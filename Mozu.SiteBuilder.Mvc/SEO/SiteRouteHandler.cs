@@ -203,20 +203,20 @@ namespace Mozu.SiteBuilder.Mvc.SEO
             var additionalValues = viewDataAdditionFunc == null ? new Dictionary<string, object>() : viewDataAdditionFunc();
             var finalRouteValues =
                 incomingRouteValues
-                .ChainSet(additionalValues);
-            finalRouteValues["httproute"] = true;
+                .ChainSet(additionalValues)
+                .ChainSet("httproute", true);
+
             var newReq = new HttpRequestMessage();
             foreach ( var rp in _requestMessage.Value.Properties)
             {
                 newReq.Properties[rp.Key]= rp.Value;
             }
-          
+
             foreach (var route in routes)
             {
                 var vpath = route.GetVirtualPath(newReq, finalRouteValues);
-              
-                if ( vpath != null)
-                { 
+                if (vpath != null)
+                {
                     var uri = new Uri("http://localhost/" + vpath.VirtualPath);
                     uri = new Uri(uri.GetLeftPart(UriPartial.Path) + request.RequestUri.Query);
                     if (!string.Equals(uri.PathAndQuery, _requestMessage.Value.RequestUri.PathAndQuery, StringComparison.OrdinalIgnoreCase))
@@ -224,13 +224,8 @@ namespace Mozu.SiteBuilder.Mvc.SEO
                         return request.CreateResponse(HttpStatusCode.MovedPermanently, new RedirectResult(uri.PathAndQuery, true));
                     }
                     return null;
-                    
                 }
-                
             }
-               
-
-            
             return null;
            
         }
@@ -238,17 +233,9 @@ namespace Mozu.SiteBuilder.Mvc.SEO
         public IHttpRouteData GetRouteData(string virtualPathRoot, HttpRequestMessage request)
         {
             var routeCollection = GetRouteCollectionAsync().Result;
-            if (routeCollection == null)
-            {
-                return null;
-            }
+            if (routeCollection == null) return null;
 
             return  routeCollection.GetRouteData(_requestMessage.Value);
-            
         }
-
-     
-
-
     }
 }

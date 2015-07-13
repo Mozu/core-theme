@@ -46,8 +46,7 @@ namespace Mozu.SiteBuilder.Mvc
             SetDebugMode();
 
             DataViewMode = dvmGetter.GetDataViewMode(UserClaims);
-            this.Now = new Lazy<DateTime>(GetNowValue);
-            
+            PreviewDate = GetNowValue();
         }
 
         private void SetDebugMode()
@@ -117,6 +116,8 @@ namespace Mozu.SiteBuilder.Mvc
             }
             return now;
         }
+
+        
 
         private static DateTime RoundMinueteToLowest10(DateTime now)
         {
@@ -355,7 +356,6 @@ namespace Mozu.SiteBuilder.Mvc
         public bool HasInvalidCredentials { get; set; }
 
         public LightweightUserClaims AdminUserClaim { get; set; }
-        public Lazy<DateTime> Now { get; private set; }
 
         public void SetDataMode(DataViewModeType dataViewMode)
         {

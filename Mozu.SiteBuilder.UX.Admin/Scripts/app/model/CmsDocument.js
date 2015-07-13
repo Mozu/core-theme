@@ -111,6 +111,16 @@ Ext.define('Taco.model.CmsDocument', {
         {
             name: 'publishState',
             defaultValue: null
+        },
+        {
+            name: 'beginDate',
+            type: 'date',
+            defaultValue: null
+        },
+        {
+            name: 'endDate',
+            type: 'date',
+            defaultValue: null
         }
     ],
     idProperty:'uniqueId',

@@ -9,9 +9,6 @@ using Microsoft.FSharp.Core;
 using Mozu.SiteBuilder.Mvc.Contexts;
 using NDjango.Interfaces;
 using NDjango.Misc;
-using Newtonsoft.Json;
-using Newtonsoft.Json.Linq;
-using Mozu.SiteBuilder.Mvc.Extensions;
 
 namespace Mozu.SiteBuilder.Mvc.ViewEngine
 {
@@ -54,7 +51,6 @@ namespace Mozu.SiteBuilder.Mvc.ViewEngine
         {
             requestContext["true"] = true;
             requestContext["false"] = false;
-            requestContext["now"] = DateTime.UtcNow;
         }
 
         private static void AddClientApiContextData(Dictionary<string, object> requestContext, ClientApiContext clientApiContext)
@@ -78,6 +74,7 @@ namespace Mozu.SiteBuilder.Mvc.ViewEngine
         {
             requestContext["pageContext"] = pageContext;
             requestContext["user"] = pageContext.User;
+            requestContext["now"] = pageContext.Now;
         }
 
         private static void AddViewContextData(Dictionary<string, object> requestContext, HyprViewContext viewContext)
