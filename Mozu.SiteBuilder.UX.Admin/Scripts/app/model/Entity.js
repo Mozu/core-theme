@@ -186,7 +186,7 @@ Ext.define('Taco.model.Entity', {
             useNull: true
         },
         {
-            name: 'beginDate',
+            name: 'startDate',
             type: 'date',
             defaultValue: null
         },

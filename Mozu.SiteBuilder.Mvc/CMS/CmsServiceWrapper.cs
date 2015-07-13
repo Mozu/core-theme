@@ -40,6 +40,11 @@ namespace Mozu.SiteBuilder.Mvc.CMS
             {
                 _docRepo = _docRepo.CloneWithoutUserClaims();
             }
+            if(apiContext.DataViewMode == Core.DataViewModeType.Pending)
+            {
+                _docRepo.Options.DisableCache = true;
+            }
+            
             
           //  _cmsTypeHelper = cmsTypeHelper;
             _lifetimescope = lifetimescope;
