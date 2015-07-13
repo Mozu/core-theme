@@ -220,7 +220,22 @@ Ext.define('Taco.view.publishing.grid.Draft', {
                     text: 'Catalog Id',
                     columnWidth: 100,
                     hidden: true
-                },        
+                }, 
+                listFQN: {
+                    xtype: 'gridcolumn',
+                    dataIndex: 'listFQN',
+                    stateId: 'listFQN',
+                    text: 'List Name',
+                    columnWidth: 100
+                },    
+                siteId: {
+                    xtype: 'gridcolumn',
+                    dataIndex: 'siteId',
+                    stateId: 'siteId',
+                    text: 'Site ID',
+                    columnWidth: 100,
+                    hidden: true
+                },         
                 actions: {
                     xtype: 'taco.menucolumn',
                     text: 'Actions',
@@ -287,11 +302,13 @@ Ext.define('Taco.view.publishing.grid.Draft', {
                     col.name,
                     col.publishSetCode,
                     col.draftUpdateDate,
+                    col.listFQN,
                     col.type,
                     col.modification,
                     col.updatedBy,
                     col.lastPublished,
-                    col.actions
+                    col.siteId,
+                    col.actions,
                 ],
                 product: [
                     col.name,

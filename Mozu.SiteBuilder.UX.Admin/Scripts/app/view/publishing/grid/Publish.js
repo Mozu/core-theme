@@ -19,11 +19,15 @@ Ext.define('Taco.view.publishing.grid.Publish', {
         deleteFromGrid: 'Taco.core.ux.mixins.DeleteFromGrid'
     },
 
+    margin: '30 0 0 0',
+
     launchEditorOnClick: false,
+
+    border: false,
 
     modelName: 'Taco.model.PublishSet',
 
-    enableNavHeader: true,
+    enableNavHeader: false,
 
     addContentViewPadding: true,
     id: 'publishList',
@@ -73,12 +77,12 @@ Ext.define('Taco.view.publishing.grid.Publish', {
             this.addCreateButton();
         }
 
-        this.getSelectionModel().on('select', this.fireSelectionEvent, this, {single: false});
+        // this.getSelectionModel().on('select', this.fireSelectionEvent, this, {single: false});
     },
 
-    fireSelectionEvent: function() {
-        this.up('gridwrapper').down('#taco-publishset-button').enable();
-    },
+    // fireSelectionEvent: function() {
+    //     this.up('gridwrapper').down('#taco-publishset-button').enable();
+    // },
 
     addCreateButton: function() {
         this.down('toolbar').insert({
@@ -112,8 +116,8 @@ Ext.define('Taco.view.publishing.grid.Publish', {
                 }, 
                 {
                     xtype: 'gridcolumn',
-                    dataIndex: 'contentCount',
-                    stateId: 'contentCount',
+                    dataIndex: 'totalCount',
+                    stateId: 'totalCount',
                     width: 100,
                     text: 'Count'
                 }, 

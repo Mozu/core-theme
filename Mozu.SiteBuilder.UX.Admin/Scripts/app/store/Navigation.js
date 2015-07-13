@@ -74,10 +74,6 @@ Ext.define('Taco.store.Navigation', {
                 return;
             }
 
-             
-
-            console.log(Taco.tenantSettings)
-
 
             Ext.Array.each(Taco.extensiblity.subNavLinks, function (link) {
                 //todo check security.
@@ -454,7 +450,13 @@ Ext.define('Taco.store.Navigation', {
                 'address': 'publishing',
                 'icon': 'nav-publishing',
                 'behaviorIds': [8],
-                'items': []
+                'items': [
+                    {
+                        'id': 'publishing',
+                        'label': 'Settings',
+                        'address': 'settings/publishing'
+                    }
+                ]
             }, {
                 'id': 'locations',
                 'label': 'Locations',

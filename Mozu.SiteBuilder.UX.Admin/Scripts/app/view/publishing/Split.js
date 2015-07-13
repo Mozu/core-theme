@@ -91,7 +91,7 @@ Ext.define('Taco.view.publishing.Split', {
     },
 
     updateContentGrid: function(record) {
-        this.gridCommunication.contentLayout.down('tabpanel').setTitle('Content for ' + record.get('name'));
+        this.gridCommunication.contentLayout.down('tabpanel').setTitle('<b>' + record.get('name') + '</b> Drafts');
         this.gridCommunication.contentsDocumentStore.read({code: record.get('code'), type: 'cms'});
         this.gridCommunication.contentsProductStore.read({code: record.get('code'), type: 'product'});
     },
@@ -121,7 +121,7 @@ Ext.define('Taco.view.publishing.Split', {
             gridClass: 'getDraftGridConfig',
             type: 'publishSetContents',
             panelConfig: {
-                header: 'Publish Set Contents',
+                header: 'Publish Set Drafts',
                 body: 'You can view the content of a publish grid by selecting a publish set!'
             }
         });

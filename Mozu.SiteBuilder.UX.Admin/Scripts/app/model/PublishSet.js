@@ -73,6 +73,13 @@ Ext.define('Taco.model.PublishSet', {
             type: 'int'
         },
         {
+            name: 'totalCount',
+            type: 'int',
+            convert: function(value, model){
+                return model.get('productCount') + model.get('contentCount');
+            }
+        },
+        {
             name: 'publishDate',
             type: 'date',
             defaultValue: 'Unset'

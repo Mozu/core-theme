@@ -31,11 +31,10 @@ Ext.define('Taco.view.publishing.grid.GridWrapper', {
             xtype: 'panel',
             ui: 'subform',
             layout: 'fit',
-            style: 'border-top-width:0px;',
             split: true,
             minWidth: 300,
             itemId: 'publish-grid-container',
-            tools: [this.getPublishButton()],
+            // tools: [this.getPublishButton()], // removed per the publish set council of the elders
             items: [
                 Ext.create('Taco.view.publishing.grid.Publish', {
                     storeConfig: {

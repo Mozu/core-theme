@@ -44,14 +44,15 @@ Ext.define('Taco.view.publishing.modal.CreatePublishSet', {
                             required: true,
                             emptyText: 'If left blank, a code will be generated'
                         },
+
                         {
-                            xtype: 'datefield',
+                            xtype: 'datetime',
                             name: 'publishDate',
                             fieldLabel: 'Publish Date',
                             minDate: new Date(),
-                            autoShow: false,
                             width: 340
                         }
+
                     ]
                 },
                 {
@@ -71,6 +72,7 @@ Ext.define('Taco.view.publishing.modal.CreatePublishSet', {
             ]
         });
     },
+
     onSave: function() {
         var values = this.form.getValues(),
             me = this,
