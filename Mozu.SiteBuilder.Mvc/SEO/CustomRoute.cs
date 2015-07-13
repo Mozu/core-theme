@@ -102,7 +102,7 @@ namespace Mozu.SiteBuilder.Mvc.SEO
                 DoRewriteRouteData(request, values, PreMappings);
             }
             var ret=  base.ProcessConstraint(request, constraint, parameterName, values, routeDirection);
-            if (ret)
+            if (ret && !object.Equals( origional,values ))
             {
                 origional.Clear();
                 origional.AddRange(values);

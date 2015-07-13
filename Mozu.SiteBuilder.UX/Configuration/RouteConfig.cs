@@ -85,6 +85,11 @@ namespace Mozu.SiteBuilder.UX.Configuration
                 "search",
                 new { controller = "Search", action = "index" });
 
+            routes.MapHttpRoute(
+               "Misc_content_3",
+               "cms/files/{documentId}",
+               new { action = "index", controller = "content", list = "files@mozu" }
+               );
 
 
 
@@ -199,6 +204,115 @@ namespace Mozu.SiteBuilder.UX.Configuration
                 new { controller = "BackOffice", action = "Preview" });
 
 
+            routes.MapHttpRoute(
+              "Storefront_User_ResetPAssword",
+              "user/resetpasswordconfirm",
+              new { controller = "Auth", action = "ResetPassword" });
+
+            routes.MapHttpRoute(
+                "Storefront_MyAccount2",
+                "myaccount",
+                new { controller = "MyAccount", action = "Index" });
+
+
+            routes.MapHttpRoute(
+                "StoreFront_ajax_Configure",
+                "product/configure",
+                new { controller = "Catalog", action = "Configure" });
+
+            routes.MapHttpRoute(
+               "StoreFront_feeds_categories",
+               "feeds/category/{categoryId}",
+               new { controller = "Catalog", action = "CategoryFeed" });
+
+            routes.MapHttpRoute(
+               "StoreFront_checkout",
+               "checkout/{orderId}/{action}",
+               new { controller = "Checkout", action = "Index", orderId = RouteParameter.Optional });
+
+
+
+            routes.MapHttpRoute(
+                "StoreFront_cart",
+                "cart/{action}",
+                new { controller = "Cart", action = "Index" });
+
+
+            routes.MapHttpRoute(
+                "Logout",
+                "logout",
+                new { controller = "Auth", action = "LogOut" },
+                new { acceptConstraint = new AcceptConstraint("application/json", false) });
+
+
+            routes.MapHttpRoute(
+                "AJAX Login",
+                "user/login",
+                new { controller = "Auth", action = "AjaxLogin" },
+                new { acceptConstraint = new AcceptConstraint("application/json", true) });
+
+
+            routes.MapHttpRoute(
+                "Login",
+                "user/login",
+                new { controller = "Auth", action = "Login" },
+                new { acceptConstraint = new AcceptConstraint("application/json", false) });
+
+            routes.MapHttpRoute(
+                "Order Status Login",
+                "user/anonymous-login",
+                new { controller = "Auth", action = "AnonymousOrderLogin" },
+                new { acceptConstraint = new AcceptConstraint("application/json", true) });
+
+            routes.MapHttpRoute(
+                "Anonymous Order Status",
+                "my-anonymous-account",
+                new { controller = "MyAnonymousAccount", action = "Index" });
+
+            routes.MapHttpRoute(
+                "refresh tokens",
+                "token/refresh",
+                new { controller = "testing", action = "RefreshAPiContextHeaders" });
+
+            routes.MapHttpRoute(
+                "AjaxCreateAccount",
+                "user/create",
+                new { controller = "Auth", action = "AjaxCreateAccount" },
+                new { acceptConstraint = new AcceptConstraint("application/json", true) });
+
+            routes.MapHttpRoute(
+                "CreateAccount",
+                "user/create",
+                new { controller = "Auth", action = "CreateAccount" },
+                new { acceptConstraint = new AcceptConstraint("application/json", false) });
+
+            routes.MapHttpRoute(
+                "Sign Up",
+                "user/signup",
+                new { controller = "Auth", action = "CreateAccount" },
+                new { acceptConstraint = new AcceptConstraint("application/json", false) });
+
+            routes.MapHttpRoute(
+                "AjaxResetPassword",
+                "user/resetpassword",
+                new { controller = "Auth", action = "AjaxResetPassword" },
+                new { acceptConstraint = new AcceptConstraint("application/json", true) });
+
+            routes.MapHttpRoute(
+               "AjaxForgotPassword",
+               "user/forgotpassword",
+               new { controller = "Auth", action = "AjaxForgotPassword" },
+               new { acceptConstraint = new AcceptConstraint("application/json", false) });
+
+
+
+            routes.MapHttpRoute(
+               "beep boop",
+               "robots.txt",
+               new { controller = "Home", action = "RobotsTxt" });
+
+
+
             routes.Add("SiteRoutes", new NonSystemRoute());
 
             return routes;
@@ -270,15 +384,7 @@ namespace Mozu.SiteBuilder.UX.Configuration
 
 
 
-            routes.MapHttpRoute(
-                "Storefront_User_ResetPAssword",
-                "user/resetpasswordconfirm",
-                new { controller = "Auth", action = "ResetPassword" });
-
-            routes.MapHttpRoute(
-                "Storefront_MyAccount2",
-                "myaccount",
-                new {controller = "MyAccount", action = "Index"});
+          
 
 
             routes.MapHttpRoute(
@@ -304,11 +410,7 @@ namespace Mozu.SiteBuilder.UX.Configuration
 
             
             
-            routes.MapHttpRoute(
-                "StoreFront_feeds_categories",
-                "feeds/category/{categoryId}",
-                new { controller = "Catalog", action = "CategoryFeed" });
-
+           
            
 
             routes.MapHttpRoute(
@@ -325,26 +427,12 @@ namespace Mozu.SiteBuilder.UX.Configuration
 
             
 
-            routes.MapHttpRoute(
-                "StoreFront_ajax_Configure",
-                "product/configure",
-                new {controller = "Catalog", action = "Configure"});
+            
 
 
             
 
-            routes.MapHttpRoute(
-                "StoreFront_checkout",
-                "checkout/{orderId}/{action}",
-                new { controller = "Checkout", action = "Index", orderId = RouteParameter.Optional });
-
-            
-
-            routes.MapHttpRoute(
-                "StoreFront_cart",
-                "cart/{action}",
-                new {controller = "Cart", action = "Index"});
-
+           
             routes.MapHttpRoute(
                 "StoreFront_Store",
                 "store",
@@ -468,83 +556,7 @@ namespace Mozu.SiteBuilder.UX.Configuration
             //   new { controller = "Resource", Action = "script", pathInfo = UrlParameter.Optional });
 
 
-            routes.MapHttpRoute(
-                "Logout",
-                "logout",
-                new {controller = "Auth", action = "LogOut"},
-                new {acceptConstraint = new AcceptConstraint("application/json", false)});
 
-
-            routes.MapHttpRoute(
-                "AJAX Login",
-                "user/login",
-                new {controller = "Auth", action = "AjaxLogin"},
-                new {acceptConstraint = new AcceptConstraint("application/json", true)});
-
-
-            routes.MapHttpRoute(
-                "Login",
-                "user/login",
-                new {controller = "Auth", action = "Login"},
-                new {acceptConstraint = new AcceptConstraint("application/json", false)});
-
-            routes.MapHttpRoute(
-                "Order Status Login",
-                "user/anonymous-login",
-                new { controller = "Auth", action = "AnonymousOrderLogin" },
-                new { acceptConstraint = new AcceptConstraint("application/json", true) });
-
-            routes.MapHttpRoute(
-                "Anonymous Order Status",
-                "my-anonymous-account",
-                new {controller = "MyAnonymousAccount", action = "Index"});
-
-            routes.MapHttpRoute(
-                "refresh tokens",
-                "token/refresh",
-                new {controller = "testing", action = "RefreshAPiContextHeaders"});
-
-            routes.MapHttpRoute(
-                "AjaxCreateAccount",
-                "user/create",
-                new {controller = "Auth", action = "AjaxCreateAccount"},
-                new {acceptConstraint = new AcceptConstraint("application/json", true)});
-
-            routes.MapHttpRoute(
-                "CreateAccount",
-                "user/create",
-                new {controller = "Auth", action = "CreateAccount"},
-                new {acceptConstraint = new AcceptConstraint("application/json", false)});
-
-            routes.MapHttpRoute(
-                "Sign Up",
-                "user/signup",
-                new { controller = "Auth", action = "CreateAccount" },
-                new { acceptConstraint = new AcceptConstraint("application/json", false)});
-
-            routes.MapHttpRoute(
-                "AjaxResetPassword",
-                "user/resetpassword",
-                new {controller = "Auth", action = "AjaxResetPassword"},
-                new {acceptConstraint = new AcceptConstraint("application/json", true)});
-
-             routes.MapHttpRoute(
-                "AjaxForgotPassword",
-                "user/forgotpassword",
-                new {controller = "Auth", action = "AjaxForgotPassword"},
-                new {acceptConstraint = new AcceptConstraint("application/json", false)});
-
-
-            
-
-            
-
-
-
-            routes.MapHttpRoute(
-               "beep boop",
-               "robots.txt",
-               new { controller = "Home", action = "RobotsTxt" });
 
 
             
