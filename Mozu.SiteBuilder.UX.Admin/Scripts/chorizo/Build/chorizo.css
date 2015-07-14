@@ -130,8 +130,7 @@
 /* line 27, ../../sass/etc/chorizo/_widgets.scss */
 .mz-cms-widget-modal .mz-cms-body {
   padding: 9px 10px 0;
-  height: 385px;
-}
+  overflow-y: auto;}
 /* line 32, ../../sass/etc/chorizo/_widgets.scss */
 .mz-cms-widget-modal .mz-cms-widget {
   display: inline-block;

@@ -2,7 +2,7 @@ CONTENT: NONE
 NUGET
   remote: http://nuget-external.corp.volusion.com:8201/api/odata
   specs:
-    51Degrees.mobi (2.1.15.1)
+    51Degrees.mobi (2.1.15.1) - content: none
       Microsoft.Web.Infrastructure (>= 1.0.0.0)
     Autofac (3.5.2)
     Autofac.WebApi2 (3.4.0)
@@ -17,21 +17,21 @@ NUGET
       Newtonsoft.Json (>= 5.0.8)
       RabbitMQ.Client (>= 3.2.1)
       Stact (>= 1.1.2)
-    Burrows.Autofac (0.3.3.0) - framework: >= net451
+    Burrows.Autofac (0.3.3.0)
       Autofac (>= 3.3.0)
       Burrows (>= 0.3.3.0)
       Magnum (>= 2.1.2)
       Newtonsoft.Json (>= 5.0.8)
-    Burrows.Log4Net (0.3.3.0) - framework: >= net451
+    Burrows.Log4Net (0.3.3.0)
       Burrows (>= 0.3.3.0)
       log4net (>= 2.0.3)
     ClearScript.Installer (5.4.5634.17927)
-    dotless (1.4.0.0) - framework: >= net45
+    dotless (1.4.0.0)
     FluentAssertions (3.2.2)
     FluentValidation (5.5.0.0)
     FSharp.Core (3.1.2.1)
     FSharpx.Collections (1.9.6)
-    JsonValue (0.6.0) - framework: >= net451
+    JsonValue (0.6.0)
     log4net (2.0.3)
     Magnum (2.1.3)
       Newtonsoft.Json (>= 6.0.5)
@@ -52,7 +52,7 @@ NUGET
     Microsoft.Bcl (1.1.9)
       Microsoft.Bcl.Build (>= 1.0.14)
     Microsoft.Bcl.Build (1.0.14)
-    Microsoft.Net.Http (2.2.28) - framework: portable-wp80+win+net45+wp81+unsupported
+    Microsoft.Net.Http (2.2.28) - framework: portable-wp80+win+net45+wp81+Unsupported
       Microsoft.Bcl (>= 1.1.9)
       Microsoft.Bcl.Build (>= 1.0.14)
     Microsoft.Owin (3.0.0)
@@ -65,25 +65,25 @@ NUGET
     Microsoft.Owin.Hosting (3.0.0)
       Microsoft.Owin (>= 3.0.0)
       Owin (>= 1.0)
-    Microsoft.Owin.SelfHost (2.1.0) - framework: >= net451
+    Microsoft.Owin.SelfHost (2.1.0)
       Microsoft.Owin (>= 2.1.0)
       Microsoft.Owin.Diagnostics (>= 2.1.0)
       Microsoft.Owin.Host.HttpListener (>= 2.1.0)
       Microsoft.Owin.Hosting (>= 2.1.0)
       Owin (>= 1.0)
-    Microsoft.Owin.StaticFiles (2.1.0) - framework: >= net451
+    Microsoft.Owin.StaticFiles (2.1.0)
       Microsoft.Owin (>= 2.1.0)
       Microsoft.Owin.FileSystems (>= 2.1.0)
       Owin (>= 1.0)
     Microsoft.Web.Infrastructure (1.0.0.0)
     Microsoft.Web.Xdt (2.1.1)
     mongocsharpdriver (1.10.0)
-    morelinq (1.0.16006) - framework: >= net451
+    morelinq (1.0.16006)
     Newtonsoft.Json (6.0.8)
     NSubstitute (1.8.1.0)
     NUnit (2.6.4)
     Owin (1.0)
-    protobuf-net (2.0.0.668) - framework: >= net45
+    protobuf-net (2.0.0.668)
     RabbitMQ.Client (3.3.5)
     Should (1.1.20)
     Sprache (2.0.0.45)
@@ -92,12 +92,13 @@ NUGET
   remote: http://nuget-internal.corp.volusion.com:8200/api/odata
   specs:
     Jolt (1.0.0)
-    Mozu.AdminUser.Contracts (1.17.2) - framework: >= net451
-      Mozu.Tenant.Contracts
-    Mozu.AppDev.Contracts (1.17.2) - framework: >= net451
+    Mozu.AdminUser.Contracts (1.17.2)
       Mozu.Core.Prime (>= 1.17)
-    Mozu.BuildSupport.GetAssemblyFileVersionTask (1.0.0) - framework: >= net45
-    Mozu.CommerceRuntime.Contracts (1.17.6) - framework: >= net451
+      Mozu.Tenant.Contracts
+    Mozu.AppDev.Contracts (1.17.2)
+      Mozu.Core.Prime (>= 1.17)
+    Mozu.BuildSupport.GetAssemblyFileVersionTask (1.0.0)
+    Mozu.CommerceRuntime.Contracts (1.17.6)
       Mozu.Core.Extensible.Contracts
       Mozu.Core.Prime
       Mozu.PricingRuntime.Contracts
@@ -105,11 +106,11 @@ NUGET
       Newtonsoft.Json
     Mozu.Content.Contracts (1.18.1-dev1507141658ci)
       Mozu.Core.Prime (>= 1.17)
-    Mozu.Core.Api.Contracts (1.17.1) - framework: >= net451
+    Mozu.Core.Api.Contracts (1.17.1)
       Mozu.Core.Prime (>= 1.17.0)
     Mozu.Core.Extensible.Contracts (1.17.1)
       Mozu.Core.Prime (>= 1.17)
-    Mozu.Core.Messaging (1.17.1) - framework: >= net451
+    Mozu.Core.Messaging (1.17.1)
       Burrows (>= 0.3.1.0)
       Mozu.Core.Messaging.Contracts (>= 1.17.0)
       Mozu.Core.Prime (>= 1.17.0)
@@ -130,7 +131,7 @@ NUGET
       Sprache (>= 2.0.0.45)
       log4net (>= 2.0.3)
       mongocsharpdriver (>= 1.10.0)
-    Mozu.Core.Test (1.17.1) - framework: >= net451
+    Mozu.Core.Test (1.17.1)
       Autofac (>= 3.5.2)
       AutofacContrib.NSubstitute (>= 3.3.2)
       FluentAssertions (>= 3.2.2)
@@ -144,26 +145,26 @@ NUGET
     Mozu.Hypr.NDjango (1.17.38)
       FSharp.Core (>= 3.1.2.1)
       FSharpx.Collections (>= 1.9.6)
-    Mozu.InstalledApps.Contracts (1.17.3) - framework: >= net451
+    Mozu.InstalledApps.Contracts (1.17.3)
       Mozu.Core.Prime (>= 1.17)
       Mozu.Tenant.Contracts (>= 1.17)
-    Mozu.Location.Contracts (1.17.1) - framework: >= net451
+    Mozu.Location.Contracts (1.17.1)
       Mozu.Core.Prime (>= 1.17.0)
-    Mozu.MZDB.Contracts (1.17.2) - framework: >= net451
+    Mozu.MZDB.Contracts (1.17.2)
     Mozu.PaymentService.Contracts (1.9.9)
     Mozu.PricingRuntime.Contracts (1.17.1)
       Mozu.Core.Prime (>= 1.17.6)
     Mozu.ProductAdmin.Contracts (1.18.1-dev1507140133)
       Mozu.Core.Prime (>= 1.17.6) - framework: >= net45
-    Mozu.ProductRuntime.Contracts (1.17.2) - framework: >= net451
+    Mozu.ProductRuntime.Contracts (1.17.2)
       Mozu.Core.Prime (>= 1.17.0)
-    Mozu.Provisioning.Contracts (1.17.5) - framework: >= net451
+    Mozu.Provisioning.Contracts (1.17.5)
       Mozu.Core.Prime (>= 1.17)
       Mozu.Tenant.Contracts (>= 1.17)
-    Mozu.Reference.Contracts (1.17.4) - framework: >= net451
+    Mozu.Reference.Contracts (1.17.4)
     Mozu.ScheduledEvent.Contracts (1.18.1-dev1507091835)
       Mozu.Core.Prime (>= 1.18.0)
-    Mozu.ShippingAdmin.Contracts (1.17.4) - framework: >= net451
+    Mozu.ShippingAdmin.Contracts (1.17.4)
       Mozu.Core.Prime (>= 1.17)
     Mozu.ShippingRuntime.Contracts (1.17.2)
       Mozu.Core.Prime (>= 1.17)

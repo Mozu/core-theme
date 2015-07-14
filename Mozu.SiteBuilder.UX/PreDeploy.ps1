@@ -1,4 +1,5 @@
-#edited
+# Alm.DeployPack Repo/Solution Mozu.DeployWeb Content\PreDeploy.ps1
+# DO NOT CHANGE THIS FILE: see scripts in Mozu.Config\Scripts
 
 # Alm.DeployPack Repo/Solution Mozu.DeployWeb Content\PreDeploy.ps1
 # DO NOT CHANGE THIS FILE: see scripts in Mozu.Config\Scripts
