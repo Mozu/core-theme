@@ -8,11 +8,10 @@
             <div class='mz-header-icon'></div>
 
             <div class='mz-preview-actions'>
-                <span>
-                    <input id='mz-url-copy' type="text" readonly="true"/>
-                </span>
+                {#<span><input id='mz-url-copy' type="text" readonly="true"/></span>#}
                 <span>
                     <input id='mz-date-display' type="text" />
+                    <span id='mz-date-icon'></span>
                 </span>
             </div>
 

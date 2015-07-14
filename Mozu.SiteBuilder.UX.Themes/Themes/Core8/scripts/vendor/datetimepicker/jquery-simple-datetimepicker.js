@@ -750,7 +750,8 @@
 			$link_close.prop('title', translate(locale,'close')); 
 			$link_close.click(function() { 
 				$picker.hide(); 
-			}); 
+			});
+			$link_close.css('display', 'none'); 
 			$header.append($link_close); 
 		} 
 
