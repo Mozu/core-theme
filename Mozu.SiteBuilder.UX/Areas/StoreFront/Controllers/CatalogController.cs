@@ -92,6 +92,10 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
             {
                 return redirect;
             }
+            if (Request.Method == HttpMethod.Head)
+            {
+                return this.Request.CreateResponse(HttpStatusCode.OK);
+            }
 
             PageContext.PageType = "product";
             PageContext.ProductCode = productCode;
@@ -213,6 +217,11 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
             {
                 return redirect;
             }
+            if ( Request.Method == HttpMethod.Head)
+            {
+                return this.Request.CreateResponse(HttpStatusCode.OK);
+            }
+            
 
             PageContext.PageType = "category";
             PageContext.CategoryId = cat.CategoryId;

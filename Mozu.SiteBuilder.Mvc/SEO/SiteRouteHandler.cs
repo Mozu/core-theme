@@ -6,6 +6,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Net;
 using System.Net.Http;
+using System.Net.Http.Formatting;
 using System.Threading.Tasks;
 using System.Web.Http;
 using System.Web.Http.Hosting;
@@ -221,7 +222,17 @@ namespace Mozu.SiteBuilder.Mvc.SEO
                     uri = new Uri(uri.GetLeftPart(UriPartial.Path) + request.RequestUri.Query);
                     if (!string.Equals(uri.PathAndQuery, _requestMessage.Value.RequestUri.PathAndQuery, StringComparison.OrdinalIgnoreCase))
                     {
-                        return request.CreateResponse(HttpStatusCode.MovedPermanently, new RedirectResult(uri.PathAndQuery, true));
+                        var statusCode = HttpStatusCode.MovedPermanently;
+                        IEnumerable<string> values;
+                        if (request.Headers.TryGetValues("X-Requested-With", out values) &&
+                            values.Any(x => string.Equals(x, "XMLHttpRequest", StringComparison.OrdinalIgnoreCase)))
+                        {
+                            statusCode = HttpStatusCode.OK;
+                        }
+                        var redirect = request.CreateResponse(statusCode);
+                        redirect.Headers.Location = new Uri(uri.PathAndQuery, UriKind.Relative);
+                        return redirect;
+
                     }
                     return null;
                 }

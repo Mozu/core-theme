@@ -58,10 +58,15 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
         [HttpGet]
         public async Task<HttpResponseMessage> ContentIndex(string documentListName, string listView = null)
         {
-            var resp = await _customRouteHandler.RedirectWithContext(Request, FancyRoute.CmsList, () => new Dictionary<string, object> { {"listName", documentListName }, {"listView", listView } });
-            if (resp != null)
+            var redirect = await _customRouteHandler.RedirectWithContext(Request, FancyRoute.CmsList, () => new Dictionary<string, object> { {"listName", documentListName }, {"listView", listView } });
+            
+            if (redirect != null)
             {
-                return resp;
+                return redirect;
+            }
+            if (Request.Method == HttpMethod.Head)
+            {
+                return this.Request.CreateResponse(HttpStatusCode.OK);
             }
 
             var pageType = SiteContext.Theme.PageTypes.FirstOrDefault(x => x.ListFQN == documentListName && string.Equals(x.EntityType, "contentIndex", StringComparison.OrdinalIgnoreCase));
@@ -155,10 +160,14 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
                 return this.Request.CreateErrorResponse(HttpStatusCode.NotFound, "page not found");
             }
 
-            var resp = await _customRouteHandler.RedirectWithContext(Request, FancyRoute.CmsPage, () => ToRouteDictionary(pc.CmsContext.Page.Document)).ConfigureAwait(false);
-            if (resp != null)
+            var redirect = await _customRouteHandler.RedirectWithContext(Request, FancyRoute.CmsPage, () => ToRouteDictionary(pc.CmsContext.Page.Document)).ConfigureAwait(false);
+            if (redirect != null)
             {
-                return resp;
+                return redirect;
+            }
+            if (Request.Method == HttpMethod.Head)
+            {
+                return this.Request.CreateResponse(HttpStatusCode.OK);
             }
 
             var vm = pc.CmsContext.Page.Document;
