@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Net;
 using System.Net.Http;
@@ -6,6 +7,7 @@ using System.Threading.Tasks;
 using System.Web.Http;
 using MongoDB.Bson;
 using Mozu.CommerceRuntime.Contracts.Clients;
+using Mozu.CommerceRuntime.Contracts.Orders;
 using Mozu.CommerceRuntime.Contracts.Returns;
 using Mozu.Core;
 using Mozu.Core.Api.Client;
@@ -60,8 +62,10 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
                 return Request.CreateErrorResponse(HttpStatusCode.NotFound, "Page not found.");
             }
 
-            var order = (await _orderWebApiClient.GetOrders(filter: String.Format("id eq {0}", orderId)));
-            var returns = (await _returnApiClient.GetReturns(filter: String.Format("originalorderid eq {0}", orderId)));
+            var order = (await _orderWebApiClient.GetOrder(orderId));
+            // because we're an auth'd anonymous user the only returns returned are those which are associated
+            // with the bag's orderid
+            var returns = (await _returnApiClient.GetReturns());
 
             var pc = PageContext;
             pc.CmsContext = new CmsPageContext()
@@ -75,12 +79,22 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
             };
             pc.PageType = "my_anonymous_account";
 
-            var orderResult = order.ReadAsAsync();
-            var returnResult = returns.ReadAsAsync();
+            var orderResult = order.ReadAsSync();
+            var returnResult = returns.ReadAsSync();
+
+            // TODO: remove this when we get away from needing to re-use myaccount templates which expect pagedcollection
+            var pagedOrderCollection = new Mozu.CommerceRuntime.Contracts.Orders.OrderCollection
+            {
+                Items = new List<Order> {orderResult},
+                PageCount = 1,
+                PageSize = 1,
+                StartIndex = 0,
+                TotalCount = 1
+            };
 
             var retObject = (new Customer.Contracts.CustomerAccount()).ToJObject();
-            retObject.Add("orderHistory", orderResult.Result.ToJObject());
-            retObject.Add("returnHistory", returnResult.Result.ToJObject());
+            retObject.Add("orderHistory", pagedOrderCollection.ToJObject());
+            retObject.Add("returnHistory", returnResult.ToJObject());
 
 
             return Request.CreateResponse(HttpStatusCode.OK, View("my-anonymous-account", retObject));
