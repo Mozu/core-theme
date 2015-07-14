@@ -12,6 +12,8 @@ Ext.define('Taco.view.publishing.grid.GridWrapper', {
     ],
 
     initComponent: function () {
+        var me = this;
+
         this.items = [];
 
         this.items.push(this[this.gridClass]());
@@ -23,7 +25,19 @@ Ext.define('Taco.view.publishing.grid.GridWrapper', {
         if (this.type === 'publishSetContents') {
             this.getLayout().setActiveItem(1);
         }
+
+        if (this.type === 'publishSet') {
+            this.getLayout().setActiveItem(1);
+            this.down('publishlist').store.on('load', this.updatePanel, this, {single: true});
+        }
+
     },
+
+
+    updatePanel: function(store) {
+        if (store.getCount() > 1) this.getLayout().setActiveItem(0);
+    },
+
     getPublishGridConfig: function() {
 
         return {

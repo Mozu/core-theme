@@ -15,10 +15,6 @@ Ext.define('Taco.view.publishing.grid.Publish', {
         'Taco.core.ux.window.Modal'
     ],
 
-    mixins: {
-        deleteFromGrid: 'Taco.core.ux.mixins.DeleteFromGrid'
-    },
-
     margin: '30 0 0 0',
 
     launchEditorOnClick: false,
@@ -68,8 +64,6 @@ Ext.define('Taco.view.publishing.grid.Publish', {
         this.store = Ext.create(this.storeConfig.name, this.storeConfig.options);
         
         this.columns = this.getColumnConfig();
-
-        this.mixins.deleteFromGrid.init.apply(this);
 
         this.callParent(arguments);
 
@@ -261,19 +255,10 @@ Ext.define('Taco.view.publishing.grid.Publish', {
 
     onPublishSetDelete: function(method, item, eventData) {
 
-        if (method === 'unassign') {
-            Taco.model.PublishSet.unassignAll({
+        if (method === 'unassign' || method === 'discard') {
+            Taco.model.PublishSet.doDelete({
                 data: [eventData.record.data],
-                success: function() {
-                    eventData.record.store.read();
-                },
-                failure: this.showMessage.bind(this, 'There was an error deleting this publish set!', 'error')
-            });
-        }
-
-        else if (method === 'discard') {
-             Taco.model.PublishSet.discardAll({
-                data: [eventData.record.data],
+                method: method,
                 success: function() {
                     eventData.record.store.read();
                 },

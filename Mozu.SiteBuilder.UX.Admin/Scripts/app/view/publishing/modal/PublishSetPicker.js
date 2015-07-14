@@ -42,7 +42,8 @@ Ext.define('Taco.view.publishing.modal.PublishSetPicker', {
                         fieldLabel: 'Publish Set',
                         name: 'publishSetName',
                         itemId: 'publish-set-picker-combobox',
-                        width: 375,
+                        width: 457,
+                        // width: 375,
                         editable: true,
                         forceSelection: true,
                         store: this.getPublishSetStore(),
@@ -62,25 +63,25 @@ Ext.define('Taco.view.publishing.modal.PublishSetPicker', {
                                     scope: me,
                                     callback: function() {
                                         cmp.setValue(me.record.get('publishSetCode'));
-                                        me.disableButton(me.record.get('publishSetCode'));
+                                        // me.disableButton(me.record.get('publishSetCode'));
                                     }
                                 });
                             },
                             change: function(record, value) {
-                                me.disableButton.call(me, value);
+                                // me.disableButton.call(me, value);
                             }
                         }
                    },
-                   {
-                        xtype: 'button',
-                        ui: 'action-primary',
-                        scale: 'medium',
-                        itemId: 'createActionButton',
-                        text: 'Edit',
-                        margin: '41 0 0 10',
-                        scope: this,
-                        handler: this.showEditModal.bind(this)
-                   }
+                   // {
+                   //      xtype: 'button',
+                   //      ui: 'action-primary',
+                   //      scale: 'medium',
+                   //      itemId: 'createActionButton',
+                   //      text: 'Edit',
+                   //      margin: '41 0 0 10',
+                   //      scope: this,
+                   //      handler: this.showEditModal.bind(this)
+                   // }
                 ]
             }]
         });

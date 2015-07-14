@@ -23,7 +23,7 @@ Ext.define('Taco.view.publishing.Split', {
     title: 'Pending Changes',
 
     createButtonEnabled: true,
-    createButtonText: 'Create Publish Set',
+    createButtonText: 'Create New Publish Set',
     saveButtonVisible: false,
     cancelButtonVisible: false,
 
@@ -107,11 +107,12 @@ Ext.define('Taco.view.publishing.Split', {
     eastGrid: function() {
         return Ext.create('Taco.view.publishing.grid.GridWrapper', {
             title: 'Publish Sets',
+            type: 'publishSet',
             gridClass: 'getPublishGridConfig',
             panelConfig: {
                 header: 'Publish Sets',
-                body: [ 'Publish Sets are a new feature in Mozu 1.18. Use Them to collect Drafts into related sets and set an optional',
-                        'Publish Date so your changes can go live on time, every time.<br> Click the "Create new Publish Set" button above to get started!'].join('')
+                body: [ 'Publish Sets are a new feature in Mozu. Use them to collect product and content drafts into related sets and set an optional ',
+                        'publish date for those changes to go live.<br><br> <b>Click the "Create New Publish Set" button above to get started!</b>'].join('')
             }
         });
     },
@@ -131,6 +132,7 @@ Ext.define('Taco.view.publishing.Split', {
         Ext.create('Taco.view.publishing.modal.CreatePublishSet', {
             callback: function() {
                me.gridCommunication.publistSetLayout.down('#publish-grid').store.read();
+               me.setActiveCard(me.gridCommunication.publistSetLayout, 0);
             }
         }).show();
     },

@@ -26,7 +26,7 @@ using Mozu.Tenant.Contracts.Clients;
 namespace Mozu.SiteBuilder.UX.Admin.Api
 {
     /// <summary>
-    /// Controller for discounts.
+    /// Controller for publish sets.
 	/// </summary>
     [WebApi("app/publishsets", SuppressDescriptorGeneration = true)]
     public class PublishSetController : BaseController
@@ -70,7 +70,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
             }
             else if ( string.Equals( "product", type, StringComparison.OrdinalIgnoreCase ))
             {
-                extFilter.Add(new FilterCollectionItem() { property = "publishedstate", value = "Pending" });
+                extFilter.Add(new FilterCollectionItem() { property= "publishedstate", value = "Pending" });
                 if (!string.Equals("all", code, StringComparison.OrdinalIgnoreCase)) {
                     extFilter.Add(new FilterCollectionItem() { property = "publishsetcode", value = code });
                 }
@@ -190,11 +190,20 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
                         };
                         items.Add(pubSet);
                     }
-                    pubSet.ContentCount = x.ProductCount;
+                    pubSet.ProductCount = x.ProductCount;
                 });
 
 
             }
+
+            var includesUnassigned = items.FirstOrDefault(x => x.Code.Equals("unassigned", StringComparison.OrdinalIgnoreCase));
+
+            if (includesUnassigned == null)
+            {
+                items.Add(new PublishSet { Code = "UNASSIGNED", ContentCount = 0, ProductCount = 0, Name = "unassigned" });
+            }
+           
+
             return List2(Mapper.Map<List<PublishSet>>(items), items.Count);
         
         }
@@ -273,22 +282,44 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
             return this.List2(newPublishSetList);
         }
 
-        [HttpPostRoute(UriTemplate = "discardAll")]
-        public async Task<Response<List<PublishSet>>> DiscardAll(List<PublishSet> newPublishSet)
+        public class DeletePublishSetObject
+        {
+            public string method { get; set; }
+            public List<PublishSet> data { get; set; }
+        }
+
+
+        /// <summary>
+        /// Delete method has option to discard all drafts or set them to unassigned
+        /// 'method' is either unassign or discard
+        /// </summary>
+        [HttpPostRoute(UriTemplate = "deleteWithContent")]
+        public async Task<Response<List<PublishSet>>> UnassignAll(DeletePublishSetObject deletedSet)
         {
             List<PublishSet> retList = new List<PublishSet>();
+            var publishSetToDelete = deletedSet.data.First();
+            var shouldDiscard = string.Equals(deletedSet.method, "discard");
 
+            var tasks = new List<Task<ServiceClientResponse>>() {
+                _publishSetWebApiClient.DeletePublishSet(publishSetToDelete.Code).ContinueWith(t=>t.Result as ServiceClientResponse),
+                _productItemPublishingClient.DeletePublishSet(publishSetToDelete.Code, shouldDiscard).ContinueWith(t=>t.Result as ServiceClientResponse),
+                _cmsItemPublishingClient.DeletePublishSet(publishSetToDelete.Code, shouldDiscard).ContinueWith(t=>t.Result as ServiceClientResponse)
+            };
 
+            var results = await Task.WhenAll(tasks).ConfigureAwait(false);
+
+            foreach (ServiceClientResponse task in results)
+            {
+               if (task.HasException)
+               {
+                   throw task.ReadException();
+               }
+            }
+
+            retList.Add(publishSetToDelete);
+         
             return this.List2(retList);
         }
 
-        [HttpPostRoute(UriTemplate = "unassignAll")]
-        public async Task<Response<List<PublishSet>>> UnassignAll(List<PublishSet> newPublishSet)
-        {
-            List<PublishSet> retList = new List<PublishSet>();
-
-
-            return this.List2(retList);
-        }
     }
 }

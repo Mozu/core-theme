@@ -24,17 +24,13 @@ Ext.define('Taco.model.PublishSet', {
             }, cfg));
         },
 
-        discardAll: function(cfg) {
+        doDelete: function(cfg) {
             this.doPublish(Ext.apply({}, {
-                url: '/admin/app/publishsets/discardAll',
-                jsonData: cfg.data
-            }, cfg));
-        },
-
-        unassignAll: function(cfg) {
-            this.doPublish(Ext.apply({}, {
-                url: '/admin/app/publishsets/unassignAll',
-                jsonData: cfg.data
+                url: '/admin/app/publishsets/deleteWithContent',
+                jsonData: {
+                    data: cfg.data,
+                    method: cfg.method
+                }
             }, cfg));
         },
 
