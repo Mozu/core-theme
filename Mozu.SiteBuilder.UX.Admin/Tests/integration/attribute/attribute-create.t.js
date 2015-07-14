@@ -10,7 +10,7 @@
        }
        ,
       function (next) {
-          t.click('>> #createbutton');
+          t.click('>> #createActionButton');
           t.waitForComponent('Taco.view.attribute.Edit', true, next);
       },
         function (next, res) {

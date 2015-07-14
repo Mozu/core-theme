@@ -40,7 +40,7 @@ Ext.define('Taco.store.TooltipHelp', {
             value: 'If specified, only customers whose lifetime value meets or exceeds this amount are eligible for the discount. '
         }, {
             key: 'discount.conditions.includedPaymentMethodField',
-            value: 'TBP by Misha. '
+            value: 'Requires shoppers to check out with the specified payment method in order for the discount to apply. You can only select payment methods that are enabled in the Payment & Checkout settings.'
         }, {
             key: 'discount.criteria.maximumQuantityPerRedemption',
             value: 'Choose the maximum quantity of products the customer will receive the discount on, per redemption. In a "Buy (n) of X, Get (m) of Y at discounted rate" scenario, this field specifies the quantity (m). Control other restrictions in "Discount Limitations" section.'
@@ -55,7 +55,7 @@ Ext.define('Taco.store.TooltipHelp', {
             value: 'Choose what will be discounted.'
         }, {
             key: 'discount.criteria.includedCategoriesOperatorCheckbox',
-            value: 'TBP by Misha'
+            value: 'When this option is checked, only products that are common to all listed categories are eligible for the discount. When this option is unchecked, products that belong to any of the selected categories are eligible for the discount.'
         }, {
             key: 'discount.criteria.excludeLineItemDiscounts',
             value: 'You can also use the "Restrict discounts on this product" setting on individual products to exclude them from discounts. '
