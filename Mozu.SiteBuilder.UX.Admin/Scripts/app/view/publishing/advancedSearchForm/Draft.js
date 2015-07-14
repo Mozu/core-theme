@@ -83,6 +83,6 @@ Ext.define('Taco.view.publishing.advancedSearchForm.Draft', {
     },
 
     getPublishSetStore: function() {
-        return Ext.create('Taco.store.PublishSets', { includeCounts: true });
+        return Ext.create('Taco.store.PublishSets', { includeCounts: false });
     }
 });
