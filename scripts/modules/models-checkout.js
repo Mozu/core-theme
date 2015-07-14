@@ -962,6 +962,13 @@
 
 
             },
+            processDigitalWallet: function (digitalWalletType, payment) {
+                this.apiProcessDigitalWallet({
+                    digitalWalletData: JSON.stringify(payment)
+                }).then(function () {
+                    console.log('called the api method', arguments);
+                });
+            },
             addCoupon: function () {
                 var me = this;
                 var code = this.get('couponCode');

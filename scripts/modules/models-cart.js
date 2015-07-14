@@ -61,8 +61,20 @@
         },
         toOrder: function() {
             var me = this;
-            me.apiCheckout().then(function(order) {
-                me.trigger('ordercreated', order);
+            return me.apiCheckout().then(function(order) {
+                var successfulVisaPayment = window.V_success;
+
+                if (successfulVisaPayment) {
+                    order.processDigitalWallet({
+                        order: order,
+                        digitalWalletData: JSON.stringify(successfulVisaPayment)
+                    }).then(function (order) {
+                        delete window.V_success;
+                        me.trigger('ordercreated', order);
+                    });
+                } else {
+                    me.trigger('ordercreated', order);
+                }
             });
         },
         removeItem: function (id) {

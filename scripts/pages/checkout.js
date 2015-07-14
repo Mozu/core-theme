@@ -1,4 +1,4 @@
-﻿require(["modules/jquery-mozu", "underscore", "hyprlive", "modules/backbone-mozu", "modules/models-checkout", "modules/views-messages", "modules/cart-monitor"], function ($, _, Hypr, Backbone, CheckoutModels, messageViewFactory, CartMonitor) {
+﻿require(["modules/jquery-mozu", "underscore", "hyprlive", "modules/backbone-mozu", "modules/models-checkout", "modules/views-messages", "modules/cart-monitor", "vendor/visa/v1/sdk", 'hyprlivecontext'], function ($, _, Hypr, Backbone, CheckoutModels, messageViewFactory, CartMonitor, V, HyprLiveContext) {
 
     var CheckoutStepView = Backbone.MozuView.extend({
         edit: function () {
@@ -144,11 +144,15 @@
         },
 
         initialize: function () {
+            this.listenTo(this.model, 'change:paymentType', this.onSelectPaymentType, this);
             this.listenTo(this.model, 'change:digitalCreditCode', this.onEnterDigitalCreditCode, this);
             this.listenTo(this.model, 'orderPayment', function (order, scope) {
                     this.render();
                 }, this);
             this.codeEntered = !!this.model.get('digitalCreditCode');
+
+            window.onVisaCheckoutReady = this.initVisaCheckout;
+            this.initVisaCheckout();
         },
 
         updateAcceptsMarketing: function(e) {
@@ -238,6 +242,32 @@
                 case "digitalCreditCode":
                     return this.getDigitalCredit(e);
             }
+        },
+        initVisaCheckout: function () {
+            var me = this;
+            var apiKey = require.mozuData('pagecontext').visaCheckoutApiKey;
+
+                V.on("payment.success", function(payment) {
+                    console.log({ success: payment });
+                    me.model.parent.processDigitalWallet('VisaCheckout', payment);
+                });
+
+                V.on("payment.cancel", function(payment) {
+                    console.log({ cancel: JSON.stringify(payment) });
+                });
+
+                V.on("payment.error", function(payment, error) {
+                    console.warn({ error: JSON.stringify(error) });
+                });
+
+            _.delay(V.init, 500, {
+                apikey: apiKey, //"0H1JJQFW9MUVTXPU5EFD13fucnCWg42uLzRQMIPHHNEuQLyYk",
+                clientId: HyprLiveContext.locals.siteContext.checkoutSettings.visaCheckout.clientId,
+                paymentRequest: {
+                    currencyCode: window.order.get('currencyCode'),
+                    total: "" + window.order.get('total')
+                }
+            });
         }
     });
 

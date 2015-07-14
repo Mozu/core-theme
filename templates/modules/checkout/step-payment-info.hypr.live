@@ -122,6 +122,12 @@
                         {% endif %}
                         <span class="mz-validationmessage" data-mz-validationmessage-for="paymentType"></span>
                     </div>
+                {% if siteContext.checkoutSettings.visaCheckout.isEnabled %}
+                    <div class="mz-l-formfieldgroup-cell mz-digitalwallets">
+                        <img alt="Visa Checkout" class="v-button" role="button"
+                        src="{{pageContext.visaCheckoutButtonUrl}}"/>
+                </div>
+                {% endif %}
                 </div>
 
                 {% if model.paymentType == "CreditCard" %}
@@ -139,7 +145,7 @@
                         <p>{{ labels.paypalExpressInfo }}</p>
                     </div>
                 </div>
-                {% endif %}
+              {% endif %}
 
             </div>
         </div>
