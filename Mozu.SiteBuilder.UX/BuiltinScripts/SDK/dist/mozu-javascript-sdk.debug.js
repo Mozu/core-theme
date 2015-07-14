@@ -1,5 +1,5 @@
 /*! 
- * Mozu JavaScript SDK - v0.3.0 - 2015-07-08
+ * Mozu JavaScript SDK - v0.3.0 - 2015-07-14
  *
  * Copyright (c) 2015 Volusion, Inc.
  *
@@ -4034,6 +4034,11 @@ module.exports=
             "verb": "DELETE",
             "template": "{+orderService}{id}/extendedproperties"
         },
+        "process-digital-wallet": {
+            "verb": "PUT",
+            "template": "{+orderService}{id}/digitalWallet/VisaCheckout",
+            "includeSelf": true
+        }
     },
     "rma": {
         "create": {

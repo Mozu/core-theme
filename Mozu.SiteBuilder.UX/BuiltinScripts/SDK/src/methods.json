@@ -567,6 +567,11 @@
             "verb": "DELETE",
             "template": "{+orderService}{id}/extendedproperties"
         },
+        "process-digital-wallet": {
+            "verb": "PUT",
+            "template": "{+orderService}{id}/digitalWallet/VisaCheckout",
+            "includeSelf": true
+        }
     },
     "rma": {
         "create": {
