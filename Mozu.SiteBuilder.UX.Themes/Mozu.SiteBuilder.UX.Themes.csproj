@@ -2653,6 +2653,7 @@
     </VisualStudio>
   </ProjectExtensions>
   <Target Name="BuildThemes">
+    <MSBuild Projects="$(MSBuildProjectFullPath)" Properties="ThemeName=Core8;" Targets="BuildThemeWithGrunt" />
     <MSBuild Projects="$(MSBuildProjectFullPath)" Properties="ThemeName=Core7;" Targets="BuildThemeWithGrunt" />
     <MSBuild Projects="$(MSBuildProjectFullPath)" Properties="ThemeName=Core6;" Targets="BuildThemeWithGrunt" />
     <MSBuild Projects="$(MSBuildProjectFullPath)" Properties="ThemeName=Core5;" Targets="BuildThemeWithGrunt" />
