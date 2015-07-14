@@ -93,7 +93,6 @@ NUGET
   specs:
     Jolt (1.0.0)
     Mozu.AdminUser.Contracts (1.17.2) - framework: >= net451
-      Mozu.Core.Prime (>= 1.17)
       Mozu.Tenant.Contracts
     Mozu.AppDev.Contracts (1.17.2) - framework: >= net451
       Mozu.Core.Prime (>= 1.17)
@@ -104,7 +103,7 @@ NUGET
       Mozu.PricingRuntime.Contracts
       Mozu.ShippingRuntime.Contracts
       Newtonsoft.Json
-    Mozu.Content.Contracts (1.18.1-dev1507141504ci)
+    Mozu.Content.Contracts (1.18.1-dev1507141658ci)
       Mozu.Core.Prime (>= 1.17)
     Mozu.Core.Api.Contracts (1.17.1) - framework: >= net451
       Mozu.Core.Prime (>= 1.17.0)
