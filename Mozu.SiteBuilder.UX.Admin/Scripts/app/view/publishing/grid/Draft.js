@@ -12,7 +12,7 @@ Ext.define('Taco.view.publishing.grid.Draft', {
         'Taco.store.PublishSetItems',
         'Taco.view.publishing.advancedSearchForm.Publish',
         'Taco.view.publishing.advancedSearchForm.DraftContent',
-        'Taco.view.publishing.advancedSearchForm.DraftPublish',
+        'Taco.view.publishing.advancedSearchForm.DraftProduct',
         'Taco.view.publishing.modal.PublishSetPicker'
     ],
     mixins: {
