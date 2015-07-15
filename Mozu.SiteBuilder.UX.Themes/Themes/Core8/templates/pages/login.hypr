@@ -76,9 +76,9 @@
                             </div>
                             <div class="mz-l-formfieldgroup-cell">
                                 <select data-mz-verify-with>
-                                    <option>Zip Code</option>
-                                    <option>Phone Number</option>
-                                    <option>Email Address</option>
+                                    {% if themeSettings.zipCodeEnabled %}<option>Zip Code</option>{% endif %}
+                                    {% if themeSettings.phoneNumberEnabled %}<option>Phone Number</option>{% endif %}
+                                    {% if themeSettings.billingEmailEnabled %}<option>Email Address</option>{% endif %}
                                 </select>
                             </div>
                         </div>
