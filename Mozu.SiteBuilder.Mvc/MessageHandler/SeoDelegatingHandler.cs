@@ -1,173 +1,115 @@
 ﻿using System;
 using System.Collections;
-using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations;
-using System.Linq;
 using System.Net;
 using System.Net.Http;
-using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Web;
-using System.Web.Http.Hosting;
-using System.Web.Http.Routing;
 using Autofac;
-using Mozu.SiteBuilder.Mvc.ActionResults;
-using Mozu.SiteBuilder.Mvc.CMS;
-using Mozu.SiteBuilder.Mvc.Contexts;
 using Mozu.SiteBuilder.Mvc.SEO;
 using Mozu.SiteBuilder.Mvc.ViewEngine;
-using Mozu.SiteBuilder.UX.Models.Admin.CMS;
 using Mozu.SiteBuilder.UX.Models.Navigation;
 
 namespace Mozu.SiteBuilder.Mvc.MessageHandler
 {
     public class SeoDelegatingHandler : DelegatingHandler
     {
-        public static bool IsSeoRewrite(HttpRequestMessage msg)
-        {
-             object isRedirectFlag;
-            return  msg.Properties.TryGetValue("isSeoRewrite", out isRedirectFlag) && (bool) isRedirectFlag ;
-        }
-        protected async override Task<HttpResponseMessage> SendAsync(
-            HttpRequestMessage request,
-            CancellationToken cancellationToken)
-        {
-            var httpContextBase = (HttpContextBase)request.Properties["MS_HttpContext"];
+        // look in the source code for HttpRoute.cs in asp.net for this.  it's internal there, so we can't just use it.
+        internal const string MS_HTTP_RoutingContextKey = "MS_RoutingContext";
 
+        protected async override Task<HttpResponseMessage> SendAsync(HttpRequestMessage request, CancellationToken cancellationToken)
+        {
             var apiContext = request.Resolve<ISiteBuilderApiContext>();
-
             if (apiContext.SiteId.HasValue == false)
             {
                 return (await base.SendAsync(request, cancellationToken).ConfigureAwait(false));
             }
 
+            // try redirects
+            var redirect = await GetRedirectForRequestUri(request.Resolve<IRedirectRepository>(), request.RequestUri);
+            if (redirect != null)
+            {
+                if (redirect.IsRewrite.GetValueOrDefault(false))
+                {
+                    var rewritten = RewriteCurrentRequest(request, redirect.Destination);
+                    return await SendAsync(rewritten, cancellationToken).ConfigureAwait(false);
+                }
+                else if (!apiContext.IsEditMode)
+                {
+                    return RedirectTo(redirect.Destination, request);
+                }
+            }
 
-            var repo = request.Resolve<IRedirectRepository>();
+            // try any custom routes
+            if (request.GetRouteData().Route is NonSystemRoute)
+            {
+                var rerouted = await PerformCustomRouting(request).ConfigureAwait(false);
+                return await base.SendAsync(rerouted, cancellationToken).ConfigureAwait(false);
+            }
+
+            return await base.SendAsync(request, cancellationToken).ConfigureAwait(false);
+        }
+
+        static async Task<RedirectEntry> GetRedirectForRequestUri(IRedirectRepository repo, Uri requestUri)
+        {
             var redirects = await repo.FetchRedirectEntries().ConfigureAwait(false);
-            string stem = request.RequestUri.AbsolutePath;
-            stem = stem.Length > 0 && stem[0] == '/' ? stem.Substring(1) : stem;
+            var stem = requestUri.AbsolutePath.TrimStart('/');
+
+            // try any redirects
             RedirectEntry redir;
-            IHttpRouteData routeData = null;
             if (redirects.TryGetValue(stem, out redir))
             {
-                if (redir.IsRewrite.GetValueOrDefault(false))
-                {
-                    string url = "~/" + redir.Destination;
-
-                    var ub = new UriBuilder();
-                    ub.Host = "localhost";
-                    ub.Path = redir.Destination; ;
-
-                    
-                    #region magicstrings
-
-                    var req = new HttpRequestMessage(HttpMethod.Get, ub.Uri);
-                    //magic strings taken from decompiled source :(
-                    
-                    
-                    var myHttpContext = new MyHttpContextBase(httpContextBase, url);
-
-                    req.Properties["MS_HttpContext"] = myHttpContext;
-                    myHttpContext.Items["MS_HttpRequestMessage"] = req;
-
-                    #endregion
-
-                    routeData = System.Web.Http.GlobalConfiguration.Configuration.Routes.GetRouteData(req);
-                    if (routeData != null)
-                    {
-                        request.Properties[HttpPropertyKeys.HttpRouteDataKey] = routeData;
-                    }
-                    request.Properties["isSeoRewrite"] = true;
-                    var rctx = request.GetRequestContext();
-                    rctx.RouteData = routeData;
-                     
-                }
-                else if ( !apiContext.IsEditMode )
-                {
-                    HttpResponseMessage resp = request.CreateResponse(HttpStatusCode.MovedPermanently);
-                    var uri = new Uri(redir.Destination, UriKind.RelativeOrAbsolute);
-                    if (!uri.IsAbsoluteUri && !string.IsNullOrEmpty(redir.Destination) && redir.Destination[0] != '/')
-                    {
-                        uri = new Uri("/"+ redir.Destination, UriKind.RelativeOrAbsolute);
-                    }
-                    resp.Headers.Location = uri;
-                    //var tcs = new TaskCompletionSource<HttpResponseMessage>();
-                    //tcs.SetResult(resp);
-                    return resp;
-                }
+                return redir;
             }
-
-            if (  request.GetRouteData().Route is Mozu.SiteBuilder.Mvc.SEO.NonSystemRoute)
+            else
             {
-                var routeHandler = request.Resolve<ICustomRouteHandler>();
-                var found = await routeHandler.RouteIncomingRequest().ConfigureAwait(false);
-                if ( !found)
-                {
-                    request.Resolve<IRouteConfig>().RouteIncomingRequest(request);
-                }
+                return null;
             }
-
-
-
-            var response = await base.SendAsync(request, cancellationToken).ConfigureAwait(false);
-
-            
-            return response;
-
-
-
         }
 
-       
-
-        private class MyHttpContextBase : HttpContextBase
+        private static async Task<HttpRequestMessage> PerformCustomRouting(HttpRequestMessage request)
         {
-            private readonly IDictionary _items;
-            private HttpContextBase httpContext;
+            var routeHandler = request.Resolve<ICustomRouteHandler>();
+            if (routeHandler == null) return request;
 
-            public MyHttpContextBase(HttpContextBase httpContext, string pathInfo)
+            var found = await routeHandler.RouteIncomingRequest().ConfigureAwait(false);
+            if (!found)
             {
-                // TODO: Complete member initialization
-                _items = new Hashtable();
-                this.httpContext = httpContext;
-                MyRequest = new MyHttpRequestBase(this.httpContext.Request, pathInfo);
+                request.Resolve<IRouteConfig>().RouteIncomingRequest(request);
             }
-
-            public override IDictionary Items
-            {
-                get { return _items; }
-            }
-
-            public override HttpRequestBase Request
-            {
-                get { return MyRequest; }
-            }
-
-            private HttpRequestBase MyRequest { get; set; }
+            return request;
         }
 
-        private class MyHttpRequestBase : HttpRequestBase
+        private static HttpResponseMessage RedirectTo(string location, HttpRequestMessage request)
         {
-            private readonly string _appRelativeCurrentExecutionFilePath;
-            private HttpRequestBase _httpRequestBase;
-
-            public MyHttpRequestBase(HttpRequestBase httpRequestBase, string appRelativeCurrentExecutionFilePath)
+            HttpResponseMessage resp = request.CreateResponse(HttpStatusCode.MovedPermanently);
+            var uri = new Uri(location, UriKind.RelativeOrAbsolute);
+            if (!uri.IsAbsoluteUri && !string.IsNullOrEmpty(location) && location.StartsWith("/"))
             {
-                // TODO: Complete member initialization
-                _httpRequestBase = httpRequestBase;
-                _appRelativeCurrentExecutionFilePath = appRelativeCurrentExecutionFilePath;
+                uri = new Uri("/" + location, UriKind.RelativeOrAbsolute);
             }
+            resp.Headers.Location = uri;
+            return resp;
+        }
 
-            public override string AppRelativeCurrentExecutionFilePath
-            {
-                get { return _appRelativeCurrentExecutionFilePath; }
-            }
+        /// <summary>
+        /// rewriting the request just means hard-setting the URI to the new location, and then magically erasing some state that webapi stuffs into the request context for routing purposes.
+        /// </summary>
+        static HttpRequestMessage RewriteCurrentRequest(HttpRequestMessage request, string destination)
+        {
+            request.Properties["isSeoRewrite"] = true;
 
-            public override string PathInfo
-            {
-                get { return ""; }
-            }
+            // create new uri
+            string url = "~/" + destination;
+            var ub = new UriBuilder();
+            ub.Host = "localhost";
+            ub.Path = destination;
+
+            // set new uri and clear out the old request context, which was built off of that old uri
+            request.RequestUri = ub.Uri;
+            request.Properties[MS_HTTP_RoutingContextKey] = null;
+
+            return request;
         }
     }
 }
