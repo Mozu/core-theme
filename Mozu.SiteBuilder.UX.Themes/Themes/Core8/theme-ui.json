@@ -92,7 +92,7 @@
         },
         {
             "xtype": "panel",
-            "title": "Anonymous Accout Verification Options",
+            "title": "Anonymous Account Verification Options",
             "collapsed":false,
             "items": [
                 {
