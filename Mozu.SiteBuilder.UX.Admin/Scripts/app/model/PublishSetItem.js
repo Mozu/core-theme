@@ -98,11 +98,13 @@ Ext.define('Taco.model.PublishSetItem', {
         },
         {
             name: 'draftUpdateDate',
-            type: 'date'
+            type: 'date',
+            dateFormat: 'c'
         },
         {
             name: 'updatedBy',
-            type: 'string'
+            type: 'string',
+            dateFormat: 'c'
         },
         {
             name: 'type',
@@ -119,7 +121,8 @@ Ext.define('Taco.model.PublishSetItem', {
         },
         {
             name: 'activeUpdateDate',
-            type: 'date'
+            type: 'date',
+            dateFormat: 'c'
         },
         {
             name: 'catalogId',

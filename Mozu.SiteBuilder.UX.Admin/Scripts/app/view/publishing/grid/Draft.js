@@ -125,7 +125,8 @@ Ext.define('Taco.view.publishing.grid.Draft', {
 
     getColumnConfig: function (gridType, parentContainer) {
 
-        var col = {
+        var me = this,
+            col = {
                 name:   { 
                     xtype: 'gridcolumn',
                     dataIndex: 'name',
@@ -241,14 +242,21 @@ Ext.define('Taco.view.publishing.grid.Draft', {
                     text: 'Actions',
 
                     onMenuShow: function(cmp, eventData) {
-                        var menuColumn = cmp.down('#remove-from-publish-set');
-                        menuColumn[eventData.record.get('publishSetCode').toLowerCase() === 'unassigned' ? 'disable' : 'enable']();
+                        var removeMenuColumn = cmp.down('#remove-from-publish-set'),
+                            editMenuColumn = cmp.down('#edit-draft'),
+                            editable = eventData.record.get('listFQN').toLowerCase() === 'pagetemplatecontent@mozu' || eventData.record.get('listFQN').toLowerCase() === 'pages@mozu' || eventData.record.get('type').toLowerCase() === 'product';
+                        
+                        editMenuColumn.setText(me.setEditColumnText(eventData.record));
+                        removeMenuColumn[eventData.record.get('publishSetCode').toLowerCase() === 'unassigned' ? 'disable' : 'enable']();
+                        editMenuColumn[editable ? 'enable' : 'disable']();
+
                     },
 
                     menuItems: [
                         {
                             text: 'Edit',
-                            menuColumnHandler: this.showEditPage
+                            itemId: 'edit-draft',
+                            menuColumnHandler: this.showEditPage.bind(this)
                         }, 
                         {
                             text: 'Publish Now',
@@ -327,6 +335,16 @@ Ext.define('Taco.view.publishing.grid.Draft', {
         return columns[parentContainer][gridType];
     },
 
+    setEditColumnText: function(record) {
+        var text = 'Preview';
+
+        if (record.get('type') === 'product') {
+            text = 'Edit';
+        }
+
+        return text;
+    },
+
     getAssociatedUserName: function(value){
         var user = Ext.Array.findBy(window.Taco.siteUsersRaw, function(u) { return u.id === value; });
 
@@ -386,8 +404,24 @@ Ext.define('Taco.view.publishing.grid.Draft', {
     },
 
     showEditPage: function(item, eventData) {
+        
         var record = eventData.record,
-            route = record.get('type') === 'product' ? 'products/edit/' + record.get('id') : 'website/page/' + record.get('name');
+            route;
+
+        if (record.get('type') === 'product') {
+            Taco.app.context.setCurrentContext(Taco.app.context.findCatalog(record.get('masterCatalogId')), false);
+            route = 'products/edit/' + record.get('id');
+        }
+
+        else if (record.get('listFQN').toLowerCase() === 'pagetemplatecontent@mozu') {
+            Taco.app.context.setCurrentContext(Taco.app.context.findSite(record.get('siteId')), false);
+            route = 'website/page/templates/' + record.get('name');
+        }
+
+        else {
+            Taco.app.context.setCurrentContext(Taco.app.context.findSite(record.get('siteId')), false);
+            route = 'website/page/' + record.get('name');
+        }
 
         Taco.app.StateManager.attemptNavigate(route);
     },
@@ -426,6 +460,7 @@ Ext.define('Taco.view.publishing.grid.Draft', {
         }
 
         else {
+            
             if (recordStore) recordStore.reload(); 
             this.updatePublishSetStore.call(this);
         }
@@ -445,7 +480,7 @@ Ext.define('Taco.view.publishing.grid.Draft', {
                 rec.set('publishSetCode', code);
             });
             eventData.record[0].store.sync({
-                callback: this.onAfterRecordUpdate.bind(this, eventData.record.store)
+                callback: this.onAfterRecordUpdate.bind(this, eventData.record[0].store)
             });
         }
     },

@@ -35,7 +35,7 @@ Ext.define('Taco.view.publishing.grid.GridWrapper', {
 
 
     updatePanel: function(store) {
-        if (store.getCount() > 1) this.getLayout().setActiveItem(0);
+        if (store.getCount() > 0) this.getLayout().setActiveItem(0);
     },
 
     getPublishGridConfig: function() {

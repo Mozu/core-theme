@@ -78,7 +78,9 @@ Ext.define('Taco.model.PublishSet', {
         {
             name: 'publishDate',
             type: 'date',
+            dateFormat: 'c',
             defaultValue: 'Unset'
+
         },
         {
             name: 'notes',
@@ -92,6 +94,7 @@ Ext.define('Taco.model.PublishSet', {
         {
             name: 'lastPublished',
             type: 'date',
+            dateFormat: 'c',
             convert: function(value, model) {
                 return model.get('auditInfo').updateDate;
             },
@@ -100,6 +103,7 @@ Ext.define('Taco.model.PublishSet', {
         {
             name: 'lastPublishedBy',
             type: 'date',
+            dateFormat: 'c',
             convert: function(value, model) {
                 return model.get('auditInfo').updateBy;
             },
@@ -116,6 +120,7 @@ Ext.define('Taco.model.PublishSet', {
          {
             name: 'createDate',
             type: 'date',
+            dateFormat: 'c',
             convert: function(value, model) {
                 return model.get('auditInfo').createDate;
             },
@@ -132,6 +137,7 @@ Ext.define('Taco.model.PublishSet', {
         {
             name: 'updateDate',
             type: 'date',
+            dateFormat: 'c',
             convert: function(value, model) {
                 return model.get('auditInfo').updateDate;
             },
