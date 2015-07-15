@@ -1,7 +1,7 @@
-(function(namespace){
+define(function () {
     'use strict';
 
-    var V = window[namespace] = {},
+    var V = {},
         _onload = window.onload,
         _initialIframeWidth,
         _resizeEventHandler,
@@ -1018,7 +1018,13 @@
         },
 
         _getInitFunction = function(){
-            return window.onVisaCheckoutReady || window.onVmeReady;
+            if (window.onVisaCheckoutReady) {
+                V._onVisaCheckoutReady = window.onVisaCheckoutReady;
+            
+                delete window.onVisaCheckoutReady;
+            }
+
+            return V._onVisaCheckoutReady || window.onVmeReady;
         },
 
         _initializeLegacyIntegration = function() {
@@ -1202,4 +1208,5 @@
         }
     }));
 
-}('V'));
+    return V;
+});
