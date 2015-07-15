@@ -11,7 +11,8 @@ Ext.define('Taco.view.publishing.grid.Draft', {
         'Taco.model.PublishSetItem',
         'Taco.store.PublishSetItems',
         'Taco.view.publishing.advancedSearchForm.Publish',
-        'Taco.view.publishing.advancedSearchForm.Draft',
+        'Taco.view.publishing.advancedSearchForm.DraftContent',
+        'Taco.view.publishing.advancedSearchForm.DraftPublish',
         'Taco.view.publishing.modal.PublishSetPicker'
     ],
     mixins: {
@@ -33,13 +34,12 @@ Ext.define('Taco.view.publishing.grid.Draft', {
     title: this.title,
     autoScroll: true,
     enableQuickFilters:false,
-    advancedSearchConfig : {
-        advancedFormCls: 'Taco.view.publishing.advancedSearchForm.Draft'
-    },
     onCreate: Ext.emptyFn,
     stateful: true,
     stateId: 'statefulPublishSetGrid',
     initComponent: function () {
+        console.log(this.advancedFormCls)
+        this.advancedSearchConfig = {advancedFormCls: this.advancedFormCls};
 
         this.itemId = this.title.toLowerCase(); //establish the grid as either product or content
         
@@ -439,7 +439,7 @@ Ext.define('Taco.view.publishing.grid.Draft', {
     },
 
     updatePublishSetStore: function() {
-        var grid = this.up('publish-split').getEast().down('publishlist'),
+        var grid = this.up('publish-split').getEast().down('#publish-grid'),
             productStore = this.up('publish-split').getEast2().down('#product').store,
             contentStore = this.up('publish-split').getEast2().down('#content').store;
 

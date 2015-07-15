@@ -2,7 +2,7 @@
  * @class Taco.view.publishing.Search.AdvancedSearchForm
  */
  
-Ext.define('Taco.view.publishing.advancedSearchForm.Draft', {
+Ext.define('Taco.view.publishing.advancedSearchForm.DraftContent', {
     extend: 'Taco.core.ux.form.Form',
     requires: [
         'Ext.form.FieldContainer',
@@ -76,10 +76,14 @@ Ext.define('Taco.view.publishing.advancedSearchForm.Draft', {
             modifiedBy: {
                 name: 'modifiedBy',
                 fieldLabel: 'Modified By'
+            },
+            keyword: {
+                name: 'name',
+                fieldLabel: 'Content Name'
             }
         };
 
-        return [fields.publishSet, fields.lastModified, fields.lastPulished, fields.modifiedBy];
+        return [fields.keyword];
     },
 
     getPublishSetStore: function() {

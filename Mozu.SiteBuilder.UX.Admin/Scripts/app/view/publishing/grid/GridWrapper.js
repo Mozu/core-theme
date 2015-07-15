@@ -28,11 +28,10 @@ Ext.define('Taco.view.publishing.grid.GridWrapper', {
 
         if (this.type === 'publishSet') {
             this.getLayout().setActiveItem(1);
-            this.down('publishlist').store.on('load', this.updatePanel, this, {single: true});
+            this.down('#publish-grid').store.on('load', this.updatePanel, this, {single: true});
         }
 
     },
-
 
     updatePanel: function(store) {
         if (store.getCount() > 0) this.getLayout().setActiveItem(0);
@@ -86,7 +85,7 @@ Ext.define('Taco.view.publishing.grid.GridWrapper', {
                             type: 'product' // should be product, but service isnt there
                         }
                     },
-                    advancedFormCls: 'Taco.view.publishing.advancedSearchForm.Draft'
+                    advancedFormCls: 'Taco.view.publishing.advancedSearchForm.DraftProduct'
                 }),
                 Ext.create('Taco.view.publishing.grid.Draft', {
                     scope: this,
@@ -100,7 +99,7 @@ Ext.define('Taco.view.publishing.grid.GridWrapper', {
                             type: 'cms'
                         }
                     },
-                    advancedFormCls: 'Taco.view.publishing.advancedSearchForm.Draft'
+                    advancedFormCls: 'Taco.view.publishing.advancedSearchForm.DraftContent'
                 })
             ]
         };
