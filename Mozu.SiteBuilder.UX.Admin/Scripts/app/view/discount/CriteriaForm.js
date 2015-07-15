@@ -90,7 +90,7 @@ Ext.define('Taco.view.discount.CriteriaForm', {
             Taco.core.ux.TooltipLabel.wrapConfig('discount.criteria.applyToProductsWithSalePrice', me, {
                 xtype: 'checkbox',
                 name: 'appliesToSaleProduct',
-                boxLabel: 'Applies to On Sale Products',
+                boxLabel: 'Applies to Sale Products',
                 width: 300,
                 value: this.record.get('doesNotApplyToProductsWithSalePrice') !== true,
                 listeners: {
@@ -115,7 +115,7 @@ Ext.define('Taco.view.discount.CriteriaForm', {
             Taco.core.ux.TooltipLabel.wrapConfig('discount.criteria.appliesToSalePrice', me, {
                 xtype: 'checkbox',
                 name: 'appliesToSalePrice',
-                boxLabel: 'Applies to On Sale Price',
+                boxLabel: 'Applies to Sale Price',
                 width: 300,
                 value: this.record.get('doesNotApplyToSalePrice') !== true,
                 listeners: {
