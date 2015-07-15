@@ -1,4 +1,4 @@
-﻿define(['modules/backbone-mozu', 'underscore', 'modules/jquery-mozu', 'modules/models-cart', 'modules/cart-monitor', 'vendor/visa/v1/sdk', 'hyprlivecontext'], function (Backbone, _, $, CartModels, CartMonitor, V, HyprLiveContext) {
+﻿define(['modules/backbone-mozu', 'underscore', 'modules/jquery-mozu', 'modules/models-cart', 'modules/cart-monitor', 'hyprlivecontext'], function (Backbone, _, $, CartModels, CartMonitor, HyprLiveContext) {
     var CartView = Backbone.MozuView.extend({
         templateName: "modules/cart/cart-table",
         initialize: function () {
@@ -17,8 +17,14 @@
                 }
             });
 
+            // This url will differ between sandbox and production. It may be added to the site context,
+            // or it could come from a theme setting, ex: Hypr.getThemeSetting('visaCheckoutSdkUrl')
+            var sdkUrl = 'https://sandbox-assets.secure.checkout.visa.com/checkout-widget/resources/js/integration/v1/sdk.js';
+
+            // The VisaCheckout SDK wants a global function to call when it's ready
+            // so we give it the same function we call when we're ready
             window.onVisaCheckoutReady = initVisaCheckout;
-            initVisaCheckout();
+            require([sdkUrl], initVisaCheckout);
         },
         updateQuantity: _.debounce(function (e) {
             var $qField = $(e.currentTarget),
@@ -75,43 +81,50 @@
         }
     });
 
-    // visa checkout
+    /* begin visa checkout */
     function initVisaCheckout (model, total) {
         var delay = 500;
-        var apiKey = require.mozuData('pagecontext').visaCheckoutApiKey;
-        var checkoutSettings = HyprLiveContext.locals.siteContext.checkoutSettings;
+        var visaCheckoutSettings = HyprLiveContext.locals.siteContext.checkoutSettings.visaCheckout;
+        var apiKey = visaCheckoutSettings.apiKey || '0H1JJQFW9MUVTXPU5EFD13fucnCWg42uLzRQMIPHHNEuQLyYk';
+        var clientId = visaCheckoutSettings.clientId || 'mozu_test1';
 
+        // if this function is being called on init rather than after updating cart total
         if (!model) {
             model = CartModels.Cart.fromCurrent();
             total = model.get('total');
             delay = 0;
 
+            // on success, attach the encoded payment data to the window
+            // then turn the cart into an order and advance to checkout
             V.on("payment.success", function(payment) {
-                console.log({ success: JSON.stringify(payment) });
+                // payment here is an object, not a string. we'll stringify it later
                 window.V_success = payment;
                 window.cartView.cartView.model.toOrder();
             });
 
+            // for debugging purposes only. don't use this in production
             V.on("payment.cancel", function(payment) {
                 console.log({ cancel: JSON.stringify(payment) });
             });
 
+            // for debugging purposes only. don't use this in production
             V.on("payment.error", function(payment, error) {
                 console.warn({ error: JSON.stringify(error) });
             });
         }
 
         // delay V.init() while we wait for MozuView to re-render
-        // wouldn't it be nice to listen for a "render" event instead?
+        // we could probably listen for a "render" event instead
         _.delay(V.init, delay, {
             apikey: apiKey,
-            clientId: (checkoutSettings.visaCheckout && checkoutSettings.visaCheckout.clientId) || 'mozu_test1',
+            clientId: clientId,
             paymentRequest: {
                 currencyCode: model ? model.get('currencyCode') : 'USD',
                 total: "" + total
             }
         });
     }
+    /* end visa checkout */
 
     $(document).ready(function() {
         var cartModel = CartModels.Cart.fromCurrent(),

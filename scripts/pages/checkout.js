@@ -1,4 +1,4 @@
-﻿require(["modules/jquery-mozu", "underscore", "hyprlive", "modules/backbone-mozu", "modules/models-checkout", "modules/views-messages", "modules/cart-monitor", "vendor/visa/v1/sdk", 'hyprlivecontext'], function ($, _, Hypr, Backbone, CheckoutModels, messageViewFactory, CartMonitor, V, HyprLiveContext) {
+﻿require(["modules/jquery-mozu", "underscore", "hyprlive", "modules/backbone-mozu", "modules/models-checkout", "modules/views-messages", "modules/cart-monitor", 'hyprlivecontext'], function ($, _, Hypr, Backbone, CheckoutModels, messageViewFactory, CartMonitor, HyprLiveContext) {
 
     var CheckoutStepView = Backbone.MozuView.extend({
         edit: function () {
@@ -151,8 +151,14 @@
                 }, this);
             this.codeEntered = !!this.model.get('digitalCreditCode');
 
-            window.onVisaCheckoutReady = this.initVisaCheckout;
-            this.initVisaCheckout();
+            // This url will differ between sandbox and production. It may be added to the site context,
+            // or it could come from a theme setting, ex: Hypr.getThemeSetting('visaCheckoutSdkUrl')
+            var sdkUrl = 'https://sandbox-assets.secure.checkout.visa.com/checkout-widget/resources/js/integration/v1/sdk.js';
+
+            // The VisaCheckout SDK wants a global function to call when it's ready
+            // so we give it the same function we call when we're ready
+            window.onVisaCheckoutReady = _.bind(this.initVisaCheckout, this);
+            require([sdkUrl], _.bind(this.initVisaCheckout, this));
         },
 
         updateAcceptsMarketing: function(e) {
@@ -243,32 +249,43 @@
                     return this.getDigitalCredit(e);
             }
         },
+        /* begin visa checkout */
         initVisaCheckout: function () {
             var me = this;
-            var apiKey = require.mozuData('pagecontext').visaCheckoutApiKey;
+            var delay = 0;
+            var visaCheckoutSettings = HyprLiveContext.locals.siteContext.checkoutSettings.visaCheckout;
+            var apiKey = visaCheckoutSettings.apiKey || '0H1JJQFW9MUVTXPU5EFD13fucnCWg42uLzRQMIPHHNEuQLyYk';
+            var clientId = visaCheckoutSettings.clientId || 'mozu_test1';
 
-                V.on("payment.success", function(payment) {
-                    console.log({ success: payment });
-                    me.model.parent.processDigitalWallet('VisaCheckout', payment);
-                });
+            console.log(HyprLiveContext);
 
-                V.on("payment.cancel", function(payment) {
-                    console.log({ cancel: JSON.stringify(payment) });
-                });
+            // on success, attach the encoded payment data to the window
+            // then call the sdk's api method for digital wallets, via models-checkout's helper
+            V.on("payment.success", function(payment) {
+                console.log({ success: payment });
+                me.model.parent.processDigitalWallet('VisaCheckout', payment);
+            });
 
-                V.on("payment.error", function(payment, error) {
-                    console.warn({ error: JSON.stringify(error) });
-                });
+            // for debugging purposes only. don't use this in production
+            V.on("payment.cancel", function(payment) {
+                console.log({ cancel: JSON.stringify(payment) });
+            });
 
-            _.delay(V.init, 500, {
-                apikey: apiKey, //"0H1JJQFW9MUVTXPU5EFD13fucnCWg42uLzRQMIPHHNEuQLyYk",
-                clientId: HyprLiveContext.locals.siteContext.checkoutSettings.visaCheckout.clientId,
+            // for debugging purposes only. don't use this in production
+            V.on("payment.error", function(payment, error) {
+                console.warn({ error: JSON.stringify(error) });
+            });
+
+            _.delay(V.init, delay, {
+                apikey: apiKey,
+                clientId: clientId,
                 paymentRequest: {
                     currencyCode: window.order.get('currencyCode'),
                     total: "" + window.order.get('total')
                 }
             });
         }
+        /* end visa checkout */
     });
 
     var CouponView = Backbone.MozuView.extend({

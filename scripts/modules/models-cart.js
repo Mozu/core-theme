@@ -62,9 +62,12 @@
         toOrder: function() {
             var me = this;
             return me.apiCheckout().then(function(order) {
+                // this is the only place in the cart where you can edit an order before navigating to the checkout page
                 var successfulVisaPayment = window.V_success;
 
+                // if we have a successful Visa Checkout payment from the cart, it'll be on this global var
                 if (successfulVisaPayment) {
+                    // once the order has been preprocessed, we can move on to the checkout page
                     order.processDigitalWallet({
                         order: order,
                         digitalWalletData: JSON.stringify(successfulVisaPayment)
@@ -72,6 +75,7 @@
                         delete window.V_success;
                         me.trigger('ordercreated', order);
                     });
+                // otherwise let's just go to checkout like normal
                 } else {
                     me.trigger('ordercreated', order);
                 }
