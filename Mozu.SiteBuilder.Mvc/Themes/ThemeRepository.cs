@@ -89,23 +89,32 @@ namespace Mozu.SiteBuilder.Mvc.Themes
 
         public Theme GetThemeSlim(ThemeSelection selection)
         {
-            return _themeSlims.GetOrAdd(selection.Id, (s) =>
+            var theme = _themeSlims.GetOrAdd(selection.Id, CreateThemeSlim);
+
+            if (theme == null)
             {
-                var tmd=_themeMetaDataProvider.GetThemeSlim(s);
-                if (tmd == null)
+                // if dir is written after initially asked the 
+                theme = CreateThemeSlim(selection.Id);
+                if ( theme != null )
                 {
-                    return null;
-                    
+                    _themeSlims[selection.Id] = theme;
                 }
-                return ThemeFactory.Build(tmd, null);
-            });
+            }
+            return theme;
 
-
-
-
-            // food//GetThemeSlim
+          
         }
        
+        Theme CreateThemeSlim(string themeId)
+        {
+            var tmd = _themeMetaDataProvider.GetThemeSlim(themeId);
+            if (tmd == null)
+            {
+                return null;
+
+            }
+            return ThemeFactory.Build(tmd, null);
+        }
 
 
 
@@ -119,7 +128,19 @@ namespace Mozu.SiteBuilder.Mvc.Themes
             var t = _themes.GetOrAdd(name??Mozu.SiteBuilder.Mvc.Constants.DefaultTheme , themeName => CreateTheme(themeName, inheritChain));
             
             if (t == null)
-                throw new ThemeNotFoundException("Requested theme was not found: " + name);
+            {
+                //if requested before written  the wather will miss.  need to check again on negative caches entries.
+                if ( _themeMetaDataProvider.GetTheme(name) != null)
+                {
+                    _themes.TryRemove(name, out t);
+                    t = _themes.GetOrAdd(name, themeName => CreateTheme(themeName, inheritChain));
+                }
+                if ( t == null)
+                {
+                    throw new ThemeNotFoundException("Requested theme was not found: " + name);
+                }
+            }
+               
 
             _watchers.GetOrAdd(t.ThemePath, CreateWatcher);
             return t;

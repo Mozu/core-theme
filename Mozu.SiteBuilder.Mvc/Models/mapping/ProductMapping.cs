@@ -56,6 +56,8 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.ModelMapping
                    dic["productCode"] = product.ProductCode;
                    dic["productName"] = product.ProductName;
                    dic["productSlug"] = product.Content == null ? null : product.Content.SEOFriendlyUrl;
+                   dic["productType"] = product.ProductType;
+                   dic["variationProductCode"] = product.VariationProductCode;
                    if ( product.Categories != null && product.Categories.Count>0)
                    {
                        var cat = product.Categories.First();
@@ -68,6 +70,16 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.ModelMapping
                        dic[token.Raw] = cat.Content == null ? null : cat.Content.Slug;
 
                    }
+                   
+                   if ( product.Properties != null)
+                   {
+                       foreach (var prop in product.Properties.Where(x => !x.IsMultiValue.GetValueOrDefault(false) && x.Values != null && x.Values.Count > 0 ))
+                       {
+                           dic[prop.AttributeFQN] = prop.Values.First().Value;
+                       }
+
+                   }
+
                    return dic;
                });
 
