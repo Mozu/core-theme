@@ -99,6 +99,6 @@
      'grunt-contrib-compress'].forEach(grunt.loadNpmTasks);
 
     grunt.loadTasks('./tasks/');
-    grunt.registerTask('default', ['jshint', 'bower', 'zubat']);
+    grunt.registerTask('default', ['jshint', /*'bower', */ 'zubat']); // no bower necessary for now
 
 };
