@@ -1,6 +1,6 @@
 {
   "name": "mozu-core5",
-  "version": "8.0.0-visaprerelease.7",
+  "version": "8.0.0-visaprerelease.8",
   "dependencies": {
     "JSV": {
       "version": "4.0.2",
