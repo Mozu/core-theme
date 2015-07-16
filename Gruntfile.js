@@ -46,18 +46,6 @@
                 ignore: ['\\.references', '\\.git', 'node_modules', '^/resources', '^/tasks', '\\.zip$']
             }
         },
-        setver: {
-            release: {
-                packagejson: true,
-                bowerjson: true,
-                thumbnail: {
-                    src: 'thumb.tpt.png',
-                    color: '#ffffff',
-                    pointsize: 20,
-                    dest: 'thumb.png'
-                }
-            }
-        },
         watch: {
             json: {
                 files: [
@@ -112,6 +100,6 @@
 
     grunt.loadTasks('./tasks/');
     grunt.registerTask('default', ['jshint', 'bower', 'zubat']);
-    grunt.registerTask('release', ['jshint', 'bower', 'zubat', 'setver', 'compress']);
+    grunt.registerTask('compress', ['compress']);
 
 };
