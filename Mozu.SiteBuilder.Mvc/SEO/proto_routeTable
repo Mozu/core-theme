@@ -1,80 +1,136 @@
 {
 	"mappings": {
-		"facetValue-tenant~color": {
+		"facetValue-Tenant~colorgroup": {
 			"type": "facetValueFilter",
 			"mapTo": "facetValueFilter",
-			"facetId": "tenant~color"
+			"facetId": "Tenant~colorgroup"
 		},
-		"category": {
-			"type": "category"
+		"removeDesignerDash": {
+			"type": "regex",
+			"beforeRouting": true,
+			"pattern": "designer-",
+			"replacement": ""
 		}
 	},
 	"validators": {
 		"color": {
 			"type": "productAttribute",
-			"attributeCode": "tenant~color"
+			"attributeCode": "Tenant~colorgroup"
 		},
 		"categoryCode": {
 			"type": "categoryCode"
 		},
 		"categorySlugPath": {
 			"type": "categorySlugPath"
-		},
-		"assortmentName": {
-			"type": "stringlist",
-			"values": [
-				"blue-assortment",
-				"red-assortment"
-			]
 		}
 	},
 	"routes": [
 		{
-			"template": "assortment/{name}",
-			"defaults": {
-				"list": "pages@mozu",
-				"code": "shop"
-			},
-			"internalRoute": "CmsPage",
-			"mappings": {},
-			"canonical": true,
-			"validators": {
-				"assortmentName": [
-					"name"
-				]
-			}
-		},
-		{
-			"template": "assortment/{name}/{code}",
-			"defaults": {
-				"list": "pages@mozu"
-			},
-			"internalRoute": "CmsPage",
-			"mappings": {},
-			"canonical": true,
-			"validators": {
-				"categoryCode": [
-					"code"
-				],
-				"assortmentName": [
-					"name"
-				]
-			}
-		},
-		{
-			"template": "{parent-categorySlug}/{categorySlug}/{facetValue-tenant~color}",
+			"template": "assortment/{assortment-categorySlug}/{grandParent-categorySlug}/{parent-categorySlug}/{categorySlug}",
 			"defaults": {},
 			"internalRoute": "Category",
 			"mappings": {
-				"facetValue-tenant~color": [
-					"facetValue-tenant~color",
+				"removeDesignerDash": [
+					"grandParent-categorySlug",
+					"parent-categorySlug",
 					"categorySlug"
 				]
 			},
 			"canonical": true,
 			"validators": {
+				"categorySlugPath": [
+					"assortment-categorySlug",
+					"categorySlug"
+				]
+			}
+		},
+			{
+			"template": "assortment/{assortment-categorySlug}/{parent-categorySlug}/{categorySlug}/{facetValue-Tenant~colorgroup}",
+			"defaults": {},
+			"internalRoute": "Category",
+			"mappings": {
+				"removeDesignerDash": [
+					"grandParent-categorySlug",
+					"parent-categorySlug",
+					"categorySlug"
+				]
+			},
+			"canonical": true,
+			"validators": {
+				"categorySlugPath": [
+				    "facetValue-Tenant~colorgroup",
+					"assortment-categorySlug",
+					"categorySlug"
+				]
+			}
+		},
+			{
+			"template": "assortment/{assortment-categorySlug}/{categorySlug}/{facetValue-Tenant~colorgroup}",
+			"defaults": {},
+			"internalRoute": "Category",
+			"mappings": {
+				"removeDesignerDash": [
+					"grandParent-categorySlug",
+					"parent-categorySlug",
+					"categorySlug"
+				]
+			},
+			"canonical": true,
+			"validators": {
+				"categorySlugPath": [
+				    "facetValue-Tenant~colorgroup",
+					"assortment-categorySlug",
+					"categorySlug"
+				]
+			}
+		},
+		{
+			"template": "assortment/{assortment-categorySlug}/{parent-categorySlug}/{categorySlug}",
+			"defaults": {},
+			"internalRoute": "Category",
+			"mappings": {
+				"removeDesignerDash": [
+					"grandParent-categorySlug",
+					"parent-categorySlug",
+					"categorySlug"
+				]
+			},
+			"canonical": true,
+			"validators": {
+				"categorySlugPath": [
+					"assortment-categorySlug",
+					"categorySlug"
+				]
+			}
+		},
+		{
+			"template": "assortment/{assortment-categorySlug}/{categorySlug}",
+			"defaults": {
+				"categorySlug": "shop"
+			},
+			"internalRoute": "Category",
+			"mappings": {},
+			"canonical": true,
+			"validators": {
+				"categorySlugPath": [
+					"assortment-categorySlug",
+					"categorySlug"
+				]
+			}
+		},
+		{
+			"template": "{parent-categorySlug}/{categorySlug}/{facetValue-Tenant~colorgroup}",
+			"defaults": {},
+			"internalRoute": "Category",
+			"mappings": {
+				"facetValue-Tenant~colorgroup": [
+					"facetValue-Tenant~colorgroup"
+				]
+			},
+			"canonical": true,
+			"validators": {
 				"color": [
-					"facetValue-tenant~color"
+					"facetValue-Tenant~colorgroup"
 				],
 				"categorySlugPath": [
 					"categorySlug"
@@ -82,12 +138,12 @@
 			}
 		},
 		{
-			"template": "{categorySlug}/{facetValue-tenant~color}",
+			"template": "{categorySlug}/{facetValue-Tenant~colorgroup}",
 			"defaults": {},
 			"internalRoute": "Category",
 			"mappings": {
-				"category": [
-					"categorySlug"
+				"facetValue-Tenant~colorgroup": [
+					"facetValue-Tenant~colorgroup"
 				]
 			},
 			"canonical": true,
@@ -96,7 +152,7 @@
 					"categorySlug"
 				],
 				"color": [
-					"facetValue-tenant~color"
+					"facetValue-Tenant~colorgroup"
 				]
 			}
 		},
@@ -104,11 +160,7 @@
 			"template": "{grandParent-categorySlug}/{parent-categorySlug}/{categorySlug}",
 			"defaults": {},
 			"internalRoute": "Category",
-			"mappings": {
-				"category": [
-					"categorySlug"
-				]
-			},
+			"mappings": {},
 			"canonical": true,
 			"validators": {
 				"categorySlugPath": [
@@ -120,11 +172,19 @@
 			"template": "{parent-categorySlug}/{categorySlug}",
 			"defaults": {},
 			"internalRoute": "Category",
-			"mappings": {
-				"category": [
+			"mappings": {},
+			"canonical": true,
+			"validators": {
+				"categorySlugPath": [
 					"categorySlug"
 				]
-			},
+			}
+		},
+		{
+			"template": "{categorySlug}",
+			"defaults": {},
+			"internalRoute": "Category",
+			"mappings": {},
 			"canonical": true,
 			"validators": {
 				"categorySlugPath": [
@@ -136,17 +196,39 @@
 			"template": "{categoryCode}",
 			"defaults": {},
 			"internalRoute": "Category",
-			"mappings": {
-				"category": [
-					"categoryCode"
-				]
-			},
-			"canonical": true,
+			"mappings": {},
+			"canonical": false,
 			"validators": {
 				"categoryCode": [
 					"categoryCode"
 				]
 			}
+		},
+		{
+			"template": "{productName}/p/{productCode}/detail.fly",
+			"defaults": {},
+			"internalRoute": "ProductDetails",
+			"mappings": {},
+			"canonical": true,
+			"validators": {}
+		},
+		{
+			"template": "{productSlug}/p/{productCode}/detail.fly",
+			"defaults": {},
+			"internalRoute": "ProductDetails",
+			"mappings": {},
+			"canonical": true,
+			"validators": {}
+		},
+		{
+			"template": "pages/{name}/{documentListFQN}/{documentProperty-page_type_definition}",
+			"defaults": {
+				"list": "pages@mozu"
+			},
+			"internalRoute": "CmsPage",
+			"mappings": {},
+			"canonical": true,
+			"validators": {}
 		}
 	]
 }

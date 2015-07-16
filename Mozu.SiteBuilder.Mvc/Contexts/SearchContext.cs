@@ -27,7 +27,12 @@ namespace Mozu.SiteBuilder.Mvc.Contexts
         public NameValueCollection Facets { get; set; }
 
 
+        public SearchContext Clone()
+        {
+            return new SearchContext() { Facets = new NameValueCollection(Facets) };
+        }
 
+        private SearchContext() { }
 
         public class FacetJsonConverter : JsonConverter
         {
@@ -84,9 +89,9 @@ namespace Mozu.SiteBuilder.Mvc.Contexts
             }
             _initedData = httpRouteData;
 
-            foreach (var key in httpRouteData.Values.Keys.Where(x => x.StartsWith(RouteDataValueKeyPrefix, StringComparison.OrdinalIgnoreCase)))
+            foreach (var key in httpRouteData.Values.Keys.Where(x => x.EndsWith(RouteDataValueKeySuffix, StringComparison.OrdinalIgnoreCase)))
             {
-                string facetValueKey = key.Substring(RouteDataValueKeyPrefix.Length);
+                string facetValueKey = key.Substring(0, key.Length - RouteDataValueKeySuffix.Length);
                 var existingValues = this.Facets.GetValues(facetValueKey) ?? new string[0];
 
 
@@ -169,7 +174,7 @@ namespace Mozu.SiteBuilder.Mvc.Contexts
         }
         public const string RouteDataKey = "facetValueFilter";
         public const string QueryStringKey = "facetValueFilter";
-        public const string RouteDataValueKeyPrefix = "facetValue-";
+        public const string RouteDataValueKeySuffix = "-facet";
 
 
          internal void InitRouteData(IDictionary<string,object> httpRouteData)
@@ -178,7 +183,7 @@ namespace Mozu.SiteBuilder.Mvc.Contexts
             foreach (string key in this.Facets.Keys)
             {
                 var vals = this.Facets.GetValues(key);
-                httpRouteData[RouteDataValueKeyPrefix + key] = (vals != null && vals.Length > 1) ? (object)vals : (object)this.Facets[key];
+                httpRouteData[ key + RouteDataValueKeySuffix] = (vals != null && vals.Length > 1) ? (object)vals : (object)this.Facets[key];
             }
         }
 

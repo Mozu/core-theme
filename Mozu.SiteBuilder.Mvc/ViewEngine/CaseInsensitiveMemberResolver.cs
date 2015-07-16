@@ -125,6 +125,19 @@ namespace Mozu.SiteBuilder.Mvc.ViewEngine
         }
 
 
+        public T ResolveMemberOrDefault<T>(object container, string memberName, T defaultValue = default(T))
+        {
+            FSharpOption<object> result = ResolveMember(container, memberName);
+            if (result == null || result.Value == null || !(result.Value is T))
+            {
+                return defaultValue;
+            }
+            return (T)result.Value;
+
+            
+        }
+
+
         static readonly FSharpFunc<object, object> cleanFunc = FuncConvert.ToFSharpFunc<object, object>(CleanJson);
         static System.Collections.Concurrent.ConcurrentDictionary<string, MemberResolverGetMemberBinder> _binders = new System.Collections.Concurrent.ConcurrentDictionary<string, MemberResolverGetMemberBinder>();
         public FSharpOption<object> ResolveMember(object container, string memberName)

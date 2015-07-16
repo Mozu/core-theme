@@ -42,6 +42,8 @@ namespace Mozu.SiteBuilder.Mvc.SEO
         /// <param name="viewDataAdditionFunc"></param>
         /// <returns></returns>
         Task<HttpResponseMessage> RedirectWithContext(HttpRequestMessage request, FancyRoute internalRoute, Func<IDictionary<string,object>> viewDataAdditionFunc = null);
+        Task<string> GetCannonicalUrl( FancyRoute internalRoute, Func<IDictionary<string, object>> viewDataAdditionFunc, bool useExistingValues );
+        
     }
    
     public interface IRedirectRepository
@@ -94,7 +96,7 @@ namespace Mozu.SiteBuilder.Mvc.SEO
             Dictionary<string, RedirectEntry> ret = null;
 
             
-            if (!gdt.IsCompleted || gdt.Result.HasException || !gdt.Result.ResponseMessage.IsSuccessStatusCode)
+            if (!gdt.IsCompleted || gdt.Result.HasException || gdt.Result.ResponseMessage== null ||  !gdt.Result.ResponseMessage.IsSuccessStatusCode)
             {
                 if (gdt.IsFaulted)
                 {
