@@ -449,6 +449,12 @@ Ext.define('Taco.view.publishing.grid.Draft', {
             productStore.reload();
         }
 
+        //if an update occurrs on the publish set contents, we need to refresh draft grid
+        if (this.type === 'publish set contents') { 
+            this.up('publish-split').getWest().down('#product').store.reload();
+            this.up('publish-split').getWest().down('#content').store.reload();
+        }
+
         grid.store.reload();
        
     },
