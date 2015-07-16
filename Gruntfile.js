@@ -1,6 +1,7 @@
 ﻿module.exports = function(grunt) {
 
     var pkg = grunt.file.readJSON('./package.json');
+    var semver = require('semver');
 
     grunt.initConfig({
         pkg: pkg,
@@ -107,7 +108,7 @@
     grunt.registerTask('setver', function() {
 
         var j = grunt.file.readJSON('./theme.json');
-        j.about.name = "Core7 VisaCheckout " + pkg.version;
+        j.about.name = "Core7 VisaCheckout " + semver.inc(pkg.version, grunt.option('increment') || 'prerelease');
         grunt.file.write('./theme.json', JSON.stringify(j, null, 4));
 
     });
