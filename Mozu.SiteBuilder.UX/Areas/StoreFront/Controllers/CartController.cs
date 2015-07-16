@@ -8,6 +8,7 @@ using AutoMapper;
 using Mozu.CommerceRuntime.Contracts.Carts;
 using Mozu.CommerceRuntime.Contracts.Clients;
 using Mozu.CommerceRuntime.Contracts.Commerce;
+using Mozu.CommerceRuntime.Contracts.Orders;
 using Mozu.Core;
 using Mozu.Core.Api.Client;
 using Mozu.Core.Settings;
@@ -124,6 +125,8 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
         public class CheckoutModel
         {
             public string Id { get; set; }
+            public string DigitalWalletType { get; set; }
+            public string DigitalWalletData { get; set; }
         }
 
 
@@ -149,6 +152,12 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
                     apiContext.UserClaims.Bag["VisitId"] = this.PageContext.Visit != null ? this.PageContext.Visit.VisitId : null;
                 });
                 order = (await orderWebApiClient.CreateOrderFromCart(model.Id)).ReadAsSync();
+
+                if (!model.DigitalWalletData.IsNullOrEmpty() && !model.DigitalWalletType.IsNullOrEmpty())
+                {
+
+                    await orderWebApiClient.ProcessDigitalWallet(order.Id, model.DigitalWalletType, new DigitalWallet { DigitalWalletData = model.DigitalWalletData });
+                }
             }
             catch (Exception e)
             {

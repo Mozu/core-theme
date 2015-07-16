@@ -26,7 +26,7 @@ nuget morelinq 1.0.16006
 nuget Mozu.AdminUser.Contracts 1.17.2 
 nuget Mozu.AppDev.Contracts 1.17.2 
 nuget Mozu.BuildSupport.GetAssemblyFileVersionTask 1.0.0 
-nuget Mozu.CommerceRuntime.Contracts 1.17.6 
+nuget Mozu.CommerceRuntime.Contracts < 1.19 prerelease
 nuget mozu.content.contracts < 1.19 prerelease
 nuget Mozu.Core.Api.Contracts 1.17.1 
 nuget Mozu.Core.Messaging 1.17.1 
