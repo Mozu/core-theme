@@ -59,7 +59,7 @@ Ext.define('Taco.view.discount.LimitationsForm', {
                 hideTrigger: true,
                 width: 250,
                 margin: "0px 20px 0px 0px",
-                fieldLabel: 'Total Number of Redemptions ' + (this.record.get('currentRedemptionCount') ? '<br/><i>(current redemptions:&nbsp;' + this.record.get('currentRedemptionCount') + '</i>)' : ''),
+                fieldLabel: 'Total Number of Redemptions',
                 emptyText: 'Unlimited',
                 minValue: 0
             }))
