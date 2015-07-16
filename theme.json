@@ -6,7 +6,7 @@
         "isDesktop": true,
         "isMobile": false,
         "isTablet": false,
-        "name": "Core8 VisaCheckout"
+        "name": "Core8 VisaCheckout 8.0.0-visaprerelease.6"
     },
     "editors": [
         {
@@ -73,98 +73,74 @@
     "emailTemplates": [
         {
             "id": "order.shipped",
-            "properties": {
-
-            },
+            "properties": {},
             "template": "email/order-shipped",
             "title": "Your Order Has Shipped"
         },
         {
             "id": "order.changed",
             "customEditor": "email-orderconfirmation",
-            "properties": {
-
-            },
+            "properties": {},
             "template": "email/order-confirmation",
             "title": "Order Confirmation"
         },
         {
             "id": "refund.created",
-            "properties": {
-
-            },
+            "properties": {},
             "template": "email/order-refund-issued",
             "title": "Refund Issued"
         },
         {
             "id": "return.created",
-            "properties": {
-
-            },
+            "properties": {},
             "template": "email/product-return-changed",
             "title": "Return Created"
         },
         {
             "id": "return.authorized",
-            "properties": {
-
-            },
+            "properties": {},
             "template": "email/product-return-authorized",
             "title": "Return Authorized"
         },
         {
             "id": "return.rejected",
-            "properties": {
-
-            },
+            "properties": {},
             "template": "email/product-return-rejected",
             "title": "Return Request Rejected"
         },
         {
             "id": "return.closed",
-            "properties": {
-
-            },
+            "properties": {},
             "template": "email/product-return-received",
             "title": "Return Item Received"
         },
         {
             "id": "return.changed",
-            "properties": {
-
-            },
+            "properties": {},
             "template": "email/product-return-changed",
             "title": "Return Has Been Updated"
         },
         {
             "id": "user.created",
-            "properties": {
-
-            },
+            "properties": {},
             "template": "email/new-user",
             "title": "Welcome"
         },
         {
             "id": "user.passwordreset",
-            "properties": {
-
-            },
+            "properties": {},
             "template": "email/password-reset",
             "title": "Password Reset"
         },
         {
             "id": "product.instock",
-            "properties": {
-
-            },
+            "properties": {},
             "template": "email/product-instock",
             "title": "Back in Stock"
         },
         {
             "id": "giftcard.created",
-            "properties": {
-
-            },
+            "properties": {},
             "template": "email/giftcard-created",
             "title": "Gift Card Created"
         }
@@ -359,7 +335,7 @@
         }
     ],
     "settings": {
-        "backofficeDateTimeFormat" :  "m/d/Y H:i:s O",
+        "backofficeDateTimeFormat": "m/d/Y H:i:s O",
         "extendedPropertiesEnabled": false,
         "extendedPropertyParameters": "",
         "zipCodeEnabled": true,
@@ -393,9 +369,7 @@
         "primaryFont": "Source Sans Pro",
         "fontSize": "14px",
         "gutterWidth": "25px",
-        "internal-themeAddons": [
-
-        ],
+        "internal-themeAddons": [],
         "itemListingThumbSize": 80,
         "listProductCode": true,
         "listProductShortDesc": true,
@@ -1033,16 +1007,27 @@
             "displayName": "Add This",
             "displayTemplate": "social/addthis",
             "editViewFields": [
-
                 {
                     "xtype": "mz-input-dropdown",
                     "name": "style",
                     "fieldLabel": "AddThis Button Style",
                     "store": [
-                        [ "1", "small" ],
-                        [ "2", "medium" ],
-                        [ "3", "large" ],
-                        [ "4", "compact" ]
+                        [
+                            "1",
+                            "small"
+                        ],
+                        [
+                            "2",
+                            "medium"
+                        ],
+                        [
+                            "3",
+                            "large"
+                        ],
+                        [
+                            "4",
+                            "compact"
+                        ]
                     ]
                 },
                 {
