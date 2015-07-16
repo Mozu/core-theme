@@ -1,7 +1,7 @@
 ﻿module.exports = function(grunt) {
 
     grunt.initConfig({
-
+        pkg: grunt.file.readJSON('./package.json'),
         bower: {
             install: {
                 options: {
@@ -79,15 +79,39 @@
                     spawn: false
                 }
             }
+        },
+        "compress": {
+          "build": {
+            "options": {
+              "archive": "<%= pkg.name %>-<%= pkg.version %>.zip",
+              "pretty": true
+            },
+            "files": [
+              {
+                "src": [
+                  "**",
+                  "!node_modules/**",
+                  "!references/**",
+                  "!tasks/**",
+                  "!configure.js",
+                  "!Gruntfile.js",
+                  "!mozu.config.json",
+                  "!*.zip"
+                ],
+                "dest": "/"
+              }
+            ]
+          }
         }
     });
 
     ['grunt-bower-task',
      'grunt-contrib-jshint',
-     'grunt-contrib-watch'].forEach(grunt.loadNpmTasks);
+     'grunt-contrib-watch',
+     'grunt-contrib-compress'].forEach(grunt.loadNpmTasks);
 
     grunt.loadTasks('./tasks/');
     grunt.registerTask('default', ['jshint', 'bower', 'zubat']);
-    grunt.registerTask('release', ['jshint', 'bower', 'zubat', 'setver']);
+    grunt.registerTask('release', ['jshint', 'bower', 'zubat', 'setver', 'compress']);
 
 };
