@@ -153,7 +153,7 @@
 
             // This url will differ between sandbox and production. It may be added to the site context,
             // or it could come from a theme setting, ex: Hypr.getThemeSetting('visaCheckoutSdkUrl')
-            var sdkUrl = 'https://sandbox-assets.secure.checkout.visa.com/checkout-widget/resources/js/integration/v1/sdk.js';
+            var sdkUrl = Hypr.getThemeSetting("visaCheckoutSdkUrl");
 
             // The VisaCheckout SDK wants a global function to call when it's ready
             // so we give it the same function we call when we're ready
