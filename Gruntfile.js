@@ -1,7 +1,9 @@
 ﻿module.exports = function(grunt) {
 
+    var pkg = grunt.file.readJSON('./package.json');
+
     grunt.initConfig({
-        pkg: grunt.file.readJSON('./package.json'),
+        pkg: pkg,
         bower: {
             install: {
                 options: {
@@ -100,5 +102,14 @@
 
     grunt.loadTasks('./tasks/');
     grunt.registerTask('default', ['jshint', /*'bower', */ 'zubat']); // no bower necessary for now
+
+
+    grunt.registerTask('setver', function() {
+
+        var j = grunt.file.readJSON('./theme.json');
+        j.about.name = "Core7 VisaCheckout " + pkg.version;
+        grunt.file.write('./theme.json', JSON.stringify(j, null, 4));
+
+    });
 
 };
