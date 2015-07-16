@@ -98,8 +98,25 @@
             // then turn the cart into an order and advance to checkout
             V.on("payment.success", function(payment) {
                 // payment here is an object, not a string. we'll stringify it later
-                window.V_success = payment;
-                window.cartView.cartView.model.toOrder();
+                var $form = $('#cartform');
+                
+                _.each({
+
+                    digitalWalletData: JSON.stringify(payment)],
+                    digitalWalletType: "VisaCheckout"
+
+                }, function(value, key) {
+                    
+                    $form.append($('<input />', {
+                        type: 'hidden',
+                        name: key,
+                        value: value
+                    });
+                    
+                });
+
+                $form.submit();
+
             });
 
             // for debugging purposes only. don't use this in production
