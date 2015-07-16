@@ -100,6 +100,5 @@
 
     grunt.loadTasks('./tasks/');
     grunt.registerTask('default', ['jshint', 'bower', 'zubat']);
-    grunt.registerTask('compress', ['compress']);
 
 };
