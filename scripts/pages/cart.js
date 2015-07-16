@@ -102,7 +102,7 @@
                 
                 _.each({
 
-                    digitalWalletData: JSON.stringify(payment)],
+                    digitalWalletData: JSON.stringify(payment),
                     digitalWalletType: "VisaCheckout"
 
                 }, function(value, key) {
@@ -111,8 +111,8 @@
                         type: 'hidden',
                         name: key,
                         value: value
-                    });
-                    
+                    }));
+
                 });
 
                 $form.submit();
