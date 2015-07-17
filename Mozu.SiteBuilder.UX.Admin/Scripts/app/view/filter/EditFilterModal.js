@@ -13,6 +13,7 @@ Ext.define('Taco.view.filter.EditFilterModal', {
     modelName: 'Taco.model.ExpressionTree',
 
     editCls: 'Taco.view.filter.Edit',
+    
 
     showActionsBar: false,
 

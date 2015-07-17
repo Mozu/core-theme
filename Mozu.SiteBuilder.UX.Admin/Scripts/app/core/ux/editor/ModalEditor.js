@@ -18,7 +18,7 @@ Ext.define('Taco.core.ux.editor.ModalEditor', {
     ],
     
     width: '95%',
-    height:'95%',
+    //height:'95%',
 
     closeAction: 'destroy',
 
@@ -53,7 +53,7 @@ Ext.define('Taco.core.ux.editor.ModalEditor', {
         type: 'fit'
     },
 
-    header:false,
+    //header:false,
 
     initComponent: function (eOpts) {
         var me = this;
@@ -154,7 +154,7 @@ Ext.define('Taco.core.ux.editor.ModalEditor', {
             isModalWrapper: true,
             showIndexOnCancel: false,
             showIndexOnDestroy: false,
-            enableWindowCloseButton: true,
+            enableWindowCloseButton: false,
             record: me.record,
             saveButtonVisible: true,
             cancelButtonVisible: true
@@ -165,6 +165,10 @@ Ext.define('Taco.core.ux.editor.ModalEditor', {
         }, this);
         this.mon(this.editView, 'cancel', this.close, this);
         this.add(this.editView);
+        
+
+        var editViewHeader = this.editView.header;
+
     },
 
     
