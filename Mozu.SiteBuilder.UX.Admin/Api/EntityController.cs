@@ -28,7 +28,7 @@ using DC = Mozu.Content.Contracts;
 using CMS = Mozu.Content.Contracts;
 using AVM = Mozu.SiteBuilder.Mvc.Models.CMS.Admin;
 using Constants = Mozu.Core.Messaging.Contracts.Constants;
-
+using Mozu.Core;
 
 namespace Mozu.SiteBuilder.UX.Admin.Api
 {
@@ -43,21 +43,21 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
         private readonly IEntityListsWebApiClient _entityListsWebApiClient;
         private readonly IDocumentTypeWebApiClient _documentTypeWebApiClient;
         private readonly IThemeContentRetriever _contentRetriever;
+        private readonly bool shouldGetInactiveDocumnents;
         //   private const string TBD = "duno";
-        public EntityControllerController(IDocumentListWebApiClient documentListWebApiClient, IEntityListsWebApiClient entityListsWebApiClient, IDocumentTypeWebApiClient documentTypeWebApiClient, IThemeContentRetriever contentRetriever)
+        public EntityControllerController(IDocumentListWebApiClient documentListWebApiClient, IEntityListsWebApiClient entityListsWebApiClient, IDocumentTypeWebApiClient documentTypeWebApiClient, IThemeContentRetriever contentRetriever, ISiteBuilderApiContext sbApiContext)
 
         {
             _documentListWebApiClient = documentListWebApiClient;
             _entityListsWebApiClient = entityListsWebApiClient;
             _documentTypeWebApiClient = documentTypeWebApiClient;
             _contentRetriever = contentRetriever;
+            shouldGetInactiveDocumnents = sbApiContext.UserClaims != null && sbApiContext.UserClaims.ScopeType.EqualsIgnoreCase(UserScopeType.Tenant.ToStringQuickly());
         }
 
         [HttpPostRoute(UriTemplate = "delete")]
         public async Task<Response<List<object>>> Delete(List<JObject> documents)
         {
-            EntityContainer cont;
-
             if (documents.First().Value<string>("entityType") == "cms")
             {
                 List<Task<ServiceClientResponse<StreamContent>>> tasks = documents.Select(doc =>
@@ -195,7 +195,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
                 if (!string.IsNullOrEmpty(pagingParams.id))
                 {
 
-                    var doc = (await _documentListWebApiClient.GetDocument(documentListName: list, documentId: pagingParams.id)).ReadAsSync();
+                    var doc = (await _documentListWebApiClient.GetDocument(documentListName: list, documentId: pagingParams.id, includeInactive: shouldGetInactiveDocumnents)).ReadAsSync();
                     res = new DC.DocumentCollection()
                           {
                               Items = new List<DC.Document>() {doc},
@@ -204,11 +204,11 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
                 }
                 else if (string.IsNullOrEmpty(view))
                 {
-                    res = (await _documentListWebApiClient.GetDocuments(documentListName: list, pageSize: pagingParams.pageSize, filter: filter, startIndex: pagingParams.startIndex, sortBy: sortBy)).ReadAsSync();
+                    res = (await _documentListWebApiClient.GetDocuments(documentListName: list, pageSize: pagingParams.pageSize, filter: filter, startIndex: pagingParams.startIndex, sortBy: sortBy, includeInactive: shouldGetInactiveDocumnents)).ReadAsSync();
                 }
                 else
                 {
-                    res = (await _documentListWebApiClient.GetViewDocuments(documentListName: list, pageSize: pagingParams.pageSize, filter: filter, startIndex: pagingParams.startIndex, sortBy: sortBy, viewName: view)).ReadAsSync();
+                    res = (await _documentListWebApiClient.GetViewDocuments(documentListName: list, pageSize: pagingParams.pageSize, filter: filter, startIndex: pagingParams.startIndex, sortBy: sortBy, viewName: view, includeInactive: shouldGetInactiveDocumnents)).ReadAsSync();
                     
                 }
 
@@ -434,7 +434,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
         public async Task<Response<List<EditorResult>>> ReadEditor()
 
         {
-            ServiceClientResponse<DC.DocumentCollection> cmsEditorsTask = await _documentListWebApiClient.GetDocuments(documentListName: "entityEditors@mozu", targetContextLevel: TargetContextLevelType.Tenant, pageSize: 600, startIndex: 0);
+            ServiceClientResponse<DC.DocumentCollection> cmsEditorsTask = await _documentListWebApiClient.GetDocuments(documentListName: "entityEditors@mozu", targetContextLevel: TargetContextLevelType.Tenant, pageSize: 600, startIndex: 0, includeInactive: shouldGetInactiveDocumnents);
 
             List<EditorResult> editors = new List<EditorResult>();
             //List<EditorResult> editors = Directory.GetFiles(HttpRuntime.AppDomainAppPath + @"\Tests\Mocks\Entities\Editors\").Select(js => new EditorResult
