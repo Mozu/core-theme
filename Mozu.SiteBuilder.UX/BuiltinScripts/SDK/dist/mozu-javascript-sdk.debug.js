@@ -1,5 +1,5 @@
 /*! 
- * Mozu JavaScript SDK - v0.3.0 - 2015-07-16
+ * Mozu JavaScript SDK - v0.3.0 - 2015-07-17
  *
  * Copyright (c) 2015 Volusion, Inc.
  *
@@ -4965,13 +4965,13 @@ module.exports = (function () {
 
                     var payment = self.getCurrentPayment();
                     if (payment.paymentType === "StoreCredit" || payment.paymentType === "GiftCard") {
-                        return;
+                        return self;
                     }
 
                     var newRemainingBalance = self.prop('amountRemainingForPayment');
 
                     if (newRemainingBalance === 0) {
-                        return;
+                        return self;
                     }
 
                     var newAmount = payment.amountRequested + newRemainingBalance;

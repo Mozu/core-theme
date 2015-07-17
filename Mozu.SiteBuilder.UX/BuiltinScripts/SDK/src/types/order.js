@@ -98,13 +98,13 @@ module.exports = (function () {
 
                     var payment = self.getCurrentPayment();
                     if (payment.paymentType === "StoreCredit" || payment.paymentType === "GiftCard") {
-                        return;
+                        return self;
                     }
 
                     var newRemainingBalance = self.prop('amountRemainingForPayment');
 
                     if (newRemainingBalance === 0) {
-                        return;
+                        return self;
                     }
 
                     var newAmount = payment.amountRequested + newRemainingBalance;
