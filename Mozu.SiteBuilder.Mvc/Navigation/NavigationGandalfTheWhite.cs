@@ -12,6 +12,9 @@ using Mozu.ProductRuntime.Contracts.Clients;
 using Mozu.SiteBuilder.Mvc.Caching;
 using Mozu.SiteBuilder.Mvc.Extensions;
 using Mozu.SiteBuilder.UX.Models.Navigation;
+using Mozu.SiteBuilder.Mvc.Contexts;
+using Mozu.Core;
+using Mozu.Core.Extensions;
 
 namespace Mozu.SiteBuilder.Mvc.Navigation
 {
@@ -21,29 +24,32 @@ namespace Mozu.SiteBuilder.Mvc.Navigation
     /// </summary>
     public sealed class NavigationGandalfTheWhite : INavigationGandalf
     {
-        private IProductCategoryRuntimeWebApiClient _productCategoryRuntimeWebApiClient;
-        private IDocumentListWebApiClient _documentClient;
-        private INavigationRepository _navRepo;
-        private ILogger _logger;
-        private MD5 _md5;
-        private IStorefrontCache _cache;
-        private const string NAVIGATION_LIST_INTERNAL_CACHE_KEY = "navigation_list";
-        private const string NAVIGATION_TREE_CACHE_KEY = "navigation_tree";
+        IProductCategoryRuntimeWebApiClient _productCategoryRuntimeWebApiClient;
+        IDocumentListWebApiClient _documentClient;
+        INavigationRepository _navRepo;
+        ILogger _logger;
+        MD5 _md5;
+        IStorefrontCache _cache;
+        readonly NavigationNodeIndexComparer _navigationNodeIndexComparer = new NavigationNodeIndexComparer();
+        readonly bool _shouldRequestInactiveDocuments;
+
+        const string NAVIGATION_LIST_INTERNAL_CACHE_KEY = "navigation_list";
+        const string NAVIGATION_TREE_CACHE_KEY = "navigation_tree";
 
         // the top level name in EXT's tree thing (a root pseudo-node).
-        private const string SUPER_ROOT_NODE_NAME = "root";
+        const string SUPER_ROOT_NODE_NAME = "root";
 
         // the top level name for items that exist in the navigation tree.
-        private const string NAV_ROOT_NODE_NAME = "_navigation";
+        const string NAV_ROOT_NODE_NAME = "_navigation";
 
         // the special node to assign unlinked pages as a child of.
-        private const string UNLINKED_PAGES_NODE_ID = "_unlinked";
+        const string UNLINKED_PAGES_NODE_ID = "_unlinked";
 
 
         /// <summary>
         /// Public constructor.
         /// </summary>
-        public NavigationGandalfTheWhite(IProductCategoryRuntimeWebApiClient productCategoryRuntimeWebApiClient, IDocumentListWebApiClient documentClient, INavigationRepository navRepo,  ILogger logger, IStorefrontCache cache = null)
+        public NavigationGandalfTheWhite(IProductCategoryRuntimeWebApiClient productCategoryRuntimeWebApiClient, IDocumentListWebApiClient documentClient, INavigationRepository navRepo,  ILogger logger, PageContext pageContext, IApiContext apicontext, IStorefrontCache cache = null)
         {
             _productCategoryRuntimeWebApiClient = productCategoryRuntimeWebApiClient.CloneWithoutUserClaims();
             _documentClient = documentClient.CloneWithoutUserClaims();
@@ -51,6 +57,9 @@ namespace Mozu.SiteBuilder.Mvc.Navigation
             _logger = logger;
             _md5 = MD5.Create();
             _cache = cache;
+
+            _shouldRequestInactiveDocuments = pageContext.IsEditMode || (apicontext.UserClaims != null && apicontext.UserClaims.ScopeType.EqualsIgnoreCase(UserScopeType.Tenant.ToStringQuickly())); // if tenant admin or edit mode...
+
         }
 
         /// <summary>
@@ -103,7 +112,7 @@ namespace Mozu.SiteBuilder.Mvc.Navigation
             var catTask = _productCategoryRuntimeWebApiClient.GetCategoryTree();
 
             // get the list of pages
-            var pageTask = _documentClient.GetDocuments(documentListName: "pages@mozu", pageSize: 250);
+            var pageTask = _documentClient.GetDocuments(documentListName: "pages@mozu", pageSize: 250, includeInactive: _shouldRequestInactiveDocuments);
 
             // get the list of blogs
             // var blogTask = _cmsService.GetList2(contentCollection: "blogs", pageSize: 1, filter: "DocumentTypeFQN eq blog" );
@@ -310,7 +319,7 @@ namespace Mozu.SiteBuilder.Mvc.Navigation
                     : result;
             }
         }
-        private NavigationNodeIndexComparer _navigationNodeIndexComparer = new NavigationNodeIndexComparer();
+
 
         private List<SuperNavigationNode> BuildTree(List<SuperNavigationNode> flat)
         {

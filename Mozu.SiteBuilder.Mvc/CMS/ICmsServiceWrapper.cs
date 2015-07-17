@@ -19,11 +19,11 @@ namespace Mozu.SiteBuilder.Mvc.CMS
 
         Task<Tuple<bool, ServiceClientResponse<StreamContent>>> Delete2(string listFQN, string documentId);
 
-        Task<ServiceClientResponse<DC.Document>> GetByPath2(string contentCollection, string name, string status=null);
+        Task<ServiceClientResponse<DC.Document>> GetByPath2(string contentCollection, string name, string status=null, bool? includeInactive = null);
 
-        Task<ServiceClientResponse<DC.Document>> Get2(string contentCollection, string id);
+        Task<ServiceClientResponse<DC.Document>> Get2(string contentCollection, string id, bool? includeInactive = null);
 
-        Task<ServiceClientResponse<DC.DocumentCollection>> GetList2(string contentCollection = null, string filter = null, string sortBy = null, int? pageSize = 25, int? startIndex = 0);
+        Task<ServiceClientResponse<DC.DocumentCollection>> GetList2(string contentCollection = null, string filter = null, string sortBy = null, int? pageSize = 25, int? startIndex = 0, bool? includeInactive = null);
 
         [Obsolete]
         Task<Tuple<DC.FolderTree, ServiceClientResponse<DC.FolderTree>>> GetFolderTree(string collection, string parentId = null, int? levels = null);
