@@ -333,23 +333,20 @@
     },
 
     doPublish: function () {
+
         Taco.model.Product.publishBulk({
             data: [this.record.getId()],
             success: function () {
-                // this.publishButton.setDirty(false);
-                this.publishButton.removeCls('taco-button-processing');
-                this.publishButton.setText('Publish');
-                this.publishButton.disable();
+                this.resetPublishButton();
                 if (this.fireIdChangeAfterPublish) {
                     this.resumeEvent('idchange');
                     this.fireEvent('idchange', this, this.record);
                 }
             },
-            failure: function () {
-                Taco.MessageBox.alert(
-                    'Sorry!',
-                    'Product change was unable to be published.'
-                );
+            failure: function (err) {
+                var errMsg = (err && err.responseText) ? JSON.parse(err.responseText).message : '';
+                Taco.app.fireEvent('setmessage', 'Product change was unable to be published.  ' + errMsg, 'error');
+                this.resetPublishButton();
             },
             callback: function () {
                 this.doPublishAfterSave = false;
@@ -358,6 +355,11 @@
         });
     },
 
+    resetPublishButton : function() {
+        this.publishButton.removeCls('taco-button-processing');
+        this.publishButton.setText('Publish');
+        this.publishButton.disable();
+    },
 
     changeProductCode: function () {
         var me = this,

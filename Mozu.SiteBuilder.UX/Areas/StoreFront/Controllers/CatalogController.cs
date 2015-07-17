@@ -202,7 +202,7 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
       
         [HttpHead]
         [HttpGet]
-        public async Task<HttpResponseMessage> Category(int? categoryId = null, string categoryCode=null , string sortBy = null, int? page = null, int? itemsPerPage = null)
+        public async Task<HttpResponseMessage> Category(int? categoryId = null, string categoryCode=null)
         {
 
             var catTree = (await _categoryTreeProvider.GetAllCategories().ConfigureAwait(false));

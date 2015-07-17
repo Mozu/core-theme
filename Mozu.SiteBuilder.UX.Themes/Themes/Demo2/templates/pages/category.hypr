@@ -14,6 +14,7 @@
 
 <div data-mz-category="{{model.categoryId}}" class="mz-l-container">
     <h1 class="mz-pagetitle">{{ model.name|safe }}</h1>
+	<h2> {% make_url "category" model %}</h1>
 	{% dropzone "category-page-top" scope="page" %}
 	
 

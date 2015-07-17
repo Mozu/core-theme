@@ -128,6 +128,7 @@ namespace Mozu.SiteBuilder.Mvc.SEO.Mappings
     //todo:depricate
     public class CategoryMapping : IRouteDataMapping
     {
+        
         public Mapping Settings
         {
             get;
@@ -142,8 +143,13 @@ namespace Mozu.SiteBuilder.Mvc.SEO.Mappings
 
         public IDictionary<string, object> Map(HttpRequestMessage requestMessage, IDictionary<string, object> values, string parameterName)
         {
-            
-           return values;
+            //var slug = parameterName + "Slug";
+            //var id = parameterName + "Id";
+            //var code = parameterName + "Code";
+            //string val;
+            //if(values.try )
+
+            return values;
         }
 
         public Task<bool> Initialize()

@@ -36,6 +36,10 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
         public async Task<Response<Product>> PublishAll()
         {
             var response = await _publishingClient.PublishDrafts(ALL_PRODUCTS_SCOPE);
+            if (response.HasException)
+            {
+                throw response.ReadException();
+            }
             return new Response<Product> { Success = true };
         }
 
@@ -50,6 +54,10 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
                                                                      {
                                                                          ProductCodes = productCodes
                                                                      });
+            if (response.HasException)
+            {
+                throw response.ReadException();
+            }
             return new Response<Product> { Success = true };
         }
 
@@ -60,7 +68,10 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
         public async Task<Response<Product>> DiscardAll()
         {
             var response = await _publishingClient.DiscardDrafts(ALL_PRODUCTS_SCOPE);
-
+            if (response.HasException)
+            {
+                throw response.ReadException();
+            }
             return new Response<Product> { Success = true };
         }
 
@@ -74,8 +85,11 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
             var response = await _publishingClient.DiscardDrafts(new DC.PublishingScope()
                                                                      {
                                                                          ProductCodes = productCodes
-                                                                     });
-
+                                                                 });
+            if (response.HasException)
+            {
+                throw response.ReadException();
+            }
             return new Response<Product> { Success = true };
         }
     }

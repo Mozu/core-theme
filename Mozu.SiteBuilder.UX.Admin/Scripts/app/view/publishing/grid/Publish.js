@@ -26,7 +26,6 @@ Ext.define('Taco.view.publishing.grid.Publish', {
     enableNavHeader: false,
 
     addContentViewPadding: true,
-    id: 'publishList',
 
     enableSearch: true,
     enablePaging: true,

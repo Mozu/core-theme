@@ -26,7 +26,7 @@ namespace Mozu.SiteBuilder.Mvc.MessageHandler
             }
 
             // try redirects
-            var redirect = await GetRedirectForRequestUri(request.Resolve<IRedirectRepository>(), request.RequestUri);
+            var redirect = await GetRedirectForRequestUri(request.Resolve<IRedirectRepository>(), request.RequestUri).ConfigureAwait(false);
             if (redirect != null)
             {
                 if (redirect.IsRewrite.GetValueOrDefault(false))

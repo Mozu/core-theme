@@ -4,109 +4,55 @@
 Ext.define('Taco.view.filter.Form', {   
     extend: 'Taco.core.ux.form.Form',
     requires: [
-        
+      'Taco.view.filter.OperatorField',
+      'Taco.view.filter.Schema'
     ],
+
+    addContentViewPadding:false,
 
     rejectRecordOnCancel:false,
 
     createTitle: 'Create Filter',
+
     editTitle: '{[values.record.data.name]}',
 
     initComponent: function () {
-
         var me = this;
         // if the left member is "properties." we will end up with two fields that define the left member;
 
+        
 
+        var fieldStoreCfg = Taco.filter.getFieldStoreCfg();
+
+        this.fieldStore = Ext.create('Ext.data.Store', fieldStoreCfg);
+
+        var fieldValue = this.record.get("left").toLowerCase();
+        
         this.leftField = Ext.widget({
             xtype: 'combobox',
-            name: 'left',
+            name: 'leftField',
             fieldLabel: 'Field',
             width: 300,
             valueField: 'id',
-            displayField: 'name',
+            displayField: 'text',
             queryMode: 'local',
             valueNotFoundText: 'not found',
             editable: false,
             forceSelection: true,
-            initialValue: "Active",
-            listeners: {
-                scope:me,
-                'change' : function() {
-                    
-                }
-            },
-            store: Ext.create('Ext.data.Store', {
-                fields: ['id', "name"],
-                data: [
-                    {
-                        name: "Category",
-                        id: "categoryCode"
-                    }, {
-                        name: "Not Equals",
-                        id: "ne"
-                    }, {
-                        name: "Greater Than",
-                        id: "gt"
-                    }, {
-                        name: "Greater Than Equal",
-                        id: "ge"
-                    }, {
-                        name: "Less Than",
-                        id: "lt"
-                    }, {
-                        name: "Less Than Equal",
-                        id: "le"
-                    }
-                ]
-            })
+            value: fieldValue,
+            store: this.fieldStore
         });
 
-
         this.operatorField = Ext.widget({
-            xtype: 'combobox',
-            name: 'operator',
-            fieldLabel: 'Operator',
-            width:120,
-            valueField: 'id',
-            displayField: 'name',
-            queryMode: 'local',
-            valueNotFoundText: 'not found',
-            editable: false,
-            forceSelection: true,
-            initialValue: "Active",
-            //trigger2Cls: 'x-form-clear-trigger',
-            onTrigger2Click: function () {
-                this.clearValue();
-            },
-            store: Ext.create('Ext.data.Store', {
-                fields: ['id', "name"],
-                data: [
-                    {
-                        name: "Equals",
-                        id: "eq"
-                    }, {
-                        name: "Not Equals",
-                        id: "ne"
-                    }, {
-                        name: "Greater Than",
-                        id: "gt"
-                    }, {
-                        name: "Greater Than Equal",
-                        id: "ge"
-                    }, {
-                        name: "Less Than",
-                        id: "lt"
-                    }, {
-                        name: "Less Than Equal",
-                        id: "le"
-                    }
-                ]
-            })
+            xtype: 'operatorfield',
+            fieldLabel: "Operator",
+            value: this.record.get("operator"),
+            name: 'operator'
         });
 
         this.rightField = Ext.create('Ext.form.field.Text', {
             name: "right",
+            value: this.record.get("right"),
             fieldLabel: "Value"
         });
 
@@ -116,15 +62,82 @@ Ext.define('Taco.view.filter.Form', {
             this.rightField
         ];
 
-
         this.callParent(arguments);
+
+        this.mon(me, 'boxready', function() {
+            me.mon(me.leftField, 'change', this.onFieldChange, me);
+            // reset the operator field based on the current field value;
+            me.refreshOperatorField();
+            // reset the value field based on the curretn field and operator 
+            me.refreshValueField();
+        }, me);
     },
 
+    // state of this field is driven by the field and operator
+    refreshValueField: function () {
+        var me = this,
+            leftValue,
+            operatorValue,
+            fieldRecord,
+            operatorRecord,
+            rightFieldDisabled;
+
+        
+
+        leftValue = this.leftField.getValue();
+        operatorValue = this.operatorField.getValue();
+
+        rightFieldDisabled = (!leftValue || !operatorValue);
+
+        this.rightField.setDisabled(rightFieldDisabled);
+        if (rightFieldDisabled) {
+            return;
+        }
+
+
+        fieldRecord = this.fieldStore.getById(leftValue);
+        operatorRecord = Taco.filter.operatorStore.getById(operatorValue);
+
+
+         
+        
+
+    },
+
+    refreshOperatorField: function (leftValue) {
+        var me = this,
+            fieldRecord;
+
+        leftValue = leftValue || this.record.get("left");
+
+        if (this.operatorField) {
+            this.operatorField.setDisabled(!leftValue);
+        }
+
+        if (!leftValue) {
+            return;
+        }
+
+        fieldRecord = this.fieldStore.getById(leftValue);
+
+        if (!fieldRecord) {
+            console.error(" error:" + leftValue + " is not a valid field");
+            return;
+        }
+
+        var supportedOperators = fieldRecord.get("supportedOperators");
+
+        if (this.operatorField) {
+            this.operatorField.setSupportedOperators(supportedOperators);
+        }
+    },
+
+    onFieldChange: function (field, newValue, oldValue, e) {
+        var me = this
+        this.refreshOperatorField(newValue);
+    },
     onDestroy: function () {
         var me = this;
-
-        me.clearListeners();
-
         this.callParent(arguments);
     }
 });

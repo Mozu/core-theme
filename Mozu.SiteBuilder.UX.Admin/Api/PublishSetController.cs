@@ -97,7 +97,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
         /// Get a list of discounts.
         /// </summary>
         [HttpPostRoute(UriTemplate = "items/create")]
-        public async Task<Response<int>> AddItems(List<PublishSetItem> items)
+        public async Task<Response<List<PublishSetItem>>> AddItems(List<PublishSetItem> items)
         {
             var type = items.First().Type ;
             var code = items.First().PublishSetCode;
@@ -106,7 +106,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
             {
 
                 var res = (await _cmsItemPublishingClient.AddPublishSetItems(code: code, documentIds: items.Select(x => x.Id).ToList()).ConfigureAwait(false)).ReadAsSync();
-                return Single2<int>(Convert.ToInt32(res));
+                return List2(items);
             }
 
             else if (type == "product")
@@ -118,7 +118,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
 
                 var res = (await _productItemPublishingClient.AssignProductsToPublishSet (productPublishSet).ConfigureAwait(false)).ReadAsSync();
 
-                return Single2<int>(res.ProductCount);
+                return List2(items);
             }
 
             throw new NotImplementedException(type);
@@ -126,7 +126,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
         }
 
         /// <summary>
-        /// Get a list of discounts.
+        /// Get a list of publish sets.
         /// </summary>
         [HttpGetRoute(UriTemplate = "list")]
         public async Task<Response<List<PublishSet>>> ListPublishSets([FromUri]PagingParamaters pagingParams, [FromUri]FilterCollection extFilter, [FromUri]bool includeCounts = false, [FromUri]bool includeDynamic = false)
@@ -171,7 +171,12 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
                         {
                             Code = x.PublishSetCode
                         };
-                        items.Add(pubSet);
+
+                        if (!string.Equals(pubSet.Code, "unassigned",StringComparison.OrdinalIgnoreCase))
+                        {
+                            items.Add(pubSet);
+                        }
+                        
                     }
                     pubSet.ContentCount = x.Count;
                 });
@@ -196,12 +201,12 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
 
             }
 
-            var includesUnassigned = items.FirstOrDefault(x => x.Code.Equals("unassigned", StringComparison.OrdinalIgnoreCase));
+            //var includesUnassigned = items.FirstOrDefault(x => x.Code.Equals("unassigned", StringComparison.OrdinalIgnoreCase));
 
-            if (includesUnassigned == null)
-            {
-                items.Add(new PublishSet { Code = "UNASSIGNED", ContentCount = 0, ProductCount = 0, Name = "unassigned" });
-            }
+            //if (includesUnassigned == null)
+            //{
+            //    items.Add(new PublishSet { Code = "UNASSIGNED", ContentCount = 0, ProductCount = 0, Name = "unassigned" });
+            //}
            
 
             return List2(Mapper.Map<List<PublishSet>>(items), items.Count);

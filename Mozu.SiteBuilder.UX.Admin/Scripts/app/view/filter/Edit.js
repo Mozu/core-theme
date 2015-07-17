@@ -9,14 +9,26 @@ Ext.define('Taco.view.filter.Edit', {
     ],
     formCls: 'Taco.view.filter.Form',
 
+    style:"background-color:#fff",
+
     enableNextPrevious: false,
 
     rejectRecordOnCancel: false,
 
     title: 'Edit Filter',
 
+    extraNavHeaderCls : "taco-navheader-white",
+
+    useWhiteContainer: true,
+
     initComponent: function () {
         var me = this;
+
+        //this.cls += " taco-navheader-white ";
+
+        //this.bodyCls += " taco-navheader-white ";
+        //this.bodyStyle = "background-color:#fff";
+
         this.callParent(arguments);
     },
 

@@ -126,6 +126,22 @@ Ext.define('Taco.core.ux.mixins.NavHeader', {
         // state member that is set when a request to save is active;
         saveInProgress : false,
         saveInProgressText: "Saving...",
+
+        // turns off all the default coloration for the content container; ie. makes everything white;
+        useWhiteContainer:false,
+
+        navContainerCls: " taco-content-navcontainer ",
+
+        navContainerWhiteCls: " taco-content-navcontainer-white ",
+
+        navContainerBodyCls: " taco-content-navcontainer-body",
+
+        contentViewPaddingCls: " taco-content-navcontainer-padding ",
+
+        navHeaderCls: "taco-navheader",
+
+        extraNavHeaderCls: "",
+
         title: null
     },
 
@@ -149,32 +165,36 @@ Ext.define('Taco.core.ux.mixins.NavHeader', {
 
 
         this.cls = this.cls || "";
-        this.cls += " taco-content-navcontainer ";
+        this.cls += this.navContainerCls;
+        
+        if (this.useWhiteContainer) {
+            this.cls += this.navContainerWhiteCls;
+        }
+
+        
 
         if (this.addContentViewPadding) {
             // adds the 20px padding that is typical of views inserted into the contentView;
             // can be disabled so that the view can be inserted into some other container where padding will be applied differently;
-            this.cls += " taco-content-navcontainer-padding ";
+            this.cls += this.contentViewPaddingCls;
         }
 
         if (!this.bodyCls) {
             this.bodyCls = "";
         }
 
-        this.bodyCls += " taco-content-navcontainer-body";
-
-        //cls: "taco-content-container",
+        this.bodyCls += this.navContainerBodyCls;
 
 
         me.header = {
             xtype: "container",
-            cls: "taco-navheader",
+            cls: this.navHeaderCls,
             // need to set the min height to 
             style: "height:52px;",
             items: []
         }
 
-        this.createNavHeader()
+        this.createNavHeader();
     },
 
     createNavHeader: function () {
@@ -377,7 +397,11 @@ Ext.define('Taco.core.ux.mixins.NavHeader', {
 
         if (me.isModalWrapper) {
             me.footerActions.unshift({ xtype: 'tbfill' });
-            me.bbar = me.footerActions;
+            me.bbar = {
+                xtype: "toolbar",
+                padding: "10px 0px 0px 0px",
+                items:me.footerActions 
+            };
         }
 
     },

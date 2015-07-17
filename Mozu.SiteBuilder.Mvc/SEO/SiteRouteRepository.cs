@@ -6,13 +6,15 @@ using System.Linq;
 using System.Threading.Tasks;
 using System.Web.Http;
 using System.Runtime.Caching;
-
+using System.Text.RegularExpressions;
 using Mozu.Core.Logging;
 using Mozu.SiteSettings.General.Contracts.Clients;
 using Mozu.SiteBuilder.Mvc.Extensions;
 using Mozu.Core.Api.Client;
 using Mozu.Core.Extensions;
 using Mozu.Content.Contracts.Clients;
+using Mozu.ProductAdmin.Contracts.Clients;
+using Mozu.SiteBuilder.Mvc.SEO.Constraints;
 using Mozu.SiteBuilder.Mvc.SEO.Mappings;
 
 namespace Mozu.SiteBuilder.Mvc.SEO
@@ -97,7 +99,10 @@ namespace Mozu.SiteBuilder.Mvc.SEO
                 .Select(kvp => new { kvp.Key, Mapping = _routeDataMappingFactory.BuildMapping(kvp.Value) })
                 .Where(x => x.Mapping != null)
                 .ToDictionary(x => x.Key, x => x.Mapping, StringComparer.OrdinalIgnoreCase);
-
+            var implictHanlder = new ImplicitConfigurationHandler(constraints, mappings, _customRouteConstraintFactory, _routeDataMappingFactory);
+            customSettings.Routes.ForEach(x=> implictHanlder.ConfigureRoute(x));
+           
+            
             var tasks =
                 constraints.Values.Cast<ICanInit>()
                 .Concat(mappings.Values.Cast<ICanInit>())
@@ -124,6 +129,8 @@ namespace Mozu.SiteBuilder.Mvc.SEO
 
         CustomRoute CreateCustomRoute(Route routeDef, IDictionary<string, ICustomRouteConstraint> validators, IDictionary<string, IRouteDataMapping> mappings)
         {
+
+           
             var knownValidators =
                 routeDef.Validators
                 .Partition(kvp => validators.ContainsKey(kvp.Key ))
@@ -150,6 +157,205 @@ namespace Mozu.SiteBuilder.Mvc.SEO
 
             return new CustomRoute(routeDef.Template, routeDef.InternalRoute.ToEnum<FancyRoute>(), routeDef.Canonical.GetValueOrDefault(false), defaults, knownValidators, knownMappings);
         }
+
+
+
+
+
+        class ImplicitConfigurationHandler
+        {
+            private readonly IDictionary<string, ICustomRouteConstraint> _validators;
+            private readonly IDictionary<string, IRouteDataMapping> _mappings;
+            private readonly ICustomRouteConstraintFactory _customRouteConstraintFactory;
+            private readonly IRouteDataMappingFactory _routeDataMappingFactory;
+
+            public ImplicitConfigurationHandler(
+                IDictionary<string, ICustomRouteConstraint> validators,
+                IDictionary<string, IRouteDataMapping> mappings,
+                ICustomRouteConstraintFactory customRouteConstraintFactory,
+                IRouteDataMappingFactory routeDataMappingFactory)
+            {
+                _validators = validators;
+                _mappings = mappings;
+                _customRouteConstraintFactory = customRouteConstraintFactory;
+                _routeDataMappingFactory = routeDataMappingFactory;
+            }
+
+            static Regex segmentsRe = new Regex(@"{(?<catSegment>(([a-z0-9~]+)\-){0,1}(?<catType>category(Code|Id|Slug)))}|{(?<facetSegment>((?<facet>[a-z0-9~]+)\-facet))}",
+                RegexOptions.IgnoreCase |
+                RegexOptions.ExplicitCapture |
+                RegexOptions.Singleline |
+                RegexOptions.IgnorePatternWhitespace);
+
+            
+            public Route ConfigureRoute(Route routeDef)
+            {
+
+                var matches = segmentsRe.Matches(routeDef.Template);
+
+                foreach (Match match in matches)
+                {
+                    if (match.Success)
+                    {
+                        var catSegmens = match.Groups["catSegment"].Captures;
+                        var catTypes = match.Groups["catType"].Captures;
+                        var facetSegments = match.Groups["facetSegment"].Captures;
+                        var facets = match.Groups["facet"].Captures;
+                        ProcessCategorySegments(routeDef, catSegmens, catTypes);
+
+                        ProcessFacetSegments(routeDef, facetSegments, facets);
+                    }
+                }
+                return routeDef;
+
+            }
+
+            private void ProcessFacetSegments(Route routeDef, CaptureCollection facetSegments, CaptureCollection facets)
+            {
+                for (int i = 0; i < facetSegments.Count; i++)
+                {
+                    var facetSegment = facetSegments[i].Value;
+                    var facet = facets[i].Value;
+                    var constaintName = (string) null;
+                    var kvp =
+                        _validators.FirstOrDefault(
+                            x =>
+                                x.Value is ProductAttributeRouteConstraint &&
+                                string.Equals(((ProductAttributeRouteConstraint) x.Value).AttributeCode, facet,
+                                    StringComparison.OrdinalIgnoreCase));
+                    if (kvp.Key == null)
+                    {
+                        constaintName = "_" + facet;
+                        if (_validators.ContainsKey(constaintName))
+                        {
+                            continue;
+                        }
+
+                        var constraint =
+                            _customRouteConstraintFactory.BuildConstraint(new Validator()
+                            {
+                                type = Validator.TypeConst.attribute,
+                                attributeCode = facet
+                            });
+                        _validators[constaintName] = constraint;
+                    }
+                    else
+                    {
+                        constaintName = kvp.Key;
+                    }
+                    routeDef.Validators = routeDef.Validators ?? new Dictionary<string, string[]>(StringComparer.OrdinalIgnoreCase);
+                    string[] tokensToValidate;
+                    if (routeDef.Validators.TryGetValue(constaintName, out tokensToValidate))
+                    {
+                        tokensToValidate = tokensToValidate ?? new string[0];
+                        if (!tokensToValidate.Contains(facetSegment))
+                        {
+                            routeDef.Validators[constaintName] = tokensToValidate.Concat(new string[] {facetSegment}).ToArray();
+                        }
+                    }
+                    else
+                    {
+                        routeDef.Validators[constaintName] = new string[] {facetSegment};
+                    }
+
+
+                    var mappingName = constaintName;
+                    string[] mappTokens;
+                    var mappingKvp =
+                        _mappings.FirstOrDefault(
+                            x =>
+                                x.Value is FacetValueFilterMapping &&
+                                string.Equals(((FacetValueFilterMapping) x.Value).Settings.facetId, facet,
+                                    StringComparison.OrdinalIgnoreCase));
+                    if (mappingKvp.Key == null)
+                    {
+                        mappingName = "_" + facet;
+                        if (_mappings.ContainsKey(mappingName))
+                        {
+                            continue;
+                        }
+
+                        var mapping =
+                            _routeDataMappingFactory.BuildMapping(new Mapping()
+                            {
+                                type = Mapping.TypeConst.facet,
+                                facetId = facet,
+                                mapTo = "facetValueFilter"
+                            });
+                        _mappings[mappingName] = mapping;
+                    }
+                    else
+                    {
+                        mappingName = mappingKvp.Key;
+                    }
+
+
+                    routeDef.Mappings = routeDef.Mappings ?? new Dictionary<string, string[]>(StringComparer.OrdinalIgnoreCase);
+                    if (routeDef.Mappings.TryGetValue(mappingName, out mappTokens))
+                    {
+                        mappTokens = mappTokens ?? new string[0];
+                        if (!mappTokens.Contains(facetSegment))
+                        {
+                            routeDef.Mappings[mappingName] = mappTokens.Concat(new string[] {facetSegment}).ToArray();
+                        }
+                    }
+                    else
+                    {
+                        routeDef.Mappings[mappingName] = new string[] {facetSegment};
+                    }
+                }
+            }
+
+            private void ProcessCategorySegments(Route routeDef, CaptureCollection catSegmens, CaptureCollection catTypes)
+            {
+                for (int i = 0; i < catSegmens.Count; i++)
+                {
+                    var constaintName = (string) null;
+                    var contraintType = catTypes[i].Value;
+                    var catSegment = catSegmens[i].Value;
+                    if (catSegment.StartsWith("parent-Category"))
+                    {
+                        continue;
+                    }
+                    var kvp =
+                        _validators.FirstOrDefault(
+                            x =>
+                                x.Value is CategoryContraint &&
+                                string.Equals(((CategoryContraint) x.Value).Settings.type, contraintType,
+                                    StringComparison.OrdinalIgnoreCase));
+                    if (kvp.Key == null)
+                    {
+                        constaintName = "_" + contraintType;
+                        if (_validators.ContainsKey(constaintName))
+                        {
+                            continue;
+                        }
+                        var constraint = new CategoryContraint(new Validator() {type = contraintType});
+                        _validators[constaintName] = constraint;
+                    }
+                    else
+                    {
+                        constaintName = kvp.Key;
+                    }
+
+                    routeDef.Validators = routeDef.Validators ?? new Dictionary<string, string[]>(StringComparer.OrdinalIgnoreCase);
+                    string[] tokensToValidate;
+                    if (routeDef.Validators.TryGetValue(constaintName, out tokensToValidate))
+                    {
+                        tokensToValidate = tokensToValidate ?? new string[0];
+                        if (!tokensToValidate.Contains(catSegment))
+                        {
+                            routeDef.Validators[constaintName] = tokensToValidate.Concat(new string[] {catSegment}).ToArray();
+                        }
+                    }
+                    else
+                    {
+                        routeDef.Validators[constaintName] = new string[] {catSegment};
+                    }
+                }
+            }
+        }
+       
 
         public static string GetControllerAction(FancyRoute internalRoute)
         {

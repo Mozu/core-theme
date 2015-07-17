@@ -90,7 +90,7 @@ Ext.define('Taco.view.discount.CriteriaForm', {
             Taco.core.ux.TooltipLabel.wrapConfig('discount.criteria.applyToProductsWithSalePrice', me, {
                 xtype: 'checkbox',
                 name: 'appliesToSaleProduct',
-                boxLabel: 'Applies to On Sale Products',
+                boxLabel: 'Applies to products on sale',
                 width: 300,
                 value: this.record.get('doesNotApplyToProductsWithSalePrice') !== true,
                 listeners: {
@@ -115,7 +115,7 @@ Ext.define('Taco.view.discount.CriteriaForm', {
             Taco.core.ux.TooltipLabel.wrapConfig('discount.criteria.appliesToSalePrice', me, {
                 xtype: 'checkbox',
                 name: 'appliesToSalePrice',
-                boxLabel: 'Applies to On Sale Price',
+                boxLabel: 'Applies to sale price',
                 width: 300,
                 value: this.record.get('doesNotApplyToSalePrice') !== true,
                 listeners: {
@@ -242,7 +242,7 @@ Ext.define('Taco.view.discount.CriteriaForm', {
             typeAhead: true,
             displayField: 'nameAndCode',
             valueField: 'id',
-            fieldLabel: 'Exclude products in the following categories',
+            fieldLabel: 'Excluded Categories',
             style: {
                 display: 'inline-table',
                 verticalAlign: 'bottom'
@@ -357,7 +357,7 @@ Ext.define('Taco.view.discount.CriteriaForm', {
             disableKeyFilter: true,
             typeAhead: false,
             displayField: 'productName',
-            fieldLabel: 'Exclude the following products',
+            fieldLabel: 'Excluded Products',
             valueField: 'productCode',
             style: {
                 display: 'inline-table',

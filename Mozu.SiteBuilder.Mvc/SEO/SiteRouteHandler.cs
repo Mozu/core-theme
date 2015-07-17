@@ -76,15 +76,16 @@ namespace Mozu.SiteBuilder.Mvc.SEO
     {
         private readonly Lazy<HttpRequestMessage> _requestMessage;
         private readonly Lazy<ISiteBuilderApiContext> _siteBuilderApiContext;
+        private readonly IRouteConfig _routeconfig;
         private readonly Lazy<ICustomRouteCollectionRepository> _customRouteRepository;
         private object _httpRouteCollection;
 
-        public CustomRouteHandler(HttpRequestMessage request, Lazy<ICustomRouteCollectionRepository> customRouteRepository, Lazy<ISiteBuilderApiContext> siteBuilderApiContext)
+        public CustomRouteHandler(HttpRequestMessage request, Lazy<ICustomRouteCollectionRepository> customRouteRepository, Lazy<ISiteBuilderApiContext> siteBuilderApiContext, IRouteConfig routeconfig)
         {
             _requestMessage = new Lazy<HttpRequestMessage>(() => request);
             _customRouteRepository = customRouteRepository;
             _siteBuilderApiContext = siteBuilderApiContext;
-
+            _routeconfig = routeconfig;
         }
 
         private HttpRouteCollection RouteCollection
@@ -156,20 +157,20 @@ namespace Mozu.SiteBuilder.Mvc.SEO
         System.Collections.Concurrent.ConcurrentDictionary<FancyRoute,Tuple<System.Web.Http.HttpRouteCollection,List<CustomRoute>>> _canonicleCache = new System.Collections.Concurrent.ConcurrentDictionary<FancyRoute, Tuple<System.Web.Http.HttpRouteCollection, List<CustomRoute>>>();
 
 
-        List<CustomRoute> GetCanonicalRouteList(FancyRoute internalRoute, System.Web.Http.HttpRouteCollection routeCollection , HttpRequestMessage request)
+        List<CustomRoute> GetCanonicalRouteList(FancyRoute internalRoute, System.Web.Http.HttpRouteCollection routeCollection , IRouteConfig routeConfig)
         {
-            var res = _canonicleCache.GetOrAdd(internalRoute, (ir) => DoGetCanonicalRouteList(ir, routeCollection, request));
+            var res = _canonicleCache.GetOrAdd(internalRoute, (ir) => DoGetCanonicalRouteList(ir, routeCollection, routeConfig));
             if ( !object.Equals(res.Item1 , routeCollection))
             {
                 _canonicleCache.TryRemove(internalRoute, out res);
             }
-            res = _canonicleCache.GetOrAdd(internalRoute, (ir) => DoGetCanonicalRouteList(ir, routeCollection, request));
+            res = _canonicleCache.GetOrAdd(internalRoute, (ir) => DoGetCanonicalRouteList(ir, routeCollection, routeConfig));
             return res.Item2;
         }
-        Tuple<HttpRouteCollection, List<CustomRoute>> DoGetCanonicalRouteList(FancyRoute internalRoute, HttpRouteCollection routeCollection, HttpRequestMessage request)
+        Tuple<HttpRouteCollection, List<CustomRoute>> DoGetCanonicalRouteList(FancyRoute internalRoute, HttpRouteCollection routeCollection, IRouteConfig routeConfig)
         {
             var routes = new List<CustomRoute>();
-            var defaultRoutes = request.Resolve<IRouteConfig>().DefaultRoutes
+            var defaultRoutes = routeConfig.DefaultRoutes
                         .Where(route => route is CustomRoute).Cast<CustomRoute>()
                         .Where(route => route.IsCanonicalFor(internalRoute)).ToList();
 
@@ -185,6 +186,10 @@ namespace Mozu.SiteBuilder.Mvc.SEO
             return new Tuple<HttpRouteCollection, List<CustomRoute>>(routeCollection, routes);
         }
 
+
+
+
+
         public async Task<HttpResponseMessage> RedirectWithContext(HttpRequestMessage request, FancyRoute internalRoute, Func<IDictionary<string, object>> viewDataAdditionFunc)
         {
             if (_siteBuilderApiContext.Value.IsEditMode)
@@ -195,7 +200,7 @@ namespace Mozu.SiteBuilder.Mvc.SEO
           
             var routeCollection = await GetRouteCollectionAsync().ConfigureAwait(false);
 
-            var routes = GetCanonicalRouteList(internalRoute, routeCollection, request);
+            var routes = GetCanonicalRouteList(internalRoute, routeCollection, _routeconfig);
 
             if (!routes.Any()) return null; // no canonical route that matches, or current route is canonical? then no redirect!
 
@@ -239,6 +244,52 @@ namespace Mozu.SiteBuilder.Mvc.SEO
             }
             return null;
            
+        }
+
+        public async Task<string> GetCannonicalUrl( FancyRoute internalRoute, Func<IDictionary<string, object>> viewDataAdditionFunc, bool useExistingValues)
+        {
+            
+            var routeCollection = await GetRouteCollectionAsync().ConfigureAwait(false);
+
+            var routes = GetCanonicalRouteList(internalRoute, routeCollection, _routeconfig);
+
+            if (!routes.Any()) return null; // no canonical route that matches, or current route is canonical? then no redirect!
+
+            IDictionary<string, object> finalRouteValues = null;
+            var additionalValues = viewDataAdditionFunc == null ? new Dictionary<string, object>() : viewDataAdditionFunc();
+            if (useExistingValues)
+            {
+                finalRouteValues =
+                   _requestMessage.Value.GetRouteData().Values
+                    .ChainSet(additionalValues);
+            }else
+            {
+                finalRouteValues = additionalValues;
+            }
+            
+            additionalValues.ChainSet("httproute", true);
+
+            var newReq = new HttpRequestMessage();
+            
+
+            foreach (var route in routes)
+            {
+                var vpath = route.GetVirtualPath(newReq, finalRouteValues);
+                if (vpath != null)
+                {
+                    var url = "/"+ new Uri("http://localhost/" + vpath.VirtualPath).GetComponents(UriComponents.Path, UriFormat.Unescaped);
+
+                    if (useExistingValues)
+                    {
+                         url += _requestMessage.Value.RequestUri.Query;
+                    }
+
+                    return url;
+
+                }
+            }
+            return null;
+
         }
 
         public IHttpRouteData GetRouteData(string virtualPathRoot, HttpRequestMessage request)

@@ -54,7 +54,7 @@ namespace Mozu.SiteBuilder.Mvc.SEO.Constraints
                 case Validator.TypeConst.mzdb:
                     return new MzdbRouteConstraint(_entityListClient, validator.listId, validator.fieldId);
             }
-            throw new ArgumentException(string.Format("mapping type {0} not known", validator.type));
+            throw new ArgumentException(string.Format("validtor type [{0}] not known", validator.type));
         }
 
       
@@ -181,12 +181,12 @@ namespace Mozu.SiteBuilder.Mvc.SEO.Constraints
    
     public class CategoryContraint : ConstraintBase
     {
-        private Validator validator;
+        public Validator Settings { get; set; }
 
-        public CategoryContraint(Validator validator)
+        public CategoryContraint(Validator settings)
         {
             // TODO: Complete member initialization
-            this.validator = validator;
+            this.Settings = settings;
         }
 
         public override Task<bool> Initialize()
@@ -195,9 +195,12 @@ namespace Mozu.SiteBuilder.Mvc.SEO.Constraints
         }
 
         
+        //public Validator Settings
+        //{
+        //    get;set;
+        //}
 
 
-        
 
         public override bool DoMatch(HttpRequestMessage request, IHttpRoute route, string parameterName, IDictionary<string, object> values, HttpRouteDirection routeDirection)
         {
@@ -219,7 +222,7 @@ namespace Mozu.SiteBuilder.Mvc.SEO.Constraints
             {
                 return false;
             }
-            switch (validator.type)
+            switch (Settings.type)
             {
                 case Validator.TypeConst.categoryId:
                     {
@@ -441,12 +444,13 @@ namespace Mozu.SiteBuilder.Mvc.SEO.Constraints
 
         public ProductAttributeRouteConstraint(IAttributeWebApiClient attributeClient, IApiContext context, string attributeCode)
         {
+            AttributeCode = attributeCode;
             if (attributeCode.IsNullOrEmpty()) throw new ArgumentException("attributeCode");
 
             dataFunc = () => attributeClient.CloneWithoutUserClaims().GetAttributeVocabularyValues(attributeCode);
             _localeCode = context.LocaleCode;
         }
-
+        public string AttributeCode { get; set; }
         public override async Task<bool> Initialize()
         {
             var res = await dataFunc().ConfigureAwait(false);
@@ -476,17 +480,17 @@ namespace Mozu.SiteBuilder.Mvc.SEO.Constraints
                 return false;
             }
 
-            if (routeDirection == HttpRouteDirection.UriGeneration)
-            {
-                return true;
-            }
+           
 
             var curRouteValue = routeValue.ToString();
             if (!_values.TryGetValue(curRouteValue, out attr))
             {
                 return false;
             }
-           
+            if (routeDirection == HttpRouteDirection.UriGeneration)
+            {
+                return true;
+            }
 
             //TODO: put the right locale in here?
             values[parameterName] = GetAttributeValue(attr, "en-US");
