@@ -35,3 +35,17 @@
         }
     }
 }
+
+.taco-content-navcontainer-white {
+    .taco-navheader {
+        .taco-navheader-toolbar{        
+            border-bottom: 0px !important;
+        }
+    }
+    
+    background-color: #fff;
+    .taco-content-navcontainer-body {                
+        background-color: #fff;
+        border-bottom: 0px !important;
+    }
+}

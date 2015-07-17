@@ -8,7 +8,9 @@ Ext.define('Taco.view.category.Form', {
         'Taco.shared.view.field.Image',
         'Taco.core.ux.CategoryComboBox',
         'Taco.core.ux.form.SlugField',
-        'Taco.view.filter.ExpressionTreePanel'
+        'Taco.view.filter.ExpressionTreePanel',
+        'Taco.view.filter.Schema',
+        'Taco.view.filter.OperatorField'
     ],
 
     ui: 'subform',
@@ -51,6 +53,19 @@ Ext.define('Taco.view.category.Form', {
         }
 
         this.items = [];
+
+        
+        //var operatorField = Ext.create('Taco.view.filter.OperatorField', {
+        //    value:"eq"
+        //});
+
+        
+
+        //var filterPanel = Ext.create('Taco.view.filter.Form', {
+        //});
+        //this.items.push(filterPanel);
+
+
 
         this.items.push(
         {

@@ -42,13 +42,11 @@ Ext.define('Taco.view.category.Index', {
                         click: {
                             fn: function (menu, menuItem, e) {
                                 if (!menuItem) {
-                                    return
+                                    return;
                                 }
 
-                                Taco.core.StateManager.attemptNavigate('categories/create', {
-                                    isDynamic: (menuItem.getItemId() == "Dynamic")
-                                });
-
+                                var url = (menuItem.getItemId() == "Dynamic") ? 'categories/createdynamic' : 'categories/create';
+                                Taco.core.StateManager.attemptNavigate(url);
                             },
                             scope: me,
                             delegate: "x-menu-item-link"
