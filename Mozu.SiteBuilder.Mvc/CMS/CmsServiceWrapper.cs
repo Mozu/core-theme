@@ -149,7 +149,7 @@ namespace Mozu.SiteBuilder.Mvc.CMS
         }
 
 
-        public Task<ServiceClientResponse<DC.DocumentCollection >> GetList2(string contentCollection = null, string filter = null, string sortBy = null, int? pageSize = 25, int? startIndex = 0)
+        public Task<ServiceClientResponse<DC.DocumentCollection >> GetList2(string contentCollection = null, string filter = null, string sortBy = null, int? pageSize = 25, int? startIndex = 0, bool? includeinactive = null)
         {
             return _docRepo.GetDocuments(
                     documentListName: contentCollection, 
@@ -158,17 +158,17 @@ namespace Mozu.SiteBuilder.Mvc.CMS
                             //  publishState : _apiContext.CmsDraftState, 
                               sortBy: sortBy, 
                             pageSize: pageSize, 
-                          startIndex: startIndex
+                          startIndex: startIndex,
+                          includeInactive: includeinactive
             );
         }
 
-        public Task<ServiceClientResponse<DC.Document>> GetByPath2(string contentCollection, string name, string status = null )
+        public Task<ServiceClientResponse<DC.Document>> GetByPath2(string contentCollection, string name, string status = null, bool? includeInactive = null)
         {
             var task = _docRepo.GetTreeDocument(
                 documentListName: contentCollection,
-                    documentName: name
-                    //,
-               //     publishState : status?? _apiContext.CmsDraftState
+                    documentName: name,
+                    includeInactive: includeInactive
             );
 
             return task.ContinueWith(t =>
@@ -188,11 +188,12 @@ namespace Mozu.SiteBuilder.Mvc.CMS
             });
         }
 
-        public Task<ServiceClientResponse<DC.Document>> Get2(string contentCollection, string id)
+        public Task<ServiceClientResponse<DC.Document>> Get2(string contentCollection, string id, bool? includeInactive = null)
         {
             return _docRepo.GetDocument(
                 documentListName: contentCollection,
-                documentId: id
+                documentId: id,
+                includeInactive: includeInactive
                 //,
          //       publishState : _apiContext.CmsDraftState
             );

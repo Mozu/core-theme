@@ -80,7 +80,8 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
                                               Page = new DocumentRequest()
                                                      {
                                                          Path = documentListName + (!string.IsNullOrEmpty(listView) ? "-" + listView : "") + ".index",
-                                                         ListFQN = "pages@mozu"
+                                                         ListFQN = "pages@mozu",
+                                                         IncludeInactiveDocument = SiteContext.IsEditMode
                                                      },
                                               Template = new DocumentRequest
                                                          {
@@ -148,7 +149,8 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
                 Page = new DocumentRequest()
                 {
                     Path = documentName,
-                    ListFQN = documentListName
+                    ListFQN = documentListName,
+                    IncludeInactiveDocument = PageContext.IsEditMode
                 }
             };
 

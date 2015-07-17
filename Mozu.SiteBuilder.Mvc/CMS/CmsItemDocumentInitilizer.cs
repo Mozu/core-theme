@@ -34,11 +34,11 @@ namespace Mozu.SiteBuilder.Mvc.CMS
             {
                 if (request.Id != null)
                 {
-                    task = _cmsServiceWrapper.Get2(request.ListFQN ?? defaultCollection, request.Id);
+                    task = _cmsServiceWrapper.Get2(request.ListFQN ?? defaultCollection, request.Id, request.IncludeInactiveDocument);
                 }
                 if (request.Path != null)
                 {
-                    task = _cmsServiceWrapper.GetByPath2(request.ListFQN ?? defaultCollection, request.Path);
+                    task = _cmsServiceWrapper.GetByPath2(request.ListFQN ?? defaultCollection, request.Path, includeInactive: request.IncludeInactiveDocument);
                 }
             }
             return task != null;

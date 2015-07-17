@@ -33,6 +33,11 @@ namespace Mozu.SiteBuilder.UX.Models.Admin.CMS
         [System.Runtime.Serialization.IgnoreDataMember()]
         public Mozu.Content.Contracts.Document Document { get; set; }
 
+        /// <summary>
+        /// if true documents outside the date range of the current request will be returned.
+        /// </summary>
+        public bool? IncludeInactiveDocument { get; set; }
+
 
 
 
