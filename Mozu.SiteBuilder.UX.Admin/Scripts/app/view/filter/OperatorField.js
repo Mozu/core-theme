@@ -1,4 +1,4 @@
-﻿this.recurseField/**
+﻿/**
  * The operator field is used when defining the filter.
  */
 Ext.define('Taco.view.filter.OperatorField', {   
