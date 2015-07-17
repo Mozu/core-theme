@@ -141,7 +141,7 @@ Ext.define('Taco.view.discount.ConditionsForm', {
                 unitAtEnd: false,
                 hideTrigger: true,
                 width: 600,
-                fieldLabel: 'Minimum category purchase amount',
+                fieldLabel: 'Minimum Category Purchase Amount',
                 //  emptyText: 'No Customer Value limit',
                 minValue: 0
             })
@@ -164,7 +164,7 @@ Ext.define('Taco.view.discount.ConditionsForm', {
 
         this.oneTimeUsePerShopper = Ext.create('Ext.form.field.Checkbox', {
             name: 'oneTimeUsePerShopper',
-            boxLabel: 'Discount Can Be Redeemed One Time Per Shopper',
+            boxLabel: 'Discount can be redeemed one time per shopper',
             checked: this.record.get('maximumUsesPerUser') === 1,
             listeners: {
                 change: function (cb, newValue) {
@@ -187,14 +187,14 @@ Ext.define('Taco.view.discount.ConditionsForm', {
             this.segmentsBox,
             Taco.core.ux.TooltipLabel.wrapConfig('discount.conditions.minimumQuantityRequiredProducts', me, {
                 xtype: 'fieldcontainer',
-                fieldLabel: 'Required item purchase',
+                fieldLabel: 'Required Item Purchase',
                 margin: '0 0 0 0'
             }),
             this.productsBox,
             //this.minimumProductSubtotalBeforeDiscounts,
             Taco.core.ux.TooltipLabel.wrapConfig('discount.conditions.minimumQuantityProductsRequiredInCategories', me, {
                 xtype: 'fieldcontainer',
-                fieldLabel: 'Required category purchase',
+                fieldLabel: 'Required Category Purchase',
                 margin: '0 0 0 0'
             }),
             this.categoriesBox,
