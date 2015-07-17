@@ -57,6 +57,7 @@ Ext.define('Taco.view.filter.ExpressionTreePanel', {
         me.title = "Expression";
         me.tools = me.tools || [];
         
+        
 
         this.mon(me, "needsvalidation", this.validateExpression, me);
 
@@ -70,8 +71,16 @@ Ext.define('Taco.view.filter.ExpressionTreePanel', {
                     if (record.data.type == "container") {
                         return (record.data.logicalOperator == "or") ? "Any of the following" : "All of the following";
                     } else {
+                        
+                        var operator = Taco.filter.operatorStore.getById(record.get("operator"));
+                        var field = Taco.filter.fieldStore.getById(record.get("left"));
                         var filterTpl = new Ext.XTemplate('{left} {operator} {right}');
-                        return filterTpl.apply(record.data);
+                        
+                        return filterTpl.apply({
+                            left: (field) ? field.get("text"): record.get("left"),
+                            operator: operator.get("text"),
+                            right:record.get("right")
+                        });
                     }
                 },
                 flex: 1,
@@ -452,23 +461,21 @@ Ext.define('Taco.view.filter.ExpressionTreePanel', {
 
     editFilter: function (nodeId, record, item, index, e) {
         var me = this;
-        console.log("edit filter");
-        alert("coming soon.");
-
-        // var win = Ext.create('Taco.view.filter.EditFilterModal', {
-        //     record: Ext.clone(record),
-        //     listeners: {
-        //         scope:me,
-        //         'aftersaveclose' : function() {
-                    
-        //             me.refreshFocus();
-        //         },
-        //         'aftercancelclose': function () {
-                    
-        //             me.refreshFocus();
-        //         }
-        //     }
-        // });
+        
+        alert("coming soon");
+        return;
+         var win = Ext.create('Taco.view.filter.EditFilterModal', {
+             record: record,
+             listeners: {
+                 scope:me,
+                 'aftersaveclose' : function() {
+                     me.refreshFocus();
+                 },
+                 'aftercancelclose': function () {
+                     me.refreshFocus();
+                 }
+             }
+         });
 
     },
     createFilter: function() {

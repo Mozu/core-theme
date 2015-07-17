@@ -568,6 +568,7 @@
     <Content Include="Scripts\app\model\OrderAttribute.js" />
     <Content Include="Scripts\app\model\ShippingMethod.js" />
     <Content Include="Scripts\app\model\Wishlist.js" />
+    <Content Include="Scripts\app\overrides\data\Store.js" />
     <Content Include="Scripts\app\overrides\data\AbstractStore.js" />
     <Content Include="Scripts\app\overrides\dom\ElementAddons.js" />
     <Content Include="Scripts\app\overrides\form\Basic.js" />
@@ -703,6 +704,7 @@
     <Content Include="Scripts\app\view\filter\EditCodeModal.js" />
     <Content Include="Scripts\app\view\filter\EditFilterModal.js" />
     <Content Include="Scripts\app\view\filter\ExpressionTreePanel.js" />
+    <Content Include="Scripts\app\view\filter\OperatorField.js" />
     <Content Include="Scripts\app\view\filter\Form.js" />
     <Content Include="Scripts\app\view\filter\schema.js" />
     <Content Include="Scripts\app\view\generalSettings\subform\Features.js" />

@@ -13,6 +13,11 @@ Ext.define('Taco.controller.Categories', {
     stores: ['Categories'],
     modelName: 'Category',
 
+    createdynamic: function (id, additionalParams, appState) {
+        additionalParams.isDynamic = true;
+        return this.doCreate(null, additionalParams, appState, this.getEditorView(), Taco.model[this.modelName]);
+    },
+
     doCreateInternal: function (id, additionalParams, appState, viewName, model) {
         var record = appState ? appState.record : Ext.create(model);
         

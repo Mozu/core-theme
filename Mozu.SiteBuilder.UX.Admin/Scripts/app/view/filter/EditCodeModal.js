@@ -76,7 +76,7 @@ Ext.define('Taco.view.filter.EditCodeModal', {
             mode: "text",
             useWrapMode: false,
             fontSize: "13px",
-            value: "loading...",
+            value: "",
             name: "textExpression",
             showPrintMargin: false,
             selectOnRender: false,
@@ -193,8 +193,22 @@ Ext.define('Taco.view.filter.EditCodeModal', {
 
     onTabChange: function(tabPanel, newCard, oldCard, e) {
         // need to validate the data on tab change if the content of the active tab has change since last validation;
-        
+        // check to see if we have any data worth validating. ie empty string or root with no nodes.
+
         if (this.requiresValidation) {
+            var codeTxt = oldCard.down('.taco-codefield').getValue();
+            if (!codeTxt) {
+                return true;
+            }
+
+            if (oldCard.getItemId() == "treeCode") {
+                var json = this.decodeTree(codeTxt);
+                if (!json || !json.nodes || !json.nodes.length) {
+                    // bypass validation nothing to validate;
+                    return true;
+                }
+            }
+
             this.validateCode(oldCard, function(data) {
                 // callback when the validation returns so we can allow the tab change to happen
                 
