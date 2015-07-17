@@ -4948,12 +4948,45 @@ module.exports = (function () {
                 errors.throwOnObject(self, 'ADD_CUSTOMER_FAILED', reason.message);
             });
         },
-        createPayment: function(extraProps) {
-            return this.api.action(this, 'createPayment', utils.extend({
-                currencyCode: this.api.context.Currency().toUpperCase(),
-                amount: this.prop('amountRemainingForPayment'),
-                newBillingInfo: this.prop('billingInfo')
-            }, extraProps || {}));
+        createPayment: function (extraProps) {
+            var self = this;
+
+            return self.api.action(self, 'createPayment', utils.extend({
+                currencyCode: self.api.context.Currency().toUpperCase(),
+                amount: self.prop('amountRemainingForPayment'),
+                newBillingInfo: self.prop('billingInfo')
+            }, extraProps || {})).then(function (updatedOrder) {
+                
+
+                // creating a payment can trigger a discount (discounts now support payment types)
+                // this would mean the order total can change, and the previous 'amountRemainingForPayment' which we used
+                // to create the payment might not be valid. 
+                return self.get().then(function () {
+
+                    var payment = self.getCurrentPayment();
+                    if (payment.paymentType === "StoreCredit" || payment.paymentType === "GiftCard") {
+                        return;
+                    }
+
+                    var newRemainingBalance = self.prop('amountRemainingForPayment');
+
+                    if (newRemainingBalance === 0) {
+                        return;
+                    }
+
+                    var newAmount = payment.amountRequested + newRemainingBalance;
+
+                    self.voidPayment(payment.id);
+
+                    return self.api.action(self, 'createPayment', utils.extend({
+                        currencyCode: self.api.context.Currency().toUpperCase(),
+                        amount: newAmount,
+                        newBillingInfo: self.prop('billingInfo')
+                    }, extraProps || {}));
+                    
+                });
+            });
+
         },
         addStoreCredit: function(payment) {
             return this.createPayment({
