@@ -59,7 +59,7 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
         [SbActionExtensionFilter(actionId: ActionFilterConstants.NotFoundBeforeAction, executionType: ActionExtensionExecutionTypes.BeforeController)]
         [SbActionExtensionFilter(actionId: ActionFilterConstants.NotFoundAfterAction, executionType: ActionExtensionExecutionTypes.AfterController)]
         [System.Web.Http.HttpGet]
-        public HttpResponseMessage NotFound()
+        public new HttpResponseMessage NotFound()
         {
             return Request.CreateErrorResponse(HttpStatusCode.NotFound, "Page not found.");
             //PageContext.CmsContext = new CmsPageContext()
