@@ -1,5 +1,4 @@
-﻿//#define NONAV
-using System;
+﻿using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Collections.Specialized;
@@ -7,65 +6,36 @@ using System.Linq;
 using System.Net.Http;
 using System.Text;
 using System.Text.RegularExpressions;
-using System.Threading.Tasks;
-using System.Web;
 using System.Web.Http.Routing;
-using AutoMapper;
-using Mozu.SiteBuilder.Mvc.Models.CMS;
-using Mozu.SiteBuilder.Mvc.Navigation;
-using Mozu.SiteBuilder.UX.Models.Navigation;
-using Mozu.SiteBuilder.UX.Models.StoreFront.Catalog;
 using Newtonsoft.Json;
 
 namespace Mozu.SiteBuilder.Mvc.Contexts
 {
-
-
     public class SearchContext
     {
-        [Newtonsoft.Json.JsonConverter(typeof(FacetJsonConverter))]
-        public NameValueCollection Facets { get; set; }
+        const string RouteDataKey = "facetValueFilter";
+        const string QueryStringKey = "facetValueFilter";
+        const string RouteDataValueKeySuffix = "-facet";
+        static readonly Regex KvpRegex = new Regex(@"(?<key>[^,\:]+)(\:(?<val>[^,]*))?");
+        IHttpRouteData _initedData;
 
-
-        public SearchContext Clone()
+        private SearchContext()
         {
-            return new SearchContext() { Facets = new NameValueCollection(Facets) };
         }
-
-        private SearchContext() { }
-
-        public class FacetJsonConverter : JsonConverter
-        {
-
-            public override bool CanConvert(Type objectType)
-            {
-                return true;
-            }
-
-            public override object ReadJson(JsonReader reader, Type objectType, object existingValue, JsonSerializer serializer)
-            {
-                throw new NotImplementedException();
-            }
-
-            public override void WriteJson(JsonWriter writer, object value, JsonSerializer serializer)
-            {
-                NameValueCollection col = value as NameValueCollection;
-                var filterString = ToFacetValueFilterString(col);
-                writer.WriteValue(filterString);
-            }
-        }
-
         public SearchContext(HttpRequestMessage request)
         {
             Facets = new NameValueCollection(StringComparer.OrdinalIgnoreCase);
             InitFromQstring(request);
             InitFromRouteData(request.GetRouteData());
         }
-
-        private void InitFromQstring(HttpRequestMessage request)
+        public SearchContext Clone()
+        {
+            return new SearchContext() { Facets = new NameValueCollection(Facets) };
+        }
+        void InitFromQstring(HttpRequestMessage request)
         {
             var qs = request.RequestUri.ParseQueryString();
-            var facetValueQsValue = qs[SearchContext.QueryStringKey];
+            var facetValueQsValue = qs[QueryStringKey];
             if (!string.IsNullOrWhiteSpace(facetValueQsValue))
             {
                 var matchesw = KvpRegex.Matches(facetValueQsValue);
@@ -74,14 +44,10 @@ namespace Mozu.SiteBuilder.Mvc.Contexts
                     this.Facets.Add(m.Groups["key"].Value, m.Groups["val"].Value);
                 }
             }
-            
-
-
             return;
         }
        
-        IHttpRouteData _initedData;
-        private void InitFromRouteData(System.Web.Http.Routing.IHttpRouteData httpRouteData)
+        void InitFromRouteData(IHttpRouteData httpRouteData)
         {
             if (_initedData == httpRouteData)
             {
@@ -141,13 +107,21 @@ namespace Mozu.SiteBuilder.Mvc.Contexts
             }
 
         }
+        internal void InitRouteData(IDictionary<string, object> httpRouteData)
+        {
+            httpRouteData[RouteDataKey] = this;
+            foreach (string key in this.Facets.Keys)
+            {
+                var vals = this.Facets.GetValues(key);
+                httpRouteData[key + RouteDataValueKeySuffix] = (vals != null && vals.Length > 1) ? (object)vals : (object)this.Facets[key];
+            }
+        }
 
-        static readonly Regex KvpRegex = new Regex(@"(?<key>[^,\:]+)(\:(?<val>[^,]*))?");
         public string ToFacetValueFilter()
         {
-
             return ToFacetValueFilterString(this.Facets);
         }
+        
         public static string ToFacetValueFilterString(NameValueCollection facets)
         {
 
@@ -172,26 +146,10 @@ namespace Mozu.SiteBuilder.Mvc.Contexts
             }
             return sb.ToString();
         }
-        public const string RouteDataKey = "facetValueFilter";
-        public const string QueryStringKey = "facetValueFilter";
-        public const string RouteDataValueKeySuffix = "-facet";
-
-
-         internal void InitRouteData(IDictionary<string,object> httpRouteData)
-        {
-            httpRouteData[RouteDataKey] = this;
-            foreach (string key in this.Facets.Keys)
-            {
-                var vals = this.Facets.GetValues(key);
-                httpRouteData[ key + RouteDataValueKeySuffix] = (vals != null && vals.Length > 1) ? (object)vals : (object)this.Facets[key];
-            }
-        }
-
         public static string GetStringFromRequest(HttpRequestMessage requestMessage)
         {
             return Get(requestMessage).ToFacetValueFilter();
         }
-
         public static SearchContext Get(HttpRequestMessage requestMessage)
         {
             SearchContext col = null;
@@ -215,6 +173,29 @@ namespace Mozu.SiteBuilder.Mvc.Contexts
 
         public int? CategoryId { get; set; }
         public string Query { get; set; }
+
+        [JsonConverter(typeof(FacetJsonConverter))]
+        public NameValueCollection Facets { get; set; }
+    }
+
+    public class FacetJsonConverter : JsonConverter
+    {
+        public override bool CanConvert(Type objectType)
+        {
+            return true;
+        }
+
+        public override object ReadJson(JsonReader reader, Type objectType, object existingValue, JsonSerializer serializer)
+        {
+            throw new NotImplementedException();
+        }
+
+        public override void WriteJson(JsonWriter writer, object value, JsonSerializer serializer)
+        {
+            NameValueCollection col = value as NameValueCollection;
+            var filterString = SearchContext.ToFacetValueFilterString(col);
+            writer.WriteValue(filterString);
+        }
     }
 
 }

@@ -74,6 +74,7 @@ namespace Mozu.SiteBuilder.UX.Hypr.Tags
             var cacheResults = arguments.GetValueOrDefault<bool>("cacheResults", true);
             var facetHierDepthInt = arguments.GetValueOrDefault<int>("facetHierDepth", 2);
             var responseFields = arguments.GetValueOrDefault<string>("responseFields");
+            var facet = arguments.GetValueOrDefault<string>("facet");
 
             int? facetCategoryId;
             int? categoryId;
@@ -108,7 +109,7 @@ namespace Mozu.SiteBuilder.UX.Hypr.Tags
 
             
             var cache = context.Resolve<ILiveModeOnlyCache>();
-            ProductSearchResult pc = await DoSearch(cache, startIndex, pageSize, cacheResults, facetTemplate, facetValueFilter, facetHierValue, facetHierDepth, searchQueryString, sortBy, filter, productSearchWebApiClient, pageContext, productCodesFilters, productCodes, responseFields).ConfigureAwait(false);
+            ProductSearchResult pc = await DoSearch(cache, startIndex, pageSize, cacheResults, facetTemplate, facetValueFilter, facetHierValue, facetHierDepth, searchQueryString, sortBy, filter, productSearchWebApiClient, pageContext, productCodesFilters, productCodes, responseFields, facet).ConfigureAwait(false);
 
             var dict = new Dictionary<string, object> { { "model", pc } };
             var nodes = getTemplateFunction(template).Nodes;
@@ -116,7 +117,7 @@ namespace Mozu.SiteBuilder.UX.Hypr.Tags
             return new[] { WalkResultHelpers.RenderNodesWithContextMods(nodes, dict, Enumerable.Empty<string>()) };
         }
 
-        private async Task<ProductSearchResult> DoSearch(ILiveModeOnlyCache cache, int startIndex, int pageSize, bool cacheResults, string facetTemplate, string facetValueFilter, string facetHierValue, string facetHierDepth, string searchQueryString, string sortBy, string filter, IProductSearchWebApiClient productSearchWebApiClient, Mozu.SiteBuilder.Mvc.Contexts.PageContext pageContext, string[] productCodesFilters, IEnumerable productCodes, string responseFields)
+        private async Task<ProductSearchResult> DoSearch(ILiveModeOnlyCache cache, int startIndex, int pageSize, bool cacheResults, string facetTemplate, string facetValueFilter, string facetHierValue, string facetHierDepth, string searchQueryString, string sortBy, string filter, IProductSearchWebApiClient productSearchWebApiClient, Mozu.SiteBuilder.Mvc.Contexts.PageContext pageContext, string[] productCodesFilters, IEnumerable productCodes, string responseFields , string facet )
         {
             string cacheKey = null;
            
@@ -134,6 +135,7 @@ namespace Mozu.SiteBuilder.UX.Hypr.Tags
                     .Append(sortBy)
                     .Append (responseFields)
                     .Append(pageSize)
+                    .Append(facet)
                     .ToString();
 
                 pc = cache.Get<ProductSearchResult>(cacheKey);
@@ -147,6 +149,7 @@ namespace Mozu.SiteBuilder.UX.Hypr.Tags
                     facetTemplate: facetTemplate,
                     facetHierDepth: facetHierDepth,
                     facetValueFilter: facetValueFilter,
+                    facet: facet,
                     startIndex: startIndex,
                     sortBy: sortBy,
                     responseFields: responseFields,

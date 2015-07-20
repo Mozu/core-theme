@@ -288,6 +288,7 @@ namespace Mozu.SiteBuilder.Mvc.Navigation
                     new SuperNavigationNode
                     {
                         NodeType = NavigationNodeType.Category,
+                        CategoryCode = cat.CategoryCode,
                         Id = "cat^^" + cat.CategoryId,
                         ParentId = cat.ParentCategory != null ? "cat^^" + cat.ParentCategory.CategoryId : NAV_ROOT_NODE_NAME,
                         OriginalId = cat.CategoryId.ToString(),
