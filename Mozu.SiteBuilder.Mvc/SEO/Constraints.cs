@@ -16,24 +16,32 @@ using Mozu.Core.Extensions;
 using Mozu.Core;
 using Mozu.Core.Api.Contracts.Client;
 using Mozu.MZDB.Contracts;
+using Mozu.ProductRuntime.Contracts;
+using Mozu.ProductRuntime.Contracts.Clients;
 using Mozu.SiteBuilder.Mvc.Catalog;
 using Mozu.SiteBuilder.Mvc.ViewEngine;
 using Mozu.SiteBuilder.UX.Models.StoreFront.Catalog;
 using Mozu.SiteSettings.General.Contracts.General.Routing;
 using Category = Mozu.SiteBuilder.UX.Models.StoreFront.Catalog.Category;
+using ProductSearchResult = Mozu.ProductRuntime.Contracts.ProductSearchResult;
 
 namespace Mozu.SiteBuilder.Mvc.SEO.Constraints
 {
     public class ConstraintFactory : ICustomRouteConstraintFactory
     {
         readonly IAttributeWebApiClient _attributeClient;
+        private readonly IProductSearchWebApiClient _productSearchWebApiClient;
         readonly IApiContext _context;
         readonly IEntityListsWebApiClient _entityListClient;
 
-        public ConstraintFactory(IEntityListsWebApiClient entityListClient, IAttributeWebApiClient attributeClient, IApiContext context)
+        public ConstraintFactory(IEntityListsWebApiClient entityListClient, 
+            IAttributeWebApiClient attributeClient,
+            ProductRuntime.Contracts.Clients.IProductSearchWebApiClient productSearchWebApiClient,
+            IApiContext context)
         {
             _entityListClient = entityListClient;
             _attributeClient = attributeClient;
+            _productSearchWebApiClient = productSearchWebApiClient;
             _context = context;
         }
 
@@ -42,7 +50,7 @@ namespace Mozu.SiteBuilder.Mvc.SEO.Constraints
             switch (validator.type)
             {
                 case Validator.TypeConst.attribute:
-                    return new ProductAttributeRouteConstraint(_attributeClient, _context, validator.attributeCode);
+                    return new ProductAttributeRouteConstraint(_attributeClient, _productSearchWebApiClient, _context, validator.attributeCode);
                 case Validator.TypeConst.categoryCode:
                 case Validator.TypeConst.categorySlug:
                 case Validator.TypeConst.categorySlugPath:
@@ -438,62 +446,91 @@ namespace Mozu.SiteBuilder.Mvc.SEO.Constraints
 
     public class ProductAttributeRouteConstraint : ConstraintBase
     {
-        readonly Func<Task<ServiceClientResponse<List<AttributeVocabularyValue>>>> dataFunc;
+        readonly Func<Task<ServiceClientResponse<List<AttributeVocabularyValue>>>> attFn;
+        Func<Task<ServiceClientResponse<ProductSearchResult>>> searchFn;
         private string _localeCode;
-        IDictionary<string, AttributeVocabularyValue> _values { get; set; }
+        IDictionary<string, AttributeVocabularyValue> _attributeValues { get; set; }
+        IDictionary<string, FacetValue> _facetValues { get; set; }
 
-        public ProductAttributeRouteConstraint(IAttributeWebApiClient attributeClient, IApiContext context, string attributeCode)
+        public ProductAttributeRouteConstraint(IAttributeWebApiClient attributeClient, IProductSearchWebApiClient _productSearchWebApiClient,  IApiContext context, string attributeCode)
         {
             AttributeCode = attributeCode;
             if (attributeCode.IsNullOrEmpty()) throw new ArgumentException("attributeCode");
 
-            dataFunc = () => attributeClient.CloneWithoutUserClaims().GetAttributeVocabularyValues(attributeCode);
+            searchFn = () => _productSearchWebApiClient.CloneWithoutUserClaims().Search(
+                query: "*:*",
+                pageSize: 0,
+                facet: attributeCode);
+            attFn = () => attributeClient.CloneWithoutUserClaims().GetAttributeVocabularyValues(attributeCode);
             _localeCode = context.LocaleCode;
         }
         public string AttributeCode { get; set; }
         public override async Task<bool> Initialize()
         {
-            var res = await dataFunc().ConfigureAwait(false);
-            if (res.HasException)
+            var attTask = attFn();
+            var searchTask = searchFn();
+            await Task.WhenAll(attTask, searchTask).ConfigureAwait(false);
+            var attRes = attTask.Result;
+            if (attRes.HasException)
             {
-                throw res.ReadException();
+                throw attRes.ReadException();
             }
-            var val = res.ReadAsSync();
+            var val = attRes.ReadAsSync();
             var dict = new Dictionary<string, AttributeVocabularyValue>(StringComparer.OrdinalIgnoreCase);
             foreach (var entry in val)
             {
                 dict[entry.Content.StringValue] = entry;
                 dict[entry.Value.ToString()] = entry;
             }
+            var searchRes = searchTask.Result;
 
-            _values = dict;
+            if (searchRes.HasException)
+            {
+                throw searchRes.ReadException();
+            }
+            var val2 = searchRes.ReadAsSync();
+            var dict2 = new Dictionary<string, FacetValue>(StringComparer.OrdinalIgnoreCase);
+            foreach (var entry in val2.Facets.SelectMany(x=> x.Values))
+            {
+                dict2[entry.Value] = entry;
+                
+            }
+
+
+            _facetValues = dict2;
+            _attributeValues = dict;
             return true;
         }
 
         public override bool DoMatch(HttpRequestMessage request, IHttpRoute route, string parameterName, IDictionary<string, object> values, HttpRouteDirection routeDirection)
         {
             
-            AttributeVocabularyValue attr;
+           
             object routeValue;
             if (!values.TryGetValue(parameterName, out routeValue))
             {
                 return false;
             }
 
-           
-
-            var curRouteValue = routeValue.ToString();
-            if (!_values.TryGetValue(curRouteValue, out attr))
-            {
-                return false;
-            }
             if (routeDirection == HttpRouteDirection.UriGeneration)
             {
                 return true;
             }
 
+           
+            var curRouteValue = routeValue.ToString();
+
+            if (!_attributeValues.ContainsKey(curRouteValue) && !_facetValues.ContainsKey(curRouteValue))
+            {
+                return false;
+            }
+
+
+
+
             //TODO: put the right locale in here?
-            values[parameterName] = GetAttributeValue(attr, "en-US");
+            //AttributeVocabularyValue attr;
+            //values[parameterName] = GetAttributeValue(attr, "en-US");
             return true;
         }
 

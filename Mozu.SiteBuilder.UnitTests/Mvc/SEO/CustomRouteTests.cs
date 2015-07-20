@@ -26,6 +26,8 @@ using Mozu.Content.Contracts;
 using Mozu.SiteSettings.General.Contracts.Clients;
 using Mozu.SiteSettings.General.Contracts.General.Routing;
 using Mozu.Core.Extensions;
+using Mozu.ProductRuntime.Contracts;
+using Mozu.ProductRuntime.Contracts.Clients;
 
 namespace Mozu.SiteBuilder.UnitTests.Mvc.SEO    
 {
@@ -154,6 +156,7 @@ namespace Mozu.SiteBuilder.UnitTests.Mvc.SEO
                 new Dictionary<string, object> { { "designer", "once" } },
                 true
             };
+
             yield return new object[]
             {
                 "designer",
@@ -161,7 +164,7 @@ namespace Mozu.SiteBuilder.UnitTests.Mvc.SEO
                 new Dictionary<string, object> { { "haha", "once" } },
                 false
             };
-
+           
             var attrClient = Substitute.For<IAttributeWebApiClient, ICloneable>();
             (attrClient as ICloneable).Clone().Returns(attrClient);
             var vocabs = new List<ProductAdmin.Contracts.AttributeVocabularyValue>{
@@ -169,28 +172,52 @@ namespace Mozu.SiteBuilder.UnitTests.Mvc.SEO
                 Vocab("whatevs")
             };
 
+            var searchClient = Substitute.For<IProductSearchWebApiClient, ICloneable>();
+            (searchClient as ICloneable).Clone().Returns(searchClient);
+            
+
             attrClient.GetAttributeVocabularyValues(Arg.Any<string>()).Returns(Task.FromResult(Response(vocabs)));
+            searchClient.Search().ReturnsForAnyArgs(Task.FromResult(Response(new ProductSearchResult()
+            {
+                Facets =
+                new List<ProductRuntime.Contracts.Facet>() {
+                    new ProductRuntime.Contracts.Facet() {
+                        Values =new List<FacetValue>() {
+                            new FacetValue() { Value ="bing"},
+                            new FacetValue(){ Value ="bong" }
+                            }
+                    }
+                }
+            })));
+
             var context = Substitute.For<IApiContext>();
             context.LocaleCode.Returns("en-US");
 
             yield return new object[]
             {
                 "param",
-                new ProductAttributeRouteConstraint(attrClient, context, "butts"),
+                new ProductAttributeRouteConstraint(attrClient, searchClient, context, "butts"),
                 new Dictionary<string, object> { { "param", "meh" } },
                 true
             };
             yield return new object[]
             {
                 "param",
-                new ProductAttributeRouteConstraint(attrClient, context, "butts"),
+                new ProductAttributeRouteConstraint(attrClient, searchClient, context, "butts"),
+                new Dictionary<string, object> { { "param", "bing" } },
+                true
+            };
+            yield return new object[]
+            {
+                "param",
+                new ProductAttributeRouteConstraint(attrClient, searchClient,context, "butts"),
                 new Dictionary<string, object> { { "param", "sure" } },
                 false
             };
             yield return new object[]
             {
                 "param",
-                new ProductAttributeRouteConstraint(attrClient, context, "butts"),
+                new ProductAttributeRouteConstraint(attrClient, searchClient,context, "butts"),
                 new Dictionary<string, object> { },
                 false
             };
@@ -238,7 +265,7 @@ namespace Mozu.SiteBuilder.UnitTests.Mvc.SEO
         [TestCaseSource("ConstraintFactory")]
         public void FactoryCanMakeConstraints(Validator validator, Type expectedType)
         {
-            var fact = new ConstraintFactory(Substitute.For<IEntityListsWebApiClient>(), Substitute.For<IAttributeWebApiClient>(), Substitute.For<IApiContext>());
+            var fact = new ConstraintFactory(Substitute.For<IEntityListsWebApiClient>(), Substitute.For<IAttributeWebApiClient>(), Substitute.For<IProductSearchWebApiClient>(), Substitute.For<IApiContext>());
             fact.BuildConstraint(validator).GetType().ShouldEqual(expectedType);
         }
 
@@ -289,6 +316,8 @@ namespace Mozu.SiteBuilder.UnitTests.Mvc.SEO
             (entityListClient as ICloneable).Clone().Returns(entityListClient);
             var attrClient = Substitute.For<IAttributeWebApiClient, ICloneable>();
             (attrClient as ICloneable).Clone().Returns(attrClient);
+            var searchClient = Substitute.For<IProductSearchWebApiClient, ICloneable>();
+            (searchClient as ICloneable).Clone().Returns(searchClient);
 
             var siteSettingsClient = Substitute.For<IGeneralSettingsWebApiClient, ICloneable>();
             (siteSettingsClient as ICloneable).Clone().Returns(siteSettingsClient);
@@ -297,7 +326,7 @@ namespace Mozu.SiteBuilder.UnitTests.Mvc.SEO
             var docListClient = Substitute.For<IDocumentListWebApiClient, ICloneable>();
             (docListClient as ICloneable).Clone().Returns(docListClient);
 
-            var constraintFactory = new ConstraintFactory(entityListClient, attrClient, sbapiContext);
+            var constraintFactory = new ConstraintFactory(entityListClient, attrClient, searchClient, sbapiContext);
             var mappingFactory = new RouteMappingFactory(entityListClient);
             var repo = new CustomRouteRepository(sbapiContext, logger, cache, constraintFactory, mappingFactory, siteSettingsClient, docListClient);
 

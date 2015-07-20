@@ -47,6 +47,11 @@ namespace Mozu.SiteBuilder.Mvc.Navigation
             set { _originalId = value; }
         }
 
+
+        public string CategoryCode
+        {
+            get;set;
+        }
         
         [Obsolete]
         public string OriginalCollection
