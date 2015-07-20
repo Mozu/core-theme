@@ -217,6 +217,7 @@
     <Compile Include="Extensions\StringExtensions.cs" />
     <Compile Include="Extensions\UserClaimsExtensions.cs" />
     <Compile Include="MessageHandler\SiteBuilderRouteDataInitilizer.cs" />
+    <Compile Include="OAF\SbActionExtensionFilter.cs" />
     <Compile Include="RequestUrlFinderOuter.cs" />
     <Compile Include="CMS\CmsItemDocumentInitilizer.cs" />
     <Compile Include="CMS\CmsServiceWrapper.cs" />

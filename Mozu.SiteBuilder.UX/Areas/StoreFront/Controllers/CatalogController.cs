@@ -27,6 +27,7 @@ using ProductCollection = Mozu.ProductRuntime.Contracts.ProductCollection;
 using ProductSearchResult = Mozu.ProductRuntime.Contracts.ProductSearchResult;
 using Mozu.SiteBuilder.UX.Filters;
 using Mozu.Core.Actions;
+using Mozu.SiteBuilder.Mvc.OAF;
 using Mozu.SiteSettings.General.Contracts.General.Routing;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Converters;
@@ -37,8 +38,8 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
     [NoSslActionFilter]
     [ContextInitialization]
     [DataViewModeEnforcement]
-    [ActionExtensionFilter(actionId: ActionFilterConstants.GlobalPageAfterAction, executionType: ActionExtensionExecutionTypes.AfterController)]
-    [ActionExtensionFilter(actionId: ActionFilterConstants.GlobalPageBeforeAction, executionType: ActionExtensionExecutionTypes.BeforeController)]
+    [SbActionExtensionFilter(actionId: ActionFilterConstants.GlobalPageAfterAction, executionType: ActionExtensionExecutionTypes.AfterController)]
+    [SbActionExtensionFilter(actionId: ActionFilterConstants.GlobalPageBeforeAction, executionType: ActionExtensionExecutionTypes.BeforeController)]
     public class CatalogController : BaseApiController
     {
         readonly ISiteBuilderApiContext _apiCtx;
@@ -309,6 +310,8 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
                 var uri = new Uri(feedUrl, "?startIndex=" + idx);
                 feed.Links.Add(new SyndicationLink(uri) { RelationshipType = "next" });
             }
+
+            
 
             var res = new RssActionResult { Feed = feed };
             return Request.CreateResponse(HttpStatusCode.OK, res);

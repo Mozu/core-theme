@@ -93,15 +93,15 @@ namespace Mozu.SiteBuilder.Mvc.Contexts
         /// </summary>
         public IRuntimeNavigationNode CurrentNode { get; private set; }
 
+        List<object> _breadCrumbs;
+
         /// <summary>
         /// Returns a collection of NavigationRuntimeNodes representing the path from the site root to the current node.
         /// </summary>
-        public IEnumerable<IRuntimeNavigationNode> Breadcrumbs
+        public List<object> Breadcrumbs
         {
-            get
-            {
-                return GetBreadcrumbs(CurrentNode);
-            }
+            get { return _breadCrumbs ?? (_breadCrumbs = GetBreadcrumbs(CurrentNode).Cast<object>().ToList()); }
+            set { _breadCrumbs = value; }
         }
 
         /// <summary>
