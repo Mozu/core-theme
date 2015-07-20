@@ -38,8 +38,8 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
     [NoSslActionFilter]
     [ContextInitialization]
     [DataViewModeEnforcement]
-    [SbActionExtensionFilter(actionId: ActionFilterConstants.GlobalPageAfterAction, executionType: ActionExtensionExecutionTypes.AfterController)]
     [SbActionExtensionFilter(actionId: ActionFilterConstants.GlobalPageBeforeAction, executionType: ActionExtensionExecutionTypes.BeforeController)]
+    [SbActionExtensionFilter(actionId: ActionFilterConstants.GlobalPageAfterAction, executionType: ActionExtensionExecutionTypes.AfterController)]
     public class CatalogController : BaseApiController
     {
         readonly ISiteBuilderApiContext _apiCtx;
@@ -60,6 +60,8 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
             _customRouteHandler = customRouteHandler;
         }
 
+        [SbActionExtensionFilter(actionId: ActionFilterConstants.ProductDetailsBeforeAction, executionType: ActionExtensionExecutionTypes.BeforeController)]
+        [SbActionExtensionFilter(actionId: ActionFilterConstants.ProductDetailsAfterAction, executionType: ActionExtensionExecutionTypes.AfterController)]
         [HttpHead]
         [HttpGet]
         public async Task<HttpResponseMessage> ProductDetail(string productCode)
@@ -200,7 +202,8 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
         }
 
 
-      
+        [SbActionExtensionFilter(actionId: ActionFilterConstants.ProductDetailsBeforeAction, executionType: ActionExtensionExecutionTypes.BeforeController)]
+        [SbActionExtensionFilter(actionId: ActionFilterConstants.ProductDetailsAfterAction, executionType: ActionExtensionExecutionTypes.AfterController)]
         [HttpHead]
         [HttpGet]
         public async Task<HttpResponseMessage> Category(int? categoryId = null, string categoryCode=null)

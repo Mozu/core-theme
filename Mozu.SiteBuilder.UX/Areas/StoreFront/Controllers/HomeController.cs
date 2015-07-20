@@ -18,8 +18,8 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
 {
     [ContextInitialization]
     [DataViewModeEnforcement]
-    [SbActionExtensionFilter(actionId: ActionFilterConstants.GlobalPageAfterAction, executionType: ActionExtensionExecutionTypes.AfterController)]
     [SbActionExtensionFilter(actionId: ActionFilterConstants.GlobalPageBeforeAction, executionType: ActionExtensionExecutionTypes.BeforeController)]
+    [SbActionExtensionFilter(actionId: ActionFilterConstants.GlobalPageAfterAction, executionType: ActionExtensionExecutionTypes.AfterController)]
     public class HomeController : BaseApiController
     {
         public HomeController() { }
@@ -55,7 +55,9 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
 
 
         }
-
+        
+        [SbActionExtensionFilter(actionId: ActionFilterConstants.NotFoundBeforeAction, executionType: ActionExtensionExecutionTypes.BeforeController)]
+        [SbActionExtensionFilter(actionId: ActionFilterConstants.NotFoundAfterAction, executionType: ActionExtensionExecutionTypes.AfterController)]
         [System.Web.Http.HttpGet]
         public HttpResponseMessage NotFound()
         {

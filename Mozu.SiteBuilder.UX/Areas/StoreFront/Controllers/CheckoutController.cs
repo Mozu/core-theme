@@ -33,85 +33,85 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
     [SslOnlyActionFilter]
     [ContextInitialization]
     [NoWarmAuthActionFilter(ReturnUrl = "/cart/checkout")]
-    [DataViewModeEnforcementAttribute]
-    [SbActionExtensionFilter(actionId: ActionFilterConstants.GlobalPageAfterAction, executionType: ActionExtensionExecutionTypes.AfterController)]
+    [DataViewModeEnforcement]
     [SbActionExtensionFilter(actionId: ActionFilterConstants.GlobalPageBeforeAction, executionType: ActionExtensionExecutionTypes.BeforeController)]
+    [SbActionExtensionFilter(actionId: ActionFilterConstants.GlobalPageAfterAction, executionType: ActionExtensionExecutionTypes.AfterController)]
     public class CheckoutController : BaseApiController
     {
-       
+
         private readonly IAuthenticationHelper _authHelper;
         private readonly ICookieProvider _cookieProvider;
         private readonly ICustomerAccountWebApiClient _customerAccountWebApiClient;
         private readonly IOrderWebApiClient _orderWebApiClient;
         private readonly ICartWebApiClient _cartWebApiClient;
         private readonly ISettings _settings;
-        private readonly ILocationRuntimeWebApiClient _locationRuntimeWebApiClient;  
+        private readonly ILocationRuntimeWebApiClient _locationRuntimeWebApiClient;
         private readonly ICreditWebApiClient _creditWebApiClient;
-  
-        
-        
+
+
+
 
         //private static string _merchantId;
         private const string CookieName = "order";
 
-        public CheckoutController(IAuthenticationHelper authHelper, ICookieProvider cookieProvider, ICustomerAccountWebApiClient customerAccountWebApiClient, IOrderWebApiClient orderWebApiClient, Mozu.Location.Contracts.Clients.ILocationRuntimeWebApiClient locationRuntimeWebApiClient ,  ICreditWebApiClient creditWebApiClient, Mozu.CommerceRuntime.Contracts.Clients.ICartWebApiClient cartWebApiClient , ISettings settings)
+        public CheckoutController(IAuthenticationHelper authHelper, ICookieProvider cookieProvider, ICustomerAccountWebApiClient customerAccountWebApiClient, IOrderWebApiClient orderWebApiClient, Mozu.Location.Contracts.Clients.ILocationRuntimeWebApiClient locationRuntimeWebApiClient, ICreditWebApiClient creditWebApiClient, Mozu.CommerceRuntime.Contracts.Clients.ICartWebApiClient cartWebApiClient, ISettings settings)
         {
-          
+
             _authHelper = authHelper;
             _cookieProvider = cookieProvider;
-            
+
             _orderWebApiClient = orderWebApiClient;
             _cartWebApiClient = cartWebApiClient;
             _settings = settings;
             _customerAccountWebApiClient = customerAccountWebApiClient;
             _creditWebApiClient = creditWebApiClient.CloneWithoutUserClaims();
             _locationRuntimeWebApiClient = locationRuntimeWebApiClient.CloneWithoutUserClaims();
-            
+
 
         }
 
-        
+
 
         /*public string MerchantId
         {
             get { return _merchantId ?? (_merchantId = _orderService.GetMerchantId()); }
         }*/
 
-       
+
         private static List<string> CompletedOrderStates = new List<string>{
             Order.OrderStatusConst.SUBMITTED,
             Order.OrderStatusConst.ACCEPTED,
-            Order.OrderStatusConst.PENDING_REVIEW, 
+            Order.OrderStatusConst.PENDING_REVIEW,
             Order.OrderStatusConst.PROCESSING,
             Order.OrderStatusConst.COMPLETED,
             Order.OrderStatusConst.ERRORED
         };
 
 
-         [System.Web.Http.HttpPost]
-        public async Task<HttpResponseMessage > Index(string id=null , HttpRequestMessage requestMessage = null)
-         {
-             if (id == null)
-             {
-                 var cart = (await _cartWebApiClient.GetOrCreateCart()).ReadAsSync();
-                 id = cart.Id;
-             }
+        [System.Web.Http.HttpPost]
+        public async Task<HttpResponseMessage> Index(string id = null, HttpRequestMessage requestMessage = null)
+        {
+            if (id == null)
+            {
+                var cart = (await _cartWebApiClient.GetOrCreateCart()).ReadAsSync();
+                id = cart.Id;
+            }
 
-             Uri redirectUrl = null;
-             try
-             {
-                 var order = (await _orderWebApiClient.CreateOrderFromCart(id)).ReadAsSync();
-                 redirectUrl = CreateRedirectUrl("/checkout/" + order.Id);
-             }
-             catch (Exception e)
-             {
-                 UpdateCartWithExceptionMessage(id, e);
-                 redirectUrl = CreateRedirectUrl("/cart/");
-             }
-             var req = this.Request.CreateResponse(HttpStatusCode.Redirect);
-             req.Headers.Location = redirectUrl;
-             return req;
-         }
+            Uri redirectUrl = null;
+            try
+            {
+                var order = (await _orderWebApiClient.CreateOrderFromCart(id)).ReadAsSync();
+                redirectUrl = CreateRedirectUrl("/checkout/" + order.Id);
+            }
+            catch (Exception e)
+            {
+                UpdateCartWithExceptionMessage(id, e);
+                redirectUrl = CreateRedirectUrl("/cart/");
+            }
+            var req = this.Request.CreateResponse(HttpStatusCode.Redirect);
+            req.Headers.Location = redirectUrl;
+            return req;
+        }
 
         /// <summary>
         /// not async as called from exception block
@@ -150,7 +150,8 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
             return redirectUrl;
         }
 
-
+        [SbActionExtensionFilter(actionId: ActionFilterConstants.CheckoutBeforeAction, executionType: ActionExtensionExecutionTypes.BeforeController)]
+        [SbActionExtensionFilter(actionId: ActionFilterConstants.CheckoutAfterAction, executionType: ActionExtensionExecutionTypes.AfterController)]
         [System.Web.Http.HttpGet]
         [ClientCacheHeaders(ForceRevalidate = true)]
         public async Task<ActionResult> Index(string orderId)
@@ -178,14 +179,14 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
             var billTask = GetBillingCountries();
             var shipStateTask = GetUSShippingStates();
             var billStateTask = GetUSBillingStates();
-            
+
             var orderTask = _orderWebApiClient.GetOrder(id);
             await Task.WhenAll(shipTask, billTask, orderTask, shipStateTask, billStateTask);
 
             try
             {
-                 model = orderTask.Result.ReadAsAsync().Result;
-                
+                model = orderTask.Result.ReadAsAsync().Result;
+
             }
             catch
             {
@@ -194,7 +195,7 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
             if (CompletedOrderStates.Contains(model.Status)) return Redirect("/checkout/" + model.Id + "/confirmation");
             bool addedPrimaryShippingContactToOrderJustNow = false;
 
-           // dynamic dOrder = jOrder;
+            // dynamic dOrder = jOrder;
             this.PageContext.BillingCountries = billTask.Result;
             this.PageContext.ShippingCountries = shipTask.Result;
 
@@ -238,12 +239,12 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
 
             }
             var ipAddress = this.HttpContext.Request.Headers["x-forwarded-for"] ?? this.HttpContext.Request.ServerVariables["REMOTE_ADDR"];
-          //  System.Net.IPAddress ipAddressStruct;
+            //  System.Net.IPAddress ipAddressStruct;
             if (!ipAddress.IsIPAddressValid())
             {
                 ipAddress = "127.0.0.1";
             }
-            
+
             model.IPAddress = ipAddress;
 
             var jSerializer = new JsonSerializer() { ContractResolver = new CamelCasePropertyNamesContractResolver() };
@@ -263,7 +264,7 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
                 jOrder.Add("customer", accountJson);
             }
 
-            if (model.FulfillmentInfo != null && model.FulfillmentInfo.FulfillmentContact != null 
+            if (model.FulfillmentInfo != null && model.FulfillmentInfo.FulfillmentContact != null
                 && model.FulfillmentInfo.FulfillmentContact.Address != null)
             {
                 if (addedPrimaryShippingContactToOrderJustNow)
@@ -273,7 +274,7 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
                         model = (await _orderWebApiClient.UpdateOrder(id, model)).ReadAsSync();
                     }
                     catch { } // it's really okay if this doesn't work
-                   
+
                 }
 
                 List<ShippingRate> methods = null;
@@ -299,10 +300,11 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
         {
             public string apiBase { get; set; }
         }
-     
-
+        
+        [SbActionExtensionFilter(actionId: ActionFilterConstants.OrderConfirmationBeforeAction, executionType: ActionExtensionExecutionTypes.BeforeController)]
+        [SbActionExtensionFilter(actionId: ActionFilterConstants.OrderConfirmationAfterAction, executionType: ActionExtensionExecutionTypes.AfterController)]
         [System.Web.Http.HttpGet]
-        public async Task<ActionResult>  Confirmation(string orderId)
+        public async Task<ActionResult> Confirmation(string orderId)
         {
             var locTask = _locationRuntimeWebApiClient.GetDirectShipLocation();
             var orderTask = _orderWebApiClient.GetOrder(orderId);
@@ -360,7 +362,7 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
                         var location = locations.Items.Find(x => x.Code == order.Items[i].FulfillmentLocationCode);
                         if (location != null)
                         {
-                            ((JObject) jItems[i]).Add("fulfillmentLocationName", location.Name);
+                            ((JObject)jItems[i]).Add("fulfillmentLocationName", location.Name);
                         }
                     }
                 }

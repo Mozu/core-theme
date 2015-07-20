@@ -35,8 +35,8 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
     [ContextInitialization]
     [ClientCacheHeaders(ForceRevalidate = true)]
     [DataViewModeEnforcementAttribute]
+    [SbActionExtensionFilter(actionId: ActionFilterConstants.GlobalPageBeforeAction, executionType: ActionExtensionExecutionTypes.BeforeController)]
     [SbActionExtensionFilter(actionId: ActionFilterConstants.GlobalPageAfterAction, executionType: ActionExtensionExecutionTypes.AfterController)]
-    [SbActionExtensionFilterAttribute(actionId: ActionFilterConstants.GlobalPageBeforeAction, executionType: ActionExtensionExecutionTypes.BeforeController)]
     public class CartController : BaseApiController
     {
         private readonly ICartWebApiClient _cartClient;
@@ -67,6 +67,8 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
             return string.Join(" or ", locationCodes.Select(x => "Code eq \"" + x +"\""));
         }
 
+        [SbActionExtensionFilter(actionId: ActionFilterConstants.CartBeforeAction, executionType: ActionExtensionExecutionTypes.BeforeController)]
+        [SbActionExtensionFilter(actionId: ActionFilterConstants.CartAfterAction, executionType: ActionExtensionExecutionTypes.AfterController)]
         [System.Web.Http.HttpGet]
         public async Task<ActionResult> Index()
         {

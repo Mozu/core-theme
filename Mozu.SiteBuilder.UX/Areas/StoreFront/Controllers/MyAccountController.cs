@@ -28,8 +28,8 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
     [HotOnlyAuthActionFilter]
     [SslOnlyActionFilter]
     [DataViewModeEnforcement]
-    [SbActionExtensionFilter(actionId: ActionFilterConstants.GlobalPageAfterAction, executionType: ActionExtensionExecutionTypes.AfterController)]
     [SbActionExtensionFilter(actionId: ActionFilterConstants.GlobalPageBeforeAction, executionType: ActionExtensionExecutionTypes.BeforeController)]
+    [SbActionExtensionFilter(actionId: ActionFilterConstants.GlobalPageAfterAction, executionType: ActionExtensionExecutionTypes.AfterController)]
     public class MyAccountController : BaseApiController
     {
         private const string DEFAULT_WISHLIST_NAME = "my_wishlist";
@@ -69,7 +69,9 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
 
 
         //todo:hyper  remiplement auth att.
-       // [SiteBuilderAuthorize()]
+        // [SiteBuilderAuthorize()]
+        [SbActionExtensionFilter(actionId: ActionFilterConstants.MyAccountBeforeAction, executionType: ActionExtensionExecutionTypes.BeforeController)]
+        [SbActionExtensionFilter(actionId: ActionFilterConstants.MyAccountAfterAction, executionType: ActionExtensionExecutionTypes.AfterController)]
         [HttpGet]
         public async Task<HttpResponseMessage> Index()
         {

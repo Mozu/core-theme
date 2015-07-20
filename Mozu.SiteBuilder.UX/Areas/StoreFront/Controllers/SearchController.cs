@@ -22,8 +22,8 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
     [NoSslActionFilter]
     [ContextInitialization]
     [DataViewModeEnforcement]
-    [SbActionExtensionFilter(actionId: ActionFilterConstants.GlobalPageAfterAction, executionType: ActionExtensionExecutionTypes.AfterController)]
     [SbActionExtensionFilter(actionId: ActionFilterConstants.GlobalPageBeforeAction, executionType: ActionExtensionExecutionTypes.BeforeController)]
+    [SbActionExtensionFilter(actionId: ActionFilterConstants.GlobalPageAfterAction, executionType: ActionExtensionExecutionTypes.AfterController)]
     public class SearchController : BaseApiController
     {
         private readonly IProductCategoryRuntimeWebApiClient _catClient;
@@ -38,6 +38,8 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
             _searchClient = searchClient;
         }
 
+        [SbActionExtensionFilter(actionId: ActionFilterConstants.SearchIndexBeforeAction, executionType: ActionExtensionExecutionTypes.BeforeController)]
+        [SbActionExtensionFilter(actionId: ActionFilterConstants.SearchIndexAfterAction, executionType: ActionExtensionExecutionTypes.AfterController)]
         [HttpGet]
         public async Task<ActionResult> Index(string query= null, int? categoryId = null, int? page = null,
             //adding w as an extra param for jelly belly.  Plan to remove in r6.1
