@@ -272,8 +272,9 @@
     CustomerCardWithContact = PaymentMethods.CreditCard.extend({
         validation: _.extend({
             contactId: {
-                required: true,
-                msg: Hypr.getLabel('cardBillingMissing')
+                fn: function(value, property, model) {
+                    if (!value && model.contacts && model.contacts.length > 0) return Hypr.getLabel('cardBillingMissing');
+                }
             }
         }, PaymentMethods.CreditCard.prototype.validation),
         selected: true, // so that validation rules always run,
@@ -353,6 +354,7 @@
         saveCard: function() {
             if (!this.validate('editingCard')) {
                 var self = this,
+                    saveContactOp,
                     editingCard = this.get('editingCard').toJSON(),
                     doSaveCard = function() {
                         return self.apiSavePaymentCard(editingCard).then(function() {
@@ -364,8 +366,7 @@
                     saveContactFirst = function() {
                         self.get('editingContact').set('isBillingContact', true);
                         var op = self.get('editingContact').save();
-                        if (!op) throw new Error("Could not save contact!");
-                        return op.then(function(contact) {
+                        if (op) return op.then(function(contact) {
                             editingCard.contactId = contact.prop('id');
                             self.endEditContact();
                             self.getContacts();
@@ -373,7 +374,8 @@
                         });
                     };
                 if (!editingCard.contactId || editingCard.contactId === "new") {
-                    return saveContactFirst().then(doSaveCard);
+                    saveContactOp = saveContactFirst();
+                    if (saveContactOp) return saveContactOp.then(doSaveCard);
                 } else {
                     return doSaveCard();
                 }
