@@ -111,10 +111,12 @@ module.exports = (function () {
 
                     self.voidPayment(payment.id);
 
+                    var billingInfo = payment.billingInfo;
+
                     return self.api.action(self, 'createPayment', utils.extend({
                         currencyCode: self.api.context.Currency().toUpperCase(),
                         amount: newAmount,
-                        newBillingInfo: self.prop('billingInfo')
+                        newBillingInfo: billingInfo
                     }, extraProps || {}));
                     
                 });

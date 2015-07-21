@@ -1,5 +1,5 @@
 /*! 
- * Mozu JavaScript SDK - v0.3.0 - 2015-07-17
+ * Mozu JavaScript SDK - v0.3.0 - 2015-07-21
  *
  * Copyright (c) 2015 Volusion, Inc.
  *
@@ -4978,10 +4978,12 @@ module.exports = (function () {
 
                     self.voidPayment(payment.id);
 
+                    var billingInfo = payment.billingInfo;
+
                     return self.api.action(self, 'createPayment', utils.extend({
                         currencyCode: self.api.context.Currency().toUpperCase(),
                         amount: newAmount,
-                        newBillingInfo: self.prop('billingInfo')
+                        newBillingInfo: billingInfo
                     }, extraProps || {}));
                     
                 });
