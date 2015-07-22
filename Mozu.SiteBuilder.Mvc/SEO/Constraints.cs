@@ -262,8 +262,10 @@ namespace Mozu.SiteBuilder.Mvc.SEO.Constraints
             {
                 return false;
             }
-
-            values[token.SubCode + "-categoryObject"] = cat;
+            if (token.Depth == 0)
+            {
+                values[token.SubCode + "-categoryObject"] = cat;
+            }
 
             return true;
 
@@ -512,7 +514,7 @@ namespace Mozu.SiteBuilder.Mvc.SEO.Constraints
                 return false;
             }
 
-            if (routeDirection == HttpRouteDirection.UriGeneration)
+            if (routeValue is string && routeDirection == HttpRouteDirection.UriGeneration)
             {
                 return true;
             }
@@ -524,7 +526,7 @@ namespace Mozu.SiteBuilder.Mvc.SEO.Constraints
             {
                 return false;
             }
-
+           
 
 
 

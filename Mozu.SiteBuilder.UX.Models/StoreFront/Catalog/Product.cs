@@ -664,33 +664,62 @@ namespace Mozu.SiteBuilder.UX.Models.StoreFront.Catalog
     {
         
     }
-    public class CategoryTree
+
+    public interface ICategoryTree
+    {
+        string ETag { get; set; }
+        List<Category> RootCategories { get; }
+        List<Category> AllCategories { get; set; }
+        Category FindById( int? categoryId);
+        Category FindByCode(string categoryCode);
+        IEnumerable<Category> FindBySlug ( string categorySlug);
+    }
+
+    public class CategoryTree : ICategoryTree
     {
         public string ETag { get; set; }
-        public List<Category> Items { get; set; }
+
+        List<Category> _rootCategories;
+        public List<Category> RootCategories
+        {
+            get
+            {
+                if (_rootCategories == null )
+                {
+                    _rootCategories = AllCategories.Where(x => x.ParentCategoryId == null).OrderBy(x => x.Index).ToList();
+                }
+                return _rootCategories;
+            }
+        }
+
+        public List<Category> AllCategories { get; set; }
+       
         public Category FindById( int? categoryId)
         {
             if (!categoryId.HasValue)
             {
                 return null;
             }
-            return Items.FirstOrDefault(x => x.CategoryId == categoryId);
+            return AllCategories.FirstOrDefault(x => x.CategoryId == categoryId);
         }
+        [Microsoft.ClearScript.ScriptMember("findByCode")]
         public Category FindByCode(string categoryCode)
         {
             if( categoryCode == null)
             {
                 return null;
             }
-            return Items.FirstOrDefault(x => string.Equals(categoryCode, x.CategoryCode, StringComparison.OrdinalIgnoreCase));
+            return AllCategories.FirstOrDefault(x => string.Equals(categoryCode, x.CategoryCode, StringComparison.OrdinalIgnoreCase));
         }
+
+        [Microsoft.ClearScript.ScriptMember("findBySlug")]
         public IEnumerable<Category> FindBySlug ( string categorySlug)
         {
             if (categorySlug == null)
             {
                 return null;
             }
-            return Items.Where(x => x.Content != null && string.Equals(categorySlug, x.Content.Slug , StringComparison.OrdinalIgnoreCase));
+            return AllCategories.Where(x => x.Content != null && string.Equals(categorySlug, x.Content.Slug , StringComparison.OrdinalIgnoreCase));
         }
     }
 

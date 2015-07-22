@@ -30,6 +30,14 @@ namespace Mozu.SiteBuilder.Mvc.Catalog
             _logger = logger;
         }
 
+        public bool HasCompleted
+        {
+            get
+            {
+                return _categoryTreeTask != null && _categoryTreeTask.IsCompleted;
+            }
+        }
+
         public Task<CategoryTree> GetAllCategories()
         {
             if (_categoryTreeTask != null)
@@ -114,7 +122,7 @@ namespace Mozu.SiteBuilder.Mvc.Catalog
                     cat.ParentCategory = parent;
                 }
             }
-            return new CategoryTree {Items = categories, ETag = etag};
+            return new CategoryTree {AllCategories = categories, ETag = etag};
         }
     }
     

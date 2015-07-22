@@ -12,7 +12,7 @@ namespace Mozu.SiteBuilder.Mvc.SEO
     public class CustomRoute : HttpRoute
     {
         string Template { get; set; }
-        FancyRoute InternalRoute { get; set; }
+        public FancyRoute InternalRoute { get; set; }
         bool IsCanonical { get; set; }
         IDictionary<IRouteDataMapping, string[]> PreMappings { get; set; }
         IDictionary<IRouteDataMapping, string[]> PostMappings { get; set; }

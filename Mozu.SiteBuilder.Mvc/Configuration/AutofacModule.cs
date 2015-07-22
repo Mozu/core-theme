@@ -11,6 +11,7 @@ using Mozu.SiteBuilder.Mvc.Caching;
 using Mozu.SiteBuilder.Mvc.CMS;
 using Mozu.SiteBuilder.Mvc.Catalog;
 using Mozu.SiteBuilder.Mvc.Contexts;
+using Mozu.SiteBuilder.Mvc.Helpers;
 using Mozu.SiteBuilder.Mvc.Navigation;
 using Mozu.SiteBuilder.Mvc.Themes;
 using Mozu.SiteBuilder.Mvc.Users;
@@ -39,6 +40,9 @@ namespace Mozu.SiteBuilder.Mvc.Configuration
             //contexts
             builder.RegisterType<ClientApiContext>().InstancePerRequest();
             builder.RegisterType<NavigationContext>().InstancePerRequest();
+            builder.RegisterType<UrlHelper>().InstancePerRequest();
+
+
             builder.RegisterType<PageContext>().InstancePerRequest();
             builder.RegisterType<SiteContext>().As<ISiteContext>().InstancePerRequest();
             builder.RegisterType<SiteContext>().InstancePerRequest();

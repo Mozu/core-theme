@@ -197,7 +197,7 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
             };
             PageContext.PageType = "category";
             PageContext.CategoryId = -1;
-            cat.ChildrenCategories = catList.Items.Where(x => x.ParentCategory == null).ToList();
+            cat.ChildrenCategories = catList.AllCategories.Where(x => x.ParentCategory == null).ToList();
             return View("Category", cat);
         }
 
@@ -269,7 +269,7 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
             // TODO: Sort by Date Last Modified DESC
             string sortBy = null; // "CreateDate DESC";
 
-            List<Category> catList = (await _categoryTreeProvider.GetAllCategories()).Items;
+            List<Category> catList = (await _categoryTreeProvider.GetAllCategories()).AllCategories;
             Category cat = catList.Where(x => x.CategoryId == categoryId.GetValueOrDefault(-1)).FirstOrDefault();
             if (cat == null)
             {

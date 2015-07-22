@@ -255,16 +255,11 @@ namespace Mozu.SiteBuilder.Mvc.SEO
 
             if (!routes.Any()) return null; // no canonical route that matches, or current route is canonical? then no redirect!
 
-            IDictionary<string, object> finalRouteValues = null;
+            //IDictionary<string, object> finalRouteValues = null;
             var additionalValues = viewDataAdditionFunc == null ? new Dictionary<string, object>() : viewDataAdditionFunc();
             if (useExistingValues)
             {
-                finalRouteValues =
-                   _requestMessage.Value.GetRouteData().Values
-                    .ChainSet(additionalValues);
-            }else
-            {
-                finalRouteValues = additionalValues;
+                additionalValues.ChainSet(_requestMessage.Value.GetRouteData().Values);
             }
             
             additionalValues.ChainSet("httproute", true);
@@ -274,7 +269,7 @@ namespace Mozu.SiteBuilder.Mvc.SEO
 
             foreach (var route in routes)
             {
-                var vpath = route.GetVirtualPath(newReq, finalRouteValues);
+                var vpath = route.GetVirtualPath(newReq, additionalValues);
                 if (vpath != null)
                 {
                     var url = "/"+ new Uri("http://localhost/" + vpath.VirtualPath).GetComponents(UriComponents.Path, UriFormat.Unescaped);

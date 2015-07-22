@@ -10,8 +10,11 @@ using Autofac;
 using Microsoft.ClearScript;
 using Mozu.Core.Actions;
 using Mozu.Core.Actions.Contracts;
+using Mozu.SiteBuilder.Mvc.Catalog;
 using Mozu.SiteBuilder.Mvc.Contexts;
+using Mozu.SiteBuilder.Mvc.Helpers;
 using Mozu.SiteBuilder.Mvc.ViewEngine;
+using Mozu.SiteBuilder.UX.Models.StoreFront.Catalog;
 
 namespace Mozu.SiteBuilder.Mvc.OAF
 {
@@ -37,12 +40,29 @@ namespace Mozu.SiteBuilder.Mvc.OAF
             AddToActionContext<SiteContext>(actionContext.Request, "siteContext");
             AddToActionContext<PageContext>(actionContext.Request, "pageContext");
             AddToActionContext<NavigationContext>(actionContext.Request,"navigation");
+            AddToActionContext<UrlHelper>(actionContext.Request, "urlHelper");
+
+             
+            var catTreeProvider = actionContext.Request.Resolve<ICategoryTreeProvider>();
+
+            if ( catTreeProvider.HasCompleted)
+            {
+                AddToActionContext<ICategoryTree>(actionContext.Request, "categoryHelper", catTreeProvider.GetAllCategories().Result);
+            }else
+            {
+                AddToActionContext<ICategoryTree>(actionContext.Request, "categoryHelper", new CategoryHelper(catTreeProvider));
+            }
+            
+
 
             return base.CreateFunctionContext(actionContext);
         }
-        public static void AddToActionContext<T>(HttpRequestMessage httpRequestMessage, string name )
+
+        
+
+        public static void AddToActionContext<T>(HttpRequestMessage httpRequestMessage, string name , T obj = null) where T : class
         {
-           var obj = httpRequestMessage.Resolve<T>();
+            obj = obj ?? httpRequestMessage.Resolve<T>();
             
             
             IPropertyBag bag = null;
@@ -58,6 +78,57 @@ namespace Mozu.SiteBuilder.Mvc.OAF
             }
             bag[name] = obj;
 
+        }
+
+        class CategoryHelper : ICategoryTree
+        {
+            private readonly ICategoryTreeProvider _provider;
+            Lazy<Task<CategoryTree>> _catTask;
+            public CategoryHelper(ICategoryTreeProvider provider)
+            {
+                _provider = provider;
+                _catTask = new Lazy<Task<CategoryTree>>(() => _provider.GetAllCategories());
+            }
+
+            public string ETag
+            {
+                get
+                {
+                    return _catTask.Value.Result.ETag;
+                }
+                set {; }
+            }
+            public List<Category> RootCategories
+            {
+                get
+                {
+                    return _catTask.Value.Result.RootCategories;
+                }
+            }
+            public List<Category> AllCategories
+            {
+                get
+                {
+                    return _catTask.Value.Result.AllCategories;
+                }
+                set { }
+            }
+
+            [Microsoft.ClearScript.ScriptMember("findById")]
+            public Category FindById(int? categoryId)
+            {
+                return _catTask.Value.Result.FindById(categoryId);
+            }
+            [Microsoft.ClearScript.ScriptMember("findByCode")]
+            public Category FindByCode(string categoryCode)
+            {
+                return _catTask.Value.Result.FindByCode(categoryCode);
+            }
+            [Microsoft.ClearScript.ScriptMember("findBySlug")]
+            public IEnumerable<Category> FindBySlug(string categorySlug)
+            {
+                return _catTask.Value.Result.FindBySlug(categorySlug);
+            }
         }
     }
 }

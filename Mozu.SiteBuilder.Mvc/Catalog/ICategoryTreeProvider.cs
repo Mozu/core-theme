@@ -11,5 +11,6 @@ namespace Mozu.SiteBuilder.Mvc.Catalog
     public interface ICategoryTreeProvider
     {
         Task<CategoryTree> GetAllCategories();
+        bool HasCompleted{ get; }
     }
 }

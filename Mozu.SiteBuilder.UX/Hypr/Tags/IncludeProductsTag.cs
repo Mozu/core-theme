@@ -307,7 +307,7 @@ namespace Mozu.SiteBuilder.UX.Hypr.Tags
                 var catTree = context.Resolve<ICategoryTreeProvider>().GetAllCategories().Result;
                 if (!string.IsNullOrWhiteSpace(faceCategoryCode))
                 {
-                    var tempCat = catTree.Items.Where(x => string.Equals(faceCategoryCode, x.CategoryCode, StringComparison.OrdinalIgnoreCase)).FirstOrDefault();
+                    var tempCat = catTree.AllCategories.Where(x => string.Equals(faceCategoryCode, x.CategoryCode, StringComparison.OrdinalIgnoreCase)).FirstOrDefault();
                     if (tempCat != null)
                     {
                         facetCategoryId = tempCat.Id;
@@ -315,7 +315,7 @@ namespace Mozu.SiteBuilder.UX.Hypr.Tags
                 }
                 if (!string.IsNullOrWhiteSpace(categoryCode))
                 {
-                    var tempCat = catTree.Items.Where(x => string.Equals(categoryCode, x.CategoryCode, StringComparison.OrdinalIgnoreCase)).FirstOrDefault();
+                    var tempCat = catTree.AllCategories.Where(x => string.Equals(categoryCode, x.CategoryCode, StringComparison.OrdinalIgnoreCase)).FirstOrDefault();
                     if (tempCat != null)
                     {
                         categoryId = tempCat.Id;

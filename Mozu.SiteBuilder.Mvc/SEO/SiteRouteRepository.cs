@@ -313,6 +313,17 @@ namespace Mozu.SiteBuilder.Mvc.SEO
                     var constaintName = (string) null;
                     var contraintType = catTypes[i].Value;
                     var catSegment = catSegmens[i].Value;
+                    var token = new CategoryToken(catSegment);
+                    if ( token.Depth !=0)
+                    {
+                        continue;
+                    }
+                    if ( string.Equals( contraintType , "categoryCode", StringComparison.InvariantCultureIgnoreCase) ||
+                        string.Equals(contraintType, "categorySlug", StringComparison.InvariantCultureIgnoreCase))
+                    {
+                        contraintType = contraintType + "Path";
+                    }
+                        
                     if (catSegment.StartsWith("parent-Category"))
                     {
                         continue;
