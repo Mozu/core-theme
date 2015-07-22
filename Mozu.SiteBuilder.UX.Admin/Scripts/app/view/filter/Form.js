@@ -34,7 +34,7 @@ Ext.define('Taco.view.filter.Form', {
         // filter out the real time fields from the dynamicPrecomputedExpressions
         if (this.getType() === "DynamicPreComputed") {
             this.fieldStore.filterBy(function (filter) {
-                var retVal = !(filter.get("filterType") === "DynamicRealTime");
+                var retVal = (filter.get("filterType") !== "DynamicRealTime");
                 return retVal;
             });
         }
