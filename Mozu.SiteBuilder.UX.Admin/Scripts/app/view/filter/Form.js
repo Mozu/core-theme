@@ -12,19 +12,32 @@ Ext.define('Taco.view.filter.Form', {
 
     rejectRecordOnCancel:false,
 
-    createTitle: 'Create Filter',
+    originalTitle: true,
 
-    editTitle: '{[values.record.data.name]}',
+    config: {
+        // DynamicPreComputed or DynamicRealTime
+        type:null
+    },
+
+    //createTitle: 'Create Filter',
+
+    //editTitle: '{[values.record.data.name]}',
 
     initComponent: function () {
         var me = this;
         // if the left member is "properties." we will end up with two fields that define the left member;
 
-        
-
         var fieldStoreCfg = Taco.filter.getFieldStoreCfg();
 
         this.fieldStore = Ext.create('Ext.data.Store', fieldStoreCfg);
+
+        // filter out the real time fields from the dynamicPrecomputedExpressions
+        if (this.getType() === "DynamicPreComputed") {
+            this.fieldStore.filterBy(function (filter) {
+                var retVal = !(filter.get("filterType") === "DynamicRealTime");
+                return retVal;
+            });
+        }
 
         var fieldValue = this.record.get("left").toLowerCase();
         
@@ -33,7 +46,10 @@ Ext.define('Taco.view.filter.Form', {
             name: 'leftField',
             fieldLabel: 'Field',
             width: 300,
+            //triggerAction: 'all',
+            lastQuery:'',
             valueField: 'id',
+            allowBlank:false,
             displayField: 'text',
             queryMode: 'local',
             valueNotFoundText: 'not found',
@@ -52,6 +68,7 @@ Ext.define('Taco.view.filter.Form', {
 
         this.rightField = Ext.create('Ext.form.field.Text', {
             name: "right",
+            allowBlank: false,
             value: this.record.get("right"),
             fieldLabel: "Value"
         });
@@ -66,6 +83,7 @@ Ext.define('Taco.view.filter.Form', {
 
         this.mon(me, 'boxready', function() {
             me.mon(me.leftField, 'change', this.onFieldChange, me);
+            me.mon(me.operatorField, 'change', this.onOperatorFieldChange, me);
             // reset the operator field based on the current field value;
             me.refreshOperatorField();
             // reset the value field based on the curretn field and operator 
@@ -82,7 +100,6 @@ Ext.define('Taco.view.filter.Form', {
             operatorRecord,
             rightFieldDisabled;
 
-        
 
         leftValue = this.leftField.getValue();
         operatorValue = this.operatorField.getValue();
@@ -94,7 +111,6 @@ Ext.define('Taco.view.filter.Form', {
             return;
         }
 
-
         fieldRecord = this.fieldStore.getById(leftValue);
         operatorRecord = Taco.filter.operatorStore.getById(operatorValue);
 
@@ -102,6 +118,11 @@ Ext.define('Taco.view.filter.Form', {
          
         
 
+    },
+
+    onOperatorFieldChange: function (field, newValue, oldValue, eOpts ) {
+        var me = this;
+        me.refreshValueField();
     },
 
     refreshOperatorField: function (leftValue) {
@@ -132,9 +153,23 @@ Ext.define('Taco.view.filter.Form', {
         }
     },
 
+    beforeSave: function () {
+
+        var operator = this.operatorField.getValue();
+        this.record.set("operator", operator);
+
+        var leftValue = this.leftField.getValue();
+        this.record.set("left", leftValue);
+
+        return true;
+    },
+
     onFieldChange: function (field, newValue, oldValue, e) {
         var me = this
-        this.refreshOperatorField(newValue);
+        
+        if (newValue) {
+            this.refreshOperatorField(newValue);
+        }
     },
     onDestroy: function () {
         var me = this;

@@ -105,15 +105,16 @@ Ext.define('Taco.view.filter.ExpressionTreePanel', {
                 xtype: 'taco.menucolumn',
                 menuDisabled: true,
                 text: 'Actions',
-                //onMenuShow: function(menu, eventData) {
-                //    // need to disable the delete menu option when discount has been used
-                //    var deleteMenuItem = menu.down("#deleteMenuItem");
-                //    if (eventData.record.get('canBeDeleted')) {
-                //        deleteMenuItem.show();
-                //    } else {
-                //        deleteMenuItem.hide();
-                //    }
-                //},
+                onMenuShow: function (menu, eventData) {
+                    var deleteMenuItem = menu.down("#deleteMenuItem"),
+                        createFilterMenuItem = menu.down("#createFilterMenuItem"),
+                        createContainerMenuItem= menu.down("#createContainerMenuItem"),
+                        record = eventData.record;
+
+                    createFilterMenuItem.hidden = !(record.get('type') == "container");
+                    createContainerMenuItem.hidden = !(record.get('type') == "container");
+                    deleteMenuItem.hidden = (record.isRoot());
+                },
                 menuItems: [
                     {
                         text: 'Edit',
@@ -126,7 +127,7 @@ Ext.define('Taco.view.filter.ExpressionTreePanel', {
                             me.editNode(record.get("id"), eventData.record, eventData.item, eventData.rowIndex, eventData.e);
 
                         }
-                    }
+                    },
 
                     //,
                     //{
@@ -143,17 +144,41 @@ Ext.define('Taco.view.filter.ExpressionTreePanel', {
 
                     //        Taco.app.StateManager.attemptNavigate('discounts/duplicate/' + record.getId(), metaData);
                     //    }
-                    //}, {
-                    //    text: 'Delete',
-                    //    itemId: "deleteMenuItem",
-                    //    // deleteMenuColumnHandler can be found in Taco.core.ux.mixins.DeleteFromGrid
-                    //    menuColumnHandler: "deleteMenuColumnHandler",
-                    //    //requiredBehaviors: {
-                    //    //    model: 'Taco.model.Discount',
-                    //    //    behavior: 'delete'
-                    //    //},
-                    //    scope: me
-                    //}
+                    //}, 
+                    {
+
+                        text: 'Create Container',
+                        itemId: "createContainerMenuItem",
+                        menuColumnHandler: function(item, eventData) {
+                            var record = eventData.record;
+                            me.createContainer(record.get("id"), eventData.record, eventData.item, eventData.rowIndex, eventData.e);
+
+                        },
+                        scope: me
+                    },
+
+                    {
+
+                        text: 'Create Filter',
+                        itemId: "createFilterMenuItem",
+                        menuColumnHandler: function (item, eventData) {
+                            var record = eventData.record;
+                            me.createFilter(record.get("id"), eventData.record, eventData.item, eventData.rowIndex, eventData.e);
+                        },
+                        scope: me
+                    },
+                    
+                    {
+
+                        text: 'Delete',
+                        itemId: "deleteMenuItem",
+                        menuColumnHandler: function(item, eventData) {
+                            var record = eventData.record;
+                            me.deleteNode(record.get("id"), eventData.record, eventData.item, eventData.rowIndex, eventData.e);
+
+                        },
+                        scope: me
+                    }
                 ]
             });
 
@@ -333,7 +358,7 @@ Ext.define('Taco.view.filter.ExpressionTreePanel', {
         var selectedRecords = selMod.getSelection() || me.getRootNode();
         selMod.deselectAll();
         
-        console.log("refreshFocus", selectedRecords)
+        
         
         //var rootNode = me.getRootNode();
         //me.getSelectionModel().select(rootNode);
@@ -431,6 +456,12 @@ Ext.define('Taco.view.filter.ExpressionTreePanel', {
 
         this.mon(me, "itemkeydown", function (view, record, item, index, e) {
             switch (e.getKey()) {
+                case Ext.EventObject.F:
+                    me.createFilter();
+                    break;
+                case Ext.EventObject.C:
+                    me.createContainer();
+                    break;
                 case e.ENTER:
                     // need to correct the event to give it an xy position relative to the row in the tree.
                     e.xy = Ext.get(item).getXY();
@@ -455,42 +486,94 @@ Ext.define('Taco.view.filter.ExpressionTreePanel', {
         }
     },
 
-    deleteNode: function () {
-        console.log("delete node")
+    deleteNode: function (id, record, item, rowIndex, e) {
+        // figure out what gets selected after the delete happens. this will maintain focus. and provide keyboard support.
+        var nodeToSelect = record.nextSibling || record.previousSibling || record.parentNode;
+
+        if (record && !record.isRoot()) {
+            record.removeAll();
+            record.remove();
+            this.getSelectionModel().select(nodeToSelect);
+        }
     },
 
     editFilter: function (nodeId, record, item, index, e) {
         var me = this;
-        
-        alert("coming soon");
-        return;
-         //var win = Ext.create('Taco.view.filter.EditFilterModal', {
-         //    record: record,
-         //    listeners: {
-         //        scope:me,
-         //        'aftersaveclose' : function() {
-         //            me.refreshFocus();
-         //        },
-         //        'aftercancelclose': function () {
-         //            me.refreshFocus();
-         //        }
-         //    }
-         //});
+         var win = Ext.create('Taco.view.filter.EditFilterModal', {
+             record: record,
+             type: this.getType(),
+             listeners: {
+                 scope:me,
+                 'aftersaveclose' : function() {
+                     me.refreshFocus();
+                 },
+                 'aftercancelclose': function () {
+                     me.refreshFocus();
+                 }
+             }
+         });
 
     },
-    createFilter: function() {
-        console.log("create filter")
+    
+    createFilter: function (id, record, item, rowIndex, e) {
+        var me = this;
+        if (!record) {
+            record = this.getSelectionModel().getSelection()[0];
+        }
+
+        if (record.get("type") !== "container") {
+            return;
+        }
+        
+        var newRecord = Ext.create('Taco.model.ExpressionTree', {
+            leaf:true,
+            left: "ProductCode",
+            operator: "eq",
+            right: "",
+            type: "predicate"
+        });
+
+        var win = Ext.create('Taco.view.filter.EditFilterModal', {
+            record: newRecord,
+            type:this.getType(),
+            listeners: {
+                scope: me,
+                'aftersaveclose': function () {
+                    var addedRecord = record.insertChild(0, newRecord);
+                    me.refreshFocus();
+                },
+                'aftercancelclose': function () {
+                    newRecord.destroy();
+                    me.refreshFocus();
+                }
+            }
+        });
     },
+
     deleteFilter: function() {
         console.log("delete filter")
     },
 
-    
-    createContainer: function() {
-        console.log("create container")
+    containerDataTpl : {
+        "expanded": true,
+        "type": "container",
+        "logicalOperator": "or",
+        "nodes": []
+    },
+
+
+    createContainer: function (id, record, item, rowIndex, e) {
+        if (!record) {
+            record = this.getSelectionModel().getSelection()[0];
+        }
+
+        if (record.get("type") === "container") {
+            var addedRecord = record.insertChild(0, Ext.Object.merge({}, this.containerDataTpl));
+            this.view.select(addedRecord);
+        }
     },
     deleteContainer: function () {
-        console.log("delete container")
+        
     },
     editContainer: function (nodeId, record, item, index, e) {
         var me = this,

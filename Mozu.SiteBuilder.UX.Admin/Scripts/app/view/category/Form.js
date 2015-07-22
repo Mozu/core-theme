@@ -27,6 +27,8 @@ Ext.define('Taco.view.category.Form', {
         var me = this,
             categoryType = this.record.get("categoryType");
 
+        
+
         this.title = this.record.data.name;
 
         //this.expressionTreePanel = Ext.create('Taco.view.filter.ExpressionTreePanel', {
@@ -35,7 +37,7 @@ Ext.define('Taco.view.category.Form', {
         //    showCodeButton: false
         //});
 
-        if (categoryType == "DynamicPreComputed") {
+        if (categoryType != "Static") {
 
             var expressionData = this.record.get("dynamicExpression");
 
@@ -151,6 +153,7 @@ Ext.define('Taco.view.category.Form', {
                 }
             ]
         });
+        
 
         
         this.dynamicCategoryTypeCombo = Ext.widget({
@@ -165,9 +168,9 @@ Ext.define('Taco.view.category.Form', {
             editable: false,
             forceSelection: true,
             initialValue: "Active",
-            //disabled: !this.record.phantom,
+            disabled: !this.record.phantom,
             // temporarily disabling the ability to create real time dynamic expressions. service isn't ready yet.
-            disabled: true,
+            //disabled: true,
             value:(this.record.get("categoryType")=="DynamicPreComputed") ? "yes" : "no",
             listeners: {
                 scope: me,

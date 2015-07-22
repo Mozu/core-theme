@@ -1,42 +1,44 @@
-﻿/**
- * @class  Taco.view.discount.Edit
- */
+﻿///**
+// * @class  Taco.view.discount.Edit
+// */
 
-Ext.define('Taco.view.filter.Edit', {
-    extend: 'Taco.core.ux.form.FullEditor',
-    requires: [
-        'Taco.view.filter.Form'
-    ],
-    formCls: 'Taco.view.filter.Form',
+//Ext.define('Taco.view.filter.Edit', {
+//    extend: 'Taco.core.ux.form.FullEditor',
+//    requires: [
+//        'Taco.view.filter.Form'
+//    ],
+//    formCls: 'Taco.view.filter.Form',
 
-    style:"background-color:#fff",
+//    style:"background-color:#fff",
 
-    enableNextPrevious: false,
+//    enableNextPrevious: false,
 
-    rejectRecordOnCancel: false,
+//    rejectRecordOnCancel: false,
 
-    title: 'Edit Filter',
+//    title: 'Edit Filter',
 
-    extraNavHeaderCls : "taco-navheader-white",
+//    extraNavHeaderCls : "taco-navheader-white",
 
-    useWhiteContainer: true,
+//    useWhiteContainer: true,
 
-    initComponent: function () {
-        var me = this;
+//    initComponent: function () {
+//        var me = this;
 
-        //this.cls += " taco-navheader-white ";
+        
 
-        //this.bodyCls += " taco-navheader-white ";
-        //this.bodyStyle = "background-color:#fff";
+//        this.mon(me, "beforesave", function () {
+//            debugger;
+//            return true;
+//        }, me);
 
-        this.callParent(arguments);
-    },
+//        this.callParent(arguments);
+//    },
 
-    onDestroy: function () {
-        var me = this;
+//    onDestroy: function () {
+//        var me = this;
 
-        me.clearListeners();
+//        me.clearListeners();
 
-        this.callParent(arguments);
-    }
-});
+//        this.callParent(arguments);
+//    }
+//});

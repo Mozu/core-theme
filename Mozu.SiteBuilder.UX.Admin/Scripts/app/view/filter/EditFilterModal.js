@@ -4,28 +4,49 @@
  */
 
 Ext.define('Taco.view.filter.EditFilterModal', {
-    extend: 'Taco.core.ux.editor.ModalEditor',
+    extend: 'Taco.core.ux.window.Modal',
     requires: [
         'Taco.model.ExpressionTree',
-        'Taco.view.filter.Edit'
+        'Taco.view.filter.Form'
     ],
 
     modelName: 'Taco.model.ExpressionTree',
 
-    editCls: 'Taco.view.filter.Edit',
-    
+    form: 'Taco.view.filter.Form',
 
-    showActionsBar: false,
+    autoShow:true,
 
-    entityId: null,
+    title: "Edit Filter",
 
-    record: null,    
+    record: null,
+
+    scale: "medium",
+
+    config: {
+        // DynamicPreComputed or DynamicRealTime
+        type:null
+    },
 
     initComponent: function(eOpts) {
         var me = this;
+        
+        this.form = Ext.create(me.form, {
+            type:this.getType(),
+            record: me.record
+        });
+
+        this.items = [this.form];
+
         this.callParent(arguments);
     },
 
+    doSave: function () {
+
+        this.form.beforeSave();
+        this.record.set(this.form.getValues());
+        this.saveSuccess(this.record);
+    },
+    
     /**
     * Do any class level cleanup. Destroy and null any scoped refs.     
     */
