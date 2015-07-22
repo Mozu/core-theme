@@ -6,6 +6,8 @@
  * The Modal is equivalent to the Taco.core.ux.form.FullEditor class and should be interchangeable. Its purpose is to allow in context creation and editing of an entity.
  */
 
+// dont use this yet. needs a lot of work.
+
 // TODO: Try align this class with the FullEditor class. Potentially by utilizing the same mixins with those mixins being agnostic to the view that contains them.
 
 // todo: investigate trying to add navform2 and tabForm into this class;
@@ -160,6 +162,8 @@ Ext.define('Taco.core.ux.editor.ModalEditor', {
             cancelButtonVisible: true
         });
 
+        this.mon(this.editView, "afterrender", this.bindActionsToForm, this);
+
         this.mon(this.editView, 'aftersave', function (view,record, idEdit) {
             this.saveSuccess(record);
         }, this);
@@ -168,8 +172,20 @@ Ext.define('Taco.core.ux.editor.ModalEditor', {
         
 
         var editViewHeader = this.editView.header;
-
     },
+
+    bindActionsToForm: function (form) {
+        var actions = this.query('[formBind]'),
+            form = form || this.form || this.getForm();
+
+        debugger;
+        if (form && form.isComponent) {
+            // uuuuuugly. 
+            form.form.form.getBoundItems().add(actions);
+            //form.getForm().getBoundItems().add(actions);
+        }
+    },
+
 
     
     initUi: function () {

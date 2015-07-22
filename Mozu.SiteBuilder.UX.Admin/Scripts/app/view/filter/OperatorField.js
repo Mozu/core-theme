@@ -10,6 +10,7 @@ Ext.define('Taco.view.filter.OperatorField', {
     ],
     config: {
         fieldLabel: "Operator",
+        allowBlank: false,
         value:null,
         supportedOperators: [
             "eq", "ne", "req", "lt", "le", "gt", "ge", "in"
@@ -42,6 +43,7 @@ Ext.define('Taco.view.filter.OperatorField', {
             width: 300,
             valueField: 'id',
             displayField: 'text',
+            allowBlank: this.allowBlank,
             queryMode: 'local',
             valueNotFoundText: '',
             editable: false,
@@ -62,6 +64,9 @@ Ext.define('Taco.view.filter.OperatorField', {
         ];
 
         this.callParent(arguments);
+
+        this.relayEvents(this.operatorCombo, ["change"]);
+
     },
 
     getValue: function () {
@@ -90,6 +95,11 @@ Ext.define('Taco.view.filter.OperatorField', {
         }
             
         this.operatorCombo.setValue(comboValue);
+    },
+
+    validate: function () {
+
+        return (this.getValue());
     },
 
     isRecursiveAllowed : function() {

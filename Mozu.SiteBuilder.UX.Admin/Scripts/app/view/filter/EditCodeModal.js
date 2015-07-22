@@ -238,8 +238,6 @@ Ext.define('Taco.view.filter.EditCodeModal', {
         var codeField = tab.down('.taco-codefield');
         var codeTxt = codeField.getValue();
 
-        
-        
         var jsonData = {
             type:this.getType()
         }

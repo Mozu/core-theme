@@ -11,14 +11,14 @@ Ext.define('Taco.view.filter.Schema', {
 
     // Override this config when we i18L
     operatorData: [
-        { id: "eq", text: "Is equal to: " },
-        { id: "ne", text: "Does not equal: " },
-        { id: "req", text: "Is equal to: ", recurse: true }, //Note: req is going to be defined by a seperate checkbox field when the user selects the eq. operator.
-        { id: "lt", text: "Is less than: " },
-        { id: "le", text: "Is less than or equal to: " },
-        { id: "gt", text: "Is greater than: " }, 
-        { id: "ge", text: "Is greater than or equal to: " },
-        { id: "in", text: "Is one of the following: " }
+        { id: "eq", text: "is equal to: " },
+        { id: "ne", text: "does not equal: " },
+        { id: "req", text: "is equal to (plus its children): ", recurse: true }, //Note: req is going to be defined by a seperate checkbox field when the user selects the eq. operator.
+        { id: "lt", text: "is less than: " },
+        { id: "le", text: "is less than or equal to: " },
+        { id: "gt", text: "is greater than: " }, 
+        { id: "ge", text: "is greater than or equal to: " },
+        { id: "in", text: "is one of the following: " }
         
     ],
 
@@ -27,6 +27,7 @@ Ext.define('Taco.view.filter.Schema', {
      * config options:
      * id: the key for the lookup. will be all lower case and the store will be case insensitive with regard to the id's
      * field: Same as the id but Camel case for readability in the code editor.
+     * filterType: Used to control when a filter is available.
      * text: the label used for display in the ui
      * defaultValue :  The default value to use when no valud is provided;
      * supportedOperators: Which operators do we currently support for this field. This can be optionaly over riden by the instance.
@@ -121,6 +122,109 @@ Ext.define('Taco.view.filter.Schema', {
                 xtype: "currencyfield"
             },
             allowBlank: false
+        }, {
+            id: "daysavailableincatalog",
+            field: "DaysAvailableInCatalog",
+            text: "Days available in catalog",
+            defaultValue: "",
+            dataType: "int",
+            supportedOperators: ["eq", "ne", "in", "lt", "le", "gt", "ge"],
+            editorCfg: {
+                xtype: "numberfield"
+            },
+            allowBlank: false
+        }, {
+            id: "fulfillmenttypessupported",
+            field: "FulfillmentTypesSupported",
+            text: "Fulfillment types supported",
+            defaultValue: "",
+            dataType: "string",
+            supportedOperators: ["eq", "ne", "in"],
+            editorCfg: {
+                xtype: "combo"
+            },
+            validEnumValues: ["DirectShip", "InStorePickup", "Digital"],
+            allowBlank: false
+        }, {
+            id: "measurements.packageweight.value",
+            field: "Measurements.PackageWeight.Value",
+            text: "Weight",
+            defaultValue: "",
+            dataType: "float",
+            supportedOperators: ["eq", "ne", "in", "lt", "le", "gt", "ge"],
+            editorCfg: {
+                xtype: "numberfield"
+            },
+            allowBlank: false
+        }, {
+            id: "measurements.packageweight.value",
+            field: "Measurements.PackageWeight.Value",
+            text: "Weight",
+            defaultValue: "",
+            dataType: "float",
+            supportedOperators: ["eq", "ne", "in", "lt", "le", "gt", "ge"],
+            editorCfg: {
+                xtype: "numberfield"
+            },
+            allowBlank: false
+        }, {
+            id: "measurements.packageheight.value",
+            field: "Measurements.PackageHeight.Value",
+            text: "Height",
+            defaultValue: "",
+            dataType: "float",
+            supportedOperators: ["eq", "ne", "in", "lt", "le", "gt", "ge"],
+            editorCfg: {
+                xtype: "numberfield"
+            },
+            allowBlank: false
+        }, {
+            id: "measurements.packagelength.value",
+            field: "Measurements.PackageLength.Value",
+            text: "Length",
+            defaultValue: "",
+            dataType: "float",
+            supportedOperators: ["eq", "ne", "in", "lt", "le", "gt", "ge"],
+            editorCfg: {
+                xtype: "numberfield"
+            },
+            allowBlank: false
+        }, {
+            id: "measurements.packagewidth.value",
+            field: "Measurements.PackageWidth.Value",
+            text: "Width",
+            defaultValue: "",
+            dataType: "float",
+            supportedOperators: ["eq", "ne", "in", "lt", "le", "gt", "ge"],
+            editorCfg: {
+                xtype: "numberfield"
+            },
+            allowBlank: false
+        }, {
+            id: "price.saleprice",
+            field: "Price.SalePrice",
+            filterType: "DynamicRealTime",
+            text: "Sale Price (Real Time)",
+            defaultValue: "",
+            dataType: "float",
+            supportedOperators: ["eq", "ne", "in", "lt", "le", "gt", "ge"],
+            editorCfg: {
+                xtype: "currencyfield"
+            },
+            allowBlank: false
+        }, {
+            id: "price.saletype",
+            field: "Price.SaleType",
+            filterType: "DynamicRealTime",
+            text: "Sale Type (Real Time)",
+            defaultValue: "",
+            dataType: "string",
+            supportedOperators: ["eq", "ne", "in", "lt", "le", "gt", "ge"],
+            editorCfg: {
+                xtype: "combo"
+            },
+            validEnumValues: ["CatalogSalePrice", "DiscountedList", "DiscountedCatalogSalePrice"],
+            allowBlank: false
         }
     ],
 
@@ -137,6 +241,7 @@ Ext.define('Taco.view.filter.Schema', {
             { name: "dataType", type: "string" },
             { name: "supportedOperators", type: "array" },
             { name: "editorCfg", type: "object" },
+            { name: "filterType", type: "string", defaultValue:"DynamicPreComputed" },
             { name: "allowBlank", type: "boolean" }
         ]
     },
