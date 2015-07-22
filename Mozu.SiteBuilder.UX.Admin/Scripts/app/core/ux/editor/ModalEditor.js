@@ -177,8 +177,7 @@ Ext.define('Taco.core.ux.editor.ModalEditor', {
     bindActionsToForm: function (form) {
         var actions = this.query('[formBind]'),
             form = form || this.form || this.getForm();
-
-        debugger;
+        
         if (form && form.isComponent) {
             // uuuuuugly. 
             form.form.form.getBoundItems().add(actions);

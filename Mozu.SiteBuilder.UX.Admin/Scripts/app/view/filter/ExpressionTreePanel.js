@@ -111,8 +111,8 @@ Ext.define('Taco.view.filter.ExpressionTreePanel', {
                         createContainerMenuItem= menu.down("#createContainerMenuItem"),
                         record = eventData.record;
 
-                    createFilterMenuItem.hidden = !(record.get('type') == "container");
-                    createContainerMenuItem.hidden = !(record.get('type') == "container");
+                    createFilterMenuItem.hidden = (record.get('type') != "container");
+                    createContainerMenuItem.hidden = (record.get('type') != "container");
                     deleteMenuItem.hidden = (record.isRoot());
                 },
                 menuItems: [
