@@ -75,6 +75,8 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
             string facetHierValue = null;
             string facetHierDepth = null;
             string facets = null;
+            int? pageSize = PageContext.Search.PageSize;
+            int? startIndex = PageContext.Search.StartIndex;
 
             if (categoryId.HasValue)
             {
@@ -82,18 +84,19 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
                 searchQuery.Append(categoryId);
             }
 
-            if (PageContext.Search.PageSize == null)
+            if (pageSize == null)
             {
-                PageContext.Search.PageSize = ((int?) (JToken)themeSettings["defaultPageSize"]) ?? 20;
+                pageSize = ((int?) (JToken)themeSettings["defaultPageSize"]) ?? 20;
+
             }
 
-            if (PageContext.Search.StartIndex == null && page != null)
+            if (startIndex== null && page != null)
             {
-                PageContext.Search.StartIndex = (page.Value - 1) * PageContext.Search.PageSize.Value;
+                startIndex = (page.Value - 1) * pageSize;
             }
             else
             {
-                PageContext.Search.StartIndex = PageContext.Search.StartIndex.GetValueOrDefault(0);
+                startIndex = startIndex.GetValueOrDefault(0);
             }
 
             if (includeFacets.GetValueOrDefault(true) )
@@ -107,7 +110,7 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
                 }
             }
             
-            var searchResponse = (await _searchClient.Search(query, searchQuery.ToString(), facetHierValue: facetHierValue, facetTemplate: facetTemplate, facetHierDepth: facetHierDepth, facetValueFilter: PageContext.Search.ToFacetValueFilter(), startIndex: PageContext.Search.StartIndex, sortBy: PageContext.Search.SortBy, pageSize: PageContext.Search.PageSize, facet: facets)).ReadAsSync();
+            var searchResponse = (await _searchClient.Search(query, searchQuery.ToString(), facetHierValue: facetHierValue, facetTemplate: facetTemplate, facetHierDepth: facetHierDepth, facetValueFilter: PageContext.Search.ToFacetValueFilter(), startIndex: startIndex.Value, sortBy: PageContext.Search.SortBy, pageSize: pageSize.Value, facet: facets)).ReadAsSync();
             var pc = Mapper.Map<ProductSearchResult>(searchResponse);
 
             pc.Query = query;
