@@ -131,8 +131,9 @@ Ext.define('Taco.view.publishing.grid.Draft', {
                     xtype: 'gridcolumn',
                     dataIndex: 'name',
                     stateId: 'name',
-                    columnWidth: 100,
-                    text: 'Name'
+                    minWidth: 100,
+                    text: 'Name',
+                    flex: 1
                 }, 
                 publishSetCode: {
                     type: 'gridcolumn',

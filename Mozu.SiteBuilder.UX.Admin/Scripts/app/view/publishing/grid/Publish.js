@@ -98,7 +98,8 @@ Ext.define('Taco.view.publishing.grid.Publish', {
                     dataIndex: 'name',
                     stateId: 'name',
                     text: 'Name',
-                    hideable: false
+                    hideable: false,
+                    flex: 1
                 }, 
                 {
                     xtype: 'gridcolumn',
@@ -157,6 +158,14 @@ Ext.define('Taco.view.publishing.grid.Publish', {
                     text: 'Last Published By',
                     hidden: true,
                     renderer: this.getAssociatedUserName
+                },
+                {
+                    xtype: 'gridcolumn',
+                    dataIndex: 'status',
+                    stateId: 'status`',
+                    width: 100,
+                    text: 'Status',
+                    hidden: true
                 }
                 // {
                 //     xtype: 'gridcolumn',
@@ -277,9 +286,25 @@ Ext.define('Taco.view.publishing.grid.Publish', {
         Taco.model.PublishSet.publishAll({
             data: [eventData.record.data],
             success: function() {
+                this.showConfirmation(eventData);
                 eventData.record.store.read();
             },
+            scope: this,
             failure: this.showMessage.bind(this, 'There was an error publishing this publish set!', 'error')
+        });
+    },
+
+    showConfirmation: function(eventData) {
+        this.getConfirmationModal({
+            header: 'Publish ',
+            message: eventData.record.get('name') + ' has been scheduled to publish',
+            primaryOptions: {
+                text: 'Ok',
+                handler: function() {}
+            },
+            beforeShowFunction: function(cmp){
+                cmp.down('button').hide();
+            }
         });
     },
 
@@ -306,6 +331,7 @@ Ext.define('Taco.view.publishing.grid.Publish', {
             modal: true,
             closeAction: 'destroy',
             height: 200,
+            beforeShowFunction: config.beforeShowFunction,
             primaryText: config.primaryOptions ? config.primaryOptions.text : 'Confirm',
             secondaryText: config.secondaryOptions ? config.secondaryOptions.text : 'Cancel',
             primaryHandler: function() {
@@ -334,7 +360,12 @@ Ext.define('Taco.view.publishing.grid.Publish', {
                         html: config.message
                     })
                 ]
-            }]
+            }],
+            listeners:  {
+                beforeshow: function(cmp) {
+                    if (this.beforeShowFunction) this.beforeShowFunction.call(this, cmp);
+                }
+            }
         }).show();
     },
 

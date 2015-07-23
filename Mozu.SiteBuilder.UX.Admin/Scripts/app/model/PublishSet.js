@@ -142,6 +142,11 @@ Ext.define('Taco.model.PublishSet', {
                 return model.get('auditInfo').updateDate;
             },
             defaultValue: null
+        },
+        {
+            name: 'status',
+            type: 'string',
+            defaultValue: null
         }
     ],
 
