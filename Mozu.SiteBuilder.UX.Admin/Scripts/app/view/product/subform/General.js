@@ -540,7 +540,7 @@ Ext.define('Taco.view.product.subform.General', {
                     {
                         xtype: 'datetime',
                         fieldLabel: 'Date First Available',
-                        name: 'DateFirstAvailableInCatalog',
+                        name: 'dateFirstAvailableInCatalog',
                         labelAlign: 'top',
                         hidden: this.isGlobal,
                         width: twoColumnFieldWidth,
