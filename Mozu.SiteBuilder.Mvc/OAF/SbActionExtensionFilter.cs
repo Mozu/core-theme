@@ -10,6 +10,7 @@ using Autofac;
 using Microsoft.ClearScript;
 using Mozu.Core.Actions;
 using Mozu.Core.Actions.Contracts;
+using Mozu.SiteBuilder.Mvc.ActionResults;
 using Mozu.SiteBuilder.Mvc.Catalog;
 using Mozu.SiteBuilder.Mvc.Contexts;
 using Mozu.SiteBuilder.Mvc.Helpers;
@@ -29,12 +30,45 @@ namespace Mozu.SiteBuilder.Mvc.OAF
         {
             this.FunctionActionFilterType = typeof(ISbActionExtensionFilter);
         }
+       
     }
     public interface ISbActionExtensionFilter: IActionExtensionFilter
     { }
 
     public class SbActionExtensionFilter : ApiActionExtensionFilter, ISbActionExtensionFilter
     {
+        public override IFunctionCallbackHandler CreateHandler(HttpActionContext actionContext)
+        {
+            return new WrappedFunctionCallbackHandler()
+            {
+                BeforeExecuteHandler = (handler, fn) =>
+                {
+
+                    var response = actionContext.Response;
+                    if (response != null)
+                    {
+                        if (response.Content is ObjectContent)
+                        {
+                            var val = ((ObjectContent)response.Content).Value;
+                            if (val is TransferResult || val is RedirectResult)
+                            {
+                                return FunctionContinuationBehavior.Stop;
+                            }
+                        }
+                        else
+                        {
+                            if (response.StatusCode == System.Net.HttpStatusCode.Redirect || response.StatusCode == System.Net.HttpStatusCode.MovedPermanently)
+                            {
+                                return FunctionContinuationBehavior.Stop;
+                            }
+                        }
+                    }
+
+                    return handler.OnBeforeExecute(fn);
+                }
+            };
+        }
+
         protected override ApiActionExtensionFilterContext CreateFunctionContext(HttpActionContext actionContext)
         {
             AddToActionContext<SiteContext>(actionContext.Request, "siteContext");
