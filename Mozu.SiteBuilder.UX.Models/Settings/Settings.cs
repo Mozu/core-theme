@@ -93,6 +93,24 @@ namespace Mozu.SiteBuilder.UX.Models.Settings
         public Dictionary<string, string> SupportedCards { get; set; }
 
         public VisaCheckoutSettings VisaCheckout { get; set; }
+
+        public List<ExternalPaymentWorkflowSettings> ExternalPaymentWorkflowSettings { get; set; }
+    }
+
+    public class ExternalPaymentWorkflowSettings
+    {
+        public string Name { get; set; }
+        public string Namespace { get; set; }
+        public bool IsEnabled { get; set; }
+        public List<ThirdPartyCredentialField> Credentials { get; set; }
+    }
+
+    public class ThirdPartyCredentialField
+    {
+        public string DisplayName { get; set; }
+        public string APIName { get; set; }
+        public string Value { get; set; }
+        public string InputType { get; set; }
     }
 
     /// <summary>

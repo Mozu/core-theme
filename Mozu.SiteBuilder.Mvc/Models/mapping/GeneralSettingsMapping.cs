@@ -2,8 +2,12 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Linq.Dynamic;
+using System.Security.Cryptography;
 using System.Text.RegularExpressions;
 using AutoMapper;
+using Mozu.SiteBuilder.Mvc.Extensions;
+using Mozu.SiteBuilder.Mvc.OAF;
 using Mozu.SiteBuilder.UX.Models.Settings;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Bson;
@@ -24,10 +28,17 @@ namespace Mozu.SiteBuilder.Mvc.Models.ModelMapping
         {
           //  Mapper.CreateMap<Mozu.SiteSettings.General.Contracts.GeneralSettings, UX.Models.Settings.GeneralSettings>();
             Mapper.CreateMap<Mozu.Tenant.Contracts.Domain , SiteDomain>();
+
+            Mapper.CreateMap<DC.ThirdPartyCredentialField, ThirdPartyCredentialField>()
+                ;
+            Mapper.CreateMap<DC.ExternalPaymentWorkflowDefinition, ExternalPaymentWorkflowSettings>()
+                .ForMember(x => x.Credentials, opt => opt.MapFrom(src => src.Credentials.Where(c => c.IsSensitive.HasValue && !c.IsSensitive.Value)))
+                ;
             
             Mapper.CreateMap<DC.CheckoutSettings, UX.Models.Settings.CheckoutSettings>()
                   .ForMember(x => x.CustomerCheckoutType, opt => opt.ResolveUsing(x => x.CustomerCheckoutSettings.CustomerCheckoutType))
                   .ForMember(x => x.IsPayPalEnabled, opt => opt.ResolveUsing(x => x.PaymentSettings.ExternalPaymentWorkflowDefinitions != null && x.PaymentSettings.ExternalPaymentWorkflowDefinitions.Any(expwd => String.Equals(expwd.Name, DC.Constants.ThirdPartyPayment.PAYPAL_EXPRESS, System.StringComparison.OrdinalIgnoreCase) && expwd.IsEnabled)))
+                  .ForMember(x => x.ExternalPaymentWorkflowSettings, opt => opt.ResolveUsing(GetExternalPaymentWorkflowSettings))
                   .ForMember(x => x.VisaCheckout, opt => opt.ResolveUsing(GetVisaCheckoutSettings))
                   .ForMember(x => x.PayByMail, opt => opt.ResolveUsing(x => x.PaymentSettings.PayByMail))
                   .ForMember(x => x.PaymentProcessingFlowType, opt => opt.ResolveUsing(x => x.OrderProcessingSettings.PaymentProcessingFlowType))
@@ -154,6 +165,15 @@ namespace Mozu.SiteBuilder.Mvc.Models.ModelMapping
             return  Convert.ToBase64String(ms.ToArray());
 
 
+        }
+
+        private static List<ExternalPaymentWorkflowSettings> GetExternalPaymentWorkflowSettings(DC.CheckoutSettings checkoutSettings)
+        {
+            if(checkoutSettings == null || checkoutSettings.PaymentSettings == null || checkoutSettings.PaymentSettings.ExternalPaymentWorkflowDefinitions == null)
+                return new List<ExternalPaymentWorkflowSettings>();
+
+            return
+                Mapper.Map<List<ExternalPaymentWorkflowSettings>>(checkoutSettings.PaymentSettings.ExternalPaymentWorkflowDefinitions);
         }
 
         private VisaCheckoutSettings GetVisaCheckoutSettings(DC.CheckoutSettings checkoutSettings)
