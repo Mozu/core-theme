@@ -136,6 +136,8 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.ModelMapping
                 .ForMember(m => m.StockOnHandAdjustment, op => op.Ignore())
                 .ForMember(m => m.IsHiddenWhenOutOfStock, op => op.Ignore())
                 .ForMember(m => m.IsBackOrderAllowed, op => op.Ignore())
+                .ForMember(m => m.PublishSetName, op => op.Ignore())
+                .ForMember(m => m.PublishSetDate, op => op.Ignore())
 
                 .AfterMap((x, y) =>
                 {
