@@ -112,7 +112,21 @@ namespace Mozu.SiteBuilder.UX.Models.Settings
         public string APIName { get; set; }
         public string Value { get; set; }
         public string InputType { get; set; }
-        public List<string> VocabularyValues { get; set; } 
+        public List<VocabularyValue> VocabularyValues { get; set; }
+    }
+
+    public class VocabularyValue
+    {
+        public string Key { get; set; }
+
+        public List<LocalizedContent> Contents { get; set; }
+    }
+
+    public class LocalizedContent
+    {
+        public string LocaleCode { get; set; }
+
+        public string Value { get; set; }
     }
 
     /// <summary>

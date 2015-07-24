@@ -79,6 +79,31 @@ Ext.define('Taco.view.settings.paymentAndCheckout.ExternalGateway', {
             });
         }
 
+        if (fieldDef.inputType === 'RadioButton') {
+
+            var radioButtonItems = [];
+            Ext.each(fieldDef.vocabularyValues, function (val) {
+                if (val.contents[0]) {
+                    radioButtonItems.push({
+                        boxLabel: val.contents[0].value,
+                        name: fieldDef.apiName,
+                        inputValue: val.key,
+                        id: val.key
+                    });
+                }
+            });
+
+            var field = Ext.widget({
+                xtype: 'radiogroup',
+                name: fieldDef.apiName,
+                fieldLabel: fieldDef.displayName,
+                vertical: true,
+                items: radioButtonItems
+            });
+
+            return field;
+        }
+
         return Ext.widget(
             {
                 xtype: 'textfield',
@@ -102,9 +127,11 @@ Ext.define('Taco.view.settings.paymentAndCheckout.ExternalGateway', {
                 isDirty = true;
             }
 
+            var fieldValue = field.getValue();
+
             val['displayName'] = field.getFieldLabel();
             val['apiName'] = field.getName();
-            val['value'] = field.getValue();
+            val['value'] = typeof fieldValue === 'object' ? fieldValue[Object.keys(fieldValue)[0]] : fieldValue;
             creds.push(val);
         });
 

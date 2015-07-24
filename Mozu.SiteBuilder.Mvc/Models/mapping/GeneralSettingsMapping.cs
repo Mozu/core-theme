@@ -31,6 +31,13 @@ namespace Mozu.SiteBuilder.Mvc.Models.ModelMapping
 
             Mapper.CreateMap<DC.ThirdPartyCredentialField, ThirdPartyCredentialField>()
                 ;
+
+            Mapper.CreateMap<DC.LocalizedContent, LocalizedContent>()
+                ;
+
+            Mapper.CreateMap<DC.VocabularyValue, VocabularyValue>()
+                ;
+
             Mapper.CreateMap<DC.ExternalPaymentWorkflowDefinition, ExternalPaymentWorkflowSettings>()
                 .ForMember(x => x.Credentials, opt => opt.MapFrom(src => src.Credentials.Where(c => c.IsSensitive.HasValue && !c.IsSensitive.Value)))
                 ;
