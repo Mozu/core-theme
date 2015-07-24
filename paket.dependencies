@@ -33,7 +33,7 @@ nuget Mozu.Core.Messaging 1.17.1
 nuget Mozu.Core.Test 1.17.1 
 nuget Mozu.Customer.Contracts < 1.19 prerelease 
 nuget mozu.deployweb 2.0.3 
-nuget Mozu.Hypr.NDjango < 1.18 
+nuget Mozu.Hypr.NDjango 1.18.1-dev1507241131ci prerelease
 nuget Mozu.InstalledApps.Contracts 1.17.3 
 nuget Mozu.Location.Contracts 1.17.1 
 nuget Mozu.MZDB.Contracts 1.17.2 
