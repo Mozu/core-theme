@@ -523,7 +523,7 @@ Ext.define('Taco.view.website.Tree', {
                                     editAction: 'move',
                                     nodeType: 'page',
                                     originalDocumentListName: cmsRecord.get('listFQN'),
-                                    url: '/' + cmsRecord.get('name'),
+                                    url: '/cms/' + cmsRecord.get('listFQN') +'/' + cmsRecord.get('name'),
                                     name: values.title                                    
                                 });
                                 navRecord.setDirty();
