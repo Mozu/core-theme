@@ -101,6 +101,7 @@ namespace Mozu.SiteBuilder.UX.Models.Settings
     {
         public string Name { get; set; }
         public string Namespace { get; set; }
+        public string FullyQualifiedName { get; set; }
         public bool IsEnabled { get; set; }
         public List<ThirdPartyCredentialField> Credentials { get; set; }
     }
@@ -111,6 +112,7 @@ namespace Mozu.SiteBuilder.UX.Models.Settings
         public string APIName { get; set; }
         public string Value { get; set; }
         public string InputType { get; set; }
+        public List<string> VocabularyValues { get; set; } 
     }
 
     /// <summary>
