@@ -14,6 +14,9 @@ Ext.define('Taco.model.ExternalPaymentDefinition', {
             name: 'isEnabled',
             type: 'bool'
         }, {
+            name: 'fullyQualifiedName',
+            type: 'string'
+        }, {
             name: 'credentials',
             type: 'auto'
         }

@@ -49,15 +49,8 @@ Ext.define('Taco.view.settings.paymentAndCheckout.ExternalGateway', {
                     value = item['value'];
                 }
             });
-            
-                credField = Ext.widget(
-                {
-                    xtype: 'textfield',
-                    fieldLabel: fieldDef.displayName,
-                    name: fieldDef.apiName,
-                    inputType: 'password',
-                    value: value
-                });
+
+            var credField = this.getCredentialFieldConfig(fieldDef, value);
             this.credFields.push(credField);
             this.credPanel.add(credField);
         }, this);
@@ -74,6 +67,27 @@ Ext.define('Taco.view.settings.paymentAndCheckout.ExternalGateway', {
         }else {
             this.credPanel.hide();
         }
+    },
+    getCredentialFieldConfig: function (fieldDef, value) {
+        if (fieldDef.inputType === 'YesNo') {
+            return Ext.widget(
+            {
+                xtype: 'checkbox',
+                fieldLabel: fieldDef.displayName,
+                name: fieldDef.apiName,
+                checked: value,
+            });
+        }
+
+        return Ext.widget(
+            {
+                xtype: 'textfield',
+                fieldLabel: fieldDef.displayName,
+                name: fieldDef.apiName,
+                inputType: 'password',
+                value: value
+            });
+
     },
     persistFormValues: function () {
         var me = this;
