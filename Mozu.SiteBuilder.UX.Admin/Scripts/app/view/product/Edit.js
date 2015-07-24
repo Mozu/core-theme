@@ -142,8 +142,7 @@
         //        width:100
         //});
 
-        this.additionalActions = [{
-            xtype: "button",
+        this.publishingButton = Ext.widget('button', {
             ui: 'action-primary',
             scale:"medium",
             itemId: 'publish',
@@ -151,6 +150,7 @@
             beforeItemId: 'cancelActionButton',
             margin: '0 0 0 10',
             hidden: !this.checkProductPublishing(),
+            disabled: this.record.phantom,
             scope: me,
             menuAlign: 'tr-br?',
             menu: {
@@ -175,7 +175,11 @@
                     this.discardDraftMenuItem
                 ]
             }
-        }, {
+        });
+
+        this.additionalActions = [
+            this.publishingButton,
+            {
             xtype: 'button',
             itemId: 'moreButton',
             ui: 'action',
@@ -306,6 +310,8 @@
     },
 
     setTitlePanel: function() {
+        if (this.record.phantom) return;
+
         if (this.record.get('publishSetCode')) {
             this.titlePanel.setText('Scheduled with ' + this.record.get('publishSetName')
                 + (this.record.get('publishSetDate') ? ' on ' + Ext.Date.format(this.record.get('publishSetDate'),'M j, g:i a') : ''));
