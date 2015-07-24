@@ -123,6 +123,8 @@ Ext.define('Taco.view.website.Tree', {
                 fn: function (tree, record, item, index, e, eOpts) {
                     var url = record.get('url'),
                         metaData = record.raw.metaData,
+                        originalDocumentListName = record.get('originalDocumentListName'),
+                        name = record.get('name'),
                         items;
 
                     this.url = url;
@@ -142,6 +144,10 @@ Ext.define('Taco.view.website.Tree', {
                     } 
 
                     else if (url) {
+                        if (originalDocumentListName && name)
+                        {
+                            url = "/cms/" + originalDocumentListName + "/" + name;
+                        }
                         this.fireEvent('urlclick', this, url, record, item, index, e, eOpts);
                     }
                 }

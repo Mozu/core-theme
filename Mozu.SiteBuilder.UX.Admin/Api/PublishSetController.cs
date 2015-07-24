@@ -271,8 +271,8 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
         {
             var tasks = 
                 newPublishSetList
-                .Select(x => x.Map<Mozu.ScheduledEvent.Contracts.PublishSet>())
-                .Select(converted => _publishSetWebApiClient.PublishPublishSet(converted, converted.Code));
+               
+                .Select(x => _publishSetWebApiClient.PublishPublishSet(x.Code ));
 
             var results = await Task.WhenAll(tasks).ConfigureAwait(false);
 
