@@ -142,7 +142,10 @@ Ext.define('Taco.core.ux.mixins.NavHeader', {
 
         extraNavHeaderCls: "",
 
-        title: null
+        title: null,
+
+        titlePanel: null
+
     },
 
     initNavHeader: function () {
@@ -227,6 +230,10 @@ Ext.define('Taco.core.ux.mixins.NavHeader', {
             });
 
             me.titleContainer.items.push(me.titleCmp);
+
+            if (me.titlePanel) {
+                me.titleContainer.items.push(me.titlePanel);
+            }
 
             conf.items.push(me.titleContainer);        
 

@@ -64,6 +64,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.ModelMapping
                 .ForMember(x => x.ManageStock, op => op.ResolveUsing(dc => (dc.InventoryInfo ?? new DC.ProductInventoryInfo()).ManageStock ))
                 .ForMember(x => x.ProductUsage, op => op.ResolveUsing(x => x.ProductUsage))
                 .ForMember(x => x.PublishedState, op => op.ResolveUsing(dc => (dc.PublishingInfo?? NULLPUB).PublishedState ))
+                .ForMember(x => x.PublishSetCode, op => op.ResolveUsing(dc => (dc.PublishingInfo?? NULLPUB).PublishSetCode ))
                 .ForMember(x => x.LastModifiedBy, op => op.ResolveUsing(dc => (dc.AuditInfo != null)
                     ? dc.AuditInfo.UpdateBy : null))
                 .ForMember(x => x.LastModifiedDate, op => op.ResolveUsing(dc => (dc.AuditInfo != null)
@@ -213,7 +214,16 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.ModelMapping
                         }
                     }
                 ))
-
+                .ForMember(dc => dc.PublishingInfo, op => op.ResolveUsing(x => (string.IsNullOrEmpty(x.PublishSetCode)) 
+                    ? null
+                    : new DC.ProductPublishingInfo()
+                        {
+                            PublishSetCode = x.PublishSetCode,
+                            PublishedState = x.PublishedState,
+                            LastPublishedBy = x.LastPublishedBy,
+                            LastPublishedDate = x.LastPublishedDate
+                        }
+                ))
                 .ForMember(x => x.PackageHeight, op => op.ResolveUsing(x => x.PackageHeight == null
                     ? null: new Measurement { Unit = "in", Value = x.PackageHeight }))
                 .ForMember(x => x.PackageLength, op => op.ResolveUsing(x => x.PackageLength == null
@@ -232,7 +242,6 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.ModelMapping
                 .ForMember(dc => dc.ApplicableDiscounts, op => op.Ignore())
                 .ForMember(dc => dc.IsVariation, op => op.Ignore())
                 .ForMember(dc => dc.VariationKey, op => op.Ignore())
-                .ForMember(dc => dc.PublishingInfo, op => op.Ignore())
                 .ForMember(dc => dc.AuditInfo, op => op.Ignore())
                 .ForMember(dc => dc.PricingBehavior, op => op.ResolveUsing(x => new DC.ProductPricingBehaviorInfo
                 {

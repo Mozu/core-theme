@@ -11,6 +11,7 @@ using Mozu.Core.Api.Routing;
 using Mozu.Core.Extensions;
 using Mozu.ProductAdmin.Contracts;
 using Mozu.ProductAdmin.Contracts.Clients;
+using Mozu.ScheduledEvent.Contracts.Clients;
 using Mozu.SiteBuilder.Mvc.Extensions;
 using Mozu.SiteBuilder.UX.Admin.Api.Models;
 using Mozu.SiteBuilder.UX.Admin.Helpers;
@@ -31,15 +32,17 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
 
         private readonly IProductWebApiClient _productClient;
         private readonly IProductTypeWebApiClient _productTypeWebApiClient;
+        private readonly IPublishSetWebApiClient _publishSetClient;
 
         /// <summary>
         /// Public constructor.
         /// </summary>
-        public ProductController(IProductWebApiClient productClient, IProductTypeWebApiClient productTypeWebApiClient)
+        public ProductController(IProductWebApiClient productClient, IProductTypeWebApiClient productTypeWebApiClient, IPublishSetWebApiClient publishSetClient)
         {
             _productClient = productClient;
             
             _productTypeWebApiClient = productTypeWebApiClient;
+            _publishSetClient = publishSetClient;
         }
 
 		[HttpGetRoute(UriTemplate = "list")]
@@ -49,7 +52,15 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
             {
                 var result = await _productClient.GetProduct(pagingParams.id, null);
                 DC.Product prod = result.ReadAsAsync().Result;
-                return List2(Mapper.Map<Product>(prod));
+                var productModel = Mapper.Map<Product>(prod);
+                
+
+                if (prod.PublishingInfo == null || string.IsNullOrEmpty(prod.PublishingInfo.PublishSetCode)) return List2(productModel);
+
+                var ps = (await _publishSetClient.GetPublishSet(prod.PublishingInfo.PublishSetCode)).ReadAsSync();
+                productModel.PublishSetName = ps.Name;
+                productModel.PublishSetDate = ps.PublishDate;
+                return List2(productModel);
             }
             string responseGroups = !string.IsNullOrEmpty(extFilter.ResponseGroups) ? extFilter.ResponseGroups : (extFilter.SearchType == "global" || extFilter.SearchType == "picker" ? "min" : "ProductInCatalogs,Min,Price");
 

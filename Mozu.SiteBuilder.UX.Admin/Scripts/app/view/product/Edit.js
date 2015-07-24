@@ -3,18 +3,22 @@
     requires: [
         'Taco.view.product.Form',
         'Taco.view.product.widget.productCode.Modal',
-        'Ext.button.Button'
+        'Taco.view.publishing.modal.PublishSetPicker',
+        'Ext.button.Button',
+        'Ext.menu.Item',
+        'Ext.form.Label',
+        'Taco.store.PublishSets'
     ],
-    
+
     statics: {
         sizes: {},
-        factory: function (cfg, callback, scope) {
+        factory: function(cfg, callback, scope) {
             var tasks = [];
 
             cfg = Ext.apply(cfg, {
-            
+
             });
-            
+
             // need to preload the productType Record so that the views can layout correctly
             var productTypeId = cfg.record.get("productTypeId");
 
@@ -24,7 +28,7 @@
                         type: 'Taco.model.ProductType',
                         id:productTypeId
                     }
-            });
+                });
 
                 tasks.push({
                     modelToLoad: cfg.productTypeRecord
@@ -44,7 +48,7 @@
     },
 
     alias: "widget.taco-product-editor",
-    
+
     formCls: 'Taco.view.product.Form',
 
     enableNextPrevious: true,
@@ -73,20 +77,104 @@
     initComponent: function () {
         var me = this;
 
+        this.publishNowMenuItem = Ext.widget('menuitem', {
+            text: 'Publish Now',
+            disabled: this.record.get('publishedState') === 'Live',
+            //requiredBehaviors: {
+            //    model: 'Taco.model.Product',
+            //    behavior: 'create'
+            //},
+            listeners: {
+                click: {
+                    fn: me.onClickPublish,
+                    scope: me
+                }
+            }
+        });
+
+        this.discardDraftMenuItem = Ext.widget('menuitem', {
+            text: 'Discard Draft',
+            disabled: this.record.get('publishedState') === 'Live',
+            //requiredBehaviors: {
+            //    model: 'Taco.model.Product',
+            //    behavior: 'publish'
+            //},
+            listeners: {
+                click: {
+                    scope: me,
+                    fn: me.discardProductDraft
+                }
+            }
+        });
+
+        this.removePublishSetMenuItem = Ext.widget('menuitem', {
+            text: 'Remove from Publish Set',
+            disabled: !this.record.get('publishSetCode'),
+            //requiredBehaviors: {
+            //    model: 'Taco.model.Product',
+            //    behavior: 'create'
+            //},
+            listeners: {
+                click: {
+                    scope: me,
+                    fn: me.removePublishSet
+                }
+            }
+        });
+
+        this.titlePanel = Ext.widget('label', {
+            padding: '5 0 0 10',
+            cls: "taco-content-header-title-root",
+            width: 320
+        });
+        if (this.checkProductPublishing()) {
+            this.setTitlePanel();
+        }
+
+        //this.titleIndicator = Taco.core.ux.TooltipLabel.wrapConfig('discount.conditions.includedPaymentMethodField', me, {
+        //        xtype: 'displayfield',
+        //        name: 'productIndicator',
+        //        value: ' ',
+        //        fieldLabel: 'Draft',
+        //        //labelAlign: 'top',
+        //        //padding: '0 0 10 10',
+        //        //cls: "taco-content-header-title",
+        //        width:100
+        //});
+
         this.additionalActions = [{
             xtype: "button",
-            ui: "action-primary",
+            ui: 'action-primary',
             scale:"medium",
             itemId: 'publish',
-            text: 'Publish',
-            disabled: this.record.get('publishedState') == 'Live',
-            beforeItemId: 'save',
+            text: 'Publishing',
+            beforeItemId: 'cancelActionButton',
             margin: '0 0 0 10',
             hidden: !this.checkProductPublishing(),
-            handler: this.onClickPublish,
-            //dirtyState: this.record.get('publishedState') !== 'Live'
-            scope: this
-            
+            scope: me,
+            menuAlign: 'tr-br?',
+            menu: {
+                plain: true,
+                shadow: false,
+                items: [
+                    this.publishNowMenuItem,
+                    {
+                        text: 'Move to Publish Set',
+                        //requiredBehaviors: {
+                        //    model: 'Taco.model.Product',
+                        //    behavior: 'create'
+                        //},
+                        listeners: {
+                            click: {
+                                scope: me,
+                                fn: me.movePublishSet
+                            }
+                        }
+                    },
+                    this.removePublishSetMenuItem,
+                    this.discardDraftMenuItem
+                ]
+            }
         }, {
             xtype: 'button',
             itemId: 'moreButton',
@@ -122,7 +210,7 @@
                     text: 'Duplicate',
                     disabled: me.record.phantom,
                     requiredBehaviors: {
-                        model: 'Taco.model.Product',
+                        model: 'Taco.model.Product',    
                         behavior: 'create'
                     },
                     handler: function (item) {
@@ -205,9 +293,29 @@
         }];
                 
         this.formCfg = Ext.apply(this.formCfg || {}, { options: this.options, isDuplicate:this.isDuplicate });
-
-        
         this.callParent(arguments);
+    },
+
+    onPublishSetChange: function () {
+        this.setTitlePanel();
+        if (this.record.get('publishSetCode')) {
+            this.removePublishSetMenuItem.enable(true);
+        } else {
+            this.removePublishSetMenuItem.disable(true);
+        }
+    },
+
+    setTitlePanel: function() {
+        if (this.record.get('publishSetCode')) {
+            this.titlePanel.setText('Scheduled with ' + this.record.get('publishSetName')
+                + (this.record.get('publishSetDate') ? ' on ' + Ext.Date.format(this.record.get('publishSetDate'),'M j, g:i a') : ''));
+        } else {
+            if (this.record.get('publishedState') === 'Live') {
+                this.titlePanel.setText('');
+            } else {
+                this.titlePanel.setText('Draft');
+            }
+        }
     },
 
     viewInSite: function (site, env) {
@@ -222,7 +330,7 @@
             // if the form becomes invalid disable the publish button
             me.mon(me.form, 'validityChange', function (view, valid) {
                 if (me.publishButton) {
-                    me.publishButton.setDisabled(!valid);
+                    me.publishNowMenuItem.setDisabled(!valid);
                 }
                 
             }, me);
@@ -236,7 +344,14 @@
                     // note: I am not calling this.form.isValid() because that call causes the form error messages to appear;
                     var isValid = !me.form.hasInvalidField() && me.form.isDirty();
                     if (isValid) {
-                        me.publishButton.enable();
+                        if (me.record.get('publishedState') === 'Live') {
+                            this.record.set('publishedState', 'Draft');
+                        }
+
+                        if (me.discardDraftMenuItem.isDisabled()){
+                            me.discardDraftMenuItem.enable(true);
+                            me.setTitlePanel();
+                        }
                     }
                 }
             }, me);
@@ -273,12 +388,13 @@
 
         if (this.form.hasInvalidField()) {
             // cant publish if the form is invalid. IE it hasn't got its required fields;
+            //todo: message invalid.
             return;
         }
 
         
         this.publishButton.addCls('taco-button-processing');
-        this.publishButton.setText('Publishing...');
+        this.publishButton.setText('Processing...');
 
         // if the form is dirty, we need to persist the changes before doing the publish
         if (this.form.isDirty()) {
@@ -291,6 +407,62 @@
         } else {
             this.doPublish();
         }
+    },
+
+    movePublishSet: function () {
+        var me = this,
+            modal = Ext.create('Taco.view.publishing.modal.PublishSetPicker', {
+                record: me.record,
+                callback: function (publishSetCode) {
+                    me.record.set('publishSetCode', publishSetCode);
+                    if (publishSetCode) {
+                        me.removePublishSetMenuItem.enable(true);
+                        var store = Ext.create('Taco.store.PublishSets', {includeCounts: false});
+                        store.load(function(records, operation, success) {
+                            var model = Ext.Array.findBy(records, function(item) {
+                                return item.get('code') === publishSetCode;
+                            });
+                            if (model) {
+                                me.record.set('publishSetName', model.get('name'));
+                                me.record.set('publishSetDate', model.get('publishDate'));
+                            }
+                            me.onPublishSetChange();
+                        });
+
+                        //todo: handle model not found greg_murray on 7/24/2015
+                    }
+                }
+            });
+
+        modal.show();
+    },
+
+    setProductRecordPublishSetToNull: function() {
+        this.record.set('publishSetCode', null);
+        this.record.set('publishSetName', null);
+        this.record.set('publishSetDate', null);
+    },
+
+    removePublishSet: function() {
+        this.setProductRecordPublishSetToNull();
+        this.onPublishSetChange();
+    },
+
+    discardProductDraft: function () {
+        var me = this;
+        this.publishButton.addCls('taco-button-processing');
+        this.publishButton.setText('Processing...');
+        this.record.discardDraft({
+            success: function (scope, items) {
+                Taco.core.StateManager.attemptNavigate(me.getEditRoute() + '/' + me.record.getId(), { record: me.record });
+            },
+            failure: function (response) {
+                var json = Ext.decode(response.responseText, true),
+                    msg = (json && json.message) ? json.message : '';
+                me.resetPublishButton();
+                Taco.app.fireEvent('setmessage', 'Error discarding draft.' + msg, 'error');
+            }
+        });
     },
 
     destroyRecord: function () {
@@ -320,7 +492,7 @@
                             Taco.core.StateManager.attemptNavigate(contextUrl + '/products');
                         },
                         failure: function (m) {
-                            Taco.app.fireEvent('setmessage', text, 'error deleting product');
+                            Taco.app.fireEvent('setmessage', 'error deleting product', 'error');
                         },
                         callback: function () {
                             me.setLoading(true, me.body);
@@ -338,6 +510,9 @@
             data: [this.record.getId()],
             success: function () {
                 this.resetPublishButton();
+                this.setProductRecordPublishSetToNull();
+                this.record.set('publishedState', 'Live');
+                this.onPublishSetChange();
                 if (this.fireIdChangeAfterPublish) {
                     this.resumeEvent('idchange');
                     this.fireEvent('idchange', this, this.record);
@@ -357,8 +532,8 @@
 
     resetPublishButton : function() {
         this.publishButton.removeCls('taco-button-processing');
-        this.publishButton.setText('Publish');
-        this.publishButton.disable();
+        this.publishButton.setText('Publishing');
+        this.publishNowMenuItem.disable(true);
     },
 
     changeProductCode: function () {

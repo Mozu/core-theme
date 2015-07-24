@@ -90,6 +90,21 @@ Ext.define('Taco.model.Product', {
             type: "string",
             useNull: true
         }, {
+            name: "publishSetCode",
+            type: "string",
+            useNull: true
+        }, {
+            name: "publishSetDate",
+            type: "date",
+            useNull: true,
+            dateFormat: 'c',
+            persist: false
+        }, {
+            name: "publishSetName",
+            type: "string",
+            useNull: true,
+            persist: false
+        }, {
             name: 'variationOptions',
             type: 'auto',
             defaultValue: [],

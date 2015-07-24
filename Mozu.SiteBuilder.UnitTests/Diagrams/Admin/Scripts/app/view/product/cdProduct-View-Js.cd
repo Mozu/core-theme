@@ -104,7 +104,7 @@
     </TypeIdentifier>
   </Class>
   <Class Name="Mozu.SiteBuilder.UnitTests.Diagrams.Admin.Scripts.app.view.product.jsBundleable">
-    <Position X="6" Y="5.25" Width="2.5" />
+    <Position X="9.25" Y="6.5" Width="2.5" />
     <TypeIdentifier>
       <HashCode>AAAAAAAAAAIAEAAAAAAAAJAAAAAAAAAAAAAAAAEAAAA=</HashCode>
       <FileName>Diagrams\Admin\Scripts\app\view\product\DiagramProductJs.cs</FileName>
@@ -118,7 +118,7 @@
     </TypeIdentifier>
   </Class>
   <Class Name="Mozu.SiteBuilder.UnitTests.Diagrams.Admin.Scripts.app.view.product.jsTacoViewProductForm">
-    <Position X="9.5" Y="4" Width="1.5" />
+    <Position X="4.5" Y="6" Width="2" />
     <TypeIdentifier>
       <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAwAAAAAAAAAAAAAA=</HashCode>
       <FileName>Diagrams\Admin\Scripts\app\view\product\DiagramProductJs.cs</FileName>

@@ -95,6 +95,15 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.Models.ProductModels
 		[JsonProperty(DefaultValueHandling = DefaultValueHandling.Ignore)]
         public DateTime? LastPublishedDate { get; set; }
 
+        [JsonProperty(DefaultValueHandling = DefaultValueHandling.Ignore)]
+        public string PublishSetCode { get; set; }
+
+        [JsonProperty(DefaultValueHandling = DefaultValueHandling.Ignore)]
+        public string PublishSetName { get; set; }
+
+        [JsonProperty(DefaultValueHandling = DefaultValueHandling.Ignore)]
+        public DateTime? PublishSetDate { get; set; }
+
 
         /// <summary>
         /// The parent product code, if any.
