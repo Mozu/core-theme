@@ -124,8 +124,13 @@ namespace Mozu.SiteBuilder.Mvc.Tags
                     return Uncached(walker);
                 }
 
+                bool disabled = IsDisabled(arguments, pageCtx); ;
+
+              
+
+
                 object epc = siteCtx.ThemeSettings["enablePartialCaching"];
-                if (!Convert.ToBoolean(epc))
+                if (!Convert.ToBoolean(epc) || disabled)
                 {
                     return Uncached(walker);
                 }
@@ -146,6 +151,50 @@ namespace Mozu.SiteBuilder.Mvc.Tags
                 {
                     return ChildNodeWalker(output);
                 }
+            }
+
+            private bool IsDisabled ( ArgumentCollection arguments, PageContext pageCtx)
+            {
+               
+
+                var disabledObj = arguments.FirstOrDefault(x => x.Name == "disabled");
+                
+                if (disabledObj != null)
+                {
+                    var value = disabledObj.Value;
+                    if (value == null)
+                    {
+                        return true;
+                    }
+                    if (value is int && ((int)value) == 0)
+                    {
+                        return true;
+                    }
+                    if (value is double && ((double)value) == 0)
+                    {
+                        return true;
+                    }
+                    if (value is decimal && ((decimal)value) == 0)
+                    {
+                        return true;
+                    }
+                    if (value is string  && (string.IsNullOrWhiteSpace((string)value) ))
+                    {
+                        return true;
+                    }
+                    if ( !(value is string) && value is System.Collections.IList && ((System.Collections.IList )value).Count ==0)
+                    {
+                        return true;
+                    }
+                }
+                else
+                {
+                    //work around for peops using just page paras for faceting...
+                    return arguments.Any(x => x.Value != null && (x.Value is PagingParameters || x.Value is SortingParameters)) && (pageCtx.Search.Facets.Count > 0 || !string.IsNullOrEmpty(pageCtx.Search.Query));
+                }
+                return false;
+               
+               
             }
 
             private string[] TryGetOutputStrings(ITemplateManager manager, Walker walker, string key, CacheScope cachescope, ISettings settings)

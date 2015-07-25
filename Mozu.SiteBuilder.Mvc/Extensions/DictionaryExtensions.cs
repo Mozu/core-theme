@@ -45,17 +45,27 @@ namespace Mozu.SiteBuilder.Mvc.Extensions
             return dict;
         }
 
-        public static IDictionary<TKey, TValue> ChainSet<TKey, TValue>(this IDictionary<TKey, TValue> dict, IDictionary<TKey, TValue> pairs)
+        public static IDictionary<TKey, TValue> ChainSet<TKey, TValue>(this IDictionary<TKey, TValue> dict, IDictionary<TKey, TValue> pairs, bool overwrite= true)
         {
             if (Object.ReferenceEquals(dict , pairs))
             {
                 //wtf chet?
                 return dict;
             }
+            if (dict == null || pairs == null)
+            {
+                return dict;
+            }
+            
 
             foreach (var pair in pairs)
             {
+                if (!overwrite && dict.ContainsKey(pair.Key))
+                {
+                    continue;
+                }
                 dict[pair.Key] = pair.Value;
+               
             }
             return dict;
         }

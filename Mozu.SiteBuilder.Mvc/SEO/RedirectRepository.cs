@@ -96,7 +96,7 @@ namespace Mozu.SiteBuilder.Mvc.SEO
             Dictionary<string, RedirectEntry> ret = null;
 
             
-            if (!gdt.IsCompleted || gdt.Result.HasException || gdt.Result.ResponseMessage== null ||  !gdt.Result.ResponseMessage.IsSuccessStatusCode)
+            if (!gdt.IsCompleted || gdt.Result.HasException || ( gdt.Result.ResponseMessage== null ||  !gdt.Result.ResponseMessage.IsSuccessStatusCode) )
             {
                 if (gdt.IsFaulted)
                 {

@@ -38,6 +38,10 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.Models
                 return 0;
             }
         }
+        public override string ToString()
+        {
+            return this.id + ";" + this.NumericId + ":" + pageIndex + ";" + startIndex + ";" + pageSize + ";" + productCode + ";" + (sort == null ? "" : string.Join(",",sort.Select(x => x.direction + x.property)) );
+        }
     }
 
     public class FilterCollection : List<FilterCollectionItem>

@@ -249,31 +249,74 @@ namespace Mozu.SiteBuilder.Mvc.Helpers
         }
         public string MakeFacetUrl(object obj)
         {
+            var routeData = _httpRequestMessage.GetRouteData();
+            var searchContext = _pageContext.Search;
+            var strObj = obj as string;
+            string urlBase = null;
+            object tmpObj;
+            int catId;
+            if (strObj == "CLEAR")
+            {
+                if ( routeData.Values.TryGetValue("categoryId", out tmpObj) && int.TryParse(tmpObj.ToString(), out catId))
+                {
+                    urlBase = MakeCategoryUrl(catId, null, false);
+                }
+                return string.Format("{0}?&sortBy={1}", urlBase,  HttpUtility.UrlEncode(searchContext.SortBy));
+                
+
+            }
+
 
             var isApplied = !(obj is string) && _resolver.ResolveMemberOrDefault<bool>(obj, "isApplied", false);
             var facetValue = obj is string ? (string)obj : _resolver.ResolveMemberOrDefault<string>(obj, "filterValue");
+          
             if (string.IsNullOrEmpty(facetValue))
+            {
+                var childrenFacetValues = _resolver.ResolveMemberOrDefault<string>(obj, "childrenFacetValues");
+                if( childrenFacetValues !=null)
+                {
+                    //must be a top level cat with no immediate child products
+                    catId = _resolver.ResolveMemberOrDefault<int>(obj, "value", -1);
+                    if (catId > -1)
+                    {
+                        return MakeCategoryUrl(catId, null, true);
+                    }
+
+                }
+                return "#";
+            }
+           
+            var facetParts = facetValue.Split(':');
+            if (facetParts.Length != 2)
             {
                 return "#";
             }
-            string urlBase = null;
-            var parts = facetValue.Split(':');
-            var searchContext = _pageContext.Search;
-            var existing = searchContext.Facets.GetValues(parts[0]);
+          
+            
+            var facetPairKey = facetParts[0];
+            var facetPairValue = facetParts[1];
+            
+            if (facetPairKey.Equals( "categoryId", StringComparison.OrdinalIgnoreCase)&& int.TryParse( facetPairValue, out catId))
+            {
+                return  MakeCategoryUrl(catId, null, true);
+            }
+
+            
+            var existing = searchContext.Facets.GetValues(facetPairKey);
             if (isApplied && existing != null)
             {
-                searchContext.Facets.Remove(parts[0]);
+                searchContext.Facets.Remove(facetPairKey);
                 foreach (var val in existing)
                 {
-                    if (val != parts[1])
+                    if (val != facetPairValue)
                     {
-                        searchContext.Facets.Add(parts[0], val);
+                        searchContext.Facets.Add(facetPairKey, val);
                     }
                 }
-                var routeData = _httpRequestMessage.GetRouteData();
-                var routeValueKey = parts[0] + "-facet";
+                
+                var routeValueKey = facetPairKey + "-facet";
                 object tmp;
-                if (routeData.Values.TryGetValue(routeValueKey, out tmp) && string.Equals((tmp as string) , parts[1], StringComparison.OrdinalIgnoreCase))
+                if (routeData.Values.TryGetValue(routeValueKey, out tmp) && string.Equals((tmp as string) , facetPairValue, StringComparison.OrdinalIgnoreCase))
                 {
                     var dic = new Dictionary<string, object>(routeData.Values, StringComparer.OrdinalIgnoreCase);
                     dic.Remove(routeValueKey);
@@ -284,7 +327,7 @@ namespace Mozu.SiteBuilder.Mvc.Helpers
             }
             else
             {
-                searchContext.Facets.Add(parts[0], parts[1]);
+                searchContext.Facets.Add(facetPairKey, facetPairValue);
             }
             
             
@@ -293,12 +336,12 @@ namespace Mozu.SiteBuilder.Mvc.Helpers
 
             
 
-            searchContext.Facets.Remove(parts[0]);
+            searchContext.Facets.Remove(facetPairKey);
             if (  existing != null)
             {
                 foreach (var val in existing)
                 {
-                    searchContext.Facets.Add(parts[0], val);
+                    searchContext.Facets.Add(facetPairKey, val);
                 }
 
             }

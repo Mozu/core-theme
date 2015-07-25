@@ -6,6 +6,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using System.Web.Http;
 using System.Runtime.Caching;
+using System.Text;
 using System.Text.RegularExpressions;
 using Mozu.Core.Logging;
 using Mozu.SiteSettings.General.Contracts.Clients;
@@ -99,7 +100,12 @@ namespace Mozu.SiteBuilder.Mvc.SEO
                 .Select(kvp => new { kvp.Key, Mapping = _routeDataMappingFactory.BuildMapping(kvp.Value) })
                 .Where(x => x.Mapping != null)
                 .ToDictionary(x => x.Key, x => x.Mapping, StringComparer.OrdinalIgnoreCase);
+
+
+
+            AncestoryTokenExmpander.Process(customSettings.Routes);
             var implictHanlder = new ImplicitConfigurationHandler(constraints, mappings, _customRouteConstraintFactory, _routeDataMappingFactory);
+
             customSettings.Routes.ForEach(x=> implictHanlder.ConfigureRoute(x));
            
             
@@ -159,7 +165,75 @@ namespace Mozu.SiteBuilder.Mvc.SEO
         }
 
 
+        class AncestoryTokenExmpander
+        {
+            static Regex regex = new Regex(@"{(?<name>[^:^{^}]+):ancestors\((?<num>[0-9]+)\)}",
+                RegexOptions.IgnoreCase |
+                RegexOptions.ExplicitCapture |
+                RegexOptions.Singleline |
+                RegexOptions.IgnorePatternWhitespace);
+            public static void Process (List<Route> routeDefs)
+            {
+                int i = 0;
+                while (i < routeDefs.Count)
+                {
+                    var curIndex = i;
+                    i++;
+                    var route = routeDefs[curIndex];
+                    var match = regex.Match(route.Template);
 
+                    if (!match.Success)
+                    {
+                        continue;
+                    }
+                    if (match.Success)
+                    {
+                        routeDefs.Remove(route);
+                        var name = match.Groups["name"].Value;
+                        
+                        int num;
+                        if (!int.TryParse(match.Groups["num"].Value, out num)|| num > 10)
+                        {
+                            continue;
+                        }
+                        string path = null;
+                        CategoryToken token = new CategoryToken(name);
+                        var initDepth = token.Depth;
+                        for( int ancess = initDepth; ancess <= num; ancess++)
+                        {
+                            token.Depth = ancess;
+                            var segment  = string.Format("{{{0}}}", token.Raw);
+                            if (path == null)
+                            {
+                                path = segment;
+                            }
+                            else
+                            {
+                               
+                                path = segment + "/" + path;
+                            }
+
+                            // token.to
+                            var newRoute = new Route()
+                            {
+                                Canonical = route.Canonical,
+                                Defaults = route.Defaults,
+                                InternalRoute = route.InternalRoute,
+                                Mappings = route.Mappings,
+                                Template = route.Template.Replace(match.Value, path),
+                                Validators = route.Validators
+                            };
+                            routeDefs.Insert(curIndex, newRoute);
+                        }
+
+                    }
+
+
+                }
+                
+            }
+
+        }
 
 
         class ImplicitConfigurationHandler
