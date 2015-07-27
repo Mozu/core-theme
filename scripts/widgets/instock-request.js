@@ -40,7 +40,7 @@ define(['modules/jquery-mozu', 'hyprlive', 'underscore', "modules/api", "modules
                     api.create('instockrequest', {
                         email: email,
                         customerId: user.accountId,
-                        productCode: this.model.get('productCode'),
+                        productCode: this.model.get('variationProductCode') || this.model.get('productCode'),
                         locationCode: this.model.get('inventoryInfo').onlineLocationCode
                     }).then(function () {
                         saveNotification(self.model.get('variationProductCode') || self.model.get('productCode'));

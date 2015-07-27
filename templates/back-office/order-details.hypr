@@ -76,10 +76,11 @@
                         <td>({{ model.storeCredit|currency }})</td>
                     </tr>
                 {% endif %}
-                {% if model.dutyTotal %}
+
+                {% if model.dutyTotal > 0 %}
                 <tr>
                     <td colspan="5">Duties and Taxes</td>
-                    <td>{{ model.dutyTotal|add(model.taxTotal)|currency }}</td>
+                    <td>{% filter currency %} {{ model.dutyTotal|add:model.taxTotal}} {% endfilter %}</td>
                 </tr>
                 {% else %}
                 <tr>
@@ -87,15 +88,20 @@
                     <td>{{ model.taxTotal|currency }}</td>
                 </tr>
                 {% endif %}
-                <tr>                    <td colspan="5">Tax</td>
-                    <td>{{ model.taxTotal|currency }}</td>
-                </tr><tr>
+
+                <tr>
                     <td colspan="5">Shipping ({{ model.fulfillmentInfo.shippingMethodName }})</td>
                     <td>{{ model.shippingTotal|currency }}</td>
                 </tr>
+                {% if model.handlingTotal > 0 %}
+                    <tr>
+                        <td colspan="5">Handling</td>
+                        <td>{{ model.handlingTotal|currency }}</td>
+                    </tr>
+                {% endif %}
                 {% if model.feeTotal > 0 %}
                     <tr>
-                        <td colspan="5">Handling Fees</td>
+                        <td colspan="5">Fees</td>
                         <td>{{ model.feeTotal|currency }}</td>
                     </tr>
                 {% endif %}

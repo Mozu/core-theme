@@ -8,5 +8,5 @@
     {% block search-box %}
         {% include "modules/page-header/search-box" %}
     {% endblock search-box %}
-    
+
 </header>

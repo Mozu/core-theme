@@ -18,7 +18,7 @@
         {% if siteContext.checkoutSettings.supportedCards.discover %}
         <option value="DISCOVER" {% if model.paymentOrCardType == "DISCOVER" %}selected="selected"{% endif %}>{{ labels.ccDiscover }}</option>
         {% endif %}
-        {% if siteContext.checkoutSettings.supportedCards.jcb %}
+		{% if siteContext.checkoutSettings.supportedCards.jcb %}
         <option value="JCB" {% if model.paymentOrCardType == "JCB" %}selected="selected"{% endif %}>{{ labels.ccJcb }}</option>
         {% endif %}
     </select>
