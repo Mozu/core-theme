@@ -234,7 +234,7 @@
                     glyph: (forward) ? 'XE60B@mozicons' : 'XE60C@mozicons',
                     padding: {
                         left: 7
-                    },
+                    }
                 }
             } else {
                 // text button

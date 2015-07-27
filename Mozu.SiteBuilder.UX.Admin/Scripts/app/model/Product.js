@@ -976,6 +976,49 @@ Ext.define('Taco.model.Product', {
     //    }
     //],
 
+    // calculates publishing info from current state
+    getPublishingInfo: function() {
+        if (this.phantom || this.get('publishedState') === 'Live') {
+            return {
+                statusText: '',
+                enabled: {
+                    publish: false,
+                    now: false,
+                    discard:false,
+                    remove:false
+                },
+                publishSetInfo: null
+            };
+        }
+
+        if (this.get('publishSetCode')) {
+            return {
+                statusText: 'SCHEDULED',
+                enabled: {
+                    publish: true,
+                    now: true,
+                    discard:true,
+                    remove:true
+                },
+                publishSetInfo: {
+                    name: this.get('publishSetName'),
+                    scheduledDate: this.get('publishSetDate')
+                }
+            };
+        }
+
+        return {
+            statusText: 'DRAFT',
+            enabled: {
+                publish: true,
+                now: true,
+                discard:true,
+                remove:false
+            },
+            publishSetInfo: null
+        };
+    },
+
     validations: [
         { type: 'length', name: 'productName', min: 3, max: 100 },
         { type: 'presence', name: 'productName' },
