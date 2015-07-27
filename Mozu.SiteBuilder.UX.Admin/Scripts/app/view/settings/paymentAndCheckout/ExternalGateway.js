@@ -88,7 +88,8 @@ Ext.define('Taco.view.settings.paymentAndCheckout.ExternalGateway', {
                         boxLabel: val.contents[0].value,
                         name: fieldDef.apiName,
                         inputValue: val.key,
-                        id: val.key
+                        id: val.key,
+                        checked: val.key == value
                     });
                 }
             });
