@@ -22,8 +22,10 @@ namespace Mozu.SiteBuilder.Mvc.SEO
     {
         HttpRouteCollection DefaultRoutes { get; }
 
-        void RouteIncomingRequest(HttpRequestMessage message);
-        
+        void RouteIncomingDefaultRouteRequest(HttpRequestMessage message);
+
+        void RouteIncomingSystemRouteRequest(HttpRequestMessage message);
+
 
     }
     public class NonSystemRoute : IHttpRoute
