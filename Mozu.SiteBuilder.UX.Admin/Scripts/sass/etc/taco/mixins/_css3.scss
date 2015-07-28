@@ -14,6 +14,13 @@
   border-radius: 0 !important;
 }
 
+@mixin border-radius-xbrowser($radius) {
+  -webkit-border-radius: $radius;
+  -moz-border-radius: $radius;
+  -ms-border-radius: $radius;
+  border-radius: $radius;
+}
+
 /* SHADOWS */
 
 @mixin outer-shadow ($strength: 0.3, $radius: 5px, $x: 0, $y: 0) {

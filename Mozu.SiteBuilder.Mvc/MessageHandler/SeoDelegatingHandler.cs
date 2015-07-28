@@ -32,6 +32,7 @@ namespace Mozu.SiteBuilder.Mvc.MessageHandler
                 if (redirect.IsRewrite.GetValueOrDefault(false))
                 {
                     var rewritten = RewriteCurrentRequest(request, redirect.Destination);
+                    request.Resolve<IRouteConfig>().RouteIncomingSystemRouteRequest(rewritten);
                     return await SendAsync(rewritten, cancellationToken).ConfigureAwait(false);
                 }
                 else if (!apiContext.IsEditMode)
@@ -75,7 +76,7 @@ namespace Mozu.SiteBuilder.Mvc.MessageHandler
             var found = await routeHandler.RouteIncomingRequest().ConfigureAwait(false);
             if (!found)
             {
-                request.Resolve<IRouteConfig>().RouteIncomingRequest(request);
+                request.Resolve<IRouteConfig>().RouteIncomingDefaultRouteRequest(request);
             }
             return request;
         }

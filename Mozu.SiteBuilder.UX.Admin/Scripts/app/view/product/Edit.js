@@ -123,24 +123,9 @@
         });
 
         this.titlePanel = Ext.widget('label', {
-            padding: '5 0 0 10',
-            cls: "taco-content-header-title-root",
-            width: 320
+            padding: '5 0 0 10'
         });
-        if (this.checkProductPublishing()) {
-            this.setTitlePanel();
-        }
 
-        //this.titleIndicator = Taco.core.ux.TooltipLabel.wrapConfig('discount.conditions.includedPaymentMethodField', me, {
-        //        xtype: 'displayfield',
-        //        name: 'productIndicator',
-        //        value: ' ',
-        //        fieldLabel: 'Draft',
-        //        //labelAlign: 'top',
-        //        //padding: '0 0 10 10',
-        //        //cls: "taco-content-header-title",
-        //        width:100
-        //});
 
         this.publishingButton = Ext.widget('button', {
             ui: 'action-primary',
@@ -295,33 +280,31 @@
                 }
             }
         }];
-                
+
+        if (this.checkProductPublishing()) {
+            this.setPublishStatus();
+        }
+
         this.formCfg = Ext.apply(this.formCfg || {}, { options: this.options, isDuplicate:this.isDuplicate });
         this.callParent(arguments);
     },
 
-    onPublishSetChange: function () {
-        this.setTitlePanel();
-        if (this.record.get('publishSetCode')) {
-            this.removePublishSetMenuItem.enable(true);
-        } else {
-            this.removePublishSetMenuItem.disable(true);
-        }
-    },
-
-    setTitlePanel: function() {
-        if (this.record.phantom) return;
-
-        if (this.record.get('publishSetCode')) {
-            this.titlePanel.setText('Scheduled with ' + this.record.get('publishSetName')
-                + (this.record.get('publishSetDate') ? ' on ' + Ext.Date.format(this.record.get('publishSetDate'),'M j, g:i a') : ''));
-        } else {
-            if (this.record.get('publishedState') === 'Live') {
-                this.titlePanel.setText('');
-            } else {
-                this.titlePanel.setText('Draft');
+    setPublishStatus: function() {
+        var pubInfo = this.record.getPublishingInfo(),
+            msg = '';
+        if (pubInfo.statusText) {
+            msg = '<div class="taco-content-header-publish-'
+                + ((pubInfo.statusText === 'DRAFT') ? 'draft' : 'scheduled') + '">' + pubInfo.statusText;
+            if (pubInfo.publishSetInfo) {
+                msg+= ' ' + Ext.Date.format(pubInfo.publishSetInfo.scheduledDate, 'M j');
             }
+            msg += '</div>';
         }
+        this.titlePanel.setText(msg, false);
+        this.publishingButton.setDisabled(!pubInfo.enabled.publish);
+        this.removePublishSetMenuItem.setDisabled(!pubInfo.enabled.remove);
+        this.publishNowMenuItem.setDisabled(!pubInfo.enabled.now);
+        this.discardDraftMenuItem.setDisabled(!pubInfo.enabled.discard);
     },
 
     viewInSite: function (site, env) {
@@ -353,11 +336,7 @@
                         if (me.record.get('publishedState') === 'Live') {
                             this.record.set('publishedState', 'Draft');
                         }
-
-                        if (me.discardDraftMenuItem.isDisabled()){
-                            me.discardDraftMenuItem.enable(true);
-                            me.setTitlePanel();
-                        }
+                        me.setPublishStatus();
                     }
                 }
             }, me);
@@ -422,7 +401,6 @@
                 callback: function (publishSetCode) {
                     me.record.set('publishSetCode', publishSetCode);
                     if (publishSetCode) {
-                        me.removePublishSetMenuItem.enable(true);
                         var store = Ext.create('Taco.store.PublishSets', {includeCounts: false});
                         store.load(function(records, operation, success) {
                             var model = Ext.Array.findBy(records, function(item) {
@@ -432,7 +410,7 @@
                                 me.record.set('publishSetName', model.get('name'));
                                 me.record.set('publishSetDate', model.get('publishDate'));
                             }
-                            me.onPublishSetChange();
+                            me.setPublishStatus();
                         });
 
                         //todo: handle model not found greg_murray on 7/24/2015
@@ -451,7 +429,7 @@
 
     removePublishSet: function() {
         this.setProductRecordPublishSetToNull();
-        this.onPublishSetChange();
+        this.setPublishStatus();
     },
 
     discardProductDraft: function () {
@@ -518,7 +496,7 @@
                 this.resetPublishButton();
                 this.setProductRecordPublishSetToNull();
                 this.record.set('publishedState', 'Live');
-                this.onPublishSetChange();
+                this.setPublishStatus();
                 if (this.fireIdChangeAfterPublish) {
                     this.resumeEvent('idchange');
                     this.fireEvent('idchange', this, this.record);

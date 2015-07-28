@@ -6,6 +6,7 @@ using System.Linq;
 using System.Net.Http;
 using System.Text;
 using System.Text.RegularExpressions;
+using System.Web;
 using System.Web.Http.Routing;
 using Newtonsoft.Json;
 
@@ -32,9 +33,11 @@ namespace Mozu.SiteBuilder.Mvc.Contexts
         {
             return new SearchContext() { Facets = new NameValueCollection(Facets) };
         }
+       
         void InitFromQstring(HttpRequestMessage request)
         {
             var qs = request.RequestUri.ParseQueryString();
+            var routeData = request.GetRouteData();
             var facetValueQsValue = qs[QueryStringKey];
             if (!string.IsNullOrWhiteSpace(facetValueQsValue))
             {
@@ -43,6 +46,23 @@ namespace Mozu.SiteBuilder.Mvc.Contexts
                 {
                     this.Facets.Add(m.Groups["key"].Value, m.Groups["val"].Value);
                 }
+            }
+            int tmpInt;
+            if ( !routeData.Values.ContainsKey("pageSize") && int.TryParse( qs["pageSize"], out tmpInt))
+            {
+                routeData.Values["pageSize"] = tmpInt;
+            }
+            if (!routeData.Values.ContainsKey("startIndex") && int.TryParse(qs["startIndex"], out tmpInt))
+            {
+                routeData.Values["startIndex"] = tmpInt;
+            }
+            if (!routeData.Values.ContainsKey("sortBy") && !string.IsNullOrEmpty(qs["sortBy"]))
+            {
+                routeData.Values["sortBy"] = qs["sortBy"];
+            }
+            if (!routeData.Values.ContainsKey("query") && !string.IsNullOrEmpty(qs["query"]))
+            {
+                routeData.Values["query"] = qs["query"]; 
             }
             return;
         }
@@ -176,6 +196,136 @@ namespace Mozu.SiteBuilder.Mvc.Contexts
 
         [JsonConverter(typeof(FacetJsonConverter))]
         public NameValueCollection Facets { get; set; }
+
+        
+        
+        public string ToUrl(SearchContextOverrides overrides= null)
+        {
+            var clearFacets = overrides != null && overrides.ClearFacets;
+            string facetQsVal = null;
+            string urlBase = overrides != null ? overrides.UrlBase : null;
+            string sortBy = overrides != null && overrides.SortByOverwritten  ? overrides.SortBy : this.SortBy;
+            var pageSize = overrides != null && overrides.PageSize.HasValue ? overrides.PageSize : this.PageSize;
+            var startIndex = overrides != null && overrides.StartIndex.HasValue ? overrides.StartIndex : this.StartIndex;
+            var query = overrides != null && overrides.QueryOverwritten ? overrides.Query : this.Query;
+            #region doFacets
+            if ( !clearFacets && ( 
+                (   
+                this.Facets != null && 
+                this.Facets.Count> 0 
+                )
+                || 
+                (
+                overrides != null && 
+                 overrides.AddFacet.HasValue )
+                )
+                )
+            {
+                var removeFacet = overrides != null && overrides.RemoveFacet.HasValue ? overrides.RemoveFacet.Value : new KeyValuePair<string, string>();
+                var addFacet = overrides != null && overrides.AddFacet.HasValue ? overrides.AddFacet : null;
+
+
+                StringBuilder sb = new StringBuilder();
+                foreach (string key in Facets.Keys)
+                {
+                    foreach (var val in Facets.GetValues(key))
+                    {
+                        if ( string.Equals( key, removeFacet.Key, StringComparison.OrdinalIgnoreCase) &&
+                            string.Equals(val, removeFacet.Value, StringComparison.OrdinalIgnoreCase) )
+                        {
+                            continue;
+                        }
+                        if (sb.Length > 0)
+                        {
+                            sb.Append(",");
+                        }
+                        sb.Append(key);
+                        sb.Append(':');
+                        sb.Append(val);
+                    }
+
+                }
+                if (addFacet.HasValue)
+                {
+                    if (sb.Length > 0)
+                    {
+                        sb.Append(",");
+                    }
+                    sb.Append(addFacet.Value.Key);
+                    sb.Append(':');
+                    sb.Append(addFacet.Value.Value);
+                }
+
+                facetQsVal = sb.ToString();
+
+            }
+            #endregion doFacets
+
+
+            return string.Format("{0}?pageSize={1}&sortBy={2}&facetValueFilter={3}&startIndex={4}&query={5}",
+                urlBase,
+               pageSize,
+                HttpUtility.UrlEncode(sortBy),
+                HttpUtility.UrlEncode(facetQsVal),
+                startIndex,
+                HttpUtility.UrlEncode(query));
+
+        }
+    }
+    public class SearchContextOverrides
+    {
+       
+        private string _sortBy;
+        
+        private string _query;
+      
+        public int? StartIndex
+        {
+            get;set;
+        }
+        public string UrlBase { get; set; }
+        public string SortBy
+        {
+            get { return _sortBy; }
+            set
+            {
+                SortByOverwritten = true;
+                _sortBy = value;
+            }
+
+        }
+        public bool SortByOverwritten
+        {
+            get; set;
+        }
+        public string Query
+        {
+            get { return _query; }
+            set
+            {
+                QueryOverwritten = true;
+                _query = value;
+            }
+        }
+
+        public bool QueryOverwritten
+        {
+            get; set;
+        }
+        public int? PageSize
+        {
+            get; set;
+        }
+
+    
+      
+
+        public bool ClearFacets { get; set; }
+
+        public KeyValuePair<string, string>? RemoveFacet { get; set; }
+        public KeyValuePair<string,string>? AddFacet { get; set; }
+
+
     }
 
     public class FacetJsonConverter : JsonConverter

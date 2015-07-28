@@ -60,6 +60,10 @@ namespace Mozu.SiteBuilder.Mvc.Contexts
             return new PagingParameters(search);
             
         }
+        public override string ToString()
+        {
+            return string.Format("PagingParameters,{0},{1},{2}", this.StartIndex, this.PageSize, this.FacetValueFilter );
+        }
     }
 
     public static class CmsContextExtensions

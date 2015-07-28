@@ -235,7 +235,7 @@ Ext.define('Taco.core.ux.mixins.NavHeader', {
                 me.titleContainer.items.push(me.titlePanel);
             }
 
-            conf.items.push(me.titleContainer);        
+            conf.items.push(me.titleContainer);
 
             if (!Ext.isEmpty(this.contextConfig) && !Ext.isEmpty(this.contextConfig.supportedLevels)) {
                 me.titleContainer.items.push({
@@ -254,7 +254,9 @@ Ext.define('Taco.core.ux.mixins.NavHeader', {
 
             } else {
                 // In order for the title to grow and shrink dynamically and have elipsis we can only do this when there is no trailing "for [ context combo ] "
-                me.titleCmp.flex = 1;
+                if (!me.titlePanel) {
+                    me.titleCmp.flex = 1;
+                }
             }
         }
 
