@@ -8,15 +8,6 @@ Ext.define('Taco.model.Return', {
     statics: (function () {
 
         var constants = {
-                reasons: {
-                    DAMAGED: 'Damaged',
-                    DEFECTIVE: 'Defective',
-                    MISSING_PARTS: 'MissingParts',
-                    DIFFERENT_EXPECTATIONS: 'DifferentExpectations',
-                    LATE: 'Late',
-                    NO_LONGER_WANTED: 'NoLongerWanted',
-                    OTHER: 'Other'
-                },
                 statuses: {
                     AUTHORIZED: "Authorized",
                     CANCELLED: "Cancelled",
@@ -38,7 +29,26 @@ Ext.define('Taco.model.Return', {
         return {
             constants: constants,
             getValidReasons: function () {
-                return storeReasons;
+                var me = this;
+                var config = {};
+                
+                //config.success = 
+                //config.failure =
+
+                Ext.apply(config, {
+                    success: function (response) {
+
+                        console.log(response);
+                    },
+                    failure: function (response, options) {
+                        console.log(response);
+                    },
+                    url: '/admin/app/return/returnReasons',
+                    method: "GET"
+
+                });
+
+                Ext.Ajax.request(config);;
             }
         };
     }()),
