@@ -245,7 +245,7 @@ namespace Mozu.SiteBuilder.Mvc.SEO
             return null;
            
         }
-
+      
         public async Task<string> GetCannonicalUrl( FancyRoute internalRoute, Func<IDictionary<string, object>> viewDataAdditionFunc, bool useExistingValues)
         {
             
