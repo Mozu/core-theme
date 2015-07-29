@@ -297,12 +297,15 @@ namespace Mozu.SiteBuilder.Mvc.Contexts
                 if (_cdnPrefix == null)
                 {
 
-                    _cdnPrefix = string.IsNullOrWhiteSpace(this.GeneralSettings.CustomCdnHostName) ? _settings.AppSettings("CdnHost") : this.GeneralSettings.CustomCdnHostName;
-
+                    _cdnPrefix = "//" + (
+                        string.IsNullOrWhiteSpace(this.GeneralSettings.CustomCdnHostName) ? _settings.AppSettings("CdnHost") : this.GeneralSettings.CustomCdnHostName)
+                        + "/" + _siteBuilderApiContext.TenantId + "-" + _siteBuilderApiContext.SiteId;
+                    
                     if (_settings.AppSettings("disableCDN") == "true")
                     {
                         _cdnPrefix = ""; ;
                     }
+                   
                 }
                 return _cdnPrefix;
             }
