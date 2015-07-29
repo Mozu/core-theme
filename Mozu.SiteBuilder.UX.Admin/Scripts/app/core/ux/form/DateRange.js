@@ -61,5 +61,5 @@ Ext.define('Taco.core.ux.form.DateRange', {
             end.validate();
         }
         return true;
-    },
+    }
 });

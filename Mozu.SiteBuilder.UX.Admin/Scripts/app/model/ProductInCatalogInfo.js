@@ -29,6 +29,20 @@ Ext.define('Taco.model.ProductInCatalogInfo', {
             "useNull": true
         },
         {
+            "name": "status",
+            "type": "string",
+            persist: false,
+            convert: function (value, record) {
+                if (!record.get('isActive')) {
+                    return 'Disabled';
+                }
+                if (record.get('activeStartDate') || record.get('activeEndDate')) {
+                    return 'Scheduled';
+                }
+                return 'Active';
+            }
+        },
+        {
             "name": "product",
             "type": "auto",
             "persist": false
@@ -162,6 +176,18 @@ Ext.define('Taco.model.ProductInCatalogInfo', {
             "type": "boolean",
             "useNull": false,
             defaultValue: false
+        },
+        {
+            name: "activeStartDate",
+            type: "date",
+            useNull: true,
+            dateFormat: 'c'
+        },
+        {
+            name: "activeEndDate",
+            type: "date",
+            useNull: true,
+            dateFormat: 'c'
         }
 
     ],

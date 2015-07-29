@@ -427,8 +427,9 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.ModelMapping
 
 
                 .ForMember(x => x.DateFirstAvailableInCatalog, op => op.ResolveUsing(dc => (dc.DateFirstAvailableInCatalog ?? null)))
+                .ForMember(x => x.ActiveStartDate, op => op.ResolveUsing(x => (x.ActiveDates != null) ? x.ActiveDates.StartDate : null))
+                .ForMember(x => x.ActiveEndDate, op => op.ResolveUsing(x => (x.ActiveDates != null) ? x.ActiveDates.EndDate : null))
 
-                //ignores
                 .ForMember(x => x.ProductCode, op => op.Ignore())
                 .ForMember(x => x.ListPrice, op => op.Ignore())
                 ;
@@ -446,6 +447,11 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.ModelMapping
                 .ForMember(dc => dc.IsContentOverridden, op => op.ResolveUsing(pisi => pisi.IsContentOverridden))
                 .ForMember(dc => dc.IsPriceOverridden, op => op.ResolveUsing(pisi => pisi.IsPriceOverridden))
                 .ForMember(dc => dc.IsSEOContentOverridden, op => op.ResolveUsing(pisi => pisi.IsSEOContentOverridden))
+                .ForMember(dc => dc.ActiveDates, op => op.ResolveUsing(x => new DC.EffectiveDates
+                {
+                    StartDate = x.ActiveStartDate,
+                    EndDate = x.ActiveEndDate
+                }))
                 .ForMember(dc => dc.Content, op => op.ResolveUsing(pisi => {
                     List<DC.ProductLocalizedImage> images = Mapper.Map<List<DC.ProductLocalizedImage>>(pisi.ProductImages );
                     return new DC.ProductLocalizedContent
