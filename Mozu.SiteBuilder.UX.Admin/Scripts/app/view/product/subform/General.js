@@ -872,7 +872,7 @@ Ext.define('Taco.view.product.subform.General', {
         }
         var startDate = startDateFld.parseDate(startDateFld.getValue());
         var endDate = endDateFld.parseDate(endDateFld.getValue());
-        if ((startDate && endDate) && (startDate > endDate)) {
+        if ((startDate && endDate) && (startDate >= endDate)) {
             return endBeforeStartMsg;
         }
         return true;
