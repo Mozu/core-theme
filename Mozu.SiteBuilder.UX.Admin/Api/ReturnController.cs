@@ -96,11 +96,12 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
             public decimal Amount { get; set; }
         }
 
-        [HttpGetRoute(UriTemplate = "returnReasons")]
-        public async Task<Response<List<string>>> GetReturnReasons()
+        [HttpGetRoute(UriTemplate = "reasons")]
+        public async Task<Response<List<string>>> GetReasons()
         {
-            var returnReasons = (await _returnWebApiClient.GetReturnReasons()).ReadAsAsync();
-            return List2(Mapper.Map<List<string>>(returnReasons));
+            var returnReasons = (await _returnWebApiClient.GetReasons()).ReadAsSync().Items;
+
+            return List2(returnReasons);
         }
 
         [HttpPostRoute(UriTemplate = "paymentAction")]
