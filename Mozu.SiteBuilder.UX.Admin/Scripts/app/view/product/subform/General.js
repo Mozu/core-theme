@@ -458,7 +458,7 @@ Ext.define('Taco.view.product.subform.General', {
         });
         
         this.mapEndField = Ext.widget({
-            xtype: 'datefield',
+            xtype: 'daterange',
             fieldLabel: 'MAP End Date',
             name: 'mapEndDate',
             itemId: 'mapenddt',
@@ -504,22 +504,18 @@ Ext.define('Taco.view.product.subform.General', {
             width: twoColumnFieldWidth,
             margin:"0 50 0 0",
             itemId: 'activeStartDt',
-            endDateFieldName: 'activeEndDate',
+            //endDateFieldName: 'activeEndDate',
             pickerOffset: 4,
             hidden: (!this.productInCatalogInfo || this.productInCatalogInfo.get('status') !== 'Scheduled'),
             allowBlank: true,
             validator: function() {
-                if (!this.isVisible()) return true;
-
-                if (!this.getValue() && !me.activeEndDateField.getValue()) {
-                    return "You must enter a start or end date.";
-                }
-                return true;
+                return !me.productInCatalogInfo ||
+                    me.validateDateRange(me.activeStartDateField, me.activeEndDateField, "Start date must be before end date");
             }
         });
 
         this.activeEndDateField = Ext.widget({
-            xtype: 'datetime', //'daterange',
+            xtype: 'datetime',
             fieldLabel: 'Active End Date',
             name: 'activeEndDate',
             itemId: 'activeEndDt',
@@ -529,13 +525,9 @@ Ext.define('Taco.view.product.subform.General', {
             pickerOffset: 4,
             hidden: (!this.productInCatalogInfo || this.productInCatalogInfo.get('status') !== 'Scheduled'),
             allowBlank: true,
-            validator: function() {
-                if (!this.isVisible()) return true;
-
-                if (!this.getValue() && !me.activeStartDateField.getValue()) {
-                    return "You must enter a starting or end date.";
-                }
-                return true;
+            validator: function(val) {
+                return !me.productInCatalogInfo ||
+                    me.validateDateRange(me.activeStartDateField, me.activeEndDateField, "End date must be after start date");
             }
         });
 
@@ -867,6 +859,23 @@ Ext.define('Taco.view.product.subform.General', {
        
 
 
+    },
+
+    validateDateRange: function(startDateFld, endDateFld, endBeforeStartMsg) {
+        if (!startDateFld.isVisible()) return true;
+
+        if (!startDateFld.getValue() && !endDateFld.getValue()) {
+            return "You must enter an active start or end date.";
+        }
+        if (!startDateFld.getValue() || !endDateFld.getValue()) {
+            return true;
+        }
+        var startDate = startDateFld.parseDate(startDateFld.getValue());
+        var endDate = endDateFld.parseDate(endDateFld.getValue());
+        if ((startDate && endDate) && (startDate > endDate)) {
+            return endBeforeStartMsg;
+        }
+        return true;
     },
 
     /**
