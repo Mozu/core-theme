@@ -43,7 +43,7 @@ namespace Mozu.SiteBuilder.Mvc.Contexts
         ThemeRuntimeSettingsCollection ThemeSettings { get; set; }
         Theme Theme { get; set; }
         bool IsEditMode { get; set; }
-        string CdnPrefix { get; set; }
+        string CdnPrefix { get; }
         string SecureHost { get; set; }
         bool SupportsInStorePickup { get; set; }
         SiteDomains Domains { get; set; }
@@ -95,8 +95,7 @@ namespace Mozu.SiteBuilder.Mvc.Contexts
             _settings = settings;
             _sitesWebApiClient = sitesWebApiClient.CloneWithoutUserClaims();
             _checkoutSettingsWebApiClient = checkoutSettingsWebApiClient.CloneWithoutUserClaims();
-            CdnPrefix = settings.AppSettings("CdnHost");
-
+            
 
             _themeOverrideId = ProcessThemeOverride(requestMessage, cookieProvider);
 
@@ -118,16 +117,7 @@ namespace Mozu.SiteBuilder.Mvc.Contexts
             string secure = uriBuilder.Uri.GetComponents(UriComponents.SchemeAndServer, UriFormat.Unescaped);
 
             SecureHost = _settings.CoreSettings.IsSSLValidationEnabled ? secure : _currentHost;
-
-            if (!string.IsNullOrEmpty(CdnPrefix))
-            {
-                CdnPrefix = "//" + CdnPrefix + "/" + siteBuilderApiContext.TenantId + "-" + siteBuilderApiContext.SiteId;
-            }
-            if (settings.AppSettings("disableCDN") == "true")
-            {
-                CdnPrefix = null;
-            }
-
+            
             Mozu.Core.Money.CurrencyCode cc;
             if (Mozu.Core.Money.CurrencyCode.TryParse(siteBuilderApiContext.CurrencyCode, out cc))
             {
@@ -299,7 +289,25 @@ namespace Mozu.SiteBuilder.Mvc.Contexts
 
         public bool IsEditMode { get; set; }
 
-        public string CdnPrefix { get; set; }
+        string _cdnPrefix;
+        public string CdnPrefix
+        {
+            get
+            {
+                if (_cdnPrefix == null)
+                {
+
+                    _cdnPrefix = string.IsNullOrWhiteSpace(this.GeneralSettings.CustomCdnHostName) ? _settings.AppSettings("CdnHost") : this.GeneralSettings.CustomCdnHostName;
+
+                    if (_settings.AppSettings("disableCDN") == "true")
+                    {
+                        _cdnPrefix = ""; ;
+                    }
+                }
+                return _cdnPrefix;
+            }
+            //set { }
+        }
 
         public string SecureHost { get; set; }
 

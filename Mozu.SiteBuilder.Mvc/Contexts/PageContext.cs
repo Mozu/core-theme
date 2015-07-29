@@ -206,6 +206,11 @@ namespace Mozu.SiteBuilder.Mvc.Contexts
             get; set;
         }
 
+        public string CdnCacheBustKey
+        {
+            get { return _requestMessage.Resolve<ISiteContext>().GeneralSettings.CdnCacheBustKey; }
+        }
+
         public PagingParameters Pagination
         {
             get; set;

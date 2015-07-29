@@ -292,31 +292,34 @@ namespace Mozu.SiteBuilder.Mvc.Helpers
             {
                 return "#";
             }
-
+            var sb = new StringBuilder(url);
             //cdnify
             if (url.Length > 2 && url[0] == '/' && url[0] != '/')
             {
-                url = _siteContext.CdnPrefix + url;
+                sb.Insert(0,_siteContext.CdnPrefix);
+              //  url = _siteContext.CdnPrefix + url;
             }
-
+            if (url.IndexOf('?') == -1)
+                {
+                    sb.Append( "?");
+                }
+                else
+                {
+                 sb.Append( "&");
+                   
+            }
+            
             foreach (var kvp in config)
             {
                 if (kvp.Value == null)
                 {
                     continue;
                 }
-                if (url.IndexOf('?') == -1)
-                {
-                    url += "?";
-                }
-                else
-                {
-                    url += "&";
-                }
-
-                url += kvp.Key + "=" + HttpUtility.UrlEncode(kvp.Value.ToString());
+                sb.Append(kvp.Key).Append("=").Append(HttpUtility.UrlEncode(kvp.Value.ToString())).Append("&");
             }
-            return url;
+
+            sb.Append("_mzCb=").Append(_siteContext.GeneralSettings.CdnCacheBustKey);
+            return sb.ToString();
         }
         public string MakeFacetUrl(object obj)
         {
