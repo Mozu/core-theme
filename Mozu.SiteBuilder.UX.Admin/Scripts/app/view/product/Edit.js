@@ -7,7 +7,8 @@
         'Ext.button.Button',
         'Ext.menu.Item',
         'Ext.form.Label',
-        'Taco.store.PublishSets'
+        'Taco.store.PublishSets',
+        'Taco.core.ux.content.IndicatorContainer'
     ],
 
     statics: {
@@ -122,10 +123,7 @@
             }
         });
 
-        this.titlePanel = Ext.widget('label', {
-            padding: '5 0 0 10'
-        });
-
+        this.titlePanel = Ext.widget('taco-indicator', {});
 
         this.publishingButton = Ext.widget('button', {
             ui: 'action-primary',
@@ -291,16 +289,35 @@
 
     setPublishStatus: function() {
         var pubInfo = this.record.getPublishingInfo(),
-            msg = '';
+            tooltipContent = '',
+            extraStyle = '',
+            generateTooltipKey = function (content) {
+                return "<span style='width:90px;font-weight: bold;float:left;'>" + content + "</span>";
+            },
+            generateTooltipValue = function (content, additionalStyle) {
+                return "<span style='padding-left: 5px;float:left;" + additionalStyle + "'>" + content + "</span>";
+            };
+
         if (pubInfo.statusText) {
-            msg = '<div class="taco-content-header-publish-'
-                + ((pubInfo.statusText === 'DRAFT') ? 'draft' : 'scheduled') + '">' + pubInfo.statusText;
+            extraStyle = (!pubInfo.publishSetInfo) ? 'font-style:italic;' : '';
+            tooltipContent = generateTooltipKey('Publish Set:');
             if (pubInfo.publishSetInfo) {
-                msg+= ' ' + Ext.Date.format(pubInfo.publishSetInfo.scheduledDate, 'M j');
+                tooltipContent += generateTooltipValue(pubInfo.publishSetInfo.name, '');
+            } else {
+                tooltipContent += generateTooltipValue('None', extraStyle);
             }
-            msg += '</div>';
+            tooltipContent += "<br/>";
+            tooltipContent += generateTooltipKey('Publish Date:');
+            tooltipContent += generateTooltipValue((pubInfo.publishSetInfo && pubInfo.publishSetInfo.scheduledDate
+                    ? Ext.Date.format(pubInfo.publishSetInfo.scheduledDate, 'F j, Y, g:i a T')
+                    : 'Unscheduled'), extraStyle);
+
+            this.titlePanel.setTooltipContent(tooltipContent);
+            this.titlePanel.setText(pubInfo.statusText, false);
+            this.titlePanel.show();
+        } else {
+            this.titlePanel.hide();
         }
-        this.titlePanel.setText(msg, false);
         this.publishingButton.setDisabled(!pubInfo.enabled.publish);
         this.removePublishSetMenuItem.setDisabled(!pubInfo.enabled.remove);
         this.publishNowMenuItem.setDisabled(!pubInfo.enabled.now);
@@ -551,7 +568,7 @@
     
     },
     doCreate : function (){
-        var controller = "products"
+        var controller = "products";
         Taco.app.StateManager.attemptNavigate(controller + '/create');
     }
 });

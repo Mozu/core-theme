@@ -993,7 +993,7 @@ Ext.define('Taco.model.Product', {
 
         if (this.get('publishSetCode')) {
             return {
-                statusText: 'SCHEDULED',
+                statusText: 'Scheduled',
                 enabled: {
                     publish: true,
                     now: true,
@@ -1001,6 +1001,7 @@ Ext.define('Taco.model.Product', {
                     remove:true
                 },
                 publishSetInfo: {
+                    code: this.get('publishSetCode'),
                     name: this.get('publishSetName'),
                     scheduledDate: this.get('publishSetDate')
                 }
@@ -1008,7 +1009,7 @@ Ext.define('Taco.model.Product', {
         }
 
         return {
-            statusText: 'DRAFT',
+            statusText: 'Draft',
             enabled: {
                 publish: true,
                 now: true,

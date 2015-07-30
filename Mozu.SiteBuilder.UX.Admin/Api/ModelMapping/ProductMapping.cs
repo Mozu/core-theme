@@ -216,9 +216,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.ModelMapping
                         }
                     }
                 ))
-                .ForMember(dc => dc.PublishingInfo, op => op.ResolveUsing(x => (string.IsNullOrEmpty(x.PublishSetCode)) 
-                    ? null
-                    : new DC.ProductPublishingInfo()
+                .ForMember(dc => dc.PublishingInfo, op => op.ResolveUsing(x => new DC.ProductPublishingInfo()
                         {
                             PublishSetCode = x.PublishSetCode,
                             PublishedState = x.PublishedState,
