@@ -30,6 +30,8 @@ Ext.define('Taco.model.GeneralSettings', {
         { "name": "isAddressValidationEnabled", "type": "boolean", "useNull": true },
         { "name": "allowInvalidAddresses", "type": "boolean", "useNull": true },
         { "name": "isWishlistCreationEnabled", "type": "boolean", "useNull": true },
+        { "name": "customCdnHostName", "type": "string", "useNull": true },
+        { "name": "cdnCacheBustKey", "type": "string", "useNull": true },
         // customer experience template
         { "name": "templateSiteId", "type": "integer", "useNull": true },
         { "name": "siteTimeFormat", "type": "string", "useNull": true },

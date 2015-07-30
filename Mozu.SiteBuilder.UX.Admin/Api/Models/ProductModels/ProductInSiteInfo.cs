@@ -37,6 +37,9 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.Models.ProductModels
 
         public string DateFirstAvailableInCatalog { get; set; }
 
+        public DateTime? ActiveStartDate { get; set; }
+
+        public DateTime? ActiveEndDate { get; set; }
 
         #region Content
         /// <summary>

@@ -20,7 +20,9 @@ Ext.define('Taco.view.product.subform.General', {
         'Taco.store.ProductTypes',
         'Taco.core.ux.form.CurrencyField',
         'Taco.shared.view.field.ProductTypePickerField',
-        'Taco.core.ux.form.DateRange'
+        'Taco.core.ux.form.DateRange',
+        'Taco.core.ux.form.DateTime'
+        //'Taco.core.ux.form.DateRangeContainer'
     ],
     statics: {
         sizes: {},
@@ -456,7 +458,7 @@ Ext.define('Taco.view.product.subform.General', {
         });
         
         this.mapEndField = Ext.widget({
-            xtype: 'datefield',
+            xtype: 'daterange',
             fieldLabel: 'MAP End Date',
             name: 'mapEndDate',
             itemId: 'mapenddt',
@@ -495,6 +497,40 @@ Ext.define('Taco.view.product.subform.General', {
             }()
         };
 
+        this.activeStartDateField = Ext.widget({
+            xtype: 'datetime',
+            fieldLabel: 'Active Start Date',
+            name: 'activeStartDate',
+            width: twoColumnFieldWidth,
+            margin:"0 50 0 0",
+            itemId: 'activeStartDt',
+            //endDateFieldName: 'activeEndDate',
+            pickerOffset: 4,
+            hidden: (!this.productInCatalogInfo || this.productInCatalogInfo.get('status') !== 'Scheduled'),
+            allowBlank: true,
+            validator: function() {
+                return !me.productInCatalogInfo ||
+                    me.validateDateRange(me.activeStartDateField, me.activeEndDateField, "Start date must be before end date");
+            }
+        });
+
+        this.activeEndDateField = Ext.widget({
+            xtype: 'datetime',
+            fieldLabel: 'Active End Date',
+            name: 'activeEndDate',
+            itemId: 'activeEndDt',
+            width: twoColumnFieldWidth,
+            margin: "0 0 0 0",
+            startDateFieldName: 'activeStartDate',
+            pickerOffset: 4,
+            hidden: (!this.productInCatalogInfo || this.productInCatalogInfo.get('status') !== 'Scheduled'),
+            allowBlank: true,
+            validator: function(val) {
+                return !me.productInCatalogInfo ||
+                    me.validateDateRange(me.activeStartDateField, me.activeEndDateField, "End date must be after start date");
+            }
+        });
+
         this.items = [
             {
                 xtype: 'fieldcontainer',
@@ -507,13 +543,12 @@ Ext.define('Taco.view.product.subform.General', {
                         persistChangesToModel: true,
                         record: this.productInCatalogInfo,
                         hidden: this.isGlobal,
-                        width: twoColumnFieldWidth,
                         header: false,
                         items: [
                             {
                                 xtype: 'combobox',
                                 fieldLabel: 'Status',
-                                name: 'isActive',
+                                name: 'status',
                                 labelAlign: 'top',
                                 hidden: this.isGlobal,
                                 allowBlank: false,
@@ -521,8 +556,33 @@ Ext.define('Taco.view.product.subform.General', {
                                 forceSelection: true,
                                 listConfig: { shadow: false },
                                 width: twoColumnFieldWidth,
-                                store: [[false, 'Disable'], [true, 'Active']],
-                                value: this.productInCatalogInfo ? this.productInCatalogInfo.get('isActive') : false
+                                store: [['Active', 'Active'], ['Scheduled', 'Scheduled'], ['Disable', 'Disable']],
+                                value: this.productInCatalogInfo ? this.productInCatalogInfo.get('status') : 'Disable',
+                                listeners: {
+                                    change: function(cmp, newValue) {
+                                        me.productInCatalogInfo.set('isActive', newValue === 'Scheduled' || newValue === 'Active');
+                                        //show eff dates.
+                                        //me.enableDateRangeFields(me, me.activeStartDateField, me.activeEndDateField, (newValue === 'Scheduled'));
+                                        me.activeStartDateField.setVisible(newValue === 'Scheduled');
+                                        me.activeEndDateField.setVisible(newValue === 'Scheduled');
+                                        if (newValue !== 'Scheduled') {
+                                            me.activeStartDateField.setValue(null);
+                                            me.activeEndDateField.setValue(null);
+                                        }
+                                    },
+
+                                    scope: this
+                                }
+                            }, {
+                                xtype: 'fieldcontainer',
+                                startDate: this.activeStartDateField,
+                                endDate: this.activeEndDateField,
+                                layout: 'hbox',
+                                width: '100%',
+                                items: [
+                                    this.activeStartDateField,
+                                    this.activeEndDateField
+                                ]
                             }
                         ]
                     } 
@@ -799,6 +859,23 @@ Ext.define('Taco.view.product.subform.General', {
        
 
 
+    },
+
+    validateDateRange: function(startDateFld, endDateFld, endBeforeStartMsg) {
+        if (!startDateFld.isVisible()) return true;
+
+        if (!startDateFld.getValue() && !endDateFld.getValue()) {
+            return "You must enter an active start or end date.";
+        }
+        if (!startDateFld.getValue() || !endDateFld.getValue()) {
+            return true;
+        }
+        var startDate = startDateFld.parseDate(startDateFld.getValue());
+        var endDate = endDateFld.parseDate(endDateFld.getValue());
+        if ((startDate && endDate) && (startDate >= endDate)) {
+            return endBeforeStartMsg;
+        }
+        return true;
     },
 
     /**

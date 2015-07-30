@@ -169,18 +169,53 @@ Ext.define('Taco.view.generalSettings.subform.About', {
 
                 xtype: 'fieldcontainer',
                 // note this layout is required for radiogroups to have the proper height;
-                layout:"column",
+                layout: 'hbox',
                 items: [
                     {
                         xtype: "editabledisplayfield",
                         //name:"isWebSite",
                         fieldLabel: "Mozu Hosted Store Front",
                         margin: "0 4 0 0",
-                        columnWidth: .5,
+                      
                         value: me.record.get('isMozuWebSite') ? 'Yes' : 'No',
                         flex: 1
                     },
-                    me.customerExperienceTemplate
+                    {
+                        xtype: 'container',
+                        layout: 'hbox',
+                        items:[
+                            {
+                                xtype: 'textfield',
+                                name: 'customCdnHostName',
+                                fieldLabel: 'CDN Domain',
+                                emptyText:Taco.cdnPrefix,
+                                flex: 1
+                            },
+                            {
+                       
+                                xtype: 'button',
+                                margin: '41 0 0 10',
+                                text: 'Bust Cache',
+                                ui: 'action',
+                                scale: 'medium',
+                             
+                                handler: function () {
+                                    me.down('#cdnCacheBustKey').setValue( '_'+new Date().getTime());
+                                }
+                        
+                            }
+                        ],
+                        flex: 1
+                    
+                        
+                    },
+                   
+                
+                   {
+                       xtype: 'hiddenfield',
+                       name: 'cdnCacheBustKey',
+                       itemId:'cdnCacheBustKey'
+                   }
                 ]
             }
         ];
