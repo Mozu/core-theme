@@ -6,9 +6,9 @@
       </div>
       <div class="mz-l-formfieldgroup-cell">
         <label>
-          <input type="radio" name="returnType" value="Refund" data-mz-value="rma.returnType" checked="checked"> {{ labels.refund }} </label>
+          <input type="radio" name="returnType" value="Refund" data-mz-value="rma.returnType" checked="checked"/> {{ labels.refund }} </label>
         <label>
-          <input type="radio" name="returnType" value="Replace" data-mz-value="rma.returnType" > {{ labels.replace }} </label>
+          <input type="radio" name="returnType" value="Replace" data-mz-value="rma.returnType" /> {{ labels.replace }} </label>
       </div>
     </div>
     <div class="mz-l-formfieldgroup-row">
@@ -18,13 +18,9 @@
       <div class="mz-l-formfieldgroup-cell">
         <select data-mz-value="rma.reason" class="mz-returnform-reason">
           <option value="">{{ labels.pleaseSelect }}</option>
-          <option value="Damaged">{{ labels.damaged }}</option>
-          <option value="Defective">{{ labels.defective }}</option>
-          <option value="DifferentExpectations">{{ labels.differentExpectations }}</option>
-          <option value="Late">{{ labels.tooLate }}</option>
-          <option value="MissingParts">{{ labels.missingParts }}</option>
-          <option value="NoLongerWanted">{{ labels.noLongerWanted }}</option>
-          <option value="Other">{{ labels.other }}</option>
+          {% for reason in pageContext.reasonCollection.items %}
+          <option value="{{reason}}">{{ labels|prop(reason) }}</option>
+          {% endfor %}
         </select>
         <span class="mz-validationmessage" data-mz-validationmessage-for="rma.reason"></span>
       </div>
