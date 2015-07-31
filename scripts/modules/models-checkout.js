@@ -906,18 +906,28 @@
 
                 var self = this,
                     user = require.mozuData('user');
+
                 _.defer(function() {
                     var latestPayment = self.apiModel.getCurrentPayment(),
                         fulfillmentInfo = self.get('fulfillmentInfo'),
                         fulfillmentContact = fulfillmentInfo.get('fulfillmentContact'),
                         billingInfo = self.get('billingInfo'),
                         steps = [fulfillmentInfo, fulfillmentContact, billingInfo],
+                        paymentWorkflow = latestPayment && latestPayment.paymentWorkflow,
                         paypalCancelled = (latestPayment && latestPayment.paymentType === "PaypalExpress" && window.location.href.indexOf('PaypalExpress=canceled') !== -1),
                         allStepsComplete = function () {
                             return _.reduce(steps, function(m, i) { return m + i.stepStatus(); }, '') === "completecompletecomplete";
                         },
                         isReady = allStepsComplete() && !(paypalCancelled);
                         
+                    if (paymentWorkflow) {
+                        billingInfo.set('paymentWorkflow', paymentWorkflow);
+                        billingInfo.get('card').set({
+                            isCvvOptional: true,
+                            paymentWorkflow: paymentWorkflow
+                        });
+                    }
+
                     self.isReady(isReady);
 
                     _.each(steps, function(step) {
