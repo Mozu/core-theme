@@ -4,7 +4,8 @@
  */
 
 Ext.define('Taco.view.filter.EditFilterModal', {
-    extend: 'Taco.core.ux.window.Modal',
+    //extend: 'Taco.core.ux.window.Modal',
+    extend: 'Taco.core.ux.window.Drawer',
     requires: [
         'Taco.model.ExpressionTree',
         'Taco.view.filter.Form'
@@ -20,7 +21,9 @@ Ext.define('Taco.view.filter.EditFilterModal', {
 
     record: null,
 
-    scale: "medium",
+    scale: "large",
+
+    layout:"fit",
 
     config: {
         // DynamicPreComputed or DynamicRealTime

@@ -585,6 +585,7 @@
     <Content Include="Scripts\app\overrides\grid\Panel.js" />
     <Content Include="Scripts\app\overrides\grid\RowEditorButtons.js" />
     <Content Include="Scripts\app\overrides\grid\RowEditor.js" />
+    <Content Include="Scripts\app\overrides\menu\Item.js" />
     <Content Include="Scripts\app\overrides\menu\Menu.js" />
     <Content Include="Scripts\app\overrides\panel\Header.js" />
     <Content Include="Scripts\app\overrides\picker\Month.js" />
@@ -705,9 +706,12 @@
     <Content Include="Scripts\app\view\filter\EditCodeModal.js" />
     <Content Include="Scripts\app\view\filter\EditFilterModal.js" />
     <Content Include="Scripts\app\view\filter\ExpressionTreePanel.js" />
+    <Content Include="Scripts\app\view\filter\MultiSelectorField.js" />
+    <Content Include="Scripts\app\view\filter\MultiSelectorGrid.js" />
     <Content Include="Scripts\app\view\filter\OperatorField.js" />
     <Content Include="Scripts\app\view\filter\Form.js" />
     <Content Include="Scripts\app\view\filter\schema.js" />
+    <Content Include="Scripts\app\view\filter\ValueField.js" />
     <Content Include="Scripts\app\view\generalSettings\subform\Features.js" />
     <Content Include="Scripts\app\view\ipblocking\Edit.js" />
     <Content Include="Scripts\app\view\ipblocking\Form.js" />
@@ -1352,6 +1356,7 @@
     <Content Include="Scripts\packages\mozuadmintheme\resources\fonts\mozicons.woff" />
     <Content Include="Scripts\sass\src\core\ux\browser\SearchList.scss" />
     <Content Include="Scripts\app\mocks\auditlog.json" />
+    <Content Include="Scripts\sass\src\overrides\menu\Item.scss" />
     <None Include="SetupSenchaWorkspace.ps1" />
     <Content Include="Scripts\.sencha\app\build-impl.xml" />
     <Content Include="Scripts\.sencha\app\plugin.xml" />

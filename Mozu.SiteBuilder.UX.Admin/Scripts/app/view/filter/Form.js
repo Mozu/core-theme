@@ -5,6 +5,7 @@ Ext.define('Taco.view.filter.Form', {
     extend: 'Taco.core.ux.form.Form',
     requires: [
       'Taco.view.filter.OperatorField',
+      'Taco.view.filter.ValueField',
       'Taco.view.filter.Schema'
     ],
 
@@ -19,6 +20,11 @@ Ext.define('Taco.view.filter.Form', {
         type:null
     },
 
+    layout: {
+        type: "vbox",
+        align:"stretch"
+    },
+    
     //createTitle: 'Create Filter',
 
     //editTitle: '{[values.record.data.name]}',
@@ -61,14 +67,18 @@ Ext.define('Taco.view.filter.Form', {
 
         this.operatorField = Ext.widget({
             xtype: 'operatorfield',
+            width: 300,
             fieldLabel: "Operator",
             value: this.record.get("operator"),
             name: 'operator'
         });
 
-        this.rightField = Ext.create('Ext.form.field.Text', {
+        this.rightField = Ext.create('Taco.view.filter.ValueField', {
             name: "right",
+            flex:1,
             allowBlank: false,
+            fieldRecord : this.getFieldRecord(),
+            operatorRecord: this.getOperatorRecord(),
             value: this.record.get("right"),
             fieldLabel: "Value"
         });
@@ -87,42 +97,44 @@ Ext.define('Taco.view.filter.Form', {
             // reset the operator field based on the current field value;
             me.refreshOperatorField();
             // reset the value field based on the curretn field and operator 
-            me.refreshValueField();
+            //me.refreshValueField();
         }, me);
     },
 
+
     // state of this field is driven by the field and operator
-    refreshValueField: function () {
+    //refreshValueField: function () {
+    //    var me = this,
+    //        leftValue,
+    //        operatorValue,
+    //        fieldRecord,
+    //        operatorRecord;
+
+
+    //    leftValue = this.leftField.getValue();
+    //    operatorValue = this.operatorField.getValue();
+
+    //    fieldRecord = this.fieldStore.getById(leftValue);
+    //    operatorRecord = Taco.filter.operatorStore.getById(operatorValue);
+
+    //    this.rightField.setFieldRecord(fieldRecord);
+    //    this.rightField.setOperatorRecord(operatorRecord);
+    //},
+
+    getOperatorRecord : function() {
         var me = this,
-            leftValue,
-            operatorValue,
-            fieldRecord,
-            operatorRecord,
-            rightFieldDisabled;
+            operatorValue = (this.operatorField) ? this.operatorField.getValue() : this.record.get("operator");
 
-
-        leftValue = this.leftField.getValue();
-        operatorValue = this.operatorField.getValue();
-
-        rightFieldDisabled = (!leftValue || !operatorValue);
-
-        this.rightField.setDisabled(rightFieldDisabled);
-        if (rightFieldDisabled) {
-            return;
-        }
-
-        fieldRecord = this.fieldStore.getById(leftValue);
-        operatorRecord = Taco.filter.operatorStore.getById(operatorValue);
-
-
-         
-        
-
+        return Taco.filter.operatorStore.getById(operatorValue);
     },
 
     onOperatorFieldChange: function (field, newValue, oldValue, eOpts ) {
-        var me = this;
-        me.refreshValueField();
+        var me = this,
+            operatorRecord;
+        
+
+        operatorRecord = this.getOperatorRecord();
+        this.rightField.setOperatorRecord(operatorRecord);
     },
 
     refreshOperatorField: function (leftValue) {
@@ -161,15 +173,27 @@ Ext.define('Taco.view.filter.Form', {
         var leftValue = this.leftField.getValue();
         this.record.set("left", leftValue);
 
+        var rightValue = this.rightField.getValue();
+        this.record.set("right", rightValue);
+
         return true;
     },
 
+    getFieldRecord: function () {
+        var me = this,
+            fieldValue = (this.leftField) ? this.leftField.getValue() : this.record.get("left");
+
+        return Taco.filter.fieldStore.getById(fieldValue);
+    },
+
     onFieldChange: function (field, newValue, oldValue, e) {
-        var me = this
+        var me = this;
         
         if (newValue) {
             this.refreshOperatorField(newValue);
         }
+
+        this.rightField.setFieldRecord(this.getFieldRecord());
     },
     onDestroy: function () {
         var me = this;
