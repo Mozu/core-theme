@@ -8,6 +8,7 @@ using System.Threading.Tasks;
 using System.Web;
 using Mozu.Core.Api.Routing;
 using Mozu.SiteBuilder.UX.Admin.Api.Models;
+using System.Linq;
 
 namespace Mozu.SiteBuilder.UX.Admin.Api
 {
@@ -37,6 +38,8 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
             var list = new List<KeyValuePair<string, string>>();
 
             var path = _httpContext.Server.MapPath(@"/admin/scripts/app/locale/lang-" + lang + ".csv");
+
+            if (!File.Exists(path)) return Enumerable.Empty<KeyValuePair<string, string>>().ToList();
 
             // TODO: async-y reading magic
             using (var reader = new StreamReader(System.IO.File.OpenRead(path)))
