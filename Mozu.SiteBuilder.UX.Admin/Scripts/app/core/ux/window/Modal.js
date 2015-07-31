@@ -182,7 +182,26 @@ Ext.define('Taco.core.ux.window.Modal', {
     * This sets up some standard keyboard shortcuts for Modal Dialogs.
     */
     initKeyMap: function () {
-        var me = this;        
+        var me = this;
+
+        me.formLessKeyMap = new Ext.util.KeyMap({
+            target: me.el,
+            ignoreInputFields: true,
+            
+            binding: [
+                 {
+                    // Backspace on windows and delete key on mac. need to prevent the navigate
+                    key: 8,
+
+                    fn: function () {
+                        console.log("preventing modals from causing a navigate");
+                    },
+                    // prevents the event from bubbling past the modal;
+                    defaultEventAction: 'stopEvent',
+                    scope: me
+                }
+            ]
+        });
         // adding key listeners for dialogs
         me.keyMap = new Ext.util.KeyMap({
             target: me.el,
@@ -190,7 +209,7 @@ Ext.define('Taco.core.ux.window.Modal', {
                 // Ctrl + Shift + S
                 key: Ext.EventObject.S,
                 ctrl: true,
-                shift: true,                
+                shift: true,
                 fn: me.primaryHandler,
                 // prevents the event from bubbling past the modal;
                 defaultEventAction: 'stopEvent',
