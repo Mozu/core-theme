@@ -123,7 +123,9 @@
             }
         });
 
-        this.titlePanel = Ext.widget('taco-indicator', {});
+        if (this.checkProductPublishing()) {
+            this.titlePanel = Ext.widget('taco-indicator', {});
+        }
 
         this.publishingButton = Ext.widget('button', {
             ui: 'action-primary',
@@ -297,6 +299,10 @@
             generateTooltipValue = function (content, additionalStyle) {
                 return "<span style='padding-left: 5px;float:left;" + additionalStyle + "'>" + content + "</span>";
             };
+
+        if (!this.checkProductPublishing()) {
+            return;
+        }
 
         if (pubInfo.statusText) {
             extraStyle = (!pubInfo.publishSetInfo) ? 'font-style:italic;' : '';
