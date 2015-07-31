@@ -11,11 +11,11 @@
         
             items: [{
                 xtype: "mz-input-date",
-                name: "document.startDate",
+                name: "document.activeDateRange.startDate",
                 fieldLabel: 'Start Date'
             }, {
                 xtype: "mz-input-date",
-                name: "document.endDate",
+                name: "document.activeDateRange.endDate",
                 fieldLabel: 'End Date'
             }]
         });
