@@ -9,7 +9,7 @@ Ext.define('Taco.view.publishing.modal.CreatePublishSet', {
     primaryText: 'Save',
     secondaryText: 'Cancel',
     initComponent: function() {
-        console.log(this.record);
+
         this.form = this.buildForm();
         this.items = [this.form];
 
@@ -51,16 +51,6 @@ Ext.define('Taco.view.publishing.modal.CreatePublishSet', {
                             fieldLabel: 'Publish Date',
                             minDate: new Date(),
                             width: 340
-                            // listeners: {
-                            //     afterrender: function(cmp) {
-                                    
-                            //     },
-                            //     change: function (cmp) {
-                            //         console.log(this.record.get('publishDate'))
-                            //         cmp.setValue(this.record.get('publishDate'));
-                            //     },
-                            //     scope: this
-                            // }
                         }
 
                     ]

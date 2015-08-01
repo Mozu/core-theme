@@ -12,10 +12,11 @@ Ext.define('Taco.view.publishing.grid.Publish', {
         'Ext.Date',
         'Taco.core.ux.grid.MenuColumn',
         'Taco.view.publishing.modal.CreatePublishSet',
-        'Taco.core.ux.window.Modal'
+        'Taco.core.ux.window.Modal',
+        'Taco.view.Growl'
     ],
 
-    margin: '30 0 0 0',
+    margin: '0 0 0 0',
 
     launchEditorOnClick: false,
 
@@ -60,22 +61,80 @@ Ext.define('Taco.view.publishing.grid.Publish', {
         
     initComponent: function () {
 
+        this.stateId = 'statefulPublishSetGrid';
+
         this.store = Ext.create(this.storeConfig.name, this.storeConfig.options);
         
         this.columns = this.getColumnConfig();
 
         this.callParent(arguments);
 
-        if (this.isPicker) {
-            this.addCreateButton();
-        }
+        this.getSelectionModel().on('select', this.fireSelectionEvent, this, {single: false});
 
-        // this.getSelectionModel().on('select', this.fireSelectionEvent, this, {single: false});
+        this.store.on('load', this.updateCard, this, {single: true});
+
+        this.on('boxready', function() {
+            if (!this.store.storeHasLoaded) this.setLoading(true);
+        }, this);
+
     },
 
-    // fireSelectionEvent: function() {
-    //     this.up('gridwrapper').down('#taco-publishset-button').enable();
-    // },
+    updateCard: function(store, records) {
+        this.setLoading(false);
+
+        if (records.length > 0) {
+      
+            if (window.location.pathname.indexOf('/publishsets/') !== -1){
+                var path = window.location.pathname,
+                    id = path.substring(path.lastIndexOf('/') + 1, path.length);
+
+                this.getSelectionModel().select(this.store.getById(id));
+
+                this.up('publish-split').getEast().expand();
+            }
+
+            else {
+                 this.up('publish-split').getEast().collapse();
+            }
+        }
+        else {
+            this.up('panel').getLayout().setActiveItem(1);
+            this.up('publish-split').getEast().collapse();
+        }
+    },
+
+    updateUrl: function(record) {
+
+        var url = 'publishing/publishsets';
+
+        if (record) {
+            url += '/' + record.getId();
+            //if were loading a page that is already in the url -- we dont need to add to history
+            if (record.getId() !== window.location.pathname.substring(window.location.pathname.lastIndexOf('/') + 1)) {
+                Taco.app.StateManager.addState(url);
+            }
+        }
+    },
+
+    fireSelectionEvent: function(store, record, isDelete) {
+        //override the paramater, EXT passes the id of the record, but we only recognize true or false;
+        isDelete = isDelete !== true ? false : isDelete;
+        
+        var contentLayout = this.up('publish-split').down('tabpanel');
+
+        this.updateUrl(record);
+
+        if (!isDelete) {
+            contentLayout.setTitle('<span style="font-weight:bold;">' + record.get('name') + '</span> <span style="color:#999;">Drafts</span>');
+        }
+
+        else {
+            contentLayout.setTitle('<span>Publish Set Contents</span>');
+        }
+
+        contentLayout.down('#content').store.read({code: record.get('code'), type: 'cms'});
+        contentLayout.down('#product').store.read({code: record.get('code'), type: 'product'});
+    },
 
     addCreateButton: function() {
         this.down('toolbar').insert({
@@ -98,159 +157,176 @@ Ext.define('Taco.view.publishing.grid.Publish', {
                     dataIndex: 'name',
                     stateId: 'name',
                     text: 'Name',
-                    hideable: false,
-                    flex: 1
+                    minWidth: 100,
+                    flex: 3,
+                    sortable: false
                 }, 
                 {
                     xtype: 'gridcolumn',
                     dataIndex: 'code',
                     stateId: 'id',
                     text: 'Code',
-                    hideable: false
+                    flex: 2,
+                    sortable: false
                 }, 
                 {
                     xtype: 'gridcolumn',
                     dataIndex: 'totalCount',
                     stateId: 'totalCount',
-                    width: 100,
-                    text: 'Count'
+                    columnWidth: 100,
+                    text: 'Count',
+                    flex: 2,
+                    sortable: false
                 }, 
                 {
                     xtype: 'gridcolumn',
                     dataIndex: 'publishDate',
                     stateId: 'publishDate',
-                    width: 100,
+                    columnWidth: 100,
                     text: 'Publish Date',
-                    renderer: Ext.util.Format.dateRenderer('d M, Y')
+                    renderer: Ext.util.Format.dateRenderer('d M, Y'),
+                    sortable: false
                 },
                 {
                     xtype: 'gridcolumn',
                     dataIndex: 'createDate',
                     stateId: 'createDate',
-                    width: 100,
+                    columnWidth: 100,
                     text: 'Created Date',
                     hidden: true,
-                    renderer: Ext.util.Format.dateRenderer('d M, Y')
+                    renderer: Ext.util.Format.dateRenderer('d M, Y'),
+                    sortable: false
                 },
                 {
                     xtype: 'gridcolumn',
                     dataIndex: 'updateBy',
                     stateId: 'modifiedBy',
-                    width: 100,
+                    columnWidth: 100,
                     text: 'Modified By',
                     hidden: true,
-                    renderer: this.getAssociatedUserName
+                    renderer: this.getAssociatedUserName,
+                    sortable: false
                 },
                 {
                     xtype: 'gridcolumn',
                     dataIndex: 'lastPublished',
                     stateId: 'lastPublished',
-                    width: 100,
+                    columnWidth: 100,
                     text: 'Last Published',
                     hidden: true,
-                    renderer: Ext.util.Format.dateRenderer('d M, Y')
+                    renderer: Ext.util.Format.dateRenderer('d M, Y'),
+                    sortable: false
                 },
                 {
                     xtype: 'gridcolumn',
                     dataIndex: 'lastPublishedBy',
                     stateId: 'lastPublishedBy',
-                    width: 100,
+                    columnWidth: 100,
                     text: 'Last Published By',
                     hidden: true,
-                    renderer: this.getAssociatedUserName
+                    renderer: this.getAssociatedUserName,
+                    sortable: false
                 },
                 {
                     xtype: 'gridcolumn',
                     dataIndex: 'status',
                     stateId: 'status`',
-                    width: 100,
+                    columnWidth: 100,
                     text: 'Status',
-                    hidden: true
-                }
-                // {
-                //     xtype: 'gridcolumn',
-                //     dataIndex: 'masterCatalog',
-                //     stateId: 'masterCatalog',
-                //     width: 100,
-                //     text: 'Master Catalog',
-                //     hidden: true
-                // }
-            ];
-
-        if (!this.isPicker) {
-            columns.push({
-                xtype: 'taco.menucolumn',
-                text: 'Actions',
-
-                onMenuShow: function(cmp, eventData) {
-                    var editMenuColumn = cmp.down('#edit-publish-set'),
-                        deleteMenuColumn = cmp.down('#delete-publish-set');
-
-                    deleteMenuColumn[eventData.record.get('code').toLowerCase() === 'unassigned' ? 'disable' : 'enable']();
-                    editMenuColumn[eventData.record.get('code').toLowerCase() === 'unassigned' ? 'disable' : 'enable']();
+                    hidden: true,
+                    sortable: false
                 },
+                {
+                    xtype: 'taco.menucolumn',
+                    text: 'Actions',
 
-                menuItems: [
-                    {
-                        text: 'Edit',
-                        itemId: 'edit-publish-set',
-                        menuColumnHandler: this.showEditModal
+                    onMenuShow: function(cmp, eventData) {
+                        var editMenuColumn = cmp.down('#edit-publish-set'),
+                            deleteMenuColumn = cmp.down('#delete-publish-set'),
+                            publishNow = cmp.down('#publish-now');
+
+                        publishNow[eventData.record.get('totalCount') > 0 ? 'enable' : 'disable']();
+                        deleteMenuColumn[eventData.record.get('code').toLowerCase() === 'unassigned' ? 'disable' : 'enable']();
+                        editMenuColumn[eventData.record.get('code').toLowerCase() === 'unassigned' ? 'disable' : 'enable']();
                     },
-                    {
-                        text: 'Manage Contents',
-                        menuColumnHandler: function(item, eventData) {
-                            this.scope.up('publish-split').getEast2().expand();
+
+                    menuItems: [
+                        {
+                            text: 'Edit',
+                            itemId: 'edit-publish-set',
+                            menuColumnHandler: this.showEditModal
                         },
-                        scope: this
-                    },
-                    {
-                        text: 'Publish Now',
-                        menuColumnHandler: function(item, eventData) {
-                            me.getConfirmationModal({
-                                header: 'Publish ' + eventData.record.get('name'),
-                                message: 'Are you sure you want to publish all drafts associated with this publish set?',
-                                callback: me.onPublishSetPublish.bind(me, item, eventData)
-                            });
-                        }
-                    },
-                    {
-                        text: 'Delete',
-                        itemId: 'delete-publish-set',
-                        menuColumnHandler: function(item, eventData) {
-                            var totalRecords = eventData.record.get('productCount') + eventData.record.get('contentCount');
-
-                            if (totalRecords > 0) {
-
+                        {
+                            text: 'Manage Drafts',
+                            menuColumnHandler: function(item, eventData) {
+                                this.scope.up('publish-split').getEast().expand();
+                            },
+                            scope: me
+                        },
+                        {
+                            text: 'Publish Now',
+                            itemId: 'publish-now',
+                            menuColumnHandler: function(item, eventData) {
                                 me.getConfirmationModal({
-                                    header: 'Delete Publish Set Options',
-                                    message: 'Would you like to discard all associated drafts, or move all drafts to unassigned?',
+                                    header: 'Publish Now',
+                                    message: me.getPublishModalMessage(eventData.record),
+                                    callback: me.onPublishSetPublish.bind(me, item, eventData),
                                     primaryOptions: {
-                                        text: 'Discard Drafts',
-                                        handler: me.onPublishSetDelete.bind(me, 'discard', item, eventData)
-                                    },
-                                    secondaryOptions: {
-                                        text: 'Unassign Drafts',
-                                        handler: me.onPublishSetDelete.bind(me, 'unassign', item, eventData)
+                                        text: 'Yes, Publish Now'
                                     }
                                 });
                             }
-
-                            else {
-
-                                me.getConfirmationModal({
-                                    header: 'Delete ' + eventData.record.get('name'),
-                                    message: 'Are you sure you want to delete this publish set?',
-                                    callback: me.onPublishSetDelete.bind(me, null, item, eventData)
-                                });
-                            }
-                
                         },
-                    }
-                ]
-            });
-        }
+                        {
+                            text: 'Delete',
+                            itemId: 'delete-publish-set',
+                            menuColumnHandler: function(item, eventData) {
+                                var totalRecords = eventData.record.get('productCount') + eventData.record.get('contentCount');
+
+                                if (totalRecords > 0) {
+                                    me.getDeleteModal({
+                                        msg: 'Would you like to discard all ' + eventData.record.get('totalCount') + ' drafts, or move all ' + eventData.record.get('totalCount') + ' drafts to unassigned?',
+                                        discardFunc: me.onPublishSetDelete.bind(me, 'discard', item, eventData),
+                                        unassignFunc: me.onPublishSetDelete.bind(me, 'unassign', item, eventData)
+                                    });
+                                }
+
+                                else {
+                                    me.getConfirmationModal({
+                                        header: 'Delete ' + eventData.record.get('name'),
+                                        message: 'Are you sure you want to delete this publish set?',
+                                        callback: me.onPublishSetDelete.bind(me, null, item, eventData),
+                                         primaryOptions: {
+                                            text: 'Yes, Delete Publish Set'
+                                        }
+                                    });
+                                }
+                    
+                            },
+                        }
+                    ]
+            }
+        ];
     
         return columns;
+    },
+
+    getPublishModalMessage: function(record) {
+        var message,
+            word = record.get('totalCount') === 1 ? record.get('totalCount') + ' Draft' : record.get('totalCount') + ' Drafts';
+
+        if (record.get('publishDate')) {
+            message = 'The ' + record.get('name') + ' Publish Set contains ' + word + ' and is currently scheduled to go live on ' + Ext.util.Format.date(record.get('publishDate'), 'm/d/Y g:i a');
+        } 
+
+        else {
+            message = 'The ' + record.get('name') + ' Publish Set contains ' + word;
+        }
+        
+        message+= ' <br><br>Are you sure you want to publish ' + word;
+
+        return message;
+
     },
 
     getAssociatedUserName: function(value){
@@ -263,20 +339,28 @@ Ext.define('Taco.view.publishing.grid.Publish', {
 
     onPublishSetDelete: function(method, item, eventData) {
 
+        var me = this;
+
         if (method === 'unassign' || method === 'discard') {
             Taco.model.PublishSet.doDelete({
                 data: [eventData.record.data],
                 method: method,
                 success: function() {
                     eventData.record.store.read();
+                    me.fireSelectionEvent(null, eventData.record, true);
+                    me.up('publish-split').showGrowl('Deleted');
                 },
                 failure: this.showMessage.bind(this, 'There was an error deleting this publish set!', 'error')
             });
         }
 
         else {
-             eventData.record.destroy({
-                failure: this.showMessage.bind(this, 'There was an error deleting this publish set!', 'error')
+            eventData.record.destroy({
+                failure: this.showMessage.bind(this, 'There was an error deleting this publish set!', 'error'),
+                success: function() {
+                    me.up('publish-split').showGrowl('Deleted');
+                    me.fireSelectionEvent(null, eventData.record, true);
+                }
             });
         }
        
@@ -324,13 +408,72 @@ Ext.define('Taco.view.publishing.grid.Publish', {
         modal.show();
     },
 
+    getDeleteModal: function(config) {
+        
+        var modal = Ext.create('Taco.core.ux.window.Modal', {
+                scale: 'small',
+                title: 'Delete Publish Set',
+                modal: true,
+                closeAction: 'destroy',
+                height: 250,
+                width: 470,
+                actions: [
+                    {
+                        ui: 'action',
+                        scale: 'medium',
+                        text: 'Cancel',
+                        handler: function() {
+                            this.close();
+                        }
+                    },
+                    {
+                        xtype: 'splitbutton',
+                        ui: 'action-primary',
+                        scale: 'medium',
+                        text: 'Yes, Delete',
+                        menu: {
+                            plain: true,
+                            shadow: false,
+                            items: [{
+                            text: 'Delete and Discard Drafts',
+                                scope: this,
+                                plain: true,
+                                handler: function () {
+                                    modal.close();
+                                    config.discardFunc();
+                                }
+                            }
+                            ]
+                        },
+                        handler: function() {
+                            this.close();
+                            config.unassignFunc();
+                        }
+                    }
+                ],
+                items: [{
+                    xtype: 'container',
+                    layout: { 
+                        type: 'hbox' 
+                    },
+                    items: [
+                        Ext.create('Ext.panel.Panel', {
+                            width: '100%',
+                            html: config.msg
+                        })
+                    ]
+                }]
+            }).show();
+    },
+
     getConfirmationModal: function(config) {
         Ext.create('Taco.core.ux.window.Modal', {
             scale: 'small',
             title: config.header,
             modal: true,
             closeAction: 'destroy',
-            height: 200,
+            height: 250,
+            width: 470,
             beforeShowFunction: config.beforeShowFunction,
             primaryText: config.primaryOptions ? config.primaryOptions.text : 'Confirm',
             secondaryText: config.secondaryOptions ? config.secondaryOptions.text : 'Cancel',
@@ -372,5 +515,4 @@ Ext.define('Taco.view.publishing.grid.Publish', {
     showMessage: function(msg, type) {
         Taco.app.fireEvent('setmessage', msg, type);
     }
-
 });

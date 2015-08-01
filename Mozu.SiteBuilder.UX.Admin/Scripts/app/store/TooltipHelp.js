@@ -65,6 +65,9 @@ Ext.define('Taco.store.TooltipHelp', {
         }, {
             key: 'discount.limitations.maxRedemptionCount',
             value: 'Restrict the number of times this discount can be redeemed by all customers.'
+        },{
+            key: 'publishset.publishsetdate',
+            value: 'Publish Date is inherited from the<br/> Publish Set, and designates the<br/> date and time when all drafts in<br/> Publish Set publish.'
         }
 
    ]

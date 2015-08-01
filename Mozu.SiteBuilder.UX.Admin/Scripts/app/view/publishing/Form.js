@@ -7,10 +7,13 @@ Ext.define('Taco.view.publishing.Form', {
         'Taco.view.publishing.grid.Draft'
     ],
 
+    contextConfig: {
+        supportedLevels: ['m', 'c'],
+        requiresContextOfType: ['m', 'c']
+    },
+
     initComponent: function () {
-        this.items = [
-            Ext.create('Taco.view.publishing.grid.Draft')
-        ]
+        this.items = [];
         this.callParent(arguments);
     }
 });

@@ -6,6 +6,26 @@
         line-height: 20px;
         padding-bottom: 0px;
 
+        &.#{$vprefix}growl {
+            background-color: $growl-color-status-info;
+            border-color: $growl-color-status-info;
+            font-size: 20px;
+            opacity: 1;
+            transition-duration: .3s;
+            transition-property: opacity;
+            transition-timing-function: cubic-bezier(.65,.29,.93,.75);
+            text-align: center;
+
+            &.hidden {
+                 opacity: 0;
+            }
+
+            .#{$prefix}window-body {
+                border-color: $growl-color-status-info;
+            }
+
+        }
+
         .#{$prefix}window-body {
             background-color: transparent;
             border-color: $color-status-info;

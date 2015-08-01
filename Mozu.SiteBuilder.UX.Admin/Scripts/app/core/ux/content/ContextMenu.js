@@ -12,10 +12,22 @@ Ext.define('Taco.core.ux.content.ContextMenu', {
     forceSelection: true,
     minWidth: 150,
     growToLongestValue: false,
+    matchFieldWidth: false,
     editable:false,
+    maxWidth: 400,
     supportedLevels: [],
     defaultListConfig : {
         minWidth:300
+    }, 
+    listeners : {
+        afterrender: function(){
+            //override width of combobox if it's determined width is less than the max width
+            var width = this.inputEl.getValue().length + this.getWidth();
+
+            if (width < this.maxWidth) {
+                this.setWidth(width);
+            }
+        }
     },
     initComponent: function () {
         var ctx = Taco.app.context,

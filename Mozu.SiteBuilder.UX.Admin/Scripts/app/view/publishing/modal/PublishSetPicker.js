@@ -4,10 +4,10 @@ Ext.define('Taco.view.publishing.modal.PublishSetPicker', {
         'Taco.view.publishing.grid.Publish'
     ],
     scale: 'small',
-    title: 'Publishing',
+    title: 'Move to Publish Set',
     modal: true,
     closeAction: 'destroy',
-    height: 300,
+    height: 350,
     width: 500,
     primaryText: 'Done',
     layout: { 
@@ -34,7 +34,7 @@ Ext.define('Taco.view.publishing.modal.PublishSetPicker', {
                 xtype: 'container',
                 itemId: 'publish-set-picker',
                 layout: { 
-                    type: 'hbox' 
+                    type: 'vbox' 
                 },
                 items: [
                    {    
@@ -43,18 +43,23 @@ Ext.define('Taco.view.publishing.modal.PublishSetPicker', {
                         name: 'publishSetName',
                         itemId: 'publish-set-picker-combobox',
                         width: 457,
-                        // width: 375,
                         editable: true,
                         forceSelection: true,
                         store: this.getPublishSetStore(),
                         valueField: 'code',
                         displayField: 'name',
+                        queryMode: 'local',
+                        queryParam: 'name',
                         validator: function(name) {
                             if (this.store.data.items.some(function(rec){ return rec.get('name') === name;})) {
                                 return true;
                             }
+
+                            else if (this.store.totalCount < 1) {
+                                return 'No Publish Sets Have Been Created';
+                            }
                             else {
-                                return 'Please choose a valid publish set!';
+                                return 'Please choose a valid publish set';
                             }
                         },
                         listeners: {
@@ -63,25 +68,35 @@ Ext.define('Taco.view.publishing.modal.PublishSetPicker', {
                                     scope: me,
                                     callback: function() {
                                         cmp.setValue(me.record.get('publishSetCode'));
-                                        // me.disableButton(me.record.get('publishSetCode'));
+                                        if (me.record.get('publishDate')) {
+                                            me.down('#publish-date-field').setValue(Ext.util.Format.date(me.record.get('publishDate'), 'M/D/Y g:i a'));
+                                        }
                                     }
                                 });
                             },
-                            change: function(record, value) {
-                                // me.disableButton.call(me, value);
+                            change: function(cmp) {
+                                if (cmp.valueModels && cmp.getValue() !== -1) me.down('#publish-date-field').setValue(Ext.util.Format.date(cmp.valueModels[0].get('publishDate'), 'm/d/Y g:i a') || 'Unscheduled');
                             }
                         }
-                   },
-                   // {
-                   //      xtype: 'button',
-                   //      ui: 'action-primary',
-                   //      scale: 'medium',
-                   //      itemId: 'createActionButton',
-                   //      text: 'Edit',
-                   //      margin: '41 0 0 10',
-                   //      scope: this,
-                   //      handler: this.showEditModal.bind(this)
-                   // }
+                    },
+
+                    Ext.create('Ext.form.field.Text',
+                       Taco.core.ux.TooltipLabel.wrapConfig('publishset.publishsetdate', me, {
+                        name: 'scope',
+                        fieldLabel: 'Publish Date',
+                        labelAlign: 'top',
+                        itemId: 'publish-date-field',
+                        text: 'Publish Date',
+                        style: 'padding-top:30px;font:bold 14px/14px "SourceSansProRegular",helvetica,arial,verdana,sans-serif;',
+                        border: false,
+                        listeners: {
+                            afterrender: function(cmp) {
+                                //disable without changing css
+                                cmp.inputEl.dom.disabled = true;
+                                cmp.inputEl.dom.style.borderWidth = '0px';
+                            }
+                        }
+                    }))
                 ]
             }]
         });
@@ -98,7 +113,26 @@ Ext.define('Taco.view.publishing.modal.PublishSetPicker', {
     },
 
     getPublishSetStore: function() {
-        return Ext.create('Taco.store.PublishSets', {includeCounts: false});
+        return Ext.create('Taco.store.PublishSets', {
+            includeCounts: false,
+            autoLoad: false,
+            remoteFilter: false,
+            remoteSort: false,
+            listeners: {
+                load: {
+                    fn: function(store, records) {
+                        if (records.length < 1) {
+                            this.down('#publish-set-picker-combobox').setValue(Ext.create('Taco.model.PublishSetItem', {
+                                name: 'No Publish Sets Have Been Created',
+                                code: '-1'
+                            }));
+                        }
+                    },
+                    single: true,
+                    scope: this
+                }
+            }
+        });
     },
 
     showEditModal: function(item, eventData) {

@@ -13,7 +13,8 @@ Ext.define('Taco.view.publishing.grid.Draft', {
         'Taco.view.publishing.advancedSearchForm.Publish',
         'Taco.view.publishing.advancedSearchForm.DraftContent',
         'Taco.view.publishing.advancedSearchForm.DraftProduct',
-        'Taco.view.publishing.modal.PublishSetPicker'
+        'Taco.view.publishing.modal.PublishSetPicker',
+        'Taco.view.Growl'
     ],
     mixins: {
         deleteFromGrid: 'Taco.core.ux.mixins.DeleteFromGrid'
@@ -36,15 +37,17 @@ Ext.define('Taco.view.publishing.grid.Draft', {
     enableQuickFilters:false,
     onCreate: Ext.emptyFn,
     stateful: true,
-    stateId: 'statefulPublishSetGrid',
+    layout: 'fit',
     initComponent: function () {
-        console.log(this.advancedFormCls)
+
+        this.stateId = this.statefulId; 
+
         this.advancedSearchConfig = {advancedFormCls: this.advancedFormCls};
 
         this.itemId = this.title.toLowerCase(); //establish the grid as either product or content
         
         this.store = Ext.create(this.storeConfig.name, this.storeConfig.options);
-        
+
         this.columns = this.getColumnConfig(this.itemId, this.type);
 
         this.selModel = Ext.create('Ext.selection.CheckboxModel', {
@@ -56,16 +59,33 @@ Ext.define('Taco.view.publishing.grid.Draft', {
                 selectionchange: {
                     scope: this,
                     fn: function (selModel, selected) {
-                        this.searchToolbar.items.get('bulkActions').setVisible(selected.length > 1);
+                        this.searchToolbar.items.get('bulkActions')[selected.length > 0 ? 'enable': 'disable']();
                     }
                 }
             }
         });
 
+        this.store.on('load', this.updateTabPanelIdentifiers, this, {single: false});
+
 
         this.callParent(arguments);
 
         if (!this.hideSearchToolbar) this.addBulkActions();
+
+        this.on('afterrender', this.updateStyles, this, {single: true});
+    },
+
+    updateStyles: function() {
+        this.up('tabpanel').body.dom.style.border = 'none';
+    },
+
+    updateTabPanelIdentifiers: function(store, records) {
+        var index = store.type === 'product' ? 0 : 1,
+            text = store.type === 'product' ? 'Product (' + records.length + ')': 'Content (' + records.length + ')';
+
+        if (this.up('tabpanel').tabBar) {
+            this.up('tabpanel').tabBar.items.items[index].setText(text);
+        }
     },
 
     addBulkActions: function() {
@@ -77,17 +97,31 @@ Ext.define('Taco.view.publishing.grid.Draft', {
             itemId: 'bulkActions',
             text: 'Bulk Actions',
             margin: '0 10 0 0',
-            hidden: true,
+            hidden: false,
+            disabled: true,
+            onMenuShow: function(cmp, eventData) {
+                var selection = eventData.scope.up('grid').getSelectionModel().getSelection(),
+                    allAreUnassigned = selection.every(function(rec) {return rec.get('publishSetCode') === '';});
+
+                cmp.down('#Remove')[allAreUnassigned ? 'hide' : 'show']();
+            },  
             menu: [
                 {
                     itemId: 'Publish',
                     text: 'Publish Now',
                     scope: this,
                     handler: function (item, eventData) {
+
+                        var selection = item.scope.selModel.getSelection(),
+                            name = selection.length === 1 ? selection[0].get('name') : undefined,
+                            msg = selection.length === 1 ? 'Are you sure you\'d like to publish the  ' + name + ' Draft?' : 'Are you sure you\'d like to publish the selected Drafts?';
+
+
                         this.getConfirmationModal({
-                            message: 'Are you sure you\'d like to publish the selected drafts?',
+                            message: msg,
                             callback: this.doBulkAction.bind(this, item),
-                            header: 'Publish Drafts?'
+                            header: 'Publish Now',
+                            primaryText: 'Yes, Publish Now'
                         });
                     }
                 },
@@ -104,7 +138,34 @@ Ext.define('Taco.view.publishing.grid.Draft', {
                     text: 'Remove from Publish Set',
                     scope: this,
                     handler: function (item, eventData) {
-                        this.doBulkAction.call(this, item);
+
+
+                        var me = this,
+                            selection = item.scope.selModel.getSelection(),
+                            name = selection.length === 1 ? selection[0].get('name') + ' Draft' : 'Drafts';
+
+                        if (selection.length === 1) {
+                            this.getPublishSetName(selection[0], function(res){
+
+                                var pubsetName = res.items && res.items.length > 0 ? res.items[0].name : ' Publish Set';
+
+                                me.getConfirmationModal({
+                                    message: 'Are you sure want to remove the ' + name + ' from the ' + pubsetName + '?',
+                                    callback: me.doBulkAction.bind(me, item),
+                                    header: 'Remove From Publish Set',
+                                    primaryText: 'Yes, Remove'
+                                });
+                            });
+                        }
+                        
+                        else {
+                            this.getConfirmationModal({
+                                message: 'Are you sure want to removed the selected Drafts from their corresponding Publish Sets?',
+                                callback: this.doBulkAction.bind(this, item),
+                                header: 'Remove From Publish Set',
+                                primaryText: 'Yes, Remove'
+                            });
+                        }
                     }
                 },
                 {
@@ -112,10 +173,14 @@ Ext.define('Taco.view.publishing.grid.Draft', {
                     text: 'Discard Drafts',
                     scope: this,
                     handler: function (item, eventData) {
+                        var total = item.scope.selModel.getSelection().length,
+                            prefix = total === 1 ? 'this ' : 'these ',
+                            word = total === 1 ? ' Draft?' : ' Drafts?';
                         this.getConfirmationModal({
-                            message: 'Are you sure you\'d like to discard the selected drafts?',
+                            message: 'Are you sure you\'d like to discard ' + prefix + total + word,
                             callback: this.doBulkAction.bind(this, item),
-                            header: 'Discard Drafts?'
+                            header: 'Discard Drafts',
+                            primaryText: 'Yes, Discard'
                         });
                     }
                 }
@@ -133,14 +198,17 @@ Ext.define('Taco.view.publishing.grid.Draft', {
                     stateId: 'name',
                     minWidth: 100,
                     text: 'Name',
-                    flex: 1
+                    flex: 2,
+                    sortable: gridType === 'product'
                 }, 
                 publishSetCode: {
                     type: 'gridcolumn',
                     dataIndex: 'publishSetCode',
                     stateId: 'publishSetCode',
                     columnWidth: 100,
-                    text: 'Publish Set'
+                    text: 'Publish Set Code',
+                    flex: 2,
+                    sortable: false
                 },
                 draftUpdateDate: {
                     xtype: 'gridcolumn',
@@ -148,7 +216,9 @@ Ext.define('Taco.view.publishing.grid.Draft', {
                     stateId: 'draftUpdateDate',
                     columnWidth: 100,
                     text: 'Last Modified',
-                    renderer: Ext.util.Format.dateRenderer('d M, Y')
+                    renderer: Ext.util.Format.dateRenderer('d M, Y'),
+                    flex: 2,
+                    sortable: false
                 },
                 updatedBy: {
                     xtype: 'gridcolumn',
@@ -156,15 +226,26 @@ Ext.define('Taco.view.publishing.grid.Draft', {
                     stateId: 'updatedBy',
                     columnWidth: 100,
                     text: 'Modified By',
-                    renderer: this.getAssociatedUserName
+                    renderer: this.getAssociatedUserName,
+                    sortable: false
                 },
                 id: {
                     xtype: 'gridcolumn',
                     dataIndex: 'id',
                     stateId: 'id',
-                    text: 'Id',
+                    text: 'ID',
                     columnWidth: 100,
-                    hidden: true
+                    hidden: true,
+                    sortable: false
+                },
+                productCode: {
+                    xtype: 'gridcolumn',
+                    dataIndex: 'id',
+                    stateId: 'id',
+                    text: 'Product Code',
+                    columnWidth: 100,
+                    hidden: true,
+                    sortable: false
                 },
                 type: { 
                     xtype: 'gridcolumn',
@@ -172,7 +253,8 @@ Ext.define('Taco.view.publishing.grid.Draft', {
                     stateId: 'type',
                     columnWidth: 100,
                     text: 'Type',
-                    hidden: true
+                    hidden: true,
+                    sortable: false
                 }, 
                 lastPublished: {
                     xtype: 'gridcolumn',
@@ -181,7 +263,8 @@ Ext.define('Taco.view.publishing.grid.Draft', {
                     text: 'Last Published',
                     hidden: true,
                     columnWidth: 100,
-                    renderer: Ext.util.Format.dateRenderer('d M, Y')
+                    renderer: Ext.util.Format.dateRenderer('d M, Y'),
+                    sortable: false
                 },
                 lastPublishedBy: {
                     xtype: 'gridcolumn',
@@ -189,7 +272,8 @@ Ext.define('Taco.view.publishing.grid.Draft', {
                     stateId: 'lastPublishedBy',
                     text: 'Last Published By',
                     columnWidth: 100,
-                    hidden: true
+                    hidden: true,
+                    sortable: false
                 },
                 modification: {
                     xtype: 'gridcolumn',
@@ -197,7 +281,8 @@ Ext.define('Taco.view.publishing.grid.Draft', {
                     stateId: 'modification',
                     text: 'Modification',
                     columnWidth: 100,
-                    hidden: true
+                    hidden: true,
+                    sortable: false
                 },
                 added: {
                     xtype: 'gridcolumn',
@@ -205,7 +290,8 @@ Ext.define('Taco.view.publishing.grid.Draft', {
                     stateId: 'added',
                     text: 'Added',
                     columnWidth: 100,
-                    hidden: true
+                    hidden: true,
+                    sortable: false
                 },
                 addedBy: {
                     xtype: 'gridcolumn',
@@ -213,7 +299,8 @@ Ext.define('Taco.view.publishing.grid.Draft', {
                     stateId: 'addedBy',
                     text: 'Added By',
                     columnWidth: 100,
-                    hidden: true
+                    hidden: true,
+                    sortable: false
                 },
                 catalogId: {
                     xtype: 'gridcolumn',
@@ -221,14 +308,16 @@ Ext.define('Taco.view.publishing.grid.Draft', {
                     stateId: 'catalogId',
                     text: 'Catalog Id',
                     columnWidth: 100,
-                    hidden: true
+                    hidden: true,
+                    sortable: false
                 }, 
                 listFQN: {
                     xtype: 'gridcolumn',
                     dataIndex: 'listFQN',
                     stateId: 'listFQN',
                     text: 'List Name',
-                    columnWidth: 100
+                    columnWidth: 100,
+                    sortable: false
                 },    
                 siteId: {
                     xtype: 'gridcolumn',
@@ -236,47 +325,27 @@ Ext.define('Taco.view.publishing.grid.Draft', {
                     stateId: 'siteId',
                     text: 'Site ID',
                     columnWidth: 100,
-                    hidden: true
+                    hidden: true,
+                    sortable: false
                 },         
                 actions: {
                     xtype: 'taco.menucolumn',
                     text: 'Actions',
 
                     onMenuShow: function(cmp, eventData) {
-                        var removeMenuColumn = cmp.down('#remove-from-publish-set'),
+                        var removeMenuColumn = cmp.down('#Remove'),
                             editMenuColumn = cmp.down('#edit-draft'),
+                            showInPublishSet = cmp.down('#show-in-publish-set'),
                             editable = eventData.record.get('listFQN').toLowerCase() === 'pagetemplatecontent@mozu' || eventData.record.get('listFQN').toLowerCase() === 'pages@mozu' || eventData.record.get('type').toLowerCase() === 'product';
                         
                         editMenuColumn.setText(me.setEditColumnText(eventData.record));
-                        removeMenuColumn[eventData.record.get('publishSetCode').toLowerCase() === 'unassigned' ? 'disable' : 'enable']();
-                        editMenuColumn[editable ? 'enable' : 'disable']();
-
+                        removeMenuColumn[eventData.record.get('publishSetCode') ? 'show' : 'hide']();
+                        editMenuColumn[editable ? 'show' : 'hide']();
+                        
+                        if (showInPublishSet) showInPublishSet[eventData.record.get('publishSetCode') ? 'show' : 'hide']();
                     },
 
-                    menuItems: [
-                        {
-                            text: 'Edit',
-                            itemId: 'edit-draft',
-                            menuColumnHandler: this.showEditPage.bind(this)
-                        }, 
-                        {
-                            text: 'Publish Now',
-                            menuColumnHandler: this.doPublishBulk.bind(this)
-                        },
-                        {
-                            text: 'Move to Publish Set',
-                            menuColumnHandler: this.doMoveBulk.bind(this)
-                        },
-                        {
-                            text: 'Remove from Publish Set',
-                            itemId: 'remove-from-publish-set',
-                            menuColumnHandler: this.doRemoveBulk.bind(this)
-                        },
-                        {
-                            text: 'Discard Draft',
-                            menuColumnHandler: this.doDiscardBulk.bind(this)
-                        }
-                    ]
+                    menuItems: this.getMenuItems.apply(this)
                 }
             };
         
@@ -312,11 +381,11 @@ Ext.define('Taco.view.publishing.grid.Draft', {
                     col.publishSetCode,
                     col.draftUpdateDate,
                     col.listFQN,
-                    col.type,
-                    col.modification,
                     col.updatedBy,
                     col.lastPublished,
+                    col.modification,
                     col.siteId,
+                    col.type,
                     col.actions,
                 ],
                 product: [
@@ -324,7 +393,7 @@ Ext.define('Taco.view.publishing.grid.Draft', {
                     col.publishSetCode,
                     col.draftUpdateDate,
                     col.updatedBy,
-                    col.id,
+                    col.productCode,
                     col.lastPublished,
                     col.lastPublishedBy,
                     col.modification,
@@ -334,6 +403,101 @@ Ext.define('Taco.view.publishing.grid.Draft', {
         };
 
         return columns[parentContainer][gridType];
+    },
+
+    getMenuItems: function() {
+
+        var me = this,
+
+            menuItems =  [{
+                text: 'Edit',
+                itemId: 'edit-draft',
+                menuColumnHandler: this.showEditPage.bind(this)
+            }];
+
+        if (this.scope.stateId !== 'taco-publish-sets'){
+            menuItems.push({
+                text: 'Show in Publish Set',
+                itemId: 'show-in-publish-set',
+                menuColumnHandler: this.showInPublishSet.bind(this)
+            });
+        }
+
+        menuItems = menuItems.concat([
+            {
+                text: 'Move to Publish Set',
+                menuColumnHandler: this.doMoveBulk.bind(this)
+            },
+            {
+                text: 'Remove from Publish Set',
+                itemId: 'Remove',
+                menuColumnHandler: function(item, eventData) {
+
+                    if (eventData.record.get('publishSetCode')) {
+                        me.getPublishSetName(eventData.record, function(res) {
+
+                            var name = res.items && res.items.length > 0 ? res.items[0].name : 'this';
+
+                            me.getConfirmationModal({
+                                message: 'Are you sure you want to remove ' + eventData.record.get('name') + ' from the ' + name + ' Publish Set?',
+                                callback: me.doRemoveBulk.bind(me, item, eventData),
+                                header: 'Remove from Publish Set'
+                            });
+                        });
+                    }
+
+                    else {
+                        me.doRemoveBulk.call(me, item, eventData);
+                    }
+                },
+                scope: me
+            },
+            {
+                text: 'Publish Now',
+                menuColumnHandler: function(item, eventData) {
+
+                    // this was removed per Jason Muxlow's most recent review
+                    // if (eventData.record.get('publishSetCode')) {
+                        me.getConfirmationModal({
+                            message: 'Are you sure want to publish ' + eventData.record.get('name') + '?',
+                            callback: me.doPublishBulk.bind(me, item, eventData),
+                            header: 'Publish Now',
+                            primaryText: 'Yes, Publish Now'
+                        });
+                    // }
+
+                    // else {
+                    //     me.doPublishBulk.call(me, item, eventData);
+                    // }
+                },
+                scope: me
+            },
+            {
+                text: 'Discard Draft',
+                menuColumnHandler:  function(item, eventData) {
+                    me.getConfirmationModal({
+                        message: 'Are you sure want to discard the ' + eventData.record.get('name') + ' Draft?',
+                        callback: me.doDiscardBulk.bind(me, item, eventData),
+                        header: 'Discard Draft',
+                        primaryText: 'Yes, Discard Now'
+                    });
+                }
+            }
+        ]);
+
+        return menuItems;
+    },
+    getPublishSetName: function(record, callback) {
+        Ext.Ajax.request({
+            url: '/admin/app/publishsets/getBy/' + record.get('publishSetCode'),
+            method: 'GET',
+            success: function (res, status) {
+                callback(JSON.parse(res.responseText));
+            }
+        }, this);
+    },
+    showInPublishSet: function(cmp, e) {
+        Taco.app.StateManager.attemptNavigate('/publishing/publishsets/' + cmp.eventData.record.get('publishSetCode'));
     },
 
     setEditColumnText: function(record) {
@@ -375,6 +539,7 @@ Ext.define('Taco.view.publishing.grid.Draft', {
             data: config.records,
             success: function() {
                 config.store.read();
+                me.showGrowl('Published');
                 me.updatePublishSetStore();
             },
             failure: this.showMessage.bind(this, 'There was an error publishing this draft!', 'error')
@@ -391,6 +556,7 @@ Ext.define('Taco.view.publishing.grid.Draft', {
             success: function() {
                 config.store.reload();
                 me.updatePublishSetStore();
+                me.showGrowl('Discarded');
             },
             failure: this.showMessage.bind(this, 'There was an error discarding this draft!', 'error')
         });
@@ -440,23 +606,11 @@ Ext.define('Taco.view.publishing.grid.Draft', {
     },
 
     updatePublishSetStore: function() {
-        var grid = this.up('publish-split').getEast().down('#publish-grid'),
-            productStore = this.up('publish-split').getEast2().down('#product').store,
-            contentStore = this.up('publish-split').getEast2().down('#content').store;
 
-        // if the publish grid has a selection made, let's reload the publish set content grid
-        if (grid.getSelectionModel().getSelection().length > 0) {
-            contentStore.reload();
-            productStore.reload();
+        //if were a draft grid with an associated publish set store - i.e. the publish set view
+        if (this.up('publish-split')) { 
+            this.up('publish-split').down('#publish-grid').store.reload();
         }
-
-        //if an update occurrs on the publish set contents, we need to refresh draft grid
-        if (this.type === 'publish set contents') { 
-            this.up('publish-split').getWest().down('#product').store.reload();
-            this.up('publish-split').getWest().down('#content').store.reload();
-        }
-
-        grid.store.reload();
        
     },
 
@@ -474,9 +628,16 @@ Ext.define('Taco.view.publishing.grid.Draft', {
     },
 
     setPublishCode: function(item, eventData, code) {
+        var growlMessage;
 
         if (!Ext.isArray(eventData.record)) {
             eventData.record.set('publishSetCode', code);
+
+            growlMessage = '<span style="font-weight:bold;">Moved</span>';
+
+            if (!this.up('publish-split')) growlMessage+= '<br><br><span><a style="color:white;" href="/admin/' + Taco.app.StateManager.getCurrentState().getMetaData().ctx + '/publishing/publishsets/' + code + '">View in Publish Set</a></span>';
+
+            this.showGrowl(code === 'unassigned' ? 'Removed' : growlMessage);
             eventData.record.store.sync({
                 callback: this.onAfterRecordUpdate.bind(this, eventData.record.store)
             });
@@ -486,10 +647,18 @@ Ext.define('Taco.view.publishing.grid.Draft', {
             eventData.record.forEach(function(rec){
                 rec.set('publishSetCode', code);
             });
+            
+            growlMessage = '<span style="font-weight:bold;">Moved</span>';
+
+            if (!this.up('publish-split')) growlMessage+= '<br><br><span><a style="color:white;" href="/admin/' + Taco.app.StateManager.getCurrentState().getMetaData().ctx + '/publishing/publishsets/' + code + '">View in Publish Set</a></span>';
+
+            this.showGrowl(code === 'unassigned' ? 'Removed' : growlMessage);
             eventData.record[0].store.sync({
                 callback: this.onAfterRecordUpdate.bind(this, eventData.record[0].store)
             });
         }
+
+
     },
 
     doRemoveBulk: function(item, eventData) {
@@ -500,6 +669,10 @@ Ext.define('Taco.view.publishing.grid.Draft', {
         Taco.app.fireEvent('setmessage', msg, type);
     },
 
+    showGrowl: function(msg) {
+        Taco.app.fireEvent('setgrowl', msg, null, 2000);
+    },
+
     getConfirmationModal: function(config) {
         Ext.create('Taco.core.ux.window.Modal', {
             scale: 'small',
@@ -507,7 +680,7 @@ Ext.define('Taco.view.publishing.grid.Draft', {
             modal: true,
             closeAction: 'destroy',
             height: 200,
-            primaryText: 'Confirm',
+            primaryText: config.primaryText ? config.primaryText : 'Confirm',
             secondaryText: 'Cancel',
             primaryHandler: function() {
                 config.callback();
