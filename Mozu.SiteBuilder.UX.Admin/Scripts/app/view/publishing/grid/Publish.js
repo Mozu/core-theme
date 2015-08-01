@@ -295,9 +295,9 @@ Ext.define('Taco.view.publishing.grid.Publish', {
                                     me.getConfirmationModal({
                                         header: 'Delete ' + eventData.record.get('name'),
                                         message: 'Are you sure you want to delete this publish set?',
-                                        callback: me.onPublishSetDelete.bind(me, null, item, eventData),
-                                         primaryOptions: {
-                                            text: 'Yes, Delete Publish Set'
+                                        primaryOptions: {
+                                            text: 'Yes, Delete Publish Set',
+                                            handler: me.onPublishSetDelete.bind(me, null, item, eventData),
                                         }
                                     });
                                 }
