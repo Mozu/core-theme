@@ -90,7 +90,7 @@ Ext.define('Taco.view.product.subform.General', {
         //widest width that will fit in an override container at the smallest browser width;
         var fullFieldWidth = (defaultFieldWidth * 3) + (2 * defaultFieldMargin);
         // field width when part of a two column layout
-        var twoColumnFieldWidth = (fullFieldWidth / 2)  -  (defaultFieldMargin/2)
+        var twoColumnFieldWidth = (fullFieldWidth / 2)  -  (defaultFieldMargin/2);
 
         
         if (productTypeId) {
@@ -117,7 +117,6 @@ Ext.define('Taco.view.product.subform.General', {
                 }
                 this.textareaEl._syncInited = true;
             }
-            ;
         };
 
         this.productUsageStore = Ext.create('Ext.data.Store', {
@@ -573,30 +572,30 @@ Ext.define('Taco.view.product.subform.General', {
 
                                     scope: this
                                 }
-                            }, {
-                                xtype: 'fieldcontainer',
-                                startDate: this.activeStartDateField,
-                                endDate: this.activeEndDateField,
-                                layout: 'hbox',
-                                width: '100%',
-                                items: [
-                                    this.activeStartDateField,
-                                    this.activeEndDateField
-                                ]
                             }
                         ]
-                    } 
+                    }
                 ]
             },
-
             {
                 xtype: 'formform',
                 persistChangesToModel: true,
                 record: this.productInCatalogInfo,
                 hidden: this.isGlobal,
-                width: twoColumnFieldWidth,
+                width: '100%',
                 header: false,
                 items: [
+                    {
+                        xtype: 'fieldcontainer',
+                        startDate: this.activeStartDateField,
+                        endDate: this.activeEndDateField,
+                        layout: 'hbox',
+                        width: '100%',
+                        items: [
+                            this.activeStartDateField,
+                            this.activeEndDateField
+                        ]
+                    },
                     {
                         xtype: 'datetime',
                         fieldLabel: 'Date First Available',
@@ -654,12 +653,8 @@ Ext.define('Taco.view.product.subform.General', {
                         height: 300,
 
                         listeners: {
-                            editmodechange: htmlEditorEditModeChangeHandler,
-
-
-                        },
-
-
+                            editmodechange: htmlEditorEditModeChangeHandler
+                        }
                     }, {
                         xtype: 'htmleditor',
                         enableFont: false,
@@ -676,15 +671,13 @@ Ext.define('Taco.view.product.subform.General', {
                                 cmp.productForm = cmp.productForm || cmp.up('productform');
                                 cmp.productForm.fireEvent('productfulldescriptionchange', me.productInCatalogInfo || me.product, newValue);
                             }
-                        },
-
+                        }
                     },
 
                     this.imagesConfig
                   
                 ]
-            },
-           
+            }
         ];
 
         
@@ -819,7 +812,7 @@ Ext.define('Taco.view.product.subform.General', {
         };
 
 
-        this.items.push (this.priceOverRideConfig)
+        this.items.push (this.priceOverRideConfig);
 
 
         this.callParent(arguments);
