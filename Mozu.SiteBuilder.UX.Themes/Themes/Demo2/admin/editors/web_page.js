@@ -6,8 +6,8 @@
             xtype: 'panel',
             collapsible: 'true',
             ui: 'subform',
-            title: 'Efectivity Dating',
-            itemId: 'effectivityDatePanel',
+            title: 'Active Date Range',
+            itemId: 'activeDateRangePanel',
         
             items: [{
                 xtype: "mz-input-date",
