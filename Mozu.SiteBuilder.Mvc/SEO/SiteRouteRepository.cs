@@ -73,14 +73,14 @@ namespace Mozu.SiteBuilder.Mvc.SEO
 
         async Task<HttpRouteCollection> ICustomRouteCollectionRepository.GetHttpRouteCollection()
         {
-            var settings = await GetRouteSettings(_genSettingsClient).ConfigureAwait(false);
-            var routes = settings.CustomRoutes;
+            var routesRequest = await _genSettingsClient.GetCustomRouteSettings().ConfigureAwait(false);
+            var routes = routesRequest.ReadAsSync();
             if (routes == null) return null;
 
             var key = GetType().FullName +
                          ((_siteBuilderApiContext.DataViewMode == DataViewModeType.Pending) ? "1" : "0") +
                          _siteBuilderApiContext.SiteId +
-                         settings.AuditInfo.UpdateDate.GetValueOrDefault(DateTime.MaxValue).Ticks;
+                         DateTime.UtcNow.AddMinutes(2).Ticks; // TODO: go add auditInfo to the custom routes, or at least mirror the ones from general settings on the server-side./
 
             return await _cache.AddOrGetExisting(key, async () => await CreateRouteCollectionFromSettings(routes).ConfigureAwait(false), DateTimeOffset.UtcNow.AddMinutes(5)).ConfigureAwait(false);
         }
