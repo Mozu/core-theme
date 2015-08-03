@@ -425,8 +425,8 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.ModelMapping
 
 
                 .ForMember(x => x.DateFirstAvailableInCatalog, op => op.ResolveUsing(dc => (dc.DateFirstAvailableInCatalog ?? null)))
-                .ForMember(x => x.ActiveStartDate, op => op.ResolveUsing(x => (x.ActiveDates != null) ? x.ActiveDates.StartDate : null))
-                .ForMember(x => x.ActiveEndDate, op => op.ResolveUsing(x => (x.ActiveDates != null) ? x.ActiveDates.EndDate : null))
+                .ForMember(x => x.ActiveStartDate, op => op.ResolveUsing(x => (x.ActiveDateRange != null) ? x.ActiveDateRange.StartDate : null))
+                .ForMember(x => x.ActiveEndDate, op => op.ResolveUsing(x => (x.ActiveDateRange != null) ? x.ActiveDateRange.EndDate : null))
 
                 .ForMember(x => x.ProductCode, op => op.Ignore())
                 .ForMember(x => x.ListPrice, op => op.Ignore())
@@ -445,7 +445,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.ModelMapping
                 .ForMember(dc => dc.IsContentOverridden, op => op.ResolveUsing(pisi => pisi.IsContentOverridden))
                 .ForMember(dc => dc.IsPriceOverridden, op => op.ResolveUsing(pisi => pisi.IsPriceOverridden))
                 .ForMember(dc => dc.IsSEOContentOverridden, op => op.ResolveUsing(pisi => pisi.IsSEOContentOverridden))
-                .ForMember(dc => dc.ActiveDates, op => op.ResolveUsing(x => new DC.EffectiveDates
+                .ForMember(dc => dc.ActiveDateRange, op => op.ResolveUsing(x => new DC.ActiveDateRange
                 {
                     StartDate = x.ActiveStartDate,
                     EndDate = x.ActiveEndDate
