@@ -240,12 +240,17 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
             
             if (expression.Type == "DynamicRealTime")
             {
-              var validatedExpression = _categoriesClient.ValidateRealTimeDynamicExpression(Mapper.Map<DC.DynamicExpression>(expression)).Result.ReadAsAsync().Result;
+                var validatedExpression =
+                    (await
+                        _categoriesClient.ValidateRealTimeDynamicExpression(Mapper.Map<DC.DynamicExpression>(expression)))
+                        .ReadAsSync();  //.Result.ReadAsAsync().Result ;
               return Single2(Mapper.Map<Models.Category.DynamicExpression>(validatedExpression));
             }
             else
             {
-              var validatedExpression = _categoriesClient.ValidateDynamicExpression(Mapper.Map<DC.DynamicExpression>(expression)).Result.ReadAsAsync().Result;
+                var validatedExpression =
+                    (await _categoriesClient.ValidateDynamicExpression(Mapper.Map<DC.DynamicExpression>(expression)))
+                        .ReadAsSync(); //.Result.ReadAsAsync().Result;
               return Single2(Mapper.Map<Models.Category.DynamicExpression>(validatedExpression));
             }
         }
