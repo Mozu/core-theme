@@ -1248,11 +1248,17 @@
                     } else {
                         // in the simplest, most common case, where the order total has reduced and only one
                         // payment method is active, then we can automatically deduct the difference
-                        return order.apiVoidPayment(currentPayment.id).then(function() {
-                            currentPayment.amountRequested = total;                            
-                            billingInfo.set(currentPayment);
-                            return billingInfo.applyPayment();
-                        });
+
+                        // return order.apiVoidPayment(currentPayment.id).then(function() {
+                        //     currentPayment.amountRequested = total;                            
+                        //     billingInfo.set(currentPayment);
+                        //     return billingInfo.applyPayment();
+                        // });
+
+                        currentPayment.amountRequested = total;
+                        billingInfo.set(currentPayment);
+                        return order.update();
+                        
                     }
                 }
 
