@@ -6,7 +6,7 @@
         "isDesktop": true,
         "isMobile": false,
         "isTablet": false,
-        "name": "Core7 VisaCheckout 8.0.0-visaprerelease.12"
+        "name": "Core7 VisaCheckout 8.0.0-visaprerelease.13"
     },
     "editors": [
         {
@@ -313,7 +313,7 @@
             "userCreatable": false
         },
         {
-            "entityType":  "anonymous_account",
+            "entityType": "anonymous_account",
             "id": "my_anonymous_account",
             "template": "my-anonymous-account",
             "title": "Anonymous Order Status",
@@ -326,7 +326,7 @@
             "title": "Sign Up",
             "userCreatable": false
         },
-         {
+        {
             "entityType": "forgotpassword",
             "id": "forgotpassword",
             "template": "forgot-password",
