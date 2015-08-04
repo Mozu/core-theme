@@ -123,7 +123,7 @@ namespace Mozu.SiteBuilder.Mvc.Contexts
             }
             if (httpRouteData.Values.TryGetValue("query", out temp) && !string.IsNullOrWhiteSpace(temp as string))
             {
-                this.SortBy = (string)temp;
+                this.Query = (string)temp;
             }
 
         }
