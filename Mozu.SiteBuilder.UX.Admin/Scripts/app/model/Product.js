@@ -15,7 +15,8 @@ Ext.define('Taco.model.Product', {
         'Taco.model.ProductInCatalogInfo',
         'Taco.model.ProductVariation',
         'Taco.model.BundledProduct',
-        'Taco.store.ProductTypes'
+        'Taco.store.ProductTypes',
+        'Taco.core.data.Model'
     ],
     statics: {
         publishBulk: function (cfg) {
@@ -92,7 +93,13 @@ Ext.define('Taco.model.Product', {
         }, {
             name: "publishSetCode",
             type: "string",
-            useNull: true
+            useNull: true,
+            convert: function (v) {
+                return Taco.core.data.Model.nullIfEmpty(v);
+            },
+            serialize: function (v) {
+                return Taco.core.data.Model.nullIfEmpty(v);
+            }
         }, {
             name: "publishSetDate",
             type: "date",
