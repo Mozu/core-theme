@@ -11,7 +11,6 @@ NUGET
     AutofacContrib.NSubstitute (3.3.2)
       Autofac (>= 3.3.0)
       NSubstitute (>= 1.7.0.0)
-    AutoMapper (3.3.0)
     Burrows (0.3.3.0)
       Magnum (>= 2.1.2)
       Newtonsoft.Json (>= 5.0.8)
@@ -89,6 +88,10 @@ NUGET
     Sprache (2.0.0.45)
     Stact (1.1.2)
       Magnum (>= 2.1.2)
+  remote: http://nuget-extprop.corp.volusion.com:8204/api/odata
+  specs:
+    AutoMapper (3.3.1)
+    FAKE (4.0.2)
   remote: http://nuget-internal.corp.volusion.com:8200/api/odata
   specs:
     Jolt (1.0.0)
@@ -98,6 +101,7 @@ NUGET
     Mozu.AppDev.Contracts (1.17.2)
       Mozu.Core.Prime (>= 1.17)
     Mozu.BuildSupport.GetAssemblyFileVersionTask (1.0.0)
+    Mozu.BuildTools (1.9.0.16)
     Mozu.CommerceRuntime.Contracts (1.18.1-dev1507302100)
       Mozu.Core.Extensible.Contracts
       Mozu.Core.Prime

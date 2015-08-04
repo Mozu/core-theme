@@ -1,3 +1,14 @@
-nuget.exe install Mozu.BuildTools -OutputDirectory packages -ExcludeVersion
+@echo off
+cls
 
-packages\Mozu.BuildTools\tools\FAKE\FAKE.exe build.fsx %*
+.paket\paket.bootstrapper.exe
+if errorlevel 1 (
+  exit /b %errorlevel%
+)
+
+.paket\paket.exe restore
+if errorlevel 1 (
+  exit /b %errorlevel%
+)
+
+packages\FAKE\tools\FAKE.exe build.fsx %*

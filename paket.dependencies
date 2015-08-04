@@ -45,3 +45,5 @@ nuget Mozu.ShippingAdmin.Contracts 1.17.4
 nuget Mozu.SiteSettings.General.Contracts < 1.19 prerelease  
 nuget Mozu.SiteSettings.Order.Contracts < 1.19 prerelease
 nuget protobuf-net 2.0.0.668 
+nuget Mozu.BuildTools
+nuget FAKE
