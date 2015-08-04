@@ -772,7 +772,6 @@
                 };
             },
             hasPaymentChanged: function(payment) {
-                var billingInfoInFormFields = this.toJSON();
 
                 function normalizeBillingInfos(obj) {
                     return {
@@ -780,7 +779,7 @@
                         billingContact: _.extend(_.omit(obj.billingContact, "orderId"), {
                             address: _.omit(obj.billingContact.address, 'candidateValidatedAddresses')
                         }),
-                        card: !obj.card ? {} : _.extend(_.omit(obj.card, "cardType", "paymentOrCardType", "cardNumberPartOrMask", "cardNumber", "cardNumberPart", "paymentServiceCardId", "id"), {
+                        card: !obj.card ? {} : _.extend(_.omit(obj.card, "paymentWorkflow", "isCvvOptional", "cardType", "paymentOrCardType", "cardNumberPartOrMask", "cardNumber", "cardNumberPart", "paymentServiceCardId", "id"), {
                             cardType: obj.card.paymentOrCardType || obj.card.cardType,
                             cardNumber: obj.card.cardNumberPartOrMask || obj.card.cardNumberPart || obj.card.cardNumber,
                             id: obj.card.paymentServiceCardId || obj.card.id,
@@ -790,7 +789,14 @@
                     };
                 }
 
-                return !_.isEqual(normalizeBillingInfos(payment.billingInfo), normalizeBillingInfos(billingInfoInFormFields));
+                var normalizedSavedPaymentInfo = normalizeBillingInfos(payment.billingInfo);
+                var normalizedLiveBillingInfo = normalizeBillingInfos(this.toJSON());
+
+                if (payment.paymentWorkflow === "VisaCheckout") {
+                    delete normalizedLiveBillingInfo.billingContact.address.addressType; // visa does not flow this value through
+                }
+
+                return !_.isEqual(normalizedSavedPaymentInfo, normalizedLiveBillingInfo);
             },
             submit: function () {
                 var order = this.getOrder();
