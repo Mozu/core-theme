@@ -18,7 +18,7 @@
         {% if siteContext.checkoutSettings.supportedCards.discover %}
         <option value="DISCOVER" {% if model.paymentOrCardType == "DISCOVER" %}selected="selected"{% endif %}>{{ labels.ccDiscover }}</option>
         {% endif %}
-        {% if siteContext.checkoutSettings.supportedCards.jcb %}
+		{% if siteContext.checkoutSettings.supportedCards.jcb %}
         <option value="JCB" {% if model.paymentOrCardType == "JCB" %}selected="selected"{% endif %}>{{ labels.ccJcb }}</option>
         {% endif %}
     </select>
@@ -85,7 +85,7 @@
             <label for="mz-payment-security-code">{{ labels.securityCode }}{% if ! model.isCvvOptional %}<span class="is-required"> *</span>{% endif %}:</label>
         </div>
         <div class="mz-l-formfieldgroup-cell">
-            <input type="tel" name="security-code" id="mz-payment-security-code" class="mz-l-formfieldgroup-halfsize" data-mz-value="{{ cardcontext }}cvv" value="{{ model.cvv }}" autocomplete="off">
+            <input type="tel" name="security-code" id="mz-payment-security-code" class="mz-l-formfieldgroup-halfsize" data-mz-value="{{ cardcontext }}cvv" value="{% if not model.cvv and model.paymentServiceCardId %}***{% else %}{{ model.cvv }}{% endif %}" autocomplete="off">
             <span class="mz-validationmessage" data-mz-validationmessage-for="{{ cardcontext }}cvv"></span>
         </div>
     </div>

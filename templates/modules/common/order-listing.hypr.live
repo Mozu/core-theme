@@ -11,6 +11,8 @@
         <dl class="mz-propertylist">
             <dt>{{ labels.orderNumber }}</dt>
             <dd>{{ model.orderNumber }}</dd>
+            <dt>{{ labels.orderStatus }}</dt>
+            <dd>{{ model.status }}</dd>
             <dt>{{ labels.total }}</dt>
             <dd>{{ model.total|currency }}</dd>
             {% if model.amountRefunded > 0 %}

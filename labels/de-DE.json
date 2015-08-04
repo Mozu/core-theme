@@ -4,9 +4,15 @@
 
     "logOut"   : "Abmeldung",
     "logIn"   : "Einloggen",
+    "logIn2"  : "Melden Sie sich bei Ihrem Konto",
 
     "signUp"   : "Anmeldung",
-    "forgotPassword"       : "Passwort Vergessen",
+    "signUpLink"           : "Ein Konto erstellen",
+    "forgotPassword"       : "Passwort vergessen",
+    "orderStatus": "Bestellstatus",
+    "order": "Bestellen",
+    "verifyWith"           : "Stellen Sie sicher, mit",
+    "verification"         : "Überprüfung",
     "viewCart"   : "Einkaufswagen",
     "search"   : "Suche",
     "of"   : "von",

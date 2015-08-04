@@ -63,12 +63,12 @@
                     <td>{{ model.discountedSubtotal|currency }}</td>
                 </tr>
                 {% for discount in model.orderDiscounts %}
-					{% if not discount.excluded %}
+                    {% if not discount.excluded %}
                     <tr>
                         <td colspan="5">Discount ({{ discount.discount.name }})</td>
                         <td>({{ discount.impact|currency }})</td>
                     </tr>
-					{% endif %}
+                    {% endif %}
                 {% endfor %}
                 {% if model.storeCredit and model.storeCredit > 0 %}
                     <tr>
@@ -76,10 +76,11 @@
                         <td>({{ model.storeCredit|currency }})</td>
                     </tr>
                 {% endif %}
-                {% if model.dutyTotal %}
+
+                {% if model.dutyTotal > 0 %}
                 <tr>
                     <td colspan="5">Duties and Taxes</td>
-                    <td>{{ model.dutyTotal|add(model.taxTotal)|currency }}</td>
+                    <td>{% filter currency %} {{ model.dutyTotal|add:model.taxTotal}} {% endfilter %}</td>
                 </tr>
                 {% else %}
                 <tr>
@@ -87,15 +88,20 @@
                     <td>{{ model.taxTotal|currency }}</td>
                 </tr>
                 {% endif %}
-                <tr>                    <td colspan="5">Tax</td>
-                    <td>{{ model.taxTotal|currency }}</td>
-                </tr><tr>
+
+                <tr>
                     <td colspan="5">Shipping ({{ model.fulfillmentInfo.shippingMethodName }})</td>
                     <td>{{ model.shippingTotal|currency }}</td>
                 </tr>
+                {% if model.handlingTotal > 0 %}
+                    <tr>
+                        <td colspan="5">Handling</td>
+                        <td>{{ model.handlingTotal|currency }}</td>
+                    </tr>
+                {% endif %}
                 {% if model.feeTotal > 0 %}
                     <tr>
-                        <td colspan="5">Handling Fees</td>
+                        <td colspan="5">Fees</td>
                         <td>{{ model.feeTotal|currency }}</td>
                     </tr>
                 {% endif %}
@@ -298,17 +304,17 @@
                             {% for packageItem in package.items %}
                                 <tr>
                                     <td>
-										{{ packageItem.productCode }}
-									</td>
-									<td>
+                                        {{ packageItem.productCode }}
+                                    </td>
+                                    <td>
                                         <div class="product-name">{{ packageItem.productname }}</div>
                                     </td>
-									<td>
-										{{ packageItem.adjustedweight.value }} {{ packageItem.adjustedweight.unit }}
-									</td>
                                     <td>
-										{{ packageItem.quantity }}
-									</td>
+                                        {{ packageItem.adjustedweight.value }} {{ packageItem.adjustedweight.unit }}
+                                    </td>
+                                    <td>
+                                        {{ packageItem.quantity }}
+                                    </td>
                                 </tr>
                             {% endfor %}
                             </tbody>
@@ -345,20 +351,20 @@
                                 <th>Quantity</th>
                             </tr></thead>
                             <tbody>
-							{% for pickupItem in pickup.items %}
+                            {% for pickupItem in pickup.items %}
                                 <tr>
                                     <td>
-										{{ pickupItem.productCode }}
-									</td>
-									<td>
+                                        {{ pickupItem.productCode }}
+                                    </td>
+                                    <td>
                                         <div class="product-name">{{ pickupItem.productname }}</div>
                                     </td>
-									<td>
-										{{ pickupItem.adjustedweight.value }} {{ pickupItem.adjustedweight.unit }}
-									</td>
                                     <td>
-										{{ pickupItem.quantity }}
-									</td>
+                                        {{ pickupItem.adjustedweight.value }} {{ pickupItem.adjustedweight.unit }}
+                                    </td>
+                                    <td>
+                                        {{ pickupItem.quantity }}
+                                    </td>
                                 </tr>
                             {% endfor %}
                             </tbody>

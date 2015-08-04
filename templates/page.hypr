@@ -1,4 +1,4 @@
-﻿{% autoescape on %}
+{% autoescape on %}
 {% block doctype %}
 <!doctype html>
 {% endblock doctype %}
@@ -82,6 +82,10 @@
        
         <div id="page-wrapper" class="mz-l-pagewrapper">
     
+            {% block future-preview-header %}
+                {% include "modules/future-date-preview/header" %}
+            {% endblock future-preview-header %}
+
             {% block page-header %}
             {% include "modules/page-header" %}
             {% endblock page-header %}

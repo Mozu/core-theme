@@ -1,0 +1,67 @@
+@font-face {
+    font-family: mozicons;
+    src: url(../Admin/scripts/build/resources/fonts/mozicons.woff);
+}
+
+.mz-future-date-header {
+    background-color: #FFF;
+    border: 1px solid #666666;
+    height: 75px;
+    width: 100%;
+    overflow: hidden;
+    position: fixed;
+    text-align: center;
+    top: 0;
+    z-index: 999;
+    transition-property: margin-top;
+    transition-duration: .2s;
+    transition-timing-function: cubic-bezier(.65,.29,.93,.75);
+    margin-top: 0;
+
+    &.mz-header-hidden {
+        margin-top: -80px;
+    }
+
+    .mz-content {
+
+        div {
+            display: inline-block;
+            margin: 15px;
+
+            &.mz-header-icon {
+                color: #df3018;
+                float: left;
+                font-size: 28px;
+
+                &::after {
+                    font-family: mozicons;
+                    content: "\E037";
+                }
+            }
+
+            &.mz-preview-actions {
+                margin-top: 24px;
+
+                input {
+                    margin-left: 10px;
+                    margin-right: 10px;
+                    text-align: center;
+                    width: 180px;
+                }
+
+                #mz-date-icon {
+                    &::after {
+                        font-family: mozicons;
+                        content: "\E02C";
+                    }
+                }
+            }
+            
+            &.mz-preview-share {
+                float: right;
+                margin-top:21px;
+            }
+        }
+       
+    }
+}
