@@ -69,7 +69,7 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
             var returns = (await _returnApiClient.GetReturns());
             var reasons = (await _returnApiClient.GetReasons());
 
-            //PageContext.ReasonCollection = reasons.ReadAsSync().Items;
+            PageContext.ReasonCollection = reasons.ReadAsSync().ToJObject();
 
             var pc = PageContext;
             pc.CmsContext = new CmsPageContext()

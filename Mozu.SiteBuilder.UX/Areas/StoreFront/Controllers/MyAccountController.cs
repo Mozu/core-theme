@@ -120,7 +120,7 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
             this.PageContext.BillingStates = billStateTask.Result;
             this.PageContext.ShippingStates = shipStateTask.Result;
 
-            this.PageContext.ReasonCollection = reasonList.Result.ReadAsSync().Items.ToJObject();
+            this.PageContext.ReasonCollection = reasonList.Result.ReadAsSync().ToJObject();
             
             CommerceRuntime.Contracts.Wishlists.Wishlist wishlist = null;
             try {
