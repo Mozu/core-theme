@@ -51,6 +51,10 @@ $grid-cell-special-border-width: 0px;
     white-space: normal !important;
 }
 
+.#{$prefix}grid-cell-inner-treecolumn { 
+    white-space: nowrap !important;
+}
+
 /* UNUSED VARIABLES */
 
 // $grid-body-background-color

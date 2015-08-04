@@ -6,16 +6,16 @@
             xtype: 'panel',
             collapsible: 'true',
             ui: 'subform',
-            title: 'Efectivity Dating',
-            itemId: 'effectivityDatePanel',
+            title: 'Active Date Range',
+            itemId: 'activeDateRangePanel',
         
             items: [{
                 xtype: "mz-input-date",
-                name: "document.startDate",
+                name: "document.activeDateRange.startDate",
                 fieldLabel: 'Start Date'
             }, {
                 xtype: "mz-input-date",
-                name: "document.endDate",
+                name: "document.activeDateRange.endDate",
                 fieldLabel: 'End Date'
             }]
         });

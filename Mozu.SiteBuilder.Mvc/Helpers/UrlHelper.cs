@@ -16,6 +16,7 @@ using Mozu.SiteBuilder.Mvc.ViewEngine;
 using Mozu.SiteBuilder.UX.Models.StoreFront.Catalog;
 using Mozu.SiteSettings.General.Contracts.General.Routing;
 using NDjango.Interfaces;
+using Newtonsoft.Json.Linq;
 
 namespace Mozu.SiteBuilder.Mvc.Helpers
 {
@@ -90,6 +91,14 @@ namespace Mozu.SiteBuilder.Mvc.Helpers
                         url = MakeFacetUrl( obj);
                         break;
                     }
+                case "paging":
+                    {
+                        return MakePagingUrl(obj);
+                    }
+                case "sorting":
+                    {
+                        return MakeSortingUrl(obj);
+                    }
                 case "image":
                     {
                         url = MakeImagetUrl( obj, config);
@@ -111,6 +120,68 @@ namespace Mozu.SiteBuilder.Mvc.Helpers
                     }
             }
             return url;
+        }
+
+        private string MakeSortingUrl(object obj)
+        {
+            string val = obj as string;
+            var searchContext = _pageContext.Search;
+            
+            return searchContext.ToUrl(new SearchContextOverrides() { SortBy = val });
+
+
+        }
+
+        private string MakePagingUrl(object obj)
+        {
+            string val = obj as string;
+            int tmp;
+            var searchContext = _pageContext.Search;
+           
+            
+            int defaultPageSize = ((int?)(JToken)this._siteContext.ThemeSettings["defaultPageSize"]) ?? 20;
+            int pageSize = searchContext.PageSize.HasValue ? searchContext.PageSize.Value : defaultPageSize;
+            
+            int currentStartIndex = searchContext.StartIndex.HasValue ? searchContext.StartIndex.Value : 0;
+
+            var overrides = new SearchContextOverrides();
+            
+
+            if ( string.Equals( val, "first", StringComparison.OrdinalIgnoreCase))
+            {
+                overrides.StartIndex =  0;
+            }
+            else if (string.Equals(val, "next", StringComparison.OrdinalIgnoreCase))
+            {
+                int currentPage = currentStartIndex / pageSize;
+                overrides.StartIndex =  (currentPage + 1) * pageSize;
+            }
+            else if (string.Equals(val, "previous", StringComparison.OrdinalIgnoreCase))
+            {
+                int currentPage = currentStartIndex / pageSize;
+                if ( currentPage > 0 )
+                {
+                    overrides.StartIndex = (currentPage - 1) * pageSize;
+                }
+                else
+                {
+                    overrides.StartIndex = 0;
+                }
+               
+            }
+            else if ( int.TryParse( val , out tmp )&& tmp > 0)
+            {
+                overrides.StartIndex = (tmp -1) * pageSize;
+            }
+            else if ( obj is int )
+            {
+                overrides.StartIndex = (((int)obj) - 1) * pageSize;
+
+            }
+            
+            return searchContext.ToUrl(overrides);
+
+
         }
 
         public  string MakeProductUrl(object  obj)
@@ -221,31 +292,34 @@ namespace Mozu.SiteBuilder.Mvc.Helpers
             {
                 return "#";
             }
-
+            var sb = new StringBuilder(url);
             //cdnify
             if (url.Length > 2 && url[0] == '/' && url[0] != '/')
             {
-                url = _siteContext.CdnPrefix + url;
+                sb.Insert(0,_siteContext.CdnPrefix);
+              //  url = _siteContext.CdnPrefix + url;
             }
-
+            if (url.IndexOf('?') == -1)
+                {
+                    sb.Append( "?");
+                }
+                else
+                {
+                 sb.Append( "&");
+                   
+            }
+            
             foreach (var kvp in config)
             {
                 if (kvp.Value == null)
                 {
                     continue;
                 }
-                if (url.IndexOf('?') == -1)
-                {
-                    url += "?";
-                }
-                else
-                {
-                    url += "&";
-                }
-
-                url += kvp.Key + "=" + HttpUtility.UrlEncode(kvp.Value.ToString());
+                sb.Append(kvp.Key).Append("=").Append(HttpUtility.UrlEncode(kvp.Value.ToString())).Append("&");
             }
-            return url;
+
+            sb.Append("_mzCb=").Append(_siteContext.GeneralSettings.CdnCacheBustKey);
+            return sb.ToString();
         }
         public string MakeFacetUrl(object obj)
         {
@@ -257,27 +331,28 @@ namespace Mozu.SiteBuilder.Mvc.Helpers
             int catId;
             if (strObj == "CLEAR")
             {
+
+
                 if ( routeData.Values.TryGetValue("categoryId", out tmpObj) && int.TryParse(tmpObj.ToString(), out catId))
                 {
                     urlBase = MakeCategoryUrl(catId, null, false);
                 }
-                return string.Format("{0}?&sortBy={1}", urlBase,  HttpUtility.UrlEncode(searchContext.SortBy));
+                return searchContext.ToUrl(new SearchContextOverrides() { ClearFacets = true , UrlBase= urlBase });
                 
-
             }
 
 
-            var isApplied = !(obj is string) && _resolver.ResolveMemberOrDefault<bool>(obj, "isApplied", false);
+            
             var facetValue = obj is string ? (string)obj : _resolver.ResolveMemberOrDefault<string>(obj, "filterValue");
           
             if (string.IsNullOrEmpty(facetValue))
             {
-                var childrenFacetValues = _resolver.ResolveMemberOrDefault<string>(obj, "childrenFacetValues");
+                var childrenFacetValues = _resolver.ResolveMemberOrDefault<object>(obj, "childrenFacetValues");
                 if( childrenFacetValues !=null)
                 {
                     //must be a top level cat with no immediate child products
-                    catId = _resolver.ResolveMemberOrDefault<int>(obj, "value", -1);
-                    if (catId > -1)
+                    var tempCat = _resolver.ResolveMemberOrDefault<string>(obj, "value");
+                    if (int.TryParse(tempCat, out catId))
                     {
                         return MakeCategoryUrl(catId, null, true);
                     }
@@ -285,7 +360,10 @@ namespace Mozu.SiteBuilder.Mvc.Helpers
                 }
                 return "#";
             }
-           
+
+
+            var isApplied = !(obj is string) && _resolver.ResolveMemberOrDefault<bool>(obj, "isApplied", false);
+
             var facetParts = facetValue.Split(':');
             if (facetParts.Length != 2)
             {
@@ -301,51 +379,41 @@ namespace Mozu.SiteBuilder.Mvc.Helpers
                 return  MakeCategoryUrl(catId, null, true);
             }
 
-            
+
+            //handle stupid facets being in the stupid stem...
             var existing = searchContext.Facets.GetValues(facetPairKey);
             if (isApplied && existing != null)
             {
-                searchContext.Facets.Remove(facetPairKey);
-                foreach (var val in existing)
-                {
-                    if (val != facetPairValue)
-                    {
-                        searchContext.Facets.Add(facetPairKey, val);
-                    }
-                }
-                
                 var routeValueKey = facetPairKey + "-facet";
                 object tmp;
-                if (routeData.Values.TryGetValue(routeValueKey, out tmp) && string.Equals((tmp as string) , facetPairValue, StringComparison.OrdinalIgnoreCase))
+                if (routeData.Values.TryGetValue(routeValueKey, out tmp) && string.Equals((tmp as string), facetPairValue, StringComparison.OrdinalIgnoreCase))
                 {
                     var dic = new Dictionary<string, object>(routeData.Values, StringComparer.OrdinalIgnoreCase);
                     dic.Remove(routeValueKey);
 
                     urlBase = _customRouteHandler.GetCannonicalUrl((routeData.Route as CustomRoute).InternalRoute, () => dic, false).Result;
-                    
+
                 }
+            }
+           
+
+
+            var overrides = new SearchContextOverrides()
+            {
+                UrlBase = urlBase
+            };
+            if (isApplied)
+            {
+                overrides.RemoveFacet = new KeyValuePair<string, string>(facetPairKey, facetPairValue);
             }
             else
             {
-                searchContext.Facets.Add(facetPairKey, facetPairValue);
+                overrides.AddFacet = new KeyValuePair<string, string>(facetPairKey, facetPairValue);
             }
-            
-            
+            return searchContext.ToUrl(overrides);
 
-            var url = string.Format("{0}?facetValueFilter={1}&sortBy={2}", urlBase, HttpUtility.UrlEncode(searchContext.ToFacetValueFilter()), HttpUtility.UrlEncode(searchContext.SortBy));
 
             
-
-            searchContext.Facets.Remove(facetPairKey);
-            if (  existing != null)
-            {
-                foreach (var val in existing)
-                {
-                    searchContext.Facets.Add(facetPairKey, val);
-                }
-
-            }
-            return url;
         }
     }
 }

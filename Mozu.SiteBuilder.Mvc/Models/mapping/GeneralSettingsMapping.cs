@@ -63,6 +63,13 @@ namespace Mozu.SiteBuilder.Mvc.Models.ModelMapping
                 //ignores
                 .ForMember(m => m.AdjustForDaylightSavingTime, op => op.Ignore())
                 .ForMember(m => m.AllowAllIPs, op => op.Ignore())
+                .ForMember(m => m.CdnCacheBustKey , op => op.ResolveUsing (x=> x.CacheSettings != null ? x.CacheSettings.CdnCacheBustKey : null))
+
+                .ForMember(m => m.CustomCdnHostName, op => op.ResolveUsing(x => x.CustomCdnHostName))
+             
+                //  .ForMember(m => m.CdnCacheBustKey, op => op.ResolveUsing(x => x.CustomCdnHostName))
+                   
+
                 .ForMember(m => m.IsWishlistCreationEnabled, op => op.ResolveUsing(x => x.IsWishlistCreationEnabled))
                 .ForMember(m => m.SupressedEmailTransactions, op => op.ResolveUsing(x => x.SupressedEmailTransactions))
                 .ForMember(m => m.ChannelId, op => op.Ignore())
@@ -114,8 +121,10 @@ namespace Mozu.SiteBuilder.Mvc.Models.ModelMapping
 
             //   .ForMember(x => x.IPBlocks, o => o.ResolveUsing(x => x.IPBlocks != null ? x.IPBlocks.Items : new List<Mozu.SiteSettings.General.Contracts.IPBlock>()));
             Mapper.CreateMap<GeneralSettings, GDC.GeneralSettings>()
+                .ForMember(m => m.CacheSettings, op => op.ResolveUsing(x => new GDC.CacheSettings() { CdnCacheBustKey = x.CdnCacheBustKey }))
                 //ignores
                 .ForMember(dc => dc.IsMozuWebSite, op => op.Ignore())
+                .ForMember(dc => dc.CustomCdnHostName, op => op.ResolveUsing ( x=> x.CustomCdnHostName))
                 .ForMember(dc => dc.IsWishlistCreationEnabled, op => op.ResolveUsing(x => x.IsWishlistCreationEnabled))
                 .ForMember(dc => dc.TaxableTerritories, op => op.Ignore())
                 .ForMember(dc => dc.AuditInfo, op => op.Ignore())

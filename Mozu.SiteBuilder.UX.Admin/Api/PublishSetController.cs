@@ -80,11 +80,11 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
                 var res = (await _productWebApiClient.GetProducts(
                     startIndex: pagingParams.startIndex, 
                     q: q, 
+                    sortBy: pagingParams.sort.ToSortString(),
                     pageSize: pagingParams.pageSize, 
                     filter: filter).ConfigureAwait(false)).ReadAsSync();
 
                 var mapped = Mapper.Map<List<PublishSetItem>>(res.Items);
-                mapped.ForEach(x=> x.PublishSetCode = code);
                 return List2(mapped, (int)res.TotalCount);
             }
 
@@ -123,6 +123,16 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
 
             throw new NotImplementedException(type);
 
+        }
+
+
+        [HttpGetRoute(UriTemplate = "getBy/{id}")]
+        public async Task<Response<List<Mozu.ScheduledEvent.Contracts.PublishSet>>> GetPublishSetById(string id)
+        {
+            var x = new PublishSet();
+            var pub = (await _publishSetWebApiClient.GetPublishSet(id).ConfigureAwait(false)).ReadAsSync();
+
+            return List2(pub);
         }
 
         /// <summary>
@@ -172,7 +182,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
                             Code = x.PublishSetCode
                         };
 
-                        if (!string.Equals(pubSet.Code, "unassigned",StringComparison.OrdinalIgnoreCase))
+                        if (!string.Equals(pubSet.Code, "unassigned",StringComparison.OrdinalIgnoreCase) && !string.IsNullOrEmpty(pubSet.Name))
                         {
                             items.Add(pubSet);
                         }
@@ -207,9 +217,8 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
             //{
             //    items.Add(new PublishSet { Code = "UNASSIGNED", ContentCount = 0, ProductCount = 0, Name = "unassigned" });
             //}
-           
 
-            return List2(Mapper.Map<List<PublishSet>>(items), items.Count);
+            return List2(Mapper.Map<List<PublishSet>>(items), result.TotalCount);
         
         }
        // static List<PublishSet> tempstore = new List<PublishSet>();

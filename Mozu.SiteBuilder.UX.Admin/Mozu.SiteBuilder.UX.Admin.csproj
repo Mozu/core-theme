@@ -173,8 +173,11 @@
     <Compile Include="Api\CatalogPublishingController.cs" />
     <Compile Include="Api\CategoryController.cs" />
     <Compile Include="Api\ChannelController.cs" />
+    <Compile Include="Api\CouponSetController.cs" />
     <Compile Include="Api\ModelMapping\DynamicExpressionMapping.cs" />
     <Compile Include="Api\ModelMapping\PublishingSetMapping.cs" />
+    <Compile Include="Api\Models\Discount\Coupon.cs" />
+    <Compile Include="Api\Models\Discount\CouponSet.cs" />
     <Compile Include="Api\Models\PublishSets\PublishSets.cs" />
     <Compile Include="Api\PublishSetController.cs" />
     <Compile Include="Api\EntityController.cs" />
@@ -401,6 +404,8 @@
     <Compile Include="Helpers\AttributeHelpers\AttributeFilterExtensions.cs" />
     <Compile Include="Helpers\ChannelHelpers\ChannelFilterExtensions.cs" />
     <Compile Include="Helpers\CollectionTaskUnMapper.cs" />
+    <Compile Include="Helpers\CouponSetHelpers\CouponSetFilterExtensions.cs" />
+    <Compile Include="Helpers\CouponSetHelpers\CouponSetPagingParametersExtensions.cs" />
     <Compile Include="Helpers\DiscountHelpers\CustomerHelpers\CustomerFilterExtensions.cs" />
     <Compile Include="Helpers\DiscountHelpers\CustomerHelpers\CustomerSortExtensions.cs" />
     <Compile Include="Helpers\DiscountHelpers\DiscountPagingParametersExtensions.cs" />
@@ -453,6 +458,7 @@
     <Content Include="Scripts\.sencha\app\watch-impl.xml" />
     <Content Include="Scripts\app\app.js" />
     <Content Include="Scripts\app\controller\ActionManagement.js" />
+    <Content Include="Scripts\app\controller\CouponSets.js" />
     <Content Include="Scripts\app\controller\Entities.js" />
     <Content Include="Scripts\app\controller\Localization.js" />
     <Content Include="Scripts\app\controller\BusinessIntelligence.js" />
@@ -480,6 +486,7 @@
     <Content Include="Scripts\app\core\util\Validation.js" />
     <Content Include="Scripts\app\core\ux\action\DeleteMenuItem.js" />
     <Content Include="Scripts\app\core\ux\browser\SearchList.js" />
+    <Content Include="Scripts\app\core\ux\content\IndicatorContainer.js" />
     <Content Include="Scripts\app\core\ux\content\SplitContainer.js" />
     <Content Include="Scripts\app\core\ux\content\ContextMenu.js" />
     <Content Include="Scripts\app\core\ux\editor\ModalEditor.js" />
@@ -527,6 +534,7 @@
     <Content Include="Scripts\app\model\BehaviorCategory.js" />
     <Content Include="Scripts\app\model\AccountUserTree.js" />
     <Content Include="Scripts\app\model\AuditLog.js" />
+    <Content Include="Scripts\app\model\CouponSet.js" />
     <Content Include="Scripts\app\model\IpBlocking.js" />
     <Content Include="Scripts\app\model\ExpressionTree.js" />
     <Content Include="Scripts\app\model\OrderRefund.js" />
@@ -584,6 +592,7 @@
     <Content Include="Scripts\app\overrides\grid\Panel.js" />
     <Content Include="Scripts\app\overrides\grid\RowEditorButtons.js" />
     <Content Include="Scripts\app\overrides\grid\RowEditor.js" />
+    <Content Include="Scripts\app\overrides\menu\Item.js" />
     <Content Include="Scripts\app\overrides\menu\Menu.js" />
     <Content Include="Scripts\app\overrides\panel\Header.js" />
     <Content Include="Scripts\app\overrides\picker\Month.js" />
@@ -618,6 +627,8 @@
     <Content Include="Scripts\app\store\BehaviorNodes.js" />
     <Content Include="Scripts\app\store\BehaviorCategoryRoles.js" />
     <Content Include="Scripts\app\store\BehaviorCategories.js" />
+    <Content Include="Scripts\app\store\CouponSetGrid.js" />
+    <Content Include="Scripts\app\store\CouponSets.js" />
     <Content Include="Scripts\app\store\DiscountGrid.js" />
     <Content Include="Scripts\app\store\Discounts.js" />
     <Content Include="Scripts\app\store\IpBlocking.js" />
@@ -685,6 +696,9 @@
     <Content Include="Scripts\app\view\capability\Form.js" />
     <Content Include="Scripts\app\view\capability\Index.js" />
     <Content Include="Scripts\app\view\channel\Index.js" />
+    <Content Include="Scripts\app\view\couponSet\AdvancedSearchForm.js" />
+    <Content Include="Scripts\app\view\couponSet\Grid.js" />
+    <Content Include="Scripts\app\view\couponSet\Index.js" />
     <Content Include="Scripts\app\view\customers\AdvancedSearchForm.js" />
     <Content Include="Scripts\app\view\customers\Contacts.js" />
     <Content Include="Scripts\app\view\customers\modal\Contacts.js" />
@@ -704,9 +718,12 @@
     <Content Include="Scripts\app\view\filter\EditCodeModal.js" />
     <Content Include="Scripts\app\view\filter\EditFilterModal.js" />
     <Content Include="Scripts\app\view\filter\ExpressionTreePanel.js" />
+    <Content Include="Scripts\app\view\filter\MultiSelectorField.js" />
+    <Content Include="Scripts\app\view\filter\MultiSelectorGrid.js" />
     <Content Include="Scripts\app\view\filter\OperatorField.js" />
     <Content Include="Scripts\app\view\filter\Form.js" />
     <Content Include="Scripts\app\view\filter\schema.js" />
+    <Content Include="Scripts\app\view\filter\ValueField.js" />
     <Content Include="Scripts\app\view\generalSettings\subform\Features.js" />
     <Content Include="Scripts\app\view\ipblocking\Edit.js" />
     <Content Include="Scripts\app\view\ipblocking\Form.js" />
@@ -1351,6 +1368,7 @@
     <Content Include="Scripts\packages\mozuadmintheme\resources\fonts\mozicons.woff" />
     <Content Include="Scripts\sass\src\core\ux\browser\SearchList.scss" />
     <Content Include="Scripts\app\mocks\auditlog.json" />
+    <Content Include="Scripts\sass\src\overrides\menu\Item.scss" />
     <None Include="SetupSenchaWorkspace.ps1" />
     <Content Include="Scripts\.sencha\app\build-impl.xml" />
     <Content Include="Scripts\.sencha\app\plugin.xml" />

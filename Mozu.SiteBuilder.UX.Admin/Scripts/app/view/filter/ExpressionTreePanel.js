@@ -118,6 +118,8 @@ Ext.define('Taco.view.filter.ExpressionTreePanel', {
                 menuItems: [
                     {
                         text: 'Edit',
+                        width: 260,
+                        accelerator:"ENTER",
                         //requiredBehaviors: {
                         //    model: 'Taco.model.Discount',
                         //    behavior: 'update'
@@ -147,8 +149,22 @@ Ext.define('Taco.view.filter.ExpressionTreePanel', {
                     //}, 
                     {
 
+                        text: 'Create Filter',
+                        width: 260,
+                        accelerator: "F",
+                        itemId: "createFilterMenuItem",
+                        menuColumnHandler: function (item, eventData) {
+                            var record = eventData.record;
+                            me.createFilter(record.get("id"), eventData.record, eventData.item, eventData.rowIndex, eventData.e);
+                        },
+                        scope: me
+                    },
+                    {
+
                         text: 'Create Container',
                         itemId: "createContainerMenuItem",
+                        width:260,
+                        accelerator: "C",
                         menuColumnHandler: function(item, eventData) {
                             var record = eventData.record;
                             me.createContainer(record.get("id"), eventData.record, eventData.item, eventData.rowIndex, eventData.e);
@@ -157,21 +173,14 @@ Ext.define('Taco.view.filter.ExpressionTreePanel', {
                         scope: me
                     },
 
-                    {
-
-                        text: 'Create Filter',
-                        itemId: "createFilterMenuItem",
-                        menuColumnHandler: function (item, eventData) {
-                            var record = eventData.record;
-                            me.createFilter(record.get("id"), eventData.record, eventData.item, eventData.rowIndex, eventData.e);
-                        },
-                        scope: me
-                    },
+                    
                     
                     {
 
                         text: 'Delete',
+                        width: 260,
                         itemId: "deleteMenuItem",
+                        accelerator: "DELETE",
                         menuColumnHandler: function(item, eventData) {
                             var record = eventData.record;
                             me.deleteNode(record.get("id"), eventData.record, eventData.item, eventData.rowIndex, eventData.e);
@@ -226,7 +235,7 @@ Ext.define('Taco.view.filter.ExpressionTreePanel', {
                     ui: 'action',
                     xtype: "button",
                     scale: 'medium',
-                    text: 'Manual Edit',
+                    text: 'Advanced Editor',
                     handler: this.openCodeEditor,
                     scope:me
                 }
@@ -462,6 +471,7 @@ Ext.define('Taco.view.filter.ExpressionTreePanel', {
                 case Ext.EventObject.C:
                     me.createContainer();
                     break;
+                
                 case e.ENTER:
                     // need to correct the event to give it an xy position relative to the row in the tree.
                     e.xy = Ext.get(item).getXY();

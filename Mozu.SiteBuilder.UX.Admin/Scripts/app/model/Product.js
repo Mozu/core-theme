@@ -15,7 +15,8 @@ Ext.define('Taco.model.Product', {
         'Taco.model.ProductInCatalogInfo',
         'Taco.model.ProductVariation',
         'Taco.model.BundledProduct',
-        'Taco.store.ProductTypes'
+        'Taco.store.ProductTypes',
+        'Taco.core.data.Model'
     ],
     statics: {
         publishBulk: function (cfg) {
@@ -92,7 +93,13 @@ Ext.define('Taco.model.Product', {
         }, {
             name: "publishSetCode",
             type: "string",
-            useNull: true
+            useNull: true,
+            convert: function (v) {
+                return Taco.core.data.Model.nullIfEmpty(v);
+            },
+            serialize: function (v) {
+                return Taco.core.data.Model.nullIfEmpty(v);
+            }
         }, {
             name: "publishSetDate",
             type: "date",
@@ -993,7 +1000,7 @@ Ext.define('Taco.model.Product', {
 
         if (this.get('publishSetCode')) {
             return {
-                statusText: 'SCHEDULED',
+                statusText: 'Scheduled',
                 enabled: {
                     publish: true,
                     now: true,
@@ -1001,6 +1008,7 @@ Ext.define('Taco.model.Product', {
                     remove:true
                 },
                 publishSetInfo: {
+                    code: this.get('publishSetCode'),
                     name: this.get('publishSetName'),
                     scheduledDate: this.get('publishSetDate')
                 }
@@ -1008,7 +1016,7 @@ Ext.define('Taco.model.Product', {
         }
 
         return {
-            statusText: 'DRAFT',
+            statusText: 'Draft',
             enabled: {
                 publish: true,
                 now: true,

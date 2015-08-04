@@ -241,6 +241,11 @@ namespace Mozu.SiteBuilder.UX.Models.Settings
         [DataMember/*(Name = "channelId")*/]
         public string ChannelId { get; set; }
 
+        [DataMember/*(Name = "channelId")*/]
+        public string CdnCacheBustKey { get; set; }
+
+
+
 
         [DataMember/*(Name = "replyToEmail")*/]
         public string ReplyToEmailAddress { get; set; }
@@ -322,6 +327,9 @@ namespace Mozu.SiteBuilder.UX.Models.Settings
         public bool? IsRequiredLoginForLiveEnabled { get; set; }
         [DataMember]
         public bool? IsRequiredLoginForStagingEnabled { get; set; }
+         [DataMember]
+        public string CustomCdnHostName { get; set; }
+
         //public ViewModeToggles ViewModeToggles { get; set; }
          
     }

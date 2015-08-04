@@ -67,3 +67,4 @@ Mozu.SiteBuilder.UX/BuiltinScripts/SDK/tests/sdk.js
 
 # ignore any of Chet's ideas
 .paket/
+.fake

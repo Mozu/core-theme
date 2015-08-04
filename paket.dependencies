@@ -4,7 +4,7 @@ source http://nuget-internal.corp.volusion.com:8200/api/odata
 source http://nuget-external.corp.volusion.com:8201/api/odata
 
 nuget 51Degrees.mobi 2.1.15.1 content: none
-nuget ClearScript.Installer 5.4.5634.17927 
+
 nuget Microsoft.AspNet.WebApi.Core 5.2.3
 nuget Microsoft.AspNet.WebPages 3.2.2 
 nuget Microsoft.AspNet.Mvc 5.2.2 
@@ -45,3 +45,5 @@ nuget Mozu.ShippingAdmin.Contracts 1.17.4
 nuget Mozu.SiteSettings.General.Contracts < 1.19 prerelease  
 nuget Mozu.SiteSettings.Order.Contracts < 1.19 prerelease
 nuget protobuf-net 2.0.0.668 
+nuget Mozu.BuildTools
+nuget FAKE

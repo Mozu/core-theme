@@ -39,22 +39,12 @@
 .#{$vprefix}content-header-publish-state {
     border: none;
     @include border-radius-xbrowser(2em);
-    height: 14px;
+    height: 18px;
     background-color: $color-status-indicator;
     color:white;
     text-align:center;
     font-size:14px;
-    margin-top: 2px;
-}
-
-.#{$vprefix}content-header-publish-draft {
-    @extend .#{$vprefix}content-header-publish-state;
-    width:60px;
-}
-
-.#{$vprefix}content-header-publish-scheduled {
-    @extend .#{$vprefix}content-header-publish-state;
-    width:130px;
+    margin-top: 1px;
 }
 
 .taco-content-navcontainer-white {

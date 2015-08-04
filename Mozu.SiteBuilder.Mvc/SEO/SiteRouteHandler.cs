@@ -22,8 +22,10 @@ namespace Mozu.SiteBuilder.Mvc.SEO
     {
         HttpRouteCollection DefaultRoutes { get; }
 
-        void RouteIncomingRequest(HttpRequestMessage message);
-        
+        void RouteIncomingDefaultRouteRequest(HttpRequestMessage message);
+
+        void RouteIncomingSystemRouteRequest(HttpRequestMessage message);
+
 
     }
     public class NonSystemRoute : IHttpRoute
@@ -245,7 +247,7 @@ namespace Mozu.SiteBuilder.Mvc.SEO
             return null;
            
         }
-
+      
         public async Task<string> GetCannonicalUrl( FancyRoute internalRoute, Func<IDictionary<string, object>> viewDataAdditionFunc, bool useExistingValues)
         {
             

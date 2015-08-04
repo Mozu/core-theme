@@ -52,7 +52,7 @@ Ext.define('Taco.view.publishing.advancedSearchForm.DraftProduct', {
                         width: 232
                     }]
             },
-            lastPulished: {
+            lastPublished: {
                 xtype: 'fieldcontainer',
                 fieldLabel: 'Last Published',
                 layout: {
@@ -79,7 +79,7 @@ Ext.define('Taco.view.publishing.advancedSearchForm.DraftProduct', {
             }
         };
 
-        return [fields.publishSet, fields.lastModified, fields.lastPulished, fields.modifiedBy];
+        return [fields.publishSet, fields.lastModified, fields.modifiedBy];
     },
 
     getPublishSetStore: function() {

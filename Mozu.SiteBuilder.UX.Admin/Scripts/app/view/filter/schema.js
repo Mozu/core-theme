@@ -5,20 +5,17 @@
 Ext.define('Taco.view.filter.Schema', {
     singleton: true,
     alternateClassName: "Taco.filter",
-    required: [
-        'Ext.data.Store'
-    ],
 
     // Override this config when we i18L
     operatorData: [
-        { id: "eq", text: "is equal to: " },
-        { id: "ne", text: "does not equal: " },
-        { id: "req", text: "is equal to (plus its children): ", recurse: true }, //Note: req is going to be defined by a seperate checkbox field when the user selects the eq. operator.
-        { id: "lt", text: "is less than: " },
-        { id: "le", text: "is less than or equal to: " },
-        { id: "gt", text: "is greater than: " }, 
-        { id: "ge", text: "is greater than or equal to: " },
-        { id: "in", text: "is one of the following: " }
+        { id: "eq", text: "is equal to " },
+        { id: "ne", text: "does not equal " },
+        { id: "req", text: "is equal to (plus its children) ", recurse: true }, //Note: req is going to be defined by a seperate checkbox field when the user selects the eq. operator.
+        { id: "lt", text: "is less than " },
+        { id: "le", text: "is less than or equal to " },
+        { id: "gt", text: "is greater than " }, 
+        { id: "ge", text: "is greater than or equal to " },
+        { id: "in", text: "is one of the following  " }
         
     ],
 
@@ -75,8 +72,11 @@ Ext.define('Taco.view.filter.Schema', {
             dataType: "string", 
             supportedOperators: ["eq", "ne", "in"],
             editorCfg: {
-                xtype:"textfield"
+                xtype: "taco-productpickerfield",
+                //tells the valueField that we need a multiSelectorGrid to display the selected value since the id we save isn't particularly useful information to users
+                isPickerField: true
             },
+            
             allowBlank:false
         }, {
             id: "categories.categorycode",
@@ -85,9 +85,9 @@ Ext.define('Taco.view.filter.Schema', {
             defaultValue: "",
             dataType: "string",
             supportedOperators: ["eq", "req", "ne", "in"],
-            editorCfg: {
-                xtype: "textfield"
-            },
+            //editorCfg: {
+            //    xtype: "textfield"
+            //},
             allowBlank: false
         }, {
             id: "producttypeid",
@@ -97,7 +97,8 @@ Ext.define('Taco.view.filter.Schema', {
             dataType: "string",
             supportedOperators: ["eq", "ne", "in"],
             editorCfg: {
-                xtype: "textfield"
+                xtype: "taco-producttypepickerfield",
+                isPickerField: true
             },
             allowBlank: false
         }, {
@@ -129,9 +130,9 @@ Ext.define('Taco.view.filter.Schema', {
             defaultValue: "",
             dataType: "int",
             supportedOperators: ["eq", "ne", "in", "lt", "le", "gt", "ge"],
-            editorCfg: {
-                xtype: "numberfield"
-            },
+            //editorCfg: {
+            //    xtype: "numberfield"
+            //},
             allowBlank: false
         }, {
             id: "fulfillmenttypessupported",
@@ -143,7 +144,11 @@ Ext.define('Taco.view.filter.Schema', {
             editorCfg: {
                 xtype: "combo"
             },
-            validEnumValues: ["DirectShip", "InStorePickup", "Digital"],
+            validEnumValues: [
+                { id: "DirectShip", name: "Direct Ship" },
+                { id: "InStorePickup", name: "In Store Pickup" },
+                { id: "Digital", name: "Digital" }
+             ],
             allowBlank: false
         }, {
             id: "measurements.packageweight.value",
@@ -163,9 +168,9 @@ Ext.define('Taco.view.filter.Schema', {
             defaultValue: "",
             dataType: "float",
             supportedOperators: ["eq", "ne", "in", "lt", "le", "gt", "ge"],
-            editorCfg: {
-                xtype: "numberfield"
-            },
+            //editorCfg: {
+            //    xtype: "numberfield"
+            //},
             allowBlank: false
         }, {
             id: "measurements.packageheight.value",
@@ -174,9 +179,9 @@ Ext.define('Taco.view.filter.Schema', {
             defaultValue: "",
             dataType: "float",
             supportedOperators: ["eq", "ne", "in", "lt", "le", "gt", "ge"],
-            editorCfg: {
-                xtype: "numberfield"
-            },
+            //editorCfg: {
+            //    xtype: "numberfield"
+            //},
             allowBlank: false
         }, {
             id: "measurements.packagelength.value",
@@ -185,9 +190,9 @@ Ext.define('Taco.view.filter.Schema', {
             defaultValue: "",
             dataType: "float",
             supportedOperators: ["eq", "ne", "in", "lt", "le", "gt", "ge"],
-            editorCfg: {
-                xtype: "numberfield"
-            },
+            //editorCfg: {
+            //    xtype: "numberfield"
+            //},
             allowBlank: false
         }, {
             id: "measurements.packagewidth.value",
@@ -196,9 +201,9 @@ Ext.define('Taco.view.filter.Schema', {
             defaultValue: "",
             dataType: "float",
             supportedOperators: ["eq", "ne", "in", "lt", "le", "gt", "ge"],
-            editorCfg: {
-                xtype: "numberfield"
-            },
+            //editorCfg: {
+            //    xtype: "numberfield"
+            //},
             allowBlank: false
         }, {
             id: "price.saleprice",
@@ -223,10 +228,16 @@ Ext.define('Taco.view.filter.Schema', {
             editorCfg: {
                 xtype: "combo"
             },
-            validEnumValues: ["CatalogSalePrice", "DiscountedList", "DiscountedCatalogSalePrice"],
+            validEnumValues: [
+                { id: "CatalogSalePrice", name: "Catalog Sale Price" },
+                { id: "DiscountedList", name: "Discounted List Price" },
+                { id: "DiscountedCatalogSalePrice", name: "Discounted Catalog Sale Price" }
+            ],
             allowBlank: false
         }
     ],
+
+    
 
     fieldStoreCfg: {
         makeIdCaseInsensitive: true,
@@ -237,9 +248,10 @@ Ext.define('Taco.view.filter.Schema', {
             }},
             { name: "field", type: "string" },
             { name: "text", type: "string" },
-            { name: "defaultVAlue", type: "auto" },
+            { name: "defaultValue", type: "auto" },
             { name: "dataType", type: "string" },
             { name: "supportedOperators", type: "array" },
+            { name: "validEnumValues", type: "array" },
             { name: "editorCfg", type: "object" },
             { name: "filterType", type: "string", defaultValue:"DynamicPreComputed" },
             { name: "allowBlank", type: "boolean" }

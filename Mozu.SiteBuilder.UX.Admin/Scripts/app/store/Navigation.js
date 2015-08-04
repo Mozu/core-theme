@@ -248,6 +248,12 @@ Ext.define('Taco.store.Navigation', {
 
                         'label': 'Discounts',
                         'address': 'discounts'
+                    }, {
+                        'id': 'couponset',
+                        'behaviorIds': [24],
+
+                        'label': 'Coupon Sets',
+                        'address': 'CouponSets'
                     } /*, {
                 'id': 'promotions',
                 'label': 'Promotions',
@@ -447,10 +453,20 @@ Ext.define('Taco.store.Navigation', {
             }, {
                 'id': 'publishing',
                 'label': 'Publishing ',
-                'address': 'publishing',
+                'address': 'publishing/drafts',
                 'icon': 'nav-publishing',
                 'behaviorIds': [8],
                 'items': [
+                    {
+                        'id': 'drafts',
+                        'label': 'Drafts',
+                        'address': 'publishing/drafts'
+                    },
+                    {
+                        'id': 'publishSets',
+                        'label': 'Publish Sets',
+                        'address': 'publishing/publishsets'
+                    },
                     {
                         'id': 'publishing',
                         'label': 'Settings',

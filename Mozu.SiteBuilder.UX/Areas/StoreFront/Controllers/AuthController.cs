@@ -330,7 +330,7 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
             {
                 return Request.CreateResponse(HttpStatusCode.BadRequest, new
                 {
-                    Message = "orderId is required"
+                    Message = "Order Number is required."
                 });
             }
 
@@ -339,7 +339,7 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
             {
                 return Request.CreateResponse(HttpStatusCode.BadRequest, new
                 {
-                    Message = "One of the following must be provided: email, billingZipCode, or billingPhoneNumber"
+                    Message = "Verification field required."
                 });
             }
 
@@ -357,7 +357,7 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
             {
                 return Request.CreateResponse(HttpStatusCode.NotFound, new
                 {
-                    Message = "The order number you provided was not found. Please validate the order number and try again or contact customer service."
+                    Message = "anonOrderNumberMissing"
                 });
             }
 
@@ -411,7 +411,7 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
         {
             return Request.CreateResponse(HttpStatusCode.BadRequest, new
             {
-                Message = "Sorry, the information you provided did not match our records. Please check the information that you provided and try again or contact the customer service department"
+                Message = "anonAuthError"
             });
         }
 

@@ -4,7 +4,10 @@
  */
 Ext.define('Taco.controller.Message', {
     extend: 'Taco.core.Controller',
-    views: ['Taco.view.NotifierBar'],
+    views: [
+        'Taco.view.NotifierBar',
+        'Taco.view.Growl'
+    ],
 
     messages: new Ext.util.MixedCollection(),
 
@@ -18,6 +21,7 @@ Ext.define('Taco.controller.Message', {
 
         me.application.on({
             setmessage: me.setMessage,
+            setgrowl: me.setGrowl,
             scope: me
         });
 
@@ -112,5 +116,29 @@ Ext.define('Taco.controller.Message', {
         this.displayMessages();
 
         return dialog;
+    },
+
+    setGrowl: function(message, type, duration) {
+        var growl;
+        
+        growl = Ext.create('Taco.view.Growl', {
+            message: message,
+            messageType: type,
+            duration: duration,
+            listeners: {
+                beforehide: {
+                    scope: this,
+                    fn: function (cmp) {
+                        this.messages.remove(cmp);
+                    }
+                }
+            }
+        });
+
+        this.messages.add(growl);
+
+        this.displayMessages();
+
+        return growl;
     }
 });

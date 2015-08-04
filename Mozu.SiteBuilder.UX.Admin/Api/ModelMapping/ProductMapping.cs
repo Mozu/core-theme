@@ -216,9 +216,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.ModelMapping
                         }
                     }
                 ))
-                .ForMember(dc => dc.PublishingInfo, op => op.ResolveUsing(x => (string.IsNullOrEmpty(x.PublishSetCode)) 
-                    ? null
-                    : new DC.ProductPublishingInfo()
+                .ForMember(dc => dc.PublishingInfo, op => op.ResolveUsing(x => new DC.ProductPublishingInfo()
                         {
                             PublishSetCode = x.PublishSetCode,
                             PublishedState = x.PublishedState,
@@ -427,8 +425,9 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.ModelMapping
 
 
                 .ForMember(x => x.DateFirstAvailableInCatalog, op => op.ResolveUsing(dc => (dc.DateFirstAvailableInCatalog ?? null)))
+                .ForMember(x => x.ActiveStartDate, op => op.ResolveUsing(x => (x.ActiveDateRange != null) ? x.ActiveDateRange.StartDate : null))
+                .ForMember(x => x.ActiveEndDate, op => op.ResolveUsing(x => (x.ActiveDateRange != null) ? x.ActiveDateRange.EndDate : null))
 
-                //ignores
                 .ForMember(x => x.ProductCode, op => op.Ignore())
                 .ForMember(x => x.ListPrice, op => op.Ignore())
                 ;
@@ -446,6 +445,11 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.ModelMapping
                 .ForMember(dc => dc.IsContentOverridden, op => op.ResolveUsing(pisi => pisi.IsContentOverridden))
                 .ForMember(dc => dc.IsPriceOverridden, op => op.ResolveUsing(pisi => pisi.IsPriceOverridden))
                 .ForMember(dc => dc.IsSEOContentOverridden, op => op.ResolveUsing(pisi => pisi.IsSEOContentOverridden))
+                .ForMember(dc => dc.ActiveDateRange, op => op.ResolveUsing(x => new DC.ActiveDateRange
+                {
+                    StartDate = x.ActiveStartDate,
+                    EndDate = x.ActiveEndDate
+                }))
                 .ForMember(dc => dc.Content, op => op.ResolveUsing(pisi => {
                     List<DC.ProductLocalizedImage> images = Mapper.Map<List<DC.ProductLocalizedImage>>(pisi.ProductImages );
                     return new DC.ProductLocalizedContent

@@ -17,7 +17,7 @@ Ext.define('Taco.view.filter.EditCodeModal', {
 
     record: null,
 
-    title: "Manualy Edit Expression",
+    title: "Advanced Expression Editor",
 
     autoShow: true,
 

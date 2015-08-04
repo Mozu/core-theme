@@ -22,11 +22,11 @@ Ext.define('Taco.shared.view.field.ProductPickerField', {
     productType: 'parent',
     productsPerPage: 10,
     checkChangeBuffer: 5000,
-    minChars :1,
+    minChars :4,
     displayField: 'name',
     hideLabel: true,
     hideTrigger: false,
-    emptyText: "Product Search",
+    emptyText: "Product Search (4 characters minimum)",
     selectOnFocus: true,
     flex: 1,
     value: "",
@@ -97,7 +97,6 @@ Ext.define('Taco.shared.view.field.ProductPickerField', {
     
     initComponent: function(eOpts) {
         var me = this;
-
         if (!me.store) {
 
             if (me.productType == 'parent') {

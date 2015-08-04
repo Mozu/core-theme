@@ -83,7 +83,8 @@ module.exports = function (grunt) {
         uglify: {
             dist: {
                 options: {
-                    banner: '<%= banner %>'
+                    banner: '<%= banner %>',
+                    report: 'min'
                 },
                 src: '<%= releasetemp %>',
                 dest: '<%= pkg.main %>.js'

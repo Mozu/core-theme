@@ -650,12 +650,21 @@ namespace Mozu.SiteBuilder.UX.Configuration
                 return true;
             }
         }
-
-
-        public void RouteIncomingRequest(HttpRequestMessage request)
+        public void RouteIncomingSystemRouteRequest(HttpRequestMessage request)
         {
-            var rerouteData = DefaultRoutes.GetRouteData(request);
-            if ( rerouteData != null)
+            DoReRoute(request, SystemRoutes);
+        }
+
+        public void RouteIncomingDefaultRouteRequest(HttpRequestMessage request)
+        {
+            DoReRoute(request, DefaultRoutes);
+            
+        }
+
+        void DoReRoute(HttpRequestMessage request , HttpRouteCollection routeCollection )
+        {
+            var rerouteData = routeCollection.GetRouteData(request);
+            if (rerouteData != null)
             {
                 request.Properties[HttpPropertyKeys.HttpRouteDataKey] = rerouteData;
 
@@ -669,7 +678,6 @@ namespace Mozu.SiteBuilder.UX.Configuration
                 var rctx = request.GetRequestContext();
                 rctx.RouteData = rerouteData;
             }
-            
         }
     }
 }

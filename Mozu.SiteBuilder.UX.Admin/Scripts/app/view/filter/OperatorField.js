@@ -10,8 +10,9 @@ Ext.define('Taco.view.filter.OperatorField', {
     ],
     config: {
         fieldLabel: "Operator",
+        fieldCfg: null,
         allowBlank: false,
-        value:null,
+        value: null,
         supportedOperators: [
             "eq", "ne", "req", "lt", "le", "gt", "ge", "in"
         ],
@@ -40,7 +41,7 @@ Ext.define('Taco.view.filter.OperatorField', {
         this.operatorCombo = Ext.widget({
             xtype: 'combobox',
             name: 'operatorCombo',
-            width: 300,
+            width: "100%",
             valueField: 'id',
             displayField: 'text',
             allowBlank: this.allowBlank,
@@ -81,9 +82,8 @@ Ext.define('Taco.view.filter.OperatorField', {
     setValue: function (value) {
         this.value = value;
         var comboValue = value;
-
+        
         if (!value) {
-            this.operatorCombo.setValue();
             this.recurseField.setVisible(false);
         }
 
@@ -117,7 +117,7 @@ Ext.define('Taco.view.filter.OperatorField', {
         }
     },
 
-    applySupportedOperators: function (supportedOperators) {
+    updateSupportedOperators: function (supportedOperators) {
 
         // update the fields on change of the supportedOperators
         if (this.rendered) {

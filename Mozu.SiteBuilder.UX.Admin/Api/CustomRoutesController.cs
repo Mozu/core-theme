@@ -26,6 +26,7 @@ using Mozu.SiteBuilder.Mvc;
 using Mozu.SiteSettings.General.Contracts.Clients;
 using Mozu.SiteSettings.General.Contracts.General.Routing;
 using FluentValidation;
+using Mozu.Core.Api.Client.Exceptions;
 
 namespace Mozu.SiteBuilder.UX.Admin.Api
 {
@@ -44,28 +45,24 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
         [HttpGetRoute(UriTemplate = "read")]
         public async Task<Response<CustomRouteSettings>> Get()
         {
-            var genSettings = (await _genSettingsClient.GetGeneralSettings().ConfigureAwait(false)).ReadAsSync();
-            return Single2(genSettings.CustomRoutes);
+            var routesRequest = (await _genSettingsClient.GetCustomRouteSettings().ConfigureAwait(false));
+            if (!routesRequest.HasException) return Single2(routesRequest.ReadAsSync());
+            if (routesRequest.ResponseMessage.StatusCode == HttpStatusCode.NotFound) return Single2(new CustomRouteSettings());
+            else throw routesRequest.ReadException();
         }
 
         [HttpPostRoute(UriTemplate = "edit")]
         public async Task<Response<CustomRouteSettings>> Edit(CustomRouteSettings settings)
         {
             await _routeValidator.ValidateAndThrowAsync(settings);
-
-            var genSettings = (await _genSettingsClient.GetGeneralSettings().ConfigureAwait(false)).ReadAsSync();
-            genSettings.CustomRoutes = settings;
-
-            var updated = (await _genSettingsClient.UpdateGeneralSettings(genSettings).ConfigureAwait(false)).ReadAsSync();
-            return Single2(updated.CustomRoutes);
+            var updated = (await _genSettingsClient.UpdateCustomRouteSettings(settings).ConfigureAwait(false)).ReadAsSync();
+            return Single2(updated);
         }
 
         [HttpPostRoute(UriTemplate = "delete")]
         public async Task<HttpResponseMessage> Delete()
         {
-            var genSettings = (await _genSettingsClient.GetGeneralSettings().ConfigureAwait(false)).ReadAsSync();
-            genSettings.CustomRoutes = null;
-            var deleted = (await _genSettingsClient.UpdateGeneralSettings(genSettings).ConfigureAwait(false)).ReadAsSync();
+            var deleted = (await _genSettingsClient.DeleteCustomRouteSettings().ConfigureAwait(false)).ReadAsSync();
             return Request.CreateResponse(HttpStatusCode.NoContent);
         }
     }

@@ -19,6 +19,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Helpers.ProductHelpers
         private const string STOCK_AVAILABLE_PROPERTY = "stockAvailable";
         private const string CREATE_DATE_PROPERTY = "createDate";
         private const string UPDATE_DATE_PROPERTY = "updateDate";
+        private const string PUBLISH_TYPE = "publishType";
 
         /// <summary>
         /// Converts a SortingCollection for Product to a mozu services-compatible sort string.
