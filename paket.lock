@@ -11,6 +11,7 @@ NUGET
     AutofacContrib.NSubstitute (3.3.2)
       Autofac (>= 3.3.0)
       NSubstitute (>= 1.7.0.0)
+    AutoMapper (3.3.0)
     Burrows (0.3.3.0)
       Magnum (>= 2.1.2)
       Newtonsoft.Json (>= 5.0.8)
@@ -24,8 +25,9 @@ NUGET
     Burrows.Log4Net (0.3.3.0)
       Burrows (>= 0.3.3.0)
       log4net (>= 2.0.3)
-    ClearScript.Installer (5.4.5689)
+    ClearScript.Installer (5.4.5690)
     dotless (1.4.0.0)
+    FAKE (4.0.2)
     FluentAssertions (3.2.2)
     FluentValidation (5.5.0.0)
     FSharp.Core (3.1.2.1)
@@ -88,10 +90,6 @@ NUGET
     Sprache (2.0.0.45)
     Stact (1.1.2)
       Magnum (>= 2.1.2)
-  remote: http://nuget-extprop.corp.volusion.com:8204/api/odata
-  specs:
-    AutoMapper (3.3.1)
-    FAKE (4.0.2)
   remote: http://nuget-internal.corp.volusion.com:8200/api/odata
   specs:
     Jolt (1.0.0)
@@ -108,7 +106,7 @@ NUGET
       Mozu.PricingRuntime.Contracts
       Mozu.ShippingRuntime.Contracts
       Newtonsoft.Json
-    Mozu.Content.Contracts (1.18.1-dev1507311829ci)
+    Mozu.Content.Contracts (1.18.1-dev1508041614ci)
       Mozu.Core.Prime (>= 1.17)
     Mozu.Core.Api.Contracts (1.17.1)
       Mozu.Core.Prime (>= 1.17.0)
