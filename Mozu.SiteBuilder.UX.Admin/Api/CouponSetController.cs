@@ -54,7 +54,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
         {
             if (pagingParams.id != null)
             {
-                var singleCouponSet = (await _couponSetWebClient.GetCouponSet(pagingParams.id, responseGroups:null)).ReadAsSync();
+                var singleCouponSet = (await _couponSetWebClient.GetCouponSet(pagingParams.id, responseGroups:"Counts")).ReadAsSync();
 
                 return List2(Mapper.Map<CouponSet>(singleCouponSet));
             }
@@ -74,7 +74,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
 
             try
             {
-                var couponSetList = (await _couponSetWebClient.GetCouponSets(pagingParams.startIndex, pagingParams.pageSize, sortBy, filter, null)).ReadAsSync();
+                var couponSetList = (await _couponSetWebClient.GetCouponSets(pagingParams.startIndex, pagingParams.pageSize, sortBy, filter, responseGroups:"Counts")).ReadAsSync();
 
                 var couponSets = Mapper.Map<List<CouponSet>>(couponSetList.Items);
 

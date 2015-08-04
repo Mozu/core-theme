@@ -34,6 +34,7 @@ Ext.application({
         'Catalog',
         'Testing',
         'Discounts',
+        'CouponSets',
         'Settings',
         'Provisioning',
         'Tbd',

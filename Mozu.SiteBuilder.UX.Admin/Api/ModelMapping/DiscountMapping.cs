@@ -64,17 +64,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.ModelMapping
         {
             if (sortItem == null || string.IsNullOrEmpty(sortItem.property))
                 return string.Empty;
-            switch (sortItem.property.ToLowerInvariant())
-            {
-                case "name":
-                    return "content.name" + GetSortDirection(sortItem);
-                case "expirationdate":
-                    return "enddate" + GetSortDirection(sortItem);
-                case "amounttype":
-                    return "amounttype" + GetSortDirection(sortItem) + ", amount" + GetSortDirection(sortItem);
-                default:
-                    return sortItem.property.ToLowerInvariant() + GetSortDirection(sortItem);
-            }
+            return sortItem.property.ToLowerInvariant() + GetSortDirection(sortItem);
         }
 
         private static string GetSortDirection(SortingCollectionItem sortItem)
