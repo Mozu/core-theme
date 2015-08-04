@@ -26,6 +26,7 @@ using Mozu.SiteBuilder.Mvc;
 using Mozu.SiteSettings.General.Contracts.Clients;
 using Mozu.SiteSettings.General.Contracts.General.Routing;
 using FluentValidation;
+using Mozu.Core.Api.Client.Exceptions;
 
 namespace Mozu.SiteBuilder.UX.Admin.Api
 {
@@ -44,8 +45,10 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
         [HttpGetRoute(UriTemplate = "read")]
         public async Task<Response<CustomRouteSettings>> Get()
         {
-            var routes = (await _genSettingsClient.GetCustomRouteSettings().ConfigureAwait(false)).ReadAsSync();
-            return Single2(routes);
+            var routesRequest = (await _genSettingsClient.GetCustomRouteSettings().ConfigureAwait(false));
+            if (!routesRequest.HasException) return Single2(routesRequest.ReadAsSync());
+            if (routesRequest.ResponseMessage.StatusCode == HttpStatusCode.NotFound) return Single2(new CustomRouteSettings());
+            else throw routesRequest.ReadException();
         }
 
         [HttpPostRoute(UriTemplate = "edit")]

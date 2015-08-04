@@ -73,14 +73,18 @@ namespace Mozu.SiteBuilder.Mvc.SEO
 
         async Task<HttpRouteCollection> ICustomRouteCollectionRepository.GetHttpRouteCollection()
         {
-            var routesRequest = await _genSettingsClient.GetCustomRouteSettings().ConfigureAwait(false);
-            var routes = routesRequest.ReadAsSync();
+            var genSettingsRequest = await _genSettingsClient.GetGeneralSettings().ConfigureAwait(false);
+            var genSettings = genSettingsRequest.ReadAsSync();
+
+            if (genSettings == null) return null;
+
+            var routes = genSettings.CustomRoutes;
             if (routes == null) return null;
 
             var key = GetType().FullName +
                          ((_siteBuilderApiContext.DataViewMode == DataViewModeType.Pending) ? "1" : "0") +
                          _siteBuilderApiContext.SiteId +
-                         DateTime.UtcNow.AddMinutes(2).Ticks; // TODO: go add auditInfo to the custom routes, or at least mirror the ones from general settings on the server-side./
+                         genSettings.AuditInfo.UpdateDate.GetValueOrDefault(DateTime.MaxValue).Ticks; // TODO: go add auditInfo to the custom routes, or at least mirror the ones from general settings on the server-side./
 
             return await _cache.AddOrGetExisting(key, async () => await CreateRouteCollectionFromSettings(routes).ConfigureAwait(false), DateTimeOffset.UtcNow.AddMinutes(5)).ConfigureAwait(false);
         }
