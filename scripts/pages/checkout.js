@@ -142,7 +142,14 @@
             "change [data-mz-digital-credit-amount]": "applyDigitalCredit",
             "change [data-mz-digital-add-remainder-to-customer]": "addRemainderToCustomer"
         },
-
+        edit: function () {
+            if (
+                this.model.get('paymentWorkflow') === "VisaCheckout" &&
+                window.confirm(Hypr.getLabel('visaCheckoutEditReminder'))
+            ) {
+                this.model.cancelVisaCheckout();
+            }
+        },
         initialize: function () {
             this.listenTo(this.model, 'change:paymentType', this.onSelectPaymentType, this);
             this.listenTo(this.model, 'change:digitalCreditCode', this.onEnterDigitalCreditCode, this);

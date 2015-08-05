@@ -299,9 +299,21 @@
                 check: PaymentMethods.Check
             },
             helpers: ['acceptsMarketing', 'savedPaymentMethods', 'availableStoreCredits', 'applyingCredit', 'maxCreditAmountToApply',
-                'activeStoreCredits', 'nonStoreCreditTotal', 'activePayments', 'availableDigitalCredits', 'digitalCreditPaymentTotal', 'isAnonymousShopper'],
+                'activeStoreCredits', 'nonStoreCreditTotal', 'activePayments', 'availableDigitalCredits', 'digitalCreditPaymentTotal', 'isAnonymousShopper', 'visaCheckoutFlowComplete'],
             acceptsMarketing: function () {
                 return this.getOrder().get('acceptsMarketing');
+            },
+            visaCheckoutFlowComplete: function() {
+                return this.get('paymentWorkflow') === "VisaCheckout";
+            },
+            cancelVisaCheckout: function() {
+                var self = this;
+                var order = this.getOrder();
+                var currentPayment = order.apiModel.getCurrentPayment();
+                order.apiVoidPayment(currentPayment.id).then(function() {
+                    self.clear();
+                    self.stepStatus("incomplete");
+                });
             },
             activePayments: function () {
                 return this.getOrder().apiModel.getActivePayments();
@@ -749,10 +761,13 @@
             calculateStepStatus: function () {
                 var fulfillmentComplete = this.parent.get('fulfillmentInfo').stepStatus() === "complete",
                     activePayments = this.activePayments(),
+                    currentPayment = this.getOrder().apiModel.getCurrentPayment(),
                     thereAreActivePayments = activePayments.length > 0,
                     paymentTypeIsCard = activePayments && !!_.findWhere(activePayments, { paymentType: 'CreditCard' }),
                     paymentTypeIsPayPal = activePayments && !!_.findWhere(activePayments, { paymentType: 'PaypalExpress' }),
                     balanceZero = this.parent.get('amountRemainingForPayment') === 0;
+
+                //if (currentPayment && currentPayment.paymentWorkflow === "VisaCheckout") return this.markComplete();
 
                 if (paymentTypeIsCard) return this.stepStatus("incomplete"); // initial state for CVV entry
 
@@ -932,6 +947,7 @@
                             isCvvOptional: true,
                             paymentWorkflow: paymentWorkflow
                         });
+                        billingInfo.trigger('stepstatuschange'); // trigger a rerender
                     }
 
                     self.isReady(isReady);

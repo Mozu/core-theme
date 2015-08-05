@@ -406,5 +406,9 @@
   "notifyWidgetSuccess"  : "You will be notified when this product is back in stock.",
   "notifyWidgetError"    : "There was an error subscribing. Please try again.",
 
-  "dealOfTheDay"     : "Deal of the Day"
+  "dealOfTheDay"     : "Deal of the Day",
+
+  "visaCheckoutCVVReminder": "Please re-enter your card security code.",
+  "visaCheckoutEditReminder": "If you edit your payment details at this point, you will no longer be using Visa Checkout. Do you wish to continue?",
+  "cancelVisaCheckout": "Edit Details"
 }

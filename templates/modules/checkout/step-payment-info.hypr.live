@@ -1,6 +1,6 @@
 ﻿<h3 class="mz-formstep-header">
     {{ labels.paymentInformation }}
-    <button type="button" class="mz-button mz-button-small mz-formstep-edit" data-mz-action="edit">{{ labels.edit }}</button>
+    <button type="button" class="mz-button mz-button-small mz-formstep-edit" {% if model.visaCheckoutFlowComplete %}style="display: block"{% endif %} data-mz-action="edit">{{ labels.edit }}</button>
 </h3>
 <div class="mz-formstep-body">
     <div class="mz-formstep-summary mz-l-stack">
@@ -40,6 +40,15 @@
                 <dd>
                     <div class="mz-addresssummary">
                         {% include "modules/common/address-summary" with model=payment.billingInfo.billingContact %}
+                        {% if payment.paymentWorkflow === "VisaCheckout" %}
+                            <img alt="This Payment Using Visa Checkout"
+                        src="{{pageContext.visaCheckoutButtonUrl}}?size=154&amp;cardBrands={{ payment.card.paymentOrCardType }}"/>
+<!-- 
+                                <label class="mz-payment-security-code-label">{{ labels.visaCheckoutCVVReminder }}</label>
+                                <input type="tel" name="security-code" id="mz-payment-security-code" class="mz-l-formfieldgroup-halfsize" data-mz-value="{{ cardcontext }}cvv" value="{{ model.cvv }}" autocomplete="off">
+                                <span class="mz-validationmessage" data-mz-validationmessage-for="{{ cardcontext }}cvv"></span> -->
+
+                        {% endif %}
                     </div>
                 </dd>
             </dl>
@@ -76,9 +85,12 @@
       
       {% if model.nonStoreCreditTotal > 0 %}
       
+        {% if not model.visaCheckoutFlowComplete %}
         {% include "modules/checkout/checkout-digital-credit" %}
+        {% endif %}
       
         <div class="mz-l-stack-section">
+        {% if not model.visaCheckoutFlowComplete %}
             <h4 class="mz-l-stack-sectiontitle">{{ labels.paymentMethods }}</h4>
             <div class="mz-l-formfieldgroup">
                 {% if model.savedPaymentMethods %}
@@ -125,13 +137,33 @@
                 {% if siteContext.checkoutSettings.visaCheckout.isEnabled %}
                     <div class="mz-l-formfieldgroup-cell mz-digitalwallets">
                         <img alt="Visa Checkout" class="v-button" role="button"
-                        src="{{pageContext.visaCheckoutButtonUrl}}"/>
-                </div>
+                        src="{{pageContext.visaCheckoutButtonUrl}}?size=154&amp;color=neutral"/>
+                    </div>
                 {% endif %}
                 </div>
+                {% endif %}
 
                 {% if model.paymentType == "CreditCard" %}
+                {% if model.visaCheckoutFlowComplete %}
+                <div class="mz-l-stack-section mz-checkout-payment">
+                    <h4 class="mz-l-stack-sectiontitle">{{ model.paymentType }}</h4>
+                    <span><strong>{{ model.amountRequested|currency }}</strong> &mdash; {{ model.card.cardNumberPartOrMask }}</span>
+                    <dl class="mz-propertylist">
+                        <dt>{{ labels.billingAddress }}</dt>
+                        <dd>
+                            <div class="mz-addresssummary">
+                                {% include "modules/common/address-summary" with model=model.billingContact %}
+                                <img alt="This Payment Using Visa Checkout"
+                                    src="{{pageContext.visaCheckoutButtonUrl}}?size=154&amp;color=neutral&amp;cardBrands={{ payment.card.paymentOrCardType }}"/>
+                            </div>
+                        </dd>
+                    </dl>
+                    {% include "modules/checkout/visa-checkout-billing-credit-card-form" with model=model.card %}
+                </div>
+                
+                {% else %}
                 {% include "modules/checkout/billing-credit-card-form" with model=model.card %}
+                {% endif %}
                 {% endif %}
 
                 {% if model.paymentType == "Check" %}
@@ -149,6 +181,7 @@
 
             </div>
         </div>
+        {% if not model.visaCheckoutFlowComplete %}
         <div class="mz-l-stack-section">
             <h4 class="mz-l-stack-sectiontitle">{{ labels.billingAddress }}</h4>
             {% if model.requiresFulfillmentInfo %}
@@ -164,10 +197,11 @@
             </div>
             {% endif %}
         </div>
+        {% endif %}
         
         {% else %}
         
-         {% if model.activeStoreCredits and model.activeStoreCredits.length > 0 %}
+         {% if model.activeStoreCredits and model.activeStoreCredits.length > 0 and not model.visaCheckoutFlowComplete %}
          
             {% include "modules/checkout/checkout-digital-credit" %}
             
