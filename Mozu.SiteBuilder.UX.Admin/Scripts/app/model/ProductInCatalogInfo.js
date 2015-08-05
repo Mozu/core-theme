@@ -34,7 +34,7 @@ Ext.define('Taco.model.ProductInCatalogInfo', {
             persist: false,
             convert: function (value, record) {
                 if (!record.get('isActive')) {
-                    return 'Disabled';
+                    return 'Disable';
                 }
                 if (record.get('activeStartDate') || record.get('activeEndDate')) {
                     return 'Scheduled';
