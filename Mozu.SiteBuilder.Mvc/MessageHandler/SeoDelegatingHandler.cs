@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Net;
 using System.Net.Http;
+using System.Text.RegularExpressions;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Web;
@@ -105,34 +106,73 @@ namespace Mozu.SiteBuilder.Mvc.MessageHandler
 
             return null;
         }
+
+        static Regex redirectTokenReplacement = new Regex(@"{(?<token>[^}]+)}",
+                RegexOptions.IgnoreCase |
+                RegexOptions.ExplicitCapture |
+                RegexOptions.Singleline |
+                RegexOptions.IgnorePatternWhitespace);
+
+
         static RedirectEntry ProcessQS( Uri incoming, RedirectEntry entry)
         {
-            if ( !entry.CopyQueryString.GetValueOrDefault(false))
-            {
-                return entry;
-            }
-            var copy = new RedirectEntry()
-            {
-                CopyQueryString = entry.CopyQueryString,
-                Source = entry.Source,
-                Destination = entry.Destination,
-                IsRewrite = entry.IsRewrite,
-                IsTemporary = entry.IsTemporary
-            };
+          
+            
             var incommingQs = incoming.ParseQueryString();
             var qpos = entry.Destination.IndexOf('?');
             var stem = entry.Destination;
-            if ( qpos > -1)
+            var qstring = qpos > -1 ? System.Web.HttpUtility.ParseQueryString(entry.Destination.Substring(qpos + 1)) : new System.Collections.Specialized.NameValueCollection(StringComparer.OrdinalIgnoreCase);
+
+
+
+
+            if (entry.CopyQueryString.GetValueOrDefault(false))
             {
-                var destQs = System.Web.HttpUtility.ParseQueryString(entry.Destination.Substring(qpos + 1));
-                foreach( string key in destQs.Keys)
+                foreach( string key in incommingQs.Keys)
                 {
-                    incommingQs[key] = destQs[key];
+                    if ( qstring[key] == null)
+                    {
+                        qstring[key] = incommingQs[key];
+                    }
                 }
-                stem = entry.Destination.Substring(0, qpos);
             }
-            copy.Destination = stem + "?" + incommingQs.ToString();
-            return copy;
+
+
+            //handle dest ?x={z}  where source = ?z=bing > x=bing
+            //foreach (string key in qstring)
+            //{
+            //    var token = qstring[key];
+            //    if (token.StartsWith("{")&& token.EndsWith("}"))
+            //    {
+            //        token = token.Substring(1, token.Length - 2);
+            //        string replacementVal = incommingQs[token];
+            //        if (replacementVal != null)
+            //        {
+            //            qstring[key] = replacementVal;
+            //        }
+            //    }
+            //}
+
+            var dest = stem + "?" + incommingQs.ToString();
+
+            dest = redirectTokenReplacement.Replace(dest, match => {
+                var token = match.Groups["token"].Value;
+                var rep = incommingQs[token];
+                if ( rep != null)
+                {
+                    return rep;
+                }
+                return match.Value;
+            });
+
+            return  new RedirectEntry()
+            {
+                Source = entry.Source,
+                Destination = dest,
+                IsRewrite = entry.IsRewrite,
+                IsTemporary = entry.IsTemporary
+            };
+           
         }
 
         private static async Task<HttpRequestMessage> PerformCustomRouting(HttpRequestMessage request)

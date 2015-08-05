@@ -59,7 +59,7 @@ namespace Mozu.SiteBuilder.Mvc.SEO
         public Dictionary<string, RedirectEntry> Simple { get; set; }
         public Dictionary<string, List<RuntimeRedirectEntry>> QueryString { get; set; }
 
-        public JObject Entries { get; set; }
+      
     }
     public class RuntimeRedirectEntry
     {
@@ -212,9 +212,8 @@ namespace Mozu.SiteBuilder.Mvc.SEO
                         {
                             try
                             {
-                                var jObject = JObject.Load(jr);
-                                
-                                ret = BuildRuntimeRedirects(jObject);
+                               
+                                ret = BuildRuntimeRedirects(jr);
 
                                 _cache[key] = ret;
                                 _cache.Set(fallbackKey, ret,
@@ -253,47 +252,51 @@ namespace Mozu.SiteBuilder.Mvc.SEO
             }
             return ret;
         }
-        RuntimeRedirects BuildRuntimeRedirects ( JObject  entries)
+        RuntimeRedirects BuildRuntimeRedirects (JsonTextReader reader)
         {
             RuntimeRedirects rr = new RuntimeRedirects()
             {
-                Entries = entries,
                 QueryString = new Dictionary<string,List<RuntimeRedirectEntry>>(StringComparer.OrdinalIgnoreCase),
                 Simple = new Dictionary<string,RedirectEntry>(StringComparer.OrdinalIgnoreCase)
             };
+            JsonSerializer ser = JsonSerializer.CreateDefault();
 
-            foreach (var entry in entries)
+
+            while (reader.Read())
             {
-                var source = entry.Key;
-                //todo check ser;
-                var redirect = entry.Value.ToObject<RedirectEntry>();
-                redirect.Source = source;
-                var qPos = source.IndexOf('?');
-                if (qPos == -1)
+                if (reader.TokenType == JsonToken.PropertyName)
                 {
-                    rr.Simple[source] = redirect;
-                    continue;
+                    var source = (string)reader.Value;
+                    reader.Read();
+                    var redirect = ser.Deserialize<RedirectEntry>(reader);
+                    redirect.Source = source;
+                    var qPos = source.IndexOf('?');
+                    if (qPos == -1)
+                    {
+                        rr.Simple[source] = redirect;
+                        continue;
+                    }
+                    List<RuntimeRedirectEntry> qsEntries;
+
+
+                    var stem = source.Substring(0, qPos);
+
+                    if (!rr.QueryString.TryGetValue(stem, out qsEntries))
+                    {
+                        qsEntries = new List<RuntimeRedirectEntry>();
+                        rr.QueryString[stem] = qsEntries;
+                    }
+                    qsEntries.Add(new RuntimeRedirectEntry()
+                    {
+                        Redirect = redirect,
+                        Query = System.Web.HttpUtility.ParseQueryString(source.Substring(qPos + 1))
+                    });
                 }
-                List<RuntimeRedirectEntry> qsEntries;
+          
 
 
-                var stem = source.Substring(0, qPos);
-
-                if (!rr.QueryString.TryGetValue(stem, out qsEntries))
-                {
-                    qsEntries = new List<RuntimeRedirectEntry>();
-                    rr.QueryString[stem] = qsEntries;
-                }
-                qsEntries.Add(new RuntimeRedirectEntry()
-                {
-                    Redirect = redirect,
-                    Query = System.Web.HttpUtility.ParseQueryString(source.Substring(qPos + 1))
-                });
             }
             
-
-            
-
             return rr;
         }
         Task<Dictionary<string, RedirectEntry>> IRedirectRepository.UpdateRedirectEntries(Dictionary<string, RedirectEntry> redirects, int? siteId)

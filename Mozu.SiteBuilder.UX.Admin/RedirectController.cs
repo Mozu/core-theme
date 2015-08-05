@@ -91,7 +91,10 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
                 EscapeWrite(sw, x.Destination);
                 sw.Write(',');
                 sw.WriteLine(x.IsRewrite.GetValueOrDefault(false) ? 1 : 0);
-
+                sw.Write(',');
+                sw.WriteLine(x.IsTemporary.GetValueOrDefault(false) ? 1 : 0);
+                sw.Write(',');
+                sw.WriteLine(x.CopyQueryString.GetValueOrDefault(false) ? 1 : 0);
             });
             sw.Flush();
             ms.Position = 0;
