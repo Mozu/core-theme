@@ -1,4 +1,4 @@
-﻿require(["modules/jquery-mozu", "underscore", "hyprlive", "modules/backbone-mozu", "modules/models-checkout", "modules/views-messages", "modules/cart-monitor", 'hyprlivecontext'], function ($, _, Hypr, Backbone, CheckoutModels, messageViewFactory, CartMonitor, HyprLiveContext) {
+﻿require(["modules/jquery-mozu", "underscore", "hyprlive", "modules/backbone-mozu", "modules/models-checkout", "modules/views-messages", "modules/cart-monitor", 'hyprlivecontext', 'modules/preserve-element-through-render'], function ($, _, Hypr, Backbone, CheckoutModels, messageViewFactory, CartMonitor, HyprLiveContext, preserveElements) {
 
     var CheckoutStepView = Backbone.MozuView.extend({
         edit: function () {
@@ -150,17 +150,23 @@
                     this.render();
                 }, this);
             this.codeEntered = !!this.model.get('digitalCreditCode');
-
-            // This url will differ between sandbox and production. It may be added to the site context,
-            // or it could come from a theme setting, ex: Hypr.getThemeSetting('visaCheckoutSdkUrl')
-            var sdkUrl = Hypr.getThemeSetting("visaCheckoutSdkUrl");
-
-            // The VisaCheckout SDK wants a global function to call when it's ready
-            // so we give it the same function we call when we're ready
-            window.onVisaCheckoutReady = _.bind(this.initVisaCheckout, this);
-            require([sdkUrl], _.bind(this.initVisaCheckout, this));
         },
-
+        render: function() {
+            preserveElements(this, ['.v-button'], function() {
+                CheckoutStepView.prototype.render.apply(this, arguments);
+            });
+            var status = this.model.stepStatus();
+            if (!this.visaCheckoutInitialized && (status == "incomplete" || status == "invalid")) {
+                // This url will differ between sandbox and production. It may be added to the site context,
+                // or it could come from a theme setting, ex: Hypr.getThemeSetting('visaCheckoutSdkUrl')
+                var sdkUrl = Hypr.getThemeSetting("visaCheckoutSdkUrl");
+                // The VisaCheckout SDK wants a global function to call when it's ready
+                // so we give it the same function we call when we're ready
+                window.onVisaCheckoutReady = _.bind(this.initVisaCheckout, this);
+                require([sdkUrl]);
+                this.visaCheckoutInitialized = true;
+            }
+        },
         updateAcceptsMarketing: function(e) {
             this.model.getOrder().set('acceptsMarketing', $(e.currentTarget).prop('checked'));
         },
@@ -252,12 +258,10 @@
         /* begin visa checkout */
         initVisaCheckout: function () {
             var me = this;
-            var delay = 0;
             var visaCheckoutSettings = HyprLiveContext.locals.siteContext.checkoutSettings.visaCheckout;
             var apiKey = visaCheckoutSettings.apiKey || '0H1JJQFW9MUVTXPU5EFD13fucnCWg42uLzRQMIPHHNEuQLyYk';
             var clientId = visaCheckoutSettings.clientId || 'mozu_test1';
-
-            console.log(HyprLiveContext);
+            var orderModel = this.model.getOrder();
 
             // on success, attach the encoded payment data to the window
             // then call the sdk's api method for digital wallets, via models-checkout's helper
@@ -276,12 +280,12 @@
                 console.warn({ error: JSON.stringify(error) });
             });
 
-            _.delay(V.init, delay, {
+            V.init({
                 apikey: apiKey,
                 clientId: clientId,
                 paymentRequest: {
-                    currencyCode: window.order.get('currencyCode'),
-                    total: "" + window.order.get('total')
+                    currencyCode: orderModel.get('currencyCode'),
+                    total: "" + orderModel.get('total')
                 }
             });
         }

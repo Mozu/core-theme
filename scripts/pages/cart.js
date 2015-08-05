@@ -1,10 +1,9 @@
-﻿define(['modules/backbone-mozu', 'underscore', 'modules/jquery-mozu', 'modules/models-cart', 'modules/cart-monitor', 'hyprlivecontext', 'hyprlive'], function (Backbone, _, $, CartModels, CartMonitor, HyprLiveContext, Hypr) {
+﻿define(['modules/backbone-mozu', 'underscore', 'modules/jquery-mozu', 'modules/models-cart', 'modules/cart-monitor', 'hyprlivecontext', 'hyprlive', 'modules/preserve-element-through-render'], function (Backbone, _, $, CartModels, CartMonitor, HyprLiveContext, Hypr, preserveElement) {
     var CartView = Backbone.MozuView.extend({
         templateName: "modules/cart/cart-table",
         initialize: function () {
             var me = this;
 
-            this.listenTo(this.model, 'change:total', this.onTotalChange, this);
             //setup coupon code text box enter.
             this.listenTo(this.model, 'change:couponCode', this.onEnterCouponCode, this);
             this.codeEntered = !!this.model.get('couponCode');
@@ -25,6 +24,11 @@
             // so we give it the same function we call when we're ready
             window.onVisaCheckoutReady = initVisaCheckout;
             require([sdkUrl], initVisaCheckout);
+        },
+        render: function() {
+            preserveElement(this, ['.v-button'], function() {
+                Backbone.MozuView.prototype.render.call(this);
+            });
         },
         updateQuantity: _.debounce(function (e) {
             var $qField = $(e.currentTarget),
@@ -72,7 +76,6 @@
                 this.$el.find('#cart-coupon-code').prop('disabled', true);
             }
         },
-        onTotalChange: initVisaCheckout,
         autoUpdate: [
             'couponCode'
         ],
