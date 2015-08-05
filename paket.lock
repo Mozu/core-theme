@@ -100,7 +100,7 @@ NUGET
       Mozu.Core.Prime (>= 1.17)
     Mozu.BuildSupport.GetAssemblyFileVersionTask (1.0.0)
     Mozu.BuildTools (1.9.0.16)
-    Mozu.CommerceRuntime.Contracts (1.18.1-dev1507302100)
+    Mozu.CommerceRuntime.Contracts (1.18.1-dev1508042207ci)
       Mozu.Core.Extensible.Contracts
       Mozu.Core.Prime
       Mozu.PricingRuntime.Contracts

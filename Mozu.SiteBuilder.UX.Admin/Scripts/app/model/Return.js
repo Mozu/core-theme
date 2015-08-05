@@ -8,15 +8,6 @@ Ext.define('Taco.model.Return', {
     statics: (function () {
 
         var constants = {
-                reasons: {
-                    DAMAGED: 'Damaged',
-                    DEFECTIVE: 'Defective',
-                    MISSING_PARTS: 'MissingParts',
-                    DIFFERENT_EXPECTATIONS: 'DifferentExpectations',
-                    LATE: 'Late',
-                    NO_LONGER_WANTED: 'NoLongerWanted',
-                    OTHER: 'Other'
-                },
                 statuses: {
                     AUTHORIZED: "Authorized",
                     CANCELLED: "Cancelled",
@@ -28,17 +19,40 @@ Ext.define('Taco.model.Return', {
                     REJECTED: "Rejected",
                     RESTOCKED: "Restocked",
                     SHIPPED: "Shipped"
-                }
-            },
-            storeReasons = Ext.Array.map(Ext.Object.getValues(constants.reasons), function toStoreReason(s) {
-                return [s, Taco.core.util.Common.camelToSpace(s)];
-            });
+                },
+                storeReasons: {}
+        }
 
 
         return {
             constants: constants,
+            retrieveValidReasons: function() {
+                var config = {};
+
+                //config.success = 
+                //config.failure =
+
+                Ext.apply(config, {
+                    success: function (response) {
+                        console.log(response);
+
+                        var reasons = JSON.parse(response.responseText);
+                        constants.storeReasons = Ext.Array.map(Ext.Object.getValues(reasons.items), function toStoreReasons(s) {
+                            return [s, Taco.core.util.Common.camelToSpace(s)];
+                        });
+                    },
+                    failure: function (response, options) {
+                        console.log(response);
+                    },
+                    url: '/admin/app/return/reasons',
+                    method: "GET"
+
+                });
+
+                Ext.Ajax.request(config);
+            }(),
             getValidReasons: function () {
-                return storeReasons;
+                return constants.storeReasons;
             }
         };
     }()),

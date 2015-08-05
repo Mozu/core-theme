@@ -17,6 +17,7 @@ using Newtonsoft.Json.Converters;
 using Mozu.SiteBuilder.Mvc.Models.CMS;
 using Mozu.SiteBuilder.Mvc.Extensions;
 using Mozu.SiteBuilder.Mvc.ViewEngine;
+using Newtonsoft.Json.Linq;
 
 namespace Mozu.SiteBuilder.Mvc.Contexts
 {
@@ -424,6 +425,7 @@ namespace Mozu.SiteBuilder.Mvc.Contexts
         public List<KeyValuePair<string, string>> BillingStates { get; set; }
         public List<KeyValuePair<string, string>> ShippingStates { get; set; }
         public string VisaCheckoutButtonUrl { get; set; }
+        public JObject ReasonCollection { get; set; }
         public DateTime Now { get; set; }
 
         public  string CategoryCode { get; set; }

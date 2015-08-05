@@ -95,6 +95,15 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
             public string PaymentType { get; set; }
             public decimal Amount { get; set; }
         }
+
+        [HttpGetRoute(UriTemplate = "reasons")]
+        public async Task<Response<List<string>>> GetReasons()
+        {
+            var returnReasons = (await _returnWebApiClient.GetReasons()).ReadAsSync().Items;
+
+            return List2(returnReasons);
+        }
+
         [HttpPostRoute(UriTemplate = "paymentAction")]
         public async Task<Response<List<Return>>> CreatePaymentActionForReturn(PaymentActionDTO action)
         {
