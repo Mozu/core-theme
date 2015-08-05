@@ -4,6 +4,7 @@
     var semver = require('semver');
 
     grunt.initConfig({
+        mozuconfig: require('./mozu.config.json'),
         pkg: pkg,
         bower: {
             install: {
@@ -69,7 +70,13 @@
                 options: {
                     spawn: false
                 }
-            }
+            },
+              "sync": {
+                "files": "<%= mozusync.upload.src %>",
+                "tasks": [
+                  "mozusync:upload"
+                ]
+              }
         },
         "compress": {
           "build": {
@@ -93,13 +100,61 @@
               }
             ]
           }
+        },
+        "mozusync": {
+          "options": {
+            "applicationKey": "<%= mozuconfig.workingApplicationKey %>",
+            "context": "<%= mozuconfig %>",
+            "watchAdapters": [
+              {
+                "src": "mozusync.upload.src",
+                "action": "upload"
+              },
+              {
+                "src": "mozusync.del.remove",
+                "action": "delete"
+              }
+            ]
+          },
+          "upload": {
+            "options": {
+              "action": "upload",
+              "noclobber": true
+            },
+            "src": [
+              "**",
+              "!node_modules/**",
+              "!references/**",
+              "!tasks/**",
+              "!configure.js",
+              "!Gruntfile.js",
+              "!mozu.config.json",
+              "!*.zip"
+            ],
+            "filter": "isFile"
+          },
+          "del": {
+            "options": {
+              "action": "delete"
+            },
+            "src": "<%= mozusync.upload.src %>",
+            "filter": "isFile",
+            "remove": []
+          },
+          "wipe": {
+            "options": {
+              "action": "deleteAll"
+            },
+            "src": "<%= mozusync.upload.src %>"
+          }
         }
     });
 
     ['grunt-bower-task',
      'grunt-contrib-jshint',
      'grunt-contrib-watch',
-     'grunt-contrib-compress'].forEach(grunt.loadNpmTasks);
+     'grunt-contrib-compress',
+     'grunt-mozu-appdev-sync'].forEach(grunt.loadNpmTasks);
 
     grunt.loadTasks('./tasks/');
     grunt.registerTask('default', ['jshint', /*'bower', */ 'zubat']); // no bower necessary for now
