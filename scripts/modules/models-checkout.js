@@ -1231,7 +1231,7 @@
                     return deferred.promise;
                 } else {
                     billingInfo = order.get('billingInfo');
-                    if (!currentPayment || activePayments.length > 1 || currentPayment.paymentType === "PaypalExpress" || difference < 0) {
+                    if (!currentPayment || activePayments.length > 1 || currentPayment.paymentType === "PaypalExpress") {
                         // if store credits or PayPal are being used,
                         // or multiple payments are active,
                         // or the order total has increased,
