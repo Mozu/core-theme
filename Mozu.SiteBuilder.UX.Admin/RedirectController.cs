@@ -83,7 +83,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
             var sw = new StreamWriter(ms);
             var dic = await _redirectRepository.FetchRedirectEntries(siteid);
 
-            sw.WriteLine("source,destination,rewrite");
+            sw.WriteLine("source,destination,rewrite,isTemporary,copyQueryStrings");
             EnumerableExtensions.Each(dic.Values, x =>
             {
                 EscapeWrite(sw, x.Source);
@@ -220,7 +220,9 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
                         {
                             Source = row[0],
                             Destination = row[1],
-                            IsRewrite = row.Length > 2 && row[2] == "1"
+                            IsRewrite = row.Length > 2 && row[2] == "1",
+                            IsTemporary = row.Length > 3 && row[3] == "1",
+                            CopyQueryString = row.Length > 4 && row[4] == "1"
                         };
                         Validate(entry, dic.Count);
                         dic[entry.Source] = entry;

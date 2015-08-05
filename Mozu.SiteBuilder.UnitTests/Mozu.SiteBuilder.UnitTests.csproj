@@ -184,6 +184,7 @@
     <Compile Include="Mvc\SEO\SlugRegexTest.cs" />
     <Compile Include="StoreFront\ModelMapping\MvcMappingTest.cs" />
     <Compile Include="Utils\HttpRequestMessageHelpers.cs" />
+    <Compile Include="Utils\MemberResolverTests.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Admin\Api\cdProductCodeUpdate.cd" />

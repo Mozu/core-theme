@@ -46,6 +46,36 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.ModelMapping
         }
     }
 
+    #region CouponSet sorter
+
+    #region sort field mapping
+
+    public interface ICouponSetSortFormatter : ISortFormatter
+    {
+    }
+
+    /// <summary>
+    ///     Provides mapping to API fields for sorting and formatting to API sort syntax.
+    ///     Keeps mapping in one place by colocating with mapping.
+    /// </summary>
+    public class CouponSetSortFormatter : ICouponSetSortFormatter
+    {
+        public string Format(SortingCollectionItem sortItem)
+        {
+            if (sortItem == null || string.IsNullOrEmpty(sortItem.property))
+                return string.Empty;
+            return sortItem.property.ToLowerInvariant() + GetSortDirection(sortItem);
+        }
+
+        private static string GetSortDirection(SortingCollectionItem sortItem)
+        {
+            return ((sortItem.IsAscending) ? " asc" : " desc");
+        }
+    }
+
+    #endregion
+    #endregion
+
     #endregion
 
     public class DiscountMapping : Profile
@@ -248,6 +278,20 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.ModelMapping
                 })
                 .ForMember(dc => dc.AuditInfo, opt => opt.Ignore())
                 ;
+
+            MapCouponSets();
+        }
+
+        private void MapCouponSets()
+        {
+            Mapper.CreateMap<DC.CouponSet, CouponSet>();
+            Mapper.CreateMap<CouponSet, DC.CouponSet>()
+                .ForMember(x => x.AuditInfo, op => op.Ignore());
+
+            Mapper.CreateMap<DC.Coupon, Coupon>();
+            Mapper.CreateMap<Coupon, DC.Coupon>()
+                .ForMember(x => x.AuditInfo, op => op.Ignore());
+
         }
 
         //private string MapToTargetType(DC.DiscountTarget t)

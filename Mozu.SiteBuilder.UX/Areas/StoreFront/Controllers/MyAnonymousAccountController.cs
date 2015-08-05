@@ -67,6 +67,9 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
             // because we're an auth'd anonymous user the only returns returned are those which are associated
             // with the bag's orderid
             var returns = (await _returnApiClient.GetReturns());
+            var reasons = (await _returnApiClient.GetReasons());
+
+            PageContext.ReasonCollection = reasons.ReadAsSync().ToJObject();
 
             var pc = PageContext;
             pc.CmsContext = new CmsPageContext()

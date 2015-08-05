@@ -73,6 +73,23 @@ Ext.define('Taco.view.redirects.Index', {
                 text: 'Rewrite',
                 width: 100
             }, {
+                dataIndex: 'q',
+                stateId: 'qs',
+                editor: {
+                    xtype: 'checkboxfield'
+                },
+                text: 'Copy QueryString',
+                width: 100
+            },
+            {
+                dataIndex: 't',
+                stateId: 'temp',
+                editor: {
+                    xtype: 'checkboxfield'
+                },
+                text: 'Is Temporary',
+                width: 100
+            }, {
                 xtype: 'taco.menucolumn',
                 text: 'Actions',
                 width: 100,

@@ -102,6 +102,7 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
             var cardsTask = _customerAccountWebApiClient.GetAccountCards(account.Id);
             var orderHistoryTask = _orderWebApiClient.GetOrders(0, 5, null, "Status ne Created and Status ne Validated and Status ne Pending and Status ne Abandoned and Status ne Errored");
             var returnHistoryTask = _returnApiClient.GetReturns(0, 5, null);
+            var reasonList = _returnApiClient.GetReasons();
             var storeCreditsTask = _creditApiClient.GetCredits(0, 25, "activationDate DESC", String.Format("CustomerId eq \"{0}\" and activationdate le \"{1}\" and expirationdate ge \"{1}\"", account.Id, DateTime.UtcNow.ToString("o")));
             var wishlistTask = _wishlistApiClient.GetWishlistByName(account.Id, DEFAULT_WISHLIST_NAME);
 
@@ -111,13 +112,15 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
             var shipStateTask = GetUSShippingStates();
             var billStateTask = GetUSBillingStates();
 
-            await Task.WhenAll(cardsTask, orderHistoryTask, returnHistoryTask, storeCreditsTask, wishlistTask, shipStateTask, billStateTask);
+            await Task.WhenAll(cardsTask, orderHistoryTask, returnHistoryTask, reasonList, storeCreditsTask, wishlistTask, shipStateTask, billStateTask);
 
             this.PageContext.ShippingCountries = shipTask.Result;
             this.PageContext.BillingCountries  = billTask.Result;
 
             this.PageContext.BillingStates = billStateTask.Result;
             this.PageContext.ShippingStates = shipStateTask.Result;
+
+            this.PageContext.ReasonCollection = reasonList.Result.ReadAsSync().ToJObject();
             
             CommerceRuntime.Contracts.Wishlists.Wishlist wishlist = null;
             try {

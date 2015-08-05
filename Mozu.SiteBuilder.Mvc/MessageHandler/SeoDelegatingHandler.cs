@@ -1,5 +1,7 @@
 ﻿using System;
 using System.Collections;
+using System.Collections.Generic;
+using System.Linq;
 using System.Net;
 using System.Net.Http;
 using System.Threading;
@@ -37,7 +39,7 @@ namespace Mozu.SiteBuilder.Mvc.MessageHandler
                 }
                 else if (!apiContext.IsEditMode)
                 {
-                    return RedirectTo(redirect.Destination, request);
+                    return RedirectTo(redirect.Destination, redirect.IsTemporary.GetValueOrDefault(false) , request);
                 }
             }
 
@@ -53,19 +55,84 @@ namespace Mozu.SiteBuilder.Mvc.MessageHandler
 
         static async Task<RedirectEntry> GetRedirectForRequestUri(IRedirectRepository repo, Uri requestUri)
         {
-            var redirects = await repo.FetchRedirectEntries().ConfigureAwait(false);
-            var stem = requestUri.AbsolutePath.TrimStart('/');
-
-            // try any redirects
-            RedirectEntry redir;
-            if (redirects.TryGetValue(stem, out redir))
-            {
-                return redir;
-            }
-            else
+            var redirects = await repo.GetRuntimeRedirectEntries().ConfigureAwait(false);
+            if ( redirects == null || redirects.Simple == null)
             {
                 return null;
             }
+            var stem = requestUri.AbsolutePath.TrimStart('/');
+            
+            // try any redirects
+            RedirectEntry redir;
+
+            if (redirects.Simple.TryGetValue(stem, out redir))
+            {
+                return ProcessQS(requestUri, redir);  
+            }
+            List<RuntimeRedirectEntry> rrel;
+
+            if ( string.IsNullOrEmpty(requestUri.Query) ||  !redirects.QueryString.TryGetValue( stem, out rrel))
+            {
+                return null;
+            }
+            var incommingQs = requestUri.ParseQueryString();
+            foreach(var rre in rrel)
+            {
+                bool match = true;
+                foreach ( var key in rre.Query.AllKeys)
+                {
+                    var redirVal = rre.Query[key];
+                   
+                    if ( redirVal == "*")
+                    {
+                        continue;
+                    }
+                       
+                    var incommingVals =incommingQs.GetValues(key);
+                    if ( incommingVals == null || incommingVals.Length ==0 || !incommingVals.Any( x=> string.Equals( x,redirVal, StringComparison.OrdinalIgnoreCase )))
+                    {
+                        match = false;
+                        break;
+                    }
+                        
+                }
+                if ( match )
+                {
+
+                    return ProcessQS(requestUri, rre.Redirect);
+                }
+            }
+
+            return null;
+        }
+        static RedirectEntry ProcessQS( Uri incoming, RedirectEntry entry)
+        {
+            if ( !entry.CopyQueryString.GetValueOrDefault(false))
+            {
+                return entry;
+            }
+            var copy = new RedirectEntry()
+            {
+                CopyQueryString = entry.CopyQueryString,
+                Source = entry.Source,
+                Destination = entry.Destination,
+                IsRewrite = entry.IsRewrite,
+                IsTemporary = entry.IsTemporary
+            };
+            var incommingQs = incoming.ParseQueryString();
+            var qpos = entry.Destination.IndexOf('?');
+            var stem = entry.Destination;
+            if ( qpos > -1)
+            {
+                var destQs = System.Web.HttpUtility.ParseQueryString(entry.Destination.Substring(qpos + 1));
+                foreach( string key in destQs.Keys)
+                {
+                    incommingQs[key] = destQs[key];
+                }
+                stem = entry.Destination.Substring(0, qpos);
+            }
+            copy.Destination = stem + "?" + incommingQs.ToString();
+            return copy;
         }
 
         private static async Task<HttpRequestMessage> PerformCustomRouting(HttpRequestMessage request)
@@ -81,9 +148,9 @@ namespace Mozu.SiteBuilder.Mvc.MessageHandler
             return request;
         }
 
-        private static HttpResponseMessage RedirectTo(string location, HttpRequestMessage request)
+        private static HttpResponseMessage RedirectTo(string location, bool isTemorary , HttpRequestMessage request)
         {
-            HttpResponseMessage resp = request.CreateResponse(HttpStatusCode.MovedPermanently);
+            HttpResponseMessage resp = request.CreateResponse(isTemorary? HttpStatusCode.Moved : HttpStatusCode.MovedPermanently);
             var uri = new Uri(location, UriKind.RelativeOrAbsolute);
             if (!uri.IsAbsoluteUri && !string.IsNullOrEmpty(location) && location.StartsWith("/"))
             {

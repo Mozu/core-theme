@@ -248,6 +248,12 @@ Ext.define('Taco.store.Navigation', {
 
                         'label': 'Discounts',
                         'address': 'discounts'
+                    }, {
+                        'id': 'couponset',
+                        'behaviorIds': [24],
+
+                        'label': 'Coupon Sets',
+                        'address': 'CouponSets'
                     } /*, {
                 'id': 'promotions',
                 'label': 'Promotions',
