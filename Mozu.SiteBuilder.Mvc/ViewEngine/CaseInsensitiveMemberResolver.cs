@@ -4,6 +4,7 @@ using System.Dynamic;
 using Microsoft.FSharp.Core;
 using NDjango.Interfaces;
 using NDjango.FiltersCS;
+using System.Linq;
 
 namespace Mozu.SiteBuilder.Mvc.ViewEngine
 {
@@ -42,8 +43,6 @@ namespace Mozu.SiteBuilder.Mvc.ViewEngine
                 {
                     yield return this[i];
                 }
-
-
             }
 
             public int Add(object value)
@@ -127,16 +126,12 @@ namespace Mozu.SiteBuilder.Mvc.ViewEngine
 
         public T ResolveMemberOrDefault<T>(object container, string memberName, T defaultValue = default(T))
         {
-            FSharpOption<object> result = ResolveMember(container, memberName);
-            if (result == null || result.Value == null || !(result.Value is T))
-            {
+            var result = ResolveMember(container, memberName);
+            if (OptionModule.IsNone(result) || result.Value.GetType() != typeof(T))
                 return defaultValue;
-            }
-            return (T)result.Value;
-
-            
+            else
+                return (T)result.Value;
         }
-
 
         static readonly FSharpFunc<object, object> cleanFunc = FuncConvert.ToFSharpFunc<object, object>(CleanJson);
         static System.Collections.Concurrent.ConcurrentDictionary<string, MemberResolverGetMemberBinder> _binders = new System.Collections.Concurrent.ConcurrentDictionary<string, MemberResolverGetMemberBinder>();
@@ -145,20 +140,44 @@ namespace Mozu.SiteBuilder.Mvc.ViewEngine
             FSharpOption<object> result;
             if (container is Microsoft.ClearScript.V8.IV8ScriptItem)
             {
-                var binder = _binders.GetOrAdd(memberName, s => new MemberResolverGetMemberBinder(memberName, false));
-                object res;
-                if (!((DynamicObject)container).TryGetMember(binder, out res))
-                {
-                    res = null;
-                }
-                res = res is Microsoft.ClearScript.Undefined ? null : res;
-                result = new FSharpOption<object>(res);
+                result = ResolveFromClearScriptBinders(container, memberName);
+            }
+            else if (container is Newtonsoft.Json.Linq.JObject)
+            {
+                result = ResolveFromJObject(container, memberName);
             }
             else
             {
                 result = _actual.ResolveMember(container, memberName);
             }
             return OptionModule.Map(cleanFunc, result);
+        }
+
+        static FSharpOption<object> ResolveFromJObject(object container, string memberName)
+        {
+            var jobj = container as Newtonsoft.Json.Linq.JObject;
+            if (jobj == null || memberName == null) return FSharpOption<object>.None;
+
+            var dictLookup = jobj.Property(memberName);
+            if (dictLookup != null) return FSharpOption<object>.Some(dictLookup);
+
+            // in worst case now we have to iterator over properties ordinally
+            var propLookup = jobj.Properties().FirstOrDefault(prop => prop.Name.Equals(memberName, StringComparison.OrdinalIgnoreCase));
+            if (propLookup == null) return FSharpOption<object>.None;
+            else return FSharpOption<object>.Some(propLookup.Value);
+        }
+
+        static FSharpOption<object> ResolveFromClearScriptBinders(object container, string memberName)
+        {
+            var binder = _binders.GetOrAdd(memberName, s => new MemberResolverGetMemberBinder(memberName, false));
+            object res;
+            if (!((DynamicObject)container).TryGetMember(binder, out res))
+            {
+                res = null;
+            }
+            res = res is Microsoft.ClearScript.Undefined ? null : res;
+            if (res == null) return FSharpOption<object>.None;
+            else return FSharpOption<object>.Some(res);
         }
 
         class MemberResolverGetMemberBinder : GetMemberBinder
