@@ -49,8 +49,24 @@ namespace Mozu.SiteBuilder.Mvc.SEO
     public interface IRedirectRepository
     {
         Task<Dictionary<string, RedirectEntry>> FetchRedirectEntries(int? siteId = null);
+        Task<RuntimeRedirects> GetRuntimeRedirectEntries(int? siteId = null);
         Task<Dictionary<string, RedirectEntry>> UpdateRedirectEntries(Dictionary<string, RedirectEntry> redirects, int? siteId = null);
     }
+
+    public class RuntimeRedirects
+    {
+        
+        public Dictionary<string, RedirectEntry> Simple { get; set; }
+        public Dictionary<string, List<RuntimeRedirectEntry>> QueryString { get; set; }
+
+        public JObject Entries { get; set; }
+    }
+    public class RuntimeRedirectEntry
+    {
+        public System.Collections.Specialized.NameValueCollection Query { get; set; }
+        public RedirectEntry Redirect{ get; set; }
+    }
+  
 
     public class RedirectRepository : IRedirectRepository
     {
@@ -59,7 +75,7 @@ namespace Mozu.SiteBuilder.Mvc.SEO
         readonly IDocumentListWebApiClient _systemDocumentClient;
         readonly ILogger _logger;
         readonly ISiteBuilderApiContext _siteBuilderApiContext;
-        Task<Dictionary<string, RedirectEntry>> _redirectEntryListTask;
+        Task<RuntimeRedirects> _redirectEntryListTask;
         readonly IDocumentListWebApiClient _userDocumentClient;
 
         public RedirectRepository(IDocumentListWebApiClient documentListWebApiClient, ISiteBuilderApiContext siteBuilderApiContext, ILogger logger)
@@ -73,27 +89,36 @@ namespace Mozu.SiteBuilder.Mvc.SEO
 
         static System.Collections.Concurrent.ConcurrentDictionary<string, AsyncLock> _redirectLookupLock = new System.Collections.Concurrent.ConcurrentDictionary<string, AsyncLock>();
 
-        async Task<Dictionary<string, RedirectEntry>> IRedirectRepository.FetchRedirectEntries(int? siteId)
+         Task<Dictionary<string, RedirectEntry>> IRedirectRepository.FetchRedirectEntries(int? siteId)
+        {
+             var client = siteId == null ? _systemDocumentClient : _systemDocumentClient.CloneWithSbContext(_siteBuilderApiContext).CloneWithSiteId(siteId);
+             return DoFetchEntries(client);
+
+        }
+
+        Task<RuntimeRedirects> IRedirectRepository.GetRuntimeRedirectEntries(int? siteId)
         {
             if (_redirectEntryListTask == null)
             {
                 var client = siteId == null ? _systemDocumentClient : _systemDocumentClient.CloneWithSbContext(_siteBuilderApiContext).CloneWithSiteId(siteId);
-
+                
                 _redirectEntryListTask = client
                     .CloneWithConfigOptions(x => x.TimeoutMilliseconds = 5000)
                     .GetTreeDocument("siteSettings@mozu", FileName)
-                    .ContinueWith(gdt =>LookupRedirectsFromCmsMetaDoc(gdt, client))
+                    .ContinueWith(gdt => LookupRedirectsFromCmsMetaDoc(gdt, client))
                     .Unwrap();
             }
-            
-            return await _redirectEntryListTask.ConfigureAwait(false);
-        }
 
-        private async Task<Dictionary<string, RedirectEntry>> LookupRedirectsFromCmsMetaDoc(Task<ServiceClientResponse<Document>> gdt, IDocumentListWebApiClient client)
+            return _redirectEntryListTask;
+        }
+        
+      
+
+        private async Task<RuntimeRedirects> LookupRedirectsFromCmsMetaDoc(Task<ServiceClientResponse<Document>> gdt, IDocumentListWebApiClient client)
         {
             string fallbackKey = CreateKey(null);
             Document doc = null;
-            Dictionary<string, RedirectEntry> ret = null;
+            RuntimeRedirects ret = null;
 
             
             if (!gdt.IsCompleted || gdt.Result.HasException || ( gdt.Result.ResponseMessage== null ||  !gdt.Result.ResponseMessage.IsSuccessStatusCode) )
@@ -102,10 +127,10 @@ namespace Mozu.SiteBuilder.Mvc.SEO
                 {
                     _logger.Error("error looking up redirects", gdt.Exception);
                 }
-                ret = _cache[fallbackKey] as Dictionary<string, RedirectEntry> ;
+                ret = _cache[fallbackKey] as RuntimeRedirects;
                 if (ret == null)
                 {
-                    _cache[fallbackKey] = ret = new Dictionary<string, RedirectEntry>();
+                    _cache[fallbackKey] = ret = new RuntimeRedirects();
                 }
                 return ret;
             }
@@ -116,7 +141,7 @@ namespace Mozu.SiteBuilder.Mvc.SEO
             
 
             var key = CreateKey(doc);
-            ret = _cache[key] as Dictionary<string, RedirectEntry>;
+            ret = _cache[key] as RuntimeRedirects;
             if (ret == null)
             {
                 string lockStr = string.Intern(fallbackKey);
@@ -130,10 +155,46 @@ namespace Mozu.SiteBuilder.Mvc.SEO
             }
             return ret;
         }
-
-        async Task<Dictionary<string, RedirectEntry>> BuildRedirectEntriesFromCmsDocument( string key, IDocumentListWebApiClient client, Document doc, string fallbackKey)
+        async Task<Dictionary<string,RedirectEntry>> DoFetchEntries( IDocumentListWebApiClient client)
         {
-            Dictionary<string, RedirectEntry> ret = _cache[key] as Dictionary<string, RedirectEntry>;
+            return await client.CloneWithConfigOptions(x => x.TimeoutMilliseconds = 8000)
+                            .GetTreeDocumentContent("siteSettings@mozu", FileName)
+                            .ContinueWith(x =>
+                            {
+                                if (x.IsFaulted)
+                                {
+                                    return new Dictionary<string, RedirectEntry>(StringComparer.OrdinalIgnoreCase);
+                                }
+                                var resp = x.Result;
+                                if (!resp.ResponseMessage.IsSuccessStatusCode)
+                                {
+                                    return new Dictionary<string, RedirectEntry>(StringComparer.OrdinalIgnoreCase);
+                                }
+
+                                using (var stream = resp.ResponseMessage.Content.ReadAsStreamAsync().Result)
+                                using (var tr = new StreamReader(stream))
+                                using (var jr = new JsonTextReader(tr))
+                                {
+                                    try
+                                    {
+                                        var dic = Newtonsoft.Json.JsonSerializer.CreateDefault().Deserialize<Dictionary<string, RedirectEntry>>(jr);
+                                        return new Dictionary<string, RedirectEntry>(dic, StringComparer.OrdinalIgnoreCase);
+                                        
+                                    }
+                                    catch (Exception ex)
+                                    {
+                                        _logger.Error(ex);
+                                        return new Dictionary<string, RedirectEntry>( StringComparer.OrdinalIgnoreCase);
+                                       
+                                    }
+                                }
+
+                            })
+                            .ConfigureAwait(false);
+        }
+        async Task<RuntimeRedirects> BuildRedirectEntriesFromCmsDocument( string key, IDocumentListWebApiClient client, Document doc, string fallbackKey)
+        {
+            var ret = _cache[key] as RuntimeRedirects;
             if (ret == null)
             {
                 try
@@ -151,8 +212,10 @@ namespace Mozu.SiteBuilder.Mvc.SEO
                         {
                             try
                             {
-                                ret = JsonSerializer.CreateDefault().Deserialize<Dictionary<string, RedirectEntry>>(jr);
-                                ret = new Dictionary<string, RedirectEntry>(ret, StringComparer.OrdinalIgnoreCase);
+                                var jObject = JObject.Load(jr);
+                                
+                                ret = BuildRuntimeRedirects(jObject);
+
                                 _cache[key] = ret;
                                 _cache.Set(fallbackKey, ret,
                                     new CacheItemPolicy() {AbsoluteExpiration = ObjectCache.InfiniteAbsoluteExpiration});
@@ -160,14 +223,14 @@ namespace Mozu.SiteBuilder.Mvc.SEO
                             catch (Exception ex)
                             {
                                 _logger.Error(ex);
-                                ret = new Dictionary<string, RedirectEntry>(StringComparer.OrdinalIgnoreCase);
+                                ret = new RuntimeRedirects();
                                 _cache[key] = ret;
                             }
                         }
                     }
                     else
                     {
-                        ret = new Dictionary<string, RedirectEntry>(StringComparer.OrdinalIgnoreCase);
+                        ret = new RuntimeRedirects();
                         _cache[key] = ret;
                     }
                 }
@@ -176,10 +239,10 @@ namespace Mozu.SiteBuilder.Mvc.SEO
                 {
                     _logger.Error("error looking up redirects", ex);
 
-                    ret = _cache[fallbackKey] as Dictionary<string, RedirectEntry>;
+                    ret = _cache[fallbackKey] as RuntimeRedirects;
                     if (ret == null)
                     {
-                        ret = new Dictionary<string, RedirectEntry>(StringComparer.OrdinalIgnoreCase);
+                        ret = new RuntimeRedirects();
                         _cache.Set(key, ret, new CacheItemPolicy() {AbsoluteExpiration = DateTimeOffset.UtcNow.AddSeconds(10)});
                     }
                     else
@@ -190,7 +253,49 @@ namespace Mozu.SiteBuilder.Mvc.SEO
             }
             return ret;
         }
+        RuntimeRedirects BuildRuntimeRedirects ( JObject  entries)
+        {
+            RuntimeRedirects rr = new RuntimeRedirects()
+            {
+                Entries = entries,
+                QueryString = new Dictionary<string,List<RuntimeRedirectEntry>>(StringComparer.OrdinalIgnoreCase),
+                Simple = new Dictionary<string,RedirectEntry>(StringComparer.OrdinalIgnoreCase)
+            };
 
+            foreach (var entry in entries)
+            {
+                var source = entry.Key;
+                //todo check ser;
+                var redirect = entry.Value.ToObject<RedirectEntry>();
+                redirect.Source = source;
+                var qPos = source.IndexOf('?');
+                if (qPos == -1)
+                {
+                    rr.Simple[source] = redirect;
+                    continue;
+                }
+                List<RuntimeRedirectEntry> qsEntries;
+
+
+                var stem = source.Substring(0, qPos);
+
+                if (!rr.QueryString.TryGetValue(stem, out qsEntries))
+                {
+                    qsEntries = new List<RuntimeRedirectEntry>();
+                    rr.QueryString[stem] = qsEntries;
+                }
+                qsEntries.Add(new RuntimeRedirectEntry()
+                {
+                    Redirect = redirect,
+                    Query = System.Web.HttpUtility.ParseQueryString(source.Substring(qPos + 1))
+                });
+            }
+            
+
+            
+
+            return rr;
+        }
         Task<Dictionary<string, RedirectEntry>> IRedirectRepository.UpdateRedirectEntries(Dictionary<string, RedirectEntry> redirects, int? siteId)
         {
             var client = siteId.HasValue ? _userDocumentClient.CloneWithSbContext(_siteBuilderApiContext).CloneWithSiteId(siteId) : _userDocumentClient;
