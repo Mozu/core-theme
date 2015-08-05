@@ -793,7 +793,7 @@
                 var normalizedLiveBillingInfo = normalizeBillingInfos(this.toJSON());
 
                 if (payment.paymentWorkflow === "VisaCheckout") {
-                    delete normalizedLiveBillingInfo.billingContact.address.addressType; // visa does not flow this value through
+                    normalizedLiveBillingInfo.billingContact.address.addressType = normalizedSavedPaymentInfo.billingContact.address.addressType;
                 }
 
                 return !_.isEqual(normalizedSavedPaymentInfo, normalizedLiveBillingInfo);
