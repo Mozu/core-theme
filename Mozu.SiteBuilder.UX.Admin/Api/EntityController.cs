@@ -107,7 +107,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
             {
                 List<Task<ServiceClientResponse<DC.Document>>> tasks = documents.Select(doc =>
                 {
-                    var cmsDoc = doc.ToObject<DC.Document>();
+                    var cmsDoc = Mapper.Map<DC.Document>(doc);
                     return _documentListWebApiClient.CreateDocument(documentListName: cmsDoc.ListFQN, document: cmsDoc);
                 }).ToList();
 
@@ -142,7 +142,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
             {
                 List<Task<ServiceClientResponse<DC.Document>>> tasks = documents.Select(doc =>
                 {
-                    var cmsDoc = doc.ToObject<DC.Document>();
+                    var cmsDoc = Mapper.Map<JObject,DC.Document>(doc);
                     return _documentListWebApiClient.UpdateDocument(documentListName: cmsDoc.ListFQN, documentId: cmsDoc.Id, document: cmsDoc);
                 }).ToList();
 
@@ -216,7 +216,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
 
                 return List2(res.Items.Select(x =>
                 {
-                    JObject j = JObject.FromObject(x, JsonSerializer.Create(new CaseInsensitiveJsonSerializerSettings()));
+                    JObject j = Mapper.Map<JObject>(x); 
                     j["entityType"] = "cms";
                     return j;
                 }).ToList(), res.TotalCount);

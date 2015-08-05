@@ -1,6 +1,6 @@
 ﻿Ext.widget({
     xtype: 'mz-form-webpage',
-    initComponent() {
+    initComponent: function () {
     
         this.containers.push({
             xtype: 'panel',
@@ -11,11 +11,11 @@
         
             items: [{
                 xtype: "mz-input-date",
-                name: "document.activeDateRange.startDate",
+                name: "document.startDate",
                 fieldLabel: 'Start Date'
             }, {
                 xtype: "mz-input-date",
-                name: "document.activeDateRange.endDate",
+                name: "document.endDate",
                 fieldLabel: 'End Date'
             }]
         });
