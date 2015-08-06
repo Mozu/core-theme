@@ -15,22 +15,22 @@ namespace Mozu.SiteBuilder.UX.Controllers
     {
         public const string GlobalPageBeforeAction = "storefront.pages.global.beforeRequest";
         public const string GlobalPageAfterAction = "storefront.pages.global.afterRequest";
-        public const string SearchIndexBeforeAction = "storefront.pages.search.before";
-        public const string SearchIndexAfterAction = "storefront.pages.search.after";
-        public const string ProductDetailsBeforeAction = "storefront.pages.productDetails.before";
-        public const string ProductDetailsAfterAction = "storefront.pages.productDetails.after";
-        public const string CategoryBeforeAction = "storefront.pages.category.before";
-        public const string CategoryAfterAction = "storefront.pages.category.after";
-        public const string CartBeforeAction = "storefront.pages.cart.before";
-        public const string CartAfterAction = "storefront.pages.cart.after";
-        public const string CheckoutBeforeAction = "storefront.pages.checkout.before";
-        public const string CheckoutAfterAction = "storefront.pages.checkout.after";
-        public const string OrderConfirmationBeforeAction = "storefront.pages.orderConfirmation.before";
-        public const string OrderConfirmationAfterAction = "storefront.pages.orderConfirmation.after";
-        public const string MyAccountBeforeAction = "storefront.pages.myAccount.before";
-        public const string MyAccountAfterAction = "storefront.pages.myAccount.after";
-        public const string NotFoundBeforeAction = "storefront.pages.404.before";
-        public const string NotFoundAfterAction = "storefront.pages.404.after";
+        public const string SearchIndexBeforeAction = "storefront.pages.search.request.before";
+        public const string SearchIndexAfterAction = "storefront.pages.search.request.after";
+        public const string ProductDetailsBeforeAction = "storefront.pages.productDetails.request.before";
+        public const string ProductDetailsAfterAction = "storefront.pages.productDetails.request.after";
+        public const string CategoryBeforeAction = "storefront.pages.category.request.before";
+        public const string CategoryAfterAction = "storefront.pages.category.request.after";
+        public const string CartBeforeAction = "storefront.pages.cart.request.before";
+        public const string CartAfterAction = "storefront.pages.cart.request.after";
+        public const string CheckoutBeforeAction = "storefront.pages.checkout.request.before";
+        public const string CheckoutAfterAction = "storefront.pages.checkout.request.after";
+        public const string OrderConfirmationBeforeAction = "storefront.pages.orderConfirmation.request.before";
+        public const string OrderConfirmationAfterAction = "storefront.pages.orderConfirmation.request.after";
+        public const string MyAccountBeforeAction = "storefront.pages.myAccount.request.before";
+        public const string MyAccountAfterAction = "storefront.pages.myAccount.request.after";
+        public const string NotFoundBeforeAction = "storefront.pages.404.request.before";
+        public const string NotFoundAfterAction = "storefront.pages.404.request.after";
     }
 
     [RefreshStoreFrontUserAuthTicketFilter]
