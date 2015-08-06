@@ -79,7 +79,10 @@ namespace Mozu.SiteBuilder.Mvc.Themes
 
         public DateTime GetLastWriteTime(string fileName)
         {
-            var theme = _themes.Where(x => x.Value.ThemePath != null && fileName.StartsWith(x.Value.ThemePath, StringComparison.OrdinalIgnoreCase)).Select(x => x.Value).FirstOrDefault();
+            var theme = _themes.Where(x =>
+            x.Value != null && 
+            x.Value.ThemePath != null 
+            && fileName.StartsWith(x.Value.ThemePath, StringComparison.OrdinalIgnoreCase)).Select(x => x.Value).FirstOrDefault();
             if (theme != null)
             {
                 var vpath = fileName.Substring(theme.ThemePath.Length).TrimStart(new char[] { '\\' });
