@@ -5,6 +5,9 @@
     $title-height: 30px;
 
     .#{$vprefix}theme-selector {
+        overflow-x: hidden;
+        overflow-y: auto;
+
         h2 {
             font-size: 21px;
             font-weight: bold;

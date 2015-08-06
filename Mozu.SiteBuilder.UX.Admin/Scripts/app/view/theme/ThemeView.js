@@ -19,14 +19,10 @@ Ext.define('Taco.view.theme.ThemeView', {
     tpl: [
         '<tpl for="groups">',
             '<h2>',
-                '<tpl if="name == true">',
-                    'Applied Theme',
-                '<tpl else>',
-                    'Available Themes',
-                '</tpl>',
+                'Applied Themes',
             '</h2>',
 
-            '<ul class="group group-<tpl if="name == true">applied<tpl else>purchased</tpl>">',
+            '<ul style="margin-top: 13px" class="group group-<tpl if="name == true">applied<tpl else>purchased</tpl>">',
                 '<tpl for="children">',
                     '<li class="theme-swatch">',
                         '<ul class="menu">',
@@ -140,37 +136,37 @@ Ext.define('Taco.view.theme.ThemeView', {
                 }
 
                 if (targetEl.hasCls('action-apply')) {
-                    if (model.get("isDesktop")) {
-                        this.swapSelection("isSelectedDesktop", model);
+                    if (model.get('isDesktop')) {
+                        this.swapSelection('isSelectedDesktop', model);
                     }
 
-                    if (model.get("isMobile")) {
-                        this.swapSelection("isSelectedMobile", model);
+                    if (model.get('isMobile')) {
+                        this.swapSelection('isSelectedMobile', model);
                     }
 
-                    if (model.get("isTablet")) {
-                        this.swapSelection("isSelectedTablet", model);
+                    if (model.get('isTablet')) {
+                        this.swapSelection('isSelectedTablet', model);
                     }
 
                     this.store.sync();
                 }
 
                 if (targetEl.hasCls('action-remove')) {
-                    if (model.get("isDesktop")) {
-                        this.removeSelection("isSelectedDesktop", model);
-                    }
+                    // if (model.get('isDesktop')) {
+                    this.removeSelection.call(this, model);
+                    // }
 
-                    if (model.get("isMobile")) {
-                        this.removeSelection("isSelectedMobile", model);
-                    }
+                    // if (model.get('isMobile')) {
+                    //     this.removeSelection('isSelectedMobile', model);
+                    // }
 
-                    if (model.get("isTablet")) {
-                        this.removeSelection("isSelectedTablet", model);
-                    }
+                    // if (model.get('isTablet')) {
+                    //     this.removeSelection('isSelectedTablet', model);
+                    // }
 
-                    this.removeSelection("isSelected", model);
+                    // this.removeSelection('isSelected', model);
 
-                    this.store.sync();
+                    // this.store.sync();
                 }
 
             },
@@ -191,9 +187,23 @@ Ext.define('Taco.view.theme.ThemeView', {
         this.removeSelection(fieldName);
         model.set(fieldName, true);
     },
-    removeSelection: function (fieldName) {
-        // *** Grab the currently selected record (with matching fieldName) and set to false
-        var selectedModel = this.store.findRecord(fieldName, true);
-        if (selectedModel) selectedModel.set(fieldName, false);
+    removeSelection: function (model) {
+        
+        var me = this,
+            theme = Ext.create('Taco.model.ThemeListing', {
+                id: model.getId(),
+                isSelectedDesktop: model.get('isSelectedDesktop'),
+                isSelectedMobile: model.get('isSelectedMobile'),
+                isSelectedTablet: model.get('isSelectedTablet')
+            });
+
+        theme.applyTheme({
+            success: function() {
+                me.store.reload();
+                me.up('#taco-themeView').treeStore.reload();
+            },
+            apply: false
+        });
+
     }
 });

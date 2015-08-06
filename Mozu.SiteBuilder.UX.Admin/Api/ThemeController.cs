@@ -21,6 +21,7 @@ using Mozu.Tenant.Contracts.Clients;
 using Newtonsoft.Json.Linq;
 using Theme = Mozu.SiteBuilder.Mvc.Themes.Theme;
 using AutoMapper;
+using System.Text.RegularExpressions;
 
 namespace Mozu.SiteBuilder.UX.Admin.Api
 {
@@ -52,6 +53,14 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
 
             public string Author { get; set; }
 
+            public string Version { get; set; }
+
+            public string Status { get; set; }
+
+            public bool? Leaf { get; set; }
+
+            public bool? loaded { get { return true; } set { } }
+
             public bool? IsDesktop { get; set; }
 
             public bool? IsMobile { get; set; }
@@ -66,11 +75,19 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
 
             public bool? AllowProduction { get; set; }
 
+            public DateTime? InstallDate { get; set; }
 
+            [JsonIgnore]
             public DateTime TimeStamp { get; set; }
 
-        [JsonIgnore]
+            [JsonIgnore]
+            public string VersionGroup { get; set; }
+
+            [JsonIgnore]
             public Thumbnail Thumbnail { get; set; }
+
+            [JsonProperty("items")]
+            public ThemeDTO[] Children { get; set; }
 
             [JsonProperty(PropertyName = "thumbnail")]
             public string ThumbnailAsDataUri
@@ -89,7 +106,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
 
          
 
-            public ThemeDTO(GeneralSettings genSettings, Theme theme, bool? isSelectedDesktop = null, bool? isSelectedMobile = null, bool? isSelectedTablet = null)
+            public ThemeDTO(GeneralSettings genSettings, Theme theme, bool? isSelectedDesktop = null, bool? isSelectedMobile = null, bool? isSelectedTablet = null, string version = null)
             {
                 Name = theme.Name;
                 TimeStamp = theme.TimeStamp;
@@ -104,6 +121,8 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
                 IsSelectedDesktop = IsSelectedTheme(genSettings.DesktopTheme, isSelectedDesktop);
                 IsSelectedMobile = IsSelectedTheme(genSettings.MobileTheme, isSelectedMobile);
                 IsSelectedTablet = IsSelectedTheme(genSettings.TabletTheme, isSelectedTablet);
+
+                Version = version;
 
             }
 
@@ -173,10 +192,93 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
             response.Content.Headers.ContentType = new MediaTypeHeaderValue("image/" + System.IO.Path.GetExtension(theme.Thumbnail.Name).Replace(".", ""));
 
             return response;
+        }
 
 
+        Mozu.Tenant.Contracts.Entitlement GetEntitlementFromDirectory(string directoryPath, bool allowNonProductionThemes)
+        {
+            var theme = _themeRepository.GetThemeSlim(new ThemeSelection() { Id = System.IO.Path.GetFileName(directoryPath) });
+            if (theme != null && !theme.AllowProduction.GetValueOrDefault(true) && !allowNonProductionThemes)
+            {
+                return null;
+            }
 
+            return new Mozu.Tenant.Contracts.Entitlement
+            {
+                ApplicationAssetPath = theme.Id,
+                ApplicationName = theme.Id,
+                DeveloperAccountName = theme.Author,
+                AppKey = theme.Id.StartsWith("Core") ? "Core" + theme.Id : theme.Id,
+                ApplicationVersion = theme.Id
+            };
+        }
 
+        class VersionStringComparer : IComparer<string>
+        {
+            public int Compare(string x, string y)
+            {
+                if (x == y) return 0;
+
+                var versionRegex = new Regex(@"^[0-9]+.[0-9]+.[0-9]+$");
+
+                if (!versionRegex.IsMatch(x) || !versionRegex.IsMatch(y))
+                {
+                    var coreRegex = new Regex(@"^Core[0-9]+$");
+
+                    if (!coreRegex.IsMatch(x) || !coreRegex.IsMatch(y))
+                    {
+                        return StringComparer.CurrentCulture.Compare(x, y);
+                    }
+
+                    try
+                    {
+                        var xint = Int32.Parse(x.Substring(4));
+                        var yint = Int32.Parse(y.Substring(4));
+                        if (xint > yint) return 1;
+                        if (yint > xint) return -1;
+                        return 0;
+                    }
+                    catch
+                    {
+                        return 0;
+                    }
+                }
+
+                var xparts = x.Split('.');
+                var yparts = y.Split('.');
+
+                var length = new[] { xparts.Length, yparts.Length }.Max();
+
+                for (var i = 0; i < length; i++)
+                {
+                    int xint;
+                    int yint;
+
+                    if (!Int32.TryParse(xparts.ElementAtOrDefault(i), out xint)) xint = 0;
+                    if (!Int32.TryParse(yparts.ElementAtOrDefault(i), out yint)) yint = 0;
+
+                    if (xint > yint) return 1;
+                    if (yint > xint) return -1;
+                }
+
+                //they're equal value but not equal strings, eg 1 and 1.0
+                return 0;
+            }
+        }
+
+        bool IsSelectedDesktop(Tenant.Contracts.Entitlement e, GeneralSettings g)
+        {
+            return g.DesktopTheme != null && g.DesktopTheme.Id == e.ApplicationAssetPath.Replace('\\', '~');
+        }
+
+        bool IsSelectedTablet(Tenant.Contracts.Entitlement e, GeneralSettings g)
+        {
+            return g.TabletTheme != null && g.TabletTheme.Id == e.ApplicationAssetPath.Replace('\\', '~');
+        }
+
+        bool IsSelectedMobile(Tenant.Contracts.Entitlement e, GeneralSettings g)
+        {
+            return g.MobileTheme != null && g.MobileTheme.Id == e.ApplicationAssetPath.Replace('\\', '~');
         }
 
         [HttpGetRoute(UriTemplate = "list")]
@@ -184,14 +286,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
         {
             var localThemeDir = _themeRepository.GetLocalThemePath();
             var genSettings = await _generalSettingsWebApiClient.ReadSettings();
-            //var localThemes = Directory.GetDirectories(localThemeDir);
             var entitlements = (await _tenantClient.GetSiteEntitlements(this.SbApiContext.TenantId, this.SbApiContext.SiteId)).ReadAsSync();
-
-
-            var localThemes = entitlements.Items.Where(x => x.ApplicationType == "Theme")
-                .Select(x => (x.ApplicationAssetPath??"").Replace( "\\","/") )
-                .Union(Directory.GetDirectories(localThemeDir)
-                .Select(x => Path.GetFileName(x)));
 
             bool allowNonProductionThemes = false;
 
@@ -200,31 +295,95 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
                 allowNonProductionThemes = false;
             }
 
-            var themes = localThemes
-                .Select(x =>
+            var coreEntitlements = Directory.GetDirectories(localThemeDir).Select(x => GetEntitlementFromDirectory(x, allowNonProductionThemes)).Where(x => x != null);
+
+            var themes = entitlements.Items.Where(x => x.ApplicationType == "Theme")
+                .Concat(coreEntitlements)
+                .Select(e => new ThemeDTO
                 {
-                    try
-                    {
-                        var ret = _themeRepository.GetThemeSlim(new ThemeSelection() { Id = x });
-                        if (ret != null && !ret.AllowProduction.GetValueOrDefault(true) && !allowNonProductionThemes)
-                        {
-                            ret = null;
-                        }
-                        return ret;
-                    }
-                    catch (Exception ex)
-                    {
-                       _logger.Warn("theme error",ex);
-                        return null;
-                    }
+                    Id = e.ApplicationAssetPath.Replace('\\', '~'),
+                    Name = e.ApplicationName,
+                    Author = e.DeveloperAccountName,
+                    InstallDate = e.UpdateDate == DateTime.MinValue ?  (DateTime?)null : e.UpdateDate,
+                    Status = e.Status,
+                    Version = e.ApplicationVersion,
+                    VersionGroup = e.AppKey.Substring(0, e.AppKey.IndexOf(e.ApplicationVersion)),
+                    IsSelectedDesktop = IsSelectedDesktop(e, genSettings),
+                    IsSelectedMobile = IsSelectedMobile(e, genSettings),
+                    IsSelectedTablet = IsSelectedTablet(e, genSettings),
+                    Leaf = true
+                }).ToList();
 
-                })
-                    .Where(x => x != null)
-                .Select<Theme, ThemeDTO>(t => new ThemeDTO(genSettings , t)).ToList();
-            // List<ThemeDTO> themes = _themeRepository.GetAll().Select<ITheme, ThemeDTO>(t => new ThemeDTO(t)).ToList();
-            return List2(themes);
-            //   throw new NotImplementedException();
+            var versionStringComparer = new VersionStringComparer();
 
+            var retList = themes.GroupBy(t => t.VersionGroup).Select(g =>
+            {
+                // TODO: Replace alphanumeric sort with better shit
+                var children = g.OrderByDescending(o => o.Version, versionStringComparer).ToArray();
+                if (children.Length > 1)
+                {
+                    return new ThemeDTO()
+                    {
+                        Children = children,
+                        Name = children[0].Name.StartsWith("Core") ? "Core" : children[0].Name
+                    };
+                }
+                else
+                {
+                    return children[0];
+                }
+
+            }).ToList();
+
+            return List2(retList);
+        }
+
+        [HttpGetRoute(UriTemplate = "applied")]
+        public async Task<Response<List<ThemeDTO>>> GetListAppliedThemes()
+        {
+            var themeIds = new List<string>();
+            var entitlements = (await _tenantClient.GetSiteEntitlements(this.SbApiContext.TenantId, this.SbApiContext.SiteId)).ReadAsSync();
+
+            var localThemeDir = _themeRepository.GetLocalThemePath();
+            var genSettings = await _generalSettingsWebApiClient.ReadSettings();
+
+            if (genSettings.DesktopTheme != null && !String.IsNullOrEmpty(genSettings.DesktopTheme.Id))
+            {
+                var id = genSettings.DesktopTheme.Id;
+                themeIds.Add(id);
+            }
+
+            if (genSettings.TabletTheme != null && !String.IsNullOrEmpty(genSettings.TabletTheme.Id))
+            {
+                var id = genSettings.TabletTheme.Id;
+                if (!themeIds.Contains(id))
+                {
+                    themeIds.Add(id);
+                }
+            }
+
+            if (genSettings.MobileTheme != null && !String.IsNullOrEmpty(genSettings.MobileTheme.Id))
+            {
+                var id = genSettings.MobileTheme.Id;
+                if (!themeIds.Contains(id))
+                {
+                    themeIds.Add(id);
+                }
+            }
+
+            var themes = themeIds.Select(x =>
+            {
+               
+                var theme = _themeRepository.GetThemeSlim(new ThemeSelection() { Id = x });
+
+                var entitlement = entitlements.Items.FirstOrDefault(e => e.ApplicationAssetPath.Replace('\\', '~') == theme.Id);
+
+                var version = entitlement != null ? entitlement.ApplicationVersion : null;
+
+                return new ThemeDTO(genSettings, theme, version: version);
+            });
+
+            return List2(themes.ToList());
         }
 
         
@@ -237,6 +396,74 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
             return SuccessWithTotal2<List<ThemeDTO>>(0);
         }
 
+        [HttpPostRoute(UriTemplate = "apply/{id}/{method}")]
+        public async Task<Response<List<ThemeDTO>>> ApplyTheme(string id, Boolean method)
+        {
+            var settings = await _generalSettingsWebApiClient.ReadSettings();
+            string lastTheme = null;
+
+            var theme = _themeRepository.GetTheme(new ThemeSelection { Id = id });
+
+            if (theme.IsDesktop.GetValueOrDefault(false))
+            {
+                if (method)
+                {   
+                    lastTheme = settings.DesktopTheme != null ? settings.DesktopTheme.Id : null;
+                    settings.DesktopTheme = new ThemeSelection { Id = id };
+                }
+
+                else if (settings.DesktopTheme != null && settings.DesktopTheme.Id == id)
+                {
+                    settings.DesktopTheme = null;
+                }
+            }
+
+            if (theme.IsTablet.GetValueOrDefault(false))
+            {
+                if (method)
+                {   
+                    lastTheme = lastTheme ?? (settings.TabletTheme != null ?  settings.TabletTheme.Id : null);
+                    settings.TabletTheme = new ThemeSelection { Id = id };
+                }
+
+                else if (settings.DesktopTheme != null && settings.TabletTheme.Id == id)
+                {
+                    settings.TabletTheme = null;
+                }
+            }
+
+            if (theme.IsMobile.GetValueOrDefault(false))
+            {
+                if (method)
+                {
+                    lastTheme = lastTheme ?? (settings.MobileTheme != null ?  settings.MobileTheme.Id : null);
+                    settings.MobileTheme = new ThemeSelection { Id = id };
+                }
+
+                else if (settings.DesktopTheme != null && settings.MobileTheme.Id == id)
+                {
+                    settings.MobileTheme = null;
+                }
+            }
+
+            if (lastTheme != null && method)
+            {
+                var resp =  _themeSettingsRepository.GetInstanceValues(id).Result;
+
+                if (resp == null || !resp.HasValues)
+                {
+                    var oldValues = _themeSettingsRepository.GetInstanceValues(lastTheme).Result;
+                    await _themeSettingsRepository.SaveInstanceValues(oldValues, id);
+                }
+           
+            }
+
+            _generalSettingsWebApiClient.UpdateThemeCore(settings);
+
+            return SuccessWithTotal2<List<ThemeDTO>>(0);
+        }
+
+
         [HttpPostRoute(UriTemplate = "update")]
         public async Task<Response<List<ThemeDTO>>> UpdateTheme(HttpRequestMessage msg)
         {
@@ -244,8 +471,6 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
             ThemeDTO newDesktop = themes.LastOrDefault(t => t.IsSelectedDesktop.Value);
             ThemeDTO newMobile = themes.LastOrDefault(t => t.IsSelectedMobile.Value);
             ThemeDTO newTablet = themes.LastOrDefault(t => t.IsSelectedTablet.Value);
-
-
             
             // TODO: need async settingsClient
             var settings = await _generalSettingsWebApiClient.ReadSettings();

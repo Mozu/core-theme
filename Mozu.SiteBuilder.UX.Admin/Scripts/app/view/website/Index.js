@@ -30,7 +30,7 @@ Ext.define('Taco.view.website.Index', {
         'Taco.view.website.entityAdapters.EmailTemplateEntityAdapter',
         'Taco.view.website.entityAdapters.OrderTemplateEntityAdapter',
         'Ext.ux.IFrame',
-        'Taco.store.ThemeListing',
+        'Taco.store.ThemeListingsTree',
         'Ext.menu.CheckItem',
         'Taco.view.entityManager.Grid',
         'Taco.view.entityManager.DynamicFormContainer',

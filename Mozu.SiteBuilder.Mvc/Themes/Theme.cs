@@ -28,6 +28,12 @@ namespace Mozu.SiteBuilder.Mvc.Themes
         [DataMember(Name="name")]
         public string Name { get; set; }
 
+        /// <summary>
+        /// Theme version number
+        /// </summary>
+        [DataMember(Name = "version")]
+        public string Version { get; set; }
+
 
         /// <summary>
         /// Contains this theme's author.
