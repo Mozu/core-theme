@@ -794,7 +794,7 @@
                         billingContact: _.extend(_.omit(obj.billingContact, "orderId"), {
                             address: _.omit(obj.billingContact.address, 'candidateValidatedAddresses')
                         }),
-                        card: !obj.card ? {} : _.extend(_.omit(obj.card, "paymentWorkflow", "isCvvOptional", "cardType", "paymentOrCardType", "cardNumberPartOrMask", "cardNumber", "cardNumberPart", "paymentServiceCardId", "id"), {
+                        card: !obj.card ? {} : _.extend(_.omit(obj.card, "cvv", "paymentWorkflow", "isCvvOptional", "cardType", "paymentOrCardType", "cardNumberPartOrMask", "cardNumber", "cardNumberPart", "paymentServiceCardId", "id"), {
                             cardType: obj.card.paymentOrCardType || obj.card.cardType,
                             cardNumber: obj.card.cardNumberPartOrMask || obj.card.cardNumberPart || obj.card.cardNumber,
                             id: obj.card.paymentServiceCardId || obj.card.id,
@@ -819,10 +819,13 @@
                 order.syncBillingAndCustomerEmail();
                 if (this.nonStoreCreditTotal() > 0 && this.validate()) return false;
                 var currentPayment = order.apiModel.getCurrentPayment();
+                var card = this.get('card');
                 if (!currentPayment) {
                     return this.applyPayment();
                 } else if (this.hasPaymentChanged(currentPayment)) {
                     return order.apiVoidPayment(currentPayment.id).then(this.applyPayment);
+                } else if (card.cvv && card.paymentServiceCardId && card.cvv.match(/\d+/)) {
+                    return api.createSync('creditcard', { id: card.paymentServiceCardId }).update(card);
                 } else {
                     this.markComplete();
                 }
