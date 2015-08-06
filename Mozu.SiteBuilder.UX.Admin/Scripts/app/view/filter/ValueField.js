@@ -6,6 +6,7 @@ Ext.define('Taco.view.filter.ValueField', {
     alias: "widget.valuefield",
     requires: [
         'Taco.view.filter.Schema',
+        'Taco.core.ux.form.DateTime',
         'Ext.form.field.Text',
         'Ext.form.field.TextArea',
         'Ext.form.field.Number',
@@ -21,7 +22,7 @@ Ext.define('Taco.view.filter.ValueField', {
         fieldLabel: "Value",
         fieldRecord: null,
         operatorRecord: null,
-        allowBlank: false,
+        allowBlank: true,
         name: "",
         value: null
     },
@@ -64,7 +65,8 @@ Ext.define('Taco.view.filter.ValueField', {
             valueType: this.fieldRecord.get("dataType"),
             singleSelect: this.operatorRecord.get("id") != "in",
             fieldCfg:fieldCfg,
-            flex:1,
+            flex: 1,
+            emptyText:fieldCfg.emptyText || "",
             value:value
         });
 
@@ -84,17 +86,26 @@ Ext.define('Taco.view.filter.ValueField', {
         var me = this,
             previousFieldXtype,
             fieldCfg = this.getFieldConfig(),
-            value = (this.field) ? this.field.getValue() : this.value;
-
+            value = (this.field) ? this.field.getValue() : this.value,
+            operatorRecord = this.getOperatorRecord();
 
         
+
+        console.log("value is string " + Ext.isString(value));
+        console.log("value is number" + Ext.isNumeric(value));
+
+
+        //if the field is a combo we need to cast values to string since the code editor validation will cast the value to int, but the cat. service returns the id's in string format.
+        if (fieldCfg.xtype == "combo") {
+            value = this.castValue(value, "string");
+        }
 
         // if we have a multi value situation (ie the "in" operator) then we need to add some ui to store the array of selected values.
         // the field no longer is the ui for displaying the value;
         // if we are using a picker field to select the values we need to show the multiSelectGrid to display the selected value. The persisted value will be the id, but the grid 
         // will display more useful information about the record;
         
-        if (this.getOperatorRecord().get("id") == "in" || fieldCfg.isPickerField) {
+        if (operatorRecord && (operatorRecord.get("id") == "in" || fieldCfg.isPickerField)) {
             this.createMultiField();
             return;
         }
@@ -165,7 +176,7 @@ Ext.define('Taco.view.filter.ValueField', {
     getFieldConfigByDataType: function (dataType, fieldCfg) {
         var me = this,
             fieldCfg = fieldCfg || {};
-
+        
         switch (dataType) {
             case "string":
                 Ext.apply(fieldCfg, {
@@ -190,6 +201,12 @@ Ext.define('Taco.view.filter.ValueField', {
                     //minValue: 0,
                     mouseWheelEnabled: true,
                     selectOnFocus: true
+                });
+                break;
+            case "boolean":
+                Ext.apply(fieldCfg, {
+                    xtype: "checkbox",
+                    boxLabel: "true"
                 });
                 break;
             case "date":
@@ -219,22 +236,25 @@ Ext.define('Taco.view.filter.ValueField', {
 
         switch (fieldCfg.xtype) {
             case "combo":
-                //validEnumValues
+                var displayField = fieldCfg.displayField || "name";
+                var valueField = fieldCfg.valueField ||  "id";
+                
                 Ext.applyIf(fieldCfg, {
                     store: Ext.create('Ext.data.Store', {
-                        fields:["id","name"],
+                        fields:[valueField,displayField],
                         data: fieldRecord.get("validEnumValues")
                     }),
                     queryMode: 'local',
                     valueNotFoundText: 'not found',
                     editable: false,
                     forceSelection: true,
-                    displayField: 'name',
+                    displayField: displayField,
                     triggerOnClick: true,
-                    valueField: 'id',
+                    valueField: valueField,
                     width: 300
                 });
 
+                
 
                 //validEnumValues
 
@@ -303,14 +323,40 @@ Ext.define('Taco.view.filter.ValueField', {
         this.updateFieldEditability();
     },
 
+    castValue: function (value,castTo) {
+        var dataType = castTo || this.fieldRecord.data.dataType;
+
+        if (dataType == "float") {
+            value = parseFloat(value);
+        } else if (dataType == "int") {
+            value = parseInt(value);
+        } else if (dataType == "string") {
+            if (!Ext.isString(value)) {
+                if (value.toString()) {
+                    value = value.toString();
+                }
+            }
+        }
+
+        return value;
+    },
+
     getValue: function () {
-        
-        var value = (this.field) ? this.field.getValue() : null;
+        var me = this,
+            value = (this.field) ? this.field.getValue() : null;
+
+        // need to cast the value to the dataType since combo converts it to string;
+
+        if (Ext.isArray(value)) {
+            Ext.Array.each(value, this.castValue, me);
+        } else {
+            this.castValue(value);
+        }
+
         return value;
     },
 
     setValue: function (value) {
-        this.value = value || "";
         this.field.setValue(value);
     },
 

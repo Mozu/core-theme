@@ -9,7 +9,7 @@ Ext.define('Taco.overrides.data.Store', {
     makeIdCaseInsensitive : false,
 
     getById: function (id) {
-        if (this.makeIdCaseInsensitive) {
+        if (id && this.makeIdCaseInsensitive) {
             id = id.toLowerCase();
         }
         return this.callParent(arguments);

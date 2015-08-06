@@ -98,13 +98,13 @@ Ext.define('Taco.view.attribute.Grid', {
                     dataIndex: 'id',
                     stateId: 'id',
                     hidden: true,
+                    sortable: false,
                     text: 'ID',
                     minWidth: 200
                 }, {
                     dataIndex: 'code',
                     stateId: 'code',
                     hidden: true,
-
                     text: 'Code',
                     minWidth: 200
                 }, {

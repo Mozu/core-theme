@@ -117,8 +117,8 @@ Ext.define('Taco.view.filter.OperatorField', {
         }
     },
 
+    // when the supportedOperators array gets set we need to update the fields;
     updateSupportedOperators: function (supportedOperators) {
-
         // update the fields on change of the supportedOperators
         if (this.rendered) {
             // toggle the recursive checkbox based on the supportedOperators if its already rendered
@@ -141,6 +141,7 @@ Ext.define('Taco.view.filter.OperatorField', {
 
         return supportedOperators;
     },
+
     onDestroy: function () {
         var me = this;
         this.callParent(arguments);
