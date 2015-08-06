@@ -17,6 +17,7 @@ Ext.define('Taco.core.ux.content.IndicatorContainer', {
     tooltipExplanation: 'Click for info.',
     tooltipContent: '',
     layout: 'hbox',
+    // afterrender: Ext.emptyFn,
     getHtmlTooltipContent: function() {
         return this.tooltipContent;
     },

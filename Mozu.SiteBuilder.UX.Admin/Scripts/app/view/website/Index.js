@@ -819,14 +819,19 @@ Ext.define('Taco.view.website.Index', {
             var pubInfo = record.getPublishingInfo();
 
             if (pubInfo.publishSetInfo) {
+
                 Taco.model.PublishSet.load(pubInfo.publishSetInfo.code, {
                     success: function(record) {
+                        console.log('gheee')
                         var date = record.get('publishDate') ? Ext.Date.format(record.get('publishDate'), 'F j, Y, g:i a T') : 'Unscheduled';
 
                         me.pubRecord = record;
 
                         me.down('#draftIcon').show();
                         me.down('#draftIcon').setTooltipContent(generateTooltipKey('Publish Set:') + generateTooltipValue('<span id="publishSetName">' + '</span>', null) + '<br>' + generateTooltipKey('Publish Date: ') + generateTooltipValue(date, null));            
+                    },
+                    failure: function() {
+                        Taco.app.fireEvent('setmessage', 'Error Retrieving Publish Set Information', 'error');
                     }
                 });
             }

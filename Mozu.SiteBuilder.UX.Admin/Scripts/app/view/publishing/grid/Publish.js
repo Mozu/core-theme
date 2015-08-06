@@ -249,13 +249,9 @@ Ext.define('Taco.view.publishing.grid.Publish', {
                     text: 'Actions',
 
                     onMenuShow: function(cmp, eventData) {
-                        var editMenuColumn = cmp.down('#edit-publish-set'),
-                            deleteMenuColumn = cmp.down('#delete-publish-set'),
-                            publishNow = cmp.down('#publish-now');
+                        var publishNow = cmp.down('#publish-now');
 
                         publishNow[eventData.record.get('totalCount') > 0 ? 'enable' : 'disable']();
-                        deleteMenuColumn[eventData.record.get('code').toLowerCase() === 'unassigned' ? 'disable' : 'enable']();
-                        editMenuColumn[eventData.record.get('code').toLowerCase() === 'unassigned' ? 'disable' : 'enable']();
                     },
 
                     menuItems: [

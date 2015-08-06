@@ -75,7 +75,7 @@ Ext.define('Taco.view.publishing.modal.PublishSetPicker', {
                                 });
                             },
                             change: function(cmp) {
-                                if (cmp.valueModels && cmp.getValue() !== -1) me.down('#publish-date-field').setValue(Ext.util.Format.date(cmp.valueModels[0].get('publishDate'), 'm/d/Y g:i a') || 'Unscheduled');
+                                if (cmp.valueModels && cmp.valueModels[0] && cmp.getValue() !== -1) me.down('#publish-date-field').setValue(Ext.util.Format.date(cmp.valueModels[0].get('publishDate'), 'm/d/Y g:i a') || 'Unscheduled');
                             }
                         }
                     },
