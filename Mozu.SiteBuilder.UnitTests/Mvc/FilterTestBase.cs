@@ -47,6 +47,8 @@ namespace Mozu.SiteBuilder.UnitTests.Mvc
             get;set;
         }
         void InitManager(){
+            NDjango.Utilities.UtilConfig.Comparer = new DjangoComparer();
+            ResolverConfig.Resolver = new JsonCleaningCaseInsensitiveMemberResolver();
             Manager = new TemplateManagerProvider()
                     .WithLibrary(typeof (AddFilter).Assembly)
                     .WithLibrary(typeof (HyprViewEngine).Assembly)
