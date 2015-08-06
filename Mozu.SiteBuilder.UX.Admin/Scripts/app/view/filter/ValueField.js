@@ -323,7 +323,10 @@ Ext.define('Taco.view.filter.ValueField', {
         this.updateFieldEditability();
     },
 
-    castValue: function (value,castTo) {
+    castValue: function (value, castTo) {
+
+        if (!value){return value}
+
         var dataType = castTo || this.fieldRecord.data.dataType;
 
         if (dataType == "float") {
