@@ -8,7 +8,8 @@ Ext.define('Taco.view.order.widget.ReturnableItemGrid', {
 
     title: 'Returnable Items',
 
-    columns: [{
+    columns: [
+    {
         text: 'Line',
         draggable: false,
         resizable: true,
@@ -81,7 +82,35 @@ Ext.define('Taco.view.order.widget.ReturnableItemGrid', {
             showBorder: true,
             editable: false,
             forceSelection: true,
-            store: Taco.model.Return.getValidReasons()
+            valueField: 'name',
+            displayField: 'name',
+            store: {
+                autoLoad: true,
+                fields: [
+                {
+                    name: 'id',
+                    type: 'string',
+                    convert: function (value, record) {
+                        return record.raw;
+                    }
+                },
+                {
+                    name: 'name',
+                    type: 'string',
+                    convert:function(value, record) {
+                        return Taco.core.util.Common.camelToSpace(record.raw);
+                    }
+                }
+                ],
+                proxy: {
+                    type: 'ajax',
+                    url: '/admin/app/return/reasons',
+                    reader: {
+                        type: 'json',
+                        root: 'items'
+                    }
+                }
+            }
         }
     }, {
         dataIndex: 'quantityOrdered',
