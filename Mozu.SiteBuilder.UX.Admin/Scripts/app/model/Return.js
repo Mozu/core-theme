@@ -19,41 +19,12 @@ Ext.define('Taco.model.Return', {
                     REJECTED: "Rejected",
                     RESTOCKED: "Restocked",
                     SHIPPED: "Shipped"
-                },
-                storeReasons: {}
+                }
         }
 
 
         return {
-            constants: constants,
-            retrieveValidReasons: function() {
-                var config = {};
-
-                //config.success = 
-                //config.failure =
-
-                Ext.apply(config, {
-                    success: function (response) {
-                        console.log(response);
-
-                        var reasons = JSON.parse(response.responseText);
-                        constants.storeReasons = Ext.Array.map(Ext.Object.getValues(reasons.items), function toStoreReasons(s) {
-                            return [s, Taco.core.util.Common.camelToSpace(s)];
-                        });
-                    },
-                    failure: function (response, options) {
-                        console.log(response);
-                    },
-                    url: '/admin/app/return/reasons',
-                    method: "GET"
-
-                });
-
-                Ext.Ajax.request(config);
-            }(),
-            getValidReasons: function () {
-                return constants.storeReasons;
-            }
+            constants: constants
         };
     }()),
 
