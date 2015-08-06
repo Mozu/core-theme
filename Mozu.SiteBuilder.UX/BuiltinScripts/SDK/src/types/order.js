@@ -141,7 +141,7 @@ module.exports = (function () {
         getActivePayments: function() {
             var payments = this.prop('payments'),
                 activePayments = [];
-            if (payments.length !== 0) {
+            if (payments && payments.length !== 0) {
                 for (var i = payments.length - 1; i >= 0; i--) {
                     if (payments[i].status === CONSTANTS.PAYMENT_STATUSES.NEW)
                         activePayments.push(utils.clone(payments[i]))

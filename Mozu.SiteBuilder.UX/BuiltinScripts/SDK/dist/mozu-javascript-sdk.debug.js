@@ -1,5 +1,5 @@
 /*! 
- * Mozu JavaScript SDK - v0.3.0 - 2015-07-21
+ * Mozu JavaScript SDK - v0.3.0 - 2015-08-06
  *
  * Copyright (c) 2015 Volusion, Inc.
  *
@@ -5008,7 +5008,7 @@ module.exports = (function () {
         getActivePayments: function() {
             var payments = this.prop('payments'),
                 activePayments = [];
-            if (payments.length !== 0) {
+            if (payments && payments.length !== 0) {
                 for (var i = payments.length - 1; i >= 0; i--) {
                     if (payments[i].status === CONSTANTS.PAYMENT_STATUSES.NEW)
                         activePayments.push(utils.clone(payments[i]))
