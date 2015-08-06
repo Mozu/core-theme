@@ -95,7 +95,9 @@ namespace Mozu.SiteBuilder.Mvc.Contexts
             _settings = settings;
             _sitesWebApiClient = sitesWebApiClient.CloneWithoutUserClaims();
             _checkoutSettingsWebApiClient = checkoutSettingsWebApiClient.CloneWithoutUserClaims();
-            
+            _checkoutSettingsWebApiClient.Options.TimeoutMilliseconds = _sitesWebApiClient.Options.TimeoutMilliseconds = _locationSettingsWebApiClient.Options.TimeoutMilliseconds = _generalSettingsWebApiClient.Options.TimeoutMilliseconds =  5000;
+
+
 
             _themeOverrideId = ProcessThemeOverride(requestMessage, cookieProvider);
 
@@ -380,8 +382,8 @@ namespace Mozu.SiteBuilder.Mvc.Contexts
                     var sitesDc = siteTask.Result.ReadAsSync();
                     this.Domains = new SiteDomains(_currentHost, Mapper.Map<List<SiteDomain>>(sitesDc.Domains));
                 
-                    SiteSettings.General.Contracts.GeneralSettings genSettingsDC = genSettingsTask.Result.ReadAsSync();
-                    SiteSettings.Order.Contracts.CheckoutSettings checkoutSettingsDC = checkoutSettingsTask.Result.ResponseMessage.IsSuccessStatusCode? checkoutSettingsTask.Result.ReadAsSync() : FalloverCheckoutSettings;
+                    var genSettingsDC = genSettingsTask.Result.ReadAsSync();
+                    var checkoutSettingsDC = checkoutSettingsTask.GetResultOrDefault(FalloverCheckoutSettings);
                     _generalSettings = Mapper.Map<GeneralSettings>(genSettingsDC);
                     _checkoutSettings = Mapper.Map<CheckoutSettings>(checkoutSettingsDC, opt => opt.Items["countryCode"] = sitesDc.CountryCode);
                     md5.HashAuditInfo(genSettingsDC.AuditInfo).

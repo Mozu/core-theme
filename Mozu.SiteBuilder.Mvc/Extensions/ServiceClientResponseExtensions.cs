@@ -5,12 +5,77 @@ using Mozu.Core.Api.Contracts;
 using Mozu.Core.Api.Contracts.Client;
 using System.Collections.Generic;
 using System.Text;
+using System.Threading.Tasks;
 using Mozu.Core.Exceptions;
 
 namespace Mozu.SiteBuilder.Mvc.Extensions
 {
     public static class ServiceClientResponseExtensions
     {
+
+        public static T GetResultOrDefault<T>(this Task<ServiceClientResponse<T>> task, T defaultT = default(T))
+        {
+            if ( task.IsSuccess())
+            {
+                return task.Result.ReadAsSync();
+            }
+            return defaultT;
+        }
+
+        public static T GetResultOrDefault<T>(this Task<ServiceClientResponse<T>> task, Func<T> defaultFn)
+        {
+            if (task.IsSuccess())
+            {
+                return task.Result.ReadAsSync();
+            }
+            return defaultFn();
+        }
+
+        public static bool IsSuccess<T> ( this Task<T> task ) where T : ServiceClientResponse
+        {
+            if (!task.IsCompleted || task.IsFaulted)
+            {
+                return false;
+            }
+            try
+            {
+                var res = task.Result;
+                if (res.HasException)
+                {
+                    return false;
+                }
+                return (int)res.ResponseMessage.StatusCode < 400;
+                
+            }
+            catch
+            {
+                return false;
+            }
+            
+        }
+        public static Exception GetException<T>(this Task<T> task) where T : ServiceClientResponse
+        {
+            if (task.Exception != null)
+            {
+                return task.Exception;
+            }
+
+            try
+            {
+                var res = task.Result;
+                if (res.HasException)
+                {
+                    return res.ReadException();
+                }
+                
+            }
+            catch (Exception ex)
+            {
+                return ex;
+            }
+            return null;
+        }
+
         public static string ETag<T>(this T scr) where T : ServiceClientResponse
         {
             if (scr.ResponseMessage != null && scr.ResponseMessage.Headers != null && scr.ResponseMessage.Headers.ETag != null && scr.ResponseMessage.Headers.ETag.Tag != null)
