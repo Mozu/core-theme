@@ -33,6 +33,41 @@
         .taco-content-header-title-root {
             color: $color-framework-blue-dark;
         }
+
+        .page-title {
+            margin-left: 22px;
+        }
+
+        .taco-website-header-icon {
+
+                &.page-icon {
+                   @include icon-font($glyph-category, 20px);
+                    top: -1.5px;
+                }
+
+                &.template-icon {
+                    @include icon-font($glyph-template, 20px);
+                }
+
+                &.category-icon {
+                    @include icon-font($glyph-tree-category, 20px);
+                }
+
+                &.folder-icon {
+                    @include icon-font($glyph-folder, 19px);
+                }
+
+                &.link-icon {
+                    @include icon-font($glyph-link, 20px);
+                }
+
+                &::after {
+                    color: $color-neutral-40;
+                    left: auto;
+                    right: 0px;
+                }
+
+        }
     }
 }
 

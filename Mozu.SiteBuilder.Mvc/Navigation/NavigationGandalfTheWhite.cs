@@ -189,7 +189,7 @@ namespace Mozu.SiteBuilder.Mvc.Navigation
                         {
                             node = new SuperNavigationNode
                             {
-                                Name = (string)page.Get<string>("link_title") ?? page.Name,
+                                Name = string.IsNullOrEmpty(page.Get<string>("link_title")) ? page.Name : page.Get<string>("link_title"),
                                 NodeType = NavigationNodeType.Page,
                                 Id = "page^^" + page.ListFQN + "^^" + page.Id,
                                 ParentId = navmeta.ParentId,
@@ -252,7 +252,7 @@ namespace Mozu.SiteBuilder.Mvc.Navigation
                     where !Regex.IsMatch(p.Name, "^[0-9a-f]{8}-")
                     select new SuperNavigationNode
                     {
-                        Name = (string)p.Get<string>("link_title") ?? p.Name,
+                        Name = string.IsNullOrEmpty(p.Get<string>("link_title")) ? p.Name : p.Get<string>("link_title"),
                         NodeType = NavigationNodeType.Page,
                         Id = "page^^" + p.ListFQN + "^^" + p.Id,
                         ParentId = UNLINKED_PAGES_NODE_ID,

@@ -222,9 +222,10 @@ Ext.define('Taco.view.website.entityAdapters.BaseEntityAdapter', {
         this.fireEvent('load', record);
     },
     setPubState: function() {
-        if (this.record && this.record.get('publishState') === 'draft') {
+        if (this.getDocument() && this.getDocument().get('publishState') === 'draft') {
             this.manager.showHideButtons(['isPublishable'], true);
             this.manager.setPublishable(true);
+            this.manager.updateDraftIcon(this.getDocument());
         }
         if (!this.pageContext || !this.pageContext.cmsContext) {
             return;
@@ -232,6 +233,7 @@ Ext.define('Taco.view.website.entityAdapters.BaseEntityAdapter', {
         Ext.Object.each(this.pageContext.cmsContext, function(key, value) {
             if (value && value.publishState === 'draft') {
                 this.manager.setPublishable(true);
+                this.manager.updateDraftIcon(this.getDocument());
             }
         }, this);
     },

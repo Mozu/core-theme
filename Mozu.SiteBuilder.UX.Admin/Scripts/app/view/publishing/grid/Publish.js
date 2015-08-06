@@ -79,6 +79,14 @@ Ext.define('Taco.view.publishing.grid.Publish', {
 
     },
 
+    listeners: {
+        beforeitemdblclick: {
+            fn: function(cmp) {
+                cmp.up('publish-split').getEast().expand();
+            }
+        }
+    },
+
     updateCard: function(store, records) {
         this.setLoading(false);
 
@@ -320,10 +328,10 @@ Ext.define('Taco.view.publishing.grid.Publish', {
         } 
 
         else {
-            message = 'The ' + record.get('name') + ' Publish Set contains ' + word;
+            message = 'The ' + record.get('name') + ' Publish Set contains ' + word + '.';
         }
         
-        message+= ' <br><br>Are you sure you want to publish ' + word;
+        message+= ' <br><br>Are you sure you want to publish ' + word + '?';
 
         return message;
 

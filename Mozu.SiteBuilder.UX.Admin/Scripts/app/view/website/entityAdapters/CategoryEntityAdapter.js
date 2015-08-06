@@ -62,6 +62,12 @@ Ext.define('Taco.view.website.entityAdapters.CategoryEntityAdapter', {
             this.fireEvent('load', this);
         }
 
+        this.setPubState();
+
+        if (this.getDocument()) {
+            this.mon(this.getDocument(), 'aftercommit', this.setPubState, this);
+        }
+
     },
     
     getStore: function () {

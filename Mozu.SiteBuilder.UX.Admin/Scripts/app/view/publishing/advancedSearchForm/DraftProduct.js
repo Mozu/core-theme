@@ -79,7 +79,7 @@ Ext.define('Taco.view.publishing.advancedSearchForm.DraftProduct', {
             }
         };
 
-        return [fields.publishSet, fields.lastModified, fields.modifiedBy];
+        return [fields.lastModified, fields.modifiedBy];
     },
 
     getPublishSetStore: function() {

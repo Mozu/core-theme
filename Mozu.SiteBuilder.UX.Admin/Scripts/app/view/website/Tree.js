@@ -325,7 +325,19 @@ Ext.define('Taco.view.website.Tree', {
             navItems = this.store.tree.nodeHash,
             current = this.getCurrentNode.call(me, navItems);
 
-        if (current) me.selectPath(current.getPath());
+
+        if (current) {
+            me.selectPath(current.getPath());
+            // this.up('#websiteIndex').updateHeaderTitle(null, current);
+        }
+
+        else {
+            //to do: talk to UX about what it should say if there's no record
+            // console.log(this.up('#websiteIndex').down('#iframe'));
+            // this.up('#websiteIndex').updateHeaderTitle(null, Ext.create('Taco.model.NavigationTreeNode', {
+            //     name: 'Home'
+            // }));
+        }
 
     },
 

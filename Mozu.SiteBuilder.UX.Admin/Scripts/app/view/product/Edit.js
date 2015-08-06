@@ -446,8 +446,8 @@
 
     setProductRecordPublishSetToNull: function() {
         this.record.set('publishSetCode', null);
-        this.record.set('publishSetName', null);
-        this.record.set('publishSetDate', null);
+        // this.record.set('publishSetName', null);
+        // this.record.set('publishSetDate', null);
     },
 
     removePublishSet: function() {

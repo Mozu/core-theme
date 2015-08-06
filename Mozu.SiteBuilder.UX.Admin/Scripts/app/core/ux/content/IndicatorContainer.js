@@ -65,6 +65,9 @@ Ext.define('Taco.core.ux.content.IndicatorContainer', {
                         hide: function () {
                             me.tipContent.destroy();
                             me.tipContent = null;
+                        },
+                        afterrender: {
+                            fn: me.afterrender.bind(null, me)
                         }
                     }
                 });

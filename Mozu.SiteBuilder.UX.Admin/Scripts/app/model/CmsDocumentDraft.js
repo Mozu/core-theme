@@ -10,45 +10,45 @@ Ext.define('Taco.model.CmsDocumentDraft', {
     
     fields: [
         {
-            "name": "id",
-            "type": "string",
-            "useNull": true
+            'name': 'id',
+            'type': 'string',
+            'useNull': true
         },
         {
-            "name": "draftType",
-            "type": "string",
-            "useNull": true
+            'name': 'draftType',
+            'type': 'string',
+            'useNull': true
         },
         {
-            "name": "listFQN",
-            "type": "string",
-            "useNull": true
+            'name': 'listFQN',
+            'type': 'string',
+            'useNull': true
         },
         {
-            "name": "name",
-            "type": "string",
-            "useNull": true
+            'name': 'name',
+            'type': 'string',
+            'useNull': true
         },
         {
-            "name": "isPublished",
-            "type": "boolean",
-            "defaultValue": false
+            'name': 'isPublished',
+            'type': 'boolean',
+            'defaultValue': false
         },
         {
-            "name": "modificationType",
-            "type": "string",
-            "useNull": true
+            'name': 'modificationType',
+            'type': 'string',
+            'useNull': true
         },
         {
-            "name": "lastModified",
-            "type": "date",
-            "useNull": true,
+            'name': 'lastModified',
+            'type': 'date',
+            'useNull': true,
             dateFormat: 'c'
         },
         {
-            "name": "modifiedBy",
-            "type": "string",
-            "useNull": true,
+            'name': 'modifiedBy',
+            'type': 'string',
+            'useNull': true,
             convert: function (v, r) {
                 var uName = null;
                 Ext.each(Taco.siteUsers, function (item) {
@@ -60,9 +60,9 @@ Ext.define('Taco.model.CmsDocumentDraft', {
             }
         },
         {
-            "name": "lastPublished",
-            "type": "date",
-            "useNull": true
+            'name': 'lastPublished',
+            'type': 'date',
+            'useNull': true
         },
         {
             name: 'beginDate',
@@ -80,18 +80,18 @@ Ext.define('Taco.model.CmsDocumentDraft', {
     proxy: {
         type: 'ajax',
         api: {
-            read: "/admin/app/cmspublishing/listdrafts",
-            destroy: "/admin/app/cmspublishing/discard",
+            read: '/admin/app/cmspublishing/listdrafts',
+            destroy: '/admin/app/cmspublishing/discard',
             // note: to publish, you must also set isPublished=true on the model.
-            update: "/admin/app/cmspublishing/publish",
-            publishAll: "/admin/app/cmspublishing/publishall",
-            discardAll: "/admin/app/cmspublishing/discardall"
+            update: '/admin/app/cmspublishing/publish',
+            publishAll: '/admin/app/cmspublishing/publishall',
+            discardAll: '/admin/app/cmspublishing/discardall'
         },
         reader: {
             type: 'json',
             root: 'items',
             successProperty: 'success',
-            messageProperty: "message"
+            messageProperty: 'message'
         },
         writer: {
             allowSingle: false,

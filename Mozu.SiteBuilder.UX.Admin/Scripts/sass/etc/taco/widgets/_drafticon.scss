@@ -1,0 +1,19 @@
+.#{$vprefix}draft-icon {
+    
+    .#{$prefix}form-item-label { 
+        background-color: #72B4DD;
+        @include border-radius(17px);
+        color: white;
+        font-size: 13px;
+        padding: 5px 7px 3px 7px;
+        min-width: 70px;
+    }
+
+    .#{$vprefix}icon-tooltip-help {
+        color: white
+    }
+
+    input {
+        display: none;
+    }
+}
