@@ -12,6 +12,7 @@ using Mozu.SiteBuilder.UX.Admin.Api.Models;
 using Mozu.SiteBuilder.UX.Admin.Helpers.AttributeHelpers;
 using Attribute = Mozu.SiteBuilder.UX.Admin.Api.Models.Attributes.Product.Attribute;
 
+
 namespace Mozu.SiteBuilder.UX.Admin.Api
 {
     [AllowAnonymous]
@@ -37,6 +38,21 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
                 return List2(item);
             }
 
+
+            // search coming from the attributePickerField. Treat is like a normal keyword search;
+            var query = extFilter.QueryString.Get("query");
+            if (!String.IsNullOrEmpty(query))
+            {
+                extFilter.Add(new FilterCollectionItem { comparison = "eq", field = "all", value = query });
+            }
+
+            // allow the list to be filtered on type (Property, Extra, Option); will be passed in via the extraParams on the ui proxy; this is seperate from the advanced search filter;
+            if (extFilter.QueryString.Get("type") != null)
+            {
+
+                extFilter.Add(new FilterCollectionItem { comparison = "eq", field = "type", value = extFilter.QueryString.Get("type") });
+            }
+
             long totalCount;
             var dcAttributes = await GetAttributesRaw(pagingParams, extFilter);
 
@@ -47,7 +63,10 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
         public async Task<Tuple<List<ProductAdmin.Contracts.Attribute>,long>> GetAttributesRaw(PagingParamaters pagingParams, FilterCollection extFilter)
         {
             string filter = extFilter.ToFilterString();
-            string sort = null; // pagingParams.sort.ToSortString();
+            //string sort = null; // pagingParams.sort.ToSortString();
+            string sort = pagingParams.sort.ToSortString();
+
+
 
             var dcAttributes = new List<Mozu.ProductAdmin.Contracts.Attribute>();
             long totalCount = 0;

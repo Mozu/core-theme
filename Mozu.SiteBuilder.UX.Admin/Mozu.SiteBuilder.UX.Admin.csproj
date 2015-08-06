@@ -402,6 +402,7 @@
     <Compile Include="Helpers\AttributeHelpers\AttributeHelper.cs" />
     <Compile Include="Helpers\AttributeHelpers\IAttributeHelper.cs" />
     <Compile Include="Helpers\AttributeHelpers\AttributeFilterExtensions.cs" />
+    <Compile Include="Helpers\AttributeHelpers\AttributeSortExtensions.cs" />
     <Compile Include="Helpers\ChannelHelpers\ChannelFilterExtensions.cs" />
     <Compile Include="Helpers\CollectionTaskUnMapper.cs" />
     <Compile Include="Helpers\CouponSetHelpers\CouponSetFilterExtensions.cs" />
@@ -529,6 +530,7 @@
     <Content Include="Scripts\app\core\ux\window\Drawer.js" />
     <Content Include="Scripts\app\core\ux\window\MessageBox.js" />
     <Content Include="Scripts\app\core\ux\window\Modal.js" />
+    <Content Include="Scripts\app\model\FilterField.js" />
     <Content Include="Scripts\app\model\BehaviorNode.js" />
     <Content Include="Scripts\app\model\BehaviorCategoryRole.js" />
     <Content Include="Scripts\app\model\BehaviorCategory.js" />
@@ -616,6 +618,7 @@
     <Content Include="Scripts\app\shared\view\field\LocationPickerField.js" />
     <Content Include="Scripts\app\shared\view\field\Product.js" />
     <Content Include="Scripts\app\shared\view\field\ProductPickerField.js" />
+    <Content Include="Scripts\app\shared\view\field\AttributePickerField.js" />
     <Content Include="Scripts\app\shared\view\field\ProductTypePickerField.js" />
     <Content Include="Scripts\app\shared\view\form\ExtensibleAttribute.js" />
     <Content Include="Scripts\app\shared\view\modal\StoreCredit.js" />
@@ -633,6 +636,7 @@
     <Content Include="Scripts\app\store\Discounts.js" />
     <Content Include="Scripts\app\store\IpBlocking.js" />
     <Content Include="Scripts\app\store\PaymentWorkflows.js" />
+    <Content Include="Scripts\app\store\AttributesPicker.js" />
     <Content Include="Scripts\app\store\ProductTypesPicker.js" />
     <Content Include="Scripts\app\store\ProductTypesGrid.js" />
     <Content Include="Scripts\app\store\PublishSetItems.js" />
@@ -714,6 +718,7 @@
     <Content Include="Scripts\app\view\discount\GeneralForm.js" />
     <Content Include="Scripts\app\view\discount\Grid.js" />
     <Content Include="Scripts\app\view\discount\LimitationsForm.js" />
+    <Content Include="Scripts\app\view\filter\FieldStore.js" />
     <Content Include="Scripts\app\view\filter\Edit.js" />
     <Content Include="Scripts\app\view\filter\EditCodeModal.js" />
     <Content Include="Scripts\app\view\filter\EditFilterModal.js" />

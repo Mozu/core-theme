@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Linq;
+using Magnum.Extensions;
 using Mozu.SiteBuilder.UX.Admin.Api.Models;
 
 namespace Mozu.SiteBuilder.UX.Admin.Helpers.AttributeHelpers
@@ -41,16 +42,35 @@ namespace Mozu.SiteBuilder.UX.Admin.Helpers.AttributeHelpers
                     return String.Format("({1} cont {0} or {2} cont {0} or {3} cont {0})", filter.escapedValue, ATTRIBUTE_CONTENT_NAME, ATTRIBUTE_ADMIN_NAME, ATTRIBUTE_CODE);
                 case "id":
                 case "type":
-                    switch (filter.value.ToString().ToLowerInvariant())
+
+                    var str = "";
+                    var seperator = "";
+
+                    var value = filter.value.ToString().ToLowerInvariant();
+
+                    if (value.Contains("property"))
                     {
-                        case "property":
-                            return String.Format("{0} eq true", ATTRIBUTE_IS_PROPERTY);
-                        case "extra":
-                            return String.Format("{0} eq true", ATTRIBUTE_IS_EXTRA);
-                        case "option":
-                            return String.Format("{0} eq true", ATTRIBUTE_IS_OPTION);
+                        str += String.Format("{0} eq true", ATTRIBUTE_IS_PROPERTY);
+                        seperator = " or ";
                     }
-                    return "";
+
+                    if (value.Contains("extra"))
+                    {
+                        str += String.Format("{1}{0} eq true", ATTRIBUTE_IS_EXTRA, seperator);
+                        seperator = " or ";
+                    }
+
+                    if (value.Contains("option"))
+                    {
+                        str += String.Format("{1}{0} eq true", ATTRIBUTE_IS_OPTION,seperator);
+                    }
+
+                    if (str.IsNotEmpty())
+                    {
+                        str = "(" + str + ")";
+                    }
+                    
+                    return str;
                 case "inputtype":
                     return String.Format("{2} {1} {0}", filter.value, filter.comparison, ATTRIBUTE_INPUT_TYPE);
                 case "code":

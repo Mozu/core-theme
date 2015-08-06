@@ -39,7 +39,7 @@ Ext.define('Taco.view.filter.MultiSelectorField', {
     initComponent: function () {
         var me = this,
             storeData = [];
-
+        
         if (this.value) {
             // make sure the data is in an array
             if (!Ext.isArray(this.value)) {
@@ -65,11 +65,13 @@ Ext.define('Taco.view.filter.MultiSelectorField', {
             //emptyText:"Add a value (Enter Key)",
             value: "",
             flex: 1,
+            valueNotFoundText :"",
             allowBlank:true,
             name:"multiSelectorAddField"
         });
         
-        if (!fieldCfg.isPickerField) {
+        
+        if (!fieldCfg.isPickerField && fieldCfg.xtype != "combo") {
             fieldCfg = Ext.applyIf(fieldCfg, {
                 emptyText:"Add a value and then hit ENTER Key"
             });
@@ -78,7 +80,7 @@ Ext.define('Taco.view.filter.MultiSelectorField', {
 
         this.addField = Ext.widget(fieldCfg);
 
-        if (fieldCfg.isPickerField) {
+        if (fieldCfg.isPickerField || fieldCfg.xtype=="combo") {
             this.mon(this.addField, 'select', function(field, records) {
                 var id = records[0].getId();
                 me.addValue(id);
@@ -122,7 +124,7 @@ Ext.define('Taco.view.filter.MultiSelectorField', {
         ];
 
         // dont' need the add button for picker fields;
-        if (!fieldCfg.isPickerField) {
+        if (!fieldCfg.isPickerField && fieldCfg.xtype != "combo") {
             this.addBarItems.push({
                 xtype: "button",
                 ui: "action",

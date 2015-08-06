@@ -5,6 +5,9 @@
 Ext.define('Taco.view.filter.Schema', {
     singleton: true,
     alternateClassName: "Taco.filter",
+    requires: [
+        'Taco.model.FilterField'
+    ],
 
     // Override this config when we i18L
     operatorData: [
@@ -234,6 +237,14 @@ Ext.define('Taco.view.filter.Schema', {
                 { id: "DiscountedCatalogSalePrice", name: "Discounted Catalog Sale Price" }
             ],
             allowBlank: false
+        }, {
+            id: "properties.",
+            field: "properties.",
+            text: "Attribute Property",
+            defaultValue: "",
+            dataType: "string",
+            supportedOperators: ["eq", "ne", "in", "lt", "le", "gt", "ge"],
+            allowBlank: false
         }
     ],
 
@@ -241,21 +252,23 @@ Ext.define('Taco.view.filter.Schema', {
 
     fieldStoreCfg: {
         makeIdCaseInsensitive: true,
-        fields: [
-            { name: "id", type: "string", convert: function(value, record) {
-                // force the id's lower case this store's id's need to be case insensitive;
-                return value.toLowerCase();
-            }},
-            { name: "field", type: "string" },
-            { name: "text", type: "string" },
-            { name: "defaultValue", type: "auto" },
-            { name: "dataType", type: "string" },
-            { name: "supportedOperators", type: "array" },
-            { name: "validEnumValues", type: "array" },
-            { name: "editorCfg", type: "object" },
-            { name: "filterType", type: "string", defaultValue:"DynamicPreComputed" },
-            { name: "allowBlank", type: "boolean" }
-        ]
+        model: "Taco.model.FilterField"
+        //,
+        //fields: [
+        //    { name: "id", type: "string", convert: function(value, record) {
+        //        // force the id's lower case this store's id's need to be case insensitive;
+        //        return value.toLowerCase();
+        //    }},
+        //    { name: "field", type: "string" },
+        //    { name: "text", type: "string" },
+        //    { name: "defaultValue", type: "auto" },
+        //    { name: "dataType", type: "string" },
+        //    { name: "supportedOperators", type: "array" },
+        //    { name: "validEnumValues", type: "array" },
+        //    { name: "editorCfg", type: "object" },
+        //    { name: "filterType", type: "string", defaultValue:"DynamicPreComputed" },
+        //    { name: "allowBlank", type: "boolean" }
+        //]
     },
 
     // the default editor configs used to set the value for the fields based on the dataType of the field.
@@ -272,15 +285,25 @@ Ext.define('Taco.view.filter.Schema', {
         },
         "date": {
             xtype: "datefield"
+        },
+        "datetime": {
+            xtype: "datetime"
         }
     },
 
     getFieldStoreCfg: function () {
+
+        var data = Ext.Array.clone(this.fieldData);
         return Ext.Object.merge({
-            data: Ext.Array.clone(this.fieldData)
+            data: data
         }, this.fieldStoreCfg);
     },
 
+
+    getFieldStore: function (fieldStoreCfg) {
+        var fieldStore = Ext.create('Ext.data.Store', fieldStoreCfg);
+        return fieldStore;
+    },
 
     init: function() {
         
@@ -289,10 +312,7 @@ Ext.define('Taco.view.filter.Schema', {
         this.operatorStore = Ext.create('Ext.data.Store',storeCfg);
         
         var fieldStoreCfg = this.getFieldStoreCfg();
-        this.fieldStore = Ext.create('Ext.data.Store', fieldStoreCfg);
-
-
-
+        this.fieldStore = this.getFieldStore(fieldStoreCfg);
 
 
 /*
@@ -494,6 +514,19 @@ RealTime Only: above +
         ]
     },
 
+    getOperatorByType: function (type) {
+        var operators =  {
+            "boolean": ["eq"],
+            "string": ["eq", "ne", "in"],
+            "int": ["eq", "ne", "in", "lt", "le", "gt", "ge"],
+            "float": ["eq", "ne", "in", "lt", "le", "gt", "ge"],
+            "date": ["eq", "ne", "in", "lt", "le", "gt", "ge"],
+            "datetime": ["eq", "ne", "in", "lt", "le", "gt", "ge"],
+            "pickerfield": ["eq", "ne", "in"]
+        }
+
+        return Ext.Array.clone(operators[type]) || [];
+    },
     
     getOperatorStoreCfg: function () {
         return Ext.Object.merge({
