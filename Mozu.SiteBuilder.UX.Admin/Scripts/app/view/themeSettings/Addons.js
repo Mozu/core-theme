@@ -29,7 +29,7 @@ Ext.define('Taco.view.themesettings.Addons', {
             }]
         };
 
-        this.store = Ext.create('Taco.store.ThemeListing', {
+        this.store = Ext.create('Taco.store.ThemeListings', {
             data: me.addons
         });
 

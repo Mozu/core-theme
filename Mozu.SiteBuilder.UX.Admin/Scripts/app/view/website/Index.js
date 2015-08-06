@@ -40,7 +40,8 @@ Ext.define('Taco.view.website.Index', {
         'Taco.core.ux.DraftIcon',
         'Taco.view.publishing.modal.PublishSetPicker',
         'Taco.core.ux.content.IndicatorContainer',
-        'Taco.core.ux.action.Action'
+        'Taco.core.ux.action.Action',
+        'Taco.store.ThemeListingsApplied'
     ],
     selectedTheme: '',
     itemId: 'websiteIndex',
@@ -528,7 +529,7 @@ Ext.define('Taco.view.website.Index', {
         this.callParent(arguments);
         this.fireEvent('navigatestart', this, { url: this.url });
 
-        this.themeStore = Ext.create('Taco.store.ThemeListing', {
+        this.themeStore = Ext.create('Taco.store.ThemeListingsApplied', {
             autoLoad: true,
             listeners: {
                 load: this.onThemeLoad,
@@ -822,7 +823,6 @@ Ext.define('Taco.view.website.Index', {
 
                 Taco.model.PublishSet.load(pubInfo.publishSetInfo.code, {
                     success: function(record) {
-                        console.log('gheee')
                         var date = record.get('publishDate') ? Ext.Date.format(record.get('publishDate'), 'F j, Y, g:i a T') : 'Unscheduled';
 
                         me.pubRecord = record;
