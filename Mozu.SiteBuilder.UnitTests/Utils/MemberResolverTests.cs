@@ -26,6 +26,7 @@ namespace Mozu.SiteBuilder.UnitTests.Utils
         {
             yield return new object[] { new JObject() { { "Property", true } }, "property", FSharpOption<object>.Some(true) };
             yield return new object[] { Microsoft.ClearScript.Undefined.Value, "meh", FSharpOption<object>.None };
+            yield return new object[] { new JObject() { { "isEmpty", new JValue(false) } }, "isEmpty", FSharpOption<object>.Some(false) };
         }
     }
 }

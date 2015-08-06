@@ -5,6 +5,7 @@ using Microsoft.FSharp.Core;
 using NDjango.Interfaces;
 using NDjango.FiltersCS;
 using System.Linq;
+using Newtonsoft.Json.Linq;
 
 namespace Mozu.SiteBuilder.Mvc.ViewEngine
 {
@@ -135,31 +136,37 @@ namespace Mozu.SiteBuilder.Mvc.ViewEngine
 
         static readonly FSharpFunc<object, object> cleanFunc = FuncConvert.ToFSharpFunc<object, object>(CleanJson);
         static System.Collections.Concurrent.ConcurrentDictionary<string, MemberResolverGetMemberBinder> _binders = new System.Collections.Concurrent.ConcurrentDictionary<string, MemberResolverGetMemberBinder>();
+
         public FSharpOption<object> ResolveMember(object container, string memberName)
         {
-            FSharpOption<object> result;
+            if (string.IsNullOrEmpty(memberName)) return FSharpOption<object>.None;
+            var result = ResolveProperty(container, memberName);
+            return OptionModule.Map(cleanFunc, result);
+        }
+
+        static FSharpOption<object> ResolveProperty(object container, string memberName)
+        {
             if (container is Microsoft.ClearScript.V8.IV8ScriptItem)
             {
-                result = ResolveFromClearScriptBinders(container, memberName);
+                return ResolveFromClearScriptBinders(container, memberName);
             }
-            else if (container is Newtonsoft.Json.Linq.JObject)
+            else if (container is JObject)
             {
-                result = ResolveFromJObject(container, memberName);
+                return ResolveFromJObject(container, memberName);
             }
             else
             {
-                result = _actual.ResolveMember(container, memberName);
+                return _actual.ResolveMember(container, memberName);
             }
-            return OptionModule.Map(cleanFunc, result);
         }
 
         static FSharpOption<object> ResolveFromJObject(object container, string memberName)
         {
-            var jobj = container as Newtonsoft.Json.Linq.JObject;
-            if (jobj == null || memberName == null) return FSharpOption<object>.None;
+            var jobj = container as JObject;
+            if (jobj == null) return FSharpOption<object>.None;
 
             var dictLookup = jobj.Property(memberName);
-            if (dictLookup != null) return FSharpOption<object>.Some(dictLookup);
+            if (dictLookup != null) return FSharpOption<object>.Some(dictLookup.Value);
 
             // in worst case now we have to iterator over properties ordinally
             var propLookup = jobj.Properties().FirstOrDefault(prop => prop.Name.Equals(memberName, StringComparison.OrdinalIgnoreCase));
@@ -180,6 +187,7 @@ namespace Mozu.SiteBuilder.Mvc.ViewEngine
             else return FSharpOption<object>.Some(res);
         }
 
+
         class MemberResolverGetMemberBinder : GetMemberBinder
         {
             public MemberResolverGetMemberBinder(string name, bool ignoreCase)
@@ -194,5 +202,4 @@ namespace Mozu.SiteBuilder.Mvc.ViewEngine
         }
 
     }
-
 }
