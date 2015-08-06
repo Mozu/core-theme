@@ -124,7 +124,27 @@
         });
 
         if (this.checkProductPublishing()) {
-            this.titlePanel = Ext.widget('taco-indicator', {});
+            this.titlePanel = Ext.widget('taco-indicator', {
+                afterrender: function(toolTip) {
+                    var pubInfo = me.record.getPublishingInfo();
+                    
+                    if (pubInfo.publishSetInfo) {
+                        Ext.create('Taco.core.ux.action.Action', {
+                            text: pubInfo.publishSetInfo.name,
+                            renderTo: 'publishSetName',
+                            listeners: {
+                                click: {
+                                    fn: function(cmp) {
+                                        toolTip.tipContent.hide();
+                                        Taco.app.StateManager.attemptNavigate('/publishing/publishsets/' + pubInfo.publishSetInfo.code);
+                                    }
+                                }
+                            }
+                        });
+                    }
+                   
+                }
+            });
         }
 
         this.publishingButton = Ext.widget('button', {
@@ -296,8 +316,8 @@
             generateTooltipKey = function (content) {
                 return "<span style='width:90px;font-weight: bold;float:left;'>" + content + "</span>";
             },
-            generateTooltipValue = function (content, additionalStyle) {
-                return "<span style='padding-left: 5px;float:left;" + additionalStyle + "'>" + content + "</span>";
+            generateTooltipValue = function (content, additionalStyle, id) {
+                return "<span id='" + id + "' style='padding-left: 5px;float:left;" + additionalStyle + "'>" + content + "</span>";
             };
 
         if (!this.checkProductPublishing()) {
@@ -308,7 +328,7 @@
             extraStyle = (!pubInfo.publishSetInfo) ? 'font-style:italic;' : '';
             tooltipContent = generateTooltipKey('Publish Set:');
             if (pubInfo.publishSetInfo) {
-                tooltipContent += generateTooltipValue(pubInfo.publishSetInfo.name, '');
+                tooltipContent += generateTooltipValue('', '', 'publishSetName');
             } else {
                 tooltipContent += generateTooltipValue('None', extraStyle);
             }
