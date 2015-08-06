@@ -137,6 +137,11 @@ Ext.define('Taco.model.PublishSetItem', {
         {
             name: 'publishSetCode',
             type: 'string'
+        },
+        {
+            name: 'publishSetName',
+            type: 'string',
+            defaultValue: null
         }
 
     ],

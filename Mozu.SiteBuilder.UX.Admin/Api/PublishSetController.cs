@@ -66,7 +66,26 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
             if (string.Equals("cms", type, StringComparison.OrdinalIgnoreCase))
             {
                 var res = (await _cmsItemPublishingClient.GetPublishSetItems(code: code, pageSize: pagingParams.pageSize, startIndex: pagingParams.startIndex).ConfigureAwait(false)).ReadAsSync();
-                return List2(Mapper.Map<List<PublishSetItem>>(res.Items), (int)res.TotalCount);
+                var returnItems = Mapper.Map<List<PublishSetItem>>(res.Items);
+
+                if (code == "all" || code == "unassigned")
+                {
+                    var codes = res.Items.Select(x => x.PublishSetCode).Where(x => !string.IsNullOrEmpty(x)).Distinct().ToList();
+
+                    if (codes.Count > 0)
+                    {
+
+                        var query = string.Join(" or ", codes.Select(x => string.Format("Code eq {0}", x)));
+                        var resultSet = _publishSetWebApiClient.GetPublishSets(filter: query, pageSize: 100).Result.ReadAsSync();
+                        foreach (var draft in returnItems)
+                        {
+                            draft.PublishSetName = resultSet.Items.Where(x => x.Code == draft.PublishSetCode).Select(x => x.Name).FirstOrDefault();
+                        }
+                    }
+
+                }
+
+                return List2(returnItems, (int)res.TotalCount);
             }
             else if ( string.Equals( "product", type, StringComparison.OrdinalIgnoreCase ))
             {
@@ -84,8 +103,21 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
                     pageSize: pagingParams.pageSize, 
                     filter: filter).ConfigureAwait(false)).ReadAsSync();
 
-                var mapped = Mapper.Map<List<PublishSetItem>>(res.Items);
-                return List2(mapped, (int)res.TotalCount);
+                var returnItems = Mapper.Map<List<PublishSetItem>>(res.Items);
+
+                var codes = res.Items.Select(x => x.PublishingInfo.PublishSetCode).Where(x => !string.IsNullOrEmpty(x)).Distinct().ToList();
+
+                if (codes.Count > 0)
+                {
+                    var query = string.Join(" or ", codes.Select(x => string.Format("Code eq {0}", x)));
+                    var resultSet = _publishSetWebApiClient.GetPublishSets(filter: query, pageSize: 100).Result.ReadAsSync();
+                    foreach (var draft in returnItems)
+                    {
+                        draft.PublishSetName = resultSet.Items.Where(x => x.Code == draft.PublishSetCode).Select(x => x.Name).FirstOrDefault();
+                    }
+                }
+
+                return List2(returnItems, (int)res.TotalCount);
             }
 
             throw new NotImplementedException(type);

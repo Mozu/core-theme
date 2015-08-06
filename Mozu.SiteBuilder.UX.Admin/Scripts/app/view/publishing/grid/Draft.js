@@ -327,6 +327,14 @@ Ext.define('Taco.view.publishing.grid.Draft', {
                     columnWidth: 100,
                     hidden: true,
                     sortable: false
+                },     
+                publishSetName:  {
+                    xtype: 'gridcolumn',
+                    dataIndex: 'publishSetName',
+                    stateId: 'publishSetName',
+                    text: 'Publish Set Name',
+                    columnWidth: 100,
+                    sortable: false
                 },         
                 actions: {
                     xtype: 'taco.menucolumn',
@@ -379,6 +387,7 @@ Ext.define('Taco.view.publishing.grid.Draft', {
                 content: [
                     col.name,
                     col.publishSetCode,
+                    col.publishSetName,
                     col.draftUpdateDate,
                     col.listFQN,
                     col.updatedBy,
@@ -391,6 +400,7 @@ Ext.define('Taco.view.publishing.grid.Draft', {
                 product: [
                     col.name,
                     col.publishSetCode,
+                    col.publishSetName,
                     col.draftUpdateDate,
                     col.updatedBy,
                     col.productCode,

@@ -71,6 +71,8 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.Models.PublishSets
 
         public string PublishSetCode { get; set; }
 
+        public string PublishSetName { get; set; }
+
 
         public int? MasterCatalogId { get; set; }
         public int? CatalogId { get; set; }
