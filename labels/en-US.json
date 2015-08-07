@@ -409,6 +409,6 @@
   "dealOfTheDay"     : "Deal of the Day",
 
   "visaCheckoutCVVReminder": "Please re-enter your card security code.",
-  "visaCheckoutEditReminder": "For security reasons you cannot edit the credit card information from Visa Checkout. You can select a different credit card from the list below(Visa Checkout card details will be removed) and Cancel link on the top right",
+  "visaCheckoutEditReminder": "For security reasons you cannot edit the credit card information from Visa Checkout. If you proceed, your Visa Checkout details will be removed and this order will be processed without Visa Checkout.",
   "cancelVisaCheckout": "Edit Details"
 }
