@@ -410,6 +410,25 @@ Ext.define('Taco.view.filter.ExpressionTreePanel', {
 
         this.initContextMenu();
 
+        me.formLessKeyMap = new Ext.util.KeyMap({
+            target: me.el,
+            ignoreInputFields: true,
+
+            binding: [
+                 {
+                     // Backspace on windows and delete key on mac. need to prevent the navigate
+                     key: 8,
+
+                     fn: function () {
+                         console.log("preventing backspace key from navigating");
+                     },
+                     // prevents the event from bubbling past the modal;
+                     defaultEventAction: 'stopEvent',
+                     scope: me
+                 }
+            ]
+        });
+
     },
     onFocusIn: function () {
         this.el.addCls(this.focusinCls);
@@ -463,7 +482,11 @@ Ext.define('Taco.view.filter.ExpressionTreePanel', {
         var xOffset = 150,
             yOffset = 10;
 
+
+        
+
         this.mon(me, "itemkeydown", function (view, record, item, index, e) {
+            console.log(e.getKey());
             switch (e.getKey()) {
                 case Ext.EventObject.F:
                     me.createFilter();
@@ -479,8 +502,10 @@ Ext.define('Taco.view.filter.ExpressionTreePanel', {
                     e.xy[1] = e.xy[1] + yOffset;
                     me.editNode(record.get("id"), record, item, index, e);
                     break;
+                case 8:
                 case e.DELETE:
                     me.deleteNode(record.get("id"), record, item, index, e);
+                    
                     break;
             }
         },me, {
