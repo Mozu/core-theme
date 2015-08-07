@@ -241,6 +241,10 @@ Ext.define('Taco.view.filter.MultiSelectorField', {
 
     setValue: function (value) {
         this.value = value;
+        
+        if (!value) {
+            this.store.removeAll();
+        }
     },
 
     validate: function () {

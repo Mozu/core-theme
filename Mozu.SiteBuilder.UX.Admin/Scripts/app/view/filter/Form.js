@@ -328,6 +328,7 @@ Ext.define('Taco.view.filter.Form', {
         
 
         operatorRecord = this.getOperatorRecord();
+        this.rightField.setValue(null);
         this.rightField.setOperatorRecord(operatorRecord);
     },
 
@@ -397,6 +398,7 @@ Ext.define('Taco.view.filter.Form', {
     doFieldChange: function(fieldRecord) {
         this.setFieldRecord(fieldRecord);
         this.refreshOperatorField();
+        this.rightField.setValue(null);
         this.rightField.setFieldRecord(fieldRecord);
     },
     

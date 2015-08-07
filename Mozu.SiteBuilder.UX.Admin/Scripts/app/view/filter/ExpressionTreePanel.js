@@ -483,6 +483,8 @@ Ext.define('Taco.view.filter.ExpressionTreePanel', {
                     me.deleteNode(record.get("id"), record, item, index, e);
                     break;
             }
+        },me, {
+            buffer:100
         });
     },
 
