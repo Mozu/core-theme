@@ -13,6 +13,7 @@ using System.Web.Http.Hosting;
 using System.Web.Http.Routing;
 using System.Web.Routing;
 using Autofac;
+using Mozu.SiteBuilder.Mvc.MessageHandler;
 using Mozu.SiteBuilder.Mvc.ViewEngine;
 
 namespace Mozu.SiteBuilder.Mvc.SEO
@@ -198,8 +199,14 @@ namespace Mozu.SiteBuilder.Mvc.SEO
             {
                 return null;
             }
+            object tmp;
+            if (request.Properties.TryGetValue(SeoDelegatingHandler.IsSeoRewrite , out tmp) && tmp is bool && ((bool)tmp))
+            {
+                return null;
+            }
+            
+            
 
-          
             var routeCollection = await GetRouteCollectionAsync().ConfigureAwait(false);
 
             var routes = GetCanonicalRouteList(internalRoute, routeCollection, _routeconfig);

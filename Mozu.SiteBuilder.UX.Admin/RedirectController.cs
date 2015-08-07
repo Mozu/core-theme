@@ -42,10 +42,10 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
         [HttpGetRoute(UriTemplate = "list")]
         public async Task<Response<List<RedirectEntry>>> List([FromUri] PagingParamaters pagingParams, [FromUri] FilterCollection extFilter, [FromUri] bool draft = false)
         {
-            var dic = await _redirectRepository.FetchRedirectEntries();
-            var tot = dic.Count;
-            var list = dic.Values.OrderBy(x => x.Source).Skip(pagingParams.SkipAmount).Take(pagingParams.pageSize.Value).ToList();
-            return List2(list, tot);
+            var list = await _redirectRepository.FetchRedirectEntries();
+            var tot = list.Count;
+            var retlist = list.Skip(pagingParams.SkipAmount).Take(pagingParams.pageSize.Value).ToList();
+            return List2(retlist, tot);
         }
 
         [HttpPostRoute(UriTemplate = "create")]
@@ -58,10 +58,23 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
         public async Task<Response<List<RedirectEntry>>> Edit(List<RedirectEntry> redirects)
         {
             redirects.ForEach(x => Validate(x));
-            var dic = await _redirectRepository.FetchRedirectEntries();
-            EnumerableExtensions.Each(redirects, x => dic[x.Source] = x);
+            var source = new List<RedirectEntry>(await _redirectRepository.FetchRedirectEntries());
+            foreach( var newR in redirects)
+            {
+                var sourceIdx = source.FindIndex(src => src.Source == newR.Source);
+                if (sourceIdx > -1)
+                {
+                    source[sourceIdx] = newR;
+                }
+                else
+                {
+                    source.Add(newR);
+                }
+                
+            }
 
-            dic = await _redirectRepository.UpdateRedirectEntries(dic);
+
+             await _redirectRepository.UpdateRedirectEntries(source);
 
             return List2(redirects);
         }
@@ -69,47 +82,74 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
         [HttpPostRoute(UriTemplate = "delete")]
         public async Task<Response<List<RedirectEntry>>> Delete(List<RedirectEntry> redirects)
         {
-            var dic = await _redirectRepository.FetchRedirectEntries();
-            EnumerableExtensions.Each(redirects, x => dic.Remove(x.Source));
-            dic = await _redirectRepository.UpdateRedirectEntries(dic);
+            var source = await _redirectRepository.FetchRedirectEntries();
+
+            foreach (var newR in redirects)
+            {
+                var sourceIdx = source.FindIndex(src => src.Source == newR.Source);
+                if (sourceIdx > -1)
+                {
+                    source.RemoveAt(sourceIdx);
+                }
+                
+            }
+
+           await _redirectRepository.UpdateRedirectEntries(source);
             return List2(redirects);
         }
 
+        
+
         [HttpGetRoute(UriTemplate = "export")]
-        public async Task<HttpResponseMessage> Export(int siteid)
+        public async Task<RedirectsCsvFileResult> Export(int siteid)
         {
             await InitContextFromSite(siteid);
             var ms = new MemoryStream();
             var sw = new StreamWriter(ms);
-            var dic = await _redirectRepository.FetchRedirectEntries(siteid);
-
-            sw.WriteLine("source,destination,rewrite,isTemporary,copyQueryStrings");
-            EnumerableExtensions.Each(dic.Values, x =>
+            var redirects = await _redirectRepository.FetchRedirectEntries(siteid);
+            return new RedirectsCsvFileResult("text/csv")
             {
-                EscapeWrite(sw, x.Source);
-                sw.Write(',');
-                EscapeWrite(sw, x.Destination);
-                sw.Write(',');
-                sw.WriteLine(x.IsRewrite.GetValueOrDefault(false) ? 1 : 0);
-                sw.Write(',');
-                sw.WriteLine(x.IsTemporary.GetValueOrDefault(false) ? 1 : 0);
-                sw.Write(',');
-                sw.WriteLine(x.CopyQueryString.GetValueOrDefault(false) ? 1 : 0);
-            });
-            sw.Flush();
-            ms.Position = 0;
+                FileDownloadName = "redirects_export.csv",
+                Redirects = redirects
+                
+            };
+            
+        }
+        public class RedirectsCsvFileResult: Mozu.SiteBuilder.Mvc.ActionResults.FileResult
+        {
+            public RedirectsCsvFileResult(string contentType) : base(contentType)
+            {
+            }
+            public List<RedirectEntry> Redirects { get; set; }
+            protected override void WriteFile(HttpResponseBase response)
+            {
+                var sw = response.Output;
+                sw.WriteLine("source,destination,rewrite,isTemporary,copyQueryStrings");
+                EnumerableExtensions.Each(Redirects, x =>
+                {
+                    RedirectController.EscapeWrite(sw, x.Source);
+                    sw.Write(',');
+                    RedirectController.EscapeWrite(sw, x.Destination);
+                    sw.Write(',');
+                    sw.Write(x.IsRewrite.GetValueOrDefault(false) ? 1 : 0);
+                    sw.Write(',');
+                    sw.Write(x.IsTemporary.GetValueOrDefault(false) ? 1 : 0);
+                    sw.Write(',');
+                    sw.Write(x.CopyQueryString.GetValueOrDefault(false) ? 1 : 0);
+                    sw.WriteLine();
+                });
+               
+            }
+            protected override Task WriteFileAsync(HttpResponseBase response)
+            {
+                WriteFile(response);
+                return Task.FromResult<bool> (true);
+            }
 
-            var resp = Request.CreateResponse(HttpStatusCode.OK);
-            resp.Content = new StreamContent(ms);
-            resp.Content.Headers.ContentType = new MediaTypeHeaderValue("text/csv");
-            resp.Content.Headers.ContentDisposition = new ContentDispositionHeaderValue("attachment");
-            resp.Content.Headers.ContentDisposition.Name = "redirect";
-            resp.Content.Headers.ContentDisposition.FileName = "redirects_export.csv";
-
-            return resp;
+            
         }
 
-        void EscapeWrite(TextWriter sw, string inSTr)
+        static  void EscapeWrite(TextWriter sw, string inSTr)
         {
             if (inSTr.IndexOf('\"') > -1)
             {
@@ -201,7 +241,8 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
             var fileinfo = new FileInfo(streamProvider.FileData.SingleOrDefault().LocalFileName);
 
             var file = bodyparts.Contents.First();
-            Dictionary<string, RedirectEntry> dic = new Dictionary<string, RedirectEntry>(StringComparer.OrdinalIgnoreCase);
+            List<RedirectEntry> list = new System.Collections.Generic.List<RedirectEntry>();
+           // Dictionary<string, RedirectEntry> dic = new Dictionary<string, RedirectEntry>(StringComparer.OrdinalIgnoreCase);
 
             using (var stream = fileinfo.OpenRead())
             {
@@ -227,15 +268,15 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
                             IsTemporary = row.Length > 3 && row[3] == "1",
                             CopyQueryString = row.Length > 4 && row[4] == "1"
                         };
-                        Validate(entry, dic.Count);
-                        dic[entry.Source] = entry;
+                        Validate(entry, list.Count);
+                        list.Add(entry);
 
 
                     }
                 }
             }
 
-            dic = await _redirectRepository.UpdateRedirectEntries(dic, siteId);
+            await _redirectRepository.UpdateRedirectEntries(list, siteId);
             return Request.CreateResponse(HttpStatusCode.OK, EmptySingle2<bool>());
         }
 

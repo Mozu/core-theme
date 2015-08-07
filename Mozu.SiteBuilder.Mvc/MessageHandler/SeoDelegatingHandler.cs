@@ -17,6 +17,7 @@ namespace Mozu.SiteBuilder.Mvc.MessageHandler
 {
     public class SeoDelegatingHandler : DelegatingHandler
     {
+        internal const string IsSeoRewrite = "IsSeoRewrite";
         // look in the source code for HttpRoute.cs in asp.net for this.  it's internal there, so we can't just use it.
         internal const string MS_HTTP_RoutingContextKey = "MS_RoutingContext";
 
@@ -205,7 +206,7 @@ namespace Mozu.SiteBuilder.Mvc.MessageHandler
         /// </summary>
         static HttpRequestMessage RewriteCurrentRequest(HttpRequestMessage request, string destination)
         {
-            request.Properties["isSeoRewrite"] = true;
+            request.Properties[IsSeoRewrite] = true;
 
             // create new uri
             string url = "~/" + destination;

@@ -48,9 +48,9 @@ namespace Mozu.SiteBuilder.Mvc.SEO
    
     public interface IRedirectRepository
     {
-        Task<Dictionary<string, RedirectEntry>> FetchRedirectEntries(int? siteId = null);
+        Task<List<RedirectEntry>> FetchRedirectEntries(int? siteId = null);
         Task<RuntimeRedirects> GetRuntimeRedirectEntries(int? siteId = null);
-        Task<Dictionary<string, RedirectEntry>> UpdateRedirectEntries(Dictionary<string, RedirectEntry> redirects, int? siteId = null);
+        Task<List<RedirectEntry>> UpdateRedirectEntries(List<RedirectEntry> redirects, int? siteId = null);
     }
 
     public class RuntimeRedirects
@@ -89,7 +89,7 @@ namespace Mozu.SiteBuilder.Mvc.SEO
 
         static System.Collections.Concurrent.ConcurrentDictionary<string, AsyncLock> _redirectLookupLock = new System.Collections.Concurrent.ConcurrentDictionary<string, AsyncLock>();
 
-         Task<Dictionary<string, RedirectEntry>> IRedirectRepository.FetchRedirectEntries(int? siteId)
+         Task<List<RedirectEntry>> IRedirectRepository.FetchRedirectEntries(int? siteId)
         {
              var client = siteId == null ? _systemDocumentClient : _systemDocumentClient.CloneWithSbContext(_siteBuilderApiContext).CloneWithSiteId(siteId);
              return DoFetchEntries(client);
@@ -105,7 +105,7 @@ namespace Mozu.SiteBuilder.Mvc.SEO
                 _redirectEntryListTask = client
                     .CloneWithConfigOptions(x => x.TimeoutMilliseconds = 5000)
                     .GetTreeDocument("siteSettings@mozu", FileName)
-                    .ContinueWith(gdt => LookupRedirectsFromCmsMetaDoc(gdt, client))
+                    .ContinueWith(gdt => LookupRedirectsFromCmsMetaDoc(gdt, siteId, client))
                     .Unwrap();
             }
 
@@ -114,7 +114,7 @@ namespace Mozu.SiteBuilder.Mvc.SEO
         
       
 
-        private async Task<RuntimeRedirects> LookupRedirectsFromCmsMetaDoc(Task<ServiceClientResponse<Document>> gdt, IDocumentListWebApiClient client)
+        private async Task<RuntimeRedirects> LookupRedirectsFromCmsMetaDoc(Task<ServiceClientResponse<Document>> gdt, int? siteId, IDocumentListWebApiClient client)
         {
             string fallbackKey = CreateKey(null);
             Document doc = null;
@@ -150,88 +150,87 @@ namespace Mozu.SiteBuilder.Mvc.SEO
                 
                 using (var releaser = await ayncLock.LockAsync().ConfigureAwait(false))
                 {
-                    ret = await BuildRedirectEntriesFromCmsDocument(key, client, doc, fallbackKey).ConfigureAwait(false);
+                    ret = await BuildRedirectEntriesFromCmsDocument(key, client, siteId , fallbackKey).ConfigureAwait(false);
                 }
             }
             return ret;
         }
-        async Task<Dictionary<string,RedirectEntry>> DoFetchEntries( IDocumentListWebApiClient client)
+        Task<List<RedirectEntry>> DoFetchEntries( IDocumentListWebApiClient client)
         {
-            return await client.CloneWithConfigOptions(x => x.TimeoutMilliseconds = 8000)
+
+            return client.CloneWithConfigOptions(x => x.TimeoutMilliseconds = 8000)
+
                             .GetTreeDocumentContent("siteSettings@mozu", FileName)
                             .ContinueWith(x =>
                             {
-                                if (x.IsFaulted)
+                                if (x.IsFaulted || !x.IsCompleted)
                                 {
-                                    return new Dictionary<string, RedirectEntry>(StringComparer.OrdinalIgnoreCase);
+                                    return new List<RedirectEntry>();
                                 }
                                 var resp = x.Result;
                                 if (!resp.ResponseMessage.IsSuccessStatusCode)
                                 {
-                                    return new Dictionary<string, RedirectEntry>(StringComparer.OrdinalIgnoreCase);
+                                    return new List<RedirectEntry>();
                                 }
+
 
                                 using (var stream = resp.ResponseMessage.Content.ReadAsStreamAsync().Result)
                                 using (var tr = new StreamReader(stream))
                                 using (var jr = new JsonTextReader(tr))
                                 {
+
                                     try
                                     {
-                                        var dic = Newtonsoft.Json.JsonSerializer.CreateDefault().Deserialize<Dictionary<string, RedirectEntry>>(jr);
-                                        return new Dictionary<string, RedirectEntry>(dic, StringComparer.OrdinalIgnoreCase);
-                                        
+                                        var ser = Newtonsoft.Json.JsonSerializer.CreateDefault();
+                                        if (jr.Read())
+                                        {
+                                            if (jr.TokenType == JsonToken.StartArray)
+                                            {
+                                                return ser.Deserialize<List<RedirectEntry>>(jr);
+                                            }
+                                            else if (jr.TokenType == JsonToken.StartObject)
+                                            {
+                                                var list = new List<RedirectEntry>();
+                                                while (jr.Read())
+                                                {
+                                                    if (jr.TokenType == JsonToken.PropertyName)
+                                                    {
+                                                        var source = (string)jr.Value;
+                                                        jr.Read();
+                                                        var redirect = ser.Deserialize<RedirectEntry>(jr);
+                                                        redirect.Source = source;
+                                                        list.Add(redirect);
+                                                    }
+                                                }
+                                                return list;
+
+                                            }
+                                            else
+                                            {
+                                                throw new InvalidOperationException("bad format");
+                                            }
+                                        }
                                     }
                                     catch (Exception ex)
                                     {
                                         _logger.Error(ex);
-                                        return new Dictionary<string, RedirectEntry>( StringComparer.OrdinalIgnoreCase);
-                                       
                                     }
+                                    return new List<RedirectEntry>();
                                 }
 
-                            })
-                            .ConfigureAwait(false);
+                            });
         }
-        async Task<RuntimeRedirects> BuildRedirectEntriesFromCmsDocument( string key, IDocumentListWebApiClient client, Document doc, string fallbackKey)
+        async Task<RuntimeRedirects> BuildRedirectEntriesFromCmsDocument( string key, IDocumentListWebApiClient client, int? siteId, string fallbackKey)
         {
             var ret = _cache[key] as RuntimeRedirects;
             if (ret == null)
             {
                 try
                 {
-                    var res = await client.CloneWithConfigOptions(x => x.TimeoutMilliseconds = 8000)
-                            .GetDocumentContent("siteSettings@mozu", doc.Id)
+                    var redirects = await ((IRedirectRepository)this).FetchRedirectEntries(siteId)
                             .ConfigureAwait(false);
-                          
-
-                    if (res.HasException == false &&  res.ResponseMessage.IsSuccessStatusCode && res.ResponseMessage.Content.Headers.ContentLength > 0)
-                    {
-                        using (var stream = await res.ResponseMessage.Content.ReadAsStreamAsync().ConfigureAwait(false))
-                        using ( var tr = new StreamReader(stream))
-                        using( var jr = new JsonTextReader(tr))
-                        {
-                            try
-                            {
-                               
-                                ret = BuildRuntimeRedirects(jr);
-
-                                _cache[key] = ret;
-                                _cache.Set(fallbackKey, ret,
-                                    new CacheItemPolicy() {AbsoluteExpiration = ObjectCache.InfiniteAbsoluteExpiration});
-                            }
-                            catch (Exception ex)
-                            {
-                                _logger.Error(ex);
-                                ret = new RuntimeRedirects();
-                                _cache[key] = ret;
-                            }
-                        }
-                    }
-                    else
-                    {
-                        ret = new RuntimeRedirects();
-                        _cache[key] = ret;
-                    }
+                    ret = BuildRuntimeRedirects(redirects);
+                    
                 }
 
                 catch (Exception ex)
@@ -252,54 +251,48 @@ namespace Mozu.SiteBuilder.Mvc.SEO
             }
             return ret;
         }
-        RuntimeRedirects BuildRuntimeRedirects (JsonTextReader reader)
+        RuntimeRedirects BuildRuntimeRedirects (List<RedirectEntry> redirects)
         {
             RuntimeRedirects rr = new RuntimeRedirects()
             {
                 QueryString = new Dictionary<string,List<RuntimeRedirectEntry>>(StringComparer.OrdinalIgnoreCase),
                 Simple = new Dictionary<string,RedirectEntry>(StringComparer.OrdinalIgnoreCase)
             };
-            JsonSerializer ser = JsonSerializer.CreateDefault();
+            
 
-
-            while (reader.Read())
+            foreach (var redirect in redirects)
             {
-                if (reader.TokenType == JsonToken.PropertyName)
+                var source = redirect.Source;
+                var qPos = source.IndexOf('?');
+                if (qPos == -1)
                 {
-                    var source = (string)reader.Value;
-                    reader.Read();
-                    var redirect = ser.Deserialize<RedirectEntry>(reader);
-                    redirect.Source = source;
-                    var qPos = source.IndexOf('?');
-                    if (qPos == -1)
-                    {
-                        rr.Simple[source] = redirect;
-                        continue;
-                    }
-                    List<RuntimeRedirectEntry> qsEntries;
-
-
-                    var stem = source.Substring(0, qPos);
-
-                    if (!rr.QueryString.TryGetValue(stem, out qsEntries))
-                    {
-                        qsEntries = new List<RuntimeRedirectEntry>();
-                        rr.QueryString[stem] = qsEntries;
-                    }
-                    qsEntries.Add(new RuntimeRedirectEntry()
-                    {
-                        Redirect = redirect,
-                        Query = System.Web.HttpUtility.ParseQueryString(source.Substring(qPos + 1))
-                    });
+                    rr.Simple[source] = redirect;
+                    continue;
                 }
-          
+                List<RuntimeRedirectEntry> qsEntries;
+
+
+                var stem = source.Substring(0, qPos);
+
+                if (!rr.QueryString.TryGetValue(stem, out qsEntries))
+                {
+                    qsEntries = new List<RuntimeRedirectEntry>();
+                    rr.QueryString[stem] = qsEntries;
+                }
+                qsEntries.Add(new RuntimeRedirectEntry()
+                {
+                    Redirect = redirect,
+                    Query = System.Web.HttpUtility.ParseQueryString(source.Substring(qPos + 1))
+                });
+
+
 
 
             }
             
             return rr;
         }
-        Task<Dictionary<string, RedirectEntry>> IRedirectRepository.UpdateRedirectEntries(Dictionary<string, RedirectEntry> redirects, int? siteId)
+        Task<List<RedirectEntry>> IRedirectRepository.UpdateRedirectEntries(List<RedirectEntry> redirects, int? siteId)
         {
             var client = siteId.HasValue ? _userDocumentClient.CloneWithSbContext(_siteBuilderApiContext).CloneWithSiteId(siteId) : _userDocumentClient;
             return client.GetTreeDocument("siteSettings@mozu", FileName).ContinueWith(gdt =>
