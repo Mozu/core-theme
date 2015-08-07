@@ -13,6 +13,8 @@
     "order": "Bestellen",
     "verifyWith"           : "Stellen Sie sicher, mit",
     "verification"         : "Überprüfung",
+    "billingPostalCode": "Abrechnung-Postleitzahl",
+    "billingPhoneNumber": "Abrechnung-Telefonnummer",
     "viewCart"   : "Einkaufswagen",
     "search"   : "Suche",
     "of"   : "von",
