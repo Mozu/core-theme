@@ -19,5 +19,8 @@
         ///     Only returned with response group includeCounts
         /// </summary>
         public int? RedemptionCount { get; set; }
+
+
+        public bool CanBeDeleted { get; set; }
     }
 }
