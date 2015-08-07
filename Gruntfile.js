@@ -1,4 +1,4 @@
-﻿module.exports = function(grunt) {
+module.exports = function(grunt) {
 
     var pkg = grunt.file.readJSON('./package.json');
     var semver = require('semver');
@@ -87,18 +87,36 @@
             "files": [
               {
                 "src": [
-                  "**",
-                  "!node_modules/**",
-                  "!references/**",
-                  "!tasks/**",
-                  "!configure.js",
-                  "!Gruntfile.js",
-                  "!mozu.config.json",
-                  "!*.zip"
+                  "admin/**/*",
+                  "compiled/**/*",
+                  "labels/**/*",
+                  "resources/**/*",
+                  "scripts/**/*",
+                  "stylesheets/**/*",
+                  "templates/**/*",
+                  "theme.json",
+                  "*thumb.png",
+                  "*thumb.jpg",
+                  "theme-ui.json",
+                  "!.orig",
+                  "!.inherited"
                 ],
                 "dest": "/"
               }
             ]
+          }
+        },
+        "mozutheme": {
+          "check": {},
+          "update": {
+            "versionRange": "<%= pkg.config.baseThemeVersion %>"
+          },
+          "compile": {},
+          "quickcompile": {
+            "command": "compile",
+            "opts": {
+              "skipminification": true
+            }
           }
         },
         "mozusync": {
@@ -154,16 +172,22 @@
      'grunt-contrib-jshint',
      'grunt-contrib-watch',
      'grunt-contrib-compress',
-     'grunt-mozu-appdev-sync'].forEach(grunt.loadNpmTasks);
+     'grunt-mozu-appdev-sync',
+     'thmaa'
+    ].forEach(grunt.loadNpmTasks);
 
-    grunt.loadTasks('./tasks/');
-    grunt.registerTask('default', ['jshint', /*'bower', */ 'zubat']); // no bower necessary for now
+    grunt.registerTask('default', [
+      'jshint', 
+      'bower',
+      'mozutheme:quickcompile',
+      'mozusync:upload'
+    ]); // no bower necessary for now
 
 
     grunt.registerTask('setver', function() {
 
         var j = grunt.file.readJSON('./theme.json');
-        j.about.name = "Core7 VisaCheckout " + semver.inc(pkg.version, grunt.option('increment') || 'prerelease');
+        j.about.name = "Core8 VisaCheckout " + semver.inc(pkg.version, grunt.option('increment') || 'prerelease');
         grunt.file.write('./theme.json', JSON.stringify(j, null, 4));
 
     });

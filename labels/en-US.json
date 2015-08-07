@@ -17,6 +17,7 @@
   "viewCart"             : "View Cart",
   "search"               : "Search",
   "of"                   : "of",
+  "or"                   : "or",
   "from"                 : "from",
   "all"                  : "All",
   "save"                 : "Save",
@@ -59,11 +60,14 @@
   "cardNumber"           : "Card Number",
   "nameOnCard"           : "Name On Card",
   "expires"              : "Expires",
-  "securityCode"         : "Security Code",
+  "securityCode"         : "Security Code (CVV2)",
   "phone"                : "Phone",
   "email"                : "Email",
   "emailAddress"         : "Email Address",
   "creditCard"           : "Credit Card",
+  "newCreditCard"        : "New Credit Card",
+  "savedCreditCard"      : "Saved Credit Card",
+  "change"               : "change",
 
   "ccVisa"         : "Visa",
   "ccMastercard"     : "MasterCard",
@@ -354,7 +358,7 @@
   "differentExpectations": "Different from what was expected",
   "defective"            : "Defective - does not work properly",
   "noLongerWanted"       : "No longer needed/wanted",
-  "tooLate"              : "Arrived too late",
+  "late"              : "Arrived too late",
   "wrongCountryForType"  : "Please select a country supported for this contact type",
   "digitalCodeAlreadyUsed": "This code has already been used.",
   "digitalCreditExceedsBalance": "The amount to apply exceeds the total remaining.",
@@ -407,8 +411,5 @@
   "notifyWidgetError"    : "There was an error subscribing. Please try again.",
 
   "dealOfTheDay"     : "Deal of the Day",
-
-  "visaCheckoutCVVReminder": "Please re-enter your card security code.",
-  "visaCheckoutEditReminder": "For security reasons you cannot edit the credit card information from Visa Checkout. If you proceed, your Visa Checkout details will be removed and this order will be processed without Visa Checkout.",
-  "cancelVisaCheckout": "Edit Details"
+  "visaCheckoutEditReminder": "For security reasons you cannot edit the credit card information from Visa Checkout. If you proceed, your Visa Checkout details will be removed and this order will be processed without Visa Checkout."
 }

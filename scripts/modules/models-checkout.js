@@ -1,4 +1,4 @@
-﻿define([
+define([
     "modules/jquery-mozu",
     "underscore",
     "hyprlive",
@@ -310,7 +310,7 @@
                 var self = this;
                 var order = this.getOrder();
                 var currentPayment = order.apiModel.getCurrentPayment();
-                order.apiVoidPayment(currentPayment.id).then(function() {
+                return order.apiVoidPayment(currentPayment.id).then(function() {
                     self.clear();
                     self.stepStatus("incomplete");
                 });
@@ -707,19 +707,41 @@
                     me.get('card').clear();
                     me.get('check').clear();
                     me.unset('paymentType');
+                    me.set('usingSavedCard', false);
                 } else {
                     me.setSavedPaymentMethod(newId);
+                    me.set('usingSavedCard', true);
                 }
             },
-            setSavedPaymentMethod: function (newId) {
+            clearSavedPaymentMethod: function() {
+                var me = this, 
+                    order = me.getOrder(),
+                    currentPayment = order.apiModel.getCurrentPayment();
+
+                function clear() {
+                    me.syncPaymentMethod(me, "new");
+                    me.unset('isSameBillingShippingAddress');
+                    me.stepStatus("incomplete");
+                }
+
+                if (currentPayment && 
+                    currentPayment.card && 
+                    currentPayment.card.paymentServiceCardId == me.get('card.paymentServiceCardId')) {
+                    order.apiVoidPayment(currentPayment.id).then(clear);
+                } else {
+                    clear();
+                }
+            },
+            setSavedPaymentMethod: function (newId, manualCard) {
                 var me = this,
                     customer = me.getOrder().get('customer'),
-                    card = customer.get('cards').get(newId),
+                    card = manualCard || customer.get('cards').get(newId),
                     cardBillingContact = card && customer.get('contacts').get(card.get('contactId'));
                 if (card) {
                     me.get('billingContact').set(cardBillingContact.toJSON());
                     me.get('card').set(card.toJSON());
                     me.set('paymentType', 'CreditCard');
+                    me.set('usingSavedCard', true);
                 }
             },
             getPaymentTypeFromCurrentPayment: function () {
@@ -738,7 +760,7 @@
                 var me = this;
                 _.defer(function () {
                     me.getPaymentTypeFromCurrentPayment();
-                    me.setSavedPaymentMethod(me.get('savedPaymentMethodId'));
+                    me.setSavedPaymentMethod(me.get('savedPaymentMethodId') || me.get('card.paymentServiceCardId'));
                 });
                 var billingContact = this.get('billingContact');
                 this.on('change:paymentType', this.selectPaymentType);
@@ -749,7 +771,11 @@
                     }
                 });
                 this.on('change:savedPaymentMethodId', this.syncPaymentMethod);
-
+                this.on('change:usingSavedCard', function(me, yes) {
+                    if (yes && !me.get('savedPaymentMethodId')) {
+                        me.setSavedPaymentMethod(null, me.getOrder().get('customer.cards').first());
+                    }
+                });
                 this._cachedDigitalCredits = null;
 
                 _.bindAll(this, 'applyPayment', 'addStoreCredit');
@@ -761,13 +787,10 @@
             calculateStepStatus: function () {
                 var fulfillmentComplete = this.parent.get('fulfillmentInfo').stepStatus() === "complete",
                     activePayments = this.activePayments(),
-                    currentPayment = this.getOrder().apiModel.getCurrentPayment(),
                     thereAreActivePayments = activePayments.length > 0,
                     paymentTypeIsCard = activePayments && !!_.findWhere(activePayments, { paymentType: 'CreditCard' }),
                     paymentTypeIsPayPal = activePayments && !!_.findWhere(activePayments, { paymentType: 'PaypalExpress' }),
                     balanceZero = this.parent.get('amountRemainingForPayment') === 0;
-
-                //if (currentPayment && currentPayment.paymentWorkflow === "VisaCheckout") return this.markComplete();
 
                 if (paymentTypeIsCard) return this.stepStatus("incomplete"); // initial state for CVV entry
 
@@ -791,10 +814,10 @@
                 function normalizeBillingInfos(obj) {
                     return {
                         paymentType: obj.paymentType,
-                        billingContact: _.extend(_.omit(obj.billingContact, "orderId"), {
+                        billingContact: _.extend(_.omit(obj.billingContact, "id", "orderId", "accountId", "auditInfo", "types"), {
                             address: _.omit(obj.billingContact.address, 'candidateValidatedAddresses')
                         }),
-                        card: !obj.card ? {} : _.extend(_.omit(obj.card, "cvv", "paymentWorkflow", "isCvvOptional", "cardType", "paymentOrCardType", "cardNumberPartOrMask", "cardNumber", "cardNumberPart", "paymentServiceCardId", "id"), {
+                        card: !obj.card ? {} : _.extend(_.omit(obj.card, "contactId", "cvv", "paymentWorkflow", "isCvvOptional", "cardType", "paymentOrCardType", "cardNumberPartOrMask", "cardNumber", "cardNumberPart", "paymentServiceCardId", "id"), {
                             cardType: obj.card.paymentOrCardType || obj.card.cardType,
                             cardNumber: obj.card.cardNumberPartOrMask || obj.card.cardNumberPart || obj.card.cardNumber,
                             id: obj.card.paymentServiceCardId || obj.card.id,
@@ -1278,12 +1301,6 @@
                     } else {
                         // in the simplest, most common case, where the order total has reduced and only one
                         // payment method is active, then we can automatically deduct the difference
-
-                        // return order.apiVoidPayment(currentPayment.id).then(function() {
-                        //     currentPayment.amountRequested = total;                            
-                        //     billingInfo.set(currentPayment);
-                        //     return billingInfo.applyPayment();
-                        // });
 
                         currentPayment.amountRequested = total;
                         billingInfo.set(currentPayment);

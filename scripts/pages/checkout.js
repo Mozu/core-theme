@@ -1,6 +1,6 @@
-﻿require(["modules/jquery-mozu", "underscore", "hyprlive", "modules/backbone-mozu", "modules/models-checkout", "modules/views-messages", "modules/cart-monitor", 'hyprlivecontext', 'modules/preserve-element-through-render'], function ($, _, Hypr, Backbone, CheckoutModels, messageViewFactory, CartMonitor, HyprLiveContext, preserveElements) {
+require(["modules/jquery-mozu", "underscore", "hyprlive", "modules/backbone-mozu", "modules/models-checkout", "modules/views-messages", "modules/cart-monitor", 'hyprlivecontext', 'modules/editable-view', 'modules/preserve-element-through-render'], function ($, _, Hypr, Backbone, CheckoutModels, messageViewFactory, CartMonitor, HyprLiveContext, EditableView, preserveElements) {
 
-    var CheckoutStepView = Backbone.MozuView.extend({
+    var CheckoutStepView = EditableView.extend({
         edit: function () {
             this.model.edit();
         },
@@ -17,7 +17,7 @@
         },
         constructor: function () {
             var me = this;
-            Backbone.MozuView.apply(this, arguments);
+            EditableView.apply(this, arguments);
             me.resize();
             setTimeout(function () {
                 me.$('.mz-panel-wrap').css({ 'overflow-y': 'hidden'});
@@ -132,7 +132,6 @@
             'digitalCreditCode'
         ],
         renderOnChange: [
-            'savedPaymentMethodId',
             'billingContact.address.countryCode',
             'paymentType',
             'isSameBillingShippingAddress'
@@ -142,16 +141,8 @@
             "change [data-mz-digital-credit-amount]": "applyDigitalCredit",
             "change [data-mz-digital-add-remainder-to-customer]": "addRemainderToCustomer"
         },
-        edit: function () {
-            if (
-                this.model.get('paymentWorkflow') === "VisaCheckout" &&
-                window.confirm(Hypr.getLabel('visaCheckoutEditReminder'))
-            ) {
-                this.model.cancelVisaCheckout();
-            }
-        },
+        
         initialize: function () {
-            this.listenTo(this.model, 'change:paymentType', this.onSelectPaymentType, this);
             this.listenTo(this.model, 'change:digitalCreditCode', this.onEnterDigitalCreditCode, this);
             this.listenTo(this.model, 'orderPayment', function (order, scope) {
                     this.render();
@@ -174,8 +165,52 @@
                 this.visaCheckoutInitialized = true;
             }
         },
-        updateAcceptsMarketing: function(e) {
+        updateAcceptsMarketing: function() {
             this.model.getOrder().set('acceptsMarketing', $(e.currentTarget).prop('checked'));
+        },
+        updatePaymentType: function(e) {
+            var newType = $(e.currentTarget).val();
+            this.model.set('usingSavedCard', e.currentTarget.hasAttribute('data-mz-saved-credit-card'));
+            this.model.set('paymentType', newType, { silent: true });
+            this.model.trigger('change:paymentType', this.model, newType);
+        },
+        beginEditingCard: function() {
+            var me = this;
+            var isVisaCheckout = this.model.visaCheckoutFlowComplete();
+            if (!isVisaCheckout) {
+                this.editing.savedCard = true;
+                this.render();
+            }
+            if (window.confirm(Hypr.getLabel('visaCheckoutEditReminder'))) {
+                this.doModelAction('cancelVisaCheckout').then(function() {
+                    me.editing.savedCard = false;
+                    me.render();
+                });
+            }
+        },
+        finishEditingCard: function() {
+            var me = this;
+            var op = me.doModelAction('submit');
+            if (op) {
+                return op.then(function() {
+                    me.editing.savedCard = false;
+                    me.model.edit();
+                });
+            }
+        },
+        beginEditingBillingAddress: function() {
+            this.editing.savedBillingAddress = true;
+            this.render();
+        },
+        finishEditingBillingAddress: function() {
+            var me = this;
+            var op = me.doModelAction('submit');
+            if (op) {
+                return op.then(function() {
+                    me.editing.savedBillingAddress = false;
+                    me.model.edit();
+                });
+            }
         },
         beginApplyCredit: function () {
             this.model.beginApplyCredit();
