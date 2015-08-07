@@ -6,18 +6,19 @@ Ext.define('Taco.view.couponSet.Grid', {
     //cls: Taco.baseCSSPrefix + 'searchlist',
 
     requires: [
+        'Ext.Date',
+        'Ext.form.Panel',
+        'Ext.tip.QuickTipManager',
+        'Taco.core.ux.BaseGrid',
+        'Taco.core.ux.FilterableDataView',
+        'Taco.core.ux.TextFilter',
+        'Taco.core.ux.grid.MenuColumn',
         'Taco.model.CouponSet',
         'Taco.store.CouponSetGrid',
-        'Taco.view.couponSet.AdvancedSearchForm',
-        'Ext.Date',
         'Taco.store.TargetedShippingMethods',
-        'Ext.form.Panel',
-        'Taco.core.ux.BaseGrid',
-        'Ext.tip.QuickTipManager',
-        'Taco.core.ux.TextFilter',
-        'Taco.view.discount.Edit',
-        'Taco.core.ux.FilterableDataView',
-        'Taco.core.ux.grid.MenuColumn'
+        'Taco.view.couponSet.AdvancedSearchForm',
+        'Taco.view.couponSet.modal.CouponSetEditor',
+        'Taco.view.discount.Edit'
     ],
 
     mixins: {
@@ -50,44 +51,6 @@ Ext.define('Taco.view.couponSet.Grid', {
     createButtonEnabled: true,
     saveButtonEnabled: false,
     cancelButtonEnabled: false,
-    createButtonCfg: {
-        menuAlign: 'tr-br?',
-        menu: {
-            plain: true,
-            shadow: false,
-            items: [
-                {
-                    text: 'Manual Coupon Set',
-                    //requiredBehaviors: {
-                    //    model: 'Taco.model.Discount',
-                    //    behavior: 'create'
-                    //},
-                    listeners: {
-                        click: {
-                            scope: this,
-                            fn: function() {
-                                console.log("manual");
-                            }
-                        }
-                    }
-                }, {
-                    text: 'Generated Coupon Set',
-                    //requiredBehaviors: {
-                    //    model: 'Taco.model.Discount',
-                    //    behavior: 'create'
-                    //},
-                    listeners: {
-                        click: {
-                            scope: this,
-                            fn: function() {
-                                console.log("generated");
-                            }
-                        }
-                    }
-                }
-            ]
-        }
-    },
 
     createButtonText: "Create New Coupon Set",
 
@@ -102,6 +65,8 @@ Ext.define('Taco.view.couponSet.Grid', {
     autoScroll: true,
 
     enableQuickFilters:false,
+
+    deletePromptMsg : "If a coupon set is currently active, deleting it could affect pending orders and carts.<br/>Are you sure you want to delete this?",
 
     advancedSearchConfig : {
         advancedFormCls: 'Taco.view.couponSet.AdvancedSearchForm',
@@ -129,6 +94,8 @@ Ext.define('Taco.view.couponSet.Grid', {
         
     initComponent: function () {
         var me = this;
+
+        me.createButtonCfg = me.getCreateButtonConfig();
 
         this.columns = this.getColumnConfig();
 
@@ -240,25 +207,27 @@ Ext.define('Taco.view.couponSet.Grid', {
                 menuItems: [
                     {
                         text: 'Edit',
-                        requiredBehaviors: {
-                            model: 'Taco.model.Discount',
-                            behavior: 'update'
-                        },
-                        menuColumnHandler: function (item, eventData) {
-                            var record = eventData.record;
-                            Ext.defer(function () {
-                                Taco.core.StateManager.attemptNavigate(me.controllerName + '/edit/' + record.getId(), {complexMetaData: {record: record}});
-                            }, 1, this);
-                        }
+                        //requiredBehaviors: {
+                        //    model: 'Taco.model.Discount',
+                        //    behavior: 'update'
+                        //},
+                        menuColumnHandler: me.doEdit,
+                        //    function (item, eventData) {
+                        //    var record = eventData.record;
+                        //    Ext.defer(function () {
+                        //        Taco.core.StateManager.attemptNavigate(me.controllerName + '/edit/' + record.getId(), {complexMetaData: {record: record}});
+                        //    }, 1, this);
+                        //}
+                        scope: me
                     }, {
                         text: 'Delete',
                         itemId: "deleteMenuItem",
                         // deleteMenuColumnHandler can be found in Taco.core.ux.mixins.DeleteFromGrid
                         menuColumnHandler: "deleteMenuColumnHandler",
-                        requiredBehaviors: {
-                            model: 'Taco.model.Discount',
-                            behavior: 'delete'
-                        },
+                        //requiredBehaviors: {
+                        //    model: 'Taco.model.Discount',
+                        //    behavior: 'delete'
+                        //},
                         scope: me
                     }
                 ]
@@ -266,28 +235,120 @@ Ext.define('Taco.view.couponSet.Grid', {
         ];
     },
 
+
+    launchEditor: function (record) {
+        Ext.defer(function () {
+            this.openEditor(record, record.get('couponSetType'), false);
+        }, 1, this);
+    },
+
+
     onItemClick: function (view, record, elm, index, e) {
         // console.log(e.target);
         if (e.target.className === 'taco-launch-editor') {
             e.preventDefault();
-            this.launchEditor(record);
-            Taco.app.StateManager.addState(this.controllerName + '/edit/' + record.getId(), { id: record.getId() });
+            this.openEditor(record, record.get('couponSetType'), false);
+            //this.doEdit(record, e);
+            //this.launchEditor(record);
+            //Taco.app.StateManager.addState(this.controllerName + '/edit/' + record.getId(), { id: record.getId() });
         }
     },
 
-    doCreate : function (){
-        Taco.app.StateManager.attemptNavigate(this.controllerName + '/create');
+    doEdit : function (item, eventData) {
+        var rec = eventData.record;
+        item.scope.openEditor(rec, rec.get('couponSetType'), false);
     },
 
-    launchEditor: function (record) {
+    openEditor: function (record, couponSetType, isNew) {
         var me = this;
-        Ext.defer(function () {
-            Taco.core.StateManager.attemptNavigate(me.controllerName + '/edit/' + record.getId(), { complexMetaData: { record: record } });
-        }, 1, this);
+        Ext.create('Taco.view.couponSet.modal.CouponSetEditor', {
+            // if we want to edit a draft only, pass recordId.
+            // otherwise, pass the record.
+
+            record: record,
+            createType: couponSetType,
+            isCreateMode: isNew,
+
+            listeners: {
+                savesuccess: function() {
+                  me.store.reload();
+                }
+            }
+        });
+    },
+
+    doCreate : function (couponSetType){
+        if (!couponSetType) return;
+        this.openEditor(null, couponSetType, true);
     },
 
     getDeletePromptMessage: function (record) {
         return record.getDeletePromptMessage();
+    },
+
+    getCreateButtonConfig: function () {
+        var me = this;
+        return {
+            menuAlign: 'tr-br?',
+            menu: {
+                plain: true,
+                shadow: false,
+                items: [
+                    {
+                        text: 'Manual Coupon Set',
+                        //requiredBehaviors: {
+                        //    model: 'Taco.model.Discount',
+                        //    behavior: 'create'
+                        //},
+                        listeners: {
+                            click: {
+                                fn: function (menu, menuItem) {
+                                    if (!menuItem) {
+                                        return
+                                    }
+                                    ////var context= menuItem.context;
+                                    //var siteId = menuItem.siteId;
+                                    //// set the context to the siteId of the selected store;
+                                    //var context = Taco.app.context.getStore().findRecord('id', siteId).raw
+                                    //Taco.app.context.setCurrentContext(context);
+                                    //create the
+                                    me.doCreate('Manual');
+
+                                },
+                                scope: me,
+                                delegate: "x-menu-item-link"
+                            }
+                        }
+                    }, {
+                        text: 'Generated Coupon Set',
+                        //requiredBehaviors: {
+                        //    model: 'Taco.model.Discount',
+                        //    behavior: 'create'
+                        //},
+                        listeners: {
+                            click: {
+                                fn: function (menu, menuItem) {
+                                    if (!menuItem) {
+                                        return
+                                    }
+                                    ////var context= menuItem.context;
+                                    //var siteId = menuItem.siteId;
+                                    //// set the context to the siteId of the selected store;
+                                    //var context = Taco.app.context.getStore().findRecord('id', siteId).raw
+                                    //Taco.app.context.setCurrentContext(context);
+                                    //create the
+                                    me.doCreate('Generated');
+                                },
+                                scope: me,
+                                delegate: "x-menu-item-link"
+                            }
+                        }
+                    }
+                ]
+            }
+        }
     }
+
+
 
 });

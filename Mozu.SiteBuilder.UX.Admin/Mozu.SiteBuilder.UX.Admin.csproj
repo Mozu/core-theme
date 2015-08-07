@@ -173,6 +173,7 @@
     <Compile Include="Api\CatalogPublishingController.cs" />
     <Compile Include="Api\CategoryController.cs" />
     <Compile Include="Api\ChannelController.cs" />
+    <Compile Include="Api\CouponSetController.cs" />
     <Compile Include="Api\ModelMapping\ContentMapping.cs" />
     <Compile Include="Api\ModelMapping\DynamicExpressionMapping.cs" />
     <Compile Include="Api\ModelMapping\PublishingSetMapping.cs" />
@@ -701,8 +702,10 @@
     <Content Include="Scripts\app\view\capability\Index.js" />
     <Content Include="Scripts\app\view\channel\Index.js" />
     <Content Include="Scripts\app\view\couponSet\AdvancedSearchForm.js" />
+    <Content Include="Scripts\app\view\couponSet\GeneralForm.js" />
     <Content Include="Scripts\app\view\couponSet\Grid.js" />
     <Content Include="Scripts\app\view\couponSet\Index.js" />
+    <Content Include="Scripts\app\view\couponSet\modal\CouponSetEditor.js" />
     <Content Include="Scripts\app\view\customers\AdvancedSearchForm.js" />
     <Content Include="Scripts\app\view\customers\Contacts.js" />
     <Content Include="Scripts\app\view\customers\modal\Contacts.js" />
