@@ -23,7 +23,10 @@
 
     var CreditCard = PaymentMethod.extend({
         mozuType: 'creditcard',
-        isCvvOptional: false,
+        defaults: {
+            isCvvOptional: false,
+            isDefaultPayMethod: false
+        },
         validation: {
             paymentOrCardType: {
                 fn: "present",
@@ -42,33 +45,18 @@
             nameOnCard: {
                 fn: "present",
                 msg: Hypr.getLabel('cardNameMissing')
-            },
-            cvv: {
-                fn: function(value, attr) {
-                    var cardType = attr.split('.')[0];
-                    var card = this.get(cardType);
-                    var payment;
+            // },
+            // cvv: {
+            //     fn: function(value, attr) {
+            //         var cardType = attr.split('.')[0],
+            //             card = this.get(cardType);
 
-                    // if card is a payment, actual card data is nested within
-                    if (card.mozuType === 'payment') {
-                        card = card.get('card');
-                    } else if (card.mozuType === 'creditcard') {
-                        payment = order.get('payments')[0];
+            //         // if card is not selected or cvv is optional, no need to validate
+            //         if (!card.selected || card.get('isCvvOptional')) return;
 
-                        if (payment && payment.status === 'New' && payment.paymentWorkflow === 'VisaCheckout') {
-                            card.set({
-                                isCvvOptional: true,
-                                paymentWorkflow: 'VisaCheckout'
-                            });
-                        }
-                    }
-
-                    // if card is not selected or cvv is optional, no need to validate
-                    if (!card.selected || card.get('isCvvOptional')) return;
-
-                    if (!value)
-                        return Hypr.getLabel('securityCodeMissing') || Hypr.getLabel('genericRequired');
-                }
+            //         if (!value)
+            //             return Hypr.getLabel('securityCodeMissing') || Hypr.getLabel('genericRequired');
+            //     }
             }
         },
         initialize: function () {
@@ -97,7 +85,8 @@
         dataTypes: {
             expireMonth: Backbone.MozuModel.DataTypes.Int,
             expireYear: Backbone.MozuModel.DataTypes.Int,
-            isCardInfoSaved: Backbone.MozuModel.DataTypes.Boolean
+            isCardInfoSaved: Backbone.MozuModel.DataTypes.Boolean,
+            isDefaultPayMethod: Backbone.MozuModel.DataTypes.Boolean
         },
         expirationDateInPast: function (value, attr, computedState) {
             if (!this.selected) return undefined;
