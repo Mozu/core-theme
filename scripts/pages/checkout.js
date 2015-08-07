@@ -154,7 +154,7 @@
             this.model.getOrder().set('acceptsMarketing', $(e.currentTarget).prop('checked'));
         },
         updatePaymentType: function(e) {
-            var newType = $(e.currentTarget).val()
+            var newType = $(e.currentTarget).val();
             this.model.set('usingSavedCard', e.currentTarget.hasAttribute('data-mz-saved-credit-card'));
             this.model.set('paymentType', newType, { silent: true });
             this.model.trigger('change:paymentType', this.model, newType);

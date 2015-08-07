@@ -720,10 +720,10 @@
                     clear();
                 }
             },
-            setSavedPaymentMethod: function (newId, card) {
+            setSavedPaymentMethod: function (newId, manualCard) {
                 var me = this,
                     customer = me.getOrder().get('customer'),
-                    card = card || customer.get('cards').get(newId),
+                    card = manualCard || customer.get('cards').get(newId),
                     cardBillingContact = card && customer.get('contacts').get(card.get('contactId'));
                 if (card) {
                     me.get('billingContact').set(cardBillingContact.toJSON());
