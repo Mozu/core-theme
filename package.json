@@ -2,7 +2,7 @@
   "name": "mozu-core-theme-visa-checkout",
   "author": "Volusion, Inc.",
   "description": "The core storefront theme for Mozu",
-  "version": "8.0.0-0",
+  "version": "8.0.0-1",
   "scripts": {
     "gh-release": "grunt && grunt setver --increment prerelease && git add theme.json && git commit -m 'updating theme.json' && npm version prerelease && grunt compress && git push && git push --tags"
   },
