@@ -90,6 +90,11 @@ Ext.define('Taco.model.OrderPayment', {
             'useNull': true
         },
         {
+            'name': 'paymentWorkflow',
+            'type': 'string',
+            'useNull': true
+        },
+        {
             'name': 'storeCreditCode',
             'type': 'string',
             'useNull': true
@@ -128,6 +133,11 @@ Ext.define('Taco.model.OrderPayment', {
             'name': 'isManual',
             'type': 'boolean',
             'default': false
+        },
+        {
+            'name': 'externalTransactionId',
+            'type': 'string',
+            'useNull': true
         }],
 
     associations: [

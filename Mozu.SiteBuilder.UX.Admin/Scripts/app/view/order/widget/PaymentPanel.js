@@ -348,8 +348,8 @@ Ext.define('Taco.view.order.widget.PaymentPanel', {
 
                     '<tpl if="paymentType == \'Check\'">',
                         '<div class="paymentTypeCheck">',
-                        '<h4 class="paymentDetailsHeader">Method:</h4>',
-                        '<div class="check">Check</div>',
+                            '<h4 class="paymentDetailsHeader">Method:</h4>',
+                            '<div class="check">Check</div>',
                         '</div>',
                     '<tpl elseif="paymentType == \'StoreCredit\'">',
                         '<div class="paymentTypeStoreCredit">',
@@ -364,15 +364,21 @@ Ext.define('Taco.view.order.widget.PaymentPanel', {
                         '</div>',
                     '<tpl else>',
                         '<div class="authorizedCreditCard">',
-                        '<h4 class="paymentDetailsHeader">Method:</h4>',
+                            '<h4 class="paymentDetailsHeader">Method:</h4>',
                                 '<div class="creditCard">{cardType}</div>',
                                 '<div class="creditCard">{cardNumber}</div>',
+                                '<div class="paymentType">Type: {paymentType}</div>',
+                                '<div class="referenceId">Reference ID: {externalTransactionId}</div>',
                             // if the auth data has an id than its been authorized
                             '<tpl if="id">',
                                     '<div class="authorization">Authorization ID: {id}</div>',
                             '</tpl>',
                         '</div>',
                     '</tpl>',
+                    '<div class="workflow">',
+                        '<h4 class="paymentDetailsHeader">Workflow:</h4>',
+                        '<div class="workflow">{paymentWorkflow}</div>',
+                    '</div>',
 
 
                     '<tpl if="paymentType != \'StoreCredit\'">',

@@ -50,6 +50,8 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.Models.Order
         /// </summary>
         public string PaymentType { get; set; }
 
+        public string PaymentWorkflow { get; set; }
+
         /// <summary>
         /// Billing Contact for this payment.
         /// </summary>
@@ -81,6 +83,8 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.Models.Order
         public short? ExpireMonth { get; set; }
 
         public short? ExpireYear { get; set; }
+
+        public string ExternalTransactionId { get; set; }
 
         #endregion
 
