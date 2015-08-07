@@ -486,7 +486,7 @@ Ext.define('Taco.view.filter.ExpressionTreePanel', {
         
 
         this.mon(me, "itemkeydown", function (view, record, item, index, e) {
-            console.log(e.getKey());
+            
             switch (e.getKey()) {
                 case Ext.EventObject.F:
                     me.createFilter();
