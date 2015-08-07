@@ -720,10 +720,10 @@
                     clear();
                 }
             },
-            setSavedPaymentMethod: function (newId) {
+            setSavedPaymentMethod: function (newId, card) {
                 var me = this,
                     customer = me.getOrder().get('customer'),
-                    card = customer.get('cards').get(newId),
+                    card = card || customer.get('cards').get(newId),
                     cardBillingContact = card && customer.get('contacts').get(card.get('contactId'));
                 if (card) {
                     me.get('billingContact').set(cardBillingContact.toJSON());
@@ -748,7 +748,7 @@
                 var me = this;
                 _.defer(function () {
                     me.getPaymentTypeFromCurrentPayment();
-                    me.setSavedPaymentMethod(me.get('savedPaymentMethodId'));
+                    me.setSavedPaymentMethod(me.get('savedPaymentMethodId') || me.get('card.paymentServiceCardId'));
                 });
                 var billingContact = this.get('billingContact');
                 this.on('change:paymentType', this.selectPaymentType);
@@ -759,7 +759,11 @@
                     }
                 });
                 this.on('change:savedPaymentMethodId', this.syncPaymentMethod);
-
+                this.on('change:usingSavedCard', function(me, yes) {
+                    if (yes && !me.get('savedPaymentMethodId')) {
+                        me.setSavedPaymentMethod(null, me.getOrder().get('customer.cards').first());
+                    }
+                });
                 this._cachedDigitalCredits = null;
 
                 _.bindAll(this, 'applyPayment', 'addStoreCredit');
@@ -798,10 +802,10 @@
                 function normalizeBillingInfos(obj) {
                     return {
                         paymentType: obj.paymentType,
-                        billingContact: _.extend(_.omit(obj.billingContact, "orderId"), {
+                        billingContact: _.extend(_.omit(obj.billingContact, "id", "orderId", "accountId", "auditInfo", "types"), {
                             address: _.omit(obj.billingContact.address, 'candidateValidatedAddresses')
                         }),
-                        card: !obj.card ? {} : _.extend(_.omit(obj.card, "cvv", "paymentWorkflow", "isCvvOptional", "cardType", "paymentOrCardType", "cardNumberPartOrMask", "cardNumber", "cardNumberPart", "paymentServiceCardId", "id"), {
+                        card: !obj.card ? {} : _.extend(_.omit(obj.card, "contactId", "cvv", "paymentWorkflow", "isCvvOptional", "cardType", "paymentOrCardType", "cardNumberPartOrMask", "cardNumber", "cardNumberPart", "paymentServiceCardId", "id"), {
                             cardType: obj.card.paymentOrCardType || obj.card.cardType,
                             cardNumber: obj.card.cardNumberPartOrMask || obj.card.cardNumberPart || obj.card.cardNumber,
                             id: obj.card.paymentServiceCardId || obj.card.id,

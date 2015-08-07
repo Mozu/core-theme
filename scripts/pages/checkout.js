@@ -132,7 +132,6 @@
             'digitalCreditCode'
         ],
         renderOnChange: [
-            'savedPaymentMethodId',
             'billingContact.address.countryCode',
             'paymentType',
             'isSameBillingShippingAddress'
@@ -155,9 +154,10 @@
             this.model.getOrder().set('acceptsMarketing', $(e.currentTarget).prop('checked'));
         },
         updatePaymentType: function(e) {
-            var $el = $(e.currentTarget);
-            this.model.set('usingSavedCard', $el.data('mzSavedCreditCard'));
-            this.model.set('paymentType', $el.val());
+            var newType = $(e.currentTarget).val()
+            this.model.set('usingSavedCard', e.currentTarget.hasAttribute('data-mz-saved-credit-card'));
+            this.model.set('paymentType', newType, { silent: true });
+            this.model.trigger('change:paymentType', this.model, newType);
         },
         beginEditingCard: function() {
             this.editing.savedCard = true;
@@ -165,10 +165,13 @@
         },
         finishEditingCard: function() {
             var me = this;
-            me.doModelAction('submit').then(function() {
-                me.editing.savedCard = false;
-                me.model.edit();
-            });
+            var op = me.doModelAction('submit');
+            if (op) {
+                return op.then(function() {
+                    me.editing.savedCard = false;
+                    me.model.edit();
+                });
+            }
         },
         beginEditingBillingAddress: function() {
             this.editing.savedBillingAddress = true;
@@ -176,10 +179,13 @@
         },
         finishEditingBillingAddress: function() {
             var me = this;
-            me.doModelAction('submit').then(function() {
-                me.editing.savedBillingAddress = false;
-                me.model.edit();
-            });
+            var op = me.doModelAction('submit');
+            if (op) {
+                return op.then(function() {
+                    me.editing.savedBillingAddress = false;
+                    me.model.edit();
+                });
+            }
         },
         beginApplyCredit: function () {
             this.model.beginApplyCredit();

@@ -60,7 +60,7 @@
   "cardNumber"           : "Card Number",
   "nameOnCard"           : "Name On Card",
   "expires"              : "Expires",
-  "securityCode"         : "Security Code",
+  "securityCode"         : "Security Code (CVV2)",
   "phone"                : "Phone",
   "email"                : "Email",
   "emailAddress"         : "Email Address",

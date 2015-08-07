@@ -87,14 +87,19 @@
             "files": [
               {
                 "src": [
-                  "**",
-                  "!node_modules/**",
-                  "!references/**",
-                  "!tasks/**",
-                  "!configure.js",
-                  "!Gruntfile.js",
-                  "!mozu.config.json",
-                  "!*.zip"
+                  "admin/**/*",
+                  "compiled/**/*",
+                  "labels/**/*",
+                  "resources/**/*",
+                  "scripts/**/*",
+                  "stylesheets/**/*",
+                  "templates/**/*",
+                  "theme.json",
+                  "*thumb.png",
+                  "*thumb.jpg",
+                  "theme-ui.json",
+                  "!.orig",
+                  "!.inherited"
                 ],
                 "dest": "/"
               }
