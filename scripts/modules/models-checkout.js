@@ -814,17 +814,22 @@
                 return !_.isEqual(normalizedSavedPaymentInfo, normalizedLiveBillingInfo);
             },
             submit: function () {
+                
                 var order = this.getOrder();
                 // just can't sync these emails right
                 order.syncBillingAndCustomerEmail();
+
                 if (this.nonStoreCreditTotal() > 0 && this.validate()) return false;
+
                 var currentPayment = order.apiModel.getCurrentPayment();
+
                 var card = this.get('card');
+
                 if (!currentPayment) {
                     return this.applyPayment();
                 } else if (this.hasPaymentChanged(currentPayment)) {
                     return order.apiVoidPayment(currentPayment.id).then(this.applyPayment);
-                } else if (card.cvv && card.paymentServiceCardId && card.cvv.match(/\d+/)) {
+                } else if (card.cvv && card.paymentServiceCardId) {
                     return api.createSync('creditcard', { id: card.paymentServiceCardId }).update(card);
                 } else {
                     this.markComplete();
