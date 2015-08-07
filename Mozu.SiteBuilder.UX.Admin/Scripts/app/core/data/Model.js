@@ -153,22 +153,7 @@ Ext.define('Taco.core.data.Model', {
     },
 
     getData2: function (record, includeAssociated) {
-        var me = this,
-            fields = me.fields.items,
-            fLen = fields.length,
-            data = {},
-            name, f;
-
-        record.fields.each(function (field) {
-            if (field.persist) {
-                data[field.name] = record.get(field.name);
-            }
-        });
-        //todo
-        //if (includeAssociated === true) {
-        //    Ext.apply(data, me.getAssociatedData());
-        //}
-        return data;
+        return record.getProxy().getWriter().getRecordData(record, { operation: 'update' });
     },
 
     getOrCreateHasManyStore: function (config) {
@@ -225,6 +210,7 @@ Ext.define('Taco.core.data.Model', {
             var data = [];
             if (store.isDirty()) {
                 Ext.each(store.data.items, function (record) {
+
                     data.push(this.getData2(record, true));
                 });
                 this.setThruStore = associationKey;
