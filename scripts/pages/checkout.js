@@ -154,6 +154,9 @@
         updateAcceptsMarketing: function(e) {
             this.model.getOrder().set('acceptsMarketing', $(e.currentTarget).prop('checked'));
         },
+        changePaymentMethod: function(e) {
+            this.model.clearSavedPaymentMethod();
+        },
         beginApplyCredit: function () {
             this.model.beginApplyCredit();
             this.render();
