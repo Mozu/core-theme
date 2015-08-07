@@ -303,9 +303,11 @@
                 }
             }
         },
-        defaults: {
-            editingCard: {},
-            editingContact: {}
+        defaults: function () {
+            return {
+                editingCard: {},
+                editingContact: {}
+            };
         },
         initialize: function() {
             var self = this,
@@ -323,6 +325,10 @@
                     returnHistory.trigger('returndisplayed', id);
                 });
             });
+
+            _.defer(function (cust) {
+                cust.getCards();
+            }, self);
         },
         changePassword: function () {
             var self = this;
@@ -340,11 +346,10 @@
                 contacts = this.get('contacts').toJSON(),
                 editingCardModel = {
                     contacts: contacts,
-                    hasSavedContacts: this.hasSavedContacts(),
-                    isCvvOptional:true
+                    hasSavedContacts: this.hasSavedContacts()
                 };
             if (toEdit) {
-                _.extend(editingCardModel, toEdit.toJSON({ helpers: true }));
+                _.extend(editingCardModel, toEdit.toJSON({ helpers: true }), { isCvvOptional: true });
             }
             this.get('editingCard').set(editingCardModel);
         },

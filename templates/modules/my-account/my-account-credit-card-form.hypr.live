@@ -4,6 +4,17 @@
     <li class="mz-accountpaymentmethods-method mz-accountpaymentmethods-form">
     <div class="mz-l-formfieldgroup mz-creditcardform">
     {% parent %}
+    <div class="mz-l-formfieldgroup-row mz-payment-credit-card-defaultflag-row">
+        <div class="mz-l-formfieldgroup-cell"></div>
+        <div class="mz-l-formfieldgroup-cell">
+        {% if model.isDefaultPayMethod %}
+        <span>{{ labels.default }}</span>
+        {% else %}
+        <input type="checkbox" id="foobar" data-mz-value="{{ cardcontext }}isDefaultPayMethod" />
+        <label for="foobar">{{ labels.default }}</label>
+        {% endif %}
+        </div>
+    </div>
     {% if model.hasSavedContacts %}
     <div class="mz-l-formfieldgroup-row mz-creditcard-billingaddresses">
         <div class="mz-l-formfieldgroup-cell">

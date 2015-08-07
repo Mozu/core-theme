@@ -23,7 +23,10 @@
 
     var CreditCard = PaymentMethod.extend({
         mozuType: 'creditcard',
-        isCvvOptional: false,
+        defaults: {
+            isCvvOptional: false,
+            isDefaultPayMethod: false
+        },
         validation: {
             paymentOrCardType: {
                 fn: "present",
@@ -82,7 +85,8 @@
         dataTypes: {
             expireMonth: Backbone.MozuModel.DataTypes.Int,
             expireYear: Backbone.MozuModel.DataTypes.Int,
-            isCardInfoSaved: Backbone.MozuModel.DataTypes.Boolean
+            isCardInfoSaved: Backbone.MozuModel.DataTypes.Boolean,
+            isDefaultPayMethod: Backbone.MozuModel.DataTypes.Boolean
         },
         expirationDateInPast: function (value, attr, computedState) {
             if (!this.selected) return undefined;
