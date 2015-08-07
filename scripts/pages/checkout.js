@@ -1,6 +1,6 @@
-﻿require(["modules/jquery-mozu", "underscore", "hyprlive", "modules/backbone-mozu", "modules/models-checkout", "modules/views-messages", "modules/cart-monitor"], function ($, _, Hypr, Backbone, CheckoutModels, messageViewFactory, CartMonitor) {
+﻿require(["modules/jquery-mozu", "underscore", "hyprlive", "modules/backbone-mozu", "modules/models-checkout", "modules/views-messages", "modules/cart-monitor", 'modules/editable-view'], function ($, _, Hypr, Backbone, CheckoutModels, messageViewFactory, CartMonitor, EditableView) {
 
-    var CheckoutStepView = Backbone.MozuView.extend({
+    var CheckoutStepView = EditableView.extend({
         edit: function () {
             this.model.edit();
         },
@@ -17,7 +17,7 @@
         },
         constructor: function () {
             var me = this;
-            Backbone.MozuView.apply(this, arguments);
+            EditableView.apply(this, arguments);
             me.resize();
             setTimeout(function () {
                 me.$('.mz-panel-wrap').css({ 'overflow-y': 'hidden'});
@@ -154,8 +154,32 @@
         updateAcceptsMarketing: function(e) {
             this.model.getOrder().set('acceptsMarketing', $(e.currentTarget).prop('checked'));
         },
-        changePaymentMethod: function(e) {
-            this.model.clearSavedPaymentMethod();
+        updatePaymentType: function(e) {
+            var $el = $(e.currentTarget);
+            this.model.set('usingSavedCard', $el.data('mzSavedCreditCard'));
+            this.model.set('paymentType', $el.val());
+        },
+        beginEditingCard: function() {
+            this.editing.savedCard = true;
+            this.render();
+        },
+        finishEditingCard: function() {
+            var me = this;
+            me.doModelAction('submit').then(function() {
+                me.editing.savedCard = false;
+                me.model.edit();
+            });
+        },
+        beginEditingBillingAddress: function() {
+            this.editing.savedBillingAddress = true;
+            this.render();
+        },
+        finishEditingBillingAddress: function() {
+            var me = this;
+            me.doModelAction('submit').then(function() {
+                me.editing.savedBillingAddress = false;
+                me.model.edit();
+            });
         },
         beginApplyCredit: function () {
             this.model.beginApplyCredit();

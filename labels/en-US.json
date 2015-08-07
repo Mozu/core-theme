@@ -17,6 +17,7 @@
   "viewCart"             : "View Cart",
   "search"               : "Search",
   "of"                   : "of",
+  "or"                   : "or",
   "from"                 : "from",
   "all"                  : "All",
   "save"                 : "Save",
@@ -64,7 +65,9 @@
   "email"                : "Email",
   "emailAddress"         : "Email Address",
   "creditCard"           : "Credit Card",
-  "changePaymentMethod"  : "Change Payment Method",
+  "newCreditCard"        : "New Credit Card",
+  "savedCreditCard"      : "Saved Credit Card",
+  "change"               : "change",
 
   "ccVisa"         : "Visa",
   "ccMastercard"     : "MasterCard",

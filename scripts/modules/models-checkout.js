@@ -695,8 +695,10 @@
                     me.get('card').clear();
                     me.get('check').clear();
                     me.unset('paymentType');
+                    me.set('usingSavedCard', false);
                 } else {
                     me.setSavedPaymentMethod(newId);
+                    me.set('usingSavedCard', true);
                 }
             },
             clearSavedPaymentMethod: function() {
@@ -727,6 +729,7 @@
                     me.get('billingContact').set(cardBillingContact.toJSON());
                     me.get('card').set(card.toJSON());
                     me.set('paymentType', 'CreditCard');
+                    me.set('usingSavedCard', true);
                 }
             },
             getPaymentTypeFromCurrentPayment: function () {
