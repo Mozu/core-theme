@@ -73,10 +73,6 @@ Ext.define('Taco.view.publishing.grid.Publish', {
 
         this.store.on('load', this.updateCard, this, {single: true});
 
-        this.on('boxready', function() {
-            if (!this.store.storeHasLoaded) this.setLoading(true);
-        }, this);
-
     },
 
     listeners: {
@@ -88,7 +84,6 @@ Ext.define('Taco.view.publishing.grid.Publish', {
     },
 
     updateCard: function(store, records) {
-        this.setLoading(false);
 
         if (records.length > 0) {
       
