@@ -40,8 +40,7 @@ Ext.define('Taco.view.website.Index', {
         'Taco.core.ux.DraftIcon',
         'Taco.view.publishing.modal.PublishSetPicker',
         'Taco.core.ux.content.IndicatorContainer',
-        'Taco.core.ux.action.Action',
-        'Taco.store.ThemeListingsApplied'
+        'Taco.core.ux.action.Action'
     ],
     selectedTheme: '',
     itemId: 'websiteIndex',
@@ -529,7 +528,7 @@ Ext.define('Taco.view.website.Index', {
         this.callParent(arguments);
         this.fireEvent('navigatestart', this, { url: this.url });
 
-        this.themeStore = Ext.create('Taco.store.ThemeListingsApplied', {
+        this.themeStore = Ext.create('Taco.store.ThemeListingsTree', {
             autoLoad: true,
             listeners: {
                 load: this.onThemeLoad,
@@ -732,25 +731,30 @@ Ext.define('Taco.view.website.Index', {
             previewThemesMenu = this.getHeader().down('#previewThemesMenu'),
             menu = {
                 items: []
-            };
+            },
+            hash = this.themeStore.tree.nodeHash;
 
-        this.themeStore.each(function (themeRecord) {
-            menu.items.push({
-                xtype: 'menucheckitem',
-                text: themeRecord.get('name'),
-                //     icon: '/admin/Scripts/build/resources/images/menu/checked.gif',
-                checked: themeRecord.get('isSelectedDesktop'),
-                group: 'selectedTheme',
-                handler: function (menuItem) {
-                    me.selectedTheme = themeRecord.get('id');
-                    me.navigate({
-                        url: me.url
-                    });
-                    menuItem.setChecked(true);
-                }
+        Object.keys(hash).forEach(function (key) {
+            var rec = hash[key];
 
-            });
+            if (rec.get('name') && rec.isLeaf()) {
+                menu.items.push({
+                    xtype: 'menucheckitem',
+                    text: rec.get('name'),
+                    checked: rec.get('isSelectedDesktop'),
+                    group: 'selectedTheme',
+                    handler: function (menuItem) {
+                        me.selectedTheme = rec.get('id');
+                        me.navigate({
+                            url: me.url
+                        });
+                        menuItem.setChecked(true);
+                    }
+
+                });
+            }
         });
+
         previewThemesMenu.setMenu(menu);
 
 
