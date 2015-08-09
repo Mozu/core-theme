@@ -57,7 +57,10 @@ Ext.define('Taco.view.settings.localization.widget.LocalizationGrid', {
     //stateId: 'statefulOrderGrid',
 
     initComponent: function () {
-        var me = this;
+        var me = this,
+            mc = Taco.app.context.getMasterCatalog(),
+            excludeDefaultLocale = true,
+            supportedLocales = (!mc) ? [] : mc.getSupportedLocales(excludeDefaultLocale);
 
         Ext.apply(me, {
             viewConfig: {
@@ -75,7 +78,7 @@ Ext.define('Taco.view.settings.localization.widget.LocalizationGrid', {
                         if (!column.record.dirty) {
                             return;
                         }
-
+                        column.record.set('supportedLocales', supportedLocales);
                         column.record.commit();
                         column.record.save();
                     }
