@@ -21,7 +21,7 @@
             });
 
             // need to preload the productType Record so that the views can layout correctly
-            var productTypeId = cfg.record.get("productTypeId");
+            var productTypeId = cfg.record.get('productTypeId');
 
             if (productTypeId) {
                 cfg = Ext.apply(cfg, {
@@ -48,18 +48,18 @@
         }
     },
 
-    alias: "widget.taco-product-editor",
+    alias: 'widget.taco-product-editor',
 
     formCls: 'Taco.view.product.Form',
 
     enableNextPrevious: true,
 
     nextPreviousCfg: {
-        store: "Taco.store.ProductGrid",
-        stateId: "statefulProductGrid",
-        nextButtonTipTpl: "Next Product <div style='padding-top:10px;'>{productName}</div><div style='margin-top:5px;border-top:1px solid #ccc;padding-top:10px;text-align:center;color:#ccc;font-size:11px;'>{shortCutTip}</div>",
-        previousButtonTipTpl: "Previous Product <div style='padding-top:10px;'>{productName}</div><div style='margin-top:5px;border-top:1px solid #ccc;padding-top:10px;text-align:center;color:#ccc;font-size:11px;'>{shortCutTip}</div>",
-        url: "/products/edit/"
+        store: 'Taco.store.ProductGrid',
+        stateId: 'statefulProductGrid',
+        nextButtonTipTpl: 'Next Product <div style="padding-top:10px;">{productName}</div><div style="margin-top:5px;border-top:1px solid #ccc;padding-top:10px;text-align:center;color:#ccc;font-size:11px;">{shortCutTip}</div>',
+        previousButtonTipTpl: 'Previous Product <div style="padding-top:10px;">{productName}</div><div style="margin-top:5px;border-top:1px solid #ccc;padding-top:10px;text-align:center;color:#ccc;font-size:11px;">{shortCutTip}</div>',
+        url: '/products/edit/'
     },
 
 
@@ -71,27 +71,12 @@
     saveAndCreateButtonEnabled : true,
 
     afterDuplicate: function () {
-        Taco.app.fireEvent('setmessage', "Please enter a product code.", 'info');
+        Taco.app.fireEvent('setmessage', 'Please enter a product code.', 'info');
         Taco.app.fireEvent('productduplicated', true);
     },
 
     initComponent: function () {
         var me = this;
-
-        this.publishNowMenuItem = Ext.widget('menuitem', {
-            text: 'Publish Now',
-            disabled: this.record.get('publishedState') === 'Live',
-            //requiredBehaviors: {
-            //    model: 'Taco.model.Product',
-            //    behavior: 'create'
-            //},
-            listeners: {
-                click: {
-                    fn: me.onClickPublish,
-                    scope: me
-                }
-            }
-        });
 
         this.discardDraftMenuItem = Ext.widget('menuitem', {
             text: 'Discard Draft',
@@ -147,11 +132,11 @@
             });
         }
 
-        this.publishingButton = Ext.widget('button', {
+        this.publishingButton = Ext.widget('splitbutton', {
             ui: 'action-primary',
-            scale:"medium",
+            scale: 'medium',
             itemId: 'publish',
-            text: 'Publishing',
+            text: 'Publish Now',
             beforeItemId: 'cancelActionButton',
             margin: '0 0 0 10',
             hidden: !this.checkProductPublishing(),
@@ -162,7 +147,6 @@
                 plain: true,
                 shadow: false,
                 items: [
-                    this.publishNowMenuItem,
                     {
                         text: 'Move to Publish Set',
                         //requiredBehaviors: {
@@ -179,7 +163,8 @@
                     this.removePublishSetMenuItem,
                     this.discardDraftMenuItem
                 ]
-            }
+            },
+            handler: me.onClickPublish
         });
 
         this.additionalActions = [
@@ -213,8 +198,8 @@
                 },
                 
                 {
-                    xtype: "menuseparator",
-                    style: "border:0px;height:1px;background-color:#ccc;margin:6px 0px;"
+                    xtype: 'menuseparator',
+                    style: 'border:0px;height:1px;background-color:#ccc;margin:6px 0px;'
                 }, {
                     text: 'Duplicate',
                     disabled: me.record.phantom,
@@ -222,7 +207,7 @@
                         model: 'Taco.model.Product',    
                         behavior: 'create'
                     },
-                    handler: function (item) {
+                    handler: function () {
                         var record = me.record,
                             metaData = {
                                 id: record.getId()
@@ -314,10 +299,10 @@
             tooltipContent = '',
             extraStyle = '',
             generateTooltipKey = function (content) {
-                return "<span style='width:90px;font-weight: bold;float:left;'>" + content + "</span>";
+                return '<span style="width:90px;font-weight: bold;float:left;">' + content + '</span>';
             },
             generateTooltipValue = function (content, additionalStyle, id) {
-                return "<span id='" + id + "' style='padding-left: 5px;float:left;" + additionalStyle + "'>" + content + "</span>";
+                return '<span id="' + id + '" style="padding-left: 5px;float:left;"' + additionalStyle + '">' + content + '</span>';
             };
 
         if (!this.checkProductPublishing()) {
@@ -332,21 +317,23 @@
             } else {
                 tooltipContent += generateTooltipValue('None', extraStyle);
             }
-            tooltipContent += "<br/>";
+            tooltipContent += '<br/>';
             tooltipContent += generateTooltipKey('Publish Date:');
             tooltipContent += generateTooltipValue((pubInfo.publishSetInfo && pubInfo.publishSetInfo.scheduledDate
                     ? Ext.Date.format(pubInfo.publishSetInfo.scheduledDate, 'F j, Y, g:i a T')
                     : 'Unscheduled'), extraStyle);
 
             this.titlePanel.setTooltipContent(tooltipContent);
-            this.titlePanel.setText(pubInfo.statusText, false);
+            this.titlePanel.setText('DRAFT', false);
+            // no longer updating the main text per conversation with jason muxlow 
+            // this.titlePanel.setText(pubInfo.statusText, false);
             this.titlePanel.show();
         } else {
             this.titlePanel.hide();
         }
         this.publishingButton.setDisabled(!pubInfo.enabled.publish);
         this.removePublishSetMenuItem.setDisabled(!pubInfo.enabled.remove);
-        this.publishNowMenuItem.setDisabled(!pubInfo.enabled.now);
+        // this.publishNowMenuItem.setDisabled(!pubInfo.enabled.now);
         this.discardDraftMenuItem.setDisabled(!pubInfo.enabled.discard);
     },
 
@@ -362,42 +349,29 @@
             // if the form becomes invalid disable the publish button
             me.mon(me.form, 'validityChange', function (view, valid) {
                 if (me.publishButton) {
-                    me.publishNowMenuItem.setDisabled(!valid);
+                    // me.publishNowMenuItem.setDisabled(!valid);
                 }
                 
             }, me);
-
-            // if the form gets modified, enable the publish button, but only if its valid when it becomes dirty;
+            
             me.mon(me.form, 'dirtychange', function () {
-                
-                me.requiresSave = me.form.isDirty();
-                
-                if (me.publishButton) {
-                    // note: I am not calling this.form.isValid() because that call causes the form error messages to appear;
-                    var isValid = !me.form.hasInvalidField() && me.form.isDirty();
-                    if (isValid) {
-                        if (me.record.get('publishedState') === 'Live') {
-                            this.record.set('publishedState', 'Draft');
-                        }
-                        me.setPublishStatus();
-                    }
+                if (me.publishButton && me.form.isDirty()) {
+
+                  me.publishButton.disable();   
                 }
             }, me);
-        //}
-        
-
-
-    
 
             this.on({
                 render: function() {
                     this.publishButton = this.down('button#publish');
                 },
-            aftersave: function () {
-                if (this.doPublishAfterSave) {
-                    this.doPublish();
-                }
-            },
+                aftersave: function () {
+                    if (this.doPublishAfterSave) {
+                        this.doPublish();
+                    }
+
+                    this.setPublishStatus();
+                },
             scope: this
         });
     },
@@ -413,6 +387,7 @@
     },
 
     onClickPublish: function () {
+        var me = this;
 
         if (this.form.hasInvalidField()) {
             // cant publish if the form is invalid. IE it hasn't got its required fields;
@@ -420,7 +395,6 @@
             return;
         }
 
-        
         this.publishButton.addCls('taco-button-processing');
         this.publishButton.setText('Processing...');
 
@@ -431,7 +405,9 @@
                 this.fireIdChangeAfterPublish = true;
             }
             this.doPublishAfterSave = true;
-            this.form.save();
+            this.form.save({
+                success: me.setGrowl.bind(me, 'Published', 'info')
+            });
         } else {
             this.doPublish();
         }
@@ -454,6 +430,9 @@
                                 me.record.set('publishSetDate', model.get('publishDate'));
                             }
                             me.setPublishStatus();
+                            me.record.save({
+                                success: me.setGrowl.bind(me, 'Moved to Publish Set', 'info')
+                            });
                         });
 
                         //todo: handle model not found greg_murray on 7/24/2015
@@ -471,8 +450,16 @@
     },
 
     removePublishSet: function() {
+        var me = this;
+
         this.setProductRecordPublishSetToNull();
         this.setPublishStatus();
+        this.record.save({
+            success:  me.setGrowl.bind(me, 'Removed from Publish Set', 'info'),
+            failure: function() {
+                Taco.app.fireEvent('setmessage', 'Error removing draft from publish set', 'error');
+            }
+        });
     },
 
     discardProductDraft: function () {
@@ -482,6 +469,7 @@
         this.record.discardDraft({
             success: function (scope, items) {
                 Taco.core.StateManager.attemptNavigate(me.getEditRoute() + '/' + me.record.getId(), { record: me.record });
+                me.setGrowl('Discarded', 'info');
             },
             failure: function (response) {
                 var json = Ext.decode(response.responseText, true),
@@ -501,15 +489,15 @@
             rightJustifyButtons: true,
             // reverses the order of the buttons
             reverseOrder: true,
-            msg: "Are you sure you want to delete this?",
+            msg: 'Are you sure you want to delete this?',
             closable: false,
             buttons: Ext.Msg.YESNO,
             fn: function (val) {
                 if (val === 'yes') {                    
-                    me.setLoading(true, me.body)
+                    me.setLoading(true, me.body);
                     me.record.destroy({
                         success: function (m) {
-                            var productsStore = Taco.core.data.StoreManager.getOrCreate("Taco.store.ProductGrid");
+                            var productsStore = Taco.core.data.StoreManager.getOrCreate('Taco.store.ProductGrid');
                             if (productsStore) {
                                 productsStore.needsRefresh = true;
                             }
@@ -524,7 +512,7 @@
                         callback: function () {
                             me.setLoading(true, me.body);
                         }
-                    })
+                    });
                 }
             }
         });
@@ -544,6 +532,7 @@
                     this.resumeEvent('idchange');
                     this.fireEvent('idchange', this, this.record);
                 }
+                this.setGrowl('Published', 'info');
             },
             failure: function (err) {
                 var errMsg = (err && err.responseText) ? JSON.parse(err.responseText).message : '';
@@ -560,23 +549,23 @@
     resetPublishButton : function() {
         this.publishButton.removeCls('taco-button-processing');
         this.publishButton.setText('Publishing');
-        this.publishNowMenuItem.disable(true);
+        // this.publishNowMenuItem.disable(true);
     },
 
     changeProductCode: function () {
         var me = this,
-            focusEl = me.down("#moreButton");
+            focusEl = me.down('#moreButton');
 
         var productTypeId = me.record.get('productTypeId'),
             productType = this.record.productTypeRecord;
 
-        Ext.create("Taco.view.product.widget.productCode.Modal", {
+        Ext.create('Taco.view.product.widget.productCode.Modal', {
             product: me.record,
             productType: productType,            
             listeners: {
                 'aftersaveclose': function (win, productCode) {
                     // flag product store to be updated                    
-                    var productsStore = Taco.core.data.StoreManager.getOrCreate("Taco.store.ProductGrid");
+                    var productsStore = Taco.core.data.StoreManager.getOrCreate('Taco.store.ProductGrid');
                     if (productsStore) {
                         productsStore.needsRefresh = true;
                     }
@@ -593,8 +582,13 @@
         });
     
     },
+
+    setGrowl: function(msg, info) {
+        Taco.app.fireEvent('setgrowl', msg, info, 2000);
+    },
+
     doCreate : function (){
-        var controller = "products";
+        var controller = 'products';
         Taco.app.StateManager.attemptNavigate(controller + '/create');
     }
 });
