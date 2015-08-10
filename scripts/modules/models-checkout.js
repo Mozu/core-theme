@@ -766,7 +766,7 @@
                 });
                 this._cachedDigitalCredits = null;
 
-                _.bindAll(this, 'applyPayment', 'addStoreCredit');
+                _.bindAll(this, 'applyPayment', 'addStoreCredit', 'markComplete');
             },
             selectPaymentType: function (me, newPaymentType) {
                 me.get('check').selected = newPaymentType === "Check";
@@ -802,16 +802,31 @@
                 function normalizeBillingInfos(obj) {
                     return {
                         paymentType: obj.paymentType,
-                        billingContact: _.extend(_.omit(obj.billingContact, "id", "orderId", "accountId", "auditInfo", "types"), {
-                            address: _.omit(obj.billingContact.address, 'candidateValidatedAddresses')
+                        billingContact: _.extend(_.pick(obj.billingContact,
+                            'email',
+                            'firstName',
+                            'lastNameOrSurname',
+                            'phoneNumbers'),
+                        {
+                            address: _.pick(obj.billingContact.address, 
+                                'address1',
+                                'address2',
+                                'addressType',
+                                'cityOrTown',
+                                'countryCode',
+                                'postalOrZipCode',
+                                'stateOrProvince')
                         }),
-                        card: !obj.card ? {} : _.extend(_.omit(obj.card, "contactId", "cvv", "paymentWorkflow", "isCvvOptional", "cardType", "paymentOrCardType", "cardNumberPartOrMask", "cardNumber", "cardNumberPart", "paymentServiceCardId", "id"), {
+                        card: _.extend(_.pick(obj.card,
+                            'expireMonth',
+                            'expireYear',
+                            'nameOnCard'),
+                        {
                             cardType: obj.card.paymentOrCardType || obj.card.cardType,
                             cardNumber: obj.card.cardNumberPartOrMask || obj.card.cardNumberPart || obj.card.cardNumber,
-                            id: obj.card.paymentServiceCardId || obj.card.id,
-                            cvv: obj.card.cvv && obj.card.cvv.indexOf("*") === -1 ? obj.card.cvv : void 0
+                            id: obj.card.paymentServiceCardId || obj.card.id
                         }),
-                        check: !obj.check ? {} : obj.check
+                        check: obj.check || {}
                     };
                 }
 
@@ -836,8 +851,8 @@
                     return this.applyPayment();
                 } else if (this.hasPaymentChanged(currentPayment)) {
                     return order.apiVoidPayment(currentPayment.id).then(this.applyPayment);
-                } else if (card.cvv && card.paymentServiceCardId) {
-                    return api.createSync('creditcard', { id: card.paymentServiceCardId }).update(card);
+                } else if (card.get('cvv') && card.get('paymentServiceCardId')) {
+                    return card.apiSave().then(this.markComplete, order.onCheckoutError);
                 } else {
                     this.markComplete();
                 }
@@ -882,7 +897,11 @@
             markComplete: function () {
                 this.stepStatus("complete");
                 this.isLoading(false);
-                this.getOrder().isReady(true);
+                var order = this.getOrder();
+                _.defer(function() {
+                    order.isReady(true);    
+                });
+                
             },
             toJSON: function(options) {
                 var j = CheckoutStep.prototype.toJSON.apply(this, arguments), loggedInEmail;
