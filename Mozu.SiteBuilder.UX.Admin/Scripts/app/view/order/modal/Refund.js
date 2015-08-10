@@ -78,7 +78,7 @@ Ext.define('Taco.view.order.modal.Refund', {
             model: 'Taco.model.OrderPayment',
             data: store.queryBy(function (record) {
                 return (
-                    Ext.Array.contains(['CreditCard', 'Paypal', 'PaypalExpress'], record.get('paymentType'))
+                    !Ext.Array.contains(['StoreCredit', 'Check'], record.get('paymentType'))
                         && Ext.Array.contains(record.get('availableActions'), 'CreditPayment')
                         && record.get('amountCollected') - (record.get('amountCredited') || 0) > 0
                 );
