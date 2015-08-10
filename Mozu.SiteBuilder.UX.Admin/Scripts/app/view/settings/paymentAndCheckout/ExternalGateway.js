@@ -7,6 +7,7 @@ Ext.define('Taco.view.settings.paymentAndCheckout.ExternalGateway', {
     cascadeChildTasks: true,
     padding: '0 0 20 0',
     header: null,
+    fqn: null,
 
     initComponent: function () {
         this.header = null;
@@ -15,6 +16,7 @@ Ext.define('Taco.view.settings.paymentAndCheckout.ExternalGateway', {
         var gatewayType = this.externalPayment.get('name').toUpperCase();
         var credOriginalValues = [];
         var isEnabled = false;
+        this.fqn = this.externalPayment.get('fullyQualifiedName')
         
         this.items = [];
         this.credFields = [];
@@ -88,7 +90,7 @@ Ext.define('Taco.view.settings.paymentAndCheckout.ExternalGateway', {
                         boxLabel: val.contents[0].value,
                         name: fieldDef.apiName,
                         inputValue: val.key,
-                        id: val.key,
+                        id: this.fqn + '-' + val.key,
                         checked: val.key == value
                     });
                 }
