@@ -12,8 +12,7 @@ node_modules/
 *.sublime-workspace
 seismic-audio/
 lib/
-*/*.orig
-*/*/*.orig
+*.orig
 user.app.config
 
 *ncrunch*

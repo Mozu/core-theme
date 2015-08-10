@@ -1,6 +1,6 @@
-﻿require(["modules/jquery-mozu", "underscore", "hyprlive", "modules/backbone-mozu", "modules/models-checkout", "modules/views-messages", "modules/cart-monitor"], function ($, _, Hypr, Backbone, CheckoutModels, messageViewFactory, CartMonitor) {
+﻿require(["modules/jquery-mozu", "underscore", "hyprlive", "modules/backbone-mozu", "modules/models-checkout", "modules/views-messages", "modules/cart-monitor", 'modules/editable-view'], function ($, _, Hypr, Backbone, CheckoutModels, messageViewFactory, CartMonitor, EditableView) {
 
-    var CheckoutStepView = Backbone.MozuView.extend({
+    var CheckoutStepView = EditableView.extend({
         edit: function () {
             this.model.edit();
         },
@@ -17,7 +17,7 @@
         },
         constructor: function () {
             var me = this;
-            Backbone.MozuView.apply(this, arguments);
+            EditableView.apply(this, arguments);
             me.resize();
             setTimeout(function () {
                 me.$('.mz-panel-wrap').css({ 'overflow-y': 'hidden'});
@@ -132,7 +132,6 @@
             'digitalCreditCode'
         ],
         renderOnChange: [
-            'savedPaymentMethodId',
             'billingContact.address.countryCode',
             'paymentType',
             'isSameBillingShippingAddress'
@@ -140,30 +139,7 @@
         additionalEvents: {
             "change [data-mz-digital-credit-enable]": "enableDigitalCredit",
             "change [data-mz-digital-credit-amount]": "applyDigitalCredit",
-            "change [data-mz-digital-add-remainder-to-customer]": "addRemainderToCustomer",
-            "change [data-mz-value=\"card.paymentOrCardType\"]": "foobar",
-            "change [data-mz-value=\"card.cardNumberPartOrMask\"]": "foobar",
-            "change [data-mz-value=\"card.nameOnCard\"]": "foobar",
-            "change [data-mz-value=\"card.expireMonth\"]": "foobar",
-            "change [data-mz-value=\"card.expireYear\"]": "foobar"
-        },
-        foobar: function (e) {
-            var card = this.model.get('card');
-            var field = $('#mz-payment-credit-card-number');
-
-            // If payment service already assigned a cardId to the card info,
-            // then we need to unset the cardId when that info changes.
-            // This way payment service will handle it as a new payment.
-            if (card && card.get('paymentServiceCardId')) {
-                card.unset('paymentServiceCardId');
-
-                // Counterintuitively, a masked card is not backed by a full card. It's only a visual aid.
-                // Once the cardId is unset, the shopper must understand that she needs to re-enter a
-                // valid full card. Pending better UX, we enforce this by clearing the field.
-                if (field && field.val().indexOf('*') !== -1) {
-                    field.val('');
-                }
-            }
+            "change [data-mz-digital-add-remainder-to-customer]": "addRemainderToCustomer"
         },
 
         initialize: function () {
@@ -176,6 +152,40 @@
 
         updateAcceptsMarketing: function(e) {
             this.model.getOrder().set('acceptsMarketing', $(e.currentTarget).prop('checked'));
+        },
+        updatePaymentType: function(e) {
+            var newType = $(e.currentTarget).val();
+            this.model.set('usingSavedCard', e.currentTarget.hasAttribute('data-mz-saved-credit-card'));
+            this.model.set('paymentType', newType, { silent: true });
+            this.model.trigger('change:paymentType', this.model, newType);
+        },
+        beginEditingCard: function() {
+            this.editing.savedCard = true;
+            this.render();
+        },
+        finishEditingCard: function() {
+            var me = this;
+            var op = me.doModelAction('submit');
+            if (op) {
+                return op.then(function() {
+                    me.editing.savedCard = false;
+                    me.model.edit();
+                });
+            }
+        },
+        beginEditingBillingAddress: function() {
+            this.editing.savedBillingAddress = true;
+            this.render();
+        },
+        finishEditingBillingAddress: function() {
+            var me = this;
+            var op = me.doModelAction('submit');
+            if (op) {
+                return op.then(function() {
+                    me.editing.savedBillingAddress = false;
+                    me.model.edit();
+                });
+            }
         },
         beginApplyCredit: function () {
             this.model.beginApplyCredit();

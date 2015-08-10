@@ -695,19 +695,41 @@
                     me.get('card').clear();
                     me.get('check').clear();
                     me.unset('paymentType');
+                    me.set('usingSavedCard', false);
                 } else {
                     me.setSavedPaymentMethod(newId);
+                    me.set('usingSavedCard', true);
                 }
             },
-            setSavedPaymentMethod: function (newId) {
+            clearSavedPaymentMethod: function() {
+                var me = this, 
+                    order = me.getOrder(),
+                    currentPayment = order.apiModel.getCurrentPayment();
+
+                function clear() {
+                    me.syncPaymentMethod(me, "new");
+                    me.unset('isSameBillingShippingAddress');
+                    me.stepStatus("incomplete");
+                }
+
+                if (currentPayment && 
+                    currentPayment.card && 
+                    currentPayment.card.paymentServiceCardId == me.get('card.paymentServiceCardId')) {
+                    order.apiVoidPayment(currentPayment.id).then(clear);
+                } else {
+                    clear();
+                }
+            },
+            setSavedPaymentMethod: function (newId, manualCard) {
                 var me = this,
                     customer = me.getOrder().get('customer'),
-                    card = customer.get('cards').get(newId),
+                    card = manualCard || customer.get('cards').get(newId),
                     cardBillingContact = card && customer.get('contacts').get(card.get('contactId'));
                 if (card) {
                     me.get('billingContact').set(cardBillingContact.toJSON());
                     me.get('card').set(card.toJSON());
                     me.set('paymentType', 'CreditCard');
+                    me.set('usingSavedCard', true);
                 }
             },
             getPaymentTypeFromCurrentPayment: function () {
@@ -726,7 +748,7 @@
                 var me = this;
                 _.defer(function () {
                     me.getPaymentTypeFromCurrentPayment();
-                    me.setSavedPaymentMethod(me.get('savedPaymentMethodId'));
+                    me.setSavedPaymentMethod(me.get('savedPaymentMethodId') || me.get('card.paymentServiceCardId'));
                 });
                 var billingContact = this.get('billingContact');
                 this.on('change:paymentType', this.selectPaymentType);
@@ -737,10 +759,14 @@
                     }
                 });
                 this.on('change:savedPaymentMethodId', this.syncPaymentMethod);
-
+                this.on('change:usingSavedCard', function(me, yes) {
+                    if (yes && !me.get('savedPaymentMethodId')) {
+                        me.setSavedPaymentMethod(null, me.getOrder().get('customer.cards').first());
+                    }
+                });
                 this._cachedDigitalCredits = null;
 
-                _.bindAll(this, 'applyPayment', 'addStoreCredit');
+                _.bindAll(this, 'applyPayment', 'addStoreCredit', 'markComplete');
             },
             selectPaymentType: function (me, newPaymentType) {
                 me.get('check').selected = newPaymentType === "Check";
@@ -771,17 +797,64 @@
                     paypalCancelUrl: base + "PaypalExpress=canceled"
                 };
             },
-            submit: function () {
-                var order = this.getOrder();
+            hasPaymentChanged: function(payment) {
 
+                function normalizeBillingInfos(obj) {
+                    return {
+                        paymentType: obj.paymentType,
+                        billingContact: _.extend(_.pick(obj.billingContact,
+                            'email',
+                            'firstName',
+                            'lastNameOrSurname',
+                            'phoneNumbers'),
+                        {
+                            address: _.pick(obj.billingContact.address, 
+                                'address1',
+                                'address2',
+                                'addressType',
+                                'cityOrTown',
+                                'countryCode',
+                                'postalOrZipCode',
+                                'stateOrProvince')
+                        }),
+                        card: _.extend(_.pick(obj.card,
+                            'expireMonth',
+                            'expireYear',
+                            'nameOnCard'),
+                        {
+                            cardType: obj.card.paymentOrCardType || obj.card.cardType,
+                            cardNumber: obj.card.cardNumberPartOrMask || obj.card.cardNumberPart || obj.card.cardNumber,
+                            id: obj.card.paymentServiceCardId || obj.card.id
+                        }),
+                        check: obj.check || {}
+                    };
+                }
+
+                var normalizedSavedPaymentInfo = normalizeBillingInfos(payment.billingInfo);
+                var normalizedLiveBillingInfo = normalizeBillingInfos(this.toJSON());
+
+                return !_.isEqual(normalizedSavedPaymentInfo, normalizedLiveBillingInfo);
+            },
+            submit: function () {
+                
+                var order = this.getOrder();
                 // just can't sync these emails right
                 order.syncBillingAndCustomerEmail();
+
                 if (this.nonStoreCreditTotal() > 0 && this.validate()) return false;
+
                 var currentPayment = order.apiModel.getCurrentPayment();
-                if (currentPayment) {
-                    return order.apiVoidPayment(currentPayment.id).then(this.applyPayment);
-                } else {
+
+                var card = this.get('card');
+
+                if (!currentPayment) {
                     return this.applyPayment();
+                } else if (this.hasPaymentChanged(currentPayment)) {
+                    return order.apiVoidPayment(currentPayment.id).then(this.applyPayment);
+                } else if (card.get('cvv') && card.get('paymentServiceCardId')) {
+                    return card.apiSave().then(this.markComplete, order.onCheckoutError);
+                } else {
+                    this.markComplete();
                 }
             },
             applyPayment: function () {
@@ -794,9 +867,28 @@
                 }
                 this.syncApiModel();
                 if (this.nonStoreCreditTotal() > 0) {
-                    return order.apiAddPayment().then(function () {
+                    return order.apiAddPayment().then(function() {
                         var payment = order.apiModel.getCurrentPayment();
-                        if (payment && payment.paymentType !== "PaypalExpress") self.markComplete();
+                        var modelCard, modelCvv;
+                        if (payment) {
+                            switch (payment.paymentType) {
+                                case "CreditCard":
+                                    modelCard = self.get('card');
+                                    modelCvv = modelCard.get('cvv');
+                                    if (
+                                        modelCvv && modelCvv.indexOf('*') === -1 // CVV exists and is not masked
+                                    ) {
+                                        modelCard.set('cvv', '***');
+                                        // to hide CVV once it has been sent to the paymentservice
+                                    }
+                                    self.markComplete();
+                                    break;
+                                case "PaypalExpress":
+                                    break;
+                                default:
+                                    self.markComplete();
+                            }
+                        }
                     });
                 } else {
                     this.markComplete();
@@ -805,7 +897,11 @@
             markComplete: function () {
                 this.stepStatus("complete");
                 this.isLoading(false);
-                this.getOrder().isReady(true);
+                var order = this.getOrder();
+                _.defer(function() {
+                    order.isReady(true);    
+                });
+                
             },
             toJSON: function(options) {
                 var j = CheckoutStep.prototype.toJSON.apply(this, arguments), loggedInEmail;
@@ -865,6 +961,7 @@
 
                 var self = this,
                     user = require.mozuData('user');
+
                 _.defer(function() {
                     var latestPayment = self.apiModel.getCurrentPayment(),
                         fulfillmentInfo = self.get('fulfillmentInfo'),
@@ -876,7 +973,7 @@
                             return _.reduce(steps, function(m, i) { return m + i.stepStatus(); }, '') === "completecompletecomplete";
                         },
                         isReady = allStepsComplete() && !(paypalCancelled);
-                        
+
                     self.isReady(isReady);
 
                     _.each(steps, function(step) {
@@ -920,6 +1017,13 @@
 
 
 
+            },
+            processDigitalWallet: function (digitalWalletType, payment) {
+                this.apiProcessDigitalWallet({
+                    digitalWalletData: JSON.stringify(payment)
+                }).then(function () {
+                    console.log('called the api method', arguments);
+                });
             },
             addCoupon: function () {
                 var me = this;
@@ -1167,7 +1271,7 @@
                     return deferred.promise;
                 } else {
                     billingInfo = order.get('billingInfo');
-                    if (!currentPayment || activePayments.length > 1 || currentPayment.paymentType === "PaypalExpress" || difference < 0) {
+                    if (!currentPayment || activePayments.length > 1 || currentPayment.paymentType === "PaypalExpress") {
                         // if store credits or PayPal are being used,
                         // or multiple payments are active,
                         // or the order total has increased,
@@ -1190,11 +1294,11 @@
                     } else {
                         // in the simplest, most common case, where the order total has reduced and only one
                         // payment method is active, then we can automatically deduct the difference
-                        return order.apiVoidPayment(currentPayment.id).then(function() {
-                            currentPayment.amountRequested = total;                            
-                            billingInfo.set(currentPayment);
-                            return billingInfo.applyPayment();
-                        });
+
+                        currentPayment.amountRequested = total;
+                        billingInfo.set(currentPayment);
+                        return order.update();
+                        
                     }
                 }
 
