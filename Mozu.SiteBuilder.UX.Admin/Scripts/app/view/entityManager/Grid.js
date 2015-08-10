@@ -56,25 +56,24 @@ Ext.define('Taco.view.entityManager.Grid', {
         //}
         me.callParent(arguments);
 
-        // not showing views data per #59712
+        if (me.listMetaData.views.length > 0) {
 
-        // if (me.listMetaData.views.length > 0) {
-        //     menu = Ext.widget('menu');
-        //     Ext.Array.each(me.listMetaData.views, function(view) {
-        //         menu.add({
-        //             text: view.name,
-        //             view: view,
-        //             handler: function(cmp) {
-        //                 me.initListView(cmp.view);
-        //             }
-        //         });
-        //     });
-        //     this.gridPager.insert(this.gridPager.items.getCount() - 2, '-');
-        //     this.gridPager.insert(this.gridPager.items.getCount() - 2, {
-        //         text: 'views',
-        //         menu: menu
-        //     });
-        // }
+            menu = Ext.widget('menu');
+            Ext.Array.each(me.listMetaData.views, function(view) {
+                menu.add({
+                    text: view.name,
+                    view: view,
+                    handler: function(cmp) {
+                        me.initListView(cmp.view);
+                    }
+                });
+            });
+            this.gridPager.insert(this.gridPager.items.getCount() - 2, '-');
+            this.gridPager.insert(this.gridPager.items.getCount() - 2, {
+                text: 'views',
+                menu: menu
+            });
+        }
 
         //me.insertDocked(0, me.Lists);
     },
