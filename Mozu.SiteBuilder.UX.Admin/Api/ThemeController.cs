@@ -440,7 +440,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
                     settings.MobileTheme = new ThemeSelection { Id = id };
                 }
 
-                else if (settings.DesktopTheme != null && settings.MobileTheme.Id == id)
+                else if (settings.MobileTheme != null && settings.MobileTheme.Id == id)
                 {
                     settings.MobileTheme = null;
                 }

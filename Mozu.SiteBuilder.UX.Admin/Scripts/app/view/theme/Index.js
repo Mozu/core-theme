@@ -56,7 +56,7 @@ Ext.define('Taco.view.theme.Index', {
             store: this.appliedStore,
             margin: '5 0 0 0',
             width: 318
-        })
+        });
     },
 
     buildTree: function() {
@@ -74,6 +74,30 @@ Ext.define('Taco.view.theme.Index', {
             viewConfig: {
                 animate: false,
                 stripeRows: true
+            },
+            listeners: {
+                itemcontextmenu: function(cmp, record, item, index, e) { 
+
+                    if (!record.isLeaf()) {
+                        e.stopEvent();
+                        return;
+                    }
+
+                    var menuItems = me.getMenuItems(),
+                        menu;
+
+                    //overriding the menucolumnhandler from menuitems so it works with this menu
+                    menuItems.forEach(function(item) {
+                        item.handler = item.menuColumnHandler.bind(me, null, {record: record});
+                    });
+
+                    menu = Ext.create('Ext.menu.Menu', {
+                        items: menuItems,
+                    });
+
+                    e.stopEvent();
+                    menu.showAt(e.xy);
+                }
             },
             columns: [{
                 text: 'Name',
@@ -112,7 +136,55 @@ Ext.define('Taco.view.theme.Index', {
                     }
 
                 },
-                menuItems: [{
+                menuItems: me.getMenuItems()
+            }],
+
+            dockedItems: [{
+                xtype: 'container',
+                dock: 'top',
+                padding: '0 0 10',
+                cls: 'taco-secondary-actions',
+                layout: {
+                    type: 'hbox',
+                    align: 'middle',
+                    pack: 'end'
+                },
+                items: [{
+                    xtype: 'component',
+                    cls: 'taco-theme-selector',
+                    html: '<h2>Available Themes</h2>',
+                    flex: 1
+                }, {
+                    xtype: 'button',
+                    scale: 'medium',
+                    ui: 'action',
+                    text: 'Expand All',
+                    allowDepress: false,
+                    enableToggle: true,
+                    scope: this,
+                    toggleHandler: function (button, nextState) {
+                        this.treeList.expandAll(function () {
+                            button.toggle(false);
+                        });
+                    }
+                }, {
+                    xtype: 'button',
+                    scale: 'medium',
+                    ui: 'action',
+                    text: 'Collapse All',
+                    margin: '0 0 0 10',
+                    scope: this,
+                    handler: function () {
+                        this.treeList.collapseAll();
+                    }
+                }]
+            }]
+        });
+    },
+
+    getMenuItems: function() {
+        var me = this;
+        return [{
                     text: 'Apply',
 
                     menuColumnHandler: function (item, eventData) {
@@ -182,49 +254,6 @@ Ext.define('Taco.view.theme.Index', {
                         }).show();
                     }
                 }]
-            }],
-
-            dockedItems: [{
-                xtype: 'container',
-                dock: 'top',
-                padding: '0 0 10',
-                cls: 'taco-secondary-actions',
-                layout: {
-                    type: 'hbox',
-                    align: 'middle',
-                    pack: 'end'
-                },
-                items: [{
-                    xtype: 'component',
-                    cls: 'taco-theme-selector',
-                    html: '<h2>Available Themes</h2>',
-                    flex: 1
-                }, {
-                    xtype: 'button',
-                    scale: 'medium',
-                    ui: 'action',
-                    text: 'Expand All',
-                    allowDepress: false,
-                    enableToggle: true,
-                    scope: this,
-                    toggleHandler: function (button, nextState) {
-                        this.treeList.expandAll(function () {
-                            button.toggle(false);
-                        });
-                    }
-                }, {
-                    xtype: 'button',
-                    scale: 'medium',
-                    ui: 'action',
-                    text: 'Collapse All',
-                    margin: '0 0 0 10',
-                    scope: this,
-                    handler: function () {
-                        this.treeList.collapseAll();
-                    }
-                }]
-            }]
-        })
     }
 
 });
