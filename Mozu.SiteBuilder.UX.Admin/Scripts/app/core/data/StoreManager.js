@@ -234,6 +234,7 @@ Ext.define('Taco.core.data.StoreManager', {
         if (!Ext.isNumeric(catalogId)) {
             catalogId = Taco.app.context.getCatalogId();
         }
+        
         return this.getOrCreate({
             type: 'Taco.store.CategoriesTree',
             id: 'Taco.store.CategoriesTree-' + catalogId,

@@ -8,6 +8,7 @@ Ext.define('Taco.view.filter.OperatorField', {
         'Taco.view.filter.Schema',
         'Ext.form.field.ComboBox'
     ],
+
     config: {
         fieldLabel: "Operator",
         fieldCfg: null,
@@ -95,6 +96,11 @@ Ext.define('Taco.view.filter.OperatorField', {
         }
             
         this.operatorCombo.setValue(comboValue);
+    },
+
+    isValid : function() {
+
+        return this.validate();
     },
 
     validate: function () {

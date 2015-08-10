@@ -13,19 +13,35 @@ Ext.define('Taco.view.discount.widget.CategoryPicker', {
     listWidth: 382,
     height: 30,
 
+    showDynamicRealTimeCategories: true,
+
     initComponent: function () {
         var me = this;
         this.catStore.clearFilter(true);
-        this.catStore.load();
+        
 
         // reset the list's dirty state when its store first loads
         this.catStore.on({
-            load: function() {
+            load: function () {
                 me.categoryList.resetOriginalValue();
             },
             single: true,
             scope: this
         });
+        me.catStore.on({
+            load: function () {
+                if (!me.showDynamicRealTimeCategories) {
+                    me.catStore.filterBy(function (record) {
+                        var isRealTime = record.get("categoryType") === "DynamicRealTime";
+                        return (!isRealTime);
+                    });
+                }
+                
+            },
+            scope: this
+        });
+
+        this.catStore.load();
 
         this.addEvents(
             /**
@@ -46,6 +62,7 @@ Ext.define('Taco.view.discount.widget.CategoryPicker', {
                 return this.catStore;
             },
             queryMode: 'local',
+            lastQuery: "",
             hideTrigger: true,
             triggerOnClick: false,
             forceSelection: true,
@@ -105,6 +122,20 @@ Ext.define('Taco.view.discount.widget.CategoryPicker', {
     launchCategoryModal: function (list) {
         var me = this,
             treeStore = Taco.core.data.StoreManager.getCategoryTreeByCatalog();
+
+        treeStore.on({
+            load: function () {
+                if (!me.showDynamicRealTimeCategories) {
+                    treeStore.filterBy(function(record) {
+                        var isRealTime = record.get("categoryType") === "DynamicRealTime";
+                        return (!isRealTime);
+                    });
+                }
+            },
+            scope: this
+        });
+
+
 
         this.modal = Ext.create('Taco.view.category.Modal', {
             store: treeStore

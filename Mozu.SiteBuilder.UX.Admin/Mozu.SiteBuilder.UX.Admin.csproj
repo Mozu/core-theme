@@ -579,6 +579,7 @@
     <Content Include="Scripts\app\model\OrderAttribute.js" />
     <Content Include="Scripts\app\model\ShippingMethod.js" />
     <Content Include="Scripts\app\model\Wishlist.js" />
+    <Content Include="Scripts\app\overrides\data\TreeStore.js" />
     <Content Include="Scripts\app\overrides\data\Store.js" />
     <Content Include="Scripts\app\overrides\data\AbstractStore.js" />
     <Content Include="Scripts\app\overrides\dom\ElementAddons.js" />

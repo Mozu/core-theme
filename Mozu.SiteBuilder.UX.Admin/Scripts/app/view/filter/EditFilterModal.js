@@ -46,7 +46,6 @@ Ext.define('Taco.view.filter.EditFilterModal', {
     doSave: function () {
 
         this.form.beforeSave();
-        this.record.set(this.form.getValues());
         this.saveSuccess(this.record);
     },
     

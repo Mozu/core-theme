@@ -81,6 +81,7 @@ Ext.define('Taco.Application', {
         'Taco.overrides.picker.Month',
         'Taco.overrides.data.AbstractStore',
         'Taco.overrides.data.Store',
+        'Taco.overrides.data.TreeStore',
         'Taco.overrides.form.Basic',
         'Taco.overrides.form.FieldContainer',
         'Taco.overrides.form.field.Base',

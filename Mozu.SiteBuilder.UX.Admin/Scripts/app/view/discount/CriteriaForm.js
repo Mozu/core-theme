@@ -134,7 +134,13 @@ Ext.define('Taco.view.discount.CriteriaForm', {
 
         // reset the list's dirty state when its store first loads
         catStore.on({
-            load: function () {
+            load: function (store) {
+
+                store.filterBy(function (record) {
+                    var isRealTime = record.get("categoryType") === "DynamicRealTime";
+                    return !isRealTime;
+                });
+
                 this.categoryList.resetOriginalValue();
             },
             single: true,
@@ -152,6 +158,7 @@ Ext.define('Taco.view.discount.CriteriaForm', {
                 return catStore;
             },
             queryMode: 'local',
+            lastQuery: "",
             hideTrigger: true,
             triggerOnClick: false,
             forceSelection: true,
@@ -240,6 +247,7 @@ Ext.define('Taco.view.discount.CriteriaForm', {
             forceSelection: true,
             disableKeyFilter: true,
             typeAhead: true,
+            lastQuery:"",
             displayField: 'nameAndCode',
             valueField: 'id',
             fieldLabel: 'Excluded Categories',
@@ -529,6 +537,20 @@ Ext.define('Taco.view.discount.CriteriaForm', {
     launchCategoryModal: function (list) {
         var me = this,
             treeStore = Taco.core.data.StoreManager.getCategoryTreeByCatalog();
+
+
+        treeStore.on({
+            load: function () {
+                if (!me.showDynamicRealTimeCategories) {
+                    treeStore.filterBy(function (record) {
+                        var isRealTime = record.get("categoryType") === "DynamicRealTime";
+                        return (!isRealTime);
+                    });
+                }
+            },
+            scope: this
+        });
+
 
         this.modal = Ext.create('Taco.view.category.Modal', {
             store: treeStore

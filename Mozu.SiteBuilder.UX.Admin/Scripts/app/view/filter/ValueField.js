@@ -4,6 +4,11 @@
 Ext.define('Taco.view.filter.ValueField', {
     extend: 'Ext.form.FieldContainer',
     alias: "widget.valuefield",
+    mixins: {
+        field: 'Ext.form.field.Field'
+    },
+
+
     requires: [
         'Taco.view.filter.Schema',
         'Taco.core.ux.form.DateTime',
@@ -36,13 +41,10 @@ Ext.define('Taco.view.filter.ValueField', {
         var me = this;
         this.items = [];
 
+        this.updateFieldEditability();
         this.createField();
 
         this.callParent(arguments);
-
-        //this.initRelayEvents();
-
-        this.updateFieldEditability();
     },
 
     // when we have a multi value situation;
@@ -87,13 +89,14 @@ Ext.define('Taco.view.filter.ValueField', {
             previousFieldXtype,
             fieldCfg = this.getFieldConfig(),
             value = (this.field) ? this.field.getValue() : this.value,
-            operatorRecord = this.getOperatorRecord();
+            operatorRecord = this.getOperatorRecord(),
+            fieldRecord = this.getFieldRecord(),
+            isDisabled = (!operatorRecord || !fieldRecord);
 
         
-
-        console.log("value is string " + Ext.isString(value));
-        console.log("value is number" + Ext.isNumeric(value));
-
+        if (isDisabled) {
+            return;
+        }
 
         //if the field is a combo we need to cast values to string since the code editor validation will cast the value to int, but the cat. service returns the id's in string format.
         if (fieldCfg.xtype == "combo") {
@@ -170,7 +173,11 @@ Ext.define('Taco.view.filter.ValueField', {
         var me = this,
             isEditable = (me.fieldRecord && me.operatorRecord);
 
-        me.setDisabled(!isEditable);
+        if (me.rendered) {
+            me.setDisabled(!isEditable);
+        } else {
+            me.disabled = !isEditable;
+        }
     },
 
     getFieldConfigByDataType: function (dataType, fieldCfg) {
@@ -312,20 +319,21 @@ Ext.define('Taco.view.filter.ValueField', {
 
     updateFieldRecord: function (record) {
         var me = this;
-        
-        this.createField();
         this.updateFieldEditability();
+        this.createField();
     },
 
     updateOperatorRecord: function (record) {
-        
-        this.createField();
         this.updateFieldEditability();
+        this.createField();
     },
 
     castValue: function (value, castTo) {
 
-        if (!value){return value}
+
+        if (!value) {
+            return value;
+        }
 
         var dataType = castTo || this.fieldRecord.data.dataType;
 
@@ -360,9 +368,14 @@ Ext.define('Taco.view.filter.ValueField', {
     },
 
     setValue: function (value) {
+
+
+        this.value = value;
         this.field.setValue(value);
     },
-
+    isValid: function () {
+        return this.validate();
+    },
     validate: function () {
         return (this.getValue());
     },

@@ -350,6 +350,7 @@ Ext.define('Taco.view.discount.ConditionsForm', {
             catStore: this.record.getCategoryStore(),
             record: this.record,
             name: 'conditionalCategories',
+            showDynamicRealTimeCategories:false,
             listWidth: 407,
             listeners: {
                 scope: me,
