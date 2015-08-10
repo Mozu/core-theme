@@ -642,6 +642,8 @@
     <Content Include="Themes\Core8\scripts\modules\cart-monitor.js" />
     <Content Include="Themes\Core8\scripts\modules\common.js" />
     <Content Include="Themes\Core8\scripts\modules\contextify.js" />
+    <Content Include="Themes\Core8\scripts\modules\editable-view.js" />
+    <Content Include="Themes\Core8\scripts\modules\future-date-preview.js" />
     <Content Include="Themes\Core8\scripts\modules\jquery-dateinput-localized.js" />
     <Content Include="Themes\Core8\scripts\modules\jquery-mozu.js" />
     <Content Include="Themes\Core8\scripts\modules\login-links.js" />
@@ -677,6 +679,9 @@
     <Content Include="Themes\Core8\scripts\vendor\bootstrap\js\popover.js" />
     <Content Include="Themes\Core8\scripts\vendor\bootstrap\js\scrollspy.js" />
     <Content Include="Themes\Core8\scripts\vendor\bootstrap\js\tooltip.js" />
+    <Content Include="Themes\Core8\scripts\vendor\datetimepicker\jquery-simple-datetimepicker.js" />
+    <Content Include="Themes\Core8\scripts\vendor\datetimepicker\jquery.datetimepicker.css" />
+    <Content Include="Themes\Core8\scripts\vendor\datetimepicker\jquery.datetimepicker.js" />
     <Content Include="Themes\Core8\scripts\vendor\jquery-colorbox\jquery.colorbox.js" />
     <Content Include="Themes\Core8\scripts\vendor\jquery-placeholder\jquery.placeholder.js" />
     <Content Include="Themes\Core8\scripts\vendor\jquery-scrollto.js" />
@@ -2580,6 +2585,11 @@
     <Content Include="Themes\Core8\theme.json" />
     <Content Include="Themes\Core8\stylesheets\pages\login.less" />
     <Content Include="Themes\Core8\templates\pages\my-anonymous-account.hypr" />
+    <Content Include="Themes\Core8\templates\modules\future-date-preview\header.hypr" />
+    <Content Include="Themes\Core8\templates\modules\checkout\billing-address-selector.hypr.live" />
+    <Content Include="Themes\Core8\templates\modules\checkout\payment-selector.hypr.live" />
+    <Content Include="Themes\Core8\stylesheets\modules\future-date-preview\header.less" />
+    <Content Include="Themes\Core8\stylesheets\modules\common\datetimepicker.less" />
     <None Include="Web.CI.config">
       <DependentUpon>Web.config</DependentUpon>
     </None>
