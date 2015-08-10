@@ -121,7 +121,7 @@ module.exports = function(grunt) {
         },
         "mozusync": {
           "options": {
-            "applicationKey": "<%= mozuconfig.workingApplicationKey %>",
+            "applicationKey": "comnm.visacheckout2.1.0.0.release",
             "context": "<%= mozuconfig %>",
             "watchAdapters": [
               {
