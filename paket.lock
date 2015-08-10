@@ -53,7 +53,7 @@ NUGET
     Microsoft.Bcl (1.1.9)
       Microsoft.Bcl.Build (>= 1.0.14)
     Microsoft.Bcl.Build (1.0.14)
-    Microsoft.Net.Http (2.2.28) - framework: portable-wp80+win+net45+wp81+unsupported
+    Microsoft.Net.Http (2.2.28) - framework: portable-wp80+win+net45+wp81+Unsupported
       Microsoft.Bcl (>= 1.1.9)
       Microsoft.Bcl.Build (>= 1.0.14)
     Microsoft.Owin (3.0.0)
@@ -106,7 +106,7 @@ NUGET
       Mozu.PricingRuntime.Contracts
       Mozu.ShippingRuntime.Contracts
       Newtonsoft.Json
-    Mozu.Content.Contracts (1.18.1-dev1508041614ci)
+    Mozu.Content.Contracts (1.18.1-dev1508101540ci)
       Mozu.Core.Prime (>= 1.17)
     Mozu.Core.Api.Contracts (1.17.1)
       Mozu.Core.Prime (>= 1.17.0)

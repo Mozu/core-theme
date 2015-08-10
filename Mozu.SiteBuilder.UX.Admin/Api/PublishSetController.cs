@@ -136,8 +136,8 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
 
             if (type == "cms")
             {
-
-                var res = (await _cmsItemPublishingClient.AddPublishSetItems(code: code, documentIds: items.Select(x => x.Id).ToList()).ConfigureAwait(false)).ReadAsSync();
+                var pubSetItems = items.Select(i => new Mozu.Content.Contracts.AddOrDeletePublishItem { DocumentId = i.Id, DocListFQN = i.ListFQN }).ToList(); 
+                var res = (await _cmsItemPublishingClient.AddPublishSetItems(code: code, itemsToPublish: pubSetItems).ConfigureAwait(false)).ReadAsSync();
                 return List2(items);
             }
 
