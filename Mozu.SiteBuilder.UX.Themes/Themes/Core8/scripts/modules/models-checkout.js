@@ -372,17 +372,6 @@
             },
             finishApplyCredit: function () {
                 var self = this,
-                    order = this.getOrder();
-                var currentPayment = order.apiModel.getCurrentPayment();
-                if (currentPayment) {
-                    // must first void the current payment because it will no longer be the right price
-                    return order.apiVoidPayment(currentPayment.id).then(this.addStoreCredit);
-                } else {
-                    return this.addStoreCredit();
-                }
-            },
-            addStoreCredit: function () {
-                var self = this,
                     order = self.getOrder();
                 return order.apiAddStoreCredit({
                     storeCreditCode: this.get('selectedCredit'),
@@ -390,7 +379,7 @@
                 }).then(function (o) {
                     order.set(o.data);
                     self.closeApplyCredit();
-                    return o; // return order.get('customer').getCredits();
+                    return order.update();
                 });
             },
 
@@ -682,12 +671,9 @@
                 return (!customer || !customer.id || customer.id <= 1);
             },
 
-            removeCredit: function (id) {
-                var order = this.getOrder(),
-                    currentPayment = order.apiModel.getCurrentPayment();
-                // must also, asynchronously, void the current payment because it will no longer be the right price
-                if (currentPayment) order.apiVoidPayment(currentPayment.id);
-                return this.getOrder().apiVoidPayment(id);
+            removeCredit: function(id) {
+                var order = this.getOrder();
+                return order.apiVoidPayment(id).then(order.update);
             },
             syncPaymentMethod: function (me, newId) {
                 if (!newId || newId === "new") {
@@ -699,25 +685,6 @@
                 } else {
                     me.setSavedPaymentMethod(newId);
                     me.set('usingSavedCard', true);
-                }
-            },
-            clearSavedPaymentMethod: function() {
-                var me = this, 
-                    order = me.getOrder(),
-                    currentPayment = order.apiModel.getCurrentPayment();
-
-                function clear() {
-                    me.syncPaymentMethod(me, "new");
-                    me.unset('isSameBillingShippingAddress');
-                    me.stepStatus("incomplete");
-                }
-
-                if (currentPayment && 
-                    currentPayment.card && 
-                    currentPayment.card.paymentServiceCardId == me.get('card.paymentServiceCardId')) {
-                    order.apiVoidPayment(currentPayment.id).then(clear);
-                } else {
-                    clear();
                 }
             },
             setSavedPaymentMethod: function (newId, manualCard) {
@@ -760,13 +727,15 @@
                 });
                 this.on('change:savedPaymentMethodId', this.syncPaymentMethod);
                 this.on('change:usingSavedCard', function(me, yes) {
-                    if (yes && !me.get('savedPaymentMethodId')) {
+                    if (!yes) {
+                        me.get('card').clear();
+                    } else if (!me.get('savedPaymentMethodId')) {
                         me.setSavedPaymentMethod(null, me.getOrder().get('customer.cards').first());
                     }
                 });
                 this._cachedDigitalCredits = null;
 
-                _.bindAll(this, 'applyPayment', 'addStoreCredit', 'markComplete');
+                _.bindAll(this, 'applyPayment', 'markComplete');
             },
             selectPaymentType: function (me, newPaymentType) {
                 me.get('check').selected = newPaymentType === "Check";
