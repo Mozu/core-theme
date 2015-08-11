@@ -426,7 +426,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
                     settings.TabletTheme = new ThemeSelection { Id = id };
                 }
 
-                else if (settings.DesktopTheme != null && settings.TabletTheme.Id == id)
+                else if (settings.TabletTheme != null && settings.TabletTheme.Id == id)
                 {
                     settings.TabletTheme = null;
                 }
