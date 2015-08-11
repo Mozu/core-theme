@@ -153,8 +153,12 @@ namespace Mozu.SiteBuilder.Mvc.MessageHandler
             //        }
             //    }
             //}
-
-            var dest = stem + "?" + incommingQs.ToString();
+            string dest = stem;
+            if (  qstring.Count> 0 )
+            {
+                dest = stem + "?" + qstring.ToString();
+            }
+            
 
             dest = redirectTokenReplacement.Replace(dest, match => {
                 var token = match.Groups["token"].Value;
