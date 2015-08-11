@@ -27,6 +27,9 @@ module.exports = (function () {
     OrderStatus2IsReady[CONSTANTS.ORDER_ACTIONS.SUBMIT_ORDER] = true;
     OrderStatus2IsReady[CONSTANTS.ORDER_ACTIONS.ACCEPT_ORDER] = true;
 
+    function getPaymentDate(p) {
+        return new Date(p.auditInfo.createDate);
+    }
 
     var PaymentStrategies = {
         "PaypalExpress": function (order, billingInfo) {
@@ -88,7 +91,7 @@ module.exports = (function () {
                 currencyCode: self.api.context.Currency().toUpperCase(),
                 amount: self.prop('amountRemainingForPayment'),
                 newBillingInfo: self.prop('billingInfo')
-            }, extraProps || {})).then(function (updatedOrder) {
+            }, extraProps || {}))/*.then(function (updatedOrder) {
                 
 
                 // creating a payment can trigger a discount (discounts now support payment types)
@@ -96,7 +99,13 @@ module.exports = (function () {
                 // to create the payment might not be valid. 
                 return self.get().then(function () {
 
-                    var payment = self.getCurrentPayment();
+                    var payment = self.getActivePayments().sort(function(a, b) {
+                        var aDate = getPaymentDate(a),
+                            bDate = getPaymentDate(b);
+                        if (aDate > bDate) return -1;
+                        if (bDate > aDate) return 1;
+                        return 0;
+                    })[0];
                     if (payment.paymentType === "StoreCredit" || payment.paymentType === "GiftCard") {
                         return self;
                     }
@@ -120,7 +129,7 @@ module.exports = (function () {
                     }, extraProps || {}));
                     
                 });
-            });
+            })*/;
 
         },
         addStoreCredit: function(payment) {
