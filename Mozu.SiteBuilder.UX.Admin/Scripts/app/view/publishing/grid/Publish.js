@@ -269,9 +269,9 @@ Ext.define('Taco.view.publishing.grid.Publish', {
                                 me.getConfirmationModal({
                                     header: 'Publish Now',
                                     message: me.getPublishModalMessage(eventData.record),
-                                    callback: me.onPublishSetPublish.bind(me, item, eventData),
                                     primaryOptions: {
-                                        text: 'Yes, Publish Now'
+                                        text: 'Yes, Publish Now',
+                                        handler: me.onPublishSetPublish.bind(me, item, eventData),
                                     }
                                 });
                             }
@@ -366,10 +366,11 @@ Ext.define('Taco.view.publishing.grid.Publish', {
     },
 
     onPublishSetPublish: function(item, eventData) {
+        var me = this;
         Taco.model.PublishSet.publishAll({
             data: [eventData.record.data],
             success: function() {
-                this.showConfirmation(eventData);
+                me.up('publish-split').showGrowl('Scheduled to Publish', 'info');
                 eventData.record.store.read();
             },
             scope: this,
