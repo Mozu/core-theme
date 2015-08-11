@@ -61,6 +61,9 @@ namespace Mozu.SiteBuilder.Mvc.SEO.Constraints
                     return new StringListRouteConstraint(validator.values);
                 case Validator.TypeConst.mzdb:
                     return new MzdbRouteConstraint(_entityListClient, validator.listId, validator.fieldId);
+                case QueryStringConstraint.TypeName:
+                    return new QueryStringConstraint(validator);
+
             }
             throw new ArgumentException(string.Format("validtor type [{0}] not known", validator.type));
         }
@@ -186,7 +189,62 @@ namespace Mozu.SiteBuilder.Mvc.SEO.Constraints
                 RegexOptions.ExplicitCapture |
                 RegexOptions.IgnorePatternWhitespace);
     }
-   
+   public class QueryStringConstraint: ConstraintBase
+    {
+        public const string TypeName = "_querystring_";
+        public  ValidatorSettings Settings { get; set; }
+        public QueryStringConstraint ( Validator validator)
+        {
+            Settings = (ValidatorSettings)validator;
+        }
+
+        public class ValidatorSettings : Validator
+        {
+            public string QsKey { get; set; }
+            public string ValueKey { get; set; }
+            public string Value { get; set; }
+            public bool IsLiteral { get; set; }
+        }
+
+       public override Task<bool> Initialize()
+       {
+            return Task.FromResult(true);
+       }
+
+       public override bool DoMatch(HttpRequestMessage request, IHttpRoute route, string parameterName, IDictionary<string, object> values,
+           HttpRouteDirection routeDirection)
+       {
+            var qs = request.GetQueryNameValuePairs();
+            object tmp;
+            string foundVal;
+            var found = false;
+            if ( values.TryGetValue(Settings.ValueKey, out tmp))
+            {
+                foundVal = Convert.ToString(tmp);
+                found = true;
+            }
+            else
+            {
+                foundVal = qs.Where(x => string.Equals(x.Key, Settings.QsKey, StringComparison.OrdinalIgnoreCase)).Select(x=> x.Value).FirstOrDefault();
+                found = foundVal != null;
+            }
+            if (!found)
+            {
+                return false;
+            }
+            if ( Settings.IsLiteral )
+            {
+                if ( string.Equals(foundVal, Settings.Value ))
+                {
+                    values[Settings.ValueKey] = Settings.Value;
+                    return true;
+                }
+                return false;
+            }
+            values[Settings.ValueKey] = foundVal;
+            return true;
+        }
+    }
     public class CategoryContraint : ConstraintBase
     {
         public Validator Settings { get; set; }

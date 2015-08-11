@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Collections.Specialized;
 using System.Linq;
 using System.Net.Http;
 using System.Threading.Tasks;
@@ -14,16 +15,24 @@ namespace Mozu.SiteBuilder.Mvc.SEO
         string Template { get; set; }
         public FancyRoute InternalRoute { get; set; }
         bool IsCanonical { get; set; }
+
+        //todo possible support for qstring in url gen.
+        NameValueCollection QueryString { get; set; }
         IDictionary<IRouteDataMapping, string[]> PreMappings { get; set; }
         IDictionary<IRouteDataMapping, string[]> PostMappings { get; set; }
 
-        public CustomRoute(string template, FancyRoute internalRoute, bool isCanonical, IDictionary<string, object> defaults, IDictionary<ICustomRouteConstraint, string[]> constraints, IDictionary<IRouteDataMapping, string[]> mappings) :
+        public CustomRoute(string template, string queryString,  FancyRoute internalRoute, bool isCanonical, IDictionary<string, object> defaults, IDictionary<ICustomRouteConstraint, string[]> constraints, IDictionary<IRouteDataMapping, string[]> mappings) :
             base(template, defaults.ToRouteDictionary())
         {
           
             Template = template;
             InternalRoute = internalRoute;
             IsCanonical = isCanonical;
+            if ( !string.IsNullOrWhiteSpace(queryString))
+            {
+                QueryString = System.Web.HttpUtility.ParseQueryString(queryString);
+            }
+            
 
             PreMappings = mappings.Where(x => x.Key.Settings.beforeRouting.GetValueOrDefault(false)).ToDictionary(x=>x.Key, y=> y.Value );
             PostMappings = mappings.Where(x => !x.Key.Settings.beforeRouting.GetValueOrDefault(false)).ToDictionary(x => x.Key, y => y.Value);
@@ -50,6 +59,10 @@ namespace Mozu.SiteBuilder.Mvc.SEO
             }
         
         }
+
+
+        
+       
 
 
         /// <summary>

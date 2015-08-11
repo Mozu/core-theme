@@ -157,7 +157,36 @@ namespace Mozu.SiteBuilder.Mvc.SEO.Mappings
             return Task.FromResult(true); 
         }
     }
+    public class QueryStringMapping : IRouteDataMapping
+    {
+        List<Tuple<string, string>> Pairs = new List<Tuple<string, string>>();
 
+        public QueryStringMapping ()
+        {
+            Settings = new Mapping();
+        }
+
+        public Task<bool> Initialize()
+        {
+            return Task.FromResult<bool>(true);
+        }
+
+        public Mapping Settings { get; set; }
+        public IDictionary<string, object> Map(HttpRequestMessage requestMessage, IDictionary<string, object> values, string parameterName)
+        {
+            var qs = requestMessage.GetQueryNameValuePairs();
+            foreach ( var pair in Pairs)
+            {
+                var val = qs.Where(x => x.Key == pair.Item1).Select(x => x.Value).FirstOrDefault();
+                if (val != null)
+                {
+                    values[pair.Item2] = val;
+                }
+
+            }
+            return values;
+        }
+    }
     public class RouteDataFixup : IRouteDataMapping
     {
 

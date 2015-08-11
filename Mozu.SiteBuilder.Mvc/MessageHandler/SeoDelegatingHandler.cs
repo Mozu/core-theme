@@ -144,7 +144,7 @@ namespace Mozu.SiteBuilder.Mvc.MessageHandler
             {
                dest = stem + "?" + qstring.ToString();
             }
-            
+
 
             dest = redirectTokenReplacement.Replace(dest, match => {
                 var token = match.Groups["token"].Value;

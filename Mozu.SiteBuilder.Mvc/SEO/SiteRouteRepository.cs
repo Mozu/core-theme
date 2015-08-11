@@ -106,13 +106,13 @@ namespace Mozu.SiteBuilder.Mvc.SEO
                 .ToDictionary(x => x.Key, x => x.Mapping, StringComparer.OrdinalIgnoreCase);
 
 
-
-            AncestoryTokenExmpander.Process(customSettings.Routes);
-            var implictHanlder = new ImplicitConfigurationHandler(constraints, mappings, _customRouteConstraintFactory, _routeDataMappingFactory);
-
-            customSettings.Routes.ForEach(x=> implictHanlder.ConfigureRoute(x));
-           
             
+            AncestoryTokenExmpander.Process(customSettings.Routes);
+            ImplicitConfigurationHandler.Process(constraints, mappings, _customRouteConstraintFactory, _routeDataMappingFactory , customSettings.Routes );
+            QueryStringPreProcessor.Process(customSettings.Routes, constraints);
+
+
+
             var tasks =
                 constraints.Values.Cast<ICanInit>()
                 .Concat(mappings.Values.Cast<ICanInit>())
@@ -161,13 +161,89 @@ namespace Mozu.SiteBuilder.Mvc.SEO
                 routeDef.Defaults
                 .ChainSet("controller", GetControllerName(routeDef.InternalRoute.ToEnum<FancyRoute>()))
                 .ChainSet("action", GetControllerAction(routeDef.InternalRoute.ToEnum<FancyRoute>()));
-               
 
-                
+            var template = routeDef.Template;
+            string qString = null;
+            var qpos = routeDef.Template.IndexOf('?');
+            if ( qpos >-1)
+            {
+                template = routeDef.Template.Substring(0, qpos);
+                qString = routeDef.Template.Substring(qpos + 1);
+            }
+           
 
-            return new CustomRoute(routeDef.Template, routeDef.InternalRoute.ToEnum<FancyRoute>(), routeDef.Canonical.GetValueOrDefault(false), defaults, knownValidators, knownMappings);
+            //route.Template = route.Template.Substring(0, qpos);
+
+
+
+            return new CustomRoute(template, qString, routeDef.InternalRoute.ToEnum<FancyRoute>(), routeDef.Canonical.GetValueOrDefault(false), defaults, knownValidators, knownMappings);
         }
 
+        
+
+        class QueryStringPreProcessor
+        {
+
+            public static void Process(List<Route> routes, Dictionary<string, ICustomRouteConstraint> constraints)
+            {
+
+                foreach (var route in routes)
+                {
+                    int qpos = (route.Template ?? "").IndexOf('?');
+                    if (qpos == -1)
+                    {
+                        continue;
+                    }
+                   
+                   
+                    var qString = route.Template.Substring( qpos + 1);
+
+                    //route.Template = route.Template.Substring(0, qpos);
+
+                  
+                    var qPairs = qString.Split(new char[] { '&' }, StringSplitOptions.RemoveEmptyEntries);
+
+                    foreach (var qPair in qPairs)
+                    {
+                        var parts = qPair.Split(new char[] { '=' }, StringSplitOptions.RemoveEmptyEntries);
+                        if (parts.Length != 2)
+                        {
+                            continue;
+                        }
+                        var key = parts[0];
+                        var value = parts[1];
+                        ICustomRouteConstraint existingValidator;
+                        if (!constraints.TryGetValue(qPair, out existingValidator))
+                        {
+
+                            var  qsVal = new QueryStringConstraint.ValidatorSettings
+                            {
+                                type = QueryStringConstraint.TypeName ,
+                                QsKey = key,
+                                ValueKey = key,
+                                IsLiteral = false
+                        };
+                            if (value.StartsWith("{") && value.EndsWith("}"))
+                            {
+                                qsVal.ValueKey = value.Substring(1, value.Length - 2);
+                                qsVal.IsLiteral = false;
+                            }
+                            else if (value != "*")
+                            {
+                                qsVal.IsLiteral = true;
+                                qsVal.Value = value;
+                            }
+                            constraints.Add(qPair, new QueryStringConstraint(qsVal));
+                        }
+                        route.Validators[qPair] = new string[] { "*" };
+
+                    }
+
+                }
+            }
+
+            
+        }
 
         class AncestoryTokenExmpander
         {
@@ -442,6 +518,13 @@ namespace Mozu.SiteBuilder.Mvc.SEO
                         routeDef.Validators[constaintName] = new string[] {catSegment};
                     }
                 }
+            }
+
+            public static void Process(Dictionary<string, ICustomRouteConstraint> constraints, Dictionary<string, IRouteDataMapping> mappings, ICustomRouteConstraintFactory customRouteConstraintFactory, IRouteDataMappingFactory routeDataMappingFactory, List<Route> routeDefs)
+            {
+                var implictHanlder = new ImplicitConfigurationHandler(constraints, mappings, customRouteConstraintFactory, routeDataMappingFactory);
+
+                routeDefs.ForEach(x => implictHanlder.ConfigureRoute(x));
             }
         }
        

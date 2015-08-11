@@ -581,7 +581,7 @@ Ext.define('Taco.view.product.subform.General', {
                 xtype: 'formform',
                 persistChangesToModel: true,
                 record: this.productInCatalogInfo,
-                hidden: this.isGlobal,
+                //hidden: this.isGlobal,
                 width: '100%',
                 header: false,
                 items: [
