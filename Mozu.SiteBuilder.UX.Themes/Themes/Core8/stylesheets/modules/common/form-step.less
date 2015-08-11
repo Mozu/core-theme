@@ -1,15 +1,19 @@
 ﻿.mz-formstep {
+    margin-bottom: @gutter*1.25;
     .mz-formstep-header {
         border-bottom: 1px solid #eee;
         padding: @gutter/4 0;
         margin-bottom: @gutter;
         font-size: @fontSizeLarge;
         font-weight: bold;
-        .mz-button {
-            font-size: @fontSize;
-            font-weight: normal;
-            float: right;
-        }
+        position: relative;
+    }
+    .mz-formstep-edit {
+        font-size: @fontSize;
+        font-weight: normal;
+        position: absolute;
+        right: 0;
+        bottom: @gutter/4;
     }
     .mz-formstep-next {
         margin-top: @gutter/2;
