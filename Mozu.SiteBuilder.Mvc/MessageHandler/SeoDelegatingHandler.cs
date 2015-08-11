@@ -122,7 +122,8 @@ namespace Mozu.SiteBuilder.Mvc.MessageHandler
             var incommingQs = incoming.ParseQueryString();
             var qpos = entry.Destination.IndexOf('?');
             var stem = entry.Destination;
-            var qstring = qpos > -1 ? System.Web.HttpUtility.ParseQueryString(entry.Destination.Substring(qpos + 1)) : new System.Collections.Specialized.NameValueCollection(StringComparer.OrdinalIgnoreCase);
+            var query = qpos > -1 ? entry.Destination.Substring(qpos + 1) : string.Empty;
+            var qstring =  System.Web.HttpUtility.ParseQueryString(query);
 
 
 
@@ -138,21 +139,6 @@ namespace Mozu.SiteBuilder.Mvc.MessageHandler
                 }
             }
 
-
-            //handle dest ?x={z}  where source = ?z=bing > x=bing
-            //foreach (string key in qstring)
-            //{
-            //    var token = qstring[key];
-            //    if (token.StartsWith("{")&& token.EndsWith("}"))
-            //    {
-            //        token = token.Substring(1, token.Length - 2);
-            //        string replacementVal = incommingQs[token];
-            //        if (replacementVal != null)
-            //        {
-            //            qstring[key] = replacementVal;
-            //        }
-            //    }
-            //}
             string dest = stem;
             if (  qstring.Count> 0 )
             {
