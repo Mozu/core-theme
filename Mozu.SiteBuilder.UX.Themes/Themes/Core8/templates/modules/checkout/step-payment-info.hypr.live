@@ -78,7 +78,7 @@
 
         {% include "modules/checkout/checkout-digital-credit" %}
 
-        {% if model.activePayments|first|prop('billingInfo')|prop('card')|prop('paymentServiceCardId') %}
+        {% if model.hasSavedCardPayment %}
       
         {% if editing.savedCard %}
         <div class="mz-l-stack-section mz-checkout-current-payment mz-checkout-saved-card-editing">

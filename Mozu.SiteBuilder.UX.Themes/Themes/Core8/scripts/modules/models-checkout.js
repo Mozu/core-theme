@@ -299,12 +299,16 @@
                 check: PaymentMethods.Check
             },
             helpers: ['acceptsMarketing', 'savedPaymentMethods', 'availableStoreCredits', 'applyingCredit', 'maxCreditAmountToApply',
-                'activeStoreCredits', 'nonStoreCreditTotal', 'activePayments', 'availableDigitalCredits', 'digitalCreditPaymentTotal', 'isAnonymousShopper'],
+                'activeStoreCredits', 'nonStoreCreditTotal', 'activePayments', 'hasSavedCardPayment', 'availableDigitalCredits', 'digitalCreditPaymentTotal', 'isAnonymousShopper'],
             acceptsMarketing: function () {
                 return this.getOrder().get('acceptsMarketing');
             },
             activePayments: function () {
                 return this.getOrder().apiModel.getActivePayments();
+            },
+            hasSavedCardPayment: function() {
+                var currentPayment = this.getOrder().apiModel.getCurrentPayment();
+                return !!(currentPayment && currentPayment.billingInfo.card && currentPayment.billingInfo.card.paymentServiceCardId);
             },
             nonStoreCreditTotal: function () {
                 var me = this,
