@@ -30,7 +30,9 @@
     <MsBuild Targets="DownloadPaket" Projects="$(MSBuildThisFileFullPath)" Properties="Configuration=NOT_IMPORTANT;DownloadPaket=$(DownloadPaket)" />
   </Target>
   <Target Name="DownloadPaket">
-    <Exec Command="$(DownloadPaketCommand)" Condition=" '$(DownloadPaket)' == 'true' AND !Exists('$(PaketExePath)')" />
+    <Exec Command="$(DownloadPaketCommand)" Condition=" '$(DownloadPaket)' == 'true'" />
+    <!-- always download paket.  It changes every fucking day -->
+    <!-- <Exec Command="$(DownloadPaketCommand)" Condition=" '$(DownloadPaket)' == 'true' AND !Exists('$(PaketExePath)')" /> -->
   </Target>
   <Target Name="RestorePackages" DependsOnTargets="CheckPrerequisites">
   
