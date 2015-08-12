@@ -299,7 +299,7 @@ define([
                 check: PaymentMethods.Check
             },
             helpers: ['acceptsMarketing', 'savedPaymentMethods', 'availableStoreCredits', 'applyingCredit', 'maxCreditAmountToApply',
-                'activeStoreCredits', 'nonStoreCreditTotal', 'activePayments', 'availableDigitalCredits', 'digitalCreditPaymentTotal', 'isAnonymousShopper', 'visaCheckoutFlowComplete'],
+                'activeStoreCredits', 'nonStoreCreditTotal', 'activePayments', 'hasSavedCardPayment', 'availableDigitalCredits', 'digitalCreditPaymentTotal', 'isAnonymousShopper', 'visaCheckoutFlowComplete'],
             acceptsMarketing: function () {
                 return this.getOrder().get('acceptsMarketing');
             },
@@ -317,6 +317,10 @@ define([
             },
             activePayments: function () {
                 return this.getOrder().apiModel.getActivePayments();
+            },
+            hasSavedCardPayment: function() {
+                var currentPayment = this.getOrder().apiModel.getCurrentPayment();
+                return !!(currentPayment && currentPayment.billingInfo.card && currentPayment.billingInfo.card.paymentServiceCardId);
             },
             nonStoreCreditTotal: function () {
                 var me = this,
@@ -384,17 +388,6 @@ define([
             },
             finishApplyCredit: function () {
                 var self = this,
-                    order = this.getOrder();
-                var currentPayment = order.apiModel.getCurrentPayment();
-                if (currentPayment) {
-                    // must first void the current payment because it will no longer be the right price
-                    return order.apiVoidPayment(currentPayment.id).then(this.addStoreCredit);
-                } else {
-                    return this.addStoreCredit();
-                }
-            },
-            addStoreCredit: function () {
-                var self = this,
                     order = self.getOrder();
                 return order.apiAddStoreCredit({
                     storeCreditCode: this.get('selectedCredit'),
@@ -402,7 +395,7 @@ define([
                 }).then(function (o) {
                     order.set(o.data);
                     self.closeApplyCredit();
-                    return o; // return order.get('customer').getCredits();
+                    return order.update();
                 });
             },
 
@@ -694,12 +687,9 @@ define([
                 return (!customer || !customer.id || customer.id <= 1);
             },
 
-            removeCredit: function (id) {
-                var order = this.getOrder(),
-                    currentPayment = order.apiModel.getCurrentPayment();
-                // must also, asynchronously, void the current payment because it will no longer be the right price
-                if (currentPayment) order.apiVoidPayment(currentPayment.id);
-                return this.getOrder().apiVoidPayment(id);
+            removeCredit: function(id) {
+                var order = this.getOrder();
+                return order.apiVoidPayment(id).then(order.update);
             },
             syncPaymentMethod: function (me, newId) {
                 if (!newId || newId === "new") {
@@ -711,25 +701,6 @@ define([
                 } else {
                     me.setSavedPaymentMethod(newId);
                     me.set('usingSavedCard', true);
-                }
-            },
-            clearSavedPaymentMethod: function() {
-                var me = this, 
-                    order = me.getOrder(),
-                    currentPayment = order.apiModel.getCurrentPayment();
-
-                function clear() {
-                    me.syncPaymentMethod(me, "new");
-                    me.unset('isSameBillingShippingAddress');
-                    me.stepStatus("incomplete");
-                }
-
-                if (currentPayment && 
-                    currentPayment.card && 
-                    currentPayment.card.paymentServiceCardId == me.get('card.paymentServiceCardId')) {
-                    order.apiVoidPayment(currentPayment.id).then(clear);
-                } else {
-                    clear();
                 }
             },
             setSavedPaymentMethod: function (newId, manualCard) {
@@ -772,13 +743,15 @@ define([
                 });
                 this.on('change:savedPaymentMethodId', this.syncPaymentMethod);
                 this.on('change:usingSavedCard', function(me, yes) {
-                    if (yes && !me.get('savedPaymentMethodId')) {
+                    if (!yes) {
+                        me.get('card').clear();
+                    } else if (!me.get('savedPaymentMethodId')) {
                         me.setSavedPaymentMethod(null, me.getOrder().get('customer.cards').first());
                     }
                 });
                 this._cachedDigitalCredits = null;
 
-                _.bindAll(this, 'applyPayment', 'addStoreCredit', 'markComplete');
+                _.bindAll(this, 'applyPayment', 'markComplete');
             },
             selectPaymentType: function (me, newPaymentType) {
                 me.get('check').selected = newPaymentType === "Check";
@@ -1039,7 +1012,7 @@ define([
                 if (data.acceptsMarketing === null) {
                     self.set('acceptsMarketing', true);
                 }
-                _.bindAll(this, 'update', 'onCheckoutSuccess', 'onCheckoutError', 'addNewCustomer', 'saveCustomerCard', 'finalPaymentReconcile', 'apiCheckout', 'addDigitalCreditToCustomerAccount', 'addCustomerContact', 'addBillingContact', 'addShippingContact', 'addShippingAndBillingContact');
+                _.bindAll(this, 'update', 'onCheckoutSuccess', 'onCheckoutError', 'addNewCustomer', 'saveCustomerCard',/* 'finalPaymentReconcile', */'apiCheckout', 'addDigitalCreditToCustomerAccount', 'addCustomerContact', 'addBillingContact', 'addShippingContact', 'addShippingAndBillingContact');
 
 
 
@@ -1280,55 +1253,55 @@ define([
             isSavingNewCustomer: function() {
                 return this.get("createAccount") && !this.customerCreated;
             },
-            finalPaymentReconcile: function() {
+            //finalPaymentReconcile: function() {
 
-                var order = this,
-                    total = this.get('total'),
-                    activePayments = this.apiModel.getActivePayments(),
-                    currentPayment = this.apiModel.getCurrentPayment(),
-                    billingInfo,
-                    difference = Math.round((_.reduce(activePayments, function(sum, payment) { return sum + payment.amountRequested; }, 0) - total) * 100) / 100,
-                    deferred;
+            //    var order = this,
+            //        total = this.get('total'),
+            //        activePayments = this.apiModel.getActivePayments(),
+            //        currentPayment = this.apiModel.getCurrentPayment(),
+            //        billingInfo,
+            //        difference = Math.round((_.reduce(activePayments, function(sum, payment) { return sum + payment.amountRequested; }, 0) - total) * 100) / 100,
+            //        deferred;
 
-                if (difference === 0) {
-                    // no recalculation necessary, simply return a fulfilled promise to continue
-                    deferred = api.defer();
-                    deferred.resolve(true);
-                    return deferred.promise;
-                } else {
-                    billingInfo = order.get('billingInfo');
-                    if (!currentPayment || activePayments.length > 1 || currentPayment.paymentType === "PaypalExpress") {
-                        // if store credits or PayPal are being used,
-                        // or multiple payments are active,
-                        // or the order total has increased,
-                        // void all payments and ask the shopper to recalculate payment manually
-                        return api.all.apply(api, activePayments.map(function(payment) { return order.apiVoidPayment(payment.id); })).then(function() {
-                            order.get('customer.credits').each(function(credit) {
-                                // blank out cached credits manually
-                                credit.set({
-                                    isEnabled: false,
-                                    creditAmountApplied: 0,
-                                    remainingBalance: credit.get('currentBalance')
-                                });
-                            });
-                            return billingInfo.loadCustomerDigitalCredits();
-                        }).then(function() {
-                            billingInfo.clear();
-                            billingInfo.stepStatus('incomplete');
-                            throw new Error(Hypr.getLabel("recalculatePayments"));
-                        });
-                    } else {
-                        // in the simplest, most common case, where the order total has reduced and only one
-                        // payment method is active, then we can automatically deduct the difference
+            //    if (difference === 0) {
+            //        // no recalculation necessary, simply return a fulfilled promise to continue
+            //        deferred = api.defer();
+            //        deferred.resolve(true);
+            //        return deferred.promise;
+            //    } else {
+            //        billingInfo = order.get('billingInfo');
+            //        if (!currentPayment || activePayments.length > 1 || currentPayment.paymentType === "PaypalExpress") {
+            //            // if store credits or PayPal are being used,
+            //            // or multiple payments are active,
+            //            // or the order total has increased,
+            //            // void all payments and ask the shopper to recalculate payment manually
+            //            return api.all.apply(api, activePayments.map(function(payment) { return order.apiVoidPayment(payment.id); })).then(function() {
+            //                order.get('customer.credits').each(function(credit) {
+            //                    // blank out cached credits manually
+            //                    credit.set({
+            //                        isEnabled: false,
+            //                        creditAmountApplied: 0,
+            //                        remainingBalance: credit.get('currentBalance')
+            //                    });
+            //                });
+            //                return billingInfo.loadCustomerDigitalCredits();
+            //            }).then(function() {
+            //                billingInfo.clear();
+            //                billingInfo.stepStatus('incomplete');
+            //                throw new Error(Hypr.getLabel("recalculatePayments"));
+            //            });
+            //        } else {
+            //            // in the simplest, most common case, where the order total has reduced and only one
+            //            // payment method is active, then we can automatically deduct the difference
 
-                        currentPayment.amountRequested = total;
-                        billingInfo.set(currentPayment);
-                        return order.update();
+            //            currentPayment.amountRequested = total;
+            //            billingInfo.set(currentPayment);
+            //            return order.update();
                         
-                    }
-                }
+            //        }
+            //    }
 
-            },
+            //},
             submit: function () {
                 var order = this,
                     billingInfo = this.get('billingInfo'),
@@ -1390,7 +1363,7 @@ define([
                     }
                 }
                
-                process.push(this.finalPaymentReconcile, this.apiCheckout);
+                process.push(/*this.finalPaymentReconcile, */this.apiCheckout);
                 
                 api.steps(process).then(this.onCheckoutSuccess, this.onCheckoutError);
 

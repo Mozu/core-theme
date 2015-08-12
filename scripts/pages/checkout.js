@@ -134,7 +134,8 @@ require(["modules/jquery-mozu", "underscore", "hyprlive", "modules/backbone-mozu
         renderOnChange: [
             'billingContact.address.countryCode',
             'paymentType',
-            'isSameBillingShippingAddress'
+            'isSameBillingShippingAddress',
+            'usingSavedCard'
         ],
         additionalEvents: {
             "change [data-mz-digital-credit-enable]": "enableDigitalCredit",
@@ -171,8 +172,7 @@ require(["modules/jquery-mozu", "underscore", "hyprlive", "modules/backbone-mozu
         updatePaymentType: function(e) {
             var newType = $(e.currentTarget).val();
             this.model.set('usingSavedCard', e.currentTarget.hasAttribute('data-mz-saved-credit-card'));
-            this.model.set('paymentType', newType, { silent: true });
-            this.model.trigger('change:paymentType', this.model, newType);
+            this.model.set('paymentType', newType);
         },
         beginEditingCard: function() {
             var me = this;

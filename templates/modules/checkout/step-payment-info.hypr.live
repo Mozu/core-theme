@@ -1,6 +1,6 @@
 <h3 class="mz-formstep-header">
     {{ labels.paymentInformation }}
-    <button type="button" class="mz-button mz-button-small mz-formstep-edit" data-mz-action="edit">{{ labels.edit }}</button>
+    <a href="javascript:;" class="mz-formstep-edit" data-mz-action="edit">{{ labels.change }}</a>
 </h3>
 <div class="mz-formstep-body">
     <div class="mz-formstep-summary mz-l-stack">
@@ -82,12 +82,11 @@
 
         {% include "modules/checkout/checkout-digital-credit" %}
 
-        {% if model.activePayments|first|prop('billingInfo')|prop('card')|prop('paymentServiceCardId') %}
+        {% if model.hasSavedCardPayment %}
       
         {% if editing.savedCard %}
         <div class="mz-l-stack-section mz-checkout-current-payment mz-checkout-saved-card-editing">
             <h4 class="mz-l-stack-sectiontitle">{{ labels.paymentMethods }}</h4>
-            <a class="mz-checkout-payment-done" href="javascript:;" data-mz-action="finishEditingCard">{{ labels.save }}</a>
             {% include "modules/checkout/payment-selector" %}
         </div>
         {% else %}
@@ -117,7 +116,6 @@
         {% if editing.savedBillingAddress %}
         <div class="mz-l-stack-section mz-checkout-current-payment mz-checkout-saved-billingaddress-editing">
             <h4 class="mz-l-stack-sectiontitle">{{ labels.billingAddress }}</h4>
-            <a class="mz-checkout-payment-done" href="javascript:;" data-mz-action="finishEditingBillingAddress">{{ labels.save }}</a>
             {% include "modules/checkout/billing-address-selector" %}
         </div>
         {% else %}

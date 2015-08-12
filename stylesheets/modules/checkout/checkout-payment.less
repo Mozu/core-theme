@@ -17,19 +17,25 @@
 }
 
 
-.mz-paymentselector.mz-l-formfieldgroup .mz-l-formfieldgroup-cell {
-    > label {
-        text-align: left;
-        font-size: @fontSizeLarger;
+.mz-paymentselector.mz-l-formfieldgroup {
+    display: block;
+    > .mz-l-formfieldgroup-row {
+        display: block;
     }
-    .mz-paymentselector-reenter-cvv {
-        label {
+    .mz-l-formfieldgroup-cell {
+        > label {
             text-align: left;
-            min-width: auto;
-            display: inline-block;
-            margin-right: @gutter/4;
+            font-size: @fontSizeLarger;
         }
-    }    
+        .mz-paymentselector-reenter-cvv {
+            label {
+                text-align: left;
+                min-width: auto;
+                display: inline-block;
+                margin-right: @gutter/4;
+            }
+        }    
+    }
 }
 
 .mz-digitalwallets {
