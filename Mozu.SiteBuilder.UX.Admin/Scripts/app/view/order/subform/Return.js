@@ -231,7 +231,7 @@ Ext.define('Taco.view.order.subform.Return', {
 
         if (refundItems.length > 0) records.push(this.createReturn("Refund", refundItems));
         if (replaceItems.length > 0) records.push(this.createReturn("Replace", replaceItems));
-
+        // This is where we would force them to choose a return reason, should we do this in the admin?
         if (records.length === 0) {
             this.returnableItemsErrorEl.setError('Sorry, an unknown error occurred. There were no items of return type "Replace" or "Refund".');
             return false;
