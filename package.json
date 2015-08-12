@@ -3,9 +3,6 @@
   "author": "Volusion, Inc.",
   "description": "The core storefront theme for Mozu",
   "version": "8.0.0-3",
-  "scripts": {
-    "gh-release": "grunt && grunt setver --increment prerelease && git add theme.json && git commit -m 'updating theme.json' && npm version prerelease && grunt compress && git push && git push --tags"
-  },
   "devDependencies": {
     "grunt": "~0.4",
     "grunt-bower-task": "~0.4",
@@ -13,12 +10,12 @@
     "grunt-contrib-jshint": "~0.8",
     "grunt-contrib-watch": "~0.6",
     "grunt-jsonlint": "*",
-    "grunt-mozu-appdev-sync": "^0.5.1"
+    "grunt-mozu-appdev-sync": "^0.5.1",
+    "semver": "^5.0.1",
+    "thmaa": "^0.10.4"
   },
   "engines": {
     "node": ">=0.10"
   },
-  "dependencies": {
-    "thmaa": "^0.10.4"
-  }
+  "dependencies": {}
 }
