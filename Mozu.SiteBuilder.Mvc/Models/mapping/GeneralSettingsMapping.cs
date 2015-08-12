@@ -204,7 +204,7 @@ namespace Mozu.SiteBuilder.Mvc.Models.ModelMapping
                                 System.StringComparison.OrdinalIgnoreCase));
                 if (externalPayment != null)
                 {
-                    settings.IsEnabled = true;
+                    settings.IsEnabled = externalPayment.IsEnabled;
                     if (externalPayment.Credentials != null)
                     {
                         settings.ClientId = externalPayment.Credentials.Any(data => data.APIName == "CLIENTID")
