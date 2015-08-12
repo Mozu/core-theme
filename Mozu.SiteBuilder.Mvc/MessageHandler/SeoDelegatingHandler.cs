@@ -108,7 +108,7 @@ namespace Mozu.SiteBuilder.Mvc.MessageHandler
             return null;
         }
 
-        static Regex redirectTokenReplacement = new Regex(@"{(?<token>[^}]+)}",
+        static Regex redirectTokenReplacement = new Regex(@"{(?<token>[^}]+)}|%7b(?<token>[^}]+)%7d",
                 RegexOptions.IgnoreCase |
                 RegexOptions.ExplicitCapture |
                 RegexOptions.Singleline |
@@ -121,9 +121,9 @@ namespace Mozu.SiteBuilder.Mvc.MessageHandler
             
             var incommingQs = incoming.ParseQueryString();
             var qpos = entry.Destination.IndexOf('?');
-            var stem = entry.Destination;
+            var stem = qpos > -1 ? entry.Destination.Substring(0,qpos) : entry.Destination; 
             var query = qpos > -1 ? entry.Destination.Substring(qpos + 1) : string.Empty;
-            var qstring =  System.Web.HttpUtility.ParseQueryString(query);
+            var qstring =  System.Web.HttpUtility.ParseQueryString(query,System.Text.Encoding.UTF8);
 
 
 
@@ -142,7 +142,7 @@ namespace Mozu.SiteBuilder.Mvc.MessageHandler
             string dest = stem;
             if (  qstring.Count> 0 )
             {
-                dest = stem + "?" + qstring.ToString();
+               dest = stem + "?" + qstring.ToString();
             }
             
 
@@ -181,7 +181,7 @@ namespace Mozu.SiteBuilder.Mvc.MessageHandler
 
         private static HttpResponseMessage RedirectTo(string location, bool isTemorary , HttpRequestMessage request)
         {
-            HttpResponseMessage resp = request.CreateResponse(isTemorary? HttpStatusCode.Moved : HttpStatusCode.MovedPermanently);
+            HttpResponseMessage resp = request.CreateResponse(isTemorary? HttpStatusCode.Redirect : HttpStatusCode.MovedPermanently);
             var uri = new Uri(location, UriKind.RelativeOrAbsolute);
             if (!uri.IsAbsoluteUri && !string.IsNullOrEmpty(location) && location.StartsWith("/"))
             {
