@@ -1018,10 +1018,17 @@ define([
 
             },
             processDigitalWallet: function (digitalWalletType, payment) {
-                this.apiProcessDigitalWallet({
+                var me = this;
+                return this.apiProcessDigitalWallet({
                     digitalWalletData: JSON.stringify(payment)
-                }).then(function () {
-                    console.log('called the api method', arguments);
+                }).then(function() {
+                    _.each([
+                        'fulfillmentInfo.fulfillmentContact',
+                        'fulfillmentInfo',
+                        'billingInfo'
+                    ], function(name) {
+                        me.get(name).trigger('sync');
+                    });
                 });
             },
             addCoupon: function () {
