@@ -6,10 +6,16 @@ Ext.define('Taco.view.couponSet.Grid', {
     //cls: Taco.baseCSSPrefix + 'searchlist',
 
     requires: [
+        'Taco.model.CouponSet',
+        'Taco.store.CouponSetGrid',
+        'Taco.view.couponSet.AdvancedSearchForm',
         'Ext.Date',
+        'Taco.store.TargetedShippingMethods',
         'Ext.form.Panel',
-        'Ext.tip.QuickTipManager',
         'Taco.core.ux.BaseGrid',
+        'Ext.tip.QuickTipManager',
+        'Taco.core.ux.TextFilter',
+        'Taco.view.discount.Edit',
         'Taco.core.ux.FilterableDataView',
         'Taco.core.ux.TextFilter',
         'Taco.core.ux.grid.MenuColumn',
@@ -105,6 +111,8 @@ Ext.define('Taco.view.couponSet.Grid', {
         me.callParent(arguments);
     },
     
+
+
     // override this method and adjust the columns if your need a grid with a subset of columns;
     getColumnConfig: function () {
         var me = this;
@@ -261,6 +269,7 @@ Ext.define('Taco.view.couponSet.Grid', {
 
     openEditor: function (record, couponSetType, isNew) {
         var me = this;
+        
         Ext.create('Taco.view.couponSet.modal.CouponSetEditor', {
             // if we want to edit a draft only, pass recordId.
             // otherwise, pass the record.

@@ -64,6 +64,16 @@ Ext.define('Taco.core.util.ExceptionWhiner', {
             ? this.createHtmlList(m.exceptions)
             : "Unknown error.";
         Taco.app.fireEvent('setmessage', errText, 'error');
+    },
+
+    /**
+     * Uses message from response to fire Error event.
+     * @param {} resp 
+     * @returns {} 
+     */
+    handleRemoteFailure: function (resp) {
+        var json = Ext.decode(resp.responseText, true);
+        Taco.app.fireEvent('setmessage', json.message, 'error');
     }
 
 });

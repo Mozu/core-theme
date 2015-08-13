@@ -6,13 +6,24 @@
 Ext.define('Taco.model.CouponCode', {
     extend: 'Taco.core.data.Model',
     fields: [
-        { name: 'code', type: 'string', isHidden: true }    
+        { name: 'couponSetCode', type: 'string' },
+        { name: 'couponCode', type: 'string' },
+        { name: 'canBeDeleted', type: 'boolean' },
+        { name: 'createDate', type: 'date' },
+        { name: 'updateDate', type: 'date' },
+        { name: 'createBy', type: 'string' },
+        { name: 'updateBy', type: 'string' },
+        { name: 'redemptionCount', type: 'int' }
     ],
-
+    idProperty: 'couponCode',
     proxy: {
         type: 'ajaxproxy',
         api: {
-            read: '/admin/app/discount/generatecoupon'
+            read: '/admin/app/couponcode/list',
+            create: '/admin/app/couponcode/create',
+            // no update allowed
+            update: '/admin/app/couponcode/update',
+            destroy: '/admin/app/couponcode/delete'
         },
         reader: {
             type: 'json',
@@ -20,7 +31,8 @@ Ext.define('Taco.model.CouponCode', {
             successProperty: 'success'
         },
         writer: {
-            type: 'json'
+            type: 'json',
+            allowSingle:false
         }
     }
 });

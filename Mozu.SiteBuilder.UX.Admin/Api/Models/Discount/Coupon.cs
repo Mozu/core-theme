@@ -1,4 +1,6 @@
-﻿namespace Mozu.SiteBuilder.UX.Admin.Api.Models.Discount
+﻿using System;
+
+namespace Mozu.SiteBuilder.UX.Admin.Api.Models.Discount
 {
     public class Coupon
     {
@@ -20,7 +22,27 @@
         /// </summary>
         public int? RedemptionCount { get; set; }
 
-
         public bool CanBeDeleted { get; set; }
+
+        /// <summary>
+        ///     The date of conception.
+        /// </summary>
+        public DateTime? CreateDate { get; set; }
+
+        /// <summary>
+        ///     The date of last modification
+        /// </summary>
+        public DateTime? UpdateDate { get; set; }
+
+        /// <summary>
+        ///     The date of conception.
+        /// </summary>
+        public string CreateBy { get; set; }
+
+        /// <summary>
+        ///     The date of last modification
+        /// </summary>
+        public string UpdateBy { get; set; }
+        
     }
 }

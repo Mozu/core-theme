@@ -506,6 +506,7 @@ Ext.define('Taco.view.product.subform.General', {
             //endDateFieldName: 'activeEndDate',
             pickerOffset: 4,
             hidden: (!this.productInCatalogInfo || this.productInCatalogInfo.get('status') !== 'Scheduled'),
+            value: this.productInCatalogInfo ? this.productInCatalogInfo.get('activeStartDate') : "",
             allowBlank: true,
             validator: function() {
                 return !me.productInCatalogInfo ||
@@ -523,6 +524,7 @@ Ext.define('Taco.view.product.subform.General', {
             startDateFieldName: 'activeStartDate',
             pickerOffset: 4,
             hidden: (!this.productInCatalogInfo || this.productInCatalogInfo.get('status') !== 'Scheduled'),
+            value: this.productInCatalogInfo ? this.productInCatalogInfo.get('activeEndDate') : "",
             allowBlank: true,
             validator: function(val) {
                 return !me.productInCatalogInfo ||
@@ -587,8 +589,6 @@ Ext.define('Taco.view.product.subform.General', {
                 items: [
                     {
                         xtype: 'fieldcontainer',
-                        startDate: this.activeStartDateField,
-                        endDate: this.activeEndDateField,
                         layout: 'hbox',
                         width: '100%',
                         items: [

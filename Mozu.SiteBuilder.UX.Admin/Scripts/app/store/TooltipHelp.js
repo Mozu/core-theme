@@ -68,6 +68,9 @@ Ext.define('Taco.store.TooltipHelp', {
         },{
             key: 'publishset.publishsetdate',
             value: 'Publish Date is inherited from the<br/> Publish Set, and designates the<br/> date and time when all drafts in<br/> Publish Set publish.'
+        }, {
+            key: 'couponSet.generatedCode.prefix',
+            value: 'TBD Coupon Code Prefix'
         }
 
    ]

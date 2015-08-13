@@ -173,6 +173,7 @@
     <Compile Include="Api\CatalogPublishingController.cs" />
     <Compile Include="Api\CategoryController.cs" />
     <Compile Include="Api\ChannelController.cs" />
+    <Compile Include="Api\CouponCodeController.cs" />
     <Compile Include="Api\CouponSetController.cs" />
     <Compile Include="Api\ModelMapping\ContentMapping.cs" />
     <Compile Include="Api\ModelMapping\DynamicExpressionMapping.cs" />
@@ -337,7 +338,6 @@
     <Compile Include="Api\Models\Account\Invitation.cs" />
     <Compile Include="Api\Models\Account\PasswordInfo.cs" />
     <Compile Include="Api\Models\Account\UserSystemData.cs" />
-    <Compile Include="Api\Models\Discount\CouponCode.cs" />
     <Compile Include="Api\Models\Discount\Discount.cs" />
     <Compile Include="Api\Models\Feature.cs" />
     <Compile Include="Api\Models\FileManagement\FileManagementFile.cs" />
@@ -406,6 +406,8 @@
     <Compile Include="Helpers\AttributeHelpers\AttributeSortExtensions.cs" />
     <Compile Include="Helpers\ChannelHelpers\ChannelFilterExtensions.cs" />
     <Compile Include="Helpers\CollectionTaskUnMapper.cs" />
+    <Compile Include="Helpers\CouponCodeHelpers\CouponCodeFilterExtensions.cs" />
+    <Compile Include="Helpers\CouponCodeHelpers\CouponCodeSortExtensions.cs" />
     <Compile Include="Helpers\CouponSetHelpers\CouponSetFilterExtensions.cs" />
     <Compile Include="Helpers\CouponSetHelpers\CouponSetPagingParametersExtensions.cs" />
     <Compile Include="Helpers\DiscountHelpers\CustomerHelpers\CustomerFilterExtensions.cs" />
@@ -633,6 +635,7 @@
     <Content Include="Scripts\app\store\BehaviorCategoryRoles.js" />
     <Content Include="Scripts\app\store\BehaviorCategories.js" />
     <Content Include="Scripts\app\store\CouponSetGrid.js" />
+    <Content Include="Scripts\app\store\CouponCodes.js" />
     <Content Include="Scripts\app\store\CouponSets.js" />
     <Content Include="Scripts\app\store\DiscountGrid.js" />
     <Content Include="Scripts\app\store\Discounts.js" />
@@ -702,7 +705,10 @@
     <Content Include="Scripts\app\view\capability\Form.js" />
     <Content Include="Scripts\app\view\capability\Index.js" />
     <Content Include="Scripts\app\view\channel\Index.js" />
+    <Content Include="Scripts\app\view\couponCode\AdvancedSearchForm.js" />
+    <Content Include="Scripts\app\view\couponCode\Grid.js" />
     <Content Include="Scripts\app\view\couponSet\AdvancedSearchForm.js" />
+    <Content Include="Scripts\app\view\couponSet\GeneratedCodeForm.js" />
     <Content Include="Scripts\app\view\couponSet\GeneralForm.js" />
     <Content Include="Scripts\app\view\couponSet\Grid.js" />
     <Content Include="Scripts\app\view\couponSet\Index.js" />

@@ -288,11 +288,24 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.ModelMapping
             Mapper.CreateMap<CouponSet, DC.CouponSet>()
                 .ForMember(x => x.AuditInfo, op => op.Ignore());
 
-            Mapper.CreateMap<DC.Coupon, Coupon>();
+            Mapper.CreateMap<DC.Coupon, Coupon>()
+                .ForMember(x => x.CreateDate,
+                    op => op.ResolveUsing(dc => (dc.AuditInfo != null) ? dc.AuditInfo.CreateDate : null))
+                .ForMember(x => x.CreateBy,
+                    op => op.ResolveUsing(dc => (dc.AuditInfo != null) ? dc.AuditInfo.CreateBy : null))
+                .ForMember(x => x.UpdateDate,
+                    op => op.ResolveUsing(dc => (dc.AuditInfo != null) ? dc.AuditInfo.UpdateDate : null))
+                .ForMember(x => x.UpdateBy,
+                    op => op.ResolveUsing(dc => (dc.AuditInfo != null) ? dc.AuditInfo.UpdateBy : null));
+
+                    
+
             Mapper.CreateMap<Coupon, DC.Coupon>()
                 .ForMember(x => x.AuditInfo, op => op.Ignore());
 
         }
+
+
 
         //private string MapToTargetType(DC.DiscountTarget t)
         //{

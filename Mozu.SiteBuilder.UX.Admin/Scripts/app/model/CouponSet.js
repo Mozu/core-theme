@@ -43,11 +43,13 @@ Ext.define('Taco.model.CouponSet', {
         }, {
             name: 'startDate',
             type: 'date',
-            useNull: true
+            useNull: true,
+            dateFormat: 'c'
         }, {
             name: 'endDate',
             type: 'date',
-            useNull: true
+            useNull: true,
+            dateFormat: 'c'
         }, {
             name: 'setSize',
             type: 'int',

@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using System.Linq;
+using System.Web.Http;
 using AutoMapper;
 using Mozu.Core.Api.Client.Exceptions;
 using Mozu.Core;
@@ -22,6 +23,9 @@ using Mozu.SiteSettings.Order.Contracts.Clients;
 
 namespace Mozu.SiteBuilder.UX.Admin.Api
 {
+    
+
+
     /// <summary>
     /// Controller for couponSets.
 	/// </summary>
@@ -138,6 +142,14 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
             tasks.Select(TaskHelper.Result).ThrowExceptionsIfAny();
 
             return SuccessWithTotal2<CouponSet>(couponSets.Count);
+        }
+
+        [HttpGetRoute(UriTemplate = "uniqueCode")]
+        public async Task<Response<KeyValuePair<string, string>>> SuggestUniqueCode()
+        {
+            string uniqueCode = (await _couponSetWebClient.GetUniqueCouponSetCode()).ReadAsSync();
+            var keyVal = new KeyValuePair<string,string>("uniqueCode", uniqueCode);
+            return Single2(keyVal);
         }
 
     }

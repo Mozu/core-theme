@@ -14,11 +14,8 @@
 		//border-color: #bfbfbf;
 		line-height:20px;
 		min-height:$form-field-height;
-		height:"auto";
+		height:auto;
         cursor:pointer;
-        
-        
-        
 	}
 
     .taco-editable-display-field-inner-border{		
@@ -56,6 +53,12 @@
         font-style: italic;
         margin-left: 5px;
         font-size: 14px;
+    }
+
+    .taco-readonly-display-preview {
+        vertical-align: middle;
+        border: 1px solid lightgrey;
+        text-align: center;
     }
 
 
