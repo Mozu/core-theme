@@ -87,7 +87,7 @@ Ext.define('Taco.core.ux.mixins.DeleteFromGrid', {
             if (grid.multiSelect) {
                 itemsToDelete = grid.getSelectionModel().getSelection();
             } else {
-                itemsToDelete = reocrd;
+                itemsToDelete = record;
             }
             me.onDelete(itemsToDelete);
             me.fireEvent('delete', me);
