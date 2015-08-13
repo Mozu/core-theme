@@ -75,16 +75,23 @@ Ext.define('Taco.core.ux.mixins.DeleteFromGrid', {
      * Subclasses should NOT override this method with their own behavior. They should override the doDelete()
      */
     deleteEntity: function (record, grid) {
-        var me = this;
+        var me = this,
+            itemsToDelete;
 
         if (me.deleteInProgress) {
             return;
         }
 
         if (me.fireEvent('beforedelete', me) !== false) {
-            me.onDelete(record);
+
+            if (grid.multiSelect) {
+                itemsToDelete = grid.getSelectionModel().getSelection();
+            } else {
+                itemsToDelete = reocrd;
+            }
+            me.onDelete(itemsToDelete);
             me.fireEvent('delete', me);
-            me.doDelete(record, grid);
+            me.doDelete(itemsToDelete, grid);
         }
     },
 

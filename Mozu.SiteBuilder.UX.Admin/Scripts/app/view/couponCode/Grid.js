@@ -40,12 +40,14 @@ Ext.define('Taco.view.couponCode.Grid', {
     // Will add the 20px padding needed for display in the contentView as part of the NavHeader code;
     addContentViewPadding: false,
 
+    multiSelect: true,
+
     enableSearch: true,
     enablePaging: true,
     enableRowEditing: true,
     defaultRowEditingData: {
     },
-    enableAutoSelect: true,
+    enableAutoSelect: false,
     createButtonEnabled: true,
     saveButtonEnabled: false,
     cancelButtonEnabled: false,
@@ -102,10 +104,10 @@ Ext.define('Taco.view.couponCode.Grid', {
 
 
         // this plugin will auto select the first record in the grid and manage reselection of the selected item after a store load
-        //if (this.enableAutoSelect !== false) {
+        if (this.enableAutoSelect !== false) {
             this.plugins = this.plugins || [];
             this.plugins.push(Ext.create('Taco.core.ux.grid.plugins.AutoSelect'));
-        //}
+        }
 
 
         // initialize the delete mixin
@@ -178,12 +180,12 @@ Ext.define('Taco.view.couponCode.Grid', {
                 }
                 
                 if (json.success) {
-                    field.reset();
+                    //field.setValue();
                     //me.getSelectionModel().deselectAll();
                     me.mon(me.store, 'load', function () {
-                        //Taco.app.fireEvent('setgrowl', "Created", null, 2000);
-                        me.getSelectionModel().selectRange(0, 0);
-                        field.focus();
+                        Taco.app.fireEvent('setgrowl', "Created", null, 2000);
+                        //me.getSelectionModel().selectRange(0, 0);
+                        //field.focus();
                     }, me, {
                         single: true
                     });
@@ -302,32 +304,18 @@ Ext.define('Taco.view.couponCode.Grid', {
             },{
                 xtype: 'taco.menucolumn',
                 text: 'Actions',
-                onMenuShow: function (menu, eventData) {
-                    // need to disable the delete menu option when discount has been used
-                    var deleteMenuItem = menu.down("#deleteMenuItem");
-                    if (eventData.record.get('canBeDeleted')) {
-                        deleteMenuItem.show();
-                    } else {
-                        deleteMenuItem.hide();
-                    }
-                },
+                //onMenuShow: function (menu, eventData) {
+                //    // need to disable the delete menu option when discount has been used
+                //    var deleteMenuItem = menu.down("#deleteMenuItem");
+                //    if (eventData.record.get('canBeDeleted')) {
+                //        deleteMenuItem.show();
+                //    } else {
+                //        deleteMenuItem.hide();
+                //    }
+                //},
                 //flex: 1,
                 menuItems: [
                     {
-                        text: 'Edit',
-                        //requiredBehaviors: {
-                        //    model: 'Taco.model.Discount',
-                        //    behavior: 'update'
-                        //},
-                        menuColumnHandler: me.doEdit,
-                        //    function (item, eventData) {
-                        //    var record = eventData.record;
-                        //    Ext.defer(function () {
-                        //        Taco.core.StateManager.attemptNavigate(me.controllerName + '/edit/' + record.getId(), {complexMetaData: {record: record}});
-                        //    }, 1, this);
-                        //}
-                        scope: me
-                    }, {
                         text: 'Delete',
                         itemId: "deleteMenuItem",
                         // deleteMenuColumnHandler can be found in Taco.core.ux.mixins.DeleteFromGrid
@@ -342,7 +330,11 @@ Ext.define('Taco.view.couponCode.Grid', {
             }
         ];
     },
-
+    
+    doDelete2: function(records) {
+        
+        
+    },
 
     launchEditor: function (record) {
         

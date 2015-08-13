@@ -5,6 +5,8 @@ Ext.define('Taco.view.Growl', {
     extend: 'Taco.core.ux.window.Window',
     alias: 'widget.growl',
 
+    focusOnToFront:false,
+
     bodyPadding: '30 10 30 10',
     closeAction: 'destroy',
     header: false,

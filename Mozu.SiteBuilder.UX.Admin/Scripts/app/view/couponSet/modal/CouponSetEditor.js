@@ -22,7 +22,7 @@ Ext.define('Taco.view.couponSet.modal.CouponSetEditor', {
     height: '100%',
     scale: 'large',
     title: 'Create Coupon Set',
-    width: '70%',
+    width: 900,
     createType: '',
     isCreateMode: true,
     record: null,
@@ -194,7 +194,9 @@ Ext.define('Taco.view.couponSet.modal.CouponSetEditor', {
         });
 
         me.couponCodePanel = Ext.create('Taco.view.couponCode.Grid', {
-            height: 400,
+            //height: 400,
+            minHeight:200,
+            autoHeight:true,
             couponSetCode: couponSetCode
         });
 
