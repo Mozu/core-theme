@@ -75,9 +75,9 @@
                             </div>
                             <div class="mz-l-formfieldgroup-cell">
                                 <select data-mz-verify-with>
-                                    {% if themeSettings.zipCodeEnabled %}<option>Zip Code</option>{% endif %}
-                                    {% if themeSettings.phoneNumberEnabled %}<option>Phone Number</option>{% endif %}
-                                    {% if themeSettings.billingEmailEnabled %}<option>Email Address</option>{% endif %}
+                                    {% if themeSettings.zipCodeEnabled %}<option>{{ labels.billingPostalCode }}</option>{% endif %}
+                                    {% if themeSettings.phoneNumberEnabled %}<option>{{ labels.billingPhoneNumber }}</option>{% endif %}
+                                    {% if themeSettings.billingEmailEnabled %}<option>{{ labels.billingEmail }}</option>{% endif %}
                                 </select>
                             </div>
                         </div>
