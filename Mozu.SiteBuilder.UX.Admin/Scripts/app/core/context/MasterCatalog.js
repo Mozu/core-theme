@@ -1,5 +1,9 @@
 ﻿Ext.define('Taco.core.context.MasterCatalog', {
     //extend: 'Ext.util.Observable',
+    requires: [
+        'Taco.core.util.ExceptionWhiner'
+    ],
+
     urlToken: null,
     contextType: 'm',
     name: '',
@@ -78,7 +82,7 @@
             method: 'POST',
             jsonData: {
                 context: {
-                    masterCatalogId: this.id,
+                    masterCatalogId: this.id
                 },
                 publishingEnabled: this.publishingEnabled
             }
@@ -162,17 +166,20 @@
         return (site.currencyCode === this.currencyCode && site.localeCode === this.localeCode);
     },
 
-    updateProductPublishingMode: function (mode) {
+    updateProductPublishingMode: function (mode, isLiveEdit) {
         Ext.Ajax.request({
             url: '/admin/app/settings/publishing/product',
             method: 'POST',
             jsonData: {
                 masterCatalogId: this.id,
-                productPublishingMode: mode
+                productPublishingMode: mode,
+                isLiveEditEnabled: isLiveEdit
             },
             success: function () {
                 this.productPublishingMode = mode;
+                this.isLiveEditEnabled = isLiveEdit;
             },
+            failure: Taco.core.util.ExceptionWhiner.handleRemoteFailure,
             scope: this
         });
     }

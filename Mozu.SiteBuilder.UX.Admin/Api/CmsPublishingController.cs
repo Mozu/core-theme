@@ -100,6 +100,10 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
             }
             [JsonProperty(NullValueHandling = NullValueHandling.Include, DefaultValueHandling = DefaultValueHandling.Include)]
             public bool? IsPubEnabled { get; set; }
+
+            [JsonProperty(NullValueHandling = NullValueHandling.Include, DefaultValueHandling = DefaultValueHandling.Include)]
+            public bool? IsLiveEditEnabled { get; set; }
+
         }
 
         /// Publish a set of documents.

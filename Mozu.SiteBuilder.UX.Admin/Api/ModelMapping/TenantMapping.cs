@@ -50,15 +50,16 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.ModelMapping
                 .ForMember(x => x.Locale, op => op.ResolveUsing(x => x.DefaultLocaleCode))
                 //ignores
                 .ForMember(x => x.ProductPublishingMode, op => op.Ignore())
+                .ForMember(x => x.EnableLiveEdit, op => op.Ignore())            
                 .ForMember(x => x.Sites, op => op.Ignore())
-                .ForMember(x => x.ContentPublishingEnabled, op => op.Ignore()) // todo: xverify - Greg Murray on 2014-08-28 
+                .ForMember(x => x.ContentPublishingEnabled, op => op.Ignore())
                 ;
             AutoMapper.Mapper.CreateMap<DC.Catalog, TaContextCatalog>()
                 .ForMember(x => x.Id, op => op.ResolveUsing(x => x.Id))
                 .ForMember(x => x.Currency, op => op.ResolveUsing(x => x.DefaultCurrencyCode))
                 .ForMember(x => x.Locale, op => op.ResolveUsing(x => x.DefaultLocaleCode))
                 .ForMember(x => x.Name, op => op.ResolveUsing(x => x.Name))
-                .ForMember(x => x.ContentPublishingEnabled, op => op.Ignore()) // todo: xverify - Greg Murray on 2014-08-28
+                .ForMember(x => x.ContentPublishingEnabled, op => op.Ignore())
                 ;
             
               //.ForMember(x => x.StagingHost, op => op.ResolveUsing(x => x.Domains == null ? null : x.Domains.Where(d => d.IsSystemAssigned).Select(d => d.DomainName).FirstOrDefault()));
@@ -84,7 +85,10 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.ModelMapping
                     {
                         var sitegroupInTacontext = tacontext.MasterCatalogs.FirstOrDefault(s => s.Id == sitegroup.Id);
                         if (sitegroupInTacontext != null)
+                        {
                             sitegroupInTacontext.ProductPublishingMode = sitegroup.ProductPublishingMode;
+                            sitegroupInTacontext.EnableLiveEdit = sitegroup.EnableLiveEdit;
+                        }
                     }
 
                     // TODO: hard-coding a default value for now, in case the service doesn't always return a value.
@@ -92,6 +96,11 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.ModelMapping
                         {
                             if (sc.ProductPublishingMode == null) 
                                 sc.ProductPublishingMode = Mozu.ProductAdmin.Contracts.MasterCatalog.ProductPublishingModeConst.Live;
+                            if (!sc.EnableLiveEdit.HasValue)
+                            {
+                                sc.EnableLiveEdit = false;
+                            }
+
                         });
 
                 })

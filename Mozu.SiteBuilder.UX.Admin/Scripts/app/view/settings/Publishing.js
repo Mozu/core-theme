@@ -4,6 +4,7 @@ Ext.define('Taco.view.settings.Publishing', {
     extend: 'Taco.core.ux.content.Container',
 
     requires: [
+        'Ext.form.field.Checkbox',
         'Taco.core.ux.form.OnOffSliderButton'
     ],
 
@@ -24,6 +25,7 @@ Ext.define('Taco.view.settings.Publishing', {
                 "catid",
                 "siteid",
                 'isPubEnabled',
+                'isLiveEditEnabled',
                 "scopeType"
             ],
             proxy: {
@@ -38,7 +40,7 @@ Ext.define('Taco.view.settings.Publishing', {
             },
             listeners: {
                 load: this.onCcontentPubStore,
-                scope:this,
+                scope:this
             },
             autoLoad:true
         });
@@ -46,7 +48,7 @@ Ext.define('Taco.view.settings.Publishing', {
 
 
 //this.body.items = this.buildItems();
-        this.body.items = []
+        this.body.items = [];
 
         this.callParent(arguments);
 
@@ -95,8 +97,10 @@ Ext.define('Taco.view.settings.Publishing', {
 
             var subitems = [],
                 isLiveProduct = masterCatalog.productPublishingMode === 'Live',
+                isLiveEdit = masterCatalog.enableLiveEdit,
                 liveProductRadio,
-                stagedProductRadio;
+                stagedProductRadio,
+                liveEditProductCheckbox;
 
             liveProductRadio = Ext.widget({
                 xtype: 'radio',
@@ -105,10 +109,27 @@ Ext.define('Taco.view.settings.Publishing', {
                 cellCls: 'product radio',
                 listeners: {
                     change: function (field) {
-                        masterCatalog.updateProductPublishingMode(field.getValue() ? 'Live' : 'Pending');
+                        var publishMode,
+                            isLiveEdit = null,
+                            liveEditCheck = me.down('#isLiveEditEnabled-' + masterCatalog.id);
+
+                        if (field.getValue()) {
+                            publishMode = 'Live';
+                            isLiveEdit = false;
+                            if (liveEditCheck) {
+                                liveEditCheck.setValue(false);
+                                liveEditCheck.disable();
+                            }
+                        } else {
+                            publishMode = 'Pending';
+                            if (liveEditCheck) {
+                                liveEditCheck.enable();
+                            }
+                        }
+                        masterCatalog.updateProductPublishingMode(publishMode, isLiveEdit);
                     },
                     click: {
-                        fn: function (e) {
+                        fn: function () {
                             this.confirmLive(liveProductRadio);
                         },
                         element: 'inputEl'
@@ -136,6 +157,25 @@ Ext.define('Taco.view.settings.Publishing', {
                 }
             }, this);
 
+            liveEditProductCheckbox = Ext.widget('checkboxfield',
+                Taco.core.ux.TooltipLabel.wrapConfig('settings.publishing.liveEdit', me, {
+                    xtype: 'checkbox',
+                    name: 'isLiveEditEnabled-' + masterCatalog.id,
+                    itemId: 'isLiveEditEnabled-' + masterCatalog.id,
+                    checked: isLiveEdit,
+                    fieldLabel: 'Live Edit',
+                    labelAlign: 'left',
+                    labelWidth: 75,
+                    disabled: isLiveProduct,
+                    listeners: {
+                        change: function (field) {
+                            masterCatalog.updateProductPublishingMode(null, field.getValue());
+                        },
+                        scope: this
+                    }
+                })
+            );
+
             Ext.Array.push(subitems, {}, {
                 xtype: 'component',
                 html: 'Live',
@@ -152,6 +192,7 @@ Ext.define('Taco.view.settings.Publishing', {
                 stagedProductRadio
             );
 
+            Ext.Array.push(subitems, {}, {}, liveEditProductCheckbox);
 
             // Get out of there are no sites, gary!!!
             if (!masterCatalog.sites.length) return;
@@ -212,7 +253,7 @@ Ext.define('Taco.view.settings.Publishing', {
                     site.updateContentPublishingMode(field.getValue() ? 'Live' : 'Pending');
                 },
                 click: {
-                    fn: function (e) {
+                    fn: function () {
                         this.confirmLive(liveContentRadio);
                     },
                     element: 'inputEl'
@@ -262,7 +303,7 @@ Ext.define('Taco.view.settings.Publishing', {
             title: 'Are you sure?',
             msg: 'Switching to Live Edits will automatically publish any staged edits.',
             modal: true,
-            fn: function (btn, text) {
+            fn: function (btn) {
                 
                 this.suspendSetValue = false;
 
@@ -273,4 +314,4 @@ Ext.define('Taco.view.settings.Publishing', {
             scope: this
         });
     }
-})
+});

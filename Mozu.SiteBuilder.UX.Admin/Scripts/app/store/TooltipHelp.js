@@ -71,8 +71,10 @@ Ext.define('Taco.store.TooltipHelp', {
         }, {
             key: 'couponSet.generatedCode.prefix',
             value: 'TBD Coupon Code Prefix'
+        }, {
+            key: 'settings.publishing.liveEdit',
+            value: 'Enables Live Edit of Products through the Mozu API.'
         }
-
    ]
    
 });
