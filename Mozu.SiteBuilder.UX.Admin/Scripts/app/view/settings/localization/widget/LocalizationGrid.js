@@ -60,7 +60,8 @@ Ext.define('Taco.view.settings.localization.widget.LocalizationGrid', {
         var me = this,
             mc = Taco.app.context.getMasterCatalog(),
             excludeDefaultLocale = true,
-            supportedLocales = (!mc) ? [] : mc.getSupportedLocales(excludeDefaultLocale);
+            supportedLocales = (!mc) ? [] : mc.getSupportedLocales(excludeDefaultLocale),
+            supportedCurrencies = (!mc) ? [] : mc.getSupportedCurrencies(excludeDefaultLocale);
 
         Ext.apply(me, {
             viewConfig: {
@@ -79,6 +80,7 @@ Ext.define('Taco.view.settings.localization.widget.LocalizationGrid', {
                             return;
                         }
                         column.record.set('supportedLocales', supportedLocales);
+                        column.record.set('supportedCurrencies', supportedCurrencies);
                         column.record.commit();
                         column.record.save();
                     }

@@ -193,8 +193,9 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
                                        DeltaPrice = localizedPrice.GetValueOrDefault()
                                    }).ToList();
 
-            var updatedResults = (await _productWebApiClient.UpdateExtraValueLocalizedDeltaPrices(localizedPrices, extraPrice.ProductCode, extraPrice.AttributeFQN,
-                responseFields: null, targetContextLevel: TargetContextLevel, value: extraPrice.AttributeName)).ReadAsSync();
+            var updatedResults = (await _productWebApiClient.UpdateExtraValueLocalizedDeltaPrices(localizedPrices, extraPrice.ProductCode, extraPrice.AttributeFQN, 
+                value: string.IsNullOrEmpty(extraPrice.AttributeName) ? "null" : extraPrice.AttributeName,
+                responseFields: null, targetContextLevel: TargetContextLevel)).ReadAsSync();
             var jResult = ReportLocalizedConverterHelper.AddLocalizedPrices(extraPrice, updatedResults);
             return Single2(jResult);
         } 
