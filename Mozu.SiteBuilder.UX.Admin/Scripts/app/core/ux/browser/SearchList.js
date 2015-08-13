@@ -12,7 +12,8 @@ Ext.define('Taco.core.ux.browser.SearchList', {
         pageable: 'Taco.core.ux.mixins.Pageable',
         searchable: 'Taco.core.ux.mixins.Searchable',
         rowEditable: 'Taco.core.ux.mixins.RowEditable',
-        deleteFromGrid : 'Taco.core.ux.mixins.DeleteFromGrid'
+        deleteFromGrid: 'Taco.core.ux.mixins.DeleteFromGrid',
+        gridcontextmenu: 'Taco.core.ux.mixins.GridContextMenu'
     },
     
     alias: 'widget.searchlist',
@@ -138,39 +139,9 @@ Ext.define('Taco.core.ux.browser.SearchList', {
         
         
         this.callParent(arguments);
+
         
-        
-        // add right click menu to grid that pulls its data from the actions menuColumn;
-        var menuColumns = Ext.Array.filter(me.columns, function (col) { return col.isXType && col.isXType('taco.menucolumn'); });        
-        if (me.disableContextMenuClick !== true && menuColumns && menuColumns.length == 1) {
-
-            me.mon(me.view, 'itemcontextmenu', function (cmp, record, item, index, e) {
-                var eventData = {
-                    grid: cmp.ownerCt,
-                    rowIndex: index,
-                    header: menuColumns[0],
-                    e: e,
-                    record: record,
-                    item: item
-                },
-                    menu = menuColumns[0].getMenu(eventData);
-
-                menu.on('hide', function () {
-                    // need to clear and reselect to get focus set after menu closes;
-                    // deselect old record
-                    me.getSelectionModel().deselect(record);
-                    //reselect old record
-                    me.getSelectionModel().select(record, false, false);
-                }, me)
-
-
-
-                //e.preventDefault();
-                e.stopEvent();
-                menu.showAt(e.xy);
-            }, me);
-
-        }
+        this.mixins.gridcontextmenu.constructor.apply(this);
 
     },
 

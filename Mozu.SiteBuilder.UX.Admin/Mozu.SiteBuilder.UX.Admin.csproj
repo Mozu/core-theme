@@ -518,6 +518,7 @@
     <Content Include="Scripts\app\core\ux\grid\AddEntityRow.js" />
     <Content Include="Scripts\app\core\ux\grid\plugins\AutoSelect.js" />
     <Content Include="Scripts\app\core\ux\mixins\DeleteFromGrid.js" />
+    <Content Include="Scripts\app\core\ux\mixins\GridContextMenu.js" />
     <Content Include="Scripts\app\core\ux\plugins\NextPrevious.js" />
     <Content Include="Scripts\app\core\ux\PanelHeaderStat.js" />
     <Content Include="Scripts\app\core\ux\HtmlEditorImagePlugin.js" />
