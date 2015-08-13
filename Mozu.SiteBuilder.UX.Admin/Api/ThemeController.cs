@@ -322,10 +322,12 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
                 var children = g.OrderByDescending(o => o.Version, versionStringComparer).ToArray();
                 if (children.Length > 1)
                 {
+                    var name = children[0].Name.StartsWith("Core") ? "Core" : children[0].Name;
                     return new ThemeDTO()
                     {
                         Children = children,
-                        Name = children[0].Name.StartsWith("Core") ? "Core" : children[0].Name
+                        Name = name,
+                        Id = "_parent_" + name
                     };
                 }
                 else

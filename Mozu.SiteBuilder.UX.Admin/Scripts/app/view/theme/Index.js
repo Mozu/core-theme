@@ -188,12 +188,17 @@ Ext.define('Taco.view.theme.Index', {
                     text: 'Apply',
 
                     menuColumnHandler: function (item, eventData) {
-                        var record = eventData.record;
+                        var record = eventData.record,
+                            path = record.getPath();
                         Ext.defer(function () {
                             record.applyTheme({
                                 success: function() {
                                     console.log('success');
-                                    me.treeStore.reload();
+                                    me.treeStore.reload({
+                                        callback: function () {
+                                            me.treeList.selectPath(path);
+                                        }
+                                    });
                                     me.appliedStore.reload();
                                 },
                                 apply: true
