@@ -18,14 +18,11 @@ Ext.define('Taco.view.couponCode.Grid', {
     mixins: {
         deleteFromGrid: 'Taco.core.ux.mixins.DeleteFromGrid',
         pageable: 'Taco.core.ux.mixins.Pageable',
-        searchable: 'Taco.core.ux.mixins.Searchable'
+        searchable: 'Taco.core.ux.mixins.Searchable',
+        gridcontextmenu: 'Taco.core.ux.mixins.GridContextMenu'
     },
 
-    //contextConfig: {
-    //    supportedLevels: ['s'],
-    //    requiresContextOfType: ['s']
-    //},
-
+    minHeight: 240,
     
     launchEditorOnClick:false,
     
@@ -35,6 +32,10 @@ Ext.define('Taco.view.couponCode.Grid', {
     controllerName: 'CouponCode',
 
     enableNavHeader: true,
+
+    
+
+    emptyText:'None Available',
 
     // adds the "taco-content-navcontainer-padding" class
     // Will add the 20px padding needed for display in the contentView as part of the NavHeader code;
@@ -136,6 +137,9 @@ Ext.define('Taco.view.couponCode.Grid', {
         me.initQuickAddBar();
 
         me.callParent(arguments);
+
+        this.mixins.gridcontextmenu.constructor.apply(this);
+
 
         me.addDocked(me.quickAddBar,0);
 
