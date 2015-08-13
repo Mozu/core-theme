@@ -48,18 +48,21 @@ namespace Mozu.SiteBuilder.UX.Models.Admin
         [DataMember(Name = "catalogs")]
         public List<TaContextCatalog> Catalogs { get; set; }
 
-
         [DataMember(Name = "localeCode")]
         public string Locale { get; set; }
-
 
         [DataMember(Name = "currencyCode")]
         public string Currency { get; set; }
 
-
-
          [DataMember(Name = "contentPublishingEnabled")]
         public bool? ContentPublishingEnabled { get; set; }
+
+        /// <summary>
+        /// If the publishingMode is Pending and LiveEditsEnabled = true, DataViewMode live can be passed in the header and live products can be directly edited. 
+        /// </summary>
+        [DataMember(EmitDefaultValue = false)]
+        public bool? EnableLiveEdit { get; set; }
+
     }
 
 
