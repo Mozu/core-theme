@@ -26,6 +26,7 @@ Ext.define('Taco.core.ux.TooltipLabel', {
     * tooltipKey = key in Taco.store.TooltipHelp
     * scope = caller's this reference
     * config = field or fieldcontainer with label or checkbox with boxlabel
+    * optId = optional id for cases where the same tooltipkey will be used by multiple components on the same page.
     *
     * Sample:
     * ========
@@ -39,8 +40,9 @@ Ext.define('Taco.core.ux.TooltipLabel', {
     *   );
     *
     **/
-    wrapConfig: function (tooltipKey, scope, config) {
-        var spanLabel = '<span id="' + tooltipKey + '" class="' + Taco.baseCSSPrefix + 'tooltip-help"></span>',
+    wrapConfig: function (tooltipKey, scope, config, optId) {
+        var spanId = tooltipKey + optId || '',
+            spanLabel = '<span id="' + spanId + '" class="' + Taco.baseCSSPrefix + 'tooltip-help"></span>',
             tooltipStore = Taco.core.data.StoreManager.getOrCreate('Taco.store.TooltipHelp'),
             tipContent,
 
@@ -57,7 +59,7 @@ Ext.define('Taco.core.ux.TooltipLabel', {
             },
 
             tooltipButtonRenderer = function(cmp, opts) {
-                var renderLabel = Ext.get(tooltipKey),
+                var renderLabel = Ext.get(spanId),
                 tooltipBtn = Ext.create('Ext.Button', {
                     ui: 'link',
                     cls: Taco.baseCSSPrefix + 'icon-tooltip-help',
@@ -65,7 +67,7 @@ Ext.define('Taco.core.ux.TooltipLabel', {
                     handler: function(btn, evt) {
                         onTooltipClick(btn, evt);
                     },
-                    itemId: tooltipKey + '.button',
+                    itemId: spanId + '.button',
                     tooltip: {
                         text: 'Click for info',
                         cls: Taco.baseCSSPrefix + 'tooltip',

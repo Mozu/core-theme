@@ -171,9 +171,9 @@ Ext.define('Taco.view.settings.Publishing', {
                         change: function (field) {
                             masterCatalog.updateProductPublishingMode(null, field.getValue());
                         },
-                        scope: this
+                        scope: me
                     }
-                })
+                },  masterCatalog.id)
             );
 
             Ext.Array.push(subitems, {}, {
