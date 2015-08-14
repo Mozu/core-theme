@@ -41,6 +41,7 @@ Ext.define('Taco.view.couponSet.GeneratedCodeForm', {
             margin: "0 50 0 0",
             fieldLabel: 'Number of Codes',
             //emptyText: '',
+            readOnly: !me.isCreateMode,
             minValue: 0,
             allowBlank: false
         });
@@ -49,6 +50,7 @@ Ext.define('Taco.view.couponSet.GeneratedCodeForm', {
         this.codePrefix = Ext.create('Ext.form.field.Text',
             Taco.core.ux.TooltipLabel.wrapConfig('couponSet.generatedCode.prefix', me,{
                 name: 'couponSetCode',
+                readOnly: !me.isCreateMode,
                 fieldLabel: "Code Prefix",
                 labelAlign: 'top',
                 allowBlank: true,
