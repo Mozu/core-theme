@@ -22,7 +22,19 @@ define(['jquery', 'shim!vendor/datetimepicker/jquery-simple-datetimepicker[jquer
             ShowHideAction = function() {
                 ButtonHandler.apply(this, arguments);
                 this.headerbar = $('.mz-future-date-header');
-                this.isShown = true;
+                this.indicator = $('.mz-future-bar-indicator');
+                this.isShown = (function() {
+                    if (!document.cookie.split(';').filter(function(str) {return str.indexOf('MZ_SHOW_FUTURE_BAR') > 0;})) {
+                        return true;
+                    }
+                    else {
+                        var cookie  = document.cookie.split(';').filter(function(str) {return str.indexOf('MZ_SHOW_FUTURE_BAR') > 0;})[0];
+                        if (!cookie) return true;
+                        return cookie.indexOf('true') !== -1;
+                    }
+                })();
+
+                console.log(this.isShown);
             },
             ShareAction = function() {
                 ButtonHandler.apply(this, arguments);
@@ -33,20 +45,24 @@ define(['jquery', 'shim!vendor/datetimepicker/jquery-simple-datetimepicker[jquer
         ShowHideAction.prototype = new ButtonHandler();
 
         ShowHideAction.prototype.init = function(){
+            this.handler.on('click', this.action.bind(this));
+            this.indicator.on('click', this.action.bind(this));
+        };
 
-            this.handler.on('click', (function(){
-                this.headerbar.addClass('mz-header-hidden');
-                this.setIsShown();
-                $(document).find('.datepicker').hide();
-            }).bind(this));
-
-            $(window).on('scroll', (function() {
-                if (this.isShown) this.headerbar[$(window).scrollTop() > 0 ? 'addClass' : 'removeClass']('mz-header-hidden');
-            }).bind(this));
+        ShowHideAction.prototype.action = function() {
+            this.indicator.toggleClass('hidden');
+            this.headerbar.toggleClass('mz-header-hidden');
+            this.setIsShown();
+            $(document).find('.datepicker').hide();
+            this.setCookie();
         };
 
         ShowHideAction.prototype.setIsShown = function() {
             this.isShown = !this.isShown;
+        };
+
+        ShowHideAction.prototype.setCookie = function(type) {
+            document.cookie = ' MZ_SHOW_FUTURE_BAR=' + this.isShown + '; Path=/; Expires=';
         };
 
         DateTimePicker.prototype.init = function() {
