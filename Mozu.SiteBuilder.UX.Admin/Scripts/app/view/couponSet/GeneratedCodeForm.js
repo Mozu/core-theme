@@ -56,6 +56,8 @@ Ext.define('Taco.view.couponSet.GeneratedCodeForm', {
                 maxLength: 32,
                 emptyText: 'Generated if blank',
                 enableKeyEvents: true,
+                regex: /^[BCDFGHJKLMNPQRSTVWXYZ1-9\$!]+$/i,
+                regexText: 'Invalid character. Vowels, the number 0, and any special characters, except "$" or "!", are not allowed.',
                 listeners: {
                     keyup: me.updatePreview,
                     scope: me

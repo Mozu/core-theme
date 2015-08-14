@@ -15,6 +15,12 @@ Ext.define('Taco.model.CouponCode', {
         { name: 'updateBy', type: 'string' },
         { name: 'redemptionCount', type: 'int' }
     ],
+    behaviors: {
+        read: 24,
+        create: 25,
+        update: 26,
+        destroy: 27
+    },
     idProperty: 'couponCode',
     proxy: {
         type: 'ajaxproxy',

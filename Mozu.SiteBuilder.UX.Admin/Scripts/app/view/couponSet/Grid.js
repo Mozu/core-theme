@@ -191,7 +191,7 @@ Ext.define('Taco.view.couponSet.Grid', {
                 text: 'End Date',
                 hidden: true,
                 sortable: true,
-                renderer: function (value, metaData, record, rowIndex, colIndex, store) {
+                renderer: function (value, metaData, record) {
                     var val = "";
                     if (!record.get("endDate")) {
                         val = "Never";
@@ -215,10 +215,10 @@ Ext.define('Taco.view.couponSet.Grid', {
                 menuItems: [
                     {
                         text: 'Edit',
-                        //requiredBehaviors: {
-                        //    model: 'Taco.model.Discount',
-                        //    behavior: 'update'
-                        //},
+                        requiredBehaviors: {
+                            model: 'Taco.model.CouponSet',
+                            behavior: 'update'
+                        },
                         menuColumnHandler: me.doEdit,
                         //    function (item, eventData) {
                         //    var record = eventData.record;
@@ -232,10 +232,10 @@ Ext.define('Taco.view.couponSet.Grid', {
                         itemId: "deleteMenuItem",
                         // deleteMenuColumnHandler can be found in Taco.core.ux.mixins.DeleteFromGrid
                         menuColumnHandler: "deleteMenuColumnHandler",
-                        //requiredBehaviors: {
-                        //    model: 'Taco.model.Discount',
-                        //    behavior: 'delete'
-                        //},
+                        requiredBehaviors: {
+                            model: 'Taco.model.CouponSet',
+                            behavior: 'delete'
+                        },
                         scope: me
                     }
                 ]
@@ -305,10 +305,10 @@ Ext.define('Taco.view.couponSet.Grid', {
                 items: [
                     {
                         text: 'Manual Coupon Set',
-                        //requiredBehaviors: {
-                        //    model: 'Taco.model.Discount',
-                        //    behavior: 'create'
-                        //},
+                        requiredBehaviors: {
+                            model: 'Taco.model.CouponSet',
+                            behavior: 'create'
+                        },
                         listeners: {
                             click: {
                                 fn: function (menu, menuItem) {
@@ -330,10 +330,10 @@ Ext.define('Taco.view.couponSet.Grid', {
                         }
                     }, {
                         text: 'Generated Coupon Set',
-                        //requiredBehaviors: {
-                        //    model: 'Taco.model.Discount',
-                        //    behavior: 'create'
-                        //},
+                        requiredBehaviors: {
+                            model: 'Taco.model.CouponSet',
+                            behavior: 'create'
+                        },
                         listeners: {
                             click: {
                                 fn: function (menu, menuItem) {
