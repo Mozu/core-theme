@@ -236,6 +236,7 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
             if (notification.MessagePublishingContext != null && !string.IsNullOrEmpty(notification.MessagePublishingContext.CustomerId))
             {
                 user = await TryGetUser(notification);
+                PageContext.User = user;
             }
 
 
@@ -292,6 +293,7 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
                     FirstName = dcUser.FirstName,
                     LastName = dcUser.LastName,
                     UserId = dcUser.UserId,
+                    IsAnonymous = dcUser.IsAnonymous,
                     AccountId = dcUser.Id
                 };
             }

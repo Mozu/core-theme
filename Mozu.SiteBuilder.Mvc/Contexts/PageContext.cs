@@ -302,6 +302,10 @@ namespace Mozu.SiteBuilder.Mvc.Contexts
                 }
                 return _user;
             }
+            set
+            {
+                _user = value;
+            }
         }
 
 
