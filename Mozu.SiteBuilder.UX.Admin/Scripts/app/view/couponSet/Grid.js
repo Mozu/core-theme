@@ -135,12 +135,13 @@ Ext.define('Taco.view.couponSet.Grid', {
                 sortable: true
             }, {
                 xtype: 'gridcolumn',
-                dataIndex: 'couponCodeCount',
-                stateId: 'couponCodeCount',
+                dataIndex: 'countOrSetSize',
+                stateId: 'countOrSetSize',
                 text: 'Total Codes',
                 width: 180,
                 hidden: false,
-                sortable: false
+                sortable: false,
+                renderer: Ext.util.Format.numberRenderer('0,000')
             }, {
                 xtype: 'gridcolumn',
                 dataIndex: 'redemptionCount',
@@ -148,7 +149,8 @@ Ext.define('Taco.view.couponSet.Grid', {
                 text: '# Redeemed',
                 width: 180,
                 hidden: false,
-                sortable: false
+                sortable: false,
+                renderer: Ext.util.Format.numberRenderer('0,000')
             }, {
                 xtype: 'gridcolumn',
                 dataIndex: 'redemptionPercent',
@@ -156,7 +158,9 @@ Ext.define('Taco.view.couponSet.Grid', {
                 text: '% Redeemed',
                 width: 180,
                 hidden: false,
-                sortable: false
+                sortable: false,
+                renderer: Ext.util.Format.numberRenderer('0.00 %')
+
             }, {
                 xtype: 'gridcolumn',
                 dataIndex: 'assignedDiscountCount',
@@ -164,7 +168,8 @@ Ext.define('Taco.view.couponSet.Grid', {
                 text: '# of Assigned Discounts',
                 width: 180,
                 hidden: false,
-                sortable: false
+                sortable: false,
+                renderer: Ext.util.Format.numberRenderer('0,000')
             }, {
                 xtype: 'gridcolumn',
                 dataIndex: 'couponSetCode',

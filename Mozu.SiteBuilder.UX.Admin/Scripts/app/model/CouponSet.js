@@ -60,6 +60,15 @@ Ext.define('Taco.model.CouponSet', {
             useNull: true,
             persist: false
         }, {
+            name: 'countOrSetSize',
+            type: 'int',
+            persist: false,
+            convert: function (v, record) {
+                return (record.get('couponCodeType') === 'Manual')
+                    ? record.get('couponCodeCount')
+                    : record.get('setSize');
+            }
+        },{
             name: 'redemptionCount',
             type: 'int',
             useNull: true,
@@ -69,8 +78,8 @@ Ext.define('Taco.model.CouponSet', {
             type: 'float',
             persist: false,
             convert: function (v, record) {
-                if (record.get('couponCodeCount') && record.get('couponCodeCount') > 0 && record.get('redemptionCount') && record.get('redemptionCount') > 0 ) {
-                    return (record.get('redemptionCount') / (1.0) * record.get('couponCodeCount'));
+                if (record.get('countOrSetSize') && record.get('countOrSetSize') > 0 && record.get('redemptionCount') && record.get('redemptionCount') > 0 ) {
+                    return (record.get('redemptionCount') / (1.0) * record.get('countOrSetSize'));
                 } else {
                     return 0.0;
                 }

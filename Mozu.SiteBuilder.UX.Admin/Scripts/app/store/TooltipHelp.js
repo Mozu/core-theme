@@ -70,7 +70,7 @@ Ext.define('Taco.store.TooltipHelp', {
             value: 'Publish Date is inherited from the<br/> Publish Set, and designates the<br/> date and time when all drafts in<br/> Publish Set publish.'
         }, {
             key: 'couponSet.generatedCode.prefix',
-            value: 'TBD Coupon Code Prefix'
+            value: 'The Code Prefix field specifies the prefix of all generated<br/>coupon codes within the coupon set.  This coupon prefix<br/>should be unique to the coupon set.  You can either specify<br/>a custom prefix or have Mozu suggest one.'
         }, {
             key: 'settings.publishing.liveEdit',
             value: 'Enables Live Edit of Products through the Mozu API.'
