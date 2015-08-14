@@ -118,7 +118,7 @@ NUGET
       Mozu.Core.Prime (>= 1.17.0)
     Mozu.Core.Messaging.Contracts (1.17.1)
       Mozu.Core.Prime (>= 1.17.0)
-    Mozu.Core.Prime (1.18.1-dev1508122003ci) - framework: >= net45
+    Mozu.Core.Prime (1.18.1-dev1508122003ci)
       AutoMapper (>= 3.3.0)
       Autofac (>= 3.5.2)
       Autofac.WebApi2 (>= 3.4.0)
@@ -157,7 +157,7 @@ NUGET
     Mozu.PricingRuntime.Contracts (1.17.1)
       Mozu.Core.Prime (>= 1.17.6)
     Mozu.ProductAdmin.Contracts (1.18.1-dev1508141554)
-      Mozu.Core.Prime (>= 1.17.6) - framework: >= net45
+      Mozu.Core.Prime (>= 1.17.6)
     Mozu.ProductRuntime.Contracts (1.17.2)
       Mozu.Core.Prime (>= 1.17.0)
     Mozu.Provisioning.Contracts (1.17.5)
