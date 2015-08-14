@@ -131,10 +131,11 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
         [HttpPostRoute(UriTemplate = "delete")]
         public async Task<Response<Coupon>> DeleteCoupons(List<Coupon> coupons, [FromUri]string couponSetCode)
         {
-            var dc = Mapper.Map<List<DC.Coupon>>(coupons);
-            
-            var response = (await _couponSetWebClient.DeleteCoupons(couponSetCode, dc)).ReadAsSync();
-            
+            var tasks = coupons.Select(c => _couponSetWebClient.DeleteCoupon(couponSetCode, c.CouponCode)).ToList();
+            await Task.WhenAll(tasks);
+
+            tasks.Select(TaskHelper.Result).ThrowExceptionsIfAny();
+
             return  SuccessWithTotal2<Coupon>(coupons.Count);
         }
     }
