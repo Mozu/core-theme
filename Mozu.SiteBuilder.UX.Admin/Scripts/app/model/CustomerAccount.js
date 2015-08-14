@@ -148,6 +148,9 @@ Ext.define('Taco.model.CustomerAccount', {
             name: 'customerSinceDate',
             type: 'date',
             dateFormat: 'c'
+        }, {
+            name: 'externalId',
+            type: 'string'
         }
 
     ],

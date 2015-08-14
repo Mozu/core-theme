@@ -45,6 +45,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.ModelMapping
                 //todo: confirm default of 0 Greg Murray on 2014-01-27 (ordercount defaults to 0 above so should be ok)
                 .ForMember(x => x.VisitCount, op => op.ResolveUsing(dc => (dc.CommerceSummary != null) ? dc.CommerceSummary.VisitsCount : 0))
                 .ForMember(x => x.IsAnonymous, op => op.ResolveUsing(dc => dc.IsAnonymous))
+                .ForMember(x => x.ExternalId, op => op.ResolveUsing(dc => dc.ExternalId))
                 //ignores
                 .ForMember(x => x.WishlistCount, op => op.Ignore())
                 .ForMember(x => x.PaymentCards, op => op.Ignore())
@@ -83,12 +84,12 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.ModelMapping
                 .ForMember(dc => dc.TaxExempt, op => op.ResolveUsing(x => x.TaxExempt))
                 .ForMember(dc => dc.TaxId, op => op.ResolveUsing(x => x.TaxId))
                 .ForMember(dc => dc.IsAnonymous, op => op.ResolveUsing(x => x.IsAnonymous))
+                .ForMember(dc => dc.ExternalId, op => op.ResolveUsing(x =>x.ExternalId))
 
                 // ensure that all contacts have the appropriate AccountId set
                 .AfterMap((x, dc) => dc.Contacts.ForEach(con => con.AccountId = dc.Id))
                 //ignore
                 .ForMember(dc => dc.LocaleCode, op => op.Ignore())
-                .ForMember(dc => dc.ExternalId, op => op.Ignore())
                 .ForMember(dc => dc.AuditInfo, op => op.Ignore())
                 .ForMember(dc => dc.IsLocked, op => op.Ignore())
                 .ForMember(dc => dc.IsActive, op => op.ResolveUsing(x => !x.IsDisabled))

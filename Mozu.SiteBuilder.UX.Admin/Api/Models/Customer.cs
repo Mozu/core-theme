@@ -59,7 +59,10 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.Models
         /// </summary>
         public bool AcceptsMarketing { get; set; }
 
-      
+        /// <summary>
+        /// This is set from the API, and we need to hold it so it won't loose the data.
+        /// </summary>
+        public string ExternalId { get; set; }
 
         /// <summary>
         /// List of attributes assigned to the customer.
