@@ -293,6 +293,7 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
                     FirstName = dcUser.FirstName,
                     LastName = dcUser.LastName,
                     UserId = dcUser.UserId,
+                    IsAnonymous = dcUser.IsAnonymous,
                     AccountId = dcUser.Id
                 };
             }
