@@ -10,9 +10,13 @@
     @{
 
         bool debugLayouts = WebConfigurationManager.AppSettings["extDebugLayout"] == "true";
-        string assFile = typeof (AccountController).Assembly.Location;
+        var ass = typeof(AccountController).Assembly;
+        string assFile = ass.Location;
         DateTime verDate = File.GetCreationTime(assFile);
         FileVersionInfo ver = FileVersionInfo.GetVersionInfo(assFile);
+        var assemblyInfoAtt = (System.Reflection.AssemblyInformationalVersionAttribute)ass.GetCustomAttributes(typeof(System.Reflection.AssemblyInformationalVersionAttribute), false).FirstOrDefault() ?? new System.Reflection.AssemblyInformationalVersionAttribute("local");
+        var assemblyInfoHash = new Guid(System.Security.Cryptography.MD5.Create().ComputeHash(System.Text.Encoding.ASCII.GetBytes(assemblyInfoAtt.InformationalVersion))).ToString();
+
 
         var user = (User) ViewData["user"];
         int[] behaviors = user.BehaviorIds;
@@ -28,31 +32,32 @@
         object locValues = ViewData["localizationValues"];
 
         var windowTaco = new
-                             {
-                                 baseCSSPrefix = "taco-",
-                                 testHarnessMode = Context.Request["testHarnessMode"] == "true",
-                                 adminRelPath = Url.Content("~"),
-                                 cdnPrefix = Mozu.Core.Settings.MozuConfigurationManager.AppSettings("CdnHost"),
-                                 SiteBuilderHelperToggle = Mozu.Core.Settings.MozuConfigurationManager.AppSettings("SiteBuilderHelpToggle"),
-                                 //DrupalLink = Mozu.Core.Settings.MozuConfigurationManager.AppSettings("drupalserver"),
-                                 adminHelpLink = Mozu.Core.Settings.MozuConfigurationManager.AppSettings("adminhelpserver"),
-                                 User = new
-                                            {
-                                                id = user.Id, behaviors, taContext,
-                                                email = user.EmailAddress,
-                                                sites = siteRolesJson,
-                                                name = (user.FirstName + " " + user.LastName).Trim()
-                                            },
-                                 apiVersion = ver.FileVersion,
-                                 localizationValues = locValues, paymentApiBaseUrl,
-                                 buildDate = verDate,
-                                 siteUsersRaw = siteUsers,
-                             extensiblity = new{
-                                 subNavLinks = ViewData["adminSubNavExtensibilty"]
-                             },
-                             tenantSettings = ViewData["tenantGlobalSettings"],
-                             showBirstReport = ViewData["showBristReport"]
-                             };
+        {
+            baseCSSPrefix = "taco-",
+            testHarnessMode = Context.Request["testHarnessMode"] == "true",
+            adminRelPath = Url.Content("~"),
+            cdnPrefix = Mozu.Core.Settings.MozuConfigurationManager.AppSettings("CdnHost"),
+            SiteBuilderHelperToggle = Mozu.Core.Settings.MozuConfigurationManager.AppSettings("SiteBuilderHelpToggle"),
+            //DrupalLink = Mozu.Core.Settings.MozuConfigurationManager.AppSettings("drupalserver"),
+            adminHelpLink = Mozu.Core.Settings.MozuConfigurationManager.AppSettings("adminhelpserver"),
+            User = new
+            {
+                id = user.Id, behaviors, taContext,
+                email = user.EmailAddress,
+                sites = siteRolesJson,
+                name = (user.FirstName + " " + user.LastName).Trim()
+            },
+            apiVersion = ver.FileVersion,
+            localizationValues = locValues, paymentApiBaseUrl,
+            buildDate = verDate,
+            buildInfo = assemblyInfoAtt.InformationalVersion,
+            siteUsersRaw = siteUsers,
+            extensiblity = new{
+                subNavLinks = ViewData["adminSubNavExtensibilty"]
+            },
+            tenantSettings = ViewData["tenantGlobalSettings"],
+            showBirstReport = ViewData["showBristReport"]
+        };
     };
 
     window.Taco = @Html.Raw(JsonConvert.SerializeObject(windowTaco,Newtonsoft.Json.Formatting.None,CaseInsensitiveJsonSerializerSettings.Default));

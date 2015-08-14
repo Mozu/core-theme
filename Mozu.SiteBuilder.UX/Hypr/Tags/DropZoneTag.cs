@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Reflection;
 using System.Text;
 using System.Web;
 using Mozu.SiteBuilder.Mvc;
@@ -67,14 +68,19 @@ namespace Mozu.SiteBuilder.UX.Hypr.Tags
     public class EditResourcesTag : SimpleTagBase
     {
         static string FileVersion = System.Diagnostics.FileVersionInfo.GetVersionInfo(typeof(BaseApiController).Assembly.Location).FileVersion;
-        const string Format = "\t\t<script type=\"text/javascript\" src=\"{0}/admin/scripts/chorizo/{1}.js?{2}\"></script>\r\n";
+        const string Format = "\t\t<script type=\"text/javascript\" src=\"{0}/admin/scripts/chorizo/{1}.js?{2},{3}\"></script>\r\n";
         static string[] autoIncludeScripts = new[] { "_classfactory", "format", "content", "targets", "widgets", "editor" };
+        static AssemblyInformationalVersionAttribute  AssemblyInfoAtt = (System.Reflection.AssemblyInformationalVersionAttribute)(typeof(BaseApiController).Assembly.GetCustomAttributes(typeof(System.Reflection.AssemblyInformationalVersionAttribute), false).FirstOrDefault() ?? new System.Reflection.AssemblyInformationalVersionAttribute("local");
+        static string AssemblyInfoHash = new Guid(System.Security.Cryptography.MD5.Create().ComputeHash(System.Text.Encoding.ASCII.GetBytes(AssemblyInfoAtt.InformationalVersion))).ToString();
+
+
 
         protected override IEnumerable<WalkResult> ProcessTag(ArgumentCollection arguments, IContext context, Func<string, ITemplate> getTemplateFunction)
         {
+            var siteContext = context.SiteContext();
             var pageContext = context.PageContext();
             var settings = context.Resolve<ISettings>();
-            var cdnHost = settings.AppSettings("CdnHost");
+            var cdnHost = string.IsNullOrWhiteSpace(siteContext.GeneralSettings.CustomCdnHostName) ? settings.AppSettings("CdnHost") : siteContext.GeneralSettings.CustomCdnHostName;
             var cdn = settings.AppSettings("disableCDN") == "true" || string.IsNullOrEmpty(cdnHost)
                 ? string.Empty
                 : string.Format("//{0}/common", cdnHost);
@@ -83,13 +89,13 @@ namespace Mozu.SiteBuilder.UX.Hypr.Tags
             using (var sbItemDisposer = StringBuilderPool.Default.GetContainer())
             {
                 var sb = sbItemDisposer.Item;
-                sb.AppendFormat("\t\t<link rel=\"stylesheet\" href=\"{0}/resources/cms/layout.css?{1}\">\r", cdn, FileVersion);
+                sb.AppendFormat("\t\t<link rel=\"stylesheet\" href=\"{0}/resources/cms/layout.css?{1},{2}\">\r", siteContext.CdnPrefix, FileVersion, AssemblyInfoHash);
                 if (!isEditmode)
                 {
                     return new[] { WalkResultHelpers.Buffer(sb.ToString()) };
                 }
 
-                sb.AppendFormat("\r\n\t\t<link rel=\"stylesheet\" href=\"/admin/scripts/chorizo/build/chorizo.css?{0}\">", FileVersion);
+                sb.AppendFormat("\r\n\t\t<link rel=\"stylesheet\" href=\"{2}/admin/scripts/chorizo/build/chorizo.css?{0},{1},\">", FileVersion, AssemblyInfoHash, cdn);
                 sb.AppendLine("\t\t<link rel=\"stylesheet\" href=\"//netdna.bootstrapcdn.com/font-awesome/4.0.2/css/font-awesome.min.css\">");
                 sb.AppendLine("\t\t<script src=\"//ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js\"></script>");
 #if DEBUG
@@ -97,7 +103,7 @@ namespace Mozu.SiteBuilder.UX.Hypr.Tags
 #else
                 sb.AppendLine("\t\t<script src=\"//ajax.googleapis.com/ajax/libs/jqueryui/1.10.3/jquery-ui.min.js\"></script>");
 #endif
-                autoIncludeScripts.Aggregate(sb, (builder, s) => builder.AppendFormat(Format, cdn, s, FileVersion));
+                autoIncludeScripts.Aggregate(sb, (builder, s) => builder.AppendFormat(Format, cdn, s, FileVersion, AssemblyInfoHash));
 
                 return new[] { WalkResultHelpers.Buffer(sb.ToString()) }; 
             }
