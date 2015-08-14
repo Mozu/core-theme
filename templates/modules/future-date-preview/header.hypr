@@ -1,25 +1,33 @@
 {% if pageContext.dataViewMode == 'pending' and pageContext.isEditMode != 'true' %}
 
-    {% require_script "modules/future-date-preview" %}
+    {% require_script "modules/theme-utility-bar" %}
 
-    <div class='mz-future-date-header'>
-
+    <div class='mz-future-date-header {% if pageContext.cookies.MZ_SHOW_FUTURE_BAR.value == false %} mz-header-hidden {% endif %}'>
         <div class='mz-content'>
             <div class='mz-header-icon'></div>
 
             <div class='mz-preview-actions'>
-                {#<span><input id='mz-url-copy' type="text" readonly="true"/></span>#}
+                
                 <span>
+                    <span>Preview Date: </span>
                     <input id='mz-date-display' type="text" />
                     <span id='mz-date-icon'></span>
                 </span>
             </div>
 
             <div class='mz-preview-share'>
-                <button class='mz-button' id='mz-showhide-preview-bar'>Hide</button>
+                <button class='mz-preview-button' id='mz-showhide-preview-bar'>Hide</button>
             </div>
 
         </div>
+
+    </div>
+
+    <div class='mz-future-bar-indicator {% if pageContext.cookies.MZ_SHOW_FUTURE_BAR.value == true %} hidden {% endif %}''>
+        
+        <span class='mz-indicator-icon'></span>
+
+        <span class='mz-indicator-text'>Show</span>
 
     </div>
 
