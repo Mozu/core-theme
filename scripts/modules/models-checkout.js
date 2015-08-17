@@ -66,6 +66,15 @@
             },
             next: function () {
                 if (this.submit()) this.isLoading(true);
+            },
+            cancelStep: function() {
+                var me = this,
+                order = me.getOrder();
+                me.isLoading(true);
+                order.apiModel.get().ensure(function(){
+                    me.isLoading(false);
+                    return me.stepStatus("complete");
+                });
             }
         }),
 
@@ -765,8 +774,26 @@
                     thereAreActivePayments = activePayments.length > 0,
                     paymentTypeIsCard = activePayments && !!_.findWhere(activePayments, { paymentType: 'CreditCard' }),
                     paymentTypeIsPayPal = activePayments && !!_.findWhere(activePayments, { paymentType: 'PaypalExpress' }),
+                    nonMozuPaymentWorkflow = activePayments && !!_.find(activePayments, function(payment){ return payment.paymentWorkflow != "Mozu";} ),
                     balanceZero = this.parent.get('amountRemainingForPayment') === 0;
 
+                if (nonMozuPaymentWorkflow) return this.stepStatus("complete");/*{
+                    var order = this.getOrder(),
+                    me = this;
+                    var nonMozuPayment = this.getNonMozuPayment(activePayments);
+                    if (nonMozuPayment && !balanceZero )
+                        order.apiVoidPayment(nonMozuPayment.id).then(function() {
+                            order.apiCreatePayment(
+                            {
+                                "newBillingInfo" : nonMozuPayment.billingInfo, 
+                                "externalTransactionId" : nonMozuPayment.externalTransactionId
+                            }).then( function() {
+                                return me.stepStatus("complete");        
+                            });
+                        });
+                    else
+                        return this.stepStatus("complete");
+                }*/
                 if (paymentTypeIsCard) return this.stepStatus("incomplete"); // initial state for CVV entry
 
                 if (!fulfillmentComplete) return this.stepStatus('new');
@@ -1033,7 +1060,7 @@
                 if (data.acceptsMarketing === null) {
                     self.set('acceptsMarketing', true);
                 }
-                _.bindAll(this, 'update', 'onCheckoutSuccess', 'onCheckoutError', 'addNewCustomer', 'saveCustomerCard',/* 'finalPaymentReconcile', */'apiCheckout', 'addDigitalCreditToCustomerAccount', 'addCustomerContact', 'addBillingContact', 'addShippingContact', 'addShippingAndBillingContact');
+                _.bindAll(this, 'update', 'onCheckoutSuccess', 'onCheckoutError', 'addNewCustomer', 'saveCustomerCard',/* 'finalPaymentReconcile', */'apiCheckout', 'addDigitalCreditToCustomerAccount', 'addCustomerContact', 'addBillingContact', 'addShippingContact', 'addShippingAndBillingContact','reconcileNonMozuPayments');
 
 
 
@@ -1337,6 +1364,30 @@
             //    }
 
             //},
+            getNonMozuPayment: function(activePayments) {
+                return _.find(activePayments, function(payment){ return payment.paymentWorkflow != "Mozu";} );
+            },
+            reconcileNonMozuPayments: function() {
+
+                var activePayments = this.apiModel.getActivePayments(),
+                order = this,
+                nonMozuPaymentWorkflow = activePayments && !!this.getNonMozuPayment(activePayments),
+                amountRemainingForPayment = order.get('amountRemainingForPayment');
+
+                if (!nonMozuPaymentWorkflow || amountRemainingForPayment === 0) return;
+                var nonMozuPayment = this.getNonMozuPayment(activePayments);
+
+                return order.apiVoidPayment(nonMozuPayment.id).then(function(result) {
+                    if (result.data.amountRemainingForPayment > 0) {
+                       return order.apiCreatePayment(
+                        {
+                            "newBillingInfo" : nonMozuPayment.billingInfo, 
+                            "externalTransactionId" : nonMozuPayment.externalTransactionId
+                        });
+                    }
+                });
+
+            },
             submit: function () {
                 var order = this,
                     billingInfo = this.get('billingInfo'),
@@ -1348,6 +1399,9 @@
                     nonStoreCreditTotal = billingInfo.nonStoreCreditTotal(),
                     requiresFulfillmentInfo = this.get('requiresFulfillmentInfo'),
                     requiresBillingInfo = nonStoreCreditTotal > 0,
+                    //activePayments = this.apiModel.getActivePayments(),
+                    currentPayment = this.apiModel.getCurrentPayment();
+                    
                     process = [function() {
                         return order.update({
                             ipAddress: order.get('ipAddress'),
@@ -1366,11 +1420,14 @@
                 this.syncBillingAndCustomerEmail();
                 this.setFulfillmentContactEmail();
 
-                if (nonStoreCreditTotal > 0 && this.validate()) {
+                if (nonStoreCreditTotal > 0 && this.validate() && currentPayment.paymentWorkflow === "Mozu") {
                     this.isSubmitting = false;
                     return false;
                 }
                 this.isLoading(true);
+                
+                
+                process.push(this.reconcileNonMozuPayments);
 
                 if (isSavingNewCustomer) {
                     process.unshift(this.addNewCustomer); 

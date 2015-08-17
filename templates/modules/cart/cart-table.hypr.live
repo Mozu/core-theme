@@ -105,11 +105,14 @@
       {% if not model.isEmpty %}<a class="mz-carttable-emptylink" href="javascript:;" data-mz-action="empty">{{ labels.emptyCart }}</a>{% endif %}
       <button id="cart-checkout" class="mz-button mz-button-large"  {% if model.isEmpty %} disabled="disabled" {% endif %} data-mz-action="proceedToCheckout">{{ labels.proceedToCheckout }}</button>
 
-      {% if siteContext.checkoutSettings.visaCheckout.isEnabled %}
+      {% if not model.isEmpty %}
       <div>
         <p>or checkout with</p>
-        <img alt="Visa Checkout" class="v-button" role="button"
-          src="{{pageContext.visaCheckoutButtonUrl}}"/>       
+          <div id="AmazonPayButton"/>
+          {% if siteContext.checkoutSettings.visaCheckout.isEnabled %}
+              <img alt="Visa Checkout" class="v-button" role="button"
+                   src="{{pageContext.visaCheckoutButtonUrl}}"/>
+          {% endif %}
       </div>
       {% endif %}
     </td>

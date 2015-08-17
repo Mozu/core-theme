@@ -23,4 +23,5 @@
         </table>
 	</form>
 </div>
+{% preload_json pageContext "pagecontext" %}
 {% endblock body-content %}

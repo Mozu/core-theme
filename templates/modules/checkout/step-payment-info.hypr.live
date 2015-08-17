@@ -1,10 +1,13 @@
 <h3 class="mz-formstep-header">
     {{ labels.paymentInformation }}
     <a href="javascript:;" class="mz-formstep-edit" data-mz-action="edit">{{ labels.change }}</a>
+    {% if viewData.awsCheckout and model.stepStatus == "incomplete" %}
+      <a href="javascript:;" class="mz-formstep-cancel" data-mz-action="cancel">{{ labels.cancel }}</button>
+    {% endif %}
 </h3>
 <div class="mz-formstep-body">
     <div class="mz-formstep-summary mz-l-stack">
-      {% if model.activeStoreCredits and model.activeStoreCredits.length > 0 %}
+      {% if model.activeStoreCredits and model.activeStoreCredits.length > 0 and payment.paymentWorkflow  == "Mozu" %}
       <div class="mz-l-stack-section mz-checkout-payment">
         <h4 class="mz-l-stack-sectiontitle">{{ labels.digitalCredit }}</h4>
           {% for payment in model.activeStoreCredits %}
@@ -65,10 +68,17 @@
             </dl>
         </div>
         {% endif %}
+        {% if payment.paymentWorkflow  != "Mozu"%}
+
+            {% if payment.paymentType == "PayByAmazon"%}
+                {% include "modules/checkout/payment-paybyamazon" with model=payment.billingInfo.billingContact%}  
+            {%endif%}
+            {% include "modules/checkout/checkout-digital-credit" %}
+        {%endif%}
       
       {% endfor %} 
 
-        {% if model.billingContact.email %}
+        {% if model.billingContact.email and payment.paymentWorkflow  == "Mozu" %}
         <div class="mz-l-stack-section">
             <h4 class="mz-l-stack-sectiontitle">{{ labels.billingContact }}</h4>
             <p>{{ labels.email }}: <strong>{{ model.billingContact.email }}</strong></p>
@@ -142,15 +152,10 @@
         </div>
         {% endif %}
         {% else %}
-        
-        {% if model.activeStoreCredits and model.activeStoreCredits.length > 0 %}
-         
+            {% if model.activeStoreCredits and model.activeStoreCredits.length > 0  %}
             {% include "modules/checkout/checkout-digital-credit" %}
-            
         {% endif %}
-        
         <h4 class="mz-checkout-nopaymentrequired">{{ labels.noPaymentRequired|string_format(model.remainingTotal|currency) }}</h4>
-
         {% endif %}
 
       {% if user.isAnonymous %}

@@ -3,18 +3,30 @@
         {% if model.requiresFulfillmentInfo or model.requiresDigitalFulfillmentContact %}
           <a href="javascript:;" class="mz-formstep-edit" data-mz-action="edit">{{ labels.change }}</a>
         {% endif %}
+        {% if viewData.awsCheckout and model.stepStatus == "incomplete" %}
+          <a href="javascript:;" class="mz-formstep-cancel" data-mz-action="cancel">{{ labels.cancel }}</a>
+        {% endif %}
     </h3>
     <div class="mz-formstep-body">
       {% if not model.address.candidateValidatedAddresses %}
       <div class="mz-formstep-summary mz-addresssummary">
         {% if model.requiresFulfillmentInfo %}
+          {% if viewData.awsCheckout %}
+              <a data-mz-action="amazonShippingAndBilling" href="javascript:;" style="float:right;">{{labels.awsChangeAddress}}</a>
+          {%endif%}
           {% include "modules/common/address-summary" %}      
         {% else %}
           {{ labels.noFulfillmentInfoRequired }}
         {% endif %}
       </div>
       {% if model.requiresFulfillmentInfo  %}
+        {% if viewData.awsCheckout and model.stepStatus == "incomplete" %}
+            <div class="mz-l-security-box">
+            {{ labels.awsAddressWarning }}
+            </div>
+        {%endif%}
       <div class="mz-formstep-fields mz-l-formfieldgroup">
+        
         {% if model.contacts %}
         {% include "modules/checkout/checkout-shipping-contact-selector" with editingContact=model %}
         {% else %}

@@ -1,13 +1,17 @@
 ﻿<div class="mz-checkout-payment">
-                <h4 class="mz-checkout-paymenttitle"><strong>{% if model.amountCollected > 0 %}{{ model.amountCollected|currency }}{% else %}{{ model.amountRequested|currency }}{% endif %}</strong> &mdash; {% if model.billingInfo.paymentType == "Check" %}{{ labels.checkByMail }} {% endif %}{% if model.billingInfo.paymentType == "PaypalExpress" %} {{ labels.payPal }} {% endif %}{% if model.billingInfo.paymentType == "CreditCard" %}{{ labels.creditCard }}{% endif %}{% if model.billingInfo.paymentType == "StoreCredit" or model.billingInfo.paymentType == "GiftCard" %}{{ labels.digitalCredit }}{% endif %}</h4>
+                <h4 class="mz-checkout-paymenttitle"><strong>{% if model.amountCollected > 0 %}{{ model.amountCollected|currency }}{% else %}{{ model.amountRequested|currency }}{% endif %}</strong> &mdash; {% if model.billingInfo.paymentType == "Check" %}{{ labels.checkByMail }} {% endif %}{% if model.billingInfo.paymentType == "PaypalExpress" %} {{ labels.payPal }} {% endif %}{% if model.billingInfo.paymentType == "CreditCard" %}{{ labels.creditCard }}{% endif %}{% if model.billingInfo.paymentType == "StoreCredit" or model.billingInfo.paymentType == "GiftCard" %}{{ labels.digitalCredit }}{% endif %}{% if model.billingInfo.paymentType == "PayByAmazon" %} {{ labels.payByAmazon }} {% endif %}</h4>
                 <dl class="mz-propertylist">
                     {% if model.billingInfo.billingContact.email %}
                     <dt>{{ labels.billingEmail }}</dt>
                     <dd>{{ model.billingInfo.billingContact.email }}</dd>
                   {% endif %}
-                  {% if model.billingInfo.paymentType == "StoreCredit" or model.billingInfo.paymentType == "GiftCard" %}
-                  <dt>{{ labels.digitalCreditCode }}</dt>
-                    <dd>{{ model.billingInfo.storeCreditCode }}</dd>
+                  {% if model.billingInfo.paymentType == "StoreCredit" or model.billingInfo.paymentType == "GiftCard" or model.billingInfo.paymentType == "PayByAmazon"%}
+                    {% if model.billingInfo.paymentType == "PayByAmazon" %}
+                        <img src="../../resources/images/amazonpay60x38.png"/>
+                    {% else %}
+                        <dt>{{ labels.digitalCreditCode }}</dt>
+                        <dd>{{ model.billingInfo.storeCreditCode }}</dd>
+                    {%endif%}    
                     {% else %}
                     <dt>{{ labels.billingName }}</dt>
                     <dd>{{ model.billingInfo.billingContact.firstName }} {{ model.billingInfo.billingContact.lastNameOrSurname }}</dd>
