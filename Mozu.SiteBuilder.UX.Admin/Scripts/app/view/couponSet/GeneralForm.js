@@ -77,8 +77,8 @@ Ext.define('Taco.view.couponSet.GeneralForm', {
                 width: twoColumnFieldWidth,
                 margin: "0 50 0 0",
                 fieldLabel: 'Max Redemptions per Code',
-                emptyText: 'Unlimited',
-                minValue: 0
+                emptyText: 'Defaults to 1',
+                minValue: 1
             })
         );
 
@@ -89,7 +89,7 @@ Ext.define('Taco.view.couponSet.GeneralForm', {
             margin: "0 0 0 0",
             fieldLabel: 'Max Redemptions per Customer',
             emptyText: 'Defaults to 1',
-            minValue: 0
+            minValue: 1
             }
         );
 
@@ -115,6 +115,15 @@ Ext.define('Taco.view.couponSet.GeneralForm', {
                 ]
             }
         ];
+
+        this.mon(Taco.app, 'couponsetcreated', function(data) {
+            if (!me.redemptionsPerCode.getValue()){
+                me.redemptionsPerCode.setValue(data.get('maxRedemptionsPerCouponCode'));
+            }
+            if (!me.redemptionsPerUser.getValue()){
+                me.redemptionsPerUser.setValue(data.get('maxRedemptionsPerUser'));
+            }
+        }, me);
 
         this.callParent(arguments);
     },
