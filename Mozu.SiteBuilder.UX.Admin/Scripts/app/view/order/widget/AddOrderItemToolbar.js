@@ -131,7 +131,6 @@ Ext.define('Taco.view.order.widget.AddOrderItemToolbar', {
             displayTpl: Ext.create('Ext.XTemplate',
                 '<tpl if="values && values.productName"><span class="product-name">{productName}</span> <span class="product-code">{productCode}</span></tpl>'
             ),
-            defaultFilters: [{ property: 'isactive', value: true}, { property: 'publishedstate', value: true }],
             listeners: {
                 focus: {
                     fn: this.onFocus,
