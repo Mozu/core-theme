@@ -1,5 +1,5 @@
 ﻿/**
- * @class Taco.view.order.subform.Payment
+ * @class Taco.view.order.subform.Return
  */
 Ext.define('Taco.view.order.subform.Return', {
     extend: 'Taco.view.order.subform.Subform',
@@ -211,6 +211,8 @@ Ext.define('Taco.view.order.subform.Return', {
 
             replaceItems = [],
 
+            erroredReturns = [],
+
             selected = this.returnableItems.getSelectionModel().getSelection();
 
         if (selected.length === 0) {
@@ -226,12 +228,18 @@ Ext.define('Taco.view.order.subform.Return', {
             return false;
         }
 
-        replaceItems = Ext.Array.filter(selected, function (item) { return item.get('returnType') === 'Replace' } );
-        refundItems  = Ext.Array.filter(selected, function (item) { return item.get('returnType') === 'Refund' } );
+        erroredReturns = Ext.Array.filter(selected, function (item) { return item.get('reason') === 'Select'; });
+        if (erroredReturns.length > 0) {
+            this.returnableItemsErrorEl.setError('Please choose a reason other then "Select".');
+            return false;
+        }
+
+        replaceItems = Ext.Array.filter(selected, function (item) { return item.get('returnType') === 'Replace'; } );
+        refundItems  = Ext.Array.filter(selected, function (item) { return item.get('returnType') === 'Refund'; } );
 
         if (refundItems.length > 0) records.push(this.createReturn("Refund", refundItems));
         if (replaceItems.length > 0) records.push(this.createReturn("Replace", replaceItems));
-        // This is where we would force them to choose a return reason, should we do this in the admin?
+        
         if (records.length === 0) {
             this.returnableItemsErrorEl.setError('Sorry, an unknown error occurred. There were no items of return type "Replace" or "Refund".');
             return false;
