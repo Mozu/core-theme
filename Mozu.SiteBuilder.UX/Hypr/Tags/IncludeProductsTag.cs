@@ -14,6 +14,7 @@ using Mozu.SiteBuilder.Mvc.MessageHandler;
 using NDjango.Interfaces;
 using NDjango.FiltersCS.Compatibility;
 using Mozu.SiteBuilder.Mvc.Catalog;
+using Mozu.SiteBuilder.Mvc.Contexts;
 
 namespace Mozu.SiteBuilder.UX.Hypr.Tags
 {
@@ -75,6 +76,10 @@ namespace Mozu.SiteBuilder.UX.Hypr.Tags
             var facetHierDepthInt = arguments.GetValueOrDefault<int>("facetHierDepth", 2);
             var responseFields = arguments.GetValueOrDefault<string>("responseFields");
             var facet = arguments.GetValueOrDefault<string>("facet");
+            var searchTuningRuleCode = arguments.GetValueOrDefault<string>("searchTuningRuleCode");
+            var enableSearchTuningRules = arguments.GetValueOrDefault<bool?>("enableSearchTuningRules");
+            var searchTuningRuleContext = arguments.GetValueOrDefault<string>("searchTuningRuleContext");
+            var facetTemplateExclude = arguments.GetValueOrDefault<string>("facetTemplateExclude");
 
             int? facetCategoryId;
             int? categoryId;
@@ -109,7 +114,29 @@ namespace Mozu.SiteBuilder.UX.Hypr.Tags
 
             
             var cache = context.Resolve<ILiveModeOnlyCache>();
-            ProductSearchResult pc = await DoSearch(cache, startIndex, pageSize, cacheResults, facetTemplate, facetValueFilter, facetHierValue, facetHierDepth, searchQueryString, sortBy, filter, productSearchWebApiClient, pageContext, productCodesFilters, productCodes, responseFields, facet).ConfigureAwait(false);
+            ProductSearchResult pc = await DoSearch(
+                cache, 
+                startIndex, 
+                pageSize, 
+                cacheResults, 
+                facetTemplate, 
+                facetValueFilter, 
+                facetHierValue, 
+                facetHierDepth, 
+                searchQueryString, 
+                sortBy, 
+                filter, 
+                productSearchWebApiClient, 
+                pageContext, 
+                productCodesFilters, 
+                productCodes, 
+                responseFields, 
+                facet, 
+                searchTuningRuleCode, 
+                enableSearchTuningRules ,
+                searchTuningRuleContext ,
+                facetTemplateExclude
+             ).ConfigureAwait(false);
 
             var dict = new Dictionary<string, object> { { "model", pc } };
             var nodes = getTemplateFunction(template).Nodes;
@@ -117,7 +144,29 @@ namespace Mozu.SiteBuilder.UX.Hypr.Tags
             return new[] { WalkResultHelpers.RenderNodesWithContextMods(nodes, dict, Enumerable.Empty<string>()) };
         }
 
-        private async Task<ProductSearchResult> DoSearch(ILiveModeOnlyCache cache, int startIndex, int pageSize, bool cacheResults, string facetTemplate, string facetValueFilter, string facetHierValue, string facetHierDepth, string searchQueryString, string sortBy, string filter, IProductSearchWebApiClient productSearchWebApiClient, Mozu.SiteBuilder.Mvc.Contexts.PageContext pageContext, string[] productCodesFilters, IEnumerable productCodes, string responseFields , string facet )
+        private async Task<ProductSearchResult> DoSearch(
+            ILiveModeOnlyCache cache, 
+            int startIndex, 
+            int pageSize, 
+            bool cacheResults, 
+            string facetTemplate, 
+            string facetValueFilter, 
+            string facetHierValue, 
+            string facetHierDepth, 
+            string searchQueryString, 
+            string sortBy, 
+            string filter, 
+            IProductSearchWebApiClient productSearchWebApiClient, 
+            PageContext pageContext, 
+            string[] productCodesFilters, 
+            IEnumerable productCodes, 
+            string responseFields , 
+            string facet ,
+            string searchTuningRuleCode,
+            bool?  enableSearchTuningRules ,
+            string searchTuningRuleContext ,
+            string facetTemplateExclude
+            )
         {
             string cacheKey = null;
            
@@ -136,6 +185,11 @@ namespace Mozu.SiteBuilder.UX.Hypr.Tags
                     .Append (responseFields)
                     .Append(pageSize)
                     .Append(facet)
+                    .Append(searchTuningRuleCode)
+                    .Append(enableSearchTuningRules)
+                    .Append(searchTuningRuleContext)
+                    .Append(facetTemplateExclude)
+
                     .ToString();
 
                 pc = cache.Get<ProductSearchResult>(cacheKey);
@@ -153,7 +207,14 @@ namespace Mozu.SiteBuilder.UX.Hypr.Tags
                     startIndex: startIndex,
                     sortBy: sortBy,
                     responseFields: responseFields,
-                    pageSize: pageSize).ConfigureAwait(false);
+                    pageSize: pageSize,
+                    searchTuningRuleCode: searchTuningRuleCode,
+                    enableSearchTuningRules: enableSearchTuningRules,
+                    searchTuningRuleContext: searchTuningRuleContext
+              // facetTemplateExclude: facetTemplateExclude
+
+                    ).ConfigureAwait(false);
+
 
                 if (res.HasException)
                 {

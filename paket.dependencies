@@ -38,7 +38,7 @@ nuget Mozu.InstalledApps.Contracts 1.17.3
 nuget Mozu.Location.Contracts 1.17.1 
 nuget Mozu.MZDB.Contracts 1.17.2 
 nuget Mozu.ProductAdmin.Contracts < 1.19 prerelease
-nuget Mozu.ProductRuntime.Contracts 1.17.2 
+nuget Mozu.ProductRuntime.Contracts < 1.19 prerelease
 nuget Mozu.Provisioning.Contracts 1.17.5 
 nuget Mozu.Reference.Contracts 1.17.4 
 nuget Mozu.ShippingAdmin.Contracts 1.17.4 
