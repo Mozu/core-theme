@@ -70,7 +70,7 @@ namespace Mozu.SiteBuilder.UX.Hypr.Tags
         static string FileVersion = System.Diagnostics.FileVersionInfo.GetVersionInfo(typeof(BaseApiController).Assembly.Location).FileVersion;
         const string Format = "\t\t<script type=\"text/javascript\" src=\"{0}/admin/scripts/chorizo/{1}.js?{2},{3}\"></script>\r\n";
         static string[] autoIncludeScripts = new[] { "_classfactory", "format", "content", "targets", "widgets", "editor" };
-        static AssemblyInformationalVersionAttribute  AssemblyInfoAtt = (System.Reflection.AssemblyInformationalVersionAttribute)(typeof(BaseApiController).Assembly.GetCustomAttributes(typeof(System.Reflection.AssemblyInformationalVersionAttribute), false).FirstOrDefault() ?? new System.Reflection.AssemblyInformationalVersionAttribute("local");
+        static AssemblyInformationalVersionAttribute  AssemblyInfoAtt = (AssemblyInformationalVersionAttribute)typeof(BaseApiController).Assembly.GetCustomAttributes(typeof(AssemblyInformationalVersionAttribute), false).FirstOrDefault() ?? new AssemblyInformationalVersionAttribute("local");
         static string AssemblyInfoHash = new Guid(System.Security.Cryptography.MD5.Create().ComputeHash(System.Text.Encoding.ASCII.GetBytes(AssemblyInfoAtt.InformationalVersion))).ToString();
 
 
