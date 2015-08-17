@@ -79,79 +79,79 @@ Ext.define('Taco.view.attribute.Grid', {
     
     // override this method and adjust the columns if your need a grid with a subset of columns;
     getColumnConfig: function () {
-        var me = this,
-            columns = [
-                {
-                    dataIndex: 'adminName',
-                    stateId: 'adminName',
-                    text: 'Administration Name',
-                    flex: 1,
-                    minWidth: 120
-                }, {
-                    dataIndex: 'name',
-                    stateId: 'name',
-                    text: 'Name',
-                    flex: 1,
-                    minWidth: 120
-
-                }, {
-                    dataIndex: 'id',
-                    stateId: 'id',
-                    hidden: true,
-                    sortable: false,
-                    text: 'ID',
-                    minWidth: 200
-                }, {
-                    dataIndex: 'code',
-                    stateId: 'code',
-                    hidden: true,
-                    text: 'Code',
-                    minWidth: 200
-                }, {
-                    dataIndex: 'inputType',
-                    stateId: 'inputType',
-                    sortable: false,
-                    text: 'Input Type',
-                    width: 130
-                }, {
-                    text: 'Type',
-                    stateId: 'type',
-                    width: 200,
-                    sortable: false,
-                    renderer: function(value, metaData, record) {
-                        var ret = [];
-                        if (record.get('isOption')) {
-                            ret.push('Option')
-                        }
-                        if (record.get('isExtra')) {
-                            ret.push('Extra')
-                        }
-                        if (record.get('isProperty')) {
-                            ret.push('Property')
-                        }
-                        return ret.join(', ');
+        var me = this;
+        return [
+            {
+                dataIndex: 'adminName',
+                stateId: 'adminName',
+                text: 'Administration Name',
+                flex: 1,
+                minWidth: 120
+            }, {
+                dataIndex: 'name',
+                stateId: 'name',
+                text: 'Name',
+                flex: 1,
+                minWidth: 120
+            }, {
+                dataIndex: 'id',
+                stateId: 'id',
+                hidden: true,
+                sortable: false,
+                text: 'ID',
+                minWidth: 200
+            }, {
+                dataIndex: 'code',
+                stateId: 'code',
+                hidden: true,
+                text: 'Code',
+                minWidth: 200
+            }, {
+                dataIndex: 'inputType',
+                stateId: 'inputType',
+                sortable: false,
+                text: 'Input Type',
+                width: 130
+            }, {
+                text: 'Type',
+                stateId: 'type',
+                width: 200,
+                sortable: false,
+                renderer: function(value, metaData, record) {
+                    var ret = [];
+                    if (record.get('isOption')) {
+                        ret.push('Option')
                     }
-
-
-                }, {
-                    xtype: 'taco.menucolumn',
-                    text: 'Actions',
-                    menuItems: [
-                        {
-                            text: 'Edit',
-                            menuColumnHandler: 'editMenuColumnHandler'
-                        }, {
-                            text: 'Delete',
-                            menuColumnHandler: 'destroyMenuColumnHandler'
-                        }
-                    ]
+                    if (record.get('isExtra')) {
+                        ret.push('Extra')
+                    }
+                    if (record.get('isProperty')) {
+                        ret.push('Property')
+                    }
+                    return ret.join(', ');
                 }
-            ];
-        
-        
-        
+            }, {
+                xtype: 'taco.menucolumn',
+                text: 'Actions',
+                menuItems: [
+                    {
+                        text: 'Edit',
+                        menuColumnHandler: 'editMenuColumnHandler',
+                        scope: me
+                    }, {
+                        text: 'Delete',
+                        // deleteMenuColumnHandler can be found in Taco.core.ux.mixins.DeleteFromGrid
+                        menuColumnHandler: "deleteMenuColumnHandler",
+                        //requiredBehaviors: {
+                        //    model: 'Taco.model.Attribute',
+                        //    behavior: 'delete'
+                        //},
+                        scope: me
+                    }
+                ]
+            }
+        ];
 
-        return columns;
     },
 
     onItemClick: function (view, record, elm, index, e) {
@@ -164,7 +164,7 @@ Ext.define('Taco.view.attribute.Grid', {
     },
 
     doCreate : function (){
-        var controller = "attributes"
+        var controller = "attributes";
         Taco.app.StateManager.attemptNavigate(controller + '/create');
     },
 
@@ -173,12 +173,6 @@ Ext.define('Taco.view.attribute.Grid', {
         Ext.defer(function () {
             Taco.core.StateManager.attemptNavigate('attributes/edit/' + record.getId(), { complexMetaData: { record: record } });
         }, 1, this);
-        return;
     }
-
-    //,
-    //getDeletePromptMessage: function (record) {
-    //    return record.getDeletePromptMessage();
-    //}
 
 });
