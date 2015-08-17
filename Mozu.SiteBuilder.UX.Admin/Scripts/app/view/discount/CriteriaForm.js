@@ -194,16 +194,16 @@ Ext.define('Taco.view.discount.CriteriaForm', {
             })
         );
 
-        this.categoryMaxQuantityField = Ext.widget({
-            xtype: 'numberfield',
-            itemId: 'maxQuantity',
-            hideTrigger: true,
-            width: 100,
-            emptyText: "Unlimited",
-            allowBlank: true,
-            labelAlign: 'right',
-            hideLabel: true
-        });
+        //this.categoryMaxQuantityField = Ext.widget({
+        //    xtype: 'numberfield',
+        //    itemId: 'maxQuantity',
+        //    hideTrigger: true,
+        //    width: 100,
+        //    emptyText: "Unlimited",
+        //    allowBlank: true,
+        //    labelAlign: 'right',
+        //    hideLabel: true
+        //});
 
 
         // Note: only visible when Scope is lineItem and the specific categories radio button is selected
@@ -313,16 +313,16 @@ Ext.define('Taco.view.discount.CriteriaForm', {
             }
         });
 
-        this.productMaxQuantityField = Ext.widget({
-            xtype: 'numberfield',
-            itemId: 'maxQuantity',
-            hideTrigger: true,
-            width: 100,
-            allowBlank: true,
-            labelAlign: 'right',
-            emptyText: "Unlimited",
-            hideLabel: true
-        });
+        //this.productMaxQuantityField = Ext.widget({
+        //    xtype: 'numberfield',
+        //    itemId: 'maxQuantity',
+        //    hideTrigger: true,
+        //    width: 100,
+        //    allowBlank: true,
+        //    labelAlign: 'right',
+        //    emptyText: "Unlimited",
+        //    hideLabel: true
+        //});
         
         // Note: only visible when Scope is lineItem and the specific products radio button is selected
         this.productsBox = Ext.create('Ext.form.FieldContainer', {
@@ -526,6 +526,8 @@ Ext.define('Taco.view.discount.CriteriaForm', {
             this.shippingZoneList
         ];
 
+        this.warnOnExternalDataChange();
+
         this.callParent(arguments);
 
     },
@@ -664,9 +666,7 @@ Ext.define('Taco.view.discount.CriteriaForm', {
      * Handle the change of the buy item condition fields in the condition form, handle the 
      * @private
      */
-    handleBuyItemConditions: function (hasBuyItems) {
-        var me = this;
-
+    handleBuyItemConditions: function () {
         this.updateMaximumQuantityPerRedemptionField();
     },
 
@@ -720,7 +720,7 @@ Ext.define('Taco.view.discount.CriteriaForm', {
         me.parentForm.getForm().checkValidity();
     },
 
-    handleCriteriaScopeChange: function(cmp, newValue, oldValue) {
+    handleCriteriaScopeChange: function() {
         
         this.setProductCategoryContainerVisibility();
     },
@@ -799,7 +799,7 @@ Ext.define('Taco.view.discount.CriteriaForm', {
         var me = this,
             categoriesActive = me.includeSpecificCatagoriesInput.checked,
             productActive = me.includeSpecificProductsInput.checked,
-            isLineItem = (this.scopeType === 'LineItem');;
+            isLineItem = (this.scopeType === 'LineItem');
 
         var includeAllProductsSelected = this.includeAllProductsInput.checked;
 
@@ -835,6 +835,16 @@ Ext.define('Taco.view.discount.CriteriaForm', {
         this.record.set("maximumQuantityPerRedemption", me.maximumQuantityPerRedemptionTB.getValue());
 
         return true;
+    },
+
+    warnOnExternalDataChange: function () {
+        if (!this.record.phantom && !this.record.isDuplicate
+            && this.record.get('scope') === 'LineItem'
+            && !this.record.get('includeAllProducts')
+            && this.record.get('products').length === 0
+            && this.record.get('categories').length === 0) {
+            Taco.app.fireEvent('setmessage', 'Some dependent product or category data has changed. Please verify the target criteria scope.', 'warning');
+        }
     },
 
     onDestroy: function () {
