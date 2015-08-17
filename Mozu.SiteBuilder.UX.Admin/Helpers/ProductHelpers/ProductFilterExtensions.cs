@@ -164,7 +164,10 @@ namespace Mozu.SiteBuilder.UX.Admin.Helpers.ProductHelpers
                 case "siteid":
                     return string.Format("{1} eq {0}", filter.value, SITE_ID_PROPERTY);
                 case "publishedstate":
-                    return String.Format("{1} ne Live", filter.value, PRODUCT_PUBLISHED_STATE);
+                    // TODO: Change this to use filter.comparison, but need to find usages of this property and update them.
+                    bool getLive;
+                    bool.TryParse(filter.value.ToString(), out getLive);
+                    return String.Format("{1} {0} Live", getLive ? "eq" : "ne", PRODUCT_PUBLISHED_STATE);
                 case "upc":
                     return string.Format("{1} eq \"{0}\"", filter.value, PRODUCT_UPC_PROPERTY);
                 case "mfgpartnumber":

@@ -66,6 +66,9 @@ Ext.define('Taco.shared.view.field.ProductPickerField', {
 
     // default filter parameter used to get the full list
     allQuery: "",
+
+    // filters to include with every query
+    defaultFilters: [],
     
     // modify the format of the query data to fit the service filtering pattern.
     formatQuery: function (queryEvent, e) {
@@ -79,17 +82,22 @@ Ext.define('Taco.shared.view.field.ProductPickerField', {
         delete this.lastQuery;
 
         var queryText = queryEvent.combo.getValue() || "";
-        if (queryText == "") {
+
+        // the formated query f's the min char check.... 
+        if (queryText !== "" && queryText.length < this.minChars) {
+             return false;
+        }
+
+        var filters = this.defaultFilters || [];
+        if (queryText !== "") {
+            filters = filters.concat([{ property: 'all', value: queryText }]);
+        }
+        if (filters.length) {
+            queryEvent.forceAll = false;
+            queryEvent.query = Ext.encode(filters);
+        } else {
             // need to force the load of the full list. just returning a value of "" causes the control to reload the last query;
             queryEvent.forceAll = true;
-        } else {
-            //the formated query f's the min char check.... 
-            if (queryText.length < this.minChars) {
-                return false;
-            }
-
-            queryEvent.forceAll = false;
-            queryEvent.query = Ext.encode([{ property: 'all', value: queryText }]);
         }
 
         return true;
