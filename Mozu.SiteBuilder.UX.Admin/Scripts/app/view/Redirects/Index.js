@@ -89,7 +89,16 @@ Ext.define('Taco.view.redirects.Index', {
                 },
                 text: 'Is Temporary',
                 width: 100
-            }, {
+            },
+             {
+                 dataIndex: 'p',
+                 stateId: 'prior',
+                 editor: {
+                     xtype: 'numberfield'
+                 },
+                 text: 'Priority',
+                 width: 100
+             }, {
                 xtype: 'taco.menucolumn',
                 text: 'Actions',
                 width: 100,

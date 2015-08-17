@@ -14,6 +14,8 @@ using Mozu.Core.Api.Contracts.Client;
 using Mozu.Core.Logging;
 using Mozu.SiteBuilder.Mvc.Extensions;
 using Mozu.SiteBuilder.UX.Models.Navigation;
+using System.Linq;
+
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using Mozu.SiteSettings.General.Contracts.General.Routing;
@@ -292,6 +294,9 @@ namespace Mozu.SiteBuilder.Mvc.SEO
             
             return rr;
         }
+
+        
+
         Task<List<RedirectEntry>> IRedirectRepository.UpdateRedirectEntries(List<RedirectEntry> redirects, int? siteId)
         {
             var client = siteId.HasValue ? _userDocumentClient.CloneWithSbContext(_siteBuilderApiContext).CloneWithSiteId(siteId) : _userDocumentClient;
@@ -309,7 +314,9 @@ namespace Mozu.SiteBuilder.Mvc.SEO
                     gtRes = client.CreateDocument("siteSettings@mozu", new Document {Name = FileName, DocumentTypeFQN = "document@mozu", Properties = new JObject()}).Result;
                 }
 
-                Document doc = gtRes.ReadAsSync();
+                redirects.Sort(RedirectComparer.Default);
+
+                 Document doc = gtRes.ReadAsSync();
                 var stream = new MemoryStream();
                 var sw = new StreamWriter(stream);
                 var jw = new JsonTextWriter(sw);

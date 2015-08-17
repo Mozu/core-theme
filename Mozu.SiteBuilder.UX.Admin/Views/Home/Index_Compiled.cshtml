@@ -34,7 +34,7 @@
     <link type="image/x-icon" href="@cdn@Url.Content("~/Scripts/resources/favicon.ico")?ver=@ver.FileVersion&verHash=@assemblyInfoHash" rel="icon" />
     <link type="image/x-icon" href="@cdn@Url.Content("~/Scripts/resources/favicon.ico")?ver=@ver.FileVersion&verHash=@assemblyInfoHash" rel="shortcut icon" />
 
-    @DoCss(ver, cdn);
+    @DoCss(ver, assemblyInfoHash, cdn);
     @Html.Partial("admininlinejson")
     <script type="text/javascript" src="@cdn@Url.Content("~/Scripts/resources/lib/init.min.js")?ver=@ver.FileVersion&verHash=@assemblyInfoHash"></script>
     
