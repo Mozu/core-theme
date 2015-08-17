@@ -20,6 +20,10 @@ namespace Mozu.SiteBuilder.UX.Admin.Helpers.ProductHelpers
         private const string CREATE_DATE_PROPERTY = "createDate";
         private const string UPDATE_DATE_PROPERTY = "updateDate";
         private const string PUBLISH_TYPE = "publishType";
+        private const string PUBLISH_SET_CODE = "code";
+        private const string PUBLISH_DATE = "publishDate";
+        private const string PUBLISH_STATUS = "status";
+        private const string PUBLIS_SET_NAME = "name";
 
         /// <summary>
         /// Converts a SortingCollection for Product to a mozu services-compatible sort string.
@@ -65,6 +69,14 @@ namespace Mozu.SiteBuilder.UX.Admin.Helpers.ProductHelpers
                     return UPDATE_DATE_PROPERTY;
                 case "createdate":
                     return CREATE_DATE_PROPERTY;
+                case "code":
+                    return PUBLISH_SET_CODE;
+                case "publishdate":
+                    return PUBLISH_DATE;
+                case "status":
+                    return PUBLISH_STATUS;
+                case "publishsetname":
+                    return PUBLIS_SET_NAME;
                 default:
                     throw new InvalidOperationException("unknown sort.property " + item.property);
             }

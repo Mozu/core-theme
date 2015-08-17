@@ -218,7 +218,7 @@ Ext.define('Taco.view.publishing.grid.Draft', {
                     text: 'Last Modified',
                     renderer: Ext.util.Format.dateRenderer('d M, Y'),
                     flex: 2,
-                    sortable: false
+                    sortable: true
                 },
                 updatedBy: {
                     xtype: 'gridcolumn',
@@ -235,7 +235,7 @@ Ext.define('Taco.view.publishing.grid.Draft', {
                     stateId: 'id',
                     text: 'ID',
                     columnWidth: 100,
-                    hidden: true,
+                    hidden: true, 
                     sortable: false
                 },
                 productCode: {
@@ -245,7 +245,7 @@ Ext.define('Taco.view.publishing.grid.Draft', {
                     text: 'Product Code',
                     columnWidth: 100,
                     hidden: true,
-                    sortable: false
+                    sortable: true
                 },
                 type: { 
                     xtype: 'gridcolumn',

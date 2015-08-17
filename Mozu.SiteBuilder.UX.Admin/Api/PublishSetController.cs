@@ -94,6 +94,9 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
                     extFilter.Add(new FilterCollectionItem() { property = "publishsetcode", value = code });
                 }
 
+                //sanatizing query stuff
+                sanitizeProductSortQuery(pagingParams, "productdraft");
+
                 var filter = ProductFilterExtensions.ToFilterString(extFilter, false);
                 var q = extFilter.ToQString();
                 var res = (await _productWebApiClient.GetProducts(
@@ -174,7 +177,13 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
         public async Task<Response<List<PublishSet>>> ListPublishSets([FromUri]PagingParamaters pagingParams, [FromUri]FilterCollection extFilter, [FromUri]bool includeCounts = false, [FromUri]bool includeDynamic = false)
         {
 
-            var result = (await _publishSetWebApiClient.GetPublishSets(startIndex: pagingParams.startIndex, pageSize: pagingParams.pageSize, filter: null).ConfigureAwait(false)).ReadAsSync();
+            sanitizeProductSortQuery(pagingParams, "publishset");
+
+            var result = (await _publishSetWebApiClient.GetPublishSets(
+                startIndex: pagingParams.startIndex, 
+                pageSize: pagingParams.pageSize, 
+                sortBy: pagingParams.sort.ToSortString(),
+                filter: null).ConfigureAwait(false)).ReadAsSync();
 
 
            var items = result.Items.Map <List<PublishSet>>();
@@ -367,5 +376,39 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
             return this.List2(retList);
         }
 
+        private PagingParamaters sanitizeProductSortQuery(PagingParamaters pagingParams, string type)
+        {
+            if (pagingParams.sort.Count > 0)
+            {
+                if (type.Equals("productdraft"))
+                {
+                    var productCodeStort = pagingParams.sort.FirstOrDefault(x => x.property == "id");
+                    var lastModifiedSort = pagingParams.sort.FirstOrDefault(x => x.property == "draftUpdateDate");
+
+                    if (productCodeStort != null)
+                    {
+                        productCodeStort.property = "productcode";
+                    }
+
+                    if (lastModifiedSort != null)
+                    {
+                        lastModifiedSort.property = "updatedate";
+                    }
+                }
+
+                else if (type.Equals("publishset"))
+                {
+                    var publishsetName = pagingParams.sort.FirstOrDefault(x => x.property == "name");
+
+                    if (publishsetName != null)
+                    {
+                        publishsetName.property = "publishSetName";
+                    }
+                }
+               
+            }
+
+            return pagingParams;
+       }
     }
 }

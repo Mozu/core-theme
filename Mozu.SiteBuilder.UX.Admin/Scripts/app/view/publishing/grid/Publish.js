@@ -162,7 +162,7 @@ Ext.define('Taco.view.publishing.grid.Publish', {
                     text: 'Name',
                     minWidth: 100,
                     flex: 3,
-                    sortable: false
+                    sortable: true
                 }, 
                 {
                     xtype: 'gridcolumn',
@@ -170,7 +170,7 @@ Ext.define('Taco.view.publishing.grid.Publish', {
                     stateId: 'id',
                     text: 'Code',
                     flex: 2,
-                    sortable: false
+                    sortable: true
                 }, 
                 {
                     xtype: 'gridcolumn',
@@ -188,7 +188,7 @@ Ext.define('Taco.view.publishing.grid.Publish', {
                     columnWidth: 100,
                     text: 'Publish Date',
                     renderer: Ext.util.Format.dateRenderer('d M, Y'),
-                    sortable: false
+                    sortable: true
                 },
                 {
                     xtype: 'gridcolumn',
@@ -198,7 +198,7 @@ Ext.define('Taco.view.publishing.grid.Publish', {
                     text: 'Created Date',
                     hidden: true,
                     renderer: Ext.util.Format.dateRenderer('d M, Y'),
-                    sortable: false
+                    sortable: true
                 },
                 {
                     xtype: 'gridcolumn',
@@ -232,12 +232,22 @@ Ext.define('Taco.view.publishing.grid.Publish', {
                 },
                 {
                     xtype: 'gridcolumn',
+                    dataIndex: 'updateDate',
+                    stateId: 'updateDate',
+                    columnWidth: 100,
+                    text: 'Last Updated',
+                    hidden: true,
+                    renderer: Ext.util.Format.dateRenderer('d M, Y'),
+                    sortable: true
+                },
+                {
+                    xtype: 'gridcolumn',
                     dataIndex: 'status',
                     stateId: 'status`',
                     columnWidth: 100,
                     text: 'Status',
                     hidden: true,
-                    sortable: false
+                    sortable: true
                 },
                 {
                     xtype: 'taco.menucolumn',
