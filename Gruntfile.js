@@ -121,7 +121,7 @@
         },
         "mozusync": {
           "options": {
-            "applicationKey": "comnm.core8_preview.1.0.0.release",
+            "applicationKey": '<%= mozuconfig.workingApplicationKey %>',
             "context": "<%= mozuconfig %>",
             "watchAdapters": [
               {

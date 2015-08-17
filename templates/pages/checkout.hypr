@@ -12,6 +12,13 @@
 
 {% preload_json model "checkout" %}
 
+<script type="text/json" id="data-mz-preload-viewdata"> 
+{
+   "awsCheckout" : {% if viewData.awsCheckout %}true{%else%}false{%endif%}
+}
+</script>
+
+
 <div class="mz-l-container">
     <h1 class="mz-pagetitle">
         {{ labels.checkout }}
@@ -64,7 +71,7 @@
         </div>
 
     </div><!-- left .column -->
-
+    {% preload_json pageContext "pageContext" %}
 </form>
 
 </div>

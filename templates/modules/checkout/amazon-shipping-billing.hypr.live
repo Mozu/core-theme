@@ -1,0 +1,16 @@
+<tbody>
+	<tr>
+		<td style="padding:0px 10px 0px 0px;">
+			<div id="amazonAddressBookWidgetDiv"></div>
+		</td>
+		<td style="padding:0px 10px 0px 0px;">
+			<div id="walletWidgetDiv"></div>    
+		</td>
+	<tr>
+	<tr>
+		<td style="padding:10px 10px 0px 0px;">
+			<button id="cancel" class="mz-button mz-button-medium" data-mz-action="redirectToCart">{{ labels.cancel }}</button>
+			<button id="continue" class="mz-button mz-button-medium" data-mz-action="submit">{{ labels.continue }}</button>
+		</td>
+	</tr>
+</tbody>

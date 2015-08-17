@@ -1,0 +1,18 @@
+<div class="mz-l-stack-section">
+    <a data-mz-action="amazonShippingAndBilling" href="#" style="float:right;">{{labels.aswChangeBilling}}</a>
+    <div class="mz-l-formfieldgroup-cell">
+        <img src="../resources/images/amazonpay60x38.png"/>
+    </div>
+</div>
+
+<div class="mz-l-stack-section">
+	<div class="mz-formstep-summary">
+    	<strong>{{labels.billingContact}}</strong>
+     </div>
+    <div class="mz-l-formfieldgroup-cell">
+        <p>{{ model.email }}</p>
+    </div>
+</div>
+
+
+

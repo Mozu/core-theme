@@ -1,6 +1,11 @@
 {% with paymentId|default(0) as paymentId %}
 {% with siteContext.checkoutSettings.isPayPalEnabled as externalWorkflowsEnabled %} {# external workflows implemented in a later system can be added to this test #}
 <div class="mz-l-formfieldgroup mz-paymentselector">
+    {% if viewData.awsCheckout and model.stepStatus == "incomplete" %}
+        <div class="mz-l-formfieldgroup-row mz-l-security-box" >
+            {{ labels.awsPaymentWarning}}
+        </div>
+    {%endif%}
     <div class="mz-l-formfieldgroup-row mz-paymentselector-newcreditcard">
         <div class="mz-l-formfieldgroup-cell">
             <input data-mz-value="paymentType" data-mz-new-credit-card id="paymentType-newcreditcard-{{ paymentId }}" name="paymentType" type="radio" class="mz-paymenttype-input" value="CreditCard" {% if model.paymentType == "CreditCard" and not model.usingSavedCard %}checked="true"{% endif %} />
@@ -58,6 +63,9 @@
                 </span>
             </label>
             {% endif %}
+            <div class="mz-paymenttype" style="margin-top:10px;">
+                <div id="AmazonPayButton"/>
+            </div>    
         </div>
     </div>
     {% endif %}

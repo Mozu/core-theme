@@ -1,4 +1,4 @@
-﻿define(['modules/backbone-mozu', 'underscore', 'modules/jquery-mozu', 'modules/models-cart', 'modules/cart-monitor'], function (Backbone, _, $, CartModels, CartMonitor) {
+﻿define(['modules/backbone-mozu', 'underscore', 'modules/jquery-mozu', 'modules/models-cart', 'modules/cart-monitor','modules/amazonPay'], function (Backbone, _, $, CartModels, CartMonitor, AmazonPay) {
 
     var CartView = Backbone.MozuView.extend({
         templateName: "modules/cart/cart-table",
@@ -16,6 +16,8 @@
                     return false;
                 }
             });
+
+            AmazonPay.init(CartModels.Cart.fromCurrent().id);
         },
         updateQuantity: _.debounce(function (e) {
             var $qField = $(e.currentTarget),
@@ -97,6 +99,8 @@
 
         CartMonitor.setCount(cartModel.count());
 
+        if (AmazonPay.isEnabled && cartModel.count() > 0)
+            AmazonPay.addCheckoutButton(cartModel.id, true);
     });
 
 });

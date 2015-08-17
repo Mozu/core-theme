@@ -1,4 +1,6 @@
-﻿require(["modules/jquery-mozu", "underscore", "hyprlive", "modules/backbone-mozu", "modules/models-checkout", "modules/views-messages", "modules/cart-monitor", 'modules/editable-view'], function ($, _, Hypr, Backbone, CheckoutModels, messageViewFactory, CartMonitor, EditableView) {
+﻿require(["modules/jquery-mozu", "underscore", "hyprlive", "modules/backbone-mozu", "modules/models-checkout", "modules/views-messages", "modules/cart-monitor", 'modules/editable-view','modules/amazonpay', 'modules/preserve-element-through-render'], function ($, _, Hypr, Backbone, CheckoutModels, messageViewFactory, CartMonitor, EditableView,AmazonPay,PreserveElements) {
+
+    var viewData;
 
     var CheckoutStepView = EditableView.extend({
         edit: function () {
@@ -11,9 +13,22 @@
                 me.model.next();
             });
         },
+        cancel: function(){
+            this.model.cancelStep();
+        },
+        amazonShippingAndBilling: function() {
+            //isLoading(true);
+            window.location = "/checkout/"+window.order.id+"?isAwsCheckout=true&access_token="+$.deparam().access_token+"&view="+AmazonPay.viewName;
+        },
         choose: function () {
             var me = this;
             me.model.choose.apply(me.model, arguments);
+        },
+        getRenderContext: function() {
+            var ctx = Backbone.MozuView.prototype.getRenderContext.apply(this, arguments);
+            ctx.viewData = viewData;
+
+            return ctx;
         },
         constructor: function () {
             var me = this;
@@ -38,7 +53,10 @@
         },
         render: function () {
             this.$el.removeClass('is-new is-incomplete is-complete is-invalid').addClass('is-' + this.model.stepStatus());
-            Backbone.MozuView.prototype.render.apply(this, arguments);
+            var args = arguments;
+            PreserveElements(this, ['#AmazonPayButton'], function() {
+                Backbone.MozuView.prototype.render.apply(this, args);
+            });
             this.resize();
         },
         resize: _.debounce(function () {
@@ -106,6 +124,7 @@
         autoUpdate: [
             'savedPaymentMethodId',
             'paymentType',
+            'paymentWorkflow',
             'card.paymentOrCardType',
             'card.cardNumberPartOrMask',
             'card.nameOnCard',
@@ -144,9 +163,11 @@
         },
 
         initialize: function () {
+            //AmazonPay.init();
             this.listenTo(this.model, 'change:digitalCreditCode', this.onEnterDigitalCreditCode, this);
             this.listenTo(this.model, 'orderPayment', function (order, scope) {
                     this.render();
+                    AmazonPay.addCheckoutButton(window.order.id, false);
                 }, this);
             this.codeEntered = !!this.model.get('digitalCreditCode');
         },
@@ -371,6 +392,8 @@
         var $checkoutView = $('#checkout-form'),
             checkoutData = require.mozuData('checkout');
 
+        viewData = require.mozuData('viewdata');
+
         var checkoutModel = window.order = new CheckoutModels.CheckoutPage(checkoutData),
             checkoutViews = {
                 steps: {
@@ -414,6 +437,8 @@
 
         checkoutModel.on('complete', function() {
             CartMonitor.setCount(0);
+             if (viewData.awsCheckout)
+                amazon.Login.logout();
             window.location = "/checkout/" + checkoutModel.get('id') + "/confirmation";
         });
 
@@ -426,7 +451,11 @@
 
         _.invoke(checkoutViews.steps, 'initStepView');
 
+       
+
         $checkoutView.noFlickerFadeIn();
 
+         AmazonPay.init(); 
+         AmazonPay.addCheckoutButton(window.order.id, false);
     });
 });

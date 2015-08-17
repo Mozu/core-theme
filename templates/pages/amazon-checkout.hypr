@@ -1,0 +1,28 @@
+{% extends "page" %}
+
+
+
+
+{% block body-content %}
+
+{% require_script "pages/amazon-checkout" %}
+
+{% preload_json model "checkout" %}
+
+
+<div class="mz-l-container">
+    <h1 class="mz-pagetitle">
+        {{ labels.awsCheckout }}
+    </h1>
+
+    <form id="checkout-form" class="mz-checkoutform mz-l-2column mz-l-2column-right" method="post" onsubmit="return false;" id="amazonCheckout">
+    	{% include "modules/common/message-bar" with model=model.messages %}
+    	<table id="shippingBillingTbl">
+	    	{% include "modules/checkout/amazon-shipping-billing" %}
+	    </table>
+    </form>
+
+</div>        
+
+
+{% endblock body-content %}
