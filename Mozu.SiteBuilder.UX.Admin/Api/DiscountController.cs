@@ -171,21 +171,23 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
         [HttpGetRoute(UriTemplate = "paymentworkflow/list")]
         public async Task<Response<List<KeyValuePair<string, string>>>> GetPaymentWorkflows(PagingParamaters pagingParams, FilterCollection extFilter)
         {
-            var displayNames = new List<KeyValuePair<string, string>>
+            var displayNameLookup = new Dictionary<string, string>
             {
-                new KeyValuePair<string, string>(SiteSettings.Order.Contracts.Constants.ThirdPartyPayment.PAYPAL_EXPRESS.ToUpper(), "PayPal Express"),
-                new KeyValuePair<string, string>(SiteSettings.Order.Contracts.Constants.ThirdPartyPayment.VISA_CHECKOUT.ToUpper(), "Visa Checkout"),
-                new KeyValuePair<string, string>("PayByAmazon", "Amazon Pay")
+                { SiteSettings.Order.Contracts.Constants.ThirdPartyPayment.PAYPAL_EXPRESS.ToUpper(), "PayPal Express"},
+                { SiteSettings.Order.Contracts.Constants.ThirdPartyPayment.VISA_CHECKOUT.ToUpper(), "Visa Checkout"}
             };
+            
             var paymentSettings = (await _checkoutSettingsClient.GetPaymentSettings()).ReadAsSync();
 
-            var enabledPaymentWorkflows = 
-                from wk in paymentSettings.ExternalPaymentWorkflowDefinitions
-                join dis in displayNames on wk.Name equals dis.Key
-                where wk.IsEnabled
-                select new KeyValuePair<string, string>(wk.Name, dis.Value);
+            var enabledPaymentWorkflows = paymentSettings.ExternalPaymentWorkflowDefinitions
+                                        .Where(x => x.IsEnabled)
+                                        .Select(wf => new KeyValuePair<string, string>(wf.Name,
+                                            displayNameLookup.ContainsKey(wf.Name.ToUpper())
+                                                ? displayNameLookup[wf.Name.ToUpper()]
+                                                : wf.Name))
+                                        .ToList();
 
-            return List2(enabledPaymentWorkflows.ToList());
+            return List2(enabledPaymentWorkflows);
         }
     }
 }
