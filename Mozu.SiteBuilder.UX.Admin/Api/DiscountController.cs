@@ -161,8 +161,8 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
             var displayNames = new List<KeyValuePair<string, string>>
             {
                 new KeyValuePair<string, string>(SiteSettings.Order.Contracts.Constants.ThirdPartyPayment.PAYPAL_EXPRESS.ToUpper(), "PayPal Express"),
-                new KeyValuePair<string, string>("VISACHECKOUT", "Visa Checkout"),
-                new KeyValuePair<string, string>("AMAZONPAY", "Amazon Pay"),
+                new KeyValuePair<string, string>(SiteSettings.Order.Contracts.Constants.ThirdPartyPayment.VISA_CHECKOUT.ToUpper(), "Visa Checkout"),
+                new KeyValuePair<string, string>("PayByAmazon", "Amazon Pay")
             };
             var paymentSettings = (await _checkoutSettingsClient.GetPaymentSettings()).ReadAsSync();
 
