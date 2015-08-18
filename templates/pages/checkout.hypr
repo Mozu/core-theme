@@ -74,7 +74,6 @@
         </div>
 
     </div><!-- left .column -->
-    {% preload_json pageContext "pageContext" %}
 </form>
 
 </div>

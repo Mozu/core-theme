@@ -65,8 +65,10 @@
         </div>
         {% endif %}
         {% if payment.paymentWorkflow  != "Mozu"%}
-
-            {% if payment.paymentType == "PayByAmazon"%}
+            {% if payment.paymentType == "PayByAmazon" and model.nonStoreCreditTotal == 0%}
+            <h4 class="mz-checkout-nopaymentrequired">{{ labels.noPaymentRequired|string_format(model.remainingTotal|currency) }}</h4> 
+            {% endif %}
+            {% if payment.paymentType == "PayByAmazon" and model.nonStoreCreditTotal > 0%}
                 {% include "modules/checkout/payment-paybyamazon" with model=payment.billingInfo.billingContact%}  
             {%endif%}
             {% include "modules/checkout/checkout-digital-credit" %}

@@ -1,5 +1,5 @@
-require(['modules/jquery-mozu', 'hyprlive', 'modules/backbone-mozu', 'modules/models-location', 'modules/models-product'],
-    function($, Hypr, Backbone, LocationModels, ProductModels) {
+require(['modules/jquery-mozu', 'hyprlive', 'modules/backbone-mozu', 'modules/models-location', 'modules/models-product', 'hyprlivecontext'],
+    function($, Hypr, Backbone, LocationModels, ProductModels, HyprLiveContext) {
 
         var positionErrorLabel = Hypr.getLabel('positionError'),
 
@@ -70,7 +70,7 @@ require(['modules/jquery-mozu', 'hyprlive', 'modules/backbone-mozu', 'modules/mo
                     $(window).on('beforeunload', function() {
                         me.$('.is-loading').removeClass('is-loading');
                     });
-                    window.location.href = "/cart";
+                    window.location.href = HyprLiveContext.locals.pageContext.secureHost+"/cart";
                 });
             }
         });
