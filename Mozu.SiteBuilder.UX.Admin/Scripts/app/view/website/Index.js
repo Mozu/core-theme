@@ -300,7 +300,11 @@ Ext.define('Taco.view.website.Index', {
                 scale: 'medium',
                 buttonGroup: 'isSavable',
                 itemId: 'cancelActionButton',
-                handler: me.getRevertModal,
+                handler: function() {
+                    if (me.chorizoEditor._dirty) {
+                        me.getRevertModal();
+                    }
+                },
                 scope: me,
                 text: 'Cancel',
                 margin: '0 0 0 10'
