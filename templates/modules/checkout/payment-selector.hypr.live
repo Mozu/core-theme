@@ -21,7 +21,7 @@
                 <option value="{{ card.id }}" {% if model.savedPaymentMethodId == card.id %} selected="selected" {% endif %}>{{ card.cardType }} {{ card.cardNumberPartOrMask }} {{ labels.expires }} {{ card.expireMonth }}/{{ card.expireYear }}</option>
                 {% endfor %}
             </select>
-            {% if themeSettings.isCvvSuppressed %}
+            {% if not themeSettings.isCvvSuppressed %}
             <div class="mz-paymentselector-reenter-cvv">
                 <label class="mz-paymentselector-label">{{ labels.securityCode }} <span class="is-required">*</span></label>
                 <input {% if not model.usingSavedCard %}disabled="true"{% endif %} type="tel" name="security-code" id="mz-payment-security-code-{{ paymentId }}" class="mz-l-formfieldgroup-halfsize" data-mz-value="card.cvv" value="{{ model.card.cvv }}" autocomplete="off"/>

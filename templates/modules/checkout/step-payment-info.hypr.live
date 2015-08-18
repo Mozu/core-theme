@@ -91,7 +91,7 @@
             <a class="mz-checkout-payment-change" href="javascript:;" data-mz-action="beginEditingCard">{{ labels.change }}</a>
             <p><strong>{{ model.amountRequested|default(model.nonStoreCreditTotal)|currency }}</strong> &mdash; <strong>{{ model.card.paymentOrCardType }}</strong> {{ model.card.cardNumberPartOrMask }}</p>
             <p>{{ labels.expires }} {{ model.card.expireMonth }}/{{ model.card.expireYear }}</p>
-            {% if themeSettings.isCvvSuppressed %}
+            {% if not themeSettings.isCvvSuppressed %}
             <div class="mz-l-formfieldgroup">
               <div class="mz-l-formfieldgroup-row mz-payment-credit-card-securitycode-row">
                 <div class="mz-l-formfieldgroup-cell">
