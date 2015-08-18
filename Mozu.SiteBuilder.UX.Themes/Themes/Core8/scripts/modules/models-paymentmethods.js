@@ -52,9 +52,15 @@
                         card = this.get(cardType);
 
                     // If card is not selected or cvv is not required, no need to validate
-                    if (!card.selected || Hypr.getThemeSetting('isCvvSuppressed')) return;
-                    if (!value)
+                    if (!card.selected || Hypr.getThemeSetting('isCvvSuppressed')) {
+                        card.set('isCvvOptional', true);
+                        return;
+                    }
+
+                    if (!value) {
                         return Hypr.getLabel('securityCodeMissing') || Hypr.getLabel('genericRequired');
+                    }
+                        
                 }
             }
         },
