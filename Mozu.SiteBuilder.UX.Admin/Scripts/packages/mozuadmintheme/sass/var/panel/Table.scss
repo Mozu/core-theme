@@ -47,13 +47,6 @@ $grid-cell-special-border-color: $grid-row-cell-border-color;
 $grid-cell-special-border-style: $grid-row-cell-border-style;
 $grid-cell-special-border-width: 0px;
 
-.#{$prefix}grid-cell-inner { 
-    white-space: normal !important;
-}
-
-.#{$prefix}grid-cell-inner-treecolumn { 
-    white-space: nowrap !important;
-}
 
 /* UNUSED VARIABLES */
 
