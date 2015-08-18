@@ -51,8 +51,8 @@
                     var cardType = attr.split('.')[0],
                         card = this.get(cardType);
 
-                    // if card is not selected or cvv is optional, no need to validate
-                    if (!card.selected || card.get('isCvvOptional')) return;
+                    // If card is not selected or cvv is not required, no need to validate
+                    if (!card.selected || Hypr.getThemeSetting('isCvvSuppressed')) return;
                     if (!value)
                         return Hypr.getLabel('securityCodeMissing') || Hypr.getLabel('genericRequired');
                 }
