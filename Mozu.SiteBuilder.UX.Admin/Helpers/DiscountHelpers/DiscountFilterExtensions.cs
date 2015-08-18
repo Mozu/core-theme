@@ -49,6 +49,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Helpers.DiscountHelpers
         private const string CONDITIONS_PRODUCTS_PRODUCTID_PROPERTY = "conditions.productid";  // ??
         private const string CONDITIONS_CATEGORIES_CATEGORYID_PROPERTY = "conditions.categoryid";  // ??
 
+        private const string COUPON_SET_ID_PROPERTY = "couponsetid";  // ??
         private enum SymbolNames
         {
             CurrencySymbol,
@@ -279,6 +280,10 @@ namespace Mozu.SiteBuilder.UX.Admin.Helpers.DiscountHelpers
                     return String.Format("{0} eq \"{1}\"", CONDITIONS_CATEGORIES_CATEGORYID_PROPERTY, filter.value);
                 case "validondate":
                     return String.Format("{0} le \"{2}\" and ({1} ge \"{2}\" or {1} eq null)", START_DATE_PROPERTY, END_DATE_PROPERTY, DateTime.Parse((string)filter.value).ToUniversalTime().ToString("o"));
+                case "couponsetid":
+                    return String.Format("{0} eq \"{1}\"", COUPON_SET_ID_PROPERTY, filter.value);
+
+                    
                 default:
                     {
                         throw new NotImplementedException("unable to filter on property " + filter.property);

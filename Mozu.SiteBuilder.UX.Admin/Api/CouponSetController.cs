@@ -23,7 +23,13 @@ using Mozu.SiteSettings.Order.Contracts.Clients;
 
 namespace Mozu.SiteBuilder.UX.Admin.Api
 {
-    
+
+
+    public class AssignDiscountArgs
+    {
+        public string CouponSetCode { get; set; }
+        public Discount AssignedDiscount { get; set; }
+    }
 
 
     /// <summary>
@@ -152,5 +158,68 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
             return Single2(keyVal);
         }
 
+
+        [HttpPostRoute(UriTemplate = "assigndiscount")]
+        public async Task<Response<List<CouponSet>>> AssignDiscount(AssignDiscountArgs args)
+        //public async Task<Response<Coupon>> DeleteCoupons(List<Coupon> coupons, [FromUri]string couponSetCode)
+        {
+            //string uniqueCode = (await _couponSetWebClient.GetUniqueCouponSetCode()).ReadAsSync();
+            //var keyVal = new KeyValuePair<string,string>("uniqueCode", uniqueCode);
+            //return Single2(keyVal);
+
+            var couponSetCode = args.CouponSetCode;
+            var discountId = (args.AssignedDiscount.Id.HasValue) ? args.AssignedDiscount.Id.Value : 0;
+            //var dc = Mapper.Map<DC.AssignedDiscount>(args.AssignedDiscount);
+
+
+            if (discountId != 0)
+            {
+                var dc = new DC.AssignedDiscount { 
+                    DiscountId = discountId,
+                    CouponSetCode = args.CouponSetCode
+                };
+
+                //var couponList = coupons.Select(x => x.CouponCode).ToList();
+
+
+                var response = (await _couponSetWebClient.AssignDiscount(couponSetCode, dc)).ReadAsSync();
+
+                return this.EmptyList2<CouponSet>();
+            }
+            else
+            {
+                return this.FailureList2<CouponSet>("No Dscount ID Provided");
+            }
+
+            
+        }
+
+
+
+        [HttpPostRoute(UriTemplate = "unassigndiscount")]
+        public async Task<Response<List<CouponSet>>> UnAssignDiscount(AssignDiscountArgs args)
+        
+        {
+        
+            var couponSetCode = args.CouponSetCode;
+            var discountId = (args.AssignedDiscount.Id.HasValue) ? args.AssignedDiscount.Id.Value : 0;
+        
+            if (discountId != 0)
+            {
+                var dc = new DC.AssignedDiscount
+                {
+                    DiscountId = discountId,
+                    CouponSetCode = args.CouponSetCode
+                };
+
+                var response = (await _couponSetWebClient.UnAssignDiscount(couponSetCode, dc)).ReadAsSync();
+
+                return this.EmptyList2<CouponSet>();
+            }
+            else
+            {
+                return this.FailureList2<CouponSet>("No Dscount ID Provided");
+            }
+        }
     }
 }

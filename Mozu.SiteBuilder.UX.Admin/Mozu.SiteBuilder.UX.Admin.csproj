@@ -624,6 +624,7 @@
     <Content Include="Scripts\app\shared\view\field\Product.js" />
     <Content Include="Scripts\app\shared\view\field\ProductPickerField.js" />
     <Content Include="Scripts\app\shared\view\field\AttributePickerField.js" />
+    <Content Include="Scripts\app\shared\view\field\DiscountPickerField.js" />
     <Content Include="Scripts\app\shared\view\field\ProductTypePickerField.js" />
     <Content Include="Scripts\app\shared\view\form\ExtensibleAttribute.js" />
     <Content Include="Scripts\app\shared\view\modal\StoreCredit.js" />
@@ -707,6 +708,7 @@
     <Content Include="Scripts\app\view\capability\Index.js" />
     <Content Include="Scripts\app\view\channel\Index.js" />
     <Content Include="Scripts\app\view\couponCode\AdvancedSearchForm.js" />
+    <Content Include="Scripts\app\view\couponCode\DiscountGrid.js" />
     <Content Include="Scripts\app\view\couponCode\Grid.js" />
     <Content Include="Scripts\app\view\couponSet\AdvancedSearchForm.js" />
     <Content Include="Scripts\app\view\couponSet\GeneratedCodeForm.js" />
@@ -741,6 +743,7 @@
     <Content Include="Scripts\app\view\filter\schema.js" />
     <Content Include="Scripts\app\view\filter\ValueField.js" />
     <Content Include="Scripts\app\view\generalSettings\subform\Features.js" />
+    <Content Include="Scripts\app\view\Growl.js" />
     <Content Include="Scripts\app\view\ipblocking\Edit.js" />
     <Content Include="Scripts\app\view\ipblocking\Form.js" />
     <Content Include="Scripts\app\view\location\AdvancedSearchForm.js" />
