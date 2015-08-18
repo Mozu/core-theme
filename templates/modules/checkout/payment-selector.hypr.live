@@ -1,9 +1,9 @@
 {% with paymentId|default(0) as paymentId %}
-{% with siteContext.checkoutSettings.isPayPalEnabled or siteContext.checkoutSettings.visaCheckout.isEnabled as externalWorkflowsEnabled %} {# external workflows implemented in a later system can be added to this test #}
+    {# external workflows implemented in a later system can be added to this test #}
 <div class="mz-l-formfieldgroup mz-paymentselector">
     {% if viewData.awsCheckout and model.stepStatus == "incomplete" %}
         <div class="mz-l-formfieldgroup-row mz-l-security-box" >
-            {{ labels.awsPaymentWarning}}
+                    {{ labels.awsPaymentWarning }}
         </div>
     {%endif%}
     <div class="mz-l-formfieldgroup-row mz-paymentselector-newcreditcard">
@@ -52,7 +52,8 @@
     {% if model.paymentType == "Check" %}
     {% include "modules/checkout/checking-account-form" %}
     {% endif %}
-    {% if externalWorkflowsEnabled %}
+    {% with siteContext.checkoutSettings.externalPaymentWorkflowSettings|findwhere("isEnabled", true) as externalPaymentWorkflowsEnabled %} 
+    {% if externalPaymentWorkflowsEnabled %}
     <div class="mz-l-formfieldgroup-row mz-paymentselector-separator">
         <div class="mz-l-formfieldgroup-cell">
         </div>
@@ -61,30 +62,38 @@
         </div>
     </div>
     <div class="mz-l-formfieldgroup-row mz-paymentselector-externalworkflows">
-        <div class="mz-l-formfieldgroup-cell">
-        </div>
-        <div class="mz-l-formfieldgroup-cell">
-            {% if siteContext.checkoutSettings.isPayPalEnabled %}
-            <label class="mz-paymenttype mz-paymenttype-paypal">
-                <input data-mz-value="paymentType" name="paymentType" type="radio" class="mz-paymenttype-input" value="PaypalExpress" {% if model.paymentType == "PaypalExpress" %}checked="checked"{% endif %} />
-                <span class="mz-paymenttype-label mz-paymenttype-label-paypal">
-                    <img src="https://www.paypal.com/en_US/i/logo/PayPal_mark_37x23.gif" alt="{{ labels.payPal }}" align="left" style="margin-right:7px;">
-                  {{ labels.payPal }}
-                </span>
-            </label>
-            {% endif %}
-            {% if siteContext.checkoutSettings.visaCheckout.isEnabled %}
-                <div class="mz-l-formfieldgroup-cell mz-digitalwallets">
-                    <img alt="Visa Checkout" class="v-button" role="button"
-                    src="{{pageContext.visaCheckoutButtonUrl}}?size=154&amp;color=neutral"/>
+        {% for externalPayment in siteContext.checkoutSettings.externalPaymentWorkflowSettings %}
+            {% if externalPayment.isEnabled %}
+                                
+                <div class="mz-l-formfieldgroup-cell">
+                </div>
+                <div class="mz-l-formfieldgroup-cell">
+                {% if externalPayment.name == "PayPalExpress" %}
+                  <label class="mz-paymenttype mz-paymenttype-paypal">
+                    <input data-mz-value="paymentType" name="paymentType" type="radio" class="mz-paymenttype-input" value="PaypalExpress" {% if model.paymentType == "PaypalExpress" %}checked="checked"{% endif %} />
+                    <span class="mz-paymenttype-label mz-paymenttype-label-paypal">
+                      <img src="https://www.paypal.com/en_US/i/logo/PayPal_mark_37x23.gif" alt="{{ labels.payPal }}" align="left" style="margin-right:7px;">
+                      {{ labels.payPal }}
+                    </span>
+                  </label>
+                 {% endif %}
+                {% if externalPayment.name == "VisaCheckout" %}
+                    <div class="mz-l-formfieldgroup-cell mz-digitalwallets">
+                        <img alt="Visa Checkout" class="v-button" role="button"
+                        src="{{pageContext.visaCheckoutButtonUrl}}?size=154&amp;color=neutral"/>
+                    </div>
+                {% endif %}
+                {% if externalPayment.name == "PayByAmazon" %}
+                    <div class="mz-paymenttype" style="margin-top:10px;">
+                        <div id="AmazonPayButton"/>
+                    </div>
+                {% endif %}
                 </div>
             {% endif %}
-            <div class="mz-paymenttype" style="margin-top:10px;">
-                <div id="AmazonPayButton"/>
-            </div>   
-        </div>
+        {%endfor%}
     </div>
     {% endif %}
+    {% endwith %}
     <div class="mz-l-formfieldgroup-row mz-paymentselector-validation">
         <div class="mz-formfieldgroup-cell">
         </div>
@@ -97,5 +106,4 @@
 {% if model.paymentType == "PaypalExpress" %}
     <p>{{ labels.paypalExpressInfo }}</p>
 {% endif %}
-{% endwith %}
 {% endwith %}

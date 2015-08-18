@@ -92,11 +92,8 @@ function($,EventBus, Api, hyprlivecontext, _) {
 			onPaymentSelect: function(orderReference) {
 
 			},
-			design: {
-				size: {
-					width:'400px',
-					height:'260px'
-				}
+			design : {
+				designMode: 'responsive'
 			},
 			onError: function(error) {
 				console.log(error.getErrorCode());
@@ -118,11 +115,8 @@ function($,EventBus, Api, hyprlivecontext, _) {
 		var divId = "amazonAddressBookWidgetDiv";
 		var addressWalletData = {
 			sellerId: sellerId,
-			design: {
-				size: {
-					width:'400px',
-					height:'260px'
-				}
+			design : {
+				designMode: 'responsive'
 			},
 			onOrderReferenceCreate: function(orderReference) {
 				var orderReferenceId = orderReference.getAmazonOrderReferenceId();

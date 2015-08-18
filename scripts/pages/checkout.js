@@ -449,7 +449,9 @@ require(["modules/jquery-mozu", "underscore", "hyprlive", "modules/backbone-mozu
             checkoutData = require.mozuData('checkout');
 
         viewData = require.mozuData('viewdata');
-
+        AmazonPay.init(); 
+        checkoutData.isAmazonPayEnable = AmazonPay.isEnabled;
+        
         var checkoutModel = window.order = new CheckoutModels.CheckoutPage(checkoutData),
             checkoutViews = {
                 steps: {
@@ -510,7 +512,7 @@ require(["modules/jquery-mozu", "underscore", "hyprlive", "modules/backbone-mozu
 
         $checkoutView.noFlickerFadeIn();
 
-         AmazonPay.init(); 
+         
          AmazonPay.addCheckoutButton(window.order.id, false);
     });
 });
