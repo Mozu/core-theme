@@ -32,7 +32,7 @@ require(["modules/jquery-mozu","modules/backbone-mozu",'modules/editable-view', 
 		},
 		redirectToCart: function() {
 			amazon.Login.logout();
-			window.location = "/cart";
+			window.location = document.referrer;
 		},
 		submit: function(){
 			this.model.submit();
