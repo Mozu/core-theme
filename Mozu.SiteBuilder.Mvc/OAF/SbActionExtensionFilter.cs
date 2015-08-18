@@ -39,7 +39,7 @@ namespace Mozu.SiteBuilder.Mvc.OAF
     {
         public override IFunctionCallbackHandler CreateHandler(HttpActionContext actionContext)
         {
-            return new WrappedFunctionCallbackHandler()
+            return new WrappedFunctionCallbackHandler(DefaultFunctionCallbackHandler.Default)
             {
                 BeforeExecuteHandler = (handler, fn) =>
                 {
