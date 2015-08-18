@@ -82,9 +82,9 @@
        
         <div id="page-wrapper" class="mz-l-pagewrapper">
     
-            {% block future-preview-header %}
-                {% include "modules/future-date-preview/header" %}
-            {% endblock future-preview-header %}
+            {% block utility-bar %}
+                {% include "modules/utility-bar/header" %}
+            {% endblock utility-bar %}
 
             {% block page-header %}
             {% include "modules/page-header" %}
