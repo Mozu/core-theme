@@ -4,7 +4,9 @@
 
 Ext.define('Taco.view.discount.Index', {
     extend: 'Taco.view.discount.Grid',
-    alias: 'widget.discountlist'    
+    alias: 'widget.discountlist',
+    stateful:true,
+    stateId: 'statefulDiscountGrid'
 });
 
 

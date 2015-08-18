@@ -52,6 +52,9 @@ Ext.define('Taco.view.discount.Grid', {
     createButtonText: "Create New Discount",
 
     showActionsColumn: true,
+    enableEditAction: true,
+    enableDuplicateAction: true,
+    enableDeleteAction: true,
 
     hideSearchToolbar: false,
     
@@ -80,8 +83,8 @@ Ext.define('Taco.view.discount.Grid', {
 
     onCreate: Ext.emptyFn,
 
-    stateful: true,
-    stateId: 'statefulDiscountGrid',
+    stateful: false,
+    stateId: null,
 
     statics: {
         
@@ -91,6 +94,13 @@ Ext.define('Taco.view.discount.Grid', {
         var me = this;
 
         this.columns = this.getColumnConfig();
+
+        if (this.showActionsColumn) {
+            var actionColumn = this.getActionColumn();
+            if (actionColumn) {
+                this.columns.push(actionColumn);
+            }
+        }
 
         // initialize the delete mixin
         this.mixins.deleteFromGrid.init.apply(this);
@@ -103,7 +113,7 @@ Ext.define('Taco.view.discount.Grid', {
         var me = this,
             columns = [
                 {
-                    xtype: 'gridcolumn',
+                    //xtype: 'gridcolumn',
                     dataIndex: 'name',
                     stateId: 'name',
                     text: 'Name',
@@ -119,21 +129,21 @@ Ext.define('Taco.view.discount.Grid', {
                     stateId: 'amountType',
                     text: 'Type',
                     width: 150,
-                    renderer: function (value, metaData, record, rowIndex, colIndex, store) {
-                        var retVal="";
-                        switch (value){
-                            case "Percentage":
-                                retVal =  record.get("amount") + "% OFF";
-                                break;
-                            case "Amount":
-                                retVal = Taco.app.context.getCurrent().formatCurrency(record.get("amount")) + " OFF";
-                                break;
-                            case "Free":
-                                retVal = "Free";
-                                break;
-                            case "FixedPrice":
-                                retVal = "Fixed: " + Taco.app.context.getCurrent().formatCurrency(record.get("amount"));
-                                break;
+                    renderer: function(value, metaData, record, rowIndex, colIndex, store) {
+                        var retVal = "";
+                        switch (value) {
+                        case "Percentage":
+                            retVal = record.get("amount") + "% OFF";
+                            break;
+                        case "Amount":
+                            retVal = Taco.app.context.getCurrent().formatCurrency(record.get("amount")) + " OFF";
+                            break;
+                        case "Free":
+                            retVal = "Free";
+                            break;
+                        case "FixedPrice":
+                            retVal = "Fixed: " + Taco.app.context.getCurrent().formatCurrency(record.get("amount"));
+                            break;
                         }
 
                         return retVal;
@@ -145,8 +155,8 @@ Ext.define('Taco.view.discount.Grid', {
                     text: 'Applies To',
                     width: 180,
                     hidden: false,
-                    sortable:false,
-                    renderer: function (value, metaData, record, rowIndex, colIndex, store) {
+                    sortable: false,
+                    renderer: function(value, metaData, record, rowIndex, colIndex, store) {
                         var val = "",
                             cats = record.get("categories").length,
                             prods = record.get("products").length;
@@ -187,7 +197,7 @@ Ext.define('Taco.view.discount.Grid', {
                     format: 'm-d-Y g:i a',
                     width: 130,
                     text: 'End Date',
-                    renderer: function (value, metaData, record, rowIndex, colIndex, store) {
+                    renderer: function(value, metaData, record, rowIndex, colIndex, store) {
 
                         var val = "";
 
@@ -219,84 +229,99 @@ Ext.define('Taco.view.discount.Grid', {
                     text: 'Used',
                     width: 80,
                     hidden: false
-                },{
-                    xtype: 'taco.menucolumn',
-                    text: 'Actions',
-                    onMenuShow: function (menu, eventData) {
-                        // need to disable the delete menu option when discount has been used
-                        var deleteMenuItem = menu.down("#deleteMenuItem");
-                        if (eventData.record.get('canBeDeleted')) {
-                            deleteMenuItem.show();
-                        } else {
-                            deleteMenuItem.hide();
-                        }
-                    },
-                    //flex: 1,
-                    menuItems: [
-                        {
-                            text: 'Edit',
-                            requiredBehaviors: {
-                                model: 'Taco.model.Discount',
-                                behavior: 'update'
-                            },
-                            menuColumnHandler: function (item, eventData) {
-                                var record = eventData.record;
-                                Ext.defer(function () {
-                                    Taco.core.StateManager.attemptNavigate('discounts/edit/' + record.getId(), { complexMetaData: { record: record } });
-                                }, 1, this);
-                            }
-                        },{
-                            text: 'Duplicate',
-                            requiredBehaviors: {
-                                model: 'Taco.model.Discount',
-                                behavior: 'create'
-                            },
-                            menuColumnHandler: function (item, eventData) {
-                                var record = eventData.record,
-                                    metaData = {
-                                        id: record.getId()
-                                    };
-
-                                Taco.app.StateManager.attemptNavigate('discounts/duplicate/' + record.getId(), metaData);
-                            }
-                        }, {
-                            text: 'Delete',
-                            itemId: "deleteMenuItem",
-                            // deleteMenuColumnHandler can be found in Taco.core.ux.mixins.DeleteFromGrid
-                            menuColumnHandler: "deleteMenuColumnHandler",
-                            requiredBehaviors: {
-                                model: 'Taco.model.Discount',
-                                behavior: 'delete'
-                            },
-                            scope: me
-                        }
-                    ]
                 }
-                /*
-
-                // BUG:  15695
-                // http://tfs.ads.volusion.com:8080/tfs/VNext/Mozu/_workitems/edit/15695
-                // (Simeon K.) delete of discounts causes orders that had that discount to spontaneously combust. Poof! Removing delete action trigger until we have a better solution;
-
-                , {
-                    xtype: 'taco.menucolumn',
-                    text: 'Actions',
-                    menuItems:[{
-                        text: 'Delete',
-                        requiredBehaviors: {
-                            model: 'Taco.model.Discount',
-                            behavior:'destroy'
-                        },
-                        menuColumnHandler: 'destroyMenuColumnHandler'
-                    }]
-                }
-                */
-            ]
-        
-        
-        
+            ];
 
         return columns;
+    },
+
+    // list of actions to put in action column and context menu;
+    getActionItems: function () {
+        var me = this,
+            actions = [];
+
+        if (this.enableEditAction) {
+            actions.push({
+                text: 'Edit',
+                requiredBehaviors: {
+                    model: 'Taco.model.Discount',
+                    behavior: 'update'
+                },
+                menuColumnHandler: function(item, eventData) {
+                    var record = eventData.record;
+                    Ext.defer(function() {
+                        Taco.core.StateManager.attemptNavigate('discounts/edit/' + record.getId(), { complexMetaData: { record: record } });
+                    }, 1, this);
+                }
+            });
+        }
+        
+        if (this.enableDuplicateAction) {
+            actions.push({
+                text: 'Duplicate',
+                requiredBehaviors: {
+                    model: 'Taco.model.Discount',
+                    behavior: 'create'
+                },
+                menuColumnHandler: function(item, eventData) {
+                    var record = eventData.record,
+                        metaData = {
+                            id: record.getId()
+                        };
+
+                    Taco.app.StateManager.attemptNavigate('discounts/duplicate/' + record.getId(), metaData);
+                }
+            });    
+        }
+        
+        if (this.enableDeleteAction) {
+            actions.push({
+                text: 'Delete',
+                itemId: "deleteMenuItem",
+                // deleteMenuColumnHandler can be found in Taco.core.ux.mixins.DeleteFromGrid
+                menuColumnHandler: "deleteMenuColumnHandler",
+                requiredBehaviors: {
+                    model: 'Taco.model.Discount',
+                    behavior: 'delete'
+                },
+                scope: me
+            });
+        }
+
+        return actions;
+
+    },
+
+    onActionMenuShow: function (menu, eventData) {
+        var me = this;
+
+        // need to disable the delete menu option when discount has been used
+        var deleteMenuItem = menu.down("#deleteMenuItem");
+        if (deleteMenuItem) {
+            if (eventData.record.get('canBeDeleted')) {
+                deleteMenuItem.show();
+            } else {
+                deleteMenuItem.hide();
+            }
+        }
+    },
+
+    getActionColumn: function () {
+        var me = this,
+            actionColumn = null,
+            actions = this.getActionItems();
+
+        // as long as we have actions;
+        if (actions.length) {
+            actionColumn = {
+                xtype: 'taco.menucolumn',
+                text: 'Actions',
+                onMenuShow: me.onActionMenuShow,
+                menuItems: actions
+            }
+        }
+
+        return actionColumn;
     },
 
     onItemClick: function (view, record, elm, index, e) {

@@ -7,10 +7,11 @@ Ext.define('Taco.view.couponSet.modal.CouponSetEditor', {
     extend: 'Taco.core.ux.window.Drawer',
 
     requires: [
-        'Taco.core.ux.form.Form',
         'Taco.view.couponSet.GeneralForm',
         'Taco.view.couponSet.GeneratedCodeForm',
-        'Taco.view.couponCode.Grid'
+        'Taco.view.couponSet.GeneralForm',
+        'Taco.view.couponCode.Grid',
+        'Taco.view.couponCode.DiscountGrid'
     ],
 
     // this should really be the default;
@@ -73,14 +74,14 @@ Ext.define('Taco.view.couponSet.modal.CouponSetEditor', {
     managePanelsOnCreate: function (closeAfterSave, saveText, isCouponCodePanelVisible) {
         var couponSetCode = (this.record) ? this.record.get("couponSetCode") : null,
             couponSetId = (this.record) ? this.record.get("id") : null;
-        
+
+
         if (this.createType === 'Manual') {
             this.closeOnSave = closeAfterSave;
             var primaryBtn = this.down('#primaryAction');
             if (primaryBtn) {
                 primaryBtn.setText(saveText);
             }
-
             if (this.couponCodePanel) {
                 if (isCouponCodePanelVisible) {
                     this.couponCodePanel.setCouponSetCode(couponSetCode);
@@ -89,13 +90,13 @@ Ext.define('Taco.view.couponSet.modal.CouponSetEditor', {
                 this.couponCodePanel.setVisible(isCouponCodePanelVisible);
             }
 
-            if (isCouponCodePanelVisible) {
-                this.discountPanel.setCouponSetCode(couponSetCode);
-                this.discountPanel.setCouponSetId(couponSetId);
+            if (this.discountPanel) {
+                if (isCouponCodePanelVisible) {
+                    this.discountPanel.setCouponSetCode(couponSetCode);
+                    this.discountPanel.setCouponSetId(couponSetId);
+                }
+                this.discountPanel.setVisible(isCouponCodePanelVisible);
             }
-
-            this.discountPanel.setVisible(isCouponCodePanelVisible);
-
         }
     },
 
@@ -209,7 +210,7 @@ Ext.define('Taco.view.couponSet.modal.CouponSetEditor', {
             record: me.record,
             isCreateMode: me.isCreateMode
         });
-
+        
         me.couponCodePanel = Ext.create('Taco.view.couponCode.Grid', {
             autoHeight: true,
             autoHidePagingToolbar: true,
@@ -230,8 +231,7 @@ Ext.define('Taco.view.couponSet.modal.CouponSetEditor', {
         });
 
 
-        var container = Ext.create('Taco.core.ux.form.Form',{
-            autoScroll: true,
+        var container = Ext.create('Taco.core.ux.form.Form', {
             items :  [
                 me.generalPanel
             ]
