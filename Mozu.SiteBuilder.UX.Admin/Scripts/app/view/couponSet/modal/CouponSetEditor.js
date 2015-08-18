@@ -73,14 +73,14 @@ Ext.define('Taco.view.couponSet.modal.CouponSetEditor', {
     managePanelsOnCreate: function (closeAfterSave, saveText, isCouponCodePanelVisible) {
         var couponSetCode = (this.record) ? this.record.get("couponSetCode") : null,
             couponSetId = (this.record) ? this.record.get("id") : null;
-
-
+        
         if (this.createType === 'Manual') {
             this.closeOnSave = closeAfterSave;
             var primaryBtn = this.down('#primaryAction');
             if (primaryBtn) {
                 primaryBtn.setText(saveText);
             }
+
             if (this.couponCodePanel) {
                 if (isCouponCodePanelVisible) {
                     this.couponCodePanel.setCouponSetCode(couponSetCode);
@@ -88,10 +88,11 @@ Ext.define('Taco.view.couponSet.modal.CouponSetEditor', {
                 
                 this.couponCodePanel.setVisible(isCouponCodePanelVisible);
             }
-                if (isCouponCodePanelVisible) {
-                    this.discountPanel.setCouponSetCode(couponSetCode);
-                    this.discountPanel.setCouponSetId(couponSetId);
-                }
+
+            if (isCouponCodePanelVisible) {
+                this.discountPanel.setCouponSetCode(couponSetCode);
+                this.discountPanel.setCouponSetId(couponSetId);
+            }
         }
     },
 
@@ -240,6 +241,7 @@ Ext.define('Taco.view.couponSet.modal.CouponSetEditor', {
             container.add(me.generatedCodePanel);
         } else {
             container.add(me.couponCodePanel);
+            container.add(me.discountPanel);
         }
 
         me.items = [

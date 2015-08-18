@@ -708,6 +708,7 @@
     <Content Include="Scripts\app\view\capability\Index.js" />
     <Content Include="Scripts\app\view\channel\Index.js" />
     <Content Include="Scripts\app\view\couponCode\AdvancedSearchForm.js" />
+    <Content Include="Scripts\app\view\couponCode\DiscountGrid.js" />
     <Content Include="Scripts\app\view\couponCode\Grid.js" />
     <Content Include="Scripts\app\view\couponSet\AdvancedSearchForm.js" />
     <Content Include="Scripts\app\view\couponSet\GeneratedCodeForm.js" />

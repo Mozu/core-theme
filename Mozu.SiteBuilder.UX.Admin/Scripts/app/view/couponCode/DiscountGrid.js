@@ -70,25 +70,20 @@ Ext.define('Taco.view.couponCode.DiscountGrid', {
         this.viewConfig.deferEmptyText = this.deferEmptyText;
         
 
-        this.store = Ext.create('Taco.store.Discounts', {
+        //this.store = Ext.create('Taco.store.Discounts', {
+        //    pageSize: this.pageSize,
+        //    autoLoad: false
+        //});
+        
+        
+
+
+        me.store = Taco.core.data.StoreManager.getOrCreate({
+            type: 'Taco.store.Discounts',
+            createOnly: true,
             pageSize: this.pageSize,
             autoLoad: false
         });
-        
-        
-
-
-        //me.store = Taco.core.data.StoreManager.getOrCreate({
-        //    type: 'Taco.store.Discounts',
-        //    createOnly: true,
-        //    pageSize: this.pageSize,
-        //    autoLoad: (couponSetId) ? true : false,
-        //    extraParams: {
-        //        params: {
-        //            couponsetid: this.getCouponSetId()
-        //        }
-        //    }
-        //});
 
         me.initQuickAddBar();
 
