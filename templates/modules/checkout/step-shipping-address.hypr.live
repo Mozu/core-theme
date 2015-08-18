@@ -11,10 +11,12 @@
       {% if not model.address.candidateValidatedAddresses %}
       <div class="mz-formstep-summary mz-addresssummary">
         {% if model.requiresFulfillmentInfo %}
+          {% include "modules/common/address-summary" %}   
           {% if viewData.awsCheckout %}
-              <a data-mz-action="amazonShippingAndBilling" href="javascript:;" style="float:right;">{{labels.awsChangeAddress}}</a>
-          {%endif%}
-          {% include "modules/common/address-summary" %}      
+            <div style="margin-top:20px;">
+              <a data-mz-action="amazonShippingAndBilling" href="javascript:;">{{labels.awsChangeAddress}}</a>
+            </div>
+          {%endif%}   
         {% else %}
           {{ labels.noFulfillmentInfoRequired }}
         {% endif %}

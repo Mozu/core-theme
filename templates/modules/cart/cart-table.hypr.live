@@ -106,10 +106,20 @@
       <button id="cart-checkout" class="mz-button mz-button-large"  {% if model.isEmpty %} disabled="disabled" {% endif %} data-mz-action="proceedToCheckout">{{ labels.proceedToCheckout }}</button>
 
       {% if not model.isEmpty %}
-        <div>
-          <p>or checkout with</p>
-          <div id="AmazonPayButton"/>
-        </div>
+        {% with siteContext.checkoutSettings.externalPaymentWorkflowSettings|findwhere("isEnabled", true) as externalPaymentWorkflowsEnabled %} 
+          {% if externalPaymentWorkflowsEnabled %}
+            <div>
+              <p>{{labels.orWith}}</p>
+              {% for externalPayment in siteContext.checkoutSettings.externalPaymentWorkflowSettings %}
+                  {% if externalPayment.isEnabled %}
+                    {% if externalPayment.name == "PayByAmazon" %}
+                      <div id="AmazonPayButton"/>
+                    {% endif %}
+                  {%endif%}
+              {%endfor%}
+            </div>
+          {% endif %}
+        {%endwith%}
       {% endif %}
     </td>
     <td></td>

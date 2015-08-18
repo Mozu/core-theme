@@ -393,7 +393,9 @@
             checkoutData = require.mozuData('checkout');
 
         viewData = require.mozuData('viewdata');
-
+        AmazonPay.init(); 
+        checkoutData.isAmazonPayEnable = AmazonPay.isEnabled;
+        
         var checkoutModel = window.order = new CheckoutModels.CheckoutPage(checkoutData),
             checkoutViews = {
                 steps: {
@@ -455,7 +457,7 @@
 
         $checkoutView.noFlickerFadeIn();
 
-         AmazonPay.init(); 
+         
          AmazonPay.addCheckoutButton(window.order.id, false);
     });
 });
