@@ -47,10 +47,10 @@ namespace Mozu.SiteBuilder.UnitTests.Mvc.SEO
             var mapping1 = new Mapping { type = Mapping.TypeConst.facet, mapTo = "bar", facetId = "facet@mozu" };
             yield return new object[] { mapping1, typeof(FacetValueFilterMapping) };
 
-            var mapping2 = new Mapping { type = Mapping.TypeConst.direct, mappings = new Dictionary<string, string> { { "butts", "lol"} } };
+            var mapping2 = new Mapping { type = Mapping.TypeConst.direct, mappings = new Dictionary<string, object> { { "butts", "lol"} } };
             yield return new object[] { mapping2, typeof(SiteBuilder.Mvc.SEO.Mappings.DirectMapping) };
 
-            var mapping3 = new Mapping { type = Mapping.TypeConst.mzdb, docId = "blah@foo", listName = "sigh" };
+            var mapping3 = new Mapping { type = Mapping.TypeConst.mzdb, docId = "blah@foo", listFqn = "sigh" };
             yield return new object[] { mapping3, typeof(MZDBMap) };
         }
 
@@ -70,7 +70,7 @@ namespace Mozu.SiteBuilder.UnitTests.Mvc.SEO
             var mapping2 = new Mapping { type = Mapping.TypeConst.direct};
             yield return mapping2;
 
-            var mapping3 = new Mapping { type =  Mapping.TypeConst.mzdb, listName = "sigh" };
+            var mapping3 = new Mapping { type =  Mapping.TypeConst.mzdb, listFqn = "sigh" };
             yield return mapping3;
         }
 
@@ -82,29 +82,33 @@ namespace Mozu.SiteBuilder.UnitTests.Mvc.SEO
             HttpRequestMessage reqMessage = new HttpRequestMessage(HttpMethod.Get, "http://localhost/foo"); ;
             reqMessage.SetRouteData(new HttpRouteData(new HttpRoute(), new HttpRouteValueDictionary()));
             var outputs = mapping.Map(reqMessage, inputs, "foo");
-            outputs.SequenceEqual(expectedOutput);
+            outputs.SequenceEqual(expectedOutput).ShouldBeTrue();
         }
 
         static IEnumerable<object[]> HappyPathMappings()
         {
             yield return new object[] {
-                new SiteBuilder.Mvc.SEO.Mappings.DirectMapping(new Mapping(){ mappings =new Dictionary<string, string> { { "foo", "bar" } }}),
-                new Dictionary<string, object> { { "foo", 1234 }, { "butts", "lol" } },
-                new Dictionary<string, object> { { "foo", 1234 }, { "butts", "lol" }, { "bar", 1234 } }};
+                new SiteBuilder.Mvc.SEO.Mappings.DirectMapping(new Mapping(){ mappings =new Dictionary<string, object> { { "red", "green" } }}),
+                new Dictionary<string, object> { { "foo", "red" } },
+                new Dictionary<string, object> { { "foo", "green" } }
 
-            yield return new object[] {
-                new FacetValueFilterMapping(new Mapping(){ facetId="color"} ),
-                new Dictionary<string, object> { { "color", "mauve"}, { "foo", 1234 } },
-                new Dictionary<string, object> { { "color", "mauve" }, { "foo", 1234 }, { "facetValueFilter", "mauve" } }};
+            };
+
+            //yield return new object[] {
+            //    new FacetValueFilterMapping(new Mapping(){ facetId="foo"} ),
+            //    new Dictionary<string, object> { { "foo", "mauve"}, },
+            //    new Dictionary<string, object> { { "foo", "mauve" }, { "facetValueFilter", "mauve" } }};
 
             var entityClientMock = Substitute.For<IEntityListsWebApiClient, ICloneable>();
             (entityClientMock as ICloneable).Clone().Returns(entityClientMock);
 
-            entityClientMock.GetEntity(Arg.Any<string>(), Arg.Any<string>()).Returns(ctx => Task.FromResult(new ServiceClientResponse<JObject>() { ReadAsSync = () => JObject.Parse("{\"blah\":\"foo\"}") }));
+            entityClientMock.GetEntity(Arg.Any<string>(), Arg.Any<string>()).Returns(ctx => Task.FromResult(new ServiceClientResponse<JObject>() { ReadAsSync = () => JObject.Parse("{\"red\":\"green\"}") }));
             yield return new object[] {
-                new MZDBMap( entityClientMock , new Mapping (){ listName = "list", docId ="doc"}),
-                new Dictionary<string, object> { { "blah", 1234 }, { "butts", "lol" } },
-                new Dictionary<string, object> { { "blah", 1234 }, { "butts", "lol" }, { "foo", 1234 } }};
+                new MZDBMap( entityClientMock , new Mapping (){ listFqn = "list", docId ="doc"}),
+                 new Dictionary<string, object> { { "foo", "red" } },
+                new Dictionary<string, object> { { "foo", "green" } }
+
+            };
         }
 
         /// <summary>
@@ -114,7 +118,7 @@ namespace Mozu.SiteBuilder.UnitTests.Mvc.SEO
         static IEnumerable<object[]> NoOpPathMappings()
         {
             yield return new object[] {
-                new SiteBuilder.Mvc.SEO.Mappings.DirectMapping(new Mapping(){ mappings =new Dictionary<string, string> { { "foo", "bar" } }}),
+                new SiteBuilder.Mvc.SEO.Mappings.DirectMapping(new Mapping(){ mappings =new Dictionary<string, object> { { "foo", "bar" } }}),
                 new Dictionary<string, object> { { "bar", 1234 } },
                 new Dictionary<string, object> { { "bar", 1234 } }
             };
@@ -132,7 +136,7 @@ namespace Mozu.SiteBuilder.UnitTests.Mvc.SEO
 
             entityClientMock.GetEntity(Arg.Any<string>(), Arg.Any<string>()).Returns(ctx => Task.FromResult(Response(obj)));
             yield return new object[] {
-                new MZDBMap(entityClientMock, new Mapping(){ listName = "list", docId ="doc"}),
+                new MZDBMap(entityClientMock, new Mapping(){ listFqn = "list", docId ="doc"}),
                 new Dictionary<string, object> { { "butts", "lol" } },
                 new Dictionary<string, object> { { "butts", "lol" } }
             };
@@ -231,7 +235,7 @@ namespace Mozu.SiteBuilder.UnitTests.Mvc.SEO
             yield return new object[]
             {
                 "param",
-                new MzdbRouteConstraint(mzdbClient, "mylist", "myfield"),
+                new MzdbRouteConstraint(mzdbClient, "mylist", null, "myfield"),
                 new Dictionary<string, object> { {"param", "value!" } },
                 true
             };
@@ -239,14 +243,14 @@ namespace Mozu.SiteBuilder.UnitTests.Mvc.SEO
             yield return new object[]
             {
                 "param",
-                new MzdbRouteConstraint(mzdbClient, "mylist", "myfield"),
+                new MzdbRouteConstraint(mzdbClient, "mylist",null, "myfield"),
                 new Dictionary<string, object> { {"param", "sigh" } },
                 false
             };
             yield return new object[]
             {
                 "param",
-                new MzdbRouteConstraint(mzdbClient, "mylist", "myfield"),
+                new MzdbRouteConstraint(mzdbClient, "mylist", null,"myfield"),
                 new Dictionary<string, object> { },
                 false
             };
@@ -274,7 +278,7 @@ namespace Mozu.SiteBuilder.UnitTests.Mvc.SEO
             var attrConstraint = new Validator { type = Validator.TypeConst.attribute,attributeCode = "attr"};
             yield return new object[] { attrConstraint, typeof(ProductAttributeRouteConstraint) };
 
-            var mzdbConstraint = new Validator { type = Validator.TypeConst.mzdb, listId = "lol", fieldId = "meh"};
+            var mzdbConstraint = new Validator { type = Validator.TypeConst.mzdb, listFqn = "lol", field = "meh"};
             yield return new object[] { mzdbConstraint, typeof(MzdbRouteConstraint) };
 
             var listConstraint = new Validator {type = Validator.TypeConst.list, values = new List<string> {"one", "two", "three" } };

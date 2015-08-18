@@ -44,9 +44,10 @@ namespace Mozu.SiteBuilder.Mvc.SEO.Constraints
             _productSearchWebApiClient = productSearchWebApiClient;
             _context = context;
         }
-
+        
         public ICustomRouteConstraint BuildConstraint(Validator validator)
         {
+         
             switch (validator.type)
             {
                 case Validator.TypeConst.attribute:
@@ -60,7 +61,7 @@ namespace Mozu.SiteBuilder.Mvc.SEO.Constraints
                 case Validator.TypeConst.list:
                     return new StringListRouteConstraint(validator.values);
                 case Validator.TypeConst.mzdb:
-                    return new MzdbRouteConstraint(_entityListClient, validator.listId, validator.fieldId);
+                    return new MzdbRouteConstraint(_entityListClient, validator.listFqn,validator.docId, validator.field);
                 case QueryStringConstraint.TypeName:
                     return new QueryStringConstraint(validator);
 
@@ -604,34 +605,59 @@ namespace Mozu.SiteBuilder.Mvc.SEO.Constraints
             var content = attr.LocalizedContent == null ? attr.Content : attr.LocalizedContent.FirstOrDefault(lc => lc.LocaleCode.EqualsIgnoreCase(localeCode)) ?? attr.Content;
             return content.StringValue;
         }
-
-
     }
 
     public class MzdbRouteConstraint : ConstraintBase
     {
         readonly Func<int, int, Task<ServiceClientResponse<EntityCollection>>> _getDocsFunc;
-        readonly Func<JObject, string> _fieldGetter;
+        readonly Func<Task<ServiceClientResponse<JObject>>> _getDosFunc;
+        readonly Func<JObject, IEnumerable<string>> _fieldGetter;
         IList<string> _values;
 
-        public MzdbRouteConstraint(IEntityListsWebApiClient mzdbClient, string listId, string fieldId)
+        public MzdbRouteConstraint(IEntityListsWebApiClient mzdbClient, string listId, string docId, string fieldId)
         {
             if (listId.IsNullOrEmpty()) throw new ArgumentException("listId");
             if (fieldId.IsNullOrEmpty()) throw new ArgumentException("fieldId");
 
-            _getDocsFunc = async (start, size) => await mzdbClient.CloneWithoutUserClaims().GetEntities(listId, startIndex: start, pageSize: size).ConfigureAwait(false);
-            _fieldGetter = o => o.Value<string>(fieldId);
+            var client = mzdbClient.CloneWithoutUserClaims();
+            if ( string.IsNullOrEmpty(docId))
+            {
+                _getDocsFunc = async (start, size) => await client.GetEntities(listId, startIndex: start, pageSize: size).ConfigureAwait(false);
+            }
+            else
+            {
+                _getDosFunc = async () => await client.GetEntity(listId, docId).ConfigureAwait(false);
+            }
+            
+            _fieldGetter = o => FlattenFieldValues(o, fieldId);
+        }
+
+        static IEnumerable<string> FlattenFieldValues(JObject o, string field)
+        {
+            JToken t;
+            if (!o.TryGetValue(field, out t)) return Enumerable.Empty<string>();
+
+            if (t is JArray) return ((JArray)t).Values().Where(x => x is JValue).Select(x => x.Value<string>());
+            if (t is JValue) return new[] { ((JValue)t).Value<string>() };
+            return Enumerable.Empty<string>();
         }
 
         public override async Task<bool> Initialize()
         {
-            var mzdbDocResponse = await _getDocsFunc(0, 50).ConfigureAwait(false);
-            if (mzdbDocResponse.HasException) throw mzdbDocResponse.ReadException();
+            if (_getDocsFunc != null)
+            {
+                var mzdbDocResponse = await _getDocsFunc(0, 50).ConfigureAwait(false);
+                if (mzdbDocResponse.HasException) throw mzdbDocResponse.ReadException();
 
-            var mzdbDocs = mzdbDocResponse.ReadAsSync();
-            var otherItems = await Unroll<JObject>(async (start, size) => (await _getDocsFunc(start, size).ConfigureAwait(false)).ReadAsSync(), mzdbDocs.TotalCount, 50);
+                var mzdbDocs = mzdbDocResponse.ReadAsSync();
+                var otherItems = await Unroll<JObject>(async (start, size) => (await _getDocsFunc(start, size).ConfigureAwait(false)).ReadAsSync(), mzdbDocs.TotalCount, 50);
 
-            _values = mzdbDocs.Items.Concat(otherItems).Select(_fieldGetter).ToList();
+                _values = mzdbDocs.Items.Concat(otherItems).SelectMany(_fieldGetter).ToList();
+            }
+            else
+            {
+                _values = _fieldGetter((await _getDosFunc()).ReadAsSync()).ToList();
+            }
             return true;
         }
 

@@ -115,7 +115,7 @@ namespace Mozu.SiteBuilder.Mvc.SEO.Mappings
             {
                 var parameterValue = Convert.ToString(obj);
                 var key = string.IsNullOrWhiteSpace(Settings.mapTo) ? parameterName : Settings.mapTo;
-                values[key] = Regex.Replace(parameterValue, Settings.pattern, Settings.replacement, RegexOptions.IgnoreCase);
+                values[key] = Regex.Replace(parameterValue, Settings.pattern, Settings.replacement??string.Empty, RegexOptions.IgnoreCase);
             }
             return values;
         }
@@ -304,7 +304,7 @@ namespace Mozu.SiteBuilder.Mvc.SEO.Mappings
             Settings = settings;
         }
         public Mapping Settings { get; set; }
-        public Dictionary<string, string> Mappings { get; set; }
+        public Dictionary<string, object> Mappings { get; set; }
         public IDictionary<string, object> Map(HttpRequestMessage requestMessage, IDictionary<string, object> values, string parameterName)
         {
             object obj;
@@ -312,7 +312,7 @@ namespace Mozu.SiteBuilder.Mvc.SEO.Mappings
             {
                 var parameterValue = Convert.ToString(obj);
 
-                string replacement;
+                object replacement;
                 if (Mappings.TryGetValue(parameterValue, out replacement))
                 {
                     var key = string.IsNullOrWhiteSpace(Settings.mapTo) ? parameterName : Settings.mapTo;
@@ -332,7 +332,7 @@ namespace Mozu.SiteBuilder.Mvc.SEO.Mappings
             
             if (settings.mappings == null ) throw new ArgumentException("mappings");
 
-            this.Mappings = new Dictionary<string, string>(settings.mappings, StringComparer.OrdinalIgnoreCase);
+            this.Mappings = new Dictionary<string, object>(settings.mappings, StringComparer.OrdinalIgnoreCase);
         }
         public Task<bool> Initialize() { return Task.FromResult(true); }
 
@@ -348,11 +348,11 @@ namespace Mozu.SiteBuilder.Mvc.SEO.Mappings
         
         public MZDBMap(IEntityListsWebApiClient client, Mapping settings):base(settings)
         {
-            if (settings.listName.IsNullOrEmpty()) throw new ArgumentException("entityList");
+            if (settings.listFqn.IsNullOrEmpty()) throw new ArgumentException("entityList");
             if (settings.docId.IsNullOrEmpty()) throw new ArgumentException("docId");
 
             _client = client;
-            _entityList = settings.listName;
+            _entityList = settings.listFqn;
             _docId = settings.docId;
         }
 
@@ -362,16 +362,14 @@ namespace Mozu.SiteBuilder.Mvc.SEO.Mappings
             if (entityResponse.HasException) throw entityResponse.ReadException();
 
             var entity = entityResponse.ReadAsSync();
-            var entries = 
-                entity.Values()
-                .Where(x => x.Type == JTokenType.Property &&  (( JProperty)x).Value is JValue  )
-                .Cast<JProperty>();
-            this.Mappings = new Dictionary<string,string>( StringComparer.OrdinalIgnoreCase );
+        
+                
+            this.Mappings = new Dictionary<string,object>( StringComparer.OrdinalIgnoreCase );
 
-            foreach( var prop in entries)
+            foreach( var prop in entity.Properties().Where(x=> x.Value is JValue))
             {
                 var val = ((JValue)prop.Value).Value;
-                this.Mappings[prop.Name ]= val== null ? null : val.ToString();
+                this.Mappings[prop.Name] = val;
             }
                
             return true;

@@ -93,6 +93,7 @@ namespace Mozu.SiteBuilder.Mvc.SEO
         {
             if (customSettings == null) return null;
 
+            FixCasing(customSettings);
             var constraints =
                 customSettings.Validators
                 .Select(kvp => new { kvp.Key, Constraint = _customRouteConstraintFactory.BuildConstraint(kvp.Value) })
@@ -135,6 +136,39 @@ namespace Mozu.SiteBuilder.Mvc.SEO
             }
 
             return routeCollection;
+        }
+
+        static Dictionary<string, string> CaseInsensitiveValidatorLookup;
+        static Dictionary<string, string> CaseInsensitiveMappingLookup;
+
+
+        private void FixCasing(CustomRouteSettings customSettings)
+        {
+            if (CaseInsensitiveValidatorLookup ==null)
+            {
+                CaseInsensitiveValidatorLookup = typeof(Validator.TypeConst).GetFields().ToDictionary(x => x.Name, y => y.Name, StringComparer.OrdinalIgnoreCase);
+            }
+            if (CaseInsensitiveMappingLookup == null)
+            {
+                CaseInsensitiveMappingLookup = typeof(Mapping.TypeConst).GetFields().ToDictionary(x => x.Name, y => y.Name, StringComparer.OrdinalIgnoreCase);
+            }
+
+            string tmp;
+            if (customSettings.Mappings != null)
+            {
+                customSettings.Mappings.Each(x =>
+               {
+                   x.Value.type = CaseInsensitiveMappingLookup.TryGetValue(x.Value.type, out tmp) ? tmp : x.Value.type;
+               });
+            }
+            if (customSettings.Validators != null)
+            {
+                customSettings.Validators.Each(x =>
+                {
+                    x.Value.type = CaseInsensitiveValidatorLookup.TryGetValue(x.Value.type, out tmp) ? tmp : x.Value.type;
+                });
+            }
+
         }
 
         CustomRoute CreateCustomRoute(Route routeDef, IDictionary<string, ICustomRouteConstraint> validators, IDictionary<string, IRouteDataMapping> mappings)

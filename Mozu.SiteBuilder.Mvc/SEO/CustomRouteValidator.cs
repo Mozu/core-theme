@@ -33,7 +33,7 @@ namespace Mozu.SiteBuilder.Mvc.SEO
             _entityListClient = client;
             RuleFor(x => x.Value.type).Must(BeInTypeConst).WithName("mapping type").WithMessage(string.Format("mapping type must be one of {0}", string.Join(",", types)));
             RuleFor(x => x.Value).Must(HaveFacetMapFields).When(x => x.Value.type == Mapping.TypeConst.facet).WithName("facet mapping").WithMessage("facet mapping must provide  mapTo, and facetId");
-            RuleFor(x => x.Value).Must(HaveMZDBMapFields).When(x => x.Value.type == Mapping.TypeConst.mzdb).WithName("mzdb mapping").WithMessage("mzdb mapping must provide listName and docId");
+            RuleFor(x => x.Value).Must(HaveMZDBMapFields).When(x => x.Value.type == Mapping.TypeConst.mzdb).WithName("mzdb mapping").WithMessage("mzdb mapping must provide listFqn and docId");
             RuleFor(x => x.Value).Must(HaveDirectMapFields).When(x => x.Value.type == Mapping.TypeConst.direct).WithName("direct mapping").WithMessage("direct mapping must provide mappings");
         }
 
@@ -44,7 +44,7 @@ namespace Mozu.SiteBuilder.Mvc.SEO
 
         private bool HaveMZDBMapFields(Mapping arg)
         {
-            return !arg.listName.IsNullOrEmpty() && !arg.docId.IsNullOrEmpty();
+            return !arg.listFqn.IsNullOrEmpty() && !arg.docId.IsNullOrEmpty();
         }
 
         private bool HaveFacetMapFields(Mapping arg)
@@ -68,16 +68,16 @@ namespace Mozu.SiteBuilder.Mvc.SEO
             var validDoc = ValidatorExt.OK;
             if (instance.type == Mapping.TypeConst.mzdb)
             {
-                validDoc = await IsValidMZDBDoc(_entityListClient, instance.listName, instance.docId).ConfigureAwait(false);
+                validDoc = await IsValidMZDBDoc(_entityListClient, instance.listFqn, instance.docId).ConfigureAwait(false);
             }
             var result = await base.ValidateAsync(context).ConfigureAwait(false);
             return result.Concat(validDoc);
         }
 
-        private async Task<ValidationResult> IsValidMZDBDoc(IEntityListsWebApiClient _entityListClient, string listName, string docId)
+        private async Task<ValidationResult> IsValidMZDBDoc(IEntityListsWebApiClient _entityListClient, string listFqn, string docId)
         {
-            var response = await _entityListClient.CloneWithoutUserClaims().GetEntity(listName, docId).ConfigureAwait(false);
-            if(response.HasException) return new ValidationResult(new List<ValidationFailure> { new ValidationFailure("mapping listname and docId", "the listname must have a document matching docId") });
+            var response = await _entityListClient.CloneWithoutUserClaims().GetEntity(listFqn, docId).ConfigureAwait(false);
+            if(response.HasException) return new ValidationResult(new List<ValidationFailure> { new ValidationFailure("mapping listFqn and docId", "the listFqn must have a document matching docId") });
             return ValidatorExt.OK;
 
         }
@@ -96,12 +96,12 @@ namespace Mozu.SiteBuilder.Mvc.SEO
             RuleFor(x => x.Value.type).Must(BeInTypeConst).WithName("validator type").WithMessage(string.Format("validator type must be one of {0}", string.Join(",", types)));
             RuleFor(x => x.Value).Must(HaveAttributeConstraintFields).When(x => x.Value.type == Validator.TypeConst.attribute).WithName("attribute validator").WithMessage("attribute validator must provide attributecode");
             RuleFor(x => x.Value).Must(HaveListConstraintFields).When(x => x.Value.type == Validator.TypeConst.list).WithName("list validator").WithMessage("list validator must provide values");
-            RuleFor(x => x.Value).Must(HaveMZDBConstraintFields).When(x => x.Value.type == Validator.TypeConst.mzdb).WithName("mzdb constraint").WithMessage("mzdb constraint must provide listName and fieldId");
+            RuleFor(x => x.Value).Must(HaveMZDBConstraintFields).When(x => x.Value.type == Validator.TypeConst.mzdb).WithName("mzdb constraint").WithMessage("mzdb constraint must provide listFqn and field");
         }
 
         private bool HaveMZDBConstraintFields(Validator arg)
         {
-            return !arg.listId.IsNullOrEmpty() && !arg.fieldId.IsNullOrEmpty();
+            return !arg.listFqn.IsNullOrEmpty() && !arg.field.IsNullOrEmpty();
         }
 
         private bool HaveListConstraintFields(Validator arg)
@@ -141,7 +141,7 @@ namespace Mozu.SiteBuilder.Mvc.SEO
                     if (attrResponse.HasException) return new ValidationResult(new List<ValidationFailure> { new ValidationFailure("attributeCode", "attribute code must exist") });
                     return ValidatorExt.OK;
                 case Validator.TypeConst.mzdb:
-                    var mzdbResponse = await _entityListClient.CloneWithoutUserClaims().GetEntityList(instance.listId).ConfigureAwait(false);
+                    var mzdbResponse = await _entityListClient.CloneWithoutUserClaims().GetEntityList(instance.listFqn).ConfigureAwait(false);
                     if (mzdbResponse.HasException) return new ValidationResult(new List<ValidationFailure> { new ValidationFailure("listId", "list must exist") });
                     return ValidatorExt.OK;
             }
