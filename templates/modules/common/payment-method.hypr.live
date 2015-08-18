@@ -8,6 +8,7 @@
      <strong class="mz-paymentmethod-methodtype">{{ model.cardType }}</strong>
      <div class="mz-paymentmethod-cardnumber">{{ model.cardNumberPart }}</div>
      <div class="mz-paymentmethod-cardexp">{{ labels.expires }} {{ model.expireMonth }}/{{model.expireYear }}</div>
-     {% endblock payment-method-details %}
+       {% if model.isDefaultPayMethod %}<em class="is-primary">({{ labels.primary }})</em>{% endif %}
+       {% endblock payment-method-details %}
    </div>
  </div>
