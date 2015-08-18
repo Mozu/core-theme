@@ -22,15 +22,15 @@
         </div>
 
     </div>
-
-    <div class='mz-future-bar-indicator {% if pageContext.cookies.MZ_SHOW_FUTURE_BAR.value == true %} hidden {% endif %}''>
+  
+    <div class='mz-future-bar-indicator {% if pageContext.cookies.MZ_SHOW_FUTURE_BAR.value == true or pageContext.cookies.MZ_SHOW_FUTURE_BAR.value == "" %} hidden {% endif %}''>
         
         <span class='mz-indicator-icon'></span>
 
         <span class='mz-indicator-text'>Show</span>
 
     </div>
-
+    
 {% endif %}
 
 
