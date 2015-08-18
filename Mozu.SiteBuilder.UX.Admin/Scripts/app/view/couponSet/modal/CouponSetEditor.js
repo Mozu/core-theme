@@ -232,6 +232,7 @@ Ext.define('Taco.view.couponSet.modal.CouponSetEditor', {
 
 
         var container = Ext.create('Taco.core.ux.form.Form', {
+            autoScroll:true,
             items :  [
                 me.generalPanel
             ]
