@@ -269,7 +269,10 @@ namespace Mozu.SiteBuilder.UnitTests.Mvc.SEO
         [TestCaseSource("ConstraintFactory")]
         public void FactoryCanMakeConstraints(Validator validator, Type expectedType)
         {
-            var fact = new ConstraintFactory(Substitute.For<IEntityListsWebApiClient>(), Substitute.For<IAttributeWebApiClient>(), Substitute.For<IProductSearchWebApiClient>(), Substitute.For<IApiContext>());
+            var entityClient = Substitute.For<IEntityListsWebApiClient,ICloneable>();
+            ((ICloneable)entityClient).Clone().Returns(entityClient);
+
+            var fact = new ConstraintFactory(entityClient, Substitute.For<IAttributeWebApiClient>(), Substitute.For<IProductSearchWebApiClient>(), Substitute.For<IApiContext>());
             fact.BuildConstraint(validator).GetType().ShouldEqual(expectedType);
         }
 
