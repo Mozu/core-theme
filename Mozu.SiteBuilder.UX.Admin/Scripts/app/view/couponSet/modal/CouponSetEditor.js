@@ -93,6 +93,9 @@ Ext.define('Taco.view.couponSet.modal.CouponSetEditor', {
                 this.discountPanel.setCouponSetCode(couponSetCode);
                 this.discountPanel.setCouponSetId(couponSetId);
             }
+
+            this.discountPanel.setVisible(isCouponCodePanelVisible);
+
         }
     },
 
