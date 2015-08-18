@@ -7,9 +7,9 @@ Ext.define('Taco.view.couponSet.modal.CouponSetEditor', {
     extend: 'Taco.core.ux.window.Drawer',
 
     requires: [
+        'Taco.core.ux.form.Form',
         'Taco.view.couponSet.GeneralForm',
         'Taco.view.couponSet.GeneratedCodeForm',
-        'Taco.view.couponSet.GeneralForm',
         'Taco.view.couponCode.Grid'
     ],
 
@@ -230,7 +230,7 @@ Ext.define('Taco.view.couponSet.modal.CouponSetEditor', {
         });
 
 
-        var container = Ext.create("Ext.container.Container",{
+        var container = Ext.create('Taco.core.ux.form.Form',{
             items :  [
                 me.generalPanel
             ]
