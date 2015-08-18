@@ -1,4 +1,4 @@
-﻿define(['modules/backbone-mozu', 'underscore', 'modules/jquery-mozu', 'modules/models-cart', 'modules/cart-monitor','modules/amazonPay'], function (Backbone, _, $, CartModels, CartMonitor, AmazonPay) {
+﻿define(['modules/backbone-mozu', 'underscore', 'modules/jquery-mozu', 'modules/models-cart', 'modules/cart-monitor','modules/amazonPay', 'modules/preserve-element-through-render'], function (Backbone, _, $, CartModels, CartMonitor, AmazonPay, PreserveElements) {
 
     var CartView = Backbone.MozuView.extend({
         templateName: "modules/cart/cart-table",
@@ -34,11 +34,18 @@
             var $removeButton = $(e.currentTarget),
                 id = $removeButton.data('mz-cart-item');
             this.model.removeItem(id);
+
             return false;
         },
         empty: function() {
             this.model.apiDel().then(function() {
                 window.location.reload();
+            });
+        },
+        render: function () {
+            var args = arguments;
+            PreserveElements(this, ['#AmazonPayButton'], function() {
+                Backbone.MozuView.prototype.render.apply(this, args);
             });
         },
         proceedToCheckout: function () {

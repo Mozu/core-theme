@@ -1306,27 +1306,6 @@
             getNonMozuPayment: function(activePayments) {
                 return _.find(activePayments, function(payment){ return payment.paymentWorkflow != "Mozu";} );
             },
-            reconcileNonMozuPayments: function() {
-
-                var activePayments = this.apiModel.getActivePayments(),
-                order = this,
-                nonMozuPaymentWorkflow = activePayments && !!this.getNonMozuPayment(activePayments),
-                amountRemainingForPayment = order.get('amountRemainingForPayment');
-
-                if (!nonMozuPaymentWorkflow || amountRemainingForPayment === 0) return;
-                var nonMozuPayment = this.getNonMozuPayment(activePayments);
-
-                return order.apiVoidPayment(nonMozuPayment.id).then(function(result) {
-                    if (result.data.amountRemainingForPayment > 0) {
-                       return order.apiCreatePayment(
-                        {
-                            "newBillingInfo" : nonMozuPayment.billingInfo, 
-                            "externalTransactionId" : nonMozuPayment.externalTransactionId
-                        });
-                    }
-                });
-
-            },
             submit: function () {
                 var order = this,
                     billingInfo = this.get('billingInfo'),
