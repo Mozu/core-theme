@@ -49,8 +49,8 @@ function($,EventBus, Api, hyprlivecontext, _) {
 		addCheckoutButton: function(id, isCart) {
 			var self = this;
 			if (!self.isEnabled) return;
-			var pageContext = require.mozuData('pagecontext');
-			var redirectUrl = pageContext.secureHost;
+			//var pageContext = require.mozuData('pagecontext');
+			var redirectUrl = hyprlivecontext.locals.pageContext.secureHost;
 			if (!isCart)
 				redirectUrl += "/checkout/"+id+"?isAwsCheckout=true&view="+self.viewName;
 			else
