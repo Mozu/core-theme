@@ -80,6 +80,7 @@
             <span class="mz-validationmessage" data-mz-validationmessage-for="{{ cardcontext }}expireYear"></span>
         </div>
     </div>
+    {% if not themeSettings.isCvvSuppressed %}
     <div class="mz-l-formfieldgroup-row mz-payment-credit-card-securitycode-row">
         <div class="mz-l-formfieldgroup-cell">
             <label for="mz-payment-security-code">{{ labels.securityCode }}{% if not model.isCvvOptional %}<span class="is-required"> *</span>{% endif %}:</label>
@@ -89,5 +90,6 @@
             <span class="mz-validationmessage" data-mz-validationmessage-for="{{ cardcontext }}cvv"></span>
         </div>
     </div>
+    {% endif %}
 
 {% endblock credit-card-form %}
