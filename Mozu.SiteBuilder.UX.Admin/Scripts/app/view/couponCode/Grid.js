@@ -2,7 +2,7 @@
  * @class Taco.view.couponCode.Grid
 */
 Ext.define('Taco.view.couponCode.Grid', {
-    extend: 'Ext.grid.Panel',
+    extend: 'Taco.core.ux.grid.Panel',
     requires: [
         'Taco.model.CouponCode',
         'Taco.store.CouponCodes',
@@ -61,6 +61,8 @@ Ext.define('Taco.view.couponCode.Grid', {
     
     title: "Codes",
 
+    pageSize: 5,
+
     store: { type: 'Taco.store.CouponCodes' },
 
     autoScroll: true,
@@ -97,14 +99,14 @@ Ext.define('Taco.view.couponCode.Grid', {
         me.mixins = me.mixins|| [];
         
         this.store = Ext.create('Taco.store.CouponCodes', {
-            pageSize:10,
+            pageSize: this.pageSize,
             autoLoad:(couponSetCode) ? true : false
         });
 
         if (couponSetCode) {
-            
+            this.store.proxy.extraParams.couponSetCode = couponSetCode;
         }
-        this.store.proxy.extraParams.couponSetCode = couponSetCode;
+        
 
         //this.defaultRowEditingData = {
         //    couponSetCode: this.getCouponSetCode()

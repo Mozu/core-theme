@@ -21,7 +21,7 @@ Ext.define('Taco.view.couponCode.DiscountGrid', {
     //    pageSize:10
     //},
     launchEditorOnClick: false,
-
+    deferEmptyText:false,
     emptyText: 'None Available',
 
     autoScroll: false,
@@ -30,6 +30,11 @@ Ext.define('Taco.view.couponCode.DiscountGrid', {
         couponSetCode: null,
         couponSetId: null
     },
+
+
+    deferEmtpyText: false,
+
+    showActionsColumn : true,
 
     autoHidePagingToolbar:false,
 
@@ -50,34 +55,54 @@ Ext.define('Taco.view.couponCode.DiscountGrid', {
         var me = this,
             couponSetId = this.getCouponSetId();
 
-        this.store.extraParams.params.couponsetid = couponSetId;
+        //this.store.extraParams.params.couponsetid = couponSetId;
         this.store.proxy.extraParams.couponsetid = couponSetId;
     },
 
-    initComponent: function () {
+    initComponent: function() {
         var me = this,
             couponSetId = this.getCouponSetId();
 
         me.dockedItems = me.dockedItems || [];
         me.mixins = me.mixins || [];
         
-        me.store = Taco.core.data.StoreManager.getOrCreate({
-            type: 'Taco.store.Discounts',
-            createOnly: true,
+        this.viewConfig = this.viewConfig || {}
+        this.viewConfig.deferEmptyText = this.deferEmptyText;
+        
+
+        this.store = Ext.create('Taco.store.Discounts', {
             pageSize: this.pageSize,
-            autoLoad: (couponSetId) ? true : false,
-            extraParams: {
-                params: {
-                    couponsetid: this.getCouponSetId()
-                }
-            }
+            autoLoad: false
         });
+        
+        
+
+
+        //me.store = Taco.core.data.StoreManager.getOrCreate({
+        //    type: 'Taco.store.Discounts',
+        //    createOnly: true,
+        //    pageSize: this.pageSize,
+        //    autoLoad: (couponSetId) ? true : false,
+        //    extraParams: {
+        //        params: {
+        //            couponsetid: this.getCouponSetId()
+        //        }
+        //    }
+        //});
 
         me.initQuickAddBar();
 
         this.callParent(arguments);
 
         me.addDocked(me.quickAddBar, 0);
+
+
+        if (couponSetId) {
+            this.store.proxy.extraParams = this.store.proxy.extraParams || {};
+            this.store.proxy.extraParams.couponsetid = couponSetId;
+            this.store.load();
+        }
+
     },
 
 
@@ -213,4 +238,26 @@ Ext.define('Taco.view.couponCode.DiscountGrid', {
 
         return actions;
     }
+
+    //,
+    //getColumnConfig: function () {
+    //    var me = this,
+    //        columns = [
+    //            {
+    //                //xtype: 'gridcolumn',
+    //                dataIndex: 'name',
+    //                stateId: 'name',
+    //                text: 'Name',
+    //                hideable: false,
+    //                flex: 1,
+    //                minWidth: 150
+    //                //renderer: function (value, metaData, record, rowIndex, colIndex, store) {
+    //                //    return '<a href="#" class="taco-launch-editor">' + (value + '</a>');
+    //                //}
+    //            }
+    //        ];
+
+    //    return columns;
+    //}
+
 });
