@@ -81,28 +81,36 @@ Ext.define('Taco.view.couponCode.Grid', {
         
     },
 
-    
+    updateCouponSetCode: function () {
+        
+        var me = this,
+            couponSetCode = this.getCouponSetCode();
+
+        me.store.proxy.extraParams.couponSetCode = couponSetCode;
+    },
         
     initComponent: function () {
-        var me = this;
+        var me = this,
+            couponSetCode = this.getCouponSetCode();
 
         me.dockedItems = me.dockedItems || [];
         me.mixins = me.mixins|| [];
-
         
         this.store = Ext.create('Taco.store.CouponCodes', {
             pageSize:10,
-            autoLoad:true
+            autoLoad:(couponSetCode) ? true : false
         });
 
-        this.store.proxy.extraParams.couponSetCode = this.getCouponSetCode();
+        if (couponSetCode) {
+            
+        }
+        this.store.proxy.extraParams.couponSetCode = couponSetCode;
 
-        this.defaultRowEditingData = {
-            couponSetCode: this.getCouponSetCode()
-        };
+        //this.defaultRowEditingData = {
+        //    couponSetCode: this.getCouponSetCode()
+        //};
 
         this.columns = Ext.Array.clone(this.getColumnConfig());
-
 
         // this plugin will auto select the first record in the grid and manage reselection of the selected item after a store load
         if (this.enableAutoSelect !== false) {
@@ -139,7 +147,6 @@ Ext.define('Taco.view.couponCode.Grid', {
         me.callParent(arguments);
 
         this.mixins.gridcontextmenu.constructor.apply(this);
-
 
         me.addDocked(me.quickAddBar,0);
 

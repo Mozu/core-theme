@@ -60,6 +60,19 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
                 return List2(Mapper.Map<Discount>(singleDiscount));
             }
 
+
+            var couponSetId = extFilter.QueryString.Get("couponsetid");
+            if (!String.IsNullOrEmpty(couponSetId))
+            {
+                extFilter.Add(new FilterCollectionItem { comparison = "eq", field = "couponsetid", value = couponSetId });
+            }
+
+            var query = extFilter.QueryString.Get("query");
+            if (!String.IsNullOrEmpty(query))
+            {
+                extFilter.Add(new FilterCollectionItem { comparison = "eq", field = "all", value = query });
+            }
+
             string filter = null;
             if (extFilter != null && extFilter.Count > 0)
             {

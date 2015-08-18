@@ -71,6 +71,10 @@ Ext.define('Taco.view.couponSet.modal.CouponSetEditor', {
     },
 
     managePanelsOnCreate: function (closeAfterSave, saveText, isCouponCodePanelVisible) {
+        var couponSetCode = (this.record) ? this.record.get("couponSetCode") : null,
+            couponSetId = (this.record) ? this.record.get("id") : null;
+
+
         if (this.createType === 'Manual') {
             this.closeOnSave = closeAfterSave;
             var primaryBtn = this.down('#primaryAction');
@@ -78,8 +82,16 @@ Ext.define('Taco.view.couponSet.modal.CouponSetEditor', {
                 primaryBtn.setText(saveText);
             }
             if (this.couponCodePanel) {
+                if (isCouponCodePanelVisible) {
+                    this.couponCodePanel.setCouponSetCode(couponSetCode);
+                }
+                
                 this.couponCodePanel.setVisible(isCouponCodePanelVisible);
             }
+                if (isCouponCodePanelVisible) {
+                    this.discountPanel.setCouponSetCode(couponSetCode);
+                    this.discountPanel.setCouponSetId(couponSetId);
+                }
         }
     },
 
@@ -186,7 +198,8 @@ Ext.define('Taco.view.couponSet.modal.CouponSetEditor', {
     // initialize the header and grid when the data load the first time
     initUi: function () {
         var me = this,
-            couponSetCode = me.record ? me.record.get('couponSetCode') : null;
+            couponSetCode = me.record ? me.record.get('couponSetCode') : null,
+            couponSetId = me.record ? me.record.get('id') : null;;
 
         me.generalPanel = Ext.create('Taco.view.couponSet.GeneralForm', {
             record: me.record,
@@ -194,9 +207,24 @@ Ext.define('Taco.view.couponSet.modal.CouponSetEditor', {
         });
 
         me.couponCodePanel = Ext.create('Taco.view.couponCode.Grid', {
-            autoHeight:true,
+            autoHeight: true,
+            autoHidePagingToolbar: true,
             couponSetCode: couponSetCode
         });
+
+        me.discountPanel = Ext.create('Taco.view.couponCode.DiscountGrid', {
+            margin: {
+                top: 20,
+                right: 0,
+                bottom: 0,
+                left: 0
+            },
+            autoHidePagingToolbar: true,
+            autoHeight: true,
+            couponSetCode: couponSetCode,
+            couponSetId: couponSetId
+        });
+
 
         var container = Ext.create("Ext.container.Container",{
             items :  [
