@@ -92,8 +92,6 @@ namespace Mozu.SiteBuilder.UX.Models.Settings
 
         public Dictionary<string, string> SupportedCards { get; set; }
 
-        public VisaCheckoutSettings VisaCheckout { get; set; }
-
         public List<ExternalPaymentWorkflowSettings> ExternalPaymentWorkflowSettings { get; set; }
     }
 
