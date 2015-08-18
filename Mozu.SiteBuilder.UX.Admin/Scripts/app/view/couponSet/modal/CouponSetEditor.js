@@ -203,7 +203,7 @@ Ext.define('Taco.view.couponSet.modal.CouponSetEditor', {
     initUi: function () {
         var me = this,
             couponSetCode = me.record ? me.record.get('couponSetCode') : null,
-            couponSetId = me.record ? me.record.get('id') : null;;
+            couponSetId = me.record ? me.record.get('id') : null;
 
         me.generalPanel = Ext.create('Taco.view.couponSet.GeneralForm', {
             record: me.record,
@@ -231,6 +231,7 @@ Ext.define('Taco.view.couponSet.modal.CouponSetEditor', {
 
 
         var container = Ext.create('Taco.core.ux.form.Form',{
+            autoScroll: true,
             items :  [
                 me.generalPanel
             ]
