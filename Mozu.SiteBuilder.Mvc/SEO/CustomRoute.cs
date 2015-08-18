@@ -85,6 +85,15 @@ namespace Mozu.SiteBuilder.Mvc.SEO
                 foreach (var parameterName in paramNames)
                 {
                     mapEntry.Key.Map(requestMessage, dict, parameterName);
+                    if ( mapEntry.Key.Settings != null && mapEntry.Key.Settings.mapTo != null)
+                    {
+                        object newVal;
+                        if ( values.TryGetValue( parameterName, out newVal))
+                        {
+                            values[mapEntry.Key.Settings.mapTo] = newVal;
+                        }
+                        
+                    }
                 }
                 return values;
             });
