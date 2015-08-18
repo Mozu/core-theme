@@ -20,7 +20,7 @@
         {
             "xtype": "panel",
             "title": "Extended Properties",
-            "collapsed":false,
+            "collapsed": false,
             "items": [
                 {
                     "xtype": "mz-input-checkbox",
@@ -92,8 +92,20 @@
         },
         {
             "xtype": "panel",
+            "title": "Suppress CVV During Checkout",
+            "collapsed": false,
+            "items": [
+                {
+                    "xtype": "mz-input-checkbox",
+                    "name": "isCvvSuppressed",
+                    "fieldLabel": "CVV Suppressed"
+                }
+            ]
+        },
+        {
+            "xtype": "panel",
             "title": "Anonymous Account Verification Options",
-            "collapsed":false,
+            "collapsed": false,
             "items": [
                 {
                     "xtype": "mz-input-checkbox",
