@@ -70,7 +70,8 @@ module.exports = (function() {
 
         if (!data.paymentOrCardType) errors.throwOnObject(obj, 'CARD_TYPE_MISSING');
         if (!data.cardNumberPartOrMask) errors.throwOnObject(obj, 'CARD_NUMBER_MISSING');
-        if (!data.cvv && !data.isCvvOptional) errors.throwOnObject(obj, 'CVV_MISSING');
+        // SDK shouldn't check for CVV anymore because we now check for it in the theme.
+        //if (!data.cvv && !data.isCvvOptional) errors.throwOnObject(obj, 'CVV_MISSING');
 
         maskedData = transform.toCardData(data);
         cardNumber = maskedData.cardNumber.replace(charsInCardNumberRE, '');
