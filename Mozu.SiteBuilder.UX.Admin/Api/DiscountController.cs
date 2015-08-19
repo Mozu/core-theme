@@ -15,6 +15,7 @@ using Mozu.SiteBuilder.UX.Admin.Helpers.DiscountHelpers;
 using DC = Mozu.ProductAdmin.Contracts;
 using Mozu.Core.Api.Contracts.Client;
 using System.Net.Http;
+using Mozu.Core.Extensions;
 using Mozu.SiteBuilder.UX.Admin.Helpers;
 using Mozu.SiteBuilder.Mvc.Extensions;
 using Mozu.Tenant.Contracts.Clients;
@@ -33,18 +34,19 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
         private IApiContext _ctx;
         private readonly ITenantsWebApiClient _tenantClient;
         private readonly ICheckoutSettingsWebApiClient _checkoutSettingsClient;
+        private readonly ICouponSetWebApiClient _couponSetClient;
 
         /// <summary>
         /// Public constructor.
         /// </summary>
-        public DiscountController(IDiscountWebApiClient discountWebClient, IDiscountSortFormatter discountSortFormatter, IApiContext ctx, ITenantsWebApiClient tenantClient, ICheckoutSettingsWebApiClient checkoutSettingsClient)
+        public DiscountController(IDiscountWebApiClient discountWebClient, IDiscountSortFormatter discountSortFormatter, IApiContext ctx, ITenantsWebApiClient tenantClient, ICheckoutSettingsWebApiClient checkoutSettingsClient, ICouponSetWebApiClient couponSetClient)
         {
             _discountWebClient = discountWebClient;
             _discountSortFormatter = discountSortFormatter;
             _ctx = ctx;
             _tenantClient = tenantClient;
             _checkoutSettingsClient = checkoutSettingsClient;
-
+            _couponSetClient = couponSetClient;
         }
 
         /// <summary>
@@ -56,8 +58,10 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
             if (pagingParams.id != null)
             {
                 var singleDiscount = (await _discountWebClient.GetDiscount(pagingParams.NumericId)).ReadAsSync();
-
-                return List2(Mapper.Map<Discount>(singleDiscount));
+                var couponSets = (await _couponSetClient.GetCouponSets(filter: string.Format("assigneddiscountid eq {0}", pagingParams.NumericId))).ReadAsSync();
+                var singleModel = Mapper.Map<Discount>(singleDiscount);
+                singleModel.CouponSets = Mapper.Map<List<CouponSet>>(couponSets.Items);
+                return List2(singleModel);
             }
 
 
@@ -83,7 +87,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
 
                 filter = extFilter.ToFilterString(_ctx, masterNumberFormat, _tenantClient);
             }
-            
+
 
             string sortBy = pagingParams.ToSort(_discountSortFormatter);
 
@@ -129,7 +133,14 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
                 try
                 {
                     var response = (await _discountWebClient.CreateDiscount(dc)).ReadAsSync();
-                    responseList.Add(Mapper.Map<Discount>(response));
+                    var model = Mapper.Map<Discount>(response);
+                    if (!discount.CouponSets.IsNullOrEmpty())
+                    {
+                        discount.Id = model.Id;
+                        var addedCouponSets = await AssignCouponSetsToDiscount(discount, new DC.CouponSetCollection {Items = new List<DC.CouponSet>()});
+                        model.CouponSets = addedCouponSets;
+                    }
+                    responseList.Add(model);
                 }
                 catch (ApiWebClientConnectionException e)
                 {
@@ -150,12 +161,65 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
 
             foreach (var discount in discountList)
             {
+                var currentCouponSets = (await _couponSetClient.GetCouponSets(filter: string.Format("assigneddiscountid eq {0}", discount.Id))).ReadAsSync();
+                //merge
+                if (!discount.CouponSets.IsNullOrEmpty() && currentCouponSets.TotalCount > 0)
+                {
+                    await UnassignCouponSetsFromDiscount(currentCouponSets, discount);
+                    await AssignCouponSetsToDiscount(discount, currentCouponSets);
+                }
+
                 var dc = Mapper.Map<DC.Discount>(discount);
                 var res = (await _discountWebClient.UpdateDiscount(dc, discount.Id )).ReadAsSync();
-                retList.Add(Mapper.Map<Discount>(res));
+
+                var savedCouponSets = (await _couponSetClient.GetCouponSets(filter: string.Format("assigneddiscountid eq {0}", discount.Id))).ReadAsSync();
+                var model = Mapper.Map<Discount>(res);
+                model.CouponSets = Mapper.Map<List<CouponSet>>(savedCouponSets.Items);
+                retList.Add(model);
             }
 
             return List2(retList);
+        }
+
+        private async Task UnassignCouponSetsFromDiscount(DC.CouponSetCollection currentCouponSets, Discount discount)
+        {
+            var deleteList =
+                currentCouponSets.Items.Where(x => !discount.CouponSets.Select(cs => cs.Id).Contains(x.Id));
+
+            var deleteTasks =
+                deleteList.Select(
+                    x =>
+                        _couponSetClient.UnAssignDiscount(x.CouponSetCode,
+                            new DC.AssignedDiscount
+                            {
+                                CouponSetCode = x.CouponSetCode,
+                                CouponSetId = x.Id.GetValueOrDefault(),
+                                DiscountId = discount.Id.GetValueOrDefault()
+                            })).ToList();
+
+            await Task.WhenAll(deleteTasks);
+            deleteTasks.Select(TaskHelper.Result).ThrowExceptionsIfAny();
+        }
+
+        private async Task<List<CouponSet>> AssignCouponSetsToDiscount(Discount discount, DC.CouponSetCollection currentCouponSets)
+        {
+            var addList = discount.CouponSets.Where(x => !currentCouponSets.Items.Select(cs => cs.Id).Contains(x.Id)).ToList();
+
+            if (!addList.Any())
+                return new List<CouponSet>();
+            var addTasks =
+                addList.Select(
+                    x => _couponSetClient.AssignDiscount(x.CouponSetCode,
+                        new DC.AssignedDiscount
+                        {
+                            CouponSetCode = x.CouponSetCode,
+                            CouponSetId = x.Id.GetValueOrDefault(),
+                            DiscountId = discount.Id.GetValueOrDefault()
+                        })).ToList();
+
+            await Task.WhenAll(addTasks);
+            addTasks.Select(TaskHelper.Result).ThrowExceptionsIfAny();
+            return addList;
         }
 
         [HttpPostRoute(UriTemplate = "delete")]
@@ -176,7 +240,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
                 { SiteSettings.Order.Contracts.Constants.ThirdPartyPayment.PAYPAL_EXPRESS.ToUpper(), "PayPal Express"},
                 { SiteSettings.Order.Contracts.Constants.ThirdPartyPayment.VISA_CHECKOUT.ToUpper(), "Visa Checkout"}
             };
-            
+
             var paymentSettings = (await _checkoutSettingsClient.GetPaymentSettings()).ReadAsSync();
 
             var enabledPaymentWorkflows = paymentSettings.ExternalPaymentWorkflowDefinitions

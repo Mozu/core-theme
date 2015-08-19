@@ -116,10 +116,10 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.ModelMapping
                     opt => opt.ResolveUsing(x => (x.Target != null && x.Target.Categories != null)
                         ? (x.Target.Categories).Select(_ => _.Id).ToList()
                         : (Enumerable.Empty<DC.TargetedCategory>()).Select(_ => _.Id).ToList()))
-                
-                .ForMember(x => x.IsIncludedCategoriesAllOperator, op => op.ResolveUsing(dc => (dc.Target != null 
-                                && dc.Target.IncludedCategoriesOperator == DC.DiscountTarget.TargetedCategoriesOperators.ALL)))
-            
+
+                .ForMember(x => x.IsIncludedCategoriesAllOperator, op => op.ResolveUsing(dc => (dc.Target != null
+                    && dc.Target.IncludedCategoriesOperator == DC.DiscountTarget.TargetedCategoriesOperators.ALL)))
+
                 .ForMember(x => x.Products, opt => opt.ResolveUsing(x => (x.Target != null && x.Target.Products != null)
                     ? (x.Target.Products).Select(_ => _.ProductCode).ToList()
                     : (Enumerable.Empty<DC.TargetedProduct>()).Select(_ => _.ProductCode).ToList()))
@@ -132,7 +132,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.ModelMapping
                         ? (x.Target.ExcludedProducts).Select(_ => _.ProductCode).ToList()
                         : (Enumerable.Empty<DC.TargetedProduct>()).Select(_ => _.ProductCode).ToList()))
 
-                        
+
 
                 .ForMember(x => x.ShippingMethods,
                     opt => opt.ResolveUsing(x => (x.Target != null && x.Target.ShippingMethods != null)
@@ -211,9 +211,9 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.ModelMapping
                 .ForMember(x => x.DoesNotApplyToSalePrice, op => op.ResolveUsing(dc => dc.DoesNotApplyToSalePrice))
                 .ForMember(x => x.DoesNotApplyToProductsWithSalePrice, op => op.ResolveUsing(dc => dc.DoesNotApplyToProductsWithSalePrice))
                 .ForMember(x => x.Name, op => op.ResolveUsing(dc => dc.Content != null ? dc.Content.Name : string.Empty))
-                .ForMember(x => x.FriendlyDescription, op => op.ResolveUsing(dc => dc.Content != null ? dc.Content.FriendlyDescription : string.Empty));
+                .ForMember(x => x.FriendlyDescription, op => op.ResolveUsing(dc => dc.Content != null ? dc.Content.FriendlyDescription : string.Empty))
+                .ForMember(x => x.CouponSets, op => op.Ignore());
             
-                
             // To data contract
             Mapper.CreateMap<Discount, DC.Discount>()
                 .ForMember(x => x.DoesNotApplyToSalePrice, opt => opt.ResolveUsing(x => x.DoesNotApplyToSalePrice))
