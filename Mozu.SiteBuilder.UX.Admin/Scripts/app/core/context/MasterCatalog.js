@@ -74,6 +74,11 @@
     isContentPublishingEnabled: function () {
         return this.contentPublishingEnabled;
     },
+
+    isLiveEditEnabled: function () {
+        return this.enableLiveEdit;
+    },
+
     updateContentPublishingMode: function (value) {
         this.publishingEnabled = value == 'Pending';
 
@@ -175,9 +180,10 @@
                 productPublishingMode: mode,
                 isLiveEditEnabled: isLiveEdit
             },
-            success: function () {
-                this.productPublishingMode = mode;
-                this.isLiveEditEnabled = isLiveEdit;
+            success: function (data) {
+                var result = Ext.JSON.decode(data.responseText);
+                this.productPublishingMode = result.items.productPublishingMode;
+                this.enableLiveEdit = result.items.enableLiveEdit;
             },
             failure: Taco.core.util.ExceptionWhiner.handleRemoteFailure,
             scope: this

@@ -97,7 +97,7 @@ Ext.define('Taco.view.settings.Publishing', {
 
             var subitems = [],
                 isLiveProduct = masterCatalog.productPublishingMode === 'Live',
-                isLiveEdit = masterCatalog.enableLiveEdit,
+                isLiveEdit = masterCatalog.isLiveEditEnabled(),
                 liveProductRadio,
                 stagedProductRadio,
                 liveEditProductCheckbox;
