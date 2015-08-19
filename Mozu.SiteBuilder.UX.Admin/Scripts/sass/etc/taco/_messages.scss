@@ -9,12 +9,14 @@
         &.#{$vprefix}growl {
             background-color: $growl-color-status-info;
             border-color: $growl-color-status-info;
+            border-radius: 10px;
             font-size: 20px;
             opacity: 1;
             transition-duration: .3s;
             transition-property: opacity;
             transition-timing-function: cubic-bezier(.65,.29,.93,.75);
             text-align: center;
+
 
             &.hidden {
                  opacity: 0;

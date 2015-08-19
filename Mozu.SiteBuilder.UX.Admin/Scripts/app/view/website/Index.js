@@ -279,13 +279,37 @@ Ext.define('Taco.view.website.Index', {
                                 var me = this,
                                     record = this.getPublishRecord();
 
-                                record.discardDraft(function() {
-                                    me.setPublishable(false);
-                                    me.showGrowl('Discarded', 'info', 2000);
-                                    me.down('#draftIcon').hide();
+                                Ext.create('Taco.core.ux.window.Modal', {
+                                    scale: 'small',
+                                    title: 'Discard Draft',
+                                    modal: true,
+                                    closeAction: 'destroy',
+                                    height: 200,
+                                    primaryText: 'Yes, Discard',
+                                    secondaryText: 'Cancel',
+                                    primaryHandler: function() {
+                                        
+                                        record.discardDraft(function() {
+                                            me.setPublishable(false);
+                                            me.showGrowl('Discarded', 'info', 2000);
+                                            me.down('#draftIcon').hide();
+                                        });
 
-                                    // to do: should we reload the page? ask ux
-                                });
+                                        this.save();
+                                    },
+                                    items: [{
+                                        xtype: 'container',
+                                        layout: { 
+                                            type: 'hbox' 
+                                        },
+                                        items: [
+                                            Ext.create('Ext.panel.Panel', {
+                                                width: '100%',
+                                                html: 'Are you sure you want to discard this Draft?'
+                                            })
+                                        ]
+                                    }]
+                                }).show();
 
                             }
                         }
@@ -814,7 +838,7 @@ Ext.define('Taco.view.website.Index', {
     },  
 
     updateDraftIcon: function(record) {
-
+    
         var me = this,
             generateTooltipKey = function (content) {
                 return '<span style="width:90px;font-weight: bold;float:left;">' + content + '</span>';
@@ -829,25 +853,31 @@ Ext.define('Taco.view.website.Index', {
 
             if (pubInfo.publishSetInfo) {
 
-                Taco.model.PublishSet.load(pubInfo.publishSetInfo.code, {
-                    success: function(record) {
-                        var date = record.get('publishDate') ? Ext.Date.format(record.get('publishDate'), 'F j, Y, g:i a T') : 'Unscheduled';
+                var callback =  function(record) {
+                    var date = record.get('publishDate') ? Ext.Date.format(record.get('publishDate'), 'M j, Y g:ia T') : 'Unscheduled';
+                    me.pubRecord = record;
+                    me.down('#draftIcon').show();
+                    me.down('#draftIcon').setTooltipContent(generateTooltipKey('Publish Set:') + generateTooltipValue('<span id="publishSetName">' + '</span>', null) + '<br>' + generateTooltipKey('Publish Date: ') + generateTooltipValue(date, null));            
+                };  
 
-                        me.pubRecord = record;
-
-                        me.down('#draftIcon').show();
-                        me.down('#draftIcon').setTooltipContent(generateTooltipKey('Publish Set:') + generateTooltipValue('<span id="publishSetName">' + '</span>', null) + '<br>' + generateTooltipKey('Publish Date: ') + generateTooltipValue(date, null));            
+                Ext.Ajax.request({
+                    url: '/admin/app/publishsets/getBy/' + pubInfo.publishSetInfo.code,
+                    method: 'GET',
+                    success: function (res, status) {
+                        var record = Ext.create('Taco.model.PublishSet', JSON.parse(res.responseText).items[0]);
+                        callback(record);
                     },
                     failure: function() {
                         Taco.app.fireEvent('setmessage', 'Error Retrieving Publish Set Information', 'error');
                     }
-                });
+                }, this);
+
             }
 
             else {
                 this.down('#draftIcon').show();
                 this.down('#draftIcon').setTooltipContent(generateTooltipKey('Publish Set: ') + generateTooltipValue('None') + '<br>' + generateTooltipKey('Publish Date: ') + generateTooltipValue('Unscheduled', null));            
-        }
+            }
 
         }
         
@@ -1077,6 +1107,7 @@ Ext.define('Taco.view.website.Index', {
 
     onPublish: function () {
         this.entitypeTypeHandler.publish();
+        this.updateDraftIcon();
     },
 
     onWidgetDrop: function (cfg) {
