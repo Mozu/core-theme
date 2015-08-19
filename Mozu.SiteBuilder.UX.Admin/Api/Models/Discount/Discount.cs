@@ -182,5 +182,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.Models.Discount
         public int? MinimumQuantityProductsRequiredInCategories { get; set; }
         public int? MinimumQuantityRequiredProducts { get; set; }
         public decimal? MinimumCategorySubtotalBeforeDiscounts { get; set; }
+
+        public List<CouponSet> CouponSets { get; set; } 
     }
 }
