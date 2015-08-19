@@ -93,7 +93,7 @@ namespace Mozu.SiteBuilder.Mvc.Helpers
                     }
                 case "paging":
                     {
-                        return MakePagingUrl(obj);
+                        return MakePagingUrl(obj, config);
                     }
                 case "sorting":
                     {
@@ -132,12 +132,19 @@ namespace Mozu.SiteBuilder.Mvc.Helpers
 
         }
 
-        private string MakePagingUrl(object obj)
+        private string MakePagingUrl(object productCollection, Dictionary<string, object> config)
         {
-            string val = obj as string;
+            
+            object obj;
+            if ( !config.TryGetValue("page", out obj))
+            {
+                throw new ArgumentException("missing page", "page");
+            }
+
+            string val = Convert.ToString(obj);
             int tmp;
             var searchContext = _pageContext.Search;
-           
+            
             
             int defaultPageSize = ((int?)(JToken)this._siteContext.ThemeSettings["defaultPageSize"]) ?? 20;
             int pageSize = searchContext.PageSize.HasValue ? searchContext.PageSize.Value : defaultPageSize;
