@@ -85,7 +85,7 @@ Ext.define('Taco.view.couponCode.DiscountGrid', {
 
         if (couponSetId) {
             this.store.proxy.extraParams = this.store.proxy.extraParams || {};
-            this.store.proxy.extraParams.couponsetid = couponSetId;-
+            this.store.proxy.extraParams.couponsetid = couponSetId;
             this.store.load();
         }
 
