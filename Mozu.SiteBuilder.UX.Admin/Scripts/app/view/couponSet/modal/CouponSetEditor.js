@@ -66,6 +66,7 @@ Ext.define('Taco.view.couponSet.modal.CouponSetEditor', {
 
         this.initUi();
         this.callParent(arguments);
+        
         if (this.isCreateMode) {
             this.managePanelsOnCreate(false, 'Save & Continue', false);  //has to be after parent call
         }
@@ -76,27 +77,27 @@ Ext.define('Taco.view.couponSet.modal.CouponSetEditor', {
             couponSetId = (this.record) ? this.record.get("id") : null;
 
 
+        this.closeOnSave = closeAfterSave;
+        var primaryBtn = this.down('#primaryAction');
+        if (primaryBtn) {
+            primaryBtn.setText(saveText);
+        }
+
         if (this.createType === 'Manual') {
-            this.closeOnSave = closeAfterSave;
-            var primaryBtn = this.down('#primaryAction');
-            if (primaryBtn) {
-                primaryBtn.setText(saveText);
-            }
             if (this.couponCodePanel) {
                 if (isCouponCodePanelVisible) {
                     this.couponCodePanel.setCouponSetCode(couponSetCode);
                 }
-                
                 this.couponCodePanel.setVisible(isCouponCodePanelVisible);
             }
+        }
 
-            if (this.discountPanel) {
-                if (isCouponCodePanelVisible) {
-                    this.discountPanel.setCouponSetCode(couponSetCode);
-                    this.discountPanel.setCouponSetId(couponSetId);
-                }
-                this.discountPanel.setVisible(isCouponCodePanelVisible);
+        if (this.discountPanel) {
+            if (isCouponCodePanelVisible) {
+                this.discountPanel.setCouponSetCode(couponSetCode);
+                this.discountPanel.setCouponSetId(couponSetId);
             }
+            this.discountPanel.setVisible(isCouponCodePanelVisible);
         }
     },
 
@@ -246,8 +247,9 @@ Ext.define('Taco.view.couponSet.modal.CouponSetEditor', {
             container.add(me.generatedCodePanel);
         } else {
             container.add(me.couponCodePanel);
-            container.add(me.discountPanel);
         }
+
+        container.add(me.discountPanel);
 
         me.items = [
             container
