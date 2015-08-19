@@ -118,6 +118,8 @@ Ext.define('Taco.view.publishing.modal.PublishSetPicker', {
             autoLoad: false,
             remoteFilter: false,
             remoteSort: false,
+            // gonna remove pagesize, when we create the paginated modal in 1.19
+            pageSize: 200,
             listeners: {
                 load: {
                     fn: function(store, records) {
