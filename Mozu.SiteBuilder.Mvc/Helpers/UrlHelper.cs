@@ -291,7 +291,7 @@ namespace Mozu.SiteBuilder.Mvc.Helpers
             }
             if (url == null)
             {
-                url = _resolver.ResolveMemberOrDefault<string>(obj, "imageUrl")();
+                url = _resolver.ResolveMemberOrDefault<string>(obj, "imageUrl");
             }
             //todo cmsid stuff..
 
