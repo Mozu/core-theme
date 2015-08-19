@@ -169,6 +169,23 @@ Ext.define('Taco.model.Discount', {
             name: 'couponCode',
             type: 'string'
         }, {
+            name: 'couponSets',
+            type: 'auto',
+            defaultValue:[],
+            defaultValue1:[{
+                assignedDiscountCount: 0,
+                canBeDeleted: true,
+                couponCodeCount: 72,
+                couponCodeType: "Manual",
+                couponSetCode: "FXN9",
+                id: 1,
+                maxRedemptionsPerCouponCode: 1,
+                maxRedemptionsPerUser: 1,
+                name: "chet jr",
+                redemptionCount: 0,
+                status: "Active"
+            }]
+        }, {
             name: 'amount',
             type: 'float'
         }, {
@@ -268,6 +285,32 @@ Ext.define('Taco.model.Discount', {
 
         }
         return me.customerSegmentStore;
+    },
+
+    getCouponSetStore: function () {
+        var me = this;
+        if (!me.couponSetStore) {
+            me.couponSetStore = Taco.core.data.StoreManager.getOrCreate(
+                {
+                    type: 'Taco.store.CouponSets',
+                    createOnly: true,
+                    id: "couponSet-" + this.id,
+                    autoLoad: true,
+                    clearFilters: false,
+                    remoteFilter: false,
+                    data: this.get("couponSets"),
+                    proxy: {
+                        type: 'memory',
+                        reader: {
+                            type: 'json',
+                            root: 'items'
+                        }
+                    }
+                });
+
+        }
+        return me.couponSetStore;
+
     },
 
     getDeletePromptMessage: function () {

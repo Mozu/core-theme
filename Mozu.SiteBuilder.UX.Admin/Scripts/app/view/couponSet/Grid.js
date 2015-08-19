@@ -18,9 +18,7 @@ Ext.define('Taco.view.couponSet.Grid', {
         'Taco.view.discount.Edit',
         'Taco.core.ux.FilterableDataView',
         'Taco.core.ux.TextFilter',
-        'Taco.core.ux.grid.MenuColumn',
-        'Taco.model.CouponSet',
-        'Taco.store.CouponSetGrid',
+        'Taco.core.ux.grid.MenuColumn',        
         'Taco.store.TargetedShippingMethods',
         'Taco.view.couponSet.AdvancedSearchForm',
         'Taco.view.couponSet.modal.CouponSetEditor',
@@ -62,6 +60,9 @@ Ext.define('Taco.view.couponSet.Grid', {
 
     showActionsColumn: true,
 
+    enableEditAction: true,
+    enableDeleteAction:true,
+
     hideSearchToolbar: false,
     
     title: "Coupon Sets",
@@ -97,13 +98,21 @@ Ext.define('Taco.view.couponSet.Grid', {
     statics: {
         
     },
+
         
     initComponent: function () {
         var me = this;
 
         me.createButtonCfg = me.getCreateButtonConfig();
-
+        
         this.columns = this.getColumnConfig();
+
+        if (this.showActionsColumn) {
+            var actionColumn = this.getActionColumn();
+            if (actionColumn) {
+                this.columns.push(actionColumn);
+            }
+        }
 
         // initialize the delete mixin
         this.mixins.deleteFromGrid.init.apply(this);
@@ -111,10 +120,186 @@ Ext.define('Taco.view.couponSet.Grid', {
         me.callParent(arguments);
     },
     
+    getColumnConfig: function () {
+        var me = this,
+            columns = [
+                {
+                    xtype: 'gridcolumn',
+                    dataIndex: 'name',
+                    stateId: 'name',
+                    text: 'Name',
+                    hideable: false,
+                    flex: 1,
+                    minWidth: 150,
+                    sortable: true
+                }, {
+                    xtype: 'gridcolumn',
+                    dataIndex: 'couponCodeType',
+                    stateId: 'couponCodeType',
+                    text: 'Type',
+                    width: 150,
+                    sortable: true
+                }, {
+                    xtype: 'gridcolumn',
+                    dataIndex: 'countOrSetSize',
+                    stateId: 'countOrSetSize',
+                    text: 'Total Codes',
+                    width: 180,
+                    hidden: false,
+                    sortable: false,
+                    renderer: Ext.util.Format.numberRenderer('0,000')
+                }, {
+                    xtype: 'gridcolumn',
+                    dataIndex: 'redemptionCount',
+                    stateId: 'redemptionCount',
+                    text: '# Redeemed',
+                    width: 180,
+                    hidden: false,
+                    sortable: false,
+                    renderer: Ext.util.Format.numberRenderer('0,000')
+                }, {
+                    xtype: 'gridcolumn',
+                    dataIndex: 'redemptionPercent',
+                    stateId: 'redemptionPercent',
+                    text: '% Redeemed',
+                    width: 180,
+                    hidden: false,
+                    sortable: false,
+                    renderer: Ext.util.Format.numberRenderer('0.00 %')
+
+                }, {
+                    xtype: 'gridcolumn',
+                    dataIndex: 'assignedDiscountCount',
+                    stateId: 'assignedDiscountCount',
+                    text: '# of Assigned Discounts',
+                    width: 180,
+                    hidden: false,
+                    sortable: false,
+                    renderer: Ext.util.Format.numberRenderer('0,000')
+                }, {
+                    xtype: 'gridcolumn',
+                    dataIndex: 'couponSetCode',
+                    stateId: 'couponSetCode',
+                    text: 'Code Prefix',
+                    width: 180,
+                    hidden: true,
+                    sortable: true
+                }, {
+                    xtype: 'datecolumn',
+                    dataIndex: 'startDate',
+                    stateId: 'startDate',
+                    format: 'n/j/Y g:i a',
+                    width: 130,
+                    text: 'Start Date',
+                    hidden: true,
+                    sortable: true
+                }, {
+                    xtype: 'datecolumn',
+                    dataIndex: 'endDate',
+                    stateId: 'endDate',
+                    format: 'm-d-Y g:i a',
+                    width: 130,
+                    text: 'End Date',
+                    hidden: true,
+                    sortable: true,
+                    renderer: function (value, metaData, record) {
+                        var val = "";
+                        if (!record.get("endDate")) {
+                            val = "Never";
+                            return val;
+                        }
+                        return Ext.Date.format(value, "n/j/Y g:i a");
+                    }
+                }
+            ];
+
+        return columns;
+    },
+
+    // list of actions to put in action column and context menu;
+    getActionItems: function () {
+        var me = this,
+            actions = [];
+
+        if (this.enableEditAction) {
+            actions.push({
+                text: 'Edit',
+                requiredBehaviors: {
+                    model: 'Taco.model.CouponSet',
+                    behavior: 'update'
+                },
+                menuColumnHandler: me.doEdit,
+                scope:me
+            });
+        }
+
+
+        if (this.enableDeleteAction) {
+            actions.push({
+                text: 'Delete',
+                itemId: "deleteMenuItem",
+                // deleteMenuColumnHandler can be found in Taco.core.ux.mixins.DeleteFromGrid
+                menuColumnHandler: "deleteMenuColumnHandler",
+                requiredBehaviors: {
+                    model: 'Taco.model.CouponSet',
+                    behavior: 'delete'
+                },
+                scope: me
+            });
+        }
+
+        return actions;
+
+    },
+
+    onActionMenuShow: function (menu, eventData) {
+        var me = this;
+
+        // need to disable the delete menu option when discount has been used
+        var deleteMenuItem = menu.down("#deleteMenuItem");
+        if (deleteMenuItem) {
+            if (eventData.record.get('canBeDeleted')) {
+                deleteMenuItem.show();
+            } else {
+                deleteMenuItem.hide();
+            }
+        }
+    },
+
+    getActionColumn: function () {
+        var me = this,
+            actionColumn = null,
+            actions = this.getActionItems();
+
+        // as long as we have actions;
+        if (actions.length) {
+            actionColumn = {
+                xtype: 'taco.menucolumn',
+                text: 'Actions',
+                onMenuShow: me.onActionMenuShow,
+                menuItems: actions
+            }
+        }
+
+        return actionColumn;
+    },
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
     // override this method and adjust the columns if your need a grid with a subset of columns;
-    getColumnConfig: function () {
+    getColumnConfig2: function () {
         var me = this;
         return [
             {

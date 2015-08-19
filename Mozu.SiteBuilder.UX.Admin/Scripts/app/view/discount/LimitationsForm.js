@@ -5,11 +5,15 @@
  */
 Ext.define('Taco.view.discount.LimitationsForm', {
     requires: [
+        
         'Ext.data.UuidGenerator',
         'Ext.ux.form.field.BoxSelect',
         'Taco.core.ux.form.CurrencyField',
         'Taco.core.util.Validation',
-        'Taco.core.ux.TooltipLabel'
+        'Taco.core.ux.TooltipLabel',
+        'Taco.model.FilterField',
+        'Taco.view.discount.widget.CouponSetSelector',
+        'Taco.shared.view.field.CouponSetPickerField'
     ],
     extend: 'Taco.core.ux.form.Form',
     alias: 'widget.taco-discount-limitations',
@@ -108,31 +112,100 @@ Ext.define('Taco.view.discount.LimitationsForm', {
             ]
         });
 
-        this.requiresCouponInput = Ext.create('Ext.form.field.Checkbox', {
-            name: 'requiresCoupon',
-            boxLabel: 'Create coupon',
-            padding: {
-                top:10
-            },
-            labelAlign: 'right',
+        //this.requiresCouponInput = Ext.create('Ext.form.field.Checkbox', {
+        //    name: 'requiresCoupon',
+        //    boxLabel: 'Create coupon',
+        //    padding: {
+        //        top:10
+        //    },
+        //    labelAlign: 'right',
+        //    listeners: {
+        //        change: function (cb, newValue) {
+        //            me.couponCodeBox[newValue ? 'show' : 'hide']();
+        //            me.couponCodeInput.setDisabled(!newValue);
+        //            me.couponCodeInput.validate();
+        //            me.parentForm.getForm().checkValidity();
+        //        },
+        //        scope: this
+        //    }
+        //});
+
+
+        this.couponSetStore = this.record.getCouponSetStore();
+
+
+
+
+        this.noCouponCodeRadio = Ext.widget({
+            xtype: 'radio',
+            name: 'couponCodeType',
+            persistSelectedValueOnly: true,
+            fieldLabel:"Coupon Codes",
+            boxLabel: 'None',
+            inputValue: "none",
+            width: 300,
+            checked: Ext.isEmpty(this.record.get('couponCode')) && this.couponSetStore.count() == 0,
             listeners: {
-                change: function (cb, newValue) {
-                    me.couponCodeBox[newValue ? 'show' : 'hide']();
-                    me.couponCodeInput.setDisabled(!newValue);
-                    me.couponCodeInput.validate();
-                    me.parentForm.getForm().checkValidity();
+                afterchange: function (cmp, newValue, oldValue) {
+                    if (newValue) {
+                        this.onCouponChange(cmp.inputValue);
+                    }
                 },
                 scope: this
             }
         });
 
+        this.couponCodeRadio = Ext.widget({
+            xtype: 'radio',
+            name: 'couponCodeType',
+            persistSelectedValueOnly: true,
+            boxLabel: 'Coupon Code',
+            inputValue: "couponCode",
+            width: 300,
+            // default selection if the record is a create;
+            checked : !Ext.isEmpty(this.record.get('couponCode')),
+            //checked: ((this.record.phantom && !this.record.isDuplicate) || (!this.record.get('includeAllProducts') && this.record.get('products').length)),
+            listeners: {
+                afterchange: function (cmp, newValue, oldValue) {
+                    if (newValue) {
+                        this.onCouponChange(cmp.inputValue);
+                    }
+                },
+                scope: this
+            }
+        });
+
+        this.couponSetRadio = Ext.widget({
+            xtype: 'radio',
+            name: 'couponCodeType',
+            persistSelectedValueOnly: true,
+            boxLabel: 'Coupon Set',
+            inputValue: "couponSet",
+            width: 300,
+            checked: (this.couponSetStore.count()), 
+            listeners: {
+                afterchange: function (cmp, newValue, oldValue) {
+                    if (newValue) {
+                        this.onCouponChange(cmp.inputValue);
+                    }
+                },
+                scope: this
+            }
+        });
+
+
+
+
         this.couponCodeInput = Ext.create('Ext.form.field.Text', {
             name: 'couponCode',
             allowBlank: false,
+            emptyText:"Enter a coupon code",
             width: 520,
-            disabled: !(this.record.get('couponCode') || this.record.get('requiresCoupon')),
+            disabled: !(this.record.get('couponCode')),
             validator: Taco.core.util.Validation.validateQueryString
         });
+
+        
 
         this.couponCodeBox = Ext.create('Ext.form.FieldContainer', {
             layout: {
@@ -140,14 +213,15 @@ Ext.define('Taco.view.discount.LimitationsForm', {
                 align: 'top'
             },
             //fieldLabel:"Coupon Code",
-            hidden: !(this.record.get('couponCode') || this.record.get('requiresCoupon')),
+            //hidden: !(this.record.get('couponCode') || this.record.get('requiresCoupon')),
+            hidden: !(this.record.get('couponCode')),
             items: [
                 this.couponCodeInput,
                 {
                     xtype: 'button',
                     scale: 'medium',
                     ui: 'action',
-                    text: 'Random',
+                    text: 'Suggest',
                     margin: '0 0 0 10',
                     handler: function () {
                         var randomizer = Ext.data.IdGenerator.get('uuid'),
@@ -159,10 +233,39 @@ Ext.define('Taco.view.discount.LimitationsForm', {
                 }
             ]
         });
+
+        
+
+        var fieldRecord = Ext.create('Taco.model.FilterField', {
+            id: "productcode",
+            field: "ProductCode",
+            text: "Product code",
+            defaultValue: "",
+            dataType: "string",
+            supportedOperators: ["eq", "ne", "in"],
+            editorCfg: {
+                xtype: "taco-couponsetpickerfield",
+                
+                //tells the valueField that we need a multiSelectorGrid to display the selected value since the id we save isn't particularly useful information to users
+                isPickerField: true
+            },
+
+            allowBlank: true
+        });
+
+        this.couponSetBox = Ext.create('Taco.view.discount.widget.CouponSetSelector', {
+            store:this.couponSetStore,
+            fieldRecord: fieldRecord,
+            hidden: !this.couponSetStore.count()
+        });
+
+
+
         this.oneTimeUsePerShopper = Ext.create('Ext.form.field.Checkbox', {
             name: 'oneTimeUsePerShopper',
             boxLabel: 'Discount can be redeemed one time per shopper',
             checked: this.record.get('maximumUsesPerUser') === 1,
+            margin:"10 0 0 0",
             listeners: {
                 change: function (cb, newValue) {
                     this.record.set('maximumUsesPerUser', newValue ? 1 : null);
@@ -191,8 +294,12 @@ Ext.define('Taco.view.discount.LimitationsForm', {
             },
             this.redemptionContainer,            
             this.redemptionCountContainer,
-            this.requiresCouponInput,
+            //this.requiresCouponInput,
+            this.noCouponCodeRadio,
+            this.couponCodeRadio,
+            this.couponSetRadio,
             this.couponCodeBox,
+            this.couponSetBox,
             this.oneTimeUsePerShopper
         ];
 
@@ -269,6 +376,60 @@ Ext.define('Taco.view.discount.LimitationsForm', {
         
     },
 
+    onCouponChange: function (value) {
+        var me = this;
+
+        if (value) {
+            var showCouponCode = false,
+                showCouponSet = false;
+
+            switch (value) {
+                case "none":
+                    break;
+                case "couponCode":
+                    showCouponCode = true;
+                    break;
+                case "couponSet":
+                    showCouponSet = true;
+                    break;
+            }
+
+            
+
+            me.couponCodeInput.setDisabled(!showCouponCode);
+
+            me.couponCodeBox.setVisible(showCouponCode);
+            
+            me.couponCodeInput.validate();
+
+            this.couponSetBox.setVisible(showCouponSet);
+
+            me.parentForm.getForm().checkValidity();
+
+        }
+    },
+
+    beforeSave: function() {
+        var me = this,
+            couponSetData = [];
+
+        if (this.couponSetRadio.checked) {
+            this.couponSetStore.each(function (record) {
+                couponSetData.push(record.data);
+            });
+        }
+        
+        this.record.set("couponSets", couponSetData);
+
+        if (!this.couponCodeRadio.checked) {
+            me.couponCodeInput.setValue("");
+            this.record.set("couponCode", "");
+        }
+
+        this.callParent(arguments);
+    },
+
+    
     onDestroy: function () {
         var me = this;
 

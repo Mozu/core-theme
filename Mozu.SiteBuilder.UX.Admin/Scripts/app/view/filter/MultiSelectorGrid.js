@@ -2,16 +2,27 @@
  * @class Taco.view.discount.Grid
 */
 Ext.define('Taco.view.filter.MultiSelectorGrid', {
-    extend: 'Taco.core.ux.grid.Panel',
-    requires: [
+        extend: 'Taco.core.ux.grid.Panel',
+        requires: [
+            'Taco.core.ux.grid.MenuColumn'
+        ],
 
-    ],
+        mixins: {
+            gridcontextmenu: 'Taco.core.ux.mixins.GridContextMenu'
+        },
+
+    enableDeleteAction:true,
+    
+    showActionsColumn:true,
+    
 
     statics: {
         
     },
+    removeAction : "destroy",
         
-    EmptyText: "No Values To Display",
+    deferEmptyText: false,
+    emptyText: "No Values To Display",
 
     //autoHeight:true,
     //height:"300",
@@ -19,7 +30,19 @@ Ext.define('Taco.view.filter.MultiSelectorGrid', {
     initComponent: function () {
         var me = this;
 
+        this.viewConfig = this.viewConfig || {}
+        this.viewConfig.emptyText = this.emptyText;
+        this.viewConfig.deferEmptyText = this.deferEmptyText;
+
+
         this.columns = this.getColumnConfig();
+        
+        if (this.showActionsColumn) {
+            var actionColumn = this.getActionColumn();
+            if (actionColumn) {
+                this.columns.push(actionColumn);
+            }
+        }
         
         this.mon(me, "itemkeydown", function (view, record, item, index, e) {
             console.log(e.getKey());
@@ -36,8 +59,7 @@ Ext.define('Taco.view.filter.MultiSelectorGrid', {
                     break;
                 
                 case e.DELETE:
-                   
-                    record.destroy();
+                    this.removeRecord(record);
                     break;
             }
         });
@@ -54,14 +76,80 @@ Ext.define('Taco.view.filter.MultiSelectorGrid', {
 
 
         me.callParent(arguments);
+
+        this.mixins.gridcontextmenu.constructor.apply(this);
     },
     
+    // override this method and adjust the columns if your need a grid with a subset of columns;
+    //getColumnConfig2: function () {
+    //    var me = this,
+    //        columns = [
+    //            {
+    //             //   xtype: 'gridcolumn',
+    //                dataIndex: 'id',
+    //                text: 'Id',
+    //                renderer: function (value, record) {
+    //                    return value;
+    //                    //todo: add display format
+    //                    //return Taco.app.context.getCurrent().formatCurrency(value);
+    //                },
+    //                hideable: false,
+    //                flex: 1,
+    //                minWidth: 150
+    //            }
+    //        ];
+
+
+    //    columns.push( {
+    //        xtype: 'taco.menucolumn',
+    //        text: 'Actions',
+    //        onMenuShow: function(menu, eventData) {
+    //            //// need to disable the delete menu option when discount has been used
+    //            //var deleteMenuItem = menu.down("#deleteMenuItem");
+    //            //if (eventData.record.get('canBeDeleted')) {
+    //            //    deleteMenuItem.show();
+    //            //} else {
+    //            //    deleteMenuItem.hide();
+    //            //}
+    //        },
+    //        menuItems: [
+    //             {
+    //                text: 'Delete',
+    //                itemId: "deleteMenuItem",
+    //                accelerator: "DELETE",
+    //                width:250,
+    //                // deleteMenuColumnHandler can be found in Taco.core.ux.mixins.DeleteFromGrid
+    //                 //menuColumnHandler: "deleteMenuColumnHandler",
+    //                menuColumnHandler: function (item, eventData) {
+    //                    var record = eventData.record;
+    //                    record.destroy();
+                        
+    //                    //Ext.defer(function () {
+    //                    //    Taco.core.StateManager.attemptNavigate('discounts/edit/' + record.getId(), { complexMetaData: { record: record } });
+    //                    //}, 1, this);
+    //                },
+    //                //requiredBehaviors: {
+    //                //    model: 'Taco.model.Discount',
+    //                //    behavior: 'delete'
+    //                //},
+    //                scope: me
+    //            }
+    //        ]
+    //    });
+
+    //    return columns;
+    //},
+
+
+
+
+
     // override this method and adjust the columns if your need a grid with a subset of columns;
     getColumnConfig: function () {
         var me = this,
             columns = [
                 {
-                 //   xtype: 'gridcolumn',
+                    //   xtype: 'gridcolumn',
                     dataIndex: 'id',
                     text: 'Id',
                     renderer: function (value, record) {
@@ -75,44 +163,122 @@ Ext.define('Taco.view.filter.MultiSelectorGrid', {
                 }
             ];
 
-
-        columns.push( {
-            xtype: 'taco.menucolumn',
-            text: 'Actions',
-            onMenuShow: function(menu, eventData) {
-                //// need to disable the delete menu option when discount has been used
-                //var deleteMenuItem = menu.down("#deleteMenuItem");
-                //if (eventData.record.get('canBeDeleted')) {
-                //    deleteMenuItem.show();
-                //} else {
-                //    deleteMenuItem.hide();
-                //}
-            },
-            menuItems: [
-                 {
-                    text: 'Delete',
-                    itemId: "deleteMenuItem",
-                    accelerator: "DELETE",
-                    width:250,
-                    // deleteMenuColumnHandler can be found in Taco.core.ux.mixins.DeleteFromGrid
-                     //menuColumnHandler: "deleteMenuColumnHandler",
-                    menuColumnHandler: function (item, eventData) {
-                        var record = eventData.record;
-                        record.destroy();
-                        
-                        //Ext.defer(function () {
-                        //    Taco.core.StateManager.attemptNavigate('discounts/edit/' + record.getId(), { complexMetaData: { record: record } });
-                        //}, 1, this);
-                    },
-                    //requiredBehaviors: {
-                    //    model: 'Taco.model.Discount',
-                    //    behavior: 'delete'
-                    //},
-                    scope: me
-                }
-            ]
-        });
-
         return columns;
+    },
+
+    // list of actions to put in action column and context menu;
+    getActionItems: function () {
+        var me = this,
+            actions = [];
+
+        //if (this.enableEditAction) {
+        //    actions.push({
+        //        text: 'Edit',
+        //        requiredBehaviors: {
+        //            model: 'Taco.model.Discount',
+        //            behavior: 'update'
+        //        },
+        //        menuColumnHandler: function (item, eventData) {
+        //            var record = eventData.record;
+        //            Ext.defer(function () {
+        //                Taco.core.StateManager.attemptNavigate('discounts/edit/' + record.getId(), { complexMetaData: { record: record } });
+        //            }, 1, this);
+        //        }
+        //    });
+        //}
+
+        //if (this.enableDuplicateAction) {
+        //    actions.push({
+        //        text: 'Duplicate',
+        //        requiredBehaviors: {
+        //            model: 'Taco.model.Discount',
+        //            behavior: 'create'
+        //        },
+        //        menuColumnHandler: function (item, eventData) {
+        //            var record = eventData.record,
+        //                metaData = {
+        //                    id: record.getId()
+        //                };
+
+        //            Taco.app.StateManager.attemptNavigate('discounts/duplicate/' + record.getId(), metaData);
+        //        }
+        //    });
+        //}
+
+        if (this.enableDeleteAction) {
+            //actions.push({
+            //    text: 'Delete',
+            //    itemId: "deleteMenuItem",
+            //    // deleteMenuColumnHandler can be found in Taco.core.ux.mixins.DeleteFromGrid
+            //    menuColumnHandler: "deleteMenuColumnHandler",
+            //    requiredBehaviors: {
+            //        model: 'Taco.model.Discount',
+            //        behavior: 'delete'
+            //    },
+            //    scope: me
+            //});
+
+            actions.push({
+                text: 'Delete',
+                itemId: "deleteMenuItem",
+                accelerator: "DELETE",
+                width: 250,
+                menuColumnHandler: function(item, eventData) {
+                    var record = eventData.record;
+                    //eventData.grid.removeRecord(record);
+                    Ext.bind(eventData.grid.removeRecord, eventData.grid, [record])();
+                },
+                scope: me
+            });
+        }
+        return actions;
+    },
+
+    removeRecord: function (record) {
+        if (this.removeAction == "destroy") {
+            record.destroy();
+        } else {
+            this.store.remove([record]);
+            //record.destroy();
+        }
+        
+    },
+
+    onActionMenuShow: function (menu, eventData) {
+        var me = this;
+
+        // need to disable the delete menu option when discount has been used
+        //var deleteMenuItem = menu.down("#deleteMenuItem");
+        //if (deleteMenuItem) {
+        //    if (eventData.record.get('canBeDeleted')) {
+        //        deleteMenuItem.show();
+        //    } else {
+        //        deleteMenuItem.hide();
+        //    }
+        //}
+    },
+
+    getActionColumn: function () {
+        var me = this,
+            actionColumn = null,
+            actions = this.getActionItems();
+
+        // as long as we have actions;
+        if (actions.length) {
+            actionColumn = {
+                xtype: 'taco.menucolumn',
+                text: 'Actions',
+                onMenuShow: me.onActionMenuShow,
+                menuItems: actions
+            }
+        }
+
+        return actionColumn;
     }
+
+
+
+
+
+
 });

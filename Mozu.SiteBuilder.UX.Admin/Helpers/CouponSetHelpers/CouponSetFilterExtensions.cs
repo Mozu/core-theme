@@ -13,6 +13,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Helpers.CouponSetHelpers
     internal static class CouponSetFilterExtensions
     {
 
+        private const string DISCOUNT_ID_PROPERTY = "assigneddiscountid";
         private const string NAME_PROPERTY = "name";
         private const string COUPON_SET_CODE_PROPERTY = "couponsetcode";
         private const string COUPON_CODE_TYPE_PROPERTY = "couponcodetype";
@@ -120,6 +121,8 @@ namespace Mozu.SiteBuilder.UX.Admin.Helpers.CouponSetHelpers
         {
             switch (filter.property.ToLowerInvariant())
             {
+                case "discountid":
+                    return String.Format("{0} eq \"{1}\"", DISCOUNT_ID_PROPERTY, filter.escapedValue);
                 case "couponsetname":
                     return String.Format("{0} cont \"{1}\"", NAME_PROPERTY, filter.escapedValue);
                 case "couponcodetype":

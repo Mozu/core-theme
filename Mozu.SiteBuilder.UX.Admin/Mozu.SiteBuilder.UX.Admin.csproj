@@ -731,6 +731,7 @@
     <Content Include="Scripts\app\view\discount\GeneralForm.js" />
     <Content Include="Scripts\app\view\discount\Grid.js" />
     <Content Include="Scripts\app\view\discount\LimitationsForm.js" />
+    <Content Include="Scripts\app\view\discount\widget\CouponSetSelector.js" />
     <Content Include="Scripts\app\view\filter\FieldStore.js" />
     <Content Include="Scripts\app\view\filter\Edit.js" />
     <Content Include="Scripts\app\view\filter\EditCodeModal.js" />

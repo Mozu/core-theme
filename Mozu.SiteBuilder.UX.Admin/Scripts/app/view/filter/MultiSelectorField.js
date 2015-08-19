@@ -5,6 +5,7 @@ Ext.define('Taco.view.filter.MultiSelectorField', {
     extend: 'Ext.form.FieldContainer',
     alias: "widget.multiselectorfield",
     requires: [
+        'Taco.model.CouponSet',
         'Taco.view.filter.Schema',
         'Ext.form.field.Text',
         'Ext.form.field.TextArea',
@@ -19,17 +20,23 @@ Ext.define('Taco.view.filter.MultiSelectorField', {
     config: {
         maxSize: null,
         // force the field to replace the store values with a single record;
+        fields:[
+            "id"
+        ],
+        model: null,
+        store: null,
+        
+        autoHeightGrid:false,
         singleSelect: false,
         dataType: "string",
         fieldCfg:null,
         fieldLabel: "Values",
         allowBlank: false,
+        hideHeaders: true,
+        removeAction :"destroy", // or remove
+        // warning this can cause layout run errors when the grid has no data. this is not ready for use yet
+        autoHideGrid:true,
         value: null
-    },
-
-    layout: {
-        type:"vbox",
-        align:"stretch"
     },
 
     //isFormField:true,
@@ -40,26 +47,44 @@ Ext.define('Taco.view.filter.MultiSelectorField', {
         var me = this,
             storeData = [];
         
-        if (this.value) {
-            // make sure the data is in an array
-            if (!Ext.isArray(this.value)) {
-                this.value = [this.value];
+        
+            this.layout = {
+                type:"vbox",
+                align:"stretch"
+            }
+        
+
+
+        if (this.store) {
+
+        } else {
+            if (this.value) {
+                // make sure the data is in an array
+                if (!Ext.isArray(this.value)) {
+                    this.value = [this.value];
+                }
+
+                // need to transform the data into a format the store can consume and make the dataTypes consistant so that the id's will be the same type.
+                storeData = Ext.Array.map(this.value, function (obj) {
+                    //return { id: obj.toString() };
+                    return { id: me.coerceDataType(obj) };
+                });
             }
 
-            // need to transform the data into a format the store can consume and make the dataTypes consistant so that the id's will be the same type.
-            storeData = Ext.Array.map(this.value, function (obj) {
-                //return { id: obj.toString() };
-                return { id: me.coerceDataType(obj) };
-            });
+            var storeConfig = {
+                data: storeData
+            };
+
+            if (this.getModel()) {
+                storeConfig.model = this.getModel();
+            } else {
+                storeConfig.fields = this.getFields();
+            }
+
+            this.store = Ext.create('Ext.data.Store', storeConfig);
         }
+
         
-        
-        this.store = Ext.create('Ext.data.Store', {
-            fields: [
-                "id"
-            ],
-            data:storeData
-        });
 
         var fieldCfg = Ext.apply(this.getFieldCfg(), {
             //emptyText:"Add a value (Enter Key)",
@@ -73,8 +98,10 @@ Ext.define('Taco.view.filter.MultiSelectorField', {
         
         if (!fieldCfg.isPickerField && fieldCfg.xtype != "combo") {
             fieldCfg = Ext.applyIf(fieldCfg, {
-                emptyText:"Add a value and then hit ENTER Key"
+                emptyText: "Add a value and then hit ENTER Key"
             });
+        } else {
+            fieldCfg.emptyText = this.emptyText || "";
         }
 
 
@@ -83,7 +110,7 @@ Ext.define('Taco.view.filter.MultiSelectorField', {
         if (fieldCfg.isPickerField || fieldCfg.xtype=="combo") {
             this.mon(this.addField, 'select', function(field, records) {
                 var id = records[0].getId();
-                me.addValue(id);
+                me.addValue(id, records[0]);
             }, me);
         } else {
             // dont' listen for enter on the picker field since the enter key in the picker field is already handled internally;
@@ -99,8 +126,10 @@ Ext.define('Taco.view.filter.MultiSelectorField', {
         this.mon(this.store, 'bulkremove', function (store) {
             
             if (store.count() == 0) {
-                this.list.hide();
-                this.addField.focus();
+                if (me.getAutoHideGrid()) {
+                    me.list.hide();
+                };
+                me.addField.focus();
             }
         }, me);
 
@@ -111,11 +140,28 @@ Ext.define('Taco.view.filter.MultiSelectorField', {
 
         
 
-        this.list = Ext.create('Taco.view.filter.MultiSelectorGrid', {
-            hideHeaders:true,
+
+        var gridConfig = {
+            hideHeaders:this.getHideHeaders(),
             store: this.store,
-            hidden: storeData.length == 0
-        });
+            getColumnConfig: me.getColumnConfig,
+            removeAction : this.getRemoveAction(),
+            hidden: (this.autoHideGrid && this.store.count() == 0)
+        }
+
+        if (this.getAutoHeightGrid()) {
+            gridConfig.autoHeight = true;
+            gridConfig.minHeight = 90;
+            //gridConfig.height = 200;
+            //gridConfig.width = 500;
+            //gridConfig.height = 500;
+            //this.width = 500;
+            //this.height = 500;
+            //this.autoHeight = true;
+            //this.minHeight = 200;
+        }
+
+        this.list = Ext.create('Taco.view.filter.MultiSelectorGrid', gridConfig);
 
 
 
@@ -164,13 +210,34 @@ Ext.define('Taco.view.filter.MultiSelectorField', {
 
     },
 
-    addValue: function(value) {
+    getColumnConfig: function () {
+        var me = this,
+            columns = [
+                {
+                    //   xtype: 'gridcolumn',
+                    dataIndex: 'id',
+                    text: 'Id',
+                    renderer: function (value, record) {
+                        return value;
+                        //todo: add display format
+                        //return Taco.app.context.getCurrent().formatCurrency(value);
+                    },
+                    hideable: false,
+                    flex: 1,
+                    minWidth: 150
+                }
+            ];
+
+        return columns;
+    },
+
+    addValue: function(value,record) {
         var me = this,
             // need to make sure that id goes into the store with the right dataType so that it matches what's going to be persisted.
             id = me.coerceDataType(value || this.addField.getValue());
 
         if (!id) {
-            return
+            return;
         }
 
         
@@ -183,9 +250,18 @@ Ext.define('Taco.view.filter.MultiSelectorField', {
                 me.store.removeAll();
             } 
 
-            recordToSelect = me.store.insert(0, {
-                id: id
-            });
+            if (record) {
+                var json = record.data;
+                json.id = id;
+                
+                recordToSelect = me.store.insert(0, json);
+            } else {
+                recordToSelect = me.store.insert(0, {
+                    id: id
+                });
+            }
+
+            
         }
         me.list.getSelectionModel().select(recordToSelect);
         me.addField.reset();
