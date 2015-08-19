@@ -69,15 +69,6 @@ Ext.define('Taco.view.couponCode.DiscountGrid', {
         this.viewConfig = this.viewConfig || {}
         this.viewConfig.deferEmptyText = this.deferEmptyText;
         
-
-        //this.store = Ext.create('Taco.store.Discounts', {
-        //    pageSize: this.pageSize,
-        //    autoLoad: false
-        //});
-        
-        
-
-
         me.store = Taco.core.data.StoreManager.getOrCreate({
             type: 'Taco.store.Discounts',
             createOnly: true,

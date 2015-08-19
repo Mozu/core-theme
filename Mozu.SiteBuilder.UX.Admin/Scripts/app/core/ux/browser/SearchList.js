@@ -94,8 +94,9 @@ Ext.define('Taco.core.ux.browser.SearchList', {
             throw("store configuration is required.  Example store: { type: 'Taco.store.InventoryProducts' } ");
             return;
         } else {
-            me.store = Taco.core.data.StoreManager.getOrCreate(me.store);
-
+            if (!me.store.isStore) {
+                me.store = Taco.core.data.StoreManager.getOrCreate(me.store);
+            }
         }
         // initialize the delete mixin
         this.mixins.deleteFromGrid.init.apply(this);
