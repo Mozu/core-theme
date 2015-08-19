@@ -159,19 +159,22 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
         {
             var retList = new List<Discount>();
 
+
             foreach (var discount in discountList)
             {
+                bool discountHasCoupons = !discount.CouponSets.IsNullOrEmpty();
+                discount.RequiresCoupon = discountHasCoupons || !string.IsNullOrEmpty(discount.CouponCode);
+                var dc = Mapper.Map<DC.Discount>(discount);
+                var res = (await _discountWebClient.UpdateDiscount(dc, discount.Id)).ReadAsSync();
+
                 var currentCouponSets = (await _couponSetClient.GetCouponSets(filter: string.Format("assigneddiscountid eq {0}", discount.Id))).ReadAsSync();
                 //merge
-                if (!discount.CouponSets.IsNullOrEmpty() && currentCouponSets.TotalCount > 0)
+                if (discountHasCoupons || currentCouponSets.TotalCount > 0)
                 {
                     await UnassignCouponSetsFromDiscount(currentCouponSets, discount);
                     await AssignCouponSetsToDiscount(discount, currentCouponSets);
                 }
-
-                var dc = Mapper.Map<DC.Discount>(discount);
-                var res = (await _discountWebClient.UpdateDiscount(dc, discount.Id )).ReadAsSync();
-
+                
                 var savedCouponSets = (await _couponSetClient.GetCouponSets(filter: string.Format("assigneddiscountid eq {0}", discount.Id))).ReadAsSync();
                 var model = Mapper.Map<Discount>(res);
                 model.CouponSets = Mapper.Map<List<CouponSet>>(savedCouponSets.Items);
