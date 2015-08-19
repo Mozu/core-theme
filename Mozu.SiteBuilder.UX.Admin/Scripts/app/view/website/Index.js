@@ -817,7 +817,7 @@ Ext.define('Taco.view.website.Index', {
 
         var me = this,
             generateTooltipKey = function (content) {
-                return '<span style="wid:90px;font-weight: bold;float:left;">' + content + '</span>';
+                return '<span style="width:90px;font-weight: bold;float:left;">' + content + '</span>';
             },
             generateTooltipValue = function (content, additionalStyle) {
                 return '<span style="padding-left: 5px;float:left;"' + additionalStyle + '">' + content + '</span>';
@@ -846,8 +846,8 @@ Ext.define('Taco.view.website.Index', {
 
             else {
                 this.down('#draftIcon').show();
-                this.down('#draftIcon').setTooltipContent(generateTooltipKey('Publish Set: ') + generateTooltipValue('Unassigned') + '<br>' + generateTooltipKey('Publish Date: ') + generateTooltipValue('Unscheduled', null));            
-            }
+                this.down('#draftIcon').setTooltipContent(generateTooltipKey('Publish Set: ') + generateTooltipValue('None') + '<br>' + generateTooltipKey('Publish Date: ') + generateTooltipValue('Unscheduled', null));            
+        }
 
         }
         

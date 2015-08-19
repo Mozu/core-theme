@@ -94,6 +94,7 @@ Ext.define('Taco.core.ux.content.IndicatorContainer', {
             },
             handler: onTooltipClick,
             itemId: 'titleTooltipBtn',
+            cls: 'taco-tooltip-button',
             tooltip: {
                 text: me.tooltipExplanation,
                 cls: Taco.baseCSSPrefix + 'tooltip'
