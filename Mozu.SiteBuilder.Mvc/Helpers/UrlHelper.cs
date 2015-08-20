@@ -22,14 +22,14 @@ namespace Mozu.SiteBuilder.Mvc.Helpers
 {
     public class UrlHelper
     {
-        private readonly SiteContext _siteContext;
-        private readonly PageContext _pageContext;
+        private readonly ISiteContext _siteContext;
+        private readonly IPageContext _pageContext;
         private readonly ICustomRouteHandler _customRouteHandler;
         private readonly HttpRequestMessage _httpRequestMessage;
         private readonly Lazy<ICategoryTreeProvider> _categoryTreeProvider;
 
-        public UrlHelper(SiteContext siteContext ,
-            PageContext pageContext, 
+        public UrlHelper(ISiteContext siteContext ,
+            IPageContext pageContext, 
             ICustomRouteHandler customRouteHandler, 
             HttpRequestMessage httpRequestMessage,
             Lazy<ICategoryTreeProvider> categoryTreeProvider)
@@ -135,7 +135,7 @@ namespace Mozu.SiteBuilder.Mvc.Helpers
             {
                 return "#";
             }
-            if (str[0] != '/' || str.IndexOf("http", StringComparison.OrdinalIgnoreCase) != 0)
+            if (str[0] != '/' && str.IndexOf("http", StringComparison.OrdinalIgnoreCase) != 0)
             {
                 str = '/' + str;
             }
@@ -173,9 +173,9 @@ namespace Mozu.SiteBuilder.Mvc.Helpers
             
             
             int defaultPageSize = ((int?)(JToken)this._siteContext.ThemeSettings["defaultPageSize"]) ?? 20;
-            int pageSize = searchContext.PageSize.HasValue ? searchContext.PageSize.Value : defaultPageSize;
-            
-            int currentStartIndex = searchContext.StartIndex.HasValue ? searchContext.StartIndex.Value : 0;
+            int pageSize = _resolver.ResolveMemberOrDefault<int>(productCollection, "PageSize", defaultPageSize);
+
+            int currentStartIndex = _resolver.ResolveMemberOrDefault<int>(productCollection, "StartIndex", 0);
 
             var overrides = new SearchContextOverrides();
             
@@ -327,7 +327,7 @@ namespace Mozu.SiteBuilder.Mvc.Helpers
             }
             var sb = new StringBuilder(url);
             //cdnify
-            if (url.Length > 2 && url[0] == '/' && url[0] != '/')
+            if (url.Length > 2 && url[0] == '/' && url[1] != '/')
             {
                 sb.Insert(0,_siteContext.CdnPrefix);
               //  url = _siteContext.CdnPrefix + url;
@@ -351,7 +351,7 @@ namespace Mozu.SiteBuilder.Mvc.Helpers
                 sb.Append(kvp.Key).Append("=").Append(HttpUtility.UrlEncode(kvp.Value.ToString())).Append("&");
             }
 
-            sb.Append("_mzCb=").Append(_siteContext.GeneralSettings.CdnCacheBustKey);
+            sb.Append("_mzcb=").Append(_siteContext.GeneralSettings.CdnCacheBustKey);
             return sb.ToString();
         }
         public string MakeFacetUrl(object obj)

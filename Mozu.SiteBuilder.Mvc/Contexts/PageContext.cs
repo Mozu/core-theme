@@ -118,8 +118,55 @@ namespace Mozu.SiteBuilder.Mvc.Contexts
 
         
     }
-   
-    public class PageContext : IEditableContext
+
+    public interface IPageContext
+    {
+        NameValueCollection Query { get; }
+        HttpCookieCollection Cookies { get; }
+        string ThemeId { get; }
+        bool IsDebugMode { get; }
+        SortingParameters Sorting { get; set; }
+        string CdnCacheBustKey { get; }
+        PagingParameters Pagination { get; set; }
+        bool HandledByProxy { get; set; }
+        bool IsSecure { get; set; }
+        string PageType { get; set; }
+        string PageTypeId { get; set; }
+        List<KeyValuePair<string, string>> ShippingCountries { get; set; }
+        List<KeyValuePair<string, string>> BillingCountries { get; set; }
+        bool IsCrawler { get; }
+        bool IsMobile { get; }
+        bool IsTablet { get; }
+        bool IsDesktop { get; }
+        CmsPageContext CmsContext { get; set; }
+        SearchContext Search { get; set; }
+        Visit Visit { get; set; }
+        string Title { get; set; }
+        string MetaDescription { get; set; }
+        string MetaTitle { get; set; }
+        string MetaKeywords { get; set; }
+        EditModes? EditMode { get; set; }
+        UX.Models.Customers.User User { get; set; }
+        UserProfile UserProfile { get; }
+        string ProductCode { get; set; }
+        string FeedUrl { get; set; }
+        string ListName { get; set; }
+        string ListViewName { get; set; }
+        string DocumentId { get; set; }
+        bool IsEditMode { get; set; }
+        string Url { get; set; }
+        DataViewModeType DataViewMode { get; set; }
+        string SecureHost { get; set; }
+        List<KeyValuePair<string, string>> BillingStates { get; set; }
+        List<KeyValuePair<string, string>> ShippingStates { get; set; }
+        string VisaCheckoutButtonUrl { get; set; }
+        JObject ReasonCollection { get; set; }
+        DateTime Now { get; set; }
+        string CategoryCode { get; set; }
+        int? CategoryId { get; set; }
+    }
+
+    public class PageContext : IEditableContext, IPageContext
     {
         private readonly ISiteBuilderApiContext _apiContext;
         private readonly IAuthenticationHelper _authenticationHelper;
@@ -148,6 +195,7 @@ namespace Mozu.SiteBuilder.Mvc.Contexts
             SecureHost = _settings.CoreSettings.IsSSLValidationEnabled ? CreateSecureUrl(Url) : CreateDefaultUrl(Url);
             DataViewMode = apiContext.DataViewMode;
         }
+        
 
         private static string CreateDefaultUrl(string url)
         {

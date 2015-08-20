@@ -43,7 +43,7 @@ namespace Mozu.SiteBuilder.Mvc.Configuration
             builder.RegisterType<UrlHelper>().InstancePerRequest();
 
 
-            builder.RegisterType<PageContext>().InstancePerRequest();
+            builder.RegisterType<PageContext>().As<IPageContext>().InstancePerRequest();
             builder.RegisterType<SiteContext>().As<ISiteContext>().InstancePerRequest();
             builder.RegisterType<SiteContext>().InstancePerRequest();
             builder.RegisterType<PageContext>().As<IEditableContext>().InstancePerRequest();
