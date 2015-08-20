@@ -98,7 +98,7 @@
                   "*thumb.png",
                   "*thumb.jpg",
                   "theme-ui.json",
-                  "!.orig",
+                  "!*.orig",
                   "!.inherited"
                 ],
                 "dest": "/"
