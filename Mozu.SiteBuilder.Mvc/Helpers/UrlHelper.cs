@@ -114,12 +114,38 @@ namespace Mozu.SiteBuilder.Mvc.Helpers
                         url = MakeProductUrl( obj);
                         break;
                     }
+                case "cdn":
+                    {
+                        url = MakeCdnUrl(obj);
+                        break;
+                    }
                 default:
                     {
                         throw new RenderingError(string.Format("unknonw type [{0}]", type), null);
                     }
             }
             return url;
+        }
+
+        private string MakeCdnUrl(object o)
+        {
+
+            var str = o as string;
+            if (string.IsNullOrEmpty(str))
+            {
+                return "#";
+            }
+            if (str[0] != '/' || str.IndexOf("http", StringComparison.OrdinalIgnoreCase) != 0)
+            {
+                str = '/' + str;
+            }
+
+            if ( str[0]=='/')
+            {
+                return this._siteContext.CdnPrefix + str;
+            }
+            return str;
+
         }
 
         private string MakeSortingUrl(object obj)
