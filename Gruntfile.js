@@ -1,10 +1,10 @@
-﻿module.exports = function(grunt) {
+module.exports = function(grunt) {
 
     var pkg = grunt.file.readJSON('./package.json');
     var semver = require('semver');
 
     grunt.initConfig({
-        mozuconfig: require('./mozu.config.json'),
+        mozuconfig: grunt.file.exists('./mozu.config.json') ? grunt.file.readJSON('./mozu.config.json') : {},
         pkg: pkg,
         bower: {
             install: {
@@ -98,7 +98,7 @@
                   "*thumb.png",
                   "*thumb.jpg",
                   "theme-ui.json",
-                  "!.orig",
+                  "!*.orig",
                   "!.inherited"
                 ],
                 "dest": "/"
@@ -121,7 +121,7 @@
         },
         "mozusync": {
           "options": {
-            "applicationKey": '<%= mozuconfig.workingApplicationKey %>',
+            "applicationKey": "<%= mozuconfig.workingApplicationKey %>",
             "context": "<%= mozuconfig %>",
             "watchAdapters": [
               {
@@ -184,16 +184,19 @@
     grunt.registerTask('default', [
       'jshint', 
       'bower',
-      'mozutheme:quickcompile',
-      'mozusync:upload'
+      'mozutheme:quickcompile'
     ]); // no bower necessary for now
 
 
     grunt.registerTask('setver', function() {
 
         var j = grunt.file.readJSON('./theme.json');
-        j.about.name = "Core8 " + semver.inc(pkg.version, grunt.option('increment') || 'prerelease');
+        var b = grunt.file.readJSON('./bower.json');
+        var newVersion = semver.inc(pkg.version, grunt.option('increment') || 'prerelease');
+        j.about.name = "Core8 " + newVersion;
+        b.version = newVersion;
         grunt.file.write('./theme.json', JSON.stringify(j, null, 4));
+        grunt.file.write('./bower.json', JSON.stringify(b, null, 4));
 
     });
 

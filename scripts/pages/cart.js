@@ -1,5 +1,4 @@
-﻿define(['modules/backbone-mozu', 'underscore', 'modules/jquery-mozu', 'modules/models-cart', 'modules/cart-monitor','modules/amazonPay', 'modules/preserve-element-through-render'], function (Backbone, _, $, CartModels, CartMonitor, AmazonPay, PreserveElements) {
-
+define(['modules/backbone-mozu', 'underscore', 'modules/jquery-mozu', 'modules/models-cart', 'modules/cart-monitor', 'hyprlivecontext', 'hyprlive', 'modules/preserve-element-through-render','modules/amazonPay'], function (Backbone, _, $, CartModels, CartMonitor, HyprLiveContext, Hypr, preserveElement, AmazonPay) {
     var CartView = Backbone.MozuView.extend({
         templateName: "modules/cart/cart-table",
         initialize: function () {
@@ -18,6 +17,19 @@
             });
 
             AmazonPay.init(CartModels.Cart.fromCurrent().id);
+            // This url will differ between sandbox and production. It may be added to the site context,
+            // or it could come from a theme setting, ex: Hypr.getThemeSetting('visaCheckoutSdkUrl')
+            var sdkUrl = Hypr.getThemeSetting("visaCheckoutSdkUrl");
+
+            // The VisaCheckout SDK wants a global function to call when it's ready
+            // so we give it the same function we call when we're ready
+            window.onVisaCheckoutReady = initVisaCheckout;
+            require([sdkUrl], initVisaCheckout);
+        },
+        render: function() {
+            preserveElement(this, ['.v-button', '#AmazonPayButton'], function() {
+                Backbone.MozuView.prototype.render.call(this);
+            });
         },
         updateQuantity: _.debounce(function (e) {
             var $qField = $(e.currentTarget),
@@ -40,12 +52,6 @@
         empty: function() {
             this.model.apiDel().then(function() {
                 window.location.reload();
-            });
-        },
-        render: function () {
-            var args = arguments;
-            PreserveElements(this, ['#AmazonPayButton'], function() {
-                Backbone.MozuView.prototype.render.apply(this, args);
             });
         },
         proceedToCheckout: function () {
@@ -80,8 +86,69 @@
         }
     });
 
-    $(document).ready(function() {
+    /* begin visa checkout */
+    function initVisaCheckout (model, total) {
+        var delay = 500;
+        var visaCheckoutSettings = HyprLiveContext.locals.siteContext.checkoutSettings.visaCheckout;
+        var apiKey = visaCheckoutSettings.apiKey || '0H1JJQFW9MUVTXPU5EFD13fucnCWg42uLzRQMIPHHNEuQLyYk';
+        var clientId = visaCheckoutSettings.clientId || 'mozu_test1';
 
+        // if this function is being called on init rather than after updating cart total
+        if (!model) {
+            model = CartModels.Cart.fromCurrent();
+            total = model.get('total');
+            delay = 0;
+
+            // on success, attach the encoded payment data to the window
+            // then turn the cart into an order and advance to checkout
+            V.on("payment.success", function(payment) {
+                // payment here is an object, not a string. we'll stringify it later
+                var $form = $('#cartform');
+                
+                _.each({
+
+                    digitalWalletData: JSON.stringify(payment),
+                    digitalWalletType: "VisaCheckout"
+
+                }, function(value, key) {
+                    
+                    $form.append($('<input />', {
+                        type: 'hidden',
+                        name: key,
+                        value: value
+                    }));
+
+                });
+
+                $form.submit();
+
+            });
+
+            // for debugging purposes only. don't use this in production
+            V.on("payment.cancel", function(payment) {
+                console.log({ cancel: JSON.stringify(payment) });
+            });
+
+            // for debugging purposes only. don't use this in production
+            V.on("payment.error", function(payment, error) {
+                console.warn({ error: JSON.stringify(error) });
+            });
+        }
+
+        // delay V.init() while we wait for MozuView to re-render
+        // we could probably listen for a "render" event instead
+        _.delay(V.init, delay, {
+            apikey: apiKey,
+            clientId: clientId,
+            paymentRequest: {
+                currencyCode: model ? model.get('currencyCode') : 'USD',
+                total: "" + total
+            }
+        });
+    }
+    /* end visa checkout */
+
+    $(document).ready(function() {
         var cartModel = CartModels.Cart.fromCurrent(),
             cartViews = {
 
@@ -105,6 +172,7 @@
         window.cartView = cartViews;
 
         CartMonitor.setCount(cartModel.count());
+
 
         if (AmazonPay.isEnabled && cartModel.count() > 0)
             AmazonPay.addCheckoutButton(cartModel.id, true);

@@ -1,4 +1,4 @@
-﻿<h3 class="mz-formstep-header">
+<h3 class="mz-formstep-header">
     {{ labels.paymentInformation }}
     <a href="javascript:;" class="mz-formstep-edit" data-mz-action="edit">{{ labels.change }}</a>
     {% if viewData.awsCheckout and model.stepStatus == "incomplete" %}
@@ -43,6 +43,10 @@
                 <dd>
                     <div class="mz-addresssummary">
                         {% include "modules/common/address-summary" with model=payment.billingInfo.billingContact %}
+                        {% if payment.paymentWorkflow === "VisaCheckout" %}
+                            <span><img alt="This Payment Using Visa Checkout"
+                        src="{{pageContext.visaCheckoutButtonUrl}}?size=154&amp;color=neutral&amp;cardBrands={{ payment.card.paymentOrCardType }}"/></span>
+                        {% endif %}
                     </div>
                 </dd>
             </dl>
@@ -65,10 +69,10 @@
         </div>
         {% endif %}
         {% if payment.paymentWorkflow  != "Mozu"%}
-            {% if payment.paymentType == "PayByAmazon" and model.nonStoreCreditTotal == 0%}
+            {% if payment.paymentType == "PayWithAmazon" and model.nonStoreCreditTotal == 0%}
             <h4 class="mz-checkout-nopaymentrequired">{{ labels.noPaymentRequired|string_format(model.remainingTotal|currency) }}</h4> 
             {% endif %}
-            {% if payment.paymentType == "PayByAmazon" and model.nonStoreCreditTotal > 0%}
+            {% if payment.paymentType == "PayWithAmazon" and model.nonStoreCreditTotal > 0%}
                 {% include "modules/checkout/payment-paybyamazon" with model=payment.billingInfo.billingContact%}  
             {%endif%}
             {% include "modules/checkout/checkout-digital-credit" %}
@@ -93,30 +97,35 @@
             {% if model.hasSavedCardPayment %}
           
                 {% if editing.savedCard %}
-                    <div class="mz-l-stack-section mz-checkout-current-payment mz-checkout-saved-card-editing">
-                        <h4 class="mz-l-stack-sectiontitle">{{ labels.paymentMethods }}</h4>
-                        
-                        {% include "modules/checkout/payment-selector" %}
-                    </div>
+                <div class="mz-l-stack-section mz-checkout-current-payment mz-checkout-saved-card-editing">
+                    <h4 class="mz-l-stack-sectiontitle">{{ labels.paymentMethods }}</h4>
+                    {% include "modules/checkout/payment-selector" %}
+                </div>
                 {% else %}
-                    <div class="mz-l-stack-section mz-checkout-current-payment mz-checkout-saved-card">
-                        <h4 class="mz-l-stack-sectiontitle">{{ labels.paymentMethod }}</h4>
-                        <a class="mz-checkout-payment-change" href="javascript:;" data-mz-action="beginEditingCard">{{ labels.change }}</a>
-                        <p><strong>{{ model.amountRequested|default(model.nonStoreCreditTotal)|currency }}</strong> &mdash; <strong>{{ model.card.paymentOrCardType }}</strong> {{ model.card.cardNumberPartOrMask }}</p>
-                        <p>{{ labels.expires }} {{ model.card.expireMonth }}/{{ model.card.expireYear }}</p>
-                        <div class="mz-l-formfieldgroup">
-                          <div class="mz-l-formfieldgroup-row mz-payment-credit-card-securitycode-row">
-                            <div class="mz-l-formfieldgroup-cell">
-                                <label for="mz-payment-security-code">{{ labels.securityCode }}<span class="is-required"> *</span>:</label>
-                            </div>
-                            <div class="mz-l-formfieldgroup-cell">
-                                <input type="tel" name="security-code" id="mz-payment-security-code" class="mz-l-formfieldgroup-halfsize" data-mz-value="card.cvv" value="{{ model.cvv }}" autocomplete="off">
-                                <span class="mz-validationmessage" data-mz-validationmessage-for="card.cvv"></span>
-                            </div>
-                          </div>
+                <div class="mz-l-stack-section mz-checkout-current-payment mz-checkout-saved-card">
+                    <h4 class="mz-l-stack-sectiontitle">{{ labels.paymentMethod }}</h4>
+                    {% if model.visaCheckoutFlowComplete %}
+                        <span><img alt="This Payment Using Visa Checkout"
+                    src="{{pageContext.visaCheckoutButtonUrl}}?size=154&amp;color=neutral&amp;cardBrands={{ payment.card.paymentOrCardType }}"/></span>
+                    {% endif %}
+                    <a class="mz-checkout-payment-change" href="javascript:;" data-mz-action="beginEditingCard">{{ labels.change }}</a>
+                    <p><strong>{{ model.amountRequested|default(model.nonStoreCreditTotal)|currency }}</strong> &mdash; <strong>{{ model.card.paymentOrCardType }}</strong> {{ model.card.cardNumberPartOrMask }}</p>
+                    <p>{{ labels.expires }} {{ model.card.expireMonth }}/{{ model.card.expireYear }}</p>
+                    {% if not themeSettings.isCvvSuppressed %}
+                    <div class="mz-l-formfieldgroup">
+                      <div class="mz-l-formfieldgroup-row mz-payment-credit-card-securitycode-row">
+                        <div class="mz-l-formfieldgroup-cell">
+                            <label for="mz-payment-security-code">{{ labels.securityCode }}<span class="is-required"> *</span>:</label>
                         </div>
+                        <div class="mz-l-formfieldgroup-cell">
+                            <input type="tel" name="security-code" id="mz-payment-security-code" class="mz-l-formfieldgroup-halfsize" data-mz-value="card.cvv" value="{{ model.cvv }}" autocomplete="off"/>
+                            <span class="mz-validationmessage" data-mz-validationmessage-for="card.cvv"></span>
+                        </div>
+                      </div>
                     </div>
-                {% endif %}
+                    {% endif %}
+                </div>
+            {% endif %}
 
                 {% if editing.savedBillingAddress %}
                     <div class="mz-l-stack-section mz-checkout-current-payment mz-checkout-saved-billingaddress-editing">

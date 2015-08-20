@@ -29,7 +29,7 @@
 
                 <td>
                     <b>{{ labels.billingInformation }}</b>:<br><br>
-                    {% if model.billingInfo.paymentType != "PayByAmazon"%}
+                    {% if model.billingInfo.paymentType != "PayWithAmazon"%}
                     {% include "modules/common/email-address-summary" with model=model.billingInfo.billingContact %}<br><br>
                     {%endif%}
                     {% if model.billingInfo.paymentType == "CreditCard" %}
@@ -39,8 +39,8 @@
                     {% if model.billingInfo.paymentType == "PaypalExpress" %}
                         <b>{{ labels.paymentMethod }}</b>: {{ labels.paypalExpress }}
                     {% endif %}
-                    {% if model.billingInfo.paymentType == "PayByAmazon" %}
-                        <b>{{ labels.paymentMethod }}</b>: {{ labels.payByAmazon }}
+                    {% if model.billingInfo.paymentType == "PayWithAmazon" %}
+                        <b>{{ labels.paymentMethod }}</b>: {{ labels.payWithAmazon }}
                     {%endif%}
                 </td>
             </tr>

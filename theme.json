@@ -6,7 +6,7 @@
         "isDesktop": true,
         "isMobile": false,
         "isTablet": false,
-        "name": "Core8 8.0.0-3"
+        "name": "Core8 8.0.0-4"
     },
     "editors": [
         {
@@ -338,6 +338,7 @@
         "backofficeDateTimeFormat": "m/d/Y H:i:s O",
         "extendedPropertiesEnabled": false,
         "extendedPropertyParameters": "",
+        "isCvvSuppressed": false,
         "zipCodeEnabled": true,
         "phoneNumberEnabled": true,
         "billingEmailEnabled": true,
@@ -644,7 +645,8 @@
         ],
         "useDebugScripts": false,
         "useSearchAutocomplete": true,
-        "allowCustomerInitiatedReturns": true
+        "allowCustomerInitiatedReturns": true,
+        "visaCheckoutSdkUrl": "https://sandbox-assets.secure.checkout.visa.com/checkout-widget/resources/js/integration/v1/sdk.js"
     },
     "widgets": [
         {

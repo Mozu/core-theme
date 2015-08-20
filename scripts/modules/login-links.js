@@ -179,21 +179,21 @@ define(['shim!vendor/bootstrap/js/popover[shim!vendor/bootstrap/js/tooltip[modul
             var billingPhoneNumber = "";
 
             switch (this.$parent.find('[data-mz-verify-with]').val()) {
-                case "Zip Code":
+                case "zipCode":
                     {
                         billingZipCode = this.$parent.find('[data-mz-verification]').val();
                         email = null;
                         billingPhoneNumber = null;
                         break;
                     }
-                case "Phone Number":
+                case "phoneNumber":
                     {
                         billingZipCode = null;
                         email = null;
                         billingPhoneNumber = this.$parent.find('[data-mz-verification]').val();
                         break;
                     }
-                case "Email Address":
+                case "email":
                     {
                         billingZipCode = null;
                         email = this.$parent.find('[data-mz-verification]').val();

@@ -1,4 +1,4 @@
-﻿define([
+define([
     "modules/jquery-mozu",
     "underscore",
     "hyprlive",
@@ -308,9 +308,21 @@
                 check: PaymentMethods.Check
             },
             helpers: ['acceptsMarketing', 'savedPaymentMethods', 'availableStoreCredits', 'applyingCredit', 'maxCreditAmountToApply',
-                'activeStoreCredits', 'nonStoreCreditTotal', 'activePayments', 'hasSavedCardPayment', 'availableDigitalCredits', 'digitalCreditPaymentTotal', 'isAnonymousShopper'],
+                'activeStoreCredits', 'nonStoreCreditTotal', 'activePayments', 'hasSavedCardPayment', 'availableDigitalCredits', 'digitalCreditPaymentTotal', 'isAnonymousShopper', 'visaCheckoutFlowComplete'],
             acceptsMarketing: function () {
                 return this.getOrder().get('acceptsMarketing');
+            },
+            visaCheckoutFlowComplete: function() {
+                return this.get('paymentWorkflow') === "VisaCheckout";
+            },
+            cancelVisaCheckout: function() {
+                var self = this;
+                var order = this.getOrder();
+                var currentPayment = order.apiModel.getCurrentPayment();
+                return order.apiVoidPayment(currentPayment.id).then(function() {
+                    self.clear();
+                    self.stepStatus("incomplete");
+                });
             },
             activePayments: function () {
                 return this.getOrder().apiModel.getActivePayments();
@@ -728,7 +740,9 @@
                 var me = this;
                 _.defer(function () {
                     me.getPaymentTypeFromCurrentPayment();
-                    me.setSavedPaymentMethod(me.get('savedPaymentMethodId') || me.get('card.paymentServiceCardId'));
+                    var savedCardId = me.get('card.paymentServiceCardId');
+                    me.set('savedPaymentMethodId', savedCardId, { silent: true });
+                    me.setSavedPaymentMethod(savedCardId);
                 });
                 var billingContact = this.get('billingContact');
                 this.on('change:paymentType', this.selectPaymentType);
@@ -832,6 +846,10 @@
 
                 var normalizedSavedPaymentInfo = normalizeBillingInfos(payment.billingInfo);
                 var normalizedLiveBillingInfo = normalizeBillingInfos(this.toJSON());
+
+                if (payment.paymentWorkflow === "VisaCheckout") {
+                    normalizedLiveBillingInfo.billingContact.address.addressType = normalizedSavedPaymentInfo.billingContact.address.addressType;
+                }
 
                 return !_.isEqual(normalizedSavedPaymentInfo, normalizedLiveBillingInfo);
             },
@@ -969,11 +987,21 @@
                         fulfillmentContact = fulfillmentInfo.get('fulfillmentContact'),
                         billingInfo = self.get('billingInfo'),
                         steps = [fulfillmentInfo, fulfillmentContact, billingInfo],
+                        paymentWorkflow = latestPayment && latestPayment.paymentWorkflow,
                         paypalCancelled = (latestPayment && latestPayment.paymentType === "PaypalExpress" && window.location.href.indexOf('PaypalExpress=canceled') !== -1),
                         allStepsComplete = function () {
                             return _.reduce(steps, function(m, i) { return m + i.stepStatus(); }, '') === "completecompletecomplete";
                         },
                         isReady = allStepsComplete() && !(paypalCancelled);
+                        
+                    if (paymentWorkflow) {
+                        billingInfo.set('paymentWorkflow', paymentWorkflow);
+                        billingInfo.get('card').set({
+                            isCvvOptional: true,
+                            paymentWorkflow: paymentWorkflow
+                        });
+                        billingInfo.trigger('stepstatuschange'); // trigger a rerender
+                    }
 
                     self.isReady(isReady);
 
@@ -1020,10 +1048,17 @@
 
             },
             processDigitalWallet: function (digitalWalletType, payment) {
-                this.apiProcessDigitalWallet({
+                var me = this;
+                return this.apiProcessDigitalWallet({
                     digitalWalletData: JSON.stringify(payment)
-                }).then(function () {
-                    console.log('called the api method', arguments);
+                }).then(function() {
+                    _.each([
+                        'fulfillmentInfo.fulfillmentContact',
+                        'fulfillmentInfo',
+                        'billingInfo'
+                    ], function(name) {
+                        me.get(name).trigger('sync');
+                    });
                 });
             },
             addCoupon: function () {

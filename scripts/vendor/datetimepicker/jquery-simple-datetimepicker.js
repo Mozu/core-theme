@@ -279,7 +279,7 @@
 				$picker.parent().css('left', $input.offset().left + 'px');
 			}
 			// Display on most top of the z-index
-			$picker.parent().css('z-index', 100000);
+			$picker.parent().css('z-index', 90000000000);
 		}
 	};
 
@@ -541,8 +541,12 @@
 		var locale = $picker.data("locale");
 		var format = getDateFormat($picker.data("dateFormat"), locale, $picker.data('dateOnly'));
 		
-		var old = $inp.val();                        
-		$inp.val(getFormattedDate(date, format));
+		var old = $inp.val();           
+		var month = monthDictionary[date.getMonth()];
+		var unformatted = getFormattedDate(date, format);  
+		var formatted = unformatted.replace(unformatted.substring(0, unformatted.indexOf('-') + 1), month);
+
+		$inp.val(unformatted);
 		if (old != $inp.val()) { // only trigger if it actually changed to avoid a nasty loop condition
 			$inp.trigger("change");
 		}
@@ -1198,6 +1202,21 @@
 			"isOutputToInputObject": opt.autodateOnStart
 		}, opt.currentTime ? new Date(opt.currentTime) : false || opt.current);
 	};
+
+	var monthDictionary = {
+		0: 'Jan',
+		1: 'Feb',
+		2: 'Mar',
+		3: 'Apr',
+		4: 'May',
+		5: 'Jun',
+		6: 'July',
+		7: 'Aug',
+		8: 'Sep',
+		9: 'Oct',
+		10: 'Nov',
+		11: 'Dec'
+	};
 	
 	var getDefaults = function() {
 		return {
@@ -1265,6 +1284,7 @@
 			if(0 < $(PickerObjects[$(input).data('pickerId')]).length) {
 				console.log("dtpicker - Already exist appended picker");
 				return;
+
 			}
 
 			/* Add input-field with inputsObjects array */

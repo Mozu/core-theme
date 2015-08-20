@@ -10,8 +10,8 @@ function($,EventBus, Api, hyprlivecontext, _) {
 		isScriptLoaded: false,
 		viewName:"amazon-checkout",
 		init:function() {
-			var paymentSettings = _.findWhere(hyprlivecontext.locals.siteContext.checkoutSettings.externalPaymentWorkflowSettings, {"name" : "PayByAmazon"});
-			if (paymentSettings === null || !paymentSettings.isEnabled) return;
+			var paymentSettings = _.findWhere(hyprlivecontext.locals.siteContext.checkoutSettings.externalPaymentWorkflowSettings, {"name" : "PayWithAmazon"});
+			if (!paymentSettings || !paymentSettings.isEnabled) return;
 			this.isEnabled = paymentSettings.isEnabled;
 			var environment = this.getValue(paymentSettings, "environment");
 			var isSandbox = environment == "sandbox";
@@ -40,10 +40,8 @@ function($,EventBus, Api, hyprlivecontext, _) {
 		getValue: function(paymentSetting, key) {
 			var value = _.findWhere(paymentSetting.credentials, {"apiName" : key});
 
-			if (!value) {
-				console.log(key+" not found");
+			if (!value) 
 				return;
-			}
 			return value.value;
 		},
 		addCheckoutButton: function(id, isCart) {

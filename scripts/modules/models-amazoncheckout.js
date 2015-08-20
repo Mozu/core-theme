@@ -54,8 +54,8 @@ define([
                 var me = this;
                  var billingInfo = {
                     "newBillingInfo" : 
-                    {   "paymentType": "PayByAmazon",
-                        "paymentWorkflow": "PayByAmazon",
+                    {   "paymentType": "PayWithAmazon",
+                        "paymentWorkflow": "PayWithAmazon",
                         
                         "billingContact" : {
                             "email": me.get("fulfillmentInfo").fulfillmentContact.email
