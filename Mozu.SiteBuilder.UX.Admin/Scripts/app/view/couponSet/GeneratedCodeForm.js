@@ -128,6 +128,12 @@ Ext.define('Taco.view.couponSet.GeneratedCodeForm', {
             }
         ];
 
+        this.mon(Taco.app, 'couponsetcreated', function(data) {
+            me.codePrefix.setValue(data.get('couponSetCode'));
+            me.codePrefix.setReadOnly(true);
+            me.numberOfCodes.setReadOnly(true);
+        }, me);
+
         this.callParent(arguments);
     },
 
