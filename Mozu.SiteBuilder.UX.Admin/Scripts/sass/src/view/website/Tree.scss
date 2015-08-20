@@ -90,7 +90,7 @@
 
     .#{$vprefix}website-tree-menu-trigger {
         float: right;
-        @include icon-font($glyph-arrowdown);
+        @include icon-font($glyph-gear, 13px);
         display: none;
     }
 }
