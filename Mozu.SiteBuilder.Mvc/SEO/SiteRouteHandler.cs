@@ -8,6 +8,7 @@ using System.Net;
 using System.Net.Http;
 using System.Net.Http.Formatting;
 using System.Threading.Tasks;
+using System.Web;
 using System.Web.Http;
 using System.Web.Http.Hosting;
 using System.Web.Http.Routing;
@@ -236,18 +237,19 @@ namespace Mozu.SiteBuilder.Mvc.SEO
                     uri = new Uri(uri.GetLeftPart(UriPartial.Path) + request.RequestUri.Query);
                     if (!string.Equals(uri.PathAndQuery, _requestMessage.Value.RequestUri.PathAndQuery, StringComparison.OrdinalIgnoreCase))
                     {
-                        var statusCode = HttpStatusCode.MovedPermanently;
-                        IEnumerable<string> values;
-                        if (request.Headers.TryGetValues("X-Requested-With", out values) &&
-                            values.Any(x => string.Equals(x, "XMLHttpRequest", StringComparison.OrdinalIgnoreCase)))
-                        {
-                            statusCode = HttpStatusCode.OK;
-                        }
-                        var redirect = request.CreateResponse(statusCode);
+                        var redirect = request.CreateResponse(HttpStatusCode.MovedPermanently);
                         redirect.Headers.Location = new Uri(uri.PathAndQuery, UriKind.Relative);
+                        redirect.Headers.TryAddWithoutValidation(Constants.HEADER_CANONICAL_URL, uri.PathAndQuery);
                         return redirect;
+                    }
+
+                    IEnumerable<string> values;
+                    if (request.Headers.TryGetValues(Constants.HEADER_ALTERNATIVE_VIEW, out values) && values.Any(x => !string.IsNullOrWhiteSpace(x)))
+                    {
+                        request.Resolve<HttpContextBase>().Response.AddHeader(Constants.HEADER_CANONICAL_URL, uri.PathAndQuery);
 
                     }
+
                     return null;
                 }
             }

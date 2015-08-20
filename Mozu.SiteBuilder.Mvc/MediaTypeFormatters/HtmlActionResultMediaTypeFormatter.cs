@@ -97,6 +97,14 @@ namespace Mozu.SiteBuilder.Mvc.MediaTypeFormatters
             {
                 
                 var viewEngine = this.RequestMessage.Resolve<HyprViewEngine>();
+
+                IEnumerable<string> values;
+                if ( this.RequestMessage.Headers.TryGetValues(Constants.HEADER_ALTERNATIVE_VIEW, out values) && values.Any(x => !string.IsNullOrWhiteSpace(x)))
+                {
+                    vrb.View = viewEngine.FindPageView(values.First());
+                }
+                
+
                 var view = vrb.View ?? viewEngine.FindPageView(vrb.ViewName);
                 var hvc = new HyprViewContext(this.RequestMessage, vrb.ViewData, null);
                 var httpContext = this.RequestMessage.HttpContext();
