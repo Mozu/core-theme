@@ -256,6 +256,16 @@ Ext.define('Taco.view.publishing.grid.Draft', {
                     hidden: true,
                     sortable: false
                 }, 
+                publishDate: { 
+                    xtype: 'gridcolumn',
+                    dataIndex: 'publishDate',
+                    stateId: 'publishDate',
+                    columnWidth: 100,
+                    text: 'Publish Date',
+                    renderer: Ext.util.Format.dateRenderer('d M, Y'),
+                    hidden: false,
+                    sortable: false
+                }, 
                 lastPublished: {
                     xtype: 'gridcolumn',
                     dataIndex: 'draftUpdateDate',
@@ -388,6 +398,7 @@ Ext.define('Taco.view.publishing.grid.Draft', {
                     col.name,
                     col.publishSetCode,
                     col.publishSetName,
+                    col.publishDate,
                     col.draftUpdateDate,
                     col.listFQN,
                     col.updatedBy,
@@ -401,6 +412,7 @@ Ext.define('Taco.view.publishing.grid.Draft', {
                     col.name,
                     col.publishSetCode,
                     col.publishSetName,
+                    col.publishDate,
                     col.draftUpdateDate,
                     col.updatedBy,
                     col.productCode,
