@@ -17,8 +17,8 @@ Ext.define('Taco.view.couponCode.AdvancedSearchForm', {
 
         this.items = [
             {
-                name: 'couponsetcode',
-                fieldLabel: 'Code'
+                name: 'couponCode',
+                fieldLabel: 'Coupon Code'
             },
             {
                 xtype: 'fieldcontainer',

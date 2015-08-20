@@ -13,7 +13,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Helpers.CouponCodeHelpers
     internal static class CouponCodeFilterExtensions
     {
 
-        private const string COUPON_SET_CODE = "code";
+        private const string COUPON_CODE = "code";
         private const string COUPON_SET_ID = "couponsetid";
         private const string CREATED_BY = "createdby";
         private const string CREATE_DATE = "createdate";
@@ -38,9 +38,9 @@ namespace Mozu.SiteBuilder.UX.Admin.Helpers.CouponCodeHelpers
             switch (filter.property.ToLowerInvariant())
             {
                 case "all":
-                    return String.Format("{0} cont \"{1}\"", COUPON_SET_CODE, filter.escapedValue);
-                case "couponsetcode":
-                    return String.Format("{0} eq \"{1}\"", COUPON_SET_CODE, filter.escapedValue);
+                    return String.Format("{0} cont \"{1}\"", COUPON_CODE, filter.escapedValue);
+                case "couponcode":
+                    return String.Format("{0} eq \"{1}\"", COUPON_CODE, filter.escapedValue);
                 case "couponsetid":
                     return String.Format("{0} eq \"{1}\"", COUPON_SET_ID, filter.value);
                 case "createdby":
