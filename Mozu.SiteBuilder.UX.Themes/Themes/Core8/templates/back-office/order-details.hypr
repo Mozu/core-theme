@@ -91,8 +91,17 @@
 
                 <tr>
                     <td colspan="5">Shipping ({{ model.fulfillmentInfo.shippingMethodName }})</td>
-                    <td>{{ model.shippingTotal|currency }}</td>
+                    <td>{{ model.shippingSubTotal|currency }}</td>
                 </tr>
+                {% for shippingDiscount in model.shippingDiscounts %}
+					{% if not shippingDiscount.excluded %}
+						<tr>
+							<td colspan="5">Shipping Discount ({{ shippingDiscount.discount.discount.name }})</td>
+							<td>({{ shippingDiscount.discount.impact|currency }})</td>
+						</tr>
+					{% endif %}
+                {% endfor %}
+
                 {% if model.handlingTotal > 0 %}
                     <tr>
                         <td colspan="5">Handling</td>
