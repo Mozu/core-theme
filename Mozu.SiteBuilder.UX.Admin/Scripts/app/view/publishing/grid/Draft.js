@@ -268,7 +268,7 @@ Ext.define('Taco.view.publishing.grid.Draft', {
                 }, 
                 lastPublished: {
                     xtype: 'gridcolumn',
-                    dataIndex: 'draftUpdateDate',
+                    dataIndex: 'lastPublishDate',
                     stateId: 'lastPublished',
                     text: 'Last Published',
                     hidden: true,

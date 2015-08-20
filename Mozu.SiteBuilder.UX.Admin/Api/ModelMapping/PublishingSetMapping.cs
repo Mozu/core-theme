@@ -36,7 +36,8 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.ModelMapping
                 .ForMember(x => x.DraftUpdateDate, op => op.ResolveUsing(y => y.AuditInfo.UpdateDate))
                 .ForMember(x => x.UpdatedBy, op => op.ResolveUsing(y => y.AuditInfo.UpdateBy))
                 .ForMember(x => x.Id, op => op.ResolveUsing(y => y.ProductCode))
-                .ForMember(x => x.PublishSetCode, op => op.ResolveUsing(y => y.PublishingInfo.PublishSetCode));
+                .ForMember(x => x.PublishSetCode, op => op.ResolveUsing(y => y.PublishingInfo.PublishSetCode))
+                .ForMember(x => x.LastPublishDate, op => op.ResolveUsing(y => y.PublishingInfo.LastPublishedDate));
             Mapper.CreateMap<PublishSetItem, DC.DocumentDraftSummary>();
         }
     }
