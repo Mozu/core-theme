@@ -90,7 +90,7 @@ function($,EventBus, Api, hyprlivecontext, _) {
 		var walletData = {
 			sellerId: sellerId,
 			onPaymentSelect: function(orderReference) {
-
+				EventBus.trigger("aws-card-selected");
 			},
 			design : {
 				designMode: 'responsive'

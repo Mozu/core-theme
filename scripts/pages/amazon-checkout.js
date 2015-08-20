@@ -8,7 +8,13 @@ require(["modules/jquery-mozu","modules/backbone-mozu",'modules/editable-view', 
 		initialize: function() {
 			AmazonPay.init();
 			EventBus.on("aws-referenceOrder-created", this.setawsOrderData);
-			EventBus.on("aws-address-selected", function() {AmazonPay.addWalletWidget();});
+			EventBus.on("aws-address-selected", function() {
+				AmazonPay.addWalletWidget();
+				
+			});
+			EventBus.on("aws-card-selected", function() {
+				$("#checkoutActions").show();
+			});
 			AmazonPay.addAddressWidget();
 			
 			this.listenTo(this.model, "awscheckoutcomplete", function(id){

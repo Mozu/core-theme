@@ -58,12 +58,12 @@ define([
                         "paymentWorkflow": "PayByAmazon",
                         
                         "billingContact" : {
-                            "email": me.get("fulfillmentInfo").fulfillmentContact.email,
-                            "address" : {
+                            "email": me.get("fulfillmentInfo").fulfillmentContact.email
+                            /*"address" : {
                                  "stateOrProvince": "n/a",
                                 "countryCode": "US",
                                 "addressType": "Residential"
-                            }
+                            }*/
                         },
                         "orderId" : me.id,
                         "isSameBillingShippingAddress" : false
