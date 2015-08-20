@@ -1,4 +1,4 @@
-﻿module.exports = function(grunt) {
+module.exports = function(grunt) {
 
     var pkg = grunt.file.readJSON('./package.json');
     var semver = require('semver');
@@ -121,7 +121,7 @@
         },
         "mozusync": {
           "options": {
-            "applicationKey": "comnm.core8_preview.1.0.0.release",
+            "applicationKey": "comnm.visacheckout2.1.0.0.release",
             "context": "<%= mozuconfig %>",
             "watchAdapters": [
               {
@@ -192,7 +192,7 @@
     grunt.registerTask('setver', function() {
 
         var j = grunt.file.readJSON('./theme.json');
-        j.about.name = "Core8 " + semver.inc(pkg.version, grunt.option('increment') || 'prerelease');
+        j.about.name = "Core8 VisaCheckout " + semver.inc(pkg.version, grunt.option('increment') || 'prerelease');
         grunt.file.write('./theme.json', JSON.stringify(j, null, 4));
 
     });

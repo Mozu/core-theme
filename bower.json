@@ -1,6 +1,6 @@
 {
   "name": "mozu-core-theme",
-  "version": "v8.0.0-0",
+  "version": "v8.0.0-visaprerelease.2",
   "dependencies": {
     "backbone": "~1.1",
     "underscore": "~1.6",

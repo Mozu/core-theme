@@ -6,7 +6,7 @@
         "isDesktop": true,
         "isMobile": false,
         "isTablet": false,
-        "name": "Core8 8.0.0-3"
+        "name": "Core8 VisaCheckout 8.0.0-visaprerelease.26"
     },
     "editors": [
         {
@@ -645,7 +645,8 @@
         ],
         "useDebugScripts": false,
         "useSearchAutocomplete": true,
-        "allowCustomerInitiatedReturns": true
+        "allowCustomerInitiatedReturns": true,
+        "visaCheckoutSdkUrl": "https://sandbox-assets.secure.checkout.visa.com/checkout-widget/resources/js/integration/v1/sdk.js"
     },
     "widgets": [
         {

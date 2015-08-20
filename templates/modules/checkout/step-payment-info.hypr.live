@@ -1,4 +1,4 @@
-﻿<h3 class="mz-formstep-header">
+<h3 class="mz-formstep-header">
     {{ labels.paymentInformation }}
     <a href="javascript:;" class="mz-formstep-edit" data-mz-action="edit">{{ labels.change }}</a>
 </h3>
@@ -40,6 +40,10 @@
                 <dd>
                     <div class="mz-addresssummary">
                         {% include "modules/common/address-summary" with model=payment.billingInfo.billingContact %}
+                        {% if payment.paymentWorkflow === "VisaCheckout" %}
+                            <span><img alt="This Payment Using Visa Checkout"
+                        src="{{pageContext.visaCheckoutButtonUrl}}?size=154&amp;color=neutral&amp;cardBrands={{ payment.card.paymentOrCardType }}"/></span>
+                        {% endif %}
                     </div>
                 </dd>
             </dl>
@@ -88,6 +92,10 @@
         {% else %}
         <div class="mz-l-stack-section mz-checkout-current-payment mz-checkout-saved-card">
             <h4 class="mz-l-stack-sectiontitle">{{ labels.paymentMethod }}</h4>
+            {% if model.visaCheckoutFlowComplete %}
+                <span><img alt="This Payment Using Visa Checkout"
+            src="{{pageContext.visaCheckoutButtonUrl}}?size=154&amp;color=neutral&amp;cardBrands={{ payment.card.paymentOrCardType }}"/></span>
+            {% endif %}
             <a class="mz-checkout-payment-change" href="javascript:;" data-mz-action="beginEditingCard">{{ labels.change }}</a>
             <p><strong>{{ model.amountRequested|default(model.nonStoreCreditTotal)|currency }}</strong> &mdash; <strong>{{ model.card.paymentOrCardType }}</strong> {{ model.card.cardNumberPartOrMask }}</p>
             <p>{{ labels.expires }} {{ model.card.expireMonth }}/{{ model.card.expireYear }}</p>

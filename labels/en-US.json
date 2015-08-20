@@ -412,5 +412,6 @@
   "notifyWidgetSuccess"  : "You will be notified when this product is back in stock.",
   "notifyWidgetError"    : "There was an error subscribing. Please try again.",
 
-  "dealOfTheDay"     : "Deal of the Day"
+  "dealOfTheDay"     : "Deal of the Day",
+  "visaCheckoutEditReminder": "For security reasons you cannot edit the credit card information from Visa Checkout. If you proceed, your Visa Checkout details will be removed and this order will be processed without Visa Checkout."
 }
