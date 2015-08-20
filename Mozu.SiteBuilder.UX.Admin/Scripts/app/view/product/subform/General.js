@@ -8,7 +8,7 @@ Ext.define('Taco.view.product.subform.General', {
     extend: 'Taco.view.product.subform.Subform',
     alias: 'widget.productgeneralsubform',
     requires: [
-        'Ext.form.field.HtmlEditor',        
+        'Ext.form.field.HtmlEditor',
         'Taco.view.product.subform.OverrideForm',
         'Ext.form.field.ComboBox',
         'Taco.view.product.subform.Bundle',
@@ -21,7 +21,8 @@ Ext.define('Taco.view.product.subform.General', {
         'Taco.core.ux.form.CurrencyField',
         'Taco.shared.view.field.ProductTypePickerField',
         'Taco.core.ux.form.DateRange',
-        'Taco.core.ux.form.DateTime'
+        'Taco.core.ux.form.DateTime',
+        'Taco.core.util.Validation'
         //'Taco.core.ux.form.DateRangeContainer'
     ],
     statics: {
@@ -39,10 +40,7 @@ Ext.define('Taco.view.product.subform.General', {
     initComponent: function () {
 
         var me = this,
-            readOnly,
-            requiredContent,
             classDef = this.statics(),
-            visable,
             isMapEnabled = false,
             isDiscountRestricted = this.product.get("discountsRestricted"),
             isTaxable = (this.product.get("isTaxable")),
@@ -107,7 +105,7 @@ Ext.define('Taco.view.product.subform.General', {
         };
 
         // sync changes from code view of the htmleditor to WYSIWYG view
-        var htmlEditorEditModeChangeHandler = function(el, editMode, eOpts) {
+        var htmlEditorEditModeChangeHandler = function(el, editMode) {
             if (editMode) {
                 if (!this.textareaEl._syncInited) {
                     this.textareaEl.on('keydown', function() {
@@ -468,11 +466,6 @@ Ext.define('Taco.view.product.subform.General', {
             disabled: !isMapEnabled,
             allowBlank: true
         });
-        
-        readOnly = this.isEdit() || !(this.isSingleSite || this.isGlobal);
-        visable = !readOnly || this.isEdit();
-        requiredContent = this.isSingleSite || this.isGlobal;
-
 
         this.imagesConfig = {
             fieldLabel: 'Product Image',
@@ -510,7 +503,7 @@ Ext.define('Taco.view.product.subform.General', {
             allowBlank: true,
             validator: function() {
                 return !me.productInCatalogInfo ||
-                    me.validateDateRange(me.activeStartDateField, me.activeEndDateField, "Start date must be before end date");
+                    Taco.core.util.Validation.validateDateRange(me.activeStartDateField, me.activeEndDateField, "Start date must be before end date");
             }
         });
 
@@ -526,9 +519,9 @@ Ext.define('Taco.view.product.subform.General', {
             hidden: (!this.productInCatalogInfo || this.productInCatalogInfo.get('status') !== 'Scheduled'),
             value: this.productInCatalogInfo ? this.productInCatalogInfo.get('activeEndDate') : "",
             allowBlank: true,
-            validator: function(val) {
+            validator: function() {
                 return !me.productInCatalogInfo ||
-                    me.validateDateRange(me.activeStartDateField, me.activeEndDateField, "End date must be after start date");
+                    Taco.core.util.Validation.validateDateRange(me.activeStartDateField, me.activeEndDateField, "End date must be after start date");
             }
         });
 
@@ -854,31 +847,12 @@ Ext.define('Taco.view.product.subform.General', {
 
     },
 
-    validateDateRange: function(startDateFld, endDateFld, endBeforeStartMsg) {
-        if (!startDateFld.isVisible()) return true;
-
-        if (!startDateFld.getValue() && !endDateFld.getValue()) {
-            return "You must enter an active start or end date.";
-        }
-        if (!startDateFld.getValue() || !endDateFld.getValue()) {
-            return true;
-        }
-        var startDate = startDateFld.parseDate(startDateFld.getValue());
-        var endDate = endDateFld.parseDate(endDateFld.getValue());
-        if ((startDate && endDate) && (startDate >= endDate)) {
-            return endBeforeStartMsg;
-        }
-        return true;
-    },
-
     /**
     * when the productUsage changes, will need to alter the ux for price on the general form;
     */
     updatePriceUI: function () {
         var me = this,
             productUsageValue = me.product.get("productUsage"),
-            price = 0,
-            salePrice = 0,
             bundleItemTotals,
             rollupBundleContainer;
 
@@ -941,7 +915,7 @@ Ext.define('Taco.view.product.subform.General', {
         store.filter([
             {
                 filterFn: function (record) {
-                    var isValid = Ext.Array.some(validProductUsages, function (item, index, array) {
+                    var isValid = Ext.Array.some(validProductUsages, function (item) {
                         return (item == record.data.id);
                     });
 

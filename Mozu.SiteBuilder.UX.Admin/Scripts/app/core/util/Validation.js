@@ -114,6 +114,23 @@ Ext.define('Taco.core.util.Validation', {
         }
         replaceString = replaceString || '-';
         return slug.replace(Taco.core.util.Validation.getReplaceInvalidSeoRegex(), replaceString).toLowerCase();
+    },
+
+    validateDateRange: function(startDateFld, endDateFld, endBeforeStartMsg) {
+        if (!startDateFld.isVisible()) return true;
+
+        if (!startDateFld.getValue() && !endDateFld.getValue()) {
+            return "You must enter an active start or end date.";
+        }
+        if (!startDateFld.getValue() || !endDateFld.getValue()) {
+            return true;
+        }
+        var startDate = startDateFld.parseDate(startDateFld.getValue());
+        var endDate = endDateFld.parseDate(endDateFld.getValue());
+        if ((startDate && endDate) && (startDate >= endDate)) {
+            return endBeforeStartMsg;
+        }
+        return true;
     }
 
 });

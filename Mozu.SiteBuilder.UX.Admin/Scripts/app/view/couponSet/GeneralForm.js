@@ -6,8 +6,9 @@
 Ext.define('Taco.view.couponSet.GeneralForm', {
     extend: 'Taco.core.ux.form.Form',
     alias: 'widget.taco-couponset-general',
-    require: [
-        'Taco.core.ux.TooltipLabel'
+    requires: [
+        'Taco.core.ux.TooltipLabel',
+        'Taco.core.util.Validation'
     ],
     ui: 'subform',
     margin: '0 0 39 0',
@@ -50,8 +51,7 @@ Ext.define('Taco.view.couponSet.GeneralForm', {
             pickerOffset: 4,
             allowBlank: true,
             validator: function() {
-                return !me.productInCatalogInfo ||
-                    me.validateDateRange(me.activeStartDateField, me.activeEndDateField, "Start date must be before end date");
+                return Taco.core.util.Validation.validateDateRange(me.activeStartDateField, me.activeEndDateField, "Start date must be before end date");
             }
         });
 
@@ -65,8 +65,7 @@ Ext.define('Taco.view.couponSet.GeneralForm', {
             pickerOffset: 4,
             allowBlank: true,
             validator: function() {
-                return !me.productInCatalogInfo ||
-                    me.validateDateRange(me.activeStartDateField, me.activeEndDateField, "End date must be after start date");
+                return Taco.core.util.Validation.validateDateRange(me.activeStartDateField, me.activeEndDateField, "End date must be after start date");
             }
         });
 
