@@ -4,7 +4,7 @@ module.exports = function(grunt) {
     var semver = require('semver');
 
     grunt.initConfig({
-        mozuconfig: require('./mozu.config.json'),
+        mozuconfig: grunt.file.exists('./mozu.config.json') ? grunt.file.readJSON('./mozu.config.json') : {},
         pkg: pkg,
         bower: {
             install: {
@@ -121,7 +121,7 @@ module.exports = function(grunt) {
         },
         "mozusync": {
           "options": {
-            "applicationKey": "comnm.visacheckout2.1.0.0.release",
+            "applicationKey": "<%= mozuconfig.workingApplicationKey %>",
             "context": "<%= mozuconfig %>",
             "watchAdapters": [
               {
@@ -184,8 +184,7 @@ module.exports = function(grunt) {
     grunt.registerTask('default', [
       'jshint', 
       'bower',
-      'mozutheme:quickcompile',
-      'mozusync:upload'
+      'mozutheme:quickcompile'
     ]); // no bower necessary for now
 
 
