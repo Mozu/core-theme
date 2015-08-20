@@ -198,28 +198,16 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
 
         [HttpPostRoute(UriTemplate = "unassigndiscount")]
         public async Task<Response<List<CouponSet>>> UnAssignDiscount(AssignDiscountArgs args)
-        
         {
-        
-            var couponSetCode = args.CouponSetCode;
-            var discountId = (args.AssignedDiscount.Id.HasValue) ? args.AssignedDiscount.Id.Value : 0;
-        
-            if (discountId != 0)
+            if (!args.AssignedDiscount.Id.HasValue)
             {
-                var dc = new DC.AssignedDiscount
-                {
-                    DiscountId = discountId,
-                    CouponSetCode = args.CouponSetCode
-                };
-
-                var response = (await _couponSetWebClient.UnAssignDiscount(couponSetCode, dc)).ReadAsSync();
-
-                return this.EmptyList2<CouponSet>();
+                return this.FailureList2<CouponSet>("No Discount ID Provided");
             }
-            else
-            {
-                return this.FailureList2<CouponSet>("No Dscount ID Provided");
-            }
+            var response =
+                (await _couponSetWebClient.UnAssignDiscount(args.CouponSetCode, args.AssignedDiscount.Id))
+                    .ReadAsSync();
+            return EmptyList2<CouponSet>();
+
         }
     }
 }

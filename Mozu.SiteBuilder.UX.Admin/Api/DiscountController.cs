@@ -134,21 +134,27 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
                 {
                     var response = (await _discountWebClient.CreateDiscount(dc)).ReadAsSync();
                     var model = Mapper.Map<Discount>(response);
-                    if (!discount.CouponSets.IsNullOrEmpty())
-                    {
-                        discount.Id = model.Id;
-                        var addedCouponSets = await AssignCouponSetsToDiscount(discount, new DC.CouponSetCollection {Items = new List<DC.CouponSet>()});
-                        model.CouponSets = addedCouponSets;
-                    }
+                    model.CouponSets = await AssignCouponSetsOnCreate(model.Id, discount);
                     responseList.Add(model);
                 }
                 catch (ApiWebClientConnectionException e)
                 {
-                    return this.FailureList2<Discount>(e.Message);
+                    return FailureList2<Discount>(e.Message);
                 }
             }
 
             return List2(responseList);
+        }
+
+        private async Task<List<CouponSet>> AssignCouponSetsOnCreate(int? discountId, Discount discount)
+        {
+            if (discount.CouponSets.IsNullOrEmpty())
+                return new List<CouponSet>();
+
+            var addTasks = AssignCouponSetsToDiscountTasks(discountId, discount.CouponSets);
+            await Task.WhenAll(addTasks);
+            addTasks.Select(TaskHelper.Result).ThrowExceptionsIfAny();
+            return discount.CouponSets;
         }
 
         /// <summary>
@@ -159,72 +165,66 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
         {
             var retList = new List<Discount>();
 
-
             foreach (var discount in discountList)
             {
-                bool discountHasCoupons = !discount.CouponSets.IsNullOrEmpty();
-                discount.RequiresCoupon = discountHasCoupons || !string.IsNullOrEmpty(discount.CouponCode);
+                discount.RequiresCoupon = !discount.CouponSets.IsNullOrEmpty() || !string.IsNullOrEmpty(discount.CouponCode);
                 var dc = Mapper.Map<DC.Discount>(discount);
                 var res = (await _discountWebClient.UpdateDiscount(dc, discount.Id)).ReadAsSync();
 
-                var currentCouponSets = (await _couponSetClient.GetCouponSets(filter: string.Format("assigneddiscountid eq {0}", discount.Id))).ReadAsSync();
-                //merge
-                if (discountHasCoupons || currentCouponSets.TotalCount > 0)
-                {
-                    await UnassignCouponSetsFromDiscount(currentCouponSets, discount);
-                    await AssignCouponSetsToDiscount(discount, currentCouponSets);
-                }
-                
+                await MergeCouponSets(discount);
                 var savedCouponSets = (await _couponSetClient.GetCouponSets(filter: string.Format("assigneddiscountid eq {0}", discount.Id))).ReadAsSync();
+
                 var model = Mapper.Map<Discount>(res);
                 model.CouponSets = Mapper.Map<List<CouponSet>>(savedCouponSets.Items);
                 retList.Add(model);
             }
-
             return List2(retList);
         }
 
-        private async Task UnassignCouponSetsFromDiscount(DC.CouponSetCollection currentCouponSets, Discount discount)
+        private async Task MergeCouponSets(Discount discount)
         {
-            var deleteList =
-                currentCouponSets.Items.Where(x => !discount.CouponSets.Select(cs => cs.Id).Contains(x.Id));
+            var currentCouponSets = (await _couponSetClient.GetCouponSets(filter: string.Format("assigneddiscountid eq {0}", discount.Id))).ReadAsSync();
 
-            var deleteTasks =
+            if (discount.CouponSets.IsNullOrEmpty() && currentCouponSets.TotalCount == 0)
+                return;
+
+            var tasks = new List<Task>();
+
+            var deleteList = currentCouponSets.Items.Where(x => !discount.CouponSets.Select(cs => cs.Id).Contains(x.Id));
+            var delTasks = UnassignCouponSetsFromDiscountTasks(discount.Id, deleteList);
+            tasks.AddRange(delTasks);
+
+            var addList = discount.CouponSets.Where(x => !currentCouponSets.Items.Select(cs => cs.Id).Contains(x.Id));
+            var addTasks = AssignCouponSetsToDiscountTasks(discount.Id, addList);
+            tasks.AddRange(addTasks);
+
+            await Task.WhenAll(tasks);
+
+            delTasks.Select(TaskHelper.Result).ThrowExceptionsIfAny();
+            addTasks.Select(TaskHelper.Result).ThrowExceptionsIfAny();
+        }
+
+        private List<Task<ServiceClientResponse<StreamContent>>> UnassignCouponSetsFromDiscountTasks(int? discountId, IEnumerable<DC.CouponSet> deleteList )
+        {
+            List<Task<ServiceClientResponse<StreamContent>>> deleteTasks =
                 deleteList.Select(
                     x =>
-                        _couponSetClient.UnAssignDiscount(x.CouponSetCode,
-                            new DC.AssignedDiscount
-                            {
-                                CouponSetCode = x.CouponSetCode,
-                                CouponSetId = x.Id.GetValueOrDefault(),
-                                DiscountId = discount.Id.GetValueOrDefault()
-                            })).ToList();
-
-            await Task.WhenAll(deleteTasks);
-            deleteTasks.Select(TaskHelper.Result).ThrowExceptionsIfAny();
+                        _couponSetClient.UnAssignDiscount(x.CouponSetCode, discountId)).ToList();
+            return deleteTasks;
         }
 
-        private async Task<List<CouponSet>> AssignCouponSetsToDiscount(Discount discount, DC.CouponSetCollection currentCouponSets)
+        private List<Task<ServiceClientResponse<StreamContent>>> AssignCouponSetsToDiscountTasks(int? discountId, IEnumerable<CouponSet> addList)
         {
-            var addList = discount.CouponSets.Where(x => !currentCouponSets.Items.Select(cs => cs.Id).Contains(x.Id)).ToList();
-
-            if (!addList.Any())
-                return new List<CouponSet>();
-            var addTasks =
-                addList.Select(
-                    x => _couponSetClient.AssignDiscount(x.CouponSetCode,
-                        new DC.AssignedDiscount
-                        {
-                            CouponSetCode = x.CouponSetCode,
-                            CouponSetId = x.Id.GetValueOrDefault(),
-                            DiscountId = discount.Id.GetValueOrDefault()
-                        })).ToList();
-
-            await Task.WhenAll(addTasks);
-            addTasks.Select(TaskHelper.Result).ThrowExceptionsIfAny();
-            return addList;
+            return addList.Select(x => 
+                _couponSetClient.AssignDiscount(x.CouponSetCode,
+                                                new DC.AssignedDiscount
+                                                {
+                                                    CouponSetCode = x.CouponSetCode,
+                                                    CouponSetId = x.Id.GetValueOrDefault(),
+                                                    DiscountId = discountId.GetValueOrDefault()
+                                                })).ToList();
         }
-
+        
         [HttpPostRoute(UriTemplate = "delete")]
         public async Task<Response<Discount>> DeleteDiscount(List<Discount> discounts)
         {
