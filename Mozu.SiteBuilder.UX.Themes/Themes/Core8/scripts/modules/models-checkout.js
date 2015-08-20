@@ -719,7 +719,9 @@
                 var me = this;
                 _.defer(function () {
                     me.getPaymentTypeFromCurrentPayment();
-                    me.setSavedPaymentMethod(me.get('savedPaymentMethodId') || me.get('card.paymentServiceCardId'));
+                    var savedCardId = me.get('card.paymentServiceCardId');
+                    me.set('savedPaymentMethodId', savedCardId, { silent: true });
+                    me.setSavedPaymentMethod(savedCardId);
                 });
                 var billingContact = this.get('billingContact');
                 this.on('change:paymentType', this.selectPaymentType);
