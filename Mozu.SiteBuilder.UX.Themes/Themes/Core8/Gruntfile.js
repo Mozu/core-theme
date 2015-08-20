@@ -1,4 +1,4 @@
-﻿module.exports = function(grunt) {
+module.exports = function(grunt) {
 
     var pkg = grunt.file.readJSON('./package.json');
     var semver = require('semver');
@@ -151,7 +151,7 @@
               "*thumb.png",
               "*thumb.jpg",
               "theme-ui.json",
-              "!.orig",
+              "!*.orig",
               "!.inherited"
             ],
             "filter": "isFile"
@@ -191,8 +191,12 @@
     grunt.registerTask('setver', function() {
 
         var j = grunt.file.readJSON('./theme.json');
-        j.about.name = "Core8 " + semver.inc(pkg.version, grunt.option('increment') || 'prerelease');
+        var b = grunt.file.readJSON('./bower.json');
+        var newVersion = semver.inc(pkg.version, grunt.option('increment') || 'prerelease');
+        j.about.name = "Core8 " + newVersion;
+        b.version = newVersion;
         grunt.file.write('./theme.json', JSON.stringify(j, null, 4));
+        grunt.file.write('./bower.json', JSON.stringify(b, null, 4));
 
     });
 

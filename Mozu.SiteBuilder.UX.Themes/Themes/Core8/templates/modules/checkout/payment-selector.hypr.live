@@ -1,5 +1,5 @@
 {% with paymentId|default(0) as paymentId %}
-{% with siteContext.checkoutSettings.isPayPalEnabled as externalWorkflowsEnabled %} {# external workflows implemented in a later system can be added to this test #}
+{% with siteContext.checkoutSettings.isPayPalEnabled or siteContext.checkoutSettings.visaCheckout.isEnabled as externalWorkflowsEnabled %} {# external workflows implemented in a later system can be added to this test #}
 <div class="mz-l-formfieldgroup mz-paymentselector">
     <div class="mz-l-formfieldgroup-row mz-paymentselector-newcreditcard">
         <div class="mz-l-formfieldgroup-cell">
@@ -67,6 +67,12 @@
                   {{ labels.payPal }}
                 </span>
             </label>
+            {% endif %}
+            {% if siteContext.checkoutSettings.visaCheckout.isEnabled %}
+                <div class="mz-l-formfieldgroup-cell mz-digitalwallets">
+                    <img alt="Visa Checkout" class="v-button" role="button"
+                    src="{{pageContext.visaCheckoutButtonUrl}}?size=154&amp;color=neutral"/>
+                </div>
             {% endif %}
         </div>
     </div>
