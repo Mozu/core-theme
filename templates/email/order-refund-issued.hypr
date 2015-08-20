@@ -44,6 +44,9 @@
 						{% endif %}
 					{% endif %}
 				{% endif %}
+				{% if refund.payment.paymentType == "PayByAmazon" %}
+					{{labels.payByAmazon}}
+				{% endif %}
 			</td>
 			<td>{{ refund.amount|currency }}</td>
 			<td>{{ refund.auditInfo.createDate }}</td>

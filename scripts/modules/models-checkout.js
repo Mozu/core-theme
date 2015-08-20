@@ -828,16 +828,16 @@
                             'lastNameOrSurname',
                             'phoneNumbers'),
                         {
-                            address: _.pick(obj.billingContact.address, 
+                            address: (obj.billingContact.address ? _.pick(obj.billingContact.address, 
                                 'address1',
                                 'address2',
                                 'addressType',
                                 'cityOrTown',
                                 'countryCode',
                                 'postalOrZipCode',
-                                'stateOrProvince')
+                                'stateOrProvince') : null)
                         }),
-                        card: _.extend(_.pick(obj.card,
+                        card: (obj.card ? _.extend(_.pick(obj.card,
                             'expireMonth',
                             'expireYear',
                             'nameOnCard'),
@@ -845,7 +845,7 @@
                             cardType: obj.card.paymentOrCardType || obj.card.cardType,
                             cardNumber: obj.card.cardNumberPartOrMask || obj.card.cardNumberPart || obj.card.cardNumber,
                             id: obj.card.paymentServiceCardId || obj.card.id
-                        }),
+                        }) : null),
                         check: obj.check || {}
                     };
                 }
@@ -883,6 +883,7 @@
             },
             applyPayment: function () {
                 var self = this, order = this.getOrder();
+                this.unset("paymentWorkflow");
                 if (this.get("paymentType") === "PaypalExpress") {
                     this.set(this.getPaypalUrls());
                 } else {
