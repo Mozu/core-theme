@@ -1,8 +1,8 @@
 {
-  "name": "mozu-core-theme-visa-checkout",
+  "name": "mozu-core-theme",
   "author": "Volusion, Inc.",
-  "description": "The core storefront theme for Mozu, with a reference Visa Checkout implementation",
-  "version": "8.0.0-visaprerelease.26",
+  "description": "The core storefront theme for Mozu.",
+  "version": "8.0.0-3",
   "repository": {
     "type": "git",
     "url": "https://github.com/mozu/core-theme-preview.git"
