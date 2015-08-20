@@ -200,7 +200,20 @@ Ext.define('Taco.view.generalSettings.subform.About', {
                                 scale: 'medium',
                              
                                 handler: function () {
-                                    me.down('#cdnCacheBustKey').setValue( '_'+new Date().getTime());
+                                    var newKey =  '_'+new Date().getTime();
+                                    me.down('#cdnCacheBustKey').setValue(newKey);
+                                    me.record.set('cdnCacheBustKey', newKey);
+                                    me.setLoading(true);
+                                    me.record.save({
+                                        success:function() {
+                                            me.setLoading(false);
+                                            Taco.app.fireEvent('setgrowl', 'Cache Busted', 'info', 2000);
+                                        },
+                                        failure: function() {
+                                            me.setLoading(false);
+                                            Taco.app.fireEvent('setmessage', 'Unable to bust Cache', 'error');
+                                        }
+                                    });
                                 }
                         
                             }
