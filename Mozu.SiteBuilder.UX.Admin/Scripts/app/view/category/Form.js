@@ -119,6 +119,8 @@ Ext.define('Taco.view.category.Form', {
                         xtype: 'categorycombobox',
                         name: 'parentId',
                         fieldLabel: 'Assign to Other Category',
+                        showDynamicRealTime: false,
+                        showDynamicPreComputed: false,
                         validator: function(value) {
                             if (value == this.up().up().child('component[name="name"]').value) {
                                 return 'Category name is in use';

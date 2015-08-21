@@ -344,7 +344,7 @@ Ext.define('Taco.view.discount.ConditionsForm', {
     },
 
     buildCategory: function () {
-        var me = this
+        var me = this;
         
         this.conditionalCategoryPanel = Ext.create('Taco.view.discount.widget.CategoryPicker', {
             catStore: this.record.getCategoryStore(),
