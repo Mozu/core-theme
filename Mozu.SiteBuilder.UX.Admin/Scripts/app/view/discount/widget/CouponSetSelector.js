@@ -51,7 +51,8 @@ Ext.define('Taco.view.discount.widget.CouponSetSelector', {
 
     // when we have a multi value situation;
     createMultiField: function () {
-        var fieldCfg = this.getFieldConfig(),
+        var me = this,
+            fieldCfg = this.getFieldConfig(),
             value = (this.field) ? this.field.getValue() : this.value;
 
         if (this.field) {
