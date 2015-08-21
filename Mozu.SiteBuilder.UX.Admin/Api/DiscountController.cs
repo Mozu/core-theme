@@ -58,7 +58,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
             if (pagingParams.id != null)
             {
                 var singleDiscount = (await _discountWebClient.GetDiscount(pagingParams.NumericId)).ReadAsSync();
-                var couponSets = (await _couponSetClient.GetCouponSets(filter: string.Format("assigneddiscountid eq {0}", pagingParams.NumericId))).ReadAsSync();
+                var couponSets = (await _couponSetClient.GetCouponSets(filter: string.Format("assigneddiscountid eq {0}", pagingParams.NumericId), responseGroups: "Counts")).ReadAsSync();
                 var singleModel = Mapper.Map<Discount>(singleDiscount);
                 singleModel.CouponSets = Mapper.Map<List<CouponSet>>(couponSets.Items);
                 return List2(singleModel);
@@ -172,7 +172,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
                 var res = (await _discountWebClient.UpdateDiscount(dc, discount.Id)).ReadAsSync();
 
                 await MergeCouponSets(discount);
-                var savedCouponSets = (await _couponSetClient.GetCouponSets(filter: string.Format("assigneddiscountid eq {0}", discount.Id))).ReadAsSync();
+                var savedCouponSets = (await _couponSetClient.GetCouponSets(filter: string.Format("assigneddiscountid eq {0}", discount.Id), responseGroups: "Counts")).ReadAsSync();
 
                 var model = Mapper.Map<Discount>(res);
                 model.CouponSets = Mapper.Map<List<CouponSet>>(savedCouponSets.Items);
