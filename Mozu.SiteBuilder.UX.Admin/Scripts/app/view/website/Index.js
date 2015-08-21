@@ -162,7 +162,7 @@ Ext.define('Taco.view.website.Index', {
                                 window.open('/_gosite/' + Taco.app.context.getSiteId() + '?environment=live&redir=' + encodeURIComponent(url));
                             }
                         }, {
-                            text: 'View Staging',
+                            text: 'View Staged',
                             handler: function (menuItem) {
                                 //scope is set to index on all action buttons by container.
                                 var url = menuItem.up('button').scope.url;
