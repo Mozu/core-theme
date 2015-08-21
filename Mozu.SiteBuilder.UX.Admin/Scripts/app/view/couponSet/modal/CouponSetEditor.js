@@ -263,6 +263,11 @@ Ext.define('Taco.view.couponSet.modal.CouponSetEditor', {
         Taco.app.fireEvent('couponsetcreated', this.record);
         this.managePanelsOnCreate(true, 'Save', true);
         this.isCreateMode = false;
+        Ext.defer(function() {
+            this.focusEl.focus();
+        }, 1, this);
+        
+
     },
 
     doSave: function () {
