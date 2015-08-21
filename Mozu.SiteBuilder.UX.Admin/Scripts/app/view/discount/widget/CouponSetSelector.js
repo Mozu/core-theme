@@ -30,7 +30,9 @@ Ext.define('Taco.view.discount.widget.CouponSetSelector', {
         // warning this can cause layout run errors when the grid has no data. this is not ready for use yet
         autoHideGrid: false,
         singleSelect:false,
-        value: null
+        value: null,
+        stateful: false,
+        stateId: null
     },
 
     layout: {
@@ -39,7 +41,6 @@ Ext.define('Taco.view.discount.widget.CouponSetSelector', {
     },
 
     initComponent: function () {
-        var me = this;
         this.items = [];
 
         this.updateFieldEditability();
@@ -50,16 +51,13 @@ Ext.define('Taco.view.discount.widget.CouponSetSelector', {
 
     // when we have a multi value situation;
     createMultiField: function () {
-        var me = this,
-            previousFieldXtype,
-            fieldCfg = this.getFieldConfig(),
+        var fieldCfg = this.getFieldConfig(),
             value = (this.field) ? this.field.getValue() : this.value;
 
         if (this.field) {
             if (this.fieldRelayers) {
                 Ext.destroy(this.fieldRelayers);
             }
-            previousFieldXtype = this.field.xtype;
             Ext.destroy(this.field);
         }
 
@@ -74,6 +72,8 @@ Ext.define('Taco.view.discount.widget.CouponSetSelector', {
             removeAction: "remove",
             autoHideGrid:this.autoHideGrid,
             autoHeightGrid: this.getAutoHeightGrid(),
+            stateful: this.getStateful(),
+            stateId: this.getStateId(),
             //flex: 1,
             emptyText: fieldCfg.emptyText || "Select coupon sets",
             value: value,
@@ -85,99 +85,97 @@ Ext.define('Taco.view.discount.widget.CouponSetSelector', {
 
             },
             getColumnConfig: function () {
-                var me = this,
-                    columns = [
-                        {
-                            xtype: 'gridcolumn',
-                            dataIndex: 'name',
-                            stateId: 'name',
-                            text: 'Name',
-                            hideable: false,
-                            flex: 1,
-                            minWidth: 150,
-                            sortable: true
-                        }, {
-                            xtype: 'gridcolumn',
-                            dataIndex: 'couponCodeType',
-                            stateId: 'couponCodeType',
-                            text: 'Type',
-                            width: 150,
-                            sortable: true
-                        }, {
-                            xtype: 'gridcolumn',
-                            dataIndex: 'countOrSetSize',
-                            stateId: 'countOrSetSize',
-                            text: 'Total Codes',
-                            width: 180,
-                            hidden: false,
-                            sortable: false,
-                            renderer: Ext.util.Format.numberRenderer('0,000')
-                        }, {
-                            xtype: 'gridcolumn',
-                            dataIndex: 'redemptionCount',
-                            stateId: 'redemptionCount',
-                            text: '# Redeemed',
-                            width: 180,
-                            hidden: false,
-                            sortable: false,
-                            renderer: Ext.util.Format.numberRenderer('0,000')
-                        }, {
-                            xtype: 'gridcolumn',
-                            dataIndex: 'redemptionPercent',
-                            stateId: 'redemptionPercent',
-                            text: '% Redeemed',
-                            width: 180,
-                            hidden: false,
-                            sortable: false,
-                            renderer: Ext.util.Format.numberRenderer('0.00 %')
+                return [
+                    {
+                        xtype: 'gridcolumn',
+                        dataIndex: 'name',
+                        stateId: 'name',
+                        text: 'Name',
+                        hideable: false,
+                        flex: 1,
+                        minWidth: 150,
+                        sortable: true
+                    }, {
+                        xtype: 'gridcolumn',
+                        dataIndex: 'couponCodeType',
+                        stateId: 'couponCodeType',
+                        text: 'Type',
+                        width: 150,
+                        sortable: true
+                    }, {
+                        xtype: 'gridcolumn',
+                        dataIndex: 'countOrSetSize',
+                        stateId: 'countOrSetSize',
+                        text: 'Total Codes',
+                        width: 180,
+                        hidden: false,
+                        sortable: false,
+                        renderer: Ext.util.Format.numberRenderer('0,000')
+                    }, {
+                        xtype: 'gridcolumn',
+                        dataIndex: 'redemptionCount',
+                        stateId: 'redemptionCount',
+                        text: '# Redeemed',
+                        width: 180,
+                        hidden: false,
+                        sortable: false,
+                        renderer: Ext.util.Format.numberRenderer('0,000')
+                    }, {
+                        xtype: 'gridcolumn',
+                        dataIndex: 'redemptionPercent',
+                        stateId: 'redemptionPercent',
+                        text: '% Redeemed',
+                        width: 180,
+                        hidden: false,
+                        sortable: false,
+                        renderer: Ext.util.Format.numberRenderer('0.00 %')
 
-                        }, {
-                            xtype: 'gridcolumn',
-                            dataIndex: 'assignedDiscountCount',
-                            stateId: 'assignedDiscountCount',
-                            text: '# of Assigned Discounts',
-                            width: 180,
-                            hidden: false,
-                            sortable: false,
-                            renderer: Ext.util.Format.numberRenderer('0,000')
-                        }, {
-                            xtype: 'gridcolumn',
-                            dataIndex: 'couponSetCode',
-                            stateId: 'couponSetCode',
-                            text: 'Code Prefix',
-                            width: 180,
-                            hidden: true,
-                            sortable: true
-                        }, {
-                            xtype: 'datecolumn',
-                            dataIndex: 'startDate',
-                            stateId: 'startDate',
-                            format: 'n/j/Y g:i a',
-                            width: 130,
-                            text: 'Start Date',
-                            hidden: true,
-                            sortable: true
-                        }, {
-                            xtype: 'datecolumn',
-                            dataIndex: 'endDate',
-                            stateId: 'endDate',
-                            format: 'm-d-Y g:i a',
-                            width: 130,
-                            text: 'End Date',
-                            hidden: true,
-                            sortable: true,
-                            renderer: function (value, metaData, record) {
-                                var val = "";
-                                if (!record.get("endDate")) {
-                                    val = "Never";
-                                    return val;
-                                }
-                                return Ext.Date.format(value, "n/j/Y g:i a");
+                    }, {
+                        xtype: 'gridcolumn',
+                        dataIndex: 'assignedDiscountCount',
+                        stateId: 'assignedDiscountCount',
+                        text: '# of Assigned Discounts',
+                        width: 180,
+                        hidden: false,
+                        sortable: false,
+                        renderer: Ext.util.Format.numberRenderer('0,000')
+                    }, {
+                        xtype: 'gridcolumn',
+                        dataIndex: 'couponSetCode',
+                        stateId: 'couponSetCode',
+                        text: 'Code Prefix',
+                        width: 180,
+                        hidden: true,
+                        sortable: true
+                    }, {
+                        xtype: 'datecolumn',
+                        dataIndex: 'startDate',
+                        stateId: 'startDate',
+                        format: 'n/j/Y g:i a',
+                        width: 130,
+                        text: 'Start Date',
+                        hidden: true,
+                        sortable: true
+                    }, {
+                        xtype: 'datecolumn',
+                        dataIndex: 'endDate',
+                        stateId: 'endDate',
+                        format: 'm-d-Y g:i a',
+                        width: 130,
+                        text: 'End Date',
+                        hidden: true,
+                        sortable: true,
+                        renderer: function (value, metaData, record) {
+                            var val = "";
+                            if (!record.get("endDate")) {
+                                val = "Never";
+                                return val;
                             }
+                            return Ext.Date.format(value, "n/j/Y g:i a");
                         }
-                    ];
+                    }
+                ];
 
-                return columns;
             }
             
         });
@@ -195,9 +193,7 @@ Ext.define('Taco.view.discount.widget.CouponSetSelector', {
 
     // when we have a single value situation;
     createField: function () {
-        var me = this,
-            previousFieldXtype,
-            fieldCfg = this.getFieldConfig(),
+        var fieldCfg = this.getFieldConfig(),
             value = (this.field) ? this.field.getValue() : this.value,
             fieldRecord = this.getFieldRecord(),
             isDisabled = (!fieldRecord);
@@ -230,7 +226,6 @@ Ext.define('Taco.view.discount.widget.CouponSetSelector', {
             if (this.fieldRelayers) {
                 Ext.destroy(this.fieldRelayers);
             }
-            previousFieldXtype = this.field.xtype;
             Ext.destroy(this.field);
         }
 
@@ -289,8 +284,7 @@ Ext.define('Taco.view.discount.widget.CouponSetSelector', {
     },
 
     getFieldConfigByDataType: function (dataType, fieldCfg) {
-        var me = this,
-            fieldCfg = fieldCfg || {};
+        var fieldCfg = fieldCfg || {};
 
         switch (dataType) {
             case "string":
@@ -424,14 +418,12 @@ Ext.define('Taco.view.discount.widget.CouponSetSelector', {
         return cfg;
     },
 
-    updateFieldRecord: function (record) {
-        var me = this;
+    updateFieldRecord: function () {
         this.updateFieldEditability();
         this.createField();
     },
 
     castValue: function (value, castTo) {
-
 
         if (!value) {
             return value;
@@ -494,8 +486,6 @@ Ext.define('Taco.view.discount.widget.CouponSetSelector', {
         
     },
     onDestroy: function () {
-        var me = this;
-
         this.callParent(arguments);
     }
 });

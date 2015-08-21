@@ -146,7 +146,7 @@ Ext.define('Taco.view.discount.LimitationsForm', {
             width: 300,
             checked: Ext.isEmpty(this.record.get('couponCode')) && this.couponSetStore.count() == 0,
             listeners: {
-                afterchange: function (cmp, newValue, oldValue) {
+                afterchange: function (cmp, newValue) {
                     if (newValue) {
                         this.onCouponChange(cmp.inputValue);
                     }
@@ -166,7 +166,7 @@ Ext.define('Taco.view.discount.LimitationsForm', {
             checked : !Ext.isEmpty(this.record.get('couponCode')),
             //checked: ((this.record.phantom && !this.record.isDuplicate) || (!this.record.get('includeAllProducts') && this.record.get('products').length)),
             listeners: {
-                afterchange: function (cmp, newValue, oldValue) {
+                afterchange: function (cmp, newValue) {
                     if (newValue) {
                         this.onCouponChange(cmp.inputValue);
                     }
@@ -184,7 +184,7 @@ Ext.define('Taco.view.discount.LimitationsForm', {
             width: 300,
             checked: (this.couponSetStore.count()), 
             listeners: {
-                afterchange: function (cmp, newValue, oldValue) {
+                afterchange: function (cmp, newValue) {
                     if (newValue) {
                         this.onCouponChange(cmp.inputValue);
                     }
@@ -255,6 +255,8 @@ Ext.define('Taco.view.discount.LimitationsForm', {
 
         this.couponSetBox = Ext.create('Taco.view.discount.widget.CouponSetSelector', {
             store:this.couponSetStore,
+            stateful: true,
+            stateId: 'statefulCouponSetSelector',
             fieldRecord: fieldRecord,
             hidden: !this.couponSetStore.count(),
             listeners: {

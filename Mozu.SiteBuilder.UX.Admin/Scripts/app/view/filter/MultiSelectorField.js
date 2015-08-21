@@ -37,7 +37,9 @@ Ext.define('Taco.view.filter.MultiSelectorField', {
         removeAction :"destroy", // or remove
         // warning this can cause layout run errors when the grid has no data. this is not ready for use yet
         autoHideGrid:true,
-        value: null
+        value: null,
+        stateful: false,
+        stateId: null
     },
 
     //isFormField:true,
@@ -52,7 +54,7 @@ Ext.define('Taco.view.filter.MultiSelectorField', {
             this.layout = {
                 type:"vbox",
                 align:"stretch"
-            }
+            };
         
 
 
@@ -85,8 +87,6 @@ Ext.define('Taco.view.filter.MultiSelectorField', {
             this.store = Ext.create('Ext.data.Store', storeConfig);
         }
 
-        
-
         var fieldCfg = Ext.apply(this.getFieldCfg(), {
             //emptyText:"Add a value (Enter Key)",
             value: "",
@@ -96,7 +96,6 @@ Ext.define('Taco.view.filter.MultiSelectorField', {
             name:"multiSelectorAddField"
         });
         
-        
         if (!fieldCfg.isPickerField && fieldCfg.xtype != "combo") {
             fieldCfg = Ext.applyIf(fieldCfg, {
                 emptyText: "Add a value and then hit ENTER Key"
@@ -104,7 +103,6 @@ Ext.define('Taco.view.filter.MultiSelectorField', {
         } else {
             fieldCfg.emptyText = this.emptyText || "";
         }
-
 
         this.addField = Ext.widget(fieldCfg);
 
@@ -129,7 +127,7 @@ Ext.define('Taco.view.filter.MultiSelectorField', {
             if (store.count() == 0) {
                 if (me.getAutoHideGrid()) {
                     me.list.hide();
-                };
+                }
                 me.addField.focus();
             }
         }, me);
@@ -151,8 +149,10 @@ Ext.define('Taco.view.filter.MultiSelectorField', {
             getColumnConfig: me.getColumnConfig,
             removeItemText : this.removeItemText,
             removeAction : this.getRemoveAction(),
-            hidden: (this.autoHideGrid && this.store.count() == 0)
-        }
+            hidden: (this.autoHideGrid && this.store.count() == 0),
+            stateful: this.getStateful(),
+            stateId: this.getStateId()
+        };
 
         if (this.getAutoHeightGrid()) {
             gridConfig.autoHeight = true;
@@ -216,13 +216,12 @@ Ext.define('Taco.view.filter.MultiSelectorField', {
     },
 
     getColumnConfig: function () {
-        var me = this,
-            columns = [
+        return [
                 {
                     //   xtype: 'gridcolumn',
                     dataIndex: 'id',
                     text: 'Id',
-                    renderer: function (value, record) {
+                renderer: function (value) {
                         return value;
                         //todo: add display format
                         //return Taco.app.context.getCurrent().formatCurrency(value);
@@ -232,8 +231,6 @@ Ext.define('Taco.view.filter.MultiSelectorField', {
                     minWidth: 150
                 }
             ];
-
-        return columns;
     },
 
     addValue: function(value,record) {
@@ -285,7 +282,7 @@ Ext.define('Taco.view.filter.MultiSelectorField', {
         var dataType = this.getDataType(),
             isNumber =  (dataType=="int" || dataType=="float"),
             isDate =  (dataType=="date" || dataType=="datatime"),
-            isString =  (dataType=="string")
+            isString =  (dataType=="string");
         if (value) {
             if (isNumber) {
                 value = parseFloat(value);
@@ -338,7 +335,6 @@ Ext.define('Taco.view.filter.MultiSelectorField', {
     },
 
     onDestroy: function () {
-        var me = this;
         this.callParent(arguments);
     }
 });
