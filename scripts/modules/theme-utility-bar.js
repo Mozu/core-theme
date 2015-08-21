@@ -4,7 +4,9 @@ define(['jquery', 'shim!vendor/datetimepicker/jquery-simple-datetimepicker[jquer
         var DateTimePicker = function() {
                 var me = this;
                 this.handler = $('#mz-date-display');
+                this.displayBar = $('#mz-date-display-cover');
                 this.urlBar = $('#mz-url-copy');
+                this.dateField = $('.visible-date');
                 this.setQueryString(this.getCookie(), true);
                 this.showUrl();
                 this.options = {
@@ -12,6 +14,7 @@ define(['jquery', 'shim!vendor/datetimepicker/jquery-simple-datetimepicker[jquer
                     currentTime: this.getCookie(),
                     onInit: function(handler) {
                         me.picker = handler;
+                        me.setDate(me.getCookie());
                     }
                 };
             },
@@ -33,8 +36,6 @@ define(['jquery', 'shim!vendor/datetimepicker/jquery-simple-datetimepicker[jquer
                         return cookie.indexOf('true') !== -1;
                     }
                 })();
-
-                console.log(this.isShown);
             },
             ShareAction = function() {
                 ButtonHandler.apply(this, arguments);
@@ -68,14 +69,14 @@ define(['jquery', 'shim!vendor/datetimepicker/jquery-simple-datetimepicker[jquer
         DateTimePicker.prototype.init = function() {
             this.plugin = this.handler.appendDtpicker(this.options);
 
-            $('#mz-date-icon').on('click', (function() {
+            this.displayBar.on('click', (function() {
                 this.picker.show();
             }).bind(this));
             
             $(document).on('click', (function(){
 
                 if (!this.picker.isShow()) {
-                    if (this.dateHasChanged.call(this)) location.search = 'mz_now=' + new Date(this.plugin.val()).toISOString();   
+                    if (this.dateHasChanged.call(this)) location.search = this.getQueryString(this.sanitizeDate());   
                 }
 
             }).bind(this));
@@ -85,6 +86,15 @@ define(['jquery', 'shim!vendor/datetimepicker/jquery-simple-datetimepicker[jquer
             }).bind(this));
 
             $(document).on('click', '.icon-home', this.setCookie.bind(this));
+        };
+
+        DateTimePicker.prototype.sanitizeDate = function() {
+            return new Date(this.plugin.val().replace(/-/g, '/')).toISOString();
+        };
+
+        DateTimePicker.prototype.setDate = function(date) {
+            date = date ? new Date(date).toDateString() + ', ' + new Date(date).toLocaleTimeString(navigator.language, {hour: '2-digit', minute:'2-digit'}) + ' CST': 'Now';
+            this.dateField.text(date);
         };
 
         DateTimePicker.prototype.getCookie = function() {
@@ -101,8 +111,28 @@ define(['jquery', 'shim!vendor/datetimepicker/jquery-simple-datetimepicker[jquer
 
         DateTimePicker.prototype.setQueryString = function(str, soft) {
             if (soft && str) {
-                window.history.pushState('MOZU', document.title, '?mz_now=' + str);
+
+                window.history.pushState('MOZU', document.title, this.getQueryString(str));
             }
+        };
+
+        DateTimePicker.prototype.getQueryString = function(str) {
+            var queryString = '';
+
+            if (location.search.indexOf('?') !== -1 && location.search.indexOf('mz_now') === -1) {
+                queryString = location.search + 'mz_now=' + str;
+            }
+
+            else if (location.search.indexOf('?') != -1) {
+                queryString = location.search.replace(/mz_now.*Z/, '') + '&' + 'mz_now=' + str;
+                queryString = queryString.replace(/(&)+/g, '&');
+            }
+
+            else {
+                queryString = '?mz_now=' + str;
+            }
+            
+            return queryString;
         };
 
         DateTimePicker.prototype.dateHasChanged = function() {
@@ -113,7 +143,7 @@ define(['jquery', 'shim!vendor/datetimepicker/jquery-simple-datetimepicker[jquer
             } 
 
             else if (window.location.search !== ''){
-                return new Date(this.plugin.val()).toISOString().substring(0, 23) !== this.getCookie().substring(0, 23);
+                return this.sanitizeDate().substring(0, 23) !== this.getCookie().substring(0, 23);
             }
             
         };
