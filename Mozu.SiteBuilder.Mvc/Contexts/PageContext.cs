@@ -160,6 +160,7 @@ namespace Mozu.SiteBuilder.Mvc.Contexts
         List<KeyValuePair<string, string>> BillingStates { get; set; }
         List<KeyValuePair<string, string>> ShippingStates { get; set; }
         string VisaCheckoutButtonUrl { get; set; }
+        string VisaCheckoutJavaScriptSdkUrl { get; set; }
         JObject ReasonCollection { get; set; }
         DateTime Now { get; set; }
         string CategoryCode { get; set; }

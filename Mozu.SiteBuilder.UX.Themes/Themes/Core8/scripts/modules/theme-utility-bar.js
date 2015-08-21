@@ -36,8 +36,6 @@ define(['jquery', 'shim!vendor/datetimepicker/jquery-simple-datetimepicker[jquer
                         return cookie.indexOf('true') !== -1;
                     }
                 })();
-
-                console.log(this.isShown);
             },
             ShareAction = function() {
                 ButtonHandler.apply(this, arguments);
@@ -78,7 +76,7 @@ define(['jquery', 'shim!vendor/datetimepicker/jquery-simple-datetimepicker[jquer
             $(document).on('click', (function(){
 
                 if (!this.picker.isShow()) {
-                    if (this.dateHasChanged.call(this)) location.search = 'mz_now=' + this.sanitizeDate();   
+                    if (this.dateHasChanged.call(this)) location.search = this.getQueryString(this.sanitizeDate());   
                 }
 
             }).bind(this));
@@ -113,8 +111,28 @@ define(['jquery', 'shim!vendor/datetimepicker/jquery-simple-datetimepicker[jquer
 
         DateTimePicker.prototype.setQueryString = function(str, soft) {
             if (soft && str) {
-                window.history.pushState('MOZU', document.title, '?mz_now=' + str);
+
+                window.history.pushState('MOZU', document.title, this.getQueryString(str));
             }
+        };
+
+        DateTimePicker.prototype.getQueryString = function(str) {
+            var queryString = '';
+
+            if (location.search.indexOf('?') !== -1 && location.search.indexOf('mz_now') === -1) {
+                queryString = location.search + 'mz_now=' + str;
+            }
+
+            else if (location.search.indexOf('?') != -1) {
+                queryString = location.search.replace(/mz_now.*Z/, '') + '&' + 'mz_now=' + str;
+                queryString = queryString.replace(/(&)+/g, '&');
+            }
+
+            else {
+                queryString = '?mz_now=' + str;
+            }
+            
+            return queryString;
         };
 
         DateTimePicker.prototype.dateHasChanged = function() {
@@ -125,7 +143,6 @@ define(['jquery', 'shim!vendor/datetimepicker/jquery-simple-datetimepicker[jquer
             } 
 
             else if (window.location.search !== ''){
-                console.log(this.plugin.val().replace(/-/g, '/'));
                 return this.sanitizeDate().substring(0, 23) !== this.getCookie().substring(0, 23);
             }
             

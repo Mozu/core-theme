@@ -116,15 +116,25 @@ Ext.define('Taco.core.util.Validation', {
         return slug.replace(Taco.core.util.Validation.getReplaceInvalidSeoRegex(), replaceString).toLowerCase();
     },
 
-    validateDateRange: function(startDateFld, endDateFld, endBeforeStartMsg) {
-        if (!startDateFld.isVisible()) return true;
 
-        if (!startDateFld.getValue() && !endDateFld.getValue()) {
-            return "You must enter an active start or end date.";
-        }
-        if (!startDateFld.getValue() || !endDateFld.getValue()) {
+
+    /*
+    *  Validates start date is before end date.  Can pass requiredCount of 0, 1 or 2 to enforce at number of fields required.
+    *  Defaults to 0.  Pass in different end & start msg.
+    *  validator: function() {
+    *    return Taco.core.util.Validation.validateDateRange(me.activeStartDateField, me.activeEndDateField,
+    *      "End date must be after start date", 0);
+    *  }
+     */
+    validateDateRange: function(startDateFld, endDateFld, endBeforeStartMsg, requiredCount) {
+        requiredCount = requiredCount || 0;
+
+        if (requiredCount === 0 && (!startDateFld.getValue() || !endDateFld.getValue())) {
             return true;
+        } else if (requiredCount >= 1 && (!startDateFld.getValue() && !endDateFld.getValue())) {
+            return "You must enter an active start " + (requiredCount == 1 ? "or" : "and") + " end date.";
         }
+
         var startDate = startDateFld.parseDate(startDateFld.getValue());
         var endDate = endDateFld.parseDate(endDateFld.getValue());
         if ((startDate && endDate) && (startDate >= endDate)) {
