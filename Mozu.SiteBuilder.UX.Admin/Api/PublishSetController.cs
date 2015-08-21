@@ -68,22 +68,26 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
                 var res = (await _cmsItemPublishingClient.GetPublishSetItems(code: code, pageSize: pagingParams.pageSize, startIndex: pagingParams.startIndex).ConfigureAwait(false)).ReadAsSync();
                 var returnItems = Mapper.Map<List<PublishSetItem>>(res.Items);
 
-                if (code == "all" || code == "unassigned")
+                var codes = res.Items.Select(x => x.PublishSetCode).Where(x => !string.IsNullOrEmpty(x)).Distinct().ToList();
+
+                if (codes.Count > 0)
                 {
-                    var codes = res.Items.Select(x => x.PublishSetCode).Where(x => !string.IsNullOrEmpty(x)).Distinct().ToList();
 
-                    if (codes.Count > 0)
+                    var query = string.Join(" or ", codes.Select(x => string.Format("Code eq {0}", x)));
+                    var resultSet = _publishSetWebApiClient.GetPublishSets(filter: query, pageSize: 100).Result.ReadAsSync();
+                    foreach (var draft in returnItems)
                     {
+                        var correctPublishSet = resultSet.Items.Where(x => x.Code == draft.PublishSetCode).FirstOrDefault();
 
-                        var query = string.Join(" or ", codes.Select(x => string.Format("Code eq {0}", x)));
-                        var resultSet = _publishSetWebApiClient.GetPublishSets(filter: query, pageSize: 100).Result.ReadAsSync();
-                        foreach (var draft in returnItems)
+                        if (correctPublishSet != null)
                         {
-                            draft.PublishSetName = resultSet.Items.Where(x => x.Code == draft.PublishSetCode).Select(x => x.Name).FirstOrDefault();
+                            draft.PublishSetName = correctPublishSet.Name;
+                            draft.PublishDate = correctPublishSet.PublishDate;
                         }
-                    }
 
+                    }
                 }
+
 
                 return List2(returnItems, (int)res.TotalCount);
             }
@@ -116,7 +120,14 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
                     var resultSet = _publishSetWebApiClient.GetPublishSets(filter: query, pageSize: 100).Result.ReadAsSync();
                     foreach (var draft in returnItems)
                     {
-                        draft.PublishSetName = resultSet.Items.Where(x => x.Code == draft.PublishSetCode).Select(x => x.Name).FirstOrDefault();
+                        var correctPublishSet = resultSet.Items.Where(x => x.Code == draft.PublishSetCode).FirstOrDefault();
+
+                        if (correctPublishSet != null)
+                        {
+                            draft.PublishSetName = correctPublishSet.Name;
+                            draft.PublishDate = correctPublishSet.PublishDate;
+                        }
+                        
                     }
                 }
 

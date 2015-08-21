@@ -29,8 +29,6 @@ Ext.define('Taco.view.generalsettings.Form', {
         var subFormConfig = {
             record: me.record
         };
-
-        console.log(subFormConfig);
         
         me.items = [
             Ext.create('Taco.view.generalSettings.subform.About', subFormConfig),

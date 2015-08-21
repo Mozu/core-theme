@@ -10,9 +10,17 @@
                 
                 <span>
                     <span>Preview Date: </span>
-                    <input id='mz-date-display' type="text" />
-                    <span id='mz-date-icon'></span>
+                    <div id='mz-date-display-cover'>
+                        <span id='mz-date-display' class='visible-date'></span>
+                        <span id='mz-date-icon'></span>
+                    </div>
                 </span>
+
+                 <span class='hidden-input'>
+                    <input id='mz-date-display' type="text" />
+                </span>
+
+
             </div>
 
             <div class='mz-preview-share'>

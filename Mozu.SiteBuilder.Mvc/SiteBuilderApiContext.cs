@@ -365,10 +365,12 @@ namespace Mozu.SiteBuilder.Mvc
 
     public static class Constants
     {
-        public const string DefaultTheme = "Core7";
+        public const string DefaultTheme = "Core8";
         public const string COOKIENAME = "SBCONTEXT";
         public const string DEBUGCOOKIENAME = "SBD";
 		public const string NOWCOOKIENAME = "MZ_NOW";
+        public const string HEADER_ALTERNATIVE_VIEW = "x-vol-alternative-view";
+        public const string HEADER_CANONICAL_URL = "x-vol-canonical-url";
 
     }
 }

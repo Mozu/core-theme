@@ -75,7 +75,7 @@ Ext.define('Taco.view.publishing.modal.PublishSetPicker', {
                                 });
                             },
                             change: function(cmp) {
-                                if (cmp.valueModels && cmp.valueModels[0] && cmp.getValue() !== -1) me.down('#publish-date-field').setValue(Ext.util.Format.date(cmp.valueModels[0].get('publishDate'), 'm/d/Y g:i a') || 'Unscheduled');
+                                if (cmp.valueModels && cmp.valueModels[0] && cmp.getValue() !== -1) me.down('#publish-date-field').setValue(Ext.util.Format.date(cmp.valueModels[0].get('publishDate'), 'M j, Y g:ia T') || 'Unscheduled');
                             }
                         }
                     },
@@ -87,6 +87,7 @@ Ext.define('Taco.view.publishing.modal.PublishSetPicker', {
                         labelAlign: 'top',
                         itemId: 'publish-date-field',
                         text: 'Publish Date',
+                        width: 400,
                         style: 'padding-top:30px;font:bold 14px/14px "SourceSansProRegular",helvetica,arial,verdana,sans-serif;',
                         border: false,
                         listeners: {

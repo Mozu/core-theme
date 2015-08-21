@@ -1,6 +1,7 @@
 /**
- * @class Taco.view.NotifierBar
+ * @class Taco.view.Growl
  */
+ 
 Ext.define('Taco.view.Growl', {
     extend: 'Taco.core.ux.window.Window',
     alias: 'widget.growl',
@@ -16,8 +17,6 @@ Ext.define('Taco.view.Growl', {
     ui: 'modal',
     width: '15%',
     duration: 2000,
-    y: 8,
-    x: window.innerWidth - 165,
 
     layout: {
         type: 'fit'

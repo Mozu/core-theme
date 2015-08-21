@@ -18,7 +18,7 @@ Ext.define('Taco.view.couponSet.Grid', {
         'Taco.view.discount.Edit',
         'Taco.core.ux.FilterableDataView',
         'Taco.core.ux.TextFilter',
-        'Taco.core.ux.grid.MenuColumn',        
+        'Taco.core.ux.grid.MenuColumn',
         'Taco.store.TargetedShippingMethods',
         'Taco.view.couponSet.AdvancedSearchForm',
         'Taco.view.couponSet.modal.CouponSetEditor',
@@ -34,9 +34,9 @@ Ext.define('Taco.view.couponSet.Grid', {
         requiresContextOfType: ['s']
     },
 
-    
+
     launchEditorOnClick:true,
-    
+
     // Required by mixin: Taco.core.ux.mixins.LaunchEditor defined in SearchList
     modelName: 'Taco.model.CouponSet',
 
@@ -64,7 +64,7 @@ Ext.define('Taco.view.couponSet.Grid', {
     enableDeleteAction:true,
 
     hideSearchToolbar: false,
-    
+
     title: "Coupon Sets",
 
     store: { type: 'Taco.store.CouponSetGrid' },
@@ -77,12 +77,12 @@ Ext.define('Taco.view.couponSet.Grid', {
 
     advancedSearchConfig : {
         advancedFormCls: 'Taco.view.couponSet.AdvancedSearchForm',
-        
+
         quickFilterData: [
             [{ orderStatus: 'Open' }, 'Open Orders'],
             [{ paymentstatus: 'Unpaid', orderStatus: 'Open' }, 'Unpaid Orders'],
             [{ paymentstatus: 'Paid', fulfillmentStatus: 'NotFulfilled' }, 'Paid, Pending Fulfillment Orders'],
-            [{ orderStatus: 'Pending', ordertype: 'Offline' }, 'Pending Orders'], 
+            [{ orderStatus: 'Pending', ordertype: 'Offline' }, 'Pending Orders'],
             [{ fulfillmentStatus: 'Fulfilled' }, 'Fulfilled Orders'],
             [{ orderStatus: 'Cancelled' }, 'Cancelled Orders'],
             [{ orderStatus: 'Errored' }, 'Errored Orders'],
@@ -96,15 +96,15 @@ Ext.define('Taco.view.couponSet.Grid', {
     stateId: 'statefulCouponSetGrid',
 
     statics: {
-        
+
     },
 
-        
+
     initComponent: function () {
         var me = this;
 
         me.createButtonCfg = me.getCreateButtonConfig();
-        
+
         this.columns = this.getColumnConfig();
 
         if (this.showActionsColumn) {
@@ -116,191 +116,11 @@ Ext.define('Taco.view.couponSet.Grid', {
 
         // initialize the delete mixin
         this.mixins.deleteFromGrid.init.apply(this);
-        
+
         me.callParent(arguments);
     },
-    
+
     getColumnConfig: function () {
-        var me = this,
-            columns = [
-                {
-                    xtype: 'gridcolumn',
-                    dataIndex: 'name',
-                    stateId: 'name',
-                    text: 'Name',
-                    hideable: false,
-                    flex: 1,
-                    minWidth: 150,
-                    sortable: true
-                }, {
-                    xtype: 'gridcolumn',
-                    dataIndex: 'couponCodeType',
-                    stateId: 'couponCodeType',
-                    text: 'Type',
-                    width: 150,
-                    sortable: true
-                }, {
-                    xtype: 'gridcolumn',
-                    dataIndex: 'countOrSetSize',
-                    stateId: 'countOrSetSize',
-                    text: 'Total Codes',
-                    width: 180,
-                    hidden: false,
-                    sortable: false,
-                    renderer: Ext.util.Format.numberRenderer('0,000')
-                }, {
-                    xtype: 'gridcolumn',
-                    dataIndex: 'redemptionCount',
-                    stateId: 'redemptionCount',
-                    text: '# Redeemed',
-                    width: 180,
-                    hidden: false,
-                    sortable: false,
-                    renderer: Ext.util.Format.numberRenderer('0,000')
-                }, {
-                    xtype: 'gridcolumn',
-                    dataIndex: 'redemptionPercent',
-                    stateId: 'redemptionPercent',
-                    text: '% Redeemed',
-                    width: 180,
-                    hidden: false,
-                    sortable: false,
-                    renderer: Ext.util.Format.numberRenderer('0.00 %')
-
-                }, {
-                    xtype: 'gridcolumn',
-                    dataIndex: 'assignedDiscountCount',
-                    stateId: 'assignedDiscountCount',
-                    text: '# of Assigned Discounts',
-                    width: 180,
-                    hidden: false,
-                    sortable: false,
-                    renderer: Ext.util.Format.numberRenderer('0,000')
-                }, {
-                    xtype: 'gridcolumn',
-                    dataIndex: 'couponSetCode',
-                    stateId: 'couponSetCode',
-                    text: 'Code Prefix',
-                    width: 180,
-                    hidden: true,
-                    sortable: true
-                }, {
-                    xtype: 'datecolumn',
-                    dataIndex: 'startDate',
-                    stateId: 'startDate',
-                    format: 'n/j/Y g:i a',
-                    width: 130,
-                    text: 'Start Date',
-                    hidden: true,
-                    sortable: true
-                }, {
-                    xtype: 'datecolumn',
-                    dataIndex: 'endDate',
-                    stateId: 'endDate',
-                    format: 'm-d-Y g:i a',
-                    width: 130,
-                    text: 'End Date',
-                    hidden: true,
-                    sortable: true,
-                    renderer: function (value, metaData, record) {
-                        var val = "";
-                        if (!record.get("endDate")) {
-                            val = "Never";
-                            return val;
-                        }
-                        return Ext.Date.format(value, "n/j/Y g:i a");
-                    }
-                }
-            ];
-
-        return columns;
-    },
-
-    // list of actions to put in action column and context menu;
-    getActionItems: function () {
-        var me = this,
-            actions = [];
-
-        if (this.enableEditAction) {
-            actions.push({
-                text: 'Edit',
-                requiredBehaviors: {
-                    model: 'Taco.model.CouponSet',
-                    behavior: 'update'
-                },
-                menuColumnHandler: me.doEdit,
-                scope:me
-            });
-        }
-
-
-        if (this.enableDeleteAction) {
-            actions.push({
-                text: 'Delete',
-                itemId: "deleteMenuItem",
-                // deleteMenuColumnHandler can be found in Taco.core.ux.mixins.DeleteFromGrid
-                menuColumnHandler: "deleteMenuColumnHandler",
-                requiredBehaviors: {
-                    model: 'Taco.model.CouponSet',
-                    behavior: 'delete'
-                },
-                scope: me
-            });
-        }
-
-        return actions;
-
-    },
-
-    onActionMenuShow: function (menu, eventData) {
-        var me = this;
-
-        // need to disable the delete menu option when discount has been used
-        var deleteMenuItem = menu.down("#deleteMenuItem");
-        if (deleteMenuItem) {
-            if (eventData.record.get('canBeDeleted')) {
-                deleteMenuItem.show();
-            } else {
-                deleteMenuItem.hide();
-            }
-        }
-    },
-
-    getActionColumn: function () {
-        var me = this,
-            actionColumn = null,
-            actions = this.getActionItems();
-
-        // as long as we have actions;
-        if (actions.length) {
-            actionColumn = {
-                xtype: 'taco.menucolumn',
-                text: 'Actions',
-                onMenuShow: me.onActionMenuShow,
-                menuItems: actions
-            }
-        }
-
-        return actionColumn;
-    },
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-    // override this method and adjust the columns if your need a grid with a subset of columns;
-    getColumnConfig2: function () {
-        var me = this;
         return [
             {
                 xtype: 'gridcolumn',
@@ -345,7 +165,6 @@ Ext.define('Taco.view.couponSet.Grid', {
                 hidden: false,
                 sortable: false,
                 renderer: Ext.util.Format.numberRenderer('0.00 %')
-
             }, {
                 xtype: 'gridcolumn',
                 dataIndex: 'assignedDiscountCount',
@@ -390,49 +209,90 @@ Ext.define('Taco.view.couponSet.Grid', {
                     return Ext.Date.format(value, "n/j/Y g:i a");
                 }
             }, {
-                xtype: 'taco.menucolumn',
-                text: 'Actions',
-                onMenuShow: function (menu, eventData) {
-                    // need to disable the delete menu option when discount has been used
-                    var deleteMenuItem = menu.down("#deleteMenuItem");
-                    if (eventData.record.get('canBeDeleted')) {
-                        deleteMenuItem.show();
-                    } else {
-                        deleteMenuItem.hide();
-                    }
-                },
-                //flex: 1,
-                menuItems: [
-                    {
-                        text: 'Edit',
-                        requiredBehaviors: {
-                            model: 'Taco.model.CouponSet',
-                            behavior: 'update'
-                        },
-                        menuColumnHandler: me.doEdit,
-                        //    function (item, eventData) {
-                        //    var record = eventData.record;
-                        //    Ext.defer(function () {
-                        //        Taco.core.StateManager.attemptNavigate(me.controllerName + '/edit/' + record.getId(), {complexMetaData: {record: record}});
-                        //    }, 1, this);
-                        //}
-                        scope: me
-                    }, {
-                        text: 'Delete',
-                        itemId: "deleteMenuItem",
-                        // deleteMenuColumnHandler can be found in Taco.core.ux.mixins.DeleteFromGrid
-                        menuColumnHandler: "deleteMenuColumnHandler",
-                        requiredBehaviors: {
-                            model: 'Taco.model.CouponSet',
-                            behavior: 'delete'
-                        },
-                        scope: me
-                    }
-                ]
+                xtype: 'gridcolumn',
+                dataIndex: 'maxRedemptionsPerCouponCode',
+                stateId: 'maxRedemptionsPerCouponCode',
+                text: 'Max Redemptions per Code',
+                width: 180,
+                hidden: true,
+                sortable: true
+            }, {
+                xtype: 'gridcolumn',
+                dataIndex: 'maxRedemptionsPerUser',
+                stateId: 'maxRedemptionsPerUser',
+                text: 'Max Redemptions per Customer',
+                width: 210,
+                hidden: true,
+                sortable: true
             }
         ];
     },
 
+    // list of actions to put in action column and context menu;
+    getActionItems: function () {
+        var me = this,
+            actions = [];
+
+        if (this.enableEditAction) {
+            actions.push({
+                text: 'Edit',
+                requiredBehaviors: {
+                    model: 'Taco.model.CouponSet',
+                    behavior: 'update'
+                },
+                menuColumnHandler: me.doEdit,
+                scope:me
+            });
+        }
+
+
+        if (this.enableDeleteAction) {
+            actions.push({
+                text: 'Delete',
+                itemId: "deleteMenuItem",
+                // deleteMenuColumnHandler can be found in Taco.core.ux.mixins.DeleteFromGrid
+                menuColumnHandler: "deleteMenuColumnHandler",
+                requiredBehaviors: {
+                    model: 'Taco.model.CouponSet',
+                    behavior: 'delete'
+                },
+                scope: me
+            });
+        }
+
+        return actions;
+
+    },
+
+    onActionMenuShow: function (menu, eventData) {
+        // need to disable the delete menu option when discount has been used
+        var deleteMenuItem = menu.down("#deleteMenuItem");
+        if (deleteMenuItem) {
+            if (eventData.record.get('canBeDeleted')) {
+                deleteMenuItem.show();
+            } else {
+                deleteMenuItem.hide();
+            }
+        }
+    },
+
+    getActionColumn: function () {
+        var me = this,
+            actionColumn = null,
+            actions = this.getActionItems();
+
+        // as long as we have actions;
+        if (actions.length) {
+            actionColumn = {
+                xtype: 'taco.menucolumn',
+                text: 'Actions',
+                onMenuShow: me.onActionMenuShow,
+                menuItems: actions
+            }
+        }
+
+        return actionColumn;
+    },
 
     launchEditor: function (record) {
         Ext.defer(function () {
@@ -459,7 +319,7 @@ Ext.define('Taco.view.couponSet.Grid', {
 
     openEditor: function (record, couponSetType, isNew) {
         var me = this;
-        
+
         Ext.create('Taco.view.couponSet.modal.CouponSetEditor', {
             // if we want to edit a draft only, pass recordId.
             // otherwise, pass the record.
@@ -547,7 +407,5 @@ Ext.define('Taco.view.couponSet.Grid', {
             }
         }
     }
-
-
 
 });

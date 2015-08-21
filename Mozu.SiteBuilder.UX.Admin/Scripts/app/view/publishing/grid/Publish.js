@@ -187,7 +187,7 @@ Ext.define('Taco.view.publishing.grid.Publish', {
                     stateId: 'publishDate',
                     columnWidth: 100,
                     text: 'Publish Date',
-                    renderer: Ext.util.Format.dateRenderer('d M, Y'),
+                    renderer: Ext.util.Format.dateRenderer('d M, Y, g:i a'),
                     sortable: true
                 },
                 {
@@ -197,7 +197,7 @@ Ext.define('Taco.view.publishing.grid.Publish', {
                     columnWidth: 100,
                     text: 'Created Date',
                     hidden: true,
-                    renderer: Ext.util.Format.dateRenderer('d M, Y'),
+                    renderer: Ext.util.Format.dateRenderer('d M, Y, g:i a'),
                     sortable: true
                 },
                 {
@@ -217,7 +217,7 @@ Ext.define('Taco.view.publishing.grid.Publish', {
                     columnWidth: 100,
                     text: 'Last Published',
                     hidden: true,
-                    renderer: Ext.util.Format.dateRenderer('d M, Y'),
+                    renderer: Ext.util.Format.dateRenderer('d M, Y, g:i a'),
                     sortable: false
                 },
                 {
@@ -237,7 +237,7 @@ Ext.define('Taco.view.publishing.grid.Publish', {
                     columnWidth: 100,
                     text: 'Last Updated',
                     hidden: true,
-                    renderer: Ext.util.Format.dateRenderer('d M, Y'),
+                    renderer: Ext.util.Format.dateRenderer('d M, Y, g:i a'),
                     sortable: true
                 },
                 {

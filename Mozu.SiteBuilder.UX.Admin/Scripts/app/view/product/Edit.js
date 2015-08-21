@@ -320,7 +320,7 @@
             tooltipContent += '<br/>';
             tooltipContent += generateTooltipKey('Publish Date:');
             tooltipContent += generateTooltipValue((pubInfo.publishSetInfo && pubInfo.publishSetInfo.scheduledDate
-                    ? Ext.Date.format(pubInfo.publishSetInfo.scheduledDate, 'F j, Y, g:i a T')
+                    ? Ext.Date.format(pubInfo.publishSetInfo.scheduledDate, 'M j, Y g:ia T')
                     : 'Unscheduled'), extraStyle);
 
             this.titlePanel.setTooltipContent(tooltipContent);

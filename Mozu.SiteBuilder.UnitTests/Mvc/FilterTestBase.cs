@@ -10,6 +10,8 @@ using NDjango.Interfaces;
 using NDjango.Misc;
 using NUnit.Framework;
 using System.Net.Http;
+using Autofac;
+using AutofacContrib.NSubstitute;
 
 namespace Mozu.SiteBuilder.UnitTests.Mvc
 {
@@ -74,7 +76,8 @@ namespace Mozu.SiteBuilder.UnitTests.Mvc
             }
 
             public Dictionary<string, string> Templates { get; set; }
-            public IEnumerable<object> ServiceRegistrations { get; set; }
+
+            public  Action<ContainerBuilder> ContainerModifier  { get; set; }
 
 
             public static Func<string, Tuple<bool, string>> CompareLiteral(string expected)
@@ -139,6 +142,10 @@ namespace Mozu.SiteBuilder.UnitTests.Mvc
             dict["now"] = DateTime.UtcNow;
             //add viewContextNode
             var hyprviewcontext = new HyprViewContext(null, null, null);
+            var modifier = desc.ContainerModifier ?? new Action<ContainerBuilder>(cb => { });
+            var autoSub =  new AutoSubstitute(modifier);
+            
+            hyprviewcontext.LifetimeScope = autoSub.Container;
             dict.Add("_vc", hyprviewcontext);
             hyprviewcontext.HttpContext = new HttpContextWrapper(new HttpContext(new HttpRequest("Default", "http://mozilla.com", ""), new HttpResponse(new StreamWriter(new MemoryStream()))));
             return dict;

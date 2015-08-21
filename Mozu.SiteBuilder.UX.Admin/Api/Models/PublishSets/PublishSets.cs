@@ -55,6 +55,16 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.Models.PublishSets
         public DateTime DraftUpdateDate { get; set; }
 
         /// <summary>
+        /// The date and time the document is scheduled to Publish
+        /// </summary>
+        public DateTime? PublishDate { get; set; }
+
+        /// <summary>
+        /// The date and time the document is was last published
+        /// </summary>
+        public DateTime? LastPublishDate { get; set; }
+
+        /// <summary>
         /// The userId or applicationId that last updated the draft document.
         /// </summary>
         public string UpdatedBy { get; set; }
