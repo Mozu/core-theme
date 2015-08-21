@@ -25,7 +25,7 @@ require(["modules/jquery-mozu", "underscore", "hyprlive", "modules/backbone-mozu
             me.model.choose.apply(me.model, arguments);
         },
         getRenderContext: function() {
-            var ctx = Backbone.MozuView.prototype.getRenderContext.apply(this, arguments);
+            var ctx = EditableView.prototype.getRenderContext.apply(this, arguments);
             ctx.viewData = viewData;
 
             return ctx;
@@ -169,13 +169,16 @@ require(["modules/jquery-mozu", "underscore", "hyprlive", "modules/backbone-mozu
             this.listenTo(this.model, 'change:digitalCreditCode', this.onEnterDigitalCreditCode, this);
             this.listenTo(this.model, 'orderPayment', function (order, scope) {
                     this.render();
-                    AmazonPay.addCheckoutButton(window.order.id, false);
+                    //AmazonPay.addCheckoutButton(window.order.id, false);
                 }, this);
             this.codeEntered = !!this.model.get('digitalCreditCode');
         },
         render: function() {
-            preserveElements(this, ['.v-button'], function() {
+            
+            
+            preserveElements(this, ['.v-button', '#amazonButonPaymentSection'], function() {
                 CheckoutStepView.prototype.render.apply(this, arguments);
+                
             });
             var status = this.model.stepStatus();
             if (visaCheckoutSettings.isEnabled && !this.visaCheckoutInitialized && this.$('.v-button').length > 0) {
@@ -183,6 +186,9 @@ require(["modules/jquery-mozu", "underscore", "hyprlive", "modules/backbone-mozu
                 require([pageContext.visaCheckoutJavaScriptSdkUrl]);
                 this.visaCheckoutInitialized = true;
             }
+            if ($("#AmazonPayButton").length > 0 && $("#amazonButonPaymentSection").length > 0)
+                $("#AmazonPayButton").removeAttr("style").appendTo("#amazonButonPaymentSection");
+            //AmazonPay.addCheckoutButton(window.order.id, false);
         },
         updateAcceptsMarketing: function() {
             this.model.getOrder().set('acceptsMarketing', $(e.currentTarget).prop('checked'));
@@ -512,7 +518,8 @@ require(["modules/jquery-mozu", "underscore", "hyprlive", "modules/backbone-mozu
 
         $checkoutView.noFlickerFadeIn();
 
+        if (AmazonPay.isEnabled)
+            AmazonPay.addCheckoutButton(window.order.id, false);
          
-         AmazonPay.addCheckoutButton(window.order.id, false);
     });
 });

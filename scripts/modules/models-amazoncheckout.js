@@ -3,8 +3,9 @@ define([
     "underscore",
     "modules/backbone-mozu",
     "modules/api",
-    "hyprlivecontext"
-],function ($, _, Backbone, api, HyprLiveContext) {
+    "hyprlivecontext",
+    "hyprlive"
+],function ($, _, Backbone, api, HyprLiveContext, Hypr) {
 
     var AwsCheckoutPage = Backbone.MozuModel.extend({
             mozuType: 'order',
@@ -20,8 +21,9 @@ define([
                 me.apiModel.getShippingMethods().then(
                     function (methods) {
 
-                        if (methods.length === 0)
-                            throw "Could not get shipping options for "+fulfillmentInfo.address.postalOrZipCode;
+                        if (methods.length === 0) {
+                            me.onCheckoutError(Hypr.getLabel("awsNoShippingOptions"));
+                        }
                         
                         var  shippingMethod = _.findWhere(methods, {shippingMethodCode: existingShippingMethodCode}) ||
                                                  _.min(methods, function(method){return method.price;});
@@ -59,11 +61,6 @@ define([
                         
                         "billingContact" : {
                             "email": me.get("fulfillmentInfo").fulfillmentContact.email
-                            /*"address" : {
-                                 "stateOrProvince": "n/a",
-                                "countryCode": "US",
-                                "addressType": "Residential"
-                            }*/
                         },
                         "orderId" : me.id,
                         "isSameBillingShippingAddress" : false
@@ -87,6 +84,20 @@ define([
                     me.isLoading(false);
                     me.applyShippingMethods(result.data,existingShippingMethodCode);
                 });
+            },
+             onCheckoutError: function (msg) {
+                var me = this,
+                    errorHandled = false;
+                me.isLoading(false);
+                error = {
+                        items: [
+                            {
+                                message: msg || Hypr.getLabel('unknownError')
+                            }
+                        ]
+                    };
+                this.trigger('error', error);
+                throw error;
             }
         });
 
