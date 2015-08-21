@@ -496,14 +496,15 @@ Ext.define('Taco.view.product.subform.General', {
             width: twoColumnFieldWidth,
             margin:"0 50 0 0",
             itemId: 'activeStartDt',
-            //endDateFieldName: 'activeEndDate',
             pickerOffset: 4,
             hidden: (!this.productInCatalogInfo || this.productInCatalogInfo.get('status') !== 'Scheduled'),
             value: this.productInCatalogInfo ? this.productInCatalogInfo.get('activeStartDate') : "",
             allowBlank: true,
             validator: function() {
-                return !me.productInCatalogInfo ||
-                    Taco.core.util.Validation.validateDateRange(me.activeStartDateField, me.activeEndDateField, "Start date must be before end date");
+                return !me.productInCatalogInfo
+                    || (!me.activeStartDateField.isVisible())
+                    || Taco.core.util.Validation.validateDateRange(me.activeStartDateField, me.activeEndDateField,
+                        "Start date must be before end date", 1);
             }
         });
 
@@ -514,14 +515,15 @@ Ext.define('Taco.view.product.subform.General', {
             itemId: 'activeEndDt',
             width: twoColumnFieldWidth,
             margin: "0 0 0 0",
-            startDateFieldName: 'activeStartDate',
             pickerOffset: 4,
             hidden: (!this.productInCatalogInfo || this.productInCatalogInfo.get('status') !== 'Scheduled'),
             value: this.productInCatalogInfo ? this.productInCatalogInfo.get('activeEndDate') : "",
             allowBlank: true,
             validator: function() {
-                return !me.productInCatalogInfo ||
-                    Taco.core.util.Validation.validateDateRange(me.activeStartDateField, me.activeEndDateField, "End date must be after start date");
+                return !me.productInCatalogInfo
+                    || (!me.activeEndDateField.isVisible())
+                    || Taco.core.util.Validation.validateDateRange(me.activeStartDateField, me.activeEndDateField,
+                        "End date must be after start date", 1);
             }
         });
 

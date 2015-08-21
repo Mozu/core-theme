@@ -51,7 +51,8 @@ Ext.define('Taco.view.couponSet.GeneralForm', {
             pickerOffset: 4,
             allowBlank: true,
             validator: function() {
-                return Taco.core.util.Validation.validateDateRange(me.activeStartDateField, me.activeEndDateField, "Start date must be before end date");
+                return Taco.core.util.Validation.validateDateRange(me.activeStartDateField, me.activeEndDateField,
+                    "Start date must be before end date", 0);
             }
         });
 
@@ -65,7 +66,8 @@ Ext.define('Taco.view.couponSet.GeneralForm', {
             pickerOffset: 4,
             allowBlank: true,
             validator: function() {
-                return Taco.core.util.Validation.validateDateRange(me.activeStartDateField, me.activeEndDateField, "End date must be after start date");
+                return Taco.core.util.Validation.validateDateRange(me.activeStartDateField, me.activeEndDateField,
+                    "End date must be after start date", 0);
             }
         });
 
