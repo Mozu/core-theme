@@ -70,7 +70,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
 
             try
             {
-                var couponCodeList = (await _couponSetWebClient.GetCoupons(couponSetCode, pagingParams.startIndex, pagingParams.pageSize, sort, filter)).ReadAsSync();
+                var couponCodeList = (await _couponSetWebClient.GetCoupons(couponSetCode, pagingParams.startIndex, pagingParams.pageSize, sort, filter, responseGroups:"Counts")).ReadAsSync();
 
                 var couponCodeListItems = Mapper.Map<List<Coupon>>(couponCodeList.Items);
 
