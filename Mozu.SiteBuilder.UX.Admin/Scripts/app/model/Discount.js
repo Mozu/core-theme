@@ -298,6 +298,7 @@ Ext.define('Taco.model.Discount', {
                     autoLoad: true,
                     clearFilters: false,
                     remoteFilter: false,
+                    remoteSort:false,
                     data: this.get("couponSets"),
                     proxy: {
                         type: 'memory',

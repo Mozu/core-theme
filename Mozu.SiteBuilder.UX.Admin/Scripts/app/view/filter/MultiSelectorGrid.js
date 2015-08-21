@@ -15,6 +15,7 @@ Ext.define('Taco.view.filter.MultiSelectorGrid', {
     
     showActionsColumn:true,
     
+    sortableColumns : false,
 
     statics: {
         
@@ -23,6 +24,8 @@ Ext.define('Taco.view.filter.MultiSelectorGrid', {
         
     deferEmptyText: false,
     emptyText: "No Values To Display",
+
+    removeItemText: 'Delete',
 
     //autoHeight:true,
     //height:"300",
@@ -219,7 +222,7 @@ Ext.define('Taco.view.filter.MultiSelectorGrid', {
             //});
 
             actions.push({
-                text: 'Delete',
+                text: this.removeItemText,
                 itemId: "deleteMenuItem",
                 accelerator: "DELETE",
                 width: 250,

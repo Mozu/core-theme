@@ -256,7 +256,13 @@ Ext.define('Taco.view.discount.LimitationsForm', {
         this.couponSetBox = Ext.create('Taco.view.discount.widget.CouponSetSelector', {
             store:this.couponSetStore,
             fieldRecord: fieldRecord,
-            hidden: !this.couponSetStore.count()
+            hidden: !this.couponSetStore.count(),
+            listeners: {
+                change: function () {
+                    me.parentForm.getForm().checkValidity();
+                },
+                scope:me
+            }
         });
 
 

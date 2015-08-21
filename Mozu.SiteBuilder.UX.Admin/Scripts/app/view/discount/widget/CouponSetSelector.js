@@ -69,6 +69,7 @@ Ext.define('Taco.view.discount.widget.CouponSetSelector', {
             hideHeaders: false,
             model: 'Taco.model.CouponSet',
             store: this.store,
+            removeItemText : "Remove",
             fieldCfg: fieldCfg,
             removeAction: "remove",
             autoHideGrid:this.autoHideGrid,
@@ -76,6 +77,13 @@ Ext.define('Taco.view.discount.widget.CouponSetSelector', {
             //flex: 1,
             emptyText: fieldCfg.emptyText || "Select coupon sets",
             value: value,
+            listeners: {
+                'change':function () {
+                    me.checkChange();
+                },
+                scope:me
+
+            },
             getColumnConfig: function () {
                 var me = this,
                     columns = [
@@ -469,6 +477,10 @@ Ext.define('Taco.view.discount.widget.CouponSetSelector', {
     },
     isValid: function () {
         return this.validate();
+    },
+
+    getErrors: function() {
+        return this.callParent(arguments);
     },
 
     validate: function () {

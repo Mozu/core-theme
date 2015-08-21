@@ -26,6 +26,7 @@ Ext.define('Taco.view.filter.MultiSelectorField', {
         model: null,
         store: null,
         
+        removeItemText : "Delete",
         autoHeightGrid:false,
         singleSelect: false,
         dataType: "string",
@@ -134,7 +135,10 @@ Ext.define('Taco.view.filter.MultiSelectorField', {
         }, me);
 
         this.mon(this.store, 'datachanged', function (store) {
-            this.validate();
+            //this.validate();
+            
+            var oldValue = this.value;
+            this.fireEvent('change', this, this.getValue(), oldValue);
         }, me);
 
 
@@ -145,6 +149,7 @@ Ext.define('Taco.view.filter.MultiSelectorField', {
             hideHeaders:this.getHideHeaders(),
             store: this.store,
             getColumnConfig: me.getColumnConfig,
+            removeItemText : this.removeItemText,
             removeAction : this.getRemoveAction(),
             hidden: (this.autoHideGrid && this.store.count() == 0)
         }
@@ -321,6 +326,10 @@ Ext.define('Taco.view.filter.MultiSelectorField', {
         if (!value) {
             this.store.removeAll();
         }
+    },
+
+    isValid : function() {
+        return this.callParent(arguments);
     },
 
     validate: function () {
