@@ -1,6 +1,6 @@
 require(["modules/jquery-mozu","modules/backbone-mozu",'modules/editable-view', "modules/eventbus","underscore", 
-	"modules/amazonPay","modules/models-amazoncheckout", 'modules/preserve-element-through-render'], 
-	function ($,Backbone, EditableView, EventBus, _, AmazonPay, AmazonCheckoutModels, PreserveElements) {
+	"modules/amazonPay","modules/models-amazoncheckout"], 
+	function ($,Backbone, EditableView, EventBus, _, AmazonPay, AmazonCheckoutModels) {
  
 
 	var AmazonCheckoutView = EditableView.extend({
@@ -23,10 +23,6 @@ require(["modules/jquery-mozu","modules/backbone-mozu",'modules/editable-view', 
 			
 		},
 		render: function() {
-			//PreserveElements(this, ['#amazonAddressBookWidgetDiv','#walletWidgetDiv'], function() {
-            //    Backbone.MozuView.prototype.render.call(this);
-            //});
-			//EventBus.on("aws-address-selected", function() {AmazonPay.addWalletWidget();});
 			AmazonPay.addAddressWidget();
 		},
 		setawsOrderData: function(data) {
@@ -41,8 +37,7 @@ require(["modules/jquery-mozu","modules/backbone-mozu",'modules/editable-view', 
 			window.location = document.referrer;
 		},
 		submit: function(){
-			this.model.submit();
-			//window.location = "/checkout/"+this.model.get("id");
+			this.model.submit();			
 		}
 	});
 
@@ -57,9 +52,5 @@ require(["modules/jquery-mozu","modules/backbone-mozu",'modules/editable-view', 
 									model: checkoutModel,
 									messagesEl: $('[data-mz-message-bar]')
 								});
-
-		//var checkout = new AmazonCheckout();
-		//checkout.init();
-	
 	});
 });

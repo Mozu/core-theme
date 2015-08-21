@@ -81,8 +81,8 @@
                                 </div>
                             {%endif%}
                              {% if externalPayment.name == "PayWithAmazon" %}
-                                <div class="mz-paymenttype" style="margin-top:10px;">
-                                    <div id="AmazonPayButton"/>
+                                <div class="mz-paymenttype" id="amazonButonPaymentSection" style="margin-top:10px;">
+                                   
                                 </div>    
                             {%endif%}
                         </div>
@@ -95,4 +95,5 @@
     {% if model.paymentType == "PaypalExpress" %}
         <p>{{ labels.paypalExpressInfo }}</p>
     {% endif %}
+     
 {% endwith %}
