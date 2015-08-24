@@ -1311,7 +1311,7 @@ Ext.define('Taco.view.website.Index', {
     onTreeUrlClick: function (tree, url, record) {
 
         this.navigate({
-            url: url
+            url: record.get('url')
         });
     },
 

@@ -25,8 +25,95 @@
 
     <script>
         window.HyprLiveContext = {
-            locals: {},
-            templates: {}
+          "locals": {
+            "siteContext": {
+              "themeId": null,
+              "generalSettings": {
+                "websiteName": "BFPerfSite",
+                "siteTimeZone": "Central Standard Time",
+                "siteTimeFormat": "hh:mm:ss tt",
+                "adjustForDaylightSavingTime": false,
+                "allowAllIPs": false,
+                "senderEmailAddress": "BFTenant@volusion.com",
+                "replyToEmailAddress": "BFTenant@volusion.com",
+                "cdnCacheBustKey": 1234,
+                "supressedEmailTransactions": {
+                  "backInStock": null,
+                  "orderChanged": null,
+                  "orderShipped": null,
+                  "orderFulfillmentDetailsChanged": null,
+                  "shopperLoginCreated": null,
+                  "shopperPasswordReset": null,
+                  "returnCreated": null,
+                  "returnAuthorized": null,
+                  "returnUpdated": null,
+                  "returnRejected": null,
+                  "returnCancelled": null,
+                  "returnClosed": null,
+                  "refundCreated": null,
+                  "storeCreditCreated": null,
+                  "storeCreditUpdated": null,
+                  "giftCardCreated": null
+                },
+                "desktopTheme": {},
+                "isGoogleAnalyticsEnabled": false,
+                "isGoogleAnalyticsEcommerceEnabled": false,
+                "isWishlistCreationEnabled": false,
+                "allowInvalidAddresses": false,
+                "isAddressValidationEnabled": false,
+                "isRequiredLoginForLiveEnabled": false,
+                "isRequiredLoginForStagingEnabled": false
+              },
+              "checkoutSettings": {
+                "customerCheckoutType": "LoginOptional",
+                "paymentProcessingFlowType": "AuthorizeOnOrderPlacementAndCaptureOnOrderShipment",
+                "payByMail": true,
+                "useOverridePriceToCalculateDiscounts": false,
+                "isPayPalEnabled": false,
+                "supportedCards": {},
+                "visaCheckout": {
+                  "isEnabled": false
+                },
+                "externalPaymentWorkflowSettings": [{
+                  "name": "PayPalExpress",
+                  "namespace": "tenant",
+                  "fullyQualifiedName": "tenant~PayPalExpress",
+                  "isEnabled": false,
+                  "credentials": []
+                }, {
+                  "name": "VisaCheckout",
+                  "namespace": "tenant",
+                  "fullyQualifiedName": "tenant~VisaCheckout",
+                  "isEnabled": false,
+                  "credentials": [{
+                    "displayName": "ClientId",
+                    "apiName": "CLIENTID",
+                    "inputType": "TextBox",
+                    "vocabularyValues": []
+                  }, {
+                    "displayName": "ApiKey",
+                    "apiName": "APIKEY",
+                    "inputType": "TextBox",
+                    "vocabularyValues": []
+                  }]
+                }]
+              },
+              "cdnPrefix": "//cdn.mozu-perf.volusion.com/9795-9865",
+              "secureHost": "http://cdn.mozu-perf.volusion.com",
+              "supportsInStorePickup": false,
+              "currencyInfo": {
+                "currencyCode": "usd",
+                "englishName": "US dollar",
+                "symbol": "$",
+                "precision": 2,
+                "roundingType": "upToCurrencyPrecision"
+              }
+            },
+            "themeSettings": {
+              "listProductThumbSize": 150
+            }
+          },
+          "templates": {}
         };
         require = function() { };
         require.mozuData = function() {

@@ -93,7 +93,7 @@ NUGET
   remote: http://nuget-internal.corp.volusion.com:8200/api/odata
   specs:
     Jolt (1.0.0)
-    Mozu.AdminUser.Contracts (1.17.2)
+    Mozu.AdminUser.Contracts (1.18.1)
       Mozu.Core.Prime (>= 1.17)
       Mozu.Tenant.Contracts
     Mozu.AppDev.Contracts (1.17.2)
@@ -106,19 +106,17 @@ NUGET
       Mozu.PricingRuntime.Contracts
       Mozu.ShippingRuntime.Contracts
       Newtonsoft.Json
-    Mozu.Content.Contracts (1.18.1-dev1508101540ci)
+    Mozu.Content.Contracts (1.18.2-dev1508241943ci)
       Mozu.Core.Prime (>= 1.17)
-    Mozu.Core.Api.Contracts (1.17.1)
-      Mozu.Core.Prime (>= 1.17.0)
     Mozu.Core.Extensible.Contracts (1.17.1)
       Mozu.Core.Prime (>= 1.17)
-    Mozu.Core.Messaging (1.17.1)
-      Burrows (>= 0.3.1.0)
-      Mozu.Core.Messaging.Contracts (>= 1.17.0)
-      Mozu.Core.Prime (>= 1.17.0)
-    Mozu.Core.Messaging.Contracts (1.17.1)
-      Mozu.Core.Prime (>= 1.17.0)
-    Mozu.Core.Prime (1.18.6)
+    Mozu.Core.Messaging (1.18.1)
+      Burrows (>= 0.3.3.0)
+      Mozu.Core.Messaging.Contracts (>= 1.18.0)
+      Mozu.Core.Prime (>= 1.18.0)
+    Mozu.Core.Messaging.Contracts (1.18.1)
+      Mozu.Core.Prime (>= 1.18.0)
+    Mozu.Core.Prime (1.18.8)
       AutoMapper (>= 3.3.0)
       Autofac (>= 3.5.2)
       Autofac.WebApi2 (>= 3.4.0)
@@ -133,7 +131,7 @@ NUGET
       Sprache (>= 2.0.0.45)
       log4net (>= 2.0.3)
       mongocsharpdriver (>= 1.10.0)
-    Mozu.Core.Test (1.17.1)
+    Mozu.Core.Test (1.18.8)
       Autofac (>= 3.5.2)
       AutofacContrib.NSubstitute (>= 3.3.2)
       FluentAssertions (>= 3.2.2)
@@ -157,7 +155,7 @@ NUGET
     Mozu.PricingRuntime.Contracts (1.17.1)
       Mozu.Core.Prime (>= 1.17.6)
     Mozu.ProductAdmin.Contracts (1.18.1-dev1508202039)
-      Mozu.Core.Prime (>= 1.17.6) - framework: >= net45
+      Mozu.Core.Prime (>= 1.17.6)
     Mozu.ProductRuntime.Contracts (1.18.1-dev1508111935tes)
       Mozu.Core.Prime (>= 1.17.0)
     Mozu.Provisioning.Contracts (1.17.5)
@@ -175,7 +173,7 @@ NUGET
     Mozu.SiteSettings.Order.Contracts (1.18.1-dev1507311602)
       Mozu.Core.Prime (>= 1.17)
       Mozu.PaymentService.Contracts (>= 1.9.6)
-    Mozu.Tenant.Contracts (1.17.2)
+    Mozu.Tenant.Contracts (1.18.1)
       Mozu.Core.Prime (>= 1.17)
     Mozu.VS.PowerShell (1.17.1)
     OctoPack (2.1.3)
