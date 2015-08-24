@@ -9,7 +9,6 @@ Mozu.AdminUser.Contracts
 Mozu.AppDev.Contracts
 Mozu.CommerceRuntime.Contracts
 Mozu.Content.Contracts
-Mozu.Core.Api.Contracts
 Mozu.Core.Messaging
 Mozu.Customer.Contracts
 Mozu.Hypr.NDjango

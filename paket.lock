@@ -41,8 +41,8 @@ NUGET
       Microsoft.AspNet.WebPages (>= 3.2.2 < 3.3.0)
     Microsoft.AspNet.Razor (3.2.2)
     Microsoft.AspNet.WebApi.Client (5.2.3)
-      Microsoft.Net.Http (>= 2.2.22) - framework: portable-wp80+win+net45+wp81+Unsupported
-      Newtonsoft.Json (>= 6.0.4) - framework: portable-wp80+win+net45+wp81+Unsupported, >= net45
+      Microsoft.Net.Http (>= 2.2.22)
+      Newtonsoft.Json (>= 6.0.4)
     Microsoft.AspNet.WebApi.Core (5.2.3)
       Microsoft.AspNet.WebApi.Client (>= 5.2.3)
     Microsoft.AspNet.WebApi.WebHost (5.2.3)
@@ -53,7 +53,7 @@ NUGET
     Microsoft.Bcl (1.1.9)
       Microsoft.Bcl.Build (>= 1.0.14)
     Microsoft.Bcl.Build (1.0.14)
-    Microsoft.Net.Http (2.2.28) - framework: portable-wp80+win+net45+wp81+Unsupported
+    Microsoft.Net.Http (2.2.28) - framework: portable-wp80+win+net45+wp81+unsupported
       Microsoft.Bcl (>= 1.1.9)
       Microsoft.Bcl.Build (>= 1.0.14)
     Microsoft.Owin (3.0.0)
@@ -93,7 +93,7 @@ NUGET
   remote: http://nuget-internal.corp.volusion.com:8200/api/odata
   specs:
     Jolt (1.0.0)
-    Mozu.AdminUser.Contracts (1.17.2)
+    Mozu.AdminUser.Contracts (1.18.1)
       Mozu.Core.Prime (>= 1.17)
       Mozu.Tenant.Contracts
     Mozu.AppDev.Contracts (1.17.2)
@@ -108,16 +108,14 @@ NUGET
       Newtonsoft.Json
     Mozu.Content.Contracts (1.18.1-dev1508101540ci)
       Mozu.Core.Prime (>= 1.17)
-    Mozu.Core.Api.Contracts (1.17.1)
-      Mozu.Core.Prime (>= 1.17.0)
     Mozu.Core.Extensible.Contracts (1.17.1)
       Mozu.Core.Prime (>= 1.17)
-    Mozu.Core.Messaging (1.17.1)
-      Burrows (>= 0.3.1.0)
-      Mozu.Core.Messaging.Contracts (>= 1.17.0)
-      Mozu.Core.Prime (>= 1.17.0)
-    Mozu.Core.Messaging.Contracts (1.17.1)
-      Mozu.Core.Prime (>= 1.17.0)
+    Mozu.Core.Messaging (1.18.1)
+      Burrows (>= 0.3.3.0)
+      Mozu.Core.Messaging.Contracts (>= 1.18.0)
+      Mozu.Core.Prime (>= 1.18.0)
+    Mozu.Core.Messaging.Contracts (1.18.1)
+      Mozu.Core.Prime (>= 1.18.0)
     Mozu.Core.Prime (1.18.8)
       AutoMapper (>= 3.3.0)
       Autofac (>= 3.5.2)
@@ -133,7 +131,7 @@ NUGET
       Sprache (>= 2.0.0.45)
       log4net (>= 2.0.3)
       mongocsharpdriver (>= 1.10.0)
-    Mozu.Core.Test (1.17.1)
+    Mozu.Core.Test (1.18.8)
       Autofac (>= 3.5.2)
       AutofacContrib.NSubstitute (>= 3.3.2)
       FluentAssertions (>= 3.2.2)
@@ -175,7 +173,7 @@ NUGET
     Mozu.SiteSettings.Order.Contracts (1.18.1-dev1507311602)
       Mozu.Core.Prime (>= 1.17)
       Mozu.PaymentService.Contracts (>= 1.9.6)
-    Mozu.Tenant.Contracts (1.17.2)
+    Mozu.Tenant.Contracts (1.18.1)
       Mozu.Core.Prime (>= 1.17)
     Mozu.VS.PowerShell (1.17.1)
     OctoPack (2.1.3)
