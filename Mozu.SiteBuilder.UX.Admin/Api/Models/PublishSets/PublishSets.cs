@@ -45,11 +45,6 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.Models.PublishSets
         public string ListFQN { get; set; }
 
         /// <summary>
-        /// The date and time the document was last published, if any.
-        /// </summary>
-        public DateTime? ActiveUpdateDate { get; set; }
-
-        /// <summary>
         /// The date and time the document draft was last updated.
         /// </summary>
         public DateTime DraftUpdateDate { get; set; }

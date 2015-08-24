@@ -24,7 +24,11 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.ModelMapping
             // To model
 
             Mapper.CreateMap<DC.DocumentDraftSummary, PublishSetItem>()
-                .ForMember(x => x.Type, opt => opt.UseValue("cms"));
+                .ForMember(x => x.Type, opt => opt.UseValue("cms"))
+                .ForMember(x => x.LastPublishDate, opt => opt.ResolveUsing(d => d.ActiveUpdateDate))
+                .ForMember(x => x.LastPublishedBy, opt => opt.ResolveUsing(d => d.ActiveUpdatedBy))
+                ;
+
             Mapper.CreateMap<PublishSetItem, DC.DocumentDraftSummary>();
 
             Mapper.CreateMap<SE.PublishSet, PublishSet>();
