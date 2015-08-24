@@ -56,11 +56,11 @@
         {% endif %}
 
         {% block stylesheets %}
-        {{ "/stylesheets/storefront.less"|stylesheet_tag:"default" }}
+        <link rel="stylesheet" href="{% make_url "stylesheet" "/stylesheets/storefront.less" %}" title="default" />
         {% endblock stylesheets %}
         
         {% block head-tag-scripts %}
-        <script src="{{siteContext.cdnPrefix}}/scripts/vendor/modernizr.min.js"></script>
+        <script src="{% make_url "cdn" "/scripts/vendor/modernizr.min.js" %}"></script>
         {% include "modules/web-fonts-loader" %}
         {% endblock head-tag-scripts %}
         {% cms_resources %}
