@@ -59,6 +59,10 @@ module.exports = function(grunt) {
                 }
             }
         },
+        watch: {
+            files: ['src/*', 'tests/HyprLiveSpec.js'],
+            tasks: ['default']
+        },
         mocha: {
             test: {
                 options: {
@@ -71,6 +75,8 @@ module.exports = function(grunt) {
     });
 
     Object.keys(grunt.file.readJSON('package.json').devDependencies).filter(function(dep) { return dep.match(/^grunt-/); }).forEach(grunt.loadNpmTasks);
+
+    grunt.loadNpmTasks('grunt-contrib-watch');
 
     //var order = ['clean:dist', 'concat', 'uglify', 'clean:tmp', 'connect:server', 'mocha'];
     // while zetlen swig's bower.json is still mysteriously out of whack, let's just never bower

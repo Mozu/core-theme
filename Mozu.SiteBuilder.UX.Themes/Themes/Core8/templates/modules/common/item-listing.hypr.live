@@ -4,7 +4,7 @@
   {% block item-listing-image %}
   {% if model.product.imageUrl %}
   <div class="mz-itemlisting-thumb">
-    <img class="mz-itemlisting-thumb-img" src="{{ model.product.imageUrl }}?max=80" {% if model.product.imageAlternateText %}alt="{{ model.product.imageAlternateText }}"{% endif %} />
+    <img class="mz-itemlisting-thumb-img" src="{% make_url "image" model.product with max=80 as_parameters %}" {% if model.product.imageAlternateText %}alt="{{ model.product.imageAlternateText }}"{% endif %} />
   </div>
   {% endif %}
   {% endblock item-listing-image %}

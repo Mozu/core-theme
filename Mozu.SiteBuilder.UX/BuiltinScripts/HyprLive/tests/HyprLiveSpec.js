@@ -19,7 +19,7 @@
             HyprLiveContext.templates['path/to/example3'] = '{{pageContext.query.bluch}}';
             HyprLiveContext.templates['path/to/example4'] = '{{pageContext.query.htmlqs}}';
             history.replaceState({}, null, window.location.href.split('?').shift() + "?funch=wunch&gunch= spaces then brunch&htmlqs=<b>bla</b>")
-        })
+        });
         it('include getTemplate, getThemeSetting, and getLabel methods', function() {
             expect(Hypr).to.respondTo('getTemplate');
             expect(Hypr).to.respondTo('getThemeSetting');
@@ -48,6 +48,12 @@
         });
     });
     describe('custom tags', function() {
+        before(function() {
+            HyprLiveContext.locals.themeSettings = HyprLiveContext.locals.themeSettings || {};
+
+            HyprLiveContext.locals.themeSettings.listProductThumbSize = 150;
+        });
+
         ['require_script', 'json_attribute', 'data_attributes'].forEach(function(attr) {
             it('has a null tag ' + attr + ' that fails silently', function() {
                 expect(Hypr.engine.render('{% ' + attr + ' %}')).not.to.throw;
@@ -68,8 +74,108 @@
             expect(Hypr.engine.render('{% dropzone "why-not" %}')).to.equal('<div id="mz-drop-zone-why-not" class="mz-drop-zone"></div>');
             expect(Hypr.engine.render('{% dropzone "why-again" scope="page" %}')).to.equal('<div id="mz-drop-zone-why-again" class="mz-drop-zone"></div>');
         });
+
+        it('has a tag {% make_url "image" %} that produces a valid Image url', function() {
+            var data = { locals: { image: { imageUrl: '//cdn.mozu.com/img.jpg' } } };
+            expect(Hypr.engine.render('{% make_url "image" image %}', data))
+                .to.equal('//cdn.mozu.com/img.jpg?_mzCb=1234');
+            expect(Hypr.engine.render('{% make_url "image" image with max=themeSettings.listProductThumbSize as_parameter %}', data))
+                .to.equal('//cdn.mozu.com/img.jpg?max=150&_mzCb=1234');
+            expect(Hypr.engine.render('{% make_url "image" image with max=themeSettings.listProductThumbSize size=1 as_parameter %}', data))
+                .to.equal('//cdn.mozu.com/img.jpg?max=150&size=1&_mzCb=1234');
+        });
+
+        it('has a tag {% make_url "product" %} that produces a valid Product url', function() {
+            expect(Hypr.engine.render('{% make_url "product" 1234 %}'))
+                .to.equal('/p/1234');
+            expect(Hypr.engine.render('{% make_url "product" "something-code-12" %}'))
+                .to.equal('/p/something-code-12');
+            expect(Hypr.engine.render('{% make_url "product" model %}', { locals: { model: { productCode: 'something-code-12' } } }))
+                .to.equal('/p/something-code-12');
+        });
+
+        it('has a tag {% make_url "category" %} that produces a valid Category url', function() {
+            expect(Hypr.engine.render('{% make_url "category" 1234 %}'))
+                .to.equal('/c/1234');
+            expect(Hypr.engine.render('{% make_url "category" "something-code-12" %}'))
+                .to.equal('/c/something-code-12');
+            expect(Hypr.engine.render('{% make_url "category" model %}', { locals: { model: { categoryCode: 'something-code-12' } } }))
+                .to.equal('/c/something-code-12');
+        });
+
+        it('has a tag {% make_url "sorting" %} that produces a valid Sorting url', function() {
+            // ensure query string is not overwritten
+            history.replaceState({}, null, window.location.href.split('?').shift() + "?a=1&b=21");
+
+            expect(Hypr.engine.render('{% make_url "sorting" "price:asc" %}'))
+                .to.equal('?a=1&b=21&sortBy=price%3Aasc');
+            expect(Hypr.engine.render('{% make_url "sorting" sort %}', { locals: { sort: 'price:desc' } }))
+                .to.equal('?a=1&b=21&sortBy=price%3Adesc');
+            expect(Hypr.engine.render('{% make_url "sorting" sort %}', { locals: { sort: 'price:desc,rating:asc' } }))
+                .to.equal('?a=1&b=21&sortBy=price%3Adesc%2Crating%3Aasc');
+            
+            // ensure sortBy is being replaced
+            history.replaceState({}, null, window.location.href.split('?').shift() + "?a=1&b=21&sortBy=dead%3Adata");
+            expect(Hypr.engine.render('{% make_url "sorting" "price:asc" %}'))
+                .to.equal('?a=1&b=21&sortBy=price%3Aasc');
+        });
+
+        it('has a tag {% make_url "faceting" %} that produces a valid Faceting url', function() {
+            // ensure query string is not overwritten
+            history.replaceState({}, null, window.location.href.split('?').shift() + '?a=1&b=21');
+            expect(Hypr.engine.render('{% make_url "faceting" "size:1,size:2" %}'))
+                .to.equal('?a=1&b=21&facetValueFilter=size%3A1%2Csize%3A2');
+            expect(Hypr.engine.render('{% make_url "faceting" facet %}', { locals: { facet: { filterValue: 'size:1,size:2' } } }))
+                .to.equal('?a=1&b=21&facetValueFilter=size%3A1%2Csize%3A2');
+
+            // append if a facetValueFilter alread exists
+            history.replaceState({}, null, window.location.href.split('?').shift() + '?a=1&b=21&facetValueFilter=size%3A1%2Csize%3A2');            
+            expect(Hypr.engine.render('{% make_url "faceting" "size:3" %}'))
+                .to.equal('?a=1&b=21&facetValueFilter=size%3A1%2Csize%3A2%2Csize%3A3');
+
+            // remove facet value if already defined
+            history.replaceState({}, null, window.location.href.split('?').shift() + '?a=1&b=21&facetValueFilter=size%3A1%2Csize%3A2%2Csize%3A3');            
+            expect(Hypr.engine.render('{% make_url "faceting" "size:3" %}'))
+                .to.equal('?a=1&b=21&facetValueFilter=size%3A1%2Csize%3A2');
+        });
+
+        it('has a tag {% make_url "cdn" %} that produces a valid CDN url with cache busting support', function() {
+            expect(Hypr.engine.render('{% make_url "cdn" "/files/video.mp4" %}'))
+                .to.equal('//cdn.mozu-perf.volusion.com/9795-9865/files/video.mp4?_mzCb=1234');
+        });
+
+        it('has a tag {% make_url "paging" %} that produces a valid Paging url', function() {
+            // currently on Page 3 (startIndex: 20)
+            var data = { locals: { productCollection: { pageCount: 5, pageSize: 10, startIndex: 20, totalCount: 48 }, i: 5 } };
+
+            history.replaceState({}, null, window.location.href.split('?').shift() + '?a=1&b=21&startIndex=20');
+            expect(Hypr.engine.render('{% make_url "paging" productCollection with page="first" as_parameter %}', data)).to.equal('?a=1&b=21&startIndex=0');
+            expect(Hypr.engine.render('{% make_url "paging" productCollection with page="last" as_parameter %}', data)).to.equal('?a=1&b=21&startIndex=40');
+            expect(Hypr.engine.render('{% make_url "paging" productCollection with page="previous" as_parameter %}', data)).to.equal('?a=1&b=21&startIndex=10');
+            expect(Hypr.engine.render('{% make_url "paging" productCollection with page="next" as_parameter %}', data)).to.equal('?a=1&b=21&startIndex=30');
+            expect(Hypr.engine.render('{% make_url "paging" productCollection with page=1 as_parameter %}', data)).to.equal('?a=1&b=21&startIndex=0');
+            expect(Hypr.engine.render('{% make_url "paging" productCollection with page=2 as_parameter %}', data)).to.equal('?a=1&b=21&startIndex=10');
+            expect(Hypr.engine.render('{% make_url "paging" productCollection with page=3 as_parameter %}', data)).to.equal('?a=1&b=21&startIndex=20');
+            expect(Hypr.engine.render('{% make_url "paging" productCollection with page=4 as_parameter %}', data)).to.equal('?a=1&b=21&startIndex=30');
+            expect(Hypr.engine.render('{% make_url "paging" productCollection with page=i as_parameter %}', data)).to.equal('?a=1&b=21&startIndex=40');
+
+            // ensure startIndex min is 0
+            expect(Hypr.engine.render('{% make_url "paging" productCollection with page=0 as_parameter %}', data)).to.equal('?a=1&b=21&startIndex=0');
+
+            // ensure startIndex max is 40 
+            expect(Hypr.engine.render('{% make_url "paging" productCollection with page=6 as_parameter %}', data)).to.equal('?a=1&b=21&startIndex=40');
+
+            // ensure current page if none is defined
+            expect(Hypr.engine.render('{% make_url "paging" productCollection %}', data)).to.equal('?a=1&b=21&startIndex=20');
+
+            // allow user to change pageSize
+            expect(Hypr.engine.render('{% make_url "paging" productCollection with pageSize=30 as_parameter %}', data)).to.equal('?pageSize=30&a=1&b=21&startIndex=20');
+        });
     });
     describe('custom filters', function() {
+        before(function () {
+            history.replaceState({}, null, window.location.href.split('?').shift() + "?funch=wunch&gunch= spaces then brunch&htmlqs=<b>bla</b>");
+        });
         it('has a currency filter that formats currency (currently US only)', function() {
             expect(Hypr.engine.render('{{ dolla|currency }}', { locals: { dolla: 3 } })).to.equal('$3.00');
             expect(Hypr.engine.render('{{ dolla|currency }}', { locals: { dolla: 3.0002 } })).to.equal('$3.00');

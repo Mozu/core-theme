@@ -37,7 +37,7 @@ Ext.define('Taco.core.ux.CategoryComboBox', {
             single: true,
             scope: this
         });
-
+    
         me.store.load();
 
         this.callParent(arguments);

@@ -121,7 +121,7 @@ namespace Mozu.SiteBuilder.Mvc.Helpers
                     }
                 default:
                     {
-                        throw new RenderingError(string.Format("unknonw type [{0}]", type), null);
+                        throw new RenderingError(string.Format("unknown type [{0}]", type), null);
                     }
             }
             return url;

@@ -46,7 +46,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
             var dcSettings = (await _siteGroupClient.GetMasterCatalog( args.MasterCatalogId)).ReadAsSync();
             if (!string.IsNullOrEmpty(args.ProductPublishingMode))
             {
-                dcSettings.ProductPublishingMode = args.ProductPublishingMode;
+            dcSettings.ProductPublishingMode = args.ProductPublishingMode;
             }
             if (args.IsLiveEditEnabled.HasValue)
             {
