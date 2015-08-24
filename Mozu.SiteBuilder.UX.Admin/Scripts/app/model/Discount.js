@@ -171,20 +171,7 @@ Ext.define('Taco.model.Discount', {
         }, {
             name: 'couponSets',
             type: 'auto',
-            defaultValue:[],
-            defaultValue1:[{
-                assignedDiscountCount: 0,
-                canBeDeleted: true,
-                couponCodeCount: 72,
-                couponCodeType: "Manual",
-                couponSetCode: "FXN9",
-                id: 1,
-                maxRedemptionsPerCouponCode: 1,
-                maxRedemptionsPerUser: 1,
-                name: "chet jr",
-                redemptionCount: 0,
-                status: "Active"
-            }]
+            defaultValue:[]
         }, {
             name: 'amount',
             type: 'float'

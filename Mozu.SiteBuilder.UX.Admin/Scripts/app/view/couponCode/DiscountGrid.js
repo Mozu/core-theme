@@ -213,7 +213,7 @@ Ext.define('Taco.view.couponCode.DiscountGrid', {
         originalActions = this.callParent(arguments);
         
         actions.push({
-            text: 'Remove Coupon Set From Discount',
+            text: 'Remove',
             menuColumnHandler: function(item, eventData) {
                 var record = eventData.record;
                 me.removeDiscount(record);

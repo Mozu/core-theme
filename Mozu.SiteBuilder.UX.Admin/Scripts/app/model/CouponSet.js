@@ -34,12 +34,12 @@ Ext.define('Taco.model.CouponSet', {
             persist: false
         }, {
             name: 'maxRedemptionsPerUser',
-            type: 'int',
-            useNull: true
+            defaultValue: 1,
+            type: 'int'
         }, {
             name: 'maxRedemptionsPerCouponCode',
-            type: 'int',
-            useNull: true
+            defaultValue:1,
+            type: 'int'
         }, {
             name: 'startDate',
             type: 'date',
