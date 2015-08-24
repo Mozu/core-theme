@@ -112,6 +112,10 @@ Ext.define('Taco.model.PublishSetItem', {
             dateFormat: 'c'
         },
         {
+            name: 'lastPublishedBy',
+            type: 'string'
+        },
+        {
             name: 'updatedBy',
             type: 'string',
             dateFormat: 'c'

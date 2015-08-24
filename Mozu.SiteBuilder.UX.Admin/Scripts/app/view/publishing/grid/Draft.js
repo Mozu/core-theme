@@ -281,6 +281,7 @@ Ext.define('Taco.view.publishing.grid.Draft', {
                     dataIndex: 'lastPublishedBy',
                     stateId: 'lastPublishedBy',
                     text: 'Last Published By',
+                    renderer: this.getAssociatedUserName,
                     columnWidth: 100,
                     hidden: true,
                     sortable: false
@@ -403,6 +404,7 @@ Ext.define('Taco.view.publishing.grid.Draft', {
                     col.listFQN,
                     col.updatedBy,
                     col.lastPublished,
+                    col.lastPublishedBy,
                     col.modification,
                     col.siteId,
                     col.type,
