@@ -107,7 +107,8 @@ Ext.define('Taco.core.ux.form.field.Code', {
 
             // need to replace any curly quotes that are pasted into the editor. typically from outlook or ms based product.
             me.editor.on('paste', function (e) {
-                e.text = e.text.replace(/“/, "\"");
+                e.text = e.text.replace(/“/g, "\"");
+                e.text = e.text.replace(/”/g, "\"");
             });
 
             
