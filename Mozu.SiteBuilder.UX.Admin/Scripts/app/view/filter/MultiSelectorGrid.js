@@ -2,14 +2,14 @@
  * @class Taco.view.discount.Grid
 */
 Ext.define('Taco.view.filter.MultiSelectorGrid', {
-        extend: 'Taco.core.ux.grid.Panel',
-        requires: [
-            'Taco.core.ux.grid.MenuColumn'
-        ],
+    extend: 'Taco.core.ux.grid.Panel',
+    requires: [
+        'Taco.core.ux.grid.MenuColumn'
+    ],
 
-        mixins: {
-            gridcontextmenu: 'Taco.core.ux.mixins.GridContextMenu'
-        },
+    mixins: {
+        gridcontextmenu: 'Taco.core.ux.mixins.GridContextMenu'
+    },
 
     enableDeleteAction:true,
     
@@ -24,6 +24,10 @@ Ext.define('Taco.view.filter.MultiSelectorGrid', {
         
     deferEmptyText: false,
     emptyText: "No Values To Display",
+
+    config : {
+        gridActions: []
+    },
 
     removeItemText: 'Delete',
 
@@ -172,7 +176,7 @@ Ext.define('Taco.view.filter.MultiSelectorGrid', {
     // list of actions to put in action column and context menu;
     getActionItems: function () {
         var me = this,
-            actions = [];
+            gridActions = this.getGridActions() || [];
 
         //if (this.enableEditAction) {
         //    actions.push({
@@ -221,7 +225,7 @@ Ext.define('Taco.view.filter.MultiSelectorGrid', {
             //    scope: me
             //});
 
-            actions.push({
+            gridActions.push({
                 text: this.removeItemText,
                 itemId: "deleteMenuItem",
                 accelerator: "DELETE",
@@ -234,7 +238,7 @@ Ext.define('Taco.view.filter.MultiSelectorGrid', {
                 scope: me
             });
         }
-        return actions;
+        return gridActions;
     },
 
     removeRecord: function (record) {
@@ -264,15 +268,15 @@ Ext.define('Taco.view.filter.MultiSelectorGrid', {
     getActionColumn: function () {
         var me = this,
             actionColumn = null,
-            actions = this.getActionItems();
+            gridActions = this.getActionItems();
 
         // as long as we have actions;
-        if (actions.length) {
+        if (gridActions.length) {
             actionColumn = {
                 xtype: 'taco.menucolumn',
                 text: 'Actions',
                 onMenuShow: me.onActionMenuShow,
-                menuItems: actions
+                menuItems: gridActions
             }
         }
 

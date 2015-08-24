@@ -17,7 +17,7 @@ Ext.define('Taco.view.discount.widget.CouponSetSelector', {
         'Taco.core.ux.form.CurrencyField',
         'Taco.view.filter.MultiSelectorField',
         'Taco.shared.view.field.ProductPickerField',
-        'Taco.shared.view.field.ProductTypePickerField'        
+        'Taco.shared.view.field.ProductTypePickerField'
     ],
 
     config: {
@@ -68,13 +68,67 @@ Ext.define('Taco.view.discount.widget.CouponSetSelector', {
             hideHeaders: false,
             model: 'Taco.model.CouponSet',
             store: this.store,
-            removeItemText : "Remove",
+            removeItemText: "Remove",
             fieldCfg: fieldCfg,
             removeAction: "remove",
-            autoHideGrid:this.autoHideGrid,
+            autoHideGrid: this.autoHideGrid,
             autoHeightGrid: this.getAutoHeightGrid(),
             stateful: this.getStateful(),
             stateId: this.getStateId(),
+            gridActions: this.getGridActions(),
+            fieldActions: [
+                {
+                    xtype: "button",
+                    text: "Create",
+                    margin:{left:4},
+                    ui: "action",
+                    scale: "medium",
+                    menuAlign: 'tr-br?',
+                    menu: {
+                        plain: true,
+                        shadow: false,
+                        items: [
+                            {
+                                text: 'Manual Coupon Set',
+                                requiredBehaviors: {
+                                    model: 'Taco.model.CouponSet',
+                                    behavior: 'create'
+                                },
+                                listeners: {
+                                    click: {
+                                        fn: function(menu, menuItem) {
+                                            if (!menuItem) {
+                                                return
+                                            }
+                                            me.createCouponSet('Manual');
+                                        },
+                                        scope: me,
+                                        delegate: "x-menu-item-link"
+                                    }
+                                }
+                            }, {
+                                text: 'Generated Coupon Set',
+                                requiredBehaviors: {
+                                    model: 'Taco.model.CouponSet',
+                                    behavior: 'create'
+                                },
+                                listeners: {
+                                    click: {
+                                        fn: function(menu, menuItem) {
+                                            if (!menuItem) {
+                                                return
+                                            }
+                                            me.createCouponSet('Generated');
+                                        },
+                                        scope: me,
+                                        delegate: "x-menu-item-link"
+                                    }
+                                }
+                            }
+                        ]
+                    }
+                }
+            ],
             //flex: 1,
             emptyText: fieldCfg.emptyText || "Select coupon sets",
             value: value,
@@ -191,6 +245,90 @@ Ext.define('Taco.view.discount.widget.CouponSetSelector', {
 
 
     },
+
+    getGridActions: function () {
+        var me = this,
+            gridActions = [];
+
+        
+        gridActions.push(
+            {
+                text: 'Edit',
+                requiredBehaviors: {
+                    model: 'Taco.model.Discount',
+                    behavior: 'update'
+                },
+                menuColumnHandler: function (item, eventData) {
+                    var record = eventData.record;
+                    item.scope.editCouponSet(record, record.get('couponSetType'), false);
+                },
+                scope:me
+            },
+            {
+                text: 'Create Manual Coupon Set',
+                requiredBehaviors: {
+                    model: 'Taco.model.Discount',
+                    behavior: 'update'
+                },
+                menuColumnHandler: function (item, eventData) {
+                    item.scope.createCouponSet("Manual");
+                },
+                scope: me
+            },
+            {
+                text: 'Create Generated Coupon Set',
+                requiredBehaviors: {
+                    model: 'Taco.model.Discount',
+                    behavior: 'update'
+                },
+                menuColumnHandler: function (item, eventData) {
+                    item.scope.createCouponSet("Generated");
+                },
+                scope: me
+            });
+
+        return gridActions;
+    },
+
+    createCouponSet: function (couponSetType) {
+        var me = this;
+
+        Ext.create('Taco.view.couponSet.modal.CouponSetEditor', {
+            record: null,
+            createType: couponSetType,
+            isCreateMode: true,
+            listeners: {
+                aftersaveclose: function (window, newRecord, e) {
+                    me.store.add(newRecord);
+                },
+                scope: me
+            }
+        });
+    },
+
+    editCouponSet: function(record, couponSetType, isCreateMode) {
+        var me = this;
+
+        Ext.create('Taco.view.couponSet.modal.CouponSetEditor', {
+            // if we want to edit a draft only, pass recordId.
+            // otherwise, pass the record.
+
+            record: record,
+            createType: couponSetType,
+            isCreateMode: isCreateMode,
+            listeners: {
+                aftersaveclose: function (window, newRecord, e) {
+                    me.store.remove(record);
+                    me.store.add(newRecord);
+                    //me.store.reload();
+                },
+                scope:me
+            }
+        });
+
+
+    },
+
 
     // when we have a single value situation;
     createField: function () {

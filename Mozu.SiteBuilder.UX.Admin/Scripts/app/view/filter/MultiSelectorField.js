@@ -34,6 +34,8 @@ Ext.define('Taco.view.filter.MultiSelectorField', {
         fieldLabel: "Values",
         allowBlank: false,
         hideHeaders: true,
+        gridActions: [],
+        fieldActions: [],
         removeAction :"destroy", // or remove
         // warning this can cause layout run errors when the grid has no data. this is not ready for use yet
         autoHideGrid:true,
@@ -148,7 +150,8 @@ Ext.define('Taco.view.filter.MultiSelectorField', {
             store: this.store,
             getColumnConfig: me.getColumnConfig,
             removeItemText : this.removeItemText,
-            removeAction : this.getRemoveAction(),
+            removeAction: this.getRemoveAction(),
+            gridActions: this.getGridActions(),
             hidden: (this.autoHideGrid && this.store.count() == 0),
             stateful: this.getStateful(),
             stateId: this.getStateId()
@@ -190,6 +193,12 @@ Ext.define('Taco.view.filter.MultiSelectorField', {
                 scope: me
             });
         }
+        
+        //  insert any field actions (buttons typically) to the right of the field and its add button
+        if (this.fieldActions.length) {
+            Ext.Array.insert(this.addBarItems, this.addBarItems.length, this.fieldActions);
+        }
+
 
         this.items = [
             {
