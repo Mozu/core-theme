@@ -179,17 +179,17 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
         {
             bool isValid = true;
 
-            if (string.IsNullOrWhiteSpace(entry.Source) || string.IsNullOrWhiteSpace(entry.Destination))
+            if (string.IsNullOrWhiteSpace(entry.Source) && string.IsNullOrWhiteSpace(entry.Destination))
             {
                 isValid = false;
             }
             else
             {
-                if (entry.Source[0] == '/')
+                if (entry.Source.StartsWith("/"))
                 {
                     entry.Source = entry.Source.Substring(1);
                 }
-                if (entry.Destination[0] == '/')
+                if (entry.Destination.StartsWith("/"))
                 {
                     entry.Destination = entry.Destination.Substring(1);
                 }

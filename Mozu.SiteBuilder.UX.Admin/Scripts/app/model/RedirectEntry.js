@@ -28,7 +28,8 @@ Ext.define('Taco.model.RedirectEntry', {
      {
          name: 'p',
          type: 'number',
-         defaultValue: false
+         defaultValue: null,
+         useNull:true
      },
     ],
     idProperty: 's',
