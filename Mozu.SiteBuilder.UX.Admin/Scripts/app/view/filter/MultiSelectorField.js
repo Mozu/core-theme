@@ -35,6 +35,7 @@ Ext.define('Taco.view.filter.MultiSelectorField', {
         allowBlank: false,
         hideHeaders: true,
         gridActions: [],
+        gridEditAction : Ext.emptyFn,
         fieldActions: [],
         removeAction :"destroy", // or remove
         // warning this can cause layout run errors when the grid has no data. this is not ready for use yet
@@ -172,6 +173,7 @@ Ext.define('Taco.view.filter.MultiSelectorField', {
         this.list = Ext.create('Taco.view.filter.MultiSelectorGrid', gridConfig);
 
 
+        this.mon(this.list, 'itemdblclick', this.gridEditAction, me);
 
         this.addBarItems = [
             this.addField

@@ -76,6 +76,9 @@ Ext.define('Taco.view.discount.widget.CouponSetSelector', {
             stateful: this.getStateful(),
             stateId: this.getStateId(),
             gridActions: this.getGridActions(),
+            gridEditAction : function(grid, record, item, index, e) {
+                me.editCouponSet(record, record.get("couponSetType"), false);
+            },
             fieldActions: [
                 {
                     xtype: "button",
