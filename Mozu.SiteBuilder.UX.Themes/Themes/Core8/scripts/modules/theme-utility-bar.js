@@ -120,7 +120,8 @@ define(['jquery', 'shim!vendor/datetimepicker/jquery-simple-datetimepicker[jquer
             var queryString = '';
 
             if (location.search.indexOf('?') !== -1 && location.search.indexOf('mz_now') === -1) {
-                queryString = location.search + 'mz_now=' + str;
+                queryString = location.search + '&mz_now=' + str;
+                queryString = queryString.replace(/(&)+/g, '&');
             }
 
             else if (location.search.indexOf('?') != -1) {
