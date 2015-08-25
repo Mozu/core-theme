@@ -92,17 +92,11 @@ Ext.define('Taco.view.category.Form', {
         }, {
             xtype: 'categorycombobox',
             name: 'parentId',
-            fieldLabel: 'PArent Categroy',
+            fieldLabel: 'Parent Categroy',
             width: "100%",
             showDynamicRealTime: false,
             showDynamicPreComputed: false,
-            validator: function (value) {
-                if (value == this.up().up().child('component[name="name"]').value) {
-                    return 'Category name is in use';
-                } else {
-                    return true;
-                }
-            }
+            excludedIds: [this.record.get("categoryCode")]
         }, {
             xtype: 'fieldcontainer',
             layout: "fit",

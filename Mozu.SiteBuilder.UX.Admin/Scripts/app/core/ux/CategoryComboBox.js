@@ -10,19 +10,29 @@ Ext.define('Taco.core.ux.CategoryComboBox', {
     valueField: 'id',
     minChars: 1,
     queryMode: 'local',
+    lastQuery:"",
     showDynamicRealTime: true,
     showDynamicPreComputed: true,
+    excludedIds:[],
     initComponent: function () {
         var me = this;
         me.store = Taco.core.data.StoreManager.getOrCreate({
             type: 'Taco.store.Categories',
             createOnly: true,
-            autoLoad: false
-        });
+            autoLoad: false,
+            filters: [
+                function (record) {
+                    //exclude any id's past in via the excludedIds array;
+                    if (me.excludedIds.length) {
+                        var isExcluded = Ext.Array.findBy(me.excludedIds, function (id) {
+                            return id == record.get("categoryCode");
+                        });
 
-        me.store.on({
-            load: function (store) {
-                store.filterBy(function(record) {
+                        if (isExcluded) {
+                            return false;
+                        }
+                    }
+
                     var categoryType = record.get("categoryType");
                     if (categoryType == "Static") {
                         return true;
@@ -32,15 +42,17 @@ Ext.define('Taco.core.ux.CategoryComboBox', {
                         return (me.showDynamicRealTime);
                     }
                     return true;
-                });
-            },
-            single: true,
-            scope: this
+                }
+            ]
         });
     
         me.store.load();
 
         this.callParent(arguments);
+    },
+    doQuery : function() {
+        debugger;
+        this.callParent(arguments)
     },
     setValue: function (value) {
         if (value === -1) {
