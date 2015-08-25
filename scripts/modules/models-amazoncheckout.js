@@ -28,8 +28,9 @@ define([
                         var shippingMethod = "";
                         if (existingShippingMethodCode)
                             shippingMethod = _.findWhere(methods, {shippingMethodCode: existingShippingMethodCode});
-                        else
-                            _.min(methods, function(method){return method.price;});
+                        
+                        if (!shippingMethod || !shippingMethod.shippingMethodCode)
+                            shippingMethod =_.min(methods, function(method){return method.price;});
                         
                         var fulfillmentInfo = me.get("fulfillmentInfo");
                         fulfillmentInfo.shippingMethodCode = shippingMethod.shippingMethodCode;
@@ -46,8 +47,8 @@ define([
                 var me = this;
                 me.isLoading (true);
                 var currentPayment = me.apiModel.getCurrentPayment();
-                var amountRemainingForPayment = me.get("amountRemainingForPayment");
-                if (currentPayment && amountRemainingForPayment > 0) {
+                //var amountRemainingForPayment = me.get("amountRemainingForPayment");
+                if (currentPayment) {
                     // must first void the current payment because it will no longer be the right price
                     return me.apiVoidPayment(currentPayment.id).then(function() {
                         me.applyPayment();
@@ -58,7 +59,7 @@ define([
             },
             applyPayment: function() {
                 var me = this;
-                if (me.get("amountRemainingForPayment") == 0) {
+                if (me.get("amountRemainingForPayment") === 0) {
                     me.trigger('awscheckoutcomplete', me.id);
                     return;
                 }
