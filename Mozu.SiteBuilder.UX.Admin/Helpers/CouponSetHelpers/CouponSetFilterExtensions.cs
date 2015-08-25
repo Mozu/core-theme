@@ -121,6 +121,8 @@ namespace Mozu.SiteBuilder.UX.Admin.Helpers.CouponSetHelpers
         {
             switch (filter.property.ToLowerInvariant())
             {
+                case "all":
+                    return String.Format("({0} cont \"{2}\") or ({1} eq \"{2}\")", NAME_PROPERTY, COUPON_SET_CODE_PROPERTY, filter.escapedValue);
                 case "discountid":
                     return String.Format("{0} eq \"{1}\"", DISCOUNT_ID_PROPERTY, filter.escapedValue);
                 case "couponsetname":

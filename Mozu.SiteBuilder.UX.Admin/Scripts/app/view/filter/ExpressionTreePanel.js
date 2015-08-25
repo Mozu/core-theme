@@ -16,9 +16,9 @@ Ext.define('Taco.view.filter.ExpressionTreePanel', {
         permissions: 'Taco.core.ux.mixins.Permissions'
     },
 
-    editTitle: 'Edit Filter',
+    editTitle: 'Edit Condition',
 
-    createTitle: 'Create Filter',
+    createTitle: 'Add Condition',
 
     focusinCls: "x-tree-focusin",
 
@@ -149,9 +149,9 @@ Ext.define('Taco.view.filter.ExpressionTreePanel', {
                     //}, 
                     {
 
-                        text: 'Create Filter',
+                        text: 'Add Condition',
                         width: 260,
-                        accelerator: "F",
+                        accelerator: "C",
                         itemId: "createFilterMenuItem",
                         menuColumnHandler: function (item, eventData) {
                             var record = eventData.record;
@@ -161,10 +161,10 @@ Ext.define('Taco.view.filter.ExpressionTreePanel', {
                     },
                     {
 
-                        text: 'Create Container',
+                        text: 'Add Group',
                         itemId: "createContainerMenuItem",
                         width:260,
-                        accelerator: "C",
+                        accelerator: "G",
                         menuColumnHandler: function(item, eventData) {
                             var record = eventData.record;
                             me.createContainer(record.get("id"), eventData.record, eventData.item, eventData.rowIndex, eventData.e);
@@ -172,9 +172,6 @@ Ext.define('Taco.view.filter.ExpressionTreePanel', {
                         },
                         scope: me
                     },
-
-                    
-                    
                     {
 
                         text: 'Delete',
@@ -488,13 +485,14 @@ Ext.define('Taco.view.filter.ExpressionTreePanel', {
         this.mon(me, "itemkeydown", function (view, record, item, index, e) {
             
             switch (e.getKey()) {
-                case Ext.EventObject.F:
+                // add condition
+                case Ext.EventObject.C:
                     me.createFilter();
                     break;
-                case Ext.EventObject.C:
+                    // create group
+                case Ext.EventObject.G:
                     me.createContainer();
                     break;
-                
                 case e.ENTER:
                     // need to correct the event to give it an xy position relative to the row in the tree.
                     e.xy = Ext.get(item).getXY();

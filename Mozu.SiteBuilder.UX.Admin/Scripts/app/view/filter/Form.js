@@ -28,10 +28,6 @@ Ext.define('Taco.view.filter.Form', {
         type: "vbox",
         align:"stretch"
     },
-    
-    //createTitle: 'Create Filter',
-
-    //editTitle: '{[values.record.data.name]}',
 
     initComponent: function () {
         var me = this;

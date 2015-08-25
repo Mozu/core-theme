@@ -1,6 +1,7 @@
 ﻿/**
 * @class Taco.store.TooltipHelp
 * Static Tooltips store until service can be made available.
+* Note:  Any anchor tags that are part of the tooltip content need to have the css class of "taco-help-link" otherwise the tooltip logic will supress the click and close the tip.
 */
 Ext.define('Taco.store.TooltipHelp', {
     extend: 'Ext.data.Store',
@@ -8,6 +9,10 @@ Ext.define('Taco.store.TooltipHelp', {
     remoteSort: false,
     remoteFilter: false,    
     data: [
+        {
+            key: 'category.productMembership',
+            value: 'The Product Membership field controls the dynamic category type and its behaviors. Select Precomputed if you want the category to be available as a discount target. Select Realtime if you don\'t plan on targeting this category in discounts and your expression needs to reference precomputed dynamic categories, post-discount pricing information, or additional sale types. <a target="_blank" class="taco-help-link" href=\'https://mozu.com/docs/admin/help/Catalog/Dynamic_Category_Expressions.htm\'>Learn more</a>'
+        },
         {
             key: 'category.confirmDelete.deleteCategory',
             value: 'Subcategory will move one level up in the category tree.'

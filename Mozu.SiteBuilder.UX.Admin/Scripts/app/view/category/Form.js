@@ -31,12 +31,6 @@ Ext.define('Taco.view.category.Form', {
 
         this.title = this.record.data.name;
 
-        //this.expressionTreePanel = Ext.create('Taco.view.filter.ExpressionTreePanel', {
-        //    title:"Uneditable expression tree (test)",
-        //    editable: false,
-        //    showCodeButton: false
-        //});
-
         if (categoryType != "Static") {
 
             var expressionData = this.record.get("dynamicExpression");
@@ -55,34 +49,11 @@ Ext.define('Taco.view.category.Form', {
         }
 
         this.items = [];
+        var leftItems = [];
+        var rightItems = [];
 
-        
-        //var operatorField = Ext.create('Taco.view.filter.OperatorField', {
-        //    value:"eq"
-        //});
-
-        
-
-        //var filterPanel = Ext.create('Taco.view.filter.Form', {
-        //});
-        //this.items.push(filterPanel);
-
-
-
-        this.items.push(
+        leftItems.push(
         {
-            name: 'categoryCode',
-            fieldLabel: 'Category Code',
-            itemId: "categoryCodeField",
-            xtype: 'textfield',
-            width: "100%",
-            allowBlank: true,
-            maxLength: 30,
-            required: false,
-            emptyText: 'If left blank, a code will be generated',
-            regex: /^[a-z0-9_\-]+$/i,
-            regexText: 'Invalid character. Please choose from alphanumeric, underscore, or hyphen characters.'
-        }, {
             name: 'name',
             fieldLabel: 'Category Name',
             allowBlank: false,
@@ -106,41 +77,32 @@ Ext.define('Taco.view.category.Form', {
 
                 }
             }
-        });
-        
-        this.items.push(
-            // note: i had to nest the combo box in a fieldcontainer and do layout fit to get the combo to be 100% width. not sure why.
-            {
-                xtype: 'fieldcontainer',
-                layout: "fit",
-                width: "100%",
-                items: [
-                    {
-                        xtype: 'categorycombobox',
-                        name: 'parentId',
-                        fieldLabel: 'Assign to Other Category',
-                        showDynamicRealTime: false,
-                        showDynamicPreComputed: false,
-                        validator: function(value) {
-                            if (value == this.up().up().child('component[name="name"]').value) {
-                                return 'Category name is in use';
-                            } else {
-                                return true;
-                            }
-                        }
-                    }
-                ]
-            }
-        );
-
-        this.items.push(
-        {
-            xtype: 'textarea',
-            rows: '10',
-            name: 'description',
+        }, {
+            name: 'categoryCode',
+            fieldLabel: 'Category Code',
+            itemId: "categoryCodeField",
+            xtype: 'textfield',
             width: "100%",
-            fieldLabel: 'Description',
-            maxLength: 500
+            allowBlank: true,
+            maxLength: 30,
+            required: false,
+            emptyText: 'If left blank, a code will be generated',
+            regex: /^[a-z0-9_\-]+$/i,
+            regexText: 'Invalid character. Please choose from alphanumeric, underscore, or hyphen characters.'
+        }, {
+            xtype: 'categorycombobox',
+            name: 'parentId',
+            fieldLabel: 'PArent Categroy',
+            width: "100%",
+            showDynamicRealTime: false,
+            showDynamicPreComputed: false,
+            validator: function (value) {
+                if (value == this.up().up().child('component[name="name"]').value) {
+                    return 'Category name is in use';
+                } else {
+                    return true;
+                }
+            }
         }, {
             xtype: 'fieldcontainer',
             layout: "fit",
@@ -156,12 +118,26 @@ Ext.define('Taco.view.category.Form', {
             ]
         });
         
-
         
-        this.dynamicCategoryTypeCombo = Ext.widget({
+
+        rightItems.push({
+            xtype: 'textarea',
+            height: 148,
+            margin: {
+                bottom:0
+            },
+            name: 'description',
+            width: "100%",
+            fieldLabel: 'Description',
+            maxLength: 500
+        });
+        
+
+        this.dynamicCategoryTypeCombo = Ext.create('Ext.form.field.ComboBox',
+            Taco.core.ux.TooltipLabel.wrapConfig('category.productMembership', me, {
             xtype: 'combobox',
             name: 'dynamicCategoryTypeCombo',
-            fieldLabel: 'Make category available as discount target',
+            fieldLabel: 'Product Membership',
             width: 300,
             valueField: 'id',
             displayField: 'name',
@@ -194,22 +170,55 @@ Ext.define('Taco.view.category.Form', {
                 fields: ['id', "name"],
                 data: [
                     {
-                        name: "No",
+                        name: "Realtime",
                         id: "no"
                     },{
-                        name: "Yes",
+                        name: "Precomputed",
                         id: "yes"
                     }
                 ]
             })
+        }));
+
+        
+
+        if (categoryType !== "Static") {
+            rightItems.push(this.dynamicCategoryTypeCombo);
+        }
+
+
+
+        this.items.push({
+            xtype: 'fieldcontainer',
+            layout: "hbox",
+            //width: "100%",
+            //fieldLabel: "Options",
+            items: [
+                {
+                    xtype: 'fieldcontainer',
+                    flex: 1,
+                    layout: "vbox",
+                    margin: {
+                        right: 10
+                    },
+                    items: leftItems
+                },{
+                    xtype: 'fieldcontainer',
+                    margin: {
+                      left:10  
+                    },
+                    flex: 1,
+                    items: rightItems
+                }
+            ]
         });
 
 
         if (categoryType !== "Static") {
-            this.items.push(this.dynamicCategoryTypeCombo);
-        
             this.items.push(this.expressionTreePanel);
         }
+
+        
 
         this.items.push({
                 //Note: need to update the record manually in the beforeSave class method. form.Form does not extract the value from the imageField automatically.

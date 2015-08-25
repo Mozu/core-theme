@@ -17,7 +17,7 @@ Ext.define('Taco.view.filter.EditFilterModal', {
 
     autoShow:true,
 
-    title: "Edit Filter",
+    title: "Edit Condition",
 
     record: null,
 
