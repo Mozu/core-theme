@@ -10,7 +10,10 @@ Ext.define('Taco.core.ux.form.field.Code', {
         'Ext.util.KeyNav'
     ],
     componentLayout: 'taco-codefieldlayout',
+    // white code editor theme
     theme: "ace/theme/textmate",
+    // black code editor theme
+    //theme: 'ace/theme/monokai',
     // height: 300,
     //  width: 800,
     minHeight: 300,

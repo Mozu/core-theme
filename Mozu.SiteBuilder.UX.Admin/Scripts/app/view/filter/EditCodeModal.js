@@ -47,6 +47,7 @@ Ext.define('Taco.view.filter.EditCodeModal', {
             width: "100%",
             mode: "json",
             useWrapMode: false,
+            theme: 'ace/theme/monokai',
             fontSize: "13px",
             value: treeData,
             name: "expression",
@@ -78,6 +79,7 @@ Ext.define('Taco.view.filter.EditCodeModal', {
             fontSize: "13px",
             value: "",
             name: "textExpression",
+            theme: 'ace/theme/monokai',
             showPrintMargin: false,
             selectOnRender: false,
             listeners: {
