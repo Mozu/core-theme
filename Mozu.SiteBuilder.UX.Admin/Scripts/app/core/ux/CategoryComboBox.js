@@ -50,10 +50,6 @@ Ext.define('Taco.core.ux.CategoryComboBox', {
 
         this.callParent(arguments);
     },
-    doQuery : function() {
-        debugger;
-        this.callParent(arguments)
-    },
     setValue: function (value) {
         if (value === -1) {
             value = null;
