@@ -121,7 +121,7 @@ Ext.define('Taco.view.filter.Form', {
            
             if (uicontrol) {
                 editorCfg = {
-                    xtype: "taco-producttypepickerfield",
+                    xtype: "taco-productpickerfield",
                     isPickerField: true
                 }
             }
