@@ -61,7 +61,7 @@
                         {% if type.grouper == "DigitalCredit" %}{{ labels.digitalCredit }}{% endif %}
                         {% if type.grouper == "Paypal" %}{{ labels.payPal }}{% endif %}
                         {% if type.grouper == "PaypalExpress" %}{{ labels.paypalExpress }}{% endif %}
-                   
+                        {% if type.grouper == "PayWithAmazon" %}{{ labels.payWithAmazon }}{%endif%}
                 {% endfor %}
             </td>
             <td>{{ model.shippingMethodName }}</td>

@@ -15,7 +15,7 @@ define([
                 _.bindAll(this, "submit");
 
             },
-            applyShippingMethods: function(fulfillmentInfo, existingShippingMethodCode) {
+            applyShippingMethods: function(existingShippingMethodCode) {
                 var me = this;
                 me.isLoading( true);
                 me.apiModel.getShippingMethods().then(
@@ -25,10 +25,13 @@ define([
                             me.onCheckoutError(Hypr.getLabel("awsNoShippingOptions"));
                         }
                         
-                        var  shippingMethod = _.findWhere(methods, {shippingMethodCode: existingShippingMethodCode}) ||
-                                                 _.min(methods, function(method){return method.price;});
+                        var shippingMethod = "";
+                        if (existingShippingMethodCode)
+                            shippingMethod = _.findWhere(methods, {shippingMethodCode: existingShippingMethodCode});
+                        else
+                            _.min(methods, function(method){return method.price;});
                         
-
+                        var fulfillmentInfo = me.get("fulfillmentInfo");
                         fulfillmentInfo.shippingMethodCode = shippingMethod.shippingMethodCode;
                         fulfillmentInfo.shippingMethodName = shippingMethod.shippingMethodName;
                         me.apiModel.update({ fulfillmentInfo: fulfillmentInfo}).then(
@@ -43,7 +46,8 @@ define([
                 var me = this;
                 me.isLoading (true);
                 var currentPayment = me.apiModel.getCurrentPayment();
-                if (currentPayment) {
+                var amountRemainingForPayment = me.get("amountRemainingForPayment");
+                if (currentPayment && amountRemainingForPayment > 0) {
                     // must first void the current payment because it will no longer be the right price
                     return me.apiVoidPayment(currentPayment.id).then(function() {
                         me.applyPayment();
@@ -54,6 +58,10 @@ define([
             },
             applyPayment: function() {
                 var me = this;
+                if (me.get("amountRemainingForPayment") == 0) {
+                    me.trigger('awscheckoutcomplete', me.id);
+                    return;
+                }
                  var billingInfo = {
                     "newBillingInfo" : 
                     {   "paymentType": "PayByAmazon",
@@ -81,8 +89,12 @@ define([
                 var fulfillmentInfo = me.get("fulfillmentInfo"),
                     existingShippingMethodCode = fulfillmentInfo.shippingMethodCode;
                 me.apiUpdateShippingInfo( {data: fulfillmentInfo}).then(function(result) {
+                    me.set("fulfillmentInfo",result.data);
                     me.isLoading(false);
-                    me.applyShippingMethods(result.data,existingShippingMethodCode);
+                    if (me.apiModel.data.requiresFulfillmentInfo)
+                        me.applyShippingMethods(existingShippingMethodCode);
+                    else
+                        me.applyBilling();
                 });
             },
              onCheckoutError: function (msg) {
