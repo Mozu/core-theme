@@ -130,7 +130,7 @@ Ext.define('Taco.core.ux.TooltipLabel', {
             },
 
             onClickAnywhereCloseTip = function (evt) {
-                var target = Ext.fly(e.target);
+                var target = Ext.fly(evt.target);
                 // need to allow the links to the help content to work;
                 if (target && target.dom.tagName == "A" && target.hasCls("taco-help-link")) {
                     return;
