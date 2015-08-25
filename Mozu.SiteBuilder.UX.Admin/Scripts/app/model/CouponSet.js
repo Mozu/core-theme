@@ -79,7 +79,7 @@ Ext.define('Taco.model.CouponSet', {
             persist: false,
             convert: function (v, record) {
                 if (record.get('countOrSetSize') && record.get('countOrSetSize') > 0 && record.get('redemptionCount') && record.get('redemptionCount') > 0 ) {
-                    return (record.get('redemptionCount') / (1.0) * record.get('countOrSetSize'));
+                    return (record.get('redemptionCount') / record.get('countOrSetSize') ) * 100;
                 } else {
                     return 0.0;
                 }
