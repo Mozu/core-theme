@@ -69,6 +69,7 @@
         </div>
         {% endif %}
         {% if payment.paymentWorkflow  != "Mozu"%}
+        
             {% if payment.paymentType == "PayWithAmazon" and model.nonStoreCreditTotal == 0%}
             <h4 class="mz-checkout-nopaymentrequired">{{ labels.noPaymentRequired|string_format(model.remainingTotal|currency) }}</h4> 
             {% endif %}
