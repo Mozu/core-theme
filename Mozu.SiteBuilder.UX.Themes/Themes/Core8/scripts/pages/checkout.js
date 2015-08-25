@@ -157,7 +157,7 @@ require(["modules/jquery-mozu", "underscore", "hyprlive", "modules/backbone-mozu
                 CheckoutStepView.prototype.render.apply(this, arguments);
             });
             var status = this.model.stepStatus();
-            if (visaCheckoutSettings.isEnabled && !this.visaCheckoutInitialized && (status == "incomplete" || status == "invalid")) {
+            if (visaCheckoutSettings.isEnabled && !this.visaCheckoutInitialized && this.$('.v-button').length > 0) {
                 window.onVisaCheckoutReady = _.bind(this.initVisaCheckout, this);
                 require([pageContext.visaCheckoutJavaScriptSdkUrl]);
                 this.visaCheckoutInitialized = true;
