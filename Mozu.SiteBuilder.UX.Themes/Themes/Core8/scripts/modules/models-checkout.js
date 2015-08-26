@@ -1027,15 +1027,22 @@
             },
             processDigitalWallet: function (digitalWalletType, payment) {
                 var me = this;
-                return this.apiProcessDigitalWallet({
-                    digitalWalletData: JSON.stringify(payment)
-                }).then(function() {
-                    _.each([
-                        'fulfillmentInfo.fulfillmentContact',
-                        'fulfillmentInfo',
-                        'billingInfo'
-                    ], function(name) {
-                        me.get(name).trigger('sync');
+                // void active payments; if there are none then the promise will resolve immediately
+                return api.all(_.map(_.filter(me.apiModel.getActivePayments(), function(payment) {
+                    return payment.paymentType !== "StoreCredit" && payment.paymentType !== "GiftCard";
+                }), function(payment) {
+                    return me.apiVoidPayment(payment.id);
+                })).then(function() {
+                    return me.apiProcessDigitalWallet({
+                        digitalWalletData: JSON.stringify(payment)
+                    }).then(function() {
+                        _.each([
+                            'fulfillmentInfo.fulfillmentContact',
+                            'fulfillmentInfo',
+                            'billingInfo'
+                        ], function(name) {
+                            me.get(name).trigger('sync');
+                        });
                     });
                 });
             },
