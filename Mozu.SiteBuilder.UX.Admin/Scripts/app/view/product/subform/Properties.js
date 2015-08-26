@@ -29,7 +29,7 @@ Ext.define('Taco.view.product.subform.Properties', {
                         xtype: 'datefield',
                         name: this.getFieldName(ptAttribute),
                         fieldLabel: ptAttribute.get('adminName'),
-                        allowBlank: ptAttribute.get('isRequired') === true ? false : true,
+                        allowBlank: ptAttribute.get('isRequired') !== true,
                         // BUG: 58777 - need to convert string dates to js dates. Normally this is done in the model but in this case the date is a child entity of an array and doesnt have a date type model to do the transform.
                         value: (values && values.length) ? this.convertDate(values[0]) : null
                     }
@@ -41,7 +41,7 @@ Ext.define('Taco.view.product.subform.Properties', {
                         xtype: 'textareafield',
                         name: this.getFieldName(ptAttribute),
                         fieldLabel: ptAttribute.get('adminName'),
-                        allowBlank: ptAttribute.get('isRequired') === true ? false : true,
+                        allowBlank: ptAttribute.get('isRequired') !== true,
                         value: (values && values.length) ? values[0] : null,
                         width: 600,
                         rows: 12,
@@ -56,7 +56,7 @@ Ext.define('Taco.view.product.subform.Properties', {
                         xtype: 'checkboxfield',
                         name: this.getFieldName(ptAttribute),
                         fieldLabel: ptAttribute.get('adminName'),
-                        allowBlank: ptAttribute.get('isRequired') === true ? false : true,
+                        allowBlank: ptAttribute.get('isRequired') !== true,
                         checked: (values && values.length) ? values[0] : null
                     }
                 ];
@@ -70,7 +70,7 @@ Ext.define('Taco.view.product.subform.Properties', {
                         fieldLabel: ptAttribute.get('adminName'),
                         displayField: 'value',
                         valueField: 'id',
-                        allowBlank: ptAttribute.get('isRequired') === true ? false : true,
+                        allowBlank: ptAttribute.get('isRequired') !== true,
                         value: (values && values.length) ? (allowMulti ? values : values[0]) : (allowMulti ? [] : null),
                         width: 400,
                         store: Ext.create('Ext.data.Store', {
@@ -89,9 +89,36 @@ Ext.define('Taco.view.product.subform.Properties', {
                         xtype: 'textfield',
                         name: this.getFieldName(ptAttribute),
                         fieldLabel: ptAttribute.get('adminName'),
-                        allowBlank: ptAttribute.get('isRequired') === true ? false : true,
+                        allowBlank: ptAttribute.get('isRequired') !== true,
                         value: (values && values.length) ? values[0] : null,
                         width: 400
+                    }
+                ];
+            },
+            'NumberField': function (ptAttribute, values) {
+                return [
+                    {
+                        xtype: 'numberfield',
+                        name: this.getFieldName(ptAttribute),
+                        fieldLabel: ptAttribute.get('adminName'),
+                        allowBlank: ptAttribute.get('isRequired') !== true,
+                        value: (values && values.length) ? values[0] : null,
+                        width: 400,
+                        hideTrigger: true
+                    }
+                ];
+            },
+            'SlugField': function (ptAttribute, values) {
+                return [
+                    {
+                        xtype: 'taco-slugfield',
+                        name: this.getFieldName(ptAttribute),
+                        fieldLabel: ptAttribute.get('adminName'),
+                        allowBlank: ptAttribute.get('isRequired') !== true,
+                        value: (values && values.length) ? values[0] : null,
+                        width: 400,
+                        maxLength: 50,
+                        skipToLowerCase: true
                     }
                 ];
             },
@@ -101,7 +128,7 @@ Ext.define('Taco.view.product.subform.Properties', {
                         xtype: 'taco.field.product',
                         name: this.getFieldName(ptAttribute),
                         fieldLabel: ptAttribute.get('adminName'),
-                        allowBlank: ptAttribute.get('isRequired') === true ? false : true,
+                        allowBlank: ptAttribute.get('isRequired') !== true,
                         width: 400,
                         value: values
                     }
@@ -206,6 +233,14 @@ Ext.define('Taco.view.product.subform.Properties', {
             prop = this.product.getProperties().getById(attributeFQN),
             values = prop ? prop.get('values') : null;
 
+        if (editor === 'TextBox') {
+            if (ptAttribute.get('dataType') === 'String') {
+                editor = 'SlugField';
+            }
+            else if (ptAttribute.get('dataType') === 'Number') {
+                editor = 'NumberField';
+            }
+        }
         if (typeof this.statics().editors[editor] !== 'function') {
             return [
                 {
