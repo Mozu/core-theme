@@ -1360,7 +1360,7 @@
                 var saveCreditCard = false;
                 if (activePayments !== null && activePayments.length > 0) {
                      var creditCard = _.findWhere(activePayments, { paymentType: 'CreditCard' });
-                     if (creditCard != null && creditCard.billingInfo != null && creditCard.billingInfo.card != null) {
+                     if (creditCard !== undefined && creditCard !== null && creditCard.billingInfo !== null && creditCard.billingInfo.card !== null) {
                          saveCreditCard = creditCard.billingInfo.card.isCardInfoSaved;
                          billingInfo.set('card', creditCard.billingInfo.card);
                      }
