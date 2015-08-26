@@ -116,6 +116,8 @@ require(["modules/jquery-mozu", "underscore", "hyprlive", "modules/backbone-mozu
         }
     });
 
+    var visaCheckoutSettings = HyprLiveContext.locals.siteContext.checkoutSettings.visaCheckout;
+    var pageContext = require.mozuData('pagecontext');
     var BillingInfoView = CheckoutStepView.extend({
         templateName: 'modules/checkout/step-payment-info',
         autoUpdate: [
@@ -176,14 +178,9 @@ require(["modules/jquery-mozu", "underscore", "hyprlive", "modules/backbone-mozu
                 
             });
             var status = this.model.stepStatus();
-            if (!this.visaCheckoutInitialized && (status == "incomplete" || status == "invalid")) {
-                // This url will differ between sandbox and production. It may be added to the site context,
-                // or it could come from a theme setting, ex: Hypr.getThemeSetting('visaCheckoutSdkUrl')
-                var sdkUrl = Hypr.getThemeSetting("visaCheckoutSdkUrl");
-                // The VisaCheckout SDK wants a global function to call when it's ready
-                // so we give it the same function we call when we're ready
+            if (visaCheckoutSettings.isEnabled && !this.visaCheckoutInitialized && this.$('.v-button').length > 0) {
                 window.onVisaCheckoutReady = _.bind(this.initVisaCheckout, this);
-                require([sdkUrl]);
+                require([pageContext.visaCheckoutJavaScriptSdkUrl]);
                 this.visaCheckoutInitialized = true;
             }
             if ($("#AmazonPayButton").length > 0 && $("#amazonButonPaymentSection").length > 0)

@@ -17,14 +17,13 @@ define(['modules/backbone-mozu', 'underscore', 'modules/jquery-mozu', 'modules/m
             });
 
             AmazonPay.init(CartModels.Cart.fromCurrent().id);
-            // This url will differ between sandbox and production. It may be added to the site context,
-            // or it could come from a theme setting, ex: Hypr.getThemeSetting('visaCheckoutSdkUrl')
-            var sdkUrl = Hypr.getThemeSetting("visaCheckoutSdkUrl");
 
-            // The VisaCheckout SDK wants a global function to call when it's ready
-            // so we give it the same function we call when we're ready
-            window.onVisaCheckoutReady = initVisaCheckout;
-            require([sdkUrl], initVisaCheckout);
+            var visaCheckoutSettings = HyprLiveContext.locals.siteContext.checkoutSettings.visaCheckout;
+            var pageContext = require.mozuData('pagecontext');
+            if (visaCheckoutSettings.isEnabled) {
+                window.onVisaCheckoutReady = initVisaCheckout;
+                require([pageContext.visaCheckoutJavaScriptSdkUrl], initVisaCheckout);
+            }
         },
         render: function() {
             preserveElement(this, ['.v-button', '#AmazonPayButton'], function() {
@@ -90,8 +89,8 @@ define(['modules/backbone-mozu', 'underscore', 'modules/jquery-mozu', 'modules/m
     function initVisaCheckout (model, total) {
         var delay = 500;
         var visaCheckoutSettings = HyprLiveContext.locals.siteContext.checkoutSettings.visaCheckout;
-        var apiKey = visaCheckoutSettings.apiKey || '0H1JJQFW9MUVTXPU5EFD13fucnCWg42uLzRQMIPHHNEuQLyYk';
-        var clientId = visaCheckoutSettings.clientId || 'mozu_test1';
+        var apiKey = visaCheckoutSettings.apiKey;
+        var clientId = visaCheckoutSettings.clientId;
 
         // if this function is being called on init rather than after updating cart total
         if (!model) {

@@ -1,4 +1,4 @@
-define([
+﻿define([
     "modules/jquery-mozu",
     "underscore",
     "hyprlive",
@@ -806,6 +806,12 @@ define([
             },
             getPaypalUrls: function () {
                 var base = window.location.href + (window.location.href.indexOf('?') !== -1 ? "&" : "?");
+
+                //Remove the already existing Paypal parameters from URL
+                if (base.indexOf("PaypalExpress=") != -1) {
+                    base = base.substring(0, base.indexOf("PaypalExpress="));
+                }
+               
                 return {
                     paypalReturnUrl: base + "PaypalExpress=complete",
                     paypalCancelUrl: base + "PaypalExpress=canceled"
@@ -1387,11 +1393,19 @@ define([
                     process.push(this.addNewCustomer); 
                 }
 
-                var card = billingInfo.get('card');
-                if (billingInfo.get('paymentType') === "CreditCard" && card.get('isCardInfoSaved') && (this.get('createAccount') || isAuthenticated)) {
+                var activePayments = this.apiModel.getActivePayments();
+                var saveCreditCard = false;
+                if (activePayments !== null && activePayments.length > 0) {
+                     var creditCard = _.findWhere(activePayments, { paymentType: 'CreditCard' });
+                     if (creditCard !== null && creditCard.billingInfo !== null && creditCard.billingInfo.card !== null) {
+                         saveCreditCard = creditCard.billingInfo.card.isCardInfoSaved;
+                         billingInfo.set('card', creditCard.billingInfo.card);
+                     }
+                 }
+                 if (saveCreditCard && (this.get('createAccount') || isAuthenticated)) {
                     isSavingCreditCard = true;
                     process.push(this.saveCustomerCard);
-                }
+                    }
 
                 if ((this.get('createAccount') || isAuthenticated) && billingInfo.getDigitalCreditsToAddToCustomerAccount().length > 0) {
                     process.push(this.addDigitalCreditToCustomerAccount);

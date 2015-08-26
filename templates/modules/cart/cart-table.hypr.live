@@ -13,7 +13,7 @@
   <tr class="mz-carttable-item">
     <td class="mz-carttable-item-product">
       {% if item.product.imageUrl and themeSettings.showCartItemImage %}
-          <img class="mz-carttable-item-image" src="{{ item.product.imageUrl }}?max=80" {% if item.product.imageAlternateText %}alt="{{ item.product.imageAlternateText }}"{% endif %} />
+          <img class="mz-carttable-item-image" src="{% make_url "image" item.product with max=80 as_parameters %}" {% if item.product.imageAlternateText %}alt="{{ item.product.imageAlternateText }}"{% endif %} />
       {% endif %}
       <div class="mz-carttable-item-info-wrap{% if not item.product.imageUrl %} mz-no-image{% endif %}">
         <a class="mz-carttable-item-title" href="{{item.product.url}}">{{ item.product.name }}</a>
