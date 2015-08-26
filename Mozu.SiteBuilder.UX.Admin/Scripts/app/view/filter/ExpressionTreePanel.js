@@ -232,113 +232,12 @@ Ext.define('Taco.view.filter.ExpressionTreePanel', {
                     ui: 'action',
                     xtype: "button",
                     scale: 'medium',
-                    text: 'Advanced Editor',
+                    text: 'Advanced',
                     handler: this.openCodeEditor,
                     scope:me
                 }
             );
         }
-
-
-        //this.tools.push(
-        //    {
-        //        ui: 'action',
-        //        xtype: "button",
-        //        scale: 'medium',
-        //        text: 'Serialize',
-        //        handler: this.getValue,
-        //        scope: me
-        //    }
-        //);
-        
-        /*
-
-
-        this.data = {
-            "text": "categorycode eq onSpecial or (price gt 10 and price lt 100)",
-            "tree": {
-                expanded:true,
-                "type": "container",
-                "logicalOperator": "or",
-                "nodes": [
-                    {
-                        "type": "predicate",
-                        "left": "categories.categoryCode",
-                        "operator": "eq",
-                        "right": "onSpecial"
-                    },
-                    //{
-                    //    "type": "container",
-                    //    "logicalOperator": "and",
-                    //    "nodes": []
-                    //},
-                    {
-                      "type": "container",
-                      "logicalOperator": "and",
-                      "nodes": [
-                        {
-                            "type": "predicate",
-                            "left": "price.catalogListPrice",
-                            "operator": "gt",
-                            "right": 10
-                        },
-                        {
-                            "type": "predicate",
-                            "left": "price.catalogSalePrice",
-                            "operator": "lt",
-                            "right": 8
-                        }
-                      ]
-                  }
-                ]
-            }
-        }
-
-
-        this.treeData = this.data.tree;
-
-
-        // need to decorate the root so I can distinquish it from other containers;
-        this.data.tree.isRootContainer = true;
-        */
-
-        // need to process the data structure to make it work with the tree panels needs.
-        // leaf
-        // expanded
-        // text
-        // get the data ready for use in a tree;
-        //Ext.Object.each(data.tree, function(key, value, node) {
-        //    if (key == "type") {
-        //        if (value == "container") {
-        //            node.expaned = true;
-        //            node.text = (node.logicalOperator == "or") ? "All of the following" : "Any of the following";
-        //        } else {
-        //            node.leaf = true;
-        //        }
-        //    }
-        //});
-
-        
-
-
-        /*
-        {
-                expanded: true,
-                children: [
-                    { text: "detention", leaf: true },
-                    {
-                        text: "homework", expanded: true, children: [
-                          { text: "book report", leaf: true },
-                          { text: "algebra", leaf: true }
-                        ]
-                    },
-                    { text: "buy lottery tickets", leaf: true }
-                ]
-            }
-            */
-
-        
-
         
         this.store = Ext.create('Ext.data.TreeStore', {
             model: "Taco.model.ExpressionTree",
@@ -371,16 +270,6 @@ Ext.define('Taco.view.filter.ExpressionTreePanel', {
         selMod.select(selectedRecords);
     },
     
-    //onFocus: function () {
-    //    var me = this;
-    //    console.log("onFocus");
-    //    var selMod = me.getSelectionModel();
-    //    var selectedRecord = selMod.getLastSelected() || 0;
-    //    //me.getSelectionModel().select(selectedRecord);
-    //    console.log('lastSelection', selectedRecord);
-    //    me.getSelectionModel().select(0);
-    //},
-
     onBoxReady: function () {
         var me = this;
 

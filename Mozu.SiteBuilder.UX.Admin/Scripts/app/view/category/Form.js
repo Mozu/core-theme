@@ -49,90 +49,14 @@ Ext.define('Taco.view.category.Form', {
         }
 
         this.items = [];
-        var leftItems = [];
-        var rightItems = [];
-
-        leftItems.push(
-        {
-            name: 'name',
-            fieldLabel: 'Category Name',
-            allowBlank: false,
-            xtype: 'textfield',
-            width: "100%",
-            maxLength: 200,
-            enforceMaxLength: true,
-            required: true,
-            minLength: 3,
-            listeners: {
-                change: function(cmp, newValue) {
-                    cmp.slugField = cmp.slugField || cmp.up('formform').down('[name="slug"]');
-                    var previous = cmp.slugField.onNameChangeValue,
-                        current = cmp.slugField.getValue(),
-                        newValue;
-                    if (current && previous != current) {
-                        return;
-                    }
-                    cmp.slugField.setValue(newValue);
-                    cmp.slugField.onNameChangeValue = cmp.slugField.getValue();
-
-                }
-            }
-        }, {
-            name: 'categoryCode',
-            fieldLabel: 'Category Code',
-            itemId: "categoryCodeField",
-            xtype: 'textfield',
-            width: "100%",
-            allowBlank: true,
-            maxLength: 30,
-            required: false,
-            emptyText: 'If left blank, a code will be generated',
-            regex: /^[a-z0-9_\-]+$/i,
-            regexText: 'Invalid character. Please choose from alphanumeric, underscore, or hyphen characters.'
-        }, {
-            xtype: 'categorycombobox',
-            name: 'parentId',
-            fieldLabel: 'Parent Categroy',
-            width: "100%",
-            showDynamicRealTime: false,
-            showDynamicPreComputed: false,
-            excludedIds: [this.record.get("categoryCode")]
-        }, {
-            xtype: 'fieldcontainer',
-            layout: "fit",
-            width: "100%",
-            fieldLabel: "Options",
-            items: [
-                {
-                    name: 'isHidden',
-                    width: "100%",
-                    xtype: 'checkboxfield',
-                    boxLabel: 'Hide category on store front'
-                }
-            ]
-        });
-        
-        
-
-        rightItems.push({
-            xtype: 'textarea',
-            height: 148,
-            margin: {
-                bottom:0
-            },
-            name: 'description',
-            width: "100%",
-            fieldLabel: 'Description',
-            maxLength: 500
-        });
-        
 
         this.dynamicCategoryTypeCombo = Ext.create('Ext.form.field.ComboBox',
             Taco.core.ux.TooltipLabel.wrapConfig('category.productMembership', me, {
             xtype: 'combobox',
             name: 'dynamicCategoryTypeCombo',
             fieldLabel: 'Product Membership',
-            width: 300,
+            margin: { left: 20 },
+            flex: 1,
             valueField: 'id',
             displayField: 'name',
             queryMode: 'local',
@@ -174,35 +98,107 @@ Ext.define('Taco.view.category.Form', {
             })
         }));
 
-        
+
+        var secondRowItems = [{
+            xtype: 'categorycombobox',
+            name: 'parentId',
+            fieldLabel: 'Parent Categroy',
+            flex:1,
+            
+            showDynamicRealTime: false,
+            showDynamicPreComputed: false,
+            excludedIds: [this.record.get("categoryCode")]
+
+        }];
 
         if (categoryType !== "Static") {
-            rightItems.push(this.dynamicCategoryTypeCombo);
+            secondRowItems.push(this.dynamicCategoryTypeCombo);
         }
 
 
 
         this.items.push({
             xtype: 'fieldcontainer',
-            layout: "hbox",
-            //width: "100%",
-            //fieldLabel: "Options",
+            layout: {
+                type: "hbox",
+                align:"stretch"
+            },
             items: [
                 {
                     xtype: 'fieldcontainer',
                     flex: 1,
                     layout: "vbox",
-                    margin: {
-                        right: 10
-                    },
-                    items: leftItems
+                    items: [{
+                        name: 'name',
+                        fieldLabel: 'Category Name',
+                        allowBlank: false,
+                        xtype: 'textfield',
+                        width: "100%",
+                        maxLength: 200,
+                        enforceMaxLength: true,
+                        required: true,
+                        minLength: 3,
+                        listeners: {
+                            change: function (cmp, newValue) {
+                                cmp.slugField = cmp.slugField || cmp.up('formform').down('[name="slug"]');
+                                var previous = cmp.slugField.onNameChangeValue,
+                                    current = cmp.slugField.getValue(),
+                                    newValue;
+                                if (current && previous != current) {
+                                    return;
+                                }
+                                cmp.slugField.setValue(newValue);
+                                cmp.slugField.onNameChangeValue = cmp.slugField.getValue();
+
+                            }
+                        }
+                    }, {
+                        name: 'categoryCode',
+                        fieldLabel: 'Category Code',
+                        itemId: "categoryCodeField",
+                        xtype: 'textfield',
+                        width: "100%",
+                        allowBlank: true,
+                        maxLength: 30,
+                        required: false,
+                        emptyText: 'If left blank, a code will be generated',
+                        regex: /^[a-z0-9_\-]+$/i,
+                        regexText: 'Invalid character. Please choose from alphanumeric, underscore, or hyphen characters.'
+                    }]
                 },{
                     xtype: 'fieldcontainer',
                     margin: {
-                      left:10  
+                      left:20
+                    },
+                    layout: {
+                        type:"vbox"
                     },
                     flex: 1,
-                    items: rightItems
+                    items: [{
+                        xtype: 'textarea',
+                        name: 'description',
+                        width: "100%",
+                        flex:1,
+                        fieldLabel: 'Description',
+                        maxLength: 500
+                    }]
+                }
+            ]
+        },{
+            xtype: 'fieldcontainer',
+            layout: "hbox",
+            items: secondRowItems
+        }, {
+            xtype: 'fieldcontainer',
+            layout: "fit",
+            width: "100%",
+            fieldLabel: "Options",
+            items: [
+                {
+                    name: 'isHidden',
+                    width: "100%",
+                    xtype: 'checkboxfield',
+                    boxLabel: 'Hide category on store front'
                 }
             ]
         });
@@ -211,8 +207,6 @@ Ext.define('Taco.view.category.Form', {
         if (categoryType !== "Static") {
             this.items.push(this.expressionTreePanel);
         }
-
-        
 
         this.items.push({
                 //Note: need to update the record manually in the beforeSave class method. form.Form does not extract the value from the imageField automatically.
@@ -284,7 +278,7 @@ Ext.define('Taco.view.category.Form', {
 
         // need to update the record manually. form.Form does not extract the value from the imageField automatically.
         this.record.set("categoryImages", uploadedImages);
-
+        
         if (this.expressionTreePanel) {
             var treeData = this.expressionTreePanel.getValue();
             var expressionData = {
@@ -294,13 +288,6 @@ Ext.define('Taco.view.category.Form', {
 
             this.record.set("dynamicExpression", expressionData);
         }
-
-        
-        //var categoryStore = Taco.core.data.StoreManager.getOrCreate("Taco.store.Categories");
-        //if (categoryStore) {
-        //    categoryStore.needsRefresh = true;
-        //}
-        
 
         return true;
     },

@@ -112,7 +112,7 @@ Ext.define('Taco.view.filter.EditCodeModal', {
                 },
                 items: [
                     {
-                        title: "Tree",
+                        title: "JSON",
                         itemId:"treeCode",
                         layout: 'fit',
                         items: [this.codeField]
