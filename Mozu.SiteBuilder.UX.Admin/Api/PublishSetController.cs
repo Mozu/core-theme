@@ -243,32 +243,18 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
                     pubSet.ContentCount = x.Count;
                 });
 
-                var prodItems =productTask.Result.ReadAsSync();
+                var prodItems = productTask.Result.ReadAsSync();
 
                 prodItems.Items.ForEach(x =>
                 {
                     var pubSet = items.FirstOrDefault(y => string.Equals(x.Code, y.Code, StringComparison.OrdinalIgnoreCase));
-                    if (pubSet == null)
+                    if (pubSet != null)
                     {
-                        //todo remove this?  shouldnt be a thing?
-                        pubSet = new PublishSet()
-                        {
-                            Code = x.Code 
-                        };
-                        items.Add(pubSet);
+                        pubSet.ProductCount = x.ProductCount;
                     }
-                    pubSet.ProductCount = x.ProductCount;
                 });
 
-
             }
-
-            //var includesUnassigned = items.FirstOrDefault(x => x.Code.Equals("unassigned", StringComparison.OrdinalIgnoreCase));
-
-            //if (includesUnassigned == null)
-            //{
-            //    items.Add(new PublishSet { Code = "UNASSIGNED", ContentCount = 0, ProductCount = 0, Name = "unassigned" });
-            //}
 
             return List2(Mapper.Map<List<PublishSet>>(items), result.TotalCount);
         
