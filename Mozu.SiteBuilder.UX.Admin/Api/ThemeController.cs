@@ -373,9 +373,15 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
                 }
             }
 
+            if (themeIds.Count() == 0)
+            {
+                var theme = _themeRepository.GetThemeOrDefault(new ThemeSelection() { Id = null });
+
+                themeIds.Add(theme.Id);
+            }
+
             var themes = themeIds.Select(x =>
             {
-               
                 var theme = _themeRepository.GetThemeSlim(new ThemeSelection() { Id = x });
 
                 var entitlement = entitlements.Items.FirstOrDefault(e => e.ApplicationAssetPath.Replace('\\', '~') == theme.Id);
