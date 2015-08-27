@@ -272,9 +272,9 @@ Ext.define('Taco.view.filter.EditCodeModal', {
                     return;
                 }
                 
-                var treeData = this.encodeTree(json.items.tree);
+                var newTreeData = this.encodeTree(json.items.tree);
 
-                this.codeField.setValue(treeData);
+                this.codeField.setValue(newTreeData);
                 this.textField.setValue(json.items.text);
 
                 if (callback) {
