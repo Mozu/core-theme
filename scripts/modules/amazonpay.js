@@ -61,6 +61,7 @@ function($,EventBus, Api, hyprlivecontext, _) {
 					type:  self.buttonType,
 					color: self.buttonColor,
 					useAmazonAddressBook: true,
+					size: "small",
 					authorization: function() {
 						var loginOptions = {scope: "profile postal_code payments:widget payments:shipping_address", popup: self.usePopUp};
 						authRequest = amazon.Login.authorize (loginOptions,redirectUrl);
