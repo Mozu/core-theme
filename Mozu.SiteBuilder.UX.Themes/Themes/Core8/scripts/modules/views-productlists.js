@@ -1,11 +1,13 @@
 ﻿define(['modules/jquery-mozu', 'underscore', 'modules/backbone-mozu', 'hyprlive'], function ($, _, Backbone, Hypr) {
+    
     var ProductListView = Backbone.MozuView.extend({
             templateName: 'modules/product/product-list-tiled'
         }),
 
     FacetingPanel = Backbone.MozuView.extend({
         additionalEvents: {
-            "change [data-mz-facet-value]": "setFacetValue"
+            "change [data-mz-facet-value]": "setFacetValue",
+            "click [data-mz-facet-link]": "handleFacetLink"
         },
         templateName: "modules/product/faceting-form",
         initialize: function () {
@@ -30,6 +32,9 @@
         setFacetValue: function (e) {
             var $box = $(e.currentTarget);
             this.model.setFacetValue($box.data('mz-facet'), $box.data('mz-facet-value'), $box.is(':checked'));
+        },
+        handleFacetLink: function (e) {
+            e.stopImmediatePropagation();
         }
     });
 
