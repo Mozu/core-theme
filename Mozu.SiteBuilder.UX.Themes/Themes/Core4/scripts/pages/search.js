@@ -12,7 +12,12 @@ define(['modules/jquery-mozu', "shim!vendor/underscore>_", 'hyprlive', 'modules/
             facetingViews;
 
         if (productListData) {
-            var facetingModel = new FacetingModels.FacetedProductCollection(productListData);            if (searchQuery) facetingModel.setQuery(searchQuery);            if (categoryId) facetingModel.setHierarchy('categoryId', categoryId);            facetingViews = {
+            var facetingModel = new FacetingModels.FacetedProductCollection(productListData);
+
+            if (searchQuery) facetingModel.setQuery(searchQuery);
+            if (categoryId) facetingModel.setHierarchy('categoryId', categoryId);
+
+            facetingViews = {
                 pagingControls: new PagingViews.PagingControls({
                     el: $searchPageBody.find('[data-mz-pagingcontrols]'),
                     model: facetingModel
@@ -28,11 +33,15 @@ define(['modules/jquery-mozu', "shim!vendor/underscore>_", 'hyprlive', 'modules/
                     el: $searchPageBody.find('[data-mz-productlist]'),
                     model: facetingModel
                 }))
-            };            if ($facetPanel.length > 0) {
+            };
+
+            if ($facetPanel.length > 0) {
                 facetingViews.facetPanel = new ProductListViews.FacetingPanel({
-                    el: $facetPanel,                    model: facetingModel
+                    el: $facetPanel,
+                    model: facetingModel
                 });
-            }
+            }
+
             Backbone.history.start({ pushState: true, root: window.location.pathname });
             var router = new Backbone.Router();
 

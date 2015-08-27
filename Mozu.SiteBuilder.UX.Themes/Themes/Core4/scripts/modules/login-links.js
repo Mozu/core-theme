@@ -120,7 +120,8 @@ define(['shim!vendor/bootstrap-popover[modules/jquery-mozu=jQuery]>jQuery', 'mod
         },
         slideRight: function () {
             this.$slideboxOuter.css('left', -this.panelWidth);
-        },        slideLeft: function () {
+        },
+        slideLeft: function () {
             this.$slideboxOuter.css('left', 0);
         },
         login: function () {

@@ -148,7 +148,8 @@
         hasSavedContacts: function() {
             var contacts = this.get('contacts');
             return contacts && contacts.length > 0;
-        },        relations: {
+        },
+        relations: {
             contacts: Backbone.Collection.extend({
                 model: CustomerContact
             }),
