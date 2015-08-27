@@ -1,3 +1,23 @@
+
+{% with siteContext.checkoutSettings.externalPaymentWorkflowSettings|findwhere("name", "PayWithAmazon") as payWithAmazon %} 
+	{%with payWithAmazon.credentials|findwhere("apiName", "clientId") as clientId%}
+		<script>
+			window.onAmazonLoginReady = function() {
+				amazon.Login.setClientId("{{clientId.value}}"); 
+		};
+		</script>
+	{%endwith%}
+
+	{%with payWithAmazon.credentials|findwhere("apiName", "environment") as environment%}
+		{% if environment.value == "sandbox" %}
+			<script ype='text/javascript' src='https://static-na.payments-amazon.com/OffAmazonPayments/us/sandbox/js/Widgets.js'></script>
+		{%else%}
+			<script ype='text/javascript' src='https://static-na.payments-amazon.com/OffAmazonPayments/us/js/Widgets.js'></script>
+		{%endif%}
+	{%endwith%}
+		
+{% endwith %}
+
 <tbody>
 	<tr>
 		<td style="padding:0px 10px 0px 0px;">

@@ -1040,15 +1040,22 @@
             },
             processDigitalWallet: function (digitalWalletType, payment) {
                 var me = this;
-                return this.apiProcessDigitalWallet({
-                    digitalWalletData: JSON.stringify(payment)
-                }).then(function() {
-                    _.each([
-                        'fulfillmentInfo.fulfillmentContact',
-                        'fulfillmentInfo',
-                        'billingInfo'
-                    ], function(name) {
-                        me.get(name).trigger('sync');
+                // void active payments; if there are none then the promise will resolve immediately
+                return api.all(_.map(_.filter(me.apiModel.getActivePayments(), function(payment) {
+                    return payment.paymentType !== "StoreCredit" && payment.paymentType !== "GiftCard";
+                }), function(payment) {
+                    return me.apiVoidPayment(payment.id);
+                })).then(function() {
+                    return me.apiProcessDigitalWallet({
+                        digitalWalletData: JSON.stringify(payment)
+                    }).then(function() {
+                        _.each([
+                            'fulfillmentInfo.fulfillmentContact',
+                            'fulfillmentInfo',
+                            'billingInfo'
+                        ], function(name) {
+                            me.get(name).trigger('sync');
+                        });
                     });
                 });
             },
@@ -1379,7 +1386,7 @@
                 var saveCreditCard = false;
                 if (activePayments !== null && activePayments.length > 0) {
                      var creditCard = _.findWhere(activePayments, { paymentType: 'CreditCard' });
-                     if (creditCard !== undefined && creditCard !== null && creditCard.billingInfo !== undefined && creditCard.billingInfo !== null && creditCard.billingInfo.card !== undefined && creditCard.billingInfo.card !== null) {
+                     if (creditCard && creditCard.billingInfo && creditCard.billingInfo.card) {
                          saveCreditCard = creditCard.billingInfo.card.isCardInfoSaved;
                          billingInfo.set('card', creditCard.billingInfo.card);
                      }

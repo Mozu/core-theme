@@ -46,7 +46,7 @@ define([
             applyBilling: function() {
                 var me = this;
                 me.isLoading (true);
-                var currentPayment = me.apiModel.getCurrentPayment();
+                /*var currentPayment = me.apiModel.getCurrentPayment();
                 //var amountRemainingForPayment = me.get("amountRemainingForPayment");
                 if (currentPayment) {
                     // must first void the current payment because it will no longer be the right price
@@ -55,7 +55,15 @@ define([
                     });
                 } else {
                     return me.applyPayment();
-                }
+                }*/
+
+                return api.all(_.map(_.filter(me.apiModel.getActivePayments(), function(payment) {
+                    return payment.paymentType !== "StoreCredit" && payment.paymentType !== "GiftCard";
+                }), function(payment) {
+                    return me.apiVoidPayment(payment.id);
+                })).then(function() {
+                    return me.applyPayment();
+                });
             },
             applyPayment: function() {
                 var me = this;
@@ -67,7 +75,7 @@ define([
                     "newBillingInfo" : 
                     {   "paymentType": "PayWithAmazon",
                         "paymentWorkflow": "PayWithAmazon",
-                        
+                        "card" : null,
                         "billingContact" : {
                             "email": me.get("fulfillmentInfo").fulfillmentContact.email
                         },

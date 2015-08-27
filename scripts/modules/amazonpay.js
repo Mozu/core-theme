@@ -9,7 +9,7 @@ function($,EventBus, Api, hyprlivecontext, _) {
 		isEnabled: false,
 		isScriptLoaded: false,
 		viewName:"amazon-checkout",
-		init:function() {
+		init:function(loadScript) {
 			var paymentSettings = _.findWhere(hyprlivecontext.locals.siteContext.checkoutSettings.externalPaymentWorkflowSettings, {"name" : "PayWithAmazon"});
 			if (!paymentSettings || !paymentSettings.isEnabled) return;
 			this.isEnabled = paymentSettings.isEnabled;
@@ -21,20 +21,24 @@ function($,EventBus, Api, hyprlivecontext, _) {
 			this.buttonColor = this.getValue(paymentSettings,"buttonColor") || "Gold";
 			this.buttonType = this.getValue(paymentSettings,"buttonType") || "PwA";
 			this.usePopUp = (this.getValue(paymentSettings, "usepopup") || "true") == "true";
-			if (this.sellerId && this.clientId) {
+			if (this.sellerId && this.clientId && loadScript) {
 				var self = this;
+				sandbox = (isSandbox ? "/sandbox" : "");
+				var payWithAmazonUrl = "https://static-na.payments-amazon.com/OffAmazonPayments/us"+sandbox+"/js/Widgets.js";
+
 				window.onAmazonLoginReady = function() {
 					amazon.Login.setClientId(self.clientId); //use clientId
 				};
-				var sandbox = (isSandbox ? "/sandbox" : "");
-				var script = "https://static-na.payments-amazon.com/OffAmazonPayments/us"+sandbox+"/js/Widgets.js?sellerId="+this.sellerId;
-				$.getScript(script).done(function(scrit, textStatus){
+			
+				$.getScript(payWithAmazonUrl).done(function(scrit, textStatus){
 					//console.log(textStatus);
 					self.isScriptLoaded = true;
 					EventBus.trigger("aws-script-loaded");
 				}).fail(function(jqxhr, settings, exception) {
 					console.log(jqxhr);
 				});
+				//} else
+				//	self.isScriptLoaded = true;
 			}
 		},
 		getValue: function(paymentSetting, key) {
@@ -59,7 +63,7 @@ function($,EventBus, Api, hyprlivecontext, _) {
 					type:  self.buttonType,
 					color: self.buttonColor,
 					useAmazonAddressBook: true,
-					size: "small",
+					size: (!isCart ? "small" : "medium"),
 					authorization: function() {
 						var loginOptions = {scope: "profile postal_code payments:widget payments:shipping_address", popup: self.usePopUp};
 						authRequest = amazon.Login.authorize (loginOptions,redirectUrl);
@@ -72,11 +76,7 @@ function($,EventBus, Api, hyprlivecontext, _) {
 			});
 		},
 		addAddressWidget: function(awsReferenceId) {
-			var self = this;
-			EventBus.on("aws-script-loaded", function() {
-				loadAddressWidget(self.sellerId,awsReferenceId);
-				EventBus.trigger("aws-address-selected");
-			});
+			loadAddressWidget(this.sellerId,awsReferenceId);
 		},
 		addWalletWidget: function(awsReferenceId) {
 			loadWalletWidget(this.sellerId, awsReferenceId);
@@ -105,7 +105,6 @@ function($,EventBus, Api, hyprlivecontext, _) {
 			walletData.displayMode = "Read";
 			walletData.amazonOrderReferenceId = awsReferenceId;
 		}
-		console.log(walletData);
 		new OffAmazonPayments.Widgets.Wallet(walletData).bind(divId);
 
 	}
@@ -120,6 +119,7 @@ function($,EventBus, Api, hyprlivecontext, _) {
 			onOrderReferenceCreate: function(orderReference) {
 				var orderReferenceId = orderReference.getAmazonOrderReferenceId();
 				EventBus.trigger("aws-referenceOrder-created", {"orderReferenceId": orderReferenceId});
+				EventBus.trigger("aws-address-selected");
 			},
 			onAddressSelect: function(orderReference) {
 

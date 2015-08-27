@@ -162,11 +162,9 @@ require(["modules/jquery-mozu", "underscore", "hyprlive", "modules/backbone-mozu
         },
         
         initialize: function () {
-            //AmazonPay.init();
             this.listenTo(this.model, 'change:digitalCreditCode', this.onEnterDigitalCreditCode, this);
             this.listenTo(this.model, 'orderPayment', function (order, scope) {
                     this.render();
-                    //AmazonPay.addCheckoutButton(window.order.id, false);
                 }, this);
             this.codeEntered = !!this.model.get('digitalCreditCode');
         },
@@ -452,7 +450,7 @@ require(["modules/jquery-mozu", "underscore", "hyprlive", "modules/backbone-mozu
             checkoutData = require.mozuData('checkout');
 
         viewData = require.mozuData('viewdata');
-        AmazonPay.init(); 
+        AmazonPay.init(true); 
         checkoutData.isAmazonPayEnable = AmazonPay.isEnabled;
       
         

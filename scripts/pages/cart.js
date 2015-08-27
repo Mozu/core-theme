@@ -16,7 +16,7 @@ define(['modules/backbone-mozu', 'underscore', 'modules/jquery-mozu', 'modules/m
                 }
             });
 
-            AmazonPay.init(CartModels.Cart.fromCurrent().id);
+            AmazonPay.init(true);
 
             var visaCheckoutSettings = HyprLiveContext.locals.siteContext.checkoutSettings.visaCheckout;
             var pageContext = require.mozuData('pagecontext');

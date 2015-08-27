@@ -6,24 +6,27 @@ require(["modules/jquery-mozu","modules/backbone-mozu",'modules/editable-view', 
 	var AmazonCheckoutView = EditableView.extend({
 		templateName: 'modules/checkout/amazon-shipping-billing',
 		initialize: function() {
-			AmazonPay.init();
+			
 			EventBus.on("aws-referenceOrder-created", this.setawsOrderData);
 			EventBus.on("aws-address-selected", function() {
 				AmazonPay.addWalletWidget();
-				
 			});
 			EventBus.on("aws-card-selected", function() {
 				$("#checkoutActions").show();
 			});
-			AmazonPay.addAddressWidget();
 			
+			EventBus.on("aws-script-loaded", function() {
+				console.log("script loaded");
+				AmazonPay.addAddressWidget();
+			});
+
 			this.listenTo(this.model, "awscheckoutcomplete", function(id){
 				window.location = "/checkout/"+id+"?isAwsCheckout=true&access_token="+$.deparam().access_token;
 			});
 			
 		},
 		render: function() {
-			AmazonPay.addAddressWidget();
+			//AmazonPay.addAddressWidget();
 		},
 		setawsOrderData: function(data) {
 			var awsData = { awsReferenceId: data.orderReferenceId, addressAuthorizationToken:$.deparam().access_token};
@@ -43,7 +46,7 @@ require(["modules/jquery-mozu","modules/backbone-mozu",'modules/editable-view', 
 
 
 	$(document).ready(function () {
-
+		AmazonPay.init(false);
 
 		var checkoutData = require.mozuData('checkout');
 		var checkoutModel = window.order = new AmazonCheckoutModels.AwsCheckoutPage(checkoutData);
@@ -52,5 +55,7 @@ require(["modules/jquery-mozu","modules/backbone-mozu",'modules/editable-view', 
 									model: checkoutModel,
 									messagesEl: $('[data-mz-message-bar]')
 								});
+
+		AmazonPay.addAddressWidget();
 	});
 });
