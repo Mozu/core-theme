@@ -101,7 +101,7 @@ namespace Mozu.SiteBuilder.Mvc.Helpers
                     }
                 case "image":
                     {
-                        url = MakeImagetUrl( obj, config);
+                        url = MakeImageUrl( obj, config);
                         break;
                     }
                 case "category":
@@ -116,7 +116,7 @@ namespace Mozu.SiteBuilder.Mvc.Helpers
                     }
                 case "cdn":
                     {
-                        url = MakeCdnUrl(obj);
+                        url = MakeCdnUrl(obj, config);
                         break;
                     }
                 default:
@@ -127,10 +127,12 @@ namespace Mozu.SiteBuilder.Mvc.Helpers
             return url;
         }
 
-        private string MakeCdnUrl(object o)
+        private string MakeCdnUrl(object o, Dictionary<string, object> config)
         {
 
-            var str = o as string;
+            var sb = new StringBuilder(o as string);
+            var str = sb.ToString();
+
             if (string.IsNullOrEmpty(str))
             {
                 return "#";
@@ -138,13 +140,28 @@ namespace Mozu.SiteBuilder.Mvc.Helpers
             if (str[0] != '/' && str.IndexOf("http", StringComparison.OrdinalIgnoreCase) != 0)
             {
                 str = '/' + str;
+                sb.Insert(0, str);
             }
 
-            if ( str[0]=='/')
+            sb.Append(str.IndexOf('?') == -1 ? '?' : '&');
+
+            foreach (var kvp in config)
             {
-                return this._siteContext.CdnPrefix + str;
+                if (kvp.Value == null)
+                {
+                    continue;
+                }
+                sb.Append(kvp.Key).Append("=").Append(HttpUtility.UrlEncode(kvp.Value.ToString())).Append("&");
             }
-            return str;
+
+            sb.Append("_mzcb=").Append(_siteContext.GeneralSettings.CdnCacheBustKey);
+
+            if (sb.ToString()[0] == '/')
+            {
+                return sb.Insert(0, this._siteContext.CdnPrefix).ToString();
+            }
+
+            return sb.ToString();
 
         }
 
@@ -314,7 +331,7 @@ namespace Mozu.SiteBuilder.Mvc.Helpers
 
 
 
-        public  string MakeImagetUrl( dynamic obj, Dictionary<string,object> config)
+        public  string MakeImageUrl( dynamic obj, Dictionary<string,object> config)
         {
             string url = null;
             if (obj is string)
