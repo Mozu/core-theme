@@ -197,8 +197,6 @@ namespace Mozu.SiteBuilder.Mvc.Contexts
         [JsonConverter(typeof(FacetJsonConverter))]
         public NameValueCollection Facets { get; set; }
 
-        
-        
         public string ToUrl(SearchContextOverrides overrides= null)
         {
             var clearFacets = overrides != null && overrides.ClearFacets;
@@ -262,19 +260,70 @@ namespace Mozu.SiteBuilder.Mvc.Contexts
             #endregion doFacets
 
 
-            return string.Format("{0}?pageSize={1}&sortBy={2}&facetValueFilter={3}&startIndex={4}&query={5}",
-                urlBase,
-               pageSize,
-                HttpUtility.UrlEncode(sortBy),
-                HttpUtility.UrlEncode(facetQsVal),
-                startIndex,
-                HttpUtility.UrlEncode(query));
+
+            var queryCollection = System.Web.HttpUtility.ParseQueryString("");
+
+            if (pageSize != null)
+            {
+                queryCollection.Add("pageSize", pageSize.ToString());
+            }
+
+            if (!String.IsNullOrEmpty(sortBy))
+            {
+                queryCollection.Add("sortBy", sortBy);
+            }
+
+            if (!String.IsNullOrEmpty(facetQsVal))
+            {
+                queryCollection.Add("facetValueFilter", facetQsVal);
+            }
+
+            if (startIndex != null)
+            {
+                queryCollection.Add("startIndex", startIndex.ToString());
+            }
+
+            if (!String.IsNullOrEmpty(query))
+            {
+                queryCollection.Add("query", query);
+            }
+
+            return queryCollection.Count > 0 ? urlBase + "?" + queryCollection.ToString() : urlBase;
 
         }
     }
     public class SearchContextOverrides
     {
        
+        public SearchContextOverrides(Dictionary<string, object> config)
+        {
+            object startIndex;
+            if (config.TryGetValue("startIndex", out startIndex))
+            {
+                this.StartIndex = Convert.ToInt32(startIndex);
+            }
+
+            object sortBy;
+            if (config.TryGetValue("sortBy", out sortBy))
+            {
+                this.SortBy = Convert.ToString(sortBy);
+            }
+
+            object query;
+            if (config.TryGetValue("query", out query))
+            {
+                this.Query = Convert.ToString(query);
+            }
+
+            object pageSize;
+            if (config.TryGetValue("pageSize", out pageSize))
+            {
+                this.PageSize = Convert.ToInt32(pageSize);
+            }
+        }
+
+        public SearchContextOverrides() { }
+
         private string _sortBy;
         
         private string _query;

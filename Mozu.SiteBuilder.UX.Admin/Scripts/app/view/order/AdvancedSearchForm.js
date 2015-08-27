@@ -278,12 +278,14 @@ Ext.define('Taco.view.order.AdvancedSearchForm', {
      * @param {Ext.EventObject} e The event object.
      */
     escapeSpecialChars: function (field, e) {
+
         var specialChars = /[\'\"\{\}\[\]]/g; // ' " { } [ ]
         var value = field.getValue();
 
         if (!Ext.isEmpty(value)) {
             // ^ is the escape character; $& is the matched token
-            field.setValue(value.replace(specialChars, '^$&'));
+            // removing the escaped chars before escaped, so not to double up if the input is blurred more than once
+            field.setValue(value.replace(/\^/g, '').replace(specialChars, '^$&'));
         }
     }
 });

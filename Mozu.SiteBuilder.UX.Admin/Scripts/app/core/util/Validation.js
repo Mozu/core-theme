@@ -108,12 +108,14 @@ Ext.define('Taco.core.util.Validation', {
         return true;
     },
 
-    toValidSeoSlug: function(slug, replaceString) {
+    toValidSeoSlug: function(slug, replaceString, skipToLowerCase) {
+        var result;
         if (!slug) {
             return slug;
         }
         replaceString = replaceString || '-';
-        return slug.replace(Taco.core.util.Validation.getReplaceInvalidSeoRegex(), replaceString).toLowerCase();
+        result = slug.replace(Taco.core.util.Validation.getReplaceInvalidSeoRegex(), replaceString);
+        return skipToLowerCase ? result : result.toLowerCase();
     },
 
 

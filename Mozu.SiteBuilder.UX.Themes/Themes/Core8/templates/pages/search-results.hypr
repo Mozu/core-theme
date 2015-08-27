@@ -9,14 +9,7 @@
 {% require_script "pages/search" %}
 
 <div {% if pageContext.categoryId %}data-mz-category="{{ pageContext.categoryId }}" {% endif %}data-mz-search="{{ pageContext.search.query }}" class="mz-l-container">
-    <h1 class="mz-pagetitle">{{ labels.searchResults }}: <span class="mz-searchresults-query">{{ pageContext.search.query }}</span></h1>
-    {% include "modules/product/faceted-products" %}
-    {% comment %}
-    {% if model.items.length < themeSettings.defaultPageSize and pageContext.categoryId %}
-    <p>{{ labels.searchResultsSummary|string_format(pageContext.search.query, pageContext.categoryName, model.items.length) }}</p>
-    {% endif %}
-    {% endcomment %}
-    {% dropzone "search-results" scope="template" %}
+	{% include "pages/search-interior" %}
 </div>
 
 {% endblock body-content %}

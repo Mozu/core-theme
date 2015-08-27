@@ -2,8 +2,8 @@
   <span class="mz-paging-title">{{ labels.show }}:</span>
   <select data-mz-value="pageSize" class="mz-pagingcontrols-pagesize-dropdown" autocomplete="off">
     {% block page-sizes %}
-      {% for pageSize in themeSettings.pageSizeOptions %}
-        <option {% if model.pageSize == pageSize %}selected="selected"{% endif %} value="{{ pageSize }}">{{ pageSize }}</option>
+      {% for size in themeSettings.pageSizeOptions %}
+        <option data-mz-url="{% make_url "paging" model with pageSize=size page=1 %}" {% if model.pageSize == size %}selected="selected"{% endif %} value="{{ size }}">{{ size }}</option>
       {% endfor %}
     {% endblock page-sizes %}
   </select>

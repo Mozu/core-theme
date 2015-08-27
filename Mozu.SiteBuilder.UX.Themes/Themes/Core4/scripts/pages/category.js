@@ -29,7 +29,7 @@ define(['modules/jquery-mozu', 'shim!vendor/underscore>_', 'hyprlive', 'modules/
                 }) )
             };            if ($facetPanel.length > 0) {                facetingViews.facetPanel = new ProductListViews.FacetingPanel({
                     el: $facetPanel,                    model: facetingModel
-                });            }
+                });            }
             Backbone.history.start({ pushState: true, root: window.location.pathname });
             var router = new Backbone.Router();
 

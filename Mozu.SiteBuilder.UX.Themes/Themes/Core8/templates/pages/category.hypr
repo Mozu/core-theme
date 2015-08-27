@@ -9,11 +9,6 @@
 {% require_script "pages/category" %}
 
 <div data-mz-category="{{model.categoryId}}" class="mz-l-container">
-    <h1 class="mz-pagetitle">{{ model.name|safe }}</h1>
-	{% dropzone "category-page-top" scope="page" %}
-	{% partial_cache model.categoryId pageContext.Sorting pageContext.Pagination %}
-    {% include_products "modules/product/faceted-products" with includeFacets=themeSettings.showCategoryFacets and pageWithUrl=true and sortWithUrl=true and pageSize=themeSettings.defaultPageSize as_parameter %}
-	{% endpartial_cache %}
-	{% dropzone "category-page-bottom" scope="page" %}
+    {% include "pages/category-interior" %}
 </div>
 {% endblock body-content %}

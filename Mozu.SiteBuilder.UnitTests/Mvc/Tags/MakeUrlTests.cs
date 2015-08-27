@@ -7,6 +7,7 @@ using System.Threading.Tasks;
 using System.Web.Http.Routing;
 using NUnit.Framework;
 using Autofac;
+using Mozu.SiteBuilder.Mvc;
 using Mozu.SiteBuilder.Mvc.Contexts;
 using Mozu.SiteBuilder.UX.Models.StoreFront.Catalog;
 using NSubstitute;
@@ -42,7 +43,8 @@ namespace Mozu.SiteBuilder.UnitTests.Mvc.Tags
             {
 
             };
-            var urlHelper = new UrlHelper(sc, pc, null, null, null);
+            var ac = Substitute.For<ISiteBuilderApiContext>();
+            var urlHelper = new UrlHelper(sc, ac, pc, null, null, null);
             Action<ContainerBuilder> containerMods = cb =>
            {
                cb.Register(c => sc).As<ISiteContext>();
@@ -60,7 +62,7 @@ namespace Mozu.SiteBuilder.UnitTests.Mvc.Tags
                     Name = "cdn",
                     Template = @"{% make_url ""cdn"" ""/foo.png"" %}",
                     ContainerModifier = containerMods,
-                    ExpectedFunc = TestDescriptor.CompareLiteral("//cdn/1-m2/foo.png")
+                    ExpectedFunc = TestDescriptor.CompareLiteral("//cdn/1-m2/foo.png?_mzcb=123")
                 },
                 new TestDescriptor
                 {
@@ -93,8 +95,34 @@ namespace Mozu.SiteBuilder.UnitTests.Mvc.Tags
                         PageCount = 10,
                         TotalCount =100
                     } } },
-                    ExpectedFunc = TestDescriptor.CompareLiteral("?pageSize=&sortBy=&facetValueFilter=&startIndex=60&query=")
-                }
+                    ExpectedFunc = TestDescriptor.CompareLiteral("?startIndex=60")
+                },
+                new TestDescriptor
+                {
+                    Name = "sortby_withParams",
+                    Template = @"{% make_url ""sorting"" productCol with sortBy=""price:desc"" as_paramater %}",
+                    ContainerModifier = containerMods,
+                       Context = new Dictionary<string, object>() { { "productCol", new ProductCollection() {
+                        StartIndex=50,
+                        PageSize = 10,
+                        PageCount = 10,
+                        TotalCount =100
+                    } } },
+                    ExpectedFunc = TestDescriptor.ContainsLiteral("sortBy=price%3adesc")
+                },
+                 new TestDescriptor
+                {
+                    Name = "sortby_without_Params",
+                    Template = @"{% make_url ""sorting"" ""price:desc""  %}",
+                    ContainerModifier = containerMods,
+                       Context = new Dictionary<string, object>() { { "productCol", new ProductCollection() {
+                        StartIndex=50,
+                        PageSize = 10,
+                        PageCount = 10,
+                        TotalCount =100
+                    } } },
+                    ExpectedFunc = TestDescriptor.ContainsLiteral("sortBy=price%3adesc")
+                },
             };
         }
          

@@ -6,6 +6,7 @@ Ext.define('Taco.core.ux.form.SlugField', {
     extend: 'Ext.form.field.Text',
     alias: ['widget.slugfield', 'widget.taco-slugfield'],
     slugCls: 'taco-slug-prefix',
+    skipToLowerCase: false,
    // slugPrefix: '/',
 
     //fieldSubTpl2: [ // note: {id} here is really {inputId}, but {cmpId} is available
@@ -19,8 +20,7 @@ Ext.define('Taco.core.ux.form.SlugField', {
     ],
 
     onRender: function() {
-        var me = this,
-            paddingLeft, height;
+        var me = this;
 
         me.callParent(arguments);
 
@@ -79,7 +79,7 @@ Ext.define('Taco.core.ux.form.SlugField', {
 
         if (typeof value === 'string') {
             currentValue = me.getValue();
-            newValue = Taco.core.util.Validation.toValidSeoSlug(value);
+            newValue = Taco.core.util.Validation.toValidSeoSlug(value, '-', me.skipToLowerCase);
 
             if (currentValue === newValue) {
                 return false;
@@ -91,8 +91,8 @@ Ext.define('Taco.core.ux.form.SlugField', {
 
     getCaretIndex: function() {
         var me = this,
-            index, selection;
-        input = me.inputEl.dom;
+            selection,
+            input = me.inputEl.dom;
 
         if (input.selectionStart !== 'undefined') {
             return input.selectionStart;
