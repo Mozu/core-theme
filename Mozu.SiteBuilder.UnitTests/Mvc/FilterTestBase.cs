@@ -79,6 +79,21 @@ namespace Mozu.SiteBuilder.UnitTests.Mvc
 
             public  Action<ContainerBuilder> ContainerModifier  { get; set; }
 
+            public static Func<string, Tuple<bool, string>> ContainsLiteral(string expected)
+            {
+                
+                return actual =>
+                {
+                    if (actual.Contains(expected))
+                    {
+                        return new Tuple<bool, string>(true, string.Empty);
+                    }
+                    else
+                    {
+                        return new Tuple<bool, string>(false, string.Format("actual didn't contain expected. expected: {0}. Actual: {1}", expected, actual));
+                    }
+                };
+            }
 
             public static Func<string, Tuple<bool, string>> CompareLiteral(string expected)
             {

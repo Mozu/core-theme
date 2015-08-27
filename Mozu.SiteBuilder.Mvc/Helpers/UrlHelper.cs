@@ -97,11 +97,11 @@ namespace Mozu.SiteBuilder.Mvc.Helpers
                     }
                 case "sorting":
                     {
-                        return MakeSortingUrl(obj);
+                        return MakeSortingUrl(obj,config);
                     }
                 case "image":
                     {
-                        url = MakeImagetUrl( obj, config);
+                        url = MakeImageUrl( obj, config);
                         break;
                     }
                 case "category":
@@ -116,7 +116,7 @@ namespace Mozu.SiteBuilder.Mvc.Helpers
                     }
                 case "cdn":
                     {
-                        url = MakeCdnUrl(obj);
+                        url = MakeCdnUrl(obj, config);
                         break;
                     }
                 default:
@@ -127,10 +127,12 @@ namespace Mozu.SiteBuilder.Mvc.Helpers
             return url;
         }
 
-        private string MakeCdnUrl(object o)
+        private string MakeCdnUrl(object o, Dictionary<string, object> config)
         {
 
-            var str = o as string;
+            var sb = new StringBuilder(o as string);
+            var str = sb.ToString();
+
             if (string.IsNullOrEmpty(str))
             {
                 return "#";
@@ -138,22 +140,47 @@ namespace Mozu.SiteBuilder.Mvc.Helpers
             if (str[0] != '/' && str.IndexOf("http", StringComparison.OrdinalIgnoreCase) != 0)
             {
                 str = '/' + str;
+                sb.Insert(0, str);
             }
 
-            if ( str[0]=='/')
+            sb.Append(str.IndexOf('?') == -1 ? '?' : '&');
+
+            foreach (var kvp in config)
             {
-                return this._siteContext.CdnPrefix + str;
+                if (kvp.Value == null)
+                {
+                    continue;
+                }
+                sb.Append(kvp.Key).Append("=").Append(HttpUtility.UrlEncode(kvp.Value.ToString())).Append("&");
             }
-            return str;
+
+            sb.Append("_mzcb=").Append(_siteContext.GeneralSettings.CdnCacheBustKey);
+
+            if (sb.ToString()[0] == '/')
+            {
+                return sb.Insert(0, this._siteContext.CdnPrefix).ToString();
+            }
+
+            return sb.ToString();
 
         }
 
-        private string MakeSortingUrl(object obj)
+        private string MakeSortingUrl(object obj , Dictionary<string, object> config)
         {
-            string val = obj as string;
             var searchContext = _pageContext.Search;
+            if ( obj is string)
+            {
+                return searchContext.ToUrl(new SearchContextOverrides() { SortBy = (string)obj });
+            }
+            object sortByObj;
+            if ( config != null && config.TryGetValue( "sortBy", out sortByObj) && !string.IsNullOrWhiteSpace( sortByObj as string))
+            {
+                return searchContext.ToUrl(new SearchContextOverrides() { SortBy = (string)sortByObj });
+            }
+            return "#";
+           
             
-            return searchContext.ToUrl(new SearchContextOverrides() { SortBy = val });
+           
 
 
         }
@@ -221,11 +248,11 @@ namespace Mozu.SiteBuilder.Mvc.Helpers
         {
 
             Product product = obj as Product;
-           
+            string url;
             if (product == null)
             {
                 string productCode = null;
-                string url = "#";
+                 url = "#";
                 if (obj is string)
                 {
                     productCode = (string)obj;
@@ -239,9 +266,9 @@ namespace Mozu.SiteBuilder.Mvc.Helpers
             }
 
 
-            
-            return _customRouteHandler.GetCannonicalUrl(FancyRoute.ProductDetails, () => Mapper.Map<IDictionary<string, object>>(product), false).Result ?? "#";
 
+             return _customRouteHandler.GetCannonicalUrl(FancyRoute.ProductDetails, () => Mapper.Map<IDictionary<string, object>>(product), false).Result?? "/p/" + product.ProductCode;
+            
         }
         public string MakeCategoryUrl( object obj, Dictionary<string, object> config, bool includeContxt)
         {
@@ -295,16 +322,16 @@ namespace Mozu.SiteBuilder.Mvc.Helpers
             {
                 return "#";
             }
-         
+
 
             //maybe remove existing context?
-            return _customRouteHandler.GetCannonicalUrl(FancyRoute.Category, () => Mapper.Map<IDictionary<string, object>>(cat).ChainSet(config), includeContxt).Result ?? "#";
+            return _customRouteHandler.GetCannonicalUrl(FancyRoute.Category, () => Mapper.Map<IDictionary<string, object>>(cat).ChainSet(config), includeContxt).Result ?? "/c/" + cat.CategoryId;
         }
 
 
 
 
-        public  string MakeImagetUrl( dynamic obj, Dictionary<string,object> config)
+        public  string MakeImageUrl( dynamic obj, Dictionary<string,object> config)
         {
             string url = null;
             if (obj is string)

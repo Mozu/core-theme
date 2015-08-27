@@ -267,20 +267,18 @@ Ext.define('Taco.view.discount.LimitationsForm', {
             }
         });
 
-
-
-        this.oneTimeUsePerShopper = Ext.create('Ext.form.field.Checkbox', {
-            name: 'oneTimeUsePerShopper',
-            boxLabel: 'Discount can be redeemed one time per shopper',
-            checked: this.record.get('maximumUsesPerUser') === 1,
-            margin:"10 0 0 0",
-            listeners: {
-                change: function (cb, newValue) {
-                    this.record.set('maximumUsesPerUser', newValue ? 1 : null);
-                },
-                scope: this
-            }
-        });
+        this.oneTimeUsePerShopper = Ext.create('Ext.form.field.Checkbox',
+            Taco.core.ux.TooltipLabel.wrapConfig('discount.limitation.oneTimeUsePerShopper', me, {
+                name: 'oneTimeUsePerShopper',
+                boxLabel: 'Discount Can Be Redeemed One Time Per Shopper',
+                checked: this.record.get('maximumUsesPerUser') === 1,
+                listeners: {
+                    change: function (cb, newValue) {
+                        this.record.set('maximumUsesPerUser', newValue ? 1 : null);
+                    },
+                    scope: this
+                }
+        }));
 
         this.items = [
             {
@@ -318,7 +316,6 @@ Ext.define('Taco.view.discount.LimitationsForm', {
     //setFieldVisibility: function (isLineItem, appliesToShipping, discountType) {
     setFieldVisibility: function (scopeType, targetType, discountType) {
         var me = this,
-            appliesToShipping = (targetType == "Shipping"),
             isOrder = (scopeType === 'Order'),
             isLineItem = (scopeType === 'LineItem'),
             orderMaxVisible = false,

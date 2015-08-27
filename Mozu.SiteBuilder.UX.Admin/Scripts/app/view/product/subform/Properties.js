@@ -108,20 +108,6 @@ Ext.define('Taco.view.product.subform.Properties', {
                     }
                 ];
             },
-            'SlugField': function (ptAttribute, values) {
-                return [
-                    {
-                        xtype: 'taco-slugfield',
-                        name: this.getFieldName(ptAttribute),
-                        fieldLabel: ptAttribute.get('adminName'),
-                        allowBlank: ptAttribute.get('isRequired') !== true,
-                        value: (values && values.length) ? values[0] : null,
-                        width: 400,
-                        maxLength: 50,
-                        skipToLowerCase: true
-                    }
-                ];
-            },
             'productPicker': function (ptAttribute, values) {
                 return [
                     {
@@ -233,13 +219,8 @@ Ext.define('Taco.view.product.subform.Properties', {
             prop = this.product.getProperties().getById(attributeFQN),
             values = prop ? prop.get('values') : null;
 
-        if (editor === 'TextBox') {
-            if (ptAttribute.get('dataType') === 'String') {
-                editor = 'SlugField';
-            }
-            else if (ptAttribute.get('dataType') === 'Number') {
-                editor = 'NumberField';
-            }
+        if (editor === 'TextBox' && ptAttribute.get('dataType') === 'Number') {
+            editor = 'NumberField';
         }
         if (typeof this.statics().editors[editor] !== 'function') {
             return [
