@@ -22,6 +22,7 @@ namespace Mozu.SiteBuilder.Mvc.Helpers
 {
     public class UrlHelper
     {
+        private readonly ISiteBuilderApiContext _apiContext;
         private readonly ISiteContext _siteContext;
         private readonly IPageContext _pageContext;
         private readonly ICustomRouteHandler _customRouteHandler;
@@ -29,11 +30,13 @@ namespace Mozu.SiteBuilder.Mvc.Helpers
         private readonly Lazy<ICategoryTreeProvider> _categoryTreeProvider;
 
         public UrlHelper(ISiteContext siteContext ,
+            ISiteBuilderApiContext apiContext,
             IPageContext pageContext, 
             ICustomRouteHandler customRouteHandler, 
             HttpRequestMessage httpRequestMessage,
             Lazy<ICategoryTreeProvider> categoryTreeProvider)
         {
+            _apiContext = apiContext;
             _siteContext = siteContext;
             _pageContext = pageContext;
             _customRouteHandler = customRouteHandler;
@@ -114,6 +117,11 @@ namespace Mozu.SiteBuilder.Mvc.Helpers
                         url = MakeProductUrl( obj);
                         break;
                     }
+                case "stylesheet":
+                    {
+                        url = MakeStylesheetUrl(obj, config);
+                        break;
+                    }
                 case "cdn":
                     {
                         url = MakeCdnUrl(obj, config);
@@ -125,6 +133,36 @@ namespace Mozu.SiteBuilder.Mvc.Helpers
                     }
             }
             return url;
+        }
+
+        private string MakeStylesheetUrl(object obj, Dictionary<string, object> config)
+        {
+            var url = MakeCdnUrl(obj, config);
+            var sb = new StringBuilder(url);
+
+            sb.Append(url.IndexOf('?') == -1 ? '?' : '&');
+
+            sb.Append("SBTHEME=").Append(HttpUtility.UrlEncode(this._siteContext.Theme.Id));
+            if (this._pageContext.IsDebugMode)
+            {
+                sb.Append("&debug=true");
+            }
+            if (this._apiContext.DataViewMode == Core.DataViewModeType.Pending)
+            {
+                sb.Append("&dv=p");
+            }
+
+            foreach (var kvp in config)
+            {
+                if (kvp.Value == null)
+                {
+                    continue;
+                }
+                sb.Append('&').Append(kvp.Key).Append("=").Append(HttpUtility.UrlEncode(kvp.Value.ToString()));
+            }
+
+            return sb.ToString();
+
         }
 
         private string MakeCdnUrl(object o, Dictionary<string, object> config)
@@ -205,7 +243,12 @@ namespace Mozu.SiteBuilder.Mvc.Helpers
             int currentStartIndex = _resolver.ResolveMemberOrDefault<int>(productCollection, "StartIndex", 0);
 
             var overrides = new SearchContextOverrides();
-            
+
+            if (config.TryGetValue("pageSize", out obj))
+            {
+                pageSize = Convert.ToInt32(obj);
+                overrides.PageSize = pageSize;
+            }
 
             if ( string.Equals( val, "first", StringComparison.OrdinalIgnoreCase))
             {
@@ -389,7 +432,7 @@ namespace Mozu.SiteBuilder.Mvc.Helpers
             string urlBase = null;
             object tmpObj;
             int catId;
-            if (strObj == "CLEAR")
+            if (strObj == "clear")
             {
 
 

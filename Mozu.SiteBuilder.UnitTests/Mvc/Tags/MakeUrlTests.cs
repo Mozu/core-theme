@@ -7,6 +7,7 @@ using System.Threading.Tasks;
 using System.Web.Http.Routing;
 using NUnit.Framework;
 using Autofac;
+using Mozu.SiteBuilder.Mvc;
 using Mozu.SiteBuilder.Mvc.Contexts;
 using Mozu.SiteBuilder.UX.Models.StoreFront.Catalog;
 using NSubstitute;
@@ -42,7 +43,8 @@ namespace Mozu.SiteBuilder.UnitTests.Mvc.Tags
             {
 
             };
-            var urlHelper = new UrlHelper(sc, pc, null, null, null);
+            var ac = Substitute.For<ISiteBuilderApiContext>();
+            var urlHelper = new UrlHelper(sc, ac, pc, null, null, null);
             Action<ContainerBuilder> containerMods = cb =>
            {
                cb.Register(c => sc).As<ISiteContext>();
