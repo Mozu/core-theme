@@ -1373,7 +1373,7 @@
                 this.isLoading(true);
 
                 if (isSavingNewCustomer) {
-                    process.push(this.addNewCustomer); 
+                    process.unshift(this.addNewCustomer); 
                 }
 
                 var activePayments = this.apiModel.getActivePayments();
