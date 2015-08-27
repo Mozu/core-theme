@@ -221,11 +221,11 @@ namespace Mozu.SiteBuilder.Mvc.Helpers
         {
 
             Product product = obj as Product;
-           
+            string url;
             if (product == null)
             {
                 string productCode = null;
-                string url = "#";
+                 url = "#";
                 if (obj is string)
                 {
                     productCode = (string)obj;
@@ -239,9 +239,9 @@ namespace Mozu.SiteBuilder.Mvc.Helpers
             }
 
 
-            
-            return _customRouteHandler.GetCannonicalUrl(FancyRoute.ProductDetails, () => Mapper.Map<IDictionary<string, object>>(product), false).Result ?? "#";
 
+             return _customRouteHandler.GetCannonicalUrl(FancyRoute.ProductDetails, () => Mapper.Map<IDictionary<string, object>>(product), false).Result?? "/p/" + product.ProductCode;
+            
         }
         public string MakeCategoryUrl( object obj, Dictionary<string, object> config, bool includeContxt)
         {
@@ -295,10 +295,10 @@ namespace Mozu.SiteBuilder.Mvc.Helpers
             {
                 return "#";
             }
-         
+
 
             //maybe remove existing context?
-            return _customRouteHandler.GetCannonicalUrl(FancyRoute.Category, () => Mapper.Map<IDictionary<string, object>>(cat).ChainSet(config), includeContxt).Result ?? "#";
+            return _customRouteHandler.GetCannonicalUrl(FancyRoute.Category, () => Mapper.Map<IDictionary<string, object>>(cat).ChainSet(config), includeContxt).Result ?? "/c/" + cat.CategoryId;
         }
 
 
