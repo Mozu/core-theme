@@ -40,11 +40,18 @@ Ext.define('Taco.overrides.menu.Item', {
         '</tpl>'
     ],
     beforeRender: function () {
-        var me = this;
+        var me = this,
+            // Note: pdm has determined that 10% of gmail users don't use keyboard shortcuts.
+            // So we will not show the keyboard shortcuts in the menus in our application. 
+            // Power users will have to accidently stumble onto these features or be omnipotent. 
+            // If they are in fact omnipotent, I will be greatly disappointed that they are wasting their time managing an ecommerce site.
+            // If your ever curious when and why I finally flipped the bit, look no more.
+            pdmClueless = true;
+
         this.callParent(arguments);
         Ext.applyIf(me.renderData, {
             acceleratorCls: me.acceleratorCls,
-            accelerator: me.accelerator
+            accelerator: me.accelerator && !pdmClueless
         });
     },
     acceleratorCls: Ext.baseCSSPrefix + 'menu-item-accelerator'
