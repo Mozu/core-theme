@@ -144,7 +144,7 @@ require(["modules/jquery-mozu", "underscore", "hyprlive", "modules/backbone-mozu
             "change [data-mz-digital-credit-amount]": "applyDigitalCredit",
             "change [data-mz-digital-add-remainder-to-customer]": "addRemainderToCustomer"
         },
-        
+
         initialize: function () {
             this.listenTo(this.model, 'change:digitalCreditCode', this.onEnterDigitalCreditCode, this);
             this.listenTo(this.model, 'orderPayment', function (order, scope) {
@@ -175,8 +175,8 @@ require(["modules/jquery-mozu", "underscore", "hyprlive", "modules/backbone-mozu
             var me = this;
             var isVisaCheckout = this.model.visaCheckoutFlowComplete();
             if (!isVisaCheckout) {
-                this.editing.savedCard = true;
-                this.render();
+            this.editing.savedCard = true;
+            this.render();
             } else if (window.confirm(Hypr.getLabel('visaCheckoutEditReminder'))) {
                 this.doModelAction('cancelVisaCheckout').then(function() {
                     me.editing.savedCard = false;

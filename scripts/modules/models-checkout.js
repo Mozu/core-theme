@@ -961,17 +961,30 @@
 
                 _.defer(function() {
                     var latestPayment = self.apiModel.getCurrentPayment(),
+                        activePayments = self.apiModel.getActivePayments(),
                         fulfillmentInfo = self.get('fulfillmentInfo'),
                         fulfillmentContact = fulfillmentInfo.get('fulfillmentContact'),
                         billingInfo = self.get('billingInfo'),
                         steps = [fulfillmentInfo, fulfillmentContact, billingInfo],
                         paymentWorkflow = latestPayment && latestPayment.paymentWorkflow,
+                        visaCheckoutPayment = activePayments && _.findWhere(activePayments, { paymentWorkflow: 'VisaCheckout' }),
                         paypalCancelled = (latestPayment && latestPayment.paymentType === "PaypalExpress" && window.location.href.indexOf('PaypalExpress=canceled') !== -1),
                         allStepsComplete = function () {
                             return _.reduce(steps, function(m, i) { return m + i.stepStatus(); }, '') === "completecompletecomplete";
                         },
                         isReady = allStepsComplete() && !(paypalCancelled);
-                        
+
+                    //Visa checkout payments can be added to order without UIs knowledge. This evaluates and voids the required payments.
+                    if (visaCheckoutPayment) {
+                        _.filter(self.apiModel.getActivePayments(), function (payment) {
+                            return payment.paymentType !== "StoreCredit" && payment.paymentType !== "GiftCard" && payment.paymentWorkflow != 'VisaCheckout';
+                        }).every(function (payment) {
+                            return self.apiVoidPayment(payment.id);
+                        });
+                        billingInfo.set('card', visaCheckoutPayment.billingInfo.card);
+                        billingInfo.set('billingContact', visaCheckoutPayment.billingInfo.billingContact);
+                    }
+
                     if (paymentWorkflow) {
                         billingInfo.set('paymentWorkflow', paymentWorkflow);
                         billingInfo.get('card').set({
@@ -1360,7 +1373,7 @@
                 this.isLoading(true);
 
                 if (isSavingNewCustomer) {
-                    process.push(this.addNewCustomer); 
+                    process.unshift(this.addNewCustomer); 
                 }
 
                 var activePayments = this.apiModel.getActivePayments();
