@@ -774,26 +774,10 @@
                     thereAreActivePayments = activePayments.length > 0,
                     paymentTypeIsCard = activePayments && !!_.findWhere(activePayments, { paymentType: 'CreditCard' }),
                     paymentTypeIsPayPal = activePayments && !!_.findWhere(activePayments, { paymentType: 'PaypalExpress' }),
-                    nonMozuPaymentWorkflow = activePayments && !!_.find(activePayments, function(payment){ return payment.paymentWorkflow != "Mozu";} ),
+                    nonMozuPaymentWorkflow = activePayments && !!_.find(activePayments, function(payment){ return payment.paymentWorkflow != "PayWithAmazon";} ),
                     balanceZero = this.parent.get('amountRemainingForPayment') === 0;
 
-                if (nonMozuPaymentWorkflow) return this.stepStatus("complete");/*{
-                    var order = this.getOrder(),
-                    me = this;
-                    var nonMozuPayment = this.getNonMozuPayment(activePayments);
-                    if (nonMozuPayment && !balanceZero )
-                        order.apiVoidPayment(nonMozuPayment.id).then(function() {
-                            order.apiCreatePayment(
-                            {
-                                "newBillingInfo" : nonMozuPayment.billingInfo, 
-                                "externalTransactionId" : nonMozuPayment.externalTransactionId
-                            }).then( function() {
-                                return me.stepStatus("complete");        
-                            });
-                        });
-                    else
-                        return this.stepStatus("complete");
-                }*/
+                if (nonMozuPaymentWorkflow) return this.stepStatus("complete");
                 if (paymentTypeIsCard) return this.stepStatus("incomplete"); // initial state for CVV entry
 
                 if (!fulfillmentComplete) return this.stepStatus('new');
@@ -883,7 +867,8 @@
             },
             applyPayment: function () {
                 var self = this, order = this.getOrder();
-                this.unset("paymentWorkflow");
+                if (this.get("paymentWorkflow") == "PayWithAmazon")
+                    this.unset("paymentWorkflow");
                 if (this.get("paymentType") === "PaypalExpress") {
                     this.set(this.getPaypalUrls());
                 } else {
@@ -1345,9 +1330,6 @@
             //    }
 
             //},
-            getNonMozuPayment: function(activePayments) {
-                return _.find(activePayments, function(payment){ return payment.paymentWorkflow != "Mozu";} );
-            },
             submit: function () {
                 var order = this,
                     billingInfo = this.get('billingInfo'),
@@ -1380,7 +1362,7 @@
                 this.syncBillingAndCustomerEmail();
                 this.setFulfillmentContactEmail();
 
-                if (nonStoreCreditTotal > 0 && this.validate() && currentPayment.paymentWorkflow === "Mozu") {
+                if (nonStoreCreditTotal > 0 && this.validate() && currentPayment.paymentWorkflow !== "PayWithAmazon") {
                     this.isSubmitting = false;
                     return false;
                 }

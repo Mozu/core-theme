@@ -2,7 +2,7 @@
     {{ labels.paymentInformation }}
     <a href="javascript:;" class="mz-formstep-edit" data-mz-action="edit">{{ labels.change }}</a>
     {% if viewData.awsCheckout and model.stepStatus == "incomplete" %}
-      <a href="javascript:;" class="mz-formstep-cancel" data-mz-action="cancel">{{ labels.cancel }}</button>
+      <a href="javascript:;" class="mz-formstep-cancel" data-mz-action="cancel">{{ labels.cancel }}</a>
     {% endif %}
 </h3>
 <div class="mz-formstep-body">
@@ -68,12 +68,12 @@
             </dl>
         </div>
         {% endif %}
-        {% if payment.paymentWorkflow  != "Mozu"%}
+        {% if payment.paymentWorkflow  == "PayWithAmazon"%}
         
-            {% if payment.paymentType == "PayWithAmazon" and model.nonStoreCreditTotal == 0%}
+            {% if model.nonStoreCreditTotal == 0%}
             <h4 class="mz-checkout-nopaymentrequired">{{ labels.noPaymentRequired|string_format(model.remainingTotal|currency) }}</h4> 
             {% endif %}
-            {% if payment.paymentType == "PayWithAmazon" and model.nonStoreCreditTotal > 0%}
+            {% if model.nonStoreCreditTotal > 0%}
                 {% include "modules/checkout/payment-paybyamazon" with model=payment.billingInfo.billingContact%}  
             {%endif%}
             {% include "modules/checkout/checkout-digital-credit" %}
