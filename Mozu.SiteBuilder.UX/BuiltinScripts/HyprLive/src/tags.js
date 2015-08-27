@@ -178,7 +178,7 @@ HyprLive.engine.setExtension('makeUrlTag', function(type, object) {
 
 var util = {
     sortingKey: 'sortBy',
-    facetingKey: 'facetValueFilter',
+    facetKey: 'facetValueFilter',
     pagingKey: 'startIndex',
     imageUrl: function(object, extendedQuery) {
         var url = typeof object === 'object' ? object.imageUrl : object;
@@ -197,10 +197,10 @@ var util = {
         query[this.sortingKey] = object;
         return this.urlScrub(extendedQuery + '&' + this.stringify(query));
     },
-    facetingUrl: function(object, extendedQuery) {
+    facetUrl: function(object, extendedQuery) {
         var filterValue = typeof object === 'object' ? object.filterValue : object,
             query = this.parseQuery(),
-            filters = !query[this.facetingKey] ? [] : query[this.facetingKey].split(','),
+            filters = !query[this.facetKey] ? [] : query[this.facetKey].split(','),
             idx = this.indexOf(filters, filterValue);
 
         if (idx === -1) {
@@ -209,7 +209,7 @@ var util = {
             filters.splice(idx, 1);
         }
 
-        query[this.facetingKey] = filters.join(',');
+        query[this.facetKey] = filters.join(',');
 
         return this.urlScrub(extendedQuery + '&' + this.stringify(query));
     },

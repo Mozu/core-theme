@@ -120,22 +120,22 @@
                 .to.equal('?a=1&b=21&sortBy=price%3Aasc');
         });
 
-        it('has a tag {% make_url "faceting" %} that produces a valid Faceting url', function() {
+        it('has a tag {% make_url "facet" %} that produces a valid Faceting url', function() {
             // ensure query string is not overwritten
             history.replaceState({}, null, window.location.href.split('?').shift() + '?a=1&b=21');
-            expect(Hypr.engine.render('{% make_url "faceting" "size:1,size:2" %}'))
+            expect(Hypr.engine.render('{% make_url "facet" "size:1,size:2" %}'))
                 .to.equal('?a=1&b=21&facetValueFilter=size%3A1%2Csize%3A2');
-            expect(Hypr.engine.render('{% make_url "faceting" facet %}', { locals: { facet: { filterValue: 'size:1,size:2' } } }))
+            expect(Hypr.engine.render('{% make_url "facet" facet %}', { locals: { facet: { filterValue: 'size:1,size:2' } } }))
                 .to.equal('?a=1&b=21&facetValueFilter=size%3A1%2Csize%3A2');
 
             // append if a facetValueFilter alread exists
             history.replaceState({}, null, window.location.href.split('?').shift() + '?a=1&b=21&facetValueFilter=size%3A1%2Csize%3A2');            
-            expect(Hypr.engine.render('{% make_url "faceting" "size:3" %}'))
+            expect(Hypr.engine.render('{% make_url "facet" "size:3" %}'))
                 .to.equal('?a=1&b=21&facetValueFilter=size%3A1%2Csize%3A2%2Csize%3A3');
 
             // remove facet value if already defined
             history.replaceState({}, null, window.location.href.split('?').shift() + '?a=1&b=21&facetValueFilter=size%3A1%2Csize%3A2%2Csize%3A3');            
-            expect(Hypr.engine.render('{% make_url "faceting" "size:3" %}'))
+            expect(Hypr.engine.render('{% make_url "facet" "size:3" %}'))
                 .to.equal('?a=1&b=21&facetValueFilter=size%3A1%2Csize%3A2');
         });
 
