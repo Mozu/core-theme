@@ -70,7 +70,10 @@ Ext.define('Taco.store.TooltipHelp', {
         }, {
             key: 'discount.limitations.maxRedemptionCount',
             value: 'Restrict the number of times this discount can be redeemed by all customers.'
-        },{
+        }, {
+            key: 'discount.limitation.oneTimeUsePerShopper',
+            value: 'When checked, shoppers must be logged into a storefront account<br/>in order for both the discount and restriction to apply.'
+        }, {
             key: 'publishset.publishsetdate',
             value: 'Publish Date is inherited from the<br/> Publish Set, and designates the<br/> date and time when all drafts in<br/> Publish Set publish.'
         }, {
