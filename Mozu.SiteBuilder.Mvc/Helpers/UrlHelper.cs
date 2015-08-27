@@ -97,7 +97,7 @@ namespace Mozu.SiteBuilder.Mvc.Helpers
                     }
                 case "sorting":
                     {
-                        return MakeSortingUrl(obj);
+                        return MakeSortingUrl(obj,config);
                     }
                 case "image":
                     {
@@ -148,12 +148,22 @@ namespace Mozu.SiteBuilder.Mvc.Helpers
 
         }
 
-        private string MakeSortingUrl(object obj)
+        private string MakeSortingUrl(object obj , Dictionary<string, object> config)
         {
-            string val = obj as string;
             var searchContext = _pageContext.Search;
+            if ( obj is string)
+            {
+                return searchContext.ToUrl(new SearchContextOverrides() { SortBy = (string)obj });
+            }
+            object sortByObj;
+            if ( config != null && config.TryGetValue( "sortBy", out sortByObj) && !string.IsNullOrWhiteSpace( sortByObj as string))
+            {
+                return searchContext.ToUrl(new SearchContextOverrides() { SortBy = (string)sortByObj });
+            }
+            return "#";
+           
             
-            return searchContext.ToUrl(new SearchContextOverrides() { SortBy = val });
+           
 
 
         }

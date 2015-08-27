@@ -94,7 +94,33 @@ namespace Mozu.SiteBuilder.UnitTests.Mvc.Tags
                         TotalCount =100
                     } } },
                     ExpectedFunc = TestDescriptor.CompareLiteral("?pageSize=&sortBy=&facetValueFilter=&startIndex=60&query=")
-                }
+                },
+                new TestDescriptor
+                {
+                    Name = "sortby_withParams",
+                    Template = @"{% make_url ""sorting"" productCol with sortBy=""price:desc"" as_paramater %}",
+                    ContainerModifier = containerMods,
+                       Context = new Dictionary<string, object>() { { "productCol", new ProductCollection() {
+                        StartIndex=50,
+                        PageSize = 10,
+                        PageCount = 10,
+                        TotalCount =100
+                    } } },
+                    ExpectedFunc = TestDescriptor.ContainsLiteral("sortBy=price%3adesc")
+                },
+                 new TestDescriptor
+                {
+                    Name = "sortby_without_Params",
+                    Template = @"{% make_url ""sorting"" ""price:desc""  %}",
+                    ContainerModifier = containerMods,
+                       Context = new Dictionary<string, object>() { { "productCol", new ProductCollection() {
+                        StartIndex=50,
+                        PageSize = 10,
+                        PageCount = 10,
+                        TotalCount =100
+                    } } },
+                    ExpectedFunc = TestDescriptor.ContainsLiteral("sortBy=price%3adesc")
+                },
             };
         }
          
