@@ -782,10 +782,8 @@ define([
                     thereAreActivePayments = activePayments.length > 0,
                     paymentTypeIsCard = activePayments && !!_.findWhere(activePayments, { paymentType: 'CreditCard' }),
                     paymentTypeIsPayPal = activePayments && !!_.findWhere(activePayments, { paymentType: 'PaypalExpress' }),
-                    //payWithAmazon = activePayments && !!_.find(activePayments, function(payment){ return payment.paymentWorkflow == "PayWithAmazon";} );
-                    balanceZero = this.parent.get('amountRemainingForPayment') === 0;
+                    balanceZero = this.parent.get('amountRemainingForPayment') <= 0; // use <=0 to catch payments that have been added with more amount. this scenario happens when discount is applied after payment is added
 
-                //if (payWithAmazon) return this.stepStatus("complete");
                 if (paymentTypeIsCard) return this.stepStatus("incomplete"); // initial state for CVV entry
 
                 if (!fulfillmentComplete) return this.stepStatus('new');
