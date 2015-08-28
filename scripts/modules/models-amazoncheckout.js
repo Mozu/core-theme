@@ -46,16 +46,6 @@ define([
             applyBilling: function() {
                 var me = this;
                 me.isLoading (true);
-                /*var currentPayment = me.apiModel.getCurrentPayment();
-                //var amountRemainingForPayment = me.get("amountRemainingForPayment");
-                if (currentPayment) {
-                    // must first void the current payment because it will no longer be the right price
-                    return me.apiVoidPayment(currentPayment.id).then(function() {
-                        me.applyPayment();
-                    });
-                } else {
-                    return me.applyPayment();
-                }*/
 
                 return api.all(_.map(_.filter(me.apiModel.getActivePayments(), function(payment) {
                     return payment.paymentType !== "StoreCredit" && payment.paymentType !== "GiftCard";
@@ -73,7 +63,8 @@ define([
                 }
                  var billingInfo = {
                     "newBillingInfo" : 
-                    {   "paymentType": "PayWithAmazon",
+                    {   
+                        "paymentType": "PayWithAmazon",
                         "paymentWorkflow": "PayWithAmazon",
                         "card" : null,
                         "billingContact" : {

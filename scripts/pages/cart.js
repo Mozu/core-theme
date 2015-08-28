@@ -15,6 +15,7 @@ define(['modules/backbone-mozu', 'underscore', 'modules/jquery-mozu', 'modules/m
                     return false;
                 }
             });
+            AmazonPay.init(CartModels.Cart.fromCurrent().id);
 
             AmazonPay.init(true);
 
@@ -171,7 +172,6 @@ define(['modules/backbone-mozu', 'underscore', 'modules/jquery-mozu', 'modules/m
         window.cartView = cartViews;
 
         CartMonitor.setCount(cartModel.count());
-
 
         if (AmazonPay.isEnabled && cartModel.count() > 0)
             AmazonPay.addCheckoutButton(cartModel.id, true);

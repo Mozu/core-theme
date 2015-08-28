@@ -1,7 +1,10 @@
 {% with paymentId|default(0) as paymentId %}
-
-{% with siteContext.checkoutSettings.isPayPalEnabled or siteContext.checkoutSettings.visaCheckout.isEnabled as externalWorkflowsEnabled %} {# external workflows implemented in a later system can be added to this test #}
 <div class="mz-l-formfieldgroup mz-paymentselector">
+    {% if viewData.awsCheckout and model.stepStatus == "incomplete" %}
+        <div class="mz-l-formfieldgroup-row mz-l-security-box" >
+                    {{ labels.awsPaymentWarning }}
+        </div>
+    {%endif%}
     <div class="mz-l-formfieldgroup-row mz-paymentselector-newcreditcard">
         <div class="mz-l-formfieldgroup-cell">
             <input data-mz-value="paymentType" data-mz-new-credit-card id="paymentType-newcreditcard-{{ paymentId }}" name="paymentType" type="radio" class="mz-paymenttype-input" value="CreditCard" {% if model.paymentType == "CreditCard" and not model.usingSavedCard %}checked="true"{% endif %} />
@@ -48,7 +51,6 @@
     {% if model.paymentType == "Check" %}
     {% include "modules/checkout/checking-account-form" %}
     {% endif %}
-
     {% with siteContext.checkoutSettings.externalPaymentWorkflowSettings|findwhere("isEnabled", true) as externalPaymentWorkflowsEnabled %} 
         {% if externalPaymentWorkflowsEnabled %}
             <div class="mz-l-formfieldgroup-row mz-paymentselector-separator">
@@ -91,9 +93,14 @@
             {%endfor%}
         {% endif %}
     {% endwith %}
-
-    {% if model.paymentType == "PaypalExpress" %}
-        <p>{{ labels.paypalExpressInfo }}</p>
-    {% endif %}
-     
-{% endwith %}
+    <div class="mz-l-formfieldgroup-row mz-paymentselector-validation">
+        <div class="mz-formfieldgroup-cell">
+        </div>
+        <div class="mz-formfieldgroup-cell">
+            <span class="mz-validationmessage" data-mz-validationmessage-for="paymentType"></span>
+        </div>
+    </div>
+</div>
+{% if model.paymentType == "PaypalExpress" %}
+    <p>{{ labels.paypalExpressInfo }}</p>
+{% endif %}

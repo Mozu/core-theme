@@ -6,7 +6,6 @@ require(["modules/jquery-mozu","modules/backbone-mozu",'modules/editable-view', 
 	var AmazonCheckoutView = EditableView.extend({
 		templateName: 'modules/checkout/amazon-shipping-billing',
 		initialize: function() {
-			
 			EventBus.on("aws-referenceOrder-created", this.setawsOrderData);
 			/*EventBus.on("aws-address-selected", function() {
 				AmazonPay.addWalletWidget();

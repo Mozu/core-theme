@@ -265,21 +265,22 @@
 			}
 			if(parseInt($(window).height()) <=  ($input.offset().top - $(document).scrollTop() + input_outer_height + picker_outer_height) ){
 				// Display to top of an input-field
-				$picker.parent().css('top', ($input.offset().top - (input_outer_height / 2) - picker_outer_height) + 'px');
+				$picker.parent().css('top', ($input.offset().top - (input_outer_height / 2) - picker_outer_height) - 3 + 'px');
 			} else {
 				// Display to bottom of an input-field
-				$picker.parent().css('top', ($input.offset().top + input_outer_height) + 'px');
+				$picker.parent().css('top', ($input.offset().top + input_outer_height) - 3 + 'px');
 			}
 			// Move position of a picker - horizontal
 			if($picker.parent().width() + $input.offset().left > $(window).width()) {
 				// Display left side stick to window
-				$picker.parent().css('left', (($(window).width() - $picker.parent().width()) / 2) + 'px');
+				$picker.parent().css('left', (($(window).width() - $picker.parent().width()) / 2) + 17.5 +  'px');
 			} else {
 				// Display left side stick to input
-				$picker.parent().css('left', $input.offset().left + 'px');
+				$picker.parent().css('left', $input.offset().left + 17.5 + 'px');
 			}
 			// Display on most top of the z-index
 			$picker.parent().css('z-index', 90000000000);
+
 		}
 	};
 
