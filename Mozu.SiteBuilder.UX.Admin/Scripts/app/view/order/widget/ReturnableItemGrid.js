@@ -87,20 +87,20 @@ Ext.define('Taco.view.order.widget.ReturnableItemGrid', {
             store: {
                 autoLoad: true,
                 fields: [
-                {
-                    name: 'id',
-                    type: 'string',
-                    convert: function (value, record) {
-                        return record.raw;
+                    {
+                        name: 'id',
+                        type: 'string',
+                        convert: function(value, record) {
+                            return record.raw;
+                        }
+                    },
+                    {
+                        name: 'name',
+                        type: 'string',
+                        convert: function(value, record) {
+                            return Taco.core.util.Common.camelToSpace(record.raw);
+                        }
                     }
-                },
-                {
-                    name: 'name',
-                    type: 'string',
-                    convert:function(value, record) {
-                        return Taco.core.util.Common.camelToSpace(record.raw);
-                    }
-                }
                 ],
                 proxy: {
                     type: 'ajax',
@@ -119,7 +119,7 @@ Ext.define('Taco.view.order.widget.ReturnableItemGrid', {
         sortable: false,
         resizable: false,
         menuDisabled: true,
-        width:100
+        width: 100
     }, {
         dataIndex: 'quantityFulfilled',
         text: 'Qty Fulfilled',
@@ -135,7 +135,7 @@ Ext.define('Taco.view.order.widget.ReturnableItemGrid', {
         sortable: false,
         resizable: false,
         menuDisabled: true,
-        width:100
+        width: 100
     }, {
         dataIndex: 'quantity',
         text: 'Qty to Return',
@@ -149,16 +149,7 @@ Ext.define('Taco.view.order.widget.ReturnableItemGrid', {
             showBorder:true,
             hideTrigger: true,
             minValue: 0,
-            msgTarget: 'qtip',
-            validator: function (value) {
-                var record = this.ownerCt.editingPlugin.activeRecord;
-                var qf = record.get('quantityFulfilled');
-                var qr = record.get('quantityReturned');
-
-                if (value === "0") return true; // zero is always valid
-
-                return (value <= (qf - qr)) || 'Quantity to return may not exceed quantity fulfilled less quantity returned.';
-            }
+            msgTarget: 'qtip'
         },
         renderer: function (value) {
             return value || 0;
@@ -187,7 +178,7 @@ Ext.define('Taco.view.order.widget.ReturnableItemGrid', {
         this.plugins.push(Ext.create('Ext.grid.plugin.CellEditing', {
             clicksToEdit: 1
         }));
-
+        
         this.selModel = Ext.create('Ext.selection.CheckboxModel', {
             selType: 'checkboxmodel',
             injectCheckbox: 'last',
