@@ -584,7 +584,7 @@
     },
 
     setGrowl: function(msg, info) {
-        Taco.app.fireEvent('setgrowl', msg, info, 2000);
+        Taco.app.fireEvent('setgrowl', msg, info, 1000);
     },
 
     doCreate : function (){
