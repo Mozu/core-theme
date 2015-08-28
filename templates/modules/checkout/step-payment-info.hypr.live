@@ -7,7 +7,7 @@
 </h3>
 <div class="mz-formstep-body">
     <div class="mz-formstep-summary mz-l-stack">
-      {% if model.activeStoreCredits and model.activeStoreCredits.length > 0 and payment.paymentWorkflow  == "Mozu" %}
+      {% if model.activeStoreCredits and model.activeStoreCredits.length > 0 and payment.paymentWorkflow  != "PayWithAmazon" %}
       <div class="mz-l-stack-section mz-checkout-payment">
         <h4 class="mz-l-stack-sectiontitle">{{ labels.digitalCredit }}</h4>
           {% for payment in model.activeStoreCredits %}

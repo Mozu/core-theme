@@ -119,7 +119,7 @@ function($,EventBus, Api, hyprlivecontext, _) {
 			onOrderReferenceCreate: function(orderReference) {
 				var orderReferenceId = orderReference.getAmazonOrderReferenceId();
 				EventBus.trigger("aws-referenceOrder-created", {"orderReferenceId": orderReferenceId});
-				EventBus.trigger("aws-address-selected");
+				//EventBus.trigger("aws-address-selected");
 			},
 			onAddressSelect: function(orderReference) {
 

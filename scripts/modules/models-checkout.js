@@ -12,7 +12,7 @@
     function ($, _, Hypr, Backbone, api, CustomerModels, AddressModels, PaymentMethods, HyprLiveContext) {
 
         var CheckoutStep = Backbone.MozuModel.extend({
-            helpers: ['stepStatus', 'requiresFulfillmentInfo', 'requiresDigitalFulfillmentContact'],  //
+            helpers: ['stepStatus', 'requiresFulfillmentInfo','isAwsShipping', 'requiresDigitalFulfillmentContact'],  //
             // instead of overriding constructor, we are creating
             // a method that only the CheckoutStepView knows to
             // run, so it can run late enough for the parent
@@ -57,6 +57,14 @@
             },
             requiresFulfillmentInfo: function () {
                 return this.getOrder().get('requiresFulfillmentInfo');
+            },
+            isAwsShipping: function() {
+                var data= this.getOrder().get("fulfillmentInfo").get("data");
+                if (data && data.awsReferenceId)
+                    return true;
+                else
+                    return false;
+
             },
             requiresDigitalFulfillmentContact: function () {
                 return this.getOrder().get('requiresDigitalFulfillmentContact');
@@ -774,10 +782,10 @@
                     thereAreActivePayments = activePayments.length > 0,
                     paymentTypeIsCard = activePayments && !!_.findWhere(activePayments, { paymentType: 'CreditCard' }),
                     paymentTypeIsPayPal = activePayments && !!_.findWhere(activePayments, { paymentType: 'PaypalExpress' }),
-                    nonMozuPaymentWorkflow = activePayments && !!_.find(activePayments, function(payment){ return payment.paymentWorkflow != "PayWithAmazon";} ),
+                    //payWithAmazon = activePayments && !!_.find(activePayments, function(payment){ return payment.paymentWorkflow == "PayWithAmazon";} );
                     balanceZero = this.parent.get('amountRemainingForPayment') === 0;
 
-                if (nonMozuPaymentWorkflow) return this.stepStatus("complete");
+                //if (payWithAmazon) return this.stepStatus("complete");
                 if (paymentTypeIsCard) return this.stepStatus("incomplete"); // initial state for CVV entry
 
                 if (!fulfillmentComplete) return this.stepStatus('new');
@@ -1049,10 +1057,12 @@
                     return me.apiProcessDigitalWallet({
                         digitalWalletData: JSON.stringify(payment)
                     }).then(function() {
+                        me.getOrder().get("fulfillmentInfo").set("data", null); 
                         _.each([
                             'fulfillmentInfo.fulfillmentContact',
                             'fulfillmentInfo',
-                            'billingInfo'
+                            'billingInfo',
+                            'fulfillmentInfo.data'
                         ], function(name) {
                             me.get(name).trigger('sync');
                         });

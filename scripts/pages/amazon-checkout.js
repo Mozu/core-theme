@@ -8,17 +8,17 @@ require(["modules/jquery-mozu","modules/backbone-mozu",'modules/editable-view', 
 		initialize: function() {
 			
 			EventBus.on("aws-referenceOrder-created", this.setawsOrderData);
-			EventBus.on("aws-address-selected", function() {
+			/*EventBus.on("aws-address-selected", function() {
 				AmazonPay.addWalletWidget();
-			});
+			});*/
 			EventBus.on("aws-card-selected", function() {
-				$("#checkoutActions").show();
+				$("#continue").show();
 			});
 			
-			EventBus.on("aws-script-loaded", function() {
+			/*EventBus.on("aws-script-loaded", function() {
 				console.log("script loaded");
 				AmazonPay.addAddressWidget();
-			});
+			});*/
 
 			this.listenTo(this.model, "awscheckoutcomplete", function(id){
 				window.location = "/checkout/"+id+"?isAwsCheckout=true&access_token="+$.deparam().access_token;
@@ -57,5 +57,6 @@ require(["modules/jquery-mozu","modules/backbone-mozu",'modules/editable-view', 
 								});
 
 		AmazonPay.addAddressWidget();
+		AmazonPay.addWalletWidget();
 	});
 });
