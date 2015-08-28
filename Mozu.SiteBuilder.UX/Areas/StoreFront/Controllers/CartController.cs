@@ -58,7 +58,6 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
             _orderWebApiClient = orderWebApiClient;
             _cookieProvider = cookieProvider;
             _locationClient = locationClient;
-
             _settings = settings;
         }
 
@@ -107,6 +106,11 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
             {
                 if (PageContext.IsDebugMode) throw error;
                 jCart.Add("messages", new JArray(new { message = error.Message }.ToJObject(_cartSerializer.Value)));
+            }
+
+            if (this.SiteContext.CheckoutSettings.VisaCheckout.IsEnabled)
+            {
+                this.HttpContext.Response.AddHeader("X-Frame-Options", "SAMEORIGIN");
             }
 
             return View("cart", jCart);

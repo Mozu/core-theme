@@ -40,12 +40,12 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
         public ProductController(IProductWebApiClient productClient, IProductTypeWebApiClient productTypeWebApiClient, IPublishSetWebApiClient publishSetClient)
         {
             _productClient = productClient;
-            
+
             _productTypeWebApiClient = productTypeWebApiClient;
             _publishSetClient = publishSetClient;
         }
 
-		[HttpGetRoute(UriTemplate = "list")]
+        [HttpGetRoute(UriTemplate = "list")]
         public async Task<Response<List<Product>>> ListProducts([FromUri]PagingParamaters pagingParams, [FromUri]FilterCollection extFilter)
         {
             if (pagingParams.id != null)
@@ -53,7 +53,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
                 var result = await _productClient.GetProduct(pagingParams.id, null);
                 DC.Product prod = result.ReadAsAsync().Result;
                 var productModel = Mapper.Map<Product>(prod);
-                
+
 
                 if (prod.PublishingInfo == null || string.IsNullOrEmpty(prod.PublishingInfo.PublishSetCode)) return List2(productModel);
 
@@ -91,13 +91,13 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
         /// Lists all products that are capable of managing inventory and have manageStock=true. This excludes base products and bundles.
         /// </summary>
         [HttpGetRoute(UriTemplate = "inventoriedproductlist")]
-        public async Task<Response<List<Product>>> ListInventoriedProducts([FromUri]PagingParamaters pagingParams, [FromUri]FilterCollection extFilter) 
+        public async Task<Response<List<Product>>> ListInventoriedProducts([FromUri]PagingParamaters pagingParams, [FromUri]FilterCollection extFilter)
         {
             // use a hard-coded response group and filter for this search.
             string responseGroups = extFilter.ResponseGroups ?? "Min,Price,VariationOptions";
 
-            
-            string extraFilter = extFilter.ToFilterString(withVariations: true );
+
+            string extraFilter = extFilter.ToFilterString(withVariations: true);
             string filter = "manageStock eq true and (isVariation eq true or productUsage eq standard or productUsage eq component)";
             if (!string.IsNullOrEmpty(extraFilter))
             {
@@ -115,18 +115,18 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
             if (products == null || !products.Any())
                 return Message3<List<Product>>(false, "No products were created because they were not sent correctly. Please try again.");
 
-           
+
             var createdProducts = await _productMapper.PerformAction(products, p => _productClient.AddProduct(p));
             return List2(createdProducts.ToList());
         }
 
-		[HttpPostRoute(UriTemplate = "edit")]
+        [HttpPostRoute(UriTemplate = "edit")]
         public async Task<Response<List<Product>>> EditProduct(List<Product> products)
         {
             if (products == null || !products.Any())
                 return Message3<List<Product>>(false, "No products were edited because they were not sent correctly. Please try again.");
 
-            var  productTypes = new List<ProductType>();
+            var productTypes = new List<ProductType>();
             foreach (var product in products)
             {
                 if (product.ProductTypeId.HasValue && !productTypes.Any(x => x.Id == product.ProductTypeId))
@@ -139,37 +139,37 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
 
                 }
             }
-            
+
             var editedProducts = await _productMapper.PerformAction(products, p =>
+            {
+                var pt = productTypes.FirstOrDefault(x => p.ProductTypeId == x.Id);
+                if (p.Properties != null && pt != null)
                 {
-                    var pt = productTypes.FirstOrDefault(x => p.ProductTypeId == x.Id);
-                    if (p.Properties  != null && pt != null)
+                    foreach (var prop in p.Properties)
                     {
-                        foreach (var prop in p.Properties)
+                        var def = pt.Properties.FirstOrDefault(x => prop.AttributeFQN == x.AttributeFQN && x.AttributeDetail.InputType == "List" && x.AttributeDetail.ValueType == "AdminEntered" && x.AttributeDetail.DataType == "String");
+                        if (def != null)
                         {
-                            var def = pt.Properties.FirstOrDefault(x => prop.AttributeFQN == x.AttributeFQN && x.AttributeDetail.InputType == "List" && x.AttributeDetail.ValueType == "AdminEntered" && x.AttributeDetail.DataType == "String");
-                            if (def != null)
+                            if (prop.Values != null && prop.Values.Count == 1)
                             {
-                                if (prop.Values != null && prop.Values.Count == 1)
-                                {
-                                    prop.Values[0].Value = def.AttributeFQN + "_value";
-                                }
+                                prop.Values[0].Value = def.AttributeFQN + "_value";
                             }
                         }
-                        p.Properties.Select( prop=>  pt.Properties.FirstOrDefault(x=>x.AttributeFQN == prop.AttributeFQN ) )
-                            .Where( x=> x!=null&& x.AttributeDetail.ValueType =="AdminEntered" && x.AttributeDetail.DataType =="String")
-                            .ToList() 
-                            .ForEach(def =>
-                                {
-                                    
-                                });
                     }
-                    return _productClient.UpdateProduct(p, p.ProductCode);
-                });
+                    p.Properties.Select(prop => pt.Properties.FirstOrDefault(x => x.AttributeFQN == prop.AttributeFQN))
+                        .Where(x => x != null && x.AttributeDetail.ValueType == "AdminEntered" && x.AttributeDetail.DataType == "String")
+                        .ToList()
+                        .ForEach(def =>
+                        {
+
+                        });
+                }
+                return _productClient.UpdateProduct(p, p.ProductCode);
+            });
             return List2(editedProducts.ToList());
         }
 
-		[HttpPostRoute(UriTemplate = "delete")]
+        [HttpPostRoute(UriTemplate = "delete")]
         public async Task<Response<List<Product>>> DeleteProduct(List<Product> products)
         {
             if (products == null || !products.Any())
@@ -186,7 +186,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
             int? qLimit = isSearchTypeGlobal ? (int?)3 : (int?)null;
             var prodCollection = (await _productClient.GetProducts(startIndex: pagingParams.startIndex, pageSize: pagingParams.pageSize,
                         sortBy: sort, responseGroups: responseGroups, filter: filter, q: q, qLimit: qLimit)).ReadAsSync();
-            
+
             // need to call the productType service and get the productType name to saturate each product record;
             var productTypes = new List<int?>();
             // gather up all of hte product types
@@ -206,7 +206,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
             foreach (var productTypeId in productTypes)
             {
                 productTypeFilter += String.Format("{1}id eq {0}", productTypeId, filterSeperator); ;
-                filterSeperator = " or ";   
+                filterSeperator = " or ";
             }
 
             // call the productType service and retrieve records for all productTypes;
@@ -220,7 +220,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
 
             var mapped = prodCollection.Items.Map<List<Product>>();
 
-            var ptLookUp  = pttask.Items.ToDictionary(x => x.Id, y => y.Name);
+            var ptLookUp = pttask.Items.ToDictionary(x => x.Id, y => y.Name);
 
             // iterate product records and add productTypeName
             foreach (var product in mapped)

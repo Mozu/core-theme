@@ -8,11 +8,12 @@ using System.Text;
 using System.Text.RegularExpressions;
 using System.Web;
 using System.Web.Http.Routing;
+using Mozu.SiteBuilder.UX.Models.StoreFront.Catalog;
 using Newtonsoft.Json;
 
 namespace Mozu.SiteBuilder.Mvc.Contexts
 {
-    public class SearchContext
+    public class SearchContext : IProductListingState
     {
         const string RouteDataKey = "facetValueFilter";
         const string QueryStringKey = "facetValueFilter";
@@ -292,7 +293,10 @@ namespace Mozu.SiteBuilder.Mvc.Contexts
 
         }
     }
-    public class SearchContextOverrides
+
+   
+
+    public class SearchContextOverrides : IProductListingState
     {
        
         public SearchContextOverrides(Dictionary<string, object> config)

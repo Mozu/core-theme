@@ -17,6 +17,7 @@ using Mozu.Location.Contracts.Clients;
 using Mozu.SiteBuilder.Mvc;
 using Mozu.SiteBuilder.Mvc.ActionFilters;
 using Mozu.SiteBuilder.Mvc.ActionResults;
+using Mozu.SiteBuilder.Mvc.Contexts;
 using Mozu.SiteBuilder.Mvc.Security;
 using Mozu.SiteBuilder.UX.Controllers;
 using Mozu.SiteBuilder.UX.Models.Admin.CMS;
@@ -291,6 +292,11 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
                 var asm = (methods ?? new List<ShippingRate>(0)).ToJArray();
                 JObject si = (JObject)jOrder["fulfillmentInfo"];
                 si.Add("availableShippingMethods", asm);
+            }
+
+            if (this.SiteContext.CheckoutSettings.VisaCheckout.IsEnabled)
+            {
+                this.HttpContext.Response.AddHeader("X-Frame-Options", "sameorigin");
             }
 
             return View("checkout", jOrder);

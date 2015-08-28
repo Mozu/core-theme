@@ -440,7 +440,7 @@ namespace Mozu.SiteBuilder.Mvc.Helpers
                 {
                     urlBase = MakeCategoryUrl(catId, null, false);
                 }
-                return searchContext.ToUrl(new SearchContextOverrides() { ClearFacets = true , UrlBase= urlBase });
+                return searchContext.ToUrl(new SearchContextOverrides() { ClearFacets = true , UrlBase= urlBase, StartIndex = 0 });
                 
             }
 
@@ -513,6 +513,7 @@ namespace Mozu.SiteBuilder.Mvc.Helpers
             {
                 overrides.AddFacet = new KeyValuePair<string, string>(facetPairKey, facetPairValue);
             }
+            overrides.StartIndex = 0;
             return searchContext.ToUrl(overrides);
 
 

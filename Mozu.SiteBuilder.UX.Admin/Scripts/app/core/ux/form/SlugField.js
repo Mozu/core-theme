@@ -6,8 +6,7 @@ Ext.define('Taco.core.ux.form.SlugField', {
     extend: 'Ext.form.field.Text',
     alias: ['widget.slugfield', 'widget.taco-slugfield'],
     slugCls: 'taco-slug-prefix',
-    skipToLowerCase: false,
-   // slugPrefix: '/',
+    // slugPrefix: '/',
 
     //fieldSubTpl2: [ // note: {id} here is really {inputId}, but {cmpId} is available
     //'<div class="{slugCls}"><span>{slugPrefix}</span></div>', '<input id="{id}" type="{type}" {inputAttrTpl}', ' size="1"', // allows inputs to fully respect CSS widths across all browsers
@@ -19,8 +18,9 @@ Ext.define('Taco.core.ux.form.SlugField', {
         'Taco.core.util.Validation'
     ],
 
-    onRender: function() {
-        var me = this;
+    onRender: function () {
+        var me = this,
+            paddingLeft, height;
 
         me.callParent(arguments);
 
@@ -36,16 +36,16 @@ Ext.define('Taco.core.ux.form.SlugField', {
         //});
 
         me.inputEl.on({
-            keyup: function() {
+            keyup: function () {
                 me.formatValue(true);
             },
-            blur: function() {
+            blur: function () {
                 me.formatValue();
             }
         });
     },
 
-    getSubTplData: function() {
+    getSubTplData: function () {
         var me = this,
             data = me.callParent(arguments);
 
@@ -57,7 +57,7 @@ Ext.define('Taco.core.ux.form.SlugField', {
         return data;
     },
 
-    formatValue: function(maintainCaret) {
+    formatValue: function (maintainCaret) {
         var me = this,
             index;
 
@@ -72,14 +72,14 @@ Ext.define('Taco.core.ux.form.SlugField', {
 
     },
 
-    setValue: function(value) {
+    setValue: function (value) {
         var me = this,
             newValue,
             currentValue;
 
         if (typeof value === 'string') {
             currentValue = me.getValue();
-            newValue = Taco.core.util.Validation.toValidSeoSlug(value, '-', me.skipToLowerCase);
+            newValue = Taco.core.util.Validation.toValidSeoSlug(value);
 
             if (currentValue === newValue) {
                 return false;
@@ -89,10 +89,10 @@ Ext.define('Taco.core.ux.form.SlugField', {
         return me.callParent(value);
     },
 
-    getCaretIndex: function() {
+    getCaretIndex: function () {
         var me = this,
-            selection,
-            input = me.inputEl.dom;
+            index, selection;
+        input = me.inputEl.dom;
 
         if (input.selectionStart !== 'undefined') {
             return input.selectionStart;
@@ -106,7 +106,7 @@ Ext.define('Taco.core.ux.form.SlugField', {
         return undefined;
     },
 
-    setCaretIndex: function(index) {
+    setCaretIndex: function (index) {
         var me = this,
             range, input = me.inputEl.dom;
 
