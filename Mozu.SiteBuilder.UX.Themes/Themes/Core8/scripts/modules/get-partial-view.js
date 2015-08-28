@@ -15,6 +15,10 @@ define(['jquery', 'modules/api'], function($, api) {
         var deferred = api.defer();
 
         function handleSuccess(body, __, res) {
+            var canonical = res.getResponseHeader('x-vol-canonical-url');
+            if (canonical) {
+                canonical = canonical.replace(/[&\?]_partial=true/, '');
+            }
             deferred.resolve({
                 canonicalUrl: res.getResponseHeader('x-vol-canonical-url'),
                 body: body
@@ -27,7 +31,7 @@ define(['jquery', 'modules/api'], function($, api) {
 
         $.ajax({
             method: 'GET',
-            url: url,
+            url: url + (url.indexOf('?') === -1 ? "?" : "&") + "_partial=true",
             dataType: 'html',
             headers: {
                 'x-vol-alternative-view': partialTemplate
