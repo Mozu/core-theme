@@ -40,6 +40,9 @@ Ext.define('Taco.view.filter.ValueField', {
     initComponent: function() {
         var me = this;
         this.items = [];
+        // the secret sauce for getting the dirtyState checking to work.. if its undefined it fails the check for dirty change;
+        this.originalValue = null;
+
 
         this.updateFieldEditability();
         this.createField();
@@ -48,11 +51,13 @@ Ext.define('Taco.view.filter.ValueField', {
     },
 
     // when we have a multi value situation;
-    createMultiField: function () {
+    createMultiField: function (allowBlank) {
         var me = this,
             previousFieldXtype,
             fieldCfg = this.getFieldConfig(),
             value = (this.field) ? this.field.getValue() : this.value;
+
+        fieldCfg.allowBlank = allowBlank;
 
         if (this.field) {
             if (this.fieldRelayers) {
@@ -62,12 +67,20 @@ Ext.define('Taco.view.filter.ValueField', {
             Ext.destroy(this.field);
         }
 
+        
 
         this.field = Ext.create('Taco.view.filter.MultiSelectorField', {
+            allowBlank : allowBlank,
             valueType: this.fieldRecord.get("dataType"),
             singleSelect: this.operatorRecord.get("id") != "in",
             fieldCfg:fieldCfg,
             flex: 1,
+            listeners: {
+                'change': function () {
+                    me.checkChange();
+                },
+                scope:me
+            },
             emptyText:fieldCfg.emptyText || "",
             value:value
         });
@@ -83,6 +96,8 @@ Ext.define('Taco.view.filter.ValueField', {
         
     },
 
+
+
     // when we have a single value situation;
     createField: function () {
         var me = this,
@@ -92,7 +107,7 @@ Ext.define('Taco.view.filter.ValueField', {
             operatorRecord = this.getOperatorRecord(),
             fieldRecord = this.getFieldRecord(),
             isDisabled = (!operatorRecord || !fieldRecord),
-            opId = operatorRecord.get("id"),
+            opId = (operatorRecord) ? operatorRecord.get("id") : null,
             operatorAllowsBlank = (opId == "eq" || opId == "ne"),
             allowBlank = (fieldCfg.allowBlank && operatorAllowsBlank);
         
@@ -115,7 +130,7 @@ Ext.define('Taco.view.filter.ValueField', {
         // will display more useful information about the record;
         
         if (operatorRecord && (operatorRecord.get("id") == "in" || fieldCfg.isPickerField)) {
-            this.createMultiField();
+            this.createMultiField(allowBlank);
             return;
         }
 
@@ -140,9 +155,15 @@ Ext.define('Taco.view.filter.ValueField', {
 
         fieldCfg.value = value;
 
+        
+
 
         this.field = Ext.widget(fieldCfg);
 
+        this.mon(this.field, "change", function() {
+            console.log("checkchange field");
+            me.checkChange();
+        }, me);
 
         
 
@@ -293,6 +314,7 @@ Ext.define('Taco.view.filter.ValueField', {
         var me = this,
             fieldRecord = me.getFieldRecord(),
             operatorRecord = me.getOperatorRecord(),
+            allowBlank =  (fieldRecord) ? this.fieldRecord.get("allowBlank") : false,
             fieldCfg = {},
             dataType,
             cfg;
@@ -315,7 +337,7 @@ Ext.define('Taco.view.filter.ValueField', {
         }, fieldCfg, {
                 width:300,
                 xtype: "textfield",
-                allowBlank: this.fieldRecord.get("allowBlank"),
+                allowBlank: allowBlank,
                 name: this.name || "valuefield"
             }
         );
@@ -380,10 +402,20 @@ Ext.define('Taco.view.filter.ValueField', {
         this.field.setValue(value);
     },
     isValid: function () {
-        return this.validate();
+        var me = this;
+        //  return me.disabled || Ext.isEmpty(me.getErrors());
+        return me.disabled || (this.allowBlank || !Ext.isEmpty(this.getValue()));
     },
+
     validate: function () {
-        return (this.allowBlank || this.getValue());
+        var me = this,
+            isValid = me.isValid();
+
+        if (isValid !== me.wasValid) {
+            me.wasValid = isValid;
+            me.fireEvent('validitychange', me, isValid);
+        }
+        return isValid;
     },
     onDestroy: function () {
         var me = this;
