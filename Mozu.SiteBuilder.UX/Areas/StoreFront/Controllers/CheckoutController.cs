@@ -17,6 +17,7 @@ using Mozu.Location.Contracts.Clients;
 using Mozu.SiteBuilder.Mvc;
 using Mozu.SiteBuilder.Mvc.ActionFilters;
 using Mozu.SiteBuilder.Mvc.ActionResults;
+using Mozu.SiteBuilder.Mvc.Contexts;
 using Mozu.SiteBuilder.Mvc.Security;
 using Mozu.SiteBuilder.UX.Controllers;
 using Mozu.SiteBuilder.UX.Models.Admin.CMS;
@@ -47,6 +48,7 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
         private readonly ISettings _settings;
         private readonly ILocationRuntimeWebApiClient _locationRuntimeWebApiClient;
         private readonly ICreditWebApiClient _creditWebApiClient;
+        private readonly ISiteContext _siteContext;
 
 
 
@@ -54,7 +56,7 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
         //private static string _merchantId;
         private const string CookieName = "order";
 
-        public CheckoutController(IAuthenticationHelper authHelper, ICookieProvider cookieProvider, ICustomerAccountWebApiClient customerAccountWebApiClient, IOrderWebApiClient orderWebApiClient, Mozu.Location.Contracts.Clients.ILocationRuntimeWebApiClient locationRuntimeWebApiClient, ICreditWebApiClient creditWebApiClient, Mozu.CommerceRuntime.Contracts.Clients.ICartWebApiClient cartWebApiClient, ISettings settings)
+        public CheckoutController(IAuthenticationHelper authHelper, ICookieProvider cookieProvider, ICustomerAccountWebApiClient customerAccountWebApiClient, IOrderWebApiClient orderWebApiClient, Mozu.Location.Contracts.Clients.ILocationRuntimeWebApiClient locationRuntimeWebApiClient, ICreditWebApiClient creditWebApiClient, Mozu.CommerceRuntime.Contracts.Clients.ICartWebApiClient cartWebApiClient, ISettings settings, ISiteContext siteContext)
         {
 
             _authHelper = authHelper;
@@ -66,6 +68,7 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
             _customerAccountWebApiClient = customerAccountWebApiClient;
             _creditWebApiClient = creditWebApiClient.CloneWithoutUserClaims();
             _locationRuntimeWebApiClient = locationRuntimeWebApiClient.CloneWithoutUserClaims();
+            _siteContext = siteContext;
 
 
         }
@@ -291,6 +294,11 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
                 var asm = (methods ?? new List<ShippingRate>(0)).ToJArray();
                 JObject si = (JObject)jOrder["fulfillmentInfo"];
                 si.Add("availableShippingMethods", asm);
+            }
+
+            if (_siteContext.CheckoutSettings.VisaCheckout.IsEnabled)
+            {
+                this.HttpContext.Response.AddHeader("X-Frame-Options", "sameorigin");
             }
 
             return View("checkout", jOrder);

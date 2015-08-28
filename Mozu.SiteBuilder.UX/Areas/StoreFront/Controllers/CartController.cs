@@ -44,9 +44,10 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
         private readonly ICookieProvider _cookieProvider;
         private readonly ILocationRuntimeWebApiClient _locationClient;
         private readonly ISettings _settings;
+        private readonly ISiteContext _siteContext;
         private Lazy<JsonSerializerSettings> _cartSerializer = new Lazy<JsonSerializerSettings>(() => new JsonSerializerSettings { ContractResolver = new CamelCasePropertyNamesContractResolver() });
 
-        public CartController(ICartWebApiClient cartClient, IOrderWebApiClient orderWebApiClient, ICookieProvider cookieProvider, ILocationRuntimeWebApiClient locationClient, ISettings settings)
+        public CartController(ICartWebApiClient cartClient, IOrderWebApiClient orderWebApiClient, ICookieProvider cookieProvider, ILocationRuntimeWebApiClient locationClient, ISettings settings, ISiteContext siteContext)
         {
             if(cartClient == null)
             {
@@ -58,7 +59,7 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
             _orderWebApiClient = orderWebApiClient;
             _cookieProvider = cookieProvider;
             _locationClient = locationClient;
-
+            _siteContext = siteContext;
             _settings = settings;
         }
 
@@ -107,6 +108,11 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
             {
                 if (PageContext.IsDebugMode) throw error;
                 jCart.Add("messages", new JArray(new { message = error.Message }.ToJObject(_cartSerializer.Value)));
+            }
+
+            if (_siteContext.CheckoutSettings.VisaCheckout.IsEnabled)
+            {
+                this.HttpContext.Response.AddHeader("X-Frame-Options", "SAMEORIGIN");
             }
 
             return View("cart", jCart);
