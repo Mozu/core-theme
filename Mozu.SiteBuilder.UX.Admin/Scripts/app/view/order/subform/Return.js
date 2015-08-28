@@ -224,7 +224,7 @@ Ext.define('Taco.view.order.subform.Return', {
             var qf = item.get('quantityFulfilled');
             var qr = item.get('quantityReturned');
 
-            return !(item.get('quantity') <= (qf - qr));
+            return (item.get('quantity') > (qf - qr));
         })) {
             this.returnableItemsErrorEl.setError('Item \'Quantity to Return\' exceeds \'Quantity Fulfilled\'..');
             return false;
