@@ -16,7 +16,7 @@ Ext.define('Taco.view.Growl', {
     overflowY: 'hidden',
     ui: 'modal',
     width: '15%',
-    duration: 2000,
+    duration: 1000,
 
     layout: {
         type: 'fit'

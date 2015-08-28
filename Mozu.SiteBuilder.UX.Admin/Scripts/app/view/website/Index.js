@@ -250,7 +250,7 @@ Ext.define('Taco.view.website.Index', {
                                     modal = Ext.create('Taco.view.publishing.modal.PublishSetPicker', {
                                     record: record,
                                     callback: function(publishSetCode) {
-                                        record.setPublishCode(publishSetCode, me.showGrowl.bind(me, 'Moved to Publish Set', 'info', 2000));
+                                        record.setPublishCode(publishSetCode, me.showGrowl.bind(me, 'Moved to Publish Set', 'info', 1000));
                                     }
                                 });
 
@@ -267,7 +267,7 @@ Ext.define('Taco.view.website.Index', {
                                 var me = this,
                                     record = this.getPublishRecord();
 
-                                record.setPublishCode(null, me.showGrowl.bind(me, 'Removed From Publish Set', 'info', 2000));
+                                record.setPublishCode(null, me.showGrowl.bind(me, 'Removed From Publish Set', 'info', 1000));
 
                             }
                         },
@@ -291,7 +291,7 @@ Ext.define('Taco.view.website.Index', {
                                         
                                         record.discardDraft(function() {
                                             me.setPublishable(false);
-                                            me.showGrowl('Discarded', 'info', 2000);
+                                            me.showGrowl('Discarded', 'info', 1000);
                                             me.down('#draftIcon').hide();
                                         });
 

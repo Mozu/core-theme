@@ -694,7 +694,7 @@ Ext.define('Taco.view.publishing.grid.Draft', {
     },
 
     showGrowl: function(msg) {
-        Taco.app.fireEvent('setgrowl', msg, null, 2000);
+        Taco.app.fireEvent('setgrowl', msg, null, 1000);
     },
 
     getConfirmationModal: function(config) {

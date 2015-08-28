@@ -177,6 +177,6 @@ Ext.define('Taco.view.publishing.Split', {
     },
 
     showGrowl: function(msg, type) {
-        Taco.app.fireEvent('setgrowl', msg, type, 2000);
+        Taco.app.fireEvent('setgrowl', msg, type, 1000);
     }
 });
