@@ -69,7 +69,7 @@ Ext.define('Taco.view.couponCode.Grid', {
 
     enableQuickFilters:false,
 
-    //deletePromptMsg : "If a coupon code is currently redemed, deleting it could affect pending orders and carts.<br/>Are you sure you want to delete this?",
+    deletePromptMsg: "If a coupon code is currently active, deleting it could affect pending orders and carts. <br/>Are you sure you want to delete this?",
 
     advancedSearchConfig : {
         advancedFormCls: 'Taco.view.couponCode.AdvancedSearchForm',
@@ -344,43 +344,19 @@ Ext.define('Taco.view.couponCode.Grid', {
             }
         ];
     },
-    
-    doDelete2: function(records) {
-        
-        
-    },
 
-    launchEditor: function (record) {
-        
-    },
-
-
-    onItemClick: function (view, record, elm, index, e) {
-        
-    },
-
-    doEdit : function (item, eventData) {
-        
-    },
-
-    openEditor: function (record, couponSetType, isNew) {
-        
-    },
-
-    doCreate : function (cfg) {
-        
-        if (this.enableRowEditing) {
-            this.onRowEditorCreate();
+    onDeleteSuccess : function(data) {
+        if (this.store.currentPage > 1 && this.store.count() ===0) {
+            // deleted the last record on the page;
+            this.store.loadPage(this.store.currentPage--);
         }
     },
 
-    onRowEditorCreate: function () {
-        
-        this.callParent(arguments);
-    },
-    getDeletePromptMessage: function (record) {
-        return record.getDeletePromptMessage();
-    },
+    launchEditor: Ext.emptyFn,
+    
+    //getDeletePromptMessage: function (record) {
+    //    return record.getDeletePromptMessage();
+    //},
     /**
     * Do any class level cleanup. Destroy and null any scoped refs.     
     */
