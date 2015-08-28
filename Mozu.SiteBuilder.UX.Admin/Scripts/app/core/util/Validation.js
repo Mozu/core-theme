@@ -5,7 +5,7 @@
 Ext.define('Taco.core.util.Validation', {
     singleton: true,
 
-    constructor: function(config) {
+    constructor: function (config) {
         this.initConfig(config);
     },
     config: {
@@ -80,7 +80,7 @@ Ext.define('Taco.core.util.Validation', {
      * @param value text value
      * @returns if passes validation then returns true, else returns error string
      */
-    validateSeoFriendlyText : function(value) {
+    validateSeoFriendlyText: function (value) {
         var seoFriendlyRegex = Taco.core.util.Validation.getSeoFriendlyRegex(),
             isValid = !value || seoFriendlyRegex.test(value);
         if (!isValid) {
@@ -94,7 +94,7 @@ Ext.define('Taco.core.util.Validation', {
      * @param value text value
      * @returns if passes validation then returns true, else returns error string
      */
-    validateQueryString : function(value) {
+    validateQueryString: function (value) {
         var queryStringRegex = Taco.core.util.Validation.getQueryStringRegex(),
             isValid = !value || queryStringRegex.test(value),
             validationMsg;
@@ -108,14 +108,12 @@ Ext.define('Taco.core.util.Validation', {
         return true;
     },
 
-    toValidSeoSlug: function(slug, replaceString, skipToLowerCase) {
-        var result;
+    toValidSeoSlug: function (slug, replaceString) {
         if (!slug) {
             return slug;
         }
         replaceString = replaceString || '-';
-        result = slug.replace(Taco.core.util.Validation.getReplaceInvalidSeoRegex(), replaceString);
-        return skipToLowerCase ? result : result.toLowerCase();
+        return slug.replace(Taco.core.util.Validation.getReplaceInvalidSeoRegex(), replaceString).toLowerCase();
     },
 
 
@@ -128,7 +126,7 @@ Ext.define('Taco.core.util.Validation', {
     *      "End date must be after start date", 0);
     *  }
      */
-    validateDateRange: function(startDateFld, endDateFld, endBeforeStartMsg, requiredCount) {
+    validateDateRange: function (startDateFld, endDateFld, endBeforeStartMsg, requiredCount) {
         requiredCount = requiredCount || 0;
 
         if (requiredCount === 0 && (!startDateFld.getValue() || !endDateFld.getValue())) {
