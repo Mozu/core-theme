@@ -91,9 +91,15 @@ Ext.define('Taco.view.filter.ValueField', {
             value = (this.field) ? this.field.getValue() : this.value,
             operatorRecord = this.getOperatorRecord(),
             fieldRecord = this.getFieldRecord(),
-            isDisabled = (!operatorRecord || !fieldRecord);
-
+            isDisabled = (!operatorRecord || !fieldRecord),
+            opId = operatorRecord.get("id"),
+            operatorAllowsBlank = (opId == "eq" || opId == "ne"),
+            allowBlank = (fieldCfg.allowBlank && operatorAllowsBlank);
         
+        this.setAllowBlank(allowBlank);
+        // need to override the field config's allow blank since the operator can force it to be required;
+        fieldCfg.allowBlank = allowBlank;
+
         if (isDisabled) {
             return;
         }
@@ -309,7 +315,7 @@ Ext.define('Taco.view.filter.ValueField', {
         }, fieldCfg, {
                 width:300,
                 xtype: "textfield",
-                allowBlank: this.allowBlank,
+                allowBlank: this.fieldRecord.get("allowBlank"),
                 name: this.name || "valuefield"
             }
         );
@@ -377,7 +383,7 @@ Ext.define('Taco.view.filter.ValueField', {
         return this.validate();
     },
     validate: function () {
-        return (this.getValue());
+        return (this.allowBlank || this.getValue());
     },
     onDestroy: function () {
         var me = this;

@@ -125,7 +125,7 @@ Ext.define('Taco.view.filter.Schema', {
             editorCfg: {
                 xtype: "currencyfield"
             },
-            allowBlank: false
+            allowBlank: true
         }, {
             id: "daysavailableincatalog",
             field: "DaysAvailableInCatalog",
@@ -163,7 +163,7 @@ Ext.define('Taco.view.filter.Schema', {
             editorCfg: {
                 xtype: "numberfield"
             },
-            allowBlank: false
+            allowBlank: true
         }, {
             id: "measurements.packageweight.value",
             field: "Measurements.PackageWeight.Value",
@@ -174,7 +174,7 @@ Ext.define('Taco.view.filter.Schema', {
             //editorCfg: {
             //    xtype: "numberfield"
             //},
-            allowBlank: false
+            allowBlank: true
         }, {
             id: "measurements.packageheight.value",
             field: "Measurements.PackageHeight.Value",
@@ -185,7 +185,7 @@ Ext.define('Taco.view.filter.Schema', {
             //editorCfg: {
             //    xtype: "numberfield"
             //},
-            allowBlank: false
+            allowBlank: true
         }, {
             id: "measurements.packagelength.value",
             field: "Measurements.PackageLength.Value",
@@ -196,7 +196,7 @@ Ext.define('Taco.view.filter.Schema', {
             //editorCfg: {
             //    xtype: "numberfield"
             //},
-            allowBlank: false
+            allowBlank: true
         }, {
             id: "measurements.packagewidth.value",
             field: "Measurements.PackageWidth.Value",
@@ -207,7 +207,7 @@ Ext.define('Taco.view.filter.Schema', {
             //editorCfg: {
             //    xtype: "numberfield"
             //},
-            allowBlank: false
+            allowBlank: true
         }, {
             id: "price.saleprice",
             field: "Price.SalePrice",
@@ -219,7 +219,7 @@ Ext.define('Taco.view.filter.Schema', {
             editorCfg: {
                 xtype: "currencyfield"
             },
-            allowBlank: false
+            allowBlank: true
         }, {
             id: "price.saletype",
             field: "Price.SaleType",
@@ -236,7 +236,7 @@ Ext.define('Taco.view.filter.Schema', {
                 { id: "DiscountedList", name: "Discounted List Price" },
                 { id: "DiscountedCatalogSalePrice", name: "Discounted Catalog Sale Price" }
             ],
-            allowBlank: false
+            allowBlank: true
         }, {
             id: "properties.",
             field: "properties.",
@@ -244,15 +244,15 @@ Ext.define('Taco.view.filter.Schema', {
             defaultValue: "",
             dataType: "string",
             supportedOperators: ["eq", "ne", "in", "lt", "le", "gt", "ge"],
-            allowBlank: false
+            allowBlank: true
         }
     ],
 
-    
-
     fieldStoreCfg: {
         makeIdCaseInsensitive: true,
-        model: "Taco.model.FilterField"
+        model: "Taco.model.FilterField",
+        sorters:["text"]
+
         //,
         //fields: [
         //    { name: "id", type: "string", convert: function(value, record) {
@@ -315,196 +315,8 @@ Ext.define('Taco.view.filter.Schema', {
         this.fieldStore = this.getFieldStore(fieldStoreCfg);
 
 
-/*
-        
-        ev.RegisterStaticField(
-                fieldName: "ProductCode",
-                supportedOperators:
-                    Expression.PredicateOperator.eq |
-                    Expression.PredicateOperator.ne |
-                    Expression.PredicateOperator.@in,
- 
-                dataType: Expression.DataType.@string,
-                allowNullOnRight: false);
- 
-            ev.RegisterStaticField(
-                fieldName: "Categories.CategoryCode",
-                supportedOperators:
-                   Expression.PredicateOperator.eq |
-                   Expression.PredicateOperator.req |
-                   Expression.PredicateOperator.@in |
-                   Expression.PredicateOperator.ne,
-                   dataType: Expression.DataType.@string,
-                   allowNullOnRight: false);
- 
-            ev.RegisterStaticField(
-                fieldName: "ProductTypeId",
-                supportedOperators:
-                   Expression.PredicateOperator.eq |
-                   Expression.PredicateOperator.@in |
-                   Expression.PredicateOperator.ne,
-               dataType: Expression.DataType.@int,
-               allowNullOnRight: false);
- 
- 
-            ev.RegisterStaticField(
-                fieldName: "Price.CatalogListPrice",
-                supportedOperators:
-                    Expression.PredicateOperator.eq |
-                    Expression.PredicateOperator.ne |
-                    Expression.PredicateOperator.gt |
-                    Expression.PredicateOperator.ge |
-                    Expression.PredicateOperator.@in |
-                    Expression.PredicateOperator.lt |
-                    Expression.PredicateOperator.le,
-                  dataType: Expression.DataType.@decimal,
-                  allowNullOnRight: false);
- 
-            ev.RegisterStaticField(
-                fieldName: "Price.CatalogSalePrice",
-                supportedOperators:
-                    Expression.PredicateOperator.eq |
-                    Expression.PredicateOperator.ne |
-                    Expression.PredicateOperator.gt |
-                    Expression.PredicateOperator.ge |
-                    Expression.PredicateOperator.@in |
-                    Expression.PredicateOperator.lt |
-                    Expression.PredicateOperator.le,
-                    dataType: Expression.DataType.@decimal,
-                    allowNullOnRight: true);
- 
-            ev.RegisterStaticField(
-                fieldName: "DaysAvailableInCatalog",
-                supportedOperators:
-                    Expression.PredicateOperator.eq |
-                    Expression.PredicateOperator.ne |
-                    Expression.PredicateOperator.gt |
-                    Expression.PredicateOperator.ge |
-                    // Note: This one deferred. Expression.PredicateOperator.@in |
-                    Expression.PredicateOperator.lt |
-                    Expression.PredicateOperator.le,
-                 dataType: Expression.DataType.@int,
-                 allowNullOnRight: false);
- 
-            ev.RegisterStaticField(
-                fieldName: "FulfillmentTypesSupported",
-                supportedOperators:
-                    Expression.PredicateOperator.eq |
-                    Expression.PredicateOperator.ne |
-                    Expression.PredicateOperator.@in,
-                dataType: Expression.DataType.@string,
-                allowNullOnRight: false,
-                validEnumValues: new string[] { "DirectShip", "InStorePickup", "Digital" });
- 
- 
- 
-            ev.RegisterStaticField(
-                fieldName: "Measurements.PackageWeight.Value",
-                supportedOperators:
-                    Expression.PredicateOperator.eq |
-                    Expression.PredicateOperator.ne |
-                    Expression.PredicateOperator.gt |
-                    Expression.PredicateOperator.ge |
-                    Expression.PredicateOperator.@in |
-                    Expression.PredicateOperator.lt |
-                    Expression.PredicateOperator.le,
-                dataType: Expression.DataType.@decimal,
-                allowNullOnRight: true);
- 
-            ev.RegisterStaticField(
-                fieldName: "Measurements.PackageHeight.Value",
-                supportedOperators:
-                    Expression.PredicateOperator.eq |
-                    Expression.PredicateOperator.ne |
-                    Expression.PredicateOperator.gt |
-                    Expression.PredicateOperator.ge |
-                    Expression.PredicateOperator.@in |
-                    Expression.PredicateOperator.lt |
-                    Expression.PredicateOperator.le,
-                dataType: Expression.DataType.@decimal,
-                allowNullOnRight: true);
- 
-            ev.RegisterStaticField(
-                fieldName: "Measurements.PackageWidth.Value",
-                supportedOperators:
-                    Expression.PredicateOperator.eq |
-                    Expression.PredicateOperator.ne |
-                    Expression.PredicateOperator.gt |
-                    Expression.PredicateOperator.ge |
-                    Expression.PredicateOperator.@in |
-                    Expression.PredicateOperator.lt |
-                    Expression.PredicateOperator.le,
-                dataType: Expression.DataType.@decimal,
-                allowNullOnRight: true);
- 
-            ev.RegisterStaticField(
-                fieldName: "Measurements.PackageLength.Value",
-                supportedOperators:
-                    Expression.PredicateOperator.eq |
-                    Expression.PredicateOperator.ne |
-                    Expression.PredicateOperator.gt |
-                    Expression.PredicateOperator.ge |
-                    Expression.PredicateOperator.@in |
-                    Expression.PredicateOperator.lt |
-                    Expression.PredicateOperator.le,
-                dataType: Expression.DataType.@decimal,
-                allowNullOnRight: true);
- 
- 
-            ev.RegisterDynamicField(
-                fieldPrefix: "properties.",
-                supportedOperators:
-                    Expression.PredicateOperator.eq |
-                    Expression.PredicateOperator.ne |
-                    Expression.PredicateOperator.gt |
-                    Expression.PredicateOperator.ge |
-                    Expression.PredicateOperator.@in |
-                    Expression.PredicateOperator.le |
-                    Expression.PredicateOperator.lt,
-                    allowNullOnRight: true);
- 
-RealTime Only: above +
- 
-            ev.RegisterStaticField(
-                fieldName: "Price.SalePrice",
-                supportedOperators:
-                    Expression.PredicateOperator.eq |
-                    Expression.PredicateOperator.ne |
-                    Expression.PredicateOperator.gt |
-                    Expression.PredicateOperator.ge |
-                    Expression.PredicateOperator.@in |
-                    Expression.PredicateOperator.lt |
-                    Expression.PredicateOperator.le,
-                dataType: Expression.DataType.@decimal,
-                allowNullOnRight: true);
- 
- 
-            ev.RegisterStaticField(
-                fieldName: "Price.SaleType",
-                supportedOperators:
-                    Expression.PredicateOperator.eq |
-                    Expression.PredicateOperator.ne |
-                    Expression.PredicateOperator.@in,
-                dataType: Expression.DataType.@string,
-                allowNullOnRight: true,
-                validEnumValues: new string[] {  "CatalogSalePrice", "DiscountedList", "DiscountedCatalogSalePrice" });
-
-
-        */
-
-
     },
 
-    
-    // cfg: optional
-    // cfg.includedOperators:[] // specific list of operators to include
-    // cfg.excludedOperators:[] // specific list of operators to remove from the default list
-    
-
-    //getOperator: function (key, cfg) {
-    //    var cfg = Ext.apply(this.getOperatorCfg(key), cfg);
-    //    return this.buildField(cfg);
-    //},
 
     operatorStoreCfg : {
         fields: [

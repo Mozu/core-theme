@@ -48,8 +48,6 @@ Ext.define('Taco.view.filter.Form', {
                 });
             }
 
-
-
             // if we have a fieldRecord then init the ui. otherwise call to get field record;
             var fieldValue = this.record.get("left").toLowerCase();
             var fieldRecord = this.fieldStore.getById(fieldValue);
@@ -149,7 +147,7 @@ Ext.define('Taco.view.filter.Form', {
             validEnumValues: record.data.values,
             editorCfg: editorCfg,
             //filterType: "DynamicPreComputed" },
-            allowBlank:false
+            allowBlank:true
         });
 
         
@@ -253,7 +251,7 @@ Ext.define('Taco.view.filter.Form', {
         this.rightField = Ext.create('Taco.view.filter.ValueField', {
             name: "right",
             flex: 1,
-            allowBlank: false,
+            allowBlank: this.fieldRecord.get("allowBlank"),
             fieldRecord: this.getFieldRecord(),
             operatorRecord: this.getOperatorRecord(),
             value: this.record.get("right"),

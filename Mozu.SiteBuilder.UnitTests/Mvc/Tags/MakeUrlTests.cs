@@ -62,7 +62,7 @@ namespace Mozu.SiteBuilder.UnitTests.Mvc.Tags
                     Name = "cdn",
                     Template = @"{% make_url ""cdn"" ""/foo.png"" %}",
                     ContainerModifier = containerMods,
-                    ExpectedFunc = TestDescriptor.CompareLiteral("//cdn/1-m2/foo.png")
+                    ExpectedFunc = TestDescriptor.CompareLiteral("//cdn/1-m2/foo.png?_mzcb=123")
                 },
                 new TestDescriptor
                 {
@@ -95,7 +95,7 @@ namespace Mozu.SiteBuilder.UnitTests.Mvc.Tags
                         PageCount = 10,
                         TotalCount =100
                     } } },
-                    ExpectedFunc = TestDescriptor.CompareLiteral("?pageSize=&sortBy=&facetValueFilter=&startIndex=60&query=")
+                    ExpectedFunc = TestDescriptor.CompareLiteral("?startIndex=60")
                 },
                 new TestDescriptor
                 {

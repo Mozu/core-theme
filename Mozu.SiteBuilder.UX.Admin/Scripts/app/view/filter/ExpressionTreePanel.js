@@ -71,16 +71,23 @@ Ext.define('Taco.view.filter.ExpressionTreePanel', {
                     if (record.data.type == "container") {
                         return (record.data.logicalOperator == "or") ? "Any of the following" : "All of the following";
                     } else {
-                        
                         var operator = Taco.filter.operatorStore.getById(record.get("operator"));
                         var field = Taco.filter.fieldStore.getById(record.get("left"));
                         var filterTpl = new Ext.XTemplate('{left} {operator} {right}');
-                        
-                        return filterTpl.apply({
-                            left: (field) ? field.get("text"): record.get("left"),
-                            operator: operator.get("text"),
-                            right:record.get("right")
-                        });
+                        var leftText = (field) ? field.get("text") : record.get("left");
+                        var retVal = "";
+
+                        if (record.get("right")) {
+                            retVal = filterTpl.apply({
+                                left: leftText,
+                                operator: operator.get("text"),
+                                right: record.get("right")
+                            });
+                        } else {
+                            // null value use case.
+                            retVal = (operator.get("id") === "eq") ? leftText + " has no value" : leftText +" has a value";
+                        }
+                        return retVal;
                     }
                 },
                 flex: 1,
