@@ -20,7 +20,7 @@ define(['jquery', 'modules/api'], function($, api) {
                 canonical = canonical.replace(/[&\?]_partial=true/, '');
             }
             deferred.resolve({
-                canonicalUrl: res.getResponseHeader('x-vol-canonical-url'),
+                canonicalUrl: canonical,
                 body: body
             });
         }
