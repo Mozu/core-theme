@@ -6,6 +6,7 @@ using System.ServiceModel.Web;
 using System.Threading.Tasks;
 using System.Web.Http;
 using System.Text;
+using System.Text.RegularExpressions;
 using AutoMapper;
 using Mozu.Core.Api.Routing;
 using Mozu.Core.Extensions;
@@ -143,33 +144,61 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
             var editedProducts = await _productMapper.PerformAction(products, p =>
                 {
                     var pt = productTypes.FirstOrDefault(x => p.ProductTypeId == x.Id);
-                    if (p.Properties  != null && pt != null)
+                    if (p.Properties != null && pt != null)
                     {
-                        foreach (var prop in p.Properties)
-                        {
-                            var def = pt.Properties.FirstOrDefault(x => prop.AttributeFQN == x.AttributeFQN && x.AttributeDetail.InputType == "List" && x.AttributeDetail.ValueType == "AdminEntered" && x.AttributeDetail.DataType == "String");
-                            if (def != null)
-                            {
-                                if (prop.Values != null && prop.Values.Count == 1)
-                                {
-                                    prop.Values[0].Value = def.AttributeFQN + "_value";
-                                }
-                            }
-                        }
-                        p.Properties.Select( prop=>  pt.Properties.FirstOrDefault(x=>x.AttributeFQN == prop.AttributeFQN ) )
-                            .Where( x=> x!=null&& x.AttributeDetail.ValueType =="AdminEntered" && x.AttributeDetail.DataType =="String")
-                            .ToList() 
-                            .ForEach(def =>
-                                {
-                                    
-                                });
-                    }
+                        ProcessAdminEnteredStringProperties(pt, p);
+                    }                    
                     return _productClient.UpdateProduct(p, p.ProductCode);
                 });
             return List2(editedProducts.ToList());
         }
 
-		[HttpPostRoute(UriTemplate = "delete")]
+        private void ProcessAdminEnteredStringProperties(ProductType pt, DC.Product p)
+        {
+            var prodTypeStrAttrs = pt.Properties.Where(
+                x => x.AttributeDetail.ValueType.EqualsIgnoreCase("AdminEntered")
+                     && x.AttributeDetail.DataType.EqualsIgnoreCase("String"));
+
+            foreach (var prop in p.Properties)
+            {
+
+                var match = prodTypeStrAttrs.FirstOrDefault(x => x.AttributeFQN == prop.AttributeFQN);
+                if (match == null)
+                    continue;
+                switch (match.AttributeDetail.InputType)
+                {
+                    case "List":
+                        ProcessListProperty(match, prop);
+                        break;
+                    case "TextBox":
+                    case "TextArea":
+                        SlugifyValues(prop.Values);
+                        break;
+                }
+            }
+        }
+
+        private void ProcessListProperty(AttributeInProductType prodTypeListAttr, ProductProperty prop)
+        {
+            if (prop.Values != null && prop.Values.Count == 1)
+            {
+                prop.Values[0].Value = prodTypeListAttr.AttributeFQN + "_value";
+            }
+        }
+
+        private void SlugifyValues(List<ProductPropertyValue> values)
+        {
+            const int truncLimit = 50;
+            if (values.IsNullOrEmpty())
+                return;
+            values.ForEach(x =>
+            {
+                string sanitized = Regex.Replace(x.Value as string ?? "", "[^A-Za-z0-9-_\\.]", "-");
+                x.Value = (sanitized.Length <= truncLimit) ? sanitized : sanitized.Substring(0, truncLimit);
+            });
+        }
+
+        [HttpPostRoute(UriTemplate = "delete")]
         public async Task<Response<List<Product>>> DeleteProduct(List<Product> products)
         {
             if (products == null || !products.Any())

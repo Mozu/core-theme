@@ -179,7 +179,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.ModelMapping
                         {
                             if (x.Id == null)
                             {
-                                x.Id = Regex.Replace(x.Value as string ?? "", "[^A-Za-z0-9-_\\.]", "-"); ;
+                                x.Id = Regex.Replace(x.Value as string ?? "", "[^A-Za-z0-9-_\\.]", "-"); 
                             }
 
 
