@@ -116,6 +116,7 @@ namespace Mozu.SiteBuilder.UX.Hypr.Tags
             var cache = context.Resolve<ILiveModeOnlyCache>();
             ProductSearchResult pc = await DoSearch(
                 cache, 
+                searchContext ,
                 startIndex, 
                 pageSize, 
                 cacheResults, 
@@ -146,6 +147,7 @@ namespace Mozu.SiteBuilder.UX.Hypr.Tags
 
         private async Task<ProductSearchResult> DoSearch(
             ILiveModeOnlyCache cache, 
+            IProductListingState productListingState,
             int startIndex, 
             int pageSize, 
             bool cacheResults, 
@@ -232,7 +234,7 @@ namespace Mozu.SiteBuilder.UX.Hypr.Tags
                         {
                             var ser = GlobalConfiguration.Configuration.Formatters.JsonFormatter.CreateJsonSerializer();
                             pc = ser.Deserialize<ProductSearchResult>(rdr);
-
+                            pc.Init(true, productListingState);
                             if (productCodesFilters != null && productCodesFilters.Length > 0 && pc.Items != null)
                             {
                                 pc.Items = productCodes

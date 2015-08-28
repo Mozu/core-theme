@@ -177,12 +177,14 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
                 string facetValueFilter = HttpRequestBase.QueryString["facetValueFilter"];
                 ProductSearchResult pcDC = await (await _searchClient.Search(query: "*:*", filter: filter, startIndex: startIdx, pageSize: itemsPerPage, sortBy: sortBy, facetTemplate: "categoryId:" + categoryId, facetHierValue: "categoryId:" + categoryId, facetHierDepth: "categoryId:2", facetValueFilter: facetValueFilter)).ReadAsAsync();
                 var pc = Mapper.Map<UX.Models.StoreFront.Catalog.ProductSearchResult>(pcDC);
+                pc.Init(true, this.PageContext.Search);
                 return pc;
             }
             else
             {
-                ProductCollection pcDC = await (await _productClient.GetProducts(filter: filter, startIndex: startIdx, pageSize: itemsPerPage, sortBy: sortBy, responseGroups: "Categories,Measurements,Properties,Options")).ReadAsAsync();
+                var pcDC = await (await _productClient.GetProducts(filter: filter, startIndex: startIdx, pageSize: itemsPerPage, sortBy: sortBy, responseGroups: "Categories,Measurements,Properties,Options")).ReadAsAsync();
                 var pc = Mapper.Map<UX.Models.StoreFront.Catalog.ProductCollection>(pcDC);
+                pc.Init(true, this.PageContext.Search);
                 return pc;
             }
         }

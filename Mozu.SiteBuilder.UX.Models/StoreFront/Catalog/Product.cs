@@ -146,16 +146,24 @@ namespace Mozu.SiteBuilder.UX.Models.StoreFront.Catalog
         public string UrlBase { get; set; }
         private bool _inited = false;
 
-        public void Init(bool force = false)
+        public void Init(bool force = false, IProductListingState state = null)
         {
             if (force || _inited)
             {
                 return;
             }
             _inited = true;
-
-            //CurrentPage = (int)Math.Ceiling((double)StartIndex / (double)PageSize ) + 1;
-
+            if (state != null)
+            {
+                CurrentSort = state.SortBy;
+                StartIndex = state.StartIndex.GetValueOrDefault(StartIndex);
+                PageSize = state.PageSize.GetValueOrDefault(PageSize);
+                if (PageSize > 0)
+                {
+                    CurrentPage = (int)Math.Ceiling((double)StartIndex / (double)PageSize) + 1;
+                }
+          
+            }
             Pages = new List<RepeaterItem>();
             for (int i = 1; i <= PageCount; i++)
             {
@@ -252,14 +260,29 @@ namespace Mozu.SiteBuilder.UX.Models.StoreFront.Catalog
         public int PageCount { get; set; }
     }
 
-  
+    public interface IProductListingState
+    {
+        // int? CategoryId { get; set; }
+        // NameValueCollection Facets { get; set; }
+        int? PageSize { get; set; }
+        string Query { get; set; }
+        string SortBy { get; set; }
+        int? StartIndex { get; set; }
+    }
 
-//public class CategoryFacet: Mozu.ProductRuntime.Contracts.CategoryFacet
-    //{
-        
-    //}
+    
     public class ProductSearchResult : ProductCollection 
     {
+        public override  void Init(bool force = false, IProductListingState state = null)
+        {
+            if ( state != null)
+            {
+                this.Query = state.Query;
+                
+            }
+           
+            base.Init(force, state);
+        }
         [DataMember(EmitDefaultValue = false)]
         public object Respell { get; set; }
 
@@ -286,49 +309,7 @@ namespace Mozu.SiteBuilder.UX.Models.StoreFront.Catalog
         }
 
 
-        //public int CurrentPage
-        //{
-        //    get
-        //    {
-        //        double  val = this.FirstIndex/(this.PageSize == 0 ? 1 : this.PageSize);
-           
-        //        return (int)Math.Ceiling(val); 
-        //    }
-        //}
-
-        //public string CurrentSort
-        //{
-        //    get
-        //    {
-        //        this.CurrentSort 
-        //         return this.la && decodeURIComponent(this.lastRequest.sortBy).replace(/\+/g,' '); 
-        //    }    
-        //}
-        //         var conf = this.baseRequestParams ? _.clone(this.baseRequestParams) : {},
-        //        pageSize = this.get("pageSize"),
-        //        startIndex = this.get("startIndex"),
-        //        filterValue = this.getFacetValueFilter();
-        //    conf.pageSize = pageSize;
-        //    if (startIndex) conf.startIndex = startIndex;
-        //    if (filterValue) conf.facetValueFilter = filterValue;
-        //    if (this.query) conf.query = this.query;
-        //    return conf;
-
-
-        // hasValueFacets: function () { return !!this.get('facets').findWhere({ facetType: 'Value' }); },
-    //firstIndex: function() { return this.get("startIndex") + 1; },
-    //lastIndex: function () { return this.get("startIndex") + this.get("items").length; },
-    //hasPreviousPage: function () { return this.get("startIndex") > 0; },
-    //hasNextPage: function () { return this.lastIndex() < this.get("totalCount"); },
-    //currentPage: function() { return Math.ceil(this.firstIndex() / (this.get('pageSize') || 1)); },
-    //currentSort: function() { return this.lastRequest && decodeURIComponent(this.lastRequest.sortBy).replace(/\+/g,' '); },
-
-
-
-
-
-        //[DataMember(EmitDefaultValue = false)]
-        //public CategoryFacet CategoryFacet { get; set; }
+        
 
         public string Query { get; set; }
 
@@ -354,17 +335,7 @@ namespace Mozu.SiteBuilder.UX.Models.StoreFront.Catalog
         }
     }
 
-    //public class CategoryFacetItem:  Mozu.ProductRuntime.Contracts.CategoryFacetItem
-    //{
-
-    //    public string Name { get; set; }
-
-    //    public string Url { get; set; }
-    //}
-    //public class ProductAttribute: Mozu.ProductRuntime.Contracts.a.ProductAttribute
-    //{
-        
-    //}
+   
     public class ProductOption : Mozu.ProductRuntime.Contracts.ProductOption
     {
    
@@ -558,14 +529,24 @@ namespace Mozu.SiteBuilder.UX.Models.StoreFront.Catalog
         }
         public string UrlBase { get; set; }
         bool _inited = false;
-        public void Init (bool force= false )
+        public virtual void Init (bool force= false  , IProductListingState state = null )
         {
-            if (force || _inited)
+            if (!force && _inited)
             {
                 return;
             }
             _inited = true;
-                
+            if (state != null)
+            {
+                CurrentSort = state.SortBy;
+                StartIndex = state.StartIndex.GetValueOrDefault(StartIndex);
+                PageSize = state.PageSize.GetValueOrDefault(PageSize);
+                if (PageSize > 0)
+                {
+                    CurrentPage = (int)Math.Ceiling((double)StartIndex / (double)PageSize) + 1;
+                }
+
+            }
             //CurrentPage = (int)Math.Ceiling((double)StartIndex / (double)PageSize ) + 1;
 
             Pages = new List<RepeaterItem>();
