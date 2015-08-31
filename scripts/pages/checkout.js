@@ -184,29 +184,9 @@ require(["modules/jquery-mozu", "underscore", "hyprlive", "modules/backbone-mozu
                 });
             }
         },
-        finishEditingCard: function() {
-            var me = this;
-            var op = me.doModelAction('submit');
-            if (op) {
-                return op.then(function() {
-                    me.editing.savedCard = false;
-                    me.model.edit();
-                });
-            }
-        },
         beginEditingBillingAddress: function() {
             this.editing.savedBillingAddress = true;
             this.render();
-        },
-        finishEditingBillingAddress: function() {
-            var me = this;
-            var op = me.doModelAction('submit');
-            if (op) {
-                return op.then(function() {
-                    me.editing.savedBillingAddress = false;
-                    me.model.edit();
-                });
-            }
         },
         beginApplyCredit: function () {
             this.model.beginApplyCredit();
