@@ -801,14 +801,14 @@
                             'lastNameOrSurname',
                             'phoneNumbers'),
                         {
-                            address: _.pick(obj.billingContact.address, 
+                            address: obj.billingContact.address ? _.pick(obj.billingContact.address, 
                                 'address1',
                                 'address2',
                                 'addressType',
                                 'cityOrTown',
                                 'countryCode',
                                 'postalOrZipCode',
-                                'stateOrProvince')
+                                'stateOrProvince') : {}
                         }),
                         card: _.extend(_.pick(obj.card,
                             'expireMonth',
