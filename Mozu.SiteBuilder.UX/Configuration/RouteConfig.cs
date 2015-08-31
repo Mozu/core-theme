@@ -230,13 +230,15 @@ namespace Mozu.SiteBuilder.UX.Configuration
                "checkout/{orderId}/{action}",
                new { controller = "Checkout", action = "Index", orderId = RouteParameter.Optional });
 
-
-
             routes.MapHttpRoute(
                 "StoreFront_cart",
-                "cart/{action}",
+                "cart",
                 new { controller = "Cart", action = "Index" });
 
+            routes.MapHttpRoute(
+                "StoreFront_cart_checkout",
+                "cart/checkout",
+                new { controller = "Cart", action = "Checkout" });
 
             routes.MapHttpRoute(
                 "Logout",
@@ -244,13 +246,11 @@ namespace Mozu.SiteBuilder.UX.Configuration
                 new { controller = "Auth", action = "LogOut" },
                 new { acceptConstraint = new AcceptConstraint("application/json", false) });
 
-
             routes.MapHttpRoute(
                 "AJAX Login",
                 "user/login",
                 new { controller = "Auth", action = "AjaxLogin" },
                 new { acceptConstraint = new AcceptConstraint("application/json", true) });
-
 
             routes.MapHttpRoute(
                 "Login",
