@@ -82,6 +82,9 @@ Ext.define('Taco.store.TooltipHelp', {
         }, {
             key: 'settings.publishing.liveEdit',
             value: 'Enables Live Edit of Products through the Mozu API.'
+        }, {
+            key: 'product.general.dateFirstAvailable',
+            value: 'This field specifies the intended date when the product either first becomes or became available. Use this field to reference the product in an expression that uses the Days Available in Catalog entity. Setting this field to a future date doesn’t automatically publish the product live on that date.'
         }
    ]
    

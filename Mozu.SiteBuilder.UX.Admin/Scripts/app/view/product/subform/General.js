@@ -591,15 +591,16 @@ Ext.define('Taco.view.product.subform.General', {
                             this.activeEndDateField
                         ]
                     },
-                    {
-                        xtype: 'datetime',
+
+                    Taco.core.ux.TooltipLabel.wrapConfig('product.general.dateFirstAvailable', me, {
+                        xtype: 'datefield',
                         fieldLabel: 'Date First Available',
                         name: 'dateFirstAvailableInCatalog',
                         labelAlign: 'top',
                         hidden: this.isGlobal,
                         width: twoColumnFieldWidth,
                         value: this.productInCatalogInfo ? this.productInCatalogInfo.get('dateFirstAvailableInCatalog') : ""
-                    }
+                    },Ext.id())
                 ]
             },
             {
