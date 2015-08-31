@@ -100,7 +100,8 @@ Ext.define('Taco.view.settings.Publishing', {
                 isLiveEdit = masterCatalog.isLiveEditEnabled(),
                 liveProductRadio,
                 stagedProductRadio,
-                liveEditProductCheckbox;
+                liveEditProductCheckbox,
+                liveEditColumnHeading;
 
             liveProductRadio = Ext.widget({
                 xtype: 'radio',
@@ -157,13 +158,33 @@ Ext.define('Taco.view.settings.Publishing', {
                 }
             }, this);
 
+            //liveEditProductCheckbox = Ext.widget('checkboxfield',
+            //    Taco.core.ux.TooltipLabel.wrapConfig('settings.publishing.liveEdit', me, {
+            //        xtype: 'checkbox',
+            //        name: 'isLiveEditEnabled-' + masterCatalog.id,
+            //        itemId: 'isLiveEditEnabled-' + masterCatalog.id,
+            //        checked: isLiveEdit,
+            //        fieldLabel: 'Live Edit',
+            //        labelAlign: 'left',
+            //        labelWidth: 75,
+            //        disabled: isLiveProduct,
+            //        listeners: {
+            //            change: function (field) {
+            //                masterCatalog.updateProductPublishingMode(null, field.getValue());
+            //            },
+            //            scope: me
+            //        }
+            //    },  masterCatalog.id)
+            //);
+
             liveEditProductCheckbox = Ext.widget('checkboxfield',
-                Taco.core.ux.TooltipLabel.wrapConfig('settings.publishing.liveEdit', me, {
+                {
                     xtype: 'checkbox',
                     name: 'isLiveEditEnabled-' + masterCatalog.id,
                     itemId: 'isLiveEditEnabled-' + masterCatalog.id,
                     checked: isLiveEdit,
-                    fieldLabel: 'Live Edit',
+                    cellCls: 'product radio',
+                    //fieldLabel: 'Live Edit',
                     labelAlign: 'left',
                     labelWidth: 75,
                     disabled: isLiveProduct,
@@ -173,26 +194,44 @@ Ext.define('Taco.view.settings.Publishing', {
                         },
                         scope: me
                     }
-                },  masterCatalog.id)
+                }
+            );
+
+            liveEditColumnHeading = Ext.widget('fieldcontainer',
+                Taco.core.ux.TooltipLabel.wrapConfig('settings.publishing.liveEdit', me, {
+                    xtype: 'fieldcontainer',
+                    //name: 'isLiveEditEnabled-' + masterCatalog.id,
+                    //itemId: 'isLiveEditEnabled-' + masterCatalog.id,
+                    //checked: isLiveEdit,
+                    fieldLabel: 'Live Edit',
+                    cellCls: 'header radio'
+                    //labelAlign: 'left',
+                    //labelWidth: 75,
+                    //disabled: isLiveProduct,
+                }, masterCatalog.id)
             );
 
             Ext.Array.push(subitems, {}, {
-                xtype: 'component',
-                html: 'Live',
+                xtype: 'fieldcontainer',
+                fieldLabel: 'Live',
                 cellCls: 'header radio'
             }, {
-                html: 'Staged',
+                xtype: 'fieldcontainer',
+                fieldLabel: 'Staged',
                 cellCls: 'header radio'
-            }, {
+            }, 
+            liveEditColumnHeading,   
+            {
                 html: 'Product Publishing',
                 width: 200,
                 cellCls: 'product'
             },
-                liveProductRadio,
-                stagedProductRadio
+            liveProductRadio,
+            stagedProductRadio,
+            liveEditProductCheckbox
             );
 
-            Ext.Array.push(subitems, {}, {}, liveEditProductCheckbox);
+            //Ext.Array.push(subitems, {}, {}, liveEditProductCheckbox);
 
             // Get out of there are no sites, gary!!!
             if (!masterCatalog.sites.length) return;
@@ -201,7 +240,7 @@ Ext.define('Taco.view.settings.Publishing', {
                 Ext.Array.push(subitems, {
                     html: 'Content Publishing',
                     cellCls: 'content'
-                }, {}, {});
+                }, {}, {}, {});
 
                 
                 this.addContentPublishOptions(masterCatalog, subitems);
@@ -221,7 +260,7 @@ Ext.define('Taco.view.settings.Publishing', {
                 title: masterCatalog.name,
                 layout: {
                     type: 'table',
-                    columns: 3
+                    columns: 4
                 },
                 margin: '0 0 30',
                 defaults: {
@@ -287,7 +326,8 @@ Ext.define('Taco.view.settings.Publishing', {
             cellCls: 'site site-name'
         },
             liveContentRadio,
-            stagedContentRadio
+            stagedContentRadio,
+            {}
         );
     },
 

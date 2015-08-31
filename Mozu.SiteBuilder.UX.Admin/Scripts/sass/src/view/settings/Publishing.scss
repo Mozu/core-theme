@@ -1,14 +1,5 @@
-﻿// .shit {
-//     background-color: rgba(255,0,0,0.3);
-//     border-top: 3px solid blue;
-// }
-
-
+﻿
 .#{$vprefix}publishing-settings {
-    .shit {
-        background-color: rgba(255,0,0,0.3);
-        border-top: 3px solid blue;
-    }
 
     .header {
         padding-top: 15px;
@@ -19,12 +10,14 @@
         border-color: $color-neutral-05;
         border-style: solid;
         border-width: 1px 0 0;
+        font-weight:bold;
         vertical-align: middle !important;
     }
 
     .content {
         padding-top: 20px;
         vertical-align: middle !important;
+        font-weight:bold;
     }
 
     .site {
@@ -32,12 +25,12 @@
     }
 
     .site-name {
-        padding-left: 6px;
+        padding-left: 15px;
     }
 
     .radio {
-        padding-left: 10px;
-        padding-right: 10px;
+        padding-left: 30px;
+        padding-right: 30px;
         text-align: center;
         
         & > table {
