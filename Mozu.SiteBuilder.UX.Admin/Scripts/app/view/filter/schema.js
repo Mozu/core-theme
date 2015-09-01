@@ -216,7 +216,7 @@ Ext.define('Taco.view.filter.Schema', {
             text: "Sale Type",
             defaultValue: "",
             dataType: "string",
-            supportedOperators: ["eq", "ne", "in", "lt", "le", "gt", "ge"],
+            supportedOperators: ["eq", "ne", "in"],
             editorCfg: {
                 xtype: "combo"
             },
