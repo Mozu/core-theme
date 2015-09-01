@@ -8,7 +8,9 @@ using System.Web.Http.Routing;
 using NUnit.Framework;
 using Autofac;
 using Mozu.SiteBuilder.Mvc;
+using Mozu.SiteBuilder.Mvc.Catalog;
 using Mozu.SiteBuilder.Mvc.Contexts;
+using Mozu.SiteBuilder.Mvc.SEO;
 using Mozu.SiteBuilder.UX.Models.StoreFront.Catalog;
 using NSubstitute;
 using UrlHelper = Mozu.SiteBuilder.Mvc.Helpers.UrlHelper;
@@ -38,13 +40,20 @@ namespace Mozu.SiteBuilder.UnitTests.Mvc.Tags
             {
                 CdnCacheBustKey = "123"
             };
+            var customRouteHandler = Substitute.For<ICustomRouteHandler>();
+            customRouteHandler.GetCannonicalUrl(SiteSettings.General.Contracts.General.Routing.FancyRoute.Category, NSubstitute.Arg.Any<Func<IDictionary<string, object>>>(), NSubstitute.Arg.Any<bool>()).Returns(Task<string>.FromResult((string)null));
+            var catTreeProvider = Substitute.For<ICategoryTreeProvider>();
+            var catTree = new CategoryTree();
+            catTree.AllCategories = new List<Category>() { new Category() { CategoryId = 66, CategoryCode = "steve" } };
+            catTreeProvider.GetAllCategories().Returns(Task.FromResult(catTree));
             var pc = Substitute.For<IPageContext>();
             pc.Search = new SearchContext(req)
             {
 
             };
             var ac = Substitute.For<ISiteBuilderApiContext>();
-            var urlHelper = new UrlHelper(sc, ac, pc, null, null, null);
+            
+            var urlHelper = new UrlHelper(sc, ac, pc, customRouteHandler, req,new Lazy<ICategoryTreeProvider>(()=> catTreeProvider));
             Action<ContainerBuilder> containerMods = cb =>
            {
                cb.Register(c => sc).As<ISiteContext>();
@@ -64,6 +73,7 @@ namespace Mozu.SiteBuilder.UnitTests.Mvc.Tags
                     ContainerModifier = containerMods,
                     ExpectedFunc = TestDescriptor.CompareLiteral("//cdn/1-m2/foo.png?_mzcb=123")
                 },
+              
                 new TestDescriptor
                 {
                     Name = "image1",
@@ -122,6 +132,18 @@ namespace Mozu.SiteBuilder.UnitTests.Mvc.Tags
                         TotalCount =100
                     } } },
                     ExpectedFunc = TestDescriptor.ContainsLiteral("sortBy=price%3adesc")
+                },
+                 new TestDescriptor
+                {
+                    Name = "categoryFacet",
+                    Template = @"{% make_url ""facet"" facetValue %}",
+                    ContainerModifier = containerMods,
+                       Context = new Dictionary<string, object>() { { "facetValue", new Mozu.ProductRuntime.Contracts.FacetValue() {
+                       ChildrenFacetValues = new List<ProductRuntime.Contracts.FacetValue>(),
+                       Value = "66"
+                       
+                    } } },
+                    ExpectedFunc = TestDescriptor.ContainsLiteral("/c/66")
                 },
             };
         }
