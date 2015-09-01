@@ -148,7 +148,7 @@ namespace Mozu.SiteBuilder.Mvc.MessageHandler
             }
             List<RuntimeRedirectEntry> rrel;
 
-            if (string.IsNullOrEmpty(requestUri.Query) || !redirects.QueryString.TryGetValue(stem, out rrel))
+            if (!redirects.QueryString.TryGetValue(stem, out rrel))
             {
                 return null;
             }

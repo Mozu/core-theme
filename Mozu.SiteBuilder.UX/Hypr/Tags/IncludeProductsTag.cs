@@ -50,6 +50,7 @@ namespace Mozu.SiteBuilder.UX.Hypr.Tags
     /// 
     /// productCodes=alternate to query.  An array of product codes
     /// </summary>
+    
     [NDjango.ParserNodes.Description("tbd")]
     [NDjango.Interfaces.Name("include_products")]
     public class IncludeProductsTag : SimpleTagBaseAsync
@@ -59,6 +60,8 @@ namespace Mozu.SiteBuilder.UX.Hypr.Tags
             var pageContext = context.PageContext();
             var siteContext = context.SiteContext();
             var searchContext = pageContext.Search;
+
+
 
 
             var template = arguments.GetValueOrDefault<string>("viewName") ?? (string)arguments[0].Value;
@@ -110,6 +113,7 @@ namespace Mozu.SiteBuilder.UX.Hypr.Tags
 
             ProcessFacets(searchContext, includeFacets, ref cacheResults, facetHierDepthInt, facetCategoryId, categoryId, ref facetTemplate, ref facetValueFilter, ref facetHierValue, ref facetHierDepth);
 
+            ProcessSearchTuningRuleContext(categoryId, ref searchTuningRuleContext);
             string sortBy = ProcessSortBy(siteContext, searchContext, sortWithUrl, sort);
 
             
@@ -303,6 +307,18 @@ namespace Mozu.SiteBuilder.UX.Hypr.Tags
             }
             filter = filterStringBuilder.ToString();
             return true;
+        }
+
+        static void ProcessSearchTuningRuleContext( int? categoryId,  ref string searchTuningRuleContext)
+        {
+            if (!string.IsNullOrEmpty(searchTuningRuleContext))
+            {
+                return;
+            }
+            if ( categoryId.HasValue)
+            {
+                searchTuningRuleContext = "categoryId:" + categoryId.Value;
+            }
         }
 
         private static void ProcessFacets(Mvc.Contexts.SearchContext searchContext, bool includeFacets, ref bool cacheResults, int facetHierDepthInt, int? facetCategoryId, int? categoryId, ref string facetTemplate, ref string facetValueFilter, ref string facetHierValue, ref string facetHierDepth)
