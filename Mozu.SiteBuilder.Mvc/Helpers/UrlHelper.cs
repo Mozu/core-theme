@@ -127,6 +127,11 @@ namespace Mozu.SiteBuilder.Mvc.Helpers
                         url = MakeCdnUrl(obj, config);
                         break;
                     }
+                case "document":
+                    {
+                        url = MakeDocumentUrl(obj, config);
+                        break;
+                    }
                 default:
                     {
                         throw new RenderingError(string.Format("unknown type [{0}]", type), null);
@@ -164,7 +169,45 @@ namespace Mozu.SiteBuilder.Mvc.Helpers
             return sb.ToString();
 
         }
+        string MakeDocumentUrl(object o, Dictionary<string, object> config)
+        {
+            Mozu.Content.Contracts.Document doc = null;
+            if (o is string)
+            {
+                doc = new Mozu.Content.Contracts.Document() { Name = (string)o };
+                return DoMakeDocumentUrl(doc, config);
 
+            }
+            doc = o as Mozu.Content.Contracts.Document;
+            if (doc != null)
+            {
+                return DoMakeDocumentUrl(doc, config);
+            }
+
+            var name = _resolver.ResolveMemberOrDefault<string>(o, "name", null);
+            if (string.IsNullOrEmpty(name))
+            {
+                return "#";
+            }
+            doc = new Content.Contracts.Document()
+            {
+                Name = name,
+                ListFQN = _resolver.ResolveMemberOrDefault<string>(o, "ListFQN", null),
+                DocumentTypeFQN = _resolver.ResolveMemberOrDefault<string>(o, "DocumentTypeFQN", null),
+                Properties = _resolver.ResolveMemberOrDefault<JObject>(0, "Properties")
+
+            };
+            return DoMakeDocumentUrl(doc, config);
+        }
+            
+
+
+        
+        string DoMakeDocumentUrl ( Mozu.Content.Contracts.Document doc, Dictionary<string, object> config)
+        {
+            return _customRouteHandler.GetCannonicalUrl(FancyRoute.CmsPage, () => Mapper.Map<IDictionary<string, object>>(doc).ChainSet(config), false).Result ?? "/" + doc.Name;
+        }
+    
         private string MakeCdnUrl(object o, Dictionary<string, object> config)
         {
 

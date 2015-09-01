@@ -976,11 +976,12 @@
 
                     //Visa checkout payments can be added to order without UIs knowledge. This evaluates and voids the required payments.
                     if (visaCheckoutPayment) {
-                        _.filter(self.apiModel.getActivePayments(), function (payment) {
+                        _.each(_.filter(self.apiModel.getActivePayments(), function (payment) {
                             return payment.paymentType !== "StoreCredit" && payment.paymentType !== "GiftCard" && payment.paymentWorkflow != 'VisaCheckout';
-                        }).every(function (payment) {
-                            return self.apiVoidPayment(payment.id);
+                        }), function (payment) {
+                            self.apiVoidPayment(payment.id);
                         });
+                        paymentWorkflow = visaCheckoutPayment.paymentWorkflow;
                         billingInfo.set('card', visaCheckoutPayment.billingInfo.card);
                         billingInfo.set('billingContact', visaCheckoutPayment.billingInfo.billingContact);
                     }
@@ -1048,7 +1049,8 @@
                 })).then(function() {
                     return me.apiProcessDigitalWallet({
                         digitalWalletData: JSON.stringify(payment)
-                    }).then(function() {
+                    }).then(function () {
+                        me.updateVisaCheckoutBillingInfo();
                         _.each([
                             'fulfillmentInfo.fulfillmentContact',
                             'fulfillmentInfo',
@@ -1058,6 +1060,18 @@
                         });
                     });
                 });
+            },
+            updateVisaCheckoutBillingInfo: function() {
+                //Update the billing info with visa checkout payment
+                var billingInfo = this.get('billingInfo');
+                var activePayments = this.apiModel.getActivePayments();
+                var visaCheckoutPayment = activePayments && _.findWhere(activePayments, { paymentWorkflow: 'VisaCheckout' });
+                if (visaCheckoutPayment) {
+                    billingInfo.set('card', visaCheckoutPayment.billingInfo.card);
+                    billingInfo.set('billingContact', visaCheckoutPayment.billingInfo.billingContact);
+                    billingInfo.set('paymentWorkflow', visaCheckoutPayment.paymentWorkflow);
+                    billingInfo.set('paymentType', visaCheckoutPayment.paymentType);
+                }
             },
             addCoupon: function () {
                 var me = this;
@@ -1090,6 +1104,10 @@
                         me.trigger('error', {
                             message: Hypr.getLabel('promoCodeError', code)
                         });
+                    }
+
+                    else if (me.get('total') === 0) {
+                        me.trigger('complete');
                     }
                     me.isLoading(false);
                 });

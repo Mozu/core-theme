@@ -7,6 +7,7 @@ require(["modules/jquery-mozu", "underscore", "hyprlive", "modules/backbone-mozu
         next: function () {
             // wait for blur validation to complete
             var me = this;
+            me.editing.savedCard = false;
             _.defer(function () {
                 me.model.next();
             });
@@ -38,7 +39,7 @@ require(["modules/jquery-mozu", "underscore", "hyprlive", "modules/backbone-mozu
         },
         render: function () {
             this.$el.removeClass('is-new is-incomplete is-complete is-invalid').addClass('is-' + this.model.stepStatus());
-            Backbone.MozuView.prototype.render.apply(this, arguments);
+            EditableView.prototype.render.apply(this, arguments);
             this.resize();
         },
         resize: _.debounce(function () {
@@ -149,7 +150,7 @@ require(["modules/jquery-mozu", "underscore", "hyprlive", "modules/backbone-mozu
             this.listenTo(this.model, 'change:digitalCreditCode', this.onEnterDigitalCreditCode, this);
             this.listenTo(this.model, 'orderPayment', function (order, scope) {
                     this.render();
-                }, this);
+            }, this);
             this.codeEntered = !!this.model.get('digitalCreditCode');
         },
         render: function() {
@@ -285,6 +286,7 @@ require(["modules/jquery-mozu", "underscore", "hyprlive", "modules/backbone-mozu
             // then call the sdk's api method for digital wallets, via models-checkout's helper
             V.on("payment.success", function(payment) {
                 console.log({ success: payment });
+                me.editing.savedCard = false;
                 me.model.parent.processDigitalWallet('VisaCheckout', payment);
             });
 

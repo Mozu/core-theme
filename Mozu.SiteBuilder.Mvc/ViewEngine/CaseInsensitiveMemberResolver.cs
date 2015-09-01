@@ -128,7 +128,7 @@ namespace Mozu.SiteBuilder.Mvc.ViewEngine
         public T ResolveMemberOrDefault<T>(object container, string memberName, T defaultValue = default(T))
         {
             var result = ResolveMember(container, memberName);
-            if (OptionModule.IsNone(result) || result.Value.GetType() != typeof(T))
+            if (OptionModule.IsNone(result) || !(result.Value is T))
                 return defaultValue;
             else
                 return (T)result.Value;
