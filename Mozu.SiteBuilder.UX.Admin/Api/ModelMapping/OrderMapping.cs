@@ -1095,6 +1095,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.ModelMapping
                 .ForMember(dc => dc.Quantity, op => op.ResolveUsing(x => x.Quantity))
                 .ForMember(dc => dc.LineId, op => op.ResolveUsing(x => x.LineId))
                 .ForMember(dc => dc.FulfillmentItemType, op => op.ResolveUsing(( OrderPackageItem x) => ShippingDC.FulfillmentItemTypeConst.PHYSICAL))
+                .ForMember(dc => dc.OptionAttributeFQN, op => op.Ignore())
                 ;
         }
 
@@ -1118,6 +1119,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.ModelMapping
                 .ForMember(dc => dc.LineId, op => op.ResolveUsing(x => x.LineId))
                 //todo: do we need this on our model? - Greg Murray on 2014-05-19 
                 .ForMember(dc => dc.FulfillmentItemType, op => op.ResolveUsing(( OrderPickupItem x) => ShippingDC.FulfillmentItemTypeConst.PHYSICAL))
+                .ForMember(dc => dc.OptionAttributeFQN, op => op.Ignore())
                 ;
         }
 
