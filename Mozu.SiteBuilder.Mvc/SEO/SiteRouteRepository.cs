@@ -423,7 +423,7 @@ namespace Mozu.SiteBuilder.Mvc.SEO
                             _customRouteConstraintFactory.BuildConstraint(new Validator()
                             {
                                 type = Validator.TypeConst.attribute,
-                                attributeCode = facet
+                                attributeFQN = facet
                             });
                         _validators[constaintName] = constraint;
                     }

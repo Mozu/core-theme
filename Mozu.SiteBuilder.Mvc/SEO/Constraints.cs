@@ -51,7 +51,7 @@ namespace Mozu.SiteBuilder.Mvc.SEO.Constraints
             switch (validator.type)
             {
                 case Validator.TypeConst.attribute:
-                    return new ProductAttributeRouteConstraint(_attributeClient, _productSearchWebApiClient, _context, validator.attributeCode);
+                    return new ProductAttributeRouteConstraint(_attributeClient, _productSearchWebApiClient, _context, validator.attributeFQN);
                 case Validator.TypeConst.categoryCode:
                 case Validator.TypeConst.categorySlug:
                 case Validator.TypeConst.categorySlugPath:
