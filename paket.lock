@@ -41,8 +41,8 @@ NUGET
       Microsoft.AspNet.WebPages (>= 3.2.2 < 3.3.0)
     Microsoft.AspNet.Razor (3.2.2)
     Microsoft.AspNet.WebApi.Client (5.2.3)
-      Microsoft.Net.Http (>= 2.2.22)
-      Newtonsoft.Json (>= 6.0.4)
+      Microsoft.Net.Http (>= 2.2.22) - framework: portable-wp80+win+net45+wp81+Unsupported
+      Newtonsoft.Json (>= 6.0.4) - framework: portable-wp80+win+net45+wp81+Unsupported, >= net45
     Microsoft.AspNet.WebApi.Core (5.2.3)
       Microsoft.AspNet.WebApi.Client (>= 5.2.3)
     Microsoft.AspNet.WebApi.WebHost (5.2.3)
@@ -53,7 +53,7 @@ NUGET
     Microsoft.Bcl (1.1.9)
       Microsoft.Bcl.Build (>= 1.0.14)
     Microsoft.Bcl.Build (1.0.14)
-    Microsoft.Net.Http (2.2.28) - framework: portable-wp80+win+net45+wp81+unsupported
+    Microsoft.Net.Http (2.2.28) - framework: portable-wp80+win+net45+wp81+Unsupported
       Microsoft.Bcl (>= 1.1.9)
       Microsoft.Bcl.Build (>= 1.0.14)
     Microsoft.Owin (3.0.0)
@@ -116,7 +116,7 @@ NUGET
       Mozu.Core.Prime (>= 1.18.0)
     Mozu.Core.Messaging.Contracts (1.18.1)
       Mozu.Core.Prime (>= 1.18.0)
-    Mozu.Core.Prime (1.18.17-dev1509011807)
+    Mozu.Core.Prime (1.18.16)
       AutoMapper (>= 3.3.0)
       Autofac (>= 3.5.2)
       Autofac.WebApi2 (>= 3.4.0)
