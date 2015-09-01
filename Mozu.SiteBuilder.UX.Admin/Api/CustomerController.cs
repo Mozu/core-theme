@@ -4,18 +4,14 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Net;
 using System.Net.Http;
-using System.Threading;
 using System.Threading.Tasks;
 using System.Web.Http;
-using System.Web.UI;
 using AutoMapper;
 using Mozu.Core.Api.Contracts.Client;
 using Mozu.Core.Api.Routing;
-using Mozu.Core.Exceptions;
 using Mozu.Customer.Contracts.Clients;
 using Mozu.Customer.Contracts.Credit;
 using Mozu.SiteBuilder.Mvc.Extensions;
-using Mozu.SiteBuilder.Mvc.MediaTypeFormatters;
 using Mozu.SiteBuilder.UX.Admin.Api.Models;
 using Mozu.SiteBuilder.UX.Admin.Helpers.CustomerHelpers;
 using ApiCustomer = Mozu.SiteBuilder.UX.Admin.Api.Models.Customer;
@@ -53,20 +49,18 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
             throw new NotImplementedException();
         }
 
-
         [HttpGetRoute(UriTemplate = "segments/list")]
         public async Task<HttpResponseMessage> GetSegments([FromUri]PagingParamaters pagingParameters, [FromUri]FilterCollection extFilter)
         {
             // var ret =(await _customerGroupWebApiClient.GetGroups(0, 200)).ReadAsSync().Items.OrderBy(x => x.Name).Select(x => new KeyValuePair<int, string>(x.Id, x.Name)).ToList();
             var segments = (await _customerSegmentWebApiClient.GetSegments(startIndex: pagingParameters.startIndex, pageSize: pagingParameters.pageSize)).ReadAsSync();
 
-            return this.Request.CreateResponse(HttpStatusCode.OK, List2(segments.Items,(int)segments.TotalCount));
+            return this.Request.CreateResponse(HttpStatusCode.OK, List2(segments.Items, (int)segments.TotalCount));
         }
 
         [HttpPostRoute(UriTemplate = "segments/create")]
         public async Task<HttpResponseMessage> CraeteSegments(List<DC.CustomerSegment> segments)
         {
-
             var tasks = segments.Select(x => _customerSegmentWebApiClient.AddSegment(x)).ToList();
             await Task.WhenAll(tasks);
             var retList = tasks.Select(x => x.Result.ReadAsSync()).ToList();
@@ -79,53 +73,47 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
             public int SegmentId { get; set; }
             public string Method { get; set; }
             public List<int> Customers { get; set; }
-            
         }
 
-       [HttpPostRoute(UriTemplate = "segments/batch")]
+        [HttpPostRoute(UriTemplate = "segments/batch")]
         public async Task<HttpResponseMessage> Batch(SegmentBatchUpdate update)
         {
-           if (update.Method == "add")
-           {
-               var res = (await _customerSegmentWebApiClient.AddSegmentAccounts(update.Customers, update.SegmentId));
-               if (! res.ResponseMessage.IsSuccessStatusCode)
-               {
-                   throw res.ReadException();
-               }
-               return this.Request.CreateResponse(HttpStatusCode.OK, this.EmptyList2<int>());
-           }
+            if (update.Method == "add")
+            {
+                var res = (await _customerSegmentWebApiClient.AddSegmentAccounts(update.Customers, update.SegmentId));
+                if (!res.ResponseMessage.IsSuccessStatusCode)
+                {
+                    throw res.ReadException();
+                }
+                return this.Request.CreateResponse(HttpStatusCode.OK, this.EmptyList2<int>());
+            }
 
-           if (update.Method == "remove")
-           {
-               var res = (await _customerSegmentWebApiClient.DeleteSegmentAccounts( update.Customers, update.SegmentId));
-               if (!res.ResponseMessage.IsSuccessStatusCode)
-               {
-                   throw res.ReadException();
-               }
-               return this.Request.CreateResponse(HttpStatusCode.OK, this.EmptyList2<int>());
-           }
-           throw new NotImplementedException("unknown batch mode");
+            if (update.Method == "remove")
+            {
+                var res = (await _customerSegmentWebApiClient.DeleteSegmentAccounts(update.Customers, update.SegmentId));
+                if (!res.ResponseMessage.IsSuccessStatusCode)
+                {
+                    throw res.ReadException();
+                }
+                return this.Request.CreateResponse(HttpStatusCode.OK, this.EmptyList2<int>());
+            }
+            throw new NotImplementedException("unknown batch mode");
         }
-
 
         [HttpPostRoute(UriTemplate = "segments/delete")]
         public async Task<HttpResponseMessage> DeleteSegments(List<DC.CustomerSegment> segments)
         {
 
-            var tasks = segments.Select(x => _customerSegmentWebApiClient.DeleteSegment(x.Id )).ToList();
+            var tasks = segments.Select(x => _customerSegmentWebApiClient.DeleteSegment(x.Id)).ToList();
             await Task.WhenAll(tasks);
 
-            foreach (var task in tasks.Where(x=> !x.Result.ResponseMessage.IsSuccessStatusCode ))
+            foreach (var task in tasks.Where(x => !x.Result.ResponseMessage.IsSuccessStatusCode))
             {
                 throw task.Result.ReadException();
             }
-          
-           
 
             return this.Request.CreateResponse(HttpStatusCode.OK, new List<int>());
-
         }
-
 
         [HttpPostRoute(UriTemplate = "segments/edit")]
         public async Task<HttpResponseMessage> EditSegments(List<DC.CustomerSegment> segments)
@@ -135,14 +123,10 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
             await Task.WhenAll(tasks);
             var retList = tasks.Select(x => x.Result.ReadAsSync()).ToList();
             return this.Request.CreateResponse(HttpStatusCode.OK, List2(segments));
-
         }
 
-
-
-
         [HttpGetRoute(UriTemplate = "list")]
-        public async Task<Response<List<ApiCustomer>>> List([FromUri]PagingParamaters pagingParameters, [FromUri]FilterCollection extFilter, bool? showAnonymous= null)
+        public async Task<Response<List<ApiCustomer>>> List([FromUri]PagingParamaters pagingParameters, [FromUri]FilterCollection extFilter, bool? showAnonymous = null)
         {
             int customerId;
             if (pagingParameters.id != null)
@@ -178,8 +162,6 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
             {
                 isAnonymous = !excludeAnonymous;
             }
-                
-               
 
             int? qLimit = (!string.IsNullOrEmpty(q) && extFilter.SearchType == "global") ? (int?)3 : (int?)null;
             var sort = pagingParameters.sort.ToSortString();
@@ -224,7 +206,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
         public async Task<Response<List<ApiCustomer>>> EditCustomers(List<ApiCustomer> customers)
         {
             var retList = new List<ApiCustomer>();
-            var dcCustomers = Mapper.Map<List<Mozu.Customer.Contracts.CustomerAccount>>(customers);
+            var dcCustomers = Mapper.Map<List<DC.CustomerAccount>>(customers);
             foreach (var dcCust in dcCustomers)
             {
                 var dcExistingCustomer = await GetAccountWithAttributes(dcCust.Id);
@@ -233,14 +215,15 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
                 var contactsDeleteTasks = contactsTuple.Item2;
                 var attrTasks = ManageAttributes(dcCust, dcExistingCustomer);
                 var segmentTasks = ManageSegments(dcCust, dcExistingCustomer);
-                
+
                 await Task.WhenAll(contactsManagementTasks, contactsDeleteTasks, attrTasks, segmentTasks);
                 IfTaskHasExceptionThenThrow(contactsManagementTasks);
                 IfTaskHasExceptionThenThrow(contactsDeleteTasks);
                 IfTaskHasExceptionThenThrow(attrTasks);
                 IfTaskHasExceptionThenThrow(segmentTasks);
- 
-                await _customerWebApiClient.UpdateAccount(dcCust, dcCust.Id);
+
+                var response = await _customerWebApiClient.UpdateAccount(dcCust, dcCust.Id);
+                IfResponseHasExceptionThenThrow(response);
 
                 var updatedCustomer = await GetAccountWithAttributes(dcCust.Id);
 
@@ -264,14 +247,22 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
                 retList.Add(updatedCustomer.Map<ApiCustomer>());
             }
             return List2(retList);
-
         }
 
         private static void IfTaskHasExceptionThenThrow<T>(Task<ServiceClientResponse<T>[]> taskResults)
         {
-            foreach (var taskResult in taskResults.Result.Where(taskResult => taskResult.HasException))
+            var responses = taskResults.Result;
+            foreach (var response in responses)
             {
-                throw taskResult.ReadException();
+                IfResponseHasExceptionThenThrow(response);
+            }
+        }
+
+        private static void IfResponseHasExceptionThenThrow<T>(ServiceClientResponse<T> response)
+        {
+            if (response.HasException)
+            {
+                throw response.ReadException();
             }
         }
 
@@ -341,25 +332,22 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
             }
         }
 
-
         private Task<ServiceClientResponse<StreamContent>[]> ManageSegments(DC.CustomerAccount dcCustomer, DC.CustomerAccount dcExistingCustomer)
         {
 
             var groupManagementTasks = new List<Task<ServiceClientResponse<StreamContent>>>();
             dcExistingCustomer.Segments = dcExistingCustomer.Segments ?? new List<DC.CustomerSegment>();
-            var existingGroups = dcExistingCustomer.Segments .Select(x => x.Id).ToList();
+            var existingGroups = dcExistingCustomer.Segments.Select(x => x.Id).ToList();
             var newGroups = dcCustomer.Segments.Select(x => x.Id).ToList();
 
             var groupsToAdd = newGroups.Except(existingGroups);
             var groupsToDel = existingGroups.Except(newGroups);
 
-            groupManagementTasks.AddRange(groupsToAdd.Select(x => _customerSegmentWebApiClient.AddSegmentAccounts( new List<int>{ dcCustomer.Id} , x)));
-            groupManagementTasks.AddRange(groupsToDel.Select(x => _customerSegmentWebApiClient.DeleteSegmentAccounts( new List<int>{ dcCustomer.Id} , x)));
+            groupManagementTasks.AddRange(groupsToAdd.Select(x => _customerSegmentWebApiClient.AddSegmentAccounts(new List<int> { dcCustomer.Id }, x)));
+            groupManagementTasks.AddRange(groupsToDel.Select(x => _customerSegmentWebApiClient.DeleteSegmentAccounts(new List<int> { dcCustomer.Id }, x)));
 
             return Task.WhenAll(groupManagementTasks);
         }
-
-
 
         /// <summary>
         /// Update contacts subroutine for EditCustomers. Yes, a subroutine.
@@ -384,7 +372,6 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
             var managementResults = Task.WhenAll(contactManagementTasks);
             var deleteResults = Task.WhenAll(contactDeleteTasks);
             return new Tuple<Task<ServiceClientResponse<DC.CustomerContact>[]>, Task<ServiceClientResponse<StreamContent>[]>>(managementResults, deleteResults);
-
         }
 
         /// <summary>
@@ -412,7 +399,6 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
             return Task.WhenAll(attributeTasks);
         }
 
-
         [HttpGetRoute(UriTemplate = "cards/list")]
         public async Task<Response<List<DC.Card>>> GetCards([FromUri]int? customerId = null)
         {
@@ -424,7 +410,6 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
             var x = result.Items;
             return List2(x, (int)result.TotalCount);
         }
-
 
         [HttpGetRoute(UriTemplate = "credits/list")]
         public async Task<Response<List<Credit>>> GetCredits([FromUri]string id = null, [FromUri]FilterCollection extFilter = null, [FromUri]PagingParamaters pagingParams = null, [FromUri]int? customerId = null)
@@ -443,8 +428,6 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
             int? startIndex = pagingParams.startIndex;
             int? pageSize = pagingParams.pageSize ?? 20;
 
-
-
             if (extFilter != null && extFilter.Count > 0)
             {
                 if (filter != null)
@@ -457,7 +440,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
 
             var sort = pagingParams.sort.ToSortString();
 
-            var dcitemTask = (await _creditWebApiClient.GetCredits(startIndex, pageSize, sortBy:sort, filter: filter));
+            var dcitemTask = (await _creditWebApiClient.GetCredits(startIndex, pageSize, sortBy: sort, filter: filter));
 
             if (dcitemTask.HasException)
             {
@@ -484,19 +467,18 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
                     custLookups[cred.CustomerId] = customer;
                     if (customer != null)
                     {
-                        cred.Customer = Mapper.Map<Mozu.SiteBuilder.UX.Admin.Api.Models.Customer>(customer);
+                        cred.Customer = Mapper.Map<ApiCustomer>(customer);
                     }
                 }
 
             }
-
             return List2(vmitem, dcitem.TotalCount);
         }
 
         [HttpPostRoute(UriTemplate = "credits/create")]
         public async Task<Response<Credit>> AddCredit(Credit credit)
         {
-            var dcitem = Mapper.Map<DC.Credit.Credit>(credit);
+            var dcitem = Mapper.Map<Customer.Contracts.Credit.Credit>(credit);
             dcitem.InitialBalance = dcitem.CurrentBalance;
             dcitem.CurrencyCode = "USD";
             dcitem = (await _creditWebApiClient.AddCredit(dcitem)).ReadAsSync();
@@ -517,8 +499,8 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
                 });
             }
 
-            var dcitem = Mapper.Map<DC.Credit.Credit>(credit);
-           // dcitem.CurrencyCode = "USD";
+            var dcitem = Mapper.Map<Customer.Contracts.Credit.Credit>(credit);
+            // dcitem.CurrencyCode = "USD";
             //dcitem.CreditType = dcitem.CreditType "StoreCredit";
             //dcitem.CurrentBalance = 
 
