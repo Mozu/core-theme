@@ -220,7 +220,13 @@ Ext.define('Taco.view.discount.Grid', {
                     stateId: 'couponCode',
                     text: 'Coupon Code',
                     width: 130,
-                    hidden: false
+                    hidden: false,
+                    renderer: function (value, metaData, record, rowIndex, colIndex, store) {
+                        if (record.get("requiresCoupon") && Ext.isEmpty(record.get("couponCode"))) {
+                            return "Multiple Codes";
+                        };
+                        return value;
+                    }
                 }, {
                     xtype: 'numbercolumn',
                     dataIndex: 'currentRedemptionCount',
