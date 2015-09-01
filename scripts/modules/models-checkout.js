@@ -976,11 +976,12 @@
 
                     //Visa checkout payments can be added to order without UIs knowledge. This evaluates and voids the required payments.
                     if (visaCheckoutPayment) {
-                        _.filter(self.apiModel.getActivePayments(), function (payment) {
+                        _.each(_.filter(self.apiModel.getActivePayments(), function (payment) {
                             return payment.paymentType !== "StoreCredit" && payment.paymentType !== "GiftCard" && payment.paymentWorkflow != 'VisaCheckout';
-                        }).every(function (payment) {
-                            return self.apiVoidPayment(payment.id);
+                        }), function (payment) {
+                            self.apiVoidPayment(payment.id);
                         });
+                        paymentWorkflow = visaCheckoutPayment.paymentWorkflow;
                         billingInfo.set('card', visaCheckoutPayment.billingInfo.card);
                         billingInfo.set('billingContact', visaCheckoutPayment.billingInfo.billingContact);
                     }
