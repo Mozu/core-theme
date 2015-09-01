@@ -64,6 +64,10 @@ ApiInterfaceConstructor.prototype = {
             var contextHeaders = me.getRequestHeaders();
             xhr = utils.request(method, url, contextHeaders, data, function (rawJSON) {
                 // update context with response headers
+                var newUserClaims = xhr.getResponseHeader && xhr.getResponseHeader('x-vol-user-claims');
+                if (newUserClaims) {
+                    me.context.UserClaims(newUserClaims);
+                }
                 if (!runningOptions.silent) {
                     me.fire('success', rawJSON, xhr, requestConf);
                 }

@@ -15,6 +15,15 @@
     } : function() {
         return new window.ActiveXObject("Microsoft.XMLHTTP");
     });
+
+    function isSameOrigin(str1, str2) {
+        var url1 = document.createElement('a');
+        var url2 = document.createElement('a');
+        url1.href = str1;
+        url2.href = str2;
+        return url1.protocol === url2.protocol && url1.host === url2.host;
+    }
+
     var utils = {
         extend: function () {
             var src, copy, name, options,
@@ -234,7 +243,7 @@
             if (typeof data !== "string") data = JSON.stringify(data);
             
             var xhr;
-            if (iframePath) {
+            if (iframePath && !isSameOrigin(url, window.location.href)) {
                 IframeXHR = IframeXHR || require('./iframexhr');
                 xhr = new IframeXHR(iframePath);
             } else {

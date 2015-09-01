@@ -1,5 +1,5 @@
 /*! 
- * Mozu JavaScript SDK - v0.3.0 - 2015-08-19
+ * Mozu JavaScript SDK - v0.3.0 - 2015-09-01
  *
  * Copyright (c) 2015 Volusion, Inc.
  *
@@ -3152,6 +3152,15 @@ module.exports = (function(window, document, undefined) {
         setRequestHeader: function (key, value) {
             this.headers[key] = value;
         },
+        getResponseHeader: function() {
+            return null;
+        },
+        getAllResponseHeaders: function() {
+            return "";
+        },
+        overrideMimeType: function() {
+            return null;
+        },
         getMessage: function () {
             var msg = [this.url, this.messageBody, this.method];
             for (var header in this.headers) {
@@ -3303,6 +3312,10 @@ ApiInterfaceConstructor.prototype = {
             var contextHeaders = me.getRequestHeaders();
             xhr = utils.request(method, url, contextHeaders, data, function (rawJSON) {
                 // update context with response headers
+                var newUserClaims = xhr.getResponseHeader && xhr.getResponseHeader('x-vol-user-claims');
+                if (newUserClaims) {
+                    me.context.UserClaims(newUserClaims);
+                }
                 if (!runningOptions.silent) {
                     me.fire('success', rawJSON, xhr, requestConf);
                 }
@@ -5296,6 +5309,15 @@ var process=require("__browserify_process");
     } : function() {
         return new window.ActiveXObject("Microsoft.XMLHTTP");
     });
+
+    function isSameOrigin(str1, str2) {
+        var url1 = document.createElement('a');
+        var url2 = document.createElement('a');
+        url1.href = str1;
+        url2.href = str2;
+        return url1.protocol === url2.protocol && url1.host === url2.host;
+    }
+
     var utils = {
         extend: function () {
             var src, copy, name, options,
@@ -5515,7 +5537,7 @@ var process=require("__browserify_process");
             if (typeof data !== "string") data = JSON.stringify(data);
             
             var xhr;
-            if (iframePath) {
+            if (iframePath && !isSameOrigin(url, window.location.href)) {
                 IframeXHR = IframeXHR || require('./iframexhr');
                 xhr = new IframeXHR(iframePath);
             } else {
