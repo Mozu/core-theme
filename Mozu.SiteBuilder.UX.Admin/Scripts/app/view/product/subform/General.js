@@ -506,8 +506,8 @@ Ext.define('Taco.view.product.subform.General', {
                 me.statusCombo.validate();
 
                 if (me.productInCatalogInfo && me.activeStartDateField.isVisible()) {
-                    var isValid = Taco.core.util.Validation.validateDateRange(me.activeStartDateField, me.activeEndDateField, "Start date must be before end date", 0);
                     // if both fields have values we need to validate the dates are in order;
+                    var isValid = Taco.core.util.Validation.validateDateRange(me.activeStartDateField, me.activeEndDateField, "Start date must be before end date", 0);
                     return isValid;
                 }
                 return true;
@@ -531,12 +531,8 @@ Ext.define('Taco.view.product.subform.General', {
                 me.statusCombo.validate();
 
                 if (me.productInCatalogInfo && me.activeEndDateField.isVisible()) {
+                    // if both fields have values we need to validate the dates are in order;
                     var isValid = Taco.core.util.Validation.validateDateRange(me.activeStartDateField, me.activeEndDateField, "End date must be after start date", 0);
-
-                    if (isValid!==true) {
-                        me.statusCombo.markInvalid(me.statusCombo.dateValidationMsg);
-                    }
-                        // if both fields have values we need to validate the dates are in order;
                     return isValid;
                 }
                 return true;
