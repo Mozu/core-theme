@@ -1049,7 +1049,8 @@
                 })).then(function() {
                     return me.apiProcessDigitalWallet({
                         digitalWalletData: JSON.stringify(payment)
-                    }).then(function() {
+                    }).then(function () {
+                        me.updateVisaCheckoutBillingInfo();
                         _.each([
                             'fulfillmentInfo.fulfillmentContact',
                             'fulfillmentInfo',
@@ -1059,6 +1060,18 @@
                         });
                     });
                 });
+            },
+            updateVisaCheckoutBillingInfo: function() {
+                //Update the billing info with visa checkout payment
+                var billingInfo = this.get('billingInfo');
+                var activePayments = this.apiModel.getActivePayments();
+                var visaCheckoutPayment = activePayments && _.findWhere(activePayments, { paymentWorkflow: 'VisaCheckout' });
+                if (visaCheckoutPayment) {
+                    billingInfo.set('card', visaCheckoutPayment.billingInfo.card);
+                    billingInfo.set('billingContact', visaCheckoutPayment.billingInfo.billingContact);
+                    billingInfo.set('paymentWorkflow', visaCheckoutPayment.paymentWorkflow);
+                    billingInfo.set('paymentType', visaCheckoutPayment.paymentType);
+                }
             },
             addCoupon: function () {
                 var me = this;
