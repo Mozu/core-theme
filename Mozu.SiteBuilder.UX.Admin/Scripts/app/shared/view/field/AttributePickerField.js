@@ -44,7 +44,7 @@ Ext.define('Taco.shared.view.field.AttributePickerField', {
     listConfig: {
         loadingText: 'Searching...',
         cls : "product-type-picker-menu",
-        emptyText: '<div style="padding:20px; 10px; ">No matching product types found.</div>'
+        emptyText: '<div style="padding:20px; 10px; ">No matching attribute found.</div>'
     },
 
     // querystring parameter name that contains the search filter data;
