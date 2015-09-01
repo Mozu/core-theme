@@ -18,7 +18,10 @@ Ext.define('Taco.view.couponSet.GeneratedCodeForm', {
     margin: '0 0 39 0',
 
     title: 'Code Configuration',
-    isCreateMode: false,
+    
+    config : {
+        isCreateMode: false
+    },
 
     initComponent: function() {
         var me = this;
@@ -56,10 +59,11 @@ Ext.define('Taco.view.couponSet.GeneratedCodeForm', {
                 allowBlank: true,
                 enforceMaxLength: true,
                 maxLength: 32,
+                flex:1,
                 emptyText: 'Generated if blank',
                 enableKeyEvents: true,
-                regex: /^[BCDFGHJKLMNPQRSTVWXYZ1-9\$!]+$/i,
-                regexText: 'Invalid character. Vowels, the number 0, and any special characters, except "$" or "!", are not allowed.',
+                //regex: /^[BCDFGHJKLMNPQRSTVWXYZ1-9\$!]+$/i,
+                //regexText: 'Invalid character. Vowels, the number 0, and any special characters, except "$" or "!", are not allowed.',
                 listeners: {
                     keyup: me.updatePreview,
                     scope: me
@@ -71,7 +75,9 @@ Ext.define('Taco.view.couponSet.GeneratedCodeForm', {
         this.suggestButton = Ext.create('Ext.button.Button', {
             ui: "action",
             disabled: !me.isCreateMode,
+            hidden: !me.isCreateMode,
             scale: "medium",
+            width: 100,
             margin: "41 0 0 5",
             text: "Suggest",
             handler: me.suggestPrefix,
@@ -130,6 +136,8 @@ Ext.define('Taco.view.couponSet.GeneratedCodeForm', {
 
         this.mon(Taco.app, 'couponsetcreated', function(data) {
             me.codePrefix.setValue(data.get('couponSetCode'));
+            me.setIsCreateMode(false);
+            me.suggestButton.hide();
             me.codePrefix.setReadOnly(true);
             me.numberOfCodes.setReadOnly(true);
         }, me);
@@ -143,6 +151,7 @@ Ext.define('Taco.view.couponSet.GeneratedCodeForm', {
 
     suggestPrefix: function() {
         var me = this;
+
         Ext.Ajax.request({
             url: '/admin/app/couponset/uniqueCode',
             success: function (response) {
@@ -155,7 +164,6 @@ Ext.define('Taco.view.couponSet.GeneratedCodeForm', {
         });
 
     },
-
     onDestroy: function () {
         var me = this;
 

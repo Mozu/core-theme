@@ -14,7 +14,9 @@ Ext.define('Taco.view.couponSet.GeneralForm', {
     margin: '0 0 39 0',
 
     title: 'General',
-    isCreateMode: false,
+    config: {
+        isCreateMode: false
+    },
 
     initComponent: function() {
         var me = this;
