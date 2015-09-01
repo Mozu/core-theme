@@ -500,11 +500,17 @@ Ext.define('Taco.view.product.subform.General', {
             hidden: (!this.productInCatalogInfo || this.productInCatalogInfo.get('status') !== 'Scheduled'),
             value: this.productInCatalogInfo ? this.productInCatalogInfo.get('activeStartDate') : "",
             allowBlank: true,
-            validator: function() {
-                return !me.productInCatalogInfo
-                    || (!me.activeStartDateField.isVisible())
-                    || Taco.core.util.Validation.validateDateRange(me.activeStartDateField, me.activeEndDateField,
-                        "Start date must be before end date", 1);
+            validateOnBlank: true,
+            validator: function () {
+                // need to update the validation message on the status combo. it will display the requirment that one or more dates is required
+                me.statusCombo.validate();
+
+                if (me.productInCatalogInfo && me.activeStartDateField.isVisible()) {
+                    var isValid = Taco.core.util.Validation.validateDateRange(me.activeStartDateField, me.activeEndDateField, "Start date must be before end date", 0);
+                    // if both fields have values we need to validate the dates are in order;
+                    return isValid;
+                }
+                return true;
             }
         });
 
@@ -519,13 +525,73 @@ Ext.define('Taco.view.product.subform.General', {
             hidden: (!this.productInCatalogInfo || this.productInCatalogInfo.get('status') !== 'Scheduled'),
             value: this.productInCatalogInfo ? this.productInCatalogInfo.get('activeEndDate') : "",
             allowBlank: true,
-            validator: function() {
-                return !me.productInCatalogInfo
-                    || (!me.activeEndDateField.isVisible())
-                    || Taco.core.util.Validation.validateDateRange(me.activeStartDateField, me.activeEndDateField,
-                        "End date must be after start date", 1);
+            validateOnBlank: true,
+            validator: function () {
+                // need to update the validation message on the status combo. it will display the requirment that one or more dates is required
+                me.statusCombo.validate();
+
+                if (me.productInCatalogInfo && me.activeEndDateField.isVisible()) {
+                    var isValid = Taco.core.util.Validation.validateDateRange(me.activeStartDateField, me.activeEndDateField, "End date must be after start date", 0);
+
+                    if (isValid!==true) {
+                        me.statusCombo.markInvalid(me.statusCombo.dateValidationMsg);
+                    }
+                        // if both fields have values we need to validate the dates are in order;
+                    return isValid;
+                }
+                return true;
             }
         });
+
+        me.statusCombo = Ext.widget({
+            xtype: 'combobox',
+            fieldLabel: 'Status',
+            name: 'status',
+            labelAlign: 'top',
+            hidden: this.isGlobal,
+            allowBlank: false,
+            editable: false,
+            forceSelection: true,
+            listConfig: { shadow: false },
+            width: twoColumnFieldWidth,
+            store: [['Active', 'Active'], ['Scheduled', 'Scheduled'], ['Disable', 'Disable']],
+            value: this.productInCatalogInfo ? this.productInCatalogInfo.get('status') : 'Disable',
+            dateValidationMsg: "An active start or end date is required",
+            //validateDate: function() {
+            //    if (Ext.isEmpty(me.activeStartDateField.getValue()) && Ext.isEmpty(me.activeEndDateField.getValue())) {
+            //        this.markInvalid(this.dateValidationMsg);
+            //    }
+            //},
+            validator: function () {
+                // check to see if the start and end dates have a value;
+                if (this.getValue() === 'Scheduled' && Ext.isEmpty(me.activeStartDateField.getValue()) && Ext.isEmpty(me.activeEndDateField.getValue())) {
+                    return this.dateValidationMsg;
+                }
+                return true;
+            },
+            listeners: {
+                change: function (cmp, newValue) {
+                    me.productInCatalogInfo.set('isActive', newValue === 'Scheduled' || newValue === 'Active');
+                    //show eff dates.
+                    //me.enableDateRangeFields(me, me.activeStartDateField, me.activeEndDateField, (newValue === 'Scheduled'));
+                    me.activeStartDateField.setVisible(newValue === 'Scheduled');
+                    //me.activeStartDateField.setDisabled(newValue !== 'Scheduled');
+                    me.activeEndDateField.setVisible(newValue === 'Scheduled');
+                    //me.activeEndDateField.setDisabled(newValue !== 'Scheduled');
+                    if (newValue !== 'Scheduled') {
+                        me.activeStartDateField.setValue(null);
+                        //me.activeStartDateField
+                        me.activeEndDateField.setValue(null);
+                    }
+                    // force the combo to do a validity check and bypass the ext check for changes in validity;
+                    cmp.wasValid = null;
+
+
+                },
+
+                scope: this
+            }
+        })
 
         this.items = [
             {
@@ -541,35 +607,7 @@ Ext.define('Taco.view.product.subform.General', {
                         hidden: this.isGlobal,
                         header: false,
                         items: [
-                            {
-                                xtype: 'combobox',
-                                fieldLabel: 'Status',
-                                name: 'status',
-                                labelAlign: 'top',
-                                hidden: this.isGlobal,
-                                allowBlank: false,
-                                editable: false,
-                                forceSelection: true,
-                                listConfig: { shadow: false },
-                                width: twoColumnFieldWidth,
-                                store: [['Active', 'Active'], ['Scheduled', 'Scheduled'], ['Disable', 'Disable']],
-                                value: this.productInCatalogInfo ? this.productInCatalogInfo.get('status') : 'Disable',
-                                listeners: {
-                                    change: function(cmp, newValue) {
-                                        me.productInCatalogInfo.set('isActive', newValue === 'Scheduled' || newValue === 'Active');
-                                        //show eff dates.
-                                        //me.enableDateRangeFields(me, me.activeStartDateField, me.activeEndDateField, (newValue === 'Scheduled'));
-                                        me.activeStartDateField.setVisible(newValue === 'Scheduled');
-                                        me.activeEndDateField.setVisible(newValue === 'Scheduled');
-                                        if (newValue !== 'Scheduled') {
-                                            me.activeStartDateField.setValue(null);
-                                            me.activeEndDateField.setValue(null);
-                                        }
-                                    },
-
-                                    scope: this
-                                }
-                            }
+                            me.statusCombo
                         ]
                     }
                 ]
