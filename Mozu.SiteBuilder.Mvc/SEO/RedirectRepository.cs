@@ -291,6 +291,31 @@ namespace Mozu.SiteBuilder.Mvc.SEO
 
 
             }
+
+            List<RuntimeRedirectEntry> qaEntries;
+            List<string> removals = null;
+            foreach( var simpleEntries in rr.Simple)
+            {
+                if (rr.QueryString.TryGetValue(simpleEntries.Key, out qaEntries))
+                {
+                    qaEntries.Add(new RuntimeRedirectEntry()
+                    {
+                        Query = new System.Collections.Specialized.NameValueCollection(),
+                        Redirect = simpleEntries.Value
+                    });
+                    if (removals == null)
+                    {
+                        removals = new List<string>();
+                    }
+
+                    removals.Add(simpleEntries.Key);
+                }
+            }
+            if (removals != null)
+            {
+                removals.ForEach(x=>rr.Simple.Remove(x));
+            }
+
             
             return rr;
         }
