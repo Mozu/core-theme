@@ -8,6 +8,7 @@
         remoteFilter: true,
         pageSize: 25,
         storeManagerConfig: {
+            createOnly:true,
             clearFilters: false,
             contextLevel: 's',
             clearSort: false,
