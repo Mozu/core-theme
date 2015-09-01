@@ -118,22 +118,7 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
 
         Dictionary<string, object> ToRouteDictionary(Mozu.Content.Contracts.Document doc)
         {
-            var dic = new Dictionary<string, object>(StringComparer.OrdinalIgnoreCase) { 
-            { "documentName", doc.Name }, 
-            { "documentListName", doc.ListFQN  } ,
-            { "documentListFQN", doc.ListFQN  } ,
-            { "documentType", doc.DocumentTypeFQN   } ,
-            { "documentTypeFQN", doc.DocumentTypeFQN   } ,
-            { "documentdocumentTypeFQN", doc.DocumentTypeFQN   } 
-            };
-            if ( doc.Properties!= null)
-            {
-                foreach( var prop in doc.Properties.Properties().Cast<JProperty>().Where(x=> x.Value  is JValue))
-                {
-                    dic["documentProperty-" + prop.Name] = ((JValue)prop.Value).Value;
-                }
-            }
-            return dic;
+            return AutoMapper.Mapper.Map<Dictionary<string, object>>(doc);
         }
 
 

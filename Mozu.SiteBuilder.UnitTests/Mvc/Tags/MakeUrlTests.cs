@@ -41,7 +41,7 @@ namespace Mozu.SiteBuilder.UnitTests.Mvc.Tags
                 CdnCacheBustKey = "123"
             };
             var customRouteHandler = Substitute.For<ICustomRouteHandler>();
-            customRouteHandler.GetCannonicalUrl(SiteSettings.General.Contracts.General.Routing.FancyRoute.Category, NSubstitute.Arg.Any<Func<IDictionary<string, object>>>(), NSubstitute.Arg.Any<bool>()).Returns(Task<string>.FromResult((string)null));
+            customRouteHandler.GetCannonicalUrl(NSubstitute.Arg.Any<SiteSettings.General.Contracts.General.Routing.FancyRoute>()  , NSubstitute.Arg.Any<Func<IDictionary<string, object>>>(), NSubstitute.Arg.Any<bool>()).Returns(Task<string>.FromResult((string)null));
             var catTreeProvider = Substitute.For<ICategoryTreeProvider>();
             var catTree = new CategoryTree();
             catTree.AllCategories = new List<Category>() { new Category() { CategoryId = 66, CategoryCode = "steve" } };
@@ -144,6 +144,14 @@ namespace Mozu.SiteBuilder.UnitTests.Mvc.Tags
                        
                     } } },
                     ExpectedFunc = TestDescriptor.ContainsLiteral("/c/66")
+                },
+                  new TestDescriptor
+                {
+                    Name = "document",
+                    Template = @"{% make_url ""document"" doc %}",
+                    ContainerModifier = containerMods,
+                    Context = new Dictionary<string, object>() { { "doc", new Mozu.Content.Contracts.Document() {Name="steve", ListFQN="food@fart" } } },
+                    ExpectedFunc = TestDescriptor.ContainsLiteral("/steve")
                 },
             };
         }

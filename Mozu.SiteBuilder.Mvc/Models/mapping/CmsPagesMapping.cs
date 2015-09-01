@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Web;
 using AutoMapper;
+using Newtonsoft.Json.Linq;
 using DC = Mozu.Content.Contracts;
 using VM = Mozu.SiteBuilder.Mvc.Models.CMS;
 
@@ -23,48 +24,31 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.ModelMapping
             Mapper.CreateMap<DC.Facet, VM.Facet>();
             Mapper.CreateMap<VM.Facet, DC.Facet>();
 
-            //Mapper.CreateMap<DC.Document, VM.Document>()
-            //    .ForMember (x=> x.DocumentTypeFQN ,  op=> op.MapFrom ( x=> x.DocumentTypeFQN ))
-            //    .ForMember(x => x.Collection, op => op.MapFrom(_ => _.ListFQN  ))
-                
-            //    .ConstructUsingServiceLocator();
-            //Mapper.CreateMap<DC.Document, VM.WidgetInstance >()
-            //    .ForMember(x => x.DocumentTypeFQN, op => op.MapFrom(x => x.DocumentTypeFQN))
-            //    .ForMember(x => x.Collection, op => op.MapFrom(_ => _.ContentCollection))
-            //    .AfterMap((x, y) => y.Init())
-           //     .ConstructUsingServiceLocator();
-            //Mapper.CreateMap<DC.Document, VM.Blog >()
-            //    .ForMember(x => x.DocumentTypeFQN, op => op.MapFrom(x => x.DocumentTypeFQN))
-            //    .ForMember(x => x.Collection, op => op.MapFrom(_ => _.ListFQN))
-            //    .ConstructUsingServiceLocator();
-            //Mapper.CreateMap<DC.Document, VM.Post >()
-            //    .ForMember(x => x.DocumentTypeFQN, op => op.MapFrom(x => x.DocumentTypeFQN))
-            //    .ForMember(x => x.Collection, op => op.MapFrom(_ => _.ListFQN))
-            //    .ConstructUsingServiceLocator(); 
-            //Mapper.CreateMap<VM.Document, DC.Document>();
-            //Mapper.CreateMap<DC.PropertyValue, VM.CmsProperty>()
-            //    .ForMember(x => x.Key  , op => op.MapFrom(_ => _.PropertyType))
-            //    .ForMember(x => x.RawValue , op => op.MapFrom(_ => _.Value ))
-            //    .ConstructUsingServiceLocator(); 
 
-            //Mapper.CreateMap<VM.CmsProperty, DC.PropertyValue>();
-            ////Mapper.AssertConfigurationIsValid(this.ProfileName);
+            Mapper.CreateMap<Mozu.Content.Contracts.Document, IDictionary<string, object>>()
+               .ConstructUsing((Mozu.Content.Contracts.Document doc) =>
+               {
+
+                   var dic = new Dictionary<string, object>(StringComparer.OrdinalIgnoreCase) {
+                        { "documentName", doc.Name  },
+                        { "documentListName", doc.ListFQN ??"pages@mozu"} ,
+                        { "documentListFQN", doc.ListFQN  ?? "pages@mozu"} ,
+                        { "documentType", doc.DocumentTypeFQN ??"web_page@mozu"  } ,
+                        { "documentTypeFQN", doc.DocumentTypeFQN  ??"web_page@mozu"  } ,
+                        { "documentdocumentTypeFQN", doc.DocumentTypeFQN  ??"web_page@mozu" }
+                        };
+                   if (doc.Properties != null)
+                   {
+                       foreach (var prop in doc.Properties.Properties().Cast<JProperty>().Where(x => x.Value is JValue))
+                       {
+                           dic["documentProperty-" + prop.Name] = ((JValue)prop.Value).Value;
+                       }
+                   }
+                   return dic;
+               });
 
            
-
-            //todo: reconsile fuck document id id and id ....
-            //Mapper.CreateMap<Mozu.Content.Contracts.Document, Mvc.Models.CMS.Admin.Document>()
-            //    .ForMember(x => x.Items, m => m.MapFrom(x => x.Properties));
-            //Mapper.CreateMap<Mvc.Models.CMS.Admin.Document, Mozu.Content.Contracts.Document>()
-            //    .ForMember(x => x.Id, opt => opt.MapFrom(_ => _.DocumentId))
-            //    .ForMember(x => x.Properties, m => m.MapFrom(x => x.Items));
-
-
-
-            //Mapper.CreateMap<Mozu.Content.Contracts.PropertyValue, Mvc.Models.CMS.Admin.DocumentProperty>()
-            //    .ForMember(x => x.Key, m => m.MapFrom(x => x.PropertyType));
-            //Mapper.CreateMap<Mvc.Models.CMS.Admin.DocumentProperty, Mozu.Content.Contracts.PropertyValue>()
-            //    .ForMember(x => x.PropertyType, m => m.MapFrom(x => x.Key));
+            
 
 
             Mapper.CreateMap<Mozu.Content.Contracts.DocumentDraftSummary, Mozu.SiteBuilder.UX.Models.Admin.CMS.DocumentDraft>()
