@@ -278,7 +278,7 @@ namespace Mozu.SiteBuilder.UnitTests.Mvc.SEO
 
         static IEnumerable<object[]> ConstraintFactory()
         {
-            var attrConstraint = new Validator { type = Validator.TypeConst.attribute,attributeCode = "attr"};
+            var attrConstraint = new Validator { type = Validator.TypeConst.attribute,attributeFQN = "attr"};
             yield return new object[] { attrConstraint, typeof(ProductAttributeRouteConstraint) };
 
             var mzdbConstraint = new Validator { type = Validator.TypeConst.mzdb, listFqn = "lol", field = "meh"};

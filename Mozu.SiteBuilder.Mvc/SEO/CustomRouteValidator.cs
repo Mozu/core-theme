@@ -111,7 +111,7 @@ namespace Mozu.SiteBuilder.Mvc.SEO
 
         private bool HaveAttributeConstraintFields(Validator arg)
         {
-            return !arg.attributeCode.IsNullOrEmpty();
+            return !arg.attributeFQN.IsNullOrEmpty();
         }
 
         static string[] types = typeof(Validator.TypeConst)
@@ -137,7 +137,7 @@ namespace Mozu.SiteBuilder.Mvc.SEO
             switch (instance.type)
             {
                 case Validator.TypeConst.attribute:
-                    var attrResponse = await _attributeClient.CloneWithoutUserClaims().GetAttribute(instance.attributeCode).ConfigureAwait(false);
+                    var attrResponse = await _attributeClient.CloneWithoutUserClaims().GetAttribute(instance.attributeFQN).ConfigureAwait(false);
                     if (attrResponse.HasException) return new ValidationResult(new List<ValidationFailure> { new ValidationFailure("attributeCode", "attribute code must exist") });
                     return ValidatorExt.OK;
                 case Validator.TypeConst.mzdb:
