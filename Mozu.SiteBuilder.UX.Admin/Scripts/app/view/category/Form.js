@@ -102,7 +102,7 @@ Ext.define('Taco.view.category.Form', {
         var secondRowItems = [{
             xtype: 'categorycombobox',
             name: 'parentId',
-            fieldLabel: 'Parent Categroy',
+            fieldLabel: 'Parent Category',
             flex:1,
             
             showDynamicRealTime: false,

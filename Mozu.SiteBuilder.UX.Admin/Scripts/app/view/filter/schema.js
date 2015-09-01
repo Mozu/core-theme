@@ -70,7 +70,7 @@ Ext.define('Taco.view.filter.Schema', {
         {
             id: "productcode",
             field: "ProductCode",
-            text: "Product code",
+            text: "Product Code",
             defaultValue: "",
             dataType: "string", 
             supportedOperators: ["eq", "ne", "in"],
@@ -84,7 +84,7 @@ Ext.define('Taco.view.filter.Schema', {
         }, {
             id: "categories.categorycode",
             field: "Categories.CategoryCode",
-            text: "Category code",
+            text: "Category Code",
             defaultValue: "",
             dataType: "string",
             supportedOperators: ["eq", "req", "ne", "in"],
@@ -95,7 +95,7 @@ Ext.define('Taco.view.filter.Schema', {
         }, {
             id: "producttypeid",
             field: "ProductTypeId",
-            text: "Product type id",
+            text: "Product Type",
             defaultValue: "",
             dataType: "string",
             supportedOperators: ["eq", "ne", "in"],
@@ -107,7 +107,7 @@ Ext.define('Taco.view.filter.Schema', {
         }, {
             id: "price.cataloglistprice",
             field: "Price.CatalogListPrice",
-            text: "List price",
+            text: "List Price",
             defaultValue: "",
             dataType: "float",
             supportedOperators: ["eq", "ne", "in", "lt", "le", "gt", "ge"],
@@ -118,7 +118,7 @@ Ext.define('Taco.view.filter.Schema', {
         }, {
             id: "price.catalogsaleprice",
             field: "Price.CatalogSalePrice",
-            text: "Sale price",
+            text: "Sale Price",
             defaultValue: "",
             dataType: "float",
             supportedOperators: ["eq", "ne", "in", "lt", "le", "gt", "ge"],
@@ -129,7 +129,7 @@ Ext.define('Taco.view.filter.Schema', {
         }, {
             id: "daysavailableincatalog",
             field: "DaysAvailableInCatalog",
-            text: "Days available in catalog",
+            text: "Days Available In Catalog",
             defaultValue: "",
             dataType: "int",
             supportedOperators: ["eq", "ne", "in", "lt", "le", "gt", "ge"],
@@ -140,7 +140,7 @@ Ext.define('Taco.view.filter.Schema', {
         }, {
             id: "fulfillmenttypessupported",
             field: "FulfillmentTypesSupported",
-            text: "Fulfillment types supported",
+            text: "Fulfillment Types Supported",
             defaultValue: "",
             dataType: "string",
             supportedOperators: ["eq", "ne", "in"],
@@ -153,17 +153,6 @@ Ext.define('Taco.view.filter.Schema', {
                 { id: "Digital", name: "Digital" }
              ],
             allowBlank: false
-        }, {
-            id: "measurements.packageweight.value",
-            field: "Measurements.PackageWeight.Value",
-            text: "Weight",
-            defaultValue: "",
-            dataType: "float",
-            supportedOperators: ["eq", "ne", "in", "lt", "le", "gt", "ge"],
-            editorCfg: {
-                xtype: "numberfield"
-            },
-            allowBlank: true
         }, {
             id: "measurements.packageweight.value",
             field: "Measurements.PackageWeight.Value",
@@ -212,7 +201,7 @@ Ext.define('Taco.view.filter.Schema', {
             id: "price.saleprice",
             field: "Price.SalePrice",
             filterType: "DynamicRealTime",
-            text: "Sale Price (Real Time)",
+            text: "Post-Discount Price",
             defaultValue: "",
             dataType: "float",
             supportedOperators: ["eq", "ne", "in", "lt", "le", "gt", "ge"],
@@ -224,7 +213,7 @@ Ext.define('Taco.view.filter.Schema', {
             id: "price.saletype",
             field: "Price.SaleType",
             filterType: "DynamicRealTime",
-            text: "Sale Type (Real Time)",
+            text: "Sale Type",
             defaultValue: "",
             dataType: "string",
             supportedOperators: ["eq", "ne", "in", "lt", "le", "gt", "ge"],

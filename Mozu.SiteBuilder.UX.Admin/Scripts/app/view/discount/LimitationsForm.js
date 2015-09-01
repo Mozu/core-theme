@@ -159,7 +159,7 @@ Ext.define('Taco.view.discount.LimitationsForm', {
             xtype: 'radio',
             name: 'couponCodeType',
             persistSelectedValueOnly: true,
-            boxLabel: 'Coupon Code',
+            boxLabel: 'Single Code',
             inputValue: "couponCode",
             width: 300,
             // default selection if the record is a create;
@@ -179,7 +179,7 @@ Ext.define('Taco.view.discount.LimitationsForm', {
             xtype: 'radio',
             name: 'couponCodeType',
             persistSelectedValueOnly: true,
-            boxLabel: 'Coupon Set',
+            boxLabel: 'Multiple Codes',
             inputValue: "couponSet",
             width: 300,
             checked: (this.couponSetStore.count()), 

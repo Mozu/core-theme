@@ -212,7 +212,7 @@ Ext.define('Taco.view.couponSet.Grid', {
                 xtype: 'gridcolumn',
                 dataIndex: 'maxRedemptionsPerCouponCode',
                 stateId: 'maxRedemptionsPerCouponCode',
-                text: 'Max Redemptions per Code',
+                text: 'Max Redemptions (Per Code)',
                 width: 180,
                 hidden: true,
                 sortable: true
@@ -220,7 +220,7 @@ Ext.define('Taco.view.couponSet.Grid', {
                 xtype: 'gridcolumn',
                 dataIndex: 'maxRedemptionsPerUser',
                 stateId: 'maxRedemptionsPerUser',
-                text: 'Max Redemptions per Customer',
+                text: 'Max Redemptions per Customer (Per Code)',
                 width: 210,
                 hidden: true,
                 sortable: true

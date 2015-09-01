@@ -77,7 +77,7 @@ Ext.define('Taco.view.couponSet.GeneralForm', {
                 hideTrigger: true,
                 width: twoColumnFieldWidth,
                 margin: "0 50 0 0",
-                fieldLabel: 'Max Redemptions per Code',
+                fieldLabel: 'Max Redemptions (Per Code)',
                 emptyText: 'Defaults to 1',
                 value: 1,
                 minValue: 1
@@ -89,7 +89,7 @@ Ext.define('Taco.view.couponSet.GeneralForm', {
             hideTrigger: true,
             width: twoColumnFieldWidth,
             margin: "0 0 0 0",
-            fieldLabel: 'Max Redemptions per Customer',
+            fieldLabel: 'Max Redemptions per Customer (Per Code)',
             emptyText: 'Defaults to 1',
             value: 1,
             minValue: 1

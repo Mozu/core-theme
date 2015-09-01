@@ -11,7 +11,7 @@ Ext.define('Taco.store.TooltipHelp', {
     data: [
         {
             key: 'category.productMembership',
-            value: 'The Product Membership field controls the dynamic category type and its behaviors. Select Precomputed if you want the category to be available as a discount target. Select Realtime if you don\'t plan on targeting this category in discounts and your expression needs to reference precomputed dynamic categories, post-discount pricing information, or additional sale types. <a target="_blank" class="taco-help-link" href=\'https://mozu.com/docs/admin/help/Catalog/Dynamic_Category_Expressions.htm\'>Learn more</a>'
+            value: 'The Product Membership field controls the dynamic category type and its behaviors. Select Precomputed if you want the category to be available as a discount target. Select Realtime if you don\'t plan on targeting this category in discounts and your expression needs to reference precomputed dynamic categories, post-discount pricing information, or sale types. <a target="_blank" class="taco-help-link" href=\'https://mozu.com/docs/admin/help/Catalog/Dynamic_Category_Expressions.htm\'>Learn more</a>'
         },
         {
             key: 'category.confirmDelete.deleteCategory',
