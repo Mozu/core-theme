@@ -624,17 +624,7 @@ Ext.define('Taco.view.product.subform.General', {
                             this.activeStartDateField,
                             this.activeEndDateField
                         ]
-                    },
-
-                    Taco.core.ux.TooltipLabel.wrapConfig('product.general.dateFirstAvailable', me, {
-                        xtype: 'datefield',
-                        fieldLabel: 'Date First Available',
-                        name: 'dateFirstAvailableInCatalog',
-                        labelAlign: 'top',
-                        hidden: this.isGlobal,
-                        width: twoColumnFieldWidth,
-                        value: this.productInCatalogInfo ? this.productInCatalogInfo.get('dateFirstAvailableInCatalog') : ""
-                    },Ext.id())
+                    }
                 ]
             },
             {
@@ -843,6 +833,17 @@ Ext.define('Taco.view.product.subform.General', {
 
 
         this.items.push (this.priceOverRideConfig);
+
+        this.items.push(
+            Taco.core.ux.TooltipLabel.wrapConfig('product.general.dateFirstAvailable', me, {
+            xtype: 'datefield',
+            fieldLabel: 'First Available Date',
+            name: 'dateFirstAvailableInCatalog',
+            labelAlign: 'top',
+            hidden: this.isGlobal,
+            width: twoColumnFieldWidth,
+            value: this.productInCatalogInfo ? this.productInCatalogInfo.get('dateFirstAvailableInCatalog') : ""
+        }, Ext.id()))
 
 
         this.callParent(arguments);
