@@ -1,13 +1,13 @@
 ﻿define([
-    "modules/jquery-mozu",
-    "underscore",
-    "hyprlive",
-    "modules/backbone-mozu",
-    "modules/api",
-    "modules/models-customer",
-    "modules/models-address",
-    "modules/models-paymentmethods",
-    "hyprlivecontext"
+    'modules/jquery-mozu',
+    'underscore',
+    'hyprlive',
+    'modules/backbone-mozu',
+    'modules/api',
+    'modules/models-customer',
+    'modules/models-address',
+    'modules/models-paymentmethods',
+    'hyprlivecontext'
 ],
     function ($, _, Hypr, Backbone, api, CustomerModels, AddressModels, PaymentMethods, HyprLiveContext) {
 
@@ -26,12 +26,12 @@
                 })(this.next);
                 var order = me.getOrder();
                 me.calculateStepStatus();
-                me.listenTo(order, "error", function () {
+                me.listenTo(order, 'error', function () {
                     if (me.isLoading()) {
                         me.isLoading(false);
                     }
                 });
-                me.set("orderId", order.id);
+                me.set('orderId', order.id);
                 if (me.apiModel) me.apiModel.on('action', function (name, data) {
                     if (data) {
                         data.orderId = order.id;
@@ -62,7 +62,7 @@
                 return this.getOrder().get('requiresDigitalFulfillmentContact');
             },
             edit: function () {
-                this.stepStatus("incomplete");
+                this.stepStatus('incomplete');
             },
             next: function () {
                 if (this.submit()) this.isLoading(true);
@@ -73,14 +73,14 @@
             relations: CustomerModels.Contact.prototype.relations,
             validation: CustomerModels.Contact.prototype.validation,
             digitalOnlyValidation: {
-                "email": {
+                'email': {
                     pattern: 'email',
                     msg: Hypr.getLabel('emailMissing')
                 } 
             },
             dataTypes: {
                 contactId: function(val) {
-                    return (val === "new") ? val : Backbone.MozuModel.DataTypes.Int(val);
+                    return (val === 'new') ? val : Backbone.MozuModel.DataTypes.Int(val);
                 }
             },
             helpers: ['contacts'],
@@ -91,7 +91,7 @@
             initialize: function () {
                 var self = this;
                 this.on('change:contactId', function (model, newContactId) {
-                    if (!newContactId || newContactId === "new") {
+                    if (!newContactId || newContactId === 'new') {
                         model.get('address').clear();
                         model.get('phoneNumbers').clear();
                         model.unset('id');
@@ -107,7 +107,7 @@
                     this.validation = this.digitalOnlyValidation;
                 }
 
-                if (!this.requiresFulfillmentInfo() && !this.requiresDigitalFulfillmentContact()) return this.stepStatus("complete");
+                if (!this.requiresFulfillmentInfo() && !this.requiresDigitalFulfillmentContact()) return this.stepStatus('complete');
                 return CheckoutStep.prototype.calculateStepStatus.apply(this);
             },
             getOrder: function () {
@@ -152,7 +152,16 @@
                     return this.nextDigitalOnly();
                 }
 
-                if (this.validate()) return false;
+                var validationObj = this.validate();
+
+                if (validationObj) { 
+                    Object.keys(validationObj).forEach(function(key){
+                        this.trigger('error', {message: validationObj[key]});
+                    }, this);
+
+                    return false;
+                }
+
                 var parent = this.parent,
                     order = this.getOrder(),
                     me = this,
@@ -186,7 +195,7 @@
                     completeStep();
                 } else {
                     if (!addr.get('candidateValidatedAddresses')) {
-                        var methodToUse = allowInvalidAddresses ? "validateAddressLenient" : "validateAddress";
+                        var methodToUse = allowInvalidAddresses ? 'validateAddressLenient' : 'validateAddress';
                         addr.apiModel[methodToUse]().then(function (resp) {
                             if (resp.data && resp.data.addressCandidates && resp.data.addressCandidates.length) {
                                 if (_.find(resp.data.addressCandidates, addr.is, addr)) {
@@ -241,20 +250,20 @@
                 _.each(['shippingMethodCode', 'shippingMethodName'], this.unset, this);
             },
             calculateStepStatus: function () {
-                var st = "new", available;
-                if (!this.requiresFulfillmentInfo()) return this.stepStatus("complete");
-                if (this.provisional) return this.stepStatus("incomplete");
-                if (this.get("fulfillmentContact").stepStatus() !== "complete") {
-                    return this.stepStatus("new");
+                var st = 'new', available;
+                if (!this.requiresFulfillmentInfo()) return this.stepStatus('complete');
+                if (this.provisional) return this.stepStatus('incomplete');
+                if (this.get('fulfillmentContact').stepStatus() !== 'complete') {
+                    return this.stepStatus('new');
                 }
-                available = this.get("availableShippingMethods");
-                if (available && available.length && _.findWhere(available, { shippingMethodCode: this.get("shippingMethodCode") })) {
-                    return this.stepStatus("complete");
+                available = this.get('availableShippingMethods');
+                if (available && available.length && _.findWhere(available, { shippingMethodCode: this.get('shippingMethodCode') })) {
+                    return this.stepStatus('complete');
                 }
-                return this.stepStatus("incomplete");
+                return this.stepStatus('incomplete');
             },
             updateShippingMethod: function (code) {
-                var available = this.get("availableShippingMethods"),
+                var available = this.get('availableShippingMethods'),
                     newMethod = _.findWhere(available, { shippingMethodCode: code });
                 if (!newMethod && available && available[0]) {
                     newMethod = available[0];
@@ -272,7 +281,7 @@
                     me.provisional = false;
                     me.isLoading(false);
                     me.calculateStepStatus();
-                    me.parent.get("billingInfo").calculateStepStatus();
+                    me.parent.get('billingInfo').calculateStepStatus();
                 });
             }
         }),
@@ -284,14 +293,14 @@
                     required: true,
                     msg: Hypr.getLabel('paymentTypeMissing')
                 },
-                "billingContact.email": {
+                'billingContact.email': {
                     pattern: 'email',
                     msg: Hypr.getLabel('emailMissing')
                 } 
             },
             dataTypes: {
-                "isSameBillingShippingAddress": Backbone.MozuModel.DataTypes.Boolean,
-                "creditAmountToApply": Backbone.MozuModel.DataTypes.Float
+                'isSameBillingShippingAddress': Backbone.MozuModel.DataTypes.Boolean,
+                'creditAmountToApply': Backbone.MozuModel.DataTypes.Float
             },
             relations: {
                 billingContact: CustomerModels.Contact,
@@ -304,7 +313,7 @@
                 return this.getOrder().get('acceptsMarketing');
             },
             visaCheckoutFlowComplete: function() {
-                return this.get('paymentWorkflow') === "VisaCheckout";
+                return this.get('paymentWorkflow') === 'VisaCheckout';
             },
             cancelVisaCheckout: function() {
                 var self = this;
@@ -312,7 +321,7 @@
                 var currentPayment = order.apiModel.getCurrentPayment();
                 return order.apiVoidPayment(currentPayment.id).then(function() {
                     self.clear();
-                    self.stepStatus("incomplete");
+                    self.stepStatus('incomplete');
                 });
             },
             activePayments: function () {
@@ -579,7 +588,7 @@
                 var self = this;
                 return customer.apiGetDigitalCredit(creditCode).then(function (credit) {
                     var creditModel = new PaymentMethods.DigitalCredit(credit.data);
-                    creditModel.set("isTiedToCustomer", false);
+                    creditModel.set('isTiedToCustomer', false);
 
                     var validateCredit = function() {
                         var now = new Date(),
@@ -692,7 +701,7 @@
                 return order.apiVoidPayment(id).then(order.update);
             },
             syncPaymentMethod: function (me, newId) {
-                if (!newId || newId === "new") {
+                if (!newId || newId === 'new') {
                     me.get('billingContact').clear();
                     me.get('card').clear();
                     me.get('check').clear();
@@ -756,38 +765,38 @@
                 _.bindAll(this, 'applyPayment', 'markComplete');
             },
             selectPaymentType: function (me, newPaymentType) {
-                me.get('check').selected = newPaymentType === "Check";
-                me.get('card').selected = newPaymentType === "CreditCard";
+                me.get('check').selected = newPaymentType === 'Check';
+                me.get('card').selected = newPaymentType === 'CreditCard';
             },
             calculateStepStatus: function () {
-                var fulfillmentComplete = this.parent.get('fulfillmentInfo').stepStatus() === "complete",
+                var fulfillmentComplete = this.parent.get('fulfillmentInfo').stepStatus() === 'complete',
                     activePayments = this.activePayments(),
                     thereAreActivePayments = activePayments.length > 0,
                     paymentTypeIsCard = activePayments && !!_.findWhere(activePayments, { paymentType: 'CreditCard' }),
                     paymentTypeIsPayPal = activePayments && !!_.findWhere(activePayments, { paymentType: 'PaypalExpress' }),
                     balanceZero = this.parent.get('amountRemainingForPayment') === 0;
 
-                if (paymentTypeIsCard) return this.stepStatus("incomplete"); // initial state for CVV entry
+                if (paymentTypeIsCard) return this.stepStatus('incomplete'); // initial state for CVV entry
 
                 if (!fulfillmentComplete) return this.stepStatus('new');
 
-                if (paymentTypeIsPayPal && window.location.href.indexOf('PaypalExpress=') === -1) return this.stepStatus("incomplete"); // This should handle back button/reload cases!
+                if (paymentTypeIsPayPal && window.location.href.indexOf('PaypalExpress=') === -1) return this.stepStatus('incomplete'); // This should handle back button/reload cases!
 
-                if (thereAreActivePayments && (balanceZero || (this.get('paymentType') === "PaypalExpress" && window.location.href.indexOf('PaypalExpress=complete') !== -1))) return this.stepStatus("complete");
-                return this.stepStatus("incomplete");
+                if (thereAreActivePayments && (balanceZero || (this.get('paymentType') === 'PaypalExpress' && window.location.href.indexOf('PaypalExpress=complete') !== -1))) return this.stepStatus('complete');
+                return this.stepStatus('incomplete');
 
             },
             getPaypalUrls: function () {
-                var base = window.location.href + (window.location.href.indexOf('?') !== -1 ? "&" : "?");
+                var base = window.location.href + (window.location.href.indexOf('?') !== -1 ? '&' : '?');
 
                 //Remove the already existing Paypal parameters from URL
-                if (base.indexOf("PaypalExpress=") != -1) {
-                    base = base.substring(0, base.indexOf("PaypalExpress="));
+                if (base.indexOf('PaypalExpress=') != -1) {
+                    base = base.substring(0, base.indexOf('PaypalExpress='));
                 }
                
                 return {
-                    paypalReturnUrl: base + "PaypalExpress=complete",
-                    paypalCancelUrl: base + "PaypalExpress=canceled"
+                    paypalReturnUrl: base + 'PaypalExpress=complete',
+                    paypalCancelUrl: base + 'PaypalExpress=canceled'
                 };
             },
             hasPaymentChanged: function(payment) {
@@ -826,7 +835,7 @@
                 var normalizedSavedPaymentInfo = normalizeBillingInfos(payment.billingInfo);
                 var normalizedLiveBillingInfo = normalizeBillingInfos(this.toJSON());
 
-                if (payment.paymentWorkflow === "VisaCheckout") {
+                if (payment.paymentWorkflow === 'VisaCheckout') {
                     normalizedLiveBillingInfo.billingContact.address.addressType = normalizedSavedPaymentInfo.billingContact.address.addressType;
                 }
 
@@ -856,7 +865,7 @@
             },
             applyPayment: function () {
                 var self = this, order = this.getOrder();
-                if (this.get("paymentType") === "PaypalExpress") {
+                if (this.get('paymentType') === 'PaypalExpress') {
                     this.set(this.getPaypalUrls());
                 } else {
                     this.unset('paypalReturnUrl');
@@ -869,7 +878,7 @@
                         var modelCard, modelCvv;
                         if (payment) {
                             switch (payment.paymentType) {
-                                case "CreditCard":
+                                case 'CreditCard':
                                     modelCard = self.get('card');
                                     modelCvv = modelCard.get('cvv');
                                     if (
@@ -880,7 +889,7 @@
                                     }
                                     self.markComplete();
                                     break;
-                                case "PaypalExpress":
+                                case 'PaypalExpress':
                                     break;
                                 default:
                                     self.markComplete();
@@ -892,7 +901,7 @@
                 }
             },
             markComplete: function () {
-                this.stepStatus("complete");
+                this.stepStatus('complete');
                 this.isLoading(false);
                 var order = this.getOrder();
                 _.defer(function() {
@@ -968,16 +977,16 @@
                         steps = [fulfillmentInfo, fulfillmentContact, billingInfo],
                         paymentWorkflow = latestPayment && latestPayment.paymentWorkflow,
                         visaCheckoutPayment = activePayments && _.findWhere(activePayments, { paymentWorkflow: 'VisaCheckout' }),
-                        paypalCancelled = (latestPayment && latestPayment.paymentType === "PaypalExpress" && window.location.href.indexOf('PaypalExpress=canceled') !== -1),
+                        paypalCancelled = (latestPayment && latestPayment.paymentType === 'PaypalExpress' && window.location.href.indexOf('PaypalExpress=canceled') !== -1),
                         allStepsComplete = function () {
-                            return _.reduce(steps, function(m, i) { return m + i.stepStatus(); }, '') === "completecompletecomplete";
+                            return _.reduce(steps, function(m, i) { return m + i.stepStatus(); }, '') === 'completecompletecomplete';
                         },
                         isReady = allStepsComplete() && !(paypalCancelled);
 
                     //Visa checkout payments can be added to order without UIs knowledge. This evaluates and voids the required payments.
                     if (visaCheckoutPayment) {
                         _.each(_.filter(self.apiModel.getActivePayments(), function (payment) {
-                            return payment.paymentType !== "StoreCredit" && payment.paymentType !== "GiftCard" && payment.paymentWorkflow != 'VisaCheckout';
+                            return payment.paymentType !== 'StoreCredit' && payment.paymentType !== 'GiftCard' && payment.paymentWorkflow != 'VisaCheckout';
                         }), function (payment) {
                             self.apiVoidPayment(payment.id);
                         });
@@ -1005,8 +1014,8 @@
                         });
                     });
 
-                    if (!self.get("requiresFulfillmentInfo")) {
-                        self.validation = _.pick(self.constructor.prototype.validation, _.filter(_.keys(self.constructor.prototype.validation), function(k) { return k.indexOf("fulfillment") === -1; }));
+                    if (!self.get('requiresFulfillmentInfo')) {
+                        self.validation = _.pick(self.constructor.prototype.validation, _.filter(_.keys(self.constructor.prototype.validation), function(k) { return k.indexOf('fulfillment') === -1; }));
                     }
 
                     self.get('billingInfo.billingContact').on('change:email', function(model, newVal) {
@@ -1043,7 +1052,7 @@
                 var me = this;
                 // void active payments; if there are none then the promise will resolve immediately
                 return api.all(_.map(_.filter(me.apiModel.getActivePayments(), function(payment) {
-                    return payment.paymentType !== "StoreCredit" && payment.paymentType !== "GiftCard";
+                    return payment.paymentType !== 'StoreCredit' && payment.paymentType !== 'GiftCard';
                 }), function(payment) {
                     return me.apiVoidPayment(payment.id);
                 })).then(function() {
@@ -1130,7 +1139,7 @@
                     };
                 }
                 $.each(error.items, function (ix, errorItem) {
-                    if (errorItem.name === "ADD_CUSTOMER_FAILED" && errorItem.message.toLowerCase().indexOf('invalid parameter: password')) {
+                    if (errorItem.name === 'ADD_CUSTOMER_FAILED' && errorItem.message.toLowerCase().indexOf('invalid parameter: password')) {
                         errorHandled = true;
                         order.trigger('passwordinvalid', errorItem.message.substring(errorItem.message.indexOf('Password')));
                     }
@@ -1150,10 +1159,10 @@
                 billingContact = billingInfo.get('billingContact'),
                 email = this.get('emailAddress'),
                 captureCustomer = function (customer) {
-                    if (!customer || (customer.type !== "customer" && customer.type !== "login")) return;
+                    if (!customer || (customer.type !== 'customer' && customer.type !== 'login')) return;
                     var newCustomer;
-                    if (customer.type === "customer") newCustomer = customer.data;
-                    if (customer.type === "login") newCustomer = customer.data.customerAccount;
+                    if (customer.type === 'customer') newCustomer = customer.data;
+                    if (customer.type === 'login') newCustomer = customer.data.customerAccount;
                     if (newCustomer && newCustomer.id) {
                         self.set('customer', newCustomer);
                         api.off('sync', captureCustomer);
@@ -1166,8 +1175,8 @@
                     account: {
                         emailAddress: email,
                         userName: email,
-                        firstName: billingContact.get("firstName") || this.get('fulfillmentInfo.fulfillmentContact.firstName'),
-                        lastName: billingContact.get("lastNameOrSurname") || this.get('fulfillmentInfo.fulfillmentContact.lastNameOrSurname'),
+                        firstName: billingContact.get('firstName') || this.get('fulfillmentInfo.fulfillmentContact.firstName'),
+                        lastName: billingContact.get('lastNameOrSurname') || this.get('fulfillmentInfo.fulfillmentContact.lastNameOrSurname'),
                         acceptsMarketing: self.get('acceptsMarketing')
                     },
                     password: this.get('password')
@@ -1194,7 +1203,7 @@
                     contactInfo = this.get(infoName),
                     contact = contactInfo.get(contactName).toJSON(),
                     process = [function() {
-                        if (contact.id === -1 || contact.id === 1 || contact.id === "new") delete contact.id;
+                        if (contact.id === -1 || contact.id === 1 || contact.id === 'new') delete contact.id;
                         return customer.apiModel.addContact(contact).then(function(contactResult) {
                             contact.id = contactResult.data.id;
                             return contactResult;
@@ -1227,7 +1236,7 @@
                 var contactId = contact.contactId;
                 if (contactId) contact.id = contactId;
 
-                if (!contact.id || contact.id === -1 || contact.id === 1 || contact.id === "new") {
+                if (!contact.id || contact.id === -1 || contact.id === 1 || contact.id === 'new') {
                     contact.types = contactTypes;
                     return api.steps(process);
                 } else {
@@ -1267,7 +1276,7 @@
                 var contactId = billingContact.contactId;
                 if (contactId) billingContact.id = contactId;
 
-                if (!billingContact.id || billingContact.id === -1 || billingContact.id === 1 || billingContact.id === "new") {
+                if (!billingContact.id || billingContact.id === -1 || billingContact.id === 1 || billingContact.id === 'new') {
                     billingContact.types = !isSameBillingShippingAddress ? [{ name: 'Billing', isPrimary: isPrimaryAddress }] : [{ name: 'Shipping', isPrimary: isPrimaryAddress }, { name: 'Billing', isPrimary: isPrimaryAddress }];
                     return saveBillingContactFirst().then(doSaveCard);
                 } else {
@@ -1304,7 +1313,7 @@
                 });
             },
             isSavingNewCustomer: function() {
-                return this.get("createAccount") && !this.customerCreated;
+                return this.get('createAccount') && !this.customerCreated;
             },
             //finalPaymentReconcile: function() {
 
@@ -1323,7 +1332,7 @@
             //        return deferred.promise;
             //    } else {
             //        billingInfo = order.get('billingInfo');
-            //        if (!currentPayment || activePayments.length > 1 || currentPayment.paymentType === "PaypalExpress") {
+            //        if (!currentPayment || activePayments.length > 1 || currentPayment.paymentType === 'PaypalExpress') {
             //            // if store credits or PayPal are being used,
             //            // or multiple payments are active,
             //            // or the order total has increased,
@@ -1341,7 +1350,7 @@
             //            }).then(function() {
             //                billingInfo.clear();
             //                billingInfo.stepStatus('incomplete');
-            //                throw new Error(Hypr.getLabel("recalculatePayments"));
+            //                throw new Error(Hypr.getLabel('recalculatePayments'));
             //            });
             //        } else {
             //            // in the simplest, most common case, where the order total has reduced and only one
@@ -1434,7 +1443,7 @@
                 return this.apiModel.update(j);
             },
             isReady: function (val) {
-                this.set("isReady", val);
+                this.set('isReady', val);
             },
             toJSON: function (options) {
                 var j = Backbone.MozuModel.prototype.toJSON.apply(this, arguments);
