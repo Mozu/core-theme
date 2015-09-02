@@ -361,7 +361,8 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.ModelMapping
                                 ParentProductName = item.ProductName,
                                 Key = item.Id + "-" + bp.ProductCode,
                                 OrderLineId = item.LineId,
-                                FulfillmentStatus = bp.FulfillmentStatus
+                                FulfillmentStatus = bp.FulfillmentStatus,
+                                OrderItemOptionAttributeFQN = bp.OptionAttributeFQN
                             }
                         )
                         .ToList();
@@ -980,6 +981,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.ModelMapping
                 .ForMember(x => x.ProductCode, op => op.ResolveUsing(dc => dc.ProductCode))
                 .ForMember(x => x.Quantity, op => op.ResolveUsing(dc => dc.Quantity))
                 .ForMember(x => x.LineId, op => op.ResolveUsing(dc => dc.LineId))
+                .ForMember(x => x.OptionAttributeFQN, op => op.ResolveUsing(x => x.OptionAttributeFQN))
                 //ignores, handled in Order mapping or FillPackageItemDetails.
                 .ForMember(x => x.ProductName, op => op.Ignore())
                 .ForMember(x => x.FulfillmentMethod, op => op.Ignore())
@@ -1020,6 +1022,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.ModelMapping
                 .ForMember(x => x.ProductCode, op => op.ResolveUsing(dc => dc.ProductCode))
                 .ForMember(x => x.Quantity, op => op.ResolveUsing(dc => dc.Quantity))
                 .ForMember(x => x.LineId, op => op.ResolveUsing(dc => dc.LineId))
+                .ForMember(x => x.OptionAttributeFQN, op => op.ResolveUsing(x => x.OptionAttributeFQN))
                 //ignores, handled in Order mapping
                 .ForMember(x => x.ProductName, op => op.Ignore())
                 .ForMember(x => x.FulfillmentMethod, op => op.Ignore())
@@ -1054,6 +1057,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.ModelMapping
                 .ForMember(x => x.Quantity, op => op.ResolveUsing(dc => dc.Quantity))
                 .ForMember(x => x.GiftCardCode, op => op.ResolveUsing(dc => dc.GiftCardCode))
                 .ForMember(x => x.LineId, op => op.ResolveUsing(dc => dc.LineId))
+                .ForMember(x => x.OptionAttributeFQN, op => op.ResolveUsing(x => x.OptionAttributeFQN))
                 .ForMember(x => x.Weight, op => op.UseValue(null))
                 //ignores, handled in Order mapping
                 .ForMember(x => x.FulfillmentStatus, op => op.Ignore())
@@ -1105,8 +1109,8 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.ModelMapping
                 .ForMember(dc => dc.ProductCode, op => op.ResolveUsing(x => x.ProductCode))
                 .ForMember(dc => dc.Quantity, op => op.ResolveUsing(x => x.Quantity))
                 .ForMember(dc => dc.LineId, op => op.ResolveUsing(x => x.LineId))
+                .ForMember(dc => dc.OptionAttributeFQN, op => op.ResolveUsing(x => x.OptionAttributeFQN))
                 .ForMember(dc => dc.FulfillmentItemType, op => op.ResolveUsing(( OrderPackageItem x) => ShippingDC.FulfillmentItemTypeConst.PHYSICAL))
-                .ForMember(dc => dc.OptionAttributeFQN, op => op.Ignore())
                 ;
         }
 
@@ -1128,9 +1132,9 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.ModelMapping
                 .ForMember(dc => dc.ProductCode, op => op.ResolveUsing(x => x.ProductCode))
                 .ForMember(dc => dc.Quantity, op => op.ResolveUsing(x => x.Quantity))
                 .ForMember(dc => dc.LineId, op => op.ResolveUsing(x => x.LineId))
+                .ForMember(dc => dc.OptionAttributeFQN, op => op.ResolveUsing(x => x.OptionAttributeFQN))
                 //todo: do we need this on our model? - Greg Murray on 2014-05-19 
                 .ForMember(dc => dc.FulfillmentItemType, op => op.ResolveUsing(( OrderPickupItem x) => ShippingDC.FulfillmentItemTypeConst.PHYSICAL))
-                .ForMember(dc => dc.OptionAttributeFQN, op => op.Ignore())
                 ;
         }
 

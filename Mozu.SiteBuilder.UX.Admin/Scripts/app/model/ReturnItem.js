@@ -33,6 +33,11 @@ Ext.define('Taco.model.ReturnItem', {
             "useNull": true
         },
         {
+            "name": "orderItemOptionAttributeFQN",
+            "type": "string",
+            "useNull": true
+        },
+        {
             "name": "productCode",
             "type": "string",
             "useNull": true

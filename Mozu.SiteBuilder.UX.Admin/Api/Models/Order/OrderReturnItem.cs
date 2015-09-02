@@ -24,5 +24,6 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.Models.Order
         public string ParentProductName { get; set; }
         public int OrderLineId { get; set; }
         public string FulfillmentStatus { get; set; }
+        public string OrderItemOptionAttributeFQN { get; set; }
     }
 }

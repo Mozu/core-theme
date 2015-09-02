@@ -246,7 +246,7 @@ Ext.define('Taco.view.order.widget.ReturnableItemGrid', {
                     var i, matchingReturnableItems, returnableItem;
 
                     for (i = 1; i <= item.quantity; i++) {
-                        matchingReturnableItems = Ext.Array.filter(returnableItems, function (ri) { return ri.productCode === item.productCode && ri.orderLineId === item.orderLineId  && ri.quantityReturned < ri.quantityOrdered });
+                        matchingReturnableItems = Ext.Array.filter(returnableItems, function (ri) { return ri.productCode === item.productCode && ri.orderLineId === item.orderLineId && ri.orderItemOptionAttributeFQN == item.orderItemOptionAttributeFQN && ri.quantityReturned < ri.quantityOrdered });
                         if (!matchingReturnableItems || !matchingReturnableItems.length) continue;
                         // in case multiple returnable items exist for the same product code, round-robin over them all and increment quantity returned.
                         returnableItem = Ext.Array.sort(matchingReturnableItems, function (a, b) { return a.quantityReturned < b.quantityReturned ? -1 : 1 })[0];
@@ -279,7 +279,8 @@ Ext.define('Taco.view.order.widget.ReturnableItemGrid', {
                 { type: 'string', name: 'orderItemId' },
                 { type: 'string', name: 'parentItemId' },
                 { type: 'int', name: 'orderLineId' },
-                { type: 'string', name: 'fulfillmentStatus' }
+                { type: 'string', name: 'fulfillmentStatus' },
+                { type: 'string', name: 'orderItemOptionAttributeFQN' }
             ],
             data: [],
             sorters: [{

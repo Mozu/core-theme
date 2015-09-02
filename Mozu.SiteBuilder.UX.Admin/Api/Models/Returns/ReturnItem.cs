@@ -22,6 +22,11 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.Models.Returns
         public int OrderLineId { get; set; }
 
         /// <summary>
+        /// This is the Option attribute FQN for the item being returned .. typically only when the return item is a product bundle item.
+        /// </summary>
+        public string OrderItemOptionAttributeFQN { get; set; }
+
+        /// <summary>
         /// Need ProductCode or OrderItemId.
         /// </summary>
         public string ProductCode { get; set; }

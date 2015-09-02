@@ -194,6 +194,7 @@ Ext.define('Taco.view.order.subform.Return', {
                     productCode: item.get('orderItemId') ? null : item.get('productCode'), // only provide product code when there is no orderItemId
                     quantity: item.get('quantity'),
                     returnReason: item.get('reason'),
+                    orderItemOptionAttributeFQN: item.get('orderItemOptionAttributeFQN'),
                     rmaNote: item.get('reason') === 'Other' ? 'Other' : null
                 };
             })
