@@ -71,6 +71,10 @@ Ext.define('Taco.view.order.subform.fulfillment.Grid', {
                 name: 'fulfillmentStatus',
                 type: 'string',
                 useNull: true
+            }, {
+                name: 'optionAttributeFQN',
+                type: 'string',
+                useNull: true
             }],
             sorters: [{
                 sorterFn: function (a, b) {

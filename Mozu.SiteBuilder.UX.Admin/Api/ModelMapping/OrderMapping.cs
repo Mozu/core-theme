@@ -385,6 +385,14 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.ModelMapping
                 });
         }
 
+        static bool MatchBundledProduct(AbstractOrderPackageItem item, BundledProduct bundledProduct, int lineId)
+        {
+            var result = item.LineId.HasValue && item.LineId == lineId && item.ProductCode == bundledProduct.ProductCode &&
+                (string.IsNullOrWhiteSpace(item.OptionAttributeFQN) || item.OptionAttributeFQN.Equals(bundledProduct.OptionAttributeFQN, StringComparison.OrdinalIgnoreCase));
+
+            return result;
+        }
+
         private void ResolveUnpackagedAmountsForBundledProduct(int lineId, Order order, OrderItem orderItem)
         {
             // for each item in the bundled product
@@ -410,9 +418,9 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.ModelMapping
                     desiredDigitalQuantity = bundledProduct.Quantity * orderItem.Quantity;
                 }
 
-                var packagedQuantity = order.Packages.SelectMany(p => p.Items).Where(i => i.LineId.HasValue && i.LineId == lineId && i.ProductCode == bundledProduct.ProductCode).Sum(i => i.Quantity);
-                var pickedQuantity = order.Pickups.SelectMany(p => p.Items).Where(i => i.LineId.HasValue && i.LineId == lineId && i.ProductCode == bundledProduct.ProductCode).Sum(i => i.Quantity);
-                var digitallyFulfilled = order.DigitalPackages.SelectMany(p => p.Items).Where(i => i.LineId.HasValue && i.LineId == lineId && i.ProductCode == bundledProduct.ProductCode).Sum(i => i.Quantity);
+                var packagedQuantity = order.Packages.SelectMany(p => p.Items).Where(i => MatchBundledProduct(i, bundledProduct, lineId)).Sum(i => i.Quantity);
+                var pickedQuantity = order.Pickups.SelectMany(p => p.Items).Where(i => MatchBundledProduct(i, bundledProduct, lineId)).Sum(i => i.Quantity);
+                var digitallyFulfilled = order.DigitalPackages.SelectMany(p => p.Items).Where(i => MatchBundledProduct(i, bundledProduct, lineId)).Sum(i => i.Quantity);
                 // add new unpackaged item with remaining quantity to the order.UnpackagedItems
                 // make sure new entry contains, fulfillment status, line id, and other goodness
                 // if there are more desired products than created packages contain, add this product to unpackagedItems.
@@ -430,7 +438,8 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.ModelMapping
                         FulfillmentLocationCode = orderItem.FulfillmentLocationCode, // TODO: Can bundled components have different fulfillment locations?
                         IsPackagedStandAlone = bundledProduct.IsPackagedStandAlone,
                         LineId = orderItem.LineId,
-                        FulfillmentStatus = bundledProduct.FulfillmentStatus
+                        FulfillmentStatus = bundledProduct.FulfillmentStatus,
+                        OptionAttributeFQN = bundledProduct.OptionAttributeFQN
                     });
                 }
 
@@ -447,7 +456,8 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.ModelMapping
                         FulfillmentMethod = CommerceDC.FulfillmentMethodConst.PICKUP,
                         FulfillmentLocationCode = orderItem.FulfillmentLocationCode, // TODO: Can bundled components have different fulfillment locations?
                         LineId = orderItem.LineId,
-                        FulfillmentStatus = bundledProduct.FulfillmentStatus
+                        FulfillmentStatus = bundledProduct.FulfillmentStatus,
+                        OptionAttributeFQN = bundledProduct.OptionAttributeFQN
                     });
                 }
 
@@ -464,7 +474,8 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.ModelMapping
                         UnitPrice = orderItem.UnitPrice,
                         Total = orderItem.UnitPrice * remainingQuantity, // TODO: Why are we doing this here and not in pickup or unpackaged
                         LineId = orderItem.LineId,
-                        FulfillmentStatus = bundledProduct.FulfillmentStatus
+                        FulfillmentStatus = bundledProduct.FulfillmentStatus,
+                        OptionAttributeFQN = bundledProduct.OptionAttributeFQN
                     });
                 }
             }            

@@ -18,6 +18,8 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.Models.Order
         /// </summary>
         public int? LineId { get; set; }
 
+        public string OptionAttributeFQN { get; set; }
+
         public string FulfillmentStatus { get; set; }
         
     }
