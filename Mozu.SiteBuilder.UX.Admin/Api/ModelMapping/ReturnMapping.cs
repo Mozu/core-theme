@@ -137,7 +137,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.ModelMapping
             .ForMember(dc => dc.ShippingLossAmount, op => op.ResolveUsing(x => x.ShippingLossAmount))
             .ForMember(dc => dc.ShippingLossTaxAmount, op => op.ResolveUsing(x => x.ShippingLossTaxAmount))
             .ForMember(dc => dc.OrderLineId, op => op.ResolveUsing(x => x.OrderLineId))
-
+            .ForMember(dc => dc.OrderItemOptionAttributeFQN, op => op.Ignore())
             //ignores
             .ForMember(dc => dc.BundledProducts, op => op.Ignore());
             ;
