@@ -31,7 +31,7 @@ namespace Mozu.SiteBuilder.Mvc.SEO
         public MappingValidator(IEntityListsWebApiClient client)
         {
             _entityListClient = client;
-            RuleFor(x => x.Value.type).Must(BeInTypeConst).WithName("mapping type").WithMessage(string.Format("mapping type must be one of {0}", string.Join(",", types)));
+            RuleFor(x => x.Value.type.ToLowerInvariant()).Must(BeInTypeConst).WithName("mapping type").WithMessage(string.Format("mapping type must be one of {0}", string.Join(",", types)));
             RuleFor(x => x.Value).Must(HaveFacetMapFields).When(x => x.Value.type == Mapping.TypeConst.facet).WithName("facet mapping").WithMessage("facet mapping must provide  mapTo, and facetId");
             RuleFor(x => x.Value).Must(HaveMZDBMapFields).When(x => x.Value.type == Mapping.TypeConst.mzdb).WithName("mzdb mapping").WithMessage("mzdb mapping must provide listFqn and docId");
             RuleFor(x => x.Value).Must(HaveDirectMapFields).When(x => x.Value.type == Mapping.TypeConst.direct).WithName("direct mapping").WithMessage("direct mapping must provide mappings");
@@ -93,7 +93,7 @@ namespace Mozu.SiteBuilder.Mvc.SEO
             _entityListClient = entityListClient;
             _attributeClient = attributeClient;
 
-            RuleFor(x => x.Value.type).Must(BeInTypeConst).WithName("validator type").WithMessage(string.Format("The validator must be one of the following types: [{0}]", string.Join(",", types)));
+            RuleFor(x => x.Value.type.ToLowerInvariant()).Must(BeInTypeConst).WithName("validator type").WithMessage(string.Format("The validator must be one of the following types: [{0}]", string.Join(",", types)));
             RuleFor(x => x.Value).Must(HaveAttributeConstraintFields).When(x => x.Value.type == Validator.TypeConst.attribute).WithName("attribute validator").WithMessage("A validator of type 'productAttribute' must provide an attributeFQN.");
             RuleFor(x => x.Value).Must(HaveListConstraintFields).When(x => x.Value.type == Validator.TypeConst.list).WithName("list validator").WithMessage("A validator of type 'list' must provide a list of values.");
             RuleFor(x => x.Value).Must(HaveMZDBConstraintFields).When(x => x.Value.type == Validator.TypeConst.mzdb).WithName("mzdb constraint").WithMessage("A validator of type 'mzdb' must provide a listFqn and a field.");
@@ -134,7 +134,7 @@ namespace Mozu.SiteBuilder.Mvc.SEO
 
         private async Task<ValidationResult> DoDataValidations(Validator instance, IEntityListsWebApiClient _entityListClient, IAttributeWebApiClient _attributeClient)
         {
-            switch (instance.type.ToLower())
+            switch (instance.type.ToLowerInvariant())
             {
                 case Validator.TypeConst.attribute:
                     var attrResponse = await _attributeClient.CloneWithoutUserClaims().GetAttribute(instance.attributeFQN).ConfigureAwait(false);
@@ -152,13 +152,8 @@ namespace Mozu.SiteBuilder.Mvc.SEO
 
     public class RouteValidator : AbstractValidator<Route>
     {
-       // readonly IEnumerable<string> _mappingNames;
-    //    readonly IEnumerable<string> _validatorKeys;
-
         public RouteValidator(IEnumerable<string> mappingNames, IEnumerable<string> validatorKeys)
         {
-         //   _mappingNames = mappingNames;
-          //  _validatorKeys = validatorKeys;
             RuleFor(x => x.InternalRoute).Must(ParseAsFancyRoute).WithName("internal route").WithMessage(string.Format("the internal route must be one of {0}", string.Join(",", Enum.GetNames(typeof(FancyRoute)))));
             RuleFor(x => x.Mappings.Keys ).Must( x => x.All(map => mappingNames.Contains(map, StringComparer.OrdinalIgnoreCase))).WithName("mapping name").WithMessage("all mappings must be declared in the mapping section of the custom routes");
             RuleFor(x => x.Validators.Keys).Must(x => x.All(constraint => validatorKeys.Contains(constraint, StringComparer.OrdinalIgnoreCase))).WithName("validator name").WithMessage("all validators must be declared in the validators section of the custom routes.  Error with validators:({0}) in routeTempate:{1}", x =>  String.Join(",", x.Validators.Keys), x=> x.Template );
@@ -174,7 +169,6 @@ namespace Mozu.SiteBuilder.Mvc.SEO
             catch
             {
                 return false;
-
             }
         }
     }
