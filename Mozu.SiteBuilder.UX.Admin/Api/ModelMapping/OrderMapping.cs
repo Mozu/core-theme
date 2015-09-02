@@ -1028,6 +1028,9 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.ModelMapping
                 .ForMember(x => x.FulfillmentMethod, op => op.Ignore())
                 .ForMember(x => x.FulfillmentLocationCode, op => op.Ignore())
                 .ForMember(x => x.FulfillmentStatus, op => op.Ignore())
+                .ForMember(x => x.Weight, op => op.Ignore())
+                .ForMember(x => x.UnitPrice, op => op.Ignore())
+                .ForMember(x => x.Total, op => op.Ignore())
                 ;
         }
 
