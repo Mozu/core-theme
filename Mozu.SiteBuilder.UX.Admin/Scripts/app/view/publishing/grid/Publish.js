@@ -89,11 +89,38 @@ Ext.define('Taco.view.publishing.grid.Publish', {
       
             if (window.location.pathname.indexOf('/publishsets/') !== -1){
                 var path = window.location.pathname,
-                    id = path.substring(path.lastIndexOf('/') + 1, path.length);
+                    me = this,
+                    id = path.substring(path.lastIndexOf('/') + 1, path.length),
+                    selection = this.store.getById(id);
 
-                this.getSelectionModel().select(this.store.getById(id));
+                // selection is on the first page
+                if (selection) {
+                    this.getSelectionModel().select(selection);
+                    this.up('publish-split').getEast().expand();
+                }
 
-                this.up('publish-split').getEast().expand();
+                // else we need to grab the id, fetch the record, and display that in the publish grid
+                else {
+                     Ext.Ajax.request({
+                        url: '/admin/app/publishsets/getBy/' + id,
+                        method: 'GET',
+                        success: function (res, status) {
+                            var record = res && res.responseText ? JSON.parse(res.responseText).items[0] : null,
+                                selection = Ext.create('Taco.model.PublishSetItem', record);
+
+                            if (selection) {
+                                me.getSelectionModel().select(selection);
+                                me.up('publish-split').getEast().expand();
+                            }
+
+                            else {
+                                me.showMessage('Unable to find the corresponding Publish Set', 'error');
+                            }
+                           
+                        }
+                    });
+                }
+
             }
 
             else {
