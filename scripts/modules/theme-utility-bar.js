@@ -112,7 +112,7 @@ define(['jquery', 'shim!vendor/datetimepicker/jquery-simple-datetimepicker[jquer
         DateTimePicker.prototype.setQueryString = function(str, soft) {
             if (soft && str) {
 
-                window.history.pushState('MOZU', document.title, this.getQueryString(str));
+                window.history.replaceState('MOZU', document.title, this.getQueryString(str));
             }
         };
 
@@ -124,9 +124,10 @@ define(['jquery', 'shim!vendor/datetimepicker/jquery-simple-datetimepicker[jquer
                 queryString = queryString.replace(/(&)+/g, '&');
             }
 
-            else if (location.search.indexOf('?') != -1) {
-                queryString = location.search.replace(/mz_now.*Z/, '') + '&' + 'mz_now=' + str;
+            else if (location.search.indexOf('?') !== -1) {
+                queryString = location.search.replace(/mz_now.*Z/, '') + (location.search.indexOf('&') === -1 ? '?' : '&') + 'mz_now=' + str;
                 queryString = queryString.replace(/(&)+/g, '&');
+                queryString = queryString.replace(/(\?)+/g, '?');
             }
 
             else {

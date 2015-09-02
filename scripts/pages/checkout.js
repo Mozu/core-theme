@@ -8,6 +8,7 @@ require(["modules/jquery-mozu", "underscore", "hyprlive", "modules/backbone-mozu
         next: function () {
             // wait for blur validation to complete
             var me = this;
+            me.editing.savedCard = false;
             _.defer(function () {
                 me.model.next();
             });
@@ -52,8 +53,7 @@ require(["modules/jquery-mozu", "underscore", "hyprlive", "modules/backbone-mozu
         },
         render: function () {
             this.$el.removeClass('is-new is-incomplete is-complete is-invalid').addClass('is-' + this.model.stepStatus());
-            var args = arguments;
-            EditableView.prototype.render.apply(this, args);
+            EditableView.prototype.render.apply(this, arguments);
             this.resize();
         },
         resize: _.debounce(function () {
@@ -166,8 +166,12 @@ require(["modules/jquery-mozu", "underscore", "hyprlive", "modules/backbone-mozu
             this.listenTo(this.model, 'change:digitalCreditCode', this.onEnterDigitalCreditCode, this);
             this.listenTo(this.model, 'orderPayment', function (order, scope) {
                     this.render();
+<<<<<<< HEAD
                     //AmazonPay.addCheckoutButton(window.order.id, false);
                 }, this);
+=======
+            }, this);
+>>>>>>> master
             this.codeEntered = !!this.model.get('digitalCreditCode');
         },
         render: function() {
@@ -208,29 +212,9 @@ require(["modules/jquery-mozu", "underscore", "hyprlive", "modules/backbone-mozu
                 });
             }
         },
-        finishEditingCard: function() {
-            var me = this;
-            var op = me.doModelAction('submit');
-            if (op) {
-                return op.then(function() {
-                    me.editing.savedCard = false;
-                    me.model.edit();
-                });
-            }
-        },
         beginEditingBillingAddress: function() {
             this.editing.savedBillingAddress = true;
             this.render();
-        },
-        finishEditingBillingAddress: function() {
-            var me = this;
-            var op = me.doModelAction('submit');
-            if (op) {
-                return op.then(function() {
-                    me.editing.savedBillingAddress = false;
-                    me.model.edit();
-                });
-            }
         },
         beginApplyCredit: function () {
             this.model.beginApplyCredit();
@@ -329,6 +313,7 @@ require(["modules/jquery-mozu", "underscore", "hyprlive", "modules/backbone-mozu
             // then call the sdk's api method for digital wallets, via models-checkout's helper
             V.on("payment.success", function(payment) {
                 console.log({ success: payment });
+                me.editing.savedCard = false;
                 me.model.parent.processDigitalWallet('VisaCheckout', payment);
             });
 
