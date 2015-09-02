@@ -93,10 +93,10 @@ namespace Mozu.SiteBuilder.Mvc.SEO
             _entityListClient = entityListClient;
             _attributeClient = attributeClient;
 
-            RuleFor(x => x.Value.type).Must(BeInTypeConst).WithName("validator type").WithMessage(string.Format("validator type must be one of {0}", string.Join(",", types)));
-            RuleFor(x => x.Value).Must(HaveAttributeConstraintFields).When(x => x.Value.type == Validator.TypeConst.attribute).WithName("attribute validator").WithMessage("attribute validator must provide attributecode");
-            RuleFor(x => x.Value).Must(HaveListConstraintFields).When(x => x.Value.type == Validator.TypeConst.list).WithName("list validator").WithMessage("list validator must provide values");
-            RuleFor(x => x.Value).Must(HaveMZDBConstraintFields).When(x => x.Value.type == Validator.TypeConst.mzdb).WithName("mzdb constraint").WithMessage("mzdb constraint must provide listFqn and field");
+            RuleFor(x => x.Value.type).Must(BeInTypeConst).WithName("validator type").WithMessage(string.Format("The validator must be one of the following types: [{0}]", string.Join(",", types)));
+            RuleFor(x => x.Value).Must(HaveAttributeConstraintFields).When(x => x.Value.type == Validator.TypeConst.attribute).WithName("attribute validator").WithMessage("A validator of type 'productAttribute' must provide an attributeFQN.");
+            RuleFor(x => x.Value).Must(HaveListConstraintFields).When(x => x.Value.type == Validator.TypeConst.list).WithName("list validator").WithMessage("A validator of type 'list' must provide a list of values.");
+            RuleFor(x => x.Value).Must(HaveMZDBConstraintFields).When(x => x.Value.type == Validator.TypeConst.mzdb).WithName("mzdb constraint").WithMessage("A validator of type 'mzdb' must provide a listFqn and a field.");
         }
 
         private bool HaveMZDBConstraintFields(Validator arg)
@@ -134,18 +134,19 @@ namespace Mozu.SiteBuilder.Mvc.SEO
 
         private async Task<ValidationResult> DoDataValidations(Validator instance, IEntityListsWebApiClient _entityListClient, IAttributeWebApiClient _attributeClient)
         {
-            switch (instance.type)
+            switch (instance.type.ToLower())
             {
                 case Validator.TypeConst.attribute:
                     var attrResponse = await _attributeClient.CloneWithoutUserClaims().GetAttribute(instance.attributeFQN).ConfigureAwait(false);
-                    if (attrResponse.HasException) return new ValidationResult(new List<ValidationFailure> { new ValidationFailure("attributeCode", "attribute code must exist") });
+                    if (attrResponse.HasException) return new ValidationResult(new List<ValidationFailure> { new ValidationFailure("attributeFqn", "attribute FQN must exist", instance.attributeFQN) });
                     return ValidatorExt.OK;
                 case Validator.TypeConst.mzdb:
                     var mzdbResponse = await _entityListClient.CloneWithoutUserClaims().GetEntityList(instance.listFqn).ConfigureAwait(false);
-                    if (mzdbResponse.HasException) return new ValidationResult(new List<ValidationFailure> { new ValidationFailure("listId", "list must exist") });
+                    if (mzdbResponse.HasException) return new ValidationResult(new List<ValidationFailure> { new ValidationFailure("listFqn", "list FQN must exist", instance.listFqn) });
+                    return ValidatorExt.OK;
+                default:
                     return ValidatorExt.OK;
             }
-            return ValidatorExt.OK;
         }
     }
 
