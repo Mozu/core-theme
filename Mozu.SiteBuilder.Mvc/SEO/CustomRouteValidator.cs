@@ -10,6 +10,7 @@ using System.Linq;
 using Mozu.Core.Extensions;
 using Mozu.Core.Api.Client;
 using Mozu.ProductAdmin.Contracts.Clients;
+using System.Text.RegularExpressions;
 
 namespace Mozu.SiteBuilder.Mvc.SEO
 {
@@ -172,9 +173,28 @@ namespace Mozu.SiteBuilder.Mvc.SEO
             RuleFor(x => x.InternalRoute).Must(ParseAsFancyRoute).WithName("internal route").WithMessage(string.Format("the internal route must be one of {0}", string.Join(",", Enum.GetNames(typeof(FancyRoute)))));
             RuleFor(x => x.Mappings.Keys ).Must( x => x.All(map => mappingNames.Contains(map, StringComparer.OrdinalIgnoreCase))).WithName("mapping name").WithMessage("all mappings must be declared in the mapping section of the custom routes");
             RuleFor(x => x.Validators.Keys).Must(x => x.All(constraint => validatorKeys.Contains(constraint, StringComparer.OrdinalIgnoreCase))).WithName("validator name").WithMessage("all validators must be declared in the validators section of the custom routes.  Error with validators:({0}) in routeTempate:{1}", x =>  String.Join(",", x.Validators.Keys), x=> x.Template );
+            RuleFor(x => x.InternalRoute).NotNull().NotEmpty().WithName("Internal Route").WithMessage("An Internal Route must be provided");
+            RuleFor(x => x.Template).Must(NotContainDuplicateRouteParameters).WithName("Internal Route").WithMessage("The route {0} has duplicate route parameters: [{1}]", x => x.Template, x => string.Join(",", GetDuplicateRouteParameters(x.Template)));
         }
 
-        private bool ParseAsFancyRoute(string arg)
+        static bool NotContainDuplicateRouteParameters(string arg)
+        {
+            return !GetDuplicateRouteParameters(arg).Any();
+        }
+
+        static Regex paramParser = new Regex("{(?<param>\\w*)}", RegexOptions.Compiled | RegexOptions.IgnoreCase);
+        static IEnumerable<string> GetDuplicateRouteParameters(string route)
+        {
+            var matches = paramParser.Matches(route).Cast<Match>();
+            return matches
+                .Where(x => x.Success)
+                .Select(x => x.Groups["param"].Value)
+                .GroupBy(x => x, StringComparer.OrdinalIgnoreCase)
+                .Where(x => x.Count() > 1)
+                .Select(x => x.Key);
+        }
+
+        static bool ParseAsFancyRoute(string arg)
         {
             try
             {
