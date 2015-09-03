@@ -114,7 +114,7 @@ namespace Mozu.SiteBuilder.Mvc.OAF
 
         }
 
-        class CategoryHelper : ICategoryTree
+        public class CategoryHelper : ICategoryTree
         {
             private readonly ICategoryTreeProvider _provider;
             Lazy<Task<CategoryTree>> _catTask;

@@ -27,7 +27,7 @@ namespace Mozu.SiteBuilder.UX.Models.Navigation
     {
         bool IsHomePage { get; }
         IRuntimeNavigationNode Parent { get; set; }
-        ICollection<IRuntimeNavigationNode> Items { get; }
+        ICollection<IRuntimeNavigationNode> Items { get;} 
     }
 
     /// <summary>
