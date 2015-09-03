@@ -108,7 +108,7 @@ namespace Mozu.SiteBuilder.Mvc.SEO
 
             RuleFor(x => x.Value.type.ToLowerInvariant()).Must(BeInTypeConst).WithName("validator type").WithMessage(string.Format("The validator must be one of the following types: [{0}]", string.Join(", ", types)));
             RuleFor(x => x.Value).Must(HaveAttributeConstraintFields).When(x => x.Value.type == Validator.TypeConst.attribute).WithName("attribute validator").WithMessage("A validator of type 'productAttribute' must provide an attributeFQN.");
-            RuleFor(x => x.Value).Must(HaveListConstraintFields).When(x => x.Value.type == Validator.TypeConst.list).WithName("list validator").WithMessage("A validator of type 'list' must provide a list of values.");
+            RuleFor(x => x.Value).Must(HaveListConstraintFields).When(x => x.Value.type == Validator.TypeConst.list).WithName("stringlist validator").WithMessage("A validator of type 'stringlist' must provide a list of values.");
             RuleFor(x => x.Value).Must(HaveMZDBConstraintFields).When(x => x.Value.type == Validator.TypeConst.mzdb).WithName("mzdb constraint").WithMessage("A validator of type 'mzdb' must provide a listFqn and a field.");
         }
 
