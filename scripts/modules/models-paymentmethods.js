@@ -50,7 +50,7 @@
                 fn: function(value, attr) {
                     var cardType = attr.split('.')[0],
                         card = this.get(cardType),
-                        isNewCard = $('[id^=paymentType-newcreditcard-]').is(':checked');
+                        isNewCard = this.get('paymentServiceCardId') || this.get('cardId');
 
                     // If card is not selected or cvv is not required, no need to validate
                     if (!card.selected || (Hypr.getThemeSetting('isCvvSuppressed') && !isNewCard)) {
