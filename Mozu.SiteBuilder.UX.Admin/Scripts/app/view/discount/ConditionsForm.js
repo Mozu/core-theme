@@ -25,8 +25,16 @@ Ext.define('Taco.view.discount.ConditionsForm', {
 
     initComponent: function () {
         var me = this,
-            paymentWorkflowsStore = Taco.core.data.StoreManager.getOrCreate('Taco.store.PaymentWorkflows');
-            
+            paymentWorkflowsStore = Taco.core.data.StoreManager.getOrCreate({
+                type: 'Taco.store.PaymentWorkflows', 
+                clearFilters: false,
+                createOnly:true,
+                filters: [function (record) {
+                    return record.get("key") != "PAYPALEXPRESS";
+                }]
+            });
+
+
         this.includedPaymentMethodField = Ext.create('Ext.form.field.ComboBox',
             Taco.core.ux.TooltipLabel.wrapConfig('discount.conditions.includedPaymentMethodField', me, {
                 name: 'includedPaymentMethod',
@@ -34,6 +42,7 @@ Ext.define('Taco.view.discount.ConditionsForm', {
                 queryMode: 'local',
                 margin: 0,
                 width: 600,
+                lastQuery:"",
                 fieldLabel: 'Required Payment Method',
                 labelAlign: 'top',
                 editable: false,
