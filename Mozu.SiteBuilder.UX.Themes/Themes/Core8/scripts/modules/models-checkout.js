@@ -248,6 +248,9 @@
 
                 // always make them choose again
                 _.each(['shippingMethodCode', 'shippingMethodName'], this.unset, this);
+
+                // after unset we need to select the cheapest option
+                this.updateShippingMethod();
             },
             calculateStepStatus: function () {
                 var st = 'new', available;
@@ -264,14 +267,27 @@
             },
             updateShippingMethod: function (code) {
                 var available = this.get('availableShippingMethods'),
-                    newMethod = _.findWhere(available, { shippingMethodCode: code });
-                if (!newMethod && available && available[0]) {
-                    newMethod = available[0];
+                    newMethod = _.findWhere(available, { shippingMethodCode: code }),
+                    lowestValue =  _.min(available, function(ob) { return ob.price; });
+
+                if (!newMethod && available && lowestValue) {
+                    newMethod = lowestValue;
                     this.provisional = true;
                 }
                 if (newMethod) {
                     this.set(newMethod);
                 }
+
+                // wait for customer to be defined
+                _.defer((function() {
+                    var contacts = this.getOrder().get('customer').get('contacts'),
+                        isPrimaryShipping = contacts.filter(function(ob) {return ob.attributes.isPrimaryShippingContact;});
+
+                    // if this is our primary shipping information
+                    if (isPrimaryShipping.length > 0 && !newMethod) {
+                        this.stepStatus('complete');
+                    }
+                }).bind(this));
             },
             next: function () {
                 if (this.validate()) return false;
