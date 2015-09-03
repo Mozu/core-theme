@@ -10,7 +10,6 @@ using System.Linq;
 using Mozu.Core.Extensions;
 using Mozu.Core.Api.Client;
 using Mozu.ProductAdmin.Contracts.Clients;
-using Mozu.Core;
 
 namespace Mozu.SiteBuilder.Mvc.SEO
 {
@@ -93,7 +92,7 @@ namespace Mozu.SiteBuilder.Mvc.SEO
             _entityListClient = entityListClient;
             _attributeClient = attributeClient;
 
-            RuleFor(x => x.Value.type.ToLowerInvariant()).Must(BeInTypeConst).WithName("validator type").WithMessage(string.Format("The validator must be one of the following types: [{0}]", string.Join(",", types)));
+            RuleFor(x => x.Value.type.ToLowerInvariant()).Must(BeInTypeConst).WithName("validator type").WithMessage(string.Format("The validator must be one of the following types: [{0}]", string.Join(", ", types)));
             RuleFor(x => x.Value).Must(HaveAttributeConstraintFields).When(x => x.Value.type == Validator.TypeConst.attribute).WithName("attribute validator").WithMessage("A validator of type 'productAttribute' must provide an attributeFQN.");
             RuleFor(x => x.Value).Must(HaveListConstraintFields).When(x => x.Value.type == Validator.TypeConst.list).WithName("list validator").WithMessage("A validator of type 'list' must provide a list of values.");
             RuleFor(x => x.Value).Must(HaveMZDBConstraintFields).When(x => x.Value.type == Validator.TypeConst.mzdb).WithName("mzdb constraint").WithMessage("A validator of type 'mzdb' must provide a listFqn and a field.");
@@ -117,9 +116,12 @@ namespace Mozu.SiteBuilder.Mvc.SEO
         static string[] types = typeof(Validator.TypeConst)
             .GetFields(BindingFlags.Static | BindingFlags.Public)
             .Where(fi => fi.FieldType == typeof(string))
+            .Where(fi => !fi.Name.StartsWith("category", StringComparison.OrdinalIgnoreCase)) // we don't want to expose the categegory* types for validation, because they are internal.
+                                                                                              // we should probably have a better way of marking this.
             .Select(fi => (string)fi.GetValue(null))
             
             .ToArray();
+
         private bool BeInTypeConst(string arg)
         {
             return types.Contains(arg, StringComparer.OrdinalIgnoreCase);
