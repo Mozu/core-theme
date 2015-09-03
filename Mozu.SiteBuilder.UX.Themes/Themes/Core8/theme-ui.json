@@ -92,7 +92,7 @@
         },
         {
             "xtype": "panel",
-            "title": "Suppress CVV During Checkout",
+            "title": "Suppress CVV During Express Checkout",
             "collapsed": false,
             "items": [
                 {
