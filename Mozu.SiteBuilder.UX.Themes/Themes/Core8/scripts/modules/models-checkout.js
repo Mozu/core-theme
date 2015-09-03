@@ -1080,6 +1080,7 @@
                     billingInfo.set('billingContact', visaCheckoutPayment.billingInfo.billingContact);
                     billingInfo.set('paymentWorkflow', visaCheckoutPayment.paymentWorkflow);
                     billingInfo.set('paymentType', visaCheckoutPayment.paymentType);
+                    this.trigger('complete');
                 }
             },
             addCoupon: function () {
