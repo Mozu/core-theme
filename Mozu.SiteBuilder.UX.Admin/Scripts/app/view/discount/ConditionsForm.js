@@ -30,7 +30,7 @@ Ext.define('Taco.view.discount.ConditionsForm', {
                 clearFilters: false,
                 createOnly:true,
                 filters: [function (record) {
-                    return record.get("key") != "PAYPALEXPRESS";
+                    return record.get("key").toUpperCase() != "PAYPALEXPRESS";
                 }]
             });
 
