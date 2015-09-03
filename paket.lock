@@ -106,7 +106,7 @@ NUGET
       Mozu.PricingRuntime.Contracts
       Mozu.ShippingRuntime.Contracts
       Newtonsoft.Json
-    Mozu.Content.Contracts (1.18.2)
+    Mozu.Content.Contracts (1.18.3)
       Mozu.Core.Prime (>= 1.17)
     Mozu.Core.Extensible.Contracts (1.18.1)
       Mozu.Core.Prime (>= 1.17)
@@ -116,7 +116,7 @@ NUGET
       Mozu.Core.Prime (>= 1.18.0)
     Mozu.Core.Messaging.Contracts (1.18.1)
       Mozu.Core.Prime (>= 1.18.0)
-    Mozu.Core.Prime (1.18.16)
+    Mozu.Core.Prime (1.18.18)
       AutoMapper (>= 3.3.0)
       Autofac (>= 3.5.2)
       Autofac.WebApi2 (>= 3.4.0)
@@ -168,9 +168,9 @@ NUGET
       Mozu.Core.Prime (>= 1.17)
     Mozu.ShippingRuntime.Contracts (1.18.1)
       Mozu.Core.Prime (>= 1.17)
-    Mozu.SiteSettings.General.Contracts (1.18.2)
+    Mozu.SiteSettings.General.Contracts (1.18.6)
       Mozu.Core.Prime (>= 1.17)
-    Mozu.SiteSettings.Order.Contracts (1.18.2)
+    Mozu.SiteSettings.Order.Contracts (1.18.6)
       Mozu.Core.Prime (>= 1.17)
       Mozu.PaymentService.Contracts (>= 1.9.6)
     Mozu.Tenant.Contracts (1.18.1)

@@ -29,7 +29,7 @@ namespace Mozu.SiteBuilder.Mvc.SEO.Mappings
         }
         public IRouteDataMapping BuildMapping(Mapping mapping)
         {
-            switch (mapping.type)
+            switch (mapping.type.ToLowerInvariant())
             {
                 case Mapping.TypeConst.direct:
                     return new DirectMapping(mapping);

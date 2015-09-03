@@ -48,7 +48,7 @@ namespace Mozu.SiteBuilder.Mvc.SEO.Constraints
         public ICustomRouteConstraint BuildConstraint(Validator validator)
         {
          
-            switch (validator.type)
+            switch (validator.type.ToLowerInvariant())
             {
                 case Validator.TypeConst.attribute:
                     return new ProductAttributeRouteConstraint(_attributeClient, _productSearchWebApiClient, _context, validator.attributeFQN);
@@ -66,7 +66,7 @@ namespace Mozu.SiteBuilder.Mvc.SEO.Constraints
                     return new QueryStringConstraint(validator);
 
             }
-            throw new ArgumentException(string.Format("validtor type [{0}] not known", validator.type));
+            throw new ArgumentException(string.Format("validator type [{0}] not known", validator.type));
         }
 
       
