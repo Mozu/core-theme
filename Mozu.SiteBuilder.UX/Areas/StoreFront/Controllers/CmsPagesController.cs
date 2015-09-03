@@ -116,9 +116,9 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
 
 
 
-        Dictionary<string, object> ToRouteDictionary(Mozu.Content.Contracts.Document doc)
+        IDictionary<string, object> ToRouteDictionary(Mozu.Content.Contracts.Document doc)
         {
-            return AutoMapper.Mapper.Map<Dictionary<string, object>>(doc);
+            return AutoMapper.Mapper.Map<IDictionary<string, object>>(doc);
         }
 
 
