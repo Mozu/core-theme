@@ -21,7 +21,20 @@ namespace Mozu.SiteBuilder.Mvc.SEO
             RuleFor(x => x.Mappings).SetCollectionValidator(new MappingValidator(entityListClient)).When(x => x.Mappings != null && x.Mappings.Count > 0).WithName("mappings").WithMessage("Mappings must all be valid");
             RuleFor(x => x.Validators).SetCollectionValidator(new ConstraintValidator(entityListClient, attributeClient)).When(x => x.Validators != null && x.Validators.Count > 0).WithName("validators").WithMessage("Validators must all be valid");
             RuleFor(x => x.Routes).SetCollectionValidator(x => new RouteValidator(x.Mappings.Keys, x.Validators.Keys)).When(x => x.Routes != null && x.Routes.Count > 0).WithName("routes").WithMessage("Routes must all be valid");
+            RuleFor(x => x.Routes)
+                .Must(HaveDistinctTemplates)
+                .When(x => x.Routes != null)
+                .WithName("Duplicate Routes detected")
+                .WithMessage("There are multiple routes with the same templates: [{0}]", x => string.Join(",", Group(x.Routes).Where(rs => rs.Count() > 1).Select(g => g.Key)));
         }
+
+        static bool HaveDistinctTemplates(List<Route> routes)
+        {
+            return Group(routes).All(x => x.Count() == 1);
+        }
+
+        static IEnumerable<IGrouping<string, Route>> Group(List<Route> routes) { return routes.GroupBy(x => x.Template, StringComparer.OrdinalIgnoreCase); }
+
     }
 
     public class MappingValidator : AbstractValidator<KeyValuePair<string, Mapping>>

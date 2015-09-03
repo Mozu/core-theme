@@ -97,9 +97,9 @@ Ext.define('Taco.controller.Message', {
      */
     setMessage: function (message, type) {
         var dialog;
-
+        var msgWithBreaks = message.replace(/(?:\r\n|\r|\n)/g, '<br />');
         dialog = Ext.create(this.getTacoViewNotifierBarView(), {
-            message: message,
+            message: msgWithBreaks,
             messageType: type,
             listeners: {
                 beforehide: {
