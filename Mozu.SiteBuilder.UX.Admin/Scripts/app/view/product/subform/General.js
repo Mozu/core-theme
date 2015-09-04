@@ -847,6 +847,7 @@ Ext.define('Taco.view.product.subform.General', {
                 fieldLabel: 'First Available Date',
                 name: 'dateFirstAvailableInCatalog',
                 labelAlign: 'top',
+                allowBlank:false,
                 hidden: this.isGlobal,
                 width: twoColumnFieldWidth,
                 value: dateFirstAvailable
