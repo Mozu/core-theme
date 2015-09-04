@@ -834,16 +834,24 @@ Ext.define('Taco.view.product.subform.General', {
 
         this.items.push (this.priceOverRideConfig);
 
+
+        
+        var dateFirstAvailable = this.productInCatalogInfo ? this.productInCatalogInfo.get('dateFirstAvailableInCatalog') : "";
+        if (Ext.isEmpty(dateFirstAvailable)) {
+            dateFirstAvailable = new Date();
+        }
+        
         this.items.push(
             Taco.core.ux.TooltipLabel.wrapConfig('product.general.dateFirstAvailable', me, {
-            xtype: 'datefield',
-            fieldLabel: 'First Available Date',
-            name: 'dateFirstAvailableInCatalog',
-            labelAlign: 'top',
-            hidden: this.isGlobal,
-            width: twoColumnFieldWidth,
-            value: this.productInCatalogInfo ? this.productInCatalogInfo.get('dateFirstAvailableInCatalog') : ""
-        }, Ext.id()))
+                xtype: 'datefield',
+                fieldLabel: 'First Available Date',
+                name: 'dateFirstAvailableInCatalog',
+                labelAlign: 'top',
+                hidden: this.isGlobal,
+                width: twoColumnFieldWidth,
+                value: dateFirstAvailable
+            }, Ext.id())
+        );
 
 
         this.callParent(arguments);
@@ -1132,6 +1140,15 @@ Ext.define('Taco.view.product.subform.General', {
                 return img.isUploaded;
             });
         }
+
+
+        
+        
+        var dateFirstAvailableInCatalog = this.findField("dateFirstAvailableInCatalog");
+        if (this.productInCatalogInfo) {
+            this.productInCatalogInfo.set('dateFirstAvailableInCatalog', dateFirstAvailableInCatalog.getValue());
+        }
+        
 
         // need to update the record manually. form.Form does not extract the value from the imageField automatically.
         this.record.set("productImages", uploadedImages);
