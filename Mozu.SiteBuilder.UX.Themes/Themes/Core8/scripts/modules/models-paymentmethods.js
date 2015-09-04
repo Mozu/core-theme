@@ -25,7 +25,8 @@
         mozuType: 'creditcard',
         defaults: {
             isCvvOptional: false,
-            isDefaultPayMethod: false
+            isDefaultPayMethod: false,
+            isSavedCard: false
         },
         validation: {
             paymentOrCardType: {
@@ -50,10 +51,10 @@
                 fn: function(value, attr) {
                     var cardType = attr.split('.')[0],
                         card = this.get(cardType),
-                        isNewCard = this.get('paymentServiceCardId') || this.get('cardId');
+                        isSavedCard = card.get('isSavedCard');
 
                     // If card is not selected or cvv is not required, no need to validate
-                    if (!card.selected || (Hypr.getThemeSetting('isCvvSuppressed') && !isNewCard)) {
+                    if (!card.selected || (Hypr.getThemeSetting('isCvvSuppressed') && isSavedCard)) {
                         return;
                     }
 
