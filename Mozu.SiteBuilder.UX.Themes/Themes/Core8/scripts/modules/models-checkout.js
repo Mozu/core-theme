@@ -875,7 +875,9 @@
                 // the card needs to know if this is a saved card or not.
                 this.get('card').set('isSavedCard', order.get('billingInfo.usingSavedCard'));
                 // the card needs to know if this is Visa checkout (or Amazon? TBD)
-                this.get('card').set('isVisaCheckout', currentPayment.paymentWorkflow.toLowerCase() === 'visacheckout');
+                if (currentPayment) {
+                    this.get('card').set('isVisaCheckout', currentPayment.paymentWorkflow.toLowerCase() === 'visacheckout');
+                }
 
                 if (this.nonStoreCreditTotal() > 0 && this.validate()) return false;
 
