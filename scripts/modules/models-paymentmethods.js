@@ -115,7 +115,7 @@
                     var cardType = attr.split('.')[0],
                         card = this.get(cardType),
                         isSavedCard = card.get('isSavedCard'),
-                        isVisaCheckout = card.get('isVisaCheckout'); // This should change to include amazon too...
+                        isVisaCheckout = card.get('isVisaCheckout');
 
                     var skipValidation = Hypr.getThemeSetting('isCvvSuppressed') && isSavedCard;
 
