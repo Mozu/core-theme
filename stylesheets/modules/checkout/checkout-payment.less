@@ -25,10 +25,13 @@
     > .mz-l-formfieldgroup-row {
         display: block;
     }
+    .mz-paymentselector-option label {
+        text-align: left;
+        font-size: @fontSizeLarger;
+    }
     .mz-l-formfieldgroup-cell {
         > label {
-            text-align: left;
-            font-size: @fontSizeLarger;
+            min-width: 155px;
         }
         .mz-paymentselector-reenter-cvv {
             label {
@@ -39,5 +42,11 @@
             }
         }    
     }
+    .mz-payment-credit-card-savepayment-row {
+        margin-left: 155px;
+    }
 }
 
+.mz-paymentselector-newcreditcard .mz-l-formfieldgroup-cell:first-child label {
+    min-width: 155px;
+}
