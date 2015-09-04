@@ -320,7 +320,7 @@
             },
             relations: {
                 billingContact: CustomerModels.Contact,
-                card: PaymentMethods.CreditCard,
+                card: PaymentMethods.CreditCardWithCVV,
                 check: PaymentMethods.Check
             },
             helpers: ['acceptsMarketing', 'savedPaymentMethods', 'availableStoreCredits', 'applyingCredit', 'maxCreditAmountToApply',
