@@ -42,6 +42,8 @@ Ext.define('Taco.view.order.Grid', {
 
     autoScroll: true,
 
+    itemId: 'taco-order-grid',
+
     enableQuickFilters:true,
 
     advancedSearchConfig : {
@@ -95,6 +97,10 @@ Ext.define('Taco.view.order.Grid', {
                 }
             }
         });
+
+        if (window.location.href.indexOf('/edit/') !== -1) {
+            console.log(this.up('order-split'))
+        }
         
         me.callParent(arguments);
 

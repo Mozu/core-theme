@@ -43,7 +43,8 @@ Ext.define('Taco.view.fileManager.Associator', {
                         dock: 'bottom',
                         displayInfo: true,
                         store: this.store,
-                        inputItemWidth: 45
+                        inputItemWidth: 45,
+                        style: 'margin-top: 10px;'
                 }),
                 Ext.widget({
                     xtype: 'taco-filtercontainer',
@@ -52,6 +53,7 @@ Ext.define('Taco.view.fileManager.Associator', {
                     advancedForm: this.advancedSearchConfig.form,
                     advancedFormCls: this.advancedSearchConfig.advancedFormCls,
                     store: this.store,
+                    style: 'margin-bottom:10px;',
                     filterStores: this.advancedSearchConfig.stores
                 })
                 
@@ -60,7 +62,7 @@ Ext.define('Taco.view.fileManager.Associator', {
             columns: [{
                 xtype: 'templatecolumn',
                 header: 'Image',
-                tpl: '<tpl if="localthumbnail"><div class="taco-basegrid-thumbnail"><img width="60" src="{localthumbnail}" /></div><tpl else><div class="taco-basegrid-thumbnail"><img width="60" src="{thumbnail}?size=60" /></div></tpl>'
+                tpl: '<tpl if="localthumbnail"><div class="taco-basegrid-thumbnail"><img height="60" src="{localthumbnail}" /></div><tpl else><div class="taco-basegrid-thumbnail"><img height="60" width="60" src="{thumbnail}?size=60" /></div></tpl>'
             }, {
                 text: 'Name',
                 editor: {
@@ -154,6 +156,8 @@ Ext.define('Taco.view.fileManager.Associator', {
                 Taco.app.DragDropZone.disallowDrop();
             }
         });
+
+        console.log(cmp)
     },
 
     /**

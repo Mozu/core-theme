@@ -63,6 +63,8 @@ Ext.define('Taco.view.order.Split', {
     },
 
     initComponent: function () {
+        var me = this;
+
         this.store = Taco.core.data.StoreManager.getOrCreate('Taco.store.OrderGrid');
 
         this.editor = this.statics().eastConfigs.placeholder;
@@ -117,6 +119,23 @@ Ext.define('Taco.view.order.Split', {
                 fn: 'handleAddToEast'
             }
         });
+
+
+        this.getEast().on('afterlayout', function() {
+            
+            setTimeout(function() {
+                // if we load orders, and were not viewing an order, and the grid isnt full page -- lets select the first order
+                if (window.location.href.indexOf('/edit/') === -1 && !me.getEast().getCollapsed()) {
+                    me.down('#taco-order-grid').store.on('load', function(store, records) {
+                        me.onRecordChange(store.getAt(0));
+                    });
+                }
+            }, 0);
+
+
+        }, this, {single: true});
+       
+        
     },
 
     createActionHandler: function () {
