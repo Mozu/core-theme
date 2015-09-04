@@ -738,6 +738,12 @@
                     me.get('card').set(card.toJSON());
                     me.set('paymentType', 'CreditCard');
                     me.set('usingSavedCard', true);
+                    if (Hypr.getThemeSetting('isCvvSuppressed')) {
+                        me.get('card').set('isCvvOptional', true);
+                        if (me.parent.get('amountRemainingForPayment') > 0) {
+                            return me.applyPayment();
+                        }
+                    }
                 }
             },
             getPaymentTypeFromCurrentPayment: function () {
@@ -792,7 +798,7 @@
                     paymentTypeIsPayPal = activePayments && !!_.findWhere(activePayments, { paymentType: 'PaypalExpress' }),
                     balanceZero = this.parent.get('amountRemainingForPayment') === 0;
 
-                if (paymentTypeIsCard) return this.stepStatus('incomplete'); // initial state for CVV entry
+                if (paymentTypeIsCard && !Hypr.getThemeSetting('isCvvSuppressed')) return this.stepStatus('incomplete'); // initial state for CVV entry
 
                 if (!fulfillmentComplete) return this.stepStatus('new');
 
