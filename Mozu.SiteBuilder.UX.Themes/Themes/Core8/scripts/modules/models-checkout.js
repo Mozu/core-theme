@@ -248,6 +248,9 @@
 
                 // always make them choose again
                 _.each(['shippingMethodCode', 'shippingMethodName'], this.unset, this);
+
+                // after unset we need to select the cheapest option
+                this.updateShippingMethod();
             },
             calculateStepStatus: function () {
                 var st = 'new', available;
@@ -264,14 +267,27 @@
             },
             updateShippingMethod: function (code) {
                 var available = this.get('availableShippingMethods'),
-                    newMethod = _.findWhere(available, { shippingMethodCode: code });
-                if (!newMethod && available && available[0]) {
-                    newMethod = available[0];
+                    newMethod = _.findWhere(available, { shippingMethodCode: code }),
+                    lowestValue =  _.min(available, function(ob) { return ob.price; });
+
+                if (!newMethod && available && lowestValue) {
+                    newMethod = lowestValue;
                     this.provisional = true;
                 }
                 if (newMethod) {
                     this.set(newMethod);
                 }
+
+                // wait for customer to be defined
+                _.defer((function() {
+                    var contacts = this.getOrder().get('customer').get('contacts'),
+                        isPrimaryShipping = contacts.filter(function(ob) {return ob.attributes.isPrimaryShippingContact;});
+
+                    // if this is our primary shipping information
+                    if (isPrimaryShipping.length > 0 && !newMethod) {
+                        this.stepStatus('complete');
+                    }
+                }).bind(this));
             },
             next: function () {
                 if (this.validate()) return false;
@@ -304,7 +320,7 @@
             },
             relations: {
                 billingContact: CustomerModels.Contact,
-                card: PaymentMethods.CreditCard,
+                card: PaymentMethods.CreditCardWithCVV,
                 check: PaymentMethods.Check
             },
             helpers: ['acceptsMarketing', 'savedPaymentMethods', 'availableStoreCredits', 'applyingCredit', 'maxCreditAmountToApply',
@@ -847,9 +863,15 @@
                 // just can't sync these emails right
                 order.syncBillingAndCustomerEmail();
 
-                if (this.nonStoreCreditTotal() > 0 && this.validate()) return false;
-
+                // This needs to be ahead of validation so we can check if visa checkout is being used.
                 var currentPayment = order.apiModel.getCurrentPayment();
+
+                // the card needs to know if this is a saved card or not.
+                this.get('card').set('isSavedCard', order.get('billingInfo.usingSavedCard'));
+                // the card needs to know if this is Visa checkout (or Amazon? TBD)
+                this.get('card').set('isVisaCheckout', currentPayment.paymentWorkflow.toLowerCase() === 'visacheckout');
+
+                if (this.nonStoreCreditTotal() > 0 && this.validate()) return false;
 
                 var card = this.get('card');
 

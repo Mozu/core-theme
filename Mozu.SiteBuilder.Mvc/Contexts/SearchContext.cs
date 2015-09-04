@@ -106,15 +106,15 @@ namespace Mozu.SiteBuilder.Mvc.Contexts
 
 
             object temp;
-            if (httpRouteData.Values.TryGetValue("pageSize", out temp) && (!string.IsNullOrWhiteSpace(temp as string) || temp is int))
+            if (httpRouteData.Values.TryGetValue("pageSize", out temp) && (!string.IsNullOrWhiteSpace(temp as string) || temp is int || temp is long))
             {
                 this.PageSize = Convert.ToInt32(temp);
             }
-            if (httpRouteData.Values.TryGetValue("startIndex", out temp) && (!string.IsNullOrWhiteSpace(temp as string) || temp is int))
+            if (httpRouteData.Values.TryGetValue("startIndex", out temp) && (!string.IsNullOrWhiteSpace(temp as string) || temp is int || temp is long))
             {
                 this.StartIndex = Convert.ToInt32(temp);
             }
-            if (httpRouteData.Values.TryGetValue("categoryId", out temp) && (!string.IsNullOrWhiteSpace(temp as string) || temp is int))
+            if (httpRouteData.Values.TryGetValue("categoryId", out temp) && (!string.IsNullOrWhiteSpace(temp as string) || temp is int || temp is long))
             {
                 this.CategoryId = Convert.ToInt32(temp);
             }

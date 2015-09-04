@@ -8,7 +8,15 @@
  * Later when we shim ES6/promise that can also go away.
  */
 
-define(['jquery', 'modules/api'], function($, api) {
+define(['modules/jquery-mozu', 'modules/api'], function($, api) {
+
+    function setPartialTrue(url) {
+        return url + (url.indexOf('?') === -1 ? "?" : "&") + "_partial=true";
+    }
+
+    function removePartiaParaml(url) {
+        return url.replace(/[&\?]_partial=true/g, '');
+    }
 
     return function getPartialView(url, partialTemplate) {
 
@@ -17,7 +25,7 @@ define(['jquery', 'modules/api'], function($, api) {
         function handleSuccess(body, __, res) {
             var canonical = res.getResponseHeader('x-vol-canonical-url');
             if (canonical) {
-                canonical = canonical.replace(/[&\?]_partial=true/, '');
+                canonical = removePartialParam(canonical);
             }
             deferred.resolve({
                 canonicalUrl: canonical,
@@ -31,7 +39,7 @@ define(['jquery', 'modules/api'], function($, api) {
 
         $.ajax({
             method: 'GET',
-            url: url + (url.indexOf('?') === -1 ? "?" : "&") + "_partial=true",
+            url: setPartialTrue(removePartialParam(url)),
             dataType: 'html',
             headers: {
                 'x-vol-alternative-view': partialTemplate

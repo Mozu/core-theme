@@ -674,7 +674,8 @@ namespace Mozu.SiteBuilder.UX.Models.StoreFront.Catalog
         }
 
         public List<Category> AllCategories { get; set; }
-       
+
+        [Microsoft.ClearScript.ScriptMember("findById")]
         public Category FindById( int? categoryId)
         {
             if (!categoryId.HasValue)
