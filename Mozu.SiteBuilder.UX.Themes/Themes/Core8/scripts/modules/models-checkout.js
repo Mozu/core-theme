@@ -863,12 +863,15 @@
                 // just can't sync these emails right
                 order.syncBillingAndCustomerEmail();
 
+                // This needs to be ahead of validation so we can check if visa checkout is being used.
+                var currentPayment = order.apiModel.getCurrentPayment();
+
                 // the card needs to know if this is a saved card or not.
                 this.get('card').set('isSavedCard', order.get('billingInfo.usingSavedCard'));
+                // the card needs to know if this is Visa checkout (or Amazon? TBD)
+                this.get('card').set('isVisaCheckout', currentPayment.paymentWorkflow.toLowerCase() === 'visacheckout');
 
                 if (this.nonStoreCreditTotal() > 0 && this.validate()) return false;
-
-                var currentPayment = order.apiModel.getCurrentPayment();
 
                 var card = this.get('card');
 
