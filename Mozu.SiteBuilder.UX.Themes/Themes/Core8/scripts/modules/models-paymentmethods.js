@@ -47,26 +47,6 @@
             nameOnCard: {
                 fn: "present",
                 msg: Hypr.getLabel('cardNameMissing')
-            },
-            cvv: {
-                fn: function(value, attr) {
-                    var cardType = attr.split('.')[0],
-                        card = this.get(cardType),
-                        isSavedCard = card.get('isSavedCard'),
-                        isVisaCheckout = card.get('isVisaCheckout'); // This should change to include amazon too...
-
-                    var skipValidation = Hypr.getThemeSetting('isCvvSuppressed') && isSavedCard;
-
-                    // If card is not selected or cvv is not required, no need to validate
-                    if (!card.selected || isVisaCheckout || skipValidation) {
-                        return;
-                    }
-
-                    if (!value) {
-                        return Hypr.getLabel('securityCodeMissing') || Hypr.getLabel('genericRequired');
-                    }
-                        
-                }
             }
         },
         initialize: function () {
@@ -128,6 +108,31 @@
         }
     });
 
+    var CreditCardWithCVV = CreditCard.extend({
+        validation: _.extend({}, CreditCard.prototype.validation, {
+            cvv: {
+                fn: function(value, attr) {
+                    var cardType = attr.split('.')[0],
+                        card = this.get(cardType),
+                        isSavedCard = card.get('isSavedCard'),
+                        isVisaCheckout = card.get('isVisaCheckout'); // This should change to include amazon too...
+
+                    var skipValidation = Hypr.getThemeSetting('isCvvSuppressed') && isSavedCard;
+
+                    // If card is not selected or cvv is not required, no need to validate
+                    if (!card.selected || isVisaCheckout || skipValidation) {
+                        return;
+                    }
+
+                    if (!value) {
+                        return Hypr.getLabel('securityCodeMissing') || Hypr.getLabel('genericRequired');
+                    }
+
+                }
+            }
+        })
+    });
+
 
     var PayPal = PaymentMethod.extend({
         mozuType: 'paypalpayment'
@@ -178,6 +183,7 @@
 
     return {
         CreditCard: CreditCard,
+        CreditCardWithCVV: CreditCardWithCVV,
         Check: Check,
         DigitalCredit: DigitalCredit
     };
