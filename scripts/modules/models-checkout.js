@@ -863,6 +863,9 @@
                 // just can't sync these emails right
                 order.syncBillingAndCustomerEmail();
 
+                // the card needs to know if this is a saved card or not.
+                this.get('card').set('isSavedCard', order.get('billingInfo.usingSavedCard'));
+
                 if (this.nonStoreCreditTotal() > 0 && this.validate()) return false;
 
                 var currentPayment = order.apiModel.getCurrentPayment();
