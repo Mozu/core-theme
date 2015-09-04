@@ -26,7 +26,8 @@
         defaults: {
             isCvvOptional: false,
             isDefaultPayMethod: false,
-            isSavedCard: false
+            isSavedCard: false,
+            isVisaCheckout: false
         },
         validation: {
             paymentOrCardType: {
@@ -51,10 +52,13 @@
                 fn: function(value, attr) {
                     var cardType = attr.split('.')[0],
                         card = this.get(cardType),
-                        isSavedCard = card.get('isSavedCard');
+                        isSavedCard = card.get('isSavedCard'),
+                        isVisaCheckout = card.get('isVisaCheckout'); // This should change to include amazon too...
+
+                    var skipValidation = Hypr.getThemeSetting('isCvvSuppressed') && isSavedCard;
 
                     // If card is not selected or cvv is not required, no need to validate
-                    if (!card.selected || (Hypr.getThemeSetting('isCvvSuppressed') && isSavedCard)) {
+                    if (!card.selected || isVisaCheckout || skipValidation) {
                         return;
                     }
 
