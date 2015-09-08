@@ -281,7 +281,7 @@ namespace Mozu.SiteBuilder.Mvc.SEO.Constraints
             {
                 return false;
             }
-            switch (Settings.type)
+            switch (Settings.type.ToLowerInvariant())
             {
                 case Validator.TypeConst.categoryId:
                     {

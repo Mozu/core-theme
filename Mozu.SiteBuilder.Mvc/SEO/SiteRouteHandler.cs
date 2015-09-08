@@ -276,7 +276,10 @@ namespace Mozu.SiteBuilder.Mvc.SEO
             routingValues.ChainSet("httproute", true);
 
             var newReq = new HttpRequestMessage();
-            
+            foreach(var prop in _requestMessage.Value.Properties)
+            {
+                newReq.Properties.Add(prop.Key, prop.Value);
+            }
 
             foreach (var route in routes)
             {
