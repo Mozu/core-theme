@@ -293,6 +293,7 @@ Ext.define('Taco.view.website.Index', {
                                             me.setPublishable(false);
                                             me.showGrowl('Discarded', 'info', 1000);
                                             me.down('#draftIcon').hide();
+                                            me.cancel(); // trigger a reload so that discarded state is wiped clean.
                                         });
 
                                         this.save();

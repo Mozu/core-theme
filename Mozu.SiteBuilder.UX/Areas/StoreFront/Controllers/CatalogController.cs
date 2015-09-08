@@ -109,13 +109,15 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
             {
                 Template = new DocumentRequest
                 {
-                    Path = "product"
+                    Path = "product",
+                    IncludeInactiveDocument = PageContext.IsEditMode
                 },
                 Page = new DocumentRequest
                 {
                     Path = "product-" + productCode,
                     ListFQN = "catalogContent@mozu",
-                    DocumentTypeFQN = "productContent@mozu"
+                    DocumentTypeFQN = "productContent@mozu",
+                    IncludeInactiveDocument = PageContext.IsEditMode
                 }
             };
 
@@ -242,14 +244,15 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
             {
                 Template = new DocumentRequest
                 {
-                    Path = "category"
+                    Path = "category",
+                    IncludeInactiveDocument = PageContext.IsEditMode
                 },
                 Page = new DocumentRequest
                 {
                     Path = "category-" + categoryId,
                     ListFQN = "catalogContent@mozu",
-                    DocumentTypeFQN = "categoryContent@mozu"
-
+                    DocumentTypeFQN = "categoryContent@mozu",
+                    IncludeInactiveDocument = PageContext.IsEditMode
                 }
             };
 
