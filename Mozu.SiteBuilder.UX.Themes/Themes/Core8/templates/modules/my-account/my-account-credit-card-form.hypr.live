@@ -7,12 +7,8 @@
     <div class="mz-l-formfieldgroup-row mz-payment-credit-card-defaultflag-row">
         <div class="mz-l-formfieldgroup-cell"></div>
         <div class="mz-l-formfieldgroup-cell">
-        {% if model.isDefaultPayMethod %}
-        <span>{{ labels.default }}</span>
-        {% else %}
-        <input type="checkbox" id="foobar" data-mz-value="{{ cardcontext }}isDefaultPayMethod" />
-        <label for="foobar">{{ labels.default }}</label>
-        {% endif %}
+        <input type="checkbox" id="editingcard-is-primary" {% if model.isDefaultPayMethod %}checked="true"{% endif %} data-mz-value="{{ cardcontext }}isDefaultPayMethod" />
+        <label for="editingcard-is-primary">{{ labels.primary }}</label>
         </div>
     </div>
     {% if model.hasSavedContacts %}
