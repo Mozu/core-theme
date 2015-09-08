@@ -6,7 +6,7 @@
         "isDesktop": true,
         "isMobile": false,
         "isTablet": false,
-        "name": "Amazon Pay Core8 8.0.0-10",
+        "name": "Amazon Pay Core8 8.0.0-12",
         "allowProduction": true
     },
     "editors": [

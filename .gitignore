@@ -12,6 +12,9 @@ node_modules/
 
 /npm-debug.log
 
+# Vim-specific
+*.swp
+
 /compiled/
 .yo-rc.json
 mozu.config.json
