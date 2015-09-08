@@ -781,6 +781,9 @@
                     } else if (!me.get('savedPaymentMethodId')) {
                         me.setSavedPaymentMethod(null, me.getOrder().get('customer.cards').first());
                     }
+                    else {
+                        me.setSavedPaymentMethod(me.get('savedPaymentMethodId'));
+                    }
                 });
                 this._cachedDigitalCredits = null;
 
