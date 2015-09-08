@@ -21,10 +21,16 @@ function($,EventBus, Api, hyprlivecontext, _) {
 			this.buttonColor = this.getValue(paymentSettings,"buttonColor") || "Gold";
 			this.buttonType = this.getValue(paymentSettings,"buttonType") || "PwA";
 			this.usePopUp = (this.getValue(paymentSettings, "usepopup") || "true") == "true";
+			var regionMappings = {"de" : "eu", "uk" : "eu", "us" : "na", "jp" : "jp"};
+
 			if (this.sellerId && this.clientId && loadScript) {
 				var self = this;
 				sandbox = (isSandbox ? "/sandbox" : "");
-				var payWithAmazonUrl = "https://static-na.payments-amazon.com/OffAmazonPayments/us"+sandbox+"/js/Widgets.js";
+
+				if (region != "us")
+					sandbox += "/lpa";
+
+				var payWithAmazonUrl = "https://static-"+regionMappings[region]+".payments-amazon.com/OffAmazonPayments/"+ region +sandbox+"/js/Widgets.js";
 
 				window.onAmazonLoginReady = function() {
 					amazon.Login.setClientId(self.clientId); //use clientId

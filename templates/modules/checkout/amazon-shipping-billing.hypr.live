@@ -9,11 +9,21 @@
 	{%endwith%}
 
 	{%with payWithAmazon.credentials|findwhere("apiName", "environment") as environment%}
-		{% if environment.value == "sandbox" %}
-			<script ype='text/javascript' src='https://static-na.payments-amazon.com/OffAmazonPayments/us/sandbox/js/Widgets.js'></script>
-		{%else%}
-			<script ype='text/javascript' src='https://static-na.payments-amazon.com/OffAmazonPayments/us/js/Widgets.js'></script>
-		{%endif%}
+		{%with payWithAmazon.credentials|findwhere("apiName", "region") as region%}
+			{% if environment.value == "sandbox" %}
+				{% if region.value == "uk" || region.value == "de"%}  
+					<script ype='text/javascript' src='https://static-eu.payments-amazon.com/OffAmazonPayments/{{region.value}}/sandbox/lpa/js/Widgets.js'></script>
+				{%else%}
+					<script ype='text/javascript' src='https://static-na.payments-amazon.com/OffAmazonPayments/us/sandbox/js/Widgets.js'></script>
+				{%endif%}
+			{%else%}
+				{% if region.value == "uk" || region.value == "de"%}  
+					<script ype='tedxt/javascript' src='https://static-eu.payments-amazon.com/OffAmazonPayments/{{region.value}}/lpa/js/Widgets.js'></script>
+				{%else%}
+					<script ype='tedxt/javascript' src='https://static-na.payments-amazon.com/OffAmazonPayments/us/js/Widgets.js'></script>
+				{%endif%}	
+			{%endif%}
+		{%endwith%}
 	{%endwith%}
 		
 {% endwith %}
