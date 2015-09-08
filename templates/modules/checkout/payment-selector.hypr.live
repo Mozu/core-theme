@@ -77,13 +77,13 @@
                             </label>
                             {% endif %}
                             {% if name == "visacheckout"%}
-                                <div class="mz-l-formfieldgroup-cell mz-digitalwallets">
+                                <div class="mz-digitalwallets">
                                     <img alt="Visa Checkout" class="v-button" role="button"
                                     src="{{pageContext.visaCheckoutButtonUrl}}?size=154&amp;color=neutral"/>
                                 </div>
                             {% endif %}
                             {% if name == "paywithamazon" %}
-                                <div class="mz-paymenttype" id="amazonButonPaymentSection" style="margin-top:10px;">
+                                <div class="mz-paymenttype" id="amazonButonPaymentSection">
                                    
                                 </div>    
                             {% endif %}
