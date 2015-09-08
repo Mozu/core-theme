@@ -1,3 +1,4 @@
+
 /**
  * Header portion, with title and dirtybutton, of a Taco.core.ux.content.Container.
  * @class Taco.core.ux.content.Header
@@ -14,25 +15,30 @@ Ext.define('Taco.core.ux.content.ContextMenu', {
     growToLongestValue: false,
     matchFieldWidth: false,
     editable:false,
-    maxWidth: 400,
+    maxWidth: 900,
     supportedLevels: [],
     defaultListConfig : {
         minWidth:300
     }, 
-    listeners : {
-        afterrender: function(){
-            //override width of combobox if it's determined width is less than the max width
-            var width = this.inputEl.getValue().length + this.getWidth();
+    adjustWidth: function() {
+        var width = this.inputEl.getValue().length * 11;
+        
+        if (width < this.maxWidth) {
+            this.setWidth(width);
+        }
 
-            if (width < this.maxWidth) {
-                this.setWidth(width);
-            }
+        else {
+            this.setWidth(this.maxWidth);
         }
     },
+
     initComponent: function () {
         var ctx = Taco.app.context,
             item,
             value;
+
+        this.on('afterrender', this.adjustWidth);
+
         this.store = Taco.app.context.getStore(false);
         
         this.store.filter([
@@ -111,6 +117,7 @@ Ext.define('Taco.core.ux.content.ContextMenu', {
                 }
             }, 1);
         }
+
     },
 
     onGlobalContextChange: function (context) {
