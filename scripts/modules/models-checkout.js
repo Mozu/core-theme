@@ -860,7 +860,7 @@
                 if (payment.paymentWorkflow === 'VisaCheckout') {
                     normalizedLiveBillingInfo.billingContact.address.addressType = normalizedSavedPaymentInfo.billingContact.address.addressType;
                 }
-
+                
                 return !_.isEqual(normalizedSavedPaymentInfo, normalizedLiveBillingInfo);
             },
             submit: function () {
@@ -1021,6 +1021,7 @@
                             self.apiVoidPayment(payment.id);
                         });
                         paymentWorkflow = visaCheckoutPayment.paymentWorkflow;
+                        billingInfo.unset('billingContact');
                         billingInfo.set('card', visaCheckoutPayment.billingInfo.card);
                         billingInfo.set('billingContact', visaCheckoutPayment.billingInfo.billingContact);
                     }
@@ -1107,6 +1108,7 @@
                 var visaCheckoutPayment = activePayments && _.findWhere(activePayments, { paymentWorkflow: 'VisaCheckout' });
                 if (visaCheckoutPayment) {
                     billingInfo.set('card', visaCheckoutPayment.billingInfo.card);
+                    billingInfo.unset('billingContact');
                     billingInfo.set('billingContact', visaCheckoutPayment.billingInfo.billingContact);
                     billingInfo.set('paymentWorkflow', visaCheckoutPayment.paymentWorkflow);
                     billingInfo.set('paymentType', visaCheckoutPayment.paymentType);
