@@ -79,10 +79,6 @@ namespace Mozu.SiteBuilder.Mvc.SEO.Constraints
 
         public bool Match(HttpRequestMessage request, IHttpRoute route, string parameterName, IDictionary<string, object> values, HttpRouteDirection routeDirection)
         {
-            if ( routeDirection == HttpRouteDirection.UriGeneration)
-            {
-                return true;
-            }
             return DoMatch(request, route, parameterName, values, routeDirection);
         }
     }
@@ -271,10 +267,6 @@ namespace Mozu.SiteBuilder.Mvc.SEO.Constraints
 
         public override bool DoMatch(HttpRequestMessage request, IHttpRoute route, string parameterName, IDictionary<string, object> values, HttpRouteDirection routeDirection)
         {
-            if (routeDirection == HttpRouteDirection.UriGeneration)
-            {
-                return true;
-            }
             object tmp;
             if ( !values.TryGetValue(parameterName,out tmp) || tmp == null)
             {
@@ -573,12 +565,6 @@ namespace Mozu.SiteBuilder.Mvc.SEO.Constraints
                 return false;
             }
 
-            if (routeValue is string && routeDirection == HttpRouteDirection.UriGeneration)
-            {
-                return true;
-            }
-
-           
             var curRouteValue = routeValue.ToString();
 
             if (!_attributeValues.ContainsKey(curRouteValue) && !_facetValues.ContainsKey(curRouteValue))
@@ -586,9 +572,6 @@ namespace Mozu.SiteBuilder.Mvc.SEO.Constraints
                 return false;
             }
            
-
-
-
             //TODO: put the right locale in here?
             //AttributeVocabularyValue attr;
             //values[parameterName] = GetAttributeValue(attr, "en-US");
@@ -670,11 +653,6 @@ namespace Mozu.SiteBuilder.Mvc.SEO.Constraints
 
         public override bool DoMatch(HttpRequestMessage request, IHttpRoute route, string parameterName, IDictionary<string, object> values, HttpRouteDirection routeDirection)
         {
-            //todo:validate this.
-            if (routeDirection == HttpRouteDirection.UriGeneration)
-            {
-                return true;
-            }
             object temp;
             if (!values.TryGetValue(parameterName, out temp))
             {
