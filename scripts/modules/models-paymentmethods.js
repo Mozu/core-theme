@@ -117,10 +117,11 @@
                         isSavedCard = card.get('isSavedCard'),
                         isVisaCheckout = card.get('isVisaCheckout');
 
-                    var skipValidation = Hypr.getThemeSetting('isCvvSuppressed') && isSavedCard;
+                    var skipValidationSaved = Hypr.getThemeSetting('isCvvSuppressed') && isSavedCard;
+                    var skipValidationVisaCheckout = Hypr.getThemeSetting('isCvvSuppressed') && isVisaCheckout;
 
                     // If card is not selected or cvv is not required, no need to validate
-                    if (!card.selected || isVisaCheckout || skipValidation) {
+                    if (!card.selected || skipValidationVisaCheckout || skipValidationSaved) {
                         return;
                     }
 
