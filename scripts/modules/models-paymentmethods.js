@@ -1,4 +1,4 @@
-﻿define(['jquery', 'underscore', 'modules/backbone-mozu', 'hyprlive'], function ($, _, Backbone, Hypr) {
+﻿define(['modules/jquery-mozu', 'underscore', 'modules/backbone-mozu', 'hyprlive'], function ($, _, Backbone, Hypr) {
     // payment methods only validate if they are selected!
     var PaymentMethod = Backbone.MozuModel.extend({
         present: function (value, attr) {
@@ -25,7 +25,9 @@
         mozuType: 'creditcard',
         defaults: {
             isCvvOptional: false,
-            isDefaultPayMethod: false
+            isDefaultPayMethod: false,
+            isSavedCard: false,
+            isVisaCheckout: false
         },
         validation: {
             paymentOrCardType: {
@@ -45,22 +47,6 @@
             nameOnCard: {
                 fn: "present",
                 msg: Hypr.getLabel('cardNameMissing')
-            },
-            cvv: {
-                fn: function(value, attr) {
-                    var cardType = attr.split('.')[0],
-                        card = this.get(cardType);
-
-                    // If card is not selected or cvv is not required, no need to validate
-                    if (!card.selected || Hypr.getThemeSetting('isCvvSuppressed')) {
-                        return;
-                    }
-
-                    if (!value) {
-                        return Hypr.getLabel('securityCodeMissing') || Hypr.getLabel('genericRequired');
-                    }
-                        
-                }
             }
         },
         initialize: function () {
@@ -122,6 +108,32 @@
         }
     });
 
+    var CreditCardWithCVV = CreditCard.extend({
+        validation: _.extend({}, CreditCard.prototype.validation, {
+            cvv: {
+                fn: function(value, attr) {
+                    var cardType = attr.split('.')[0],
+                        card = this.get(cardType),
+                        isSavedCard = card.get('isSavedCard'),
+                        isVisaCheckout = card.get('isVisaCheckout');
+
+                    var skipValidationSaved = Hypr.getThemeSetting('isCvvSuppressed') && isSavedCard;
+                    var skipValidationVisaCheckout = Hypr.getThemeSetting('isCvvSuppressed') && isVisaCheckout;
+
+                    // If card is not selected or cvv is not required, no need to validate
+                    if (!card.selected || skipValidationVisaCheckout || skipValidationSaved) {
+                        return;
+                    }
+
+                    if (!value) {
+                        return Hypr.getLabel('securityCodeMissing') || Hypr.getLabel('genericRequired');
+                    }
+
+                }
+            }
+        })
+    });
+
 
     var PayPal = PaymentMethod.extend({
         mozuType: 'paypalpayment'
@@ -172,6 +184,7 @@
 
     return {
         CreditCard: CreditCard,
+        CreditCardWithCVV: CreditCardWithCVV,
         Check: Check,
         DigitalCredit: DigitalCredit
     };
