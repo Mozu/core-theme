@@ -193,7 +193,7 @@ module.exports = function(grunt) {
         var j = grunt.file.readJSON('./theme.json');
         var b = grunt.file.readJSON('./bower.json');
         var newVersion = semver.inc(pkg.version, grunt.option('increment') || 'prerelease');
-        j.about.name = "Core8 " + newVersion;
+        j.about.name = "Amazon Pay Core8 " + newVersion;
         b.version = newVersion;
         grunt.file.write('./theme.json', JSON.stringify(j, null, 4));
         grunt.file.write('./bower.json', JSON.stringify(b, null, 4));
