@@ -62,12 +62,12 @@
             </div>
             {% for externalPayment in siteContext.checkoutSettings.externalPaymentWorkflowSettings %}
                 {% if externalPayment.isEnabled %}
+                {% with externalPayment.name|lower as name %}
                     <div class="mz-l-formfieldgroup-row mz-paymentselector-externalworkflows">
                         <div class="mz-l-formfieldgroup-cell">
                         </div>
                         <div class="mz-l-formfieldgroup-cell">
-
-                            {% if externalPayment.name == "PayPalExpress" %}
+                            {% if name == "paypalexpress" %}
                            <label class="mz-paymenttype mz-paymenttype-paypal">
                                 <input data-mz-value="paymentType" name="paymentType" type="radio" class="mz-paymenttype-input" value="PaypalExpress" {% if model.paymentType == "PaypalExpress" %}checked="checked"{% endif %} />
                                 <span class="mz-paymenttype-label mz-paymenttype-label-paypal">
@@ -76,21 +76,22 @@
                                 </span>
                             </label>
                             {% endif %}
-                            {% if externalPayment.name == "VisaCheckout"%}
+                            {% if name == "visacheckout"%}
                                 <div class="mz-l-formfieldgroup-cell mz-digitalwallets">
                                     <img alt="Visa Checkout" class="v-button" role="button"
                                     src="{{pageContext.visaCheckoutButtonUrl}}?size=154&amp;color=neutral"/>
                                 </div>
-                            {%endif%}
-                             {% if externalPayment.name == "PayWithAmazon" %}
+                            {% endif %}
+                            {% if name == "paywithamazon" %}
                                 <div class="mz-paymenttype" id="amazonButonPaymentSection" style="margin-top:10px;">
                                    
                                 </div>    
-                            {%endif%}
+                            {% endif %}
                         </div>
                     </div>
-                {%endif%}
-            {%endfor%}
+                {% endwith %}
+                {% endif %}
+            {% endfor %}
         {% endif %}
     {% endwith %}
     <div class="mz-l-formfieldgroup-row mz-paymentselector-validation">
