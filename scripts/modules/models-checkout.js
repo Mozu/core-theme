@@ -881,8 +881,23 @@
                 if (currentPayment) {
                     this.get('card').set('isVisaCheckout', currentPayment.paymentWorkflow.toLowerCase() === 'visacheckout');
                 }
-
-                if (this.nonStoreCreditTotal() > 0 && this.validate()) return false;
+                var val = this.validate();
+                if (this.nonStoreCreditTotal() > 0 && val) {
+                    // display errors:
+                    var error = {"items":[]};
+                    for (var key in val) {
+                        if (val.hasOwnProperty(key)) {
+                            var errorItem = {};
+                            if (key.toLowerCase().indexOf('card') > -1) {
+                                errorItem.name = key.substring('card.'.length);
+                                errorItem.message = val[key];
+                                error.items.push(errorItem);
+                            }
+                        }
+                    }
+                    order.onCheckoutError(error);
+                    return false;
+                }
 
                 var card = this.get('card');
 
