@@ -35,6 +35,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
         private readonly IProductWebApiClient _productWebApiClient;
         private readonly Mozu.ProductAdmin.Contracts.Clients.IPublishingWebApiClient _productItemPublishingClient;
         private readonly Mozu.ScheduledEvent.Contracts.Clients.IPublishSetWebApiClient _publishSetWebApiClient;
+        private readonly IApiContext _context;
 
         /// <summary>
         /// Public constructor.
@@ -43,13 +44,15 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
             Mozu.Content.Contracts.Clients.IDocumentPublishSetWebApiClient cmsItemPublishingClient,
             Mozu.ProductAdmin.Contracts.Clients.IProductWebApiClient productWebApiClient, 
            Mozu.ScheduledEvent.Contracts.Clients.IPublishSetWebApiClient publishSetWebApiClient,
-            Mozu.ProductAdmin.Contracts.Clients.IPublishingWebApiClient productItemPublishingClient
+            Mozu.ProductAdmin.Contracts.Clients.IPublishingWebApiClient productItemPublishingClient,
+            IApiContext context
             )
         {
             _cmsItemPublishingClient = cmsItemPublishingClient;
             _productWebApiClient = productWebApiClient;
             _publishSetWebApiClient = publishSetWebApiClient;
             _productItemPublishingClient = productItemPublishingClient;
+            _context = context;
         }
 
         /// <summary>
@@ -150,7 +153,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
 
             if (type == "cms")
             {
-                var pubSetItems = items.Select(i => new Mozu.Content.Contracts.AddOrDeletePublishItem { DocumentId = i.Id, DocListFQN = i.ListFQN }).ToList(); 
+                var pubSetItems = items.Select(Map).ToList(); 
                 var res = (await _cmsItemPublishingClient.AddPublishSetItems(code: code, itemsToPublish: pubSetItems).ConfigureAwait(false)).ReadAsSync();
                 return List2(items);
             }
@@ -168,7 +171,20 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
             }
 
             throw new NotImplementedException(type);
+        }
 
+        Mozu.Content.Contracts.AddOrDeletePublishItem Map(PublishSetItem item)
+        {
+            var scopeTypeAndId = GetScopeTypeAndId(item);
+            return new Mozu.Content.Contracts.AddOrDeletePublishItem { DocumentId = item.Id, DocListFQN = item.ListFQN, ScopeType = scopeTypeAndId.Item1, scopeTypeAndId = scopeTypeAndId.Item2 };
+        }
+
+        Tuple<string, int> GetScopeTypeAndId(PublishSetItem item)
+        {
+            if (item.SiteId.HasValue) return Tuple.Create("site", item.SiteId.Value);
+            if (item.CatalogId.HasValue) return Tuple.Create("catalog", item.CatalogId.Value);
+            if (item.MasterCatalogId.HasValue) return Tuple.Create("mastercatalog", item.MasterCatalogId.Value);
+            return Tuple.Create("tenant", _context.TenantId);
         }
 
 
