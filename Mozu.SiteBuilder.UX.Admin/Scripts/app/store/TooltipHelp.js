@@ -83,6 +83,12 @@ Ext.define('Taco.store.TooltipHelp', {
             key: 'settings.publishing.liveEdit',
             value: 'Enables Live Edit of Products through the Mozu API.'
         }, {
+            key: 'settings.general.customCdn',
+            value: 'Please contact Mozu Support or your Solution Partner to enable this feature.'
+        }, {
+            key: 'settings.general.bustCdnCache',
+            value: 'This feature requires an update to your theme.<br><br><a href="' + Taco.adminHelpLink + '" target="_blank" class="taco-help-link">See Enabling the Bust Cache Feature in Mozu Help.</a>'
+        }, {
             key: 'product.general.dateFirstAvailable',
             value: 'This field specifies the intended date when the product either first becomes or became available. Use this field to reference the product in an expression that uses the Days Available in Catalog entity. Setting this field to a future date doesn’t automatically publish the product live on that date.'
         }

@@ -184,39 +184,43 @@ Ext.define('Taco.view.generalSettings.subform.About', {
                         xtype: 'container',
                         layout: 'hbox',
                         items:[
-                            {
+                            Taco.core.ux.TooltipLabel.wrapConfig('settings.general.customCdn', this, {
                                 xtype: 'textfield',
                                 name: 'customCdnHostName',
                                 fieldLabel: 'CDN Domain',
                                 emptyText:Taco.cdnPrefix,
                                 flex: 1
-                            },
-                            {
-                       
-                                xtype: 'button',
-                                margin: '41 0 0 10',
-                                text: 'Bust Cache',
-                                ui: 'action',
-                                scale: 'medium',
-                             
-                                handler: function () {
-                                    var newKey =  '_'+new Date().getTime();
-                                    me.down('#cdnCacheBustKey').setValue(newKey);
-                                    me.record.set('cdnCacheBustKey', newKey);
-                                    me.setLoading(true);
-                                    me.record.save({
-                                        success:function() {
-                                            me.setLoading(false);
-                                            Taco.app.fireEvent('setgrowl', 'Cache Busted', 'info', 1000);
-                                        },
-                                        failure: function() {
-                                            me.setLoading(false);
-                                            Taco.app.fireEvent('setmessage', 'Unable to bust Cache', 'error');
-                                        }
-                                    });
-                                }
+                            }, Ext.id()),
+                            
+                            Taco.core.ux.TooltipLabel.wrapConfig('settings.general.bustCdnCache', this, {
+                                xtype: 'fieldcontainer',
+                                fieldLabel: 'Bust CDN Cache',
+                                margin: '0 0 0 5',
+                                items: [{
+                                    xtype: 'button',
+                                    text: 'Bust CDN Cache',
+                                    ui: 'action',
+                                    scale: 'medium',
+                                 
+                                    handler: function () {
+                                        var newKey =  '_'+new Date().getTime();
+                                        me.down('#cdnCacheBustKey').setValue(newKey);
+                                        me.record.set('cdnCacheBustKey', newKey);
+                                        me.setLoading(true);
+                                        me.record.save({
+                                            success:function() {
+                                                me.setLoading(false);
+                                                Taco.app.fireEvent('setgrowl', 'Cache Busted', 'info', 1000);
+                                            },
+                                            failure: function() {
+                                                me.setLoading(false);
+                                                Taco.app.fireEvent('setmessage', 'Unable to bust Cache', 'error');
+                                            }
+                                        });
+                                    }
+                                }]
                         
-                            }
+                            }, Ext.id())
                         ],
                         flex: 1
                     
