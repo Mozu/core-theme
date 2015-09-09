@@ -76,6 +76,13 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
         public async Task<HttpResponseMessage> Index()
         {
             //var account = (await _customerAccountWebApiClient.GetAccounts(filter : "UserId eq \"" + CurrentUser.UserId + "\"")).ReadAsSync().Items.FirstOrDefault();
+            // If there isn't an active user or account id for the user, then we are going to redirect to the user/login page.
+            if (this.PageContext.User == null || this.PageContext.User.AccountId == null)
+            {
+                var redir = Request.CreateResponse(statusCode: HttpStatusCode.Redirect);
+                redir.Headers.Location = new Uri("/user/login", UriKind.Relative);
+                return redir;
+            }
 
             var account = (await _customerAccountWebApiClient.GetAccount(this.PageContext.User.AccountId)).ReadAsSync();
 

@@ -74,6 +74,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.OpeationHandlers
             col.ResponseGroups = qs["responseGroups"];
             col.ShowVariations = Convert.ToBoolean(qs["showVariations"]);
             col.ShowProductUsages = qs["showProductUsages"];
+            col.UseLiveMode = Convert.ToBoolean(qs["liveMode"]);
             col.query = qs["query"];
 
 
