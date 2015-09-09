@@ -754,6 +754,7 @@
     <Content Include="Scripts\app\view\order\modal\OverrideTotalWeight.js" />
     <Content Include="Scripts\app\view\order\modal\Refund.js" />
     <Content Include="Scripts\app\view\order\subform\AuditLog.js" />
+    <Content Include="Scripts\app\view\order\widget\AttributeGrid.js" />
     <Content Include="Scripts\app\view\order\widget\AuditLogGrid.js" />
     <Content Include="Scripts\app\view\category\ConfirmDeleteOfSubcategoriesModal.js" />
     <Content Include="Scripts\app\view\product\widget\productCode\Modal.js" />

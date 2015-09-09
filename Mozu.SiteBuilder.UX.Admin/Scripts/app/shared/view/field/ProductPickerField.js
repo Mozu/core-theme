@@ -7,9 +7,9 @@ Ext.define('Taco.shared.view.field.ProductPickerField', {
     requires: [
         'Taco.store.ProductPicker'
     ],
-    
+
     config: {
-    
+
     },
 
     // this adds support to combos that have paged stores to use the pageup and pagedown keys to change the page in the store;
@@ -22,7 +22,7 @@ Ext.define('Taco.shared.view.field.ProductPickerField', {
     productType: 'parent',
     productsPerPage: 10,
     checkChangeBuffer: 5000,
-    minChars :4,
+    minChars: 4,
     displayField: 'name',
     hideLabel: true,
     hideTrigger: false,
@@ -30,10 +30,10 @@ Ext.define('Taco.shared.view.field.ProductPickerField', {
     selectOnFocus: true,
     flex: 1,
     value: "",
-    
+
     listConfig: {
         loadingText: 'Searching...',
-        cls : "product-picker-menu",
+        cls: "product-picker-menu",
         emptyText: '<div style="padding:20px; 10px; ">No matching products found.</div>',
         // Custom rendering template for each item
         getInnerTpl: function () {
@@ -66,11 +66,17 @@ Ext.define('Taco.shared.view.field.ProductPickerField', {
 
     // default filter parameter used to get the full list
     allQuery: "",
-    
+
+    // specifies whether to only show the "live" version of items, i.e. the published version as opposed to new/draft.
+    liveMode: false,
+
+    // filters to include with every query
+    defaultFilters: [],
+
     // modify the format of the query data to fit the service filtering pattern.
     formatQuery: function (queryEvent, e) {
 
-    
+
         // need to format the search text from the combobox into a filter structure the service wants;
         // always force the query to match what's in the field.
         // after a selection the queryEvent.query is initially set to "" which is incorrect in this situation;
@@ -79,32 +85,37 @@ Ext.define('Taco.shared.view.field.ProductPickerField', {
         delete this.lastQuery;
 
         var queryText = queryEvent.combo.getValue() || "";
-        if (queryText == "") {
+
+        // the formated query f's the min char check.... 
+        if (queryText !== "" && queryText.length < this.minChars) {
+            return false;
+        }
+
+        var filters = this.defaultFilters || [];
+        if (queryText !== "") {
+            filters = filters.concat([{ property: 'all', value: queryText }]);
+        }
+        if (filters.length) {
+            queryEvent.forceAll = false;
+            queryEvent.query = Ext.encode(filters);
+        } else {
             // need to force the load of the full list. just returning a value of "" causes the control to reload the last query;
             queryEvent.forceAll = true;
-        } else {
-            //the formated query f's the min char check.... 
-            if (queryText.length < this.minChars) {
-                return false;
-            }
-
-            queryEvent.forceAll = false;
-            queryEvent.query = Ext.encode([{ property: 'all', value: queryText }]);
         }
 
         return true;
     },
-    
-    initComponent: function(eOpts) {
+
+    initComponent: function (eOpts) {
         var me = this;
         if (!me.store) {
 
             if (me.productType == 'parent') {
                 me.store = Taco.core.data.StoreManager.getOrCreate({
                     pageSize: me.productsPerPage,
-                    type: 'Taco.store.ProductPicker'
-                   
-                });
+                    type: 'Taco.store.ProductPicker',
+                    liveMode: me.liveMode
+            });
             }
             if (me.productType == 'inventory') {
                 me.store = Taco.core.data.StoreManager.getOrCreate({
@@ -113,12 +124,12 @@ Ext.define('Taco.shared.view.field.ProductPickerField', {
                     // note that clearSort is required to avoid having the sorters get cleared when the store is instantiated;
                     clearSort: false,
                     remoteSort: true,
-                
+
                     autoLoad: true
                 });
             }
         }
-        
+
         me.mon(me, 'beforequery', this.formatQuery, this);
         me.callParent(arguments);
     }

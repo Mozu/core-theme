@@ -138,7 +138,7 @@ Ext.define('Taco.view.order.subform.Detail', {
             data:this.record.getData()
         });
 
-        me.internalNoteRow = Ext.create('Taco.view.order.subform.InternalNotes', {
+        me.internalNoteRow = Ext.create('Taco.view.order.subform.InternalNotes', {            
             record: this.record,
             orderForm: this
         });
@@ -146,7 +146,9 @@ Ext.define('Taco.view.order.subform.Detail', {
         this.orderAttrGrid = Ext.create('Taco.view.order.subform.Attributes', {
             ui: "subform-section",
             headerToolbar: true,
-            attributeDefinitionStore: Taco.core.data.StoreManager.getOrCreate('Taco.store.OrderAttributes'),
+            attributeDefinitionStore: Taco.core.data.StoreManager.getOrCreate({
+                type: 'Taco.store.OrderAttributes'                
+            }),
             record: this.record,
             orderForm: this
         });

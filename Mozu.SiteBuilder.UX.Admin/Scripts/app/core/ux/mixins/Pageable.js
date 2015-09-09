@@ -53,19 +53,25 @@ Ext.define('Taco.core.ux.mixins.Pageable', {
         });
 
         if (me.autoHidePagingToolbar) {
-            me.mon(me.store, "load", function (store, records, successful) {
-                if (me.store.pageSize >= me.store.totalCount) {
-                    me.gridPager.hide();
-                } else {
-                    me.gridPager.show();
-                }
-            }, me);
+            me.mon(me.store, "load", me.updatePagingToolbarVisibility, me);            
+            if (me.store.hasLoaded() && !me.store.isLoading()) {
+                me.updatePagingToolbarVisibility();
+            }
         }
-
 
         this.dockedItems = Ext.Array.clone(this.dockedItems || []);
         this.dockedItems.push(this.gridPager);
 
         return this.gridPager;
+    },
+    updatePagingToolbarVisibility: function () {
+        var me = this;
+
+        if (me.store.pageSize >= me.store.totalCount) {
+            me.gridPager.hide();
+        } else {
+            me.gridPager.show();
+        }
     }
+
 });

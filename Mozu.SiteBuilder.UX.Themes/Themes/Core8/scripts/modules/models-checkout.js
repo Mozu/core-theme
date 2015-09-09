@@ -98,7 +98,7 @@
                         model.unset('firstName');
                         model.unset('lastNameOrSurname');
                     } else {
-                        model.set(model.getOrder().get('customer').get('contacts').get(newContactId).toJSON());
+                        model.set(model.getOrder().get('customer').get('contacts').get(newContactId).toJSON(), {silent: true});
                     }
                 });
             },
@@ -781,6 +781,9 @@
                     } else if (!me.get('savedPaymentMethodId')) {
                         me.setSavedPaymentMethod(null, me.getOrder().get('customer.cards').first());
                     }
+                    else {
+                        me.setSavedPaymentMethod(me.get('savedPaymentMethodId'));
+                    }
                 });
                 this._cachedDigitalCredits = null;
 
@@ -1023,8 +1026,8 @@
                         paymentWorkflow = visaCheckoutPayment.paymentWorkflow;
                         billingInfo.unset('billingContact');
                         billingInfo.set('card', visaCheckoutPayment.billingInfo.card);
-                        billingInfo.set('billingContact', visaCheckoutPayment.billingInfo.billingContact);
-                    }
+                        billingInfo.set('billingContact', visaCheckoutPayment.billingInfo.billingContact, { silent:true });
+                     }
 
                     if (paymentWorkflow) {
                         billingInfo.set('paymentWorkflow', paymentWorkflow);
@@ -1109,7 +1112,7 @@
                 if (visaCheckoutPayment) {
                     billingInfo.set('card', visaCheckoutPayment.billingInfo.card);
                     billingInfo.unset('billingContact');
-                    billingInfo.set('billingContact', visaCheckoutPayment.billingInfo.billingContact);
+                    billingInfo.set('billingContact', visaCheckoutPayment.billingInfo.billingContact, { silent:true });
                     billingInfo.set('paymentWorkflow', visaCheckoutPayment.paymentWorkflow);
                     billingInfo.set('paymentType', visaCheckoutPayment.paymentType);
                     this.trigger('complete');

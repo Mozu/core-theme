@@ -38,5 +38,24 @@ Ext.define('Taco.store.ProductPicker', {
                 allowSingle: false,
                 type: 'json'
             }
+        },
+
+        loadPage: function (page, options) {
+            options = options || {};
+            options.params = options.params || {};
+            options.params.liveMode = this.liveMode;
+
+            return this.callParent([page, options]);
+        },
+        load: function (options) {
+
+            //use initialized values or override if in options...
+
+            options = options || {};
+            this.liveMode = options.liveMode || this.liveMode;
+            options.params = options.params || {};
+            options.params.liveMode = this.liveMode;
+
+            return this.callParent([options]);
         }
     });
