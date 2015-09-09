@@ -260,7 +260,7 @@ Ext.define('Taco.view.product.subform.General', {
 
             this.discountsRestrictedStartField = Ext.widget({
                 xtype: 'daterange',
-                fieldLabel: 'Restriction Effective Date',
+                fieldLabel: 'Restriction Start Date',
                 width: defaultFieldWidth,
                 margin:"0 0 0 50",
                 name: 'discountsRestrictedStartDate',
@@ -443,7 +443,7 @@ Ext.define('Taco.view.product.subform.General', {
 
         this.mapStartField = Ext.widget({
             xtype: 'daterange',
-            fieldLabel: 'MAP Effective Date',
+            fieldLabel: 'MAP Start Date',
             name: 'mapStartDate',
             width: defaultFieldWidth,
             margin:"0 0 0 50",
