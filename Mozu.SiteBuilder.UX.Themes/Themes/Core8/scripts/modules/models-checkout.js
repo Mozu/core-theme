@@ -98,7 +98,7 @@
                         model.unset('firstName');
                         model.unset('lastNameOrSurname');
                     } else {
-                        model.set(model.getOrder().get('customer').get('contacts').get(newContactId).toJSON());
+                        model.set(model.getOrder().get('customer').get('contacts').get(newContactId).toJSON(), {silent: true});
                     }
                 });
             },
