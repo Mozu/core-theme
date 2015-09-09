@@ -12,7 +12,8 @@ Ext.define('Taco.view.order.subform.Attributes', {
     requires: [
         "Ext.grid.Panel",
         "Taco.core.ux.window.Modal",
-        "Taco.shared.view.form.ExtensibleAttribute"
+        "Taco.shared.view.form.ExtensibleAttribute",
+        "Taco.view.order.widget.AttributeGrid"
     ],
 
     initComponent: function () {
@@ -27,26 +28,16 @@ Ext.define('Taco.view.order.subform.Attributes', {
             handler: this.openAttributesDialog
         }];
 
-        this.items = [{
-            xtype: 'grid',
-            store: this.attributeDefinitionStore,
-            columns: [{
-                dataIndex: 'adminName',
-                text: 'Name',
-                flex: 2
-            }, {
-                dataIndex: 'values',
-                text: 'Value',
-                flex: 3,
-                renderer: function (value, meta, record, index) {
-                    var att = Ext.Array.findBy(me.record.get('attributes'), function (attribute) {
-                        return (attribute.fullyQualifiedName || '').toLowerCase() === (record.get('id') || '').toLowerCase();
-                    });
 
-                    return (att && !Ext.isEmpty(att.values) ? att.values.join(', ').replace(/\n/g, '<br>') : '--');
-                }
-            }]
-        }];
+        this.orderAttributesGrid = Ext.create('Taco.view.order.widget.AttributeGrid', {
+            minHeight: 100,
+            record: me.record,
+            store: this.attributeDefinitionStore
+        });
+
+        this.items = [
+            this.orderAttributesGrid
+        ];
 
         this.callParent(arguments);
     },

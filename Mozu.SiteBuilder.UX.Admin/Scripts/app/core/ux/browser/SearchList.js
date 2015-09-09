@@ -64,6 +64,16 @@ Ext.define('Taco.core.ux.browser.SearchList', {
     
     initComponent: function () {
         var me = this;
+        this.viewConfig = this.viewConfig || {}
+
+        
+        if (this.deferEmptyText !== undefined) {
+            this.viewConfig.deferEmptyText = this.deferEmptyText;
+        }
+
+        if (this.emptyText !== undefined) {
+            this.viewConfig.emptyText = this.emptyText;
+        }
         
         me.columns = Ext.clone(me.columns);
 
