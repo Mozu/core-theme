@@ -131,7 +131,9 @@ Ext.define('Taco.view.order.widget.AddOrderItemToolbar', {
             displayTpl: Ext.create('Ext.XTemplate',
                 '<tpl if="values && values.productName"><span class="product-name">{productName}</span> <span class="product-code">{productCode}</span></tpl>'
             ),
-            listeners: {                
+            liveMode: true,
+            defaultFilters: [ { property: 'iscurrentlyactive', value: true } ],
+            listeners: {
                 focus: {
                     fn: this.onFocus,
                     scope:me

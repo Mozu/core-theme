@@ -16,6 +16,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Helpers.ProductHelpers
         private const string PRICE_MAP_PROPERTY = "price.map";
         private const string CATEGORY_ID_PROPERTY = "productincatalogs.productcategories.categoryId";
         private const string IS_ACTIVE_PROPERTY = "productincatalogs.isActive";
+        private const string IS_CURRENTLY_ACTIVE_PROPERTY = "productincatalogs.iscurrentlyactive";
         private const string STOCK_ON_HAND_PROPERTY = "stockOnHand";
         private const string SITE_ID_PROPERTY = "productincatalogs.siteId";
         private const string PRODUCT_FULL_DESCRIPTION = "productincatalogs.content.productFullDescription";
@@ -113,6 +114,8 @@ namespace Mozu.SiteBuilder.UX.Admin.Helpers.ProductHelpers
                     return string.Format("productincatalogs.productcategories.categoryid eq {0}", filter.value);
                 case "isactive":
                     return string.Format("{1} eq {0}", filter.value , IS_ACTIVE_PROPERTY);
+                case "iscurrentlyactive":
+                    return string.Format("{1} eq {0}", filter.value , IS_CURRENTLY_ACTIVE_PROPERTY);
                 case "productname":
                 case "name":
                     return string.Format("{1} cont \"{0}\"", filter.value, PRODUCT_NAME_PROPERTY);

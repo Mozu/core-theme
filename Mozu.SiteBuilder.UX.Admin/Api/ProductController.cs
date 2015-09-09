@@ -1,12 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.ServiceModel;
-using System.ServiceModel.Web;
 using System.Threading.Tasks;
 using System.Web.Http;
 using System.Text;
 using AutoMapper;
+using Mozu.Core;
 using Mozu.Core.Api.Routing;
 using Mozu.Core.Extensions;
 using Mozu.ProductAdmin.Contracts;
@@ -18,7 +17,6 @@ using Mozu.SiteBuilder.UX.Admin.Helpers;
 using Mozu.SiteBuilder.UX.Admin.Helpers.ProductHelpers;
 using DC = Mozu.ProductAdmin.Contracts;
 using Product = Mozu.SiteBuilder.UX.Admin.Api.Models.ProductModels.Product;
-using StringExtensions = Mozu.Core.Extensions.StringExtensions;
 
 namespace Mozu.SiteBuilder.UX.Admin.Api
 {
@@ -84,7 +82,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
             var q = extFilter.ToQString();
             var isGlobalSearchType = extFilter.SearchType.EqualsIgnoreCase("global");
 
-            return await SearchProducts(pagingParams, filter, q, responseGroups, isGlobalSearchType);
+            return await SearchProducts(pagingParams, filter, q, responseGroups, isGlobalSearchType, extFilter.UseLiveMode);
         }
 
         /// <summary>
@@ -106,7 +104,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
             var q = extFilter.ToQString(withVariations: true);
             var isGlobalSearchType = extFilter.SearchType.EqualsIgnoreCase("global");
 
-            return await SearchProducts(pagingParams, filter, q, responseGroups, isGlobalSearchType);
+            return await SearchProducts(pagingParams, filter, q, responseGroups, isGlobalSearchType, false);
         }
 
         [HttpPostRoute(UriTemplate = "create")]
@@ -180,10 +178,14 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
         }
 
         private async Task<Response<List<Product>>> SearchProducts(PagingParamaters pagingParams, string filter, string q,
-            string responseGroups, bool isSearchTypeGlobal)
+            string responseGroups, bool isSearchTypeGlobal, bool useLiveMode)
         {
             string sort = pagingParams.sort.ToSortString();
             int? qLimit = isSearchTypeGlobal ? (int?)3 : (int?)null;
+            if (useLiveMode)
+            {
+                SbApiContext.SetDataMode(DataViewModeType.Live);
+            }
             var prodCollection = (await _productClient.GetProducts(startIndex: pagingParams.startIndex, pageSize: pagingParams.pageSize,
                         sortBy: sort, responseGroups: responseGroups, filter: filter, q: q, qLimit: qLimit)).ReadAsSync();
 

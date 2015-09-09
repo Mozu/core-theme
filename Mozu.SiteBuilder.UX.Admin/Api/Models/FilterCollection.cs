@@ -53,11 +53,19 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.Models
         { }
         public string query { get; set; }
 
+        /// <summary>
+        /// Values can be "global" or "picker".
+        /// </summary>
         public string SearchType { get; set; }
 
         public string ShowProductUsages { get; set; }
 
         public bool ShowVariations { get; set; }
+
+        /// <summary>
+        /// Specifies whether to only show the "live" version of items, i.e. the published version as opposed to new/draft.
+        /// </summary>
+        public bool UseLiveMode { get; set; }
 
         public bool TryGetValue<T>(string id, out T outValue)
         {
