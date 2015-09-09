@@ -276,11 +276,9 @@ namespace Mozu.SiteBuilder.Mvc.SEO
             routingValues.ChainSet("httproute", true);
 
             var newReq = new HttpRequestMessage();
-            foreach(var prop in _requestMessage.Value.Properties)
-            {
-                newReq.Properties.Add(prop.Key, prop.Value);
-            }
+            newReq.Properties[HttpPropertyKeys.DependencyScope] = _requestMessage.Value.Properties[HttpPropertyKeys.DependencyScope];
 
+            
             foreach (var route in routes)
             {
                 var vpath = route.GetVirtualPath(newReq, routingValues);
@@ -289,7 +287,7 @@ namespace Mozu.SiteBuilder.Mvc.SEO
                     var url = "/"+ new Uri("http://localhost/" + vpath.VirtualPath).GetComponents(UriComponents.Path, UriFormat.Unescaped);
 
                     if (useExistingValues)
-                    {
+                    { 
                          url += _requestMessage.Value.RequestUri.Query;
                     }
 

@@ -272,9 +272,16 @@ namespace Mozu.SiteBuilder.Mvc.SEO.Constraints
             {
                 return false;
             }
-        
+
+            if (routeDirection == HttpRouteDirection.UriGeneration)
+            {
+                return true;
+            }
+
             var tree = new Lazy<CategoryTree>(()=>request.Resolve<ICategoryTreeProvider>().GetAllCategories().Result);
             Category cat = null;
+
+          
 
             var token = new CategoryToken(parameterName);
             if ( !token.IsMatch)
