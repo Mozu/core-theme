@@ -176,7 +176,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
         Mozu.Content.Contracts.AddOrDeletePublishItem Map(PublishSetItem item)
         {
             var scopeTypeAndId = GetScopeTypeAndId(item);
-            return new Mozu.Content.Contracts.AddOrDeletePublishItem { DocumentId = item.Id, DocListFQN = item.ListFQN, ScopeType = scopeTypeAndId.Item1, scopeTypeAndId = scopeTypeAndId.Item2 };
+            return new Mozu.Content.Contracts.AddOrDeletePublishItem { DocumentId = item.Id, DocListFQN = item.ListFQN, ScopeType = scopeTypeAndId.Item1, ScopeId = scopeTypeAndId.Item2 };
         }
 
         Tuple<string, int> GetScopeTypeAndId(PublishSetItem item)
@@ -186,7 +186,6 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
             if (item.MasterCatalogId.HasValue) return Tuple.Create("mastercatalog", item.MasterCatalogId.Value);
             return Tuple.Create("tenant", _context.TenantId);
         }
-
 
         [HttpGetRoute(UriTemplate = "getBy/{id}")]
         public async Task<Response<List<Mozu.ScheduledEvent.Contracts.PublishSet>>> GetPublishSetById(string id)
