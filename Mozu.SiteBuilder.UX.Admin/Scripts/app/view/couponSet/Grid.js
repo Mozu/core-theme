@@ -29,11 +29,11 @@ Ext.define('Taco.view.couponSet.Grid', {
         deleteFromGrid: 'Taco.core.ux.mixins.DeleteFromGrid'
     },
 
+    
     contextConfig: {
-        supportedLevels: ['s'],
-        requiresContextOfType: ['s']
+        supportedLevels: ['c'],
+        requiresContextOfType: ['c', 's']
     },
-
 
     launchEditorOnClick:true,
 

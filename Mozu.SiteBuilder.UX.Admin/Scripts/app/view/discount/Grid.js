@@ -24,12 +24,13 @@ Ext.define('Taco.view.discount.Grid', {
         deleteFromGrid: 'Taco.core.ux.mixins.DeleteFromGrid'
     },
 
+    
+
     contextConfig: {
-        supportedLevels: ['s'],
-        requiresContextOfType: ['s']
+        supportedLevels: ['c'],
+        requiresContextOfType: ['c', 's']
     },
 
-    
     launchEditorOnClick:true,
     
     // Required by mixin: Taco.core.ux.mixins.LaunchEditor defined in SearchList
