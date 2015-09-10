@@ -122,11 +122,11 @@
 	
 }
 
-
-.animation (@name, @duration: 300ms, @delay: 0, @ease: ease) {
-	-webkit-animation: @name @duration @delay @ease;
-	-moz-animation:    @name @duration @delay @ease;
-	-ms-animation:     @name @duration @delay @ease;
+.animation (@name, @duration: 300ms, @delay: 0, @ease: ease, @direction: normal, @iteration-count: 1, @fill-mode: none, @play-state: running) {
+  animation:         @name @duration @ease @delay @iteration-count @direction @fill-mode @play-state;
+	-webkit-animation: @name @duration @ease @delay @iteration-count @direction @fill-mode @play-state;
+  -moz-animation:    @name @duration @ease @delay @iteration-count @direction @fill-mode @play-state;
+  -ms-animation:     @name @duration @ease @delay @iteration-count @direction @fill-mode @play-state;
 }
 
 .transition (@transition) {
