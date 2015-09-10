@@ -80,6 +80,11 @@
                 return {
                     xtype: 'textfield'
                 };
+            },
+            'TextArea': function (option) {
+                return {
+                    xtype: 'textareafield'
+                };
             }
         },
 
@@ -365,7 +370,7 @@
     },
 
     loadRuntimeProduct: function (data) {
-        this.runtimeData = data;
+        this.runtimeData = data;        
         this.buildOptions(this.runtimeData.Options);
     },
 

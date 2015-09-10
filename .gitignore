@@ -15,6 +15,8 @@ lib/
 *.orig
 user.app.config
 mozu.config.json
+*.swp
+*.swo
 
 *ncrunch*
 *.ide

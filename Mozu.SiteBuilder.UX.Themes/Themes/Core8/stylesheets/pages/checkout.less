@@ -1,4 +1,21 @@
-﻿.mz-checkoutform-comments-field {
+﻿@-webkit-keyframes pulse {
+  from { .opacity(0.2); }
+  to { .opacity(0.3); }
+}
+@keyframes pulse {
+  from { .opacity(0.2); }
+  to { .opacity(0.3); }
+}
+
+
+.mz-checkout-mask {
+  position: absolute;
+  background-color: @textColor;
+  .opacity(0);
+  .animation(pulse, 0.5s, 0s, linear, alternate, infinite);
+}
+
+.mz-checkoutform-comments-field {
     width: 100%;
     height: 8em;
 }
