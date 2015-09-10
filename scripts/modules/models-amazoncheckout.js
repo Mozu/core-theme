@@ -90,7 +90,11 @@ define([
                 var fulfillmentInfo = me.get("fulfillmentInfo"),
                     existingShippingMethodCode = fulfillmentInfo.shippingMethodCode;
 
-                me.awsData = fulfillmentInfo.data;
+                if (me.awsData === null)
+                    me.awsData = fulfillmentInfo.data;
+                else 
+                    fulfillmentInfo.data = me.awsData;
+
                 me.apiUpdateShippingInfo( {data: fulfillmentInfo}).then(function(result) {
                     me.set("fulfillmentInfo",result.data);
                     me.isLoading(false);

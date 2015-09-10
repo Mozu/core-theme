@@ -61,7 +61,6 @@ define([
             isAwsCheckout: function() {
                 var activePayments = this.getOrder().apiModel.getActivePayments();
                 return activePayments && !!_.findWhere(activePayments, { paymentType: 'PayWithAmazon' });
-                //this.set("isAwsCheckout",isAwsCheckout);
             },
             requiresDigitalFulfillmentContact: function () {
                 return this.getOrder().get('requiresDigitalFulfillmentContact');
@@ -1420,6 +1419,10 @@ define([
             //    }
 
             //},
+            isAwsCheckout: function() {
+                var activePayments = this.apiModel.getActivePayments();
+                return activePayments && !!_.findWhere(activePayments, { paymentType: 'PayWithAmazon' });
+            },
             submit: function () {
                 var order = this,
                     billingInfo = this.get('billingInfo'),
@@ -1434,6 +1437,9 @@ define([
                     //activePayments = this.apiModel.getActivePayments(),
                     currentPayment = this.apiModel.getCurrentPayment();
                     
+                    if (this.isAwsCheckout()) 
+                        requiresBillingInfo = false;
+
                     process = [function() {
                         return order.update({
                             ipAddress: order.get('ipAddress'),
