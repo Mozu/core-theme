@@ -404,6 +404,31 @@ require(["modules/jquery-mozu", "underscore", "hyprlive", "modules/backbone-mozu
         }
     });
 
+    var ParentView = function(conf) {
+      var gutter = parseInt(Hypr.getThemeSetting('gutterWidth'));
+      if (isNaN(gutter)) gutter = 15;
+      var mask;
+      conf.model.on('beforerefresh', function() {
+         conf.el.css('opacity',0.5);
+         var pos = conf.el.position();
+         mask = $('<div></div>', {
+           'class': 'mz-checkout-mask',
+         }).css({
+           width: conf.el.outerWidth() + (gutter * 2),
+           height: conf.el.outerHeight() + (gutter * 2),
+           top: pos.top - gutter,
+           left: pos.left - gutter
+         }).insertAfter(conf.el);
+      });
+      function killMask() {
+         conf.el.css('opacity',1);
+        mask.remove();
+      }
+      conf.model.on('refresh', killMask); 
+      conf.model.on('error', killMask);
+      return conf;
+    };
+
     $(document).ready(function () {
 
         var $checkoutView = $('#checkout-form'),
@@ -411,6 +436,10 @@ require(["modules/jquery-mozu", "underscore", "hyprlive", "modules/backbone-mozu
 
         var checkoutModel = window.order = new CheckoutModels.CheckoutPage(checkoutData),
             checkoutViews = {
+                parentView: new ParentView({
+                  el: $checkoutView,
+                  model: checkoutModel
+                }),
                 steps: {
                     shippingAddress: new ShippingAddressView({
                         el: $('#step-shipping-address'),
