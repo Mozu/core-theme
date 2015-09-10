@@ -48,11 +48,14 @@ define([
                 var me = this;
                 me.isLoading (true);
 
-                return api.all(_.map(_.filter(me.apiModel.getActivePayments(), function(payment) {
+                return api.all.apply(api,_.map(_.filter(me.apiModel.getActivePayments(), function(payment) {
                     return payment.paymentType !== "StoreCredit" && payment.paymentType !== "GiftCard";
                 }), function(payment) {
                     return me.apiVoidPayment(payment.id);
                 })).then(function() {
+                    return me.apiGet();
+                }).then(function(order) {
+                    console.log(order);
                     return me.applyPayment();
                 });
             },

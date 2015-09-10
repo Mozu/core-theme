@@ -1437,8 +1437,10 @@ define([
                     //activePayments = this.apiModel.getActivePayments(),
                     currentPayment = this.apiModel.getCurrentPayment();
                     
-                    if (this.isAwsCheckout()) 
-                        requiresBillingInfo = false;
+                    if (this.isAwsCheckout()) {
+                        billingContact.set("address", null);
+//                        requiresBillingInfo = false;
+                    }
 
                     process = [function() {
                         return order.update({
