@@ -5,7 +5,7 @@
                     {{ labels.awsPaymentWarning }}
         </div>
     {%endif%}
-    <div class="mz-l-formfieldgroup-row mz-paymentselector-newcreditcard">
+    <div class="mz-l-formfieldgroup-row mz-paymentselector-option mz-paymentselector-newcreditcard">
         <div class="mz-l-formfieldgroup-cell">
             <input data-mz-value="paymentType" data-mz-new-credit-card id="paymentType-newcreditcard-{{ paymentId }}" name="paymentType" type="radio" class="mz-paymenttype-input" value="CreditCard" {% if model.paymentType == "CreditCard" and not model.usingSavedCard %}checked="true"{% endif %} />
         </div>
@@ -17,7 +17,7 @@
     {% include "modules/checkout/billing-credit-card-form" with model=model.card %}
     {% endif %}
     {% if model.savedPaymentMethods %}
-    <div class="mz-l-formfieldgroup-row mz-paymentselector-savedcreditcard">
+    <div class="mz-l-formfieldgroup-row mz-paymentselector-option mz-paymentselector-savedcreditcard">
         <div class="mz-l-formfieldgroup-cell">
             <input data-mz-value="paymentType" data-mz-saved-credit-card id="paymentType-savedcreditcard-{{ paymentId }}" name="paymentType" type="radio" class="mz-paymenttype-input" value="CreditCard" {% if model.paymentType == "CreditCard" and model.usingSavedCard %}checked="checked"{% endif %} />
         </div>
@@ -39,7 +39,7 @@
     </div>
     {% endif %}
     {% if siteContext.checkoutSettings.payByMail %}
-    <div class="mz-l-formfieldgroup-row mz-paymentselector-check">
+    <div class="mz-l-formfieldgroup-row mz-paymentselector-option mz-paymentselector-check">
         <div class="mz-l-formfieldgroup-cell">
             <input data-mz-value="paymentType" data-mz-check id="paymentType-check-{{ paymentId }}" name="paymentType" type="radio" class="mz-paymenttype-input" value="Check" {% if model.paymentType == "Check" %}checked="checked"{% endif %} />
         </div>
@@ -102,6 +102,8 @@
         </div>
     </div>
 </div>
+
 {% if model.paymentType == "PaypalExpress" %}
     <p>{{ labels.paypalExpressInfo }}</p>
 {% endif %}
+{% endwith %}
