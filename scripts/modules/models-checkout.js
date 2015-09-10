@@ -1115,7 +1115,7 @@
                         me.runForAllSteps(function() {
                             this.trigger('sync');
                             this.isLoading(false);
-                        })
+                        });
                     });
                 });
             },
