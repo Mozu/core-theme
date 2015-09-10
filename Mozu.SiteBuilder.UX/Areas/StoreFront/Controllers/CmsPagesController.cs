@@ -86,7 +86,8 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
                                                      },
                                               Template = new DocumentRequest
                                                          {
-                                                             Path = template
+                                                             Path = template,
+                                                             IncludeInactiveDocument = SiteContext.IsEditMode
                                                          }
                                    
                                           };

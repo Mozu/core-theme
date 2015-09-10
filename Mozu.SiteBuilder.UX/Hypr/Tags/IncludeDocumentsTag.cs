@@ -123,7 +123,7 @@ namespace Mozu.SiteBuilder.UX.Hypr.Tags
                 service = service.CloneWithConfigOptions(opts => opts.DisableCache = true);
             }
 
-            var res = await service.GetViewDocuments(documentListName: list, viewName: view, filter: query, sortBy: sortBy, pageSize: pageSize, startIndex: startIndex).ConfigureAwait(false);
+            var res = await service.GetViewDocuments(documentListName: list, viewName: view, filter: query, sortBy: sortBy, pageSize: pageSize, startIndex: startIndex, includeInactive: sbContext.IsEditMode).ConfigureAwait(false);
        
             object model = null;
             if (res.HasException && sbContext.IsDebugMode)
