@@ -8,7 +8,7 @@ Ext.define('Taco.view.order.subform.Return', {
         'Taco.view.order.widget.ProcessReturnPanel',
         'Taco.view.order.widget.ReturnableItemGrid',
         'Taco.core.ux.PanelHeaderStat',
-        'Taco.model.Order',
+        'Taco.model.Order'
     ],
 
     itemId: 'orderReturn',
