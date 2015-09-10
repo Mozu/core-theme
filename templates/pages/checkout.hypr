@@ -22,12 +22,6 @@
 {% preload_json siteContext "sitecontext" %}
 
 
-<script type="text/json" id="data-mz-preload-viewdata"> 
-{
-   "awsCheckout" : {% if viewData.awsCheckout %}true{%else%}false{%endif%}
-}
-</script>
-
 
 <div class="mz-l-container">
     <h1 class="mz-pagetitle">

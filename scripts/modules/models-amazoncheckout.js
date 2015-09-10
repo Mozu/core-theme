@@ -9,6 +9,7 @@ define([
 
     var AwsCheckoutPage = Backbone.MozuModel.extend({
             mozuType: 'order',
+            awsData: null,
             handlesMessages: true,
             initialize: function (data) {
                 var self = this;
@@ -73,7 +74,7 @@ define([
                         "orderId" : me.id,
                         "isSameBillingShippingAddress" : false
                     },
-                    "externalTransactionId" : me.get("fulfillmentInfo").data.awsReferenceId
+                    "externalTransactionId" : me.awsData.awsReferenceId
                 };
 
                 me.apiCreatePayment(billingInfo).then( function() {
@@ -88,6 +89,8 @@ define([
                 me.isLoading(true);
                 var fulfillmentInfo = me.get("fulfillmentInfo"),
                     existingShippingMethodCode = fulfillmentInfo.shippingMethodCode;
+
+                me.awsData = fulfillmentInfo.data;
                 me.apiUpdateShippingInfo( {data: fulfillmentInfo}).then(function(result) {
                     me.set("fulfillmentInfo",result.data);
                     me.isLoading(false);

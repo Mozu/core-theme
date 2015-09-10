@@ -1,5 +1,5 @@
 require(["modules/jquery-mozu", "underscore", "hyprlive", "modules/backbone-mozu", "modules/models-checkout", "modules/views-messages", "modules/cart-monitor", 'hyprlivecontext', 'modules/editable-view', 'modules/preserve-element-through-render','modules/amazonpay'], function ($, _, Hypr, Backbone, CheckoutModels, messageViewFactory, CartMonitor, HyprLiveContext, EditableView, preserveElements,AmazonPay) {
-    var viewData;
+    //var viewData;
 
     var CheckoutStepView = EditableView.extend({
         edit: function () {
@@ -24,12 +24,13 @@ require(["modules/jquery-mozu", "underscore", "hyprlive", "modules/backbone-mozu
             var me = this;
             me.model.choose.apply(me.model, arguments);
         },
-        getRenderContext: function() {
+
+        /*getRenderContext: function() {
             var ctx = EditableView.prototype.getRenderContext.apply(this, arguments);
             ctx.viewData = viewData;
 
             return ctx;
-        },
+        },*/
         constructor: function () {
             var me = this;
             EditableView.apply(this, arguments);
@@ -101,6 +102,7 @@ require(["modules/jquery-mozu", "underscore", "hyprlive", "modules/backbone-mozu
             'address.countryCode',
             'contactId'
         ]
+
     });
 
     var ShippingInfoView = CheckoutStepView.extend({
@@ -431,7 +433,7 @@ require(["modules/jquery-mozu", "underscore", "hyprlive", "modules/backbone-mozu
         var $checkoutView = $('#checkout-form'),
             checkoutData = require.mozuData('checkout');
 
-        viewData = require.mozuData('viewdata');
+        //viewData = require.mozuData('viewdata');
         AmazonPay.init(true); 
         checkoutData.isAmazonPayEnable = AmazonPay.isEnabled;
       
@@ -478,7 +480,7 @@ require(["modules/jquery-mozu", "underscore", "hyprlive", "modules/backbone-mozu
 
         checkoutModel.on('complete', function() {
             CartMonitor.setCount(0);
-             if (viewData.awsCheckout)
+            if (amazon)
                 amazon.Login.logout();
             window.location = "/checkout/" + checkoutModel.get('id') + "/confirmation";
         });

@@ -7,25 +7,14 @@ require(["modules/jquery-mozu","modules/backbone-mozu",'modules/editable-view', 
 		templateName: 'modules/checkout/amazon-shipping-billing',
 		initialize: function() {
 			EventBus.on("aws-referenceOrder-created", this.setawsOrderData);
-			/*EventBus.on("aws-address-selected", function() {
-				AmazonPay.addWalletWidget();
-			});*/
 			EventBus.on("aws-card-selected", function() {
 				$("#continue").show();
 			});
-			
-			/*EventBus.on("aws-script-loaded", function() {
-				console.log("script loaded");
-				AmazonPay.addAddressWidget();
-			});*/
 
 			this.listenTo(this.model, "awscheckoutcomplete", function(id){
 				window.location = "/checkout/"+id+"?isAwsCheckout=true&access_token="+$.deparam().access_token;
 			});
 			
-		},
-		render: function() {
-			//AmazonPay.addAddressWidget();
 		},
 		setawsOrderData: function(data) {
 			var awsData = { awsReferenceId: data.orderReferenceId, addressAuthorizationToken:$.deparam().access_token};

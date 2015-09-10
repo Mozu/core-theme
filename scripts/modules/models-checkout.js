@@ -12,7 +12,7 @@ define([
     function ($, _, Hypr, Backbone, api, CustomerModels, AddressModels, PaymentMethods, HyprLiveContext) {
 
         var CheckoutStep = Backbone.MozuModel.extend({
-            helpers: ['stepStatus', 'requiresFulfillmentInfo','isAwsShipping', 'requiresDigitalFulfillmentContact'],  //
+            helpers: ['stepStatus', 'requiresFulfillmentInfo','isAwsCheckout', 'requiresDigitalFulfillmentContact'],  //
             // instead of overriding constructor, we are creating
             // a method that only the CheckoutStepView knows to
             // run, so it can run late enough for the parent
@@ -58,13 +58,10 @@ define([
             requiresFulfillmentInfo: function () {
                 return this.getOrder().get('requiresFulfillmentInfo');
             },
-            isAwsShipping: function() {
-                var data= this.getOrder().get("fulfillmentInfo").get("data");
-                if (data && data.awsReferenceId)
-                    return true;
-                else
-                    return false;
-
+            isAwsCheckout: function() {
+                var activePayments = this.getOrder().apiModel.getActivePayments();
+                return activePayments && !!_.findWhere(activePayments, { paymentType: 'PayWithAmazon' });
+                //this.set("isAwsCheckout",isAwsCheckout);
             },
             requiresDigitalFulfillmentContact: function () {
                 return this.getOrder().get('requiresDigitalFulfillmentContact');
@@ -118,6 +115,7 @@ define([
                         model.set(model.getOrder().get('customer').get('contacts').get(newContactId).toJSON());
                     }
                 });
+                //this.set("isAwsCheckout", self.isAwsCheckout());
             },
             calculateStepStatus: function () {
                 if (!this.requiresFulfillmentInfo() && this.requiresDigitalFulfillmentContact()) {
@@ -782,10 +780,10 @@ define([
                     thereAreActivePayments = activePayments.length > 0,
                     paymentTypeIsCard = activePayments && !!_.findWhere(activePayments, { paymentType: 'CreditCard' }),
                     paymentTypeIsPayPal = activePayments && !!_.findWhere(activePayments, { paymentType: 'PaypalExpress' }),
-                    paymentTypeIsAmazon = activePayments && !!_.findWhere(activePayments, { paymentType: 'PayWithAmazon' }),
+                    //paymentTypeIsAmazon = activePayments && !!_.findWhere(activePayments, { paymentType: 'PayWithAmazon' }),
                     balanceZero = this.parent.get('amountRemainingForPayment') <= 0; // use <=0 to catch payments that have been added with more amount. this scenario happens when discount is applied after payment is added
 
-                if (paymentTypeIsAmazon) return this.stepStatus("complete");
+                if (this.isAwsCheckout()) return this.stepStatus("complete");
                 if (paymentTypeIsCard) return this.stepStatus("incomplete"); // initial state for CVV entry
 
                 if (!fulfillmentComplete) return this.stepStatus('new');

@@ -1,6 +1,6 @@
 {% with paymentId|default(0) as paymentId %}
 <div class="mz-l-formfieldgroup mz-paymentselector">
-    {% if viewData.awsCheckout and model.stepStatus == "incomplete" %}
+    {% if model.paymentType == "PayWithAmazon" %}
         <div class="mz-l-formfieldgroup-row mz-l-security-box" >
                     {{ labels.awsPaymentWarning }}
         </div>
