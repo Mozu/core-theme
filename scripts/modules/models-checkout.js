@@ -799,7 +799,7 @@
                     thereAreActivePayments = activePayments.length > 0,
                     paymentTypeIsCard = activePayments && !!_.findWhere(activePayments, { paymentType: 'CreditCard' }),
                     paymentTypeIsPayPal = activePayments && !!_.findWhere(activePayments, { paymentType: 'PaypalExpress' }),
-                    balanceZero = this.parent.get('amountRemainingForPayment') === 0;
+                    balanceNotPositive = this.parent.get('amountRemainingForPayment') <= 0;
 
                 if (paymentTypeIsCard && !Hypr.getThemeSetting('isCvvSuppressed')) return this.stepStatus('incomplete'); // initial state for CVV entry
 
@@ -807,7 +807,7 @@
 
                 if (paymentTypeIsPayPal && window.location.href.indexOf('PaypalExpress=') === -1) return this.stepStatus('incomplete'); // This should handle back button/reload cases!
 
-                if (thereAreActivePayments && (balanceZero || (this.get('paymentType') === 'PaypalExpress' && window.location.href.indexOf('PaypalExpress=complete') !== -1))) return this.stepStatus('complete');
+                if (thereAreActivePayments && (balanceNotPositive || (this.get('paymentType') === 'PaypalExpress' && window.location.href.indexOf('PaypalExpress=complete') !== -1))) return this.stepStatus('complete');
                 return this.stepStatus('incomplete');
 
             },
@@ -1097,10 +1097,13 @@
 
 
             },
-            processDigitalWallet: function (digitalWalletType, payment) {
+            processDigitalWallet: function(digitalWalletType, payment) {
                 var me = this;
+                me.runForAllSteps(function() {
+                    this.isLoading(true);
+                });
                 // void active payments; if there are none then the promise will resolve immediately
-                return api.all(_.map(_.filter(me.apiModel.getActivePayments(), function(payment) {
+                return api.all.apply(api, _.map(_.filter(me.apiModel.getActivePayments(), function(payment) {
                     return payment.paymentType !== 'StoreCredit' && payment.paymentType !== 'GiftCard';
                 }), function(payment) {
                     return me.apiVoidPayment(payment.id);
@@ -1109,13 +1112,10 @@
                         digitalWalletData: JSON.stringify(payment)
                     }).then(function () {
                         me.updateVisaCheckoutBillingInfo();
-                        _.each([
-                            'fulfillmentInfo.fulfillmentContact',
-                            'fulfillmentInfo',
-                            'billingInfo'
-                        ], function(name) {
-                            me.get(name).trigger('sync');
-                        });
+                        me.runForAllSteps(function() {
+                            this.trigger('sync');
+                            this.isLoading(false);
+                        })
                     });
                 });
             },
@@ -1130,7 +1130,7 @@
                     billingInfo.set('billingContact', visaCheckoutPayment.billingInfo.billingContact, { silent:true });
                     billingInfo.set('paymentWorkflow', visaCheckoutPayment.paymentWorkflow);
                     billingInfo.set('paymentType', visaCheckoutPayment.paymentType);
-                    this.trigger('complete');
+                    this.refresh();
                 }
             },
             addCoupon: function () {
@@ -1492,6 +1492,26 @@
             update: function() {
                 var j = this.toJSON();
                 return this.apiModel.update(j);
+            },
+            refresh: function() {
+              var me = this;
+              this.trigger('beforerefresh');
+              return this.apiGet().then(function() {
+                me.trigger('refresh');
+                // me.runForAllSteps(function() {
+                //   this.trigger("sync");
+                // });
+              });
+            },
+            runForAllSteps: function(cb) {
+                var me = this;
+                _.each([
+                       'fulfillmentInfo.fulfillmentContact',
+                       'fulfillmentInfo',
+                       'billingInfo'
+                ], function(name) {
+                    cb.call(me.get(name));
+                });
             },
             isReady: function (val) {
                 this.set('isReady', val);
