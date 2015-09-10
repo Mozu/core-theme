@@ -63,7 +63,7 @@ Ext.define('Taco.view.category.Edit', {
 
                                 
                                 
-                                    var sites = ctx.sites;
+                                    var sites = ctx.catalog.sites;
                                     Ext.each(sites, function (site) {
                                         if (site.isMozuRendered) {
                                             previewSites.push({
