@@ -4,7 +4,8 @@
 
 Ext.define('Taco.view.order.widget.ReturnableItemGrid', {
     extend: 'Ext.grid.Panel',
-    requires: ['Taco.model.Return'],
+    requires: ['Taco.model.Return',
+               'Ext.data.Store'],
 
     title: 'Returnable Items',
 
