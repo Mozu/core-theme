@@ -550,7 +550,7 @@ Ext.define('Taco.view.product.subform.General', {
             forceSelection: true,
             listConfig: { shadow: false },
             width: twoColumnFieldWidth,
-            store: [['Active', 'Active'], ['Scheduled', 'Scheduled'], ['Disable', 'Disable']],
+            store: [['Active', 'Active'], ['Scheduled', 'Scheduled'], ['Disable', 'Disabled']],
             value: this.productInCatalogInfo ? this.productInCatalogInfo.get('status') : 'Disable',
             dateValidationMsg: "An active start or end date is required",
             //validateDate: function() {
