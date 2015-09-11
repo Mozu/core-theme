@@ -405,14 +405,14 @@ require(["modules/jquery-mozu", "underscore", "hyprlive", "modules/backbone-mozu
     });
 
     var ParentView = function(conf) {
-      var gutter = parseInt(Hypr.getThemeSetting('gutterWidth'));
+      var gutter = parseInt(Hypr.getThemeSetting('gutterWidth'), 10);
       if (isNaN(gutter)) gutter = 15;
       var mask;
       conf.model.on('beforerefresh', function() {
          conf.el.css('opacity',0.5);
          var pos = conf.el.position();
          mask = $('<div></div>', {
-           'class': 'mz-checkout-mask',
+           'class': 'mz-checkout-mask'
          }).css({
            width: conf.el.outerWidth() + (gutter * 2),
            height: conf.el.outerHeight() + (gutter * 2),
