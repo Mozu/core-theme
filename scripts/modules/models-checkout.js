@@ -1150,6 +1150,8 @@
                 }
                 this.isLoading(true);
                 return this.apiAddCoupon(this.get('couponCode')).then(function () {
+
+                    me.get('billingInfo').trigger('sync');
                     me.set('couponCode', '');
 
                     var productDiscounts = _.flatten(_.pluck(me.get('items'), 'productDiscounts'));
