@@ -4,157 +4,10 @@
 
 Ext.define('Taco.view.order.widget.ReturnableItemGrid', {
     extend: 'Ext.grid.Panel',
-    requires: ['Taco.model.Return'],
+    requires: ['Taco.model.Return',
+               'Ext.data.Store'],
 
     title: 'Returnable Items',
-
-    columns: [
-    {
-        text: 'Line',
-        draggable: false,
-        resizable: true,
-        width: 50,
-        sortable: false,
-        menuDisabled: true,
-        hidden: false,
-        align: 'center',
-        dataIndex: 'orderLineId'
-    }, {
-        dataIndex: 'productCode',
-        text: 'Code',
-        draggable: false,
-        sortable: false,
-        resizable: false,
-        menuDisabled: false,
-        minWidth: 100,
-        flex: 1
-    }, {
-        dataIndex: 'productName',
-        text: 'Products',
-        draggable: false,
-        sortable: false,
-        resizable: false,
-        menuDisabled: true,
-        minWidth: 100,
-        flex: 1,
-        renderer: function(val, md, record) {
-            var parentBundleName = record.get('parentBundleName');
-            return parentBundleName ? val + " <em class=\"taco-bundleditem-note\">(Bundled with <strong>" + parentBundleName + "</strong>)</em>" : val;
-        }
-    }, {
-        text: 'Status',
-        draggable: false,
-        resizable: true,
-        width: 120,
-        sortable: false,
-        menuDisabled: true,
-        hidden: false,
-        align: 'left',
-        dataIndex: 'fulfillmentStatus'
-    }, {
-        dataIndex: 'returnType',
-        text: 'Type',
-        draggable: false,
-        sortable: false,
-        resizable: false,
-        menuDisabled: true,
-        width: 100,
-        editor: {
-            xtype: 'combobox',
-            allowOnlyWhitespace: false,
-            showBorder: true,
-            editable: false,
-            forceSelection: true,
-            store: ['Replace', 'Refund']
-        }
-    }, {
-        dataIndex: 'reason',
-        text: 'Reason',
-        draggable: false,
-        sortable: false,
-        resizable: false,
-        menuDisabled: true,
-        width: 100,
-        editor: {
-            xtype: 'combobox',
-            showBorder: true,
-            allowOnlyWhitespace: false,
-            showBorder: true,
-            editable: false,
-            forceSelection: true,
-            valueField: 'name',
-            displayField: 'name',
-            store: {
-                autoLoad: true,
-                fields: [
-                    {
-                        name: 'id',
-                        type: 'string',
-                        convert: function(value, record) {
-                            return record.raw;
-                        }
-                    },
-                    {
-                        name: 'name',
-                        type: 'string',
-                        convert: function(value, record) {
-                            return Taco.core.util.Common.camelToSpace(record.raw);
-                        }
-                    }
-                ],
-                proxy: {
-                    type: 'ajax',
-                    url: '/admin/app/return/reasons',
-                    reader: {
-                        type: 'json',
-                        root: 'items'
-                    }
-                }
-            }
-        }
-    }, {
-        dataIndex: 'quantityOrdered',
-        text: 'Qty Ordered',
-        draggable: false,
-        sortable: false,
-        resizable: false,
-        menuDisabled: true,
-        width: 100
-    }, {
-        dataIndex: 'quantityFulfilled',
-        text: 'Qty Fulfilled',
-        draggable: false,
-        sortable: false,
-        resizable: false,
-        menuDisabled: true,
-        width: 100
-    }, {
-        dataIndex: 'quantityReturned',
-        text: 'Qty Returned',
-        draggable: false,
-        sortable: false,
-        resizable: false,
-        menuDisabled: true,
-        width: 100
-    }, {
-        dataIndex: 'quantity',
-        text: 'Qty to Return',
-        draggable: false,
-        sortable: false,
-        resizable: false,
-        menuDisabled: true,
-        width: 100,
-        editor: {
-            xtype: 'numberfield',
-            showBorder:true,
-            hideTrigger: true,
-            minValue: 0,
-            msgTarget: 'qtip'
-        },
-        renderer: function (value) {
-            return value || 0;
-        }
-    }],
 
     viewConfig: {
         deferEmptyText: false,
@@ -187,6 +40,36 @@ Ext.define('Taco.view.order.widget.ReturnableItemGrid', {
             showHeaderCheckbox: true
         });
 
+        this.reasonStore = Ext.create('Ext.data.Store', {
+            autoLoad: true,
+            fields: [
+                {
+                    name: 'id',
+                    type: 'string',
+                    convert: function (value, record) {
+                        return record.raw;
+                    }
+                },
+                {
+                    name: 'name',
+                    type: 'string',
+                    convert: function (value, record) {
+                        return Taco.core.util.Common.camelToSpace(record.raw);
+                    }
+                }
+            ],
+            proxy: {
+                type: 'ajax',
+                url: '/admin/app/return/reasons',
+                reader: {
+                    type: 'json',
+                    root: 'items'
+                }
+            }
+        });
+
+        this.columns = this.getColumnConfig();
+
         this.callParent(arguments);
 
         this.on({
@@ -206,6 +89,131 @@ Ext.define('Taco.view.order.widget.ReturnableItemGrid', {
                 fn: 'addReturnableItems'
             }
         });
+    },
+
+    getColumnConfig: function() {
+        return [
+            {
+                text: 'Line',
+                draggable: false,
+                resizable: true,
+                width: 50,
+                sortable: false,
+                menuDisabled: true,
+                hidden: false,
+                align: 'center',
+                dataIndex: 'orderLineId'
+            }, {
+                dataIndex: 'productCode',
+                text: 'Code',
+                draggable: false,
+                sortable: false,
+                resizable: false,
+                menuDisabled: false,
+                minWidth: 100,
+                flex: 1
+            }, {
+                dataIndex: 'productName',
+                text: 'Products',
+                draggable: false,
+                sortable: false,
+                resizable: false,
+                menuDisabled: true,
+                minWidth: 100,
+                flex: 1,
+                renderer: function(val, md, record) {
+                    var parentBundleName = record.get('parentBundleName');
+                    return parentBundleName ? val + " <em class=\"taco-bundleditem-note\">(Bundled with <strong>" + parentBundleName + "</strong>)</em>" : val;
+                }
+            }, {
+                text: 'Status',
+                draggable: false,
+                resizable: true,
+                width: 120,
+                sortable: false,
+                menuDisabled: true,
+                hidden: false,
+                align: 'left',
+                dataIndex: 'fulfillmentStatus'
+            }, {
+                dataIndex: 'returnType',
+                text: 'Type',
+                draggable: false,
+                sortable: false,
+                resizable: false,
+                menuDisabled: true,
+                width: 100,
+                editor: {
+                    xtype: 'combobox',
+                    allowOnlyWhitespace: false,
+                    showBorder: true,
+                    editable: false,
+                    forceSelection: true,
+                    store: ['Replace', 'Refund']
+                }
+            }, {
+                dataIndex: 'reason',
+                text: 'Reason',
+                draggable: false,
+                sortable: false,
+                resizable: false,
+                menuDisabled: true,
+                width: 100,
+                editor: {
+                    xtype: 'combobox',
+                    showBorder: true,
+                    allowOnlyWhitespace: false,
+                    showBorder: true,
+                    editable: false,
+                    forceSelection: true,
+                    valueField: 'name',
+                    displayField: 'name',
+                    store: this.reasonStore
+                }
+            }, {
+                dataIndex: 'quantityOrdered',
+                text: 'Qty Ordered',
+                draggable: false,
+                sortable: false,
+                resizable: false,
+                menuDisabled: true,
+                width: 100
+            }, {
+                dataIndex: 'quantityFulfilled',
+                text: 'Qty Fulfilled',
+                draggable: false,
+                sortable: false,
+                resizable: false,
+                menuDisabled: true,
+                width: 100
+            }, {
+                dataIndex: 'quantityReturned',
+                text: 'Qty Returned',
+                draggable: false,
+                sortable: false,
+                resizable: false,
+                menuDisabled: true,
+                width: 100
+            }, {
+                dataIndex: 'quantity',
+                text: 'Qty to Return',
+                draggable: false,
+                sortable: false,
+                resizable: false,
+                menuDisabled: true,
+                width: 100,
+                editor: {
+                    xtype: 'numberfield',
+                    showBorder: true,
+                    hideTrigger: true,
+                    minValue: 0,
+                    msgTarget: 'qtip'
+                },
+                renderer: function(value) {
+                    return value || 0;
+                }
+            }
+        ];
     },
 
     reload: function () {
