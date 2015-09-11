@@ -36,7 +36,7 @@ Ext.define('Taco.view.category.Edit', {
                         }
                     }, {
                         itemId: 'preview',
-                        text: 'View Staged',
+                        text: 'View Staged',                        
                         menu: {
                             plain: true,
                             shadow: false,
@@ -53,15 +53,18 @@ Ext.define('Taco.view.category.Edit', {
                                 previewSites = [],
                                 liveSites = [];
 
+                        
+                            if (me.record.phantom) {
+                                liveItems.disable()
+                                previewItem.disable()
+                                return; 
+                            }
 
                             var ctx = Taco.app.context.getCurrentContext();
 
                             if (previewItem && previewItem.menu) {
                                 previewMenu = previewItem.menu;
                                 liveMenu = liveItems.menu;
-                                debugger;
-
-                                
                                 
                                     var sites = ctx.catalog.sites;
                                     Ext.each(sites, function (site) {
@@ -105,7 +108,31 @@ Ext.define('Taco.view.category.Edit', {
         this.callParent(arguments);
 
     },
-    viewInSite: function (site, env) {
-        window.open('/_gosite/' + site.id + '?environment=' + env + '&redir=' + encodeURIComponent('/c/' + this.record.getId()));
-    },
+    viewInSite: function (site, env, noPrompt) {
+        var me = this,
+            url = '/_gosite/' + site.id + '?environment=' + env + '&redir=' + encodeURIComponent('/c/' + this.record.getId());
+
+        if (noPrompt || !this.getForm().isDirty()) {
+            window.open(url);
+        } else {
+            // prompt
+
+            Ext.MessageBox.show({
+                title: 'Unsaved Changes',
+                // pushes the buttons to the right to be consistant with our dialog ux.
+                rightJustifyButtons: true,
+                // reverses the order of the buttons
+                reverseOrder: true,
+                msg: 'You have unsaved changes that will not be reflected on the site. <br/> Do you want to continue?',
+                closable: false,
+                buttons: Ext.Msg.YESNO,
+                fn: function (val) {
+                    if (val === 'yes') {
+                        window.open(url);
+                    }
+                }
+            });
+            
+        }
+    }, 
 });
