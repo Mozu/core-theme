@@ -26,6 +26,20 @@ define(['modules/backbone-mozu'], function(Backbone) {
             operation.then(renderAlways, renderAlways);
             return operation;
         }
+    },
+    handleLoadingChange: function(isLoading) {
+      Backbone.MozuView.prototype.handleLoadingChange.apply(this, arguments);
+      var allInputElements = this.$('input,select,button,textarea');
+      if (isLoading) {
+        this.alreadyDisabled = allInputElements.filter(':disabled');
+        allInputElements.prop('disabled',true);
+      } else {
+        if (this.alreadyDisabled) {
+          allInputElements.not(this.alreadyDisabled).removeProp('disabled');
+        } else {
+          allInputElements.removeProp('disabled');
+        }
+      }
     }
   });
 

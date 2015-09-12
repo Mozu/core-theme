@@ -320,8 +320,13 @@ define([
             mozuType: 'payment',
             validation: {
                 paymentType: {
-                    required: true,
-                    msg: Hypr.getLabel('paymentTypeMissing')
+                    fn: function(value, attr) {
+                      var order = this.getOrder(); 
+                      var payment = order.apiModel.getCurrentPayment();
+                      var errorMessage = Hypr.getLabel('paymentTypeMissing');
+                      if (!value) return errorMessage;
+                      if (this.nonStoreCreditTotal() > 0 && !payment) return errorMessage;
+                    }
                 },
                 'billingContact.email': {
                     pattern: 'email',
@@ -814,7 +819,7 @@ define([
                     paymentTypeIsCard = activePayments && !!_.findWhere(activePayments, { paymentType: 'CreditCard' }),
                     paymentTypeIsPayPal = activePayments && !!_.findWhere(activePayments, { paymentType: 'PaypalExpress' }),
                     //paymentTypeIsAmazon = activePayments && !!_.findWhere(activePayments, { paymentType: 'PayWithAmazon' }),
-                    balanceZero = this.parent.get('amountRemainingForPayment') <= 0; // use <=0 to catch payments that have been added with more amount. this scenario happens when discount is applied after payment is added
+                    balanceNotPositive = this.parent.get('amountRemainingForPayment') <= 0;
 
                 if (this.isAwsCheckout()) return this.stepStatus("complete");
                 if (paymentTypeIsCard && !Hypr.getThemeSetting('isCvvSuppressed')) return this.stepStatus('incomplete'); // initial state for CVV entry
@@ -823,7 +828,7 @@ define([
 
                 if (paymentTypeIsPayPal && window.location.href.indexOf('PaypalExpress=') === -1) return this.stepStatus('incomplete'); // This should handle back button/reload cases!
 
-                if (thereAreActivePayments && (balanceZero || (this.get('paymentType') === 'PaypalExpress' && window.location.href.indexOf('PaypalExpress=complete') !== -1))) return this.stepStatus('complete');
+                if (thereAreActivePayments && (balanceNotPositive || (this.get('paymentType') === 'PaypalExpress' && window.location.href.indexOf('PaypalExpress=complete') !== -1))) return this.stepStatus('complete');
                 return this.stepStatus('incomplete');
 
             },
@@ -897,8 +902,23 @@ define([
                 if (currentPayment) {
                     this.get('card').set('isVisaCheckout', currentPayment.paymentWorkflow.toLowerCase() === 'visacheckout');
                 }
-
-                if (this.nonStoreCreditTotal() > 0 && this.validate()) return false;
+                var val = this.validate();
+                if (this.nonStoreCreditTotal() > 0 && val) {
+                    // display errors:
+                    var error = {"items":[]};
+                    for (var key in val) {
+                        if (val.hasOwnProperty(key)) {
+                            var errorItem = {};
+                            if (key.toLowerCase().indexOf('card') > -1) {
+                                errorItem.name = key.substring('card.'.length);
+                                errorItem.message = val[key];
+                                error.items.push(errorItem);
+                            }
+                        }
+                    }
+                    if (error.items.length > 0) order.onCheckoutError(error);
+                    return false;
+                }
 
                 var card = this.get('card');
 
@@ -1100,10 +1120,14 @@ define([
 
 
             },
-            processDigitalWallet: function (digitalWalletType, payment) {
+            processDigitalWallet: function(digitalWalletType, payment) {
                 var me = this;
+                me.runForAllSteps(function() {
+                    this.isLoading(true);
+                });
+                order.trigger('beforerefresh');
                 // void active payments; if there are none then the promise will resolve immediately
-                return api.all(_.map(_.filter(me.apiModel.getActivePayments(), function(payment) {
+                return api.all.apply(api, _.map(_.filter(me.apiModel.getActivePayments(), function(payment) {
                     return payment.paymentType !== 'StoreCredit' && payment.paymentType !== 'GiftCard';
                 }), function(payment) {
                     return me.apiVoidPayment(payment.id);
@@ -1112,14 +1136,11 @@ define([
                         digitalWalletData: JSON.stringify(payment)
                     }).then(function () {
                         me.updateVisaCheckoutBillingInfo();
-                        _.each([
-                            'fulfillmentInfo.fulfillmentContact',
-                            'fulfillmentInfo',
-                            'billingInfo',
-                            'fulfillmentInfo.data'
-                        ], function(name) {
-                            me.get(name).trigger('sync');
+                        me.runForAllSteps(function() {
+                            this.trigger('sync');
+                            this.isLoading(false);
                         });
+                        me.get('fulfillmentInfo.data').trigger('sync');
                     });
                 });
             },
@@ -1134,7 +1155,7 @@ define([
                     billingInfo.set('billingContact', visaCheckoutPayment.billingInfo.billingContact, { silent:true });
                     billingInfo.set('paymentWorkflow', visaCheckoutPayment.paymentWorkflow);
                     billingInfo.set('paymentType', visaCheckoutPayment.paymentType);
-                    this.trigger('complete');
+                    this.refresh();
                 }
             },
             addCoupon: function () {
@@ -1154,6 +1175,8 @@ define([
                 }
                 this.isLoading(true);
                 return this.apiAddCoupon(this.get('couponCode')).then(function () {
+
+                    me.get('billingInfo').trigger('sync');
                     me.set('couponCode', '');
 
                     var productDiscounts = _.flatten(_.pluck(me.get('items'), 'productDiscounts'));
@@ -1511,6 +1534,26 @@ define([
             update: function() {
                 var j = this.toJSON();
                 return this.apiModel.update(j);
+            },
+            refresh: function() {
+              var me = this;
+              this.trigger('beforerefresh');
+              return this.apiGet().then(function() {
+                me.trigger('refresh');
+                // me.runForAllSteps(function() {
+                //   this.trigger("sync");
+                // });
+              });
+            },
+            runForAllSteps: function(cb) {
+                var me = this;
+                _.each([
+                       'fulfillmentInfo.fulfillmentContact',
+                       'fulfillmentInfo',
+                       'billingInfo'
+                ], function(name) {
+                    cb.call(me.get(name));
+                });
             },
             isReady: function (val) {
                 this.set('isReady', val);
