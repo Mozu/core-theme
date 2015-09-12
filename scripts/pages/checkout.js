@@ -409,6 +409,7 @@ require(["modules/jquery-mozu", "underscore", "hyprlive", "modules/backbone-mozu
       if (isNaN(gutter)) gutter = 15;
       var mask;
       conf.model.on('beforerefresh', function() {
+         killMask();
          conf.el.css('opacity',0.5);
          var pos = conf.el.position();
          mask = $('<div></div>', {
@@ -421,8 +422,8 @@ require(["modules/jquery-mozu", "underscore", "hyprlive", "modules/backbone-mozu
          }).insertAfter(conf.el);
       });
       function killMask() {
-         conf.el.css('opacity',1);
-        mask.remove();
+        conf.el.css('opacity',1);
+        if (mask) mask.remove();
       }
       conf.model.on('refresh', killMask); 
       conf.model.on('error', killMask);
