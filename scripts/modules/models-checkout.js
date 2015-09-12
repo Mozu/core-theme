@@ -306,13 +306,7 @@
             mozuType: 'payment',
             validation: {
                 paymentType: {
-                    fn: function(value, attr) {
-                      var order = this.getOrder(); 
-                      var payment = order.apiModel.getCurrentPayment();
-                      var errorMessage = Hypr.getLabel('paymentTypeMissing');
-                      if (!value) return errorMessage;
-                      if (this.nonStoreCreditTotal() > 0 && !payment) return errorMessage;
-                    }
+                    fn: "validatePaymentType"
                 },
                 'billingContact.email': {
                     pattern: 'email',
@@ -328,8 +322,15 @@
                 card: PaymentMethods.CreditCardWithCVV,
                 check: PaymentMethods.Check
             },
+            validatePaymentType: function(value, attr) {
+              var order = this.getOrder(); 
+              var payment = order.apiModel.getCurrentPayment();
+              var errorMessage = Hypr.getLabel('paymentTypeMissing');
+              if (!value) return errorMessage;
+              if ((value === "StoreCredit" || value === "GiftCard") && this.nonStoreCreditTotal() > 0 && !payment) return errorMessage;
+            }
             helpers: ['acceptsMarketing', 'savedPaymentMethods', 'availableStoreCredits', 'applyingCredit', 'maxCreditAmountToApply',
-                'activeStoreCredits', 'nonStoreCreditTotal', 'activePayments', 'hasSavedCardPayment', 'availableDigitalCredits', 'digitalCreditPaymentTotal', 'isAnonymousShopper', 'visaCheckoutFlowComplete'],
+              'activeStoreCredits', 'nonStoreCreditTotal', 'activePayments', 'hasSavedCardPayment', 'availableDigitalCredits', 'digitalCreditPaymentTotal', 'isAnonymousShopper', 'visaCheckoutFlowComplete'],
             acceptsMarketing: function () {
                 return this.getOrder().get('acceptsMarketing');
             },
