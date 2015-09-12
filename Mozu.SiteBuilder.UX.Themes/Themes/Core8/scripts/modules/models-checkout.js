@@ -895,7 +895,7 @@
                             }
                         }
                     }
-                    order.onCheckoutError(error);
+                    if (error.items.length > 0) order.onCheckoutError(error);
                     return false;
                 }
 
