@@ -320,13 +320,7 @@ define([
             mozuType: 'payment',
             validation: {
                 paymentType: {
-                    fn: function(value, attr) {
-                      var order = this.getOrder(); 
-                      var payment = order.apiModel.getCurrentPayment();
-                      var errorMessage = Hypr.getLabel('paymentTypeMissing');
-                      if (!value) return errorMessage;
-                      if (this.nonStoreCreditTotal() > 0 && !payment) return errorMessage;
-                    }
+                    fn: "validatePaymentType"
                 },
                 'billingContact.email': {
                     pattern: 'email',
@@ -341,6 +335,13 @@ define([
                 billingContact: CustomerModels.Contact,
                 card: PaymentMethods.CreditCardWithCVV,
                 check: PaymentMethods.Check
+            },
+            validatePaymentType: function(value, attr) {
+              var order = this.getOrder(); 
+              var payment = order.apiModel.getCurrentPayment();
+              var errorMessage = Hypr.getLabel('paymentTypeMissing');
+              if (!value) return errorMessage;
+              if ((value === "StoreCredit" || value === "GiftCard") && this.nonStoreCreditTotal() > 0 && !payment) return errorMessage;
             },
             helpers: ['acceptsMarketing', 'savedPaymentMethods', 'availableStoreCredits', 'applyingCredit', 'maxCreditAmountToApply',
                 'activeStoreCredits', 'nonStoreCreditTotal', 'activePayments', 'hasSavedCardPayment', 'availableDigitalCredits', 'digitalCreditPaymentTotal', 'isAnonymousShopper', 'visaCheckoutFlowComplete'],
@@ -753,7 +754,7 @@ define([
                     card = manualCard || customer.get('cards').get(newId),
                     cardBillingContact = card && customer.get('contacts').get(card.get('contactId'));
                 if (card) {
-                    me.get('billingContact').set(cardBillingContact.toJSON());
+                    me.get('billingContact').set(cardBillingContact.toJSON(), { silent: true });
                     me.get('card').set(card.toJSON());
                     me.set('paymentType', 'CreditCard');
                     me.set('usingSavedCard', true);
@@ -884,7 +885,7 @@ define([
                 if (payment.paymentWorkflow === 'VisaCheckout') {
                     normalizedLiveBillingInfo.billingContact.address.addressType = normalizedSavedPaymentInfo.billingContact.address.addressType;
                 }
-
+                
                 return !_.isEqual(normalizedSavedPaymentInfo, normalizedLiveBillingInfo);
             },
             submit: function () {
@@ -1488,7 +1489,7 @@ define([
                     return false;
                 }
                 this.isLoading(true);
-                
+
                 
                 //process.push(this.reconcileNonMozuPayments);
 
