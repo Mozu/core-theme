@@ -306,8 +306,13 @@
             mozuType: 'payment',
             validation: {
                 paymentType: {
-                    required: true,
-                    msg: Hypr.getLabel('paymentTypeMissing')
+                    fn: function(value, attr) {
+                      var order = this.getOrder(); 
+                      var payment = order.apiModel.getCurrentPayment();
+                      var errorMessage = Hypr.getLabel('paymentTypeMissing');
+                      if (!value) return errorMessage;
+                      if (this.nonStoreCreditTotal() > 0 && !payment) return errorMessage;
+                    }
                 },
                 'billingContact.email': {
                     pattern: 'email',
@@ -1102,6 +1107,7 @@
                 me.runForAllSteps(function() {
                     this.isLoading(true);
                 });
+                order.trigger('beforerefresh');
                 // void active payments; if there are none then the promise will resolve immediately
                 return api.all.apply(api, _.map(_.filter(me.apiModel.getActivePayments(), function(payment) {
                     return payment.paymentType !== 'StoreCredit' && payment.paymentType !== 'GiftCard';
