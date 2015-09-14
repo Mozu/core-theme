@@ -153,7 +153,7 @@ Ext.define('Taco.core.ux.mixins.DeleteFromGrid', {
     */
     //onDeleteSuccess: Ext.emptyFn,
     onDeleteSuccess: function (data) {
-       // this.gridPager.doRefresh();
+       this.gridPager.doRefresh();
     },
 
     /**
