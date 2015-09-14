@@ -23,6 +23,7 @@
 
         this.attributeStore = Taco.core.data.StoreManager.getOrCreate({
             type: 'Taco.store.Attributes',
+            createOnly:true,
             remoteFilter: false,
             clearFilters: true,
             clearSort: true,
