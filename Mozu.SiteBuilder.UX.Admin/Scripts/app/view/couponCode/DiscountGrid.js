@@ -138,7 +138,7 @@ Ext.define('Taco.view.couponCode.DiscountGrid', {
                     //field.setValue();
                     //me.getSelectionModel().deselectAll();
                     me.mon(me.store, 'load', function () {
-                        Taco.app.fireEvent('setgrowl', growlMessage, null, 2000);
+                        //Taco.app.fireEvent('setgrowl', growlMessage, null, 2000);
                     }, me, {
                         single: true
                     });
