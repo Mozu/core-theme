@@ -217,18 +217,18 @@ namespace Mozu.SiteBuilder.Mvc.SEO.Constraints
        {
             var qs = request.GetQueryNameValuePairs();
             object tmp;
-            string foundVal;
+            string foundVal= qs.Where(x => string.Equals(x.Key, Settings.QsKey, StringComparison.OrdinalIgnoreCase)).Select(x => x.Value).FirstOrDefault();
             var found = false;
-            if ( values.TryGetValue(Settings.ValueKey, out tmp))
+            if ( !string.IsNullOrEmpty(foundVal))
+            {
+                found = true;
+            }
+            else if ( values.TryGetValue(Settings.ValueKey, out tmp))
             {
                 foundVal = Convert.ToString(tmp);
                 found = true;
             }
-            else
-            {
-                foundVal = qs.Where(x => string.Equals(x.Key, Settings.QsKey, StringComparison.OrdinalIgnoreCase)).Select(x=> x.Value).FirstOrDefault();
-                found = foundVal != null;
-            }
+            
             if (!found)
             {
                 return false;

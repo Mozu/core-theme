@@ -159,12 +159,17 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
                     apiContext.UserClaims = apiContext.UserClaims.Copy();
                     apiContext.UserClaims.Bag["VisitId"] = this.PageContext.Visit != null ? this.PageContext.Visit.VisitId : null;
                 });
-                order = (await orderWebApiClient.CreateOrderFromCart(model.Id)).ReadAsSync();
-
+                
                 if (!model.DigitalWalletData.IsNullOrEmpty() && !model.DigitalWalletType.IsNullOrEmpty())
                 {
-
-                    await orderWebApiClient.ProcessDigitalWallet(order.Id, model.DigitalWalletType, new DigitalWallet { DigitalWalletData = model.DigitalWalletData });
+                    order = (await orderWebApiClient.ProcessDigitalWallet(model.Id,
+                                                            model.DigitalWalletType, 
+                                                            new DigitalWallet { DigitalWalletData = model.DigitalWalletData, CartId = model.Id}
+                                                            )).ReadAsSync();
+                }
+                else
+                {
+                    order = (await orderWebApiClient.CreateOrderFromCart(model.Id)).ReadAsSync();
                 }
             }
             catch (Exception e)
