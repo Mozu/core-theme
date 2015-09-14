@@ -322,3 +322,17 @@ $color-neutral-98: rgb(249, 249, 249);
     border-width:1px;
     padding: 0px;
 }
+
+.taco-subform-noborder {
+    border-width: 0;
+}
+
+.taco-subform-nopadding {
+    padding: 0 0 0 0;
+}
+
+.taco-subform-nohr {
+    .x-panel-body-subform {
+        border: 0;
+    }
+}

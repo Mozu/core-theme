@@ -20,7 +20,8 @@ Ext.define('Taco.view.couponSet.GeneralForm', {
 
     initComponent: function() {
         var me = this;
-
+        me.cls = me.cls || '';
+        me.cls += 'taco-subform-noborder taco-subform-nopadding taco-subform-nohr';
         // horizontal space between fields
         var defaultFieldMargin = 50;
         // how wide should fields be that display currency amounts
