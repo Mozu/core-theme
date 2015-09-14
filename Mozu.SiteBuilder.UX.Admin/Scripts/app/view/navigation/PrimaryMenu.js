@@ -160,8 +160,13 @@ Ext.define('Taco.view.navigation.PrimaryMenu', {
             data = Ext.apply({ selected: parent == selected }, parent.getData()),
             subData = [];
             if (parent.get('showBreadCrumbs')) {
-            parent.items().each(function (subRecord) {
-                subData.push(Ext.apply({ selected: subRecord == selected }, subRecord.getData()));
+                parent.items().each(function (subRecord) {
+                    if (selected && selected.data && selected.data.address) {
+                        subData.push(Ext.apply({ selected: subRecord.data.address == selected.data.address }, subRecord.getData()));
+                    }
+                    else {
+                        subData.push(Ext.apply({ selected: subRecord == selected }, subRecord.getData()));
+                    }
             });
         }
 
