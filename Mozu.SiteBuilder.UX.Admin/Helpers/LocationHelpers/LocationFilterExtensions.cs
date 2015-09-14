@@ -5,6 +5,9 @@ using Mozu.SiteBuilder.UX.Admin.Api.Models;
 
 namespace Mozu.SiteBuilder.UX.Admin.Helpers.LocationHelpers
 {
+    
+
+
     public static class LocationFilterExtensions
     {
         private const string NAME = "name";
@@ -16,6 +19,45 @@ namespace Mozu.SiteBuilder.UX.Admin.Helpers.LocationHelpers
         private const string SUPPORTSINVENTORY = "supportsinventory";
         private const string FULFILLMENT_TYPE = "fulfillmenttype.code";
         //private const string IS_DISABLED = "isdisabled";
+
+        // sort VARS
+        private const string NAME_PROPERTY = "name";
+        private const string CODE_PROPERTY = "code";
+        private const string SUPPORTS_INVENTORY_PROPERTY = "supportsinventory";
+
+
+
+        /// <summary>
+        /// Converts a SortingCollection for Product to a mozu services-compatible sort string.
+        /// </summary>
+        /// <param name="useSiteContext">
+        /// By default, sort occurs on global-level content or price parameters.
+        /// Pass true to force sort on content and price fields nested inside ProductInCatalogs.
+        /// </param>
+        public static string ToSortString(this SortingCollection sortCollection)
+        {
+            if (sortCollection == null || sortCollection.Count == 0)
+                return "name desc";
+
+            return string.Join(" and ", sortCollection.Select(x => GetFilter(x) + (x.IsAscending ? " asc" : " desc")));
+        }
+
+
+
+        private static string GetFilter(SortingCollectionItem item)
+        {
+            switch (item.property.ToLowerInvariant())
+            {
+                case "name":
+                    return NAME_PROPERTY;
+                case "code":
+                    return CODE_PROPERTY;
+                case "supportsinventory":
+                    return SUPPORTS_INVENTORY_PROPERTY;
+                default:
+                    return item.property.ToLowerInvariant();
+            }
+        }
 
 
         /// <summary>

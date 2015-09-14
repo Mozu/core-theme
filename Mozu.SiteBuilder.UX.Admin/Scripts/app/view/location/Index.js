@@ -89,14 +89,14 @@ Ext.define('Taco.view.location.Index', {
                 {
                     dataIndex: 'code',
                     stateId: 'code',
-                    sortable: false,
+                    sortable: true,
                     width: 150,
                     text: 'Code'
 
                 }, {
                     dataIndex: 'name',
                     stateId: 'name',
-                    sortable: false,
+                    sortable: true,
                     width: 200,
                     text: 'Name'
 
