@@ -11,6 +11,7 @@ Ext.define('Taco.view.couponSet.GeneralForm', {
         'Taco.core.util.Validation'
     ],
     ui: 'subform',
+    cls: 'taco-subform-noborder taco-subform-nopadding taco-subform-nohr',
     margin: '0 0 39 0',
 
     title: 'General',
@@ -20,7 +21,6 @@ Ext.define('Taco.view.couponSet.GeneralForm', {
 
     initComponent: function() {
         var me = this;
-
         // horizontal space between fields
         var defaultFieldMargin = 50;
         // how wide should fields be that display currency amounts

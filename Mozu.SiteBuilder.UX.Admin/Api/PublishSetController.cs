@@ -153,6 +153,8 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
 
             if (type == "cms")
             {
+                items.ForEach(CleanPublishSetCodeForContent);
+
                 var pubSetItems = items.Select(Map).ToList(); 
                 var res = (await _cmsItemPublishingClient.AddPublishSetItems(code: code, itemsToPublish: pubSetItems).ConfigureAwait(false)).ReadAsSync();
                 return List2(items);
@@ -386,6 +388,14 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
             retList.Add(publishSetToDelete);
          
             return this.List2(retList);
+        }
+
+        private void CleanPublishSetCodeForContent (PublishSetItem item)
+        {
+            if (item.PublishSetCode == "unassigned")
+            {
+                item.PublishSetCode = null;
+            }
         }
 
         private PagingParamaters sanitizeProductSortQuery(PagingParamaters pagingParams, string type)

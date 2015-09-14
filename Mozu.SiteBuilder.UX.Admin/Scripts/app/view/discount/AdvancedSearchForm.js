@@ -203,7 +203,7 @@ Ext.define('Taco.view.discount.AdvancedSearchForm', {
                 }, {
                     xtype: 'component',
                     html: 'to',
-                    margin: '0 10'
+                    margin: '7 10'
                 }, {
                     xtype: 'numberfield',
                     name: 'usageCountTo',
@@ -230,7 +230,7 @@ Ext.define('Taco.view.discount.AdvancedSearchForm', {
                 }, {
                     xtype: 'component',
                     html: 'to',
-                    margin: '0 10'
+                    margin: '7 10'
                 }, {
                     xtype: 'datetime',
                     // allows the field to consume an iso foramt value;
@@ -254,7 +254,7 @@ Ext.define('Taco.view.discount.AdvancedSearchForm', {
                 }, {
                     xtype: 'component',
                     html: 'to',
-                    margin: '0 10'
+                    margin: '7 10'
                 }, {
                     xtype: 'datetime',
                     // allows the field to consume an iso foramt value;

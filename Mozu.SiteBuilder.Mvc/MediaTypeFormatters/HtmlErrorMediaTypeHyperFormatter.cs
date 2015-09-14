@@ -19,6 +19,8 @@ namespace Mozu.SiteBuilder.Mvc.MediaTypeFormatters
     {
         public HtmlErrorMediaTypeHyperFormatter()
         {
+            SupportedMediaTypes.Add(new MediaTypeHeaderValue("application/json"));
+            SupportedMediaTypes.Add(new MediaTypeHeaderValue("text/json"));
             SupportedMediaTypes.Add(new MediaTypeHeaderValue("text/html"));
         }
         public ILifetimeScope LifetimeScope { get; set; }

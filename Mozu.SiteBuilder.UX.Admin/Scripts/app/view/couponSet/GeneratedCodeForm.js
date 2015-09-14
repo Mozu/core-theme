@@ -91,7 +91,7 @@ Ext.define('Taco.view.couponSet.GeneratedCodeForm', {
                 color: 'grey'
             },
             fieldBodyCls: 'taco-readonly-display-preview',
-            value: "Enter number of codes & code prefix."
+            value: this.getPreviewText()
         });
 
         this.items = [{
@@ -142,11 +142,29 @@ Ext.define('Taco.view.couponSet.GeneratedCodeForm', {
             me.numberOfCodes.setReadOnly(true);
         }, me);
 
+        if (this.record && this.record.get("couponSetCode") && this.previewCode) {
+            this.previewCode.setValue(this.getPreviewText())
+        }
         this.callParent(arguments);
     },
 
-    updatePreview: function (field) {
-        this.previewCode.setValue(field.getValue() + "XXXXXXXXX");
+    updatePreview: function () {
+        this.previewCode.setValue(this.getPreviewText());
+    },
+
+    getPreviewText: function () {
+        if (this.record && this.record.get('couponSetCode')) {
+            var prefix = this.record.get("couponSetCode");
+            return prefix + "XXXXXXXXX";
+        }
+        else if(this.codePrefix && this.codePrefix.getValue() != '') {
+            
+            var prefix = this.codePrefix.getValue();
+            return prefix + "XXXXXXXXX";
+        }
+        else {
+            return "Enter number of codes & code prefix.";
+        }
     },
 
     suggestPrefix: function() {

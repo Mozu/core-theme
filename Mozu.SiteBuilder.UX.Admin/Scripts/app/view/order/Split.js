@@ -120,20 +120,21 @@ Ext.define('Taco.view.order.Split', {
             }
         });
 
+        // to do: #68204 rework this to be able to select first order when selection is empty on initial load
 
-        this.getEast().on('afterlayout', function() {
+        // this.getEast().on('afterlayout', function() {
             
-            setTimeout(function() {
-                // if we load orders, and were not viewing an order, and the grid isnt full page -- lets select the first order
-                if (window.location.href.indexOf('/edit/') === -1 && !me.getEast().getCollapsed()) {
-                    me.down('#taco-order-grid').store.on('load', function(store, records) {
-                        me.onRecordChange(store.getAt(0));
-                    });
-                }
-            }, 0);
+        //     setTimeout(function() {
+        //         // if we load orders, and were not viewing an order, and the grid isnt full page -- lets select the first order
+        //         if (window.location.href.indexOf('/edit/') === -1 && !me.getEast().getCollapsed()) {
+        //             me.down('#taco-order-grid').store.on('load', function(store, records) {
+        //                 me.onRecordChange(store.getAt(0));
+        //             });
+        //         }
+        //     }, 0);
 
 
-        }, this, {single: true});
+        // }, this, {single: true});
        
         
     },

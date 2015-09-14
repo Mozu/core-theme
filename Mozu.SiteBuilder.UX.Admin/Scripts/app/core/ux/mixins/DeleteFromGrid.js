@@ -109,7 +109,7 @@ Ext.define('Taco.core.ux.mixins.DeleteFromGrid', {
     doDelete: function (record, grid) {
         var me = this,
             data = null;
-        
+        // select next item, next || last
         Ext.MessageBox.show({
             title: 'Delete',
             // pushes the buttons to the right to be consistant with our dialog ux.
@@ -151,7 +151,10 @@ Ext.define('Taco.core.ux.mixins.DeleteFromGrid', {
     /**
     *  Template method called just before the deletesuccess event is fired; 
     */
-    onDeleteSuccess: Ext.emptyFn,
+    //onDeleteSuccess: Ext.emptyFn,
+    onDeleteSuccess: function (data) {
+       // this.gridPager.doRefresh();
+    },
 
     /**
     * Callback method that announces failure while deleting    

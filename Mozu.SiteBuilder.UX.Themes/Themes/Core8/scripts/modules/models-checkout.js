@@ -305,10 +305,9 @@
         BillingInfo = CheckoutStep.extend({
             mozuType: 'payment',
             validation: {
-                paymentType: {
-                    required: true,
-                    msg: Hypr.getLabel('paymentTypeMissing')
-                },
+                paymentType: {
+                    fn: "validatePaymentType"
+                },
                 'billingContact.email': {
                     pattern: 'email',
                     msg: Hypr.getLabel('emailMissing')
@@ -323,8 +322,15 @@
                 card: PaymentMethods.CreditCardWithCVV,
                 check: PaymentMethods.Check
             },
+            validatePaymentType: function(value, attr) {
+              var order = this.getOrder(); 
+              var payment = order.apiModel.getCurrentPayment();
+              var errorMessage = Hypr.getLabel('paymentTypeMissing');
+              if (!value) return errorMessage;
+              if ((value === "StoreCredit" || value === "GiftCard") && this.nonStoreCreditTotal() > 0 && !payment) return errorMessage;
+            },
             helpers: ['acceptsMarketing', 'savedPaymentMethods', 'availableStoreCredits', 'applyingCredit', 'maxCreditAmountToApply',
-                'activeStoreCredits', 'nonStoreCreditTotal', 'activePayments', 'hasSavedCardPayment', 'availableDigitalCredits', 'digitalCreditPaymentTotal', 'isAnonymousShopper', 'visaCheckoutFlowComplete'],
+              'activeStoreCredits', 'nonStoreCreditTotal', 'activePayments', 'hasSavedCardPayment', 'availableDigitalCredits', 'digitalCreditPaymentTotal', 'isAnonymousShopper', 'visaCheckoutFlowComplete'],
             acceptsMarketing: function () {
                 return this.getOrder().get('acceptsMarketing');
             },
@@ -734,7 +740,7 @@
                     card = manualCard || customer.get('cards').get(newId),
                     cardBillingContact = card && customer.get('contacts').get(card.get('contactId'));
                 if (card) {
-                    me.get('billingContact').set(cardBillingContact.toJSON());
+                    me.get('billingContact').set(cardBillingContact.toJSON(), { silent: true });
                     me.get('card').set(card.toJSON());
                     me.set('paymentType', 'CreditCard');
                     me.set('usingSavedCard', true);
@@ -895,7 +901,7 @@
                             }
                         }
                     }
-                    order.onCheckoutError(error);
+                    if (error.items.length > 0) order.onCheckoutError(error);
                     return false;
                 }
 
@@ -1102,6 +1108,7 @@
                 me.runForAllSteps(function() {
                     this.isLoading(true);
                 });
+                order.trigger('beforerefresh');
                 // void active payments; if there are none then the promise will resolve immediately
                 return api.all.apply(api, _.map(_.filter(me.apiModel.getActivePayments(), function(payment) {
                     return payment.paymentType !== 'StoreCredit' && payment.paymentType !== 'GiftCard';
@@ -1150,6 +1157,8 @@
                 }
                 this.isLoading(true);
                 return this.apiAddCoupon(this.get('couponCode')).then(function () {
+
+                    me.get('billingInfo').trigger('sync');
                     me.set('couponCode', '');
 
                     var productDiscounts = _.flatten(_.pluck(me.get('items'), 'productDiscounts'));
