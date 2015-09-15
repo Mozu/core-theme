@@ -132,12 +132,32 @@ namespace Mozu.SiteBuilder.Mvc.Helpers
                         url = MakeDocumentUrl(obj, config);
                         break;
                     }
+                case "search":
+                    {
+                        url = MakeSearchUrl();
+                        break;
+                    }
+                case "cart":
+                    {
+                        url = MakeCartUrl();
+                        break;
+                    }
                 default:
                     {
                         throw new RenderingError(string.Format("unknown type [{0}]", type), null);
                     }
             }
             return url;
+        }
+
+        private string MakeCartUrl()
+        {
+            return _customRouteHandler.GetCannonicalUrl(FancyRoute.Cart, null, false).Result;
+        }
+
+        private string MakeSearchUrl()
+        {
+            return _customRouteHandler.GetCannonicalUrl(FancyRoute.Search, null, false).Result;
         }
 
         private string MakeStylesheetUrl(object obj, Dictionary<string, object> config)

@@ -29,24 +29,29 @@ using Mozu.SiteBuilder.UX.Filters;
 using Newtonsoft.Json;
 using Mozu.Core.Actions;
 using Mozu.SiteBuilder.Mvc.OAF;
+using System.Net.Http;
+using Mozu.SiteBuilder.Mvc.SEO;
+using System.Net;
+using Mozu.SiteSettings.General.Contracts.General.Routing;
 
 namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
 {
     [ContextInitialization]
     [ClientCacheHeaders(ForceRevalidate = true)]
-    [DataViewModeEnforcementAttribute]
+    [DataViewModeEnforcement]
     [SbActionExtensionFilter(actionId: ActionFilterConstants.GlobalPageBeforeAction, executionType: ActionExtensionExecutionTypes.BeforeController)]
     [SbActionExtensionFilter(actionId: ActionFilterConstants.GlobalPageAfterAction, executionType: ActionExtensionExecutionTypes.AfterController)]
     public class CartController : BaseApiController
     {
-        private readonly ICartWebApiClient _cartClient;
+        readonly ICartWebApiClient _cartClient;
         IOrderWebApiClient _orderWebApiClient;
-        private readonly ICookieProvider _cookieProvider;
-        private readonly ILocationRuntimeWebApiClient _locationClient;
-        private readonly ISettings _settings;
-        private Lazy<JsonSerializerSettings> _cartSerializer = new Lazy<JsonSerializerSettings>(() => new JsonSerializerSettings { ContractResolver = new CamelCasePropertyNamesContractResolver() });
+        readonly ICookieProvider _cookieProvider;
+        readonly ILocationRuntimeWebApiClient _locationClient;
+        readonly ISettings _settings;
+        Lazy<JsonSerializerSettings> _cartSerializer = new Lazy<JsonSerializerSettings>(() => new JsonSerializerSettings { ContractResolver = new CamelCasePropertyNamesContractResolver() });
+        readonly ICustomRouteHandler _customRouteHandler;
 
-        public CartController(ICartWebApiClient cartClient, IOrderWebApiClient orderWebApiClient, ICookieProvider cookieProvider, ILocationRuntimeWebApiClient locationClient, ISettings settings)
+        public CartController(ICartWebApiClient cartClient, IOrderWebApiClient orderWebApiClient, ICookieProvider cookieProvider, ILocationRuntimeWebApiClient locationClient, ISettings settings, ICustomRouteHandler customRouteHandler)
         {
             if(cartClient == null)
             {
@@ -59,6 +64,7 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
             _cookieProvider = cookieProvider;
             _locationClient = locationClient;
             _settings = settings;
+            _customRouteHandler = customRouteHandler;
         }
 
         private string BuildLocationsFilter(IEnumerable<string> locationCodes)
@@ -69,8 +75,11 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
         [SbActionExtensionFilter(actionId: ActionFilterConstants.CartBeforeAction, executionType: ActionExtensionExecutionTypes.BeforeController)]
         [SbActionExtensionFilter(actionId: ActionFilterConstants.CartAfterAction, executionType: ActionExtensionExecutionTypes.AfterController)]
         [System.Web.Http.HttpGet]
-        public async Task<ActionResult> Index()
+        public async Task<HttpResponseMessage> Index()
         {
+            var redirect = await _customRouteHandler.RedirectWithContext(Request, FancyRoute.Cart);
+            if (redirect != null) return redirect;
+
             var pc = this.PageContext;
             pc.CmsContext = new CmsPageContext()
             {
@@ -87,7 +96,8 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
             this.PageContext.VisaCheckoutButtonUrl = _settings.AppSettings("VisaCheckoutButtonUrl");
             this.PageContext.VisaCheckoutJavaScriptSdkUrl = _settings.AppSettings("VisaCheckoutJavaScriptSdkUrl");
 
-            return (await RenderCartViewWithMessage(null));
+            var viewResult = await RenderCartViewWithMessage(null);
+            return Request.CreateResponse(HttpStatusCode.OK, viewResult);
         }
 
         private async Task<ActionResult> RenderCartViewWithMessage(Exception error)
