@@ -196,7 +196,7 @@ Ext.define('Taco.view.couponCode.Grid', {
                     //field.setValue();
                     //me.getSelectionModel().deselectAll();
                     me.mon(me.store, 'load', function () {
-                        Taco.app.fireEvent('setgrowl', "Created", null, 2000);
+                        //Taco.app.fireEvent('setgrowl', "Created", null, 2000);
                         //me.getSelectionModel().selectRange(0, 0);
                         //field.focus();
                         field.reset();
