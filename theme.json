@@ -6,8 +6,8 @@
         "isDesktop": true,
         "isMobile": false,
         "isTablet": false,
-        "name": "Core7",
-        "allowProduction": false
+        "name": "Core8 8.0.0-rc.3",
+        "allowProduction": true
     },
     "editors": [
         {
