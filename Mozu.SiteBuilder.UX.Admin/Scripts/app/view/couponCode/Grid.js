@@ -345,11 +345,8 @@ Ext.define('Taco.view.couponCode.Grid', {
         ];
     },
 
-    onDeleteSuccess : function(data) {
-        if (this.store.currentPage > 1 && this.store.count() ===0) {
-            // deleted the last record on the page;
-            this.store.loadPage(this.store.currentPage--);
-        }
+    onDeleteSuccess: function (data) {
+        this.gridPager.doRefresh();
     },
 
     launchEditor: Ext.emptyFn,
