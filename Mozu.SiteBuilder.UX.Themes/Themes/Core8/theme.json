@@ -312,6 +312,12 @@
             "template": "login",
             "title": "Login",
             "userCreatable": false
+        },{
+            "entityType": "resetPasswordConfirmDetails",
+            "id": "reset_password",
+            "template": "reset-password",
+            "title": "Reset Password",
+            "userCreatable": false
         },
         {
             "entityType": "anonymous_account",
