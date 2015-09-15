@@ -91,8 +91,13 @@ Ext.define('Taco.core.ux.TooltipLabel', {
             },
 
             onTooltipClick = function (btn, evt) {
+                evt.stopEvent();
                 Ext.tip.QuickTipManager.unregister(btn.getEl());
-                if (!tipContent) {
+                if (tipContent) {
+                    tipContent.destroy();
+                    tipContent = null;
+                }
+                else {
                     tipContent = Ext.create('Ext.tip.ToolTip', {
                         target: btn.getEl(),
                         cls: Taco.baseCSSPrefix + 'tooltip-help-content',
@@ -118,15 +123,15 @@ Ext.define('Taco.core.ux.TooltipLabel', {
                         }],
                         listeners: {
                             hide: function () {
-                                tipContent.destroy();
-                                tipContent = null;
+                                // was being called BEFORE the click event fired a second time, preventing from detecting if the popup existed to close it if the icon was clicked again
+                                //tipContent.destroy();
+                                //tipContent = null;
                             }
                         }
                     });
+                    tipContent.showBy(btn, 'bl-tr?', [0, -5]);
+                    scope.mon(Ext.getBody(), 'click', onClickAnywhereCloseTip, this);
                 }
-                evt.stopEvent();
-                tipContent.showBy(btn, 'bl-tr?', [0, -5]);
-                scope.mon(Ext.getBody(), 'click', onClickAnywhereCloseTip, this);
             },
 
             onClickAnywhereCloseTip = function (evt) {
