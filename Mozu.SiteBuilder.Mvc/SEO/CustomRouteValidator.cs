@@ -175,7 +175,14 @@ namespace Mozu.SiteBuilder.Mvc.SEO
             RuleFor(x => x.Validators.Keys).Must(x => x.All(constraint => validatorKeys.Contains(constraint, StringComparer.OrdinalIgnoreCase))).WithName("validator name").WithMessage("all validators must be declared in the validators section of the custom routes.  Error with validators:({0}) in routeTempate:{1}", x =>  String.Join(",", x.Validators.Keys), x=> x.Template );
             RuleFor(x => x.InternalRoute).NotNull().NotEmpty().WithName("Internal Route").WithMessage("An Internal Route must be provided");
             RuleFor(x => x.Template).NotNull().WithName("template");
-            RuleFor(x => x.Template).Must(NotContainDuplicateRouteParameters).When(x => !string.IsNullOrEmpty(x.Template)).WithName("Route Template").WithMessage("The route {0} has duplicate route parameters: [{1}]", x => x.Template, x => string.Join(",", GetDuplicateRouteParameters(x.Template)));
+            RuleFor(x => x.Template).Must(NotContainDuplicateRouteParameters).When(x => !string.IsNullOrEmpty(x.Template)).WithName("Route Template").WithMessage("The route \"{0}\" has duplicate route parameters: [{1}]", x => x.Template, x => string.Join(",", GetDuplicateRouteParameters(x.Template)));
+            RuleFor(x => x.Template).Must(NotStartWithInvalidRouteCharacters).When(x => !string.IsNullOrEmpty(x.Template)).WithName("Route Template").WithMessage("The route \"{0}\" cannot start with '~' or '/'", x => x.Template);
+        }
+
+        static string[] badStrings = new[] { "/", "~" };
+        static bool NotStartWithInvalidRouteCharacters(string arg)
+        {
+            return !badStrings.Any(arg.StartsWith);
         }
 
         static bool NotContainDuplicateRouteParameters(string arg)
