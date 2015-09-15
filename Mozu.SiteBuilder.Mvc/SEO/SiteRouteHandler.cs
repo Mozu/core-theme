@@ -205,8 +205,8 @@ namespace Mozu.SiteBuilder.Mvc.SEO
             {
                 return null;
             }
-            
-            
+
+            var currentRouteData  = request.GetRouteData();
 
             var routeCollection = await GetRouteCollectionAsync().ConfigureAwait(false);
 
@@ -215,7 +215,7 @@ namespace Mozu.SiteBuilder.Mvc.SEO
             if (!routes.Any()) return null; // no canonical route that matches, or current route is canonical? then no redirect!
 
      
-            var incomingRouteValues = _requestMessage.Value.GetRouteData().Values;
+            var incomingRouteValues = currentRouteData.Values;
             var additionalValues = viewDataAdditionFunc == null ? new Dictionary<string, object>() : viewDataAdditionFunc();
             var finalRouteValues =
                 incomingRouteValues
@@ -230,6 +230,10 @@ namespace Mozu.SiteBuilder.Mvc.SEO
 
             foreach (var route in routes)
             {
+                if (route == currentRouteData.Route)
+                {
+                    return null;
+                }
                 var vpath = route.GetVirtualPath(newReq, finalRouteValues);
                 if (vpath != null)
                 {
