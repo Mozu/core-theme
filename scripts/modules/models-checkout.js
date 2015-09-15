@@ -1124,7 +1124,14 @@
                             this.trigger('sync');
                             this.isLoading(false);
                         });
+                        me.updateShippingInfo();
                     });
+                });
+            },
+            updateShippingInfo: function() {
+                var me = this;
+                this.apiModel.getShippingMethods().then(function (methods) { 
+                    me.get('fulfillmentInfo').refreshShippingMethods(methods);
                 });
             },
             updateVisaCheckoutBillingInfo: function() {
