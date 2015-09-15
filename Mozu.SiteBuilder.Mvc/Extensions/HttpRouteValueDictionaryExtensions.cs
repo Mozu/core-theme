@@ -7,9 +7,12 @@ namespace Mozu.SiteBuilder.Mvc.Extensions
     {
         public static HttpRouteValueDictionary ToRouteDictionary<TValue>(this IDictionary<string, TValue> dict)
         {
-            var rvd = new HttpRouteValueDictionary();
+            var rvd = new HttpRouteValueDictionary(dict.Count);
             foreach (var pair in dict) {
-                rvd[pair.Key] = pair.Value;
+                {
+                    rvd[pair.Key] = pair.Value is long ? (object)System.Convert.ToInt32(pair.Value) : pair.Value;
+                }
+               
             }
             return rvd;
         }

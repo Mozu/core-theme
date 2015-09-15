@@ -739,6 +739,7 @@
     <Folder Include="Themes\Core5\templates\modules\entities\" />
     <Folder Include="Themes\Core6\admin\widgets\" />
     <Folder Include="Themes\Core6\templates\modules\entities\" />
+    <Folder Include="Themes\Demo2\admin\editors\" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="Properties\PublishProfiles\demo wp.pubxml" />
@@ -2601,6 +2602,7 @@
     <Content Include="Themes\Core8\templates\pages\category-interior.hypr" />
     <Content Include="Themes\Core8\templates\pages\search-interior.hypr" />
     <None Include="Themes\Core8\templates\modules\common\anti-clickjacking-script.hypr" />
+    <Content Include="Themes\Core8\templates\modules\utility-bar\header.hypr" />
     <None Include="Web.CI.config">
       <DependentUpon>Web.config</DependentUpon>
     </None>

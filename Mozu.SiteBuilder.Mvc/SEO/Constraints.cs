@@ -215,20 +215,26 @@ namespace Mozu.SiteBuilder.Mvc.SEO.Constraints
        public override bool DoMatch(HttpRequestMessage request, IHttpRoute route, string parameterName, IDictionary<string, object> values,
            HttpRouteDirection routeDirection)
        {
+            if (routeDirection == HttpRouteDirection.UriGeneration)
+            {
+                return true;
+            }
             var qs = request.GetQueryNameValuePairs();
             object tmp;
             string foundVal= qs.Where(x => string.Equals(x.Key, Settings.QsKey, StringComparison.OrdinalIgnoreCase)).Select(x => x.Value).FirstOrDefault();
             var found = false;
-            if ( !string.IsNullOrEmpty(foundVal))
+            if (!string.IsNullOrEmpty(foundVal))
             {
                 found = true;
             }
-            else if ( values.TryGetValue(Settings.ValueKey, out tmp))
+            else if (values.TryGetValue(Settings.ValueKey, out tmp))
             {
                 foundVal = Convert.ToString(tmp);
                 found = true;
             }
             
+
+
             if (!found)
             {
                 return false;

@@ -11,16 +11,10 @@ using System.Collections.Generic;
 using System.Net.Http;
 using System.Web;
 using System.Web.Http;
-using AutoMapper;
-using Mozu.SiteBuilder.Mvc.MessageHandler;
 using NDjango.Interfaces;
 using NDjango.FiltersCS.Compatibility;
-using Mozu.SiteBuilder.Mvc.Catalog;
 using Mozu.SiteBuilder.Mvc.ViewEngine;
-using Mozu.SiteBuilder.Mvc.Extensions;
 using Mozu.SiteBuilder.Mvc.Helpers;
-using Mozu.SiteBuilder.Mvc.SEO;
-using Mozu.SiteSettings.General.Contracts.General.Routing;
 
 namespace Mozu.SiteBuilder.UX.Hypr.Tags
 {
@@ -30,15 +24,15 @@ namespace Mozu.SiteBuilder.UX.Hypr.Tags
     ///   <a href="{% make_url "facet" facet %}">{{ facet.name }}</a>
     /// </summary>
     [NDjango.ParserNodes.Description("tbd")]
-    [NDjango.Interfaces.Name("make_url")]
+    [Name("make_url")]
     public class MakeUrlTag : SimpleTagBase
     {
         static JsonCleaningCaseInsensitiveMemberResolver _resolver = new JsonCleaningCaseInsensitiveMemberResolver();
         protected override IEnumerable<WalkResult> ProcessTag(ArgumentCollection arguments, IContext context, Func<string, ITemplate> getTemplateFunction)
         {
             var type = (arguments[0].Value as string ?? "").ToLowerInvariant();
-            var obj = arguments[1].Value ;
-            var includeContext = arguments.GetValueOrDefault<bool>("includeContext", false);
+            var obj = arguments.Count > 1 ? arguments[1].Value : null;
+            var includeContext = arguments.GetValueOrDefault("includeContext", false);
                
             var props = arguments.Where(x => x.ArgumentType == TagArgument.ArgumentTypes.NamedArgument).ToDictionary(x => x.Name, y => y.Value, StringComparer.OrdinalIgnoreCase);
 
