@@ -407,7 +407,8 @@ Ext.define('Taco.view.publishing.grid.Publish', {
         Taco.model.PublishSet.publishAll({
             data: [eventData.record.data],
             success: function() {
-                me.up('publish-split').showGrowl('Scheduled to Publish', 'info');
+                me.up('publish-split').showGrowl('Published', 'info');
+                me.up('publish-split').down('draftpublishlist').store.reload();
                 eventData.record.store.read();
             },
             scope: this,

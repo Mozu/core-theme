@@ -60,6 +60,8 @@ Mozu.SiteBuilder.UX.Admin/Scripts/.sencha_backup/
 TestResult.xml
 Mozu.SiteBuilder.UX.Themes/Themes/*/compiled/*
 Mozu.SiteBuilder.UX.Themes/Themes/reptar
+Mozu.SiteBuilder.UX.Themes/Themes/core-theme-preview/
+
 *.log
 Mozu.SiteBuilder.UX/BuiltinScripts/SDK/tests/sdk.js
 
