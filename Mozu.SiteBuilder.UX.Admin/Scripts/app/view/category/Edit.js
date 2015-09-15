@@ -9,8 +9,12 @@ Ext.define('Taco.view.category.Edit', {
     formCls: 'Taco.view.category.Form',
     saveAndCreateButtonEnabled: true,
     doCreate: function () {
-        var controller = "categories"
-        Taco.app.StateManager.attemptNavigate(controller + '/create');
+        var controller = "categories",
+            url;
+
+        url = (this.record.get("categoryType") != "Static") ? controller + '/createdynamic' : controller + '/create'
+        
+        Taco.app.StateManager.attemptNavigate(url);
     },
     initComponent: function () {
         var me = this;
