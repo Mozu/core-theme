@@ -14,7 +14,7 @@ define(['modules/jquery-mozu', 'modules/api'], function($, api) {
         return url + (url.indexOf('?') === -1 ? "?" : "&") + "_partial=true";
     }
 
-    function removePartiaParaml(url) {
+    function removePartialParam(url) {
         return url.replace(/[&\?]_partial=true/g, '');
     }
 
