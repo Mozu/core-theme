@@ -30,6 +30,9 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
         [HttpGetRoute(UriTemplate = "list")]
         public async Task<HttpResponseMessage> List([FromUri]PagingParamaters pagingParams, [FromUri]FilterCollection extFilter)
         {
+
+            
+
             DC.LocationCollection locations;
             if (!String.IsNullOrEmpty(pagingParams.id))
             {
@@ -40,8 +43,8 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
             else
             {
                 string filter = extFilter.ToFilterString();
-                //string sort = pagingParams.sort.ToSortString();
-                locations = (await _locationWebApiClient.GetLocations(startIndex: pagingParams.startIndex, pageSize: pagingParams.pageSize, filter: filter)).ReadAsSync();
+                string sort = (pagingParams != null && pagingParams.sort != null) ? pagingParams.sort.ToSortString() : null;
+                locations = (await _locationWebApiClient.GetLocations(startIndex: pagingParams.startIndex, pageSize: pagingParams.pageSize, sortBy: sort, filter: filter)).ReadAsSync();
             }
 
             // default RegularHours to an object for pass through.
