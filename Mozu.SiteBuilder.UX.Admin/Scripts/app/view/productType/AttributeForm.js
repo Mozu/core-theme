@@ -221,7 +221,23 @@
             fields: fields,
             sorters: [{
                 property: 'value',
-                direction: 'ASC'
+                direction: 'ASC',
+                transform: function(item) { // only return the field value to the comparison function
+                    return item.data.value
+                },
+                sorterFn: function (a, b) {
+                    var reA = /[^a-zA-Z]/g;
+                    var reN = /[^0-9]/g;
+                    var aA = (typeof a === 'string') ? a.replace(reA, "") : a; // check for option type 'number' since its supplied as int
+                    var bA = (typeof b === 'string') ? b.replace(reA, "") : b;
+                    if (aA === bA) {
+                        var aN = parseInt(a.replace(reN, ""), 10);
+                        var bN = parseInt(b.replace(reN, ""), 10);
+                        return aN === bN ? 0 : aN > bN ? 1 : -1;
+                    } else {
+                        return aA > bA ? 1 : -1;
+                    }
+                }
             }],
             data: attribute.get('values')
         });
@@ -230,7 +246,10 @@
             fields: fields,
             sorters:[{
                 property: 'value',
-                direction: 'ASC'
+                direction: 'ASC',
+                sorterFn: function (a, b) {
+                    return a.index - b.index;
+                }
             }],
             data: this.record.get('selectedValues')
         });
