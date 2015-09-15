@@ -441,7 +441,23 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
                  username = userName,
                  validationToken = t,
              };
-             return View("Reset-Password", model);
+
+
+            var template = this.SiteContext.Theme.PageTypes.Where(x => x.Id == "Reset_Password").Select(x => x.Template).FirstOrDefault("Reset-Password");
+
+
+            PageContext.CmsContext = new CmsPageContext()
+            {
+                Template = new DocumentRequest()
+                {
+                    Path = template,
+                    DocumentTypeFQN = "pageTemplateContent@mozu"
+                }
+
+            };
+
+
+            return View(template, model);
          }
 
          public class ResetPasswordConfirmDetails

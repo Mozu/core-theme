@@ -69,6 +69,13 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
                 return List2(Mapper.Map<CouponSet>(singleCouponSet));
             }
 
+
+            var query = extFilter.QueryString.Get("query");
+            if (!String.IsNullOrEmpty(query))
+            {
+                extFilter.Add(new FilterCollectionItem { comparison = "eq", field = "all", value = query });
+            }
+
             string filter = null;
             if (extFilter != null && extFilter.Count > 0)
             {
