@@ -1,17 +1,14 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Dynamic;
-using System.Linq;
 using System.Net.Http;
 using System.Text;
-using System.Threading.Tasks;
 using System.Web;
 using AutoMapper;
 using Mozu.SiteBuilder.Mvc.Catalog;
 using Mozu.SiteBuilder.Mvc.Contexts;
 using Mozu.SiteBuilder.Mvc.Extensions;
 using Mozu.SiteBuilder.Mvc.SEO;
-using Mozu.SiteBuilder.Mvc.Tags;
 using Mozu.SiteBuilder.Mvc.ViewEngine;
 using Mozu.SiteBuilder.UX.Models.StoreFront.Catalog;
 using Mozu.SiteSettings.General.Contracts.General.Routing;
@@ -45,7 +42,6 @@ namespace Mozu.SiteBuilder.Mvc.Helpers
         }
 
         static JsonCleaningCaseInsensitiveMemberResolver _resolver = new JsonCleaningCaseInsensitiveMemberResolver();
-
 
         [Microsoft.ClearScript.ScriptMember("getUrl")]
         public string MakeUrl(string type, object obj, DynamicObject config)
@@ -219,9 +215,6 @@ namespace Mozu.SiteBuilder.Mvc.Helpers
             };
             return DoMakeDocumentUrl(doc, config);
         }
-            
-
-
         
         string DoMakeDocumentUrl ( Mozu.Content.Contracts.Document doc, Dictionary<string, object> config)
         {
@@ -255,7 +248,10 @@ namespace Mozu.SiteBuilder.Mvc.Helpers
                 sb.Append(kvp.Key).Append("=").Append(HttpUtility.UrlEncode(kvp.Value.ToString())).Append("&");
             }
 
-            sb.Append("_mzcb=").Append(_siteContext.GeneralSettings.CdnCacheBustKey);
+            if (!_siteContext.GeneralSettings.CdnCacheBustKey.IsNullOrEmpty())
+            {
+                sb.Append("_mzcb=").Append(_siteContext.GeneralSettings.CdnCacheBustKey);
+            }
 
             if (sb.ToString()[0] == '/')
             {
@@ -279,11 +275,6 @@ namespace Mozu.SiteBuilder.Mvc.Helpers
                 return searchContext.ToUrl(new SearchContextOverrides() { SortBy = (string)sortByObj });
             }
             return "#";
-           
-            
-           
-
-
         }
 
         private string MakePagingUrl(object productCollection, Dictionary<string, object> config)
@@ -433,10 +424,6 @@ namespace Mozu.SiteBuilder.Mvc.Helpers
             //maybe remove existing context?
             return _customRouteHandler.GetCannonicalUrl(FancyRoute.Category, () => Mapper.Map<IDictionary<string, object>>(cat).ChainSet(config), includeContxt).Result ?? "/c/" + cat.CategoryId;
         }
-
-
-
-
         public  string MakeImageUrl( dynamic obj, Dictionary<string,object> config)
         {
             string url = null;
