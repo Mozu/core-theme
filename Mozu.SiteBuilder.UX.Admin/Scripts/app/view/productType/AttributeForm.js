@@ -222,10 +222,9 @@
             sorters: [{
                 property: 'value',
                 direction: 'ASC',
-                transform: function(item) { // only return the field value to the comparison function
-                    return item.data.value
-                },
                 sorterFn: function (a, b) {
+                    a = a.data.value;
+                    b = b.data.value;
                     var reA = /[^a-zA-Z]/g;
                     var reN = /[^0-9]/g;
                     var aA = (typeof a === 'string') ? a.replace(reA, "") : a; // check for option type 'number' since its supplied as int
