@@ -164,10 +164,10 @@ namespace Mozu.SiteBuilder.Mvc.Helpers
             sb.Append(url.IndexOf('?') == -1 ? '?' : '&');
 
             sb.Append("SBTHEME=").Append(HttpUtility.UrlEncode(this._siteContext.Theme.Id));
-            if (this._pageContext.IsDebugMode)
-            {
-                sb.Append("&debug=true");
-            }
+
+            // debug mode MUST be set or else the request to resources will fail
+            sb.AppendFormat("&debug={0}", _pageContext.IsDebugMode);
+
             if (this._apiContext.DataViewMode == Core.DataViewModeType.Pending)
             {
                 sb.Append("&dv=p");
