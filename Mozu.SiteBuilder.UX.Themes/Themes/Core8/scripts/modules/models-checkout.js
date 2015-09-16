@@ -779,8 +779,6 @@
                     me.on('change:usingSavedCard', function (me, yes) {
                         if (!yes) {
                             me.get('card').clear();
-                        } else if (!me.get('savedPaymentMethodId')) {
-                            me.setSavedPaymentMethod(null, me.getOrder().get('customer.cards').first());
                         }
                         else {
                             me.setSavedPaymentMethod(me.get('savedPaymentMethodId'));
