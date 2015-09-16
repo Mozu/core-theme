@@ -9,7 +9,6 @@ using System.Web.Http.Routing;
 using Mozu.SiteBuilder.Mvc.Extensions;
 using Mozu.SiteBuilder.Mvc.SEO;
 using Mozu.SiteBuilder.Mvc.SEO.Mappings;
-using Mozu.SiteBuilder.Mvc.ViewEngine;
 using Mozu.SiteSettings.General.Contracts.General.Routing;
 
 namespace Mozu.SiteBuilder.UX.Configuration
@@ -80,10 +79,14 @@ namespace Mozu.SiteBuilder.UX.Configuration
              "favicon.ico",
                     new { controller = "Resource", action = "misc", pathinfo = "images/favicon.ico" });
 
-            routes.MapHttpRoute(
+            routes.MapCustomHttpRoute(
                 "search",
                 "search",
-                new { controller = "Search", action = "index" });
+                null,
+                null, 
+                null,
+                FancyRoute.Search,
+                true);
 
             routes.MapHttpRoute(
                "Misc_content_3",
@@ -230,10 +233,14 @@ namespace Mozu.SiteBuilder.UX.Configuration
                "checkout/{orderId}/{action}",
                new { controller = "Checkout", action = "Index", orderId = RouteParameter.Optional });
 
-            routes.MapHttpRoute(
+            routes.MapCustomHttpRoute(
                 "StoreFront_cart",
                 "cart",
-                new { controller = "Cart", action = "Index" });
+                null,
+                null, 
+                null, 
+                FancyRoute.Cart, 
+                true);
 
             routes.MapHttpRoute(
                 "StoreFront_cart_checkout",

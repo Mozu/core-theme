@@ -26,10 +26,10 @@ namespace Mozu.SiteBuilder.Mvc.Helpers
         private readonly HttpRequestMessage _httpRequestMessage;
         private readonly Lazy<ICategoryTreeProvider> _categoryTreeProvider;
 
-        public UrlHelper(ISiteContext siteContext ,
+        public UrlHelper(ISiteContext siteContext,
             ISiteBuilderApiContext apiContext,
-            IPageContext pageContext, 
-            ICustomRouteHandler customRouteHandler, 
+            IPageContext pageContext,
+            ICustomRouteHandler customRouteHandler,
             HttpRequestMessage httpRequestMessage,
             Lazy<ICategoryTreeProvider> categoryTreeProvider)
         {
@@ -47,10 +47,10 @@ namespace Mozu.SiteBuilder.Mvc.Helpers
         public string MakeUrl(string type, object obj, DynamicObject config)
         {
             Dictionary<string, object> dic = new Dictionary<string, object>(StringComparer.OrdinalIgnoreCase);
-            foreach ( var name in config.GetDynamicMemberNames())
+            foreach (var name in config.GetDynamicMemberNames())
             {
-                object  configValue;
-                if (config.TryGetMember(MyGetMemberBinder.Get(name),out configValue))
+                object configValue;
+                if (config.TryGetMember(MyGetMemberBinder.Get(name), out configValue))
                 {
                     dic[name] = configValue;
                 }
@@ -61,7 +61,7 @@ namespace Mozu.SiteBuilder.Mvc.Helpers
         {
             public static System.Collections.Concurrent.ConcurrentDictionary<string, MyGetMemberBinder> _cache = new System.Collections.Concurrent.ConcurrentDictionary<string, MyGetMemberBinder>();
 
-            public static MyGetMemberBinder Get( string key)
+            public static MyGetMemberBinder Get(string key)
             {
                 return _cache.GetOrAdd(key, x => new MyGetMemberBinder(key, true));
             }
@@ -80,14 +80,14 @@ namespace Mozu.SiteBuilder.Mvc.Helpers
         }
         public string MakeUrl(string type, object obj, Dictionary<string, object> config, bool includeContxt)
         {
-            
+
             var url = "#";
 
             switch (type)
             {
                 case "facet":
                     {
-                        url = MakeFacetUrl( obj);
+                        url = MakeFacetUrl(obj);
                         break;
                     }
                 case "paging":
@@ -96,21 +96,21 @@ namespace Mozu.SiteBuilder.Mvc.Helpers
                     }
                 case "sorting":
                     {
-                        return MakeSortingUrl(obj,config);
+                        return MakeSortingUrl(obj, config);
                     }
                 case "image":
                     {
-                        url = MakeImageUrl( obj, config);
+                        url = MakeImageUrl(obj, config);
                         break;
                     }
                 case "category":
                     {
-                        url = MakeCategoryUrl( obj, config, includeContxt);
+                        url = MakeCategoryUrl(obj, config, includeContxt);
                         break;
                     }
                 case "product":
                     {
-                        url = MakeProductUrl( obj);
+                        url = MakeProductUrl(obj);
                         break;
                     }
                 case "stylesheet":
@@ -148,12 +148,12 @@ namespace Mozu.SiteBuilder.Mvc.Helpers
 
         private string MakeCartUrl()
         {
-            return _customRouteHandler.GetCannonicalUrl(FancyRoute.Cart, null, false).Result;
+            return _customRouteHandler.GetCannonicalUrl(FancyRoute.Cart, null, false).Result ?? "/cart";
         }
 
         private string MakeSearchUrl()
         {
-            return _customRouteHandler.GetCannonicalUrl(FancyRoute.Search, null, false).Result;
+            return _customRouteHandler.GetCannonicalUrl(FancyRoute.Search, null, false).Result ?? "/search";
         }
 
         private string MakeStylesheetUrl(object obj, Dictionary<string, object> config)
@@ -215,12 +215,12 @@ namespace Mozu.SiteBuilder.Mvc.Helpers
             };
             return DoMakeDocumentUrl(doc, config);
         }
-        
-        string DoMakeDocumentUrl ( Mozu.Content.Contracts.Document doc, Dictionary<string, object> config)
+
+        string DoMakeDocumentUrl(Mozu.Content.Contracts.Document doc, Dictionary<string, object> config)
         {
             return _customRouteHandler.GetCannonicalUrl(FancyRoute.CmsPage, () => Mapper.Map<IDictionary<string, object>>(doc).ChainSet(config), false).Result ?? "/" + doc.Name;
         }
-    
+
         private string MakeCdnUrl(object o, Dictionary<string, object> config)
         {
 
@@ -262,15 +262,15 @@ namespace Mozu.SiteBuilder.Mvc.Helpers
 
         }
 
-        private string MakeSortingUrl(object obj , Dictionary<string, object> config)
+        private string MakeSortingUrl(object obj, Dictionary<string, object> config)
         {
             var searchContext = _pageContext.Search;
-            if ( obj is string)
+            if (obj is string)
             {
                 return searchContext.ToUrl(new SearchContextOverrides() { SortBy = (string)obj });
             }
             object sortByObj;
-            if ( config != null && config.TryGetValue( "sortBy", out sortByObj) && !string.IsNullOrWhiteSpace( sortByObj as string))
+            if (config != null && config.TryGetValue("sortBy", out sortByObj) && !string.IsNullOrWhiteSpace(sortByObj as string))
             {
                 return searchContext.ToUrl(new SearchContextOverrides() { SortBy = (string)sortByObj });
             }
@@ -279,9 +279,9 @@ namespace Mozu.SiteBuilder.Mvc.Helpers
 
         private string MakePagingUrl(object productCollection, Dictionary<string, object> config)
         {
-            
+
             object obj;
-            if ( !config.TryGetValue("page", out obj))
+            if (!config.TryGetValue("page", out obj))
             {
                 throw new ArgumentException("missing page", "page");
             }
@@ -289,8 +289,8 @@ namespace Mozu.SiteBuilder.Mvc.Helpers
             string val = Convert.ToString(obj);
             int tmp;
             var searchContext = _pageContext.Search;
-            
-            
+
+
             int defaultPageSize = ((int?)(JToken)this._siteContext.ThemeSettings["defaultPageSize"]) ?? 20;
             int pageSize = _resolver.ResolveMemberOrDefault<int>(productCollection, "PageSize", defaultPageSize);
 
@@ -304,19 +304,19 @@ namespace Mozu.SiteBuilder.Mvc.Helpers
                 overrides.PageSize = pageSize;
             }
 
-            if ( string.Equals( val, "first", StringComparison.OrdinalIgnoreCase))
+            if (string.Equals(val, "first", StringComparison.OrdinalIgnoreCase))
             {
-                overrides.StartIndex =  0;
+                overrides.StartIndex = 0;
             }
             else if (string.Equals(val, "next", StringComparison.OrdinalIgnoreCase))
             {
                 int currentPage = currentStartIndex / pageSize;
-                overrides.StartIndex =  (currentPage + 1) * pageSize;
+                overrides.StartIndex = (currentPage + 1) * pageSize;
             }
             else if (string.Equals(val, "previous", StringComparison.OrdinalIgnoreCase))
             {
                 int currentPage = currentStartIndex / pageSize;
-                if ( currentPage > 0 )
+                if (currentPage > 0)
                 {
                     overrides.StartIndex = (currentPage - 1) * pageSize;
                 }
@@ -324,24 +324,24 @@ namespace Mozu.SiteBuilder.Mvc.Helpers
                 {
                     overrides.StartIndex = 0;
                 }
-               
+
             }
-            else if ( int.TryParse( val , out tmp )&& tmp > 0)
+            else if (int.TryParse(val, out tmp) && tmp > 0)
             {
-                overrides.StartIndex = (tmp -1) * pageSize;
+                overrides.StartIndex = (tmp - 1) * pageSize;
             }
-            else if ( obj is int )
+            else if (obj is int)
             {
                 overrides.StartIndex = (((int)obj) - 1) * pageSize;
 
             }
-            
+
             return searchContext.ToUrl(overrides);
 
 
         }
 
-        public  string MakeProductUrl(object  obj)
+        public string MakeProductUrl(object obj)
         {
 
             Product product = obj as Product;
@@ -349,7 +349,7 @@ namespace Mozu.SiteBuilder.Mvc.Helpers
             if (product == null)
             {
                 string productCode = null;
-                 url = "#";
+                url = "#";
                 if (obj is string)
                 {
                     productCode = (string)obj;
@@ -364,10 +364,10 @@ namespace Mozu.SiteBuilder.Mvc.Helpers
 
 
 
-             return _customRouteHandler.GetCannonicalUrl(FancyRoute.ProductDetails, () => Mapper.Map<IDictionary<string, object>>(product), false).Result?? "/p/" + product.ProductCode;
-            
+            return _customRouteHandler.GetCannonicalUrl(FancyRoute.ProductDetails, () => Mapper.Map<IDictionary<string, object>>(product), false).Result ?? "/p/" + product.ProductCode;
+
         }
-        public string MakeCategoryUrl( object obj, Dictionary<string, object> config, bool includeContxt)
+        public string MakeCategoryUrl(object obj, Dictionary<string, object> config, bool includeContxt)
         {
 
             // bool includeContxt = false;
@@ -379,7 +379,7 @@ namespace Mozu.SiteBuilder.Mvc.Helpers
             }
             else if (obj is string)
             {
-              
+
                 if (!int.TryParse((string)obj, out categoryId))
                 {
                     categoryId = -1;
@@ -424,7 +424,7 @@ namespace Mozu.SiteBuilder.Mvc.Helpers
             //maybe remove existing context?
             return _customRouteHandler.GetCannonicalUrl(FancyRoute.Category, () => Mapper.Map<IDictionary<string, object>>(cat).ChainSet(config), includeContxt).Result ?? "/c/" + cat.CategoryId;
         }
-        public  string MakeImageUrl( dynamic obj, Dictionary<string,object> config)
+        public string MakeImageUrl(dynamic obj, Dictionary<string, object> config)
         {
             string url = null;
             if (obj is string)
@@ -449,19 +449,19 @@ namespace Mozu.SiteBuilder.Mvc.Helpers
             //cdnify
             if (url.Length > 2 && url[0] == '/' && url[1] != '/')
             {
-                sb.Insert(0,_siteContext.CdnPrefix);
-              //  url = _siteContext.CdnPrefix + url;
+                sb.Insert(0, _siteContext.CdnPrefix);
+                //  url = _siteContext.CdnPrefix + url;
             }
             if (url.IndexOf('?') == -1)
-                {
-                    sb.Append( "?");
-                }
-                else
-                {
-                 sb.Append( "&");
-                   
+            {
+                sb.Append("?");
             }
-            
+            else
+            {
+                sb.Append("&");
+
+            }
+
             foreach (var kvp in config)
             {
                 if (kvp.Value == null)
@@ -486,22 +486,22 @@ namespace Mozu.SiteBuilder.Mvc.Helpers
             {
 
 
-                if ( routeData.Values.TryGetValue("categoryId", out tmpObj) && int.TryParse(tmpObj.ToString(), out catId))
+                if (routeData.Values.TryGetValue("categoryId", out tmpObj) && int.TryParse(tmpObj.ToString(), out catId))
                 {
                     urlBase = MakeCategoryUrl(catId, null, false);
                 }
-                return searchContext.ToUrl(new SearchContextOverrides() { ClearFacets = true , UrlBase= urlBase, StartIndex = 0 });
-                
+                return searchContext.ToUrl(new SearchContextOverrides() { ClearFacets = true, UrlBase = urlBase, StartIndex = 0 });
+
             }
 
 
-            
+
             var facetValue = obj is string ? (string)obj : _resolver.ResolveMemberOrDefault<string>(obj, "filterValue");
-          
+
             if (string.IsNullOrEmpty(facetValue))
             {
                 var childrenFacetValues = _resolver.ResolveMemberOrDefault<object>(obj, "childrenFacetValues");
-                if( childrenFacetValues !=null)
+                if (childrenFacetValues != null)
                 {
                     //must be a top level cat with no immediate child products
                     var tempCat = _resolver.ResolveMemberOrDefault<string>(obj, "value");
@@ -522,14 +522,14 @@ namespace Mozu.SiteBuilder.Mvc.Helpers
             {
                 return "#";
             }
-          
-            
+
+
             var facetPairKey = facetParts[0];
             var facetPairValue = facetParts[1];
-            
-            if (facetPairKey.Equals( "categoryId", StringComparison.OrdinalIgnoreCase)&& int.TryParse( facetPairValue, out catId))
+
+            if (facetPairKey.Equals("categoryId", StringComparison.OrdinalIgnoreCase) && int.TryParse(facetPairValue, out catId))
             {
-                return  MakeCategoryUrl(catId, null, true);
+                return MakeCategoryUrl(catId, null, true);
             }
 
 
@@ -548,7 +548,7 @@ namespace Mozu.SiteBuilder.Mvc.Helpers
 
                 }
             }
-           
+
 
 
             var overrides = new SearchContextOverrides()
@@ -567,7 +567,7 @@ namespace Mozu.SiteBuilder.Mvc.Helpers
             return searchContext.ToUrl(overrides);
 
 
-            
+
         }
     }
 }
