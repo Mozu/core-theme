@@ -306,8 +306,10 @@
             mozuType: 'payment',
             validation: {
                 paymentType: {
+
                     fn: "validatePaymentType"
                 },
+
                 'billingContact.email': {
                     pattern: 'email',
                     msg: Hypr.getLabel('emailMissing')
@@ -761,11 +763,13 @@
                 }
             },
             edit: function () {
+                this.set('card.cvv', '');
                 this.getPaymentTypeFromCurrentPayment();
                 CheckoutStep.prototype.edit.apply(this, arguments);
             },
             initialize: function () {
                 var me = this;
+
                 _.defer(function () {
                     me.getPaymentTypeFromCurrentPayment();
                     var savedCardId = me.get('card.paymentServiceCardId');
