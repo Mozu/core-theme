@@ -161,7 +161,8 @@ namespace Mozu.SiteBuilder.Mvc.Helpers
             var url = MakeCdnUrl(obj, config);
             var sb = new StringBuilder(url);
 
-            sb.Append(url.IndexOf('?') == -1 ? '?' : '&');
+            // the url gets a '?' added to it from makecdn uy
+            //sb.Append(url.IndexOf('?') == -1 ? '?' : '&');
 
             sb.Append("SBTHEME=").Append(HttpUtility.UrlEncode(this._siteContext.Theme.Id));
 
