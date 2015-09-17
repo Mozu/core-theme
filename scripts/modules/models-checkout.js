@@ -1,4 +1,4 @@
-define([
+﻿define([
     'modules/jquery-mozu',
     'underscore',
     'hyprlive',
@@ -1493,7 +1493,7 @@ define([
                 this.syncBillingAndCustomerEmail();
                 this.setFulfillmentContactEmail();
 
-                if (nonStoreCreditTotal > 0 && this.validate() && currentPayment.paymentWorkflow !== "PayWithAmazon") {
+                if (nonStoreCreditTotal > 0 && this.validate() && (currentPayment.paymentWorkflow !== "PayWithAmazon" || this.validate().agreeToTerms)) {
                     this.isSubmitting = false;
                     return false;
                 }
