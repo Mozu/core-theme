@@ -102,8 +102,7 @@ Ext.define('Taco.model.PublishSet', {
         },
         {
             name: 'lastPublishedBy',
-            type: 'date',
-            dateFormat: 'c',
+            type: 'string',
             convert: function(value, model) {
                 return model.get('auditInfo').updateBy;
             },
