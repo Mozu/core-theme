@@ -2,7 +2,7 @@
     {% if model.length > 0 %}
     <ul class="is-showing mz-errors">
         {% for msg in model %}
-            <li>{{ msg.message }}</li>
+            <li class="mz-error-item" >{{ msg.message }}</li>
         {% endfor %}
     </ul>
     {% endif %}
