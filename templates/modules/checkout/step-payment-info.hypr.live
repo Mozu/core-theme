@@ -37,7 +37,7 @@
         {% if payment.billingInfo.paymentType == "CreditCard" %}
         <div class="mz-l-stack-section mz-checkout-payment">
             <h4 class="mz-l-stack-sectiontitle">{{ payment.billingInfo.paymentType }}</h4>
-            <span><strong>{{ payment.amountRequested|currency }}</strong> &mdash; {{ payment.billingInfo.card.cardNumberPartOrMask }}</span>
+            <span><strong>{{ model.amountRequested|default(model.nonStoreCreditTotal)|currency }}</strong> &mdash; {{ payment.billingInfo.card.cardNumberPartOrMask }}</span>
             <dl class="mz-propertylist">
                 <dt>{{ labels.billingAddress }}</dt>
                 <dd>
@@ -119,7 +119,7 @@
                             <label for="mz-payment-security-code">{{ labels.securityCode }}<span class="is-required"> *</span>:</label>
                         </div>
                         <div class="mz-l-formfieldgroup-cell">
-                            <input type="tel" name="security-code" id="mz-payment-security-code" class="mz-l-formfieldgroup-halfsize" data-mz-value="card.cvv" value="{{ model.cvv }}" autocomplete="off"/>
+                    <input type="tel" name="security-code" id="mz-payment-security-code" class="mz-l-formfieldgroup-halfsize" data-mz-value="card.cvv" value="{{ model.card.cvv }}" autocomplete="off"/>
                             <span class="mz-validationmessage" data-mz-validationmessage-for="card.cvv"></span>
                         </div>
                       </div>
