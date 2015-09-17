@@ -306,8 +306,10 @@
             mozuType: 'payment',
             validation: {
                 paymentType: {
+
                     fn: "validatePaymentType"
                 },
+
                 'billingContact.email': {
                     pattern: 'email',
                     msg: Hypr.getLabel('emailMissing')
@@ -754,8 +756,9 @@
             },
             getPaymentTypeFromCurrentPayment: function () {
                 var billingInfoPaymentType = this.get('paymentType'),
-                        currentPayment = this.getOrder().apiModel.getCurrentPayment(),
-                        currentPaymentType = currentPayment && currentPayment.billingInfo.paymentType;
+                    currentPayment = this.getOrder().apiModel.getCurrentPayment(),
+                    currentPaymentType = currentPayment && currentPayment.billingInfo.paymentType;
+
                 if (currentPaymentType && currentPaymentType !== billingInfoPaymentType) {
                     this.set('paymentType', currentPaymentType);
                 }
@@ -766,11 +769,21 @@
             },
             initialize: function () {
                 var me = this;
+
                 _.defer(function () {
                     me.getPaymentTypeFromCurrentPayment();
                     var savedCardId = me.get('card.paymentServiceCardId');
                     me.set('savedPaymentMethodId', savedCardId, { silent: true });
                     me.setSavedPaymentMethod(savedCardId);
+
+                    me.on('change:usingSavedCard', function (me, yes) {
+                        if (!yes) {
+                            me.get('card').clear();
+                        }
+                        else {
+                            me.setSavedPaymentMethod(me.get('savedPaymentMethodId'));
+                        }
+                    });
                 });
                 var billingContact = this.get('billingContact');
                 this.on('change:paymentType', this.selectPaymentType);
@@ -781,16 +794,6 @@
                     }
                 });
                 this.on('change:savedPaymentMethodId', this.syncPaymentMethod);
-                this.on('change:usingSavedCard', function(me, yes) {
-                    if (!yes) {
-                        me.get('card').clear();
-                    } else if (!me.get('savedPaymentMethodId')) {
-                        me.setSavedPaymentMethod(null, me.getOrder().get('customer.cards').first());
-                    }
-                    else {
-                        me.setSavedPaymentMethod(me.get('savedPaymentMethodId'));
-                    }
-                });
                 this._cachedDigitalCredits = null;
 
                 _.bindAll(this, 'applyPayment', 'markComplete');
@@ -1123,7 +1126,14 @@
                             this.trigger('sync');
                             this.isLoading(false);
                         });
+                        me.updateShippingInfo();
                     });
+                });
+            },
+            updateShippingInfo: function() {
+                var me = this;
+                this.apiModel.getShippingMethods().then(function (methods) { 
+                    me.get('fulfillmentInfo').refreshShippingMethods(methods);
                 });
             },
             updateVisaCheckoutBillingInfo: function() {
