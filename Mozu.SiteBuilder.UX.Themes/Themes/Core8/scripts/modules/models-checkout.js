@@ -756,14 +756,14 @@
             },
             getPaymentTypeFromCurrentPayment: function () {
                 var billingInfoPaymentType = this.get('paymentType'),
-                        currentPayment = this.getOrder().apiModel.getCurrentPayment(),
-                        currentPaymentType = currentPayment && currentPayment.billingInfo.paymentType;
+                    currentPayment = this.getOrder().apiModel.getCurrentPayment(),
+                    currentPaymentType = currentPayment && currentPayment.billingInfo.paymentType;
+
                 if (currentPaymentType && currentPaymentType !== billingInfoPaymentType) {
                     this.set('paymentType', currentPaymentType);
                 }
             },
             edit: function () {
-                this.set('card.cvv', '');
                 this.getPaymentTypeFromCurrentPayment();
                 CheckoutStep.prototype.edit.apply(this, arguments);
             },
