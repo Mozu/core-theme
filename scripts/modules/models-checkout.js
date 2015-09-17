@@ -965,9 +965,14 @@
 
                     var allDiscounts = me.get('orderDiscounts').concat(productDiscounts).concat(shippingDiscounts).concat(orderShippingDiscounts);
                     var lowerCode = code.toLowerCase();
-                    if (!allDiscounts || !_.find(allDiscounts, function(d) {
-                        return d.couponCode.toLowerCase() === lowerCode;
-                    })) {
+
+                    var matchesCode = function (d) {
+                        // there are discounts that have no coupon code that we should not blow up on.
+                        return (d.couponCode || "").toLowerCase() === lowerCode;
+                    };
+
+                    if (!allDiscounts || !_.find(allDiscounts, matchesCode))
+                    {
                         me.trigger('error', {
                             message: Hypr.getLabel('promoCodeError', code)
                         });
