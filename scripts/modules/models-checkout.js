@@ -464,7 +464,9 @@
 
                 if (activeCredits) {
                     var userEnteredCredits = _.filter(activeCredits, function(activeCred) {
-                        var existingCustomerCredit = self._cachedDigitalCredits.findWhere({ code: activeCred.billingInfo.storeCreditCode });
+                        var existingCustomerCredit = self._cachedDigitalCredits.find(function(cred) {
+                            return cred.code.toLowerCase() === activeCred.billingInfo.storeCreditCode.toLowerCase()
+                        });
                         if (!existingCustomerCredit) {
                             return true;
                         }
@@ -506,7 +508,7 @@
 
                 this._oldPaymentType = this.get('paymentType');
                 var digitalCredit = this._cachedDigitalCredits.filter(function(cred) {
-                     return cred.get('code') === creditCode;
+                     return cred.get('code').toLowerCase() === creditCode.toLowerCase();
                 });
 
                 if (! digitalCredit || digitalCredit.length === 0) {
@@ -533,7 +535,7 @@
                 if (activeCreditPayments) {
                     //check if payment applied with this code, remove
                     var sameCreditPayment = _.find(activeCreditPayments, function (cred) {
-                        return cred.status !== 'Voided' && cred.billingInfo && cred.billingInfo.storeCreditCode === creditCode;
+                        return cred.status !== 'Voided' && cred.billingInfo && cred.billingInfo.storeCreditCode.toLowerCase() === creditCode.toLowerCase();
                     });
 
                     if (sameCreditPayment) {
@@ -657,7 +659,7 @@
                 var creditCode = this.get('digitalCreditCode');
 
                 var existingDigitalCredit = this._cachedDigitalCredits.filter(function (cred) {
-                    return cred.get('code') === creditCode;
+                    return cred.get('code').toLowerCase() === creditCode.toLowerCase();
                 });
                 if (existingDigitalCredit && existingDigitalCredit.length > 0){
                     me.trigger('error', {
@@ -701,7 +703,9 @@
             addRemainingCreditToCustomerAccount: function(creditCode, isEnabled) {
                 var self = this;
 
-                var digitalCredit = self._cachedDigitalCredits.findWhere({ code: creditCode });
+                var digitalCredit = self._cachedDigitalCredits.find(function(credit) {
+                    return credit.code.toLowerCase() === creditCode.toLowerCase();
+                });
 
                 if (!digitalCredit) {
                     return self.deferredError(Hypr.getLabel('genericNotFound'), self);
