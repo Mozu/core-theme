@@ -30,9 +30,13 @@ Ext.define('Taco.view.couponSet.Grid', {
     },
 
     
+    //contextConfig: {
+    //    supportedLevels: ['c'],
+    //    requiresContextOfType: ['c', 's']
+    //},
     contextConfig: {
-        supportedLevels: ['c'],
-        requiresContextOfType: ['c', 's']
+        supportedLevels: ['s'],
+        requiresContextOfType: ['s']
     },
 
     launchEditorOnClick:true,
