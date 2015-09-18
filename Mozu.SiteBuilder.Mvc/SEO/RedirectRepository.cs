@@ -57,6 +57,11 @@ namespace Mozu.SiteBuilder.Mvc.SEO
 
     public class RuntimeRedirects
     {
+        public RuntimeRedirects()
+        {
+            Simple = new Dictionary<string, RedirectEntry>(StringComparer.OrdinalIgnoreCase);
+            QueryString = new Dictionary<string, List<RuntimeRedirectEntry>>(StringComparer.OrdinalIgnoreCase);
+        }
         
         public Dictionary<string, RedirectEntry> Simple { get; set; }
         public Dictionary<string, List<RuntimeRedirectEntry>> QueryString { get; set; }

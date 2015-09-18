@@ -10,18 +10,19 @@ using Autofac;
 using Mozu.SiteBuilder.Mvc.SEO;
 using Mozu.SiteBuilder.Mvc.ViewEngine;
 using Mozu.SiteBuilder.UX.Models.Navigation;
+using System.Collections.Specialized;
 
 namespace Mozu.SiteBuilder.Mvc.MessageHandler
 {
     public class SeoDelegatingHandler : DelegatingHandler
     {
-        private IRedirectHanlder _redirecter = RedirectHanlder.Instance;
+        private IRedirectHandler _redirecter = RedirectHandler.Instance;
         internal const string IsSeoRewrite = "IsSeoRewrite";
         // look in the source code for HttpRoute.cs in asp.net for this.  it's internal there, so we can't just use it.
         internal const string MS_HTTP_RoutingContextKey = "MS_RoutingContext";
 
 
-        public IRedirectHanlder Redirecter
+        public IRedirectHandler Redirecter
         {
             get { return _redirecter; }
             set { _redirecter = value; }
@@ -47,7 +48,7 @@ namespace Mozu.SiteBuilder.Mvc.MessageHandler
                 }
                 else if (!apiContext.IsEditMode)
                 {
-                    return RedirectTo(redirect.Destination, redirect.IsTemporary.GetValueOrDefault(false) , request);
+                    return RedirectTo(redirect.Destination, redirect.IsTemporary.GetValueOrDefault(false), request);
                 }
             }
 
@@ -61,7 +62,7 @@ namespace Mozu.SiteBuilder.Mvc.MessageHandler
             return await base.SendAsync(request, cancellationToken).ConfigureAwait(false);
         }
 
-        
+
 
         private static async Task<HttpRequestMessage> PerformCustomRouting(HttpRequestMessage request)
         {
@@ -76,11 +77,11 @@ namespace Mozu.SiteBuilder.Mvc.MessageHandler
             return request;
         }
 
-        private static HttpResponseMessage RedirectTo(string location, bool isTemorary , HttpRequestMessage request)
+        private static HttpResponseMessage RedirectTo(string location, bool isTemorary, HttpRequestMessage request)
         {
-            HttpResponseMessage resp = request.CreateResponse(isTemorary? HttpStatusCode.Redirect : HttpStatusCode.MovedPermanently);
+            HttpResponseMessage resp = request.CreateResponse(isTemorary ? HttpStatusCode.Redirect : HttpStatusCode.MovedPermanently);
             var uri = new Uri(location, UriKind.RelativeOrAbsolute);
-            if (!uri.IsAbsoluteUri &&  !location.StartsWith("/"))
+            if (!uri.IsAbsoluteUri && !location.StartsWith("/"))
             {
                 uri = new Uri("/" + location, UriKind.RelativeOrAbsolute);
             }
@@ -106,79 +107,65 @@ namespace Mozu.SiteBuilder.Mvc.MessageHandler
         }
     }
 
-    public interface IRedirectHanlder
+    public interface IRedirectHandler
     {
         Task<RedirectEntry> GetRedirectForRequestUri(IRedirectRepository repo, Uri requestUri);
-        RedirectEntry FindRedirectForRequestUri(RuntimeRedirects redirects, Uri requestUri);
-        RedirectEntry ProcessQS(Uri incoming, RedirectEntry entry);
     }
 
-    public  class RedirectHanlder : IRedirectHanlder
+    public class RedirectHandler : IRedirectHandler
     {
-        public static readonly IRedirectHanlder Instance = new RedirectHanlder();
-        private RedirectHanlder() { }
-        public  async Task<RedirectEntry> GetRedirectForRequestUri(IRedirectRepository repo, Uri requestUri)
+        public static readonly IRedirectHandler Instance = new RedirectHandler();
+        private RedirectHandler() { }
+        public async Task<RedirectEntry> GetRedirectForRequestUri(IRedirectRepository repo, Uri requestUri)
         {
             var redirects = await repo.GetRuntimeRedirectEntries().ConfigureAwait(false);
             if (redirects == null || redirects.Simple == null)
             {
                 return null;
             }
-            var redir = FindRedirectForRequestUri(redirects, requestUri);
+
+            var stem = requestUri.AbsolutePath.TrimStart('/');
+            var queryString = requestUri.ParseQueryString();
+            var redir = FindRedirectForRequestUri(redirects, stem, queryString);
             if (redir == null)
             {
                 return null;
             }
-            return ProcessQS(requestUri, redir);
-
-
+            return ProcessQS(queryString, redir);
         }
-        public  RedirectEntry FindRedirectForRequestUri(RuntimeRedirects redirects, Uri requestUri)
+
+        RedirectEntry FindRedirectForRequestUri(RuntimeRedirects redirects, string stem, NameValueCollection queryString)
         {
-            var stem = requestUri.AbsolutePath.TrimStart('/');
-
-            // try any redirects
             RedirectEntry redir;
-
             if (redirects.Simple.TryGetValue(stem, out redir))
             {
                 return redir;
             }
-            List<RuntimeRedirectEntry> rrel;
 
-            if (!redirects.QueryString.TryGetValue(stem, out rrel))
+            List<RuntimeRedirectEntry> qsRedirectEntries;
+            if (!redirects.QueryString.TryGetValue(stem, out qsRedirectEntries))
             {
                 return null;
             }
-            var incommingQs = requestUri.ParseQueryString();
-            foreach (var rre in rrel)
-            {
-                bool match = true;
-                foreach (var key in rre.Query.AllKeys)
-                {
-                    var redirVal = rre.Query[key];
 
-                    if (redirVal == "*")
-                    {
-                        continue;
-                    }
+            var matchingRedirect = 
+                qsRedirectEntries
+                .FirstOrDefault(redirectEntry => MatchesRequest(redirectEntry.Query, queryString));
 
-                    var incommingVals = incommingQs.GetValues(key);
-                    if (incommingVals == null || incommingVals.Length == 0 || !incommingVals.Any(x => string.Equals(x, redirVal, StringComparison.OrdinalIgnoreCase)))
-                    {
-                        match = false;
-                        break;
-                    }
+            if (matchingRedirect == null) return null;
+            return matchingRedirect.Redirect;
+        }
 
-                }
-                if (match)
-                {
+        static bool MatchesRequest(NameValueCollection redirectQuery, NameValueCollection incomingQuery)
+        {
+            // all keys in the redirect must be present in the incoming request
+            if (redirectQuery.AllKeys.Any(key => !incomingQuery.AllKeys.Contains(key, StringComparer.OrdinalIgnoreCase))) return false;
 
-                    return  rre.Redirect;
-                }
-            }
+            // all non-wildcard values in the redirect QS must have matching values in the incoming request
+            var required = redirectQuery.AllKeys.Where(x => !redirectQuery[x].Equals("*", StringComparison.OrdinalIgnoreCase));
+            if (required.Any(key => !incomingQuery.GetValues(key).Contains(redirectQuery[key], StringComparer.OrdinalIgnoreCase))) return false;
 
-            return null;
+            return true;
         }
 
         static readonly Regex RedirectTokenReplacement = new Regex(@"{(?<token>[^}]+)}",
@@ -187,15 +174,12 @@ namespace Mozu.SiteBuilder.Mvc.MessageHandler
                 RegexOptions.IgnorePatternWhitespace);
 
 
-        public  RedirectEntry ProcessQS(Uri incoming, RedirectEntry entry)
+        static RedirectEntry ProcessQS(NameValueCollection queryString, RedirectEntry entry)
         {
-
-
-            var incommingQs = incoming.ParseQueryString();
-
-            var entryDestination = RedirectTokenReplacement.Replace(entry.Destination, match => {
+            var expandedTemplate = RedirectTokenReplacement.Replace(entry.Destination, match =>
+            {
                 var token = match.Groups["token"].Value;
-                var rep = incommingQs[token];
+                var rep = queryString[token];
                 if (rep != null)
                 {
                     return rep;
@@ -203,24 +187,16 @@ namespace Mozu.SiteBuilder.Mvc.MessageHandler
                 return match.Value;
             });
 
-
-
             var qpos = entry.Destination.IndexOf('?');
-            var stem = qpos > -1 ? entryDestination.Substring(0, qpos) : entry.Destination;
-            var query = qpos > -1 ? entryDestination.Substring(qpos + 1) : string.Empty;
+            var stem = qpos > -1 ? expandedTemplate.Substring(0, qpos) : expandedTemplate;
+            var query = qpos > -1 ? expandedTemplate.Substring(qpos + 1) : string.Empty;
             var qstring = System.Web.HttpUtility.ParseQueryString(query, System.Text.Encoding.UTF8);
-
-
-
 
             if (entry.CopyQueryString.GetValueOrDefault(false))
             {
-                foreach (string key in incommingQs.Keys)
+                foreach (string key in queryString.AllKeys.Where(x => queryString[x] != null))
                 {
-                    if (qstring[key] == null)
-                    {
-                        qstring[key] = incommingQs[key];
-                    }
+                    qstring[key] = queryString[key];
                 }
             }
 
@@ -230,9 +206,6 @@ namespace Mozu.SiteBuilder.Mvc.MessageHandler
                 dest = stem + "?" + qstring.ToString();
             }
 
-
-
-
             return new RedirectEntry()
             {
                 Source = entry.Source,
@@ -240,7 +213,6 @@ namespace Mozu.SiteBuilder.Mvc.MessageHandler
                 IsRewrite = entry.IsRewrite,
                 IsTemporary = entry.IsTemporary
             };
-
         }
     }
 }
