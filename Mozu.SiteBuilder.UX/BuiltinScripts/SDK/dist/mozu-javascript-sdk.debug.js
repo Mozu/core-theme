@@ -4601,6 +4601,8 @@ module.exports = (function() {
         // SDK shouldn't check for CVV anymore because we now check for it in the theme.
         //if (!data.cvv && !data.isCvvOptional) errors.throwOnObject(obj, 'CVV_MISSING');
 
+        if (data && data.cvv && data.cvv.indexOf('*') !== -1) delete data.cvv;
+
         maskedData = transform.toCardData(data);
         cardNumber = maskedData.cardNumber.replace(charsInCardNumberRE, '');
         if (!validateCardNumber(obj, cardNumber)) errors.throwOnObject(obj, 'CARD_NUMBER_UNRECOGNIZED');
