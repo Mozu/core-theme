@@ -756,14 +756,14 @@
             },
             getPaymentTypeFromCurrentPayment: function () {
                 var billingInfoPaymentType = this.get('paymentType'),
-                        currentPayment = this.getOrder().apiModel.getCurrentPayment(),
-                        currentPaymentType = currentPayment && currentPayment.billingInfo.paymentType;
+                    currentPayment = this.getOrder().apiModel.getCurrentPayment(),
+                    currentPaymentType = currentPayment && currentPayment.billingInfo.paymentType;
+
                 if (currentPaymentType && currentPaymentType !== billingInfoPaymentType) {
                     this.set('paymentType', currentPaymentType);
                 }
             },
             edit: function () {
-                this.set('card.cvv', '');
                 this.getPaymentTypeFromCurrentPayment();
                 CheckoutStep.prototype.edit.apply(this, arguments);
             },
@@ -1177,9 +1177,14 @@
 
                     var allDiscounts = me.get('orderDiscounts').concat(productDiscounts).concat(shippingDiscounts).concat(orderShippingDiscounts);
                     var lowerCode = code.toLowerCase();
-                    if (!allDiscounts || !_.find(allDiscounts, function(d) {
-                        return d.couponCode.toLowerCase() === lowerCode;
-                    })) {
+
+                    var matchesCode = function (d) {
+                        // there are discounts that have no coupon code that we should not blow up on.
+                        return (d.couponCode || "").toLowerCase() === lowerCode;
+                    };
+
+                    if (!allDiscounts || !_.find(allDiscounts, matchesCode))
+                    {
                         me.trigger('error', {
                             message: Hypr.getLabel('promoCodeError', code)
                         });

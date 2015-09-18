@@ -99,11 +99,11 @@
         // the toJSON method should omit the CVV so it is not sent to the wrong API
         toJSON: function (options) {
             var j = PaymentMethod.prototype.toJSON.apply(this);
-            if (j.card && (!options || !options.helpers)) delete j.card.cvv;
             _.each(twoWayCardShapeMapping, function (k, v) {
                 if (!(k in j) && (v in j)) j[k] = j[v];
                 if (!(v in j) && (k in j)) j[v] = j[k];
             });
+            if (j && (!options || !options.helpers) && j.cvv.indexOf('*') !== -1) delete j.cvv;
             return j;
         }
     });
