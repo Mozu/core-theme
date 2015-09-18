@@ -24,7 +24,7 @@ Ext.define('Taco.store.StoreCredits', {
         }
     },
     statics: {
-        createForCustomer: function(customerId, options) {
+        createForCustomer: function (customerId, options, onlyActiveCredits) {
             var store, proxy;
             options || (options = {});
             Ext.apply(options, {
@@ -33,20 +33,22 @@ Ext.define('Taco.store.StoreCredits', {
                     {
                         property: 'customerId',
                         value: customerId
-                    },
-                    {
-                        filterFn: function(record) {
-                            return record.get('currentBalance') > 0;
-                        }
                     }
                 ]
             });
 
             store = Ext.create('Taco.store.StoreCredits', options);
-            //proxy = store.getProxy();
-            
-            //proxy['extraParams'] || (proxy['extraParams'] = {});
-            //proxy.extraParams['customerId'] = customerId;
+
+            proxy = store.getProxy();
+            proxy['extraParams'] || (proxy['extraParams'] = {});
+
+            if (onlyActiveCredits) {
+                proxy.extraParams.advancedSearch = Ext.JSON.encodeValue({
+                    'activatedateto': new Date(),     // It's been activated by now
+                    'expirationdatefrom': new Date(), // It hasn't expired yet
+                    'currentbalancefrom': 0.0001      // It still has a balance
+                });
+            }
 
             return store;
         }

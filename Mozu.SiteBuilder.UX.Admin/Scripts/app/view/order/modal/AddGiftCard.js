@@ -20,7 +20,7 @@ Ext.define('Taco.view.order.modal.AddGiftCard', {
     initComponent: function () {
         var me = this;
         
-        me.storeCreditsStore = Taco.store.StoreCredits.createForCustomer(me.record.get('customerId'));
+        me.storeCreditsStore = Taco.store.StoreCredits.createForCustomer(me.record.get('customerId'), {}, true);
         me.storeCreditsStore.load();
 
         me.form = Ext.create('Taco.view.order.widget.GiftCardForm', {
