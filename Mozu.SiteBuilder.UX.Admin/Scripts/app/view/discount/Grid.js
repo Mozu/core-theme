@@ -26,9 +26,14 @@ Ext.define('Taco.view.discount.Grid', {
 
     
 
+    //contextConfig: {
+    //    supportedLevels: ['c'],
+    //    requiresContextOfType: ['c', 's']
+    //},
+
     contextConfig: {
-        supportedLevels: ['c'],
-        requiresContextOfType: ['c', 's']
+        supportedLevels: ['s'],
+        requiresContextOfType: ['s']
     },
 
     launchEditorOnClick:true,
