@@ -103,9 +103,7 @@
                 if (!(k in j) && (v in j)) j[k] = j[v];
                 if (!(v in j) && (k in j)) j[v] = j[k];
             });
-            
-            if (j && (!options || !options.helpers) && j.cvv && j.cvv.indexOf('*') !== -1) delete j.cvv;
-
+            if (j && (!options || !options.helpers) && j.cvv && j.cvv.toString().indexOf('*') !== -1) delete j.cvv;
             return j;
         }
     });
