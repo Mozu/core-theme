@@ -1,12 +1,12 @@
 /*! 
- * Mozu Hypr Live - v1.0.0 - 2015-08-27
+ * Mozu Hypr Live - v1.0.0 - 2015-09-21
  *
  * Copyright (c) 2015 Volusion, Inc.
  *
  */
 
 /*! 
- * Mozu Hypr Live - v1.0.0 - 2015-08-27
+ * Mozu Hypr Live - v1.0.0 - 2015-09-21
  *
  * Copyright (c) 2015 Volusion, Inc.
  *
@@ -6328,6 +6328,45 @@ HyprLive.engine.setTag('make_url', MakeUrlTag.parse, MakeUrlTag.compile, false, 
         if (!value) return "";
         if (!moreTime || isNaN(moreTime)) return value;
         return ((+value) + (moreTime*1000))/1000;
+    });
+
+    HyprLive.engine.setFilter('split', function(value, separator) {
+        var sepType = typeof separator;
+        var valType = typeof value;
+        if (separator && sepType !== "string" && sepType !== "number") {
+            throw new Error("Must supply a string or number as the separator to the |split filter.");
+        }
+        if (value && valType !== "string" && valType !== "number") {
+            throw new Error("Must supply a string or number as the value to the |split filter.");
+        }
+        try {
+            return value.toString().split(arguments.length === 2 ? separator.toString() : " ");
+        } catch (e) {
+            throw new Error("Error in |split filter: " + e);
+        }
+    });
+
+    HyprLive.engine.setFilter('replace', function(value, toReplace, replacement) {
+        var toReplaceType = typeof toReplace;
+        var replacementType = typeof replacement;
+        var valType = typeof value;
+        if (value && valType !== "string" && valType !== "number") {
+            throw new Error("Must supply a string or number as the value to the |replace filter.");
+        }
+        if (arguments.length === 1) {
+            throw new Error("Must call |replace filter with at least one argument.");
+        }
+        if (toReplace && toReplaceType !== "string" && toReplaceType !== "number") {
+            throw new Error("Must supply a string or number as the string to replace argument to the |replace filter.");
+        }
+        if (replacement && replacementType !== "string" && replacementType !== "number") {
+            throw new Error("Must supply a string or number as the second argument to the |split filter.");
+        }
+        try {
+            return value.toString().split(toReplace.toString()).join(replacement ? replacement.toString() : '');
+        } catch (e) {
+            throw new Error("Error in |replace filter: " + e);
+        }
     });
 
 

@@ -469,6 +469,70 @@
                 });
             });
 
+            describe('has a split filter that splits a string on a given character to make a list', function() {
+                it('splits on space by default', function() {
+                    var tpt = '{% for word in value|split %}"{{word}}" {% endfor %}';
+                    expect(Hypr.engine.render(tpt, { locals: { value: "three little words" } })).to.equal('"three" "little" "words" ');
+                });
+                function splitWith(value, char) {
+                    var tpt = '{% for word in value|split(char) %}"{{word}}"{% endfor %}'
+                    return Hypr.engine.render(tpt, { locals: { value: value, char: char } });
+                }
+                it('splits on other characters', function() {
+                    expect(splitWith('three,little,words', ",")).to.equal('"three""little""words"');
+                    expect(splitWith('three,little,words', 'l')).to.equal('"three,""itt""e,words"');
+                    expect(splitWith('102030405', 0)).to.equal('"1""2""3""4""5"');
+                });
+                it('fails on splitting things that cannot be split', function() {
+                    expect(function() { return splitWith({ an: "object" }, ","); }).to.throw(/Must supply a string/);
+                    expect(function() { return splitWith("something", { an: "object" }); }).to.throw(/Must supply a string/);
+                });
+            });
+
+            describe('has a replace filter that replaces all substrings within a string with a replacement string', function() {
+                it('fails informatively if called with no arguments', function() {
+                    expect(function() {
+                        Hypr.engine.render(" {{ value|replace }} ", { locals: { value: "hi" } });
+                    }).to.throw(/at least one argument/);
+                });
+                function tryReplace(str, r) {
+                    var tpt = arguments.length === 2 ? "{{ value|replace(str, r) }}" : "{{ value|replace(str) }}";
+                    return Hypr.engine.render(tpt, {
+                        locals: {
+                            value: "The quick brown fox jumps over the lazy dog",
+                            str: str,
+                            r: r
+                        }
+                    });
+                }
+                it('fails informatively if called on a non-string', function() {
+                    expect(function() {
+                        Hypr.engine.render("{{ value|replace(str) }}", {
+                            locals: {
+                                value: { an: "object" },
+                                str: "str"
+                            }
+                        });
+                    }).to.throw(/Must supply a string or number as the value/);
+                });
+                it('fails informatively if called with a non-string to replace', function() {
+                    expect(function() {
+                        return tryReplace({ an: "object" });
+                    }).to.throw(/Must supply a string or number as the string to replace argument/);
+                });
+                it('fails informatively if called with a non-string to replace with', function() {
+                    expect(function() {
+                        return tryReplace("quick", { an: "object" });
+                    }).to.throw(/Must supply a string or number as the second argument/);
+                });
+                it("deletes all instances of the string if you don't supply a replacement string", function() {
+                    expect(tryReplace("quick ")).to.equal("The brown fox jumps over the lazy dog");
+                });
+                it("replaces all instances of the string if you supply a replacement string", function() {
+                    expect(tryReplace("quick", "questionable")).to.equal("The questionable brown fox jumps over the lazy dog");
+                });
+            })
+
 
         });
 
