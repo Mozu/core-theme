@@ -354,11 +354,12 @@
                 
             }, me);
             
-            me.mon(me.form, 'dirtychange', function () {
+            me.mon(me.form, 'dirtychange', function (form, isDirty) {
                 if (me.publishButton && me.form.isDirty()) {
 
                   me.publishButton.disable();   
                 }
+                me.requiresSave = isDirty;
             }, me);
 
             this.on({
@@ -528,6 +529,7 @@
                 this.setProductRecordPublishSetToNull();
                 this.record.set('publishedState', 'Live');
                 this.setPublishStatus();
+                this.requiresSave = false;
                 if (this.fireIdChangeAfterPublish) {
                     this.resumeEvent('idchange');
                     this.fireEvent('idchange', this, this.record);
