@@ -61,7 +61,7 @@ define([
             },
             applyPayment: function() {
                 var me = this;
-                if (me.get("amountRemainingForPayment") <= 0) {
+                if (me.get("amountRemainingForPayment") < 0) {
                     me.trigger('awscheckoutcomplete', me.id);
                     return;
                 }
