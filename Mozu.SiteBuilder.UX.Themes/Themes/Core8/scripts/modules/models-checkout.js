@@ -589,8 +589,8 @@
                     storeCreditCode: creditCode,
                     amount: creditAmountToApply
                 }).then(function (o) {
-                    //clearing existing order because information may have been removed (payment info) #68583
-                    order.clear();
+                    //clearing existing order billing info because information may have been removed (payment info) #68583
+                    order.get('billingInfo').clear();
                     order.set(o.data);
                     self.trigger('orderPayment', o.data, self);
                     return o;
