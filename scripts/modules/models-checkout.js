@@ -478,7 +478,9 @@
 
                 if (activeCredits) {
                     var userEnteredCredits = _.filter(activeCredits, function(activeCred) {
-                        var existingCustomerCredit = self._cachedDigitalCredits.findWhere({ code: activeCred.billingInfo.storeCreditCode });
+                        var existingCustomerCredit = self._cachedDigitalCredits.find(function(cred) {
+                            return cred.code.toLowerCase() === activeCred.billingInfo.storeCreditCode.toLowerCase();
+                        });
                         if (!existingCustomerCredit) {
                             return true;
                         }
@@ -520,7 +522,7 @@
 
                 this._oldPaymentType = this.get('paymentType');
                 var digitalCredit = this._cachedDigitalCredits.filter(function(cred) {
-                     return cred.get('code') === creditCode;
+                     return cred.get('code').toLowerCase() === creditCode.toLowerCase();
                 });
 
                 if (! digitalCredit || digitalCredit.length === 0) {
@@ -547,7 +549,7 @@
                 if (activeCreditPayments) {
                     //check if payment applied with this code, remove
                     var sameCreditPayment = _.find(activeCreditPayments, function (cred) {
-                        return cred.status !== 'Voided' && cred.billingInfo && cred.billingInfo.storeCreditCode === creditCode;
+                        return cred.status !== 'Voided' && cred.billingInfo && cred.billingInfo.storeCreditCode.toLowerCase() === creditCode.toLowerCase();
                     });
 
                     if (sameCreditPayment) {
@@ -601,6 +603,8 @@
                     storeCreditCode: creditCode,
                     amount: creditAmountToApply
                 }).then(function (o) {
+                    //clearing existing order billing info because information may have been removed (payment info) #68583
+                    order.get('billingInfo').clear();
                     order.set(o.data);
                     self.trigger('orderPayment', o.data, self);
                     return o;
@@ -671,7 +675,7 @@
                 var creditCode = this.get('digitalCreditCode');
 
                 var existingDigitalCredit = this._cachedDigitalCredits.filter(function (cred) {
-                    return cred.get('code') === creditCode;
+                    return cred.get('code').toLowerCase() === creditCode.toLowerCase();
                 });
                 if (existingDigitalCredit && existingDigitalCredit.length > 0){
                     me.trigger('error', {
@@ -715,7 +719,9 @@
             addRemainingCreditToCustomerAccount: function(creditCode, isEnabled) {
                 var self = this;
 
-                var digitalCredit = self._cachedDigitalCredits.findWhere({ code: creditCode });
+                var digitalCredit = self._cachedDigitalCredits.find(function(credit) {
+                    return credit.code.toLowerCase() === creditCode.toLowerCase();
+                });
 
                 if (!digitalCredit) {
                     return self.deferredError(Hypr.getLabel('genericNotFound'), self);
@@ -1195,9 +1201,14 @@
 
                     var allDiscounts = me.get('orderDiscounts').concat(productDiscounts).concat(shippingDiscounts).concat(orderShippingDiscounts);
                     var lowerCode = code.toLowerCase();
-                    if (!allDiscounts || !_.find(allDiscounts, function(d) {
-                        return d.couponCode.toLowerCase() === lowerCode;
-                    })) {
+
+                    var matchesCode = function (d) {
+                        // there are discounts that have no coupon code that we should not blow up on.
+                        return (d.couponCode || "").toLowerCase() === lowerCode;
+                    };
+
+                    if (!allDiscounts || !_.find(allDiscounts, matchesCode))
+                    {
                         me.trigger('error', {
                             message: Hypr.getLabel('promoCodeError', code)
                         });
@@ -1236,7 +1247,15 @@
                         order.trigger('userexists', order.get('emailAddress'));
                     }
                 });
-                this.trigger('error', error);
+
+                //on an error, if the card is declined -- and the service returns no card data, lets unset the model.card
+                this.apiGet().then(function(res) {
+                    if (res.data.billingInfo && !res.data.billingInfo.card) {
+                         order.unset('billingInfo.card', {silent: true});
+                    }
+                    order.trigger('error', error);
+                });
+
                 if (!errorHandled) order.messages.reset(error.items);
                 order.isSubmitting = false;
                 throw error;
