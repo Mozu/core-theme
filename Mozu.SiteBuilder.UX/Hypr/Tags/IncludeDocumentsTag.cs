@@ -57,7 +57,7 @@ namespace Mozu.SiteBuilder.UX.Hypr.Tags
             bool sortWithUrl = arguments.GetValueOrDefault("sortWithUrl", false);
             int startIndex = arguments.GetValueOrDefault("startIndex", 0);
             int pageSize = arguments.GetValueOrDefault("pageSize", 15);
-            var query = arguments.GetValueOrDefault<string>("query");
+            var query = arguments.GetValueOrDefault<string>("query", arguments.GetValueOrDefault<string>("filter"));
             var sortBy = arguments.GetValueOrDefault<string>("sort");
             var list = arguments.GetValueOrDefault<string>("listFQN");
             var view = arguments.GetValueOrDefault<string>("view") ?? "default";
