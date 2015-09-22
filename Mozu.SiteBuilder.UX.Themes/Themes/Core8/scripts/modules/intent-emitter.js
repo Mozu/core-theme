@@ -13,7 +13,7 @@ define(['underscore', 'backbone'], function(_, Backbone) {
 			emitter.trigger(eventName || 'data', processor.apply(this, arguments), e);
 		};
 		var View = Backbone.View.extend({
-			events: subscriptions.reduce(function(memo, subscription) {
+			events: _.reduce(subscriptions, function(memo, subscription) {
 				memo[subscription] = handler;
 				return memo;
 			}, {})
