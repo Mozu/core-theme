@@ -465,7 +465,7 @@
                 if (activeCredits) {
                     var userEnteredCredits = _.filter(activeCredits, function(activeCred) {
                         var existingCustomerCredit = self._cachedDigitalCredits.find(function(cred) {
-                            return cred.code.toLowerCase() === activeCred.billingInfo.storeCreditCode.toLowerCase()
+                            return cred.code.toLowerCase() === activeCred.billingInfo.storeCreditCode.toLowerCase();
                         });
                         if (!existingCustomerCredit) {
                             return true;
