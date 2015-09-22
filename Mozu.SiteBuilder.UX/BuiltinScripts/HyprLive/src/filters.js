@@ -174,6 +174,10 @@
         return str;
     });
 
+    HyprLive.engine.setFilter('urlencode', function(str) {
+        return encodeURIComponent(str.toString());
+    });
+
     HyprLive.engine.setFilter('string_format', function (tpt) {
         var formatted = tpt, otherArgs = Array.prototype.slice.call(arguments, 1);
         for (var i = 0, len = otherArgs.length; i < len; i++) {
