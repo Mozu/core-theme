@@ -1,7 +1,6 @@
 module.exports = function(grunt) {
 
     var pkg = grunt.file.readJSON('./package.json');
-    var semver = require('semver');
 
     grunt.initConfig({
         mozuconfig: grunt.file.exists('./mozu.config.json') ? grunt.file.readJSON('./mozu.config.json') : {},
@@ -192,9 +191,8 @@ module.exports = function(grunt) {
 
         var j = grunt.file.readJSON('./theme.json');
         var b = grunt.file.readJSON('./bower.json');
-        var newVersion = semver.inc(pkg.version, grunt.option('increment') || 'prerelease');
-        j.about.name = "Core8 " + newVersion;
-        b.version = newVersion;
+        j.about.name = "Core8 " + pkg.version;
+        b.version = pkg.version;
         grunt.file.write('./theme.json', JSON.stringify(j, null, 4));
         grunt.file.write('./bower.json', JSON.stringify(b, null, 4));
 
