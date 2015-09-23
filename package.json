@@ -2,7 +2,7 @@
   "name": "mozu-core-theme-amazon-pay",
   "author": "Volusion, Inc.",
   "description": "The core storefront theme for Mozu, enhanced with Amazon Pay functionality.",
-  "version": "8.0.0-amazonpay.4",
+  "version": "8.0.0-amazonpay.5",
   "repository": {
     "type": "git",
     "url": "https://github.com/mozu/core-theme-preview.git"
