@@ -5,13 +5,6 @@
  *
  */
 
-/*! 
- * Mozu Hypr Live - v1.0.0 - 2015-09-23
- *
- * Copyright (c) 2015 Volusion, Inc.
- *
- */
-
  (function(root) {	// IE8 polyfills	var hasOwnProperty = Object.prototype.hasOwnProperty,
     hasDontEnumBug = !({toString: null}).propertyIsEnumerable('toString'),
     dontEnums = [
