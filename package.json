@@ -15,7 +15,6 @@
     "grunt-contrib-watch": "~0.6",
     "grunt-jsonlint": "*",
     "grunt-mozu-appdev-sync": "^0.5.1",
-    "semver": "^5.0.1",
     "thmaa": "^0.10.4"
   },
   "engines": {
