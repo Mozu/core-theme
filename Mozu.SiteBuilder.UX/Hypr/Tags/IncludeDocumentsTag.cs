@@ -64,8 +64,6 @@ namespace Mozu.SiteBuilder.UX.Hypr.Tags
 
             var tempCol = arguments.GetValueOrDefault<IEnumerable>("ids");
             var id = arguments.GetValueOrDefault<string>("id");
-            var isEffectivityDated = arguments.GetValueOrDefault<bool>("effectivityDated", false);
-        
             
             List <string> docIds = null;
             if (tempCol != null)
@@ -102,19 +100,6 @@ namespace Mozu.SiteBuilder.UX.Hypr.Tags
                 {
                     startIndex = tmp;
                 }
-            }
-
-            if (isEffectivityDated)
-            {
-
-                var pageContext = context.PageContext ();
-                DateTime  now = pageContext.Now;
-                query = query ?? "";
-                if ( query.Length > 0 )
-                {
-                    query += " and ";
-                }
-                query += string.Format("properties.beginDate le {0} and properties.endDate ge {0}", now.ToUniversalTime().ToString("o"));
             }
 
             // staying in line with the admin-side doc client
