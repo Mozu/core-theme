@@ -1504,6 +1504,7 @@ var TYPES = {
       type: TYPES.BOOL,
       regex: [
         /^(true|false)\s+/,
+        /^(true|false)(?=\))/,
         /^(true|false)$/
       ],
       idx: 1
