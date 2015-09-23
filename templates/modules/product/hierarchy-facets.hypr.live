@@ -1,0 +1,25 @@
+{% if facetValues and facetValues.length > 0 %}
+<div class="mz-l-sidebaritem">
+    <h4>{{ facet.label|safe }}</h4>
+    <ul class="mz-facetingform-facet mz-facetingform-facet-hierarchy">
+        {% for fval in facetValues %}
+        {% if fval.isDisplayed %}
+        <li>
+            <a href="{% make_url "facet" fval  %}" class="mz-facetingform-link" data-mz-action="drillDown" data-mz-hierarchy-id="{{ fval.value }}" data-mz-facet-value="{{ fval.filterValue }}" data-mz-facet="{{ facet.field }}">{{ fval.label|safe }}</a>
+            {% if themeSettings.showChildCategoriesInFaceting and fval.childrenFacetValues.length > 0 %}
+            <ul class="mz-facetingform-facet mz-facetingform-facet-hierarchy">
+            {% for child in fval.childrenFacetValues %}
+                {% if child.isDisplayed and not child.isEmpty %}
+                <li>
+                    <a href="{% make_url "facet" child %}" class="mz-facetingform-link" data-mz-action="drillDown" data-mz-hierarchy-id="{{ child.value }}" data-mz-facet-value="{{ child.filterValue }}" data-mz-facet="{{ facet.field }}">{{ child.label|safe }}</a>
+                </li>
+                {% endif %}
+            {% endfor %}
+            </ul>
+            {% endif %}
+        </li>
+        {% endif %}
+        {% endfor %}
+    </ul>
+</div>
+{% endif %}

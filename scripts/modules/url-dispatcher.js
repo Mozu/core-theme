@@ -7,30 +7,50 @@
 
 define(['backbone'], function(Backbone) {
 
-    Backbone.history.start({ pushState: true });
+    var Dispatcher;
+    var proto;
 
-    var proto = Backbone.Router.prototype;
+    if (Modernizr.history) {
+        Backbone.history.start({ pushState: true });
 
-    // using a backbone router ONLY for its event emitter capability
-    var Dispatcher = new Backbone.Router();
+        proto = Backbone.Router.prototype;
 
-    // register catchall route so it fires event
-    Dispatcher.route('*all', 'all', function() { });
+        // using a backbone router ONLY for its event emitter capability
+        Dispatcher = new Backbone.Router();
 
-    // hiding the implementation of the particular event emitter
-    Dispatcher.onChange = function(cb) {
-        Dispatcher.on('route:all', function() {
-            cb(window.location.pathname + window.location.search + window.location.hash);
-        });
-    };
+        // register catchall route so it fires event
+        Dispatcher.route('*all', 'all', function() { });
 
-    Dispatcher.send = function(url) {
-        return proto.navigate.call(this, url, { trigger: true });
-    };
+        // hiding the implementation of the particular event emitter
+        Dispatcher.onChange = function(cb) {
+            Dispatcher.on('route:all', function() {
+                cb(window.location.pathname + window.location.search + window.location.hash);
+            });
+        };
 
-    Dispatcher.replace = function(url) {
-        return proto.navigate.call(this, url, { replace: true });
-    };
+        Dispatcher.send = function(url) {
+            return proto.navigate.call(this, url, { trigger: true });
+        };
+
+        Dispatcher.replace = function(url) {
+            return proto.navigate.call(this, url, { replace: true });
+        };
+
+    } else {
+        // if the browser does not support the HTML5 History API,
+        // the dispatcher should simply default to full page navigation.
+        Dispatcher = {
+            send: function(url) {
+                window.location = url;
+            },
+            replace: function(url) {
+                window.location.replace(url);
+            },
+            onChange: function() { } // let the browser do its thing instead
+        };
+    }
+
+    
 
     return Dispatcher;
 

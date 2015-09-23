@@ -312,7 +312,8 @@
             "template": "login",
             "title": "Login",
             "userCreatable": false
-        },{
+        },
+        {
             "entityType": "resetPasswordConfirmDetails",
             "id": "reset_password",
             "template": "reset-password",
@@ -404,6 +405,7 @@
         "showCartItemOptions": true,
         "showCartItemWeight": true,
         "showCategoryFacets": true,
+        "showChildCategoriesInFaceting": true,
         "showCheckoutCommentsField": true,
         "showMSRP": true,
         "showProductDetailMeasurements": true,
