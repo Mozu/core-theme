@@ -465,7 +465,7 @@
                 if (activeCredits) {
                     var userEnteredCredits = _.filter(activeCredits, function(activeCred) {
                         var existingCustomerCredit = self._cachedDigitalCredits.find(function(cred) {
-                            return cred.code.toLowerCase() === activeCred.billingInfo.storeCreditCode.toLowerCase();
+                            return cred.get('code').toLowerCase() === activeCred.billingInfo.storeCreditCode.toLowerCase();
                         });
                         if (!existingCustomerCredit) {
                             return true;
@@ -591,7 +591,7 @@
                 }).then(function (o) {
                     //clearing existing order billing info because information may have been removed (payment info) #68583
                     order.get('billingInfo').clear();
-                    order.set(o.data);
+                    order.set(o.data, {silent: true});
                     self.trigger('orderPayment', o.data, self);
                     return o;
                 });
@@ -903,14 +903,14 @@
                     for (var key in val) {
                         if (val.hasOwnProperty(key)) {
                             var errorItem = {};
-                            if (key.toLowerCase().indexOf('card') > -1) {
-                                errorItem.name = key.substring('card.'.length);
-                                errorItem.message = val[key];
-                                error.items.push(errorItem);
-                            }
+                            errorItem.name = key;
+                            errorItem.message = key.substring(0, ".") + val[key];
+                            error.items.push(errorItem);
                         }
                     }
-                    if (error.items.length > 0) order.onCheckoutError(error);
+                    if (error.items.length > 0) {
+                        order.onCheckoutError(error);
+                    }
                     return false;
                 }
 
