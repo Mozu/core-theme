@@ -784,7 +784,7 @@ Ext.define('Taco.view.order.modal.AuditLogInfo', {
                                 amt = v.amountRequested;
                                 break;
                             }
-                            case 'default':
+                            default:
                             {
                                 // Serious data issue! Should not get here.
                                 //  This handles display problems so NaN isn't displayed.
