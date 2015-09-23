@@ -5,7 +5,7 @@
  *
  */
 
- (function(root) {	// IE8 polyfills	var hasOwnProperty = Object.prototype.hasOwnProperty,
+ (function(root) {	/* IE8 polyfills */	var hasOwnProperty = Object.prototype.hasOwnProperty,
     hasDontEnumBug = !({toString: null}).propertyIsEnumerable('toString'),
     dontEnums = [
         'toString',
