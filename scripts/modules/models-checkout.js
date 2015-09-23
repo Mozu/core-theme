@@ -804,7 +804,10 @@
 
                 _.bindAll(this, 'applyPayment', 'markComplete');
             },
-            selectPaymentType: function (me, newPaymentType) {
+            selectPaymentType: function(me, newPaymentType) {
+                if (!me.changed || !me.changed.paymentWorkflow) {
+                    me.set('paymentWorkflow', 'Mozu');
+                }
                 me.get('check').selected = newPaymentType === 'Check';
                 me.get('card').selected = newPaymentType === 'CreditCard';
             },
