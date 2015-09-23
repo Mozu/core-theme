@@ -207,6 +207,7 @@ namespace Mozu.SiteBuilder.Mvc.Contexts
             var pageSize = overrides != null && overrides.PageSize.HasValue ? overrides.PageSize : this.PageSize;
             var startIndex = overrides != null && overrides.StartIndex.HasValue ? overrides.StartIndex : this.StartIndex;
             var query = overrides != null && overrides.QueryOverwritten ? overrides.Query : this.Query;
+            var categoryId = overrides != null && overrides.CategoryId.HasValue ? overrides.CategoryId : this.CategoryId;
             #region doFacets
             if ( !clearFacets && ( 
                 (   
@@ -284,6 +285,12 @@ namespace Mozu.SiteBuilder.Mvc.Contexts
                 queryCollection.Add("startIndex", startIndex.ToString());
             }
 
+            if (categoryId.HasValue)
+            {
+                queryCollection.Add("categoryId", categoryId.Value.ToString());
+            }
+
+
             if (!String.IsNullOrEmpty(query))
             {
                 queryCollection.Add("query", query);
@@ -337,6 +344,8 @@ namespace Mozu.SiteBuilder.Mvc.Contexts
             get;set;
         }
         public string UrlBase { get; set; }
+
+        public int? CategoryId { get; set; }
         public string SortBy
         {
             get { return _sortBy; }
