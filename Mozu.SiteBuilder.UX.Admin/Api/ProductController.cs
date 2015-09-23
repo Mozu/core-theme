@@ -202,24 +202,22 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
             // de-duplicate
             productTypes = productTypes.Distinct().ToList();
 
-            var productTypeFilter = "";
+            var productTypeFilter = new StringBuilder();
             var filterSeperator = "";
 
             foreach (var productTypeId in productTypes)
             {
-                productTypeFilter += String.Format("{1}id eq {0}", productTypeId, filterSeperator); ;
+                productTypeFilter.Append(filterSeperator).Append("id eq ").Append(productTypeId);
                 filterSeperator = " or ";
             }
 
+
             // call the productType service and retrieve records for all productTypes;
             var pttask = (await _productTypeWebApiClient.GetProductTypes(
-                /* startIndex:     */ null,
-                /* pageSize:       */ null,
-                /* sortBy:         */ null,
-                /* filter:         */ productTypeFilter,
-                /* responseGroups: */ null
+                filter: productTypeFilter.ToString(),
+                responseFields: "items(id,name)"
                 )).ReadAsSync();
-
+            
             var mapped = prodCollection.Items.Map<List<Product>>();
 
             var ptLookUp = pttask.Items.ToDictionary(x => x.Id, y => y.Name);

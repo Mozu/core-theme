@@ -1,5 +1,5 @@
 /*! 
- * Mozu JavaScript SDK - v0.3.0 - 2015-09-01
+ * Mozu JavaScript SDK - v0.3.0 - 2015-09-18
  *
  * Copyright (c) 2015 Volusion, Inc.
  *
@@ -4609,9 +4609,10 @@ module.exports = (function() {
         // if (cardNumber.indexOf(maskCharacter) === -1) maskedData.numberPart = createCardNumberMask(obj, cardNumber);
         maskedData.cardNumber = cardNumber;
 
+        if (maskedData && maskedData.cvv && maskedData.cvv.indexOf('*') !== -1) delete maskedData.cvv;
+
         return maskedData;
     }
-
 
     var transform = {
         fields: {

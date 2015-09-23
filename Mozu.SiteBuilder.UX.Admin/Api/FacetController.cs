@@ -64,18 +64,30 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
             
             //server facets
             var configuredServerFacets = (await _facetWebApiClient.GetFacetCategoryList(set.CategoryId)).ReadAsSync().Configured ?? new List<DC.Facet>();
-            var serverFacets = configuredServerFacets.Where(x => x.CategoryId == set.CategoryId && x.OverrideFacetId == null);
+            var serverNonOverridenFacets = configuredServerFacets.Where(x => x.CategoryId == set.CategoryId && x.OverrideFacetId == null).ToList();
             var inheritedServerFacet = configuredServerFacets.Where(x => x.CategoryId != set.CategoryId && x.OverrideFacetId == null).ToList();
             var overridenServerFacet = configuredServerFacets.Where(x => x.OverrideFacetId != null).ToList();
+
+            UpdateFacetIdFromExistingServerFacets(facets, serverNonOverridenFacets);
 
             //look into sending above 3 calls using return Task.WhenAll(catTask, pageTask, navTask).ContinueWith(t =>
             await AddFacets(set, facets, inheritedClientFacets, inheritedServerFacet);
             await UpdateFacets(facets, overridenClientFacets, overridenServerFacet, inheritedServerFacet);
-            await DeleteFacets(serverFacets, facets, overridenClientFacets, inheritedServerFacet);
+            await DeleteFacets(serverNonOverridenFacets, facets, overridenClientFacets, inheritedServerFacet);
 
 		    var res = (await _facetWebApiClient.GetFacetCategoryList(set.CategoryId)).ReadAsSync();
             var ret = Mapper.Map<FacetSet>(res);
             return List2(ret);
+        }
+
+        // todo: quick fix for Tfs#67489 as client doesn't send facetId on add, until reloaded.  Need to refactor entire update - Greg Murray on 2015-09-23
+        private void UpdateFacetIdFromExistingServerFacets(List<DC.Facet> facets, List<DC.Facet> serverFacets)
+        {
+            var serverFacetLookup = serverFacets.Where(sf => sf.Source != null).ToDictionary(x => x.Source.Id);
+            foreach(var facet in facets.Where(x => !x.FacetId.HasValue && x.Source != null && serverFacetLookup.ContainsKey(x.Source.Id)))
+            {
+                facet.FacetId = serverFacetLookup[facet.Source.Id].FacetId;
+            }
         }
 
         private async Task UpdateFacets(List<DC.Facet> facets, List<DC.Facet> overridenFacets, List<DC.Facet> overridenServerFacet, List<DC.Facet> inheritedServerFacet)
@@ -91,17 +103,17 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
             }
         }
 
-        private async Task AddFacets(FacetSet set, List<DC.Facet> facets, List<DC.Facet> inheritedFacets, List<DC.Facet> inheritedServerFacet)
+        private async Task AddFacets(FacetSet set, List<DC.Facet> facets, List<DC.Facet> inheritedFacets, List<DC.Facet> inheritedServerFacet) 
         {
             var facetsToAdd = facets.Where(x => !x.FacetId.HasValue).ToList();
             facetsToAdd.AddRange(_inheritedFacetHelper.GetOverridenFacetsToAdd(inheritedFacets, inheritedServerFacet,
                 set.CategoryId));
+            if (facetsToAdd.Count == 0)
+                return;
             var newFacetCalls = facetsToAdd.Select(x => _facetWebApiClient.AddFacet(x)).ToList();
-            if (newFacetCalls.Count > 0)
-            {
-                await Task.WhenAll(newFacetCalls);
-                newFacetCalls.Select(TaskHelper.Result).ThrowExceptionsIfAny();
-            }
+            await Task.WhenAll(newFacetCalls);
+            newFacetCalls.Select(TaskHelper.Result).ThrowExceptionsIfAny();
+            
         }
 
         private async Task DeleteFacets(IEnumerable<DC.Facet> serverFacets, List<DC.Facet> facets, List<DC.Facet> overridenFacets, List<DC.Facet> inheritedServerFacet)

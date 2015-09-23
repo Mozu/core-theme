@@ -7,6 +7,8 @@ using Mozu.SiteBuilder.Mvc.MessageHandler;
 using Mozu.SiteBuilder.Mvc.SEO;
 using Mozu.SiteBuilder.UX.Models.Navigation;
 using NUnit.Framework;
+using System.Net.Http;
+using NSubstitute;
 
 namespace Mozu.SiteBuilder.UnitTests.Mvc
 {
@@ -20,12 +22,14 @@ namespace Mozu.SiteBuilder.UnitTests.Mvc
 
        
 
-        [Test, TestCaseSource("GetTests")]
-        public void DefaultTests(TestSenario test)
+        [TestCaseSource("GetTests")]
+        public async Task DefaultTests(TestSenario test)
         {
-            var uri = new Uri("http://localhost"+ test.Url);
+            var uri = new Uri("http://localhost/" + test.Url);
+            var repo = Substitute.For<IRedirectRepository>();
+            repo.GetRuntimeRedirectEntries(Arg.Any<int?>()).Returns(ctx => Task.FromResult(test.RuntimeRedirects));
 
-            var res =RedirectHanlder.Instance.FindRedirectForRequestUri(test.RuntimeRedirects, uri);
+            var res = await RedirectHandler.Instance.GetRedirectForRequestUri(repo, uri);
             if (res == null && test.Result == null)
             {
                 return;
@@ -79,15 +83,35 @@ namespace Mozu.SiteBuilder.UnitTests.Mvc
                     {
                         Destination = "/products-category/c/282?foo=h5&moo=6"
                     }
-                }
-             };
+                },
+             new TestSenario()
+             {
+                 Name="simple substitution",
+                 Url = "/foo?prods=123456",
+                 RuntimeRedirects = new RuntimeRedirects
+                 {
+                     QueryString = new Dictionary<string, List<RuntimeRedirectEntry>>
+                     {
+                         {
+                             "foo", new List<RuntimeRedirectEntry> {
+                             new RuntimeRedirectEntry {
+                                 Query = System.Web.HttpUtility.ParseQueryString("prods=*"),
+                                 Redirect = new RedirectEntry {
+                                    Source = "foo?prods=*",
+                                    Destination = "p/{prods}"
+                                 }
+                                }
+                             }
+                         }
+                     }
+                 },
+                 Result = new RedirectEntry
+                 {
+                     Destination = "p/123456"
+                 } } };
             return list;
-                 
-
-
-
-
         }
+
         public class TestSenario
         {
             public string Name { get; set; }
@@ -95,6 +119,10 @@ namespace Mozu.SiteBuilder.UnitTests.Mvc
            
             public RedirectEntry Result { get; set; }
             public RuntimeRedirects RuntimeRedirects { get; set; }
+            public override string ToString()
+            {
+                return Name;
+            }
         }
     }
 }

@@ -2272,7 +2272,9 @@
     <Content Include="Themes\Core7\templates\modules\page-header\store-branding.hypr" />
     <Content Include="Themes\Core7\templates\modules\page-header\utility-nav.hypr" />
     <Content Include="Themes\Core7\templates\modules\product\faceted-products.hypr" />
-    <Content Include="Themes\Core7\templates\modules\product\faceting-form.hypr.live" />
+    <Content Include="Themes\Core7\templates\modules\product\faceting-form.hypr.live">
+      <SubType>Designer</SubType>
+    </Content>
     <Content Include="Themes\Core7\templates\modules\product\price-stack.hypr.live" />
     <Content Include="Themes\Core7\templates\modules\product\product-detail.hypr.live" />
     <Content Include="Themes\Core7\templates\modules\product\product-images.hypr.live" />
@@ -2603,6 +2605,7 @@
     <Content Include="Themes\Core8\templates\pages\search-interior.hypr" />
     <None Include="Themes\Core8\templates\modules\common\anti-clickjacking-script.hypr" />
     <Content Include="Themes\Core8\templates\modules\utility-bar\header.hypr" />
+    <Content Include="Themes\Core8\templates\modules\product\hierarchy-facets.hypr.live" />
     <None Include="Web.CI.config">
       <DependentUpon>Web.config</DependentUpon>
     </None>

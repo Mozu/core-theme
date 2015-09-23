@@ -848,7 +848,7 @@ Ext.define('Taco.view.website.Index', {
                 return '<span style="padding-left: 5px;float:left;"' + additionalStyle + '">' + content + '</span>';
             };
 
-        if (record && record.get('publishState') && record.get('publishState') !== 'active') {
+        if (record && record.get('publishState') && record.get('publishState') && record.get('publishState') !== 'active') {
 
             var pubInfo = record.getPublishingInfo();
 

@@ -53,12 +53,6 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
             bool isCatFiltered = false;
             query = query ?? w;
 
-            var redirect = await _customRouteHandler.RedirectWithContext(Request, FancyRoute.Search, () => MakeSearchDict(query, categoryId, page, w)).ConfigureAwait(false);
-            if (redirect != null)
-            {
-                return redirect;
-            }
-
             var categoryIdFacet = PageContext.Search.Facets["categoryId"];
             if (!categoryIdFacet.IsNullOrEmpty())
             {

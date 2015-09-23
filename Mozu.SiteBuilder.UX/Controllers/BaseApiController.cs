@@ -23,6 +23,8 @@ namespace Mozu.SiteBuilder.UX.Controllers
         public const string CategoryAfterAction = "storefront.pages.category.request.after";
         public const string CartBeforeAction = "storefront.pages.cart.request.before";
         public const string CartAfterAction = "storefront.pages.cart.request.after";
+        public const string CmsPageBeforeAction = "storefront.pages.cmspage.request.before";
+        public const string CmsPageAfterAction = "storefront.pages.cmspage.request.after";
         public const string CheckoutBeforeAction = "storefront.pages.checkout.request.before";
         public const string CheckoutAfterAction = "storefront.pages.checkout.request.after";
         public const string OrderConfirmationBeforeAction = "storefront.pages.orderConfirmation.request.before";
@@ -31,6 +33,7 @@ namespace Mozu.SiteBuilder.UX.Controllers
         public const string MyAccountAfterAction = "storefront.pages.myAccount.request.after";
         public const string NotFoundBeforeAction = "storefront.pages.404.request.before";
         public const string NotFoundAfterAction = "storefront.pages.404.request.after";
+
     }
 
     [RefreshStoreFrontUserAuthTicketFilter]

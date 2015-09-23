@@ -81,9 +81,10 @@ module.exports = (function() {
         // if (cardNumber.indexOf(maskCharacter) === -1) maskedData.numberPart = createCardNumberMask(obj, cardNumber);
         maskedData.cardNumber = cardNumber;
 
+        if (maskedData && maskedData.cvv && maskedData.cvv.indexOf('*') !== -1) delete maskedData.cvv;
+
         return maskedData;
     }
-
 
     var transform = {
         fields: {

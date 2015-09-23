@@ -57,15 +57,13 @@ namespace Mozu.SiteBuilder.UX.Hypr.Tags
             bool sortWithUrl = arguments.GetValueOrDefault("sortWithUrl", false);
             int startIndex = arguments.GetValueOrDefault("startIndex", 0);
             int pageSize = arguments.GetValueOrDefault("pageSize", 15);
-            var query = arguments.GetValueOrDefault<string>("query");
+            var query = arguments.GetValueOrDefault<string>("query", arguments.GetValueOrDefault<string>("filter"));
             var sortBy = arguments.GetValueOrDefault<string>("sort");
             var list = arguments.GetValueOrDefault<string>("listFQN");
             var view = arguments.GetValueOrDefault<string>("view") ?? "default";
 
             var tempCol = arguments.GetValueOrDefault<IEnumerable>("ids");
             var id = arguments.GetValueOrDefault<string>("id");
-            var isEffectivityDated = arguments.GetValueOrDefault<bool>("effectivityDated", false);
-        
             
             List <string> docIds = null;
             if (tempCol != null)
@@ -102,19 +100,6 @@ namespace Mozu.SiteBuilder.UX.Hypr.Tags
                 {
                     startIndex = tmp;
                 }
-            }
-
-            if (isEffectivityDated)
-            {
-
-                var pageContext = context.PageContext ();
-                DateTime  now = pageContext.Now;
-                query = query ?? "";
-                if ( query.Length > 0 )
-                {
-                    query += " and ";
-                }
-                query += string.Format("properties.beginDate le {0} and properties.endDate ge {0}", now.ToUniversalTime().ToString("o"));
             }
 
             // staying in line with the admin-side doc client

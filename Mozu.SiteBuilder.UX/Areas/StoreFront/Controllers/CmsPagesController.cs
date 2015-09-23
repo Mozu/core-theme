@@ -125,6 +125,8 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
 
         [HttpHead]
         [HttpGet]
+        [SbActionExtensionFilter(actionId: ActionFilterConstants.CmsPageBeforeAction, executionType: ActionExtensionExecutionTypes.BeforeController)]
+        [SbActionExtensionFilter(actionId: ActionFilterConstants.CmsPageAfterAction, executionType: ActionExtensionExecutionTypes.AfterController)]
         public async Task<HttpResponseMessage> Page(string documentListName, string documentName)
         {
             

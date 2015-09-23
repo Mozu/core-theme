@@ -152,9 +152,9 @@ namespace Mozu.SiteBuilder.Mvc.Helpers
         }
 
         private string MakeSearchUrl()
-        {
-            return _customRouteHandler.GetCannonicalUrl(FancyRoute.Search, null, false).Result ?? "/search";
-        }
+            {
+                return _customRouteHandler.GetCannonicalUrl(FancyRoute.Search, null, false).Result ?? "/search";
+            }
 
         private string MakeStylesheetUrl(object obj, Dictionary<string, object> config)
         {
@@ -370,7 +370,7 @@ namespace Mozu.SiteBuilder.Mvc.Helpers
         }
         public string MakeCategoryUrl(object obj, Dictionary<string, object> config, bool includeContxt)
         {
-
+           
             // bool includeContxt = false;
             int categoryId = -1;
             string categoryCode = null;
@@ -422,8 +422,28 @@ namespace Mozu.SiteBuilder.Mvc.Helpers
             }
 
 
-            //maybe remove existing context?
-            return _customRouteHandler.GetCannonicalUrl(FancyRoute.Category, () => Mapper.Map<IDictionary<string, object>>(cat).ChainSet(config), includeContxt).Result ?? "/c/" + cat.CategoryId;
+            if (_pageContext.PageType == "search")
+            {
+                return _pageContext.Search.ToUrl(new SearchContextOverrides()
+                {
+                    UrlBase = "/search",
+                    CategoryId =cat.CategoryId
+
+               });
+            }
+
+
+            var url = _customRouteHandler.GetCannonicalUrl(FancyRoute.Category, () => Mapper.Map<IDictionary<string, object>>(cat).ChainSet(config), includeContxt).Result;
+            if (url == null)
+            {
+                url = "/c/" + cat.CategoryId;
+                if (includeContxt)
+                {
+                    url += "?" + this._httpRequestMessage.RequestUri.Query;
+                }
+
+            }
+            return url;
         }
         public string MakeImageUrl(dynamic obj, Dictionary<string, object> config)
         {
