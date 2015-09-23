@@ -433,7 +433,7 @@ namespace Mozu.SiteBuilder.Mvc.Helpers
             }
 
 
-            var url = _customRouteHandler.GetCannonicalUrl(FancyRoute.Search, () => Mapper.Map<IDictionary<string, object>>(cat).ChainSet(config), includeContxt).Result;
+            var url = _customRouteHandler.GetCannonicalUrl(FancyRoute.Category, () => Mapper.Map<IDictionary<string, object>>(cat).ChainSet(config), includeContxt).Result;
             if (url == null)
             {
                 url = "/c/" + cat.CategoryId;
