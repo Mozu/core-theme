@@ -1,12 +1,12 @@
 /*! 
- * Mozu Hypr Live - v1.0.0 - 2015-09-21
+ * Mozu Hypr Live - v1.0.0 - 2015-09-23
  *
  * Copyright (c) 2015 Volusion, Inc.
  *
  */
 
 /*! 
- * Mozu Hypr Live - v1.0.0 - 2015-09-21
+ * Mozu Hypr Live - v1.0.0 - 2015-09-23
  *
  * Copyright (c) 2015 Volusion, Inc.
  *
@@ -6121,6 +6121,10 @@ HyprLive.engine.setTag('make_url', MakeUrlTag.parse, MakeUrlTag.compile, false, 
         str = words.slice(0, num).join(' ');
         if (words.length > num) str += " ...";
         return str;
+    });
+
+    HyprLive.engine.setFilter('urlencode', function(str) {
+        return encodeURIComponent(str.toString());
     });
 
     HyprLive.engine.setFilter('string_format', function (tpt) {
