@@ -770,6 +770,7 @@ Ext.define('Taco.view.order.modal.AuditLogInfo', {
                             case 'collected':
                             // FALL THROUGH: If we credit a payment, then we previously collected something against that payment.
                             case 'credited':
+                            case 'creditpending':
                             {
                                 amt = v.amountCollected;
                                 break;
