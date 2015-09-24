@@ -550,7 +550,7 @@
 
     resetPublishButton : function() {
         this.publishButton.removeCls('taco-button-processing');
-        this.publishButton.setText('Publishing');
+        this.publishButton.setText('Publish Now');
         // this.publishNowMenuItem.disable(true);
     },
 
