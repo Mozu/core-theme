@@ -439,7 +439,7 @@ namespace Mozu.SiteBuilder.Mvc.Helpers
                 url = "/c/" + cat.CategoryId;
                 if (includeContxt)
                 {
-                    url += "?" + this._httpRequestMessage.RequestUri.Query;
+                    url += this._httpRequestMessage.RequestUri.Query;
                 }
 
             }
