@@ -149,8 +149,8 @@ module.exports = {
                 try {
                     affiliates = JSON.parse(affiliates);
                 } catch (e) { }
-
-                if (affiliates && affiliates.length > 0 && isCartUrl(url) && !this._finishedUpdatingAffiliates) {
+                var methodIsNotDelete = method && method.toLowerCase() !== 'delete';
+                if (affiliates && affiliates.length > 0 && isCartUrl(url) && !this._finishedUpdatingAffiliates && methodIsNotDelete) {
                     return operation.then(function(r) {
                         originalResponse = r;
                         return self.action('cart', 'getExtendedProperties', {}, { silent: true });

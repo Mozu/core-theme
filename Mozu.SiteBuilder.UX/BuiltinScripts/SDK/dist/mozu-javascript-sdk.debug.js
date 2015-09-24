@@ -1,5 +1,5 @@
 /*! 
- * Mozu JavaScript SDK - v0.3.0 - 2015-09-18
+ * Mozu JavaScript SDK - v0.3.0 - 2015-09-24
  *
  * Copyright (c) 2015 Volusion, Inc.
  *
@@ -2638,8 +2638,8 @@ module.exports = {
                 try {
                     affiliates = JSON.parse(affiliates);
                 } catch (e) { }
-
-                if (affiliates && affiliates.length > 0 && isCartUrl(url) && !this._finishedUpdatingAffiliates) {
+                var methodIsNotDelete = method && method.toLowerCase() !== 'delete';
+                if (affiliates && affiliates.length > 0 && isCartUrl(url) && !this._finishedUpdatingAffiliates && methodIsNotDelete) {
                     return operation.then(function(r) {
                         originalResponse = r;
                         return self.action('cart', 'getExtendedProperties', {}, { silent: true });
@@ -4460,7 +4460,7 @@ var errors = require('../errors');
 
 errors.register({
     'ADD_COUPON_FAILED': 'Adding coupon failed for the following reason: {0}'
-})
+});
 
 module.exports = {
     count: function () {
