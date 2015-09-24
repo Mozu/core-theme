@@ -97,9 +97,18 @@ Ext.define('Taco.view.redirects.Index', {
                      xtype: 'numberfield'
                  },
                  text: 'Priority',
-                
                  width: 100
-             }, {
+             },
+             {
+                 dataIndex: 'e',
+                 stateId: 'enabled',
+                 editor: {
+                     xtype: 'checkboxfield'
+                 },
+                 text: 'Enabled',
+                 width: 100
+             },
+             {
                 xtype: 'taco.menucolumn',
                 text: 'Actions',
                 width: 100,
