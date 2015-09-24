@@ -50,9 +50,9 @@ NUGET
     Microsoft.AspNet.WebPages (3.2.2)
       Microsoft.AspNet.Razor (>= 3.2.2 < 3.3.0)
       Microsoft.Web.Infrastructure (>= 1.0.0.0)
-    Microsoft.Bcl (1.1.9)
+    Microsoft.Bcl (1.1.9) - framework: portable-wp80+win+net45+wp81+Unsupported
       Microsoft.Bcl.Build (>= 1.0.14)
-    Microsoft.Bcl.Build (1.0.14)
+    Microsoft.Bcl.Build (1.0.14) - framework: portable-wp80+win+net45+wp81+Unsupported
     Microsoft.Net.Http (2.2.28) - framework: portable-wp80+win+net45+wp81+Unsupported
       Microsoft.Bcl (>= 1.1.9)
       Microsoft.Bcl.Build (>= 1.0.14)
@@ -138,7 +138,7 @@ NUGET
       NSubstitute (>= 1.8.1.0)
       NUnit (>= 2.6.4)
       Should (>= 1.1.20)
-    Mozu.Customer.Contracts (1.18.1)
+    Mozu.Customer.Contracts (1.18.2)
       Mozu.Core.Extensible.Contracts
     Mozu.DeployWeb (2.0.4)
       OctoPack (>= 2.1.3)
