@@ -46,7 +46,7 @@
 
         <a id="orderhistory"></a>
         <div class="mz-l-stack-section mz-accountorderhistory" id="account-orderhistory">
-            {% include "modules/my-account/my-account-orderhistory" with model=model.orderHistory %}
+            {% include "modules/my-account/my-account-orderhistory" with model=model.orderHistory showPaging=true %}
         </div>
         
         <a id="returnhistory"></a>
