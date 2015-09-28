@@ -131,7 +131,15 @@ namespace Mozu.SiteBuilder.Mvc.MessageHandler
             {
                 return null;
             }
-            return ProcessQS(queryString, redir);
+            var destination = ProcessQS(queryString, redir.Destination, redir.CopyQueryString);
+
+            return new RedirectEntry()
+            {
+                Source = redir.Source,
+                Destination = destination,
+                IsRewrite = redir.IsRewrite,
+                IsTemporary = redir.IsTemporary
+            };
         }
 
         RedirectEntry FindRedirectForRequestUri(RuntimeRedirects redirects, string stem, NameValueCollection queryString)
@@ -174,9 +182,9 @@ namespace Mozu.SiteBuilder.Mvc.MessageHandler
                 RegexOptions.IgnorePatternWhitespace);
 
 
-        static RedirectEntry ProcessQS(NameValueCollection queryString, RedirectEntry entry)
+        static string ProcessQS(NameValueCollection queryString, string destinationTemplate, bool? copyQS)
         {
-            var expandedTemplate = RedirectTokenReplacement.Replace(entry.Destination, match =>
+            var expandedTemplate = RedirectTokenReplacement.Replace(destinationTemplate, match =>
             {
                 var token = match.Groups["token"].Value;
                 var rep = queryString[token];
@@ -187,12 +195,12 @@ namespace Mozu.SiteBuilder.Mvc.MessageHandler
                 return match.Value;
             });
 
-            var qpos = entry.Destination.IndexOf('?');
+            var qpos = expandedTemplate.IndexOf('?');
             var stem = qpos > -1 ? expandedTemplate.Substring(0, qpos) : expandedTemplate;
             var query = qpos > -1 ? expandedTemplate.Substring(qpos + 1) : string.Empty;
             var qstring = System.Web.HttpUtility.ParseQueryString(query, System.Text.Encoding.UTF8);
 
-            if (entry.CopyQueryString.GetValueOrDefault(false))
+            if (copyQS.GetValueOrDefault(false))
             {
                 foreach (string key in queryString.AllKeys.Where(x => queryString[x] != null))
                 {
@@ -205,14 +213,7 @@ namespace Mozu.SiteBuilder.Mvc.MessageHandler
             {
                 dest = stem + "?" + qstring.ToString();
             }
-
-            return new RedirectEntry()
-            {
-                Source = entry.Source,
-                Destination = dest,
-                IsRewrite = entry.IsRewrite,
-                IsTemporary = entry.IsTemporary
-            };
+            return dest;
         }
     }
 }
