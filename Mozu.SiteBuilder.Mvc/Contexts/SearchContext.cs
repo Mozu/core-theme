@@ -10,11 +10,13 @@ using System.Web;
 using System.Web.Http.Routing;
 using Mozu.SiteBuilder.UX.Models.StoreFront.Catalog;
 using Newtonsoft.Json;
+using Mozu.SiteBuilder.Mvc.ViewEngine;
 
 namespace Mozu.SiteBuilder.Mvc.Contexts
 {
     public class SearchContext : IProductListingState
     {
+        private readonly HttpRequestMessage _request;
         const string RouteDataKey = "facetValueFilter";
         const string QueryStringKey = "facetValueFilter";
         const string RouteDataValueKeySuffix = "-facet";
@@ -26,6 +28,7 @@ namespace Mozu.SiteBuilder.Mvc.Contexts
         }
         public SearchContext(HttpRequestMessage request)
         {
+            _request = request;
             Facets = new NameValueCollection(StringComparer.OrdinalIgnoreCase);
             InitFromQstring(request);
             InitFromRouteData(request.GetRouteData());
@@ -64,6 +67,10 @@ namespace Mozu.SiteBuilder.Mvc.Contexts
             if (!routeData.Values.ContainsKey("query") && !string.IsNullOrEmpty(qs["query"]))
             {
                 routeData.Values["query"] = qs["query"]; 
+            }
+            if (!routeData.Values.ContainsKey("categoryId") && !string.IsNullOrEmpty(qs["categoryId"]))
+            {
+                routeData.Values["categoryId"] = qs["categoryId"];
             }
             return;
         }
@@ -197,6 +204,24 @@ namespace Mozu.SiteBuilder.Mvc.Contexts
 
         [JsonConverter(typeof(FacetJsonConverter))]
         public NameValueCollection Facets { get; set; }
+
+        string _defaultSort;
+        string IProductListingState.DefaultSort
+        {
+            get
+            {
+                if ( _defaultSort == null && _request != null)
+                {
+                   var sc = _request.Resolve<ISiteContext>();
+                    if (sc != null )
+                    {
+                        _defaultSort = sc.ThemeSettings["defaultSort"] as string ?? "createDate asc";
+                    }
+
+                }
+                return _defaultSort;
+            }
+        }
 
         public string ToUrl(SearchContextOverrides overrides= null)
         {
@@ -387,6 +412,14 @@ namespace Mozu.SiteBuilder.Mvc.Contexts
         public KeyValuePair<string, string>? RemoveFacet { get; set; }
         public KeyValuePair<string,string>? AddFacet { get; set; }
 
+
+        string IProductListingState.DefaultSort
+        {
+            get
+            {
+                return "createDate asc";
+            }
+        }
 
     }
 

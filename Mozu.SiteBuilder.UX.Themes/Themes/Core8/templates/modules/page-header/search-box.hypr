@@ -3,15 +3,15 @@
         <input placeholder="{{ labels.search }}" type="search" class="mz-searchbox-input" autocomplete="off" name="query" data-mz-role="searchquery" />
         <button class="mz-searchbox-button" type="submit">{{ labels.search }}</button>
     </span>
-	<select class="mz-searchbox-categories" name="facetValueFilter" 
-            data-mz-contextify='[value="categoryId:{{ pageContext.categoryId }}"]'
+	<select class="mz-searchbox-categories" name="categoryId" 
+            data-mz-contextify='[value="{{ pageContext.categoryId }}"]'
             data-mz-contextify-attr='selected'
             data-mz-contextify-val='selected'>
         <option value="">{{ labels.all }}</option>
         {% partial_cache %}
         {% for node in navigation.tree %}
         {% if node.nodeType == "category" and not node.isEmpty %}
-        <option value="categoryId:{{node.originalId}}">{{node.name}}</option>
+        <option value="{{node.originalId}}">{{node.name}}</option>
         {% endif %}
 		{% endfor %}
         {% endpartial_cache %}

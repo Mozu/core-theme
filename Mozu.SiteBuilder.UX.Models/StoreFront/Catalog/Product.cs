@@ -268,6 +268,8 @@ namespace Mozu.SiteBuilder.UX.Models.StoreFront.Catalog
         string Query { get; set; }
         string SortBy { get; set; }
         int? StartIndex { get; set; }
+        //jon roeder said to write this exactly this way
+        string DefaultSort{ get; }
     }
 
     
@@ -564,7 +566,7 @@ namespace Mozu.SiteBuilder.UX.Models.StoreFront.Catalog
             {
                 new RepeaterItem (){
                     Text="Default",
-                    Value=""
+                    Value= state != null ?state.DefaultSort : "createDate asc"
                 },
                 new RepeaterItem (){
                     Text="Price: Low to High",
