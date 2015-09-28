@@ -794,9 +794,28 @@
                 }
                 this.syncApiModel();
                 if (this.nonStoreCreditTotal() > 0) {
-                    return order.apiAddPayment().then(function () {
+                    return order.apiAddPayment().then(function() {
                         var payment = order.apiModel.getCurrentPayment();
-                        if (payment && payment.paymentType !== "PaypalExpress") self.markComplete();
+                        var modelCard, modelCvv;
+                        if (payment) {
+                            switch (payment.paymentType) {
+                                case "CreditCard":
+                                    modelCard = self.get('card');
+                                    modelCvv = modelCard.get('cvv');
+                                    if (
+                                        modelCvv && modelCvv.indexOf('*') === -1 // CVV exists and is not masked
+                                    ) {
+                                        modelCard.set('cvv', '***');
+                                        // to hide CVV once it has been sent to the paymentservice
+                                    }
+                                    self.markComplete();
+                                    break;
+                                case "PaypalExpress":
+                                    break;
+                                default:
+                                    self.markComplete();
+                            }
+                        }
                     });
                 } else {
                     this.markComplete();
