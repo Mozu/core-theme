@@ -75,6 +75,22 @@ define(['shim!vendor/bootstrap/js/popover[shim!vendor/bootstrap/js/tooltip[modul
 
             }
         },
+        retrieveErrorLabel: function (xhr) {
+            var message = "";
+            if (xhr.message) {
+                message = Hypr.getLabel(xhr.message);
+            } else if ((xhr && xhr.responseJSON && xhr.responseJSON.message)) {
+                message = Hypr.getLabel(xhr.responseJSON.message);
+            }
+
+            if (!message || message.length === 0) {
+                this.displayApiMessage(xhr);
+            } else {
+                var msgCont = {};
+                msgCont.message = message;
+                this.displayApiMessage(msgCont);
+            }
+        },
         displayApiMessage: function (xhr) {
             this.displayMessage(xhr.message ||
                 (xhr && xhr.responseJSON && xhr.responseJSON.message) ||
@@ -92,7 +108,7 @@ define(['shim!vendor/bootstrap/js/popover[shim!vendor/bootstrap/js/tooltip[modul
                 this.$el.on('click', this.createPopover);
             }
             else {
-               this.$el.on('click', this.doFormSubmit.bind(this));
+               this.$el.on('click', _.bind(this.doFormSubmit, this));
             }    
         },
         doFormSubmit: function(e){
@@ -157,11 +173,57 @@ define(['shim!vendor/bootstrap/js/popover[shim!vendor/bootstrap/js/tooltip[modul
                 password: this.$parent.find('[data-mz-login-password]').val()
             }).then(this.handleLoginComplete, this.displayApiMessage);
         },
+        anonymousorder: function() {
+            var email = "";
+            var billingZipCode = "";
+            var billingPhoneNumber = "";
+
+            switch (this.$parent.find('[data-mz-verify-with]').val()) {
+                case "zipCode":
+                    {
+                        billingZipCode = this.$parent.find('[data-mz-verification]').val();
+                        email = null;
+                        billingPhoneNumber = null;
+                        break;
+                    }
+                case "phoneNumber":
+                    {
+                        billingZipCode = null;
+                        email = null;
+                        billingPhoneNumber = this.$parent.find('[data-mz-verification]').val();
+                        break;
+                    }
+                case "email":
+                    {
+                        billingZipCode = null;
+                        email = this.$parent.find('[data-mz-verification]').val();
+                        billingPhoneNumber = null;
+                        break;
+                    }
+                default:
+                    {
+                        billingZipCode = null;
+                        email = null;
+                        billingPhoneNumber = null;
+                        break;
+                    }
+
+            }
+
+            this.setLoading(true);
+            // the new handle message needs to take the redirect.
+            api.action('customer', 'orderStatusLogin', {
+                ordernumber: this.$parent.find('[data-mz-order-number]').val(),
+                email: email,
+                billingZipCode: billingZipCode,
+                billingPhoneNumber: billingPhoneNumber
+            }).then(function () { window.location.href = "/my-anonymous-account"; }, _.bind(this.retrieveErrorLabel, this));
+        },
         retrievePassword: function () {
             this.setLoading(true);
             api.action('customer', 'resetPasswordStorefront', {
                 EmailAddress: this.$parent.find('[data-mz-forgotpassword-email]').val()
-            }).then(this.displayResetPasswordMessage.bind(this), this.displayApiMessage);
+            }).then(_.bind(this.displayResetPasswordMessage,this), this.displayApiMessage);
         },
         handleLoginComplete: function () {
             window.location.reload();
@@ -257,11 +319,35 @@ define(['shim!vendor/bootstrap/js/popover[shim!vendor/bootstrap/js/tooltip[modul
             loginPage.pageType = 'login';
             loginPage.init(this);
         });
+        $('[data-mz-action="anonymousorder-submit"]').each(function () {
+            var loginPage = new SignupPopover();
+            loginPage.formSelector = 'form[name="mz-anonymousorder"]';
+            loginPage.pageType = 'anonymousorder';
+            loginPage.init(this);
+        });
         $('[data-mz-action="forgotpasswordpage-submit"]').each(function(){
             var loginPage = new SignupPopover();
             loginPage.formSelector = 'form[name="mz-forgotpasswordform"]';
             loginPage.pageType = 'retrievePassword';
             loginPage.init(this);
+        });
+
+        $('[data-mz-action="logout"]').each(function(){
+            var el = $(this);
+
+            //if were in edit mode, we override the /logout GET, to preserve the correct referrer/page location | #64822
+            if (require.mozuData('pagecontext').isEditMode) {
+ 
+                 el.on('click', function(e) {
+                    e.preventDefault();
+                    $.ajax({
+                        method: 'GET',
+                        url: '../../logout',
+                        complete: function() { location.reload();}
+                    });
+                });
+            }
+            
         });
     });
 

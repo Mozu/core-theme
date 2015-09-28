@@ -92,6 +92,28 @@
         },
         {
             "xtype": "panel",
+            "title": "Anonymous Account Verification Options",
+            "collapsed":false,
+            "items": [
+                {
+                    "xtype": "mz-input-checkbox",
+                    "name": "zipCodeEnabled",
+                    "fieldLabel": "Billing Zip Code"
+                },
+                {
+                    "xtype": "mz-input-checkbox",
+                    "name": "phoneNumberEnabled",
+                    "fieldLabel": "Billing Phone Number"
+                },
+                {
+                    "xtype": "mz-input-checkbox",
+                    "name": "billingEmailEnabled",
+                    "fieldLabel": "Billing Email"
+                }
+            ]
+        },
+        {
+            "xtype": "panel",
             "title": "Text",
             "collapsed": false,
             "items": [

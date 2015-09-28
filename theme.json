@@ -345,6 +345,13 @@
             "userCreatable": false
         },
         {
+            "entityType":  "anonymous_account",
+            "id": "my_anonymous_account",
+            "template": "my-anonymous-account",
+            "title": "Anonymous Order Status",
+            "userCreatable": false
+        },
+        {
             "entityType": "signup",
             "id": "signup",
             "template": "signup",
@@ -363,6 +370,9 @@
         "backofficeDateTimeFormat" :  "m/d/Y H:i:s O",
         "extendedPropertiesEnabled": false,
         "extendedPropertyParameters": "",
+        "zipCodeEnabled": true,
+        "phoneNumberEnabled": true,
+        "billingEmailEnabled": true,
         "bannerImage": "/resources/images/banner.jpg",
         "bannerImageEnabled": false,
         "bannerImageRepeat": "repeat-x",
