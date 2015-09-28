@@ -83,11 +83,15 @@ Ext.define('Taco.core.ux.form.field.Code', {
             me.editor.setOptions({
                 enableBasicAutocompletion: true, 
                 enableSnippets: true,
-                enableLiveAutocompletion: false, 
+                enableLiveAutocompletion: false,
+                scrollPastEnd: 0.7
             });
 
             if (!me.selectOnRender) {
-                me.editor.clearSelection();
+                Ext.defer(function() {
+                    me.editor.clearSelection();
+                    me.editor.scrollToLine(0);
+                }, 10);
             }
             
             //listen for the esc key to set focus on the components el;
@@ -139,6 +143,12 @@ Ext.define('Taco.core.ux.form.field.Code', {
         me.suspendEvents(false);
         if (me.editor) {
             me.editor.setValue(me.getValue());
+            if (!me.selectOnRender) {
+                Ext.defer(function() {
+                    me.editor.clearSelection();
+                    me.editor.scrollToLine(0);
+                }, 10);
+            }
         }
         me.resumeEvents();
         return ret;
