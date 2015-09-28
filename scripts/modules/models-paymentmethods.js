@@ -1,4 +1,4 @@
-﻿define(['jquery', 'underscore', 'modules/backbone-mozu', 'hyprlive'], function ($, _, Backbone, Hypr) {
+﻿define(['modules/jquery-mozu', 'underscore', 'modules/backbone-mozu', 'hyprlive'], function ($, _, Backbone, Hypr) {
     // payment methods only validate if they are selected!
     var PaymentMethod = Backbone.MozuModel.extend({
         present: function (value, attr) {
@@ -23,7 +23,12 @@
 
     var CreditCard = PaymentMethod.extend({
         mozuType: 'creditcard',
-        isCvvOptional: false,
+        defaults: {
+            isCvvOptional: false,
+            isDefaultPayMethod: false,
+            isSavedCard: false,
+            isVisaCheckout: false
+        },
         validation: {
             paymentOrCardType: {
                 fn: "present",
@@ -42,18 +47,6 @@
             nameOnCard: {
                 fn: "present",
                 msg: Hypr.getLabel('cardNameMissing')
-            },
-            cvv: {
-                fn: function(value, attr) {
-                    var cardType = attr.split('.')[0],
-                        card = this.get(cardType);
-
-                    if (card.get('isCvvOptional')) return '';
-
-                    if (!this.selected) return undefined;
-                    if (!value)
-                        return Hypr.getLabel('securityCodeMissing') || Hypr.getLabel('genericRequired');
-                }
             }
         },
         initialize: function () {
@@ -82,7 +75,8 @@
         dataTypes: {
             expireMonth: Backbone.MozuModel.DataTypes.Int,
             expireYear: Backbone.MozuModel.DataTypes.Int,
-            isCardInfoSaved: Backbone.MozuModel.DataTypes.Boolean
+            isCardInfoSaved: Backbone.MozuModel.DataTypes.Boolean,
+            isDefaultPayMethod: Backbone.MozuModel.DataTypes.Boolean
         },
         expirationDateInPast: function (value, attr, computedState) {
             if (!this.selected) return undefined;
@@ -105,13 +99,39 @@
         // the toJSON method should omit the CVV so it is not sent to the wrong API
         toJSON: function (options) {
             var j = PaymentMethod.prototype.toJSON.apply(this);
-            if (j.card && (!options || !options.helpers)) delete j.card.cvv;
             _.each(twoWayCardShapeMapping, function (k, v) {
                 if (!(k in j) && (v in j)) j[k] = j[v];
                 if (!(v in j) && (k in j)) j[v] = j[k];
             });
+            if (j && (!options || !options.helpers) && j.cvv && j.cvv.toString().indexOf('*') !== -1) delete j.cvv;
             return j;
         }
+    });
+
+    var CreditCardWithCVV = CreditCard.extend({
+        validation: _.extend({}, CreditCard.prototype.validation, {
+            cvv: {
+                fn: function(value, attr) {
+                    var cardType = attr.split('.')[0],
+                        card = this.get(cardType),
+                        isSavedCard = card.get('isSavedCard'),
+                        isVisaCheckout = card.get('isVisaCheckout');
+
+                    var skipValidationSaved = Hypr.getThemeSetting('isCvvSuppressed') && isSavedCard;
+                    var skipValidationVisaCheckout = Hypr.getThemeSetting('isCvvSuppressed') && isVisaCheckout;
+
+                    // If card is not selected or cvv is not required, no need to validate
+                    if (!card.selected || skipValidationVisaCheckout || skipValidationSaved) {
+                        return;
+                    }
+
+                    if (!value) {
+                        return Hypr.getLabel('securityCodeMissing') || Hypr.getLabel('genericRequired');
+                    }
+
+                }
+            }
+        })
     });
 
 
@@ -164,6 +184,7 @@
 
     return {
         CreditCard: CreditCard,
+        CreditCardWithCVV: CreditCardWithCVV,
         Check: Check,
         DigitalCredit: DigitalCredit
     };

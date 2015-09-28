@@ -20,7 +20,7 @@
         {
             "xtype": "panel",
             "title": "Extended Properties",
-            "collapsed":false,
+            "collapsed": false,
             "items": [
                 {
                     "xtype": "mz-input-checkbox",
@@ -87,6 +87,40 @@
                         "30px",
                         "35px"
                     ]
+                }
+            ]
+        },
+        {
+            "xtype": "panel",
+            "title": "Suppress CVV During Express Checkout",
+            "collapsed": false,
+            "items": [
+                {
+                    "xtype": "mz-input-checkbox",
+                    "name": "isCvvSuppressed",
+                    "fieldLabel": "CVV Suppressed"
+                }
+                    ]
+        },
+        {
+            "xtype": "panel",
+            "title": "Anonymous Account Verification Options",
+            "collapsed": false,
+            "items": [
+                {
+                    "xtype": "mz-input-checkbox",
+                    "name": "zipCodeEnabled",
+                    "fieldLabel": "Billing Zip Code"
+                },
+                {
+                    "xtype": "mz-input-checkbox",
+                    "name": "phoneNumberEnabled",
+                    "fieldLabel": "Billing Phone Number"
+                },
+                {
+                    "xtype": "mz-input-checkbox",
+                    "name": "billingEmailEnabled",
+                    "fieldLabel": "Billing Email"
                 }
             ]
         },

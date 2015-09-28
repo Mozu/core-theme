@@ -5,7 +5,10 @@
   "version": "8.0.0-rc.5",
   "repository": {
     "type": "git",
-    "url": "https://github.com/mozu/core-theme.git"
+    "url": "https://github.com/mozu/core-theme-preview.git"
+  },
+  "scripts": {
+    "gh-release": "grunt && grunt setver --increment prerelease && git add theme.json && git commit -m 'updating theme.json' && npm version prerelease && grunt compress && git push && git push --tags"
   },
   "devDependencies": {
     "grunt": "~0.4",
@@ -15,6 +18,7 @@
     "grunt-contrib-watch": "~0.6",
     "grunt-jsonlint": "*",
     "grunt-mozu-appdev-sync": "^0.5.1",
+    "semver": "^5.0.1",
     "thmaa": "^0.10.4"
   },
   "engines": {

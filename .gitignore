@@ -13,3 +13,6 @@ node_modules/
 /npm-debug.log
 
 /compiled/
+.yo-rc.json
+mozu.config.json
+
