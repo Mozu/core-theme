@@ -13,26 +13,26 @@ namespace Mozu.SiteBuilder.UX.Controllers
 {
     public static class ActionFilterConstants
     {
-        public const string GlobalPageBeforeAction = "storefront.pages.global.beforeRequest";
-        public const string GlobalPageAfterAction = "storefront.pages.global.afterRequest";
-        public const string SearchIndexBeforeAction = "storefront.pages.search.request.before";
-        public const string SearchIndexAfterAction = "storefront.pages.search.request.after";
-        public const string ProductDetailsBeforeAction = "storefront.pages.productDetails.request.before";
-        public const string ProductDetailsAfterAction = "storefront.pages.productDetails.request.after";
-        public const string CategoryBeforeAction = "storefront.pages.category.request.before";
-        public const string CategoryAfterAction = "storefront.pages.category.request.after";
-        public const string CartBeforeAction = "storefront.pages.cart.request.before";
-        public const string CartAfterAction = "storefront.pages.cart.request.after";
-        public const string CmsPageBeforeAction = "storefront.pages.cmspage.request.before";
-        public const string CmsPageAfterAction = "storefront.pages.cmspage.request.after";
-        public const string CheckoutBeforeAction = "storefront.pages.checkout.request.before";
-        public const string CheckoutAfterAction = "storefront.pages.checkout.request.after";
-        public const string OrderConfirmationBeforeAction = "storefront.pages.orderConfirmation.request.before";
-        public const string OrderConfirmationAfterAction = "storefront.pages.orderConfirmation.request.after";
-        public const string MyAccountBeforeAction = "storefront.pages.myAccount.request.before";
-        public const string MyAccountAfterAction = "storefront.pages.myAccount.request.after";
-        public const string NotFoundBeforeAction = "storefront.pages.404.request.before";
-        public const string NotFoundAfterAction = "storefront.pages.404.request.after";
+        public const string GlobalPageBeforeAction = "http.storefront.pages.global.beforeRequest";
+        public const string GlobalPageAfterAction = "http.storefront.pages.global.afterRequest";
+        public const string SearchIndexBeforeAction = "http.storefront.pages.search.request.before";
+        public const string SearchIndexAfterAction = "http.storefront.pages.search.request.after";
+        public const string ProductDetailsBeforeAction = "http.storefront.pages.productDetails.request.before";
+        public const string ProductDetailsAfterAction = "http.storefront.pages.productDetails.request.after";
+        public const string CategoryBeforeAction = "http.storefront.pages.category.request.before";
+        public const string CategoryAfterAction = "http.storefront.pages.category.request.after";
+        public const string CartBeforeAction = "http.storefront.pages.cart.request.before";
+        public const string CartAfterAction = "http.storefront.pages.cart.request.after";
+        public const string CmsPageBeforeAction = "http.storefront.pages.cmspage.request.before";
+        public const string CmsPageAfterAction = "http.storefront.pages.cmspage.request.after";
+        public const string CheckoutBeforeAction = "http.storefront.pages.checkout.request.before";
+        public const string CheckoutAfterAction = "http.storefront.pages.checkout.request.after";
+        public const string OrderConfirmationBeforeAction = "http.storefront.pages.orderConfirmation.request.before";
+        public const string OrderConfirmationAfterAction = "http.storefront.pages.orderConfirmation.request.after";
+        public const string MyAccountBeforeAction = "http.storefront.pages.myAccount.request.before";
+        public const string MyAccountAfterAction = "http.storefront.pages.myAccount.request.after";
+        public const string NotFoundBeforeAction = "http.storefront.pages.404.request.before";
+        public const string NotFoundAfterAction = "http.storefront.pages.404.request.after";
 
     }
 
