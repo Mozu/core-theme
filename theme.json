@@ -398,6 +398,7 @@
         "showCartItemOptions": true,
         "showCartItemWeight": true,
         "showCategoryFacets": true,
+        "showChildCategoriesInFaceting": true,
         "showCheckoutCommentsField": true,
         "showMSRP": true,
         "showProductDetailMeasurements": true,

@@ -1,4 +1,4 @@
-﻿<nav class="mz-utilitynav">
+<nav class="mz-utilitynav">
     <ul class="mz-utilitynav-list">
         {% if not user.isAnonymous %}
         <li class="mz-utilitynav-item">
@@ -22,7 +22,7 @@
       {% require_script "modules/login-links" %}
       {% endif %}
       <li class="mz-utilitynav-item">
-            <a class="mz-utilitynav-link mz-utilitynav-link-cart" href="/cart">
+            <a class="mz-utilitynav-link mz-utilitynav-link-cart" href="{% make_url "cart" %}">
                 {{ labels.viewCart }} (<span class="mz-cartmonitor" data-mz-role="cartmonitor">0</span>)
                 {% require_script "modules/cart-monitor" %}
             </a>

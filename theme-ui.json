@@ -58,6 +58,11 @@
             "items": [
                 {
                     "xtype": "mz-input-checkbox",
+                    "name": "showChildCategoriesInFaceting",
+                    "fieldLabel": "Show two levels of the category hierarchy in faceting"
+                },
+                {
+                    "xtype": "mz-input-checkbox",
                     "name": "useSearchAutocomplete",
                     "fieldLabel": "Show search suggestions"
                 },

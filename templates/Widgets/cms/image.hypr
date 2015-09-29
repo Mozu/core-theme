@@ -21,7 +21,7 @@
             {% endif %}
             {% if Model.config.linkSource == 'file' %}
                 {% if Model.config.linkFileId %}
-                    href="{{ siteContext.cdnPrefix }}/cms/files/{{Model.config.linkFileId}}"
+                    href="{% make_url "cdn" "/cms/files/"|add(Model.config.linkFileId) %}"
                 {% endif %}
             {% endif %}
             >
@@ -45,7 +45,7 @@
         {% endif %}
         {% if Model.config.imageSource == 'file' %}
             {% if Model.config.imageFileId %}
-                src="{{ siteContext.cdnPrefix }}/cms/files/{{Model.config.imageFileId}}"
+                src="{% make_url "cdn" "/cms/files/"|add(Model.config.imageFileId) %}"
             {% endif %}
         {% endif %}
          >
@@ -55,7 +55,6 @@
     {% endif %}
 
 {% else %}
-    
     <{% if Model.config.imageClickAction == 'url' %}a{% else %}div{% endif %}
         class="mz-cms-image-cover"
         title="{{Model.config.imageAltText}}"
@@ -71,7 +70,7 @@
             {% endif %}
             {% if Model.config.linkSource == 'file' %}
                 {% if Model.config.linkFileId %}
-                    href="{{ siteContext.cdnPrefix }}/cms/files/{{Model.config.linkFileId}}"
+                    href="{% make_url "cdn" "/cms/files/"|add(Model.config.linkFileId) %}"
                 {% endif %}
             {% endif %}
         {% endif %}
@@ -82,7 +81,7 @@
             {% endif %}
             {% if Model.config.imageSource == 'file' %}
                 {% if Model.config.imageFileId %}
-                    '{{ siteContext.cdnPrefix }}/cms/files/{{Model.config.imageFileId}}'
+                    '{% make_url "cdn" "/cms/files/"|add(Model.config.imageFileId) %}'
                 {% endif %}
             {% endif %}
         );
