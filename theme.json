@@ -314,7 +314,14 @@
             "userCreatable": false
         },
         {
-            "entityType": "anonymous_account",
+            "entityType": "resetPasswordConfirmDetails",
+            "id": "reset_password",
+            "template": "reset-password",
+            "title": "Reset Password",
+            "userCreatable": false
+        },
+        {
+            "entityType":  "anonymous_account",
             "id": "my_anonymous_account",
             "template": "my-anonymous-account",
             "title": "Anonymous Order Status",
