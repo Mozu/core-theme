@@ -5,6 +5,7 @@ using System.Linq;
 using System.Net;
 using System.Net.Http;
 using System.Threading.Tasks;
+using System.Web.Http;
 using Mozu.Core.Api.Contracts.Client;
 using Mozu.Core.Api.Routing;
 using Mozu.Core.Extensions;
@@ -15,10 +16,12 @@ using Mozu.SiteBuilder.Mvc.Contexts;
 using Mozu.SiteBuilder.Mvc.Extensions;
 using Mozu.SiteBuilder.Mvc.Models.CMS;
 using Mozu.SiteBuilder.Mvc.Navigation;
+using Mozu.SiteBuilder.Mvc.SEO;
 using Mozu.SiteBuilder.Mvc.ViewEngine;
 using Mozu.SiteBuilder.UX.Admin.Api.Models;
 using Mozu.SiteBuilder.UX.Admin.Api.Models.Navigation;
 using Mozu.SiteBuilder.UX.Models.Navigation;
+using Mozu.SiteSettings.General.Contracts.General.Routing;
 using DC = Mozu.ProductAdmin.Contracts;
 using Document = Mozu.Content.Contracts.Document;
 
@@ -27,6 +30,8 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
     [WebApi("app/navigation", SuppressDescriptorGeneration = true)]
     public class NavigationController : BaseController
     {
+
+
         // the top level name in EXT's tree thing (a root pseudo-node).
         public const string SUPER_ROOT_NODE_NAME = "root";
         // the special node to assign unlinked pages as a child of.
@@ -764,6 +769,44 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
         {
             Increase,
             Decrease
+        }
+
+
+        public class AdminRouteConfig: IRouteConfig
+        {
+            static HttpRouteCollection _defaults;
+            static HttpRouteCollection GetDefaultRoutes()
+            {
+                var routes = new System.Web.Http.HttpRouteCollection();
+                
+                routes.MapCustomHttpRoute(
+                      "cms_page",
+                     "cms/{documentListName}/{documentName}",
+                     new { controller = "cmspages", action = "Page" },
+                      null,
+                    null,
+                    FancyRoute.CmsPage,
+                    true);
+
+                return routes;
+
+            }
+            public HttpRouteCollection DefaultRoutes
+            {
+                get
+                {
+                    return _defaults = _defaults ?? GetDefaultRoutes();
+                }
+            }
+            public void RouteIncomingDefaultRouteRequest(HttpRequestMessage message)
+            {
+                throw new NotImplementedException();
+            }
+
+            public void RouteIncomingSystemRouteRequest(HttpRequestMessage message)
+            {
+                throw new NotImplementedException();
+            }
         }
     }
 }

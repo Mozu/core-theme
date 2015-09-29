@@ -24,6 +24,8 @@ using Mozu.SiteBuilder.Mvc.Mobile;
 using Mozu.SiteBuilder.Mvc.Navigation;
 using Mozu.SiteBuilder.Mvc.ViewEngine;
 using Mozu.InstalledApplications.Contracts.Clients;
+using Mozu.SiteBuilder.Mvc.SEO;
+using Mozu.SiteBuilder.UX.Admin.Api;
 using Mozu.SiteBuilder.UX.Admin.Api.ErrorHandlers;
 
 namespace Mozu.SiteBuilder.UX.Admin.Configuration
@@ -66,8 +68,9 @@ namespace Mozu.SiteBuilder.UX.Admin.Configuration
           //  builder.RegisterClassesMatchingInterfaceName(typeof(Mozu.SiteSettings.Shipping.Contracts.Clients.ShippingSettingsWebApiClient).Assembly);
             builder.RegisterClassesMatchingInterfaceName(typeof(Mozu.ShippingRuntime.Contracts.Clients.ShippingWebApiClient).Assembly);
             //builder.RegisterClassesMatchingInterfaceName(typeof(PlatformService.Contracts.Clients.ReferenceDataWebApiClient).Assembly);
-         //   builder.RegisterClassesMatchingInterfaceName(typeof(Mozu.SiteSettings.Shipping.Contracts.Clients.ShippingSettingsWebApiClient ).Assembly);
+            //   builder.RegisterClassesMatchingInterfaceName(typeof(Mozu.SiteSettings.Shipping.Contracts.Clients.ShippingSettingsWebApiClient ).Assembly);
 
+            builder.RegisterType<NavigationController.AdminRouteConfig>().As<IRouteConfig>().SingleInstance();
 
             builder.RegisterClassesMatchingInterfaceName(typeof (IEntityListsWebApiClient).Assembly);
 
