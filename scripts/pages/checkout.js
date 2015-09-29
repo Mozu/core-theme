@@ -1,12 +1,13 @@
-﻿require(["modules/jquery-mozu", "underscore", "hyprlive", "modules/backbone-mozu", "modules/models-checkout", "modules/views-messages", "modules/cart-monitor"], function ($, _, Hypr, Backbone, CheckoutModels, messageViewFactory, CartMonitor) {
+require(["modules/jquery-mozu", "underscore", "hyprlive", "modules/backbone-mozu", "modules/models-checkout", "modules/views-messages", "modules/cart-monitor", 'hyprlivecontext', 'modules/editable-view', 'modules/preserve-element-through-render'], function ($, _, Hypr, Backbone, CheckoutModels, messageViewFactory, CartMonitor, HyprLiveContext, EditableView, preserveElements) {
 
-    var CheckoutStepView = Backbone.MozuView.extend({
+    var CheckoutStepView = EditableView.extend({
         edit: function () {
             this.model.edit();
         },
         next: function () {
             // wait for blur validation to complete
             var me = this;
+            me.editing.savedCard = false;
             _.defer(function () {
                 me.model.next();
             });
@@ -17,7 +18,7 @@
         },
         constructor: function () {
             var me = this;
-            Backbone.MozuView.apply(this, arguments);
+            EditableView.apply(this, arguments);
             me.resize();
             setTimeout(function () {
                 me.$('.mz-panel-wrap').css({ 'overflow-y': 'hidden'});
@@ -38,7 +39,7 @@
         },
         render: function () {
             this.$el.removeClass('is-new is-incomplete is-complete is-invalid').addClass('is-' + this.model.stepStatus());
-            Backbone.MozuView.prototype.render.apply(this, arguments);
+            EditableView.prototype.render.apply(this, arguments);
             this.resize();
         },
         resize: _.debounce(function () {
@@ -101,6 +102,8 @@
         }
     });
 
+    var visaCheckoutSettings = HyprLiveContext.locals.siteContext.checkoutSettings.visaCheckout;
+    var pageContext = require.mozuData('pagecontext');
     var BillingInfoView = CheckoutStepView.extend({
         templateName: 'modules/checkout/step-payment-info',
         autoUpdate: [
@@ -132,10 +135,10 @@
             'digitalCreditCode'
         ],
         renderOnChange: [
-            'savedPaymentMethodId',
             'billingContact.address.countryCode',
             'paymentType',
-            'isSameBillingShippingAddress'
+            'isSameBillingShippingAddress',
+            'usingSavedCard'
         ],
         additionalEvents: {
             "change [data-mz-digital-credit-enable]": "enableDigitalCredit",
@@ -147,12 +150,44 @@
             this.listenTo(this.model, 'change:digitalCreditCode', this.onEnterDigitalCreditCode, this);
             this.listenTo(this.model, 'orderPayment', function (order, scope) {
                     this.render();
-                }, this);
+            }, this);
             this.codeEntered = !!this.model.get('digitalCreditCode');
         },
-
-        updateAcceptsMarketing: function(e) {
+        render: function() {
+            preserveElements(this, ['.v-button'], function() {
+                CheckoutStepView.prototype.render.apply(this, arguments);
+            });
+            var status = this.model.stepStatus();
+            if (visaCheckoutSettings.isEnabled && !this.visaCheckoutInitialized && this.$('.v-button').length > 0) {
+                window.onVisaCheckoutReady = _.bind(this.initVisaCheckout, this);
+                require([pageContext.visaCheckoutJavaScriptSdkUrl]);
+                this.visaCheckoutInitialized = true;
+            }
+        },
+        updateAcceptsMarketing: function() {
             this.model.getOrder().set('acceptsMarketing', $(e.currentTarget).prop('checked'));
+        },
+        updatePaymentType: function(e) {
+            var newType = $(e.currentTarget).val();
+            this.model.set('usingSavedCard', e.currentTarget.hasAttribute('data-mz-saved-credit-card'));
+            this.model.set('paymentType', newType);
+        },
+        beginEditingCard: function() {
+            var me = this;
+            var isVisaCheckout = this.model.visaCheckoutFlowComplete();
+            if (!isVisaCheckout) {
+            this.editing.savedCard = true;
+            this.render();
+            } else if (window.confirm(Hypr.getLabel('visaCheckoutEditReminder'))) {
+                this.doModelAction('cancelVisaCheckout').then(function() {
+                    me.editing.savedCard = false;
+                    me.render();
+                });
+            }
+        },
+        beginEditingBillingAddress: function() {
+            this.editing.savedBillingAddress = true;
+            this.render();
         },
         beginApplyCredit: function () {
             this.model.beginApplyCredit();
@@ -238,7 +273,43 @@
                 case "digitalCreditCode":
                     return this.getDigitalCredit(e);
             }
+        },
+        /* begin visa checkout */
+        initVisaCheckout: function () {
+            var me = this;
+            var visaCheckoutSettings = HyprLiveContext.locals.siteContext.checkoutSettings.visaCheckout;
+            var apiKey = visaCheckoutSettings.apiKey || '0H1JJQFW9MUVTXPU5EFD13fucnCWg42uLzRQMIPHHNEuQLyYk';
+            var clientId = visaCheckoutSettings.clientId || 'mozu_test1';
+            var orderModel = this.model.getOrder();
+
+            // on success, attach the encoded payment data to the window
+            // then call the sdk's api method for digital wallets, via models-checkout's helper
+            V.on("payment.success", function(payment) {
+                console.log({ success: payment });
+                me.editing.savedCard = false;
+                me.model.parent.processDigitalWallet('VisaCheckout', payment);
+            });
+
+            // for debugging purposes only. don't use this in production
+            V.on("payment.cancel", function(payment) {
+                console.log({ cancel: JSON.stringify(payment) });
+            });
+
+            // for debugging purposes only. don't use this in production
+            V.on("payment.error", function(payment, error) {
+                console.warn({ error: JSON.stringify(error) });
+            });
+
+            V.init({
+                apikey: apiKey,
+                clientId: clientId,
+                paymentRequest: {
+                    currencyCode: orderModel.get('currencyCode'),
+                    total: "" + orderModel.get('total')
+            }
+            });
         }
+        /* end visa checkout */
     });
 
     var CouponView = Backbone.MozuView.extend({
@@ -333,6 +404,32 @@
         }
     });
 
+    var ParentView = function(conf) {
+      var gutter = parseInt(Hypr.getThemeSetting('gutterWidth'), 10);
+      if (isNaN(gutter)) gutter = 15;
+      var mask;
+      conf.model.on('beforerefresh', function() {
+         killMask();
+         conf.el.css('opacity',0.5);
+         var pos = conf.el.position();
+         mask = $('<div></div>', {
+           'class': 'mz-checkout-mask'
+         }).css({
+           width: conf.el.outerWidth() + (gutter * 2),
+           height: conf.el.outerHeight() + (gutter * 2),
+           top: pos.top - gutter,
+           left: pos.left - gutter
+         }).insertAfter(conf.el);
+      });
+      function killMask() {
+        conf.el.css('opacity',1);
+        if (mask) mask.remove();
+      }
+      conf.model.on('refresh', killMask); 
+      conf.model.on('error', killMask);
+      return conf;
+    };
+
     $(document).ready(function () {
 
         var $checkoutView = $('#checkout-form'),
@@ -340,6 +437,10 @@
 
         var checkoutModel = window.order = new CheckoutModels.CheckoutPage(checkoutData),
             checkoutViews = {
+                parentView: new ParentView({
+                  el: $checkoutView,
+                  model: checkoutModel
+                }),
                 steps: {
                     shippingAddress: new ShippingAddressView({
                         el: $('#step-shipping-address'),
