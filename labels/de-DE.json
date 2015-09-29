@@ -324,7 +324,7 @@
     "differentExpectations"   : "Anders als das, was erwartet wurde,",
     "defective"   : "Defekt - nicht richtig funktioniert",
     "noLongerWanted"   : "Nicht mehr benötigte / wanted",
-    "tooLate"   : "Kam zu spät",
+    "late"   : "Kam zu spät",
     "wrongCountryForType"   : "Bitte wählen Sie ein Land für diesen Kontakt Typ unterstützt",
     "digitalCodeAlreadyUsed"   : "Dieser Code wurde bereits verwendet.",
     "digitalCreditExceedsBalance": "Der Betrag, gelten übersteigt die verbleibende Gesamt.",
