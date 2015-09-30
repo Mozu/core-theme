@@ -1061,7 +1061,7 @@
             "displayName": "Deal of the Day",
             "displayTemplate": "catalog/deal-of-the-day",
             "editView": "taco-dealoftheday-widgeteditor",
-            "icon": "/resources/admin/widgets/26_related_products.png",
+            "icon": "/resources/admin/widgets/28_deal_of_the_day.png",
             "id": "deal-of-the-day",
             "validPageTypes": [
                 "*"
