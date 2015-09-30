@@ -25,7 +25,11 @@ namespace Mozu.SiteBuilder.UX.Models.Navigation
 
         [DataMember(Name = "p", EmitDefaultValue = false, IsRequired = false, Order = 5)]
         public decimal? Priority { get; set; }
+
+        [DataMember(Name = "e", EmitDefaultValue = false, IsRequired = false, Order = 6)]
+        public bool? IsEnabled { get; set; }
     }
+
     public class RedirectComparer : IComparer<RedirectEntry>
     {
         public static RedirectComparer Default = new RedirectComparer();

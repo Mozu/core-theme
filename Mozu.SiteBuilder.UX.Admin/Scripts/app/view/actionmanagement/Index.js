@@ -6,7 +6,7 @@ Ext.define('Taco.view.actionmanagement.Index', {
         'Ext.form.Panel',
         'Taco.core.ux.form.field.Code'
     ],
-
+    title: 'Action Management',
     formCls: 'Taco.core.ux.form.Form',
     enableNavHeader: true,
     autoTitle: true,
@@ -18,19 +18,17 @@ Ext.define('Taco.view.actionmanagement.Index', {
 
         this.formCfg = {
             flex: 1,
-            layout: {
-                type: 'vbox',
-                align: 'stretch'
-
-            },
+            layout: 'fit',
             title: this.title,
             items: [{
                 xtype: 'taco-codefield',
                 itemId: 'configfield',
                 name: 'expression',
-                height: 500,
-                resizable: true,
+                fontSize: '12px',
+                height: 600,
+                resizable: false,
                 showGutter: true,
+                selectOnRender: false,
                 mode: 'json',
                 theme: 'ace/theme/monokai'
             }]
@@ -39,7 +37,22 @@ Ext.define('Taco.view.actionmanagement.Index', {
         this.callParent(arguments);
 
         me.configField = me.down('#configfield');
+
+        me.on('afterrender', function () {
+            Ext.defer(function() {
+                me.resizeEditor();
+            }, 10);
+        });
+
+        me.on('resize', function() {
+            me.resizeEditor();
+        });
+
         me.initEditor();
+    },
+
+    resizeEditor: function() {
+        this.configField.setHeight(this.body.getHeight() - 50);
     },
 
     initEditor: function () {

@@ -96,10 +96,10 @@ namespace Mozu.SiteBuilder.Mvc.SEO
 
         static System.Collections.Concurrent.ConcurrentDictionary<string, AsyncLock> _redirectLookupLock = new System.Collections.Concurrent.ConcurrentDictionary<string, AsyncLock>();
 
-         Task<List<RedirectEntry>> IRedirectRepository.FetchRedirectEntries(int? siteId)
+        Task<List<RedirectEntry>> IRedirectRepository.FetchRedirectEntries(int? siteId)
         {
-             var client = siteId == null ? _systemDocumentClient : _systemDocumentClient.CloneWithSbContext(_siteBuilderApiContext).CloneWithSiteId(siteId);
-             return DoFetchEntries(client);
+            var client = siteId == null ? _systemDocumentClient : _systemDocumentClient.CloneWithSbContext(_siteBuilderApiContext).CloneWithSiteId(siteId);
+            return DoFetchEntries(client);
 
         }
 
@@ -267,7 +267,7 @@ namespace Mozu.SiteBuilder.Mvc.SEO
             };
             
 
-            foreach (var redirect in redirects)
+            foreach (var redirect in redirects.Where(x => x.IsEnabled.GetValueOrDefault(false)))
             {
                 var source = redirect.Source;
                 var qPos = source.IndexOf('?');
