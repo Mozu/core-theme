@@ -1,7 +1,9 @@
 module.exports = function(grunt) {
 
+    var pkg = grunt.file.readJSON('./package.json');
     grunt.initConfig({
         mozuconfig: grunt.file.exists('./mozu.config.json') ? grunt.file.readJSON('./mozu.config.json') : {},
+        pkg: pkg,
         bower: {
             install: {
                 options: {
