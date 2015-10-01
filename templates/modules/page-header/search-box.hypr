@@ -7,6 +7,7 @@
             data-mz-contextify='[value="categoryId:{{ pageContext.categoryId }}"]'
             data-mz-contextify-attr='selected'
             data-mz-contextify-val='selected'>
+        <option value="">{{ labels.all }}</option>
         {% partial_cache %}
         {% for cat in navigation.rootCategories %}
         <option value="categoryId:{{cat.originalId}}">{{cat.Name}}</option>

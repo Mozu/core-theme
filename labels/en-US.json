@@ -122,7 +122,7 @@
   "taxAtCheckout"        : "Tax & Shipping Calculated at Checkout",
   "orderTotal"           : "Order Total",
   "emptyCart"            : "Empty Cart",
-  "proceedToCheckout"    : "Proceed to Checkout",
+  "proceedToCheckout"    : "Proceed To Checkout",
   "storePickupAt"        : "In-Store Pickup at <strong>{0}</strong>",
 
   "checkout"             : "Checkout",

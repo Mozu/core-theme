@@ -78,10 +78,22 @@
                 {% endif %}
                 <tr>                    <td colspan="5">Tax</td>
                     <td>{{ model.taxTotal|currency }}</td>
-                </tr><tr>
-                    <td colspan="5">Shipping ({{ model.fulfillmentInfo.shippingMethodName }})</td>
-                    <td>{{ model.shippingTotal|currency }}</td>
                 </tr>
+				
+
+                <tr>
+                    <td colspan="5">Shipping ({{ model.fulfillmentInfo.shippingMethodName }})</td>
+                    <td>{{ model.shippingSubTotal|currency }}</td>
+                </tr>
+                {% for shippingDiscount in model.shippingDiscounts %}
+					{% if not shippingDiscount.excluded %}
+						<tr>
+							<td colspan="5">Shipping Discount ({{ shippingDiscount.discount.discount.name }})</td>
+							<td>({{ shippingDiscount.discount.impact|currency }})</td>
+						</tr>
+					{% endif %}
+                {% endfor %}
+
                 {% if model.feeTotal > 0 %}
                     <tr>
                         <td colspan="5">Handling Fees</td>
@@ -115,11 +127,17 @@
                                 <em class="product-option-label">[includes]</em>{{ product.productCode }} - {{ product.name }} (Qty. {{ product.quantity }})
                             </div>
                         {% endfor %}
+						{% for discount in item.productDiscounts %}
+                            <div class="discount">
+                                <span class="product-discount-label">Discount (</span>{{ discount.discount.name }}<span>)</span>
+                            </div>
+                        {% endfor %}
                     </td>
                     <td>{% if "item.fulfillmentLocationCode" %}{{ item.fulfillmentMethod }} ({{ item.fulfillmentLocationCode }}){% endif %}</td>
                     <td class="currency-column">{{ item.unitPrice.extendedAmount|currency }}</td>
                     <td class="quantity-column">{{ item.quantity }}</td>
                     <td class="currency-column">{{ item.subtotal|currency }}</td>
+                    <td class="currency-column">{{ item.subtotal|currency }} <br/> {% if item.discountTotal != 0 %}({{ item.discountTotal|currency }}){% endif %}
                 </tr>
             {% endfor %}
             </tbody>
