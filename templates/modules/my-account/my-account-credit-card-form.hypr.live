@@ -16,7 +16,13 @@
     </div>
     {% else %}
         {% include "modules/common/address-form" with addresscontext="editingContact." model=editingContact %}
-		<span class="mz-validationmessage" data-mz-validationmessage-for="{{ cardcontext }}contactId"></span>
+		<div class="mz-l-formfieldgroup-row">
+			<div class="mz-l-formfieldgroup-cell">
+			</div>
+			<div class="mz-l-formfieldgroup-cell">
+				<span class="mz-validationmessage" data-mz-validationmessage-for="{{ cardcontext }}contactId"></span>
+			</div>
+		</div>
     {% endif %}
     </div>
     <div class="mz-creditcard-actions">

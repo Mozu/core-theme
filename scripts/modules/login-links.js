@@ -1,4 +1,4 @@
-﻿/**
+/**
  * Adds a login popover to all login links on a page.
  */
 define(['shim!vendor/bootstrap/js/popover[shim!vendor/bootstrap/js/tooltip[modules/jquery-mozu=jQuery]>jQuery=jQuery]>jQuery', 'modules/api', 'hyprlive', 'underscore', 'vendor/jquery-placeholder/jquery.placeholder'], function ($, api, Hypr, _) {
@@ -262,6 +262,23 @@ define(['shim!vendor/bootstrap/js/popover[shim!vendor/bootstrap/js/tooltip[modul
             loginPage.formSelector = 'form[name="mz-forgotpasswordform"]';
             loginPage.pageType = 'retrievePassword';
             loginPage.init(this);
+        });
+        $('[data-mz-action="logout"]').each(function(){
+            var el = $(this);
+
+            //if were in edit mode, we override the /logout GET, to preserve the correct referrer/page location | #64822
+            if (require.mozuData('pagecontext').isEditMode) {
+ 
+                 el.on('click', function(e) {
+                    e.preventDefault();
+                    $.ajax({
+                        method: 'GET',
+                        url: '../../logout',
+                        complete: function() { location.reload();}
+                    });
+                });
+            }
+            
         });
     });
 

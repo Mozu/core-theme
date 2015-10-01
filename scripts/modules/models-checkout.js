@@ -766,6 +766,11 @@
             },
             getPaypalUrls: function () {
                 var base = window.location.href + (window.location.href.indexOf('?') !== -1 ? "&" : "?");
+
+                //Remove the already existing Paypal parameters from URL
+                if (base.indexOf("PaypalExpress=") != -1) {
+                    base = base.substring(0, base.indexOf("PaypalExpress="));
+                }
                 return {
                     paypalReturnUrl: base + "PaypalExpress=complete",
                     paypalCancelUrl: base + "PaypalExpress=canceled"
