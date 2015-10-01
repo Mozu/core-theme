@@ -1,5 +1,5 @@
 /*! 
- * Mozu JavaScript SDK - v0.3.0 - 2015-09-24
+ * Mozu JavaScript SDK - v0.3.0 - 2015-10-01
  *
  * Copyright (c) 2015 Volusion, Inc.
  *
@@ -2638,7 +2638,7 @@ module.exports = {
                 try {
                     affiliates = JSON.parse(affiliates);
                 } catch (e) { }
-                var methodIsNotDelete = method && method.toLowerCase() !== 'delete';
+                var methodIsNotDelete = method && method.toLowerCase() !== 'delete' || method === undefined;
                 if (affiliates && affiliates.length > 0 && isCartUrl(url) && !this._finishedUpdatingAffiliates && methodIsNotDelete) {
                     return operation.then(function(r) {
                         originalResponse = r;
