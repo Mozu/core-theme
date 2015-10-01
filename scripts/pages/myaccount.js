@@ -238,6 +238,7 @@
     var PaymentMethodsView = EditableView.extend({
         templateName: "modules/my-account/my-account-paymentmethods",
         autoUpdate: [
+            'editingCard.isDefaultPayMethod',
             'editingCard.paymentOrCardType',
             'editingCard.nameOnCard',
             'editingCard.cardNumberPartOrMask',
@@ -263,6 +264,7 @@
             'editingContact.isPrimaryShippingContact'
         ],
         renderOnChange: [
+            'editingCard.isDefaultPayMethod',
             'editingCard.contactId',
             'editingContact.address.countryCode'
         ],

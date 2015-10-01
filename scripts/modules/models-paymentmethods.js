@@ -23,7 +23,10 @@
 
     var CreditCard = PaymentMethod.extend({
         mozuType: 'creditcard',
-        isCvvOptional: false,
+        defaults: {
+            isCvvOptional: false,
+            isDefaultPayMethod: false
+        },
         validation: {
             paymentOrCardType: {
                 fn: "present",
@@ -45,12 +48,15 @@
             },
             cvv: {
                 fn: function(value, attr) {
-                    var cardType = attr.split('.')[0],
-                        card = this.get(cardType);
+                    var cardType = attr.split('.')[0];
+                    var card = this.get(cardType);
 
-                    if (card.get('isCvvOptional')) return '';
+                    // if card is a payment, actual card data is nested within
+                    if (card.mozuType === 'payment') card = card.get('card');
 
-                    if (!this.selected) return undefined;
+                    // if card is not selected or cvv is optional, no need to validate
+                    if (!card.selected || card.get('isCvvOptional')) return;
+
                     if (!value)
                         return Hypr.getLabel('securityCodeMissing') || Hypr.getLabel('genericRequired');
                 }
@@ -82,7 +88,8 @@
         dataTypes: {
             expireMonth: Backbone.MozuModel.DataTypes.Int,
             expireYear: Backbone.MozuModel.DataTypes.Int,
-            isCardInfoSaved: Backbone.MozuModel.DataTypes.Boolean
+            isCardInfoSaved: Backbone.MozuModel.DataTypes.Boolean,
+            isDefaultPayMethod: Backbone.MozuModel.DataTypes.Boolean
         },
         expirationDateInPast: function (value, attr, computedState) {
             if (!this.selected) return undefined;
