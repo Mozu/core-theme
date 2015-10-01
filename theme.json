@@ -6,7 +6,7 @@
         "isDesktop": true,
         "isMobile": false,
         "isTablet": false,
-        "name": "Core8 8.0.0-rc.5",
+        "name": "Core8 8.0.0",
         "allowProduction": true
     },
     "editors": [
@@ -321,7 +321,7 @@
             "userCreatable": false
         },
         {
-            "entityType":  "anonymous_account",
+            "entityType": "anonymous_account",
             "id": "my_anonymous_account",
             "template": "my-anonymous-account",
             "title": "Anonymous Order Status",
