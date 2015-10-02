@@ -3,6 +3,9 @@
         {% if model.requiresFulfillmentInfo or model.requiresDigitalFulfillmentContact %}
           <a href="javascript:;" class="mz-formstep-edit" data-mz-action="edit">{{ labels.change }}</a>
         {% endif %}
+        {% if model.isMozuCheckout == false and model.stepStatus == "incomplete" %}
+          <a href="javascript:;" class="mz-formstep-cancel" data-mz-action="cancel">{{ labels.cancel }}</a>
+        {% endif %}
     </h3>
     <div class="mz-formstep-body">
       {% if not model.address.candidateValidatedAddresses %}
