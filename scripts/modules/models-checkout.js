@@ -12,7 +12,7 @@ define([
     function ($, _, Hypr, Backbone, api, CustomerModels, AddressModels, PaymentMethods, HyprLiveContext) {
 
         var CheckoutStep = Backbone.MozuModel.extend({
-            helpers: ['stepStatus', 'requiresFulfillmentInfo','isMozuCheckout', 'requiresDigitalFulfillmentContact'],  //
+            helpers: ['stepStatus', 'requiresFulfillmentInfo', 'requiresDigitalFulfillmentContact'],  //
             // instead of overriding constructor, we are creating
             // a method that only the CheckoutStepView knows to
             // run, so it can run late enough for the parent
@@ -58,13 +58,6 @@ define([
             requiresFulfillmentInfo: function () {
                 return this.getOrder().get('requiresFulfillmentInfo');
             },
-            isMozuCheckout: function() {
-                var activePayments = this.getOrder().apiModel.getActivePayments();
-                return !(activePayments && (!!_.findWhere(activePayments, { paymentType: 'CreditCard' }) 
-                || !!_.findWhere(activePayments, { paymentType: 'Check' }) 
-                || !!_.findWhere(activePayments, { paymentType: 'PaypalExpress' } 
-                || !!_.findWhere(activePayments, { paymentType: 'VisaCheckout' }))));
-            },
             requiresDigitalFulfillmentContact: function () {
                 return this.getOrder().get('requiresDigitalFulfillmentContact');
             },
@@ -73,15 +66,6 @@ define([
             },
             next: function () {
                 if (this.submit()) this.isLoading(true);
-            },
-            cancelStep: function() {
-                var me = this,
-                order = me.getOrder();
-                me.isLoading(true);
-                order.apiModel.get().ensure(function(){
-                    me.isLoading(false);
-                    return me.stepStatus("complete");
-                });
             }
         }),
 
@@ -1482,12 +1466,7 @@ define([
                     isAuthenticated = require.mozuData('user').isAuthenticated,
                     nonStoreCreditTotal = billingInfo.nonStoreCreditTotal(),
                     requiresFulfillmentInfo = this.get('requiresFulfillmentInfo'),
-                    requiresBillingInfo = nonStoreCreditTotal > 0;
-                    
-                    if (!this.isMozuCheckout()) {
-                        billingContact.set("address", null);
-                    }
-
+                    requiresBillingInfo = nonStoreCreditTotal > 0,
                     process = [function() {
                         return order.update({
                             ipAddress: order.get('ipAddress'),
