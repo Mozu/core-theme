@@ -1,7 +1,7 @@
 // BEGIN UTILS
 // Many of these poached from lodash
 
-    var maxFlattenDepth = 20;
+    var maxFlattenDepth = 100;
 
     var MicroEvent = require('microevent');
     var isNode = typeof process === "object" && process.title === "node";
@@ -64,7 +64,8 @@
             }
         },
         flatten: function (obj, into, prefix, separator, depth) {
-            if (depth === 0) throw "Cannot flatten circular object.";
+            if (depth === 0)
+              throw new Error("Cannot flatten object of depth greater than 100. Consider normalizing this object.");
             if (!depth) depth = maxFlattenDepth;
             into = into || {};
             separator = separator || ".";
@@ -78,7 +79,7 @@
                       val instanceof Date ||
                       val instanceof RegExp)
                     ) {
-                        utils.flatten(val.toJSON ? val.toJSON() : val, into, prefix + key + separator, separator, --depth);
+                        utils.flatten(val.toJSON ? val.toJSON() : val, into, prefix + key + separator, separator, depth - 1);
                     }
                     else {
                         into[prefix + key] = val;

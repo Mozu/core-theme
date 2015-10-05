@@ -1,5 +1,5 @@
 /*! 
- * Mozu JavaScript SDK - v0.3.0 - 2015-10-01
+ * Mozu JavaScript SDK - v0.3.0 - 2015-10-05
  *
  * Copyright (c) 2015 Volusion, Inc.
  *
@@ -5296,7 +5296,7 @@ var process=require("__browserify_process");
 // BEGIN UTILS
 // Many of these poached from lodash
 
-    var maxFlattenDepth = 20;
+    var maxFlattenDepth = 100;
 
     var MicroEvent = require('microevent');
     var isNode = typeof process === "object" && process.title === "node";
@@ -5359,7 +5359,8 @@ var process=require("__browserify_process");
             }
         },
         flatten: function (obj, into, prefix, separator, depth) {
-            if (depth === 0) throw "Cannot flatten circular object.";
+            if (depth === 0)
+              throw new Error("Cannot flatten object of depth greater than 100. Consider normalizing this object.");
             if (!depth) depth = maxFlattenDepth;
             into = into || {};
             separator = separator || ".";
@@ -5373,7 +5374,7 @@ var process=require("__browserify_process");
                       val instanceof Date ||
                       val instanceof RegExp)
                     ) {
-                        utils.flatten(val.toJSON ? val.toJSON() : val, into, prefix + key + separator, separator, --depth);
+                        utils.flatten(val.toJSON ? val.toJSON() : val, into, prefix + key + separator, separator, depth - 1);
                     }
                     else {
                         into[prefix + key] = val;
@@ -5646,6 +5647,7 @@ var process=require("__browserify_process");
 // END UTILS
 
 /*********/
+
 },{"./iframexhr":18,"__browserify_process":1,"microevent":2,"uritemplate":3,"when":12,"xmlhttprequest":false}]},{},[20])
 (20)
 });
