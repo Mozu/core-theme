@@ -197,6 +197,7 @@
     <None Include="Diagrams\Admin\Api\cdCapabilities.cd" />
     <None Include="Diagrams\Admin\Api\cdLocalizedContent.cd" />
     <None Include="Diagrams\Admin\Api\cdReportController.cd" />
+    <None Include="Diagrams\Admin\Api\ErrorHandlers\cdExceptions.cd" />
     <None Include="Diagrams\Admin\Api\Models\Facets\cdFacets.cd" />
     <None Include="Diagrams\Admin\Api\Models\LocalizedModels\cdLocalizedModels.cd" />
     <None Include="Diagrams\Admin\Api\Models\OrderModels\cdOrderItem.cd" />
