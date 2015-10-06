@@ -19,6 +19,7 @@
         <div class="mz-l-formfieldgroup-cell">
             <label class="mz-paymentselector-label mz-paymentselector-label-savedcreditcard" for="paymentType-savedcreditcard-{{ paymentId }}">{{ labels.savedCreditCard }}</label>
             <select {% if not model.usingSavedCard %}disabled="true"{% endif %} name="savedPaymentMethods" class="mz-payment-select-saved-payments" data-mz-value="savedPaymentMethodId">
+				<option selected="selected" value="">{{ labels.selectSavedCreditCard }}</option>
                 {% for card in model.savedPaymentMethods %}
                 <option value="{{ card.id }}" {% if model.savedPaymentMethodId == card.id %} selected="selected" {% endif %}>{{ card.cardType }} {{ card.cardNumberPartOrMask }} {{ labels.expires }} {{ card.expireMonth }}/{{ card.expireYear }}</option>
                 {% endfor %}

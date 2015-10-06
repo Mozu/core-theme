@@ -313,7 +313,7 @@ define([
                 'billingContact.email': {
                     pattern: 'email',
                     msg: Hypr.getLabel('emailMissing')
-                } 
+                }
             },
             dataTypes: {
                 'isSameBillingShippingAddress': Backbone.MozuModel.DataTypes.Boolean,
@@ -330,6 +330,7 @@ define([
               var errorMessage = Hypr.getLabel('paymentTypeMissing');
               if (!value) return errorMessage;
               if ((value === "StoreCredit" || value === "GiftCard") && this.nonStoreCreditTotal() > 0 && !payment) return errorMessage;
+
             },
             helpers: ['acceptsMarketing', 'savedPaymentMethods', 'availableStoreCredits', 'applyingCredit', 'maxCreditAmountToApply',
                 'activeStoreCredits', 'nonStoreCreditTotal', 'activePayments', 'hasSavedCardPayment', 'availableDigitalCredits', 'digitalCreditPaymentTotal', 'isAnonymousShopper', 'visaCheckoutFlowComplete'],
@@ -899,7 +900,18 @@ define([
                 if (currentPayment) {
                     this.get('card').set('isVisaCheckout', currentPayment.paymentWorkflow.toLowerCase() === 'visacheckout');
                 }
-                var val = this.validate();
+
+                // when we are using the saved card, validation is only to make sure we have one selected.
+                var val = null;
+                if (!order.get('billingInfo.usingSavedCard')) {
+                    val = this.validate();
+
+                // the second condition is to make sure that saved credit card is the operation.
+                } else if (order.get('billingInfo.usingSavedCard') && !this.get('savedPaymentMethodId')) {
+                    var missingSavedCardErrorMsg = Hypr.getLabel('selectASavedCard');
+                    val = { 'card.saved': missingSavedCardErrorMsg };
+                }
+
                 if (this.nonStoreCreditTotal() > 0 && val) {
                     // display errors:
                     var error = {"items":[]};
@@ -953,7 +965,10 @@ define([
                                         modelCard.set('cvv', '***');
                                         // to hide CVV once it has been sent to the paymentservice
                                     }
-                                    self.markComplete();
+                                    // we want to let the user have the opportunity to change the billing info if we use it from the one on the card.
+                                    if (!self.get('usingSavedCard')) {
+                                        self.markComplete();
+                                    }
                                     break;
                                 case 'PaypalExpress':
                                     break;
