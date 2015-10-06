@@ -22,6 +22,34 @@ namespace Mozu.SiteBuilder.Mvc.Extensions
             return string.Join(string.Empty, strings);
         }
 
+        public static bool TryGetInt(this IDictionary<string, object> dic, string key, out int ret)
+        {
+            ret = -1;
+            object temp;
+            if (dic ==null)
+            {
+                return false;
+            }
+            if (dic.TryGetValue("pageSize", out temp))
+            {
+                if (temp is string)
+                {
+                    return int.TryParse((string)temp, out ret);
+                }
+                if (temp is int || temp is long)
+                {
+                    try
+                    {
+                        ret = Convert.ToInt32(temp);
+                        return true;
+                    }
+                    catch { }
+                }
+            }
+            return false;
+        }
+
+
         public static IDictionary<TKey,TValue> ChainSet<TKey,TValue>(this IDictionary<TKey,TValue> dict, TKey key, TValue value, bool overWrite=true)
         {
             if (!overWrite && dict.ContainsKey(key))

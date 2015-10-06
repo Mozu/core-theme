@@ -8,6 +8,7 @@ using System.Text;
 using System.Text.RegularExpressions;
 using System.Web;
 using System.Web.Http.Routing;
+using Mozu.SiteBuilder.Mvc.Extensions;
 using Mozu.SiteBuilder.UX.Models.StoreFront.Catalog;
 using Newtonsoft.Json;
 using Mozu.SiteBuilder.Mvc.ViewEngine;
@@ -113,17 +114,18 @@ namespace Mozu.SiteBuilder.Mvc.Contexts
 
 
             object temp;
-            if (httpRouteData.Values.TryGetValue("pageSize", out temp) && (!string.IsNullOrWhiteSpace(temp as string) || temp is int || temp is long))
+            int tempInt;
+            if (httpRouteData.Values.TryGetInt ( "pageSize", out tempInt) )
             {
-                httpRouteData.Values["pageSize"] =this.PageSize = Convert.ToInt32(temp);
+                httpRouteData.Values["pageSize"] = this.PageSize = tempInt;
             }
-            if (httpRouteData.Values.TryGetValue("startIndex", out temp) && (!string.IsNullOrWhiteSpace(temp as string) || temp is int || temp is long))
+            if (httpRouteData.Values.TryGetInt("startIndex", out tempInt) )
             {
-                httpRouteData.Values["startIndex"] = this.StartIndex = Convert.ToInt32(temp);
+                httpRouteData.Values["startIndex"] = this.StartIndex = tempInt;
             }
-            if (httpRouteData.Values.TryGetValue("categoryId", out temp) && (!string.IsNullOrWhiteSpace(temp as string) || temp is int || temp is long))
+            if (httpRouteData.Values.TryGetInt("categoryId", out tempInt))
             {
-                httpRouteData.Values["categoryId"] = this.CategoryId = Convert.ToInt32(temp);
+                httpRouteData.Values["categoryId"] = this.CategoryId = tempInt;
             }
             if (httpRouteData.Values.TryGetValue("sortBy", out temp) && !string.IsNullOrWhiteSpace(temp as string))
             {
@@ -135,6 +137,9 @@ namespace Mozu.SiteBuilder.Mvc.Contexts
             }
 
         }
+
+     
+
         internal void InitRouteData(IDictionary<string, object> httpRouteData)
         {
             httpRouteData[RouteDataKey] = this;
@@ -333,10 +338,10 @@ namespace Mozu.SiteBuilder.Mvc.Contexts
        
         public SearchContextOverrides(Dictionary<string, object> config)
         {
-            object startIndex;
-            if (config.TryGetValue("startIndex", out startIndex))
+            int startIndex;
+            if (config.TryGetInt("startIndex", out startIndex))
             {
-                this.StartIndex = Convert.ToInt32(startIndex);
+                this.StartIndex = startIndex;
             }
 
             object sortBy;
@@ -351,10 +356,10 @@ namespace Mozu.SiteBuilder.Mvc.Contexts
                 this.Query = Convert.ToString(query);
             }
 
-            object pageSize;
-            if (config.TryGetValue("pageSize", out pageSize))
+            int pageSize;
+            if (config.TryGetInt("pageSize", out pageSize))
             {
-                this.PageSize = Convert.ToInt32(pageSize);
+                this.PageSize = pageSize;
             }
         }
 
