@@ -28,9 +28,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
     [WebApi("app/themes", SuppressDescriptorGeneration = true)]
     public class ThemeController : BaseController
     {
-      
-
-        public ThemeController(ITenantsWebApiClient tenantClient, IGeneralSettingWrapper generalSettingsWebApiClient, IThemeRepository themeRepository, ICmsServiceWrapper cmsServiceWrapper, IThemeSettingsRepository themeSettingsRepository, ILogger logger , ISettings settings )
+        public ThemeController(ITenantsWebApiClient tenantClient, IGeneralSettingWrapper generalSettingsWebApiClient, IThemeRepository themeRepository, ICmsServiceWrapper cmsServiceWrapper, IThemeSettingsRepository themeSettingsRepository, ILogger logger, ISettings settings)
         {
             _tenantClient = tenantClient;
             _generalSettingsWebApiClient = generalSettingsWebApiClient;
@@ -41,11 +39,9 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
             _settings = settings;
         }
 
-
-        
         public class ThemeDTO
         {
-          
+
 
             public string Name { get; set; }
 
@@ -104,7 +100,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
             public ThemeDTO()
             { }
 
-         
+
 
             public ThemeDTO(GeneralSettings genSettings, Theme theme, bool? isSelectedDesktop = null, bool? isSelectedMobile = null, bool? isSelectedTablet = null, string version = null)
             {
@@ -130,8 +126,8 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
             {
                 if (isSelected.HasValue)
                     return isSelected.Value;
-                return ( themeSelection != null && 
-                    String.Equals(Id, themeSelection.Id, StringComparison.InvariantCultureIgnoreCase) );
+                return (themeSelection != null &&
+                    String.Equals(Id, themeSelection.Id, StringComparison.InvariantCultureIgnoreCase));
             }
 
 
@@ -143,14 +139,11 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
                 return otherTheme != null && this.Id == otherTheme.Id;
             }
 
-         
+
         }
 
-
-
-
         [HttpGetRoute(UriTemplate = "thumNamil/{themeId}")]
-        public async Task<HttpResponseMessage> GetThumbByTheme(string themeId)
+        public Task<HttpResponseMessage> GetThumbByTheme(string themeId)
         {
             var theme = _themeRepository.GetThemeSlim(new ThemeSelection() { Id = themeId });
             HttpResponseMessage response = new HttpResponseMessage(HttpStatusCode.OK);
@@ -158,15 +151,13 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
             response.Content = new StreamContent(File.OpenRead(theme.Thumbnail.FullPath));
             response.Content.Headers.Expires = new DateTimeOffset(DateTime.Now.AddYears(1));
             response.Headers.CacheControl = new CacheControlHeaderValue()
-                                            {
-                                                MaxAge = new TimeSpan(365,0,0,0),
-                                               Public = true
-
-                                            };
+            {
+                MaxAge = new TimeSpan(365, 0, 0, 0),
+                Public = true
+            };
 
             response.Content.Headers.ContentType = new MediaTypeHeaderValue("image/" + System.IO.Path.GetExtension(theme.Thumbnail.Name).Replace(".", ""));
-
-            return response;
+            return Task.FromResult(response);
         }
 
         [HttpGetRoute(UriTemplate = "sitethumbNail")]
@@ -182,9 +173,9 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
             }
             catch (Exception ex)
             {
-               _logger.Warn("error sitethumbNail", ex);
+                _logger.Warn("error sitethumbNail", ex);
             }
-            theme =theme ?? _themeRepository.GetThemeSlim(new ThemeSelection() { Id = Mozu.SiteBuilder.Mvc.Constants.DefaultTheme });
+            theme = theme ?? _themeRepository.GetThemeSlim(new ThemeSelection() { Id = Mozu.SiteBuilder.Mvc.Constants.DefaultTheme });
 
             HttpResponseMessage response = new HttpResponseMessage(HttpStatusCode.OK);
             response.Content = new StreamContent(File.OpenRead(theme.Thumbnail.FullPath));
@@ -266,17 +257,17 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
             }
         }
 
-        bool IsSelectedDesktop(Tenant.Contracts.Entitlement e, GeneralSettings g)
+        static bool IsSelectedDesktop(Tenant.Contracts.Entitlement e, GeneralSettings g)
         {
             return g.DesktopTheme != null && g.DesktopTheme.Id == e.ApplicationAssetPath.Replace('\\', '~');
         }
 
-        bool IsSelectedTablet(Tenant.Contracts.Entitlement e, GeneralSettings g)
+        static bool IsSelectedTablet(Tenant.Contracts.Entitlement e, GeneralSettings g)
         {
             return g.TabletTheme != null && g.TabletTheme.Id == e.ApplicationAssetPath.Replace('\\', '~');
         }
 
-        bool IsSelectedMobile(Tenant.Contracts.Entitlement e, GeneralSettings g)
+        static bool IsSelectedMobile(Tenant.Contracts.Entitlement e, GeneralSettings g)
         {
             return g.MobileTheme != null && g.MobileTheme.Id == e.ApplicationAssetPath.Replace('\\', '~');
         }
@@ -295,16 +286,53 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
                 allowNonProductionThemes = false;
             }
 
-            var coreEntitlements = Directory.GetDirectories(localThemeDir).Select(x => GetEntitlementFromDirectory(x, allowNonProductionThemes)).Where(x => x != null);
+            var coreEntitlements =
+                Directory.GetDirectories(localThemeDir)
+                .Select(x => GetEntitlementFromDirectory(x, allowNonProductionThemes))
+                .Where(x => x != null);
 
-            var themes = entitlements.Items.Where(x => x.ApplicationType == "Theme")
+            var themes =
+                entitlements.Items
+                .Where(x => x.ApplicationType == "Theme")
                 .Concat(coreEntitlements)
-                .Select(e => new ThemeDTO
+                .Select(e => CreateDTO(e, genSettings, _logger))
+                .Where(x => x != null)
+                .GroupBy(t => t.VersionGroup)
+                .Select(CollapseGroup)
+                .ToList();
+
+            return List2(themes);
+        }
+
+        static IComparer<string> versionComparer = new VersionStringComparer();
+        static ThemeDTO CollapseGroup(IGrouping<string, ThemeDTO> themes)
+        {
+            var children = themes.OrderByDescending(o => o.Version, versionComparer).ToArray();
+            if (children.Length > 1)
+            {
+                var name = children[0].Name.StartsWith("Core") ? "Core" : children[0].Name;
+                return new ThemeDTO()
+                {
+                    Children = children,
+                    Name = name,
+                    Id = "_parent_" + name
+                };
+            }
+            else
+            {
+                return children[0];
+            }
+        }
+
+        static ThemeDTO CreateDTO(Tenant.Contracts.Entitlement e, GeneralSettings genSettings, ILogger logger)
+        {
+            try {
+                return new ThemeDTO
                 {
                     Id = e.ApplicationAssetPath.Replace('\\', '~'),
                     Name = e.ApplicationName,
                     Author = e.DeveloperAccountName,
-                    InstallDate = e.UpdateDate == DateTime.MinValue ?  (DateTime?)null : e.UpdateDate,
+                    InstallDate = e.UpdateDate == DateTime.MinValue ? (DateTime?)null : e.UpdateDate,
                     Status = e.Status,
                     Version = e.ApplicationVersion,
                     VersionGroup = e.AppKey.Substring(0, e.AppKey.IndexOf(e.ApplicationVersion)),
@@ -312,32 +340,17 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
                     IsSelectedMobile = IsSelectedMobile(e, genSettings),
                     IsSelectedTablet = IsSelectedTablet(e, genSettings),
                     Leaf = true
-                }).ToList();
-
-            var versionStringComparer = new VersionStringComparer();
-
-            var retList = themes.GroupBy(t => t.VersionGroup).Select(g =>
+                };
+            }
+            catch (ArgumentOutOfRangeException ex)
             {
-                // TODO: Replace alphanumeric sort with better shit
-                var children = g.OrderByDescending(o => o.Version, versionStringComparer).ToArray();
-                if (children.Length > 1)
-                {
-                    var name = children[0].Name.StartsWith("Core") ? "Core" : children[0].Name;
-                    return new ThemeDTO()
-                    {
-                        Children = children,
-                        Name = name,
-                        Id = "_parent_" + name
-                    };
-                }
-                else
-                {
-                    return children[0];
-                }
-
-            }).ToList();
-
-            return List2(retList);
+                logger.Error("blew up when trying to make DTO for theme in substring", ex, new { Id = e.ApplicationAssetPath.Replace('\\', '~'), Version = e.ApplicationVersion, AppKey = e.AppKey });
+            }
+            catch (Exception ex)
+            {
+                logger.Error("hard fail making theme DTO", ex, new { Id = e.ApplicationAssetPath.Replace('\\', '~'), Version = e.ApplicationVersion, AppKey = e.AppKey });
+            }
+            return null;
         }
 
         [HttpGetRoute(UriTemplate = "applied")]
@@ -394,13 +407,10 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
             return List2(themes.ToList());
         }
 
-        
-
-        [HttpPostRoute (UriTemplate = "addons/update/{themeId}")]
-        public async Task<Response<List<ThemeDTO>>> UpdateAddons(string themeId, string[] addons )
+        [HttpPostRoute(UriTemplate = "addons/update/{themeId}")]
+        public async Task<Response<List<ThemeDTO>>> UpdateAddons(string themeId, string[] addons)
         {
             var retval = await _themeSettingsRepository.SaveSingleValue(ThemeSettingsRepository.ADDONKEY, addons, themeId);
-
             return SuccessWithTotal2<List<ThemeDTO>>(0);
         }
 
@@ -415,7 +425,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
             if (theme.IsDesktop.GetValueOrDefault(false))
             {
                 if (method)
-                {   
+                {
                     lastTheme = settings.DesktopTheme != null ? settings.DesktopTheme.Id : null;
                     settings.DesktopTheme = new ThemeSelection { Id = id };
                 }
@@ -429,8 +439,8 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
             if (theme.IsTablet.GetValueOrDefault(false))
             {
                 if (method)
-                {   
-                    lastTheme = lastTheme ?? (settings.TabletTheme != null ?  settings.TabletTheme.Id : null);
+                {
+                    lastTheme = lastTheme ?? (settings.TabletTheme != null ? settings.TabletTheme.Id : null);
                     settings.TabletTheme = new ThemeSelection { Id = id };
                 }
 
@@ -444,7 +454,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
             {
                 if (method)
                 {
-                    lastTheme = lastTheme ?? (settings.MobileTheme != null ?  settings.MobileTheme.Id : null);
+                    lastTheme = lastTheme ?? (settings.MobileTheme != null ? settings.MobileTheme.Id : null);
                     settings.MobileTheme = new ThemeSelection { Id = id };
                 }
 
@@ -456,21 +466,20 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
 
             if (lastTheme != null && method)
             {
-                var resp =  _themeSettingsRepository.GetInstanceValues(id).Result;
+                var resp = _themeSettingsRepository.GetInstanceValues(id).Result;
 
                 if (resp == null || !resp.HasValues)
                 {
                     var oldValues = _themeSettingsRepository.GetInstanceValues(lastTheme).Result;
                     await _themeSettingsRepository.SaveInstanceValues(oldValues, id);
                 }
-           
+
             }
 
             _generalSettingsWebApiClient.UpdateThemeCore(settings);
 
             return SuccessWithTotal2<List<ThemeDTO>>(0);
         }
-
 
         [HttpPostRoute(UriTemplate = "update")]
         public async Task<Response<List<ThemeDTO>>> UpdateTheme(HttpRequestMessage msg)
@@ -479,7 +488,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
             ThemeDTO newDesktop = themes.LastOrDefault(t => t.IsSelectedDesktop.Value);
             ThemeDTO newMobile = themes.LastOrDefault(t => t.IsSelectedMobile.Value);
             ThemeDTO newTablet = themes.LastOrDefault(t => t.IsSelectedTablet.Value);
-            
+
             // TODO: need async settingsClient
             var settings = await _generalSettingsWebApiClient.ReadSettings();
 
@@ -487,44 +496,44 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
             {
                 settings.DesktopTheme = new ThemeSelection()
                 {
-                    Id = Mozu.SiteBuilder.Mvc.Constants.DefaultTheme 
+                    Id = Mozu.SiteBuilder.Mvc.Constants.DefaultTheme
                 };
             }
 
             if (newDesktop != null)
             {
-                
-                settings.DesktopTheme.Id  = newDesktop.Id;
+
+                settings.DesktopTheme.Id = newDesktop.Id;
 
                 // intent to set a desktop theme.
-               // settings.DesktopTheme = new ThemeSelection() {Id = newDesktop.Id};
+                // settings.DesktopTheme = new ThemeSelection() {Id = newDesktop.Id};
             }
-            else if (themes.Any(t => t.Id == settings.DesktopTheme.Id ))
+            else if (themes.Any(t => t.Id == settings.DesktopTheme.Id))
             {
                 // intent to un-set the desktop theme.
                 // having NO desktop theme is not a legal state, so we will set the theme to the default.
                 newDesktop = new ThemeDTO(settings, _themeRepository.GetDefaultTheme(), true);
                 if (!themes.Any(t => t.Equals(newDesktop)))
                     themes.Add(newDesktop);
-                settings.DesktopTheme.Id  =newDesktop.Id;
+                settings.DesktopTheme.Id = newDesktop.Id;
             }
 
             settings.MobileTheme = GetThemeSelection(newMobile, settings.MobileTheme, themes);
             settings.TabletTheme = GetThemeSelection(newTablet, settings.TabletTheme, themes);
-            
+
             _generalSettingsWebApiClient.UpdateThemeCore(settings);
 
             // the UI returns the ThemeDTO without a thumbnail (to minimize the payload). But if we pass the same ThemeDTO without
             // a thumbnail back to them, the UI will update to have no thumbnail. So we have to loop over the provided ThemeDTO objects
             // and construct a new one to return to them.
 
-            IEnumerable<ThemeDTO> returnedThemesList =
+            var returnedThemesList =
                 from t in themes
-                let isSelectedDesktop = (newDesktop != null && newDesktop.Equals(t)) || (newDesktop == null && t.Id.Equals(settings.DesktopTheme.Id ))
+                let isSelectedDesktop = (newDesktop != null && newDesktop.Equals(t)) || (newDesktop == null && t.Id.Equals(settings.DesktopTheme.Id))
                 let isSelectedMobile = (newMobile != null && newMobile.Equals(t)) || (newMobile == null && settings.MobileTheme != null && t.Equals(settings.MobileTheme.Id))
                 let isSelectedTablet = (newTablet != null && newTablet.Equals(t)) || (newTablet == null && settings.TabletTheme != null && t.Equals(settings.TabletTheme.Id))
                 let fullTheme = _themeRepository.GetThemeSlim(new ThemeSelection() { Id = t.Id })
-                select new ThemeDTO(settings , fullTheme, isSelectedDesktop, isSelectedMobile, isSelectedTablet);
+                select new ThemeDTO(settings, fullTheme, isSelectedDesktop, isSelectedMobile, isSelectedTablet);
 
             return List2(returnedThemesList.ToList());
         }
