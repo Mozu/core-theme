@@ -1,0 +1,20 @@
+﻿{% if item.discountedTotal || item.discountedTotal == 0 %}
+	{% if item.discountedTotal < item.subtotal %} 
+		<span class="mz-item-rowtotal is-crossedout" {% block crossedout-inline-style %}{% endblock crossedout-inline-style %}>	{{ item.subtotal|currency }}</span>
+		{% for productDiscount in item.productDiscounts %}
+			<div class="mz-item-discount">
+			<span class="mz-item-discountname">{{ productDiscount.discount.name }}</span>
+			{% if productDiscount.discount.freeShipping %}
+				<span class="mz-item-discountamt">{{ labels.freeShipping }}</span>
+			{% else %}
+				<span class="mz-item-discountamt"> -{{ productDiscount.impact|currency }}</span>
+			{% endif %}
+			</div>
+		{% endfor %}
+		<span class="mz-item-rowtotal {% if item.unitPrice.saleAmount %}is-saleprice{% endif %}">{{ item.discountedTotal|currency }}</span>
+	{% else %}
+		<span class="mz-item-rowtotal {% if item.unitPrice.saleAmount %}is-saleprice{% endif %}">{{ item.subtotal|currency }}</span>
+	{% endif %}
+{% else %}
+	<span class="mz-item-rowtotal {% if item.unitPrice.saleAmount %}is-saleprice{% endif %}">{{ item.subtotal|currency }}</span>
+{% endif %}

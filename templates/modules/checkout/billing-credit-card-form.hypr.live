@@ -1,0 +1,20 @@
+﻿{% extends "modules/common/credit-card-form" %}
+{% block credit-card-form %}
+    {% set cardcontext="card." %}
+        {% parent %}
+		<div class="mz-l-formfieldgroup-row mz-payment-credit-card-securitycode-row">
+			<div class="mz-l-formfieldgroup-cell">
+				<label for="mz-payment-security-code">{{ labels.securityCode }}{% if not model.isCvvOptional %}<span class="is-required"> *</span>{% endif %}:</label>
+			</div>
+			<div class="mz-l-formfieldgroup-cell">
+				<input type="tel" name="security-code" id="mz-payment-security-code" class="mz-l-formfieldgroup-halfsize" data-mz-value="{{ cardcontext }}cvv" value="{{ model.cvv }}" autocomplete="off">
+				<span class="mz-validationmessage" data-mz-validationmessage-for="{{ cardcontext }}cvv"></span>
+			</div>
+		</div>
+        <div class="mz-l-formfieldgroup-row mz-payment-credit-card-savepayment-row">
+            <div class="mz-l-formfieldgroup-cell"></div>
+            <div class="mz-l-formfieldgroup-cell">
+                <label class="mz-inline"><input type="checkbox" name="save-card-info" data-mz-value="{{ cardcontext }}isCardInfoSaved" value="true" {% if model.isCardInfoSaved %}checked="checked"{% endif %}> {{ labels.saveCard }}</label>
+            </div>
+        </div>
+{% endblock credit-card-form %}

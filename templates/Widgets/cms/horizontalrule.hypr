@@ -1,0 +1,5 @@
+﻿<div {% data_attributes Model %}> 
+	
+	<hr style="border: 0 {{ Model.config.hrBorderStyle|default:"solid" }}; border-top-width: {{ Model.config.hrBorderWidth|default:"1px" }}; border-color: {{ Model.config.hrBorderColor|default:"#000" }}; margin-top: {{ Model.config.hrMarginTop|default:"none" }}; margin-bottom: {{ Model.config.hrMarginBottom|default:"none" }};">
+
+</div>

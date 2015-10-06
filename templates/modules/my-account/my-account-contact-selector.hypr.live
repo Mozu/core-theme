@@ -1,0 +1,7 @@
+﻿{% extends "modules/common/contact-selector" %}
+{% block module-classes %} mz-l-tiles {% endblock module-classes %}
+{% block contact-selector %}
+{% set contactcontext="editingCard." %}
+{% set addresscontext="editingContact." %}
+{% parent %}
+{% endblock contact-selector %}

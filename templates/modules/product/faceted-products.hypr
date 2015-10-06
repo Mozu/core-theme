@@ -1,0 +1,50 @@
+﻿{% if not pageContext.query.partial %}
+<script type="text/json" id="data-mz-preload-facetedproducts">
+{
+	"facets": {% json model.facets %}, 
+	"currentPage": {{ model.currentPage }},
+	"firstIndex": {{ model.firstIndex }},
+	"hasNextPage": {{ model.hasNextPage|lower }},
+	"hasPreviousPage": {{ model.hasPreviousPage|lower }},
+	"lastIndex": {{ model.lastIndex }},
+	"middlePageNumbers": {% json model.middlePageNumbers %},
+	"pageCount": {{ model.pageCount }},
+	"pageSize": {{ model.pageSize }},
+	"startIndex": {{ model.startIndex }},
+	"totalCount": {{ model.totalCount }},
+	"currentSort": "{{ model.currentSort }}"
+}
+</script>
+{% endif %}
+{% if model.facets %}
+<div data-mz-facets class="mz-l-sidebar">
+	{% dropzone "sidebar-above-facets" scope="template" %}
+    {% include "modules/product/faceting-form" %}
+	{% dropzone "sidebar-below-facets" scope="template" %}
+</div>
+{% endif %}
+
+<div class="mz-l-paginatedlist">
+    <div class="mz-l-paginatedlist-header">
+        <div data-mz-pagesort class="mz-sortby">
+            {% include "modules/common/page-sort" %}
+        </div>
+        <div data-mz-pagenumbers class="mz-pagenumbers">
+            {% include "modules/common/page-numbers" %}
+        </div>
+        <div data-mz-pagingcontrols class="mz-pagingcontrols">
+            {% include "modules/common/paging-controls" %}
+        </div>
+    </div>
+    <div data-mz-productlist class="mz-l-paginatedlist-list">
+        {% include "modules/product/product-list-tiled" %}
+    </div>
+    <div class="mz-l-paginatedlist-footer">
+        <div data-mz-pagenumbers class="mz-pagenumbers">
+            {% include "modules/common/page-numbers" %}
+        </div>
+        <div data-mz-pagingcontrols class="mz-pagingcontrols">
+            {% include "modules/common/paging-controls" %}
+        </div>
+    </div>
+</div>

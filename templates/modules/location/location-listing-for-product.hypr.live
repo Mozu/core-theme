@@ -1,0 +1,25 @@
+﻿<div class="mz-locationlisting mz-locationlisting-forproduct {% if model.quantity == 0 %}is-disabled{% endif %}">
+    <div class="mz-locationlisting-locationdetails">
+        <h4 class="mz-locationlisting-name">{{ model.name }}</h4>
+        <div class="mz-addresssummary">
+            {% include "modules/common/address-summary" %}
+        </div>
+    </div>
+    <div class="mz-locationlisting-inventory">
+        <p class="mz-locationlisting-inventorystatus">
+            {% if model.quantity == 0 %}
+            {{ labels.outOfStock }}
+            {% else %}
+            {{ labels.availableNow }}
+            {% endif %}
+        </p>
+    </div>
+    {% if location.distance %}
+    <div class="mz-locationlisting-distance">
+        {{ labels.milesAway|string_format(location.distance) }}
+    </div>
+    {% endif %}
+    <div class="mz-locationlisting-actions">
+        <button class="mz-button" {% if model.quantity == 0 %}disabled="disabled"{% endif %} data-mz-action="addToCartForPickup" data-mz-location="{{ model.code }}">{{ labels.addToCart }}</button>
+    </div>
+</div>

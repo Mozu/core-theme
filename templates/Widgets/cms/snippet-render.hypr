@@ -1,0 +1,11 @@
+﻿{% if model.items %}
+	<div class="mz-snippetList {% block module-classes %}{% endblock module-classes %}">
+
+    <ul class="mz-snippetList-list {% block list-classes %}{% endblock list-classes %}">
+        {% for snippet in model.items %}
+            <li class="mz-snippetlist-item">{{ snippet.properties.content|safe }}</li>
+        {% endfor %}
+    </ul>
+   
+</div>
+ {% endif %}

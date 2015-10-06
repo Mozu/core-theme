@@ -1,0 +1,51 @@
+.mz-checkout-payment {
+    clear: both;
+    min-width: 340px;
+    .mz-checkout-paymenttitle {
+        border-bottom: 1px solid #eee;
+        font-weight: normal;
+        strong {
+            font-size: @fontSizeLarger;
+        }
+    }
+
+
+    &-change, &-done {
+        float: right;
+    }
+}
+
+
+.mz-paymentselector.mz-l-formfieldgroup {
+    .mz-digitalwallets {
+        padding-top: @gutter/2;
+    }
+    display: block;
+    > .mz-l-formfieldgroup-row {
+        display: block;
+    }
+    .mz-paymentselector-option label {
+        text-align: left;
+        font-size: @fontSizeLarger;
+    }
+    .mz-l-formfieldgroup-cell {
+        > label {
+            min-width: 155px;
+        }
+        .mz-paymentselector-reenter-cvv {
+            label {
+                text-align: left;
+                min-width: auto;
+                display: inline-block;
+                margin-right: @gutter/4;
+            }
+            }
+        }    
+    .mz-payment-credit-card-savepayment-row {
+        margin-left: 155px;
+    }
+}
+
+.mz-paymentselector-newcreditcard .mz-l-formfieldgroup-cell:first-child label {
+    min-width: 155px;
+}

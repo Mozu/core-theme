@@ -1,0 +1,21 @@
+<div class="mz-popover mz-popover-login mz-l-slidebox">
+  <div class="mz-l-slidebox-outer">
+    <div class="mz-l-slidebox-inner">
+      <section data-mz-role="login-form" class="mz-login-form mz-l-slidebox-panel">
+        <input name="email" data-mz-login-email placeholder="{{ labels.emailAddress }}" type="text" />
+        <input name="password" data-mz-login-password placeholder="{{ labels.password }}" type="password" />
+        <div class="mz-popover-action">
+          (<a data-mz-action="forgotpasswordform" href="javascript:;">{{ labels.forgotPasswordLink }}</a>) <button class="mz-button" data-mz-action="submitlogin">{{ labels.logIn }}</button>
+        </div>
+      </section>
+      <section data-mz-role="forgotpassword-form" class="mz-forgot-password mz-l-slidebox-panel">
+        <label>{{ labels.resetPassword }}</label>
+        <input type="email" data-mz-forgotpassword-email name="reset-password" placeholder="{{ labels.emailAddress }}" />
+        <div class="mz-popover-action">
+          (<a href="javascript:;" data-mz-action="loginform">{{ labels.cancel }}</a>) <button class="mz-button" data-mz-action="submitforgotpassword">{{ labels.sendEmail }}</button>
+        </div>
+      </section>
+    </div>
+  </div>
+  <section data-mz-role="popover-message" class="mz-popover-message"></section>
+</div>

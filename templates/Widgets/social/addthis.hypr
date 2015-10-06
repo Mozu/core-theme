@@ -1,0 +1,53 @@
+﻿<div  >
+
+{%if  SiteContext.IsEditMode %}
+<div style="background: url(https://cache.addthiscdn.com/www/20120531075334/style/images/header/bg-logo.png) no-repeat left center;width: 116px;height: 50px;overflow: hidden;text-indent: -9999px;">AddThis</div>
+
+
+{% else %}
+{% if Model.config.style == "1" %}
+<!-- AddThis Button BEGIN -->
+<div class="addthis_toolbox addthis_default_style ">
+<a class="addthis_button_preferred_1"></a>
+<a class="addthis_button_preferred_2"></a>
+<a class="addthis_button_preferred_3"></a>
+<a class="addthis_button_preferred_4"></a>
+<a class="addthis_button_compact"></a>
+<a class="addthis_counter addthis_bubble_style"></a>
+</div>
+<script type="text/javascript" src="http://s7.addthis.com/js/250/addthis_widget.js#pubid={{Model.config.profileId}}"></script>
+<!-- AddThis Button END -->
+{% else %}
+{% if Model.config.style == "2" %}
+<!-- AddThis Button BEGIN -->
+<div class="addthis_toolbox addthis_default_style ">
+<a class="addthis_button_facebook_like" fb:like:layout="button_count"></a>
+<a class="addthis_button_tweet"></a>
+<a class="addthis_button_pinterest_pinit" pi:pinit:layout="horizontal"></a>
+<a class="addthis_counter addthis_pill_style"></a>
+</div>
+<script type="text/javascript" src="http://s7.addthis.com/js/250/addthis_widget.js#pubid={{Model.config.profileId}}"></script>
+<!-- AddThis Button END -->
+{% else %}
+{% if Model.config.style == "3" %}
+<!-- AddThis Button BEGIN -->
+<div class="addthis_toolbox addthis_default_style addthis_32x32_style">
+<a class="addthis_button_preferred_1"></a>
+<a class="addthis_button_preferred_2"></a>
+<a class="addthis_button_preferred_3"></a>
+<a class="addthis_button_preferred_4"></a>
+<a class="addthis_button_compact"></a>
+<a class="addthis_counter addthis_bubble_style"></a>
+</div>
+<script type="text/javascript" src=http://s7.addthis.com/js/250/addthis_widget.js#pubid={{Model.config.profileId}}"></script>
+<!-- AddThis Button END -->
+{% else %}
+<!-- AddThis Button BEGIN -->
+<a class="addthis_button" href="http://www.addthis.com/bookmark.php?v=300&amp;pubid=ra-52a8f776524a38c4"><img src="http://s7.addthis.com/static/btn/v2/lg-share-en.gif" width="125" height="16" alt="Bookmark and Share" style="border:0"/></a>
+<script type="text/javascript" src=http://s7.addthis.com/js/250/addthis_widget.js#pubid={{Model.config.profileId}}"></script>
+<!-- AddThis Button END -->
+{%endif%}
+{%endif%}
+{%endif%}
+{%endif%}
+</div>

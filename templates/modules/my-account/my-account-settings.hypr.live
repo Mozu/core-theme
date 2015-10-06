@@ -1,0 +1,91 @@
+﻿<h3 class="mz-l-stack-sectiontitle">{{ labels.accountSettings }}{% if not editing %}<a href class="mz-link-edit-accountsettings" data-mz-action="startEdit">{{ labels.edit }}</a>{% endif %}</h3>
+<div class="mz-accountsettings-section mz-accountsettings-name {% if editing %} is-editing {% endif %}">
+  <span class="mz-accountsettings-label mz-account-settings-label-name">{{ labels.firstName }} / {{ labels.lastName }}</span>
+  {% if editing %}
+  <input class="mz-accountsettings-firstname" type="text" placeholder="{{ labels.firstName }}" data-mz-value="firstName" value="{{ model.firstName }}" />
+  <input class="mz-accountsettings-lastname" type="text" placeholder="{{ labels.lastName }}" data-mz-value="lastName" value="{{ model.lastName }}" />
+  <span class="mz-validationmessage" data-mz-validationmessage-for="firstName"></span>
+  <span class="mz-validationmessage" data-mz-validationmessage-for="lastName"></span>
+  {% else %}
+  <div class="mz-accountsettings-displayname" id="account-settings-name">{{ model.firstName }} {{ model.lastName }}</div>
+  {% endif %}
+</div>
+<div class="mz-accountsettings-section mz-accountsettings-email">
+  <span class="mz-accountsettings-label mz-account-settings-label-email">{{ labels.emailAddress }}</span>
+  {% if editing %}
+  <input class="mz-accountsettings-email" type="email" placeholder="{{ labels.emailAddress }}" data-mz-value="emailAddress" value="{{ model.emailAddress }}" />
+  <span class="mz-validationmessage" data-mz-validationmessage-for="emailAddress"></span>
+  {% else %}
+  <div class="mz-accountsettings-displayemail">{{ model.emailAddress|default(model.userName) }}</div>
+  {% endif %}
+</div>
+<div class="mz-accountsettings-section mz-accountsettings-acceptsmarketing">
+  <input type="checkbox" id="account-acceptsmarketing" data-mz-value="acceptsMarketing" {% if model.acceptsMarketing %}checked="checked"{% endif %} {% if not editing %}disabled="disabled"{% endif %} />
+  <label for="account-acceptsmarketing">{{ labels.accountOptIn }}</label>
+</div>
+
+<div class="mz-accountsettings-section mz-accountsettings-attributes">
+  {% for attribute in model.attributes %}
+    <div class="mz-accountsettings-attribute mz-accountsettings-attribute-{{ attribute.inputType|lower }}">
+      {% if attribute.inputType === "YesNo" %}
+        {% if attribute.valueType !== "AdminEntered" %}
+          <input type="checkbox" name="account-attribute-{{ attribute.attributeFQN }}" value="{{ attribute.adminName }}"
+            data-mz-attribute="{{ attribute.attributeFQN }}" data-mz-value="attribute" {% if attribute.values[0] === true %}checked="checked"{% endif %}
+            {% if attribute.valueType === "AdminEntered" or not editing %}disabled="disabled"{% endif %} />
+          <label for="account-attribute-{{ attribute.attributeFQN }}">{{ attribute.adminName }}</label>
+        {% else %}
+          <span class="mz-accountsettings-label">{{ attribute.adminName }}</span>
+          <span class="mz-accountsettings-value">{% if attribute.values[0] %}Yes{% else %}No{% endif %}</span>
+        {% endif %}
+      {% endif %}
+      {% if attribute.inputType === "TextBox" %}
+        <span class="mz-accountsettings-label">{{ attribute.adminName }}</span>
+        {% if editing and attribute.valueType !== "AdminEntered" %}
+          <input type="text" name="account-attribute-{{ attribute.attributeFQN }}" value="{{ attribute.values|first }}"
+            data-mz-attribute="{{ attribute.attributeFQN }}" data-mz-value="attribute" />
+          <span class="mz-validationmessage" data-mz-validationmessage-for="values"></span>
+        {% else %}
+          <span class="mz-accountsettings-attribute--value">{{ attribute.values|first|default("N/A") }}</span>
+        {% endif %}
+      {% endif %}
+      {% if attribute.inputType === "Date" %}
+        <span class="mz-accountsettings-label">{{ attribute.adminName }}</span>
+        {% if editing and attribute.valueType !== "AdminEntered" %}
+          <input type="text" name="account-attribute-{{ attribute.attributeFQN }}" value="{{ attribute.values|first }}"
+            placeholder="MM/DD/YYYY" data-mz-attribute="{{ attribute.attributeFQN }}" data-mz-value="attribute" />
+          <span class="mz-validationmessage" data-mz-validationmessage-for="values"></span>
+        {% else %}
+          <span class="mz-accountsettings-attribute--value">{{ attribute.values|first|default("N/A") }}</span>
+        {% endif %}
+      {% endif %}
+      {% if attribute.inputType === "List" %}
+        <span class="mz-accountsettings-label">{{ attribute.adminName }}</span>
+        {% if editing and attribute.valueType !== "AdminEntered" %}
+          {% for option in attribute.vocabularyValues %}
+            <input type="radio" id="account-attribute-{{ attribute.attributeFQN }}-{{ option.value }}"
+              name="account-attribute-{{ attribute.attributeFQN }}" value="{{ option.value }}" data-mz-attribute="{{ attribute.attributeFQN }}"
+              data-mz-value="attribute" {% if attribute.values[0] === option.value %}checked="checked"{% endif %} />
+            <label for="account-attribute-{{ attribute.attributeFQN }}-{{ option.value }}">{{ option.value }}</label>
+          {% endfor %}
+        {% else %}
+          <span class="mz-accountsettings-attribute-value">{{ attribute.values|first|default("N/A") }}</span>
+        {% endif %}
+      {% endif %}
+      {% if attribute.inputType === "TextArea" %}
+        <span class="mz-accountsettings-label">{{ attribute.adminName }}</span>
+        {% if editing and attribute.valueType !== "AdminEntered" %}
+          <textarea cols="60" rows="3" name="account-attribute-{{ attribute.attribute.FQN }}" data-mz-attribute="{{ attribute.attributeFQN }}"
+            data-mz-value="attribute">{{ attribute.values|first }}</textarea>
+          <span class="mz-validationmessage" data-mz-validationmessage-for="values"></span>
+        {% else %}
+          <span class="mz-accountsettings-attribute-value">{{ attribute.values|first|default("N/A") }}</span>
+        {% endif %}
+      {% endif %}
+    </div>
+  {% endfor %}
+</div>
+
+{% if editing %}
+<button class="mz-button mz-button-small mz-accountsettings-editdone" data-mz-action="finishEdit">{{ labels.save }}</button>
+<button class="mz-button mz-button-small mz-accountsettings-editdone" data-mz-action="cancelEdit">{{ labels.cancel }}</button>
+{% endif %}

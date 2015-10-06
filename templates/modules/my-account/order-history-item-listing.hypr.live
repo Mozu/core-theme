@@ -1,0 +1,22 @@
+﻿{% extends "modules/common/item-listing" %}
+{% block item-name %}
+    {% if model.dateShipped %} {{ labels.shipped }}: {{ model.dateShipped|date("F j, Y") }} }}{% endif %}
+    {% parent %}
+{% endblock item-name %}
+{% block item-listing-actions %}
+    {% for item in order.packages %}
+    <span class="mz-itemlisting-action" data-mz-tracking-number="{{ item.trackingNumber }}" data-mx-shipping-code="{{ item.shippingMethodCode }}" data-mx-shipping-name="{{ item.shippingMethodName }}">{{ labels.trackingNumber }}: {{ item.trackingNumber }}</span>
+    {% endfor %}
+    {% if returning == model.id %}
+    {% include "modules/common/item-return-form" %}
+    {% else %}
+    {% if item.product.fulfillmentStatus == "Fulfilled" and themeSettings.allowCustomerInitiatedReturns %}
+    <a class="mz-itemlisting-action" href="javascript:;" data-mz-action="startReturnItem" data-mz-order-id="{{ order.id }}" data-mz-start-return="{{ model.id }}">{{ labels.returnOrReplace }}</a>
+    {% endif %}
+    {% endif %}
+{% endblock item-listing-actions %}
+{% block item-listing-extras %}
+{% if returning == model.id %}
+<p class="mz-itemlisting-prompt is-warning">{{ labels.returnInfo|safe }}</p>
+{% endif %}
+{% endblock item-listing-extras %}

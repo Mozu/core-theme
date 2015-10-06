@@ -1,0 +1,17 @@
+﻿.mz-l-slidebox {
+    overflow: hidden;
+
+    .mz-l-slidebox-outer {
+        display: table;
+        position: relative;
+        left: 0;
+        .transition(~'left 0.4s ease');
+        > .mz-l-slidebox-inner {
+            display: table-row;
+
+            > .mz-l-slidebox-panel {
+                display: table-cell;
+            }
+        }
+    }
+}

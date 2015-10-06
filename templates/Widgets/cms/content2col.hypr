@@ -1,0 +1,22 @@
+﻿<table {% data_attributes Model%}>
+  <tr>
+    <td>
+      <h1 {% data_attributes Model.Properties.Title %}> {{Model.Properties.Title}}</h1>
+
+      <br />
+      <div {% data_attributes Model.Properties.body %}>
+        {{Model.Properties.body}}
+      </div>
+    </td>
+
+    <td>
+      <h1 {% data_attributes Model.Properties.Title2  %}> {{Model.Properties.Title2}}</h1>
+
+      <br />
+      <div {% data_attributes Model.Properties.body %}>
+        {{Model.Properties.body2}}
+      </div>
+    </td>
+
+  </tr>
+</table>

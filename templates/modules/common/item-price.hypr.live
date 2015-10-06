@@ -1,0 +1,12 @@
+﻿      {% with item.productDiscounts|first as productDiscount %}
+      {% if item.unitPrice.saleAmount %}
+        {% if not productDiscount or productDiscount.appliesToSalePrice %} 
+            <span class="mz-item-price is-crossedout" {% block crossedout-inline-style %}{% endblock crossedout-inline-style %}>{{ item.unitPrice.listAmount|currency }}</span>
+            <span class="mz-item-price is-saleprice">{{ item.unitPrice.extendedAmount|currency }}</span>
+        {% else %}
+            <span class="mz-item-price">{{ item.unitPrice.extendedAmount|currency }}</span>
+        {% endif %}
+      {% else %}
+      <span class="mz-item-price">{{ item.unitPrice.extendedAmount|currency }}</span>
+      {% endif %}
+      {% endwith %}

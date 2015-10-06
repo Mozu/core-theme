@@ -1,0 +1,16 @@
+﻿{% extends "modules/common/order-listing" %}
+{% block order-details %}
+    <dl class="mz-propertylist">
+        <dt>{{ labels.status }}</dt>
+        <dd>{{ model.status }}</dd>
+        <dt>{{ labels.returnNumber }}</dt>
+        <dd>{{ model.returnNumber }}</dd>
+        <dt>{{ labels.returnTotal }}</dt>
+        <dd>{{ model.refundAmount|currency }}</dd>
+    </dt>
+{% endblock order-details %}
+{% block order-items %}
+    {% for item in model.items %}
+    {% include "modules/my-account/return-history-item-listing" with model=item %}
+    {% endfor %}
+{% endblock order-items %}

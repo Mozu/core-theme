@@ -1,0 +1,17 @@
+﻿<div {% data_attributes Model%}>
+    <table style="width:100%"   width="100%" >
+        <tr>
+            {%for col in Model.config.columns %}
+            <td style="width:{{col.width}}%"  width="{{col.width}}%">
+                {% dropzone  zoneId=col.id  scope=Model.zoneScope %}
+            </td>
+            {%endfor%}
+        </tr>
+
+    </table>
+  {%if not Model.config &&  SiteContext.IsEditMode  %}
+  <div style="border-style:dotted;border-width:1px;padding:5px">click <i>EDIT</i> to add columns</div>
+  {%endif%}
+  
+
+</div>

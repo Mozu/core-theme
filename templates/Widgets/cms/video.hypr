@@ -1,0 +1,13 @@
+﻿{% if not Model.config %} 
+    <div class="mz-cms-image-cover" style="background-image: url('/admin/scripts/resources/images/legacy/AddPhotos.png');"></div>
+{% else %}
+    <div class="mz-cms-video-placeholder"
+         data-url="{{Model.config.url}}"
+         {% if PageContext.IsEditMode %}data-edit="true"{% endif %}
+         >
+        <div class="mz-cms-video-player"></div>
+        <div class="mz-cms-video-cover"></div>
+        <div class="mz-cms-video-play">Play</div>
+    </div>
+{% endif %}
+{% require_script "widgets/video" %}
