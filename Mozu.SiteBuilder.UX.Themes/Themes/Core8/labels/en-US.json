@@ -69,6 +69,7 @@
   "creditCard"           : "Credit Card",
   "newCreditCard"        : "New Credit Card",
   "savedCreditCard"      : "Saved Credit Card",
+  "selectSavedCreditCard": "Select a credit card",
   "change"               : "change",
 
   "ccVisa"         : "Visa",
@@ -339,6 +340,7 @@
   "firstNameMissing"     : "First name required",
   "lastNameMissing"      : "Last name required",
   "paymentTypeMissing"   : "Please select a payment type",
+  "selectASavedCard"     : "Please select a saved card",
   "cardTypeMissing"      : "Please select your card type",
   "cardNameMissing"      : "Please enter the name printed on your card",
   "cardNumberMissing"    : "Please enter your card number",
