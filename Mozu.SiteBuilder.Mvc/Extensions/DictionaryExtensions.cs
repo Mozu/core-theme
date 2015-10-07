@@ -30,7 +30,7 @@ namespace Mozu.SiteBuilder.Mvc.Extensions
             {
                 return false;
             }
-            if (dic.TryGetValue("pageSize", out temp))
+            if (dic.TryGetValue(key, out temp))
             {
                 if (temp is string)
                 {

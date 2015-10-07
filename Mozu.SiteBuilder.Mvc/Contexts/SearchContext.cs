@@ -210,23 +210,7 @@ namespace Mozu.SiteBuilder.Mvc.Contexts
         [JsonConverter(typeof(FacetJsonConverter))]
         public NameValueCollection Facets { get; set; }
 
-        string _defaultSort;
-        string IProductListingState.DefaultSort
-        {
-            get
-            {
-                if ( _defaultSort == null && _request != null)
-                {
-                   var sc = _request.Resolve<ISiteContext>();
-                    if (sc != null )
-                    {
-                        _defaultSort = sc.ThemeSettings["defaultSort"] as string ?? "createDate asc";
-                    }
-
-                }
-                return _defaultSort;
-            }
-        }
+      
 
         public string ToUrl(SearchContextOverrides overrides= null)
         {
@@ -418,13 +402,6 @@ namespace Mozu.SiteBuilder.Mvc.Contexts
         public KeyValuePair<string,string>? AddFacet { get; set; }
 
 
-        string IProductListingState.DefaultSort
-        {
-            get
-            {
-                return "createDate asc";
-            }
-        }
 
     }
 

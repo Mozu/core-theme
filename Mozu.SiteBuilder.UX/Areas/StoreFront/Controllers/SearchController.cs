@@ -115,6 +115,7 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
 
             var searchResponse = (await _searchClient.Search(query, searchQuery.ToString(), facetHierValue: facetHierValue, facetTemplate: facetTemplate, facetHierDepth: facetHierDepth, facetValueFilter: PageContext.Search.ToFacetValueFilter(), startIndex: startIndex.Value, sortBy: PageContext.Search.SortBy, pageSize: pageSize.Value, facet: facets , searchTuningRuleContext: searchTuningRuleContext)).ReadAsSync();
             var pc = Mapper.Map<ProductSearchResult>(searchResponse);
+           
             pc.Init(true, this.PageContext.Search);
             pc.UrlBase = "/search?query=" + query;
 
