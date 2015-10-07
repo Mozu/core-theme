@@ -189,6 +189,11 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
             var prodCollection = (await _productClient.GetProducts(startIndex: pagingParams.startIndex, pageSize: pagingParams.pageSize,
                         sortBy: sort, responseGroups: responseGroups, filter: filter, q: q, qLimit: qLimit)).ReadAsSync();
 
+            if (prodCollection.TotalCount == 0)
+            {
+                return List2(new List<Product>(), 0);
+            }
+            
             // need to call the productType service and get the productType name to saturate each product record;
             var productTypes = new List<int?>();
             // gather up all of hte product types
@@ -234,7 +239,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
                 };
             }
 
-            return List2(mapped, (int)prodCollection.TotalCount);
+            return List2(mapped, prodCollection.TotalCount);
         }
 
         [HttpPostRoute(UriTemplate = "renameproductcode")]
