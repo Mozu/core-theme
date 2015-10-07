@@ -142,7 +142,7 @@ Ext.define('Taco.shared.view.field.Image', {
             }
         });
 
-        this.uploadButton = Ext.create('Ext.form.field.File', {
+        this.uploadButton = Ext.create('Taco.core.ux.form.field.MultiImageField', {
             buttonOnly: true,
             hideLabel: true,
             hidden: true,
