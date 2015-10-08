@@ -14,30 +14,7 @@ using Mozu.SiteSettings.General.Contracts.General.Routing;
 namespace Mozu.SiteBuilder.UX.Configuration
 {
 
-    public static class RouteExtensions
-    {
-        public static IHttpRoute MapCustomHttpRoute(this System.Web.Http.HttpRouteCollection routes, string name, string routeTemplate, object defaults, IDictionary<ICustomRouteConstraint, string[]> constraints, IDictionary<IRouteDataMapping, string[]> mappings, FancyRoute fancyRoute, bool isCanonical)
-        {
-            if (mappings == null)
-            {
-                mappings = new Dictionary<IRouteDataMapping, string[]>();
-            }
-
-            mappings.Add( new RouteDataFixup(), new string[0]);
-
-            HttpRouteValueDictionary defaultsDictionary = new HttpRouteValueDictionary(defaults);
-            defaultsDictionary
-               .ChainSet("controller", CustomRouteRepository.GetControllerName(fancyRoute))
-               .ChainSet("action", CustomRouteRepository.GetControllerAction(fancyRoute));
-               
-
-
-          
-            CustomRoute route = new CustomRoute(routeTemplate, null, fancyRoute, isCanonical, defaultsDictionary, constraints, mappings);
-            routes.Add(name, route);
-            return route;
-        }
-    }
+   
     public class RouteConfig : IRouteConfig
     {
 

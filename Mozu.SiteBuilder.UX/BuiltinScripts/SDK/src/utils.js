@@ -1,7 +1,7 @@
 // BEGIN UTILS
 // Many of these poached from lodash
 
-    var maxFlattenDepth = 20;
+    var maxFlattenDepth = 100;
 
     var MicroEvent = require('microevent');
     var isNode = typeof process === "object" && process.title === "node";
@@ -15,15 +15,6 @@
     } : function() {
         return new window.ActiveXObject("Microsoft.XMLHTTP");
     });
-
-    function isSameOrigin(str1, str2) {
-        var url1 = document.createElement('a');
-        var url2 = document.createElement('a');
-        url1.href = str1;
-        url2.href = str2;
-        return url1.protocol === url2.protocol && url1.host === url2.host;
-    }
-
     var utils = {
         extend: function () {
             var src, copy, name, options,
@@ -64,7 +55,8 @@
             }
         },
         flatten: function (obj, into, prefix, separator, depth) {
-            if (depth === 0) throw "Cannot flatten circular object.";
+            if (depth === 0)
+              throw new Error("Cannot flatten object of depth greater than 100. Consider normalizing this object.");
             if (!depth) depth = maxFlattenDepth;
             into = into || {};
             separator = separator || ".";
@@ -78,7 +70,7 @@
                       val instanceof Date ||
                       val instanceof RegExp)
                     ) {
-                        utils.flatten(val.toJSON ? val.toJSON() : val, into, prefix + key + separator, separator, --depth);
+                        utils.flatten(val.toJSON ? val.toJSON() : val, into, prefix + key + separator, separator, depth - 1);
                     }
                     else {
                         into[prefix + key] = val;
@@ -243,7 +235,7 @@
             if (typeof data !== "string") data = JSON.stringify(data);
             
             var xhr;
-            if (iframePath && !isSameOrigin(url, window.location.href)) {
+            if (iframePath) {
                 IframeXHR = IframeXHR || require('./iframexhr');
                 xhr = new IframeXHR(iframePath);
             } else {

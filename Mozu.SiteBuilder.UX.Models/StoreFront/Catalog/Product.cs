@@ -268,6 +268,7 @@ namespace Mozu.SiteBuilder.UX.Models.StoreFront.Catalog
         string Query { get; set; }
         string SortBy { get; set; }
         int? StartIndex { get; set; }
+
     }
 
     

@@ -15,7 +15,7 @@ namespace Mozu.SiteBuilder.UnitTests.Mvc
     [Category("Redirects")]
     [TestFixture]
 
-    class RedirectHandlerTests
+    public class RedirectHandlerTests
     {
 
         [TestCaseSource("GetTests")]
@@ -30,7 +30,7 @@ namespace Mozu.SiteBuilder.UnitTests.Mvc
             {
                 return;
             }
-            if ( res == null && test.Result != null || test.Result == null && res != null)
+            if (res == null && test.Result != null || test.Result == null && res != null)
             {
                 Assert.AreNotEqual(res, test.Result);
                 return;
@@ -107,6 +107,36 @@ namespace Mozu.SiteBuilder.UnitTests.Mvc
                 Result = new RedirectEntry
                 {
                     Destination = "p/123456"
+                } 
+                };
+                yield return new TestScenario()
+                {
+                    Name = "redirect with QS in destination",
+                    Url = "test?prod=MS-TEST-007&utm_campaign=test",
+                    RuntimeRedirects = new RuntimeRedirects
+                    {
+                        QueryString = new Dictionary<string, List<RuntimeRedirectEntry>>
+                        {
+                            { "test",
+                                new List<RuntimeRedirectEntry>
+                                {
+                                    new RuntimeRedirectEntry
+                                    {
+                                        Query = System.Web.HttpUtility.ParseQueryString("prod=*&utm_campaign=*"),
+                                        Redirect = new RedirectEntry
+                                        {
+                                            Source = "test?prod=*&utm_campaign=*",
+                                            Destination = "p/{prod}?campaign={utm_campaign}"
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    Result = new RedirectEntry
+                    {
+                        Destination = "p/MS-TEST-007?campaign=test"
+                    }
                 }
             };
         }
@@ -115,7 +145,7 @@ namespace Mozu.SiteBuilder.UnitTests.Mvc
         {
             public string Name { get; set; }
             public string Url { get; set; }
-           
+
             public RedirectEntry Result { get; set; }
             public RuntimeRedirects RuntimeRedirects { get; set; }
             public override string ToString()

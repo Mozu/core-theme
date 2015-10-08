@@ -55,7 +55,7 @@ ApiInterfaceConstructor.prototype = {
         if (requestConf.overridePostData) {
             data = requestConf.overridePostData;
         } else if (conf && !requestConf.noBody) {
-            data = conf.data || conf;
+            data = conf instanceof ApiObject ? conf.data : conf;
         }
 
         var xhr;

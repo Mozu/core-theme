@@ -24,8 +24,6 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.ModelMapping
                 .ForMember(x => x.UserId, op => op.ResolveUsing(dc => string.IsNullOrWhiteSpace(dc.UserId) ? null : dc.UserId))
                 .ForMember(x => x.EmailAddress, op => op.ResolveUsing(dc => dc.EmailAddress))
                 .ForMember(x => x.UserName, op => op.ResolveUsing(dc => dc.UserName))
-                .ForMember(x => x.LifetimeValue, op => op.ResolveUsing(dc => dc.LifetimeValue))
-                .ForMember(x => x.LifeTimeValueSetDate, op => op.ResolveUsing(dc => dc.LifeTimeValueSetDate))
                 .ForMember(x => x.FirstName, op => op.ResolveUsing(dc => dc.FirstName))
                 .ForMember(x => x.LastName, op => op.ResolveUsing(dc => dc.LastName))
                 .ForMember(x => x.Contacts, op => op.ResolveUsing(dc => dc.Contacts))
