@@ -566,7 +566,8 @@ define([
                                     storeCreditCode: creditCode,
                                     amount: creditAmountToApply
                                 }).then(function (o) {
-                                    order.set(o.data);
+                                    order.get('billingInfo').clear();
+                                    order.set(o.data, { silent: true });
                                     self.trigger('orderPayment', o.data, self);
                                     return o;
                                 });
