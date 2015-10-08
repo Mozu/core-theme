@@ -272,6 +272,12 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
             return g.MobileTheme != null && g.MobileTheme.Id == e.ApplicationAssetPath.Replace('\\', '~');
         }
 
+        static Regex _appNameVersionPackageSuffixRe = new Regex(@"\.[0-9]+\.[0-9]+\.[0-9]+\.\w+$",
+                RegexOptions.IgnoreCase |
+                RegexOptions.ExplicitCapture |
+                RegexOptions.Singleline |
+                RegexOptions.IgnorePatternWhitespace);
+
         [HttpGetRoute(UriTemplate = "list")]
         public async Task<Response<List<ThemeDTO>>> GetListThemes()
         {
@@ -335,7 +341,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
                     InstallDate = e.UpdateDate == DateTime.MinValue ? (DateTime?)null : e.UpdateDate,
                     Status = e.Status,
                     Version = e.ApplicationVersion,
-                    VersionGroup = e.AppKey.Substring(0, e.AppKey.IndexOf(e.ApplicationVersion)),
+                    VersionGroup = _appNameVersionPackageSuffixRe.Replace(e.AppKey, ""),
                     IsSelectedDesktop = IsSelectedDesktop(e, genSettings),
                     IsSelectedMobile = IsSelectedMobile(e, genSettings),
                     IsSelectedTablet = IsSelectedTablet(e, genSettings),
