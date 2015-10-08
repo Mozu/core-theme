@@ -15,10 +15,6 @@
   </metadata>
   <files>
     <file src="*.*" target="" exclude="*.cs;*.txt;*.csproj*;.*ignore;*.nuspec"/>
-    <file src="bin\**" target="bin" exclude="bin\AutoTest.Net\**;bin\Scripts\**;bin\Tests\**;"/>
-    <file src="Scripts\**" target="Scripts" exclude="Scripts\packages\**;Scripts\sass\**;Scripts\ux\**;Scripts\make*.*;Scripts\switch*.*;Scripts\*.exe;Scripts\ext\**;Scripts\node_modules\**;"/>
-    <file src="Scripts\app\locale\**" target="Scripts\app\locale" />
-    <file src="Tests\**" target="Tests" />
-    <file src="Views\**" target="Views" />
+    <file src="Scripts\**" target="Scripts"/>
   </files>
 </package>
