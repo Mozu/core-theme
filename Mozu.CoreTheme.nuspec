@@ -1,0 +1,24 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<package xmlns="http://schemas.microsoft.com/packaging/2010/07/nuspec.xsd">
+  <metadata>
+    <id>Mozu.CoreTheme</id>
+    <title>Mozu.CoreTheme</title>
+    <authors>Mozu</authors>
+    <owners>Volusion, Inc.</owners>
+    <licenseUrl>http://example.com</licenseUrl>
+    <projectUrl>http://example.com</projectUrl>
+    <requireLicenseAcceptance>false</requireLicenseAcceptance>
+    <description>Mozu.CoreTheme</description>
+    <iconUrl>http://www.gravatar.com/avatar/419634e3493eead56e7aab22abb8aef8.png</iconUrl>
+    <releaseNotes />
+    <version>0.0.0.0</version>
+  </metadata>
+  <files>
+    <file src="*.*" target="" exclude="*.cs;*.txt;*.csproj*;.*ignore;*.nuspec"/>
+    <file src="bin\**" target="bin" exclude="bin\AutoTest.Net\**;bin\Scripts\**;bin\Tests\**;"/>
+    <file src="Scripts\**" target="Scripts" exclude="Scripts\packages\**;Scripts\sass\**;Scripts\ux\**;Scripts\make*.*;Scripts\switch*.*;Scripts\*.exe;Scripts\ext\**;Scripts\node_modules\**;"/>
+    <file src="Scripts\app\locale\**" target="Scripts\app\locale" />
+    <file src="Tests\**" target="Tests" />
+    <file src="Views\**" target="Views" />
+  </files>
+</package>
