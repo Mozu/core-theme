@@ -966,10 +966,8 @@ define([
                                         modelCard.set('cvv', '***');
                                         // to hide CVV once it has been sent to the paymentservice
                                     }
-                                    // we want to let the user have the opportunity to change the billing info if we use it from the one on the card.
-                                    if (!self.get('usingSavedCard')) {
-                                        self.markComplete();
-                                    }
+
+                                    self.markComplete();
                                     break;
                                 case 'PaypalExpress':
                                     break;
