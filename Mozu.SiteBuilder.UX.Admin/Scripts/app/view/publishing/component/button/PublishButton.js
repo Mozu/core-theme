@@ -2,7 +2,6 @@ Ext.define('Taco.view.publishing.component.button.PublishButton', {
     alias: 'widget.publishbutton',
     extend: 'Ext.button.Split',
     requires: [
-        'Taco.core.ux.action.SplitButton',
         'Taco.core.ux.window.Modal',
         'Taco.view.publishing.modal.PublishSetPicker',
         'Taco.model.PublishSet'
