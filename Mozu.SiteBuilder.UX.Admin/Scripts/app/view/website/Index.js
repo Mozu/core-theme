@@ -99,16 +99,26 @@ Ext.define('Taco.view.website.Index', {
             },
 
             onMoveToPublish: function(record, code) {
-                record.setPublishCode(code, me.showGrowl.bind(me, 'Moved to Publish Set', 'info', 1000));
+                me.publishButton.setLoading(true);
+                record.setPublishCode(code, function() {
+                    me.publishButton.setLoading(false);
+                    me.showGrowl('Moved to Publish Set', 'info', 1000);
+                });
             },
 
             onRemoveFromPublishSet: function(record) {
-                record.setPublishCode(null, me.showGrowl.bind(me, 'Removed From Publish Set', 'info', 1000));
+                me.publishButton.setLoading(true);
+                record.setPublishCode(null, function() {
+                    me.publishButton.setLoading(false);    
+                    me.showGrowl.bind(me, 'Removed From Publish Set', 'info', 1000);
+                });
             },
 
             onDiscardDraft: function(record) {
+                me.publishButton.setLoading(true);
                 record.discardDraft(function() {
                     me.setPublishable(false);
+                    me.publishButton.setLoading(false);
                     me.showGrowl('Discarded', 'info', 1000);
                     me.down('#draftIcon').hide();
                     me.cancel();

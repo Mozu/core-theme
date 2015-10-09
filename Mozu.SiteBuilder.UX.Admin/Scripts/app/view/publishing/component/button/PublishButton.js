@@ -69,6 +69,15 @@ Ext.define('Taco.view.publishing.component.button.PublishButton', {
         this.callParent(arguments);
     },
 
+    setLoading: function(isLoading) {
+
+        var method = isLoading ? 'addCls' : 'removeCls',
+            text = isLoading ?  'Proccessing...': 'Publish Now';
+
+        this[method]('taco-button-processing');
+        this.setText(text);
+    },
+
     onMenuShow: function(cmp) {
 
         if (!this.record) {
@@ -95,11 +104,12 @@ Ext.define('Taco.view.publishing.component.button.PublishButton', {
 
     _onRemoveFromPublishSet: function() {
         var me = this;
+        var name = this.record.get('name') || this.record.get('productName');
 
         this.getPublishSetById(function(publishSet) {
             me.getModal({
                 header: 'Remove Draft',
-                message: 'Are you sure you want to remove ' + me.record.get('name') + ' from ' + publishSet.get('name') ,
+                message: 'Are you sure you want to remove ' + name + ' from ' + publishSet.get('name') ,
                 onSave: me.onRemoveFromPublishSet.bind(me, me.record),
                 onCancel: me.onCancelRemove
             });
@@ -109,10 +119,11 @@ Ext.define('Taco.view.publishing.component.button.PublishButton', {
     _onDiscardDraft: function() {
 
         var me = this;
+        var name = this.record.get('name') || this.record.get('productName');
 
         this.getModal({
             header: 'Discard Draft',
-            message: 'Are you sure you want to discard ' + this.record.get('name') + '?',
+            message: 'Are you sure you want to discard ' + name + '?',
             primaryText: 'Yes, Discard',
             onSave: this.onDiscardDraft.bind(me, me.record),
             onCancel: this.onCancelDiscard
@@ -130,13 +141,13 @@ Ext.define('Taco.view.publishing.component.button.PublishButton', {
 
     updateButton: function() {
 
-        if (this.record && this.record.get('publishState') === 'draft') {
-            this.enable();
-        } 
+        if (!this.record) return false;
 
-        else {
-            this.disable();
-        }
+        var state = this.record.get('publishState') || this.record.get('publishedState');
+
+        if (!state) return false;
+
+        this[state.toLowerCase() === 'draft' ? 'enable' : 'disable']();
     },
 
     getPublishSetById: function(cb) {

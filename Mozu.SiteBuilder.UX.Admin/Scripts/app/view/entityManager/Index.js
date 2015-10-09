@@ -102,17 +102,28 @@ Ext.define('Taco.view.entityManager.Index', {
             },
 
             onMoveToPublish: function(record, code) {
-                record.setPublishCode(code, me.showGrowl.bind(me, 'Moved to Publish Set'));
+                me.publishActionButton.setLoading(true);
+                record.setPublishCode(code, function() {
+                    me.showGrowl.bind(me, 'Moved to Publish Set');
+                    me.publishActionButton.setLoading(false);
+                });
             },
 
             onRemoveFromPublishSet: function(record) {
+                me.publishActionButton.setLoading(true);
                 record.set('publishSetCode', '');
-                record.save();
+                record.save({
+                    success: function() {
+                        me.publishActionButton.setLoading(false);
+                    }
+                });
                 me.showGrowl('Removed', 'info', 1000);
             },
 
             onDiscardDraft: function(record) {
+                me.publishActionButton.setLoading(true);
                 record.discardDraft(function() {
+                    me.publishActionButton.setLoading(false);
                     me.showGrowl('Discarded', 'info', 1000);
                 });
                 me.lastListClicked.raw = me.lastListClicked.raw  || {};
@@ -149,7 +160,9 @@ Ext.define('Taco.view.entityManager.Index', {
             //initialize the content navigation toolbar.
             this.mixins.navHeader.init.apply(this);
         }
+
         me.callParent(arguments);
+
         if (qs.entityType && qs.list) {
             me.on('render', function() {
                 var fn = function() {
@@ -175,7 +188,6 @@ Ext.define('Taco.view.entityManager.Index', {
                 }
             });
         }
-        //me.insertDocked(0, me.Lists);
     },
     showHideButtons: function() {
         var me = this,

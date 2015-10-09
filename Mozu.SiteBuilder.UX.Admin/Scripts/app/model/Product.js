@@ -93,13 +93,13 @@ Ext.define('Taco.model.Product', {
         }, {
             name: "publishSetCode",
             type: "string",
-            useNull: true,
-            convert: function (v) {
-                return Taco.core.data.Model.nullIfEmpty(v);
-            },
-            serialize: function (v) {
-                return Taco.core.data.Model.nullIfEmpty(v);
-            }
+            useNull: false
+            // convert: function (v) {
+            //     // return Taco.core.data.Model.nullIfEmpty(v);
+            // },
+            // serialize: function (v) {
+            //     return Taco.core.data.Model.nullIfEmpty(v);
+            // }
         }, {
             name: "publishSetDate",
             type: "date",
