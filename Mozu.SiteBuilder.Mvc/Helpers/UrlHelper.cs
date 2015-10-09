@@ -311,12 +311,12 @@ namespace Mozu.SiteBuilder.Mvc.Helpers
             }
             else if (string.Equals(val, "next", StringComparison.OrdinalIgnoreCase))
             {
-                int currentPage = currentStartIndex / pageSize;
+                int currentPage = pageSize> 0 ?currentStartIndex / pageSize:0;
                 overrides.StartIndex = (currentPage + 1) * pageSize;
             }
             else if (string.Equals(val, "previous", StringComparison.OrdinalIgnoreCase))
             {
-                int currentPage = currentStartIndex / pageSize;
+                int currentPage = pageSize>0? currentStartIndex / pageSize : 0;
                 if (currentPage > 0)
                 {
                     overrides.StartIndex = (currentPage - 1) * pageSize;

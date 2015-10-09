@@ -363,13 +363,9 @@ namespace Mozu.SiteBuilder.UX.Hypr.Tags
                     startIndex = searchContext.StartIndex.Value;
                 }
             }
-            else
+            else if(productCodesFilters != null && pageSize < productCodesFilters.Length)
             {
-                if (pageSize == 15)
-                {
-                    pageSize = productCodesFilters.Length;
-                }
-
+                pageSize = productCodesFilters.Length;
             }
         }
 
