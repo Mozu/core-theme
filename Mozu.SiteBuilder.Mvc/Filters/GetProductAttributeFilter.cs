@@ -3,6 +3,8 @@ using System.Linq;
 using NDjango.Interfaces;
 using NDjango.FiltersCS.List;
 using System.Collections;
+using Mozu.ProductRuntime.Contracts;
+using Mozu.Core.Extensions;
 
 namespace Mozu.SiteBuilder.Mvc.Filters
 {
@@ -23,16 +25,29 @@ namespace Mozu.SiteBuilder.Mvc.Filters
 
         public object PerformWithParamAndContext(object value, IEnumerable<object> parameter, IContext context)
         {
-            var attributes = GetAttributesFrom(value, context);  
             var attrName = parameter.First().ToString();
-            var matchingProductProperty = findWhere.PerformWithParamAndContext(attributes, new []{"attributeFQN", attrName}, context); // this will firstordefault, so returning null is fine.
+            var typed = value as Product;
+            if (typed != null) return GetAttributeFromProduct(typed, attrName);
+            else return GetAttributeFromUntyped(value, context, attrName);
+        }
+
+        private static object GetAttributeFromUntyped(object value, IContext context, string attrName)
+        {
+            var attributes = GetAttributesFrom(value, context);
+            var matchingProductProperty = findWhere.PerformWithParamAndContext(attributes, new[] { "attributeFQN", attrName }, context); // this will firstordefault, so returning null is fine.
             return matchingProductProperty;
+        }
+
+        private object GetAttributeFromProduct(Product typed, string attrName)
+        {
+            var props = typed.Properties ?? new List<ProductProperty>();
+            var opts = typed.Options ?? new List<ProductOption>();
+            return ((object)props.FirstOrDefault(x => x.AttributeFQN.EqualsIgnoreCase(attrName))) ?? opts.FirstOrDefault(x => x.AttributeFQN.EqualsIgnoreCase(attrName));
         }
 
         private static IEnumerable<object> GetAttributesFrom(object value, IContext context)
         {
             var props = prop.PerformWithParam(value, "properties");
-
             var properties = ToSafeEnumerable(props);
             var opts = prop.PerformWithParam(value, "options");
             var options = ToSafeEnumerable(opts);

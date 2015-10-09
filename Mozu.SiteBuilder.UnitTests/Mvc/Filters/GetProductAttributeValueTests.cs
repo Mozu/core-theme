@@ -1,4 +1,4 @@
-﻿using System;
+﻿using System; 
 using System.Collections.Generic;
 using NUnit.Framework;
 
@@ -9,12 +9,13 @@ namespace Mozu.SiteBuilder.UnitTests.Mvc.Filters
     public class GetProductAttributeValueTests : TemplateTestBase
     {
         [Test, TestCaseSource("GetTests")]
-        public void Run(TestDescriptor desc)
+        public void GetProductAttrTest(TestDescriptor desc)
         {
             RunTemplate(desc);
         }
 
         private const string getavailability = "{{ product | get_product_attribute_value('availability') }}";
+        private const string getavailabilitymulti = "{{ product | get_product_attribute_values('availability')|join(', ') }}";
 
         private static List<TestDescriptor> GetTests()
         {
@@ -25,7 +26,7 @@ namespace Mozu.SiteBuilder.UnitTests.Mvc.Filters
                 {
                     Name = "base case",
                     Template = getavailability,
-                    Context = new Dictionary<string, object> { {"product", new {Properties = new[] {new {attributeFQN = "availability", values = new[]{new{value="eh", stringValue="eh"}}}}}} },
+                    Context = new Dictionary<string, object> { {"product", new {Properties = new[] {new {attributeFQN = "availability", values = new[]{new{value="eh", stringValue="eh"}}, ismultivalue = false}}}} },
                     ExpectedFunc = TestDescriptor.CompareLiteral("eh")
                 },
                 new TestDescriptor
@@ -46,22 +47,36 @@ namespace Mozu.SiteBuilder.UnitTests.Mvc.Filters
                 {
                     Name = "will match options as well",
                     Template = getavailability,
-                    Context = new Dictionary<string, object> { {"product", new {Options = new[] {new {attributeFQN = "availability", values = new[]{new{value="eh", stringValue="eh"}}}}}} },
+                    Context = new Dictionary<string, object> { {"product", new {Options = new[] {new {attributeFQN = "availability", values = new[]{new{value="eh", stringValue="Eh"}}}}}} },
                     ExpectedFunc = TestDescriptor.CompareLiteral("eh")
                 },
                 new TestDescriptor
                 {
-                    Name = "takes stringvalue first",
+                    Name = "takes value first",
                     Template = getavailability,
-                    Context = new Dictionary<string, object> { {"product", new {Options = new[] {new {attributeFQN = "availability", values = new[]{new{value="eh", stringValue="eh"}}}}}} },
+                    Context = new Dictionary<string, object> { {"product", new {Options = new[] {new {attributeFQN = "availability", values = new[]{new{value="eh", stringValue="Eh"}}}}}} },
                     ExpectedFunc = TestDescriptor.CompareLiteral("eh")
                 },
                 new TestDescriptor
                 {
-                    Name = "takes value if no stringvalue",
-                    Template = getavailability,
-                    Context = new Dictionary<string, object> { {"product", new {Options = new[] {new {attributeFQN = "availability", values = new[]{new{value="eh"}}}}}} },
+                    Name = "takes stringvalue if told to",
+                    Template = "{{ product | get_product_attribute_value('availability', true) }}",
+                    Context = new Dictionary<string, object> { {"product", new {Options = new[] {new {attributeFQN = "availability", values = new[]{new{stringvalue="eh"}}}}}} },
                     ExpectedFunc = TestDescriptor.CompareLiteral("eh")
+                },
+                new TestDescriptor
+                {
+                    Name = "base case multi",
+                    Template = getavailabilitymulti,
+                    Context = new Dictionary<string, object> { {"product", new {Properties = new[] {new {attributeFQN = "availability", values = new[]{new{value="eh", stringValue="EH"}, new {value="meh", stringValue="MEH" } }}}}} },
+                    ExpectedFunc = TestDescriptor.CompareLiteral("eh, meh")
+                },
+                new TestDescriptor
+                {
+                    Name = "multi stringvalue",
+                    Template = "{{ product | get_product_attribute_values('availability', true)|join(', ') }}",
+                    Context = new Dictionary<string, object> { {"product", new {Properties = new[] {new {attributeFQN = "availability", values = new[]{new{value="eh", stringValue="EH"}, new {value="meh", stringValue="MEH" } }}}}} },
+                    ExpectedFunc = TestDescriptor.CompareLiteral("eh, meh")
                 },
             };
         }
