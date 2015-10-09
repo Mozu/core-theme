@@ -1,0 +1,20 @@
+{% extends "page" %}
+
+{% block title-tag-content %}{% firstof pageContext.metaTitle model.name %}  - {% parent %}{% endblock title-tag-content %}
+
+
+{% block body-tag-classes %} mz-category {% endblock body-tag-classes %}
+
+{% block body-content %}
+
+{% require_script "pages/category" %}
+
+<div data-mz-category="{{model.categoryId}}" class="mz-l-container">
+    <h1 class="mz-pagetitle">parent cat{{ model.name }}</h1>
+	{% dropzone "parent-category-page-top" scope="page" %}
+	{# todo list of child cats #}
+    {% include_products "modules/product/faceted-products" with includeFacets=themeSettings.showCategoryFacets and pageWithUrl=true and pageSize=themeSettings.defaultPageSize as_parameter %}
+	{% dropzone "parent-category-page-bottom" scope="page" %}
+</div>
+
+{% endblock body-content %}

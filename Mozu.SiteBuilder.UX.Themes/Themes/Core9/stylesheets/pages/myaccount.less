@@ -1,0 +1,55 @@
+﻿.mz-myaccount {
+    .mz-myaccount-panels {
+        margin-left: 200px;
+    }
+
+    .mz-myaccount-nav {
+        width: 200px;
+        box-sizing: border-box;
+    }
+
+    .mz-contacttype-isprimary {
+        font-size: @fontSizeSmall;
+        font-style: italic;
+        display: block;
+        margin-top: 3px;
+        text-indent: @gutter;
+    }
+
+    @media (max-width: 600px) {
+        .mz-myaccount-panels {
+            margin-left: 0;
+        }
+
+        .mz-myaccount-nav {
+            float: none;
+            width: auto;
+            margin-bottom: @gutter;
+            .clearfix();
+
+            .mz-scrollnav-item {
+                float: left;
+                margin: @gutter/4;
+            }
+        }
+    }
+
+    .mz-l-stack-section {
+        min-height: inherit;
+    }
+
+    #account-settings {
+        clear: none;
+
+        .mz-link-edit-accountsettings {
+            float: none;
+            line-height: inherit;
+        }
+
+        .mz-accountsettings-label {
+            display: block;
+            color: #999;
+            font-size: 80%;
+        }
+    }
+}

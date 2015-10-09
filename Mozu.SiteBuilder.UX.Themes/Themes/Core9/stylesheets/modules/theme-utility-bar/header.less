@@ -1,0 +1,165 @@
+@font-face {
+    font-family: mozicons;
+    src: url(../Admin/scripts/build/resources/fonts/mozicons.woff);
+}
+
+.mz-future-bar-indicator {
+    background-color: @mozuBackgroundColor;
+    border-radius: 15px;
+    bottom: 0;
+    color: #FFFFFF;
+    cursor: pointer;
+    height: @pillButtonHeight;
+    line-height: 31px;
+    margin-bottom: 25px;
+    margin-right: 15px;
+    opacity: 1;
+    overflow: hidden;
+    position: fixed;
+    right: 0;
+    transition-property: width, border-radius, opacity;
+    transition-duration: .1s;
+    transition-timing-function: cubic-bezier(.65,.29,.93,.75);
+    width: 30px;
+    z-index: 200000000;
+
+    &:hover {
+        border-radius: @pillButtonBorderRadius;
+        width: @pillButtonWidth;
+
+        .mz-indicator-icon { 
+            &::after {
+                margin-left: 5px;
+            }
+        }
+    }
+
+    .mz-indicator-icon {
+
+        &::after {
+            content: "\E60A";
+            font-family: mozicons;
+            font-size: 12px;
+            padding: 8px;
+            margin-left: 1px;
+            transition-property: margin-left;
+            transition-duration: .1s;
+            transition-timing-function: cubic-bezier(.65,.29,.93,.75);
+        }
+    }
+
+    &.hidden {
+        opacity: 0;
+    }
+}
+
+.mz-future-date-header {
+    background-color: #FFF;
+    border-top: 1px solid #666666;
+    border-bottom: none;
+    bottom: 0;
+    color: #000000;
+    font-family: 'Source Sans Pro', sans-serif;
+    font-size: 14px;
+    height: 75px;
+    opacity: .9;
+    overflow: hidden;
+    position: fixed;
+    right: 0;
+    text-align: center;
+    transition-property: margin-bottom;
+    transition-duration: .3s;
+    transition-timing-function: cubic-bezier(.65,.29,.93,.75);
+    width: 100%;
+    z-index: 200000001;
+
+    &.mz-header-hidden {
+        margin-bottom: -80px;
+    }
+
+    .mz-content {
+
+        div {
+            display: inline-block;
+            margin: 15px;
+
+            &.mz-header-icon {
+                color: #df3018;
+                float: left;
+                font-size: 24px;
+                margin-top: 21px;
+
+                &::after {
+                    content: "\E037"; 
+                    font-family: mozicons;
+                }
+            }
+
+            &.mz-preview-actions {
+
+
+                .hidden-input {
+                    display: none;
+                }
+
+                span > span:first-child {
+                    top: -21px;
+                    position: relative;
+                }
+
+                .visible-date {
+                    left: -20px;
+                    margin-left: auto;
+                    margin-right: auto;
+                    position: absolute;
+                    right: 0;
+                }
+
+                input, #mz-date-display-cover {
+                    border: 1px solid;
+                    border-color: #BFBFBF;
+                    border-radius: 2px;
+                    height: 20px;  
+                    margin-left: 10px;
+                    margin-right: 10px;
+                    text-align: center;
+                    position: relative;
+                    width: 260px;
+                }
+
+                #mz-date-icon {
+    
+                    &::after {
+                        content: "\E02C";   
+                        font-family: mozicons;
+                        position: absolute;
+                        right: 4px;
+                        top: 1px;    
+                    }
+                }
+            }
+            
+            &.mz-preview-share {
+                float: right;
+                margin-top:21px;
+
+                .mz-preview-button {
+                    background-color: @mozuBackgroundColor;
+                    border-radius: @pillButtonBorderRadius;
+                    border: none;
+                    color: white;
+                    height: @pillButtonHeight;
+                    width: @pillButtonWidth;
+
+                     &::before {
+                        content: "\E60A";
+                        font-family: mozicons;
+                        font-size: 12px;
+                        padding-right: 8px;
+                    }
+                }
+            }
+        }
+       
+    }
+}
