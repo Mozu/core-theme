@@ -173,13 +173,22 @@
 
             this.$urlInput.val(url || '');
 
-            this.$urlTooltip
-                .show()
-                .position({
-                    of: $posEl,
-                    my: 'center top',
-                    at: 'center bottom'
-                });
+            /**
+             * 69244
+             * 
+             * Modified to only draw a new form if
+             * one was not already visible
+             */
+
+            if(!$('.mz-cms-tooltip').is(':visible')) {
+                this.$urlTooltip
+                    .show()
+                    .position({
+                        of: $posEl,
+                        my: 'center top',
+                        at: 'center bottom'
+                    });
+            }
 
             this.$urlInput.focus();
         },
