@@ -157,7 +157,20 @@
             this._range = this.range();
             this._text.editingUrl(true);
             doc.execCommand('createLink', false, '#mz-cms-temp-link');
-            this.showTooltip();
+
+            /**
+             * 69244
+             * 
+             * Modified to only draw a new form if
+             * one was not already visible.
+             * Also modified to keep value in it
+             * even if the button is clicked
+             * multiple times.
+             */
+
+            if(!$('.mz-cms-tooltip').is(':visible')) {
+                this.showTooltip();
+            }
         },
 
         showTooltip: function (url, posEl) {
@@ -172,23 +185,13 @@
             $posEl = $posEl[0].nodeName === '#text' ? $posEl.parent() : $posEl;
 
             this.$urlInput.val(url || '');
-
-            /**
-             * 69244
-             * 
-             * Modified to only draw a new form if
-             * one was not already visible
-             */
-
-            if(!$('.mz-cms-tooltip').is(':visible')) {
-                this.$urlTooltip
-                    .show()
-                    .position({
-                        of: $posEl,
-                        my: 'center top',
-                        at: 'center bottom'
-                    });
-            }
+            this.$urlTooltip
+                .show()
+                .position({
+                    of: $posEl,
+                    my: 'center top',
+                    at: 'center bottom'
+                });
 
             this.$urlInput.focus();
         },
