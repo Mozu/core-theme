@@ -99,7 +99,7 @@ namespace Mozu.SiteBuilder.UnitTests.Mvc
             {
                 return actual =>
                 {
-                    if (actual.Equals(expected, StringComparison.OrdinalIgnoreCase))
+                    if (actual.Equals(expected))
                     {
                         return new Tuple<bool, string>(true, string.Empty);
                     }

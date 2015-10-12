@@ -967,10 +967,8 @@
                                         modelCard.set('cvv', '***');
                                         // to hide CVV once it has been sent to the paymentservice
                                     }
-                                    // we want to let the user have the opportunity to change the billing info if we use it from the one on the card.
-                                    if (!self.get('usingSavedCard')) {
-                                        self.markComplete();
-                                    }
+
+                                    self.markComplete();
                                     break;
                                 case 'PaypalExpress':
                                     break;
@@ -1082,7 +1080,7 @@
                     if (paymentWorkflow) {
                         billingInfo.set('paymentWorkflow', paymentWorkflow);
                         billingInfo.get('card').set({
-                            isCvvOptional: true,
+                            isCvvOptional: Hypr.getThemeSetting('isCvvSuppressed'),
                             paymentWorkflow: paymentWorkflow
                         });
                         billingInfo.trigger('stepstatuschange'); // trigger a rerender
