@@ -88,6 +88,14 @@
   padding: 5px;
   position: absolute;
   top: 0;
+
+  /**
+   * 69243
+   * Modified tooltip to display in front of
+   * the video widget's background image,
+   * which has a z-index of 3
+   */
+  z-index: 4;
 }
 /* line 82, ../../sass/etc/chorizo/_format-bar.scss */
 .mz-cms-tooltip input[type="text"] {
