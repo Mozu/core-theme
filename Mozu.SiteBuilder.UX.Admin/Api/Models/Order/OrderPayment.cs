@@ -86,6 +86,8 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.Models.Order
 
         public string ExternalTransactionId { get; set; }
 
+        public string PaymentServiceCardId { get; set; }
+
         #endregion
 
         #region workflow shit

@@ -10,14 +10,14 @@ Ext.define('Taco.model.OrderPayment', {
     ],
     fields: [
         {
-            'name': 'id',
-            'type': 'string',
-            'useNull': true
+            name: 'id',
+            type: 'string',
+            useNull: true
         },
         {
-            'name': 'orderId',
-            'type': 'string',
-            'useNull': true
+            name: 'orderId',
+            type: 'string',
+            useNull: true
         },
         {
             name: "billingContact",
@@ -25,39 +25,44 @@ Ext.define('Taco.model.OrderPayment', {
             persist:false
         },
         {
-            'name': 'paymentServiceTransactionId',
-            'type': 'string',
-            'useNull': true
+            name: 'paymentServiceTransactionId',
+            type: 'string',
+            useNull: true
         },
         {
-            'name': 'status',
-            'type': 'string',
-            'useNull': true
+            name: 'paymentServiceCardId',
+            type: 'string',
+            useNull: true
         },
         {
-            'name': 'amountRequested',
-            'type': 'float',
-            'useNull': false
+            name: 'status',
+            type: 'string',
+            useNull: true
         },
         {
-            'name': 'amountCollected',
-            'type': 'float',
-            'useNull': false
+            name: 'amountRequested',
+            type: 'float',
+            useNull: false
         },
         {
-            'name': 'amountCredited',
-            'type': 'float',
-            'useNull': false
+            name: 'amountCollected',
+            type: 'float',
+            useNull: false
         },
         {
-            'name': 'amountRefunded',
-            'type': 'float',
-            'useNull': false
+            name: 'amountCredited',
+            type: 'float',
+            useNull: false
         },
         {
-            'name': 'amountAuthorized',
-            'type': 'float',
-            'useNull': false
+            name: 'amountRefunded',
+            type: 'float',
+            useNull: false
+        },
+        {
+            name: 'amountAuthorized',
+            type: 'float',
+            useNull: false
         },
         {
             // effective amount: how much was requested/authorized/captured based on payment state.
@@ -75,69 +80,78 @@ Ext.define('Taco.model.OrderPayment', {
             }
         },
         {
-            'name': 'interactions',
-            'type': 'auto',
-            'default': []
+            name: 'interactions',
+            type: 'auto',
+            defaultValue: []
         },
         {
-            "name": "availableActions",
-            "type": "auto",
-            "defaultValue": []
+            name: "availableActions",
+            type: "auto",
+            defaultValue: []
         },
         {
-            'name': 'paymentType',
-            'type': 'string',
-            'useNull': true
+            name: 'paymentType',
+            type: 'string',
+            useNull: true
         },
         {
-            'name': 'paymentWorkflow',
-            'type': 'string',
-            'useNull': true
+            name: 'paymentWorkflow',
+            type: 'string',
+            useNull: true
         },
         {
-            'name': 'storeCreditCode',
-            'type': 'string',
-            'useNull': true
+            name: 'storeCreditCode',
+            type: 'string',
+            useNull: true
         },
         {
-            'name': 'cardType',
-            'type': 'string',
-            'useNull': true
+            name: 'cardType',
+            type: 'string',
+            useNull: true
         },
         {
-            'name': 'cardNumber',
-            'type': 'string',
-            'useNull': true
+            name: 'cardNumber',
+            type: 'string',
+            useNull: true
         },
         {
-            'name': 'nameOnCard',
-            'type': 'string',
-            'useNull': true
+            name: 'nameOnCard',
+            type: 'string',
+            useNull: true
         },
         {
-            'name': 'expireMonth',
-            'type': 'int',
-            'useNull': true
+            name: 'expireMonth',
+            type: 'int',
+            useNull: true
         },
         {
-            'name': 'expireYear',
-            'type': 'int',
-            'useNull': true
+            name: 'expireYear',
+            type: 'int',
+            useNull: true
         },
         {
-            'name': 'createDate',
-            'type': 'date',
-            'useNull': true
+            name: 'createDate',
+            type: 'date',
+            useNull: true
         },
         {
-            'name': 'isManual',
-            'type': 'boolean',
+            name: 'isManual',
+            type: 'boolean',
             'default': false
         },
         {
-            'name': 'externalTransactionId',
-            'type': 'string',
-            'useNull': true
+            name: 'externalTransactionId',
+            type: 'string',
+            useNull: true
+        },
+        {
+            // Display field for combo boxes!
+            name: 'paymentDisplayField',
+            type: 'string',
+            useNull: true,
+            convert: function (value, record) {
+                return record.get('cardType') + ' ' + record.get('cardNumber') + ' exp ' + record.get('expireMonth') + '/' + record.get('expireYear');
+            }
         }],
 
     associations: [
