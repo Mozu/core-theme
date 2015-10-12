@@ -41,6 +41,13 @@ define(['modules/backbone-mozu', 'underscore', 'modules/jquery-mozu', 'modules/m
             }
         },400),
         removeItem: function(e) {
+            console.log(require.mozuData('pagecontext'));
+            if(require.mozuData('pagecontext').isEditMode) {
+                // 65954
+                // Prevents removal of test product while in editmode
+                // on the cart template
+                return false;
+            }
             var $removeButton = $(e.currentTarget),
                 id = $removeButton.data('mz-cart-item');
             this.model.removeItem(id);
