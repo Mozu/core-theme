@@ -397,15 +397,50 @@
             var tpt1 = '{% with p|get_product_attribute("tenant~manufacturer") as manufacturer %}{{ manufacturer.values|first|prop("stringValue") }}{% endwith %}';
             expect(Hypr.engine.render(tpt1, { locals: { p: MozuProduct } })).to.equal('Seismic Audio');
             var tpt2 = '{% with p|get_product_attribute("tenant~product-crosssell") as crossells %}{% for crossell in crossells.values %} {{ crossell.stringValue }} {% endfor %}{% endwith %}';
-            expect(Hypr.engine.render(tpt2, { locals: { p: MozuProduct } })).to.equal(' Speaker-Stand  Enforcer-II  FL-155P  FL-15P  TW12S35  TW12S75 ');
+            expect(Hypr.engine.render(tpt2, { locals: { p: MozuProduct } })).to.equal(' Speaker Stand  Enforcer II  FL-155P  FL-15P  TW12S35  TW12S75 ');
             var tpt3 = '{% with p|get_product_attribute("tenant~additional-handling") as addlh %}{{ addlh.values|first|prop("value") }}{% endwith %}';
             expect(Hypr.engine.render(tpt3, { locals: { p: MozuProduct } })).to.equal('false');
+        });
+
+        /*
+         *  "values": [
+                    {
+                        "value": "Speaker-Stand",
+                        "stringValue": "Speaker Stand"
+                    },
+                    {
+                        "value": "Enforcer-II",
+                        "stringValue": "Enforcer II"
+                    },
+                    {
+                        "value": "FL-155P",
+                        "stringValue": "FL-155P"
+                    },
+                    {
+                        "value": "FL-15P",
+                        "stringValue": "FL-15P"
+                    },
+                    {
+                        "value": "TW12S35",
+                        "stringValue": "TW12S35"
+                    },
+                    {
+                        "value": "TW12S75",
+                        "stringValue": "TW12S75"
+                    }
+         */
+
+        it('has a get_product_attribute_values filter that gets a list of just the primitive values of an attribute on a mozu runtime product', function() {
+            var tpt1 = '{{ p|get_product_attribute_values("tenant~product-crosssell")|join }}';
+            expect(Hypr.engine.render(tpt1, { locals: { p: MozuProduct } })).to.equal('Speaker Stand,Enforcer II,FL-155P,FL-15P,TW12S35,TW12S75');
+            var tpt2 = '{{ p|get_product_attribute_values("tenant~product-crosssell", true)|join }}';
+            expect(Hypr.engine.render(tpt2, { locals: { p: MozuProduct } })).to.equal('Speaker-Stand,Enforcer-II,FL-155P,FL-15P,TW12S35,TW12S75');
         });
         it('has a get_product_attribute_value filter that gets the first value of an attribute on a mozu runtime product', function() {
             var tpt1 = '{{ p|get_product_attribute_value("tenant~manufacturer") }}';
             expect(Hypr.engine.render(tpt1, { locals: { p: MozuProduct } })).to.equal('Seismic Audio');
             var tpt2 = '{{ p|get_product_attribute_value("tenant~product-crosssell") }}';
-            expect(Hypr.engine.render(tpt2, { locals: { p: MozuProduct } })).to.equal('Speaker-Stand');
+            expect(Hypr.engine.render(tpt2, { locals: { p: MozuProduct } })).to.equal('Speaker Stand');
             var tpt3 = '{{ p|get_product_attribute_value("tenant~additional-handling") }}';
             expect(Hypr.engine.render(tpt3, { locals: { p: MozuProduct } })).to.equal('false');
             var tpt4 = '{% if p|get_product_attribute_value("tenant~additional-handling") %}Has Handling{% endif %}';

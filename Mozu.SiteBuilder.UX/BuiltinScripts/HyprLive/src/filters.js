@@ -210,23 +210,37 @@
         return findWhere(product.properties.concat(product.options), 'attributeFQN', attributeName);
     }
 
+    function getProductAttributeValues(product, attributeName, useNonStringValue) {
+        var attr = getProductAttribute(product, attributeName), primitiveValues = [], values;
+        var preferredValueProp = useNonStringValue ? 'value' : 'stringValue',
+            secondaryValueProp = useNonStringValue ? 'stringValue' : 'value';
+        if (attr) {
+            values = prop(attr, 'values', true);
+            if (values) {
+                for (var i = 0; i < values.length; i++) {
+                    primitiveValues[i] = prop(values[i], preferredValueProp, true)
+                                        || prop(values[i], secondaryValueProp, true);
+                }
+                return primitiveValues;
+            }
+        }
+        return '';
+    }
+
+    function getProductAttributeFirstValue(product, attributeName, useNonStringValue) {
+        var values = getProductAttributeValues(product, attributeName, useNonStringValue);
+        if (values) return values[0];
+    }
+
     HyprLive.engine.setFilter('findwhere', findWhere);
 
     HyprLive.engine.setFilter('prop', prop);
 
     HyprLive.engine.setFilter('get_product_attribute', getProductAttribute);
 
-    HyprLive.engine.setFilter('get_product_attribute_value', function(product, attributeName, attributeValue) {
-        var attr = getProductAttribute(product, attributeName), values, value;
-        if (attr) {
-            values = prop(attr, 'values', true);
-            if (values) {
-                value = values[0];
-                return prop(value, 'stringValue', true) || prop(value, 'value', true)
-            }
-        }
-        return '';
-    });
+    HyprLive.engine.setFilter('get_product_attribute_values', getProductAttributeValues);
+
+    HyprLive.engine.setFilter('get_product_attribute_value', getProductAttributeFirstValue);
 
 
     function createAscendingComparator(key) {
