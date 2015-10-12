@@ -22,14 +22,14 @@ module.exports = function(grunt) {
             }
         },
         concat: {
-            options: {
-                banner: '<%= banner %>',
-            },
             test: {
                 src: ['src/wrap_header.tpl', 'node_modules/swig/dist/swig.js', 'src/loader.js', 'src/env.js', 'src/tags.js', 'src/filters.js', 'src/wrap_footer.tpl'],
                 dest: '<%= testPlatform %>'
             },
             dist: {
+                options: {
+                    banner: '<%= banner %>'
+                },
                 src: '<%= testPlatform %>',
                 dest: '<%= pkg.main %>.debug.js'
             }

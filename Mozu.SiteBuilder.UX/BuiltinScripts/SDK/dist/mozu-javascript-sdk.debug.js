@@ -1,5 +1,5 @@
 /*! 
- * Mozu JavaScript SDK - v0.3.0 - 2015-09-18
+ * Mozu JavaScript SDK - v0.3.0 - 2015-10-07
  *
  * Copyright (c) 2015 Volusion, Inc.
  *
@@ -2638,8 +2638,8 @@ module.exports = {
                 try {
                     affiliates = JSON.parse(affiliates);
                 } catch (e) { }
-
-                if (affiliates && affiliates.length > 0 && isCartUrl(url) && !this._finishedUpdatingAffiliates) {
+                var methodIsNotDelete = method && method.toLowerCase() !== 'delete' || method === undefined;
+                if (affiliates && affiliates.length > 0 && isCartUrl(url) && !this._finishedUpdatingAffiliates && methodIsNotDelete) {
                     return operation.then(function(r) {
                         originalResponse = r;
                         return self.action('cart', 'getExtendedProperties', {}, { silent: true });
@@ -3303,7 +3303,7 @@ ApiInterfaceConstructor.prototype = {
         if (requestConf.overridePostData) {
             data = requestConf.overridePostData;
         } else if (conf && !requestConf.noBody) {
-            data = conf.data || conf;
+            data = conf instanceof ApiObject ? conf.data : conf;
         }
 
         var xhr;
@@ -4291,6 +4291,13 @@ var ApiObject = require('./object');
 var objectTypes = require('./methods.json');
 var IframeXHR;
 
+function isCrossOrigin(str) {
+    var url = document.createElement('a');
+    var loc = window.location;
+    url.href = str;
+    return url.protocol + url.host !== loc.protocol + loc.host;
+}
+
 errors.register({
     'NO_REQUEST_CONFIG_FOUND': 'No request configuration was found for {0}.{1}',
     'NO_SHORTCUT_PARAM_FOUND': 'No shortcut parameter available for {0}. Please supply a configuration object instead of "{1}".'
@@ -4420,7 +4427,7 @@ var ApiReference = {
         for (var j = 0; j < copyToConfLength; j++) {
             if (copyToConf[j] in oType) returnObj[copyToConf[j]] = oType[copyToConf[j]];
         }
-        if (oType.useIframeTransport) {
+        if (oType.useIframeTransport && isCrossOrigin(returnObj.url)) {
             // cache templates lazily
             if (typeof oType.useIframeTransport === "string") oType.useIframeTransport = utils.uritemplate.parse(oType.useIframeTransport);
             returnObj.iframeTransportUrl = oType.useIframeTransport.expand(fullTptContext);
@@ -4450,6 +4457,7 @@ module.exports = ApiReference;
 // END REFERENCE
 
 /***********/
+
 },{"./collection":14,"./errors":17,"./iframexhr":18,"./methods.json":22,"./object":23,"./utils":36}],25:[function(require,module,exports){
 
 
@@ -4460,7 +4468,7 @@ var errors = require('../errors');
 
 errors.register({
     'ADD_COUPON_FAILED': 'Adding coupon failed for the following reason: {0}'
-})
+});
 
 module.exports = {
     count: function () {
@@ -5296,7 +5304,7 @@ var process=require("__browserify_process");
 // BEGIN UTILS
 // Many of these poached from lodash
 
-    var maxFlattenDepth = 20;
+    var maxFlattenDepth = 100;
 
     var MicroEvent = require('microevent');
     var isNode = typeof process === "object" && process.title === "node";
@@ -5310,15 +5318,6 @@ var process=require("__browserify_process");
     } : function() {
         return new window.ActiveXObject("Microsoft.XMLHTTP");
     });
-
-    function isSameOrigin(str1, str2) {
-        var url1 = document.createElement('a');
-        var url2 = document.createElement('a');
-        url1.href = str1;
-        url2.href = str2;
-        return url1.protocol === url2.protocol && url1.host === url2.host;
-    }
-
     var utils = {
         extend: function () {
             var src, copy, name, options,
@@ -5359,7 +5358,8 @@ var process=require("__browserify_process");
             }
         },
         flatten: function (obj, into, prefix, separator, depth) {
-            if (depth === 0) throw "Cannot flatten circular object.";
+            if (depth === 0)
+              throw new Error("Cannot flatten object of depth greater than 100. Consider normalizing this object.");
             if (!depth) depth = maxFlattenDepth;
             into = into || {};
             separator = separator || ".";
@@ -5373,7 +5373,7 @@ var process=require("__browserify_process");
                       val instanceof Date ||
                       val instanceof RegExp)
                     ) {
-                        utils.flatten(val.toJSON ? val.toJSON() : val, into, prefix + key + separator, separator, --depth);
+                        utils.flatten(val.toJSON ? val.toJSON() : val, into, prefix + key + separator, separator, depth - 1);
                     }
                     else {
                         into[prefix + key] = val;
@@ -5538,7 +5538,7 @@ var process=require("__browserify_process");
             if (typeof data !== "string") data = JSON.stringify(data);
             
             var xhr;
-            if (iframePath && !isSameOrigin(url, window.location.href)) {
+            if (iframePath) {
                 IframeXHR = IframeXHR || require('./iframexhr');
                 xhr = new IframeXHR(iframePath);
             } else {
@@ -5646,6 +5646,7 @@ var process=require("__browserify_process");
 // END UTILS
 
 /*********/
+
 },{"./iframexhr":18,"__browserify_process":1,"microevent":2,"uritemplate":3,"when":12,"xmlhttprequest":false}]},{},[20])
 (20)
 });

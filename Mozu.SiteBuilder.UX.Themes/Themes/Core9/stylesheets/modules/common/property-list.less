@@ -1,0 +1,40 @@
+﻿.mz-propertylist {
+    .clearfix();
+    clear: both;
+
+    dt {
+        float: left;
+        clear: both;
+        font-weight: bold;
+
+        &:after,
+        &::after {
+            font-weight: bold;
+            content: ':';
+        }
+    }
+
+    dd {
+        float: left;
+        clear: right;
+        margin-left: @gutter/2;
+    }
+
+    &.mz-propertylist-justified dd {
+        float: right;
+        clear: right;
+    }
+
+    &.mz-propertylist-inline {
+        clear: none;
+
+        &+ .mz-propertylist-inline {
+            margin-left: @gutter/2;
+        }
+    }
+
+}
+
+.mz-property {
+    white-space: pre-wrap;
+}

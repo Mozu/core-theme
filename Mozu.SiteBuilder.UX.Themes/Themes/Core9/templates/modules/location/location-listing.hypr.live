@@ -1,0 +1,13 @@
+﻿<div class="mz-locationlisting">
+    <div class="mz-locationlisting-locationdetails">
+        <h4 class="mz-locationlisting-name">{{ model.name }}</h4>
+        <div class="mz-addresssummary">
+            {% include "modules/common/address-summary" %}
+        </div>
+    </div>
+    {% if location.distance %}
+    <div class="mz-locationlisting-distance">
+        {{ labels.milesAway|string_format(location.distance) }}
+    </div>
+    {% endif %}
+</div>

@@ -3,7 +3,7 @@ var errors = require('../errors');
 
 errors.register({
     'ADD_COUPON_FAILED': 'Adding coupon failed for the following reason: {0}'
-})
+});
 
 module.exports = {
     count: function () {

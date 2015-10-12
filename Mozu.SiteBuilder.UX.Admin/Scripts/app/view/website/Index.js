@@ -40,7 +40,8 @@ Ext.define('Taco.view.website.Index', {
         'Taco.core.ux.DraftIcon',
         'Taco.view.publishing.modal.PublishSetPicker',
         'Taco.core.ux.content.IndicatorContainer',
-        'Taco.core.ux.action.Action'
+        'Taco.core.ux.action.Action',
+        'Taco.view.publishing.component.button.PublishButton'
     ],
     selectedTheme: '',
     itemId: 'websiteIndex',
@@ -76,7 +77,6 @@ Ext.define('Taco.view.website.Index', {
             productStore,
             me = this;
 
-
         this.entityEditors = Taco.core.data.StoreManager.getOrCreate('Taco.store.EntityEditors');
         this.pageTypeDefinitions = Taco.core.data.StoreManager.getOrCreate('Taco.store.PageTypeDefinitions');
 
@@ -84,6 +84,47 @@ Ext.define('Taco.view.website.Index', {
         this.on('navigatecomplete', this.onNavigateComplete, this);
 
         this.resolutionOverride = 0;
+
+        this.publishButton =  {
+            xtype: 'publishbutton',
+            itemId: 'publishActionButton',
+            beforeItemId: 'saveActionButton',
+            buttonGroup: 'isPublishable',
+            hidden: false,
+            disabled: true,
+            scope: this,
+            handler: function() {
+               this.onPublish();
+               me.showGrowl('Published', 'info', 1000);
+            },
+
+            onMoveToPublish: function(record, code) {
+                me.publishButton.setLoading(true);
+                record.setPublishCode(code, function() {
+                    me.publishButton.setLoading(false);
+                    me.showGrowl('Moved to Publish Set', 'info', 1000);
+                });
+            },
+
+            onRemoveFromPublishSet: function(record) {
+                me.publishButton.setLoading(true);
+                record.setPublishCode(null, function() {
+                    me.publishButton.setLoading(false);    
+                    me.showGrowl.bind(me, 'Removed From Publish Set', 'info', 1000);
+                });
+            },
+
+            onDiscardDraft: function(record) {
+                me.publishButton.setLoading(true);
+                record.discardDraft(function() {
+                    me.setPublishable(false);
+                    me.publishButton.setLoading(false);
+                    me.showGrowl('Discarded', 'info', 1000);
+                    me.down('#draftIcon').hide();
+                    me.cancel();
+                });
+            }
+        };
 
         this.actions = [
             {
@@ -219,107 +260,8 @@ Ext.define('Taco.view.website.Index', {
                     ]
                 }
             }, 
+            this.publishButton,
             {
-                xtype: 'splitbutton',
-                itemId: 'publishActionButton',
-                ui: 'action-primary',
-                scale: 'medium',
-                text: 'Publish Now',
-                margin: '0 0 0 10',
-                buttonGroup: 'isPublishable',
-                hidden: false,
-                disabled: true,
-                scope: this,
-                onMenuShow: function() {
-                    var record = me.getPublishRecord(),
-                        publishingInfo = record.getPublishingInfo();
-
-                    this.down('#move-to-publish')[publishingInfo.enabled.move ? 'enable' : 'disable']();
-                    this.down('#remove-to-publish')[publishingInfo.enabled.remove ? 'enable' : 'disable']();
-                },
-                menu: {
-                    shadow: true,
-                    items: [
-                        {
-                            text: 'Move to Publish Set',
-                            scope: this,
-                            itemId: 'move-to-publish',
-                            handler: function () {
-                                var me = this,
-                                    record = this.getPublishRecord(),
-                                    modal = Ext.create('Taco.view.publishing.modal.PublishSetPicker', {
-                                    record: record,
-                                    callback: function(publishSetCode) {
-                                        record.setPublishCode(publishSetCode, me.showGrowl.bind(me, 'Moved to Publish Set', 'info', 1000));
-                                    }
-                                });
-
-                                modal.show();
-
-                            }
-                        },
-                        {
-                            text: 'Remove From Publish Set',
-                            scope: this,
-                            itemId: 'remove-to-publish',
-                            handler: function () {
-
-                                var me = this,
-                                    record = this.getPublishRecord();
-
-                                record.setPublishCode(null, me.showGrowl.bind(me, 'Removed From Publish Set', 'info', 1000));
-
-                            }
-                        },
-                        {
-                            text: 'Discard Draft',
-                            scope: this,
-                            handler: function () {
-
-                                var me = this,
-                                    record = this.getPublishRecord();
-
-                                Ext.create('Taco.core.ux.window.Modal', {
-                                    scale: 'small',
-                                    title: 'Discard Draft',
-                                    modal: true,
-                                    closeAction: 'destroy',
-                                    height: 200,
-                                    primaryText: 'Yes, Discard',
-                                    secondaryText: 'Cancel',
-                                    primaryHandler: function() {
-                                        
-                                        record.discardDraft(function() {
-                                            me.setPublishable(false);
-                                            me.showGrowl('Discarded', 'info', 1000);
-                                            me.down('#draftIcon').hide();
-                                            me.cancel(); // trigger a reload so that discarded state is wiped clean.
-                                        });
-
-                                        this.save();
-                                    },
-                                    items: [{
-                                        xtype: 'container',
-                                        layout: { 
-                                            type: 'hbox' 
-                                        },
-                                        items: [
-                                            Ext.create('Ext.panel.Panel', {
-                                                width: '100%',
-                                                html: 'Are you sure you want to discard this Draft?'
-                                            })
-                                        ]
-                                    }]
-                                }).show();
-
-                            }
-                        }
-                    ]
-                },
-                handler: function () {
-                    this.onPublish();
-                }
-            }, {
                 xtype: 'button',
                 ui: 'action',
                 scale: 'medium',
@@ -832,6 +774,8 @@ Ext.define('Taco.view.website.Index', {
 
     setPublishRecord: function(record) { 
         this.publishRecord = record;
+
+        this.publishButton.addRecord(record);
 
         this.updateDraftIcon(record);
 

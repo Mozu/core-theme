@@ -133,10 +133,5 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.Models
         public bool IsDisabled { get; set; }
 
         public DateTime CustomerSinceDate { get; set; }
-
-        public DC.CurrencyAmount LifetimeValue { get; set; }
-
-     
-        public DateTime? LifeTimeValueSetDate { get; set; }
     }
 }

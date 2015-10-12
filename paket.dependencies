@@ -1,5 +1,6 @@
 #adding content none to top to stop pre deploy edits from being overwritten by paket install.
-content:none
+content: none
+framework: net45, net451
 source http://nuget-internal.corp.volusion.com:8200/api/odata
 source http://nuget-external.corp.volusion.com:8201/api/odata
 

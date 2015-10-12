@@ -1,0 +1,36 @@
+﻿{% extends "modules/common/address-form" %}
+{% block address-form %}
+    {% set addresscontext="editingContact." %}
+    {% if model.isShippingContact %}
+    {% set countries=pageContext.shippingCountries %}
+    {% endif %}
+    <li class="mz-accountaddressbook-contact mz-accountaddressbook-form">
+    {% parent %}
+<div class="mz-contacttypes">
+        <div class="mz-l-formfieldgroup mz-l-formfieldgroup-norows mz-contacttype">
+            <label>
+                <input type="checkbox" data-mz-value="editingContact.isBillingContact" value="true" {% if model.isBillingContact %} checked="checked" {% endif %}> {{ labels.billingContact }}
+            </label>
+            {% if model.isBillingContact %}
+            <label class="mz-contacttype-isprimary">
+                <input type="checkbox" data-mz-value="editingContact.isPrimaryBillingContact" value="true" {% if model.isPrimaryBillingContact %} checked="checked" {% endif %}> {{ labels.primary }}
+            </label>
+            {% endif %}
+        </div>
+        <div class="mz-l-formfieldgroup mz-l-formfieldgroup-norows mz-contacttype">
+            <label>
+                <input type="checkbox" data-mz-value="editingContact.isShippingContact" value="true" {% if model.isShippingContact %} checked="checked" {% endif %}> {{ labels.shippingContact }}
+            </label>
+            {% if model.isShippingContact %}
+            <label class="mz-contacttype-isprimary">
+                <input type="checkbox" data-mz-value="editingContact.isPrimaryShippingContact" value="true" {% if model.isPrimaryShippingContact %} checked="checked" {% endif %}> {{ labels.primary }}
+            </label>
+            {% endif %}
+        </div>
+    </div>
+    <div class="mz-contact-actions">
+        <button class="mz-button mz-contact-save" data-mz-action="finishEditContact">{{ labels.save }}</button>
+        <button class="mz-button mz-contact-cancel" data-mz-action="cancelEditContact">{{ labels.cancel }}</button>
+    </div>
+    </li>
+{% endblock address-form %}

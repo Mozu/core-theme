@@ -1,0 +1,29 @@
+﻿  {% extends "email/email" %}
+
+  {% block body-content %}
+    <br>
+
+	{{ labels.giftCardEmailBanner|string_format(domainName)|safe}}
+
+	<p>
+	{% if model.Order.billingInfo.billingContact.firstName %}
+		{{ labels.giftCardEmailGreeting|string_format(model.Order.billingInfo.billingContact.firstName, model.Order.billingInfo.billingContact.lastNameOrSurname)|safe }}
+	{% else %}
+		{{ labels.emailOpeningAlternative|safe }}
+	{% endif %}
+	</p>
+
+	{{ labels.giftCardEmailIntro|string_format(siteContext.generalSettings.websiteName)|safe }}
+	
+	{{ labels.giftCardEmailImage|string_format(domainName)|safe}}
+
+	<p><b>{{ labels.giftCardEmailAmount }}</b> <span class="mz-price">{{model.Credit.CurrentBalance|currency}}</span></p>
+    <p><b>{{ labels.giftCardEmailClaimCode }}</b> {{model.Credit.Code}}</p>
+
+	{{ labels.giftCardEmailInstructions|string_format(domainName)|safe }}
+
+	{{ labels.giftCardEmailClosing|string_format(domainName)|safe }}
+
+    {{ labels.emailClosing|string_format(siteContext.generalSettings.websiteName)|safe }}
+
+{% endblock body-content %}

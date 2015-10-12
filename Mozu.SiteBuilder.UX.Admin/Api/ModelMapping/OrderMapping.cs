@@ -629,7 +629,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.ModelMapping
                     }
                     var indexToInsertAt = p.Interactions.FindIndex(i => i.CreateDate < riMapped.CreateDate);
                     p.Interactions.Insert(Math.Max(indexToInsertAt, 0), riMapped);
-                    p.AmountRefunded += riMapped.Amount.GetValueOrDefault();
+                    p.AmountRefunded += riMapped.Status.Equals("Credited") ? riMapped.Amount.GetValueOrDefault() : 0;
                 }
             }
         }

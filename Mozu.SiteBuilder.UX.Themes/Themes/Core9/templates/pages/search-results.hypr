@@ -1,0 +1,16 @@
+﻿{% extends "page" %}
+
+{% block title-tag-content %}{{ labels.searchTitle|string_format(pageContext.search.query) }}  - {% parent %}{% endblock title-tag-content %}
+
+{% block body-tag-classes %} mz-searchresults {% endblock body-tag-classes %}
+
+{% block body-content %}
+
+{% require_script "pages/search" %}
+
+<div {% if pageContext.categoryId %}data-mz-category="{{ pageContext.categoryId }}" {% endif %}data-mz-search="{{ pageContext.search.query }}" class="mz-l-container">
+	{% include "pages/search-interior" %}
+</div>
+
+{% endblock body-content %}
+

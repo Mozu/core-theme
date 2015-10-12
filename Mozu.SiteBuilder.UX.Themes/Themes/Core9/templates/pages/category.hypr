@@ -1,0 +1,14 @@
+{% extends "page" %}
+
+{% block title-tag-content %}{% firstof pageContext.metaTitle model.name %}  - {% parent %}{% endblock title-tag-content %}
+
+{% block body-tag-classes %} mz-category {% endblock body-tag-classes %}
+
+{% block body-content %}
+
+{% require_script "pages/category" %}
+
+<div data-mz-category="{{model.categoryId}}" class="mz-l-container">
+    {% include "pages/category-interior" %}
+</div>
+{% endblock body-content %}

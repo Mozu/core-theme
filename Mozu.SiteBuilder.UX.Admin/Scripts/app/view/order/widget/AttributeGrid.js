@@ -40,8 +40,9 @@ Ext.define('Taco.view.order.widget.AttributeGrid', {
     initComponent: function() {
         var me = this;
         if (!me.store) {
-            throw "store is required"
-        }        
+            throw "store is required";
+        }
+        this.columns = this.getColumnConfig();
         me.callParent(arguments);
     },
 

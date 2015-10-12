@@ -1,0 +1,54 @@
+.mz-cms-image {
+    height: 100%;
+    width: 100%;
+}
+
+/* Modifying ColorBox close button's style and moving position to top right*/
+
+#cboxClose {
+	top: 0;
+	right: 0;
+	position: absolute;
+	border-radius: 50%;
+	height: 26px;
+	width: 26px;
+	border: 1px solid white;
+	background-color: black;
+	color: white;
+	font-weight: bold;
+	margin-top: -10px;
+	margin-right: -11px;
+	text-align: center;
+	font-size: 13px 1;
+	box-shadow: 3px 3px 3px black;
+}
+
+#cboxClose span {
+	display: inline-block;
+	line-height: 1;
+	font-size: 13px;
+	padding-top: 3px;
+	// width: 12px;
+	text-align: center;
+	margin: 0px auto;
+}
+
+#cboxClose::selection {
+	background-color: black;
+}
+
+#colorbox {
+	z-index: 3;
+	outline: none;
+	border:1px solid black;
+}
+
+#cboxOverlay {
+	width: 100%;
+	height: 100%;
+	top: 0px;
+	right: 0px;
+	background-color: black;
+	position: absolute;
+	z-index: 2;
+}

@@ -271,7 +271,7 @@ namespace Mozu.SiteBuilder.Mvc.Helpers
                 return searchContext.ToUrl(new SearchContextOverrides() { SortBy = (string)obj });
             }
             object sortByObj;
-            if (config != null && config.TryGetValue("sortBy", out sortByObj) && !string.IsNullOrWhiteSpace(sortByObj as string))
+            if (config != null && config.TryGetValue("sortBy", out sortByObj) && sortByObj is string)
             {
                 return searchContext.ToUrl(new SearchContextOverrides() { SortBy = (string)sortByObj });
             }
@@ -439,7 +439,7 @@ namespace Mozu.SiteBuilder.Mvc.Helpers
                 url = "/c/" + cat.CategoryId;
                 if (includeContxt)
                 {
-                    url += "?" + this._httpRequestMessage.RequestUri.Query;
+                    url += this._httpRequestMessage.RequestUri.Query;
                 }
 
             }

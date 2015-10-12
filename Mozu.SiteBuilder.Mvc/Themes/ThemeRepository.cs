@@ -20,10 +20,7 @@ namespace Mozu.SiteBuilder.Mvc.Themes
         /// </summary>
         Theme GetTheme(ThemeSelection name);
 
-
-
         Theme GetThemeSlim(ThemeSelection name);
-
 
         DateTime GetLastWriteTime(string fileName);
 
@@ -39,10 +36,6 @@ namespace Mozu.SiteBuilder.Mvc.Themes
         Theme GetDefaultTheme();
 
         string GetLocalThemePath();
-
-       
-
- 
     }
 
     /// <summary>
@@ -55,18 +48,15 @@ namespace Mozu.SiteBuilder.Mvc.Themes
     /// </summary>
     class ThemeRepository : IThemeRepository
     {
-        private readonly IThemeMetaDataProvider _themeMetaDataProvider;
-
-        private static ConcurrentDictionary<string, Theme> _themes = new ConcurrentDictionary<string, Theme>(StringComparer.OrdinalIgnoreCase);
-        private static ConcurrentDictionary<string, Theme> _themeSlims = new ConcurrentDictionary<string, Theme>(StringComparer.OrdinalIgnoreCase);
-
-
-        private static ConcurrentDictionary<string, FileSystemWatcher> _watchers = new ConcurrentDictionary<string, FileSystemWatcher>(StringComparer.OrdinalIgnoreCase);
-
+        static ConcurrentDictionary<string, Theme> _themes = new ConcurrentDictionary<string, Theme>(StringComparer.OrdinalIgnoreCase);
+        static ConcurrentDictionary<string, Theme> _themeSlims = new ConcurrentDictionary<string, Theme>(StringComparer.OrdinalIgnoreCase);
+        static ConcurrentDictionary<string, FileSystemWatcher> _watchers = new ConcurrentDictionary<string, FileSystemWatcher>(StringComparer.OrdinalIgnoreCase);
         public static readonly ThemeSelection DefaultThemeSelection = new ThemeSelection()
         {
-            Id = Mozu.SiteBuilder.Mvc.Constants.DefaultTheme
+            Id = Constants.DefaultTheme
         };
+
+        readonly IThemeMetaDataProvider _themeMetaDataProvider;
 
         /// <summary>
         /// Public constructor.
@@ -94,6 +84,7 @@ namespace Mozu.SiteBuilder.Mvc.Themes
             }
             return File.GetLastWriteTime(fileName);
         }
+
         /// <summary>
         /// Finds a theme by name.
         /// </summary>
@@ -117,8 +108,6 @@ namespace Mozu.SiteBuilder.Mvc.Themes
                 }
             }
             return theme;
-
-
         }
 
         Theme CreateThemeSlim(string themeId)
@@ -127,23 +116,20 @@ namespace Mozu.SiteBuilder.Mvc.Themes
             if (tmd == null)
             {
                 return null;
-
             }
             var ret = ThemeFactory.Build(tmd, null);
             SetTimeoutToClearTheme(themeId);
             return ret;
         }
 
-
-
         /// <summary>
         /// Returns a theme if it is already loaded. If the theme is not loaded, attempts to loads theme metadata 
         /// from the filesystem and uses ThemeFactory to build it.
         /// If the theme extends another theme, it will make a recursive call to find and initialize the parent theme.
         /// </summary>
-        private Theme GetThemeInternal(string name, Stack<string> inheritChain)
+        Theme GetThemeInternal(string name, Stack<string> inheritChain)
         {
-            var t = _themes.GetOrAdd(name ?? Mozu.SiteBuilder.Mvc.Constants.DefaultTheme, themeName => CreateTheme(themeName, inheritChain));
+            var t = _themes.GetOrAdd(name ?? Constants.DefaultTheme, themeName => CreateTheme(themeName, inheritChain));
 
             if (t == null)
             {
@@ -159,12 +145,11 @@ namespace Mozu.SiteBuilder.Mvc.Themes
                 }
             }
 
-
-            _watchers.GetOrAdd(t.ThemePath, CreateWatcher);
+            if (!string.IsNullOrEmpty(t.ThemePath)) {
+                _watchers.GetOrAdd(t.ThemePath, CreateWatcher);
+            }
             return t;
         }
-
-    
 
         void ClearThemes(object state)
         {
@@ -191,14 +176,13 @@ namespace Mozu.SiteBuilder.Mvc.Themes
             _themes.TryRemove(themeStr, out theme);
             _themeSlims.TryRemove(themeStr, out theme);
         }
+
         static Random _rand = new Random();
         void SetTimeoutToClearTheme( string theme)
         {
             int seconds = _rand.Next(8 * 60* 1000, 10 * 60 *1000);
             System.Threading.Timer t = new System.Threading.Timer(ClearThemes, theme, seconds, System.Threading.Timeout.Infinite);
-            
         }
-
 
         /// <summary>
         /// Loads theme metadata from the filesystem and uses ThemeFactory to build it.
@@ -206,22 +190,16 @@ namespace Mozu.SiteBuilder.Mvc.Themes
         /// </summary>
         private Theme CreateTheme(string name, Stack<string> inheritChain)
         {
-           
-            
             // make sure that a theme isn't somehow trying to inherit from itself.
             if (inheritChain.Contains(name, StringComparer.OrdinalIgnoreCase))
-                throw new ThemeInheritanceRecursionException(String.Format("Theme {0} cannot be its own ancestor. Stack: {1}", name, String.Join(" // ", inheritChain)));
+                throw new ThemeInheritanceRecursionException(string.Format("Theme {0} cannot be its own ancestor. Stack: {1}", name, string.Join(" // ", inheritChain)));
 
             var tmd = _themeMetaDataProvider.GetTheme(name);
-            if (tmd == null)
-                return null;
+            if (tmd == null) return null;
             
-            _watchers.GetOrAdd( tmd.ThemePath , CreateWatcher);
-
-          
-            string parentName = tmd.Configuration.About.Extends;
+            var parentName = tmd.Configuration.About.Extends;
             Theme parent = null;
-            if (!String.IsNullOrEmpty(parentName))
+            if (!string.IsNullOrEmpty(parentName))
             {
                 inheritChain.Push(name);
                 parent = GetThemeInternal(parentName, inheritChain);
@@ -231,27 +209,19 @@ namespace Mozu.SiteBuilder.Mvc.Themes
             var ret = ThemeFactory.Build(tmd, parent);
             SetTimeoutToClearTheme(name);
             return ret;
-
         }
-
-
-      
 
         /// <summary>
         /// Watch the filesystem for changes to themes.
         /// </summary>
-        
-
-        private void watcher_Changed(object sender, FileSystemEventArgs e)
+        void watcher_Changed(object sender, FileSystemEventArgs e)
         {
             // replace _themes object instead of .Clear() to prevent the case of another thread Add()ing to the stale object right after clear.
             _themes = new ConcurrentDictionary<string, Theme>();
             _themeSlims = new ConcurrentDictionary<string, Theme>();
-
-            
         }
 
-        private FileSystemWatcher CreateWatcher(string path)
+        FileSystemWatcher CreateWatcher(string path)
         {
             var watcher = new FileSystemWatcher(path)
             {
@@ -269,12 +239,13 @@ namespace Mozu.SiteBuilder.Mvc.Themes
 
         void watcher_Error(object sender, ErrorEventArgs e)
         {
-            FileSystemWatcher errordWatcher = sender as FileSystemWatcher;
-            var key = _watchers.Where(x => x.Value == errordWatcher).Select(x=>x.Key).FirstOrDefault();
-            Mozu.Core.Logging.LoggingService.LoggerFor<ThemeRepository>().Warn(string.Format("error in fileSystemWatcher [{0}]", key), e);
-            if ( key != null)
+            var watcher = sender as FileSystemWatcher;
+            // the path of the watcher is the theme.themepath, see CreateWatcher and GetThemeInternal
+            LoggingService.LoggerFor<ThemeRepository>().Warn(string.Format("error in fileSystemWatcher [{0}]", watcher.Path), e.GetException());
+
+            if (!string.IsNullOrEmpty(watcher.Path))
             {
-                _watchers.TryRemove( key, out errordWatcher);
+                _watchers.TryRemove(watcher.Path, out watcher);
             }
         }
 
@@ -315,12 +286,5 @@ namespace Mozu.SiteBuilder.Mvc.Themes
         {
             return _themeMetaDataProvider.LocalAddonPath;
         }
-
-
-
-
-
-
-        
     }
 }

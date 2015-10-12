@@ -15,6 +15,7 @@ using Mozu.SiteBuilder.UX.Models.Navigation;
 using Mozu.SiteBuilder.Mvc.Contexts;
 using Mozu.Core;
 using Mozu.Core.Extensions;
+using Mozu.SiteBuilder.Mvc.SEO;
 
 namespace Mozu.SiteBuilder.Mvc.Navigation
 {
@@ -30,6 +31,7 @@ namespace Mozu.SiteBuilder.Mvc.Navigation
         ILogger _logger;
         MD5 _md5;
         IStorefrontCache _cache;
+        private readonly ICustomRouteHandler _customRouteHandler;
         readonly NavigationNodeIndexComparer _navigationNodeIndexComparer = new NavigationNodeIndexComparer();
         readonly bool _shouldRequestInactiveDocuments;
 
@@ -49,7 +51,7 @@ namespace Mozu.SiteBuilder.Mvc.Navigation
         /// <summary>
         /// Public constructor.
         /// </summary>
-        public NavigationGandalfTheWhite(IProductCategoryRuntimeWebApiClient productCategoryRuntimeWebApiClient, IDocumentListWebApiClient documentClient, INavigationRepository navRepo,  ILogger logger, PageContext pageContext, IApiContext apicontext, IStorefrontCache cache = null)
+        public NavigationGandalfTheWhite(IProductCategoryRuntimeWebApiClient productCategoryRuntimeWebApiClient, IDocumentListWebApiClient documentClient, INavigationRepository navRepo,  ILogger logger, PageContext pageContext, IApiContext apicontext, IStorefrontCache cache = null, ICustomRouteHandler customRouteHandler= null)
         {
             _productCategoryRuntimeWebApiClient = productCategoryRuntimeWebApiClient.CloneWithoutUserClaims();
             _documentClient = documentClient.CloneWithoutUserClaims();
@@ -57,6 +59,7 @@ namespace Mozu.SiteBuilder.Mvc.Navigation
             _logger = logger;
             _md5 = MD5.Create();
             _cache = cache;
+            _customRouteHandler = customRouteHandler;
 
             _shouldRequestInactiveDocuments = pageContext.IsEditMode || (apicontext.UserClaims != null && apicontext.UserClaims.ScopeType.EqualsIgnoreCase(UserScopeType.Tenant.ToStringQuickly())); // if tenant admin or edit mode...
 
@@ -196,7 +199,7 @@ namespace Mozu.SiteBuilder.Mvc.Navigation
                                 OriginalId = page.Id,
                                 OriginalDocumentListName = page.ListFQN,
                                 Index = navmeta.Index,
-                                Url = String.Equals(page.ListFQN, "pages@mozu", StringComparison.OrdinalIgnoreCase) ? "/" + page.Name : "/" + page.ListFQN + "/" + page.Name
+                                Url = _customRouteHandler.GetCannonicalUrl(SiteSettings.General.Contracts.General.Routing.FancyRoute.CmsPage, () => AutoMapper.Mapper.Map<IDictionary<string, object>>(page), false).Result ?? (String.Equals(page.ListFQN, "pages@mozu", StringComparison.OrdinalIgnoreCase) ? "/" + page.Name : "/" + page.ListFQN + "/" + page.Name)
                             };
                         }
                         else
@@ -242,6 +245,8 @@ namespace Mozu.SiteBuilder.Mvc.Navigation
 
                     masterList.Add(node);
                 }
+
+
 
                 // build the masterlist. Step 3: put in all the trash we don't know about.
                 var allUnassigned =
