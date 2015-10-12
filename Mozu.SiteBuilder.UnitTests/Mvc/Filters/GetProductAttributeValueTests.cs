@@ -76,7 +76,7 @@ namespace Mozu.SiteBuilder.UnitTests.Mvc.Filters
                     Name = "multi value",
                     Template = "{{ product | get_product_attribute_values('availability', true)|join(', ') }}",
                     Context = new Dictionary<string, object> { {"product", new {Properties = new[] {new {attributeFQN = "availability", values = new[]{new{value="eh", stringValue="EH"}, new {value="meh", stringValue="MEH" } }}}}} },
-                    ExpectedFunc = TestDescriptor.CompareLiteral("eh, meh")
+                    ExpectedFunc = TestDescriptor.CompareLiteral("EH, MEH")
                 },
             };
         }
