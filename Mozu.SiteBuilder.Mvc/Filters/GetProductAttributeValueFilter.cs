@@ -7,10 +7,10 @@ using System;
 namespace Mozu.SiteBuilder.Mvc.Filters
 {
     /// <summary>
-    /// Provides a shortcut to getting the values of a particular named product attribute.
+    /// Provides a shortcut to getting the string values of a particular named product attribute.
     /// Returns null if the product doesn't exist, if there are no attributes on the product, or if the product contains no attributes by that name.
     /// {{ product | get_product_attribute_values('availability') }}
-    /// The stringvalue property can be requested instead of the value property by use of the second, boolean argument to this filter.
+    /// The value property can be requested instead of the stringvalue property by use of the second, boolean argument to this filter.
     /// {{ product | get_product_attribute_values('availability', true) }}
     /// </summary>
     [Name("get_product_attribute_values")]
@@ -30,12 +30,13 @@ namespace Mozu.SiteBuilder.Mvc.Filters
             return attr != null ? GetAttrValues(attr, useStringValue) : null;
         }
 
+        // default to using string value, because hypr is a text templating language.
         static bool ShouldUseStringValue(object stringValueParam)
         {
             bool useStringValue;
             if (stringValueParam == null || !bool.TryParse(stringValueParam.ToString(), out useStringValue))
             {
-                useStringValue = false;
+                useStringValue = true;
             }
             return useStringValue;
         }
@@ -84,10 +85,10 @@ namespace Mozu.SiteBuilder.Mvc.Filters
 
 
     /// <summary>
-    /// Provides a shortcut to getting the first value of a particular named product attribute.
+    /// Provides a shortcut to getting the first stringvalue of a particular named product attribute.
     /// Returns null if the product doesn't exist, if there are no attributes on the product, or if the product contains no attributes by that name.
     /// {{ product | get_product_attribute_value('availability') }}
-    /// The stringvalue property can be requested instead of the value property by use of the second, boolean argument to this filter.
+    /// The value property can be requested instead of the stringvalue property by use of the second, boolean argument to this filter.
     /// {{ product | get_product_attribute_value('availability', true) }}
     /// </summary>
     [Name("get_product_attribute_value")]
