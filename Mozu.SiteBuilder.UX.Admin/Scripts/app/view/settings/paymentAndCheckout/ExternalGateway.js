@@ -83,7 +83,6 @@ Ext.define('Taco.view.settings.paymentAndCheckout.ExternalGateway', {
 
         if (fieldDef.inputType === 'RadioButton') {
 
-            var fqn = this.fqn;
             var radioButtonItems = [];
             Ext.each(fieldDef.vocabularyValues, function (val) {
                 if (val.contents[0]) {
@@ -91,7 +90,7 @@ Ext.define('Taco.view.settings.paymentAndCheckout.ExternalGateway', {
                         boxLabel: val.contents[0].value,
                         name: fieldDef.apiName,
                         inputValue: val.key,
-                        id: fqn + '-' + val.key,
+                        id: this.fqn + '-' + val.key,
                         checked: val.key == value
                     });
                 }
