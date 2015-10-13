@@ -23,7 +23,7 @@ using Mozu.SiteBuilder.Mvc.ViewEngine;
 using Mozu.SiteBuilder.UX.Admin.Api.Models;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
-
+using Mozu.SiteBuilder.UX.Admin.Helpers.OrderHelpers;
 using DC = Mozu.Content.Contracts;
 using CMS = Mozu.Content.Contracts;
 using AVM = Mozu.SiteBuilder.Mvc.Models.CMS.Admin;
@@ -188,7 +188,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
             }
             if (entityType == "cms")
             {
-                string sortBy = null;
+                string sortBy = pagingParams.sort.Count() > 0 ? pagingParams.sort.ToSortString() : null;
                 string filter = null;
 
                 DC.DocumentCollection res = null;

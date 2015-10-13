@@ -78,9 +78,11 @@ Ext.define('Taco.view.entityManager.Grid', {
         //me.insertDocked(0, me.Lists);
     },
     initListView: function(view) {
+
         var me = this,
             columns = [],
             store;
+
         if (me.listMetaData.entityType === 'cms') {
             columns.push({
                 xtype: 'gridcolumn',
@@ -88,8 +90,10 @@ Ext.define('Taco.view.entityManager.Grid', {
                     return record.data.name;
                 },
                 text: 'document name',
+                dataIndex: 'name',
                 flex: 1,
-                width: 150
+                width: 150,
+                sortable: true
             });
         } else {
             columns.push({
@@ -164,7 +168,8 @@ Ext.define('Taco.view.entityManager.Grid', {
             listName: me.listMetaData.listFQN,
             entityType: me.listMetaData.entityType,
             view: view.name,
-            autoLoad: true
+            autoLoad: true,
+            remoteSort: true
         });
         if (me.rendered) {
             me.reconfigure(store, columns);
