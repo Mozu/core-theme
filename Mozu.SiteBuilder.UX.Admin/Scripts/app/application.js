@@ -211,7 +211,6 @@ Ext.define('Taco.Application', {
             }
         });
 
-
         Ext.override(Ext.AbstractComponent, {
             removeCls: function (cls) {
                 var me = this,

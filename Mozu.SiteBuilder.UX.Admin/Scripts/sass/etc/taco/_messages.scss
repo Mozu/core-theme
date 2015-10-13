@@ -4,6 +4,7 @@
         background-color: $color-status-info;
         font-size: 14px;
         line-height: 20px;
+        margin-top: -20px;
         padding-bottom: 0px;
 
         &.#{$vprefix}growl {

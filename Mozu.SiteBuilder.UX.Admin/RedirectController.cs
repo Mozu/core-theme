@@ -124,7 +124,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
             protected override void WriteFile(HttpResponseBase response)
             {
                 var sw = response.Output;
-                sw.WriteLine("source,destination,rewrite,isTemporary,copyQueryStrings, priority");
+                sw.WriteLine("source,destination,rewrite,isTemporary,copyQueryString, priority");
                 EnumerableExtensions.Each(Redirects, x =>
                 {
                     RedirectController.EscapeWrite(sw, x.Source);
