@@ -176,6 +176,57 @@
         showTooltip: function (url, posEl) {
             var $posEl;
 
+            this.positionTooltip();
+
+            /**
+             * Set the tooltip's position based on the
+             * positioning of its associated element
+             * and that element's container
+             *
+             * If the tooltip will exceed the editor's
+             * bounds, lock it to the bottom-right corner
+             * of its associated text.
+             *
+             * Otherwise, lock it to the bottom-left
+             * corner of its associated text.
+             *
+             * Next, determine whether the linked text or
+             * the "new hyperlink" icon was clicked. If the
+             * linked text is clicked, then $posEl does not
+             * need to be reset.
+             *
+             * Change $posEl to the element that was just
+             * selected to be hyperlinked
+             *
+             * Now just insert the tooltip just after the
+             * element it affects
+             */
+
+            $.fn.positionTooltip = function ($posEl, $urlTooltip) {
+
+                $urlTooltip = $urlTooltip;
+                $posEl = $posEl;
+
+                var top, left;
+
+                var contentBox = $posEl.closest('.mz-cms-content');
+
+                if ( ($posEl.width() + ( contentBox.width() + contentBox.offset().left - $posEl.offset().left) ) < $urlTooltip.width() && $posEl.offset().left > $urlTooltip.width()) {
+                    top = $posEl.outerHeight() + $posEl.offset().top - contentBox.offset().top;
+                    left = ($posEl.offset().left - contentBox.offset().left) - ($urlTooltip.width() - $posEl.width());
+                } else {
+                    top = $posEl.outerHeight() + $posEl.offset().top - contentBox.offset().top;
+                    left = $posEl.offset().left - contentBox.offset().left;
+                }
+
+                this.css({
+                    'margin-top'   : top,
+                    'margin-left'  : left,
+                });
+
+                return this;
+            };
+
             this._text.editingUrl(true);
 
             if (!posEl) posEl = this._range.endContainer;
@@ -185,13 +236,16 @@
             $posEl = $posEl[0].nodeName === '#text' ? $posEl.parent() : $posEl;
 
             this.$urlInput.val(url || '');
-            this.$urlTooltip
-                .show()
-                .position({
-                    of: $posEl,
-                    my: 'center top',
-                    at: 'center bottom'
-                });
+
+            this.$urlTooltip.show();
+
+            if( $posEl.prop('tagName').toLowerCase() !== 'a' && $posEl.prop('tagName').toLowerCase() !== 'a' ) {
+                $posEl = $($posEl.prevObject.context).prev();
+            }
+
+            this.$urlTooltip.insertAfter($posEl.parent());
+
+            this.$urlTooltip.positionTooltip($posEl, this.$urlTooltip);
 
             this.$urlInput.focus();
         },
