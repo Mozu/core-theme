@@ -16,7 +16,7 @@ This release includes an upgraded Core theme called **Core8**.
    - Efficient, mobile-friendly HTML partial system on category and search pages
 * A dynamic set of "reasons" for online RMAs, replacing the hardcoded set of reasons
 * Numerous bugfixes
-* Other enhancements listed in [Mozu Release Notes](http://developer.mozu.com/sites/default/files/feeds/learn/article_files/MozuQ22015ReleaseNotes.pdf).
+* Other enhancements listed in [Mozu Release Notes](http://developer.mozu.com/sites/default/files/feeds/learn/article_files/MozuQ32015ReleaseNotes.pdf).
 
 ## Upgrading to Mozu Core Theme Version 8
 
