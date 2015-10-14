@@ -27,7 +27,7 @@ Ext.define('Taco.view.fileManager.Associator', {
         advancedFormCls: 'Taco.view.fileManager.AdvancedSearchForm'
     },
     initComponent: function () {
-        var selModel = new Ext.selection.CheckboxModel;
+        var selModel = this.selModel || new Ext.selection.CheckboxModel;
 
         this.selected = selModel.selected;
 
@@ -176,7 +176,7 @@ Ext.define('Taco.view.fileManager.Associator', {
     },
 
     doSave: function () {
-        var data = this.selected.getRange();
+        var data = this.grid.getSelectionModel().getSelection();
         this.saveSuccess(data);
     }
 });
