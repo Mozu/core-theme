@@ -27,16 +27,16 @@ Ext.define('Taco.view.fileManager.Associator', {
         advancedFormCls: 'Taco.view.fileManager.AdvancedSearchForm'
     },
     initComponent: function () {
+        var selModel = new Ext.selection.CheckboxModel;
+
+        this.selected = selModel.selected;
 
         this.store = Taco.core.data.StoreManager.getOrCreate('Taco.shared.store.Files', {
             autoSync: true
         });
 
         this.grid = Ext.create('Ext.grid.Panel', {
-            selModel: {
-                selType: 'checkboxmodel',
-                mode: 'SINGLE'
-            },
+            selModel: selModel,
             store: this.store,
             dockedItems: [
                 Ext.create('Ext.toolbar.Paging', {
@@ -176,7 +176,7 @@ Ext.define('Taco.view.fileManager.Associator', {
     },
 
     doSave: function () {
-        var data = this.grid.getSelectionModel().getSelection();
+        var data = this.selected.getRange();
         this.saveSuccess(data);
     }
 });
