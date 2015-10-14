@@ -189,7 +189,7 @@ Ext.define('Taco.view.order.Form', {
                 
         this.orderDetailPanel = Ext.create('Taco.view.order.subform.Detail', Ext.apply({}, subformCfg));
 
-        this.auditLogPanel = Ext.create('Taco.view.order.subform.AuditLog', Ext.apply({}, subformCfg));
+        this.auditLogPanel = Ext.create('Taco.view.order.subform.AuditLog', subformCfg);
         
         // we always show for online orders. for offline orders we need hide the detail panel until the header is filled out.
         if ((me.record.get("orderType")=="Online") || me.isHeaderDataComplete()) {
