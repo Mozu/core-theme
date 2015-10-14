@@ -35,7 +35,8 @@
  * @requires Taco.controller.Testing
  * @requires Taco.controller.FileManager
  * @requires Taco.controller.Discounts
- * @requires Taco.controller.CouponSets
+ * @requires Taco.controller.CouponSets 
+ * @requires Taco.controller.SearchTuningRules
  * @requires Taco.controller.Settings
  
  * @requires Taco.controller.Themes

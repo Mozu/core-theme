@@ -174,6 +174,10 @@
     <Compile Include="Api\CategoryController.cs" />
     <Compile Include="Api\ChannelController.cs" />
     <Compile Include="Api\CouponCodeController.cs" />
+    <Compile Include="Api\ModelMapping\SearchTuningMapping.cs" />
+    <Compile Include="Api\Models\Search\SearchTuningRule.cs" />
+    <Compile Include="Api\Models\Search\SimpleSearchProduct.cs" />
+    <Compile Include="Api\SearchTuningRuleController.cs" />
     <Compile Include="Api\CouponSetController.cs" />
     <Compile Include="Api\ModelMapping\ContentMapping.cs" />
     <Compile Include="Api\ModelMapping\DynamicExpressionMapping.cs" />
@@ -462,6 +466,7 @@
     <Content Include="Scripts\.sencha\app\watch-impl.xml" />
     <Content Include="Scripts\app\app.js" />
     <Content Include="Scripts\app\controller\ActionManagement.js" />
+    <Content Include="Scripts\app\controller\SearchTuningRules.js" />
     <Content Include="Scripts\app\controller\CouponSets.js" />
     <Content Include="Scripts\app\controller\Entities.js" />
     <Content Include="Scripts\app\controller\Localization.js" />
@@ -546,6 +551,7 @@
     <Content Include="Scripts\app\model\OrderRefund.js" />
     <Content Include="Scripts\app\model\PublishSet.js" />
     <Content Include="Scripts\app\model\PublishSetItem.js" />
+    <Content Include="Scripts\app\model\SearchTuningRule.js" />
     <Content Include="Scripts\app\model\State.js" />
     <Content Include="Scripts\app\model\DocumentType.js" />
     <Content Include="Scripts\app\model\Card.js" />
@@ -638,6 +644,7 @@
     <Content Include="Scripts\app\store\BehaviorCategories.js" />
     <Content Include="Scripts\app\store\CouponSetGrid.js" />
     <Content Include="Scripts\app\store\CouponCodes.js" />
+    <Content Include="Scripts\app\store\SearchTuningRules.js" />
     <Content Include="Scripts\app\store\CouponSets.js" />
     <Content Include="Scripts\app\store\DiscountGrid.js" />
     <Content Include="Scripts\app\store\Discounts.js" />
@@ -710,6 +717,12 @@
     <Content Include="Scripts\app\view\couponCode\AdvancedSearchForm.js" />
     <Content Include="Scripts\app\view\couponCode\DiscountGrid.js" />
     <Content Include="Scripts\app\view\couponCode\Grid.js" />
+    <Content Include="Scripts\app\view\searchTuningRule\AdvancedSearchForm.js" />
+    <Content Include="Scripts\app\view\searchTuningRule\GeneralForm.js" />
+    <Content Include="Scripts\app\view\searchTuningRule\GeneratedCodeForm.js" />
+    <Content Include="Scripts\app\view\searchTuningRule\Grid.js" />
+    <Content Include="Scripts\app\view\searchTuningRule\Index.js" />
+    <Content Include="Scripts\app\view\searchTuningRule\modal\SearchTuningRuleEditor.js" />
     <Content Include="Scripts\app\view\couponSet\AdvancedSearchForm.js" />
     <Content Include="Scripts\app\view\couponSet\GeneratedCodeForm.js" />
     <Content Include="Scripts\app\view\couponSet\GeneralForm.js" />

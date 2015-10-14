@@ -206,6 +206,7 @@
     <None Include="Diagrams\Admin\Api\Models\ProductModels\cdLocation.cd" />
     <None Include="Diagrams\Admin\Api\Models\ProductModels\cdProductVariation.cd" />
     <None Include="Diagrams\Admin\Api\Models\ProductModels\cdProduct.cd" />
+    <None Include="Diagrams\Admin\Api\Models\Search\cdSearchTuning.cd" />
     <None Include="Diagrams\Admin\Scripts\app\view\category\cdCategories.cd" />
     <None Include="Diagrams\Admin\Scripts\app\view\couponSet\jsCouponSet.cd" />
     <None Include="Diagrams\Admin\Scripts\app\view\product\cdProduct-View-Js.cd" />
