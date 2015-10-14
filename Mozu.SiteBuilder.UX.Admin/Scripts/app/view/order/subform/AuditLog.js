@@ -35,8 +35,17 @@ Ext.define('Taco.view.order.subform.AuditLog', {
     closeAction: 'destroy',
 
     initComponent: function (eOpts) {
-        var me = this;
+        this.mon(this, {
+            'activate': this.initUI,
+            'deactivate': this.destroyUI
+        }, this);
 
+        this.callParent(arguments);
+    },
+
+    // create the UI.
+    initUI: function () {
+        var me = this;
         me.mon(me.record, 'aftercommit', function () {
             me.onRecordChange();
         });
@@ -50,16 +59,15 @@ Ext.define('Taco.view.order.subform.AuditLog', {
             orderNumber: me.orderNumber,
             orderId: me.orderId
         });
-        
-        Ext.apply(this, {
-            items: [
 
-                this.auditLogGrid
+        this.add(me.auditLogGrid);
+    },
 
-            ]
-        });
+    // Destroy the UI
+    destroyUI: function () {
+        this.removeAll();
 
-        this.callParent(arguments);
+        this.auditLogGrid.destroy();
     },
 
     // when the record changes we will need to update the order details

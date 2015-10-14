@@ -63,6 +63,36 @@ Ext.define('Taco.model.AuditLog', {
             name: 'metadata',
             type: 'auto',
             useNull: true
+        },
+        // Added to fix model issues in Ext.
+        {
+            name: 'correlationId',
+            type: 'auto',
+            useNull: true
+        }, {
+            name: 'userScopeType',
+            type: 'auto',
+            useNull: true
+        }, {
+            name: 'appKey',
+            type: 'auto',
+            useNull: true
+        }, {
+            name: 'success',
+            type: 'auto',
+            useNull: true
+        }, {
+            name: 'identifier',
+            type: 'auto',
+            useNull: true
+        }, {
+            name: 'oldValue',
+            type: 'auto',
+            useNull: true
+        }, {
+            name: 'newValue',
+            type: 'auto',
+            useNull: true
         }
 
     ]
