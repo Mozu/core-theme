@@ -15,6 +15,20 @@ Ext.define('Taco.view.publishing.modal.PublishSetPicker', {
     },
     initComponent: function() {
 
+        // todo: we may implement something like this -- but should probably be done implicitly via a header?
+        // if (!Taco.app.context.getMasterCatalog()) {
+        //     var masterCatalogs = Taco.app.context.getCurrentContext().masterCatalogs;
+
+        //     if (masterCatalogs.length !== 1) {
+        //         //to do? show a drop down to select from which catalog you want?
+        //         Taco.app.context.setCurrentMasterCatalog(masterCatalogs[0].id);
+        //     }
+
+        //     else {
+        //         Taco.app.context.setCurrentMasterCatalog(masterCatalogs[0].id);
+        //     }
+        // }
+
         this.items = [{
             xtype: 'panel',
             layout: { 
@@ -114,6 +128,7 @@ Ext.define('Taco.view.publishing.modal.PublishSetPicker', {
     },
 
     getPublishSetStore: function() {
+
         return Ext.create('Taco.store.PublishSets', {
             includeCounts: false,
             autoLoad: false,
@@ -123,7 +138,12 @@ Ext.define('Taco.view.publishing.modal.PublishSetPicker', {
             pageSize: 200,
             listeners: {
                 load: {
-                    fn: function(store, records) {
+                    fn: function(store, records, isSuccess) {
+                        
+                        if (!isSuccess) {
+                            Taco.app.fireEvent('setmessage', 'An error occurred retrieving Publish Sets!', 'error');
+                        }
+
                         if (records.length < 1) {
                             this.down('#publish-set-picker-combobox').setValue(Ext.create('Taco.model.PublishSetItem', {
                                 name: 'No Publish Sets Have Been Created',
@@ -133,7 +153,8 @@ Ext.define('Taco.view.publishing.modal.PublishSetPicker', {
                     },
                     single: true,
                     scope: this
-                }
+                },
+
             }
         });
     },
