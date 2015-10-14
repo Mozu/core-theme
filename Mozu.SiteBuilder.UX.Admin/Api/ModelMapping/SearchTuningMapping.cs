@@ -44,8 +44,6 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.ModelMapping
             
                 //ignores
                 .ForMember(dc => dc.AuditInfo, op => op.Ignore())
-                .ForMember(dc => dc.BoostExpressions, op => op.Ignore())
-                .ForMember(dc => dc.BoostFunctions, op => op.Ignore())
                 ;
 
             Mapper.CreateMap<DC.SearchTuningRule, SearchTuningRule>()
