@@ -431,16 +431,20 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
         [HttpGet]
         [SslOnlyActionFilter]
         public async Task<ActionResult> ResetPassword(string t, string u)
-         {
-             var accountsResp = await _customerAccountWebApiClient.CloneWithoutUserClaims().GetAccounts(filter: "UserId eq " + u);
+        {
+            if (_authenticationHelper.GetProfileToken().Length > 1)
+            {
+                return new RedirectResult("/");
+            }
+            var accountsResp = await _customerAccountWebApiClient.CloneWithoutUserClaims().GetAccounts(filter: "UserId eq " + u);
 
             string userName = !accountsResp.ResponseMessage.IsSuccessStatusCode ? null : (accountsResp.ReadAsSync().Items.FirstOrDefault() ?? new CustomerAccount()).UserName;
 
-             var model = new ResetPasswordConfirmDetails()
-             {
-                 username = userName,
-                 validationToken = t,
-             };
+            var model = new ResetPasswordConfirmDetails()
+            {
+                username = userName,
+                validationToken = t,
+            };
 
 
             var template = this.SiteContext.Theme.PageTypes.Where(x => x.Id == "Reset_Password").Select(x => x.Template).FirstOrDefault("Reset-Password");
@@ -458,7 +462,7 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
 
 
             return View(template, model);
-         }
+        }
 
          public class ResetPasswordConfirmDetails
          {
@@ -473,13 +477,21 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
         [HttpPost]
         [SslOnlyActionFilter]
         public async Task<HttpResponseMessage> ResetPassword(ResetPasswordConfirmDetails info)
-         {
-             var res = await DoResetPasswordConfirm(info);
-             var ex = res.ReadException();
-             info.done = res.ResponseMessage.IsSuccessStatusCode;
-             info.messages = ex== null ? new object[0] : new object[] { new { message = ex.Message } };
-             return Request.CreateResponse(HttpStatusCode.OK, View("Reset-Password", info));
-         }
+        {
+            if (_authenticationHelper.GetProfileToken().Length > 1)
+            {
+                var redir = this.Request.CreateResponse(statusCode: System.Net.HttpStatusCode.Redirect);
+
+                redir.Headers.Location = MakeRedirectUri();
+                return redir;
+            }
+
+            var res = await DoResetPasswordConfirm(info);
+            var ex = res.ReadException();
+            info.done = res.ResponseMessage.IsSuccessStatusCode;
+            info.messages = ex== null ? new object[0] : new object[] { new { message = ex.Message } };
+            return Request.CreateResponse(HttpStatusCode.OK, View("Reset-Password", info));
+        }
     }
 
     public class PantsController : BaseApiController
