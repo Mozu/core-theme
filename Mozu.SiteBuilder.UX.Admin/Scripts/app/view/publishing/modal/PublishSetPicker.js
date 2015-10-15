@@ -42,6 +42,7 @@ Ext.define('Taco.view.publishing.modal.PublishSetPicker', {
 
     buildForm: function() {
         var me = this;
+        console.log(me);
         return Ext.create('Ext.form.Panel', {
             layout: 'hbox',
             items: [{
@@ -83,7 +84,8 @@ Ext.define('Taco.view.publishing.modal.PublishSetPicker', {
                                     callback: function() {
                                         cmp.setValue(me.record.get('publishSetCode'));
                                         if (me.record.get('publishDate')) {
-                                            me.down('#publish-date-field').setValue(Ext.util.Format.date(me.record.get('publishDate'), 'M/D/Y g:i a'));
+                                            console.log(me.record.get('publishDate'));
+                                            me.down('#publish-date-field').setValue(Ext.util.Format.date(me.record.get('publishDate'), 'M j, Y g:ia T'));
                                         }
                                     }
                                 });
