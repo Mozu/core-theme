@@ -27,7 +27,7 @@ namespace Mozu.SiteBuilder.Mvc.Themes.Factories
             if (parent != null)
             {
                 theme.MergedLabels = MergeLabels(tmd.Labels, parent.MergedLabels);
-                theme.TimeStamp = parent.TimeStamp > theme.TimeStamp ? parent.TimeStamp : theme.TimeStamp;
+                theme.TimeStamp = !parent.IsCoreTheme  && parent.TimeStamp  > theme.TimeStamp ? parent.TimeStamp : theme.TimeStamp;
             }
 
             // things that require configuration

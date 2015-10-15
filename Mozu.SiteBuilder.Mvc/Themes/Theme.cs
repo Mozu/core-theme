@@ -4,6 +4,7 @@ using System.IO;
 using System.Linq;
 using System.Runtime.Serialization;
 using System.Text;
+using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using Mozu.AdminUser.Contracts.Clients;
 using Mozu.SiteBuilder.Mvc.Models.CMS;
@@ -21,6 +22,17 @@ namespace Mozu.SiteBuilder.Mvc.Themes
         /// </summary>
         [DataMember(Name="id")]
         public string Id { get; set; }
+
+        [IgnoreDataMember]
+        [Newtonsoft.Json.JsonIgnore()]
+        public bool IsCoreTheme {
+            get {
+                return this.Id != null && Regex.IsMatch(this.Id, "^core[\\d]+$", RegexOptions.IgnoreCase);
+
+            }
+        }
+
+
 
         /// <summary>
         /// Contains this theme's name.
