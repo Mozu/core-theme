@@ -199,7 +199,7 @@ Ext.define('Taco.view.publishing.grid.Draft', {
                     minWidth: 100,
                     text: 'Name',
                     flex: 2,
-                    sortable: gridType === 'product'
+                    sortable: true
                 }, 
                 publishSetCode: {
                     type: 'gridcolumn',

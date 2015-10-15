@@ -410,6 +410,8 @@
     <Compile Include="Helpers\AttributeHelpers\AttributeSortExtensions.cs" />
     <Compile Include="Helpers\ChannelHelpers\ChannelFilterExtensions.cs" />
     <Compile Include="Helpers\CollectionTaskUnMapper.cs" />
+    <Compile Include="Helpers\ContentHelpers\ContentFilterExtensions.cs" />
+    <Compile Include="Helpers\ContentHelpers\ContentSortExtensions.cs" />
     <Compile Include="Helpers\CouponCodeHelpers\CouponCodeFilterExtensions.cs" />
     <Compile Include="Helpers\CouponCodeHelpers\CouponCodeSortExtensions.cs" />
     <Compile Include="Helpers\CouponSetHelpers\CouponSetFilterExtensions.cs" />
