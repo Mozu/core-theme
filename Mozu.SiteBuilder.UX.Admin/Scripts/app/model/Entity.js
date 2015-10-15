@@ -52,19 +52,19 @@ Ext.define('Taco.model.Entity', {
         }
     },
     getLoadParams:function () {
-      return {
-          list: this.get('listFQN') ,
-          entityType: this.get('entityType'),
-          id: this.get('id')
-      };
+        return {
+            list: this.get('listFQN') ,
+            entityType: this.get('entityType'),
+            id: this.get('id')
+        };
     },
     getFields:function () {
         return this.get('properties') || this.get('item') || {};
     },
     fields: [
         {
-            'name': 'entityId',
-            'type': 'string',
+            name: 'entityId',
+            type: 'string',
             convert: function (v, rec) {
                 if (rec && rec.raw) {
                     if (rec.raw.listFQN) {
@@ -77,8 +77,8 @@ Ext.define('Taco.model.Entity', {
             persist: false
 
         }, {
-            'name': 'auditInfo',
-            'type': 'auto',
+            name: 'auditInfo',
+            type: 'auto',
             persist: false
         },
         {
@@ -213,6 +213,19 @@ Ext.define('Taco.model.Entity', {
             name: 'publishSetDate',
             type: 'string',
             defaultValue: null
+        },
+        {
+            name: 'listFlags',
+            type: 'auto',
+            defaultValue: null
+        },
+        {
+            name: 'listSupportsADR',
+            type: 'bool',
+            defaultValue: null,
+            convert: function (value, record) {
+                return record.get('listFlags').supportsADR;
+            }
         }
     ],
 

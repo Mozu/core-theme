@@ -1,10 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Net;
 using System.Net.Http;
 using System.Threading.Tasks;
-using System.Web.UI;
 using Autofac;
 using Magnum.Extensions;
 using Mozu.Content.Contracts.Clients;
@@ -14,7 +12,6 @@ using Mozu.SiteBuilder.Mvc.Extensions;
 using Mozu.SiteBuilder.Mvc.Models.CMS;
 using Mozu.SiteBuilder.UX.Models.StoreFront.CMS;
 using Newtonsoft.Json.Linq;
-using AVM = Mozu.SiteBuilder.Mvc.Models.CMS.Admin;
 using DC = Mozu.Content.Contracts;
 
 namespace Mozu.SiteBuilder.Mvc.CMS
@@ -23,9 +20,7 @@ namespace Mozu.SiteBuilder.Mvc.CMS
     {
         ISiteBuilderApiContext _apiContext;
         IDocumentListWebApiClient _docRepo;
-        
-        private readonly ILifetimeScope _lifetimescope;
-
+        readonly ILifetimeScope _lifetimescope;
 
         public CmsServiceWrapper(IDocumentListWebApiClient docRepo,
             ISiteBuilderApiContext apiContext,
@@ -33,20 +28,18 @@ namespace Mozu.SiteBuilder.Mvc.CMS
             )
         {
             _apiContext = apiContext;
-     
-       
             _docRepo = docRepo;
+
             if (_apiContext.UserClaims != null && _apiContext.UserClaims.ScopeType != Mozu.Core.ContextLevelType.Tenant.ToString())
             {
                 _docRepo = _docRepo.CloneWithoutUserClaims();
             }
+
             if(apiContext.DataViewMode == Core.DataViewModeType.Pending)
             {
                 _docRepo.Options.DisableCache = true;
             }
-            
-            
-          //  _cmsTypeHelper = cmsTypeHelper;
+
             _lifetimescope = lifetimescope;
         }
 
@@ -55,12 +48,34 @@ namespace Mozu.SiteBuilder.Mvc.CMS
             doc.Properties = doc.Properties ?? new JObject();
 
             var documentTypeId = doc.Get<string>(CmsConstants.Documents.page_type_definition);
+            var pageTypeDef = GetPageTypeDefinition(documentTypeId);
+
+            doc.Name = string.IsNullOrEmpty(doc.Name) ? Guid.NewGuid().ToString() : doc.Name;
+            doc.DocumentTypeFQN = string.IsNullOrEmpty(doc.DocumentTypeFQN) ? pageTypeDef.DocumentTypeFQN : doc.DocumentTypeFQN;
+
+            if (string.IsNullOrEmpty(doc.Get<string>(CmsConstants.Documents.template)))
+            {
+                doc.Properties[CmsConstants.Documents.template] = pageTypeDef.Template;
+            }
+
+            doc.ListFQN = string.IsNullOrEmpty(doc.ListFQN) ? CmsConstants.Documents.default_collection_name : doc.ListFQN;
+
+            if (pageTypeDef.Zones != null && pageTypeDef.Zones.Count > 0)
+            {
+                var widgetPropVal = Newtonsoft.Json.JsonConvert.SerializeObject(pageTypeDef.Zones);
+                doc.Properties.CastAs<JObject>()[CmsConstants.Documents.widget_prop] = widgetPropVal;
+            }
+
+            return _docRepo.CreateDocument(doc.ListFQN, doc);
+        }
+
+        PageTypeDefinition GetPageTypeDefinition(string documentTypeId)
+        {
             PageTypeDefinition pageTypeDef = null;
             var themeEntityDefinitionProvider = _lifetimescope.Resolve<IThemeEntityDefinitionProvider>();
             if (documentTypeId == null)
             {
                 pageTypeDef = new PageTypeDefinition();
-                //throw new InvalidOperationException("missing documentTypeId");
             }
             else
             {
@@ -71,76 +86,36 @@ namespace Mozu.SiteBuilder.Mvc.CMS
                 throw new InvalidOperationException("unknonw pageTypeDefinition " + documentTypeId);
             }
 
-
-            var d = doc;
-
-            d.Name = string.IsNullOrEmpty(d.Name) ? Guid.NewGuid().ToString() : d.Name;
-            d.DocumentTypeFQN = string.IsNullOrEmpty(d.DocumentTypeFQN) ? pageTypeDef.DocumentTypeFQN : d.DocumentTypeFQN;
-
-            if (string.IsNullOrEmpty(d.Get<string>(CmsConstants.Documents.template)))
-            {
-                d.Properties.CastAs<JObject>()[CmsConstants.Documents.template] = pageTypeDef.Template;
-                
-            }
-
-
-
-            d.ListFQN = string.IsNullOrEmpty(d.ListFQN) ? CmsConstants.Documents.default_collection_name : d.ListFQN;
-
-            if (pageTypeDef.Zones != null && pageTypeDef.Zones.Count> 0)
-            {
-                var widgetPropVal = Newtonsoft.Json.JsonConvert.SerializeObject(pageTypeDef.Zones);
-                d.Properties.CastAs<JObject>()[CmsConstants.Documents.widget_prop] = widgetPropVal;
-            }
-
-
-           
-            var task = _docRepo.CreateDocument( d.ListFQN, d);
-            return task;
+            return pageTypeDef;
         }
 
         [Obsolete]
         public Task<Tuple<DC.FolderTree, ServiceClientResponse<DC.FolderTree>>> GetFolderTree(string collection, string parentId = null, int? levels = null)
         {
             throw new NotImplementedException();
-            //return _folderRepo.GetFolderTree(collection, parentId, levels)
-            //    .ContinueWith ( x=>  
-            //        {
-            //            if ( x.Result.ResponseMessage .IsSuccessStatusCode )
-            //            {
-            //                return new Tuple<DC.FolderTree,ServiceClientResponse<DC.FolderTree>>( x.Result.ReadAsSync (), x.Result  );
-            //            }
-            //            else{
-            //                return new Tuple<DC.FolderTree, ServiceClientResponse<DC.FolderTree>>(null, x.Result );
-            //            }
-            //        });
         }
 
-        public Task<ServiceClientResponse<DC.Document>> UpdateInternal(DC.Document doc)
+        public async Task<ServiceClientResponse<DC.Document>> UpdateInternal(DC.Document doc)
         {
             if (doc.Id.StartsWith("new"))
             {
-                //todo: clean up create sync.
                 return null;
             }
 
-
-            //remove when patch comes back.
-            if (doc.Properties["widgets"]== null )
+            if (doc.Properties["widgets"] == null )
             {
-                var d = _docRepo.GetDocument(documentListName: doc.ListFQN, documentId: doc.Id).Result.ReadAsSync();
+                var docResponse = await _docRepo.GetDocument(documentListName: doc.ListFQN, documentId: doc.Id).ConfigureAwait(false);
+                var d = docResponse.ReadAsSync();
 
-                // doc.Set("widgets", );
                 JToken widgets;
                 if (d.Properties != null && d.Properties.TryGetValue("widgets", out widgets))
                 {
                     doc.Properties["widgets"] = widgets;
                 }
-
             }
-            return _docRepo.UpdateDocument(doc.ListFQN, doc.Id, doc);
-        }
 
+            return await _docRepo.UpdateDocument(doc.ListFQN, doc.Id, doc).ConfigureAwait(false);
+        }
 
         [Obsolete]
         public Task<ServiceClientResponse<List<DC.Facet>>> GetFacets(string contentCollection,  string propertyName)
@@ -148,14 +123,11 @@ namespace Mozu.SiteBuilder.Mvc.CMS
             return _docRepo.GetFacets(contentCollection,propertyName);
         }
 
-
         public Task<ServiceClientResponse<DC.DocumentCollection >> GetList2(string contentCollection = null, string filter = null, string sortBy = null, int? pageSize = 25, int? startIndex = 0, bool? includeinactive = null)
         {
             return _docRepo.GetDocuments(
                     documentListName: contentCollection, 
                               filter: filter, 
-       
-                            //  publishState : _apiContext.CmsDraftState, 
                               sortBy: sortBy, 
                             pageSize: pageSize, 
                           startIndex: startIndex,
@@ -163,29 +135,25 @@ namespace Mozu.SiteBuilder.Mvc.CMS
             );
         }
 
-        public Task<ServiceClientResponse<DC.Document>> GetByPath2(string contentCollection, string name, string status = null, bool? includeInactive = null)
+        public async Task<ServiceClientResponse<DC.Document>> GetByPath2(string contentCollection, string name, string status = null, bool? includeInactive = null)
         {
-            var task = _docRepo.GetTreeDocument(
+            var treeDocResponse = await _docRepo.GetTreeDocument(
                 documentListName: contentCollection,
                     documentName: name,
                     includeInactive: includeInactive
-            );
+            ).ConfigureAwait(false);
 
-            return task.ContinueWith(t =>
+            if (treeDocResponse.ResponseMessage.StatusCode == HttpStatusCode.NotFound)
             {
-                if (t.Result.ResponseMessage.StatusCode == HttpStatusCode.NotFound)
+                return new ServiceClientResponse<DC.Document>()
                 {
-                    return new ServiceClientResponse<DC.Document>()
-                    {
-                        HasException = false,
-                        ResponseMessage = t.Result.ResponseMessage,
-                        ReadAsSync = () => null,
-                        ReadAsAsync = t.Result.ReadAsAsync
-                    };
-                }
-
-                return t.Result;
-            });
+                    HasException = false,
+                    ResponseMessage = treeDocResponse.ResponseMessage,
+                    ReadAsSync = () => null,
+                    ReadAsAsync = () => Task.FromResult<DC.Document>(null)
+                };
+            }
+            else return treeDocResponse;
         }
 
         public Task<ServiceClientResponse<DC.Document>> Get2(string contentCollection, string id, bool? includeInactive = null)
@@ -194,18 +162,13 @@ namespace Mozu.SiteBuilder.Mvc.CMS
                 documentListName: contentCollection,
                 documentId: id,
                 includeInactive: includeInactive
-                //,
-         //       publishState : _apiContext.CmsDraftState
             );
         }
 
         public Task<ServiceClientResponse<DC.Document>> Update2(DC.Document doc)
         {
             return UpdateInternal( doc );
-
         }
-
-      
 
         public Task<ServiceClientResponse<DC.Document>> Create2(DC.Document doc)
         {
@@ -214,9 +177,7 @@ namespace Mozu.SiteBuilder.Mvc.CMS
 
         public Task<ServiceClientResponse<DC.Document>> RawCreate2(DC.Document doc)
         {
-            return _docRepo.CreateDocument(doc.ListFQN, doc
-                //,publishState:"latest"
-                );
+            return _docRepo.CreateDocument(doc.ListFQN, doc);
         }
 
         public Task<Tuple<bool, ServiceClientResponse<StreamContent>>> Delete2(DC.Document doc)
@@ -224,13 +185,21 @@ namespace Mozu.SiteBuilder.Mvc.CMS
             return Delete2(doc.ListFQN, doc.Id);
         }
 
-        public Task<Tuple<bool, ServiceClientResponse<StreamContent>>> Delete2(string listFQN, string documentId)
+        public async Task<Tuple<bool, ServiceClientResponse<StreamContent>>> Delete2(string listFQN, string documentId)
         {
-            return _docRepo.DeleteDocument(listFQN, documentId)
-                //, _apiContext.CmsDraftState)
-                .ContinueWith(t => new Tuple<bool, ServiceClientResponse<StreamContent>>(t.Result.ResponseMessage.IsSuccessStatusCode, t.Result));
+            var result = await _docRepo.DeleteDocument(listFQN, documentId).ConfigureAwait(false);
+            return Tuple.Create(result.ResponseMessage.IsSuccessStatusCode, result);
         }
 
+        public Task<ServiceClientResponse<DC.DocumentList>> GetList(string listFQN)
+        {
+            return _docRepo.GetDocumentList(listFQN);
+        }
+
+        public Task<ServiceClientResponse<DC.DocumentList>> UpdateList(DC.DocumentList list)
+        {
+            return _docRepo.UpdateDocumentList(list.ListFQN, list);
+        }
 
         public IDocumentListWebApiClient DocumentListWebApiClient
         {
