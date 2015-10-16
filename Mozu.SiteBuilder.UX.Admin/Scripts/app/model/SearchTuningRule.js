@@ -9,9 +9,13 @@ Ext.define('Taco.model.SearchTuningRule', {
     //    update: 26,
     //    destroy: 27
     //},
-    idProperty: 'code',
+    idProperty: 'id',
     fields: [
         {
+            name: 'id',
+            type: 'int',
+            useNull: true
+        }, {
             name: 'code', //required, regex like category/product code.
             type: 'string'
         }, {
@@ -64,7 +68,25 @@ Ext.define('Taco.model.SearchTuningRule', {
             name: 'blockedProducts',
             type: "auto",
             defaultValue: []
+        }, {
+            name: 'siteId',
+            type: 'int'
         }
+        //, {
+        //    name: "sites",
+        //    "type": "auto",
+        //    persist: false,
+        //    convert: function (value, record) {
+        //        if (record.siteId == null) {
+        //            var catalogId = record.get('catalogId');
+
+        //            record.sites = Taco.app.context.findSitesByCatalog(catalogId);
+        //        }
+        //        return record.sites;
+
+        //    }
+
+        //}
     ],
 
     validations: [

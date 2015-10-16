@@ -1,5 +1,5 @@
 ﻿/**
-* The Coupon Set list (grid) view
+* The Search Tuning Rule list (grid) view container
 */
 
 Ext.define('Taco.view.searchTuningRule.Index', {

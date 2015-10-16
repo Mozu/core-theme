@@ -51,7 +51,7 @@ Ext.define('Taco.view.searchTuningRule.Grid', {
     saveButtonEnabled: false,
     cancelButtonEnabled: false,
 
-    createButtonText: "Create New Search Tuning Rule",
+    createButtonText: "Create New Rule",
 
     showActionsColumn: true,
 
@@ -97,8 +97,6 @@ Ext.define('Taco.view.searchTuningRule.Grid', {
 
     initComponent: function () {
         var me = this;
-
-        me.createButtonCfg = me.getCreateButtonConfig();
 
         this.columns = this.getColumnConfig();
 
@@ -223,10 +221,10 @@ Ext.define('Taco.view.searchTuningRule.Grid', {
         if (this.enableEditAction) {
             actions.push({
                 text: 'Edit',
-                requiredBehaviors: {
-                    model: 'Taco.model.SearchTuningRule',
-                    behavior: 'update'
-                },
+                //requiredBehaviors: {
+                //    model: 'Taco.model.SearchTuningRule' //,
+                //    //behavior: 'update'
+                //},
                 menuColumnHandler: me.doEdit,
                 scope:me
             });
@@ -239,10 +237,10 @@ Ext.define('Taco.view.searchTuningRule.Grid', {
                 itemId: "deleteMenuItem",
                 // deleteMenuColumnHandler can be found in Taco.core.ux.mixins.DeleteFromGrid
                 menuColumnHandler: "deleteMenuColumnHandler",
-                requiredBehaviors: {
-                    model: 'Taco.model.SearchTuningRule',
-                    behavior: 'delete'
-                },
+                //requiredBehaviors: {
+                //    model: 'Taco.model.SearchTuningRule',
+                //    //behavior: 'delete'
+                //},
                 scope: me
             });
         }
@@ -292,7 +290,7 @@ Ext.define('Taco.view.searchTuningRule.Grid', {
         // console.log(e.target);
         if (e.target.className === 'taco-launch-editor') {
             e.preventDefault();
-            this.openEditor(record, record.get('couponSetType'), false);
+            this.openEditor(record, record.get('code'), false);
             //this.doEdit(record, e);
             //this.launchEditor(record);
             //Taco.app.StateManager.addState(this.controllerName + '/edit/' + record.getId(), { id: record.getId() });
@@ -301,10 +299,10 @@ Ext.define('Taco.view.searchTuningRule.Grid', {
 
     doEdit : function (item, eventData) {
         var rec = eventData.record;
-        item.scope.openEditor(rec, rec.get('couponSetType'), false);
+        item.scope.openEditor(rec, false);
     },
 
-    openEditor: function (record, couponSetType, isNew) {
+    openEditor: function (record, isNew) {
         var me = this;
 
         Ext.create('Taco.view.searchTuningRule.modal.SearchTuningRuleEditor', {
@@ -312,87 +310,25 @@ Ext.define('Taco.view.searchTuningRule.Grid', {
             // otherwise, pass the record.
 
             record: record,
-            createType: 'searchRule',
-            isCreateMode: isNew,
+            isCreateMode: isNew
+            //,
 
-            listeners: {
-                savesuccess: function() {
-                  me.store.reload();
-                }
-            }
+            //listeners: {
+            //    savesuccess: function() {
+            //      me.store.reload();
+            //    }
+            //}
         });
     },
 
-    doCreate : function (couponSetType){
-        if (!couponSetType) return;
-        this.openEditor(null, couponSetType, true);
+    doCreate : function (){
+        this.openEditor(null, true);
     },
 
     getDeletePromptMessage: function (record) {
         return record.getDeletePromptMessage();
-    },
-
-    getCreateButtonConfig: function () {
-        var me = this;
-        return {
-            menuAlign: 'tr-br?',
-            menu: {
-                plain: true,
-                shadow: false,
-                items: [
-                    {
-                        text: 'Manual Coupon Set',
-                        requiredBehaviors: {
-                            model: 'Taco.model.CouponSet',
-                            behavior: 'create'
-                        },
-                        listeners: {
-                            click: {
-                                fn: function (menu, menuItem) {
-                                    if (!menuItem) {
-                                        return;
-                                    }
-                                    ////var context= menuItem.context;
-                                    //var siteId = menuItem.siteId;
-                                    //// set the context to the siteId of the selected store;
-                                    //var context = Taco.app.context.getStore().findRecord('id', siteId).raw
-                                    //Taco.app.context.setCurrentContext(context);
-                                    //create the
-                                    me.doCreate('Manual');
-
-                                },
-                                scope: me,
-                                delegate: "x-menu-item-link"
-                            }
-                        }
-                    }, {
-                        text: 'Generated Coupon Set',
-                        requiredBehaviors: {
-                            model: 'Taco.model.CouponSet',
-                            behavior: 'create'
-                        },
-                        listeners: {
-                            click: {
-                                fn: function (menu, menuItem) {
-                                    if (!menuItem) {
-                                        return
-                                    }
-                                    ////var context= menuItem.context;
-                                    //var siteId = menuItem.siteId;
-                                    //// set the context to the siteId of the selected store;
-                                    //var context = Taco.app.context.getStore().findRecord('id', siteId).raw
-                                    //Taco.app.context.setCurrentContext(context);
-                                    //create the
-                                    me.doCreate('Generated');
-                                },
-                                scope: me,
-                                delegate: "x-menu-item-link"
-                            }
-                        }
-                    }
-                ]
-            }
-        }
     }
+
+
 
 });
