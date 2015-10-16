@@ -112,6 +112,9 @@
     }
 
     Target.prototype.insert = function(quadrant, widgetCfg) {
+
+        if (this.parent === null) return;
+
         var block = widgetCfg.block,
             col,
             target;

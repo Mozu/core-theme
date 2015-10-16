@@ -38,6 +38,9 @@ namespace Mozu.SiteBuilder.UX.Admin.Helpers.ContentHelpers
             {
                 case "name":
                     return String.Format("{0} {1} {2}", CONTENT_NAME, filter.comparison, filter.escapedValue);
+                case "all":
+                    //to be removed once we can filter by anything other than name in content
+                    return String.Format("{0} {1} {2}", CONTENT_NAME, "eq", filter.escapedValue);
                 default:
                     {
                         throw new NotImplementedException("unable to filter on property " + filter.property);

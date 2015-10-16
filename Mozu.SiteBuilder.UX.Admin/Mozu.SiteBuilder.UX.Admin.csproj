@@ -720,8 +720,13 @@
     <Content Include="Scripts\app\view\couponCode\DiscountGrid.js" />
     <Content Include="Scripts\app\view\couponCode\Grid.js" />
     <Content Include="Scripts\app\view\searchTuningRule\AdvancedSearchForm.js" />
+    <Content Include="Scripts\app\view\searchTuningRule\BlockedProductForm.js" />
+    <Content Include="Scripts\app\view\searchTuningRule\Edit.js" />
+    <Content Include="Scripts\app\view\searchTuningRule\Form.js" />
+    <Content Include="Scripts\app\view\searchTuningRule\PinnedProductGrid.js" />
+    <Content Include="Scripts\app\view\searchTuningRule\PinnedProductForm.js" />
+    <Content Include="Scripts\app\view\searchTuningRule\ContextForm.js" />
     <Content Include="Scripts\app\view\searchTuningRule\GeneralForm.js" />
-    <Content Include="Scripts\app\view\searchTuningRule\GeneratedCodeForm.js" />
     <Content Include="Scripts\app\view\searchTuningRule\Grid.js" />
     <Content Include="Scripts\app\view\searchTuningRule\Index.js" />
     <Content Include="Scripts\app\view\searchTuningRule\modal\SearchTuningRuleEditor.js" />

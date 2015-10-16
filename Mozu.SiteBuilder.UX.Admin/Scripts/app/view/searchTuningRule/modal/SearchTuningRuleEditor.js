@@ -7,10 +7,8 @@ Ext.define('Taco.view.searchTuningRule.modal.SearchTuningRuleEditor', {
     extend: 'Taco.core.ux.window.Drawer',
 
     requires: [
-        'Taco.view.searchTuningRule.GeneralForm',
-        'Taco.view.searchTuningRule.GeneratedCodeForm',
-        //'Taco.view.searchTuningRule.Grid',
-        'Taco.view.couponCode.DiscountGrid'
+        'Taco.view.searchTuningRule.Edit',
+        'Taco.core.util.ExceptionWhiner'
     ],
 
     // this should really be the default;
@@ -20,10 +18,9 @@ Ext.define('Taco.view.searchTuningRule.modal.SearchTuningRuleEditor', {
     closable: true,
     cls: Taco.baseCSSPrefix + 'orderform-editor',
     height: '90%',
-    //scale: 'large',
-    title: 'Create Search Tuning Rule',
-    width: 900,
-    createType: '',
+    title: 'New Rule',
+    width: '80%',
+    //createType: '',
     isCreateMode: true,
     record: null,
     closeOnSave: true,
@@ -51,54 +48,18 @@ Ext.define('Taco.view.searchTuningRule.modal.SearchTuningRuleEditor', {
         // Todo: Create override/mixin/plugin for Ext.Window to add support for relative height and width with min max values.
 
         this.titleTemplate = new Ext.XTemplate(
-            '{editType} {couponSetType} Coupon Set'
+            '{editType} Rule'
         );
 
         this.title = this.titleTemplate.apply({
-            editType: me.isCreateMode ? 'Create' : 'Edit',
-            couponSetType: me.record ? me.record.get('couponSetType') : me.createType
+            editType: me.isCreateMode ? 'Create' : 'Edit'
         });
-
-        //onBeforeClose
-        //me.mon(me, 'beforecancel', me.onBeforeCancel);
-        //me.mon(me, 'beforesave', me.onBeforeSave);
 
         this.initUi();
         this.callParent(arguments);
-        
-        if (this.isCreateMode) {
-            this.managePanelsOnCreate(false, 'Save & Continue', false);  //has to be after parent call
-        }
     },
 
-    managePanelsOnCreate: function (closeAfterSave, saveText, isCouponCodePanelVisible) {
-        var couponSetCode = (this.record) ? this.record.get("couponSetCode") : null,
-            couponSetId = (this.record) ? this.record.get("id") : null;
 
-
-        this.closeOnSave = closeAfterSave;
-        var primaryBtn = this.down('#primaryAction');
-        if (primaryBtn) {
-            primaryBtn.setText(saveText);
-        }
-
-        if (this.createType === 'Manual') {
-            if (this.couponCodePanel) {
-                if (isCouponCodePanelVisible) {
-                    this.couponCodePanel.setCouponSetCode(couponSetCode);
-                }
-                this.couponCodePanel.setVisible(isCouponCodePanelVisible);
-            }
-        }
-
-        if (this.discountPanel) {
-            if (isCouponCodePanelVisible) {
-                this.discountPanel.setCouponSetCode(couponSetCode);
-                this.discountPanel.setCouponSetId(couponSetId);
-            }
-            this.discountPanel.setVisible(isCouponCodePanelVisible);
-        }
-    },
 
     onEsc : Ext.emptyFn,
 
@@ -107,20 +68,7 @@ Ext.define('Taco.view.searchTuningRule.modal.SearchTuningRuleEditor', {
      */
     show: function () {
 
-
         this.callParent(arguments);
-
-
-        // need to manually listen for events that might cause the grid to blur;
-        /*
-        me.mon(me.el, {
-            click: me.onGridBlur,
-            keypress: me.onGridBlur,
-            scope: me
-        });
-        */
-
-
 
         if (!this.record) {
             this.loadRecord();
@@ -128,10 +76,6 @@ Ext.define('Taco.view.searchTuningRule.modal.SearchTuningRuleEditor', {
             this.onLoadRecord();
         }
 
-        //if (!me.isCreateMode) {
-        //    this.down('#discardAction').hide();
-        //    //this.down('#secondaryAction').hide();
-        //}
     },
     
     /**
@@ -150,16 +94,16 @@ Ext.define('Taco.view.searchTuningRule.modal.SearchTuningRuleEditor', {
         if (me.isCreateMode) return;
 
         var
-            couponSetCode = me.record ? me.record.get('couponSetCode') : null,
-            couponSetModel = Ext.ModelManager.getModel('Taco.model.CouponSet');
+            code = me.record ? me.record.get('code') : null,
+            searchTuningRuleModel = Ext.ModelManager.getModel('Taco.model.SearchTuningRule');
         
          me.setLoading({
              msg: "Loading"
          }, me.body);
         
-        couponSetModel.load(couponSetCode, {
+        searchTuningRuleModel.load(code, {
             failure: function () {
-                Taco.app.fireEvent('setmessage', "Error loading couponSet", 'error');
+                Taco.app.fireEvent('setmessage', "Error loading Search Tuning Rule", 'error');
                 me.setLoading(false, this.body);
             },
             success: function (record) {
@@ -174,84 +118,22 @@ Ext.define('Taco.view.searchTuningRule.modal.SearchTuningRuleEditor', {
     
     // when the draft record has loaded create and add the total and grid and hide the loading mask;
     onLoadRecord : function() {
-        this.updateUi();
         this.setLoading(false, this.body);
-    },
-    
-    // reloads the ui using new data
-    updateUi: function () {
-        
-        // update the record on the totalRow panel
-        //me.totalRow.setRecord(me.record);
-        //
-        //// need to determine the selection so it can be restored after updateing the records in the store;
-        //var currentPosition = me.detailGrid.getSelectionModel().getCurrentPosition();
-        //me.detailGrid.getStore().loadRecords(me.record.itemsStore.getRange());
-        //
-        //if (currentPosition) {
-        //    me.detailGrid.restoreSelection(currentPosition);
-        //} else {
-        //    // field is focused; need to scroll to it if needed;
-        //    var activeFocusEl = Ext.fly(document.activeElement);
-        //    var isHidden = activeFocusEl.isHiddenByScroll(me.body);
-        //    if (isHidden) {
-        //        activeFocusEl.scrollIntoView(me.body);
-        //    }
-        //}
     },
 
     // initialize the header and grid when the data load the first time
     initUi: function () {
         var me = this,
-            couponSetCode = me.record ? me.record.get('couponSetCode') : null,
-            couponSetId = me.record ? me.record.get('id') : null;
+            code = me.record ? me.record.get('code') : null;
 
-        me.generalPanel = Ext.create('Taco.view.couponSet.GeneralForm', {
-            record: me.record,
-            isCreateMode: me.isCreateMode
-        });
-        
-        me.couponCodePanel = Ext.create('Taco.view.couponCode.Grid', {
-            autoHeight: true,
-            autoHidePagingToolbar: true,
-            couponSetCode: couponSetCode
-        });
-
-        me.discountPanel = Ext.create('Taco.view.couponCode.DiscountGrid', {
-            margin: {
-                top: 20,
-                right: 0,
-                bottom: 0,
-                left: 0
-            },
-            autoHidePagingToolbar: true,
-            autoHeight: true,
-            couponSetCode: couponSetCode,
-            couponSetId: couponSetId
-        });
-
-
-        var container = Ext.create('Taco.core.ux.form.Form', {
+        me.container = Ext.create('Taco.view.searchTuningRule.Edit', {
             autoScroll:true,
-            items :  [
-                me.generalPanel
-            ]
+            record: me.record,
+            isCreate: me.isCreateMode
         });
-
-        if (me.createType === 'Generated' || (me.record && me.record.get('couponCodeType') === 'Generated')) {
-            me.generatedCodePanel = Ext.create('Taco.view.couponSet.GeneratedCodeForm', {
-                record: me.record,
-                isCreateMode: me.isCreateMode
-            });
-            container.add(me.generatedCodePanel);
-        } else {
-            container.add(me.couponCodePanel);
-        }
-
-        container.add(me.discountPanel);
 
         me.items = [
-            container
+            me.container
         ];
 
     },
@@ -259,23 +141,17 @@ Ext.define('Taco.view.searchTuningRule.modal.SearchTuningRuleEditor', {
     onCreate: function(data) {
         this.saveSuccess(data);
         this.record = data;
-        Taco.app.fireEvent('couponsetcreated', this.record);
-        this.managePanelsOnCreate(true, 'Save', true);
+        Taco.app.fireEvent('searchtuningrulecreated', this.record);
         this.isCreateMode = false;
         Ext.defer(function() {
             this.focusEl.focus();
         }, 1, this);
-        
-
     },
 
     doSave: function () {
         var me = this,
             form = me.getForm(),
-            data = (!me.generatedCodePanel)
-                    ? form.getValues()
-                    : Ext.Object.merge(form.getValues(),
-                        me.generatedCodePanel.getForm().getValues()),
+            data = form.getValues(),
             onSuccess = (!me.isCreateMode)
                     ? me.saveSuccess
                     : me.onCreate;
@@ -283,16 +159,14 @@ Ext.define('Taco.view.searchTuningRule.modal.SearchTuningRuleEditor', {
         // see if there is a form to extract the data from ;
 
         if (this.isCreateMode) {
-            this.record = Ext.create('Taco.model.CouponSet', data);
-            this.record.set('couponCodeType', this.createType);
+            this.record = Ext.create('Taco.model.SearchTuningRule', data);
         } else {
             Ext.Object.merge(this.record.data, data);
         }
         this.record.save({
             success: onSuccess,
             failure: function(item, response) {
-                var message = (response.error.status == 409) ? 'That code prefix is already in use' : 'There was an error saving the Coupon Set';
-                Taco.app.fireEvent('setmessage', message, 'error');
+                Taco.core.util.ExceptionWhiner.handleRemoteFailure(response);
             },
             scope: me
         });
