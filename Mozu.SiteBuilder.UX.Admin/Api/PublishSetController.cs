@@ -67,9 +67,6 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
      
             if (code == null) throw new ArgumentNullException("code");
 
-            var newfilter = ContentFilterExtensions.ToContentFilterString(extFilter, false);
-
-
             if (string.Equals("cms", type, StringComparison.OrdinalIgnoreCase))
             {
                 var res = (await _cmsItemPublishingClient.GetPublishSetItems(
@@ -77,7 +74,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
                     pageSize: pagingParams.pageSize, 
                     startIndex: pagingParams.startIndex,
                     sortBy: pagingParams.sort.ToContentSortString(),
-                    filter: newfilter
+                    filter: ContentFilterExtensions.ToContentFilterString(extFilter, false)
                 ).ConfigureAwait(false)).ReadAsSync();
                 var returnItems = Mapper.Map<List<PublishSetItem>>(res.Items);
 
