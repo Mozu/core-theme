@@ -154,10 +154,6 @@ Ext.define('Taco.view.order.Form', {
         this.updateTitleData();
         // update the superclasses title logic.
         this.initTitle();
-
-        if (this.auditLogPanel) {
-            this.auditLogPanel.auditLogGrid.refreshAuditLog();
-        }
     },
 
     buildForm: function () {

@@ -66,8 +66,7 @@ Ext.define('Taco.view.order.subform.AuditLog', {
     // Destroy the UI
     destroyUI: function () {
         this.removeAll();
-
-        this.auditLogGrid.destroy();
+        this.auditLogGrid = null;
     },
 
     // when the record changes we will need to update the order details
