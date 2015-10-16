@@ -25,6 +25,9 @@ Ext.define('Taco.model.SearchTuningRule', {
             name: 'name',  //required
             type: 'string'
         }, {
+            name: 'description',
+            type: 'string'
+        }, {
             name: 'keywords',
             type: "auto",
             defaultValue: []

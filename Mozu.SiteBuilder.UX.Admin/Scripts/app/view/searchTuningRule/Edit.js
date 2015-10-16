@@ -47,6 +47,11 @@ Ext.define('Taco.view.searchTuningRule.Edit', {
         var me = this,
             menuItems = [],
             delMenuItem;
+
+        if (me.isCreate && !me.record) {
+            me.record = Ext.create('Taco.model.SearchTuningRule', {});
+        }
+
         if (me.isPopUp) {
             me.enableNextPrevious = false;
             me.enableNavHeader = false;
@@ -59,9 +64,7 @@ Ext.define('Taco.view.searchTuningRule.Edit', {
         //if (me.isDuplicate) {
         //    me.record.isDuplicate = true;
         //}
-        if (me.isCreate) {
-            me.record = Ext.create('Taco.model.SearchTuningRule', {});
-        }
+
 
         //menuItems.push({
         //    text: 'Duplicate',

@@ -78,6 +78,9 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.ModelMapping
                 .ForMember(x => x.CreateDate, op => op.ResolveUsing(dc => dc.AuditInfo != null
                     ? dc.AuditInfo.CreateDate
                     : null))
+
+                // todo: once ProdAdmin has it, comment out. - Greg Murray on 2015-10-16 
+                .ForMember(x => x.Description, op => op.Ignore())
                 ;
         }
     }

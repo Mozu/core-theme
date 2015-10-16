@@ -294,7 +294,6 @@ Ext.define('Taco.view.searchTuningRule.Grid', {
         }, 1, this);
     },
 
-
     onItemClick: function (view, record, elm, index, e) {
         // console.log(e.target);
         if (e.target.className === 'taco-launch-editor') {
@@ -312,20 +311,18 @@ Ext.define('Taco.view.searchTuningRule.Grid', {
     },
 
     openEditor: function (record, isNew) {
+        var me = this;
 
         Ext.create('Taco.view.searchTuningRule.modal.SearchTuningRuleEditor', {
             // if we want to edit a draft only, pass recordId.
             // otherwise, pass the record.
-
             record: record,
-            isCreateMode: isNew
-            //,
-
-            //listeners: {
-            //    savesuccess: function() {
-            //      me.store.reload();
-            //    }
-            //}
+            isCreateMode: isNew,
+            listeners: {
+                savesuccess: function() {
+                  me.store.reload();
+                }
+            }
         });
     },
 

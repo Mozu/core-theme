@@ -11,6 +11,8 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.Models.Search
 
         public string Name { get; set; }
 
+        public string Description { get; set; }
+
         public string[] Keywords { get; set; }
 
         public List<KeyValuePair<string, string>> Filters { get; set; }
