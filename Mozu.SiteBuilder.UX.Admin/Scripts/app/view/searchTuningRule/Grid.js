@@ -30,7 +30,7 @@ Ext.define('Taco.view.searchTuningRule.Grid', {
         requiresContextOfType: ['c', 's']
     },
 
-    launchEditorOnClick:true,
+    launchEditorOnClick:false,
 
     // Required by mixin: Taco.core.ux.mixins.LaunchEditor defined in SearchList
     modelName: 'Taco.model.SearchTuningRule',
@@ -110,7 +110,13 @@ Ext.define('Taco.view.searchTuningRule.Grid', {
         // initialize the delete mixin
         this.mixins.deleteFromGrid.init.apply(this);
 
+        me.mon(Taco.app, 'searchtuningrulecreated', me.reloadGrid, me);
+
         me.callParent(arguments);
+    },
+
+    reloadGrid: function() {
+        this.store.reload();
     },
 
     getColumnConfig: function () {
@@ -120,9 +126,9 @@ Ext.define('Taco.view.searchTuningRule.Grid', {
                 dataIndex: 'code',
                 stateId: 'code',
                 text: 'Code',
-                hideable: false,
+                hideable: true,
                 //flex: 1,
-                minWidth: 50,
+                minWidth: 75,
                 sortable: true
             }, {
                 xtype: 'gridcolumn',
@@ -131,21 +137,21 @@ Ext.define('Taco.view.searchTuningRule.Grid', {
                 text: 'Name',
                 hideable: false,
                 flex: 1,
-                minWidth: 150,
+                minWidth: 250,
                 sortable: true
             }, {
                 xtype: 'gridcolumn',
                 dataIndex: 'status',
                 stateId: 'status',
                 text: 'Status',
-                width: 50,
+                width: 75,
                 sortable: false
             }, {
                 xtype: 'datecolumn',
                 dataIndex: 'startDate',
                 stateId: 'startDate',
                 format: 'n/j/Y g:i a',
-                width: 50,
+                width: 75,
                 text: 'Start Date',
                 hidden: false,
                 sortable: true
@@ -154,7 +160,7 @@ Ext.define('Taco.view.searchTuningRule.Grid', {
                 dataIndex: 'endDate',
                 stateId: 'endDate',
                 format: 'm-d-Y g:i a',
-                width: 50,
+                width: 75,
                 text: 'End Date',
                 hidden: false,
                 sortable: true,
@@ -171,41 +177,41 @@ Ext.define('Taco.view.searchTuningRule.Grid', {
                 dataIndex: 'isDefault',
                 stateId: 'isDefault',
                 text: 'Default',
-                width: 50,
-                hidden: false,
+                width: 750,
+                hidden: true,
                 sortable: false
             }, {
                 xtype: 'datecolumn',
                 dataIndex: 'createDate',
                 stateId: 'createDate',
                 format: 'n/j/Y g:i a',
-                width: 50,
+                width: 75,
                 text: 'Created Date',
                 hidden: true,
                 sortable: true
             }, {
                 xtype: 'gridcolumn',
-                dataIndex: 'createdBy',
-                stateId: 'createdBy',
+                dataIndex: 'createByUser',
+                stateId: 'createByUser',
                 text: 'Created By',
-                width: 50,
+                width: 75,
                 hidden: true,
                 sortable: false
             }, {
                 xtype: 'datecolumn',
-                dataIndex: 'modifiedDate',
-                stateId: 'modifiedDate',
+                dataIndex: 'lastModifiedDate',
+                stateId: 'lastModifiedDate',
                 format: 'n/j/Y g:i a',
-                width: 50,
+                width: 75,
                 text: 'Last Modified Date',
                 hidden: true,
                 sortable: true
             }, {
                 xtype: 'gridcolumn',
-                dataIndex: 'modifiedBy',
-                stateId: 'modifiedBy',
+                dataIndex: 'lastModifiedByUser',
+                stateId: 'lastModifiedByUser',
                 text: 'Last Modified By',
-                width: 50,
+                width: 75,
                 hidden: true,
                 sortable: false
             }
@@ -250,15 +256,18 @@ Ext.define('Taco.view.searchTuningRule.Grid', {
     },
 
     onActionMenuShow: function (menu, eventData) {
+
+        //todo: set delete message based on categories? greg_murray on 10/16/2015
+
         // need to disable the delete menu option when discount has been used
-        var deleteMenuItem = menu.down("#deleteMenuItem");
-        if (deleteMenuItem) {
-            if (eventData.record.get('canBeDeleted')) {
-                deleteMenuItem.show();
-            } else {
-                deleteMenuItem.hide();
-            }
-        }
+        //var deleteMenuItem = menu.down("#deleteMenuItem");
+        //if (deleteMenuItem) {
+        //    if (eventData.record.get('canBeDeleted')) {
+        //        deleteMenuItem.show();
+        //    } else {
+        //        deleteMenuItem.hide();
+        //    }
+        //}
     },
 
     getActionColumn: function () {
@@ -303,7 +312,6 @@ Ext.define('Taco.view.searchTuningRule.Grid', {
     },
 
     openEditor: function (record, isNew) {
-        var me = this;
 
         Ext.create('Taco.view.searchTuningRule.modal.SearchTuningRuleEditor', {
             // if we want to edit a draft only, pass recordId.

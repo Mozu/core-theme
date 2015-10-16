@@ -3,6 +3,9 @@
  */
 Ext.define('Taco.model.SearchTuningRule', {
     extend: 'Taco.core.data.Model',
+    requires: [
+        'Taco.core.util.Common'
+    ],
     //behaviors: {  //todo: need behaviors.
     //    read: 24,
     //    create: 25,
@@ -71,6 +74,33 @@ Ext.define('Taco.model.SearchTuningRule', {
         }, {
             name: 'siteId',
             type: 'int'
+        }, {
+            "name": "createBy",
+            "type": "string",
+            "useNull": true
+        }, {
+            "name": "createByUser",
+            type: "string",
+            convert: Taco.core.util.Common.getCreateByUser
+        }, {
+            "name": "createDate",
+            "type": "date",
+            "useNull": true,
+            dateFormat: 'c'
+        },
+        {
+            name: "lastModifiedBy",
+            type: "string",
+            useNull: true
+        }, {
+            name: "lastModifiedByUser",
+            type: "string",
+            convert: Taco.core.util.Common.getLastModifiedByUser
+        }, {
+            name: "lastModifiedDate",
+            type: "date",
+            useNull: true,
+            dateFormat: 'c'
         }
         //, {
         //    name: "sites",

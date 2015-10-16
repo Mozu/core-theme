@@ -25,7 +25,7 @@ Ext.define('Taco.core.util.Common', {
         var data = config.data;
         if (template && data) {
             for (var p in data) {
-                var t = template[p]
+                var t = template[p];
                 var d = data[p];
                 if ('object' === typeof d) {
                     if (!Taco.core.util.Common.isEqual({ template: t, data: d })) {
@@ -45,14 +45,14 @@ Ext.define('Taco.core.util.Common', {
     
     /**
          * Filter out null values from Array and maps in place.
-         * @param {Array/Object} the array/Object to filter
+         * @param l the array/Object to filter
          * @return the original item with null elements removed
          */
     filterNulls: function (l) {
         if (typeof l == "object") {
             if (l.constructor == Array) {
                 var i = j = 0;
-                for (var i = 0; i < l.length; i++)
+                for (i = 0; i < l.length; i++)
                     if (l[i])
                         l[j++] = l[i];
                 l.length = j;
@@ -74,5 +74,38 @@ Ext.define('Taco.core.util.Common', {
     },
     function decamelUpper(match, p1, p2) {
         return p1 + ' ' + p2;
-    })
+    }),
+
+    /**
+     * Gets user firstName lastName for given field id.
+     * @sample
+     * {
+     *   name: "lastModifiedByUser",
+     *   type: "string",
+     *   convert: Taco.core.util.Common.getLastModifiedByUser
+     * }
+     * @param v
+     * @param record
+     * @returns {user} or null
+     */
+    getLastModifiedByUser: function (v, record) {
+        return Taco.core.util.Common.getUserByUserIdField(record, 'lastModifiedBy');
+    },
+
+    getCreateByUser: function (v, record) {
+        return Taco.core.util.Common.getUserByUserIdField(record, 'createBy');
+    },
+
+    getUserByUserIdField: function (record, fieldName) {
+        if (!record) {
+            return null;
+        }
+
+        // look up user id in magical site users global object.
+        var id = record.get(fieldName);
+        var user = Ext.Array.findBy(window.Taco.siteUsersRaw, function (u) {
+            return u.id === id;
+        });
+        return (user) ? user.firstName + ' ' + user.lastName : null;
+    }
 });

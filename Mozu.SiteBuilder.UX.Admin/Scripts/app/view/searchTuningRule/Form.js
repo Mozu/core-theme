@@ -12,7 +12,6 @@ Ext.define('Taco.view.searchTuningRule.Form', {
 
     createTitle: 'New Rule',
     editTitle: '{[values.record.data.name]}',
-    isCreate: true,
 
     initComponent: function () {
 
@@ -21,46 +20,42 @@ Ext.define('Taco.view.searchTuningRule.Form', {
         // User interactions in a subform that cause changes in other forms will communicate via events on the record.
         // Each subform will listen for and react to these changes.
 
-        if (this.isCreate) {
-            me.record = Ext.create('Taco.model.SearchTuningRule', {});
-        }
+
 
 
         this.items = [{
-            xtype: 'taco-searchTuningRule-general',
-            itemId: 'general',
-            parentForm: this,
-            record: me.record,
-            manageHeight: true
-        }
-        //    , {
-        //    xtype: 'taco-searchTuningRule-context',
-        //    itemId: 'context',
-        //    parentForm: this,
-        //    record: this.record,
-        //    manageHeight: true
-        //}, {
-        //    xtype: 'taco-searchTuningRule-pinned',
-        //    itemId: 'pinned',
-        //    parentForm: this,
-        //    record: this.record,
-        //    hidden: true,
-        //    manageHeight: true
-        //},{
-        //    xtype: 'taco-searchTuningRule-blocked',
-        //    itemId: 'blocked',
-        //    parentForm: this,
-        //    record: this.record,
-        //    manageHeight: true
-        //}
+                xtype: 'taco-searchTuningRule-general',
+                itemId: 'general',
+                parentForm: this,
+                record: me.record,
+                manageHeight: true
+            }, {
+                xtype: 'taco-searchTuningRule-context',
+                itemId: 'context',
+                parentForm: this,
+                record: me.record,
+                manageHeight: true
+            }, {
+                xtype: 'taco-searchTuningRule-pinned',
+                itemId: 'pinned',
+                parentForm: this,
+                record: this.record,
+                manageHeight: true
+            }, {
+                xtype: 'taco-searchTuningRule-blocked',
+                itemId: 'blocked',
+                parentForm: this,
+                record: this.record,
+                manageHeight: true
+            }
         ];
 
         this.callParent(arguments);
 
         this.general = this.down('#general');
-        //this.context = this.down('#context');
-        //this.pinned = this.down('#pinned');
-        //this.blocked = this.down('#blocked');
+        this.context = this.down('#context');
+        this.pinned = this.down('#pinned');
+        this.blocked = this.down('#blocked');
 
         if (!this.isEdit()) this.general.setTitle('New');
 

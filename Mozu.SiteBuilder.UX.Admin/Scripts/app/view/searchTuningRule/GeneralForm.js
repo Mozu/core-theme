@@ -17,7 +17,6 @@ Ext.define('Taco.view.searchTuningRule.GeneralForm', {
 
     title: 'General',
     dateValidationMsg: "An active start or end date is required",
-    record: null,
 
     initComponent: function() {
         var me = this;

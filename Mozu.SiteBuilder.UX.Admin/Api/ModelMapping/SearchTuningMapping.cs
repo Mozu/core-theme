@@ -72,6 +72,12 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.ModelMapping
                 .ForMember(x => x.LastModifiedDate, op => op.ResolveUsing(dc => dc.AuditInfo != null
                     ? dc.AuditInfo.UpdateDate
                     : null))
+                .ForMember(x => x.CreateBy, op => op.ResolveUsing(dc => dc.AuditInfo != null
+                    ? dc.AuditInfo.CreateBy
+                    : null))
+                .ForMember(x => x.CreateDate, op => op.ResolveUsing(dc => dc.AuditInfo != null
+                    ? dc.AuditInfo.CreateDate
+                    : null))
                 ;
         }
     }

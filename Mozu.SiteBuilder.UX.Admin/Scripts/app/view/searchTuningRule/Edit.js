@@ -59,6 +59,9 @@ Ext.define('Taco.view.searchTuningRule.Edit', {
         //if (me.isDuplicate) {
         //    me.record.isDuplicate = true;
         //}
+        if (me.isCreate) {
+            me.record = Ext.create('Taco.model.SearchTuningRule', {});
+        }
 
         //menuItems.push({
         //    text: 'Duplicate',
