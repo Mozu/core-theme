@@ -14,6 +14,17 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.ModelMapping
 {
     public class ContentMapping : Profile
     {
+        static Dictionary<string, object> ToDict(UX.Models.Admin.CMS.DocListFlags flags)
+        {
+            return new Dictionary<string, object>
+            {
+                { "supportsADR", flags.SupportsActiveDateRange},
+                { "enableADR", flags.EnableActiveDateRange},
+                { "supportsPublishing", flags.SupportsPublishing},
+                { "enablePublishing", flags.EnablePublishing}
+            };
+        }
+
         public override string ProfileName
         {
             get { return GetType().FullName; }
@@ -28,9 +39,36 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.ModelMapping
             }
             return null;
         }
+        static Dictionary<string, object> defaultFlags = ToDict(new UX.Models.Admin.CMS.DocListFlags { EnableActiveDateRange = false, EnablePublishing = false, SupportsActiveDateRange = false, SupportsPublishing = false });
+
         protected override void Configure()
         {
-
+            Mapper.CreateMap<UX.Models.Admin.CMS.DocumentWithListInfo, JObject>()
+                .ConstructUsing((UX.Models.Admin.CMS.DocumentWithListInfo doc) =>
+                    {
+                        if (doc == null) return null;
+                        var jobj = JObject.FromObject(doc, _ser.Value);
+                        jobj["startDate"] = doc.ActiveDateRange == null ? null : doc.ActiveDateRange.StartDate;
+                        jobj["endDate"] = doc.ActiveDateRange == null ? null : doc.ActiveDateRange.EndDate;
+                        jobj["listFlags"] = JObject.FromObject(doc.ListFlags == null ? defaultFlags : ToDict(doc.ListFlags));
+                        return jobj;
+                    }
+                );
+            Mapper.CreateMap<JObject, UX.Models.Admin.CMS.DocumentWithListInfo>()
+                .ConstructUsing((JObject jobj) =>
+                {
+                    if (jobj == null) return null;
+                    var doc = jobj.ToObject<UX.Models.Admin.CMS.DocumentWithListInfo>();
+                    var flags = jobj["listFlags"];
+                    doc.ListFlags = new UX.Models.Admin.CMS.DocListFlags
+                    {
+                        EnableActiveDateRange = flags["enableADR"].Value<bool>(),
+                        EnablePublishing = flags["enablePublishing"].Value<bool>(),
+                        SupportsActiveDateRange = flags["supportsADR"].Value<bool>(),
+                        SupportsPublishing = flags["supportsPublishing"].Value<bool>()
+                    };
+                    return doc;
+                });
             Mapper.CreateMap<DC.Document, JObject>()
                 .ConstructUsing((DC.Document doc) =>
                 {
