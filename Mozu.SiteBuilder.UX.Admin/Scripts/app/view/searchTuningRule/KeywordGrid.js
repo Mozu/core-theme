@@ -6,22 +6,14 @@ Ext.define('Taco.view.searchTuningRule.KeywordGrid', {
     requires: [
         'Ext.ux.data.PagingMemoryProxy',
         'Taco.model.SearchTuningRule',
-        //'Taco.store.SearchTuningRule',
         'Taco.core.ux.grid.plugins.AutoSelect'
     ],
 
     minHeight: 240,
     
     launchEditorOnClick:false,
-    
-    // Required by mixin: Taco.core.ux.mixins.LaunchEditor defined in SearchList
-    //modelName: 'Taco.model.SearchTuningRule',
-
-    //controllerName: 'SearchTuningRule',
 
     enableNavHeader: true,
-
-    
 
     emptyText:'No Keywords',
 
@@ -37,11 +29,9 @@ Ext.define('Taco.view.searchTuningRule.KeywordGrid', {
     defaultRowEditingData: {
     },
     enableAutoSelect: false,
-    createButtonEnabled: true,
+    createButtonEnabled: false,
     saveButtonEnabled: false,
     cancelButtonEnabled: false,
-
-    createButtonText: "Create New Coupon Code",
 
     showActionsColumn: true,
 
@@ -50,8 +40,6 @@ Ext.define('Taco.view.searchTuningRule.KeywordGrid', {
     title: "Search Keywords",
 
     pageSize: 5,
-
-    //store: { type: 'Taco.store.SearchTuningRule' },
 
     autoScroll: true,
 
@@ -67,7 +55,6 @@ Ext.define('Taco.view.searchTuningRule.KeywordGrid', {
 
     onCreate: Ext.emptyFn,
     stateful: false,
-    //stateId: 'statefulCouponCodeGrid',
 
     mixins: {
         deleteFromGrid: 'Taco.core.ux.mixins.DeleteFromGrid',
@@ -79,14 +66,6 @@ Ext.define('Taco.view.searchTuningRule.KeywordGrid', {
     statics: {
         
     },
-
-    //updateCouponSetCode: function () {
-    //
-    //    var me = this,
-    //        couponSetCode = this.getCouponSetCode();
-    //
-    //    me.store.proxy.extraParams.couponSetCode = couponSetCode;
-    //},
         
     initComponent: function () {
         var me = this;
@@ -111,15 +90,12 @@ Ext.define('Taco.view.searchTuningRule.KeywordGrid', {
             remoteSort:false,
             remoteFilter:false,
             proxy: {
-                type: 'memory', //'memory',
+                type: 'memory',
                 enablePaging: true,
                 sorters: ['keyword'],
                 filters: [],
                 data: {
-                    'items': [
-                        {'keyword': 'foo'},
-                        {'keyword': 'bar'}
-                    ]
+                    'items': me.record.get('keywordObjects')
                 },
                 reader: {
                     type: 'json',
@@ -131,20 +107,6 @@ Ext.define('Taco.view.searchTuningRule.KeywordGrid', {
 
         me.dockedItems = me.dockedItems || [];
         me.mixins = me.mixins|| [];
-        
-        //this.store = Ext.create('Taco.store.SearchTuningRule', {
-        //    pageSize: this.pageSize,
-        //    autoLoad:(couponSetCode) ? true : false
-        //});
-
-        //if (couponSetCode) {
-        //    this.store.proxy.extraParams.couponSetCode = couponSetCode;
-        //}
-        
-
-        //this.defaultRowEditingData = {
-        //    couponSetCode: this.getCouponSetCode()
-        //};
 
         this.columns = Ext.Array.clone(this.getColumnConfig());
 
@@ -158,13 +120,6 @@ Ext.define('Taco.view.searchTuningRule.KeywordGrid', {
         // initialize the delete mixin
         this.mixins.deleteFromGrid.init.apply(this);
         
-
-        //if (this.getCouponSetCode()) {
-        //
-        //
-        //    // set the couponSetCode on the store and load the data;
-        //}
-
 
         // initialize the search toolbar mixin
         if (me.enableSearch) {
@@ -186,17 +141,6 @@ Ext.define('Taco.view.searchTuningRule.KeywordGrid', {
 
         me.addDocked(me.quickAddBar,0);
 
-        //me.store.proxy.data = {items: [
-        //    {'keyword': 'foo'},
-        //    {'keyword': 'bar'}
-        //]};
-        //me.store.load();
-
-        //this.mon(Taco.app, 'couponsetcreated', function(data) {
-        //        this.setCouponSetCode(data.get('couponSetCode'));
-        //        this.store.proxy.extraParams.couponSetCode = data.get('couponSetCode');
-        //    }, this, true
-        //);
     },
 
     onQuickAdd: function () {
@@ -213,63 +157,12 @@ Ext.define('Taco.view.searchTuningRule.KeywordGrid', {
             return;
         }
 
-        //var jsonData = {
-        //    items: valueArray
-        //};
         Ext.Array.forEach(valueArray, function(val){
             var exists = me.store.findRecord('keyword', val);
             if (!exists){
                 me.store.insert(0, {'keyword':val});
             }
         });
-
-
-        //var config = {
-        //    url: '/admin/app/couponcode/create',
-        //    method: 'POST',
-        //    jsonData: jsonData,
-        //    success: function (response) {
-        //
-        //        var json = Ext.decode(response.responseText, true);
-        //        if (!json || !json.success) {
-        //            var msg = (config.errorMsg) ? config.errorMsg : "Error";
-        //            Taco.app.fireEvent('setmessage', msg, 'error');
-        //            this.setLoading(false);
-        //            return;
-        //        }
-        //
-        //        if (json.success) {
-        //            //field.setValue();
-        //            //me.getSelectionModel().deselectAll();
-        //            me.mon(me.store, 'load', function () {
-        //                //Taco.app.fireEvent('setgrowl', "Created", null, 2000);
-        //                //me.getSelectionModel().selectRange(0, 0);
-        //                //field.focus();
-        //                field.reset();
-        //            }, me, {
-        //                single: true
-        //            });
-        //            me.store.reload();
-        //        }
-        //
-        //        this.setLoading(false);
-        //    },
-        //    failure: function (response) {
-        //        //Taco.app.viewPort.setLoading(false);
-        //        var json = Ext.decode(response.responseText, true),
-        //            msg = (json && json.message) ? json.message : (config.errorMcallsg) ? config.errorMsg : "Error";
-        //        Taco.app.fireEvent('setmessage', msg, 'error');
-        //
-        //        this.setLoading(false);
-        //    },
-        //    scope: this
-        //};
-        //
-        //this.setLoading("Loading...");
-        //Ext.Ajax.request(config);
-
-
-
     },
     getQuickAddField: function () {
         var me = this;
@@ -314,8 +207,6 @@ Ext.define('Taco.view.searchTuningRule.KeywordGrid', {
                 me.quickAddButton
             ]
         });
-
-        
 
     },
     // override this method and adjust the columns if your need a grid with a subset of columns;
@@ -369,15 +260,20 @@ Ext.define('Taco.view.searchTuningRule.KeywordGrid', {
         ];
     },
 
-    onDeleteSuccess: function (data) {
-        this.gridPager.doRefresh();
+    onDeleteSuccess: function () {
+        this.getView().refresh();
     },
 
     launchEditor: Ext.emptyFn,
-    
-    //getDeletePromptMessage: function (record) {
-    //    return record.getDeletePromptMessage();
-    //},
+
+    getValues: function() {
+        var result = [];
+        this.store.each(function(row){
+            result.push(row.get('keyword'));
+        }, this);
+        return {keywords: result};
+    },
+
     /**
     * Do any class level cleanup. Destroy and null any scoped refs.     
     */

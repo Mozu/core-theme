@@ -82,6 +82,13 @@ Ext.define('Taco.view.searchTuningRule.Form', {
     //    this.setFieldVisibility();
     //},
 
+    getValues: function() {
+        //console.log('form.getValues');
+        var generalData = this.general.getForm().getValues(),
+            contextData = this.context.getValues();
+        return Ext.Object.merge(generalData, contextData);
+    },
+
     onDestroy: function () {
         var me = this;
 
