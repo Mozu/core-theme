@@ -1,10 +1,11 @@
 ﻿/**
- * @class Taco.view.order.Index
+ * @class Taco.view.entityManager.Grid
  */
+
 Ext.define('Taco.view.entityManager.Grid', {
     extend: 'Taco.core.ux.browser.SearchList',
     alias: 'widget.entityManagerGrid',
-    requires: ['Taco.core.ux.form.Form'],
+    requires: ['Taco.view.entityManager.AdvancedSearchForm'],
     contextConfig: {
         supportedLevels: ['t', 'm', 'c', 's']
     },
@@ -22,38 +23,25 @@ Ext.define('Taco.view.entityManager.Grid', {
     saveButtonEnabled: false,
     cancelButtonEnabled: false,
     showActionsColumn: true,
-    hideSearchToolbar: true,
+    hideSearchToolbar: false,
     selType: 'rowmodel',
     autoScroll: true,
     enableQuickFilters: false,
     advancedSearchConfig: {
-        advancedFormCls: 'Taco.core.ux.form.Form',
+        advancedFormCls: 'Taco.view.entityManager.AdvancedSearchForm',
         quickFilterData: []
     },
+
     stateful: false,
-    //stateId: 'statefulOrderGrid',
+
     initComponent: function() {
         var me = this,
             menu;
+
         me.defaultView = me.listMetaData.views[0];
         me.currentView = me.defaultView;
         this.initListView(me.currentView);
-        //me.Lists = Ext.create('Taco.view.entityManager.Lists', { dock: 'left' });
-        //me.dockedItems = me.dockedItems || [];
-        //me.dockedItems.push(me.Lists);
-        //if (Ext.util.Cookies.get('debugext') === 'true') {
-        //    me.additionalActions = [{
-        //        xtype: 'button',
-        //        text: this.createButtonText + ' Raw',
-        //        margin: "0 0 0 10",
-        //        ui: 'action-secondary',
-        //        scale: 'medium',
-        //        hidden: !me.createButtonVisible,
-        //        itemId: 'createActionButton',
-        //        handler: me.createActionHandler,
-        //        scope: me
-        //    }];
-        //}
+
         me.callParent(arguments);
 
         if (me.listMetaData.views.length > 0) {
@@ -75,7 +63,6 @@ Ext.define('Taco.view.entityManager.Grid', {
             });
         }
 
-        //me.insertDocked(0, me.Lists);
     },
     initListView: function(view) {
 
@@ -103,7 +90,9 @@ Ext.define('Taco.view.entityManager.Grid', {
                 },
                 text: 'id',
                 flex: 1,
-                width: 125
+                width: 125,
+                dataIndex: 'id',
+                sortable: false
             });
         }
         view = view || {
@@ -122,7 +111,8 @@ Ext.define('Taco.view.entityManager.Grid', {
                 },
                 text: viewField.name,
                 flex: 1,
-                width: 125
+                width: 125,
+                sortable: false
             });
         });
         if (me.listMetaData.entityType === 'cms') {
@@ -133,7 +123,9 @@ Ext.define('Taco.view.entityManager.Grid', {
                 },
                 text: 'content type',
                 flex: 1,
-                width: 150
+                width: 150,
+                dataIndex: 'type',
+                sortable: false
             });
         }
         columns.push({
@@ -153,7 +145,7 @@ Ext.define('Taco.view.entityManager.Grid', {
                 }
             }]
         });
-        if (Ext.util.Cookies.get('debugext') === "true") {
+        if (Ext.util.Cookies.get('debugext') === 'true') {
             columns[columns.length - 1].menuItems.push({
                 text: 'Edit Raw',
                 hideOnClick: false,

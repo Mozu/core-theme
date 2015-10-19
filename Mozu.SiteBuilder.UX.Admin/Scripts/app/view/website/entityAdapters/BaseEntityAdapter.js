@@ -50,6 +50,30 @@ Ext.define('Taco.view.website.entityAdapters.BaseEntityAdapter', {
                 record: doc
             }));
         }
+
+        if (doc.data && doc.data.listSupportsADR) {
+            ret.push(Ext.create('Taco.core.ux.form.Form', {
+                xtype: 'panel',
+                collapsible: 'true',
+                ui: 'subform',
+                title: 'Active Date Range',
+                itemId: 'activeDateRangePanel',
+                layout: {
+                    type: 'vbox',
+                    align : 'stretch'
+                },
+                items: [{
+                    xtype: "mz-input-date",
+                    name: "document.startDate",
+                    fieldLabel: 'Start Date'
+                }, {
+                    xtype: "mz-input-date",
+                    name: "document.endDate",
+                    fieldLabel: 'End Date'
+                }]
+            }))
+        }
+
         return ret;
     },
     deleteRecord: function() {

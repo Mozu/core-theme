@@ -59,8 +59,8 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
         [HttpGet]
         public async Task<HttpResponseMessage> ContentIndex(string documentListName, string listView = null)
         {
-            var redirect = await _customRouteHandler.RedirectWithContext(Request, FancyRoute.CmsList, () => new Dictionary<string, object> { {"listName", documentListName }, {"listView", listView } });
-            
+            var redirect = await _customRouteHandler.RedirectWithContext(Request, FancyRoute.CmsList, () => new Dictionary<string, object> { { "listName", documentListName }, { "listView", listView } });
+
             if (redirect != null)
             {
                 return redirect;
@@ -77,22 +77,22 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
 
 
             this.PageContext.CmsContext = new CmsPageContext()
-                                          {
-                                              Page = new DocumentRequest()
-                                                     {
-                                                         Path = documentListName + (!string.IsNullOrEmpty(listView) ? "-" + listView : "") + ".index",
-                                                         ListFQN = "pages@mozu",
-                                                         IncludeInactiveDocument = SiteContext.IsEditMode
-                                                     },
-                                              Template = new DocumentRequest
-                                                         {
-                                                             Path = template,
-                                                             IncludeInactiveDocument = SiteContext.IsEditMode
-                                                         }
-                                   
-                                          };
+            {
+                Page = new DocumentRequest()
+                {
+                    Path = documentListName + (!string.IsNullOrEmpty(listView) ? "-" + listView : "") + ".index",
+                    ListFQN = "pages@mozu",
+                    IncludeInactiveDocument = SiteContext.IsEditMode
+                },
+                Template = new DocumentRequest
+                {
+                    Path = template,
+                    IncludeInactiveDocument = SiteContext.IsEditMode
+                }
 
-         
+            };
+
+
             await Task.WhenAll(this.ContextInitializationTasks);
             if (this.PageContext.CmsContext.Page.Document != null)
             {
@@ -129,8 +129,8 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
         [SbActionExtensionFilter(actionId: ActionFilterConstants.CmsPageAfterAction, executionType: ActionExtensionExecutionTypes.AfterController)]
         public async Task<HttpResponseMessage> Page(string documentListName, string documentName)
         {
-            
-           
+
+
 
             var pc = this.PageContext;
             pc.CmsContext = new CmsPageContext()
@@ -146,7 +146,7 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
 
             await Task.WhenAll(this.ContextInitializationTasks);
 
-            if (pc.CmsContext.Page.Document  == null)
+            if (pc.CmsContext.Page.Document == null)
             {
                 return this.Request.CreateErrorResponse(HttpStatusCode.NotFound, "page not found");
             }
@@ -172,7 +172,7 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
             pc.MetaTitle = vm.Get<string>("meta_title") as string;
             pc.PageType = "web_page";
 
-            if (!this.PageContext.IsEditMode   )
+            if (!this.PageContext.IsEditMode)
             {
                 if (pc.CmsContext.Page.Document.Get<bool>("hidden", false))
                 {
@@ -184,7 +184,7 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
                     return this.Request.CreateResponse(HttpStatusCode.OK, this.Redirect(redir));
                 }
             }
-         
+
             PageTypeDefinition pageDefinition = null;
             var pageTypeDefinitionKey = PageContext.CmsContext.Page.Document.Get<string>("page_type_definition");
             if (!string.IsNullOrEmpty(pageTypeDefinitionKey))
@@ -215,18 +215,18 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
             if (PageContext.CmsContext.Template == null || PageContext.CmsContext.Template.Path != template)
             {
                 this.PageContext.CmsContext.Template = new DocumentRequest()
-                                                       {
-                                                           Path = template
-                                                       };
-               
+                {
+                    Path = template
+                };
+
 
             }
 
-            
+
 
             var result = View(template, vm);
 
-            
+
             return this.Request.CreateResponse(HttpStatusCode.OK, result);
 
         }

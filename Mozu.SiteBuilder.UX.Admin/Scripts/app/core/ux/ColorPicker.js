@@ -184,7 +184,7 @@ Ext.define('Taco.core.ux.ColorPicker', {
         });
 
         this.hexField = Ext.create('Ext.form.field.Text', {
-            value: '#' + this.toHex(this.rgb.r) + this.toHex(this.rgb.g) + this.toHex(this.rgb.b),
+            value: this.buildRgbString(this.rgb),
             margin: '0 0 0 15',
             width: 210,
             style: {
@@ -353,7 +353,9 @@ Ext.define('Taco.core.ux.ColorPicker', {
         if (!ignoreHexField) {
             this.hexField.suspendEvents();
             hex = '#' + this.toHex(this.rgb.r) + this.toHex(this.rgb.g) + this.toHex(this.rgb.b);
-            this.hexField.setValue(hex);
+            // this.hexField.setValue(hex);
+            rgb = this.buildRgbString(this.rgb);
+            this.hexField.setValue(rgb);
             this.hexField.resumeEvents();
         }
 
@@ -375,6 +377,7 @@ Ext.define('Taco.core.ux.ColorPicker', {
 
         if (value === undefined && this.rendered) {
             this.rgb = this.getRgbFromHsv(this.hsv);
+
             this.updateSample();
             return;
         }
