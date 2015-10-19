@@ -326,6 +326,7 @@ Ext.define('Taco.core.ux.ColorPicker', {
     updateSample: function (ignoreHexField) {
         var rgbaString = this.buildRgbString(this.rgb),
             hex,
+            rgb,
             pickerCircleCfg = {
                 x: this.pickerSize * this.hsv.s / 100 + this.reticleSize,
                 y: this.pickerSize * (1 - this.hsv.v / 100) + this.reticleSize
