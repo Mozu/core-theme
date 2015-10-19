@@ -11,6 +11,8 @@ using Mozu.SiteBuilder.Mvc.SEO;
 using Mozu.SiteBuilder.Mvc.ViewEngine;
 using Mozu.SiteBuilder.UX.Models.Navigation;
 using System.Collections.Specialized;
+using Mozu.SiteBuilder.Mvc.Contexts;
+using Mozu.Core.Extensions;
 
 namespace Mozu.SiteBuilder.Mvc.MessageHandler
 {
@@ -56,13 +58,25 @@ namespace Mozu.SiteBuilder.Mvc.MessageHandler
             if (request.GetRouteData().Route is NonSystemRoute)
             {
                 var rerouted = await PerformCustomRouting(request).ConfigureAwait(false);
-                return await base.SendAsync(rerouted, cancellationToken).ConfigureAwait(false);
+                return await HandleReroutedRequest(rerouted, cancellationToken, () => base.SendAsync(request, cancellationToken));
             }
 
             return await base.SendAsync(request, cancellationToken).ConfigureAwait(false);
         }
 
+        private async Task<HttpResponseMessage> HandleReroutedRequest(HttpRequestMessage rerouted, CancellationToken cancellationToken, Func<Task<HttpResponseMessage>> continuation)
+        {
+            var customRoute = rerouted.GetRouteData().Route as CustomRoute;
+            if (customRoute == null) return await continuation().ConfigureAwait(false);
 
+            var pageContext = rerouted.Resolve<PageContext>();
+            var currentUrl = new Uri(pageContext.Url);
+            var currentProtocol = currentUrl.Scheme;
+            if (customRoute.UrlScheme.ToStringQuickly().EqualsIgnoreCase(currentUrl.Scheme)) return await continuation().ConfigureAwait(false);
+
+            var redirectLocation = new UriBuilder(customRoute.UrlScheme.ToStringQuickly(), currentUrl.Host, currentUrl.Port, currentUrl.AbsolutePath, currentUrl.Query);
+            return RedirectTo(redirectLocation.Uri.ToString(), true, rerouted);
+        }
 
         private static async Task<HttpRequestMessage> PerformCustomRouting(HttpRequestMessage request)
         {
@@ -95,14 +109,11 @@ namespace Mozu.SiteBuilder.Mvc.MessageHandler
         static HttpRequestMessage RewriteCurrentRequest(HttpRequestMessage request, string destination)
         {
             request.Properties[IsSeoRewrite] = true;
-
             var uri = new Uri("http://localhost/" + destination);
-
 
             // set new uri and clear out the old request context, which was built off of that old uri
             request.RequestUri = uri;
             request.Properties[MS_HTTP_RoutingContextKey] = null;
-
             return request;
         }
     }

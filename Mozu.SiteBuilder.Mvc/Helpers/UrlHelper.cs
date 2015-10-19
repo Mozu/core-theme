@@ -148,12 +148,12 @@ namespace Mozu.SiteBuilder.Mvc.Helpers
 
         private string MakeCartUrl()
         {
-            return _customRouteHandler.GetCannonicalUrl(FancyRoute.Cart, null, false).Result ?? "/cart";
+            return _customRouteHandler.GetCanonicalUrl(FancyRoute.Cart, null, false).Result ?? "/cart";
         }
 
         private string MakeSearchUrl()
             {
-                return _customRouteHandler.GetCannonicalUrl(FancyRoute.Search, null, false).Result ?? "/search";
+                return _customRouteHandler.GetCanonicalUrl(FancyRoute.Search, null, false).Result ?? "/search";
             }
 
         private string MakeStylesheetUrl(object obj, Dictionary<string, object> config)
@@ -219,7 +219,7 @@ namespace Mozu.SiteBuilder.Mvc.Helpers
 
         string DoMakeDocumentUrl(Mozu.Content.Contracts.Document doc, Dictionary<string, object> config)
         {
-            return _customRouteHandler.GetCannonicalUrl(FancyRoute.CmsPage, () => Mapper.Map<IDictionary<string, object>>(doc).ChainSet(config), false).Result ?? "/" + doc.Name;
+            return _customRouteHandler.GetCanonicalUrl(FancyRoute.CmsPage, () => Mapper.Map<IDictionary<string, object>>(doc).ChainSet(config), false).Result ?? "/" + doc.Name;
         }
 
         private string MakeCdnUrl(object o, Dictionary<string, object> config)
@@ -365,7 +365,7 @@ namespace Mozu.SiteBuilder.Mvc.Helpers
 
 
 
-            return _customRouteHandler.GetCannonicalUrl(FancyRoute.ProductDetails, () => Mapper.Map<IDictionary<string, object>>(product), false).Result ?? "/p/" + product.ProductCode;
+            return _customRouteHandler.GetCanonicalUrl(FancyRoute.ProductDetails, () => Mapper.Map<IDictionary<string, object>>(product), false).Result ?? "/p/" + product.ProductCode;
 
         }
         public string MakeCategoryUrl(object obj, Dictionary<string, object> config, bool includeContxt)
@@ -433,7 +433,7 @@ namespace Mozu.SiteBuilder.Mvc.Helpers
             }
 
 
-            var url = _customRouteHandler.GetCannonicalUrl(FancyRoute.Category, () => Mapper.Map<IDictionary<string, object>>(cat).ChainSet(config), includeContxt).Result;
+            var url = _customRouteHandler.GetCanonicalUrl(FancyRoute.Category, () => Mapper.Map<IDictionary<string, object>>(cat).ChainSet(config), includeContxt).Result;
             if (url == null)
             {
                 url = "/c/" + cat.CategoryId;
@@ -565,7 +565,7 @@ namespace Mozu.SiteBuilder.Mvc.Helpers
                     var dic = new Dictionary<string, object>(routeData.Values, StringComparer.OrdinalIgnoreCase);
                     dic.Remove(routeValueKey);
 
-                    urlBase = _customRouteHandler.GetCannonicalUrl((routeData.Route as CustomRoute).InternalRoute, () => dic, false).Result;
+                    urlBase = _customRouteHandler.GetCanonicalUrl((routeData.Route as CustomRoute).InternalRoute, () => dic, false).Result;
 
                 }
             }

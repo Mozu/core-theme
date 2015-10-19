@@ -31,7 +31,7 @@ namespace Mozu.SiteBuilder.Mvc.Extensions
     }
     public static class RouteExtensions
     {
-        public static IHttpRoute MapCustomHttpRoute(this System.Web.Http.HttpRouteCollection routes, string name, string routeTemplate, object defaults, IDictionary<ICustomRouteConstraint, string[]> constraints, IDictionary<IRouteDataMapping, string[]> mappings, FancyRoute fancyRoute, bool isCanonical)
+        public static IHttpRoute MapCustomHttpRoute(this System.Web.Http.HttpRouteCollection routes, string name, string routeTemplate, object defaults, IDictionary<ICustomRouteConstraint, string[]> constraints, IDictionary<IRouteDataMapping, string[]> mappings, FancyRoute fancyRoute, bool isCanonical, CustomRoute.Scheme scheme)
         {
             if (mappings == null)
             {
@@ -45,10 +45,7 @@ namespace Mozu.SiteBuilder.Mvc.Extensions
                .ChainSet("controller", CustomRouteRepository.GetControllerName(fancyRoute))
                .ChainSet("action", CustomRouteRepository.GetControllerAction(fancyRoute));
 
-
-
-
-            CustomRoute route = new CustomRoute(routeTemplate, null, fancyRoute, isCanonical, defaultsDictionary, constraints, mappings , null);
+            var route = new CustomRoute(routeTemplate, null, fancyRoute, isCanonical, defaultsDictionary, constraints, mappings, null, scheme);
             routes.Add(name, route);
             return route;
         }
