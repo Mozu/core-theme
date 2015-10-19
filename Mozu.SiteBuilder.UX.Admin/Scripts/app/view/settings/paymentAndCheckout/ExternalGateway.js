@@ -15,8 +15,9 @@ Ext.define('Taco.view.settings.paymentAndCheckout.ExternalGateway', {
         var credFieldDefs = this.externalPayment.get('credentials');
         var gatewayType = this.externalPayment.get('name').toUpperCase();
         var credOriginalValues = [];
+        var description = null;
         var isEnabled = false;
-        this.fqn = this.externalPayment.get('fullyQualifiedName')
+        this.fqn = this.externalPayment.get('fullyQualifiedName');
         
         this.items = [];
         this.credFields = [];
@@ -24,7 +25,8 @@ Ext.define('Taco.view.settings.paymentAndCheckout.ExternalGateway', {
         
         Ext.each(externalGateway, function (item) {
             if (gatewayType == item['name'].toUpperCase()) {
-                
+
+                description = item['description'];
                 credOriginalValues = item['credentials'];
                 isEnabled = item['isEnabled'];
             }
@@ -32,12 +34,21 @@ Ext.define('Taco.view.settings.paymentAndCheckout.ExternalGateway', {
 
         this.typeCheck = Ext.widget({
             xtype: 'checkbox',
-            fieldLabel: this.externalPayment.get('name'),
+            boxLabel: this.externalPayment.get('name'),
             checked: isEnabled,
             handler: this.onEnableChange,
             scope: this
         });
+     
         
+        this.descriptionContainer = Ext.widget({
+            xtype: 'box',
+            autoEl: {
+                tag: 'div',
+                html: description
+            }
+        });
+
         
         this.credPanel = Ext.widget({
             xtype: 'panel',
@@ -58,6 +69,7 @@ Ext.define('Taco.view.settings.paymentAndCheckout.ExternalGateway', {
         }, this);
         
         this.items.push(this.typeCheck);
+        this.items.push(this.descriptionContainer);
         this.items.push(this.credPanel);
         
         this.callParent(arguments);
@@ -121,7 +133,7 @@ Ext.define('Taco.view.settings.paymentAndCheckout.ExternalGateway', {
     persistFormValues: function () {
         var me = this;
         var isDirty = false, val = {}, creds = [];
-        var gatewayType = this.typeCheck.fieldLabel.toUpperCase();
+        var gatewayType = this.typeCheck.boxLabel.toUpperCase();
         var gatewayEnabled = this.typeCheck.getRawValue();
         var externalGateway = Ext.clone(me.record.get('externalPaymentWorkflows'));
         
