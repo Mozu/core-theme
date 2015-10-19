@@ -224,7 +224,9 @@ Ext.define('Taco.model.Entity', {
             type: 'bool',
             defaultValue: null,
             convert: function (value, record) {
-                return record.get('listFlags').supportsADR;
+                var flags = record.get('listFlags');
+                if (flags) return flags.supportsADR;
+                else return false;
             }
         }
     ],
