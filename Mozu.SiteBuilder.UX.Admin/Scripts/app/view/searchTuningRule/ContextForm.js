@@ -23,6 +23,10 @@ Ext.define('Taco.view.searchTuningRule.ContextForm', {
 
         Ext.tip.QuickTipManager.init();
 
+        this.keywordGrid = Ext.create('Taco.view.searchTuningRule.KeywordGrid', {
+            record: this.record,
+            width: '50%'
+        });
 
         this.items = [
             {
@@ -30,11 +34,7 @@ Ext.define('Taco.view.searchTuningRule.ContextForm', {
                 layout: 'hbox',
                 width: '100%',
                 items: [
-                    {
-                        xtype: 'label',
-                        text: 'Search Keywords Placeholder',
-                        width: '50%'
-                    },
+                    this.keywordGrid,
                     {
                         xtype: 'label',
                         text: 'Categories Placeholder',

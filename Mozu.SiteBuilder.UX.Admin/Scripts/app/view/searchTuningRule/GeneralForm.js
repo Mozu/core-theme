@@ -236,38 +236,6 @@ Ext.define('Taco.view.searchTuningRule.GeneralForm', {
             ]
         }];
 
-        //this.items = [
-        //    this.nameInput,
-        //    {
-        //        xtype: 'fieldcontainer',
-        //        startDate: this.scheduledStartDateField,
-        //        endDate: this.scheduledEndDateField,
-        //        layout: 'hbox',
-        //        width: '100%',
-        //        items: [
-        //            this.scheduledStartDateField,
-        //            this.scheduledEndDateField
-        //        ]
-        //    }, {
-        //        xtype: 'fieldcontainer',
-        //        layout: 'hbox',
-        //        width: '100%',
-        //        items: [
-        //            this.redemptionsPerCode,
-        //            this.redemptionsPerUser
-        //        ]
-        //    }
-        //];
-
-        //this.mon(Taco.app, 'couponsetcreated', function (data) {
-            //if (!me.redemptionsPerCode.getValue()){
-            //    me.redemptionsPerCode.setValue(data.get('maxRedemptionsPerCouponCode'));
-            //}
-            //if (!me.redemptionsPerUser.getValue()){
-            //    me.redemptionsPerUser.setValue(data.get('maxRedemptionsPerUser'));
-            //}
-        //}, me);
-
         this.callParent(arguments);
     },
 

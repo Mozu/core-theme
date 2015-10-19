@@ -723,6 +723,7 @@
     <Content Include="Scripts\app\view\searchTuningRule\BlockedProductForm.js" />
     <Content Include="Scripts\app\view\searchTuningRule\Edit.js" />
     <Content Include="Scripts\app\view\searchTuningRule\Form.js" />
+    <Content Include="Scripts\app\view\searchTuningRule\KeywordGrid.js" />
     <Content Include="Scripts\app\view\searchTuningRule\PinnedProductGrid.js" />
     <Content Include="Scripts\app\view\searchTuningRule\PinnedProductForm.js" />
     <Content Include="Scripts\app\view\searchTuningRule\ContextForm.js" />

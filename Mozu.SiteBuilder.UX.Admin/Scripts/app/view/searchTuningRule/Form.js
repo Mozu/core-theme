@@ -20,9 +20,6 @@ Ext.define('Taco.view.searchTuningRule.Form', {
         // User interactions in a subform that cause changes in other forms will communicate via events on the record.
         // Each subform will listen for and react to these changes.
 
-
-
-
         this.items = [{
                 xtype: 'taco-searchTuningRule-general',
                 itemId: 'general',
@@ -56,8 +53,6 @@ Ext.define('Taco.view.searchTuningRule.Form', {
         this.context = this.down('#context');
         this.pinned = this.down('#pinned');
         this.blocked = this.down('#blocked');
-
-        if (!this.isEdit()) this.general.setTitle('New');
 
         //this.on({
         //    afterrender: this.onAfterRender,
