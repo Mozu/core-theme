@@ -139,7 +139,7 @@ define(['modules/backbone-mozu', 'underscore', 'modules/jquery-mozu', 'modules/m
             clientId: clientId,
             paymentRequest: {
                 currencyCode: model ? model.get('currencyCode') : 'USD',
-                total: "" + total
+                subtotal: "" + total
             }
         });
     }
