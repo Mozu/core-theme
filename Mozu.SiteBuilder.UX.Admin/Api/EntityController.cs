@@ -33,7 +33,7 @@ using Mozu.SiteBuilder.Mvc.CMS;
 using Mozu.SiteBuilder.UX.Models.Admin.CMS;
 using Mozu.Core.Collections;
 using Mozu.SiteBuilder.Mvc.Extensions;
-
+using Mozu.SiteBuilder.UX.Admin.Helpers.ContentHelpers;
 namespace Mozu.SiteBuilder.UX.Admin.Api
 {
     [WebApi("app/entities", SuppressDescriptorGeneration = true)]
@@ -193,7 +193,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
             if (entityType == "cms")
             {
                 string sortBy = pagingParams.sort.Count() > 0 ? pagingParams.sort.ToSortString() : null;
-                string filter = null;
+                string filter = ContentFilterExtensions.ToContentFilterString(extFilter, false);
 
                 Tuple<IEnumerable<DocumentWithListInfo>, int> res = null;
                 if (!string.IsNullOrEmpty(pagingParams.id))

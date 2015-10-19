@@ -254,6 +254,7 @@ Ext.define('Taco.core.ux.form.FilterContainer', {
 
         
         if (this.fireEvent('beforefilter', this, value) !== false) {
+
             if (this.store.remoteFilter) {
 
                 var params = this.store.getProxy().extraParams = this.store.getProxy().extraParams || {};
