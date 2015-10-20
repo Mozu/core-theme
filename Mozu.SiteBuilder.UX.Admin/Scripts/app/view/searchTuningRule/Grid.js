@@ -71,6 +71,7 @@ Ext.define('Taco.view.searchTuningRule.Grid', {
     deletePromptMsg : "Are you sure you want to delete this search tuning rule?",
 
     doesSupportCatalogContext: true,
+    categoryCode: null,
 
     advancedSearchConfig : {
         advancedFormCls: 'Taco.view.searchTuningRule.AdvancedSearchForm',
@@ -113,6 +114,12 @@ Ext.define('Taco.view.searchTuningRule.Grid', {
         this.mixins.deleteFromGrid.init.apply(this);
 
         me.mon(Taco.app, 'searchtuningrulecreated', me.reloadGrid, me);
+
+        //if (me.categoryCode) {
+        //    this.store.proxy.extraParams = this.store.proxy.extraParams || {};
+        //    this.store.proxy.extraParams.categoryCode = categoryCode;
+        //    this.store.load();
+        //}
 
         me.callParent(arguments);
     },
