@@ -6,6 +6,8 @@ using System.Web.Http;
 using System.Linq;
 using Autofac;
 using Autofac.Core;
+using Autofac.Core.Lifetime;
+using Autofac.Core.Resolving;
 using Autofac.Integration.WebApi;
 using Burrows;
 using Burrows.Autofac;
@@ -145,7 +147,7 @@ namespace Mozu.SiteBuilder.UX.Configuration
             builder.RegisterType<ApplicationNameLoggingContextProvider>().As<ILoggingContextProvider>().WithParameter("applicationName", ApplicationConstants.APPLICATION_NAME).InstancePerLifetimeScope();
 
             builder.RegisterType<VisitEventPublisher>().AsSelf().InstancePerRequest();
-            builder.RegisterType<CacheItemsInvalidConsumer>().AsSelf();
+            builder.RegisterType<CacheItemsInvalidConsumer>().AsSelf().SingleInstance();
            // builder.RegisterType<CacheItemsInvalidConsumer2>().AsSelf();
 
             // Register a MassTransit/Burrows IPublisher for visits.
@@ -156,15 +158,19 @@ namespace Mozu.SiteBuilder.UX.Configuration
             builder.RegisterType<HttpErrorResponseGenerator>();
             builder.RegisterType<StorefrontCacheControlImpl>().As<IStorefrontCacheControl>().SingleInstance();;
            
+            
 
             builder
               .Register(c =>
               {
                   var format = c.Resolve<ISettings>().ConnectionStrings("SiteBuilderIncomingMessageQueueFormatString");
                   var conString = string.Format(format.Value, Guid.NewGuid().ToString("N"));
+                  var cacheInvalidator = c.Resolve<CacheItemsInvalidConsumer>();
                   var lifeTimeScope = c.Resolve<ILifetimeScope>();
+                  var burrowsScope = new BurrowsConumerScope() { Thing = cacheInvalidator , ComponentRegistry= lifeTimeScope.ComponentRegistry };
+                 
                   var factory = ServiceBusFactory.New(sbc => sbc
-                  .Configure(conString, subs => subs.LoadFrom(lifeTimeScope))
+                  .Configure(conString, subs => subs.LoadFrom(burrowsScope))
                   .SetConcurrentConsumerLimit(10));
                   return factory;
               }
@@ -175,6 +181,62 @@ namespace Mozu.SiteBuilder.UX.Configuration
 
 
 
+        }
+
+
+
+       
+
+        class BurrowsConumerScope : ILifetimeScope , IDisposer
+        {
+            public object Thing { get; set; }
+            public object ResolveComponent(IComponentRegistration registration, IEnumerable<Parameter> parameters)
+            {
+                return Thing;
+            }
+
+            public IComponentRegistry ComponentRegistry { get; set; }
+            public void Dispose()
+            {
+             
+            }
+
+            public void AddInstanceForDisposal(IDisposable instance)
+            {
+                
+            }
+
+            public ILifetimeScope BeginLifetimeScope()
+            {
+                return this;
+            }
+
+            public ILifetimeScope BeginLifetimeScope(object tag)
+            {
+                return this;
+            }
+
+            public ILifetimeScope BeginLifetimeScope(Action<ContainerBuilder> configurationAction)
+            {
+                return this;
+            }
+
+            public ILifetimeScope BeginLifetimeScope(object tag, Action<ContainerBuilder> configurationAction)
+            {
+                return this;
+            }
+
+            public IDisposer Disposer
+            {
+                get
+                {
+                    return this;
+                }
+            }
+            public object Tag { get; set; }
+            public event EventHandler<LifetimeScopeBeginningEventArgs> ChildLifetimeScopeBeginning;
+            public event EventHandler<LifetimeScopeEndingEventArgs> CurrentScopeEnding;
+            public event EventHandler<ResolveOperationBeginningEventArgs> ResolveOperationBeginning;
         }
 
 
