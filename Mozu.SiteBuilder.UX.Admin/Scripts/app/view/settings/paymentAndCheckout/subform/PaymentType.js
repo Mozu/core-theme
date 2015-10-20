@@ -43,8 +43,8 @@ Ext.define('Taco.view.settings.paymentAndCheckout.subform.PaymentType', {
 
         this.externalGatewayContainer = Ext.widget({
             xtype: 'container',
-            padding: '10 5 10 5',
-            margin: '10,10,10,10'
+            padding: '0 5 10 5',
+            margin: '0,10,10,10'
         });
 
 
@@ -56,7 +56,7 @@ Ext.define('Taco.view.settings.paymentAndCheckout.subform.PaymentType', {
                 {
                     xtype: 'checkbox',
                     name: 'payByMail',
-                    fieldLabel: 'Accept checks by mail'
+                    boxLabel: 'Accept checks by mail'
                 }
 
             ]

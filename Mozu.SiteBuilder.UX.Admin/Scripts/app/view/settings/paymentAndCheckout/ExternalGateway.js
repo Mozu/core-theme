@@ -126,7 +126,9 @@ Ext.define('Taco.view.settings.paymentAndCheckout.ExternalGateway', {
                 fieldLabel: fieldDef.displayName,
                 name: fieldDef.apiName,
                 inputType: 'password',
-                value: value
+                value: value,
+                margin: '10,0,0,0'
+                
             });
 
     },
