@@ -273,32 +273,27 @@ Ext.define('Taco.store.Navigation', {
             }, {
                 'id': 'sitebuilder',
                 'label': 'Site Builder',
-                'address': 'siteSelection',
+                'address': 'website',
                 'showBreadCrumbs': true,
-                //'address': 'sites/pages',
                 'icon': 'nav-sites',
                 'items': [
                     {
                         'id': 'webedit',
-                        'visible': false,
-                        'label': 'Edit',
+                        'label': 'Editor',
                         'address': 'website'
                     }, {
                         'id': 'themes',
                         'label': 'Themes',
-                        'visible': false,
                         'address': 'themes'
                     },
                     {
                         'id': 'redirects',
                         'label': 'Redirects',
-                        'visible': false,
                         'address': 'redirects'
                     },
                     {
                         'id': 'generalsettings',
-                        'label': 'Site Settings',
-                        'visible': false,
+                        'label': 'Settings',
                         'address': 'generalsettings/site'
                     } 
                     /*, {

@@ -41,7 +41,8 @@ Ext.define('Taco.view.website.Index', {
         'Taco.view.publishing.modal.PublishSetPicker',
         'Taco.core.ux.content.IndicatorContainer',
         'Taco.core.ux.action.Action',
-        'Taco.view.publishing.component.button.PublishButton'
+        'Taco.view.publishing.component.button.PublishButton',
+        'Taco.view.navigation.ContextSwitcher'
     ],
     selectedTheme: '',
     itemId: 'websiteIndex',
@@ -49,7 +50,7 @@ Ext.define('Taco.view.website.Index', {
     contextConfig: {
         //   supportedLevels: ['s'],
         requiresContextOfType: ['s'],
-        hidden: true
+        hidden: false
     },
     title: false,
     entityTypeEditConfig: {
@@ -129,18 +130,43 @@ Ext.define('Taco.view.website.Index', {
         this.actions = [
             {
                 xtype: 'component',
+                html: '<strong>Editor</strong> for',
+                margin: '0 10 0 0'
+            },
+            Ext.create('Taco.view.navigation.ContextSwitcher', {
+                width: '120px',
+                fieldStyle: 'background-color: #fff;'
+            }),
+            {
+                xtype: 'component',
                 itemId: 'taco-page-title',
+                flex: 1,
                 html: '',
-                style: 'font-size: 13px;',
                 maxWidth: '100px'
             },
             {
                 xtype: 'taco-indicator',
                 itemId: 'draftIcon',
                 title: 'DRAFT',
+                margin: '0 10 0 10',
                 hidden: true,
                 afterrender: this.setAction.bind(this)
-            }, '->',
+            },
+            {
+                xtype: 'button',
+                ui: 'action',
+                scale: 'medium',
+
+                itemId: 'widgetsActionButton',
+                glyph: 'XE028@mozicons',
+                buttonGroup: 'isWebPageView',
+                margin: '0 10 0 0',
+                padding: '6 8 6 8',
+                scope: this,
+                handler: function () {
+                    this.chorizoEditor.widgets().toggle();
+                }
+            },
                 this.getPageEditorButton(),
                 this.getSettingsButton(),
             {
@@ -168,20 +194,6 @@ Ext.define('Taco.view.website.Index', {
                     this.down('#widgetsActionButton').setDisabled(isPressed);
                 }
 
-            },
-            {
-                xtype: 'button',
-                ui: 'action',
-                scale: 'medium',
-
-                itemId: 'widgetsActionButton',
-                text: 'Widgets',
-                buttonGroup: 'isWebPageView',
-                margin: '0 0 0 10',
-                scope: this,
-                handler: function () {
-                    this.chorizoEditor.widgets().toggle();
-                }
             }, {
                 xtype: 'button',
                 ui: 'action',
@@ -570,13 +582,14 @@ Ext.define('Taco.view.website.Index', {
             xtype: 'button',
             ui: 'action',
             scale: 'medium',
-            text: 'Editor',
+            glyph: 'XE025@mozicons',
             toggleGroup: 'websiteEditorTabs',
             itemId: 'pageEditorTabButton',
             buttonGroup: 'isWebPage',
             allowDepress: false,
             enableToggle: true,
             pressed: true,
+            padding: '6 8 6 8',
             style: {
                 borderRadius: '2px 0px 0px 2px'
             },
@@ -598,12 +611,13 @@ Ext.define('Taco.view.website.Index', {
             ui: 'action',
             scale: 'medium',
             buttonGroup: 'hasSettings',
-            text: 'Settings',
+            glyph: 'XE02E@mozicons',
             itemId: 'pageSettingsTabButton',
             toggleGroup: 'websiteEditorTabs',
             allowDepress: false,
             enableToggle: true,
             scope: this,
+            padding: '6 8 6 8',
             style: {
                 borderRadius: '0px 2px 2px 0px'
             },
@@ -1262,7 +1276,7 @@ Ext.define('Taco.view.website.Index', {
 
     updateHeaderTitle: function(tree, record) {
         var icon = '<span class="taco-website-header-icon ' + (this.down('taco-website-tree').getIconClass(record) || 'page-icon') + '"></span>';
-        this.down('#taco-page-title').update( icon + '<h2 class="page-title">' + record.get('name') + '</h2>');
+        this.down('#taco-page-title').update( '<h2 class="page-title">' + record.get('name') + '</h2>');
     },
 
     onContentListClick: function (tree, metaData) {
