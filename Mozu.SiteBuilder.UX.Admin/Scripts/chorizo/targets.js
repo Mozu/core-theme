@@ -523,22 +523,12 @@
             .html(widgetCfg.html)
             .height(widgetCfg.data.config.height);
 
-        block = $block.mzBlock().data('mozu.mzBlock') 
-
-        win.setTimeout(function() {
-            block.triggerDrop();
-        }, 50);
+        block = $block.mzBlock().data('mozu.mzBlock');
 
         return block;
     }
 
     Block.prototype = new Target();
-
-    Block.prototype.triggerDrop = function() {
-        var evt = doc.createEvent('CustomEvent');
-        evt.initCustomEvent('mozuwidgetdrop', true, false);
-        this.element[0].dispatchEvent(evt);
-    }
 
     Block.prototype.update = function(html, data) {
         this.element.data('widget', data);
