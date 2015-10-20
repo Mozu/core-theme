@@ -237,7 +237,7 @@ namespace Mozu.SiteBuilder.Mvc.SEO
                     var redirects = await ((IRedirectRepository)this).FetchRedirectEntries(siteId)
                             .ConfigureAwait(false);
                     ret = BuildRuntimeRedirects(redirects);
-                    
+                    _cache[key] = ret;
                 }
 
                 catch (Exception ex)

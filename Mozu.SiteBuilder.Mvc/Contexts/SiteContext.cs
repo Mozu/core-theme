@@ -4,6 +4,7 @@ using System.Globalization;
 using System.Linq;
 using System.Net;
 using System.Net.Http;
+using System.Reflection;
 using System.Runtime.Serialization;
 using System.Security.Cryptography;
 using System.Text;
@@ -361,6 +362,23 @@ namespace Mozu.SiteBuilder.Mvc.Contexts
             cookieProvider.SaveResponseCookie(COOKIENAME, cookie);
         }
 
+        static byte[] _assbmlyHash;
+        static byte[] AssemblyHash
+        {
+            get
+            {
+                if (_assbmlyHash == null)
+                {
+                    var ass = typeof(SiteContext).Assembly;
+                    var assemblyInfo = ((AssemblyInformationalVersionAttribute)ass.GetCustomAttributes(typeof(AssemblyInformationalVersionAttribute), false).FirstOrDefault() ?? new AssemblyInformationalVersionAttribute("local")).InformationalVersion;
+                    var version = ass.GetName().Version.ToString();
+                    _assbmlyHash = System.Text.Encoding.UTF8.GetBytes(assemblyInfo + version);
+                }
+                return _assbmlyHash;
+
+            }
+        }
+
         public Task Init()
         {
             if (_initTask == null)
@@ -373,12 +391,15 @@ namespace Mozu.SiteBuilder.Mvc.Contexts
 
                 Task<Task<SiteContext>> initTask = settingsServiceTasks.ContinueWith(task =>
                 {
-                    MD5 md5 = new MD5CryptoServiceProvider();
+                    
                     if (siteTask.Result.ResponseMessage.StatusCode == HttpStatusCode.NotFound)
                     {
                         this.SiteExists = false;
                         return  Task<SiteContext>.FromResult(this);
                     }
+                    MD5 md5 = new MD5CryptoServiceProvider();
+                    md5.TransformBlock(AssemblyHash, 0, AssemblyHash.Length, AssemblyHash, 0);
+
                     var sitesDc = siteTask.Result.ReadAsSync();
                     this.Domains = new SiteDomains(_currentHost, Mapper.Map<List<SiteDomain>>(sitesDc.Domains));
                 
