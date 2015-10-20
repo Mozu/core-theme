@@ -1,13 +1,20 @@
 ﻿using System;
+using System.Collections;
+using System.Collections.Generic;
 using System.Net.Http;
 using System.Web.Http;
 using System.Linq;
 using Autofac;
+using Autofac.Core;
 using Autofac.Integration.WebApi;
+using Burrows;
 using Burrows.Autofac;
 using Burrows.Configuration;
+using Burrows.Configuration.SubscriptionConfigurators;
 using Burrows.Log4Net;
 using Burrows.Publishing;
+using Burrows.Saga;
+using Magnum.Extensions;
 using Mozu.Content.Contracts.Clients;
 using Mozu.Core;
 using Mozu.Core.Api;
@@ -148,25 +155,28 @@ namespace Mozu.SiteBuilder.UX.Configuration
             builder.RegisterType<SiteBuilderHttpErrorResponseGenerator>().As<IHttpErrorResponseGenerator>();
             builder.RegisterType<HttpErrorResponseGenerator>();
             builder.RegisterType<StorefrontCacheControlImpl>().As<IStorefrontCacheControl>().SingleInstance();;
-           //  Register a MassTransit/Burrows Consumer for cache invalidation.
+           
+
             builder
-                .Register(c => ServiceBusFactory.New(
-                    sbc =>
-                    {
-                        var format = c.Resolve<ISettings>().ConnectionStrings("SiteBuilderIncomingMessageQueueFormatString");
-                        if (format == null || string.IsNullOrEmpty(format.Value))
-                        {
-                            throw new Exception("missing SiteBuilderIncomingMessageQueueFormatString in config");
-                        }
-                        var conString = string.Format(format.Value , Guid.NewGuid().ToString("N"));
-                        conString.ConfigureConsumer(sbc, subs => subs.LoadFrom(c.Resolve<ILifetimeScope>()))
-                            .SetConcurrentConsumerLimit(10);
+              .Register(c =>
+              {
+                  var format = c.Resolve<ISettings>().ConnectionStrings("SiteBuilderIncomingMessageQueueFormatString");
+                  var conString = string.Format(format.Value, Guid.NewGuid().ToString("N"));
+                  var lifeTimeScope = c.Resolve<ILifetimeScope>();
+                  var factory = ServiceBusFactory.New(sbc => sbc
+                  .Configure(conString, subs => subs.LoadFrom(lifeTimeScope))
+                  .SetConcurrentConsumerLimit(10));
+                  return factory;
+              }
+              )
+               .SingleInstance()
+              .AutoActivate();
 
-                    }))
-                .SingleInstance()
-                .AutoActivate();
 
-          
+
+
         }
+
+
     }
 }
