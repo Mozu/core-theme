@@ -45,5 +45,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.Models.Search
 
         public DateTime? LastModifiedDate { get; set; }
 
+        public int? SiteId { get; set; }
+
     }
 }

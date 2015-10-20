@@ -253,13 +253,9 @@ Ext.define('Taco.view.searchTuningRule.ContextForm', {
     },
 
     getValues: function() {
-      console.log('getValues context');
-        //this.categoryList.getValues()??
         var keywordData = this.keywordGrid.getValues(),
             catData = this.getCategoryValues();
-            //data = this.getForm().getValues();
         return Ext.Object.merge(keywordData, catData);
-
     },
 
     getCategoryValues: function() {

@@ -79,8 +79,9 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.ModelMapping
                     ? dc.AuditInfo.CreateDate
                     : null))
 
-                // todo: once ProdAdmin has it, comment out. - Greg Murray on 2015-10-16 
+                // todo: once ProdAdmin has it, uncomment out. - Greg Murray on 2015-10-16 
                 .ForMember(x => x.Description, op => op.Ignore())
+                .ForMember(x => x.SiteId, op => op.Ignore())
                 ;
         }
     }

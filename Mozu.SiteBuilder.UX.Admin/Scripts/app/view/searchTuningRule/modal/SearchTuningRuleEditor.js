@@ -24,6 +24,7 @@ Ext.define('Taco.view.searchTuningRule.modal.SearchTuningRuleEditor', {
     isCreateMode: true,
     record: null,
     closeOnSave: true,
+    doesSupportCatalogContext: true,
 
     actionColumnWidth: 50,
 

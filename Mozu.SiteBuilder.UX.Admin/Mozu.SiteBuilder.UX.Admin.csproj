@@ -622,6 +622,7 @@
     <Content Include="Scripts\app\platter\forms\SimpleForms.js" />
     <Content Include="Scripts\app\shared\view\field\ArrayField.js" />
     <Content Include="Scripts\app\shared\view\field\BoxSelectWithModal.js" />
+    <Content Include="Scripts\app\shared\view\field\CouponSetPickerField.js" />
     <Content Include="Scripts\app\shared\view\field\NavNode.js" />
     <Content Include="Scripts\app\shared\view\field\Discount.js" />
     <Content Include="Scripts\app\shared\view\field\Category.js" />

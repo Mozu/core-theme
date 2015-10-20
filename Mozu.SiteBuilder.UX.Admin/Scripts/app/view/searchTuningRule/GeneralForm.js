@@ -80,6 +80,35 @@ Ext.define('Taco.view.searchTuningRule.GeneralForm', {
                 return true;
             }
         });
+        var siteStore = Ext.create('Ext.data.Store', {
+            fields: ['id', "name"],
+            data: me.record.getSites()
+        });
+        var defaultSite = (me.record && me.record.get('siteId'))
+                        ? me.record.get('siteId')
+                        : Taco.app.context.getContextAtLevel('s').getSiteId();
+
+        me.siteCombo = Ext.widget({
+            xtype: 'combobox',
+            fieldLabel: 'Site',
+            name: 'siteId',
+            labelAlign: 'top',
+            allowBlank: false,
+            editable: false,
+            forceSelection: true,
+            autoSelect: true,
+            listConfig: {shadow: false},
+            width: twoColumnFieldWidth,
+            margin:"0 50 0 0",
+            queryMode:'local',
+            store: siteStore,
+                //[['Active', 'Active'], ['Scheduled', 'Scheduled'], ['Disable', 'Disabled']],
+            //value: defaultSite,
+            valueField: 'id',
+            displayField: 'name'
+        });
+
+        me.siteCombo.select(defaultSite);
 
         me.statusCombo = Ext.widget({
             xtype: 'combobox',
@@ -190,16 +219,8 @@ Ext.define('Taco.view.searchTuningRule.GeneralForm', {
                                 align: "stretch"
                             },
                             items: [
-                                {
-                                    name: 'siteId',  // make Site lookup
-                                    fieldLabel: 'Site',
-                                    itemId: "siteField",
-                                    allowBlank: true,
-                                    xtype: 'numberfield',
-                                    width: twoColumnFieldWidth,
-                                    margin: "0 50 0 0",
-                                    required: false
-                                }, me.statusCombo
+                                me.siteCombo,
+                                me.statusCombo
                             ]
                         }, {
                             xtype: 'fieldcontainer',

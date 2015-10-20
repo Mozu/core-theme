@@ -70,6 +70,8 @@ Ext.define('Taco.view.searchTuningRule.Grid', {
 
     deletePromptMsg : "Are you sure you want to delete this search tuning rule?",
 
+    doesSupportCatalogContext: true,
+
     advancedSearchConfig : {
         advancedFormCls: 'Taco.view.searchTuningRule.AdvancedSearchForm',
 
@@ -139,6 +141,24 @@ Ext.define('Taco.view.searchTuningRule.Grid', {
                 flex: 1,
                 minWidth: 250,
                 sortable: true
+            }, {
+                xtype: 'gridcolumn',
+                dataIndex: 'keywordsJoined',
+                stateId: 'keywordsJoined',
+                text: 'Keywords',
+                hideable: true,
+                //flex: 1,
+                minWidth: 150,
+                sortable: false
+            }, {
+                xtype: 'gridcolumn',
+                dataIndex: 'siteName',
+                stateId: 'siteName',
+                text: 'Site',
+                hideable: true,
+                //flex: 1,
+                minWidth: 75,
+                sortable: false
             }, {
                 xtype: 'gridcolumn',
                 dataIndex: 'status',
@@ -318,6 +338,7 @@ Ext.define('Taco.view.searchTuningRule.Grid', {
             // otherwise, pass the record.
             record: record,
             isCreateMode: isNew,
+            doesSupportCatalogContext: me.doesSupportCatalogContext,
             listeners: {
                 savesuccess: function() {
                   me.store.reload();

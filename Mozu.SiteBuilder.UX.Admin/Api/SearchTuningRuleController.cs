@@ -36,6 +36,8 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
     public class SearchTuningRuleController : BaseController
     {
         private readonly ISearchWebApiClient _searchWebApiClient;
+        private Lazy<ISearchWebApiClient> _lazySearchClient;
+
         private readonly IApiContext _apiCtx;
         
         /// <summary>
@@ -61,7 +63,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
                 return List2(Mapper.Map<SearchTuningRule>(singleSearchTuningRule));
             }
 
-            // todo: call product admin to get products - Greg Murray on 2015-10-14 
+            // todo: call product admin to get products? - Greg Murray on 2015-10-14 
 
 
             //var query = extFilter.QueryString.Get("query");
@@ -104,6 +106,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
         public async Task<Response<List<SearchTuningRule>>> CreateSearchTuningRule(List<SearchTuningRule> searchTuningRules)
         {
             var responseList = new List<SearchTuningRule>();
+            // todo: assert that siteId has value, code, name - Greg Murray on 2015-10-20 
 
             foreach (var searchRule in searchTuningRules)
             {
@@ -111,6 +114,9 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
 
                 try
                 {
+                    // todo: need siteId added to contract - Greg Murray on 2015-10-20 
+                    //var searchClient = GetSearchClientForSite(searchRule.SiteId.GetValueOrDefault());
+                    //var response = (await searchClient.AddSearchTuningRule(dc)).ReadAsSync();
                     var response = (await _searchWebApiClient.AddSearchTuningRule(dc)).ReadAsSync();
                     responseList.Add(Mapper.Map<SearchTuningRule>(response));
                 }
@@ -135,6 +141,8 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
             foreach (var searchRule in searchTuningRules)
             {
                 var dc = Mapper.Map<DC.SearchTuningRule>(searchRule);
+                //var searchClient = GetSearchClientForSite(searchRule.SiteId.GetValueOrDefault());
+                //var res = (await searchClient.UpdateSearchTuningRule(dc.SearchTuningRuleCode, dc)).ReadAsSync();
                 var res = (await _searchWebApiClient.UpdateSearchTuningRule(dc.SearchTuningRuleCode, dc)).ReadAsSync();
                 retList.Add(Mapper.Map<SearchTuningRule>(res));
             }
@@ -145,12 +153,28 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
         [HttpPostRoute(UriTemplate = "delete")]
         public async Task<Response<SearchTuningRule>> DeleteSearchTuningRule(List<SearchTuningRule> tuningRules)
         {
-            var tasks = tuningRules.Select(d => _searchWebApiClient.DeleteSearchTuningRule(d.Code)).ToList();
+            //var tasks = tuningRules.Select(d => (GetSearchClientForSite(d.SiteId.GetValueOrDefault()))
+            //                                        .DeleteSearchTuningRule(d.Code)).ToList();
+            var tasks = tuningRules.Select(d => _searchWebApiClient
+                                                    .DeleteSearchTuningRule(d.Code)).ToList();
             await Task.WhenAll(tasks);
             tasks.Select(TaskHelper.Result).ThrowExceptionsIfAny();
 
             return SuccessWithTotal2<SearchTuningRule>(tuningRules.Count);
         }
+
+        private ISearchWebApiClient GetSearchClientForSite(int siteId)
+        {
+            _lazySearchClient = new Lazy<ISearchWebApiClient>(() =>
+                _searchWebApiClient.CloneWithApiContext(x => SetSite(x, siteId)));
+            return _lazySearchClient.Value;
+        }
+
+        private void SetSite(ApiContext apiContext, int siteId)
+        {
+            apiContext.SiteId = siteId;
+        }
+
 
     }
 }
