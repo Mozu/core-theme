@@ -290,12 +290,7 @@ Ext.define('Taco.store.Navigation', {
                         'id': 'redirects',
                         'label': 'Redirects',
                         'address': 'redirects'
-                    },
-                    {
-                        'id': 'generalsettings',
-                        'label': 'Settings',
-                        'address': 'generalsettings/site'
-                    } 
+                    }
                     /*, {
                 'id': 'fileManager',
                 'label': 'File Manager',
