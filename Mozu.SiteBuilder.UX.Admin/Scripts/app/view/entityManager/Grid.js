@@ -76,7 +76,7 @@ Ext.define('Taco.view.entityManager.Grid', {
                 renderer: function(value, metaData, record) {
                     return record.data.name;
                 },
-                text: 'document name',
+                text: 'Document Name',
                 dataIndex: 'name',
                 flex: 1,
                 width: 150,
@@ -88,7 +88,7 @@ Ext.define('Taco.view.entityManager.Grid', {
                 renderer: function(value, metaData, record) {
                     return record.data.id;
                 },
-                text: 'id',
+                text: 'Id',
                 flex: 1,
                 width: 125,
                 dataIndex: 'id',
@@ -121,11 +121,49 @@ Ext.define('Taco.view.entityManager.Grid', {
                 renderer: function(value, metaData, record) {
                     return record.data.documentTypeFQN;
                 },
-                text: 'content type',
+                text: 'Content Type',
                 flex: 1,
                 width: 150,
                 dataIndex: 'type',
                 sortable: false
+            });
+
+            columns.push({
+                xtype: 'gridcolumn',
+                renderer: function(value, metaData, record) {
+                    return record.get('publishState') ? record.get('publishState') : 'Live';
+                },
+                text: 'Status',
+                flex: 1,
+                width: 150,
+                dataIndex: 'status',
+                sortable: false
+            });
+
+            columns.push({
+                xtype: 'gridcolumn',
+                renderer: function(value, metaData, record) {
+                    return record.get('startDate') ? record.get('startDate') : 'Now';
+                },
+                text: 'Start Date',
+                flex: 1,
+                width: 150,
+                dataIndex: 'dateRange',
+                sortable: false,
+                hidden: true
+            });
+
+            columns.push({
+                xtype: 'gridcolumn',
+                renderer: function(value, metaData, record) {
+                    return record.get('endDate') ? record.get('endDate') : 'Never';
+                },
+                text: 'End Date',
+                flex: 1,
+                width: 150,
+                dataIndex: 'dateRange',
+                sortable: false,
+                hidden: true
             });
         }
         columns.push({
