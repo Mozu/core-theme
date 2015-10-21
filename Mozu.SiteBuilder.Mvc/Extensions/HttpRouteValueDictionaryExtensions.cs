@@ -48,7 +48,7 @@ namespace Mozu.SiteBuilder.Mvc.Extensions
 
 
 
-            CustomRoute route = new CustomRoute(routeTemplate, null, fancyRoute, isCanonical, defaultsDictionary, constraints, mappings);
+            CustomRoute route = new CustomRoute(routeTemplate, null, fancyRoute, isCanonical, defaultsDictionary, constraints, mappings , null);
             routes.Add(name, route);
             return route;
         }

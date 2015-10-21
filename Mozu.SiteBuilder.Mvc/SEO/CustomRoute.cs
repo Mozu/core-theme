@@ -2,11 +2,13 @@
 using System.Collections.Specialized;
 using System.Linq;
 using System.Net.Http;
+using System.Threading;
 using System.Threading.Tasks;
 using System.Web.Http.Routing;
 using Mozu.SiteBuilder.Mvc.Extensions;
 using Mozu.SiteSettings.General.Contracts.General.Routing;
 using Mozu.Core.Extensions;
+using Mozu.SiteBuilder.Mvc.OAF;
 
 namespace Mozu.SiteBuilder.Mvc.SEO
 {
@@ -21,8 +23,13 @@ namespace Mozu.SiteBuilder.Mvc.SEO
         IDictionary<IRouteDataMapping, string[]> PreMappings { get; set; }
         IDictionary<IRouteDataMapping, string[]> PostMappings { get; set; }
 
-        public CustomRoute(string template, string queryString,  FancyRoute internalRoute, bool isCanonical, IDictionary<string, object> defaults, IDictionary<ICustomRouteConstraint, string[]> constraints, IDictionary<IRouteDataMapping, string[]> mappings) :
-            base(template, defaults.ToRouteDictionary())
+        public CustomRoute(string template, string queryString,  FancyRoute internalRoute, bool isCanonical, IDictionary<string, object> defaults, IDictionary<ICustomRouteConstraint, string[]> constraints, IDictionary<IRouteDataMapping, string[]> mappings, 
+            string functionId) :
+            base(template, 
+                defaults.ToRouteDictionary(),
+                null, 
+                null, 
+                internalRoute == FancyRoute.Arcjs ? new ArcJSHttpHandler() { FunctionId = functionId } : null)
         {
           
             Template = template;
@@ -37,6 +44,7 @@ namespace Mozu.SiteBuilder.Mvc.SEO
             PreMappings = mappings.Where(x => x.Key.Settings.beforeRouting.GetValueOrDefault(false)).ToDictionary(x=>x.Key, y=> y.Value );
             PostMappings = mappings.Where(x => !x.Key.Settings.beforeRouting.GetValueOrDefault(false)).ToDictionary(x => x.Key, y => y.Value);
 
+            
 
             object temp;
             if (constraints == null)
@@ -57,8 +65,10 @@ namespace Mozu.SiteBuilder.Mvc.SEO
                 }
                 
             }
-        
+            
         }
+
+       
 
 
         

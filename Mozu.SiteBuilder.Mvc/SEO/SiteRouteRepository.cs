@@ -41,6 +41,7 @@ namespace Mozu.SiteBuilder.Mvc.SEO
             { FancyRoute.CmsPage, "cmsPages" },
             { FancyRoute.CmsList, "cmsPages" },
             { FancyRoute.Cart, "cart" },
+            { FancyRoute.Arcjs, null },
         };
         static IDictionary<FancyRoute, string> ActionNames = new Dictionary<FancyRoute, string> {
             { FancyRoute.ProductDetails, "productDetail" },
@@ -49,6 +50,7 @@ namespace Mozu.SiteBuilder.Mvc.SEO
             { FancyRoute.CmsPage, "page" },
             { FancyRoute.CmsList, "contentindex" },
             { FancyRoute.Cart, "index" },
+            { FancyRoute.Arcjs, null },
         };
         
 
@@ -210,7 +212,7 @@ namespace Mozu.SiteBuilder.Mvc.SEO
 
 
 
-            return new CustomRoute(template, qString, routeDef.InternalRoute.ToEnum<FancyRoute>(), routeDef.Canonical.GetValueOrDefault(false), defaults, knownValidators, knownMappings);
+            return new CustomRoute(template, qString, routeDef.InternalRoute.ToEnum<FancyRoute>(), routeDef.Canonical.GetValueOrDefault(false), defaults, knownValidators, knownMappings, routeDef.FunctionId);
         }
 
         
