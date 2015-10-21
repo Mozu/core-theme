@@ -10,9 +10,12 @@ using System.Net.Http.Headers;
 using System.Runtime.Hosting;
 using System.Text;
 using System.Text.RegularExpressions;
+using System.Threading;
 using System.Threading.Tasks;
 using System.Web;
 using System.Web.Http;
+using System.Web.Http.Controllers;
+using Autofac;
 using FSharpx.Collections;
 using Magnum.Extensions;
 using Microsoft.Server.Common;
@@ -252,6 +255,39 @@ namespace Mozu.SiteBuilder.UX.Areas.Misc.Controllers
             });
             
         }
+
+
+        public override Task<HttpResponseMessage> ExecuteAsync(HttpControllerContext controllerContext, CancellationToken cancellationToken)
+        {
+            this.LifetimeScope = (ILifetimeScope)controllerContext.Request.GetDependencyScope().GetService(typeof(ILifetimeScope));
+       
+            if (!IsCDNRequest())
+            {
+               
+                var cdnHost = this._settings.AppSettings("CdnHost");
+                var originalUri = new Uri(PageContext.Url);
+
+                UriBuilder ub = new UriBuilder(PageContext.Url);
+                ub.Path = this.SbApiContext.TenantId + "-" + this.SbApiContext.SiteId + "/" + ub.Path;
+                ub.Host = cdnHost;
+                var resp = new HttpResponseMessage(HttpStatusCode.MovedPermanently);
+                resp.Headers.Location = ub.Uri;
+                resp.Headers.CacheControl = new CacheControlHeaderValue() { MaxAge = TimeSpan.FromDays(10000) , Public = true};
+                return Task.FromResult<HttpResponseMessage>(resp);
+
+                
+            }
+            return base.ExecuteAsync(controllerContext, cancellationToken);
+        }
+
+        bool IsCDNRequest()
+        {
+            var cdnHost = this._settings.AppSettings("CdnHost");
+            var uri = new Uri(PageContext.Url);
+            return string.IsNullOrEmpty(cdnHost) || cdnHost.EqualsIgnoreCase(uri.Host);
+
+        }
+
 
         DataViewModeType Convert(string dataViewModeString)
         {
