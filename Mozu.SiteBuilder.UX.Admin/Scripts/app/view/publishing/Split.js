@@ -116,7 +116,7 @@ Ext.define('Taco.view.publishing.Split', {
                         options:  {
                             code: 'unassigned',
                             type: 'product',
-                            autoLoad: false
+                            autoLoad: true
                         }
                     },
                     advancedFormCls: 'Taco.view.publishing.advancedSearchForm.DraftProduct'
@@ -132,7 +132,7 @@ Ext.define('Taco.view.publishing.Split', {
                         options:  {
                             code: 'unassigned',
                             type: 'cms',
-                            autoLoad: false
+                            autoLoad: true
                         }
                     },
                     advancedFormCls: 'Taco.view.publishing.advancedSearchForm.DraftContent'
