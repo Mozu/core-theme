@@ -222,7 +222,7 @@
   "storeCreditAvailable" : "You have the following store credits available:",
   "storeCreditApplied"   : "You have applied the following store credits to your order:",
 
-  "digitalCredits"      : "Gift Cards & Store Credits",
+  "digitalCredits"      : "Store Credit / Gift Card Code",
   "digitalCreditCode"   : "Code",
   "digitalCreditBalance"  : "Balance",
   "digitalCreditAmtToUse" : "Amt. to Apply",
