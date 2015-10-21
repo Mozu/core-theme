@@ -82,20 +82,24 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
             }
 
             string filter = null;
-            if (extFilter.Count > 0)
+            if (extFilter != null && extFilter.Count > 0)
             {
                 filter = extFilter.ToFilterString();
             }
 
+            //string sort = null; // pagingParams.sort.ToSortString();
             string sort = pagingParams.sort.ToSortString();
 
-            var res = (await _productTypeClient.GetProductTypes(
-                pagingParams.startIndex,
-                pagingParams.pageSize,
-                sort,
-                filter,
-                responseFields: "items(id,name,productcount,auditinfo(updatedate),properties(attributedetail(adminname)),options(attributedetail(adminname)),extras(attributedetail(adminname)))"
-                )).ReadAsSync();
+
+            var gpttask = _productTypeClient.GetProductTypes(
+                /* startIndex:     */ pagingParams.startIndex,
+                /* pageSize:       */ pagingParams.pageSize,
+                /* sortBy:         */ sort,
+                /* filter:         */ filter,
+                /* responseGroups: */ null
+                );
+
+            var res = gpttask.Result.ReadAsSync();
 
             return List2(Mapper.Map<List<ProductType>>(res.Items), (int)res.TotalCount);
         }
