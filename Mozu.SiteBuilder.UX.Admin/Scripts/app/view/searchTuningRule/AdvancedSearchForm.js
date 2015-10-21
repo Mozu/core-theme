@@ -1,9 +1,10 @@
 ﻿/**
- * @class Taco.view.discount.AdvancedSearchForm
+ * @class Taco.view.searchTuningRule.AdvancedSearchForm
  */
 Ext.define('Taco.view.searchTuningRule.AdvancedSearchForm', {
     extend: 'Taco.core.ux.form.Form',
     requires: [
+        'Taco.core.ux.form.field.AdminUser',
         'Ext.form.FieldContainer',
         'Taco.core.ux.form.DateTime'
     ],
@@ -15,232 +16,124 @@ Ext.define('Taco.view.searchTuningRule.AdvancedSearchForm', {
     initComponent: function () {
         var me = this;
 
-        this.couponSetType = Ext.widget('combobox', {
-            name: 'couponCodeType',
-            fieldLabel: 'Type',
-            margin: { right: 40 },
+        this.items = [
+            {
+                xtype: 'fieldcontainer',
+                layout:"hbox",
+                items: [
+                    {
+                        xtype: 'textfield',
+                        name: 'name',
+                        fieldLabel: 'Name',
+                        margin: { right: 40 },
+                        flex: 1
+                    }, {
+                        xtype: 'textfield',
+                        name: 'code',
+                        fieldLabel: 'Code',
+                        flex: 1
+                    }
+                ]
+            },
+            {
+                xtype: 'fieldcontainer',
+                layout:"hbox",
+                items: [
+                    me.createStaticCombobox('status', 'Status', [
+                        {
+                            name: "Active",  //todo: can't do scheduled greg_murray on 10/21/2015
+                            id: "Active"
+                        }, {
+                            name: "Scheduled",
+                            id: "Scheduled"
+                        }, {
+                            name: "Ended",
+                            id: "Ended"
+                        }, {
+                            name: "All",
+                            id: "All"
+                        }
+                    ], 40),
+                    me.createStaticCombobox('default', 'Default', [
+                        {
+                            name: "Yes",
+                            id: "true"
+                        }, {
+                            name: "No",
+                            id: "false"
+                        }
+                    ], 0)
+                ]
+            },
+            me.createDateRangeFields('Active Start Date Range2', 'activeStartDateFrom', 'activeStartDateTo'),
+            me.createDateRangeFields('Active End Date Range2', 'activeEndDateFrom', 'activeEndDateTo'),
+            {
+                xtype: 'taco-adminuserfield',
+                name: 'createdBy',
+                fieldLabel: 'Created By',
+                flex: 1
+            },
+            me.createDateRangeFields('Create Date Range2', 'createDateFrom', 'createDateTo'),
+            {
+                xtype: 'taco-adminuserfield',
+                name: 'modifiedBy',
+                fieldLabel: 'Last Modified By',
+                flex: 1
+            },
+            me.createDateRangeFields('Modified Date Range2', 'modifiedDateFrom', 'modifiedDateTo')
+        ];
+
+        this.callParent(arguments);
+    },
+
+    createDateRangeFields: function(title, start, end) {
+        return {
+            xtype: 'fieldcontainer',
+            fieldLabel: title,
+            layout: {
+                type: 'hbox'
+            },
+            items: [{
+                xtype: 'datetime',
+                // allows the field to consume an iso foramt value;
+                altFormats: "c",
+                name: start,
+                flex: 1
+            }, {
+                xtype: 'component',
+                html: 'to',
+                margin: '5 10'
+            }, {
+                xtype: 'datetime',
+                // allows the field to consume an iso foramt value;
+                altFormats: "c",
+                name: end,
+                flex: 1
+            }]
+        }
+    },
+
+    createStaticCombobox: function(name, label, data, marginRight) {
+        return {
+            xtype: 'combobox',
+            name: name,
+            fieldLabel: label,
+            margin: { right: marginRight },
             flex: 1,
             valueField: 'id',
             displayField: 'name',
             queryMode: 'local',
             valueNotFoundText: 'not found',
             editable: false,
-            forceSelection: false,
-            initialValue: "Active",
+            forceSelection: true,
             trigger2Cls: 'x-form-clear-trigger',
             onTrigger2Click: function () {
                 this.clearValue();
             },
             store: Ext.create('Ext.data.Store', {
                 fields: ['id', "name"],
-                data: [
-                    {
-                        name: "Manual",
-                        id: "Manual"
-                    }, {
-                        name: "Generated",
-                        id: "Generated"
-                    }
-                ]
-            }),
-            listeners: {
-                change: function(cmp, newVal, oldVal) {
-                    if (newVal === 'Manual') {
-                        me.codePrefix.setDisabled(true);
-                        me.setSizeContainer.setDisabled(true);
-                    } else if (oldVal === 'Manual') {
-                        me.codePrefix.setDisabled(false);
-                        me.setSizeContainer.setDisabled(false);
-                    }
-                }
-            }
-        });
-
-        this.codePrefix = Ext.widget('textfield', {
-                name: 'couponSetCode',
-                fieldLabel: 'Code Prefix',
-                disabled: me.couponSetType.getValue() === 'Manual'
-            }
-        );
-
-        this.setSizeContainer = Ext.widget('fieldcontainer', {
-            fieldLabel: 'Generated Coupon Count',
-            layout: {
-                type: 'hbox'
-            },
-            items: [{
-                xtype: 'numberfield',
-                name: 'setSizeFrom',
-                hideTrigger: true,
-                minValue: 0,
-                mouseWheelEnabled: true,
-                selectOnFocus: true,
-                width:100
-            }, {
-                xtype: 'component',
-                html: 'to',
-                margin: '10 10'
-            }, {
-                xtype: 'numberfield',
-                name: 'setSizeTo',
-                hideTrigger: true,
-                minValue: 0,
-                mouseWheelEnabled: true,
-                selectOnFocus: true,
-                width: 100
-            }]
-        });
-
-        this.items = [
-            {
-                name: 'couponSetName',
-                fieldLabel: 'Name'
-            }, {
-                xtype: 'fieldcontainer',
-                layout:"hbox",
-                items: [this.couponSetType, {
-                    xtype: 'combobox',
-                    name: 'status',
-                    fieldLabel: 'Status',
-                    flex: 1,
-                    valueField: 'id',
-                    displayField: 'name',
-                    queryMode: 'local',
-                    valueNotFoundText: 'not found',
-                    editable: false,
-                    forceSelection: true,
-                    initialValue: "Active",
-                    trigger2Cls: 'x-form-clear-trigger',
-                    onTrigger2Click: function () {                        
-                        this.clearValue();
-                    },
-                    store: Ext.create('Ext.data.Store', {
-                        fields: ['id', "name"],
-                        data: [
-                            {
-                                name: "Active",
-                                id: "Active"
-                            }, {
-                                name: "Scheduled",
-                                id: "Scheduled"
-                            }, {
-                                name: "Ended",
-                                id: "Ended"
-                            }, {
-                                name: "All",
-                                id: "All"
-                            }
-                        ]
-                    })
-                }]
-            },
-            this.codePrefix,
-            this.setSizeContainer, {
-                xtype: 'fieldcontainer',
-                fieldLabel: 'Max Redemptions Per Coupon Code',
-                layout: {
-                    type: 'hbox'
-                },
-                items: [{
-                    xtype: 'numberfield',
-                    name: 'maxRedemptionsPerCouponCodeFrom',
-                    hideTrigger: true,
-                    minValue: 0,
-                    mouseWheelEnabled: true,
-                    selectOnFocus: true,
-                    width:100
-                }, {
-                    xtype: 'component',
-                    html: 'to',
-                    margin: '10 10'
-                }, {
-                    xtype: 'numberfield',
-                    name: 'maxRedemptionsPerCouponCodeTo',
-                    hideTrigger: true,
-                    minValue: 0,
-                    mouseWheelEnabled: true,
-                    selectOnFocus: true,
-                    width: 100
-                }]
-            }, {
-                xtype: 'fieldcontainer',
-                fieldLabel: 'Max Redemptions Per User',
-                layout: {
-                    type: 'hbox'
-                },
-                items: [{
-                    xtype: 'numberfield',
-                    name: 'maxRedemptionsPerUserFrom',
-                    hideTrigger: true,
-                    minValue: 0,
-                    mouseWheelEnabled: true,
-                    selectOnFocus: true,
-                    width:100
-                }, {
-                    xtype: 'component',
-                    html: 'to',
-                    margin: '0 10'
-                }, {
-                    xtype: 'numberfield',
-                    name: 'maxRedemptionsPerUserTo',
-                    hideTrigger: true,
-                    minValue: 0,
-                    mouseWheelEnabled: true,
-                    selectOnFocus: true,
-                    width: 100
-                }]
-            }, {
-                xtype: 'fieldcontainer',
-                fieldLabel: 'Start Date Range',
-                layout: {
-                    type: 'hbox'
-                },
-                items: [{
-                    xtype: 'datetime',
-                    // allows the field to consume an iso foramt value;
-                    altFormats: "c",
-                    name: 'startDateFrom',
-                    flex: 1
-                }, {
-                    xtype: 'component',
-                    html: 'to',
-                    margin: '0 10'
-                }, {
-                    xtype: 'datetime',
-                    // allows the field to consume an iso foramt value;
-                    altFormats: "c",
-                    name: 'startDateTo',
-                    flex: 1
-                }]
-            },
-            {
-                xtype: 'fieldcontainer',
-                fieldLabel: 'End Date Range',
-                layout: {
-                    type: 'hbox'
-                },
-                items: [{
-                    xtype: 'datetime',
-                    // allows the field to consume an iso foramt value;
-                    altFormats: "c",
-                    name: 'endDateFrom',
-                    flex: 1
-                }, {
-                    xtype: 'component',
-                    html: 'to',
-                    margin: '0 10'
-                }, {
-                    xtype: 'datetime',
-                    // allows the field to consume an iso foramt value;
-                    altFormats: "c",
-                    name: 'endDateTo',
-                    flex: 1
-                }]
-            }
-        
-        ];
-
-            
-        this.callParent(arguments);
+                data: data
+            })
+        }
     }
 });
