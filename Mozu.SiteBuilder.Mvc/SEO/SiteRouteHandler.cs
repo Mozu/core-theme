@@ -206,15 +206,17 @@ namespace Mozu.SiteBuilder.Mvc.SEO
                 var vpath = route.GetVirtualPath(newReq, finalRouteValues);
                 if (vpath != null)
                 {
+                    // the below is failing super bad with the full host name.  wtf?
                     var path = new Uri("http://localhost/" + vpath.VirtualPath).GetLeftPart(UriPartial.Path);
                     var canonicalParts = new Uri(path + request.RequestUri.Query);
-                    if (!string.Equals(canonicalParts.PathAndQuery, _requestMessage.Value.RequestUri.PathAndQuery, StringComparison.OrdinalIgnoreCase))
+                    var originalUri = new Uri(_requestMessage.Value.Resolve<PageContext>().Url);
+                    if (!string.Equals(canonicalParts.PathAndQuery, originalUri.PathAndQuery, StringComparison.OrdinalIgnoreCase))
                     {
                         var host = request.RequestUri.Host;
                         var port = request.RequestUri.Port;
                         var query = request.RequestUri.Query;
                         var redirect = request.CreateResponse(HttpStatusCode.MovedPermanently);
-                        redirect.Headers.Location = new UriBuilder(route.UrlScheme.ToStringQuickly(), host, port, path, query).Uri;
+                        redirect.Headers.Location = new UriBuilder(route.UrlScheme.ToStringQuickly(), host, port, canonicalParts.GetComponents(UriComponents.Path, UriFormat.Unescaped), query).Uri;
                         redirect.Headers.TryAddWithoutValidation(Constants.HEADER_CANONICAL_URL, canonicalParts.PathAndQuery);
                         return redirect;
                     }
@@ -237,16 +239,16 @@ namespace Mozu.SiteBuilder.Mvc.SEO
             return incomingPort;
         }
 
-        public async Task<string> GetCanonicalUrl( FancyRoute internalRoute, Func<IDictionary<string, object>> viewDataAdditionFunc, bool useExistingQuery)
+        public async Task<string> GetCanonicalUrl(FancyRoute internalRoute, Func<IDictionary<string, object>> viewDataAdditionFunc, bool useExistingQuery)
         {
             var routeCollection = await GetRouteCollectionAsync().ConfigureAwait(false);
             var routes = GetCanonicalRouteList(internalRoute, routeCollection, _routeconfig);
             if (!routes.Any()) return null; // no canonical route that matches, or current route is canonical? then no redirect!
-            
+
             var routingValues = GenerateRoutingValues(
-                viewDataAdditionFunc, 
+                viewDataAdditionFunc,
                 () => useExistingQuery ? _requestMessage.Value.GetRouteData().Values : new Dictionary<string, object>()
-                );
+            );
 
             var newReq = PrepareNewHttpRequest(_requestMessage.Value);
             foreach (var route in routes)
