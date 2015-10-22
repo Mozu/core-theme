@@ -14,6 +14,7 @@ using Autofac;
 using Mozu.SiteBuilder.Mvc.MessageHandler;
 using Mozu.SiteBuilder.Mvc.ViewEngine;
 using Mozu.Core.Extensions;
+using Mozu.SiteBuilder.Mvc.Contexts;
 
 namespace Mozu.SiteBuilder.Mvc.SEO
 {
@@ -241,7 +242,7 @@ namespace Mozu.SiteBuilder.Mvc.SEO
             var routeCollection = await GetRouteCollectionAsync().ConfigureAwait(false);
             var routes = GetCanonicalRouteList(internalRoute, routeCollection, _routeconfig);
             if (!routes.Any()) return null; // no canonical route that matches, or current route is canonical? then no redirect!
-
+            
             var routingValues = GenerateRoutingValues(
                 viewDataAdditionFunc, 
                 () => useExistingQuery ? _requestMessage.Value.GetRouteData().Values : new Dictionary<string, object>()
@@ -253,7 +254,7 @@ namespace Mozu.SiteBuilder.Mvc.SEO
                 var vpath = route.GetVirtualPath(newReq, routingValues);
                 if (vpath != null)
                 {
-                    return CreateOutboundUri(route, vpath, _requestMessage.Value.RequestUri, useExistingQuery);
+                    return CreateOutboundUri(route, vpath, _requestMessage.Value.Resolve<PageContext>().Url, useExistingQuery);
                 }
             }
             return null;
@@ -285,8 +286,9 @@ namespace Mozu.SiteBuilder.Mvc.SEO
             return newReq;
         }
 
-        static string CreateOutboundUri(CustomRoute route, IHttpVirtualPathData vpath, Uri incomingUri, bool useInboundQuery)
+        static string CreateOutboundUri(CustomRoute route, IHttpVirtualPathData vpath, string incoming, bool useInboundQuery)
         {
+            var incomingUri = new Uri(incoming);
             var scheme = route.UrlScheme.ToStringQuickly();
             var path = "/" + new Uri("http://localhost/" + vpath.VirtualPath, UriKind.Absolute).GetComponents(UriComponents.Path, UriFormat.Unescaped);
             var query = useInboundQuery ? incomingUri.Query :  string.Empty;
