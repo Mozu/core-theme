@@ -36,7 +36,7 @@ Ext.define('Taco.view.redirects.Index', {
         
     },
 
-    createButtonText: 'Create New Discount',
+    createButtonText: 'Create New Redirect',
 
     createButtonEnabled: true,
 
