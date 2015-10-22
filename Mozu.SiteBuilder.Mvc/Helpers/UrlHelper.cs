@@ -153,9 +153,9 @@ namespace Mozu.SiteBuilder.Mvc.Helpers
         }
 
         private string MakeSearchUrl()
-            {
-                return _customRouteHandler.GetCanonicalUrl(FancyRoute.Search, null, false).Result ?? "/search";
-            }
+        {
+            return _customRouteHandler.GetCanonicalUrl(FancyRoute.Search, null, false).Result ?? "/search";
+        }
 
         private string MakeStylesheetUrl(object obj, Dictionary<string, object> config)
         {
@@ -312,12 +312,12 @@ namespace Mozu.SiteBuilder.Mvc.Helpers
             }
             else if (string.Equals(val, "next", StringComparison.OrdinalIgnoreCase))
             {
-                int currentPage = pageSize> 0 ?currentStartIndex / pageSize:0;
+                int currentPage = pageSize > 0 ? currentStartIndex / pageSize : 0;
                 overrides.StartIndex = (currentPage + 1) * pageSize;
             }
             else if (string.Equals(val, "previous", StringComparison.OrdinalIgnoreCase))
             {
-                int currentPage = pageSize>0? currentStartIndex / pageSize : 0;
+                int currentPage = pageSize > 0 ? currentStartIndex / pageSize : 0;
                 if (currentPage > 0)
                 {
                     overrides.StartIndex = (currentPage - 1) * pageSize;
@@ -426,8 +426,8 @@ namespace Mozu.SiteBuilder.Mvc.Helpers
                 return _pageContext.Search.ToUrl(new SearchContextOverrides()
                 {
                     UrlBase = "/search",
-                    CategoryId =cat.CategoryId
-               });
+                    CategoryId = cat.CategoryId
+                });
             }
 
             // we know we're doing a category facet, so we can kill the pagination
