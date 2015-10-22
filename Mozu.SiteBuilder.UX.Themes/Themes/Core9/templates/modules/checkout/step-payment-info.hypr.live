@@ -140,7 +140,7 @@
                     <div class="mz-l-formfieldgroup-cell"></div>
                     <div class="mz-l-formfieldgroup-cell">
                         <label class="mz-inline">
-                            <input type="checkbox" name="special-offers" {% if="" model.acceptsMarketing="" %}checked="checked" {% endif="" %}data-mz-value="acceptsMarketing" class="mz-checkout-optin" > {{ labels.optIn|string_format(siteContext.generalSettings.websiteName) }}
+                            <input type="checkbox" name="special-offers" {% if model.acceptsMarketing %}checked="checked" {% endif %}data-mz-value="acceptsMarketing" class="mz-checkout-optin" > {{ labels.optIn|string_format(siteContext.generalSettings.websiteName) }}
                         </label>
                     </div>
                 </div>
