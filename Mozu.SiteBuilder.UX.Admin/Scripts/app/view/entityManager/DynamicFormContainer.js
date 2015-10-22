@@ -40,6 +40,7 @@
     },
     //  padding: '20px',
     initComponent: function() {
+        debugger;
         this.data = Ext.clone(this.record.getFields() || {});
         for (var name in this.record.data) {
             if (this.record.data.hasOwnProperty(name) && name !== 'properties' && name !== 'item') {
