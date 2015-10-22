@@ -213,13 +213,23 @@ namespace Mozu.SiteBuilder.UX.Areas.Misc.Controllers
         private ActionResult RedirectToCdn(string list, string documentId, DateTimeOffset timeStamp)
         {
             var cdnHost = this._settings.AppSettings("CdnHost");
-            var originalUri = new Uri(PageContext.Url);
+            var origionalUri = new Uri(PageContext.Url);
+            var origionalquery = HttpUtility.ParseQueryString(origionalUri.Query);
+            var isLatestRequest = string.Equals(origionalquery["latest"], "true", StringComparison.OrdinalIgnoreCase);
+
+            origionalquery.Remove("latest");
+            origionalquery["_mzts"] = timeStamp.Ticks.ToString();
+            if (isLatestRequest)
+            {
+                UriBuilder latestRedirectUrl = new UriBuilder(origionalUri);
+                latestRedirectUrl.Query = origionalquery.ToString();
+                return new RedirectResult(latestRedirectUrl.ToString(), false , TimeSpan.FromMinutes(10));
+            }
 
             UriBuilder ub = new UriBuilder();
             ub.Scheme = this.PageContext.IsSecure ? "https" : "http";
             ub.Host = cdnHost;
 
-            var origQuery = originalUri.Query.Length > 0 && originalUri.Query[0] == '?' ? originalUri.Query.Substring(1) : originalUri.Query;
 
             ub.Path = string.Equals( list , "files@mozu", StringComparison.OrdinalIgnoreCase)
                 ? string.Format("{0}-m{1}/cms/files/{2}", this.SbApiContext.TenantId, this.SbApiContext.MasterCatalogId,
@@ -228,8 +238,7 @@ namespace Mozu.SiteBuilder.UX.Areas.Misc.Controllers
                     (this.SbApiContext.SiteId.HasValue
                         ? this.SbApiContext.SiteId.Value.ToString()
                         : "m-" + this.SbApiContext.MasterCatalogId), list, documentId);
-            ub.Query = origQuery + (origQuery.Length >0 ? "&" : "") + "_mzts=" +
-                       timeStamp.Ticks;
+            ub.Query = origionalquery.ToString();
 
 
             return new RedirectResult(ub.ToString(), true);
