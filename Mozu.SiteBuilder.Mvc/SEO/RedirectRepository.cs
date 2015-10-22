@@ -194,15 +194,15 @@ namespace Mozu.SiteBuilder.Mvc.SEO
                                 using (var tr = new StreamReader(stream))
                                 using (var jr = new JsonTextReader(tr))
                                 {
-
                                     try
                                     {
-                                        var ser = Newtonsoft.Json.JsonSerializer.CreateDefault();
+                                        var ser = JsonSerializer.CreateDefault();
                                         if (jr.Read())
                                         {
                                             if (jr.TokenType == JsonToken.StartArray)
                                             {
-                                                return ser.Deserialize<List<RedirectEntry>>(jr);
+                                                var entries = ser.Deserialize<List<RedirectEntry>>(jr);
+                                                return entries.Select(e => { e.IsEnabled = e.IsEnabled ?? true; return e; }).ToList();
                                             }
                                             else if (jr.TokenType == JsonToken.StartObject)
                                             {
