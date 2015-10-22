@@ -14,6 +14,7 @@ using Mozu.SiteBuilder.UX.Models.StoreFront.Catalog;
 using Mozu.SiteSettings.General.Contracts.General.Routing;
 using NDjango.Interfaces;
 using Newtonsoft.Json.Linq;
+using System.Web.Http.Routing;
 
 namespace Mozu.SiteBuilder.Mvc.Helpers
 {
@@ -504,7 +505,7 @@ namespace Mozu.SiteBuilder.Mvc.Helpers
 
             if (strObj == "clear")
             {
-                return MakeCategoryUrlAndClearFacets(routeData, searchContext);
+                return MakeCategoryUrlAndClearFacets(() => GetCategoryIdFromRouteData(routeData), searchContext);
             }
 
             var facetValue = obj is string ? strObj : _resolver.ResolveMemberOrDefault<string>(obj, "filterValue");
@@ -512,7 +513,7 @@ namespace Mozu.SiteBuilder.Mvc.Helpers
             // this means we're dealing with category facet
             if (string.IsNullOrEmpty(facetValue))
             {
-                return MakeCategoryUrlAndKeepFacets(obj, searchContext);
+                return MakeCategoryUrlAndKeepFacets(() => GetCategoryIdFromCategoryFacet(obj), searchContext);
             }
 
             // this means we have some other facet type
@@ -535,7 +536,7 @@ namespace Mozu.SiteBuilder.Mvc.Helpers
             return MakeUrlForAllOtherFacetTypes(routeData, searchContext, isApplied, facetPairKey, facetPairValue);
         }
 
-        string MakeUrlForAllOtherFacetTypes(System.Web.Http.Routing.IHttpRouteData routeData, SearchContext searchContext, bool isApplied, string facetPairKey, string facetPairValue)
+        string MakeUrlForAllOtherFacetTypes(IHttpRouteData routeData, SearchContext searchContext, bool isApplied, string facetPairKey, string facetPairValue)
         {
             string facetUrl = null;
             var existing = searchContext.Facets.GetValues(facetPairKey);
@@ -561,33 +562,57 @@ namespace Mozu.SiteBuilder.Mvc.Helpers
             return searchContext.ToUrl(overrides);
         }
 
-        string MakeCategoryUrlAndKeepFacets(object obj, SearchContext searchContext)
+        string MakeCategoryUrlAndKeepFacets(Func<int?> categoryIdResolver, SearchContext searchContext)
+        {
+            var catId = categoryIdResolver();
+            if (catId.HasValue) return searchContext.ToUrl(new SearchContextOverrides { UrlBase = MakeCategoryUrl(catId.Value, null, false), StartIndex = 0 });
+            else return "#";
+        }
+
+        int? GetCategoryIdFromCategoryFacet(object categoryFacet)
         {
             int catId;
-            var childrenFacetValues = _resolver.ResolveMemberOrDefault<object>(obj, "childrenFacetValues");
+            var childrenFacetValues = _resolver.ResolveMemberOrDefault<object>(categoryFacet, "childrenFacetValues");
             if (childrenFacetValues != null)
             {
                 //must be a top level cat with no immediate child products
-                var tempCat = _resolver.ResolveMemberOrDefault<string>(obj, "value");
+                var tempCat = _resolver.ResolveMemberOrDefault<string>(categoryFacet, "value");
                 if (int.TryParse(tempCat, out catId))
                 {
-                    var urlForCatId = MakeCategoryUrl(catId, null, false);
-                    return searchContext.ToUrl(new SearchContextOverrides() { UrlBase = urlForCatId, StartIndex = 0 });
+                    return catId;
                 }
             }
-            return "#";
+            return null;
         }
 
-        string MakeCategoryUrlAndClearFacets(System.Web.Http.Routing.IHttpRouteData routeData, SearchContext searchContext)
+        int? GetCategoryIdFromRouteData(IHttpRouteData routeData)
         {
             int catId;
             object tmpObj;
-            string catUrl = null;
             if (routeData.Values.TryGetValue("categoryId", out tmpObj) && int.TryParse(tmpObj.ToString(), out catId))
             {
-                catUrl = MakeCategoryUrl(catId, null, false);
+                return catId;
             }
-            return searchContext.ToUrl(new SearchContextOverrides() { ClearFacets = true, UrlBase = catUrl, StartIndex = 0 });
+            return null;
+        }
+
+        string MakeCategoryUrlAndClearFacets(Func<int?> categoryIdResolver, SearchContext searchContext)
+        {
+            var categoryId = categoryIdResolver();
+            if (categoryId.HasValue)
+            {
+                var catUrl = MakeCategoryUrl(categoryId.Value, null, false);
+                return ClearFacetsFromUrl(catUrl, searchContext);
+            }
+            else
+            {
+                return ClearFacetsFromUrl(string.Empty, searchContext);
+            }
+        }
+
+        static string ClearFacetsFromUrl(string url, SearchContext context)
+        {
+            return context.ToUrl(new SearchContextOverrides { ClearFacets = true, UrlBase = url, StartIndex = 0 });
         }
     }
 }
