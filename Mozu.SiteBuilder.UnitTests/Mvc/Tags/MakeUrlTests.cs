@@ -18,16 +18,15 @@ using UrlHelper = Mozu.SiteBuilder.Mvc.Helpers.UrlHelper;
 namespace Mozu.SiteBuilder.UnitTests.Mvc.Tags
 {
     [Category("Hypr")]
+    [Category("MakeUrl")]
     [TestFixture]
     public class MakeUrlTests: TemplateTestBase
     {
         [Test, TestCaseSource("GetTests")]
-        public void Run(TestDescriptor desc)
+        public void MakeUrl(TestDescriptor desc)
         {
             RunTemplate(desc);
         }
-
-       
 
         private static List<TestDescriptor> GetTests()
         {
@@ -49,7 +48,6 @@ namespace Mozu.SiteBuilder.UnitTests.Mvc.Tags
             var pc = Substitute.For<IPageContext>();
             pc.Search = new SearchContext(req)
             {
-
             };
             var ac = Substitute.For<ISiteBuilderApiContext>();
             
@@ -135,15 +133,37 @@ namespace Mozu.SiteBuilder.UnitTests.Mvc.Tags
                 },
                  new TestDescriptor
                 {
-                    Name = "categoryFacet",
+                    Name = "categoryFacet clears faceting",
                     Template = @"{% make_url ""facet"" facetValue %}",
-                    ContainerModifier = containerMods,
+                    ContainerModifier = builder => {
+                        containerMods(builder);
+                        builder.Register(
+                            ctx => {
+                              ctx.Resolve<PageContext>().Search = new SearchContext(new HttpRequestMessage(HttpMethod.Get, "http://localhost/foo?startIndex=100"));
+                              return ctx.Resolve<PageContext>();
+                            }
+                        ).As<IPageContext>();
+                    },
                        Context = new Dictionary<string, object>() { { "facetValue", new Mozu.ProductRuntime.Contracts.FacetValue() {
                        ChildrenFacetValues = new List<ProductRuntime.Contracts.FacetValue>(),
                        Value = "66"
-                       
+
                     } } },
-                    ExpectedFunc = TestDescriptor.ContainsLiteral("/c/66")
+                    ExpectedFunc = actual =>
+                    {
+                        if(actual.Contains("/c/66") && !actual.Contains("startIndex")) {return Tuple.Create(true, string.Empty); } else {return Tuple.Create(false, "the expected value either contained the wrong category url or contained a startindex query param, which was unexpected."); }
+                    }
+                },
+                  new TestDescriptor
+                {
+                    Name = "categoryFacet",
+                    Template = @"{% make_url ""facet"" facetValue %}",
+                    ContainerModifier = containerMods,
+                    Context = new Dictionary<string, object>() { { "facetValue", new Mozu.ProductRuntime.Contracts.FacetValue() {
+                        ChildrenFacetValues = new List<ProductRuntime.Contracts.FacetValue>(),
+                        Value = "66"
+                    }}},
+                    ExpectedFunc = TestDescriptor.ContainsLiteral("c/66")
                 },
                   new TestDescriptor
                 {

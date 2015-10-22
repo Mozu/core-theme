@@ -279,22 +279,22 @@ namespace Mozu.SiteBuilder.Mvc.Contexts
 
             var queryCollection = System.Web.HttpUtility.ParseQueryString("");
 
-            if (pageSize != null)
+            if (pageSize != null && pageSize.Value > 0)
             {
                 queryCollection.Add("pageSize", pageSize.ToString());
             }
 
-            if (!String.IsNullOrEmpty(sortBy))
+            if (!string.IsNullOrEmpty(sortBy))
             {
                 queryCollection.Add("sortBy", sortBy);
             }
 
-            if (!String.IsNullOrEmpty(facetQsVal))
+            if (!string.IsNullOrEmpty(facetQsVal))
             {
                 queryCollection.Add("facetValueFilter", facetQsVal);
             }
 
-            if (startIndex != null)
+            if (startIndex != null && startIndex.Value != 0)
             {
                 queryCollection.Add("startIndex", startIndex.ToString());
             }
@@ -304,8 +304,7 @@ namespace Mozu.SiteBuilder.Mvc.Contexts
                 queryCollection.Add("categoryId", categoryId.Value.ToString());
             }
 
-
-            if (!String.IsNullOrEmpty(query))
+            if (!string.IsNullOrEmpty(query))
             {
                 queryCollection.Add("query", query);
             }
