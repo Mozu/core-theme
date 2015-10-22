@@ -140,19 +140,19 @@ Ext.define('Taco.view.website.Index', {
                 supportedLevels: ['s']
             }),
             {
+                xtype: 'taco-indicator',
+                itemId: 'draftIcon',
+                title: 'DRAFT',
+                margin: '0 0 0 10',
+                hidden: true,
+                afterrender: this.setAction.bind(this)
+            },
+            {
                 xtype: 'component',
                 itemId: 'taco-page-title',
                 flex: 1,
                 html: '',
                 maxWidth: '100px'
-            },
-            {
-                xtype: 'taco-indicator',
-                itemId: 'draftIcon',
-                title: 'DRAFT',
-                margin: '0 10 0 10',
-                hidden: true,
-                afterrender: this.setAction.bind(this)
             },
             {
                 xtype: 'button',
@@ -1279,6 +1279,7 @@ Ext.define('Taco.view.website.Index', {
     updateHeaderTitle: function(tree, record) {
         var icon = '<span class="taco-website-header-icon ' + (this.down('taco-website-tree').getIconClass(record) || 'page-icon') + '"></span>';
         this.down('#taco-page-title').update( '<h2 class="page-title">' + record.get('name') + '</h2>');
+        console.log(this.down('#taco-page-title'));
     },
 
     onContentListClick: function (tree, metaData) {
