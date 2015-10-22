@@ -199,7 +199,7 @@ namespace Mozu.SiteBuilder.Mvc.Navigation
                                 OriginalId = page.Id,
                                 OriginalDocumentListName = page.ListFQN,
                                 Index = navmeta.Index,
-                                Url = _customRouteHandler.GetCannonicalUrl(SiteSettings.General.Contracts.General.Routing.FancyRoute.CmsPage, () => AutoMapper.Mapper.Map<IDictionary<string, object>>(page), false).Result ?? (String.Equals(page.ListFQN, "pages@mozu", StringComparison.OrdinalIgnoreCase) ? "/" + page.Name : "/" + page.ListFQN + "/" + page.Name)
+                                Url = _customRouteHandler.GetCanonicalUrl(SiteSettings.General.Contracts.General.Routing.FancyRoute.CmsPage, () => AutoMapper.Mapper.Map<IDictionary<string, object>>(page), false).Result ?? (String.Equals(page.ListFQN, "pages@mozu", StringComparison.OrdinalIgnoreCase) ? "/" + page.Name : "/" + page.ListFQN + "/" + page.Name)
                             };
                         }
                         else

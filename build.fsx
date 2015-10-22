@@ -32,9 +32,7 @@ Target "clean" (fun _ ->
     !! "**/bin/*"
     ++ "**/obj/*"
     -- "packages/**"
-    -- "**/node_modules/**"
     -- "lib/**"
-    -- "**/Scripts/**"
     |> DeleteDirs
 )
 

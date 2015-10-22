@@ -35,7 +35,6 @@ namespace Mozu.SiteBuilder.Mvc.SEO
 
         IHttpRouteData GetRouteData(string virtualPathRoot, HttpRequestMessage request);
 
-
         /// <summary>
         /// if a canonical url exists for the internalroute that is specified, this method creates a redirect to that url, with potentially new viewdata that can be injected.
         /// </summary>
@@ -44,7 +43,17 @@ namespace Mozu.SiteBuilder.Mvc.SEO
         /// <param name="viewDataAdditionFunc"></param>
         /// <returns></returns>
         Task<HttpResponseMessage> RedirectWithContext(HttpRequestMessage request, FancyRoute internalRoute, Func<IDictionary<string,object>> viewDataAdditionFunc = null);
-        Task<string> GetCannonicalUrl( FancyRoute internalRoute, Func<IDictionary<string, object>> viewDataAdditionFunc, bool useExistingValues );
+
+        /// <summary>
+        /// Given a particular type of route that we want to canonicalize, we find all routes of that they where canonical is true, 
+        /// order by appearance, and attempt to bind each route to the route data for this request.
+        /// The first canonical route that binds the route data wins and the path data from that route is appended to the base parts of the original url.
+        /// </summary>
+        /// <param name="internalRoute"></param>
+        /// <param name="viewDataAdditionFunc"></param>
+        /// <param name="useExistingQuery"></param>
+        /// <returns></returns>
+        Task<string> GetCanonicalUrl( FancyRoute internalRoute, Func<IDictionary<string, object>> viewDataAdditionFunc, bool useExistingValues );
         
     }
    

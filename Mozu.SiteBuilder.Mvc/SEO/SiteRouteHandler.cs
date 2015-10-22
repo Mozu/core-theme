@@ -1,21 +1,19 @@
-﻿using Mozu.SiteBuilder.Mvc.ActionResults;
-using Mozu.SiteBuilder.Mvc.Extensions;
+﻿using Mozu.SiteBuilder.Mvc.Extensions;
 using Mozu.SiteSettings.General.Contracts.General.Routing;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Net;
 using System.Net.Http;
-using System.Net.Http.Formatting;
 using System.Threading.Tasks;
 using System.Web;
 using System.Web.Http;
 using System.Web.Http.Hosting;
 using System.Web.Http.Routing;
-using System.Web.Routing;
 using Autofac;
 using Mozu.SiteBuilder.Mvc.MessageHandler;
 using Mozu.SiteBuilder.Mvc.ViewEngine;
+using Mozu.Core.Extensions;
 
 namespace Mozu.SiteBuilder.Mvc.SEO
 {
@@ -27,9 +25,8 @@ namespace Mozu.SiteBuilder.Mvc.SEO
         void RouteIncomingDefaultRouteRequest(HttpRequestMessage message);
 
         void RouteIncomingSystemRouteRequest(HttpRequestMessage message);
-
-
     }
+
     public class NonSystemRoute : IHttpRoute
     {
         public IDictionary<string, object> Constraints
@@ -122,53 +119,31 @@ namespace Mozu.SiteBuilder.Mvc.SEO
             var rerouteData = routeCollection.GetRouteData(_requestMessage.Value);
             if (rerouteData == null) return false;
 
-
-
-            //detele me ???
-            foreach( var key in _requestMessage.Value.GetRouteData().Values.Keys)
-            {
-                if ( !rerouteData.Values.ContainsKey(key))
-                {
-                    rerouteData.Values[key] = _requestMessage.Value.GetRouteData().Values[key];
-                }
-            }
-            //end delte me???
-
             if (rerouteData.Route is CustomRoute)
             {
                 var cr = rerouteData.Route as CustomRoute;
                 cr.RewriteRouteData(_requestMessage.Value, rerouteData.Values);
             }
 
-          
-
             _requestMessage.Value.SetRouteData(rerouteData);
             return true;
         }
 
-
-
-        async Task<System.Web.Http.HttpRouteCollection> GetRouteCollectionAsync()
+        async Task<HttpRouteCollection> GetRouteCollectionAsync()
         {
-            if (_httpRouteCollection == null)
-            {
-                _httpRouteCollection = (await _customRouteRepository.Value.GetHttpRouteCollection().ConfigureAwait(false)) ?? new object();
-            }
-            return _httpRouteCollection as System.Web.Http.HttpRouteCollection;
+            _httpRouteCollection = _httpRouteCollection ??  (_httpRouteCollection = (await _customRouteRepository.Value.GetHttpRouteCollection().ConfigureAwait(false)) ?? new object());
+            return _httpRouteCollection as HttpRouteCollection;
         }
-       
 
-        System.Collections.Concurrent.ConcurrentDictionary<FancyRoute,Tuple<System.Web.Http.HttpRouteCollection,List<CustomRoute>>> _canonicleCache = new System.Collections.Concurrent.ConcurrentDictionary<FancyRoute, Tuple<System.Web.Http.HttpRouteCollection, List<CustomRoute>>>();
-
-
-        List<CustomRoute> GetCanonicalRouteList(FancyRoute internalRoute, System.Web.Http.HttpRouteCollection routeCollection , IRouteConfig routeConfig)
+        System.Collections.Concurrent.ConcurrentDictionary<FancyRoute,Tuple<HttpRouteCollection, List<CustomRoute>>> _canonicalCache = new System.Collections.Concurrent.ConcurrentDictionary<FancyRoute, Tuple<System.Web.Http.HttpRouteCollection, List<CustomRoute>>>();
+        List<CustomRoute> GetCanonicalRouteList(FancyRoute internalRoute, HttpRouteCollection routeCollection , IRouteConfig routeConfig)
         {
-            var res = _canonicleCache.GetOrAdd(internalRoute, (ir) => DoGetCanonicalRouteList(ir, routeCollection, routeConfig));
-            if ( !object.Equals(res.Item1 , routeCollection))
+            var res = _canonicalCache.GetOrAdd(internalRoute, (ir) => DoGetCanonicalRouteList(ir, routeCollection, routeConfig));
+            if (!Equals(res.Item1, routeCollection))
             {
-                _canonicleCache.TryRemove(internalRoute, out res);
+                _canonicalCache.TryRemove(internalRoute, out res);
             }
-            res = _canonicleCache.GetOrAdd(internalRoute, (ir) => DoGetCanonicalRouteList(ir, routeCollection, routeConfig));
+            res = _canonicalCache.GetOrAdd(internalRoute, (ir) => DoGetCanonicalRouteList(ir, routeCollection, routeConfig));
             return res.Item2;
         }
         Tuple<HttpRouteCollection, List<CustomRoute>> DoGetCanonicalRouteList(FancyRoute internalRoute, HttpRouteCollection routeCollection, IRouteConfig routeConfig)
@@ -190,10 +165,6 @@ namespace Mozu.SiteBuilder.Mvc.SEO
             return new Tuple<HttpRouteCollection, List<CustomRoute>>(routeCollection, routes);
         }
 
-
-
-
-
         public async Task<HttpResponseMessage> RedirectWithContext(HttpRequestMessage request, FancyRoute internalRoute, Func<IDictionary<string, object>> viewDataAdditionFunc)
         {
             if (_siteBuilderApiContext.Value.IsEditMode)
@@ -207,11 +178,8 @@ namespace Mozu.SiteBuilder.Mvc.SEO
             }
 
             var currentRouteData  = request.GetRouteData();
-
             var routeCollection = await GetRouteCollectionAsync().ConfigureAwait(false);
-
             var routes = GetCanonicalRouteList(internalRoute, routeCollection, _routeconfig);
-
             if (!routes.Any()) return null; // no canonical route that matches, or current route is canonical? then no redirect!
 
      
@@ -237,70 +205,99 @@ namespace Mozu.SiteBuilder.Mvc.SEO
                 var vpath = route.GetVirtualPath(newReq, finalRouteValues);
                 if (vpath != null)
                 {
-                    var uri = new Uri("http://localhost/" + vpath.VirtualPath);
-                    uri = new Uri(uri.GetLeftPart(UriPartial.Path) + request.RequestUri.Query);
-                    if (!string.Equals(uri.PathAndQuery, _requestMessage.Value.RequestUri.PathAndQuery, StringComparison.OrdinalIgnoreCase))
+                    var path = new Uri("http://localhost/" + vpath.VirtualPath).GetLeftPart(UriPartial.Path);
+                    var canonicalParts = new Uri(path + request.RequestUri.Query);
+                    if (!string.Equals(canonicalParts.PathAndQuery, _requestMessage.Value.RequestUri.PathAndQuery, StringComparison.OrdinalIgnoreCase))
                     {
+                        var host = request.RequestUri.Host;
+                        var port = request.RequestUri.Port;
+                        var query = request.RequestUri.Query;
                         var redirect = request.CreateResponse(HttpStatusCode.MovedPermanently);
-                        redirect.Headers.Location = new Uri(uri.PathAndQuery, UriKind.Relative);
-                        redirect.Headers.TryAddWithoutValidation(Constants.HEADER_CANONICAL_URL, uri.PathAndQuery);
+                        redirect.Headers.Location = new UriBuilder(route.UrlScheme.ToStringQuickly(), host, port, path, query).Uri;
+                        redirect.Headers.TryAddWithoutValidation(Constants.HEADER_CANONICAL_URL, canonicalParts.PathAndQuery);
                         return redirect;
                     }
 
                     IEnumerable<string> values;
                     if (request.Headers.TryGetValues(Constants.HEADER_ALTERNATIVE_VIEW, out values) && values.Any(x => !string.IsNullOrWhiteSpace(x)))
                     {
-                        request.Resolve<HttpContextBase>().Response.AddHeader(Constants.HEADER_CANONICAL_URL, uri.PathAndQuery);
-
+                        request.Resolve<HttpContextBase>().Response.AddHeader(Constants.HEADER_CANONICAL_URL, canonicalParts.PathAndQuery);
                     }
-
                     return null;
                 }
             }
             return null;
-           
         }
       
-        public async Task<string> GetCannonicalUrl( FancyRoute internalRoute, Func<IDictionary<string, object>> viewDataAdditionFunc, bool useExistingValues)
+        static int? GetPortForScheme(int incomingPort, CustomRoute.Scheme desiredScheme)
         {
-            
+            if (incomingPort == 80 && desiredScheme == CustomRoute.Scheme.Http) return null;
+            if (incomingPort == 443 && desiredScheme == CustomRoute.Scheme.Https) return null;
+            return incomingPort;
+        }
+
+        public async Task<string> GetCanonicalUrl( FancyRoute internalRoute, Func<IDictionary<string, object>> viewDataAdditionFunc, bool useExistingQuery)
+        {
             var routeCollection = await GetRouteCollectionAsync().ConfigureAwait(false);
-
             var routes = GetCanonicalRouteList(internalRoute, routeCollection, _routeconfig);
-
             if (!routes.Any()) return null; // no canonical route that matches, or current route is canonical? then no redirect!
 
-           
-            var routingValues = viewDataAdditionFunc == null ? new Dictionary<string, object>() : viewDataAdditionFunc();
-            if (useExistingValues)
-            {
-                routingValues.ChainSet(_requestMessage.Value.GetRouteData().Values, false);
-            }
+            var routingValues = GenerateRoutingValues(
+                viewDataAdditionFunc, 
+                () => useExistingQuery ? _requestMessage.Value.GetRouteData().Values : new Dictionary<string, object>()
+                );
 
-            routingValues.ChainSet("httproute", true);
-
-            var newReq = new HttpRequestMessage();
-            newReq.Properties[HttpPropertyKeys.DependencyScope] = _requestMessage.Value.Properties[HttpPropertyKeys.DependencyScope];
-
-            
+            var newReq = PrepareNewHttpRequest(_requestMessage.Value);
             foreach (var route in routes)
             {
                 var vpath = route.GetVirtualPath(newReq, routingValues);
                 if (vpath != null)
                 {
-                    var url = "/"+ new Uri("http://localhost/" + vpath.VirtualPath).GetComponents(UriComponents.Path, UriFormat.Unescaped);
-
-                    if (useExistingValues)
-                    { 
-                         url += _requestMessage.Value.RequestUri.Query;
-                    }
-
-                    return url;
-
+                    return CreateOutboundUri(route, vpath, _requestMessage.Value.RequestUri, useExistingQuery);
                 }
             }
             return null;
+        }
 
+        /// <summary>
+        /// a route is going to match or not based on a dictionary of values that it will try to baind against.  
+        /// Here we just concat multiple route value dictionaries together to present one unified view of the route data.
+        /// </summary>
+        /// <param name="dictionaries"></param>
+        /// <returns></returns>
+        static IDictionary<string, object> GenerateRoutingValues(params Func<IDictionary<string, object>>[] dictionaries)
+        {
+            IDictionary<string, object> initial = new Dictionary<string, object>(StringComparer.OrdinalIgnoreCase) { { "httproute", true } };
+            if (dictionaries == null) return initial;
+            return dictionaries.Aggregate(initial, (state, next) => state.ChainSet(next(), true));
+        }
+
+        /// <summary>
+        /// We want a pristine request with no context to potentially interfere with the routing calculation, so we do that here.
+        /// The only dependency we have is the dependency resolver, which we take from the parent request.
+        /// </summary>
+        /// <param name="parent"></param>
+        /// <returns></returns>
+        static HttpRequestMessage PrepareNewHttpRequest(HttpRequestMessage parent)
+        {
+            var newReq = new HttpRequestMessage();
+            newReq.Properties[HttpPropertyKeys.DependencyScope] = parent.Properties[HttpPropertyKeys.DependencyScope];
+            return newReq;
+        }
+
+        static string CreateOutboundUri(CustomRoute route, IHttpVirtualPathData vpath, Uri incomingUri, bool useInboundQuery)
+        {
+            var scheme = route.UrlScheme.ToStringQuickly();
+            var path = "/" + new Uri("http://localhost/" + vpath.VirtualPath, UriKind.Absolute).GetComponents(UriComponents.Path, UriFormat.Unescaped);
+            var query = useInboundQuery ? incomingUri.Query :  string.Empty;
+
+            var builder = new UriBuilder(scheme, incomingUri.Host);
+            var port = GetPortForScheme(incomingUri.Port, route.UrlScheme);
+
+            builder.Path = path;
+            builder.Query = query;
+            if (port != null) builder.Port = port.Value;
+            return builder.Uri.ToString();
         }
 
         public IHttpRouteData GetRouteData(string virtualPathRoot, HttpRequestMessage request)

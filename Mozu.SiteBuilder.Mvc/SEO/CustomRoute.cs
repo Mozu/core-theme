@@ -2,7 +2,6 @@
 using System.Collections.Specialized;
 using System.Linq;
 using System.Net.Http;
-using System.Threading;
 using System.Threading.Tasks;
 using System.Web.Http.Routing;
 using Mozu.SiteBuilder.Mvc.Extensions;
@@ -14,6 +13,12 @@ namespace Mozu.SiteBuilder.Mvc.SEO
 {
     public class CustomRoute : HttpRoute
     {
+        public enum Scheme
+        {
+            Http,
+            Https
+        }
+
         string Template { get; set; }
         public FancyRoute InternalRoute { get; set; }
         bool IsCanonical { get; set; }
@@ -22,29 +27,35 @@ namespace Mozu.SiteBuilder.Mvc.SEO
         NameValueCollection QueryString { get; set; }
         IDictionary<IRouteDataMapping, string[]> PreMappings { get; set; }
         IDictionary<IRouteDataMapping, string[]> PostMappings { get; set; }
+        public Scheme UrlScheme { get; set; }
 
-        public CustomRoute(string template, string queryString,  FancyRoute internalRoute, bool isCanonical, IDictionary<string, object> defaults, IDictionary<ICustomRouteConstraint, string[]> constraints, IDictionary<IRouteDataMapping, string[]> mappings, 
-            string functionId) :
+        public CustomRoute(string template, 
+            string queryString,  
+            FancyRoute internalRoute, 
+            bool isCanonical, 
+            IDictionary<string, object> defaults,
+            IDictionary<ICustomRouteConstraint, string[]> constraints, 
+            IDictionary<IRouteDataMapping, string[]> mappings, 
+            string functionId, 
+            Scheme scheme) :
             base(template, 
                 defaults.ToRouteDictionary(),
                 null, 
                 null, 
                 internalRoute == FancyRoute.Arcjs ? new ArcJSHttpHandler() { FunctionId = functionId } : null)
         {
-          
             Template = template;
             InternalRoute = internalRoute;
             IsCanonical = isCanonical;
+            UrlScheme = scheme;
+
             if ( !string.IsNullOrWhiteSpace(queryString))
             {
                 QueryString = System.Web.HttpUtility.ParseQueryString(queryString);
             }
-            
 
             PreMappings = mappings.Where(x => x.Key.Settings.beforeRouting.GetValueOrDefault(false)).ToDictionary(x=>x.Key, y=> y.Value );
             PostMappings = mappings.Where(x => !x.Key.Settings.beforeRouting.GetValueOrDefault(false)).ToDictionary(x => x.Key, y => y.Value);
-
-            
 
             object temp;
             if (constraints == null)
@@ -53,27 +64,18 @@ namespace Mozu.SiteBuilder.Mvc.SEO
             }
             foreach ( var kvp in constraints)
             {
-                var paramNames = kvp.Value == null || kvp.Value.Length ==0 ? new string[]{"*"}: kvp.Value;
+                var paramNames = kvp.Value == null || kvp.Value.Length == 0 ? new string[] { "*" } : kvp.Value;
                 foreach( var paramName in paramNames)
                 {
-                    if ( !this.Constraints.TryGetValue( paramName, out temp))
+                    if ( !Constraints.TryGetValue( paramName, out temp))
                     {
                         temp = new CustomRouteConstraintGroup();
-                        this.Constraints[paramName] = temp;
+                        Constraints[paramName] = temp;
                     }
                    ((CustomRouteConstraintGroup)temp).Constrains.Add(kvp.Key);
                 }
-                
             }
-            
         }
-
-       
-
-
-        
-       
-
 
         /// <summary>
         /// Applies any route mappings that are attached to this route to the provided set of route data
@@ -83,9 +85,7 @@ namespace Mozu.SiteBuilder.Mvc.SEO
         public IDictionary<string, object> RewriteRouteData(HttpRequestMessage requestMessage, IDictionary<string, object> values )
         {
             return DoRewriteRouteData(requestMessage, values, PostMappings);
-           
         }
-
 
         static IDictionary<string, object> DoRewriteRouteData(HttpRequestMessage requestMessage, IDictionary<string, object> values, IDictionary<IRouteDataMapping, string[]> mappings)
         {
@@ -102,12 +102,10 @@ namespace Mozu.SiteBuilder.Mvc.SEO
                         {
                             values[mapEntry.Key.Settings.mapTo] = newVal;
                         }
-                        
                     }
                 }
                 return values;
             });
-
 
             return values;
         }
@@ -115,21 +113,19 @@ namespace Mozu.SiteBuilder.Mvc.SEO
         protected override bool ProcessConstraint(HttpRequestMessage request, object constraint, string parameterName, HttpRouteValueDictionary values, HttpRouteDirection routeDirection)
         {
             var origional = values;
-            if( this.PreMappings.Count > 0 )
+            if( PreMappings.Count > 0 )
             {
                 values= new HttpRouteValueDictionary( values);
                 DoRewriteRouteData(request, values, PreMappings);
             }
             var ret=  base.ProcessConstraint(request, constraint, parameterName, values, routeDirection);
-            if (ret && !object.Equals( origional,values ))
+            if (ret && !Equals( origional,values ))
             {
                 origional.Clear();
                 origional.AddRange(values);
             }
-            
             //todo: should pre mappings persist?
             return ret;
-            
         }
 
         public bool IsCanonicalFor(FancyRoute route)
