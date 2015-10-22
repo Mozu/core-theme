@@ -299,6 +299,46 @@ namespace Mozu.SiteBuilder.UX.Configuration
 
 
 
+            //old tbd remove
+            routes.MapHttpRoute(
+                "Misc_content",
+                "files/{tenant}/{mastercat}/{documentId}",
+                new { action = "index", controller = "content", list = "files@mozu" }
+                );
+
+
+
+
+            routes.MapHttpRoute(
+                "Misc_content_2",
+                "cms/{site}/files/{documentId}",
+                new { action = "index", controller = "content", list = "files@mozu" }
+                );
+
+
+
+
+            routes.MapHttpRoute(
+                "Misc_content_4",
+                "{tenant}-{site}/cms/files/{documentId}",
+                new { action = "index", controller = "content", list = "files@mozu" }
+                );
+            
+
+          
+            routes.MapHttpRoute(
+                "DevDocs",
+                "devdocs/{action}/{id}",
+                new
+                {
+                    action = "Index",
+                    id = RouteParameter.Optional,
+                    controller = "DeveloperDocumentation"
+                }
+                );
+
+
+
             routes.Add("SiteRoutes", new NonSystemRoute());
 
             return routes;
@@ -490,54 +530,6 @@ namespace Mozu.SiteBuilder.UX.Configuration
 
 
             
-
-            //old tbd remove
-            routes.MapHttpRoute(
-                "Misc_content",
-                "files/{tenant}/{mastercat}/{documentId}",
-                new { action = "index", controller = "content", list = "files@mozu"  }
-                );
-
-         
-
-
-            routes.MapHttpRoute(
-                "Misc_content_2",
-                "cms/{site}/files/{documentId}",
-                new { action = "index", controller = "content", list = "files@mozu" }
-                );
-
-           
-
-
-            routes.MapHttpRoute(
-                "Misc_content_4",
-                "{tenant}-{site}/cms/files/{documentId}",
-                new { action = "index", controller = "content", list = "files@mozu" }
-                );
-
-
-
-            //http://txwks3164.corp.volusion.com/2083-2116/cms/7332/files/b1bf3cab-1d7c-42f8-901a-bff60b56d778?size=60
-
-
-           
-
-
-            //todo remove before launch
-            routes.MapHttpRoute(
-                "widgettest",
-                "widgettest",
-                new {action = "widgettest", controller = "Testing"}
-                );
-
-            routes.MapHttpRoute(
-                "DevDocs",
-                "devdocs/{action}/{id}",
-                new { action = "Index", 
-                    id = RouteParameter.Optional ,
-                    controller = "DeveloperDocumentation" }
-                );
 
 
             //routes.MapHttpRoute("resources",

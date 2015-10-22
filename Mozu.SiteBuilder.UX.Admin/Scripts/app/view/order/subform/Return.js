@@ -21,7 +21,6 @@ Ext.define('Taco.view.order.subform.Return', {
     },
 
     initComponent: function () {
-
         this.cls += " " + Taco.baseCSSPrefix + 'orderform-returns';
 
         // initialize and tear down the ui when the view becomes active;
@@ -34,16 +33,8 @@ Ext.define('Taco.view.order.subform.Return', {
     },
 
     destroyUI: function () {
-
         this.removeAll();
-
-        this.createButton.destroy();
-        this.returnableItemsErrorEl.destroy();
-        this.returnableItems.destroy();
-        this.returnPanels.destroy();
-
         this.createButton = this.returnableItemsErrorEl = this.returnableItems = this.returnPanels = null;
-
     },
 
     initUI: function () {
