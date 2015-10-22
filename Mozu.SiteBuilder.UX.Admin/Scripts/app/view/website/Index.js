@@ -42,16 +42,16 @@ Ext.define('Taco.view.website.Index', {
         'Taco.core.ux.content.IndicatorContainer',
         'Taco.core.ux.action.Action',
         'Taco.view.publishing.component.button.PublishButton',
-        'Taco.core.ux.content.ContextMenu'
+        'Taco.view.navigation.ContextSwitcher'
     ],
     selectedTheme: '',
     itemId: 'websiteIndex',
 
     contextConfig: {
-        supportedLevels: ['s'],
-        requiresContextOfType: ['s']
+        //   supportedLevels: ['s'],
+        requiresContextOfType: ['s'],
+        hidden: false
     },
-
     title: false,
     entityTypeEditConfig: {
         blog: 'Taco.view.website.entityAdapters.DocumentEntityAdapter',
@@ -133,11 +133,9 @@ Ext.define('Taco.view.website.Index', {
                 html: '<strong>Editor</strong> for',
                 margin: '0 10 0 0'
             },
-            Ext.create('Taco.core.ux.content.ContextMenu', {
+            Ext.create('Taco.view.navigation.ContextSwitcher', {
                 width: '120px',
-                fieldStyle: 'background-color: #fff;',
-                isSiteLevelOnly: true,
-                supportedLevels: ['s']
+                fieldStyle: 'background-color: #fff;'
             }),
             {
                 xtype: 'taco-indicator',
