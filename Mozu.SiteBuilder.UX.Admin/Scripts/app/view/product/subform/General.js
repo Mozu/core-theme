@@ -587,7 +587,7 @@ Ext.define('Taco.view.product.subform.General', {
 
                 scope: this
             }
-        })
+        });
 
         this.items = [
             {
@@ -1025,15 +1025,36 @@ Ext.define('Taco.view.product.subform.General', {
     },
 
     onProductTypeChange: function (selectField, value) {
+        var me = this;
+        Taco.core.data.StoreManager.getOrCreate({
+            type: 'Taco.store.ProductTypes',
+            pageSize: 1,
+            autoLoad: true,
+            createOnly:true,
+            listeners: {
+                beforeload: function (store) {
+                    var proxy = store.getProxy();
+                    if (!proxy.extraParams) {
+                        proxy.extraParams = {};
+                    }
+                    proxy.extraParams.id = value;
+                },
+                load: me.onProductTypeLoad,
+                scope: this
+            }
+        });
+    },
+
+    onProductTypeLoad: function (scope, records) {
         var me = this,
-            productTypeRecord = selectField.store.getById(value),
+            productTypeRecord = records[0],
+            productTypeId = productTypeRecord.get('id'),
             productUsages = productTypeRecord.get("productUsages"),
             isDigitalCreditProductType = (productTypeRecord.get("goodsType") === 'DigitalCredit'),
             productUsageField,
             parentForm,
             product;
 
-        
         // cache the record for the other forms in case they need it to control their layout;
         me.record.productTypeRecord = productTypeRecord;
 
@@ -1049,17 +1070,17 @@ Ext.define('Taco.view.product.subform.General', {
 
         // when the user changes the productType field we need to update the available productUsages based on the selected productType
         me.filterProductUsageField(productUsages);
-        
+
         //need to set the productTypeId for variations to work.
         product = parentForm.product || parentForm.record;
-        product.set('productTypeId', value);
+        product.set('productTypeId', productTypeId);
 
         if (!me.propertiesForm) {
             me.propertiesForm = parentForm.down('productpropertiesform');
         }
 
         if (me.propertiesForm) {
-            me.propertiesForm.loadByProductTypeId(value);
+            me.propertiesForm.loadByProductTypeId(productTypeId);
         }
 
         if (!me.extrasForm) {
@@ -1067,7 +1088,7 @@ Ext.define('Taco.view.product.subform.General', {
         }
 
         if (me.extrasForm) {
-            me.extrasForm.loadByProductTypeId(value);
+            me.extrasForm.loadByProductTypeId(productTypeId);
         }
 
         if (!me.optionsForm) {
@@ -1075,7 +1096,7 @@ Ext.define('Taco.view.product.subform.General', {
         }
 
         if (me.optionsForm) {
-            me.optionsForm.loadByProductTypeId(value);
+            me.optionsForm.loadByProductTypeId(productTypeId);
         }
 
         // gift card behavior.

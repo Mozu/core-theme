@@ -28,6 +28,9 @@ Ext.define('Taco.store.ProductTypesPicker', {
         api: {
             read: '/admin/app/ProductType/read'
         },
+        extraParams: {
+            responseGroup: 'picker'
+        },
         reader: {
             type: 'json',
             root: 'items',
