@@ -427,7 +427,7 @@ namespace Mozu.SiteBuilder.Mvc.Helpers
                 {
                     UrlBase = "/search",
                     CategoryId = cat.CategoryId
-                });
+               });
             }
 
             // we know we're doing a category facet, so we can kill the pagination
