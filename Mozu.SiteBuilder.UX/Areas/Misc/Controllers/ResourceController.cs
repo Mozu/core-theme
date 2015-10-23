@@ -261,7 +261,7 @@ namespace Mozu.SiteBuilder.UX.Areas.Misc.Controllers
         {
             this.LifetimeScope = (ILifetimeScope)controllerContext.Request.GetDependencyScope().GetService(typeof(ILifetimeScope));
        
-            if (!IsCDNRequest())
+            if (ShouldRedirectToCdn())
             {
                
                 var cdnHost = this._settings.AppSettings("CdnHost");
@@ -280,20 +280,13 @@ namespace Mozu.SiteBuilder.UX.Areas.Misc.Controllers
             return base.ExecuteAsync(controllerContext, cancellationToken);
         }
 
-        bool IsCDNRequest()
+        bool ShouldRedirectToCdn()
         {
-
-            if ( _settings.AppSettings("disableCDN") == "true")
-            {
-                return false;
-            }
+            var disableCdn = _settings.AppSettings("disableCDN") == "true";
             var cdnHost = this._settings.AppSettings("CdnHost");
-            if ( string.IsNullOrEmpty( cdnHost))
-            {
-                return false;
-            }
             var uri = new Uri(PageContext.Url);
-            return string.IsNullOrEmpty(cdnHost) || cdnHost.EqualsIgnoreCase(uri.Host);
+
+            return !disableCdn  &&  !string.IsNullOrEmpty(cdnHost) && !cdnHost.EqualsIgnoreCase(uri.Host);
 
         }
 

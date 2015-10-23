@@ -71,23 +71,14 @@ namespace Mozu.SiteBuilder.UX.Areas.Misc.Controllers
         }
 
 
-        bool IsCDNRequest()
+        bool ShouldRedirectToCdn()
         {
-
-            if (_settings.AppSettings("disableCDN") == "true")
-            {
-                return false;
-            }
+            var disableCdn = _settings.AppSettings("disableCDN") == "true";
             var cdnHost = this._settings.AppSettings("CdnHost");
-            if (string.IsNullOrEmpty(cdnHost))
-            {
-                return false;
-            }
-           
-
             var uri = new Uri(PageContext.Url);
-            return string.IsNullOrEmpty(cdnHost) || cdnHost.EqualsIgnoreCase(uri.Host);
-            
+
+            return !disableCdn && !string.IsNullOrEmpty(cdnHost) && !cdnHost.EqualsIgnoreCase(uri.Host);
+
         }
 
         [ClientCacheHeaders(ConfigKey = "images")]
@@ -112,7 +103,7 @@ namespace Mozu.SiteBuilder.UX.Areas.Misc.Controllers
 
            
 
-            var isCdnRequest = IsCDNRequest();
+            var shouldRedirectToCdn = ShouldRedirectToCdn();
 
             ApiContext context = null;
 
@@ -145,7 +136,7 @@ namespace Mozu.SiteBuilder.UX.Areas.Misc.Controllers
             });
             Guid guid;
             ServiceClientResponse<StreamContent> result = null;
-            if (Request.Headers.IfModifiedSince.HasValue || !isCdnRequest)
+            if (Request.Headers.IfModifiedSince.HasValue || shouldRedirectToCdn)
             {
                 if (Guid.TryParse(documentId, out guid))
                 {
@@ -163,7 +154,7 @@ namespace Mozu.SiteBuilder.UX.Areas.Misc.Controllers
                 {
                     throw result.ReadException();
                 }
-                if ( !isCdnRequest)
+                if ( shouldRedirectToCdn )
                 {
                     return RedirectToCdn(list, documentId, result.ResponseMessage.Content.Headers.LastModified.Value);
                 }
