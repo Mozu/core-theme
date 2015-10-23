@@ -15,8 +15,8 @@ Ext.define('Taco.view.storefrontProduct.Grid', {
     },
 
     contextConfig: {
-        supportedLevels: ["s"],
-        requiresContextOfType: ["c", "s"]
+        supportedLevels: ['s'],
+        requiresContextOfType: ['c', 's']
     },
 
     // Required by mixin: Taco.core.ux.mixins.LaunchEditor defined in SearchList
@@ -24,7 +24,7 @@ Ext.define('Taco.view.storefrontProduct.Grid', {
 
     enableNavHeader: false,
     launchEditorOnClick: false,
-    // adds the "taco-content-navcontainer-padding" class
+    // adds the 'taco-content-navcontainer-padding' class
     // Will add the 20px padding needed for display in the contentView as part of the NavHeader code;
     addContentViewPadding: true,
     enableSearch: true,
@@ -103,10 +103,10 @@ Ext.define('Taco.view.storefrontProduct.Grid', {
             me.store.loadData([], false);
         });
 
-        me.siteSelector = Ext.create("Taco.core.ux.content.ContextMenu", {
+        me.siteSelector = Ext.create('Taco.core.ux.content.ContextMenu', {
             fieldLabel: 'Site',
-            supportedLevels: ["s"],
-            requiresContextOfType: ["c", "s"],
+            supportedLevels: ['s'],
+            requiresContextOfType: ['c', 's'],
             changeContext: Ext.emptyFn,
             listeners: {
                 afterrender: function(component, eOpts) {
@@ -138,7 +138,7 @@ Ext.define('Taco.view.storefrontProduct.Grid', {
                     var dataViewMode = source.getValue();
                     var data = {
                         dataViewMode: dataViewMode
-                    }
+                    };
                     if (dataViewMode === 'Pending') {
                         me.sitePreviewDate.show();
                     } else {
@@ -164,7 +164,7 @@ Ext.define('Taco.view.storefrontProduct.Grid', {
             }
         });
 
-        me.header.items = me.header.items || [ this.siteSelector, this.dataViewModeSelector, this.sitePreviewDate];
+        me.header.items = me.combineHeaderItems();
 
         me.store.proxy.extraParams.siteId = me.siteSelector.value;
         me.store.proxy.extraParams.dataViewMode = me.dataViewModeSelector.value;
@@ -172,62 +172,77 @@ Ext.define('Taco.view.storefrontProduct.Grid', {
         me.callParent(arguments);
     },
 
+    combineHeaderItems: function() {
+        var staticHeaderItems = [this.siteSelector, this.dataViewModeSelector, this.sitePreviewDate],
+            items; 
+
+        if (this.additionalHeaderItems) {
+            items = staticHeaderItems.concat(this.header.additionalHeaderItems);
+        }
+
+        else {
+            items = staticHeaderItems;
+        }
+
+        return items;
+    },
+
     // override this method and adjust the columns if your need a grid with a subset of columns;
     getColumnConfig: function() {
         var me = this;
         return [
             {
-                xtype: "gridcolumn",
-                dataIndex: "productCode",
-                stateId: "productCode",
-                text: "Code",
+                xtype: 'gridcolumn',
+                dataIndex: 'productCode',
+                stateId: 'productCode',
+                text: 'Code',
                 hideable: false,
                 flex: 1,
                 minWidth: 100
             },
             {
-                xtype: "gridcolumn",
-                stateId: "name",
-                dataIndex: "name",
-                text: "Name",
+                xtype: 'gridcolumn',
+                stateId: 'name',
+                dataIndex: 'name',
+                text: 'Name',
                 minWidth: 120,
                 flex: 1,
                 sortable: false
             },
             {
-                xtype: "gridcolumn",
-                stateId: "productType",
-                dataIndex: "productType",
-                text: "Product Type",
+                xtype: 'gridcolumn',
+                stateId: 'productType',
+                dataIndex: 'productType',
+                text: 'Product Type',
                 minWidth: 120,
                 flex: 1,
                 sortable:false
             },
             {
-                xtype: "gridcolumn",
-                stateId: "price",
-                dataIndex: "price",
-                text: "Price",
+                xtype: 'gridcolumn',
+                stateId: 'price',
+                dataIndex: 'price',
+                text: 'Price',
                 minWidth: 100,
                 flex: 1,
-                align: "right",
+                align: 'right',
                 renderer: function(value, metaData, record) { return value != null ? record.formatCurrency(value) : null; }
             },
             {
-                xtype: "gridcolumn",
-                stateId: "salePrice",
-                dataIndex: "salePrice",
-                text: "SalePrice",
+                xtype: 'gridcolumn',
+                stateId: 'salePrice',
+                dataIndex: 'salePrice',
+                text: 'SalePrice',
                 minWidth: 100,
                 flex: 1,
-                align: "right",
+                align: 'right',
                 renderer: function(value, metaData, record) { return value != null ? record.formatCurrency(value): null; }
             },
             {
-                xtype: "gridcolumn",
-                stateId: "productUsage",
-                dataIndex: "productUsage",
-                text: "Usage",
+                xtype: 'gridcolumn',
+                stateId: 'productUsage',
+                dataIndex: 'productUsage',
+                text: 'Usage',
                 minWidth: 120,
                 hideable: true,
                 hidden: true,
@@ -235,10 +250,10 @@ Ext.define('Taco.view.storefrontProduct.Grid', {
                 sortable: false
             },
             {
-                xtype: "gridcolumn",
-                stateId: "createDate",
-                dataIndex: "createDate",
-                text: "Create Date",
+                xtype: 'gridcolumn',
+                stateId: 'createDate',
+                dataIndex: 'createDate',
+                text: 'Create Date',
                 minWidth: 120,
                 flex: 1,
                 hideable: true,
@@ -255,15 +270,15 @@ Ext.define('Taco.view.storefrontProduct.Grid', {
 
         if (this.enableEditAction) {
             actions.push({
-                text: "Edit",
+                text: 'Edit',
                 requiredBehaviors: {
-                    model: "Taco.model.Discount",
-                    behavior: "update"
+                    model: 'Taco.model.Discount',
+                    behavior: 'update'
                 },
                 menuColumnHandler: function(item, eventData) {
                     var record = eventData.record;
                     Ext.defer(function() {
-                        Taco.core.StateManager.attemptNavigate("discounts/edit/" + record.getId(), { complexMetaData: { record: record } });
+                        Taco.core.StateManager.attemptNavigate('discounts/edit/' + record.getId(), { complexMetaData: { record: record } });
                     }, 1, this);
                 }
             });
@@ -271,10 +286,10 @@ Ext.define('Taco.view.storefrontProduct.Grid', {
 
         if (this.enableDuplicateAction) {
             actions.push({
-                text: "Duplicate",
+                text: 'Duplicate',
                 requiredBehaviors: {
-                    model: "Taco.model.Discount",
-                    behavior: "create"
+                    model: 'Taco.model.Discount',
+                    behavior: 'create'
                 },
                 menuColumnHandler: function(item, eventData) {
                     var record = eventData.record,
@@ -282,20 +297,20 @@ Ext.define('Taco.view.storefrontProduct.Grid', {
                             id: record.getId()
                         };
 
-                    Taco.app.StateManager.attemptNavigate("discounts/duplicate/" + record.getId(), metaData);
+                    Taco.app.StateManager.attemptNavigate('discounts/duplicate/' + record.getId(), metaData);
                 }
             });
         }
 
         if (this.enableDeleteAction) {
             actions.push({
-                text: "Delete",
-                itemId: "deleteMenuItem",
+                text: 'Delete',
+                itemId: 'deleteMenuItem',
                 // deleteMenuColumnHandler can be found in Taco.core.ux.mixins.DeleteFromGrid
-                menuColumnHandler: "deleteMenuColumnHandler",
+                menuColumnHandler: 'deleteMenuColumnHandler',
                 requiredBehaviors: {
-                    model: "Taco.model.Discount",
-                    behavior: "delete"
+                    model: 'Taco.model.Discount',
+                    behavior: 'delete'
                 },
                 scope: me
             });
@@ -309,9 +324,9 @@ Ext.define('Taco.view.storefrontProduct.Grid', {
         var me = this;
 
         // need to disable the delete menu option when discount has been used
-        var deleteMenuItem = menu.down("#deleteMenuItem");
+        var deleteMenuItem = menu.down('#deleteMenuItem');
         if (deleteMenuItem) {
-            if (eventData.record.get("canBeDeleted")) {
+            if (eventData.record.get('canBeDeleted')) {
                 deleteMenuItem.show();
             } else {
                 deleteMenuItem.hide();
@@ -327,8 +342,8 @@ Ext.define('Taco.view.storefrontProduct.Grid', {
         // as long as we have actions;
         if (actions.length) {
             actionColumn = {
-                xtype: "taco.menucolumn",
-                text: "Actions",
+                xtype: 'taco.menucolumn',
+                text: 'Actions',
                 onMenuShow: me.onActionMenuShow,
                 menuItems: actions
             };
