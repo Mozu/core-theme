@@ -212,8 +212,8 @@ namespace Mozu.SiteBuilder.Mvc.SEO
                     var originalUri = new Uri(_requestMessage.Value.Resolve<PageContext>().Url);
                     if (!string.Equals(canonicalParts.PathAndQuery, originalUri.PathAndQuery, StringComparison.OrdinalIgnoreCase))
                     {
-                        var host = request.RequestUri.Host;
-                        var port = request.RequestUri.Port;
+                        var host = originalUri.Host;
+                        var port = originalUri.Port;
                         var query = request.RequestUri.Query;
                         var redirect = request.CreateResponse(HttpStatusCode.MovedPermanently);
                         redirect.Headers.Location = new UriBuilder(route.UrlScheme.ToStringQuickly(), host, port, canonicalParts.GetComponents(UriComponents.Path, UriFormat.Unescaped), query).Uri;
