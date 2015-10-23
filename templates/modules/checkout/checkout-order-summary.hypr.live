@@ -1,5 +1,5 @@
 ﻿<div class="mz-ordersummary-checkout">
-    <h3 class="mz-formstep-header">
+    <h3 class="mz-formstep-header mz-checkoutform-header">
         {{ labels.orderSummary }}
         <a href="/cart" class="mz-formstep-edit" data-mz-action="editCart">{{ labels.change }}</a>
     </h3>

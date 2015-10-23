@@ -1,4 +1,4 @@
-<h3 class="mz-formstep-header">
+<h3 class="mz-formstep-header mz-checkoutform-header">
     {{ labels.paymentInformation }}
     <a href="javascript:;" class="mz-formstep-edit" data-mz-action="edit">{{ labels.change }}</a>
 </h3>
