@@ -282,7 +282,16 @@ namespace Mozu.SiteBuilder.UX.Areas.Misc.Controllers
 
         bool IsCDNRequest()
         {
+
+            if ( _settings.AppSettings("disableCDN") == "true")
+            {
+                return false;
+            }
             var cdnHost = this._settings.AppSettings("CdnHost");
+            if ( string.IsNullOrEmpty( cdnHost))
+            {
+                return false;
+            }
             var uri = new Uri(PageContext.Url);
             return string.IsNullOrEmpty(cdnHost) || cdnHost.EqualsIgnoreCase(uri.Host);
 
