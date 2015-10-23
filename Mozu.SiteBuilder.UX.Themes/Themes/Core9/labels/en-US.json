@@ -54,6 +54,7 @@
   "status"               : "Status",
   "comments"             : "Comments",
   "couponCode"           : "Coupon Code",
+  "couponDisclaimer"     : "Note: \"{0}\" may be reflected in checkout.",
   "apply"                : "Apply",
   "nameOnCheck"          : "Name On Check",
   "routingNumber"        : "Routing Number",
