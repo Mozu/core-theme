@@ -476,6 +476,7 @@
     <Content Include="Scripts\.sencha\app\watch-impl.xml" />
     <Content Include="Scripts\app\app.js" />
     <Content Include="Scripts\app\controller\ActionManagement.js" />
+    <Content Include="Scripts\app\controller\StoreFrontProducts.js" />
     <Content Include="Scripts\app\controller\SearchTuningRules.js" />
     <Content Include="Scripts\app\controller\CouponSets.js" />
     <Content Include="Scripts\app\controller\Entities.js" />
