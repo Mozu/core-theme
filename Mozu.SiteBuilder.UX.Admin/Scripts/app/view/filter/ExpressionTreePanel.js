@@ -1,5 +1,5 @@
 ﻿/**
- * @class  Taco.view.account.RoleForm
+ * @class  Taco.view.filter.ExpressionTreePanel
  * category form
  */
 Ext.define('Taco.view.filter.ExpressionTreePanel', {
@@ -657,6 +657,31 @@ Ext.define('Taco.view.filter.ExpressionTreePanel', {
 
     getExpressionText: function(jsonData, callback) {
         var me = this;
+
+        /*function hasConditionNodes(node) {
+            var childNodes = node.childNodes;
+
+            if (childNodes.length < 1) { return false; }
+
+            for (i = childNodes.length - 1; i >= 0; i--) {
+
+                var childNode = childNodes[i];
+
+                if (childNode.data.type === 'container') {
+                    return hasConditionNodes(childNode);
+                } else {
+                    return true;
+                }
+
+            }
+
+        }
+
+        var hasNodes = hasConditionNodes(me.getRootNode());
+
+        console.log(hasNodes)
+
+        if( !hasNodes ) { return; }*/
         
         var config = {
             url: '/admin/app/category/validateexpression',
@@ -683,6 +708,7 @@ Ext.define('Taco.view.filter.ExpressionTreePanel', {
                 //Taco.app.viewPort.setLoading(false);
                 var json = Ext.decode(response.responseText, true),
                     msg = (json && json.message) ? json.message : (config.errorMcallsg) ? config.errorMsg : "Error";
+
                 Taco.app.fireEvent('setmessage', msg, 'error');
                 this.setLoading(false);
             },

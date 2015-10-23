@@ -30,6 +30,7 @@ Ext.define('Taco.view.preview.ExpressionPreviewDrawer', {
     actionColumnWidth: 50,
 
     primaryText: 'Done',
+    layout: 'fit',
 
     resizable: {
         dynamic: true,
@@ -40,25 +41,27 @@ Ext.define('Taco.view.preview.ExpressionPreviewDrawer', {
         preserveRatio: false,
         widthIncrement: 1
     },
+
+    autoDestroy: false,
     
     initComponent: function (eOpts) {
         var me = this;
 
-        me.layout = {
-            type: 'fit'
-        };
-
         me.previewGrid = Ext.create('Taco.view.storefrontProduct.Grid');
 
         me.updateExpression = function() {
-            this.getExpressionText({
-                tree: this.getValue(),
-                type: this.getType() || 'DynamicPreComputed'
-            }, function(expressionText) {
-                me.previewGrid.fireEvent('taco-update-preview', {
-                    expression: expressionText
+            if (this.getRootNode().childNodes.length === 0) { //if there are no nodes present, skip the call and empty the grid
+                me.previewGrid.fireEvent('taco-empty-grid');
+            } else {
+                this.getExpressionText({
+                    tree: this.getValue(),
+                    type: this.getType() || 'DynamicPreComputed'
+                }, function(expressionText) {
+                    me.previewGrid.fireEvent('taco-update-preview', {
+                        expression: expressionText
+                    });
                 });
-            });
+            }
         };
 
         me.expressionEditor = Ext.create('Taco.view.filter.ExpressionTreePanel', {
@@ -80,7 +83,10 @@ Ext.define('Taco.view.preview.ExpressionPreviewDrawer', {
 
         me.previewPanel = Ext.create('Ext.container.Container', {
             items: [me.previewGrid],
-            title: 'Preview'
+            title: 'Preview',
+            layout: {
+                type: 'fit'
+            }
         });
 
         var container = Ext.create('Taco.core.ux.content.SplitContainer', {
@@ -90,6 +96,8 @@ Ext.define('Taco.view.preview.ExpressionPreviewDrawer', {
                 split: true,
                 splitter: true
             },
+            border: false,
+            initializePanels: Ext.emptyFn/*,
             initializePanels: function() {
                 var state = this.getState(),
                     panel;
@@ -104,7 +112,7 @@ Ext.define('Taco.view.preview.ExpressionPreviewDrawer', {
                         panel.collapse();
                     }
                 }
-            }
+            }*/
         });
 
         container.getWest().flex = 1;

@@ -1,12 +1,12 @@
 ﻿/**
  * @class Taco.view.storefrontProduct.Grid
 */
-Ext.define("Taco.view.storefrontProduct.Grid", {
+Ext.define('Taco.view.storefrontProduct.Grid', {
     extend: 'Ext.grid.Panel',
 
     requires: [
-        "Taco.model.StorefrontProduct",
-        "Taco.store.StorefrontProducts"
+        'Taco.model.StorefrontProduct',
+        'Taco.store.StorefrontProducts'
     ],
 
     mixins: {
@@ -20,7 +20,7 @@ Ext.define("Taco.view.storefrontProduct.Grid", {
     },
 
     // Required by mixin: Taco.core.ux.mixins.LaunchEditor defined in SearchList
-    modelName: "Taco.model.StorefrontProduct",
+    modelName: 'Taco.model.StorefrontProduct',
 
     enableNavHeader: false,
     launchEditorOnClick: false,
@@ -41,8 +41,7 @@ Ext.define("Taco.view.storefrontProduct.Grid", {
     hideSearchToolbar: false,
     enableQuickFilters: false,
     autoScroll: true,
-    stateful: true,
-    stateId: 'statefulPreviewGrid',
+    stateful: false,
     headerToolbar: true,
     header: {
         layout: {
@@ -50,8 +49,15 @@ Ext.define("Taco.view.storefrontProduct.Grid", {
             align: 'left'
         }
     },
+    layout: {
+        type: 'fit'
+    },
 
-    store: { type: "Taco.store.StorefrontProducts" },
+    viewConfig: {
+        emptyText: 'No items found.'
+    },
+
+    store: { type: 'Taco.store.StorefrontProducts' },
 
     advancedSearchConfig: {
         disableAdvancedSearch: true
@@ -78,11 +84,6 @@ Ext.define("Taco.view.storefrontProduct.Grid", {
             this.mixins.pageable.constructor.apply(this);
         }
 
-        me.tools = me.tools || [ this.siteSelector, this.dataViewModeSelector, this.sitePreviewDate];
-
-        me.store.proxy.extraParams.siteId = me.siteSelector.value;
-        me.store.proxy.extraParams.dataViewMode = me.dataViewModeSelector.value;
-
         me.on('taco-update-preview', function(config) {
             var key;
             for (key in config) { // method to delete a key so its not passed as an empty value
@@ -98,69 +99,78 @@ Ext.define("Taco.view.storefrontProduct.Grid", {
             }
         }, me);
 
+        me.on('taco-empty-grid', function() {
+            me.store.loadData([], false);
+        });
+
+        me.siteSelector = Ext.create("Taco.core.ux.content.ContextMenu", {
+            fieldLabel: 'Site',
+            supportedLevels: ["s"],
+            requiresContextOfType: ["c", "s"],
+            changeContext: Ext.emptyFn,
+            listeners: {
+                afterrender: function(component, eOpts) {
+                    var item = this.store.data.items[0];
+                    this.setValue(item);
+                    me.store.proxy.extraParams.siteId = item.data.id;
+                    // TODO: needs to persist the site context on the form record, or does it?
+                },
+                select: function (component, record) {
+                    me.fireEvent('taco-update-preview', {
+                        siteId: record[0].get('id')
+                    });
+                },
+                scope: me.siteSelector
+            }
+        });
+
+        me.dataViewModeSelector = Ext.create('Taco.core.ux.form.SelectField', {
+            xtype: 'selectfield',
+            fieldLabel: 'State',
+            fields: ['text', 'value'],
+            name: 'me.siteViewModeSelector',
+            store: ['Pending','Live'],
+            editable: false,
+            forceSelection: true,
+            value: 'Live',
+            listeners: {
+                select: function (source, records) {
+                    var dataViewMode = source.getValue();
+                    var data = {
+                        dataViewMode: dataViewMode
+                    }
+                    if (dataViewMode === 'Pending') {
+                        me.sitePreviewDate.show();
+                    } else {
+                        me.sitePreviewDate.hide();
+                        data.previewDate = undefined;
+                    }
+                    me.fireEvent('taco-update-preview', data);
+                },
+                scope: me.dataViewModeSelector
+            }
+        });
+
+        me.sitePreviewDate = Ext.create('Taco.core.ux.form.DateTime', {
+            fieldLabel: 'Preview Date',
+            hidden: true,
+            listeners: {
+                change: function(component, newValue, oldValue, eOpts) {
+                    me.fireEvent('taco-update-preview', {
+                        previewDate: newValue
+                    });
+                },
+                scope: me.sitePreviewDate
+            }
+        });
+
+        me.header.items = me.header.items || [ this.siteSelector, this.dataViewModeSelector, this.sitePreviewDate];
+
+        me.store.proxy.extraParams.siteId = me.siteSelector.value;
+        me.store.proxy.extraParams.dataViewMode = me.dataViewModeSelector.value;
+
         me.callParent(arguments);
     },
-
-    siteSelector: Ext.create("Taco.core.ux.content.ContextMenu", {
-        fieldLabel: 'Site',
-        supportedLevels: ["s"],
-        requiresContextOfType: ["c", "s"],
-        changeContext: Ext.emptyFn,
-        listeners: {
-            afterrender: function(component, eOpts) {
-                var item = this.store.data.items[0];
-                this.setValue(item);
-                this.store.proxy.extraParams.siteId = item.data.id;
-                // TODO: needs to persist the site context on the form record, or does it?
-            },
-            select: function (component, record) {
-                this.fireEvent('taco-update-preview', {
-                    siteId: record[0].get('id')
-                });
-            },
-            scope: this.siteSelector
-        }
-    }),
-
-    dataViewModeSelector: Ext.create('Taco.core.ux.form.SelectField', {
-        xtype: 'selectfield',
-        fieldLabel: 'State',
-        fields: ['text', 'value'],
-        name: 'me.siteViewModeSelector',
-        store: ['Pending','Live'],
-        editable: false,
-        forceSelection: true,
-        value: 'Live',
-        listeners: {
-            select: function (source, records) {
-                var dataViewMode = source.getValue();
-                var data = {
-                    dataViewMode: dataViewMode
-                }
-                if (dataViewMode === 'Pending') {
-                    this.show();
-                } else {
-                    this.hide();
-                    data.previewDate = undefined;
-                }
-                this.fireEvent('taco-update-preview', data);
-            },
-            scope: this.dataViewModeSelector
-        }
-    }),
-
-    sitePreviewDate: Ext.create('Taco.core.ux.form.DateTime', {
-        fieldLabel: 'Preview Date',
-        hidden: true,
-        listeners: {
-            change: function(component, newValue, oldValue, eOpts) {
-                this.fireEvent('taco-update-preview', {
-                    previewDate: newValue
-                });
-            },
-            scope: this.sitePreviewDate
-        }
-    }),
 
     // override this method and adjust the columns if your need a grid with a subset of columns;
     getColumnConfig: function() {
