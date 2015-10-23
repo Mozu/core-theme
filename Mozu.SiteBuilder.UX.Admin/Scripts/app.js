@@ -36,6 +36,7 @@ Ext.application({
         'Discounts',
         'CouponSets',
         'SearchTuningRules',
+        'StoreFrontProducts',
         'Settings',
         'Provisioning',
         'Tbd',
