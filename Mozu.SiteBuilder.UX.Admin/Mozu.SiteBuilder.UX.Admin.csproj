@@ -731,6 +731,8 @@
     <Content Include="Scripts\app\view\couponCode\AdvancedSearchForm.js" />
     <Content Include="Scripts\app\view\couponCode\DiscountGrid.js" />
     <Content Include="Scripts\app\view\couponCode\Grid.js" />
+    <Content Include="Scripts\app\view\preview\ExpressionPreviewDrawer.js" />
+    <Content Include="Scripts\app\view\preview\PreviewGrid.js" />
     <Content Include="Scripts\app\view\searchTuningRule\AdvancedSearchForm.js" />
     <Content Include="Scripts\app\view\searchTuningRule\BlockedProductForm.js" />
     <Content Include="Scripts\app\view\searchTuningRule\Edit.js" />
