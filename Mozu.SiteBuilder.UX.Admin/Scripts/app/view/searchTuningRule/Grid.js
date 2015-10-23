@@ -77,14 +77,8 @@ Ext.define('Taco.view.searchTuningRule.Grid', {
         advancedFormCls: 'Taco.view.searchTuningRule.AdvancedSearchForm',
 
         quickFilterData: [
-            [{ orderStatus: 'Open' }, 'Open Orders'],
-            [{ paymentstatus: 'Unpaid', orderStatus: 'Open' }, 'Unpaid Orders'],
-            [{ paymentstatus: 'Paid', fulfillmentStatus: 'NotFulfilled' }, 'Paid, Pending Fulfillment Orders'],
-            [{ orderStatus: 'Pending', ordertype: 'Offline' }, 'Pending Orders'],
-            [{ fulfillmentStatus: 'Fulfilled' }, 'Fulfilled Orders'],
-            [{ orderStatus: 'Cancelled' }, 'Cancelled Orders'],
-            [{ orderStatus: 'Errored' }, 'Errored Orders'],
-            [{}, 'All Orders']
+            [{ code: 'Code' }, 'Code'],
+            [{ status: 'Status' }, 'Status']
         ]
     },
 
@@ -178,8 +172,8 @@ Ext.define('Taco.view.searchTuningRule.Grid', {
                 dataIndex: 'startDate',
                 stateId: 'startDate',
                 format: 'n/j/Y g:i a',
-                width: 75,
-                text: 'Start Date',
+                width: 125,
+                text: 'Active Start Date',
                 hidden: false,
                 sortable: true
             }, {
@@ -187,8 +181,8 @@ Ext.define('Taco.view.searchTuningRule.Grid', {
                 dataIndex: 'endDate',
                 stateId: 'endDate',
                 format: 'm-d-Y g:i a',
-                width: 75,
-                text: 'End Date',
+                width: 125,
+                text: 'Active End Date',
                 hidden: false,
                 sortable: true,
                 renderer: function (value, metaData, record) {

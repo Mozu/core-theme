@@ -19,16 +19,12 @@ using Mozu.Core.Api.Client;
 using Mozu.SiteBuilder.UX.Admin.Helpers;
 using Mozu.SiteBuilder.Mvc.Extensions;
 using Mozu.SiteBuilder.UX.Admin.Api.Models;
+using Mozu.SiteBuilder.UX.Admin.Helpers.SearchTuningHelpers;
 using Mozu.Tenant.Contracts.Clients;
 using Mozu.SiteSettings.Order.Contracts.Clients;
 
 namespace Mozu.SiteBuilder.UX.Admin.Api
 {
-
-
-
-
-
     /// <summary>
     /// Controller for searchTuningRules.
     /// </summary>
@@ -36,6 +32,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
     public class SearchTuningRuleController : BaseController
     {
         private readonly ISearchWebApiClient _searchWebApiClient;
+        private readonly Lazy<ISearchTuningRuleFilterBuilder> _searchTuningRuleFilterBuilder;
         private Lazy<ISearchWebApiClient> _lazySearchClient;
 
         private readonly IApiContext _apiCtx;
@@ -43,10 +40,11 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
         /// <summary>
         /// Public constructor.
         /// </summary>
-        public SearchTuningRuleController(IApiContext apiCtx, ISearchWebApiClient searchWebApiClient)
+        public SearchTuningRuleController(IApiContext apiCtx, ISearchWebApiClient searchWebApiClient, Lazy<ISearchTuningRuleFilterBuilder> searchTuningRuleFilterBuilder)
         //
         {
             _searchWebApiClient = searchWebApiClient;
+            _searchTuningRuleFilterBuilder = searchTuningRuleFilterBuilder;
             _apiCtx = apiCtx;
         }
 
@@ -66,28 +64,28 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
             // todo: call product admin to get products? - Greg Murray on 2015-10-14 
 
 
-            //var query = extFilter.QueryString.Get("query");
-            //if (!String.IsNullOrEmpty(query))
-            //{
-            //    extFilter.Add(new FilterCollectionItem { comparison = "eq", field = "all", value = query });
-            //}
+            var query = extFilter.QueryString.Get("query");
+            if (!String.IsNullOrEmpty(query))
+            {
+                extFilter.Add(new FilterCollectionItem { comparison = "eq", field = "all", value = query });
+            }
 
-            //string filter = null;
-            //if (extFilter != null && extFilter.Count > 0)
-            //{
-            //    var tenant = (await _tenantClient.GetTenant(_ctx.TenantId)).ReadAsSync();
-            //    var masterCat = tenant.MasterCatalogs.FirstOrDefault(x => x.Id == _ctx.MasterCatalogId);
-            //    var defaultLocalCode = masterCat.DefaultLocaleCode;
-            //    var masterNumberFormat = CultureInfo.GetCultureInfo(defaultLocalCode).NumberFormat;
+            string filter = null;
+            if (extFilter != null && extFilter.Count > 0)
+            {
+                /*var tenant = (await _tenantClient.GetTenant(_ctx.TenantId)).ReadAsSync();
+                var masterCat = tenant.MasterCatalogs.FirstOrDefault(x => x.Id == _ctx.MasterCatalogId);
+                var defaultLocalCode = masterCat.DefaultLocaleCode;
+                var masterNumberFormat = CultureInfo.GetCultureInfo(defaultLocalCode).NumberFormat;*/
 
-            //    filter = extFilter.ToFilterString(_ctx, masterNumberFormat, _tenantClient);
-            //}
+                filter = _searchTuningRuleFilterBuilder.Value.ToFilterString(extFilter);
+            }
 
             //string sortBy = pagingParams.ToSort(_searchTuningRuleSortFormatter);
 
             try
             {
-                var searchTuningRuleList = (await _searchWebApiClient.GetSearchTuningRules(pagingParams.startIndex, pagingParams.pageSize, sortBy:null, filter:null)).ReadAsSync();
+                var searchTuningRuleList = (await _searchWebApiClient.GetSearchTuningRules(pagingParams.startIndex, pagingParams.pageSize, sortBy:null, filter:filter)).ReadAsSync();
 
                 var searchTuningRules = Mapper.Map<List<SearchTuningRule>>(searchTuningRuleList.Items);
 

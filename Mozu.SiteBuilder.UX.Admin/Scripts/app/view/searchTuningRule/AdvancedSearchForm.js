@@ -44,11 +44,8 @@ Ext.define('Taco.view.searchTuningRule.AdvancedSearchForm', {
                             name: "Active",  //todo: can't do scheduled greg_murray on 10/21/2015
                             id: "Active"
                         }, {
-                            name: "Scheduled",
-                            id: "Scheduled"
-                        }, {
-                            name: "Ended",
-                            id: "Ended"
+                            name: "Inactive",
+                            id: "Inactive"
                         }, {
                             name: "All",
                             id: "All"
@@ -65,22 +62,22 @@ Ext.define('Taco.view.searchTuningRule.AdvancedSearchForm', {
                     ], 0)
                 ]
             },
-            me.createDateRangeFields('Active Start Date Range2', 'activeStartDateFrom', 'activeStartDateTo'),
-            me.createDateRangeFields('Active End Date Range2', 'activeEndDateFrom', 'activeEndDateTo'),
+            me.createDateRangeFields('Active Start Date Range', 'activeStartDateFrom', 'activeStartDateTo'),
+            me.createDateRangeFields('Active End Date Range', 'activeEndDateFrom', 'activeEndDateTo'),
             {
                 xtype: 'taco-adminuserfield',
                 name: 'createdBy',
                 fieldLabel: 'Created By',
                 flex: 1
             },
-            me.createDateRangeFields('Create Date Range2', 'createDateFrom', 'createDateTo'),
+            me.createDateRangeFields('Create Date Range', 'createDateFrom', 'createDateTo'),
             {
                 xtype: 'taco-adminuserfield',
                 name: 'modifiedBy',
                 fieldLabel: 'Last Modified By',
                 flex: 1
             },
-            me.createDateRangeFields('Modified Date Range2', 'modifiedDateFrom', 'modifiedDateTo')
+            me.createDateRangeFields('Modified Date Range', 'modifiedDateFrom', 'modifiedDateTo')
         ];
 
         this.callParent(arguments);
