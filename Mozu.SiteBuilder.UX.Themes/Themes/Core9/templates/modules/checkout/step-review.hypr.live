@@ -1,4 +1,4 @@
-﻿    <h3 class="mz-formstep-header">
+﻿    <h3 class="mz-formstep-header mz-checkoutform-header">
         {{ labels.reviewOrder }}
     </h3>
     <div class="mz-formstep-body">
