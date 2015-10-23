@@ -51,6 +51,9 @@
       <Class Name="Mozu.ProductRuntime.Contracts.Product.FulfillmentTypeConst">
         <TypeIdentifier />
       </Class>
+      <Class Name="Mozu.ProductRuntime.Contracts.Product.GoodsTypeConst" Collapsed="true">
+        <TypeIdentifier />
+      </Class>
       <Class Name="Mozu.ProductRuntime.Contracts.Product.PublishStateConst" Collapsed="true">
         <TypeIdentifier />
       </Class>
@@ -59,6 +62,13 @@
     <ShowAsAssociation>
       <Property Name="Price" />
     </ShowAsAssociation>
+  </Class>
+  <Class Name="Mozu.SiteBuilder.UX.Admin.Api.ProductRuntimeController">
+    <Position X="5.75" Y="6.25" Width="3.75" />
+    <Members>
+      <Method Name="ProductRuntimeController" Hidden="true" />
+    </Members>
+    <TypeIdentifier />
   </Class>
   <Font Name="Segoe UI" Size="9" />
 </ClassDiagram>

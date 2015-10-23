@@ -182,9 +182,11 @@
     <Compile Include="Api\ModelMapping\ContentMapping.cs" />
     <Compile Include="Api\ModelMapping\DynamicExpressionMapping.cs" />
     <Compile Include="Api\ModelMapping\PublishingSetMapping.cs" />
+    <Compile Include="Api\ModelMapping\StorefrontProductModelMapping.cs" />
     <Compile Include="Api\Models\Discount\Coupon.cs" />
     <Compile Include="Api\Models\Discount\CouponSet.cs" />
     <Compile Include="Api\Models\PublishSets\PublishSets.cs" />
+    <Compile Include="Api\Models\Storefront\StorefrontProduct.cs" />
     <Compile Include="Api\PublishSetController.cs" />
     <Compile Include="Api\EntityController.cs" />
     <Compile Include="Api\CmsDocumentController.cs" />
@@ -404,6 +406,7 @@
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
+    <Compile Include="Helpers\AbstractFilterExpressionBuilder.cs" />
     <Compile Include="Helpers\AttributeHelpers\AttributeHelper.cs" />
     <Compile Include="Helpers\AttributeHelpers\IAttributeHelper.cs" />
     <Compile Include="Helpers\AttributeHelpers\AttributeFilterExtensions.cs" />
@@ -422,6 +425,7 @@
     <Compile Include="Helpers\DiscountHelpers\DiscountFilterExtensions.cs" />
     <Compile Include="Helpers\FacetHelpers\IInheritedFacetHelper.cs" />
     <Compile Include="Helpers\FacetHelpers\InheritedFacetHelper.cs" />
+    <Compile Include="Helpers\ISortExpressionBuilder.cs" />
     <Compile Include="Helpers\LocalizedContentHelpers\LocalizedContentFilterExtensions.cs" />
     <Compile Include="Helpers\LocationHelpers\LocationFilterExtensions.cs" />
     <Compile Include="Helpers\LocationInventoryHelpers\LocationInventoryFilterExtensions.cs" />
@@ -434,6 +438,9 @@
     <Compile Include="Helpers\FileManagerHelpers\FileManagerHelpersSortExtensions.cs" />
     <Compile Include="Helpers\ProductHelpers\ProductFilterExtensions.cs" />
     <Compile Include="Helpers\ProductHelpers\ProductSortExtensions.cs" />
+    <Compile Include="Helpers\ProductRuntimeHelpers\ProductRuntimeFilterExpressionBuilder.cs" />
+    <Compile Include="Helpers\ProductRuntimeHelpers\ProductRuntimeSortExpressionBuilder.cs" />
+    <Compile Include="Helpers\SortExpressionBuilder.cs" />
     <Compile Include="Helpers\ProductTypeHelpers\ProductTypeFilterExtensions.cs" />
     <Compile Include="Helpers\RolesHelper.cs" />
     <Compile Include="Helpers\SearchTuningHelpers\SearchTuningRuleFilterBuilder.cs" />
@@ -542,6 +549,7 @@
     <Content Include="Scripts\app\core\ux\window\Drawer.js" />
     <Content Include="Scripts\app\core\ux\window\MessageBox.js" />
     <Content Include="Scripts\app\core\ux\window\Modal.js" />
+    <Content Include="Scripts\app\model\StorefrontProduct.js" />
     <Content Include="Scripts\app\model\FilterField.js" />
     <Content Include="Scripts\app\model\BehaviorNode.js" />
     <Content Include="Scripts\app\model\BehaviorCategoryRole.js" />
@@ -650,6 +658,7 @@
     <Content Include="Scripts\app\store\CouponCodes.js" />
     <Content Include="Scripts\app\store\SearchTuningRules.js" />
     <Content Include="Scripts\app\store\CouponSets.js" />
+    <Content Include="Scripts\app\store\StorefrontProducts.js" />
     <Content Include="Scripts\app\store\DiscountGrid.js" />
     <Content Include="Scripts\app\store\Discounts.js" />
     <Content Include="Scripts\app\store\IpBlocking.js" />
@@ -797,6 +806,10 @@
     <Content Include="Scripts\app\view\role\editModal.js" />
     <Content Include="Scripts\app\view\storeCredit\AdvancedSearchForm.js" />
     <Content Include="Scripts\app\view\storeCredit\Grid.js" />
+    <Content Include="Scripts\app\view\storefrontProduct\Grid.js" />
+    <Content Include="Scripts\app\view\storefrontProduct\Panel.js" />
+    <Content Include="Scripts\app\view\storefrontProduct\modal\StorefrontProductModal.js" />
+    <Content Include="Scripts\app\view\storefrontProduct\NoNavContextBox.js" />
     <Content Include="Scripts\app\view\website\entityAdapters\OrderTemplateEntityAdapter.js" />
     <Content Include="Scripts\app\view\settings\shipping\subform\EligibleShippingAddressLocations.js" />
     <Content Include="Scripts\app\view\website\NavigationTreeModal.js" />
