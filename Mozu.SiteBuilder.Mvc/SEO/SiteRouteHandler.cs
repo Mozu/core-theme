@@ -206,25 +206,20 @@ namespace Mozu.SiteBuilder.Mvc.SEO
                 var vpath = route.GetVirtualPath(newReq, finalRouteValues);
                 if (vpath != null)
                 {
-                    // the below is failing super bad with the full host name.  wtf?
-                    var path = new Uri("http://localhost/" + vpath.VirtualPath).GetLeftPart(UriPartial.Path);
-                    var canonicalParts = new Uri(path + request.RequestUri.Query);
-                    var originalUri = new Uri(_requestMessage.Value.Resolve<PageContext>().Url);
-                    if (!string.Equals(canonicalParts.PathAndQuery, originalUri.PathAndQuery, StringComparison.OrdinalIgnoreCase))
+                    var uri = new Uri("http://localhost/" + vpath.VirtualPath);
+                    uri = new Uri(uri.GetLeftPart(UriPartial.Path) + request.RequestUri.Query);
+                    if (!string.Equals(uri.PathAndQuery, _requestMessage.Value.RequestUri.PathAndQuery, StringComparison.OrdinalIgnoreCase))
                     {
-                        var host = originalUri.Host;
-                        var port = originalUri.Port;
-                        var query = request.RequestUri.Query;
                         var redirect = request.CreateResponse(HttpStatusCode.MovedPermanently);
-                        redirect.Headers.Location = new UriBuilder(route.UrlScheme.ToStringQuickly(), host, port, canonicalParts.GetComponents(UriComponents.Path, UriFormat.Unescaped), query).Uri;
-                        redirect.Headers.TryAddWithoutValidation(Constants.HEADER_CANONICAL_URL, canonicalParts.PathAndQuery);
+                        redirect.Headers.Location = new Uri(uri.PathAndQuery, UriKind.Relative);
+                        redirect.Headers.TryAddWithoutValidation(Constants.HEADER_CANONICAL_URL, uri.PathAndQuery);
                         return redirect;
                     }
 
                     IEnumerable<string> values;
                     if (request.Headers.TryGetValues(Constants.HEADER_ALTERNATIVE_VIEW, out values) && values.Any(x => !string.IsNullOrWhiteSpace(x)))
                     {
-                        request.Resolve<HttpContextBase>().Response.AddHeader(Constants.HEADER_CANONICAL_URL, canonicalParts.PathAndQuery);
+                        request.Resolve<HttpContextBase>().Response.AddHeader(Constants.HEADER_CANONICAL_URL, uri.PathAndQuery);
                     }
                     return null;
                 }
@@ -272,7 +267,10 @@ namespace Mozu.SiteBuilder.Mvc.SEO
         {
             IDictionary<string, object> initial = new Dictionary<string, object>(StringComparer.OrdinalIgnoreCase) { { "httproute", true } };
             if (dictionaries == null) return initial;
-            return dictionaries.Aggregate(initial, (state, next) => state.ChainSet(next(), true));
+            return dictionaries.Aggregate(initial, (state, next) => {
+                var dictToAdd = (next ?? (() => new Dictionary<string, object>()))();
+                return state.ChainSet(dictToAdd, true);
+            });
         }
 
         /// <summary>
