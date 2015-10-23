@@ -90,14 +90,23 @@
                 var shippingDiscounts = _.flatten(_.pluck(_.pluck(me.get('items').models, 'attributes'), 'shippingDiscounts'));
 
                 var allDiscounts = me.get('orderDiscounts').concat(productDiscounts).concat(shippingDiscounts);
+                var allCodes = me.get('couponCodes') || [];
                 var lowerCode = code.toLowerCase();
-                if (!allDiscounts || !_.find(allDiscounts, function (d) {
-                    return d.couponCode.toLowerCase() === lowerCode;
-                })) {
+
+                var couponExists = _.find(allCodes, function(couponCode) {
+                    return couponCode.toLowerCase() === lowerCode;
+                });
+                if (!couponExists) {
                     me.trigger('error', {
                         message: Hypr.getLabel('promoCodeError', code)
                     });
                 }
+
+                var couponIsNotApplied = (!allDiscounts || !_.find(allDiscounts, function(d) {
+                    return d.couponCode.toLowerCase() === lowerCode;
+                }));
+                me.set('tentativeCoupon', couponExists && couponIsNotApplied ? code : undefined);
+
                 me.isLoading(false);
             });
         }
