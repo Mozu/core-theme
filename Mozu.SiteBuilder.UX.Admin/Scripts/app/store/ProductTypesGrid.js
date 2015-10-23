@@ -21,5 +21,27 @@ Ext.define('Taco.store.ProductTypesGrid', {
     storeManagerConfig: {
         contextLevel:'mc',
         autoLoad: true
+    },
+    proxy: {
+        type: 'ajaxproxy',
+        contextLevel: 'm',
+        deferCacheCallback:false,
+        api: {
+            read: '/admin/app/ProductType/read',
+            destroy: '/admin/app/ProductType/destroy'
+        },
+        extraParams: {
+            responseGroup: 'grid'
+        },
+        reader: {
+            type: 'json',
+            root: 'items',
+            successProperty: 'success'
+        },
+        writer: {
+            type: 'json',
+            allowSingle: false
+        }
     }
+
 });

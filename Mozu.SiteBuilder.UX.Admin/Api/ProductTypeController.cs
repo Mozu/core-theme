@@ -44,27 +44,17 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
 
         /// <summary>
         /// Get a list of Product Types.
+        /// query param: responseGroup
+        ///   grid = only returns fields needed by ProductType grid
+        ///   picker = id and name
+        ///   null/not included = everything
         /// </summary>
 		[HttpGetRoute(UriTemplate = "read")]
         public async Task<Response<List<ProductType>>> ListProductTypes([FromUri]PagingParamaters pagingParams, [FromUri]FilterCollection extFilter)
         {
             if (pagingParams.id != null)
             {
-                int id;
-                try
-                {
-                    id = Convert.ToInt32(pagingParams.id);
-                }
-                catch (System.FormatException e)
-                {
-                    return FailureList2<ProductType>("Invalid id parameter passed." + e.ToString());
-                }
-
-
-                var resultSingle = await _productTypeClient.GetProductType(id);
-                DC.ProductType prod = resultSingle.ReadAsAsync().Result;
-
-                return List2(Mapper.Map<ProductType>(prod));
+                return await GetSingleProductTypeAsync(pagingParams);
             }
 
 
@@ -81,28 +71,28 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
                 extFilter.Add(new FilterCollectionItem { comparison = "eq", field = "all", value = query });
             }
 
+            string responseFields = GetResponseFields(extFilter.QueryString.Get("responseGroup"));
+
             string filter = null;
-            if (extFilter != null && extFilter.Count > 0)
+            if (extFilter.Count > 0)
             {
                 filter = extFilter.ToFilterString();
             }
 
-            //string sort = null; // pagingParams.sort.ToSortString();
             string sort = pagingParams.sort.ToSortString();
 
-
-            var gpttask = _productTypeClient.GetProductTypes(
-                /* startIndex:     */ pagingParams.startIndex,
-                /* pageSize:       */ pagingParams.pageSize,
-                /* sortBy:         */ sort,
-                /* filter:         */ filter,
-                /* responseGroups: */ null
-                );
-
-            var res = gpttask.Result.ReadAsSync();
+            var res = (await _productTypeClient.GetProductTypes(
+                pagingParams.startIndex,
+                pagingParams.pageSize,
+                sort,
+                filter,
+                responseFields: responseFields
+                )).ReadAsSync();
 
             return List2(Mapper.Map<List<ProductType>>(res.Items), (int)res.TotalCount);
         }
+
+        
 
         /// <summary>
         /// Create new product types.
@@ -239,6 +229,42 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
                     },
                 }
             };
+        }
+
+        private string GetResponseFields(string responseGroup)
+        {
+            if (string.IsNullOrEmpty(responseGroup))
+            {
+                return null;
+            }
+            switch (responseGroup)
+            {
+                case "picker":
+                    return "items(id,name)";
+                case "grid":
+                    return
+                        "items(id,name,productcount,auditinfo(updatedate),properties(attributedetail(adminname)),options(attributedetail(adminname)),extras(attributedetail(adminname)))";
+                default:
+                    return null;
+            }
+        }
+
+        private async Task<Response<List<ProductType>>> GetSingleProductTypeAsync(PagingParamaters pagingParams)
+        {
+            int id;
+            try
+            {
+                id = Convert.ToInt32(pagingParams.id);
+            }
+            catch (System.FormatException e)
+            {
+                return FailureList2<ProductType>("Invalid id parameter passed." + e.ToString());
+            }
+
+            var resultSingle = await _productTypeClient.GetProductType(id);
+            DC.ProductType prod = resultSingle.ReadAsAsync().Result;
+
+            return List2(Mapper.Map<ProductType>(prod));
         }
     }
 }
