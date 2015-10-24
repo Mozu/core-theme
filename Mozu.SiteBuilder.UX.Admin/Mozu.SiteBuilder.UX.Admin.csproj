@@ -440,10 +440,11 @@
     <Compile Include="Helpers\ProductHelpers\ProductSortExtensions.cs" />
     <Compile Include="Helpers\ProductRuntimeHelpers\ProductRuntimeFilterExpressionBuilder.cs" />
     <Compile Include="Helpers\ProductRuntimeHelpers\ProductRuntimeSortExpressionBuilder.cs" />
-    <Compile Include="Helpers\SortExpressionBuilder.cs" />
+    <Compile Include="Helpers\AbstractSortExpressionBuilder.cs" />
     <Compile Include="Helpers\ProductTypeHelpers\ProductTypeFilterExtensions.cs" />
     <Compile Include="Helpers\RolesHelper.cs" />
     <Compile Include="Helpers\SearchTuningHelpers\SearchTuningRuleFilterBuilder.cs" />
+    <Compile Include="Helpers\SearchTuningHelpers\SearchTuningRuleSortBuilder.cs" />
     <Compile Include="Helpers\SecurityHelpers\SecureCapabilityConfigUrlHelper.cs" />
     <Compile Include="Helpers\TaskHelper.cs" />
     <Compile Include="MessageHandlers\AuthRedirectMessageHandler.cs" />

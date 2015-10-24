@@ -44,8 +44,8 @@ Ext.define('Taco.view.searchTuningRule.AdvancedSearchForm', {
                             name: "Active",  //todo: can't do scheduled greg_murray on 10/21/2015
                             id: "Active"
                         }, {
-                            name: "Inactive",
-                            id: "Inactive"
+                            name: "Disabled",
+                            id: "Disabled"
                         }, {
                             name: "All",
                             id: "All"

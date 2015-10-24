@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using Mozu.SiteBuilder.UX.Admin.Api.Models;
 
@@ -23,6 +24,9 @@ namespace Mozu.SiteBuilder.UX.Admin.Helpers
 
         protected abstract string GetFilter(SortingCollectionItem item, bool useSiteContext);
 
-        protected abstract string GetDefaultSort();
+        protected virtual string GetDefaultSort()
+        {
+            return String.Empty;
+        }
     }
 }

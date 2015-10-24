@@ -25,6 +25,9 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.ModelMapping
             Mapper.CreateMap<SearchTuningRule, DC.SearchTuningRule>()
                 .ForMember(dc => dc.SearchTuningRuleCode, op => op.ResolveUsing(x => x.Code))
                 .ForMember(dc => dc.SearchTuningRuleName, op => op.ResolveUsing(x => x.Name))
+                .ForMember(dc => dc.SearchTuningRuleDescription, op => op.ResolveUsing(x => x.Description))
+                .ForMember(dc => dc.SiteId, op => op.ResolveUsing(x => x.SiteId.GetValueOrDefault()))
+            
                 .ForMember(dc => dc.Filters, op => op.ResolveUsing(x => x.Filters.IsNullOrEmpty()
                         ? new List<DC.SearchTuningRuleFilter>()
                         : x.Filters.Select(y => new DC.SearchTuningRuleFilter {Field = y.Key, Value = y.Value}).ToList()            
@@ -49,6 +52,8 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.ModelMapping
             Mapper.CreateMap<DC.SearchTuningRule, SearchTuningRule>()
                 .ForMember(x => x.Code, op => op.ResolveUsing(dc => dc.SearchTuningRuleCode))
                 .ForMember(x => x.Name, op => op.ResolveUsing(dc => dc.SearchTuningRuleName))
+                .ForMember(x => x.Description, op => op.ResolveUsing(dc => dc.SearchTuningRuleDescription))
+                .ForMember(x => x.SiteId, op => op.ResolveUsing(dc => dc.SiteId))
 
                 .ForMember(x => x.Filters, op => op.ResolveUsing(dc => dc.Filters.IsNullOrEmpty()
                     ? new List<KeyValuePair<string, string>>()
@@ -78,10 +83,6 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.ModelMapping
                 .ForMember(x => x.CreateDate, op => op.ResolveUsing(dc => dc.AuditInfo != null
                     ? dc.AuditInfo.CreateDate
                     : null))
-
-                // todo: once ProdAdmin has it, uncomment out. - Greg Murray on 2015-10-16 
-                .ForMember(x => x.Description, op => op.Ignore())
-                .ForMember(x => x.SiteId, op => op.Ignore())
                 ;
         }
     }

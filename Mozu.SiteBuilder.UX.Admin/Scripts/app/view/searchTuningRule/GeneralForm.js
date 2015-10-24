@@ -82,7 +82,7 @@ Ext.define('Taco.view.searchTuningRule.GeneralForm', {
         });
         var siteStore = Ext.create('Ext.data.Store', {
             fields: ['id', "name"],
-            data: me.record.getSites()
+            data: me.record.getSites(me.isCatalogLevel)
         });
         var defaultSite = (me.record && me.record.get('siteId'))
                         ? me.record.get('siteId')

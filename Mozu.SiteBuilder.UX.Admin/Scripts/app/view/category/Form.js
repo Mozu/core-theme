@@ -260,7 +260,7 @@ Ext.define("Taco.view.category.Form", {
                     //supportedLevels: ['c'],
                     requiresContextOfType: ['c']
                 },
-                doesSupportCatalogContext: true,
+                isCatalogLevel: false,
                 categoryCode: this.record.get('categoryCode')
                 //enableNavHeader: false
             })

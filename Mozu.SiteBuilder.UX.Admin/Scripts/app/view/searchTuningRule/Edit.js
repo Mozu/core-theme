@@ -33,6 +33,8 @@ Ext.define('Taco.view.searchTuningRule.Edit', {
 
     isCreate:true,
 
+    isCatalogLevel: false,
+
     //enableNextPrevious: true,
 
     //nextPreviousCfg: {
@@ -51,6 +53,10 @@ Ext.define('Taco.view.searchTuningRule.Edit', {
         if (me.isCreate && !me.record) {
             me.record = Ext.create('Taco.model.SearchTuningRule', {});
         }
+        me.formCfg = {
+            record: me.record,
+            isCatalogLevel: me.isCatalogLevel
+        };
 
         if (me.isPopUp) {
             me.enableNextPrevious = false;
@@ -87,8 +93,8 @@ Ext.define('Taco.view.searchTuningRule.Edit', {
             record: me.record,
             modelName: 'Taco.model.SearchTuningRule',
             storeName: 'Taco.store.SearchTuningRule', //grid???
-            collectionName: 'searchTuningRules',
-            promptMessage: 'tbd' //me.record.getDeletePromptMessage()
+            collectionName: 'searchTuningRules' //,
+            //promptMessage: 'tbd' //me.record.getDeletePromptMessage()
         });
         menuItems.push(delMenuItem);
 

@@ -24,7 +24,7 @@ Ext.define('Taco.view.searchTuningRule.modal.SearchTuningRuleEditor', {
     isCreateMode: true,
     record: null,
     closeOnSave: true,
-    doesSupportCatalogContext: true,
+    isCatalogLevel: false,
 
     actionColumnWidth: 50,
 
@@ -130,7 +130,8 @@ Ext.define('Taco.view.searchTuningRule.modal.SearchTuningRuleEditor', {
         me.container = Ext.create('Taco.view.searchTuningRule.Edit', {
             autoScroll:true,
             record: me.record,
-            isCreate: me.isCreateMode
+            isCreate: me.isCreateMode,
+            isCatalogLevel: me.isCatalogLevel
         });
 
         me.items = [
