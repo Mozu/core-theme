@@ -48,6 +48,10 @@ namespace Mozu.SiteBuilder.UX.Admin.Helpers.SearchTuningHelpers
                 {
                     return String.Format("code cont \"{0}\"", filterItem.escapedValue);
                 }
+                case "categorycode":
+                {
+                    return String.Format("categorycode eq \"{0}\"", filterItem.escapedValue);
+                }
                 case "name":
                 {
                     return String.Format("name cont \"{0}\"", filterItem.escapedValue);

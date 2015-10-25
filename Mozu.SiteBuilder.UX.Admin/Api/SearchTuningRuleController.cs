@@ -75,8 +75,14 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
                 extFilter.Add(new FilterCollectionItem { comparison = "eq", field = "all", value = query });
             }
 
+            var categoryCode = extFilter.QueryString.Get("categoryCode");
+            if (!String.IsNullOrEmpty(categoryCode))
+            {
+                extFilter.Add(new FilterCollectionItem { comparison = "eq", field = "categorycode", value = categoryCode });
+            }
+
             string filter = null;
-            if (extFilter != null && extFilter.Count > 0)
+            if (extFilter.Count > 0)
             {
                 filter = _searchTuningRuleFilterBuilder.Value.ToFilterString(extFilter);
             }

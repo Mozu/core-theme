@@ -62,7 +62,7 @@ Ext.define('Taco.view.searchTuningRule.Grid', {
 
     title: "Search Tuning Rules",
 
-    store: { type: 'Taco.store.SearchTuningRules' },
+    store: null,
 
     autoScroll: true,
 
@@ -109,11 +109,20 @@ Ext.define('Taco.view.searchTuningRule.Grid', {
 
         me.mon(Taco.app, 'searchtuningrulecreated', me.reloadGrid, me);
 
-        //if (me.categoryCode) {
-        //    this.store.proxy.extraParams = this.store.proxy.extraParams || {};
-        //    this.store.proxy.extraParams.categoryCode = categoryCode;
-        //    this.store.load();
-        //}
+        me.store = Taco.core.data.StoreManager.getOrCreate({
+            type: 'Taco.store.SearchTuningRules',
+            createOnly: true,
+            autoLoad: false,
+            clearFilters: true,
+            remoteFilter: true
+        });
+        if (me.categoryCode) {
+            me.store.proxy.extraParams = this.store.proxy.extraParams || {};
+            me.store.proxy.extraParams.categoryCode = me.categoryCode;
+        } else {
+            me.store.proxy.extraParams = {};
+        }
+        me.store.load();
 
         me.callParent(arguments);
     },
