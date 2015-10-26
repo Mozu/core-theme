@@ -12,7 +12,7 @@
             {{ labels.noFulfillmentInfoRequired }}
             {% endif %}
         </div>
-        <div class="mz-formstep-fields mz-l-formfieldgroup">
+        <div class="mz-formstep-fields mz-l-formfieldgroup mz-checkoutform-active">
             {% if model.availableShippingMethods %}
                 {% for method in model.availableShippingMethods %}
                     <div>
@@ -26,8 +26,8 @@
             {% else %}
                 <p>{{ labels.noShippingMethods }}</p>
             {% endif %}
-            <div class="mz-formstep-next">
-                <button type="button" class="mz-button" data-mz-action="next">{{ labels.next }}</button>
-            </div>
+        </div>
+        <div class="mz-formstep-next">
+            <button type="button" class="mz-button" data-mz-action="next">{{ labels.next }}</button>
         </div>
     </div>
