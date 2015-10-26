@@ -27,10 +27,10 @@ Ext.define('Taco.view.searchTuningRule.Grid', {
     
     contextConfig: {
         supportedLevels: ['s'],
-        requiresContextOfType: ['c', 's']
+        requiresContextOfType: ['s'] //'c',
     },
 
-    launchEditorOnClick:false,
+    launchEditorOnClick:true,
 
     // Required by mixin: Taco.core.ux.mixins.LaunchEditor defined in SearchList
     modelName: 'Taco.model.SearchTuningRule',
@@ -62,7 +62,7 @@ Ext.define('Taco.view.searchTuningRule.Grid', {
 
     title: "Search Tuning Rules",
 
-    store: { type: 'Taco.store.SearchTuningRules' },
+    store: null,
 
     autoScroll: true,
 
@@ -70,8 +70,10 @@ Ext.define('Taco.view.searchTuningRule.Grid', {
 
     deletePromptMsg : "Are you sure you want to delete this search tuning rule?",
 
-    doesSupportCatalogContext: true,
+    isCatalogLevel: false,
     categoryCode: null,
+    pageSize: 25,
+    isPopUp: false,
 
     advancedSearchConfig : {
         advancedFormCls: 'Taco.view.searchTuningRule.AdvancedSearchForm',
@@ -109,11 +111,23 @@ Ext.define('Taco.view.searchTuningRule.Grid', {
 
         me.mon(Taco.app, 'searchtuningrulecreated', me.reloadGrid, me);
 
-        //if (me.categoryCode) {
-        //    this.store.proxy.extraParams = this.store.proxy.extraParams || {};
-        //    this.store.proxy.extraParams.categoryCode = categoryCode;
-        //    this.store.load();
-        //}
+        me.store = Taco.core.data.StoreManager.getOrCreate({
+            type: 'Taco.store.SearchTuningRules',
+            createOnly: true,
+            pageSize: this.pageSize,
+            autoLoad: false,
+            clearFilters: true,
+            remoteFilter: true
+        });
+        if (me.categoryCode) {
+            me.store.proxy.extraParams = this.store.proxy.extraParams || {};
+            me.store.proxy.extraParams.categoryCode = me.categoryCode;
+        } else {
+            me.store.proxy.extraParams = {};
+        }
+        if (!this.isCatalogLevel || this.categoryCode) {
+            me.store.load();
+        }
 
         me.callParent(arguments);
     },
@@ -147,6 +161,15 @@ Ext.define('Taco.view.searchTuningRule.Grid', {
                 dataIndex: 'keywordsJoined',
                 stateId: 'keywordsJoined',
                 text: 'Keywords',
+                hideable: true,
+                //flex: 1,
+                minWidth: 150,
+                sortable: false
+            }, {
+                xtype: 'gridcolumn',
+                dataIndex: 'categoriesJoined',
+                stateId: 'categoriesJoined',
+                text: 'Categories',
                 hideable: true,
                 //flex: 1,
                 minWidth: 150,
@@ -334,12 +357,21 @@ Ext.define('Taco.view.searchTuningRule.Grid', {
     openEditor: function (record, isNew) {
         var me = this;
 
+        if (!me.isPopUp) {
+            Ext.defer(function () {
+                if (!isNew) {
+                    Taco.core.StateManager.attemptNavigate('SearchTuningRules/edit/' + record.getId(), {}); //{complexMetaData: {record: record}});
+                } else {
+                    Taco.core.StateManager.attemptNavigate('SearchTuningRules/create', {});
+                }
+            }, 1, this);
+            return;
+        }
+
         Ext.create('Taco.view.searchTuningRule.modal.SearchTuningRuleEditor', {
-            // if we want to edit a draft only, pass recordId.
-            // otherwise, pass the record.
             record: record,
             isCreateMode: isNew,
-            doesSupportCatalogContext: me.doesSupportCatalogContext,
+            isCatalogLevel: me.isCatalogLevel,
             listeners: {
                 savesuccess: function() {
                   me.store.reload();

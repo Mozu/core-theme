@@ -28,7 +28,7 @@ $glyph-category: "\E017";
 $glyph-knurling: "\E022";
 $glyph-cancel: "\E023";
 $glyph-home: "\E024";
-$glyph-pencil: "\E025";
+$glyph-pencil: "\E900";
 $glyph-dna: "\E026";
 $glyph-testtube: "\E027";
 $glyph-beaker: "\E028";
@@ -55,10 +55,12 @@ $glyph-tree-sub-category: "\E613";
 $glyph-folder: "\E614";
 $glyph-tooltip-help: "\E615";
 $glyph-move: "\E609";
+$glyph-settings: "\E901";
+$glyph-widgets: "\E902";
 
 // font set for chorizo -- because these are being compiled using compass, they cannot be encased in ""
 // optimized at 16px
-$glyph-chorizo-pencil: "E025";
+$glyph-chorizo-pencil: "E900";
 $glyph-chorizo-trash: "E02A";
 $glyph-chorizo-move: "E609";
 

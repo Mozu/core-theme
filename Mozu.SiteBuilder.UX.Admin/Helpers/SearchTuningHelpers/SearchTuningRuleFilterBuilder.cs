@@ -48,6 +48,10 @@ namespace Mozu.SiteBuilder.UX.Admin.Helpers.SearchTuningHelpers
                 {
                     return String.Format("code cont \"{0}\"", filterItem.escapedValue);
                 }
+                case "categorycode":
+                {
+                    return String.Format("categorycode eq \"{0}\"", filterItem.escapedValue);
+                }
                 case "name":
                 {
                     return String.Format("name cont \"{0}\"", filterItem.escapedValue);
@@ -58,7 +62,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Helpers.SearchTuningHelpers
                         if(v.Equals("active",StringComparison.OrdinalIgnoreCase))
                             return "active eq true";
 
-                        if (v.Equals("inactive", StringComparison.OrdinalIgnoreCase))
+                        if (v.Equals("disabled", StringComparison.OrdinalIgnoreCase))
                             return "active eq false";
 
                         return String.Empty;
@@ -67,36 +71,36 @@ namespace Mozu.SiteBuilder.UX.Admin.Helpers.SearchTuningHelpers
                 {
                         return String.Format("isdefault eq \"{0}\"", filterItem.value);
                    }
-                case "activeStartDateFrom":
+                case "activestartdatefrom":
                 {
                         return String.Format("startdate ge \"{0}\"", ((DateTime)filterItem.value).ToUniversalTime().ToString("o"));
                     }
 
-                case "activeStartDateTo":
+                case "activestartdateto":
                     {
                         return String.Format("startdate le \"{0}\"", ((DateTime)filterItem.value).ToUniversalTime().ToString("o"));
                     }
-                case "createDateFrom":
+                case "createdatefrom":
                 {
                         return String.Format("createdate ge \"{0}\"", ((DateTime)filterItem.value).ToUniversalTime().ToString("o"));
                     }
-                case "createDateTo":
+                case "createdateto":
                 {
                         return String.Format("createdate le \"{0}\"", ((DateTime)filterItem.value).ToUniversalTime().ToString("o"));
                     }
-                case "createByUser":
+                case "createbyuser":
                 {
                         return String.Format("createby eq \"{0}\"", filterItem.value);
                     }
-                case "modifiedDateFrom":
+                case "modifieddatefrom":
                     {
                         return String.Format("updatedate ge \"{0}\"", ((DateTime)filterItem.value).ToUniversalTime().ToString("o"));
                     }
-                case "modifiedDateTo":
+                case "modifieddateto":
                     {
                         return String.Format("updatedate le \"{0}\"", ((DateTime)filterItem.value).ToUniversalTime().ToString("o"));
                     }
-                case "lastModifiedByUser":
+                case "lastmodifiedbyuser":
                 {
                         return String.Format("updateby eq \"{0}\"", filterItem.value);
                     }

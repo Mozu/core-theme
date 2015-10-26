@@ -6,7 +6,7 @@
         extend: 'Ext.data.Store',
         model: 'Taco.model.SearchTuningRule',
         remoteFilter: true,
-        pageSize: 100,
+        pageSize: 25,
         storeManagerConfig: {
             clearFilters: true,
             contextLevel: 's',

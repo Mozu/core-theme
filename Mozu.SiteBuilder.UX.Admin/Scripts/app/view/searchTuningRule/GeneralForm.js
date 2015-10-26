@@ -12,8 +12,7 @@ Ext.define('Taco.view.searchTuningRule.GeneralForm', {
         'Taco.core.util.Validation'
     ],
     ui: 'subform',
-    cls: 'taco-subform-noborder taco-subform-nopadding taco-subform-nohr',
-    margin: '0 0 39 0',
+    margin: '0 0 20 0',
 
     title: 'General',
     dateValidationMsg: "An active start or end date is required",
@@ -82,7 +81,7 @@ Ext.define('Taco.view.searchTuningRule.GeneralForm', {
         });
         var siteStore = Ext.create('Ext.data.Store', {
             fields: ['id', "name"],
-            data: me.record.getSites()
+            data: me.record.getSites(me.isCatalogLevel)
         });
         var defaultSite = (me.record && me.record.get('siteId'))
                         ? me.record.get('siteId')

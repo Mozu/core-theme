@@ -13,6 +13,7 @@ Ext.define('Taco.view.searchTuningRule.AdvancedSearchForm', {
         width:500,
         xtype: 'textfield'
     },
+
     initComponent: function () {
         var me = this;
 
@@ -44,8 +45,8 @@ Ext.define('Taco.view.searchTuningRule.AdvancedSearchForm', {
                             name: "Active",  //todo: can't do scheduled greg_murray on 10/21/2015
                             id: "Active"
                         }, {
-                            name: "Inactive",
-                            id: "Inactive"
+                            name: "Disabled",
+                            id: "Disabled"
                         }, {
                             name: "All",
                             id: "All"
@@ -61,6 +62,23 @@ Ext.define('Taco.view.searchTuningRule.AdvancedSearchForm', {
                         }
                     ], 0)
                 ]
+            }, {
+                xtype: 'combo',
+                store: { type: 'Taco.store.Categories' },
+                flex:1,
+                name: 'categoryCode',
+                fieldLabel: 'Category',
+                valueField: 'id',
+                displayField: 'nameAndCode',
+                queryMode: 'local',
+                valueNotFoundText: 'not found',
+                editable: true,
+                forceSelection: true,
+                listeners: {
+                    added: function (cmp) {
+                        cmp.hidden = !Taco.app.context.getCurrent().getSiteId();
+                    }
+                }
             },
             me.createDateRangeFields('Active Start Date Range', 'activeStartDateFrom', 'activeStartDateTo'),
             me.createDateRangeFields('Active End Date Range', 'activeEndDateFrom', 'activeEndDateTo'),

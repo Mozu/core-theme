@@ -13,6 +13,7 @@ using System.Net;
 using System.Net.Http;
 using System.Threading.Tasks;
 using Mozu.SiteBuilder.Mvc.OAF;
+using System;
 
 namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
 {
@@ -35,6 +36,11 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
                 var item = nav.FirstOrDefault(x => x.IsHomePage);
                 if (item != null && item.Url.Length > 0 && item.Url != "/pages/home")
                 {
+                    var uri = new Uri(item.Url, UriKind.RelativeOrAbsolute);
+                    if (uri.IsAbsoluteUri)
+                    {
+                        return new TransferResult("/" + uri.PathAndQuery);
+                    }
                     return new TransferResult(item.Url);
                 }
             }

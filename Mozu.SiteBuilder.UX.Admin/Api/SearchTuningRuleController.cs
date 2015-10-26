@@ -33,6 +33,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
     {
         private readonly ISearchWebApiClient _searchWebApiClient;
         private readonly Lazy<ISearchTuningRuleFilterBuilder> _searchTuningRuleFilterBuilder;
+        private readonly Lazy<ISearchTuningRuleSortBuilder> _searchtuningRuleSortBuilder;
         private Lazy<ISearchWebApiClient> _lazySearchClient;
 
         private readonly IApiContext _apiCtx;
@@ -40,11 +41,15 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
         /// <summary>
         /// Public constructor.
         /// </summary>
-        public SearchTuningRuleController(IApiContext apiCtx, ISearchWebApiClient searchWebApiClient, Lazy<ISearchTuningRuleFilterBuilder> searchTuningRuleFilterBuilder)
+        public SearchTuningRuleController(IApiContext apiCtx, 
+            ISearchWebApiClient searchWebApiClient, 
+            Lazy<ISearchTuningRuleFilterBuilder> searchTuningRuleFilterBuilder,
+            Lazy<ISearchTuningRuleSortBuilder> searchtuningRuleSortBuilder)
         //
         {
             _searchWebApiClient = searchWebApiClient;
             _searchTuningRuleFilterBuilder = searchTuningRuleFilterBuilder;
+            _searchtuningRuleSortBuilder = searchtuningRuleSortBuilder;
             _apiCtx = apiCtx;
         }
 
@@ -70,22 +75,22 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
                 extFilter.Add(new FilterCollectionItem { comparison = "eq", field = "all", value = query });
             }
 
-            string filter = null;
-            if (extFilter != null && extFilter.Count > 0)
+            var categoryCode = extFilter.QueryString.Get("categoryCode");
+            if (!String.IsNullOrEmpty(categoryCode))
             {
-                /*var tenant = (await _tenantClient.GetTenant(_ctx.TenantId)).ReadAsSync();
-                var masterCat = tenant.MasterCatalogs.FirstOrDefault(x => x.Id == _ctx.MasterCatalogId);
-                var defaultLocalCode = masterCat.DefaultLocaleCode;
-                var masterNumberFormat = CultureInfo.GetCultureInfo(defaultLocalCode).NumberFormat;*/
-
-                filter = _searchTuningRuleFilterBuilder.Value.ToFilterString(extFilter);
+                extFilter.Add(new FilterCollectionItem { comparison = "eq", field = "categorycode", value = categoryCode });
             }
 
-            //string sortBy = pagingParams.ToSort(_searchTuningRuleSortFormatter);
+            string filter = null;
+            if (extFilter.Count > 0)
+            {
+                filter = _searchTuningRuleFilterBuilder.Value.ToFilterString(extFilter);
+            }
+            string sortBy = _searchtuningRuleSortBuilder.Value.ToSortString(pagingParams.sort);
 
             try
             {
-                var searchTuningRuleList = (await _searchWebApiClient.GetSearchTuningRules(pagingParams.startIndex, pagingParams.pageSize, sortBy:null, filter:filter)).ReadAsSync();
+                var searchTuningRuleList = (await _searchWebApiClient.GetSearchTuningRules(pagingParams.startIndex, pagingParams.pageSize, sortBy:sortBy, filter:filter)).ReadAsSync();
 
                 var searchTuningRules = Mapper.Map<List<SearchTuningRule>>(searchTuningRuleList.Items);
 
@@ -112,10 +117,8 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
 
                 try
                 {
-                    // todo: need siteId added to contract - Greg Murray on 2015-10-20 
-                    //var searchClient = GetSearchClientForSite(searchRule.SiteId.GetValueOrDefault());
-                    //var response = (await searchClient.AddSearchTuningRule(dc)).ReadAsSync();
-                    var response = (await _searchWebApiClient.AddSearchTuningRule(dc)).ReadAsSync();
+                    var searchClient = GetSearchClientForSite(searchRule.SiteId.GetValueOrDefault());
+                    var response = (await searchClient.AddSearchTuningRule(dc)).ReadAsSync();
                     responseList.Add(Mapper.Map<SearchTuningRule>(response));
                 }
                 catch (ApiWebClientConnectionException e)
@@ -139,9 +142,8 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
             foreach (var searchRule in searchTuningRules)
             {
                 var dc = Mapper.Map<DC.SearchTuningRule>(searchRule);
-                //var searchClient = GetSearchClientForSite(searchRule.SiteId.GetValueOrDefault());
-                //var res = (await searchClient.UpdateSearchTuningRule(dc.SearchTuningRuleCode, dc)).ReadAsSync();
-                var res = (await _searchWebApiClient.UpdateSearchTuningRule(dc.SearchTuningRuleCode, dc)).ReadAsSync();
+                var searchClient = GetSearchClientForSite(searchRule.SiteId.GetValueOrDefault());
+                var res = (await searchClient.UpdateSearchTuningRule(dc.SearchTuningRuleCode, dc)).ReadAsSync();
                 retList.Add(Mapper.Map<SearchTuningRule>(res));
             }
 
@@ -151,9 +153,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
         [HttpPostRoute(UriTemplate = "delete")]
         public async Task<Response<SearchTuningRule>> DeleteSearchTuningRule(List<SearchTuningRule> tuningRules)
         {
-            //var tasks = tuningRules.Select(d => (GetSearchClientForSite(d.SiteId.GetValueOrDefault()))
-            //                                        .DeleteSearchTuningRule(d.Code)).ToList();
-            var tasks = tuningRules.Select(d => _searchWebApiClient
+            var tasks = tuningRules.Select(d => (GetSearchClientForSite(d.SiteId.GetValueOrDefault()))
                                                     .DeleteSearchTuningRule(d.Code)).ToList();
             await Task.WhenAll(tasks);
             tasks.Select(TaskHelper.Result).ThrowExceptionsIfAny();

@@ -10,8 +10,7 @@ Ext.define('Taco.view.searchTuningRule.BlockedProductForm', {
         'Taco.core.util.Validation'
     ],
     ui: 'subform',
-    cls: 'taco-subform-noborder taco-subform-nopadding taco-subform-nohr',
-    margin: '0 0 39 0',
+    margin: '0 0 20 0',
 
     title: 'Blocked Products',
     config: {
