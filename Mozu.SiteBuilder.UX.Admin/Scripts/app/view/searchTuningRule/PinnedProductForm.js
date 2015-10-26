@@ -7,11 +7,11 @@ Ext.define('Taco.view.searchTuningRule.PinnedProductForm', {
     alias: 'widget.taco-searchTuningRule-pinned',
     requires: [
         'Taco.core.ux.TooltipLabel',
-        'Taco.core.util.Validation'
+        'Taco.core.util.Validation',
+        'Taco.view.searchTuningRule.PinnedProductGrid'
     ],
     ui: 'subform',
-    cls: 'taco-subform-noborder taco-subform-nopadding taco-subform-nohr',
-    margin: '0 0 39 0',
+    margin: '0 0 20 0',
 
     title: 'Promoted Products',
     config: {
@@ -24,7 +24,7 @@ Ext.define('Taco.view.searchTuningRule.PinnedProductForm', {
 
         Ext.tip.QuickTipManager.init();
 
-        this.items = [
+        me.items = [
             {
                 xtype: 'fieldcontainer',
                 layout: 'hbox',
