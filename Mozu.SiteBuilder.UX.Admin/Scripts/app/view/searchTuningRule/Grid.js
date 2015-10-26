@@ -27,10 +27,10 @@ Ext.define('Taco.view.searchTuningRule.Grid', {
     
     contextConfig: {
         supportedLevels: ['s'],
-        requiresContextOfType: ['c', 's']
+        requiresContextOfType: ['s'] //'c',
     },
 
-    launchEditorOnClick:false,
+    launchEditorOnClick:true,
 
     // Required by mixin: Taco.core.ux.mixins.LaunchEditor defined in SearchList
     modelName: 'Taco.model.SearchTuningRule',
@@ -73,6 +73,7 @@ Ext.define('Taco.view.searchTuningRule.Grid', {
     isCatalogLevel: false,
     categoryCode: null,
     pageSize: 25,
+    isPopUp: false,
 
     advancedSearchConfig : {
         advancedFormCls: 'Taco.view.searchTuningRule.AdvancedSearchForm',
@@ -356,9 +357,18 @@ Ext.define('Taco.view.searchTuningRule.Grid', {
     openEditor: function (record, isNew) {
         var me = this;
 
+        if (!me.isPopUp) {
+            Ext.defer(function () {
+                if (!isNew) {
+                    Taco.core.StateManager.attemptNavigate('SearchTuningRules/edit/' + record.getId(), {}); //{complexMetaData: {record: record}});
+                } else {
+                    Taco.core.StateManager.attemptNavigate('SearchTuningRules/create', {});
+                }
+            }, 1, this);
+            return;
+        }
+
         Ext.create('Taco.view.searchTuningRule.modal.SearchTuningRuleEditor', {
-            // if we want to edit a draft only, pass recordId.
-            // otherwise, pass the record.
             record: record,
             isCreateMode: isNew,
             isCatalogLevel: me.isCatalogLevel,

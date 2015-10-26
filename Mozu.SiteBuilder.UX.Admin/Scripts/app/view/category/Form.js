@@ -265,6 +265,7 @@ Ext.define("Taco.view.category.Form", {
                 },
                 isCatalogLevel: true,
                 categoryCode: this.record.get('categoryCode'),
+                isPopUp: true,
                 pageSize: 5
             })
         );

@@ -14,10 +14,9 @@ Ext.define('Taco.view.searchTuningRule.ContextForm', {
         //'Taco.view.searchTuningRule.widget.CategorySelectorGrid'
     ],
     ui: 'subform',
-    cls: 'taco-subform-noborder taco-subform-nopadding taco-subform-nohr',
-    margin: '0 0 39 0',
+    margin: '0 0 20 0',
 
-    title: 'Contexts',
+    title: 'Context',
     config: {
         isCreateMode: false
     },

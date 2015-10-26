@@ -15,9 +15,8 @@ Ext.define('Taco.model.SearchTuningRule', {
     idProperty: 'id',
     fields: [
         {
-            name: 'id',
-            type: 'int',
-            useNull: true
+            name: 'id', //required for server side.
+            type: 'string'
         }, {
             name: 'code', //required, regex like category/product code.
             type: 'string'

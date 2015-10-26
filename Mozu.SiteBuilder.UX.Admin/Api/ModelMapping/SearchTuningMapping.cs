@@ -50,6 +50,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.ModelMapping
                 ;
 
             Mapper.CreateMap<DC.SearchTuningRule, SearchTuningRule>()
+                .ForMember(x => x.Id, op => op.ResolveUsing(dc => dc.SearchTuningRuleCode))
                 .ForMember(x => x.Code, op => op.ResolveUsing(dc => dc.SearchTuningRuleCode))
                 .ForMember(x => x.Name, op => op.ResolveUsing(dc => dc.SearchTuningRuleName))
                 .ForMember(x => x.Description, op => op.ResolveUsing(dc => dc.SearchTuningRuleDescription))
