@@ -104,7 +104,7 @@ Ext.define('Taco.view.entityManager.Index', {
             onMoveToPublish: function(record, code) {
                 me.publishActionButton.setLoading(true);
                 record.setPublishCode(code, function() {
-                    me.showGrowl.bind(me, 'Moved to Publish Set');
+                    me.showGrowl('Moved to Publish Set');
                     me.publishActionButton.setLoading(false);
                 });
             },
