@@ -15,17 +15,20 @@
     }
 }
 
-
 .mz-paymentselector.mz-l-formfieldgroup {
     .mz-digitalwallets {
         padding-top: @gutter/2;
     }
     display: block;
-    > .mz-l-formfieldgroup-row {
+    .mz-l-formfieldgroup .mz-l-formfieldgroup-row {
+        display: table-row;
+    }
+    .mz-l-formfieldgroup-row {
         display: block;
     }
-    .mz-paymentselector-option label {
+    .mz-paymentselector-option .mz-checkoutform-radio {
         text-align: left;
+        display: block;
         font-size: @fontSizeLarger;
     }
     .mz-l-formfieldgroup-cell {
