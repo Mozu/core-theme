@@ -11,7 +11,6 @@ using Mozu.ProductAdmin.Contracts.Clients;
 using Mozu.SiteBuilder.UX.Admin.Api.ModelMapping;
 using Mozu.SiteBuilder.UX.Admin.Api.Models;
 using Mozu.SiteBuilder.UX.Admin.Api.Models.PublishSets;
-using Mozu.SiteBuilder.UX.Admin.Helpers.DiscountHelpers;
 using DC = Mozu.ProductAdmin.Contracts;
 using Mozu.Core.Api.Contracts.Client;
 using System.Net.Http;
@@ -21,6 +20,7 @@ using Mozu.ScheduledEvent.Contracts.Clients;
 using Mozu.SiteBuilder.UX.Admin.Helpers;
 using Mozu.SiteBuilder.Mvc.Extensions;
 using Mozu.SiteBuilder.UX.Admin.Helpers.ProductHelpers;
+using Mozu.SiteBuilder.UX.Admin.Helpers.PublishSetHelpers;
 using Mozu.Tenant.Contracts.Clients;
 using Mozu.SiteBuilder.UX.Admin.Helpers.ContentHelpers;
 
@@ -214,11 +214,13 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
 
             sanitizeProductSortQuery(pagingParams, "publishset");
 
+            var filter = PublishSetFilterExtensions.ToFilterString(extFilter);
+
             var result = (await _publishSetWebApiClient.GetPublishSets(
                 startIndex: pagingParams.startIndex, 
                 pageSize: pagingParams.pageSize, 
                 sortBy: pagingParams.sort.ToSortString(),
-                filter: null).ConfigureAwait(false)).ReadAsSync();
+                filter: filter).ConfigureAwait(false)).ReadAsSync();
 
 
            var items = result.Items.Map <List<PublishSet>>();

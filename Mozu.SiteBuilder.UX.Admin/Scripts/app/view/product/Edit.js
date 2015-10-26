@@ -389,6 +389,63 @@
         }
     },
 
+    movePublishSet: function () {
+        
+        var me = this,
+            modal = Ext.create('Taco.view.publishing.modal.PublishSetPicker', {
+                record: me.record,
+                listeners: {
+                    aftersaveclose: function (win, data) {
+
+                        
+                        me.record.set('publishSetCode', publishSetCode);
+                        if (publishSetCode) {
+                            var store = Ext.create('Taco.store.PublishSets', { includeCounts: false });
+                            store.load(function (records, operation, success) {
+                                var model = Ext.Array.findBy(records, function (item) {
+                                    return item.get('code') === publishSetCode;
+                                });
+                                if (model) {
+                                    me.record.set('publishSetName', model.get('name'));
+                                    me.record.set('publishSetDate', model.get('publishDate'));
+                                }
+                                me.setPublishStatus();
+                                me.record.save({
+                                    success: me.setGrowl.bind(me, 'Moved to Publish Set', 'info')
+                                });
+                            });
+                        }
+                            //todo: handle model not found greg_murray on 7/24/2015
+                    },
+                    scope:me
+                }
+                //    ,
+                //callback: function (publishSetCode) {
+                //    me.record.set('publishSetCode', publishSetCode);
+                //    if (publishSetCode) {
+                //        var store = Ext.create('Taco.store.PublishSets', {includeCounts: false});
+                //        store.load(function(records, operation, success) {
+                //            var model = Ext.Array.findBy(records, function(item) {
+                //                return item.get('code') === publishSetCode;
+                //            });
+                //            if (model) {
+                //                me.record.set('publishSetName', model.get('name'));
+                //                me.record.set('publishSetDate', model.get('publishDate'));
+                //            }
+                //            me.setPublishStatus();
+                //            me.record.save({
+                //                success: me.setGrowl.bind(me, 'Moved to Publish Set', 'info')
+                //            });
+                //        });
+
+                //        //todo: handle model not found greg_murray on 7/24/2015
+                //    }
+                //}
+            });
+
+        modal.show();
+    },
+
     setProductRecordPublishSetToNull: function() {
         this.record.set('publishSetCode', '');
     },
