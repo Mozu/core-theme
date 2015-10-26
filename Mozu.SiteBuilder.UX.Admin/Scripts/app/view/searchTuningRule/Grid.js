@@ -72,6 +72,7 @@ Ext.define('Taco.view.searchTuningRule.Grid', {
 
     isCatalogLevel: false,
     categoryCode: null,
+    pageSize: 25,
 
     advancedSearchConfig : {
         advancedFormCls: 'Taco.view.searchTuningRule.AdvancedSearchForm',
@@ -112,6 +113,7 @@ Ext.define('Taco.view.searchTuningRule.Grid', {
         me.store = Taco.core.data.StoreManager.getOrCreate({
             type: 'Taco.store.SearchTuningRules',
             createOnly: true,
+            pageSize: this.pageSize,
             autoLoad: false,
             clearFilters: true,
             remoteFilter: true
@@ -122,7 +124,9 @@ Ext.define('Taco.view.searchTuningRule.Grid', {
         } else {
             me.store.proxy.extraParams = {};
         }
-        me.store.load();
+        if (!this.isCatalogLevel || this.categoryCode) {
+            me.store.load();
+        }
 
         me.callParent(arguments);
     },

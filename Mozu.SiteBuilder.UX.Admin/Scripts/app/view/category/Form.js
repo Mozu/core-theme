@@ -252,17 +252,20 @@ Ext.define("Taco.view.category.Form", {
             }
         );
 
+
         this.items.push(
             Ext.create('Taco.view.searchTuningRule.Grid', {
-                title: "Sequence Tuning Rules",
+                title: ("Sequence Tuning Rules" + (this.record.phantom ? ' - editable after saving' : '')),
                 margin: '50 0 0 0',
+                minHeight: 350,
+                disabled: this.record.phantom,
                 contextConfig: {
                     //supportedLevels: ['c'],
                     requiresContextOfType: ['c']
                 },
                 isCatalogLevel: true,
-                categoryCode: this.record.get('categoryCode')
-                //enableNavHeader: false
+                categoryCode: this.record.get('categoryCode'),
+                pageSize: 5
             })
         );
 
