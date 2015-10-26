@@ -553,6 +553,8 @@
     <Content Include="Scripts\app\core\ux\window\Drawer.js" />
     <Content Include="Scripts\app\core\ux\window\MessageBox.js" />
     <Content Include="Scripts\app\core\ux\window\Modal.js" />
+    <Content Include="Scripts\app\model\BlockedProduct.js" />
+    <Content Include="Scripts\app\model\PinnedProduct.js" />
     <Content Include="Scripts\app\model\StorefrontProduct.js" />
     <Content Include="Scripts\app\model\FilterField.js" />
     <Content Include="Scripts\app\model\BehaviorNode.js" />
@@ -659,8 +661,10 @@
     <Content Include="Scripts\app\store\BehaviorNodes.js" />
     <Content Include="Scripts\app\store\BehaviorCategoryRoles.js" />
     <Content Include="Scripts\app\store\BehaviorCategories.js" />
+    <Content Include="Scripts\app\store\BlockedProducts.js" />
     <Content Include="Scripts\app\store\CouponSetGrid.js" />
     <Content Include="Scripts\app\store\CouponCodes.js" />
+    <Content Include="Scripts\app\store\PinnedProducts.js" />
     <Content Include="Scripts\app\store\SearchTuningRules.js" />
     <Content Include="Scripts\app\store\CouponSets.js" />
     <Content Include="Scripts\app\store\StorefrontProducts.js" />
