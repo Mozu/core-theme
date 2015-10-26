@@ -14,7 +14,7 @@
         {% endif %}
       </div>
       {% if model.requiresFulfillmentInfo  %}
-      <div class="mz-formstep-fields mz-l-formfieldgroup">
+      <div class="mz-formstep-fields mz-l-formfieldgroup mz-checkoutform-active">
         {% if model.contacts %}
         {% include "modules/checkout/checkout-shipping-contact-selector" with editingContact=model %}
         {% else %}
@@ -24,16 +24,16 @@
       {% endif %}
       
       {% if model.requiresDigitalFulfillmentContact %}
-      <div class="mz-formstep-fields mz-l-formfieldgroup">
+      <div class="mz-formstep-fields mz-l-formfieldgroup mz-checkoutform-active">
         {% include "modules/checkout/checkout-digital-fulfillment" with editingContact=model %}
       </div>
-      <div class="mz-formstep-summary mz-addresssummary">
+      <div class="mz-formstep-summary mz-addresssummary mz-checkoutform-active">
         <span>Gift Card Email: {{ model.email }}</span>
       </div>
       {% endif %}
       {% else %}
 
-      <div class="mz-formstep-fields mz-l-formfieldgroup">
+      <div class="mz-formstep-fields mz-l-formfieldgroup mz-checkoutform-active">
         {{ labels.selectValidAddress }}
 
         {% for addr in model.address.candidateValidatedAddresses %}
