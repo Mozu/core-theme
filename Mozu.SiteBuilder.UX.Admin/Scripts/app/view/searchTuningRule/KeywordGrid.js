@@ -17,7 +17,7 @@ Ext.define('Taco.view.searchTuningRule.KeywordGrid', {
 
     emptyText:'No Keywords',
 
-    // adds the "taco-content-navcontainer-padding" class
+    // adds the 'taco-content-navcontainer-padding' class
     // Will add the 20px padding needed for display in the contentView as part of the NavHeader code;
     addContentViewPadding: false,
 
@@ -37,7 +37,7 @@ Ext.define('Taco.view.searchTuningRule.KeywordGrid', {
 
     hideSearchToolbar: false,
     
-    title: "Search Keywords",
+    title: 'Search Keywords',
 
     pageSize: 5,
 
@@ -45,7 +45,7 @@ Ext.define('Taco.view.searchTuningRule.KeywordGrid', {
 
     enableQuickFilters:false,
 
-    deletePromptMsg: "Are you sure you want to delete this keyword?",
+    deletePromptMsg: 'Are you sure you want to delete this keyword?',
 
     advancedSearchConfig : {
         disableAdvancedSearch: true
@@ -139,7 +139,7 @@ Ext.define('Taco.view.searchTuningRule.KeywordGrid', {
 
         this.mixins.gridcontextmenu.constructor.apply(this);
 
-        me.addDocked(me.quickAddBar,0);
+        me.addDocked(me.quickAddBar, 'top');
 
     },
 
@@ -153,7 +153,7 @@ Ext.define('Taco.view.searchTuningRule.KeywordGrid', {
         valueArray = Ext.Array.clean(valueArray);
         //
 
-        if (valueArray.length == 0) {
+        if (valueArray.length === 0) {
             return;
         }
 
@@ -168,9 +168,8 @@ Ext.define('Taco.view.searchTuningRule.KeywordGrid', {
         var me = this;
         if (!me.quickAddField) {
             me.quickAddField = Ext.widget({
-                xtype: "textfield",
-                flex: 1,
-                emptyText: "Type one or more new keywords and hit ENTER key or click Add button",
+                xtype: 'textfield',
+                emptyText: 'Type one or more new keywords and hit ENTER key or click Add button',
                 listeners: {
                     scope: me,
                     specialkey: function (field, e) {
@@ -186,16 +185,18 @@ Ext.define('Taco.view.searchTuningRule.KeywordGrid', {
 
     initQuickAddBar: function () {
         var me = this;
+
         me.quickAddButton = Ext.widget({
-            xtype: "button",
-            ui: "action",
-            scale: "medium",
-            text: "Add",
+            xtype: 'button',
+            ui: 'action',
+            scale: 'medium',
+            text: 'Add',
             handler: me.onQuickAdd,
             scope: me
         });
-        me.quickAddBar = Ext.create("Ext.toolbar.Toolbar", {
-            dock: "top",
+
+        me.quickAddBar = Ext.create('Ext.toolbar.Toolbar', {
+            dock: 'top',
             padding: {
                 top: 2,
                 left: 0,
@@ -222,8 +223,8 @@ Ext.define('Taco.view.searchTuningRule.KeywordGrid', {
                 minWidth: 150,
                 editor: {
                     // defaults to textfield if no xtype is supplied
-                    emptyText: "Enter code",
-                    msgTarget: "qtip",
+                    emptyText: 'Enter code',
+                    msgTarget: 'qtip',
                     // optional enhancement to rowEditor. Makes the field only editable during a create;
                     editableOnCreateOnly: true,
                     selectOnFocus: true,
@@ -235,7 +236,7 @@ Ext.define('Taco.view.searchTuningRule.KeywordGrid', {
                 text: 'Actions',
                 //onMenuShow: function (menu, eventData) {
                 //    // need to disable the delete menu option when discount has been used
-                //    var deleteMenuItem = menu.down("#deleteMenuItem");
+                //    var deleteMenuItem = menu.down('#deleteMenuItem');
                 //    if (eventData.record.get('canBeDeleted')) {
                 //        deleteMenuItem.show();
                 //    } else {
@@ -246,9 +247,9 @@ Ext.define('Taco.view.searchTuningRule.KeywordGrid', {
                 menuItems: [
                     {
                         text: 'Delete',
-                        itemId: "deleteMenuItem",
+                        itemId: 'deleteMenuItem',
                         // deleteMenuColumnHandler can be found in Taco.core.ux.mixins.DeleteFromGrid
-                        menuColumnHandler: "deleteMenuColumnHandler",
+                        menuColumnHandler: 'deleteMenuColumnHandler',
                         //requiredBehaviors: {
                         //    model: 'Taco.model.Discount',
                         //    behavior: 'delete'

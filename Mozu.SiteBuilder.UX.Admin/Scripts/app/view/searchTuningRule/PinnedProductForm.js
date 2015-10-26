@@ -11,6 +11,7 @@ Ext.define('Taco.view.searchTuningRule.PinnedProductForm', {
         'Taco.view.searchTuningRule.PinnedProductGrid'
     ],
     ui: 'subform',
+
     margin: '0 0 20 0',
 
     title: 'Promoted Products',
