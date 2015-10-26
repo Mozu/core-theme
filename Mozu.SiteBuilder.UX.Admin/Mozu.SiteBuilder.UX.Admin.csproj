@@ -2526,7 +2526,7 @@
   <Target Name="BeforeBuild">
 
   </Target> -->
-  <UsingTask TaskName="AjaxMin" AssemblyFile="$(MSBuildExtensionsPath32)\Microsoft\MicrosoftAjax\AjaxMinTask.dll" />
+  <UsingTask TaskName="AjaxMin" AssemblyFile="$(SolutionDir)/packages/AjaxMin/tools/net40/AjaxMinTask.dll" />
   <Target Name="AfterBuild">
     <ItemGroup>
       <JS Include="$(ProjectDir)\Scripts\resources\lib\*.js" Exclude="$(ProjectDir)\Scripts\resources\lib\init.min.js" />

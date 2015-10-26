@@ -10,7 +10,6 @@ nuget Microsoft.AspNet.WebApi.Core 5.2.3
 nuget Microsoft.AspNet.WebPages 3.2.2 
 nuget Microsoft.AspNet.Mvc 5.2.2 
 
-
 nuget Mozu.Core.Prime < 1.19
 nuget Mozu.ScheduledEvent.Contracts
 nuget Mozu.VS.PowerShell
@@ -47,3 +46,4 @@ nuget Mozu.SiteSettings.General.Contracts < 1.20 prerelease
 nuget Mozu.SiteSettings.Order.Contracts < 1.20 prerelease
 nuget protobuf-net 2.0.0.668 
 nuget FAKE
+nuget ajaxmin
