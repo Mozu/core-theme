@@ -161,8 +161,11 @@ Ext.define('Taco.view.website.Index', {
                 glyph: 'XE902@mozicons',
                 buttonGroup: 'isWebPageView',
                 margin: '0 10 0 0',
-                padding: '6 8 6 8',
+                padding: '6 12 6 12',
                 scope: this,
+                style: {
+                    width: '42px'
+                },
                 handler: function () {
                     this.chorizoEditor.widgets().toggle();
                 }
@@ -589,9 +592,10 @@ Ext.define('Taco.view.website.Index', {
             allowDepress: false,
             enableToggle: true,
             pressed: true,
-            padding: '6 8 6 8',
+            padding: '6 12 6 12',
             style: {
-                borderRadius: '2px 0px 0px 2px'
+                borderRadius: '2px 0px 0px 2px',
+                width: '42px'
             },
             scope: this,
             handler: function () {
@@ -619,7 +623,8 @@ Ext.define('Taco.view.website.Index', {
             scope: this,
             padding: '6 8 6 8',
             style: {
-                borderRadius: '0px 2px 2px 0px'
+                borderRadius: '0px 2px 2px 0px',
+                width: '42px'
             },
             handler: function () {
                 var cardpanel = this.down('#editorCardPanel');
