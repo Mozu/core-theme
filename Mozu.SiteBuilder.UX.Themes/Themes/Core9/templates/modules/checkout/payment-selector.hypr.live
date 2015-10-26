@@ -1,12 +1,12 @@
 {% with paymentId|default(0) as paymentId %}
 <div class="mz-l-formfieldgroup mz-paymentselector">
     <div class="mz-l-formfieldgroup-row mz-paymentselector-option mz-paymentselector-newcreditcard {% if model.paymentType == "CreditCard" and not model.usingSavedCard %}mz-checkoutform-active{% endif %}">
-        <div class="mz-l-formfieldgroup-row mz-checkoutform-radio">
+        <div class="mz-l-formfieldgroup-row">
             <div class="mz-l-formfieldgroup-cell">
                 <input data-mz-value="paymentType" data-mz-new-credit-card id="paymentType-newcreditcard-{{ paymentId }}" name="paymentType" type="radio" class="mz-paymenttype-input" value="CreditCard" {% if model.paymentType == "CreditCard" and not model.usingSavedCard %}checked="true"{% endif %} />
             </div>
             <div class="mz-l-formfieldgroup-cell">
-                <label class="mz-paymentselector-label mz-paymentselector-label-newcreditcard" for="paymentType-newcreditcard-{{ paymentId }}">{% if model.savedPaymentMethods %}{{ labels.newCreditCard }}{% else %}{{ labels.creditCard }}{% endif %}</label>
+                <label class="mz-paymentselector-label mz-paymentselector-label-newcreditcard mz-checkoutform-radio" for="paymentType-newcreditcard-{{ paymentId }}">{% if model.savedPaymentMethods %}{{ labels.newCreditCard }}{% else %}{{ labels.creditCard }}{% endif %}</label>
             </div>
         </div>
         {% if model.paymentType == "CreditCard" and not model.usingSavedCard %}
@@ -19,12 +19,12 @@
     </div>
     {% if model.savedPaymentMethods %}
     <div class="mz-l-formfieldgroup-row mz-paymentselector-option mz-paymentselector-savedcreditcard {% if model.paymentType == "CreditCard" and model.usingSavedCard %}mz-checkoutform-active{% endif %}">
-        <div class="mz-l-formfieldgroup-row mz-checkoutform-radio">
+        <div class="mz-l-formfieldgroup-row">
             <div class="mz-l-formfieldgroup-cell">
                 <input data-mz-value="paymentType" data-mz-saved-credit-card id="paymentType-savedcreditcard-{{ paymentId }}" name="paymentType" type="radio" class="mz-paymenttype-input" value="CreditCard" {% if model.paymentType == "CreditCard" and model.usingSavedCard %}checked="checked"{% endif %} />
             </div>
             <div class="mz-l-formfieldgroup-cell">
-                <label class="mz-paymentselector-label mz-paymentselector-label-savedcreditcard" for="paymentType-savedcreditcard-{{ paymentId }}">{{ labels.savedCreditCard }}</label>
+                <label class="mz-paymentselector-label mz-paymentselector-label-savedcreditcard mz-checkoutform-radio" for="paymentType-savedcreditcard-{{ paymentId }}">{{ labels.savedCreditCard }}</label>
                 <select {% if not model.usingSavedCard %}disabled="true"{% endif %} name="savedPaymentMethods" class="mz-payment-select-saved-payments" data-mz-value="savedPaymentMethodId">
 				    <option selected="selected" value="">{{ labels.selectSavedCreditCard }}</option>
                     {% for card in model.savedPaymentMethods %}
@@ -50,12 +50,12 @@
     {% endif %}
     {% if siteContext.checkoutSettings.payByMail %}
     <div class="mz-l-formfieldgroup-row mz-paymentselector-option mz-paymentselector-check {% if model.paymentType == "Check" %}mz-checkoutform-active{% endif %}">
-        <div class="mz-l-formfieldgroup-row mz-checkoutform-radio">
+        <div class="mz-l-formfieldgroup-row">
             <div class="mz-l-formfieldgroup-cell">
                 <input data-mz-value="paymentType" data-mz-check id="paymentType-check-{{ paymentId }}" name="paymentType" type="radio" class="mz-paymenttype-input" value="Check" {% if model.paymentType == "Check" %}checked="checked"{% endif %} />
             </div>
             <div class="mz-l-formfieldgroup-cell">
-                <label class="mz-paymentselector-label mz-paymentselector-label-check" for="paymentType-check-{{ paymentId }}">{{ labels.checkByMail }}</label>
+                <label class="mz-paymentselector-label mz-paymentselector-label-check mz-checkoutform-radio" for="paymentType-check-{{ paymentId }}">{{ labels.checkByMail }}</label>
             </div>
         </div>
         {% if model.paymentType == "Check" %}
