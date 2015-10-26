@@ -20,6 +20,8 @@ Ext.define('Taco.view.searchTuningRule.PinnedProductForm', {
 
     initComponent: function() {
 
+        var me = this;
+
         Ext.tip.QuickTipManager.init();
 
         this.items = [
@@ -27,22 +29,24 @@ Ext.define('Taco.view.searchTuningRule.PinnedProductForm', {
                 xtype: 'fieldcontainer',
                 layout: 'hbox',
                 width: '100%',
+                defaults: {
+                    flex: 1
+                },
                 items: [
-                    {
-                        xtype: 'label',
-                        text: 'Placeholder'
-                    }
+                    me.pinnedGrid
                 ]
             }
         ];
 
-        this.callParent(arguments);
+        me.callParent(arguments);
     },
+
+    pinnedGrid: Ext.create('Taco.view.searchTuningRule.PinnedProductGrid', {
+        enableSearch: false
+    }),
 
     onDestroy: function () {
         var me = this;
-
-        me.clearListeners();
 
         this.callParent(arguments);
     }

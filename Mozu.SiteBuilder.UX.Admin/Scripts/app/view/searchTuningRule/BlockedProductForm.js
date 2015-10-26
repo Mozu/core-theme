@@ -7,9 +7,7 @@ Ext.define('Taco.view.searchTuningRule.BlockedProductForm', {
     alias: 'widget.taco-searchTuningRule-blocked',
     requires: [
         'Taco.core.ux.TooltipLabel',
-        'Taco.core.util.Validation',
-        'Taco.view.discount.widget.CouponSetSelector',
-        'Taco.shared.view.field.CouponSetPickerField'
+        'Taco.core.util.Validation'
     ],
     ui: 'subform',
     cls: 'taco-subform-noborder taco-subform-nopadding taco-subform-nohr',
@@ -21,110 +19,34 @@ Ext.define('Taco.view.searchTuningRule.BlockedProductForm', {
     },
 
     initComponent: function() {
-        //var me = this;
+
+        var me = this;
 
         Ext.tip.QuickTipManager.init();
-
-        //this.productPickerStore = Taco.core.data.StoreManager.getOrCreate(
-        //    {
-        //        type: 'Taco.store.ProductPicker',
-        //        createOnly: true,
-        //        liveMode:false,
-        //        id: "prod-1",
-        //        autoLoad: true,
-        //        clearFilters: false,
-        //        remoteFilter: false
-        //        //filters: function (record) {
-        //        //    return Ext.Array.indexOf((me.get('products') || []), record.getId()) > -1;
-        //        //}
-        //    });
-        //this.productStore.clearFilter(true);
-        //this.productStore.load();
-
-        //this.productStore.on({
-        //    load: function () {
-        //        this.productList.resetOriginalValue();
-        //    },
-        //    single: true,
-        //    scope: this
-        //});
-
-
-
-        //this.couponSetStore = Taco.core.data.StoreManager.getOrCreate(
-        //    {
-        //        type: 'Taco.store.CouponSets',
-        //        createOnly: true,
-        //        id: "couponSet-1",
-        //        autoLoad: true,
-        //        clearFilters: false,
-        //        remoteFilter: false,
-        //        remoteSort:false,
-        //        data: [],
-        //        proxy: {
-        //            type: 'memory',
-        //            reader: {
-        //                type: 'json',
-        //                root: 'items'
-        //            }
-        //        }
-        //    });
-
-        //var fieldRecord = Ext.create('Taco.model.FilterField', {
-        //    id: "productcode",
-        //    field: "ProductCode",
-        //    text: "Product code",
-        //    defaultValue: "",
-        //    dataType: "string",
-        //    supportedOperators: ["eq", "ne", "in"],
-        //    editorCfg: {
-        //        xtype: "taco-productpickerfield",
-        //        liveMode: false,
-        //        width:300,
-        //        flex: 1,
-        //        //tells the valueField that we need a multiSelectorGrid to display the selected value since the id we save isn't particularly useful information to users
-        //        isPickerField: true
-        //    },
-        //
-        //    allowBlank: true
-        //});
-        //
-        //this.prodSelector = Ext.create('Taco.view.searchTuningRule.widget.ProductSelector', {
-        //    store:this.productPickerStore,
-        //    stateful: false,
-        //    stateId: 'statefulProductSelector',
-        //    fieldRecord: fieldRecord,
-        //    //hidden: !this.couponSetStore.count(),
-        //    listeners: {
-        //        change: function () {
-        //            me.parentForm.getForm().checkValidity();
-        //        },
-        //        scope:me
-        //    }
-        //});
 
         this.items = [
             {
                 xtype: 'fieldcontainer',
-                layout: 'vbox',
+                layout: 'hbox',
                 width: '100%',
+                defaults: {
+                    flex: 1
+                },
                 items: [
-                    {
-                        xtype: 'label',
-                        text: 'Placeholder'
-                    }
-                    //this.prodSelector
+                    me.blockedGrid
                 ]
             }
         ];
 
-        this.callParent(arguments);
+        me.callParent(arguments);
     },
+
+    blockedGrid: Ext.create('Taco.view.searchTuningRule.BlockedProductGrid', {
+        enableSearch: false
+    }),
 
     onDestroy: function () {
         var me = this;
-
-        me.clearListeners();
 
         this.callParent(arguments);
     }

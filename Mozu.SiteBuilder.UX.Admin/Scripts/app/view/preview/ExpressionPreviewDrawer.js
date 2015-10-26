@@ -41,8 +41,6 @@ Ext.define('Taco.view.preview.ExpressionPreviewDrawer', {
         preserveRatio: false,
         widthIncrement: 1
     },
-
-    autoDestroy: false,
     
     initComponent: function (eOpts) {
         var me = this;

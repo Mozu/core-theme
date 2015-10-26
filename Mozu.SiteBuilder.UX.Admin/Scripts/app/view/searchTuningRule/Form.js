@@ -9,6 +9,7 @@ Ext.define('Taco.view.searchTuningRule.Form', {
         'Taco.view.searchTuningRule.PinnedProductForm',
         'Taco.view.searchTuningRule.BlockedProductForm'
     ],
+    autoDestroy: true,
 
     createTitle: 'New Rule',
     editTitle: '{[values.record.data.name]}',
