@@ -28,8 +28,20 @@ namespace Mozu.SiteBuilder.Mvc.MessageHandler
             set { _redirecter = value; }
         }
 
+        static readonly Regex _reMxClean = new Regex("_mz[^&]+", RegexOptions.IgnoreCase);
+
+        static void CleanMzQuery( HttpRequestMessage message)
+        {
+            if ( message.RequestUri != null && message.RequestUri.PathAndQuery.IndexOf("_mz", StringComparison.OrdinalIgnoreCase)>-1)
+            {
+                message.RequestUri = new Uri(_reMxClean.Replace(message.RequestUri.ToString(), string.Empty));
+            }
+        }
+
+
         protected async override Task<HttpResponseMessage> SendAsync(HttpRequestMessage request, CancellationToken cancellationToken)
         {
+            CleanMzQuery(request);
             var apiContext = request.Resolve<ISiteBuilderApiContext>();
             if (apiContext.SiteId.HasValue == false)
             {
@@ -106,6 +118,32 @@ namespace Mozu.SiteBuilder.Mvc.MessageHandler
             return request;
         }
     }
+
+
+    public class MzUnderscoreRequestCleaner: DelegatingHandler
+    {
+        static readonly Regex _reMxClean = new Regex("_mz[^&]+&*", RegexOptions.IgnoreCase);
+
+
+        protected  override Task<HttpResponseMessage> SendAsync(HttpRequestMessage request, CancellationToken cancellationToken)
+        {
+            CleanMzQuery(request);
+            return base.SendAsync(request, cancellationToken);
+        }
+        static void CleanMzQuery(HttpRequestMessage message)
+        {
+            if (message.RequestUri != null && message.RequestUri.PathAndQuery.IndexOf("_mz", StringComparison.OrdinalIgnoreCase) > -1)
+            {
+                UriBuilder ub = new UriBuilder(message.RequestUri);
+                if (ub.Query.Length > 1)
+                {
+                    ub.Query = _reMxClean.Replace(ub.Query.Substring(1), string.Empty);
+                    message.RequestUri = ub.Uri;
+                }
+            }
+        }
+    }
+
 
     public interface IRedirectHandler
     {
