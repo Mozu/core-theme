@@ -113,9 +113,6 @@
         {% else %}
         
             <h4 class="mz-checkout-nopaymentrequired">{{ labels.noPaymentRequired|string_format(model.remainingTotal|currency) }}</h4>
-            {% if model.activeStoreCredits and model.activeStoreCredits.length > 0 %}
-                {% include "modules/checkout/checkout-digital-credit" %}
-            {% endif %}
 
             {% endif %}
 
@@ -145,8 +142,9 @@
             </div>
         </div>
         {% endif %}
-
-        {% include "modules/checkout/checkout-digital-credit" %}
+        <div class="mz-formfieldgroup-row">
+            {% include "modules/checkout/checkout-digital-credit" %}
+        </div>
     </div>
 
     <div class="mz-formstep-next">
