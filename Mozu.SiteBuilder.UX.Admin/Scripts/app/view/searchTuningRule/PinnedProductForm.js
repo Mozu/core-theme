@@ -67,7 +67,6 @@ Ext.define('Taco.view.searchTuningRule.PinnedProductForm', {
             },
             listeners: {
                 select: function (cmp, record) {
-                    debugger; // position key?
                     me.pinnedGrid.fireEvent('recordadded', record);
                     cmp.setValue('');
                 },

@@ -928,7 +928,6 @@
     <Content Include="Scripts\app\view\settings\shipping\Zones.js" />
     <Content Include="Scripts\app\view\settings\shipping\widget\RateEditor.js" />
     <Content Include="Scripts\app\view\settings\shipping\widget\RateList.js" />
-    <Content Include="Scripts\app\view\siteSelection\Index.js" />
     <Content Include="Scripts\app\view\storeCredit\Edit.js" />
     <Content Include="Scripts\app\view\storeCredit\Form.js" />
     <Content Include="Scripts\app\view\storeCredit\Index.js" />

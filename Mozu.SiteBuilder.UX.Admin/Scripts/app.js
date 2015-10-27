@@ -59,7 +59,6 @@ Ext.application({
         'LocationTypes',
         'Website',
         'LocationInventory',
-        'SiteSelection',
         'Redirects',
         'BusinessIntelligence',
         'ActionManagement',
