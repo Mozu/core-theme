@@ -18,7 +18,8 @@ Ext.define('Taco.view.searchTuningRule.Grid', {
         'Taco.core.ux.grid.MenuColumn',
         'Taco.view.searchTuningRule.AdvancedSearchForm',
         'Taco.view.searchTuningRule.modal.SearchTuningRuleEditor',
-        'Taco.view.searchTuningRule.Form'
+        'Taco.view.searchTuningRule.Form',
+        'Taco.view.searchTuningRule.Edit'
     ],
 
     mixins: {
@@ -98,7 +99,7 @@ Ext.define('Taco.view.searchTuningRule.Grid', {
     initComponent: function () {
         var me = this;
 
-        this.columns = this.getColumnConfig();
+        this.columns = this.getColumnConfig(me.isCatalogLevel);
 
         if (this.showActionsColumn) {
             var actionColumn = this.getActionColumn();
@@ -137,8 +138,8 @@ Ext.define('Taco.view.searchTuningRule.Grid', {
         this.store.reload();
     },
 
-    getColumnConfig: function () {
-        return [
+    getColumnConfig: function (includeSiteColumn) {
+        var columns = [
             {
                 xtype: 'gridcolumn',
                 dataIndex: 'code',
@@ -175,7 +176,10 @@ Ext.define('Taco.view.searchTuningRule.Grid', {
                 //flex: 1,
                 minWidth: 150,
                 sortable: false
-            }, {
+            }
+        ];
+        if (includeSiteColumn) {
+            columns.push({
                 xtype: 'gridcolumn',
                 dataIndex: 'siteName',
                 stateId: 'siteName',
@@ -184,7 +188,10 @@ Ext.define('Taco.view.searchTuningRule.Grid', {
                 //flex: 1,
                 minWidth: 75,
                 sortable: false
-            }, {
+            });
+        }
+        return columns.concat([
+            {
                 xtype: 'gridcolumn',
                 dataIndex: 'status',
                 stateId: 'status',
@@ -260,8 +267,7 @@ Ext.define('Taco.view.searchTuningRule.Grid', {
                 hidden: true,
                 sortable: false
             }
-        ];
-
+        ]);
     },
 
     // list of actions to put in action column and context menu;

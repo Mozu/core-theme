@@ -164,6 +164,32 @@ Ext.define('Taco.view.searchTuningRule.Edit', {
     //    }
     //},
 
+    onCreate: function(data) {
+        this.saveSuccess(data);
+        this.record = data;
+        Taco.app.fireEvent('searchtuningrulecreated', this.record);
+        this.isCreateMode = false;
+        Ext.defer(function() {
+            this.focusEl.focus();
+        }, 1, this);
+    },
+
+    doSave: function () {
+        var me = this,
+            onSuccess = (!me.isCreateMode)
+                ? me.saveSuccess
+                : me.onCreate;
+
+        me.form.beforeSave();
+        this.record.save({
+            success: onSuccess,
+            failure: function(item, response) {
+                Taco.core.util.ExceptionWhiner.handleRemoteFailure(response);
+            },
+            scope: me
+        });
+    },
+
     onDestroy: function () {
         var me = this;
 

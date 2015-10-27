@@ -55,6 +55,10 @@ Ext.define('Taco.view.searchTuningRule.Form', {
             }
         ];
 
+        if (this.isCatalogLevel) {
+            this.header = false;
+        }
+
         this.callParent(arguments);
 
         this.general = this.down('#general');
@@ -96,7 +100,7 @@ Ext.define('Taco.view.searchTuningRule.Form', {
      * @private
      */
     beforeSave: function () {
-        return (this.context.beforeSave());
+        return (this.general.beforeSave() && this.context.beforeSave());
         //&& this.pinned.beforeSave() && this.blocked.beforeSave());
 
     },

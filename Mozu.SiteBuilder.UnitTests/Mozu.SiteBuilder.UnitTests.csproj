@@ -165,6 +165,7 @@
     <Compile Include="Diagrams\Admin\Scripts\app\view\product\cdDiagramProductSearch.cs" />
     <Compile Include="Diagrams\Admin\Scripts\app\view\product\DiagramProductImageJs.cs" />
     <Compile Include="Diagrams\Admin\Scripts\app\view\product\DiagramProductJs.cs" />
+    <Compile Include="Diagrams\Admin\Scripts\app\view\searchTuningRule\cdSearchTuningRule.cs" />
     <Compile Include="Mvc\RedirectHandlerTests.cs" />
     <Compile Include="Mvc\SEO\CustomRouteTests.cs" />
     <Compile Include="Mvc\Tags\ArgumentCollectionTests.cs" />
@@ -212,6 +213,7 @@
     <None Include="Diagrams\Admin\Scripts\app\view\product\cdProduct-View-Js.cd" />
     <None Include="Diagrams\Admin\Scripts\app\view\product\cdProductImages.cd" />
     <None Include="Diagrams\Admin\Scripts\app\view\product\cdProductSearchJs.cd" />
+    <None Include="Diagrams\Admin\Scripts\app\view\searchTuningRule\cdSearchTuningRules.cd" />
     <None Include="Diagrams\UX.Models\StoreFront\Catalog\Product.cd" />
     <None Include="Diagrams\UX.Models\StoreFront\Catalog\ProductSearchResults.cd" />
     <None Include="paket.references" />

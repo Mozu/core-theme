@@ -15,6 +15,7 @@ Ext.define('Taco.view.searchTuningRule.GeneralForm', {
     margin: '0 0 20 0',
 
     title: 'General',
+    record: null,
     dateValidationMsg: 'An active start or end date is required',
 
     initComponent: function() {
@@ -85,6 +86,7 @@ Ext.define('Taco.view.searchTuningRule.GeneralForm', {
             labelAlign: 'top',
             allowBlank: false,
             editable: false,
+            readOnly: !me.record.phantom,
             forceSelection: true,
             autoSelect: true,
             listConfig: {shadow: false},
@@ -199,6 +201,7 @@ Ext.define('Taco.view.searchTuningRule.GeneralForm', {
                                     margin: '0 0 0 0',
                                     allowBlank: false,
                                     maxLength: 30,
+                                    readOnly: !me.record.phantom,
                                     required: true,
                                     regex: /^[a-z0-9_\-]+$/i,
                                     regexText: 'Invalid character. Please choose from alphanumeric, underscore, or hyphen characters.'
@@ -253,6 +256,11 @@ Ext.define('Taco.view.searchTuningRule.GeneralForm', {
         }];
 
         this.callParent(arguments);
+    },
+
+    beforeSave: function () {
+        Ext.Object.merge(this.record.data, this.form.getValues());
+        return true;
     },
 
     onDestroy: function () {

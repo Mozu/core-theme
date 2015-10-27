@@ -42,6 +42,9 @@ Ext.define('Taco.model.SearchTuningRule', {
             type: 'auto',
             persist: false,
             convert: function (value, record) {
+                if (!record.get('keywords')) {
+                    return [];
+                }
                 return Ext.Array.map(record.get('keywords'), function(word) {
                     return { 'keyword': word };
                 });
@@ -54,19 +57,21 @@ Ext.define('Taco.model.SearchTuningRule', {
             name: 'categoryFilters',
             type: 'auto',
             defaultValue: [],
-            persist: false
-            // convert: function (value, record) {     //todo: if other filters in future, need to filter the filters for cats greg_murray on 10/19/2015
-            //     debugger;
-            //     return Ext.Array.filter(record.get('filters'), function(filter) {
-            //         return (filter.key === 'categoryCode');
-            //     });
-            // }
+            persist: false,
+            convert: function (value, record) {     //todo: if other filters in future, need to filter the filters for cats greg_murray on 10/19/2015
+                 return Ext.Array.filter(record.get('filters'), function(filter) {
+                     return (filter.key === 'categoryCode');
+                 });
+             }
         }, {
             name: 'categoriesJoined',
             type: 'string',
             persist: false,
             convert: function (value, record) {
                 var categories = record.get('categoryFilters');
+                if (!categories) {
+                    return '';
+                }
                 var catValues = Ext.Array.map(categories, function(catFilter) {
                     return catFilter.value;
                 });

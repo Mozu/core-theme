@@ -7,7 +7,7 @@ Ext.define('Taco.view.searchTuningRule.modal.SearchTuningRuleEditor', {
     extend: 'Taco.core.ux.window.Drawer',
 
     requires: [
-        'Taco.view.searchTuningRule.Edit',
+        'Taco.view.searchTuningRule.Form',
         'Taco.core.util.ExceptionWhiner'
     ],
 
@@ -118,10 +118,13 @@ Ext.define('Taco.view.searchTuningRule.modal.SearchTuningRuleEditor', {
 
     // initialize the header and grid when the data load the first time
     initUi: function () {
-        var me = this,
-            code = me.record ? me.record.get('code') : null;
+        var me = this;
 
-        me.container = Ext.create('Taco.view.searchTuningRule.Edit', {
+        if (me.isCreateMode && !me.record) {
+            me.record = Ext.create('Taco.model.SearchTuningRule', {});
+        }
+
+        me.container = Ext.create('Taco.view.searchTuningRule.Form', {
             autoScroll:true,
             record: me.record,
             isCreate: me.isCreateMode,
