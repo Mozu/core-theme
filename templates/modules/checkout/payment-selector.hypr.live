@@ -44,6 +44,7 @@
                 <h4 class="mz-l-stack-sectiontitle">{{ labels.billingAddress }}</h4>
                 {% include "modules/checkout/billing-address-selector" %}
             </div>
+            <a href="javascript:;" data-mz-action="editSavedCard">{{ labels.editSavedCard }}</a>
             {% endif %}
         </div>
     </div>

@@ -179,7 +179,7 @@ require(["modules/jquery-mozu", "underscore", "hyprlive", "modules/backbone-mozu
             if (!isVisaCheckout) {
             this.editing.savedCard = true;
             this.render();
-            } else if (window.confirm(Hypr.getLabel('visaCheckoutEditReminder'))) {
+            } else {
                 this.doModelAction('cancelVisaCheckout').then(function() {
                     me.editing.savedCard = false;
                     me.render();
