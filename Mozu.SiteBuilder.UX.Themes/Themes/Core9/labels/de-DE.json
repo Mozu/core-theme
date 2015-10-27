@@ -71,6 +71,7 @@
     "oldPassword": "Altes Passwort",
     "change": "ändern",
     "remove": "entfernen",
+    "editSavedCard": "Bearbeiten von Kreditkarte",
     "passwordChanged": "Passwort wurde erfolgreich geändert.",
     "confirmPassword"   : "Passwort bestätigen",
     "billingContact"   : "Billing Kontakt",

@@ -72,7 +72,7 @@
   "selectSavedCreditCard": "Select a credit card",
   "change"               : "change",
   "remove"               : "remove",
-
+  "editSavedCard"        : "Edit saved credit card information",
   "ccVisa"               : "Visa",
   "ccMastercard"         : "MasterCard",
   "ccAmericanExpress"    : "American Express",
