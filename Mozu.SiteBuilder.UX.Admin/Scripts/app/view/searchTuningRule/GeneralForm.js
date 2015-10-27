@@ -24,10 +24,10 @@ Ext.define('Taco.view.searchTuningRule.GeneralForm', {
 
         me.scheduledStartDateField = Ext.widget({
             xtype: 'datetime',
-            fieldLabel: 'Start Date',
+            fieldLabel: 'Active Start Date',
             name: 'startDate',
-            width: '100%',
-            margin:'0 0 0 0',
+            flex: 1,
+            margin: '0 20 0 0',
             itemId: 'startDateFld',
             pickerOffset: 4,
             hidden: (!this.record || this.record.get('status') !== 'Scheduled'),
@@ -49,11 +49,10 @@ Ext.define('Taco.view.searchTuningRule.GeneralForm', {
 
         me.scheduledEndDateField = Ext.widget({
             xtype: 'datetime',
-            fieldLabel: 'End Date',
+            fieldLabel: 'Active End Date',
             name: 'endDate',
             itemId: 'endDateFld',
-            width: '100%',
-            margin: '0 0 0 0',
+            flex: 1,
             pickerOffset: 4,
             hidden: (!this.record || this.record.get('status') !== 'Scheduled'),
             value: this.record ? this.record.get('endDate') : '',
@@ -111,7 +110,7 @@ Ext.define('Taco.view.searchTuningRule.GeneralForm', {
             forceSelection: true,
             listConfig: { shadow: false },
             flex: 1,
-            maxHeight: 200,
+            //maxHeight: 200,
             margin: '0 0 0 0',
             store: [['Active', 'Active'], ['Scheduled', 'Scheduled'], ['Disable', 'Disabled']],
             value: me.record ? me.record.get('status') : 'Disable',

@@ -5,7 +5,8 @@
 Ext.define('Taco.view.searchTuningRule.Edit', {
     extend: 'Taco.core.ux.form.FullEditor',
     requires: [
-        'Taco.core.ux.action.DeleteMenuItem'
+        'Taco.core.ux.action.DeleteMenuItem',
+        'Taco.view.searchTuningRule.Form'
     ],
     formCls: 'Taco.view.searchTuningRule.Form',
     statics: {

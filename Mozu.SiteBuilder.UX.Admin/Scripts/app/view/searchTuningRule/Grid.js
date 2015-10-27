@@ -17,7 +17,8 @@ Ext.define('Taco.view.searchTuningRule.Grid', {
         'Taco.core.ux.TextFilter',
         'Taco.core.ux.grid.MenuColumn',
         'Taco.view.searchTuningRule.AdvancedSearchForm',
-        'Taco.view.searchTuningRule.modal.SearchTuningRuleEditor'
+        'Taco.view.searchTuningRule.modal.SearchTuningRuleEditor',
+        'Taco.view.searchTuningRule.Form'
     ],
 
     mixins: {
