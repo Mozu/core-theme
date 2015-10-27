@@ -74,7 +74,7 @@
                 <div class="mz-l-formfieldgroup-cell">
                 </div>
                 <div class="mz-l-formfieldgroup-cell">
-                    <label class="mz-paymentselector-label mz-paymentselector-label-separator" >&ndash; {{ labels.or }} &ndash;</label>
+                    <hr class="mz-paymentselector-label mz-paymentselector-label-separator" >&ndash; {{ labels.or }} &ndash;</hr>
                 </div>
             </div>
             {% for externalPayment in siteContext.checkoutSettings.externalPaymentWorkflowSettings %}
