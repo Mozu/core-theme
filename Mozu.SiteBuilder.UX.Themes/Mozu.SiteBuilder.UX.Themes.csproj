@@ -2867,7 +2867,9 @@
     <Content Include="Themes\Core9\templates\modules\checkout\step-payment-info.hypr.live">
       <SubType>Designer</SubType>
     </Content>
-    <Content Include="Themes\Core9\templates\modules\checkout\step-review.hypr.live" />
+    <Content Include="Themes\Core9\templates\modules\checkout\step-review.hypr.live">
+      <SubType>Designer</SubType>
+    </Content>
     <Content Include="Themes\Core9\templates\modules\checkout\step-shipping-address.hypr.live" />
     <Content Include="Themes\Core9\templates\modules\checkout\step-shipping-method.hypr.live">
       <SubType>Designer</SubType>
