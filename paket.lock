@@ -5,7 +5,6 @@ NUGET
   specs:
     51Degrees.mobi (2.1.15.1) - content: none
       Microsoft.Web.Infrastructure (>= 1.0.0.0)
-    AjaxMin (5.14.5506.26202)
     Autofac (3.5.2)
     Autofac.WebApi2 (3.4.0)
       Autofac (>= 3.5.0 < 4.0.0)
