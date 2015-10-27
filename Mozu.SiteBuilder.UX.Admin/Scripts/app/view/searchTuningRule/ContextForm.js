@@ -159,17 +159,15 @@ Ext.define('Taco.view.searchTuningRule.ContextForm', {
         this.callParent(arguments);
     },
 
-    getValues: function() {
-        var keywordData = this.keywordGrid.getValues(),
-            catData = this.getCategoryValues();
-        return Ext.Object.merge(keywordData, catData);
+    beforeSave: function() {
+        this.record.set('keywords', this.keywordGrid.getValues());
+        this.record.set('filters', this.getCategoryValues());
     },
 
     getCategoryValues: function() {
-        var result = Ext.Array.map(this.categoryList.getValueRecords(), function(cat){
+        return Ext.Array.map(this.categoryGrid.getValues(), function(cat){
             return {key:'categoryCode',value:cat.get('categoryCode')};
         });
-        return {filters: result};
     },
     /**
      * Opens a modal with a TreePanel.

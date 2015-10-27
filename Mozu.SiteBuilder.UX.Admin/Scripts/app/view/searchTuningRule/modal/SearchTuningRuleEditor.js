@@ -147,19 +147,18 @@ Ext.define('Taco.view.searchTuningRule.modal.SearchTuningRuleEditor', {
 
     doSave: function () {
         var me = this,
-            form = me.getForm(),
-            data = form.getValues(),
             onSuccess = (!me.isCreateMode)
                     ? me.saveSuccess
                     : me.onCreate;
 
+        me.form.beforeSave();
         // see if there is a form to extract the data from ;
 
-        if (this.isCreateMode) {
-            this.record = Ext.create('Taco.model.SearchTuningRule', data);
-        } else {
-            Ext.Object.merge(this.record.data, data);
-        }
+        //if (this.isCreateMode) {
+        //    this.record = Ext.create('Taco.model.SearchTuningRule', data);
+        //} else {
+        //    Ext.Object.merge(this.record.data, data);
+        //}
         this.record.save({
             success: onSuccess,
             failure: function(item, response) {

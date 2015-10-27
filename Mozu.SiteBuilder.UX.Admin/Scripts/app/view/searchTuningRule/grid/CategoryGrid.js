@@ -114,6 +114,10 @@ Ext.define('Taco.view.searchTuningRule.grid.CategoryGrid', {
         });
     },
 
+    getValues: function () {
+        return this.store.data.items;
+    },
+
     // override this method and adjust the columns if your need a grid with a subset of columns;
     getColumnConfig: function () {
         var me = this;

@@ -90,11 +90,14 @@ Ext.define('Taco.view.searchTuningRule.Form', {
     //    this.setFieldVisibility();
     //},
 
-    getValues: function() {
-        //console.log('form.getValues');
-        var generalData = this.general.getForm().getValues(),
-            contextData = this.context.getValues();
-        return Ext.Object.merge(generalData, contextData);
+    /**
+     * Preprocess form before the built in form processing. Persist field values with not matching field name in the record. Reset values no longer applicable based on current state of the form;
+     * @private
+     */
+    beforeSave: function () {
+        return (this.context.beforeSave());
+        //&& this.pinned.beforeSave() && this.blocked.beforeSave());
+
     },
 
     onDestroy: function () {

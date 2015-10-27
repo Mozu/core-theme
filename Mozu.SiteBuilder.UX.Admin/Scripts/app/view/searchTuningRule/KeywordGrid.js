@@ -55,6 +55,7 @@ Ext.define('Taco.view.searchTuningRule.KeywordGrid', {
 
     onCreate: Ext.emptyFn,
     stateful: false,
+    record: null,
 
     mixins: {
         deleteFromGrid: 'Taco.core.ux.mixins.DeleteFromGrid',
@@ -161,6 +162,7 @@ Ext.define('Taco.view.searchTuningRule.KeywordGrid', {
             var exists = me.store.findRecord('keyword', val);
             if (!exists){
                 me.store.insert(0, {'keyword':val});
+                me.record.setDirty();
             }
         });
     },
@@ -266,6 +268,7 @@ Ext.define('Taco.view.searchTuningRule.KeywordGrid', {
 
     onDeleteSuccess: function () {
         this.getView().refresh();
+        this.record.setDirty();
     },
 
     launchEditor: Ext.emptyFn,
@@ -275,7 +278,7 @@ Ext.define('Taco.view.searchTuningRule.KeywordGrid', {
         this.store.each(function(row){
             result.push(row.get('keyword'));
         }, this);
-        return {keywords: result};
+        return result;
     },
 
     /**
