@@ -19,14 +19,6 @@ Ext.define('Taco.view.searchTuningRule.GeneralForm', {
 
     initComponent: function() {
         var me = this;
-        // horizontal space between fields
-        var defaultFieldMargin = 50;
-        // how wide should fields be that display currency amounts
-        var defaultFieldWidth = 250; //166; // 3 column width
-        //widest width that will fit in an override container at the smallest browser width;
-        var fullFieldWidth = (defaultFieldWidth * 3) + (2 * defaultFieldMargin);
-        // field width when part of a two column layout
-        var twoColumnFieldWidth = (fullFieldWidth / 4)  -  (defaultFieldMargin/2);
 
         Ext.tip.QuickTipManager.init();
 
@@ -171,7 +163,7 @@ Ext.define('Taco.view.searchTuningRule.GeneralForm', {
             xtype: 'fieldcontainer',
             layout: {
                 type: 'hbox',
-                align: 'stretch'
+                align: 'top'
             },
             items: [
                 {
@@ -183,7 +175,7 @@ Ext.define('Taco.view.searchTuningRule.GeneralForm', {
                             xtype: 'fieldcontainer',
                             layout: {
                                 type: 'hbox',
-                                align: 'stretch'
+                                align: 'top'
                             },
                             width: '100%',
                             items: [
@@ -217,7 +209,7 @@ Ext.define('Taco.view.searchTuningRule.GeneralForm', {
                             xtype: 'fieldcontainer',
                             layout: {
                                 type: 'hbox',
-                                align: 'stretch'
+                                align: 'top'
                             },
                             width: '100%',
                             items: [
@@ -228,7 +220,7 @@ Ext.define('Taco.view.searchTuningRule.GeneralForm', {
                             xtype: 'fieldcontainer',
                             layout: {
                                 type: 'hbox',
-                                align: 'stretch'
+                                align: 'top'
                             },
                             width: '100%',
                             items: [
