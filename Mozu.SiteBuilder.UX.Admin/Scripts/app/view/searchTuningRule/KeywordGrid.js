@@ -122,10 +122,10 @@ Ext.define('Taco.view.searchTuningRule.KeywordGrid', {
         
 
         // initialize the search toolbar mixin
-        if (me.enableSearch) {
-            this.mixins.searchable.constructor.apply(this);
-            me.dockedItems.push(me.createSearchToolbar());
-        }
+        //if (me.enableSearch) {
+        //    this.mixins.searchable.constructor.apply(this);
+        //    me.dockedItems.push(me.createSearchToolbar());
+        //}
 
         if (me.enablePaging) {
             // initialize the grid paging toolbar mixin
@@ -169,7 +169,9 @@ Ext.define('Taco.view.searchTuningRule.KeywordGrid', {
         if (!me.quickAddField) {
             me.quickAddField = Ext.widget({
                 xtype: 'textfield',
-                emptyText: 'Type one or more new keywords and hit ENTER key or click Add button',
+                flex: 1,
+                margin: '0 10 0 0',
+                emptyText: 'Type keywords here and press ENTER or click Add button',
                 listeners: {
                     scope: me,
                     specialkey: function (field, e) {
@@ -197,6 +199,7 @@ Ext.define('Taco.view.searchTuningRule.KeywordGrid', {
 
         me.quickAddBar = Ext.create('Ext.toolbar.Toolbar', {
             dock: 'top',
+            layout: 'hbox',
             padding: {
                 top: 2,
                 left: 0,
