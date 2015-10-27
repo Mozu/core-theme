@@ -442,6 +442,8 @@
     <Compile Include="Helpers\ProductRuntimeHelpers\ProductRuntimeSortExpressionBuilder.cs" />
     <Compile Include="Helpers\AbstractSortExpressionBuilder.cs" />
     <Compile Include="Helpers\ProductTypeHelpers\ProductTypeFilterExtensions.cs" />
+    <Compile Include="Helpers\PublishSetHelpers\PublishSetFilterExtensions.cs" />
+    <Compile Include="Helpers\PublishSetHelpers\PublishSetSortExtensions.cs" />
     <Compile Include="Helpers\RolesHelper.cs" />
     <Compile Include="Helpers\SearchTuningHelpers\SearchTuningRuleFilterBuilder.cs" />
     <Compile Include="Helpers\SearchTuningHelpers\SearchTuningRuleSortBuilder.cs" />
@@ -743,6 +745,7 @@
     <Content Include="Scripts\app\view\searchTuningRule\BlockedProductGrid.js" />
     <Content Include="Scripts\app\view\searchTuningRule\Edit.js" />
     <Content Include="Scripts\app\view\searchTuningRule\Form.js" />
+    <Content Include="Scripts\app\view\searchTuningRule\grid\CategoryGrid.js" />
     <Content Include="Scripts\app\view\searchTuningRule\KeywordGrid.js" />
     <Content Include="Scripts\app\view\searchTuningRule\PinnedProductGrid.js" />
     <Content Include="Scripts\app\view\searchTuningRule\PinnedProductForm.js" />
