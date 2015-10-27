@@ -18,7 +18,17 @@ if exist .sencha\workspace (
 	attrib -r bootstrap.js
 	attrib -r bootstrap.json
     cd ..
-	sencha --sdk d:\software\ext\ext-4.2.2.1144 generate workspace Scripts
+    if exist d:\software\ext\ext-4.2.2.1144 (
+		sencha --sdk d:\software\ext\ext-4.2.2.1144 generate workspace Scripts
+	)
+	else (
+		if not exist %~dp0..\..\lib\ext-4.2.2.1144 (
+			echo "missing ExtJS, downloading from \\aus01cpfs102.corp.volusion.com\Departments_F\Product\Software\ExtJS\ext-4.2.2.1144"
+			mkdir ..\..\lib
+			xcopy \\aus01cpfs102.corp.volusion.com\Departments_F\Product\Software\ExtJS\ext-4.2.2.1144 ..\..\lib\ext-4.2.2.1144 /i /y /s
+		)
+		sencha --sdk %~dp0..\..\lib\ext-4.2.2.1144 generate workspace Scripts
+	)
     cd Scripts
 	attrib -r build/*.* /S
 	attrib -r bootstrap.js
