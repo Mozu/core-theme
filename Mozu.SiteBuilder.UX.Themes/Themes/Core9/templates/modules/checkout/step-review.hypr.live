@@ -22,10 +22,10 @@
             </div>
 
                 {% if model.createAccount %}
-                <div class="mz-l-formfieldgroup mz-create-account-fields">
+                <div class="mz-l-formfieldgroup mz-create-account-fields mz-checkoutform-active">
                     <div class="mz-l-formfieldgroup-row">
                       <div class="mz-l-formfieldgroup-cell">
-                    <label for="new-account-email"> {{ labels.email }}<span class="is-required"> *</span> </label>
+                    <label for="new-account-email"> {{ labels.email }}<span class="is-required"> *</span>: </label>
                       </div>
                       <div class="mz-l-formfieldgroup-cell">
                         <input type="text" name="new-account-email" data-mz-value="emailAddress" value="{{ model.emailAddress|default(model.billingInfo.billingContact.email) }}">
@@ -34,7 +34,7 @@
                     </div>
                   <div class="mz-l-formfieldgroup-row">
                       <div class="mz-l-formfieldgroup-cell">
-                    <label for="new-account-password"> {{ labels.password }}<span class="is-required"> *</span> </label>
+                    <label for="new-account-password"> {{ labels.password }}<span class="is-required"> *</span>: </label>
                       </div>
                       <div class="mz-l-formfieldgroup-cell">
                         <input type="password" name="new-account-password" data-mz-value="password" value="{{ model.password }}">
@@ -43,7 +43,7 @@
                     </div>
                   <div class="mz-l-formfieldgroup-row">
                       <div class="mz-l-formfieldgroup-cell">
-                    <label for="new-account-password"> {{ labels.confirmPassword }}<span class="is-required"> *</span> </label>
+                    <label for="new-account-password"> {{ labels.confirmPassword }}<span class="is-required"> *</span>: </label>
                       </div>
                       <div class="mz-l-formfieldgroup-cell">
                         <input type="password" name="new-account-confirm" data-mz-value="confirmPassword" value="{{ model.confirmPassword }}">
