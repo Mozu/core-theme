@@ -65,7 +65,7 @@ Ext.define('Taco.view.searchTuningRule.ContextForm', {
         // MultiSelect is the most optimal Field that uses BoundList without a trigger
         this.categoryList = Ext.widget({
             xtype: 'combobox',
-            name: 'categoryFilters',//'categories',
+            name: 'categoryFilters',
             flex: 1,
             emptyText: 'Insert Category Names or Select Using the Add Button',
             margin: 0,
@@ -87,9 +87,9 @@ Ext.define('Taco.view.searchTuningRule.ContextForm', {
                 verticalAlign: 'bottom'
             },
             listeners: {
-                beforeselect: function (cmp, record) {
+                select: function (cmp, record) {
                     me.categoryGrid.store.add(record);
-                    cmp.setValue(null);
+                    cmp.reset();
                 },
                 scope: this
             }

@@ -15,7 +15,7 @@ Ext.define('Taco.view.searchTuningRule.GeneralForm', {
     margin: '0 0 20 0',
 
     title: 'General',
-    dateValidationMsg: "An active start or end date is required",
+    dateValidationMsg: 'An active start or end date is required',
 
     initComponent: function() {
         var me = this;
@@ -34,12 +34,12 @@ Ext.define('Taco.view.searchTuningRule.GeneralForm', {
             xtype: 'datetime',
             fieldLabel: 'Start Date',
             name: 'startDate',
-            width: twoColumnFieldWidth,
-            margin:"0 50 0 0",
+            width: '100%',
+            margin:'0 0 0 0',
             itemId: 'startDateFld',
             pickerOffset: 4,
             hidden: (!this.record || this.record.get('status') !== 'Scheduled'),
-            value: this.record ? this.record.get('startDate') : "",
+            value: this.record ? this.record.get('startDate') : '',
             allowBlank: true,
             validateOnBlank: true,
             validator: function () {
@@ -48,7 +48,7 @@ Ext.define('Taco.view.searchTuningRule.GeneralForm', {
 
                 //if (me.productInCatalogInfo && me.scheduledStartDateField.isVisible()) {
                 //    // if both fields have values we need to validate the dates are in order;
-                //    var isValid = Taco.core.util.Validation.validateDateRange(me.scheduledStartDateField, me.scheduledEndDateField, "Start date must be before end date", 0);
+                //    var isValid = Taco.core.util.Validation.validateDateRange(me.scheduledStartDateField, me.scheduledEndDateField, 'Start date must be before end date', 0);
                 //    return isValid;
                 //}
                 return true;
@@ -60,11 +60,11 @@ Ext.define('Taco.view.searchTuningRule.GeneralForm', {
             fieldLabel: 'End Date',
             name: 'endDate',
             itemId: 'endDateFld',
-            width: twoColumnFieldWidth,
-            margin: "0 0 0 0",
+            width: '100%',
+            margin: '0 0 0 0',
             pickerOffset: 4,
             hidden: (!this.record || this.record.get('status') !== 'Scheduled'),
-            value: this.record ? this.record.get('endDate') : "",
+            value: this.record ? this.record.get('endDate') : '',
             allowBlank: true,
             validateOnBlank: true,
             validator: function () {
@@ -73,14 +73,14 @@ Ext.define('Taco.view.searchTuningRule.GeneralForm', {
 
                 //if (me.productInCatalogInfo && me.scheduledEndDateField.isVisible()) {
                 //    // if both fields have values we need to validate the dates are in order;
-                //    var isValid = Taco.core.util.Validation.validateDateRange(me.scheduledStartDateField, me.scheduledEndDateField, "End date must be after start date", 0);
+                //    var isValid = Taco.core.util.Validation.validateDateRange(me.scheduledStartDateField, me.scheduledEndDateField, 'End date must be after start date', 0);
                 //    return isValid;
                 //}
                 return true;
             }
         });
         var siteStore = Ext.create('Ext.data.Store', {
-            fields: ['id', "name"],
+            fields: ['id', 'name'],
             data: me.record.getSites(me.isCatalogLevel)
         });
         var defaultSite = (me.record && me.record.get('siteId'))
@@ -97,8 +97,8 @@ Ext.define('Taco.view.searchTuningRule.GeneralForm', {
             forceSelection: true,
             autoSelect: true,
             listConfig: {shadow: false},
-            width: twoColumnFieldWidth,
-            margin:"0 50 0 0",
+            flex: 1,
+            margin:'0 20 0 0',
             queryMode:'local',
             store: siteStore,
                 //[['Active', 'Active'], ['Scheduled', 'Scheduled'], ['Disable', 'Disabled']],
@@ -118,11 +118,12 @@ Ext.define('Taco.view.searchTuningRule.GeneralForm', {
             editable: false,
             forceSelection: true,
             listConfig: { shadow: false },
-            width: twoColumnFieldWidth,
-            margin: "0 0 0 0",
+            flex: 1,
+            maxHeight: 200,
+            margin: '0 0 0 0',
             store: [['Active', 'Active'], ['Scheduled', 'Scheduled'], ['Disable', 'Disabled']],
             value: me.record ? me.record.get('status') : 'Disable',
-            dateValidationMsg: "A scheduled start or end date is required",
+            dateValidationMsg: 'A scheduled start or end date is required',
             //validateDate: function() {
             //    if (Ext.isEmpty(me.scheduledStartDateField.getValue()) && Ext.isEmpty(me.scheduledEndDateField.getValue())) {
             //        this.markInvalid(this.dateValidationMsg);
@@ -169,41 +170,42 @@ Ext.define('Taco.view.searchTuningRule.GeneralForm', {
         this.items = [{
             xtype: 'fieldcontainer',
             layout: {
-                type: "hbox",
-                align: "stretch"
+                type: 'hbox',
+                align: 'stretch'
             },
             items: [
                 {
                     xtype: 'fieldcontainer',
                     flex: 1,
-                    layout: "vbox",
+                    layout: 'vbox',
                     items: [
                         {
                             xtype: 'fieldcontainer',
                             layout: {
-                                type: "hbox",
-                                //width: "100%"
-                                align: "stretch"
+                                type: 'hbox',
+                                align: 'stretch'
                             },
+                            width: '100%',
                             items: [
                                 {
                                     name: 'name',
                                     fieldLabel: 'Name',
                                     allowBlank: false,
                                     xtype: 'textfield',
-                                    width: twoColumnFieldWidth,
-                                    margin: "0 50 0 0",
+                                    flex: 1,
+                                    margin: '0 20 0 0',
                                     required: true,
                                     minLength: 3,
                                     maxLength: 200,
                                     enforceMaxLength: true
-                                }, {
+                                }, 
+                                {
                                     name: 'code',
                                     fieldLabel: 'Code',
-                                    itemId: "codeField",
+                                    itemId: 'codeField',
                                     xtype: 'textfield',
-                                    width: twoColumnFieldWidth,
-                                    margin: "0 0 0 0",
+                                    flex: 1,
+                                    margin: '0 0 0 0',
                                     allowBlank: false,
                                     maxLength: 30,
                                     required: true,
@@ -214,9 +216,10 @@ Ext.define('Taco.view.searchTuningRule.GeneralForm', {
                         }, {
                             xtype: 'fieldcontainer',
                             layout: {
-                                type: "hbox",
-                                align: "stretch"
+                                type: 'hbox',
+                                align: 'stretch'
                             },
+                            width: '100%',
                             items: [
                                 me.siteCombo,
                                 me.statusCombo
@@ -224,29 +227,31 @@ Ext.define('Taco.view.searchTuningRule.GeneralForm', {
                         }, {
                             xtype: 'fieldcontainer',
                             layout: {
-                                type: "hbox",
-                                align: "stretch"
+                                type: 'hbox',
+                                align: 'stretch'
                             },
+                            width: '100%',
                             items: [
                                 me.scheduledStartDateField,
                                 me.scheduledEndDateField
                             ]
                         }
                     ]
-                }, {
+                }, 
+                {
                     xtype: 'fieldcontainer',
                     margin: {
                         left: 20
                     },
                     layout: {
-                        type: "vbox"
+                        type: 'vbox'
                     },
                     flex: 1,
                     items: [
                         {
                             xtype: 'textarea',
                             name: 'description',
-                            width: "100%",
+                            width: '100%',
                             flex: 1,
                             fieldLabel: 'Description',
                             maxLength: 500
