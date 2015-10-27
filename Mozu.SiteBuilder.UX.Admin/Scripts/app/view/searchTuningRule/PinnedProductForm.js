@@ -49,6 +49,8 @@ Ext.define('Taco.view.searchTuningRule.PinnedProductForm', {
     onDestroy: function () {
         var me = this;
 
+        me.clearListeners();
+
         this.callParent(arguments);
     }
 });

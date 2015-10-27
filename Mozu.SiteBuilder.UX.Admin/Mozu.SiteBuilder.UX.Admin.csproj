@@ -442,8 +442,6 @@
     <Compile Include="Helpers\ProductRuntimeHelpers\ProductRuntimeSortExpressionBuilder.cs" />
     <Compile Include="Helpers\AbstractSortExpressionBuilder.cs" />
     <Compile Include="Helpers\ProductTypeHelpers\ProductTypeFilterExtensions.cs" />
-    <Compile Include="Helpers\PublishSets\PublishSetFilterExtensions.cs" />
-    <Compile Include="Helpers\PublishSets\PublishSetSortExtensions.cs" />
     <Compile Include="Helpers\RolesHelper.cs" />
     <Compile Include="Helpers\SearchTuningHelpers\SearchTuningRuleFilterBuilder.cs" />
     <Compile Include="Helpers\SearchTuningHelpers\SearchTuningRuleSortBuilder.cs" />
@@ -649,7 +647,6 @@
     <Content Include="Scripts\app\shared\view\field\ProductPickerField.js" />
     <Content Include="Scripts\app\shared\view\field\AttributePickerField.js" />
     <Content Include="Scripts\app\shared\view\field\DiscountPickerField.js" />
-    <Content Include="Scripts\app\shared\view\field\PublishSetPickerField.js" />
     <Content Include="Scripts\app\shared\view\field\ProductTypePickerField.js" />
     <Content Include="Scripts\app\shared\view\form\ExtensibleAttribute.js" />
     <Content Include="Scripts\app\shared\view\modal\StoreCredit.js" />
@@ -743,6 +740,7 @@
     <Content Include="Scripts\app\view\preview\PreviewGrid.js" />
     <Content Include="Scripts\app\view\searchTuningRule\AdvancedSearchForm.js" />
     <Content Include="Scripts\app\view\searchTuningRule\BlockedProductForm.js" />
+    <Content Include="Scripts\app\view\searchTuningRule\BlockedProductGrid.js" />
     <Content Include="Scripts\app\view\searchTuningRule\Edit.js" />
     <Content Include="Scripts\app\view\searchTuningRule\Form.js" />
     <Content Include="Scripts\app\view\searchTuningRule\KeywordGrid.js" />
@@ -2360,7 +2358,6 @@
     <Folder Include="Scripts\app\view\product\option\" />
     <Folder Include="Scripts\app\view\settings\publishing\" />
     <Folder Include="Scripts\build\" />
-    <Folder Include="Scripts\packages\mozuadmintheme\resources\images\tree\" />
     <Folder Include="Scripts\packages\mozuadmintheme\sass\etc\siteBuilder\" />
     <Folder Include="Scripts\resources\scss\taco\widgets\" />
     <Folder Include="Scripts\sass\src\core\ux\window\" />
