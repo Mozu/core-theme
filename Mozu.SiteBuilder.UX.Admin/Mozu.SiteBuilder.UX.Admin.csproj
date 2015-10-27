@@ -499,7 +499,6 @@
     <Content Include="Scripts\app\controller\LocationTypes.js" />
     <Content Include="Scripts\app\controller\OrderAttributes.js" />
     <Content Include="Scripts\app\controller\Reports.js" />
-    <Content Include="Scripts\app\controller\SiteSelection.js" />
     <Content Include="Scripts\app\controller\Tbd.js" />
     <Content Include="Scripts\app\core\context\Catalog.js" />
     <Content Include="Scripts\app\core\data\cache\ProxyCache.js" />
