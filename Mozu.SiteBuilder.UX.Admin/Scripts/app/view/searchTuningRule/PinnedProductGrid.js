@@ -60,9 +60,18 @@ Ext.define('Taco.view.searchTuningRule.PinnedProductGrid', {
       pageSize: me.pageSize,
       autoLoad: false
     });
-
+    
     me.callParent(arguments);
+  },
 
+  listeners: {
+    afterrender: function() {
+      var record = this.up('#taco-searchTuningRule-form').record;
+      this.store = Ext.create('Ext.data.Store', {
+        fields: ['code', 'price', 'salePrice'],
+        data: record.data.boostedProducts
+      });
+    }
   },
 
   getActionItems: function() {

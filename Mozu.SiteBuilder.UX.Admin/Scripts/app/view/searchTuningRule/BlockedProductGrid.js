@@ -61,6 +61,16 @@ Ext.define('Taco.view.searchTuningRule.BlockedProductGrid', {
 
    },
 
+   listeners: {
+    afterrender: function() {
+      var record = this.up('#taco-searchTuningRule-form').record;
+      this.store = Ext.create('Ext.data.Store', {
+        fields: ['code', 'price', 'salePrice'],
+        data: record.data.blockedProducts
+      });
+    }
+  },
+
    getActionItems: function() {
        var me = this,
            actions = [],
