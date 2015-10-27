@@ -83,12 +83,26 @@ require(["modules/jquery-mozu", "underscore", "hyprlive", "modules/backbone-mozu
             'address.addressType',
             'phoneNumbers.home',
             'contactId',
-            'email'
+            'email',
+            'state'
         ],
         renderOnChange: [
             'address.countryCode',
-            'contactId'
-        ]
+            'contactId',
+            'state'
+        ],
+        beginAddContact: function () {
+            this.model.set('contactId', 'new');
+            this.model.set('state', 'addNew');
+        },
+        beginEditContact: function (e) {
+            this.model.set('state', 'edit');
+        },
+        savedAddressSelected: function (e) {
+            if (this.model.get('contactId') != e.currentTarget.value) {
+                this.model.set('state', 'savedAddress');
+            }
+        }
     });
 
     var ShippingInfoView = CheckoutStepView.extend({

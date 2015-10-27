@@ -162,6 +162,10 @@
                     return false;
                 }
 
+                if (this.get('state') == 'edit') {
+                    this.set('state', 'editComplete');
+                }
+
                 var parent = this.parent,
                     order = this.getOrder(),
                     me = this,
@@ -1280,7 +1284,12 @@
                 var customer = this.get('customer'),
                     contactInfo = this.get(infoName),
                     contact = contactInfo.get(contactName).toJSON(),
-                    process = [function() {
+                    process = [function () {
+                        if (contact.state && contact.state === 'editComplete') {
+                            return customer.apiModel.updateContact(contact).then(function (contactResult) {
+                                return contactResult;
+                            });
+                        }
                         if (contact.id === -1 || contact.id === 1 || contact.id === 'new') delete contact.id;
                         return customer.apiModel.addContact(contact).then(function(contactResult) {
                             contact.id = contactResult.data.id;
@@ -1314,7 +1323,7 @@
                 var contactId = contact.contactId;
                 if (contactId) contact.id = contactId;
 
-                if (!contact.id || contact.id === -1 || contact.id === 1 || contact.id === 'new') {
+                if (!contact.id || contact.id === -1 || contact.id === 1 || contact.id === 'new' || (contact.state && contact.state === 'editComplete')) {
                     contact.types = contactTypes;
                     return api.steps(process);
                 } else {
