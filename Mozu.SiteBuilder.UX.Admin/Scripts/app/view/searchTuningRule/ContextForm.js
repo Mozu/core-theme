@@ -89,7 +89,7 @@ Ext.define('Taco.view.searchTuningRule.ContextForm', {
             listeners: {
                 select: function (cmp, record) {
                     me.categoryGrid.fireEvent('recordadded', record);
-                    cmp.reset();
+                    cmp.setValue('');
                 },
                 scope: this
             }
@@ -159,6 +159,7 @@ Ext.define('Taco.view.searchTuningRule.ContextForm', {
         this.callParent(arguments);
     },
 
+
     beforeSave: function() {
         this.record.set('keywords', this.keywordGrid.getValues());
         this.record.set('filters', this.getCategoryValues());
@@ -166,7 +167,7 @@ Ext.define('Taco.view.searchTuningRule.ContextForm', {
 
     getCategoryValues: function() {
         return Ext.Array.map(this.categoryGrid.getValues(), function(cat){
-            return {key:'categoryCode',value:cat.get('categoryCode')};
+            return {key:'categoryCode',value: cat.get('categoryCode')};
         });
     },
     /**

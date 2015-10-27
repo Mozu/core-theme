@@ -66,41 +66,51 @@ Ext.define('Taco.view.searchTuningRule.grid.CategoryGrid', {
     },
         
     initComponent: function () {
-        var me = this;
+
+
+        if (!this.catStore) {
+            console.warn('A Category is expected to be passed into this component!');
+        }
 
         this.columns = Ext.Array.clone(this.getColumnConfig());
 
         this.store = this.getStore();
 
-        // once the passed in category store loads, if we have categoryFilters
-        // we will load the store with those records
-        if (this.record && this.record.get('categoryFilters') && this.catStore) {
-            this.catStore.on('load', function() {
-                //filter for the records which match our codes, then add to store
-            });
-        }
+        this.loadPreviousRecords();
 
-        me.callParent(arguments);
+        this.callParent(arguments);
     },
 
     listeners: {
 
         recordadded: function(records) {
             this.store.add(records);
-
-            this.updateRecord(this.store.data.items);
         }
 
     },
 
-    updateRecord: function(records) {
-        var catFilters = this.record.get('categoryFilters');
+    loadPreviousRecords: function() {
+        var me = this,
+            filters = this.record.get('filters'),
+            filterIds;
 
-        this.record.set('categoryFilters', []);
 
-        records.forEach(function(rec) {
-            catFilters.push(rec.get('categoryCode')); 
-        }, this);
+        // once the passed in category store loads, if we have categoryFilters
+        // we will load the store with those records
+
+        if (this.record && filters && filters.length > 0 && this.catStore) {
+
+            filterIds = filters.map(function(rec) { return rec.value; });
+
+            this.catStore.on('load', function(store) {
+            
+                store.each(function(rec) {
+                    if (rec.get('categoryCode') && filterIds.indexOf(rec.get('categoryCode')) != -1)  {
+                        me.store.add(rec);
+                    }   
+                });
+            });
+        }
     },
 
     doDelete: function(record) {

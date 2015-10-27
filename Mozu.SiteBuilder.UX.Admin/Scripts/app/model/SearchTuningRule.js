@@ -28,7 +28,7 @@ Ext.define('Taco.model.SearchTuningRule', {
             type: 'string'
         }, {
             name: 'keywords',
-            type: "auto",
+            type: 'auto',
             defaultValue: []
         }, {
             name: 'keywordsJoined',
@@ -38,8 +38,8 @@ Ext.define('Taco.model.SearchTuningRule', {
                 return (record.get('keywords')) ? record.get('keywords').join(',') : '';
             }
         }, {
-            name: "keywordObjects",
-            type: "auto",
+            name: 'keywordObjects',
+            type: 'auto',
             persist: false,
             convert: function (value, record) {
                 return Ext.Array.map(record.get('keywords'), function(word) {
@@ -48,17 +48,19 @@ Ext.define('Taco.model.SearchTuningRule', {
             }
         }, {
             name: 'filters',
-            type: "auto",
+            type: 'auto',
             defaultValue: []
         }, {
-            name: "categoryFilters",
-            type: "auto",
-            persist: false,
-            convert: function (value, record) {     //todo: if other filters in future, need to filter the filters for cats greg_murray on 10/19/2015
-                return Ext.Array.filter(record.get('filters'), function(filter) {
-                    return (filter.key === 'categoryCode');
-                });
-            }
+            name: 'categoryFilters',
+            type: 'auto',
+            defaultValue: [],
+            persist: false
+            // convert: function (value, record) {     //todo: if other filters in future, need to filter the filters for cats greg_murray on 10/19/2015
+            //     debugger;
+            //     return Ext.Array.filter(record.get('filters'), function(filter) {
+            //         return (filter.key === 'categoryCode');
+            //     });
+            // }
         }, {
             name: 'categoriesJoined',
             type: 'string',
@@ -75,8 +77,8 @@ Ext.define('Taco.model.SearchTuningRule', {
             type: 'boolean',
             defaultValue: true
         }, {
-            name: "status",
-            type: "string",
+            name: 'status',
+            type: 'string',
             persist: false,
             convert: function (value, record) {
                 if (!record.get('isActive')) {
@@ -103,11 +105,11 @@ Ext.define('Taco.model.SearchTuningRule', {
             dateFormat: 'c'
         }, {
             name: 'boostedProducts',
-            type: "auto",
+            type: 'auto',
             defaultValue: []
         }, {
             name: 'blockedProducts',
-            type: "auto",
+            type: 'auto',
             defaultValue: []
         }, {
             name: 'siteId',
@@ -115,7 +117,7 @@ Ext.define('Taco.model.SearchTuningRule', {
             useNull: true
         }, {
             name: 'siteName',
-            type: "string",
+            type: 'string',
             persist: false,
             convert: function (value, record) {
                 if (!record.get('siteId'))
@@ -124,35 +126,35 @@ Ext.define('Taco.model.SearchTuningRule', {
                 return (site) ? site.name : '';
             }
         }, {
-            "name": "createBy",
-            "type": "string",
-            "useNull": true
-        }, {
-            "name": "createByUser",
-            type: "string",
-            convert: Taco.core.util.Common.getCreateByUser
-        }, {
-            "name": "createDate",
-            "type": "date",
-            "useNull": true,
-            dateFormat: 'c'
-        }, {
-            name: "lastModifiedBy",
-            type: "string",
+            name: 'createBy',
+            type: 'string',
             useNull: true
         }, {
-            name: "lastModifiedByUser",
-            type: "string",
+            name: 'createByUser',
+            type: 'string',
+            convert: Taco.core.util.Common.getCreateByUser
+        }, {
+            name: 'createDate',
+            type: 'date',
+            useNull: true,
+            dateFormat: 'c'
+        }, {
+            name: 'lastModifiedBy',
+            type: 'string',
+            useNull: true
+        }, {
+            name: 'lastModifiedByUser',
+            type: 'string',
             convert: Taco.core.util.Common.getLastModifiedByUser
         }, {
-            name: "lastModifiedDate",
-            type: "date",
+            name: 'lastModifiedDate',
+            type: 'date',
             useNull: true,
             dateFormat: 'c'
         }
         //, {
-        //    name: "sites",
-        //    "type": "auto",
+        //    name: 'sites',
+        //    'type': 'auto',
         //    persist: false,
         //    convert: function (value, record) {
         //        if (record.siteId == null) {
@@ -204,7 +206,7 @@ Ext.define('Taco.model.SearchTuningRule', {
             type: 'json',
             root: 'items',
             successProperty: 'success',
-            messageProperty: "message"
+            messageProperty: 'message'
         },
         writer: {
             allowSingle: false,
