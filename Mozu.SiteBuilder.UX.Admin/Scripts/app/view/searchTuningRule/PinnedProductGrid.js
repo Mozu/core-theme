@@ -53,24 +53,26 @@ Ext.define('Taco.view.searchTuningRule.PinnedProductGrid', {
         
     me.viewConfig = me.viewConfig || {};
     me.viewConfig.deferEmptyText = me.deferEmptyText;
+
+    me.columns = me.getColumnConfig()
         
-    me.store = Taco.core.data.StoreManager.getOrCreate({
-      type: 'Taco.store.PinnedProducts',
-      createOnly: true,
-      pageSize: me.pageSize,
-      autoLoad: false
+    me.store = Ext.create('Ext.data.Store', {
+      fields: ['code', 'price', 'salePrice'],
+      data: []
     });
-    
+
     me.callParent(arguments);
+
   },
 
   listeners: {
     afterrender: function() {
       var record = this.up('#taco-searchTuningRule-form').record;
-      this.store = Ext.create('Ext.data.Store', {
-        fields: ['code', 'price', 'salePrice'],
-        data: record.data.boostedProducts
-      });
+      var products = record.data.boostedProducts;
+
+      for (var i = products.length - 1; i >= 0; i--) {
+        this.store.data.add(Ext.create('Taco.model.PinnedProduct', products[i]));
+      };
     }
   },
 
@@ -92,26 +94,81 @@ Ext.define('Taco.view.searchTuningRule.PinnedProductGrid', {
     actions = Ext.Array.merge(actions, originalActions);
 
     return actions;
+  },
+
+  getColumnConfig: function () {
+    var me = this,
+      columns = [
+        {
+          xtype: 'gridcolumn',
+          dataIndex: 'position',
+          stateId: 'position',
+          text: 'Pos',
+          hideable: false,
+          flex: 1
+        },
+        {
+          xtype: 'gridcolumn',
+          dataIndex: 'name',
+          stateId: 'name',
+          text: 'Name',
+          hideable: false,
+          flex: 1,
+          minWidth: 150
+        },
+        {
+          xtype: 'gridcolumn',
+          dataIndex: 'code',
+          stateId: 'code',
+          text: 'Code',
+          hideable: true,
+          flex: 1
+        },
+        {
+          xtype: 'gridcolumn',
+          dataIndex: 'price',
+          stateId: 'price',
+          text: 'Price',
+          hideable: true,
+          flex: 1
+        },
+        {
+          xtype: 'gridcolumn',
+          dataIndex: 'salePrice',
+          stateId: 'salePrice',
+          text: 'Sale Price',
+          hideable: true,
+          flex: 1
+        },
+        {
+          xtype: 'gridcolumn',
+          dataIndex: 'lastModified',
+          stateId: 'lastModified',
+          text: 'Last Modified',
+          hideable: true,
+          hidden: true,
+          flex: 1
+        },
+        {
+          xtype: 'gridcolumn',
+          dataIndex: 'productType',
+          stateId: 'productType',
+          text: 'Product Type',
+          hideable: true,
+          hidden: true,
+          flex: 1
+        },
+        {
+          xtype: 'gridcolumn',
+          dataIndex: 'productUsage',
+          stateId: 'productUsage',
+          text: 'Product Usage',
+          hideable: true,
+          hidden: true,
+          flex: 1
+        }
+      ];
+
+    return columns;
   }
-
-  //,
-  //getColumnConfig: function () {
-  //    var me = this,
-  //        columns = [
-  //            {
-  //                //xtype: 'gridcolumn',
-  //                dataIndex: 'name',
-  //                stateId: 'name',
-  //                text: 'Name',
-  //                hideable: false,
-  //                flex: 1,
-  //                minWidth: 150
-  //                //renderer: function (value, metaData, record, rowIndex, colIndex, store) {
-  //                //    return '<a href="#" class="taco-launch-editor">' + (value + '</a>');
-  //                //}
-  //            }
-  //        ];
-
-  //    return columns;
-  //}
 });
