@@ -400,6 +400,12 @@
             "includeSelf": true,
             "returnType": "contact"
         },
+        "update-contact": {
+            "verb": "PUT",
+            "template": "{+customerService}{accountId}/contacts/{id}",
+            "includeSelf": true,
+            "returnType": "contact"
+        },
         "get-contacts": {
             "template": "{+customerService}{id}/contacts",
             "includeSelf": true,

@@ -2995,6 +2995,7 @@
     <Content Include="Themes\Core9\templates\Widgets\cms\video.hypr" />
     <Content Include="Themes\Core9\templates\Widgets\location\store-locator.hypr" />
     <Content Include="Themes\Core9\templates\Widgets\misc\category-navigation.hypr" />
+    <Content Include="Themes\Core9\templates\modules\common\address-list.hypr.live" />
     <Content Include="Themes\Core9\templates\Widgets\misc\instock-request.hypr" />
     <Content Include="Themes\Core9\templates\Widgets\misc\pickels.hypr" />
     <Content Include="Themes\Core9\templates\Widgets\social\addthis.hypr" />
