@@ -73,8 +73,12 @@ namespace Mozu.SiteBuilder.UX.Hypr.Tags
             var filter = arguments.GetValueOrDefault<string>("query" , arguments.GetValueOrDefault<string>("filter"));
             var searchQueryString = arguments.GetValueOrDefault<string>("searchQuery", "*:*");
             var sort = arguments.GetValueOrDefault<string>("sort");
-            
-            var productCodes = arguments.GetValueOrDefault<IEnumerable>("productCodes");
+
+            IEnumerable productCodes = null;
+            if ( !arguments.TryGetValue< IEnumerable>("productCodes", out productCodes ))
+            {
+                productCodes = null;
+            }
             var cacheResults = arguments.GetValueOrDefault<bool>("cacheResults", true);
             var facetHierDepthInt = arguments.GetValueOrDefault<int>("facetHierDepth", 2);
             var responseFields = arguments.GetValueOrDefault<string>("responseFields");
