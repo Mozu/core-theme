@@ -70,12 +70,48 @@ Ext.define('Taco.view.searchTuningRule.grid.CategoryGrid', {
 
         this.columns = Ext.Array.clone(this.getColumnConfig());
 
-        this.store = Ext.create('Taco.store.Categories');
+        this.store = this.getStore();
+
+        // once the passed in category store loads, if we have categoryFilters
+        // we will load the store with those records
+        if (this.record && this.record.get('categoryFilters') && this.catStore) {
+            this.catStore.on('load', function() {
+                //filter for the records which match our codes, then add to store
+            });
+        }
 
         me.callParent(arguments);
+    },
 
-        // this.mixins.gridcontextmenu.constructor.apply(this);
+    listeners: {
 
+        recordadded: function(records) {
+            this.store.add(records);
+
+            this.updateRecord(this.store.data.items);
+        }
+
+    },
+
+    updateRecord: function(records) {
+        var catFilters = this.record.get('categoryFilters');
+
+        this.record.set('categoryFilters', []);
+
+        records.forEach(function(rec) {
+            catFilters.push(rec.get('categoryCode')); 
+        }, this);
+    },
+
+    doDelete: function(record) {
+        this.store.remove(record);
+    },
+
+    getStore: function() {
+        return Ext.create('Ext.data.Store', {
+            fields:  ['name', 'type'],
+            data: []
+        });
     },
 
     // override this method and adjust the columns if your need a grid with a subset of columns;

@@ -88,7 +88,7 @@ Ext.define('Taco.view.searchTuningRule.ContextForm', {
             },
             listeners: {
                 select: function (cmp, record) {
-                    me.categoryGrid.store.add(record);
+                    me.categoryGrid.fireEvent('recordadded', record);
                     cmp.reset();
                 },
                 scope: this
@@ -96,9 +96,10 @@ Ext.define('Taco.view.searchTuningRule.ContextForm', {
         });
 
         this.categoryGrid = Ext.create('Taco.view.searchTuningRule.grid.CategoryGrid', {
-            name: 'keywords',
+            name: 'categoryFilters',
             record: this.record,
-            width: '100%'
+            width: '100%',
+            catStore: catStore
         });
 
         this.categoriesBox = Ext.create('Ext.form.FieldContainer', {
@@ -198,7 +199,7 @@ Ext.define('Taco.view.searchTuningRule.ContextForm', {
 
         this.modal.on({
             savesuccess: function (modal, records) {
-                me.categoryGrid.store.add(records[0]);
+                me.categoryGrid.fireEvent('recordadded', records);
             },
             aftercancelclose: function () {
                 me.reloadStore(list);
