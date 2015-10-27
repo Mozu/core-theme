@@ -124,7 +124,7 @@ namespace Mozu.SiteBuilder.Mvc.Tags
                     return Uncached(walker);
                 }
 
-                bool disabled = IsDisabled(arguments, pageCtx); ;
+                bool disabled = IsDisabled(arguments, pageCtx, siteCtx); ;
 
               
 
@@ -153,7 +153,7 @@ namespace Mozu.SiteBuilder.Mvc.Tags
                 }
             }
 
-            private bool IsDisabled ( ArgumentCollection arguments, PageContext pageCtx)
+            private bool IsDisabled ( ArgumentCollection arguments, PageContext pageCtx, SiteContext siteCtx)
             {
                
 
@@ -189,8 +189,32 @@ namespace Mozu.SiteBuilder.Mvc.Tags
                 }
                 else
                 {
+                   
                     //work around for peops using just page paras for faceting...
-                    return arguments.Any(x => x.Value != null && (x.Value is PagingParameters || x.Value is SortingParameters)) && (pageCtx.Search.Facets.Count > 0 || !string.IsNullOrEmpty(pageCtx.Search.Query));
+                    return arguments.Any(x =>
+                    {
+                        var sp = x.Value as SortingParameters;
+                        if (sp != null && (!string.IsNullOrWhiteSpace(sp.Sort) && sp.Sort != (siteCtx.ThemeSettings["defaultSort"] ?? "").ToString()))
+                        {
+                            return true;
+                        }//siteContext.ThemeSettings["defaultPageSize"]
+                        var pp = x.Value as PagingParameters; 
+                        if (pp != null &&  (pp.StartIndex.GetValueOrDefault(0) > 0 || ( pp.PageSize.HasValue  && pp.StartIndex.GetValueOrDefault(0).ToString() != (siteCtx.ThemeSettings["defaultPageSize"] ?? "").ToString())))
+                        {
+                            return true;
+                        }
+                        if (pageCtx.Search.Facets.Count > 0 )
+                        {
+                            return true;
+                        }
+                        if (!string.IsNullOrEmpty(pageCtx.Search.Query))
+                        {
+                            return true;
+                        }
+
+                        return false;
+                    });
+                      
                 }
                 return false;
                

@@ -530,7 +530,8 @@ namespace Mozu.SiteBuilder.Mvc.Helpers
             int catId;
             if (facetPairKey.Equals("categoryId", StringComparison.OrdinalIgnoreCase) && int.TryParse(facetPairValue, out catId))
             {
-                return MakeCategoryUrl(catId, null, true);
+                var url = MakeCategoryUrl(catId, null, false);
+                return searchContext.ToUrl(new SearchContextOverrides() { UrlBase = url , StartIndex = 0});
             }
 
             return MakeUrlForAllOtherFacetTypes(routeData, searchContext, isApplied, facetPairKey, facetPairValue);

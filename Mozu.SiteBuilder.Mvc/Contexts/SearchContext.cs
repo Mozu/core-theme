@@ -299,14 +299,15 @@ namespace Mozu.SiteBuilder.Mvc.Contexts
                 queryCollection.Add("startIndex", startIndex.ToString());
             }
 
-            if (categoryId.HasValue)
-            {
-                queryCollection.Add("categoryId", categoryId.Value.ToString());
-            }
+            
 
             if (!string.IsNullOrEmpty(query))
             {
                 queryCollection.Add("query", query);
+                if (categoryId.HasValue)
+                {
+                    queryCollection.Add("categoryId", categoryId.Value.ToString());
+                }
             }
 
             return queryCollection.Count > 0 ? urlBase + "?" + queryCollection.ToString() : urlBase;
