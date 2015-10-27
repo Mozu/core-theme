@@ -26,8 +26,6 @@ Ext.define('Taco.view.searchTuningRule.ContextForm', {
         var me = this;
         Ext.tip.QuickTipManager.init();
 
-        console.log(this);
-
         this.keywordGrid = Ext.create('Taco.view.searchTuningRule.KeywordGrid', {
             name: 'keywords',
             record: this.record,
@@ -90,7 +88,6 @@ Ext.define('Taco.view.searchTuningRule.ContextForm', {
             },
             listeners: {
                 beforeselect: function (cmp, record) {
-                    console.log(record)
                     me.categoryGrid.store.add(record);
                     cmp.setValue(null);
                 },

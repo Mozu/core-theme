@@ -25,6 +25,10 @@ Ext.define('Taco.view.searchTuningRule.PinnedProductForm', {
 
         Ext.tip.QuickTipManager.init();
 
+        me.pinnedGrid = Ext.create('Taco.view.searchTuningRule.PinnedProductGrid', {
+            enableSearch: false
+        });
+
         me.items = [
             {
                 xtype: 'fieldcontainer',
@@ -41,10 +45,6 @@ Ext.define('Taco.view.searchTuningRule.PinnedProductForm', {
 
         me.callParent(arguments);
     },
-
-    pinnedGrid: Ext.create('Taco.view.searchTuningRule.PinnedProductGrid', {
-        enableSearch: false
-    }),
 
     onDestroy: function () {
         var me = this;

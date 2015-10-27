@@ -39,7 +39,6 @@ Ext.define('Taco.view.searchTuningRule.modal.SearchTuningRuleEditor', {
     },
     
     initComponent: function (eOpts) {
-        debugger;
         var me = this;
 
         this.layout = {

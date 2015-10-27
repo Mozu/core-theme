@@ -24,6 +24,10 @@ Ext.define('Taco.view.searchTuningRule.BlockedProductForm', {
 
         Ext.tip.QuickTipManager.init();
 
+        me.blockedGrid = Ext.create('Taco.view.searchTuningRule.BlockedProductGrid', {
+            enableSearch: false
+        });
+
         me.items = [
             {
                 xtype: 'fieldcontainer',
@@ -40,10 +44,6 @@ Ext.define('Taco.view.searchTuningRule.BlockedProductForm', {
 
         me.callParent(arguments);
     },
-
-    blockedGrid: Ext.create('Taco.view.searchTuningRule.BlockedProductGrid', {
-        enableSearch: false
-    }),
 
     onDestroy: function () {
         var me = this;
