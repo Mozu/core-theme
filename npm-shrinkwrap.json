@@ -1,6 +1,6 @@
 {
   "name": "mozu-core5",
-  "version": "8.0.0",
+  "version": "8.0.1",
   "dependencies": {
     "JSV": {
       "version": "4.0.2",
