@@ -14,13 +14,13 @@
     
     <div>
         <a href="javascript:;" data-mz-action="beginAddContact">{{labels.addAddress}}</a>
-        {% if  model.state != 'edit'%}
+          {% if  model.updateMode != 'edit'%}
             <a class="mz-accountaddressbook-edit" href="javascript:;" data-mz-action="beginEditContact" data-mz-contact="{{model.contactId}}">{{labels.editAddress}}</a>
         {% endif %}
 
     </div>
 
-    {% if model.contactId == "new"  || model.state == 'edit'%}
+    {% if model.contactId == "new"  || model.updateMode == 'edit'%}
           <div class="mz-contactselector-contact mz-contactselector-new mz-checkoutform-shipping">
               <span class="mz-contactselector-summarywrapper">
                     {% block enter-new-form %}
