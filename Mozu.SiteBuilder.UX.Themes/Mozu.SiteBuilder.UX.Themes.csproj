@@ -3001,6 +3001,7 @@
     <Content Include="Themes\Core9\templates\Widgets\social\addthis.hypr" />
     <Content Include="Themes\Core9\theme-ui.json" />
     <Content Include="Themes\Core9\theme.json" />
+    <Content Include="Themes\Core9\templates\modules\common\contact-selector-radio.hypr.live" />
     <None Include="Web.CI.config">
       <DependentUpon>Web.config</DependentUpon>
     </None>

@@ -15,16 +15,16 @@
       <span class="mz-contactselector-inputwrapper">
         <div>
           <a href="javascript:;" data-mz-action="beginAddContact">{{labels.addAddress}}</a>
-          {% if  model.state != 'edit'%}
-                <a class="mz-accountaddressbook-edit" href="javascript:;" data-mz-action="beginEditContact" data-mz-contact="{{model.contactId}}">{{labels.editAddress}}</a>
+          {% if  model.updateMode != 'edit'%}
+          <a class="mz-accountaddressbook-edit" href="javascript:;" data-mz-action="beginEditContact" data-mz-contact="{{model.contactId}}">{{labels.editAddress}}</a>
           {% endif %}
 
         </div>
       </span>
     </label>
 
-    {% if model.contactId == "new"  || model.state == 'edit'%}
-          <div class="mz-contactselector-contact mz-contactselector-new">
+    {% if model.contactId == "new"  || model.updateMode == 'edit'%}
+    <div class="mz-contactselector-contact mz-contactselector-new">
               <span class="mz-contactselector-summarywrapper">
                     {% block enter-new-form %}
                       {% include "modules/common/address-form" with model=editingContact %}
