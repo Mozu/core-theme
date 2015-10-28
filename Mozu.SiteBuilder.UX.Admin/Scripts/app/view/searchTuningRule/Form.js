@@ -15,6 +15,7 @@ Ext.define('Taco.view.searchTuningRule.Form', {
     createTitle: 'New Rule',
     editTitle: '{[values.record.data.name]}',
     isCatalogLevel: false,
+    categoryCode: null,
 
     initComponent: function () {
 
@@ -37,6 +38,7 @@ Ext.define('Taco.view.searchTuningRule.Form', {
                 itemId: 'context',
                 parentForm: this,
                 record: me.record,
+                categoryCode: me.categoryCode,
                 manageHeight: true
             },
             {

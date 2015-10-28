@@ -20,11 +20,10 @@ Ext.define('Taco.view.searchTuningRule.modal.SearchTuningRuleEditor', {
     height: '90%',
     title: 'New Rule',
     width: '80%',
-    //createType: '',
     isCreateMode: true,
     record: null,
+    categoryCode: null,
     closeOnSave: true,
-    isCatalogLevel: false,
 
     actionColumnWidth: 50,
 
@@ -54,8 +53,6 @@ Ext.define('Taco.view.searchTuningRule.modal.SearchTuningRuleEditor', {
         this.callParent(arguments);
     },
 
-
-
     onEsc : Ext.emptyFn,
 
     /**
@@ -65,7 +62,7 @@ Ext.define('Taco.view.searchTuningRule.modal.SearchTuningRuleEditor', {
 
         this.callParent(arguments);
 
-        if (!this.record) {
+        if (!this.isCreateMode) {
             this.loadRecord();
         } else {
             this.onLoadRecord();
@@ -76,7 +73,7 @@ Ext.define('Taco.view.searchTuningRule.modal.SearchTuningRuleEditor', {
     /**
      * Call the service to reload the data.
      */
-    reloadData: function () {        
+    reloadData: function () {
         this.loadRecord();
     },
 
@@ -88,29 +85,30 @@ Ext.define('Taco.view.searchTuningRule.modal.SearchTuningRuleEditor', {
 
         if (me.isCreateMode) return;
 
-        var
-            code = me.record ? me.record.get('code') : null,
-            searchTuningRuleModel = Ext.ModelManager.getModel('Taco.model.SearchTuningRule');
-        
-         me.setLoading({
-             msg: "Loading"
-         }, me.body);
-        
-        searchTuningRuleModel.load(code, {
-            failure: function () {
-                Taco.app.fireEvent('setmessage', "Error loading Search Tuning Rule", 'error');
-                me.setLoading(false, this.body);
-            },
-            success: function (record) {
-                me.record = record;
-                me.onLoadRecord();
-            },
-            callback: function (record, operation) {
-                //do something whether the load succeeded or failed
+        me.setLoading({
+            msg: "Loading"
+        }, me.body);
+
+        var singleStore = Taco.core.data.StoreManager.getOrCreate({
+            type: 'Taco.store.SearchTuningRules',
+            createOnly: true,
+            autoLoad: false,
+            clearFilters: true,
+            remoteFilter: true
+        });
+        singleStore.proxy.extraParams = singleStore.proxy.extraParams || {};
+        singleStore.proxy.extraParams.id = this.record.get('code');
+        singleStore.proxy.extraParams.siteId = this.record.get('siteId');
+        singleStore.load({
+            scope: this,
+            callback: function(records, operation, success) {
+                if (success && records.length > 0)
+                    me.record = records[0];
+                    me.onLoadRecord();
             }
         });
     },
-    
+
     // when the draft record has loaded create and add the total and grid and hide the loading mask;
     onLoadRecord : function() {
         this.setLoading(false, this.body);
@@ -128,8 +126,12 @@ Ext.define('Taco.view.searchTuningRule.modal.SearchTuningRuleEditor', {
             autoScroll:true,
             record: me.record,
             isCreate: me.isCreateMode,
-            isCatalogLevel: me.isCatalogLevel,
-            isPopUp: true
+            isCatalogLevel: true,
+            categoryCode: me.categoryCode,
+            isPopUp: true,
+            getWrapper: function() {
+                return this;
+            }
         });
 
         me.items = [

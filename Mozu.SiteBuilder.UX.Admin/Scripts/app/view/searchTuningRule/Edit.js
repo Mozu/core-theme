@@ -29,11 +29,8 @@ Ext.define('Taco.view.searchTuningRule.Edit', {
             });
         }
     },
-    isPopUp: false,
 
     isCreate:true,
-
-    isCatalogLevel: false,
 
     //enableNextPrevious: true,
 
@@ -58,15 +55,8 @@ Ext.define('Taco.view.searchTuningRule.Edit', {
         //}
         me.formCfg = {
             record: me.record,
-            isCatalogLevel: me.isCatalogLevel
+            isCatalogLevel: false
         };
-
-        if (me.isPopUp) {
-            //me.enableNextPrevious = false;
-            me.enableNavHeader = false;
-            this.callParent(arguments);
-            return;
-        }
 
         me.enableNavHeader = true;
         //me.saveAndCreateButtonEnabled = true;

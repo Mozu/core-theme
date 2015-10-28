@@ -21,6 +21,7 @@ Ext.define('Taco.view.searchTuningRule.ContextForm', {
     config: {
         isCreateMode: false
     },
+    categoryCode: null,
 
     initComponent: function() {
         var me = this;

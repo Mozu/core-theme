@@ -61,7 +61,14 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
         {
             if (pagingParams.id != null)
             {
-                var singleSearchTuningRule = (await _searchWebApiClient.GetSearchTuningRule(pagingParams.id)).ReadAsSync();
+                var searchClient = _searchWebApiClient;
+                var siteIdQueryString = extFilter.QueryString.Get("siteId");
+                int siteId;
+                if (!string.IsNullOrEmpty(siteIdQueryString) && int.TryParse(siteIdQueryString, out siteId))
+                {
+                    searchClient = GetSearchClientForSite(siteId);
+                }
+                var singleSearchTuningRule = (await searchClient.GetSearchTuningRule(pagingParams.id)).ReadAsSync();
 
                 return List2(Mapper.Map<SearchTuningRule>(singleSearchTuningRule));
             }

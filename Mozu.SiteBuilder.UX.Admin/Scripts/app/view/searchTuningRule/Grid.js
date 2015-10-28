@@ -378,10 +378,10 @@ Ext.define('Taco.view.searchTuningRule.Grid', {
         Ext.create('Taco.view.searchTuningRule.modal.SearchTuningRuleEditor', {
             record: record,
             isCreateMode: isNew,
-            isCatalogLevel: me.isCatalogLevel,
+            categoryCode: (isNew) ? me.categoryCode : null,
             listeners: {
-                savesuccess: function() {
-                  me.store.reload();
+                savesuccess: function () {
+                    me.store.reload();
                 }
             }
         });
