@@ -12,6 +12,7 @@ define(['jquery', 'shim!vendor/datetimepicker/jquery-simple-datetimepicker[jquer
                 this.options = {
                     autodateOnStart: true,
                     currentTime: this.getCookie(),
+                    futureOnly: true,
                     onInit: function(handler) {
                         me.picker = handler;
                         me.setDate(me.getCookie());
