@@ -205,6 +205,7 @@ require(["modules/jquery-mozu", "underscore", "hyprlive", "modules/backbone-mozu
             var me = this;
             this.editing.savedCard = true;
             this.editing.updateSavedCard = true;
+            this.render();
         },
         beginEditingBillingAddress: function() {
             this.editing.savedBillingAddress = true;
