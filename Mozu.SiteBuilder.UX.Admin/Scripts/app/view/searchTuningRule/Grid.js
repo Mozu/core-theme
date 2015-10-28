@@ -381,6 +381,9 @@ Ext.define('Taco.view.searchTuningRule.Grid', {
             categoryCode: (isNew) ? me.categoryCode : null,
             listeners: {
                 savesuccess: function () {
+                    if (me.store.proxy.extraParams.id) {
+                        delete me.store.proxy.extraParams.id;
+                    }
                     me.store.reload();
                 }
             }

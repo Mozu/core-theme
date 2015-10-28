@@ -85,8 +85,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
                 return List2(mapped);
             }
 
-            // todo: call product admin to get products? - Greg Murray on 2015-10-14 
-
+            var searchListClient = _searchWebApiClient;
 
             var query = extFilter.QueryString.Get("query");
             if (!String.IsNullOrEmpty(query))
@@ -98,6 +97,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
             if (!String.IsNullOrEmpty(categoryCode))
             {
                 extFilter.Add(new FilterCollectionItem { comparison = "eq", field = "categorycode", value = categoryCode });
+                searchListClient = GetSearchClientForSite((int?) null);
             }
 
             string filter = null;
@@ -109,7 +109,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
 
             try
             {
-                var searchTuningRuleList = (await _searchWebApiClient.GetSearchTuningRules(pagingParams.startIndex, pagingParams.pageSize, sortBy:sortBy, filter:filter)).ReadAsSync();
+                var searchTuningRuleList = (await searchListClient.GetSearchTuningRules(pagingParams.startIndex, pagingParams.pageSize, sortBy:sortBy, filter:filter)).ReadAsSync();
                 
                 var searchTuningRules = Mapper.Map<List<SearchTuningRule>>(searchTuningRuleList.Items);
 
@@ -316,14 +316,14 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
             return SuccessWithTotal2<SearchTuningRule>(tuningRules.Count);
         }
 
-        private ISearchWebApiClient GetSearchClientForSite(int siteId)
+        private ISearchWebApiClient GetSearchClientForSite(int? siteId)
         {
             _lazySearchClient = new Lazy<ISearchWebApiClient>(() =>
                 _searchWebApiClient.CloneWithApiContext(x => SetSite(x, siteId)));
             return _lazySearchClient.Value;
         }
 
-        private void SetSite(ApiContext apiContext, int siteId)
+        private void SetSite(ApiContext apiContext, int? siteId)
         {
             apiContext.SiteId = siteId;
         }

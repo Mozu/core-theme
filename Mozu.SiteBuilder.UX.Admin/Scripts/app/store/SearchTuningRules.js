@@ -1,5 +1,5 @@
 ﻿/**
- * @class Taco.store.CouponSets
+ * @class Taco.store.SearchTuningRules
  */
 
     Ext.define('Taco.store.SearchTuningRules', {

@@ -160,6 +160,7 @@ Ext.define('Taco.view.searchTuningRule.modal.SearchTuningRuleEditor', {
         if (!okToSave) {
             return false;
         }
+        this.record = me.form.record;
         this.record.save({
             success: onSuccess,
             failure: function(item, response) {
