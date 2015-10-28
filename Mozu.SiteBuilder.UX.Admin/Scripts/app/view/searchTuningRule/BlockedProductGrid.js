@@ -38,6 +38,7 @@ Ext.define('Taco.view.searchTuningRule.BlockedProductGrid', {
    enableEditAction: false,
    enableDuplicateAction: false,
    enableDeleteAction: false,
+   enablePaging: false,
 
    enableAutoSelect:false,
 
@@ -50,53 +51,107 @@ Ext.define('Taco.view.searchTuningRule.BlockedProductGrid', {
     me.viewConfig = me.viewConfig || {};
     me.viewConfig.deferEmptyText = me.deferEmptyText;
 
+    me.columns = me.getColumnConfig();
+
     me.store = Ext.create('Ext.data.Store', {
       fields: ['code', 'price', 'salePrice'],
       data: []
     });
 
+    if (me.showActionsColumn) {
+        var actionColumn = me.getActionColumn();
+        if (actionColumn) {
+            me.columns.push(actionColumn);
+        }
+    }
+
     me.callParent(arguments);
 
    },
 
-  listeners: {
-    afterrender: function() {
-      var record = this.up('#taco-searchTuningRule-form').record;
-      var products = record.data.blockedProducts;
+    listeners: {
+        afterrender: function() {
+            var record = this.up('#taco-searchTuningRule-form').record;
+            var products = record.data.blockedProducts;
 
-      for (var i = products.length - 1; i >= 0; i--) {
-        this.store.data.add(Ext.create('Taco.model.BlockedProduct', products[i]));
-      };
-    }
-  },
+            for (var i = products.length - 1; i >= 0; i--) {
+                this.store.data.add(Ext.create('Taco.model.BlockedProduct', products[i]));
+            };
+        },
+        recordadded: function(records) {
 
-   getActionItems: function() {
-       var me = this,
-           actions = [],
-           originalActions;
-        
-       originalActions = this.callParent(arguments);
-        
-       actions.push({
-           text: 'Remove',
-           menuColumnHandler: function(item, eventData) {
-               var record = eventData.record;
-               me.removeDiscount(record);
-           }
-       });
+            var me = this,
+                findFunc = function(rec) {
+                    return me.store.find(me.filterProperty, rec.get(me.filterProperty)) === -1;
+                },
+                recordsToAdd =[];
 
-       actions = Ext.Array.merge(actions, originalActions);
+            if (!records) {
+                console.warn('No record found!');
+                return false;
+            }
 
-       return actions;
-   },
+            if (Ext.isArray(records)) {
+                Ext.Array.each(records, function(rec) {
+                    if (findFunc(rec)) {
+                        recordsToAdd.push(rec);
+                    }
+                });
+            }
+
+            else { 
+                if (findFunc(records)) {
+                    recordsToAdd.push(records);
+                }
+            }
+
+            me.store.add(recordsToAdd);
+
+        }
+    },
+
+    removeProduct: function(record) {
+        this.store.remove(record);
+    },
+
+    getActionColumn: function () {
+        var me = this,
+            actionColumn = null,
+            actions = this.getActionItems();
+
+        // as long as we have actions;
+        if (actions.length) {
+            actionColumn = {
+                xtype: 'taco.menucolumn',
+                text: 'Actions',
+                menuItems: actions
+            }
+        }
+
+        return actionColumn;
+    },
+
+    getActionItems: function() {
+        var me = this,
+            actions = [];
+                   
+        actions.push({
+          text: 'Remove',
+          menuColumnHandler: function(item, eventData) {
+            var record = eventData.record;
+            me.removeProduct(record);
+          }
+        });
+
+        return actions;
+    },
   
   getColumnConfig: function () {
     var me = this,
       columns = [
         {
           xtype: 'gridcolumn',
-          dataIndex: 'name',
-          stateId: 'name',
+          dataIndex: 'productName',
           text: 'Name',
           hideable: false,
           flex: 1,
@@ -104,8 +159,7 @@ Ext.define('Taco.view.searchTuningRule.BlockedProductGrid', {
         },
         {
           xtype: 'gridcolumn',
-          dataIndex: 'code',
-          stateId: 'code',
+          dataIndex: 'productCode',
           text: 'Code',
           hideable: true,
           flex: 1
@@ -113,7 +167,6 @@ Ext.define('Taco.view.searchTuningRule.BlockedProductGrid', {
         {
           xtype: 'gridcolumn',
           dataIndex: 'price',
-          stateId: 'price',
           text: 'Price',
           hideable: true,
           flex: 1
@@ -121,24 +174,23 @@ Ext.define('Taco.view.searchTuningRule.BlockedProductGrid', {
         {
           xtype: 'gridcolumn',
           dataIndex: 'salePrice',
-          stateId: 'salePrice',
           text: 'Sale Price',
           hideable: true,
           flex: 1
         },
         {
           xtype: 'gridcolumn',
-          dataIndex: 'lastModified',
-          stateId: 'lastModified',
+          sortable: false,
+          dataIndex: 'lastModifiedDate',
           text: 'Last Modified',
           hideable: true,
           hidden: true,
-          flex: 1
+          flex: 1,
+          renderer: Ext.util.Format.dateRenderer('d M, Y, g:i a')
         },
         {
           xtype: 'gridcolumn',
           dataIndex: 'productType',
-          stateId: 'productType',
           text: 'Product Type',
           hideable: true,
           hidden: true,
@@ -147,7 +199,6 @@ Ext.define('Taco.view.searchTuningRule.BlockedProductGrid', {
         {
           xtype: 'gridcolumn',
           dataIndex: 'productUsage',
-          stateId: 'productUsage',
           text: 'Product Usage',
           hideable: true,
           hidden: true,
