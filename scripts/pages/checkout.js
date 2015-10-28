@@ -84,23 +84,23 @@ require(["modules/jquery-mozu", "underscore", "hyprlive", "modules/backbone-mozu
             'phoneNumbers.home',
             'contactId',
             'email',
-            'state'
+            'updateMode'
         ],
         renderOnChange: [
             'address.countryCode',
             'contactId',
-            'state'
+            'updateMode'
         ],
         beginAddContact: function () {
             this.model.set('contactId', 'new');
-            this.model.set('state', 'addNew');
+            this.model.set('updateMode', 'addNew');
         },
         beginEditContact: function (e) {
-            this.model.set('state', 'edit');
+            this.model.set('updateMode', 'edit');
         },
         savedAddressSelected: function (e) {
             if (this.model.get('contactId') != e.currentTarget.value) {
-                this.model.set('state', 'savedAddress');
+                this.model.set('updateMode', 'savedAddress');
             }
         }
     });

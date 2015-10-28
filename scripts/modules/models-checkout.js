@@ -162,8 +162,8 @@
                     return false;
                 }
 
-                if (this.get('state') == 'edit') {
-                    this.set('state', 'editComplete');
+                if (this.get('updateMode') === 'edit') {
+                    this.set('updateMode', 'editComplete');
                 }
 
                 var parent = this.parent,
@@ -1285,7 +1285,7 @@
                     contactInfo = this.get(infoName),
                     contact = contactInfo.get(contactName).toJSON(),
                     process = [function () {
-                        if (contact.state && contact.state === 'editComplete') {
+                        if (contact.updateMode && contact.updateMode === 'editComplete') {
                             return customer.apiModel.updateContact(contact).then(function (contactResult) {
                                 return contactResult;
                             });
@@ -1323,7 +1323,7 @@
                 var contactId = contact.contactId;
                 if (contactId) contact.id = contactId;
 
-                if (!contact.id || contact.id === -1 || contact.id === 1 || contact.id === 'new' || (contact.state && contact.state === 'editComplete')) {
+                if (!contact.id || contact.id === -1 || contact.id === 1 || contact.id === 'new' || (contact.updateMode && contact.updateMode === 'editComplete')) {
                     contact.types = contactTypes;
                     return api.steps(process);
                 } else {
