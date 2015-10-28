@@ -72,6 +72,13 @@ Ext.define('Taco.view.searchTuningRule.grid.CategoryGrid', {
             console.warn('A Category is expected to be passed into this component!');
         }
 
+        if (!this.filterProperty) {
+             console.warn('A filterProperty is expected to be passed into this component!');
+        }
+
+        //the property for which the grid will add/update the store
+        this.filterProperty = this.filterProperty || 'categoryCode';
+
         this.columns = Ext.Array.clone(this.getColumnConfig());
 
         this.store = this.getStore();
@@ -84,7 +91,33 @@ Ext.define('Taco.view.searchTuningRule.grid.CategoryGrid', {
     listeners: {
 
         recordadded: function(records) {
-            this.store.add(records);
+
+            var me = this,
+                findFunc = function(rec) {
+                    return me.store.find(me.filterProperty, rec.get(me.filterProperty)) === -1;
+                }, 
+                recordsToAdd =[];
+
+            if (!records) {
+                console.warn('No record found!');
+                return false;
+            }
+
+            if (Ext.isArray(records)) {
+                Ext.Array.each(records, function(rec) {
+                    if (findFunc(rec)) {
+                        recordsToAdd.push(rec);
+                    }
+                });
+            }
+
+            else { 
+                if (findFunc(records)) {
+                    recordsToAdd.push(records);
+                }
+            }
+
+            this.store.add(recordsToAdd);
         }
 
     },
@@ -105,7 +138,7 @@ Ext.define('Taco.view.searchTuningRule.grid.CategoryGrid', {
             this.catStore.on('load', function(store) {
             
                 store.each(function(rec) {
-                    if (rec.get('categoryCode') && filterIds.indexOf(rec.get('categoryCode')) != -1)  {
+                    if (rec.get(me.filterProperty) && filterIds.indexOf(rec.get(me.filterProperty)) != -1)  {
                         me.store.add(rec);
                     }   
                 });
