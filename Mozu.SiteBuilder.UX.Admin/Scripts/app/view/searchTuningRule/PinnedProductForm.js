@@ -33,9 +33,9 @@ Ext.define('Taco.view.searchTuningRule.PinnedProductForm', {
         var productStore = Taco.core.data.StoreManager.getOrCreate({
             type: 'Taco.store.Products',
             createOnly: true,
-            autoLoad: true,
+            autoLoad: false,
             clearFilters: false,
-            remoteFilter: false,
+            remoteFilter: true,
             filters: function (record) {
                 //return Ext.Array.indexOf((me.get('categories') || []), record.getId()) > -1;
             }
