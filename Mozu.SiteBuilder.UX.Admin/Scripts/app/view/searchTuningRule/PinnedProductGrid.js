@@ -126,6 +126,10 @@ Ext.define('Taco.view.searchTuningRule.PinnedProductGrid', {
         }
     },
 
+    removeProduct: function(record) {
+        this.store.remove(record);
+    },
+
     getActionColumn: function () {
         var me = this,
             actionColumn = null,
@@ -145,20 +149,15 @@ Ext.define('Taco.view.searchTuningRule.PinnedProductGrid', {
 
     getActionItems: function() {
         var me = this,
-            actions = [],
-            originalActions;
-            
-        originalActions = me.callParent(arguments);
-            
+            actions = [];
+                   
         actions.push({
           text: 'Remove',
           menuColumnHandler: function(item, eventData) {
             var record = eventData.record;
-            me.removeDiscount(record);
+            me.removeProduct(record);
           }
         });
-
-        actions = Ext.Array.merge(actions, originalActions);
 
         return actions;
     },
