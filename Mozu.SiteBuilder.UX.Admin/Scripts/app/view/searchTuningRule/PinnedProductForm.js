@@ -11,6 +11,7 @@ Ext.define('Taco.view.searchTuningRule.PinnedProductForm', {
         'Taco.view.searchTuningRule.PinnedProductGrid'
     ],
     ui: 'subform',
+    itemId: 'taco-pinnedProduct-form',
 
     margin: '0 0 20 0',
 
@@ -79,6 +80,7 @@ Ext.define('Taco.view.searchTuningRule.PinnedProductForm', {
             displayField: 'text',
             valueField: 'value',
             forceSelection: true,
+            editable: false,
             margin: '10 0 10 10',
             store: Ext.create('Ext.data.Store', {
                 fields: ['text', 'value'],
@@ -88,7 +90,12 @@ Ext.define('Taco.view.searchTuningRule.PinnedProductForm', {
                     { text: 'Insert above selected', value: 'above' },
                     { text: 'Insert below selected', value: 'below' }
                 ]
-            })
+            }),
+            listeners: {
+                afterrender: function (args) {
+                    this.select(this.getStore().getAt(0));
+                }
+            }
         })
 
         me.productForm = Ext.create('Ext.container.Container', {

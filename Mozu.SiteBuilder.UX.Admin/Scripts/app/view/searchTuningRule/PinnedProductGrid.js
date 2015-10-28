@@ -37,6 +37,7 @@ Ext.define('Taco.view.searchTuningRule.PinnedProductGrid', {
   enableDuplicateAction: false,
   enableDeleteAction: false,
   enableAutoSelect:false,
+  filterProperty: 'productCode',
 
   initComponent: function() {
     var me = this;
@@ -72,8 +73,14 @@ Ext.define('Taco.view.searchTuningRule.PinnedProductGrid', {
         var me = this,
             findFunc = function(rec) {
                 return me.store.find(me.filterProperty, rec.get(me.filterProperty)) === -1;
-            }, 
-            recordsToAdd =[];
+            },
+            recordsToAdd =[],
+            form = this.up('#taco-searchTuningRule-form').pinned,
+            placement = form.placementSelect.getValue(),
+            grid = form.pinnedGrid,
+            selectionModel = grid.getSelectionModel(),
+            selection = selectionModel.getSelection(),
+            index;
 
         if (!records) {
             console.warn('No record found!');
@@ -94,7 +101,22 @@ Ext.define('Taco.view.searchTuningRule.PinnedProductGrid', {
             }
         }
 
-        this.store.add(recordsToAdd);
+        switch (placement) {
+            case 'top':
+                index = 0;
+                break;
+            case 'bottom': 
+                index = grid.store.getCount();
+                break;
+            case 'above':
+                index = (selection[0]) ? grid.store.indexOf(selection[0]) : 0;
+                break;
+            case 'below':
+                index = (selection[0]) ? grid.store.indexOf(selection[0]) + 1 : grid.store.getCount();
+                break;
+        }
+
+        this.store.insert(index, recordsToAdd);
     }
   },
 
@@ -123,16 +145,19 @@ Ext.define('Taco.view.searchTuningRule.PinnedProductGrid', {
       columns = [
         {
           xtype: 'gridcolumn',
+          sortable: false,
           dataIndex: 'position',
-          stateId: 'position',
           text: 'Pos',
           hideable: false,
-          width: 100
+          width: 100,
+          renderer: function(cmp, metaData, record, index) {
+            return index + 1;
+          }
         },
         {
           xtype: 'gridcolumn',
+          sortable: false,
           dataIndex: 'productName',
-          stateId: 'productName',
           text: 'Name',
           hideable: false,
           flex: 1,
@@ -140,41 +165,42 @@ Ext.define('Taco.view.searchTuningRule.PinnedProductGrid', {
         },
         {
           xtype: 'gridcolumn',
+          sortable: false,
           dataIndex: 'productCode',
-          stateId: 'productCode',
           text: 'Code',
           hideable: true,
           flex: 1
         },
         {
           xtype: 'gridcolumn',
+          sortable: false,
           dataIndex: 'price',
-          stateId: 'price',
           text: 'Price',
           hideable: true,
           flex: 1
         },
         {
           xtype: 'gridcolumn',
+          sortable: false,
           dataIndex: 'salePrice',
-          stateId: 'salePrice',
           text: 'Sale Price',
           hideable: true,
           flex: 1
         },
         {
           xtype: 'gridcolumn',
-          dataIndex: 'lastModified',
-          stateId: 'lastModified',
+          sortable: false,
+          dataIndex: 'lastModifiedDate',
           text: 'Last Modified',
           hideable: true,
           hidden: true,
-          flex: 1
+          flex: 1,
+          renderer: Ext.util.Format.dateRenderer('d M, Y, g:i a')
         },
         {
           xtype: 'gridcolumn',
-          dataIndex: 'productType',
-          stateId: 'productType',
+          sortable: false,
+          dataIndex: 'productTypeName',
           text: 'Product Type',
           hideable: true,
           hidden: true,
@@ -182,8 +208,8 @@ Ext.define('Taco.view.searchTuningRule.PinnedProductGrid', {
         },
         {
           xtype: 'gridcolumn',
+          sortable: false,
           dataIndex: 'productUsage',
-          stateId: 'productUsage',
           text: 'Product Usage',
           hideable: true,
           hidden: true,
