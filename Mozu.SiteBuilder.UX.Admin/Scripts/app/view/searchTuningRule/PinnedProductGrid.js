@@ -21,9 +21,14 @@ Ext.define('Taco.view.searchTuningRule.PinnedProductGrid', {
     },
 
     viewConfig: {
-    plugins: {
-        ptype: 'gridviewdragdrop'
-    }
+        listeners: {
+            drop: function() {
+                this.refresh();
+            }
+        },
+        plugins: {
+            ptype: 'gridviewdragdrop'
+        }
     },
 
     deferEmtpyText: false,
@@ -36,6 +41,7 @@ Ext.define('Taco.view.searchTuningRule.PinnedProductGrid', {
     enableEditAction: false,
     enableDeleteAction: true,
     enableAutoSelect:false,
+    enablePaging: false,
     filterProperty: 'productCode',
 
     initComponent: function() {
@@ -69,7 +75,6 @@ Ext.define('Taco.view.searchTuningRule.PinnedProductGrid', {
         afterrender: function() {
           var record = this.up('#taco-searchTuningRule-form').record;
           var products = record.data.boostedProducts;
-
           for (var i = 0; i < products.length; i++) {
             this.store.data.add(Ext.create('Taco.model.PinnedProduct', products[i]));
           }
@@ -122,12 +127,19 @@ Ext.define('Taco.view.searchTuningRule.PinnedProductGrid', {
                     break;
             }
 
-            this.store.insert(index, recordsToAdd);
+            me.store.insert(index, recordsToAdd);
+
+            me.refresh();
         }
+    },
+
+    refresh: function() {
+        this.getView().refresh();
     },
 
     removeProduct: function(record) {
         this.store.remove(record);
+        this.refresh();
     },
 
     getActionColumn: function () {
