@@ -5,14 +5,14 @@
         {% endif %}
     </h3>
     <div class="mz-formstep-body">
-        <div class="mz-formstep-summary">
+        <div class="mz-formstep-summary mz-checkoutform">
             {% if model.requiresFulfillmentInfo %}
             <strong>{{ model.shippingMethodName }}</strong> ({{ model.price|currency }})
             {% else %}
             {{ labels.noFulfillmentInfoRequired }}
             {% endif %}
         </div>
-        <div class="mz-formstep-fields mz-l-formfieldgroup mz-checkoutform-active">
+        <div class="mz-formstep-fields mz-l-formfieldgroup mz-checkoutform mz-checkoutform-active">
             {% if model.availableShippingMethods %}
                 {% for method in model.availableShippingMethods %}
                     <div>
