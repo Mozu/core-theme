@@ -268,12 +268,12 @@ namespace Mozu.SiteBuilder.Mvc.Helpers
             var searchContext = _pageContext.Search;
             if (obj is string)
             {
-                return searchContext.ToUrl(new SearchContextOverrides() { SortBy = (string)obj });
+                return searchContext.ToUrl(new SearchContextOverrides() { SortBy = (string)obj, UrlBase =  "/"+  new Uri(this._pageContext.Url).GetComponents(UriComponents.Path, UriFormat.Unescaped) });
             }
             object sortByObj;
             if (config != null && config.TryGetValue("sortBy", out sortByObj) && sortByObj is string)
             {
-                return searchContext.ToUrl(new SearchContextOverrides() { SortBy = (string)sortByObj });
+                return searchContext.ToUrl(new SearchContextOverrides() { SortBy = (string)sortByObj, UrlBase = "/" + new Uri(this._pageContext.Url).GetComponents(UriComponents.Path, UriFormat.Unescaped) });
             }
             return "#";
         }
