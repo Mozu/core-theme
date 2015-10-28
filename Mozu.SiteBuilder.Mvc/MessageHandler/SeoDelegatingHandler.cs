@@ -11,6 +11,8 @@ using Mozu.SiteBuilder.Mvc.SEO;
 using Mozu.SiteBuilder.Mvc.ViewEngine;
 using Mozu.SiteBuilder.UX.Models.Navigation;
 using System.Collections.Specialized;
+using Mozu.SiteBuilder.Mvc.Contexts;
+using Mozu.Core.Extensions;
 
 namespace Mozu.SiteBuilder.Mvc.MessageHandler
 {
@@ -28,8 +30,20 @@ namespace Mozu.SiteBuilder.Mvc.MessageHandler
             set { _redirecter = value; }
         }
 
+        static readonly Regex _reMxClean = new Regex("_mz[^&]+", RegexOptions.IgnoreCase);
+
+        static void CleanMzQuery( HttpRequestMessage message)
+        {
+            if ( message.RequestUri != null && message.RequestUri.PathAndQuery.IndexOf("_mz", StringComparison.OrdinalIgnoreCase)>-1)
+            {
+                message.RequestUri = new Uri(_reMxClean.Replace(message.RequestUri.ToString(), string.Empty));
+            }
+        }
+
+
         protected async override Task<HttpResponseMessage> SendAsync(HttpRequestMessage request, CancellationToken cancellationToken)
         {
+            CleanMzQuery(request);
             var apiContext = request.Resolve<ISiteBuilderApiContext>();
             if (apiContext.SiteId.HasValue == false)
             {
@@ -56,13 +70,25 @@ namespace Mozu.SiteBuilder.Mvc.MessageHandler
             if (request.GetRouteData().Route is NonSystemRoute)
             {
                 var rerouted = await PerformCustomRouting(request).ConfigureAwait(false);
-                return await base.SendAsync(rerouted, cancellationToken).ConfigureAwait(false);
+                return await HandleReroutedRequest(rerouted, cancellationToken, () => base.SendAsync(request, cancellationToken));
             }
 
             return await base.SendAsync(request, cancellationToken).ConfigureAwait(false);
         }
 
+        private async Task<HttpResponseMessage> HandleReroutedRequest(HttpRequestMessage rerouted, CancellationToken cancellationToken, Func<Task<HttpResponseMessage>> continuation)
+        {
+            var customRoute = rerouted.GetRouteData().Route as CustomRoute;
+            if (customRoute == null) return await continuation().ConfigureAwait(false);
 
+            var pageContext = rerouted.Resolve<PageContext>();
+            var currentUrl = new Uri(pageContext.Url);
+            var currentProtocol = currentUrl.Scheme;
+            if (customRoute.UrlScheme.ToStringQuickly().EqualsIgnoreCase(currentUrl.Scheme)) return await continuation().ConfigureAwait(false);
+
+            var redirectLocation = new UriBuilder(customRoute.UrlScheme.ToStringQuickly(), currentUrl.Host, currentUrl.Port, currentUrl.AbsolutePath, currentUrl.Query);
+            return RedirectTo(redirectLocation.Uri.ToString(), true, rerouted);
+        }
 
         private static async Task<HttpRequestMessage> PerformCustomRouting(HttpRequestMessage request)
         {
@@ -95,17 +121,40 @@ namespace Mozu.SiteBuilder.Mvc.MessageHandler
         static HttpRequestMessage RewriteCurrentRequest(HttpRequestMessage request, string destination)
         {
             request.Properties[IsSeoRewrite] = true;
-
             var uri = new Uri("http://localhost/" + destination);
-
 
             // set new uri and clear out the old request context, which was built off of that old uri
             request.RequestUri = uri;
             request.Properties[MS_HTTP_RoutingContextKey] = null;
-
             return request;
         }
     }
+
+
+    public class MzUnderscoreRequestCleaner: DelegatingHandler
+    {
+        static readonly Regex _reMxClean = new Regex("_mz[^&]+&*", RegexOptions.IgnoreCase);
+
+
+        protected  override Task<HttpResponseMessage> SendAsync(HttpRequestMessage request, CancellationToken cancellationToken)
+        {
+            CleanMzQuery(request);
+            return base.SendAsync(request, cancellationToken);
+        }
+        static void CleanMzQuery(HttpRequestMessage message)
+        {
+            if (message.RequestUri != null && message.RequestUri.PathAndQuery.IndexOf("_mz", StringComparison.OrdinalIgnoreCase) > -1)
+            {
+                UriBuilder ub = new UriBuilder(message.RequestUri);
+                if (ub.Query.Length > 1)
+                {
+                    ub.Query = _reMxClean.Replace(ub.Query.Substring(1), string.Empty);
+                    message.RequestUri = ub.Uri;
+                }
+            }
+        }
+    }
+
 
     public interface IRedirectHandler
     {

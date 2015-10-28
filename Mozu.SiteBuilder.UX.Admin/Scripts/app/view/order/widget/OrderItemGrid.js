@@ -29,7 +29,8 @@ Ext.define('Taco.view.order.widget.OrderItemGrid', {
         
         enableToolbar: false,
 
-        autoHeight: true,
+        // WebKit browsers fail to properly calculate height with extreme wrapping.
+        manageHeight: false,
 
         // automatically scroll the grid when it overflows
         autoScroll: true,
@@ -255,7 +256,7 @@ Ext.define('Taco.view.order.widget.OrderItemGrid', {
                     sortable: false,
                     menuDisabled: true,
                     hidden:false,
-                    align: 'left',                                        
+                    align: 'left',
                     dataIndex: 'productCode'
                 },
                 {

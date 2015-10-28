@@ -15,9 +15,8 @@ Ext.define('Taco.model.SearchTuningRule', {
     idProperty: 'id',
     fields: [
         {
-            name: 'id',
-            type: 'int',
-            useNull: true
+            name: 'id', //required for server side.
+            type: 'string'
         }, {
             name: 'code', //required, regex like category/product code.
             type: 'string'
@@ -29,37 +28,62 @@ Ext.define('Taco.model.SearchTuningRule', {
             type: 'string'
         }, {
             name: 'keywords',
-            type: "auto",
+            type: 'auto',
             defaultValue: []
         }, {
-            "name": "keywordObjects",
-            "type": "auto",
+            name: 'keywordsJoined',
+            type: 'string',
             persist: false,
             convert: function (value, record) {
+                return (record.get('keywords')) ? record.get('keywords').join(',') : '';
+            }
+        }, {
+            name: 'keywordObjects',
+            type: 'auto',
+            persist: false,
+            convert: function (value, record) {
+                if (!record.get('keywords')) {
+                    return [];
+                }
                 return Ext.Array.map(record.get('keywords'), function(word) {
                     return { 'keyword': word };
                 });
             }
         }, {
             name: 'filters',
-            type: "auto",
+            type: 'auto',
             defaultValue: []
         }, {
-            "name": "categoryFilters",
-            "type": "auto",
+            name: 'categoryFilters',
+            type: 'auto',
+            defaultValue: [],
             persist: false,
             convert: function (value, record) {     //todo: if other filters in future, need to filter the filters for cats greg_murray on 10/19/2015
-                return Ext.Array.map(record.get('filters'), function(filter) {
-                    return filter.value;
+                 return Ext.Array.filter(record.get('filters'), function(filter) {
+                     return (filter.key === 'categoryCode');
+                 });
+             }
+        }, {
+            name: 'categoriesJoined',
+            type: 'string',
+            persist: false,
+            convert: function (value, record) {
+                var categories = record.get('categoryFilters');
+                if (!categories) {
+                    return '';
+                }
+                var catValues = Ext.Array.map(categories, function(catFilter) {
+                    return catFilter.value;
                 });
+                return catValues.join(',');
             }
         }, {
             name: 'isActive',
             type: 'boolean',
             defaultValue: true
         }, {
-            "name": "status",
-            "type": "string",
+            name: 'status',
+            type: 'string',
             persist: false,
             convert: function (value, record) {
                 if (!record.get('isActive')) {
@@ -86,59 +110,82 @@ Ext.define('Taco.model.SearchTuningRule', {
             dateFormat: 'c'
         }, {
             name: 'boostedProducts',
-            type: "auto",
+            type: 'auto',
             defaultValue: []
         }, {
             name: 'blockedProducts',
-            type: "auto",
+            type: 'auto',
             defaultValue: []
         }, {
             name: 'siteId',
-            type: 'int'
-        }, {
-            "name": "createBy",
-            "type": "string",
-            "useNull": true
-        }, {
-            "name": "createByUser",
-            type: "string",
-            convert: Taco.core.util.Common.getCreateByUser
-        }, {
-            "name": "createDate",
-            "type": "date",
-            "useNull": true,
-            dateFormat: 'c'
-        },
-        {
-            name: "lastModifiedBy",
-            type: "string",
+            type: 'int',
             useNull: true
         }, {
-            name: "lastModifiedByUser",
-            type: "string",
+            name: 'siteName',
+            type: 'string',
+            persist: false,
+            convert: function (value, record) {
+                if (!record.get('siteId'))
+                    return '';
+                var site = Taco.app.context.findSite(record.get('siteId'));
+                return (site) ? site.name : '';
+            }
+        }, {
+            name: 'createBy',
+            type: 'string',
+            useNull: true
+        }, {
+            name: 'createByUser',
+            type: 'string',
+            convert: Taco.core.util.Common.getCreateByUser
+        }, {
+            name: 'createDate',
+            type: 'date',
+            useNull: true,
+            dateFormat: 'c'
+        }, {
+            name: 'lastModifiedBy',
+            type: 'string',
+            useNull: true
+        }, {
+            name: 'lastModifiedByUser',
+            type: 'string',
             convert: Taco.core.util.Common.getLastModifiedByUser
         }, {
-            name: "lastModifiedDate",
-            type: "date",
+            name: 'lastModifiedDate',
+            type: 'date',
             useNull: true,
             dateFormat: 'c'
         }
-        //, {
-        //    name: "sites",
-        //    "type": "auto",
-        //    persist: false,
-        //    convert: function (value, record) {
-        //        if (record.siteId == null) {
-        //            var catalogId = record.get('catalogId');
-
-        //            record.sites = Taco.app.context.findSitesByCatalog(catalogId);
-        //        }
-        //        return record.sites;
-
-        //    }
-
-        //}
     ],
+
+    getSites: function(isCatalogLevel) {
+        var site,
+            catalog,
+            sites;
+        if (!(Taco.app && Taco.app.context)){
+            return [];
+        }
+        if (isCatalogLevel) {
+            catalog = Taco.app.context.getContextAtLevel('c');
+            sites = catalog.getSites();
+        } else {
+            site = Taco.app.context.getContextAtLevel('s');
+            sites = [];
+            sites.push(site);
+        }
+        return Ext.Array.map(sites, function(site) {
+            return { id: site.id, name: site.name };
+        });
+    },
+
+    getDeletePromptMessage: function() {
+        var msg = 'Are you sure you want to delete "' + this.get('name') + '"?';
+        if (this.get('categoryFilters').length > 1) {
+            msg += '<br/>It will affect these categories: ' + this.get('categoriesJoined');
+        }
+        return msg;
+    },
 
     validations: [
         {field: 'code', type: 'length', max: 30},
@@ -157,7 +204,7 @@ Ext.define('Taco.model.SearchTuningRule', {
             type: 'json',
             root: 'items',
             successProperty: 'success',
-            messageProperty: "message"
+            messageProperty: 'message'
         },
         writer: {
             allowSingle: false,

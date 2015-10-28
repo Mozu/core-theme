@@ -7,7 +7,7 @@ Ext.define('Taco.view.searchTuningRule.modal.SearchTuningRuleEditor', {
     extend: 'Taco.core.ux.window.Drawer',
 
     requires: [
-        'Taco.view.searchTuningRule.Edit',
+        'Taco.view.searchTuningRule.Form',
         'Taco.core.util.ExceptionWhiner'
     ],
 
@@ -20,9 +20,9 @@ Ext.define('Taco.view.searchTuningRule.modal.SearchTuningRuleEditor', {
     height: '90%',
     title: 'New Rule',
     width: '80%',
-    //createType: '',
     isCreateMode: true,
     record: null,
+    categoryCode: null,
     closeOnSave: true,
 
     actionColumnWidth: 50,
@@ -47,19 +47,11 @@ Ext.define('Taco.view.searchTuningRule.modal.SearchTuningRuleEditor', {
         // Todo: Need to listen for a navigation (via backbutton) and cancel the navigation if editor is dirty or prompt user to cancel and navigate.
         // Todo: Create override/mixin/plugin for Ext.Window to add support for relative height and width with min max values.
 
-        this.titleTemplate = new Ext.XTemplate(
-            '{editType} Rule'
-        );
-
-        this.title = this.titleTemplate.apply({
-            editType: me.isCreateMode ? 'Create' : 'Edit'
-        });
+        this.title = (me.isCreateMode ? 'New Rule' : me.record.get('name'));
 
         this.initUi();
         this.callParent(arguments);
     },
-
-
 
     onEsc : Ext.emptyFn,
 
@@ -70,7 +62,7 @@ Ext.define('Taco.view.searchTuningRule.modal.SearchTuningRuleEditor', {
 
         this.callParent(arguments);
 
-        if (!this.record) {
+        if (!this.isCreateMode) {
             this.loadRecord();
         } else {
             this.onLoadRecord();
@@ -81,7 +73,7 @@ Ext.define('Taco.view.searchTuningRule.modal.SearchTuningRuleEditor', {
     /**
      * Call the service to reload the data.
      */
-    reloadData: function () {        
+    reloadData: function () {
         this.loadRecord();
     },
 
@@ -93,29 +85,30 @@ Ext.define('Taco.view.searchTuningRule.modal.SearchTuningRuleEditor', {
 
         if (me.isCreateMode) return;
 
-        var
-            code = me.record ? me.record.get('code') : null,
-            searchTuningRuleModel = Ext.ModelManager.getModel('Taco.model.SearchTuningRule');
-        
-         me.setLoading({
-             msg: "Loading"
-         }, me.body);
-        
-        searchTuningRuleModel.load(code, {
-            failure: function () {
-                Taco.app.fireEvent('setmessage', "Error loading Search Tuning Rule", 'error');
-                me.setLoading(false, this.body);
-            },
-            success: function (record) {
-                me.record = record;
-                me.onLoadRecord();
-            },
-            callback: function (record, operation) {
-                //do something whether the load succeeded or failed
+        me.setLoading({
+            msg: "Loading"
+        }, me.body);
+
+        var singleStore = Taco.core.data.StoreManager.getOrCreate({
+            type: 'Taco.store.SearchTuningRules',
+            createOnly: true,
+            autoLoad: false,
+            clearFilters: true,
+            remoteFilter: true
+        });
+        singleStore.proxy.extraParams = singleStore.proxy.extraParams || {};
+        singleStore.proxy.extraParams.id = this.record.get('code');
+        singleStore.proxy.extraParams.siteId = this.record.get('siteId');
+        singleStore.load({
+            scope: this,
+            callback: function(records, operation, success) {
+                if (success && records.length > 0)
+                    me.record = records[0];
+                    me.onLoadRecord();
             }
         });
     },
-    
+
     // when the draft record has loaded create and add the total and grid and hide the loading mask;
     onLoadRecord : function() {
         this.setLoading(false, this.body);
@@ -123,13 +116,22 @@ Ext.define('Taco.view.searchTuningRule.modal.SearchTuningRuleEditor', {
 
     // initialize the header and grid when the data load the first time
     initUi: function () {
-        var me = this,
-            code = me.record ? me.record.get('code') : null;
+        var me = this;
 
-        me.container = Ext.create('Taco.view.searchTuningRule.Edit', {
+        if (me.isCreateMode && !me.record) {
+            me.record = Ext.create('Taco.model.SearchTuningRule', {});
+        }
+
+        me.container = Ext.create('Taco.view.searchTuningRule.Form', {
             autoScroll:true,
             record: me.record,
-            isCreate: me.isCreateMode
+            isCreate: me.isCreateMode,
+            isCatalogLevel: true,
+            categoryCode: me.categoryCode,
+            isPopUp: true,
+            getWrapper: function() {
+                return this;
+            }
         });
 
         me.items = [
@@ -150,19 +152,15 @@ Ext.define('Taco.view.searchTuningRule.modal.SearchTuningRuleEditor', {
 
     doSave: function () {
         var me = this,
-            form = me.getForm(),
-            data = form.getValues(),
             onSuccess = (!me.isCreateMode)
                     ? me.saveSuccess
                     : me.onCreate;
 
-        // see if there is a form to extract the data from ;
-
-        if (this.isCreateMode) {
-            this.record = Ext.create('Taco.model.SearchTuningRule', data);
-        } else {
-            Ext.Object.merge(this.record.data, data);
+        var okToSave = me.form.beforeSave();
+        if (!okToSave) {
+            return false;
         }
+        this.record = me.form.record;
         this.record.save({
             success: onSuccess,
             failure: function(item, response) {

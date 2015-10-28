@@ -1,5 +1,5 @@
 ﻿/**
- * @class  Taco.view.account.RoleForm
+ * @class  Taco.view.filter.ExpressionTreePanel
  * category form
  */
 Ext.define('Taco.view.filter.ExpressionTreePanel', {
@@ -9,7 +9,8 @@ Ext.define('Taco.view.filter.ExpressionTreePanel', {
         'Ext.data.TreeStore',
         'Taco.view.filter.EditFilterModal',
         'Taco.view.filter.EditCodeModal',
-        'Taco.view.filter.Schema'
+        'Taco.view.filter.Schema',
+        'Taco.view.preview.ExpressionPreviewDrawer'
     ],
 
     mixins: {
@@ -23,6 +24,8 @@ Ext.define('Taco.view.filter.ExpressionTreePanel', {
     focusinCls: "x-tree-focusin",
 
     header: true,
+
+    itemId: 'taco-expression-tree',
 
     ui: "subform-section",
 
@@ -41,6 +44,9 @@ Ext.define('Taco.view.filter.ExpressionTreePanel', {
     // shows a button that allows user to manually enter the data in a code editor;
     showCodeButton: true,
 
+    //shows preview button
+    showPreviewButton: true,
+
     disableContextMenuClick : false,
 
     // puts the tools into a header toolbar with overflow management and default button configuration; 
@@ -56,8 +62,6 @@ Ext.define('Taco.view.filter.ExpressionTreePanel', {
         var me = this;
         me.title = "Expression";
         me.tools = me.tools || [];
-        
-        
 
         this.mon(me, "needsvalidation", this.validateExpression, me);
 
@@ -244,6 +248,17 @@ Ext.define('Taco.view.filter.ExpressionTreePanel', {
                     scope:me
                 }
             );
+        }
+
+        if (this.showPreviewButton) {
+            this.tools.push({
+                ui: 'action',
+                xtype: 'button',
+                scale: 'medium',
+                text: 'Preview',
+                handler: this.openPreview,
+                scope: me
+            });
         }
         
         this.store = Ext.create('Ext.data.TreeStore', {
@@ -544,13 +559,8 @@ Ext.define('Taco.view.filter.ExpressionTreePanel', {
 
     // extracts the full data from the store
     getValue : function() {
-        var me = this,
-            data = {},
-            root = this.store.getRootNode();
-
-        data = this.serializeNode(root);
-        console.log("serialize: ", data);
-        return data;
+        var root = this.store.getRootNode();
+        return this.serializeNode(root);
     },
 
     /**
@@ -645,6 +655,70 @@ Ext.define('Taco.view.filter.ExpressionTreePanel', {
 
     },
 
+    getExpressionText: function(jsonData, callback) {
+        var me = this;
+
+        /*function hasConditionNodes(node) {
+            var childNodes = node.childNodes;
+
+            if (childNodes.length < 1) { return false; }
+
+            for (i = childNodes.length - 1; i >= 0; i--) {
+
+                var childNode = childNodes[i];
+
+                if (childNode.data.type === 'container') {
+                    return hasConditionNodes(childNode);
+                } else {
+                    return true;
+                }
+
+            }
+
+        }
+
+        var hasNodes = hasConditionNodes(me.getRootNode());
+
+        console.log(hasNodes)
+
+        if( !hasNodes ) { return; }*/
+        
+        var config = {
+            url: '/admin/app/category/validateexpression',
+            method: 'POST',
+            jsonData: jsonData,
+            success: function (response) {
+
+                var json = Ext.decode(response.responseText, true);
+
+                if (!json || !json.success) {
+                    var msg = (config.errorMsg) ? config.errorMsg : "Error";
+                    Taco.app.fireEvent('setmessage', msg, 'error');
+                    this.setLoading(false);
+                    return;
+                }
+
+                if (callback) {
+                    callback.apply(me, [json.items.text]);
+                }
+
+                this.setLoading(false);
+            },
+            failure: function (response) {
+                //Taco.app.viewPort.setLoading(false);
+                var json = Ext.decode(response.responseText, true),
+                    msg = (json && json.message) ? json.message : (config.errorMcallsg) ? config.errorMsg : "Error";
+
+                Taco.app.fireEvent('setmessage', msg, 'error');
+                this.setLoading(false);
+            },
+            scope: this
+        };
+
+        this.setLoading("Loading...");
+        Ext.Ajax.request(config);
+    },
+
     
 
     applyType: function(value) {
@@ -687,7 +761,6 @@ Ext.define('Taco.view.filter.ExpressionTreePanel', {
                     selMod.select(rootNode);
                     selMod.refresh();
 
-
                 },
                 aftercancelclose: function (win) {
                     
@@ -704,6 +777,28 @@ Ext.define('Taco.view.filter.ExpressionTreePanel', {
     openEditor : function() {
         //Ext.create('Taco.view.filter.EditFilterModal');
     },
+
+    openPreview: function(component, evt) {
+
+        var me = this,
+            treeData = this.getValue(),
+            treeType = this.up('#taco-category-form').record.get('categoryType');
+
+        Ext.create('Taco.view.preview.ExpressionPreviewDrawer', {
+            expressionData: {
+                tree: treeData,
+                type: treeType
+            },
+            listeners: {
+                scope: me,
+                aftersaveclose: function(component, data) {
+                    me.setValue(data.tree);
+                }
+            }
+        });
+
+    },
+
     /**
     * Do any class level cleanup. Destroy and null any scoped refs.     
     */

@@ -25,6 +25,7 @@ using Mozu.SiteBuilder.Mvc.ViewEngine;
 using Mozu.SiteBuilder.UX.Controllers;
 using Mozu.Tenant.Contracts;
 using Mozu.Tenant.Contracts.Clients;
+using Mozu.Core.Settings;
 
 namespace Mozu.SiteBuilder.UX.Areas.Misc.Controllers
 {
@@ -35,15 +36,17 @@ namespace Mozu.SiteBuilder.UX.Areas.Misc.Controllers
         private static readonly ConcurrentDictionary<int, Site> _siteLookup = new ConcurrentDictionary<int, Site>();
         private static long g_quality = 60;
         private IApiContext _appCtx;
+        private readonly ISettings _settings;
         private IDocumentListWebApiClient _docRepo;
 
-        public ContentController(IDocumentListWebApiClient docRepo, IApiContext appCtx)
+        public ContentController(IDocumentListWebApiClient docRepo, IApiContext appCtx, ISettings settings)
         {
             // SuppressMissingContextRedirect = true;
             _docRepo = docRepo.CloneWith(x => { x.SiteId = null; });
 
             _appCtx = appCtx;
-            ((ServiceClientBase) _docRepo).Options.MaxSize = int.MaxValue;
+            _settings = settings;
+            ((ServiceClientBase)_docRepo).Options.MaxSize = int.MaxValue;
         }
 
         //
@@ -68,6 +71,16 @@ namespace Mozu.SiteBuilder.UX.Areas.Misc.Controllers
         }
 
 
+        bool ShouldRedirectToCdn()
+        {
+            var disableCdn = _settings.AppSettings("disableCDN") == "true";
+            var cdnHost = this._settings.AppSettings("CdnHost");
+            var uri = new Uri(PageContext.Url);
+
+            return !disableCdn && !string.IsNullOrEmpty(cdnHost) && !cdnHost.EqualsIgnoreCase(uri.Host);
+
+        }
+
         [ClientCacheHeaders(ConfigKey = "images")]
         [HttpGet()]
         public async Task<ActionResult> Index(
@@ -86,6 +99,11 @@ namespace Mozu.SiteBuilder.UX.Areas.Misc.Controllers
             int? quality = null)
         {
             //todo send out appoligy letter
+
+
+           
+
+            var shouldRedirectToCdn = ShouldRedirectToCdn();
 
             ApiContext context = null;
 
@@ -118,7 +136,7 @@ namespace Mozu.SiteBuilder.UX.Areas.Misc.Controllers
             });
             Guid guid;
             ServiceClientResponse<StreamContent> result = null;
-            if (Request.Headers.IfModifiedSince.HasValue)
+            if (Request.Headers.IfModifiedSince.HasValue || shouldRedirectToCdn)
             {
                 if (Guid.TryParse(documentId, out guid))
                 {
@@ -136,7 +154,10 @@ namespace Mozu.SiteBuilder.UX.Areas.Misc.Controllers
                 {
                     throw result.ReadException();
                 }
-
+                if ( shouldRedirectToCdn )
+                {
+                    return RedirectToCdn(list, documentId, result.ResponseMessage.Content.Headers.LastModified.Value);
+                }
                 if (Request.Headers.IfModifiedSince.Value >= result.ResponseMessage.Content.Headers.LastModified.Value)
                 {
                     return new NotModifiedResult();
@@ -189,6 +210,40 @@ namespace Mozu.SiteBuilder.UX.Areas.Misc.Controllers
             }
             return new MyFileStreamResult(result.ResponseMessage.Content.ReadAsStreamAsync().Result, ct, null,
                 result.ResponseMessage.Content.Headers.LastModified);
+        }
+
+        private ActionResult RedirectToCdn(string list, string documentId, DateTimeOffset timeStamp)
+        {
+            var cdnHost = this._settings.AppSettings("CdnHost");
+            var origionalUri = new Uri(PageContext.Url);
+            var origionalquery = HttpUtility.ParseQueryString(origionalUri.Query);
+            var isLatestRequest = string.Equals(origionalquery["latest"], "true", StringComparison.OrdinalIgnoreCase);
+
+            origionalquery.Remove("latest");
+            origionalquery["_mzts"] = timeStamp.Ticks.ToString();
+            if (isLatestRequest)
+            {
+                UriBuilder latestRedirectUrl = new UriBuilder(origionalUri);
+                latestRedirectUrl.Query = origionalquery.ToString();
+                return new RedirectResult(latestRedirectUrl.ToString(), false , TimeSpan.FromMinutes(10));
+            }
+
+            UriBuilder ub = new UriBuilder();
+            ub.Scheme = this.PageContext.IsSecure ? "https" : "http";
+            ub.Host = cdnHost;
+
+
+            ub.Path = string.Equals( list , "files@mozu", StringComparison.OrdinalIgnoreCase)
+                ? string.Format("{0}-m{1}/cms/files/{2}", this.SbApiContext.TenantId, this.SbApiContext.MasterCatalogId,
+                    documentId)
+                : string.Format("{0}-{1}/cms/{2}/{3}", this.SbApiContext.TenantId,
+                    (this.SbApiContext.SiteId.HasValue
+                        ? this.SbApiContext.SiteId.Value.ToString()
+                        : "m-" + this.SbApiContext.MasterCatalogId), list, documentId);
+            ub.Query = origionalquery.ToString();
+
+
+            return new RedirectResult(ub.ToString(), true);
         }
 
 

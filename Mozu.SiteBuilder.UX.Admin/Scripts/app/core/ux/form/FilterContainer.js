@@ -73,7 +73,7 @@ Ext.define('Taco.core.ux.form.FilterContainer', {
         if (this.initFromStateManager) {
             this.initialValue = (Ext.Array.findBy(Taco.core.StateManager.getCurrentState().metaData.args, function (i) { return i.q; }) || {}).q;
         }
-        if (!this.initialValue && this.getAdvancedSearchFromStore()) {
+        if (!this.initialValue && !this.disableAdvancedSearch && this.getAdvancedSearchFromStore()) {
             this.initialValue = this.currentFilterString = this.serializeFilterValue(this.getAdvancedSearchFromStore());
         }
 

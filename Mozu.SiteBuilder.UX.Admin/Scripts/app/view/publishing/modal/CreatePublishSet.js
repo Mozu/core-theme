@@ -73,7 +73,7 @@ Ext.define('Taco.view.publishing.modal.CreatePublishSet', {
         });
     },
 
-    onSave: function() {
+    doSave: function() {
         var values = this.form.getValues(),
             me = this,
             model = Ext.create('Taco.model.PublishSet', {
@@ -86,7 +86,9 @@ Ext.define('Taco.view.publishing.modal.CreatePublishSet', {
             model.phantom = !this.isEdit;
 
             model.save({
-                success: me.callback,
+                success: function (data) {                    
+                    me.saveSuccess(data);
+                },
                 failure: function() {
                     Taco.app.fireEvent('setmessage', 'There was an error with this Publish Set!', 'error');
                 }

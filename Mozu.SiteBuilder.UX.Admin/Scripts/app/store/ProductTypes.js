@@ -8,7 +8,7 @@ Ext.define('Taco.store.ProductTypes', {
     requires:['Taco.model.ProductType'],
     extend: 'Ext.data.Store',
     model: 'Taco.model.ProductType',
-    pageSize: 20,
+    pageSize: 25,
     buffered: false,
     remoteSort: true,
     remoteFilter: true,

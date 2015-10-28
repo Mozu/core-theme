@@ -7,7 +7,6 @@ Ext.define('Taco.view.couponSet.modal.CouponSetEditor', {
     extend: 'Taco.core.ux.window.Drawer',
 
     requires: [
-        'Taco.view.couponSet.GeneralForm',
         'Taco.view.couponSet.GeneratedCodeForm',
         'Taco.view.couponSet.GeneralForm',
         'Taco.view.couponCode.Grid',

@@ -5,8 +5,8 @@
 Ext.define('Taco.view.searchTuningRule.Edit', {
     extend: 'Taco.core.ux.form.FullEditor',
     requires: [
-        'Taco.view.searchTuningRule.Form',
-        'Taco.core.ux.action.DeleteMenuItem'
+        'Taco.core.ux.action.DeleteMenuItem',
+        'Taco.view.searchTuningRule.Form'
     ],
     formCls: 'Taco.view.searchTuningRule.Form',
     statics: {
@@ -29,7 +29,6 @@ Ext.define('Taco.view.searchTuningRule.Edit', {
             });
         }
     },
-    isPopUp: true,
 
     isCreate:true,
 
@@ -51,16 +50,17 @@ Ext.define('Taco.view.searchTuningRule.Edit', {
         if (me.isCreate && !me.record) {
             me.record = Ext.create('Taco.model.SearchTuningRule', {});
         }
+        //else if (!me.record) {
+        //
+        //}
+        me.formCfg = {
+            record: me.record,
+            isCatalogLevel: false
+        };
 
-        if (me.isPopUp) {
-            me.enableNextPrevious = false;
-            me.enableNavHeader = false;
-            this.callParent(arguments);
-            return;
-        }
-
-        me.enableNextPrevious = true;
         me.enableNavHeader = true;
+        //me.saveAndCreateButtonEnabled = true;
+        //me.enableNextPrevious = true;
         //if (me.isDuplicate) {
         //    me.record.isDuplicate = true;
         //}
@@ -86,9 +86,9 @@ Ext.define('Taco.view.searchTuningRule.Edit', {
         delMenuItem = Ext.create('Taco.core.ux.action.DeleteMenuItem', {
             record: me.record,
             modelName: 'Taco.model.SearchTuningRule',
-            storeName: 'Taco.store.SearchTuningRule', //grid???
-            collectionName: 'searchTuningRules',
-            promptMessage: 'tbd' //me.record.getDeletePromptMessage()
+            storeName: 'Taco.store.SearchTuningRules',
+            collectionName: 'searchTuningRules'
+            //promptMessage: 'tbd' //me.record.getDeletePromptMessage()
         });
         menuItems.push(delMenuItem);
 
@@ -108,6 +108,38 @@ Ext.define('Taco.view.searchTuningRule.Edit', {
 
         this.callParent(arguments);
     },
+
+    ///**
+    // * Call the service and get an updated record.
+    // */
+    //loadRecord: function () {
+    //    var me = this,
+    //        code = me.record ? me.record.get('code') : null,
+    //        searchTuningRuleModel = Ext.ModelManager.getModel('Taco.model.SearchTuningRule');
+    //
+    //    me.setLoading({
+    //        msg: "Loading"
+    //    }, me.body);
+    //
+    //    searchTuningRuleModel.load(code, {
+    //        failure: function () {
+    //            Taco.app.fireEvent('setmessage', "Error loading Search Tuning Rule", 'error');
+    //            me.setLoading(false, this.body);
+    //        },
+    //        success: function (record) {
+    //            me.record = record;
+    //            me.onLoadRecord();
+    //        },
+    //        callback: function (record, operation) {
+    //            //do something whether the load succeeded or failed
+    //        }
+    //    });
+    //},
+    //
+    //// when the draft record has loaded create and add the total and grid and hide the loading mask;
+    //onLoadRecord : function() {
+    //    this.setLoading(false, this.body);
+    //},
     //afterDuplicate: function () {
     //    if (this.record.get("couponCode")) {
     //        Taco.app.fireEvent('setmessage', "Please change the coupon code. Coupon codes must be unique", 'info');
@@ -121,6 +153,32 @@ Ext.define('Taco.view.searchTuningRule.Edit', {
     //        }, this);
     //    }
     //},
+
+    onCreate: function(data) {
+        this.saveSuccess(data);
+        this.record = data;
+        Taco.app.fireEvent('searchtuningrulecreated', this.record);
+        this.isCreateMode = false;
+        Ext.defer(function() {
+            this.focusEl.focus();
+        }, 1, this);
+    },
+
+    doSave: function () {
+        var me = this,
+            onSuccess = (!me.isCreateMode)
+                ? me.saveSuccess
+                : me.onCreate;
+
+        me.form.beforeSave();
+        this.record.save({
+            success: onSuccess,
+            failure: function(item, response) {
+                Taco.core.util.ExceptionWhiner.handleRemoteFailure(response);
+            },
+            scope: me
+        });
+    },
 
     onDestroy: function () {
         var me = this;

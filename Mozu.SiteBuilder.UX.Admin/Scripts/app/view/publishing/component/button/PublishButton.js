@@ -93,8 +93,10 @@ Ext.define('Taco.view.publishing.component.button.PublishButton', {
             record = this.record,
             modal = Ext.create('Taco.view.publishing.modal.PublishSetPicker', {
             record: record,
-            callback: function(publishSetCode) {
-                me.onMoveToPublish(me.record, publishSetCode);
+            listeners: {
+                aftersaveclose: function(record, publishSetCode) {
+                    me.onMoveToPublish(me.record, publishSetCode);
+                }
             }
         });
 

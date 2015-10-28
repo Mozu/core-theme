@@ -21,11 +21,15 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.ModelMapping
 
         private List<ProductTypeAttribute> MapDCAttributeToAttribute(List<DC.AttributeInProductType> dcAttributes, int? productTypeId)
         {
+            if (dcAttributes == null)
+            {
+                return new List<ProductTypeAttribute>();
+            }
             List<ProductTypeAttribute> ret = Mapper.Map<List<ProductTypeAttribute>>(dcAttributes);
-            
+
             // add the index.
             ret.Each(r => r.Index = dcAttributes.FindIndex(dc => dc.AttributeFQN == r.AttributeFQN));
-            
+
             // add the product type id
             ret.Each(r => r.ProductTypeId = productTypeId);
 

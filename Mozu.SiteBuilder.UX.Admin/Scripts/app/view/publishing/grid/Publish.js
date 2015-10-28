@@ -60,7 +60,7 @@ Ext.define('Taco.view.publishing.grid.Publish', {
     layout: 'fit',
         
     initComponent: function () {
-
+        
         this.stateId = 'statefulPublishSetGrid';
 
         this.store = Ext.create(this.storeConfig.name, this.storeConfig.options);
@@ -166,18 +166,20 @@ Ext.define('Taco.view.publishing.grid.Publish', {
         contentLayout.down('#product').store.read({code: record.get('code'), type: 'product'});
     },
 
-    addCreateButton: function() {
-        this.down('toolbar').insert({
-            xtype: 'button',
-            ui: 'action-primary',
-            scale: 'medium',
-            itemId: 'createActionButton',
-            text: 'Create New Publish Set',
-            margin: '0 0 0 10',
-            handler: this.showCreateModal,
-            scope: this
-        });
-    },
+    //
+    // never called;
+    //addCreateButton: function() {
+    //    this.down('toolbar').insert({
+    //        xtype: 'button',
+    //        ui: 'action-primary',
+    //        scale: 'medium',
+    //        itemId: 'createActionButton',
+    //        text: 'Create New Publish Set',
+    //        margin: '0 0 0 10',
+    //        handler: this.showCreateModal,
+    //        scope: this
+    //    });
+    //},
 
     getColumnConfig: function () {
         var me = this,
@@ -431,20 +433,35 @@ Ext.define('Taco.view.publishing.grid.Publish', {
     },
 
     showEditModal: function(item, eventData) {
+        var me = this;
+
         Ext.create('Taco.view.publishing.modal.CreatePublishSet', {
             record: eventData.record,
-            callback: function() {
-                eventData.record.store.reload();
-            },
+            listeners: {
+                aftersaveclose: function(win, data){
+                    eventData.record.store.reload();
+                },
+                scope:me
+            },            
             isEdit: true
         }).show();
     },
-    
 
-    showCreateModal: function() {
-        var modal = Ext.create('Taco.view.publishing.modal.CreatePublishSet');
-        modal.show();
-    },
+    // never called
+    //showCreateModal: function () {
+        
+    //    var me = this;
+    //    var modal = Ext.create('Taco.view.publishing.modal.CreatePublishSet', {
+    //        listeners: {
+    //            aftersaveclose: function () {
+    //                // should be passing focus back to the thing that trggered the create;
+    //                debugger;
+    //            },
+    //            scope: me
+    //        }
+    //    });
+    //    modal.show();
+    //},
 
     getDeleteModal: function(config) {
         

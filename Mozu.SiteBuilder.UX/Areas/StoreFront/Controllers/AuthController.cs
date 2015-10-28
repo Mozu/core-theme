@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Net;
 using System.Web.Http;
+using Mozu.CommerceRuntime.Contracts.Orders;
 using Mozu.Core;
 using Mozu.Core.Api.Client;
 using Mozu.Core.Api.Contracts.Client;
@@ -343,7 +344,20 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
                 });
             }
 
-            var res = await _orderWebApiClient.CloneWithoutUserClaims().GetOrders(filter:String.Format("orderNumber eq {0} or externalId eq {1}", orderNumber, orderNumber));
+            // The form field is intended to possibly match to two order fields: orderNumber or
+            //  externalId. This causes an issue in CommerceRuntime when the form sends something
+            //  that isn't a number (IE, 999000999-406). This fails the filter's number conversion
+            //  for order's orderNumber field and caused the GetOrder call to return with an
+            //  exception. Basic validation needed to happen here so we didn't have number parse
+            //  exceptions in CommerceRuntime when the bad filter was being built.
+
+            int j; // This is required for TryParse below. We don't care about it.
+            var idFilter = "";
+            idFilter = Int32.TryParse(orderNumber, out j)
+                ? String.Format("orderNumber eq {0} or externalId eq {1}", orderNumber, orderNumber)
+                : String.Format("externalId eq {0}", orderNumber);
+
+            var res = await _orderWebApiClient.CloneWithoutUserClaims().GetOrders(filter: idFilter);
             if (res.HasException)
             {
                 return Request.CreateResponse(HttpStatusCode.InternalServerError, new
@@ -431,16 +445,20 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
         [HttpGet]
         [SslOnlyActionFilter]
         public async Task<ActionResult> ResetPassword(string t, string u)
-         {
-             var accountsResp = await _customerAccountWebApiClient.CloneWithoutUserClaims().GetAccounts(filter: "UserId eq " + u);
+        {
+            if (_authenticationHelper.GetProfileToken().Length > 1)
+            {
+                return new RedirectResult("/");
+            }
+            var accountsResp = await _customerAccountWebApiClient.CloneWithoutUserClaims().GetAccounts(filter: "UserId eq " + u);
 
             string userName = !accountsResp.ResponseMessage.IsSuccessStatusCode ? null : (accountsResp.ReadAsSync().Items.FirstOrDefault() ?? new CustomerAccount()).UserName;
 
-             var model = new ResetPasswordConfirmDetails()
-             {
-                 username = userName,
-                 validationToken = t,
-             };
+            var model = new ResetPasswordConfirmDetails()
+            {
+                username = userName,
+                validationToken = t,
+            };
 
 
             var template = this.SiteContext.Theme.PageTypes.Where(x => x.Id == "Reset_Password").Select(x => x.Template).FirstOrDefault("Reset-Password");
@@ -458,7 +476,7 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
 
 
             return View(template, model);
-         }
+        }
 
          public class ResetPasswordConfirmDetails
          {
@@ -473,13 +491,21 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
         [HttpPost]
         [SslOnlyActionFilter]
         public async Task<HttpResponseMessage> ResetPassword(ResetPasswordConfirmDetails info)
-         {
-             var res = await DoResetPasswordConfirm(info);
-             var ex = res.ReadException();
-             info.done = res.ResponseMessage.IsSuccessStatusCode;
-             info.messages = ex== null ? new object[0] : new object[] { new { message = ex.Message } };
-             return Request.CreateResponse(HttpStatusCode.OK, View("Reset-Password", info));
-         }
+        {
+            if (_authenticationHelper.GetProfileToken().Length > 1)
+            {
+                var redir = this.Request.CreateResponse(statusCode: System.Net.HttpStatusCode.Redirect);
+
+                redir.Headers.Location = MakeRedirectUri();
+                return redir;
+            }
+
+            var res = await DoResetPasswordConfirm(info);
+            var ex = res.ReadException();
+            info.done = res.ResponseMessage.IsSuccessStatusCode;
+            info.messages = ex== null ? new object[0] : new object[] { new { message = ex.Message } };
+            return Request.CreateResponse(HttpStatusCode.OK, View("Reset-Password", info));
+        }
     }
 
     public class PantsController : BaseApiController

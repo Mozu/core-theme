@@ -1,247 +1,256 @@
-﻿///**
-// * @class Taco.view.searchTuningRule.PinnedProductGrid
-//*/
+﻿/**
+* @class Taco.view.searchTuningRule.PinnedProductGrid
+*/
 
-//Ext.define('Taco.view.searchTuningRule.PinnedProductGrid', {
-//    extend: 'Taco.view.discount.Grid',
-//    alias: 'widget.searchTuningRule-pinned-grid',
-//    requires: [
-//        'Taco.store.Discounts',
-//        'Taco.shared.view.field.DiscountPickerField'
-//    ],
-//    stateful: false,
-//    enableNavHeader: false,
-//    //minHeight: 240,
-//    autoHeight: true,
-//    //height:300,
-//    pageSize: 5,
-//    //store: {
-//    //    type: 'Taco.store.DiscountGrid',
-//    //    createOnly:true,
-//    //    pageSize:10
-//    //},
-//    launchEditorOnClick: false,
-//    deferEmptyText:false,
-//    emptyText: 'None Available',
+Ext.define('Taco.view.searchTuningRule.PinnedProductGrid', {
+    extend: 'Taco.core.ux.browser.SearchList',
+    alias: 'widget.searchTuningRule-pinned-grid',
+    requires: [],
+    stateful: false,
+    enableNavHeader: false,
+    autoHeight: true,
+    pageSize: 5,
+    launchEditorOnClick: false,
+    deferEmptyText: false,
+    emptyText: 'None Available',
 
-//    autoScroll: false,
+    autoScroll: false,
 
-//    config: {
-//        code: null
-//    },
+    config: {
+        code: null
+    },
 
+    viewConfig: {
+        listeners: {
+            drop: function() {
+                this.refresh();
+            }
+        },
+        plugins: {
+            ptype: 'gridviewdragdrop'
+        }
+    },
 
-//    deferEmtpyText: false,
+    deferEmtpyText: false,
 
-//    showActionsColumn : true,
+    showActionsColumn : true,
 
-//    autoHidePagingToolbar:false,
+    autoHidePagingToolbar:false,
 
-//    minHeight: 240,
-//    enableEditAction: false,
-//    enableDuplicateAction: false,
-//    enableDeleteAction: false,
+    minHeight: 240,
+    enableEditAction: false,
+    enableDeleteAction: true,
+    enableAutoSelect:false,
+    enablePaging: false,
+    filterProperty: 'productCode',
 
-//    enableAutoSelect:false,
+    initComponent: function() {
+        var me = this;
 
-//    updateCouponSetCode : function() {
-//        var me = this,
-//            couponSetCode = this.getCouponSetCode();
+        me.dockedItems = me.dockedItems || [];
+        me.mixins = me.mixins || [];
+            
+        me.viewConfig = me.viewConfig || {};
+        me.viewConfig.deferEmptyText = me.deferEmptyText;
 
-//    },
+        me.columns = me.getColumnConfig();
 
-//    updateCouponSetId: function () {
-//        var me = this;
+        if (me.showActionsColumn) {
+            var actionColumn = me.getActionColumn();
+            if (actionColumn) {
+                me.columns.push(actionColumn);
+            }
+        }
+            
+        me.store = Ext.create('Ext.data.Store', {
+          fields: ['code', 'price', 'salePrice'],
+          data: []
+        });
 
-//        //this.store.extraParams.params.couponsetid = couponSetId;
-//       // this.store.proxy.extraParams.couponsetid = couponSetId;
-//    },
+        me.callParent(arguments);
 
-//    initComponent: function() {
-//        var me = this;
-//            //couponSetId = this.getCouponSetId();
+    },
 
-//        me.dockedItems = me.dockedItems || [];
-//        me.mixins = me.mixins || [];
-        
-//        this.viewConfig = this.viewConfig || {};
-//        this.viewConfig.deferEmptyText = this.deferEmptyText;
-        
-//        me.store = Taco.core.data.StoreManager.getOrCreate({
-//            type: 'Taco.store.Discounts',
-//            createOnly: true,
-//            pageSize: this.pageSize,
-//            autoLoad: false
-//        });
+    listeners: {
+        afterrender: function() {
+          var record = this.up('#taco-searchTuningRule-form').record;
+          var products = record.data.boostedProducts;
+          for (var i = 0; i < products.length; i++) {
+            this.store.data.add(Ext.create('Taco.model.PinnedProduct', products[i]));
+          }
+        },
+        recordadded: function(records) {
 
-//        me.initQuickAddBar();
+            var me = this,
+                findFunc = function(rec) {
+                    return me.store.find(me.filterProperty, rec.get(me.filterProperty)) === -1;
+                },
+                recordsToAdd =[],
+                form = this.up('#taco-searchTuningRule-form').pinned,
+                placement = form.placementSelect.getValue(),
+                grid = form.pinnedGrid,
+                selectionModel = grid.getSelectionModel(),
+                selection = selectionModel.getSelection(),
+                index;
 
-//        this.callParent(arguments);
+            if (!records) {
+                console.warn('No record found!');
+                return false;
+            }
 
-//        me.addDocked(me.quickAddBar, 0);
+            if (Ext.isArray(records)) {
+                Ext.Array.each(records, function(rec) {
+                    if (findFunc(rec)) {
+                        recordsToAdd.push(rec);
+                    }
+                });
+            }
 
+            else { 
+                if (findFunc(records)) {
+                    recordsToAdd.push(records);
+                }
+            }
 
-//        //if (couponSetId) {
-//        //    this.store.proxy.extraParams = this.store.proxy.extraParams || {};
-//        //    this.store.proxy.extraParams.couponsetid = couponSetId;
-//        //    this.store.load();
-//        //}
+            switch (placement) {
+                case 'top':
+                    index = 0;
+                    break;
+                case 'bottom': 
+                    index = grid.store.getCount();
+                    break;
+                case 'above':
+                    index = (selection[0]) ? grid.store.indexOf(selection[0]) : 0;
+                    break;
+                case 'below':
+                    index = (selection[0]) ? grid.store.indexOf(selection[0]) + 1 : grid.store.getCount();
+                    break;
+            }
 
-//    },
+            me.store.insert(index, recordsToAdd);
 
+            me.refresh();
+        }
+    },
 
-//    removeDiscount: function (record) {
-//        this.doAssign(record, "remove");
-//    },
+    refresh: function() {
+        this.getView().refresh();
+    },
 
-//    addDiscount : function(record) {
-//        this.doAssign(record);
-//    },
+    removeProduct: function(record) {
+        this.store.remove(record);
+        this.refresh();
+    },
 
-//    doAssign: function (record, target) {
-//        var me = this,
-//        value = record.getId(),
-//        url = '/admin/app/couponset/assigndiscount',
-//        growlMessage = "Added";
+    getActionColumn: function () {
+        var me = this,
+            actionColumn = null,
+            actions = this.getActionItems();
 
-//        if (target && target == "remove") {
-//            url = '/admin/app/couponset/unassigndiscount';
-//            growlMessage = "Removed";
-//        }
+        // as long as we have actions;
+        if (actions.length) {
+            actionColumn = {
+                xtype: 'taco.menucolumn',
+                text: 'Actions',
+                menuItems: actions
+            }
+        }
 
-        
-//        var jsonData = {
-//            couponSetCode: this.getCouponSetCode(),
-//            assignedDiscount: {
-//                id: value
-//            }
-//        };
+        return actionColumn;
+    },
 
+    getActionItems: function() {
+        var me = this,
+            actions = [];
+                   
+        actions.push({
+          text: 'Remove',
+          menuColumnHandler: function(item, eventData) {
+            var record = eventData.record;
+            me.removeProduct(record);
+          }
+        });
 
-//        var config = {
-//            url: url,
-//            method: 'POST',
-//            jsonData: jsonData,
-//            success: function (response) {
+        return actions;
+    },
 
-//                var json = Ext.decode(response.responseText, true);
-//                if (!json || !json.success) {
-//                    var msg = (config.errorMsg) ? config.errorMsg : "Error";
-//                    Taco.app.fireEvent('setmessage', msg, 'error');
-//                    this.setLoading(false);
-//                    return;
-//                }
+  getColumnConfig: function () {
+    var me = this,
+      columns = [
+        {
+          xtype: 'gridcolumn',
+          sortable: false,
+          dataIndex: 'position',
+          text: 'Pos',
+          hideable: false,
+          width: 100,
+          renderer: function(cmp, metaData, record, index) {
+            return index + 1;
+          }
+        },
+        {
+          xtype: 'gridcolumn',
+          sortable: false,
+          dataIndex: 'productName',
+          text: 'Name',
+          hideable: false,
+          flex: 1,
+          minWidth: 150
+        },
+        {
+          xtype: 'gridcolumn',
+          sortable: false,
+          dataIndex: 'productCode',
+          text: 'Code',
+          hideable: true,
+          flex: 1
+        },
+        {
+          xtype: 'gridcolumn',
+          sortable: false,
+          dataIndex: 'price',
+          text: 'Price',
+          hideable: true,
+          flex: 1
+        },
+        {
+          xtype: 'gridcolumn',
+          sortable: false,
+          dataIndex: 'salePrice',
+          text: 'Sale Price',
+          hideable: true,
+          flex: 1
+        },
+        {
+          xtype: 'gridcolumn',
+          sortable: false,
+          dataIndex: 'lastModifiedDate',
+          text: 'Last Modified',
+          hideable: true,
+          hidden: true,
+          flex: 1,
+          renderer: Ext.util.Format.dateRenderer('d M, Y, g:i a')
+        },
+        {
+          xtype: 'gridcolumn',
+          sortable: false,
+          dataIndex: 'productTypeName',
+          text: 'Product Type',
+          hideable: true,
+          hidden: true,
+          flex: 1
+        },
+        {
+          xtype: 'gridcolumn',
+          sortable: false,
+          dataIndex: 'productUsage',
+          text: 'Product Usage',
+          hideable: true,
+          hidden: true,
+          flex: 1
+        }
+      ];
 
-//                if (json.success) {
-//                    //field.setValue();
-//                    //me.getSelectionModel().deselectAll();
-//                    me.mon(me.store, 'load', function () {
-//                        //Taco.app.fireEvent('setgrowl', growlMessage, null, 2000);
-//                    }, me, {
-//                        single: true
-//                    });
-//                    me.store.reload();
-//                }
-
-//                this.setLoading(false);
-//            },
-//            failure: function (response) {
-//                //Taco.app.viewPort.setLoading(false);
-//                var json = Ext.decode(response.responseText, true),
-//                    msg = (json && json.message) ? json.message : (config.errorMcallsg) ? config.errorMsg : "Error";
-//                Taco.app.fireEvent('setmessage', msg, 'error');
-
-//                this.setLoading(false);
-//            },
-//            scope: this
-//        };
-
-//        this.setLoading("Loading...");
-//        Ext.Ajax.request(config);
-
-
-//    },
-
-//    getQuickAddField: function () {
-//        var me = this;
-//        if (!me.quickAddField) {
-//            me.quickAddField = Ext.create('Taco.shared.view.field.DiscountPickerField',{
-//                //xtype: "textfield",
-//                flex: 1,
-//                emptyText: "Search for discount and hit ENTER key to Add",
-//                listeners: {
-//                    scope: me,
-//                    select: function (field, records, e) {
-//                        if (records[0]) {
-//                            me.addDiscount(records[0]);
-//                            me.quickAddField.setValue("");
-//                        }
-//                    }
-//                }
-//            });
-//        }
-//        return me.quickAddField;
-//    },
-
-//    initQuickAddBar: function () {
-//        var me = this;
-        
-//        me.quickAddBar = Ext.create("Ext.toolbar.Toolbar", {
-//            dock: "top",
-//            padding: {
-//                top: 2,
-//                left: 0,
-//                right: 0,
-//                bottom: 10
-//            },
-//            items: [
-//                me.getQuickAddField()
-//            ]
-//        });
-
-
-
-//    },
-
-//    getActionItems: function() {
-//        var me = this,
-//            actions = [],
-//            originalActions;
-        
-//        originalActions = this.callParent(arguments);
-        
-//        actions.push({
-//            text: 'Remove',
-//            menuColumnHandler: function(item, eventData) {
-//                var record = eventData.record;
-//                me.removeDiscount(record);
-//            }
-//        });
-
-//        actions = Ext.Array.merge(actions, originalActions);
-
-//        return actions;
-//    }
-
-//    //,
-//    //getColumnConfig: function () {
-//    //    var me = this,
-//    //        columns = [
-//    //            {
-//    //                //xtype: 'gridcolumn',
-//    //                dataIndex: 'name',
-//    //                stateId: 'name',
-//    //                text: 'Name',
-//    //                hideable: false,
-//    //                flex: 1,
-//    //                minWidth: 150
-//    //                //renderer: function (value, metaData, record, rowIndex, colIndex, store) {
-//    //                //    return '<a href="#" class="taco-launch-editor">' + (value + '</a>');
-//    //                //}
-//    //            }
-//    //        ];
-
-//    //    return columns;
-//    //}
-
-//});
+    return columns;
+  }
+});

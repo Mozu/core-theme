@@ -176,8 +176,6 @@
         showTooltip: function (url, posEl) {
             var $posEl;
 
-            this.positionTooltip();
-
             /**
              * Set the tooltip's position based on the
              * positioning of its associated element

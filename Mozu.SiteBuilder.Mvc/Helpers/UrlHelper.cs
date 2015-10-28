@@ -14,6 +14,7 @@ using Mozu.SiteBuilder.UX.Models.StoreFront.Catalog;
 using Mozu.SiteSettings.General.Contracts.General.Routing;
 using NDjango.Interfaces;
 using Newtonsoft.Json.Linq;
+using System.Web.Http.Routing;
 
 namespace Mozu.SiteBuilder.Mvc.Helpers
 {
@@ -148,13 +149,13 @@ namespace Mozu.SiteBuilder.Mvc.Helpers
 
         private string MakeCartUrl()
         {
-            return _customRouteHandler.GetCannonicalUrl(FancyRoute.Cart, null, false).Result ?? "/cart";
+            return _customRouteHandler.GetCanonicalUrl(FancyRoute.Cart, null, false).Result ?? "/cart";
         }
 
         private string MakeSearchUrl()
-            {
-                return _customRouteHandler.GetCannonicalUrl(FancyRoute.Search, null, false).Result ?? "/search";
-            }
+        {
+            return _customRouteHandler.GetCanonicalUrl(FancyRoute.Search, null, false).Result ?? "/search";
+        }
 
         private string MakeStylesheetUrl(object obj, Dictionary<string, object> config)
         {
@@ -219,7 +220,7 @@ namespace Mozu.SiteBuilder.Mvc.Helpers
 
         string DoMakeDocumentUrl(Mozu.Content.Contracts.Document doc, Dictionary<string, object> config)
         {
-            return _customRouteHandler.GetCannonicalUrl(FancyRoute.CmsPage, () => Mapper.Map<IDictionary<string, object>>(doc).ChainSet(config), false).Result ?? "/" + doc.Name;
+            return _customRouteHandler.GetCanonicalUrl(FancyRoute.CmsPage, () => Mapper.Map<IDictionary<string, object>>(doc).ChainSet(config), false).Result ?? "/" + doc.Name;
         }
 
         private string MakeCdnUrl(object o, Dictionary<string, object> config)
@@ -298,7 +299,7 @@ namespace Mozu.SiteBuilder.Mvc.Helpers
             int currentStartIndex = _resolver.ResolveMemberOrDefault<int>(productCollection, "StartIndex", 0);
 
             var overrides = new SearchContextOverrides();
-
+            overrides.UrlBase = "/"+  new Uri(this._pageContext.Url).GetComponents(UriComponents.Path, UriFormat.Unescaped);
             if (config.TryGetValue("pageSize", out obj))
             {
                 pageSize = Convert.ToInt32(obj);
@@ -311,12 +312,12 @@ namespace Mozu.SiteBuilder.Mvc.Helpers
             }
             else if (string.Equals(val, "next", StringComparison.OrdinalIgnoreCase))
             {
-                int currentPage = pageSize> 0 ?currentStartIndex / pageSize:0;
+                int currentPage = pageSize > 0 ? currentStartIndex / pageSize : 0;
                 overrides.StartIndex = (currentPage + 1) * pageSize;
             }
             else if (string.Equals(val, "previous", StringComparison.OrdinalIgnoreCase))
             {
-                int currentPage = pageSize>0? currentStartIndex / pageSize : 0;
+                int currentPage = pageSize > 0 ? currentStartIndex / pageSize : 0;
                 if (currentPage > 0)
                 {
                     overrides.StartIndex = (currentPage - 1) * pageSize;
@@ -365,13 +366,11 @@ namespace Mozu.SiteBuilder.Mvc.Helpers
 
 
 
-            return _customRouteHandler.GetCannonicalUrl(FancyRoute.ProductDetails, () => Mapper.Map<IDictionary<string, object>>(product), false).Result ?? "/p/" + product.ProductCode;
+            return _customRouteHandler.GetCanonicalUrl(FancyRoute.ProductDetails, () => Mapper.Map<IDictionary<string, object>>(product), false).Result ?? "/p/" + product.ProductCode;
 
         }
         public string MakeCategoryUrl(object obj, Dictionary<string, object> config, bool includeContxt)
         {
-           
-            // bool includeContxt = false;
             int categoryId = -1;
             string categoryCode = null;
             if (obj is int)
@@ -427,13 +426,12 @@ namespace Mozu.SiteBuilder.Mvc.Helpers
                 return _pageContext.Search.ToUrl(new SearchContextOverrides()
                 {
                     UrlBase = "/search",
-                    CategoryId =cat.CategoryId
-
+                    CategoryId = cat.CategoryId
                });
             }
 
-
-            var url = _customRouteHandler.GetCannonicalUrl(FancyRoute.Category, () => Mapper.Map<IDictionary<string, object>>(cat).ChainSet(config), includeContxt).Result;
+            // we know we're doing a category facet, so we can kill the pagination
+            var url = _customRouteHandler.GetCanonicalUrl(FancyRoute.Category, () => Mapper.Map<IDictionary<string, object>>(cat).ChainSet(config), includeContxt).Result;
             if (url == null)
             {
                 url = "/c/" + cat.CategoryId;
@@ -495,66 +493,53 @@ namespace Mozu.SiteBuilder.Mvc.Helpers
             sb.Append("_mzcb=").Append(_siteContext.GeneralSettings.CdnCacheBustKey);
             return sb.ToString();
         }
+
         public string MakeFacetUrl(object obj)
         {
             var routeData = _httpRequestMessage.GetRouteData();
+
+            // facets are primarily handled through the searchContext, and so to large extent we'll be returning 
+            // searchContext.ToUrl(SearchContextOverrides) in order to properly encode the facets.
             var searchContext = _pageContext.Search;
             var strObj = obj as string;
-            string urlBase = null;
-            object tmpObj;
-            int catId;
+
             if (strObj == "clear")
             {
-
-
-                if (routeData.Values.TryGetValue("categoryId", out tmpObj) && int.TryParse(tmpObj.ToString(), out catId))
-                {
-                    urlBase = MakeCategoryUrl(catId, null, false);
-                }
-                return searchContext.ToUrl(new SearchContextOverrides() { ClearFacets = true, UrlBase = urlBase, StartIndex = 0 });
-
+                return MakeCategoryUrlAndClearFacets(() => GetCategoryIdFromRouteData(routeData), searchContext);
             }
 
+            var facetValue = obj is string ? strObj : _resolver.ResolveMemberOrDefault<string>(obj, "filterValue");
 
-
-            var facetValue = obj is string ? (string)obj : _resolver.ResolveMemberOrDefault<string>(obj, "filterValue");
-
+            // this means we're dealing with category facet
             if (string.IsNullOrEmpty(facetValue))
             {
-                var childrenFacetValues = _resolver.ResolveMemberOrDefault<object>(obj, "childrenFacetValues");
-                if (childrenFacetValues != null)
-                {
-                    //must be a top level cat with no immediate child products
-                    var tempCat = _resolver.ResolveMemberOrDefault<string>(obj, "value");
-                    if (int.TryParse(tempCat, out catId))
-                    {
-                        return MakeCategoryUrl(catId, null, true);
-                    }
-
-                }
-                return "#";
+                return MakeCategoryUrlAndKeepFacets(() => GetCategoryIdFromCategoryFacet(obj), searchContext);
             }
 
-
-            var isApplied = !(obj is string) && _resolver.ResolveMemberOrDefault<bool>(obj, "isApplied", false);
-
+            // this means we have some other facet type
+            var isApplied = !(obj is string) && _resolver.ResolveMemberOrDefault(obj, "isApplied", false);
             var facetParts = facetValue.Split(':');
             if (facetParts.Length != 2)
             {
                 return "#";
             }
-
-
             var facetPairKey = facetParts[0];
             var facetPairValue = facetParts[1];
 
+            // if the facet to make the url for is just 'category', then the 'facet url' is just the canonical category url
+            int catId;
             if (facetPairKey.Equals("categoryId", StringComparison.OrdinalIgnoreCase) && int.TryParse(facetPairValue, out catId))
             {
-                return MakeCategoryUrl(catId, null, true);
+                var url = MakeCategoryUrl(catId, null, false);
+                return searchContext.ToUrl(new SearchContextOverrides() { UrlBase = url , StartIndex = 0});
             }
 
+            return MakeUrlForAllOtherFacetTypes(routeData, searchContext, isApplied, facetPairKey, facetPairValue);
+        }
 
-            //handle stupid facets being in the stupid stem...
+        string MakeUrlForAllOtherFacetTypes(IHttpRouteData routeData, SearchContext searchContext, bool isApplied, string facetPairKey, string facetPairValue)
+        {
+            string facetUrl = null;
             var existing = searchContext.Facets.GetValues(facetPairKey);
             if (isApplied && existing != null)
             {
@@ -564,31 +549,71 @@ namespace Mozu.SiteBuilder.Mvc.Helpers
                 {
                     var dic = new Dictionary<string, object>(routeData.Values, StringComparer.OrdinalIgnoreCase);
                     dic.Remove(routeValueKey);
-
-                    urlBase = _customRouteHandler.GetCannonicalUrl((routeData.Route as CustomRoute).InternalRoute, () => dic, false).Result;
-
+                    facetUrl = _customRouteHandler.GetCanonicalUrl((routeData.Route as CustomRoute).InternalRoute, () => dic, false).Result;
                 }
             }
 
-
-
             var overrides = new SearchContextOverrides()
             {
-                UrlBase = urlBase
+                UrlBase = facetUrl,
+                RemoveFacet = isApplied ? new KeyValuePair<string, string>(facetPairKey, facetPairValue) : default(KeyValuePair<string, string>),
+                AddFacet = !isApplied ? new KeyValuePair<string, string>(facetPairKey, facetPairValue) : default(KeyValuePair<string, string>),
+                StartIndex = 0
             };
-            if (isApplied)
+            return searchContext.ToUrl(overrides);
+        }
+
+        string MakeCategoryUrlAndKeepFacets(Func<int?> categoryIdResolver, SearchContext searchContext)
+        {
+            var catId = categoryIdResolver();
+            if (catId.HasValue) return searchContext.ToUrl(new SearchContextOverrides { UrlBase = MakeCategoryUrl(catId.Value, null, false), StartIndex = 0 });
+            else return "#";
+        }
+
+        int? GetCategoryIdFromCategoryFacet(object categoryFacet)
+        {
+            int catId;
+            var childrenFacetValues = _resolver.ResolveMemberOrDefault<object>(categoryFacet, "childrenFacetValues");
+            if (childrenFacetValues != null)
             {
-                overrides.RemoveFacet = new KeyValuePair<string, string>(facetPairKey, facetPairValue);
+                //must be a top level cat with no immediate child products
+                var tempCat = _resolver.ResolveMemberOrDefault<string>(categoryFacet, "value");
+                if (int.TryParse(tempCat, out catId))
+                {
+                    return catId;
+                }
+            }
+            return null;
+        }
+
+        int? GetCategoryIdFromRouteData(IHttpRouteData routeData)
+        {
+            int catId;
+            object tmpObj;
+            if (routeData.Values.TryGetValue("categoryId", out tmpObj) && int.TryParse(tmpObj.ToString(), out catId))
+            {
+                return catId;
+            }
+            return null;
+        }
+
+        string MakeCategoryUrlAndClearFacets(Func<int?> categoryIdResolver, SearchContext searchContext)
+        {
+            var categoryId = categoryIdResolver();
+            if (categoryId.HasValue)
+            {
+                var catUrl = MakeCategoryUrl(categoryId.Value, null, false);
+                return ClearFacetsFromUrl(catUrl, searchContext);
             }
             else
             {
-                overrides.AddFacet = new KeyValuePair<string, string>(facetPairKey, facetPairValue);
+                return ClearFacetsFromUrl(string.Empty, searchContext);
             }
-            overrides.StartIndex = 0;
-            return searchContext.ToUrl(overrides);
+        }
 
-
-
+        static string ClearFacetsFromUrl(string url, SearchContext context)
+        {
+            return context.ToUrl(new SearchContextOverrides { ClearFacets = true, UrlBase = url, StartIndex = 0 });
         }
     }
 }

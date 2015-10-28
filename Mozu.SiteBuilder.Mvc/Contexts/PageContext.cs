@@ -290,6 +290,9 @@ namespace Mozu.SiteBuilder.Mvc.Contexts
         [System.Runtime.Serialization.IgnoreDataMember]   
         public bool HandledByProxy { get; set; }
 
+        /// <summary>
+        /// is this request via https or not
+        /// </summary>
         public bool IsSecure { get; set; }
         public string PageType { get; set; }
         public string PageTypeId { get; set; }

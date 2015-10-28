@@ -28,21 +28,12 @@ let makeTfsBuild = Fake.ProcessHelper.findFile [adminScripts] "makeTfsBuild.bat"
 let sencha = findFile pathDirectories "sencha.exe"
 // targets
 
-Target "clean" (fun _ ->
-    !! "**/bin/*"
-    ++ "**/obj/*"
-    -- "packages/**"
-    -- "**/node_modules/**"
-    -- "lib/**"
-    -- "**/Scripts/**"
-    |> DeleteDirs
-)
-
 Target "cs" (fun _ ->
   let buildParams p : MSBuildParams =
       {p with Properties = [ "configuration", config
                              "BuildingInsideVisualStudio", "false" ]
-              Verbosity = Some MSBuildVerbosity.Quiet }
+              Verbosity = Some MSBuildVerbosity.Quiet
+              Targets = ["rebuild"] }
 
   build buildParams "Mozu.SiteBuilder.sln"
 )
@@ -115,7 +106,5 @@ Target "help" (fun _ ->
     printfn "-------"
     printfn "release    build/test in release instead of debug"
 )
-
-"clean" ==> "cs"
 
 RunTargetOrDefault "help"

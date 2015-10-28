@@ -17,7 +17,9 @@ Ext.define('Taco.view.searchTuningRule.Grid', {
         'Taco.core.ux.TextFilter',
         'Taco.core.ux.grid.MenuColumn',
         'Taco.view.searchTuningRule.AdvancedSearchForm',
-        'Taco.view.searchTuningRule.modal.SearchTuningRuleEditor'
+        'Taco.view.searchTuningRule.modal.SearchTuningRuleEditor',
+        'Taco.view.searchTuningRule.Form',
+        'Taco.view.searchTuningRule.Edit'
     ],
 
     mixins: {
@@ -27,10 +29,10 @@ Ext.define('Taco.view.searchTuningRule.Grid', {
     
     contextConfig: {
         supportedLevels: ['s'],
-        requiresContextOfType: ['c', 's']
+        requiresContextOfType: ['s'] //'c',
     },
 
-    launchEditorOnClick:false,
+    launchEditorOnClick:true,
 
     // Required by mixin: Taco.core.ux.mixins.LaunchEditor defined in SearchList
     modelName: 'Taco.model.SearchTuningRule',
@@ -60,9 +62,9 @@ Ext.define('Taco.view.searchTuningRule.Grid', {
 
     hideSearchToolbar: false,
 
-    title: "Search Tuning Rules",
+    title: "Search Results Tuning",
 
-    store: { type: 'Taco.store.SearchTuningRules' },
+    store: null,
 
     autoScroll: true,
 
@@ -70,18 +72,17 @@ Ext.define('Taco.view.searchTuningRule.Grid', {
 
     deletePromptMsg : "Are you sure you want to delete this search tuning rule?",
 
+    isCatalogLevel: false,
+    categoryCode: null,
+    pageSize: 25,
+    isPopUp: false,
+
     advancedSearchConfig : {
         advancedFormCls: 'Taco.view.searchTuningRule.AdvancedSearchForm',
 
         quickFilterData: [
-            [{ orderStatus: 'Open' }, 'Open Orders'],
-            [{ paymentstatus: 'Unpaid', orderStatus: 'Open' }, 'Unpaid Orders'],
-            [{ paymentstatus: 'Paid', fulfillmentStatus: 'NotFulfilled' }, 'Paid, Pending Fulfillment Orders'],
-            [{ orderStatus: 'Pending', ordertype: 'Offline' }, 'Pending Orders'],
-            [{ fulfillmentStatus: 'Fulfilled' }, 'Fulfilled Orders'],
-            [{ orderStatus: 'Cancelled' }, 'Cancelled Orders'],
-            [{ orderStatus: 'Errored' }, 'Errored Orders'],
-            [{}, 'All Orders']
+            [{ code: 'Code' }, 'Code'],
+            [{ status: 'Status' }, 'Status']
         ]
     },
 
@@ -98,7 +99,7 @@ Ext.define('Taco.view.searchTuningRule.Grid', {
     initComponent: function () {
         var me = this;
 
-        this.columns = this.getColumnConfig();
+        this.columns = this.getColumnConfig(me.isCatalogLevel);
 
         if (this.showActionsColumn) {
             var actionColumn = this.getActionColumn();
@@ -112,6 +113,24 @@ Ext.define('Taco.view.searchTuningRule.Grid', {
 
         me.mon(Taco.app, 'searchtuningrulecreated', me.reloadGrid, me);
 
+        me.store = Taco.core.data.StoreManager.getOrCreate({
+            type: 'Taco.store.SearchTuningRules',
+            createOnly: true,
+            pageSize: this.pageSize,
+            autoLoad: false,
+            clearFilters: true,
+            remoteFilter: true
+        });
+        if (me.categoryCode) {
+            me.store.proxy.extraParams = this.store.proxy.extraParams || {};
+            me.store.proxy.extraParams.categoryCode = me.categoryCode;
+        } else {
+            me.store.proxy.extraParams = {};
+        }
+        if (!this.isCatalogLevel || this.categoryCode) {
+            me.store.load();
+        }
+
         me.callParent(arguments);
     },
 
@@ -119,8 +138,8 @@ Ext.define('Taco.view.searchTuningRule.Grid', {
         this.store.reload();
     },
 
-    getColumnConfig: function () {
-        return [
+    getColumnConfig: function (includeSiteColumn) {
+        var columns = [
             {
                 xtype: 'gridcolumn',
                 dataIndex: 'code',
@@ -141,6 +160,39 @@ Ext.define('Taco.view.searchTuningRule.Grid', {
                 sortable: true
             }, {
                 xtype: 'gridcolumn',
+                dataIndex: 'keywordsJoined',
+                stateId: 'keywordsJoined',
+                text: 'Keywords',
+                hideable: true,
+                //flex: 1,
+                minWidth: 150,
+                sortable: false
+            }, {
+                xtype: 'gridcolumn',
+                dataIndex: 'categoriesJoined',
+                stateId: 'categoriesJoined',
+                text: 'Categories',
+                hideable: true,
+                //flex: 1,
+                minWidth: 150,
+                sortable: false
+            }
+        ];
+        if (includeSiteColumn) {
+            columns.push({
+                xtype: 'gridcolumn',
+                dataIndex: 'siteName',
+                stateId: 'siteName',
+                text: 'Site',
+                hideable: true,
+                //flex: 1,
+                minWidth: 75,
+                sortable: false
+            });
+        }
+        return columns.concat([
+            {
+                xtype: 'gridcolumn',
                 dataIndex: 'status',
                 stateId: 'status',
                 text: 'Status',
@@ -151,8 +203,8 @@ Ext.define('Taco.view.searchTuningRule.Grid', {
                 dataIndex: 'startDate',
                 stateId: 'startDate',
                 format: 'n/j/Y g:i a',
-                width: 75,
-                text: 'Start Date',
+                width: 125,
+                text: 'Active Start Date',
                 hidden: false,
                 sortable: true
             }, {
@@ -160,8 +212,8 @@ Ext.define('Taco.view.searchTuningRule.Grid', {
                 dataIndex: 'endDate',
                 stateId: 'endDate',
                 format: 'm-d-Y g:i a',
-                width: 75,
-                text: 'End Date',
+                width: 125,
+                text: 'Active End Date',
                 hidden: false,
                 sortable: true,
                 renderer: function (value, metaData, record) {
@@ -215,8 +267,7 @@ Ext.define('Taco.view.searchTuningRule.Grid', {
                 hidden: true,
                 sortable: false
             }
-        ];
-
+        ]);
     },
 
     // list of actions to put in action column and context menu;
@@ -313,14 +364,27 @@ Ext.define('Taco.view.searchTuningRule.Grid', {
     openEditor: function (record, isNew) {
         var me = this;
 
+        if (!me.isPopUp) {
+            Ext.defer(function () {
+                if (!isNew) {
+                    Taco.core.StateManager.attemptNavigate('SearchTuningRules/edit/' + record.getId(), {}); //{complexMetaData: {record: record}});
+                } else {
+                    Taco.core.StateManager.attemptNavigate('SearchTuningRules/create', {});
+                }
+            }, 1, this);
+            return;
+        }
+
         Ext.create('Taco.view.searchTuningRule.modal.SearchTuningRuleEditor', {
-            // if we want to edit a draft only, pass recordId.
-            // otherwise, pass the record.
             record: record,
             isCreateMode: isNew,
+            categoryCode: (isNew) ? me.categoryCode : null,
             listeners: {
-                savesuccess: function() {
-                  me.store.reload();
+                savesuccess: function () {
+                    if (me.store.proxy.extraParams.id) {
+                        delete me.store.proxy.extraParams.id;
+                    }
+                    me.store.reload();
                 }
             }
         });

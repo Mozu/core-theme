@@ -2,7 +2,7 @@
  * @class Taco.view.locationType.Index
  */
 Ext.define('Taco.view.redirects.Index', {
-    extend: 'Taco.core.ux.browser.BrowserPage',
+    extend: 'Taco.core.ux.browser.SearchList',
     requires: [
         'Taco.model.RedirectEntry',
         'Taco.store.RedirectEntries'
@@ -10,12 +10,16 @@ Ext.define('Taco.view.redirects.Index', {
     typeName: 'Redirect',
     gridHeaderLabel: 'Redirects',
     requiresContextOfType: 's',
+
+    formCls: 'Taco.core.ux.form.Form',
     
     contextConfig: {
         supportedLevels: ['s'],
         requiresContextOfType: ['s']
     },
     
+    enableNavHeader: true,
+
     modelName: 'Taco.model.RedirectEntry',
 
     store: { type: 'Taco.store.RedirectEntries' },
@@ -23,25 +27,37 @@ Ext.define('Taco.view.redirects.Index', {
     // turn on the row editing feature for inline grid editing and inline grid creation.  typically used for simple entities with several fields.
     enableRowEditing: true,
 
+    addContentViewPadding: true,
+
+    title: 'Redirects',
+
     // default data to use when creating new entity
     defaultRowEditingData: {        
         
     },
 
-    useTilePanel: false,
-   
-    // hide the serach field
-    filterProperties: null,
+    createButtonText: 'Create New Redirect',
+
+    createButtonEnabled: true,
+
+    cancelButtonEnabled: false,
+
+    saveButtonEnabled: false,
+
+    hideSearchToolbar: true,
+
+    advancedSearchConfig: {},
+
+    doCreate: function() {
+
+        this.onRowEditorCreate();
+    },
 
     initComponent: function () {
 
         var me = this;
-
-        this.gridPanelConf = {
-            selModel: {},
-            stateful: true,
-            stateId: 'statefulRedirectsGrid',
-            columns: [
+        
+        this.columns = [
                 {
                     dataIndex: 's',
                     text: 'Source',
@@ -139,10 +155,7 @@ Ext.define('Taco.view.redirects.Index', {
                         }
                     }]
                 }
-            ]
-        };
-
-        this.header = this.header || {};
+        ];
 
         this.uploadButton = Ext.create('Ext.form.field.File', {
             buttonOnly: true,
@@ -162,7 +175,6 @@ Ext.define('Taco.view.redirects.Index', {
                     }
                 },
                 scope: this
-               
             }
         });
 
@@ -172,9 +184,7 @@ Ext.define('Taco.view.redirects.Index', {
             items: [this.uploadButton]
         });
 
-        this.header = Ext.apply({}, this.header);
-
-        this.header.actions = [
+        this.additionalActions = [
             {
                 xtype: 'button',
                 text: 'Import',
@@ -195,16 +205,6 @@ Ext.define('Taco.view.redirects.Index', {
                 hidden: !this.allowCreate(),
                 handler: this.onExport,
                 margin: '0 0 0 15',
-                scope: this
-            }, {
-                xtype: 'button',
-                ui: 'action-primary',
-                scale: 'medium',
-                text: 'Add Redirect',
-                itemId: 'createActionButton',
-                hidden: !this.allowCreate(),
-                margin: '0 0 0 15',
-                handler: this.onRowEditorCreate,
                 scope: this
             }
         ];
@@ -268,7 +268,7 @@ Ext.define('Taco.view.redirects.Index', {
         this.importForm.submit({
             success: function (form, action) {
                // Ext.Msg.alert('Success', action.result.message);
-                Taco.app.fireEvent('setmessage', 'imported', 'info');
+                Taco.app.fireEvent('setgrowl', 'Imported!', 'info', 1000);
                 this.store.reload();
 
             },

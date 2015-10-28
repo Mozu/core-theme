@@ -65,8 +65,8 @@ namespace Mozu.SiteBuilder.Mvc.Navigation
                 .ContinueWith<IList<INavigationNode>>(docResult =>
                 {
                     var res = docResult.Result;
-                    string etag = res.ETag();
                     var doc = res.ReadAsSync();
+                    var etag = doc.UpdateDate.GetValueOrDefault(DateTime.MaxValue).Ticks.ToString();
 
                     // first try to retrieve it as a JObject
                     // if that fails, try to retrieve it as a string
@@ -76,7 +76,9 @@ namespace Mozu.SiteBuilder.Mvc.Navigation
 
                         try
                         {
-                            return docAsJObject.ToObject<NavigationSet>() ?? new NavigationSet();
+                            var toReturn =  docAsJObject.ToObject<NavigationSet>() ?? new NavigationSet();
+                            toReturn.ETag = etag;
+                            return toReturn;
                         }
                         catch
                         {

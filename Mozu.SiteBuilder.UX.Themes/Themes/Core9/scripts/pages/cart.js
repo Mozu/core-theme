@@ -90,7 +90,7 @@ define(['modules/backbone-mozu', 'underscore', 'modules/jquery-mozu', 'modules/m
     });
 
     /* begin visa checkout */
-    function initVisaCheckout (model, total) {
+    function initVisaCheckout (model, subtotal) {
         var delay = 500;
         var visaCheckoutSettings = HyprLiveContext.locals.siteContext.checkoutSettings.visaCheckout;
         var apiKey = visaCheckoutSettings.apiKey;
@@ -99,7 +99,7 @@ define(['modules/backbone-mozu', 'underscore', 'modules/jquery-mozu', 'modules/m
         // if this function is being called on init rather than after updating cart total
         if (!model) {
             model = CartModels.Cart.fromCurrent();
-            total = model.get('total');
+            subtotal = model.get('subtotal');
             delay = 0;
 
             // on success, attach the encoded payment data to the window
@@ -145,7 +145,7 @@ define(['modules/backbone-mozu', 'underscore', 'modules/jquery-mozu', 'modules/m
             clientId: clientId,
             paymentRequest: {
                 currencyCode: model ? model.get('currencyCode') : 'USD',
-                total: "" + total
+                subtotal: "" + subtotal
             }
         });
     }

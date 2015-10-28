@@ -36,11 +36,9 @@ namespace Mozu.SiteBuilder.UX.Admin.Helpers.ContentHelpers
         {
             switch (filter.property.ToLowerInvariant())
             {
-                case "name":
-                    return String.Format("{0} {1} {2}", CONTENT_NAME, filter.comparison, filter.escapedValue);
                 case "all":
-                    //to be removed once we can filter by anything other than name in content
-                    return String.Format("{0} {1} {2}", CONTENT_NAME, "eq", filter.escapedValue);
+                case "name":
+                    return String.Format("( {1} sw \"{0}\" )", filter.escapedValue, CONTENT_NAME);
                 default:
                     {
                         throw new NotImplementedException("unable to filter on property " + filter.property);

@@ -7,6 +7,9 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.Models.Search
 {
     public class SearchTuningRule
     {
+        //required by UI to distinguish between new/edit
+        public string Id { get; set; }
+
         public string Code { get; set; }
 
         public string Name { get; set; }
@@ -44,6 +47,8 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.Models.Search
         public string LastModifiedBy { get; set; }
 
         public DateTime? LastModifiedDate { get; set; }
+
+        public int? SiteId { get; set; }
 
     }
 }

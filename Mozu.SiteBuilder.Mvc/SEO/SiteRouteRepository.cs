@@ -6,7 +6,6 @@ using System.Linq;
 using System.Threading.Tasks;
 using System.Web.Http;
 using System.Runtime.Caching;
-using System.Text;
 using System.Text.RegularExpressions;
 using Mozu.Core.Logging;
 using Mozu.SiteSettings.General.Contracts.Clients;
@@ -14,7 +13,6 @@ using Mozu.SiteBuilder.Mvc.Extensions;
 using Mozu.Core.Api.Client;
 using Mozu.Core.Extensions;
 using Mozu.Content.Contracts.Clients;
-using Mozu.ProductAdmin.Contracts.Clients;
 using Mozu.SiteBuilder.Mvc.SEO.Constraints;
 using Mozu.SiteBuilder.Mvc.SEO.Mappings;
 
@@ -41,6 +39,7 @@ namespace Mozu.SiteBuilder.Mvc.SEO
             { FancyRoute.CmsPage, "cmsPages" },
             { FancyRoute.CmsList, "cmsPages" },
             { FancyRoute.Cart, "cart" },
+            { FancyRoute.Arcjs, null },
         };
         static IDictionary<FancyRoute, string> ActionNames = new Dictionary<FancyRoute, string> {
             { FancyRoute.ProductDetails, "productDetail" },
@@ -49,6 +48,7 @@ namespace Mozu.SiteBuilder.Mvc.SEO
             { FancyRoute.CmsPage, "page" },
             { FancyRoute.CmsList, "contentindex" },
             { FancyRoute.Cart, "index" },
+            { FancyRoute.Arcjs, null },
         };
         
 
@@ -173,15 +173,11 @@ namespace Mozu.SiteBuilder.Mvc.SEO
 
         CustomRoute CreateCustomRoute(Route routeDef, IDictionary<string, ICustomRouteConstraint> validators, IDictionary<string, IRouteDataMapping> mappings)
         {
-
-           
             var knownValidators =
                 routeDef.Validators
                 .Partition(kvp => validators.ContainsKey(kvp.Key ))
                 .GetOrError(unknowns => new ArgumentException(string.Format("Some validators are not known: {0}", string.Join(",", unknowns.Select(x => x.Key)))))
                 .ToDictionary( x => validators[x.Key],  x => x.Value);
-
-               // .ToDictionary<ICustomRouteConstraint, string[]>((KeyValuePair<string, string[]> x) => validators[x.Key], (KeyValuePair<string, string[]> x) => x.Value, StringComparer.OrdinalIgnoreCase);
 
             var knownMappings =
                 routeDef.Mappings
@@ -204,16 +200,10 @@ namespace Mozu.SiteBuilder.Mvc.SEO
                 template = routeDef.Template.Substring(0, qpos);
                 qString = routeDef.Template.Substring(qpos + 1);
             }
-           
 
-            //route.Template = route.Template.Substring(0, qpos);
-
-
-
-            return new CustomRoute(template, qString, routeDef.InternalRoute.ToEnum<FancyRoute>(), routeDef.Canonical.GetValueOrDefault(false), defaults, knownValidators, knownMappings);
+            var scheme = routeDef.UrlScheme.IsNullOrEmpty() ? CustomRoute.Scheme.Http : routeDef.UrlScheme.ToEnum<CustomRoute.Scheme>();
+            return new CustomRoute(template, qString, routeDef.InternalRoute.ToEnum<FancyRoute>(), routeDef.Canonical.GetValueOrDefault(false), defaults, knownValidators, knownMappings, routeDef.FunctionId, scheme);
         }
-
-        
 
         class QueryStringPreProcessor
         {

@@ -9,9 +9,13 @@ Ext.define('Taco.view.searchTuningRule.Form', {
         'Taco.view.searchTuningRule.PinnedProductForm',
         'Taco.view.searchTuningRule.BlockedProductForm'
     ],
+    autoDestroy: true,
+    itemId: 'taco-searchTuningRule-form',
 
     createTitle: 'New Rule',
     editTitle: '{[values.record.data.name]}',
+    isCatalogLevel: false,
+    categoryCode: null,
 
     initComponent: function () {
 
@@ -20,25 +24,31 @@ Ext.define('Taco.view.searchTuningRule.Form', {
         // User interactions in a subform that cause changes in other forms will communicate via events on the record.
         // Each subform will listen for and react to these changes.
 
-        this.items = [{
+        this.items = [
+            {
                 xtype: 'taco-searchTuningRule-general',
                 itemId: 'general',
                 parentForm: this,
                 record: me.record,
+                isCatalogLevel: me.isCatalogLevel,
                 manageHeight: true
-            }, {
+            }, 
+            {
                 xtype: 'taco-searchTuningRule-context',
                 itemId: 'context',
                 parentForm: this,
                 record: me.record,
+                categoryCode: me.categoryCode,
                 manageHeight: true
-            }, {
+            },
+            {
                 xtype: 'taco-searchTuningRule-pinned',
                 itemId: 'pinned',
                 parentForm: this,
                 record: this.record,
                 manageHeight: true
-            }, {
+            }, 
+            {
                 xtype: 'taco-searchTuningRule-blocked',
                 itemId: 'blocked',
                 parentForm: this,
@@ -46,6 +56,10 @@ Ext.define('Taco.view.searchTuningRule.Form', {
                 manageHeight: true
             }
         ];
+
+        if (this.isCatalogLevel) {
+            this.header = false;
+        }
 
         this.callParent(arguments);
 
@@ -82,11 +96,15 @@ Ext.define('Taco.view.searchTuningRule.Form', {
     //    this.setFieldVisibility();
     //},
 
-    getValues: function() {
-        //console.log('form.getValues');
-        var generalData = this.general.getForm().getValues(),
-            contextData = this.context.getValues();
-        return Ext.Object.merge(generalData, contextData);
+
+    /**
+     * Preprocess form before the built in form processing. Persist field values with not matching field name in the record. Reset values no longer applicable based on current state of the form;
+     * @private
+     */
+    beforeSave: function () {
+        return (this.general.beforeSave() && this.context.beforeSave());
+        //&& this.pinned.beforeSave() && this.blocked.beforeSave());
+
     },
 
     onDestroy: function () {

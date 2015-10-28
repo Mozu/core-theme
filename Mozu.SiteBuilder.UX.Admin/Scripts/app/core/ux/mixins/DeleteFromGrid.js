@@ -58,6 +58,10 @@ Ext.define('Taco.core.ux.mixins.DeleteFromGrid', {
 
     deletePromptMsg : "Are you sure you want to delete this?",
 
+    getDeletePromptMessage: function (record) {
+        return this.deletePromptMsg;
+    },
+
     /**
      * @cfg saveActionHandler
      * The function to execute when the user chooses delete from the grid context menu or the action column.
@@ -116,7 +120,7 @@ Ext.define('Taco.core.ux.mixins.DeleteFromGrid', {
             rightJustifyButtons: true,
             // reverses the order of the buttons
             reverseOrder: true,
-            msg: me.deletePromptMsg,
+            msg: me.getDeletePromptMessage(record),
             closable: false,
             buttons: Ext.Msg.YESNO,
             fn: function (val) {

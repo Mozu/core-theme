@@ -60,10 +60,8 @@ Ext.define('Taco.view.order.widget.AuditLogGrid', {
             remoteSort: true,
             remoteFilter: true,
             orderId: me.orderId,
-            storeManagerConfig: {
-                // Load the data automatically!
-                autoLoad: true
-            },
+            // Load the data automatically!
+            autoLoad: true,
             proxy: {
                 type: 'ajaxproxy',
                 api: {

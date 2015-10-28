@@ -18,10 +18,6 @@ Ext.define('Taco.view.Growl', {
     width: '15%',
     duration: 1000,
 
-    layout: {
-        type: 'fit'
-    },
-
     initComponent: function () {
         var tpl;
 
@@ -30,7 +26,7 @@ Ext.define('Taco.view.Growl', {
 
         this.cls = 'taco-notifierbar taco-growl';
 
-        tpl = new Ext.XTemplate('<span class="message">{message}</span>');
+        tpl = new Ext.XTemplate('<span class="message" style="white-space:normal;">{message}</span>');
 
         this.items = [{
             xtype: 'component',
@@ -60,7 +56,6 @@ Ext.define('Taco.view.Growl', {
                         elements.forEach(function(el) {
                             el.addEventListener('mouseover', this.debounce(this.doHide, this.duration, cmp));
                         }, this);
-
                     }
 
                 }
