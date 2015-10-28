@@ -298,7 +298,7 @@ namespace Mozu.SiteBuilder.Mvc.Helpers
             int currentStartIndex = _resolver.ResolveMemberOrDefault<int>(productCollection, "StartIndex", 0);
 
             var overrides = new SearchContextOverrides();
-
+            overrides.UrlBase = "/"+  new Uri(this._pageContext.Url).GetComponents(UriComponents.Path, UriFormat.Unescaped);
             if (config.TryGetValue("pageSize", out obj))
             {
                 pageSize = Convert.ToInt32(obj);
