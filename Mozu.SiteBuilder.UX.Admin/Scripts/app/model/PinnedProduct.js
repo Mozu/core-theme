@@ -27,6 +27,9 @@ Ext.define('Taco.model.PinnedProduct', {
             name: 'salePrice',
             type: 'float'
         }, {
+            name: 'lastModifiedDate',
+            type: 'string'
+        }, {
             name: 'productTypeName',
             type: 'string'
         }, {
