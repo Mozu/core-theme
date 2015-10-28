@@ -121,9 +121,6 @@ Ext.define('Taco.store.Navigation', {
             filterFn: function (record) {
                 var ret = true;
 
-
-               
-
                 if (record.raw.behaviorIds && record.raw.behaviorIds.length) {
                     Ext.each(record.raw.behaviorIds, function (behaviorId) {
                         if (Taco.user.behaviors && Ext.Array.indexOf(Taco.user.behaviors, behaviorId) === -1) {
@@ -290,6 +287,16 @@ Ext.define('Taco.store.Navigation', {
                         'id': 'redirects',
                         'label': 'Redirects',
                         'address': 'redirects'
+                    },
+                    {
+                        'id': 'viewLive',
+                        'label': 'View Live',
+                        'address': ''
+                    },
+                    {
+                        'id': 'viewStaged',
+                        'label': 'View Staged',
+                        'address': ''
                     }
                     /*, {
                 'id': 'fileManager',

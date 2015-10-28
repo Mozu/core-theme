@@ -13,6 +13,7 @@ Ext.define('Taco.view.website.Tree', {
         'Taco.view.website.misc.ExternalLinkEditor',
         'Taco.core.ux.form.SlugField'
     ],
+    itemId: 'taco-nav-tree',
     animate:false,
     border: false,
     componentCls: 'taco-website-tree',
