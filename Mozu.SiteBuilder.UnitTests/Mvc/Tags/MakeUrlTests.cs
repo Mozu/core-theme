@@ -49,6 +49,8 @@ namespace Mozu.SiteBuilder.UnitTests.Mvc.Tags
             pc.Search = new SearchContext(req)
             {
             };
+            pc.Url = req.RequestUri.ToString();
+
             var ac = Substitute.For<ISiteBuilderApiContext>();
             
             var urlHelper = new UrlHelper(sc, ac, pc, customRouteHandler, req,new Lazy<ICategoryTreeProvider>(()=> catTreeProvider));
@@ -103,7 +105,7 @@ namespace Mozu.SiteBuilder.UnitTests.Mvc.Tags
                         PageCount = 10,
                         TotalCount =100
                     } } },
-                    ExpectedFunc = TestDescriptor.CompareLiteral("?startIndex=60")
+                    ExpectedFunc = TestDescriptor.CompareLiteral("/foo?startIndex=60")
                 },
                 new TestDescriptor
                 {
