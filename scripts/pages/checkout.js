@@ -9,7 +9,6 @@ require(["modules/jquery-mozu", "underscore", "hyprlive", "modules/backbone-mozu
             // wait for blur validation to complete
             var me = this;
             me.editing.savedCard = false;
-            me.editing.updateSavedCard = false;
             _.defer(function () {
                 me.model.next();
             });
@@ -200,13 +199,6 @@ require(["modules/jquery-mozu", "underscore", "hyprlive", "modules/backbone-mozu
                     me.render();
                 });
             }
-        },
-        beginUpdateCard: function () {
-            // This will trigger the edit on the saved card, not edit the payment.
-            var me = this;
-            this.editing.savedCard = true;
-            this.editing.updateSavedCard = true;
-            this.render();
         },
         beginEditingBillingAddress: function() {
             this.editing.savedBillingAddress = true;

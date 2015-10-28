@@ -167,7 +167,7 @@
   "paypalExpressCancelled" : "The Paypal Express transaction was cancelled.  Please select another payment method.",
   "checkByMail"          : "Check by Mail",
   "useShippingAddress"   : "Use my shipping address",
-  "optIn"                : "Yes! I want to receive news and special offers from {0}!",
+  "optIn"                : "Yes, please add me to your mailing list",
   "promoCodeError"     : "Sorry, '{0}' does not appear to be a valid coupon code.",
   "reviewOrder"          : "Review & Place Order",
   "reviewOrderText": "Please review all of the information on this page and, if necessary, make changes before placing your order.",

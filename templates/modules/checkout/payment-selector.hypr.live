@@ -1,6 +1,6 @@
 {% with paymentId|default(0) as paymentId %}
 <div class="mz-l-formfieldgroup mz-paymentselector">
-    <div class="mz-l-formfieldgroup-row mz-paymentselector-option mz-paymentselector-newcreditcard {% if model.paymentType == "CreditCard" and not model.usingSavedCard %}mz-checkoutform-active{% endif %}">
+    <div class="mz-l-formfieldgroup-row mz-paymentselector-option mz-paymentselector-newcreditcard mz-checkoutform {% if model.paymentType == "CreditCard" and not model.usingSavedCard %}mz-checkoutform-active{% endif %}">
         <div class="mz-l-formfieldgroup-row">
             <div class="mz-l-formfieldgroup-cell">
                 <input data-mz-value="paymentType" data-mz-new-credit-card id="paymentType-newcreditcard-{{ paymentId }}" name="paymentType" type="radio" class="mz-paymenttype-input" value="CreditCard" {% if model.paymentType == "CreditCard" and not model.usingSavedCard %}checked="true"{% endif %} />
@@ -12,14 +12,13 @@
         {% if model.paymentType == "CreditCard" and not model.usingSavedCard %}
         {% include "modules/checkout/billing-credit-card-form" with model=model.card %}
         <div class="mz-l-stack-section">
-            <h4 class="mz-l-stack-sectiontitle">{{ labels.billingAddress }}</h4>
+            <h4 class="mz-checkoutform-title">{{ labels.billingAddress }}</h4>
             {% include "modules/checkout/billing-address-selector" %}
         </div>
         {% endif %}
     </div>
     {% if model.savedPaymentMethods %}
-        {% if not editing.updateSavedCard %}
-        <div class="mz-l-formfieldgroup-row mz-paymentselector-option mz-paymentselector-savedcreditcard {% if model.paymentType == "CreditCard" and model.usingSavedCard %}mz-checkoutform-active{% endif %}">
+        <div class="mz-l-formfieldgroup-row mz-paymentselector-option mz-paymentselector-savedcreditcard mz-checkoutform {% if model.paymentType == "CreditCard" and model.usingSavedCard %}mz-checkoutform-active{% endif %}">
             <div class="mz-l-formfieldgroup-row">
                 <div class="mz-l-formfieldgroup-cell">
                     <input data-mz-value="paymentType" data-mz-saved-credit-card id="paymentType-savedcreditcard-{{ paymentId }}" name="paymentType" type="radio" class="mz-paymenttype-input" value="CreditCard" {% if model.paymentType == "CreditCard" and model.usingSavedCard %}checked="checked"{% endif %} />
@@ -32,6 +31,7 @@
                         <option value="{{ card.id }}" {% if model.savedPaymentMethodId == card.id %} selected="selected" {% endif %}>{{ card.cardType }} {{ card.cardNumberPartOrMask }} {{ labels.expires }} {{ card.expireMonth }}/{{ card.expireYear }}</option>
                         {% endfor %}
                     </select>
+                {% if model.paymentType == "CreditCard" and model.usingSavedCard %}
                     {% if not themeSettings.isCvvSuppressed %}
                     <div class="mz-paymentselector-reenter-cvv">
                         <label class="mz-paymentselector-label">{{ labels.securityCode }} <span class="is-required">*</span></label>
@@ -39,22 +39,19 @@
                         <span class="mz-validationmessage" data-mz-validationmessage-for="card.cvv"></span>
                     </div>
                     {% endif %}
+                {% endif %}
                 </div>
                 {% if model.paymentType == "CreditCard" and model.usingSavedCard %}
                 <div class="mz-l-stack-section">
-                    <h4 class="mz-l-stack-sectiontitle">{{ labels.billingAddress }}</h4>
-                    {% include "modules/checkout/billing-address-selector" with model=model.billingContact %}
+                    <h4 class="mz-checkoutform-title">{{ labels.billingAddress }}</h4>
+                    {% include "modules/checkout/billing-address-selector" %}
                 </div>
-                <a href="javascript:;" data-mz-action="beginUpdateCard">{{ labels.editSavedCard }}</a>
                 {% endif %}
             </div>
         </div>
-        {% else %}
-            {% include "modules/checkout/edit-saved-card-form" %}
-        {% endif %}
     {% endif %}
     {% if siteContext.checkoutSettings.payByMail %}
-    <div class="mz-l-formfieldgroup-row mz-paymentselector-option mz-paymentselector-check {% if model.paymentType == "Check" %}mz-checkoutform-active{% endif %}">
+    <div class="mz-l-formfieldgroup-row mz-paymentselector-option mz-paymentselector-check mz-checkoutform {% if model.paymentType == "Check" %}mz-checkoutform-active{% endif %}">
         <div class="mz-l-formfieldgroup-row">
             <div class="mz-l-formfieldgroup-cell">
                 <input data-mz-value="paymentType" data-mz-check id="paymentType-check-{{ paymentId }}" name="paymentType" type="radio" class="mz-paymenttype-input" value="Check" {% if model.paymentType == "Check" %}checked="checked"{% endif %} />
@@ -66,7 +63,7 @@
         {% if model.paymentType == "Check" %}
         {% include "modules/checkout/checking-account-form" %}
         <div class="mz-l-stack-section">
-            <h4 class="mz-l-stack-sectiontitle">{{ labels.billingAddress }}</h4>
+            <h4 class="mz-checkoutform-title">{{ labels.billingAddress }}</h4>
             {% include "modules/checkout/billing-address-selector" %}
         </div>
         {% endif %}

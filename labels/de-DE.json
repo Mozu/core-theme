@@ -154,7 +154,7 @@
     "paypalExpressCancelled" : "Die Paypal Express Transaktion wurde abgebrochen. Bitte wählen Sie eine andere Zahlungsmethode.",
     "checkByMail"   : "Überprüfen Sie per Mail",
     "useShippingAddress"   : "Verwenden Sie meine Lieferadresse",
-    "optIn"   : "Ja! Ich möchte Neuigkeiten und besondere Angebote von {0} erhalten!",
+    "optIn"   : "Ja, bitte fügen Sie mich zu Ihrer Mailing-Liste",
     "promoCodeError"   : "Sorry, '{0}' nicht erscheint, um eine gültige Gutscheincode.",
     "reviewOrder"   : "Review & Bestellung",
     "reviewOrderText"   : "Bitte lesen Sie alle Informationen, die auf dieser Seite und, wenn nötig, Änderungen vornehmen, bevor Sie Ihre Bestellung.",
