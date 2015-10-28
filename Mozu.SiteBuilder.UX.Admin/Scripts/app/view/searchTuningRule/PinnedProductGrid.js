@@ -3,142 +3,165 @@
 */
 
 Ext.define('Taco.view.searchTuningRule.PinnedProductGrid', {
-  extend: 'Taco.core.ux.browser.SearchList',
-  alias: 'widget.searchTuningRule-pinned-grid',
-  requires: [],
-  stateful: false,
-  enableNavHeader: false,
-  autoHeight: true,
-  pageSize: 5,
-  launchEditorOnClick: false,
-  deferEmptyText: false,
-  emptyText: 'None Available',
+    extend: 'Taco.core.ux.browser.SearchList',
+    alias: 'widget.searchTuningRule-pinned-grid',
+    requires: [],
+    stateful: false,
+    enableNavHeader: false,
+    autoHeight: true,
+    pageSize: 5,
+    launchEditorOnClick: false,
+    deferEmptyText: false,
+    emptyText: 'None Available',
 
-  autoScroll: false,
+    autoScroll: false,
 
-  config: {
-    code: null
-  },
-
-  viewConfig: {
-    plugins: {
-      ptype: 'gridviewdragdrop'
-    }
-  },
-
-  deferEmtpyText: false,
-
-  showActionsColumn : true,
-
-  autoHidePagingToolbar:false,
-
-  minHeight: 240,
-  enableEditAction: false,
-  enableDuplicateAction: false,
-  enableDeleteAction: false,
-  enableAutoSelect:false,
-  filterProperty: 'productCode',
-
-  initComponent: function() {
-    var me = this;
-
-    me.dockedItems = me.dockedItems || [];
-    me.mixins = me.mixins || [];
-        
-    me.viewConfig = me.viewConfig || {};
-    me.viewConfig.deferEmptyText = me.deferEmptyText;
-
-    me.columns = me.getColumnConfig()
-        
-    me.store = Ext.create('Ext.data.Store', {
-      fields: ['code', 'price', 'salePrice'],
-      data: []
-    });
-
-    me.callParent(arguments);
-
-  },
-
-  listeners: {
-    afterrender: function() {
-      var record = this.up('#taco-searchTuningRule-form').record;
-      var products = record.data.boostedProducts;
-
-      for (var i = 0; i < products.length; i++) {
-        this.store.data.add(Ext.create('Taco.model.PinnedProduct', products[i]));
-      }
+    config: {
+        code: null
     },
-    recordadded: function(records) {
 
-        var me = this,
-            findFunc = function(rec) {
-                return me.store.find(me.filterProperty, rec.get(me.filterProperty)) === -1;
-            },
-            recordsToAdd =[],
-            form = this.up('#taco-searchTuningRule-form').pinned,
-            placement = form.placementSelect.getValue(),
-            grid = form.pinnedGrid,
-            selectionModel = grid.getSelectionModel(),
-            selection = selectionModel.getSelection(),
-            index;
+    viewConfig: {
+    plugins: {
+        ptype: 'gridviewdragdrop'
+    }
+    },
 
-        if (!records) {
-            console.warn('No record found!');
-            return false;
+    deferEmtpyText: false,
+
+    showActionsColumn : true,
+
+    autoHidePagingToolbar:false,
+
+    minHeight: 240,
+    enableEditAction: false,
+    enableDeleteAction: true,
+    enableAutoSelect:false,
+    filterProperty: 'productCode',
+
+    initComponent: function() {
+        var me = this;
+
+        me.dockedItems = me.dockedItems || [];
+        me.mixins = me.mixins || [];
+            
+        me.viewConfig = me.viewConfig || {};
+        me.viewConfig.deferEmptyText = me.deferEmptyText;
+
+        me.columns = me.getColumnConfig();
+
+        if (me.showActionsColumn) {
+            var actionColumn = me.getActionColumn();
+            if (actionColumn) {
+                me.columns.push(actionColumn);
+            }
         }
+            
+        me.store = Ext.create('Ext.data.Store', {
+          fields: ['code', 'price', 'salePrice'],
+          data: []
+        });
 
-        if (Ext.isArray(records)) {
-            Ext.Array.each(records, function(rec) {
-                if (findFunc(rec)) {
-                    recordsToAdd.push(rec);
+        me.callParent(arguments);
+
+    },
+
+    listeners: {
+        afterrender: function() {
+          var record = this.up('#taco-searchTuningRule-form').record;
+          var products = record.data.boostedProducts;
+
+          for (var i = 0; i < products.length; i++) {
+            this.store.data.add(Ext.create('Taco.model.PinnedProduct', products[i]));
+          }
+        },
+        recordadded: function(records) {
+
+            var me = this,
+                findFunc = function(rec) {
+                    return me.store.find(me.filterProperty, rec.get(me.filterProperty)) === -1;
+                },
+                recordsToAdd =[],
+                form = this.up('#taco-searchTuningRule-form').pinned,
+                placement = form.placementSelect.getValue(),
+                grid = form.pinnedGrid,
+                selectionModel = grid.getSelectionModel(),
+                selection = selectionModel.getSelection(),
+                index;
+
+            if (!records) {
+                console.warn('No record found!');
+                return false;
+            }
+
+            if (Ext.isArray(records)) {
+                Ext.Array.each(records, function(rec) {
+                    if (findFunc(rec)) {
+                        recordsToAdd.push(rec);
+                    }
+                });
+            }
+
+            else { 
+                if (findFunc(records)) {
+                    recordsToAdd.push(records);
                 }
-            });
-        }
+            }
 
-        else { 
-            if (findFunc(records)) {
-                recordsToAdd.push(records);
+            switch (placement) {
+                case 'top':
+                    index = 0;
+                    break;
+                case 'bottom': 
+                    index = grid.store.getCount();
+                    break;
+                case 'above':
+                    index = (selection[0]) ? grid.store.indexOf(selection[0]) : 0;
+                    break;
+                case 'below':
+                    index = (selection[0]) ? grid.store.indexOf(selection[0]) + 1 : grid.store.getCount();
+                    break;
+            }
+
+            this.store.insert(index, recordsToAdd);
+        }
+    },
+
+    getActionColumn: function () {
+        var me = this,
+            actionColumn = null,
+            actions = this.getActionItems();
+
+        // as long as we have actions;
+        if (actions.length) {
+            actionColumn = {
+                xtype: 'taco.menucolumn',
+                text: 'Actions',
+                menuItems: actions
             }
         }
 
-        switch (placement) {
-            case 'top':
-                index = 0;
-                break;
-            case 'bottom': 
-                index = grid.store.getCount();
-                break;
-            case 'above':
-                index = (selection[0]) ? grid.store.indexOf(selection[0]) : 0;
-                break;
-            case 'below':
-                index = (selection[0]) ? grid.store.indexOf(selection[0]) + 1 : grid.store.getCount();
-                break;
-        }
+        return actionColumn;
+    },
 
-        this.store.insert(index, recordsToAdd);
-    }
-  },
+    getActionItems: function() {
+        var me = this,
+            actions = [],
+            originalActions;
+            
+        originalActions = me.callParent(arguments);
+            
+        actions.push({
+          text: 'Remove',
+          menuColumnHandler: function(item, eventData) {
+            var record = eventData.record;
+            me.removeDiscount(record);
+          }
+        });
 
-  getActionItems: function() {
-    var me = this,
-        actions = [],
-        originalActions;
-        
-    originalActions = me.callParent(arguments);
-        
-    actions.push({
-      text: 'Remove',
-      menuColumnHandler: function(item, eventData) {
-        var record = eventData.record;
-        me.removeDiscount(record);
-      }
-    });
+        actions = Ext.Array.merge(actions, originalActions);
 
-    actions = Ext.Array.merge(actions, originalActions);
-
-    return actions;
-  },
+        return actions;
+    },
 
   getColumnConfig: function () {
     var me = this,
