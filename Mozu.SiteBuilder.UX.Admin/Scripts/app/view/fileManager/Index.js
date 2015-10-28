@@ -235,6 +235,11 @@ Ext.define('Taco.view.fileManager.Index', {
         });
     },
 
+    onItemClick: function () {
+        // This is ugly but it fixes bug #68890
+        this.rowEditor.editor.componentLayout.owner.body.el.dom.nextSibling.style.top = this.rowEditor.editor.body.dom.style.height;
+    },
+
     //removes create operations and returns false if 
     onBeforeSyncStore: function(operations) {
         delete operations.create;
