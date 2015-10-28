@@ -252,5 +252,10 @@ Ext.define('Taco.view.searchTuningRule.PinnedProductGrid', {
       ];
 
     return columns;
+  },
+
+  getValues: function () {
+      return this.store.data.items;
   }
+
 });

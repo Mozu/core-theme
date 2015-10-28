@@ -101,6 +101,14 @@ Ext.define('Taco.view.searchTuningRule.BlockedProductForm', {
         me.callParent(arguments);
     },
 
+    beforeSave: function () {
+        var prodCodes = Ext.Array.map(this.blockedGrid.getValues(), function(prod){
+            return {productCode: prod.get('productCode')};
+        });
+        this.record.set('blockedProducts', prodCodes);
+        return true;
+    },
+
     onDestroy: function () {
         var me = this;
 

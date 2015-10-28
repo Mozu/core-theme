@@ -127,6 +127,14 @@ Ext.define('Taco.view.searchTuningRule.PinnedProductForm', {
         me.callParent(arguments);
     },
 
+    beforeSave: function() {
+        var prodCodes = Ext.Array.map(this.pinnedGrid.getValues(), function(prod){
+            return {productCode: prod.get('productCode')};
+        });
+        this.record.set('boostedProducts', prodCodes);
+        return true;
+    },
+
     onDestroy: function () {
         var me = this;
 

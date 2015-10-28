@@ -207,5 +207,9 @@ Ext.define('Taco.view.searchTuningRule.BlockedProductGrid', {
       ];
 
     return columns;
-  }
+  },
+
+    getValues: function () {
+        return this.store.data.items;
+    }
 });

@@ -15,10 +15,10 @@ Ext.define('Taco.model.BlockedProduct', {
             name: 'id',
             type: 'int'
         }, {
-            name: 'name',
+            name: 'productName',
             type: 'string'
         }, {
-            name: 'code',
+            name: 'productCode',
             type: 'string'
         }, {
             name: 'price',
@@ -26,8 +26,13 @@ Ext.define('Taco.model.BlockedProduct', {
         }, {
             name: 'salePrice',
             type: 'float'
+        }, {
+            name: 'productTypeName',
+            type: 'string'
+        }, {
+            name: 'productUsage',
+            type: 'string'
         }
-
     ],
 
     getProductStore: function () {

@@ -102,8 +102,11 @@ Ext.define('Taco.view.searchTuningRule.Form', {
      * @private
      */
     beforeSave: function () {
-        return (this.general.beforeSave() && this.context.beforeSave());
-        //&& this.pinned.beforeSave() && this.blocked.beforeSave());
+        return (this.general.beforeSave()
+            && this.context.beforeSave()
+            && this.pinned.beforeSave()
+            && this.blocked.beforeSave()
+            );
 
     },
 
