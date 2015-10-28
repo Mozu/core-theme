@@ -125,7 +125,7 @@ Ext.define('Taco.view.navigation.PrimaryMenu', {
 
         store.each(function (item) {
           
-            if (item.data.address && appStateAddress.indexOf(item.data.address.toLowerCase()) ==0  ){
+            if (item.data.address && appStateAddress.indexOf(item.data.address.toLowerCase()) == 0  ){
 
                 matches.push({
                     parentRecord: item,
@@ -158,6 +158,7 @@ Ext.define('Taco.view.navigation.PrimaryMenu', {
     syncBreadcrumb: function (parent, selected) {
         var bc = this.breadcrumb,
             data = Ext.apply({ selected: parent == selected }, parent.getData()),
+            state = Taco.core.StateManager.statestack[Taco.core.StateManager.stateindex],
             subData = [];
             if (parent.get('showBreadCrumbs')) {
                 parent.items().each(function (subRecord) {
@@ -167,7 +168,17 @@ Ext.define('Taco.view.navigation.PrimaryMenu', {
                     else {
                         subData.push(Ext.apply({ selected: subRecord == selected }, subRecord.getData()));
                     }
-            });
+            }); 
+
+            // removing the view staged and view live breadcrumbs from sitebuilder if were in redirect or theme view
+            if (state && (state.uri.indexOf('themes') !== -1 || state.uri.indexOf('redirects') !== -1)) {
+                
+                for (var i = subData.length - 1; i >= 0; i--) {
+                    if (subData[i].id === 'viewStaged' || subData[i].id === 'viewLive') {
+                        subData.splice(i, 1);
+                    }
+                }
+            }
         }
 
         Ext.apply(data, { items: subData });
@@ -190,7 +201,7 @@ Ext.define('Taco.view.navigation.PrimaryMenu', {
                     duration: 400,
                     from: { opacity: 0, x: tBox.left, y: tBox.top },
                     to: { opacity: 1, x: tBox.left, y: tBox.bottom }
-                })
+                });
             }, this);
         } else {
             // else let CSS handle the animation
