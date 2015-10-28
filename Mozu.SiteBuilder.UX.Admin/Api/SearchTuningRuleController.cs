@@ -167,7 +167,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
         /// <param name="productCodes"></param>
         private async Task<List<SimpleSearchProduct>> GetSimpleSearchProducts(List<string> productCodes)
         {
-            const string responseFields = "items(ProductCode, ProductUsage, Content.ProductName, Price.Price, Price.SalePrice, AuditInfo.UpdateDate, ProductTypeId)";
+            const string responseFields = "items(ProductCode, ProductUsage, Content, Price, AuditInfo, ProductTypeId)";
 
             var results = new List<SimpleSearchProduct>();
             var filters = new List<string>();
@@ -188,6 +188,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
                 }
                 filter = BuildSearchProductFilter(productCodes.GetRange(start, remaining));
                 filters.Add(filter);
+                break;
             }
 
             //why doesn't the product model inclue the string representation of the product type?  DOH!
@@ -202,10 +203,10 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
                             new SimpleSearchProduct
                             {
                                 Code = p.ProductCode,
-                                Name = p.Content.ProductName,
-                                Price = p.Price.Price,
-                                SalePrice = p.Price.SalePrice,
-                                LastModified = p.AuditInfo.UpdateDate,
+                                Name = p.Content != null ? p.Content.ProductName: String.Empty,
+                                Price = p.Price != null ? p.Price.Price : null,
+                                SalePrice = p.Price != null ? p.Price.SalePrice : null,
+                                LastModified = p.AuditInfo !=null ? p.AuditInfo.UpdateDate : null,
                                 ProductTypeId = p.ProductTypeId,
                                 ProductUsage = p.ProductUsage
                             }));
