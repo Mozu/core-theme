@@ -18,36 +18,40 @@
         {% endif %}
     </div>
     {% if model.savedPaymentMethods %}
-    <div class="mz-l-formfieldgroup-row mz-paymentselector-option mz-paymentselector-savedcreditcard {% if model.paymentType == "CreditCard" and model.usingSavedCard %}mz-checkoutform-active{% endif %}">
-        <div class="mz-l-formfieldgroup-row">
-            <div class="mz-l-formfieldgroup-cell">
-                <input data-mz-value="paymentType" data-mz-saved-credit-card id="paymentType-savedcreditcard-{{ paymentId }}" name="paymentType" type="radio" class="mz-paymenttype-input" value="CreditCard" {% if model.paymentType == "CreditCard" and model.usingSavedCard %}checked="checked"{% endif %} />
-            </div>
-            <div class="mz-l-formfieldgroup-cell">
-                <label class="mz-paymentselector-label mz-paymentselector-label-savedcreditcard mz-checkoutform-radio" for="paymentType-savedcreditcard-{{ paymentId }}">{{ labels.savedCreditCard }}</label>
-                <select {% if not model.usingSavedCard %}disabled="true"{% endif %} name="savedPaymentMethods" class="mz-payment-select-saved-payments" data-mz-value="savedPaymentMethodId">
-				    <option selected="selected" value="">{{ labels.selectSavedCreditCard }}</option>
-                    {% for card in model.savedPaymentMethods %}
-                    <option value="{{ card.id }}" {% if model.savedPaymentMethodId == card.id %} selected="selected" {% endif %}>{{ card.cardType }} {{ card.cardNumberPartOrMask }} {{ labels.expires }} {{ card.expireMonth }}/{{ card.expireYear }}</option>
-                    {% endfor %}
-                </select>
-                {% if not themeSettings.isCvvSuppressed %}
-                <div class="mz-paymentselector-reenter-cvv">
-                    <label class="mz-paymentselector-label">{{ labels.securityCode }} <span class="is-required">*</span></label>
-                    <input {% if not model.usingSavedCard %}disabled="true"{% endif %} type="tel" name="security-code" id="mz-payment-security-code-{{ paymentId }}" class="mz-l-formfieldgroup-halfsize" data-mz-value="card.cvv" value="{{ model.card.cvv }}" autocomplete="off"/>
-                    <span class="mz-validationmessage" data-mz-validationmessage-for="card.cvv"></span>
+        {% if not editing.updateSavedCard %}
+        <div class="mz-l-formfieldgroup-row mz-paymentselector-option mz-paymentselector-savedcreditcard {% if model.paymentType == "CreditCard" and model.usingSavedCard %}mz-checkoutform-active{% endif %}">
+            <div class="mz-l-formfieldgroup-row">
+                <div class="mz-l-formfieldgroup-cell">
+                    <input data-mz-value="paymentType" data-mz-saved-credit-card id="paymentType-savedcreditcard-{{ paymentId }}" name="paymentType" type="radio" class="mz-paymenttype-input" value="CreditCard" {% if model.paymentType == "CreditCard" and model.usingSavedCard %}checked="checked"{% endif %} />
                 </div>
+                <div class="mz-l-formfieldgroup-cell">
+                    <label class="mz-paymentselector-label mz-paymentselector-label-savedcreditcard mz-checkoutform-radio" for="paymentType-savedcreditcard-{{ paymentId }}">{{ labels.savedCreditCard }}</label>
+                    <select {% if not model.usingSavedCard %}disabled="true"{% endif %} name="savedPaymentMethods" class="mz-payment-select-saved-payments" data-mz-value="savedPaymentMethodId">
+				        <option selected="selected" value="">{{ labels.selectSavedCreditCard }}</option>
+                        {% for card in model.savedPaymentMethods %}
+                        <option value="{{ card.id }}" {% if model.savedPaymentMethodId == card.id %} selected="selected" {% endif %}>{{ card.cardType }} {{ card.cardNumberPartOrMask }} {{ labels.expires }} {{ card.expireMonth }}/{{ card.expireYear }}</option>
+                        {% endfor %}
+                    </select>
+                    {% if not themeSettings.isCvvSuppressed %}
+                    <div class="mz-paymentselector-reenter-cvv">
+                        <label class="mz-paymentselector-label">{{ labels.securityCode }} <span class="is-required">*</span></label>
+                        <input {% if not model.usingSavedCard %}disabled="true"{% endif %} type="tel" name="security-code" id="mz-payment-security-code-{{ paymentId }}" class="mz-l-formfieldgroup-halfsize" data-mz-value="card.cvv" value="{{ model.card.cvv }}" autocomplete="off"/>
+                        <span class="mz-validationmessage" data-mz-validationmessage-for="card.cvv"></span>
+                    </div>
+                    {% endif %}
+                </div>
+                {% if model.paymentType == "CreditCard" and model.usingSavedCard %}
+                <div class="mz-l-stack-section">
+                    <h4 class="mz-l-stack-sectiontitle">{{ labels.billingAddress }}</h4>
+                    {% include "modules/checkout/billing-address-selector" with model=model.billingContact %}
+                </div>
+                <a href="javascript:;" data-mz-action="beginUpdateCard">{{ labels.editSavedCard }}</a>
                 {% endif %}
             </div>
-            {% if model.paymentType == "CreditCard" and model.usingSavedCard %}
-            <div class="mz-l-stack-section">
-                <h4 class="mz-l-stack-sectiontitle">{{ labels.billingAddress }}</h4>
-                {% include "modules/checkout/billing-address-selector" %}
-            </div>
-            <a href="javascript:;" data-mz-action="editSavedCard">{{ labels.editSavedCard }}</a>
-            {% endif %}
         </div>
-    </div>
+        {% else %}
+            {% include "modules/checkout/edit-saved-card-form" %}
+        {% endif %}
     {% endif %}
     {% if siteContext.checkoutSettings.payByMail %}
     <div class="mz-l-formfieldgroup-row mz-paymentselector-option mz-paymentselector-check {% if model.paymentType == "Check" %}mz-checkoutform-active{% endif %}">
