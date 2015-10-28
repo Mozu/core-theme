@@ -62,7 +62,7 @@ Ext.define('Taco.view.searchTuningRule.Grid', {
 
     hideSearchToolbar: false,
 
-    title: "Search Tuning Rules",
+    title: "Search Results Tuning",
 
     store: null,
 

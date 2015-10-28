@@ -157,21 +157,6 @@ Ext.define('Taco.model.SearchTuningRule', {
             useNull: true,
             dateFormat: 'c'
         }
-        //, {
-        //    name: 'sites',
-        //    'type': 'auto',
-        //    persist: false,
-        //    convert: function (value, record) {
-        //        if (record.siteId == null) {
-        //            var catalogId = record.get('catalogId');
-
-        //            record.sites = Taco.app.context.findSitesByCatalog(catalogId);
-        //        }
-        //        return record.sites;
-
-        //    }
-
-        //}
     ],
 
     getSites: function(isCatalogLevel) {
@@ -192,6 +177,14 @@ Ext.define('Taco.model.SearchTuningRule', {
         return Ext.Array.map(sites, function(site) {
             return { id: site.id, name: site.name };
         });
+    },
+
+    getDeletePromptMessage: function() {
+        var msg = 'Are you sure you want to delete "' + this.get('name') + '"?';
+        if (this.get('categoryFilters').length > 1) {
+            msg += '<br/>It will affect these categories: ' + this.get('categoriesJoined');
+        }
+        return msg;
     },
 
     validations: [
