@@ -123,13 +123,13 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
 
         private async Task AddSearchProducts(SearchTuningRule singleSearchTuningRule)
         {
-            var boosted = await GetSimpleSearchProducts(singleSearchTuningRule.BoostedProducts.Select(p=>p.Code).ToList());
-            var boostedDic = boosted.ToDictionary(k => k.Code);
+            var boosted = await GetSimpleSearchProducts(singleSearchTuningRule.BoostedProducts.Select(p=>p.ProductCode).ToList());
+            var boostedDic = boosted.ToDictionary(k => k.ProductCode);
 
             //Have to keep the same order as on the original instance
             foreach (var boostedProduct in singleSearchTuningRule.BoostedProducts)
             {
-                var prod = boostedDic.Get(boostedProduct.Code);
+                var prod = boostedDic.Get(boostedProduct.ProductCode);
                 if (prod != null)
                 {
                     MapSimpleSearchProduct(boostedProduct, prod);
@@ -137,12 +137,12 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
             }
 
 
-            var blocked = await GetSimpleSearchProducts(singleSearchTuningRule.BlockedProducts.Select(p=>p.Code).ToList());
-            var blockedDic = blocked.ToDictionary(k => k.Code);
+            var blocked = await GetSimpleSearchProducts(singleSearchTuningRule.BlockedProducts.Select(p=>p.ProductCode).ToList());
+            var blockedDic = blocked.ToDictionary(k => k.ProductCode);
             //Have to keep the same order as on the original instance
             foreach (var blockedProduct in singleSearchTuningRule.BlockedProducts)
             {
-                var prod = blockedDic.Get(blockedProduct.Code);
+                var prod = blockedDic.Get(blockedProduct.ProductCode);
                 if (prod != null)
                 {
                     MapSimpleSearchProduct(blockedProduct, prod);
@@ -152,11 +152,11 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
 
         private static void MapSimpleSearchProduct(SimpleSearchProduct boostedProduct, SimpleSearchProduct prod)
         {
-            boostedProduct.Name = prod.Name;
+            boostedProduct.ProductName = prod.ProductName;
             boostedProduct.Price = prod.Price;
             boostedProduct.SalePrice = prod.SalePrice;
-            boostedProduct.LastModified = prod.LastModified;
-            boostedProduct.ProductType = prod.ProductType;
+            boostedProduct.LastModifiedDate = prod.LastModifiedDate;
+            boostedProduct.ProductTypeName = prod.ProductTypeName;
             boostedProduct.ProductUsage = prod.ProductUsage;
         }
 
@@ -202,11 +202,11 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
                         p =>
                             new SimpleSearchProduct
                             {
-                                Code = p.ProductCode,
-                                Name = p.Content != null ? p.Content.ProductName: String.Empty,
+                                ProductCode = p.ProductCode,
+                                ProductName = p.Content != null ? p.Content.ProductName: String.Empty,
                                 Price = p.Price != null ? p.Price.Price : null,
                                 SalePrice = p.Price != null ? p.Price.SalePrice : null,
-                                LastModified = p.AuditInfo !=null ? p.AuditInfo.UpdateDate : null,
+                                LastModifiedDate = p.AuditInfo !=null ? p.AuditInfo.UpdateDate : null,
                                 ProductTypeId = p.ProductTypeId,
                                 ProductUsage = p.ProductUsage
                             }));
@@ -242,7 +242,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
                 //var productTypeName = ptLookUp.FirstOrDefault(productType);
                 if (product.ProductTypeId.HasValue && ptLookUp.TryGetValue(product.ProductTypeId, out productName))
                 {
-                    product.ProductType = productName;
+                    product.ProductTypeName = productName;
                 };
             }
             return theList;

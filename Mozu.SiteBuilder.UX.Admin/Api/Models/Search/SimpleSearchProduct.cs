@@ -13,12 +13,12 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.Models.Search
                 if (ReferenceEquals(x, null)) return false;
                 if (ReferenceEquals(y, null)) return false;
                 if (x.GetType() != y.GetType()) return false;
-                return string.Equals(x.Code, y.Code);
+                return string.Equals(x.ProductCode, y.ProductCode);
             }
 
             public int GetHashCode(SimpleSearchProduct obj)
             {
-                return (obj.Code != null ? obj.Code.GetHashCode() : 0);
+                return (obj.ProductCode != null ? obj.ProductCode.GetHashCode() : 0);
             }
         }
 
@@ -29,16 +29,16 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.Models.Search
             get { return CodeComparerInstance; }
         }
 
-        public string Code { get; set; }
+        public string ProductCode { get; set; }
 
-        public string Name { get; set; }
+        public string ProductName { get; set; }
 
         public decimal? Price { get; set; }
 
         public decimal? SalePrice { get; set; }
-        public DateTime? LastModified { get; set; }
+        public DateTime? LastModifiedDate { get; set; }
 
-        public string ProductType { get; set; }
+        public string ProductTypeName { get; set; }
 
         public string ProductUsage { get; set; }
         public int? ProductTypeId { get; set; }

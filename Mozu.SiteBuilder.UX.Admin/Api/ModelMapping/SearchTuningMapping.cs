@@ -35,10 +35,10 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.ModelMapping
             
                 .ForMember(dc => dc.BoostedProductCodes, op => op.ResolveUsing(p => p.BoostedProducts.IsNullOrEmpty()
                                                                     ? new List<string>() 
-                                                                    : p.BoostedProducts.Select(x => x.Code).ToList()))
+                                                                    : p.BoostedProducts.Select(x => x.ProductCode).ToList()))
                 .ForMember(dc => dc.BlockedProductCodes, op => op.ResolveUsing(p => p.BlockedProducts.IsNullOrEmpty()
                                                                     ? new List<string>()
-                                                                    : p.BlockedProducts.Select(x => x.Code).ToList()))
+                                                                    : p.BlockedProducts.Select(x => x.ProductCode).ToList()))
 
                 .ForMember(dc => dc.Active, op => op.ResolveUsing(x => x.IsActive))
 
@@ -63,10 +63,10 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.ModelMapping
    
                 .ForMember(x => x.BoostedProducts, op => op.ResolveUsing(dc => dc.BoostedProductCodes.IsNullOrEmpty()
                                                             ? new List<SimpleSearchProduct>()
-                                                            : dc.BoostedProductCodes.Select(x => new SimpleSearchProduct {Code= x}).ToList()))
+                                                            : dc.BoostedProductCodes.Select(x => new SimpleSearchProduct {ProductCode= x}).ToList()))
                 .ForMember(x => x.BlockedProducts, op => op.ResolveUsing(dc => dc.BlockedProductCodes.IsNullOrEmpty()
                                                             ? new List<SimpleSearchProduct>()
-                                                            : dc.BlockedProductCodes.Select(x => new SimpleSearchProduct { Code = x }).ToList()))
+                                                            : dc.BlockedProductCodes.Select(x => new SimpleSearchProduct { ProductCode = x }).ToList()))
 
                 .ForMember(x => x.IsActive, op => op.ResolveUsing(dc => dc.Active))
                 .ForMember(x => x.StartDate, op => op.ResolveUsing(dc => dc.ActiveStartDate))
