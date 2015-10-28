@@ -162,8 +162,15 @@ Ext.define('Taco.view.searchTuningRule.ContextForm', {
 
 
     beforeSave: function() {
-        this.record.set('keywords', this.keywordGrid.getValues());
-        this.record.set('filters', this.getCategoryValues());
+        var keywordValues = this.keywordGrid.getValues(),
+            catValues = this.getCategoryValues();
+        if (keywordValues.length === 0 && catValues.length === 0) {
+            Taco.app.fireEvent('setmessage', 'At least one keyword or one category is required.', 'error');
+            return false;
+        }
+        this.record.set('keywords', keywordValues);
+        this.record.set('filters', catValues);
+        return true;
     },
 
     getCategoryValues: function() {

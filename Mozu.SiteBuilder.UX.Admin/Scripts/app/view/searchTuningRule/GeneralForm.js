@@ -94,13 +94,14 @@ Ext.define('Taco.view.searchTuningRule.GeneralForm', {
             margin:'0 20 0 0',
             queryMode:'local',
             store: siteStore,
-                //[['Active', 'Active'], ['Scheduled', 'Scheduled'], ['Disable', 'Disabled']],
-            //value: defaultSite,
             valueField: 'id',
-            displayField: 'name'
+            displayField: 'name',
+            listeners: {
+                afterrender: function(cmp) {
+                    cmp.setValue(defaultSite);
+                }
+            }
         });
-
-        me.siteCombo.select(defaultSite);
 
         me.statusCombo = Ext.widget({
             xtype: 'combobox',
