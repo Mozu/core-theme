@@ -88,14 +88,14 @@ Ext.define('Taco.view.searchTuningRule.form.AdvancedSearch', {
                 fieldLabel: 'Created By',
                 flex: 1
             },
-            me.createDateRangeFields('Create Date Range', 'createDateFrom', 'createDateTo'),
+            me.createDateRangeFields('Created Date Range', 'createDateFrom', 'createDateTo'),
             {
                 xtype: 'taco-adminuserfield',
                 name: 'modifiedBy',
                 fieldLabel: 'Last Modified By',
                 flex: 1
             },
-            me.createDateRangeFields('Modified Date Range', 'modifiedDateFrom', 'modifiedDateTo')
+            me.createDateRangeFields('Last Modified Date Range', 'modifiedDateFrom', 'modifiedDateTo')
         ];
 
         this.callParent(arguments);

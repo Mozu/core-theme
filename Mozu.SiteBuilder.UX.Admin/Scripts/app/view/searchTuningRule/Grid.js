@@ -162,7 +162,7 @@ Ext.define('Taco.view.searchTuningRule.Grid', {
                 xtype: 'gridcolumn',
                 dataIndex: 'keywordsJoined',
                 stateId: 'keywordsJoined',
-                text: 'Keywords',
+                text: 'Search Keywords',
                 hideable: true,
                 //flex: 1,
                 minWidth: 150,
