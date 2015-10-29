@@ -1,7 +1,7 @@
 /**
  * @class Taco.view.couponSet.Grid
 */
-Ext.define('Taco.view.preview.PreviewGrid', {
+/*Ext.define('Taco.view.preview.PreviewGrid', {
     extend: 'Taco.core.ux.browser.SearchList',
     //cls: Taco.baseCSSPrefix + 'searchlist',
 
@@ -142,4 +142,4 @@ Ext.define('Taco.view.preview.PreviewGrid', {
         ];
     }
 
-});
+});*/
