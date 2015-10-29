@@ -1,8 +1,8 @@
-﻿/**
- * @class  Taco.view.searchTuningRule.GeneralForm
+/**
+ * @class  Taco.view.searchTuningRule.form.General
  * @description Search Tuning Rule General Form
  */
-Ext.define('Taco.view.searchTuningRule.GeneralForm', {
+Ext.define('Taco.view.searchTuningRule.form.General', {
     extend: 'Taco.core.ux.form.Form',
     alias: 'widget.taco-searchTuningRule-general',
     requires: [

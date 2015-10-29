@@ -1,8 +1,8 @@
-﻿/**
-* @class Taco.view.searchTuningRule.PinnedProductGrid
+/**
+* @class Taco.view.searchTuningRule.grid.PinnedProduct
 */
 
-Ext.define('Taco.view.searchTuningRule.PinnedProductGrid', {
+Ext.define('Taco.view.searchTuningRule.grid.PinnedProduct', {
     extend: 'Taco.core.ux.browser.SearchList',
     alias: 'widget.searchTuningRule-pinned-grid',
     requires: [],

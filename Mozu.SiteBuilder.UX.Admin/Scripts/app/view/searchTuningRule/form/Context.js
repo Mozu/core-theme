@@ -1,18 +1,16 @@
-﻿/**
- * @class  Taco.view.searchTuningRule.ContextForm
+/**
+ * @class  Taco.view.searchTuningRule.Context
  * @author Travis Johnson
  * @description SearchTuningRule Context Form
  */
-Ext.define('Taco.view.searchTuningRule.ContextForm', {
+Ext.define('Taco.view.searchTuningRule.form.Context', {
     extend: 'Taco.core.ux.form.Form',
     alias: 'widget.taco-searchTuningRule-context',
     requires: [
         'Taco.core.ux.TooltipLabel',
         'Taco.core.util.Validation',
-        'Taco.view.searchTuningRule.grid.CategoryGrid'
-        //'Taco.shared.view.field.PickerField' //,
-        //'Taco.shared.view.field.CategoryPickerField',
-        //'Taco.view.searchTuningRule.widget.CategorySelectorGrid'
+        'Taco.view.searchTuningRule.grid.Category',
+        'Taco.view.searchTuningRule.grid.Keyword'
     ],
     ui: 'subform',
     margin: '0 0 20 0',
@@ -27,7 +25,7 @@ Ext.define('Taco.view.searchTuningRule.ContextForm', {
         var me = this;
         Ext.tip.QuickTipManager.init();
 
-        this.keywordGrid = Ext.create('Taco.view.searchTuningRule.KeywordGrid', {
+        this.keywordGrid = Ext.create('Taco.view.searchTuningRule.grid.Keyword', {
             name: 'keywords',
             record: this.record,
             width: '50%',
@@ -96,7 +94,7 @@ Ext.define('Taco.view.searchTuningRule.ContextForm', {
             }
         });
 
-        this.categoryGrid = Ext.create('Taco.view.searchTuningRule.grid.CategoryGrid', {
+        this.categoryGrid = Ext.create('Taco.view.searchTuningRule.grid.Category', {
             name: 'categoryFilters',
             record: this.record,
             width: '100%',

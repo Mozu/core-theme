@@ -1,8 +1,8 @@
-﻿/**
-* @class Taco.view.searchTuningRule.BlockedProductGrid
+/**
+* @class Taco.view.searchTuningRule.BlockedProduct
 */
 
-Ext.define('Taco.view.searchTuningRule.BlockedProductGrid', {
+Ext.define('Taco.view.searchTuningRule.grid.BlockedProduct', {
    extend: 'Taco.core.ux.browser.SearchList',
    alias: 'widget.searchTuningRule-blocked-grid',
    requires: [],

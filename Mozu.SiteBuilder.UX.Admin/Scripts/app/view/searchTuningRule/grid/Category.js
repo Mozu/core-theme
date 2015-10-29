@@ -2,7 +2,7 @@
  * @class Taco.view.searchTuningRule.grid.categoryGrid
 */
 
-Ext.define('Taco.view.searchTuningRule.grid.CategoryGrid', {
+Ext.define('Taco.view.searchTuningRule.grid.Category', {
     extend: 'Taco.core.ux.grid.Panel',
     requires: [
         'Ext.ux.data.PagingMemoryProxy',

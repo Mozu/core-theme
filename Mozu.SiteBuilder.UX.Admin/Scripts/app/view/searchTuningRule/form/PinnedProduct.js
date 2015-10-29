@@ -1,14 +1,14 @@
-﻿/**
- * @class  Taco.view.searchTuningRule.PinnedProductForm
+/**
+ * @class  Taco.view.searchTuningRule.form.PinnedProduct
  * @description Search Tuning Rule Pinned Product Form
  */
-Ext.define('Taco.view.searchTuningRule.PinnedProductForm', {
+Ext.define('Taco.view.searchTuningRule.form.PinnedProduct', {
     extend: 'Taco.core.ux.form.Form',
     alias: 'widget.taco-searchTuningRule-pinned',
     requires: [
         'Taco.core.ux.TooltipLabel',
         'Taco.core.util.Validation',
-        'Taco.view.searchTuningRule.PinnedProductGrid'
+        'Taco.view.searchTuningRule.grid.PinnedProduct'
     ],
     ui: 'subform',
     itemId: 'taco-pinnedProduct-form',
@@ -26,7 +26,7 @@ Ext.define('Taco.view.searchTuningRule.PinnedProductForm', {
 
         Ext.tip.QuickTipManager.init();
 
-        me.pinnedGrid = Ext.create('Taco.view.searchTuningRule.PinnedProductGrid', {
+        me.pinnedGrid = Ext.create('Taco.view.searchTuningRule.grid.PinnedProduct', {
             enableSearch: false
         });
 

@@ -16,7 +16,7 @@ Ext.define('Taco.view.searchTuningRule.Grid', {
         'Taco.core.ux.FilterableDataView',
         'Taco.core.ux.TextFilter',
         'Taco.core.ux.grid.MenuColumn',
-        'Taco.view.searchTuningRule.AdvancedSearchForm',
+        'Taco.view.searchTuningRule.form.AdvancedSearch',
         'Taco.view.searchTuningRule.modal.SearchTuningRuleEditor',
         'Taco.view.searchTuningRule.Form',
         'Taco.view.searchTuningRule.Edit'
@@ -53,7 +53,7 @@ Ext.define('Taco.view.searchTuningRule.Grid', {
     saveButtonEnabled: false,
     cancelButtonEnabled: false,
 
-    createButtonText: "Create New Rule",
+    createButtonText: 'Create New Rule',
 
     showActionsColumn: true,
 
@@ -62,7 +62,7 @@ Ext.define('Taco.view.searchTuningRule.Grid', {
 
     hideSearchToolbar: false,
 
-    title: "Search Results Tuning",
+    title: 'Search Results Tuning',
 
     store: null,
 
@@ -70,7 +70,7 @@ Ext.define('Taco.view.searchTuningRule.Grid', {
 
     enableQuickFilters:false,
 
-    deletePromptMsg : "Are you sure you want to delete this search tuning rule?",
+    deletePromptMsg : 'Are you sure you want to delete this search tuning rule?',
 
     isCatalogLevel: false,
     categoryCode: null,
@@ -78,7 +78,7 @@ Ext.define('Taco.view.searchTuningRule.Grid', {
     isPopUp: false,
 
     advancedSearchConfig : {
-        advancedFormCls: 'Taco.view.searchTuningRule.AdvancedSearchForm',
+        advancedFormCls: 'Taco.view.searchTuningRule.form.AdvancedSearch',
 
         quickFilterData: [
             [{ code: 'Code' }, 'Code'],
@@ -217,12 +217,12 @@ Ext.define('Taco.view.searchTuningRule.Grid', {
                 hidden: false,
                 sortable: true,
                 renderer: function (value, metaData, record) {
-                    var val = "";
-                    if (!record.get("endDate")) {
-                        val = "Never";
+                    var val = '';
+                    if (!record.get('endDate')) {
+                        val = 'Never';
                         return val;
                     }
-                    return Ext.Date.format(value, "n/j/Y g:i a");
+                    return Ext.Date.format(value, 'n/j/Y g:i a');
                 }
             }, {
                 xtype: 'gridcolumn',
@@ -291,9 +291,9 @@ Ext.define('Taco.view.searchTuningRule.Grid', {
         if (this.enableDeleteAction) {
             actions.push({
                 text: 'Delete',
-                itemId: "deleteMenuItem",
+                itemId: 'deleteMenuItem',
                 // deleteMenuColumnHandler can be found in Taco.core.ux.mixins.DeleteFromGrid
-                menuColumnHandler: "deleteMenuColumnHandler",
+                menuColumnHandler: 'deleteMenuColumnHandler',
                 //requiredBehaviors: {
                 //    model: 'Taco.model.SearchTuningRule',
                 //    //behavior: 'delete'
@@ -333,7 +333,7 @@ Ext.define('Taco.view.searchTuningRule.Grid', {
                 text: 'Actions',
                 onMenuShow: me.onActionMenuShow,
                 menuItems: actions
-            }
+            };
         }
 
         return actionColumn;

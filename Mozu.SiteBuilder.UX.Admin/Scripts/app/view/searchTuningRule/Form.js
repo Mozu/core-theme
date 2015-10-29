@@ -4,10 +4,10 @@
 Ext.define('Taco.view.searchTuningRule.Form', {   
     extend: 'Taco.core.ux.form.NavForm2',
     requires: [
-        'Taco.view.searchTuningRule.GeneralForm',
-        'Taco.view.searchTuningRule.ContextForm',
-        'Taco.view.searchTuningRule.PinnedProductForm',
-        'Taco.view.searchTuningRule.BlockedProductForm'
+        'Taco.view.searchTuningRule.form.General',
+        'Taco.view.searchTuningRule.form.Context',
+        'Taco.view.searchTuningRule.form.PinnedProduct',
+        'Taco.view.searchTuningRule.form.BlockedProduct'
     ],
     autoDestroy: true,
     itemId: 'taco-searchTuningRule-form',

@@ -1,14 +1,14 @@
-﻿/**
- * @class  Taco.view.searchTuningRule.BlockedProductForm
+/**
+ * @class  Taco.view.searchTuningRule.form.BlockedProduct
  * @description Search Tuning Rule Blocked Product Form
  */
-Ext.define('Taco.view.searchTuningRule.BlockedProductForm', {
+Ext.define('Taco.view.searchTuningRule.form.BlockedProduct', {
     extend: 'Taco.core.ux.form.Form',
     alias: 'widget.taco-searchTuningRule-blocked',
     requires: [
         'Taco.core.ux.TooltipLabel',
         'Taco.core.util.Validation',
-        'Taco.view.searchTuningRule.BlockedProductGrid'
+        'Taco.view.searchTuningRule.grid.BlockedProduct'
     ],
     ui: 'subform',
     margin: '0 0 20 0',
@@ -24,7 +24,7 @@ Ext.define('Taco.view.searchTuningRule.BlockedProductForm', {
 
         Ext.tip.QuickTipManager.init();
 
-        me.blockedGrid = Ext.create('Taco.view.searchTuningRule.BlockedProductGrid', {
+        me.blockedGrid = Ext.create('Taco.view.searchTuningRule.grid.BlockedProduct', {
             enableSearch: false
         });
 

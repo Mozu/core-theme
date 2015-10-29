@@ -1,7 +1,7 @@
-﻿/**
- * @class Taco.view.searchTuningRule.AdvancedSearchForm
+/**
+ * @class Taco.view.searchTuningRule.form.AdvancedSearch
  */
-Ext.define('Taco.view.searchTuningRule.AdvancedSearchForm', {
+Ext.define('Taco.view.searchTuningRule.form.AdvancedSearch', {
     extend: 'Taco.core.ux.form.Form',
     requires: [
         'Taco.core.ux.form.field.AdminUser',
@@ -20,7 +20,7 @@ Ext.define('Taco.view.searchTuningRule.AdvancedSearchForm', {
         this.items = [
             {
                 xtype: 'fieldcontainer',
-                layout:"hbox",
+                layout: 'hbox',
                 items: [
                     {
                         xtype: 'textfield',
@@ -38,27 +38,27 @@ Ext.define('Taco.view.searchTuningRule.AdvancedSearchForm', {
             },
             {
                 xtype: 'fieldcontainer',
-                layout:"hbox",
+                layout: 'hbox',
                 items: [
                     me.createStaticCombobox('status', 'Status', [
                         {
-                            name: "Active",  //todo: can't do scheduled greg_murray on 10/21/2015
-                            id: "Active"
+                            name: 'Active',  //todo: can't do scheduled greg_murray on 10/21/2015
+                            id: 'Active'
                         }, {
-                            name: "Disabled",
-                            id: "Disabled"
+                            name: 'Disabled',
+                            id: 'Disabled'
                         }, {
-                            name: "All",
-                            id: "All"
+                            name: 'All',
+                            id: 'All'
                         }
                     ], 40),
                     me.createStaticCombobox('default', 'Default', [
                         {
-                            name: "Yes",
-                            id: "true"
+                            name: 'Yes',
+                            id: 'true'
                         }, {
-                            name: "No",
-                            id: "false"
+                            name: 'No',
+                            id: 'false'
                         }
                     ], 0)
                 ]
@@ -111,7 +111,7 @@ Ext.define('Taco.view.searchTuningRule.AdvancedSearchForm', {
             items: [{
                 xtype: 'datetime',
                 // allows the field to consume an iso foramt value;
-                altFormats: "c",
+                altFormats: 'c',
                 name: start,
                 flex: 1
             }, {
@@ -121,11 +121,11 @@ Ext.define('Taco.view.searchTuningRule.AdvancedSearchForm', {
             }, {
                 xtype: 'datetime',
                 // allows the field to consume an iso foramt value;
-                altFormats: "c",
+                altFormats: 'c',
                 name: end,
                 flex: 1
             }]
-        }
+        };
     },
 
     createStaticCombobox: function(name, label, data, marginRight) {
@@ -146,9 +146,9 @@ Ext.define('Taco.view.searchTuningRule.AdvancedSearchForm', {
                 this.clearValue();
             },
             store: Ext.create('Ext.data.Store', {
-                fields: ['id', "name"],
+                fields: ['id', 'name'],
                 data: data
             })
-        }
+        };
     }
 });

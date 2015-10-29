@@ -1,7 +1,7 @@
-﻿/**
- * @class Taco.view.searchTuningRule.KeywordGrid
+/**
+ * @class Taco.view.searchTuningRule.Keyword
 */
-Ext.define('Taco.view.searchTuningRule.KeywordGrid', {
+Ext.define('Taco.view.searchTuningRule.grid.Keyword', {
     extend: 'Taco.core.ux.grid.Panel',
     requires: [
         'Ext.ux.data.PagingMemoryProxy',
