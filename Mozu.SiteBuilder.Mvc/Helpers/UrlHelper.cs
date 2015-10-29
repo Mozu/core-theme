@@ -268,12 +268,12 @@ namespace Mozu.SiteBuilder.Mvc.Helpers
             var searchContext = _pageContext.Search;
             if (obj is string)
             {
-                return searchContext.ToUrl(new SearchContextOverrides() { SortBy = (string)obj, UrlBase =  "/"+  new Uri(this._pageContext.Url).GetComponents(UriComponents.Path, UriFormat.Unescaped) });
+                return searchContext.ToUrl(new SearchContextOverrides() { SortBy = (string)obj });
             }
             object sortByObj;
             if (config != null && config.TryGetValue("sortBy", out sortByObj) && sortByObj is string)
             {
-                return searchContext.ToUrl(new SearchContextOverrides() { SortBy = (string)sortByObj, UrlBase = "/" + new Uri(this._pageContext.Url).GetComponents(UriComponents.Path, UriFormat.Unescaped) });
+                return searchContext.ToUrl(new SearchContextOverrides() { SortBy = (string)sortByObj });
             }
             return "#";
         }
@@ -298,7 +298,7 @@ namespace Mozu.SiteBuilder.Mvc.Helpers
             int currentStartIndex = _resolver.ResolveMemberOrDefault<int>(productCollection, "StartIndex", 0);
 
             var overrides = new SearchContextOverrides();
-            overrides.UrlBase = "/"+  new Uri(this._pageContext.Url).GetComponents(UriComponents.Path, UriFormat.Unescaped);
+            
             if (config.TryGetValue("pageSize", out obj))
             {
                 pageSize = Convert.ToInt32(obj);
@@ -529,7 +529,7 @@ namespace Mozu.SiteBuilder.Mvc.Helpers
             int catId;
             if (facetPairKey.Equals("categoryId", StringComparison.OrdinalIgnoreCase) && int.TryParse(facetPairValue, out catId))
             {
-                var url = MakeCategoryUrl(catId, null, false);
+                var url = MakeCategoryUrl(catId, null, true);
                 return searchContext.ToUrl(new SearchContextOverrides() { UrlBase = url , StartIndex = 0});
             }
 
@@ -572,7 +572,7 @@ namespace Mozu.SiteBuilder.Mvc.Helpers
                 var tempCat = _resolver.ResolveMemberOrDefault<string>(obj, "value");
                 if (int.TryParse(tempCat, out catId))
                 {
-                    var urlForCatId = MakeCategoryUrl(catId, null, false);
+                    var urlForCatId = MakeCategoryUrl(catId, null, true);
                     return searchContext.ToUrl(new SearchContextOverrides() { UrlBase = urlForCatId, StartIndex = 0 });
                 }
             }

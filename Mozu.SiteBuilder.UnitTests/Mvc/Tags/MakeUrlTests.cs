@@ -105,7 +105,20 @@ namespace Mozu.SiteBuilder.UnitTests.Mvc.Tags
                         PageCount = 10,
                         TotalCount =100
                     } } },
-                    ExpectedFunc = TestDescriptor.CompareLiteral("/foo?startIndex=60")
+                    ExpectedFunc = TestDescriptor.CompareLiteral("?startIndex=60")
+                },
+                       new TestDescriptor
+                {
+                    Name = "paging previous",
+                    Template = @"{% make_url ""paging"" productCol with page=""previous"" as_paramater %}",
+                    ContainerModifier = containerMods,
+                    Context = new Dictionary<string, object>() { { "productCol", new ProductCollection() {
+                        StartIndex=10,
+                        PageSize = 10,
+                        PageCount = 10,
+                        TotalCount =100
+                    } } },
+                    ExpectedFunc = TestDescriptor.CompareLiteral("?")
                 },
                 new TestDescriptor
                 {

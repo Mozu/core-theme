@@ -310,7 +310,9 @@ namespace Mozu.SiteBuilder.Mvc.Contexts
                 }
             }
 
-            return queryCollection.Count > 0 ? urlBase + "?" + queryCollection.ToString() : urlBase;
+            return queryCollection.Count > 0 ? urlBase + "?" + queryCollection.ToString() :
+                (string.IsNullOrWhiteSpace(urlBase) ? "?" : urlBase);
+                
 
         }
     }
