@@ -95,7 +95,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Helpers.OrderHelpers
                 case "modifiedfrom":
                     return string.Format("updatedate ge {0}", ((DateTime)filter.value).ToUniversalTime().ToString("s") + "Z");
                 case "modifiedto":
-                    return string.Format("updatedate le {0}", ((DateTime)filter.value).ToUniversalTime().ToString("s") + "Z");
+                    return string.Format("updatedate le {0}", ((DateTime)filter.value).AddDays(1).AddTicks(-1).ToUniversalTime().ToString("s") + "Z");
                 case "orderstatus":
                     if (filter.value.ToString().ToLower() == "open")
                     {
