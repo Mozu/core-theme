@@ -27,7 +27,7 @@ namespace Mozu.SiteBuilder.Mvc.SEO
         NameValueCollection QueryString { get; set; }
         IDictionary<IRouteDataMapping, string[]> PreMappings { get; set; }
         IDictionary<IRouteDataMapping, string[]> PostMappings { get; set; }
-        public Scheme UrlScheme { get; set; }
+        public Scheme? UrlScheme { get; set; }
 
         public CustomRoute(string template, 
             string queryString,  
@@ -37,7 +37,7 @@ namespace Mozu.SiteBuilder.Mvc.SEO
             IDictionary<ICustomRouteConstraint, string[]> constraints, 
             IDictionary<IRouteDataMapping, string[]> mappings, 
             string functionId, 
-            Scheme scheme) :
+            Scheme? scheme) :
             base(template, 
                 defaults.ToRouteDictionary(),
                 null, 

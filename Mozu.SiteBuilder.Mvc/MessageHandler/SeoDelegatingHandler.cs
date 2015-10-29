@@ -84,10 +84,12 @@ namespace Mozu.SiteBuilder.Mvc.MessageHandler
             var pageContext = rerouted.Resolve<PageContext>();
             var currentUrl = new Uri(pageContext.Url);
             var currentProtocol = currentUrl.Scheme;
-            if (customRoute.UrlScheme.ToStringQuickly().EqualsIgnoreCase(currentUrl.Scheme)) return await continuation().ConfigureAwait(false);
+            if(!customRoute.UrlScheme.HasValue || customRoute.UrlScheme.Value.ToStringQuickly().EqualsIgnoreCase(currentUrl.Scheme)) return await continuation().ConfigureAwait(false);
 
-            var redirectLocation = new UriBuilder(customRoute.UrlScheme.ToStringQuickly(), currentUrl.Host, currentUrl.Port, currentUrl.AbsolutePath, currentUrl.Query);
-            return RedirectTo(redirectLocation.Uri.ToString(), true, rerouted);
+            var builder = new UriBuilder(customRoute.UrlScheme.Value.ToStringQuickly(), currentUrl.Host);
+            builder.Path = currentUrl.AbsolutePath;
+            builder.Query = currentUrl.Query;
+            return RedirectTo(builder.Uri.ToString(), true, rerouted);
         }
 
         private static async Task<HttpRequestMessage> PerformCustomRouting(HttpRequestMessage request)
@@ -103,9 +105,9 @@ namespace Mozu.SiteBuilder.Mvc.MessageHandler
             return request;
         }
 
-        private static HttpResponseMessage RedirectTo(string location, bool isTemorary, HttpRequestMessage request)
+        private static HttpResponseMessage RedirectTo(string location, bool isTemporary, HttpRequestMessage request)
         {
-            HttpResponseMessage resp = request.CreateResponse(isTemorary ? HttpStatusCode.Redirect : HttpStatusCode.MovedPermanently);
+            HttpResponseMessage resp = request.CreateResponse(isTemporary ? HttpStatusCode.Redirect : HttpStatusCode.MovedPermanently);
             var uri = new Uri(location, UriKind.RelativeOrAbsolute);
             if (!uri.IsAbsoluteUri && !location.StartsWith("/"))
             {
