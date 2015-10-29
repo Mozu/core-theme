@@ -99,7 +99,7 @@ NUGET
       Mozu.PricingRuntime.Contracts
       Mozu.ShippingRuntime.Contracts
       Newtonsoft.Json
-    Mozu.Content.Contracts (1.19.1-dev1510152100CI)
+    Mozu.Content.Contracts (1.19.1)
       Mozu.Core.Prime (>= 1.17)
     Mozu.Core.Extensible.Contracts (1.18.1)
       Mozu.Core.Prime (>= 1.17)
@@ -161,9 +161,9 @@ NUGET
       Mozu.Core.Prime (>= 1.17)
     Mozu.ShippingRuntime.Contracts (1.18.1)
       Mozu.Core.Prime (>= 1.17)
-    Mozu.SiteSettings.General.Contracts (1.19.1-dev1510211257CI)
+    Mozu.SiteSettings.General.Contracts (1.19.1)
       Mozu.Core.Prime (>= 1.17)
-    Mozu.SiteSettings.Order.Contracts (1.19.1-dev1510210258CI)
+    Mozu.SiteSettings.Order.Contracts (1.19.1)
       Mozu.Core.Prime (>= 1.17)
       Mozu.PaymentService.Contracts (>= 1.9.6)
     Mozu.Tenant.Contracts (1.18.2)
