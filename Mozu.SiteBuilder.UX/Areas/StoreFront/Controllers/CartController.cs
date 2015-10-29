@@ -154,7 +154,6 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
         public async Task<ActionResult> Checkout(CheckoutModel model)
         {
             Cart cart = null;
-            Exception error = null;
             CommerceRuntime.Contracts.Orders.Order order = null;
             if (model == null || string.IsNullOrEmpty(model.Id))
             {
@@ -184,35 +183,10 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
             }
             catch (Exception e)
             {
-                UpdateCartWithExceptionMessage(model.Id, e);
-                error = e;
-            }
-            if (error != null)
-            {
-                return await RenderCartViewWithMessage(error);
+                return await RenderCartViewWithMessage(e);
             }
             
             return Redirect(CreateRedirectUrl("/checkout/" + order.Id).ToString());
-        }
-
-
-        /// <summary>
-        /// not async as called from exception block
-        /// </summary>
-        /// <param name="cartId"></param>
-        /// <param name="e"></param>
-        private void UpdateCartWithExceptionMessage(string cartId, Exception e)
-        {
-            var badCart = (_cartClient.GetCart(cartId)).Result.ReadAsSync();
-            badCart.ChangeMessages.Add(new ChangeMessage()
-            {
-                Message = string.Format("{0}{1}", e.Message, (e.InnerException != null)
-                    ? " : " + e.InnerException.Message
-                    : string.Empty),
-                Success = false,
-                SubjectType = "Product",
-            });
-            _cartClient.UpdateCart(badCart).Result.ReadAsSync();
         }
 
         private Uri CreateRedirectUrl(string path)
