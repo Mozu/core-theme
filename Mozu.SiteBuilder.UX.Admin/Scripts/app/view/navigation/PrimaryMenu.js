@@ -162,23 +162,20 @@ Ext.define('Taco.view.navigation.PrimaryMenu', {
             subData = [];
             if (parent.get('showBreadCrumbs')) {
                 parent.items().each(function (subRecord) {
+
+                    if (subRecord.get('viewDependent') && state && state.uri) {
+                        if (state.uri.match(subRecord.get('viewDependent'))) {
+                            return false;
+                        }
+                    }
+
                     if (selected && selected.data && selected.data.address) {
                         subData.push(Ext.apply({ selected: subRecord.data.address == selected.data.address }, subRecord.getData()));
                     }
                     else {
                         subData.push(Ext.apply({ selected: subRecord == selected }, subRecord.getData()));
                     }
-            }); 
-
-            // removing the view staged and view live breadcrumbs from sitebuilder if were in redirect or theme view
-            if (state && (state.uri.indexOf('themes') !== -1 || state.uri.indexOf('redirects') !== -1)) {
-                
-                for (var i = subData.length - 1; i >= 0; i--) {
-                    if (subData[i].id === 'viewStaged' || subData[i].id === 'viewLive') {
-                        subData.splice(i, 1);
-                    }
-                }
-            }
+            });
         }
 
         Ext.apply(data, { items: subData });
