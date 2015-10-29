@@ -110,7 +110,7 @@ NUGET
       Mozu.Core.Prime (>= 1.18.0)
     Mozu.Core.Messaging.Contracts (1.18.1)
       Mozu.Core.Prime (>= 1.18.0)
-    Mozu.Core.Prime (1.18.41)
+    Mozu.Core.Prime (1.18.42)
       Autofac (>= 3.5.2)
       Autofac.WebApi2 (>= 3.4.0)
       AutoMapper (>= 3.3.0)
