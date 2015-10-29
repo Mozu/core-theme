@@ -138,7 +138,6 @@
                     me = this;
                 if (this.validate()) return false;
                 this.getOrder().apiModel.update({ fulfillmentInfo: me.toJSON() }).ensure(function () {
-                    me.provisional = false;
                     me.isLoading(false);
                     order.messages.reset();
                     order.syncApiModel();
@@ -257,52 +256,51 @@
                 this.updateShippingMethod();
             },
             calculateStepStatus: function () {
-                var st = 'new', available;
+                // If no shipping required, we're done.
                 if (!this.requiresFulfillmentInfo()) return this.stepStatus('complete');
-                if (this.provisional) return this.stepStatus('incomplete');
+
+                // If there's no shipping address yet, go blank.
                 if (this.get('fulfillmentContact').stepStatus() !== 'complete') {
                     return this.stepStatus('new');
                 }
-                available = this.get('availableShippingMethods');
-                if (available && available.length && _.findWhere(available, { shippingMethodCode: this.get('shippingMethodCode') })) {
-                    return this.stepStatus('complete');
-                }
-                return this.stepStatus('incomplete');
+
+                // Incomplete status for shipping is basically only used to show the Shipping Method's Next button,
+                // which does nothing but show the Payment Info step.
+                var billingInfo = this.parent.get('billingInfo');
+                if (!billingInfo || billingInfo.stepStatus() === 'new') return this.stepStatus('incomplete');
+
+                // Payment Info step has been initialized. Complete status hides the Shipping Method's Next button.
+                return this.stepStatus('complete');
             },
             updateShippingMethod: function (code) {
                 var available = this.get('availableShippingMethods'),
                     newMethod = _.findWhere(available, { shippingMethodCode: code }),
-                    lowestValue =  _.min(available, function(ob) { return ob.price; });
+                    lowestValue = _.min(available, function(ob) { return ob.price; }); // Returns Infinity if no items in collection.
 
-                if (!newMethod && available && lowestValue) {
+                if (!newMethod && available && available.length && lowestValue) {
                     newMethod = lowestValue;
-                    this.provisional = true;
                 }
                 if (newMethod) {
                     this.set(newMethod);
+                    this.applyShipping();
                 }
-
-                // wait for customer to be defined
-                _.defer((function() {
-                    var contacts = this.getOrder().get('customer').get('contacts'),
-                        isPrimaryShipping = contacts.filter(function(ob) {return ob.attributes.isPrimaryShippingContact;});
-
-                    // if this is our primary shipping information
-                    if (isPrimaryShipping.length > 0 && !newMethod) {
-                        this.stepStatus('complete');
-                    }
-                }).bind(this));
             },
-            next: function () {
+            applyShipping: function() {
                 if (this.validate()) return false;
                 var me = this;
                 this.isLoading(true);
-                this.getOrder().apiModel.update({ fulfillmentInfo: me.toJSON() }).ensure(function () {
-                    me.provisional = false;
-                    me.isLoading(false);
-                    me.calculateStepStatus();
-                    me.parent.get('billingInfo').calculateStepStatus();
-                });
+                var order = this.getOrder();
+                if (order) {
+                    order.apiModel.update({ fulfillmentInfo: me.toJSON() }).ensure(function () {
+                        me.isLoading(false);
+                        me.calculateStepStatus();
+                        me.parent.get('billingInfo').calculateStepStatus();
+                    });
+                }
+            },
+            next: function () {
+                this.stepStatus('complete');
+                this.parent.get('billingInfo').calculateStepStatus();
             }
         }),
 
@@ -1402,55 +1400,7 @@
             isSavingNewCustomer: function() {
                 return this.get('createAccount') && !this.customerCreated;
             },
-            //finalPaymentReconcile: function() {
 
-            //    var order = this,
-            //        total = this.get('total'),
-            //        activePayments = this.apiModel.getActivePayments(),
-            //        currentPayment = this.apiModel.getCurrentPayment(),
-            //        billingInfo,
-            //        difference = Math.round((_.reduce(activePayments, function(sum, payment) { return sum + payment.amountRequested; }, 0) - total) * 100) / 100,
-            //        deferred;
-
-            //    if (difference === 0) {
-            //        // no recalculation necessary, simply return a fulfilled promise to continue
-            //        deferred = api.defer();
-            //        deferred.resolve(true);
-            //        return deferred.promise;
-            //    } else {
-            //        billingInfo = order.get('billingInfo');
-            //        if (!currentPayment || activePayments.length > 1 || currentPayment.paymentType === 'PaypalExpress') {
-            //            // if store credits or PayPal are being used,
-            //            // or multiple payments are active,
-            //            // or the order total has increased,
-            //            // void all payments and ask the shopper to recalculate payment manually
-            //            return api.all.apply(api, activePayments.map(function(payment) { return order.apiVoidPayment(payment.id); })).then(function() {
-            //                order.get('customer.credits').each(function(credit) {
-            //                    // blank out cached credits manually
-            //                    credit.set({
-            //                        isEnabled: false,
-            //                        creditAmountApplied: 0,
-            //                        remainingBalance: credit.get('currentBalance')
-            //                    });
-            //                });
-            //                return billingInfo.loadCustomerDigitalCredits();
-            //            }).then(function() {
-            //                billingInfo.clear();
-            //                billingInfo.stepStatus('incomplete');
-            //                throw new Error(Hypr.getLabel('recalculatePayments'));
-            //            });
-            //        } else {
-            //            // in the simplest, most common case, where the order total has reduced and only one
-            //            // payment method is active, then we can automatically deduct the difference
-
-            //            currentPayment.amountRequested = total;
-            //            billingInfo.set(currentPayment);
-            //            return order.update();
-                        
-            //        }
-            //    }
-
-            //},
             submit: function () {
                 var order = this,
                     billingInfo = this.get('billingInfo'),
