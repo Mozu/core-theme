@@ -291,12 +291,14 @@ Ext.define('Taco.store.Navigation', {
                     {
                         'id': 'viewLive',
                         'label': 'View Live',
-                        'address': ''
+                        'address': '',
+                        'breadCrumbOnly': true
                     },
                     {
                         'id': 'viewStaged',
                         'label': 'View Staged',
-                        'address': ''
+                        'address': '',
+                        'breadCrumbOnly': true
                     }
                     /*, {
                 'id': 'fileManager',
