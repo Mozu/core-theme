@@ -107,5 +107,12 @@ Ext.define('Taco.core.util.Common', {
             return u.id === id;
         });
         return (user) ? user.firstName + ' ' + user.lastName : null;
-    }
+    },
+    debounce: function(cb, duration) {
+        var timeout;
+        return (function() {
+            clearTimeout(timeout);
+            timeout = setTimeout(cb.bind(this), duration);
+        });
+    },
 });

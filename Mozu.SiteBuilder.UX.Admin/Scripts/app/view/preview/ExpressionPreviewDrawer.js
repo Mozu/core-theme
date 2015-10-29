@@ -9,7 +9,8 @@ Ext.define('Taco.view.preview.ExpressionPreviewDrawer', {
 
     requires: [
         'Taco.core.ux.content.SplitContainer',
-        'Taco.view.storefrontProduct.Grid'
+        'Taco.view.storefrontProduct.Grid',
+        'Taco.core.util.Common'
     ],
 
     // this should really be the default;
@@ -21,7 +22,7 @@ Ext.define('Taco.view.preview.ExpressionPreviewDrawer', {
     height: '90%',
     //scale: 'large',
     title: 'Products',
-    width: 1000,
+    width: '90%',
     createType: '',
     isCreateMode: true,
     record: null,
@@ -48,9 +49,8 @@ Ext.define('Taco.view.preview.ExpressionPreviewDrawer', {
         me.previewGrid = Ext.create('Taco.view.storefrontProduct.Grid');
 
         me.updateExpression = function() {
-            if (this.getRootNode().childNodes.length === 0) { //if there are no nodes present, skip the call and empty the grid
-                me.previewGrid.fireEvent('taco-empty-grid');
-            } else {
+            var root = this.getRootNode();
+            if (me.isValidExpression(root)) {
                 this.getExpressionText({
                     tree: this.getValue(),
                     type: this.getType() || 'DynamicPreComputed'
@@ -62,6 +62,28 @@ Ext.define('Taco.view.preview.ExpressionPreviewDrawer', {
             }
         };
 
+        var debouncedUpdateExpression = Taco.core.util.Common.debounce(me.updateExpression, 100);
+
+        /*
+        *    returns false if there is an empty container node, true otherwise
+        */
+        me.isValidExpression = function(node) {
+            
+            var childNodes = node.childNodes
+            if (node.data.type === 'container' && childNodes.length === 0) {
+                return false;
+            } else {
+                for (var i = 0; i < childNodes.length; i++) {
+                    var childNode = childNodes[i];
+                    if (childNode.data.type === 'container') {
+                        return me.isValidExpression(childNode);
+                    } else {
+                        return true;
+                    }
+                }
+            }
+        };
+
         me.expressionEditor = Ext.create('Taco.view.filter.ExpressionTreePanel', {
             showPreviewButton: false,
             showEditButton: false,
@@ -70,18 +92,20 @@ Ext.define('Taco.view.preview.ExpressionPreviewDrawer', {
             data: me.expressionData,
             title: 'Editor',
             bubbleEvents: ['itemappend', 'itemremove', 'iteminsert'],
+            padding: '0 10 0 0',
             listeners: {
                 scope: me.expressionEditor,
-                add: me.updateExpression,
-                itemappend: me.updateExpression,
-                itemremove: me.updateExpression,
-                iteminsert: me.updateExpression
+                add: debouncedUpdateExpression,
+                itemappend: debouncedUpdateExpression,
+                itemremove: debouncedUpdateExpression,
+                iteminsert: debouncedUpdateExpression
             }
         });
 
         me.previewPanel = Ext.create('Ext.container.Container', {
             items: [me.previewGrid],
             title: 'Preview',
+            padding: '0 0 0 10',
             layout: {
                 type: 'fit'
             }

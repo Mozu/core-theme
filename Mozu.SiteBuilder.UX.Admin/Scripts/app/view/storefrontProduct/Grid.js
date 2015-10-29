@@ -99,7 +99,7 @@ Ext.define('Taco.view.storefrontProduct.Grid', {
             }
         }, me);
 
-        me.on('taco-empty-grid', function() {
+        me.on('taco-empty-preview-grid', function() {
             me.store.loadData([], false);
         });
 
@@ -108,6 +108,7 @@ Ext.define('Taco.view.storefrontProduct.Grid', {
             supportedLevels: ['s'],
             requiresContextOfType: ['c', 's'],
             changeContext: Ext.emptyFn,
+            margin: '0 10 10 0',
             listeners: {
                 afterrender: function(component, eOpts) {
                     var item = this.store.data.items[0];
@@ -133,6 +134,7 @@ Ext.define('Taco.view.storefrontProduct.Grid', {
             editable: false,
             forceSelection: true,
             value: 'Live',
+            margin: '0 10 10 0',
             listeners: {
                 select: function (source, records) {
                     var dataViewMode = source.getValue();
@@ -154,6 +156,7 @@ Ext.define('Taco.view.storefrontProduct.Grid', {
         me.sitePreviewDate = Ext.create('Taco.core.ux.form.DateTime', {
             fieldLabel: 'Preview Date',
             hidden: true,
+            margin: '0 10 10 0',
             listeners: {
                 change: function(component, newValue, oldValue, eOpts) {
                     me.fireEvent('taco-update-preview', {
