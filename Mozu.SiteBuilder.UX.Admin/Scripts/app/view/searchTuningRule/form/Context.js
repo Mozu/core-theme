@@ -20,6 +20,7 @@ Ext.define('Taco.view.searchTuningRule.form.Context', {
         isCreateMode: false
     },
     categoryCode: null,
+    isCreate: false,
 
     initComponent: function() {
         var me = this;
@@ -50,12 +51,19 @@ Ext.define('Taco.view.searchTuningRule.form.Context', {
 
         catStore.on({
             load: function (store) {
+                var catRecordToAddWhenNew;
 
                 store.filterBy(function (record) {
                     var isRealTime = record.get('categoryType') === 'DynamicRealTime';
                     return !isRealTime;
                 });
 
+                if (me.isCreate && me.categoryCode) {
+                    catRecordToAddWhenNew = catStore.findRecord('categoryCode', me.categoryCode);
+                    if (catRecordToAddWhenNew) {
+                        me.categoryGrid.fireEvent('recordadded', catRecordToAddWhenNew);
+                    }
+                }
             },
             single: true,
             scope: this
