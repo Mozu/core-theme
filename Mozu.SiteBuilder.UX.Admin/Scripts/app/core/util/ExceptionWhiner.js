@@ -72,8 +72,20 @@ Ext.define('Taco.core.util.ExceptionWhiner', {
      * @returns {} 
      */
     handleRemoteFailure: function (resp) {
-        var json = Ext.decode(resp.responseText, true);
-        Taco.app.fireEvent('setmessage', json.message, 'error');
+        var msg,
+            json;
+        if (resp.responseText) {
+            json = Ext.decode(resp.responseText, true);
+        } else if (resp.error) {
+            json = Ext.decode(resp.error.responseText, true);
+        }
+
+        if (json && json.message) {
+            msg = json.message;
+        } else {
+            msg = 'Unknown error';
+        }
+        Taco.app.fireEvent('setmessage', msg, 'error');
     }
 
 });
