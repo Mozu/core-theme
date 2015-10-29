@@ -200,8 +200,7 @@ namespace Mozu.SiteBuilder.Mvc.SEO
                 template = routeDef.Template.Substring(0, qpos);
                 qString = routeDef.Template.Substring(qpos + 1);
             }
-
-            var scheme = routeDef.UrlScheme.IsNullOrEmpty() ? CustomRoute.Scheme.Http : routeDef.UrlScheme.ToEnum<CustomRoute.Scheme>();
+            var scheme = routeDef.UrlScheme.IsNullOrEmpty() ? (CustomRoute.Scheme?)null : routeDef.UrlScheme.ToEnum<CustomRoute.Scheme>();
             return new CustomRoute(template, qString, routeDef.InternalRoute.ToEnum<FancyRoute>(), routeDef.Canonical.GetValueOrDefault(false), defaults, knownValidators, knownMappings, routeDef.FunctionId, scheme);
         }
 
