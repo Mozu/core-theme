@@ -29,7 +29,7 @@ nuget Mozu.AdminUser.Contracts < 1.19
 nuget Mozu.AppDev.Contracts < 1.19
 nuget Mozu.BuildSupport.GetAssemblyFileVersionTask 1.0.0 
 nuget Mozu.CommerceRuntime.Contracts < 1.19
-nuget mozu.Content.Contracts < 1.20 prerelease
+nuget mozu.Content.Contracts < 1.20 
 nuget Mozu.Core.Messaging < 1.19
 nuget Mozu.Core.Test < 1.19 
 nuget Mozu.Customer.Contracts < 1.19 
@@ -38,12 +38,12 @@ nuget Mozu.Hypr.NDjango
 nuget Mozu.InstalledApps.Contracts < 1.19
 nuget Mozu.Location.Contracts < 1.19
 nuget Mozu.MZDB.Contracts < 1.19
-nuget Mozu.ProductAdmin.Contracts < 1.19
+nuget Mozu.ProductAdmin.Contracts < 1.20
 nuget Mozu.ProductRuntime.Contracts < 1.19
 nuget Mozu.Provisioning.Contracts < 1.19
 nuget Mozu.Reference.Contracts < 1.19
 nuget Mozu.ShippingAdmin.Contracts < 1.19
-nuget Mozu.SiteSettings.General.Contracts < 1.20 prerelease  
-nuget Mozu.SiteSettings.Order.Contracts < 1.20 prerelease
+nuget Mozu.SiteSettings.General.Contracts < 1.20   
+nuget Mozu.SiteSettings.Order.Contracts < 1.20 
 nuget protobuf-net 2.0.0.668 
 nuget FAKE
