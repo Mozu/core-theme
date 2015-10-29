@@ -170,7 +170,10 @@ Ext.define('Taco.view.searchTuningRule.Edit', {
                 ? me.saveSuccess
                 : me.onCreate;
 
-        me.form.beforeSave();
+        if (!me.form.beforeSave()) {
+            me.saveFailure();
+            return;
+        }
         this.record.save({
             success: onSuccess,
             failure: function(item, response) {
