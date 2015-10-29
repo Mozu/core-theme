@@ -15,11 +15,29 @@ using Mozu.SiteSettings.General.Contracts.General.Routing;
 using NDjango.Interfaces;
 using Newtonsoft.Json.Linq;
 using System.Web.Http.Routing;
+using Mozu.Core.Extensions;
+using Mozu.Core;
+using System.Linq;
 
 namespace Mozu.SiteBuilder.Mvc.Helpers
 {
     public class UrlHelper
     {
+        public enum UrlType
+        {
+            Facet,
+            Paging,
+            Sorting,
+            Image,
+            Category,
+            Product,
+            Stylesheet,
+            CDN,
+            Document,
+            Search,
+            Cart
+        }
+
         private readonly ISiteBuilderApiContext _apiContext;
         private readonly ISiteContext _siteContext;
         private readonly IPageContext _pageContext;
@@ -47,17 +65,23 @@ namespace Mozu.SiteBuilder.Mvc.Helpers
         [Microsoft.ClearScript.ScriptMember("getUrl")]
         public string MakeUrl(string type, object obj, DynamicObject config)
         {
-            Dictionary<string, object> dic = new Dictionary<string, object>(StringComparer.OrdinalIgnoreCase);
-            foreach (var name in config.GetDynamicMemberNames())
+            UrlType urlType;
+            if (FastEnum<UrlType>.TryParse(type, out urlType))
             {
-                object configValue;
-                if (config.TryGetMember(MyGetMemberBinder.Get(name), out configValue))
+                Dictionary<string, object> dic = new Dictionary<string, object>(StringComparer.OrdinalIgnoreCase);
+                foreach (var name in config.GetDynamicMemberNames())
                 {
-                    dic[name] = configValue;
+                    object configValue;
+                    if (config.TryGetMember(MyGetMemberBinder.Get(name), out configValue))
+                    {
+                        dic[name] = configValue;
+                    }
                 }
+                return MakeUrl(urlType, obj, dic, false);
             }
-            return MakeUrl(type, obj, dic, false);
+            throw new RenderingError(string.Format("unknown urltag type: {0}. Tags must be one of [{1}]", type, string.Join(",", Enum.GetNames(typeof(UrlType)).Select(x => x.ToLowerInvariant()))), Microsoft.FSharp.Core.FSharpOption<Exception>.None);
         }
+
         class MyGetMemberBinder : GetMemberBinder
         {
             public static System.Collections.Concurrent.ConcurrentDictionary<string, MyGetMemberBinder> _cache = new System.Collections.Concurrent.ConcurrentDictionary<string, MyGetMemberBinder>();
@@ -75,73 +99,69 @@ namespace Mozu.SiteBuilder.Mvc.Helpers
                 return null;
             }
         }
-        public string MakeUrl(string type, object obj, Dictionary<string, object> config)
+        public string MakeUrl(UrlType type, object obj, Dictionary<string, object> config)
         {
             return MakeUrl(type, obj, config, false);
         }
-        public string MakeUrl(string type, object obj, Dictionary<string, object> config, bool includeContxt)
+        public string MakeUrl(UrlType type, object obj, Dictionary<string, object> config, bool includeContext)
         {
 
             var url = "#";
 
             switch (type)
             {
-                case "facet":
+                case UrlType.Facet:
                     {
                         url = MakeFacetUrl(obj);
                         break;
                     }
-                case "paging":
+                case UrlType.Paging:
                     {
                         return MakePagingUrl(obj, config);
                     }
-                case "sorting":
+                case UrlType.Sorting:
                     {
                         return MakeSortingUrl(obj, config);
                     }
-                case "image":
+                case UrlType.Image:
                     {
                         url = MakeImageUrl(obj, config);
                         break;
                     }
-                case "category":
+                case UrlType.Category:
                     {
-                        url = MakeCategoryUrl(obj, config, includeContxt);
+                        url = MakeCategoryUrl(obj, config, includeContext);
                         break;
                     }
-                case "product":
+                case UrlType.Product:
                     {
                         url = MakeProductUrl(obj);
                         break;
                     }
-                case "stylesheet":
+                case UrlType.Stylesheet:
                     {
                         url = MakeStylesheetUrl(obj, config);
                         break;
                     }
-                case "cdn":
+                case UrlType.CDN:
                     {
                         url = MakeCdnUrl(obj, config);
                         break;
                     }
-                case "document":
+                case UrlType.Document:
                     {
                         url = MakeDocumentUrl(obj, config);
                         break;
                     }
-                case "search":
+                case UrlType.Search:
                     {
                         url = MakeSearchUrl();
                         break;
                     }
-                case "cart":
+                case UrlType.Cart:
                     {
                         url = MakeCartUrl();
                         break;
-                    }
-                default:
-                    {
-                        throw new RenderingError(string.Format("unknown type [{0}]", type), null);
                     }
             }
             return url;
@@ -213,14 +233,19 @@ namespace Mozu.SiteBuilder.Mvc.Helpers
                 ListFQN = _resolver.ResolveMemberOrDefault<string>(o, "ListFQN", null),
                 DocumentTypeFQN = _resolver.ResolveMemberOrDefault<string>(o, "DocumentTypeFQN", null),
                 Properties = _resolver.ResolveMemberOrDefault<JObject>(0, "Properties")
-
             };
+
             return DoMakeDocumentUrl(doc, config);
         }
 
         string DoMakeDocumentUrl(Mozu.Content.Contracts.Document doc, Dictionary<string, object> config)
         {
-            return _customRouteHandler.GetCanonicalUrl(FancyRoute.CmsPage, () => Mapper.Map<IDictionary<string, object>>(doc).ChainSet(config), false).Result ?? "/" + doc.Name;
+            return 
+                _customRouteHandler.GetCanonicalUrl(FancyRoute.CmsPage, () => Mapper.Map<IDictionary<string, object>>(doc).ChainSet(config), false).Result ??
+                (doc.ListFQN.EqualsIgnoreCase("pages@mozu") ? // the default routes for cms documents on the UX side are the source here.
+                    "/" + doc.Name : // pages have a default route of /{documentName}
+                    string.Format("/cms/{0}/{1}", doc.ListFQN, doc.Name) // all other documents have a default route of /cms/{doclistFQN}/{docName}
+                );
         }
 
         private string MakeCdnUrl(object o, Dictionary<string, object> config)
@@ -299,7 +324,6 @@ namespace Mozu.SiteBuilder.Mvc.Helpers
             int currentStartIndex = _resolver.ResolveMemberOrDefault<int>(productCollection, "StartIndex", 0);
 
             var overrides = new SearchContextOverrides();
-            overrides.UrlBase = "/"+  new Uri(this._pageContext.Url).GetComponents(UriComponents.Path, UriFormat.Unescaped);
             if (config.TryGetValue("pageSize", out obj))
             {
                 pageSize = Convert.ToInt32(obj);
@@ -343,7 +367,7 @@ namespace Mozu.SiteBuilder.Mvc.Helpers
 
         }
 
-        public string MakeProductUrl(object obj)
+        string MakeProductUrl(object obj)
         {
 
             Product product = obj as Product;
@@ -369,7 +393,8 @@ namespace Mozu.SiteBuilder.Mvc.Helpers
             return _customRouteHandler.GetCanonicalUrl(FancyRoute.ProductDetails, () => Mapper.Map<IDictionary<string, object>>(product), false).Result ?? "/p/" + product.ProductCode;
 
         }
-        public string MakeCategoryUrl(object obj, Dictionary<string, object> config, bool includeContxt)
+
+        string MakeCategoryUrl(object obj, Dictionary<string, object> config, bool includeContxt)
         {
             int categoryId = -1;
             string categoryCode = null;
@@ -389,7 +414,7 @@ namespace Mozu.SiteBuilder.Mvc.Helpers
             }
             if (categoryCode == null && categoryId == -1)
             {
-                categoryId = _resolver.ResolveMemberOrDefault<int>(obj, "categoryId", -1);
+                categoryId = _resolver.ResolveMemberOrDefault(obj, "categoryId", -1);
             }
 
             if (categoryCode == null && categoryId == -1)
@@ -443,7 +468,7 @@ namespace Mozu.SiteBuilder.Mvc.Helpers
             }
             return url;
         }
-        public string MakeImageUrl(dynamic obj, Dictionary<string, object> config)
+        string MakeImageUrl(dynamic obj, Dictionary<string, object> config)
         {
             string url = null;
             if (obj is string)
@@ -494,7 +519,7 @@ namespace Mozu.SiteBuilder.Mvc.Helpers
             return sb.ToString();
         }
 
-        public string MakeFacetUrl(object obj)
+        string MakeFacetUrl(object obj)
         {
             var routeData = _httpRequestMessage.GetRouteData();
 
