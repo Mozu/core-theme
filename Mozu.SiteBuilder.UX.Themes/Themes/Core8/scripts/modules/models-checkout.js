@@ -309,6 +309,9 @@
 
                     fn: "validatePaymentType"
                 },
+                savedPaymentMethodId: {
+                    fn: "validateSavedPaymentMethodId"
+                },
 
                 'billingContact.email': {
                     pattern: 'email',
@@ -330,6 +333,13 @@
               var errorMessage = Hypr.getLabel('paymentTypeMissing');
               if (!value) return errorMessage;
               if ((value === "StoreCredit" || value === "GiftCard") && this.nonStoreCreditTotal() > 0 && !payment) return errorMessage;
+
+            },
+            validateSavedPaymentMethodId: function (value, attr, computedState) {
+                if (this.get('usingSavedCard')) {
+                    var isValid = this.get('savedPaymentMethodId');
+                    if (!isValid) return Hypr.getLabel('selectASavedCard');
+                }
 
             },
             helpers: ['acceptsMarketing', 'savedPaymentMethods', 'availableStoreCredits', 'applyingCredit', 'maxCreditAmountToApply',
@@ -902,16 +912,7 @@
                     this.get('card').set('isVisaCheckout', currentPayment.paymentWorkflow.toLowerCase() === 'visacheckout');
                 }
 
-                // when we are using the saved card, validation is only to make sure we have one selected.
-                var val = null;
-                if (!order.get('billingInfo.usingSavedCard')) {
-                    val = this.validate();
-
-                // the second condition is to make sure that saved credit card is the operation.
-                } else if (order.get('billingInfo.usingSavedCard') && !this.get('savedPaymentMethodId')) {
-                    var missingSavedCardErrorMsg = Hypr.getLabel('selectASavedCard');
-                    val = { 'card.saved': missingSavedCardErrorMsg };
-                }
+                var val = this.validate();
 
                 if (this.nonStoreCreditTotal() > 0 && val) {
                     // display errors:

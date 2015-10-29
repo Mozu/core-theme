@@ -8,7 +8,6 @@ using System.Threading.Tasks;
 using Mozu.Content.Contracts.Clients;
 using Mozu.Core.Api.Client;
 using Mozu.Core.Logging;
-using Mozu.ProductRuntime.Contracts.Clients;
 using Mozu.SiteBuilder.Mvc.Caching;
 using Mozu.SiteBuilder.Mvc.Extensions;
 using Mozu.SiteBuilder.UX.Models.Navigation;
@@ -16,6 +15,8 @@ using Mozu.SiteBuilder.Mvc.Contexts;
 using Mozu.Core;
 using Mozu.Core.Extensions;
 using Mozu.SiteBuilder.Mvc.SEO;
+using Mozu.SiteBuilder.Mvc.Catalog;
+using Mozu.SiteBuilder.UX.Models.StoreFront.Catalog;
 
 namespace Mozu.SiteBuilder.Mvc.Navigation
 {
@@ -25,12 +26,12 @@ namespace Mozu.SiteBuilder.Mvc.Navigation
     /// </summary>
     public sealed class NavigationGandalfTheWhite : INavigationGandalf
     {
-        IProductCategoryRuntimeWebApiClient _productCategoryRuntimeWebApiClient;
-        IDocumentListWebApiClient _documentClient;
-        INavigationRepository _navRepo;
-        ILogger _logger;
-        MD5 _md5;
-        IStorefrontCache _cache;
+        readonly ICategoryTreeProvider _categoryProvider;
+        readonly IDocumentListWebApiClient _documentClient;
+        readonly INavigationRepository _navRepo;
+        readonly ILogger _logger;
+        readonly MD5 _md5;
+        readonly IStorefrontCache _cache;
         private readonly ICustomRouteHandler _customRouteHandler;
         readonly NavigationNodeIndexComparer _navigationNodeIndexComparer = new NavigationNodeIndexComparer();
         readonly bool _shouldRequestInactiveDocuments;
@@ -46,14 +47,15 @@ namespace Mozu.SiteBuilder.Mvc.Navigation
 
         // the special node to assign unlinked pages as a child of.
         const string UNLINKED_PAGES_NODE_ID = "_unlinked";
+        
 
 
         /// <summary>
         /// Public constructor.
         /// </summary>
-        public NavigationGandalfTheWhite(IProductCategoryRuntimeWebApiClient productCategoryRuntimeWebApiClient, IDocumentListWebApiClient documentClient, INavigationRepository navRepo,  ILogger logger, PageContext pageContext, IApiContext apicontext, IStorefrontCache cache = null, ICustomRouteHandler customRouteHandler= null)
+        public NavigationGandalfTheWhite(IDocumentListWebApiClient documentClient, INavigationRepository navRepo,  ILogger logger, PageContext pageContext, IApiContext apicontext, ICategoryTreeProvider categoryProvider, IStorefrontCache cache = null, ICustomRouteHandler customRouteHandler= null)
         {
-            _productCategoryRuntimeWebApiClient = productCategoryRuntimeWebApiClient.CloneWithoutUserClaims();
+            _categoryProvider = categoryProvider;
             _documentClient = documentClient.CloneWithoutUserClaims();
             _navRepo = navRepo;
             _logger = logger;
@@ -62,7 +64,6 @@ namespace Mozu.SiteBuilder.Mvc.Navigation
             _customRouteHandler = customRouteHandler;
 
             _shouldRequestInactiveDocuments = pageContext.IsEditMode || (apicontext.UserClaims != null && apicontext.UserClaims.ScopeType.EqualsIgnoreCase(UserScopeType.Tenant.ToStringQuickly())); // if tenant admin or edit mode...
-
         }
 
         /// <summary>
@@ -112,7 +113,7 @@ namespace Mozu.SiteBuilder.Mvc.Navigation
         private Task<SuperNavigationNodeList> GetListInternal()
         {
             // get the list of categories
-            var catTask = _productCategoryRuntimeWebApiClient.GetCategoryTree();
+            var catTask = _categoryProvider.GetAllCategories();
 
             // get the list of pages
             var pageTask = _documentClient.GetDocuments(documentListName: "pages@mozu", pageSize: 250, includeInactive: _shouldRequestInactiveDocuments);
@@ -127,14 +128,13 @@ namespace Mozu.SiteBuilder.Mvc.Navigation
             {
                 var pagesResp = pageTask.Result;
                 var pages = pagesResp.ReadAsSync();
-                var categoriesResp = catTask.Result;
-                var categories = catTask.Result.ReadAsSync();
+                var categoryTree = catTask.Result;
                 var navset = navTask.Result;
                 var navsetEtag = navset is NavigationSet ? (navset as NavigationSet).ETag : null;
 
-                string etag = CompositeETag(categoriesResp.ETag(), pagesResp.ETag(), navsetEtag);
+                string etag = CompositeETag(categoryTree.ETag, pagesResp.ETag(), navsetEtag);
 
-                if (!String.IsNullOrEmpty(etag) && _cache != null)
+                if (!string.IsNullOrEmpty(etag) && _cache != null)
                 {
                     var cached = _cache.Get<SuperNavigationNodeList>(NAVIGATION_LIST_INTERNAL_CACHE_KEY + etag, CacheScope.Site);
                     if (cached != null)
@@ -142,7 +142,7 @@ namespace Mozu.SiteBuilder.Mvc.Navigation
                 }
 
                 int numpages = pages != null && pages.Items != null ? pages.Items.Count : 0;
-                int numcats = categories != null && categories.Items != null ? categories.Items.Count : 0;
+                int numcats = categoryTree.AllCategories.Count;
                 int numNavset = navset != null ? navset.Count : 0;
                 var masterList = new SuperNavigationNodeList(numpages + numcats + numNavset + 2);
                 masterList.ETag = etag;
@@ -170,7 +170,7 @@ namespace Mozu.SiteBuilder.Mvc.Navigation
                 });
 
                 // build the masterlist. Step 1: put the top level categories in.
-                var allCats = GetAllCategoriesFromTree(categories.Items);
+                var allCats = GetAllCategoriesFromTree(categoryTree.AllCategories);
 
                 masterList.AddRange(allCats);
 
@@ -199,7 +199,7 @@ namespace Mozu.SiteBuilder.Mvc.Navigation
                                 OriginalId = page.Id,
                                 OriginalDocumentListName = page.ListFQN,
                                 Index = navmeta.Index,
-                                Url = _customRouteHandler.GetCannonicalUrl(SiteSettings.General.Contracts.General.Routing.FancyRoute.CmsPage, () => AutoMapper.Mapper.Map<IDictionary<string, object>>(page), false).Result ?? (String.Equals(page.ListFQN, "pages@mozu", StringComparison.OrdinalIgnoreCase) ? "/" + page.Name : "/" + page.ListFQN + "/" + page.Name)
+                                Url = _customRouteHandler.GetCanonicalUrl(SiteSettings.General.Contracts.General.Routing.FancyRoute.CmsPage, () => AutoMapper.Mapper.Map<IDictionary<string, object>>(page), false).Result ?? (String.Equals(page.ListFQN, "pages@mozu", StringComparison.OrdinalIgnoreCase) ? "/" + page.Name : "/" + page.ListFQN + "/" + page.Name)
                             };
                         }
                         else
@@ -277,11 +277,11 @@ namespace Mozu.SiteBuilder.Mvc.Navigation
         }
 
         /// <summary>
-        /// Flattens the category tree returned by the service into a list of NavigationNodes.
+        /// Maps a category from the tree into a navigation node
         /// </summary>
         /// <param name="inputList"></param>
         /// <returns></returns>
-        private List<SuperNavigationNode> GetAllCategoriesFromTree(List<ProductRuntime.Contracts.Category> inputList)
+        List<SuperNavigationNode> GetAllCategoriesFromTree(List<Category> inputList)
         {
             if (inputList == null)
                 return null;
@@ -297,8 +297,9 @@ namespace Mozu.SiteBuilder.Mvc.Navigation
                         Id = "cat^^" + cat.CategoryId,
                         ParentId = cat.ParentCategory != null ? "cat^^" + cat.ParentCategory.CategoryId : NAV_ROOT_NODE_NAME,
                         OriginalId = cat.CategoryId.ToString(),
-                        Url = cat.Content == null || String.IsNullOrEmpty(cat.Content.Slug) ? "/c/" + cat.CategoryId : "/" + cat.Content.Slug + "/c/" + cat.CategoryId,
+                        Url = _customRouteHandler.GetCanonicalUrl(SiteSettings.General.Contracts.General.Routing.FancyRoute.Category, () => AutoMapper.Mapper.Map<IDictionary<string,object>>(cat), false).Result,
                         Name = cat.Content.Name,
+                        
                         // category "Sequence" is 1-indexed, but our navigation list is 0-indexed.. so we subtract 1.
                         // actually, "Sequence" does not appear to follow any rules, so sometimes it's zero indexed.
                         // we have to do a Math.Max to guard against negative numbers.
@@ -306,10 +307,6 @@ namespace Mozu.SiteBuilder.Mvc.Navigation
                         IsHidden = !cat.IsDisplayed,
                         IsEmpty = !cat.Count.HasValue || cat.Count.Value <= 0
                     });
-
-                // recursively deal with children
-                if (cat.ChildrenCategories != null)
-                    returnList.AddRange( GetAllCategoriesFromTree(cat.ChildrenCategories) );
             }
 
             return returnList;

@@ -1,5 +1,5 @@
 /*! 
- * Mozu JavaScript SDK - v0.3.0 - 2015-10-13
+ * Mozu JavaScript SDK - v0.3.0 - 2015-10-28
  *
  * Copyright (c) 2015 Volusion, Inc.
  *
@@ -3877,6 +3877,12 @@ module.exports=
         "add-contact": {
             "verb": "POST",
             "template": "{+customerService}{id}/contacts",
+            "includeSelf": true,
+            "returnType": "contact"
+        },
+        "update-contact": {
+            "verb": "PUT",
+            "template": "{+customerService}{accountId}/contacts/{id}",
             "includeSelf": true,
             "returnType": "contact"
         },

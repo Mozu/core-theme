@@ -2,21 +2,24 @@
  * @class Taco.view.locationType.Index
  */
 Ext.define('Taco.view.redirects.Index', {
-    extend: 'Taco.core.ux.browser.BrowserPage',
+    extend: 'Taco.core.ux.browser.SearchList',
     requires: [
         'Taco.model.RedirectEntry',
         'Taco.store.RedirectEntries'
     ],
-    typeName: 'Redirects',
+    typeName: 'Redirect',
     gridHeaderLabel: 'Redirects',
     requiresContextOfType: 's',
+
+    formCls: 'Taco.core.ux.form.Form',
     
     contextConfig: {
         supportedLevels: ['s'],
         requiresContextOfType: ['s']
     },
-
     
+    enableNavHeader: true,
+
     modelName: 'Taco.model.RedirectEntry',
 
     store: { type: 'Taco.store.RedirectEntries' },
@@ -24,100 +27,135 @@ Ext.define('Taco.view.redirects.Index', {
     // turn on the row editing feature for inline grid editing and inline grid creation.  typically used for simple entities with several fields.
     enableRowEditing: true,
 
+    addContentViewPadding: true,
+
+    title: 'Redirects',
+
     // default data to use when creating new entity
     defaultRowEditingData: {        
         
     },
 
-    useTilePanel: false,
-   
-    // hide the serach field
-    filterProperties: null,
+    createButtonText: 'Create New Redirect',
 
-    gridPanelConf: {
-        selModel: {},
-        stateful: true,
-        stateId: 'statefulRedirectsGrid',
-        columns: [{
-                dataIndex: 's',
-                text: 'Source',
-                stateId: 'source',
-                editor: {
-                    emptyText: "Source",
-                    msgTarget: "qtip",
-                    // optional enhancement to rowEditor. Makes the field only editable during a create;
-                    editableOnCreateOnly: true,
-                    selectOnFocus: true,
-                    allowBlank: false
-                },
+    createButtonEnabled: true,
 
-                width: 200
-            }, {
-                dataIndex: 'd',
-                stateId: 'destination',
-                editor: {
-                    emptyText: "Destination",
-                    msgTarget: "qtip",
-                    selectOnFocus: true,
-                    allowBlank: false
-                },
-                text: 'Destination',
-                flex: 1
-            },
-            {
-                dataIndex: 'rw',
-                stateId: 'rewrite',
-                editor: {
-                    xtype: 'checkboxfield'
-                },
-                text: 'Rewrite',
-                width: 100
-            }, {
-                dataIndex: 'q',
-                stateId: 'qs',
-                editor: {
-                    xtype: 'checkboxfield'
-                },
-                text: 'Copy QueryString',
-                width: 100
-            },
-            {
-                dataIndex: 't',
-                stateId: 'temp',
-                editor: {
-                    xtype: 'checkboxfield'
-                },
-                text: 'Is Temporary',
-                width: 100
-            },
-             {
-                 dataIndex: 'p',
-                 stateId: 'prior',
-                 editor: {
-                     xtype: 'numberfield'
-                 },
-                 text: 'Priority',
-                
-                 width: 100
-             }, {
-                xtype: 'taco.menucolumn',
-                text: 'Actions',
-                width: 100,
-                menuItems: [{
-                    text: 'Delete',
-                    requiredBehaviors: {
-                        model: 'Taco.model.RedirectEntry',
-                        behavior: 'destroy'
-                    },
-                    menuColumnHandler: function (item, eventData) {
-                        eventData.record.destroy();
-                    }
-                }]
-            }
-        ]
+    cancelButtonEnabled: false,
+
+    saveButtonEnabled: false,
+
+    hideSearchToolbar: true,
+
+    advancedSearchConfig: {},
+
+    doCreate: function() {
+
+        this.onRowEditorCreate();
     },
+
     initComponent: function () {
-        this.header = this.header || {};
+
+        var me = this;
+        
+        this.columns = [
+                {
+                    dataIndex: 's',
+                    text: 'Source',
+                    stateId: 'source',
+                    editor: {
+                        emptyText: 'Source',
+                        msgTarget: 'qtip',
+                        // optional enhancement to rowEditor. Makes the field only editable during a create;
+                        editableOnCreateOnly: true,
+                        selectOnFocus: true,
+                        allowBlank: false
+                    },
+                    width: 200,
+                    align: 'left'
+                }, 
+                {
+                    dataIndex: 'd',
+                    stateId: 'destination',
+                    editor: {
+                        emptyText: 'Destination',
+                        msgTarget: 'qtip',
+                        selectOnFocus: true,
+                        allowBlank: false
+                    },
+                    text: 'Destination',
+                    flex: 1,
+                    align: 'left'
+                },
+                {
+                     dataIndex: 'e',
+                     stateId: 'enabled',
+                     editor: {
+                         xtype: 'checkboxfield'
+                     },
+                     renderer: this.checkboxRenderer,
+                     text: 'Active',
+                     width: 100,
+                     align: 'center'
+                },
+                {
+                    dataIndex: 'rw',
+                    stateId: 'rewrite',
+                    editor: {
+                        xtype: 'checkboxfield'
+                    },
+                    renderer: this.checkboxRenderer,
+                    text: 'Rewrite',
+                    width: 100,
+                    align: 'center'
+                }, 
+                {
+                    dataIndex: 'q',
+                    stateId: 'qs',
+                    editor: {
+                        xtype: 'checkboxfield'
+                },
+                    renderer: this.checkboxRenderer,
+                    text: 'Copy Query String',
+                    width: 100,
+                    align: 'center'
+                },
+                {
+                    dataIndex: 't',
+                    stateId: 'temp',
+                    editor: {
+                        xtype: 'checkboxfield'
+                    },
+                    renderer: this.checkboxRenderer,
+                    text: 'Temporary',
+                    width: 100,
+                    align: 'center'
+                },
+                {
+                     dataIndex: 'p',
+                     stateId: 'prior',
+                     editor: {
+                         xtype: 'numberfield'
+                     },
+                     text: 'Priority',
+                     width: 100,
+                     align: 'left'
+                 },
+                 {
+                    xtype: 'taco.menucolumn',
+                    text: 'Actions',
+                    width: 100,
+                    menuItems: [{
+                        text: 'Delete',
+                        requiredBehaviors: {
+                            model: 'Taco.model.RedirectEntry',
+                            behavior: 'destroy'
+                        },
+                        menuColumnHandler: function (item, eventData) {
+                            eventData.record.destroy();
+                        }
+                    }]
+                }
+        ];
 
         this.uploadButton = Ext.create('Ext.form.field.File', {
             buttonOnly: true,
@@ -126,25 +164,27 @@ Ext.define('Taco.view.redirects.Index', {
             name: 'file',
             listeners: {
                 afterrender: function (cmp) {
-                    //cmp.fileInputEl.set({accept: '.csv'});
+                    // cmp.triggerWrap.on('click', me.showWarningModal, me);
                 },
                 change: function (cmp, v) {
-                    this.onImport();
-                   // cmp.fileInputEl.set({ accept: '.csv' });
+                    if (this.store && this.store.getCount() > 0)  {
+                        this.getModal();
+                    }
+                    else {
+                        this.onImport();
+                    }
                 },
                 scope: this
-               
             }
         });
 
-        this.importForm = Ext.create('Ext.form.Panel',
-            {
-                hidden: true,
-                url: '/admin/app/redirects/import?siteId='+ Taco.app.context.getSiteId(),
-                items: [this.uploadButton]
-            });
-        this.header = Ext.apply({}, this.header);
-        this.header.actions = [
+        this.importForm = Ext.create('Ext.form.Panel', {
+            hidden: true,
+            url: '/admin/app/redirects/import?siteId='+ Taco.app.context.getSiteId(),
+            items: [this.uploadButton]
+        });
+
+        this.additionalActions = [
             {
                 xtype: 'button',
                 text: 'Import',
@@ -166,28 +206,69 @@ Ext.define('Taco.view.redirects.Index', {
                 handler: this.onExport,
                 margin: '0 0 0 15',
                 scope: this
-            }, {
-                xtype: 'button',
-                ui: 'action-primary',
-                scale: 'medium',
-                text: 'Add Redirect',
-                itemId: 'createActionButton',
-                hidden: !this.allowCreate(),
-                margin: '0 0 0 15',
-                handler: this.onRowEditorCreate,
-                scope: this
             }
         ];
     
         this.callParent(arguments);
 
+        this.rowEditor.on('edit', function(cmp, row, e) { 
+            if (row.record.phantom) {
+                row.record.save({
+                    success: function() {
+                        me.store.reload();
+                    }
+                });
+            }
+        }, this);
+
         this.add(this.importForm);
+    },
+
+    checkboxRenderer: function(val) {
+            var checked = val ? 'checked' : '';
+
+            return '<input type="button" role="checkbox" class="x-form-checkbox-glyph ' + checked + ' x-form-field x-form-checkbox x-form-cb x-grid-cell-inner x-tree-checkbox">';
+    },
+
+    getModal: function() {
+        var me = this;
+
+        var modal = Ext.create('Taco.core.ux.window.Modal', {
+            scale: 'small',
+            title: 'Replace Redirects?',
+            modal: true,
+            closeAction: 'destroy',
+            height: 250,
+            primaryText: 'Yes, Continue',
+            items: [{
+                xtype: 'container',
+                layout: { 
+                    type: 'hbox' 
+                },
+                items: [
+                    Ext.create('Ext.panel.Panel', {
+                        width: '100%',
+                        html: 'You are about to upload a new redirects file — all previous redirects and settings will be replaced with the newly uploaded file.<br><br> Do you want to continue?'
+                    })
+                ]
+            }],
+            listeners: {
+                aftersaveclose: function() {
+                    me.onImport();
+                },
+                aftercancelclose: function() {
+                    me.uploadButton.reset();
+                }
+            }
+        });
+
+        modal.show();
     },
     onImport: function () {
         this.importForm.submit({
             success: function (form, action) {
                // Ext.Msg.alert('Success', action.result.message);
-                Taco.app.fireEvent('setmessage', 'imported', 'status');
+                Taco.app.fireEvent('setgrowl', 'Imported!', 'info', 1000);
                 this.store.reload();
 
             },

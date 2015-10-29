@@ -7,7 +7,6 @@ Ext.define('Taco.view.couponSet.modal.CouponSetEditor', {
     extend: 'Taco.core.ux.window.Drawer',
 
     requires: [
-        'Taco.view.couponSet.GeneralForm',
         'Taco.view.couponSet.GeneratedCodeForm',
         'Taco.view.couponSet.GeneralForm',
         'Taco.view.couponCode.Grid',
@@ -291,8 +290,9 @@ Ext.define('Taco.view.couponSet.modal.CouponSetEditor', {
         }
         this.record.save({
             success: onSuccess,
-            failure: function() {
-                Taco.app.fireEvent('setmessage', 'There was an error saving the Coupon Set', 'error');
+            failure: function(item, response) {
+                var message = (response.error.status == 409) ? 'That code prefix is already in use' : 'There was an error saving the Coupon Set';
+                Taco.app.fireEvent('setmessage', message, 'error');
             },
             scope: me
         });

@@ -120,6 +120,32 @@ Ext.define('Taco.view.Header', {
                 element: 'el',
                 delegate: 'a',
                 fn: function (e, link) {
+
+                    if (link.getAttribute('data-nav-id').toLowerCase() === 'viewlive' || link.getAttribute('data-nav-id').toLowerCase() === 'viewstaged') {
+
+                        if(window.location.pathname.indexOf('redirects') !== -1 || window.location.pathname.indexOf('themes') !== -1) {
+                            e.preventDefault();
+                            return false;
+                        }
+
+                        var siteUrl = '/_gosite/' + Taco.app.context.currentCtx.id + '?environment=live&redir=' + encodeURIComponent(me.up().down('#taco-nav-tree').url);
+
+                        if (link.getAttribute('data-nav-id').toLowerCase() === 'viewlive') {
+                            siteUrl = '/_gosite/' + Taco.app.context.currentCtx.id + '?environment=live&redir=' + encodeURIComponent(me.up().down('#taco-nav-tree').url);
+                            console.log(siteUrl);
+                        } else if (link.getAttribute('data-nav-id').toLowerCase() === 'viewstaged') {
+                            siteUrl = '/_gosite/' + Taco.app.context.currentCtx.id + '?environment=preview&redir=' + encodeURIComponent(me.up().down('#taco-nav-tree').url);
+                            console.log(siteUrl);
+                        }
+
+                        link.href = siteUrl;
+                        
+                        e.preventDefault();
+
+                        window.open(link);
+                        return false;
+                    }
+
                     var dest,
                         id,
                         node,

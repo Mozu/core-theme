@@ -6,10 +6,17 @@ Ext.define('Taco.view.entityManager.Index', {
     mixins: {
         //  editorwrapper: 'Taco.core.ux.form.EditorWrapper',
         navHeader: 'Taco.core.ux.mixins.NavHeader',
-        permissions: 'Taco.core.ux.mixins.Permissions'
+        permissions: 'Taco.core.ux.mixins.Permissions',
     },
     alias: 'widget.entityManager',
-    requires: ['Taco.core.ux.form.Form', 'Taco.view.entityManager.Lists', 'Taco.store.EntityEditors', 'Taco.view.entityManager.DynamicFormContainer', 'Taco.core.data.StoreManager'],
+    requires: [
+        'Taco.view.publishing.component.button.PublishButton',
+        'Taco.core.ux.form.Form',
+        'Taco.view.entityManager.Lists',
+        'Taco.store.EntityEditors',
+        'Taco.view.entityManager.DynamicFormContainer',
+        'Taco.core.data.StoreManager'
+    ],
     title: 'Content/Entity',
     createButtonEnabled: true,
     contextConfig: {
@@ -27,6 +34,7 @@ Ext.define('Taco.view.entityManager.Index', {
         var me = this,
             metaData = Taco.core.StateManager.getCurrentState().metaData,
             qs = metaData.args[metaData.args.length - 1];
+
         me.additionalActions = [{
             xtype: 'button',
             ui: 'action',
@@ -76,12 +84,9 @@ Ext.define('Taco.view.entityManager.Index', {
                     }
                 }, ]
             }
-        }, {
-            xtype: 'button',
-            ui: 'action-primary',
-            scale: 'medium',
-            text: 'Publish',
-            margin: '0 0 0 10',
+        }, 
+        {
+            xtype: 'publishbutton',
             itemId: 'publishActionButton',
             beforeItemId: 'saveActionButton',
             scope: this,
@@ -91,14 +96,46 @@ Ext.define('Taco.view.entityManager.Index', {
                     success: function() {
                         record.data.publishState = 'active';
                         me.showHideButtons();
+                        me.showGrowl('Published', 'info', 1000);
                     }
                 });
+            },
+
+            onMoveToPublish: function(record, code) {
+                me.publishActionButton.setLoading(true);
+                record.setPublishCode(code, function() {
+                    me.showGrowl('Moved to Publish Set');
+                    me.publishActionButton.setLoading(false);
+                });
+            },
+
+            onRemoveFromPublishSet: function(record) {
+                me.publishActionButton.setLoading(true);
+                record.set('publishSetCode', '');
+                record.save({
+                    success: function() {
+                        me.publishActionButton.setLoading(false);
+                    }
+                });
+                me.showGrowl('Removed', 'info', 1000);
+            },
+
+            onDiscardDraft: function(record) {
+                me.publishActionButton.setLoading(true);
+                record.discardDraft(function() {
+                    me.publishActionButton.setLoading(false);
+                    me.showGrowl('Discarded', 'info', 1000);
+                });
+                me.lastListClicked.raw = me.lastListClicked.raw  || {};
+                me.lastListClicked.raw.metaData = me.lastListClicked.raw.metaData || {};
+                me.onOpenList(me.lastListClicked);
             }
         }];
         me.editors = Taco.core.data.StoreManager.getOrCreate('Taco.store.EntityEditors');
         me.lists = Ext.create('Taco.view.entityManager.Lists', {
             listeners: {
                 itemclick: function(tree, record) {
+                    me.lastListClicked = record;
                     me.onOpenList(record);
                 }
             }
@@ -123,7 +160,9 @@ Ext.define('Taco.view.entityManager.Index', {
             //initialize the content navigation toolbar.
             this.mixins.navHeader.init.apply(this);
         }
+
         me.callParent(arguments);
+
         if (qs.entityType && qs.list) {
             me.on('render', function() {
                 var fn = function() {
@@ -136,6 +175,7 @@ Ext.define('Taco.view.entityManager.Index', {
                     });
                     if (listRecord) {
                         me.onOpenList(listRecord);
+                        me.lastListClicked = listRecord;
                         me.lists.getSelectionModel().select(listRecord);
                     }
                 };
@@ -148,13 +188,13 @@ Ext.define('Taco.view.entityManager.Index', {
                 }
             });
         }
-        //me.insertDocked(0, me.Lists);
     },
     showHideButtons: function() {
         var me = this,
             header = this.getHeader(),
             record = this.getCurrentEntityRecord(),
             listMetaData = this.getListMetaData();
+
         this.saveActionButton = this.saveActionButton || header.down('#saveActionButton');
         this.cancelActionButton = this.cancelActionButton || header.down('#cancelActionButton');
         this.createActionButton = this.createActionButton || header.down('#createActionButton');
@@ -163,16 +203,15 @@ Ext.define('Taco.view.entityManager.Index', {
         this.saveActionButton.setVisible(me.form && me.form.supportsSaving);
         this.cancelActionButton.setVisible(false); //me.form);
         this.createActionButton.setVisible(me.grid);
+
+        this.publishActionButton.addRecord(record);
+
         if (record && listMetaData.supportsPublishing) {
             this.publishActionButton.setVisible(true);
-            if (record.get('publishState') === 'draft') {
-                this.publishActionButton.enable();
-            } else {
-                this.publishActionButton.disable();
-            }
         } else {
             this.publishActionButton.setVisible(false);
         }
+
         this.moreActionButton.setVisible(me.getCurrentEntityRecord() && me.getCurrentEntityRecord().get('entityType') === 'cms');
     },
     getCurrentEntityRecord: function() {
@@ -294,5 +333,8 @@ Ext.define('Taco.view.entityManager.Index', {
     saveSuccess: function() {
         this.mixins.navHeader.saveSuccess.call(this, arguments);
         this.showHideButtons();
+    },  
+    showGrowl: function(msg) {
+        Taco.app.fireEvent('setgrowl', msg, 'info', 1000);
     }
 });

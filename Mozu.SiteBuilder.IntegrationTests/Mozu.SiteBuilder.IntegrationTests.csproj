@@ -222,6 +222,8 @@
     <None Include="Diagrams\ProductAdmin\cdProductType.cd" />
     <None Include="Diagrams\ProductAdmin\cdProductAdmin_GiftCardView.cd" />
     <None Include="Diagrams\ProductAdmin\cdProductVariant.cd" />
+    <None Include="Diagrams\ProductAdmin\cdSearchSettings.cd" />
+    <None Include="Diagrams\ProductAdmin\cdSearchTuningRule.cd" />
     <None Include="Diagrams\ProductRuntime\cdProductRuntime_GiftCardView.cd" />
     <None Include="Diagrams\ProductRuntime\cdProductRuntime.cd" />
     <None Include="Diagrams\StoreFront\Checkout\cdDigitalCredit.cd" />

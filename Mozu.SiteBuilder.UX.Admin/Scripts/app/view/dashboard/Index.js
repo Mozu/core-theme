@@ -51,7 +51,6 @@ Ext.define('Taco.view.dashboard.Index', {
         me.callParent(arguments);
         
         me.navigationStore = Taco.core.data.StoreManager.getOrCreate('Taco.store.Navigation');
-
         
         if (this.navigationStore.hasCompletedLoading()) {
             this.renderNav();
@@ -73,21 +72,25 @@ Ext.define('Taco.view.dashboard.Index', {
     renderNav:function () {
         var me = this;
         Ext.Array.forEach(me.navigationStore.data.items, function (el, index, arr) {
+
             var pushData = {};
             var subNav = [];
-            pushData['id'] = el.get('id');
-            pushData['label'] = el.get('label');
-            pushData['icon'] = el.get('icon');
-            pushData['address'] = el.get('address');
+
+            pushData.id = el.get('id');
+            pushData.label = el.get('label');
+            pushData.icon = el.get('icon');
+            pushData.address = el.get('address');
+
             Ext.Array.forEach(el.itemsStore.data.items, function (subEl, index, arr) {
+
                 var subNavData = {};
-                subNavData['label'] = subEl.get('label');
-                subNavData['address'] = subEl.get('address');
+                subNavData.label = subEl.get('label');
+                subNavData.address = subEl.get('address');
                 if (subEl.get('visible') && !subEl.get('breadCrumbOnly')) {
                     subNav.push(subNavData);
                 }
             }, this);
-            pushData['subNav'] = subNav;
+            pushData.subNav = subNav;
             if (el.get('visible')) {
                 this.renderData.push(pushData);
             }

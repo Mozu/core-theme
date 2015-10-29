@@ -177,6 +177,13 @@ namespace Mozu.SiteBuilder.Mvc.SEO
             RuleFor(x => x.Template).NotNull().WithName("template");
             RuleFor(x => x.Template).Must(NotContainDuplicateRouteParameters).When(x => !string.IsNullOrEmpty(x.Template)).WithName("Route Template").WithMessage("The route \"{0}\" has duplicate route parameters: [{1}]", x => x.Template, x => string.Join(",", GetDuplicateRouteParameters(x.Template)));
             RuleFor(x => x.Template).Must(NotStartWithInvalidRouteCharacters).When(x => !string.IsNullOrEmpty(x.Template)).WithName("Route Template").WithMessage("The route \"{0}\" cannot start with '~' or '/'", x => x.Template);
+            RuleFor(x => x.UrlScheme).Must(ParseAsOneOfHttpOrHttps).When(x => !x.UrlScheme.IsNullOrEmpty()).WithName("Url Scheme").WithMessage("The Url Scheme must be one of {0}, but was {1}", x => string.Join(", ", SchemeNames), x => x.UrlScheme);
+        }
+
+        static string[] SchemeNames = Enum.GetNames(typeof(CustomRoute.Scheme));
+        static bool ParseAsOneOfHttpOrHttps(string arg)
+        {
+            return SchemeNames.Any(x => x.EqualsIgnoreCase(arg));
         }
 
         static string[] badStrings = new[] { "/", "~" };

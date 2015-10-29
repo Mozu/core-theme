@@ -1,0 +1,145 @@
+/**
+ * @class  Taco.view.searchTuningRule.form.PinnedProduct
+ * @description Search Tuning Rule Pinned Product Form
+ */
+Ext.define('Taco.view.searchTuningRule.form.PinnedProduct', {
+    extend: 'Taco.core.ux.form.Form',
+    alias: 'widget.taco-searchTuningRule-pinned',
+    requires: [
+        'Taco.core.ux.TooltipLabel',
+        'Taco.core.util.Validation',
+        'Taco.view.searchTuningRule.grid.PinnedProduct'
+    ],
+    ui: 'subform',
+    itemId: 'taco-pinnedProduct-form',
+
+    margin: '0 0 20 0',
+
+    title: 'Promoted Products',
+    config: {
+        isCreateMode: false
+    },
+
+    initComponent: function() {
+
+        var me = this;
+
+        Ext.tip.QuickTipManager.init();
+
+        me.pinnedGrid = Ext.create('Taco.view.searchTuningRule.grid.PinnedProduct', {
+            enableSearch: false
+        });
+
+
+        var productStore = Taco.core.data.StoreManager.getOrCreate({
+            type: 'Taco.store.Products',
+            createOnly: true,
+            autoLoad: false,
+            clearFilters: false,
+            remoteFilter: true,
+            filters: function (record) {
+                //return Ext.Array.indexOf((me.get('categories') || []), record.getId()) > -1;
+            }
+        });
+
+        // MultiSelect is the most optimal Field that uses BoundList without a trigger
+        me.productList = Ext.widget({
+            xtype: 'combobox',
+            name: 'categoryFilters',
+            flex: 1,
+            emptyText: 'Search for products',
+            margin: '10 10 10 0',
+            store: productStore,
+            getStore: function () {
+                return productStore;
+            },
+            queryMode: 'remote',
+            lastQuery: '',
+            hideTrigger: true,
+            triggerOnClick: true,
+            forceSelection: true,
+            disableKeyFilter: true,
+            typeAhead: true,
+            displayField: 'productName',
+            valueField: 'productCode',
+            style: {
+                display: 'inline-table',
+                verticalAlign: 'bottom'
+            },
+            listeners: {
+                select: function (cmp, record) {
+                    me.pinnedGrid.fireEvent('recordadded', record);
+                    cmp.setValue('');
+                },
+                scope: this
+            }
+        });
+
+        me.placementSelect = Ext.create('Ext.form.ComboBox', {
+            queryMode: 'local',
+            displayField: 'text',
+            valueField: 'value',
+            forceSelection: true,
+            editable: false,
+            margin: '10 0 10 10',
+            store: Ext.create('Ext.data.Store', {
+                fields: ['text', 'value'],
+                data: [
+                    { text: 'Insert at bottom', value: 'bottom' },
+                    { text: 'Insert at top', value: 'top' },
+                    { text: 'Insert above selected', value: 'above' },
+                    { text: 'Insert below selected', value: 'below' }
+                ]
+            }),
+            listeners: {
+                afterrender: function (args) {
+                    this.select(this.getStore().getAt(0));
+                }
+            }
+        })
+
+        me.productForm = Ext.create('Ext.container.Container', {
+            layout: {
+                type: 'hbox',
+                align: 'left'
+            },
+            defaults: {
+                flex: 1
+            },
+            items: [ me.productList, me.placementSelect]
+        })
+
+        me.items = [
+            {
+                xtype: 'fieldcontainer',
+                layout: 'fit',
+                width: '100%',
+                defaults: {
+                    flex: 1
+                },
+                items: [
+                    me.productForm,
+                    me.pinnedGrid
+                ]
+            }
+        ];
+
+        me.callParent(arguments);
+    },
+
+    beforeSave: function() {
+        var prodCodes = Ext.Array.map(this.pinnedGrid.getValues(), function(prod){
+            return {productCode: prod.get('productCode')};
+        });
+        this.record.set('boostedProducts', prodCodes);
+        return true;
+    },
+
+    onDestroy: function () {
+        var me = this;
+
+        me.clearListeners();
+
+        this.callParent(arguments);
+    }
+});

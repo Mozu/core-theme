@@ -15,9 +15,7 @@ Ext.define('Taco.view.discount.widget.CouponSetSelector', {
         'Ext.form.field.Date',
         'Ext.form.field.ComboBox',
         'Taco.core.ux.form.CurrencyField',
-        'Taco.view.filter.MultiSelectorField',
-        'Taco.shared.view.field.ProductPickerField',
-        'Taco.shared.view.field.ProductTypePickerField'
+        'Taco.view.filter.MultiSelectorField'
     ],
 
     config: {

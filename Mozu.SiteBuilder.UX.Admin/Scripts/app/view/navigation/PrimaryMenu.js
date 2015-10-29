@@ -125,7 +125,7 @@ Ext.define('Taco.view.navigation.PrimaryMenu', {
 
         store.each(function (item) {
           
-            if (item.data.address && appStateAddress.indexOf(item.data.address.toLowerCase()) ==0  ){
+            if (item.data.address && appStateAddress.indexOf(item.data.address.toLowerCase()) == 0  ){
 
                 matches.push({
                     parentRecord: item,
@@ -158,9 +158,17 @@ Ext.define('Taco.view.navigation.PrimaryMenu', {
     syncBreadcrumb: function (parent, selected) {
         var bc = this.breadcrumb,
             data = Ext.apply({ selected: parent == selected }, parent.getData()),
+            state = Taco.core.StateManager.statestack[Taco.core.StateManager.stateindex],
             subData = [];
             if (parent.get('showBreadCrumbs')) {
                 parent.items().each(function (subRecord) {
+
+                    if (subRecord.get('viewDependent') && state && state.uri) {
+                        if (state.uri.match(subRecord.get('viewDependent'))) {
+                            return false;
+                        }
+                    }
+
                     if (selected && selected.data && selected.data.address) {
                         subData.push(Ext.apply({ selected: subRecord.data.address == selected.data.address }, subRecord.getData()));
                     }
@@ -190,7 +198,7 @@ Ext.define('Taco.view.navigation.PrimaryMenu', {
                     duration: 400,
                     from: { opacity: 0, x: tBox.left, y: tBox.top },
                     to: { opacity: 1, x: tBox.left, y: tBox.bottom }
-                })
+                });
             }, this);
         } else {
             // else let CSS handle the animation

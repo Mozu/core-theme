@@ -46,10 +46,43 @@ Ext.define('Taco.view.website.entityAdapters.BaseEntityAdapter', {
             });
             ret.push(me.dynamicFormContainer);
         } else {
-            ret.push(Ext.create('Taco.core.ux.form.Form', {
+            var form = Ext.create('Taco.core.ux.form.Form', {
                 record: doc
-            }));
+            });
+            ret.push(form);
         }
+
+        if (doc && doc.data && doc.data.listSupportsADR) {
+            var ADRitems = [{
+                xtype: 'panel',
+                collapsible: 'true',
+                ui: 'subform',
+                title: 'Active Date Range',
+                itemId: 'activeDateRangePanel',
+                layout: {
+                    type: 'vbox',
+                    align : 'stretch'
+                },
+                items: [{
+                    xtype: 'mz-input-date',
+                    name: 'document.startDate',
+                    fieldLabel: 'Start Date',
+                    value: doc.get('startDate')
+                }, {
+                    xtype: 'mz-input-date',
+                    name: 'document.endDate',
+                    fieldLabel: 'End Date',
+                    value : doc.get('endDate')
+                }]
+            }];
+
+            ADRitems.forEach(function(adrInput) {
+                if (me && me.dynamicFormContainer && me.dynamicFormContainer.dynamicForm) {
+                    me.dynamicFormContainer.dynamicForm.add(adrInput);
+                }
+            });
+        }
+
         return ret;
     },
     deleteRecord: function() {

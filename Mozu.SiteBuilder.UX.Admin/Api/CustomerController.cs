@@ -298,7 +298,6 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
             return List2(results);
         }
 
-
         /// <summary>
         /// Add/remove customer group subroutine for EditCustomers. Yes, a subroutine.
         /// </summary>

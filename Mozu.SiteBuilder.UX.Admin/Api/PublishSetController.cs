@@ -11,7 +11,6 @@ using Mozu.ProductAdmin.Contracts.Clients;
 using Mozu.SiteBuilder.UX.Admin.Api.ModelMapping;
 using Mozu.SiteBuilder.UX.Admin.Api.Models;
 using Mozu.SiteBuilder.UX.Admin.Api.Models.PublishSets;
-using Mozu.SiteBuilder.UX.Admin.Helpers.DiscountHelpers;
 using DC = Mozu.ProductAdmin.Contracts;
 using Mozu.Core.Api.Contracts.Client;
 using System.Net.Http;
@@ -21,7 +20,9 @@ using Mozu.ScheduledEvent.Contracts.Clients;
 using Mozu.SiteBuilder.UX.Admin.Helpers;
 using Mozu.SiteBuilder.Mvc.Extensions;
 using Mozu.SiteBuilder.UX.Admin.Helpers.ProductHelpers;
+using Mozu.SiteBuilder.UX.Admin.Helpers.PublishSetHelpers;
 using Mozu.Tenant.Contracts.Clients;
+using Mozu.SiteBuilder.UX.Admin.Helpers.ContentHelpers;
 
 namespace Mozu.SiteBuilder.UX.Admin.Api
 {
@@ -56,7 +57,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
         }
 
         /// <summary>
-        /// Get a list of discounts.
+        /// Get a list of publish set items.
         /// </summary>
         [HttpGetRoute(UriTemplate = "items/list")]
         public async Task<Response<List<PublishSetItem>>> ListItems([FromUri]PagingParamaters pagingParams, [FromUri]FilterCollection extFilter, string code, string type)
@@ -68,7 +69,13 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
 
             if (string.Equals("cms", type, StringComparison.OrdinalIgnoreCase))
             {
-                var res = (await _cmsItemPublishingClient.GetPublishSetItems(code: code, pageSize: pagingParams.pageSize, startIndex: pagingParams.startIndex).ConfigureAwait(false)).ReadAsSync();
+                var res = (await _cmsItemPublishingClient.GetPublishSetItems(
+                    code: code, 
+                    pageSize: pagingParams.pageSize, 
+                    startIndex: pagingParams.startIndex,
+                    sortBy: pagingParams.sort.ToContentSortString(),
+                    filter: ContentFilterExtensions.ToContentFilterString(extFilter, false)
+                ).ConfigureAwait(false)).ReadAsSync();
                 var returnItems = Mapper.Map<List<PublishSetItem>>(res.Items);
 
                 var codes = res.Items.Select(x => x.PublishSetCode).Where(x => !string.IsNullOrEmpty(x)).Distinct().ToList();
@@ -207,11 +214,13 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
 
             sanitizeProductSortQuery(pagingParams, "publishset");
 
+            var filter = PublishSetFilterExtensions.ToFilterString(extFilter);
+
             var result = (await _publishSetWebApiClient.GetPublishSets(
                 startIndex: pagingParams.startIndex, 
                 pageSize: pagingParams.pageSize, 
                 sortBy: pagingParams.sort.ToSortString(),
-                filter: null).ConfigureAwait(false)).ReadAsSync();
+                filter: filter).ConfigureAwait(false)).ReadAsSync();
 
 
            var items = result.Items.Map <List<PublishSet>>();

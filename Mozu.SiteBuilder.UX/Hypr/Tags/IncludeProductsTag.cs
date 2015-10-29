@@ -118,7 +118,7 @@ namespace Mozu.SiteBuilder.UX.Hypr.Tags
             ProcessFacets(searchContext, includeFacets, ref cacheResults, facetHierDepthInt, facetCategoryId, categoryId, ref facetTemplate, ref facetValueFilter, ref facetHierValue, ref facetHierDepth);
 
             ProcessSearchTuningRuleContext(categoryId, ref searchTuningRuleContext);
-            string sortBy = ProcessSortBy(siteContext, searchContext, sortWithUrl, sort);
+            var sortBy = ProcessSortBy(siteContext, searchContext, sortWithUrl, sort);
 
             
             var cache = context.Resolve<ILiveModeOnlyCache>();
@@ -153,6 +153,19 @@ namespace Mozu.SiteBuilder.UX.Hypr.Tags
             return new[] { WalkResultHelpers.RenderNodesWithContextMods(nodes, dict, Enumerable.Empty<string>()) };
         }
 
+        // there was a bug when caching sort because default was being cached for two sorts -- the default, and the sort 
+        class SortContext
+        {
+            public SortContext (string key, string value)
+            {
+                cacheKey = key;
+                sortValue = value;
+            }
+            public string cacheKey { get; private set; }
+            public string sortValue { get; private set; }
+        }
+
+
         private async Task<ProductSearchResult> DoSearch(
             ILiveModeOnlyCache cache, 
             IProductListingState productListingState,
@@ -164,7 +177,7 @@ namespace Mozu.SiteBuilder.UX.Hypr.Tags
             string facetHierValue, 
             string facetHierDepth, 
             string searchQueryString, 
-            string sortBy, 
+            SortContext sortBy, 
             string filter, 
             IProductSearchWebApiClient productSearchWebApiClient, 
             PageContext pageContext, 
@@ -191,7 +204,7 @@ namespace Mozu.SiteBuilder.UX.Hypr.Tags
                     .Append(facetHierDepth)
                     .Append(facetValueFilter)
                     .Append(startIndex)
-                    .Append(sortBy)
+                    .Append(sortBy.cacheKey)
                     .Append (responseFields)
                     .Append(pageSize)
                     .Append(facet)
@@ -215,7 +228,7 @@ namespace Mozu.SiteBuilder.UX.Hypr.Tags
                     facetValueFilter: facetValueFilter,
                     facet: facet,
                     startIndex: startIndex,
-                    sortBy: sortBy,
+                    sortBy: sortBy.sortValue,
                     responseFields: responseFields,
                     pageSize: pageSize,
                     searchTuningRuleCode: searchTuningRuleCode,
@@ -262,19 +275,21 @@ namespace Mozu.SiteBuilder.UX.Hypr.Tags
             return pc;
         }
 
-        private static string ProcessSortBy(Mvc.Contexts.SiteContext siteContext, Mvc.Contexts.SearchContext searchContext, bool sortWithUrl, string sort)
+        private static SortContext ProcessSortBy(Mvc.Contexts.SiteContext siteContext, Mvc.Contexts.SearchContext searchContext, bool sortWithUrl, string sort)
         {
-            string sortBy = sort;
-            if (string.IsNullOrEmpty(sortBy))
-            {
-                sortBy = (siteContext.ThemeSettings["defaultSort"] ?? "").ToString();
-            }
 
+            // sortWithUrl is true in the newer instances of our sort implementation -- it will usually fall in this case, unless the searchContext.sortBy is null -- which means the default sort
             if (sortWithUrl && !string.IsNullOrEmpty(searchContext.SortBy))
             {
-                sortBy = searchContext.SortBy;
+                return new SortContext(searchContext.SortBy, searchContext.SortBy);
             }
-            return sortBy;
+
+            if (string.IsNullOrEmpty(sort))
+            {
+                return new SortContext("default", (siteContext.ThemeSettings["defaultSort"] ?? "").ToString());
+            }
+
+            return new SortContext(sort, sort);
         }
 
         private static bool ProcessFilter( ref IEnumerable productCodes, int? categoryId, ref string filter, ref string[] productCodesFilters)

@@ -35,17 +35,26 @@ namespace Mozu.SiteBuilder.Mvc.SEO
 
         IHttpRouteData GetRouteData(string virtualPathRoot, HttpRequestMessage request);
 
-
         /// <summary>
-        /// if a canonical url exists for the internalroute that is specified, this method creates a redirect to that url, with potentially new viewdata that can be injected.
+        /// if a canonical url exists for the internalroute that is specified, this method creates a redirect to that relative url, with potentially new viewdata that can be injected.
         /// </summary>
         /// <param name="request"></param>
         /// <param name="internalRoute"></param>
         /// <param name="viewDataAdditionFunc"></param>
         /// <returns></returns>
         Task<HttpResponseMessage> RedirectWithContext(HttpRequestMessage request, FancyRoute internalRoute, Func<IDictionary<string,object>> viewDataAdditionFunc = null);
-        Task<string> GetCannonicalUrl( FancyRoute internalRoute, Func<IDictionary<string, object>> viewDataAdditionFunc, bool useExistingValues );
-        
+
+        /// <summary>
+        /// Given a particular type of route that we want to canonicalize, we find all routes of that they where canonical is true, 
+        /// order by appearance, and attempt to bind each route to the route data for this request.
+        /// The first canonical route that binds the route data wins and the path data from that route is appended to the base parts of the original url.
+        /// This results in an ABSOLUTE url to the resource.
+        /// </summary>
+        /// <param name="internalRoute"></param>
+        /// <param name="viewDataAdditionFunc"></param>
+        /// <param name="useExistingQuery"></param>
+        /// <returns></returns>
+        Task<string> GetCanonicalUrl( FancyRoute internalRoute, Func<IDictionary<string, object>> viewDataAdditionFunc, bool useExistingValues );
     }
    
     public interface IRedirectRepository
@@ -65,15 +74,13 @@ namespace Mozu.SiteBuilder.Mvc.SEO
         
         public Dictionary<string, RedirectEntry> Simple { get; set; }
         public Dictionary<string, List<RuntimeRedirectEntry>> QueryString { get; set; }
-
-      
     }
+
     public class RuntimeRedirectEntry
     {
         public System.Collections.Specialized.NameValueCollection Query { get; set; }
         public RedirectEntry Redirect{ get; set; }
     }
-  
 
     public class RedirectRepository : IRedirectRepository
     {
@@ -96,10 +103,10 @@ namespace Mozu.SiteBuilder.Mvc.SEO
 
         static System.Collections.Concurrent.ConcurrentDictionary<string, AsyncLock> _redirectLookupLock = new System.Collections.Concurrent.ConcurrentDictionary<string, AsyncLock>();
 
-         Task<List<RedirectEntry>> IRedirectRepository.FetchRedirectEntries(int? siteId)
+        Task<List<RedirectEntry>> IRedirectRepository.FetchRedirectEntries(int? siteId)
         {
-             var client = siteId == null ? _systemDocumentClient : _systemDocumentClient.CloneWithSbContext(_siteBuilderApiContext).CloneWithSiteId(siteId);
-             return DoFetchEntries(client);
+            var client = siteId == null ? _systemDocumentClient : _systemDocumentClient.CloneWithSbContext(_siteBuilderApiContext).CloneWithSiteId(siteId);
+            return DoFetchEntries(client);
 
         }
 
@@ -185,15 +192,15 @@ namespace Mozu.SiteBuilder.Mvc.SEO
                                 using (var tr = new StreamReader(stream))
                                 using (var jr = new JsonTextReader(tr))
                                 {
-
                                     try
                                     {
-                                        var ser = Newtonsoft.Json.JsonSerializer.CreateDefault();
+                                        var ser = JsonSerializer.CreateDefault();
                                         if (jr.Read())
                                         {
                                             if (jr.TokenType == JsonToken.StartArray)
                                             {
-                                                return ser.Deserialize<List<RedirectEntry>>(jr);
+                                                var entries = ser.Deserialize<List<RedirectEntry>>(jr);
+                                                return entries.Select(e => { e.IsEnabled = e.IsEnabled ?? true; return e; }).ToList();
                                             }
                                             else if (jr.TokenType == JsonToken.StartObject)
                                             {
@@ -267,7 +274,7 @@ namespace Mozu.SiteBuilder.Mvc.SEO
             };
             
 
-            foreach (var redirect in redirects)
+            foreach (var redirect in redirects.Where(x => x.IsEnabled.GetValueOrDefault(false)))
             {
                 var source = redirect.Source;
                 var qPos = source.IndexOf('?');

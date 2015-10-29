@@ -8,7 +8,8 @@
         'Ext.menu.Item',
         'Ext.form.Label',
         'Taco.store.PublishSets',
-        'Taco.core.ux.content.IndicatorContainer'
+        'Taco.core.ux.content.IndicatorContainer',
+        'Taco.view.publishing.component.button.PublishButton'
     ],
 
     statics: {
@@ -78,36 +79,6 @@
     initComponent: function () {
         var me = this;
 
-        this.discardDraftMenuItem = Ext.widget('menuitem', {
-            text: 'Discard Draft',
-            disabled: this.record.get('publishedState') === 'Live',
-            //requiredBehaviors: {
-            //    model: 'Taco.model.Product',
-            //    behavior: 'publish'
-            //},
-            listeners: {
-                click: {
-                    scope: me,
-                    fn: me.discardProductDraft
-                }
-            }
-        });
-
-        this.removePublishSetMenuItem = Ext.widget('menuitem', {
-            text: 'Remove from Publish Set',
-            disabled: !this.record.get('publishSetCode'),
-            //requiredBehaviors: {
-            //    model: 'Taco.model.Product',
-            //    behavior: 'create'
-            //},
-            listeners: {
-                click: {
-                    scope: me,
-                    fn: me.removePublishSet
-                }
-            }
-        });
-
         if (this.checkProductPublishing()) {
             this.titlePanel = Ext.widget('taco-indicator', {
                 afterrender: function(toolTip) {
@@ -132,40 +103,46 @@
             });
         }
 
-        this.publishingButton = Ext.widget('splitbutton', {
-            ui: 'action-primary',
-            scale: 'medium',
-            itemId: 'publish',
-            text: 'Publish Now',
+        this.publishingButton = {
+            xtype: 'publishbutton',
+            itemId: 'publishActionButton',
             beforeItemId: 'cancelActionButton',
-            margin: '0 0 0 10',
+            buttonGroup: 'isPublishable',
             hidden: !this.checkProductPublishing(),
             disabled: this.record.phantom,
             scope: me,
             menuAlign: 'tr-br?',
-            menu: {
-                plain: true,
-                shadow: false,
-                items: [
-                    {
-                        text: 'Move to Publish Set',
-                        //requiredBehaviors: {
-                        //    model: 'Taco.model.Product',
-                        //    behavior: 'create'
-                        //},
-                        listeners: {
-                            click: {
-                                scope: me,
-                                fn: me.movePublishSet
-                            }
+            handler: me.onClickPublish,
+            onMoveToPublish: function(record, code) {
+                me.record.set('publishSetCode', code);
+                me.publishButton.setLoading(true);
+
+                if (code) {
+                    var store = Ext.create('Taco.store.PublishSets', {includeCounts: false});
+
+                    store.load(function(records, operation, success) {
+                        var model = Ext.Array.findBy(records, function(item) {
+                            return item.get('code') === code;
+                        });
+                        if (model) {
+                            me.record.set('publishSetName', model.get('name'));
+                            me.record.set('publishSetDate', model.get('publishDate'));
                         }
-                    },
-                    this.removePublishSetMenuItem,
-                    this.discardDraftMenuItem
-                ]
+                        me.setPublishStatus();
+                        me.record.save({
+                            success: function() {
+                                me.publishButton.setLoading(false);
+                                me.setGrowl('Moved to Publish Set', 'info');
+                            }
+                        });
+                    });
+                }
             },
-            handler: me.onClickPublish
-        });
+
+            onRemoveFromPublishSet: me.removePublishSet.bind(me),
+
+            onDiscardDraft: me.discardProductDraft.bind(me)
+        };
 
         this.additionalActions = [
             this.publishingButton,
@@ -331,10 +308,6 @@
         } else {
             this.titlePanel.hide();
         }
-        this.publishingButton.setDisabled(!pubInfo.enabled.publish);
-        this.removePublishSetMenuItem.setDisabled(!pubInfo.enabled.remove);
-        // this.publishNowMenuItem.setDisabled(!pubInfo.enabled.now);
-        this.discardDraftMenuItem.setDisabled(!pubInfo.enabled.discard);
     },
 
     viewInSite: function (site, env) {
@@ -354,16 +327,18 @@
                 
             }, me);
             
-            me.mon(me.form, 'dirtychange', function () {
+            me.mon(me.form, 'dirtychange', function (form, isDirty) {
                 if (me.publishButton && me.form.isDirty()) {
 
                   me.publishButton.disable();   
                 }
+                me.requiresSave = isDirty;
             }, me);
 
             this.on({
                 render: function() {
-                    this.publishButton = this.down('button#publish');
+                    this.publishButton = this.down('#publishActionButton');
+                    this.publishButton.addRecord(this.record);
                 },
                 aftersave: function () {
                     if (this.doPublishAfterSave) {
@@ -371,6 +346,7 @@
                     }
 
                     this.setPublishStatus();
+                    this.publishButton.addRecord(this.record);
                 },
             scope: this
         });
@@ -414,39 +390,64 @@
     },
 
     movePublishSet: function () {
+        
         var me = this,
             modal = Ext.create('Taco.view.publishing.modal.PublishSetPicker', {
                 record: me.record,
-                callback: function (publishSetCode) {
-                    me.record.set('publishSetCode', publishSetCode);
-                    if (publishSetCode) {
-                        var store = Ext.create('Taco.store.PublishSets', {includeCounts: false});
-                        store.load(function(records, operation, success) {
-                            var model = Ext.Array.findBy(records, function(item) {
-                                return item.get('code') === publishSetCode;
-                            });
-                            if (model) {
-                                me.record.set('publishSetName', model.get('name'));
-                                me.record.set('publishSetDate', model.get('publishDate'));
-                            }
-                            me.setPublishStatus();
-                            me.record.save({
-                                success: me.setGrowl.bind(me, 'Moved to Publish Set', 'info')
-                            });
-                        });
+                listeners: {
+                    aftersaveclose: function (win, data) {
 
-                        //todo: handle model not found greg_murray on 7/24/2015
-                    }
+                        
+                        me.record.set('publishSetCode', publishSetCode);
+                        if (publishSetCode) {
+                            var store = Ext.create('Taco.store.PublishSets', { includeCounts: false });
+                            store.load(function (records, operation, success) {
+                                var model = Ext.Array.findBy(records, function (item) {
+                                    return item.get('code') === publishSetCode;
+                                });
+                                if (model) {
+                                    me.record.set('publishSetName', model.get('name'));
+                                    me.record.set('publishSetDate', model.get('publishDate'));
+                                }
+                                me.setPublishStatus();
+                                me.record.save({
+                                    success: me.setGrowl.bind(me, 'Moved to Publish Set', 'info')
+                                });
+                            });
+                        }
+                            //todo: handle model not found greg_murray on 7/24/2015
+                    },
+                    scope:me
                 }
+                //    ,
+                //callback: function (publishSetCode) {
+                //    me.record.set('publishSetCode', publishSetCode);
+                //    if (publishSetCode) {
+                //        var store = Ext.create('Taco.store.PublishSets', {includeCounts: false});
+                //        store.load(function(records, operation, success) {
+                //            var model = Ext.Array.findBy(records, function(item) {
+                //                return item.get('code') === publishSetCode;
+                //            });
+                //            if (model) {
+                //                me.record.set('publishSetName', model.get('name'));
+                //                me.record.set('publishSetDate', model.get('publishDate'));
+                //            }
+                //            me.setPublishStatus();
+                //            me.record.save({
+                //                success: me.setGrowl.bind(me, 'Moved to Publish Set', 'info')
+                //            });
+                //        });
+
+                //        //todo: handle model not found greg_murray on 7/24/2015
+                //    }
+                //}
             });
 
         modal.show();
     },
 
     setProductRecordPublishSetToNull: function() {
-        this.record.set('publishSetCode', null);
-        // this.record.set('publishSetName', null);
-        // this.record.set('publishSetDate', null);
+        this.record.set('publishSetCode', '');
     },
 
     removePublishSet: function() {
@@ -454,8 +455,12 @@
 
         this.setProductRecordPublishSetToNull();
         this.setPublishStatus();
+        me.publishButton.setLoading(true);
         this.record.save({
-            success:  me.setGrowl.bind(me, 'Removed from Publish Set', 'info'),
+            success:  function() {
+                me.setGrowl('Removed from Publish Set', 'info');
+                me.publishButton.setLoading(false);
+            },
             failure: function() {
                 Taco.app.fireEvent('setmessage', 'Error removing draft from publish set', 'error');
             }
@@ -464,17 +469,20 @@
 
     discardProductDraft: function () {
         var me = this;
-        this.publishButton.addCls('taco-button-processing');
-        this.publishButton.setText('Processing...');
+
+        me.publishButton.setLoading(true);
+
         this.record.discardDraft({
             success: function (scope, items) {
                 Taco.core.StateManager.attemptNavigate(me.getEditRoute() + '/' + me.record.getId(), { record: me.record });
-                me.setGrowl('Discarded', 'info');
+                //prevent jank of reload
+                setTimeout(me.setGrowl.bind(me, 'Discarded', 'info'), 1000);
             },
             failure: function (response) {
                 var json = Ext.decode(response.responseText, true),
                     msg = (json && json.message) ? json.message : '';
-                me.resetPublishButton();
+
+                me.publishButton.setLoading(false);
                 Taco.app.fireEvent('setmessage', 'Error discarding draft.' + msg, 'error');
             }
         });
@@ -524,32 +532,27 @@
         Taco.model.Product.publishBulk({
             data: [this.record.getId()],
             success: function () {
-                this.resetPublishButton();
                 this.setProductRecordPublishSetToNull();
                 this.record.set('publishedState', 'Live');
                 this.setPublishStatus();
+                this.requiresSave = false;
                 if (this.fireIdChangeAfterPublish) {
                     this.resumeEvent('idchange');
                     this.fireEvent('idchange', this, this.record);
                 }
+                this.publishButton.setLoading(false);
                 this.setGrowl('Published', 'info');
+                this.publishButton.addRecord(this.record);
             },
             failure: function (err) {
                 var errMsg = (err && err.responseText) ? JSON.parse(err.responseText).message : '';
                 Taco.app.fireEvent('setmessage', 'Product change was unable to be published.  ' + errMsg, 'error');
-                this.resetPublishButton();
             },
             callback: function () {
                 this.doPublishAfterSave = false;
             },
             scope: this
         });
-    },
-
-    resetPublishButton : function() {
-        this.publishButton.removeCls('taco-button-processing');
-        this.publishButton.setText('Publishing');
-        // this.publishNowMenuItem.disable(true);
     },
 
     changeProductCode: function () {

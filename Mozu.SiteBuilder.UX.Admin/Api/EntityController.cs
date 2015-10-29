@@ -23,29 +23,35 @@ using Mozu.SiteBuilder.Mvc.ViewEngine;
 using Mozu.SiteBuilder.UX.Admin.Api.Models;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
-
+using Mozu.SiteBuilder.UX.Admin.Helpers.OrderHelpers;
 using DC = Mozu.Content.Contracts;
 using CMS = Mozu.Content.Contracts;
 using AVM = Mozu.SiteBuilder.Mvc.Models.CMS.Admin;
 using Constants = Mozu.Core.Messaging.Contracts.Constants;
 using Mozu.Core;
-
+using Mozu.SiteBuilder.Mvc.CMS;
+using Mozu.SiteBuilder.UX.Models.Admin.CMS;
+using Mozu.Core.Collections;
+using Mozu.SiteBuilder.Mvc.Extensions;
+using Mozu.SiteBuilder.UX.Admin.Helpers.ContentHelpers;
 namespace Mozu.SiteBuilder.UX.Admin.Api
 {
     [WebApi("app/entities", SuppressDescriptorGeneration = true)]
     public class EntityControllerController : BaseController
     {
-        private const string MZDB_LIST_PROPERTY = "EntityListName";
-        private const string MZDB_DOCUMENT_ID_PROPERTY = "Id";
-        private const string CMS_LIST_PROPERTY = "listFQN";
-        private const string CMS_DOCUMENT_ID_PROPERTY = "Id";
-        private readonly IDocumentListWebApiClient _documentListWebApiClient;
-        private readonly IEntityListsWebApiClient _entityListsWebApiClient;
-        private readonly IDocumentTypeWebApiClient _documentTypeWebApiClient;
-        private readonly IThemeContentRetriever _contentRetriever;
-        private readonly bool shouldGetInactiveDocumnents;
+       const string MZDB_LIST_PROPERTY = "EntityListName";
+       const string MZDB_DOCUMENT_ID_PROPERTY = "Id";
+       const string CMS_LIST_PROPERTY = "listFQN";
+       const string CMS_DOCUMENT_ID_PROPERTY = "Id";
+       readonly IDocumentListWebApiClient _documentListWebApiClient;
+       readonly IEntityListsWebApiClient _entityListsWebApiClient;
+       readonly IDocumentTypeWebApiClient _documentTypeWebApiClient;
+       readonly IThemeContentRetriever _contentRetriever;
+       readonly bool shouldGetInactiveDocumnents;
+       readonly CmsHelper _cmsHelper;
+
         //   private const string TBD = "duno";
-        public EntityControllerController(IDocumentListWebApiClient documentListWebApiClient, IEntityListsWebApiClient entityListsWebApiClient, IDocumentTypeWebApiClient documentTypeWebApiClient, IThemeContentRetriever contentRetriever, ISiteBuilderApiContext sbApiContext)
+        public EntityControllerController(IDocumentListWebApiClient documentListWebApiClient, IEntityListsWebApiClient entityListsWebApiClient, IDocumentTypeWebApiClient documentTypeWebApiClient, IThemeContentRetriever contentRetriever, ISiteBuilderApiContext sbApiContext, CmsHelper cmsHelper)
 
         {
             _documentListWebApiClient = documentListWebApiClient;
@@ -53,6 +59,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
             _documentTypeWebApiClient = documentTypeWebApiClient;
             _contentRetriever = contentRetriever;
             shouldGetInactiveDocumnents = sbApiContext.UserClaims != null && sbApiContext.UserClaims.ScopeType.EqualsIgnoreCase(UserScopeType.Tenant.ToStringQuickly());
+            _cmsHelper = cmsHelper;
         }
 
         [HttpPostRoute(UriTemplate = "delete")]
@@ -99,7 +106,6 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
             return EmptyList2<object>();
         }
 
-
         [HttpPostRoute(UriTemplate = "create")]
         public async Task<Response<List<Object>>> Create(List<JObject> documents)
         {
@@ -133,7 +139,6 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
                 throw new InvalidOperationException("unknonw entityType [" + documents.First().Value<string>("entityType") + "]");
             }
         }
-
 
         [HttpPostRoute(UriTemplate = "update")]
         public async Task<Response<List<Object>>> Update(List<JObject> documents)
@@ -171,7 +176,6 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
             }
         }
 
-
         [HttpGetRoute(UriTemplate = "documentTypes/read")]
         public async Task<Response<List<CMS.DocumentType>>> ReadDocumentTypes(PagingParamaters pagingParams, FilterCollection extFilter, string entityType, string list, string view = null)
         {
@@ -188,38 +192,55 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
             }
             if (entityType == "cms")
             {
-                string sortBy = null;
-                string filter = null;
+                string sortBy = pagingParams.sort.Count() > 0 ? pagingParams.sort.ToSortString() : null;
+                string filter = ContentFilterExtensions.ToContentFilterString(extFilter, false);
 
-                DC.DocumentCollection res = null;
+                Tuple<IEnumerable<DocumentWithListInfo>, int> res = null;
                 if (!string.IsNullOrEmpty(pagingParams.id))
                 {
+                    var docRequest = new DocumentRequest
+                    {
+                        Id = pagingParams.id,
+                        ListFQN = list,
+                        IncludeInactiveDocument = shouldGetInactiveDocumnents
+                    };
 
-                    var doc = (await _documentListWebApiClient.GetDocument(documentListName: list, documentId: pagingParams.id, includeInactive: shouldGetInactiveDocumnents)).ReadAsSync();
-                    res = new DC.DocumentCollection()
-                          {
-                              Items = new List<DC.Document>() {doc},
-                              TotalCount = 1
-                          };
+                    Task<ServiceClientResponse<DocumentWithListInfo>> augmentedDocTask;
+                    if (_cmsHelper.ProcessDocumentRequest(docRequest, list, out augmentedDocTask, true))
+                    {
+                        var response = await augmentedDocTask.ConfigureAwait(false);
+                        var docWithListInfo = response.ReadAsSync();
+                        res = Tuple.Create<IEnumerable<DocumentWithListInfo>, int>(new[] { docWithListInfo }, 1);
+                    }
                 }
                 else if (string.IsNullOrEmpty(view))
                 {
-                    res = (await _documentListWebApiClient.GetDocuments(documentListName: list, pageSize: pagingParams.pageSize, filter: filter, startIndex: pagingParams.startIndex, sortBy: sortBy, includeInactive: shouldGetInactiveDocumnents)).ReadAsSync();
+                    var docTask = _documentListWebApiClient.GetDocuments(documentListName: list, pageSize: pagingParams.pageSize, filter: filter, startIndex: pagingParams.startIndex, sortBy: sortBy, includeInactive: shouldGetInactiveDocumnents)
+                            .ContinueWith(t => {
+                                var result = t.Result.ReadAsSync();
+                                return Tuple.Create(result.Items.AsEnumerable(), result.TotalCount);
+                            });
+                    var listTask = _documentListWebApiClient.GetDocumentList(list).ContinueWith(t => t.Result.ReadAsSync());
+                    res = await GetDocsAndAugmentWithList(docTask, listTask).ConfigureAwait(false);
                 }
                 else
                 {
-                    res = (await _documentListWebApiClient.GetViewDocuments(documentListName: list, pageSize: pagingParams.pageSize, filter: filter, startIndex: pagingParams.startIndex, sortBy: sortBy, viewName: view, includeInactive: shouldGetInactiveDocumnents)).ReadAsSync();
-                    
+                    var docTask = _documentListWebApiClient.GetViewDocuments(documentListName: list, pageSize: pagingParams.pageSize, filter: filter, startIndex: pagingParams.startIndex, sortBy: sortBy, viewName: view, includeInactive: shouldGetInactiveDocumnents)
+                        .ContinueWith(t => {
+                            var result = t.Result.ReadAsSync();
+                            return Tuple.Create(result.Items.AsEnumerable(), result.TotalCount);
+                        });
+                    var listTask = _documentListWebApiClient.GetDocumentList(list).ContinueWith(t => t.Result.ReadAsSync());
+                    res = await GetDocsAndAugmentWithList(docTask, listTask).ConfigureAwait(false);
+
                 }
 
-                
-
-                return List2(res.Items.Select(x =>
+                return List2(res.Item1.Select(x =>
                 {
                     JObject j = Mapper.Map<JObject>(x); 
                     j["entityType"] = "cms";
                     return j;
-                }).ToList(), res.TotalCount);
+                }).ToList(), res.Item2);
             }
             else
             {
@@ -257,13 +278,9 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
             }
         }
 
-
-
         [HttpGetRoute(UriTemplate = "lists/read")]
         public async Task<Response<List<JObject>>> ReadLists (PagingParamaters pagingParams, FilterCollection extFilter, string entityType )
         {
-
-
             if (entityType == "cms")
             {
                 DC.DocumentListCollection res = (await _documentListWebApiClient.GetDocumentLists(pageSize: pagingParams.pageSize, startIndex: pagingParams.startIndex)).ReadAsSync();
@@ -296,6 +313,23 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
 
         }
 
+        async Task<Tuple<IEnumerable<DocumentWithListInfo>, int>> GetDocsAndAugmentWithList(Task<Tuple<IEnumerable<DC.Document>, int>> docTask, Task<DC.DocumentList> listTask)
+        {
+            await Task.WhenAll(docTask, listTask).ConfigureAwait(false);
+            var list = listTask.Result;
+            var listFlags = new DocListFlags
+            {
+                EnableActiveDateRange = list.EnableActiveDateRanges.GetValueOrDefault(false),
+                EnablePublishing = list.EnablePublishing.GetValueOrDefault(false),
+                SupportsActiveDateRange = list.SupportsActiveDateRanges.GetValueOrDefault(false),
+                SupportsPublishing = list.SupportsPublishing.GetValueOrDefault(false),
+            };
+            return Tuple.Create(
+                docTask.Result.Item1
+                .Select(x => x.Map<DocumentWithListInfo>())
+                .Select(x => { x.ListFlags = listFlags; return x; }), 
+                docTask.Result.Item2);
+        }
 
         [HttpGetRoute(UriTemplate = "lists/tree")]
         public async Task<Response<List<Node>>> ReadListsTree(PagingParamaters pagingParams, FilterCollection extFilter, string entityType = null, string view = null, string usages = null)
@@ -380,9 +414,6 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
 
         private JObject AddViews(EntityList x)
         {
-           
-
-           
             JObject ret = JObject.FromObject(x, JsonSerializer.Create(new CaseInsensitiveJsonSerializerSettings()));
             ret["listFQN"] = string.IsNullOrEmpty(x.NameSpace) ? x.Name : x.Name + "@" + x.NameSpace;
             ret["entityType"] = "mzdb";
@@ -392,70 +423,16 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
 
         private JObject AddViews(DC.DocumentList x)
         {
-            //var views = new List<DC.View>()
-            //            {
-                            
-            //                new DC.View()
-            //                {
-            //                    Name = "-fake",
-            //                    Usages = new List<string>() {"entityManager"},
-            //                    Fields = new List<DC.ViewFields>()
-            //                             {
-            //                                 new DC.ViewFields()
-            //                                 {
-            //                                     IsQueryable = true,
-            //                                     IsSortable = true,
-            //                                     Name = "link_title",
-            //                                     Type = "string"
-            //                                 },
-            //                                 new DC.ViewFields()
-            //                                 {
-            //                                     IsQueryable = true,
-            //                                     IsSortable = true,
-            //                                     Name = "meta_title",
-            //                                     Type = "string"
-            //                                 }
-            //                             },
-            //                    Security = "public"
-            //                }
-            //            };
-            //if (x.Views == null || x.Views.Count == 0)
-            //{
-            //    x.Views = views;
-            //}
             JObject ret = JObject.FromObject(x, JsonSerializer.Create(new CaseInsensitiveJsonSerializerSettings()));
             ret["entityType"] = "cms";
-            //ret["listFQN"] = x.Name;
             return ret;
         }
 
-
         [HttpGetRoute(UriTemplate = "editors/read")]
         public async Task<Response<List<EditorResult>>> ReadEditor()
-
         {
             ServiceClientResponse<DC.DocumentCollection> cmsEditorsTask = await _documentListWebApiClient.GetDocuments(documentListName: "entityEditors@mozu", targetContextLevel: TargetContextLevelType.Tenant, pageSize: 600, startIndex: 0, includeInactive: shouldGetInactiveDocumnents);
-
             List<EditorResult> editors = new List<EditorResult>();
-            //List<EditorResult> editors = Directory.GetFiles(HttpRuntime.AppDomainAppPath + @"\Tests\Mocks\Entities\Editors\").Select(js => new EditorResult
-            //                                                                                                                               {
-            //                                                                                                                                   Id = Path.GetFileNameWithoutExtension(js).ToLower(),
-            //                                                                                                                                   DocumentTypes = new List<string>()
-            //                                                                                                                                                   {
-            //                                                                                                                                                       Path.GetFileNameWithoutExtension(js).ToLower()
-            //                                                                                                                                                   },
-            //                                                                                                                                   EntityLists = new List<string>()
-            //                                                                                                                                                 {
-            //                                                                                                                                                     Path.GetFileNameWithoutExtension(js).ToLower()
-            //                                                                                                                                                 },
-            //                                                                                                                                   DocumentLists = new List<string>()
-            //                                                                                                                                                   {
-            //                                                                                                                                                       Path.GetFileNameWithoutExtension(js).ToLower()
-            //                                                                                                                                                   },
-            //                                                                                                                                   Priority = 0,
-            //                                                                                                                                   Code = File.ReadAllText(js)
-            //                                                                                                                               }).ToList();
-
             if (!cmsEditorsTask.HasException)
             {
                 IEnumerable<EditorResult> cmsEditors = cmsEditorsTask.ReadAsSync().Items.Select(x =>
@@ -486,7 +463,6 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
                     editors = editors.Concat(theme.Editors.Select(x =>
                     {
                         var jsFile = vpp.GetThemeFileInfo("admin\\editors\\" + x.Path, true);
-                        //var jsFile = theme.FileListing.GetFileInfo("admin\\editors\\"+ x.Path, true);
                         if (jsFile != null)
                         {
                             return new EditorResult()
@@ -531,321 +507,3 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
         }
     }
 }
-
-//namespace Mozu.Content.Contracts.Prototype
-//{
-
-//    /// <summary>
-//    /// shared betweeen cms / mzdb2.  
-//    /// </summary>
-//    public class View
-//    {
-
-//        /// <summary>
-//        /// id of the view
-//        /// </summary>
-//        public string Name { get; set; }
-
-//        /// <summary>
-//        /// lets not do this
-//        /// </summary>
-//        public string NameSpace { get; set; }
-
-
-//        /// <summary>
-//        /// tag as use in admin or not ... maybe other's
-//        /// </summary>
-//        public string[] Usages { get; set; }
-
-
-//        /// <summary>
-//        /// untyped extensibility place
-//        /// </summary>
-//        public Object MetaData { get; set; }
-
-//        /// <summary>
-//        /// less restrictive than collectoin/list security.
-//        /// </summary>
-//        public SecurityStrategy Security { get; set; }
-
-
-//        /// <summary>
-//        /// filter is anded with any fiilter used in the get </summary>
-//        public string Filter { get; set; }
-//        /// <summary>
-//        /// sort isn't anded cause that would be dumb
-//        /// </summary>
-//        public string DefaultSort { get; set; }
-
-//        /// <summary>
-//        /// list of fields returned by the get of the view 
-//        /// </summary>
-//        public List<ViewFields> Fields { get; set; }
-
-
-//    }
-
-
-//    /// <summary>
-//    /// shared by cms/mzdb.
-//    /// </summary>
-//    public class ViewFields
-//    {
-//        /// <summary>
-//        /// The property Name/Key of the items property value
-//        /// </summary>
-//        public string Name { get; set; }
-
-
-//        /// <summary>
-//        /// auto int string float date bool
-//        /// </summary>
-//        public ViewFieldTYpe Type { get; set; }
-
-
-//        /// <summary>
-//        /// the dot notation that links to the source document property eg foo for foo first level or foo.bing.bang for deeper property.  
-//        /// Need to describe how it aggregates if an interior property is a collection eg  post.relatedproducts.code
-
-//        /// </summary>
-//        public string Target { get; set; }
-
-//        /// <summary>
-//        /// need to discus how this might work.  should querys to the view be orientanted around the view or the document.
-//        /// Eg where productCodes='sam' vs post.relatedproducts.code='sam'
-//        /// </summary>
-//        public bool IsQueryable { get; set; }
-
-
-//        public bool IsSortable { get; set; }
-
-
-//    }
-
-
-//    public class DocumentTypeFQN
-//    {
-//        //public string Id { get; set; }
-
-//        /// <summary>
-//        /// unique name
-//        /// </summary>
-//        public string Name { get; set; }
-
-//        /// <summary>
-//        /// the scope of the documenttype
-//        /// </summary>
-//        public string DocumentTypeScope { get; set; }
-
-//        /// <summary>
-//        /// Friendly name localized to default(??) language
-//        /// </summary>
-//        public string DisplayName { get; set; }
-
-//        public List<LocalizedString> LocalizedDisplayNames { get; set; }
-
-//        /// <summary>
-//        /// Description localized to default(??) language
-//        /// </summary>
-//        public string Description { get; set; }
-
-//        public List<LocalizedString> LocalizedDescriptions { get; set; }
-
-//        public string ParentTypeName { get; set; }
-
-//        public List<PropertyType> PropertyTypes { get; set; }
-
-
-//        /********************
-//        *  CHANGE           *
-//        ********************/
-
-
-//        public List<string> Editors { get; set; }
-
-
-//        public Object MetaData { get; set; }
-
-//        /*********************
-//         *  EMD CHANGE       *
-//        *********************/
-
-
-//    }
-
-//    public enum SecurityStrategy
-//    {
-//        Public,
-//        Admin,
-//        Owner
-//    }
-
-
-//    public enum ViewFieldTYpe
-//    {
-
-//        String,
-//        Boolean,
-//        Int,
-//        Float,
-//        DateTime,
-//        Any
-//    }
-
-
-//    public class DocumentList
-//    {
-//        public string Name { get; set; }
-
-//        public List<string> DocumentTypes { get; set; }
-
-//        public bool? SupportsPublishing { get; set; }
-
-//        public bool? EnablePublishing { get; set; }
-
-
-//        /*********************
-//        *  CHANGE           *
-//        ********************/
-
-//        public Scopes Scope { get; set; }
-
-//        public List<View> Views { get; set; }
-
-//        public Object MetaData { get; set; }
-
-//        public SecurityStrategy Security { get; set; }
-
-//        public List<string> Usages { get; set; }
-
-//        /*********************
-//         *  EMD CHANGE       *
-//        *********************/
-
-
-//    }
-
-//    public class PropertyType
-//    {
-
-//        public PropertyType()
-//        {
-//            LocalizedDescriptions = new List<LocalizedString>();
-//            LocalizedDisplayNames = new List<LocalizedString>();
-//        }
-
-//        /// <summary>
-//        /// unique name
-//        /// </summary>
-//        public string Name { get; set; }
-
-//        /// <summary>
-//        /// Friendly name localized to current language locale or default
-//        /// </summary>
-//        public string DisplayName { get; set; }
-
-//        public string Description { get; set; }
-
-//        public List<LocalizedString> LocalizedDisplayNames { get; set; }
-//        public List<LocalizedString> LocalizedDescriptions { get; set; }
-
-//        public string DisplayTemplate { get; set; }
-
-//        public string EditTemplate { get; set; }
-
-//        public PropertyValueType PropertyValueType { get; set; }
-
-//        public string Regex { get; set; }
-//        /*public int MaxValue { get; set; }
-//        public int MinValue { get; set; }
-//        public string[] AllowedValues { get; set; }*/
-
-//        //public bool? IsInherited { get; set; }
-//        public bool? IsQueryable { get; set; }
-//        public bool? IsSortable { get; set; }
-//        public bool? IsMultiValued { get; set; }
-//        public bool? IsAggregatable { get; set; }
-//        public bool IsRequired { get; set; }
-
-
-//        /********************
-//        *  CHANGE           *
-//        ********************/
-//        public Object MetaData { get; set; }
-//        /*********************
-//         *  EMD CHANGE       *
-//        *********************/
-
-//    }
-
-
-//    public enum Scopes
-//    {
-//        Tenant,
-//        MasterCataglog,
-//        Catalog,
-//        Site
-//    }
-
-
-//    public class Document
-//    {
-
-//        public string Id { get; set; }
-
-
-//        public string Name { get; set; }
-
-
-//        public string Extension { get; set; }
-
-//        //
-//        //public string Path { get; set; }
-
-
-//        public string DocumentTypeFQN { get; set; }
-
-//        //
-//        //public string FolderId { get; set; }
-
-
-//        public string listFQN { get; set; }
-
-
-//        public long? ContentLength { get; set; }
-
-
-//        public string ContentMimeType { get; set; }
-
-
-//        public DateTime? ContentUpdateDate { get; set; }
-
-
-//        public string PublishState { get; set; }
-
-
-//        /*********************
-//         *  CHANGE           *
-//         ********************/
-
-
-//        public Object Properties { get; set; }
-
-
-//        //
-//        //public List<PropertyValue> Properties { get; set; }
-
-//        /*********************
-//         *  EMD CHANGE       *
-//        *********************/
-
-//        //TODO: jr -- rename to AuditInfo
-
-//        public DateTime? InsertDate { get; set; }
-
-
-//        public DateTime? UpdateDate { get; set; }
-//    }
-
-
-//}

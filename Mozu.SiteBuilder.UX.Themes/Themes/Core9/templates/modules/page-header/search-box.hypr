@@ -1,0 +1,23 @@
+﻿<form id="searchbox" class="mz-searchbox{% if themeSettings.useSearchAutocomplete %} mz-searchbox-expands{% endif %}" action="/search">
+    <span class="mz-searchbox-field">
+        <input placeholder="{{ labels.search }}" type="search" class="mz-searchbox-input" autocomplete="off" name="query" data-mz-role="searchquery" />
+        <button class="mz-searchbox-button" type="submit">{{ labels.search }}</button>
+    </span>
+	<select class="mz-searchbox-categories" name="categoryId" 
+            data-mz-contextify='[value="{{ pageContext.categoryId }}"]'
+            data-mz-contextify-attr='selected'
+            data-mz-contextify-val='selected'>
+        <option value="">{{ labels.all }}</option>
+        {% partial_cache %}
+        {% for node in navigation.tree %}
+        {% if node.nodeType == "category" and not node.isEmpty %}
+        <option value="{{node.originalId}}">{{node.name}}</option>
+        {% endif %}
+		{% endfor %}
+        {% endpartial_cache %}
+	</select>
+    {% require_script "modules/contextify" %}
+    {% if themeSettings.useSearchAutocomplete %}
+        {% require_script "modules/search-autocomplete" %}
+    {% endif %}
+</form>

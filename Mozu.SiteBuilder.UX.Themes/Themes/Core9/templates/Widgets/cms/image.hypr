@@ -1,0 +1,98 @@
+﻿<div class="mz-cms-image" data-mz-cms-image="{% json_attribute Model.config|default:'{}' %}">
+
+{% if not Model.config  %}
+
+    <img class="mz-cms-image-cover" style="background-image: url('/admin/scripts/resources/images/legacy/AddPhotos.png');"></div>
+
+{% endif %}
+
+{% if Model.config.imageSize == 'maintain' %}
+    
+    {% if Model.config.imageClickAction == 'url' %}
+        <a 
+            target="_blank"
+            title="{{Model.config.imageAltText}}"
+            
+            {% if Model.config.linkSource == 'externalUrl' %}
+                href="{{Model.config.linkExternalUrl}}"
+            {% endif %}
+            {% if Model.config.linkSource == 'internalUrl' %}
+                href="{{Model.config.linkInternalUrl}}"
+            {% endif %}
+            {% if Model.config.linkSource == 'file' %}
+                {% if Model.config.linkFileId %}
+                    href="{% make_url "cdn" "/cms/files/"|add(Model.config.linkFileId) %}"
+                {% endif %}
+            {% endif %}
+            >
+
+
+    {% endif %}
+
+    <img 
+        class="mz-cms-image-maintain"
+        alt="{{Model.config.imageAltText}}"
+        
+        style="
+          border-width: {{Model.config.borderWidth}}; 
+          border-style: {{Model.config.borderStyle}};
+          border-color: {{Model.config.borderColor}};
+          box-sizing: border-box;
+        "
+         
+        {% if Model.config.imageSource == 'externalUrl' %}
+            src="{{Model.config.imageExternalUrl}}"
+        {% endif %}
+        {% if Model.config.imageSource == 'file' %}
+            {% if Model.config.imageFileId %}
+                src="{% make_url "cdn" "/cms/files/"|add(Model.config.imageFileId) %}"
+            {% endif %}
+        {% endif %}
+         >
+
+    {% if Model.config.imageClickAction == 'url' %}
+        </a>
+    {% endif %}
+
+{% else %}
+    <{% if Model.config.imageClickAction == 'url' %}a{% else %}div{% endif %}
+        class="mz-cms-image-cover"
+        title="{{Model.config.imageAltText}}"
+        alt="{{Model.config.imageAltText}}"
+        
+        {% if Model.config.imageClickAction == 'url' %}
+            target="_blank"
+            {% if Model.config.linkSource == 'externalUrl' %}
+                href="{{Model.config.linkExternalUrl}}"
+            {% endif %}
+            {% if Model.config.linkSource == 'internalUrl' %}
+                href="{{Model.config.linkInternalUrl}}"
+            {% endif %}
+            {% if Model.config.linkSource == 'file' %}
+                {% if Model.config.linkFileId %}
+                    href="{% make_url "cdn" "/cms/files/"|add(Model.config.linkFileId) %}"
+                {% endif %}
+            {% endif %}
+        {% endif %}
+
+        style="background-image: url(
+            {% if Model.config.imageSource == 'externalUrl' %}
+                '{{Model.config.imageExternalUrl}}'
+            {% endif %}
+            {% if Model.config.imageSource == 'file' %}
+                {% if Model.config.imageFileId %}
+                    '{% make_url "cdn" "/cms/files/"|add(Model.config.imageFileId) %}'
+                {% endif %}
+            {% endif %}
+        );
+        border-width: {{Model.config.borderWidth}}; 
+        border-style: {{Model.config.borderStyle}};
+        border-color: {{Model.config.borderColor}};
+        box-sizing: border-box;
+        background-position: {{Model.config.positionHorizontal}} {{Model.config.positionVertical}};"
+        >
+        </{% if Model.config.imageClickAction == 'url' %}a{% else %}div{% endif %}>
+
+{% endif %}
+</div>
+{% require_script "widgets/image" %}

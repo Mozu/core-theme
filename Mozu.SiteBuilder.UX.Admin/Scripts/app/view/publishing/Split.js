@@ -116,7 +116,7 @@ Ext.define('Taco.view.publishing.Split', {
                         options:  {
                             code: 'unassigned',
                             type: 'product',
-                            autoLoad: false
+                            autoLoad: true
                         }
                     },
                     advancedFormCls: 'Taco.view.publishing.advancedSearchForm.DraftProduct'
@@ -132,7 +132,7 @@ Ext.define('Taco.view.publishing.Split', {
                         options:  {
                             code: 'unassigned',
                             type: 'cms',
-                            autoLoad: false
+                            autoLoad: true
                         }
                     },
                     advancedFormCls: 'Taco.view.publishing.advancedSearchForm.DraftContent'
@@ -141,12 +141,15 @@ Ext.define('Taco.view.publishing.Split', {
         });
     },
     onCreate: function() {
-        var me = this;
+        var me = this;        
         Ext.create('Taco.view.publishing.modal.CreatePublishSet', {
-            callback: function() {
-                me.down('#publish-grid').store.read();
-                me.showGrowl('Created', null);
-                me.getWest().down('panel').getLayout().setActiveItem(0);
+            listeners: {
+                aftersaveclose: function () {                    
+                    me.down('#publish-grid').store.read();
+                    me.showGrowl('Created', null);
+                    me.getWest().down('panel').getLayout().setActiveItem(0);
+                },
+                scope:me
             }
         }).show();
     },

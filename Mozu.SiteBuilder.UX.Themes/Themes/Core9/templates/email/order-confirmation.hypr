@@ -1,0 +1,55 @@
+﻿{% extends "email/email" %}
+
+{% block body-content %}
+    <br>
+    <p>{{ labels.orderWelcome }} {{ model.billingInfo.billingContact.firstName }} {{ model.billingInfo.billingContact.lastNameOrSurname }}!</p>
+    <br>
+    <p>{{ labels.orderConfirmationBlob1|string_format(siteContext.generalSettings.websiteName, domainName)|safe }}</p>
+
+    <table width="100%" cellpadding="1" width="100%">
+        <thead>
+            <tr>
+                <td bgcolor="#666666">
+                    <font color="#FFFFFF">{{ labels.orderDetails }}</font>
+                </td>
+            </tr>   
+        </thead>
+
+        <tbody>
+            <tr>
+                <td>
+                    <b>{{ labels.orderNo }}</b>: {{ model.orderNumber }} <a href="http://{{ domainName }}/user/login">{{ labels.checkOrderStatus }}</a><br/><br/>
+                    <b>{{ labels.shipTo }}</b>:<br><br>{% include "modules/common/email-address-summary" with model=model.fulfillmentInfo.fulfillmentContact %}<br><br>
+                    <b>{{ labels.shippingMethod }}</b>: {{ model.fulfillmentInfo.shippingMethodName }}<br>
+                </td>
+            </tr>
+
+			{% ifnotequal model.total 0 %}
+           <tr>
+
+                <td>
+                    <b>{{ labels.billingInformation }}</b>:<br><br>{% include "modules/common/email-address-summary" with model=model.billingInfo.billingContact %}<br><br>
+                        {% if model.billingInfo.paymentType == "CreditCard" %}
+                            <b>{{ labels.paymentMethod }}</b>: {{ model.billingInfo.card.paymentOrCardType }} {{ model.billingInfo.card.cardNumberPartOrMask }}
+                        {% endif %}                        
+                </td>
+            </tr>
+
+			{% endifnotequal %}
+        </tbody>
+    </table>
+
+    {% include "modules/common/email-order-summary" %}
+    
+    {% if model.shopperNotes.comments %}
+        <h5>{{ labels.comments }}</h5>
+        <br><p>{{ model.shopperNotes.comments }}</p>
+    {% endif %}
+    
+    {% if model.shopperNotes.giftMessage %}
+        <h5>{{ labels.giftMessage }}</h5>
+        <br><p>{{ model.shopperNotes.giftMessage }}</p>
+    {% endif %}
+
+    {{ labels.emailClosing|string_format(siteContext.generalSettings.websiteName)|safe }}
+{% endblock body-content %}

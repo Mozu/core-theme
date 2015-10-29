@@ -53,7 +53,8 @@ namespace Mozu.SiteBuilder.UnitTests.Mvc
                                     Destination = "/products-category/c/282?foo=h{foo}&moo={moo}",
                                     CopyQueryString = true,
                                     Source="1",
-                                    Priority = 0
+                                    Priority = 0,
+                                    IsEnabled = true
                                 },
                                 Query= System.Web.HttpUtility.ParseQueryString("foo=5&moo=*")
 
@@ -69,8 +70,8 @@ namespace Mozu.SiteBuilder.UnitTests.Mvc
         }
         public IEnumerable<TestScenario> GetTests()
         {
-            var list = new List<TestScenario>() {
-             new TestScenario()
+            yield return
+                new TestScenario()
                 {
                     Name = "prefixedQsMatch",
                     Url = "/?foo=5&moo=6",
@@ -79,63 +80,68 @@ namespace Mozu.SiteBuilder.UnitTests.Mvc
                     {
                         Destination = "/products-category/c/282?foo=h5&moo=6"
                     }
-                },
-             new TestScenario()
-             {
-                 Name="simple substitution",
-                 Url = "/foo?prods=123456",
-                 RuntimeRedirects = new RuntimeRedirects
-                 {
-                     QueryString = new Dictionary<string, List<RuntimeRedirectEntry>>
-                     {
-                         {
-                             "foo", new List<RuntimeRedirectEntry> {
-                             new RuntimeRedirectEntry {
-                                 Query = System.Web.HttpUtility.ParseQueryString("prods=*"),
-                                 Redirect = new RedirectEntry {
-                                    Source = "foo?prods=*",
-                                    Destination = "p/{prods}"
-                                 }
-                                }
-                             }
-                         }
-                     }
-                 },
-                 Result = new RedirectEntry
-                 {
-                     Destination = "p/123456"
-                 } },
-                new TestScenario()
+                };
+
+            yield return new TestScenario()
+            {
+                Name = "simple substitution",
+                Url = "/foo?prods=123456",
+                RuntimeRedirects = new RuntimeRedirects
                 {
-                    Name = "redirect with QS in destination",
-                    Url = "test?prod=MS-TEST-007&utm_campaign=test",
-                    RuntimeRedirects = new RuntimeRedirects
+                    QueryString = new Dictionary<string, List<RuntimeRedirectEntry>>
                     {
-                        QueryString = new Dictionary<string, List<RuntimeRedirectEntry>>
                         {
-                            { "test",
-                                new List<RuntimeRedirectEntry>
+                            "foo", new List<RuntimeRedirectEntry>
+                            {
+                                new RuntimeRedirectEntry
                                 {
-                                    new RuntimeRedirectEntry
+                                    Query = System.Web.HttpUtility.ParseQueryString("prods=*"),
+                                    Redirect = new RedirectEntry
                                     {
-                                        Query = System.Web.HttpUtility.ParseQueryString("prod=*&utm_campaign=*"),
-                                        Redirect = new RedirectEntry
-                                        {
-                                            Source = "test?prod=*&utm_campaign=*",
-                                            Destination = "p/{prod}?campaign={utm_campaign}"
-                                        }
+                                        Source = "foo?prods=*",
+                                        Destination = "p/{prods}",
+                                        IsEnabled = true
                                     }
                                 }
                             }
                         }
-                    },
-                    Result = new RedirectEntry
-                    {
-                        Destination = "p/MS-TEST-007?campaign=test"
                     }
+                },
+                Result = new RedirectEntry
+                {
+                    Destination = "p/123456"
                 }
             };
-            return list;
+            yield return new TestScenario()
+            {
+                Name = "redirect with QS in destination",
+                Url = "test?prod=MS-TEST-007&utm_campaign=test",
+                RuntimeRedirects = new RuntimeRedirects
+                {
+                    QueryString = new Dictionary<string, List<RuntimeRedirectEntry>>
+                    {
+                        {
+                            "test",
+                            new List<RuntimeRedirectEntry>
+                            {
+                                new RuntimeRedirectEntry
+                                {
+                                    Query = System.Web.HttpUtility.ParseQueryString("prod=*&utm_campaign=*"),
+                                    Redirect = new RedirectEntry
+                                    {
+                                        Source = "test?prod=*&utm_campaign=*",
+                                        Destination = "p/{prod}?campaign={utm_campaign}"
+                                    }
+                                }
+                            }
+                        }
+                    }
+                },
+                Result = new RedirectEntry
+                {
+                    Destination = "p/MS-TEST-007?campaign=test"
+                }
+            };
         }
 
         public class TestScenario

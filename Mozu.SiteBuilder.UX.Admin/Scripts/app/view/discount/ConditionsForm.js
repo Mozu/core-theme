@@ -166,7 +166,7 @@ Ext.define('Taco.view.discount.ConditionsForm', {
                 hideTrigger: true,
                 width: 600,
                 fieldLabel: 'Minimum Lifetime Value Amount',
-                emptyText: 'No Customer Value limit',
+                emptyText: '',
                 minValue: 0
             })
         );

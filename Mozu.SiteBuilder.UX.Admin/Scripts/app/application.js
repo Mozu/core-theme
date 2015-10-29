@@ -35,7 +35,9 @@
  * @requires Taco.controller.Testing
  * @requires Taco.controller.FileManager
  * @requires Taco.controller.Discounts
- * @requires Taco.controller.CouponSets
+ * @requires Taco.controller.CouponSets 
+ * @requires Taco.controller.SearchTuningRules
+ * @requires Taco.controller.StoreFrontProducts
  * @requires Taco.controller.Settings
  
  * @requires Taco.controller.Themes
@@ -210,7 +212,6 @@ Ext.define('Taco.Application', {
                 me.callParent(arguments);
             }
         });
-
 
         Ext.override(Ext.AbstractComponent, {
             removeCls: function (cls) {

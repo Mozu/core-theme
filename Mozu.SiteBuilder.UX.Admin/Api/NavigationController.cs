@@ -786,7 +786,8 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
                       null,
                     null,
                     FancyRoute.CmsPage,
-                    true);
+                    true,
+                    CustomRoute.Scheme.Http);
 
                 return routes;
 

@@ -75,7 +75,6 @@ Ext.define('Taco.core.ux.content.SplitContainer', {
 
     initComponent: function () {
 
-
         if (!Array.isArray(this.items)) {
             this.items = [];
         }

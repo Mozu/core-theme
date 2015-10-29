@@ -40,7 +40,9 @@ Ext.define('Taco.view.website.Index', {
         'Taco.core.ux.DraftIcon',
         'Taco.view.publishing.modal.PublishSetPicker',
         'Taco.core.ux.content.IndicatorContainer',
-        'Taco.core.ux.action.Action'
+        'Taco.core.ux.action.Action',
+        'Taco.view.publishing.component.button.PublishButton',
+        'Taco.view.navigation.ContextSwitcher'
     ],
     selectedTheme: '',
     itemId: 'websiteIndex',
@@ -48,7 +50,7 @@ Ext.define('Taco.view.website.Index', {
     contextConfig: {
         //   supportedLevels: ['s'],
         requiresContextOfType: ['s'],
-        hidden: true
+        hidden: false
     },
     title: false,
     entityTypeEditConfig: {
@@ -76,7 +78,6 @@ Ext.define('Taco.view.website.Index', {
             productStore,
             me = this;
 
-
         this.entityEditors = Taco.core.data.StoreManager.getOrCreate('Taco.store.EntityEditors');
         this.pageTypeDefinitions = Taco.core.data.StoreManager.getOrCreate('Taco.store.PageTypeDefinitions');
 
@@ -85,21 +86,90 @@ Ext.define('Taco.view.website.Index', {
 
         this.resolutionOverride = 0;
 
+        this.publishButton =  {
+            xtype: 'publishbutton',
+            itemId: 'publishActionButton',
+            beforeItemId: 'saveActionButton',
+            buttonGroup: 'isPublishable',
+            hidden: false,
+            disabled: true,
+            scope: this,
+            handler: function() {
+               this.onPublish();
+               me.showGrowl('Published', 'info', 1000);
+            },
+
+            onMoveToPublish: function(record, code) {
+                me.publishButton.setLoading(true);
+                record.setPublishCode(code, function() {
+                    me.publishButton.setLoading(false);
+                    me.showGrowl('Moved to Publish Set', 'info', 1000);
+                });
+            },
+
+            onRemoveFromPublishSet: function(record) {
+                me.publishButton.setLoading(true);
+                record.setPublishCode(null, function() {
+                    me.publishButton.setLoading(false);    
+                    me.showGrowl.bind(me, 'Removed From Publish Set', 'info', 1000);
+                });
+            },
+
+            onDiscardDraft: function(record) {
+                me.publishButton.setLoading(true);
+                record.discardDraft(function() {
+                    me.setPublishable(false);
+                    me.publishButton.setLoading(false);
+                    me.showGrowl('Discarded', 'info', 1000);
+                    me.down('#draftIcon').hide();
+                    me.cancel();
+                });
+            }
+        };
+
         this.actions = [
             {
                 xtype: 'component',
-                itemId: 'taco-page-title',
-                html: '',
-                style: 'font-size: 13px;',
-                maxWidth: '100px'
+                html: '<strong>Editor</strong> for',
+                margin: '0 10 0 0'
             },
+            Ext.create('Taco.view.navigation.ContextSwitcher', {
+                width: '120px',
+                fieldStyle: 'background-color: #fff;'
+            }),
             {
                 xtype: 'taco-indicator',
                 itemId: 'draftIcon',
                 title: 'DRAFT',
+                margin: '0 0 0 10',
                 hidden: true,
                 afterrender: this.setAction.bind(this)
-            }, '->',
+            },
+            {
+                xtype: 'component',
+                itemId: 'taco-page-title',
+                flex: 1,
+                html: '',
+                maxWidth: '100px'
+            },
+            {
+                xtype: 'button',
+                ui: 'action',
+                scale: 'medium',
+
+                itemId: 'widgetsActionButton',
+                glyph: 'XE902@mozicons',
+                buttonGroup: 'isWebPageView',
+                margin: '0 10 0 0',
+                padding: '6 12 6 12',
+                scope: this,
+                style: {
+                    width: '42px'
+                },
+                handler: function () {
+                    this.chorizoEditor.widgets().toggle();
+                }
+            },
                 this.getPageEditorButton(),
                 this.getSettingsButton(),
             {
@@ -127,20 +197,6 @@ Ext.define('Taco.view.website.Index', {
                     this.down('#widgetsActionButton').setDisabled(isPressed);
                 }
 
-            },
-            {
-                xtype: 'button',
-                ui: 'action',
-                scale: 'medium',
-
-                itemId: 'widgetsActionButton',
-                text: 'Widgets',
-                buttonGroup: 'isWebPageView',
-                margin: '0 0 0 10',
-                scope: this,
-                handler: function () {
-                    this.chorizoEditor.widgets().toggle();
-                }
             }, {
                 xtype: 'button',
                 ui: 'action',
@@ -219,107 +275,8 @@ Ext.define('Taco.view.website.Index', {
                     ]
                 }
             }, 
+            this.publishButton,
             {
-                xtype: 'splitbutton',
-                itemId: 'publishActionButton',
-                ui: 'action-primary',
-                scale: 'medium',
-                text: 'Publish Now',
-                margin: '0 0 0 10',
-                buttonGroup: 'isPublishable',
-                hidden: false,
-                disabled: true,
-                scope: this,
-                onMenuShow: function() {
-                    var record = me.getPublishRecord(),
-                        publishingInfo = record.getPublishingInfo();
-
-                    this.down('#move-to-publish')[publishingInfo.enabled.move ? 'enable' : 'disable']();
-                    this.down('#remove-to-publish')[publishingInfo.enabled.remove ? 'enable' : 'disable']();
-                },
-                menu: {
-                    shadow: true,
-                    items: [
-                        {
-                            text: 'Move to Publish Set',
-                            scope: this,
-                            itemId: 'move-to-publish',
-                            handler: function () {
-                                var me = this,
-                                    record = this.getPublishRecord(),
-                                    modal = Ext.create('Taco.view.publishing.modal.PublishSetPicker', {
-                                    record: record,
-                                    callback: function(publishSetCode) {
-                                        record.setPublishCode(publishSetCode, me.showGrowl.bind(me, 'Moved to Publish Set', 'info', 1000));
-                                    }
-                                });
-
-                                modal.show();
-
-                            }
-                        },
-                        {
-                            text: 'Remove From Publish Set',
-                            scope: this,
-                            itemId: 'remove-to-publish',
-                            handler: function () {
-
-                                var me = this,
-                                    record = this.getPublishRecord();
-
-                                record.setPublishCode(null, me.showGrowl.bind(me, 'Removed From Publish Set', 'info', 1000));
-
-                            }
-                        },
-                        {
-                            text: 'Discard Draft',
-                            scope: this,
-                            handler: function () {
-
-                                var me = this,
-                                    record = this.getPublishRecord();
-
-                                Ext.create('Taco.core.ux.window.Modal', {
-                                    scale: 'small',
-                                    title: 'Discard Draft',
-                                    modal: true,
-                                    closeAction: 'destroy',
-                                    height: 200,
-                                    primaryText: 'Yes, Discard',
-                                    secondaryText: 'Cancel',
-                                    primaryHandler: function() {
-                                        
-                                        record.discardDraft(function() {
-                                            me.setPublishable(false);
-                                            me.showGrowl('Discarded', 'info', 1000);
-                                            me.down('#draftIcon').hide();
-                                            me.cancel(); // trigger a reload so that discarded state is wiped clean.
-                                        });
-
-                                        this.save();
-                                    },
-                                    items: [{
-                                        xtype: 'container',
-                                        layout: { 
-                                            type: 'hbox' 
-                                        },
-                                        items: [
-                                            Ext.create('Ext.panel.Panel', {
-                                                width: '100%',
-                                                html: 'Are you sure you want to discard this Draft?'
-                                            })
-                                        ]
-                                    }]
-                                }).show();
-
-                            }
-                        }
-                    ]
-                },
-                handler: function () {
-                    this.onPublish();
-                }
-            }, {
                 xtype: 'button',
                 ui: 'action',
                 scale: 'medium',
@@ -628,15 +585,17 @@ Ext.define('Taco.view.website.Index', {
             xtype: 'button',
             ui: 'action',
             scale: 'medium',
-            text: 'Editor',
+            glyph: 'XE900@mozicons',
             toggleGroup: 'websiteEditorTabs',
             itemId: 'pageEditorTabButton',
             buttonGroup: 'isWebPage',
             allowDepress: false,
             enableToggle: true,
             pressed: true,
+            padding: '6 12 6 12',
             style: {
-                borderRadius: '2px 0px 0px 2px'
+                borderRadius: '2px 0px 0px 2px',
+                width: '42px'
             },
             scope: this,
             handler: function () {
@@ -656,14 +615,16 @@ Ext.define('Taco.view.website.Index', {
             ui: 'action',
             scale: 'medium',
             buttonGroup: 'hasSettings',
-            text: 'Settings',
+            glyph: 'XE901@mozicons',
             itemId: 'pageSettingsTabButton',
             toggleGroup: 'websiteEditorTabs',
             allowDepress: false,
             enableToggle: true,
             scope: this,
+            padding: '6 8 6 8',
             style: {
-                borderRadius: '0px 2px 2px 0px'
+                borderRadius: '0px 2px 2px 0px',
+                width: '42px'
             },
             handler: function () {
                 var cardpanel = this.down('#editorCardPanel');
@@ -832,6 +793,8 @@ Ext.define('Taco.view.website.Index', {
 
     setPublishRecord: function(record) { 
         this.publishRecord = record;
+
+        this.publishButton.addRecord(record);
 
         this.updateDraftIcon(record);
 
@@ -1318,7 +1281,7 @@ Ext.define('Taco.view.website.Index', {
 
     updateHeaderTitle: function(tree, record) {
         var icon = '<span class="taco-website-header-icon ' + (this.down('taco-website-tree').getIconClass(record) || 'page-icon') + '"></span>';
-        this.down('#taco-page-title').update( icon + '<h2 class="page-title">' + record.get('name') + '</h2>');
+        this.down('#taco-page-title').update( '<h2 class="page-title">' + record.get('name') + '</h2>');
     },
 
     onContentListClick: function (tree, metaData) {

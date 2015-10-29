@@ -4,7 +4,6 @@ using System.Net.Http;
 using System.Threading.Tasks;
 using Mozu.Content.Contracts.Clients;
 using Mozu.Core.Api.Contracts.Client;
-using AVM = Mozu.SiteBuilder.Mvc.Models.CMS.Admin;
 using DC = Mozu.Content.Contracts;
 
 namespace Mozu.SiteBuilder.Mvc.CMS
@@ -34,5 +33,8 @@ namespace Mozu.SiteBuilder.Mvc.CMS
         Task<ServiceClientResponse<DC.Document>> Update2(DC.Document document);
    
         IDocumentListWebApiClient DocumentListWebApiClient { get; set; }
+
+        Task<ServiceClientResponse<DC.DocumentList>> GetList(string listFQN);
+        Task<ServiceClientResponse<DC.DocumentList>> UpdateList(DC.DocumentList list);
     }
 }

@@ -540,17 +540,22 @@ Ext.define('Taco.view.attribute.Form', {
                     },
                     attributeType, {
                         xtype: 'container',
-                        width: 339,
+                        layout: {
+                            type: 'hbox',
+                            align: 'bottom'
+                        },
                         fieldLabel: 'Range',
                         cls: 'taco-date-value-input',
                         items: [
                             {
+                                fieldLabel: 'Valid Date Range',
                                 xtype: 'daterange',
                                 name: 'minDate',
                                 endDateFieldName: 'maxDate'
                             }, {
                                 xtype: 'label',
-                                text: 'to'
+                                text: 'to',
+                                padding: '0 10'
                             }, {
                                 xtype: 'daterange',
                                 name: 'maxDate',

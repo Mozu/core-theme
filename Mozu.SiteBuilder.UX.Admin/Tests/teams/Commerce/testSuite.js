@@ -96,6 +96,10 @@ var relPath = helpers.isBuildTask(window) ? '' : '../../',
                             url: relPath + "unit/view/order/modal/AddGiftCard.t.js",
                             title: "Add Gift Card Order Modal"
                         },
+                        {
+                            url: relPath + "unit/view/order/modal/AddPayment.t.js",
+                            title: "Add Payments to Order"
+                        },
                         {   
                             url: relPath + "unit/view/order/subform/Payment.t.js",
                             title: "Order Payment Sub Form"

@@ -1,0 +1,125 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<ClassDiagram MajorVersion="1" MinorVersion="1" MembersFormat="NameAndType">
+  <Class Name="Mozu.SiteBuilder.UX.Admin.Api.ErrorHandlers.FriendlyAggregateExceptionResponseBuilder">
+    <Position X="0.5" Y="2.5" Width="2.5" />
+    <Members>
+      <Method Name="FriendlyAggregateExceptionResponseBuilder" Hidden="true" />
+    </Members>
+    <TypeIdentifier />
+  </Class>
+  <Class Name="Mozu.SiteBuilder.UX.Admin.Api.ErrorHandlers.FriendlyExceptionResponseBuilderCollection">
+    <Position X="1.25" Y="7" Width="4.75" />
+    <TypeIdentifier />
+    <Lollipop Position="0.2" />
+  </Class>
+  <Class Name="Mozu.Core.Api.ErrorHandler.ApiExceptionHandlerService">
+    <Position X="1.5" Y="9.25" Width="2.5" />
+    <Members>
+      <Method Name="ApiExceptionHandlerService" Hidden="true" />
+    </Members>
+    <TypeIdentifier />
+  </Class>
+  <Class Name="Mozu.Core.Api.ErrorHandler.MozuErrorResult" BaseTypeListCollapsed="true">
+    <Position X="12.25" Y="9" Width="3.5" />
+    <Members>
+      <Method Name="MozuErrorResult" Hidden="true" />
+    </Members>
+    <TypeIdentifier />
+    <Lollipop Position="0.2" Collapsed="true" />
+  </Class>
+  <Class Name="Mozu.Core.Api.ErrorHandler.MozuApiExceptionLogger" BaseTypeListCollapsed="true">
+    <Position X="9.25" Y="9" Width="2.25" />
+    <Members>
+      <Method Name="MozuApiExceptionLogger" Hidden="true" />
+    </Members>
+    <TypeIdentifier />
+    <Lollipop Position="0.2" Collapsed="true" />
+  </Class>
+  <Class Name="Mozu.Core.Api.ErrorHandler.ApiExceptionLoggingService">
+    <Position X="7.75" Y="7.25" Width="2.5" />
+    <Members>
+      <Method Name="ApiExceptionLoggingService" Hidden="true" />
+    </Members>
+    <TypeIdentifier />
+  </Class>
+  <Class Name="Mozu.Core.Api.ErrorHandler.ApiExceptionMessageLogger" BaseTypeListCollapsed="true">
+    <Position X="11.25" Y="7.25" Width="2.5" />
+    <Members>
+      <Method Name="ApiExceptionMessageLogger" Hidden="true" />
+    </Members>
+    <TypeIdentifier />
+    <Lollipop Position="0.2" Collapsed="true" />
+  </Class>
+  <Class Name="Mozu.Core.Api.ErrorHandler.AbstractExceptionResponseBuilder&lt;TException&gt;" Collapsed="true">
+    <Position X="12.25" Y="0.5" Width="1.5" />
+    <TypeIdentifier />
+    <Lollipop Position="0.2" />
+  </Class>
+  <Class Name="Mozu.Core.Api.ErrorHandler.AggregateExceptionResponseBuilder">
+    <Position X="15.75" Y="2.5" Width="2.5" />
+    <Members>
+      <Method Name="AggregateExceptionResponseBuilder" Hidden="true" />
+    </Members>
+    <TypeIdentifier />
+  </Class>
+  <Class Name="Mozu.Core.Api.ErrorHandler.ApiClientAbstractExceptionResponseBuilder">
+    <Position X="3.25" Y="2.5" Width="2.5" />
+    <Members>
+      <Method Name="ApiClientAbstractExceptionResponseBuilder" Hidden="true" />
+    </Members>
+    <TypeIdentifier />
+  </Class>
+  <Class Name="Mozu.Core.Api.ErrorHandler.ExceptionResponseBuilderCollection" BaseTypeListCollapsed="true">
+    <Position X="4.5" Y="9.25" Width="4.25" />
+    <Members>
+      <Method Name="ExceptionResponseBuilderCollection" Hidden="true" />
+    </Members>
+    <TypeIdentifier />
+    <Lollipop Position="0.2" Collapsed="true" />
+  </Class>
+  <Class Name="Mozu.Core.Api.ErrorHandler.InvalidOrMissingTokenExceptionResponseBuilder">
+    <Position X="12" Y="2.5" Width="3.5" />
+    <Members>
+      <Method Name="InvalidOrMissingTokenExceptionResponseBuilder" Hidden="true" />
+    </Members>
+    <TypeIdentifier />
+  </Class>
+  <Class Name="Mozu.Core.Api.ErrorHandler.SystemExceptionResponseBuilder">
+    <Position X="18.75" Y="2.5" Width="2.5" />
+    <Members>
+      <Method Name="SystemExceptionResponseBuilder" Hidden="true" />
+    </Members>
+    <TypeIdentifier />
+  </Class>
+  <Class Name="Mozu.Core.Api.ErrorHandler.ValidationConflictExceptionResponseBuilder">
+    <Position X="6" Y="2.5" Width="2.5" />
+    <Members>
+      <Method Name="ValidationConflictExceptionResponseBuilder" Hidden="true" />
+    </Members>
+    <TypeIdentifier />
+  </Class>
+  <Class Name="Mozu.Core.Api.ErrorHandler.MozuApplicationExceptionResponseBuilder">
+    <Position X="9" Y="2.5" Width="2.5" />
+    <Members>
+      <Method Name="MozuApplicationExceptionResponseBuilder" Hidden="true" />
+    </Members>
+    <TypeIdentifier />
+  </Class>
+  <Interface Name="Mozu.Core.Api.ErrorHandler.IMozuApiExceptionLogger" Collapsed="true">
+    <Position X="18" Y="5.25" Width="1.5" />
+    <TypeIdentifier />
+  </Interface>
+  <Interface Name="Mozu.Core.Api.ErrorHandler.IApiExceptionMessageLogger" Collapsed="true">
+    <Position X="11.5" Y="6.5" Width="2.5" />
+    <TypeIdentifier />
+  </Interface>
+  <Interface Name="Mozu.Core.Api.ErrorHandler.IExceptionResponseBuilder" Collapsed="true">
+    <Position X="15.5" Y="6.25" Width="2.5" />
+    <TypeIdentifier />
+  </Interface>
+  <Interface Name="Mozu.Core.Api.ErrorHandler.IExceptionResponseBuilderCollection" Collapsed="true">
+    <Position X="25" Y="3.25" Width="1.5" />
+    <TypeIdentifier />
+  </Interface>
+  <Font Name="Segoe UI" Size="9" />
+</ClassDiagram>

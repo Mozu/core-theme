@@ -169,6 +169,13 @@
             me.saveFailure();
             return false;
         }
+
+        // if the record isnt dirty, we dont want to do a save, and create a draft
+        if (!this.record.dirty) {
+            me.saveSuccess();
+            return false;
+        }
+
         this.record.save({
             failure: function(record, operation) {
                 var msg = operation.error;

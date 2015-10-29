@@ -199,7 +199,7 @@ Ext.define('Taco.view.publishing.grid.Draft', {
                     minWidth: 100,
                     text: 'Name',
                     flex: 2,
-                    sortable: gridType === 'product'
+                    sortable: true
                 }, 
                 publishSetCode: {
                     type: 'gridcolumn',
@@ -621,9 +621,12 @@ Ext.define('Taco.view.publishing.grid.Draft', {
         var me = this,
             modal = Ext.create('Taco.view.publishing.modal.PublishSetPicker', {
             record: !Ext.isArray(eventData.record) ? eventData.record : eventData.record[0],
-            callback: function(publishSetCode) {
-                me.setPublishCode(item, eventData, publishSetCode);
-            }
+            listeners: {
+                aftersaveclose: function (win,publishSetCode) {
+                    me.setPublishCode(item, eventData, publishSetCode);
+                }
+            },
+            scope:me
         });
 
         modal.show();

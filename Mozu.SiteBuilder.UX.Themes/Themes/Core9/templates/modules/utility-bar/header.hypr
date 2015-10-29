@@ -1,0 +1,44 @@
+{% if pageContext.dataViewMode == 'pending' and pageContext.isEditMode != 'true' %}
+
+    {% require_script "modules/theme-utility-bar" %}
+
+    <div class='mz-future-date-header {% if pageContext.cookies.MZ_SHOW_FUTURE_BAR.value == false %} mz-header-hidden {% endif %}'>
+        <div class='mz-content'>
+            <div class='mz-header-icon'></div>
+
+            <div class='mz-preview-actions'>
+                
+                <span>
+                    <span>Preview Date: </span>
+                    <div id='mz-date-display-cover'>
+                        <span id='mz-date-display' class='visible-date'></span>
+                        <span id='mz-date-icon'></span>
+                    </div>
+                </span>
+
+                 <span class='hidden-input'>
+                    <input id='mz-date-display' type="text" />
+                </span>
+
+
+            </div>
+
+            <div class='mz-preview-share'>
+                <button class='mz-preview-button' id='mz-showhide-preview-bar'>Hide</button>
+            </div>
+
+        </div>
+
+    </div>
+  
+    <div class='mz-future-bar-indicator {% if pageContext.cookies.MZ_SHOW_FUTURE_BAR.value == true or pageContext.cookies.MZ_SHOW_FUTURE_BAR.value == "" %} hidden {% endif %}''>
+        
+        <span class='mz-indicator-icon'></span>
+
+        <span class='mz-indicator-text'>Show</span>
+
+    </div>
+    
+{% endif %}
+
+

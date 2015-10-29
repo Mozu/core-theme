@@ -6,6 +6,7 @@
 Ext.define('Taco.store.Entities', {
         extend: 'Ext.data.Store',
         model: 'Taco.model.Entity',
+        remoteFilter: true,
         constructor: function (cfg) {
             if (!cfg.listName || !cfg.entityType) {
                 Ext.log('bad EntitiesStore Config', { level: 'error' });

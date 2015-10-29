@@ -13,6 +13,7 @@ Ext.define('Taco.view.website.Tree', {
         'Taco.view.website.misc.ExternalLinkEditor',
         'Taco.core.ux.form.SlugField'
     ],
+    itemId: 'taco-nav-tree',
     animate:false,
     border: false,
     componentCls: 'taco-website-tree',
@@ -59,8 +60,15 @@ Ext.define('Taco.view.website.Tree', {
                 var output = me.getNavIcon(value, record);
 
                 if (Ext.Array.contains(['_navigation', '_unlinked'], record.getId()) || Ext.Array.contains(['category', 'link', 'page'], record.data.nodeType) || record.data.parentId === '_emailTemplates') {
-                    output += me.getNavOptions(record);
-                    output += '</span><span class="taco-website-tree-menu-trigger"></span>';
+
+                    /**
+                     * Split the output in order
+                     * to insert buttons between
+                     * icon and title
+                     */
+                    var splitOutput = output.split('</span><span>');
+                    output = splitOutput[0] + '</span>' + me.getNavOptions(record) + '</span>';
+                    output += '<span class="taco-website-tree-menu-trigger"></span>' + '<span>' + splitOutput[1];
                 }
 
                 return output;

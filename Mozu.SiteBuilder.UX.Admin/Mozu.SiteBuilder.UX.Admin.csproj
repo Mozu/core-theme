@@ -174,13 +174,19 @@
     <Compile Include="Api\CategoryController.cs" />
     <Compile Include="Api\ChannelController.cs" />
     <Compile Include="Api\CouponCodeController.cs" />
+    <Compile Include="Api\ModelMapping\SearchTuningMapping.cs" />
+    <Compile Include="Api\Models\Search\SearchTuningRule.cs" />
+    <Compile Include="Api\Models\Search\SimpleSearchProduct.cs" />
+    <Compile Include="Api\SearchTuningRuleController.cs" />
     <Compile Include="Api\CouponSetController.cs" />
     <Compile Include="Api\ModelMapping\ContentMapping.cs" />
     <Compile Include="Api\ModelMapping\DynamicExpressionMapping.cs" />
     <Compile Include="Api\ModelMapping\PublishingSetMapping.cs" />
+    <Compile Include="Api\ModelMapping\StorefrontProductModelMapping.cs" />
     <Compile Include="Api\Models\Discount\Coupon.cs" />
     <Compile Include="Api\Models\Discount\CouponSet.cs" />
     <Compile Include="Api\Models\PublishSets\PublishSets.cs" />
+    <Compile Include="Api\Models\Storefront\StorefrontProduct.cs" />
     <Compile Include="Api\PublishSetController.cs" />
     <Compile Include="Api\EntityController.cs" />
     <Compile Include="Api\CmsDocumentController.cs" />
@@ -400,12 +406,15 @@
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
+    <Compile Include="Helpers\AbstractFilterExpressionBuilder.cs" />
     <Compile Include="Helpers\AttributeHelpers\AttributeHelper.cs" />
     <Compile Include="Helpers\AttributeHelpers\IAttributeHelper.cs" />
     <Compile Include="Helpers\AttributeHelpers\AttributeFilterExtensions.cs" />
     <Compile Include="Helpers\AttributeHelpers\AttributeSortExtensions.cs" />
     <Compile Include="Helpers\ChannelHelpers\ChannelFilterExtensions.cs" />
     <Compile Include="Helpers\CollectionTaskUnMapper.cs" />
+    <Compile Include="Helpers\ContentHelpers\ContentFilterExtensions.cs" />
+    <Compile Include="Helpers\ContentHelpers\ContentSortExtensions.cs" />
     <Compile Include="Helpers\CouponCodeHelpers\CouponCodeFilterExtensions.cs" />
     <Compile Include="Helpers\CouponCodeHelpers\CouponCodeSortExtensions.cs" />
     <Compile Include="Helpers\CouponSetHelpers\CouponSetFilterExtensions.cs" />
@@ -416,6 +425,7 @@
     <Compile Include="Helpers\DiscountHelpers\DiscountFilterExtensions.cs" />
     <Compile Include="Helpers\FacetHelpers\IInheritedFacetHelper.cs" />
     <Compile Include="Helpers\FacetHelpers\InheritedFacetHelper.cs" />
+    <Compile Include="Helpers\ISortExpressionBuilder.cs" />
     <Compile Include="Helpers\LocalizedContentHelpers\LocalizedContentFilterExtensions.cs" />
     <Compile Include="Helpers\LocationHelpers\LocationFilterExtensions.cs" />
     <Compile Include="Helpers\LocationInventoryHelpers\LocationInventoryFilterExtensions.cs" />
@@ -428,8 +438,15 @@
     <Compile Include="Helpers\FileManagerHelpers\FileManagerHelpersSortExtensions.cs" />
     <Compile Include="Helpers\ProductHelpers\ProductFilterExtensions.cs" />
     <Compile Include="Helpers\ProductHelpers\ProductSortExtensions.cs" />
+    <Compile Include="Helpers\ProductRuntimeHelpers\ProductRuntimeFilterExpressionBuilder.cs" />
+    <Compile Include="Helpers\ProductRuntimeHelpers\ProductRuntimeSortExpressionBuilder.cs" />
+    <Compile Include="Helpers\AbstractSortExpressionBuilder.cs" />
     <Compile Include="Helpers\ProductTypeHelpers\ProductTypeFilterExtensions.cs" />
+    <Compile Include="Helpers\PublishSetHelpers\PublishSetFilterExtensions.cs" />
+    <Compile Include="Helpers\PublishSetHelpers\PublishSetSortExtensions.cs" />
     <Compile Include="Helpers\RolesHelper.cs" />
+    <Compile Include="Helpers\SearchTuningHelpers\SearchTuningRuleFilterBuilder.cs" />
+    <Compile Include="Helpers\SearchTuningHelpers\SearchTuningRuleSortBuilder.cs" />
     <Compile Include="Helpers\SecurityHelpers\SecureCapabilityConfigUrlHelper.cs" />
     <Compile Include="Helpers\TaskHelper.cs" />
     <Compile Include="MessageHandlers\AuthRedirectMessageHandler.cs" />
@@ -462,6 +479,8 @@
     <Content Include="Scripts\.sencha\app\watch-impl.xml" />
     <Content Include="Scripts\app\app.js" />
     <Content Include="Scripts\app\controller\ActionManagement.js" />
+    <Content Include="Scripts\app\controller\StoreFrontProducts.js" />
+    <Content Include="Scripts\app\controller\SearchTuningRules.js" />
     <Content Include="Scripts\app\controller\CouponSets.js" />
     <Content Include="Scripts\app\controller\Entities.js" />
     <Content Include="Scripts\app\controller\Localization.js" />
@@ -480,7 +499,6 @@
     <Content Include="Scripts\app\controller\LocationTypes.js" />
     <Content Include="Scripts\app\controller\OrderAttributes.js" />
     <Content Include="Scripts\app\controller\Reports.js" />
-    <Content Include="Scripts\app\controller\SiteSelection.js" />
     <Content Include="Scripts\app\controller\Tbd.js" />
     <Content Include="Scripts\app\core\context\Catalog.js" />
     <Content Include="Scripts\app\core\data\cache\ProxyCache.js" />
@@ -534,6 +552,9 @@
     <Content Include="Scripts\app\core\ux\window\Drawer.js" />
     <Content Include="Scripts\app\core\ux\window\MessageBox.js" />
     <Content Include="Scripts\app\core\ux\window\Modal.js" />
+    <Content Include="Scripts\app\model\BlockedProduct.js" />
+    <Content Include="Scripts\app\model\PinnedProduct.js" />
+    <Content Include="Scripts\app\model\StorefrontProduct.js" />
     <Content Include="Scripts\app\model\FilterField.js" />
     <Content Include="Scripts\app\model\BehaviorNode.js" />
     <Content Include="Scripts\app\model\BehaviorCategoryRole.js" />
@@ -546,6 +567,7 @@
     <Content Include="Scripts\app\model\OrderRefund.js" />
     <Content Include="Scripts\app\model\PublishSet.js" />
     <Content Include="Scripts\app\model\PublishSetItem.js" />
+    <Content Include="Scripts\app\model\SearchTuningRule.js" />
     <Content Include="Scripts\app\model\State.js" />
     <Content Include="Scripts\app\model\DocumentType.js" />
     <Content Include="Scripts\app\model\Card.js" />
@@ -614,6 +636,7 @@
     <Content Include="Scripts\app\platter\forms\SimpleForms.js" />
     <Content Include="Scripts\app\shared\view\field\ArrayField.js" />
     <Content Include="Scripts\app\shared\view\field\BoxSelectWithModal.js" />
+    <Content Include="Scripts\app\shared\view\field\CouponSetPickerField.js" />
     <Content Include="Scripts\app\shared\view\field\NavNode.js" />
     <Content Include="Scripts\app\shared\view\field\Discount.js" />
     <Content Include="Scripts\app\shared\view\field\Category.js" />
@@ -636,9 +659,13 @@
     <Content Include="Scripts\app\store\BehaviorNodes.js" />
     <Content Include="Scripts\app\store\BehaviorCategoryRoles.js" />
     <Content Include="Scripts\app\store\BehaviorCategories.js" />
+    <Content Include="Scripts\app\store\BlockedProducts.js" />
     <Content Include="Scripts\app\store\CouponSetGrid.js" />
     <Content Include="Scripts\app\store\CouponCodes.js" />
+    <Content Include="Scripts\app\store\PinnedProducts.js" />
+    <Content Include="Scripts\app\store\SearchTuningRules.js" />
     <Content Include="Scripts\app\store\CouponSets.js" />
+    <Content Include="Scripts\app\store\StorefrontProducts.js" />
     <Content Include="Scripts\app\store\DiscountGrid.js" />
     <Content Include="Scripts\app\store\Discounts.js" />
     <Content Include="Scripts\app\store\IpBlocking.js" />
@@ -710,6 +737,22 @@
     <Content Include="Scripts\app\view\couponCode\AdvancedSearchForm.js" />
     <Content Include="Scripts\app\view\couponCode\DiscountGrid.js" />
     <Content Include="Scripts\app\view\couponCode\Grid.js" />
+    <Content Include="Scripts\app\view\preview\ExpressionPreviewDrawer.js" />
+    <Content Include="Scripts\app\view\preview\PreviewGrid.js" />
+    <Content Include="Scripts\app\view\searchTuningRule\Edit.js" />
+    <Content Include="Scripts\app\view\searchTuningRule\Form.js" />
+    <Content Include="Scripts\app\view\searchTuningRule\form\AdvancedSearch.js" />
+    <Content Include="Scripts\app\view\searchTuningRule\form\BlockedProduct.js" />
+    <Content Include="Scripts\app\view\searchTuningRule\form\Context.js" />
+    <Content Include="Scripts\app\view\searchTuningRule\form\General.js" />
+    <Content Include="Scripts\app\view\searchTuningRule\form\PinnedProduct.js" />
+    <Content Include="Scripts\app\view\searchTuningRule\Grid.js" />
+    <Content Include="Scripts\app\view\searchTuningRule\grid\BlockedProduct.js" />
+    <Content Include="Scripts\app\view\searchTuningRule\grid\Category.js" />
+    <Content Include="Scripts\app\view\searchTuningRule\grid\Keyword.js" />
+    <Content Include="Scripts\app\view\searchTuningRule\grid\PinnedProduct.js" />
+    <Content Include="Scripts\app\view\searchTuningRule\Index.js" />
+    <Content Include="Scripts\app\view\searchTuningRule\modal\SearchTuningRuleEditor.js" />
     <Content Include="Scripts\app\view\couponSet\AdvancedSearchForm.js" />
     <Content Include="Scripts\app\view\couponSet\GeneratedCodeForm.js" />
     <Content Include="Scripts\app\view\couponSet\GeneralForm.js" />
@@ -757,6 +800,7 @@
     <Content Include="Scripts\app\view\order\widget\AttributeGrid.js" />
     <Content Include="Scripts\app\view\order\widget\AuditLogGrid.js" />
     <Content Include="Scripts\app\view\category\ConfirmDeleteOfSubcategoriesModal.js" />
+    <Content Include="Scripts\app\view\order\widget\ReusePaymentPickerField.js" />
     <Content Include="Scripts\app\view\product\widget\productCode\Modal.js" />
     <Content Include="Scripts\app\view\publishing\advancedSearchForm\DraftContent.js" />
     <Content Include="Scripts\app\view\publishing\advancedSearchForm\DraftProduct.js" />
@@ -774,6 +818,10 @@
     <Content Include="Scripts\app\view\role\editModal.js" />
     <Content Include="Scripts\app\view\storeCredit\AdvancedSearchForm.js" />
     <Content Include="Scripts\app\view\storeCredit\Grid.js" />
+    <Content Include="Scripts\app\view\storefrontProduct\Grid.js" />
+    <Content Include="Scripts\app\view\storefrontProduct\Panel.js" />
+    <Content Include="Scripts\app\view\storefrontProduct\modal\StorefrontProductModal.js" />
+    <Content Include="Scripts\app\view\storefrontProduct\NoNavContextBox.js" />
     <Content Include="Scripts\app\view\website\entityAdapters\OrderTemplateEntityAdapter.js" />
     <Content Include="Scripts\app\view\settings\shipping\subform\EligibleShippingAddressLocations.js" />
     <Content Include="Scripts\app\view\website\NavigationTreeModal.js" />
@@ -881,7 +929,6 @@
     <Content Include="Scripts\app\view\settings\shipping\Zones.js" />
     <Content Include="Scripts\app\view\settings\shipping\widget\RateEditor.js" />
     <Content Include="Scripts\app\view\settings\shipping\widget\RateList.js" />
-    <Content Include="Scripts\app\view\siteSelection\Index.js" />
     <Content Include="Scripts\app\view\storeCredit\Edit.js" />
     <Content Include="Scripts\app\view\storeCredit\Form.js" />
     <Content Include="Scripts\app\view\storeCredit\Index.js" />
@@ -1970,6 +2017,7 @@
     <Content Include="Tests\unit\view\discount\LimitationsForm.t.js" />
     <Content Include="Tests\unit\view\location\subform\location.t.js" />
     <Content Include="Tests\unit\view\order\modal\AddGiftCard.t.js" />
+    <Content Include="Tests\unit\view\order\modal\AddPayment.t.js" />
     <Content Include="Tests\unit\view\order\subform\Payment.t.js" />
     <Content Include="Tests\unit\view\order\widget\GiftCardGrid.t.js" />
     <Content Include="Tests\unit\view\order\widget\PaymentPanel.t.js" />

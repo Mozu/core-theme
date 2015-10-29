@@ -207,6 +207,7 @@ Ext.define('Taco.view.product.subform.Inventory', {
     
     // todo implement this feature
     manageInventory: function () {
+        var me = this;
         var productEditor = this.up('taco-product-editor');
         if (productEditor.requiresSave) {
             Ext.MessageBox.show({
@@ -220,6 +221,9 @@ Ext.define('Taco.view.product.subform.Inventory', {
                 buttons: Ext.Msg.YESNO,
                 fn: function (rec) {
                     if (rec === 'yes') {
+                        me.mon(productEditor, 'savesuccess', function() {
+                            Taco.core.StateManager.attemptNavigate('inventory?q=productCode:' + this.record.getId());
+                        }, me);
                         var saveButton = productEditor.down("#saveActionButton").toggle(true);
                     }
                 }

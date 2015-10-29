@@ -31,6 +31,11 @@ Ext.define('Taco.model.RedirectEntry', {
          defaultValue: null,
          useNull:true
      },
+     {
+         name: 'e',
+         type: 'boolean',
+         defaultValue: false,
+     }
     ],
     idProperty: 's',
     proxy: {

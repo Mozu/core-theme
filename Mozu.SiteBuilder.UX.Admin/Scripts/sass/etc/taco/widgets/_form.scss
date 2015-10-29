@@ -120,6 +120,21 @@
 	@include icons-sprite(icon-checkbox-selected-focus);
   }
 
+
+  .#{$prefix}form-checkbox-glyph {
+    border: none;
+    background-color: transparent;
+    height: 15px;
+    position: relative;
+    width: 21px;
+    &.checked {
+      @include icons-sprite(icon-checkbox-selected);
+    }
+    &.unchecked {
+      @include icons-sprite(icon-checkbox);
+    }
+  }
+
   .#{$prefix}field .#{$prefix}form-radio {
  @include icons-sprite(icon-radio);
   }
@@ -142,7 +157,7 @@
 	.x-grid-checkcolumn {
 		width:17px;
 		height:15px;		
-		background-image: url("images/icons/checkbox.gif");
+		background-image: url("images/icons/checkbox.gif" );
 	}
 
 	.x-grid-checkcolumn-checked {	

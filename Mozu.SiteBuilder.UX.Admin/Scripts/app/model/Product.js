@@ -93,13 +93,13 @@ Ext.define('Taco.model.Product', {
         }, {
             name: "publishSetCode",
             type: "string",
-            useNull: true,
-            convert: function (v) {
-                return Taco.core.data.Model.nullIfEmpty(v);
-            },
-            serialize: function (v) {
-                return Taco.core.data.Model.nullIfEmpty(v);
-            }
+            useNull: false
+            // convert: function (v) {
+            //     // return Taco.core.data.Model.nullIfEmpty(v);
+            // },
+            // serialize: function (v) {
+            //     return Taco.core.data.Model.nullIfEmpty(v);
+            // }
         }, {
             name: "publishSetDate",
             type: "date",
@@ -151,7 +151,7 @@ Ext.define('Taco.model.Product', {
                 if (record.raw) {
                     // look up user id in magical site users global object.
                     var id = record.raw.lastModifiedBy;
-                    return Ext.Array.findBy(window.Taco.siteUsersRaw, function (u) { return u.Id === id; });
+                    return Ext.Array.findBy(window.Taco.siteUsersRaw, function (u) { return u.id === id; });
                 }
                 return null;
             }
@@ -163,7 +163,7 @@ Ext.define('Taco.model.Product', {
                 if (record.raw) {
                     // look up user id in magical site users global object.
                     var id = record.raw.lastPublishedBy;
-                    return Ext.Array.findBy(window.Taco.siteUsersRaw, function (u) { return u.Id === id; });
+                    return Ext.Array.findBy(window.Taco.siteUsersRaw, function (u) { return u.id === id; });
                 }
                 return null;
             }

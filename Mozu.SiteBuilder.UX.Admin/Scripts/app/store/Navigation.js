@@ -121,9 +121,6 @@ Ext.define('Taco.store.Navigation', {
             filterFn: function (record) {
                 var ret = true;
 
-
-               
-
                 if (record.raw.behaviorIds && record.raw.behaviorIds.length) {
                     Ext.each(record.raw.behaviorIds, function (behaviorId) {
                         if (Taco.user.behaviors && Ext.Array.indexOf(Taco.user.behaviors, behaviorId) === -1) {
@@ -254,6 +251,12 @@ Ext.define('Taco.store.Navigation', {
 
                         'label': 'Coupon Sets',
                         'address': 'CouponSets'
+                    }, {
+                        'id': 'searchtuningrule',
+                        'behaviorIds': [16],
+
+                        'label': 'Search Results Tuning',
+                        'address': 'SearchTuningRules'
                     } /*, {
                 'id': 'promotions',
                 'label': 'Promotions',
@@ -267,34 +270,38 @@ Ext.define('Taco.store.Navigation', {
             }, {
                 'id': 'sitebuilder',
                 'label': 'Site Builder',
-                'address': 'siteSelection',
+                'address': 'website',
                 'showBreadCrumbs': true,
-                //'address': 'sites/pages',
                 'icon': 'nav-sites',
                 'items': [
                     {
                         'id': 'webedit',
-                        'visible': false,
-                        'label': 'Edit',
+                        'label': 'Editor',
                         'address': 'website'
                     }, {
                         'id': 'themes',
                         'label': 'Themes',
-                        'visible': false,
                         'address': 'themes'
                     },
                     {
                         'id': 'redirects',
                         'label': 'Redirects',
-                        'visible': false,
                         'address': 'redirects'
                     },
                     {
-                        'id': 'generalsettings',
-                        'label': 'Site Settings',
-                        'visible': false,
-                        'address': 'generalsettings/site'
-                    } 
+                        'id': 'viewLive',
+                        'label': 'View Live',
+                        'address': '',
+                        'breadCrumbOnly': true,
+                        'viewDependent': 'themes|redirects'
+                    },
+                    {
+                        'id': 'viewStaged',
+                        'label': 'View Staged',
+                        'address': '',
+                        'breadCrumbOnly': true,
+                        'viewDependent': 'themes|redirects'
+                    }
                     /*, {
                 'id': 'fileManager',
                 'label': 'File Manager',

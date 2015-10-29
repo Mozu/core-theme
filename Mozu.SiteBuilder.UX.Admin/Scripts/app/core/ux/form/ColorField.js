@@ -67,7 +67,17 @@ Ext.define('Taco.core.ux.form.ColorField', {
                         title: 'Select Color',
                         width: 400,
                         height: 480,
-                        items: [this.picker]
+                        items: [this.picker],
+                        oldColor: this.value
+                    });
+
+                    this.modal.on({
+                        cancel: {
+                            scope: this,
+                            fn: function () {
+                                this.setValue(this.modal.oldColor);
+                            }
+                        }
                     });
                 }
             }

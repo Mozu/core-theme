@@ -93,14 +93,13 @@ NUGET
     Mozu.AppDev.Contracts (1.18.5)
       Mozu.Core.Prime (>= 1.17)
     Mozu.BuildSupport.GetAssemblyFileVersionTask (1.0.0)
-    Mozu.BuildTools (1.9.0.16)
     Mozu.CommerceRuntime.Contracts (1.18.5)
       Mozu.Core.Extensible.Contracts
       Mozu.Core.Prime
       Mozu.PricingRuntime.Contracts
       Mozu.ShippingRuntime.Contracts
       Newtonsoft.Json
-    Mozu.Content.Contracts (1.18.4)
+    Mozu.Content.Contracts (1.19.1-dev1510152100CI)
       Mozu.Core.Prime (>= 1.17)
     Mozu.Core.Extensible.Contracts (1.18.1)
       Mozu.Core.Prime (>= 1.17)
@@ -148,9 +147,9 @@ NUGET
     Mozu.PaymentService.Contracts (1.9.11)
     Mozu.PricingRuntime.Contracts (1.18.1)
       Mozu.Core.Prime (>= 1.18.1)
-    Mozu.ProductAdmin.Contracts (1.18.2)
-      Mozu.Core.Prime (>= 1.18.1) - framework: >= net45
-    Mozu.ProductRuntime.Contracts (1.18.1)
+    Mozu.ProductAdmin.Contracts (1.19.1-dev1510231700CI)
+      Mozu.Core.Prime (>= 1.18.1)
+    Mozu.ProductRuntime.Contracts (1.18.2)
       Mozu.Core.Prime (>= 1.18.0)
     Mozu.Provisioning.Contracts (1.17.5)
       Mozu.Core.Prime (>= 1.17)
@@ -162,9 +161,9 @@ NUGET
       Mozu.Core.Prime (>= 1.17)
     Mozu.ShippingRuntime.Contracts (1.18.1)
       Mozu.Core.Prime (>= 1.17)
-    Mozu.SiteSettings.General.Contracts (1.18.6)
+    Mozu.SiteSettings.General.Contracts (1.19.1-dev1510211257CI)
       Mozu.Core.Prime (>= 1.17)
-    Mozu.SiteSettings.Order.Contracts (1.18.6)
+    Mozu.SiteSettings.Order.Contracts (1.19.1-dev1510210258CI)
       Mozu.Core.Prime (>= 1.17)
       Mozu.PaymentService.Contracts (>= 1.9.6)
     Mozu.Tenant.Contracts (1.18.2)

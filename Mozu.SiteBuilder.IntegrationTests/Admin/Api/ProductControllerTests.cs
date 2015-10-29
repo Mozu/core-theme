@@ -103,7 +103,7 @@
 //            var pagingParams = new PagingParamaters { pageSize = 12, pageIndex = 23 };
 //            var extFilter = new FilterCollection();
 
-//            var response = _testedController.ListProducts(pagingParams, extFilter).Result;
+//            var response = _testedController.GetProduct(pagingParams, extFilter).Result;
 
 //            response.Success.ShouldBeTrue();
 //            response.Total.ShouldEqual((int)_mocks.TotalCount);
@@ -118,7 +118,7 @@
 //            var pagingParams = new PagingParamaters { id = productCode };
 //            var extFilter = new FilterCollection();
 
-//            var response = _testedController.ListProducts(pagingParams, extFilter).Result;
+//            var response = _testedController.GetProduct(pagingParams, extFilter).Result;
 
 //            response.Success.ShouldBeTrue();
 //            response.Total.ShouldEqual(1);

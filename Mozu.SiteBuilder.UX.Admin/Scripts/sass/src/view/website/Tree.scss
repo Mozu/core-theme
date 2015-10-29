@@ -19,10 +19,29 @@
                 display: block;
             }
         }
+
+        /**
+         * Added 10/08/2015
+         * 
+         * Modify tree spacer images to float left
+         * TODO: Put this in the right place (not here)
+         */
+        .#{$prefix}tree-elbow-img {
+            float: left;
+        }
     }
 
     .#{$prefix}tree-node-text {
         font-size: 13px;
+
+            /**
+             * Updated 10/08/2015
+             */
+
+            display: block;
+            white-space: nowrap;
+            text-overflow: ellipsis;
+            overflow: hidden;
 
         span {
             vertical-align: top;

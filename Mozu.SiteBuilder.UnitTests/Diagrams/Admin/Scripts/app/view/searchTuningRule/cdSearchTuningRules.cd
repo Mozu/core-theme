@@ -1,0 +1,114 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<ClassDiagram MajorVersion="1" MinorVersion="1">
+  <Class Name="Mozu.SiteBuilder.UnitTests.Diagrams.Admin.Scripts.app.view.searchTuningRule.TacoWindowWindow" Collapsed="true">
+    <Position X="0.75" Y="0.75" Width="1.75" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Diagrams\Admin\Scripts\app\view\searchTuningRule\cdSearchTuningRule.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Mozu.SiteBuilder.UnitTests.Diagrams.Admin.Scripts.app.view.searchTuningRule.TacoWindowModal" Collapsed="true">
+    <Position X="0.75" Y="2" Width="1.75" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Diagrams\Admin\Scripts\app\view\searchTuningRule\cdSearchTuningRule.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Mozu.SiteBuilder.UnitTests.Diagrams.Admin.Scripts.app.view.searchTuningRule.TacoCoreUxWindowDrawer" Collapsed="true">
+    <Position X="0.75" Y="3.5" Width="2.25" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Diagrams\Admin\Scripts\app\view\searchTuningRule\cdSearchTuningRule.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Mozu.SiteBuilder.UnitTests.Diagrams.Admin.Scripts.app.view.searchTuningRule.TacoModalSearchTuningRuleEditor">
+    <Position X="0.5" Y="4.75" Width="2.75" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAEAAAA=</HashCode>
+      <FileName>Diagrams\Admin\Scripts\app\view\searchTuningRule\cdSearchTuningRule.cs</FileName>
+    </TypeIdentifier>
+    <ShowAsAssociation>
+      <Field Name="Form" />
+    </ShowAsAssociation>
+  </Class>
+  <Class Name="Mozu.SiteBuilder.UnitTests.Diagrams.Admin.Scripts.app.view.searchTuningRule.ExtPanel" Collapsed="true">
+    <Position X="8" Y="0.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Diagrams\Admin\Scripts\app\view\searchTuningRule\cdSearchTuningRule.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Mozu.SiteBuilder.UnitTests.Diagrams.Admin.Scripts.app.view.searchTuningRule.TacoFullEditor" Collapsed="true">
+    <Position X="12.25" Y="1.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Diagrams\Admin\Scripts\app\view\searchTuningRule\cdSearchTuningRule.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Mozu.SiteBuilder.UnitTests.Diagrams.Admin.Scripts.app.view.searchTuningRule.TacoSearchTuningRuleEdit">
+    <Position X="12" Y="4.25" Width="2" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAEAAAA=</HashCode>
+      <FileName>Diagrams\Admin\Scripts\app\view\searchTuningRule\cdSearchTuningRule.cs</FileName>
+    </TypeIdentifier>
+    <ShowAsAssociation>
+      <Field Name="Form" />
+    </ShowAsAssociation>
+  </Class>
+  <Class Name="Mozu.SiteBuilder.UnitTests.Diagrams.Admin.Scripts.app.view.searchTuningRule.TacoFormForm" Collapsed="true">
+    <Position X="8" Y="1.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Diagrams\Admin\Scripts\app\view\searchTuningRule\cdSearchTuningRule.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Mozu.SiteBuilder.UnitTests.Diagrams.Admin.Scripts.app.view.searchTuningRule.TacoNavForm2" Collapsed="true">
+    <Position X="7.75" Y="3" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Diagrams\Admin\Scripts\app\view\searchTuningRule\cdSearchTuningRule.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Mozu.SiteBuilder.UnitTests.Diagrams.Admin.Scripts.app.view.searchTuningRule.TacoSearchTuningRuleForm">
+    <Position X="6.75" Y="4.75" Width="2.25" />
+    <TypeIdentifier>
+      <HashCode>AAACAAAAAAAAAAAAIAAAAAAAQAAAAAABAAAAAAAAAAA=</HashCode>
+      <FileName>Diagrams\Admin\Scripts\app\view\searchTuningRule\cdSearchTuningRule.cs</FileName>
+    </TypeIdentifier>
+    <ShowAsAssociation>
+      <Field Name="blocked" />
+      <Field Name="context" />
+      <Field Name="general" />
+      <Field Name="pinned" />
+    </ShowAsAssociation>
+  </Class>
+  <Class Name="Mozu.SiteBuilder.UnitTests.Diagrams.Admin.Scripts.app.view.searchTuningRule.TacoSearchTuningRuleGeneralForm" Collapsed="true">
+    <Position X="3.75" Y="6.25" Width="2.75" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Diagrams\Admin\Scripts\app\view\searchTuningRule\cdSearchTuningRule.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Mozu.SiteBuilder.UnitTests.Diagrams.Admin.Scripts.app.view.searchTuningRule.SearchTuningRuleContextForm" Collapsed="true">
+    <Position X="8.5" Y="6.25" Width="2.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Diagrams\Admin\Scripts\app\view\searchTuningRule\cdSearchTuningRule.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Mozu.SiteBuilder.UnitTests.Diagrams.Admin.Scripts.app.view.searchTuningRule.SearchTuningRulePinnedProductForm" Collapsed="true">
+    <Position X="4.5" Y="7.25" Width="2.75" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Diagrams\Admin\Scripts\app\view\searchTuningRule\cdSearchTuningRule.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Mozu.SiteBuilder.UnitTests.Diagrams.Admin.Scripts.app.view.searchTuningRule.SearchTuningRuleBlockedProductForm" Collapsed="true">
+    <Position X="8" Y="7.25" Width="2.75" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Diagrams\Admin\Scripts\app\view\searchTuningRule\cdSearchTuningRule.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Font Name="Segoe UI" Size="9" />
+</ClassDiagram>
