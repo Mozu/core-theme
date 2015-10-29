@@ -257,6 +257,7 @@ Ext.define("Taco.view.category.Form", {
             Ext.create('Taco.view.searchTuningRule.Grid', {
                 title: ("Sequence Tuning Rules" + (this.record.phantom ? ' - editable after saving' : '')),
                 margin: '50 0 0 0',
+                useWhiteContainer:true,
                 minHeight: 350,
                 disabled: this.record.phantom,
                 contextConfig: {

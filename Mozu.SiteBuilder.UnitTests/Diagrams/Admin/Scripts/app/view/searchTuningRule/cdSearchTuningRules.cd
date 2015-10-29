@@ -76,9 +76,9 @@
       <FileName>Diagrams\Admin\Scripts\app\view\searchTuningRule\cdSearchTuningRule.cs</FileName>
     </TypeIdentifier>
     <ShowAsAssociation>
+      <Field Name="general" />
       <Field Name="blocked" />
       <Field Name="context" />
-      <Field Name="general" />
       <Field Name="pinned" />
     </ShowAsAssociation>
   </Class>
@@ -89,22 +89,57 @@
       <FileName>Diagrams\Admin\Scripts\app\view\searchTuningRule\cdSearchTuningRule.cs</FileName>
     </TypeIdentifier>
   </Class>
-  <Class Name="Mozu.SiteBuilder.UnitTests.Diagrams.Admin.Scripts.app.view.searchTuningRule.SearchTuningRuleContextForm" Collapsed="true">
-    <Position X="8.5" Y="6.25" Width="2.5" />
+  <Class Name="Mozu.SiteBuilder.UnitTests.Diagrams.Admin.Scripts.app.view.searchTuningRule.TacoSearchTuningRuleContextForm" Collapsed="true">
+    <Position X="9" Y="6.5" Width="2.75" />
     <TypeIdentifier>
       <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
       <FileName>Diagrams\Admin\Scripts\app\view\searchTuningRule\cdSearchTuningRule.cs</FileName>
     </TypeIdentifier>
   </Class>
-  <Class Name="Mozu.SiteBuilder.UnitTests.Diagrams.Admin.Scripts.app.view.searchTuningRule.SearchTuningRulePinnedProductForm" Collapsed="true">
-    <Position X="4.5" Y="7.25" Width="2.75" />
+  <Class Name="Mozu.SiteBuilder.UnitTests.Diagrams.Admin.Scripts.app.view.searchTuningRule.TacoSearchTuningRulePinnedProductForm" Collapsed="true">
+    <Position X="4" Y="7.25" Width="3.25" />
     <TypeIdentifier>
       <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
       <FileName>Diagrams\Admin\Scripts\app\view\searchTuningRule\cdSearchTuningRule.cs</FileName>
     </TypeIdentifier>
   </Class>
-  <Class Name="Mozu.SiteBuilder.UnitTests.Diagrams.Admin.Scripts.app.view.searchTuningRule.SearchTuningRuleBlockedProductForm" Collapsed="true">
-    <Position X="8" Y="7.25" Width="2.75" />
+  <Class Name="Mozu.SiteBuilder.UnitTests.Diagrams.Admin.Scripts.app.view.searchTuningRule.TacoSearchTuningRuleBlockedProductForm" Collapsed="true">
+    <Position X="9" Y="7.5" Width="3.25" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Diagrams\Admin\Scripts\app\view\searchTuningRule\cdSearchTuningRule.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Mozu.SiteBuilder.UnitTests.Diagrams.Admin.Scripts.app.view.searchTuningRule.ExtGridPanel" Collapsed="true">
+    <Position X="1" Y="6.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Diagrams\Admin\Scripts\app\view\searchTuningRule\cdSearchTuningRule.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Mozu.SiteBuilder.UnitTests.Diagrams.Admin.Scripts.app.view.searchTuningRule.TacoGridPanel" Collapsed="true">
+    <Position X="1.25" Y="7.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Diagrams\Admin\Scripts\app\view\searchTuningRule\cdSearchTuningRule.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Mozu.SiteBuilder.UnitTests.Diagrams.Admin.Scripts.app.view.searchTuningRule.TacoSearchList" Collapsed="true">
+    <Position X="1.25" Y="9" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Diagrams\Admin\Scripts\app\view\searchTuningRule\cdSearchTuningRule.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Mozu.SiteBuilder.UnitTests.Diagrams.Admin.Scripts.app.view.searchTuningRule.TacoSearchTuningRuleGrid" Collapsed="true">
+    <Position X="0.75" Y="10.25" Width="2.25" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Diagrams\Admin\Scripts\app\view\searchTuningRule\cdSearchTuningRule.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Mozu.SiteBuilder.UnitTests.Diagrams.Admin.Scripts.app.view.searchTuningRule.TacoSearchTuningRuleIndex" Collapsed="true">
+    <Position X="0.75" Y="11.75" Width="2.5" />
     <TypeIdentifier>
       <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
       <FileName>Diagrams\Admin\Scripts\app\view\searchTuningRule\cdSearchTuningRule.cs</FileName>

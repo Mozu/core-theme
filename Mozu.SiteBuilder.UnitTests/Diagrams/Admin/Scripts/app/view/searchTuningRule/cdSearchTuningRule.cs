@@ -1,4 +1,6 @@
-﻿namespace Mozu.SiteBuilder.UnitTests.Diagrams.Admin.Scripts.app.view.searchTuningRule
+﻿using Mozu.SiteBuilder.UnitTests.Diagrams.Admin.Scripts.app.view.product;
+
+namespace Mozu.SiteBuilder.UnitTests.Diagrams.Admin.Scripts.app.view.searchTuningRule
 {
     class TacoWindowWindow { }
 
@@ -30,17 +32,27 @@
     class TacoSearchTuningRuleForm : TacoNavForm2
     {
         public TacoSearchTuningRuleGeneralForm general;
-        public SearchTuningRuleContextForm context;
-        public SearchTuningRulePinnedProductForm pinned;
-        public SearchTuningRuleBlockedProductForm blocked;
+        public TacoSearchTuningRuleContextForm context;
+        public TacoSearchTuningRulePinnedProductForm pinned;
+        public TacoSearchTuningRuleBlockedProductForm blocked;
     }
     
     class TacoSearchTuningRuleGeneralForm : TacoFormForm { }
 
-    class SearchTuningRuleContextForm : TacoFormForm { }
+    class TacoSearchTuningRuleContextForm : TacoFormForm { }
 
-    class SearchTuningRulePinnedProductForm : TacoFormForm { }
+    class TacoSearchTuningRulePinnedProductForm : TacoFormForm { }
             
-    class SearchTuningRuleBlockedProductForm : TacoFormForm { }
+    class TacoSearchTuningRuleBlockedProductForm : TacoFormForm { }
+
+    class ExtGridPanel { }
+
+    class TacoGridPanel : ExtGridPanel { }
+
+    class TacoSearchList : TacoGridPanel { }
+
+    class TacoSearchTuningRuleGrid: TacoSearchList { }
+
+    class TacoSearchTuningRuleIndex: TacoSearchTuningRuleGrid { }
 
 }
