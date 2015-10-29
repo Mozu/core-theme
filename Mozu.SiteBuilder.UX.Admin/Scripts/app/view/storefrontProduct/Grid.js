@@ -157,6 +157,7 @@ Ext.define('Taco.view.storefrontProduct.Grid', {
             fieldLabel: 'Preview Date',
             hidden: true,
             margin: '0 10 10 0',
+            minWidth: 200,
             listeners: {
                 change: function(component, newValue, oldValue, eOpts) {
                     me.fireEvent('taco-update-preview', {
