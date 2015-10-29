@@ -261,10 +261,10 @@ Ext.define('Taco.view.order.Form', {
         
         if (errors.length) {
             Taco.app.fireEvent('setmessage', errors.join("<br/>"), 'error', me);
-        }
 
-        // fire an event so that the editor wrapper can reenable the save button;
-        this.fireEvent('beforesavefailure', me, errors);
+            // fire an event so that the editor wrapper can reenable the save button;
+            this.fireEvent('beforesavefailure', me, errors);
+        }
 
         return isValid;
     },
