@@ -1,20 +1,12 @@
 ﻿using System;
-using System.Collections;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using Mozu.ProductRuntime.Contracts.Clients;
-using Mozu.SiteBuilder.Mvc.Caching;
 using Mozu.SiteBuilder.Mvc.Tags;
-using Mozu.SiteBuilder.UX.Models.StoreFront.Catalog;
 using System.Collections.Generic;
-using System.Net.Http;
-using System.Web;
-using System.Web.Http;
 using NDjango.Interfaces;
 using NDjango.FiltersCS.Compatibility;
 using Mozu.SiteBuilder.Mvc.ViewEngine;
 using Mozu.SiteBuilder.Mvc.Helpers;
+using Mozu.Core;
 
 namespace Mozu.SiteBuilder.UX.Hypr.Tags
 {
@@ -37,14 +29,19 @@ namespace Mozu.SiteBuilder.UX.Hypr.Tags
             var props = arguments.Where(x => x.ArgumentType == TagArgument.ArgumentTypes.NamedArgument).ToDictionary(x => x.Name, y => y.Value, StringComparer.OrdinalIgnoreCase);
 
             var urlHelper = context.Resolve<UrlHelper>();
-            var url = urlHelper.MakeUrl(type, obj, props, includeContext);
 
-            return new[] { WalkResultHelpers.Buffer(url) };
+            UrlHelper.UrlType urlType;
+            if (FastEnum<UrlHelper.UrlType>.TryParse(type, out urlType))
+            {
+                var url = urlHelper.MakeUrl(urlType, obj, props, includeContext);
+                return new[] { WalkResultHelpers.Buffer(url) };
+            }
+            else
+            {
+                throw new RenderingError(string.Format("unknown urltag type: {0}. Tags must be one of [{1}]", type, string.Join(",", Enum.GetNames(typeof(UrlHelper.UrlType)).Select(x => x.ToLowerInvariant()))), Microsoft.FSharp.Core.FSharpOption<Exception>.None);
+            }
         }
-
-
     }
-
 }
        
       
