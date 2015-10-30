@@ -79,16 +79,19 @@ Ext.define('Taco.view.searchTuningRule.grid.Category', {
         //the property for which the grid will add/update the store
         this.filterProperty = this.filterProperty || 'categoryCode';
 
-        this.columns = Ext.Array.clone(this.getColumnConfig());
 
-        this.store = this.getStore();
+        this.store = this.getStore(records);
+
+        this.columns = Ext.Array.clone(this.getColumnConfig());
 
         if (this.enablePaging) {
             // initialize the grid paging toolbar mixin
             this.mixins.pageable.constructor.apply(this);
         }
 
-        this.loadPreviousRecords();
+        var prevRecords = this.loadPreviousRecords();
+
+
 
         this.callParent(arguments);
     },
@@ -141,12 +144,16 @@ Ext.define('Taco.view.searchTuningRule.grid.Category', {
             filterIds = filters.map(function(rec) { return rec.value; });
 
             this.catStore.on('load', function(store) {
+                var records = [];
             
                 store.each(function(rec) {
                     if (rec.get(me.filterProperty) && filterIds.indexOf(rec.get(me.filterProperty)) != -1)  {
-                        me.store.add(rec);
-                    }   
+                        //me.store.add(rec);
+                        records.push(rec);
+                    }
                 });
+
+
             });
         }
     },
@@ -155,10 +162,15 @@ Ext.define('Taco.view.searchTuningRule.grid.Category', {
         this.store.remove(record);
     },
 
-    getStore: function() {
+    getStore: function () {
         return Ext.create('Ext.data.Store', {
-            fields:  ['name', 'type'],
-            data: []
+            fields:  ['nameAndCode', 'type'],
+            data: [],
+            autoLoad: false,
+            proxy: {
+                type: 'memory',
+                enablePaging: true
+            }
         });
     },
 
@@ -172,7 +184,7 @@ Ext.define('Taco.view.searchTuningRule.grid.Category', {
         return [
             {
                 xtype: 'gridcolumn',
-                dataIndex: 'name',
+                dataIndex: 'nameAndCode',
                 text: 'Name',
                 hideable: false,
                 flex: 3,
