@@ -154,7 +154,7 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
         public async Task<ActionResult> Checkout(CheckoutModel model)
         {
             Cart cart = null;
-            Exception error;
+            Exception error = null;
             CommerceRuntime.Contracts.Orders.Order order = null;
             if (model == null || string.IsNullOrEmpty(model.Id))
             {
