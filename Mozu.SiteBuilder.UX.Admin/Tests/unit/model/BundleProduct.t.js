@@ -56,7 +56,6 @@
 
                 function execute(next) {
                     m.testCases.forEach(function (testCase) {
-                        debugger;
                         testCase.actual = testCase.tacoBundle.getBundleItemTotals(testCase.bundledProducts);
                     });
                     next();

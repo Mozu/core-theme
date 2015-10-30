@@ -139,10 +139,14 @@
                 }
             },
 
-            onRemoveFromPublishSet: me.removePublishSet.bind(me),
+            onRemoveFromPublishSet: function() {
+                me.removePublishSet();
+            },
 
-            onDiscardDraft: me.discardProductDraft.bind(me)
-        };
+            onDiscardDraft: function() {
+                me.discardProductDraft();
+            }
+        },
 
         this.additionalActions = [
             this.publishingButton,

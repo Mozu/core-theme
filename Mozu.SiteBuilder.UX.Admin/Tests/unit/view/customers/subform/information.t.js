@@ -54,7 +54,7 @@ StartTest(function(t) {
           function(next) {
               n.form.getForm().setValues(n.customer.getData());
               t.isComponentNotVisible(n.form.down('#createAccountCheckbox'), 'The create account checkbox should be hidden on existing customers');
-              t.isHandleHtml(n.form, 'customer-since', '04/14/2014', 'The customer since date is correct');
+              t.isHandleHtml(n.form, 'customer-since', '03/18/2014', 'The customer since date is correct');
               t.isHandleHtml(n.form, 'customer-total-spent', '$100.99', 'The customer lifetime value is correct');
               t.isHandleHtml(n.form, 'customer-order-count', '1', 'The customer fulfilled order count is correct');
               t.isHandleHtml(n.form, 'customer-visit-count', '0', 'The customer total visit count is correct');
