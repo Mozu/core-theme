@@ -9,7 +9,7 @@ Ext.define('Taco.view.searchTuningRule.grid.Keyword', {
         'Taco.core.ux.grid.plugins.AutoSelect'
     ],
 
-    minHeight: 240,
+    minHeight: 260,
     useWhiteContainer:true,
     
     launchEditorOnClick:false,
@@ -26,7 +26,7 @@ Ext.define('Taco.view.searchTuningRule.grid.Keyword', {
 
     enableSearch: true,
     enablePaging: true,
-    enableRowEditing: true,
+    enableRowEditing: false,
     defaultRowEditingData: {
     },
     enableAutoSelect: false,
@@ -38,9 +38,11 @@ Ext.define('Taco.view.searchTuningRule.grid.Keyword', {
 
     hideSearchToolbar: false,
 
+    title: false,
+
     pageSize: 5,
 
-    autoScroll: true,
+    autoScroll: false,
 
     enableQuickFilters:false,
 
@@ -66,7 +68,7 @@ Ext.define('Taco.view.searchTuningRule.grid.Keyword', {
     statics: {
         
     },
-        
+
     initComponent: function () {
         var me = this;
 
@@ -78,35 +80,10 @@ Ext.define('Taco.view.searchTuningRule.grid.Keyword', {
             }]
         });
 
-        me.store = Ext.create('Ext.data.Store', {
-            storeId: 'keywordStore',
-            autoLoad: true,
-            model: 'KeywordModel',
-            sorters:['keyword'],
-            fields: ['keyword'],
-
-            //autoLoad: false,
-            pageSize: this.pageSize,
-            remoteSort:false,
-            remoteFilter:false,
-            proxy: {
-                type: 'memory',
-                enablePaging: true,
-                sorters: ['keyword'],
-                filters: [],
-                data: {
-                    'items': me.record.get('keywordObjects')
-                },
-                reader: {
-                    type: 'json',
-                    root: 'items'
-                }
-            }
-        });
-
+        this.store = this.getKeywordStore();
 
         me.dockedItems = me.dockedItems || [];
-        me.mixins = me.mixins|| [];
+        me.mixins = me.mixins || [];
 
         this.columns = Ext.Array.clone(this.getColumnConfig());
 
@@ -224,31 +201,13 @@ Ext.define('Taco.view.searchTuningRule.grid.Keyword', {
                 dataIndex: 'keyword',
                 text: 'Keyword',
                 hideable: false,
-                flex: 1,
-                minWidth: 150,
-                editor: {
-                    // defaults to textfield if no xtype is supplied
-                    emptyText: 'Enter code',
-                    msgTarget: 'qtip',
-                    // optional enhancement to rowEditor. Makes the field only editable during a create;
-                    editableOnCreateOnly: true,
-                    selectOnFocus: true,
-                    allowBlank: false
-                },
+                flex: 3,
+                minWidth: 100,
                 sortable: true
             }, {
                 xtype: 'taco.menucolumn',
+                flex: 1,
                 text: 'Actions',
-                //onMenuShow: function (menu, eventData) {
-                //    // need to disable the delete menu option when discount has been used
-                //    var deleteMenuItem = menu.down('#deleteMenuItem');
-                //    if (eventData.record.get('canBeDeleted')) {
-                //        deleteMenuItem.show();
-                //    } else {
-                //        deleteMenuItem.hide();
-                //    }
-                //},
-                //flex: 1,
                 menuItems: [
                     {
                         text: 'Delete',
@@ -279,6 +238,35 @@ Ext.define('Taco.view.searchTuningRule.grid.Keyword', {
             result.push(row.get('keyword'));
         }, this);
         return result;
+    },
+
+    getKeywordStore: function () {
+        var me = this;
+        return Ext.create('Ext.data.Store', {
+            storeId: 'keywordStore',
+            autoLoad: true,
+            model: 'KeywordModel',
+            sorters: ['keyword'],
+            fields: ['keyword'],
+
+            //autoLoad: false,
+            pageSize: this.pageSize,
+            remoteSort: false,
+            remoteFilter: false,
+            proxy: {
+                type: 'memory',
+                enablePaging: true,
+                sorters: ['keyword'],
+                filters: [],
+                data: {
+                    'items': me.record.get('keywordObjects')
+                },
+                reader: {
+                    type: 'json',
+                    root: 'items'
+                }
+            }
+        });
     },
 
     /**

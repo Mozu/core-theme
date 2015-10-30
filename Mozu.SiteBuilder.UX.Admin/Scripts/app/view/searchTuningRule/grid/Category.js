@@ -13,7 +13,7 @@ Ext.define('Taco.view.searchTuningRule.grid.Category', {
 
     ],
 
-    minHeight: 240,
+    minHeight: 225,
     
     launchEditorOnClick:false,
 
@@ -40,7 +40,7 @@ Ext.define('Taco.view.searchTuningRule.grid.Category', {
 
     pageSize: 5,
 
-    autoScroll: true,
+    autoScroll: false,
 
     enableQuickFilters: false,
 
@@ -82,6 +82,11 @@ Ext.define('Taco.view.searchTuningRule.grid.Category', {
         this.columns = Ext.Array.clone(this.getColumnConfig());
 
         this.store = this.getStore();
+
+        if (this.enablePaging) {
+            // initialize the grid paging toolbar mixin
+            this.mixins.pageable.constructor.apply(this);
+        }
 
         this.loadPreviousRecords();
 
@@ -170,7 +175,7 @@ Ext.define('Taco.view.searchTuningRule.grid.Category', {
                 dataIndex: 'name',
                 text: 'Name',
                 hideable: false,
-                flex: 1,
+                flex: 3,
                 minWidth: 100,
                 editor: {},
                 sortable: false
@@ -180,7 +185,8 @@ Ext.define('Taco.view.searchTuningRule.grid.Category', {
                 dataIndex: 'categoryType',
                 text: 'Type',
                 hideable: false,
-                minWidth: 100,
+                flex:1,
+                minWidth: 150,
                 sortable: false
             },
             {

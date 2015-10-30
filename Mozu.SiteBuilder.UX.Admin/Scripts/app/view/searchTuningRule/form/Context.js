@@ -68,7 +68,7 @@ Ext.define('Taco.view.searchTuningRule.form.Context', {
             name: 'categoryFilters',
             flex: 1,
             emptyText: 'Insert Category Names or Select Using the Add Button',
-            margin: 0,
+            margin: '0 10 0 0',
             store: catStore,
             getStore: function () {
                 return catStore;
@@ -128,7 +128,7 @@ Ext.define('Taco.view.searchTuningRule.form.Context', {
                             scale: 'medium',
                             ui: 'action',
                             text: 'Add',
-                            margin: '0 0 0 10',
+                            margin: '0 1 0 0',
                             style: {
                                 verticalAlign: 'bottom'
                             },
@@ -148,8 +148,6 @@ Ext.define('Taco.view.searchTuningRule.form.Context', {
             record: this.record,
             width: '100%',
             useWhiteContainer:true,
-            //flex:1,
-            minHeight: 275,
             margin: {
                 right: 10
             }
