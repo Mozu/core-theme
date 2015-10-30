@@ -310,6 +310,12 @@ namespace Mozu.SiteBuilder.Mvc.Contexts
                 }
             }
 
+            if ( urlBase != null && urlBase.IndexOf('?')>0)
+            {
+                urlBase = urlBase.Substring(0, urlBase.IndexOf('?'));
+            }
+
+
             return queryCollection.Count > 0 ? urlBase + "?" + queryCollection.ToString() :
                 (string.IsNullOrWhiteSpace(urlBase) ? "?" : urlBase);
                 

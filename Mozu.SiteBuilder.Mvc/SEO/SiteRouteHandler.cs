@@ -234,45 +234,36 @@ namespace Mozu.SiteBuilder.Mvc.SEO
             return incomingPort;
         }
 
-        public async Task<string> GetCanonicalUrl(FancyRoute internalRoute, Func<IDictionary<string, object>> viewDataAdditionFunc, bool useExistingQuery)
+        public async Task<string> GetCanonicalUrl(FancyRoute internalRoute, Func<IDictionary<string, object>> viewDataAdditionFunc, bool useContext)
         {
             var routeCollection = await GetRouteCollectionAsync().ConfigureAwait(false);
             var routes = GetCanonicalRouteList(internalRoute, routeCollection, _routeconfig);
             if (!routes.Any()) return null; // no canonical route that matches, or current route is canonical? then no redirect!
 
-            var routingValues = GenerateRoutingValues(
-                viewDataAdditionFunc,
-                () => useExistingQuery ? _requestMessage.Value.GetRouteData().Values : new Dictionary<string, object>()
-            );
 
+            var  routingValues = new Dictionary<string, object>(StringComparer.OrdinalIgnoreCase) { { "httproute", true } };
+            if (useContext)
+            {
+                routingValues.ChainSet(_requestMessage.Value.GetRouteData().Values, true);
+            }
+            if ( viewDataAdditionFunc != null)
+            {
+                routingValues.ChainSet(viewDataAdditionFunc(), true);
+            }
+        
             var newReq = PrepareNewHttpRequest(_requestMessage.Value);
             foreach (var route in routes)
             {
                 var vpath = route.GetVirtualPath(newReq, routingValues);
                 if (vpath != null)
                 {
-                    return CreateOutboundUri(route, vpath, _requestMessage.Value.Resolve<PageContext>().Url, useExistingQuery);
+                    return CreateOutboundUri(route, vpath, _requestMessage.Value.Resolve<PageContext>().Url, useContext);
                 }
             }
             return null;
         }
 
-        /// <summary>
-        /// a route is going to match or not based on a dictionary of values that it will try to baind against.  
-        /// Here we just concat multiple route value dictionaries together to present one unified view of the route data.
-        /// </summary>
-        /// <param name="dictionaries"></param>
-        /// <returns></returns>
-        static IDictionary<string, object> GenerateRoutingValues(params Func<IDictionary<string, object>>[] dictionaries)
-        {
-            IDictionary<string, object> initial = new Dictionary<string, object>(StringComparer.OrdinalIgnoreCase) { { "httproute", true } };
-            if (dictionaries == null) return initial;
-            return dictionaries.Aggregate(initial, (state, next) => {
-                var dictToAdd = (next ?? (() => new Dictionary<string, object>()))();
-                return state.ChainSet(dictToAdd, true);
-            });
-        }
-
+     
         /// <summary>
         /// We want a pristine request with no context to potentially interfere with the routing calculation, so we do that here.
         /// The only dependency we have is the dependency resolver, which we take from the parent request.
