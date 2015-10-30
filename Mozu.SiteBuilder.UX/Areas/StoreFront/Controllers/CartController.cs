@@ -154,6 +154,7 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
         public async Task<ActionResult> Checkout(CheckoutModel model)
         {
             Cart cart = null;
+            Exception error;
             CommerceRuntime.Contracts.Orders.Order order = null;
             if (model == null || string.IsNullOrEmpty(model.Id))
             {
@@ -183,7 +184,12 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
             }
             catch (Exception e)
             {
-                return await RenderCartViewWithMessage(e);
+                error = e;
+            }
+            // lame, can't await a task in an exception handler so have to do this here
+            if (error != null)
+            {
+                return await RenderCartViewWithMessage(error);
             }
             
             return Redirect(CreateRedirectUrl("/checkout/" + order.Id).ToString());
