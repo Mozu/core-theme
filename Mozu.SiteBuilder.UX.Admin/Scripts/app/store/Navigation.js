@@ -255,7 +255,7 @@ Ext.define('Taco.store.Navigation', {
                         'id': 'searchtuningrule',
                         'behaviorIds': [16],
 
-                        'label': 'Search Results Tuning',
+                        'label': '<span style="display:block;">Search Results Tuning</span>',
                         'address': 'SearchTuningRules'
                     } /*, {
                 'id': 'promotions',

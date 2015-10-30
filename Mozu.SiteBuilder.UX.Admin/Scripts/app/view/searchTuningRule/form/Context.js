@@ -1,6 +1,6 @@
 /**
  * @class  Taco.view.searchTuningRule.Context
- * @author Travis Johnson
+ * @author gm, bc
  * @description SearchTuningRule Context Form
  */
 Ext.define('Taco.view.searchTuningRule.form.Context', {
@@ -26,14 +26,7 @@ Ext.define('Taco.view.searchTuningRule.form.Context', {
         var me = this;
         Ext.tip.QuickTipManager.init();
 
-        this.keywordGrid = Ext.create('Taco.view.searchTuningRule.grid.Keyword', {
-            name: 'keywords',
-            record: this.record,
-            width: '50%',
-            margin: {
-                right: 20
-            }
-        });
+
 
         var catStore = Taco.core.data.StoreManager.getOrCreate({
             type: 'Taco.store.Categories',
@@ -115,6 +108,9 @@ Ext.define('Taco.view.searchTuningRule.form.Context', {
             style: {
                 verticalAlign: 'top'
             },
+            margin: {
+                left: 10
+            },
             fieldLabel: 'Categories',
             allowBlank: true,
             items: [
@@ -147,6 +143,42 @@ Ext.define('Taco.view.searchTuningRule.form.Context', {
             ]
         });
 
+        this.keywordGrid = Ext.create('Taco.view.searchTuningRule.grid.Keyword', {
+            name: 'keywords',
+            record: this.record,
+            width: '100%',
+            useWhiteContainer:true,
+            //flex:1,
+            minHeight: 275,
+            margin: {
+                right: 10
+            }
+
+        });
+
+        this.keywordBox = Ext.create('Ext.form.FieldContainer', {
+            layout: 'vbox',
+            width: '50%',
+            style: {
+                verticalAlign: 'top'
+            },
+            fieldLabel: 'Search Keywords',
+            allowBlank: true,
+            items: [
+                {
+                    xtype: 'fieldcontainer',
+                    layout: {
+                        type: 'hbox',
+                        align: 'stretch'
+                    },
+                    width: '100%',
+                    items: [
+                        this.keywordGrid
+                    ]
+                }
+            ]
+        });
+
         this.items = [
             {
                 xtype: 'fieldcontainer',
@@ -155,7 +187,7 @@ Ext.define('Taco.view.searchTuningRule.form.Context', {
                     type: 'hbox'
                 },
                 items: [
-                    this.keywordGrid,
+                    this.keywordBox,
                     this.categoriesBox
                 ]
             }

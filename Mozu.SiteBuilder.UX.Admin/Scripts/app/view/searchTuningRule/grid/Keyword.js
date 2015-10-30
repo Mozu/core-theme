@@ -10,6 +10,7 @@ Ext.define('Taco.view.searchTuningRule.grid.Keyword', {
     ],
 
     minHeight: 240,
+    useWhiteContainer:true,
     
     launchEditorOnClick:false,
 
@@ -36,8 +37,6 @@ Ext.define('Taco.view.searchTuningRule.grid.Keyword', {
     showActionsColumn: true,
 
     hideSearchToolbar: false,
-    
-    title: 'Search Keywords',
 
     pageSize: 5,
 
@@ -202,11 +201,12 @@ Ext.define('Taco.view.searchTuningRule.grid.Keyword', {
         me.quickAddBar = Ext.create('Ext.toolbar.Toolbar', {
             dock: 'top',
             layout: 'hbox',
+            cls: 'taco-content-navcontainer-white',
             padding: {
-                top: 2,
+                top: 0,
                 left: 0,
                 right: 0,
-                bottom:10
+                bottom:5
             },
             items: [
                 me.getQuickAddField(),
