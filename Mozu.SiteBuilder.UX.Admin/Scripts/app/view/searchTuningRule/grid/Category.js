@@ -91,6 +91,10 @@ Ext.define('Taco.view.searchTuningRule.grid.Category', {
         this.loadPreviousRecords();
 
         this.callParent(arguments);
+
+        
+        this.mixins.gridcontextmenu.constructor.apply(this);
+
     },
 
     listeners: {
