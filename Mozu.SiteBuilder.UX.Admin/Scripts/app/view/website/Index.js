@@ -48,7 +48,7 @@ Ext.define('Taco.view.website.Index', {
     itemId: 'websiteIndex',
 
     contextConfig: {
-        //   supportedLevels: ['s'],
+        supportedLevels: ['s'],
         requiresContextOfType: ['s'],
         hidden: false
     },
@@ -133,9 +133,11 @@ Ext.define('Taco.view.website.Index', {
                 html: '<strong>Editor</strong> for',
                 margin: '0 10 0 0'
             },
-            Ext.create('Taco.view.navigation.ContextSwitcher', {
+            Ext.create('Taco.core.ux.content.ContextMenu', {
                 width: '120px',
-                fieldStyle: 'background-color: #fff;'
+                fieldStyle: 'background-color: #fff;',
+                requiresContextOfType: ['s'],
+                supportedLevels: ['s']
             }),
             {
                 xtype: 'taco-indicator',
