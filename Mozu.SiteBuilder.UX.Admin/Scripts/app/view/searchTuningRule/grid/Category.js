@@ -79,19 +79,16 @@ Ext.define('Taco.view.searchTuningRule.grid.Category', {
         //the property for which the grid will add/update the store
         this.filterProperty = this.filterProperty || 'categoryCode';
 
-
-        this.store = this.getStore(records);
-
         this.columns = Ext.Array.clone(this.getColumnConfig());
+
+        this.store = this.getStore();
 
         if (this.enablePaging) {
             // initialize the grid paging toolbar mixin
             this.mixins.pageable.constructor.apply(this);
         }
 
-        var prevRecords = this.loadPreviousRecords();
-
-
+        this.loadPreviousRecords();
 
         this.callParent(arguments);
     },
@@ -144,16 +141,12 @@ Ext.define('Taco.view.searchTuningRule.grid.Category', {
             filterIds = filters.map(function(rec) { return rec.value; });
 
             this.catStore.on('load', function(store) {
-                var records = [];
             
                 store.each(function(rec) {
                     if (rec.get(me.filterProperty) && filterIds.indexOf(rec.get(me.filterProperty)) != -1)  {
-                        //me.store.add(rec);
-                        records.push(rec);
+                        me.store.add(rec);
                     }
                 });
-
-
             });
         }
     },
@@ -165,12 +158,7 @@ Ext.define('Taco.view.searchTuningRule.grid.Category', {
     getStore: function () {
         return Ext.create('Ext.data.Store', {
             fields:  ['nameAndCode', 'type'],
-            data: [],
-            autoLoad: false,
-            proxy: {
-                type: 'memory',
-                enablePaging: true
-            }
+            data: []
         });
     },
 
