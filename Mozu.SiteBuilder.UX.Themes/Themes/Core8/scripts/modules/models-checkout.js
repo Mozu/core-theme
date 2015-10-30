@@ -956,6 +956,12 @@
                     return order.apiAddPayment().then(function() {
                         var payment = order.apiModel.getCurrentPayment();
                         var modelCard, modelCvv;
+                        var activePayments = order.apiModel.getActivePayments();
+                        var creditCardPayment = activePayments && _.findWhere(activePayments, { paymentType: 'CreditCard' });
+                        //Clear card if no credit card payments exists
+                        if (!creditCardPayment) {
+                            self.clear('card');
+                        }
                         if (payment) {
                             switch (payment.paymentType) {
                                 case 'CreditCard':
