@@ -28,20 +28,11 @@ namespace Mozu.SiteBuilder.Mvc.MessageHandler
             set { _redirecter = value; }
         }
 
-        static readonly Regex _reMxClean = new Regex("_mz[^&]+", RegexOptions.IgnoreCase);
-
-        static void CleanMzQuery( HttpRequestMessage message)
-        {
-            if ( message.RequestUri != null && message.RequestUri.PathAndQuery.IndexOf("_mz", StringComparison.OrdinalIgnoreCase)>-1)
-            {
-                message.RequestUri = new Uri(_reMxClean.Replace(message.RequestUri.ToString(), string.Empty));
-            }
-        }
-
+      
 
         protected async override Task<HttpResponseMessage> SendAsync(HttpRequestMessage request, CancellationToken cancellationToken)
         {
-            CleanMzQuery(request);
+          
             var apiContext = request.Resolve<ISiteBuilderApiContext>();
             if (apiContext.SiteId.HasValue == false)
             {
@@ -122,7 +113,7 @@ namespace Mozu.SiteBuilder.Mvc.MessageHandler
 
     public class MzUnderscoreRequestCleaner: DelegatingHandler
     {
-        static readonly Regex _reMxClean = new Regex("_mz[^&]+&*", RegexOptions.IgnoreCase);
+        static readonly Regex _reMxClean = new Regex("_mz_[^&]+&*", RegexOptions.IgnoreCase);
 
 
         protected  override Task<HttpResponseMessage> SendAsync(HttpRequestMessage request, CancellationToken cancellationToken)
@@ -132,7 +123,7 @@ namespace Mozu.SiteBuilder.Mvc.MessageHandler
         }
         static void CleanMzQuery(HttpRequestMessage message)
         {
-            if (message.RequestUri != null && message.RequestUri.PathAndQuery.IndexOf("_mz", StringComparison.OrdinalIgnoreCase) > -1)
+            if (message.RequestUri != null && message.RequestUri.PathAndQuery.IndexOf("_mz_", StringComparison.OrdinalIgnoreCase) > -1)
             {
                 UriBuilder ub = new UriBuilder(message.RequestUri);
                 if (ub.Query.Length > 1)
