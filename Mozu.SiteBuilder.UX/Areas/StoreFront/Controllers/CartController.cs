@@ -184,35 +184,15 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
             }
             catch (Exception e)
             {
-                UpdateCartWithExceptionMessage(model.Id, e);
                 error = e;
             }
+            // lame, can't await a task in an exception handler so have to do this here
             if (error != null)
             {
                 return await RenderCartViewWithMessage(error);
             }
             
             return Redirect(CreateRedirectUrl("/checkout/" + order.Id).ToString());
-        }
-
-
-        /// <summary>
-        /// not async as called from exception block
-        /// </summary>
-        /// <param name="cartId"></param>
-        /// <param name="e"></param>
-        private void UpdateCartWithExceptionMessage(string cartId, Exception e)
-        {
-            var badCart = (_cartClient.GetCart(cartId)).Result.ReadAsSync();
-            badCart.ChangeMessages.Add(new ChangeMessage()
-            {
-                Message = string.Format("{0}{1}", e.Message, (e.InnerException != null)
-                    ? " : " + e.InnerException.Message
-                    : string.Empty),
-                Success = false,
-                SubjectType = "Product",
-            });
-            _cartClient.UpdateCart(badCart).Result.ReadAsSync();
         }
 
         private Uri CreateRedirectUrl(string path)
