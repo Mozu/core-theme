@@ -335,8 +335,7 @@ namespace Mozu.SiteBuilder.UX.Configuration
               null,
               null,
               FancyRoute.ProductDetails,
-              true,
-              CustomRoute.Scheme.Http);
+              true);
 
 
     
@@ -347,8 +346,7 @@ namespace Mozu.SiteBuilder.UX.Configuration
                 null,
                 null,
                 FancyRoute.Search,
-                true,
-                CustomRoute.Scheme.Http);
+                true);
 
             routes.MapCustomHttpRoute(
                            "StoreFront_cart",
@@ -357,8 +355,8 @@ namespace Mozu.SiteBuilder.UX.Configuration
                            null,
                            null,
                            FancyRoute.Cart,
-                           true,
-                           CustomRoute.Scheme.Https);
+                           true
+                           );
 
             routes.MapHttpRoute(
                 "StoreFront_cart_checkout",
@@ -402,8 +400,7 @@ namespace Mozu.SiteBuilder.UX.Configuration
                 null,
                 null,
                 FancyRoute.Category,
-                true,
-                CustomRoute.Scheme.Http);
+                true);
 
 
 
@@ -415,8 +412,7 @@ namespace Mozu.SiteBuilder.UX.Configuration
                 null,
                 null,
                 FancyRoute.Category,
-                false,
-                CustomRoute.Scheme.Http);
+                false);
 
 
 

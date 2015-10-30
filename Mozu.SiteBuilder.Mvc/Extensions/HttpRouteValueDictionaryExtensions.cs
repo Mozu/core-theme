@@ -31,7 +31,7 @@ namespace Mozu.SiteBuilder.Mvc.Extensions
     }
     public static class RouteExtensions
     {
-        public static IHttpRoute MapCustomHttpRoute(this System.Web.Http.HttpRouteCollection routes, string name, string routeTemplate, object defaults, IDictionary<ICustomRouteConstraint, string[]> constraints, IDictionary<IRouteDataMapping, string[]> mappings, FancyRoute fancyRoute, bool isCanonical, CustomRoute.Scheme scheme)
+        public static IHttpRoute MapCustomHttpRoute(this System.Web.Http.HttpRouteCollection routes, string name, string routeTemplate, object defaults, IDictionary<ICustomRouteConstraint, string[]> constraints, IDictionary<IRouteDataMapping, string[]> mappings, FancyRoute fancyRoute, bool isCanonical, CustomRoute.Scheme? scheme = null)
         {
             if (mappings == null)
             {

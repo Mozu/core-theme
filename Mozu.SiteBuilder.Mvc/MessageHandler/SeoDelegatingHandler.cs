@@ -13,6 +13,7 @@ using Mozu.SiteBuilder.UX.Models.Navigation;
 using System.Collections.Specialized;
 using Mozu.SiteBuilder.Mvc.Contexts;
 using Mozu.Core.Extensions;
+using Mozu.Core.Settings;
 
 namespace Mozu.SiteBuilder.Mvc.MessageHandler
 {
@@ -56,26 +57,28 @@ namespace Mozu.SiteBuilder.Mvc.MessageHandler
                     return RedirectTo(redirect.Destination, redirect.IsTemporary.GetValueOrDefault(false), request);
                 }
             }
-
+            var settings = request.Resolve<ISettings>();
             // try any custom routes
             if (request.GetRouteData().Route is NonSystemRoute)
             {
                 var rerouted = await PerformCustomRouting(request).ConfigureAwait(false);
-                return await HandleReroutedRequest(rerouted, cancellationToken, () => base.SendAsync(request, cancellationToken));
+                return await HandleReroutedRequest(rerouted, cancellationToken, () => base.SendAsync(request, cancellationToken), settings.CoreSettings.IsSSLValidationEnabled);
             }
 
             return await base.SendAsync(request, cancellationToken).ConfigureAwait(false);
         }
 
-        private async Task<HttpResponseMessage> HandleReroutedRequest(HttpRequestMessage rerouted, CancellationToken cancellationToken, Func<Task<HttpResponseMessage>> continuation)
+        private async Task<HttpResponseMessage> HandleReroutedRequest(HttpRequestMessage rerouted, CancellationToken cancellationToken, Func<Task<HttpResponseMessage>> continuation, bool sslValidationEnabled)
         {
             var customRoute = rerouted.GetRouteData().Route as CustomRoute;
             if (customRoute == null) return await continuation().ConfigureAwait(false);
-
+            
             var pageContext = rerouted.Resolve<PageContext>();
             var currentUrl = new Uri(pageContext.Url);
-            var currentProtocol = currentUrl.Scheme;
-            if(!customRoute.UrlScheme.HasValue || customRoute.UrlScheme.Value.ToStringQuickly().EqualsIgnoreCase(currentUrl.Scheme)) return await continuation().ConfigureAwait(false);
+      
+            if( !sslValidationEnabled || 
+                !customRoute.UrlScheme.HasValue ||
+                customRoute.UrlScheme.Value.ToStringQuickly().EqualsIgnoreCase(currentUrl.Scheme)) return await continuation().ConfigureAwait(false);
 
             var builder = new UriBuilder(customRoute.UrlScheme.Value.ToStringQuickly(), currentUrl.Host);
             builder.Path = currentUrl.AbsolutePath;

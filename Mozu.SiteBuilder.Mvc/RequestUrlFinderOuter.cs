@@ -31,7 +31,13 @@ namespace Mozu.SiteBuilder.Mvc
             IEnumerable<string> values;
             if (request.Headers.TryGetValues(Core.Api.Contracts.Constants.Headers.ORIGINAL_URL, out values))
             {
-                return values.FirstOrDefault();
+                var url = values.FirstOrDefault();
+                //ssl has been terminated before rp.. need to reset
+                if (request.Headers.TryGetValues(Core.Api.Contracts.Constants.Headers.SSL_HANDLED, out values))
+                {
+                    url = "https" + url.Substring(4);
+                }
+                return url;
             }
             else
             {
