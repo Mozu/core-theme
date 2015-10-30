@@ -245,9 +245,6 @@ Ext.define('Taco.view.searchTuningRule.form.Context', {
             savesuccess: function (modal, records) {
                 me.categoryGrid.fireEvent('recordadded', records);
             },
-            aftercancelclose: function () {
-                me.reloadStore(list);
-            },
             scope: this
         });
     },
