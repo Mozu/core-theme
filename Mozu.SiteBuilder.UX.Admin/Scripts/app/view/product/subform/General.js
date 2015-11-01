@@ -185,11 +185,12 @@ Ext.define('Taco.view.product.subform.General', {
                         scope: this,
                         fn: 'onProductTypeChange'
                     }
-                },
-                validator: function(val) {
-                    var matches = this.store.queryBy(function(record, id) { return record.get('name') === val });
-                    return (matches.items.length === 1) ? true : 'No matches';
                 }
+                //,
+                //validator: function(val) {
+                //    var matches = this.store.queryBy(function(record, id) { return record.get('name') === val });
+                //    return (matches.items.length === 1) ? true : 'No matches';
+                //}
             });
 
 
