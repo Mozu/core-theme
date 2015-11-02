@@ -1,0 +1,263 @@
+﻿{
+ "websiteName": "Bluefly",
+ "customCdnHostName": "",
+ "cacheSettings": {
+  "cdnCacheBustKey": "_1446485558875"
+ },
+ "siteTimeZone": "Eastern Standard Time",
+ "siteTimeFormat": "hh:mm:ss tt",
+ "senderEmailAddress": "bluefly@staging.com",
+ "senderEmailAlias": "Bluefly Support",
+ "replyToEmailAddress": "bluefly@staging.com",
+ "favIconPath": "http://cdn.www.bluefly.com/favicon.ico",
+ "favIconMobilePath": "http://cdn.www.bluefly.com/favicon.ico",
+ "logoText": "",
+ "logoPath": "",
+ "theme": "eyJJZCI6In4xMTgyMH45MTYyIiwiTG9jYXRpb24iOm51bGwsIkFkZG9ucyI6bnVsbH0=",
+ "mobileTheme": "eyJJZCI6In4xMTgyMH45MTYyIiwiTG9jYXRpb24iOm51bGwsIkFkZG9ucyI6bnVsbH0=",
+ "tabletTheme": "eyJJZCI6In4xMTgyMH45MTYyIiwiTG9jYXRpb24iOm51bGwsIkFkZG9ucyI6bnVsbH0=",
+ "googleAnalyticsCode": "UA-60397345-1",
+ "isGoogleAnalyticsEnabled": true,
+ "isGoogleAnalyticsEcommerceEnabled": true,
+ "isWishlistCreationEnabled": false,
+ "isAddressValidationEnabled": false,
+ "allowInvalidAddresses": true,
+ "taxableTerritories": [],
+ "supressedEmailTransactions": {
+  "orderChanged": true,
+  "orderShipped": true,
+  "shopperLoginCreated": true,
+  "returnCreated": true,
+  "returnAuthorized": true,
+  "returnUpdated": true,
+  "returnRejected": true,
+  "returnClosed": true,
+  "refundCreated": true,
+  "giftCardCreated": true
+ },
+ "auditInfo": {
+  "updateDate": "2015-11-02T17:32:39.220Z",
+  "createDate": "2015-10-01T14:38:17.107Z",
+  "updateBy": "2b70787a7ce943c4ac6f8aa5da8a8ae8",
+  "createBy": "8d29e4f31df44358b472b410dc9fb052"
+ },
+ "viewAuthorizations": {},
+ "customRoutes": {
+  "mappings": {
+   "removeDesignerDash": {
+    "type": "regex",
+    "beforeRouting": true,
+    "pattern": "designer-",
+    "replacement": ""
+   },
+   "category-landing": {
+    "type": "regex",
+    "mapTo": "documentname",
+    "pattern": "\\s",
+    "replacement": ""
+   }
+  },
+  "validators": {
+   "specialAssortments": {
+    "type": "stringlist",
+    "values": [
+     "sale",
+     "new-arrivals"
+    ]
+   },
+   "designer": {
+    "type": "stringlist",
+    "values": [
+     "designer"
+    ]
+   }
+  },
+  "routes": [
+   {
+    "template": "search",
+    "defaults": {
+     "categoryCode": "shop"
+    },
+    "internalRoute": "Search",
+    "mappings": {},
+    "validators": {}
+   },
+   {
+    "template": "{categorySlug}/index",
+    "defaults": {
+     "documentListName": "pages@mozu"
+    },
+    "internalRoute": "CmsPage",
+    "mappings": {
+     "category-landing": [
+      "categorySlug"
+     ]
+    },
+    "validators": {}
+   },
+   {
+    "template": "assortment/{assortment-categorySlug}/index",
+    "defaults": {
+     "documentListName": "pages@mozu"
+    },
+    "internalRoute": "CmsPage",
+    "mappings": {
+     "category-landing": [
+      "assortment-categorySlug"
+     ]
+    },
+    "validators": {}
+   },
+   {
+    "template": "designer-old/{documentname}",
+    "defaults": {
+     "documentListName": "designers@bluefly"
+    },
+    "internalRoute": "CmsPage",
+    "mappings": {},
+    "validators": {}
+   },
+   {
+    "template": "{designer}/{tenant~brand-facet}/{categorySlug:ancestors(5)}",
+    "defaults": {
+     "categorySlug": "shop",
+     "isDesignerPage": "true"
+    },
+    "internalRoute": "Category",
+    "mappings": {},
+    "canonical": true,
+    "validators": {
+     "designer": [
+      "designer"
+     ]
+    }
+   },
+   {
+    "template": "{assortment-categorySlug}/{categorySlug:ancestors(5)}/{tenant~brand-facet}",
+    "defaults": {
+     "categorySlug": "shop"
+    },
+    "internalRoute": "Category",
+    "mappings": {},
+    "canonical": true,
+    "validators": {
+     "specialAssortments": [
+      "assortment-categorySlug"
+     ]
+    }
+   },
+   {
+    "template": "{assortment-categorySlug}/{categorySlug:ancestors(5)}/{tenant~colorgroup-facet}",
+    "defaults": {
+     "categorySlug": "shop"
+    },
+    "internalRoute": "Category",
+    "mappings": {},
+    "canonical": true,
+    "validators": {
+     "specialAssortments": [
+      "assortment-categorySlug"
+     ]
+    }
+   },
+   {
+    "template": "{assortment-categorySlug}/{categorySlug:ancestors(5)}",
+    "defaults": {
+     "categorySlug": "shop"
+    },
+    "internalRoute": "Category",
+    "mappings": {},
+    "canonical": true,
+    "validators": {
+     "specialAssortments": [
+      "assortment-categorySlug"
+     ]
+    }
+   },
+   {
+    "template": "assortment/{assortment-categorySlug}/{categorySlug:ancestors(5)}/{tenant~colorgroup-facet}",
+    "defaults": {},
+    "internalRoute": "Category",
+    "mappings": {},
+    "canonical": true,
+    "validators": {}
+   },
+   {
+    "template": "assortment/{assortment-categorySlug}/{categorySlug:ancestors(5)}/{tenant~brand-facet}",
+    "defaults": {},
+    "internalRoute": "Category",
+    "mappings": {},
+    "canonical": true,
+    "validators": {}
+   },
+   {
+    "template": "assortment/{assortment-categorySlug}/{categorySlug:ancestors(5)}",
+    "defaults": {
+     "categorySlug": "shop"
+    },
+    "internalRoute": "Category",
+    "mappings": {},
+    "canonical": true,
+    "validators": {}
+   },
+   {
+    "template": "{categorySlug:ancestors(5)}/{tenant~colorgroup-facet}",
+    "defaults": {},
+    "internalRoute": "Category",
+    "mappings": {},
+    "canonical": true,
+    "validators": {}
+   },
+   {
+    "template": "{categorySlug:ancestors(5)}/{tenant~brand-facet}",
+    "defaults": {},
+    "internalRoute": "Category",
+    "mappings": {},
+    "canonical": true,
+    "validators": {}
+   },
+   {
+    "template": "{categorySlug:ancestors(5)}",
+    "defaults": {},
+    "internalRoute": "Category",
+    "mappings": {},
+    "canonical": true,
+    "validators": {}
+   },
+   {
+    "template": "{productSlug}/p/{productCode}",
+    "defaults": {},
+    "internalRoute": "ProductDetails",
+    "mappings": {},
+    "canonical": true,
+    "validators": {}
+   },
+   {
+    "template": "{productSlug}/p/{productCode}/detail.fly",
+    "defaults": {},
+    "internalRoute": "ProductDetails",
+    "mappings": {},
+    "canonical": false,
+    "validators": {}
+   },
+   {
+    "template": "p/{productCode}/detail.fly",
+    "defaults": {},
+    "internalRoute": "ProductDetails",
+    "mappings": {},
+    "canonical": false,
+    "validators": {}
+   },
+   {
+    "template": "pages/{name}/{documentListFQN}/{documentProperty-page_type_definition}",
+    "defaults": {
+     "list": "pages@mozu"
+    },
+    "internalRoute": "CmsPage",
+    "mappings": {},
+    "canonical": false,
+    "validators": {}
+   }
+  ]
+ }
+}

@@ -257,7 +257,7 @@ namespace Mozu.SiteBuilder.Mvc.SEO
                 var vpath = route.GetVirtualPath(newReq, routingValues);
                 if (vpath != null)
                 {
-                    return CreateOutboundUri(route, vpath, _requestMessage.Value.Resolve<PageContext>().Url, useContext);
+                    return CreateOutboundUri(route, vpath, _requestMessage.Value.Resolve<IPageContext>().Url, useContext);
                 }
             }
             return null;
@@ -286,7 +286,11 @@ namespace Mozu.SiteBuilder.Mvc.SEO
             var builder = new UriBuilder(scheme, incomingUri.Host);
             builder.Path = path;
             builder.Query = query;
-            return builder.Uri.ToString();
+            if (route.UrlScheme.HasValue)
+            {
+                return builder.Uri.ToString();
+            }
+            return builder.Uri.GetComponents(UriComponents.PathAndQuery, UriFormat.Unescaped);
         }
 
         public IHttpRouteData GetRouteData(string virtualPathRoot, HttpRequestMessage request)

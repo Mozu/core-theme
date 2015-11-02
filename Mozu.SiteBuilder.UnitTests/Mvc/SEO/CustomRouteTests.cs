@@ -1,6 +1,7 @@
 ﻿using NUnit.Framework;
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -22,14 +23,27 @@ using Mozu.Content.Contracts.Clients;
 using Mozu.SiteBuilder.Mvc;
 using Mozu.Core.Logging;
 using System.Runtime.Caching;
+using System.Web.Http.Dependencies;
+using System.Web.Http.Hosting;
 using Mozu.Content.Contracts;
 using Mozu.SiteSettings.General.Contracts.Clients;
 using Mozu.SiteSettings.General.Contracts.General.Routing;
 using Mozu.Core.Extensions;
 using Mozu.ProductRuntime.Contracts;
 using Mozu.ProductRuntime.Contracts.Clients;
+using Autofac;
+using Autofac.Integration.WebApi;
+using AutofacContrib.NSubstitute;
+using AutoMapper;
+using Mozu.Core.Api.Contracts;
+using Mozu.SiteBuilder.Mvc.Catalog;
+using Mozu.SiteBuilder.Mvc.Contexts;
+using Mozu.SiteBuilder.UX.Configuration;
+using Mozu.SiteBuilder.UX.Models.StoreFront.Catalog;
+using NSubstitute.Core;
 
-namespace Mozu.SiteBuilder.UnitTests.Mvc.SEO    
+
+namespace Mozu.SiteBuilder.UnitTests.Mvc.SEO
 {
     [TestFixture, Category("CustomRoutes")]
     public class CustomRouteTests
@@ -47,7 +61,7 @@ namespace Mozu.SiteBuilder.UnitTests.Mvc.SEO
             var mapping1 = new Mapping { type = Mapping.TypeConst.facet, mapTo = "bar", facetId = "facet@mozu" };
             yield return new object[] { mapping1, typeof(FacetValueFilterMapping) };
 
-            var mapping2 = new Mapping { type = Mapping.TypeConst.direct, mappings = new Dictionary<string, object> { { "butts", "lol"} } };
+            var mapping2 = new Mapping { type = Mapping.TypeConst.direct, mappings = new Dictionary<string, object> { { "butts", "lol" } } };
             yield return new object[] { mapping2, typeof(SiteBuilder.Mvc.SEO.Mappings.DirectMapping) };
 
             var mapping3 = new Mapping { type = Mapping.TypeConst.mzdb, docId = "blah@foo", listFqn = "sigh" };
@@ -67,10 +81,10 @@ namespace Mozu.SiteBuilder.UnitTests.Mvc.SEO
             var mapping1 = new Mapping { type = Mapping.TypeConst.facet, mapTo = "bar" };
             yield return mapping1;
 
-            var mapping2 = new Mapping { type = Mapping.TypeConst.direct};
+            var mapping2 = new Mapping { type = Mapping.TypeConst.direct };
             yield return mapping2;
 
-            var mapping3 = new Mapping { type =  Mapping.TypeConst.mzdb, listFqn = "sigh" };
+            var mapping3 = new Mapping { type = Mapping.TypeConst.mzdb, listFqn = "sigh" };
             yield return mapping3;
         }
 
@@ -148,7 +162,7 @@ namespace Mozu.SiteBuilder.UnitTests.Mvc.SEO
         {
             var httpRoute = Substitute.For<IHttpRoute>();
             await constraint.Initialize();
-            constraint.DoMatch(null,null,parameterName, inputs,HttpRouteDirection.UriResolution).ShouldEqual(routeShouldMatch);
+            constraint.DoMatch(null, null, parameterName, inputs, HttpRouteDirection.UriResolution).ShouldEqual(routeShouldMatch);
         }
 
         static IEnumerable<object[]> ConstraintTests()
@@ -168,7 +182,7 @@ namespace Mozu.SiteBuilder.UnitTests.Mvc.SEO
                 new Dictionary<string, object> { { "haha", "once" } },
                 false
             };
-           
+
             var attrClient = Substitute.For<IAttributeWebApiClient, ICloneable>();
             (attrClient as ICloneable).Clone().Returns(attrClient);
             var vocabs = new List<ProductAdmin.Contracts.AttributeVocabularyValue>{
@@ -178,10 +192,10 @@ namespace Mozu.SiteBuilder.UnitTests.Mvc.SEO
 
             var searchClient = Substitute.For<IProductSearchWebApiClient, ICloneable>();
             (searchClient as ICloneable).Clone().Returns(searchClient);
-            
+
 
             attrClient.GetAttributeVocabularyValues(Arg.Any<string>()).Returns(Task.FromResult(Response(vocabs)));
-            searchClient.Search().ReturnsForAnyArgs(Task.FromResult(Response(new ProductSearchResult()
+            searchClient.Search().ReturnsForAnyArgs(Task.FromResult(Response(new ProductRuntime.Contracts.ProductSearchResult()
             {
                 Facets =
                 new List<ProductRuntime.Contracts.Facet>() {
@@ -269,7 +283,7 @@ namespace Mozu.SiteBuilder.UnitTests.Mvc.SEO
         [TestCaseSource("ConstraintFactory")]
         public void FactoryCanMakeConstraints(Validator validator, Type expectedType)
         {
-            var entityClient = Substitute.For<IEntityListsWebApiClient,ICloneable>();
+            var entityClient = Substitute.For<IEntityListsWebApiClient, ICloneable>();
             ((ICloneable)entityClient).Clone().Returns(entityClient);
 
             var fact = new ConstraintFactory(entityClient, Substitute.For<IAttributeWebApiClient>(), Substitute.For<IProductSearchWebApiClient>(), Substitute.For<IApiContext>());
@@ -278,13 +292,13 @@ namespace Mozu.SiteBuilder.UnitTests.Mvc.SEO
 
         static IEnumerable<object[]> ConstraintFactory()
         {
-            var attrConstraint = new Validator { type = Validator.TypeConst.attribute,attributeFQN = "attr"};
+            var attrConstraint = new Validator { type = Validator.TypeConst.attribute, attributeFQN = "attr" };
             yield return new object[] { attrConstraint, typeof(ProductAttributeRouteConstraint) };
 
-            var mzdbConstraint = new Validator { type = Validator.TypeConst.mzdb, listFqn = "lol", field = "meh"};
+            var mzdbConstraint = new Validator { type = Validator.TypeConst.mzdb, listFqn = "lol", field = "meh" };
             yield return new object[] { mzdbConstraint, typeof(MzdbRouteConstraint) };
 
-            var listConstraint = new Validator {type = Validator.TypeConst.list, values = new List<string> {"one", "two", "three" } };
+            var listConstraint = new Validator { type = Validator.TypeConst.list, values = new List<string> { "one", "two", "three" } };
             yield return new object[] { listConstraint, typeof(StringListRouteConstraint) };
         }
 
@@ -311,7 +325,7 @@ namespace Mozu.SiteBuilder.UnitTests.Mvc.SEO
                 },
                 AuditInfo = new Core.Api.Contracts.AuditInfo()
                 {
-                    UpdateDate= DateTime.MinValue
+                    UpdateDate = DateTime.MinValue
                 }
             };
 
@@ -352,6 +366,238 @@ namespace Mozu.SiteBuilder.UnitTests.Mvc.SEO
                 ResponseMessage = new System.Net.Http.HttpResponseMessage(System.Net.HttpStatusCode.OK)
             };
         }
+    }
+
+    [TestFixture, Category("CustomRoutes")]
+    public class BfCustomRouteTests
+    {
+        public class TestCase
+        {
+            public override string ToString()
+            {
+                return Name ?? Url;
+         }
+            public string Name { get; set; }
+            public string Url { get; set; }
+
+            public Action<CustomRouteHandler> RouteAction { get; set; }
+            public Action<HttpRequestMessage > ValidateRequest { get; set; }
+            public Action<CustomRoute> ValidateRoute{ get; set; }
+            public Action <CustomRouteHandler , CategoryTree > DoLinkStuff { get; set; }
+
+        }
+        public IEnumerable<TestCase> GetTests()
+        {
+            yield return new TestCase()
+            {
+                Name = "sale sub cat",
+                Url = "sale/women",
+                ValidateRoute = route =>
+                {
+                    Assert.AreEqual(route.InternalRoute, FancyRoute.Category);
+                   
+                },
+                ValidateRequest= req =>
+                {
+                    Assert.AreEqual((string)req.GetRouteData().Values["categorySlug"], "women");
+                },
+                DoLinkStuff= (handler, tree) =>
+                {
+                    var otherCat = tree.FindById(32);
+                    var catMap = Mapper.Map<IDictionary<string, object>>(otherCat);
+                    var url = handler.GetCanonicalUrl(FancyRoute.Category, () => catMap, true).Result;
+                    Assert.AreEqual(url, "/sale/women/clothing/dresses");
+
+                }
+            };
+            yield return new TestCase()
+            {
+                Name = "cat with facet",
+                Url = "women?facetValueFilter=tenant~brand%3acitizens-of-humanity%2ctenant~brand%3adl1961-premium-denim",
+                ValidateRoute = route =>
+                {
+                    Assert.AreEqual(route.InternalRoute, FancyRoute.Category);
+
+                },
+                ValidateRequest = req =>
+                {
+                    Assert.AreEqual((string)req.GetRouteData().Values["categorySlug"], "women");
+                },
+                DoLinkStuff = (handler, tree) =>
+                {
+                    var otherCat = tree.FindById(32);
+                    var catMap = Mapper.Map<IDictionary<string, object>>(otherCat);
+                    var url = handler.GetCanonicalUrl(FancyRoute.Category, () => catMap, true).Result;
+                    Assert.AreEqual(url, "/women/clothing/dresses?facetValueFilter=tenant~brand:citizens-of-humanity,tenant~brand:dl1961-premium-denim");
+
+                }
+            };
+        }
+        [Test]
+        [TestCaseSource("GetTests")]
+        public void Run(TestCase test )
+        {
+            //  CustomRouteHandler handler = new CustomRouteHandler();
+
+            
+            Mapper.AddProfile<Mozu.SiteBuilder.UX.Areas.StoreFront.ModelMapping.ProductMapping>();
+            var subber = new AutofacContrib.NSubstitute.AutoSubstitute();
+            subber.Provide<IRouteConfig>(new RouteConfig());
+            var sbapiContext = subber.ResolveAndSubstituteFor<ISiteBuilderApiContext>();
+            var pc = subber.ResolveAndSubstituteFor<IPageContext>();
+            var logger = subber.ResolveAndSubstituteFor<ILogger>();
+            var cache = new MemoryCache("testcache");
+            subber.Provide<ObjectCache>(cache);
+            
+            HttpRequestMessage reqMessage = new HttpRequestMessage(HttpMethod.Get, "http://localhost/" + test.Url ); ;
+            pc.Url.Returns(reqMessage.RequestUri.ToString());
+
+            reqMessage.SetRouteData(new HttpRouteData(new HttpRoute(), new HttpRouteValueDictionary()));
+            subber.Provide<HttpRequestMessage>(reqMessage);
+            IDependencyScope scope = new AutofacWebApiDependencyScope(subber.Container);
+
+            var lt=scope.GetRequestLifetimeScope();
+            var xx=lt.Resolve<HttpRequestMessage>();
+
+            reqMessage.Properties[HttpPropertyKeys.DependencyScope] = scope;
+
+
+
+            InitServices(subber);
+
+            subber.Provide<ICustomRouteConstraintFactory>(subber.Resolve<ConstraintFactory>());
+            subber.Provide<IRouteDataMappingFactory>(subber.Resolve<RouteMappingFactory>());
+
+
+
+
+
+
+            var custRepo = subber.ResolveAndSubstituteFor<CustomRouteRepository>();
+            var lazyRepo = new Lazy<ICustomRouteCollectionRepository>(() => custRepo);
+            subber.Provide<Lazy<ICustomRouteCollectionRepository>>(lazyRepo);
+
+
+
+            var catTreeProvider = subber.ResolveAndSubstituteFor<RuntimeCategoryTreeProvider>();
+            subber.Provide<ICategoryTreeProvider>(catTreeProvider);
+            var yyy = lt.Resolve<ICategoryTreeProvider>();
+
+
+
+
+            var catTree = catTreeProvider.GetAllCategories().Result;
+            var customRouteRepo = subber.ResolveAndSubstituteFor<CustomRouteHandler>();
+
+
+           
+            customRouteRepo.RouteIncomingRequest();
+
+
+
+            customRouteRepo.GetCanonicalUrl(FancyRoute.Category, () => new Dictionary<string, object>(), true);
+
+            if (test.ValidateRequest != null)
+            {
+                test.ValidateRequest(reqMessage);
+            }
+            if (test.ValidateRoute != null)
+            {
+                test.ValidateRoute(reqMessage.GetRouteData().Route as CustomRoute);
+            }
+
+            if (test.DoLinkStuff != null)
+            {
+                test.DoLinkStuff(customRouteRepo, catTree);
+            }
+
+            
+            
+            
+
+        }
+
+        static T GetResource<T>(string name)
+        {
+            var ass = typeof(BfCustomRouteTests).Assembly;
+            var rname = ass.GetManifestResourceNames().First(x => x.EndsWith(name+".json", StringComparison.OrdinalIgnoreCase));
+            var str= ass.GetManifestResourceStream(rname);
+            Newtonsoft.Json.JsonSerializer ser = new JsonSerializer();
+            return ser.Deserialize<T>(new JsonTextReader(new StreamReader(str)));
+            
+        }
+
+        void InitServices(AutoSubstitute subber)
+        {
+            var attrClient = Substitute.For<IAttributeWebApiClient, ICloneable>();
+            (attrClient as ICloneable).Clone().Returns(attrClient);
+            subber.Provide<IAttributeWebApiClient>(attrClient);
+
+
+            attrClient.GetAttributeVocabularyValues(Arg.Any<string>()).ReturnsForAnyArgs(x =>
+            {
+                var att = (string)x.Args()[0];
+                var res = Task.FromResult(Response(GetResource<List<ProductAdmin.Contracts.AttributeVocabularyValue>>("IAttributeWebApiClient.GetAttributeVocabularyValues." + att)));
+                return res;
+            });
+            
+
+            var searchClient = Substitute.For<IProductSearchWebApiClient, ICloneable>();
+            (searchClient as ICloneable).Clone().Returns(searchClient);
+            subber.Provide<IProductSearchWebApiClient>(searchClient);
+
+
+       
+            searchClient.Search().ReturnsForAnyArgs(x =>
+            {
+                var att =(string)x.Args()[4];
+                var searchResult = Task.FromResult(Response(GetResource<ProductRuntime.Contracts.ProductSearchResult>("IProductSearchWebApiClient.Search."+ att)));
+                return searchResult;
+            });
+
+
+
+          //  GetResource<ProductRuntime.Contracts.ProductSearchResult>("IProductSearchWebApiClient.Search." + x.Arg<string>()));
+           
+            //searchClient.Search(facet:"tenant~brand").Returns(Task.FromResult(Response(searchResultBrand)));
+           // searchClient.Search(facet: "tenant~colorgroup").Returns(Task.FromResult(Response(searchResultColorGruop)));
+
+            var catClient = Substitute.For<IProductCategoryRuntimeWebApiClient, ICloneable>();
+            (catClient as ICloneable).Clone().Returns(catClient);
+            subber.Provide<IProductCategoryRuntimeWebApiClient>(catClient);
+            var catTree = GetResource<ProductRuntime.Contracts.CategoryCollection>("IProductCategoryRuntimeWebApiClient.GetCategoryTree");
+            catClient.GetCategoryTree().ReturnsForAnyArgs(Task.FromResult(Response(catTree)));
+
+
+            var docClient = Substitute.For<IDocumentListWebApiClient, ICloneable>();
+            (docClient as ICloneable).Clone().Returns(docClient);
+            subber.Provide<IDocumentListWebApiClient>(docClient);
+           
+
+
+
+
+
+            var genSettingsClient = Substitute.For<IGeneralSettingsWebApiClient, ICloneable>();
+            (genSettingsClient as ICloneable).Clone().Returns(genSettingsClient);
+            subber.Provide<IGeneralSettingsWebApiClient>(genSettingsClient);
+            var genSettings = GetResource<SiteSettings.General.Contracts.GeneralSettings>("IGeneralSettingsWebApiClient.GetGeneralSettings");
+            genSettingsClient.GetGeneralSettings(Arg.Any<string>(), Arg.Any<TargetContextLevelType>()).ReturnsForAnyArgs(Task.FromResult(Response(genSettings)));
+
+        }
+
+        static ServiceClientResponse<T> Response<T>(T obj)
+        {
+            return new ServiceClientResponse<T>
+            {
+                HasException = false,
+                ReadAsAsync = () => Task.FromResult(obj),
+                ReadAsSync = () => obj,
+                ReadException = () => null,
+                ResponseMessage = new System.Net.Http.HttpResponseMessage(System.Net.HttpStatusCode.OK)
+            };
+        }
+
     }
 }
 

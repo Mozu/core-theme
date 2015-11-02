@@ -1,0 +1,169 @@
+﻿{
+ "facets": [
+  {
+   "label": "Color",
+   "facetType": "Value",
+   "field": "tenant~colorgroup",
+   "values": [
+    {
+     "label": "Black",
+     "isApplied": false,
+     "count": 10643,
+     "value": "black",
+     "filterValue": "tenant~colorgroup:black",
+     "isDisplayed": true,
+     "childrenFacetValues": []
+    },
+    {
+     "label": "Blue",
+     "isApplied": false,
+     "count": 6030,
+     "value": "blue",
+     "filterValue": "tenant~colorgroup:blue",
+     "isDisplayed": true,
+     "childrenFacetValues": []
+    },
+    {
+     "label": "Brown",
+     "isApplied": false,
+     "count": 4494,
+     "value": "brown",
+     "filterValue": "tenant~colorgroup:brown",
+     "isDisplayed": true,
+     "childrenFacetValues": []
+    },
+    {
+     "label": "Grey",
+     "isApplied": false,
+     "count": 3211,
+     "value": "grey",
+     "filterValue": "tenant~colorgroup:grey",
+     "isDisplayed": true,
+     "childrenFacetValues": []
+    },
+    {
+     "label": "Red",
+     "isApplied": false,
+     "count": 2316,
+     "value": "red",
+     "filterValue": "tenant~colorgroup:red",
+     "isDisplayed": true,
+     "childrenFacetValues": []
+    },
+    {
+     "label": "Multiple Colors",
+     "isApplied": false,
+     "count": 2203,
+     "value": "multiple colors",
+     "filterValue": "tenant~colorgroup:multiple colors",
+     "isDisplayed": true,
+     "childrenFacetValues": []
+    },
+    {
+     "label": "Khaki",
+     "isApplied": false,
+     "count": 2134,
+     "value": "khaki",
+     "filterValue": "tenant~colorgroup:khaki",
+     "isDisplayed": true,
+     "childrenFacetValues": []
+    },
+    {
+     "label": "Pink",
+     "isApplied": false,
+     "count": 1969,
+     "value": "pink",
+     "filterValue": "tenant~colorgroup:pink",
+     "isDisplayed": true,
+     "childrenFacetValues": []
+    },
+    {
+     "label": "White",
+     "isApplied": false,
+     "count": 1758,
+     "value": "white",
+     "filterValue": "tenant~colorgroup:white",
+     "isDisplayed": true,
+     "childrenFacetValues": []
+    },
+    {
+     "label": "Green",
+     "isApplied": false,
+     "count": 1714,
+     "value": "green",
+     "filterValue": "tenant~colorgroup:green",
+     "isDisplayed": true,
+     "childrenFacetValues": []
+    },
+    {
+     "label": "Gold",
+     "isApplied": false,
+     "count": 1365,
+     "value": "gold",
+     "filterValue": "tenant~colorgroup:gold",
+     "isDisplayed": true,
+     "childrenFacetValues": []
+    },
+    {
+     "label": "Purple",
+     "isApplied": false,
+     "count": 1326,
+     "value": "purple",
+     "filterValue": "tenant~colorgroup:purple",
+     "isDisplayed": true,
+     "childrenFacetValues": []
+    },
+    {
+     "label": "Silver",
+     "isApplied": false,
+     "count": 1143,
+     "value": "silver",
+     "filterValue": "tenant~colorgroup:silver",
+     "isDisplayed": true,
+     "childrenFacetValues": []
+    },
+    {
+     "label": "Ivory",
+     "isApplied": false,
+     "count": 967,
+     "value": "ivory",
+     "filterValue": "tenant~colorgroup:ivory",
+     "isDisplayed": true,
+     "childrenFacetValues": []
+    },
+    {
+     "label": "Orange",
+     "isApplied": false,
+     "count": 766,
+     "value": "orange",
+     "filterValue": "tenant~colorgroup:orange",
+     "isDisplayed": true,
+     "childrenFacetValues": []
+    },
+    {
+     "label": "Yellow",
+     "isApplied": false,
+     "count": 579,
+     "value": "yellow",
+     "filterValue": "tenant~colorgroup:yellow",
+     "isDisplayed": true,
+     "childrenFacetValues": []
+    },
+    {
+     "label": "Clear",
+     "isApplied": false,
+     "count": 98,
+     "value": "clear",
+     "filterValue": "tenant~colorgroup:clear",
+     "isDisplayed": true,
+     "childrenFacetValues": []
+    }
+   ]
+  }
+ ],
+ "startIndex": 0,
+ "pageSize": 0,
+ "pageCount": 0,
+ "totalCount": 42716,
+ "items": []
+}

@@ -1,0 +1,138 @@
+﻿[
+ {
+  "valueSequence": 23,
+  "value": "Black",
+  "content": {
+   "localeCode": "en-US",
+   "stringValue": "Black"
+  }
+ },
+ {
+  "valueSequence": 24,
+  "value": "Blue",
+  "content": {
+   "localeCode": "en-US",
+   "stringValue": "Blue"
+  }
+ },
+ {
+  "valueSequence": 25,
+  "value": "Brown",
+  "content": {
+   "localeCode": "en-US",
+   "stringValue": "Brown"
+  }
+ },
+ {
+  "valueSequence": 26,
+  "value": "Gold",
+  "content": {
+   "localeCode": "en-US",
+   "stringValue": "Gold"
+  }
+ },
+ {
+  "valueSequence": 27,
+  "value": "Green",
+  "content": {
+   "localeCode": "en-US",
+   "stringValue": "Green"
+  }
+ },
+ {
+  "valueSequence": 28,
+  "value": "Grey",
+  "content": {
+   "localeCode": "en-US",
+   "stringValue": "Grey"
+  }
+ },
+ {
+  "valueSequence": 29,
+  "value": "Ivory",
+  "content": {
+   "localeCode": "en-US",
+   "stringValue": "Ivory"
+  }
+ },
+ {
+  "valueSequence": 30,
+  "value": "Khaki",
+  "content": {
+   "localeCode": "en-US",
+   "stringValue": "Khaki"
+  }
+ },
+ {
+  "valueSequence": 31,
+  "value": "Orange",
+  "content": {
+   "localeCode": "en-US",
+   "stringValue": "Orange"
+  }
+ },
+ {
+  "valueSequence": 32,
+  "value": "Pink",
+  "content": {
+   "localeCode": "en-US",
+   "stringValue": "Pink"
+  }
+ },
+ {
+  "valueSequence": 33,
+  "value": "Purple",
+  "content": {
+   "localeCode": "en-US",
+   "stringValue": "Purple"
+  }
+ },
+ {
+  "valueSequence": 34,
+  "value": "Red",
+  "content": {
+   "localeCode": "en-US",
+   "stringValue": "Red"
+  }
+ },
+ {
+  "valueSequence": 35,
+  "value": "Silver",
+  "content": {
+   "localeCode": "en-US",
+   "stringValue": "Silver"
+  }
+ },
+ {
+  "valueSequence": 36,
+  "value": "White",
+  "content": {
+   "localeCode": "en-US",
+   "stringValue": "White"
+  }
+ },
+ {
+  "valueSequence": 37,
+  "value": "Yellow",
+  "content": {
+   "localeCode": "en-US",
+   "stringValue": "Yellow"
+  }
+ },
+ {
+  "valueSequence": 38,
+  "value": "Clear",
+  "content": {
+   "localeCode": "en-US",
+   "stringValue": "Clear"
+  }
+ },
+ {
+  "valueSequence": 39,
+  "value": "Multiple Colors",
+  "content": {
+   "localeCode": "en-US",
+   "stringValue": "Multiple Colors"
+  }
+ }
+]
