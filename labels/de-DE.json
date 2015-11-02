@@ -1,4 +1,4 @@
-﻿{
+{
 
     "dateFormat": "j.n.Y",
 
@@ -154,7 +154,7 @@
     "paypalExpressCancelled" : "Die Paypal Express Transaktion wurde abgebrochen. Bitte wählen Sie eine andere Zahlungsmethode.",
     "checkByMail"   : "Überprüfen Sie per Mail",
     "useShippingAddress"   : "Verwenden Sie meine Lieferadresse",
-    "optIn"   : "Ja, bitte fügen Sie mich zu Ihrer Mailing-Liste",
+    "optIn"   : "Ja! Ich möchte Neuigkeiten und besondere Angebote von {0} erhalten!",
     "promoCodeError"   : "Sorry, '{0}' nicht erscheint, um eine gültige Gutscheincode.",
     "reviewOrder"   : "Füllen Sie Ihre Bestellung",
     "reviewOrderText"   : "Bitte lesen Sie alle Informationen, die auf dieser Seite und, wenn nötig, Änderungen vornehmen, bevor Sie Ihre Bestellung.",
@@ -207,7 +207,7 @@
     "storeCredits"   : "Shop Credits",
     "storeCreditAvailable"   : "Sie haben die folgenden Speicherkredite zur Verfügung   :",
     "storeCreditApplied"   : "Sie haben die folgenden Speicherkredite aufgebracht, um Ihre Bestellung   :",
-    "digitalCredits"   : "Store Credit / Gift Card Code",
+    "digitalCredits"   : "Geschenk-Karte und Shop Kredit",
     "digitalCreditCode"   : "Code",
     "digitalCreditBalance"   : "Balance",
     "digitalCreditAmtToUse"   : "Amt. zu bewerben,",

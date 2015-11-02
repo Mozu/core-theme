@@ -167,7 +167,7 @@
   "paypalExpressCancelled" : "The Paypal Express transaction was cancelled.  Please select another payment method.",
   "checkByMail"          : "Check by Mail",
   "useShippingAddress"   : "Use my shipping address",
-  "optIn"                : "Yes, please add me to your mailing list",
+  "optIn"                : "Yes! I want to receive news and special offers from {0}!",
   "promoCodeError"     : "Sorry, '{0}' does not appear to be a valid coupon code.",
   "reviewOrder"          : "Complete Your Order",
   "reviewOrderText": "Please review all of the information on this page and, if necessary, make changes before placing your order.",
@@ -223,7 +223,7 @@
   "storeCreditAvailable" : "You have the following store credits available:",
   "storeCreditApplied"   : "You have applied the following store credits to your order:",
 
-  "digitalCredits"      : "Store Credit / Gift Card Code",
+  "digitalCredits"      : "Gift Card & Store Credit",
   "digitalCreditCode"   : "Code",
   "digitalCreditBalance"  : "Balance",
   "digitalCreditAmtToUse" : "Amt. to Apply",
