@@ -13,6 +13,7 @@ using Mozu.SiteBuilder.Mvc.Security;
 using Mozu.SiteBuilder.UX.Admin.Api;
 using Mozu.SiteBuilder.UX.Admin.Helpers;
 using System.Threading.Tasks;
+using Mozu.SiteBuilder.Mvc.Helpers;
 
 namespace Mozu.SiteBuilder.UX.Admin.Controllers
 {
@@ -26,6 +27,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Controllers
         readonly ICookieProvider _cookieProvider;
         readonly IAuthenticationHelper _authHelper;
         readonly ISiteBuilderApiContext _apiContext;
+        readonly LoginAppRouteHelper _loginAppRouter;
 
         public AuthController( IAuthenticationHelper authHelper, IUserHelper userHelper, IPasswordHelper passwordHelper,ISettings settings , ISiteBuilderApiContext  apiContext, ICookieProvider cookieProvider, HttpRequestMessage request)
         {
@@ -35,53 +37,52 @@ namespace Mozu.SiteBuilder.UX.Admin.Controllers
             _cookieProvider = cookieProvider;
             _authHelper = authHelper;
             _apiContext = apiContext;
-                
+
             _log = LoggingService.LoggerFor<AuthController>();
+            _loginAppRouter = new LoginAppRouteHelper(settings.LoginPath);
+            _handledByRP =  IsHeaderPresent(request, Mozu.Core.Api.Contracts.Constants.Headers.ORIGINAL_URL);
+        }
+
+        static bool IsHeaderPresent(HttpRequestMessage request, string name)
+        {
             IEnumerable<string> values;
-            if (request.Headers.TryGetValues(Mozu.Core.Api.Contracts.Constants.Headers.ORIGINAL_URL, out values))
-            {
-                this._handledByRP = true;
-            }
+            return request.Headers.TryGetValues(name, out values);
         }
 
         [HttpGet]
         public HttpResponseMessage FedLogin(string returnUrl)
         {
-            var redir = _settings.LoginPath + "/to?scopeType=Tenant&redirectUrl=" + returnUrl;
-            if (!_handledByRP)
-            {
-                redir += "&PostbackUrl=http://" + GetHost() + "/admin/auth/pants&showdev=true";
-            }
+            var postback = !_handledByRP ? string.Format("http://{0}/admin/auth/pants", GetHost()) : null;
+            var redir = _loginAppRouter.To(UserScopeType.Tenant, _apiContext.TenantId, returnUrl, postback, true);
 
             var message = new System.Net.Http.HttpResponseMessage(HttpStatusCode.Redirect);
-            message.Headers.Location = new Uri(redir);
+            message.Headers.Location = redir;
             return message;
         }
 
+        /// <summary>
+        /// As opposed to the FedLogin above, we don't want to auto-redirect back here so we don't provide a scopeid or redirecturl
+        /// </summary>
+        /// <returns></returns>
         [HttpGet]
         public HttpResponseMessage Launchpad()
         {
-            var redir = _settings.LoginPath;
-            if (!_handledByRP)
-            {
-                redir += "?postbackUrl=http://" + GetHost() + "/admin/auth/pants&scopeType=tenant&showdev=true";
-            }
+            var postback = !_handledByRP ? string.Format("http://{0}/admin/auth/pants", GetHost()) : null;
+            var redir = _loginAppRouter.To(UserScopeType.Tenant, null, null, postback, true);
             
             var resp = new HttpResponseMessage(HttpStatusCode.Redirect);
-            resp.Headers.Location = new Uri(redir);
+            resp.Headers.Location = redir;
             return resp;
         }
 
         [HttpGet]
         public HttpResponseMessage Logout()
         {
-            var redir = _settings.LoginPath + "/home/Logout";
-            if (!_handledByRP)
-            {
-                redir += "?PostbackUrl=http://" + GetHost() + "/admin/auth/pants&scopeType=tenant&showdev=true";
-            }
+            var postback = !_handledByRP ? string.Format("http://{0}/admin/auth/pants", GetHost()) : null;
+            var redir = _loginAppRouter.Logout(UserScopeType.Tenant, postback, true);
+
             var resp = new HttpResponseMessage(HttpStatusCode.Redirect );
-            resp.Headers.Location = new Uri(redir);
+            resp.Headers.Location = redir;
             return resp;
         }
 

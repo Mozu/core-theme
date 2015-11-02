@@ -25,7 +25,7 @@ using Mozu.CommerceRuntime.Contracts.Clients;
 
 namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
 {
-    [DataViewModeEnforcementAttribute]
+    [DataViewModeEnforcement]
     public class AuthController : BaseApiController
     {
         
@@ -102,12 +102,11 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
         protected async Task<ServiceClientResponse<CustomerAuthTicket>> DoLogin(string email, string password)
         {
             return await LoginAndTrack(() => _authTicketWebApiClient.CreateUserAuthTicket(new CustomerUserAuthInfo()
-             {
+            {
                 Username = email,
                 Password = password
-
             }));
-                }
+        }
             
         protected async Task<ServiceClientResponse<StreamContent>> DoResetPassword(ResetPasswordInfo info)
         {
@@ -177,9 +176,7 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
                     Path = "login",
                     DocumentTypeFQN = "pageTemplateContent@mozu"
                 }
-
             };
-
 
             return View("Login", new { ReturnUrl = returnUrl });
         }
@@ -197,9 +194,7 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
                     Path = "forgot-password",
                     DocumentTypeFQN = "pageTemplateContent@mozu"
                 }
-
             };
-
 
             return View("Forgot-Password", new { ReturnUrl = returnUrl });
         }
