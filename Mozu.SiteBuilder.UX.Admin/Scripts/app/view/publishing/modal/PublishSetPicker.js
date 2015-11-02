@@ -61,7 +61,7 @@ Ext.define('Taco.view.publishing.modal.PublishSetPicker', {
                         callback: function () {
                             cmp.setValue(me.record.get('publishSetCode'));
                             if (me.record.get('publishDate')) {
-                                me.down('#publish-date-field').setValue(Ext.util.Format.date(me.record.get('publishDate'), 'M/D/Y g:i a'));
+                                me.down('#publish-date-field').setValue(Ext.util.Format.date(me.record.get('publishDate'), 'M j, Y g:ia T'));
                             }
                         }
                     });
@@ -73,16 +73,16 @@ Ext.define('Taco.view.publishing.modal.PublishSetPicker', {
         });
 
         this.createPublishSetButton = Ext.widget({
-            xtype: "button",
-            ui: "action",
-            scale: "medium",
-            text: "Create",
+            xtype: 'button',
+            ui: 'action',
+            scale: 'medium',
+            text: 'Create',
             margin:{
                 left:4
             },
             handler: this.createPublishSet,
             scope:me
-        })
+        });
 
         this.publishSetPickerContainer = Ext.widget({
             xtype: 'fieldcontainer',
