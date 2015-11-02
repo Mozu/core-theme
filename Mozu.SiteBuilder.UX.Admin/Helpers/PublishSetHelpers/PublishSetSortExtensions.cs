@@ -8,7 +8,8 @@ namespace Mozu.SiteBuilder.UX.Admin.Helpers.PublishSetHelpers
     {
 
         private const string CODE_PROPERTY = "code";
-        private const string NAME_PROPERTY = "name";        
+        private const string NAME_PROPERTY = "name";
+        private const string PRODUCT_NAME = "content.productname";    
         private const string PUBLISH_DATE_PROPERTY = "publishdate";
         private const string STATUS_PROPERTY = "status";        
         private const string CREATE_DATE_PROPERTY = "createdate";        
@@ -41,14 +42,16 @@ namespace Mozu.SiteBuilder.UX.Admin.Helpers.PublishSetHelpers
                     return NAME_PROPERTY;
                 case "name":
                     return NAME_PROPERTY;
-                case "publishDate":
+                case "publishdate":
                     return PUBLISH_DATE_PROPERTY;
                 case "status":
                     return STATUS_PROPERTY;
-                case "createDate":
+                case "createdate":
                     return CREATE_DATE_PROPERTY;
-                case "updateDate":
+                case "updatedate":
                     return UPDATE_DATE_PROPERTY;
+                case "productname":
+                    return PRODUCT_NAME;
                 default:
                    return item.property.ToLowerInvariant();
             }

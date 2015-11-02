@@ -192,9 +192,18 @@ Ext.define('Taco.view.publishing.grid.Draft', {
 
         var me = this,
             col = {
-                name:   { 
+                name: { 
                     xtype: 'gridcolumn',
                     dataIndex: 'name',
+                    stateId: 'name',
+                    minWidth: 100,
+                    text: 'Name',
+                    flex: 2,
+                    sortable: true
+                },
+                productName: { 
+                    xtype: 'gridcolumn',
+                    dataIndex: 'productName',
                     stateId: 'name',
                     minWidth: 100,
                     text: 'Name',
@@ -382,7 +391,7 @@ Ext.define('Taco.view.publishing.grid.Draft', {
                     col.actions
                 ],
                 product: [
-                    col.name,
+                    col.productName,
                     col.draftUpdateDate,
                     col.updatedBy,
                     col.id,
@@ -411,7 +420,7 @@ Ext.define('Taco.view.publishing.grid.Draft', {
                     col.actions,
                 ],
                 product: [
-                    col.name,
+                    col.productName,
                     col.publishSetCode,
                     col.publishSetName,
                     col.publishDate,

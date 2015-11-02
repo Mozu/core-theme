@@ -93,6 +93,13 @@ Ext.define('Taco.model.PublishSetItem', {
             type: 'string'
         },
         {
+            name: 'productName',
+            type: 'string',
+            convert: function(value, record) {
+                return record.get('name');
+            }
+        },
+        {
             name: 'listFQN',
             type: 'string'
         },
