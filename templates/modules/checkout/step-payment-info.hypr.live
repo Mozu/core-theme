@@ -36,6 +36,8 @@
         </div>
         {% endif %}
     {% endfor %} 
+    
+    
                     </div>
         
     <div class="mz-formstep-fields mz-l-stack">
@@ -88,7 +90,7 @@
             {% endif %}
         {% else %}
         
-            <h4 class="mz-checkout-nopaymentrequired">{{ labels.noPaymentRequired|string_format(model.remainingTotal|currency) }}</h4>
+            <h4 class="mz-checkout-nopaymentrequired mz-checkoutform">{{ labels.noPaymentRequired|string_format(model.remainingTotal|currency) }}</h4>
 
             {% endif %}
     </div>
