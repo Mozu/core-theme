@@ -72,7 +72,7 @@
     
     {% with siteContext.checkoutSettings.externalPaymentWorkflowSettings|findwhere("isEnabled", true) as externalPaymentWorkflowsEnabled %} 
         {% if externalPaymentWorkflowsEnabled %}
-            <div class="mz-l-formfieldgroup-row mz-paymentselector-separator">
+            <div class="mz-l-formfieldgroup-row">
                 <div class="mz-paymentselector-label-separator">&ndash; {{ labels.or }} &ndash;</div>
             </div>
             {% for externalPayment in siteContext.checkoutSettings.externalPaymentWorkflowSettings %}
