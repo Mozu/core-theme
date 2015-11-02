@@ -111,15 +111,32 @@ Ext.define('Taco.view.storefrontProduct.Grid', {
             margin: '0 10 10 0',
             listeners: {
                 afterrender: function(component, eOpts) {
-                    var item = this.store.data.items[0];
-                    this.setValue(item);
+                    var item = component.store.data.items[0];
+                    component.setValue(item);
                     me.store.proxy.extraParams.siteId = item.data.id;
-                    // TODO: needs to persist the site context on the form record, or does it?
+                    if (item.raw.masterCatalog.productPublishingMode === 'Live') {
+                        me.dataViewModeSelector.setValue('Live').hide();
+                    } else {
+                        me.dataViewModeSelector.show();
+                    }
                 },
-                select: function (component, record) {
-                    me.fireEvent('taco-update-preview', {
-                        siteId: record[0].get('id')
-                    });
+                select: function (component, records) {
+                    var record = records[0];
+                    var data = {
+                        siteId: record.get('id')
+                    };
+                    if (record.raw.masterCatalog.productPublishingMode === 'Live') {
+                        me.dataViewModeSelector.setValue('Live').hide();
+                        me.sitePreviewDate.hide();
+                        data.dataViewMode = 'Live';
+                    } else {
+                        me.dataViewModeSelector.show();
+                        if (me.dataViewModeSelector.getValue() === 'Pending') {
+                            me.sitePreviewDate.show();
+                        }
+                    }
+
+                    me.fireEvent('taco-update-preview', data);
                 },
                 scope: me.siteSelector
             }
@@ -135,11 +152,12 @@ Ext.define('Taco.view.storefrontProduct.Grid', {
             forceSelection: true,
             value: 'Live',
             margin: '0 10 10 0',
+            hidden: true,
             listeners: {
                 select: function (source, records) {
                     var dataViewMode = source.getValue();
                     var data = {
-                        dataViewMode: dataViewMode
+                        dataViewMode: (dataViewMode === 'Staged') ? 'Pending' : 'Live'
                     };
                     if (dataViewMode === 'Staged') {
                         me.sitePreviewDate.show();
