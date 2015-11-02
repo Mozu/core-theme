@@ -46,7 +46,7 @@ Ext.define('Taco.view.searchTuningRule.grid.Keyword', {
 
     enableQuickFilters:false,
 
-    deletePromptMsg: 'Are you sure you want to delete this keyword?',
+    confirmDelete: false,
 
     advancedSearchConfig : {
         disableAdvancedSearch: true
@@ -210,14 +210,23 @@ Ext.define('Taco.view.searchTuningRule.grid.Keyword', {
                 text: 'Actions',
                 menuItems: [
                     {
-                        text: 'Delete',
-                        itemId: 'deleteMenuItem',
+                        text: 'Remove',
+                        itemId: 'removeMenuItem',
                         // deleteMenuColumnHandler can be found in Taco.core.ux.mixins.DeleteFromGrid
                         menuColumnHandler: 'deleteMenuColumnHandler',
                         //requiredBehaviors: {
                         //    model: 'Taco.model.Discount',
                         //    behavior: 'delete'
                         //},
+                        scope: me
+                    }, {
+                        text: 'Remove All',
+                        itemId: 'removeAllMenuItems',
+                        menuColumnHandler: function() {
+                            me.store.getProxy().data.items = [];
+                            me.store.removeAll();
+                            me.store.loadPage(1);
+                        },
                         scope: me
                     }
                 ]

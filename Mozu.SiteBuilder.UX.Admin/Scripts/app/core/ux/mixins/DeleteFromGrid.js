@@ -28,6 +28,9 @@ Ext.define('Taco.core.ux.mixins.DeleteFromGrid', {
     mixins: {
         permissions: 'Taco.core.ux.mixins.Permissions'
     },
+
+    confirmDelete: true,
+
     init: function () {
         var me = this;
         this.mixins.permissions.constructor.apply(this, arguments);
@@ -112,8 +115,23 @@ Ext.define('Taco.core.ux.mixins.DeleteFromGrid', {
      */
     doDelete: function (record, grid) {
         var me = this,
-            data = null;
-        // select next item, next || last
+            removeRecord = function (rec) {
+                me.deleteInProgress = true;
+                var store = grid.getStore();
+                grid.setLoading(true);
+                store.remove(rec);
+                store.sync({
+                    success: me.deleteSuccess,
+                    failure: me.deleteFailure,
+                    scope:me
+                });
+            };
+
+        if (!me.confirmDelete) {
+            removeRecord(record);
+            return;
+        }
+
         Ext.MessageBox.show({
             title: 'Delete',
             // pushes the buttons to the right to be consistant with our dialog ux.
@@ -125,15 +143,7 @@ Ext.define('Taco.core.ux.mixins.DeleteFromGrid', {
             buttons: Ext.Msg.YESNO,
             fn: function (val) {
                 if (val === 'yes') {
-                    me.deleteInProgress = true;
-                    var store = grid.getStore();
-                    grid.setLoading(true);
-                    store.remove(record);
-                    store.sync({
-                        success: me.deleteSuccess,
-                        failure: me.deleteFailure,
-                        scope:me
-                    });
+                    removeRecord(record);
                 }
             }
         });
