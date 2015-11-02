@@ -1,7 +1,7 @@
     <h3 class="mz-formstep-header mz-checkoutform-header">
         {{ labels.shippingMethod }}
     </h3>
-    <div class="mz-formstep-body">
+    <div class="mz-formstep-body mz-checkoutform">
         {% if model.requiresFulfillmentInfo %}
             {% if model.availableShippingMethods.length %}
                 {% for method in model.availableShippingMethods %}
