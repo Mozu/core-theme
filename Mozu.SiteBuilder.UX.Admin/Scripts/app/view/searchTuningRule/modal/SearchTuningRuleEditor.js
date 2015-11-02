@@ -47,7 +47,7 @@ Ext.define('Taco.view.searchTuningRule.modal.SearchTuningRuleEditor', {
         // Todo: Need to listen for a navigation (via backbutton) and cancel the navigation if editor is dirty or prompt user to cancel and navigate.
         // Todo: Create override/mixin/plugin for Ext.Window to add support for relative height and width with min max values.
 
-        this.title = (me.isCreateMode ? 'New Rule' : me.record.get('name'));
+        this.title = (me.isCreateMode ? 'New Product Ranking Rule' : me.record.get('name'));
 
         this.initUi();
         this.callParent(arguments);
