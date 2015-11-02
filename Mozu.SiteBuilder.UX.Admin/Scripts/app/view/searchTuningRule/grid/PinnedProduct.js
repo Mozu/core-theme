@@ -5,7 +5,11 @@
 Ext.define('Taco.view.searchTuningRule.grid.PinnedProduct', {
     extend: 'Taco.core.ux.browser.SearchList',
     alias: 'widget.searchTuningRule-pinned-grid',
-    requires: [],
+    requires: [
+        'Ext.MessageBox',
+        'Taco.core.ux.mixins.GridContextMenu',
+        'Taco.model.PinnedProduct'
+    ],
     stateful: false,
     enableNavHeader: false,
     autoHeight: true,
@@ -29,6 +33,9 @@ Ext.define('Taco.view.searchTuningRule.grid.PinnedProduct', {
         plugins: {
             ptype: 'gridviewdragdrop'
         }
+    },
+    mixins: {
+      gridcontextmenu: 'Taco.core.ux.mixins.GridContextMenu'
     },
 
     deferEmtpyText: false,
@@ -137,9 +144,19 @@ Ext.define('Taco.view.searchTuningRule.grid.PinnedProduct', {
         this.getView().refresh();
     },
 
+    addProduct: function(record, index) {
+        this.store.insert(index, record);
+        this.refresh();
+    },
+
     removeProduct: function(record) {
         this.store.remove(record);
         this.refresh();
+    },
+
+    moveProduct: function(record, index) {
+        this.removeProduct(record);
+        this.addProduct(record, index);
     },
 
     getActionColumn: function () {
@@ -160,18 +177,49 @@ Ext.define('Taco.view.searchTuningRule.grid.PinnedProduct', {
     },
 
     getActionItems: function() {
-        var me = this,
-            actions = [];
-                   
-        actions.push({
-          text: 'Remove',
-          menuColumnHandler: function(item, eventData) {
-            var record = eventData.record;
-            me.removeProduct(record);
-          }
-        });
+        var me = this;
+        return [
+          {
+            text: 'Move to Top',
+            menuColumnHandler: function(item, eventData) {
+              var record = eventData.record;
+              me.removeProduct(record);
+              me.moveProduct(record, 0);
+            }
+          },
+          {
+            text: 'Move to Position',
+            menuColumnHandler: function(item, eventData) {
+                var record = eventData.record;
+              
+                Ext.MessageBox.prompt('Move to Position', 'Enter a value from 1 to ' + me.store.getCount(), function (val, index) {
+                    index = parseInt(index, 10) - 1; // parse the string, and fix for zero-index
+                    me.moveProduct(record, index);
+                }, me);
 
-        return actions;
+            }
+          },
+          {
+            text: 'Move to Bottom',
+            menuColumnHandler: function(item, eventData) {
+              var record = eventData.record;
+              me.moveProduct(record, me.store.getCount());
+            }
+          },
+          {
+            text: 'Remove',
+            menuColumnHandler: function(item, eventData) {
+              var record = eventData.record;
+              me.removeProduct(record);
+            }
+          },
+          {
+            text: 'Remove All',
+            menuColumnHandler: function(item, eventData) {
+              me.store.removeAll();
+            }
+          }
+        ];
     },
 
   getColumnConfig: function () {
