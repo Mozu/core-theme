@@ -155,15 +155,15 @@ Ext.define('Taco.view.storefrontProduct.Grid', {
             hidden: true,
             listeners: {
                 select: function (source, records) {
-                    var dataViewMode = source.getValue();
+                    var fieldValue = source.getValue();
                     var data = {
-                        dataViewMode: (dataViewMode === 'Staged') ? 'Pending' : 'Live'
+                        dataViewMode: (fieldValue === 'Staged') ? 'Pending' : 'Live' // translation cause the service expects 'pending'
                     };
-                    if (dataViewMode === 'Staged') {
+                    if (fieldValue === 'Staged') {
                         me.sitePreviewDate.show();
                     } else {
                         me.sitePreviewDate.hide();
-                        data.previewDate = undefined;
+                        data.previewDate = undefined; // unset for api call
                     }
                     me.fireEvent('taco-update-preview', data);
                 },
