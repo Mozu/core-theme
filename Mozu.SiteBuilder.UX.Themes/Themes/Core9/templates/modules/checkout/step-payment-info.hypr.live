@@ -4,7 +4,7 @@
 </h3>
 <div class="mz-formstep-body">
     <div class="mz-formstep-summary mz-l-stack">
-    {% for payment in model.activePayments %}
+        {% for payment in model.activePayments %}
         {% if payment.billingInfo.paymentType == "Check" %}
         <div class="mz-l-stack-section mz-checkout-payment  mz-checkoutform">
             <div class="mz-l-stack-section mz-checkout-current-payment">{{ labels.checkByMail }}</div>
@@ -35,7 +35,9 @@
             {% endif %}
         </div>
         {% endif %}
-    {% endfor %}
+        {% endfor %}
+    
+    
     </div>
 
     <div class="mz-formstep-fields mz-l-stack">
@@ -88,7 +90,7 @@
             {% endif %}
         {% else %}
         
-            <h4 class="mz-checkout-nopaymentrequired">{{ labels.noPaymentRequired|string_format(model.remainingTotal|currency) }}</h4>
+            <h4 class="mz-checkout-nopaymentrequired mz-checkoutform">{{ labels.noPaymentRequired|string_format(model.remainingTotal|currency) }}</h4>
 
         {% endif %}
     </div>
