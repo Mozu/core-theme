@@ -310,7 +310,7 @@ namespace Mozu.SiteBuilder.Mvc.Contexts
                 }
             }
 
-            if ( urlBase != null && urlBase.IndexOf('?')>0)
+            if (urlBase != null && urlBase.IndexOf('?') > 0)
             {
                 urlBase = urlBase.Substring(0, urlBase.IndexOf('?'));
             }
