@@ -959,8 +959,8 @@
                         var activePayments = order.apiModel.getActivePayments();
                         var creditCardPayment = activePayments && _.findWhere(activePayments, { paymentType: 'CreditCard' });
                         //Clear card if no credit card payments exists
-                        if (!creditCardPayment) {
-                            self.clear('card');
+                        if (!creditCardPayment && self.get('card')) {
+                            self.get('card').clear();
                         }
                         if (payment) {
                             switch (payment.paymentType) {
