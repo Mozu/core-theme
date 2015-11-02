@@ -95,7 +95,7 @@
             {% endif %}
     </div>
 
-    <div class="mz-l-stack-section mz-checkoutform">
+    <div class="mz-formfieldgroup-row mz-payment-emailgroup mz-paymentselector-separator mz-checkoutform">
             <div class="mz-l-formfieldgroup">
                 <div class="mz-l-formfieldgroup-row">
                     <div class="mz-l-formfieldgroup-cell">
@@ -119,7 +119,7 @@
             </div>
         </div>
         
-    <div class="mz-formfieldgroup-row mz-checkoutform">
+    <div class="mz-formfieldgroup-row mz-paymentselector-separator mz-checkoutform">
             {% include "modules/checkout/checkout-digital-credit" %}
     </div>
 
