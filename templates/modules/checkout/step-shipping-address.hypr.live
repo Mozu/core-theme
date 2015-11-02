@@ -1,12 +1,12 @@
 ﻿    <h3 class="mz-formstep-header mz-checkoutform-header">
         {{ labels.shippingInformation }}
-        {% if model.requiresFulfillmentInfo or model.requiresDigitalFulfillmentContact %}
-          <a href="javascript:;" class="mz-formstep-edit" data-mz-action="edit">{{ labels.change }}</a>
-        {% endif %}
     </h3>
     <div class="mz-formstep-body">
-      {% if not model.address.candidateValidatedAddresses %}
-      <div class="mz-formstep-summary mz-addresssummary mz-checkoutform">
+        {% if model.requiresFulfillmentInfo or model.requiresDigitalFulfillmentContact %}
+        <a href="javascript:;" class="mz-formstep-edit" data-mz-action="edit">{{ labels.change }}</a>
+        {% endif %}
+        {% if not model.address.candidateValidatedAddresses %}
+        <div class="mz-formstep-summary mz-addresssummary mz-checkoutform">
         {% if model.requiresFulfillmentInfo %}
           {% include "modules/common/address-summary" %}      
         {% else %}
