@@ -15,7 +15,7 @@ Ext.define('Taco.view.searchTuningRule.form.PinnedProduct', {
 
     margin: '0 0 20 0',
 
-    title: 'Promoted Products',
+    title: 'Product Ranking Rules',
     config: {
         isCreateMode: false
     },
