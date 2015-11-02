@@ -12,7 +12,7 @@ Ext.define('Taco.view.searchTuningRule.Form', {
     autoDestroy: true,
     itemId: 'taco-searchTuningRule-form',
 
-    createTitle: 'New Rule',
+    createTitle: 'New Product Ranking Rule',
     editTitle: '{[values.record.data.name]}',
     isCatalogLevel: false,
     categoryCode: null,

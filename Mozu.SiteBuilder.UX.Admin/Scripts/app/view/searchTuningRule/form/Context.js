@@ -68,7 +68,7 @@ Ext.define('Taco.view.searchTuningRule.form.Context', {
             xtype: 'combobox',
             name: 'categoryFilters',
             flex: 1,
-            emptyText: 'Insert Category Names or Select Using the Add Button',
+            emptyText: 'Search for Categories or click Add Button',
             margin: '0 10 0 0',
             store: catStore,
             getStore: function () {

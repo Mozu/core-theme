@@ -125,7 +125,7 @@ Ext.define('Taco.view.searchTuningRule.grid.Keyword', {
             field = this.getQuickAddField(),
             value = field.getValue().trim(),
             // split the value on comma and space and turn into an array.
-            valueArray = (value) ? value.split(/[ ,]+/) : [];
+            valueArray = (value) ? value.split(/[,]+/) : [];
         // remove any empty strings;
         valueArray = Ext.Array.clean(valueArray);
         //

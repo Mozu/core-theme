@@ -18,7 +18,7 @@ Ext.define('Taco.view.searchTuningRule.modal.SearchTuningRuleEditor', {
     closable: true,
     cls: Taco.baseCSSPrefix + 'orderform-editor',
     height: '90%',
-    title: 'New Rule',
+    title: 'New Product Ranking Rule',
     width: '80%',
     isCreateMode: true,
     record: null,
