@@ -254,7 +254,7 @@ Ext.define("Taco.view.category.Form", {
 
 
         this.items.push(
-            Ext.create('Taco.view.searchTuningRule.Grid', {
+            Ext.create('Taco.view.productRanking.Grid', {
                 title: ("Product Ranking Rules" + (this.record.phantom ? ' - editable after saving' : '')),
                 margin: '50 0 0 0',
                 useWhiteContainer:true,

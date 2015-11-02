@@ -1,10 +1,10 @@
 ﻿/**
- * @class Taco.store.SearchTuningRules
+ * @class Taco.store.ProductRankings
  */
 
-    Ext.define('Taco.store.SearchTuningRules', {
+    Ext.define('Taco.store.ProductRankings', {
         extend: 'Ext.data.Store',
-        model: 'Taco.model.SearchTuningRule',
+        model: 'Taco.model.ProductRanking',
         remoteFilter: true,
         pageSize: 25,
         storeManagerConfig: {

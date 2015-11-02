@@ -1,10 +1,10 @@
 /**
-* @class Taco.view.searchTuningRule.grid.PinnedProduct
+* @class Taco.view.productRanking.grid.PinnedProduct
 */
 
-Ext.define('Taco.view.searchTuningRule.grid.PinnedProduct', {
+Ext.define('Taco.view.productRanking.grid.PinnedProduct', {
     extend: 'Taco.core.ux.browser.SearchList',
-    alias: 'widget.searchTuningRule-pinned-grid',
+    alias: 'widget.productRanking-pinned-grid',
     requires: [
         'Ext.MessageBox',
         'Taco.core.ux.mixins.GridContextMenu',
@@ -80,7 +80,7 @@ Ext.define('Taco.view.searchTuningRule.grid.PinnedProduct', {
 
     listeners: {
         afterrender: function() {
-          var record = this.up('#taco-searchTuningRule-form').record;
+          var record = this.up('#taco-productRanking-form').record;
           var products = record.data.boostedProducts;
           for (var i = 0; i < products.length; i++) {
             this.store.data.add(Ext.create('Taco.model.PinnedProduct', products[i]));
@@ -93,7 +93,7 @@ Ext.define('Taco.view.searchTuningRule.grid.PinnedProduct', {
                     return me.store.find(me.filterProperty, rec.get(me.filterProperty)) === -1;
                 },
                 recordsToAdd =[],
-                form = this.up('#taco-searchTuningRule-form').pinned,
+                form = this.up('#taco-productRanking-form').pinned,
                 placement = form.placementSelect.getValue(),
                 grid = form.pinnedGrid,
                 selectionModel = grid.getSelectionModel(),

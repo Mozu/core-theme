@@ -1,16 +1,16 @@
 ﻿/**
- * The Search Tuning Rule from
+ * The Product Ranking Rule form
  */
-Ext.define('Taco.view.searchTuningRule.Form', {   
+Ext.define('Taco.view.productRanking.Form', {   
     extend: 'Taco.core.ux.form.NavForm2',
     requires: [
-        'Taco.view.searchTuningRule.form.General',
-        'Taco.view.searchTuningRule.form.Context',
-        'Taco.view.searchTuningRule.form.PinnedProduct',
-        'Taco.view.searchTuningRule.form.BlockedProduct'
+        'Taco.view.productRanking.form.General',
+        'Taco.view.productRanking.form.Context',
+        'Taco.view.productRanking.form.PinnedProduct',
+        'Taco.view.productRanking.form.BlockedProduct'
     ],
     autoDestroy: true,
-    itemId: 'taco-searchTuningRule-form',
+    itemId: 'taco-productRanking-form',
 
     createTitle: 'New Product Ranking Rule',
     editTitle: '{[values.record.data.name]}',
@@ -27,7 +27,7 @@ Ext.define('Taco.view.searchTuningRule.Form', {
 
         this.items = [
             {
-                xtype: 'taco-searchTuningRule-general',
+                xtype: 'taco-productRanking-general',
                 itemId: 'general',
                 parentForm: this,
                 record: me.record,
@@ -35,7 +35,7 @@ Ext.define('Taco.view.searchTuningRule.Form', {
                 manageHeight: true
             }, 
             {
-                xtype: 'taco-searchTuningRule-context',
+                xtype: 'taco-productRanking-context',
                 itemId: 'context',
                 parentForm: this,
                 record: me.record,
@@ -44,14 +44,14 @@ Ext.define('Taco.view.searchTuningRule.Form', {
                 manageHeight: true
             },
             {
-                xtype: 'taco-searchTuningRule-pinned',
+                xtype: 'taco-productRanking-pinned',
                 itemId: 'pinned',
                 parentForm: this,
                 record: this.record,
                 manageHeight: true
             }, 
             {
-                xtype: 'taco-searchTuningRule-blocked',
+                xtype: 'taco-productRanking-blocked',
                 itemId: 'blocked',
                 parentForm: this,
                 record: this.record,

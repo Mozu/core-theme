@@ -1,12 +1,12 @@
 /**
- * @class Taco.view.searchTuningRule.grid.categoryGrid
+ * @class Taco.view.productRanking.grid.categoryGrid
 */
 
-Ext.define('Taco.view.searchTuningRule.grid.Category', {
+Ext.define('Taco.view.productRanking.grid.Category', {
     extend: 'Taco.core.ux.grid.Panel',
     requires: [
         'Ext.ux.data.PagingMemoryProxy',
-        'Taco.model.SearchTuningRule',
+        'Taco.model.ProductRanking',
         'Taco.core.ux.grid.plugins.AutoSelect',
         'Taco.model.Category',
         'Taco.store.Categories'

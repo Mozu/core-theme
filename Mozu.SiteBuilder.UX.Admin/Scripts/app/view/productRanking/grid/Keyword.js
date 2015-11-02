@@ -1,11 +1,11 @@
 /**
- * @class Taco.view.searchTuningRule.Keyword
+ * @class Taco.view.productRanking.Keyword
 */
-Ext.define('Taco.view.searchTuningRule.grid.Keyword', {
+Ext.define('Taco.view.productRanking.grid.Keyword', {
     extend: 'Taco.core.ux.grid.Panel',
     requires: [
         'Ext.ux.data.PagingMemoryProxy',
-        'Taco.model.SearchTuningRule',
+        'Taco.model.ProductRanking',
         'Taco.core.ux.grid.plugins.AutoSelect'
     ],
 

@@ -1,13 +1,13 @@
 ﻿/**
- * @class Taco.view.searchTuningRule.Grid
+ * @class Taco.view.productRanking.Grid
 */
-Ext.define('Taco.view.searchTuningRule.Grid', {
+Ext.define('Taco.view.productRanking.Grid', {
     extend: 'Taco.core.ux.browser.SearchList',
     //cls: Taco.baseCSSPrefix + 'searchlist',
 
     requires: [
-        'Taco.model.SearchTuningRule',
-        'Taco.store.SearchTuningRules',
+        'Taco.model.ProductRanking',
+        'Taco.store.ProductRankings',
         'Ext.Date',
         'Ext.form.Panel',
         'Taco.core.ux.BaseGrid',
@@ -16,10 +16,10 @@ Ext.define('Taco.view.searchTuningRule.Grid', {
         'Taco.core.ux.FilterableDataView',
         'Taco.core.ux.TextFilter',
         'Taco.core.ux.grid.MenuColumn',
-        'Taco.view.searchTuningRule.form.AdvancedSearch',
-        'Taco.view.searchTuningRule.modal.SearchTuningRuleEditor',
-        'Taco.view.searchTuningRule.Form',
-        'Taco.view.searchTuningRule.Edit'
+        'Taco.view.productRanking.form.AdvancedSearch',
+        'Taco.view.productRanking.modal.ProductRankingEditor',
+        'Taco.view.productRanking.Form',
+        'Taco.view.productRanking.Edit'
     ],
 
     mixins: {
@@ -35,9 +35,9 @@ Ext.define('Taco.view.searchTuningRule.Grid', {
     launchEditorOnClick:true,
 
     // Required by mixin: Taco.core.ux.mixins.LaunchEditor defined in SearchList
-    modelName: 'Taco.model.SearchTuningRule',
+    modelName: 'Taco.model.ProductRanking',
 
-    controllerName: 'SearchTuningRules',
+    controllerName: 'ProductRankings',
 
     enableNavHeader: true,
 
@@ -70,7 +70,7 @@ Ext.define('Taco.view.searchTuningRule.Grid', {
 
     enableQuickFilters:false,
 
-    deletePromptMsg : 'Are you sure you want to delete this search tuning rule?',
+    deletePromptMsg : 'Are you sure you want to delete this product ranking rule?',
 
     isCatalogLevel: false,
     categoryCode: null,
@@ -78,7 +78,7 @@ Ext.define('Taco.view.searchTuningRule.Grid', {
     isPopUp: false,
 
     advancedSearchConfig : {
-        advancedFormCls: 'Taco.view.searchTuningRule.form.AdvancedSearch',
+        advancedFormCls: 'Taco.view.productRanking.form.AdvancedSearch',
 
         quickFilterData: [
             [{ code: 'Code' }, 'Code'],
@@ -89,7 +89,7 @@ Ext.define('Taco.view.searchTuningRule.Grid', {
     onCreate: Ext.emptyFn,
 
     stateful: true,
-    stateId: 'statefulSearchTuningRuleGrid',
+    stateId: 'statefulProductRankingGrid',
 
     statics: {
 
@@ -111,10 +111,10 @@ Ext.define('Taco.view.searchTuningRule.Grid', {
         // initialize the delete mixin
         this.mixins.deleteFromGrid.init.apply(this);
 
-        me.mon(Taco.app, 'searchtuningrulecreated', me.reloadGrid, me);
+        me.mon(Taco.app, 'productrankingrulecreated', me.reloadGrid, me);
 
         me.store = Taco.core.data.StoreManager.getOrCreate({
-            type: 'Taco.store.SearchTuningRules',
+            type: 'Taco.store.ProductRankings',
             createOnly: true,
             pageSize: this.pageSize,
             autoLoad: false,
@@ -279,7 +279,7 @@ Ext.define('Taco.view.searchTuningRule.Grid', {
             actions.push({
                 text: 'Edit',
                 //requiredBehaviors: {
-                //    model: 'Taco.model.SearchTuningRule' //,
+                //    model: 'Taco.model.ProductRanking' //,
                 //    //behavior: 'update'
                 //},
                 menuColumnHandler: me.doEdit,
@@ -295,7 +295,7 @@ Ext.define('Taco.view.searchTuningRule.Grid', {
                 // deleteMenuColumnHandler can be found in Taco.core.ux.mixins.DeleteFromGrid
                 menuColumnHandler: 'deleteMenuColumnHandler',
                 //requiredBehaviors: {
-                //    model: 'Taco.model.SearchTuningRule',
+                //    model: 'Taco.model.ProductRanking',
                 //    //behavior: 'delete'
                 //},
                 scope: me
@@ -367,15 +367,15 @@ Ext.define('Taco.view.searchTuningRule.Grid', {
         if (!me.isPopUp) {
             Ext.defer(function () {
                 if (!isNew) {
-                    Taco.core.StateManager.attemptNavigate('SearchTuningRules/edit/' + record.getId(), {}); //{complexMetaData: {record: record}});
+                    Taco.core.StateManager.attemptNavigate('ProductRankings/edit/' + record.getId(), {}); //{complexMetaData: {record: record}});
                 } else {
-                    Taco.core.StateManager.attemptNavigate('SearchTuningRules/create', {});
+                    Taco.core.StateManager.attemptNavigate('ProductRankings/create', {});
                 }
             }, 1, this);
             return;
         }
 
-        Ext.create('Taco.view.searchTuningRule.modal.SearchTuningRuleEditor', {
+        Ext.create('Taco.view.productRanking.modal.ProductRankingEditor', {
             record: record,
             isCreateMode: isNew,
             categoryCode: (isNew) ? me.categoryCode : null,

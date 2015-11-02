@@ -1,13 +1,13 @@
 ﻿
 /**
- * @class Taco.view.searchTuningRule.modal.SearchTuningRuleEditor
+ * @class Taco.view.productRanking.modal.ProductRankingEditor
  */
 
-Ext.define('Taco.view.searchTuningRule.modal.SearchTuningRuleEditor', {
+Ext.define('Taco.view.productRanking.modal.ProductRankingEditor', {
     extend: 'Taco.core.ux.window.Drawer',
 
     requires: [
-        'Taco.view.searchTuningRule.Form',
+        'Taco.view.productRanking.Form',
         'Taco.core.util.ExceptionWhiner'
     ],
 
@@ -90,7 +90,7 @@ Ext.define('Taco.view.searchTuningRule.modal.SearchTuningRuleEditor', {
         }, me.body);
 
         var singleStore = Taco.core.data.StoreManager.getOrCreate({
-            type: 'Taco.store.SearchTuningRules',
+            type: 'Taco.store.ProductRankings',
             createOnly: true,
             autoLoad: false,
             clearFilters: true,
@@ -119,10 +119,10 @@ Ext.define('Taco.view.searchTuningRule.modal.SearchTuningRuleEditor', {
         var me = this;
 
         if (me.isCreateMode && !me.record) {
-            me.record = Ext.create('Taco.model.SearchTuningRule', {});
+            me.record = Ext.create('Taco.model.ProductRanking', {});
         }
 
-        me.container = Ext.create('Taco.view.searchTuningRule.Form', {
+        me.container = Ext.create('Taco.view.productRanking.Form', {
             autoScroll:true,
             record: me.record,
             isCreate: me.isCreateMode,
@@ -143,7 +143,7 @@ Ext.define('Taco.view.searchTuningRule.modal.SearchTuningRuleEditor', {
     onCreate: function(data) {
         this.saveSuccess(data);
         this.record = data;
-        Taco.app.fireEvent('searchtuningrulecreated', this.record);
+        Taco.app.fireEvent('productrankingrulecreated', this.record);
         this.isCreateMode = false;
         Ext.defer(function() {
             this.focusEl.focus();

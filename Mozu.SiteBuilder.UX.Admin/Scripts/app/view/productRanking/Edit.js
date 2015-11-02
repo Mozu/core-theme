@@ -1,14 +1,14 @@
 ﻿/**
- * @class  Taco.view.searchTuningRule.Edit
+ * @class  Taco.view.productRanking.Edit
  */
 
-Ext.define('Taco.view.searchTuningRule.Edit', {
+Ext.define('Taco.view.productRanking.Edit', {
     extend: 'Taco.core.ux.form.FullEditor',
     requires: [
         'Taco.core.ux.action.DeleteMenuItem',
-        'Taco.view.searchTuningRule.Form'
+        'Taco.view.productRanking.Form'
     ],
-    formCls: 'Taco.view.searchTuningRule.Form',
+    formCls: 'Taco.view.productRanking.Form',
     statics: {
         factory: function (cfg, callback, scope) {
             //cfg = Ext.apply(cfg,
@@ -20,7 +20,7 @@ Ext.define('Taco.view.searchTuningRule.Edit', {
           
             Ext.create('Taco.core.ux.form.Tasks', {
                 finalCallback: function () {
-                    callback.call(scope || this, Ext.create('Taco.view.searchTuningRule.Edit', cfg));
+                    callback.call(scope || this, Ext.create('Taco.view.productRanking.Edit', cfg));
                 },
                 tasks: [
                     
@@ -35,7 +35,7 @@ Ext.define('Taco.view.searchTuningRule.Edit', {
     //enableNextPrevious: true,
 
     //nextPreviousCfg: {
-    //    store: "Taco.store.SearchTuningRuleGrid",
+    //    store: "Taco.store.ProductRankingGrid",
     //    url: "/discounts/edit/",
     //    nextButtonTipTpl: "Next Discount <div style='padding-top:10px;'>{name}</div><div style='margin-top:5px;border-top:1px solid #ccc;padding-top:10px;text-align:center;color:#ccc;font-size:11px;'>{shortCutTip}</div>",
     //    previousButtonTipTpl: "Previous Discount <div style='padding-top:10px;'>{name}</div><div style='margin-top:5px;border-top:1px solid #ccc;padding-top:10px;text-align:center;color:#ccc;font-size:11px;'>{shortCutTip}</div>",
@@ -48,7 +48,7 @@ Ext.define('Taco.view.searchTuningRule.Edit', {
             delMenuItem;
 
         if (me.isCreate && !me.record) {
-            me.record = Ext.create('Taco.model.SearchTuningRule', {});
+            me.record = Ext.create('Taco.model.ProductRanking', {});
         }
         //else if (!me.record) {
         //
@@ -70,7 +70,7 @@ Ext.define('Taco.view.searchTuningRule.Edit', {
         //    text: 'Duplicate',
         //    disabled: me.record.phantom,
         //    requiredBehaviors: {
-        //        model: 'Taco.model.SearchTuningRule',
+        //        model: 'Taco.model.ProductRanking',
         //        behavior: 'create'
         //    },
         //    handler: function(item) {
@@ -79,15 +79,15 @@ Ext.define('Taco.view.searchTuningRule.Edit', {
         //                id: record.getId()
         //            };
 
-        //        Taco.app.StateManager.attemptNavigate('searchtuningrules/duplicate/' + record.getId(), metaData);
+        //        Taco.app.StateManager.attemptNavigate('productrankings/duplicate/' + record.getId(), metaData);
         //    }
         //});
 
         delMenuItem = Ext.create('Taco.core.ux.action.DeleteMenuItem', {
             record: me.record,
-            modelName: 'Taco.model.SearchTuningRule',
-            storeName: 'Taco.store.SearchTuningRules',
-            collectionName: 'searchTuningRules'
+            modelName: 'Taco.model.ProductRanking',
+            storeName: 'Taco.store.ProductRankings',
+            collectionName: 'productRankings'
             //promptMessage: 'tbd' //me.record.getDeletePromptMessage()
         });
         menuItems.push(delMenuItem);
@@ -115,15 +115,15 @@ Ext.define('Taco.view.searchTuningRule.Edit', {
     //loadRecord: function () {
     //    var me = this,
     //        code = me.record ? me.record.get('code') : null,
-    //        searchTuningRuleModel = Ext.ModelManager.getModel('Taco.model.SearchTuningRule');
+    //        productRankingModel = Ext.ModelManager.getModel('Taco.model.ProductRanking');
     //
     //    me.setLoading({
     //        msg: "Loading"
     //    }, me.body);
     //
-    //    searchTuningRuleModel.load(code, {
+    //    productRankingModel.load(code, {
     //        failure: function () {
-    //            Taco.app.fireEvent('setmessage', "Error loading Search Tuning Rule", 'error');
+    //            Taco.app.fireEvent('setmessage', "Error loading Product Ranking Rule", 'error');
     //            me.setLoading(false, this.body);
     //        },
     //        success: function (record) {
@@ -157,7 +157,7 @@ Ext.define('Taco.view.searchTuningRule.Edit', {
     onCreate: function(data) {
         this.saveSuccess(data);
         this.record = data;
-        Taco.app.fireEvent('searchtuningrulecreated', this.record);
+        Taco.app.fireEvent('productrankingrulecreated', this.record);
         this.isCreateMode = false;
         Ext.defer(function() {
             this.focusEl.focus();

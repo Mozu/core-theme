@@ -1,19 +1,21 @@
 /**
- * @class  Taco.view.searchTuningRule.form.BlockedProduct
- * @description Search Tuning Rule Blocked Product Form
+ * @class  Taco.view.productRanking.form.PinnedProduct
+ * @description Product Ranking Rule Pinned Product Form
  */
-Ext.define('Taco.view.searchTuningRule.form.BlockedProduct', {
+Ext.define('Taco.view.productRanking.form.PinnedProduct', {
     extend: 'Taco.core.ux.form.Form',
-    alias: 'widget.taco-searchTuningRule-blocked',
+    alias: 'widget.taco-productRanking-pinned',
     requires: [
         'Taco.core.ux.TooltipLabel',
         'Taco.core.util.Validation',
-        'Taco.view.searchTuningRule.grid.BlockedProduct'
+        'Taco.view.productRanking.grid.PinnedProduct'
     ],
     ui: 'subform',
+    itemId: 'taco-pinnedProduct-form',
+
     margin: '0 0 20 0',
 
-    title: 'Blocked Products',
+    title: 'Product Ranking Rules',
     config: {
         isCreateMode: false
     },
@@ -24,9 +26,10 @@ Ext.define('Taco.view.searchTuningRule.form.BlockedProduct', {
 
         Ext.tip.QuickTipManager.init();
 
-        me.blockedGrid = Ext.create('Taco.view.searchTuningRule.grid.BlockedProduct', {
+        me.pinnedGrid = Ext.create('Taco.view.productRanking.grid.PinnedProduct', {
             enableSearch: false
         });
+
 
         var productStore = Taco.core.data.StoreManager.getOrCreate({
             type: 'Taco.store.Products',
@@ -65,12 +68,35 @@ Ext.define('Taco.view.searchTuningRule.form.BlockedProduct', {
             },
             listeners: {
                 select: function (cmp, record) {
-                    me.blockedGrid.fireEvent('recordadded', record);
+                    me.pinnedGrid.fireEvent('recordadded', record);
                     cmp.setValue('');
                 },
                 scope: this
             }
         });
+
+        me.placementSelect = Ext.create('Ext.form.ComboBox', {
+            queryMode: 'local',
+            displayField: 'text',
+            valueField: 'value',
+            forceSelection: true,
+            editable: false,
+            margin: '10 0 10 10',
+            store: Ext.create('Ext.data.Store', {
+                fields: ['text', 'value'],
+                data: [
+                    { text: 'Insert at bottom', value: 'bottom' },
+                    { text: 'Insert at top', value: 'top' },
+                    { text: 'Insert above selected', value: 'above' },
+                    { text: 'Insert below selected', value: 'below' }
+                ]
+            }),
+            listeners: {
+                afterrender: function (args) {
+                    this.select(this.getStore().getAt(0));
+                }
+            }
+        })
 
         me.productForm = Ext.create('Ext.container.Container', {
             layout: {
@@ -80,7 +106,7 @@ Ext.define('Taco.view.searchTuningRule.form.BlockedProduct', {
             defaults: {
                 flex: 1
             },
-            items: [ me.productList]
+            items: [ me.productList, me.placementSelect]
         })
 
         me.items = [
@@ -93,7 +119,7 @@ Ext.define('Taco.view.searchTuningRule.form.BlockedProduct', {
                 },
                 items: [
                     me.productForm,
-                    me.blockedGrid
+                    me.pinnedGrid
                 ]
             }
         ];
@@ -101,11 +127,11 @@ Ext.define('Taco.view.searchTuningRule.form.BlockedProduct', {
         me.callParent(arguments);
     },
 
-    beforeSave: function () {
-        var prodCodes = Ext.Array.map(this.blockedGrid.getValues(), function(prod){
+    beforeSave: function() {
+        var prodCodes = Ext.Array.map(this.pinnedGrid.getValues(), function(prod){
             return {productCode: prod.get('productCode')};
         });
-        this.record.set('blockedProducts', prodCodes);
+        this.record.set('boostedProducts', prodCodes);
         return true;
     },
 

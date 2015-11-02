@@ -1,16 +1,16 @@
 /**
- * @class  Taco.view.searchTuningRule.Context
+ * @class  Taco.view.productRanking.Context
  * @author gm, bc
- * @description SearchTuningRule Context Form
+ * @description ProductRanking Context Form
  */
-Ext.define('Taco.view.searchTuningRule.form.Context', {
+Ext.define('Taco.view.productRanking.form.Context', {
     extend: 'Taco.core.ux.form.Form',
-    alias: 'widget.taco-searchTuningRule-context',
+    alias: 'widget.taco-productRanking-context',
     requires: [
         'Taco.core.ux.TooltipLabel',
         'Taco.core.util.Validation',
-        'Taco.view.searchTuningRule.grid.Category',
-        'Taco.view.searchTuningRule.grid.Keyword'
+        'Taco.view.productRanking.grid.Category',
+        'Taco.view.productRanking.grid.Keyword'
     ],
     ui: 'subform',
     margin: '0 0 20 0',
@@ -96,7 +96,7 @@ Ext.define('Taco.view.searchTuningRule.form.Context', {
             }
         });
 
-        this.categoryGrid = Ext.create('Taco.view.searchTuningRule.grid.Category', {
+        this.categoryGrid = Ext.create('Taco.view.productRanking.grid.Category', {
             name: 'categoryFilters',
             record: this.record,
             width: '100%',
@@ -144,7 +144,7 @@ Ext.define('Taco.view.searchTuningRule.form.Context', {
             ]
         });
 
-        this.keywordGrid = Ext.create('Taco.view.searchTuningRule.grid.Keyword', {
+        this.keywordGrid = Ext.create('Taco.view.productRanking.grid.Keyword', {
             name: 'keywords',
             record: this.record,
             width: '100%',

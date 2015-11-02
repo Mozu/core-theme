@@ -1,7 +1,7 @@
 /**
- * @class Taco.view.searchTuningRule.form.AdvancedSearch
+ * @class Taco.view.productRanking.form.AdvancedSearch
  */
-Ext.define('Taco.view.searchTuningRule.form.AdvancedSearch', {
+Ext.define('Taco.view.productRanking.form.AdvancedSearch', {
     extend: 'Taco.core.ux.form.Form',
     requires: [
         'Taco.core.ux.form.field.AdminUser',

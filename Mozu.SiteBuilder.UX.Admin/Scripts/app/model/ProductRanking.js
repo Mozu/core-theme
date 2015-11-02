@@ -1,7 +1,7 @@
 /**
- * @class Taco.model.SearchTuningRule
+ * @class Taco.model.ProductRanking
  */
-Ext.define('Taco.model.SearchTuningRule', {
+Ext.define('Taco.model.ProductRanking', {
     extend: 'Taco.core.data.Model',
     requires: [
         'Taco.core.util.Common'

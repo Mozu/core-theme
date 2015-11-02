@@ -1,10 +1,10 @@
 /**
- * @class  Taco.view.searchTuningRule.form.General
- * @description Search Tuning Rule General Form
+ * @class  Taco.view.productRanking.form.General
+ * @description Product Ranking Rule General Form
  */
-Ext.define('Taco.view.searchTuningRule.form.General', {
+Ext.define('Taco.view.productRanking.form.General', {
     extend: 'Taco.core.ux.form.Form',
-    alias: 'widget.taco-searchTuningRule-general',
+    alias: 'widget.taco-productRanking-general',
     requires: [
         'Ext.form.field.ComboBox',
         'Ext.form.field.Date',

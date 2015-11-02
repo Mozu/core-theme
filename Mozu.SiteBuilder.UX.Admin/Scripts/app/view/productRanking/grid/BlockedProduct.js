@@ -1,10 +1,10 @@
 /**
-* @class Taco.view.searchTuningRule.BlockedProduct
+* @class Taco.view.productRanking.BlockedProduct
 */
 
-Ext.define('Taco.view.searchTuningRule.grid.BlockedProduct', {
+Ext.define('Taco.view.productRanking.grid.BlockedProduct', {
    extend: 'Taco.core.ux.browser.SearchList',
-   alias: 'widget.searchTuningRule-blocked-grid',
+   alias: 'widget.productRanking-blocked-grid',
    requires: [],
    stateful: false,
    enableNavHeader: false,
@@ -71,7 +71,7 @@ Ext.define('Taco.view.searchTuningRule.grid.BlockedProduct', {
 
     listeners: {
         afterrender: function() {
-            var record = this.up('#taco-searchTuningRule-form').record;
+            var record = this.up('#taco-productRanking-form').record;
             var products = record.data.blockedProducts;
 
             for (var i = products.length - 1; i >= 0; i--) {
