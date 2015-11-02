@@ -108,14 +108,15 @@ Ext.define('Taco.view.storefrontProduct.Grid', {
             supportedLevels: ['s'],
             requiresContextOfType: ['c', 's'],
             changeContext: Ext.emptyFn,
+            readOnly: (this.store.getCount() === 1) ? true : false,
             margin: '0 10 10 0',
             listeners: {
                 afterrender: function(component, eOpts) {
-                    var item = component.store.data.items[0];
-                    component.setValue(item);
-                    me.store.proxy.extraParams.siteId = item.data.id;
-                    if (item.raw.masterCatalog.productPublishingMode === 'Live') {
-                        me.dataViewModeSelector.setValue('Live').hide();
+                    var record = component.store.data.items[0];
+                    component.setValue(record);
+                    me.store.proxy.extraParams.siteId = record.data.id;
+                    if (record.raw.masterCatalog.productPublishingMode === 'Live') {
+                        me.dataViewModeSelector.hide();
                     } else {
                         me.dataViewModeSelector.show();
                     }
