@@ -3,11 +3,11 @@
     <a href="javascript:;" class="mz-formstep-edit" data-mz-action="edit">{{ labels.change }}</a>
 </h3>
 <div class="mz-formstep-body">
-    <div class="mz-formstep-summary mz-l-stack mz-checkoutform">
+    <div class="mz-formstep-summary mz-l-stack">
     {% for payment in model.activePayments %}
         {% if payment.billingInfo.paymentType == "Check" %}
-        <div class="mz-l-stack-section mz-checkout-payment">
-            <div class="mz-l-stack-section mz-checkout-current-payment">{{ payment.billingInfo.check.checkNumber }}</div>
+        <div class="mz-l-stack-section mz-checkout-payment  mz-checkoutform">
+            <div class="mz-l-stack-section mz-checkout-current-payment">{{ labels.checkByMail }}</div>
             <div class="mz-l-stack-section mz-checkout-current-payment mz-checkout-saved-billingaddress">
                 <h4 class="mz-checkoutform-title">{{ labels.billingAddress }}</h4>
                 <div class="mz-addresssummary">
@@ -17,7 +17,7 @@
         </div>
         {% endif %}
         {% if payment.billingInfo.paymentType == "CreditCard" %}
-        <div class="mz-l-stack-section mz-checkout-payment">
+        <div class="mz-l-stack-section mz-checkout-payment  mz-checkoutform">
             <div class="mz-l-stack-section mz-checkout-current-payment">
                 {{ model.card.paymentOrCardType }} {{ model.card.cardNumberPartOrMask }}
                 <br/>{{ labels.expires }} {{ model.card.expireMonth }}/{{ model.card.expireYear }}
@@ -36,38 +36,10 @@
         </div>
         {% endif %}
     {% endfor %} 
-    
-        {% if model.billingContact.email %}
-        <div class="mz-l-stack-section">
-            <div class="mz-l-formfieldgroup">
-                <div class="mz-l-formfieldgroup-row">
-                    <div class="mz-l-formfieldgroup-cell">
-                        <label for="billing-email">
-                            {{ labels.billingContact }}<span class="is-required"> *</span>:
-                        </label>
                     </div>
-                    <div class="mz-l-formfieldgroup-cell">
-                        <input type="text" id="billing-email" name="billing-email" data-mz-value="billingContact.email" value="{{ model.billingContact.email }}">
-                            <span class="mz-validationmessage" data-mz-validationmessage-for="billingContact.email"></span>
-                        </div>
-                </div>
-                <div class="mz-l-formfieldgroup-row">
-                    <div class="mz-l-formfieldgroup-cell"></div>
-                    <div class="mz-l-formfieldgroup-cell">
-                        <label class="mz-inline">
-                            <input type="checkbox" name="special-offers" {% if model.acceptsMarketing %}checked="checked" {% endif %}data-mz-value="acceptsMarketing" class="mz-checkout-optin" > {{ labels.optIn }}
-                            </label>
-                    </div>
-                </div>
-            </div>
-        </div>
-        {% endif %}
         
-        {% include "modules/checkout/checkout-digital-credit" %}
-    </div>
+    <div class="mz-formstep-fields mz-l-stack">
 
-    <div class="mz-formstep-fields mz-l-stack mz-checkoutform">
-      
         {% if model.nonStoreCreditTotal > 0 %}
 
             {% if model.hasSavedCardPayment %}
@@ -77,7 +49,7 @@
                         {% include "modules/checkout/payment-selector" %}
                     </div>
                 {% else %}
-                    <div class="mz-l-stack-section mz-checkout-current-payment mz-checkout-saved-card">
+                    <div class="mz-l-stack-section mz-checkout-current-payment mz-checkout-saved-card  mz-checkoutform">
                         {% if model.visaCheckoutFlowComplete %}
                             <span><img alt="This Payment Using Visa Checkout" src="{{pageContext.visaCheckoutButtonUrl}}?size=154&amp;color=neutral&amp;cardBrands={{ payment.card.paymentOrCardType }}"/></span>
                             <a class="mz-checkout-payment-change" href="javascript:;" data-mz-action="beginEditingCard">{{ labels.removePayment }}</a>
@@ -119,8 +91,9 @@
             <h4 class="mz-checkout-nopaymentrequired">{{ labels.noPaymentRequired|string_format(model.remainingTotal|currency) }}</h4>
 
             {% endif %}
+    </div>
 
-        <div class="mz-l-stack-section">
+    <div class="mz-l-stack-section mz-checkoutform">
             <div class="mz-l-formfieldgroup">
                 <div class="mz-l-formfieldgroup-row">
                     <div class="mz-l-formfieldgroup-cell">
@@ -129,7 +102,7 @@
                         </label>
                     </div>
                     <div class="mz-l-formfieldgroup-cell">
-                        <input type="text" id="billing-email" name="billing-email" data-mz-value="billingContact.email" value="{{ model.billingContact.email }}">
+                    <input type="text" id="billing-email" name="billing-email" data-mz-value="billingContact.email" value="{{ model.billingContact.email }}"/>
                             <span class="mz-validationmessage" data-mz-validationmessage-for="billingContact.email"></span>
                         </div>
                 </div>
@@ -137,16 +110,15 @@
                     <div class="mz-l-formfieldgroup-cell"></div>
                     <div class="mz-l-formfieldgroup-cell">
                         <label class="mz-inline">
-                            <input type="checkbox" name="special-offers" {% if model.acceptsMarketing %}checked="checked" {% endif %}data-mz-value="acceptsMarketing" class="mz-checkout-optin" > {{ labels.optIn }}
+                        <input type="checkbox" name="special-offers" {% if model.acceptsMarketing %}checked="checked" {% endif %}data-mz-value="acceptsMarketing" class="mz-checkout-optin" /> {{ labels.optIn }}
                         </label>
                     </div>
                 </div>
             </div>
         </div>
         
-        <div class="mz-formfieldgroup-row">
+    <div class="mz-formfieldgroup-row mz-checkoutform">
             {% include "modules/checkout/checkout-digital-credit" %}
-        </div>
     </div>
 
     <div class="mz-formstep-next">
