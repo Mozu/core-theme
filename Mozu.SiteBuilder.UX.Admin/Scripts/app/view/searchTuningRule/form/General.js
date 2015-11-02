@@ -86,7 +86,7 @@ Ext.define('Taco.view.searchTuningRule.form.General', {
             labelAlign: 'top',
             allowBlank: false,
             editable: false,
-            readOnly: !me.record.phantom,
+            readOnly: !me.record.phantom || siteStore.getTotalCount() <= 1,
             forceSelection: true,
             autoSelect: true,
             listConfig: {shadow: false},
