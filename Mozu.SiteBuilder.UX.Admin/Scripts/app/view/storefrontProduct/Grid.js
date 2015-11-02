@@ -130,7 +130,7 @@ Ext.define('Taco.view.storefrontProduct.Grid', {
             fieldLabel: 'State',
             fields: ['text', 'value'],
             name: 'me.siteViewModeSelector',
-            store: ['Pending','Live'],
+            store: ['Live', 'Staged'],
             editable: false,
             forceSelection: true,
             value: 'Live',
@@ -141,7 +141,7 @@ Ext.define('Taco.view.storefrontProduct.Grid', {
                     var data = {
                         dataViewMode: dataViewMode
                     };
-                    if (dataViewMode === 'Pending') {
+                    if (dataViewMode === 'Staged') {
                         me.sitePreviewDate.show();
                     } else {
                         me.sitePreviewDate.hide();
