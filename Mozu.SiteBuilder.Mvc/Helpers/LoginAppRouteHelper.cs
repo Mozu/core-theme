@@ -23,6 +23,20 @@ namespace Mozu.SiteBuilder.Mvc.Helpers
             return builder.Uri;
         }
 
+        public Uri Launchpad(UserScopeType scopeType, string postbackUrl, bool showDev)
+        {
+            var builder = new UriBuilder(_basePath);
+            builder.Path = "login";
+            var queryDict = new Dictionary<string, string>
+            {
+                { "scopetype", scopeType.ToStringQuickly() },
+                { "postbackurl", postbackUrl },
+                { "showdev", showDev.ToString() }
+            };
+            builder.Query = queryDict.ToQueryString();
+            return builder.Uri;
+        }
+
         public Uri To(UserScopeType scopeType, int? scopeId, string redirectUrl, string postBackUrl, bool showDev)
         {
             var builder = new UriBuilder(_basePath);
@@ -33,7 +47,7 @@ namespace Mozu.SiteBuilder.Mvc.Helpers
                 { "scopeid", scopeId.ToString() },
                 { "redirecturl", redirectUrl },
                 { "postbackurl", postBackUrl },
-                { "showdev", true.ToString() }
+                { "showdev", showDev.ToString() }
             };
             builder.Query = queryDict.ToQueryString();
             return builder.Uri;
@@ -47,7 +61,7 @@ namespace Mozu.SiteBuilder.Mvc.Helpers
             {
                 { "scopetype", scopeType.ToStringQuickly() },
                 { "postbackurl", postback },
-                { "showdev", true.ToString() }
+                { "showdev", showDev.ToString() }
             };
             builder.Query = queryDict.ToQueryString();
             return builder.Uri;

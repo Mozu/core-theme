@@ -68,7 +68,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Controllers
         public HttpResponseMessage Launchpad()
         {
             var postback = !_handledByRP ? string.Format("http://{0}/admin/auth/pants", GetHost()) : null;
-            var redir = _loginAppRouter.To(UserScopeType.Tenant, null, null, postback, true);
+            var redir = _loginAppRouter.Launchpad(UserScopeType.Tenant, postback, true);
             
             var resp = new HttpResponseMessage(HttpStatusCode.Redirect);
             resp.Headers.Location = redir;
