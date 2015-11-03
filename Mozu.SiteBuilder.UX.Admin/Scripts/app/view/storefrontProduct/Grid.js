@@ -79,7 +79,7 @@ Ext.define('Taco.view.storefrontProduct.Grid', {
             this.mixins.pageable.constructor.apply(this);
         }
 
-        me.on('taco-update-preview', function(config) {
+        me.on('taco-update-preview', function (config) {
             var key;
             for (key in config) { // method to delete a key so its not passed as an empty value
                 if (config.hasOwnProperty(key) && typeof config[key] === 'undefined') {
@@ -147,7 +147,7 @@ Ext.define('Taco.view.storefrontProduct.Grid', {
 
         var dataViewModeStoreData = [{ name:'Live', value:'Live' }];
         if (publishingEnabled) {
-            dataViewModeStoreData.push({ value: 'Pending', name: 'Staged' });
+            dataViewModeStoreData.push({ name: 'Staged', value: 'Pending' });
         }
 
         me.dataViewModeSelector = Ext.create('Taco.core.ux.form.SelectField', {
@@ -299,72 +299,11 @@ Ext.define('Taco.view.storefrontProduct.Grid', {
     getActionItems: function() {
         var me = this,
             actions = [];
-
-        if (this.enableEditAction) {
-            actions.push({
-                text: 'Edit',
-                requiredBehaviors: {
-                    model: 'Taco.model.Discount',
-                    behavior: 'update'
-                },
-                menuColumnHandler: function(item, eventData) {
-                    var record = eventData.record;
-                    Ext.defer(function() {
-                        Taco.core.StateManager.attemptNavigate('discounts/edit/' + record.getId(), { complexMetaData: { record: record } });
-                    }, 1, this);
-                }
-            });
-        }
-
-        if (this.enableDuplicateAction) {
-            actions.push({
-                text: 'Duplicate',
-                requiredBehaviors: {
-                    model: 'Taco.model.Discount',
-                    behavior: 'create'
-                },
-                menuColumnHandler: function(item, eventData) {
-                    var record = eventData.record,
-                        metaData = {
-                            id: record.getId()
-                        };
-
-                    Taco.app.StateManager.attemptNavigate('discounts/duplicate/' + record.getId(), metaData);
-                }
-            });
-        }
-
-        if (this.enableDeleteAction) {
-            actions.push({
-                text: 'Delete',
-                itemId: 'deleteMenuItem',
-                // deleteMenuColumnHandler can be found in Taco.core.ux.mixins.DeleteFromGrid
-                menuColumnHandler: 'deleteMenuColumnHandler',
-                requiredBehaviors: {
-                    model: 'Taco.model.Discount',
-                    behavior: 'delete'
-                },
-                scope: me
-            });
-        }
-
         return actions;
 
     },
 
-    onActionMenuShow: function(menu, eventData) {
-        var me = this;
-
-        // need to disable the delete menu option when discount has been used
-        var deleteMenuItem = menu.down('#deleteMenuItem');
-        if (deleteMenuItem) {
-            if (eventData.record.get('canBeDeleted')) {
-                deleteMenuItem.show();
-            } else {
-                deleteMenuItem.hide();
-            }
-        }
-    },
+    onActionMenuShow: Ext.emptyFn,
 
     getActionColumn: function() {
         var me = this,
