@@ -1,8 +1,8 @@
 <h3 class="mz-formstep-header mz-checkoutform-header">
     {{ labels.paymentInformation }}
+    <a href="javascript:;" class="mz-formstep-edit" data-mz-action="edit">{{ labels.change }}</a>
 </h3>
 <div class="mz-formstep-body">
-    <a href="javascript:;" class="mz-formstep-edit" data-mz-action="beginEditingCard">{{ labels.change }}</a>
     <div class="mz-formstep-summary mz-l-stack">
         {% for payment in model.activePayments %}
         {% if payment.billingInfo.paymentType == "Check" %}
