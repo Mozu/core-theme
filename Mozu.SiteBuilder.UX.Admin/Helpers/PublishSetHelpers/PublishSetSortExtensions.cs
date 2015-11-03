@@ -26,7 +26,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Helpers.PublishSetHelpers
         public static string ToSortString(this SortingCollection sortCollection)
         {
             if (sortCollection == null || sortCollection.Count == 0)
-                return NAME_PROPERTY + " desc";
+                return null;
 
             return string.Join(" and ", sortCollection.Select(x => GetFilter(x) + (x.IsAscending ? " asc" : " desc")));
         }
