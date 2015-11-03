@@ -191,11 +191,15 @@ require(["modules/jquery-mozu", "underscore", "hyprlive", "modules/backbone-mozu
             var me = this;
             var isVisaCheckout = this.model.visaCheckoutFlowComplete();
             if (!isVisaCheckout) {
-            this.editing.savedCard = true;
-            this.render();
+                if (this.model.get('usingSavedCard')) {
+                    this.editing.savedCard = true;
+                }
+                this.edit();
+                this.render();
             } else {
                 this.doModelAction('cancelVisaCheckout').then(function() {
                     me.editing.savedCard = false;
+                    me.edit();
                     me.render();
                 });
             }

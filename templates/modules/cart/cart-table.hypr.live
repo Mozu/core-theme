@@ -108,7 +108,7 @@
         {% include "modules/common/coupon-code-field" %}
       </div>   
       {% if not model.isEmpty %}<a class="mz-carttable-emptylink" href="javascript:;" data-mz-action="empty">{{ labels.emptyCart }}</a>{% endif %}
-      <button id="cart-checkout" class="mz-button mz-button-large{% if not model.isEmpty %} mz-carttable-button-active{% endif %}"  {% if model.isEmpty %} disabled="disabled" {% endif %} data-mz-action="proceedToCheckout">{{ labels.proceedToCheckout }}</button>
+      <button id="cart-checkout" class="mz-button mz-button-large"  {% if model.isEmpty %} disabled="disabled" {% endif %} data-mz-action="proceedToCheckout">{{ labels.proceedToCheckout }}</button>
 
       {% if siteContext.checkoutSettings.visaCheckout.isEnabled %}
       <div>

@@ -127,7 +127,7 @@
     "taxAtCheckout"   : "Tax & Versand an der Kasse berechnet",
     "orderTotal"   : "Gesamtbestellung",
     "emptyCart"            : "Einkaufswagen leeren",
-    "proceedToCheckout"   : "Zur Kasse gehen",
+    "proceedToCheckout"   : "Kasse",
     "storePickupAt"   : "In-Store Pickup <strong> {0} </ strong>",
     "checkout"   : "Kasse",
     "orderSummary"   : "Bestellübersicht",
