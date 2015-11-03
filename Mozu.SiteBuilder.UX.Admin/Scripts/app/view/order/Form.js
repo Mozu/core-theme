@@ -82,14 +82,15 @@ Ext.define('Taco.view.order.Form', {
     isHeaderDataComplete: function () {
         var me = this,
             fulfillmentContact = me.record.get("fulfillmentContact"),
-            billingContact = me.record.get("billingContact"),
             isValid = true;
+
+        // BillingContact is no longer checked here. See issue #70588 for details.
         
-        // if we have a fulfillment contact and billing contact and its not an empty object
-        if (!fulfillmentContact || Ext.Object.isEmpty(fulfillmentContact) || !billingContact || Ext.Object.isEmpty(billingContact)) {
+        // if we have a fulfillment contact and its not an empty object
+        if (!fulfillmentContact || Ext.Object.isEmpty(fulfillmentContact)) {
             isValid = false;
         }
-        return isValid 
+        return isValid;
     },
 
 
@@ -139,8 +140,7 @@ Ext.define('Taco.view.order.Form', {
     },
 
     onRecordChange: function () {
-        var me = this,
-            orderItems = this.record.get("items")
+        var me = this;
         
         this.updatePanelVisibility();
 
@@ -185,27 +185,23 @@ Ext.define('Taco.view.order.Form', {
                 
         this.orderDetailPanel = Ext.create('Taco.view.order.subform.Detail', Ext.apply({}, subformCfg));
 
+        this.paymentPanel = Ext.create('Taco.view.order.subform.Payment', Ext.apply({}, subformCfg));
+
         this.auditLogPanel = Ext.create('Taco.view.order.subform.AuditLog', subformCfg);
         
         // we always show for online orders. for offline orders we need hide the detail panel until the header is filled out.
         if ((me.record.get("orderType")=="Online") || me.isHeaderDataComplete()) {
             items.push(this.orderDetailPanel);
         }
-        
-        this.paymentPanel = Ext.create('Taco.view.order.subform.Payment', Ext.apply({
-            //hidden: !this.isHeaderDataComplete()
-        }, subformCfg));
 
         if (this.isEdit()) {
             items.push(Ext.create('Taco.view.order.subform.Fulfillment', subformCfg));
         }
 
-
         // we always show for online orders and conditionaly show for offline orders
         if ((me.record.get("orderType")=="Online")  || (me.isHeaderDataComplete() && this.record.get("items").length)) {
             items.push(this.paymentPanel);
         }
-      
 
         // adding the header data check here because there are instances of old data that lack shipping and billing contact.
         if ((me.record.get("orderType") == "Online") || (this.isEdit() && me.isHeaderDataComplete())) {
