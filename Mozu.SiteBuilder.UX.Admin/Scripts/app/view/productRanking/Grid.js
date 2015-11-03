@@ -78,8 +78,7 @@ Ext.define('Taco.view.productRanking.Grid', {
     isPopUp: false,
 
     advancedSearchConfig : {
-        advancedFormCls: 'Taco.view.productRanking.form.AdvancedSearch',
-
+        form: null, //set below
         quickFilterData: [
             [{ code: 'Code' }, 'Code'],
             [{ status: 'Status' }, 'Status']
@@ -130,6 +129,10 @@ Ext.define('Taco.view.productRanking.Grid', {
         if (!this.isCatalogLevel || this.categoryCode) {
             me.store.load();
         }
+
+        me.advancedSearchConfig.form = Ext.create('Taco.view.productRanking.form.AdvancedSearch', {
+            isCatalogLevel: me.isCatalogLevel
+        });
 
         me.callParent(arguments);
     },
@@ -397,7 +400,5 @@ Ext.define('Taco.view.productRanking.Grid', {
     getDeletePromptMessage: function (record) {
         return record.getDeletePromptMessage();
     }
-
-
 
 });

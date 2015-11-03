@@ -14,8 +14,12 @@ Ext.define('Taco.view.productRanking.form.AdvancedSearch', {
         xtype: 'textfield'
     },
 
+    isCatalogLevel: false,
+
     initComponent: function () {
-        var me = this;
+        var me = this,
+            siteStore;
+
 
         this.items = [
             {
@@ -62,7 +66,11 @@ Ext.define('Taco.view.productRanking.form.AdvancedSearch', {
                         }
                     ], 0)
                 ]
-            }, {
+            }
+        ];
+
+        if (!me.isCatalogLevel) {
+            this.items.push({
                 xtype: 'combo',
                 store: { type: 'Taco.store.Categories' },
                 flex:1,
@@ -79,7 +87,34 @@ Ext.define('Taco.view.productRanking.form.AdvancedSearch', {
                         cmp.hidden = !Taco.app.context.getCurrent().getSiteId();
                     }
                 }
-            },
+            });
+        }
+        else {
+            siteStore = Ext.create('Ext.data.Store', {
+                fields: ['id', 'name'],
+                data: Taco.app.context.getContextAtLevel('c').getSites()
+            });
+            if (siteStore.getTotalCount() > 1) {
+                this.items.push({
+                    xtype: 'combobox',
+                    fieldLabel: 'Site',
+                    name: 'siteId',
+                    labelAlign: 'top',
+                    allowBlank: true,
+                    editable: false,
+                    forceSelection: true,
+                    autoSelect: true,
+                    listConfig: {shadow: false},
+                    flex: 1,
+                    queryMode: 'local',
+                    store: siteStore,
+                    valueField: 'id',
+                    displayField: 'name'
+                });
+            }
+        }
+
+        var rangeFields = [
             me.createDateRangeFields('Active Start Date Range', 'activeStartDateFrom', 'activeStartDateTo'),
             me.createDateRangeFields('Active End Date Range', 'activeEndDateFrom', 'activeEndDateTo'),
             {
@@ -97,6 +132,7 @@ Ext.define('Taco.view.productRanking.form.AdvancedSearch', {
             },
             me.createDateRangeFields('Last Modified Date Range', 'modifiedDateFrom', 'modifiedDateTo')
         ];
+        this.items = this.items.concat(rangeFields);
 
         this.callParent(arguments);
     },
