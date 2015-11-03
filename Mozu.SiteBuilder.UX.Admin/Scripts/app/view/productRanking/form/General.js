@@ -39,11 +39,6 @@ Ext.define('Taco.view.productRanking.form.General', {
                 // need to update the validation message on the status combo. it will display the requirment that one or more dates is required
                 me.statusCombo.validate();
 
-                //if (me.productInCatalogInfo && me.scheduledStartDateField.isVisible()) {
-                //    // if both fields have values we need to validate the dates are in order;
-                //    var isValid = Taco.core.util.Validation.validateDateRange(me.scheduledStartDateField, me.scheduledEndDateField, 'Start date must be before end date', 0);
-                //    return isValid;
-                //}
                 return true;
             }
         });
@@ -60,15 +55,7 @@ Ext.define('Taco.view.productRanking.form.General', {
             allowBlank: true,
             validateOnBlank: true,
             validator: function () {
-                // need to update the validation message on the status combo. it will display the requirment that one or more dates is required
-                me.statusCombo.validate();
-
-                //if (me.productInCatalogInfo && me.scheduledEndDateField.isVisible()) {
-                //    // if both fields have values we need to validate the dates are in order;
-                //    var isValid = Taco.core.util.Validation.validateDateRange(me.scheduledStartDateField, me.scheduledEndDateField, 'End date must be after start date', 0);
-                //    return isValid;
-                //}
-                return true;
+                return me.statusCombo.validate();
             }
         });
         var siteStore = Ext.create('Ext.data.Store', {
@@ -118,11 +105,6 @@ Ext.define('Taco.view.productRanking.form.General', {
             store: [['Active', 'Active'], ['Scheduled', 'Scheduled'], ['Disable', 'Disabled']],
             value: me.record ? me.record.get('status') : 'Disable',
             dateValidationMsg: 'A scheduled start or end date is required',
-            //validateDate: function() {
-            //    if (Ext.isEmpty(me.scheduledStartDateField.getValue()) && Ext.isEmpty(me.scheduledEndDateField.getValue())) {
-            //        this.markInvalid(this.dateValidationMsg);
-            //    }
-            //},
             validator: function () {
                 // check to see if the start and end dates have a value;
                 if (this.getValue() === 'Scheduled' && Ext.isEmpty(me.scheduledStartDateField.getValue()) && Ext.isEmpty(me.scheduledEndDateField.getValue())) {
@@ -165,7 +147,7 @@ Ext.define('Taco.view.productRanking.form.General', {
             xtype: 'fieldcontainer',
             layout: {
                 type: 'hbox',
-                align: 'top'
+                align: 'stretch'
             },
             items: [
                 {
@@ -232,7 +214,7 @@ Ext.define('Taco.view.productRanking.form.General', {
                             ]
                         }
                     ]
-                }, 
+                },
                 {
                     xtype: 'fieldcontainer',
                     margin: {
