@@ -167,14 +167,12 @@ Ext.define('Taco.view.storefrontProduct.Grid', {
             forceSelection: true,
             value: 'Live',
             margin: '0 10 10 0',
-            hidden: true,
+            hidden: !publishingEnabled,
             listeners: {
                 select: function (source, records) {
                     var fieldValue = source.getValue();
-                    var data = {
-                        dataViewMode: (fieldValue === 'Staged') ? 'Pending' : 'Live' // translation cause the service expects 'pending'
-                    };
-                    if (fieldValue === 'Staged') {
+                    var data = {dataViewMode: fieldValue };
+                    if (fieldValue === 'Pending') {
                         me.sitePreviewDate.show();
                     } else {
                         me.sitePreviewDate.hide();
@@ -207,7 +205,7 @@ Ext.define('Taco.view.storefrontProduct.Grid', {
             xtype: "container",
             docked: "top",
             layout: "hbox",
-            items: me.combineHeaderItems()
+            items: [me.siteSelector, me.dataViewModeSelector, me.sitePreviewDate]
         });
 
         if (me.enableSearch) {
@@ -219,10 +217,6 @@ Ext.define('Taco.view.storefrontProduct.Grid', {
         me.store.proxy.extraParams.dataViewMode = me.dataViewModeSelector.value;
 
         me.callParent(arguments);
-    },
-
-    combineHeaderItems: function() {
-        return [this.siteSelector, this.dataViewModeSelector, this.sitePreviewDate];
     },
 
     // override this method and adjust the columns if your need a grid with a subset of columns;
