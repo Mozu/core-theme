@@ -21,7 +21,7 @@
         <dl class="mz-propertylist">
           {% for option in item.product.options %}
           <dt>{{ option.name }}</dt>&nbsp;
-          <dd> {% if option.value and not option.value.isEmpty %} 
+          <dd> {% if option.value %} 
                     {{ option.value }}
                {% else %}
                     {{ option.shopperEnteredValue }}
