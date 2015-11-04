@@ -363,8 +363,10 @@ namespace Mozu.SiteBuilder.Mvc.Navigation
         private void SetHomePage(IEnumerable<SuperNavigationNode> topLevelNav)
         {
             var homePage = topLevelNav.OrderBy(n => n.Index).FirstOrDefault(node => !node.NodeType.IsLink && !string.IsNullOrEmpty(node.Url));
-
-            homePage.IsHomePage = true;
+            if (homePage != null)
+            {
+                homePage.IsHomePage = true;
+            }
         }
 
         private string CompositeETag(string categoriesEtag, string pagesEtag, string navsetEtag)

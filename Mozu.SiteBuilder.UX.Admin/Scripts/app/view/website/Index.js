@@ -137,7 +137,16 @@ Ext.define('Taco.view.website.Index', {
                 width: '120px',
                 fieldStyle: 'background-color: #fff;',
                 requiresContextOfType: ['s'],
-                supportedLevels: ['s']
+                supportedLevels: ['s'],
+                listeners: {
+                    change: function() {
+                        //if were changing website scope, we need to redirect back to homepage
+                        if (me.url !== '/') {
+                            me.url = '/';
+                            me.navigate({url: me.url});
+                        }
+                    }
+                }
             }),
             {
                 xtype: 'taco-indicator',
@@ -1292,12 +1301,12 @@ Ext.define('Taco.view.website.Index', {
             for (var i = 0; i < keys.length; i++) {
                 if (tree.store.tree.nodeHash[keys[i]].get('isHomePage')) {
                     record = tree.store.tree.nodeHash[keys[i]];
+                    tree.selectPath(record.getPath());
                     break;
                 }
             }
         }
 
-        var icon = '<span class="taco-website-header-icon ' + (tree.getIconClass(record) || 'page-icon') + '"></span>';
         this.down('#taco-page-title').update( '<h2 class="page-title">' + record.get('name') + '</h2>');
     },
 
