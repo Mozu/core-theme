@@ -30,11 +30,13 @@ Ext.define('Taco.store.PagedMemoryStore', {
             this.proxy.data = this.proxy.data || [];
             this.proxy.data.push.apply(this.proxy.data, records);
         },
-        remove: function(store, records) {
-            Ext.Array.erase(this.proxy.data, records.index, 1);
+        remove: function(store, record) {
+            Ext.Array.remove(this.proxy.data, record);
         },
-        datachanged: function() {
-            //tbd possibly associating a grid pager?
+        bulkremove: function(store, records) {
+            Ext.Array.each(records, function(rec) {
+                Ext.Array.remove(this.proxy.data, rec);
+            }, this);
         }
     },
 
