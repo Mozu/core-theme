@@ -1281,8 +1281,23 @@ Ext.define('Taco.view.website.Index', {
         });
     },
 
-    updateHeaderTitle: function(tree, record) {
-        var icon = '<span class="taco-website-header-icon ' + (this.down('taco-website-tree').getIconClass(record) || 'page-icon') + '"></span>';
+    updateHeaderTitle: function(cmp, record) {
+
+        var tree = this.down('taco-website-tree'),
+            selection = tree.getSelectionModel().getSelection(),
+            keys = Object.keys(tree.store.tree.nodeHash);
+        
+        //if selection is empty -- we grab the node that isHomePage
+        if (selection.length === 0) {
+            for (var i = 0; i < keys.length; i++) {
+                if (tree.store.tree.nodeHash[keys[i]].get('isHomePage')) {
+                    record = tree.store.tree.nodeHash[keys[i]];
+                    break;
+                }
+            }
+        }
+
+        var icon = '<span class="taco-website-header-icon ' + (tree.getIconClass(record) || 'page-icon') + '"></span>';
         this.down('#taco-page-title').update( '<h2 class="page-title">' + record.get('name') + '</h2>');
     },
 
