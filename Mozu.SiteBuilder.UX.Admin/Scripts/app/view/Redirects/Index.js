@@ -53,6 +53,11 @@ Ext.define('Taco.view.redirects.Index', {
         this.onRowEditorCreate();
     },
 
+
+    stateful: true,
+
+    stateId: 'statefulRedirectsGrid',
+
     initComponent: function () {
 
         var me = this;
