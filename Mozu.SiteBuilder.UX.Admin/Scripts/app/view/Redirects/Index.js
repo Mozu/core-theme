@@ -116,7 +116,7 @@ Ext.define('Taco.view.redirects.Index', {
                 },
                     renderer: this.checkboxRenderer,
                     text: 'Copy Query String',
-                    width: 100,
+                    width: 133,
                     align: 'center'
                 },
                 {
