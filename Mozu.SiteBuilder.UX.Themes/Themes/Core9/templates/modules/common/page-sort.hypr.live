@@ -5,7 +5,7 @@
       {% block sort-types %}
       {% for sort in model.sorts %}
       {% with sort.value|default(themeSettings.defaultSort) as sortValue %}
-      <option data-mz-url="{% make_url "sorting=""" model with sortBy=sortValue %}" value="{{ sortValue }}"{% if="" model.currentSort =""= sortValue="" %} selected="selected"{% endif="" %}>{{ sort.text }}</option>
+      <option data-mz-url="{% make_url "sorting" model with sortBy=sortValue %}" value="{{ sortValue }}"{% if model.currentSort == sortValue %} selected="selected"{% endif %}>{{ sort.text }}</option>
       {% endwith %}
       {% endfor %}
       {% endblock sort-types %}
