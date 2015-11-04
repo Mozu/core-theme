@@ -42,6 +42,10 @@ Ext.define('Taco.view.preview.ExpressionPreviewDrawer', {
         preserveRatio: false,
         widthIncrement: 1
     },
+    /*config: {
+        type: null
+    },*/
+
     
     initComponent: function (eOpts) {
         var me = this;
@@ -53,7 +57,7 @@ Ext.define('Taco.view.preview.ExpressionPreviewDrawer', {
             if (me.isValidExpression(root)) {
                 this.getExpressionText({
                     tree: this.getValue(),
-                    type: this.getType() || 'DynamicPreComputed'
+                    type: (me.expressionData && me.expressionData.type) ? me.expressionData.type : 'DynamicPreComputed'
                 }, function(expressionText) {
                     me.previewGrid.fireEvent('taco-update-preview', {
                         expression: expressionText
@@ -83,7 +87,6 @@ Ext.define('Taco.view.preview.ExpressionPreviewDrawer', {
                 }
             }
         };
-
         me.expressionEditor = Ext.create('Taco.view.filter.ExpressionTreePanel', {
             showPreviewButton: false,
             showEditButton: false,

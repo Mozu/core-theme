@@ -782,8 +782,7 @@ Ext.define('Taco.view.filter.ExpressionTreePanel', {
 
         var me = this,
             treeData = this.getValue(),
-            treeType = this.up('#taco-category-form').record.get('categoryType');
-
+            treeType = this.getType();
         Ext.create('Taco.view.preview.ExpressionPreviewDrawer', {
             expressionData: {
                 tree: treeData,
