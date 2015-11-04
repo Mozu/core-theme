@@ -43,12 +43,7 @@ Ext.define('Taco.view.storefrontProduct.Grid', {
     autoScroll: true,
     stateful: false,
     headerToolbar: true,
-    /*header: {
-        layout: {
-            type: 'hbox',
-            align: 'left'
-        }
-    },*/
+    
     layout: {
         type: 'fit'
     },
@@ -57,8 +52,6 @@ Ext.define('Taco.view.storefrontProduct.Grid', {
     viewConfig: {
         emptyText: 'No items found.'
     },
-
-    store: { type: 'Taco.store.StorefrontProducts' },
 
     advancedSearchConfig: {
         disableAdvancedSearch: true
@@ -70,7 +63,10 @@ Ext.define('Taco.view.storefrontProduct.Grid', {
     initComponent: function() {
         var me = this;
         
-        me.store = Taco.core.data.StoreManager.getOrCreate('Taco.store.StorefrontProducts');
+        me.store = Taco.core.data.StoreManager.getOrCreate({
+            type: 'Taco.store.StorefrontProducts',
+            createOnly:true
+        });
         me.mixins = me.mixins || [];
         me.columns = me.getColumnConfig();
 
