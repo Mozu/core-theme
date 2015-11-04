@@ -38,5 +38,7 @@ namespace Mozu.SiteBuilder.UX.Models.Navigation
         public bool Expandable { get; set; }
 
         public bool IsHidden { get; set; }
+
+        public bool IsHomePage { get; set; }
     }
 }

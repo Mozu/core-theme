@@ -9,13 +9,17 @@
  */
 
 define(['modules/jquery-mozu', 'modules/api'], function($, api) {
+    var PARTIAL_PARAM_NAME = "_mz_partial";
 
     function setPartialTrue(url) {
-        return url + (url.indexOf('?') === -1 ? "?" : "&") + "_partial=true";
+        var prefixChar = !~url.indexOf('?') ? '?' : '&';
+        return url + prefixChar + PARTIAL_PARAM_NAME + "=true";
     }
 
     function removePartialParam(url) {
-        return url.replace(/[&\?]_partial=true/g, '');
+        return url.replace(
+            RegExp('[&\\?]' + PARTIAL_PARAM_NAME + '=true', 'g'),
+            '');
     }
 
     return function getPartialView(url, partialTemplate) {

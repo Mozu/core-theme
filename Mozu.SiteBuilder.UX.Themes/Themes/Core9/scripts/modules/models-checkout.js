@@ -1057,7 +1057,7 @@
                     if (paymentWorkflow) {
                         billingInfo.set('paymentWorkflow', paymentWorkflow);
                         billingInfo.get('card').set({
-                            isCvvOptional: true,
+                            isCvvOptional: Hypr.getThemeSetting('isCvvSuppressed'),
                             paymentWorkflow: paymentWorkflow
                         });
                         billingInfo.trigger('stepstatuschange'); // trigger a rerender

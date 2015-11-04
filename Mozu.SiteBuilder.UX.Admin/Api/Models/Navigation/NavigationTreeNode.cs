@@ -88,6 +88,10 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.Models.Navigation
         [DataMember(Name = "url")]
         public string Url { get; set; }
 
+        [DataMember(Name = "isHomePage")]
+        public bool IsHomePage { get; set; }
+
+
         [DataMember(Name = "leaf")]
         public bool IsLeaf { get; set; }
         
