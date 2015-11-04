@@ -64,15 +64,15 @@ namespace Mozu.SiteBuilder.UX.Areas.Misc.Controllers
         public HttpResponseMessage RefreshAPiContextHeaders()
         {
             IEnumerable<string> tmp;
-            if (this.Request.Headers.TryGetValues(Constants.Headers.APP_CLAIMS, out tmp))
+            if (this.Request.Headers.TryGetValues(Mozu.Core.Api.Contracts.Constants.Headers.APP_CLAIMS, out tmp))
             {
                 var appClaim = Mozu.Core.LightweightAppClaims.Parse(tmp.First());
                 if ((DateTime.UtcNow - appClaim.Expiration).TotalDays < 1)
                 {
                     var clientApiContext = this.Request.Resolve<ClientApiContext>();
                     var resp = Request.CreateResponse(HttpStatusCode.OK);
-                    resp.Headers.Add(Constants.Headers.APP_CLAIMS, clientApiContext.Headers[Constants.Headers.APP_CLAIMS]);
-                    resp.Headers.Add(Constants.Headers.USER_CLAIMS, clientApiContext.Headers[Constants.Headers.USER_CLAIMS]);
+                    resp.Headers.Add(Mozu.Core.Api.Contracts.Constants.Headers.APP_CLAIMS, clientApiContext.Headers[Mozu.Core.Api.Contracts.Constants.Headers.APP_CLAIMS]);
+                    resp.Headers.Add(Mozu.Core.Api.Contracts.Constants.Headers.USER_CLAIMS, clientApiContext.Headers[Mozu.Core.Api.Contracts.Constants.Headers.USER_CLAIMS]);
                     return resp;
                 }
             }
@@ -273,13 +273,13 @@ namespace Mozu.SiteBuilder.UX.Areas.Misc.Controllers
                 var writableContext = (SiteBuilderApiContext)SbApiContext;
                 var headers = new NameValueCollection();
 
-                headers[Constants.Headers.TENANT] = site.TenantId.ToString();
-                headers[Constants.Headers.MASTER_CATALOG] = site.MasterCatalogId.ToString();
-                headers[Constants.Headers.CATALOG] = site.CatalogId.ToString();
-                headers[Constants.Headers.SITE] = site.Id.ToString();
-                headers[Constants.Headers.LOCALE] = site.DefaultLocaleCode;
-                headers[Constants.Headers.CURRENCY] = site.DefaultCurrencyCode;
-                headers[Constants.Headers.DATA_VIEW_MODE] = viewMode.ToString();
+                headers[Mozu.Core.Api.Contracts.Constants.Headers.TENANT] = site.TenantId.ToString();
+                headers[Mozu.Core.Api.Contracts.Constants.Headers.MASTER_CATALOG] = site.MasterCatalogId.ToString();
+                headers[Mozu.Core.Api.Contracts.Constants.Headers.CATALOG] = site.CatalogId.ToString();
+                headers[Mozu.Core.Api.Contracts.Constants.Headers.SITE] = site.Id.ToString();
+                headers[Mozu.Core.Api.Contracts.Constants.Headers.LOCALE] = site.DefaultLocaleCode;
+                headers[Mozu.Core.Api.Contracts.Constants.Headers.CURRENCY] = site.DefaultCurrencyCode;
+                headers[Mozu.Core.Api.Contracts.Constants.Headers.DATA_VIEW_MODE] = viewMode.ToString();
 
                 return new TransferResult(redirUrl)
                 {
@@ -309,8 +309,8 @@ namespace Mozu.SiteBuilder.UX.Areas.Misc.Controllers
                 var path = redirUri.IsAbsoluteUri ? 
                     redirUri.LocalPath : 
                     redirUri.OriginalString.Substring(0, qmarkpos != -1 ? 
-                    qmarkpos : 
-                    redirUri.OriginalString.Length);
+                        qmarkpos : 
+                        redirUri.OriginalString.Length);
                 var query = redirUri.IsAbsoluteUri ? 
                     redirUri.Query.TrimStart('?') : 
                     (qmarkpos != -1 ? 

@@ -1,14 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Net;
 using System.Net.Http;
 using System.Net.Http.Formatting;
 using System.Net.Http.Headers;
-using System.Runtime.Hosting;
-using System.Text;
 using System.Text.RegularExpressions;
 using System.Threading;
 using System.Threading.Tasks;
@@ -16,232 +13,43 @@ using System.Web;
 using System.Web.Http;
 using System.Web.Http.Controllers;
 using Autofac;
-using FSharpx.Collections;
-using Magnum.Extensions;
-using Microsoft.Server.Common;
-using Microsoft.Win32;
-using MongoDB.Bson.Serialization.Conventions;
 using Mozu.Core;
-using Mozu.Core.Exceptions;
 using Mozu.Core.Extensions;
 using Mozu.SiteBuilder.Mvc.ActionFilters;
 using Mozu.SiteBuilder.Mvc.ActionResults;
 using Mozu.SiteBuilder.Mvc.MediaTypeFormatters;
 using Mozu.SiteBuilder.Mvc.Models.CMS;
-using Mozu.SiteBuilder.Mvc.ObjectPools;
 using Mozu.SiteBuilder.Mvc.Themes;
 using Mozu.SiteBuilder.Mvc.ViewEngine;
 using Mozu.SiteBuilder.UX.Controllers;
 using Newtonsoft.Json.Linq;
-using dotless.Core.Exceptions;
-using dotless.Core.Importers;
-using dotless.Core.Input;
-using dotless.Core.Loggers;
-using dotless.Core.Parser;
-using dotless.Core.Parser.Infrastructure;
-using dotless.Core.Parser.Infrastructure.Nodes;
-using dotless.Core.Parser.Tree;
-using dotless.Core.Plugins;
 using Mozu.SiteBuilder.Mvc.Navigation;
-using Stact.Routing.Nodes;
 using Mozu.Core.Settings;
+using Mozu.SiteBuilder.UX.Filters;
 
 namespace Mozu.SiteBuilder.UX.Areas.Misc.Controllers
 {
+    [ForceCDNUseFilter]
     public class ResourceController : BaseApiController
     {
-        private static readonly Lazy<Dictionary<string, string>> g_mimeTypeDic = new Lazy<Dictionary<string, string>>(BuildMimeTypeDictionary, true);
-
-        private static readonly Dictionary<string, string> g_hardCodedMimeTypes = new Dictionary<string, string>
-                                                                                      {
-                                                                                          {"ai", "application/postscript"},
-                                                                                          {"aif", "audio/x-aiff"},
-                                                                                          {"aifc", "audio/x-aiff"},
-                                                                                          {"aiff", "audio/x-aiff"},
-                                                                                          {"asc", "text/plain"},
-                                                                                          {"atom", "application/atom+xml"},
-                                                                                          {"au", "audio/basic"},
-                                                                                          {"avi", "video/x-msvideo"},
-                                                                                          {"bcpio", "application/x-bcpio"},
-                                                                                          {"bin", "application/octet-stream"},
-                                                                                          {"bmp", "image/bmp"},
-                                                                                          {"cdf", "application/x-netcdf"},
-                                                                                          {"cgm", "image/cgm"},
-                                                                                          {"class", "application/octet-stream"},
-                                                                                          {"cpio", "application/x-cpio"},
-                                                                                          {"cpt", "application/mac-compactpro"},
-                                                                                          {"csh", "application/x-csh"},
-                                                                                          {"css", "text/css"},
-                                                                                          {"dcr", "application/x-director"},
-                                                                                          {"dif", "video/x-dv"},
-                                                                                          {"dir", "application/x-director"},
-                                                                                          {"djv", "image/vnd.djvu"},
-                                                                                          {"djvu", "image/vnd.djvu"},
-                                                                                          {"dll", "application/octet-stream"},
-                                                                                          {"dmg", "application/octet-stream"},
-                                                                                          {"dms", "application/octet-stream"},
-                                                                                          {"doc", "application/msword"},
-                                                                                          {"dtd", "application/xml-dtd"},
-                                                                                          {"dv", "video/x-dv"},
-                                                                                          {"dvi", "application/x-dvi"},
-                                                                                          {"dxr", "application/x-director"},
-                                                                                          {"eps", "application/postscript"},
-                                                                                          {"etx", "text/x-setext"},
-                                                                                          {"exe", "application/octet-stream"},
-                                                                                          {"ez", "application/andrew-inset"},
-                                                                                          {"gif", "image/gif"},
-                                                                                          {"gram", "application/srgs"},
-                                                                                          {"grxml", "application/srgs+xml"},
-                                                                                          {"gtar", "application/x-gtar"},
-                                                                                          {"hdf", "application/x-hdf"},
-                                                                                          {"hqx", "application/mac-binhex40"},
-                                                                                          {"htm", "text/html"},
-                                                                                          {"html", "text/html"},
-                                                                                          {"ice", "x-conference/x-cooltalk"},
-                                                                                          {"ico", "image/x-icon"},
-                                                                                          {"ics", "text/calendar"},
-                                                                                          {"ief", "image/ief"},
-                                                                                          {"ifb", "text/calendar"},
-                                                                                          {"iges", "model/iges"},
-                                                                                          {"igs", "model/iges"},
-                                                                                          {"jnlp", "application/x-java-jnlp-file"},
-                                                                                          {"jp2", "image/jp2"},
-                                                                                          {"jpe", "image/jpeg"},
-                                                                                          {"jpeg", "image/jpeg"},
-                                                                                          {"jpg", "image/jpeg"},
-                                                                                          {"js", "application/x-javascript"},
-                                                                                          {"kar", "audio/midi"},
-                                                                                          {"latex", "application/x-latex"},
-                                                                                          {"lha", "application/octet-stream"},
-                                                                                          {"lzh", "application/octet-stream"},
-                                                                                          {"m3u", "audio/x-mpegurl"},
-                                                                                          {"m4a", "audio/mp4a-latm"},
-                                                                                          {"m4b", "audio/mp4a-latm"},
-                                                                                          {"m4p", "audio/mp4a-latm"},
-                                                                                          {"m4u", "video/vnd.mpegurl"},
-                                                                                          {"m4v", "video/x-m4v"},
-                                                                                          {"mac", "image/x-macpaint"},
-                                                                                          {"man", "application/x-troff-man"},
-                                                                                          {"mathml", "application/mathml+xml"},
-                                                                                          {"me", "application/x-troff-me"},
-                                                                                          {"mesh", "model/mesh"},
-                                                                                          {"mid", "audio/midi"},
-                                                                                          {"midi", "audio/midi"},
-                                                                                          {"mif", "application/vnd.mif"},
-                                                                                          {"mov", "video/quicktime"},
-                                                                                          {"movie", "video/x-sgi-movie"},
-                                                                                          {"mp2", "audio/mpeg"},
-                                                                                          {"mp3", "audio/mpeg"},
-                                                                                          {"mp4", "video/mp4"},
-                                                                                          {"mpe", "video/mpeg"},
-                                                                                          {"mpeg", "video/mpeg"},
-                                                                                          {"mpg", "video/mpeg"},
-                                                                                          {"mpga", "audio/mpeg"},
-                                                                                          {"ms", "application/x-troff-ms"},
-                                                                                          {"msh", "model/mesh"},
-                                                                                          {"mxu", "video/vnd.mpegurl"},
-                                                                                          {"nc", "application/x-netcdf"},
-                                                                                          {"oda", "application/oda"},
-                                                                                          {"ogg", "application/ogg"},
-                                                                                          {"pbm", "image/x-portable-bitmap"},
-                                                                                          {"pct", "image/pict"},
-                                                                                          {"pdb", "chemical/x-pdb"},
-                                                                                          {"pdf", "application/pdf"},
-                                                                                          {"pgm", "image/x-portable-graymap"},
-                                                                                          {"pgn", "application/x-chess-pgn"},
-                                                                                          {"pic", "image/pict"},
-                                                                                          {"pict", "image/pict"},
-                                                                                          {"png", "image/png"},
-                                                                                          {"pnm", "image/x-portable-anymap"},
-                                                                                          {"pnt", "image/x-macpaint"},
-                                                                                          {"pntg", "image/x-macpaint"},
-                                                                                          {"ppm", "image/x-portable-pixmap"},
-                                                                                          {"ppt", "application/vnd.ms-powerpoint"},
-                                                                                          {"ps", "application/postscript"},
-                                                                                          {"qt", "video/quicktime"},
-                                                                                          {"qti", "image/x-quicktime"},
-                                                                                          {"qtif", "image/x-quicktime"},
-                                                                                          {"ra", "audio/x-pn-realaudio"},
-                                                                                          {"ram", "audio/x-pn-realaudio"},
-                                                                                          {"ras", "image/x-cmu-raster"},
-                                                                                          {"rdf", "application/rdf+xml"},
-                                                                                          {"rgb", "image/x-rgb"},
-                                                                                          {"rm", "application/vnd.rn-realmedia"},
-                                                                                          {"roff", "application/x-troff"},
-                                                                                          {"rtf", "text/rtf"},
-                                                                                          {"rtx", "text/richtext"},
-                                                                                          {"sgm", "text/sgml"},
-                                                                                          {"sgml", "text/sgml"},
-                                                                                          {"sh", "application/x-sh"},
-                                                                                          {"shar", "application/x-shar"},
-                                                                                          {"silo", "model/mesh"},
-                                                                                          {"sit", "application/x-stuffit"},
-                                                                                          {"skd", "application/x-koan"},
-                                                                                          {"skm", "application/x-koan"},
-                                                                                          {"skp", "application/x-koan"},
-                                                                                          {"skt", "application/x-koan"},
-                                                                                          {"smi", "application/smil"},
-                                                                                          {"smil", "application/smil"},
-                                                                                          {"snd", "audio/basic"},
-                                                                                          {"so", "application/octet-stream"},
-                                                                                          {"spl", "application/x-futuresplash"},
-                                                                                          {"src", "application/x-wais-source"},
-                                                                                          {"sv4cpio", "application/x-sv4cpio"},
-                                                                                          {"sv4crc", "application/x-sv4crc"},
-                                                                                          {"svg", "image/svg+xml"},
-                                                                                          {"swf", "application/x-shockwave-flash"},
-                                                                                          {"t", "application/x-troff"},
-                                                                                          {"tar", "application/x-tar"},
-                                                                                          {"tcl", "application/x-tcl"},
-                                                                                          {"tex", "application/x-tex"},
-                                                                                          {"texi", "application/x-texinfo"},
-                                                                                          {"texinfo", "application/x-texinfo"},
-                                                                                          {"tif", "image/tiff"},
-                                                                                          {"tiff", "image/tiff"},
-                                                                                          {"tr", "application/x-troff"},
-                                                                                          {"tsv", "text/tab-separated-values"},
-                                                                                          {"txt", "text/plain"},
-                                                                                          {"ustar", "application/x-ustar"},
-                                                                                          {"vcd", "application/x-cdlink"},
-                                                                                          {"vrml", "model/vrml"},
-                                                                                          {"vxml", "application/voicexml+xml"},
-                                                                                          {"wav", "audio/x-wav"},
-                                                                                          {"wbmp", "image/vnd.wap.wbmp"},
-                                                                                          {"wbmxl", "application/vnd.wap.wbxml"},
-                                                                                          {"wml", "text/vnd.wap.wml"},
-                                                                                          {"wmlc", "application/vnd.wap.wmlc"},
-                                                                                          {"wmls", "text/vnd.wap.wmlscript"},
-                                                                                          {"wmlsc", "application/vnd.wap.wmlscriptc"},
-                                                                                          {"wrl", "model/vrml"},
-                                                                                          {"xbm", "image/x-xbitmap"},
-                                                                                          {"xht", "application/xhtml+xml"},
-                                                                                          {"xhtml", "application/xhtml+xml"},
-                                                                                          {"xls", "application/vnd.ms-excel"},
-                                                                                          {"xml", "application/xml"},
-                                                                                          {"xpm", "image/x-xpixmap"},
-                                                                                          {"xsl", "application/xml"},
-                                                                                          {"xslt", "application/xslt+xml"},
-                                                                                          {"xul", "application/vnd.mozilla.xul+xml"},
-                                                                                          {"xwd", "image/x-xwindowdump"},
-                                                                                          {"woff", "application/font-woff"},
-                                                                                          {"xyz", "chemical/x-xyz"},
-                                                                                          {"zip", "application/zip"}
-                                                                                      };
-
-        private readonly Lazy<IMozuVirtualPathProvider> _pathProvider;
-        private readonly Lazy<INavigationGandalf> _navGandalf;
-        private readonly Lazy<IThemeContentRetriever> _contentRetriever;
-        private readonly Core.Logging.ILogger _logger;
-        private readonly Lazy<AMDModuleProvider> _moduleProvider;
-        private readonly ISettings _settings;
-        private readonly IApiContext _apiContext;
+        readonly Lazy<IMozuVirtualPathProvider> _pathProvider;
+        readonly Lazy<INavigationGandalf> _navGandalf;
+        readonly Lazy<IThemeContentRetriever> _contentRetriever;
+        readonly Core.Logging.ILogger _logger;
+        readonly Lazy<AMDModuleProvider> _moduleProvider;
+        readonly ISettings _settings;
+        readonly IApiContext _apiContext;
+        readonly static Lazy<JsonpMediaTypeFormatter> _jmtf = new Lazy<JsonpMediaTypeFormatter>(() => new JsonpMediaTypeFormatter(GlobalConfiguration.Configuration.Formatters.JsonFormatter));
+        readonly ITemplateInheritanceHandler _templateGetter;
 
         public ResourceController(Lazy<IMozuVirtualPathProvider> pathProvider, 
             Lazy<INavigationGandalf> gandalf, 
             Lazy<IThemeContentRetriever> contentRetriever, 
             Core.Logging.ILogger logger, 
             ISettings settings, 
-            IApiContext apiContext)
+            IApiContext apiContext, 
+            ITemplateInheritanceHandler templateGetter,
+            Lazy<AMDModuleProvider> amdModuleProvider)
         {
             _navGandalf = gandalf;
             _contentRetriever = contentRetriever;
@@ -249,50 +57,9 @@ namespace Mozu.SiteBuilder.UX.Areas.Misc.Controllers
             _pathProvider = pathProvider;
             _apiContext = apiContext;
             _settings = settings;
-            _moduleProvider = new Lazy<AMDModuleProvider>(() => new AMDModuleProvider
-            {
-                PathProvider = _pathProvider.Value
-            });
-            
+            _moduleProvider = amdModuleProvider;
+            _templateGetter = templateGetter;
         }
-
-
-        public override Task<HttpResponseMessage> ExecuteAsync(HttpControllerContext controllerContext, CancellationToken cancellationToken)
-        {
-            this.LifetimeScope = (ILifetimeScope)controllerContext.Request.GetDependencyScope().GetService(typeof(ILifetimeScope));
-       
-            if (ShouldRedirectToCdn(controllerContext.Request))
-            {
-               
-                var cdnHost = this._settings.AppSettings("CdnHost");
-                var originalUri = new Uri(PageContext.Url);
-
-                UriBuilder ub = new UriBuilder(PageContext.Url);
-                ub.Path = this.SbApiContext.TenantId + "-" + this.SbApiContext.SiteId + "/" + ub.Path;
-                ub.Host = cdnHost;
-                var resp = new HttpResponseMessage(HttpStatusCode.MovedPermanently);
-                resp.Headers.Location = ub.Uri;
-                resp.Headers.CacheControl = new CacheControlHeaderValue() { MaxAge = TimeSpan.FromDays(10000) , Public = true};
-                return Task.FromResult<HttpResponseMessage>(resp);
-
-                
-            }
-            return base.ExecuteAsync(controllerContext, cancellationToken);
-        }
-
-        bool ShouldRedirectToCdn(HttpRequestMessage httpReqeustMessage)
-        {
-
-            var isReciever = httpReqeustMessage.RequestUri.PathAndQuery.IndexOf("/receiver", StringComparison.OrdinalIgnoreCase) > -1;
-
-            var disableCdn = _settings.AppSettings("disableCDN") == "true";
-            var cdnHost = this._settings.AppSettings("CdnHost");
-            var uri = new Uri(PageContext.Url);
-
-            return !disableCdn  && !isReciever && !string.IsNullOrEmpty(cdnHost) && !cdnHost.EqualsIgnoreCase(uri.Host);
-
-        }
-
 
         DataViewModeType Convert(string dataViewModeString)
         {
@@ -338,156 +105,19 @@ namespace Mozu.SiteBuilder.UX.Areas.Misc.Controllers
             return res;
         }
 
-        public struct TemplateInfo
-        {
-            private const string format = "{0} - {1}";
-            public string key { get; set; }
-            public string content { get; set; }
-            public string themeId { get; set; }
-
-            public new string ToString()
-            {
-                return string.Format(format, themeId, key);
-            }
-        }
-
         [ClientCacheHeaders(ConfigKey = "livetemplates")]
         [HttpGet]
         public async Task<JObject> LiveTemplates(bool? debug = false)
         {
-            var templateContentsTasks =
-                    _pathProvider.Value.GetLiveTemplates().Select(async x => new TemplateInfo
-                    {
-                        key = ScrubVirtualPath(x.VirtualPathNoExt),
-                        content = await _contentRetriever.Value.GetContentAsync(x),
-                        themeId = x.ThemeId
-                    });
-
-            var templateContents = await Task.WhenAll(templateContentsTasks);
-
-            var expansionTasks = templateContents.Select(async x =>
-            {
-                if (!GetExtendsRegex.IsMatch(x.content)) return new List<TemplateInfo> { x }; // base case
-
-                var allTemplateInfos = new List<TemplateInfo> { x }.Concat(await GetParentInfos(_pathProvider.Value, x.key, _contentRetriever.Value));
-                _logger.Info(string.Format("inheritance chain for {0}: {1}", x.ToString(), string.Join(", ", allTemplateInfos.Select(y => y.ToString()))));
-
-                return TransformAndMapTemplates(allTemplateInfos); // else have to fetch and merge in all the parents
-            });
-
-            var expandedInfos = (await Task.WhenAll(expansionTasks)).SelectMany(x => x);
-
+            var templates = await _templateGetter.GetAndExpandTemplates().ConfigureAwait(false);
             var jobj = new JObject();
-            jobj.AddRange(expandedInfos.Select(x =>
-            {
-                var sanitizedKey = x.key;
-                var contentMinusComments = ScrubCommentsFromTemplate(x.content);
-                return new JProperty(sanitizedKey, contentMinusComments);
-            }));
+            jobj.AddRange(templates.Select(x => new JProperty(x.key, x.scrubbedContent)));
             return jobj;
         }
 
-        #region helpers for live templates
-
-        private static IEnumerable<TemplateInfo> TransformAndMapTemplates(IEnumerable<TemplateInfo> allTemplateInfos)
-        {
-            // because every list that is passed into here should have a parent.
-            Debug.Assert(allTemplateInfos.Count() > 1);
-
-            var head = allTemplateInfos.First();
-            var next = allTemplateInfos.Skip(1).First();
-            var newExtendsPath = MakeExtendsPath(GetExtendsRegex.Match(head.content).Groups["path"].Value, next.themeId);
-            head.content = TransformContent(head.content, newExtendsPath);
-            next.key = newExtendsPath;
-
-            if (allTemplateInfos.Count() == 2) // base case
-            {
-                return new List<TemplateInfo> { head, next };
-            }
-
-            var others = new List<TemplateInfo> { next }.Concat(allTemplateInfos.Skip(2)); // mutated 'next' plus remainder of list
-            return new List<TemplateInfo> { head }.Concat(TransformAndMapTemplates(others));
-        }
-
-        private static string TransformContent(string content, string newExtendsPath)
-        {
-            var replaceString = CreateFullReplaceString(content);
-            var newString = string.Format("\"{0}\"", newExtendsPath);
-            return content.Replace(replaceString, newString);
-        }
-
-        private static string ScrubVirtualPath(string vp)
-        {
-            return vp.Replace('\\', '/').Replace("templates/", "");
-        }
-
-        private static string MakeExtendsPath(string basePath, string themeId)
-        {
-            var interimExtendsPath = string.Format("{0}__{1}", basePath.Replace("\"", String.Empty).Replace("'", String.Empty).Replace("\\", "/"), themeId);
-            return ScrubVirtualPath(interimExtendsPath);
-        }
-
-        private static string CreateFullReplaceString(string content)
-        {
-            var m = GetExtendsRegex.Match(content);
-            var pathPart = m.Groups["path"].Value;
-            var junkPart = m.Groups["junk"].Value;
-            var filterPart = m.Groups["filter"].Value;
-            var all = string.Format("{0}{1}{2}", pathPart, junkPart, filterPart);
-            return all;
-        }
-
-        private static readonly Regex GetExtendsRegex = new Regex(@"{%(?:\s*)extends(?:\s*)(?<path>"".*""|'.*')(?<junk>(?:\s*)\|(?:\s*))(?<filter>parent_template)(?:\s*)%}", RegexOptions.Compiled);
-
-        /// <summary>
-        /// Walks the inheritance tree for a virtual path and returns an ordered list of the parent theme files for the same virtual path.
-        /// </summary>
-        /// <param name="vpp"></param>
-        /// <param name="virtualPath"></param>
-        /// <returns></returns>
-        private static async Task<IEnumerable<TemplateInfo>> GetParentInfos(IMozuVirtualPathProvider vpp, string virtualPath, IThemeContentRetriever contentRetriever)
-        {
-
-            var theme = vpp.GetThemeFileInfo(string.Format("templates/{0}", virtualPath), false);
-            if (theme == null) return Enumerable.Empty<TemplateInfo>();
-
-            var parents = new List<ThemeFileSystemInfo>();
-            var parent = vpp.GetParentThemeFileInfo(theme);
-            while (parent != null)
-            {
-                parents.Add(parent);
-                parent = vpp.GetParentThemeFileInfo(parent);
-            }
-
-            var getContentTasks = parents.Select(async x => new TemplateInfo
-            {
-                key = ScrubVirtualPath(x.VirtualPathNoExt),
-                themeId = x.ThemeId,
-                content = await contentRetriever.GetContentAsync(x)
-            });
-
-            await Task.WhenAll(getContentTasks);
-
-            return getContentTasks.Select(x => x.Result);
-        }
-
-        private static readonly Regex HtmlCommentRegex = new Regex("<!--.*-->", RegexOptions.Compiled); // removes everything from <!-- through -->
-        private static readonly Regex HyprCommentRegex = new Regex(@"\{#.*#\}", RegexOptions.Compiled); // removes everything from {# through #}. note that the curlies have to be escaped.
-        private static readonly IEnumerable<Regex> TemplateScrubbers = new List<Regex>
-        {
-            HtmlCommentRegex,
-            HyprCommentRegex,
-        };
-
-        private static string ScrubCommentsFromTemplate(string template)
-        {
-            return TemplateScrubbers.Aggregate(template, (s, regex) => regex.Replace(s, String.Empty));
-        }
-        #endregion
-
         [HttpGet]
         [ClientCacheHeaders(ConfigKey = "receiver")]
-        public ActionResult MozuReceiver(string receiverVersion)
+        public ActionResult MozuReceiver(int receiverVersion)
         {
             return File("/Assets/mozu_receiver_v" + receiverVersion + ".html", "text/html");
         }
@@ -498,7 +128,6 @@ namespace Mozu.SiteBuilder.UX.Areas.Misc.Controllers
         {
             return File("/Assets/mozu_receiver.html", "text/html");
         }
-
 
         [ClientCacheHeaders(ConfigKey = "scripts")]
         [HttpGet]
@@ -520,18 +149,17 @@ namespace Mozu.SiteBuilder.UX.Areas.Misc.Controllers
             var pathPrefix = System.IO.Path.IsPathRooted(sharedFolder) ? "" : @"\\";
             var tenantId = "t-" + _apiContext.TenantId;
             var fileName = pathPrefix + sharedFolder + "/" + tenantId + "/" + relativePath;
-            string fileType;
-
+            
             if (checkRequestContent(relativePath, sharedFolder) || !System.IO.File.Exists(fileName))
             {
                 return Request.CreateResponse(HttpStatusCode.NotFound);
             }
-
             else
             {
                 var SourceStream = System.IO.File.Open(fileName, FileMode.Open, FileAccess.Read, FileShare.ReadWrite);
                 var content = new StreamContent(SourceStream);
-                var exists = g_mimeTypeDic.Value.TryGetValue(Path.GetExtension(fileName), out fileType);
+                string fileType;
+                var exists = Constants.MimeTypes.MimeTypesByExtension.Value.TryGetValue(Path.GetExtension(fileName), out fileType);
                 var resp = Request.CreateResponse(HttpStatusCode.OK);
 
                 resp.Content = content;
@@ -540,14 +168,12 @@ namespace Mozu.SiteBuilder.UX.Areas.Misc.Controllers
 
                 return resp;
             }
-
         }
 
-        private bool checkRequestContent(string relativePath, string sharedFolder)
+        bool checkRequestContent(string relativePath, string sharedFolder)
         {
             return relativePath.Contains("..");
         }
-
 
         [ClientCacheHeaders(ConfigKey = "navigation")]
         [HttpGet]
@@ -556,7 +182,6 @@ namespace Mozu.SiteBuilder.UX.Areas.Misc.Controllers
             var nav = await _navGandalf.Value.GetTreeNavigation();
             return JArray.FromObject(nav);
         }
-
 
         [ClientCacheHeaders(ConfigKey = "siteContext")]
         [HttpGet]
@@ -584,146 +209,17 @@ namespace Mozu.SiteBuilder.UX.Areas.Misc.Controllers
 
             return Request.CreateResponse(HttpStatusCode.OK, ctx, GetJsonMediaFormatter(ctx.GetType()));
         }
-
-        private static JsonpMediaTypeFormatter _jmtf;
-
-        private MediaTypeFormatter GetJsonMediaFormatter(Type t)
+        
+        MediaTypeFormatter GetJsonMediaFormatter(Type t)
         {
-            if (_jmtf == null)
-            {
-                _jmtf = new JsonpMediaTypeFormatter(GlobalConfiguration.Configuration.Formatters.JsonFormatter);
-            }
-            return _jmtf.GetPerRequestFormatterInstance(t, Request, new MediaTypeHeaderValue("text/json"));
-
-        }
-
-        private class AMDModuleProvider
-        {
-            public IMozuVirtualPathProvider PathProvider;
-
-            private static class ModuleParts
-            {
-                public const string DEFINE = "define([";
-                public const string FUNCTION = "], function(";
-                public const string OPEN = ") {\r\n\r\n";
-                public const string RETURN = "\r\n; return ";
-                public const string CLOSE = ";\r\n\r\n});\r\n\r\n//@sourceUrl=";
-                public const string LAST = "\r\n";
-                public const string WARNING = "\r\nwindow.console&&console.error&&console.error(\"The script `{0}` was called with the `shim!` plugin, but it may already contain code that defines it as an AMD module.\\n\\nNested `define()` calls can result in race conditions. Check this file to see if the `shim!` is necessary.\");\r\n";
-            }
-
-            public string FormatModule(string deps, string args, string contents, string toExport, string path, bool debug)
-            {
-                using (var container = StringBuilderPool.Default.GetContainer())
-                {
-                    var sb = container.Item;
-                    sb.Append(ModuleParts.DEFINE);
-                    sb.Append(deps);
-                    sb.Append(ModuleParts.FUNCTION);
-                    sb.Append(args);
-                    sb.Append(ModuleParts.OPEN);
-
-                    if (debug && contents.IndexOf("define.amd") > 0)
-                    {
-                        sb.AppendFormat(ModuleParts.WARNING, path);
-                    }
-
-                    sb.AppendLine(contents);
-                    sb.Append(ModuleParts.RETURN);
-                    sb.Append(toExport);
-                    sb.Append(ModuleParts.CLOSE);
-                    sb.Append(path);
-                    sb.Append(ModuleParts.LAST);
-
-                    return sb.ToString();
-                }
-            }
-
-
-            private string GetScriptFileContents(string pathinfo)
-            {
-                var file = PathProvider.GetThemeFileInfo("scripts/" + pathinfo);
-                return file == null ? null : System.IO.File.ReadAllText(file.FullPath);
-            }
-
-            private readonly Regex DepNameRE = new Regex("(.+)=([a-zA-Z_$][0-9a-zA-Z_$]*)$");
-
-            private Tuple<string, string> GetAMDDeps(string requireString)
-            {
-                if (string.IsNullOrEmpty(requireString))
-                {
-                    return new Tuple<string, string>(string.Empty, string.Empty);
-                }
-                List<string> namedDeps = new List<string>();
-                List<string> anonDeps = new List<string>();
-                List<string> args = new List<string>();
-
-                //string[] dep;
-
-                int nestingLevel = 0;
-                int lastCommaIndex = -1;
-                bool isComma = false;
-                char chr;
-                string depName;
-                Match depMatch;
-                char[] requireCharArray = requireString.ToCharArray();
-                for (int i = 0; i < requireCharArray.Length; i++)
-                {
-                    chr = requireCharArray[i];
-                    if (chr == '[') nestingLevel++;
-                    if (chr == ']') nestingLevel--;
-                    isComma = (chr == ',');
-                    if (nestingLevel < 0) throw new Exception("Cannot parse AMD dependency array.");
-                    if ((isComma || i + 1 == requireCharArray.Length) && nestingLevel == 0)
-                    {
-                        depName = requireString.Substring(lastCommaIndex + 1,
-                            ((isComma ? i : i + 1) - lastCommaIndex - 1));
-                        depMatch = DepNameRE.Match(depName);
-                        if (depMatch.Success)
-                        {
-                            namedDeps.Add("\"" + depMatch.Groups[1].Captures[0].Value + "\"");
-                            args.Add(depMatch.Groups[2].Captures[0].Value);
-                        }
-                        else
-                        {
-                            anonDeps.Add(depName);
-                        }
-                        lastCommaIndex = i;
-                    }
-                }
-
-
-                namedDeps.AddRange(anonDeps);
-
-                return new Tuple<string, string>(string.Join(",", namedDeps.ToArray()), string.Join(",", args.ToArray()));
-            }
-
-            public HttpResponseMessage CreateModule(HttpRequestMessage req, string pathinfo, string shimRequire, string shimExport, bool debug)
-            {
-                string contents = GetScriptFileContents(pathinfo);
-                if (contents == null)
-                {
-                    return new HttpResponseMessage(HttpStatusCode.NotFound)
-                    {
-                        RequestMessage = req,
-                        Content = new StringContent("File " + pathinfo + " not found.")
-                    };
-                }
-                Tuple<string, string> deps = GetAMDDeps(shimRequire);
-                string module = FormatModule(deps.Item1, deps.Item2, contents, shimExport, "scripts/" + pathinfo, debug);
-                return new HttpResponseMessage(HttpStatusCode.OK)
-                {
-                    RequestMessage = req,
-                    Content = new StringContent(module, Encoding.Unicode, "text/javascript")
-                };
-            }
+            return _jmtf.Value.GetPerRequestFormatterInstance(t, Request, new MediaTypeHeaderValue("text/json"));
         }
 
         [ClientCacheHeaders(ConfigKey = "scripts")]
         [System.Web.Http.HttpGet]
         public HttpResponseMessage Scripts(string pathinfo, string shimRequire = "", string shimExport = "", bool debug = false)
         {
-            if (String.IsNullOrEmpty(shimRequire) && String.IsNullOrEmpty(shimExport))
+            if (string.IsNullOrEmpty(shimRequire) && string.IsNullOrEmpty(shimExport))
             {
                 return Content("scripts/" + pathinfo, "text/javascript");
             }
@@ -745,14 +241,11 @@ namespace Mozu.SiteBuilder.UX.Areas.Misc.Controllers
                     var fullPath = new FileInfo(widget.FullPath + path);
                     if (fullPath.Exists)
                     {
-
-                        return Request.CreateResponse(HttpStatusCode.OK,
-                            new FilePathResult(fullPath.FullName, GetMimeType(pathinfo)));
+                        return Request.CreateResponse(HttpStatusCode.OK, new FilePathResult(fullPath.FullName, GetMimeType(pathinfo)));
                     }
                 }
             }
             return Request.CreateErrorResponse(HttpStatusCode.NotFound, "not found");
-
         }
 
         [ClientCacheHeaders(ConfigKey = "templates")]
@@ -793,15 +286,11 @@ namespace Mozu.SiteBuilder.UX.Areas.Misc.Controllers
         [HttpGet]
         public new HttpResponseMessage Content(string pathinfo, string contentType = null)
         {
-            if (contentType == null)
-            {
-                contentType = GetMimeType(pathinfo);
-            }
-
+            var resolvedContentType = contentType ?? GetMimeType(pathinfo);
             return GetFileResult(pathinfo, contentType);
         }
 
-        private HttpResponseMessage GetFileResult(string pathinfo, string contentType)
+        HttpResponseMessage GetFileResult(string pathinfo, string contentType)
         {
             var file = _pathProvider.Value.GetThemeFileInfo(pathinfo);
             return file != null ?
@@ -809,292 +298,15 @@ namespace Mozu.SiteBuilder.UX.Areas.Misc.Controllers
                 Request.CreateErrorResponse(HttpStatusCode.NotFound, "file not found");
         }
 
-        private static string GetMimeType(string path)
+        string GetMimeType(string path)
         {
             string mimeType;
-
             var ext = Path.GetExtension(path);
-            if (!g_mimeTypeDic.Value.TryGetValue(ext, out mimeType))
+            if (!Constants.MimeTypes.MimeTypesByExtension.Value.TryGetValue(ext, out mimeType))
             {
                 mimeType = "application/unknown";
             }
             return mimeType;
-        }
-
-        private static Dictionary<string, string> BuildMimeTypeDictionary()
-        {
-            var dic = new Dictionary<string, string>(StringComparer.OrdinalIgnoreCase);
-
-            foreach (var mimeMatch in g_hardCodedMimeTypes)
-            {
-                dic["." + mimeMatch.Key] = mimeMatch.Value;
-            }
-
-            foreach (string keyName in Registry.ClassesRoot.GetSubKeyNames())
-            {
-                RegistryKey regKey = Registry.ClassesRoot.OpenSubKey(keyName, false);
-                object contentType = regKey.GetValue("Content Type");
-                if (contentType != null)
-                {
-                    dic[keyName] = contentType.ToString();
-                }
-            }
-
-            return dic;
-        }
-
-        private class LessLogger : ILogger
-        {
-            private static string DebugTemplate = "DEBUG: {0}";
-            private static string ErrorTemplate = "ERROR: {0}";
-            private static string InfoTemplate = "INFO: {0}";
-            private static string LogTemplate = "LOG LEVEL {0}: {1}";
-            private static string WarnTemplate = "WARNING: {0}";
-
-            public void Debug(string msg)
-            {
-                System.Diagnostics.Debug.WriteLine(String.Format(DebugTemplate, msg));
-            }
-
-            public void Error(string msg)
-            {
-                System.Diagnostics.Debug.WriteLine(String.Format(ErrorTemplate, msg));
-            }
-
-            public void Info(string msg)
-            {
-                System.Diagnostics.Debug.WriteLine(String.Format(InfoTemplate, msg));
-            }
-
-            public void Log(LogLevel level, string msg)
-            {
-                System.Diagnostics.Debug.WriteLine(String.Format(LogTemplate, level.ToString(), msg));
-            }
-
-            public void Warn(string msg)
-            {
-                System.Diagnostics.Debug.WriteLine(String.Format(WarnTemplate, msg));
-            }
-
-
-            public void Debug(string message, params object[] args)
-            {
-                System.Diagnostics.Debug.WriteLine(String.Format(DebugTemplate, string.Join(" -- ", args)));
-            }
-
-            public void Error(string message, params object[] args)
-            {
-                System.Diagnostics.Debug.WriteLine(String.Format(ErrorTemplate, string.Join(" -- ", args)));
-            }
-
-            public void Info(string message, params object[] args)
-            {
-                System.Diagnostics.Debug.WriteLine(String.Format(InfoTemplate, string.Join(" -- ", args)));
-            }
-
-            public void Warn(string message, params object[] args)
-            {
-                System.Diagnostics.Debug.WriteLine(String.Format(WarnTemplate, string.Join(" -- ", args)));
-            }
-        }
-
-        private class LessTransFormer
-        {
-            private static readonly Regex g_regex =
-                new Regex(@"\{\{[\s]*(?<col>[\w]+)\.(?<var>[\w-]+)(?<filters>(?:\|\w+(?:\:[^\|\}]+)?)*)[\s]*\}\}",
-                                                              RegexOptions.IgnoreCase |
-                                                              RegexOptions.Compiled |
-                                                              RegexOptions.Singleline |
-                                                              RegexOptions.IgnorePatternWhitespace);
-
-            private readonly bool _debug;
-            private readonly bool _emitDebugStylesheet;
-            private readonly IThemeContentRetriever _contentRetriever;
-            private readonly string _path;
-
-            public LessTransFormer(string path, bool debug, bool emitDebugStylesheet, ResourceController resourceController,
-                IMozuVirtualPathProvider virtualPathProvider, IThemeContentRetriever contentRetriever)
-            {
-                Controller = resourceController;
-                _emitDebugStylesheet = emitDebugStylesheet;
-                _debug = debug;
-                _contentRetriever = contentRetriever;
-                _path = path;
-                PathProvider = virtualPathProvider;
-            }
-
-
-            public ResourceController Controller { get; set; }
-            public IMozuVirtualPathProvider PathProvider { get; set; }
-
-            public Stream Transform(Stream str, string stem)
-            {
-                var sr = new StreamReader(str);
-                string template = sr.ReadToEnd();
-                Exception debuggableException = null;
-
-                template = ProcessSettingsVariables(template, stem);
-                var reader = new MyLessFileReader(this, _contentRetriever);
-
-
-                var parser = new Parser
-                {
-                    Importer = new Importer(reader, true, false, false)
-                };
-
-
-
-                Ruleset tree = null;
-                try
-                {
-                    tree = parser.Parse(template, _path);
-                }
-                catch (System.IO.FileNotFoundException exception)
-                {
-                    throw new FileNotFoundException(exception.Message + "[" + exception.FileName + "]", exception.InnerException);
-                }
-                catch (Exception ex)
-                {
-                    if (_debug && _emitDebugStylesheet)
-                    {
-                        debuggableException = ex;
-                    }
-                    else throw;
-                }
-
-
-
-
-                var env = new Env { Compress = !_debug, Debug = _debug };
-
-
-                var mlp = new ProbeForThemeVariablesPlugin()
-                {
-                    ThemeSettings = Controller.SiteContext.ThemeSettings,
-                    CdnPrefix = Controller.SiteContext.CdnPrefix
-                };
-                env.AddPlugin(mlp);
-
-                env.AddPlugin(new InsertThemeVariablePlugin()
-                {
-                    Rules = mlp.Rules
-                });
-                env.AddFunction("cdnurl", typeof(CdnFunction));
-
-                try
-                {
-                    env.Output.Push().Append(tree);
-                }
-                catch (Exception ex)
-                {
-
-                    if (_debug && _emitDebugStylesheet)
-                    {
-                        debuggableException = ex;
-                    }
-
-                    else if (ex.GetType().FullName.Contains("dotless"))
-                    {
-                        throw;
-                    }
-                    else
-                    {
-                        throw new Exception("error parsing LESS file " + _path, ex);
-                    }
-                }
-
-                MemoryStream ms;
-                using (var container = StringBuilderPool.Default.GetContainer())
-                {
-                    StringBuilder sb;
-                    if (debuggableException != null)
-                    {
-                        sb = container.Item;
-                        sb.Append(VISIBLE_LESS_ERROR_FILE_START);
-                        sb.Append(debuggableException.Message.Replace(System.Environment.NewLine, "\\a ").Replace("\'", "\\'"));
-                        sb.Append(VISIBLE_LESS_ERROR_FILE_END);
-                    }
-                    else
-                    {
-                        sb = env.Output.Pop();
-                    }
-                    ms = new MemoryStream(Encoding.UTF8.GetBytes(sb.ToString()));
-                }
-                ms.Position = 0;
-                return ms;
-            }
-
-            public string ProcessSettingsVariables(string template, string fileName)
-            {
-                if (template.IndexOf("{{") > -0)
-                {
-                    try
-                    {
-                        return g_regex.Replace(template, Evaluator);
-                    }
-                    catch (ParsingException par)
-                    {
-                        par.Location.FileName = fileName;
-                        par.Location.Source = template;
-                        throw;
-                    }
-                }
-
-                return template;
-            }
-
-            private string Evaluator(Match match)
-            {
-                var varName = match.Groups["var"].Value;
-                var obj = Controller.SiteContext.ThemeSettings[varName];
-                if (obj == null)
-                {
-                    throw new ParsingException("missing template setting '" + varName + "'",
-                        new NodeLocation(match.Index, "", ""));
-                }
-                //var str = obj.ToString();
-                //if (string.IsNullOrEmpty(str))
-                //{
-                //    throw new ParsingException("empty template setting '" + varName + "'",
-                //        new NodeLocation(match.Index, "", ""));
-                //}
-                //return str;
-
-                return obj.ToString() ?? string.Empty;
-            }
-
-            public const string VISIBLE_LESS_ERROR_FILE_START = @"
-                body > * {
-                    opacity: 0.1;
-                }
-                body:before {
-                    position: fixed;
-                    top: 0;
-                    left: 0;
-                    width: 100%;
-                    padding: 20px 30px;
-                    font-size: 2em;
-                    color: white;
-                    background: red;
-                    font-family: monospace;
-                    font-weight: bold;
-                    content: 'There was an error parsing your Less stylesheet.'
-                }
-                body:after { 
-                    position: fixed; 
-                    top: 50px;
-                    left: 0;
-                    color: red;
-                    margin: 30px;
-                    font-weight: bold;
-                    font-family: monospace;
-                    line-height: 1.5em;
-                    font-size: 1.2em;
-                    white-space: pre;
-                    white-space: pre-wrap;
-                    content: '";
-            public const string VISIBLE_LESS_ERROR_FILE_END = @"'; 
-                }";
         }
 
         public class MozuVirtualFileResult : FileResult
@@ -1142,295 +354,5 @@ namespace Mozu.SiteBuilder.UX.Areas.Misc.Controllers
                 }
             }
         }
-
-        private class MyLessFileReader : IFileReader
-        {
-            private readonly LessTransFormer _lessTransFormer;
-            private readonly IThemeContentRetriever _contentRetriever;
-
-            public MyLessFileReader(LessTransFormer lessTransFormer, IThemeContentRetriever contentRetriever)
-            {
-                _lessTransFormer = lessTransFormer;
-                _contentRetriever = contentRetriever;
-                Controller = lessTransFormer.Controller;
-            }
-
-            private static string g_content = "/*.nullcontainerguything {}*/";
-            private ResourceController Controller { get; set; }
-
-            public string GetFileContents(string fileName)
-            {
-                var transFormedContent = string.Empty;
-                {
-                    var stem = fileName;
-                    var file = _lessTransFormer.PathProvider.GetThemeFileInfo(stem);
-                    if (file != null)
-                    {
-                        transFormedContent = _lessTransFormer.ProcessSettingsVariables(_contentRetriever.GetContent(file), file.VirtualPath);
-                    }
-                }
-                return string.IsNullOrWhiteSpace(transFormedContent) ? g_content : transFormedContent;
-            }
-
-            public bool DoesFileExist(string fileName)
-            {
-                string stem = fileName;
-                var file = _lessTransFormer.PathProvider.GetThemeFileInfo(stem);
-                return file != null;
-            }
-
-
-            public byte[] GetBinaryFileContents(string fileName)
-            {
-                // foreach (var theme in SiteContext.ThemeInfo.Stack)
-                {
-                    string stem = fileName;
-                    var file = _lessTransFormer.PathProvider.GetThemeFileInfo(stem);
-                    if (file != null)
-                    {
-                        using (Stream stream = _contentRetriever.GetStream(file))
-                        {
-                            var data = new byte[stream.Length];
-                            stream.Read(data, 0, data.Length);
-                            return data;
-                        }
-                    }
-                }
-
-                return null;
-            }
-
-
-            public bool UseCacheDependencies
-            {
-                get { return false; }
-            }
-        }
-
-        class CdnFunction : dotless.Core.Parser.Functions.Function
-        {
-
-            protected override Node Evaluate(Env env)
-            {
-                string inner;
-                var tn = Arguments[0] as TextNode;
-                if (tn == null)
-                {
-                    inner = Arguments[0].ToCSS(env);
-                }
-                else
-                {
-
-                    inner = tn.Value;
-                }
-
-
-
-
-
-
-                var imagePath = inner;
-                if (!inner.StartsWith("http", StringComparison.OrdinalIgnoreCase))
-                {
-                    var cndPrefix = env.VisitorPlugins.OfType<ProbeForThemeVariablesPlugin>().First().CdnPrefix ?? "";
-                    if (!cndPrefix.EndsWith("/"))
-                    {
-                        cndPrefix += "/";
-                    }
-                    imagePath = cndPrefix + inner;
-                }
-
-
-                return new TextNode("url(\"" + imagePath + "\")");
-
-
-            }
-        }
-
-        private class InsertThemeVariablePlugin : VisitorPlugin
-        {
-            public override VisitorPluginType AppliesTo
-            {
-                get { return VisitorPluginType.BeforeEvaluation; }
-            }
-            public Dictionary<string, Node> Rules = new Dictionary<string, Node>();
-
-            public override Node Execute(Node node, out bool visitDeeper)
-            {
-                visitDeeper = true;
-
-                var root = node as Root;
-                if (root != null && this.Rules.Count > 0)
-                {
-                    root.Rules.InsertRange(0, Rules.Values);
-                    this.Rules.Clear();
-                    visitDeeper = false;
-                }
-
-
-                return node;
-            }
-        }
-
-        private class ProbeForThemeVariablesPlugin : VisitorPlugin
-        {
-            public override VisitorPluginType AppliesTo
-            {
-                get { return VisitorPluginType.BeforeEvaluation; }
-            }
-
-            public Env Env { get; set; }
-            public Dictionary<string, Node> Rules = new Dictionary<string, Node>();
-            const string prefix = "@theme-settings-";
-
-
-            public ThemeRuntimeSettingsCollection ThemeSettings { get; set; }
-            public string CdnPrefix { get; set; }
-            public override Node Execute(Node node, out bool visitDeeper)
-            {
-
-                var variableNode = node as Variable;
-                visitDeeper = true;
-                if (variableNode != null)
-                {
-                    if (variableNode.Name.IndexOf(prefix, StringComparison.OrdinalIgnoreCase) == 0 && !Rules.ContainsKey(variableNode.Name))
-                    {
-
-                        var setting = ThemeSettings[variableNode.Name.Substring(prefix.Length)];
-                        bool added = false;
-                        if (setting != null)
-                        {
-                            Parser p = new Parser();
-                            var val = variableNode.Name + ":" + setting.ToString() + ";";
-                            try
-                            {
-                                var ruleSet = p.Parse(val, "c:\\themesettingVariables.less");
-
-                                Rules.Add(variableNode.Name, ruleSet.Rules.First());
-                            }
-                            catch
-                            {
-                                val = variableNode.Name + ":\"" + setting.ToString() + "\";";
-
-                                try
-                                {
-                                    var ruleSet = p.Parse(val, "c:\\themesettingVariables.less");
-                                    Rules.Add(variableNode.Name, ruleSet.Rules.First());
-                                }
-                                catch
-                                {
-                                }
-                            }
-
-                            added = true;
-                        }
-                    }
-                    visitDeeper = false;
-
-                }
-
-
-                return node;
-            }
-        }
-
-        //private class MyNode : Node, IOperable, IComparable
-        //{
-        //    private Node _xformedNode;
-        //    private readonly ThemeRuntimeSetting _setting;
-
-        //    public MyNode(ThemeRuntimeSetting setting)
-        //    {
-        //        _setting = setting;
-        //    }
-
-        //    public override Node Evaluate(Env env)
-        //    {
-        //       var ret= XformedNode.Evaluate(env);
-        //        return ret;
-
-        //    }
-
-        //    public Node XformedNode
-        //    {
-        //        get {
-        //            if (_xformedNode ==  null)
-        //            {
-        //                if (_setting.Value == null || _setting.Value is JObject || _setting.Value is JArray)
-        //                {
-        //                    _xformedNode =  new TextNode(_setting.Value == null ? null : _setting.Value.ToString());
-        //                }
-        //                else
-        //                {
-        //                    Parser p = new Parser();
-        //                var val = "@x:" + (_setting.Value == null ? null : _setting.Value.ToString()) + ";";
-        //                var ruleSet = p.Parse(val, "c:\\stuff.less");
-        //                var rule = ruleSet.Rules.First() as Rule;
-        //                if (rule == null)
-        //                {
-        //                    _xformedNode = new TextNode(null);
-        //                }
-        //                _xformedNode = rule.Value;
-
-
-        //                }
-
-
-
-        //            }
-        //            return _xformedNode;
-        //        }
-        //        set { _xformedNode = value; }
-        //    }
-
-        //    public Node Operate(Operation op, Node other)
-        //    {
-        //        var oper = XformedNode as IOperable;
-        //        if (oper!= null)
-        //        {
-        //            return oper.Operate(op, other);
-        //        }
-        //        throw new NotImplementedException();
-        //    }
-
-        //    public Color ToColor()
-        //    {
-
-        //        var oper = XformedNode as IOperable;
-        //        if (oper != null)
-        //        {
-        //            return oper.ToColor();
-        //        }
-        //        throw new NotImplementedException();
-        //    }
-
-        //    public int CompareTo(object obj)
-        //    {
-        //        var oper = XformedNode as IComparable;
-        //        if (oper != null)
-        //        {
-        //            return oper.CompareTo(obj);
-        //        }
-        //        throw new NotImplementedException();
-        //    }
-        //}
-
-        //private class MyVariable : Variable
-        //{
-        //    public MyVariable(string name)
-        //        : base(name)
-        //    {
-        //    }
-
-        //    public override Node Evaluate(Env env)
-        //    {
-
-        //        var tn = new TextNode("red");
-        //        return tn;
-
-        //    }
-        //}
-
-
     }
 }
