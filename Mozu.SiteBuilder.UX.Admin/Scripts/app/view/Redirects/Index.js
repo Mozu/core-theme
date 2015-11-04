@@ -138,7 +138,7 @@ Ext.define('Taco.view.redirects.Index', {
                      },
                      text: 'Priority',
                      width: 100,
-                     align: 'left'
+                     align: 'center'
                  },
                  {
                     xtype: 'taco.menucolumn',
