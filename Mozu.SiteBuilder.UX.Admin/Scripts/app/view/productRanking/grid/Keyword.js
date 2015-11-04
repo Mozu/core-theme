@@ -150,6 +150,7 @@ Ext.define('Taco.view.productRanking.grid.Keyword', {
                 me.record.setDirty();
             }
         });
+        field.setValue("");
     },
     getQuickAddField: function () {
         var me = this;
