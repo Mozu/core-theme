@@ -138,7 +138,7 @@ Ext.define('Taco.view.productRanking.grid.Category', {
             filterIds = filters.map(function(rec) { return rec.value; });
 
             this.catStore.on('load', function(store) {
-            
+
                 store.each(function(rec) {
                     if (rec.get(me.filterProperty) && filterIds.indexOf(rec.get(me.filterProperty)) != -1)  {
                         records.push(rec);
@@ -218,9 +218,19 @@ Ext.define('Taco.view.productRanking.grid.Category', {
                 text: 'Actions',
                 menuItems: [
                     {
-                        text: 'Delete',
-                        itemId: 'deleteMenuItem',
+                        text: 'Remove',
+                        itemId: 'removeMenuItem',
                         menuColumnHandler: 'deleteMenuColumnHandler',
+                        scope: me
+                    },
+                    {
+                        text: 'Remove All',
+                        itemId: 'removeAllMenuItems',
+                        menuColumnHandler: function() {
+                            me.store.getProxy().data = [];
+                            me.store.removeAll();
+                            me.store.loadPage(1);
+                        },
                         scope: me
                     }
                 ]
