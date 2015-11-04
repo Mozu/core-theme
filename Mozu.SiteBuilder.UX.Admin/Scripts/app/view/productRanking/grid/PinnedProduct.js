@@ -241,7 +241,6 @@ Ext.define('Taco.view.productRanking.grid.PinnedProduct', {
           sortable: false,
           dataIndex: 'productName',
           text: 'Name',
-          hideable: false,
           flex: 1,
           minWidth: 150
         },
