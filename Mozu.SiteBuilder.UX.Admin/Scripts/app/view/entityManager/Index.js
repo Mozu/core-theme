@@ -329,6 +329,8 @@ Ext.define('Taco.view.entityManager.Index', {
                 me.showHideButtons();
             }
         });
+
+        Taco.core.StateManager.addState('entities?entityType=' + metaData.entityType + '&list=' + metaData.name + '&record=' + record.get('name'));
     },
     saveSuccess: function() {
         this.mixins.navHeader.saveSuccess.call(this, arguments);
