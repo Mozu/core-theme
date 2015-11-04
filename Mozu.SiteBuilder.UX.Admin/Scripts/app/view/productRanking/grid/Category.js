@@ -160,6 +160,8 @@ Ext.define('Taco.view.productRanking.grid.Category', {
 
                 me.reconfigure(newStore);
             });
+        } else {
+            me.store = me.getNewStore([]);
         }
     },
 
