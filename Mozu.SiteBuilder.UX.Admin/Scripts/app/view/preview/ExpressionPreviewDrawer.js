@@ -38,7 +38,7 @@ Ext.define('Taco.view.preview.ExpressionPreviewDrawer', {
 
     initComponent: function (eOpts) {
         var me = this;
-
+        
         me.previewGrid = Ext.create('Taco.view.storefrontProduct.Grid');
 
         me.expressionEditor = Ext.create('Taco.view.filter.ExpressionTreePanel', {
@@ -85,6 +85,9 @@ Ext.define('Taco.view.preview.ExpressionPreviewDrawer', {
 
         this.callParent(arguments);
 
+
+        // initialize the preview panel
+        me.onExpressionChange(me.expressionEditor);
     },
 
     /*
