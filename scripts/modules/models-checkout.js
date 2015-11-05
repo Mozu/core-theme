@@ -161,11 +161,7 @@
                     return false;
                 }
 
-                if (this.get('updateMode') === 'edit') {
-                    this.set('updateMode', 'editComplete');
-                }
-
-                var parent = this.parent,
+               var parent = this.parent,
                     order = this.getOrder(),
                     me = this,
                     isAddressValidationEnabled = HyprLiveContext.locals.siteContext.generalSettings.isAddressValidationEnabled,
@@ -1281,20 +1277,26 @@
             addCustomerContact: function (infoName, contactName, contactTypes) {
                 var customer = this.get('customer'),
                     contactInfo = this.get(infoName),
-                    contact = contactInfo.get(contactName).toJSON(),
                     process = [function () {
-                        if (contact.updateMode && contact.updateMode === 'editComplete') {
-                            return customer.apiModel.updateContact(contact).then(function (contactResult) {
+                      
+                        // Update contact if a valid contact ID exists
+                        if (contact.id && contact.id > 0) {
+                            return customer.apiModel.updateContact(contact);
+                        }
+
+                        if (contact.id === -1 || contact.id === 1 || contact.id === 'new') {
+                            delete contact.id;
+                        }
+                        return customer.apiModel.addContact(contact).then(function(contactResult) {
+                                contact.id = contactResult.data.id;
                                 return contactResult;
                             });
-                        }
-                        if (contact.id === -1 || contact.id === 1 || contact.id === 'new') delete contact.id;
-                        return customer.apiModel.addContact(contact).then(function(contactResult) {
-                            contact.id = contactResult.data.id;
-                            return contactResult;
-                        });
                     }];
 
+                if (!contactInfo.get(contactName).get('accountId')) {
+                    contactInfo.get(contactName).set('accountId', customer.id);
+                }
+                var contact = contactInfo.get(contactName).toJSON();
                 // if customer doesn't have a primary of any of the contact types we're setting, then set primary for those types
                 if (!this.isSavingNewCustomer()) {
                     process.unshift(function() {
@@ -1321,7 +1323,8 @@
                 var contactId = contact.contactId;
                 if (contactId) contact.id = contactId;
 
-                if (!contact.id || contact.id === -1 || contact.id === 1 || contact.id === 'new' || (contact.updateMode && contact.updateMode === 'editComplete')) {
+                if (!contact.id || contact.id === -1 || contact.id === 1 || contact.id === 'new' ||
+                    this.isContactModified(contact, order.get('customer').get('contacts').get(contact.id).toJSON())) {
                     contact.types = contactTypes;
                     return api.steps(process);
                 } else {
@@ -1329,6 +1332,14 @@
                     deferred.resolve();
                     return deferred.promise;
                 }
+            },
+            isContactModified: function(orderContact, customerContact) {
+                //Check whether any of the fields available in the contact UI on checkout page is modified
+                return orderContact && customerContact && orderContact.id === customerContact.id &&
+                    (!_.isEqual(orderContact.address, customerContact.address) ||
+                    (orderContact.phoneNumbers.home && (!customerContact.phoneNumbers.home || orderContact.phoneNumbers.home !== customerContact.phoneNumbers.home)) ||
+                    orderContact.email !== customerContact.email || orderContact.firstName !== customerContact.firstName ||
+                    orderContact.lastNameOrSurname !== customerContact.lastNameOrSurname);
             },
             saveCustomerCard: function () {
                 var order = this,
