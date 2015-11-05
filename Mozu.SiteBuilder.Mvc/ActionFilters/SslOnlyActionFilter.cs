@@ -49,7 +49,7 @@ namespace Mozu.SiteBuilder.Mvc.ActionFilters
 
             // if we're on a custom route and the route specifies a scheme, then let it pass
             var customRoute = actionContext.Request.GetRouteData().Route as CustomRoute;
-            if (customRoute != null && !customRoute.UrlScheme.HasValue) return; 
+            if (customRoute != null && customRoute.UrlScheme.HasValue) return; 
             
             // else redirect to insecure
             var builder = new UriBuilder(pageContext.Url);
