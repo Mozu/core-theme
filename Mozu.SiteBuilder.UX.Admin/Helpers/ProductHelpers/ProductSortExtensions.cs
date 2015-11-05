@@ -23,7 +23,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Helpers.ProductHelpers
         private const string PUBLISH_SET_CODE = "code";
         private const string PUBLISH_DATE = "publishDate";
         private const string PUBLISH_STATUS = "status";
-        private const string PUBLIS_SET_NAME = "name";
+        
 
         /// <summary>
         /// Converts a SortingCollection for Product to a mozu services-compatible sort string.
@@ -40,9 +40,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Helpers.ProductHelpers
             //p.AuditInfo.UpdateDate 
             return string.Join(" and ", sortCollection.Select(x => GetFilter(x, useSiteContext) + (x.IsAscending ? " asc" : " desc")));
         }
-
-       
-
+        
         private static string GetFilter(SortingCollectionItem item, bool useSiteContext)
         {
             switch (item.property.ToLowerInvariant())
@@ -69,14 +67,13 @@ namespace Mozu.SiteBuilder.UX.Admin.Helpers.ProductHelpers
                     return UPDATE_DATE_PROPERTY;
                 case "createdate":
                     return CREATE_DATE_PROPERTY;
+                case "publishSetCode":
                 case "code":
                     return PUBLISH_SET_CODE;
                 case "publishdate":
                     return PUBLISH_DATE;
                 case "status":
                     return PUBLISH_STATUS;
-                case "publishsetname":
-                    return PUBLIS_SET_NAME;
                 default:
                     throw new InvalidOperationException("unknown sort.property " + item.property);
             }
