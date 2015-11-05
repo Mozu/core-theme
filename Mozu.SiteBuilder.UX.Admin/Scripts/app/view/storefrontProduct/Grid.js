@@ -241,7 +241,6 @@ Ext.define('Taco.view.storefrontProduct.Grid', {
                 text: 'Name',
                 minWidth: 120,
                 flex: 1,
-                sortable: false
             },
             {
                 xtype: 'gridcolumn',
@@ -281,7 +280,6 @@ Ext.define('Taco.view.storefrontProduct.Grid', {
                 hideable: true,
                 hidden: true,
                 flex: 1,
-                sortable: false
             },
             {
                 xtype: 'gridcolumn',
