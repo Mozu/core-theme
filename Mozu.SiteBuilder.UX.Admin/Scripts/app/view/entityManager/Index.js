@@ -338,10 +338,10 @@ Ext.define('Taco.view.entityManager.Index', {
         var me = this;
 
         if(!me.form) return null;
-        if(!record || !record.data || !record.data.listFlags || !record.data.listFlags.enableADR) return form;
+        if(!record || !record.data || !record.data.listFlags || !record.data.listFlags.enableADR) return me.form;
         var adrPanel = Ext.create('Taco.core.ux.form.field.ActiveDateRange', {record: record});
         me.form.dynamicForm.add(adrPanel);
-        return form;
+        return me.form;
     },
     saveSuccess: function() {
         this.mixins.navHeader.saveSuccess.call(this, arguments);
