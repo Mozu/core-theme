@@ -15,10 +15,6 @@
             autoLoad: false
         },
         remoteSort: true,
-        sortInfo: {
-            field: 'productCode',
-            direction: 'asc' || 'desc'
-        },
         proxy: {
             type: 'ajaxproxy',
             api: {
