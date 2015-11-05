@@ -779,8 +779,7 @@ Ext.define('Taco.view.filter.ExpressionTreePanel', {
 
         var me = this,
             treeData = this.getValue(),
-            treeType = this.up('#taco-category-form').record.get('categoryType');
-
+            treeType = this.getType();
         Ext.create('Taco.view.preview.ExpressionPreviewDrawer', {
             // need to let the preview know what type of dynamic expression we are previewing. DynamicRealTime or DynamicPreComputed;           
             dynamicCategoryType: this.getType(),

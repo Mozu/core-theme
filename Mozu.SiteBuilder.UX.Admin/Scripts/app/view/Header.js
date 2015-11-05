@@ -194,15 +194,15 @@ Ext.define('Taco.view.Header', {
     },
     getSitePreviewURL: function(attr) {
 
-        var url;
+        var url,
+            tree = this.up().down('#taco-nav-tree');
 
         if (attr === 'viewlive') {
-            url = '/_gosite/' + Taco.app.context.currentCtx.id + '?environment=live&redir=' + encodeURIComponent(this.up().down('#taco-nav-tree').url);
+            url = '/_gosite/' + Taco.app.context.currentCtx.id + '?environment=live&redir=' + encodeURIComponent(tree ? tree.url : '/');
         }   
         else {
-            url = '/_gosite/' + Taco.app.context.currentCtx.id + '?environment=preview&redir=' + encodeURIComponent(this.up().down('#taco-nav-tree').url);
+            url = '/_gosite/' + Taco.app.context.currentCtx.id + '?environment=preview&redir=' + encodeURIComponent(tree ? tree.url : '/');
         }
-
         window.open(url);
     },
     getContextHash: function(type, obj) {

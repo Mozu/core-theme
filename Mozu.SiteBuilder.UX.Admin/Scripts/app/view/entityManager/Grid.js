@@ -22,21 +22,23 @@ Ext.define('Taco.view.entityManager.Grid', {
     createButtonEnabled: true,
     saveButtonEnabled: false,
     cancelButtonEnabled: false,
+    enableAutoSelect: false,
     showActionsColumn: true,
     hideSearchToolbar: false,
     selType: 'rowmodel',
     autoScroll: true,
     enableQuickFilters: false,
+    stateful: true,
+    stateId: 'contentyEntityStatefulGrid',
     advancedSearchConfig: {
         advancedFormCls: 'Taco.view.entityManager.AdvancedSearchForm',
         quickFilterData: []
     },
 
-    stateful: false,
-
     initComponent: function() {
         var me = this,
-            menu;
+            menu;  
+
 
         me.defaultView = me.listMetaData.views[0];
         me.currentView = me.defaultView;

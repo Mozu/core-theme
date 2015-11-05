@@ -40,9 +40,9 @@ Ext.define('Taco.view.preview.ExpressionPreviewDrawer', {
         var me = this;
 
         me.previewGrid = Ext.create('Taco.view.storefrontProduct.Grid');
-                
+
         me.expressionEditor = Ext.create('Taco.view.filter.ExpressionTreePanel', {
-            showPreviewButton: false,            
+            showPreviewButton: false,
             showCodeButton: false,
             editable: true,
             // need to let the tree panel know what type of dynamic expression its editing.
