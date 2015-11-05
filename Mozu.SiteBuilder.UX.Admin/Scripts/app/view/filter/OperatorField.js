@@ -32,6 +32,7 @@ Ext.define('Taco.view.filter.OperatorField', {
             name: 'recurseField',
             width: "100%",
             xtype: 'checkboxfield',
+            checked: (this.value === "req"),
             hidden: !this.isRecursiveOperator(this.value),
             boxLabel: this.recurseText
         });
@@ -87,7 +88,7 @@ Ext.define('Taco.view.filter.OperatorField', {
         if (!value) {
             this.recurseField.setVisible(false);
         }
-
+        
         this.recurseField.setVisible(this.isRecursiveOperator(value));
 
         // if this is a recursive field we alwasys set the combo value to eq. the checkbox will decide between req and eg when we out put the value;

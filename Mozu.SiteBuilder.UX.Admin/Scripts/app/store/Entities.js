@@ -1,5 +1,5 @@
 /**
- * @class Taco.store.Roles
+ * @class Taco.store.Entities
  */
 
 
@@ -31,6 +31,25 @@ Ext.define('Taco.store.Entities', {
             options.params.view = this.view;
 
             return this.callParent([options]);
+        },
+        proxy: {
+            type: 'ajax',
+            api: {
+                read: '/admin/app/entities/read',
+                create: '/admin/app/entities/create',
+                update: '/admin/app/entities/update',
+                destroy: '/admin/app/entities/delete'
+            },
+            reader: {
+                type: 'json',
+                root: 'items',
+                successProperty: 'success',
+                messageProperty: 'message'
+            },
+            writer: {
+                allowSingle: false,
+                type: 'json'
+            }
         }
     }
 );

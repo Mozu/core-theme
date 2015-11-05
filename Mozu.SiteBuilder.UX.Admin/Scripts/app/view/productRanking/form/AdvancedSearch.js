@@ -119,14 +119,14 @@ Ext.define('Taco.view.productRanking.form.AdvancedSearch', {
             me.createDateRangeFields('Active End Date Range', 'activeEndDateFrom', 'activeEndDateTo'),
             {
                 xtype: 'taco-adminuserfield',
-                name: 'createdBy',
+                name: 'createByUser',
                 fieldLabel: 'Created By',
                 flex: 1
             },
             me.createDateRangeFields('Created Date Range', 'createDateFrom', 'createDateTo'),
             {
                 xtype: 'taco-adminuserfield',
-                name: 'modifiedBy',
+                name: 'lastModifiedByUser',
                 fieldLabel: 'Last Modified By',
                 flex: 1
             },

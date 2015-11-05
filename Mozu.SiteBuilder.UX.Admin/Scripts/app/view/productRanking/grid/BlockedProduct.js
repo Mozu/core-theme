@@ -76,7 +76,7 @@ Ext.define('Taco.view.productRanking.grid.BlockedProduct', {
 
             for (var i = products.length - 1; i >= 0; i--) {
                 this.store.data.add(Ext.create('Taco.model.BlockedProduct', products[i]));
-            };
+            }
         },
         recordadded: function(records) {
 
@@ -115,8 +115,7 @@ Ext.define('Taco.view.productRanking.grid.BlockedProduct', {
     },
 
     getActionColumn: function () {
-        var me = this,
-            actionColumn = null,
+        var actionColumn = null,
             actions = this.getActionItems();
 
         // as long as we have actions;
@@ -132,80 +131,81 @@ Ext.define('Taco.view.productRanking.grid.BlockedProduct', {
     },
 
     getActionItems: function() {
-        var me = this,
-            actions = [];
-                   
-        actions.push({
-          text: 'Remove',
-          menuColumnHandler: function(item, eventData) {
-            var record = eventData.record;
-            me.removeProduct(record);
-          }
-        });
+        var me = this;
 
-        return actions;
+        return [{
+              text: 'Remove',
+              menuColumnHandler: function(item, eventData) {
+                var record = eventData.record;
+                me.removeProduct(record);
+              }
+            }, {
+                text: 'Remove All',
+                menuColumnHandler: function() {
+                    me.store.removeAll();
+                }
+            }
+        ];
     },
   
   getColumnConfig: function () {
-    var me = this,
-      columns = [
+      return [
         {
-          xtype: 'gridcolumn',
-          dataIndex: 'productName',
-          text: 'Name',
-          flex: 1,
-          minWidth: 150
+            xtype: 'gridcolumn',
+            dataIndex: 'productName',
+            text: 'Name',
+            hideable: false,
+            flex: 1,
+            minWidth: 150
         },
         {
-          xtype: 'gridcolumn',
-          dataIndex: 'productCode',
-          text: 'Code',
-          hideable: true,
-          flex: 1
+            xtype: 'gridcolumn',
+            dataIndex: 'productCode',
+            text: 'Code',
+            hideable: true,
+            flex: 1
         },
         {
-          xtype: 'gridcolumn',
-          dataIndex: 'price',
-          text: 'Price',
-          hideable: true,
-          flex: 1
+            xtype: 'gridcolumn',
+            dataIndex: 'price',
+            text: 'Price',
+            hideable: true,
+            flex: 1
         },
         {
-          xtype: 'gridcolumn',
-          dataIndex: 'salePrice',
-          text: 'Sale Price',
-          hideable: true,
-          flex: 1
+            xtype: 'gridcolumn',
+            dataIndex: 'salePrice',
+            text: 'Sale Price',
+            hideable: true,
+            flex: 1
         },
         {
-          xtype: 'gridcolumn',
-          sortable: false,
-          dataIndex: 'lastModifiedDate',
-          text: 'Last Modified',
-          hideable: true,
-          hidden: true,
-          flex: 1,
-          renderer: Ext.util.Format.dateRenderer('d M, Y, g:i a')
+            xtype: 'gridcolumn',
+            sortable: false,
+            dataIndex: 'lastModifiedDate',
+            text: 'Last Modified',
+            hideable: true,
+            hidden: true,
+            flex: 1,
+            renderer: Ext.util.Format.dateRenderer('d M, Y, g:i a')
         },
         {
-          xtype: 'gridcolumn',
-          dataIndex: 'productType',
-          text: 'Product Type',
-          hideable: true,
-          hidden: true,
-          flex: 1
+            xtype: 'gridcolumn',
+            dataIndex: 'productType',
+            text: 'Product Type',
+            hideable: true,
+            hidden: true,
+            flex: 1
         },
         {
-          xtype: 'gridcolumn',
-          dataIndex: 'productUsage',
-          text: 'Product Usage',
-          hideable: true,
-          hidden: true,
-          flex: 1
+            xtype: 'gridcolumn',
+            dataIndex: 'productUsage',
+            text: 'Product Usage',
+            hideable: true,
+            hidden: true,
+            flex: 1
         }
-      ];
-
-    return columns;
+    ];
   },
 
     getValues: function () {

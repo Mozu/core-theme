@@ -738,7 +738,6 @@
     <Content Include="Scripts\app\view\couponCode\DiscountGrid.js" />
     <Content Include="Scripts\app\view\couponCode\Grid.js" />
     <Content Include="Scripts\app\view\preview\ExpressionPreviewDrawer.js" />
-    <Content Include="Scripts\app\view\preview\PreviewGrid.js" />
     <Content Include="Scripts\app\view\productRanking\Edit.js" />
     <Content Include="Scripts\app\view\productRanking\Form.js" />
     <Content Include="Scripts\app\view\productRanking\form\AdvancedSearch.js" />
@@ -820,7 +819,6 @@
     <Content Include="Scripts\app\view\storeCredit\Grid.js" />
     <Content Include="Scripts\app\view\storefrontProduct\Grid.js" />
     <Content Include="Scripts\app\view\storefrontProduct\Panel.js" />
-    <Content Include="Scripts\app\view\storefrontProduct\modal\StorefrontProductModal.js" />
     <Content Include="Scripts\app\view\website\entityAdapters\OrderTemplateEntityAdapter.js" />
     <Content Include="Scripts\app\view\settings\shipping\subform\EligibleShippingAddressLocations.js" />
     <Content Include="Scripts\app\view\website\NavigationTreeModal.js" />
@@ -2359,6 +2357,7 @@
     <Folder Include="Scripts\app\view\address\" />
     <Folder Include="Scripts\app\view\product\option\" />
     <Folder Include="Scripts\app\view\settings\publishing\" />
+    <Folder Include="Scripts\app\view\storefrontProduct\modal\" />
     <Folder Include="Scripts\build\" />
     <Folder Include="Scripts\packages\mozuadmintheme\sass\etc\siteBuilder\" />
     <Folder Include="Scripts\resources\scss\taco\widgets\" />

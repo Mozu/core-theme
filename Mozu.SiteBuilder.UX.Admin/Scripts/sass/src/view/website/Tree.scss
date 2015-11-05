@@ -41,6 +41,7 @@
             display: block;
             white-space: nowrap;
             text-overflow: ellipsis;
+            text-overflow: "...            ";
             overflow: hidden;
 
         span {
@@ -55,6 +56,11 @@
     }
     .#{$prefix}grid-row-selected {
         .#{$prefix}grid-td {
+            background-color: $grid-cell-selected-background-color;
+        }
+
+        .#{$vprefix}website-tree-menu-trigger,
+        .#{$vprefix}website-tree-icon.drag-icon {
             background-color: $grid-cell-selected-background-color;
         }
     }
@@ -90,6 +96,7 @@
         &.drag-icon {
             @include icon-font($glyph-knurling, 13px, rgb(179, 179, 179));
             float: right;
+            background-color: $color-framework-gray-light;
 
             &.invisible {
                 visibility: hidden;
@@ -109,6 +116,7 @@
 
     .#{$vprefix}website-tree-menu-trigger {
         float: right;
+        background-color: $color-framework-gray-light;
         @include icon-font($glyph-gear, 13px);
         display: none;
     }

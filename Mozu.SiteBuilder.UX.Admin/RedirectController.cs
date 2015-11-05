@@ -124,7 +124,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
             protected override void WriteFile(HttpResponseBase response)
             {
                 var sw = response.Output;
-                sw.WriteLine("source,destination,rewrite,isTemporary,copyQueryString, priority");
+                sw.WriteLine("source,destination,rewrite,temporary,copyQueryString,priority,active");
                 EnumerableExtensions.Each(Redirects, x =>
                 {
                     RedirectController.EscapeWrite(sw, x.Source);
@@ -138,6 +138,8 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
                     sw.Write(x.CopyQueryString.GetValueOrDefault(false) ? 1 : 0);
                     sw.Write(',');
                     sw.Write(x.Priority);
+                    sw.Write(",");
+                    sw.Write(x.IsEnabled.GetValueOrDefault(false) ? 1 : 0);
                     sw.WriteLine();
                 });
                
@@ -147,8 +149,6 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
                 WriteFile(response);
                 return Task.FromResult<bool> (true);
             }
-
-            
         }
 
         static  void EscapeWrite(TextWriter sw, string inSTr)
@@ -270,7 +270,8 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
                             IsRewrite = row.Length > 2 && row[2] == "1",
                             IsTemporary = row.Length > 3 && row[3] == "1",
                             CopyQueryString = row.Length > 4 && row[4] == "1",
-                            Priority = (row.Length > 5 && decimal.TryParse( row[5] , out d) )? (decimal?)d : (decimal?)null
+                            Priority = (row.Length > 5 && decimal.TryParse( row[5] , out d) )? (decimal?)d : (decimal?)null,
+                            IsEnabled = (row.Length > 6 && row[6] == "1")
                         };
                         Validate(entry, list.Count);
                         list.Add(entry);

@@ -6,7 +6,8 @@ Ext.define('Taco.view.productRanking.grid.Keyword', {
     requires: [
         'Ext.ux.data.PagingMemoryProxy',
         'Taco.model.ProductRanking',
-        'Taco.core.ux.grid.plugins.AutoSelect'
+        'Taco.core.ux.grid.plugins.AutoSelect',
+        'Taco.store.PagedMemoryStore'
     ],
 
     minHeight: 260,
@@ -70,17 +71,10 @@ Ext.define('Taco.view.productRanking.grid.Keyword', {
     },
 
     initComponent: function () {
+
         var me = this;
 
-        Ext.define('KeywordModel', {
-            extend: 'Ext.data.Model',
-            fields: [{
-                name: 'keyword',
-                type: 'string'
-            }]
-        });
-
-        this.store = this.getKeywordStore();
+        this.store = this.getKeywordStore(this.formatRecords());
 
         me.dockedItems = me.dockedItems || [];
         me.mixins = me.mixins || [];
@@ -120,6 +114,21 @@ Ext.define('Taco.view.productRanking.grid.Keyword', {
 
     },
 
+    formatRecords: function() {
+
+        Ext.define('KeywordModel', {
+            extend: 'Ext.data.Model',
+            fields: [{
+                name: 'keyword',
+                type: 'string'
+            }]
+        });
+
+        return Ext.Array.map(this.record.get('keywordObjects'), function(rec) {
+            return Ext.create('KeywordModel', rec);
+        });
+    },
+
     onQuickAdd: function () {
         var me = this,
             field = this.getQuickAddField(),
@@ -141,6 +150,7 @@ Ext.define('Taco.view.productRanking.grid.Keyword', {
                 me.record.setDirty();
             }
         });
+        field.setValue("");
     },
     getQuickAddField: function () {
         var me = this;
@@ -234,7 +244,12 @@ Ext.define('Taco.view.productRanking.grid.Keyword', {
         ];
     },
 
-    onDeleteSuccess: function () {
+    doDelete: function (records) {
+
+        Ext.Array.each(records, function(rec) {
+            rec.store.remove(rec);
+        });
+
         this.getView().refresh();
         this.record.setDirty();
     },
@@ -249,32 +264,15 @@ Ext.define('Taco.view.productRanking.grid.Keyword', {
         return result;
     },
 
-    getKeywordStore: function () {
-        var me = this;
-        return Ext.create('Ext.data.Store', {
+    getKeywordStore: function (records) {
+        return Ext.create('Taco.store.PagedMemoryStore', {
             storeId: 'keywordStore',
             autoLoad: true,
             model: 'KeywordModel',
             sorters: ['keyword'],
             fields: ['keyword'],
-
-            //autoLoad: false,
-            pageSize: this.pageSize,
-            remoteSort: false,
-            remoteFilter: false,
-            proxy: {
-                type: 'memory',
-                enablePaging: true,
-                sorters: ['keyword'],
-                filters: [],
-                data: {
-                    'items': me.record.get('keywordObjects')
-                },
-                reader: {
-                    type: 'json',
-                    root: 'items'
-                }
-            }
+            data: records,
+            pageSize: this.pageSize
         });
     },
 

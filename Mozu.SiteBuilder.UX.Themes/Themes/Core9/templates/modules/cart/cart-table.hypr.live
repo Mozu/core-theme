@@ -21,7 +21,13 @@
         <dl class="mz-propertylist">
           {% for option in item.product.options %}
           <dt>{{ option.name }}</dt>&nbsp;
-          <dd>{{ option.value }}</dd>
+          <dd>
+            {% if option.value %}
+                  {{ option.value }}
+            {% else %}
+                  {{ option.shopperEnteredValue }}
+            {% endif %}
+          </dd>
           {% endfor %}
         </dl>
         {% endif %}

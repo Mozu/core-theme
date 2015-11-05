@@ -67,8 +67,8 @@ Ext.define('Taco.view.website.Tree', {
                      * icon and title
                      */
                     var splitOutput = output.split('</span><span>');
-                    output = splitOutput[0] + '</span>' + me.getNavOptions(record) + '</span>';
-                    output += '<span class="taco-website-tree-menu-trigger"></span>' + '<span>' + splitOutput[1];
+                    
+                    output = me.getNavOptions(record) + '</span><span class="taco-website-tree-menu-trigger"></span>' + splitOutput[0] + '</span><span>' + splitOutput[1];
                 }
 
                 return output;

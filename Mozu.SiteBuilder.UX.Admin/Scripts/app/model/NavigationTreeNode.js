@@ -11,6 +11,10 @@ Ext.define('Taco.model.NavigationTreeNode', {
         useNull: true
     },
     {
+        name: 'isHomePage',
+        type: 'boolean'
+    },
+    {
         name: 'originalId',
         type: 'string',
         useNull: true
