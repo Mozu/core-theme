@@ -290,9 +290,10 @@ Ext.define('Taco.view.entityManager.Index', {
         }
         me.loadEditor(record, options);
     },
-    loadEditor: function(record, options) {
+    loadEditor: function (record, options) {
         var me = this,
             editor = me.editors.findEditor(record);
+
         options = options || {};
         if (!editor && options.editMode !== 'raw') {
             Taco.MessageBox.alert('Sorry!', 'No editor defined for this type');
@@ -306,10 +307,11 @@ Ext.define('Taco.view.entityManager.Index', {
             editor: editor,
             editMode: options.editMode
         });
+        me.addADRIfRequired(record);
         me.contentContainer.add(me.form);
         me.showHideButtons();
     },
-    onItemEdit: function(view, record, metaData, optoins) {
+    onItemEdit: function(view, record, metaData, options) {
         var me = this;
         record.reload({
             success: function() {
@@ -322,15 +324,22 @@ Ext.define('Taco.view.entityManager.Index', {
                         margin: '10 10 10 10',
                     },
                     bubbleEvents: ['savesuccess', 'saveSuccess', 'savefailure'],
-                    editMode: optoins ? optoins.editMode : null,
+                    editMode: options ? options.editMode : null,
                     editor: me.editors.findEditor(record)
                 });
+                me.form = me.addADRIfRequired(record);
                 me.contentContainer.add(me.form);
                 me.showHideButtons();
             }
         });
-
         Taco.core.StateManager.addState('entities?entityType=' + metaData.entityType + '&list=' + metaData.name + '&record=' + record.get('name'));
+    },
+    addADRIfRequired: function(record){
+        if(!me.form) return null;
+        if(!record || !record.data || !record.data.listFlags || !record.data.listFlags.enableADR) return form;
+        var adrPanel = Ext.create('Taco.core.ux.form.field.ActiveDateRange', {record: record});
+        me.form.dynamicForm.add(adrPanel);
+        return form;
     },
     saveSuccess: function() {
         this.mixins.navHeader.saveSuccess.call(this, arguments);
