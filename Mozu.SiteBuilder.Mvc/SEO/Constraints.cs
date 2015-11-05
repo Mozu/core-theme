@@ -553,7 +553,11 @@ namespace Mozu.SiteBuilder.Mvc.SEO.Constraints
             var dict = new Dictionary<string, AttributeVocabularyValue>(StringComparer.OrdinalIgnoreCase);
             foreach (var entry in val)
             {
-                dict[entry.Content.StringValue] = entry;
+                if (entry.Content != null)
+                {
+                    dict[entry.Content.StringValue] = entry;
+                }
+                
                 dict[entry.Value.ToString()] = entry;
             }
             var searchRes = searchTask.Result;
