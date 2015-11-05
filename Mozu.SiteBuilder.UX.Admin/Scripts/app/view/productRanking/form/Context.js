@@ -100,7 +100,8 @@ Ext.define('Taco.view.productRanking.form.Context', {
             name: 'categoryFilters',
             record: this.record,
             width: '100%',
-            catStore: catStore
+            catStore: catStore,
+            filterProperty: 'categoryCode'
         });
 
         this.categoriesBox = Ext.create('Ext.form.FieldContainer', {

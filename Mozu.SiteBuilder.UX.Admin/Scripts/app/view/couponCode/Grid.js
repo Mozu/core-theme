@@ -123,14 +123,6 @@ Ext.define('Taco.view.couponCode.Grid', {
 
         // initialize the delete mixin
         this.mixins.deleteFromGrid.init.apply(this);
-        
-
-        if (this.getCouponSetCode()) {
-
-            
-            // set the couponSetCode on the store and load the data;
-        }
-
 
         // initialize the search toolbar mixin
         if (me.enableSearch) {
@@ -168,7 +160,7 @@ Ext.define('Taco.view.couponCode.Grid', {
         // remove any empty strings;
         valueArray = Ext.Array.clean(valueArray);
 
-        if (valueArray.length == 0) {
+        if (valueArray.length === 0) {
             return;
         }
 
