@@ -438,7 +438,6 @@ Ext.define('Taco.view.filter.ExpressionTreePanel', {
     editFilter: function (nodeId, record, item, index, e) {
         var me = this;
 
-        debugger;
          var win = Ext.create('Taco.view.filter.EditFilterModal', {
              record: record,
              type: this.getType(),
