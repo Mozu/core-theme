@@ -65,7 +65,13 @@ Ext.define('Taco.view.storefrontProduct.Grid', {
         
         me.store = Taco.core.data.StoreManager.getOrCreate({
             type: 'Taco.store.StorefrontProducts',
-            createOnly:true
+            createOnly: true,
+            sorters: [
+                {
+                    property: 'name',
+                    direction: 'ASC'
+                }
+            ]
         });
         me.mixins = me.mixins || [];
         me.columns = me.getColumnConfig();
