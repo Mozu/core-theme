@@ -334,7 +334,9 @@ Ext.define('Taco.view.entityManager.Index', {
         });
         Taco.core.StateManager.addState('entities?entityType=' + metaData.entityType + '&list=' + metaData.name + '&record=' + record.get('name'));
     },
-    addADRIfRequired: function(record){
+    addADRIfRequired: function (record) {
+        var me = this;
+
         if(!me.form) return null;
         if(!record || !record.data || !record.data.listFlags || !record.data.listFlags.enableADR) return form;
         var adrPanel = Ext.create('Taco.core.ux.form.field.ActiveDateRange', {record: record});
