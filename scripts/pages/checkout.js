@@ -142,7 +142,8 @@ require(["modules/jquery-mozu", "underscore", "hyprlive", "modules/backbone-mozu
             'billingContact.address.countryCode',
             'paymentType',
             'isSameBillingShippingAddress',
-            'usingSavedCard'
+            'usingSavedCard',
+            'savedPaymentMethodId'
         ],
         additionalEvents: {
             "change [data-mz-digital-credit-enable]": "enableDigitalCredit",
@@ -154,6 +155,9 @@ require(["modules/jquery-mozu", "underscore", "hyprlive", "modules/backbone-mozu
             this.listenTo(this.model, 'change:digitalCreditCode', this.onEnterDigitalCreditCode, this);
             this.listenTo(this.model, 'orderPayment', function (order, scope) {
                     this.render();
+            }, this);
+            this.listenTo(this.model, 'change:savedPaymentMethodId', function (order, scope) {
+                this.render();
             }, this);
             this.codeEntered = !!this.model.get('digitalCreditCode');
         },
