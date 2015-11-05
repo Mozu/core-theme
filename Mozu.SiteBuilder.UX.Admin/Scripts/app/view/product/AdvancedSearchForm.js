@@ -190,6 +190,7 @@ Ext.define('Taco.view.product.AdvancedSearchForm', {
                 {
                     xtype: 'datefield',
                     name: 'modifiedFrom',
+                    altFormats: "c",
                     flex: 1
                 }, {
                     xtype: 'component',
@@ -198,6 +199,7 @@ Ext.define('Taco.view.product.AdvancedSearchForm', {
                 }, {
                     xtype: 'datefield',
                     name: 'modifiedTo',
+                    altFormats: "c",
                     flex: 1
                 }
             ]
