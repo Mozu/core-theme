@@ -83,7 +83,7 @@ namespace Mozu.SiteBuilder.Mvc.MessageHandler
             var builder = new UriBuilder(customRoute.UrlScheme.Value.ToStringQuickly(), currentUrl.Host);
             builder.Path = currentUrl.AbsolutePath;
             builder.Query = currentUrl.Query;
-            return RedirectTo(builder.Uri.ToString(), true, rerouted);
+            return RedirectTo(builder.Uri.ToString(), isTemporary: false, request: rerouted);
         }
 
         private static async Task<HttpRequestMessage> PerformCustomRouting(HttpRequestMessage request)
