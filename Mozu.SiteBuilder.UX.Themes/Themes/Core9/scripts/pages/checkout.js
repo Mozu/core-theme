@@ -190,8 +190,8 @@ require(["modules/jquery-mozu", "underscore", "hyprlive", "modules/backbone-mozu
             var me = this;
             var isVisaCheckout = this.model.visaCheckoutFlowComplete();
             if (!isVisaCheckout) {
-            this.editing.savedCard = true;
-            this.render();
+                this.editing.savedCard = true;
+                this.render();
             } else {
                 this.doModelAction('cancelVisaCheckout').then(function() {
                     me.editing.savedCard = false;

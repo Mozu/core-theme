@@ -1,5 +1,5 @@
 ﻿<div class="mz-checkout-digitalcredit mz-l-stack-section">
-  <h4 class="mz-l-stack-sectiontitle">{{ labels.digitalCredits }}</h4>
+  <h4 class="mz-checkoutform-title">{{ labels.digitalCredits }}</h4>
   <div class="mz-l-formfieldgroup-cell">
     <input type="text" id="digital-credit-code" name="digital-credit-code" class="mz-checkout-digitalcredit-enter-code" value="{{ model.digitalCreditCode }}" data-mz-value="digitalCreditCode" />
     <button class="mz-button" data-mz-action="getDigitalCredit" {% if not model.digitalCreditCode %} disabled="disabled" {% endif %}>{{ labels.apply }}</button>

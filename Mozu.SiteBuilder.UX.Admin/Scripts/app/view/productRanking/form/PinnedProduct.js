@@ -43,7 +43,8 @@ Ext.define('Taco.view.productRanking.form.PinnedProduct', {
                     cmp.setValue('');
                 },
                 scope: this
-            }
+            },
+            flex: 1
         });
 
         me.placementSelect = Ext.create('Ext.form.ComboBox', {
@@ -74,10 +75,9 @@ Ext.define('Taco.view.productRanking.form.PinnedProduct', {
                 type: 'hbox',
                 align: 'left'
             },
-            defaults: {
+            items: [ me.productList, me.placementSelect, Ext.create('Ext.panel.Panel', {
                 flex: 1
-            },
-            items: [ me.productList, me.placementSelect]
+            })]
         })
 
         me.items = [
