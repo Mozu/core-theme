@@ -553,7 +553,10 @@ namespace Mozu.SiteBuilder.Mvc.SEO.Constraints
             var dict = new Dictionary<string, AttributeVocabularyValue>(StringComparer.OrdinalIgnoreCase);
             foreach (var entry in val)
             {
-                dict[entry.Content.StringValue] = entry;
+                if (entry.Content != null)
+                {
+                    dict[entry.Content.StringValue] = entry;
+                }
                 dict[entry.Value.ToString()] = entry;
             }
             var searchRes = searchTask.Result;
@@ -616,7 +619,7 @@ namespace Mozu.SiteBuilder.Mvc.SEO.Constraints
         private string GetAttributeValue(AttributeVocabularyValue attr, string localeCode)
         {
             var content = attr.LocalizedContent == null ? attr.Content : attr.LocalizedContent.FirstOrDefault(lc => lc.LocaleCode.EqualsIgnoreCase(localeCode)) ?? attr.Content;
-            return content.StringValue;
+            return content != null ? content.StringValue : (attr.Value ?? new object()).ToString();
         }
     }
 

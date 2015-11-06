@@ -18,6 +18,8 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.Models.Search
 
         public string[] Keywords { get; set; }
 
+        public string[] CategoryNames { get; set; }
+
         public List<KeyValuePair<string, string>> Filters { get; set; }
 
         public bool IsActive { get; set; }

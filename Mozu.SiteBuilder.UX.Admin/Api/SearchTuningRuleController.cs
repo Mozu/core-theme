@@ -40,6 +40,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
         private readonly Lazy<ISearchTuningRuleSortBuilder> _searchtuningRuleSortBuilder;
         private readonly Lazy<IProductWebApiClient> _productWebApiClient;
         private readonly Lazy<IProductTypeWebApiClient> _productTypeWebApiClient;
+        private readonly Lazy<ICategoryWebApiClient> _categoryWebApiClient;
         private Lazy<ISearchWebApiClient> _lazySearchClient;
 
         private readonly IApiContext _apiCtx;
@@ -52,7 +53,8 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
             Lazy<ISearchTuningRuleFilterBuilder> searchTuningRuleFilterBuilder,
             Lazy<ISearchTuningRuleSortBuilder> searchtuningRuleSortBuilder,
             Lazy<IProductWebApiClient> productWebApiClient,
-            Lazy<IProductTypeWebApiClient> productTypeWebApiClient )
+            Lazy<IProductTypeWebApiClient> productTypeWebApiClient,
+            Lazy<ICategoryWebApiClient> categoryWebApiClient )
         //
         {
             _searchWebApiClient = searchWebApiClient;
@@ -60,6 +62,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
             _searchtuningRuleSortBuilder = searchtuningRuleSortBuilder;
             _productWebApiClient = productWebApiClient;
             _productTypeWebApiClient = productTypeWebApiClient;
+            _categoryWebApiClient = categoryWebApiClient;
             _apiCtx = apiCtx;
         }
 
@@ -112,12 +115,33 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
                 var searchTuningRuleList = (await searchListClient.GetSearchTuningRules(pagingParams.startIndex, pagingParams.pageSize, sortBy:sortBy, filter:filter)).ReadAsSync();
                 
                 var searchTuningRules = Mapper.Map<List<SearchTuningRule>>(searchTuningRuleList.Items);
-
+                if (searchTuningRuleList.TotalCount > 0)
+                {
+                    await AddCategoryNames(searchTuningRules);
+                }
                 return List2(searchTuningRules, (int?)searchTuningRuleList.TotalCount);
             }
             catch (ApiWebClientConnectionException e)
             {
                 return this.FailureList2<SearchTuningRule>(e.Message);
+            }
+        }
+
+        private async Task AddCategoryNames(List<SearchTuningRule> searchTuningRules)
+        {
+            var cats =
+                (await _categoryWebApiClient.Value.GetCategories(pageSize: 900, 
+                    responseFields: "items(categoryCode,content(name)"))
+                .ReadAsSync();
+            if (cats == null || cats.TotalCount == 0)
+            {
+                return;
+            }
+            var catLookup = cats.Items.ToDictionary(x => x.CategoryCode, y => y.Content.Name);
+            foreach (var rule in searchTuningRules)
+            {
+                rule.CategoryNames = rule.Filters.Where(x => x.Key == "categoryCode" && catLookup.ContainsKey(x.Value))
+                                           .Select(y => catLookup[y.Value]).OrderBy(z => z).ToArray();
             }
         }
 
