@@ -244,15 +244,6 @@ Ext.define('Taco.view.storefrontProduct.Grid', {
             },
             {
                 xtype: 'gridcolumn',
-                stateId: 'productType',
-                dataIndex: 'productType',
-                text: 'Product Type',
-                minWidth: 120,
-                flex: 1,
-                sortable:false
-            },
-            {
-                xtype: 'gridcolumn',
                 stateId: 'price',
                 dataIndex: 'price',
                 text: 'Price',
@@ -273,6 +264,25 @@ Ext.define('Taco.view.storefrontProduct.Grid', {
             },
             {
                 xtype: 'gridcolumn',
+                stateId: 'productType',
+                dataIndex: 'productType',
+                text: 'Product Type',
+                minWidth: 120,
+                flex: 1,
+                sortable:false
+            },
+            {
+                xtype: 'gridcolumn',
+                stateId: 'lastModifiedDate',
+                dataIndex: 'lastModifiedDate',
+                text: 'Last Modified',
+                minWidth: 120,
+                flex: 1,
+                hideable: true,
+                hidden: true
+            },
+            {
+                xtype: 'gridcolumn',
                 stateId: 'productUsage',
                 dataIndex: 'productUsage',
                 text: 'Usage',
@@ -280,16 +290,6 @@ Ext.define('Taco.view.storefrontProduct.Grid', {
                 hideable: true,
                 hidden: true,
                 flex: 1,
-            },
-            {
-                xtype: 'gridcolumn',
-                stateId: 'createDate',
-                dataIndex: 'createDate',
-                text: 'Create Date',
-                minWidth: 120,
-                flex: 1,
-                hideable: true,
-                hidden: true
             }
         ];
 
