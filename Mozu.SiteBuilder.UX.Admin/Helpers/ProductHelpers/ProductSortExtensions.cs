@@ -67,7 +67,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Helpers.ProductHelpers
                     return UPDATE_DATE_PROPERTY;
                 case "createdate":
                     return CREATE_DATE_PROPERTY;
-                case "publishSetCode":
+                case "publishsetcode":
                 case "code":
                     return PUBLISH_SET_CODE;
                 case "publishdate":
