@@ -225,9 +225,13 @@
 
         FulfillmentInfo = CheckoutStep.extend({
             initialize: function () {
+                var me = this;
                 // this adds the price and other metadata off the chosen method to the info object itself
                 this.updateShippingMethod(this.get('shippingMethodCode'));
                 this.on('change:availableShippingMethods', function (me, value) {
+                    me.updateShippingMethod(me.get('shippingMethodCode'));
+                });
+                _.defer(function() {
                     me.updateShippingMethod(me.get('shippingMethodCode'));
                 });
             },
