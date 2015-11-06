@@ -172,8 +172,8 @@ Ext.define('Taco.view.productRanking.Grid', {
                 sortable: false
             }, {
                 xtype: 'gridcolumn',
-                dataIndex: 'categoriesJoined',
-                stateId: 'categoriesJoined',
+                dataIndex: 'categoryNamesJoined',
+                stateId: 'categoryNamesJoined',
                 text: 'Categories',
                 hideable: true,
                 //flex: 1,
