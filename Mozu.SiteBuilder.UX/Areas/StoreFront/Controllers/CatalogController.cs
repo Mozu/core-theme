@@ -27,6 +27,7 @@ using ProductCollection = Mozu.ProductRuntime.Contracts.ProductCollection;
 using ProductSearchResult = Mozu.ProductRuntime.Contracts.ProductSearchResult;
 using Mozu.SiteBuilder.UX.Filters;
 using Mozu.Core.Actions;
+using Mozu.SiteBuilder.Mvc.Caching;
 using Mozu.SiteBuilder.Mvc.OAF;
 using Mozu.SiteSettings.General.Contracts.General.Routing;
 using Newtonsoft.Json;
@@ -42,22 +43,24 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
     [SbActionExtensionFilter(actionId: ActionFilterConstants.GlobalPageAfterAction, executionType: ActionExtensionExecutionTypes.AfterController)]
     public class CatalogController : BaseApiController
     {
-        readonly ISiteBuilderApiContext _apiCtx;
+      
         readonly ICategoryTreeProvider _categoryTreeProvider;
         readonly IProductWebApiClient _productClient;
         readonly IProductSearchWebApiClient _searchClient;
-        readonly ISlugNormalizer _slugNormalizer;
+       
         readonly ICustomRouteHandler _customRouteHandler;
+        private readonly IStorefrontCache _storeFrontCache;
         static readonly JsonSerializer _productSerializer = JsonSerializer.Create(new JsonSerializerSettings { Converters = new List<JsonConverter> { new ExpandoObjectConverter() }, ContractResolver = new CamelCaseResolver() });
 
-        public CatalogController(ICategoryTreeProvider categoryTreeProvider, ISiteBuilderApiContext apiCtx, IProductWebApiClient productClient, IProductSearchWebApiClient searchClient, ILifetimeScope lifetimeScope, ISlugNormalizer slugNormalizer, ICustomRouteHandler customRouteHandler)
+        public CatalogController(ICategoryTreeProvider categoryTreeProvider, IProductWebApiClient productClient, IProductSearchWebApiClient searchClient,  ICustomRouteHandler customRouteHandler , IStorefrontCache storeFrontCache )
         {
             _categoryTreeProvider = categoryTreeProvider;
             _searchClient = searchClient;
-            _slugNormalizer = slugNormalizer;
+  
             _productClient = productClient;
-            _apiCtx = apiCtx;
+         
             _customRouteHandler = customRouteHandler;
+            _storeFrontCache = storeFrontCache;
         }
 
         [SbActionExtensionFilter(actionId: ActionFilterConstants.ProductDetailsBeforeAction, executionType: ActionExtensionExecutionTypes.BeforeController)]
@@ -73,7 +76,7 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
                 if (productResponse.ResponseMessage.StatusCode == HttpStatusCode.NotFound)
                 {
                     // show detailed error message if previewing from Admin
-                    if (_apiCtx.DataViewMode == DataViewModeType.Pending)
+                    if (this.SbApiContext.DataViewMode == DataViewModeType.Pending)
                     {
                         if (productResponse.HasException)
                         {
@@ -206,6 +209,86 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
         }
 
 
+
+        bool ShouldAddCrawlerLinks()
+        {
+
+            if (PageContext.Search.Facets != null && PageContext.Search.Facets.Count > 0)
+            {
+                return false;
+            }
+            var defaultPageSize = ((int?)(JToken)SiteContext.ThemeSettings["defaultPageSize"]);
+
+            if (PageContext.Search.PageSize.HasValue && defaultPageSize.GetValueOrDefault(0) != PageContext.Search.PageSize.Value)
+            { 
+                return false;
+            }
+
+            var defaultSortOrder = ((string)(JToken)SiteContext.ThemeSettings["defaultSort"]);
+            if (!string.IsNullOrEmpty(PageContext.Search.SortBy) && !string.Equals(defaultSortOrder, PageContext.Search.SortBy))
+            { 
+                return false;
+            }
+
+            return true;
+        }
+        
+      
+        async Task<Category> AddCrawlerLinks(Category category)
+        {
+
+            Lazy<IDictionary<string, object>> catDic = new Lazy<IDictionary<string, object>>(() => Mapper.Map<IDictionary<string, object>>(category));
+
+
+
+
+            var categoryDictionary = Mapper.Map<IDictionary<string, object>>(category);
+
+            var urlBase =await (_customRouteHandler.GetCanonicalUrl(FancyRoute.Category, () => new Dictionary<string, object>(), true).ConfigureAwait(false)) ?? category.Url;
+
+            PageContext.CrawlerInfo.CanonicalUrl = PageContext.Search.ToUrl(new SearchContextOverrides() { UrlBase = urlBase });
+
+
+
+            var defaultPageSize = this.PageContext.Search.PageSize  ??  ((int?)(JToken)SiteContext.ThemeSettings["defaultPageSize"]) ?? 15;
+            var currentIdx = this.PageContext.Search.StartIndex.GetValueOrDefault(0);
+            if ( this.PageContext.Search.StartIndex.GetValueOrDefault(0) > 0)
+            {
+                var previousIdx = Math.Max(0, currentIdx - defaultPageSize);
+                this.PageContext.CrawlerInfo.PreviousUrl = this.PageContext.Search.ToUrl(new SearchContextOverrides() { UrlBase = urlBase, StartIndex = previousIdx });
+            }
+            var key = "categoryproductcount-" + category.Id;
+            var totCount = _storeFrontCache.Get<int?>(key);
+            if ( !totCount .HasValue)
+            {
+                try {
+                    totCount = (await _searchClient.Search(
+                        query: "*:*",
+                        pageSize: 0,
+                        filter: "categoryId req " + category.Id).ConfigureAwait(false)).ReadAsSync().TotalCount;
+
+                    _storeFrontCache.Set(key, totCount);
+                        }
+                catch( Exception ex)
+                {
+                    //todo log
+                    _storeFrontCache.Set(key, 0);
+                }
+                   
+            }
+
+            if (currentIdx+defaultPageSize < totCount.Value)
+            {
+                var nextIndx = currentIdx + defaultPageSize;
+                this.PageContext.CrawlerInfo.NextUrl = this.PageContext.Search.ToUrl(new SearchContextOverrides() { UrlBase = urlBase, StartIndex = nextIndx });
+            }
+
+
+            return category;
+
+        }
+
+
         [SbActionExtensionFilter(actionId: ActionFilterConstants.CategoryBeforeAction, executionType: ActionExtensionExecutionTypes.BeforeController)]
         [SbActionExtensionFilter(actionId: ActionFilterConstants.CategoryAfterAction, executionType: ActionExtensionExecutionTypes.AfterController)]
         [HttpHead]
@@ -230,6 +313,10 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
                 return this.Request.CreateResponse(HttpStatusCode.OK);
             }
             
+            
+
+
+
 
             PageContext.PageType = "category";
             PageContext.CategoryId = cat.CategoryId;
@@ -262,6 +349,13 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
             var result = View(template, cat);
 
             SetCatalogContext(cat);
+
+            if (ShouldAddCrawlerLinks())
+            {
+                await AddCrawlerLinks(cat).ConfigureAwait(false);
+            }
+
+
 
             return Request.CreateResponse(HttpStatusCode.OK, result);
         }
