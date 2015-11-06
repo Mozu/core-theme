@@ -802,14 +802,17 @@ Ext.define('Taco.view.website.Index', {
         });
     },
 
-    setPublishRecord: function(record) { 
+    setPublishRecord: function(entityHandler) { 
+
+        var record = entityHandler.getDocument();
+
         this.publishRecord = record;
 
         this.publishButton.addRecord(record);
 
         this.updateDraftIcon(record);
 
-        this.updateHeaderTitle(null, this.tree.getSelectionModel().getSelection()[0] || record);
+        this.updateHeaderTitle(null, entityHandler.getTitle());
     },  
 
     updateDraftIcon: function(record) {
@@ -999,7 +1002,7 @@ Ext.define('Taco.view.website.Index', {
     onEntityTypeAdapterLoad: function () {
         var settings = this.entitypeTypeHandler.getPageSettings();
 
-        this.setPublishRecord(this.entitypeTypeHandler.getDocument());   
+        this.setPublishRecord(this.entitypeTypeHandler);   
 
         this.pageSettings.add(settings);
     },
@@ -1291,7 +1294,7 @@ Ext.define('Taco.view.website.Index', {
         });
     },
 
-    updateHeaderTitle: function(cmp, record) {
+    updateHeaderTitle: function(cmp, title) {
 
         var tree = this.down('taco-website-tree'),
             selection = tree.getSelectionModel().getSelection(),
@@ -1308,7 +1311,7 @@ Ext.define('Taco.view.website.Index', {
             }
         }
 
-        this.down('#taco-page-title').update( '<h2 class="page-title">' + record.get('name') + '</h2>');
+        this.down('#taco-page-title').update( '<h2 class="page-title">' + title + '</h2>');
     },
 
     onContentListClick: function (tree, metaData) {

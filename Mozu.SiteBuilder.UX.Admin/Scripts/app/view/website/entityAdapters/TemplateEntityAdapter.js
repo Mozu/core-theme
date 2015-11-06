@@ -28,8 +28,9 @@ Ext.define('Taco.view.website.entityAdapters.TemplateEntityAdapter', {
         return { listFQN: this.pageContext.cmsContext.template.listFQN, id: this.pageContext.cmsContext.template.id };
     },
 
-
-
+    getTitle: function() {
+        if (this.record) return this.record.get('name');
+    },
   
     load:function () {
         var me = this,
