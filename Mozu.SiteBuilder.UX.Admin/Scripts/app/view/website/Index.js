@@ -904,9 +904,10 @@ Ext.define('Taco.view.website.Index', {
         
             var parser = document.createElement('a');
             parser.href = config.url;
-       
+
             if (parser.hostname && (parser.hostname ).toLowerCase() !== ( window.location.hostname || '').toLowerCase() ) {
                 Ext.Msg.alert('Attention', 'editing of url [<b><a href="' + parser.href + '" target="_blank">' + parser.href + '</a></b>] not supported');
+                // this.tree.selectLast();
                 return;
             }
 
