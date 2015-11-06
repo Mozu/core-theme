@@ -161,11 +161,7 @@
                     return false;
                 }
 
-                if (this.get('updateMode') === 'edit') {
-                    this.set('updateMode', 'editComplete');
-                }
-
-                var parent = this.parent,
+               var parent = this.parent,
                     order = this.getOrder(),
                     me = this,
                     isAddressValidationEnabled = HyprLiveContext.locals.siteContext.generalSettings.isAddressValidationEnabled,
@@ -1275,20 +1271,27 @@
             addCustomerContact: function (infoName, contactName, contactTypes) {
                 var customer = this.get('customer'),
                     contactInfo = this.get(infoName),
-                    contact = contactInfo.get(contactName).toJSON(),
                     process = [function () {
-                        if (contact.updateMode && contact.updateMode === 'editComplete') {
-                            return customer.apiModel.updateContact(contact).then(function (contactResult) {
+                      
+                        // Update contact if a valid contact ID exists
+                        if (orderContact.id && orderContact.id > 0) {
+                            return customer.apiModel.updateContact(orderContact);
+                        }
+
+                        if (orderContact.id === -1 || orderContact.id === 1 || orderContact.id === 'new') {
+                            delete orderContact.id;
+                        }
+                        return customer.apiModel.addContact(orderContact).then(function(contactResult) {
+                                orderContact.id = contactResult.data.id;
                                 return contactResult;
                             });
-                        }
-                        if (contact.id === -1 || contact.id === 1 || contact.id === 'new') delete contact.id;
-                        return customer.apiModel.addContact(contact).then(function(contactResult) {
-                            contact.id = contactResult.data.id;
-                            return contactResult;
-                        });
                     }];
-
+                var contactInfoContactName = contactInfo.get(contactName);
+                    
+                if (!contactInfoContactName.get('accountId')) {
+                    contactInfoContactName.set('accountId', customer.id);
+                }
+                var orderContact = contactInfoContactName.toJSON();
                 // if customer doesn't have a primary of any of the contact types we're setting, then set primary for those types
                 if (!this.isSavingNewCustomer()) {
                     process.unshift(function() {
@@ -1310,19 +1313,33 @@
                 }
 
                 // handle email
-                if (!contact.email) contact.email = this.get('emailAddress') || customer.get('emailAddress') || require.mozuData('user').email;
+                if (!orderContact.email) orderContact.email = this.get('emailAddress') || customer.get('emailAddress') || require.mozuData('user').email;
 
-                var contactId = contact.contactId;
-                if (contactId) contact.id = contactId;
-
-                if (!contact.id || contact.id === -1 || contact.id === 1 || contact.id === 'new' || (contact.updateMode && contact.updateMode === 'editComplete')) {
-                    contact.types = contactTypes;
+                var contactId = orderContact.contactId;
+                if (contactId) orderContact.id = contactId;
+                var customerContacts = order.get('customer').get('contacts');
+                if (!orderContact.id || orderContact.id === -1 || orderContact.id === 1 || orderContact.id === 'new' ||
+                    this.isContactModified(orderContact, customerContacts.get(orderContact.id).toJSON())) {
+                    orderContact.types = contactTypes;
                     return api.steps(process);
                 } else {
                     var deferred = api.defer();
                     deferred.resolve();
                     return deferred.promise;
                 }
+            },
+            isContactModified: function(orderContact, customerContact) {
+                var validContact = orderContact && customerContact && orderContact.id === customerContact.id;
+                var addressChanged = validContact && !_.isEqual(orderContact.address, customerContact.address);
+                //Note: Only home phone is used on the checkout page     
+                var phoneChanged = validContact && orderContact.phoneNumbers.home &&
+                                    (!customerContact.phoneNumbers.home || orderContact.phoneNumbers.home !== customerContact.phoneNumbers.home);
+
+                //Check whether any of the fields available in the contact UI on checkout page is modified
+                return validContact &&
+                    (addressChanged || phoneChanged || 
+                    orderContact.email !== customerContact.email || orderContact.firstName !== customerContact.firstName ||
+                    orderContact.lastNameOrSurname !== customerContact.lastNameOrSurname);
             },
             saveCustomerCard: function () {
                 var order = this,

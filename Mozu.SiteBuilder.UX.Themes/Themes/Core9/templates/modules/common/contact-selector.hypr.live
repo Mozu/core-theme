@@ -2,33 +2,26 @@
 {% block contact-selector %}
     
   <div class="mz-l-formfieldgroup-cell">
-   <select id="mz--contactselector-savedcontact" class="mz-contactselector" data-mz-value="{{ contactcontext }}contactId" name="contactId" data-mz-action="savedAddressSelected">
+   <select id="mz--contactselector-savedcontact" class="mz-contactselector" data-mz-value="{{ contactcontext }}contactId" name="contactId" >
       <option>{{labels.selectSavedAddress}}</option>
       {% for contact in model.contacts %}
     
-          <option value="{{ contact.id }}"  {% if model.contactId == contact.id %} selected {% endif %}> {% include "modules/common/address-list" with model=contact %}</option>
+          <option value="{{ contact.id }}"  {% if model.id == contact.id %} selected {% endif %}> {% include "modules/common/address-list" with model=contact %}</option>
    
       {% endfor %}
     </select> 
-
     
     <div>
         <a href="javascript:;" data-mz-action="beginAddContact">{{labels.addAddress}}</a>
-        {% if  model.updateMode != 'edit'%}
-            <a class="mz-checkoutform-shipping-edit" href="javascript:;" data-mz-action="beginEditContact" data-mz-contact="{{model.contactId}}">{{labels.editAddress}}</a>
-        {% endif %}
-
     </div>
 
-    {% if model.contactId == "new"  || model.updateMode == 'edit'%}
-          <div class="mz-contactselector-contact mz-contactselector-new mz-checkoutform-shipping">
-              <span class="mz-contactselector-summarywrapper">
+    <div class="mz-contactselector-contact mz-contactselector-new mz-checkoutform-shipping">
+      <span class="mz-contactselector-summarywrapper">
                     {% block enter-new-form %}
                       {% include "modules/common/address-form" with model=editingContact %}
                     {% endblock enter-new-form %}
                 </span>
             </div>
-      {% endif %}
      </div>
 {% endblock contact-selector %}
   
