@@ -263,7 +263,7 @@
                 // Incomplete status for shipping is basically only used to show the Shipping Method's Next button,
                 // which does nothing but show the Payment Info step.
                 var billingInfo = this.parent.get('billingInfo');
-                if (!billingInfo || billingInfo.stepStatus() === undefined || billingInfo.stepStatus() === 'new' || billingInfo.stepStatus() === 'incomplete') return this.stepStatus('incomplete');
+                if (!billingInfo || billingInfo.stepStatus() === 'new') return this.stepStatus('incomplete');
 
                 // Payment Info step has been initialized. Complete status hides the Shipping Method's Next button.
                 return this.stepStatus('complete');
