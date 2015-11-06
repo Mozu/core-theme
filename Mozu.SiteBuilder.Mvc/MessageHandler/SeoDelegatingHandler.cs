@@ -70,10 +70,12 @@ namespace Mozu.SiteBuilder.Mvc.MessageHandler
 
         private async Task<HttpResponseMessage> HandleReroutedRequest(HttpRequestMessage rerouted, CancellationToken cancellationToken, Func<Task<HttpResponseMessage>> continuation, bool sslValidationEnabled)
         {
+            var pageContext = rerouted.Resolve<PageContext>();
+            if (pageContext.IsEditMode) return await continuation().ConfigureAwait(false);
+
             var customRoute = rerouted.GetRouteData().Route as CustomRoute;
             if (customRoute == null) return await continuation().ConfigureAwait(false);
             
-            var pageContext = rerouted.Resolve<PageContext>();
             var currentUrl = new Uri(pageContext.Url);
       
             if( !sslValidationEnabled || 
