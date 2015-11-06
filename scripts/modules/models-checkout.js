@@ -1295,6 +1295,7 @@
                             });
                     }];
                 var contactInfoContactName = contactInfo.get(contactName);
+                var customerContacts = order.get('customer').get('contacts');
                     
                 if (!contactInfoContactName.get('accountId')) {
                     contactInfoContactName.set('accountId', customer.id);
@@ -1325,15 +1326,20 @@
 
                 var contactId = orderContact.contactId;
                 if (contactId) orderContact.id = contactId;
-                var customerContacts = order.get('customer').get('contacts');
-                if (!orderContact.id || orderContact.id === -1 || orderContact.id === 1 || orderContact.id === 'new' ||
-                    this.isContactModified(orderContact, customerContacts.get(orderContact.id).toJSON())) {
+                if (!orderContact.id || orderContact.id === -1 || orderContact.id === 1 || orderContact.id === 'new') {
                     orderContact.types = contactTypes;
                     return api.steps(process);
                 } else {
-                    var deferred = api.defer();
-                    deferred.resolve();
-                    return deferred.promise;
+                    var customerContact = customerContacts.get(orderContact.id).toJSON();
+                    if (this.isContactModified(orderContact, customerContact)) {
+                        //keep the current types on edit
+                        orderContact.types = orderContact.types ? orderContact.types : customerContact.types;
+                        return api.steps(process);
+                    } else {
+                        var deferred = api.defer();
+                        deferred.resolve();
+                        return deferred.promise;
+                    }
                 }
             },
             isContactModified: function(orderContact, customerContact) {
