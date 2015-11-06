@@ -334,14 +334,12 @@ Ext.define('Taco.view.entityManager.Index', {
         });
         Taco.core.StateManager.addState('entities?entityType=' + metaData.entityType + '&list=' + metaData.name + '&record=' + record.get('name'));
     },
-    addADRIfRequired: function (record) {
-        var me = this;
-
+    addADRIfRequired: function(record){
         if(!me.form) return null;
-        if(!record || !record.data || !record.data.listFlags || !record.data.listFlags.enableADR) return me.form;
+        if(!record || !record.data || !record.data.listFlags || !record.data.listFlags.enableADR) return form;
         var adrPanel = Ext.create('Taco.core.ux.form.field.ActiveDateRange', {record: record});
         me.form.dynamicForm.add(adrPanel);
-        return me.form;
+        return form;
     },
     saveSuccess: function() {
         this.mixins.navHeader.saveSuccess.call(this, arguments);

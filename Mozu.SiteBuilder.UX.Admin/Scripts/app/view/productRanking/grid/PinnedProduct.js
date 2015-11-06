@@ -214,10 +214,6 @@ Ext.define('Taco.view.productRanking.grid.PinnedProduct', {
             }
           },
           {
-            xtype: 'menuseparator',
-            style: 'border:0px;height:1px;background-color:#ccc;margin:6px 0px;'
-          },
-          {
             text: 'Remove All',
             menuColumnHandler: function(item, eventData) {
               me.store.removeAll();

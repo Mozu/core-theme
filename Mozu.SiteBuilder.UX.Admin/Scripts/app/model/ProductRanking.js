@@ -54,24 +54,6 @@ Ext.define('Taco.model.ProductRanking', {
             type: 'auto',
             defaultValue: []
         }, {
-            name: 'categoryNames',
-            type: 'auto',
-            defaultValue: [],
-            persist: false
-        }, {
-            name: 'categoryNamesJoined',
-            type: 'auto',
-            defaultValue: [],
-            persist: false,
-            convert: function (value, record) {     //todo: if other filters in future, need to filter the filters for cats greg_murray on 10/19/2015
-                var catNames = record.get('categoryNames');
-                if (!catNames || catNames.length === 0) {
-                    return '';
-                }
-                return catNames.join(',');
-            }
-        },
-        {
             name: 'categoryFilters',
             type: 'auto',
             defaultValue: [],
@@ -81,6 +63,20 @@ Ext.define('Taco.model.ProductRanking', {
                      return (filter.key === 'categoryCode');
                  });
              }
+        }, {
+            name: 'categoriesJoined',
+            type: 'string',
+            persist: false,
+            convert: function (value, record) {
+                var categories = record.get('categoryFilters');
+                if (!categories) {
+                    return '';
+                }
+                var catValues = Ext.Array.map(categories, function(catFilter) {
+                    return catFilter.value;
+                });
+                return catValues.join(',');
+            }
         }, {
             name: 'isActive',
             type: 'boolean',

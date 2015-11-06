@@ -44,10 +44,6 @@ namespace Mozu.SiteBuilder.UX.Admin.Helpers.SearchTuningHelpers
         {
             switch (filterItem.property.ToLowerInvariant())
             {
-                case "all":
-                {
-                    return String.Format("code cont \"{0}\" or name cont \"{0}\"", filterItem.escapedValue);
-                }
                 case "code":
                 {
                     return String.Format("code cont \"{0}\"", filterItem.escapedValue);

@@ -146,7 +146,7 @@
             onDiscardDraft: function() {
                 me.discardProductDraft();
             }
-        };
+        },
 
         this.additionalActions = [
             this.publishingButton,
@@ -326,7 +326,7 @@
             // if the form becomes invalid disable the publish button
             me.mon(me.form, 'validityChange', function (view, valid) {
                 if (me.publishButton) {
-                    //me.publishNowMenuItem.setDisabled(!valid);
+                    // me.publishNowMenuItem.setDisabled(!valid);
                 }
                 
             }, me);
@@ -334,7 +334,7 @@
             me.mon(me.form, 'dirtychange', function (form, isDirty) {
                 if (me.publishButton && me.form.isDirty()) {
 
-                    me.publishButton.disable();   
+                  me.publishButton.disable();   
                 }
                 me.requiresSave = isDirty;
             }, me);
