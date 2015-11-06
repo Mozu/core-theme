@@ -194,6 +194,9 @@ namespace Mozu.SiteBuilder.Mvc.Helpers
             {
                 sb.Append("&dv=p");
             }
+            sb.Append("_mzcb=").Append(_siteContext.HashString);
+            
+            
 
             foreach (var kvp in config)
             {
@@ -533,7 +536,7 @@ namespace Mozu.SiteBuilder.Mvc.Helpers
             if (strObj == "clear")
             {
 
-                return MakeCategoryUrlAndClearFacets(() => GetCategoryIdFromRouteData(routeData), searchContext);
+                return MakeCategoryUrlAndClearFacets( searchContext);
             }
 
             var facetValue = obj is string ? strObj : _resolver.ResolveMemberOrDefault<string>(obj, "filterValue");
@@ -627,18 +630,9 @@ namespace Mozu.SiteBuilder.Mvc.Helpers
             return null;
         }
 
-        string MakeCategoryUrlAndClearFacets(Func<int?> categoryIdResolver, SearchContext searchContext)
+        string MakeCategoryUrlAndClearFacets( SearchContext searchContext)
         {
-            var categoryId = categoryIdResolver();
-            if (categoryId.HasValue)
-            {
-                var catUrl = MakeCategoryUrl(categoryId.Value, null, false);
-                return ClearFacetsFromUrl(catUrl, searchContext);
-            }
-            else
-            {
-                return ClearFacetsFromUrl(string.Empty, searchContext);
-            }
+            return searchContext.ToClearUrl(_customRouteHandler);
         }
 
         static string ClearFacetsFromUrl(string url, SearchContext context)

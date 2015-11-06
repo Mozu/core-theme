@@ -9,9 +9,11 @@ using System.Text.RegularExpressions;
 using System.Web;
 using System.Web.Http.Routing;
 using Mozu.SiteBuilder.Mvc.Extensions;
+using Mozu.SiteBuilder.Mvc.SEO;
 using Mozu.SiteBuilder.UX.Models.StoreFront.Catalog;
 using Newtonsoft.Json;
 using Mozu.SiteBuilder.Mvc.ViewEngine;
+using Mozu.SiteSettings.General.Contracts.General.Routing;
 
 namespace Mozu.SiteBuilder.Mvc.Contexts
 {
@@ -210,7 +212,71 @@ namespace Mozu.SiteBuilder.Mvc.Contexts
         [JsonConverter(typeof(FacetJsonConverter))]
         public NameValueCollection Facets { get; set; }
 
-      
+        public string ToClearUrl(ICustomRouteHandler routeHandler)
+        {
+            var routeData = this._request.GetRouteData();
+            int catId = -1; ;
+        
+            object tmp;
+            bool isSearchRoute = routeData.Values.TryGetValue("controller", out tmp) && string.Equals(tmp as string, "search", StringComparison.OrdinalIgnoreCase);
+            var routeType = isSearchRoute ? FancyRoute.Search : FancyRoute.Category;
+
+            Func<IDictionary<string, object>> dicFn = () =>
+            {
+
+                var routeValues = new Dictionary<string, object>(routeData.Values, StringComparer.OrdinalIgnoreCase);
+                foreach (var key in routeData.Values.Keys.Where(x => x.EndsWith(RouteDataValueKeySuffix, StringComparison.OrdinalIgnoreCase)))
+                {
+                    routeValues.Remove(key);
+                }
+                return routeValues;
+            };
+
+
+
+            var baseUrl = routeHandler.GetCanonicalUrl(routeType, dicFn, false).Result;
+            if (baseUrl == null)
+            {
+                string categorySlug = null;
+                if ( routeData.Values.TryGetValue("categoryId", out tmp) ) 
+                {
+                    int.TryParse((tmp ?? new object()).ToString(), out catId);
+                }
+                if (routeData.Values.TryGetValue("categorySlug", out tmp))
+                {
+                    categorySlug = tmp as string;
+                }
+                
+                if (isSearchRoute)
+                {
+                    baseUrl = "/search";
+                }
+                else
+                {
+                    if ( string .IsNullOrEmpty(categorySlug))
+                    {
+                        baseUrl = "/c/" + catId;
+                    }
+                    else
+                    {
+                        baseUrl ="/"+  categorySlug + "/c/" + CategoryId;
+                    }
+                    
+                }
+                
+            }
+            if( isSearchRoute && catId > 0 )
+            {
+                return ToUrl(new SearchContextOverrides()
+                {
+                    UrlBase = baseUrl,
+                    CategoryId = catId
+                });
+            }
+            return baseUrl;
+            
+
+        }
 
         public string ToUrl(SearchContextOverrides overrides= null)
         {

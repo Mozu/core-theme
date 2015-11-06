@@ -313,7 +313,6 @@ Ext.define('Taco.view.entityManager.Index', {
     },
     onItemEdit: function(view, record, metaData, options) {
         var me = this;
-        
         record.reload({
             success: function() {
                 me.contentContainer.removeAll();
@@ -333,12 +332,12 @@ Ext.define('Taco.view.entityManager.Index', {
                 me.showHideButtons();
             }
         });
-
         Taco.core.StateManager.addState('entities?entityType=' + metaData.entityType + '&list=' + metaData.name + '&record=' + record.get('name'));
     },
-    addADRIfRequired: function(record){
+    addADRIfRequired: function (record) {
         var me = this;
-        if (!me.form) return null;
+
+        if(!me.form) return null;
         if(!record || !record.data || !record.data.listFlags || !record.data.listFlags.enableADR) return me.form;
         var adrPanel = Ext.create('Taco.core.ux.form.field.ActiveDateRange', {record: record});
         me.form.dynamicForm.add(adrPanel);

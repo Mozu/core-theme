@@ -795,8 +795,10 @@
                     me.on('change:usingSavedCard', function (me, yes) {
                         if (!yes) {
                             me.get('card').clear();
+                            me.set('usingSavedCard', false);
                         }
                         else {
+                            me.set('isSameBillingShippingAddress', false);
                             me.setSavedPaymentMethod(me.get('savedPaymentMethodId'));
                         }
                     });
