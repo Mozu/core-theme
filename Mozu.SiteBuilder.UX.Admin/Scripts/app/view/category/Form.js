@@ -260,12 +260,16 @@ Ext.define("Taco.view.category.Form", {
                 margin: '50 0 0 0',
                 useWhiteContainer:true,
                 minHeight: 350,
-                isDisabled: this.record.phantom,
+                isDisabled: me.record.phantom,
                 contextConfig: {
                     requiresContextOfType: ['c']
                 },
+                viewConfig: {
+                    deferEmptyText: false,
+                    emptyText: me.record.phantom ? "Save the category to add rules." : "None Available"
+                },
                 isCatalogLevel: true,
-                categoryCode: this.record.get('categoryCode'),
+                categoryCode: me.record.get('categoryCode'),
                 isPopUp: true,
                 pageSize: 5
             })

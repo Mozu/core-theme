@@ -140,10 +140,7 @@ Ext.define('Taco.view.productRanking.Grid', {
         me.callParent(arguments);
 
         if (me.isDisabled) {
-            var createActionButton = Ext.ComponentQuery.query('button[itemId=createActionButton]')
-            if (createActionButton && createActionButton.length > 0) {
-                createActionButton[0].setDisabled(true);
-            }
+            me.disableRankingRules();
         }
     },
 
@@ -409,6 +406,17 @@ Ext.define('Taco.view.productRanking.Grid', {
 
     getDeletePromptMessage: function (record) {
         return record.getDeletePromptMessage();
+    },
+
+    disableRankingRules: function () {
+        var createActionButton = Ext.ComponentQuery.query('button[itemId=createActionButton]');
+        if (createActionButton && createActionButton.length > 0) {
+            createActionButton[0].setDisabled(true);
+        }
+        var advFilterButton = Ext.ComponentQuery.query('button[itemId=advancedFilter]');
+        if (advFilterButton && advFilterButton.length > 0) {
+            advFilterButton[0].setDisabled(true);
+        }
     }
 
 });
