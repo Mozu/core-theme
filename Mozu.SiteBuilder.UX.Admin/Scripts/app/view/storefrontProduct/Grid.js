@@ -100,6 +100,13 @@ Ext.define('Taco.view.storefrontProduct.Grid', {
             me.store.loadData([], false);
         });
 
+        me.items = [{
+                xtype: 'container',
+                dock: 'bottom',
+                html: 'Only products that appear on the storefront are returned in this list',
+                padding: '20 10'
+            }];
+
         var ctx = Taco.app.context.getCurrentContext();
         var sites = (ctx.sites) ? ctx.sites : (ctx.catalog && ctx.catalog.sites) ? ctx.catalog.sites : [];
         var defaultSite = sites[0] || null;
@@ -230,7 +237,6 @@ Ext.define('Taco.view.storefrontProduct.Grid', {
                 dataIndex: 'productCode',
                 stateId: 'productCode',
                 text: 'Code',
-                hideable: false,
                 flex: 1,
                 minWidth: 100
             },
@@ -256,7 +262,7 @@ Ext.define('Taco.view.storefrontProduct.Grid', {
                 xtype: 'gridcolumn',
                 stateId: 'salePrice',
                 dataIndex: 'salePrice',
-                text: 'SalePrice',
+                text: 'Sale Price',
                 minWidth: 100,
                 flex: 1,
                 align: 'right',
@@ -270,7 +276,7 @@ Ext.define('Taco.view.storefrontProduct.Grid', {
                 minWidth: 120,
                 flex: 1,
                 sortable:false
-            },
+            }/*,
             {
                 xtype: 'gridcolumn',
                 stateId: 'lastModifiedDate',
@@ -280,12 +286,12 @@ Ext.define('Taco.view.storefrontProduct.Grid', {
                 flex: 1,
                 hideable: true,
                 hidden: true
-            },
+            }*/,
             {
                 xtype: 'gridcolumn',
                 stateId: 'productUsage',
                 dataIndex: 'productUsage',
-                text: 'Usage',
+                text: 'Product Usage',
                 minWidth: 120,
                 hideable: true,
                 hidden: true,

@@ -24,7 +24,7 @@ Ext.define('Taco.view.preview.ExpressionPreviewDrawer', {
 //    cls: Taco.baseCSSPrefix + 'orderform-editor',
     height: '90%',
     //scale: 'large',
-    title: 'Products',
+    title: 'Preview Expression',
     width: '90%',
     createType: '',
     isCreateMode: true,
@@ -60,7 +60,6 @@ Ext.define('Taco.view.preview.ExpressionPreviewDrawer', {
 
         me.previewPanel = Ext.create('Ext.panel.Panel', {
             items: [me.previewGrid],
-            title: 'Preview',
             padding: '0 0 0 10',
             layout: {
                 type: 'fit'
