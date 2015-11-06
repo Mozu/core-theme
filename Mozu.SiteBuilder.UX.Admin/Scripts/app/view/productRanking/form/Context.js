@@ -26,6 +26,26 @@ Ext.define('Taco.view.productRanking.form.Context', {
         var me = this;
         Ext.tip.QuickTipManager.init();
 
+        //me.header = {
+        //    xtype: "label",
+        //    text: "Context23",
+        //    margin: '20 0 20 0'
+        //};
+        //me.header =
+        //    Taco.core.ux.TooltipLabel.wrapConfig('productRanking.form.context.header', me, {
+        //        fieldLabel: "",
+        //        title: 'Context!!',
+        //        cls: 'x-header-text x-panel-header-text x-panel-header-text-subform',
+        //        //text: "Contextual",
+        //        margin: '0 0 20 0',
+        //        items: [{
+        //            xtype: "label",
+        //            text: "Context23",
+        //            margin: '20 0 20 0'
+        //        }]
+        //    });
+        //me.header.xtype = 'fieldcontainer';
+        //me.header.xtype = 'label';
 
 
         var catStore = Taco.core.data.StoreManager.getOrCreate({
@@ -46,11 +66,6 @@ Ext.define('Taco.view.productRanking.form.Context', {
         catStore.on({
             load: function (store) {
                 var catRecordToAddWhenNew;
-
-                store.filterBy(function (record) {
-                    var isRealTime = record.get('categoryType') === 'DynamicRealTime';
-                    return !isRealTime;
-                });
 
                 if (me.isCreate && me.categoryCode) {
                     catRecordToAddWhenNew = catStore.findRecord('categoryCode', me.categoryCode);
