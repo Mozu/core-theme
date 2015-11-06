@@ -86,6 +86,7 @@ Ext.define('Taco.view.productRanking.Grid', {
     },
 
     onCreate: Ext.emptyFn,
+    isDisabled: false,
 
     stateful: true,
     stateId: 'statefulProductRankingGrid',
@@ -134,7 +135,16 @@ Ext.define('Taco.view.productRanking.Grid', {
             isCatalogLevel: me.isCatalogLevel
         });
 
+
+
         me.callParent(arguments);
+
+        if (me.isDisabled) {
+            var createActionButton = Ext.ComponentQuery.query('button[itemId=createActionButton]')
+            if (createActionButton && createActionButton.length > 0) {
+                createActionButton[0].setDisabled(true);
+            }
+        }
     },
 
     reloadGrid: function() {

@@ -11,7 +11,8 @@ Ext.define("Taco.view.category.Form", {
         "Taco.core.ux.form.SlugField",
         "Taco.view.filter.ExpressionTreePanel",
         "Taco.view.filter.Schema",
-        "Taco.view.filter.OperatorField"
+        "Taco.view.filter.OperatorField",
+        "Taco.view.productRanking.Grid"
     ],
 
     itemId: 'taco-category-form',
@@ -255,13 +256,12 @@ Ext.define("Taco.view.category.Form", {
 
         this.items.push(
             Ext.create('Taco.view.productRanking.Grid', {
-                title: ("Product Ranking Rules" + (this.record.phantom ? ' - editable after saving' : '')),
+                title: "Product Ranking Rules",
                 margin: '50 0 0 0',
                 useWhiteContainer:true,
                 minHeight: 350,
-                disabled: this.record.phantom,
+                isDisabled: this.record.phantom,
                 contextConfig: {
-                    //supportedLevels: ['c'],
                     requiresContextOfType: ['c']
                 },
                 isCatalogLevel: true,
