@@ -90,7 +90,8 @@ Ext.define('Taco.core.ux.content.IndicatorContainer', {
             glyph: 'XE615@mozicons',
             style: {
                 color: 'white',
-                width: '25px'
+                width: '25px',
+                textDecoration: 'none'
             },
             handler: onTooltipClick,
             itemId: 'titleTooltipBtn',
