@@ -16,7 +16,6 @@ Ext.define('Taco.view.productRanking.form.PinnedProduct', {
 
     margin: '0 0 20 0',
 
-    title: 'Promoted Products',
     config: {
         isCreateMode: false
     },
@@ -26,6 +25,14 @@ Ext.define('Taco.view.productRanking.form.PinnedProduct', {
         var me = this;
 
         Ext.tip.QuickTipManager.init();
+
+        me.header =
+            Taco.core.ux.TooltipLabel.wrapConfig('productRanking.form.pinnedProduct.header', me, {
+                fieldLabel: "Promoted Products",
+                labelCls: 'x-header-text x-panel-header-text x-panel-header-text-subform',
+                margin: '20 0 35 0'
+            });
+        me.header.xtype = 'fieldcontainer';
 
         me.pinnedGrid = Ext.create('Taco.view.productRanking.grid.PinnedProduct', {
             enableSearch: false

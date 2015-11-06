@@ -15,7 +15,6 @@ Ext.define('Taco.view.productRanking.form.Context', {
     ui: 'subform',
     margin: '0 0 20 0',
 
-    title: 'Context',
     config: {
         isCreateMode: false
     },
@@ -26,27 +25,13 @@ Ext.define('Taco.view.productRanking.form.Context', {
         var me = this;
         Ext.tip.QuickTipManager.init();
 
-        //me.header = {
-        //    xtype: "label",
-        //    text: "Context23",
-        //    margin: '20 0 20 0'
-        //};
-        //me.header =
-        //    Taco.core.ux.TooltipLabel.wrapConfig('productRanking.form.context.header', me, {
-        //        fieldLabel: "",
-        //        title: 'Context!!',
-        //        cls: 'x-header-text x-panel-header-text x-panel-header-text-subform',
-        //        //text: "Contextual",
-        //        margin: '0 0 20 0',
-        //        items: [{
-        //            xtype: "label",
-        //            text: "Context23",
-        //            margin: '20 0 20 0'
-        //        }]
-        //    });
-        //me.header.xtype = 'fieldcontainer';
-        //me.header.xtype = 'label';
-
+        me.header =
+            Taco.core.ux.TooltipLabel.wrapConfig('productRanking.form.context.header', me, {
+                fieldLabel: "Context",
+                labelCls: 'x-header-text x-panel-header-text x-panel-header-text-subform',
+                margin: '20 0 35 0'
+            });
+        me.header.xtype = 'fieldcontainer';
 
         var catStore = Taco.core.data.StoreManager.getOrCreate({
             type: 'Taco.store.Categories',
