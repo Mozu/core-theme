@@ -257,7 +257,7 @@ namespace Mozu.SiteBuilder.Mvc.SEO
                 var vpath = route.GetVirtualPath(newReq, routingValues);
                 if (vpath != null)
                 {
-                    return CreateOutboundUri(route, vpath, _requestMessage.Value.Resolve<IPageContext>().Url, useContext);
+                    return CreateOutboundUri(route, vpath, _requestMessage.Value.Resolve<IPageContext>().Url);
                 }
             }
             return null;
@@ -277,15 +277,15 @@ namespace Mozu.SiteBuilder.Mvc.SEO
             return newReq;
         }
 
-        static string CreateOutboundUri(CustomRoute route, IHttpVirtualPathData vpath, string incoming, bool useInboundQuery)
+        static string CreateOutboundUri(CustomRoute route, IHttpVirtualPathData vpath, string incoming)
         {
             var incomingUri = new Uri(incoming);
             var path = "/" + new Uri("http://localhost/" + vpath.VirtualPath, UriKind.Absolute).GetComponents(UriComponents.Path, UriFormat.Unescaped);
-            var query = useInboundQuery ? incomingUri.Query.TrimStart('?') :  string.Empty;
+           // var query = useInboundQuery ? incomingUri.Query.TrimStart('?') :  string.Empty;
             var scheme = route.UrlScheme.HasValue ? route.UrlScheme.Value.ToStringQuickly() : incomingUri.Scheme;
             var builder = new UriBuilder(scheme, incomingUri.Host);
             builder.Path = path;
-            builder.Query = query;
+           // builder.Query = query;
             if (route.UrlScheme.HasValue)
             {
                 return builder.Uri.ToString();

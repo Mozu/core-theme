@@ -130,7 +130,7 @@ namespace Mozu.SiteBuilder.Mvc.Helpers
                     }
                 case UrlType.Category:
                     {
-                        url = MakeCategoryUrl(obj, config, includeContext);
+                        url = MakeCategoryUrl(obj, config, includeContext, false);
                         break;
                     }
                 case UrlType.Product:
@@ -397,7 +397,7 @@ namespace Mozu.SiteBuilder.Mvc.Helpers
 
         }
 
-        string MakeCategoryUrl(object obj, Dictionary<string, object> config, bool includeContxt)
+        string MakeCategoryUrl(object obj, Dictionary<string, object> config, bool includeContxt, bool forFaceting)
         {
             int categoryId = -1;
             string categoryCode = null;
@@ -449,7 +449,7 @@ namespace Mozu.SiteBuilder.Mvc.Helpers
             }
 
 
-            if (_pageContext.PageType == "search")
+            if (forFaceting && _pageContext.PageType == "search")
             {
                 return _pageContext.Search.ToUrl(new SearchContextOverrides()
                 {
@@ -563,7 +563,7 @@ namespace Mozu.SiteBuilder.Mvc.Helpers
             if (facetPairKey.Equals("categoryId", StringComparison.OrdinalIgnoreCase) && int.TryParse(facetPairValue, out catId))
             {
 
-                var url = MakeCategoryUrl(catId, null, true);
+                var url = MakeCategoryUrl(catId, null, true, true );
                 return searchContext.ToUrl(new SearchContextOverrides() { UrlBase = url , StartIndex = 0});
             }
 
@@ -599,7 +599,7 @@ namespace Mozu.SiteBuilder.Mvc.Helpers
         string MakeCategoryUrlAndKeepFacets(Func<int?> categoryIdResolver, SearchContext searchContext)
         {
             var catId = categoryIdResolver();
-            if (catId.HasValue) return searchContext.ToUrl(new SearchContextOverrides { UrlBase = MakeCategoryUrl(catId.Value, null, false), StartIndex = 0 });
+            if (catId.HasValue) return searchContext.ToUrl(new SearchContextOverrides { UrlBase = MakeCategoryUrl(catId.Value, null, false,true ), StartIndex = 0 });
             else return "#";
         }
 

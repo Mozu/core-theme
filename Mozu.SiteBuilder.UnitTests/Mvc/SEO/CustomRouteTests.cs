@@ -433,7 +433,23 @@ namespace Mozu.SiteBuilder.UnitTests.Mvc.SEO
             };
 
 
-      
+
+            yield return new TestCase()
+            {
+                Name = "search and validate categoryurl",
+                Url = "search?query=food&facetValueFilter=tenant~brand%3acitizens-of-humanity%2ctenant~brand%3adl1961-premium-denim",
+               
+                DoLinkStuff = (handler, tree, urlhelper) =>
+                {
+                    var otherCat = tree.FindById(32);
+                    var clearLinks = urlhelper.MakeUrl(SiteBuilder.Mvc.Helpers.UrlHelper.UrlType.Category, otherCat, null, false);
+                    Assert.AreEqual(clearLinks, "/women/clothing/dresses");
+
+                }
+            };
+
+
+
             yield return new TestCase()
             {
                 Name = "cat with facet",
@@ -449,10 +465,15 @@ namespace Mozu.SiteBuilder.UnitTests.Mvc.SEO
                 },
                 DoLinkStuff = (handler, tree, urlhelper) =>
                 {
-                    var otherCat = tree.FindById(32);
-                    var catMap = Mapper.Map<IDictionary<string, object>>(otherCat);
-                    var url = handler.GetCanonicalUrl(FancyRoute.Category, () => catMap, true).Result;
-                    Assert.AreEqual(url, "/women/clothing/dresses?facetValueFilter=tenant~brand:citizens-of-humanity,tenant~brand:dl1961-premium-denim");
+                    var facet = new Mozu.ProductRuntime.Contracts.FacetValue()
+                    {
+                        ChildrenFacetValues = new List<ProductRuntime.Contracts.FacetValue>(),
+                        Value = "32"
+                    };
+                  
+                    var url = urlhelper.MakeUrl(SiteBuilder.Mvc.Helpers.UrlHelper.UrlType.Facet, facet, null);
+                  
+                    Assert.AreEqual(url, "/women/clothing/dresses?facetValueFilter=tenant%7ebrand%3acitizens-of-humanity%2ctenant%7ebrand%3adl1961-premium-denim");
 
                 }
             };
