@@ -295,10 +295,12 @@ Ext.define('Taco.view.entityManager.Index', {
             editor = me.editors.findEditor(record);
 
         options = options || {};
+
         if (!editor && options.editMode !== 'raw') {
-            Taco.MessageBox.alert('Sorry!', 'No editor defined for this type');
-            return;
+            Taco.app.fireEvent('setgrowl', 'Sorry, no editor is defined this type', 'info', 1000);
+            return false;
         }
+
         me.contentContainer.removeAll();
         me.grid = null;
         me.form = Ext.create('Taco.view.entityManager.DynamicFormContainer', {
