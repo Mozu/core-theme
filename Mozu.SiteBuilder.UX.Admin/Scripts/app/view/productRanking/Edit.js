@@ -100,6 +100,7 @@ Ext.define('Taco.view.productRanking.Edit', {
             success: onSuccess,
             failure: function(item, response) {
                 Taco.core.util.ExceptionWhiner.handleRemoteFailure(response);
+                me.resetSaveButton();
             },
             scope: me
         });
