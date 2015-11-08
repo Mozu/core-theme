@@ -40,19 +40,21 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
         private readonly Lazy<ISearchTuningRuleSortBuilder> _searchtuningRuleSortBuilder;
         private readonly Lazy<IProductWebApiClient> _productWebApiClient;
         private readonly Lazy<IProductTypeWebApiClient> _productTypeWebApiClient;
+        private readonly Lazy<ICategoryWebApiClient> _categoryWebApiClient;
         private Lazy<ISearchWebApiClient> _lazySearchClient;
 
         private readonly IApiContext _apiCtx;
-        
+
         /// <summary>
         /// Public constructor.
         /// </summary>
-        public SearchTuningRuleController(IApiContext apiCtx, 
-            ISearchWebApiClient searchWebApiClient, 
+        public SearchTuningRuleController(IApiContext apiCtx,
+            ISearchWebApiClient searchWebApiClient,
             Lazy<ISearchTuningRuleFilterBuilder> searchTuningRuleFilterBuilder,
             Lazy<ISearchTuningRuleSortBuilder> searchtuningRuleSortBuilder,
             Lazy<IProductWebApiClient> productWebApiClient,
-            Lazy<IProductTypeWebApiClient> productTypeWebApiClient )
+            Lazy<IProductTypeWebApiClient> productTypeWebApiClient,
+            Lazy<ICategoryWebApiClient> categoryWebApiClient)
         //
         {
             _searchWebApiClient = searchWebApiClient;
@@ -60,6 +62,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
             _searchtuningRuleSortBuilder = searchtuningRuleSortBuilder;
             _productWebApiClient = productWebApiClient;
             _productTypeWebApiClient = productTypeWebApiClient;
+            _categoryWebApiClient = categoryWebApiClient;
             _apiCtx = apiCtx;
         }
 
@@ -97,7 +100,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
             if (!String.IsNullOrEmpty(categoryCode))
             {
                 extFilter.Add(new FilterCollectionItem { comparison = "eq", field = "categorycode", value = categoryCode });
-                searchListClient = GetSearchClientForSite((int?) null);
+                searchListClient = GetSearchClientForSite((int?)null);
             }
 
             string filter = null;
@@ -109,10 +112,13 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
 
             try
             {
-                var searchTuningRuleList = (await searchListClient.GetSearchTuningRules(pagingParams.startIndex, pagingParams.pageSize, sortBy:sortBy, filter:filter)).ReadAsSync();
-                
-                var searchTuningRules = Mapper.Map<List<SearchTuningRule>>(searchTuningRuleList.Items);
+                var searchTuningRuleList = (await searchListClient.GetSearchTuningRules(pagingParams.startIndex, pagingParams.pageSize, sortBy: sortBy, filter: filter)).ReadAsSync();
 
+                var searchTuningRules = Mapper.Map<List<SearchTuningRule>>(searchTuningRuleList.Items);
+                if (searchTuningRuleList.TotalCount > 0)
+                {
+                    await AddCategoryNames(searchTuningRules);
+                }
                 return List2(searchTuningRules, (int?)searchTuningRuleList.TotalCount);
             }
             catch (ApiWebClientConnectionException e)
@@ -121,9 +127,27 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
             }
         }
 
+        private async Task AddCategoryNames(List<SearchTuningRule> searchTuningRules)
+        {
+            var cats =
+                (await _categoryWebApiClient.Value.GetCategories(pageSize: 900,
+                    responseFields: "items(categoryCode,content(name)"))
+                .ReadAsSync();
+            if (cats == null || cats.TotalCount == 0)
+            {
+                return;
+            }
+            var catLookup = cats.Items.ToDictionary(x => x.CategoryCode, y => y.Content.Name);
+            foreach (var rule in searchTuningRules)
+            {
+                rule.CategoryNames = rule.Filters.Where(x => x.Key == "categoryCode" && catLookup.ContainsKey(x.Value))
+                                           .Select(y => catLookup[y.Value]).OrderBy(z => z).ToArray();
+            }
+        }
+
         private async Task AddSearchProducts(SearchTuningRule singleSearchTuningRule)
         {
-            var boosted = await GetSimpleSearchProducts(singleSearchTuningRule.BoostedProducts.Select(p=>p.ProductCode).ToList());
+            var boosted = await GetSimpleSearchProducts(singleSearchTuningRule.BoostedProducts.Select(p => p.ProductCode).ToList());
             var boostedDic = boosted.ToDictionary(k => k.ProductCode);
 
             //Have to keep the same order as on the original instance
@@ -137,7 +161,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
             }
 
 
-            var blocked = await GetSimpleSearchProducts(singleSearchTuningRule.BlockedProducts.Select(p=>p.ProductCode).ToList());
+            var blocked = await GetSimpleSearchProducts(singleSearchTuningRule.BlockedProducts.Select(p => p.ProductCode).ToList());
             var blockedDic = blocked.ToDictionary(k => k.ProductCode);
             //Have to keep the same order as on the original instance
             foreach (var blockedProduct in singleSearchTuningRule.BlockedProducts)
@@ -203,20 +227,20 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
                             new SimpleSearchProduct
                             {
                                 ProductCode = p.ProductCode,
-                                ProductName = p.Content != null ? p.Content.ProductName: String.Empty,
+                                ProductName = p.Content != null ? p.Content.ProductName : String.Empty,
                                 Price = p.Price != null ? p.Price.Price : null,
                                 SalePrice = p.Price != null ? p.Price.SalePrice : null,
-                                LastModifiedDate = p.AuditInfo !=null ? p.AuditInfo.UpdateDate : null,
+                                LastModifiedDate = p.AuditInfo != null ? p.AuditInfo.UpdateDate : null,
                                 ProductTypeId = p.ProductTypeId,
                                 ProductUsage = p.ProductUsage
                             }));
             }
 
-           var theList =  results.Distinct(SimpleSearchProduct.CodeComparer).ToList();
+            var theList = results.Distinct(SimpleSearchProduct.CodeComparer).ToList();
 
-           var productTypes = theList.Where(ssp=>ssp.ProductTypeId.HasValue).Select(ssp => ssp.ProductTypeId.Value).Distinct().ToList();
-           
-//Copied all of this from product controller because you have to do it every time.  Make it part of the contract on product...
+            var productTypes = theList.Where(ssp => ssp.ProductTypeId.HasValue).Select(ssp => ssp.ProductTypeId.Value).Distinct().ToList();
+
+            //Copied all of this from product controller because you have to do it every time.  Make it part of the contract on product...
             var productTypeFilter = new StringBuilder();
             var filterSeperator = "";
 
