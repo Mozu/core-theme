@@ -546,6 +546,7 @@
     <Content Include="Scripts\app\core\ux\mixins\RowEditable.js" />
     <Content Include="Scripts\app\core\ux\mixins\Searchable.js" />
     <Content Include="Scripts\app\core\ux\mixins\Pageable.js" />
+    <Content Include="Scripts\app\core\ux\store\PagingMemoryStore.js" />
     <Content Include="Scripts\app\core\ux\TooltipLabel.js" />
     <Content Include="Scripts\app\core\util\Valid.js" />
     <Content Include="Scripts\app\core\ux\window\Alert.js" />
@@ -662,6 +663,7 @@
     <Content Include="Scripts\app\store\BlockedProducts.js" />
     <Content Include="Scripts\app\store\CouponSetGrid.js" />
     <Content Include="Scripts\app\store\CouponCodes.js" />
+    <Content Include="Scripts\app\store\PagedMemoryStore.js" />
     <Content Include="Scripts\app\store\PinnedProducts.js" />
     <Content Include="Scripts\app\store\ProductRankings.js" />
     <Content Include="Scripts\app\store\CouponSets.js" />
@@ -1407,6 +1409,7 @@
     <Content Include="Scripts\sass\src\core\ux\content\SplitContainer.scss" />
     <Content Include="Scripts\sass\src\core\ux\form\field\plugins\InputMask.scss" />
     <Content Include="Scripts\sass\src\view\order\widget\AddOrderItemToolbar.scss" />
+    <Content Include="Scripts\ux\data\PagingStore.js" />
     <Content Include="Scripts\Web.config" />
     <Content Include="Scripts\sass\src\core\ux\mixins\NavHeader.scss" />
     <Content Include="Scripts\sass\src\core\ux\form\FullEditor.scss" />

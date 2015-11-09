@@ -3,11 +3,10 @@
 */
 Ext.define('Taco.view.productRanking.grid.Keyword', {
     extend: 'Taco.core.ux.grid.Panel',
-    requires: [
-        'Ext.ux.data.PagingMemoryProxy',
+    requires: [        
+        'Taco.core.ux.store.PagingMemoryStore',
         'Taco.model.ProductRanking',
-        'Taco.core.ux.grid.plugins.AutoSelect',
-        'Taco.store.PagedMemoryStore'
+        'Taco.core.ux.grid.plugins.AutoSelect'        
     ],
 
     minHeight: 260,
@@ -77,6 +76,7 @@ Ext.define('Taco.view.productRanking.grid.Keyword', {
 
         this.store = this.getKeywordStore(this.formatRecords());
 
+        
         me.dockedItems = me.dockedItems || [];
         me.mixins = me.mixins || [];
 
@@ -92,12 +92,6 @@ Ext.define('Taco.view.productRanking.grid.Keyword', {
         // initialize the delete mixin
         this.mixins.deleteFromGrid.init.apply(this);
         
-
-        // initialize the search toolbar mixin
-        //if (me.enableSearch) {
-        //    this.mixins.searchable.constructor.apply(this);
-        //    me.dockedItems.push(me.createSearchToolbar());
-        //}
 
         if (me.enablePaging) {
             // initialize the grid paging toolbar mixin
@@ -126,6 +120,7 @@ Ext.define('Taco.view.productRanking.grid.Keyword', {
             idProperty: 'keyword'
         });
 
+        
         return Ext.Array.map(this.record.get('keywordObjects'), function(rec) {
             return Ext.create('KeywordModel', rec);
         });
@@ -139,18 +134,14 @@ Ext.define('Taco.view.productRanking.grid.Keyword', {
             valueArray = (value) ? value.split(/[,]+/) : [],
             recordsToAdd =[],
 
-            findExisting = function(val) {
-                var found = Ext.Array.findBy(me.store.proxy.data, function (rec) {
-                    return rec.get(me.filterProperty) === val;
-                });
-                return found !== null;
-            };
-
-            //selectFirstKeywordAdded = function (firstItem) {
-            //    var indexOf = Ext.Array.indexOf(me.store.proxy.data, firstItem);
-            //    me.store.loadPage(Math.floor(indexOf / me.pageSize) + 1); //switch page
-            //    me.getSelectionModel().select(firstItem);
+            //findExisting = function(val) {
+            //    var found = Ext.Array.findBy(me.store.proxy.data, function (rec) {
+            //        return rec.get(me.filterProperty) === val;
+            //    });
+            //    return found !== null;
             //};
+
+            
 
         valueArray = Ext.Array.clean(valueArray);
         if (valueArray.length === 0) {
@@ -158,9 +149,7 @@ Ext.define('Taco.view.productRanking.grid.Keyword', {
         }
 
         Ext.Array.each(valueArray, function(val) {
-            if (!findExisting(val)) {
-                recordsToAdd.push(Ext.create('KeywordModel', {'keyword':val}));
-            }
+            recordsToAdd.push(Ext.create('KeywordModel', { 'keyword': val }));
         });
 
         if (recordsToAdd.length === 0) {
@@ -168,10 +157,8 @@ Ext.define('Taco.view.productRanking.grid.Keyword', {
             field.reset();
             field.focus(false, 200);
         }
-        this.getStore().add(recordsToAdd);
-        //me.gridPager.doRefresh();
-        //me.getStore().reload();
-        //selectFirstKeywordAdded(recordsToAdd[0]);
+
+        var addedRecords = this.getStore().add(recordsToAdd);
         field.reset();
         field.focus(false, 200);
     },
@@ -256,16 +243,21 @@ Ext.define('Taco.view.productRanking.grid.Keyword', {
                     }, {
                         text: 'Remove All',
                         itemId: 'removeAllMenuItems',
-                        menuColumnHandler: function() {
-                            me.store.getProxy().data.items = [];
-                            me.store.removeAll();
-                            me.store.loadPage(1);
+                        menuColumnHandler: function (){
+                            me.removeAll();
                         },
                         scope: me
                     }
                 ]
             }
         ];
+    },
+
+    removeAll: function () {
+        var me = this;
+        //me.store.getProxy().data.items = [];
+        me.store.removeAll();
+        me.store.loadPage(1);
     },
 
     doDelete: function (records) {
@@ -285,14 +277,16 @@ Ext.define('Taco.view.productRanking.grid.Keyword', {
 
     launchEditor: Ext.emptyFn,
 
-    getValues: function() {
-        return Ext.Array.map(this.store.proxy.data, function(row) {
+    // itereate all of the rcords and pluck out just the keyword members and push them into an array.
+    getValues: function () {
+        return Ext.Array.map(this.store.allData.items, function(row) {
             return row.get('keyword');
         }, this);
     },
 
     getKeywordStore: function (records) {
-        return Ext.create('Taco.store.PagedMemoryStore', {
+        
+        return Ext.create('Taco.core.ux.store.PagingMemoryStore', {
             storeId: 'keywordStore',
             autoLoad: false,
             model: 'KeywordModel',

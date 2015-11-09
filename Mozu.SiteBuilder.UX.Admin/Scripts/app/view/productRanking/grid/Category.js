@@ -5,12 +5,12 @@
 Ext.define('Taco.view.productRanking.grid.Category', {
     extend: 'Taco.core.ux.grid.Panel',
     requires: [
-        'Ext.ux.data.PagingMemoryProxy',
+        'Taco.core.ux.store.PagingMemoryStore',
+        //'Ext.ux.data.PagingMemoryProxy',
         'Taco.model.ProductRanking',
         'Taco.core.ux.grid.plugins.AutoSelect',
         'Taco.model.Category',
-        'Taco.store.Categories',
-        'Taco.store.PagedMemoryStore'
+        'Taco.store.Categories'        
     ],
 
     minHeight: 225,
@@ -56,6 +56,7 @@ Ext.define('Taco.view.productRanking.grid.Category', {
 
     mixins: {
         deleteFromGrid: 'Taco.core.ux.mixins.DeleteFromGrid',
+        pageable: 'Taco.core.ux.mixins.Pageable',
         searchable: 'Taco.core.ux.mixins.Searchable',
         gridcontextmenu: 'Taco.core.ux.mixins.GridContextMenu'
     },
@@ -65,8 +66,8 @@ Ext.define('Taco.view.productRanking.grid.Category', {
     },
         
     initComponent: function () {
-
-
+        var me = this;
+        
         if (!this.catStore) {
             console.warn('A Category is expected to be passed into this component!');
         }
@@ -81,6 +82,12 @@ Ext.define('Taco.view.productRanking.grid.Category', {
         this.columns = Ext.Array.clone(this.getColumnConfig());
 
         this.loadPreviousRecords();
+
+        if (me.enablePaging) {
+            // initialize the grid paging toolbar mixin
+            this.mixins.pageable.constructor.apply(this);
+        }
+
 
         this.callParent(arguments);
         
@@ -147,16 +154,16 @@ Ext.define('Taco.view.productRanking.grid.Category', {
 
                 newStore = me.getNewStore(records);
 
-                me.gridPager = Ext.create('Ext.toolbar.Paging', {
-                    componentCls: 'x-grid-paging-toolbar',
-                    store: newStore,
-                    displayInfo: true,
-                    dock: 'bottom',
-                    inputItemWidth: 45,
-                    border: '0 1 1'
-                });
+                //me.gridPager = Ext.create('Ext.toolbar.Paging', {
+                //    componentCls: 'x-grid-paging-toolbar',
+                //    store: newStore,
+                //    displayInfo: true,
+                //    dock: 'bottom',
+                //    inputItemWidth: 45,
+                //    border: '0 1 1'
+                //});
 
-                me.addDocked(me.gridPager);
+                //me.addDocked(me.gridPager);
 
                 me.reconfigure(newStore);
             });
@@ -165,24 +172,35 @@ Ext.define('Taco.view.productRanking.grid.Category', {
         }
     },
 
-    doDelete: function(record) {
-        this.store.remove(record);
+    removeAll: function () {
+        var me = this;
+        me.store.removeAll();
+        me.store.loadPage(1);
+    },
+
+    doDelete: function (records) {
+        var me = this;
+        
+        Ext.Array.each(records, function (rec) {
+            me.store.remove(rec);
+        });
+
+        this.getView().refresh();
+        this.onDeleteSuccess();
+        this.record.setDirty();
+
+    },
+
+    onDeleteSuccess: function () {
+        this.gridPager.doRefresh();
     },
 
     getNewStore: function (data) {
-        return Ext.create('Taco.store.PagedMemoryStore', {
+        return Ext.create('Taco.core.ux.store.PagingMemoryStore', {
             fields:  ['nameAndCode', 'type'],
             data: data,
             pageSize: this.pageSize,
-            autoLoad: false,
-            proxy: {
-                enablePaging: true,
-                type: 'memory',
-                reader: {
-                    type: 'json',
-                    root: 'data'
-                }
-            }
+            autoLoad: false
         });
     },
 
@@ -227,9 +245,7 @@ Ext.define('Taco.view.productRanking.grid.Category', {
                         text: 'Remove All',
                         itemId: 'removeAllMenuItems',
                         menuColumnHandler: function() {
-                            me.store.getProxy().data = [];
-                            me.store.removeAll();
-                            me.store.loadPage(1);
+                            me.removeAll()
                         },
                         scope: me
                     }
