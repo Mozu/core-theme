@@ -198,6 +198,7 @@ Ext.define('Taco.view.storefrontProduct.Grid', {
             hidden: true,
             margin: '0 10 10 0',
             flex:1,
+            minValue: new Date(),
             //minWidth: 200,
             listeners: {
                 change: function(component, newValue, oldValue, eOpts) {
