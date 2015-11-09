@@ -199,17 +199,19 @@ namespace Mozu.SiteBuilder.Mvc.SEO
 
             foreach (var route in routes)
             {
-                if (route == currentRouteData.Route)
-                {
-                    return null;
-                }
+                
                 var vpath = route.GetVirtualPath(newReq, finalRouteValues);
                 if (vpath != null)
                 {
                     var uri = new Uri("http://localhost/" + vpath.VirtualPath);
-                    uri = new Uri(uri.GetLeftPart(UriPartial.Path) + request.RequestUri.Query);
-                    if (!string.Equals(uri.PathAndQuery, _requestMessage.Value.RequestUri.PathAndQuery, StringComparison.OrdinalIgnoreCase))
-                    {
+
+                    //only redirect if stem is different
+                    if (!string.Equals(
+                        uri.GetComponents(UriComponents.Path , UriFormat.Unescaped),
+                        _requestMessage.Value.RequestUri.GetComponents(UriComponents.Path , UriFormat.Unescaped), 
+                        StringComparison.OrdinalIgnoreCase))
+                    { 
+                        uri = new Uri(uri.GetLeftPart(UriPartial.Path) + request.RequestUri.Query);
                         var redirect = request.CreateResponse(HttpStatusCode.MovedPermanently);
                         redirect.Headers.Location = new Uri(uri.PathAndQuery, UriKind.Relative);
                         redirect.Headers.TryAddWithoutValidation(Constants.HEADER_CANONICAL_URL, uri.PathAndQuery);
@@ -219,8 +221,14 @@ namespace Mozu.SiteBuilder.Mvc.SEO
                     IEnumerable<string> values;
                     if (request.Headers.TryGetValues(Constants.HEADER_ALTERNATIVE_VIEW, out values) && values.Any(x => !string.IsNullOrWhiteSpace(x)))
                     {
+                        uri = new Uri(uri.GetLeftPart(UriPartial.Path) + request.RequestUri.Query);
                         request.Resolve<HttpContextBase>().Response.AddHeader(Constants.HEADER_CANONICAL_URL, uri.PathAndQuery);
                     }
+                    return null;
+                }
+                //if current route didnt match??? load bearing code do not remove
+                if (route == currentRouteData.Route)
+                {
                     return null;
                 }
             }
