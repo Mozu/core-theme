@@ -210,7 +210,7 @@ Ext.define('Taco.view.publishing.grid.Draft', {
                     flex: 2,
                     sortable: true
                 }, 
-                publishSetCode: {
+                publishSetCodeProduct: {
                     type: 'gridcolumn',
                     dataIndex: 'publishSetCode',
                     stateId: 'publishSetCode',
@@ -218,6 +218,15 @@ Ext.define('Taco.view.publishing.grid.Draft', {
                     text: 'Publish Set Code',
                     flex: 2,
                     sortable: true
+                },
+                publishSetCodeContent: {
+                    type: 'gridcolumn',
+                    dataIndex: 'publishSetCode',
+                    stateId: 'publishSetCode',
+                    columnWidth: 100,
+                    text: 'Publish Set Code',
+                    flex: 2,
+                    sortable: false
                 },
                 draftUpdateDate: {
                     xtype: 'gridcolumn',
@@ -275,7 +284,7 @@ Ext.define('Taco.view.publishing.grid.Draft', {
                     hidden: false,
                     sortable: false
                 }, 
-                lastPublishedDate: {
+                lastPublishedDateProduct: {
                     xtype: 'gridcolumn',
                     dataIndex: 'lastPublishDate',
                     stateId: 'lastPublishedDate',
@@ -283,6 +292,16 @@ Ext.define('Taco.view.publishing.grid.Draft', {
                     columnWidth: 100,
                     hidden: true,
                     sortable: true,
+                    renderer: Ext.util.Format.dateRenderer('d M, Y, g:i a')
+                },
+                lastPublishedDateContent: {
+                    xtype: 'gridcolumn',
+                    dataIndex: 'lastPublishDate',
+                    stateId: 'lastPublishedDate',
+                    text: 'Last Published',
+                    columnWidth: 100,
+                    hidden: true,
+                    sortable: false,
                     renderer: Ext.util.Format.dateRenderer('d M, Y, g:i a')
                 },
                 lastPublishedBy: {
@@ -385,7 +404,7 @@ Ext.define('Taco.view.publishing.grid.Draft', {
                     col.updatedBy,
                     col.type,
                     col.modification,
-                    col.lastPublish,
+                    col.lastPublishedDateContent,
                     col.added,
                     col.addedBy,
                     col.actions
@@ -395,7 +414,7 @@ Ext.define('Taco.view.publishing.grid.Draft', {
                     col.draftUpdateDate,
                     col.updatedBy,
                     col.id,
-                    col.lastPublish,
+                    col.lastPublishedDateProduct,
                     col.lastPublishedBy,
                     col.modification,
                     col.added,
@@ -406,13 +425,13 @@ Ext.define('Taco.view.publishing.grid.Draft', {
             drafts: {
                 content: [
                     col.name,
-                    col.publishSetCode,
+                    col.publishSetCodeContent,
                     col.publishSetName,
                     col.publishDate,
                     col.draftUpdateDate,
                     col.listFQN,
                     col.updatedBy,
-                    col.lastPublishedDate,
+                    col.lastPublishedDateContent,
                     col.lastPublishedBy,
                     col.modification,
                     col.siteId,
@@ -421,13 +440,13 @@ Ext.define('Taco.view.publishing.grid.Draft', {
                 ],
                 product: [
                     col.productName,
-                    col.publishSetCode,
+                    col.publishSetCodeProduct,
                     col.publishSetName,
                     col.publishDate,
                     col.draftUpdateDate,
                     col.updatedBy,
                     col.productCode,
-                    col.lastPublishedDate,
+                    col.lastPublishedDateProduct,
                     col.lastPublishedBy,
                     col.modification,
                     col.actions

@@ -9,8 +9,6 @@ namespace Mozu.SiteBuilder.UX.Admin.Helpers.ContentHelpers
 
         private const string CONTENT_NAME = "name";
         private const string UPDATE_DATE = "updateDate";
-        private const string PUBLISH_SET_CODE = "publishsetcode";
-        private const string PUBLISH_LAST_PUBLISHED_DATE = "lastpublisheddate";
 
         /// <summary>
         /// Converts a SortingCollection for Content to a mozu services-compatible sort string.
@@ -38,11 +36,6 @@ namespace Mozu.SiteBuilder.UX.Admin.Helpers.ContentHelpers
                     return CONTENT_NAME;
                 case "draftupdatedate":
                     return UPDATE_DATE;
-                case "publishsetcode":
-                    return PUBLISH_SET_CODE;
-                case "lastpublishdate":
-                    return PUBLISH_LAST_PUBLISHED_DATE;
-
                 default:
                     throw new InvalidOperationException("unknown sort.property " + item.property);
             }
