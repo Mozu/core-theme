@@ -211,11 +211,21 @@ Ext.define('Taco.view.storefrontProduct.Grid', {
 
         me.dockedItems = me.dockedItems || [];
         me.dockedItems.push({
-            xtype: "container",
-            docked: "top",
-            layout: "hbox",
+            xtype: 'container',
+            docked: 'top',
+            layout: 'hbox',
             items: [me.siteSelector, me.dataViewModeSelector, me.sitePreviewDate]
         });
+
+        me.dockedItems.push({
+            xtype: 'label',
+            text: 'Preview',
+            docked: 'top',
+            layout: 'fit',
+            style: {
+                fontSize: '24px'
+            }
+        })
 
         if (me.enableSearch) {
             this.mixins.searchable.constructor.apply(this);
