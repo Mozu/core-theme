@@ -867,11 +867,13 @@
                         card: _.extend(_.pick(obj.card,
                             'expireMonth',
                             'expireYear',
-                            'nameOnCard'),
+                            'nameOnCard',
+                            'isSavedCardInfo'),
                         {
                             cardType: obj.card.paymentOrCardType || obj.card.cardType,
                             cardNumber: obj.card.cardNumberPartOrMask || obj.card.cardNumberPart || obj.card.cardNumber,
-                            id: obj.card.paymentServiceCardId || obj.card.id
+                            id: obj.card.paymentServiceCardId || obj.card.id,
+                            isCardInfoSaved: obj.card.isCardInfoSaved || false
                         }),
                         check: obj.check || {}
                     };
