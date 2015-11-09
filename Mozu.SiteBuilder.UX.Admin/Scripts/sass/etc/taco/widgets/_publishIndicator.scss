@@ -2,6 +2,15 @@
     
     .#{$vprefix}tooltip-button {    
         font-size: 13px;
+
+        .#{$prefix}btn-wrap {
+        	.#{$prefix}btn-button {
+        		.#{$prefix}btn-glyph {
+        			font-size: 12px;
+        			margin-top: 1px;
+        		}
+        	}
+        }
     }
 
     .#{$prefix}box-layout-ct {

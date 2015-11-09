@@ -86,9 +86,10 @@ Ext.define('Taco.view.productRanking.Grid', {
     },
 
     onCreate: Ext.emptyFn,
+    isDisabled: false,
 
     stateful: true,
-    stateId: 'statefulProductRankingGrid',
+    stateId: 'statefulProdRankingGrid',
 
     statics: {
 
@@ -134,7 +135,13 @@ Ext.define('Taco.view.productRanking.Grid', {
             isCatalogLevel: me.isCatalogLevel
         });
 
+
+
         me.callParent(arguments);
+
+        if (me.isDisabled) {
+            me.disableRankingRules();
+        }
     },
 
     reloadGrid: function() {
@@ -149,8 +156,7 @@ Ext.define('Taco.view.productRanking.Grid', {
                 stateId: 'code',
                 text: 'Code',
                 hideable: true,
-                //flex: 1,
-                minWidth: 75,
+                flex: 1,
                 sortable: true
             }, {
                 xtype: 'gridcolumn',
@@ -158,8 +164,7 @@ Ext.define('Taco.view.productRanking.Grid', {
                 stateId: 'name',
                 text: 'Name',
                 hideable: false,
-                flex: 1,
-                minWidth: 250,
+                flex: 2,                
                 sortable: true
             }, {
                 xtype: 'gridcolumn',
@@ -167,17 +172,15 @@ Ext.define('Taco.view.productRanking.Grid', {
                 stateId: 'keywordsJoined',
                 text: 'Search Keywords',
                 hideable: true,
-                //flex: 1,
-                minWidth: 150,
+                flex: 3,
                 sortable: false
             }, {
                 xtype: 'gridcolumn',
-                dataIndex: 'categoriesJoined',
-                stateId: 'categoriesJoined',
+                dataIndex: 'categoryNamesJoined',
+                stateId: 'categoryNamesJoined',
                 text: 'Categories',
                 hideable: true,
-                //flex: 1,
-                minWidth: 150,
+                flex: 3,
                 sortable: false
             }
         ];
@@ -188,8 +191,7 @@ Ext.define('Taco.view.productRanking.Grid', {
                 stateId: 'siteName',
                 text: 'Site',
                 hideable: true,
-                //flex: 1,
-                minWidth: 75,
+                flex: 1,
                 sortable: false
             });
         }
@@ -199,14 +201,14 @@ Ext.define('Taco.view.productRanking.Grid', {
                 dataIndex: 'status',
                 stateId: 'status',
                 text: 'Status',
-                width: 75,
+                flex:1,
                 sortable: false
             }, {
                 xtype: 'datecolumn',
                 dataIndex: 'startDate',
                 stateId: 'startDate',
                 format: 'n/j/Y g:i a',
-                width: 125,
+                flex:2,
                 text: 'Active Start Date',
                 hidden: false,
                 sortable: true
@@ -215,7 +217,7 @@ Ext.define('Taco.view.productRanking.Grid', {
                 dataIndex: 'endDate',
                 stateId: 'endDate',
                 format: 'm-d-Y g:i a',
-                width: 125,
+                flex:2,
                 text: 'Active End Date',
                 hidden: false,
                 sortable: true,
@@ -232,7 +234,7 @@ Ext.define('Taco.view.productRanking.Grid', {
                 dataIndex: 'isDefault',
                 stateId: 'isDefault',
                 text: 'Default',
-                width: 750,
+                flex:1,
                 hidden: true,
                 sortable: false
             }, {
@@ -240,7 +242,7 @@ Ext.define('Taco.view.productRanking.Grid', {
                 dataIndex: 'createDate',
                 stateId: 'createDate',
                 format: 'n/j/Y g:i a',
-                width: 75,
+                flex:2,
                 text: 'Created Date',
                 hidden: true,
                 sortable: true
@@ -249,7 +251,7 @@ Ext.define('Taco.view.productRanking.Grid', {
                 dataIndex: 'createByUser',
                 stateId: 'createByUser',
                 text: 'Created By',
-                width: 75,
+                flex:1,
                 hidden: true,
                 sortable: false
             }, {
@@ -257,7 +259,7 @@ Ext.define('Taco.view.productRanking.Grid', {
                 dataIndex: 'lastModifiedDate',
                 stateId: 'lastModifiedDate',
                 format: 'n/j/Y g:i a',
-                width: 75,
+                flex:2,
                 text: 'Last Modified Date',
                 hidden: true,
                 sortable: true
@@ -266,7 +268,7 @@ Ext.define('Taco.view.productRanking.Grid', {
                 dataIndex: 'lastModifiedByUser',
                 stateId: 'lastModifiedByUser',
                 text: 'Last Modified By',
-                width: 75,
+                flex:1,
                 hidden: true,
                 sortable: false
             }
@@ -399,6 +401,17 @@ Ext.define('Taco.view.productRanking.Grid', {
 
     getDeletePromptMessage: function (record) {
         return record.getDeletePromptMessage();
+    },
+
+    disableRankingRules: function () {
+        var createActionButton = Ext.ComponentQuery.query('button[itemId=createActionButton]');
+        if (createActionButton && createActionButton.length > 0) {
+            createActionButton[0].setDisabled(true);
+        }
+        var advFilterButton = Ext.ComponentQuery.query('button[itemId=advancedFilter]');
+        if (advFilterButton && advFilterButton.length > 0) {
+            advFilterButton[0].setDisabled(true);
+        }
     }
 
 });

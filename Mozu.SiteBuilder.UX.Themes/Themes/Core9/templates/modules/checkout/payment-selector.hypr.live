@@ -41,7 +41,7 @@
                     {% endif %}
                 {% endif %}
                 </div>
-                {% if model.paymentType == "CreditCard" and model.usingSavedCard %}
+                {% if model.paymentType == "CreditCard" and model.usingSavedCard and model.savedPaymentMethodId %}
                 <div class="mz-l-stack-section">
                     <h4 class="mz-checkoutform-title">{{ labels.billingAddress }}</h4>
                     {% include "modules/checkout/billing-address-selector" %}

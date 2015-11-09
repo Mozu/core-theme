@@ -14,7 +14,8 @@ namespace Mozu.SiteBuilder.UX.Admin.Helpers.PublishSetHelpers
         private const string STATUS_PROPERTY = "status";        
         private const string CREATE_DATE_PROPERTY = "createdate";        
         private const string UPDATE_DATE_PROPERTY = "updatedate";
-
+        private const string PUBLISH_LAST_PUBLISHED_DATE = "lastpublisheddate";
+        private const string PUBLISH_SET_CODE = "publishsetcode";
 
         /// <summary>
         /// Converts a SortingCollection for Product to a mozu services-compatible sort string.
@@ -35,12 +36,12 @@ namespace Mozu.SiteBuilder.UX.Admin.Helpers.PublishSetHelpers
         {
             switch (item.property.ToLowerInvariant())
             {
-
                 case "code":
                     return CODE_PROPERTY;
-                case "publishsetname":
-                    return NAME_PROPERTY;
+                case "publishsetcode":
+                    return PUBLISH_SET_CODE;
                 case "name":
+                case "publishsetname":
                     return NAME_PROPERTY;
                 case "publishdate":
                     return PUBLISH_DATE_PROPERTY;
@@ -52,6 +53,9 @@ namespace Mozu.SiteBuilder.UX.Admin.Helpers.PublishSetHelpers
                     return UPDATE_DATE_PROPERTY;
                 case "productname":
                     return PRODUCT_NAME;
+                case "lastpublishdate":
+                    return PUBLISH_LAST_PUBLISHED_DATE;
+
                 default:
                    return item.property.ToLowerInvariant();
             }

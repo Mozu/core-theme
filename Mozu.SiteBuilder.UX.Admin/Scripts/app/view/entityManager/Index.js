@@ -295,10 +295,12 @@ Ext.define('Taco.view.entityManager.Index', {
             editor = me.editors.findEditor(record);
 
         options = options || {};
+
         if (!editor && options.editMode !== 'raw') {
-            Taco.MessageBox.alert('Sorry!', 'No editor defined for this type');
-            return;
+            Taco.app.fireEvent('setgrowl', 'Sorry, no editor is defined this type', 'info', 1000);
+            return false;
         }
+
         me.contentContainer.removeAll();
         me.grid = null;
         me.form = Ext.create('Taco.view.entityManager.DynamicFormContainer', {
@@ -334,12 +336,14 @@ Ext.define('Taco.view.entityManager.Index', {
         });
         Taco.core.StateManager.addState('entities?entityType=' + metaData.entityType + '&list=' + metaData.name + '&record=' + record.get('name'));
     },
-    addADRIfRequired: function(record){
+    addADRIfRequired: function (record) {
+        var me = this;
+
         if(!me.form) return null;
-        if(!record || !record.data || !record.data.listFlags || !record.data.listFlags.enableADR) return form;
+        if(!record || !record.data || !record.data.listFlags || !record.data.listFlags.enableADR) return me.form;
         var adrPanel = Ext.create('Taco.core.ux.form.field.ActiveDateRange', {record: record});
         me.form.dynamicForm.add(adrPanel);
-        return form;
+        return me.form;
     },
     saveSuccess: function() {
         this.mixins.navHeader.saveSuccess.call(this, arguments);

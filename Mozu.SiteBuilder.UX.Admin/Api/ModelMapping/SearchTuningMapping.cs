@@ -27,14 +27,14 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.ModelMapping
                 .ForMember(dc => dc.SearchTuningRuleName, op => op.ResolveUsing(x => x.Name))
                 .ForMember(dc => dc.SearchTuningRuleDescription, op => op.ResolveUsing(x => x.Description))
                 .ForMember(dc => dc.SiteId, op => op.ResolveUsing(x => x.SiteId.GetValueOrDefault()))
-            
+
                 .ForMember(dc => dc.Filters, op => op.ResolveUsing(x => x.Filters.IsNullOrEmpty()
                         ? new List<DC.SearchTuningRuleFilter>()
-                        : x.Filters.Select(y => new DC.SearchTuningRuleFilter {Field = y.Key, Value = y.Value}).ToList()            
+                        : x.Filters.Select(y => new DC.SearchTuningRuleFilter {Field = y.Key, Value = y.Value}).ToList()
                 ))
-            
+
                 .ForMember(dc => dc.BoostedProductCodes, op => op.ResolveUsing(p => p.BoostedProducts.IsNullOrEmpty()
-                                                                    ? new List<string>() 
+                                                                    ? new List<string>()
                                                                     : p.BoostedProducts.Select(x => x.ProductCode).ToList()))
                 .ForMember(dc => dc.BlockedProductCodes, op => op.ResolveUsing(p => p.BlockedProducts.IsNullOrEmpty()
                                                                     ? new List<string>()
@@ -44,7 +44,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.ModelMapping
 
                 .ForMember(dc => dc.ActiveStartDate, op => op.ResolveUsing(x => x.StartDate))
                 .ForMember(dc => dc.ActiveEndDate, op => op.ResolveUsing(x => x.EndDate))
-            
+
                 //ignores
                 .ForMember(dc => dc.AuditInfo, op => op.Ignore())
                 ;
@@ -60,10 +60,10 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.ModelMapping
                     ? new List<KeyValuePair<string, string>>()
                     : dc.Filters.Select(y => new KeyValuePair<string, string>(y.Field, y.Value)).ToList()
                     ))
-   
+
                 .ForMember(x => x.BoostedProducts, op => op.ResolveUsing(dc => dc.BoostedProductCodes.IsNullOrEmpty()
                                                             ? new List<SimpleSearchProduct>()
-                                                            : dc.BoostedProductCodes.Select(x => new SimpleSearchProduct {ProductCode= x}).ToList()))
+                                                            : dc.BoostedProductCodes.Select(x => new SimpleSearchProduct { ProductCode = x }).ToList()))
                 .ForMember(x => x.BlockedProducts, op => op.ResolveUsing(dc => dc.BlockedProductCodes.IsNullOrEmpty()
                                                             ? new List<SimpleSearchProduct>()
                                                             : dc.BlockedProductCodes.Select(x => new SimpleSearchProduct { ProductCode = x }).ToList()))
@@ -71,7 +71,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.ModelMapping
                 .ForMember(x => x.IsActive, op => op.ResolveUsing(dc => dc.Active))
                 .ForMember(x => x.StartDate, op => op.ResolveUsing(dc => dc.ActiveStartDate))
                 .ForMember(x => x.EndDate, op => op.ResolveUsing(dc => dc.ActiveEndDate))
-            
+
                 .ForMember(x => x.LastModifiedBy, op => op.ResolveUsing(dc => dc.AuditInfo != null
                     ? dc.AuditInfo.UpdateBy
                     : null))
@@ -84,7 +84,8 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.ModelMapping
                 .ForMember(x => x.CreateDate, op => op.ResolveUsing(dc => dc.AuditInfo != null
                     ? dc.AuditInfo.CreateDate
                     : null))
-                ;
+                .ForMember(x => x.CategoryNames, op => op.Ignore())
+            ;
         }
     }
 }

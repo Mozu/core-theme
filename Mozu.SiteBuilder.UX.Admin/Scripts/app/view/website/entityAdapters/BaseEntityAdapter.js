@@ -26,6 +26,10 @@ Ext.define('Taco.view.website.entityAdapters.BaseEntityAdapter', {
     getDocument: function() {
         return this.get();
     },
+
+    getTitle: function() {
+        if (this.record) return this.record.get('name');
+    },
     getPageSettings: function() {
 
         var me = this,

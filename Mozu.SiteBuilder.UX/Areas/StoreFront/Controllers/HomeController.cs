@@ -19,8 +19,8 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
 {
     [ContextInitialization]
     [DataViewModeEnforcement]
-    [SbActionExtensionFilter(actionId: ActionFilterConstants.GlobalPageBeforeAction, executionType: ActionExtensionExecutionTypes.BeforeController)]
-    [SbActionExtensionFilter(actionId: ActionFilterConstants.GlobalPageAfterAction, executionType: ActionExtensionExecutionTypes.AfterController)]
+    [SbActionExtensionFilter(actionId: ActionFilterConstants.GlobalPageBeforeAction, executionType: ActionExtensionExecutionTypes.BeforeController, Priority = ActionFilterConstants.GlobalPageBeforePriority)]
+    [SbActionExtensionFilter(actionId: ActionFilterConstants.GlobalPageAfterAction, executionType: ActionExtensionExecutionTypes.AfterController, Priority = ActionFilterConstants.GlobalPageAfterPriority)]
     public class HomeController : BaseApiController
     {
         public HomeController() { }
@@ -30,21 +30,7 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
         [System.Web.Http.HttpGet]
         public async Task<ActionResult> Index()
         {
-            var nav = NavigationContext.Tree;
-            if (nav != null && nav.Count() > 0)
-            {
-                var item = nav.FirstOrDefault(x => x.IsHomePage);
-                if (item != null && item.Url.Length > 0 && item.Url != "/pages/home")
-                {
-                    var uri = new Uri(item.Url, UriKind.RelativeOrAbsolute);
-                    if (uri.IsAbsoluteUri)
-                    {
-                        return new TransferResult("/" + uri.PathAndQuery);
-                    }
-                    return new TransferResult(item.Url);
-                }
-            }
-
+            
 
             PageContext.CmsContext = new CmsPageContext()
             {

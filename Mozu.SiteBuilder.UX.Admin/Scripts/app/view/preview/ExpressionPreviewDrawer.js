@@ -24,7 +24,7 @@ Ext.define('Taco.view.preview.ExpressionPreviewDrawer', {
 //    cls: Taco.baseCSSPrefix + 'orderform-editor',
     height: '90%',
     //scale: 'large',
-    title: 'Products',
+    title: 'Preview Expression',
     width: '90%',
     createType: '',
     isCreateMode: true,
@@ -58,13 +58,18 @@ Ext.define('Taco.view.preview.ExpressionPreviewDrawer', {
             me.onExpressionChange(view);
         });
 
-        me.previewPanel = Ext.create('Ext.container.Container', {
+        me.previewPanel = Ext.create('Ext.panel.Panel', {
             items: [me.previewGrid],
-            title: 'Preview',
             padding: '0 0 0 10',
             layout: {
                 type: 'fit'
-            }
+            },
+            dockedItems: [{
+                xtype: 'container',
+                dock: 'bottom',
+                html: 'Only products that appear on the storefront are returned in this list',
+                padding: '20 10'
+            }]
         });
 
         var container = Ext.create('Taco.core.ux.content.SplitContainer', {
@@ -74,6 +79,7 @@ Ext.define('Taco.view.preview.ExpressionPreviewDrawer', {
                 split: true,
                 splitter: true
             },
+            cls: 'no-background-splitter',
             border: false,
             initializePanels: Ext.emptyFn
         });

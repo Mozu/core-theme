@@ -199,17 +199,19 @@ namespace Mozu.SiteBuilder.Mvc.SEO
 
             foreach (var route in routes)
             {
-                if (route == currentRouteData.Route)
-                {
-                    return null;
-                }
+                
                 var vpath = route.GetVirtualPath(newReq, finalRouteValues);
                 if (vpath != null)
                 {
                     var uri = new Uri("http://localhost/" + vpath.VirtualPath);
-                    uri = new Uri(uri.GetLeftPart(UriPartial.Path) + request.RequestUri.Query);
-                    if (!string.Equals(uri.PathAndQuery, _requestMessage.Value.RequestUri.PathAndQuery, StringComparison.OrdinalIgnoreCase))
-                    {
+
+                    //only redirect if stem is different
+                    if (!string.Equals(
+                        uri.GetComponents(UriComponents.Path , UriFormat.Unescaped),
+                        _requestMessage.Value.RequestUri.GetComponents(UriComponents.Path , UriFormat.Unescaped), 
+                        StringComparison.OrdinalIgnoreCase))
+                    { 
+                        uri = new Uri(uri.GetLeftPart(UriPartial.Path) + request.RequestUri.Query);
                         var redirect = request.CreateResponse(HttpStatusCode.MovedPermanently);
                         redirect.Headers.Location = new Uri(uri.PathAndQuery, UriKind.Relative);
                         redirect.Headers.TryAddWithoutValidation(Constants.HEADER_CANONICAL_URL, uri.PathAndQuery);
@@ -219,8 +221,14 @@ namespace Mozu.SiteBuilder.Mvc.SEO
                     IEnumerable<string> values;
                     if (request.Headers.TryGetValues(Constants.HEADER_ALTERNATIVE_VIEW, out values) && values.Any(x => !string.IsNullOrWhiteSpace(x)))
                     {
+                        uri = new Uri(uri.GetLeftPart(UriPartial.Path) + request.RequestUri.Query);
                         request.Resolve<HttpContextBase>().Response.AddHeader(Constants.HEADER_CANONICAL_URL, uri.PathAndQuery);
                     }
+                    return null;
+                }
+                //if current route didnt match??? load bearing code do not remove
+                if (route == currentRouteData.Route)
+                {
                     return null;
                 }
             }
@@ -257,7 +265,7 @@ namespace Mozu.SiteBuilder.Mvc.SEO
                 var vpath = route.GetVirtualPath(newReq, routingValues);
                 if (vpath != null)
                 {
-                    return CreateOutboundUri(route, vpath, _requestMessage.Value.Resolve<IPageContext>().Url, useContext);
+                    return CreateOutboundUri(route, vpath, _requestMessage.Value.Resolve<IPageContext>().Url);
                 }
             }
             return null;
@@ -277,15 +285,15 @@ namespace Mozu.SiteBuilder.Mvc.SEO
             return newReq;
         }
 
-        static string CreateOutboundUri(CustomRoute route, IHttpVirtualPathData vpath, string incoming, bool useInboundQuery)
+        static string CreateOutboundUri(CustomRoute route, IHttpVirtualPathData vpath, string incoming)
         {
             var incomingUri = new Uri(incoming);
             var path = "/" + new Uri("http://localhost/" + vpath.VirtualPath, UriKind.Absolute).GetComponents(UriComponents.Path, UriFormat.Unescaped);
-            var query = useInboundQuery ? incomingUri.Query.TrimStart('?') :  string.Empty;
+           // var query = useInboundQuery ? incomingUri.Query.TrimStart('?') :  string.Empty;
             var scheme = route.UrlScheme.HasValue ? route.UrlScheme.Value.ToStringQuickly() : incomingUri.Scheme;
             var builder = new UriBuilder(scheme, incomingUri.Host);
             builder.Path = path;
-            builder.Query = query;
+           // builder.Query = query;
             if (route.UrlScheme.HasValue)
             {
                 return builder.Uri.ToString();

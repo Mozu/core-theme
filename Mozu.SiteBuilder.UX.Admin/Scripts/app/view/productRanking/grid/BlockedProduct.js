@@ -139,7 +139,12 @@ Ext.define('Taco.view.productRanking.grid.BlockedProduct', {
                 var record = eventData.record;
                 me.removeProduct(record);
               }
-            }, {
+            },
+            {
+                xtype: 'menuseparator',
+                style: 'border:0px;height:1px;background-color:#ccc;margin:6px 0px;'
+            },
+            {
                 text: 'Remove All',
                 menuColumnHandler: function() {
                     me.store.removeAll();

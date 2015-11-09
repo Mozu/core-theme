@@ -100,6 +100,13 @@ Ext.define('Taco.view.storefrontProduct.Grid', {
             me.store.loadData([], false);
         });
 
+        me.items = [{
+                xtype: 'container',
+                dock: 'bottom',
+                html: 'Only products that appear on the storefront are returned in this list',
+                padding: '20 10'
+            }];
+
         var ctx = Taco.app.context.getCurrentContext();
         var sites = (ctx.sites) ? ctx.sites : (ctx.catalog && ctx.catalog.sites) ? ctx.catalog.sites : [];
         var defaultSite = sites[0] || null;
@@ -109,7 +116,7 @@ Ext.define('Taco.view.storefrontProduct.Grid', {
 
         var publishingEnabled = false;
         if (defaultSite) {
-            publishingEnabled = defaultSite.masterCatalog.isContentPublishingEnabled;
+            publishingEnabled = defaultSite.masterCatalog.productPublishingMode.toLowerCase() === 'pending';
         }
         me.siteSelector = Ext.create('Ext.form.field.ComboBox', {
             fieldLabel: 'Site',
@@ -204,11 +211,21 @@ Ext.define('Taco.view.storefrontProduct.Grid', {
 
         me.dockedItems = me.dockedItems || [];
         me.dockedItems.push({
-            xtype: "container",
-            docked: "top",
-            layout: "hbox",
+            xtype: 'container',
+            docked: 'top',
+            layout: 'hbox',
             items: [me.siteSelector, me.dataViewModeSelector, me.sitePreviewDate]
         });
+
+        me.dockedItems.push({
+            xtype: 'label',
+            text: 'Preview',
+            docked: 'top',
+            layout: 'fit',
+            style: {
+                fontSize: '24px'
+            }
+        })
 
         if (me.enableSearch) {
             this.mixins.searchable.constructor.apply(this);
@@ -230,7 +247,6 @@ Ext.define('Taco.view.storefrontProduct.Grid', {
                 dataIndex: 'productCode',
                 stateId: 'productCode',
                 text: 'Code',
-                hideable: false,
                 flex: 1,
                 minWidth: 100
             },
@@ -241,15 +257,6 @@ Ext.define('Taco.view.storefrontProduct.Grid', {
                 text: 'Name',
                 minWidth: 120,
                 flex: 1,
-            },
-            {
-                xtype: 'gridcolumn',
-                stateId: 'productType',
-                dataIndex: 'productType',
-                text: 'Product Type',
-                minWidth: 120,
-                flex: 1,
-                sortable:false
             },
             {
                 xtype: 'gridcolumn',
@@ -265,7 +272,7 @@ Ext.define('Taco.view.storefrontProduct.Grid', {
                 xtype: 'gridcolumn',
                 stateId: 'salePrice',
                 dataIndex: 'salePrice',
-                text: 'SalePrice',
+                text: 'Sale Price',
                 minWidth: 100,
                 flex: 1,
                 align: 'right',
@@ -273,23 +280,32 @@ Ext.define('Taco.view.storefrontProduct.Grid', {
             },
             {
                 xtype: 'gridcolumn',
-                stateId: 'productUsage',
-                dataIndex: 'productUsage',
-                text: 'Usage',
+                stateId: 'productType',
+                dataIndex: 'productType',
+                text: 'Product Type',
                 minWidth: 120,
-                hideable: true,
-                hidden: true,
                 flex: 1,
-            },
+                sortable:false
+            }/*,
             {
                 xtype: 'gridcolumn',
-                stateId: 'createDate',
-                dataIndex: 'createDate',
-                text: 'Create Date',
+                stateId: 'lastModifiedDate',
+                dataIndex: 'lastModifiedDate',
+                text: 'Last Modified',
                 minWidth: 120,
                 flex: 1,
                 hideable: true,
                 hidden: true
+            }*/,
+            {
+                xtype: 'gridcolumn',
+                stateId: 'productUsage',
+                dataIndex: 'productUsage',
+                text: 'Product Usage',
+                minWidth: 120,
+                hideable: true,
+                hidden: true,
+                flex: 1,
             }
         ];
 

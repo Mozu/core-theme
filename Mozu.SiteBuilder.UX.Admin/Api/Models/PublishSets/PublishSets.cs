@@ -1,7 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Web;
 using Mozu.Core.Api.Contracts;
 
 namespace Mozu.SiteBuilder.UX.Admin.Api.Models.PublishSets
@@ -10,18 +7,16 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.Models.PublishSets
     {
         public string Name { get; set; }
         public string Code { get; set; }
-        
         public DateTime? PublishDate { get; set; }
         public int? ProductCount { get; set; }
         public int? ContentCount { get; set; }
-
         public string Status { get; set; }
-
         public string Notes { get; set; }
         public AuditInfo AuditInfo { get; set; }
+	    public DateTime? LastPublishedDate { get; set; }
     }
 
-   
+
 
     public class PublishSetItem
     {

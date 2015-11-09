@@ -217,7 +217,7 @@ Ext.define('Taco.view.publishing.grid.Draft', {
                     columnWidth: 100,
                     text: 'Publish Set Code',
                     flex: 2,
-                    sortable: false
+                    sortable: true
                 },
                 draftUpdateDate: {
                     xtype: 'gridcolumn',
@@ -275,15 +275,15 @@ Ext.define('Taco.view.publishing.grid.Draft', {
                     hidden: false,
                     sortable: false
                 }, 
-                lastPublished: {
+                lastPublishedDate: {
                     xtype: 'gridcolumn',
                     dataIndex: 'lastPublishDate',
-                    stateId: 'lastPublished',
+                    stateId: 'lastPublishedDate',
                     text: 'Last Published',
-                    hidden: true,
                     columnWidth: 100,
-                    renderer: Ext.util.Format.dateRenderer('d M, Y, g:i a'),
-                    sortable: false
+                    hidden: true,
+                    sortable: true,
+                    renderer: Ext.util.Format.dateRenderer('d M, Y, g:i a')
                 },
                 lastPublishedBy: {
                     xtype: 'gridcolumn',
@@ -354,7 +354,7 @@ Ext.define('Taco.view.publishing.grid.Draft', {
                     stateId: 'publishSetName',
                     text: 'Publish Set Name',
                     columnWidth: 100,
-                    sortable: false
+                    sortable: false     // Can't sort - not in API response
                 },         
                 actions: {
                     xtype: 'taco.menucolumn',
@@ -385,7 +385,7 @@ Ext.define('Taco.view.publishing.grid.Draft', {
                     col.updatedBy,
                     col.type,
                     col.modification,
-                    col.lastPublished,
+                    col.lastPublish,
                     col.added,
                     col.addedBy,
                     col.actions
@@ -395,7 +395,7 @@ Ext.define('Taco.view.publishing.grid.Draft', {
                     col.draftUpdateDate,
                     col.updatedBy,
                     col.id,
-                    col.lastPublished,
+                    col.lastPublish,
                     col.lastPublishedBy,
                     col.modification,
                     col.added,
@@ -412,7 +412,7 @@ Ext.define('Taco.view.publishing.grid.Draft', {
                     col.draftUpdateDate,
                     col.listFQN,
                     col.updatedBy,
-                    col.lastPublished,
+                    col.lastPublishedDate,
                     col.lastPublishedBy,
                     col.modification,
                     col.siteId,
@@ -427,7 +427,7 @@ Ext.define('Taco.view.publishing.grid.Draft', {
                     col.draftUpdateDate,
                     col.updatedBy,
                     col.productCode,
-                    col.lastPublished,
+                    col.lastPublishedDate,
                     col.lastPublishedBy,
                     col.modification,
                     col.actions

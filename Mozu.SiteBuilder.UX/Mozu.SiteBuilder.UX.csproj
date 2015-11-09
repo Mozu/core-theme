@@ -161,7 +161,11 @@
     <Reference Include="System.Xml.Linq" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Areas\Misc\AMDModuleProvider.cs" />
     <Compile Include="Areas\Misc\Controllers\ContentController.cs" />
+    <Compile Include="Areas\Misc\LessUtils.cs" />
+    <Compile Include="Areas\Misc\Models\TemplateInfo.cs" />
+    <Compile Include="Areas\Misc\TemplateInheritanceHandler.cs" />
     <Compile Include="Areas\StoreFront\Controllers\BackOfficeController.cs" />
     <Compile Include="Areas\StoreFront\Controllers\LocationController.cs" />
     <Compile Include="Areas\StoreFront\Controllers\MyAnonymousAccountController.cs" />
@@ -171,6 +175,7 @@
     <Compile Include="Areas\StoreFront\Models\DetailedPickupItem.cs" />
     <Compile Include="Configuration\ApplicationConstants.cs" />
     <Compile Include="Configuration\RouteConfig.cs" />
+    <Compile Include="Constants\MimeTypes.cs" />
     <Compile Include="Controllers\BaseApiController.cs" />
     <Compile Include="Controllers\ErrorController.cs" />
     <Compile Include="Areas\Misc\Controllers\BuiltinScriptsController.cs" />
@@ -200,6 +205,7 @@
     <Compile Include="Configuration\AutofacModule.cs" />
     <Compile Include="Configuration\BootStrapperUX.cs" />
     <Compile Include="Areas\StoreFront\Controllers\CheckoutController.cs" />
+    <Compile Include="Filters\ForceCDNUseFilter.cs" />
     <Compile Include="Filters\StorefrontErrorFilterAttribute.cs" />
     <Compile Include="Filters\InitSettingsAttribute.cs" />
     <Compile Include="Filters\DataViewModeEnforcementAttribute.cs" />

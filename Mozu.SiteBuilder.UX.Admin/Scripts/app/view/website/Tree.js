@@ -137,6 +137,8 @@ Ext.define('Taco.view.website.Tree', {
 
                     this.url = url;
 
+                    this.lastSelected = this.getSelectionModel().getSelection()[0];
+
                     if (metaData) {
                         this.fireEvent('contentlistclick', this, metaData, record, item, index, e, eOpts);
                     }
@@ -154,25 +156,28 @@ Ext.define('Taco.view.website.Tree', {
                     else if (url) {
                         if (originalDocumentListName && name)
                         {
-                            url = "/cms/" + originalDocumentListName + "/" + name;
+                            url = '/cms/' + originalDocumentListName + '/' + name;
                         }
                         this.fireEvent('urlclick', this, url, record, item, index, e, eOpts);
                     }
                 }
             },
-            // itemcontextmenu: {
-            //     scope: this,
-            //     fn: function (tree, record, item, index, e, eOpts) {
-            //         var url = record.get('url');
-            //         this.menu.removeAll();
-            //         this.menu.add(this.getMenuItems(record, this));
-            //         this.menu.showBy(item, null, [-5, 0]);
-            //         e.stopEvent();
-            //     }
-            // },
+
             additemclick: {
                 scope: this,
                 fn: 'showPageCreator'
+            },
+
+            select: {
+                scope: this,
+                fn: function(selModel, record) {
+                    
+                    if (record.get('nodeType') === 'link') {
+                        this.selectPath(this.lastSelected.getPath());
+                        selModel.select(this.lastSelected);
+                        this.url = this.lastSelected.get('url');
+                    }
+                }
             }
         });
 
@@ -222,7 +227,7 @@ Ext.define('Taco.view.website.Tree', {
                         // cannot drop anything onto templates
                         isValid = false;
                     } else if (position === 'before' && Ext.Array.contains(roots, targetId)) {
-                        // cannot drop anything as a sibling of a "root" node
+                        // cannot drop anything as a sibling of a 'root' node
                         isValid = false;
                     } else if (Ext.Array.contains(roots, sourceId)) {
                         // cannot drop "root" nodes onto anything
@@ -254,6 +259,7 @@ Ext.define('Taco.view.website.Tree', {
             );
         }
     },
+
     getMenuItems: function (record, scope) {
         var menuItem = function(text, scope, handler) {
                 return {

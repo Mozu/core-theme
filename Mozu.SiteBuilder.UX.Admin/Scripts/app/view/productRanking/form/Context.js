@@ -15,7 +15,6 @@ Ext.define('Taco.view.productRanking.form.Context', {
     ui: 'subform',
     margin: '0 0 20 0',
 
-    title: 'Context',
     config: {
         isCreateMode: false
     },
@@ -26,7 +25,13 @@ Ext.define('Taco.view.productRanking.form.Context', {
         var me = this;
         Ext.tip.QuickTipManager.init();
 
-
+        me.header =
+            Taco.core.ux.TooltipLabel.wrapConfig('productRanking.form.context.header', me, {
+                fieldLabel: "Context",
+                labelCls: 'x-header-text x-panel-header-text x-panel-header-text-subform',
+                margin: '20 0 35 0'
+            });
+        me.header.xtype = 'fieldcontainer';
 
         var catStore = Taco.core.data.StoreManager.getOrCreate({
             type: 'Taco.store.Categories',
@@ -46,11 +51,6 @@ Ext.define('Taco.view.productRanking.form.Context', {
         catStore.on({
             load: function (store) {
                 var catRecordToAddWhenNew;
-
-                store.filterBy(function (record) {
-                    var isRealTime = record.get('categoryType') === 'DynamicRealTime';
-                    return !isRealTime;
-                });
 
                 if (me.isCreate && me.categoryCode) {
                     catRecordToAddWhenNew = catStore.findRecord('categoryCode', me.categoryCode);
@@ -223,20 +223,6 @@ Ext.define('Taco.view.productRanking.form.Context', {
     launchCategoryModal: function (list) {
         var me = this,
             treeStore = Taco.core.data.StoreManager.getCategoryTreeByCatalog();
-
-
-        treeStore.on({
-            load: function () {
-                if (!me.showDynamicRealTimeCategories) {
-                    treeStore.filterBy(function (record) {
-                        var isRealTime = record.get('categoryType') === 'DynamicRealTime';
-                        return (!isRealTime);
-                    });
-                }
-            },
-            scope: this
-        });
-
 
         this.modal = Ext.create('Taco.view.category.Modal', {
             store: treeStore

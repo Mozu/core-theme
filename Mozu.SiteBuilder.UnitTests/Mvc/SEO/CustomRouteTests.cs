@@ -383,7 +383,7 @@ namespace Mozu.SiteBuilder.UnitTests.Mvc.SEO
             public Action<CustomRouteHandler> RouteAction { get; set; }
             public Action<HttpRequestMessage > ValidateRequest { get; set; }
             public Action<CustomRoute> ValidateRoute{ get; set; }
-            public Action <CustomRouteHandler , CategoryTree > DoLinkStuff { get; set; }
+            public Action <CustomRouteHandler , CategoryTree , Mozu.SiteBuilder.Mvc.Helpers.UrlHelper> DoLinkStuff { get; set; }
 
         }
         public IEnumerable<TestCase> GetTests()
@@ -401,7 +401,7 @@ namespace Mozu.SiteBuilder.UnitTests.Mvc.SEO
                 {
                     Assert.AreEqual((string)req.GetRouteData().Values["categorySlug"], "women");
                 },
-                DoLinkStuff= (handler, tree) =>
+                DoLinkStuff= (handler, tree, urlhelper) =>
                 {
                     var otherCat = tree.FindById(32);
                     var catMap = Mapper.Map<IDictionary<string, object>>(otherCat);
@@ -410,6 +410,46 @@ namespace Mozu.SiteBuilder.UnitTests.Mvc.SEO
 
                 }
             };
+
+            yield return new TestCase()
+            {
+                Name = "sale with filter clear",
+                Url = "sale/women/diesel",
+                ValidateRoute = route =>
+                {
+                    Assert.AreEqual(route.InternalRoute, FancyRoute.Category);
+
+                },
+                ValidateRequest = req =>
+                {
+                    Assert.AreEqual((string)req.GetRouteData().Values["categorySlug"], "women");
+                },
+                DoLinkStuff = (handler, tree, urlhelper) =>
+                {
+                    var clearLinks = urlhelper.MakeUrl(SiteBuilder.Mvc.Helpers.UrlHelper.UrlType.Facet, "clear", null, false);
+                    Assert.AreEqual(clearLinks, "/sale/women");
+
+                }
+            };
+
+
+
+            yield return new TestCase()
+            {
+                Name = "search and validate categoryurl",
+                Url = "search?query=food&facetValueFilter=tenant~brand%3acitizens-of-humanity%2ctenant~brand%3adl1961-premium-denim",
+               
+                DoLinkStuff = (handler, tree, urlhelper) =>
+                {
+                    var otherCat = tree.FindById(32);
+                    var clearLinks = urlhelper.MakeUrl(SiteBuilder.Mvc.Helpers.UrlHelper.UrlType.Category, otherCat, null, false);
+                    Assert.AreEqual(clearLinks, "/women/clothing/dresses");
+
+                }
+            };
+
+
+
             yield return new TestCase()
             {
                 Name = "cat with facet",
@@ -423,12 +463,17 @@ namespace Mozu.SiteBuilder.UnitTests.Mvc.SEO
                 {
                     Assert.AreEqual((string)req.GetRouteData().Values["categorySlug"], "women");
                 },
-                DoLinkStuff = (handler, tree) =>
+                DoLinkStuff = (handler, tree, urlhelper) =>
                 {
-                    var otherCat = tree.FindById(32);
-                    var catMap = Mapper.Map<IDictionary<string, object>>(otherCat);
-                    var url = handler.GetCanonicalUrl(FancyRoute.Category, () => catMap, true).Result;
-                    Assert.AreEqual(url, "/women/clothing/dresses?facetValueFilter=tenant~brand:citizens-of-humanity,tenant~brand:dl1961-premium-denim");
+                    var facet = new Mozu.ProductRuntime.Contracts.FacetValue()
+                    {
+                        ChildrenFacetValues = new List<ProductRuntime.Contracts.FacetValue>(),
+                        Value = "32"
+                    };
+                  
+                    var url = urlhelper.MakeUrl(SiteBuilder.Mvc.Helpers.UrlHelper.UrlType.Facet, facet, null);
+                  
+                    Assert.AreEqual(url, "/women/clothing/dresses?facetValueFilter=tenant%7ebrand%3acitizens-of-humanity%2ctenant%7ebrand%3adl1961-premium-denim");
 
                 }
             };
@@ -445,6 +490,7 @@ namespace Mozu.SiteBuilder.UnitTests.Mvc.SEO
             subber.Provide<IRouteConfig>(new RouteConfig());
             var sbapiContext = subber.ResolveAndSubstituteFor<ISiteBuilderApiContext>();
             var pc = subber.ResolveAndSubstituteFor<IPageContext>();
+         
             var logger = subber.ResolveAndSubstituteFor<ILogger>();
             var cache = new MemoryCache("testcache");
             subber.Provide<ObjectCache>(cache);
@@ -452,7 +498,10 @@ namespace Mozu.SiteBuilder.UnitTests.Mvc.SEO
             HttpRequestMessage reqMessage = new HttpRequestMessage(HttpMethod.Get, "http://localhost/" + test.Url ); ;
             pc.Url.Returns(reqMessage.RequestUri.ToString());
 
+         
             reqMessage.SetRouteData(new HttpRouteData(new HttpRoute(), new HttpRouteValueDictionary()));
+            var sc = new SearchContext(reqMessage);
+            pc.Search = sc;
             subber.Provide<HttpRequestMessage>(reqMessage);
             IDependencyScope scope = new AutofacWebApiDependencyScope(subber.Container);
 
@@ -488,9 +537,11 @@ namespace Mozu.SiteBuilder.UnitTests.Mvc.SEO
 
             var catTree = catTreeProvider.GetAllCategories().Result;
             var customRouteRepo = subber.ResolveAndSubstituteFor<CustomRouteHandler>();
+            subber.Provide<ICustomRouteHandler>(customRouteRepo);
+            var urlHelper = subber.ResolveAndSubstituteFor<Mozu.SiteBuilder.Mvc.Helpers.UrlHelper>();
 
 
-           
+
             customRouteRepo.RouteIncomingRequest();
 
 
@@ -508,7 +559,7 @@ namespace Mozu.SiteBuilder.UnitTests.Mvc.SEO
 
             if (test.DoLinkStuff != null)
             {
-                test.DoLinkStuff(customRouteRepo, catTree);
+                test.DoLinkStuff(customRouteRepo, catTree, urlHelper );
             }
 
             

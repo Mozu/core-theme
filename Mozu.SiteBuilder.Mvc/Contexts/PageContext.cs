@@ -118,7 +118,18 @@ namespace Mozu.SiteBuilder.Mvc.Contexts
 
         
     }
+    public interface ICrawlerInfo
+    {
+        bool IsCrawler { get; set; }
+        string CanonicalUrl { get; set; }
+        string NextUrl { get; set; }
+        string PreviousUrl { get; set; }
 
+        bool? NoIndex { get; set; }
+
+        
+
+    }
     public interface IPageContext
     {
         NameValueCollection Query { get; }
@@ -135,6 +146,7 @@ namespace Mozu.SiteBuilder.Mvc.Contexts
         List<KeyValuePair<string, string>> ShippingCountries { get; set; }
         List<KeyValuePair<string, string>> BillingCountries { get; set; }
         bool IsCrawler { get; }
+        ICrawlerInfo CrawlerInfo { get; }
         bool IsMobile { get; }
         bool IsTablet { get; }
         bool IsDesktop { get; }
@@ -166,6 +178,14 @@ namespace Mozu.SiteBuilder.Mvc.Contexts
         string CategoryCode { get; set; }
         int? CategoryId { get; set; }
     }
+    public class CrawlerInfo: ICrawlerInfo
+    {
+        public bool IsCrawler { get; set; }
+        public string CanonicalUrl { get; set; }
+        public string NextUrl { get; set; }
+        public string PreviousUrl { get; set; }
+        public bool? NoIndex { get; set; }
+    }
 
     public class PageContext : IEditableContext, IPageContext
     {
@@ -184,6 +204,10 @@ namespace Mozu.SiteBuilder.Mvc.Contexts
             _settings = settings;
             _mobileDetectionProvider = mobileDetectionProvider;
             _context = context;
+            _crawlerInfo = new CrawlerInfo()
+            {
+                IsCrawler = this.IsCrawler
+            };
 
             IsEditMode = _apiContext.IsEditMode;
             HandledByProxy = IsHeaderTrue(Core.Api.Contracts.Constants.Headers.HANDLED_BY_PROXY, requestMessage);
@@ -483,5 +507,14 @@ namespace Mozu.SiteBuilder.Mvc.Contexts
 
         public  string CategoryCode { get; set; }
         public int? CategoryId { get { return Search.CategoryId; } set { Search.CategoryId = value; } }
+
+        ICrawlerInfo _crawlerInfo;
+        public ICrawlerInfo CrawlerInfo
+        {
+            get
+            {
+                return _crawlerInfo;
+            }
+        }
     }
 }

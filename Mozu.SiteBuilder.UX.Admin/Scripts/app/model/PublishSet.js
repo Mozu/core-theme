@@ -92,19 +92,16 @@ Ext.define('Taco.model.PublishSet', {
             useNull: true
         },
         {
-            name: 'lastPublished',
+            name: 'lastPublishedDate',
             type: 'date',
             dateFormat: 'c',
-            convert: function(value, model) {
-                return model.get('auditInfo').updateDate;
-            },
             defaultValue: null
         },
         {
             name: 'lastPublishedBy',
             type: 'string',
             convert: function(value, model) {
-                return model.get('auditInfo').updateBy;
+                 return model.get('auditInfo').updateBy;    //TBD what value to use (john doe/system-when-auto)
             },
             defaultValue: null
         },

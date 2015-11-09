@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Net;
 using System.Net.Http;
 using System.Text;
 using System.Threading;
@@ -23,6 +24,14 @@ namespace Mozu.SiteBuilder.Mvc.MessageHandler
 
             if ((int)response.StatusCode >= 400 && (int)response.StatusCode < 500 && request.Headers.Accept.Any(x => string.Equals(x.MediaType, "text/html", StringComparison.OrdinalIgnoreCase)))
             {
+                var iSiteBuilderApiContext = request.Resolve<ISiteBuilderApiContext>();
+                if (!iSiteBuilderApiContext.SiteId.HasValue)
+                {
+                    var redir = request.CreateResponse(HttpStatusCode.Moved);
+                    redir.Headers.Location = new Uri("/admin/auth/launchpad", UriKind.Relative);
+                    return redir;
+                }
+
                 return await Process400(request, response).ConfigureAwait(false);
             }
             return response;

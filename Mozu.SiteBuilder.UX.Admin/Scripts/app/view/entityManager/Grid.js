@@ -29,7 +29,6 @@ Ext.define('Taco.view.entityManager.Grid', {
     autoScroll: true,
     enableQuickFilters: false,
     stateful: true,
-    stateId: 'contentyEntityStatefulGrid',
     advancedSearchConfig: {
         advancedFormCls: 'Taco.view.entityManager.AdvancedSearchForm',
         quickFilterData: []
@@ -43,12 +42,13 @@ Ext.define('Taco.view.entityManager.Grid', {
         me.defaultView = me.listMetaData.views[0];
         me.currentView = me.defaultView;
         this.initListView(me.currentView);
-
+        this.stateId = this.getStateFulId(me.currentView);
         me.callParent(arguments);
 
         if (me.listMetaData.views.length > 0) {
 
             menu = Ext.widget('menu');
+
             Ext.Array.each(me.listMetaData.views, function(view) {
                 menu.add({
                     text: view.name,
@@ -58,6 +58,7 @@ Ext.define('Taco.view.entityManager.Grid', {
                     }
                 });
             });
+
             this.gridPager.insert(this.gridPager.items.getCount() - 2, '-');
             this.gridPager.insert(this.gridPager.items.getCount() - 2, {
                 text: 'views',
@@ -65,6 +66,18 @@ Ext.define('Taco.view.entityManager.Grid', {
             });
         }
 
+    },
+    getStateFulId: function(dynamicFields) {
+        var start = this.listMetaData.entityType + this.listMetaData.name + this.listMetaData.listFQN;
+
+        if (!dynamicFields) return start;
+
+        if (!dynamicFields.length || dynamicFields.length === 0) return start;
+        
+        else {
+            var key = dynamicFields.fields.map(function(rec) { return rec.name; }).join(',');
+            return start + key;
+        }
     },
     initListView: function(view) {
 
@@ -82,7 +95,9 @@ Ext.define('Taco.view.entityManager.Grid', {
                 dataIndex: 'name',
                 flex: 1,
                 width: 150,
-                sortable: true
+                sortable: true,
+                stateful: true,
+                stateId: 'name'
             });
         } else {
             columns.push({
@@ -94,12 +109,16 @@ Ext.define('Taco.view.entityManager.Grid', {
                 flex: 1,
                 width: 125,
                 dataIndex: 'id',
-                sortable: false
+                sortable: false,
+                stateful: true,
+                stateId: 'id'
             });
         }
+
         view = view || {
             fields: []
         };
+
         Ext.Array.each(view.fields || [], function(viewField) {
             columns.push({
                 xtype: 'gridcolumn',
@@ -114,9 +133,12 @@ Ext.define('Taco.view.entityManager.Grid', {
                 text: viewField.name,
                 flex: 1,
                 width: 125,
-                sortable: false
+                sortable: false,
+                stateful: true,
+                stateId: viewField.name + 'dynamic'
             });
         });
+
         if (me.listMetaData.entityType === 'cms') {
             columns.push({
                 xtype: 'gridcolumn',
@@ -127,7 +149,9 @@ Ext.define('Taco.view.entityManager.Grid', {
                 flex: 1,
                 width: 150,
                 dataIndex: 'type',
-                sortable: false
+                sortable: false,
+                stateful: true,
+                stateId: 'documentTypeFQN'
             });
 
             columns.push({
@@ -139,7 +163,9 @@ Ext.define('Taco.view.entityManager.Grid', {
                 flex: 1,
                 width: 150,
                 dataIndex: 'status',
-                sortable: false
+                sortable: false,
+                stateful: true,
+                stateId: 'publishState'
             });
 
             columns.push({
@@ -152,7 +178,9 @@ Ext.define('Taco.view.entityManager.Grid', {
                 width: 150,
                 dataIndex: 'dateRange',
                 sortable: false,
-                hidden: true
+                hidden: true,
+                stateful: true,
+                stateId: 'startDate'
             });
 
             columns.push({
@@ -165,9 +193,12 @@ Ext.define('Taco.view.entityManager.Grid', {
                 width: 150,
                 dataIndex: 'dateRange',
                 sortable: false,
-                hidden: true
+                hidden: true,
+                stateful: true,
+                stateId: 'endDate'
             });
         }
+
         columns.push({
             xtype: 'taco.menucolumn',
             text: 'Actions',
@@ -185,6 +216,7 @@ Ext.define('Taco.view.entityManager.Grid', {
                 }
             }]
         });
+
         if (Ext.util.Cookies.get('debugext') === 'true') {
             columns[columns.length - 1].menuItems.push({
                 text: 'Edit Raw',
@@ -196,6 +228,7 @@ Ext.define('Taco.view.entityManager.Grid', {
                 }
             });
         }
+
         store = Ext.create('Taco.store.Entities', {
             listName: me.listMetaData.listFQN,
             entityType: me.listMetaData.entityType,
@@ -203,6 +236,7 @@ Ext.define('Taco.view.entityManager.Grid', {
             autoLoad: true,
             remoteSort: true
         });
+
         if (me.rendered) {
             me.reconfigure(store, columns);
         } else {
