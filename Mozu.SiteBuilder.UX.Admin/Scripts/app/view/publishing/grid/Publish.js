@@ -241,13 +241,12 @@ Ext.define('Taco.view.publishing.grid.Publish', {
                 },
                 {
                     xtype: 'gridcolumn',
-                    dataIndex: 'lastPublished',
-                    stateId: 'lastPublished',
+                    dataIndex: 'lastPublishedDate',
+                    stateId: 'lastPublishedDate',
                     columnWidth: 100,
                     text: 'Last Published',
                     hidden: true,
                     renderer: Ext.util.Format.dateRenderer('d M, Y, g:i a'),
-                    sortable: false
                 },
                 {
                     xtype: 'gridcolumn',

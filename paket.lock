@@ -155,7 +155,7 @@ NUGET
       Mozu.Core.Prime (>= 1.17)
       Mozu.Tenant.Contracts (>= 1.17)
     Mozu.Reference.Contracts (1.17.4)
-    Mozu.ScheduledEvent.Contracts (1.0.2)
+    Mozu.ScheduledEvent.Contracts (1.19.1)
       Mozu.Core.Prime (>= 1.18.0)
     Mozu.ShippingAdmin.Contracts (1.18.1)
       Mozu.Core.Prime (>= 1.17)
