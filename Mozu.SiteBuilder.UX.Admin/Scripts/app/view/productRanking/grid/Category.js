@@ -5,7 +5,7 @@
 Ext.define('Taco.view.productRanking.grid.Category', {
     extend: 'Taco.core.ux.grid.Panel',
     requires: [
-        'Taco.core.ux.store.PagingMemoryStore',
+        //'Taco.core.ux.store.PagingMemoryStore',
         //'Ext.ux.data.PagingMemoryProxy',
         'Taco.model.ProductRanking',
         'Taco.core.ux.grid.plugins.AutoSelect',
@@ -67,6 +67,8 @@ Ext.define('Taco.view.productRanking.grid.Category', {
         
     initComponent: function () {
         var me = this;
+
+        me.store = me.getNewStore([]);
         
         if (!this.catStore) {
             console.warn('A Category is expected to be passed into this component!');
@@ -83,9 +85,11 @@ Ext.define('Taco.view.productRanking.grid.Category', {
 
         this.loadPreviousRecords();
 
+
+
         if (me.enablePaging) {
             // initialize the grid paging toolbar mixin
-            this.mixins.pageable.constructor.apply(this);
+        //    this.mixins.pageable.constructor.apply(this);
         }
 
 
@@ -98,7 +102,7 @@ Ext.define('Taco.view.productRanking.grid.Category', {
     listeners: {
 
         recordadded: function(records) {
-
+            
             var me = this,
                 findFunc = function(rec) {
                     return me.store.find(me.filterProperty, rec.get(me.filterProperty)) === -1;
@@ -152,7 +156,9 @@ Ext.define('Taco.view.productRanking.grid.Category', {
                     }
                 });
 
-                newStore = me.getNewStore(records);
+                //newStore = me.getNewStore(records);
+                
+                me.store.loadData(records);
 
                 //me.gridPager = Ext.create('Ext.toolbar.Paging', {
                 //    componentCls: 'x-grid-paging-toolbar',
@@ -165,11 +171,9 @@ Ext.define('Taco.view.productRanking.grid.Category', {
 
                 //me.addDocked(me.gridPager);
 
-                me.reconfigure(newStore);
+                me.reconfigure(me.store);
             });
-        } else {
-            me.store = me.getNewStore([]);
-        }
+        } 
     },
 
     removeAll: function () {
@@ -192,20 +196,23 @@ Ext.define('Taco.view.productRanking.grid.Category', {
     },
 
     onDeleteSuccess: function () {
-        this.gridPager.doRefresh();
+        
     },
 
     getNewStore: function (data) {
-        return Ext.create('Taco.core.ux.store.PagingMemoryStore', {
+        //return Ext.create('Taco.core.ux.store.PagingMemoryStore', {
+        return Ext.create('Ext.data.Store', {            
             fields:  ['nameAndCode', 'type'],
             data: data,
-            pageSize: this.pageSize,
+            //pageSize: this.pageSize,
             autoLoad: false
         });
     },
 
     getValues: function () {
-        return this.store.getValues();
+        return this.store.data.items
+        //var allData = this.store.getValues();
+        //return allData.items;
     },
 
     // override this method and adjust the columns if your need a grid with a subset of columns;

@@ -272,7 +272,7 @@ Ext.define('Taco.view.productRanking.grid.Keyword', {
     },
 
     onDeleteSuccess: function () {
-        this.gridPager.doRefresh();
+        //this.gridPager.doRefresh();
     },
 
     launchEditor: Ext.emptyFn,

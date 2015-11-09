@@ -37,12 +37,16 @@ Ext.define('Taco.core.ux.store.PagingMemoryStore', {
     // extracts all of the data from the store;
     getValues: function () {
 
-        if (this.proxy.data.length > this.pageSize) {
-            return Ext.Array.unique(this.data.items.concat(this.proxy.data));
-        }
-        else {
-            return this.data.items;
-        }
+        var proxyData = this.proxy.data;
+
+        return this.allData
+
+        //if (proxyData && proxyData.length > this.pageSize) {
+        //    return Ext.Array.unique(this.data.items.concat(this.proxy.data));
+        //}
+        //else {
+        //    return this.data.items;
+        //}
     }
    
 });
