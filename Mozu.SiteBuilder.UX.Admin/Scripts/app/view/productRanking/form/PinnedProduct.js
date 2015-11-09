@@ -14,6 +14,8 @@ Ext.define('Taco.view.productRanking.form.PinnedProduct', {
     ui: 'subform',
     itemId: 'taco-pinnedProduct-form',
 
+    title: 'Promoted Products',
+
     margin: '0 0 20 0',
 
     config: {
@@ -43,15 +45,17 @@ Ext.define('Taco.view.productRanking.form.PinnedProduct', {
             name: 'categoryFilters',
             flex: 1,
             emptyText: 'Search for products',
-            margin: '10 10 10 0',            
+            margin: '10 10 10 0',
             listeners: {
                 select: function (cmp, record) {
                     me.pinnedGrid.fireEvent('recordadded', record);
                     cmp.setValue('');
                 },
+                afterrender: function (cmp) {
+                    cmp.setValue('');
+                },
                 scope: this
-            },
-            flex: 1
+            }
         });
 
         me.placementSelect = Ext.create('Ext.form.ComboBox', {
@@ -75,7 +79,7 @@ Ext.define('Taco.view.productRanking.form.PinnedProduct', {
                     this.select(this.getStore().getAt(0));
                 }
             }
-        })
+        });
 
         me.productForm = Ext.create('Ext.container.Container', {
             layout: {
@@ -85,7 +89,7 @@ Ext.define('Taco.view.productRanking.form.PinnedProduct', {
             items: [ me.productList, me.placementSelect, Ext.create('Ext.panel.Panel', {
                 flex: 1
             })]
-        })
+        });
 
         me.items = [
             {
