@@ -1,31 +1,22 @@
 ﻿using System;
-using System.Collections;
 using System.Collections.Generic;
 using System.Net.Http;
 using System.Web.Http;
-using System.Linq;
 using Autofac;
 using Autofac.Core;
 using Autofac.Core.Lifetime;
 using Autofac.Core.Resolving;
 using Autofac.Integration.WebApi;
-using Burrows;
 using Burrows.Autofac;
 using Burrows.Configuration;
-using Burrows.Configuration.SubscriptionConfigurators;
-using Burrows.Log4Net;
 using Burrows.Publishing;
-using Burrows.Saga;
-using Magnum.Extensions;
 using Mozu.Content.Contracts.Clients;
 using Mozu.Core;
 using Mozu.Core.Api;
 using Mozu.Core.Api.Client;
 using Mozu.Core.Api.Contracts.Client;
-using Mozu.Core.Api.Handlers.Message;
 using Mozu.Core.Configuration;
 using Mozu.Core.Logging;
-using Mozu.Core.Messaging.Consume;
 using Mozu.Core.Messaging.Publish;
 using Mozu.Core.Settings;
 using Mozu.MZDB.Contracts.Clients;
@@ -34,16 +25,14 @@ using Mozu.SiteBuilder.Mvc.Caching;
 using Mozu.SiteBuilder.Mvc.Catalog;
 using Mozu.SiteBuilder.Mvc.Logging;
 using Mozu.SiteBuilder.Mvc.MediaTypeFormatters;
-using Mozu.SiteBuilder.Mvc.MessageHandler;
 using Mozu.SiteBuilder.Mvc.Mobile;
-using Mozu.SiteBuilder.Mvc.Navigation;
 using Mozu.SiteBuilder.Mvc.Settings;
-using Mozu.SiteBuilder.Mvc.Themes;
 using Mozu.SiteBuilder.Mvc.Users;
 
 using Mozu.SiteBuilder.UX.Messaging;
 using Mozu.SiteSettings.General.Contracts.Clients;
 using Module = Autofac.Module;
+using Mozu.SiteBuilder.UX.Areas.Misc;
 
 namespace Mozu.SiteBuilder.UX.Configuration
 {
@@ -157,8 +146,12 @@ namespace Mozu.SiteBuilder.UX.Configuration
             builder.RegisterType<SiteBuilderHttpErrorResponseGenerator>().As<IHttpErrorResponseGenerator>();
             builder.RegisterType<HttpErrorResponseGenerator>();
             builder.RegisterType<StorefrontCacheControlImpl>().As<IStorefrontCacheControl>().SingleInstance();;
-           
-            
+
+            builder.RegisterType<AMDModuleProvider>().AsImplementedInterfaces().AsSelf();
+            builder.RegisterType<LessLogger>().AsImplementedInterfaces().AsSelf();
+            builder.RegisterType<LessTransFormer>().AsImplementedInterfaces().AsSelf();
+            builder.RegisterType<MyLessFileReader>().AsImplementedInterfaces().AsSelf();
+            builder.RegisterType<TemplateInheritanceHandler>().AsImplementedInterfaces().AsSelf();
 
             builder
               .Register(c =>

@@ -331,22 +331,16 @@ namespace Mozu.SiteBuilder.Mvc.Themes
         private ThemeFileSystemInfoCollection LoadThemeFileListing(string themePath, string themeId)
         {
             var dirinfo = new DirectoryInfo(themePath);
-            if (!dirinfo.Exists)
-                return null;
-
-
+            if (!dirinfo.Exists) return null;
 
 
             var themeFiles = dirinfo.GetFiles().Select(x => CreateThemeFileSystemInfo(x, themePath, themeId)).ToList();
 
             var deepThemeFiles = dirinfo.GetDirectories().SelectMany(d =>
-            {
-                if (d.Name == "node_modules")
-                {
-                    return Enumerable.Empty<ThemeFileSystemInfo>();
-                }
-                return d.GetFileSystemInfos("*.*", SearchOption.AllDirectories).Select(x => CreateThemeFileSystemInfo(x, themePath, themeId));
-            }).ToList();
+                d.GetFileSystemInfos("*.*", SearchOption.AllDirectories)
+                .Where(subdir => subdir.Name != "node_modules")
+                .Select(x => CreateThemeFileSystemInfo(x, themePath, themeId))
+            ).ToList();
 
             return new ThemeFileSystemInfoCollection(themeFiles.Concat(deepThemeFiles).ToList());
         }
