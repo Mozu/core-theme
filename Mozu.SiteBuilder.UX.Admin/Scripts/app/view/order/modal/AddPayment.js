@@ -650,7 +650,7 @@ Ext.define('Taco.view.order.modal.AddPayment', {
                     
                     var order = me.record,
                     billingInfo = {
-                        isSameBillingShippingAddress: !!formValues.sameAsBilling,
+                        isSameBillingShippingAddress: false,
                         paymentServiceCardId: formValues.paymentServiceCardId,
                         nameOnCard: formValues.nameOnCard,
                         cardType: formValues.cardType,
