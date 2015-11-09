@@ -804,6 +804,7 @@
     <Content Include="Scripts\app\view\publishing\advancedSearchForm\DraftProduct.js" />
     <Content Include="Scripts\app\view\publishing\advancedSearchForm\Publish.js" />
     <Content Include="Scripts\app\view\publishing\component\AddDraftToPublishSet.js" />
+    <Content Include="Scripts\app\view\publishing\component\button\PublishButton.js" />
     <Content Include="Scripts\app\view\publishing\Form.js" />
     <Content Include="Scripts\app\view\publishing\grid\Draft.js" />
     <Content Include="Scripts\app\view\publishing\grid\GridWrapper.js" />

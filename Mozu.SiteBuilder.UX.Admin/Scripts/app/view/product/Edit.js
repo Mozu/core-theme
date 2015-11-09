@@ -146,7 +146,7 @@
             onDiscardDraft: function() {
                 me.discardProductDraft();
             }
-        },
+        };
 
         this.additionalActions = [
             this.publishingButton,
