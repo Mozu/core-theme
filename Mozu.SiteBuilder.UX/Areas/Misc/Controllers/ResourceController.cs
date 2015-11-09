@@ -146,11 +146,11 @@ namespace Mozu.SiteBuilder.UX.Areas.Misc.Controllers
         public HttpResponseMessage StaticContentShare(string relativePath)
         {
             var sharedFolder = _settings.AppSettings("SiteBuilderStaticContent");
-            var pathPrefix = System.IO.Path.IsPathRooted(sharedFolder) ? "" : @"\\";
-            var tenantId = "t-" + _apiContext.TenantId;
-            var fileName = pathPrefix + sharedFolder + "/" + tenantId + "/" + relativePath;
+            var pathPrefix = Path.IsPathRooted(sharedFolder) ? "" : @"\\";
+            var tenantShareRoot = string.Format("{0}{1}/t-{2}", pathPrefix, sharedFolder, _apiContext.TenantId);
+            var fileName = Path.Combine(tenantShareRoot, relativePath);
             
-            if (checkRequestContent(relativePath, sharedFolder) || !System.IO.File.Exists(fileName))
+            if (checkRequestContent(relativePath, tenantShareRoot) || !System.IO.File.Exists(fileName))
             {
                 return Request.CreateResponse(HttpStatusCode.NotFound);
             }
@@ -172,7 +172,9 @@ namespace Mozu.SiteBuilder.UX.Areas.Misc.Controllers
 
         bool checkRequestContent(string relativePath, string sharedFolder)
         {
-            return relativePath.Contains("..");
+            var sharedFolderPath = Path.GetFullPath(sharedFolder);
+            var relFull = Path.GetFullPath(Path.Combine(sharedFolder, relativePath));
+            return relFull.StartsWith(sharedFolderPath, StringComparison.OrdinalIgnoreCase);
         }
 
         [ClientCacheHeaders(ConfigKey = "navigation")]
