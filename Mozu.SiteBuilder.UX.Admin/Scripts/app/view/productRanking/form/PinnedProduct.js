@@ -14,6 +14,8 @@ Ext.define('Taco.view.productRanking.form.PinnedProduct', {
     ui: 'subform',
     itemId: 'taco-pinnedProduct-form',
 
+    title: 'Promoted Products',
+
     margin: '0 0 20 0',
 
     config: {

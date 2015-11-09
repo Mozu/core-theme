@@ -18,6 +18,7 @@ Ext.define('Taco.view.productRanking.form.Context', {
     config: {
         isCreateMode: false
     },
+    title: 'Context',
     categoryCode: null,
     isCreate: false,
 
