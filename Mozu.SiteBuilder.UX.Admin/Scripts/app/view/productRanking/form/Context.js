@@ -224,20 +224,6 @@ Ext.define('Taco.view.productRanking.form.Context', {
         var me = this,
             treeStore = Taco.core.data.StoreManager.getCategoryTreeByCatalog();
 
-
-        treeStore.on({
-            load: function () {
-                if (!me.showDynamicRealTimeCategories) {
-                    treeStore.filterBy(function (record) {
-                        var isRealTime = record.get('categoryType') === 'DynamicRealTime';
-                        return (!isRealTime);
-                    });
-                }
-            },
-            scope: this
-        });
-
-
         this.modal = Ext.create('Taco.view.category.Modal', {
             store: treeStore
         });
