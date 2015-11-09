@@ -14,7 +14,9 @@ namespace Mozu.SiteBuilder.UX.Controllers
     public static class ActionFilterConstants
     {
         public const string GlobalPageBeforeAction = "http.storefront.pages.global.request.before";
+        public const int GlobalPageBeforePriority = 1;
         public const string GlobalPageAfterAction = "http.storefront.pages.global.request.after";
+        public const int GlobalPageAfterPriority = 100;
         public const string SearchIndexBeforeAction = "http.storefront.pages.search.request.before";
         public const string SearchIndexAfterAction = "http.storefront.pages.search.request.after";
         public const string ProductDetailsBeforeAction = "http.storefront.pages.productDetails.request.before";
@@ -33,6 +35,7 @@ namespace Mozu.SiteBuilder.UX.Controllers
         public const string MyAccountAfterAction = "http.storefront.pages.myAccount.request.after";
         public const string NotFoundBeforeAction = "http.storefront.pages.404.request.before";
         public const string NotFoundAfterAction = "http.storefront.pages.404.request.after";
+        
 
     }
 

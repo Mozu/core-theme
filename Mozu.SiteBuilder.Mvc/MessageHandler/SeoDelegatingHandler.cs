@@ -13,7 +13,9 @@ using Mozu.SiteBuilder.UX.Models.Navigation;
 using System.Collections.Specialized;
 using Mozu.SiteBuilder.Mvc.Contexts;
 using Mozu.Core.Extensions;
+using Mozu.Core.Logging;
 using Mozu.Core.Settings;
+using Mozu.SiteBuilder.Mvc.ActionFilters;
 
 namespace Mozu.SiteBuilder.Mvc.MessageHandler
 {
@@ -152,7 +154,41 @@ namespace Mozu.SiteBuilder.Mvc.MessageHandler
             }
         }
     }
+    
+    public class HomePageTransferHandler:DelegatingHandler
+    {
+        protected async override Task<HttpResponseMessage> SendAsync(HttpRequestMessage request, CancellationToken cancellationToken)
+        {
+            if ( request.RequestUri.GetComponents(UriComponents.Path, UriFormat.Unescaped) == "")
+            {
+                var apiContext = request.Resolve<ISiteBuilderApiContext>();
+                if (apiContext.SiteId.HasValue)
+                {
+                    var navContext = request.Resolve<NavigationContext>();
+                    var tree = await navContext.ASyncGetTree().ConfigureAwait(false);
+                    if (tree != null)
+                    {
+                        var homeLink = tree.FirstOrDefault();
+                        if (homeLink != null && homeLink.Url.Length > 1)
+                        {
+                            var origUri = request.RequestUri;
+                            var newUri = new Uri(homeLink.Url, UriKind.RelativeOrAbsolute);
+                            if (!newUri.IsAbsoluteUri)
+                            {
+                                newUri = new Uri(request.RequestUri, newUri);
+                            }
+                            request.RequestUri = newUri;
 
+                        }
+                    }
+                }
+            }
+            return await base.SendAsync(request, cancellationToken);
+        }
+
+
+       
+    }
 
     public interface IRedirectHandler
     {
