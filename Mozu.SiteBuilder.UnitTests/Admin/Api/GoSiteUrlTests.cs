@@ -28,7 +28,7 @@ namespace Mozu.SiteBuilder.UnitTests.Admin.Api
             yield return new object[] { null, "laughs.com", true, "http://laughs.com" };
             yield return new object[] { null, "laughs.com", false, "~/" };
             yield return new object[] { "foo/bar", "laughs.com", false, "~/foo/bar" };
-            //yield return new object[] { "foo/bar?t=190Jv%2f2ihpEm%2fdcMNdTmzDV2ILlUHQXQqjxvFh%2falvVXlsptXleewRzzFZMJDcMoWQqIsoQiSyq9Pkb3PTMMI%2bBHXr9TCBs5FXQnBg1aHSZfd0l4Y%2bwPAzSYsJiWJWMWil5QTEFm8i8C8hwzUOyvfQI3jDXwAfKy9zR%2feaN23LI2jQqJKHdLqBDRTfyvfyba6DAbNENqG01jduXossAXklWaEsVzetjatInEHS8srxgwqULf9BfwYTmOBiCvIMiiiyN7b7mNt%2f%2fCRM7IQMVQjw%3d%3d", "laughs.com", false, "~/foo/bar?t=190Jv%2f2ihpEm%2fdcMNdTmzDV2ILlUHQXQqjxvFh%2falvVXlsptXleewRzzFZMJDcMoWQqIsoQiSyq9Pkb3PTMMI%2bBHXr9TCBs5FXQnBg1aHSZfd0l4Y%2bwPAzSYsJiWJWMWil5QTEFm8i8C8hwzUOyvfQI3jDXwAfKy9zR%2feaN23LI2jQqJKHdLqBDRTfyvfyba6DAbNENqG01jduXossAXklWaEsVzetjatInEHS8srxgwqULf9BfwYTmOBiCvIMiiiyN7b7mNt%2f%2fCRM7IQMVQjw%3d%3d" };
+            yield return new object[] { "foo/bar?t=%2f", "laughs.com", false, "~/foo/bar?t=%2f" };
         }
     }
 }

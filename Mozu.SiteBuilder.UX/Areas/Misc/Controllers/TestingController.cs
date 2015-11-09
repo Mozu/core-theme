@@ -299,7 +299,7 @@ namespace Mozu.SiteBuilder.UX.Areas.Misc.Controllers
             redir = redir.StartsWith("http") || redir.StartsWith("/") ? 
                 redir : 
                 "/" + redir;
-            var redirUri = new Uri(Uri.UnescapeDataString(redir), UriKind.RelativeOrAbsolute);
+            var redirUri = new Uri(redir, UriKind.RelativeOrAbsolute);
 
             if (redirUri.IsAbsoluteUri || doHostnameRedirect)
             {
