@@ -138,7 +138,8 @@
                 "name": "maxTopLevelNavLabelLength",
                 "hideTrigger": false,
                 "allowDecimal": false,
-                "minValue": 4
+                "minValue": 4,
+                "allowBlank": false
             }
         ]
 	}
