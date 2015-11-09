@@ -116,7 +116,7 @@ Ext.define('Taco.view.storefrontProduct.Grid', {
 
         var publishingEnabled = false;
         if (defaultSite) {
-            publishingEnabled = defaultSite.masterCatalog.isContentPublishingEnabled;
+            publishingEnabled = defaultSite.masterCatalog.productPublishingMode.toLowerCase() === 'pending';
         }
         me.siteSelector = Ext.create('Ext.form.field.ComboBox', {
             fieldLabel: 'Site',

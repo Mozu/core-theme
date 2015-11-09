@@ -79,6 +79,7 @@ Ext.define('Taco.view.preview.ExpressionPreviewDrawer', {
                 split: true,
                 splitter: true
             },
+            cls: 'no-background-splitter',
             border: false,
             initializePanels: Ext.emptyFn
         });
