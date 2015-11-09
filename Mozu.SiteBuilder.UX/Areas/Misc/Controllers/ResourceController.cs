@@ -169,7 +169,7 @@ namespace Mozu.SiteBuilder.UX.Areas.Misc.Controllers
         {
             var sharedFolderPath = Path.GetFullPath(sharedFolder);
             var relFull = Path.GetFullPath(Path.Combine(sharedFolder, relativePath));
-            return relFull.StartsWith(sharedFolderPath, StringComparison.OrdinalIgnoreCase);
+            return !relFull.StartsWith(sharedFolderPath, StringComparison.OrdinalIgnoreCase);
         }
 
         [ClientCacheHeaders(ConfigKey = "navigation")]
