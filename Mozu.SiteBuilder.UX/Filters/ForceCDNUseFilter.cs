@@ -24,7 +24,7 @@ namespace Mozu.SiteBuilder.UX.Filters
             var pageContext = actionContext.Request.Resolve<PageContext>();
             var settings = actionContext.Request.Resolve<ISettings>();
             var cdnHost = settings.AppSettings("CdnHost");
-            var disableCdn = settings.AppSettingsAsBool("disableCdn");
+            var disableCdn = settings.AppSettingsAsNullableBool("disableCdn").GetValueOrDefault(false);
             if (ShouldRedirectToCdn(actionContext.Request.RequestUri, cdnHost, disableCdn, pageContext))
             {
                 var sbapi = actionContext.Request.Resolve<IApiContext>();
