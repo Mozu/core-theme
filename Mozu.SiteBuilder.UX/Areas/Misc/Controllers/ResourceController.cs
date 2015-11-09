@@ -6,13 +6,9 @@ using System.Net;
 using System.Net.Http;
 using System.Net.Http.Formatting;
 using System.Net.Http.Headers;
-using System.Text.RegularExpressions;
-using System.Threading;
 using System.Threading.Tasks;
 using System.Web;
 using System.Web.Http;
-using System.Web.Http.Controllers;
-using Autofac;
 using Mozu.Core;
 using Mozu.Core.Extensions;
 using Mozu.SiteBuilder.Mvc.ActionFilters;
@@ -95,10 +91,9 @@ namespace Mozu.SiteBuilder.UX.Areas.Misc.Controllers
         {
             var res = Content("stylesheets/" + pathinfo, "text/css");
             var oc = res.Content as ObjectContent<MozuVirtualFileResult>;
-            bool emitDebugStylesheet = Request.Headers.Accept.Contains(new MediaTypeWithQualityHeaderValue("text/css"));
             if (oc != null)
             {
-
+                bool emitDebugStylesheet = Request.Headers.Accept.Contains(new MediaTypeWithQualityHeaderValue("text/css"));
                 ((MozuVirtualFileResult)oc.Value).Transform = new LessTransFormer(pathinfo, debug, emitDebugStylesheet, this, _pathProvider.Value, _contentRetriever.Value).Transform;
             }
 
