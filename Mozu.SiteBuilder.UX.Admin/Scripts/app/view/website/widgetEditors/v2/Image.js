@@ -555,13 +555,7 @@ Ext.define('Taco.view.website.widgetEditors.v2.Image', {
     },
 
     handleUploadLink: function (files) {
-<<<<<<< HEAD
-<<<<<<< HEAD
         this.linkStore.removeAll();
-=======
->>>>>>> b1c2b68... #62236 enabled image uploading for click-through link
-=======
->>>>>>> b1c2b68... #62236 enabled image uploading for click-through link
         this.down('#linkField').onUploadFile(files);
     },
 
