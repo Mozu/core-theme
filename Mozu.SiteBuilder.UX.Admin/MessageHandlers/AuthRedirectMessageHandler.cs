@@ -55,7 +55,7 @@ namespace Mozu.SiteBuilder.UX.Admin.MessageHandlers
             var postback = !handledByRp ? "http://" + request.Headers.GetValues("host").First() + "/admin/auth/pants" : "";
             var redirect = HttpUtility.UrlEncode(request.RequestUri.PathAndQuery);
 
-            var loginRequest = loginAppRouter.To(Core.UserScopeType.Tenant, tenantId, redirect, postback, true);
+            var loginRequest = loginAppRouter.To(Core.UserScopeType.Tenant, tenantId, redirect, postback, false);
 
             var message = new HttpResponseMessage(HttpStatusCode.Redirect);
             message.Headers.Location = loginRequest;

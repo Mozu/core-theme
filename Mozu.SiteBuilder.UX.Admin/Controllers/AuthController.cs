@@ -53,7 +53,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Controllers
         public HttpResponseMessage FedLogin(string returnUrl)
         {
             var postback = !_handledByRP ? string.Format("http://{0}/admin/auth/pants", GetHost()) : null;
-            var redir = _loginAppRouter.To(UserScopeType.Tenant, _apiContext.TenantId, returnUrl, postback, true);
+            var redir = _loginAppRouter.To(UserScopeType.Tenant, _apiContext.TenantId, returnUrl, postback, false);
 
             var message = new System.Net.Http.HttpResponseMessage(HttpStatusCode.Redirect);
             message.Headers.Location = redir;
@@ -68,7 +68,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Controllers
         public HttpResponseMessage Launchpad()
         {
             var postback = !_handledByRP ? string.Format("http://{0}/admin/auth/pants", GetHost()) : null;
-            var redir = _loginAppRouter.Launchpad(UserScopeType.Tenant, postback, true);
+            var redir = _loginAppRouter.Launchpad(UserScopeType.Tenant, postback, false);
             
             var resp = new HttpResponseMessage(HttpStatusCode.Redirect);
             resp.Headers.Location = redir;
@@ -79,7 +79,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Controllers
         public HttpResponseMessage Logout()
         {
             var postback = !_handledByRP ? string.Format("http://{0}/admin/auth/pants", GetHost()) : null;
-            var redir = _loginAppRouter.Logout(UserScopeType.Tenant, postback, true);
+            var redir = _loginAppRouter.Logout(UserScopeType.Tenant, postback, false);
 
             var resp = new HttpResponseMessage(HttpStatusCode.Redirect );
             resp.Headers.Location = redir;
