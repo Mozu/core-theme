@@ -84,6 +84,7 @@ module.exports = function(grunt) {
               "admin/**/*",
               "compiled/**/*",
               "labels/**/*",
+              "packageconfig.xml",
               "resources/**/*",
               "scripts/**/*",
               "stylesheets/**/*",
