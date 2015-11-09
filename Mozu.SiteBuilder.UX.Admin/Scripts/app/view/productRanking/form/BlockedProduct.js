@@ -33,10 +33,13 @@ Ext.define('Taco.view.productRanking.form.BlockedProduct', {
             name: 'categoryFilters',
             flex: 1,
             emptyText: 'Search for products',
-            margin: '10 0 10 0',            
+            margin: '10 0 10 0',
             listeners: {
                 select: function (cmp, record) {
                     me.blockedGrid.fireEvent('recordadded', record);
+                    cmp.setValue('');
+                },
+                afterrender: function (cmp) {
                     cmp.setValue('');
                 },
                 scope: this
