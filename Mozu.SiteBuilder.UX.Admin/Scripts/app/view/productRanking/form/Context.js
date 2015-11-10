@@ -41,7 +41,6 @@ Ext.define('Taco.view.productRanking.form.Context', {
             autoLoad: true,
             clearFilters: false,
             remoteFilter: false,
-            pageSize: 5,
             filters: function (record) {
                 //return Ext.Array.indexOf((me.get('categories') || []), record.getId()) > -1;
             }
@@ -54,7 +53,7 @@ Ext.define('Taco.view.productRanking.form.Context', {
                 var catRecordToAddWhenNew;
 
                 if (me.isCreate && me.categoryCode) {
-                    catRecordToAddWhenNew = catStore.findRecord('categoryCode', me.categoryCode);
+                    catRecordToAddWhenNew = catStore.findRecord('categoryCode', me.categoryCode, 0, false, false, true);
                     if (catRecordToAddWhenNew) {
                         me.categoryGrid.fireEvent('recordadded', catRecordToAddWhenNew);
                     }

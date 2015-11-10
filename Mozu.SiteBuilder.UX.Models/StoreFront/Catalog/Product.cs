@@ -674,7 +674,27 @@ namespace Mozu.SiteBuilder.UX.Models.StoreFront.Catalog
             }
         }
 
-        public List<Category> AllCategories { get; set; }
+
+        Lazy<IDictionary<int, Category>> _allCategoriesIndexById;
+        Lazy< IDictionary<string, Category>> _allCategoriesByCode;
+       Lazy<ILookup<string, Category>> _allCategoriesBySlug;
+        List<Category> _allCategories;
+
+        public List<Category> AllCategories
+        {
+            get { return _allCategories; }
+            set
+            {
+                _allCategories = value;
+                if (value == null)
+                {
+                    return;
+                }
+                _allCategoriesIndexById =new  Lazy<IDictionary<int, Category>>(() => _allCategories.ToDictionary(x => x.Id.GetValueOrDefault(-1)));
+                _allCategoriesByCode = new Lazy<IDictionary<string, Category>>(() => _allCategories.Where(x => !string.IsNullOrEmpty(x.CategoryCode)).ToDictionary(x => x.CategoryCode, StringComparer.OrdinalIgnoreCase));
+                _allCategoriesBySlug = new Lazy<ILookup<string, Category>>(() => _allCategories.Where(x => x.Content != null && !string.IsNullOrEmpty(x.Content.Slug)).ToLookup(x => x.Content.Slug, StringComparer.OrdinalIgnoreCase));
+            }
+        }
 
         [Microsoft.ClearScript.ScriptMember("findById")]
         public Category FindById( int? categoryId)
@@ -683,7 +703,9 @@ namespace Mozu.SiteBuilder.UX.Models.StoreFront.Catalog
             {
                 return null;
             }
-            return AllCategories.FirstOrDefault(x => x.CategoryId == categoryId);
+            Category cat;
+            _allCategoriesIndexById.Value.TryGetValue(categoryId.Value, out cat);
+            return cat;
         }
         [Microsoft.ClearScript.ScriptMember("findByCode")]
         public Category FindByCode(string categoryCode)
@@ -692,7 +714,9 @@ namespace Mozu.SiteBuilder.UX.Models.StoreFront.Catalog
             {
                 return null;
             }
-            return AllCategories.FirstOrDefault(x => string.Equals(categoryCode, x.CategoryCode, StringComparison.OrdinalIgnoreCase));
+            Category cat;
+            _allCategoriesByCode.Value.TryGetValue(categoryCode, out cat);
+            return cat;
         }
 
         [Microsoft.ClearScript.ScriptMember("findBySlug")]
@@ -702,7 +726,9 @@ namespace Mozu.SiteBuilder.UX.Models.StoreFront.Catalog
             {
                 return null;
             }
-            return AllCategories.Where(x => x.Content != null && string.Equals(categorySlug, x.Content.Slug , StringComparison.OrdinalIgnoreCase));
+
+            return _allCategoriesBySlug.Value[categorySlug];
+            
         }
     }
 

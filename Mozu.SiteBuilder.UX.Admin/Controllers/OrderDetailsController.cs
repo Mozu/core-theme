@@ -33,7 +33,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Controllers
         public HttpResponseMessage Deets(int siteId, string orderId, string packageId = null)
         {
             var claim = CreateLimitedUserClaimsForOrder(orderId);
-            string tok = HttpUtility.UrlEncode(claim.ToAccessToken());
+            string tok = claim.ToAccessToken();
 
             string destinationUrl = "/back-office/orders/" + orderId;
             if (!String.IsNullOrEmpty(packageId))
