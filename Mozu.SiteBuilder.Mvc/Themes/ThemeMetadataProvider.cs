@@ -336,9 +336,10 @@ namespace Mozu.SiteBuilder.Mvc.Themes
 
             var themeFiles = dirinfo.GetFiles().Select(x => CreateThemeFileSystemInfo(x, themePath, themeId)).ToList();
 
-            var deepThemeFiles = dirinfo.GetDirectories().SelectMany(d =>
-                d.GetFileSystemInfos("*.*", SearchOption.AllDirectories)
-                .Where(subdir => subdir.Name != "node_modules")
+            var deepThemeFiles = 
+                dirinfo.GetDirectories()
+                .Where(subdir => !subdir.Name.EndsWith("node_modules", StringComparison.OrdinalIgnoreCase))
+                .SelectMany(d => d.GetFileSystemInfos("*.*", SearchOption.AllDirectories)
                 .Select(x => CreateThemeFileSystemInfo(x, themePath, themeId))
             ).ToList();
 
