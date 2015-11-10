@@ -41,7 +41,6 @@ Ext.define('Taco.view.productRanking.form.Context', {
             autoLoad: true,
             clearFilters: false,
             remoteFilter: false,
-            pageSize: 5,
             filters: function (record) {
                 //return Ext.Array.indexOf((me.get('categories') || []), record.getId()) > -1;
             }

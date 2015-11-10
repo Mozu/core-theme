@@ -5,12 +5,10 @@
 Ext.define('Taco.view.productRanking.grid.Category', {
     extend: 'Taco.core.ux.grid.Panel',
     requires: [
-        //'Taco.core.ux.store.PagingMemoryStore',
-        //'Ext.ux.data.PagingMemoryProxy',
         'Taco.model.ProductRanking',
         'Taco.core.ux.grid.plugins.AutoSelect',
         'Taco.model.Category',
-        'Taco.store.Categories'        
+        'Taco.store.Categories'
     ],
 
     minHeight: 225,
@@ -24,7 +22,7 @@ Ext.define('Taco.view.productRanking.grid.Category', {
     multiSelect: true,
 
     enableSearch: false,
-    enablePaging: true,
+    enablePaging: false,
     enableRowEditing: true,
     defaultRowEditingData: {},
     enableAutoSelect: false,
@@ -37,8 +35,6 @@ Ext.define('Taco.view.productRanking.grid.Category', {
     hideSearchToolbar: true,
     
     title: false,
-
-    pageSize: 5,
 
     autoScroll: false,
 
@@ -56,7 +52,6 @@ Ext.define('Taco.view.productRanking.grid.Category', {
 
     mixins: {
         deleteFromGrid: 'Taco.core.ux.mixins.DeleteFromGrid',
-        pageable: 'Taco.core.ux.mixins.Pageable',
         searchable: 'Taco.core.ux.mixins.Searchable',
         gridcontextmenu: 'Taco.core.ux.mixins.GridContextMenu'
     },
@@ -66,10 +61,8 @@ Ext.define('Taco.view.productRanking.grid.Category', {
     },
         
     initComponent: function () {
-        var me = this;
 
-        me.store = me.getNewStore([]);
-        
+
         if (!this.catStore) {
             console.warn('A Category is expected to be passed into this component!');
         }
@@ -85,14 +78,6 @@ Ext.define('Taco.view.productRanking.grid.Category', {
 
         this.loadPreviousRecords();
 
-
-
-        if (me.enablePaging) {
-            // initialize the grid paging toolbar mixin
-        //    this.mixins.pageable.constructor.apply(this);
-        }
-
-
         this.callParent(arguments);
         
         this.mixins.gridcontextmenu.constructor.apply(this);
@@ -102,7 +87,7 @@ Ext.define('Taco.view.productRanking.grid.Category', {
     listeners: {
 
         recordadded: function(records) {
-            
+
             var me = this,
                 findFunc = function(rec) {
                     return me.store.find(me.filterProperty, rec.get(me.filterProperty)) === -1;
@@ -156,63 +141,42 @@ Ext.define('Taco.view.productRanking.grid.Category', {
                     }
                 });
 
-                //newStore = me.getNewStore(records);
-                
-                me.store.loadData(records);
+                newStore = me.getNewStore(records);
 
-                //me.gridPager = Ext.create('Ext.toolbar.Paging', {
-                //    componentCls: 'x-grid-paging-toolbar',
-                //    store: newStore,
-                //    displayInfo: true,
-                //    dock: 'bottom',
-                //    inputItemWidth: 45,
-                //    border: '0 1 1'
-                //});
-
-                //me.addDocked(me.gridPager);
-
-                me.reconfigure(me.store);
+                me.reconfigure(newStore);
             });
-        } 
+        } else {
+            me.store = me.getNewStore([]);
+        }
     },
 
-    removeAll: function () {
-        var me = this;
-        me.store.removeAll();
-        me.store.loadPage(1);
-    },
-
-    doDelete: function (records) {
-        var me = this;
-        
-        Ext.Array.each(records, function (rec) {
-            me.store.remove(rec);
-        });
-
-        this.getView().refresh();
-        this.onDeleteSuccess();
-        this.record.setDirty();
-
-    },
-
-    onDeleteSuccess: function () {
-        
+    doDelete: function(record) {
+        this.store.remove(record);
     },
 
     getNewStore: function (data) {
-        //return Ext.create('Taco.core.ux.store.PagingMemoryStore', {
-        return Ext.create('Ext.data.Store', {            
-            fields:  ['nameAndCode', 'type'],
+        return Ext.create('Ext.data.Store', {
+            fields:  [{
+                name: 'nameAndCode',
+                sortType: 'asUCText'
+            }, {
+                name: 'type',
+                sortType: 'asUCText'
+            }],
             data: data,
-            //pageSize: this.pageSize,
-            autoLoad: false
+            autoLoad: false,
+            proxy: {
+                type: 'memory',
+                reader: {
+                    type: 'json',
+                    root: 'data'
+                }
+            }
         });
     },
 
     getValues: function () {
-        return this.store.data.items
-        //var allData = this.store.getValues();
-        //return allData.items;
+        return this.store.data.items;
     },
 
     // override this method and adjust the columns if your need a grid with a subset of columns;
@@ -227,7 +191,7 @@ Ext.define('Taco.view.productRanking.grid.Category', {
                 flex: 3,
                 minWidth: 100,
                 editor: {},
-                sortable: false
+                sortable: true
             }, 
             {
                 xtype: 'gridcolumn',
@@ -236,7 +200,7 @@ Ext.define('Taco.view.productRanking.grid.Category', {
                 hideable: false,
                 flex:1,
                 minWidth: 150,
-                sortable: false
+                sortable: true
             },
             {
                 xtype: 'taco.menucolumn',
@@ -252,7 +216,7 @@ Ext.define('Taco.view.productRanking.grid.Category', {
                         text: 'Remove All',
                         itemId: 'removeAllMenuItems',
                         menuColumnHandler: function() {
-                            me.removeAll()
+                            me.store.removeAll();
                         },
                         scope: me
                     }
