@@ -36,7 +36,6 @@ namespace Mozu.SiteBuilder.UX.Admin.Helpers.ContentHelpers
                     return CONTENT_NAME;
                 case "draftupdatedate":
                     return UPDATE_DATE;
-
                 default:
                     throw new InvalidOperationException("unknown sort.property " + item.property);
             }

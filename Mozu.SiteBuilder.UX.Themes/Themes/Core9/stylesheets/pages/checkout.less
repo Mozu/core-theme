@@ -22,7 +22,6 @@
 
 .mz-checkoutform-active {
     background-color: #eeeeee;
-    width: 95%;
 }
 
 .mz-checkoutform {
@@ -31,6 +30,11 @@
 
 .mz-checkoutform-shipping {
     padding-top: 15px;
+    display: block;
+}
+
+.mz-checkoutform-shipping-edit {
+    padding-left: 5px;
 }
 
 .mz-contactselector {
@@ -46,6 +50,14 @@
             color: #ffffff;
             padding-right: 10px;
         }
+    }
+}
+
+.mz-formstep-body {
+    > .mz-formstep-edit {
+        float: right;
+        top: @gutter/4;
+        position: relative;
     }
 }
 

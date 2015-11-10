@@ -109,36 +109,7 @@ Ext.define('Taco.core.ux.mixins.Searchable', {
                 minHeight:30,
                 padding: '0px 0px 10px 0px',
                 cls: 'taco-grid-search-toolbar',
-                items: [
-                    /*
-                    {
-                        xtype: "tbspacer",
-                        flex: 1,
-                        hidden: me.enableSearch
-                    },
-                    {
-                        xtype: "tbspacer"
-                    }, {
-                        xtype: 'tbtext',
-                        itemId: 'recordCount',
-                        margin: '6 0 6 14',
-                        style: "",
-                        tpl: new Ext.XTemplate([
-                                '<div>',
-                                    '<span class="record-total-count">{totalCount}</span> ',
-                                    '<span class="record-unit">',
-                                    '<tpl if="totalCount == 1">{[Ext.util.Inflector.singularize(values.unit)]}<tpl else>{unit}</tpl>',
-                                    '</span>',
-                                '</div>'
-                        ]),
-                        data: {
-                            count: 0,
-                            totalCount: 0,
-                            unit: 'records'
-                        }
-                    }
-                    */
-                ]
+                items: []
             };
 
 

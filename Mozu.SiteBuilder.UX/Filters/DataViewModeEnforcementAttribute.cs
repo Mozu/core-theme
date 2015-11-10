@@ -7,6 +7,7 @@ using Mozu.Core.Settings;
 using Mozu.SiteBuilder.Mvc;
 using Mozu.SiteBuilder.Mvc.Contexts;
 using Mozu.SiteBuilder.Mvc.Extensions;
+using Mozu.SiteBuilder.Mvc.Helpers;
 using Mozu.SiteBuilder.Mvc.Security;
 using Mozu.SiteBuilder.UX.Models.Settings;
 using System;
@@ -38,7 +39,7 @@ namespace Mozu.SiteBuilder.UX.Filters
             // if we don't have a siteid, we're not going to have enough to render the view in the first place so exit early
             if (!apiContext.SiteId.HasValue) return await continuation();
 
-            var settings = resolver.Resolve<ISettings>();
+            
             var authhelper = resolver.Resolve<IAuthenticationHelper>();
 
             // fixup claims to ensure that even anonymous viewers get claims.
@@ -55,15 +56,16 @@ namespace Mozu.SiteBuilder.UX.Filters
                 return await ShowTheOriginalRequest(apiContext, viewMode, continuation);
             }
 
+            var loginAppHelper = new LoginAppRouteHelper(resolver.Resolve<ISettings>().LoginPath);
             // else we are in a locked-down state. Is there an admin logged in?
             if (!HasAdminCookie(adminToken))
             {
                 string host = GetHostValue(resolver.Resolve<IRequestUrlFinderOuter>());
-                return RedirectTo(CreateLoginLink(settings, request.RequestUri, host, apiContext.TenantId ));
+                return RedirectTo(CreateLoginLink(loginAppHelper, request.RequestUri, host, apiContext.TenantId ));
             }
 
             // now that we have an admin, is that admin authed?
-            if (!AdminHasBehavior(viewMode, adminToken)) return RedirectTo(CreateUnauthLink(settings));
+            if (!AdminHasBehavior(viewMode, adminToken)) return RedirectTo(loginAppHelper.Unauthorized());
 
             // hooray, now we can see the thing!
             return await ShowTheOriginalRequest(apiContext, viewMode, continuation);
@@ -95,17 +97,6 @@ namespace Mozu.SiteBuilder.UX.Filters
             };
         }
 
-        private static Uri CreateUnauthLink(ISettings settings)
-        {
-            return CreateLinkForLoginApp(settings, "unauthorized/index").Uri;
-        }
-
-        private static UriBuilder CreateLinkForLoginApp(ISettings settings, string route)
-        {
-            var builder = new UriBuilder(settings.LoginPath);
-            builder.Path = string.Format("login/{0}", route.Trim());
-            return builder;
-        }
 
         private static bool AdminHasBehavior(DataViewModeType viewMode, string adminToken)
         {
@@ -167,17 +158,10 @@ namespace Mozu.SiteBuilder.UX.Filters
             return !adminToken.IsNullOrEmpty();
         }
 
-        private Uri CreateLoginLink(ISettings settings, Uri requestUri, string postbackHostValue, int tenantId)
+        private Uri CreateLoginLink(LoginAppRouteHelper router, Uri requestUri, string postbackHostValue, int tenantId)
         {
-            var builder = CreateLinkForLoginApp(settings, "to");
-            var queryDict = new Dictionary<string, string> {
-                { "scopeType", "Tenant" },
-                { "ScopeId", tenantId.ToString()},
-                { "redirectUrl", requestUri.PathAndQuery},
-                { "postbackUrl",  new UriBuilder(requestUri.Scheme, postbackHostValue, requestUri.Port, "/auth/pants").Uri.ToString()}
-            };
-            builder.Query = queryDict.ToQueryString();
-            return builder.Uri;
+            var postback = new UriBuilder(requestUri.Scheme, postbackHostValue, requestUri.Port, "/auth/pants").Uri.ToString();
+            return router.To(UserScopeType.Tenant, tenantId, requestUri.PathAndQuery, postback, false);
         }
 
         static readonly int[] _publishBehaviorId = new[] { new PublishPreviewBehavior().Id };

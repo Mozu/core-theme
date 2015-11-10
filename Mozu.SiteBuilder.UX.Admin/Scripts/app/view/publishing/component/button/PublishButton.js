@@ -90,9 +90,11 @@ Ext.define('Taco.view.publishing.component.button.PublishButton', {
     _onMoveToPublish: function() {
 
         var me = this,
-            record = this.record,
-            modal = Ext.create('Taco.view.publishing.modal.PublishSetPicker', {
+            record = this.record;
+
+        Ext.create('Taco.view.publishing.modal.PublishSetPicker', {
             record: record,
+            autoShow: true,
             listeners: {
                 aftersaveclose: function(record, publishSetCode) {
                     me.onMoveToPublish(me.record, publishSetCode);
@@ -100,7 +102,6 @@ Ext.define('Taco.view.publishing.component.button.PublishButton', {
             }
         });
 
-        modal.show();
     },
 
     _onRemoveFromPublishSet: function() {
@@ -146,9 +147,11 @@ Ext.define('Taco.view.publishing.component.button.PublishButton', {
 
         var state = this.record.get('publishState') || this.record.get('publishedState');
 
-        if (!state) return false;
+        if (!state && !this.record.phantom) return false;
 
-        this[state.toLowerCase() === 'draft' ? 'enable' : 'disable']();
+        if (this.record.phantom) state = 'live';
+
+        this[state.toLowerCase() === 'draft' || state.toLowerCase() === 'new' ? 'enable' : 'disable']();
     },
 
     getPublishSetById: function(cb) {

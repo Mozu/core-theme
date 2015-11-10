@@ -88,10 +88,18 @@ Target "test" (fun _ ->
   test()
 )
 
+let touch name = 
+    !! ("*" </> name)
+    |> Seq.iter (fun f -> 
+        logfn "touching %s" f
+        System.IO.File.SetLastWriteTimeUtc(f, System.DateTime.UtcNow)
+        )
+
 Target "set-env" (fun _ ->
     let env = getBuildParamOrDefault "env" "CI"
     let scaleUnit = getBuildParamOrDefault "su" "SB"
     Xml.updateUserConfig env scaleUnit
+    touch "web.config"
 )
 
 Target "help" (fun _ ->

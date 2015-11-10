@@ -36,7 +36,7 @@
  * @requires Taco.controller.FileManager
  * @requires Taco.controller.Discounts
  * @requires Taco.controller.CouponSets 
- * @requires Taco.controller.SearchTuningRules
+ * @requires Taco.controller.ProductRankings
  * @requires Taco.controller.StoreFrontProducts
  * @requires Taco.controller.Settings
  

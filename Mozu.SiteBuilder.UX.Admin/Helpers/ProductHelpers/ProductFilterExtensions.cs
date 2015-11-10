@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections;
-using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using Mozu.SiteBuilder.UX.Admin.Api.Models;
@@ -9,6 +8,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Helpers.ProductHelpers
 {
     internal static class ProductFilterExtensions
     {
+        
         private const string PRODUCT_NAME_PROPERTY = "productincatalogs.content.productName";
         private const string PRODUCT_CODE_PROPERTY = "productCode";
         private const string PRICE_PROPERTY = "productsincatalog.price.price";
@@ -24,9 +24,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Helpers.ProductHelpers
         private const string PRODUCT_UPC_PROPERTY = "upc";
         private const string PRODUCT_MFG_PART_NUM_PROPERTY = "supplierInfo.mfgPartNumber";
         private const string PRODUCT_DIST_PART_NUM_PROPERTY = "supplierInfo.distPartNumber";
-
-
-      
+        private const string PUBLISH_SET_CODE = "publishsetcode";
 
         /// <summary>
         /// Converts a FilterCollection for Product to a mozu services-compatible filter string.
@@ -154,12 +152,11 @@ namespace Mozu.SiteBuilder.UX.Admin.Helpers.ProductHelpers
                     }
                 }
                 case "modifiedby":
-                return string.Format("(createby eq \"{0}\" or updateby eq \"{0}\")", filter.value );
+                    return string.Format("(createby eq \"{0}\" or updateby eq \"{0}\")", filter.value );
                 case "modifiedfrom" :
-                return string.Format("updatedate ge {0}", ((DateTime)filter.value).ToUniversalTime().ToString("o"));
-
+                    return string.Format("updatedate ge {0}", ((DateTime)filter.value).ToUniversalTime().ToString("o"));
                 case "modifiedto":
-                return string.Format("updatedate le {0}", ((DateTime)filter.value).ToUniversalTime().ToString("o"));
+                    return string.Format("updatedate le {0}", ((DateTime)filter.value).AddDays(1).AddTicks(-1).ToUniversalTime().ToString("o"));
                 case "price":
                     return string.Format("{2} {1} {0}", filter.value, filter.comparison, PRICE_PROPERTY);
                 case "stockonhand":
@@ -179,7 +176,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Helpers.ProductHelpers
                 case "map":
                     return string.Format("{1} eq {0}", filter.value, PRICE_MAP_PROPERTY);
                 case "publishsetcode":
-                    return string.Format("{1} eq {0}", filter.value, "publishsetcode");
+                    return string.Format("{1} eq {0}", filter.value, PUBLISH_SET_CODE);
                 default:
                     {
                         throw new NotImplementedException("unable to filter on property " + filter.property);

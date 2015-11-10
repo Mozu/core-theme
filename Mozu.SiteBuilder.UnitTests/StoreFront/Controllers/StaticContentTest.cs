@@ -70,7 +70,7 @@ namespace Mozu.SiteBuilder.UnitTests.StoreFront.Controllers
         {
             yield return new object []{"notafile.jpg", HttpStatusCode.NotFound, 12345};
             yield return new object[]{ "../../notafile.jpg", HttpStatusCode.NotFound, 12345};
-            yield return new object []{"file.html", HttpStatusCode.OK, 12345};
+            yield return new object[] { "file.html", HttpStatusCode.OK, 12345 };
             yield return new object[] { "file.html", HttpStatusCode.NotFound, 23456};
         }
     

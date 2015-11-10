@@ -141,6 +141,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Admin\Api\GoSiteUrlTests.cs" />
     <Compile Include="Admin\Api\LocalizedContentControllerTest.cs" />
     <Compile Include="Admin\Api\LocationInventoryControllerTest.cs" />
     <Compile Include="Admin\Api\ModelMapping\AdminMappingTest.cs" />
@@ -216,6 +217,12 @@
     <None Include="Diagrams\Admin\Scripts\app\view\searchTuningRule\cdSearchTuningRules.cd" />
     <None Include="Diagrams\UX.Models\StoreFront\Catalog\Product.cd" />
     <None Include="Diagrams\UX.Models\StoreFront\Catalog\ProductSearchResults.cd" />
+    <EmbeddedResource Include="Mvc\SEO\JSON\IAttributeWebApiClient.GetAttributeVocabularyValues.tenant~colorgroup.json" />
+    <EmbeddedResource Include="Mvc\SEO\JSON\IProductCategoryRuntimeWebApiClient.GetCategoryTree.json" />
+    <EmbeddedResource Include="Mvc\SEO\JSON\IProductSearchWebApiClient.Search.tenant~colorgroup.json" />
+    <EmbeddedResource Include="Mvc\SEO\JSON\IProductSearchWebApiClient.Search.tenant~brand.json" />
+    <EmbeddedResource Include="Mvc\SEO\JSON\IAttributeWebApiClient.GetAttributeVocabularyValues.tenant~brand.json" />
+    <EmbeddedResource Include="Mvc\SEO\JSON\IGeneralSettingsWebApiClient.GetGeneralSettings.json" />
     <None Include="paket.references" />
   </ItemGroup>
   <ItemGroup>

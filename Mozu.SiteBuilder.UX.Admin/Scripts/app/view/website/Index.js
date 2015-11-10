@@ -137,7 +137,16 @@ Ext.define('Taco.view.website.Index', {
                 width: '120px',
                 fieldStyle: 'background-color: #fff;',
                 requiresContextOfType: ['s'],
-                supportedLevels: ['s']
+                supportedLevels: ['s'],
+                listeners: {
+                    change: function() {
+                        //if were changing website scope, we need to redirect back to homepage
+                        if (me.url !== '/') {
+                            me.url = '/';
+                            me.navigate({url: me.url});
+                        }
+                    }
+                }
             }),
             {
                 xtype: 'taco-indicator',
@@ -793,14 +802,17 @@ Ext.define('Taco.view.website.Index', {
         });
     },
 
-    setPublishRecord: function(record) { 
+    setPublishRecord: function(entityHandler) { 
+
+        var record = entityHandler.getDocument();
+
         this.publishRecord = record;
 
         this.publishButton.addRecord(record);
 
         this.updateDraftIcon(record);
 
-        this.updateHeaderTitle(null, this.tree.getSelectionModel().getSelection()[0] || record);
+        this.updateHeaderTitle(null, entityHandler.getTitle());
     },  
 
     updateDraftIcon: function(record) {
@@ -895,9 +907,10 @@ Ext.define('Taco.view.website.Index', {
         
             var parser = document.createElement('a');
             parser.href = config.url;
-       
+
             if (parser.hostname && (parser.hostname ).toLowerCase() !== ( window.location.hostname || '').toLowerCase() ) {
                 Ext.Msg.alert('Attention', 'editing of url [<b><a href="' + parser.href + '" target="_blank">' + parser.href + '</a></b>] not supported');
+                // this.tree.selectLast();
                 return;
             }
 
@@ -989,7 +1002,7 @@ Ext.define('Taco.view.website.Index', {
     onEntityTypeAdapterLoad: function () {
         var settings = this.entitypeTypeHandler.getPageSettings();
 
-        this.setPublishRecord(this.entitypeTypeHandler.getDocument());   
+        this.setPublishRecord(this.entitypeTypeHandler);   
 
         this.pageSettings.add(settings);
     },
@@ -1281,9 +1294,24 @@ Ext.define('Taco.view.website.Index', {
         });
     },
 
-    updateHeaderTitle: function(tree, record) {
-        var icon = '<span class="taco-website-header-icon ' + (this.down('taco-website-tree').getIconClass(record) || 'page-icon') + '"></span>';
-        this.down('#taco-page-title').update( '<h2 class="page-title">' + record.get('name') + '</h2>');
+    updateHeaderTitle: function(cmp, title) {
+
+        var tree = this.down('taco-website-tree'),
+            selection = tree.getSelectionModel().getSelection(),
+            keys = Object.keys(tree.store.tree.nodeHash);
+        
+        //if selection is empty -- we grab the node that isHomePage
+        if (selection.length === 0) {
+            for (var i = 0; i < keys.length; i++) {
+                if (tree.store.tree.nodeHash[keys[i]].get('isHomePage')) {
+                    record = tree.store.tree.nodeHash[keys[i]];
+                    tree.selectPath(record.getPath());
+                    break;
+                }
+            }
+        }
+
+        this.down('#taco-page-title').update( '<h2 class="page-title">' + title + '</h2>');
     },
 
     onContentListClick: function (tree, metaData) {

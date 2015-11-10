@@ -171,11 +171,11 @@ Ext.define('Taco.store.Navigation2', {
                         "label": "Coupon Sets",
                         "address": "CouponSets"
                     }, {
-                        "id": "searchTuningRule",
+                        "id": "productRanking",
                         "behaviorIds": [16],
 
-                        "label": "Search Results Tuning",
-                        "address": "SearchTuningRules"
+                        "label": "Product Ranking",
+                        "address": "ProductRankings"
                     }
 
                     /*

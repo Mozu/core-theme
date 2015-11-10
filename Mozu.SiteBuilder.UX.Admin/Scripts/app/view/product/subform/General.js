@@ -104,6 +104,8 @@ Ext.define('Taco.view.product.subform.General', {
             persistChangesToModel: true
         };
 
+        me.isCreateMode = !me.record.productTypeRecord;
+
         // sync changes from code view of the htmleditor to WYSIWYG view
         var htmlEditorEditModeChangeHandler = function(el, editMode) {
             if (editMode) {
@@ -187,15 +189,20 @@ Ext.define('Taco.view.product.subform.General', {
                     }
                 },
                 validator: function(val) {
-                    var matches = this.store.queryBy(function(record, id) { return record.get('name') === val });
-                    return (matches.items.length === 1) ? true : 'No matches';
+                    if (me.isCreateMode) {
+                        var matches = this.store.queryBy(function(record, id) { return record.get('name') === val });
+                        return (matches.items.length === 1) ? true : 'No matches';
+                    } else {
+                        // previously saved and is uneditable.
+                        return true;
+                    }
                 }
             });
 
 
             this.productUsageField = Ext.widget({
                 xtype: 'selectfield',
-                itemId: "productUsageField",
+                itemId: 'productUsageField',
                 fieldLabel: 'Product Usage',
                 name: 'productUsage',
                 readOnly: !this.product.phantom,                
@@ -214,7 +221,7 @@ Ext.define('Taco.view.product.subform.General', {
                         var prodTypeId = me.productTypeField.getValue();
                         if (prodTypeId) {
                             var prodTypeRecord = me.record.productTypeRecord;
-                            var isDigitalCreditProdType = (prodTypeRecord.get("goodsType") === 'DigitalCredit');
+                            var isDigitalCreditProdType = (prodTypeRecord.get('goodsType') === 'DigitalCredit');
                             me.setDigitalCreditDefaults(isDigitalCreditProdType, value);
                         }
 

@@ -1,8 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Web;
-using Mozu.Core.Extensions;
 using Mozu.SiteBuilder.UX.Admin.Api.Models;
 
 namespace Mozu.SiteBuilder.UX.Admin.Helpers.ProductRuntimeHelpers
@@ -24,11 +20,11 @@ namespace Mozu.SiteBuilder.UX.Admin.Helpers.ProductRuntimeHelpers
                 case "productcode":
                     return "productCode";
                 case "saleprice":
-                    return "price.CatalogSalePrice";
-                case "price":
-                    return "price.CatalogListPrice";
+                    return "price.SalePrice";
+                case "price": 
+                    return "price";
                 case "name":
-                    return "name";
+                    return "productname";
                 case "createdate":
                     return "createdate";
                 case "producttypeid":

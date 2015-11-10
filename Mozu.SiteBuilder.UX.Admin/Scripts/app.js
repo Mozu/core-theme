@@ -35,7 +35,7 @@ Ext.application({
         'Testing',
         'Discounts',
         'CouponSets',
-        'SearchTuningRules',
+        'ProductRankings',
         'StoreFrontProducts',
         'Settings',
         'Provisioning',

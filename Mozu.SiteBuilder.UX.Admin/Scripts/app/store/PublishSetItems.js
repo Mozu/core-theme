@@ -12,9 +12,9 @@ Ext.define('Taco.store.PublishSetItems', {
     pageSize: 25,
     autoLoad: true,
     remoteSort: true,
-    sortInfo: {
-        field: 'name',
-        direction: 'asc' || 'desc'
+    sorters: {
+        property: 'name',
+        direction: 'ASC'
     },
     constructor: function (cfg) {
         if (!cfg.code || !cfg.type) {

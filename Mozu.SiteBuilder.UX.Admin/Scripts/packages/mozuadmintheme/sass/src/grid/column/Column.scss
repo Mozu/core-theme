@@ -12,6 +12,7 @@
 
 .#{$prefix}column-header-last {
     .#{$prefix}column-header-inner {
+        min-width: 50px;
         padding-right: 32px !important;
     }
 

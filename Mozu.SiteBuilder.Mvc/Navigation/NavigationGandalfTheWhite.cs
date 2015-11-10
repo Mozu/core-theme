@@ -70,12 +70,12 @@ namespace Mozu.SiteBuilder.Mvc.Navigation
         /// Gets all navigation nodes in a flat list.
         /// Flat list is used by Admin.
         /// </summary>
-        public Task<List<ITreeNavigationNode>> GetFlatList()
+        public async Task<List<ITreeNavigationNode>> GetFlatList()
         {
-            return GetListInternal().ContinueWith(t =>
-            {
-                return t.Result.OrderBy(n => n.ParentId).ThenBy(n => n.Index).ToList<ITreeNavigationNode>();
-            });
+            var internalList = await GetListInternal().ConfigureAwait(false);
+            var ordered = internalList.OrderBy(n => n.ParentId).ThenBy(n => n.Index);
+            SetHomePage(ordered.Where(x => x.ParentId == NAV_ROOT_NODE_NAME));
+            return ordered.ToList<ITreeNavigationNode>();
         }
 
         /// <summary>
@@ -356,10 +356,17 @@ namespace Mozu.SiteBuilder.Mvc.Navigation
             }
 
             var topLevelNav = root.Items != null ? root.Items.Cast<SuperNavigationNode>().ToList() : new List<SuperNavigationNode>(0);
+            SetHomePage(topLevelNav);
+            return topLevelNav;
+        }
+
+        private void SetHomePage(IEnumerable<SuperNavigationNode> topLevelNav)
+        {
             var homePage = topLevelNav.OrderBy(n => n.Index).FirstOrDefault(node => !node.NodeType.IsLink && !string.IsNullOrEmpty(node.Url));
             if (homePage != null)
+            {
                 homePage.IsHomePage = true;
-            return topLevelNav;
+            }
         }
 
         private string CompositeETag(string categoriesEtag, string pagesEtag, string navsetEtag)

@@ -324,7 +324,9 @@ namespace Mozu.SiteBuilder.Mvc.SEO
                                 InternalRoute = route.InternalRoute,
                                 Mappings = route.Mappings,
                                 Template = route.Template.Replace(match.Value, path),
-                                Validators = route.Validators
+                                Validators = route.Validators,
+                                UrlScheme = route.UrlScheme,
+                                FunctionId = route.FunctionId
                             };
                             routeDefs.Insert(curIndex, newRoute);
                         }

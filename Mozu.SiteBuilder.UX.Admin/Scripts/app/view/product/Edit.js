@@ -146,7 +146,7 @@
             onDiscardDraft: function() {
                 me.discardProductDraft();
             }
-        },
+        };
 
         this.additionalActions = [
             this.publishingButton,
@@ -376,7 +376,7 @@
         }
 
         this.publishButton.addCls('taco-button-processing');
-        this.publishButton.setText('Processing...');
+        this.publishButton.setText('Publishing...');
 
         // if the form is dirty, we need to persist the changes before doing the publish
         if (this.form.isDirty()) {

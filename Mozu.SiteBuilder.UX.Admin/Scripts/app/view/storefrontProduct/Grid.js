@@ -43,21 +43,15 @@ Ext.define('Taco.view.storefrontProduct.Grid', {
     autoScroll: true,
     stateful: false,
     headerToolbar: true,
-    header: {
-        layout: {
-            type: 'hbox',
-            align: 'left'
-        }
-    },
+    
     layout: {
         type: 'fit'
     },
+    header: false,
 
     viewConfig: {
         emptyText: 'No items found.'
     },
-
-    store: { type: 'Taco.store.StorefrontProducts' },
 
     advancedSearchConfig: {
         disableAdvancedSearch: true
@@ -68,23 +62,26 @@ Ext.define('Taco.view.storefrontProduct.Grid', {
 
     initComponent: function() {
         var me = this;
-        
-        me.store = Taco.core.data.StoreManager.getOrCreate('Taco.store.StorefrontProducts');
-        me.mixins = me.mixins || [];
-        me.dockedItems = me.dockedItems || [];
-        me.columns = me.getColumnConfig();
 
-        if (me.enableSearch) {
-            this.mixins.searchable.constructor.apply(this);
-            me.dockedItems.push(me.createSearchToolbar());
-        }
+        me.store = Taco.core.data.StoreManager.getOrCreate({
+            type: 'Taco.store.StorefrontProducts',
+            createOnly: true,
+            sorters: [
+                {
+                    property: 'name',
+                    direction: 'ASC'
+                }
+            ]
+        });
+        me.mixins = me.mixins || [];
+        me.columns = me.getColumnConfig();
 
         if (me.enablePaging) {
             // initialize the grid paging toolbar mixin
             this.mixins.pageable.constructor.apply(this);
         }
 
-        me.on('taco-update-preview', function(config) {
+        me.on('taco-update-preview', function (config) {
             var key;
             for (key in config) { // method to delete a key so its not passed as an empty value
                 if (config.hasOwnProperty(key) && typeof config[key] === 'undefined') {
@@ -103,49 +100,92 @@ Ext.define('Taco.view.storefrontProduct.Grid', {
             me.store.loadData([], false);
         });
 
-        me.siteSelector = Ext.create('Taco.core.ux.content.ContextMenu', {
+        me.items = [{
+                xtype: 'container',
+                dock: 'bottom',
+                html: 'Only products that appear on the storefront are returned in this list',
+                padding: '20 10'
+            }];
+
+        var ctx = Taco.app.context.getCurrentContext();
+        var sites = (ctx.sites) ? ctx.sites : (ctx.catalog && ctx.catalog.sites) ? ctx.catalog.sites : [];
+        var defaultSite = sites[0] || null;
+        var defaultSiteId = (defaultSite) ? defaultSite.id : "";
+        
+        me.store.proxy.extraParams.siteId = defaultSiteId;
+
+        var publishingEnabled = false;
+        if (defaultSite) {
+            publishingEnabled = defaultSite.masterCatalog.productPublishingMode.toLowerCase() === 'pending';
+        }
+        me.siteSelector = Ext.create('Ext.form.field.ComboBox', {
             fieldLabel: 'Site',
-            supportedLevels: ['s'],
-            requiresContextOfType: ['c', 's'],
-            changeContext: Ext.emptyFn,
+            queryMode: 'local',
+            flex:1,
+            displayField: 'name',
+            valueField: 'id',
             margin: '0 10 10 0',
+            value:defaultSiteId,
+            store: Ext.create('Ext.data.Store', {
+                fields: ['id', 'name'],
+                data : sites
+            }),
+
             listeners: {
-                afterrender: function(component, eOpts) {
-                    var item = this.store.data.items[0];
-                    this.setValue(item);
-                    me.store.proxy.extraParams.siteId = item.data.id;
-                    // TODO: needs to persist the site context on the form record, or does it?
-                },
-                select: function (component, record) {
-                    me.fireEvent('taco-update-preview', {
-                        siteId: record[0].get('id')
-                    });
+                select: function (component, records) {
+                    var record = records[0];
+                    var data = {
+                        siteId: record.get('id')
+                    };
+                    if (record.raw.masterCatalog.productPublishingMode === 'Live') {
+                        me.dataViewModeSelector.setValue('Live').hide();
+                        me.sitePreviewDate.hide();
+                        data.dataViewMode = 'Live';
+                    } else {
+                        me.dataViewModeSelector.show();
+                        if (me.dataViewModeSelector.getValue() === 'Pending') {
+                            me.sitePreviewDate.show();
+                        }
+                    }
+
+                    me.fireEvent('taco-update-preview', data);
                 },
                 scope: me.siteSelector
             }
         });
 
+        var dataViewModeStoreData = [{ name:'Live', value:'Live' }];
+        if (publishingEnabled) {
+            dataViewModeStoreData.push({ name: 'Staged', value: 'Pending' });
+        }
+
         me.dataViewModeSelector = Ext.create('Taco.core.ux.form.SelectField', {
             xtype: 'selectfield',
+            queryMode: 'local',
             fieldLabel: 'State',
-            fields: ['text', 'value'],
+            displayField: 'name',
+            valueField: 'value',
+            flex:1,
+            //fields: ['name', 'value'],
             name: 'me.siteViewModeSelector',
-            store: ['Pending','Live'],
+            store: Ext.create('Ext.data.Store', {
+                fields:['name','value'],
+                data: dataViewModeStoreData
+            }),
             editable: false,
             forceSelection: true,
             value: 'Live',
             margin: '0 10 10 0',
+            hidden: !publishingEnabled,
             listeners: {
                 select: function (source, records) {
-                    var dataViewMode = source.getValue();
-                    var data = {
-                        dataViewMode: dataViewMode
-                    };
-                    if (dataViewMode === 'Pending') {
+                    var fieldValue = source.getValue();
+                    var data = {dataViewMode: fieldValue };
+                    if (fieldValue === 'Pending') {
                         me.sitePreviewDate.show();
                     } else {
                         me.sitePreviewDate.hide();
-                        data.previewDate = undefined;
+                        data.previewDate = undefined; // unset for api call
                     }
                     me.fireEvent('taco-update-preview', data);
                 },
@@ -157,7 +197,9 @@ Ext.define('Taco.view.storefrontProduct.Grid', {
             fieldLabel: 'Preview Date',
             hidden: true,
             margin: '0 10 10 0',
-            minWidth: 200,
+            flex:1,
+            minValue: new Date(),
+            //minWidth: 200,
             listeners: {
                 change: function(component, newValue, oldValue, eOpts) {
                     me.fireEvent('taco-update-preview', {
@@ -168,27 +210,33 @@ Ext.define('Taco.view.storefrontProduct.Grid', {
             }
         });
 
-        me.header.items = me.combineHeaderItems();
+        me.dockedItems = me.dockedItems || [];
+        me.dockedItems.push({
+            xtype: 'container',
+            docked: 'top',
+            layout: 'hbox',
+            items: [me.siteSelector, me.dataViewModeSelector, me.sitePreviewDate]
+        });
+
+        me.dockedItems.push({
+            xtype: 'label',
+            text: 'Preview',
+            docked: 'top',
+            layout: 'fit',
+            style: {
+                fontSize: '24px'
+            }
+        })
+
+        if (me.enableSearch) {
+            this.mixins.searchable.constructor.apply(this);
+            me.dockedItems.push(me.createSearchToolbar());
+        }
 
         me.store.proxy.extraParams.siteId = me.siteSelector.value;
         me.store.proxy.extraParams.dataViewMode = me.dataViewModeSelector.value;
 
         me.callParent(arguments);
-    },
-
-    combineHeaderItems: function() {
-        var staticHeaderItems = [this.siteSelector, this.dataViewModeSelector, this.sitePreviewDate],
-            items; 
-
-        if (this.additionalHeaderItems) {
-            items = staticHeaderItems.concat(this.header.additionalHeaderItems);
-        }
-
-        else {
-            items = staticHeaderItems;
-        }
-
-        return items;
     },
 
     // override this method and adjust the columns if your need a grid with a subset of columns;
@@ -200,7 +248,6 @@ Ext.define('Taco.view.storefrontProduct.Grid', {
                 dataIndex: 'productCode',
                 stateId: 'productCode',
                 text: 'Code',
-                hideable: false,
                 flex: 1,
                 minWidth: 100
             },
@@ -211,16 +258,6 @@ Ext.define('Taco.view.storefrontProduct.Grid', {
                 text: 'Name',
                 minWidth: 120,
                 flex: 1,
-                sortable: false
-            },
-            {
-                xtype: 'gridcolumn',
-                stateId: 'productType',
-                dataIndex: 'productType',
-                text: 'Product Type',
-                minWidth: 120,
-                flex: 1,
-                sortable:false
             },
             {
                 xtype: 'gridcolumn',
@@ -236,7 +273,7 @@ Ext.define('Taco.view.storefrontProduct.Grid', {
                 xtype: 'gridcolumn',
                 stateId: 'salePrice',
                 dataIndex: 'salePrice',
-                text: 'SalePrice',
+                text: 'Sale Price',
                 minWidth: 100,
                 flex: 1,
                 align: 'right',
@@ -244,24 +281,32 @@ Ext.define('Taco.view.storefrontProduct.Grid', {
             },
             {
                 xtype: 'gridcolumn',
-                stateId: 'productUsage',
-                dataIndex: 'productUsage',
-                text: 'Usage',
+                stateId: 'productType',
+                dataIndex: 'productType',
+                text: 'Product Type',
                 minWidth: 120,
-                hideable: true,
-                hidden: true,
                 flex: 1,
-                sortable: false
-            },
+                sortable:false
+            }/*,
             {
                 xtype: 'gridcolumn',
-                stateId: 'createDate',
-                dataIndex: 'createDate',
-                text: 'Create Date',
+                stateId: 'lastModifiedDate',
+                dataIndex: 'lastModifiedDate',
+                text: 'Last Modified',
                 minWidth: 120,
                 flex: 1,
                 hideable: true,
                 hidden: true
+            }*/,
+            {
+                xtype: 'gridcolumn',
+                stateId: 'productUsage',
+                dataIndex: 'productUsage',
+                text: 'Product Usage',
+                minWidth: 120,
+                hideable: true,
+                hidden: true,
+                flex: 1,
             }
         ];
 
@@ -271,72 +316,11 @@ Ext.define('Taco.view.storefrontProduct.Grid', {
     getActionItems: function() {
         var me = this,
             actions = [];
-
-        if (this.enableEditAction) {
-            actions.push({
-                text: 'Edit',
-                requiredBehaviors: {
-                    model: 'Taco.model.Discount',
-                    behavior: 'update'
-                },
-                menuColumnHandler: function(item, eventData) {
-                    var record = eventData.record;
-                    Ext.defer(function() {
-                        Taco.core.StateManager.attemptNavigate('discounts/edit/' + record.getId(), { complexMetaData: { record: record } });
-                    }, 1, this);
-                }
-            });
-        }
-
-        if (this.enableDuplicateAction) {
-            actions.push({
-                text: 'Duplicate',
-                requiredBehaviors: {
-                    model: 'Taco.model.Discount',
-                    behavior: 'create'
-                },
-                menuColumnHandler: function(item, eventData) {
-                    var record = eventData.record,
-                        metaData = {
-                            id: record.getId()
-                        };
-
-                    Taco.app.StateManager.attemptNavigate('discounts/duplicate/' + record.getId(), metaData);
-                }
-            });
-        }
-
-        if (this.enableDeleteAction) {
-            actions.push({
-                text: 'Delete',
-                itemId: 'deleteMenuItem',
-                // deleteMenuColumnHandler can be found in Taco.core.ux.mixins.DeleteFromGrid
-                menuColumnHandler: 'deleteMenuColumnHandler',
-                requiredBehaviors: {
-                    model: 'Taco.model.Discount',
-                    behavior: 'delete'
-                },
-                scope: me
-            });
-        }
-
         return actions;
 
     },
 
-    onActionMenuShow: function(menu, eventData) {
-        var me = this;
-
-        // need to disable the delete menu option when discount has been used
-        var deleteMenuItem = menu.down('#deleteMenuItem');
-        if (deleteMenuItem) {
-            if (eventData.record.get('canBeDeleted')) {
-                deleteMenuItem.show();
-            } else {
-                deleteMenuItem.hide();
-            }
-        }
-    },
+    onActionMenuShow: Ext.emptyFn,
 
     getActionColumn: function() {
         var me = this,

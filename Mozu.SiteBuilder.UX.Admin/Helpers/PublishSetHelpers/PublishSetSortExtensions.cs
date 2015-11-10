@@ -8,12 +8,14 @@ namespace Mozu.SiteBuilder.UX.Admin.Helpers.PublishSetHelpers
     {
 
         private const string CODE_PROPERTY = "code";
-        private const string NAME_PROPERTY = "name";        
+        private const string NAME_PROPERTY = "name";
+        private const string PRODUCT_NAME = "content.productname";    
         private const string PUBLISH_DATE_PROPERTY = "publishdate";
         private const string STATUS_PROPERTY = "status";        
         private const string CREATE_DATE_PROPERTY = "createdate";        
         private const string UPDATE_DATE_PROPERTY = "updatedate";
-
+        private const string PUBLISH_LAST_PUBLISHED_DATE = "lastpublisheddate";
+        private const string PUBLISH_SET_CODE = "publishsetcode";
 
         /// <summary>
         /// Converts a SortingCollection for Product to a mozu services-compatible sort string.
@@ -25,7 +27,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Helpers.PublishSetHelpers
         public static string ToSortString(this SortingCollection sortCollection)
         {
             if (sortCollection == null || sortCollection.Count == 0)
-                return NAME_PROPERTY + " desc";
+                return null;
 
             return string.Join(" and ", sortCollection.Select(x => GetFilter(x) + (x.IsAscending ? " asc" : " desc")));
         }
@@ -34,21 +36,26 @@ namespace Mozu.SiteBuilder.UX.Admin.Helpers.PublishSetHelpers
         {
             switch (item.property.ToLowerInvariant())
             {
-
                 case "code":
                     return CODE_PROPERTY;
+                case "publishsetcode":
+                    return PUBLISH_SET_CODE;
+                case "name":
                 case "publishsetname":
                     return NAME_PROPERTY;
-                case "name":
-                    return NAME_PROPERTY;
-                case "publishDate":
+                case "publishdate":
                     return PUBLISH_DATE_PROPERTY;
                 case "status":
                     return STATUS_PROPERTY;
-                case "createDate":
+                case "createdate":
                     return CREATE_DATE_PROPERTY;
-                case "updateDate":
+                case "updatedate":
                     return UPDATE_DATE_PROPERTY;
+                case "productname":
+                    return PRODUCT_NAME;
+                case "lastpublishdate":
+                    return PUBLISH_LAST_PUBLISHED_DATE;
+
                 default:
                    return item.property.ToLowerInvariant();
             }

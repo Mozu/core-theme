@@ -26,6 +26,10 @@ Ext.define('Taco.view.website.entityAdapters.BaseEntityAdapter', {
     getDocument: function() {
         return this.get();
     },
+
+    getTitle: function() {
+        if (this.record) return this.record.get('name');
+    },
     getPageSettings: function() {
 
         var me = this,
@@ -53,34 +57,9 @@ Ext.define('Taco.view.website.entityAdapters.BaseEntityAdapter', {
         }
 
         if (doc && doc.data && doc.data.listSupportsADR) {
-            var ADRitems = [{
-                xtype: 'panel',
-                collapsible: 'true',
-                ui: 'subform',
-                title: 'Active Date Range',
-                itemId: 'activeDateRangePanel',
-                layout: {
-                    type: 'vbox',
-                    align : 'stretch'
-                },
-                items: [{
-                    xtype: 'mz-input-date',
-                    name: 'document.startDate',
-                    fieldLabel: 'Start Date',
-                    value: doc.get('startDate')
-                }, {
-                    xtype: 'mz-input-date',
-                    name: 'document.endDate',
-                    fieldLabel: 'End Date',
-                    value : doc.get('endDate')
-                }]
-            }];
-
-            ADRitems.forEach(function(adrInput) {
-                if (me && me.dynamicFormContainer && me.dynamicFormContainer.dynamicForm) {
-                    me.dynamicFormContainer.dynamicForm.add(adrInput);
-                }
-            });
+            if (me && me.dynamicFormContainer && me.dynamicFormContainer.dynamicForm) {
+                me.dynamicFormContainer.dynamicForm.add(Ext.create('Taco.core.ux.form.field.ActiveDateRange', {record:doc}));
+            }
         }
 
         return ret;

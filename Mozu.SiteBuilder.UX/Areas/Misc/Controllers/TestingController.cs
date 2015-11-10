@@ -1,5 +1,4 @@
-﻿
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Collections.Specialized;
 using System.Linq;
@@ -9,25 +8,20 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Web;
 using System.Web.Http;
-using Burrows.Testing.TestActions;
 using Mozu.Core;
 using Mozu.Core.Api.Client;
 using Mozu.Core.Api.Client.Caching;
 using Mozu.Core.Settings;
 using Mozu.SiteBuilder.Mvc;
 using Mozu.SiteBuilder.Mvc.ActionResults;
-using Mozu.SiteBuilder.Mvc.CMS;
 using Mozu.SiteBuilder.Mvc.Contexts;
 using Mozu.SiteBuilder.Mvc.Controllers;
 using Mozu.SiteBuilder.Mvc.Extensions;
 using Mozu.SiteBuilder.Mvc.Security;
 using Mozu.SiteBuilder.Mvc.ViewEngine;
-using Mozu.SiteBuilder.UX.Controllers;
 using Mozu.SiteBuilder.UX.Messaging;
-using Mozu.SiteBuilder.UX.Models.Admin.CMS;
 using Mozu.SiteBuilder.UX.Models.Settings;
 using Mozu.SiteBuilder.UX.Models.Visit;
-using Mozu.SiteSettings.Order.Contracts;
 using Mozu.SiteSettings.Order.Contracts.Clients;
 using Mozu.Tenant.Contracts.Clients;
 using Constants = Mozu.Core.Api.Contracts.Constants;
@@ -70,15 +64,15 @@ namespace Mozu.SiteBuilder.UX.Areas.Misc.Controllers
         public HttpResponseMessage RefreshAPiContextHeaders()
         {
             IEnumerable<string> tmp;
-            if (this.Request.Headers.TryGetValues(Constants.Headers.APP_CLAIMS, out tmp))
+            if (this.Request.Headers.TryGetValues(Mozu.Core.Api.Contracts.Constants.Headers.APP_CLAIMS, out tmp))
             {
                 var appClaim = Mozu.Core.LightweightAppClaims.Parse(tmp.First());
                 if ((DateTime.UtcNow - appClaim.Expiration).TotalDays < 1)
                 {
                     var clientApiContext = this.Request.Resolve<ClientApiContext>();
                     var resp = Request.CreateResponse(HttpStatusCode.OK);
-                    resp.Headers.Add(Constants.Headers.APP_CLAIMS, clientApiContext.Headers[Constants.Headers.APP_CLAIMS]);
-                    resp.Headers.Add(Constants.Headers.USER_CLAIMS, clientApiContext.Headers[Constants.Headers.USER_CLAIMS]);
+                    resp.Headers.Add(Mozu.Core.Api.Contracts.Constants.Headers.APP_CLAIMS, clientApiContext.Headers[Mozu.Core.Api.Contracts.Constants.Headers.APP_CLAIMS]);
+                    resp.Headers.Add(Mozu.Core.Api.Contracts.Constants.Headers.USER_CLAIMS, clientApiContext.Headers[Mozu.Core.Api.Contracts.Constants.Headers.USER_CLAIMS]);
                     return resp;
                 }
             }
@@ -238,7 +232,6 @@ namespace Mozu.SiteBuilder.UX.Areas.Misc.Controllers
 
             var domains = site.Domains.Where(x => x.IsInfrastructureRecord == false).ToList();
 
-            //string domainPriority = System.Configuration.ConfigurationManager.AppSettings["gositeDomainPriority"];
             IEnumerable<string> domainList;
             var viewMode = DataViewModeType.NoneSet;
             switch ((environment ?? "").ToLower())
@@ -246,82 +239,94 @@ namespace Mozu.SiteBuilder.UX.Areas.Misc.Controllers
                 case "preview":
                 case "admin-pending":
                 case "staging":
-                {
-                    var invalidator = Request.Resolve<IDirtyCacheInvalidator>();
-                    invalidator.Invalidate();
-                    viewMode = DataViewModeType.Pending;
-                    domainList = domains.Where(x => x.IsSystemAssigned).Select(x => "admin-pending-view." + x.DomainName);
-                    break;
-                }
+                    {
+                        var invalidator = Request.Resolve<IDirtyCacheInvalidator>();
+                        invalidator.Invalidate();
+                        viewMode = DataViewModeType.Pending;
+                        domainList = domains.Where(x => x.IsSystemAssigned).Select(x => "admin-pending-view." + x.DomainName);
+                        break;
+                    }
                 case "editing":
-                {
-                    viewMode = DataViewModeType.Pending;
-                    domainList = Enumerable.Empty<string>();
-                    break;
-                }
+                    {
+                        viewMode = DataViewModeType.Pending;
+                        domainList = Enumerable.Empty<string>();
+                        break;
+                    }
                 case "primary":
                 case "production":
                 default:
-                {
-                    domainList = domains.OrderByDescending(s =>  s.IsPrimary).Select(x => x.DomainName);
-                    break;
-                }
+                    {
+                        domainList = domains.OrderByDescending(s => s.IsPrimary).Select(x => x.DomainName);
+                        break;
+                    }
             }
 
 
 
             string newHostname = (domainList.FirstOrDefault());
-            bool doHostnameRedirect = _settings.AppSettings("ReverseProxy") == "true" && !String.IsNullOrEmpty(newHostname);
+            bool doHostnameRedirect = _settings.AppSettings("ReverseProxy") == "true" && !string.IsNullOrEmpty(newHostname);
 
-            if (!String.IsNullOrEmpty(transfer))
+            if (!string.IsNullOrEmpty(transfer))
             {
                 var redirUrl = "~/" + Uri.UnescapeDataString(transfer).TrimStart('/');
-                
-                var writableContext =(SiteBuilderApiContext) this.SbApiContext;
+
+                var writableContext = (SiteBuilderApiContext)SbApiContext;
                 var headers = new NameValueCollection();
 
-                headers[Mozu.Core.Api.Contracts.Constants.Headers.TENANT]=site.TenantId.ToString();
-                headers[Mozu.Core.Api.Contracts.Constants.Headers.MASTER_CATALOG ]= site.MasterCatalogId.ToString();
-                headers[Mozu.Core.Api.Contracts.Constants.Headers.CATALOG ] = site.CatalogId.ToString();
-                headers[Mozu.Core.Api.Contracts.Constants.Headers.SITE]= site.Id.ToString();
+                headers[Mozu.Core.Api.Contracts.Constants.Headers.TENANT] = site.TenantId.ToString();
+                headers[Mozu.Core.Api.Contracts.Constants.Headers.MASTER_CATALOG] = site.MasterCatalogId.ToString();
+                headers[Mozu.Core.Api.Contracts.Constants.Headers.CATALOG] = site.CatalogId.ToString();
+                headers[Mozu.Core.Api.Contracts.Constants.Headers.SITE] = site.Id.ToString();
                 headers[Mozu.Core.Api.Contracts.Constants.Headers.LOCALE] = site.DefaultLocaleCode;
                 headers[Mozu.Core.Api.Contracts.Constants.Headers.CURRENCY] = site.DefaultCurrencyCode;
                 headers[Mozu.Core.Api.Contracts.Constants.Headers.DATA_VIEW_MODE] = viewMode.ToString();
 
-
-
                 return new TransferResult(redirUrl)
-                       {
-                           Headers = headers
-                       };
+                {
+                    Headers = headers
+                };
             }
-            Mozu.SiteBuilder.Mvc.Contexts.SiteContext.Save(site: site.Id, masterCatalog: site.MasterCatalogId, tenant: site.TenantId, isEditMode: false, dataViewMode: viewMode, cookieProvider: _cookies, catalogid:site.CatalogId.Value, locale:site.DefaultLocaleCode, currency:site.DefaultCurrencyCode );
+            SiteContext.Save(site: site.Id, masterCatalog: site.MasterCatalogId, tenant: site.TenantId, isEditMode: false, dataViewMode: viewMode, cookieProvider: _cookies, catalogid: site.CatalogId.Value, locale: site.DefaultLocaleCode, currency: site.DefaultCurrencyCode);
 
-            if (!String.IsNullOrEmpty(redir))
+            var uri = CreateRedirectUrl(redir, newHostname, doHostnameRedirect);
+            return new RedirectResult(uri);
+        }
+
+        public static string CreateRedirectUrl(string redir, string newHostname, bool doHostnameRedirect)
+        {
+            if (redir.IsNullOrEmpty()) return doHostnameRedirect ? "http://" + newHostname : "~/";
+
+            redir = redir.StartsWith("http") || redir.StartsWith("/") ? 
+                redir : 
+                "/" + redir;
+            var redirUri = new Uri(redir, UriKind.RelativeOrAbsolute);
+
+            if (redirUri.IsAbsoluteUri || doHostnameRedirect)
             {
-                string redirUrl = Uri.UnescapeDataString(redir).TrimStart('/');
+                // for an absolute url (think custom route that specifies a http schema) we must always use the resolved hostname.
+                var scheme = redirUri.IsAbsoluteUri ? redirUri.Scheme : "http";
+                var qmarkpos = redirUri.OriginalString.IndexOf('?');
+                var path = redirUri.IsAbsoluteUri ? 
+                    redirUri.LocalPath : 
+                    redirUri.OriginalString.Substring(0, qmarkpos != -1 ? 
+                        qmarkpos : 
+                        redirUri.OriginalString.Length);
+                var query = redirUri.IsAbsoluteUri ? 
+                    redirUri.Query.TrimStart('?') : 
+                    (qmarkpos != -1 ? 
+                        redirUri.OriginalString.Substring(qmarkpos+1) : 
+                        string.Empty);
 
-                if (doHostnameRedirect)
-                {
-                    redirUrl = "http://" + newHostname + "/" + redirUrl;
-                }
-                else
-                {
-                    redirUrl = "~/" + redirUrl;
-                }
-
-
-                return new RedirectResult(redirUrl);
+                var builder = new UriBuilder(scheme, newHostname);
+                builder.Path = path;
+                builder.Query = query;
+                return builder.Uri.ToString();
             }
             else
             {
-                string redirUrl = doHostnameRedirect ? "http://" + newHostname : "~/";
-                return new RedirectResult(redirUrl);
+                return "~" + redirUri.OriginalString;
             }
         }
-
-
-
     }
 
 }

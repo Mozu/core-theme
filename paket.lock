@@ -42,7 +42,7 @@ NUGET
       Microsoft.AspNet.WebPages (>= 3.2.2 < 3.3.0)
     Microsoft.AspNet.Razor (3.2.2)
     Microsoft.AspNet.WebApi.Client (5.2.3)
-      Newtonsoft.Json (>= 6.0.4) - framework: portable-wp80+win+net45+wp81+Unsupported, >= net45
+      Newtonsoft.Json (>= 6.0.4)
     Microsoft.AspNet.WebApi.Core (5.2.3)
       Microsoft.AspNet.WebApi.Client (>= 5.2.3)
     Microsoft.AspNet.WebApi.WebHost (5.2.3)
@@ -99,7 +99,7 @@ NUGET
       Mozu.PricingRuntime.Contracts
       Mozu.ShippingRuntime.Contracts
       Newtonsoft.Json
-    Mozu.Content.Contracts (1.19.1)
+    Mozu.Content.Contracts (1.19.2)
       Mozu.Core.Prime (>= 1.17)
     Mozu.Core.Extensible.Contracts (1.18.1)
       Mozu.Core.Prime (>= 1.17)
@@ -109,7 +109,7 @@ NUGET
       Mozu.Core.Prime (>= 1.18.0)
     Mozu.Core.Messaging.Contracts (1.18.1)
       Mozu.Core.Prime (>= 1.18.0)
-    Mozu.Core.Prime (1.19.2)
+    Mozu.Core.Prime (1.19.13)
       Autofac (>= 3.5.2)
       Autofac.WebApi2 (>= 3.4.0)
       AutoMapper (>= 3.3.0)
@@ -148,14 +148,14 @@ NUGET
     Mozu.PricingRuntime.Contracts (1.18.1)
       Mozu.Core.Prime (>= 1.18.1)
     Mozu.ProductAdmin.Contracts (1.19.1)
-      Mozu.Core.Prime (>= 1.18.1) - framework: >= net45
+      Mozu.Core.Prime (>= 1.18.1)
     Mozu.ProductRuntime.Contracts (1.18.2)
       Mozu.Core.Prime (>= 1.18.0)
     Mozu.Provisioning.Contracts (1.17.5)
       Mozu.Core.Prime (>= 1.17)
       Mozu.Tenant.Contracts (>= 1.17)
     Mozu.Reference.Contracts (1.17.4)
-    Mozu.ScheduledEvent.Contracts (1.0.2)
+    Mozu.ScheduledEvent.Contracts (1.19.1)
       Mozu.Core.Prime (>= 1.18.0)
     Mozu.ShippingAdmin.Contracts (1.18.1)
       Mozu.Core.Prime (>= 1.17)

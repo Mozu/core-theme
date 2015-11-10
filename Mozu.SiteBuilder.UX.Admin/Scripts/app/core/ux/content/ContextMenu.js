@@ -77,10 +77,7 @@ Ext.define('Taco.core.ux.content.ContextMenu', {
             value = ctx.urlToken;
         }
         
-
-
         this.setValue(value);
-        
         
         this.callParent(arguments);
         
@@ -98,10 +95,7 @@ Ext.define('Taco.core.ux.content.ContextMenu', {
             statechange: this.onGlobalStateChange,
             scope: this
         });
-        
-
-       
-
+               
     },
     
     changeContext: function (field, newValue, oldValue) {

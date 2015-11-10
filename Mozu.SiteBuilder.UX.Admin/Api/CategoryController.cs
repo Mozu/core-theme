@@ -238,20 +238,21 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
         {
 
             
-            if (expression.Type == "DynamicRealTime")
+            if (expression.Type == "DynamicPreComputed")
+            {
+
+                var validatedExpression =
+                    (await _categoriesClient.ValidateDynamicExpression(Mapper.Map<DC.DynamicExpression>(expression)))
+                        .ReadAsSync(); //.Result.ReadAsAsync().Result;
+                return Single2(Mapper.Map<Models.Category.DynamicExpression>(validatedExpression));
+            }
+            else
             {
                 var validatedExpression =
                     (await
                         _categoriesClient.ValidateRealTimeDynamicExpression(Mapper.Map<DC.DynamicExpression>(expression)))
                         .ReadAsSync();  //.Result.ReadAsAsync().Result ;
-              return Single2(Mapper.Map<Models.Category.DynamicExpression>(validatedExpression));
-            }
-            else
-            {
-                var validatedExpression =
-                    (await _categoriesClient.ValidateDynamicExpression(Mapper.Map<DC.DynamicExpression>(expression)))
-                        .ReadAsSync(); //.Result.ReadAsAsync().Result;
-              return Single2(Mapper.Map<Models.Category.DynamicExpression>(validatedExpression));
+                return Single2(Mapper.Map<Models.Category.DynamicExpression>(validatedExpression));
             }
         }
     }

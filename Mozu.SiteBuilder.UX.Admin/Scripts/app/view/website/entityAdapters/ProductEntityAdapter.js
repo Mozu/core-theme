@@ -40,6 +40,10 @@ Ext.define('Taco.view.website.entityAdapters.ProductEntityAdapter', {
 
     },
 
+    getTitle: function() {
+        if (this.record) return this.record.get('productName');
+    },
+
 
     getDocument: function () {
         return this.getCmsPageDoc();

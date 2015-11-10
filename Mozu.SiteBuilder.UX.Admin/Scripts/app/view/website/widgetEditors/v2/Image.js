@@ -360,6 +360,10 @@ Ext.define('Taco.view.website.widgetEditors.v2.Image', {
                         buttonConfig: {
                             ui: 'action',
                             scale: 'medium'
+                        },
+                        listeners: {
+                            filechange: this.handleUploadLink,
+                            scope: this
                         }
                     }, {
                         xtype: 'textfield',
@@ -442,6 +446,7 @@ Ext.define('Taco.view.website.widgetEditors.v2.Image', {
                         items: [{
                             xtype: 'taco-singleimagefield',
                             height: 160,
+                            itemId: 'linkField',
                             store: this.linkStore
                         }]
                     }]
@@ -487,6 +492,13 @@ Ext.define('Taco.view.website.widgetEditors.v2.Image', {
                         this.imageStore.add({
                             id: data.imageFileId,
                             url: ['/cms/', Taco.app.context.currentCtx.id, '/files/', data.imageFileId].join('')
+                        });
+                    }
+
+                    if ( data.linkFileId ) {
+                        this.linkStore.add({
+                            id: data.linkFileId,
+                            url: ['/cms/', Taco.app.context.currentCtx.id, '/files/', data.linkFileId].join('')
                         });
                     }
 
@@ -541,6 +553,10 @@ Ext.define('Taco.view.website.widgetEditors.v2.Image', {
         this.down('#imageField').onUploadFile(files);
     },
 
+    handleUploadLink: function (files) {
+        this.down('#linkField').onUploadFile(files);
+    },
+
     filterOutNonImages: function() {
         this.filterBy(function(record){
             return ['gif', 'jpeg', 'pjpeg', 'png', 'tiff', 'jpg'].indexOf(record.get('fileType')) !== -1 ;
@@ -575,6 +591,8 @@ Ext.define('Taco.view.website.widgetEditors.v2.Image', {
                                 store.removeAll();
                                 store.add(record);
                             }
+
+                            console.log(record, store);
                         }, this);
                     }
                 },
@@ -603,6 +621,13 @@ Ext.define('Taco.view.website.widgetEditors.v2.Image', {
             this.imageStore.add({
                 id: data.imageFileId,
                 url: ['/cms/', Taco.app.context.currentCtx.id, '/files/', data.imageFileId].join('')
+            });
+        }
+
+        if (data.linkSource === 'file' && data.linkFileId) {
+            this.linkStore.add({
+                id: data.linkFileId,
+                url: ['/cms/', Taco.app.context.currentCtx.id, '/files/', data.linkFileId].join('')
             });
         }
 

@@ -199,17 +199,19 @@ namespace Mozu.SiteBuilder.Mvc.SEO
 
             foreach (var route in routes)
             {
-                if (route == currentRouteData.Route)
-                {
-                    return null;
-                }
+                
                 var vpath = route.GetVirtualPath(newReq, finalRouteValues);
                 if (vpath != null)
                 {
                     var uri = new Uri("http://localhost/" + vpath.VirtualPath);
-                    uri = new Uri(uri.GetLeftPart(UriPartial.Path) + request.RequestUri.Query);
-                    if (!string.Equals(uri.PathAndQuery, _requestMessage.Value.RequestUri.PathAndQuery, StringComparison.OrdinalIgnoreCase))
-                    {
+
+                    //only redirect if stem is different
+                    if (!string.Equals(
+                        uri.GetComponents(UriComponents.Path , UriFormat.Unescaped),
+                        _requestMessage.Value.RequestUri.GetComponents(UriComponents.Path , UriFormat.Unescaped), 
+                        StringComparison.OrdinalIgnoreCase))
+                    { 
+                        uri = new Uri(uri.GetLeftPart(UriPartial.Path) + request.RequestUri.Query);
                         var redirect = request.CreateResponse(HttpStatusCode.MovedPermanently);
                         redirect.Headers.Location = new Uri(uri.PathAndQuery, UriKind.Relative);
                         redirect.Headers.TryAddWithoutValidation(Constants.HEADER_CANONICAL_URL, uri.PathAndQuery);
@@ -219,8 +221,14 @@ namespace Mozu.SiteBuilder.Mvc.SEO
                     IEnumerable<string> values;
                     if (request.Headers.TryGetValues(Constants.HEADER_ALTERNATIVE_VIEW, out values) && values.Any(x => !string.IsNullOrWhiteSpace(x)))
                     {
+                        uri = new Uri(uri.GetLeftPart(UriPartial.Path) + request.RequestUri.Query);
                         request.Resolve<HttpContextBase>().Response.AddHeader(Constants.HEADER_CANONICAL_URL, uri.PathAndQuery);
                     }
+                    return null;
+                }
+                //if current route didnt match??? load bearing code do not remove
+                if (route == currentRouteData.Route)
+                {
                     return null;
                 }
             }
@@ -234,45 +242,36 @@ namespace Mozu.SiteBuilder.Mvc.SEO
             return incomingPort;
         }
 
-        public async Task<string> GetCanonicalUrl(FancyRoute internalRoute, Func<IDictionary<string, object>> viewDataAdditionFunc, bool useExistingQuery)
+        public async Task<string> GetCanonicalUrl(FancyRoute internalRoute, Func<IDictionary<string, object>> viewDataAdditionFunc, bool useContext)
         {
             var routeCollection = await GetRouteCollectionAsync().ConfigureAwait(false);
             var routes = GetCanonicalRouteList(internalRoute, routeCollection, _routeconfig);
             if (!routes.Any()) return null; // no canonical route that matches, or current route is canonical? then no redirect!
 
-            var routingValues = GenerateRoutingValues(
-                viewDataAdditionFunc,
-                () => useExistingQuery ? _requestMessage.Value.GetRouteData().Values : new Dictionary<string, object>()
-            );
 
+            var  routingValues = new Dictionary<string, object>(StringComparer.OrdinalIgnoreCase) { { "httproute", true } };
+            if (useContext)
+            {
+                routingValues.ChainSet(_requestMessage.Value.GetRouteData().Values, true);
+            }
+            if ( viewDataAdditionFunc != null)
+            {
+                routingValues.ChainSet(viewDataAdditionFunc(), true);
+            }
+        
             var newReq = PrepareNewHttpRequest(_requestMessage.Value);
             foreach (var route in routes)
             {
                 var vpath = route.GetVirtualPath(newReq, routingValues);
                 if (vpath != null)
                 {
-                    return CreateOutboundUri(route, vpath, _requestMessage.Value.Resolve<PageContext>().Url, useExistingQuery);
+                    return CreateOutboundUri(route, vpath, _requestMessage.Value.Resolve<IPageContext>().Url);
                 }
             }
             return null;
         }
 
-        /// <summary>
-        /// a route is going to match or not based on a dictionary of values that it will try to baind against.  
-        /// Here we just concat multiple route value dictionaries together to present one unified view of the route data.
-        /// </summary>
-        /// <param name="dictionaries"></param>
-        /// <returns></returns>
-        static IDictionary<string, object> GenerateRoutingValues(params Func<IDictionary<string, object>>[] dictionaries)
-        {
-            IDictionary<string, object> initial = new Dictionary<string, object>(StringComparer.OrdinalIgnoreCase) { { "httproute", true } };
-            if (dictionaries == null) return initial;
-            return dictionaries.Aggregate(initial, (state, next) => {
-                var dictToAdd = (next ?? (() => new Dictionary<string, object>()))();
-                return state.ChainSet(dictToAdd, true);
-            });
-        }
-
+     
         /// <summary>
         /// We want a pristine request with no context to potentially interfere with the routing calculation, so we do that here.
         /// The only dependency we have is the dependency resolver, which we take from the parent request.
@@ -286,16 +285,20 @@ namespace Mozu.SiteBuilder.Mvc.SEO
             return newReq;
         }
 
-        static string CreateOutboundUri(CustomRoute route, IHttpVirtualPathData vpath, string incoming, bool useInboundQuery)
+        static string CreateOutboundUri(CustomRoute route, IHttpVirtualPathData vpath, string incoming)
         {
             var incomingUri = new Uri(incoming);
             var path = "/" + new Uri("http://localhost/" + vpath.VirtualPath, UriKind.Absolute).GetComponents(UriComponents.Path, UriFormat.Unescaped);
-            var query = useInboundQuery ? incomingUri.Query.TrimStart('?') :  string.Empty;
+           // var query = useInboundQuery ? incomingUri.Query.TrimStart('?') :  string.Empty;
             var scheme = route.UrlScheme.HasValue ? route.UrlScheme.Value.ToStringQuickly() : incomingUri.Scheme;
             var builder = new UriBuilder(scheme, incomingUri.Host);
             builder.Path = path;
-            builder.Query = query;
-            return builder.Uri.ToString();
+           // builder.Query = query;
+            if (route.UrlScheme.HasValue)
+            {
+                return builder.Uri.ToString();
+            }
+            return builder.Uri.GetComponents(UriComponents.PathAndQuery, UriFormat.Unescaped);
         }
 
         public IHttpRouteData GetRouteData(string virtualPathRoot, HttpRequestMessage request)

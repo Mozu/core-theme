@@ -242,7 +242,7 @@ namespace Mozu.SiteBuilder.Mvc
             {
                 this.InitFromHeaders(_httpRequestMessage.Headers);
             }
-            else if (!_httpRequestMessage.Headers.TryGetValues(Mozu.Core.Api.Contracts.Constants.Headers.ORIGINAL_URL, out values) && !_settings.AppSettingsAsBool("ReverseProxy"))
+            else if (!_httpRequestMessage.Headers.TryGetValues(Mozu.Core.Api.Contracts.Constants.Headers.ORIGINAL_URL, out values) && !_settings.AppSettingsAsNullableBool("ReverseProxy").GetValueOrDefault(false))
             {
 
                 //todo:hyper check rp flag.
@@ -266,7 +266,7 @@ namespace Mozu.SiteBuilder.Mvc
                 LoadFromCookie(_cookieProvider);
             }
 
-            if (string.IsNullOrEmpty(this.LocaleCode) && this.SiteId.HasValue && _settings.AppSettingsAsBool("ReverseProxy"))
+            if (string.IsNullOrEmpty(this.LocaleCode) && this.SiteId.HasValue && _settings.AppSettingsAsNullableBool("ReverseProxy").GetValueOrDefault(false))
             {
                 Site site = g_SiteIdSiteLookup.GetOrAdd(this.SiteId.Value, LookupSiteById );
                 if (site != null)

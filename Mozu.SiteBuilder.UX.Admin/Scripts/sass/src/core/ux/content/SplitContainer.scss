@@ -18,4 +18,8 @@
             left: 1px;
         }
     }
+
+    .no-background-splitter & {
+        background-color: transparent;
+    }
 }

@@ -2,10 +2,12 @@
   <span class="mz-paging-sorttitle">{{ labels.sortBy }}:</span>
   <!-- {{ model.currentSort }}-->
   <select data-mz-value="sortBy" class="mz-pagingcontrols-pagesort-dropdown" autocomplete="off">
-    {% block sort-types %}
-    {% for sort in model.sorts %}
-      <option data-mz-url="{% make_url "sorting" model with sortBy=sort.value %}" value="{{ sort.value }}"{% if model.currentSort == sort.value %} selected="selected"{% endif %}>{{ sort.text }}</option>
-    {% endfor %}
-    {% endblock sort-types %}
+      {% block sort-types %}
+      {% for sort in model.sorts %}
+      {% with sort.value|default(themeSettings.defaultSort) as sortValue %}
+      <option data-mz-url="{% make_url "sorting" model with sortBy=sortValue %}" value="{{ sortValue }}"{% if model.currentSort == sortValue %} selected="selected"{% endif %}>{{ sort.text }}</option>
+      {% endwith %}
+      {% endfor %}
+      {% endblock sort-types %}
   </select>
 </label>

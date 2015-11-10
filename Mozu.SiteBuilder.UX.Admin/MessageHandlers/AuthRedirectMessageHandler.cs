@@ -10,6 +10,8 @@ using System.Web;
 using Mozu.Core.Settings;
 using Mozu.SiteBuilder.Mvc.Contexts;
 using Mozu.SiteBuilder.Mvc.ViewEngine;
+using Mozu.SiteBuilder.Mvc.Helpers;
+using Mozu.Core;
 
 namespace Mozu.SiteBuilder.UX.Admin.MessageHandlers
 {
@@ -34,36 +36,41 @@ namespace Mozu.SiteBuilder.UX.Admin.MessageHandlers
     }
     public class AuthRedirectMessageHandler : DelegatingHandler
     {
-        protected override Task<HttpResponseMessage> SendAsync(HttpRequestMessage request, CancellationToken cancellationToken)
+        protected override async Task<HttpResponseMessage> SendAsync(HttpRequestMessage request, CancellationToken cancellationToken)
         {
             if (!request.Headers.Accept.Contains(new MediaTypeWithQualityHeaderValue("text/html")))
             {
-                return base.SendAsync(request, cancellationToken);
+                return await base.SendAsync(request, cancellationToken).ConfigureAwait(false);
             }
-            return base.SendAsync(request, cancellationToken).ContinueWith((x) =>
-                {
-                    if (x.Result.StatusCode == HttpStatusCode.Unauthorized)
-                    {
-                        var res = new HttpResponseMessage(HttpStatusCode.Redirect);
-                        var handledByRp = false;
-                        IEnumerable<string> values;
-                        if (request.Headers.TryGetValues(Mozu.Core.Api.Contracts.Constants.Headers.ORIGINAL_URL, out values))
-                        {
-                            handledByRp = true;
-                        }
-                        var settings = request.Resolve<ISettings>();
-                        string redir = settings.LoginPath + "/to?scopeType=Tenant&redirectUrl=" + HttpUtility.UrlEncode(request.RequestUri.PathAndQuery);
-                        if (!handledByRp)
-                        {
-                            redir += "&postbackUrl=http://" + request.Headers.GetValues("host").First() + "/admin/auth/pants&showdev=true";
-                        }
+            var response = await base.SendAsync(request, cancellationToken).ConfigureAwait(false);
+            if (response.StatusCode != HttpStatusCode.Unauthorized) return response;
 
-                        var message = new HttpResponseMessage(HttpStatusCode.Redirect);
-                        message.Headers.Location = new Uri(redir);
-                        return message;
-                    }
-                    return x.Result;
-                });
+            // else redirect to the login app!
+            var res = new HttpResponseMessage(HttpStatusCode.Redirect);
+            var handledByRp = IsHandledByRP(request);
+            var context = request.Resolve<IApiContext>();
+            var tenantId = context.TenantId == -1 ? (int?)null : context.TenantId;
+
+            var loginAppRouter = new LoginAppRouteHelper(request.Resolve<ISettings>().LoginPath);
+            var postback = !handledByRp ? "http://" + request.Headers.GetValues("host").First() + "/admin/auth/pants" : "";
+            var redirect = HttpUtility.UrlEncode(request.RequestUri.PathAndQuery);
+
+            var loginRequest = loginAppRouter.To(Core.UserScopeType.Tenant, tenantId, redirect, postback, false);
+
+            var message = new HttpResponseMessage(HttpStatusCode.Redirect);
+            message.Headers.Location = loginRequest;
+            return message;
+        }
+
+        static bool IsHandledByRP(HttpRequestMessage request)
+        {
+            var handledByRp = false;
+            IEnumerable<string> values;
+            if (request.Headers.TryGetValues(Mozu.Core.Api.Contracts.Constants.Headers.ORIGINAL_URL, out values))
+            {
+                handledByRp = true;
+            }
+            return handledByRp;
         }
     }
 }

@@ -25,7 +25,7 @@ namespace Mozu.SiteBuilder.Mvc.Auth
             context.SetUser(user);
             authHelper.SaveAdminAccessToken(formAccessToken, isForStoreFrontAccess);
 
-            formRedirectUrl = string.IsNullOrEmpty(formRedirectUrl) ? defaultRedirectUrl : formRedirectUrl;
+            formRedirectUrl = WebUtility.UrlDecode(string.IsNullOrEmpty(formRedirectUrl) ? defaultRedirectUrl : formRedirectUrl);
             return CreateRedirectTo(request, formRedirectUrl);
         }
 
