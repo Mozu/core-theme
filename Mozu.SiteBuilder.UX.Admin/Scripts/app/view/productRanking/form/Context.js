@@ -53,7 +53,7 @@ Ext.define('Taco.view.productRanking.form.Context', {
                 var catRecordToAddWhenNew;
 
                 if (me.isCreate && me.categoryCode) {
-                    catRecordToAddWhenNew = catStore.findRecord('categoryCode', me.categoryCode);
+                    catRecordToAddWhenNew = catStore.findRecord('categoryCode', me.categoryCode, 0, false, false, true);
                     if (catRecordToAddWhenNew) {
                         me.categoryGrid.fireEvent('recordadded', catRecordToAddWhenNew);
                     }
