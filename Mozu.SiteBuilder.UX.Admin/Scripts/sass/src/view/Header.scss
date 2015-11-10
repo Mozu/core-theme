@@ -143,6 +143,17 @@
                     }
                 }
 
+                [data-nav-id='viewLive']:focus,
+                [data-nav-id='viewStaged']:focus {
+                    color: $color;
+                    text-decoration: none;
+                }
+
+                [data-nav-id='viewLive']:hover,
+                [data-nav-id='viewStaged']:hover {
+                    text-decoration: underline;
+                }
+
                 &.#{$vprefix}breadcrumb-item-selected {
                     a {
                         border-bottom: 2px solid $color-theme-base;
