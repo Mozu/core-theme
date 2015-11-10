@@ -90,7 +90,7 @@ Ext.define('Taco.view.productRanking.grid.PinnedProduct', {
 
             var me = this,
                 findFunc = function(rec) {
-                    return me.store.find(me.filterProperty, rec.get(me.filterProperty)) === -1;
+                    return me.store.find(me.filterProperty, rec.get(me.filterProperty), 0, false, false, true) === -1;
                 },
                 recordsToAdd =[],
                 form = this.up('#taco-productRanking-form').pinned,

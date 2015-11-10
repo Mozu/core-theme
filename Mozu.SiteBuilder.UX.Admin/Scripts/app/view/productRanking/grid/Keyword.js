@@ -132,10 +132,7 @@ Ext.define('Taco.view.productRanking.grid.Keyword', {
             recordsToAdd =[],
 
             findExisting = function(val) {
-                var found = Ext.Array.findBy(me.store.data.items, function (rec) {
-                    return rec.get(me.filterProperty) === val;
-                });
-                return found !== null;
+                return me.store.find(me.filterProperty, val, 0, false, false, true) !== -1;
             };
 
         valueArray = Ext.Array.clean(valueArray);
