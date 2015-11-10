@@ -51,7 +51,7 @@ Ext.define('Taco.store.shared.TreeStore', {
     },
     fillNode: function (node, newNodes) {
         var lookup = {}, fillNodes = [];
-        console.log('fillNode');
+        // console.log('fillNode');
 
         Ext.each(newNodes, function (newNode) {
             lookup[newNode.getId()] = newNode;

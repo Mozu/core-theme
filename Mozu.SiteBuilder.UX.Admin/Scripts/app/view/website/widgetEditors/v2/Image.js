@@ -511,7 +511,7 @@ Ext.define('Taco.view.website.widgetEditors.v2.Image', {
     handleImageClickActionChange: function (newValue) {
         var isUrl = newValue.imageClickAction === 'url';
 
-        console.log(isUrl ? 'url' : 'not url');
+        // console.log(isUrl ? 'url' : 'not url');
         this.down('#linkFields').setVisible(isUrl); 
         this.down('#linkSelectors').setVisible(isUrl);
     },
@@ -550,10 +550,12 @@ Ext.define('Taco.view.website.widgetEditors.v2.Image', {
     },
 
     handleUploadFile: function (files) {
+        this.imageStore.removeAll();
         this.down('#imageField').onUploadFile(files);
     },
 
     handleUploadLink: function (files) {
+        this.linkStore.removeAll();
         this.down('#linkField').onUploadFile(files);
     },
 
