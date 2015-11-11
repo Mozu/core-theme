@@ -294,8 +294,6 @@ namespace Mozu.SiteBuilder.UX.Areas.Misc.Controllers
 
         public static string CreateRedirectUrl(string redir, string newHostname, bool doHostnameRedirect)
         {
-            doHostnameRedirect = true;
-
             if (redir.IsNullOrEmpty()) return doHostnameRedirect ? "http://" + newHostname : "~/";
 
             redir = redir.StartsWith("http") || redir.StartsWith("/") ? 
