@@ -214,6 +214,7 @@ Ext.define('Taco.view.category.Index', {
     },
 
     onCellClick: function (view, td, cellIndex, record, tr, rowIndex, e, eOpts) {
+
         var target= Ext.fly(e.getTarget()),
             metaData = { id: record.getId() },
             header = view.getHeaderAtIndex(cellIndex);
@@ -224,10 +225,6 @@ Ext.define('Taco.view.category.Index', {
 
         if ((header.dataIndex || header.allowNavigation === true) && header.allowNavigation !== false && this.allowNavigation !== false) {
             e.preventDefault();
-
-            if (e.target) {
-                metaData = Ext.apply(metaData, e.target.dataset);
-            }
 
             this.launchEditor(record, metaData);
         }
