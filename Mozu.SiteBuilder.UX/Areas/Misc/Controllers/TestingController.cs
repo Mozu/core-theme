@@ -294,6 +294,8 @@ namespace Mozu.SiteBuilder.UX.Areas.Misc.Controllers
 
         public static string CreateRedirectUrl(string redir, string newHostname, bool doHostnameRedirect)
         {
+            doHostnameRedirect = true;
+
             if (redir.IsNullOrEmpty()) return doHostnameRedirect ? "http://" + newHostname : "~/";
 
             redir = redir.StartsWith("http") || redir.StartsWith("/") ? 
@@ -320,7 +322,7 @@ namespace Mozu.SiteBuilder.UX.Areas.Misc.Controllers
                 var builder = new UriBuilder(scheme, newHostname);
                 builder.Path = path;
                 builder.Query = query;
-                return builder.Uri.ToString();
+                return builder.Uri.AbsoluteUri;
             }
             else
             {
