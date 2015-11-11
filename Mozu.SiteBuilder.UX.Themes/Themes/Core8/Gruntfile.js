@@ -30,8 +30,7 @@ module.exports = function(grunt) {
             options: {
                 es3: true,
                 ignores: [
-                  'scripts/vendor/**/*.js', 
-                  'scripts/modules/jquery-simple-datetimepicker.js' // only until ben fixes this file.
+                  'scripts/vendor/**/*.js'
                 ],
                 globals: {
                     console: true,
