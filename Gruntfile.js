@@ -42,6 +42,7 @@ module.exports = function (grunt) {
         nonstandard: true,
         ignores: ['scripts/vendor/**/*.js'],
         globals: {
+          JSON: true,
           define: true,
           require: true,
           Modernizr: true
