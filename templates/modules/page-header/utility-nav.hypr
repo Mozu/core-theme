@@ -1,4 +1,4 @@
-<nav class="mz-utilitynav">
+﻿<nav class="mz-utilitynav">
     <ul class="mz-utilitynav-list">
         <li class="mz-utilitynav-item">
             <a href="/user/login" data-mz-action="anon-order" class="mz-utilitynav-link">{{ labels.orderStatus }}</a>
@@ -11,21 +11,21 @@
         {% if not user.isAnonymous %}
         <li class="mz-utilitynav-item">
             <div id="mz-logged-in-notice">
-                Welcome, <a href="/myaccount" class="mz-utilitynav-link">{{user.firstName|default(user.emailAddress)}}</a>! (<a href="/logout" data-mz-action="logout" class="mz-utilitynav-link">{{ labels.logOut }}</a>)
-            </div>
+            Welcome, <a href="/myaccount" class="mz-utilitynav-link">{{user.firstName|default(user.emailAddress)}}</a>! (<a href="/logout" data-mz-action="logout" class="mz-utilitynav-link">{{ labels.logOut }}</a>)
+            </div> 
         </li>
         {%else%}
         <li class="mz-utilitynav-item">
-      <a href="/user/login" data-mz-action="login" data-placement="bottom" class="mz-utilitynav-link">{{ labels.logIn }}</a>
-    </li>
-      <li class="mz-utilitynav-item">
-        <a href="/user/signup" data-mz-action="signup" data-placement="bottom" class="mz-utilitynav-link">{{ labels.signUp }}</a>
-      </li>
-      {% endif %}
-      <li class="mz-utilitynav-item">
+            <a href="/user/login" data-mz-action="login" data-placement="bottom" class="mz-utilitynav-link">{{ labels.logIn }}</a>
+        </li>
+        <li class="mz-utilitynav-item">
+            <a href="/user/signup" data-mz-action="signup" data-placement="bottom" class="mz-utilitynav-link">{{ labels.signUp }}</a>
+        </li>
+        {% endif %}
+        <li class="mz-utilitynav-item">
             <a class="mz-utilitynav-link mz-utilitynav-link-cart" href="{% make_url "cart" %}">
-                {{ labels.viewCart }} (<span class="mz-cartmonitor" data-mz-role="cartmonitor">0</span>)
-                {% require_script "modules/cart-monitor" %}
+            {{ labels.viewCart }} (<span class="mz-cartmonitor" data-mz-role="cartmonitor">0</span>)
+            {% require_script "modules/cart-monitor" %}
             </a>
         </li>
     </ul>

@@ -61,7 +61,7 @@ define([
         );
 
         navigationIntents.on('data', function(url, e) {
-            if (_dispatcher.send(url)) {
+            if (url && _dispatcher.send(url)) {
                 _$body.addClass('mz-loading');
                 e.preventDefault();
             }
