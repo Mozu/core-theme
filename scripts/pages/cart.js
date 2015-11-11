@@ -1,3 +1,4 @@
+/* globals V: true */
 define(['modules/backbone-mozu', 'underscore', 'modules/jquery-mozu', 'modules/models-cart', 'modules/cart-monitor', 'hyprlivecontext', 'hyprlive', 'modules/preserve-element-through-render'], function (Backbone, _, $, CartModels, CartMonitor, HyprLiveContext, Hypr, preserveElement) {
     var CartView = Backbone.MozuView.extend({
         templateName: "modules/cart/cart-table",
@@ -128,15 +129,6 @@ define(['modules/backbone-mozu', 'underscore', 'modules/jquery-mozu', 'modules/m
 
             });
 
-            // for debugging purposes only. don't use this in production
-            V.on("payment.cancel", function(payment) {
-                console.log({ cancel: JSON.stringify(payment) });
-            });
-
-            // for debugging purposes only. don't use this in production
-            V.on("payment.error", function(payment, error) {
-                console.warn({ error: JSON.stringify(error) });
-            });
         }
 
         // delay V.init() while we wait for MozuView to re-render

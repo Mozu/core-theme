@@ -8,8 +8,7 @@
         "jquery": "~1.11",
         "jquery.cookie": "~1.4",
         "jquery-colorbox": "~1.5",
-        "typeahead.js": "0.10.5",
-        "datetimepicker": "~2.4.3"
+        "typeahead.js": "0.10.5"
     },
     "ignore": [
         "/.*",

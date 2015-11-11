@@ -1,6 +1,8 @@
-module.exports = function(grunt) {
-
+/* global module: true */
+module.exports = function (grunt) {
+  'use strict';
   var pkg = grunt.file.readJSON('./package.json');
+  require('time-grunt')(grunt);
   grunt.initConfig({
     mozuconfig: grunt.file.exists('./mozu.config.json') ? grunt.file.readJSON('./mozu.config.json') : {},
     pkg: pkg,
@@ -18,95 +20,74 @@ module.exports = function(grunt) {
       }
     },
     jshint: {
-      "default": [
-        'theme.json',
-        'theme-ui.json',
-        'labels/**/*.json',
-        'Gruntfile.js',
-        'scripts/**/*.js'
-      ],
-      options: {
-        es3: true,
-        ignores: ['scripts/vendor/**/*.js'],
-        globals: {
-          console: true,
-          window: true,
-          document: true,
-          setTimeout: true,
-          clearTimeout: true,
-          navigation: true,
-          location: true,
-          module: true,
-          define: true,
-          require: true,
-          Modernizr: true,
-          process: true
-        }
-      }
-    },
-    watch: {
-      json: {
-        files: [
+      production: {
+        src: [
           'theme.json',
           'theme-ui.json',
-          'labels/**/*.json'
-        ],
-        tasks: ['jshint'],
-        options: {
-          spawn: false
-        }
-      },
-      javascript: {
-        files: [
+          'labels/**/*.json',
+          'Gruntfile.js',
           'scripts/**/*.js'
-        ],
-        tasks: ['default'],
+        ]
+      },
+      develop: {
+        src: '{<%= jshint.production.src %>}',
         options: {
-          spawn: false
+          devel: true
         }
       },
-      "sync": {
-        "files": "<%= mozusync.upload.src %>",
-        "tasks": [
-          "mozusync:upload"
-        ]
+      options: {
+        es3: true,
+        browser: true,
+        undef: true,
+        nonstandard: true,
+        ignores: ['scripts/vendor/**/*.js'],
+        globals: {
+          define: true,
+          require: true,
+          Modernizr: true
+        }
       }
     },
-    "compress": {
-      "build": {
-        "options": {
-          "archive": "<%= pkg.name %>-<%= pkg.version %>.zip",
-          "pretty": true
+    compress: {
+      build: {
+        options: {
+          archive: '<%= pkg.name %>-<%= pkg.version %>.zip',
+          pretty: true
         },
-        "files": [
+        files: [
           {
-            "src": [
-              "admin/**/*",
-              "compiled/**/*",
-              "labels/**/*",
-              "resources/**/*",
-              "scripts/**/*",
-              "stylesheets/**/*",
-              "templates/**/*",
-              "theme.json",
-              "*thumb.png",
-              "*thumb.jpg",
-              "theme-ui.json",
-              "!*.orig",
-              "!.inherited"
+            src: [
+              'admin/**/*',
+              'compiled/**/*',
+              'labels/**/*',
+              'packageconfig.xml',
+              'resources/**/*',
+              'scripts/**/*',
+              'stylesheets/**/*',
+              'templates/**/*',
+              'theme.json',
+              '*thumb.png',
+              '*thumb.jpg',
+              'theme-ui.json',
+              '!*.orig',
+              '!.inherited'
             ],
-            "dest": "/"
+            dest: '/'
           }
         ]
       }
     },
-    "mozutheme": {
-      "check": {},
-      "compile": {},
-      "quickcompile": {
-        "command": "compile",
-        "opts": {
-          "skipminification": true
+    mozutheme: {
+      check: {
+        command: 'check'
+      },
+      fullcompile: {
+        command: 'compile'
+      },
+      quickcompile: {
+        command: 'compile',
+        opts: {
+          skipminification: true
         }
       }
     }
@@ -120,17 +101,23 @@ module.exports = function(grunt) {
     'mozu-theme-helpers'
   ].forEach(grunt.loadNpmTasks);
 
-  grunt.registerTask('default', [
-    'jshint', 
+  grunt.registerTask('build', [
+    'jshint:develop',
     'bower',
     'mozutheme:quickcompile'
-  ]); // no bower necessary for now
+  ]);
 
+  grunt.registerTask('build-production', [
+    'jshint:production',
+    'mozutheme:fullcompile',
+    'compress'
+  ]);
 
-  grunt.registerTask('setver', function() {
+  grunt.registerTask('default', ['build']);
+
+  grunt.registerTask('setver', function () {
     var b = grunt.file.readJSON('./bower.json');
     b.version = pkg.version;
     grunt.file.write('./bower.json', JSON.stringify(b, null, 4));
   });
-
 };
