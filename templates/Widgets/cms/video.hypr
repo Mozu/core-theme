@@ -1,4 +1,4 @@
-{% if not Model.config %} 
+﻿{% if not Model.config %} 
     <div class="mz-cms-image-cover" style="background-image: url('/admin/scripts/resources/images/legacy/AddPhotos.png');"></div>
 {% else %}
     <div class="mz-cms-video-placeholder"

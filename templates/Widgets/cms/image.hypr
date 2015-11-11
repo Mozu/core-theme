@@ -1,4 +1,4 @@
-<div class="mz-cms-image" data-mz-cms-image="{% json_attribute Model.config|default:'{}' %}">
+﻿<div class="mz-cms-image" data-mz-cms-image="{% json_attribute Model.config|default:'{}' %}">
 
 {% if not Model.config  %}
 

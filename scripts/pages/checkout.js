@@ -306,7 +306,7 @@ require(["modules/jquery-mozu", "underscore", "hyprlive", "modules/backbone-mozu
                 paymentRequest: {
                     currencyCode: orderModel.get('currencyCode'),
                     subtotal: "" + orderModel.get('subtotal')
-            }
+                }
             });
         }
         /* end visa checkout */
