@@ -1,4 +1,4 @@
-define(['jquery', 'shim!vendor/datetimepicker/jquery-simple-datetimepicker[jquery=jquery]>jquery' ], function ($) { 
+define(['jquery', 'shim!modules/jquery-simple-datetimepicker[jquery=jquery]>jquery' ], function ($) { 
     
     var DateTimePicker = function() {
             var me = this;
