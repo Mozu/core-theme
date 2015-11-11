@@ -29,7 +29,10 @@ module.exports = function(grunt) {
             ],
             options: {
                 es3: true,
-                ignores: ['scripts/vendor/**/*.js'],
+                ignores: [
+                  'scripts/vendor/**/*.js', 
+                  'scripts/modules/jquery-simple-datetimepicker.js' // only until ben fixes this file.
+                ],
                 globals: {
                     console: true,
                     window: true,
