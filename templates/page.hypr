@@ -55,6 +55,18 @@
         <link rel="alternate" type="application/rss+xml" title="{{ PageContext.Title }}" href="{{ PageContext.FeedUrl }}" />
         {% endif %}
 
+		{% if PageContext.CrawlerInfo.CanonicalUrl  %}
+        <link rel="canonical" href="{{PageContext.CrawlerInfo.CanonicalUrl}}">
+        {% endif %}
+
+		{% if PageContext.CrawlerInfo.PreviousUrl  %}
+        <link rel="prev" href="{{PageContext.CrawlerInfo.PreviousUrl}}">
+        {% endif %}
+
+		{% if PageContext.CrawlerInfo.NextUrl  %}
+        <link rel="next" href="{{PageContext.CrawlerInfo.NextUrl}}">
+        {% endif %}
+
         {% block stylesheets %}
         <link rel="stylesheet" href="{% make_url "stylesheet" "/stylesheets/storefront.less" %}" title="default" />
         {% endblock stylesheets %}
