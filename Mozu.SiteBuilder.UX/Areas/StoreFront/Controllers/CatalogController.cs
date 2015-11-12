@@ -28,6 +28,7 @@ using ProductSearchResult = Mozu.ProductRuntime.Contracts.ProductSearchResult;
 using Mozu.SiteBuilder.UX.Filters;
 using Mozu.Core.Actions;
 using Mozu.SiteBuilder.Mvc.Caching;
+using Mozu.SiteBuilder.Mvc.Helpers;
 using Mozu.SiteBuilder.Mvc.OAF;
 using Mozu.SiteSettings.General.Contracts.General.Routing;
 using Newtonsoft.Json;
@@ -50,9 +51,10 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
        
         readonly ICustomRouteHandler _customRouteHandler;
         private readonly IStorefrontCache _storeFrontCache;
+        private readonly UrlHelper _urlhelper;
         static readonly JsonSerializer _productSerializer = JsonSerializer.Create(new JsonSerializerSettings { Converters = new List<JsonConverter> { new ExpandoObjectConverter() }, ContractResolver = new CamelCaseResolver() });
 
-        public CatalogController(ICategoryTreeProvider categoryTreeProvider, IProductWebApiClient productClient, IProductSearchWebApiClient searchClient,  ICustomRouteHandler customRouteHandler , IStorefrontCache storeFrontCache )
+        public CatalogController(ICategoryTreeProvider categoryTreeProvider, IProductWebApiClient productClient, IProductSearchWebApiClient searchClient,  ICustomRouteHandler customRouteHandler , IStorefrontCache storeFrontCache , UrlHelper urlhelper)
         {
             _categoryTreeProvider = categoryTreeProvider;
             _searchClient = searchClient;
@@ -61,6 +63,7 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
          
             _customRouteHandler = customRouteHandler;
             _storeFrontCache = storeFrontCache;
+            _urlhelper = urlhelper;
         }
 
         [SbActionExtensionFilter(actionId: ActionFilterConstants.ProductDetailsBeforeAction, executionType: ActionExtensionExecutionTypes.BeforeController)]
@@ -98,6 +101,7 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
             {
                 return redirect;
             }
+
             if (Request.Method == HttpMethod.Head)
             {
                 return this.Request.CreateResponse(HttpStatusCode.OK);
@@ -123,7 +127,7 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
                     IncludeInactiveDocument = PageContext.IsEditMode
                 }
             };
-
+            PageContext.CrawlerInfo.CanonicalUrl = _urlhelper.MakeUrl(UrlHelper.UrlType.Product, product, null);
             await ContextInitializationTasks;
 
             string template = PageContext.CmsContext.Page.GetTemplate(SiteContext, "product");
