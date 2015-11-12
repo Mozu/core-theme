@@ -1,15 +1,10 @@
 ﻿using System;
 using System.Collections.Concurrent;
-using System.Collections.Specialized;
-using System.Diagnostics;
-using System.Drawing;
-using System.Drawing.Drawing2D;
 using System.Drawing.Imaging;
 using System.IO;
 using System.Linq;
 using System.Net;
 using System.Net.Http;
-using System.Threading;
 using System.Threading.Tasks;
 using System.Web;
 using System.Web.Http;
@@ -22,44 +17,35 @@ using Mozu.SiteBuilder.Mvc.ActionFilters;
 using Mozu.SiteBuilder.Mvc.ActionResults;
 using Mozu.SiteBuilder.Mvc.Controllers;
 using Mozu.SiteBuilder.Mvc.ViewEngine;
-using Mozu.SiteBuilder.UX.Controllers;
 using Mozu.Tenant.Contracts;
 using Mozu.Tenant.Contracts.Clients;
 using Mozu.Core.Settings;
+using Mozu.SiteBuilder.Mvc.MessageHandler;
 
 namespace Mozu.SiteBuilder.UX.Areas.Misc.Controllers
 {
     public class ContentController : ApiControllerBase
     {
-        //private static string NotFoundImage = "/admin/scripts/resources/images/noimage.png";
-
-        private static readonly ConcurrentDictionary<int, Site> _siteLookup = new ConcurrentDictionary<int, Site>();
-        private static long g_quality = 60;
-        private IApiContext _appCtx;
-        private readonly ISettings _settings;
-        private IDocumentListWebApiClient _docRepo;
+        static readonly ConcurrentDictionary<int, Site> _siteLookup = new ConcurrentDictionary<int, Site>();
+        static long Quality = 60;
+        IApiContext _appCtx;
+        readonly ISettings _settings;
+        IDocumentListWebApiClient _docRepo;
 
         public ContentController(IDocumentListWebApiClient docRepo, IApiContext appCtx, ISettings settings)
         {
-            // SuppressMissingContextRedirect = true;
-            _docRepo = docRepo.CloneWith(x => { x.SiteId = null; });
-
+            _docRepo = docRepo.CloneWithApiContext(x => x.SiteId = null);
             _appCtx = appCtx;
             _settings = settings;
             ((ServiceClientBase)_docRepo).Options.MaxSize = int.MaxValue;
         }
 
-        //
-        // GET:/Img/
-
-
-        private static ImageCodecInfo GetEncoderInfo(String mimeType)
+        static ImageCodecInfo GetEncoderInfo(string mimeType)
         {
             return ImageCodecInfo.GetImageEncoders().FirstOrDefault(t => t.MimeType == mimeType);
         }
 
-
-        private Site LookupSite(int siteid)
+        Site LookupSite(int siteid)
         {
             ISitesWebApiClient client = Request.Resolve<ISitesWebApiClient>().CloneWithoutUserClaims();
             ServiceClientResponse<Site> siteRes = client.GetSite(siteid, false).Result;
@@ -70,15 +56,12 @@ namespace Mozu.SiteBuilder.UX.Areas.Misc.Controllers
             return siteRes.ReadAsSync();
         }
 
-
         bool ShouldRedirectToCdn()
         {
             var disableCdn = _settings.AppSettings("disableCDN") == "true";
-            var cdnHost = this._settings.AppSettings("CdnHost");
+            var cdnHost = _settings.AppSettings("CdnHost");
             var uri = new Uri(PageContext.Url);
-
             return !disableCdn && !string.IsNullOrEmpty(cdnHost) && !cdnHost.EqualsIgnoreCase(uri.Host);
-
         }
 
         [ClientCacheHeaders(ConfigKey = "images")]
@@ -100,10 +83,8 @@ namespace Mozu.SiteBuilder.UX.Areas.Misc.Controllers
         {
             //todo send out appoligy letter
 
-
-           
-
             var shouldRedirectToCdn = ShouldRedirectToCdn();
+            var isRewrite = Request.Properties.ContainsKey(SeoDelegatingHandler.IsSeoRewrite) ? (bool)Request.Properties[SeoDelegatingHandler.IsSeoRewrite]  : false;
 
             ApiContext context = null;
 
@@ -146,25 +127,15 @@ namespace Mozu.SiteBuilder.UX.Areas.Misc.Controllers
                 {
                     result = await _docRepo.GetTreeDocumentContentHead(list, documentId).ConfigureAwait(false);
                 }
-                if (result.ResponseMessage.StatusCode == HttpStatusCode.NotFound)
-                {
-                    return new NotFoundResult();
-                }
-                if (result.HasException)
-                {
-                    throw result.ReadException();
-                }
-                if ( shouldRedirectToCdn )
-                {
-                    return RedirectToCdn(list, documentId, result.ResponseMessage.Content.Headers.LastModified.Value);
-                }
-                if (Request.Headers.IfModifiedSince.Value >= result.ResponseMessage.Content.Headers.LastModified.Value)
-                {
-                    return new NotModifiedResult();
-                }
+                
+                // we should have a lastmodified header on the HEAD request, but in some odd cases we may not.  if we don't find one then we should serve directly from the CMS.
+                if (result.ResponseMessage.StatusCode == HttpStatusCode.NotFound) return new NotFoundResult();
+                if (result.HasException) throw result.ReadException();
+                if (shouldRedirectToCdn && !isRewrite && result.ResponseMessage.Content.Headers.LastModified.HasValue) return RedirectToCdn(list, documentId, result.ResponseMessage.Content.Headers.LastModified.Value);
+                if (Request.Headers.IfModifiedSince.Value >= result.ResponseMessage.Content.Headers.LastModified.GetValueOrDefault(DateTimeOffset.MaxValue)) return new NotModifiedResult();
             }
             
-            _docRepo.Options.CompletionOption = System.Net.Http.HttpCompletionOption.ResponseHeadersRead;
+            _docRepo.Options.CompletionOption = HttpCompletionOption.ResponseHeadersRead;
             if (Guid.TryParse(documentId, out guid))
             {
                 result = await _docRepo.TransformDocumentContent(
@@ -212,19 +183,19 @@ namespace Mozu.SiteBuilder.UX.Areas.Misc.Controllers
                 result.ResponseMessage.Content.Headers.LastModified);
         }
 
-        private ActionResult RedirectToCdn(string list, string documentId, DateTimeOffset timeStamp)
+        ActionResult RedirectToCdn(string list, string documentId, DateTimeOffset timeStamp)
         {
             var cdnHost = this._settings.AppSettings("CdnHost");
-            var origionalUri = new Uri(PageContext.Url);
-            var origionalquery = HttpUtility.ParseQueryString(origionalUri.Query);
-            var isLatestRequest = string.Equals(origionalquery["latest"], "true", StringComparison.OrdinalIgnoreCase);
+            var originalUri = new Uri(PageContext.Url);
+            var originalQuery = HttpUtility.ParseQueryString(originalUri.Query);
+            var isLatestRequest = string.Equals(originalQuery["latest"], "true", StringComparison.OrdinalIgnoreCase);
 
-            origionalquery.Remove("latest");
-            origionalquery["_mzts"] = timeStamp.Ticks.ToString();
+            originalQuery.Remove("latest");
+            originalQuery["_mzts"] = timeStamp.Ticks.ToString();
             if (isLatestRequest)
             {
-                UriBuilder latestRedirectUrl = new UriBuilder(origionalUri);
-                latestRedirectUrl.Query = origionalquery.ToString();
+                UriBuilder latestRedirectUrl = new UriBuilder(originalUri);
+                latestRedirectUrl.Query = originalQuery.ToString();
                 return new RedirectResult(latestRedirectUrl.ToString(), false , TimeSpan.FromMinutes(10));
             }
 
@@ -240,14 +211,13 @@ namespace Mozu.SiteBuilder.UX.Areas.Misc.Controllers
                     (this.SbApiContext.SiteId.HasValue
                         ? this.SbApiContext.SiteId.Value.ToString()
                         : "m-" + this.SbApiContext.MasterCatalogId), list, documentId);
-            ub.Query = origionalquery.ToString();
+            ub.Query = originalQuery.ToString();
 
 
             return new RedirectResult(ub.ToString(), true);
         }
 
-
-        private string GetContentType(string fileName)
+        string GetContentType(string fileName)
         {
             string fileExtension = Path.GetExtension(fileName);
             switch (fileExtension)
@@ -275,24 +245,16 @@ namespace Mozu.SiteBuilder.UX.Areas.Misc.Controllers
                     return "application/octet-stream";
             }
         }
-
-
-        private class MyFileStreamResult : FileStreamResult
+        class MyFileStreamResult : FileStreamResult
         {
             private readonly string _fileName;
-            private string ct;
-            private DateTimeOffset? nullable;
-            private string p;
-            private Stream stream;
 
-
-            public MyFileStreamResult(Stream stream, string contentType, string etag, DateTimeOffset? LastModifiedDate,
-                string fileName = null)
+            public MyFileStreamResult(Stream stream, string contentType, string etag, DateTimeOffset? lastModifiedDate, string fileName = null)
                 : base(stream, contentType)
             {
                 _fileName = fileName;
                 Etag = etag;
-                this.LastModifiedDate = LastModifiedDate;
+                LastModifiedDate = lastModifiedDate;
             }
 
             protected override void WriteFile(HttpResponseBase response)
@@ -303,7 +265,7 @@ namespace Mozu.SiteBuilder.UX.Areas.Misc.Controllers
                 base.WriteFile(response);
             }
 
-            private void processFileName(HttpResponseBase response)
+            void processFileName(HttpResponseBase response)
             {
                 if (_fileName != null)
                 {
@@ -311,7 +273,6 @@ namespace Mozu.SiteBuilder.UX.Areas.Misc.Controllers
                 }
             }
         }
-
 
         private class NotModifiedResult : ActionResult
         {

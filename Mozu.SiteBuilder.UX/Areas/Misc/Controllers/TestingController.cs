@@ -320,7 +320,9 @@ namespace Mozu.SiteBuilder.UX.Areas.Misc.Controllers
                 var builder = new UriBuilder(scheme, newHostname);
                 builder.Path = path;
                 builder.Query = query;
-                return builder.Uri.ToString();
+
+                // we use absoluteUri here instead of ToString() because ToString() mangled query string parameters.  DO NOT change this. <3 Anup!
+                return builder.Uri.AbsoluteUri;
             }
             else
             {

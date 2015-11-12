@@ -12,10 +12,10 @@ Ext.define('Taco.store.PublishSetItems', {
     pageSize: 25,
     autoLoad: true,
     remoteSort: true,
-    sorters: {
-        property: 'name',
-        direction: 'ASC'
-    },
+    //    sorters: {
+    //        property: 'name',
+    //        direction: 'ASC'
+    //    },
     constructor: function (cfg) {
         if (!cfg.code || !cfg.type) {
             Ext.log('bad EntitiesStore Config', { level: 'error' });

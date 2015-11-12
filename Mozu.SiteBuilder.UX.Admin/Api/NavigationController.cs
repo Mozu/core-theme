@@ -455,6 +455,8 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
                         await HandleNavigationItemRename(item);
                     break;
                 case "move":
+                    if (item.ParentId.EqualsIgnoreCase(SUPER_ROOT_NODE_NAME))
+                        throw new ArgumentException("cannot set node to be child of root node");
                     if (item.NodeType.IsPage || item.NodeType.IsLink)
                         await HandleNavigationMove(item);
                     else if (item.NodeType.IsCategory)

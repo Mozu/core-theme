@@ -1035,30 +1035,24 @@ Ext.define('Taco.view.product.subform.General', {
         }
     },
 
-    onProductTypeChange: function (selectField, value) {
+    onProductTypeChange: function (selectField, val) {
         var me = this;
-        Taco.core.data.StoreManager.getOrCreate({
-            type: 'Taco.store.ProductTypes',
-            pageSize: 1,
-            autoLoad: true,
-            createOnly:true,
-            listeners: {
-                beforeload: function (store) {
-                    var proxy = store.getProxy();
-                    if (!proxy.extraParams) {
-                        proxy.extraParams = {};
-                    }
-                    proxy.extraParams.id = value;
-                },
-                load: me.onProductTypeLoad,
-                scope: this
+        Taco.model.ProductType.load(val, {
+            scope: this,
+            success: me.onProductTypeLoad,
+            failure: function(record, operation) {
+                if (operation.error) {
+                    Taco.core.util.ExceptionWhiner.handleRemoteFailure(operation.error);
+                } else {
+                    Taco.app.fireEvent('setmessage', 'Unexpected error: could not find product type', 'error');
+                }
             }
         });
     },
 
-    onProductTypeLoad: function (scope, records) {
+    onProductTypeLoad: function (record) {
         var me = this,
-            productTypeRecord = records[0],
+            productTypeRecord = record,
             productTypeId = productTypeRecord.get('id'),
             productUsages = productTypeRecord.get("productUsages"),
             isDigitalCreditProductType = (productTypeRecord.get("goodsType") === 'DigitalCredit'),
