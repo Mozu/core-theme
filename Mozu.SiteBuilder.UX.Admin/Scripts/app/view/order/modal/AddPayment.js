@@ -88,7 +88,7 @@ Ext.define('Taco.view.order.modal.AddPayment', {
 
         // Pull the existing payments for the dropdown list!
         this.currentPayments = this.record.payments().queryBy(function (payment) {
-            return payment.get('status') !== 'Voided' && payment.get('paymentType') === 'CreditCard';
+            return payment.get('paymentType') === 'CreditCard';
         });
 
         /*if (this.record.get('parentOrderId') && this.record.get('parentOrderId').length > 0) {
