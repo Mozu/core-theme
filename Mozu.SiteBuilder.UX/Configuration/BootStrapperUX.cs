@@ -29,10 +29,10 @@ namespace Mozu.SiteBuilder.UX.Configuration
             httpConfiguration.MessageHandlers.Insert(1, new SiteBuilderRouteDataInitilizer());
           
             httpConfiguration.MessageHandlers.Add(new MzUnderscoreRequestCleaner());
-            
-            
-            httpConfiguration.MessageHandlers.Add(new SeoDelegatingHandler());
+
             httpConfiguration.MessageHandlers.Add(new HomePageTransferHandler());
+            httpConfiguration.MessageHandlers.Add(new SeoDelegatingHandler());
+            
             httpConfiguration.MessageHandlers.Add(new FourHundredMessageHandler());
             
             httpConfiguration.Formatters.JsonFormatter.SerializerSettings.ContractResolver = new Newtonsoft.Json.Serialization.CamelCasePropertyNamesContractResolver();
