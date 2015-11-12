@@ -1035,21 +1035,20 @@ Ext.define('Taco.view.product.subform.General', {
         }
     },
 
-    onProductTypeChange: function (selectField, value) {
+    onProductTypeChange: function (selectField, val) {
         var me = this;
         Taco.core.data.StoreManager.getOrCreate({
             type: 'Taco.store.ProductTypes',
             pageSize: 1,
             autoLoad: true,
             createOnly:true,
+            filterOnLoad: true,
+            remoteFilter: true,
+            filters: [{
+                property: 'id',
+                value: val
+            }],
             listeners: {
-                beforeload: function (store) {
-                    var proxy = store.getProxy();
-                    if (!proxy.extraParams) {
-                        proxy.extraParams = {};
-                    }
-                    proxy.extraParams.id = value;
-                },
                 load: me.onProductTypeLoad,
                 scope: this
             }
