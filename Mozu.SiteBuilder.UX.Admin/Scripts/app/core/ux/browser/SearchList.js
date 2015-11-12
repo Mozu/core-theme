@@ -1,6 +1,6 @@
 /**
  * @class Taco.core.ux.browser.SearchList
- * Simple grid panel with search. 
+ * Simple grid panel with search.
  */
 
 Ext.define('Taco.core.ux.browser.SearchList', {
@@ -15,40 +15,40 @@ Ext.define('Taco.core.ux.browser.SearchList', {
         deleteFromGrid: 'Taco.core.ux.mixins.DeleteFromGrid',
         gridcontextmenu: 'Taco.core.ux.mixins.GridContextMenu'
     },
-    
+
     alias: 'widget.searchlist',
-    
+
     //cls: Taco.baseCSSPrefix + 'itembrowser',
     //cls: Taco.baseCSSPrefix + 'content-view',
-    
+
     toolbar: null,
 
     launchEditorOnClick: false,
-    
+
     filterProperty: 'title',
-    
-    gridHeaderLabel: "Items",
-    
+
+    gridHeaderLabel: 'Items',
+
     enableNavHeader: false,
     // grids with navHeader `enabled will need extra content padding. Class will be assigned in the navHeader mixin.
     addContentPadding: false,
 
     enableSearch: true,
-    
+
     enablePaging: true,
-    
+
     hideSearchToolbar: false,
 
     enableAutoSelect: true,
 
     // store: { type: 'Taco.store.InventoryProducts' },
     store: null,
-    
+
     // array of toolbar items to be added to ths second toolbar below the search toolbar;
     secondToolbarItems: null,
 
     disableContextMenuClick :false,
-    
+
     // meant to be overriden by the subclass;
     columns: [
         {
@@ -61,12 +61,12 @@ Ext.define('Taco.core.ux.browser.SearchList', {
             flex:1
         }
     ],
-    
+
     initComponent: function () {
         var me = this;
         this.viewConfig = this.viewConfig || {}
 
-        
+
         if (this.deferEmptyText !== undefined) {
             this.viewConfig.deferEmptyText = this.deferEmptyText;
         }
@@ -74,7 +74,7 @@ Ext.define('Taco.core.ux.browser.SearchList', {
         if (this.emptyText !== undefined) {
             this.viewConfig.emptyText = this.emptyText;
         }
-        
+
         me.columns = Ext.clone(me.columns);
 
         if (me.enableNavHeader) {
@@ -87,19 +87,19 @@ Ext.define('Taco.core.ux.browser.SearchList', {
             })
             //**************************
         }
-        
+
         // this plugin will auto select the first record in the grid and manage reselection of the selected item after a store load
-        if (this.enableAutoSelect !== false) {            
+        if (this.enableAutoSelect !== false) {
             this.plugins = this.plugins || [];
             this.plugins.push(Ext.create('Taco.core.ux.grid.plugins.AutoSelect'));
         }
 
-        // Initialize the LaunchEditor Mixin Defined in SearchList 
+        // Initialize the LaunchEditor Mixin Defined in SearchList
         if (this.launchEditorOnClick) {
             //initialize the content navigation toolbar.
             this.mixins.launcheditor.constructor.apply(this);
         }
-        
+
         if (!me.store) {
             throw("store configuration is required.  Example store: { type: 'Taco.store.InventoryProducts' } ");
             return;
@@ -110,9 +110,9 @@ Ext.define('Taco.core.ux.browser.SearchList', {
         }
         // initialize the delete mixin
         this.mixins.deleteFromGrid.init.apply(this);
-        
-        
-        
+
+
+
         /*
         // this is deprecated since the toolbar now showing the item count
         me.store.on({
@@ -125,33 +125,33 @@ Ext.define('Taco.core.ux.browser.SearchList', {
 
 
         me.dockedItems = me.dockedItems || [];
-        
+
         if (me.enableNavHeader) {
             //initialize the content navigation toolbar.
             this.mixins.navHeader.init.apply(this);
-        } 
+        }
 
         this.mixins.rowEditable.constructor.apply(this);
-        
+
         // initialize the search toolbar mixin
         if (me.enableSearch) {
         this.mixins.searchable.constructor.apply(this);
         me.dockedItems.push(me.createSearchToolbar());
         }
-        
+
         if (me.secondToolbarItems) {
             me.dockedItems.push(me.createSecondToolbar());
         }
-        
+
         if (me.enablePaging) {
             // initialize the grid paging toolbar mixin
             this.mixins.pageable.constructor.apply(this);
         }
-        
-        
+
+
         this.callParent(arguments);
 
-        
+
         this.mixins.gridcontextmenu.constructor.apply(this);
 
     },
@@ -181,7 +181,7 @@ Ext.define('Taco.core.ux.browser.SearchList', {
 
         return me.expanderCollapser;
     },
-    
+
     createSecondToolbar: function () {
         var me = this,
             conf;
@@ -203,12 +203,12 @@ Ext.define('Taco.core.ux.browser.SearchList', {
                 handler: function () { console.log('do bulk actions'); }
             }, '->', me.createExpanderCollapser());
         }
-        
+
         if (this.secondToolbarItems && this.secondToolbarItems.length > 0) {
             var tbItems = this.secondToolbarItems.concat(conf.items);
             conf.items = tbItems;
         }
-        
+
         me.secondToolbar = conf.items.length > 0 ? Ext.widget('toolbar', conf) : null;
 
         return me.secondToolbar;
