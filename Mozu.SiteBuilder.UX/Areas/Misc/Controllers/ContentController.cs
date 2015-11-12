@@ -132,7 +132,7 @@ namespace Mozu.SiteBuilder.UX.Areas.Misc.Controllers
                 if (result.ResponseMessage.StatusCode == HttpStatusCode.NotFound) return new NotFoundResult();
                 if (result.HasException) throw result.ReadException();
                 if (shouldRedirectToCdn && !isRewrite && result.ResponseMessage.Content.Headers.LastModified.HasValue) return RedirectToCdn(list, documentId, result.ResponseMessage.Content.Headers.LastModified.Value);
-                if (Request.Headers.IfModifiedSince.Value >= result.ResponseMessage.Content.Headers.LastModified.GetValueOrDefault(DateTimeOffset.MaxValue)) return new NotModifiedResult();
+                if (Request.Headers.IfModifiedSince.GetValueOrDefault(DateTime.MinValue) >= result.ResponseMessage.Content.Headers.LastModified.GetValueOrDefault(DateTimeOffset.MaxValue)) return new NotModifiedResult();
             }
             
             _docRepo.Options.CompletionOption = HttpCompletionOption.ResponseHeadersRead;
