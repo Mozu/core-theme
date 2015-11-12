@@ -127,11 +127,12 @@ namespace Mozu.SiteBuilder.UX.Areas.Misc.Controllers
                 {
                     result = await _docRepo.GetTreeDocumentContentHead(list, documentId).ConfigureAwait(false);
                 }
-
+                
+                // we should have a lastmodified header on the HEAD request, but in some odd cases we may not.  if we don't find one then we should serve directly from the CMS.
                 if (result.ResponseMessage.StatusCode == HttpStatusCode.NotFound) return new NotFoundResult();
                 if (result.HasException) throw result.ReadException();
-                if (shouldRedirectToCdn && !isRewrite) return RedirectToCdn(list, documentId, result.ResponseMessage.Content.Headers.LastModified.Value);
-                if (Request.Headers.IfModifiedSince.Value >= result.ResponseMessage.Content.Headers.LastModified.Value) return new NotModifiedResult();
+                if (shouldRedirectToCdn && !isRewrite && result.ResponseMessage.Content.Headers.LastModified.HasValue) return RedirectToCdn(list, documentId, result.ResponseMessage.Content.Headers.LastModified.Value);
+                if (Request.Headers.IfModifiedSince.Value >= result.ResponseMessage.Content.Headers.LastModified.GetValueOrDefault(DateTimeOffset.MaxValue)) return new NotModifiedResult();
             }
             
             _docRepo.Options.CompletionOption = HttpCompletionOption.ResponseHeadersRead;
@@ -185,16 +186,16 @@ namespace Mozu.SiteBuilder.UX.Areas.Misc.Controllers
         ActionResult RedirectToCdn(string list, string documentId, DateTimeOffset timeStamp)
         {
             var cdnHost = this._settings.AppSettings("CdnHost");
-            var origionalUri = new Uri(PageContext.Url);
-            var origionalquery = HttpUtility.ParseQueryString(origionalUri.Query);
-            var isLatestRequest = string.Equals(origionalquery["latest"], "true", StringComparison.OrdinalIgnoreCase);
+            var originalUri = new Uri(PageContext.Url);
+            var originalQuery = HttpUtility.ParseQueryString(originalUri.Query);
+            var isLatestRequest = string.Equals(originalQuery["latest"], "true", StringComparison.OrdinalIgnoreCase);
 
-            origionalquery.Remove("latest");
-            origionalquery["_mzts"] = timeStamp.Ticks.ToString();
+            originalQuery.Remove("latest");
+            originalQuery["_mzts"] = timeStamp.Ticks.ToString();
             if (isLatestRequest)
             {
-                UriBuilder latestRedirectUrl = new UriBuilder(origionalUri);
-                latestRedirectUrl.Query = origionalquery.ToString();
+                UriBuilder latestRedirectUrl = new UriBuilder(originalUri);
+                latestRedirectUrl.Query = originalQuery.ToString();
                 return new RedirectResult(latestRedirectUrl.ToString(), false , TimeSpan.FromMinutes(10));
             }
 
@@ -210,7 +211,7 @@ namespace Mozu.SiteBuilder.UX.Areas.Misc.Controllers
                     (this.SbApiContext.SiteId.HasValue
                         ? this.SbApiContext.SiteId.Value.ToString()
                         : "m-" + this.SbApiContext.MasterCatalogId), list, documentId);
-            ub.Query = origionalquery.ToString();
+            ub.Query = originalQuery.ToString();
 
 
             return new RedirectResult(ub.ToString(), true);
