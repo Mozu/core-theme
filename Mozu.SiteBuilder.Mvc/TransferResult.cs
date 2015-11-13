@@ -44,7 +44,7 @@ namespace Mozu.SiteBuilder.Mvc
             else
             {
                 
-                throw new NotImplementedException("doh");
+                throw new NotImplementedException("Should be using IntegratedPipeline.");
             }
         }
 

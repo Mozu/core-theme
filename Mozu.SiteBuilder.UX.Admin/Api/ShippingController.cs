@@ -285,7 +285,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
 
             if (flag.HasValue && flag.Value)
             {
-                throw new InvalidOperationException("doh");
+                throw new InvalidOperationException("New Site provisioning in progress.");
             }
 
             await _shippingAdminProvisioningWebApiClient.CloneWithoutUserClaims().CreateSite(new CreateSiteRequest()
