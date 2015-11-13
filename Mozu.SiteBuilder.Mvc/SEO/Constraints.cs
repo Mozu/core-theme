@@ -628,7 +628,7 @@ namespace Mozu.SiteBuilder.Mvc.SEO.Constraints
         readonly Func<int, int, Task<ServiceClientResponse<EntityCollection>>> _getDocsFunc;
         readonly Func<Task<ServiceClientResponse<JObject>>> _getDosFunc;
         readonly Func<JObject, IEnumerable<string>> _fieldGetter;
-        IList<string> _values;
+        HashSet<string> _values;
 
         public MzdbRouteConstraint(IEntityListsWebApiClient mzdbClient, string listId, string docId, string fieldId)
         {
@@ -668,11 +668,11 @@ namespace Mozu.SiteBuilder.Mvc.SEO.Constraints
                 var mzdbDocs = mzdbDocResponse.ReadAsSync();
                 var otherItems = await Unroll<JObject>(async (start, size) => (await _getDocsFunc(start, size).ConfigureAwait(false)).ReadAsSync(), mzdbDocs.TotalCount, 50);
 
-                _values = mzdbDocs.Items.Concat(otherItems).SelectMany(_fieldGetter).ToList();
+                _values = new HashSet<string>(mzdbDocs.Items.Concat(otherItems).SelectMany(_fieldGetter), StringComparer.OrdinalIgnoreCase);
             }
             else
             {
-                _values = _fieldGetter((await _getDosFunc()).ReadAsSync()).ToList();
+                _values = new HashSet<string>(_fieldGetter((await _getDosFunc()).ReadAsSync()), StringComparer.OrdinalIgnoreCase);
             }
             return true;
         }
@@ -686,11 +686,7 @@ namespace Mozu.SiteBuilder.Mvc.SEO.Constraints
 
         public override bool DoMatch(HttpRequestMessage request, IHttpRoute route, string parameterName, IDictionary<string, object> values, HttpRouteDirection routeDirection)
         {
-            //todo:validate this.
-            if (routeDirection == HttpRouteDirection.UriGeneration)
-            {
-                return true;
-            }
+            
             object temp;
             if (!values.TryGetValue(parameterName, out temp))
             {
@@ -698,19 +694,19 @@ namespace Mozu.SiteBuilder.Mvc.SEO.Constraints
             }
 
             var curRouteValue = temp.ToString();
-            return _values.Any(x => x.ToString().Equals(curRouteValue, StringComparison.OrdinalIgnoreCase));
+            return _values.Contains(curRouteValue);
         }
     }
 
     public class StringListRouteConstraint : ConstraintBase
     {
-        readonly IEnumerable<string> _values;
+        readonly HashSet<string> _values;
 
         public StringListRouteConstraint(IEnumerable<string> values)
         {
             if (values == null || values.Count() == 0) throw new ArgumentException("values");
 
-            _values = values;
+            _values = new HashSet<string>(values, StringComparer.OrdinalIgnoreCase);
         }
 
         public override Task<bool> Initialize()
@@ -727,7 +723,7 @@ namespace Mozu.SiteBuilder.Mvc.SEO.Constraints
             }
             var curRouteValue = temp.ToString();
 
-            return _values.Any(x => x.Equals(curRouteValue, StringComparison.OrdinalIgnoreCase));
+            return _values.Contains(curRouteValue);
         }
     }
 }
