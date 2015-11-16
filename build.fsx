@@ -102,6 +102,35 @@ Target "set-env" (fun _ ->
     touch "web.config"
 )
 
+let findVSTool (pathFromEnvRoot : string) toolname = 
+    ["VS140COMNTOOLS";"VS120COMNTOOLS";"VS110COMNTOOLS";]
+    |> List.map System.Environment.GetEnvironmentVariable
+    |> List.map (fun s -> System.IO.Path.Combine(s, pathFromEnvRoot, toolname))
+    |> List.tryFind (System.IO.File.Exists)
+    |> (fun opt -> match opt with | Some s -> s | None -> failwithf "could not find %s" toolname)
+
+let vstest = findVSTool "..\IDE\CommonExtensions\Microsoft\TestWindow" "vstest.console.exe"
+let testdll = "Mozu.Test.UI.dll"
+
+Target "qatest" (fun _ ->
+    let testrepo, driver, environment, categories =  getBuildParamOrDefault "testrepo" __SOURCE_DIRECTORY__, getBuildParamOrDefault "driver" "chrome", getBuildParamOrDefault "env" "", (getBuildParamOrDefault "categories" "").Split(',')
+
+    if testrepo = __SOURCE_DIRECTORY__ then exit 0
+    if not <| System.IO.Directory.Exists(testrepo) then exit 0
+    
+    let testparams (ps : VSTest.VSTestParams) = {
+        ps with 
+            TestCaseFilter = match categories with | [|""|] -> null | xs -> sprintf "TestCategory=%s" (String.concat "," xs) }
+
+    // TODO: transform the web.config for the given env onto the base web.config in the UI test project
+    // 
+
+    !! (testrepo </> "UI/bin/Debug/Mozu.Test.UI.dll")
+    |> VSTest.VSTest testparams
+)
+
+
+ 
 Target "help" (fun _ ->
     printfn "Targets"
     printfn "-------"
