@@ -3084,7 +3084,7 @@
   </Target>
   <Target Name="BuildThemeWithGrunt">
     <Exec Command="md \sb_npm_cache\$(ThemeName)\node_modules" IgnoreExitCode="true" ContinueOnError="true" />
-    <Exec Command="mklink /d /j node_modules \sb_npm_cache\$(ThemeName)\node_modules" WorkingDirectory="$(ProjectDir)Themes\$(ThemeName)" IgnoreExitCode="true"  ContinueOnError="true" />
+    <Exec Command="mklink /d /j node_modules \sb_npm_cache\$(ThemeName)\node_modules" WorkingDirectory="$(ProjectDir)Themes\$(ThemeName)" IgnoreExitCode="true" ContinueOnError="true" />
     <Exec Command="npm install" WorkingDirectory="$(ProjectDir)Themes\$(ThemeName)" />
     <Exec Command="grunt -v" WorkingDirectory="$(ProjectDir)Themes\$(ThemeName)" />
     <Exec Command="node ..\..\delete_node_modules.js" WorkingDirectory="$(ProjectDir)Themes\$(ThemeName)" />
@@ -3095,10 +3095,6 @@
       </None>
     </ItemGroup>
   </Target>
-  <Target Name="AfterCompile">
-    <CallTarget Targets="BuildThemes" Condition="'$(BuildingInsideVisualStudio)' != 'true'" />
-  </Target>
-  <Import Project="..\.paket\paket.targets" />
   <Choose>
     <When Condition="$(TargetFrameworkIdentifier) == '.NETFramework' And ($(TargetFrameworkVersion) == 'v4.5' Or $(TargetFrameworkVersion) == 'v4.5.1')">
       <ItemGroup>
@@ -3183,6 +3179,13 @@
   </Choose>
   <Choose>
     <When Condition="$(TargetFrameworkIdentifier) == '.NETFramework' And ($(TargetFrameworkVersion) == 'v4.5' Or $(TargetFrameworkVersion) == 'v4.5.1')">
+      <PropertyGroup>
+        <__paket__ClearScript_Installer_targets>ClearScript.Installer</__paket__ClearScript_Installer_targets>
+      </PropertyGroup>
+    </When>
+  </Choose>
+  <Choose>
+    <When Condition="$(TargetFrameworkIdentifier) == '.NETFramework' And ($(TargetFrameworkVersion) == 'v4.5' Or $(TargetFrameworkVersion) == 'v4.5.1')">
       <ItemGroup>
         <Reference Include="ClearScript">
           <HintPath>..\packages\ClearScript.Installer\lib\net45\ClearScript.dll</HintPath>
@@ -3192,14 +3195,6 @@
       </ItemGroup>
     </When>
   </Choose>
-  <Choose>
-    <When Condition="$(TargetFrameworkIdentifier) == '.NETFramework' And ($(TargetFrameworkVersion) == 'v4.5' Or $(TargetFrameworkVersion) == 'v4.5.1')">
-      <PropertyGroup>
-        <__paket__ClearScript_Installer_targets>ClearScript.Installer</__paket__ClearScript_Installer_targets>
-      </PropertyGroup>
-    </When>
-  </Choose>
-  <Import Project="..\packages\ClearScript.Installer\build\$(__paket__ClearScript_Installer_targets).targets" Condition="Exists('..\packages\ClearScript.Installer\build\$(__paket__ClearScript_Installer_targets).targets')" Label="Paket" />
   <Choose>
     <When Condition="$(TargetFrameworkIdentifier) == '.NETFramework' And ($(TargetFrameworkVersion) == 'v4.5' Or $(TargetFrameworkVersion) == 'v4.5.1')">
       <ItemGroup>
@@ -3739,7 +3734,6 @@
       </PropertyGroup>
     </When>
   </Choose>
-  <Import Project="..\packages\OctoPack\build\$(__paket__OctoPack_targets).targets" Condition="Exists('..\packages\OctoPack\build\$(__paket__OctoPack_targets).targets')" Label="Paket" />
   <Choose>
     <When Condition="$(TargetFrameworkIdentifier) == '.NETFramework' And ($(TargetFrameworkVersion) == 'v4.5' Or $(TargetFrameworkVersion) == 'v4.5.1')">
       <ItemGroup>
@@ -3784,4 +3778,10 @@
       </ItemGroup>
     </When>
   </Choose>
+  <Target Name="AfterCompile">
+    <CallTarget Targets="BuildThemes" Condition="'$(BuildingInsideVisualStudio)' != 'true'" />
+  </Target>
+  <Import Project="..\.paket\paket.targets" />
+  <Import Project="..\packages\ClearScript.Installer\build\$(__paket__ClearScript_Installer_targets).targets" Condition="Exists('..\packages\ClearScript.Installer\build\$(__paket__ClearScript_Installer_targets).targets')" Label="Paket" />
+  <Import Project="..\packages\OctoPack\build\$(__paket__OctoPack_targets).targets" Condition="Exists('..\packages\OctoPack\build\$(__paket__OctoPack_targets).targets')" Label="Paket" />
 </Project>

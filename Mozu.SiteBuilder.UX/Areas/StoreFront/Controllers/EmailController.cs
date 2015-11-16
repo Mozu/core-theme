@@ -49,6 +49,7 @@ using Newtonsoft.Json.Converters;
 using Newtonsoft.Json.Serialization;
 using Mozu.CommerceRuntime.Contracts.Clients;
 using Mozu.SiteBuilder.Mvc;
+using Mozu.SiteBuilder.Mvc.Helpers;
 using Newtonsoft.Json.Linq;
 
 namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
@@ -137,10 +138,11 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
             ILogger logger,
             IServiceClientBase<ILocationRuntimeWebApiClient> locationRuntimeWebApiClient,
             ICustomRouteHandler customRouteHandler,
-            IOrderWebApiClient orderWebApiClient
+            IOrderWebApiClient orderWebApiClient,
+             UrlHelper urlhelper
             )
             : base(docRepo, docTypeRepo, cmsService,
-                customerAccountWebApiClient, hyprViewEngine, customRouteHandler)
+                customerAccountWebApiClient, hyprViewEngine, customRouteHandler, urlhelper)
         {
             _sitesWebApiClient = sitesWebApiClient.CloneWithoutUserClaims();
             _logger = logger;

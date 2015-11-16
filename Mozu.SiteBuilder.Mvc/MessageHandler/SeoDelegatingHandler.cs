@@ -168,7 +168,7 @@ namespace Mozu.SiteBuilder.Mvc.MessageHandler
                     var tree = await navContext.ASyncGetTree().ConfigureAwait(false);
                     if (tree != null)
                     {
-                        var homeLink = tree.FirstOrDefault();
+                        var homeLink = tree.FirstOrDefault(x => x.IsHomePage);
                         if (homeLink != null && homeLink.Url.Length > 1)
                         {
                             var origUri = request.RequestUri;
@@ -178,7 +178,6 @@ namespace Mozu.SiteBuilder.Mvc.MessageHandler
                                 newUri = new Uri(request.RequestUri, newUri);
                             }
                             request.RequestUri = newUri;
-
                         }
                     }
                 }

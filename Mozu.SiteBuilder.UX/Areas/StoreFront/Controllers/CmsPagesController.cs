@@ -23,6 +23,7 @@ using System.Threading.Tasks;
 using System.Web.Http;
 using Mozu.SiteBuilder.Mvc.OAF;
 using Newtonsoft.Json.Linq;
+using Mozu.SiteBuilder.Mvc.Helpers;
 
 namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
 {
@@ -38,6 +39,7 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
         protected ICmsServiceWrapper _cmsService;
         readonly HyprViewEngine _hyprViewEngine;
         readonly ICustomRouteHandler _customRouteHandler;
+        private readonly UrlHelper _urlhelper;
 
 
         public CmsPagesController(
@@ -46,13 +48,15 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
             ICmsServiceWrapper cmsService,
             ICustomerAccountWebApiClient customerAccountWebApiClient,
             HyprViewEngine hyprViewEngine,
-            ICustomRouteHandler customRouteHandler)
+            ICustomRouteHandler customRouteHandler,
+            UrlHelper urlhelper)
         {
             _docRepo = docRepo.CloneWithoutUserClaims();
             _docTypeRepo = docTypeRepo;
             _cmsService = cmsService;
             _hyprViewEngine = hyprViewEngine;
             _customRouteHandler = customRouteHandler;
+            _urlhelper = urlhelper;
         }
 
         [HttpHead]
@@ -221,7 +225,7 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
 
 
             }
-
+            PageContext.CrawlerInfo.CanonicalUrl = _urlhelper.MakeUrl(UrlHelper.UrlType.Document, pc.CmsContext.Page.Document, null);
 
 
             var result = View(template, vm);
