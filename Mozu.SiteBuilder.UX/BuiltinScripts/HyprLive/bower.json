@@ -21,6 +21,6 @@
     "tests"
   ],
   "dependencies": {
-    "swig": "git://github.com/zetlen/swig.git#*"
+    "swig": "http://tfs.corp.volusion.com:8080/tfs/VNext/Prototype/_git/Mozu-Swig"
   }
 }
