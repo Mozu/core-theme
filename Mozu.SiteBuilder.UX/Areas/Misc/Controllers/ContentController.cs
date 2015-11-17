@@ -60,8 +60,10 @@ namespace Mozu.SiteBuilder.UX.Areas.Misc.Controllers
         {
             var disableCdn = _settings.AppSettings("disableCDN") == "true";
             var cdnHost = _settings.AppSettings("CdnHost");
+            var cdnOriginHost = _settings.AppSettings("CdnOriginHost") ?? "";
+            var hasAkamiOriginHop = this.Request.Headers.Any(x => string.Equals(x.Key, "Akamai-Origin-Hop", StringComparison.OrdinalIgnoreCase));
             var uri = new Uri(PageContext.Url);
-            return !disableCdn && !string.IsNullOrEmpty(cdnHost) && !cdnHost.EqualsIgnoreCase(uri.Host);
+            return !disableCdn && !string.IsNullOrEmpty(cdnHost) && !cdnOriginHost.EqualsIgnoreCase(uri.Host) && !hasAkamiOriginHop;
         }
 
         [ClientCacheHeaders(ConfigKey = "images")]
