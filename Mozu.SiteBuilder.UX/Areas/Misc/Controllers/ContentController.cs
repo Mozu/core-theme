@@ -60,8 +60,10 @@ namespace Mozu.SiteBuilder.UX.Areas.Misc.Controllers
         {
             var disableCdn = _settings.AppSettings("disableCDN") == "true";
             var cdnHost = _settings.AppSettings("CdnHost");
+            var cdnOriginHost = _settings.AppSettings("CdnOriginHost") ?? "";
+            var hasAkamiOriginHop = this.Request.Headers.Any(x => string.Equals(x.Key, "Akamai-Origin-Hop", StringComparison.OrdinalIgnoreCase));
             var uri = new Uri(PageContext.Url);
-            return !disableCdn && !string.IsNullOrEmpty(cdnHost) && !cdnHost.EqualsIgnoreCase(uri.Host);
+            return !disableCdn && !string.IsNullOrEmpty(cdnHost) && !cdnOriginHost.EqualsIgnoreCase(uri.Host) && !hasAkamiOriginHop;
         }
 
         [ClientCacheHeaders(ConfigKey = "images")]
@@ -205,12 +207,12 @@ namespace Mozu.SiteBuilder.UX.Areas.Misc.Controllers
 
 
             ub.Path = string.Equals( list , "files@mozu", StringComparison.OrdinalIgnoreCase)
-                ? string.Format("{0}-m{1}/cms/files/{2}", this.SbApiContext.TenantId, this.SbApiContext.MasterCatalogId,
+                ? string.Format("{0}-m{1}/cms/files/{2}", this.SbApiContext.TenantId, this.SbApiContext.MasterCatalogId.GetValueOrDefault(1),
                     documentId)
                 : string.Format("{0}-{1}/cms/{2}/{3}", this.SbApiContext.TenantId,
                     (this.SbApiContext.SiteId.HasValue
                         ? this.SbApiContext.SiteId.Value.ToString()
-                        : "m-" + this.SbApiContext.MasterCatalogId), list, documentId);
+                        : "m-" + this.SbApiContext.MasterCatalogId.GetValueOrDefault(1)), list, documentId);
             ub.Query = originalQuery.ToString();
 
 
