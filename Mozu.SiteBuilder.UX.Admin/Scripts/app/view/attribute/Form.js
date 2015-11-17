@@ -744,7 +744,9 @@ Ext.define('Taco.view.attribute.Form', {
                 readOnly:!this.record.phantom,
                 emptyText: 'Enter a unique attribute code',
                 width: 300,
-                xtype:'taco-slugfield',
+                xtype: this.record.phantom
+                    ? 'taco-slugfield'
+                    : 'textfield',      //display as-is for existing records
                 enableKeyEvents: true,
                 listeners: {
                     keyup: function (field, e, eOpts) {
