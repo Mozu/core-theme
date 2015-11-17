@@ -4,6 +4,7 @@ using Mozu.Core.Settings;
 using Mozu.SiteBuilder.Mvc.Contexts;
 using Mozu.SiteBuilder.Mvc.ViewEngine;
 using System;
+using System.Linq;
 using System.Net;
 using System.Net.Http;
 using System.Net.Http.Headers;
@@ -24,8 +25,10 @@ namespace Mozu.SiteBuilder.UX.Filters
             var pageContext = actionContext.Request.Resolve<PageContext>();
             var settings = actionContext.Request.Resolve<ISettings>();
             var cdnHost = settings.AppSettings("CdnHost");
+            var cdnOriginHost = settings.AppSettings("CdnOriginHost") ?? "";
             var disableCdn = settings.AppSettingsAsNullableBool("disableCdn").GetValueOrDefault(false);
-            if (ShouldRedirectToCdn(actionContext.Request.RequestUri, cdnHost, disableCdn, pageContext))
+            var hasAkamiOriginHop = actionContext.Request.Headers.Any(x => string.Equals(x.Key, "Akamai-Origin-Hop", StringComparison.OrdinalIgnoreCase));
+            if (ShouldRedirectToCdn(actionContext.Request.RequestUri, cdnHost, cdnOriginHost, hasAkamiOriginHop, disableCdn, pageContext))
             {
                 var sbapi = actionContext.Request.Resolve<IApiContext>();
                 actionContext.Response = RedirectToCDN(cdnHost, new Uri(pageContext.Url), sbapi.TenantId, sbapi.SiteId);
@@ -34,11 +37,12 @@ namespace Mozu.SiteBuilder.UX.Filters
             base.OnActionExecuting(actionContext);
         }
 
-        static bool ShouldRedirectToCdn(Uri requestUri, string cdnHost, bool disableCdn, PageContext pageContext)
+        static bool ShouldRedirectToCdn(Uri requestUri, string cdnHost, string orginCdnHost , bool hasAkamiOriginHop, bool disableCdn, PageContext pageContext)
         {
             var isReciever = requestUri.PathAndQuery.IndexOf("/receiver", StringComparison.OrdinalIgnoreCase) > -1;
             var uri = new Uri(pageContext.Url);
-            return !disableCdn && !isReciever && !string.IsNullOrEmpty(cdnHost) && !cdnHost.EqualsIgnoreCase(uri.Host);
+            
+            return !disableCdn && !isReciever && !string.IsNullOrEmpty(cdnHost) && !cdnHost.EqualsIgnoreCase(uri.Host) && !orginCdnHost.EqualsIgnoreCase(uri.Host) && !hasAkamiOriginHop;
         }
 
         static HttpResponseMessage RedirectToCDN(string cdnHost, Uri originalUrl, int tenantId, int? siteId)
