@@ -254,6 +254,7 @@ namespace Mozu.SiteBuilder.UX.Areas.Misc.Controllers
 
         [ClientCacheHeaders(ConfigKey = "content")]
         [HttpGet]
+        [NoCdnForce]
         public HttpResponseMessage Misc(string pathinfo, string contentType = null)
         {
             string stem = "/resources/" + pathinfo;
@@ -284,7 +285,7 @@ namespace Mozu.SiteBuilder.UX.Areas.Misc.Controllers
         public new HttpResponseMessage Content(string pathinfo, string contentType = null)
         {
             var resolvedContentType = contentType ?? GetMimeType(pathinfo);
-            return GetFileResult(pathinfo, contentType);
+            return GetFileResult(pathinfo, resolvedContentType);
         }
 
         HttpResponseMessage GetFileResult(string pathinfo, string contentType)
