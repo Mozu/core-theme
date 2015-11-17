@@ -390,6 +390,13 @@
                 }, 0);
                 return me.roundToPlaces(result, 2);
             },
+            resetAddressDefaults: function () {
+                var billingAddress = this.get('billingContact').get('address');
+                var addressDefaults = billingAddress.defaults;
+                billingAddress.set('countryCode', addressDefaults.countryCode);
+                billingAddress.set('addressType', addressDefaults.addressType);
+                billingAddress.set('candidateValidatedAddresses', addressDefaults.candidateValidatedAddresses);
+            },
             savedPaymentMethods: function () {
                 var cards = this.getOrder().get('customer').get('cards').toJSON();
                 return cards && cards.length > 0 && cards;

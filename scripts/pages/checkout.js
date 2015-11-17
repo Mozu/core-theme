@@ -148,7 +148,8 @@ require(["modules/jquery-mozu", "underscore", "hyprlive", "modules/backbone-mozu
         additionalEvents: {
             "change [data-mz-digital-credit-enable]": "enableDigitalCredit",
             "change [data-mz-digital-credit-amount]": "applyDigitalCredit",
-            "change [data-mz-digital-add-remainder-to-customer]": "addRemainderToCustomer"
+            "change [data-mz-digital-add-remainder-to-customer]": "addRemainderToCustomer",
+            "change [name='paymentType']": "resetPaymentData"
         },
 
         initialize: function () {
@@ -161,6 +162,13 @@ require(["modules/jquery-mozu", "underscore", "hyprlive", "modules/backbone-mozu
                 this.render();
             }, this);
             this.codeEntered = !!this.model.get('digitalCreditCode');
+        },
+        resetPaymentData: function (e) {
+            if (e.target !== $('[data-mz-saved-credit-card]')[0]) {
+                $("[name='savedPaymentMethods']").val('0');
+            }
+            this.model.clear();
+            this.model.resetAddressDefaults();
         },
         render: function() {
             preserveElements(this, ['.v-button'], function() {
