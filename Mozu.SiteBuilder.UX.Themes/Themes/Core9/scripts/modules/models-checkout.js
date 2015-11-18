@@ -293,11 +293,18 @@
                 this.isLoading(true);
                 var order = this.getOrder();
                 if (order) {
-                    order.apiModel.update({ fulfillmentInfo: me.toJSON() }).ensure(function () {
-                        me.isLoading(false);
-                        me.calculateStepStatus();
-                        me.parent.get('billingInfo').calculateStepStatus();
-                    });
+                    order.apiModel.update({ fulfillmentInfo: me.toJSON() })
+                        .then(function (o) {
+                            var billingInfo = me.parent.get('billingInfo');
+                            if (billingInfo) {
+                                billingInfo.loadCustomerDigitalCredits();
+                            }
+                        })
+                        .ensure(function() {
+                            me.isLoading(false);
+                            me.calculateStepStatus();
+                            me.parent.get('billingInfo').calculateStepStatus();
+                        });
                 }
             },
             next: function () {
