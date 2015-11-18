@@ -200,7 +200,7 @@ namespace Mozu.SiteBuilder.Mvc.SEO
                                             if (jr.TokenType == JsonToken.StartArray)
                                             {
                                                 var entries = ser.Deserialize<List<RedirectEntry>>(jr);
-                                                return entries.Select(e => { e.IsEnabled = e.IsEnabled ?? true; return e; }).ToList();
+                                                return entries.Select(e => { e.IsEnabled = e.IsEnabled.GetValueOrDefault(true); return e; }).ToList();
                                             }
                                             else if (jr.TokenType == JsonToken.StartObject)
                                             {
@@ -213,11 +213,11 @@ namespace Mozu.SiteBuilder.Mvc.SEO
                                                         jr.Read();
                                                         var redirect = ser.Deserialize<RedirectEntry>(jr);
                                                         redirect.Source = source;
+                                                        redirect.IsEnabled = redirect.IsEnabled.GetValueOrDefault(true);
                                                         list.Add(redirect);
                                                     }
                                                 }
                                                 return list;
-
                                             }
                                             else
                                             {
