@@ -7,24 +7,35 @@
     "type": "git",
     "url": "https://github.com/mozu/core-theme.git"
   },
-  "scripts": {
-    "version": "grunt setver && git add -A bower.json"
-  },
   "devDependencies": {
     "grunt": "~0.4",
     "grunt-bower-task": "~0.4",
     "grunt-contrib-compress": "^0.14.0",
+    "grunt-contrib-copy": "^0.8.2",
     "grunt-contrib-jshint": "~0.11",
     "grunt-contrib-watch": "~0.6",
-    "grunt-jsonlint": "*",
     "grunt-mozu-appdev-sync": "^1.0.0",
     "mozu-theme-helpers": "^1.0.1",
-    "semver": "^5.0.1",
     "time-grunt": "^1.2.2"
   },
   "engines": {
     "node": ">=0.10"
   },
-  "dependencies": {},
+  "dependencies": {
+    "backbone": "^1.1.2",
+    "bootstrap": "^3.2.0",
+    "jquery-colorbox": "^1.5.15",
+    "jquery.cookie": "^1.4.1",
+    "typeahead.js": "0.10.5",
+    "underscore": "^1.6.0"
+  },
+  "exportsOverride": {
+    "bootstrap": [
+      "js/affix.js",
+      "js/popover.js",
+      "js/tooltip.js",
+      "js/scrollspy.js"
+    ]
+  },
   "license": "ISC"
 }
