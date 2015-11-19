@@ -23,7 +23,7 @@ This release includes an upgraded Core theme called **Core9**.
 * Improvements to the build process
    - We have removed use of the Bower frontend package manager from the Core theme. The much larger and faster NPM package manager, already in use for build tool dependencies, is now used for frontend dependencies as well. There is a simple script in the Gruntfile which copies dependencies into the `scripts/vendor` directory that Bower used to maintain.
 * Numerous bugfixes
-* Other enhancements listed in [Mozu Release Notes](http://developer.mozu.com/sites/default/files/feeds/learn/article_files/MozuQ22015ReleaseNotes.pdf).
+* Other enhancements listed in [Mozu Release Notes](http://developer.mozu.com/sites/default/files/feeds/learn/article_files/MozuQ32015ReleaseNotes.pdf).
 
 ## Upgrading to Mozu Core Theme Version 8
 
