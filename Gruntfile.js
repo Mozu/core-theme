@@ -17,7 +17,7 @@ module.exports = function (grunt) {
           {
             expand: true,
             cwd: 'node_modules/',
-            src: Object.keys(pkg.dependencies).map(function(dep) {
+            src: Object.keys(pkg.dependencies || {}).map(function(dep) {
               var depPkg;
               if (pkg.exportsOverride && pkg.exportsOverride[dep]) {
                 return pkg.exportsOverride[dep].map(function(o) {
@@ -127,9 +127,4 @@ module.exports = function (grunt) {
 
   grunt.registerTask('default', ['build']);
 
-  grunt.registerTask('setver', function () {
-    var b = grunt.file.readJSON('./bower.json');
-    b.version = pkg.version;
-    grunt.file.write('./bower.json', JSON.stringify(b, null, 4));
-  });
 };
