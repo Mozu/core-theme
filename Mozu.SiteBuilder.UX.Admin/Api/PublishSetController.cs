@@ -217,11 +217,13 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
             var filter = PublishSetFilterExtensions.ToFilterString(extFilter);
 
             var result = (await _publishSetWebApiClient.GetPublishSets(
-                startIndex: pagingParams.startIndex, 
-                pageSize: pagingParams.pageSize, 
+                startIndex: pagingParams.startIndex,
+                pageSize: pagingParams.pageSize,
                 sortBy: pagingParams.sort.ToSortString(),
-                filter: filter).ConfigureAwait(false)).ReadAsSync();
-
+                filter: filter,
+                responseFields: "items(name,code,totalCount,publishDate,lastPublishedDate,lastPublishedBy,status,auditInfo)"
+                ).ConfigureAwait(false)).ReadAsSync();
+                
 
            var items = result.Items.Map <List<PublishSet>>();
             if (includeDynamic)

@@ -48,22 +48,11 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
         {
             if (pagingParams.id != null)
             {
-                var result = await _productClient.GetProduct(pagingParams.id, null);
-                DC.Product prod = result.ReadAsAsync().Result;
-                var productModel = Mapper.Map<Product>(prod);
-
-
-                if (prod.PublishingInfo == null || string.IsNullOrEmpty(prod.PublishingInfo.PublishSetCode)) return List2(productModel);
-
-                var ps = (await _publishSetClient.GetPublishSet(prod.PublishingInfo.PublishSetCode)).ReadAsSync();
-                productModel.PublishSetName = ps.Name;
-                productModel.PublishSetDate = ps.PublishDate;
-                return List2(productModel);
+                return await GetSingleProductAsync(pagingParams);
             }
+
             string responseGroups = !string.IsNullOrEmpty(extFilter.ResponseGroups) ? extFilter.ResponseGroups : (extFilter.SearchType == "global" || extFilter.SearchType == "picker" ? "min" : "ProductInCatalogs,Min,Price");
-
             string filter = extFilter.ToFilterString();
-
 
             if (!String.IsNullOrEmpty(extFilter.ShowProductUsages))
             {
@@ -186,8 +175,16 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
             {
                 SbApiContext.SetDataMode(DataViewModeType.Live);
             }
+
+            string responseFields = "items(productCode,productTypeId,productUsage," +
+                   "price(price,salePrice)" +
+                   "productInCatalogs(catalogId,isContentOverridden,content(productName),price(price,salePrice))" +
+                   "auditInfo(updateDate)" +
+                   "content(productName))";
+
+
             var prodCollection = (await _productClient.GetProducts(startIndex: pagingParams.startIndex, pageSize: pagingParams.pageSize,
-                        sortBy: sort, responseGroups: responseGroups, filter: filter, q: q, qLimit: qLimit)).ReadAsSync();
+                        sortBy: sort, responseGroups: responseGroups, filter: filter, q: q, qLimit: qLimit, responseFields:responseFields)).ReadAsSync();
 
             if (prodCollection.TotalCount == 0)
             {
@@ -248,6 +245,22 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
             var dcProductCodeRenames = Mapper.Map<List<DC.ProductCodeRename>>(prodCodeRenames);
             var res = (await _productClient.RenameProductCodes(dcProductCodeRenames)).ReadAsSync();
             return List2(prodCodeRenames);
+        }
+
+        private async Task<Response<List<Product>>> GetSingleProductAsync(PagingParamaters pagingParams)
+        {
+            var result = await _productClient.GetProduct(pagingParams.id, null);
+            DC.Product prod = result.ReadAsAsync().Result;
+            var productModel = Mapper.Map<Product>(prod);
+
+
+            if (prod.PublishingInfo == null || string.IsNullOrEmpty(prod.PublishingInfo.PublishSetCode))
+                return List2(productModel);
+
+            var ps = (await _publishSetClient.GetPublishSet(prod.PublishingInfo.PublishSetCode)).ReadAsSync();
+            productModel.PublishSetName = ps.Name;
+            productModel.PublishSetDate = ps.PublishDate;
+            return List2(productModel);
         }
     }
 }
