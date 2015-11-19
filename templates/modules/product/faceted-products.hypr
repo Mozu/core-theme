@@ -1,4 +1,12 @@
-﻿{% if not pageContext.query.partial %}
+﻿{% comment %}
+{# Warning: the below code has significant performance costs.           #}
+{#                                                                      #}
+{# Serializing this data is no longer necessary with the partial-driven #}
+{# view system. Uncomment this code only if you need access to the raw  #}
+{# data from the faceted products collection, e.g. to use HyprLive      #}
+{# templates. **Note, however, that the partial-driven view system does #}
+{# not require HyprLive templates.** Only uncomment this code if you    #}
+{# know you need it.                                                    #}
 <script type="text/json" id="data-mz-preload-facetedproducts">
 {
 	"facets": {% json model.facets %}, 
@@ -15,7 +23,8 @@
 	"currentSort": "{{ model.currentSort }}"
 }
 </script>
-{% endif %}
+{% endcomment %}
+
 {% if model.facets %}
 <div data-mz-facets class="mz-l-sidebar">
 	{% dropzone "sidebar-above-facets" scope="template" %}
