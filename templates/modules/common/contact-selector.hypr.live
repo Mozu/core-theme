@@ -1,39 +1,28 @@
-﻿<div class="mz-contactselector {% block module-classes %}{% endblock module-classes %}">
-    {% block contact-selector %}
-    {% for contact in model.contacts %}
-    <label class="mz-contactselector-contact">
-        <span class="mz-contactselector-inputwrapper">
-            <input type="radio" data-mz-value="{{ contactcontext }}contactId" name="contactId" value="{{ contact.id }}" {% if model.contactId == contact.id %} checked="checked" {% endif %}>
-        </span>
-        <span class="mz-contactselector-summarywrapper">
-            <div class="mz-addresssummary">
-                {% include "modules/common/address-summary" with model=contact %}
-            </div>
-        </span>
-    </label>
-  {% endfor %}
-  {% if model.contactId == "new" %}
-  <div class="mz-contactselector-contact mz-contactselector-new">
-        <span class="mz-contactselector-inputwrapper">
-            <input type="radio" data-mz-value="{{ contactcontext }}contactId" name="contactId" value="new" data-mz-enternewcontact checked="checked">
-        </span>
-        <span class="mz-contactselector-summarywrapper">
-            {% block enter-new-form %}
-            {% include "modules/common/address-form" with model=editingContact %}
-            {% endblock enter-new-form %}
-        </span>
+﻿<div class="mz-contactselector">
+{% block contact-selector %}
+    
+  <div class="mz-l-formfieldgroup-cell">
+   <select id="mz--contactselector-savedcontact" class="mz-contactselector" data-mz-value="{{ contactcontext }}contactId" name="contactId" >
+      <option>{{labels.selectSavedAddress}}</option>
+      {% for contact in model.contacts %}
+    
+          <option value="{{ contact.id }}"  {% if model.id == contact.id %} selected {% endif %}> {% include "modules/common/address-list" with model=contact %}</option>
+   
+      {% endfor %}
+    </select> 
+    
+    <div>
+        <a href="javascript:;" data-mz-action="beginAddContact">{{labels.addAddress}}</a>
     </div>
-    {% else %}
-    <label class="mz-contactselector-contact mz-contactselector-new">
-        <span class="mz-contactselector-inputwrapper">
-            <input type="radio" data-mz-value="{{ contactcontext }}contactId" name="contactId" value="new" data-mz-enternewcontact>
-        </span>
-        <span class="mz-contactselector-summarywrapper">
-            <div class="mz-addresssummary">
-                <span>{{ labels.enterNewAddress }}</span>
+
+    <div class="mz-contactselector-contact mz-contactselector-new mz-checkoutform-shipping">
+      <span class="mz-contactselector-summarywrapper">
+                    {% block enter-new-form %}
+                      {% include "modules/common/address-form" with model=editingContact %}
+                    {% endblock enter-new-form %}
+                </span>
             </div>
-        </span>
-    </label>
-    {% endif %}
-    {% endblock contact-selector %}
+     </div>
+{% endblock contact-selector %}
+  
 </div>

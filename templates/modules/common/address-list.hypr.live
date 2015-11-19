@@ -1,0 +1,6 @@
+﻿   {{ model.firstName }} {{ model.lastNameOrSurname }}, {{ model.address.address1 }}
+    {% if model.address.address2 %}{{ model.address.address2 }}
+    {% endif %}
+    {% if model.address.address3 %}{{ model.address.address3 }}
+    {% endif %}
+    , {{ model.address.cityOrTown }}, {{ model.address.stateOrProvince }}

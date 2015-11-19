@@ -1,12 +1,12 @@
-﻿    <h3 class="mz-formstep-header">
+﻿    <h3 class="mz-formstep-header mz-checkoutform-header">
         {{ labels.shippingInformation }}
-        {% if model.requiresFulfillmentInfo or model.requiresDigitalFulfillmentContact %}
-          <a href="javascript:;" class="mz-formstep-edit" data-mz-action="edit">{{ labels.change }}</a>
-        {% endif %}
+        <a href="javascript:;" class="mz-formstep-edit" data-mz-action="edit">{{ labels.change }}</a>
     </h3>
     <div class="mz-formstep-body">
-      {% if not model.address.candidateValidatedAddresses %}
-      <div class="mz-formstep-summary mz-addresssummary">
+        {% if model.requiresFulfillmentInfo or model.requiresDigitalFulfillmentContact %}
+        {% endif %}
+        {% if not model.address.candidateValidatedAddresses %}
+        <div class="mz-formstep-summary mz-addresssummary mz-checkoutform">
         {% if model.requiresFulfillmentInfo %}
           {% include "modules/common/address-summary" %}      
         {% else %}
@@ -14,7 +14,7 @@
         {% endif %}
       </div>
       {% if model.requiresFulfillmentInfo  %}
-      <div class="mz-formstep-fields mz-l-formfieldgroup">
+      <div class="mz-formstep-fields mz-l-formfieldgroup mz-checkoutform  mz-checkoutform-shipping mz-checkoutform-active">
         {% if model.contacts %}
         {% include "modules/checkout/checkout-shipping-contact-selector" with editingContact=model %}
         {% else %}
@@ -24,16 +24,16 @@
       {% endif %}
       
       {% if model.requiresDigitalFulfillmentContact %}
-      <div class="mz-formstep-fields mz-l-formfieldgroup">
+      <div class="mz-formstep-fields mz-l-formfieldgroup mz-checkoutform mz-checkoutform-active">
         {% include "modules/checkout/checkout-digital-fulfillment" with editingContact=model %}
       </div>
-      <div class="mz-formstep-summary mz-addresssummary">
+      <div class="mz-formstep-summary mz-addresssummary mz-checkoutform-active">
         <span>Gift Card Email: {{ model.email }}</span>
       </div>
       {% endif %}
       {% else %}
 
-      <div class="mz-formstep-fields mz-l-formfieldgroup">
+      <div class="mz-formstep-fields mz-l-formfieldgroup mz-checkoutform  mz-checkoutform-shipping mz-checkoutform-active">
         {{ labels.selectValidAddress }}
 
         {% for addr in model.address.candidateValidatedAddresses %}

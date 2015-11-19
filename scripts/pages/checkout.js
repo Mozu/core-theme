@@ -87,7 +87,10 @@ require(["modules/jquery-mozu", "underscore", "hyprlive", "modules/backbone-mozu
         renderOnChange: [
             'address.countryCode',
             'contactId'
-        ]
+        ],
+        beginAddContact: function () {
+            this.model.set('contactId', 'new');
+        }
     });
 
     var ShippingInfoView = CheckoutStepView.extend({
@@ -139,7 +142,8 @@ require(["modules/jquery-mozu", "underscore", "hyprlive", "modules/backbone-mozu
             'billingContact.address.countryCode',
             'paymentType',
             'isSameBillingShippingAddress',
-            'usingSavedCard'
+            'usingSavedCard',
+            'savedPaymentMethodId'
         ],
         additionalEvents: {
             "change [data-mz-digital-credit-enable]": "enableDigitalCredit",
@@ -151,6 +155,9 @@ require(["modules/jquery-mozu", "underscore", "hyprlive", "modules/backbone-mozu
             this.listenTo(this.model, 'change:digitalCreditCode', this.onEnterDigitalCreditCode, this);
             this.listenTo(this.model, 'orderPayment', function (order, scope) {
                     this.render();
+            }, this);
+            this.listenTo(this.model, 'change:savedPaymentMethodId', function (order, scope) {
+                this.render();
             }, this);
             this.codeEntered = !!this.model.get('digitalCreditCode');
         },
@@ -177,9 +184,9 @@ require(["modules/jquery-mozu", "underscore", "hyprlive", "modules/backbone-mozu
             var me = this;
             var isVisaCheckout = this.model.visaCheckoutFlowComplete();
             if (!isVisaCheckout) {
-            this.editing.savedCard = true;
-            this.render();
-            } else if (window.confirm(Hypr.getLabel('visaCheckoutEditReminder'))) {
+                this.editing.savedCard = true;
+                this.render();
+            } else {
                 this.doModelAction('cancelVisaCheckout').then(function() {
                     me.editing.savedCard = false;
                     me.render();

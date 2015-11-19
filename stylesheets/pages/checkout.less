@@ -20,6 +20,56 @@
     height: 8em;
 }
 
+.mz-checkoutform-active {
+    background-color: #eeeeee;
+}
+
+.mz-checkoutform {
+    padding-left: 15px;
+}
+
+.mz-checkoutform-shipping {
+    padding-top: 15px;
+    display: block;
+}
+
+.mz-checkoutform-shipping-edit {
+    padding-left: 5px;
+}
+
+.mz-l-formfieldgroup-cell {
+    > .mz-contactselector {
+        width: 100%;
+    }
+}
+
+.mz-formstep-header {
+    &.mz-checkoutform-header {
+        background-color: #666666;
+        color: #ffffff;
+        padding-left: 10px;
+        > a {
+            color: #ffffff;
+            padding-right: 10px;
+        }
+    }
+}
+
+.mz-formstep-body {
+    > .mz-formstep-edit {
+        float: right;
+        top: @gutter/4;
+        position: relative;
+    }
+}
+
+.mz-checkoutform-title {
+    margin: 0 0 @gutter/4;
+    padding: 0 0 @gutter/8;
+    font-size: @fontSizeLarger;
+    border-bottom: none;
+}
+
 .mz-l-formfieldgroup {
 
     .mz-payment-select-saved-payments {
