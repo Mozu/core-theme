@@ -110,7 +110,7 @@ Ext.define('Taco.view.website.Index', {
             onRemoveFromPublishSet: function(record) {
                 me.publishButton.setLoading(true);
                 record.setPublishCode(null, function() {
-                    me.publishButton.setLoading(false);    
+                    me.publishButton.setLoading(false);
                     me.showGrowl.bind(me, 'Removed From Publish Set', 'info', 1000);
                 });
             },
@@ -235,7 +235,7 @@ Ext.define('Taco.view.website.Index', {
                                 var url = menuItem.up('button').scope.url;
                                 window.open('/_gosite/' + Taco.app.context.getSiteId() + '?environment=preview&redir=' + encodeURIComponent(url));
                             }
-                        }, 
+                        },
                         {
                             xtype: 'menuseparator',
                             style: 'border: 1px solid #dddfdf;'
@@ -285,7 +285,7 @@ Ext.define('Taco.view.website.Index', {
                         }
                     ]
                 }
-            }, 
+            },
             this.publishButton,
             {
                 xtype: 'button',
@@ -510,7 +510,7 @@ Ext.define('Taco.view.website.Index', {
                                 //    }
                                 //]
                             }
-                            
+
                         ]
                     }
                 ]
@@ -683,9 +683,9 @@ Ext.define('Taco.view.website.Index', {
     },
     onCardPanelItemActivate: function (cmp) {
         this.fireEvent('activecardchanged', this, cmp);
-        
+
     },
-    
+
     getWidgetDefinitions: function () {
         var themeId = this.getPageContext().themeId;
         var store = Taco.core.data.StoreManager.getOrCreate({
@@ -694,7 +694,7 @@ Ext.define('Taco.view.website.Index', {
             themeId: themeId
         });
         return store;
-        
+
 
     },
     getCardPanel: function () {
@@ -802,7 +802,7 @@ Ext.define('Taco.view.website.Index', {
         });
     },
 
-    setPublishRecord: function(entityHandler) { 
+    setPublishRecord: function(entityHandler) {
 
         var record = entityHandler.getDocument();
 
@@ -813,10 +813,10 @@ Ext.define('Taco.view.website.Index', {
         this.updateDraftIcon(record);
 
         this.updateHeaderTitle(null, entityHandler.getTitle());
-    },  
+    },
 
     updateDraftIcon: function(record) {
-    
+
         var me = this,
             generateTooltipKey = function (content) {
                 return '<span style="width:90px;font-weight: bold;float:left;">' + content + '</span>';
@@ -835,8 +835,8 @@ Ext.define('Taco.view.website.Index', {
                     var date = record.get('publishDate') ? Ext.Date.format(record.get('publishDate'), 'M j, Y g:ia T') : 'Unscheduled';
                     me.pubRecord = record;
                     me.down('#draftIcon').show();
-                    me.down('#draftIcon').setTooltipContent(generateTooltipKey('Publish Set:') + generateTooltipValue('<span id="publishSetName">' + '</span>', null) + '<br>' + generateTooltipKey('Publish Date: ') + generateTooltipValue(date, null));            
-                };  
+                    me.down('#draftIcon').setTooltipContent(generateTooltipKey('Publish Set:') + generateTooltipValue('<span id="publishSetName">' + '</span>', null) + '<br>' + generateTooltipKey('Publish Date: ') + generateTooltipValue(date, null));
+                };
 
                 Ext.Ajax.request({
                     url: '/admin/app/publishsets/getBy/' + pubInfo.publishSetInfo.code,
@@ -854,11 +854,11 @@ Ext.define('Taco.view.website.Index', {
 
             else {
                 this.down('#draftIcon').show();
-                this.down('#draftIcon').setTooltipContent(generateTooltipKey('Publish Set: ') + generateTooltipValue('None') + '<br>' + generateTooltipKey('Publish Date: ') + generateTooltipValue('Unscheduled', null));            
+                this.down('#draftIcon').setTooltipContent(generateTooltipKey('Publish Set: ') + generateTooltipValue('None') + '<br>' + generateTooltipKey('Publish Date: ') + generateTooltipValue('Unscheduled', null));
             }
 
         }
-        
+
         else {
             this.down('#draftIcon').hide();
         }
@@ -880,8 +880,8 @@ Ext.define('Taco.view.website.Index', {
                     }
                 }
             });
-        }   
-        
+        }
+
     },
 
     getPageContext: function () {
@@ -904,13 +904,14 @@ Ext.define('Taco.view.website.Index', {
     navigate: function (config) {
 
         if (!config.metaData) {
-        
+
             var parser = document.createElement('a');
             parser.href = config.url;
 
-            if (parser.hostname && (parser.hostname ).toLowerCase() !== ( window.location.hostname || '').toLowerCase() ) {
+
+            // not a real way to tell if a non http/https url is relative
+            if (parser.hostname && (parser.hostname ).toLowerCase() !== ( window.location.hostname || '').toLowerCase()) {
                 Ext.Msg.alert('Attention', 'editing of url [<b><a href="' + parser.href + '" target="_blank">' + parser.href + '</a></b>] not supported');
-                // this.tree.selectLast();
                 return;
             }
 
@@ -923,7 +924,7 @@ Ext.define('Taco.view.website.Index', {
             this.fireEvent('navigatestart', this, config);
             //  this.showHideButtons([]);
             this.url = config.url;
-      
+
             this.pageSettings.removeAll(true);
 
             this.setIFrameLocation(config);
@@ -976,7 +977,7 @@ Ext.define('Taco.view.website.Index', {
         if (button && button.toggle) button.toggle(true);
     },
     onNavigationChange:function () {
-        
+
         this.reloadPage();
     },
     reloadPage: function () {
@@ -992,9 +993,9 @@ Ext.define('Taco.view.website.Index', {
                 return;
             }
         }
-       
+
         this.navigate({ url: this.url });
-        
+
     },
 
     onDirtyChange: Ext.emptyFn,
@@ -1002,7 +1003,7 @@ Ext.define('Taco.view.website.Index', {
     onEntityTypeAdapterLoad: function () {
         var settings = this.entitypeTypeHandler.getPageSettings();
 
-        this.setPublishRecord(this.entitypeTypeHandler);   
+        this.setPublishRecord(this.entitypeTypeHandler);
 
         this.pageSettings.add(settings);
     },
@@ -1038,11 +1039,10 @@ Ext.define('Taco.view.website.Index', {
                 me.resizeIframeSpacers(me.getWidthForFrameAndSpacers.call(me), me.resolutionOverride);
             }, 150);
         });
-
         this.entitypeTypeHandler = this.createEntityTypeAdapter(pc, editor);
 
         Ext.EventManager.on(this.iframe.getDoc(), 'click', function (e, target) {
-            //cancel if over a dropzone.   dont interfere with 
+            //cancel if over a dropzone.   dont interfere with
             if (this.chorizoEditor && this.chorizoEditor.isOverGrid()) {
                 e.stopEvent();
                 return;
@@ -1130,15 +1130,15 @@ Ext.define('Taco.view.website.Index', {
             });
         };
 
-  
+
 
 
 
         if (!Ext.isEmpty(def.get('editViewFields')) || !Ext.isEmpty(def.get('customEditor')) || !Ext.isEmpty(def.get('editViewConfig')) || !Ext.isEmpty(def.get('editView'))) {
-            
+
             if (!Ext.isEmpty(def.get('customEditor'))) {
                 entityEditor = this.entityEditors.findCustomEditor(def.get('customEditor'));
-            
+
                 try {
                     /*jslint evil: true */
                     widgetEditForm = eval(entityEditor.get('code'));
@@ -1298,17 +1298,14 @@ Ext.define('Taco.view.website.Index', {
 
         var tree = this.down('taco-website-tree'),
             selection = tree.getSelectionModel().getSelection(),
+            homePageNode,
             keys = Object.keys(tree.store.tree.nodeHash);
-        
+
         //if selection is empty -- we grab the node that isHomePage
         if (selection.length === 0) {
-            for (var i = 0; i < keys.length; i++) {
-                if (tree.store.tree.nodeHash[keys[i]].get('isHomePage')) {
-                    record = tree.store.tree.nodeHash[keys[i]];
-                    tree.selectPath(record.getPath());
-                    break;
-                }
-            }
+            homePageNode = tree.getHomePage();
+
+            if (homePageNode)tree.selectPath(homePageNode.getPath());
         }
 
         this.down('#taco-page-title').update( '<h2 class="page-title">' + title + '</h2>');
@@ -1421,7 +1418,7 @@ Ext.define('Taco.view.website.Index', {
     onContentListItemEdit: function (grid, record) {
         var me = this;
         //todo if page.. navigate
-        
+
         //todo see if is isWebPage...
 
         me.navigate({ url: '/cms/' + record.get('listFQN') + '/' + record.get('name'), view: 'settings' });
@@ -1430,7 +1427,7 @@ Ext.define('Taco.view.website.Index', {
 
     getWidthForFrameAndSpacers : function() {
         // for some reason, the container reports its width as including the sidebar portion, so we have to remove it here.
-        return this.container.getWidth() - this.sideBar.getWidth(); 
+        return this.container.getWidth() - this.sideBar.getWidth();
     },
 
     resizeIframeSpacers : function(maxSpace, spaceToReserve) {
@@ -1453,7 +1450,7 @@ Ext.define('Taco.view.website.Index', {
     getRevertModal: function() {
 
         var me = this;
-        
+
         Ext.create('Taco.core.ux.window.Modal', {
             scale: 'small',
             title: 'Discard Changes?',
@@ -1468,8 +1465,8 @@ Ext.define('Taco.view.website.Index', {
             },
             items: [{
                 xtype: 'container',
-                layout: { 
-                    type: 'hbox' 
+                layout: {
+                    type: 'hbox'
                 },
                 items: [
                     Ext.create('Ext.panel.Panel', {

@@ -5,9 +5,9 @@
 
 Ext.define('Taco.view.website.misc.ExternalLinkEditor', {
     extend: 'Taco.core.ux.window.Modal',
-    autoShow: true,   
+    autoShow: true,
     initComponent: function () {
-       
+
         this.record = this.record || Ext.create('Taco.model.NavigationTreeNode', {
             nodeType: 'link',
             iconCls: 'link',
@@ -32,22 +32,15 @@ Ext.define('Taco.view.website.misc.ExternalLinkEditor', {
                     xtype: 'textfield',
                     fieldLabel: 'URL',
                     name: 'url',
-                    emptyText: 'http://',
                     allowBlank: false,
                     width: '100%',
-                    flex: 1,
-                    validator: function(value) {
-                        if (value.indexOf('http://') < 0 && value.indexOf('https://') < 0) {
-                            return 'URL must include http:// or https://';
-                        }
-                        return true;
-                    }
+                    flex: 1
                 }]
         });
 
         this.items = [this.form];
 
-        this.form.on('savesuccess', function () {            
+        this.form.on('savesuccess', function () {
             if (this.parentRecord && !Ext.Array.contains(this.parentRecord.childNodes, this.record)) {
                 this.parentRecord.appendChild(this.record);
             }
@@ -59,7 +52,6 @@ Ext.define('Taco.view.website.misc.ExternalLinkEditor', {
 
     },
     doSave: function () {
-        var me = this;
-        me.form.save()
+        this.form.save();
     }
 });

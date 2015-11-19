@@ -46,7 +46,7 @@ Ext.define('Taco.view.website.Tree', {
                 }
             }
         });
-    
+
         this.mon(this.store, 'load', Ext.Function.createSequence(this.showNavState, this.onTreeNodesLoad), this, {single: true});
 
         this.plugins = this.plugins || [];
@@ -56,7 +56,7 @@ Ext.define('Taco.view.website.Tree', {
             flex: 1,
             dataIndex: 'name',
             renderer: function (value, metaData, record) {
-                
+
                 var output = me.getNavIcon(value, record);
 
                 if (Ext.Array.contains(['_navigation', '_unlinked'], record.getId()) || Ext.Array.contains(['category', 'link', 'page'], record.data.nodeType) || record.data.parentId === '_emailTemplates') {
@@ -67,7 +67,7 @@ Ext.define('Taco.view.website.Tree', {
                      * icon and title
                      */
                     var splitOutput = output.split('</span><span>');
-                    
+
                     output = me.getNavOptions(record) + '</span><span class="taco-website-tree-menu-trigger"></span>' + splitOutput[0] + '</span><span>' + splitOutput[1];
                 }
 
@@ -106,7 +106,7 @@ Ext.define('Taco.view.website.Tree', {
             shadow: false,
             items: []
         });
-        
+
         this.callParent(arguments);
         this.addDocked({
             xtype: 'toolbar',
@@ -137,8 +137,6 @@ Ext.define('Taco.view.website.Tree', {
 
                     this.url = url;
 
-                    this.lastSelected = this.getSelectionModel().getSelection()[0];
-
                     if (metaData) {
                         this.fireEvent('contentlistclick', this, metaData, record, item, index, e, eOpts);
                     }
@@ -151,7 +149,7 @@ Ext.define('Taco.view.website.Tree', {
                             this.menu.add(items);
                             this.menu.showBy(item, null, [-5, 0]);
                         }
-                    } 
+                    }
 
                     else if (url) {
                         if (originalDocumentListName && name)
@@ -166,24 +164,12 @@ Ext.define('Taco.view.website.Tree', {
             additemclick: {
                 scope: this,
                 fn: 'showPageCreator'
-            },
-
-            select: {
-                scope: this,
-                fn: function(selModel, record) {
-                    
-                    if (record.get('nodeType') === 'link') {
-                        this.selectPath(this.lastSelected.getPath());
-                        selModel.select(this.lastSelected);
-                        this.url = this.lastSelected.get('url');
-                    }
-                }
             }
         });
 
         this.mon(this.getView(), {
             beforedrop:function(node, data, overModel, dropPosition, dropHandlers) {
-           
+
                 if (data.records && data.records.length && data.records[0].get('nodeType') === 'contentlist') {
                     dropHandlers.cancelDrop();
                     var nodeData = {
@@ -192,7 +178,7 @@ Ext.define('Taco.view.website.Tree', {
                             name: data.records[0].raw.metaData.name,
                             url: '/cms/' + data.records[0].raw.metaData.listFQN
                         },
-                       
+
                         overIndex = overModel.parentNode.indexOf(overModel);
                     if (dropPosition === 'append') {
                         node = overModel.appendChild(nodeData);
@@ -204,13 +190,13 @@ Ext.define('Taco.view.website.Tree', {
                     node.phantom = true;
 
                     node.save();
-                }             
+                }
             },
             drop: function(node, data, overModel, dropPosition, eOpts) {
                 var selModel = this.getSelectionModel(),
                     navItems = me.store.tree.nodeHash,
                     current = me.getCurrentNode.call(me, navItems);
-                
+
                 selModel.deselect(data.records[0]);
                 selModel.select(current);
             },
@@ -342,31 +328,40 @@ Ext.define('Taco.view.website.Tree', {
 
         if (current) {
             me.selectPath(current.getPath());
-            // this.up('#websiteIndex').updateHeaderTitle(null, current);
         }
 
-        else {
-            //to do: talk to UX about what it should say if there's no record
-            // console.log(this.up('#websiteIndex').down('#iframe'));
-            // this.up('#websiteIndex').updateHeaderTitle(null, Ext.create('Taco.model.NavigationTreeNode', {
-            //     name: 'Home'
-            // }));
-        }
+    },
 
+    getHomePage: function() {
+        var treeArr = this.store.tree.nodeHash,
+            keys = Object.keys(treeArr),
+            homePageNode = null;
+
+        keys.some(function(k) {
+            if (treeArr[k].get('isHomePage')) {
+                homePageNode = treeArr[k];
+                return true;
+            }
+        });
+
+        return homePageNode;
     },
 
     getCurrentNode: function(navItems){
 
         var me = this,
-            current;
+            currentKey = null;
 
-        Object.keys(navItems).forEach( function(k) {
-            if (navItems[k] && navItems[k].data.url === me.url) {
-                current = me.getStore().getNodeById(navItems[k].data.id);
-            }   
+        if (me.url === '/') return this.getHomePage();
+
+        Object.keys(navItems).some(function(k) {
+            if (navItems[k] && (navItems[k].data.url === me.url || navItems[k].data.url.indexOf(me.url) !== -1)) {
+                currentKey = navItems[k];
+                return true;
+            }
         });
 
-        return current;
+        return currentKey;
     },
 
     showLinkEditor: function (record, parentRecord) {
@@ -433,7 +428,7 @@ Ext.define('Taco.view.website.Tree', {
                             value: Taco.user.email
                         }
                     ]
-                    
+
                 }
             ],
             listeners: {
@@ -473,8 +468,8 @@ Ext.define('Taco.view.website.Tree', {
         pageTypeDefinitionStore.filter([{ property: 'userCreatable', value: true }]);
 
         // hack to get around filtered store not working... todo spend 5 mins and figure it out
-        
-        dialog = Ext.create('Taco.core.ux.window.Modal', {            
+
+        dialog = Ext.create('Taco.core.ux.window.Modal', {
             scale: 'medium',
             title: 'Add a Page',
             autoShow: true,
@@ -543,14 +538,14 @@ Ext.define('Taco.view.website.Tree', {
 
                         cmsDoc.save({
                             success: function (cmsRecord) {
-                                
+
                                 var navRecord = Ext.create('Taco.model.NavigationTreeNode', {
                                     id: 'page^^' + cmsRecord.get('listFQN') + '^^' + cmsRecord.get('id'),
                                     editAction: 'move',
                                     nodeType: 'page',
                                     originalDocumentListName: cmsRecord.get('listFQN'),
                                     url: '/cms/' + cmsRecord.get('listFQN') +'/' + cmsRecord.get('name'),
-                                    name: values.title                                    
+                                    name: values.title
                                 });
                                 navRecord.setDirty();
                                 parentRecord.appendChild(navRecord);
