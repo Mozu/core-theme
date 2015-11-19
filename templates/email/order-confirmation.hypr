@@ -31,11 +31,7 @@
                     <b>{{ labels.billingInformation }}</b>:<br><br>{% include "modules/common/email-address-summary" with model=model.billingInfo.billingContact %}<br><br>
                         {% if model.billingInfo.paymentType == "CreditCard" %}
                             <b>{{ labels.paymentMethod }}</b>: {{ model.billingInfo.card.paymentOrCardType }} {{ model.billingInfo.card.cardNumberPartOrMask }}
-                        {% endif %}
-
-                        {% if model.billingInfo.paymentType == "PaypalExpress" %}
-                            <b>{{ labels.paymentMethod }}</b>: {{ labels.paypalExpress }}
-                        {% endif %}
+                        {% endif %}                        
                 </td>
             </tr>
 

@@ -828,31 +828,15 @@
                     activePayments = this.activePayments(),
                     thereAreActivePayments = activePayments.length > 0,
                     paymentTypeIsCard = activePayments && !!_.findWhere(activePayments, { paymentType: 'CreditCard' }),
-                    paymentTypeIsPayPal = activePayments && !!_.findWhere(activePayments, { paymentType: 'PaypalExpress' }),
                     balanceNotPositive = this.parent.get('amountRemainingForPayment') <= 0;
 
                 if (paymentTypeIsCard && !Hypr.getThemeSetting('isCvvSuppressed')) return this.stepStatus('incomplete'); // initial state for CVV entry
 
                 if (!fulfillmentComplete) return this.stepStatus('new');
 
-                if (paymentTypeIsPayPal && window.location.href.indexOf('PaypalExpress=') === -1) return this.stepStatus('incomplete'); // This should handle back button/reload cases!
-
                 if (thereAreActivePayments && (balanceNotPositive || (this.get('paymentType') === 'PaypalExpress' && window.location.href.indexOf('PaypalExpress=complete') !== -1))) return this.stepStatus('complete');
                 return this.stepStatus('incomplete');
 
-            },
-            getPaypalUrls: function () {
-                var base = window.location.href + (window.location.href.indexOf('?') !== -1 ? '&' : '?');
-
-                //Remove the already existing Paypal parameters from URL
-                if (base.indexOf('PaypalExpress=') != -1) {
-                    base = base.substring(0, base.indexOf('PaypalExpress='));
-                }
-               
-                return {
-                    paypalReturnUrl: base + 'PaypalExpress=complete',
-                    paypalCancelUrl: base + 'PaypalExpress=canceled'
-                };
             },
             hasPaymentChanged: function(payment) {
 
@@ -945,12 +929,6 @@
             },
             applyPayment: function () {
                 var self = this, order = this.getOrder();
-                if (this.get('paymentType') === 'PaypalExpress') {
-                    this.set(this.getPaypalUrls());
-                } else {
-                    this.unset('paypalReturnUrl');
-                    this.unset('paypalCancelUrl');
-                }
                 this.syncApiModel();
                 if (this.nonStoreCreditTotal() > 0) {
                     return order.apiAddPayment().then(function() {
@@ -975,8 +953,6 @@
                                     }
 
                                     self.markComplete();
-                                    break;
-                                case 'PaypalExpress':
                                     break;
                                 default:
                                     self.markComplete();
@@ -1064,11 +1040,10 @@
                         steps = [fulfillmentInfo, fulfillmentContact, billingInfo],
                         paymentWorkflow = latestPayment && latestPayment.paymentWorkflow,
                         visaCheckoutPayment = activePayments && _.findWhere(activePayments, { paymentWorkflow: 'VisaCheckout' }),
-                        paypalCancelled = (latestPayment && latestPayment.paymentType === 'PaypalExpress' && window.location.href.indexOf('PaypalExpress=canceled') !== -1),
                         allStepsComplete = function () {
                             return _.reduce(steps, function(m, i) { return m + i.stepStatus(); }, '') === 'completecompletecomplete';
                         },
-                        isReady = allStepsComplete() && !(paypalCancelled);
+                        isReady = allStepsComplete();
 
                     //Visa checkout payments can be added to order without UIs knowledge. This evaluates and voids the required payments.
                     if (visaCheckoutPayment) {
@@ -1112,16 +1087,6 @@
 
                     var billingEmail = billingInfo.get('billingContact.email');
                     if (!billingEmail && user.email) billingInfo.set('billingContact.email', user.email);
-
-                    if (paypalCancelled) {
-                        self.apiVoidPayment(latestPayment.id).then(function (o) {
-                            self.set(o.data);
-                            self.trigger('error', {
-                                message: Hypr.getLabel('paypalExpressCancelled')
-                            });
-                            return o;
-                        });
-                    }
 
                 });
                 if (user.isAuthenticated) {

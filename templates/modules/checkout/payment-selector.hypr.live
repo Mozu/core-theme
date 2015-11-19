@@ -63,15 +63,6 @@
                         <div class="mz-l-formfieldgroup-cell">
                         </div>
                         <div class="mz-l-formfieldgroup-cell">
-                            {% if name == "paypalexpress" %}
-                           <label class="mz-paymenttype mz-paymenttype-paypal">
-                                <input data-mz-value="paymentType" name="paymentType" type="radio" class="mz-paymenttype-input" value="PaypalExpress" {% if model.paymentType == "PaypalExpress" %}checked="checked"{% endif %} />
-                                <span class="mz-paymenttype-label mz-paymenttype-label-paypal">
-                                    <img src="https://www.paypal.com/en_US/i/logo/PayPal_mark_37x23.gif" alt="{{ labels.payPal }}" align="left" style="margin-right:7px;">
-                                  {{ labels.payPal }}
-                                </span>
-                            </label>
-                            {% endif %}
                             {% if name == "visacheckout"%}
                                 <div class="mz-digitalwallets">
                                     <img alt="Visa Checkout" class="v-button" role="button"
@@ -94,7 +85,4 @@
     </div>
 </div>
 
-{% if model.paymentType == "PaypalExpress" %}
-    <p>{{ labels.paypalExpressInfo }}</p>
-{% endif %}
 {% endwith %}
