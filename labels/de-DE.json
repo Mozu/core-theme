@@ -52,6 +52,7 @@
     "status"   : "Status",
     "comments"   : "Kommentare",
     "couponCode"   : "Gutschein-Code",
+    "couponDisclaimer" : "Notiz: \"{0}\" könnte bei der Kasse angewendet werden.",
     "apply"   : "anwenden",
     "nameOnCheck"   : "Name On prüfen",
     "routingNumber"   : "Routing Number",
