@@ -4,28 +4,31 @@ This release includes an upgraded Core theme called **Core9**.
 
 ## What's New
 
-* Significant usability enhancements to the cart and checkout workflow
-   - Visual changes
-   - Sensible UX changes
-   - Increased clarity around discount application
-* We've upgraded our PayPal Express payment experience and forked it into a new variant of the Core Theme.
-   - In doing so, we've removed the older version of PayPal Express support from the Core Theme proper.
-   - With the new theme inheritance system, adding PayPal Express should be as easy as attaching a Git remote to the PayPal Express theme and merging it.
-* Improvements to the theme creation and upgrade process
-   - We've officially deprecated the `extends` directive in `theme.json`. It will continue to work, but rather than using runtime resolution of your base theme's assets, you can now use Git to inherit directly from the base theme. This has many advantages:
-     - Better stability in production
+* Significant usability enhancements to the cart and checkout workflow:
+   - Edit a saved shipping address during checkout.
+   - Simplified removal of digital wallet payment information.
+   - Applied shipping method now shows full list of shipping options.
+* Upgraded PayPal Express payment experience, with support for separate authorization and capture:
+   - Removed the old version of PayPal Express support from the Core Theme. 
+   - Forked a new theme with support for the new PayPal Express Certified Mozu Application.
+   - With the new theme inheritance system, adding PayPal Express support should be as easy as adding a Git remote to the [PayPal Express theme](https://github.com/Mozu/PayPalExpress-Theme) and merging it.
+* Improvements to the theme creation and upgrade process:
+   - We've officially deprecated the `extends` directive in `theme.json`. It will continue to work, but rather than using runtime resolution of your base theme's assets, you can now use Git to inherit directly from the base theme. 
+     
+     This has many advantages:
+     - Better stability in production.
      - Much easier development workflow--no more "overrides" and maintaining a references directory!
      - Much easier merging in of Core Theme upgrades--you can use Git's existing, famously robust merge tools!
    - To support this new workflow, we've overhauled the Yeoman generator for Mozu themes. **This is the recommended method for creating and upgrading Mozu themes.**
-     - Install it with `npm install -g yo generator-mozu-theme2`
+     - Install the new theme generator with `npm install -g yo generator-mozu-theme2`
      - Run it with `yo mozu-theme2`
      - Run it in an empty directory to create a new theme, or an existing theme directory to **upgrade the existing theme in-place to use the new inheritance system!**
-* Improvements to the build process
+* Improvements to the build process:
    - We have removed use of the Bower frontend package manager from the Core theme. The much larger and faster NPM package manager, already in use for build tool dependencies, is now used for frontend dependencies as well. There is a simple script in the Gruntfile which copies dependencies into the `scripts/vendor` directory that Bower used to maintain.
-* Numerous bugfixes
-* Other enhancements listed in [Mozu Release Notes](http://developer.mozu.com/sites/default/files/feeds/learn/article_files/MozuQ32015ReleaseNotes.pdf).
+* Numerous bugfixes.
+* Other enhancements listed in the [Mozu Release Notes](http://developer.mozu.com/sites/default/files/feeds/learn/article_files/MozuNovember2015ServiceUpdateReleaseNotes.pdf).
 
-## Upgrading to Mozu Core Theme Version 8
+## Upgrading to Mozu Core Theme Version 9
 
 You must manually upgrade themes that extend Core4, Core5, Core6, Core7, and Core8 to use Core9 instead. We recommend user acceptance, automated unit, and end-to-end testing of your site to ensure Core9 works for your site.
 
