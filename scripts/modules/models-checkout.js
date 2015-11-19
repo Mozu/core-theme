@@ -1321,7 +1321,7 @@
                             });
                     }];
                 var contactInfoContactName = contactInfo.get(contactName);
-                var customerContacts = order.get('customer').get('contacts');
+                var customerContacts = this.get('customer').get('contacts');
                     
                 if (!contactInfoContactName.get('accountId')) {
                     contactInfoContactName.set('accountId', customer.id);
