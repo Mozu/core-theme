@@ -241,7 +241,7 @@ Ext.define('Taco.view.product.Index', {
                         '<td colspan="2" class="x-grid-subcell"><div class="x-grid-cell-inner"></div></td>',
                         '<td class="x-grid-subcell"><div class="x-grid-cell-inner"><a href="#" class="taco-launch-editor" data-catalog-id="{catalogId}">{productName}</a></div></td>',
                         '<td class="x-grid-subcell"><div class="x-grid-cell-inner">{[this.formatPrice(values.price,values.catalogId)]}</div></td>',
-                        '<td class="x-grid-subcell"><div class="x-grid-cell-inner">{[this.formatPrice(values.salePricem,values.catalogId)]}</div></td>',
+                        '<td class="x-grid-subcell"><div class="x-grid-cell-inner">{[this.formatPrice(values.salePrice,values.catalogId)]}</div></td>',
                         '<td class="x-grid-subcell"><div class="x-grid-cell-inner">{catalogId:this.toCatalogName}</div></td>',
                         '<td class="x-grid-subcell"><div class="x-grid-cell-inner">{isContentOverridden:this.formatOverridden}</div></td>',
                         '<td class="x-grid-subcell"><div class="x-grid-cell-inner"></div></td>',
