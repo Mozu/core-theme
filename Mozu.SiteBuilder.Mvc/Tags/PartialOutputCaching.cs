@@ -224,10 +224,10 @@ namespace Mozu.SiteBuilder.Mvc.Tags
             private string[] TryGetOutputStrings(ITemplateManager manager, Walker walker, string key, CacheScope cachescope, ISettings settings)
             {
                 var cache = walker.context.Resolve<ILiveModeOnlyCache>();
-                var output = cache.Get<string[]>(key, cachescope);
+                var output = cache.Get<string[]>(key, cachescope, StorefrontCacheTypes.PartialOutput);
                 if (output != null) return output;
                 output = TryRender(manager, walker, key, settings);
-                cache.Set(key, output, cachescope);
+                cache.Set(key, output, cachescope, StorefrontCacheTypes.PartialOutput);
                 return output;
             }
 

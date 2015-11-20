@@ -145,7 +145,7 @@ namespace Mozu.SiteBuilder.UX.Configuration
             builder.Register(c => System.Runtime.Caching.MemoryCache.Default).As<System.Runtime.Caching.ObjectCache>().SingleInstance();
             builder.RegisterType<SiteBuilderHttpErrorResponseGenerator>().As<IHttpErrorResponseGenerator>();
             builder.RegisterType<HttpErrorResponseGenerator>();
-            builder.RegisterType<StorefrontCacheControlImpl>().As<IStorefrontCacheControl>().SingleInstance();;
+           
 
             builder.RegisterType<AMDModuleProvider>().AsImplementedInterfaces().AsSelf();
             builder.RegisterType<LessLogger>().AsImplementedInterfaces().AsSelf();
