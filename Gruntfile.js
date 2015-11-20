@@ -5,6 +5,7 @@ module.exports = function (grunt) {
   grunt.loadNpmTasks('grunt-contrib-copy');
   grunt.loadNpmTasks('grunt-contrib-jshint');
   grunt.loadNpmTasks('grunt-contrib-compress');
+  grunt.loadNpmTasks('grunt-mozu-appdev-sync');
   grunt.loadNpmTasks('mozu-theme-helpers');
   require('time-grunt')(grunt);
   grunt.initConfig({
@@ -109,6 +110,78 @@ module.exports = function (grunt) {
         opts: {
           skipminification: true
         }
+      }
+    },
+    watch: {
+      javascript: {
+        files: [
+          "scripts/**/*.js"
+        ],
+        tasks: [
+          "default"
+        ]
+      },
+      sync: {
+        files: "<%= mozusync.upload.src %>",
+        tasks: [
+          "mozusync:upload"
+        ],
+        options: {
+          spawn: false
+        }
+      }
+    },
+    mozusync: {
+      options: {
+        applicationKey: "<%= mozuconfig.workingApplicationKey %>",
+        context: "<%= mozuconfig %>",
+        watchAdapters: [
+          {
+            src: "mozusync.upload.src",
+            action: "upload"
+          },
+          {
+            src: "mozusync.del.remove",
+            action: "delete"
+          }
+        ]
+      },
+      upload: {
+        options: {
+          "action": "upload",
+          "noclobber": true
+        },
+        src: [
+          "admin/**/*",
+          "compiled/**/*",
+          "labels/**/*",
+          "resources/**/*",
+          "packageconfig.xml",
+          "scripts/**/*",
+          "stylesheets/**/*",
+          "templates/**/*",
+          "theme.json",
+          "*thumb.png",
+          "*thumb.jpg",
+          "theme-ui.json",
+          "!*.orig",
+          "!.inherited"
+        ],
+        filter: "isFile"
+      },
+      del: {
+        options: {
+          action: "delete"
+        },
+        src: "<%= mozusync.upload.src %>",
+        filter: "isFile",
+        remove: []
+      },
+      wipe: {
+        options: {
+          action: "deleteAll"
+        },
+        src: "<%= mozusync.upload.src %>"
       }
     }
   });
