@@ -90,7 +90,7 @@ module.exports = function (grunt) {
               '*thumb.png',
               '*thumb.jpg',
               'theme-ui.json',
-              '!*.orig',
+              '!**/*.orig',
               '!.inherited'
             ],
             dest: '/'
