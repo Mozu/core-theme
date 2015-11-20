@@ -192,6 +192,7 @@ Ext.define('Taco.view.publishing.grid.Draft', {
 
         var me = this,
             col = {
+
                 name: { 
                     xtype: 'gridcolumn',
                     dataIndex: 'name',
