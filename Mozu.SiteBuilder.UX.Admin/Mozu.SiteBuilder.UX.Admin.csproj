@@ -534,9 +534,11 @@
     <Content Include="Scripts\app\core\ux\form\ResendEmailButton.js" />
     <Content Include="Scripts\app\core\ux\grid\ActionColumn.js" />
     <Content Include="Scripts\app\core\ux\grid\AddEntityRow.js" />
+    <Content Include="Scripts\app\core\ux\grid\PagedMemoryGrid.js" />
     <Content Include="Scripts\app\core\ux\grid\plugins\AutoSelect.js" />
     <Content Include="Scripts\app\core\ux\mixins\DeleteFromGrid.js" />
     <Content Include="Scripts\app\core\ux\mixins\GridContextMenu.js" />
+    <Content Include="Scripts\app\core\ux\mixins\ActionColumn.js" />
     <Content Include="Scripts\app\core\ux\plugins\NextPrevious.js" />
     <Content Include="Scripts\app\core\ux\PanelHeaderStat.js" />
     <Content Include="Scripts\app\core\ux\HtmlEditorImagePlugin.js" />
@@ -1409,6 +1411,7 @@
     <Content Include="Scripts\sass\src\core\ux\content\SplitContainer.scss" />
     <Content Include="Scripts\sass\src\core\ux\form\field\plugins\InputMask.scss" />
     <Content Include="Scripts\sass\src\view\order\widget\AddOrderItemToolbar.scss" />
+    <Content Include="Scripts\ux\pagingStore\data\PagingStore.js" />
     <Content Include="Scripts\Web.config" />
     <Content Include="Scripts\sass\src\core\ux\mixins\NavHeader.scss" />
     <Content Include="Scripts\sass\src\core\ux\form\FullEditor.scss" />

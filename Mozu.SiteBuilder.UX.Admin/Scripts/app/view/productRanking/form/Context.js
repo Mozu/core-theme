@@ -6,7 +6,8 @@
 Ext.define('Taco.view.productRanking.form.Context', {
     extend: 'Taco.core.ux.form.Form',
     alias: 'widget.taco-productRanking-context',
-    requires: [
+    requires: [        
+        'Taco.core.ux.grid.PagedMemoryGrid',
         'Taco.core.ux.TooltipLabel',
         'Taco.core.util.Validation',
         'Taco.view.productRanking.grid.Category',
@@ -62,7 +63,7 @@ Ext.define('Taco.view.productRanking.form.Context', {
             single: true,
             scope: this
         });
-
+/*
         // MultiSelect is the most optimal Field that uses BoundList without a trigger
         this.categoryList = Ext.widget({
             xtype: 'combobox',
@@ -106,13 +107,8 @@ Ext.define('Taco.view.productRanking.form.Context', {
 
         this.categoriesBox = Ext.create('Ext.form.FieldContainer', {
             layout: 'vbox',
-            width: '50%',
-            style: {
-                verticalAlign: 'top'
-            },
-            margin: {
-                left: 10
-            },
+            columnWidth: .5,
+            padding:"0 0 0 10",            
             fieldLabel: 'Categories',
             allowBlank: true,
             items: [
@@ -143,52 +139,28 @@ Ext.define('Taco.view.productRanking.form.Context', {
                 },
                 this.categoryGrid
             ]
-        });
+        });*/
 
         this.keywordGrid = Ext.create('Taco.view.productRanking.grid.Keyword', {
             name: 'keywords',
             record: this.record,
-            width: '100%',
-            useWhiteContainer:true,
-            margin: {
-                right: 10
-            }
-
+            padding: "0 10 0 0",            
+            columnWidth: .5
         });
-
-        this.keywordBox = Ext.create('Ext.form.FieldContainer', {
-            layout: 'vbox',
-            width: '50%',
-            style: {
-                verticalAlign: 'top'
-            },
-            fieldLabel: 'Search Keywords',
-            allowBlank: true,
-            items: [
-                {
-                    xtype: 'fieldcontainer',
-                    layout: {
-                        type: 'hbox',
-                        align: 'stretch'
-                    },
-                    width: '100%',
-                    items: [
-                        this.keywordGrid
-                    ]
-                }
-            ]
+        this.categoryGrid = Ext.create('Taco.view.productRanking.grid.Category', {
+            name: 'categories',
+            record: this.record,
+            padding: "0 0 0 10",            
+            columnWidth: .5
         });
 
         this.items = [
             {
-                xtype: 'fieldcontainer',
-                layout: {
-                    align: 'stretch',
-                    type: 'hbox'
-                },
+                xtype: 'container',
+                layout: "column",
                 items: [
-                    this.keywordBox,
-                    this.categoriesBox
+                    this.keywordGrid,
+                    this.categoryGrid
                 ]
             }
         ];
