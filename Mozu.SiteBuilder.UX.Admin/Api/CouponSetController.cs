@@ -53,7 +53,6 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
             _couponSetSortFormatter = couponSetSortFormatter;
             _ctx = ctx;
             _tenantClient = tenantClient;
-
         }
 
         /// <summary>
@@ -65,10 +64,8 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
             if (pagingParams.id != null)
             {
                 var singleCouponSet = (await _couponSetWebClient.GetCouponSet(pagingParams.id, responseGroups:"Counts")).ReadAsSync();
-
                 return List2(Mapper.Map<CouponSet>(singleCouponSet));
             }
-
 
             var query = extFilter.QueryString.Get("query");
             if (!String.IsNullOrEmpty(query))
@@ -86,12 +83,19 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
 
                 filter = extFilter.ToFilterString(_ctx, masterNumberFormat, _tenantClient);
             }
-            
+
+            const string responseFields = "items(id,name,couponSetCode,couponCodeType,status,canBeDeleted,maxRedemptionsPerUser,maxRedemptionsPerCouponCode,startDate,endDate,redemptionCount)";
             string sortBy = pagingParams.ToSort(_couponSetSortFormatter);
 
             try
             {
-                var couponSetList = (await _couponSetWebClient.GetCouponSets(pagingParams.startIndex, pagingParams.pageSize, sortBy, filter, responseGroups:"Counts")).ReadAsSync();
+                var couponSetList = (await _couponSetWebClient.GetCouponSets(pagingParams.startIndex,
+                    pageSize: pagingParams.pageSize,
+                    sortBy: sortBy,
+                    filter: filter,
+                    responseGroups: "Counts",
+                    responseFields: responseFields
+                    )).ReadAsSync();
 
                 var couponSets = Mapper.Map<List<CouponSet>>(couponSetList.Items);
 
