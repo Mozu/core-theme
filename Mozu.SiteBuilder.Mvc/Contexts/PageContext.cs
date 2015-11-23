@@ -18,6 +18,7 @@ using Mozu.SiteBuilder.Mvc.Models.CMS;
 using Mozu.SiteBuilder.Mvc.Extensions;
 using Mozu.SiteBuilder.Mvc.ViewEngine;
 using Newtonsoft.Json.Linq;
+using Mozu.SiteBuilder.UX.Models.Customers;
 
 namespace Mozu.SiteBuilder.Mvc.Contexts
 {
@@ -206,7 +207,7 @@ namespace Mozu.SiteBuilder.Mvc.Contexts
             _context = context;
             _crawlerInfo = new CrawlerInfo()
             {
-                IsCrawler = this.IsCrawler
+                IsCrawler = IsCrawler
             };
 
             IsEditMode = _apiContext.IsEditMode;
@@ -219,8 +220,69 @@ namespace Mozu.SiteBuilder.Mvc.Contexts
             Pagination = PagingParameters.Create(Search);
             SecureHost = _settings.CoreSettings.IsSSLValidationEnabled ? CreateSecureUrl(Url) : CreateDefaultUrl(Url);
             DataViewMode = apiContext.DataViewMode;
+            _userProfile = new Lazy<UserProfile>(() => CreateProfileFromToken(_apiContext.UserClaims, _authenticationHelper));
+            _user = new Lazy<User>(() => CreateUserFromClaims(_apiContext.UserClaims, _userProfile));
         }
-        
+
+        static UserProfile CreateProfileFromToken(LightweightUserClaims userClaims, IAuthenticationHelper _authenticationHelper)
+        {
+            string ptoken = _authenticationHelper.GetProfileToken();
+
+            var prof = new UserProfile
+            {
+                UserId = userClaims != null ? userClaims.UserId : null
+            };
+
+            if (!string.IsNullOrEmpty(ptoken))
+            {
+                try
+                {
+                    UserProfile pt = UserProfile.Parse(ptoken);
+                    prof.EmailAddress = pt.EmailAddress;
+                    prof.FirstName = pt.FirstName;
+                    prof.LastName = pt.LastName;
+                }
+                catch
+                {
+                }
+            }
+
+            return prof;
+        }
+
+        static User CreateUserFromClaims(LightweightUserClaims userClaims, Lazy<UserProfile> userProfile)
+        {
+            string tempStr;
+            int accountId = -1;
+
+            //TODO: chusk 18 Nov 2015 - should maybe default to some dummy placeholder User.
+            if ( userClaims == null ) return null;
+            var profile = userProfile.Value;
+            if ( profile == null ) return null;
+
+            if (userClaims.Bag != null)
+            {
+
+                if (userClaims.Bag.TryGetValue("AccountId", out tempStr))
+                {
+                    if (!int.TryParse(tempStr, out accountId))
+                    {
+                        accountId = -1;
+                    }
+                }
+            }
+            
+            return new User
+            {
+                Email = userProfile.Value.EmailAddress,
+                FirstName = userProfile.Value.FirstName,
+                LastName = userProfile.Value.LastName,
+                UserId = userClaims.UserId,
+                AccountId = accountId > 0 ? accountId : (int?)null,
+                IsAuthenticated = !userClaims.IsAnonymous && userClaims.IsAuthenticationHot,
+                IsAnonymous = userClaims.IsAnonymous
+            };
+        }
 
         private static string CreateDefaultUrl(string url)
         {
@@ -323,9 +385,6 @@ namespace Mozu.SiteBuilder.Mvc.Contexts
         public List<KeyValuePair<string, string>> ShippingCountries { get; set; }
         public List<KeyValuePair<string, string>> BillingCountries { get; set; }
 
-
-
-
         public bool IsCrawler
         {
             get { return _mobileDetectionProvider.IsCurrentRequestCrawler; }
@@ -360,18 +419,14 @@ namespace Mozu.SiteBuilder.Mvc.Contexts
             }
             set
             {
-                ;
             }
         }
 
-
-       
         public Visit Visit {
             get; set;
         }
 
         public string Title { get; set; }
-
       
         public string MetaDescription { get; set; }
 
@@ -382,95 +437,30 @@ namespace Mozu.SiteBuilder.Mvc.Contexts
         [JsonConverter(typeof(StringEnumConverter))]
         public EditModes? EditMode { get; set; }
 
+        private Lazy<UserProfile> _userProfile;
+        private Lazy<User> _user;
 
-        
-
-        
-
-
-        private UserProfile _userProfile;
-        private UX.Models.Customers.User _user;
-
-        public UX.Models.Customers.User User
+        public User User
         {
             get
             {
-                if (_user == null)
-                {
-
-
-                    string tempStr;
-                    int accountId = -1;
-                    if (_apiContext.UserClaims.Bag.TryGetValue("AccountId", out tempStr))
-                    {
-                        if (!int.TryParse(tempStr, out accountId))
-                        {
-                            accountId = -1;
-                        }
-                    }
-
-                    _user = _user ?? new UX.Models.Customers.User
-                                     {
-                                         Email = UserProfile.EmailAddress, //profile != null ? profile.EmailAddress : null,
-                                         FirstName = UserProfile.FirstName, // profile != null ? profile.FirstName : null,
-                                         LastName = UserProfile.LastName, // profile != null ? profile.LastName : null,
-                                         UserId = _apiContext.UserClaims.UserId, // gcu.UserId,
-                                         AccountId = accountId > 0 ? (int?) accountId : (int?) null,
-
-
-                                         IsAuthenticated = !_apiContext.UserClaims.IsAnonymous && _apiContext.UserClaims.IsAuthenticationHot, //!gcu.IsAnonymous && gcu.IsAuthenticated,
-                                         IsAnonymous = _apiContext.UserClaims.IsAnonymous
-                                     };
-                }
-                return _user;
+                return _user.Value;
             }
             set
             {
-                _user = value;
+                _user = new Lazy<User>(() => value);
             }
         }
-
-
 
         public UserProfile UserProfile
         {
             get
             {
-                if (_userProfile == null)
-                {
-                    string ptoken = _authenticationHelper.GetProfileToken();
-
-                    _userProfile = new UserProfile
-                    {
-                        UserId = _apiContext.UserClaims != null ? _apiContext.UserClaims.UserId : null
-                    };
-
-                    if (!string.IsNullOrEmpty(ptoken))
-                    {
-                        try
-                        {
-                            UserProfile pt = UserProfile.Parse(ptoken);
-                            ((UserProfile)_userProfile).EmailAddress = pt.EmailAddress;
-                            ((UserProfile)_userProfile).FirstName = pt.FirstName;
-                            ((UserProfile)_userProfile).LastName = pt.LastName;
-                        }
-                        catch
-                        {
-                        }
-                    }
-                }
-                return _userProfile as UserProfile;
+                return _userProfile.Value;
             }
         }
 
-
-    //cms docs and template ids
-
-       
-
         public string ProductCode { get; set; }
-
-      
 
         public string FeedUrl { get; set; }
 
@@ -485,16 +475,6 @@ namespace Mozu.SiteBuilder.Mvc.Contexts
         public string Url { get; set; }
 
         public DataViewModeType DataViewMode { get; set; }
-
-        //public string IpAddress
-        //{
-        //    get
-        //    {
-        //        var req = System.Web.HttpContext.Current.Request;
-        //        return req.Headers["x-forwarded-for"] ?? req.ServerVariables["REMOTE_ADDR"];;
-        //    }
-        //}
-
 
         public string SecureHost { get; set; }
 

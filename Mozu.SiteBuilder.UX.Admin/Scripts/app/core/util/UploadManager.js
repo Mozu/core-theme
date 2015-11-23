@@ -84,7 +84,7 @@ Ext.define('Taco.core.util.UploadManager', function () {
                 },
 
                 progress: function (e) {
-                    console.log(e);
+                    // console.log(e);
                     logMessage("[FILE PROGRESS] Upload progress updated for transaction " + e.id + ". Percent complete: " + (e.percentUploaded * 100) + "%", e.timeStamp);
                 },
 

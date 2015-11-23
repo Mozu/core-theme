@@ -186,7 +186,7 @@ Ext.define('Taco.model.ProductRanking', {
     getDeletePromptMessage: function() {
         var msg = 'Are you sure you want to delete "' + this.get('name') + '"?';
         if (this.get('categoryFilters').length > 1) {
-            msg += '<br/>It will affect these categories: ' + this.get('categoriesJoined');
+            msg += '<br/>It will affect these categories: ' + this.get('categoryNamesJoined');
         }
         return msg;
     },

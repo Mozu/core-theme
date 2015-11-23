@@ -279,7 +279,7 @@ Ext.define('Taco.view.product.subform.General', {
                 endDateFieldName: 'discountsRestrictedEndDate',
                 pickerOffset: 4,
                 disabled: !isDiscountRestricted,
-                allowBlank: !isDiscountRestricted  
+                allowBlank: true
             });
             
             this.discountsRestrictedEndField = Ext.widget({
@@ -292,7 +292,7 @@ Ext.define('Taco.view.product.subform.General', {
                 startDateFieldName: 'discountsRestrictedStartDate',
                 pickerOffset: 4,
                 disabled: !isDiscountRestricted,
-                allowBlank: !isDiscountRestricted
+                allowBlank: true
             });
             
             this.mfgPartNumField = Ext.widget({

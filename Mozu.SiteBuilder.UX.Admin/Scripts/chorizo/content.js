@@ -303,7 +303,7 @@
 
         this.widgetData = data;
         this.moveColumns = this.widgetData.config.imageSize === 'maintain';
-        console.log('update img data', data);
+        // console.log('update img data', data);
 
         //this.$content.height(height);
         this.$content.css('height', height);
@@ -313,11 +313,11 @@
     };
 
     Img.prototype._defaultState = function () {
-        console.log('default');
+        // console.log('default');
     };
 
     Img.prototype._editingState = function () {
-        console.log('editing');
+        // console.log('editing');
         Chorizo.editor.edit(this.element.data('mozu.mzBlock'));
     };
 

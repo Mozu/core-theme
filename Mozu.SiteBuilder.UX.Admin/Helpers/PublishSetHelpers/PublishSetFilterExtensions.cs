@@ -48,6 +48,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Helpers.PublishSetHelpers
                 case "createddateto":
                     return String.Format("{0} le \"{1}\"", CREATE_DATE, ((DateTime)filter.value).AddDays(1).AddTicks(-1).ToUniversalTime().ToString("o"));
                 case "updatedby":
+                case "modifiedby":
                     return String.Format("{0} eq \"{1}\"", UPDATE_BY, filter.value);
                 case "updatedatefrom":
                     return String.Format("{0} ge \"{1}\"", UPDATE_DATE, ((DateTime)filter.value).ToUniversalTime().ToString("o"));
