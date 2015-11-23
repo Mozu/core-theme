@@ -368,6 +368,7 @@
                 return order.apiVoidPayment(currentPayment.id).then(function() {
                     self.clear();
                     self.stepStatus('incomplete');
+                    self.setDefaultPaymentType(self);
                 });
             },
             activePayments: function () {
@@ -388,6 +389,13 @@
                     return sum + credit.amountRequested;
                 }, 0);
                 return me.roundToPlaces(result, 2);
+            },
+            resetAddressDefaults: function () {
+                var billingAddress = this.get('billingContact').get('address');
+                var addressDefaults = billingAddress.defaults;
+                billingAddress.set('countryCode', addressDefaults.countryCode);
+                billingAddress.set('addressType', addressDefaults.addressType);
+                billingAddress.set('candidateValidatedAddresses', addressDefaults.candidateValidatedAddresses);
             },
             savedPaymentMethods: function () {
                 var cards = this.getOrder().get('customer').get('cards').toJSON();
@@ -805,6 +813,10 @@
                     me.set('savedPaymentMethodId', savedCardId, { silent: true });
                     me.setSavedPaymentMethod(savedCardId);
 
+                    if (!savedCardId) {
+                        me.setDefaultPaymentType(me);
+                    }
+
                     me.on('change:usingSavedCard', function (me, yes) {
                         if (!yes) {
                             me.get('card').clear();
@@ -835,6 +847,12 @@
                 }
                 me.get('check').selected = newPaymentType === 'Check';
                 me.get('card').selected = newPaymentType === 'CreditCard';
+            },
+            setDefaultPaymentType: function(me) {
+                me.set('paymentType', 'CreditCard');
+                if (me.savedPaymentMethods() && me.savedPaymentMethods().length > 0) {
+                    me.set('usingSavedCard', true);
+                }
             },
             calculateStepStatus: function () {
                 var fulfillmentComplete = this.parent.get('fulfillmentInfo').stepStatus() === 'complete',
@@ -949,6 +967,12 @@
                     return order.apiAddPayment().then(function() {
                         var payment = order.apiModel.getCurrentPayment();
                         var modelCard, modelCvv;
+                        var activePayments = order.apiModel.getActivePayments();
+                        var creditCardPayment = activePayments && _.findWhere(activePayments, { paymentType: 'CreditCard' });
+                        //Clear card if no credit card payments exists
+                        if (!creditCardPayment && self.get('card')) {
+                            self.get('card').clear();
+                        }
                         if (payment) {
                             switch (payment.paymentType) {
                                 case 'CreditCard':

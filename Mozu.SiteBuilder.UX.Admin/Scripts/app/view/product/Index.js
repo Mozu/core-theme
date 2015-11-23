@@ -108,7 +108,10 @@ Ext.define('Taco.view.product.Index', {
                     if (Ext.isEmpty(value)) {
                         output = '--';
                     } else {
-                        output = Ext.Array.contains(Ext.Array.pluck(value, 'isContentOverridden'), true) ? 'Yes' : 'No';
+                        output = Ext.Array.contains(Ext.Array.pluck(value, 'isContentOverridden'), true)
+                                    || Ext.Array.contains(Ext.Array.pluck(value, 'isPriceOverridden'), true)
+                                    || Ext.Array.contains(Ext.Array.pluck(value, 'isSEOContentOverridden'), true)
+                                    ? 'Yes' : 'No';
                     }
 
                     return output;
@@ -243,11 +246,13 @@ Ext.define('Taco.view.product.Index', {
                         '<td class="x-grid-subcell"><div class="x-grid-cell-inner">{[this.formatPrice(values.price,values.catalogId)]}</div></td>',
                         '<td class="x-grid-subcell"><div class="x-grid-cell-inner">{[this.formatPrice(values.salePrice,values.catalogId)]}</div></td>',
                         '<td class="x-grid-subcell"><div class="x-grid-cell-inner">{catalogId:this.toCatalogName}</div></td>',
-                        '<td class="x-grid-subcell"><div class="x-grid-cell-inner">{isContentOverridden:this.formatOverridden}</div></td>',
+                        '<td class="x-grid-subcell"><div class="x-grid-cell-inner">{[this.formatOverridden(values)]}</div></td>',
                         '<td class="x-grid-subcell"><div class="x-grid-cell-inner"></div></td>',
                         '</tr></tpl>', {
-                            formatOverridden: function (value) {
-                                return value ? '<span class="overridden">Overridden</span>' : '';
+                            formatOverridden: function (values) {
+                                return values && (values.isPriceOverridden || values.isContentOverridden || values.isSEOContentOverridden)
+                                    ? '<span class="overridden">Overridden</span>'
+                                    : '';
                             },
                             formatPrice: function (value, catalog) {
                                 return (value || value === 0) ? Taco.app.context.findCatalog(catalog).formatCurrency(value) : '--';

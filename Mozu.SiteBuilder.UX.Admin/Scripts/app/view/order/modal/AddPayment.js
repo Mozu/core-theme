@@ -54,31 +54,30 @@ Ext.define('Taco.view.order.modal.AddPayment', {
             } else {
                 this.toggleExtraInfo(null, true);
             }
-        }, this);
-
-        // determine which object is checked, or hidden/shown on the payment modal.
-        // Enable previous payment, have it selected.
-
-        if (this.currentPayments && this.currentPayments.length > 0) {
+            // determine which object is checked, or hidden/shown on the payment modal.
             // Enable previous payment, have it selected.
-            this.existingCardRadio.enable(true);
-            this.existingCardRadio.setValue(true);
-            this.newCardRadio.setValue(false);
-            // billing stuff!
-            this.newCardBillingInfo.setVisible(false);
-            this.existingCardBillingInfo.setVisible(true);
-        } else {
-            if (this.newCardRadio) {
-                // Enable/disable savedCardRadio before this here!
-                this.newCardRadio.setValue(true);
-                this.existingCardRadio.disable(true);
-                this.existingCardRadio.setValue(false);
-                // this should be done if there are no saved cards on the customer or existing cards on the order.
-                this.cardSelection.setVisible(false);
+
+            if (this.currentPayments && this.currentPayments.length > 0) {
+                // Enable previous payment, have it selected.
+                this.existingCardRadio.enable(true);
+                this.existingCardRadio.setValue(true);
+                this.newCardRadio.setValue(false);
+                // billing stuff!
+                this.newCardBillingInfo.setVisible(false);
+                this.existingCardBillingInfo.setVisible(true);
+            } else {
+                if (this.newCardRadio) {
+                    // Enable/disable savedCardRadio before this here!
+                    this.newCardRadio.setValue(true);
+                    this.existingCardRadio.disable(true);
+                    this.existingCardRadio.setValue(false);
+                    // this should be done if there are no saved cards on the customer or existing cards on the order.
+                    this.cardSelection.setVisible(false);
+                }
+                this.newCardBillingInfo.setVisible(true);
+                this.existingCardBillingInfo.setVisible(false);
             }
-            this.newCardBillingInfo.setVisible(true);
-            this.existingCardBillingInfo.setVisible(false);
-        }
+        }, this);
     },
 
 
@@ -155,6 +154,7 @@ Ext.define('Taco.view.order.modal.AddPayment', {
 
         this.cardContainer = Ext.create('Ext.container.Container', {
             anchor: 0,
+            width: '100%',
             itemId: 'cardContainer',
             items: [
             ],
@@ -164,6 +164,7 @@ Ext.define('Taco.view.order.modal.AddPayment', {
         // This is the final object to return!
         this.paymentContainer = Ext.create('Ext.container.Container', {
             anchor: 0,
+            width: '100%',
             items: [
                 this.cardSelection, this.cardContainer
             ],
@@ -176,11 +177,13 @@ Ext.define('Taco.view.order.modal.AddPayment', {
     createNewCardForm: function() {
         return Ext.create('Ext.form.FieldContainer', {
             name: 'addNewCard',
+            width: '100%',
             items:
             [
                 {
                     xtype: 'container',
                     layout: 'hbox',
+                    width:'100%',
                     defaults: {
                         style: {
                             margin: '0 20 0 0'
@@ -228,6 +231,7 @@ Ext.define('Taco.view.order.modal.AddPayment', {
                 }, {
                     xtype: 'container',
                     layout: 'hbox',
+                    width: '100%',
                     defaults: {
                         style: {
                             margin: '0 20 0 0'
@@ -331,6 +335,7 @@ Ext.define('Taco.view.order.modal.AddPayment', {
         var existingCardForm = Ext.create('Ext.form.FieldContainer', {
             name: 'addExistingCard',
             itemId: 'addExistingCard',
+            width: '100%',
             items: [
                 {
                     xtype: 'container',
@@ -395,6 +400,7 @@ Ext.define('Taco.view.order.modal.AddPayment', {
     createSavedCardForm: function() {
         return Ext.create('Ext.form.FieldContainer', {
             name: 'addSavedCard',
+            width: '100%',
             items: [
                 
             ],
@@ -490,6 +496,7 @@ Ext.define('Taco.view.order.modal.AddPayment', {
         this.newCardBillingInfo = Ext.create('Ext.container.Container', {
             anchor: 0,
             itemId: 'newCardBillingContainer',
+            width: '100%',
             items: [
                 billingLabel, this.billingCheckbox, this.billingContactInfo, this.addressForm
             ],
@@ -500,12 +507,14 @@ Ext.define('Taco.view.order.modal.AddPayment', {
             anchor: 0,
             itemId: 'existingCardBillingContainer',
             items: [],
+            width: '100%',
             scope: this
         }, this);
 
         this.billingInfo = Ext.create('Ext.container.Container', {
             anchor: 0,
             itemId: 'billingInfoContainer',
+            width: '100%',
             items: [
                 this.newCardBillingInfo, this.existingCardBillingInfo
             ],

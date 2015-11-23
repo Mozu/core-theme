@@ -557,6 +557,7 @@ namespace Mozu.SiteBuilder.Mvc.SEO.Constraints
                 {
                     dict[entry.Content.StringValue] = entry;
                 }
+                
                 dict[entry.Value.ToString()] = entry;
             }
             var searchRes = searchTask.Result;

@@ -24,6 +24,7 @@ Ext.define('Taco.view.productRanking.modal.ProductRankingEditor', {
     record: null,
     categoryCode: null,
     closeOnSave: true,
+    draggable: false,
 
     actionColumnWidth: 50,
 
