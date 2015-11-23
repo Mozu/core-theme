@@ -110,9 +110,16 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
             }
             string sortBy = _searchtuningRuleSortBuilder.Value.ToSortString(pagingParams.sort);
 
+            //const string responseFields = "items(searchTuningRuleCode,searchTuningRuleName,active,activeStartDate,activeEndDate,keywords,filters,isDefault,auditInfo)";
+            string responseFields = "items(searchTuningRuleCode,searchTuningRuleName,active,activeStartDate,activeEndDate,keywords,filters,isDefault,auditInfo)";
+            //string responseFields = "";
             try
             {
-                var searchTuningRuleList = (await searchListClient.GetSearchTuningRules(pagingParams.startIndex, pagingParams.pageSize, sortBy: sortBy, filter: filter)).ReadAsSync();
+                var searchTuningRuleList = (await searchListClient.GetSearchTuningRules(pagingParams.startIndex, 
+                    pagingParams.pageSize, 
+                    sortBy: sortBy, 
+                    filter: filter, 
+                    responseFields:responseFields)).ReadAsSync();
 
                 var searchTuningRules = Mapper.Map<List<SearchTuningRule>>(searchTuningRuleList.Items);
                 if (searchTuningRuleList.TotalCount > 0)
