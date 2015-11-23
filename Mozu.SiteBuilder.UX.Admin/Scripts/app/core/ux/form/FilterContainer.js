@@ -45,7 +45,7 @@ Ext.define('Taco.core.ux.form.FilterContainer', {
 
     enableQuickFilters: true,
     disableAdvancedSearch: false,
-    emptySearchText: '',
+    emptySearchText: 'Search',
 
     initialValue: null,
 
@@ -97,6 +97,7 @@ Ext.define('Taco.core.ux.form.FilterContainer', {
             itemId: 'textFilter',
             margin: '0 0 20 0',
             msgTarget: 'qtip',
+            cls: 'taco-advanced-search-button',
             flex: 1,
             width: 400,
             emptyText: this.emptySearchText,

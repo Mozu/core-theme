@@ -157,7 +157,7 @@ Ext.define('Taco.view.customers.Index', {
                             behavior: 'update'
                         },
                         menuColumnHandler: function (item, eventData) {
-                            var page = eventData.grid.getParentPage(),
+                            var page = eventData.grid,
                                 record = eventData.record,
                                 metaData = { id: record.getId() };
 
