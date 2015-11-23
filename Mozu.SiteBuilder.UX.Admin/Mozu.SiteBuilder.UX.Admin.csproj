@@ -2648,6 +2648,13 @@
   </Choose>
   <Choose>
     <When Condition="$(TargetFrameworkIdentifier) == '.NETFramework' And ($(TargetFrameworkVersion) == 'v4.5' Or $(TargetFrameworkVersion) == 'v4.5.1')">
+      <PropertyGroup>
+        <__paket__ClearScript_Installer_targets>ClearScript.Installer</__paket__ClearScript_Installer_targets>
+      </PropertyGroup>
+    </When>
+  </Choose>
+  <Choose>
+    <When Condition="$(TargetFrameworkIdentifier) == '.NETFramework' And ($(TargetFrameworkVersion) == 'v4.5' Or $(TargetFrameworkVersion) == 'v4.5.1')">
       <ItemGroup>
         <Reference Include="ClearScript">
           <HintPath>..\packages\ClearScript.Installer\lib\net45\ClearScript.dll</HintPath>
@@ -2657,14 +2664,6 @@
       </ItemGroup>
     </When>
   </Choose>
-  <Choose>
-    <When Condition="$(TargetFrameworkIdentifier) == '.NETFramework' And ($(TargetFrameworkVersion) == 'v4.5' Or $(TargetFrameworkVersion) == 'v4.5.1')">
-      <PropertyGroup>
-        <__paket__ClearScript_Installer_targets>ClearScript.Installer</__paket__ClearScript_Installer_targets>
-      </PropertyGroup>
-    </When>
-  </Choose>
-  <Import Project="..\packages\ClearScript.Installer\build\$(__paket__ClearScript_Installer_targets).targets" Condition="Exists('..\packages\ClearScript.Installer\build\$(__paket__ClearScript_Installer_targets).targets')" Label="Paket" />
   <Choose>
     <When Condition="$(TargetFrameworkIdentifier) == '.NETFramework' And ($(TargetFrameworkVersion) == 'v4.5' Or $(TargetFrameworkVersion) == 'v4.5.1')">
       <ItemGroup>
@@ -3256,7 +3255,6 @@
       </PropertyGroup>
     </When>
   </Choose>
-  <Import Project="..\packages\OctoPack\build\$(__paket__OctoPack_targets).targets" Condition="Exists('..\packages\OctoPack\build\$(__paket__OctoPack_targets).targets')" Label="Paket" />
   <Choose>
     <When Condition="$(TargetFrameworkIdentifier) == '.NETFramework' And ($(TargetFrameworkVersion) == 'v4.5' Or $(TargetFrameworkVersion) == 'v4.5.1')">
       <ItemGroup>
@@ -3301,4 +3299,6 @@
       </ItemGroup>
     </When>
   </Choose>
+  <Import Project="..\packages\ClearScript.Installer\build\$(__paket__ClearScript_Installer_targets).targets" Condition="Exists('..\packages\ClearScript.Installer\build\$(__paket__ClearScript_Installer_targets).targets')" Label="Paket" />
+  <Import Project="..\packages\OctoPack\build\$(__paket__OctoPack_targets).targets" Condition="Exists('..\packages\OctoPack\build\$(__paket__OctoPack_targets).targets')" Label="Paket" />
 </Project>
