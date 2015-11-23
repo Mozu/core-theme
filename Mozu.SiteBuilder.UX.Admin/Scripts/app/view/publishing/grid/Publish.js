@@ -28,7 +28,7 @@ Ext.define('Taco.view.publishing.grid.Publish', {
 
     addContentViewPadding: true,
 
-    enableSearch: true,
+    enableSearch: false,
     enablePaging: true,
     enableRowEditing: false,
     enableAutoSelect: false,

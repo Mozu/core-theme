@@ -66,11 +66,12 @@ Ext.define('Taco.view.website.Index', {
     enableNavHeader: true,
     options: {},
 
-
     layout: {
         type: 'fit'
     },
     padding: '0 0 0 0',
+
+    enableSearchBar: false,
 
 
     initComponent: function () {

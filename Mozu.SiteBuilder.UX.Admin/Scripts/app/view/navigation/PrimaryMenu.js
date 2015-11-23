@@ -182,28 +182,17 @@ Ext.define('Taco.view.navigation.PrimaryMenu', {
         bc.update(data);
     },
 
+    setTrigger: function(trigger) {
+        this.trigger = trigger;
+    },
+
     /**
      * Shows the floating menu.
      * @private
      */
     showMenu: function () {
-        var tBox = this.trigger.getEl().getPageBox();
 
-        Ext.getDoc().addListener('click', this.onClickDoc, this);
-
-        if (Ext.isIE8m) {
-            // if IE8 or less use JS to animate
-            this.show(null, function () {
-                this.animate({
-                    duration: 400,
-                    from: { opacity: 0, x: tBox.left, y: tBox.top },
-                    to: { opacity: 1, x: tBox.left, y: tBox.bottom }
-                });
-            }, this);
-        } else {
-            // else let CSS handle the animation
-            this.show();
-        }
+        this.show();
 
         this.trigger.addCls('expanded');
     },
@@ -213,25 +202,8 @@ Ext.define('Taco.view.navigation.PrimaryMenu', {
      * @private
      */
     hideMenu: function () {
-        var tBox = this.trigger.getEl().getPageBox();
 
-        Ext.getDoc().removeListener('click', this.onClickDoc, this);
-
-        if (Ext.isIE8m) {
-            // if IE8 or less use JS to animate
-            this.animate({
-                duration: 400,
-                from: { opacity: 1, x: tBox.left, y: tBox.bottom },
-                to: { opacity: 0, x: tBox.left, y: tBox.top },
-                callback: function () {
-                    this.hide();
-                },
-                scope: this
-            });
-        } else {
-            // else let CSS handle the animation
-            this.hide();
-        }
+        this.hide();
 
         this.trigger.removeCls('expanded');
     },

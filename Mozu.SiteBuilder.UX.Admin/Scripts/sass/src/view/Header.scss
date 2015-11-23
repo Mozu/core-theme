@@ -50,10 +50,8 @@
  * The light second bar
  */
 
-.#{$vprefix}viewport-nav {
-    background-color: $color-neutral-white;
-    padding-right: 30px;
-
+.#{$vprefix}navheader {
+    
     .#{$vprefix}primary-menu-trigger {
         border-right: 1px solid $color-standard-border;
         display: block;

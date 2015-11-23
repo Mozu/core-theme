@@ -2,7 +2,7 @@
  * @class Taco.view.locationType.Index
  */
 Ext.define('Taco.view.locationType.Index', {
-    extend: 'Taco.core.ux.browser.BrowserPage',
+    extend: 'Taco.core.ux.browser.SearchList',
     requires: [
         'Taco.model.LocationType',
         'Taco.store.LocationTypes'
@@ -24,6 +24,11 @@ Ext.define('Taco.view.locationType.Index', {
     defaultRowEditingData: {
     
     },
+
+    title: 'Location Types',
+    enableNavHeader: true,
+    addContentViewPadding: true,
+    enableSearch: false,
     
     useTilePanel: false,
     //launchEditorOnClick: false,
@@ -55,7 +60,10 @@ Ext.define('Taco.view.locationType.Index', {
     */
     // hide the serach field
     filterProperties: null,
-
+    enableColumnHide: false,
+    sortableColumns:false,
+    stateful: true,
+    stateId: 'statefulLocationTypesGrid',
     /*
     filterProperties: [
         {
@@ -78,13 +86,8 @@ Ext.define('Taco.view.locationType.Index', {
     },
     */    
 
-    gridPanelConf: {
-        selModel: {},
-        enableColumnHide: false,
-        sortableColumns:false,
-        stateful: true,
-        stateId: 'statefulLocationTypesGrid',
-        columns: [{
+    initComponent: function() {
+        this.columns = [{
             dataIndex: 'code',
             stateId: 'code',            
             text: 'Code',
@@ -113,7 +116,8 @@ Ext.define('Taco.view.locationType.Index', {
             flex:1
             
         }]
+        
+        this.callParent(arguments);
     }
-
    
 });

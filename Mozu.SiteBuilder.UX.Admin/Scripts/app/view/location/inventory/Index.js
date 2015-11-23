@@ -2,7 +2,7 @@
  * @class Taco.view.location.inventory.Index
  */
 Ext.define('Taco.view.location.inventory.Index', {
-    extend: 'Taco.core.ux.browser.BrowserPage',
+    extend: 'Taco.core.ux.browser.SearchList',
   
     requires: [
         'Taco.shared.view.field.ProductPickerField',
@@ -19,11 +19,14 @@ Ext.define('Taco.view.location.inventory.Index', {
         supportedLevels: ['m','c'],
         requiresContextOfType: ['m', 's', 'c']
     },
-    
+    addContentViewPadding: true,
+    enableNavHeader: true,
+    title: 'Inventory',
     gridHeaderLabel: 'Inventory',
     
     // turn on the row editing feature for inline grid editing and inline grid creation.  typically used for simple entities with several fields.
     enableRowEditing: true,
+    enableSearch: false,
     
     // optional prevalidation check for row create
     beforeRowCreate: function (editor, store) {
@@ -83,8 +86,8 @@ Ext.define('Taco.view.location.inventory.Index', {
                 select: {
                     fn: function (combo, records, eOpts) {
                         var record = records[0],
-                            itemBrowser = this.up("itembrowser"),
-                            gridPanel = itemBrowser.gridPanel,
+                            itemBrowser = this.up("searchlist"),
+                            gridPanel = itemBrowser.grid,
                             gridStore = gridPanel.store,
                             code = record.get('code');
 
@@ -321,17 +324,23 @@ Ext.define('Taco.view.location.inventory.Index', {
             ]
         });
 
-        this.gridPanelConf = {
-            viewConfig: {
-                deferEmptyText: false,
-                emptyText: "No products with inventory at this location."
-            },
-            selModel: {},
-            enableColumnHide: false,
-            sortableColumns: false,
-            //stateful: true,
-            //stateId: 'statefulLocationInventoriesGrid',
-            columns: gridColumns
+        // this.gridPanelConf = {
+        //     viewConfig: {
+        //         deferEmptyText: false,
+        //         emptyText: "No products with inventory at this location."
+        //     },
+        //     selModel: {},
+        //     enableColumnHide: false,
+        //     sortableColumns: false,
+        //     //stateful: true,
+        //     //stateId: 'statefulLocationInventoriesGrid',
+        //     columns: gridColumns
+        // };
+
+        this.columns = gridColumns;
+        this.viewConfig = {
+            deferEmptyText: false,
+            emptyText: "No products with inventory at this location."
         };
 
     },

@@ -31,7 +31,9 @@ Ext.define('Taco.core.ux.mixins.NavHeader', {
         'Ext.toolbar.Fill',
         'Ext.toolbar.Spacer',
         'Taco.core.util.ExceptionWhiner',
-        'Ext.toolbar.Spacer'
+        'Ext.toolbar.Spacer',
+        'Taco.core.ux.mixins.HamburgerButton',
+        'Taco.core.ux.mixins.Searchable'
     ],
 
     mixins: {
@@ -127,6 +129,8 @@ Ext.define('Taco.core.ux.mixins.NavHeader', {
         saveInProgress : false,
         saveInProgressText: "Saving...",
 
+        enableSearchBar: 'true',
+
         // turns off all the default coloration for the content container; ie. makes everything white;
         useWhiteContainer:false,
 
@@ -144,7 +148,13 @@ Ext.define('Taco.core.ux.mixins.NavHeader', {
 
         title: null,
 
-        titlePanel: null
+        titlePanel: null,
+
+        advancedSearchConfig: {
+            quickFilterData: [],
+            advancedForm: null,
+            advancedFormCls: null
+        }
 
     },
 
@@ -203,8 +213,7 @@ Ext.define('Taco.core.ux.mixins.NavHeader', {
     createNavHeader: function () {
         var me = this,
             hasContextSwitcher = (!Ext.isEmpty(this.contextConfig) && !Ext.isEmpty(this.contextConfig.supportedLevels)),
-            conf;        
-
+            conf;
 
         conf = {
             xtype: "toolbar",
@@ -213,13 +222,16 @@ Ext.define('Taco.core.ux.mixins.NavHeader', {
             items: []
         };
 
+        me.hamburgerButton = Ext.create('Taco.core.ux.mixins.HamburgerButton');
+
+        conf.items.push(me.hamburgerButton);
+
 
         if (me.title !== false) {
 
             me.titleContainer = {
                 xtype: "container",
                 layout: 'hbox',
-                flex: 1,
                 items: []
             };
 
@@ -238,19 +250,20 @@ Ext.define('Taco.core.ux.mixins.NavHeader', {
             conf.items.push(me.titleContainer);
 
             if (!Ext.isEmpty(this.contextConfig) && !Ext.isEmpty(this.contextConfig.supportedLevels)) {
-                me.titleContainer.items.push({
-                    autoEl: 'h3',
-                    itemId: 'forLable',
-                    style: {
-                        'line-height': '3rem',
-                        'margin': '0px 10px 0px 10px',
-                        'font-weight': 'normal'
-                    },
-                    xtype: 'component',
-                    html: 'for'
-                });
+                // me.titleContainer.items.push({
+                //     autoEl: 'h3',
+                //     itemId: 'forLable',
+                //     style: {
+                //         'line-height': '3rem',
+                //         'margin': '0px 10px 0px 10px',
+                //         'font-weight': 'normal'
+                //     },
+                //     xtype: 'component',
+                //     html: 'for'
+                // });
 
-                me.titleContainer.items.push(Ext.create('Taco.core.ux.content.ContextMenu', this.contextConfig));
+                // TODO: REMOVING CONTEXT SWITCHER FROM NAV HEADER, BUT WILL NEED TO BE PUT BACK
+                // me.titleContainer.items.push(Ext.create('Taco.core.ux.content.ContextMenu', this.contextConfig));
 
             } else {
                 // In order for the title to grow and shrink dynamically and have elipsis we can only do this when there is no trailing "for [ context combo ] "
@@ -258,6 +271,26 @@ Ext.define('Taco.core.ux.mixins.NavHeader', {
                     me.titleCmp.flex = 1;
                 }
             }
+        }
+
+        if (me.enableSearchBar) {
+            me.searchBox = Ext.widget({
+                xtype: 'taco-filtercontainer',
+                searchType: 'navigation',
+                width: '100%',
+                flex: 1,
+                enableQuickFilters : this.enableQuickFilters,
+                quickFilterData: [me.advancedSearchConfig.quickFilterData],
+                advancedForm: me.advancedSearchConfig.form,
+                advancedFormCls: me.advancedSearchConfig.advancedFormCls,
+                disableAdvancedSearch: (!me.advancedSearchConfig.disableAdvancedSearch) ? false : true,
+                emptySearchText: (!me.advancedSearchConfig.emptySearchText) ? '' : me.advancedSearchConfig.emptySearchText,
+                store: me.store || me.getDefaultStore(),
+                filterStores: me.advancedSearchConfig.stores,
+                value: this.options && this.options.query ? this.options.query : undefined
+            });
+
+            conf.items.push(me.searchBox);
         }
 
         
@@ -610,6 +643,12 @@ Ext.define('Taco.core.ux.mixins.NavHeader', {
 
     doCreate: function () {
         console.log("doCreate is expected to be defined on the class")
+    },
+
+    getDefaultStore: function() {
+        return Ext.create('Ext.data.Store', {
+            model: 'Taco.core.data.Model'
+        });
     },
 
     bindActionsToForm: function (form) {

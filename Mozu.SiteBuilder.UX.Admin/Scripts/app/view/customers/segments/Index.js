@@ -3,7 +3,7 @@
  */
 
 Ext.define('Taco.view.customers.Segments.Index', {
-    extend: 'Taco.core.ux.browser.BrowserPage',
+    extend: 'Taco.core.ux.browser.SearchList',
     
     requires: [
        // 'Taco.model.CustomerAccount',
@@ -17,10 +17,15 @@ Ext.define('Taco.view.customers.Segments.Index', {
     modelName: 'Taco.model.CustomerSegment',
     store: { type: 'Taco.store.CustomerSegments' },
     enableRowEditing: true,
+    enableSearch: false,
     defaultRowEditingData: {},
     useTilePanel: false,
+    enableNavHeader: true,
+    title: 'Customer Segment',
+    addContentViewPadding: true,
+    stateful: true,
+    stateId: 'statefulCustomerSegmentsGrid',    
     
-  
     initComponent: function () {
         var me = this;
 
@@ -30,15 +35,14 @@ Ext.define('Taco.view.customers.Segments.Index', {
 
        
 
-        this.gridPanelConf = {
-            stateful: true,
-            stateId: 'statefulCustomerSegmentsGrid',
-            columns: [ {
+        this.columns = [
+            {
                 dataIndex: 'id',
                 stateId: 'id',
                 text: 'Id',
                 width: 130
-            },{
+            },
+            {
                 dataIndex: 'code',
                 stateId: 'code',
                 text: 'Code',
@@ -54,7 +58,8 @@ Ext.define('Taco.view.customers.Segments.Index', {
                 },
                 width: 200
                 
-            }, {
+            },
+            {
                 dataIndex: 'name',
                 text: 'Name',
                 stateId: 'name',
@@ -66,7 +71,8 @@ Ext.define('Taco.view.customers.Segments.Index', {
                     allowOnlyWhitespace: false
                 },
                 width: 200
-            }, {
+            },
+            {
                 dataIndex: 'description',
                 stateId: 'description',
                 text: 'Description',
@@ -78,7 +84,8 @@ Ext.define('Taco.view.customers.Segments.Index', {
                     selectOnFocus: true,
                     allowBlank: true
                 }
-            }, {
+            },
+            {
                 xtype: 'taco.menucolumn',
                 text: 'Actions',
                 flex:1,
@@ -96,7 +103,8 @@ Ext.define('Taco.view.customers.Segments.Index', {
                             segmentCode: eventData.record.get('code')
                         });
                     }
-                }, {
+                },
+                {
                     text: 'Remove Customers',
                     requiredBehaviors: {
                         model: 'Taco.model.CustomerAccount',
@@ -110,7 +118,8 @@ Ext.define('Taco.view.customers.Segments.Index', {
                             segmentCode: eventData.record.get('code')
                         });
                     }
-                }, {
+                },
+                {
                     text: 'Delete Segment',
                     requiredBehaviors: {
                         model: 'Taco.model.CustomerAccount',
@@ -123,7 +132,8 @@ Ext.define('Taco.view.customers.Segments.Index', {
                             items: [
                                 {
                                     html: 'Do you really want to Delete Segment: ' + eventData.record.get('code')
-                                }],
+                                }
+                            ],
                             listeners: {
                                 confirm: function () {
                                     me.store.remove([eventData.record]);
@@ -131,13 +141,11 @@ Ext.define('Taco.view.customers.Segments.Index', {
                                 }
                             }
                         });
-
                     }
                 }]
+            }
+        ];
                 
-            }]
-        };
-        
         this.callParent(arguments);
     }
 });

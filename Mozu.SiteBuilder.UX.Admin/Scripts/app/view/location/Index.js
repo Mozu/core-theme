@@ -34,7 +34,7 @@ Ext.define('Taco.view.location.Index', {
     // Will add the 20px padding needed for display in the contentView as part of the NavHeader code;
     addContentViewPadding: true,
 
-    enableSearch: true,
+    enableSearch: false,
     enablePaging: true,
     enableRowEditing: false,
     enableAutoSelect: true,

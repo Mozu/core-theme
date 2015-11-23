@@ -12,6 +12,8 @@
         'Taco.view.publishing.component.button.PublishButton'
     ],
 
+    enableSearchBar: false,
+
     statics: {
         sizes: {},
         factory: function(cfg, callback, scope) {

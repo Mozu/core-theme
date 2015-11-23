@@ -20,13 +20,16 @@
 
 .taco-navheader {
     .taco-navheader-toolbar{        
-        padding: 10px 20px 10px 20px;        
+        padding: 10px;       
         border-bottom: 1px solid $color-standard-border !important;
         .taco-content-header-title{
+            border-right: 1px solid #dddfdf;
             font-size: 2.1rem;
             font-weight: bold;
             line-height: 3rem;
             overflow: hidden;
+            padding-right: 0.5em;
+            padding-left: 0.5em;
             text-overflow: ellipsis;
             white-space: nowrap;
         }

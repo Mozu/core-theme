@@ -3,11 +3,11 @@
  */
 
 Ext.define('Taco.view.orderAttribute.Index', {
-    extend: 'Taco.core.ux.browser.BrowserPage',
+    extend: 'Taco.core.ux.browser.SearchList',
    
     requires: ['Taco.model.OrderAttribute', 'Taco.store.OrderAttributes'/*, 'Taco.view.attribute.Edit'*/],
 
-   
+    addContentViewPadding: true,
 
     modelName: 'Taco.model.OrderAttribute',
     store: {
@@ -16,7 +16,10 @@ Ext.define('Taco.view.orderAttribute.Index', {
     editorName: 'Taco.view.orderAttribute.Edit',
     filterProperty: 'name',
     typeName: 'Order Attributes',
+    enableSearch: false,
+    enableNavHeader: true,
 
+    title: 'Order Attributes',
 
     gridPanelConf: {
         stateful: true,
