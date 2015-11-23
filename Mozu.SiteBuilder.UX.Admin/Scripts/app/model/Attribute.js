@@ -52,7 +52,7 @@ Ext.define('Taco.model.Attribute', {
             name: 'displayGroup',
             type: 'string',
             defaultValue: 'Admin'
-        }, {
+        }, {    
             name: 'isProperty',
             type: 'boolean'
         }, {
