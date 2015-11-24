@@ -148,7 +148,7 @@ Ext.define('Taco.view.productRanking.grid.Category', {
             ui: 'action',
             scale: 'medium',
             text: 'Add',
-            handler: me.onQuickAdd,
+            handler: me.launchCategoryModal,
             scope: me
         });
 
@@ -168,6 +168,29 @@ Ext.define('Taco.view.productRanking.grid.Category', {
             ]
         });
 
+    },
+    /**
+     * Opens a modal with a TreePanel.
+     * @private
+     */
+    launchCategoryModal: function () {
+        var me = this,
+            treeStore = Taco.core.data.StoreManager.getCategoryTreeByCatalog();
+
+        me.modal = Ext.create('Taco.view.category.Modal', {
+            store: treeStore
+        });
+
+        me.modal.on({
+            savesuccess: function (modal, values) {
+                me.store.add(values);
+                //me.parentForm.getForm().checkValidity();
+            },
+/*            aftercancelclose: function () {
+                me.reloadStore();
+            },*/
+            scope: this
+        });
     },
     // override this method and adjust the columns if your need a grid with a subset of columns;
     getColumnConfig: function () {
