@@ -15,7 +15,7 @@ Ext.define('Taco.view.productRanking.grid.Category', {
     // adds border to the grid;
     bodyStyle: "border-width:1px",
 
-    sorters: ["category"],
+    sorters: ['nameAndCode'],
 
     /*
      *  Controls whether the action column is added to the column collection.     
@@ -27,7 +27,7 @@ Ext.define('Taco.view.productRanking.grid.Category', {
      *  Example 
      *  requiredBehaviorsModel: 'Taco.model.CouponSet'
      */
-    requiredBehaviorsModel: "Taco.model.Category",
+    requiredBehaviorsModel: 'Taco.model.Category',
 
     /* 
      *show the default edit action in the actions and context menu;
@@ -45,15 +45,15 @@ Ext.define('Taco.view.productRanking.grid.Category', {
     enableDeleteAllAction: true,
 
     // often overwritten as Remove All or Delete All.
-    deleteAllActionText: "Remove All",
+    deleteAllActionText: 'Remove All',
 
-    deletePromptMsg: "Are you sure you want to remove this?",
+    deletePromptMsg: 'Are you sure you want to remove this?',
 
-    deletePromptTitle: "Remove",
+    deletePromptTitle: 'Remove',
 
-    idProperty : "category",
+    idProperty : 'category',
 
-    model : "Taco.model.Category",
+    model : 'Taco.model.Category',
 
     initComponent: function () {
         var me = this;
@@ -67,6 +67,7 @@ Ext.define('Taco.view.productRanking.grid.Category', {
                     *   Loads the existing categories into the grid's store
                     */
                     var existing = [];
+                    if (filters.length === 0) { return; }
                     Ext.each(filters, function(filter) {
                         var categoryCode = filter.value;
                         var index = store.findBy(function(record) {
@@ -184,11 +185,7 @@ Ext.define('Taco.view.productRanking.grid.Category', {
         me.modal.on({
             savesuccess: function (modal, values) {
                 me.store.add(values);
-                //me.parentForm.getForm().checkValidity();
             },
-/*            aftercancelclose: function () {
-                me.reloadStore();
-            },*/
             scope: this
         });
     },
