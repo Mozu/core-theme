@@ -60,6 +60,8 @@ Ext.define('Taco.view.productRanking.grid.Keyword', {
 
     initComponent: function () {
         var me = this;
+
+        me.getSelectionModel().preventFocus = true;
         
         // should consider putting this in the model folder if this is going to become 
         var keywordModel = Ext.define('Taco.model.KeywordModel', {
