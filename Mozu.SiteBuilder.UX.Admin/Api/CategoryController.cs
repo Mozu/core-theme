@@ -13,6 +13,7 @@ using Mozu.ProductAdmin.Contracts;
 using Mozu.ProductAdmin.Contracts.Clients;
 using Mozu.SiteBuilder.UX.Admin.Api.Models;
 using Mozu.SiteBuilder.UX.Admin.Api.Models.Category;
+using Mozu.SiteBuilder.UX.Admin.Helpers.CategoryHelpers;
 using Category = Mozu.SiteBuilder.UX.Admin.Api.Models.Category.Category;
 using DC = Mozu.ProductAdmin.Contracts;
 
@@ -61,9 +62,16 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
                     x.CatalogId = null;
                     x.SiteId = null;
                 });
+
+                if (filterCollection.QueryString.Get("categorytype") != null)
+                {
+                    filterCollection.Add(new FilterCollectionItem { comparison = "ne", field = "categorytype", value = filterCollection.QueryString.Get("type") });
+                }
+                string filter = filterCollection.ToFilterString();
+
                 while (true)
                 {
-                    var cats = (await client.GetCategories(startIndex: start, pageSize: 600, sortBy:"sequence asc")).ReadAsSync();
+                    var cats = (await client.GetCategories(startIndex: start, pageSize: 600, filter: filter, sortBy:"sequence asc")).ReadAsSync();
                     categories.AddRange(Mapper.Map<List<Category>>(cats.Items));
                     start = cats.PageSize + cats.StartIndex;
                     if (cats.TotalCount <= start )
