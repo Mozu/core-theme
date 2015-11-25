@@ -62,11 +62,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
                     x.CatalogId = null;
                     x.SiteId = null;
                 });
-
-                if (filterCollection.QueryString.Get("categorytype") != null)
-                {
-                    filterCollection.Add(new FilterCollectionItem { comparison = "ne", field = "categorytype", value = filterCollection.QueryString.Get("type") });
-                }
+                
                 string filter = filterCollection.ToFilterString();
 
                 while (true)
