@@ -56,7 +56,7 @@ Ext.define('Taco.core.ux.mixins.ActionColumn', {
 
 
     // often overwritten as Remove.
-    deleteActionText: "Delete",
+    deleteActionText: "Remove",
 
 
     /* 
@@ -65,7 +65,7 @@ Ext.define('Taco.core.ux.mixins.ActionColumn', {
     enableDeleteAllAction: true,
 
     // often overwritten as Remove All.
-    deleteAllActionText: "Delete All",
+    deleteAllActionText: "Remove All",
 
     /* 
      * Initializes the action column and returns the action column config to be used in the columns array.
