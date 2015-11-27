@@ -15,7 +15,7 @@ Ext.define('Taco.view.Header', {
         tag: 'header'
     },
     componentCls: Taco.baseCSSPrefix + 'viewport-header',
-    height: 45,
+    height: 36,
     hideMode: 'offsets',
     layout: {
         type: 'vbox',
@@ -66,7 +66,7 @@ Ext.define('Taco.view.Header', {
         this.items = [{
             xtype: 'container',
             anchor: '100%',
-            height: 45,
+            height: 36,
             cls: Taco.baseCSSPrefix + 'masthead',
             padding: '0 10 0 10',
             layout: {
