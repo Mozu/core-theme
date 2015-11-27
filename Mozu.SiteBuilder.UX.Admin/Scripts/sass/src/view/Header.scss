@@ -6,8 +6,8 @@
 .#{$vprefix}masthead {
     background-color: $color-neutral-white;
     border-bottom: 1px solid $color-standard-border;
-    border-top: 5px solid $color-theme-base;
-    font-size: px-to-rem(14);
+    font-size: px-to-rem(12);
+    font-weight: 400;
     left: 0px;
     line-height: 1.0;
     position: absolute;
