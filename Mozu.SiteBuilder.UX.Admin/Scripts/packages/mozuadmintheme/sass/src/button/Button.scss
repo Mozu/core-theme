@@ -2,7 +2,7 @@
 
 $ui-link:
     'link',                         // 1. name
-    $color-action-foreground,       // 2. text color
+    $color-button-link,             // 2. text color, no hover
     $color-neutral-transparent,     // 3. background color, normal state
     $color-neutral-transparent,     // 4. background color, hover state
     $color-neutral-transparent,     // 5. background color, active state
@@ -11,7 +11,8 @@ $ui-link:
     $color-action-outline-active,   // 8. border color, active state
     0px,                            // 9. border width
     10px,                           // 10. left padding
-    26px                            // 11. arrow width
+    26px,                           // 11. arrow width,
+    $color-button-link-hover        // 12. text color, hover
 ;
 
 $ui-action:
@@ -25,7 +26,8 @@ $ui-action:
     $color-action-outline-active,
     1px,
     19px,
-    38px
+    38px,
+    $color-action-foreground
 ;
 
 $ui-action-primary:
@@ -39,7 +41,8 @@ $ui-action-primary:
     $color-action-primary-outline-active,
     1px,
     19px,
-    38px
+    38px,
+    $color-action-foreground
 ;
 
 $ui-action-toggle:
@@ -53,7 +56,8 @@ $ui-action-toggle:
     $color-action-toggle-outline-active,
     1px,
     19px,
-    38px
+    38px,
+    $color-action-foreground
 ;
 
 $uis: $ui-link, $ui-action, $ui-action-primary, $ui-action-toggle;
@@ -89,7 +93,7 @@ $uis: $ui-link, $ui-action, $ui-action-primary, $ui-action-toggle;
             $background-gradient-disabled: null,
 
             $color: nth($ui-name, 2),
-            $color-over: nth($ui-name, 2),
+            $color-over: nth($ui-name, 12),
             $color-focus: nth($ui-name, 2),
             $color-pressed: nth($ui-name, 2),
             $color-disabled: nth($ui-name, 2),
