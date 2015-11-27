@@ -36,6 +36,7 @@ Ext.define('Taco.view.navigation.SecondaryMenu', {
             menu: {
                 plain: true,
                 shadow: false,
+                itemId: 'settingsMenu',
                 items: [
                     /*
                     // deprecated old views
@@ -54,18 +55,6 @@ Ext.define('Taco.view.navigation.SecondaryMenu', {
                         href: '/admin/auth/logout'
                     }
                 ]
-            }
-        }, {
-            xtype: 'button',
-            ui: 'link',
-            scale: 'medium',
-            text: 'Settings',
-            menuAlign: 'tr-br?',
-            menu: {
-                plain: true,
-                shadow: false,
-                itemId: 'settingsMenu',
-                items: []
             }
         },
 
