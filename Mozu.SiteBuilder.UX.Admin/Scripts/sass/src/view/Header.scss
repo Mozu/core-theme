@@ -15,8 +15,8 @@
     .#{$vprefix}mozulogo {
         display: block;
         overflow: hidden;
-        @include icon-font($glyph-mozulogo, 26px, $color-theme-base);
-        width: 103px;
+        @include icon-font($glyph-mozulogo, 18px, $color-theme-base);
+        width: 68px;
 
         &::after {
             left: auto;

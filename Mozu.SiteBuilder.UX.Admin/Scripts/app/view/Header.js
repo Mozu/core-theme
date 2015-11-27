@@ -76,7 +76,7 @@ Ext.define('Taco.view.Header', {
             items: [{
                 xtype: 'component',
                 cls: Taco.baseCSSPrefix + 'mozulogo',
-                width: 103,
+                width: 68,
                 autoEl: {
                     tag: 'a',
                     href: '/admin',
