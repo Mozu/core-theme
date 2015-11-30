@@ -10,6 +10,11 @@ Ext.define('Taco.core.ux.mixins.HamburgerButton', {
     cls: Taco.baseCSSPrefix + 'primary-menu-trigger',
     itemId: 'taco-hamburgerbutton',
     click: function () {
+
+        if (!Taco.app.PrimaryMenu.store) {
+            Taco.app.PrimaryMenu.bindStore(Taco.app.NavigationStore);
+        }
+
         if (Taco.app.PrimaryMenu.isHidden() || !Taco.app.PrimaryMenu.rendered) {
             Taco.app.PrimaryMenu.showMenu();
         } else {
@@ -19,8 +24,22 @@ Ext.define('Taco.core.ux.mixins.HamburgerButton', {
     initComponent: function() {
 
 
-        var me = this,
-            breadcrumb = Ext.create('Ext.Component', {
+        var me = this;
+
+        if (!Taco.app.PrimaryMenu) {
+           this.createPrimaryMenu();
+        }
+
+        else {
+            Taco.app.PrimaryMenu.setTrigger(this);
+        }
+
+    	this.callParent(arguments);
+    },
+
+    createPrimaryMenu: function() {
+
+        var breadcrumb = Ext.create('Ext.Component', {
             flex: 1,
             cls: Taco.baseCSSPrefix + 'breadcrumb',
             tpl: [
@@ -34,21 +53,11 @@ Ext.define('Taco.core.ux.mixins.HamburgerButton', {
             ]
         });
 
-        this.breadCrumb = breadcrumb;
-
-        if (!Taco.app.PrimaryMenu) {
-
-            // set this to a global variable so we dont have to reinit the menu on each navigate
-            Taco.app.PrimaryMenu = Ext.create('Taco.view.navigation.PrimaryMenu', {
-                trigger: me,
-                breadcrumb: breadcrumb
-            });
-        }
-
-        else {
-            Taco.app.PrimaryMenu.setTrigger(this);
-        }
-
-    	this.callParent(arguments);
+        // set this to a global variable so we dont have to reinit the menu on each navigate
+        Taco.app.PrimaryMenu = Ext.create('Taco.view.navigation.PrimaryMenu', {
+            trigger: this,
+            breadcrumb: breadcrumb
+        });
     }
+
 });

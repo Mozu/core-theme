@@ -30,6 +30,9 @@ Ext.define('Taco.view.navigation.PrimaryMenu', {
         this.on({
             add: function (menu) { menu.hide(); }
         });
+
+        Ext.getDoc().on('click', Ext.bind(this.handleDocClick, this));
+
     },
 
     bindStore: function (store, initial) {
@@ -213,7 +216,7 @@ Ext.define('Taco.view.navigation.PrimaryMenu', {
      * Needs a reference so listener can easily be added and removed.
      * @private
      */
-    onClickDoc: function (e, el) {
+    handleDocClick: function (e, el) {
         this.hideMenu();
     }
 });
