@@ -10,7 +10,7 @@ Ext.define('Taco.view.publishing.Drafts', {
     ],
     typeName: 'Publish Set',
     formCls: 'Taco.core.ux.form.Form',
-
+    enableSearchBar: false,
     contextConfig: {
         supportedLevels: ['m'],
         requiresContextOfType: ['m', 'c', 's']

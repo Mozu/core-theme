@@ -17,7 +17,12 @@ Ext.define('Taco.view.orderAttribute.Index', {
     filterProperty: 'name',
     typeName: 'Order Attributes',
     enableSearch: false,
+    enableSearchBar: false,
     enableNavHeader: true,
+    saveButtonEnabled: false,
+    cancelButtonEnabled: false,
+    createButtonEnabled: true,
+    createButtonText: 'Create New Order Attributes',
 
     title: 'Order Attributes',
 
@@ -53,6 +58,11 @@ Ext.define('Taco.view.orderAttribute.Index', {
                 menuColumnHandler: 'destroyMenuColumnHandler'
             }]
         }]
+    },
+
+    doCreate: function() {
+        var controller = 'orderattributes';
+        Taco.app.StateManager.attemptNavigate(controller + '/create');
     }
     
  

@@ -25,6 +25,12 @@ Ext.define('Taco.view.locationType.Index', {
     
     },
 
+    enableSearchBar: false,
+    createButtonEnabled: true,
+    createButtonText: 'Create New Location Type',
+    saveButtonEnabled: false,
+    cancelButtonEnabled: false,
+
     title: 'Location Types',
     enableNavHeader: true,
     addContentViewPadding: true,
@@ -118,6 +124,10 @@ Ext.define('Taco.view.locationType.Index', {
         }]
         
         this.callParent(arguments);
+    },
+
+    doCreate: function() {
+        this.onRowEditorCreate();
     }
    
 });

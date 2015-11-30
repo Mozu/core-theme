@@ -7,6 +7,7 @@ Ext.define('Taco.view.productType.Edit', {
     extend: 'Taco.core.ux.form.FullEditor',
     requires: ['Taco.view.productType.Form'],    
     formCls: 'Taco.view.productType.Form',
+    enableSearchBar: false,
     saveAndCreateButtonEnabled: true,
     doCreate: function () {
         var controller = "producttypes"

@@ -5,6 +5,7 @@ Ext.define('Taco.view.storeCredit.Edit', {
         'Taco.core.ux.form.ResendEmailButton'
     ],
     formCls: 'Taco.view.storeCredit.Form',
+    enableSearchBar: false,
     initComponent: function () {
         var me = this;
 

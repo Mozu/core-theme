@@ -24,6 +24,7 @@ Ext.define('Taco.view.productType.Grid', {
     modelName: 'Taco.model.ProductType',
 
     enableNavHeader: true,
+    enableSearchBar: false,
 
     // adds the "taco-content-navcontainer-padding" class
     // Will add the 20px padding needed for display in the contentView as part of the NavHeader code;

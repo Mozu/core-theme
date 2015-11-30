@@ -21,7 +21,12 @@ Ext.define('Taco.view.customerAttribute.Index', {
     stateId: 'statefulCustomerAttributesGrid',
     enableSearch: false,
     enableNavHeader: true,
+    enableSearchBar: false,
     addContentViewPadding: true,
+    createButtonEnabled: true,
+    saveButtonEnabled: false,
+    cancelButtonEnabled: false,
+    createButtonText: 'Create New Custom Attribute',
 
     initComponent: function() {
 
@@ -57,6 +62,13 @@ Ext.define('Taco.view.customerAttribute.Index', {
         ];
         
         this.callParent(arguments);
-    }
+    },
+
+    doCreate : function (){
+        var controller = 'customerAttribute';
+        Taco.app.StateManager.attemptNavigate(controller + '/create');
+    },
+
+    onCreate: Ext.emptyFn
    
 })

@@ -130,7 +130,7 @@ Ext.define('Taco.core.ux.mixins.NavHeader', {
         saveInProgress : false,
         saveInProgressText: "Saving...",
 
-        enableSearchBar: 'true',
+        enableSearchBar: true,
 
         // turns off all the default coloration for the content container; ie. makes everything white;
         useWhiteContainer:false,

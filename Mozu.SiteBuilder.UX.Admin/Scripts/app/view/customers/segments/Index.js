@@ -21,19 +21,18 @@ Ext.define('Taco.view.customers.Segments.Index', {
     defaultRowEditingData: {},
     useTilePanel: false,
     enableNavHeader: true,
-    title: 'Customer Segment',
+    enableSearchBar: false,
+    cancelButtonEnabled: false,
+    saveButtonEnabled: false,
+    createButtonEnabled: true,
+    createButtonText: 'Create New Customer Segment',
+    title: 'Customer Segments',
     addContentViewPadding: true,
     stateful: true,
     stateId: 'statefulCustomerSegmentsGrid',    
     
     initComponent: function () {
         var me = this;
-
-        this.header = {
-            title: 'Customer Segments'
-        };
-
-       
 
         this.columns = [
             {
@@ -147,5 +146,9 @@ Ext.define('Taco.view.customers.Segments.Index', {
         ];
                 
         this.callParent(arguments);
+    },
+
+    doCreate: function() {
+        this.onRowEditorCreate();
     }
 });

@@ -27,11 +27,14 @@ Ext.define('Taco.view.product.Index', {
     stateId: 'statefulProductGrid',
     reFetchRecordOnEdit: true,
     enableSearch: false,
+    cancelButtonEnabled: false,
+    saveButtonEnabled: false,
+    createButtonEnabled: true,
+    createButtonText: 'Create New Product',
     contextConfig: {
         supportedLevels: ['m', 'c'],
         requiresContextOfType: ['m', 'c', 's']
     },
-
     contextConf: {
         m: {
             useMultiGrid: true,
@@ -128,6 +131,11 @@ Ext.define('Taco.view.product.Index', {
 
     advancedSearchConfig: {
         advancedFormCls: 'Taco.view.product.AdvancedSearchForm'
+    },
+
+    doCreate: function() {
+        var controller = 'product';
+        Taco.app.StateManager.attemptNavigate(controller + '/create');
     },
 
     initComponent: function() {

@@ -14,6 +14,11 @@ Ext.define('Taco.view.location.inventory.Index', {
 
     // used by create button
     typeName: 'Location Inventory',
+    enableSearchBar: false,
+    createButtonEnabled: true,
+    createButtonText: 'Create New Location Inventory',
+    saveButtonEnabled: false,
+    cancelButtonEnabled: false,
 
     contextConfig: {
         supportedLevels: ['m','c'],
@@ -86,9 +91,8 @@ Ext.define('Taco.view.location.inventory.Index', {
                 select: {
                     fn: function (combo, records, eOpts) {
                         var record = records[0],
-                            itemBrowser = this.up("searchlist"),
-                            gridPanel = itemBrowser.grid,
-                            gridStore = gridPanel.store,
+                            itemBrowser = this.up('searchlist'),
+                            gridStore = itemBrowser.store,
                             code = record.get('code');
 
                         if (record.get('isDisabled')) {
@@ -379,5 +383,9 @@ Ext.define('Taco.view.location.inventory.Index', {
     onRowEditorCancel: function(editor, context) {
         this.freezeColumns(editor.grid, false);
         this.callParent(arguments);
+    },
+
+    doCreate: function() {
+        this.onRowEditorCreate();
     }
 });
