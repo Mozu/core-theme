@@ -63,8 +63,7 @@ Ext.define('Taco.core.ux.form.NavForm2', {
         });
 
 
-        
-        this.leftNav = Ext.widget({
+        this.sectionNav = Ext.widget({
             xtype: 'dataview',
             //dock: 'left',
             //width:100,
@@ -92,29 +91,24 @@ Ext.define('Taco.core.ux.form.NavForm2', {
                     }
                 }
             ]
-        })
+        });
         
-        //me.dockedItems = me.dockedItems || [];
-        //me.dockedItems.push(this.leftNav)
+        me.dockedItems = me.dockedItems || [];
+        me.dockedItems.push(this.sectionNav)
 
         
         var items = excludedItems;
-        items.push(this.leftNav)
+        //items.push(this.leftNav)
         items.push(this.formContainer)
         
         this.items = items;
 
-
-
-
         this.callParent(arguments);
-
-        
 
         this.nav = this.down('#navFormNav');
         
         this.on({
-            boxready: this.initLeftNav,
+            boxready: this.initSectionNav,
             scope: this
         });
     },
@@ -123,27 +117,10 @@ Ext.define('Taco.core.ux.form.NavForm2', {
         var wrapper = Ext.ComponentQuery.query('fulleditor')[0];
         // need to find the fulleditor class since it is the scroll container;
         return wrapper;
-
-        /*
-        if (!this.wrapper) {
-            this.wrapper = Taco.app.viewPort.down('contentbody');
-        }
-
-        return this.wrapper || this;
-        */
     },
 
-    alignLeftNav: function () {
-        var offset = this.leftNav.el.getAlignToXY(this.formContainer.el, "tr-tl", [0, 0]);
+    initSectionNav: function() {
 
-        // need to account for scrolling when this gets realigned;
-        var scrollTop = this.getWrapper().body.el.dom.scrollTop;
-        var y = offset[1] + this.leftNavTopOffset + scrollTop;
-        //this.leftNav.el.moveTo(null, offset[1] + this.leftNavTopOffset)
-        this.leftNav.el.moveTo(null, y)
-    },
-
-    initLeftNav: function () {
         if (!this.enableScrollSpy) return;
 
         this.getWrapper().on({            
@@ -152,12 +129,12 @@ Ext.define('Taco.core.ux.form.NavForm2', {
         });
 
         this.getWrapper().body.el.on({
-            
             scroll: this.checkTop,
             scope: this
         });
-        
-        this.alignLeftNav();
+
+        this.navTop = this.sectionNav.getPosition()[1];
+
     },
 
     rebuildMap: function () {
@@ -192,9 +169,33 @@ Ext.define('Taco.core.ux.form.NavForm2', {
         this.checkTop();
     },
 
+    getTop: function() {
+        return this.getWrapper().body.el.dom.scrollTop;
+    },
+
     checkTop: function () {
-        
-        var scrollTop = this.getWrapper().body.el.dom.scrollTop,
+        this.stickNav();
+        this.updateActiveNavItem();
+
+    },
+
+    stickNav: function() {
+        var scrollTop = this.getTop();
+        var sectionNav = this.sectionNav;
+        var navTop = this.navTop; // y-coordinate of the leftNav
+        var fixedClass = 'taco-fixed-navForm2';
+
+        if (scrollTop > navTop && !sectionNav.hasCls(fixedClass)) {
+            sectionNav.addCls(fixedClass);
+        }
+        else if (scrollTop < navTop && sectionNav.hasCls(fixedClass)) {
+            sectionNav.removeCls(fixedClass);
+        }
+
+    },
+
+    updateActiveNavItem: function() {
+        var scrollTop = this.getTop(),
             max,
             li,
             active;
@@ -219,7 +220,6 @@ Ext.define('Taco.core.ux.form.NavForm2', {
         if (!li) return;
 
         Ext.fly(li).addCls('active');
-
     },
 
     onNavClick: function (view, record) {
