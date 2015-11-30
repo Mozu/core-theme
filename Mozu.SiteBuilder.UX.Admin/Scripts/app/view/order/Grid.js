@@ -19,6 +19,7 @@ Ext.define('Taco.view.order.Grid', {
     modelName: 'Taco.model.Order',
 
     enableNavHeader: true,
+    
 
     // adds the "taco-content-navcontainer-padding" class
     // Will add the 20px padding needed for display in the contentView as part of the NavHeader code;
