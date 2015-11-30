@@ -104,7 +104,6 @@ Ext.define('Taco.core.ux.browser.SearchListTree', {
         
         if (!me.store) {
             throw("store configuration is required.  Example store: { type: 'Taco.store.InventoryProducts' } ");
-            return;
         } else {
             if (!me.store.isStore) {
                 me.store = Taco.core.data.StoreManager.getOrCreate(me.store);
