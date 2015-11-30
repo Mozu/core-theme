@@ -13,9 +13,7 @@ using Mozu.SiteBuilder.UX.Models.Navigation;
 using System.Collections.Specialized;
 using Mozu.SiteBuilder.Mvc.Contexts;
 using Mozu.Core.Extensions;
-using Mozu.Core.Logging;
 using Mozu.Core.Settings;
-using Mozu.SiteBuilder.Mvc.ActionFilters;
 
 namespace Mozu.SiteBuilder.Mvc.MessageHandler
 {
@@ -48,7 +46,12 @@ namespace Mozu.SiteBuilder.Mvc.MessageHandler
             var redirect = await Redirecter.GetRedirectForRequestUri(request.Resolve<IRedirectRepository>(), request.RequestUri).ConfigureAwait(false);
             if (redirect != null)
             {
-                if (redirect.IsRewrite.GetValueOrDefault(false))
+                // we short-circuit the rewrite if this request has already been rewritten this go around.
+                if (redirect.IsRewrite.GetValueOrDefault(false) && request.Properties.ContainsKey(IsSeoRewrite))
+                {
+                    
+                }
+                else if (redirect.IsRewrite.GetValueOrDefault(false))
                 {
                     var rewritten = RewriteCurrentRequest(request, redirect.Destination);
                     request.Resolve<IRouteConfig>().RouteIncomingSystemRouteRequest(rewritten);
@@ -59,6 +62,7 @@ namespace Mozu.SiteBuilder.Mvc.MessageHandler
                     return RedirectTo(redirect.Destination, redirect.IsTemporary.GetValueOrDefault(false), request);
                 }
             }
+
             var settings = request.Resolve<ISettings>();
             // try any custom routes
             if (request.GetRouteData().Route is NonSystemRoute)
