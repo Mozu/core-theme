@@ -44,6 +44,7 @@ Ext.define('Taco.core.ux.mixins.NavHeader', {
         var me = this
         this.mixins.permissions.constructor.apply(this, arguments);
 
+        me.navHeader = me;
         me.addEvents(
            /**
             * @event
@@ -226,7 +227,6 @@ Ext.define('Taco.core.ux.mixins.NavHeader', {
 
         conf.items.push(me.hamburgerButton);
 
-
         if (me.title !== false) {
 
             me.titleContainer = {
@@ -291,6 +291,11 @@ Ext.define('Taco.core.ux.mixins.NavHeader', {
             });
 
             conf.items.push(me.searchBox);
+        }
+
+        else {
+            //shifting over the buttons because we have no searchbar
+            conf.items.push('->');
         }
 
         
@@ -370,6 +375,20 @@ Ext.define('Taco.core.ux.mixins.NavHeader', {
                     hidden: !me.createButtonVisible,
                     itemId: 'createActionButton',
                     handler: me.createActionHandler,
+                    scope: me
+                }));
+            }
+
+            if (me.moreButtonCfg && me.moreButtonCfg.menu) {
+                me.actions.push(Ext.apply({}, me.moreButtonCfg, {
+                    xtype: 'button',
+                    text: '...',
+                    margin: "0 0 0 10",
+                    ui: 'action',
+                    scale: 'medium',
+                    itemId: 'moreActionButton',
+                    handler: Ext.emptyFn,
+                    margin: '0 0 0 10',
                     scope: me
                 }));
             }
@@ -652,7 +671,7 @@ Ext.define('Taco.core.ux.mixins.NavHeader', {
     },
 
     bindActionsToForm: function (form) {
-        var actions = this.header.query('[formBind]'),
+        var actions = this.header.query ? this.header.query('[formBind]') : null,
             form = form || this.form;
 
         if (form && form.isComponent) {

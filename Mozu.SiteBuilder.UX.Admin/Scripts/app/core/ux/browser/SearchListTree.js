@@ -1,10 +1,10 @@
 /**
- * @class Taco.core.ux.browser.SearchList
+ * @class Taco.core.ux.browser.SearchListTree
  * Simple grid panel with search. 
  */
 
-Ext.define('Taco.core.ux.browser.SearchList', {
-    extend: 'Taco.core.ux.grid.Panel',
+Ext.define('Taco.core.ux.browser.SearchListTree', {
+    extend: 'Taco.core.ux.TreeList',
     requires: ['Taco.core.ux.grid.plugins.AutoSelect'],
     mixins: {
         launcheditor: 'Taco.core.ux.mixins.LaunchEditor',
@@ -16,7 +16,7 @@ Ext.define('Taco.core.ux.browser.SearchList', {
         gridcontextmenu: 'Taco.core.ux.mixins.GridContextMenu'
     },
     
-    alias: 'widget.searchlist',
+    alias: 'widget.searchlisttree',
     
     //cls: Taco.baseCSSPrefix + 'itembrowser',
     //cls: Taco.baseCSSPrefix + 'content-view',
@@ -38,6 +38,8 @@ Ext.define('Taco.core.ux.browser.SearchList', {
     enablePaging: true,
     
     hideSearchToolbar: false,
+
+    preventHeader: false,
 
     enableAutoSelect: true,
 

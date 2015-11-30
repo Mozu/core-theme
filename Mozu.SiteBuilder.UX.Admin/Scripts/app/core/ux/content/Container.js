@@ -11,12 +11,17 @@ Ext.define('Taco.core.ux.content.Container', {
     componentCls: 'taco-content-container',
     layout: { type: 'border' },
     region: 'center',
+    mixins: {
+        navHeader: 'Taco.core.ux.mixins.NavHeader'
+    },
 
     headerCls: 'Taco.core.ux.content.Header',
     bodyCls: 'Taco.core.ux.content.Body',
     header: {},
     body: {},
+    bodyClsWithHeader: 'Taco.core.ux.content.Body',
     scopeActionHandlers: true,
+    enableNavHeader: false,
 
     // turn on default key listening
     enableKeyMap: false,
@@ -85,9 +90,18 @@ Ext.define('Taco.core.ux.content.Container', {
         var me = this;
 
         me.header = (me.header || {});
-        me.header = Ext.create(me.headerCls, Ext.apply(me.header, { region: 'north', contextConfig: this.contextConfig  }));
 
-        me.body = Ext.create(me.bodyCls, Ext.apply(me.body || {}, { region: 'center' }));
+        if (me.enableNavHeader) {
+            me.mixins.navHeader.init.apply(this);
+            me.body = Ext.create(me.bodyClsWithHeader, Ext.apply(me.body || {}, { region: 'center' }));
+        }
+
+        else {
+            me.header = Ext.create(me.headerCls, Ext.apply(me.header, { region: 'north', contextConfig: this.contextConfig  })); 
+            me.body = Ext.create(me.bodyCls, Ext.apply(me.body || {}, { region: 'center' }));
+        }
+
+        
 
         me.main = Ext.create('Ext.Container', {
             region: 'center',

@@ -508,6 +508,7 @@
     <Content Include="Scripts\app\core\util\Validation.js" />
     <Content Include="Scripts\app\core\ux\action\DeleteMenuItem.js" />
     <Content Include="Scripts\app\core\ux\browser\SearchList.js" />
+    <Content Include="Scripts\app\core\ux\browser\SearchListTree.js" />
     <Content Include="Scripts\app\core\ux\content\IndicatorContainer.js" />
     <Content Include="Scripts\app\core\ux\content\SplitContainer.js" />
     <Content Include="Scripts\app\core\ux\content\ContextMenu.js" />
