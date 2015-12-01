@@ -31,25 +31,26 @@
             background-color: $color-neutral-white;
         }
 
-        .taco-content-header-title{
-            border-right: 1px solid #dddfdf;
-            font-size: 2.1rem;
-            font-weight: bold;
-            line-height: 3rem;
-            overflow: hidden;
-            padding-right: 0.5em;
-            padding-left: 0.5em;
-            text-overflow: ellipsis;
-            white-space: nowrap;
-        }
-        .taco-content-header-title-root {
-            color: $color-framework-blue-dark;
+        .taco-content-header-title-container {
+            border-right: 1px solid $nav-element-active-border;
+            .taco-content-header-title{
+                font-size: 18px;
+                font-weight: 400;
+                overflow: hidden;
+                padding: 20px 18px;
+                text-overflow: ellipsis;
+                white-space: nowrap;
+            }
+            .taco-content-header-title-root {
+                color: $color-framework-blue-dark;
+            }
         }
 
         .page-title {
             margin: 2px 0px 0px 22px;
             font-weight: normal;
             font-size: 16px;
+            font-family: 'proxima-nova', sans-serif;
             width: 100%;
             padding-right: 24px;
             overflow: hidden;

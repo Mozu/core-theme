@@ -5,7 +5,7 @@
 
 .#{$vprefix}masthead {
     background-color: $color-neutral-white;
-    border-bottom: 1px solid $color-standard-border;
+    border-bottom: 1px solid $nav-element-active-border;
     font-size: px-to-rem(12);
     font-weight: 400;
     left: 0px;
@@ -29,7 +29,8 @@
 
     .#{$prefix}btn-link-medium {
         .#{$prefix}btn-inner {
-            font-size: 14px;
+            font-size: 12px;
+            font-weight: 400;
             line-height: 16px;
         }
 
