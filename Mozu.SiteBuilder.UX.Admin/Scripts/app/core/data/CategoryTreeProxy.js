@@ -6,172 +6,162 @@
 
 
 Ext.define('Taco.core.data.CategoryTreeProxy', {
-    extend: 'Taco.core.data.AjaxProxy',
-   
-    alias: 'proxy.categorytree',
-    getData: function () {
-        var mcId = Taco.app.context.getMasterCatalogId() || -1;
+        extend: 'Taco.core.data.AjaxProxy',
 
-        return (this.data || {})[mcId];
-    },
-    setData: function (data) {
-        var mcId = Taco.app.context.getMasterCatalogId() || -1;
-        this.data = this.data || {};
-        
-        this.data[mcId] = data;
-    },
+        alias: 'proxy.categorytree',
+        getData: function() {
+            var mcId = Taco.app.context.getMasterCatalogId() || -1;
 
-    read: function (operation, callback, scope) {
+            return (this.data || {})[mcId];
+        },
+        setData: function(data) {
+            var mcId = Taco.app.context.getMasterCatalogId() || -1;
+            this.data = this.data || {};
 
-        var cbw, me = this,
-            data = me.getData(),
-            filters = operation.filters;
+            this.data[mcId] = data;
+        },
 
-        // if (operation.id) {
-        //     operation.bypassCache = true;
-        //     this.data = null;
-        //     return this.callParent(arguments);
-        // }
-        
-        
+        read: function(operation, callback, scope) {
 
-        if (!data || operation.bypassCache) {
+            var cbw,
+                me = this,
+                data = me.getData(),
+                filters = operation.filters;
 
-            cbw = function (op, success, response) {
+            if (!data || operation.bypassCache) {
 
-                if (op.wasSuccessful()) {
-                    me.setData(op.response.responseText);
-                }
-                operation.filters = filters;
-                if (callback) {
-                    
-                    me.read2(op.response && op.response.responseText ? op.response.responseText : null, operation, callback, scope);
-                }
+                cbw = function(op, success, response) {
 
-            };
-            delete operation.filters;
+                    if (op.wasSuccessful()) {
+                        me.setData(op.response.responseText);
+                    }
+                    operation.filters = filters;
+                    if (callback) {
 
-            me.doRequest(operation, cbw, this);
-        } else {
-            this.read2(data,operation, callback, scope);
-        }
+                        me.read2(op.response && op.response.responseText ? op.response.responseText : null, operation, callback, scope);
+                    }
+                };
+                delete operation.filters;
 
-    },
-    doRequest:function() {
-        this.setData(null);
-        this.callParent(arguments);
-    },
-    
-    read2: function (data,operation, callback, scope) {
+                me.doRequest(operation, cbw, this);
+            } else {
+                this.read2(data, operation, callback, scope);
+            }
 
-        var me = this,
-            request = this.buildRequest(operation),
-            fn = function () {
-                var response = undefined,
-                    hasSiteIdFilter = false,
-                    jsonData,
-                    siteId = operation.siteId,
-                    catalogId = operation.catalogId;
-                if (data) {
-                    
-                    response = {
-                        responseText: data
-                    };
-                    Ext.each(operation.filters, function (filter) {
-                        if (filter.property == 'siteId') {
-                            siteId = filter.value;
+        },
+        doRequest: function() {
+            this.setData(null);
+            this.callParent(arguments);
+        },
+
+        read2: function(data, operation, callback, scope) {
+
+            var me = this,
+                request = this.buildRequest(operation),
+                fn = function() {
+                    var response = undefined,
+                        hasSiteIdFilter = false,
+                        jsonData,
+                        siteId = operation.siteId,
+                        catalogId = operation.catalogId;
+                    if (data) {
+
+                        response = {
+                            responseText: data
+                        };
+                        Ext.each(operation.filters, function(filter) {
+                            if (filter.property == 'siteId') {
+                                siteId = filter.value;
+                            }
+                            if (filter.property == 'catalogId') {
+                                catalogId = filter.value;
+                            }
+                        });
+                        if (!siteId) {
+                            siteId = Taco.app.context.getSiteId();
                         }
-                        if (filter.property == 'catalogId') {
-                            catalogId = filter.value;
+                        if (!catalogId) {
+                            if (siteId) {
+                                catalogId = Taco.app.context.findSite(siteId).getCatalogId();
+                            }
                         }
-                    });
-                    if (!siteId) {
-                        siteId = Taco.app.context.getSiteId();
-                    }
-                    if (!catalogId) {
-                        if (siteId) {
-                            catalogId = Taco.app.context.findSite(siteId).getCatalogId();
-                        } 
-                    }
-                    if (!catalogId) {
-                        catalogId = Taco.app.context.getCatalogId();
-                    }
-                    if (catalogId) {
-                        jsonData = Ext.JSON.decode(data);
-                        jsonData.items = Ext.Array.filter(jsonData.items, function (item) { return item.catalogId == catalogId; });
-                        jsonData.items.sort(function (a, b) { return (a.sequence || 99) - (b.sequence || 99); });
-                        response.responseText = Ext.JSON.encode(jsonData);
+                        if (!catalogId) {
+                            catalogId = Taco.app.context.getCatalogId();
+                        }
+                        if (catalogId) {
+                            jsonData = Ext.JSON.decode(data);
+                            jsonData.items = Ext.Array.filter(jsonData.items, function(item) { return item.catalogId == catalogId; });
+                            jsonData.items.sort(function(a, b) { return (a.sequence || 99) - (b.sequence || 99); });
+                            response.responseText = Ext.JSON.encode(jsonData);
 
+                        }
                     }
+                    me.processResponse(true, operation, request, response, callback, scope);
+                };
+
+            Ext.Function.defer(function() {
+                fn();
+            }, 10, this);
+        },
+        getTreeData: function() {
+            var me = this,
+                ids = me.getIds(),
+                length = ids.length,
+                records = [],
+                recordHash = {},
+                root = [],
+                i = 0,
+                Model = me.model,
+                idProperty = Model.prototype.idProperty,
+                rootLength,
+                record,
+                parent,
+                parentId,
+                children,
+                id;
+
+            for (; i < length; i++) {
+                id = ids[i];
+
+                record = me.getRecord(id);
+
+                records.push(record);
+
+                recordHash[id] = record;
+                if (!record.parentId) {
+
+                    root.push(record);
                 }
-                me.processResponse(true, operation, request, response, callback, scope);
-        };
-
-        Ext.Function.defer(function() {
-            fn();
-        }, 10, this);
-    },
-    getTreeData: function () {
-        var me = this,
-            ids = me.getIds(),
-            length = ids.length,
-            records = [],
-            recordHash = {},
-            root = [],
-            i = 0,
-            Model = me.model,
-            idProperty = Model.prototype.idProperty,
-            rootLength, record, parent, parentId, children, id;
-
-        for (; i < length; i++) {
-            id = ids[i];
-
-            record = me.getRecord(id);
-
-            records.push(record);
-
-            recordHash[id] = record;
-            if (!record.parentId) {
-
-                root.push(record);
-            }
-        }
-
-        rootLength = root.length;
-
-
-        Ext.Array.sort(records, me.sortByParentId);
-
-
-        for (i = rootLength; i < length; i++) {
-            record = records[i];
-            parentId = record.parentId;
-            if (!parent || parent[idProperty] !== parentId) {
-
-                parent = recordHash[parentId];
-                parent.children = children = [];
             }
 
+            rootLength = root.length;
 
-            children.push(record);
-        }
+            Ext.Array.sort(records, me.sortByParentId);
 
-        for (i = length; i--;) {
-            record = records[i];
-            if (!record.children && !record.leaf) {
+            for (i = rootLength; i < length; i++) {
+                record = records[i];
+                parentId = record.parentId;
+                if (!parent || parent[idProperty] !== parentId) {
 
-                record.loaded = true;
+                    parent = recordHash[parentId];
+                    parent.children = children = [];
+                }
+                children.push(record);
             }
+
+            for (i = length; i--;) {
+                record = records[i];
+                if (!record.children && !record.leaf) {
+                    record.loaded = true;
+                }
+            }
+
+            for (i = rootLength; i--;) {
+                record = root[i];
+                root[i] = new Model(record, record[idProperty], record);
+            }
+
+            return root;
         }
-
-
-        for (i = rootLength; i--;) {
-            record = root[i];
-            root[i] = new Model(record, record[idProperty], record);
-        }
-
-        return root;
     }
-
-}
 );

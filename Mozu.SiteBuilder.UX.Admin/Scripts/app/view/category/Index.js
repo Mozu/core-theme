@@ -19,7 +19,6 @@ Ext.define('Taco.view.category.Index', {
 
     initComponent: function () {
         var me = this;
-
         var createButtonConfig = {
             xtype: 'button',
             text: me.createButtonText,
@@ -31,38 +30,36 @@ Ext.define('Taco.view.category.Index', {
             scope: me
         }
 
-        
-        
-            Ext.apply(createButtonConfig, {
-                handler: Ext.emptyFn,
-                menu: {
-                    plain: true,
-                    showSeparator: false,
-                    listeners: {
-                        click: {
-                            fn: function (menu, menuItem, e) {
-                                if (!menuItem) {
-                                    return;
-                                }
+        Ext.apply(createButtonConfig, {
+            handler: Ext.emptyFn,
+            menu: {
+                plain: true,
+                showSeparator: false,
+                listeners: {
+                    click: {
+                        fn: function(menu, menuItem, e) {
+                            if (!menuItem) {
+                                return;
+                            }
 
-                                var url = (menuItem.getItemId() == "Dynamic") ? 'categories/createdynamic' : 'categories/create';
-                                Taco.core.StateManager.attemptNavigate(url);
-                            },
-                            scope: me,
-                            delegate: "x-menu-item-link"
-                        }
-                    },
-                    items: [
-                        {
-                            text: "Static Category",
-                            itemId:"Static"
-                        }, {
-                            text: "Dynamic Category",
-                            itemId: "Dynamic"
-                        }
-                    ]
-                }
-            });
+                            var url = (menuItem.getItemId() == "Dynamic") ? 'categories/createdynamic' : 'categories/create';
+                            Taco.core.StateManager.attemptNavigate(url);
+                        },
+                        scope: me,
+                        delegate: "x-menu-item-link"
+                    }
+                },
+                items: [
+                    {
+                        text: "Static Category",
+                        itemId: "Static"
+                    }, {
+                        text: "Dynamic Category",
+                        itemId: "Dynamic"
+                    }
+                ]
+            }
+        });
 
         me.header = {
             title: "Categories",
@@ -70,27 +67,6 @@ Ext.define('Taco.view.category.Index', {
                 createButtonConfig
             ]
         };
-
-        /*
-        me.header = {
-            title: 'Categories',
-            actions: [{
-                xtype: 'button',
-                ui: 'action-primary',
-                scale: 'medium',
-                itemId: 'createActionButton',
-                text: 'Create New Category',
-                margin: '0 0 0 10',
-                handler: function () {
-                    Taco.core.StateManager.attemptNavigate('categories/create');
-                
-                }
-            }]
-        };
-        */
-
-        
-
 
         me.store = Taco.core.data.StoreManager.getCategoryTreeByCatalog();
 
@@ -103,101 +79,109 @@ Ext.define('Taco.view.category.Index', {
                 stripeRows: true,
                 onExpand: Ext.emptyFn
             },
-            columns: [{
-                xtype: 'treecolumn',
-                text: 'Name',
-                flex: 1,
-                checkboxText:'',
-                dataIndex: 'name',
-                renderer: function (value) {
-                    return '<a href="#" class="taco-launch-editor">' + (value + '</a>');
-                }
-            }, {
-                xtype: 'treecolumn',
-                text: 'Code',
-                flex: 2,
-                checkboxText:'',
-                dataIndex: 'categoryCode',
-                renderer: function (value) {
-                    return '<a href="#" class="taco-launch-editor">' + (value + '</a>');
-                }
-            }, {
-                xtype: 'taco.menucolumn',
-                text: 'Actions',
-                menuItems: [{
-                    text: 'Edit',
-                    requiredBehaviors: {
-                        model: 'Taco.model.Category',
-                        behavior: 'update'
-                    },
-                    
-                    menuColumnHandler: function (item, eventData) {
-                        var record = eventData.record;
-                        Ext.defer(function () {
-                            Taco.core.StateManager.attemptNavigate('categories/edit/' + record.getId(), { complexMetaData: { record: record } });
-                        }, 1, this);
-
-                    }
-                },
+            columns: [
                 {
-                    text: 'Duplicate',
-                    requiredBehaviors: {
-                        model: 'Taco.model.Category',
-                        behavior: 'create'
-                    },
-                    menuColumnHandler: function (item, eventData) {                        
-                        var record = eventData.record,
-                            metaData = {
-                                id: record.getId()
-                            };
-                        
-                        Taco.app.StateManager.attemptNavigate('categories/duplicate/' + record.getId(), metaData);
+                    xtype: 'treecolumn',
+                    text: 'Name',
+                    flex: 1,
+                    checkboxText: '',
+                    dataIndex: 'name',
+                    renderer: function(value) {
+                        return '<a href="#" class="taco-launch-editor">' + (value + '</a>');
                     }
                 }, {
-                    text: 'Delete',
-                    requiredBehaviors: {
-                        model: 'Taco.model.Category',
-                        behavior: 'destroy'
-                    },
-                    menuColumnHandler: 'destroyMenuColumnHandler'
-                }]
-                
-            }],
-            dockedItems: [{
-                xtype: 'container',
-                dock: 'top',
-                padding: '0 0 10',
-                cls: 'taco-secondary-actions',
-                layout: {
-                    type: 'hbox',
-                    align: 'middle',
-                    pack: 'end'
-                },
-                items: [{
-                    xtype: 'button',
-                    scale: 'medium',
-                    ui: 'action',
-                    text: 'Expand All',
-                    allowDepress: false,
-                    enableToggle: true,
-                    scope: this,
-                    toggleHandler: function (button, nextState) {
-                        this.treelist.expandAll(function () {
-                            button.toggle(false);
-                        });
+                    xtype: 'treecolumn',
+                    text: 'Code',
+                    flex: 2,
+                    checkboxText: '',
+                    dataIndex: 'categoryCode',
+                    renderer: function(value) {
+                        return '<a href="#" class="taco-launch-editor">' + (value + '</a>');
                     }
                 }, {
-                    xtype: 'button',
-                    scale: 'medium',
-                    ui: 'action',
-                    text: 'Collapse All',
-                    margin: '0 0 0 10',
-                    scope: this,
-                    handler: function () {
-                        this.treelist.collapseAll();
-                    }
-                }]
-            }],
+                    xtype: 'taco.menucolumn',
+                    text: 'Actions',
+                    menuItems: [
+                        {
+                            text: 'Edit',
+                            requiredBehaviors: {
+                                model: 'Taco.model.Category',
+                                behavior: 'update'
+                            },
+
+                            menuColumnHandler: function(item, eventData) {
+                                var record = eventData.record;
+                                Ext.defer(function() {
+                                    Taco.core.StateManager.attemptNavigate('categories/edit/' + record.getId(), { complexMetaData: { record: record } });
+                                }, 1, this);
+
+                            }
+                        },
+                        {
+                            text: 'Duplicate',
+                            requiredBehaviors: {
+                                model: 'Taco.model.Category',
+                                behavior: 'create'
+                            },
+                            menuColumnHandler: function(item, eventData) {
+                                var record = eventData.record,
+                                    metaData = {
+                                        id: record.getId()
+                                    };
+
+                                Taco.app.StateManager.attemptNavigate('categories/duplicate/' + record.getId(), metaData);
+                            }
+                        }, {
+                            text: 'Delete',
+                            requiredBehaviors: {
+                                model: 'Taco.model.Category',
+                                behavior: 'destroy'
+                            },
+                            menuColumnHandler: 'destroyMenuColumnHandler'
+                        }
+                    ]
+
+                }
+            ],
+            dockedItems: [
+                {
+                    xtype: 'container',
+                    dock: 'top',
+                    padding: '0 0 10',
+                    cls: 'taco-secondary-actions',
+                    layout: {
+                        type: 'hbox',
+                        align: 'middle',
+                        pack: 'end'
+                    },
+                    items: [
+                        {
+                            xtype: 'button',
+                            scale: 'medium',
+                            ui: 'action',
+                            text: 'Expand All',
+                            allowDepress: false,
+                            enableToggle: true,
+                            scope: this,
+                            toggleHandler: function(button, nextState) {
+                                this.treelist.expandAll(function() {
+                                    button.toggle(false);
+                                });
+                            }
+                        }, {
+                            xtype: 'button',
+                            scale: 'medium',
+                            ui: 'action',
+                            text: 'Collapse All',
+                            margin: '0 0 0 10',
+                            scope: this,
+                            handler: function() {
+                                this.treelist.collapseAll();
+                            }
+                        }
+                    ]
+                }
+            ],
             listeners: {
                 cellclick: me.onCellClick,
                 itemmove: me.onItemMove,
@@ -217,7 +201,6 @@ Ext.define('Taco.view.category.Index', {
         var target= Ext.fly(e.getTarget()),
             metaData = { id: record.getId() },
             header = view.getHeaderAtIndex(cellIndex);
-
         if (target.hasCls('x-tree-expander')) {
             return;
         }
@@ -241,7 +224,6 @@ Ext.define('Taco.view.category.Index', {
         var me = this,
             store = me.store,
             i;
-
         if (newParent && newParent.childNodes) {
             //resequence nodes if needed
             for (i = 0; i < newParent.childNodes.length; i++) {
@@ -254,7 +236,6 @@ Ext.define('Taco.view.category.Index', {
         if (store.isDirty()) {
             me.setLoading(true);
         }
-
         store.sync({
             success: function (m) {
                 me.setLoading(false);
@@ -295,7 +276,7 @@ Ext.define('Taco.view.category.Index', {
         var me = this;
         Ext.MessageBox.show({
             title: 'Delete Category',
-            // pushes the buttons to the right to be consistant with our dialog ux.
+            // pushes the buttons to the right to be consistent with our dialog ux.
             rightJustifyButtons: true,
             // reverses the order of the buttons
             reverseOrder: true,
@@ -314,7 +295,6 @@ Ext.define('Taco.view.category.Index', {
         var store = grid.getStore();
         grid.setLoading(true);
         record.remove();
-
         store.sync({
             success: function (m) {
                 grid.setLoading(false);
@@ -333,8 +313,8 @@ Ext.define('Taco.view.category.Index', {
 
     launchEditor: function (record) {
         Ext.defer(function () {
-            Taco.core.StateManager.attemptNavigate('categories/edit/' + record.getId(), { complexMetaData: { record: record} });
-        }, 1, this);
+            Taco.core.StateManager.attemptNavigate('categories/edit/' + record.getId(), { complexMetaData: { record: record } });
+            }, 1, this);
         return;
     },
 

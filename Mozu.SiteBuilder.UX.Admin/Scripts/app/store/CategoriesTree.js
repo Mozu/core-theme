@@ -7,22 +7,25 @@ Ext.define('Taco.store.CategoriesTree', {
     extend: 'Taco.store.shared.TreeStore',
     model: 'Taco.model.Category',
     requires: ['Taco.model.Category'],
-    remoteFilter:true,
+    remoteFilter: true,
     batchUpdateMode: "operation",
     defaultRootId: -1,
     nodeParam: 'nodeQuery',
     root: {
         expanded: true,
-        isLoaded:false,
-        id:-1
+        isLoaded: false,
+        id: -1
     },
     nodeSorter: function(a, b) {
         return (a.get('sequence') !== null ? a.get('sequence') : 9999) - (b.get('sequence') !== null ? b.get('sequence') : 9999);
     },
-    storeManagerConfig: {},
-    load: function (options) {
+    storeManagerConfig: {
+        autoLoad: false,
+        createOnly: true,
+        clearFilters: true
+    },
+    load: function(options) {
         var me = this;
-
         options = options || {};
 
         if (typeof options == 'function') {
@@ -32,15 +35,14 @@ Ext.define('Taco.store.CategoriesTree', {
         }
 
         options = Ext.apply({
-            catalogId: me.catalogId
+            catalogId: me.catalogId,
+            bypassCache: true
         }, options);
 
         return me.callParent([options]);
     },
-    reload: function (options) {
-
+    reload: function(options) {
         var me = this;
-
         options = options || {};
 
         if (typeof options == 'function') {
@@ -55,4 +57,4 @@ Ext.define('Taco.store.CategoriesTree', {
 
         return me.callParent([options]);
     }
-   });
+});
