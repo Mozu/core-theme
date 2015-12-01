@@ -28,27 +28,6 @@
         padding: 9px 10px 0;
         overflow-y:auto;    }
 
-    .mz-cms-widget {
-        display: inline-block;
-        margin: 0 10px 10px 0;
-        vertical-align: top;
-        width: 60px;
-
-        .mz-cms-icon {
-            background-size: cover;
-            border: 1px solid #CCC;
-            height: 60px;
-            margin-bottom: 5px;
-            width: 100%;
-        }
-
-        .mz-cms-label {
-            color: #333;
-            font-size: 11px;
-            text-align: center;
-        }
-     }
-
     &:after {
         content: "";
         clear: both;
@@ -61,6 +40,32 @@
         &~ .mz-cms-cover {
             display: none;
         }
+    }
+}
+
+.mz-cms-widget {
+    display: inline-block;
+    margin: 0 10px 10px 0;
+    cursor: move;
+    vertical-align: top;
+    width: 60px;
+
+    .mz-cms-icon {
+        background-size: cover;
+        border: 1px solid #CCC;
+        height: 60px;
+        margin-bottom: 5px;
+        width: 100%;
+
+        &:hover {
+            background-color: transparentize(rgb(45, 109, 207), 0.9);
+        }
+    }
+
+    .mz-cms-label {
+        color: #333;
+        font-size: 11px;
+        text-align: center;
     }
 }
 

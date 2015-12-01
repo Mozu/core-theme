@@ -1,5 +1,5 @@
 /*! 
- * Mozu Hypr Live - v1.0.0 - 2015-10-12
+ * Mozu Hypr Live - v1.0.0 - 2015-11-17
  *
  * Copyright (c) 2015 Volusion, Inc.
  *
@@ -2266,15 +2266,18 @@ exports.parse = function (source, opts, tags, filters) {
     varStripAfter = new RegExp('-' + escapedVarClose + '$'),
     cmtOpen = opts.cmtControls[0],
     cmtClose = opts.cmtControls[1],
+	inlineCmtOpen = opts.inlineCmtControls[0],
+	inlineCmtClose = opts.inlineCmtControls[1],
     anyChar = '[\\s\\S]*?',
     // Split the template source based on variable, tag, and comment blocks
     // /(\{%[\s\S]*?%\}|\{\{[\s\S]*?\}\}|\{#[\s\S]*?#\})/
     splitter = new RegExp(
       '(' +
-        escapedVarOpen + anyChar + escapedVarClose + '|' +
-        escapeRegExp(cmtOpen) + anyChar + escapeRegExp(cmtClose) + '|' +
-        escapedTagOpen + anyChar + escapedTagClose +
-        ')'
+      escapedVarOpen + anyChar + escapedVarClose + '|' +
+      escapeRegExp(cmtOpen) + anyChar + escapeRegExp(cmtClose) + '|' +
+      escapeRegExp(inlineCmtOpen) + anyChar + escapeRegExp(inlineCmtClose) + '|' +
+      escapedTagOpen + anyChar + escapedTagClose +
+      ')'
     ),
     // splitter = new RegExp(
     //   '(' +
@@ -2448,9 +2451,9 @@ exports.parse = function (source, opts, tags, filters) {
     }
 
     // Is a comment?
-    if (!inRaw && utils.startsWith(chunk, cmtOpen) && utils.endsWith(chunk, cmtClose)) {
-      // do nuthin and keep going!
-      return;
+    if ((!inRaw && utils.startsWith(chunk, cmtOpen) && utils.endsWith(chunk, cmtClose)) || !inRaw && utils.startsWith(chunk, inlineCmtOpen) && utils.endsWith(chunk, inlineCmtClose)) {
+        // do nuthin and keep going!
+        return;
     }
     // Is a variable?
     if (!inRaw && utils.startsWith(chunk, varOpen) && utils.endsWith(chunk, varClose)) {
@@ -5608,6 +5611,7 @@ var HyprLive = {
     engine: new amds[0].Swig({
         cache: false,
         cmtControls: ['{% comment %}', '{% endcomment %}'],
+        inlineCmtControls: ['{#', '#}'],
         locals: locals,
         loader: amds[0].loaders.memory(HyprLiveContext.templates, '/')
     }),

@@ -89,6 +89,7 @@
                 this.element.removeClass('mz-cms-active');
                 this.$styles.hide();
             }, this);
+            if (!this.element) return;
             if (!this.element.length) return;
             this._hideTimeout = win.setTimeout(proxy, 150);
         },

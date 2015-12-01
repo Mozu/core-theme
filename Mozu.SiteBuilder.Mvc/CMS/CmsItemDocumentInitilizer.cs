@@ -9,21 +9,26 @@ using Mozu.SiteBuilder.Mvc.Extensions;
 using Mozu.SiteBuilder.Mvc.Models.CMS;
 using Mozu.SiteBuilder.Mvc.Models.CMS.Admin;
 using Mozu.SiteBuilder.UX.Models.Admin.CMS;
+using Mozu.Core.Extensions;
+using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using Document = Mozu.Content.Contracts.Document;
+using Entity = Mozu.MZDB.Contracts.DBEntry;
 
 namespace Mozu.SiteBuilder.Mvc.CMS
 {
     public class CmsHelper
     {
         private readonly ICmsServiceWrapper _cmsServiceWrapper;
+        private readonly MZDB.Contracts.Clients.IEntityListsWebApiClient _EntityListWebApiClient;
 
-        public CmsHelper(ICmsServiceWrapper cmsServiceWrapper)
+        public CmsHelper(ICmsServiceWrapper cmsServiceWrapper, Mozu.MZDB.Contracts.Clients.IEntityListsWebApiClient EntityListWebApiClient)
         {
             _cmsServiceWrapper = cmsServiceWrapper;
+            _EntityListWebApiClient = EntityListWebApiClient;
         }
 
-        public bool ProcessDocumentRequest(DocumentRequest request, string defaultCollection, out Task<ServiceClientResponse<DocumentWithListInfo>> task, bool isEditMode)
+       public bool ProcessDocumentRequest(DocumentRequest request, string defaultCollection, out Task<ServiceClientResponse<DocumentWithListInfo>> task, bool isEditMode)
         {
             if (request.Document != null) {
                 task = Task.FromResult(ServiceClientResponse.FromResult(request.Document, System.Net.HttpStatusCode.OK));
@@ -100,7 +105,8 @@ namespace Mozu.SiteBuilder.Mvc.CMS
             Task<ServiceClientResponse<DocumentWithListInfo>> pageTask = null;
             Task<ServiceClientResponse<DocumentWithListInfo>> templateTask = null;
             Task<ServiceClientResponse<DocumentWithListInfo>> siteTemplateTask = null;
-            var tasks = new List<Task<ServiceClientResponse<DocumentWithListInfo>>>();
+            Task<ServiceClientResponse<JObject>> LayoutFinderOuter = _EntityListWebApiClient.GetEntity("tenantAdminSettings@mozu", "global");
+            var tasks = new List<Task>();
             if (ProcessDocumentRequest(cmsPageContext.Page, "pages@mozu", out pageTask, pageContext.IsEditMode))
             {
                 tasks.Add(pageTask);
@@ -114,6 +120,8 @@ namespace Mozu.SiteBuilder.Mvc.CMS
                 tasks.Add(templateTask);
             }
 
+            tasks.Add(LayoutFinderOuter);
+
             await Task.WhenAll(tasks.ToArray()).ConfigureAwait(false);
             if (pageTask != null && pageTask.Result.ResponseMessage.IsSuccessStatusCode)
             {
@@ -126,7 +134,7 @@ namespace Mozu.SiteBuilder.Mvc.CMS
             if (siteTemplateTask != null && siteTemplateTask.Result.ResponseMessage.IsSuccessStatusCode)
             {
                 cmsPageContext.SiteTemplate = UpdateDocumentRequestFromTask(cmsPageContext.SiteTemplate, siteTemplateTask);
-            }   
+            }
 
             if (templateTask == null && cmsPageContext.Page.Document != null && cmsPageContext.Page.Document.Properties != null)
             {
@@ -160,7 +168,27 @@ namespace Mozu.SiteBuilder.Mvc.CMS
                 }
             }
 
-            cmsPageContext.RuntimeData = new List<ZoneRuntimeData>();
+            if (LayoutFinderOuter != null && LayoutFinderOuter.Result.ResponseMessage.IsSuccessStatusCode)
+            {
+                var tenantAdminSettingsGlobalObject = LayoutFinderOuter.Result.ReadAsSync();
+                if (tenantAdminSettingsGlobalObject != null)
+                {
+                    var layoutnode = tenantAdminSettingsGlobalObject["newLayoutEngine"] ?? new JValue(false);
+                    cmsPageContext.LayoutEngineType = layoutnode.Value<bool>() ? CmsPageContext.LayoutTypeConstants.Caliente : CmsPageContext.LayoutTypeConstants.Chorizo;
+                }
+                else
+                {
+                    cmsPageContext.LayoutEngineType = CmsPageContext.LayoutTypeConstants.Chorizo;
+                }
+            }
+            else
+            {
+                cmsPageContext.LayoutEngineType = CmsPageContext.LayoutTypeConstants.Chorizo;
+            }
+
+            cmsPageContext.RuntimeData = new List<Chorizo.ZoneRuntimeData>();
+            cmsPageContext.CalienteRuntimeData = new List<Caliente.ZoneRuntimeData>();
+
             AddRuntimeData(cmsPageContext.Page.Document, cmsPageContext, ZoneScope.Page);
             AddRuntimeData(cmsPageContext.Template.Document, cmsPageContext, ZoneScope.Template);
             AddRuntimeData(cmsPageContext.SiteTemplate.Document, cmsPageContext, ZoneScope.Site);
@@ -185,28 +213,50 @@ namespace Mozu.SiteBuilder.Mvc.CMS
             if (document == null)
                 return;
             var widgetRawArray = document.Get<JArray>(CmsConstants.Documents.widget_prop);
-            List<ZoneRuntimeData> zoneData = widgetRawArray == null ? null : widgetRawArray.ToObject<List<ZoneRuntimeData>>();
-            
+            var first = widgetRawArray != null ? widgetRawArray[0].Value<JObject>() : null;
+            // get build prop
+            // check for existence
+            // switch between caliente and chorizo based on value.
 
             var src = new DocumentRequest
-                      {
-                          Id = document.Id,
-                          ListFQN = document.ListFQN
-                      };
-
-
-
-
-
-            if (zoneData != null)
             {
-                zoneData.ForEach(x =>
-                {
-                    x.Source = src;
-                    x.Scope = scope;
-                });
-                cmsPageContext.RuntimeData.AddRange(zoneData);
+                Id = document.Id,
+                ListFQN = document.ListFQN
+            };
+
+            var property = first != null ? first["build"] : null;
+            var buildType = property == null || property.Value<string>().EqualsIgnoreCase(CmsPageContext.LayoutTypeConstants.Chorizo) ? CmsPageContext.LayoutTypeConstants.Chorizo : CmsPageContext.LayoutTypeConstants.Caliente;
+            
+            switch (buildType.ToUpperInvariant()) {
+
+                case "CHORIZO":
+                    {
+                        List<Chorizo.ZoneRuntimeData> zoneData = widgetRawArray == null ? new List<Chorizo.ZoneRuntimeData>() : widgetRawArray.ToObject<List<Chorizo.ZoneRuntimeData>>();
+
+                        zoneData.ForEach(x =>
+                        {
+                            x.Source = src;
+                            x.Scope = scope;
+                        });
+                        cmsPageContext.RuntimeData.AddRange(zoneData);
+
+                        break;
+                    }
+                case "CALIENTE":
+                    {
+                        List<Caliente.ZoneRuntimeData> zoneData = widgetRawArray == null ? new List<Caliente.ZoneRuntimeData>() : widgetRawArray.ToObject<List<Caliente.ZoneRuntimeData>>();
+
+                        zoneData.ForEach(x =>
+                        {
+                            x.Source = src;
+                            x.Scope = scope;
+                        });
+                        cmsPageContext.CalienteRuntimeData.AddRange(zoneData);
+                   
+                        break;
+                    }
             }
+
         }
 
         public void CreateTemplate_deleteme(DocumentRequest req, out Task<ServiceClientResponse<Document>> task)
@@ -223,10 +273,11 @@ namespace Mozu.SiteBuilder.Mvc.CMS
                         ListFQN = "pageTemplateContent@mozu",
                         DocumentTypeFQN = "pageTemplateContent@mozu",
                         Name = Path.GetFileName(req.Path),
-                      //  Path = Path.GetDirectoryName(req.Path)
+                        //  Path = Path.GetDirectoryName(req.Path)
                     });
             return;
         }
+
     }
 
     public static class ServiceClientResponse

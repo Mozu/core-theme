@@ -50,6 +50,7 @@ var HyprLive = {
     engine: new amds[0].Swig({
         cache: false,
         cmtControls: ['{% comment %}', '{% endcomment %}'],
+        inlineCmtControls: ['{#', '#}'],
         locals: locals,
         loader: amds[0].loaders.memory(HyprLiveContext.templates, '/')
     }),

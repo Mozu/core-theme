@@ -8,6 +8,7 @@ using System.Web;
 using Mozu.SiteBuilder.Mvc;
 using Mozu.SiteBuilder.Mvc.CMS;
 using Mozu.SiteBuilder.Mvc.Models.CMS;
+using Mozu.SiteBuilder.UX.Models.Admin.CMS;
 using Mozu.SiteBuilder.Mvc.Models.CMS.Admin;
 using Mozu.SiteBuilder.Mvc.ObjectPools;
 using Mozu.SiteBuilder.Mvc.Tags;
@@ -21,6 +22,7 @@ using Mozu.Core.Extensions;
 using Mozu.Core.Settings;
 using System.Threading.Tasks;
 using Microsoft.FSharp.Core;
+using System.Collections;
 
 namespace Mozu.SiteBuilder.UX.Hypr.Tags
 {
@@ -68,8 +70,7 @@ namespace Mozu.SiteBuilder.UX.Hypr.Tags
     public class EditResourcesTag : SimpleTagBase
     {
         static string FileVersion = System.Diagnostics.FileVersionInfo.GetVersionInfo(typeof(BaseApiController).Assembly.Location).FileVersion;
-        const string Format = "\t\t<script type=\"text/javascript\" src=\"{0}/admin/scripts/chorizo/{1}.js?{2},{3}\"></script>\r\n";
-        static string[] autoIncludeScripts = new[] { "_classfactory", "format", "content", "targets", "widgets", "editor" };
+        const string calienteScriptFormat = "\t\t<script type=\"text/javascript\" src=\"{0}/admin/scripts/chorizo/caliente/build/{1}.js?{2},{3}\"></script>\r\n";
         static AssemblyInformationalVersionAttribute  AssemblyInfoAtt = (System.Reflection.AssemblyInformationalVersionAttribute)(typeof(BaseApiController).Assembly.GetCustomAttributes(typeof(System.Reflection.AssemblyInformationalVersionAttribute), false).FirstOrDefault() ?? new System.Reflection.AssemblyInformationalVersionAttribute("local"));
         static string AssemblyInfoHash = new Guid(System.Security.Cryptography.MD5.Create().ComputeHash(System.Text.Encoding.ASCII.GetBytes(AssemblyInfoAtt.InformationalVersion))).ToString();
 
@@ -81,6 +82,8 @@ namespace Mozu.SiteBuilder.UX.Hypr.Tags
             var pageContext = context.PageContext();
             var settings = context.Resolve<ISettings>();
             var cdnHost = string.IsNullOrWhiteSpace(siteContext.GeneralSettings.CustomCdnHostName) ? settings.AppSettings("CdnHost") : siteContext.GeneralSettings.CustomCdnHostName;
+            var layoutJavaScripts = new List<string>() { "chorizo" };
+            var scriptFormat = calienteScriptFormat;
             var cdn = settings.AppSettings("disableCDN") == "true" || string.IsNullOrEmpty(cdnHost)
                 ? string.Empty
                 : string.Format("//{0}/common", cdnHost);
@@ -89,6 +92,7 @@ namespace Mozu.SiteBuilder.UX.Hypr.Tags
             using (var sbItemDisposer = StringBuilderPool.Default.GetContainer())
             {
                 var sb = sbItemDisposer.Item;
+
                 sb.AppendFormat("\t\t<link rel=\"stylesheet\" href=\"{0}/resources/cms/layout.css?{1},{2}\">\r", siteContext.CdnPrefix, FileVersion, AssemblyInfoHash);
                 if (!isEditmode)
                 {
@@ -101,9 +105,10 @@ namespace Mozu.SiteBuilder.UX.Hypr.Tags
 #if DEBUG
                 sb.AppendLine("\t\t<script src=\"//ajax.googleapis.com/ajax/libs/jqueryui/1.10.3/jquery-ui.js\"></script>");
 #else
-                sb.AppendLine("\t\t<script src=\"//ajax.googleapis.com/ajax/libs/jqueryui/1.10.3/jquery-ui.min.js\"></script>");
+               
 #endif
-                autoIncludeScripts.Aggregate(sb, (builder, s) => builder.AppendFormat(Format, cdn, s, FileVersion, AssemblyInfoHash));
+
+                layoutJavaScripts.Aggregate(sb, (builder, s) => builder.AppendFormat(scriptFormat, cdn, s, FileVersion, AssemblyInfoHash));
 
                 return new[] { WalkResultHelpers.Buffer(sb.ToString()) }; 
             }
@@ -165,14 +170,93 @@ namespace Mozu.SiteBuilder.UX.Hypr.Tags
                 await cmsHelper.InitCmsPageContext(pageContext, siteContext).ConfigureAwait(false);
             }
 
-            var zoneRuntimeData = GetRuntimeData(scope, zoneId, pageContext);
             var isEditmode = pageContext.IsEditMode && scope.ToStringQuickly().EqualsIgnoreCase(pageContext.EditMode.GetValueOrDefault(EditModes.page).ToString());
 
-            var rendered = await WriteZoneRuntimeData(context, themeEntityDefinitionProvider.GetWidgetDefinition, scope, zoneSpan, zoneId, isEditmode, zoneRuntimeData).ConfigureAwait(false);
-            return new[] { WalkResultHelpers.Buffer(rendered) };
+            var calienteRuntimeData = GetCalienteRuntimeData(scope, zoneId, pageContext);
+            if (calienteRuntimeData != null)
+            {
+                var rendered = await WriteCalienteZoneRuntimeData(context, themeEntityDefinitionProvider.GetWidgetDefinition, scope, zoneSpan, zoneId, isEditmode, calienteRuntimeData).ConfigureAwait(false);
+                return new[] { WalkResultHelpers.Buffer(rendered) };
+            }
+            else
+            {
+                var chorizoRuntimeData = GetRuntimeData(scope, zoneId, pageContext);
+                var rendered = await WriteZoneRuntimeData(context, themeEntityDefinitionProvider.GetWidgetDefinition, scope, zoneSpan, zoneId, isEditmode, chorizoRuntimeData).ConfigureAwait(false);
+
+                return new[] { WalkResultHelpers.Buffer(rendered) };
+            }
+
         }
 
-        private static async Task<string> WriteZoneRuntimeData(IContext context, Func<string, WidgetDefinition> getWidgetDefFunc, ZoneScope scope, int zoneSpan, string zoneId, bool isEditmode, ZoneRuntimeData zoneRuntimeData)
+        private static async Task<string> WriteCalienteZoneRuntimeData(IContext context, Func<string, WidgetDefinition> getWidgetDefFunc, ZoneScope scope, int zoneSpan, string zoneId, bool isEditmode, Caliente.ZoneRuntimeData zoneRuntimeData)
+        {
+            using (var sbItemDisposer = StringBuilderPool.Default.GetContainer())
+            {
+                var sb = sbItemDisposer.Item;
+                WriteCalienteOpenDropZoneTag(scope, zoneSpan, zoneId, isEditmode, zoneRuntimeData, sb);
+
+                if (zoneRuntimeData != null && zoneRuntimeData.Rows != null)
+                {
+                    foreach (var row in zoneRuntimeData.Rows)
+                    {
+                        await buildCalienteRow(row, sb, scope, zoneSpan, zoneId, isEditmode, getWidgetDefFunc, context).ConfigureAwait(false);
+                    }
+                }
+                WriteCloseDropZoneTag(sb);
+                return sb.ToString();
+            }
+        }
+
+        private static async Task buildCalienteRow(Caliente.ZoneRowRuntimeData row, StringBuilder sb, ZoneScope scope, int zoneSpan, string zoneId, bool isEditmode, Func<string, WidgetDefinition> getWidgetDefFunc, IContext context)
+        {
+            sb.Append("<div class=\"mz-cms-row\"");
+
+            sb.AppendJsonHtmlAttribute(new
+            {
+                title = row.Title,
+            }, "widget");
+
+            sb.Append("/>");
+
+            if (row.Columns != null)
+            {
+                foreach (var column in row.Columns)
+                {
+                    if (column.Rows.SafeAny() && !column.Widgets.SafeAny())
+                    {
+                        sb.AppendFormat("<div class=\"mz-cms-col-\" style=\"width:{0}\">", column.Width);
+                        foreach (var childRow in column.Rows)
+                        {
+                            await buildCalienteRow(childRow, sb, scope, zoneSpan, zoneId, isEditmode, getWidgetDefFunc, context).ConfigureAwait(false);
+                        }
+                        sb.Append("</div>");
+
+                    }
+                    else if (column.Widgets.SafeAny() && !column.Rows.SafeAny())
+                    {
+                        await WriteCalienteWidgets(sb, context, getWidgetDefFunc, column.Width, zoneSpan, isEditmode, column.Widgets).ConfigureAwait(false);
+                    }
+                    else if (!column.Widgets.SafeAny() && !column.Rows.SafeAny())
+                    {
+                        AddEmptyColumn(sb, column.Width);
+                    }
+                    else if (column.Widgets.SafeAny() && column.Rows.SafeAny())
+                    {
+                        throw new ArgumentException("a column cannot have both rows and widgets.");
+                    }
+                }
+            }
+
+            sb.Append("</div>");
+        }
+
+        private static void AddEmptyColumn(StringBuilder sb, string width)
+        {
+            sb.AppendFormat("<div class=\"mz-cms-col-\" style=\"width:{0}\">", width);
+            sb.Append("</div>");
+        }
+
+        private static async Task<string> WriteZoneRuntimeData(IContext context, Func<string, WidgetDefinition> getWidgetDefFunc, ZoneScope scope, int zoneSpan, string zoneId, bool isEditmode, Chorizo.ZoneRuntimeData zoneRuntimeData)
         {
             using (var sbItemDisposer = StringBuilderPool.Default.GetContainer())
             {
@@ -210,7 +294,7 @@ namespace Mozu.SiteBuilder.UX.Hypr.Tags
             sb.Append("</div>");
         }
 
-        private static void WriteOpenDropZoneTag(ZoneScope scope, int zoneSpan, string zoneId, bool isEditmode, ZoneRuntimeData zoneRuntimeData, StringBuilder sb)
+        private static void WriteCalienteOpenDropZoneTag(ZoneScope scope, int zoneSpan, string zoneId, bool isEditmode, Caliente.ZoneRuntimeData zoneRuntimeData, StringBuilder sb)
         {
             sb.AppendFormat("<div id=\"mz-drop-zone-{0}", zoneId);
             sb.Append("\" class=\"mz-drop-zone");
@@ -232,9 +316,43 @@ namespace Mozu.SiteBuilder.UX.Hypr.Tags
             sb.Append(">");
         }
 
-        private static async Task WriteWidgets(StringBuilder sb, IContext context, Func<string, WidgetDefinition> getWidgetDefFunc, int columnSpan, int zoneSpan, bool isEditmode, IEnumerable<ZoneWidgetRuntimeData> widgets)
+        private static void WriteOpenDropZoneTag(ZoneScope scope, int zoneSpan, string zoneId, bool isEditmode, Chorizo.ZoneRuntimeData zoneRuntimeData, StringBuilder sb)
+        {
+            sb.AppendFormat("<div id=\"mz-drop-zone-{0}", zoneId);
+            sb.Append("\" class=\"mz-drop-zone");
+            if (isEditmode)
+            {
+                sb.Append(" mz-cms-editing mz-cms-grid\" ");
+                sb.AppendJsonHtmlAttribute(new
+                {
+                    id = zoneId,
+                    scope = scope.ToStringQuickly(),
+                    span = zoneSpan,
+                    source = zoneRuntimeData == null ? null : zoneRuntimeData.Source
+                }, "drop-zone");
+            }
+            else
+            {
+                sb.Append("\" ");
+            }
+            sb.Append(">");
+        }
+
+        private static async Task WriteWidgets(StringBuilder sb, IContext context, Func<string, WidgetDefinition> getWidgetDefFunc, int? columnSpan, int zoneSpan, bool isEditmode, IEnumerable<ZoneWidgetRuntimeData> widgets)
         {
             sb.AppendFormat("<div class=\"mz-cms-col-{0}-{1}\">", columnSpan, zoneSpan);
+
+            foreach (var widget in widgets)
+            {
+                await WriteWidget(sb, widget, getWidgetDefFunc, isEditmode, context).ConfigureAwait(false);
+            }
+
+            sb.Append("</div>");
+        }
+
+        private static async Task WriteCalienteWidgets(StringBuilder sb, IContext context, Func<string, WidgetDefinition> getWidgetDefFunc, string columnWidth, int zoneSpan, bool isEditmode, IEnumerable<ZoneWidgetRuntimeData> widgets)
+        {
+            sb.AppendFormat("<div class=\"mz-cms-col-\" style=\"width:{0}\">", columnWidth);
 
             foreach (var widget in widgets)
             {
@@ -325,11 +443,18 @@ namespace Mozu.SiteBuilder.UX.Hypr.Tags
             }
         }
 
-        private static ZoneRuntimeData GetRuntimeData(ZoneScope scope, string zoneId, Mvc.Contexts.PageContext pageContext)
+        private static Chorizo.ZoneRuntimeData GetRuntimeData(ZoneScope scope, string zoneId, Mvc.Contexts.PageContext pageContext)
         {
             return (pageContext.CmsContext == null || pageContext.CmsContext.RuntimeData == null) ?
                     null :
                     pageContext.CmsContext.RuntimeData.FirstOrDefault(x => scope == x.Scope && x.Id.EqualsIgnoreCase(zoneId));
+        }
+
+        private static Caliente.ZoneRuntimeData GetCalienteRuntimeData(ZoneScope scope, string zoneId, Mvc.Contexts.PageContext pageContext)
+        {
+            return (pageContext.CmsContext == null || pageContext.CmsContext.CalienteRuntimeData == null) ?
+                    null :
+                    pageContext.CmsContext.CalienteRuntimeData.FirstOrDefault(x => scope == x.Scope && x.Id.EqualsIgnoreCase(zoneId));
         }
 
         private static string DetermineZoneScopeDefault(ArgumentCollection args)
@@ -359,6 +484,20 @@ namespace Mozu.SiteBuilder.UX.Hypr.Tags
             if (hs.Contains(zoneId)) return true;
             hs.Add(zoneId);
             return false;
+        }
+    }
+    public static class ListExt
+    {
+        public static bool SafeAny<T>(this IEnumerable<T> items)
+        {
+            if (items == null) return false;
+            return items.Any();
+        }
+
+        public static bool SafeAny<T>(this IEnumerable<T> items, Func<T, bool> pred)
+        {
+            if (items == null) return false;
+            return items.Any(pred);
         }
     }
 }

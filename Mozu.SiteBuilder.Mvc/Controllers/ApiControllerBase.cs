@@ -10,14 +10,17 @@ using Mozu.SiteBuilder.Mvc.CMS;
 using Mozu.SiteBuilder.Mvc.Contexts;
 using Mozu.SiteBuilder.Mvc.ViewEngine;
 using Mozu.SiteBuilder.UX.Models.Admin.CMS;
+using System;
 
 namespace Mozu.SiteBuilder.Mvc.Controllers
 {
     public class ApiControllerBase : ApiController, IHyprController
     {
 
-
-
+        static T Resolve<T>(Lazy<ILifetimeScope> s)
+        {
+            return s.Value.Resolve<T>();
+        }
 
         private ILifetimeScope _lifetimeScope;
 
@@ -28,13 +31,12 @@ namespace Mozu.SiteBuilder.Mvc.Controllers
                 if (_lifetimeScope == null)
                 {
                     _lifetimeScope = (ILifetimeScope) this.Request.GetDependencyScope().GetService(typeof (ILifetimeScope));
-
-
                 }
                 return _lifetimeScope;
             }
             set { _lifetimeScope = value; }
         }
+
 
         private ISiteBuilderApiContext _siteBuilderApiContext;
         private HttpContextBase _httpContextBase;
@@ -62,7 +64,7 @@ namespace Mozu.SiteBuilder.Mvc.Controllers
             {
                 if (_contextInitTasks == null)
                 {
-                    _contextInitTasks = Task.WhenAll(new CmsHelper(this.CmsService).InitCmsPageContext(this.PageContext, this.SiteContext ), this.SiteContext.Init(), this.NavigationContext.ASyncGetTree());
+                    _contextInitTasks = Task.WhenAll(new CmsHelper(this.CmsService, this.EntityListService).InitCmsPageContext(this.PageContext, this.SiteContext ), this.SiteContext.Init(), this.NavigationContext.ASyncGetTree());
                 }
                 return _contextInitTasks;
             }
@@ -73,7 +75,23 @@ namespace Mozu.SiteBuilder.Mvc.Controllers
             _contextInitTasks = null;
         }
 
-    private ICmsServiceWrapper _cmsService;
+        private Mozu.MZDB.Contracts.Clients.IEntityListsWebApiClient _entityListService;
+        public Mozu.MZDB.Contracts.Clients.IEntityListsWebApiClient EntityListService
+        {
+              get
+            {
+                if (_entityListService == null)
+                {
+                    _entityListService = LifetimeScope.Resolve<Mozu.MZDB.Contracts.Clients.IEntityListsWebApiClient>();
+
+                }
+
+                return _entityListService;
+            }
+            set { _entityListService = value; }
+        }
+
+        private ICmsServiceWrapper _cmsService;
         public ICmsServiceWrapper CmsService
         {
             get

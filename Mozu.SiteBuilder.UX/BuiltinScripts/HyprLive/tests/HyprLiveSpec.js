@@ -113,7 +113,7 @@
                 .to.equal('?a=1&b=21&sortBy=price%3Adesc');
             expect(Hypr.engine.render('{% make_url "sorting" sort %}', { locals: { sort: 'price:desc,rating:asc' } }))
                 .to.equal('?a=1&b=21&sortBy=price%3Adesc%2Crating%3Aasc');
-            
+
             // ensure sortBy is being replaced
             history.replaceState({}, null, window.location.href.split('?').shift() + "?a=1&b=21&sortBy=dead%3Adata");
             expect(Hypr.engine.render('{% make_url "sorting" "price:asc" %}'))
@@ -129,12 +129,12 @@
                 .to.equal('?a=1&b=21&facetValueFilter=size%3A1%2Csize%3A2');
 
             // append if a facetValueFilter alread exists
-            history.replaceState({}, null, window.location.href.split('?').shift() + '?a=1&b=21&facetValueFilter=size%3A1%2Csize%3A2');            
+            history.replaceState({}, null, window.location.href.split('?').shift() + '?a=1&b=21&facetValueFilter=size%3A1%2Csize%3A2');
             expect(Hypr.engine.render('{% make_url "facet" "size:3" %}'))
                 .to.equal('?a=1&b=21&facetValueFilter=size%3A1%2Csize%3A2%2Csize%3A3');
 
             // remove facet value if already defined
-            history.replaceState({}, null, window.location.href.split('?').shift() + '?a=1&b=21&facetValueFilter=size%3A1%2Csize%3A2%2Csize%3A3');            
+            history.replaceState({}, null, window.location.href.split('?').shift() + '?a=1&b=21&facetValueFilter=size%3A1%2Csize%3A2%2Csize%3A3');
             expect(Hypr.engine.render('{% make_url "facet" "size:3" %}'))
                 .to.equal('?a=1&b=21&facetValueFilter=size%3A1%2Csize%3A2');
         });
@@ -162,7 +162,7 @@
             // ensure startIndex min is 0
             expect(Hypr.engine.render('{% make_url "paging" productCollection with page=0 as_parameter %}', data)).to.equal('?a=1&b=21&startIndex=0');
 
-            // ensure startIndex max is 40 
+            // ensure startIndex max is 40
             expect(Hypr.engine.render('{% make_url "paging" productCollection with page=6 as_parameter %}', data)).to.equal('?a=1&b=21&startIndex=40');
 
             // ensure current page if none is defined
@@ -566,11 +566,14 @@
                 it("replaces all instances of the string if you supply a replacement string", function() {
                     expect(tryReplace("quick", "questionable")).to.equal("The questionable brown fox jumps over the lazy dog");
                 });
-            })
+                it("should accept new type of comment", function() {
+                     expect(Hypr.engine.render('{# banana #}')).to.equal('');
+                });
+            });
 
 
         });
 
-        
+
     });
 })

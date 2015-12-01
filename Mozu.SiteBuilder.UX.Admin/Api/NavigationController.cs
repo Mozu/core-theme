@@ -540,6 +540,11 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
 
                     originalNode.Name = change.Name;
 
+                    if (!string.Equals(change.Url, originalNode.Url, StringComparison.OrdinalIgnoreCase))
+                    {
+                        originalNode.Url = change.Url;
+                    }
+
                     return _navRepo.SaveSetAsync(navSet);
                 })
                 .Unwrap()

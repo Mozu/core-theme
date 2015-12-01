@@ -41,6 +41,7 @@ namespace Mozu.SiteBuilder.UnitTests.Mvc.Filters
                     Name = "no matching property",
                     Template = getavailability,
                     Context = new Dictionary<string, object> { { "product", new{Properties = new object[]{}}} },
+
                     ExpectedFunc = TestDescriptor.CompareLiteral(string.Empty)
                 },
                 new TestDescriptor

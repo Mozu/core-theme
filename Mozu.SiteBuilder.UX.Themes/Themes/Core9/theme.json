@@ -11,6 +11,10 @@
     },
     "editors": [
         {
+            "id": "layout",
+            "path": "layout.js"
+        },
+        {
             "documentTypes": [
                 "web_page@mozu"
             ],
@@ -656,6 +660,118 @@
         "allowCustomerInitiatedReturns": true,
         "visaCheckoutSdkUrl": "https://sandbox-assets.secure.checkout.visa.com/checkout-widget/resources/js/integration/v1/sdk.js"
     },
+    "layoutWidgets": [
+        {
+            "id": "mz-1-col",
+            "category": "*",
+            "displayName": "1 Column 100",
+            "displayTemplate": "base",
+            "defaultConfig": {
+                "title": "Mozu Layout Element",
+                "mz-col1": 100
+            },
+            "customEditor": "layout",
+            "icon": "/resources/admin/widgets/03_heading_p.png",
+            "validPageTypes": [
+                "*"
+            ],
+            "columns": [
+                {
+                    "width": "100%"
+                }
+            ]
+        },
+        {
+            "id": "mz-2-col",
+            "category": "*",
+            "displayName": "2 Column 50/50",
+            "displayTemplate": "base",
+            "defaultConfig": {
+                "title": "Mozu Layout Element",
+                "mz-col1": 50,
+                "mz-col2": 50
+            },
+            "customEditor": "layout",
+            "icon": "/resources/admin/widgets/03_heading_p.png",
+            "validPageTypes": [
+                "*"
+            ],
+            "columns": [
+                {
+                    "width": "50%"
+                },
+                {
+
+                    "width": "50%"
+                }
+            ]
+        },
+        {
+            "id": "mz-3-col",
+            "category": "*",
+            "displayName": "3 Column 33/33/33",
+            "displayTemplate": "base",
+            "defaultConfig": {
+                "title": "Mozu Layout Element",
+                "mz-col1": 33.33,
+                "mz-col2": 33.33,
+                "mz-col3": 33.33
+            },
+            "customEditor": "layout",
+            "icon": "/resources/admin/widgets/03_heading_p.png",
+            "validPageTypes": [
+                "*"
+            ],
+            "columns": [
+                {
+                    "width": "33.3%"
+                },
+                {
+
+                    "width": "33.3%"
+                },
+                {
+
+                    "width": "33.3%"
+                }
+            ]
+        },
+        {
+            "id": "mz-4-col",
+            "category": "*",
+            "displayName": "4 Column 25/25/25/25",
+            "displayTemplate": "base",
+            "defaultConfig": {
+                "title": "Mozu Layout Element",
+                "mz-col1": 25,
+                "mz-col2": 25,
+                "mz-col3": 25,
+                "mz-col4": 25
+            },
+            "customEditor": "layout",
+            "icon": "/resources/admin/widgets/03_heading_p.png",
+            "validPageTypes": [
+                "*"
+            ],
+            "columns": [
+                {
+                    "width": "25%"
+                },
+                {
+
+                    "width": "25%"
+                },
+                {
+
+                    "width": "25%"
+                },
+                {
+
+                    "width": "25%"
+                }
+            ]
+        }
+    ],
     "widgets": [
         {
             "defaultConfig": {

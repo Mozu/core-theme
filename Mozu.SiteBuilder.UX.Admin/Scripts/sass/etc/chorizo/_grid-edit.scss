@@ -1,3 +1,85 @@
+.mz-cms-row {
+
+    &.content-view {
+        padding: 20px !important;
+    }
+
+    .content {
+        line-height: 100px;
+        text-align: center;
+    }
+
+    .mz-layout-widget-header {
+        text-align: center;
+        border: 1px solid #000000;
+        height: 21px;
+        position: relative;
+
+        &.row {
+            background-color: #eee;
+            color: #0000000;
+
+            .mz-cms-tools {
+                background-color: #eee;
+            }
+        }
+
+        &.col {
+            background-color: #666;
+            color: #FFFFF;
+
+            .mz-cms-tools {
+                background-color: #666;
+            }
+        }
+    }
+}
+
+.mz-drag-icon {
+    display: block;
+    background-repeat: round;
+    height: 50px;
+    pointer-events: none;
+    position: absolute;
+    width: 50px;
+    z-index: 1000002;
+}
+
+.mz-cms-tools {
+    display: block;
+    padding: 0;
+    position: absolute;
+    right: 0;
+    top: 0;
+    height: 19px;
+    margin: 0;
+    z-index: 1000001;
+    cursor: pointer;
+
+    li {
+        display: inline-block;
+        height: 26.66px;
+        text-align: center;
+        width: 26.66px;
+        padding-top: 6.66px;
+        text-align: center;
+        color: white;
+        margin-left: 2px;
+        margin-right: 2px;
+        &.pencil {
+            @include icon-font(char-from-code($glyph-chorizo-pencil), 11px, rgb(255,255,255));
+        }
+
+        &.trash {
+            @include icon-font(char-from-code($glyph-chorizo-trash), 11px, rgb(255,255,255));
+        }
+
+        &.drag-handle {
+            @include icon-font(char-from-code($glyph-chorizo-move), 11px, rgb(255,255,255));
+        }
+    }
+}
+
 .mz-cms-editing {
 
     .mz-cms-grid {
@@ -7,11 +89,24 @@
             border-color: transparent;
             outline: none;
         }
+
+        [class*='mz-cms-col-'] {
+            transition: width 0.4s, height 0.4s;
+            border: none;
+
+            &.content-view {
+                border: 1px solid black;
+                outline: none !important;
+            }
+
+            &.mz-cms-show-zone {
+                outline-color: $hint-block-color;
+                outline-style: dashed;
+                outline-width: 1.1px;
+            }
+        }
     }
 
-    [class*='mz-cms-col-'] {
-        transition: width 0.4s, height 0.4s;
-    }
 
     .mz-cms-row {
         outline: 1px solid transparent;
@@ -23,13 +118,16 @@
         outline: 1px solid transparent;
         outline-offset: -1px;
         @include transition(outline-color $duration, background-color $duration);
-    }
 
-    .mz-cms-droppable, .mz-cms-show-zone {
+        .mz-cms-tools {
+            background-color: $hint-color;
+            display: none;
+            text-align: center;
+            width: 52px;
+        }
 
-        .mz-cms-row, .mz-cms-block, .mz-cms-blank-block {
-            outline-color: $hint-block-color;
-            outline-style: dashed;
+        &.mz-content-screen {
+            opacity: .2;
         }
     }
 
@@ -51,56 +149,6 @@
         }
     }
 
-    .mz-cms-tools {
-        background: $hint-block-hover-color;
-        margin: 0;
-        display: none;
-        padding: 0;
-        position: absolute;
-        right: 0;
-        top: 0;
-		z-index: 1000001;
-        cursor: pointer;
-
-        //@include transition(opacity $duration);
-
-        li {
-            color: white;
-            display: inline-block;
-            font-size: 10px;
-            height: 26.66px;
-            text-align: center;
-            width: 26.66px;
-            padding-top: 6.66px;
-            text-align: center;
-        }
-
-        .chorizo-icon {
-            display: inline-block;
-            overflow: hidden;
-            height: 13px;
-            position: relative;
-            font-style: normal;
-    
-            &.pencil {
-                @include icon-font(char-from-code($glyph-chorizo-pencil), 13px, rgb(255,255,255));
-                cursor: pointer;
-            }
-
-            &.drag-handle {
-                @include icon-font(char-from-code($glyph-chorizo-move), 14px, rgb(255,255,255));
-                
-            }
-
-            &.trash {
-                @include icon-font(char-from-code($glyph-chorizo-trash), 13px, rgb(255,255,255));
-                cursor: pointer;
-            }
-
-        }
-
-    }
-
 
     .mz-cms-hint-bar {
         background: $hint-color;
@@ -108,6 +156,8 @@
         position: absolute;
         width: 3px;
         z-index: 1000002;
+        pointer-events: none;
+        display: none;
 
         &:before, &:after {
             border-bottom: 0;
@@ -227,7 +277,7 @@
 
         .mz-cms-bottom {
             background-color: $hint-color;
-            bottom: 7px;
+            bottom: -4px;
             cursor: ns-resize;
             height: 7px;
             left: 50%;

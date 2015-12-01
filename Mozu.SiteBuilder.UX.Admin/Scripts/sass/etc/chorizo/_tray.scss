@@ -1,0 +1,16 @@
+#taco-widget-tray {
+    
+    .tray-header {
+        font-size: 16px;
+        margin: 9px;
+    }
+    
+    #taco-widget-holder {
+        text-align: justify;
+        margin-left: 19px;
+    }
+
+    .ui-draggable {
+        -webkit-user-drag: none;
+    }
+}

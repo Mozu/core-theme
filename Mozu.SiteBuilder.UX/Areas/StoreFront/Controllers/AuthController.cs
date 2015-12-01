@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Net;
 using System.Web.Http;
-using Mozu.CommerceRuntime.Contracts.Orders;
 using Mozu.Core;
 using Mozu.Core.Api.Client;
 using Mozu.Core.Api.Contracts.Client;
@@ -441,7 +440,7 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
         [SslOnlyActionFilter]
         public async Task<ActionResult> ResetPassword(string t, string u)
         {
-            if (_authenticationHelper.GetProfileToken().Length > 1)
+            if (_authenticationHelper != null && _authenticationHelper.GetProfileToken() != null && _authenticationHelper.GetProfileToken().Length > 1)
             {
                 return new RedirectResult("/");
             }
@@ -487,7 +486,7 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
         [SslOnlyActionFilter]
         public async Task<HttpResponseMessage> ResetPassword(ResetPasswordConfirmDetails info)
         {
-            if (_authenticationHelper.GetProfileToken().Length > 1)
+            if (_authenticationHelper != null && _authenticationHelper.GetProfileToken() != null && _authenticationHelper.GetProfileToken().Length > 1)
             {
                 var redir = this.Request.CreateResponse(statusCode: System.Net.HttpStatusCode.Redirect);
 

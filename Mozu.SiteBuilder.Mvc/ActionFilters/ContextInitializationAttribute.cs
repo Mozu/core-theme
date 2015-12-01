@@ -8,6 +8,7 @@ using System.Web.UI;
 using Mozu.SiteBuilder.Mvc.CMS;
 using Mozu.SiteBuilder.Mvc.Controllers;
 using IActionFilter = System.Web.Http.Filters.IActionFilter;
+using Mozu.SiteBuilder.Mvc.ViewEngine;
 
 namespace Mozu.SiteBuilder.Mvc.ActionFilters
 {
@@ -26,7 +27,7 @@ namespace Mozu.SiteBuilder.Mvc.ActionFilters
                             controller.PageContext.CmsContext != null &&
                             !controller.PageContext.CmsContext.Initialized)
                         {
-                            return new CmsHelper(controller.CmsService).InitCmsPageContext(controller.PageContext, controller.SiteContext  ).ContinueWith(y => x.Result);
+                            return new CmsHelper(controller.CmsService, controller.EntityListService).InitCmsPageContext(controller.PageContext, controller.SiteContext  ).ContinueWith(y => x.Result);
 
                         }
                         else
