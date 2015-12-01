@@ -5,7 +5,7 @@
  */
 
 Ext.define('Taco.view.fileManager.Index', {
-    extend: 'Taco.core.ux.browser.BrowserPage',
+    extend: 'Taco.core.ux.browser.SearchList',
     alias: 'widget.filemanager',
     requires: [
         'Taco.core.ux.form.FileInputButton',
@@ -29,8 +29,9 @@ Ext.define('Taco.view.fileManager.Index', {
         advancedFormCls: 'Taco.view.fileManager.AdvancedSearchForm'
     },
 
-    typeName: 'File Manager',
+    title: 'File Manager',
     gridHeaderLabel: 'File',
+    enableNavHeader: true,
     plural: false,
     modelName: 'Taco.shared.model.File',
     store: {
@@ -38,134 +39,148 @@ Ext.define('Taco.view.fileManager.Index', {
     },
     useTilePanel: true,
 
+    addContentViewPadding: true,
+
+    enableSearch: false,
+
     allowNavigation: false,
 
-    gridPanelConf: {
-        stateful: true,
-        stateId: "statefulFileManagerGrid",
-        columns: [{
-            sortable: false,
-            xtype: 'templatecolumn',
-            header: 'Image',
-            stateId: 'ImageColumn',
-            tpl: [
-                '<div class="taco-basegrid-thumbnail">',
-                '<tpl if="localthumbnail">',
-                '<img height="60" src="{localthumbnail}">',
-                '<tpl elseif="thumbnail && fileSize && this.isImage(fileType)">',
-                '<img height="60" src="{thumbnail}?size=60" />',
-                '</tpl>',
-                '</div>',
-                {
-                    isImage: function(fileType) {
-                        var imageTypes = ['gif', 'jpeg', 'pjpeg', 'png', 'tiff', 'jpg'];
-                        return imageTypes.indexOf(fileType) !== -1;
-                    }
-                }
-            ]
-        }, {
-            text: 'Name',
-            stateId: "name",
-            editor: {
-                xtype: 'taco.textfield',
-                listeners: {
-                    aftersetvalue: function(field, val) {
-                        var index = val.lastIndexOf('.');
-
-                        if (index < 1) {
-                            return;
-                        }
-
-                        field.suspendEvents(false);
-                        field.selectText(0, index);
-
-                        Ext.defer(function() {
-                            field.resumeEvents();
-                        }, 100);
-
-                    }
-                }
-            },
-            dataIndex: 'name',
-            width: 260
-        }, {
-            text: 'Tags',
-            sortable: false,
-            dataIndex: 'tags',
-            stateId: "tags",
-            renderer: function(value) {
-                return (Ext.isEmpty(value) ? ['...'] : value).join(', ');
-            },
-            flex: 1,
-
-            editor: {
-                xtype: 'boxselect',
-                // width: 22,
-                hideTrigger: true,
-                triggerOnClick: false,
-                forceSelection: false,
-                createNewOnEnter: true,
-                createNewOnBlur: true,
-                queryMode: 'local',
-                store: ['a', 'aa'], //tbd get tag store data driven
-
-            }
-        }, {
-            text: 'Date Modified',
-            dataIndex: 'dateModified',
-            stateId: "dateModified",
-            width: 150,
-            renderer: function(val) {
-                return Ext.Date.format(val, 'M j, Y g:i a');
-            }
-        }, {
-            text: 'Type',
-            sortable: false,
-            dataIndex: 'fileType',
-            stateId: "fileType",
-            align: 'right',
-            renderer: function(val) {
-                return val.toUpperCase();
-            }
-        }, {
-            text: 'Size',
-            sortable: false,
-            stateId: "fileSize",
-            dataIndex: 'fileSize',
-            align: 'right'
-        }, {
-            xtype: 'taco.menucolumn',
-            sortable: false,
-            text: 'Actions',
-            menuItems: [{
-                text: 'Delete',
-                requiredBehaviors: {
-                    model: 'Taco.model.Product',
-                    behavior: 'destroy'
-                },
-                menuColumnHandler: 'destroyMenuColumnHandler'
-            }, {
-                text: 'Get Url',
-                menuColumnHandler: function(item, eventData) {
-                    window.prompt('Copy to clipboard: Ctrl+C, Enter', 'http://' + window.Taco.cdnPrefix + '/' + Taco.app.context.getTenantId() + '-m' + Taco.app.context.getMasterCatalogId() + '/cms/files/' + eventData.record.getId());
-                }
-            }]
-        }]
-    },
+    createButtonEnabled: true,
+    createButtonText: 'Upload',
+    saveButtonEnabled: false,
+    cancelButtonEnabled: false,
+    stateful: true,
+    stateId: 'statefulFileManagerGrid',
 
     initComponent: function() {
         var editor;
 
-        this.header = {
-            actions: [{
-                xtype: 'tacofilefield',
-                text: 'Upload',
-                listeners: {
-                    filechange: this.onUploadFile,
-                    scope: this
-                }
-            }]
+        this.createButtonCfg = {
+            xtype: 'tacofilefield',
+            listeners: {
+                filechange: this.onUploadFile,
+                scope: this        
+            }
         };
+
+        this.columns = [
+            {
+                sortable: false,
+                xtype: 'templatecolumn',
+                header: 'Image',
+                stateId: 'ImageColumn',
+                tpl: [
+                    '<div class="taco-basegrid-thumbnail">',
+                    '<tpl if="localthumbnail">',
+                    '<img height="60" src="{localthumbnail}">',
+                    '<tpl elseif="thumbnail && fileSize && this.isImage(fileType)">',
+                    '<img height="60" src="{thumbnail}?size=60" />',
+                    '</tpl>',
+                    '</div>',
+                    {
+                        isImage: function(fileType) {
+                            var imageTypes = ['gif', 'jpeg', 'pjpeg', 'png', 'tiff', 'jpg'];
+                            return imageTypes.indexOf(fileType) !== -1;
+                        }
+                    }
+                ]
+            }, 
+            {
+                text: 'Name',
+                stateId: "name",
+                editor: {
+                    xtype: 'taco.textfield',
+                    listeners: {
+                        aftersetvalue: function(field, val) {
+                            var index = val.lastIndexOf('.');
+
+                            if (index < 1) {
+                                return;
+                            }
+
+                            field.suspendEvents(false);
+                            field.selectText(0, index);
+
+                            Ext.defer(function() {
+                                field.resumeEvents();
+                            }, 100);
+
+                        }
+                    }
+                },
+                dataIndex: 'name',
+                width: 260
+            }, 
+            {
+                text: 'Tags',
+                sortable: false,
+                dataIndex: 'tags',
+                stateId: "tags",
+                renderer: function(value) {
+                    return (Ext.isEmpty(value) ? ['...'] : value).join(', ');
+                },
+                flex: 1,
+
+                editor: {
+                    xtype: 'boxselect',
+                    // width: 22,
+                    hideTrigger: true,
+                    triggerOnClick: false,
+                    forceSelection: false,
+                    createNewOnEnter: true,
+                    createNewOnBlur: true,
+                    queryMode: 'local',
+                    store: ['a', 'aa'], //tbd get tag store data driven
+
+                }
+            }, 
+            {
+                text: 'Date Modified',
+                dataIndex: 'dateModified',
+                stateId: "dateModified",
+                width: 150,
+                renderer: function(val) {
+                    return Ext.Date.format(val, 'M j, Y g:i a');
+                }
+            }, 
+            {
+            text: 'Type',
+                sortable: false,
+                dataIndex: 'fileType',
+                stateId: "fileType",
+                align: 'right',
+                renderer: function(val) {
+                    return val.toUpperCase();
+                }
+            }, 
+            {
+                text: 'Size',
+                sortable: false,
+                stateId: "fileSize",
+                dataIndex: 'fileSize',
+                align: 'right'
+            }, 
+            {
+                xtype: 'taco.menucolumn',
+                sortable: false,
+                text: 'Actions',
+                menuItems: [
+                    {
+                        text: 'Delete',
+                        requiredBehaviors: {
+                            model: 'Taco.model.Product',
+                            behavior: 'destroy'
+                        },
+                        menuColumnHandler: 'destroyMenuColumnHandler'
+                    }, 
+                    {
+                        text: 'Get Url',
+                        menuColumnHandler: function(item, eventData) {
+                            window.prompt('Copy to clipboard: Ctrl+C, Enter', 'http://' + window.Taco.cdnPrefix + '/' + Taco.app.context.getTenantId() + '-m' + Taco.app.context.getMasterCatalogId() + '/cms/files/' + eventData.record.getId());
+                        }
+                    }
+                ]
+        }];
 
         this.callParent(arguments);
 
@@ -182,7 +197,7 @@ Ext.define('Taco.view.fileManager.Index', {
             }
         });
 
-        editor = this.down('grid').plugins[0];
+        editor = this.plugins[0];
 
         //hack to properlty align the stoopid save cancel buttons next under the editors.
         editor.on('beforeedit', function(editor) {
