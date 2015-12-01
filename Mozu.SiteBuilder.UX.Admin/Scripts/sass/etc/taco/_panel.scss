@@ -2,7 +2,38 @@
 	/* panel */
 	.#{$prefix}panel {
 		border-radius: $border-radius;
-		background-color: $white-color;
+		box-shadow: rgba(0, 0, 0, 0.09) 0px 0px 2px 0px;
+
+		.#{$vprefix}form-nav {
+			.#{$vprefix}form-nav-link {
+				font-family: 'proxima-nova', sans-serif;
+				font-size: $normal-font-link;
+				color: $gray-text-dark;
+
+				&:hover {
+					color: $dark-color;
+					text-decoration: none;
+				}
+
+				&.active {
+					color: $dark-color;
+					border-color: $valid-green;
+				}
+			}
+		}
+
+		.#{$prefix}panel-default {
+			/* override external styles */
+			box-shadow: none !important;
+		}
+
+		.#{$prefix}panel-subform-section-child {
+			background-color: $white-color;
+		}
+
+		.#{$prefix}component {
+			border-radius: $border-radius;
+		}
 
 		.#{$prefix}panel-body {
 
