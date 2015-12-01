@@ -49,7 +49,7 @@ Ext.define('Taco.core.ux.form.FilterContainer', {
 
     initialValue: null,
 
-    height: 30,
+    height: 40,
     layout: 'hbox',
     msgTarget: 'qtip',
 
@@ -81,11 +81,13 @@ Ext.define('Taco.core.ux.form.FilterContainer', {
 
         this.advancedSearchButton = {
             xtype: 'button',
+            cls: 'advanced-search-button',
             itemId: 'advancedFilter',
             ui: 'action',
             scale: 'medium',
             glyph: 'XE600@mozicons',
             width: 57,
+            height: 40,
             margin: '0 10 20 0',
             enableToggle: true,
             scope: this,

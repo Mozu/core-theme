@@ -59,21 +59,30 @@
 
         .x-form-trigger-wrap {
             border: none;
+            height: 38px;
         }
 
         .taco-filtercontainer {
+            height: 40px;
+            top: 10px;
+            border-right: 1px solid $nav-element-active-border;
             padding-left: 10px;
-            opacity: 0.33;
-            &:hover {
-                opacity: 0.74;
-            }
             .x-trigger-cell {
                 position: absolute;
+                top: 5px;
                 left: 10px;
             }
             .x-form-trigger-input-cell {
                 position: absolute;
                 left: 30px;
+                .x-form-field {
+                    font-size: 18px;
+                    font-weight: 300;
+                }
+            }
+            .advanced-search-button {
+                border: none;
+                background-color: inherit;
             }
         }
 
