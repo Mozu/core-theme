@@ -65,7 +65,7 @@ Ext.define('Taco.view.navigation.PrimaryMenu', {
         var self = this,
             controller = appState.metaData.controller,
             appStateAddress = appState.getUri().toLowerCase(),
-            fourndRecords;
+            foundRecords;
         
         if (appStateAddress && appState.getMetaData().ctx && appState.getUri().indexOf(appState.getMetaData().ctx)==0) {
             appStateAddress = appState.getUri().toLowerCase().substring(appState.getMetaData().ctx.length + 1);
@@ -78,46 +78,11 @@ Ext.define('Taco.view.navigation.PrimaryMenu', {
 
         this.breadcrumb[controller == 'dashboard' ? 'hide' : 'show']();
 
-        fourndRecords = this.findNavRecords(this.store, appStateAddress);
+        foundRecords = this.findNavRecords(this.store, appStateAddress);
 
-        if (fourndRecords) {
-            this.syncBreadcrumb(fourndRecords.parentRecord, fourndRecords.selectedRecord);
+        if (foundRecords) {
+            this.syncBreadcrumb(foundRecords.parentRecord, foundRecords.selectedRecord);
         }
-
-        //this.store.each(function (topParent) {
-            
-        //    if (self.compareController(topParent.data.address, controller)) {
-        //        parentRecord = topParent;
-        //        selectedRecord = topParent;
-        //    }
-        //    topParent.items().each(function (subItem) {
-        //        if (self.compareController(subItem.data.address, controller)) {
-        //            parentRecord = topParent;
-        //            selectedRecord = subItem;
-        //        }
-        //    });
-        //});
-        //if (!selectedRecord) {
-            
-        //    this.store.each(function (topParent) {
-        //        if (topParent.data.address && appStateAddress.indexOf(topParent.data.address.toLowerCase() )> -1 && appStateAddress.indexOf(topParent.data.address.toLowerCase()) == appStateAddress.length + topParent.data.address.length) {
-        //            parentRecord = topParent;
-        //            selectedRecord = topParent;
-        //        }
-        //        topParent.items().each(function (subItem) {
-        //            if (subItem.data.address && appStateAddress.indexOf(subItem.data.address.toLowerCase()) > -1 && appStateAddress.indexOf(subItem.data.address.toLowerCase()) == appStateAddress.length - subItem.data.address.length) {
-        //                parentRecord = topParent;
-        //                selectedRecord = subItem;
-        //            }
-                    
-        //        });
-        //    });
-        //}
-        //if (selectedRecord) {
-
-        //    this.syncBreadcrumb(parentRecord, selectedRecord);
-        //}
-        
 
     },
     findNavRecords: function (store, appStateAddress) {

@@ -138,7 +138,8 @@ Ext.define('Taco.store.Navigation', {
         type: 'memory',
         data: [
             {
-                'id': 'catalogLabel',
+                'id': 'catalog',
+                'navPage': 'home',
                 'label': 'Catalog',
                 'behaviorIds': [4],
                 'items': [{
@@ -154,7 +155,8 @@ Ext.define('Taco.store.Navigation', {
                     }
                 ]
             }, {
-                'id': 'marketingLabel',
+                'id': 'marketing',
+                'navPage': 'home',
                 'label': 'Marketing',
                 'behaviorIds': [24],
                 'items': [
@@ -176,7 +178,8 @@ Ext.define('Taco.store.Navigation', {
                     }
                 ]
             }, {
-                'id': 'contentLabel',
+                'id': 'content',
+                'navPage': 'home',
                 'label': 'Content',
                 'showBreadCrumbs': true,
                 'items': [
@@ -200,7 +203,8 @@ Ext.define('Taco.store.Navigation', {
                     }
                 ]
             }, {
-                'id': 'publishingLabel',
+                'id': 'publishing',
+                'navPage': 'home',
                 'label': 'Publishing ',
                 'behaviorIds': [8],
                 'items': [
@@ -216,9 +220,9 @@ Ext.define('Taco.store.Navigation', {
                     }
                 ]
             }, {
-                'id': 'orderLabel',
+                'id': 'order',
+                'navPage': 'home',
                 'label': 'Fulfillment',
-                'address': 'orders',
                 'behaviorIds': [73],
                 'items': [
                     {
@@ -243,7 +247,8 @@ Ext.define('Taco.store.Navigation', {
                     }
                 ]
             }, {
-                'id': 'customerLabel',
+                'id': 'customer',
+                'navPage': 'home',
                 'label': 'Customers',
                 'items': [{
                         'id': 'customers',
@@ -261,16 +266,15 @@ Ext.define('Taco.store.Navigation', {
                     }
                 ]
             }, {
-                'id': 'settingsLabel',
-                'label': 'Settings',
+                'id': 'settings',
                 'navPage': 'sysAdm',
+                'label': 'Settings',
                 'visible': false,
                 'items': [
                     {
                         'id': 'generalsettings',
                         'label': 'General Settings',
                         'address': 'generalsettings'
-
                     },
                     {
                         'id': 'paymentcheckout',
@@ -310,9 +314,9 @@ Ext.define('Taco.store.Navigation', {
 
                     }, {
                         'id': 'localization',
+                        'navPage': 'sysAdm',
                         'locAtts': ['multiLang', 'multCurrency'],
                         'label': 'Localization',
-                        'address': 'Localization',
                         'items': [
                             {
                                 'id': 'localizationAttr',
@@ -348,6 +352,7 @@ Ext.define('Taco.store.Navigation', {
                     },
                     {
                         'id': 'usersRoles',
+                        'navPage': 'sysAdm',
                         'label': 'Users &amp; Roles',
                         'items': [
                             {
@@ -360,7 +365,6 @@ Ext.define('Taco.store.Navigation', {
                                 'address': 'roles'
                             }
                         ]
-
                     }, {
                         'id': 'publishing',
                         'label': 'Publishing',
@@ -411,7 +415,7 @@ Ext.define('Taco.store.Navigation', {
                     }
                 ]
             }, {
-                'id': 'reportLabel',
+                'id': 'report',
                 'label': 'Reporting',
                 'behaviorIds': [188],
                 'items': [{
