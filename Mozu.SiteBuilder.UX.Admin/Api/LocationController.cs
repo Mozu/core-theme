@@ -26,13 +26,9 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
             _locationWebApiClient = locationWebApiClient;
         }
 
-
         [HttpGetRoute(UriTemplate = "list")]
         public async Task<HttpResponseMessage> List([FromUri]PagingParamaters pagingParams, [FromUri]FilterCollection extFilter)
         {
-
-            
-
             DC.LocationCollection locations;
             if (!String.IsNullOrEmpty(pagingParams.id))
             {
@@ -45,13 +41,11 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
                 const string responseFields = "items(code,name,isDisabled,locationTypes,address)";
                 string filter = extFilter.ToFilterString();
                 string sort = (pagingParams != null && pagingParams.sort != null) ? pagingParams.sort.ToSortString() : null;
-                locations = (await _locationWebApiClient.GetLocations(startIndex: pagingParams.startIndex, 
-                    pageSize: pagingParams.pageSize, 
-                    sortBy: sort, 
+                locations = (await _locationWebApiClient.GetLocations(startIndex: pagingParams.startIndex,
+                    pageSize: pagingParams.pageSize,
+                    sortBy: sort,
                     filter: filter,
                     responseFields: responseFields
-
-
                     )).ReadAsSync();
             }
 

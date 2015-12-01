@@ -26,11 +26,8 @@ Ext.define('Taco.view.location.Form', {
 
     initComponent: function () {
         var me = this;
-
         this.buildForm();
-        
         this.callParent(arguments);
-        
         this.loadNavItems();
     },
 

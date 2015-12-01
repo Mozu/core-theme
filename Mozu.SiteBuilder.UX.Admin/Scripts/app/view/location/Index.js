@@ -3,7 +3,7 @@
  */
 Ext.define('Taco.view.location.Index', {
     extend: 'Taco.core.ux.browser.SearchList',
-  
+
     requires: [
         'Taco.store.Locations',
         'Taco.model.Location',
@@ -16,24 +16,13 @@ Ext.define('Taco.view.location.Index', {
         'Taco.core.ux.FilterableDataView',
         'Taco.core.ux.grid.MenuColumn'
     ],
-
-    //mixins: {
-    //    deleteFromGrid: 'Taco.core.ux.mixins.DeleteFromGrid'
-    //},
-
     launchEditorOnClick: true,
-
-    // Required by mixin: Taco.core.ux.mixins.LaunchEditor defined in SearchList
     modelName: 'Taco.model.Location',
-
     store: { type: 'Taco.store.Locations' },
-
     enableNavHeader: true,
-
     // adds the "taco-content-navcontainer-padding" class
     // Will add the 20px padding needed for display in the contentView as part of the NavHeader code;
     addContentViewPadding: true,
-
     enableSearch: true,
     enablePaging: true,
     enableRowEditing: false,
@@ -41,49 +30,29 @@ Ext.define('Taco.view.location.Index', {
     createButtonEnabled: true,
     saveButtonEnabled: false,
     cancelButtonEnabled: false,
-
     createButtonText: "Create New Location",
-
     showActionsColumn: true,
-
     hideSearchToolbar: false,
-
     title: "Locations",
-
     autoScroll: true,
-    
     editorName: 'Taco.view.location.Edit',
-    
     enableQuickFilters: false,
-
     advancedSearchConfig: {
         advancedFormCls: 'Taco.view.location.AdvancedSearchForm',
-
         quickFilterData: []
     },
-
     onCreate: Ext.emptyFn,
-
     stateful: true,
     stateId: 'statefulLocationGrid',
-
-    statics: {
-        
-    },
-
-    initComponent: function () {
+    statics: {},
+    initComponent: function() {
         var me = this;
-
-        this.columns = this.getColumnConfig();
-
-        // initialize the delete mixin
-        //this.mixins.deleteFromGrid.init.apply(this);
-        
+        this.columns = me.getColumnConfig();
         me.callParent(arguments);
     },
-    
+
     // override this method and adjust the columns if your need a grid with a subset of columns;
-    getColumnConfig: function () {
+    getColumnConfig: function() {
         var me = this,
             columns = [
                 {
@@ -126,7 +95,7 @@ Ext.define('Taco.view.location.Index', {
                 }, {
                     xtype: 'taco.menucolumn',
                     text: 'Actions',
-                    onMenuShow: function (menu, eventData) {
+                    onMenuShow: function(menu, eventData) {
                         var disableMenuItem = menu.down("#disableMenuItem"),
                             enableMenuItem = menu.down("#enableMenuItem");
                         // need to disable the delete menu option when discount has been used
@@ -173,7 +142,7 @@ Ext.define('Taco.view.location.Index', {
                                 model: 'Taco.model.Location',
                                 behavior: 'update'
                             },
-                            menuColumnHandler: function (item, eventData) {
+                            menuColumnHandler: function(item, eventData) {
                                 me.setDisabledStatus(eventData.record, true);
                             }
                         }, {
@@ -188,7 +157,6 @@ Ext.define('Taco.view.location.Index', {
                             }
                         }
                     ]
-
                 }
             ];
         return columns;
@@ -198,19 +166,19 @@ Ext.define('Taco.view.location.Index', {
         var me = this;
         record.set('isDisabled', disable);
         record.store.sync({
-            success: function (m) { 
+            success: function(m) {
                 var successMsg = ((disable) ? 'Disabled ' : 'Enabled ') + record.get('name') + '.';
                 Taco.app.fireEvent('setmessage', successMsg, 'info');
                 record.store.reload();
             },
-            failure: function (m) {
+            failure: function(m) {
                 Taco.core.util.ExceptionWhiner.handleSyncFailure(m);
                 record.store.reload();
             }
         });
     },
 
-    onItemClick: function (view, record, elm, index, e) {
+    onItemClick: function(view, record, elm, index, e) {
         if (e.target.className === 'taco-launch-editor') {
             e.preventDefault();
             this.launchEditor(record);
@@ -218,22 +186,15 @@ Ext.define('Taco.view.location.Index', {
         }
     },
 
-    doCreate : function () {
+    doCreate: function() {
         var controller = "locations";
         Taco.app.StateManager.attemptNavigate(controller + '/create');
     },
 
-
-    launchEditor: function (record) {
-        Ext.defer(function () {
+    launchEditor: function(record) {
+        Ext.defer(function() {
             Taco.core.StateManager.attemptNavigate('locations/edit/' + record.getId(), { complexMetaData: { record: record } });
         }, 1, this);
         return;
-    },
-
-    //getDeletePromptMessage: function (record) {
-    //    return record.getDeletePromptMessage();
-    //}
-
-   
+    }
 });

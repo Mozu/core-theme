@@ -11,7 +11,8 @@ Ext.define('Taco.store.Locations', {
         clearFilters: true,
         //contextLevel: 's',
         clearSort: true,
-        autoLoad: true
+        autoLoad: true,
+        createOnly: true
     },
     remoteSort: true,
     sortInfo: {
