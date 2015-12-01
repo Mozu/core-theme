@@ -148,5 +148,5 @@
         } else {
             console.log("Warning: this class expects a doSave method if there is no form defined;")
         }
-    }    
+    }
 });
