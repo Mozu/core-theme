@@ -1,5 +1,0 @@
-﻿  <ul class="mz-orderlist">
-    {% for order in model.items %}
-    <li>{% include "modules/common/order-listing" with model=order %}</li>
-    {% endfor %}
-  </ul>

@@ -1,6 +1,0 @@
-﻿<div {% data_attributes Model %}> 
-	
-	   <p><a class="helloWorldCB" href="/resources/images/hello_world/hello.png" title="{{ Model.config.title}}"  data-image-size="{{ Model.config.imageSize}}"  data-transition="{{ Model.config.transition}}" >{{ Model.config.title}}</a></p>
-		{% require_script "modules/models-hello-world" %}
-   
-</div>

@@ -32,7 +32,18 @@ namespace Mozu.SiteBuilder.Mvc.Themes
 
         IEnumerable<string> ThemePaths { get; }
         IEnumerable<string> AddonPaths { get; }
-        string LocalThemePath { get; }
+
+
+        string LegacyThemePath
+        {
+            get;
+        }
+
+        string CoreThemePath
+        {
+            get;
+        }
+        
         string LocalAddonPath { get; }
     }
 
@@ -77,7 +88,8 @@ namespace Mozu.SiteBuilder.Mvc.Themes
             id = EscapeThemeId(id);
             var tmd = new ThemeMetaData { Id = id };
 
-            tmd.ThemePath = ThemePaths.Select(p => Path.GetFullPath(p + "//" + UnEscapeThemeId(id))).FirstOrDefault(p => Directory.Exists(p));
+
+            SetThemePath( tmd);
 
             if (!Directory.Exists(tmd.ThemePath))
                 return null;
@@ -93,9 +105,31 @@ namespace Mozu.SiteBuilder.Mvc.Themes
 
             if (tmd.Configuration == null)
                 return null;
-
+            
             return tmd;
 
+        }
+
+        private void SetThemePath( ThemeMetaData tmd)
+        {
+            if (string.Equals(tmd.Id, Mozu.SiteBuilder.Mvc.Constants.DefaultTheme, StringComparison.OrdinalIgnoreCase))
+            {
+                tmd.ThemePath = this.CoreThemePath;
+            }
+            else if (tmd.Id.IndexOf("core", StringComparison.OrdinalIgnoreCase) == 0)
+            {
+                string temp = this.LegacyThemePath + "//themes//" + tmd.Id;
+                if (Directory.Exists(temp))
+                {
+                    tmd.ThemePath = Path.GetFullPath(temp);
+                }
+            }
+            if (tmd.ThemePath == null)
+            {
+                tmd.ThemePath =
+                    ThemePaths.Select(p => Path.GetFullPath(p + "//" + UnEscapeThemeId(tmd.Id)))
+                        .FirstOrDefault(p => Directory.Exists(p));
+            }
         }
 
 
@@ -106,7 +140,7 @@ namespace Mozu.SiteBuilder.Mvc.Themes
             id = EscapeThemeId(id);
             var tmd = new ThemeMetaData { Id = id };
 
-            tmd.ThemePath = ThemePaths.Select(p => Path.GetFullPath(p + "//" + UnEscapeThemeId(id))).FirstOrDefault(p => Directory.Exists(p));
+            SetThemePath(tmd);
 
             if (!Directory.Exists(tmd.ThemePath))
                 return null;
@@ -383,32 +417,13 @@ namespace Mozu.SiteBuilder.Mvc.Themes
             }
         }
 
-        public string LocalThemePath
-        {
-            get
-            {
-                var coreThemeDir = _settings.AppSettings("coretheme_directory");
-                if (string.IsNullOrWhiteSpace(coreThemeDir))
-                {
-                    coreThemeDir = Path.GetFullPath(new DirectoryInfo(HttpRuntime.AppDomainAppPath).Parent.FullName + "/Mozu.SiteBuilder.UX.Themes/themes/");
-                }
-                else
-                {
-                    if (Path.GetPathRoot(coreThemeDir).Length <3  )
-                    {
-                        coreThemeDir = Path.GetFullPath(HostingEnvironment.MapPath(coreThemeDir));
-
-                    }
-                }
-                return coreThemeDir;
-            }
-        }
+        
 
         public string LocalAddonPath
         {
             get
             {
-                return  Path.GetDirectoryName( LocalThemePath)+"../addons/";
+                return null;// Path.GetDirectoryName( LocalThemePath)+"../addons/";
                 
               
              
@@ -421,7 +436,8 @@ namespace Mozu.SiteBuilder.Mvc.Themes
             {
                 yield return CertifiedThemePath;
                 yield return DevThemePath;
-                yield return LocalThemePath;
+             
+                
             }
         }
 
@@ -434,5 +450,37 @@ namespace Mozu.SiteBuilder.Mvc.Themes
                 yield return LocalAddonPath;
             }
         }
+       public string LegacyThemePath
+        {
+            get
+            {
+
+                return GetFullPath("CoreLegacyTheme");
+            }
+        }
+
+       public  string CoreThemePath
+        {
+            get
+            {
+                return GetFullPath("CoreTheme");
+            }
+        }
+
+        string GetFullPath(string settingKey)
+        {
+            var setting = _settings.AppSettings(settingKey + "_directory");
+            if (setting.IsNullOrEmpty())
+            {
+                return Path.GetFullPath(new DirectoryInfo(HttpRuntime.AppDomainAppPath).Parent.Parent.FullName + "/Mozu." + settingKey);
+            }
+            if (setting[0] == '~')
+            {
+                return Path.GetFullPath(HostingEnvironment.MapPath(setting.Substring(1)));
+            }
+            return Path.GetFullPath(setting);
+
+        }
+
     }
 }

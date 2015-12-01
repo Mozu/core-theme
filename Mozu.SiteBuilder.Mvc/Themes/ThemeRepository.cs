@@ -36,7 +36,10 @@ namespace Mozu.SiteBuilder.Mvc.Themes
         /// </summary>
         Theme GetDefaultTheme();
 
-        string GetLocalThemePath();
+       // string[] GetLocalThemePaths();
+
+        string[] GetLocalThemesIds();
+       
     }
 
 
@@ -276,10 +279,22 @@ namespace Mozu.SiteBuilder.Mvc.Themes
             return GetTheme(new ThemeSelection() { Id = Mozu.SiteBuilder.Mvc.Constants.DefaultTheme });
         }
 
-        public string GetLocalThemePath()
+        public string[] GetLocalThemesIds()
         {
-            return _themeMetaDataProvider.LocalThemePath;
+            List<string> themeIds = new List<string>();
+            themeIds.Add(Mozu.SiteBuilder.Mvc.Constants.DefaultTheme);
+            var di = new DirectoryInfo(_themeMetaDataProvider.LegacyThemePath+ "//themes");
+            if (di.Exists)
+            {
+                themeIds.AddRange(di.GetDirectories().Select(x => x.Name));
+            }
+            return themeIds.ToArray();
         }
+
+        //public string[] GetLocalThemePaths()
+        //{
+        //    return _themeMetaDataProvider.LocalThemePaths;
+        //}
 
         public string GetLocalAddonPath()
         {

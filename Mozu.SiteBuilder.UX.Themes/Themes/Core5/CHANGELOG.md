@@ -1,1 +1,0 @@
-﻿# Mozu Core Theme Changelog
