@@ -2,12 +2,34 @@
  * @class Taco.view.account.Users
  */
 Ext.define('Taco.view.account.Users', {
-    extend: 'Taco.core.ux.content.Container',
+    extend: 'Taco.core.ux.browser.SearchListTree',
     requires: [
         'Taco.core.ux.TreeList',
         'Taco.store.AccountUsersTree',
         'Taco.view.account.userFormModal'
     ],
+    enableNavHeader: true,
+
+    addContentViewPadding: true,
+
+    createButtonEnabled: true,
+
+    cancelButtonEnabled: false,
+
+    saveButtonEnabled: false,
+
+    enablePaging: false,
+
+    enableSearchBar: false,
+
+    addContentViewPadding: true,
+
+    createButtonText: 'Add User',
+
+    enableSearch: false,
+
+    title: 'Users',
+
     initComponent: function () {
         var me = this;
         me.canCreateUser = false;
@@ -29,59 +51,49 @@ Ext.define('Taco.view.account.Users', {
 
         });
 
-        me.header = {
-            title: 'Users',
-            actions: [{
-                xtype: 'button',
-                ui: 'action-primary',
-                scale: 'medium',
-                itemId: 'createActionButton',
-                text: 'Add User',
-                margin: '0 0 0 10',
-                disabled: !me.canCreateUser,
-                handler: function () {
-                    me.launchEditor();
-                }
-            }]
+        me.createButtonCfg = {
+            disabled: !me.canCreateUser,
+            handler: me.launchEditor
         };
 
         me.store = Ext.create('Taco.store.AccountUsersTree', {
             autoLoad: true
         });
 
-        me.treelist = Ext.create('Taco.core.ux.TreeList', {
+        me.viewConfig = {
             animate: false,
-            enableColumnHide: false,
-            enableRowReorder: false,
-            store: me.store,
-            viewConfig: {
-                animate: false,
-                stripeRows: true,
-                onExpand: Ext.emptyFn
-            },
-            columns: [{
+            stripeRows: true,
+            onExpand: Ext.emptyFn
+        };
+
+        me.columns = [
+            {
                 xtype: 'treecolumn',
                 dataIndex: 'email',
                 stateId: "email",
                 text: 'Email',
                 width: 400
-            }, {
+            },
+            {
                 dataIndex: 'role',
                 stateId: "role",
                 text: 'Roles',
                 width: 200
-            }, {
+            },
+            {
                 dataIndex: 'activity',
                 stateId: "activity",
                 text: 'Activity',
                 flex: 1,
                 width: 300
-            }, {
+            },
+            {
                 dataIndex: 'status',
                 stateId: "status",
                 text: 'Status',
                 width: 300
-            }, {
+            },
+            {
                 xtype: 'taco.menucolumn',
                 text: 'Actions',
                 stateId: 'actionsColumn',
@@ -93,53 +105,32 @@ Ext.define('Taco.view.account.Users', {
                 handler: function (grid, foo, bar, snerst, evt, record, row) {
                     this.launchContextMenu(evt, record, row);
                 }
-            }],
-            dockedItems: [{
-                xtype: 'container',
-                dock: 'top',
-                padding: '0 0 10',
-                cls: 'taco-secondary-actions',
-                layout: {
-                    type: 'hbox',
-                    align: 'middle',
-                    pack: 'end'
-                },
-                items: [{
-                    xtype: 'button',
-                    scale: 'medium',
-                    ui: 'action',
-                    text: 'Expand All',
-                    allowDepress: false,
-                    enableToggle: true,
-                    scope: this,
-                    toggleHandler: function (button, nextState) {
-                        this.treelist.expandAll(function () {
-                            button.toggle(false);
-                        });
-                    }
-                }, {
-                    xtype: 'button',
-                    scale: 'medium',
-                    ui: 'action',
-                    text: 'Collapse All',
-                    margin: '0 0 0 10',
-                    scope: this,
-                    handler: function () {
-                        this.treelist.collapseAll();
-                    }
-                }]
-            }],
-            listeners: {
-                cellclick: me.onCellClick,
-                itemmove: me.onItemMove,
-                scope: me
             }
-        });
+        ];
 
-        Ext.apply(me.body, {
-            layout: 'fit',
-            items: [me.treelist]
-        });
+        me.moreButtonCfg = {
+            scope: this,
+            menu: {
+                plain: true,
+                shadow: false,
+                items: [
+                    {
+                        text: 'Expand All',
+                        handler: function (menuItem) {
+                           this.expandAll()
+                        },
+                        scope: this
+                    },
+                    {
+                        text: 'Collapse All',
+                        handler: function (menuItem) {
+                            this.collapseAll()
+                        },
+                        scope: this
+                    }
+                ]
+            }
+        };
 
         me.callParent(arguments);
 
@@ -149,26 +140,21 @@ Ext.define('Taco.view.account.Users', {
             },
             scope: me
         });
-        
-        me.mon(me.treelist, 'itemcontextmenu', function(it, rec, item, index, evt) {
-            evt.stopEvent();
-            me.launchContextMenu(evt, rec, index);
-        }, me);
+
     },
     launchContextMenu: function (evt, record, row) {
 
         var actions;
         var me = this;
-        
+
         if (record.get('leaf')) {
-            
+
             actions = [
                 {
                     text: 'Delete Role',
                     disabled: (record.parentNode.get('status') == 'Pending' || !me.canDeleteUser) ? true : false,
                     handler: function (item, event) {
-                        //me.launchEditor(item.ownerCt.record);
-                        me.deleteRecord(item, event);
+                        me.deleteRecord(me, item, event);
                     },
                     scope: me
                 }
@@ -179,8 +165,7 @@ Ext.define('Taco.view.account.Users', {
                     text: 'Delete User',
                     disabled: !me.canDeleteUser,
                     handler: function (item, event) {
-                        //me.launchEditor(item.ownerCt.record);
-                        me.deleteRecord(item, event);
+                        me.deleteRecord(me, item, event);
                     },
                     scope: me
                 },
@@ -188,7 +173,7 @@ Ext.define('Taco.view.account.Users', {
                     text: 'Resend Invite',
                     disabled: !me.canDeleteUser,
                     handler: function (item, event) {
-                        me.resendInvitation(item, event);
+                        me.resendInvitation(me, item, event);
                     },
                     scope: me
                 }
@@ -196,14 +181,14 @@ Ext.define('Taco.view.account.Users', {
         } else {
             /*
                 Delete requirements:
-                have to be super admin 
+                have to be super admin
                 can not delete yourself
             */
             var canDelete = true;
             if (Taco.user.id == record.get('id')) {
                 canDelete = false;
             }
-            
+
             actions = [
                 {
                     text: 'Edit',
@@ -217,8 +202,7 @@ Ext.define('Taco.view.account.Users', {
                     text: 'Delete User',
                     disabled: (me.canDeleteUser && canDelete) ? false : true,
                     handler: function (item, event) {
-                        //me.launchEditor(item.ownerCt.record);
-                        me.deleteRecord(item, event);
+                        me.deleteRecord(me, item, event);
                     },
                     scope: me
                 }
@@ -242,32 +226,39 @@ Ext.define('Taco.view.account.Users', {
                 }
             }
         });
-        /*if (row) {
-            menu.showBy(row, 'tr-br', [-1, -1]);
-        } else {*/
-            menu.showAt(evt.getXY());
-        //}
+
+        menu.showAt(evt.getXY());
     },
-    resendInvitation: function (item, event) {
-        console.log(item.scope.treelist.getSelectionModel().getSelection()[0]);
-        Ext.Ajax.request({
-            url: '/admin/app/account/invitations/resend',
-            jsonData: item.scope.treelist.getSelectionModel().getSelection()[0].data,//item.data,
-            success: function (response) {
-                var res = Ext.JSON.decode(response.responseText);
-                if (!res.success) {
-                    Ext.MessageBox.alert('Error', 'There was a problem resending the invite: ' + res.message);
-                } else {
-                    Ext.MessageBox.alert('Success', 'The invite has been sent');
+    resendInvitation: function (scope, item, event) {
+
+        var treeview = scope.down('treeview'),
+            selection = treeview && treeview.getSelectionModel() ? scope.down('treeview').getSelectionModel().getSelection()[0] : null;
+
+        if (selection) {
+            Ext.Ajax.request({
+                url: '/admin/app/account/invitations/resend',
+                jsonData: selection.data, 
+                success: function (response) {
+                    var res = Ext.JSON.decode(response.responseText);
+                    if (!res.success) {
+                        Ext.MessageBox.alert('Error', 'There was a problem resending the invite: ' + res.message);
+                    } else {
+                        Ext.MessageBox.alert('Success', 'The invite has been sent');
+                    }
                 }
-            }
-        });
+            });  
+        }
     },
-    deleteRecord: function (item, event) {
-        var message = 'Are you sure you want to delete this user?';
-        if (item.scope.treelist.getSelectionModel().getSelection()[0].get('type').toLowerCase() == 'roll') {
+    deleteRecord: function (scope, item, event) {
+
+        var message = 'Are you sure you want to delete this user?',
+            treeview = scope.down('treeview'),
+            selection = treeview && treeview.getSelectionModel() ? scope.down('treeview').getSelectionModel().getSelection()[0] : null;
+
+        if (selection.get('type').toLowerCase() == 'roll') {
             message = 'Are you sure you want to remove this role from the user?';
         }
+
         Ext.MessageBox.show({
             title: 'Delete',
             icon: Ext.Msg.QUESTION,
@@ -275,19 +266,19 @@ Ext.define('Taco.view.account.Users', {
             buttons: Ext.Msg.YESNO,
             fn: function (buttonId) {
                 if (buttonId === 'yes') {
-                    switch (item.scope.treelist.getSelectionModel().getSelection()[0].get('type').toLowerCase()) {
+                    switch (selection.get('type').toLowerCase()) {
                         case 'user':
                             Ext.MessageBox.alert('Success', 'User has been deleted');
-                            item.scope.treelist.getSelectionModel().getSelection()[0].destroy();
+                            selection.destroy();
                             break;
                         case 'invitation':
                             Ext.Ajax.request({
                                 url: "/admin/app/account/invitations/delete",
                                 method: 'post',
-                                jsonData: item.scope.treelist.getSelectionModel().getSelection()[0].data,
+                                jsonData: selection.data,
                                 success: function () {
                                     Ext.MessageBox.alert('Success', 'User has been deleted');
-                                    item.scope.treelist.store.reload();
+                                   treeview.store.reload();
                                 },
                                 failure: function (resp) {
                                     var json = Ext.decode(resp.responseText, true);
@@ -300,11 +291,13 @@ Ext.define('Taco.view.account.Users', {
                             var childIds = [],
                                 userid = item.scope.treelist.getSelectionModel().getSelection()[0].parentNode.get('id'),
                                 deleteRecId = item.scope.treelist.getSelectionModel().getSelection()[0].get('id');
-                            item.scope.treelist.getSelectionModel().getSelection()[0].parentNode.childNodes.forEach(function (child) {
+
+                            selection.parentNode.childNodes.forEach(function (child) {
                                 if (deleteRecId != child.get('id')) {
                                     childIds.push(child.get('id'));
                                 }
                             });
+
                             Ext.Ajax.request({
                                 url: "/admin/app/account/users/updaterole",
                                 method: 'post',
@@ -313,7 +306,7 @@ Ext.define('Taco.view.account.Users', {
                                     roles: childIds
                                 },
                                 success: function () {
-                                    item.scope.treelist.store.reload();
+                                    treeview.reload();
                                 },
                                 failure: function (resp) {
                                     var json = Ext.decode(resp.responseText, true);
@@ -358,9 +351,12 @@ Ext.define('Taco.view.account.Users', {
     },
 
     launchEditor: function (record) {
-        if (record == null || record.get('type') != 'invitation' && !record.get('leaf')) {
+
+        var rec = record.get ? record : null;
+
+        if (rec == null || rec.get('type') !== 'invitation' && !rec.get('leaf')) {
             var editor = Ext.create('Taco.view.account.userFormModal', {
-                record: record
+                record: rec
             });
             editor.show();
         }
