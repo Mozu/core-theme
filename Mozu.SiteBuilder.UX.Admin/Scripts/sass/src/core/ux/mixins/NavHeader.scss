@@ -26,6 +26,12 @@
     .taco-navheader-toolbar{        
         padding: 10px;       
         border-bottom: 1px solid $color-standard-border !important;
+        background-color: $color-neutral-white;
+
+        .x-toolbar-default {
+            background-color: $color-neutral-white;
+        }
+
         .taco-content-header-title{
             border-right: 1px solid #dddfdf;
             font-size: 2.1rem;
