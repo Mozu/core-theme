@@ -1,0 +1,52 @@
+/* panel */
+.#{$prefix}panel {
+	border-radius: $border-radius;
+	background-color: $white-color;
+
+	.#{$prefix}header {
+		background-color: $dark-bg;
+		border-bottom: 1px solid $light-bg-gray;
+	}
+
+	.#{$prefix}grid-header-ct-default {
+		color: $gray-text-dark;
+		border-bottom: 1px solid $nav-element-active-border;
+
+		.#{$prefix}box-inner {
+			div {
+				font-size: $normal-font-link;
+				padding: 3px 10px;
+				display: inline-block;
+			}
+		}
+	}
+
+	.#{$prefix}grid-view-default {
+		color: $dark-color;
+		font-size: $normal-font;
+
+		td {
+			padding: 7px 10px 6px;
+		}
+	}
+
+	.#{$prefix}grid-view-default:nth-child(odd) {
+		background-color: $white-color;
+	}
+
+	.#{$prefix}grid-view-default:nth-child(even) {
+		background-color: $dark-bg;
+	}
+
+	.#{$prefix}td {
+		padding: 7px 10px 6px;
+	}
+
+	.#{$prefix}content {
+		padding: 15px 25px 30px;
+
+		.#{$prefix}title {
+			font-size: $card-title-font;
+		}
+	}
+}
