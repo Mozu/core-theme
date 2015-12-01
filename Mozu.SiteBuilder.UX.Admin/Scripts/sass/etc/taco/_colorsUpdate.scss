@@ -6,6 +6,7 @@ $white-color:					rgb(255, 255, 255);											/* #ffffff				255, 255, 255 */
 $gray-text-dark:				darken($white-color, 35);									/* #a5a5a5 --> #a6a6a6	165, 165, 165 */
 $gray-text-light:				darken($white-color, 36);									/* #a3a3a3				163, 163, 163 */
 $card-border:					darken($white-color, 6);									/* #f1f1f1 --> #f0f0f0	240, 240, 240 */
+$light-bg:						darken($white-color, 9);									/* #eaeaea --> #e8e8e8	232, 232, 232 */
 $label-color:					darken($white-color, 32);									/* #acacac --> #adadad	172, 172, 172 */
 $nav-element-text:				darken($white-color, 35);									/* #a5a5a5 --> #a6a6a6	165, 165, 165 */
 $nav-element-active:			lighten($black-color, 25);									/* #3f3f3f --> #404040	063, 063, 063 */
