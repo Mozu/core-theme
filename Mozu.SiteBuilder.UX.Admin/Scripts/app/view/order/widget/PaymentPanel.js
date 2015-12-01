@@ -396,7 +396,11 @@ Ext.define('Taco.view.order.widget.PaymentPanel', {
                                 '<tpl if="billingContact.cityOrTown && billingContact.stateOrProvince">, </tpl>',
                                 '{billingContact.stateOrProvince:stripTags}  {billingContact.postalOrZipCode:stripTags}</div>',
                                 '<div class="address">{billingContact.countryCode:stripTags}</div>',
-                                '<div class="phoneNumber">{[ values.billingContact.workPhone ? values.billingContact.workPhone : values.billingContact.homePhone ]}</div>',
+                                '<div class="phoneNumber">' +
+                                '<tpl if="billingContact.workPhone">{billingContact.workPhone:stripTags}' +
+                                '<tpl else>{billingContact.homePhone:stripTags}' +
+                                '</tpl>' +
+                                '</div>',
                             '</tpl>',
                         '</div>',
                     '</tpl>'

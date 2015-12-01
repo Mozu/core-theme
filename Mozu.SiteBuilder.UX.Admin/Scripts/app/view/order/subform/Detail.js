@@ -129,7 +129,7 @@ Ext.define('Taco.view.order.subform.Detail', {
             tpl: [
                 '<div class="customerNote">',
                     '<tpl if="values.customerNote">',
-                        '{customerNote}',
+                        '{customerNote:stripTags}',
                     '<tpl else>',
                         'None available',
                     '</tpl>',
