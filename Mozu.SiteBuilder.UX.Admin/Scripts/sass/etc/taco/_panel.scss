@@ -8,7 +8,40 @@
 		.#{$prefix}panel-header-text {
 			font-family: $font-family;
 			font-size: $card-title-font;
-			color: #dark-color;
+			color: $dark-color;
+		}
+
+		.#{$prefix}form-field {
+			border: 0;
+			border-radius: 0;
+			border-bottom: 1px solid $card-border;
+		}
+
+		.#{$prefix}field-form-focus {
+			border-color: $valid-green;
+			box-shadow: 0 1px 0 0 $valid-green;
+		}
+
+		.#{$prefix}form-item-label {
+			color: $label-color;
+			font-size: $label-link-font;
+
+			/* override external styles */
+			font-weight: normal;
+		}
+
+		.#{$prefix}form-item-required {
+			color: $error-red;
+
+			&:before {
+				content: '';
+				display: none;
+			}
+
+			&:after {
+				content: ' *';
+				color: $error-red;
+			}
 		}
 
 		.#{$vprefix}form-nav {
@@ -41,13 +74,27 @@
 			}
 		}
 
-		.#{$prefix}btn-action-medium-over {
+		.#{$prefix}btn-action-medium-over,
+		.#{$prefix}btn-link-medium-over {
 			/* override external styles */
 			-webkit-box-shadow: none;
 			box-shadow: none;
 
 			.#{$prefix}btn-inner-center {
 				color: $dark-color;
+			}
+
+			&:active {
+				background-color: $card-button-press-bg;
+			}
+		}
+
+		.#{$prefix}btn-action-medium-focus,
+		.#{$prefix}btn-link-medium-focus {
+			box-shadow: none;
+
+			.#{$prefix}btn-inner-center {
+				text-decoration: none;
 			}
 		}
 
