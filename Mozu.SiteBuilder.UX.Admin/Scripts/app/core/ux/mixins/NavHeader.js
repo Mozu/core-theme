@@ -279,6 +279,7 @@ Ext.define('Taco.core.ux.mixins.NavHeader', {
         if (me.enableSearchBar) {
             me.searchBox = Ext.widget({
                 xtype: 'taco-filtercontainer',
+                cls: 'taco-filtercontainer',
                 searchType: 'navigation',
                 width: '100%',
                 flex: 1,

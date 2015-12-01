@@ -57,6 +57,26 @@
             text-overflow: ellipsis;
         }
 
+        .x-form-trigger-wrap {
+            border: none;
+        }
+
+        .taco-filtercontainer {
+            padding-left: 10px;
+            opacity: 0.33;
+            &:hover {
+                opacity: 0.74;
+            }
+            .x-trigger-cell {
+                position: absolute;
+                left: 10px;
+            }
+            .x-form-trigger-input-cell {
+                position: absolute;
+                left: 30px;
+            }
+        }
+
         .taco-website-header-icon {
 
                 &.page-icon {
