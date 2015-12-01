@@ -1,52 +1,94 @@
-/* panel */
-.#{$prefix}panel {
-	border-radius: $border-radius;
-	background-color: $white-color;
+@mixin taco-panel {
+	/* panel */
+	.#{$prefix}panel {
+		border-radius: $border-radius;
+		background-color: $white-color;
 
-	.#{$prefix}header {
-		background-color: $dark-bg;
-		border-bottom: 1px solid $light-bg-gray;
-	}
+		.#{$prefix}panel-body {
 
-	.#{$prefix}grid-header-ct-default {
-		color: $gray-text-dark;
-		border-bottom: 1px solid $nav-element-active-border;
+			/* override external styles */
+			border: 0;
 
-		.#{$prefix}box-inner {
-			div {
+			.#{$prefix}box-inner {
+				border-bottom: 1px solid $light-bg-gray;
+			}
+
+			.#{$prefix}column-header-over {
+				/* override external styles */
+				background-color: $white-color;
+			}
+
+			.#{$prefix}grid-td {
+				/* override external styles */
+				border: 0;
+				outline: 0 !important;
+			}
+
+			.#{$prefix}grid-row-over {
+				.#{$prefix}grid-td {
+					/* override external styles */
+					border: 0;
+					outline: 0 !important;
+				}
+			}
+		}
+
+		.#{$prefix}grid-header-ct {
+			border: 0;
+			background-color: $white-color;
+			border-bottom: 1px solid $nav-element-active-border;
+
+			.#{$prefix}column-header {
+				font-family: 'proxima-nova', sans-serif;
 				font-size: $normal-font-link;
 				padding: 3px 10px;
 				display: inline-block;
+				background-color: $white-color;
+				color: $gray-text-dark;
+
+				/* override external styles */
+				border: 0;
+			}
+
+			.#{$prefix}column-header-text {
+
+				/* override external styles */
+				font-weight: normal;
 			}
 		}
-	}
 
-	.#{$prefix}grid-view-default {
-		color: $dark-color;
-		font-size: $normal-font;
+		.#{$prefix}grid-view-default {
+			color: $dark-color;
+			font-size: $normal-font;
 
-		td {
+			td {
+				font-size: $normal-font;
+				padding: 0 10px 1px;
+			}
+		}
+
+		tbody tr:nth-child(odd) {
+			td {
+				background-color: $white-color;
+			}
+		}
+
+		tbody tr:nth-child(even) {
+			td {
+				background-color: $dark-bg;
+			}
+		}
+
+		.#{$prefix}td {
 			padding: 7px 10px 6px;
 		}
-	}
 
-	.#{$prefix}grid-view-default:nth-child(odd) {
-		background-color: $white-color;
-	}
+		.#{$prefix}content {
+			padding: 15px 25px 30px;
 
-	.#{$prefix}grid-view-default:nth-child(even) {
-		background-color: $dark-bg;
-	}
-
-	.#{$prefix}td {
-		padding: 7px 10px 6px;
-	}
-
-	.#{$prefix}content {
-		padding: 15px 25px 30px;
-
-		.#{$prefix}title {
-			font-size: $card-title-font;
+			.#{$prefix}title {
+				font-size: $card-title-font;
+			}
 		}
 	}
 }
