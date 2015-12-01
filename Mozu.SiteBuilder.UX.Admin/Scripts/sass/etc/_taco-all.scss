@@ -11,6 +11,9 @@ $prefix: 'x-';
 @import 'taco/mixins/css3';
 @import 'taco/mixins/fonts';
 @import 'taco/colors';
+@import 'taco/colorsUpdate';
+@import 'taco/fontsUpdate';
+@import 'taco/borderRadius';
 
 @import 'taco/content';
 @import 'taco/viewport';
