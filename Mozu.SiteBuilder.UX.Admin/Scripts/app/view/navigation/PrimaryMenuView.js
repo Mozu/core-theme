@@ -12,19 +12,16 @@ Ext.define('Taco.view.navigation.PrimaryMenuView', {
     itemSelector: 'li.taco-menu-item',
     overItemCls: 'taco-menu-item-hover',
     selectedItemCls: 'taco-menu-item-active',
+    autoScroll: true,
 
     initComponent: function () {
         var me = this;
 
         this.tpl = [
             '<tpl for=".">',
-            //    '<tpl if="visible">',
                     '<li class="taco-menu-item"  style="{[(values.visible && !values.breadCrumbOnly) ? "" : "display:none" ]}" >',
-                       '<a href="{address}" class="taco-menu-item-link taco-icon taco-icon-{icon}">{label}</a>',
+                       '{label}',
                     '</li>',
-              //  '<tpl else>',
-               //      '<li class="taco-menu-item" style="display:none"> </li>',
-               // '</tpl>',
             '</tpl>'
         ];
 

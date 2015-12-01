@@ -163,6 +163,7 @@
     <Compile Include="Admin\Modules\ModuleTests.cs" />
     <Compile Include="Diagrams\Admin\Scripts\app\view\category\cdCategories.cs" />
     <Compile Include="Diagrams\Admin\Scripts\app\view\couponSet\jsCouponSet.cs" />
+    <Compile Include="Diagrams\Admin\Scripts\app\view\navigation\DiagramNavJs.cs" />
     <Compile Include="Diagrams\Admin\Scripts\app\view\product\cdDiagramProductSearch.cs" />
     <Compile Include="Diagrams\Admin\Scripts\app\view\product\DiagramProductImageJs.cs" />
     <Compile Include="Diagrams\Admin\Scripts\app\view\product\DiagramProductJs.cs" />
@@ -211,6 +212,7 @@
     <None Include="Diagrams\Admin\Api\Models\Search\cdSearchTuning.cd" />
     <None Include="Diagrams\Admin\Scripts\app\view\category\cdCategories.cd" />
     <None Include="Diagrams\Admin\Scripts\app\view\couponSet\jsCouponSet.cd" />
+    <None Include="Diagrams\Admin\Scripts\app\view\navigation\cdNavigation.cd" />
     <None Include="Diagrams\Admin\Scripts\app\view\product\cdProduct-View-Js.cd" />
     <None Include="Diagrams\Admin\Scripts\app\view\product\cdProductImages.cd" />
     <None Include="Diagrams\Admin\Scripts\app\view\product\cdProductSearchJs.cd" />

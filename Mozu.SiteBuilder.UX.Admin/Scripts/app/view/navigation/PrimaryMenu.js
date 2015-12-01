@@ -12,6 +12,7 @@ Ext.define('Taco.view.navigation.PrimaryMenu', {
     //    cls: 'taco-primary-menu-ct'
     //},
     autoShow: true,
+    autoScroll:true,
     border: false,
     floating: true,
     header: false,
@@ -22,7 +23,7 @@ Ext.define('Taco.view.navigation.PrimaryMenu', {
     resizable: false,
     shadow: false,
     x: 0,
-    y: 45,
+    y: 6,
     
     initComponent: function () {
         this.callParent(arguments);
