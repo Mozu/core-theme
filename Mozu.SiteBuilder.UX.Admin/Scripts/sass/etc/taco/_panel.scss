@@ -1,19 +1,19 @@
 @mixin taco-panel {
 	/* panel */
 	.#{$prefix}panel {
-		font-family: 'proxima-nova', sans-serif;
+		font-family: $font-family;
 		border-radius: $border-radius;
 		box-shadow: rgba(0, 0, 0, 0.09) 0px 0px 2px 0px;
 
 		.#{$prefix}panel-header-text {
-			font-family: 'proxima-nova', sans-serif;
+			font-family: $font-family;
 			font-size: $card-title-font;
 			color: #dark-color;
 		}
 
 		.#{$vprefix}form-nav {
 			.#{$vprefix}form-nav-link {
-				font-family: 'proxima-nova', sans-serif;
+				font-family: $font-family;
 				font-size: $normal-font-link;
 				color: $gray-text-dark;
 
@@ -26,6 +26,28 @@
 					color: $dark-color;
 					border-color: $valid-green;
 				}
+			}
+		}
+
+		.#{$prefix}btn {
+			font-family: $font-family;
+			border-radius: $border-radius-small;
+			background-color: $card-button-bg;
+			border: 1px solid $gray-border-color;
+
+			.#{$prefix}btn-inner-center {
+				font-size: $normal-font-link;
+				color: $card-button-text-color;
+			}
+		}
+
+		.#{$prefix}btn-action-medium-over {
+			/* override external styles */
+			-webkit-box-shadow: none;
+			box-shadow: none;
+
+			.#{$prefix}btn-inner-center {
+				color: $dark-color;
 			}
 		}
 
@@ -77,7 +99,7 @@
 			}
 
 			.#{$prefix}column-header {
-				font-family: 'proxima-nova', sans-serif;
+				font-family: $font-family;
 				font-size: $normal-font-link;
 				padding: 3px 10px;
 				display: inline-block;
