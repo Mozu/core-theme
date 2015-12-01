@@ -212,6 +212,7 @@ Ext.define('Taco.core.ux.mixins.NavHeader', {
     },
 
     createNavHeader: function () {
+        /*jshint maxcomplexity:1000 */
         var me = this,
             hasContextSwitcher = (!Ext.isEmpty(this.contextConfig) && !Ext.isEmpty(this.contextConfig.supportedLevels)),
             conf;
