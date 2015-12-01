@@ -9,7 +9,8 @@
 
     &.taco-fixed-navForm2 {
       position: fixed !important;
-      z-index: 100;
+      z-index: 500;
+      width: 100% !important;
     }
 
     li {
