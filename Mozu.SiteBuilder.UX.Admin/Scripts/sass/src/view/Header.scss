@@ -53,7 +53,7 @@
 .#{$vprefix}navheader {
     
     .#{$vprefix}primary-menu-trigger {
-        border-right: 1px solid $color-standard-border;
+        border-right: 1px solid $nav-element-active-border;
         display: block;
         overflow: hidden;
         @include box-shadow(1px 0px $color-neutral-white);
@@ -62,7 +62,7 @@
 
         &::after {
             left: 20px;
-            top: 10px;
+            top: 20px;
         }
         &.expanded {
             background-color: $color-neutral-20;

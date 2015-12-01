@@ -6,7 +6,7 @@ Ext.define('Taco.core.ux.mixins.HamburgerButton', {
     xtype: 'action',
     text: '',
     width: 60,
-    height: 40,
+    height: 60,
     cls: Taco.baseCSSPrefix + 'primary-menu-trigger',
     itemId: 'taco-hamburgerbutton',
     click: function () {

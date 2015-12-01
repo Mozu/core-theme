@@ -233,6 +233,8 @@ Ext.define('Taco.core.ux.mixins.NavHeader', {
             me.titleContainer = {
                 xtype: "container",
                 layout: 'hbox',
+                height: 60,
+                cls: 'taco-content-header-title-container',
                 items: []
             };
 
