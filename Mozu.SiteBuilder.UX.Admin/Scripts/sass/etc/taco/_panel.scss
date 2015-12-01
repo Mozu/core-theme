@@ -1,8 +1,15 @@
 @mixin taco-panel {
 	/* panel */
 	.#{$prefix}panel {
+		font-family: 'proxima-nova', sans-serif;
 		border-radius: $border-radius;
 		box-shadow: rgba(0, 0, 0, 0.09) 0px 0px 2px 0px;
+
+		.#{$prefix}panel-header-text {
+			font-family: 'proxima-nova', sans-serif;
+			font-size: $card-title-font;
+			color: #dark-color;
+		}
 
 		.#{$vprefix}form-nav {
 			.#{$vprefix}form-nav-link {
@@ -40,10 +47,6 @@
 			/* override external styles */
 			border: 0;
 
-			.#{$prefix}box-inner {
-				border-bottom: 1px solid $light-bg-gray;
-			}
-
 			.#{$prefix}column-header-over {
 				/* override external styles */
 				background-color: $white-color;
@@ -68,6 +71,10 @@
 			border: 0;
 			background-color: $white-color;
 			border-bottom: 1px solid $nav-element-active-border;
+
+			.#{$prefix}box-inner {
+				border-bottom: 1px solid $light-bg-gray;
+			}
 
 			.#{$prefix}column-header {
 				font-family: 'proxima-nova', sans-serif;
