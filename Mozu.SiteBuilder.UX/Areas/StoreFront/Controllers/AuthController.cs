@@ -494,6 +494,15 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
                 return redir;
             }
 
+            // compare the password and passwordConfirm, if they don't match, throw an error!
+            if (!info.password.Equals(info.passwordConfirm))
+            {
+                // Throw an error!
+                info.done = false;
+                info.messages = new object[] { new {message = "Passwords must match."}};
+                return Request.CreateResponse(HttpStatusCode.OK, View("Reset-Password", info));
+            }
+
             var res = await DoResetPasswordConfirm(info);
             var ex = res.ReadException();
             info.done = res.ResponseMessage.IsSuccessStatusCode;
