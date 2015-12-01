@@ -12,7 +12,9 @@ $ui-link:
     0px,                            // 9. border width
     10px,                           // 10. left padding
     26px,                           // 11. arrow width,
-    $color-button-link-hover        // 12. text color, hover
+    $color-button-link-hover,       // 12. text color, hover,
+    12px,                           // 13. font size,
+    400                             // 14. font weight
 ;
 
 $ui-action:
@@ -27,7 +29,9 @@ $ui-action:
     1px,
     19px,
     38px,
-    $color-action-foreground
+    $color-action-foreground,
+    16px,
+    normal
 ;
 
 $ui-action-primary:
@@ -42,7 +46,9 @@ $ui-action-primary:
     1px,
     19px,
     38px,
-    $color-action-foreground
+    $color-action-foreground,
+    16px,
+    normal
 ;
 
 $ui-action-toggle:
@@ -57,7 +63,9 @@ $ui-action-toggle:
     1px,
     19px,
     38px,
-    $color-action-foreground
+    $color-action-foreground,
+    16px,
+    normal
 ;
 
 $uis: $ui-link, $ui-action, $ui-action-primary, $ui-action-toggle;
@@ -98,17 +106,17 @@ $uis: $ui-link, $ui-action, $ui-action-primary, $ui-action-toggle;
             $color-pressed: nth($ui-name, 2),
             $color-disabled: nth($ui-name, 2),
 
-            $font-size: 16px,
-            $font-size-over: 16px,
-            $font-size-focus: 16px,
-            $font-size-pressed: 16px,
-            $font-size-disabled: 16px,
+            $font-size: nth($ui-name, 13),
+            $font-size-over: nth($ui-name, 13),
+            $font-size-focus: nth($ui-name, 13),
+            $font-size-pressed: nth($ui-name, 13),
+            $font-size-disabled: nth($ui-name, 13),
 
-            $font-weight: normal,
-            $font-weight-over: normal,
-            $font-weight-focus: normal,
-            $font-weight-pressed: normal,
-            $font-weight-disabled: normal,
+            $font-weight: nth($ui-name, 14),
+            $font-weight-over: nth($ui-name, 14),
+            $font-weight-focus: nth($ui-name, 14),
+            $font-weight-pressed: nth($ui-name, 14),
+            $font-weight-disabled: nth($ui-name, 14),
 
             $font-family: $font-family,
             $font-family-over: $font-family,

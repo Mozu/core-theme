@@ -311,7 +311,7 @@ Ext.define('Taco.core.ux.mixins.NavHeader', {
                     xtype: 'button',
                     text: me.cancelText,
                     margin: "0 0 0 10",
-                    ui: 'action',
+                    ui: 'link',
                     scale: 'medium',
                     hidden: !me.cancelButtonVisible || this.cancelHidden || !this.allowCreate(),
                     itemId: 'cancelActionButton',
