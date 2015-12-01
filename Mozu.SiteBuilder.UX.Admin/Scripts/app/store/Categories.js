@@ -10,42 +10,35 @@ Ext.define('Taco.store.Categories', {
     model: 'Taco.model.Category',
     storeManagerConfig: {
         createOnly: true,
-        autoLoad:true
+        autoLoad: true,
     },
     load: function (options) {
         var me = this;
-        
         options = options || {};
-
         if (typeof options == 'function') {
             options = {
                 callback: options
             };
         }
-
         options = Ext.apply({
-            catalogId:me.catalogId
+            catalogId: Taco.app.context.getCatalogId()
+            ,bypassCache: true,
         }, options);
-        
         return me.callParent([options]);
     },
     reload: function (options) {
-
+        //TODO: this code might not be used anymore 
         var me = this;
-
         options = options || {};
-
         if (typeof options == 'function') {
             options = {
                 callback: options
+                , bypassCache: true
             };
         }
-        
-
         options = Ext.apply({
             catalogId: catalogId
         }, options);
-
         return me.callParent([options]);
     }
 });

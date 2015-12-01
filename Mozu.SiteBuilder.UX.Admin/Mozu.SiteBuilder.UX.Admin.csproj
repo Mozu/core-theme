@@ -412,6 +412,8 @@
     <Compile Include="Helpers\AttributeHelpers\IAttributeHelper.cs" />
     <Compile Include="Helpers\AttributeHelpers\AttributeFilterExtensions.cs" />
     <Compile Include="Helpers\AttributeHelpers\AttributeSortExtensions.cs" />
+    <Compile Include="Helpers\CategoryHelpers\CategoryHelper.cs" />
+    <Compile Include="Helpers\CategoryHelpers\ICategoryHelper.cs" />
     <Compile Include="Helpers\ChannelHelpers\ChannelFilterExtensions.cs" />
     <Compile Include="Helpers\CollectionTaskUnMapper.cs" />
     <Compile Include="Helpers\ContentHelpers\ContentFilterExtensions.cs" />
