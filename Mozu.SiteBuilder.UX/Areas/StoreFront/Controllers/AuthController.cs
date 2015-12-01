@@ -440,10 +440,11 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
         [SslOnlyActionFilter]
         public async Task<ActionResult> ResetPassword(string t, string u)
         {
-            if (_authenticationHelper != null && _authenticationHelper.GetProfileToken() != null && _authenticationHelper.GetProfileToken().Length > 1)
+            if (this.PageContext != null && this.PageContext.User != null && this.PageContext.User.IsAuthenticated)
             {
                 return new RedirectResult("/");
             }
+
             var accountsResp = await _customerAccountWebApiClient.CloneWithoutUserClaims().GetAccounts(filter: "UserId eq " + u);
 
             string userName = !accountsResp.ResponseMessage.IsSuccessStatusCode ? null : (accountsResp.ReadAsSync().Items.FirstOrDefault() ?? new CustomerAccount()).UserName;
@@ -486,7 +487,7 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
         [SslOnlyActionFilter]
         public async Task<HttpResponseMessage> ResetPassword(ResetPasswordConfirmDetails info)
         {
-            if (_authenticationHelper != null && _authenticationHelper.GetProfileToken() != null && _authenticationHelper.GetProfileToken().Length > 1)
+            if (this.PageContext != null && this.PageContext.User != null && this.PageContext.User.IsAuthenticated)
             {
                 var redir = this.Request.CreateResponse(statusCode: System.Net.HttpStatusCode.Redirect);
 
