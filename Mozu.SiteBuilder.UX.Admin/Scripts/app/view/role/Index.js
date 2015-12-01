@@ -4,14 +4,32 @@
  */
 
 Ext.define('Taco.view.role.Index', {
-    extend: 'Taco.core.ux.browser.BrowserPage',
+    extend: 'Taco.core.ux.browser.SearchList',
     requires: ['Taco.model.Role', 'Taco.store.Roles', 'Taco.view.role.EditModal'],
     modelName: 'Taco.model.Role',
     store: { type: 'Taco.store.Roles' },
     editorName: 'Taco.view.role.Edit',
 
-    // this is the title. 
-    typeName: "Role",
+    enableNavHeader: true,
+
+    enableSearch: false,
+
+    enableSearchBar: false,
+
+    addContentViewPadding: true,
+
+    createButtonText: 'Create New Role',
+
+    createButtonEnabled: true,
+
+    cancelButtonEnabled: false,
+
+    saveButtonEnabled: false,
+
+    title: 'Roles',
+
+    stateful: true,
+    stateId: 'statefulRolesGrid',
 
     initComponent: function () {
         var me = this;
@@ -31,22 +49,11 @@ Ext.define('Taco.view.role.Index', {
             }]
         };
 
-        if (!this.store) {
-            this.store = Ext.create('Taco.store.Roles', {
-                autoLoad: true
-            });
-        }
-
-        this.gridPanelConf = {
-            //   store: this.store,
-            listeners: {
-                deleterole: this.onDeleteRole,
-                scope: this
-            },
-            layout: 'fit',
-            stateful: true,
-            stateId: "statefulRolesGrid",
-            columns: [
+        this.store = Ext.create('Taco.store.Roles', {
+            autoLoad: true
+        });
+        
+        this.columns = [
             {
                 xtype: 'gridcolumn',
                 dataIndex: 'name',
@@ -61,7 +68,8 @@ Ext.define('Taco.view.role.Index', {
                         return value;
                     }
                 }
-            }, {
+            },
+            {
                 xtype: 'gridcolumn',
                 dataIndex: 'isEditable',
                 stateId: "isEditable",
@@ -75,25 +83,26 @@ Ext.define('Taco.view.role.Index', {
                         return 'System Role';
                     }
                 }
-            }, {
+            },
+            {
                 xtype: 'taco.menucolumn',
                 text: 'Actions',
                 stateId: 'actionsColumn',
                 scope: me,
-                items: [{
-                    text: 'flerp'
-                }],
+                items: [
+                    {
+                        text: 'flerp'
+                    }
+                ],
                 getMenu: function (eventData) {
                     var record = eventData.record;
                     return this.up().grid.scope.getContextMenu(record);
                 },
-                    handler: function (grid, foo, bar, snerst, evt, record, row) {
-                        this.launchContextMenu(evt, record, row);
-                    }
+                handler: function (grid, foo, bar, snerst, evt, record, row) {
+                    this.launchContextMenu(evt, record, row);
                 }
-            ],
-            scope: me
-        };
+            }
+        ];
         
         this.callParent(arguments);
 
@@ -110,20 +119,24 @@ Ext.define('Taco.view.role.Index', {
         //Generates the context menu to be shown
         var actions;
         var me = this;
+        var grid = me.down('gridview');
 
         if (!record.get('isEditable')) {
             actions = [
                 {
                     text: 'View',
                     handler: function (item, event) {
-                        me.launchEditor(item.scope.gridPanel.getSelectionModel().getSelection()[0], 'view');
+                        var rec = grid.getSelectionModel().getSelection()[0];
+
+                        me.launchEditor(rec, 'view');
                     },
                     scope: me
                 },
                 {
                     text: 'Duplicate',
                     handler: function (item, event) {
-                        me.launchEditor(item.scope.gridPanel.getSelectionModel().getSelection()[0], 'dup');
+                        var rec = grid.getSelectionModel().getSelection()[0];
+                        me.launchEditor(rec, 'dup');
                     },
                     scope: me
                 }
@@ -133,14 +146,16 @@ Ext.define('Taco.view.role.Index', {
                 {
                     text: 'Edit',
                     handler: function (item, event) {
-                        me.launchEditor(item.scope.gridPanel.getSelectionModel().getSelection()[0], 'edit');
+                        var rec = grid.getSelectionModel().getSelection()[0];
+                        me.launchEditor(rec, 'edit');
                     },
                     scope: me
                 },
                 {
                     text: 'Duplicate',
                     handler: function (item, event) {
-                        me.launchEditor(item.scope.gridPanel.getSelectionModel().getSelection()[0], 'dup');
+                        var rec = grid.getSelectionModel().getSelection()[0];
+                        me.launchEditor(rec, 'dup');
                     },
                     scope: me
                 },
@@ -228,6 +243,9 @@ Ext.define('Taco.view.role.Index', {
             });
             editor.show();
         }
+    },
+    doCreate: function() {
+        this.launchEditor(null, 'create');
     },
     onDeleteRole: function (view, index, idx, action, e, record) {
     },
