@@ -5,7 +5,7 @@
         'Taco.view.settings.tax.Edit',
         'Taco.view.settings.shipping.Edit',
         'Taco.model.SiteShippingSettings',
-        'Taco.view.settings.Publishing'
+        'Taco.view.settings.publishing.Edit'
     ],
     listView: null,
     models: ['Taco.model.CheckoutSettings'],
@@ -66,6 +66,6 @@
     },
 
     publishing: function () {
-        this.createContentView('Taco.view.settings.Publishing');
+        this.createContentView('Taco.view.settings.publishing.Edit');
     }
 });

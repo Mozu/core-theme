@@ -7,6 +7,7 @@ Ext.define('Taco.view.settings.shipping.Edit', {
     requires: [
         'Taco.view.settings.shipping.Form'
     ],
+    enableSearchBar: false,
     formCls: 'Taco.view.settings.shipping.Form',
     contextConfig: {
         supportedLevels: ['s'],

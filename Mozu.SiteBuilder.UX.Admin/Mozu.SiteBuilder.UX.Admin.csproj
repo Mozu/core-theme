@@ -820,6 +820,9 @@
     <Content Include="Scripts\app\view\publishing\Split.js" />
     <Content Include="Scripts\app\view\role\editModal.js" />
     <Content Include="Scripts\app\view\productRanking\modal\ProductRankingEditor.js" />
+    <Content Include="Scripts\app\view\settings\publishing\Edit.js" />
+    <Content Include="Scripts\app\view\settings\publishing\Form.js" />
+    <Content Include="Scripts\app\view\settings\publishing\subform\PublishSettings.js" />
     <Content Include="Scripts\app\view\storeCredit\AdvancedSearchForm.js" />
     <Content Include="Scripts\app\view\storeCredit\Grid.js" />
     <Content Include="Scripts\app\view\storefrontProduct\Grid.js" />
@@ -2361,7 +2364,6 @@
     <Folder Include="Scripts\app\platter\containers\" />
     <Folder Include="Scripts\app\view\address\" />
     <Folder Include="Scripts\app\view\product\option\" />
-    <Folder Include="Scripts\app\view\settings\publishing\" />
     <Folder Include="Scripts\app\view\storefrontProduct\modal\" />
     <Folder Include="Scripts\build\" />
     <Folder Include="Scripts\packages\mozuadmintheme\sass\etc\siteBuilder\" />

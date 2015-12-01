@@ -14,6 +14,8 @@ Ext.define('Taco.view.settings.shipping.MethodsAndFees', {
     //editorName: 'Taco.view.discount.Edit',
     title: 'Shipping Methods and Fees',
 
+    enableSearchBar: false,
+
 
     contextConfig: {
         supportedLevels: ['s'],

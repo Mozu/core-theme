@@ -30,7 +30,7 @@ Ext.define('Taco.view.settings.shipping.Rules', {
     addContentViewPadding: true,
 
 
-    enableSearch: true,
+    enableSearch: false,
     enablePaging: true,
     enableRowEditing: false,
 
@@ -46,13 +46,10 @@ Ext.define('Taco.view.settings.shipping.Rules', {
     selType: 'rowmodel',
    
 
-
+    enableSearchBar: false,
    
 
     autoScroll: true,
-
-
-
 
     enableQuickFilters: false,
 
