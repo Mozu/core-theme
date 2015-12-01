@@ -132,24 +132,6 @@ Ext.define('Taco.view.website.Index', {
             }
         };
 
-
-        this.CHORIZO_WIDGET_BUTTON = {
-            xtype: 'button',
-            ui: 'action',
-            scale: 'medium',
-            toggleGroup: 'websiteEditorTabs',
-            enableToggle: true,
-            pressed: false,
-            itemId: 'widgetsActionButton',
-            text: 'Widgets',
-            buttonGroup: 'isWebPageView',
-            margin: '0 0 0 10',
-            scope: this,
-            handler: function () {
-              this.chorizoEditor.widgets().toggle();
-            }
-        };
-
         this.actions = [
             {
                 xtype: 'component',
@@ -189,7 +171,6 @@ Ext.define('Taco.view.website.Index', {
                 this.getPageEditorButton(),
                 this.getLayoutButton(),
                 this.getSettingsButton(),
-                this.CHORIZO_WIDGET_BUTTON,
             {
                 xtype: 'button',
                 ui: 'action',
