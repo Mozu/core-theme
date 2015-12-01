@@ -41,8 +41,7 @@ Ext.define('Taco.view.settings.publishing.subform.PublishSettings', {
             autoLoad: true
         })
 
-        this.items = this.buildItems();
-
+        this.items = [];
         this.callParent(arguments);
     },
 
@@ -67,9 +66,8 @@ Ext.define('Taco.view.settings.publishing.subform.PublishSettings', {
             
         });
       	
-
+        this.add(this.buildItems());
     },
-
 
     buildItems: function () {
         var items = [],
