@@ -82,11 +82,12 @@ Ext.define('Taco.view.category.Index', {
 
         me.store = Taco.core.data.StoreManager.getCategoryTreeByCatalog();
 
-        me.viewConfig = {
+        me.viewConfig = Ext.apply(me.viewConfig, {
             animate: false,
             stripeRows: true,
-            onExpand: Ext.emptyFn
-        };
+            onExpand: Ext.emptyFn,
+            enableTextSelection: true
+        });
 
         me.columns = [
         {
@@ -186,6 +187,9 @@ Ext.define('Taco.view.category.Index', {
 
 
     onCellClick: function (view, td, cellIndex, record, tr, rowIndex, e, eOpts) {
+        if (this.getSelectionText()) {  // inherited from the launchEditor mixin;
+            return;                     // if the user has highlighted text, do not launch editor
+        }
         var target= Ext.fly(e.getTarget()),
             metaData = { id: record.getId() },
             header = view.getHeaderAtIndex(cellIndex);

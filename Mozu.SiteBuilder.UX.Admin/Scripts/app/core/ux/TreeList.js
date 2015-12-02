@@ -21,7 +21,8 @@ Ext.define('Taco.core.ux.TreeList', {
     autoSync: true,
     rowLines: true,
     viewConfig: {
-        stripeRows: false
+        stripeRows: false,
+        enableTextSelection: true
     },
 
     initComponent: function () {

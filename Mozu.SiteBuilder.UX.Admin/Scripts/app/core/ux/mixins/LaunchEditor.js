@@ -53,7 +53,10 @@ Ext.define('Taco.core.ux.mixins.LaunchEditor', {
         }
     },
 
-    onCellClick: function (view, td, cellIndex, record, tr, rowIndex, e, eOpts) {        
+    onCellClick: function (view, td, cellIndex, record, tr, rowIndex, e, eOpts) {
+        if (this.getSelectionText()) { // if the user has highlighted text, do not launch editor
+            return;
+        }
         var metaData = { id: record.getId() },
             header = view.getHeaderAtIndex(cellIndex);
         if (!header) {
@@ -98,5 +101,15 @@ Ext.define('Taco.core.ux.mixins.LaunchEditor', {
             metaData = { id: record.getId() };
 
         this.launchEditor(record, metaData);
+    },
+
+    getSelectionText: function() {
+        var text = '';
+        if (window.getSelection) {
+            text = window.getSelection().toString();
+        } else if (document.selection && document.selection.type != 'Control') {
+            text = document.selection.createRange().text;
+        }
+        return text;
     }
 });

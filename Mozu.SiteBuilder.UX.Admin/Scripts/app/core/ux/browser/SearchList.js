@@ -23,7 +23,7 @@ Ext.define('Taco.core.ux.browser.SearchList', {
     
     toolbar: null,
 
-    launchEditorOnClick: false,
+    launchEditorOnClick: true,
     
     filterProperty: 'title',
     

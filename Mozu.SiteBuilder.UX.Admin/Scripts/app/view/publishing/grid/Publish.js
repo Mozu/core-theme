@@ -76,7 +76,7 @@ Ext.define('Taco.view.publishing.grid.Publish', {
     },
 
     listeners: {
-        beforeitemdblclick: {
+        beforeitemclick: {
             fn: function(cmp) {
                 cmp.up('publish-split').getEast().expand();
             }
