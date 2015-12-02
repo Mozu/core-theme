@@ -38,6 +38,12 @@
             -webkit-font-smoothing: antialiased;
         }
     }
+
+    .tenant-name {
+        font-size: 12px;
+        font-weight: 400;
+        color: #a5a5a5;
+    }
 }
 
 .#{$vprefix}secondary-nav {

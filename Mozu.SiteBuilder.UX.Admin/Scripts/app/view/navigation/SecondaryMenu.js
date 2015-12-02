@@ -21,13 +21,12 @@ Ext.define('Taco.view.navigation.SecondaryMenu', {
             hidden: true
         });
 
-        var tenantName = Taco.app.context.name || 'Unknown';
+        var tenantName = Taco.app.context.name || '[tenant]';
 
         this.items = [{
-            xtype: 'button',
-            ui: 'link',
-            scale: 'medium',
-            text: tenantName
+            xtype: 'component',
+            cls: 'tenant-name',
+            html: '<span>' + tenantName + '</span>'
         },
         {
             xtype: 'button',

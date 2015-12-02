@@ -334,6 +334,7 @@ Ext.define('Taco.core.ux.mixins.NavHeader', {
 
                 var saveButtonCfg = Ext.apply({}, me.saveButtonCfg, {
                     xtype: 'button',
+                    height: 40,
                     text: me.saveText,
                     margin: "0 0 0 10",
                     ui: 'action-primary',
@@ -345,7 +346,7 @@ Ext.define('Taco.core.ux.mixins.NavHeader', {
                     formBind: true,
                     toggleHandler: me.saveActionHandler,
                     scope: me
-                })
+                });
 
                 if (me.saveAndCreateButtonEnabled) {
                     saveButtonCfg.xtype = "splitbutton";
@@ -372,6 +373,7 @@ Ext.define('Taco.core.ux.mixins.NavHeader', {
             if (me.createButtonEnabled) {
                 me.actions.push(Ext.apply({}, me.createButtonCfg, {
                     xtype: 'button',
+                    height: 40,
                     text: this.createButtonText,
                     margin: "0 0 0 10",
                     ui: 'action-primary',
@@ -386,8 +388,8 @@ Ext.define('Taco.core.ux.mixins.NavHeader', {
             if (me.moreButtonCfg && me.moreButtonCfg.menu) {
                 me.actions.push(Ext.apply({}, me.moreButtonCfg, {
                     xtype: 'button',
+                    height: 40,
                     text: '...',
-                    margin: "0 0 0 10",
                     ui: 'action',
                     scale: 'medium',
                     itemId: 'moreActionButton',
@@ -424,9 +426,10 @@ Ext.define('Taco.core.ux.mixins.NavHeader', {
         // need to create container for buttons so that they can force the titleCmp to have elipsis
         var actionToolbar = {
             xtype: 'toolbar',
+            cls: 'navheader-action-toolbar',
             itemHeader: 'navHeaderActionContainer',            
             items: me.actions
-        }
+        };
 
         // if we have no title, the toolbar needs to flex to fill the entire container.
         if (this.title == false) {
