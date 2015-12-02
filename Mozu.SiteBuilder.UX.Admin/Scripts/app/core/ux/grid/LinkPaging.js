@@ -43,7 +43,7 @@ Ext.define('Taco.core.ux.grid.LinkPaging', {
     onLoad: function () {
         var me = this;
         var container = me.container;
-        var pageData, count;
+        var pageData, count, isEmpty;
 
         count = me.store.getCount();
         isEmpty = count === 0;
