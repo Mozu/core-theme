@@ -98,6 +98,9 @@
                 &:hover {
                     background-color: $valid-green-active;
                 }
+                .x-btn-wrap::after {
+                    top: 5px;
+                }
             }
         }
 
