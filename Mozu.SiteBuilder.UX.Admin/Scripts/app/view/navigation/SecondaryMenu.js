@@ -26,7 +26,7 @@ Ext.define('Taco.view.navigation.SecondaryMenu', {
         this.items = [{
             xtype: 'component',
             cls: 'tenant-name',
-            html: '<span>' + tenantName + '</span>'
+            html: '<div class="tenant-name-container"><span>' + tenantName + '</span></div>'
         },
         {
             xtype: 'button',
