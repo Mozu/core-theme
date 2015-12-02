@@ -77,7 +77,10 @@ Ext.define('Taco.view.publishing.grid.Publish', {
 
     listeners: {
         beforeitemclick: {
-            fn: function(cmp) {
+            fn: function(cmp, record, item, index, e, eOpts) {
+                if (e.target.className.indexOf('taco-grid-row-menu-trigger') > -1) { //if actions column
+                    return;
+                }
                 cmp.up('publish-split').getEast().expand();
             }
         }

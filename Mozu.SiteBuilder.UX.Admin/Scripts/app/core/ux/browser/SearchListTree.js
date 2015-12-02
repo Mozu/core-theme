@@ -153,7 +153,7 @@ Ext.define('Taco.core.ux.browser.SearchListTree', {
         this.callParent(arguments);
 
         
-        this.mixins.gridcontextmenu.constructor.apply(this);
+        //this.mixins.gridcontextmenu.constructor.apply(this);
 
     },
 

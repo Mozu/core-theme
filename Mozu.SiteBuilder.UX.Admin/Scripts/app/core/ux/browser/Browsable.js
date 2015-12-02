@@ -312,7 +312,7 @@ Ext.define('Taco.core.ux.browser.Browsable', {
         var menuColumns = Ext.Array.filter(this.gridPanel.columns, function (col) { return col.isXType('taco.menucolumn'); });
         if (this.disableContextMenuClick !== true && menuColumns && menuColumns.length == 1) {
 
-            this.gridPanel.on('itemcontextmenu', function (cmp, record, item, index, e) {
+            /*this.gridPanel.on('itemcontextmenu', function (cmp, record, item, index, e) {
                 var eventData = {
                     grid: cmp.ownerCt,
                     rowIndex: index,
@@ -336,7 +336,7 @@ Ext.define('Taco.core.ux.browser.Browsable', {
                 //e.preventDefault();
                 e.stopEvent();
                 menu.showAt(e.xy);
-            }, this);
+            }, this);*/
 
         }
 
