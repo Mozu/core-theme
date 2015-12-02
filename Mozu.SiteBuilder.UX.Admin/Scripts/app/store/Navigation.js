@@ -116,6 +116,14 @@ Ext.define('Taco.store.Navigation', {
         }
     },
 
+    filterNavLinksByPage: function(navPg) {
+        this.filter({
+            filterFn: function(item){
+                return item.get('navPage') === navPg;
+            }
+        })
+    },
+
     filters: [
         {
             filterFn: function (record) {
@@ -141,327 +149,366 @@ Ext.define('Taco.store.Navigation', {
                 'id': 'catalog',
                 'navPage': 'home',
                 'label': 'Catalog',
+                'icon': 'nav-catalog',
                 'behaviorIds': [4],
                 'items': [{
-                        'id': 'products',
-                        'label': 'Products',
-                        'address': 'products',
-                        'behaviorIds': [4]
-                    }, {
-                        'id': 'categories',
-                        'label': 'Categories',
-                        'address': 'categories',
-                        'behaviorIds': [16]
-                    }
+                    'id': 'products',
+                    'navPage': 'home',
+                    'label': 'Products',
+                    'address': 'products',
+                    'behaviorIds': [4]
+                }, {
+                    'id': 'categories',
+                    'navPage': 'home',
+                    'label': 'Categories',
+                    'address': 'categories',
+                    'behaviorIds': [16]
+                }, {
+                    'id': 'inventory',
+                    'label': 'Product Inventory',
+                    'address': 'inventory',
+                    'behaviorIds': [4]
+                }
                 ]
-            }, {
+            },
+            {
                 'id': 'marketing',
                 'navPage': 'home',
                 'label': 'Marketing',
+                'icon': 'nav-marketing',
                 'behaviorIds': [24],
                 'items': [
                     {
                         'id': 'discounts',
+                        'navPage': 'home',
                         'behaviorIds': [24],
                         'label': 'Discounts',
                         'address': 'discounts'
                     }, {
                         'id': 'couponset',
+                        'navPage': 'home',
                         'behaviorIds': [24],
                         'label': 'Coupon Sets',
                         'address': 'CouponSets'
                     }, {
                         'id': 'productRanking',
+                        'navPage': 'home',
                         'behaviorIds': [16],
                         'label': 'Product Ranking',
                         'address': 'ProductRankings'
                     }
                 ]
-            }, {
+            },
+            {
                 'id': 'content',
                 'navPage': 'home',
                 'label': 'Content',
+                'icon': 'nav-sites',
                 'showBreadCrumbs': true,
                 'items': [
                     {
                         'id': 'webedit',
+                        'navPage': 'home',
                         'label': 'Site Editor',
                         'address': 'website'
                     }, {
                         'id': 'themes',
+                        'navPage': 'home',
                         'label': 'Themes',
                         'address': 'themes'
                     },
                     {
                         'id': 'redirects',
+                        'navPage': 'home',
                         'label': 'Redirects',
                         'address': 'redirects'
                     }, {
                         'id': 'fileManager',
+                        'navPage': 'home',
                         'label': 'Files',
                         'address': 'fileManager'
                     }
+                    //todo: include with content? greg_murray on 12/1/2015
+                    //,{
+                    //    'id': 'entities',
+                    //    'label': 'Content/Entity',
+                    //    'address': 'entities',
+                    //    'visible': !!(Taco.tenantSettings && Taco.tenantSettings.entityManagerVisible)
+                    //}
                 ]
-            }, {
+            },
+            {
                 'id': 'publishing',
                 'navPage': 'home',
                 'label': 'Publishing ',
+                'icon': 'nav-publishing',
                 'behaviorIds': [8],
                 'items': [
                     {
                         'id': 'drafts',
+                        'navPage': 'home',
                         'label': 'Drafts',
                         'address': 'publishing/drafts'
                     },
                     {
                         'id': 'publishSets',
+                        'navPage': 'home',
                         'label': 'Publish Sets',
                         'address': 'publishing/publishsets'
                     }
                 ]
-            }, {
+            },
+            {
                 'id': 'order',
                 'navPage': 'home',
                 'label': 'Fulfillment',
+                'icon': 'nav-orders',
                 'behaviorIds': [73],
                 'items': [
                     {
                         'id': 'orders',
+                        'navPage': 'home',
                         'label': 'Orders',
                         'address': 'orders',
                         'behaviorIds': [73]
                     }, {
-                        'id': 'inventory',
-                        'label': 'Inventory',
-                        'address': 'inventory',
-                        'behaviorIds': [4]
-                    }, {
                         'id': 'locations',
+                        'navPage': 'home',
                         'label': 'Locations',
                         'address': 'locations',
                         'behaviorIds': [186]
                     }, {
                         'id': 'locations-inventory',
+                        'navPage': 'home',
                         'label': 'Inventory',
                         'address': 'locationInventory'
                     }
                 ]
-            }, {
+            },
+            {
                 'id': 'customer',
                 'navPage': 'home',
                 'label': 'Customers',
+                'icon': 'nav-customers',
                 'items': [{
-                        'id': 'customers',
-                        'label': 'Customers',
-                        'address': 'customers',
-                        'behaviorIds': [41]
-                    }, {
-                        'id': 'customerSegments',
-                        'label': 'Segments',
-                        'address': 'customer/segments'
-                    }, {
-                        'id': 'storecredit',
-                        'label': 'Store Credit',
-                        'address': 'StoreCredits'
-                    }
+                    'id': 'customers',
+                    'navPage': 'home',
+                    'label': 'Customers',
+                    'address': 'customers',
+                    'behaviorIds': [41]
+                }, {
+                    'id': 'customerSegments',
+                    'navPage': 'home',
+                    'label': 'Segments',
+                    'address': 'customer/segments'
+                }, {
+                    'id': 'storecredit',
+                    'navPage': 'home',
+                    'label': 'Store Credit',
+                    'address': 'StoreCredits'
+                }
                 ]
-            }, {
+            },
+            {
+                'id': 'report',
+                'label': 'Reporting',
+                'navPage': 'home',
+                'behaviorIds': [188],
+                'items': [{
+                    'id': 'report-sales',
+                    'navPage': 'home',
+                    'label': 'Sales',
+                    'address': 'reports'
+                }]
+            },
+            {
                 'id': 'settings',
                 'navPage': 'sysAdm',
-                'label': 'Settings',
+                'label': 'Site Configuration',
+                'icon': 'nav-settings',
                 'visible': false,
                 'items': [
                     {
                         'id': 'generalsettings',
-                        'label': 'General Settings',
+                        'navPage': 'sysAdm',
+                        'label': 'General',
                         'address': 'generalsettings'
                     },
                     {
                         'id': 'paymentcheckout',
-                        'label': 'Payment & Checkout',
+                        'navPage': 'sysAdm',
+                        'label': 'Payments',
                         'address': 'settings/paymentAndCheckout'
                     }, {
                         'id': 'tax',
+                        'navPage': 'sysAdm',
                         'label': 'Tax',
                         'address': 'settings/tax'
-                    },
-                    {
-                        'id': 'shipping',
-                        'label': 'Shipping',
-                        'address': 'shipping',
-                        'items': [
-                            {
-                                'id': 'shipping4',
-                                'label': 'Methods and Fees',
-                                'address': 'shipping'
-                            },
-                            {
-                                'id': 'shipping1',
-                                'label': 'Carriers and Settings',
-                                'address': 'shipping/carriers'
-                            },
-                            {
-                                'id': 'shipping2',
-                                'label': 'Zones',
-                                'address': 'shipping/zones'
-                            },
-                            {
-                                'id': 'shipping3',
-                                'label': 'Product Rules',
-                                'address': 'shipping/productRules'
-                            }
-                        ]
-
                     }, {
-                        'id': 'localization',
+                        'id': 'shipping4',
                         'navPage': 'sysAdm',
-                        'locAtts': ['multiLang', 'multCurrency'],
-                        'label': 'Localization',
-                        'items': [
-                            {
-                                'id': 'localizationAttr',
-                                'label': 'Attributes',
-                                'address': 'Localization',
-                                'locAtts': ['multiLang']
-                            },
-                            {
-                                'id': 'localizationAttrVal',
-                                'label': 'Attribute Values',
-                                'address': 'Localization/attributeValues',
-                                'locAtts': ['multiLang']
-                            },
-                            {
-                                'id': 'localizationProp',
-                                'label': 'Product Properties',
-                                'address': 'Localization/productProperties',
-                                'locAtts': ['multiLang']
-                            },
-                            {
-                                'id': 'localizationExtra',
-                                'label': 'Product Extras',
-                                'address': 'Localization/productExtras',
-                                'locAtts': ['multCurrency']
-                            },
-                            {
-                                'id': 'localizationVar',
-                                'label': 'Product Variants',
-                                'address': 'Localization/productVariants',
-                                'locAtts': ['multCurrency']
-                            }
-                        ]
-                    },
-                    {
-                        'id': 'usersRoles',
+                        'label': 'Methods and Fees',
+                        'address': 'shipping'
+                    }, {
+                        'id': 'tax',
                         'navPage': 'sysAdm',
-                        'label': 'Users &amp; Roles',
-                        'items': [
-                            {
-                                'id': 'users',
-                                'label': 'Users',
-                                'address': 'account/users'
-                            }, {
-                                'id': 'roles',
-                                'label': 'Roles',
-                                'address': 'roles'
-                            }
-                        ]
+                        'label': 'Tax',
+                        'address': 'settings/tax'
                     }, {
-                        'id': 'publishing',
-                        'label': 'Publishing',
-                        'address': 'settings/publishing'
-                    }, {
-                        'id': 'applications-manage',
-                        'label': 'Applications',
-                        'address': 'capability'
-                    }, {
-                        'id': 'channels',
-                        'label': 'Channels',
-                        'address': 'channels'
-                    }, {
-                        'id': 'fileManager',
-                        'label': 'File Manager',
-                        'address': 'fileManager'
-                    }, {
-                        'id': 'entities',
-                        'label': 'Content/Entity',
-                        'address': 'entities',
-                        'visible': !!(Taco.tenantSettings && Taco.tenantSettings.entityManagerVisible)
-                    }, {
-                        'id': 'sysAdmin',
-                        'label': 'System Administration',
+                        'id': 'customroutes',
                         'navPage': 'sysAdm',
-                        'items': [
-                            {
-                                'id': 'provisioning',
-                                'label': 'Catalog And Site Structure',
-                                'address': 'provisioning'
-                            }, 
-                            {
-                                'id': 'actionmanagement',
-                                'label': 'Action Management',
-                                'address': 'actionmanagement'
-                            },
-                            {
-                                'id': 'customroutes',
-                                'label': 'Custom Routes',
-                                'address': 'customroutes'
-                            },
-                            {
-                                 'id': 'ipblocking',
-                                 'label': 'IP Blocking',
-                                 'address': 'ipblocking'
-                            }
-                        ]
-                    }
-                ]
-            }, {
-                'id': 'report',
-                'label': 'Reporting',
-                'behaviorIds': [188],
-                'items': [{
-                    'id': 'report-sales',
-                    'label': 'Sales',
-                    'address': 'reports'
-                }]
-            }, {
+                        'label': 'Custom Routes',
+                        'address': 'customroutes'
+                    }]
+            },
+            {
                 'id': 'typesAndAttributes',
-                'label': 'Types & Attributes',
                 'navPage': 'sysAdm',
+                'label': 'Types & Attributes',
                 'behaviorIds': [4],
                 'items': [{
-                        'id': 'productTypes',
-                        'label': 'Product Types',
-                        'address': 'producttypes'
-                    }, {
-                        'id': 'productAttributes',
-                        'label': 'Product Attributes',
-                        'address': 'attributes'
-                    }, {
-                        'id': 'orderAttributes',
-                        'label': 'Attributes',
-                        'address': 'orderattributes'
-                    }, {
-                        'id': 'customerAttributes',
-                        'label': 'Attributes',
-                        'address': 'CustomerAttributes'
-                    }, {
-                        'id': 'locationTypes',
-                        'label': 'Location Types',
-                        'address': 'locationTypes'
-                    }
+                    'id': 'productTypes',
+                    'navPage': 'sysAdm',
+                    'label': 'Product Types',
+                    'address': 'producttypes'
+                }, {
+                    'id': 'productAttributes',
+                    'label': 'Product Attributes',
+                    'address': 'attributes'
+                }, {
+                    'id': 'orderAttributes',
+                    'label': 'Order Attributes',
+                    'address': 'orderattributes'
+                }, {
+                    'id': 'customerAttributes',
+                    'label': 'Customer Attributes',
+                    'address': 'CustomerAttributes'
+                }, {
+                    'id': 'locationTypes',
+                    'label': 'Location Types',
+                    'address': 'locationTypes'
+                }
                 ]
-            }, {
+            },
+            {
                 'id': 'settingsEnvironment',
                 'label': 'Environment',
                 'navPage': 'sysAdm',
                 'behaviorIds': [4],
                 'items': [{
-                        'id': 'publishing',
-                        'label': 'Settings',
-                        'address': 'settings/publishing'
+                    'id': 'provisioning',
+                    'label': 'Catalog & Sites',
+                    'address': 'provisioning'
+                }, {
+                    'id': 'channels',
+                    'label': 'Channels',
+                    'address': 'channels'
+                }, {
+                    'id': 'applications-manage',
+                    'label': 'Applications',
+                    'address': 'capability'
+                }, {
+                    'id': 'actionmanagement',
+                    'label': 'Actions',
+                    'address': 'actionmanagement'
+                }, {
+                    'id': 'publishing',
+                    'label': 'Settings',
+                    'address': 'settings/publishing'
+                }, {
+                    'id': 'ipblocking',
+                    'label': 'IP Blocking',
+                    'address': 'ipblocking'
+                }
+                ]
+            },
+            {
+                'id': 'usersRoles',
+                'navPage': 'sysAdm',
+                'label': 'Users &amp; Roles',
+                'items': [
+                    {
+                        'id': 'users',
+                        'label': 'Users',
+                        'address': 'account/users'
+                    }, {
+                        'id': 'roles',
+                        'label': 'Roles',
+                        'address': 'roles'
                     }
                 ]
+            },
+            {
+                'id': 'sysAdminLink',
+                'label': 'System Administration',
+                'navPage': 'home',
+                'navTarget': 'sysAdm',
+                'items': []
             }
+
+
+            //todo: include? greg_murray on 12/1/2015
+            //{
+            //    'id': 'localization',
+            //    'navPage': 'sysAdm',
+            //    'locAtts': ['multiLang', 'multCurrency'],
+            //    'label': 'Localization',
+            //    'items': [
+            //        {
+            //            'id': 'localizationAttr',
+            //            'label': 'Attributes',
+            //            'address': 'Localization',
+            //            'locAtts': ['multiLang']
+            //        },
+            //        {
+            //            'id': 'localizationAttrVal',
+            //            'label': 'Attribute Values',
+            //            'address': 'Localization/attributeValues',
+            //            'locAtts': ['multiLang']
+            //        },
+            //        {
+            //            'id': 'localizationProp',
+            //            'label': 'Product Properties',
+            //            'address': 'Localization/productProperties',
+            //            'locAtts': ['multiLang']
+            //        },
+            //        {
+            //            'id': 'localizationExtra',
+            //            'label': 'Product Extras',
+            //            'address': 'Localization/productExtras',
+            //            'locAtts': ['multCurrency']
+            //        },
+            //        {
+            //            'id': 'localizationVar',
+            //            'label': 'Product Variants',
+            //            'address': 'Localization/productVariants',
+            //            'locAtts': ['multCurrency']
+            //        }
+            //    ]
+            //},
+            //todo: include shipping sublinks? greg_murray on 12/1/2015
+            //{
+            //    'id': 'shipping',
+            //    'label': 'Shipping',
+            //    'address': 'shipping',
+            //    'items': [
+            //        {
+            //            'id': 'shipping1',
+            //            'label': 'Carriers and Settings',
+            //            'address': 'shipping/carriers'
+            //        },
+            //        {
+            //            'id': 'shipping2',
+            //            'label': 'Zones',
+            //            'address': 'shipping/zones'
+            //        },
+            //        {
+            //            'id': 'shipping3',
+            //            'label': 'Product Rules',
+            //            'address': 'shipping/productRules'
+            //        }
+            //    ]
+            //}
         ],
         reader: {
             type: 'json',

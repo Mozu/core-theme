@@ -24,6 +24,7 @@ Ext.define('Taco.view.navigation.PrimaryMenu', {
     shadow: false,
     x: 0,
     y: 6,
+    navPage: 'home',
     
     initComponent: function () {
         this.callParent(arguments);
@@ -38,6 +39,7 @@ Ext.define('Taco.view.navigation.PrimaryMenu', {
 
     bindStore: function (store, initial) {
         this.store = store;
+        this.store.filterNavLinksByPage(this.navPage);
         this.mixins.bindable.bindStore.apply(this, arguments);
 
         this.view = Ext.create('Taco.view.navigation.PrimaryMenuView', {
@@ -90,10 +92,9 @@ Ext.define('Taco.view.navigation.PrimaryMenu', {
         var matches = [],
             me = this,
             ret;
-       
 
         store.each(function (item) {
-          
+
             if (item.data.address && appStateAddress.indexOf(item.data.address.toLowerCase()) == 0  ){
 
                 matches.push({

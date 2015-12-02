@@ -19,9 +19,15 @@ Ext.define('Taco.view.navigation.PrimaryMenuView', {
 
         this.tpl = [
             '<tpl for=".">',
+                '<tpl if="!navTarget">',
                     '<li class="taco-menu-item"  style="{[(values.visible && !values.breadCrumbOnly) ? "" : "display:none" ]}" >',
-                       '{label}',
+                        '{label}',
                     '</li>',
+                '<tpl else>',
+                    '<li class="taco-menu-item"  style="{[(values.visible && !values.breadCrumbOnly) ? "" : "display:none" ]}" >',
+                        '{label} - {navTarget}',
+                    '</li>',
+                '</tpl>',
             '</tpl>'
         ];
 
@@ -74,13 +80,18 @@ Ext.define('Taco.view.navigation.PrimaryMenuView', {
      * @param  {Ext.EventObject} e The raw event object
      */
     navigate: function (view, record, item, index, e) {
-        var dest = record.get('address'),
+        var address = record.get('address'),
+            navTarget = record.get('navTarget'),
             subItem = e.getTarget('li.taco-submenu-item', 10);
 
-        if (subItem) return false;
+        if (navTarget) {
+            Taco.app.fireEvent('navmenutarget', navTarget);
+        }
+
+        if (subItem || !address) return false;
 
         e.preventDefault();
-        Taco.core.StateManager.attemptNavigate(dest);
+        Taco.core.StateManager.attemptNavigate(address);
         this.menu.hideMenu();
     },
 

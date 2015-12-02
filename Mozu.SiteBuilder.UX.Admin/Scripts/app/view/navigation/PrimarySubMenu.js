@@ -40,7 +40,7 @@ Ext.define('Taco.view.navigation.PrimarySubMenu', {
         Ext.Array.each(items, function (item) {
             var itemCfg = {
                 text: item.label
-            }
+            };
             menuCfg.items.add(itemCfg);
             if (item.address) {
                 item.handler =function () {
@@ -69,6 +69,7 @@ Ext.define('Taco.view.navigation.PrimarySubMenu', {
     navigate: function (view, record, item, index, e) {
         var menu = Ext.ComponentQuery.query('#primaryMenu').shift(),
             dest = record.get('address'),
+            navTarget = record.get('navTarget'),
             items = record.get('items'),
             flyoutMenu,
             recurseFn;
@@ -85,7 +86,6 @@ Ext.define('Taco.view.navigation.PrimarySubMenu', {
             return;
 
         }
-
        
         Taco.core.StateManager.attemptNavigate(dest);
         menu.hideMenu();

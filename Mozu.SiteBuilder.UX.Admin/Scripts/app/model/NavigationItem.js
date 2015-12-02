@@ -33,6 +33,9 @@ Ext.define('Taco.model.NavigationItem', {
             name: 'navPage',
             type: 'string',
             defaultValue: 'home'
+        }, {
+            name: 'navTarget',
+            type: 'string'
         },
     'items'],
     // belongsTo: 'NavigationItem',

@@ -56,7 +56,8 @@ Ext.define('Taco.core.ux.mixins.HamburgerButton', {
         // set this to a global variable so we dont have to reinit the menu on each navigate
         Taco.app.PrimaryMenu = Ext.create('Taco.view.navigation.PrimaryMenu', {
             trigger: this,
-            breadcrumb: breadcrumb
+            breadcrumb: breadcrumb,
+            navPage: 'home' //'sysAdm'
         });
     }
 
