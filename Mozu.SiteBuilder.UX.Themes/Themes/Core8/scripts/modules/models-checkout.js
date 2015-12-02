@@ -581,7 +581,8 @@
                                 
                                 return order.apiAddStoreCredit({
                                     storeCreditCode: creditCode,
-                                    amount: creditAmountToApply
+                                    amount: creditAmountToApply,
+                                    email: self.get('billingContact').get('email')
                                 }).then(function (o) {
                                     order.get('billingInfo').clear();
                                     order.set(o.data, { silent: true });

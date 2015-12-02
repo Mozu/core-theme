@@ -618,7 +618,8 @@
 
                 return order.apiAddStoreCredit({
                     storeCreditCode: creditCode,
-                    amount: creditAmountToApply
+                    amount: creditAmountToApply,
+                    email: self.get('billingContact').get('email')
                 }).then(function (o) {
                     //clearing existing order billing info because information may have been removed (payment info) #68583
                     order.get('billingInfo').clear();
