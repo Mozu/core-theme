@@ -1,0 +1,41 @@
+﻿  // link pager styles
+  .#{$prefix}grid-paging-toolbar {
+
+    .#{$prefix}tbar-page-link {
+      background-color: $color-neutral-transparent;
+      background-image: none;
+      border: none;
+      color: $color-framework-black;
+      text-decoration: none;
+
+      .#{$prefix}btn-inner {
+          color: $color-neutral-65;
+      }
+
+      .#{$prefix}btn-over {
+          .#{$prefix}btn-inner {
+              color: $color-framework-black;
+          }
+      }
+    }
+
+    .#{$prefix}tbar-page-link.#{$prefix}btn-over {
+      .#{$prefix}btn-inner {
+              color: $color-framework-black;
+      }
+    }
+
+    .#{$prefix}tbar-page-link-current {
+      background-color: $color-theme-green;
+      background-image: none;
+      border: none;
+      text-decoration: none;
+      @include border-radius(2px);
+
+      .#{$prefix}btn-inner {
+          color: $color-neutral-white;
+      }
+
+    }
+
+  }

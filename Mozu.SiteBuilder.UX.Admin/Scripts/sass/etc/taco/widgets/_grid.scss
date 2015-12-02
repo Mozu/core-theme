@@ -134,6 +134,10 @@
     }
   }
 
+  .#{$prefix}grid-cell-inner-action-col {
+      padding-left: 5px;
+  }
+
   // checkbox overrides
   // .#{$prefix}column-header-checkbox {
   //   .#{$prefix}column-header-inner {
@@ -210,9 +214,8 @@
   .#{$vprefix}grid-row-menu-trigger {
     cursor: pointer;
     height: 16px;
-    visibility: hidden;
     width: 50px;
-    @include icons-sprite(icon-rowactions); // icon is an <img>
+    @include icons-sprite(icon-rowactions-ellipsis); // icon is an <img>
     background-position: 50% 50%;
   }
 
@@ -231,11 +234,6 @@
   }
 
 
-  .#{$prefix}grid-row-over {
-    .#{$vprefix}grid-row-menu-trigger {
-      visibility: visible;
-    }
-  }
   .#{$prefix}grid-row-focused {
     .#{$vprefix}grid-row-menu-trigger {
       visibility: visible !important;

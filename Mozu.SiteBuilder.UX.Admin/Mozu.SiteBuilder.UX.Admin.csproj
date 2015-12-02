@@ -536,6 +536,7 @@
     <Content Include="Scripts\app\core\ux\form\ResendEmailButton.js" />
     <Content Include="Scripts\app\core\ux\grid\ActionColumn.js" />
     <Content Include="Scripts\app\core\ux\grid\AddEntityRow.js" />
+    <Content Include="Scripts\app\core\ux\grid\CheckColumnEx.js" />
     <Content Include="Scripts\app\core\ux\grid\plugins\AutoSelect.js" />
     <Content Include="Scripts\app\core\ux\mixins\DeleteFromGrid.js" />
     <Content Include="Scripts\app\core\ux\mixins\GridContextMenu.js" />

@@ -28,7 +28,7 @@
 
 Ext.define('Taco.core.ux.mixins.Pageable', {
     requires: ['Taco.core.util.ExceptionWhiner',
-        'Ext.toolbar.Paging'],
+        'Taco.core.ux.grid.LinkPaging'],
 
     autoHidePagingToolbar: false, 
 
@@ -43,7 +43,7 @@ Ext.define('Taco.core.ux.mixins.Pageable', {
             return;
         }
 
-        this.gridPager = Ext.create('Ext.toolbar.Paging', {
+        this.gridPager = Ext.create('Taco.core.ux.grid.LinkPaging', {
             componentCls: 'x-grid-paging-toolbar',
             store: this.store,
             displayInfo: true,

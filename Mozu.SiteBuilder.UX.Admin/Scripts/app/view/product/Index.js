@@ -8,7 +8,8 @@ Ext.define('Taco.view.product.Index', {
         'Taco.model.Product',
         'Taco.store.Products',
         'Taco.view.product.AdvancedSearchForm',
-        'Taco.store.ProductGrid'
+        'Taco.store.ProductGrid',
+        'Taco.core.ux.grid.CheckColumnEx'
 
     ],
 
@@ -139,7 +140,28 @@ Ext.define('Taco.view.product.Index', {
     },
 
     initComponent: function() {
+        var me = this;
+
+        if (!me.store.isStore) {
+            me.store = Taco.core.data.StoreManager.getOrCreate(me.store);
+        }
+
         this.columns = [
+            {
+                xtype: 'taco.checkcolumn',
+                columnHeaderCheckbox: true,
+                store: this.store,
+                stateId: 'isSelected',
+                dataIndex: 'isSelected',
+                draggable: false,
+                sortable: false,
+                width: 40,
+                listeners: {
+                    checkchange: function (column, rowIndex, checked) {
+                        //code for whatever on checkchange here
+                    }
+                }
+            },
             {
                     stateId: 'productCode',
                     dataIndex: 'productCode',
@@ -161,7 +183,7 @@ Ext.define('Taco.view.product.Index', {
                 dataIndex: 'price',
                 stateId: 'price',
                 text: 'Price',
-                width: 70,
+                width: 100,
                 renderer: function (value, metaData, record) {
                     return record.getContextualValue('price', true) || '--';
 
@@ -192,16 +214,18 @@ Ext.define('Taco.view.product.Index', {
                 text: 'Overridden',
                 sortable: false,
                 width: 100,
-                renderer: function (value) {
+                renderer: function (value, metaData, record) {
                     var output;
+                    var cssClass = 'product-overridden-false';
 
                     if (Ext.isEmpty(value)) {
                         output = '--';
                     } else {
+                        cssClass = Ext.Array.contains(Ext.Array.pluck(value, 'isContentOverridden'), true) ? 'product-overridden-true' : 'product-overridden-false';
                         output = Ext.Array.contains(Ext.Array.pluck(value, 'isContentOverridden'), true) ? 'Yes' : 'No';
                     }
 
-                    return output;
+                    return '<span class="product-overridden-pill ' + cssClass + '">' + output + '</span>';
                 }
             },
             {
@@ -230,7 +254,7 @@ Ext.define('Taco.view.product.Index', {
             },
             {
                 xtype: 'taco.menucolumn',
-                text: 'Actions',
+                text: '<div class="product-column-action"></div>',
                 stateId: 'actionsColumn',
                 menuItems: [{
                     itemId: 'live',

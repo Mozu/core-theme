@@ -25,3 +25,40 @@
         position: absolute;
     }
 }
+
+.#{$prefix}column-header-sort-ASC {
+    color: $color-framework-black;
+}
+
+.#{$prefix}column-header-sort-DESC {
+    color: $color-framework-black;
+}
+
+.product-overridden-pill {
+    border-radius: 20px 20px;
+    -moz-border-radius: 20px 20px;
+    -webkit-border-radius: 20px 20px;
+    -ms-border-radius: 20px 20px;
+    -o-border-radius: 20px 20px;
+    padding-left:6px;
+    padding-right:6px;
+    font-size: 11px;
+}
+
+.product-overridden-true {
+    background-color: $color-theme-green;
+    color: $color-neutral-white;
+}
+
+.product-overridden-false {
+    background-color: $color-neutral-95;
+    color:$color-neutral-65;
+}
+
+.product-column-action  {
+    height: 16px;
+    width: 50px;
+    @include icons-sprite(icon-rowactions-ellipsis); // icon is an <img>
+    background-position: 50% 50%;
+    line-height: 16px;
+}
