@@ -15,9 +15,44 @@ Ext.define('Taco.core.ux.grid.LinkPaging', {
         var pageData = me.getPageData();
         var pageNumberItems = [];
         var currPage = pageData.currentPage;
+        var lastPage = pageData.pageCount;
 
-        for (var idx = 0; idx < pageData.pageCount; idx++) {
-            var pageNumber = idx + 1;
+        var lastDisplayed = Math.max(currPage + 2, 5);
+        lastDisplayed = Math.min(lastDisplayed, lastPage);
+        var firstDisplayed = Math.min(currPage - 2, lastPage - 4);
+        firstDisplayed = Math.max(firstDisplayed, 1);
+
+        if (currPage > 1) {
+            pageNumberItems.push({
+                itemId: 'prev',
+                cls: Ext.baseCSSPrefix + 'tbar-page-link',
+                handler: me.movePrevious,
+                text: "<",
+                scope: me,
+            });
+        }
+
+        if (firstDisplayed - 1 > 0) {
+            pageNumberItems.push({
+                itemId: 'first',
+                cls: Ext.baseCSSPrefix + 'tbar-page-link',
+                handler: me.moveFirst,
+                text: "1",
+                scope: me,
+            });
+        }
+
+        if (firstDisplayed - 1 > 1) {
+            pageNumberItems.push({
+                itemId: 'prev-ellipsis',
+                cls: Ext.baseCSSPrefix + 'tbar-page-link',
+                handler: me.movePrevious,
+                text: "&#x22ef;",
+                scope: me,
+            });
+        }
+
+        for (var pageNumber = firstDisplayed; pageNumber <= lastDisplayed; pageNumber++) {
             var cls = pageNumber == currPage ? 'tbar-page-link-current' : 'tbar-page-link';
             pageNumberItems.push({
                 itemId: 'tbar-page-link' + pageNumber,
@@ -29,6 +64,41 @@ Ext.define('Taco.core.ux.grid.LinkPaging', {
                     idx: pageNumber
                 }
             });
+        }
+
+        if (lastPage - lastDisplayed > 1) {
+            pageNumberItems.push({
+                itemId: 'next-ellipsis',
+                cls: Ext.baseCSSPrefix + 'tbar-page-link',
+                handler: me.moveNext,
+                text: "&#x22ef;",
+                scope: me,
+            });
+        }
+
+        if (lastPage - lastDisplayed > 0) {
+            pageNumberItems.push({
+                itemId: 'last',
+                cls: Ext.baseCSSPrefix + 'tbar-page-link',
+                handler: me.moveLast,
+                text: lastPage,
+                scope: me,
+            });
+        }
+
+        if (currPage < lastPage) {
+            pageNumberItems.push({
+                itemId: 'next',
+                cls: Ext.baseCSSPrefix + 'tbar-page-link',
+                handler: me.moveNext,
+                text: ">",
+                scope: me,
+            });
+        }
+
+        if (me.displayInfo) {
+            pageNumberItems.push('->');
+            pageNumberItems.push({ xtype: 'tbtext', itemId: 'displayItem' });
         }
 
         return pageNumberItems;
@@ -55,6 +125,7 @@ Ext.define('Taco.core.ux.grid.LinkPaging', {
         // TODO: verify that the page controls need to change before doing a layout
         me.removeAll();
         me.add(me.getPagingItems());
+        me.updateInfo();
 
         if (me.rendered) {
             me.fireEvent('change', me, pageData);
