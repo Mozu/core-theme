@@ -537,6 +537,7 @@
     <Content Include="Scripts\app\core\ux\grid\ActionColumn.js" />
     <Content Include="Scripts\app\core\ux\grid\AddEntityRow.js" />
     <Content Include="Scripts\app\core\ux\grid\CheckColumnEx.js" />
+    <Content Include="Scripts\app\core\ux\grid\LinkPaging.js" />
     <Content Include="Scripts\app\core\ux\grid\plugins\AutoSelect.js" />
     <Content Include="Scripts\app\core\ux\mixins\DeleteFromGrid.js" />
     <Content Include="Scripts\app\core\ux\mixins\GridContextMenu.js" />
@@ -1444,6 +1445,7 @@
     <Content Include="Scripts\sass\src\core\ux\browser\SearchList.scss" />
     <Content Include="Scripts\app\mocks\auditlog.json" />
     <Content Include="Scripts\sass\src\overrides\menu\Item.scss" />
+    <Content Include="Scripts\sass\src\core\ux\grid\LinkPaging.scss" />
     <Content Include="Scripts\sass\src\overrides\menu\Menu.scss" />
     <None Include="SetupSenchaWorkspace.ps1" />
     <Content Include="Scripts\.sencha\app\build-impl.xml" />

@@ -1,4 +1,5 @@
-﻿  // link pager styles
+﻿@mixin taco-panel {
+  // link pager styles
   .#{$prefix}grid-paging-toolbar {
 
     .#{$prefix}tbar-page-link {
@@ -39,3 +40,4 @@
     }
 
   }
+}
