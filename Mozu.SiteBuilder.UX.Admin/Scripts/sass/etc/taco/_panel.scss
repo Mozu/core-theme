@@ -71,10 +71,28 @@
 			border: 1px solid $card-border;
 			border-radius: $border-radius-small;
 
+			.#{$prefix}toolbar-separator {
+				/* override external styles */
+				display: none !important;
+			}
+
 			.#{$prefix}toolbar-item {
 				padding: 5px 12px;
-				border: 1px solid $gray-border-color;
 				border-radius: 0;
+				position: relative !important;
+				left: auto !important;
+				border-top: none;
+				border-bottom: none;
+				border-left: none;
+				border-right: 1px solid $gray-border-color;
+
+				&.#{$prefix}btn-default-toolbar-small {
+					display: inline-block !important;
+				}
+
+				&:last-child {
+					border-right: none;
+				}
 
 				.#{$prefix}btn-icon-el {
 					background-image: none;
@@ -138,6 +156,24 @@
 					&.#{$prefix}edit-bold {
 						&:after {
 							content: '\E008';
+						}
+					}
+
+					&.#{$prefix}edit-createlink {
+						&:after {
+							content: '\E006';
+						}
+					}
+
+					&.#{$prefix}edit-insertorderedlist {
+						&:after {
+							content: '\E004';
+						}
+					}
+
+					&.#{$prefix}edit-insertunorderedlist {
+						&:after {
+							content: '\E005';
 						}
 					}
 				}
