@@ -88,6 +88,17 @@
 
         .navheader-action-toolbar {
             margin-right: 15px;
+            .x-btn {
+                border: none;
+                background-color: $valid-green;
+                .x-btn-inner-center {
+                    font-size: 16px;
+                    color: $white-color;
+                }
+                &:hover {
+                    background-color: $valid-green-active;
+                }
+            }
         }
 
         .taco-website-header-icon {
