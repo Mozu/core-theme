@@ -66,6 +66,84 @@
 			}
 		}
 
+		.#{$prefix}html-editor-tb {
+			background: $white-color;
+			border: 1px solid $card-border;
+			border-radius: $border-radius-small;
+
+			.#{$prefix}toolbar-item {
+				padding: 5px 12px;
+				border: 1px solid $gray-border-color;
+				border-radius: 0;
+
+				.#{$prefix}btn-icon-el {
+					background-image: none;
+					font-family: $icon-font;
+					left: -5px;
+
+					&.#{$prefix}edit-justifyright {
+						&:after {
+							content: '\E009';
+						}
+					}
+
+					&.#{$prefix}edit-justifyleft {
+						&:after {
+							content: '\E00A';
+						}
+					}
+
+					&.#{$prefix}edit-justifycenter {
+						&:after {
+							content: '\E00B';
+						}
+					}
+
+					&.#{$prefix}edit-backcolor {
+						&:after {
+							content: '\E600';
+						}
+					}
+
+					&.#{$prefix}edit-forecolor {
+						&:after {
+							content: '\E027';
+						}
+					}
+
+					&.#{$prefix}edit-decreasefontsize {
+						&:after {
+							content: '\E002';
+						}
+					}
+
+					&.#{$prefix}edit-increasefontsize {
+						&:after {
+							content: '\E003';
+						}
+					}
+
+					&.#{$prefix}edit-underline {
+						&:after {
+							content: '\E001';
+						}
+					}
+
+					&.#{$prefix}edit-italic {
+						&:after {
+							content: '\E007';
+						}
+					}
+
+					&.#{$prefix}edit-bold {
+						&:after {
+							content: '\E008';
+						}
+					}
+				}
+			}
+		}
+
 		/* this will work only if the label is after the input -- it is currently before it in the DOM */
 		.#{$prefix}field-default-form-focus + div {
 			label {
