@@ -1445,6 +1445,7 @@
     <Content Include="Scripts\sass\src\core\ux\browser\SearchList.scss" />
     <Content Include="Scripts\app\mocks\auditlog.json" />
     <Content Include="Scripts\sass\src\overrides\menu\Item.scss" />
+    <Content Include="Scripts\sass\src\core\ux\grid\LinkPaging.scss" />
     <Content Include="Scripts\sass\src\overrides\menu\Menu.scss" />
     <Content Include="Scripts\sass\src\core\ux\grid\LinkPaging.scss" />
     <None Include="SetupSenchaWorkspace.ps1" />
