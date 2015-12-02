@@ -696,9 +696,13 @@ Ext.define('Taco.view.order.Grid', {
                             },
                             scope: me,
                             delegate: "x-menu-item-link"
+                        },
+                        beforerender: function () {
+                            this.setWidth(this.up('button').getWidth());
                         }
                     },
-                    items: menu
+                    items: menu,
+                    cls: 'button-menu'
                 }
             });
         }

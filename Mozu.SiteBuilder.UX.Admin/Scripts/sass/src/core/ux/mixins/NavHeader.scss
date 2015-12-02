@@ -102,6 +102,12 @@
                     top: 5px;
                 }
             }
+            .x-btn.x-menu-active {
+                border-bottom-left-radius: 0;
+                border-bottom-right-radius: 0;
+                border-bottom: 1px solid $menu-btn-active-border;
+                background-color: $menu-btn-active-background;
+            }
         }
 
         .taco-website-header-icon {

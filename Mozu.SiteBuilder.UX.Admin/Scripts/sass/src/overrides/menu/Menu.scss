@@ -1,0 +1,24 @@
+﻿.#{$prefix}panel.button-menu {
+    border-radius: 0 0 4px 4px;
+    .#{$prefix}menu-body {
+        background-color: $valid-green;
+        padding: 0;
+        .#{$prefix}menu-item {
+            border-width: 0 0 1px;
+            border-color: rgb(39, 156, 127);
+            &:last-child {
+                border-width: 0;
+            }
+            &:hover {
+                background-color: $valid-green-active;
+            }
+            .#{$prefix}menu-item-text {
+                color: $white-color;
+                font-size: 16px;
+                line-height: 20px;
+                padding: 10px 20px;
+            }
+        }
+    }
+}
+
