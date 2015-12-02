@@ -7,6 +7,7 @@ Ext.define('Taco.view.publishing.component.button.PublishButton', {
         'Taco.model.PublishSet'
     ],
     ui: 'action-primary',
+    height: 40,
     scale: 'medium',
     text: 'Publish Now',
     margin: '0 0 0 10',

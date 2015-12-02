@@ -107,6 +107,7 @@
 
         this.publishingButton = {
             xtype: 'publishbutton',
+            height: 40,
             itemId: 'publishActionButton',
             beforeItemId: 'cancelActionButton',
             buttonGroup: 'isPublishable',
@@ -154,6 +155,7 @@
             this.publishingButton,
             {
             xtype: 'button',
+            height: 40,
             itemId: 'moreButton',
             ui: 'action',
             scale: 'medium',
