@@ -2,18 +2,32 @@
  * @class Taco.view.capability.Index
  */
 Ext.define('Taco.view.capability.Index', {
-    extend: 'Taco.core.ux.browser.BrowserPage',
+    extend: 'Taco.core.ux.browser.SearchList',
     requires: [
         'Taco.model.Capability',
         'Taco.store.Capability',
         'Taco.view.capability.Edit'
     ],
-    typeName: 'Applications',
+    title: 'Applications',
+
+    enableNavHeader: true,
+
+    enableSearch: false,
+
+    enableSearchBar: false,
+
+    addContentViewPadding: true,
+
+    createButtonEnabled: false,
+
+    cancelButtonEnabled: false,
+
+    saveButtonEnabled: false,
+
     gridHeaderLabel: 'Applications',
     
     editorName: 'Taco.view.capability.Edit',
     
-    //plural: false,
     modelName: 'Taco.model.Capability',
     
     store: { type: 'Taco.store.Capability' },
@@ -24,7 +38,9 @@ Ext.define('Taco.view.capability.Index', {
     },
 
     useTilePanel: false,
-    //launchEditorOnClick: false,
+    stateful: true,
+    stateId: 'statefulApplicationsGrid',
+    launchEditorOnClick: true,
     
     filterFormConf: {
         width: 600,
@@ -55,49 +71,63 @@ Ext.define('Taco.view.capability.Index', {
             property: 'all',
             text: 'All',
             isDefault: true
-        }, {
+        }, 
+        {
             property: 'applicationName',
             text: 'Name'
-        }, {
+        }, 
+        {
             property: 'code',
             text: 'Code'
         }
     ],
 
-    // hides the create action
-    header: {
-        actions:[]
-    },
-     
+    features: [
+        {
+            ftype: 'grouping',
+            groupHeaderTpl: '{groupValue}'
+        }
+    ],
 
-    gridPanelConf: {
-        selModel: {},
-        features: [
+    initComponent: function() {   
+    
+        this.filterProperties = [
             {
-                ftype: 'grouping',
-                groupHeaderTpl: '{groupValue}'
-
+                property: 'all',
+                text: 'All',
+                isDefault: true
+            }, 
+            {
+                property: 'applicationName',
+                text: 'Name'
+            }, 
+            {
+                property: 'code',
+                text: 'Code'
             }
-        ],
-        stateful: true,
-        stateId:"statefulApplicationsGrid",
-        columns: [
+        ];
+
+
+        this.columns =  [
             {
                 text: 'Name',
                 stateId: "name",
                 width:200,
                 dataIndex: "applicationName"
-            }, {
+            }, 
+            {
                 text: 'Publisher',
                 stateId: "publisher",
                 width: 200,
                 dataIndex: "developerAccountName"
-            }, {
+            }, 
+            {
                 text: 'Version',
                 stateId: "version",
                 width: 200,
                 dataIndex: "version"
-            }, {
+            }, 
+            {
                 text: 'Initialized',
                 stateId: "initialized",
                 width: 80,
@@ -105,7 +135,8 @@ Ext.define('Taco.view.capability.Index', {
                 renderer: function (value) {
                     return (value) ? 'Yes' : 'No';
                 }
-            }, {
+            }, 
+            {
                 text: 'Enabled',
                 stateId: "enabled",
                 width: 80,
@@ -113,12 +144,14 @@ Ext.define('Taco.view.capability.Index', {
                 renderer: function (value) {
                     return (value) ? 'Yes' : 'No';
                 }
-            }, {
+            }, 
+            {
                 text: 'License Type',
                 stateId: "licenseType",
                 width: 200,
                 dataIndex: "licenseType"
-            }, {
+            }, 
+            {
                 text: 'Coverage Area',
                 stateId: "coverageArea",
                 width: 200,
@@ -144,6 +177,8 @@ Ext.define('Taco.view.capability.Index', {
                 format: 'M d, Y',
                 dataIndex: "effectiveEndDate"
             }
-        ]
+        ];
+
+        this.callParent(arguments);
     }
 });
