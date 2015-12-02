@@ -66,10 +66,37 @@
 			}
 		}
 
+		.#{$prefix}html-editor-container {
+			&.#{$prefix}box-layout-ct {
+				min-width: 762px;
+			}
+
+			> .#{$prefix}box-inner {
+				min-width: 762px;
+			}
+		}
+
+		.#{$prefix}html-editor-input {
+			border-left: none;
+			border-right: none;
+			border-color: $card-border;
+			min-width: 762px;
+		}
+
 		.#{$prefix}html-editor-tb {
 			background: $white-color;
 			border: 1px solid $card-border;
+			height: 30px;
 			border-radius: $border-radius-small;
+			min-width: 762px;
+
+			.#{$prefix}horizontal-box-overflow-body {
+				min-width: 711px;
+
+				.#{$prefix}box-target {
+					min-width: 711px;
+				}
+			}
 
 			.#{$prefix}toolbar-separator {
 				/* override external styles */
@@ -77,27 +104,40 @@
 			}
 
 			.#{$prefix}toolbar-item {
-				padding: 5px 12px;
+				padding: 6px 16px;
 				border-radius: 0;
 				position: relative !important;
 				left: auto !important;
+				background-color: $white-color;
 				border-top: none;
 				border-bottom: none;
 				border-left: none;
 				border-right: 1px solid $gray-border-color;
 
-				&.#{$prefix}btn-default-toolbar-small {
-					display: inline-block !important;
+				&:hover {
+					background: $white-color;
+					text-decoration: none;
 				}
 
-				&:last-child {
-					border-right: none;
+				&.#{$prefix}btn-default-toolbar-small {
+					display: inline-block !important;
+
+					&:active {
+						background: $white-color;
+					}
+				}
+
+				.#{$prefix}btn-default-toolbar-small-pressed {
+					background: $white-color;
 				}
 
 				.#{$prefix}btn-icon-el {
 					background-image: none;
 					font-family: $icon-font;
 					left: -5px;
+					&:after {
+						font-size: $input-font;
+					}
 
 					&.#{$prefix}edit-justifyright {
 						&:after {
@@ -174,6 +214,12 @@
 					&.#{$prefix}edit-insertunorderedlist {
 						&:after {
 							content: '\E005';
+						}
+					}
+
+					&.#{$prefix}edit-sourceedit {
+						&:after {
+							content: '\E000';
 						}
 					}
 				}
