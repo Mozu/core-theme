@@ -98,8 +98,11 @@
                 &:hover {
                     background-color: $valid-green-active;
                 }
-                .x-btn-wrap::after {
+                .x-btn-arrow-right::after {
                     top: 5px;
+                }
+                .x-btn-split-right::after {
+                    top: -2px;
                 }
             }
             .x-btn.x-menu-active {
