@@ -148,21 +148,6 @@ Ext.define('Taco.view.product.Index', {
 
         this.columns = [
             {
-                xtype: 'taco.checkcolumn',
-                columnHeaderCheckbox: true,
-                store: this.store,
-                stateId: 'isSelected',
-                dataIndex: 'isSelected',
-                draggable: false,
-                sortable: false,
-                width: 40,
-                listeners: {
-                    checkchange: function (column, rowIndex, checked) {
-                        //code for whatever on checkchange here
-                    }
-                }
-            },
-            {
                     stateId: 'productCode',
                     dataIndex: 'productCode',
                     text: 'Code',
