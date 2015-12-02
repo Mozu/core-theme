@@ -45,6 +45,25 @@
         font-weight: 400;
         color: #a5a5a5;
     }
+
+    .user-initials-container {
+        display: inline-block;
+        width: 23px;
+        height: 23px;
+        padding-top: 2px;
+        border: 1px solid #e9e9e9;
+        border-radius: 100px;
+        background-color: #e9e9e9;
+        color: #3f3f3f;
+        font-size: 11px;
+        line-height: 18px;
+        font-weight: 600;
+        text-align: center;
+    }
+
+    .username-button {
+        padding-left: 0;
+    }
 }
 
 .#{$vprefix}secondary-nav {

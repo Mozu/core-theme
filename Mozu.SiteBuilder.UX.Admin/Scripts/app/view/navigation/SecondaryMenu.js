@@ -22,6 +22,12 @@ Ext.define('Taco.view.navigation.SecondaryMenu', {
         });
 
         var tenantName = Taco.app.context.name || '[tenant]';
+        var userName = Taco.user.name || Taco.user.email || '[user]';
+        var splitUserName = userName.split(' ');
+        var initials;
+        if (splitUserName.length > 1) {
+            initials = splitUserName[0][0] + splitUserName[splitUserName.length - 1][0];
+        }
 
         this.items = [{
             xtype: 'component',
@@ -29,10 +35,16 @@ Ext.define('Taco.view.navigation.SecondaryMenu', {
             html: '<div class="tenant-name-container"><span>' + tenantName + '</span></div>'
         },
         {
+            xtype: 'component',
+            cls: 'user-initials',
+            html: '<div class="user-initials-container">' + initials + '</div>',
+        },
+        {
             xtype: 'button',
             ui: 'link',
+            cls: 'username-button',
             scale: 'medium',
-            text: Taco.user.name || Taco.user.email || '[user]',
+            text: userName,
             menuAlign: 'tr-br?',
             menu: {
                 plain: true,
