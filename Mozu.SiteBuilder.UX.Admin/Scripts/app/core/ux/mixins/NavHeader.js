@@ -499,7 +499,6 @@ Ext.define('Taco.core.ux.mixins.NavHeader', {
         // need to create container for buttons so that they can force the titleCmp to have elipsis
         var actionToolbar = {
             xtype: 'toolbar',
-            cls: 'navheader-action-toolbar',
             itemHeader: 'navHeaderActionContainer',            
             items: me.actions
         }

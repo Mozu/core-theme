@@ -3,7 +3,10 @@ Ext.define('Taco.core.ux.picker.Selector', {
     extend: 'Ext.container.Container',
     alias: 'widget.taco.pickerselector',
 
-    requires: ['Taco.core.ux.LightTag'],
+    requires: [
+        'Taco.core.ux.LightTag',
+        'Taco.core.ux.picker.SelectorFlyout'
+    ],
     cls: 'taco-picker-selector',
 
     layout: {
@@ -51,6 +54,10 @@ Ext.define('Taco.core.ux.picker.Selector', {
             html: '+',
             hidden: this.disableTrigger,
             xtype: 'component'
+        }, {
+            itemId: 'flyout',
+            store: this.store,
+            xtype: 'taco.selectorflyout'
         }];
 
         this.callParent(arguments);
@@ -58,6 +65,7 @@ Ext.define('Taco.core.ux.picker.Selector', {
         this.selectDefaultValue();
 
         this.title = this.down('#title');
+        this.flyout = this.down('#flyout');
 
         if (this.selected) {
             this.title.update({ text: this.selected.get('text') });
@@ -97,10 +105,27 @@ Ext.define('Taco.core.ux.picker.Selector', {
             },
             scope: this
         });
+
+        this.flyout.on({
+            select: function (view, record) {
+                this.fireEvent('select', this, record);
+            },
+            scope: this
+        });
+
+        this.mon(Ext.getBody(), 'click', function (e) {
+            if (e.target.className.indexOf('trigger') > -1) {
+                return;
+            }
+
+            if (!this.flyout.isHidden()) {
+                this.flyout.hide();
+            }
+        }, this);
     },
 
     togglePicker: function () {
-        console.log('toggle picker');
+        this.flyout[this.flyout.isHidden() ? 'show' :  'hide']();
     },
 
     selectDefaultValue: function () {

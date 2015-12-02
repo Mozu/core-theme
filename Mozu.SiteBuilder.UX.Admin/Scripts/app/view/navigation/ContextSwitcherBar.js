@@ -27,6 +27,7 @@
 
         this.callParent(arguments);
 
+
         this.currentContext = Taco.app.context.getCurrent();
 
         this.visibleLevels = this.determineVisibleContexts();
@@ -35,8 +36,6 @@
     },
 
     rebuildContexts: function () {
-        //Ext.suspendLayouts();
-
         this.selectors = [];
 
         this.buildTenantContext();
@@ -45,8 +44,6 @@
         this.buildSiteContext();
 
         this.add(this.selectors);
-
-        //Ext.resumeLayouts(true);
     },
 
     buildTenantContext: function () {
@@ -121,6 +118,10 @@
         masterCatalog = Taco.app.context.getContextAtLevel('m');
         catalog = Taco.app.context.getContextAtLevel('c');
 
+        if (!catalog) {
+            return;
+        }
+
         data = this.generateStoreData(masterCatalog.catalogs);
 
         if (this.visibleLevels.indexOf('c') === this.visibleLevels.length - 1 && this.isSupported('c')) {
@@ -162,6 +163,10 @@
         site = Taco.app.context.getContextAtLevel('s');
 
         data = this.generateStoreData(masterCatalog.sites);
+
+        if (!site) {
+            return;
+        }
 
         this.selectors.push(Ext.widget({
             highlighted: site === this.currentContext,

@@ -33,7 +33,7 @@ Ext.define('Taco.core.ux.picker.InlineSelector', {
         this.on({
             boxready: this.handleBoxReady,
             scope: this
-        })
+        });
     },
 
     buildView: function () {
