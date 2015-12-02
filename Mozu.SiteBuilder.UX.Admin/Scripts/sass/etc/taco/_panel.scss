@@ -31,17 +31,48 @@
 			font-weight: normal;
 		}
 
-		.#{$prefix}form-item-required {
-			color: $error-red;
+		.#{$prefix}form-type-text {
 
-			&:before {
-				content: '';
-				display: none;
+			.#{$prefix}form-item-required {
+				color: $valid-green;
+
+				&:before {
+					content: '';
+					display: none;
+				}
+
+				&:after {
+					content: ' *';
+					color: $valid-green;
+				}
 			}
 
-			&:after {
-				content: ' *';
-				color: $error-red;
+			&.#{$prefix}form-invalid {
+
+				.#{$prefix}form-item-required {
+					color: $error-red;
+
+					&:after {
+						color: $error-red;
+					}
+				}
+
+				label {
+					position: relative;
+					top: 30px;
+					font-size: $input-font;
+					transition: .2s ease-out;
+				}
+			}
+		}
+
+		/* this will work only if the label is after the input -- it is currently before it in the DOM */
+		.#{$prefix}field-default-form-focus + div {
+			label {
+				top: 0;
+				font-size: $label-link-font;
+				transition: .2s ease-out;
+				transform: translateY(-170%);
 			}
 		}
 
@@ -61,6 +92,10 @@
 					border-color: $valid-green;
 				}
 			}
+		}
+
+		.#{$prefix}form-text {
+			padding: 0;
 		}
 
 		.#{$prefix}form-trigger-wrap {
