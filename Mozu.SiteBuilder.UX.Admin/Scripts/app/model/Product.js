@@ -173,10 +173,6 @@ Ext.define('Taco.model.Product', {
             "type": "date",
             "useNull": true,
             dateFormat: 'c'
-        }, {
-            name: "isSelected",
-            type: "boolean",
-            defaultValue: false
         },
         {
             "name": "isBackOrderAllowed",
