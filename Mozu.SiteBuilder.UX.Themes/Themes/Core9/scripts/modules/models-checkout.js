@@ -795,10 +795,16 @@
             getPaymentTypeFromCurrentPayment: function () {
                 var billingInfoPaymentType = this.get('paymentType'),
                     currentPayment = this.getOrder().apiModel.getCurrentPayment(),
-                    currentPaymentType = currentPayment && currentPayment.billingInfo.paymentType;
+                    currentPaymentType = currentPayment && currentPayment.billingInfo.paymentType,
+                    currentPaymentWorkflow = currentPayment && currentPayment.billingInfo.paymentWorkflow,
+                    currentBillingContact = currentPayment && currentPayment.billingInfo.billingContact,
+                    currentCard = currentPayment && currentPayment.billingInfo.card;
 
                 if (currentPaymentType && currentPaymentType !== billingInfoPaymentType) {
-                    this.set('paymentType', currentPaymentType);
+                    this.set('paymentType', currentPaymentType, { silent: true });
+                    this.set('paymentWorkflow', currentPaymentWorkflow, { silent: true })
+                    this.set('card', currentCard, { silent: true });
+                    this.set('billingContact', currentBillingContact, { silent: true });
                 }
             },
             edit: function () {
@@ -1483,7 +1489,10 @@
                 this.isSubmitting = true;
 
                 if (requiresBillingInfo && !billingContact.isValid()) {
-                    billingContact.set(this.apiModel.getCurrentPayment().billingInfo.billingContact); // reconcile the empty address after we got back from paypal and possibly other situations
+                    // reconcile the empty address after we got back from paypal and possibly other situations.
+                    // also happens with visacheckout ..
+                    var billingInfoFromPayment = this.apiModel.getCurrentPayment().billingInfo;
+                    billingInfo.set(billingInfoFromPayment, { silent: true });
                 }
 
                 this.syncBillingAndCustomerEmail();
