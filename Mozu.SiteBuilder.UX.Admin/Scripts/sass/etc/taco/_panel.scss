@@ -42,6 +42,7 @@
 		}
 
 		.#{$prefix}form-type-text {
+			margin-top: -1px;
 
 			.#{$prefix}form-item-required {
 				color: $valid-green;
@@ -412,6 +413,45 @@
 			.#{$prefix}title {
 				font-size: $card-title-font;
 			}
+		}
+
+		.#{$prefix}boxselect-list {
+			.#{$prefix}boxselect-item {
+				border: 1px solid $typehead-pill-border-color;
+				border-width: 1px !important;
+				border-radius: $border-radius-small;
+				background-color: $white-color;
+				font-size: $boxselect-font;
+				text-transform: capitalize;
+				padding: 9px 27px 9px 14px !important;
+
+				.#{$prefix}tab-close-btn {
+					background-image: none;
+					opacity: 1;
+					width: 27px;
+					height: 36px;
+					top: -1px;
+					border-left: 1px solid $light-bg-gray;
+
+					&:after {
+						content: '\E011';
+						left: 7px;
+						top: 18px;
+						font-family: $icon-font;
+						font-size: $label-font;
+						color: $typehead-pill-border-color;
+						display: block;
+						position: absolute;
+					}
+				}
+			}
+		}
+
+		.#{$prefix}empty-pill {
+			padding: 4px;
+			border-radius: $border-radius-large;
+			border: 1px solid $typehead-pill-border-color;
+			font-size: $tag-font;
 		}
 	}
 }
