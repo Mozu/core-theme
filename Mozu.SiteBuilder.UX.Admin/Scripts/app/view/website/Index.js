@@ -199,6 +199,7 @@ Ext.define('Taco.view.website.Index', {
             },,
             {
                 xtype: 'button',
+                height: 40,
                 ui: 'action',
                 scale: 'medium',
                 itemId: 'moreActionButton',
@@ -276,11 +277,10 @@ Ext.define('Taco.view.website.Index', {
                         }
                     ]
                 }
-            },
-            this.publishButton,
-            {
+            }, {
                 xtype: 'button',
-                ui: 'action',
+                height: 40,
+                ui: 'link',
                 scale: 'medium',
                 buttonGroup: 'isSavable',
                 itemId: 'cancelActionButton',
@@ -292,8 +292,11 @@ Ext.define('Taco.view.website.Index', {
                 scope: me,
                 text: 'Cancel',
                 margin: '0 0 0 10'
-            }, {
+            },
+            this.publishButton,
+            {
                 xtype: 'button',
+                height: 40,
                 itemId: 'saveActionButton',
                 ui: 'action-primary',
                 scale: 'medium',
@@ -650,6 +653,8 @@ Ext.define('Taco.view.website.Index', {
     getPageEditorButton: function() {
         return {
             xtype: 'button',
+            cls: 'website-editor-tab-btn',
+            height: 40,
             ui: 'action',
             scale: 'medium',
             toggleGroup: 'websiteEditorTabs',
@@ -685,6 +690,8 @@ Ext.define('Taco.view.website.Index', {
 
         var config =  {
             xtype: 'button',
+            cls: 'website-editor-tab-btn',
+            height: 40,
             ui: 'action',
             scale: 'medium',
             text: 'L',
@@ -721,6 +728,8 @@ Ext.define('Taco.view.website.Index', {
     getSettingsButton: function() {
         return {
             xtype: 'button',
+            cls: 'website-editor-tab-btn',
+            height: 40,
             ui: 'action',
             scale: 'medium',
             buttonGroup: 'hasSettings',

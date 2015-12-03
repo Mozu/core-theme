@@ -85,6 +85,7 @@ Ext.define('Taco.view.discount.Edit', {
 
         this.additionalActions = [{
             xtype: 'button',
+            height: 40,
             itemId: 'moreButton',
             ui: 'action',
             scale: 'medium',

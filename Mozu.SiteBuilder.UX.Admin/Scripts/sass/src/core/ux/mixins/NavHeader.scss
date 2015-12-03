@@ -116,6 +116,27 @@
                 border-bottom: 1px solid $menu-btn-active-border;
                 background-color: $menu-btn-active-background;
             }
+            .website-editor-tab-btn {
+                .x-btn-glyph {
+                    line-height: 28px;
+                }
+            }
+            .x-btn-link-toolbar-medium {
+                background-color: inherit;
+                padding-left: 8px;
+                padding-right: 8px;
+                &:hover {
+                    background-color: inherit;
+                }
+                &.x-btn-focus {
+                    box-shadow: none;
+                }
+                .x-btn-inner-center {
+                    font-size: 12px;
+                    color: $card-button-text-color;
+                    padding: 0;
+                }
+            }
         }
 
         .taco-website-header-icon {

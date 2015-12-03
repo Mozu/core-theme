@@ -351,6 +351,7 @@ Ext.define('Taco.core.ux.mixins.NavHeader', {
 
                 if (me.saveAndCreateButtonEnabled) {
                     saveButtonCfg.xtype = "splitbutton";
+                    saveButtonCfg.height = 40;
                     saveButtonCfg.menu = [{
                         text: "Save and Create New",
                         handler: me.saveAndCreate,

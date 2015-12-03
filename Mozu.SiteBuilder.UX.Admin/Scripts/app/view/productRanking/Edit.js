@@ -57,6 +57,7 @@ Ext.define('Taco.view.productRanking.Edit', {
 
             me.additionalActions = [{
                 xtype: 'button',
+                height: 40,
                 itemId: 'moreButton',
                 ui: 'action',
                 scale: 'medium',

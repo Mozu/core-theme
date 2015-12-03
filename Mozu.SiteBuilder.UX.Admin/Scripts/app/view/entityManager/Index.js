@@ -37,6 +37,7 @@ Ext.define('Taco.view.entityManager.Index', {
 
         me.additionalActions = [{
             xtype: 'button',
+            height: 40,
             ui: 'action',
             scale: 'medium',
             text: 'More',
