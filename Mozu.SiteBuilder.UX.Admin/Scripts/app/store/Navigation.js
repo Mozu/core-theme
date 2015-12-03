@@ -396,9 +396,13 @@ Ext.define('Taco.store.Navigation', {
                 'navPage': 'sysAdm',
                 'behaviorIds': [4],
                 'items': [{
-                    'id': 'provisioning',
-                    'label': 'Catalog & Sites',
-                    'address': 'provisioning'
+                    'id': 'catalogprovisioning',
+                    'label': 'Catalogs',
+                    'address': 'provisioning/catalogs'
+                },{
+                    'id': 'siteprovisioning',
+                    'label': 'Sites',
+                    'address': 'provisioning/sites'
                 }, {
                     'id': 'channels',
                     'label': 'Channels',

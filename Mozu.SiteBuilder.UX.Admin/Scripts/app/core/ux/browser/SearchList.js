@@ -24,7 +24,7 @@ Ext.define('Taco.core.ux.browser.SearchList', {
     toolbar: null,
 
     launchEditorOnClick: true,
-    
+
     filterProperty: 'title',
     
     gridHeaderLabel: "Items",
@@ -98,6 +98,7 @@ Ext.define('Taco.core.ux.browser.SearchList', {
         if (this.launchEditorOnClick) {
             //initialize the content navigation toolbar.
             this.mixins.launcheditor.constructor.apply(this);
+            this.addCls('taco-action-on-click');
         }
         
         if (!me.store) {

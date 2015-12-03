@@ -56,7 +56,7 @@ Ext.define('Taco.view.product.Index', {
                             return value ? '<span class="overridden">Overridden</span>' : '';
                         },
                         formatPrice: function (value, catalog) {
-                            return (value || value === 0) ? Taco.app.context.findCatalog(catalog).formatCurrency(value) : '--';
+                            return (value || value === 0) ? Taco.app.context.findCatalog(catalog).formatCurrency(value) : 'N/A';
                         },
                         toCatalogName: function (value) {
                             var catalog = Taco.app.context.findCatalog(value);
@@ -83,7 +83,7 @@ Ext.define('Taco.view.product.Index', {
         text: 'Price',
         width: 100,
         renderer: function (value, metaData, record) {
-            return (value || value === 0) ? record.formatCurrency(value) : '--';
+            return (value || value === 0) ? record.formatCurrency(value) : 'N/A';
         },
         editor: {
             xtype: 'currencyfield',
@@ -98,7 +98,7 @@ Ext.define('Taco.view.product.Index', {
         text: 'Sale Price',
         width: 100,
         renderer: function (value, metaData, record) {
-            return (value || value === 0) ? record.formatCurrency(value) : '--';
+            return (value || value === 0) ? record.formatCurrency(value) : 'N/A';
         },
         editor: {
             xtype: 'currencyfield',
@@ -170,7 +170,7 @@ Ext.define('Taco.view.product.Index', {
                 text: 'Price',
                 width: 100,
                 renderer: function (value, metaData, record) {
-                    return record.getContextualValue('price', true) || '--';
+                    return record.getContextualValue('price', true) || 'N/A';
 
                 }
             },
@@ -180,7 +180,7 @@ Ext.define('Taco.view.product.Index', {
                 text: 'Sale Price',
                 width: 100,
                 renderer: function (value, metaData, record) {
-                    return record.getContextualValue('salePrice', true) || '--';
+                    return record.getContextualValue('salePrice', true) || 'N/A';
                 }
             },
             {
@@ -190,7 +190,7 @@ Ext.define('Taco.view.product.Index', {
                 sortable: false,
                 width: 120,
                 renderer: function (value) {
-                    return !Ext.isEmpty(value) ? value.length : '--';
+                    return !Ext.isEmpty(value) ? value.length : 'N/A';
                 }
             },
             {
@@ -204,7 +204,7 @@ Ext.define('Taco.view.product.Index', {
                     var cssClass = 'product-overridden-false';
 
                     if (Ext.isEmpty(value)) {
-                        output = '--';
+                        output = 'N/A';
                     } else {
                         cssClass = Ext.Array.contains(Ext.Array.pluck(value, 'isContentOverridden'), true) ? 'product-overridden-true' : 'product-overridden-false';
                         output = Ext.Array.contains(Ext.Array.pluck(value, 'isContentOverridden'), true) ? 'Yes' : 'No';
