@@ -198,7 +198,7 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
                 this.hintbar.appendChild(this.hintBarMessage);
 
                 this.hintbarHeight = '3px';
-                this.hintbarPadding = '-41px';
+                this.hintbarPadding = 45;
 
                 doc.body.appendChild(this.hintbar);
             }
@@ -353,12 +353,12 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
                 if (msg === 'top') {
                     return {
                         key: 'top',
-                        offset: this.hintbarPadding
+                        offset: '-' + this.hintbarPadding + 'px'
                     };
                 } else {
                     return {
                         key: 'top',
-                        offset: parseInt(window.getComputedStyle(element, null).height, 10) - 41 + 'px'
+                        offset: parseInt(window.getComputedStyle(element, null).height, 10) - 44 + 'px'
                     };
                 }
             }
@@ -598,8 +598,8 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
 				}],
 				    counter,
 				    contentFormatter = ['<ul>', '<li data-role="styles" class="mz-cms-styles"', '<span>Styles</span>', '<i class="fa fa-caret-down"></i>', '<ul></ul>', '</li>', '<li data-role="bold"><i class="fa fa-bold"></i></li>', '<li data-role="italic"><i class="fa fa-italic"></i></li>', '<li data-role="underline"><i class="fa fa-underline"></i></li>', '<li data-role="createLink"><i class="fa fa-link"></i></li>', '<li data-role="unlink"><i class="fa fa-unlink"></i></li>', '<li data-role="justifyLeft"><i class="fa fa-align-left"></i></li>', '<li data-role="justifyCenter"><i class="fa fa-align-center"></i></li>', '<li data-role="justifyRight"><i class="fa fa-align-right"></i></li>', '<li data-role="insertUnorderedList"><i class="fa fa-list-ul"></i></li>', '<li data-role="insertOrderedList"><i class="fa fa-list-ol"></i></li>', '<li data-role="indent"><i class="fa fa-indent"></i></li>', '<li data-role="outdent"><i class="fa fa-outdent"></i></li>', '</ul>'].join(''),
-				    contentEditor = document.createElement('div'),
-				    urlTooltip = document.createElement('div');
+				    contentEditor = doc.createElement('div'),
+				    urlTooltip = doc.createElement('div');
 
 				var addClass = function addClass(element, className) {
 					if (element.getAttribute('class')) {
@@ -638,15 +638,15 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
 				contentEditor.setAttribute('class', 'mz-cms-format-bar');
 				contentEditor.innerHTML = contentFormatter;
 
-				if (!document.querySelector('.mz-cms-tooltip')) {
-					document.body.appendChild(urlTooltip);
+				if (!doc.querySelector('.mz-cms-tooltip')) {
+					doc.body.appendChild(urlTooltip);
 				}
 
-				if (!document.querySelector('.mz-cms-format-bar')) {
-					document.body.appendChild(contentEditor);
+				if (!doc.querySelector('.mz-cms-format-bar')) {
+					doc.body.appendChild(contentEditor);
 				} else {
 					contentEditor.parentNode.removeChild(contentEditor);
-					document.body.appendChild(contentEditor);
+					doc.body.appendChild(contentEditor);
 				}
 
 				counter = -1 * (contentEditor.offsetHeight / 2);
@@ -669,31 +669,37 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
 
 				var _buildStyles = function _buildStyles(styles) {
 					styles.forEach(function (style, index) {
-						var li = document.createElement('li');
+						var li = doc.createElement('li');
 						li.innerHTML = style.label;
 						li.setAttribute('data-style', JSON.stringify(style));
 						li.setAttribute('data-role', 'style');
-						document.querySelector('[data-role="styles"] ul').appendChild(li);
+						doc.querySelector('[data-role="styles"] ul').appendChild(li);
 					});
 				};
 
 				var createLink = function createLink() {
 					doc.execCommand('createLink', false, '#mz-cms-temp-link');
-					if (document.getElementsByClassName('mz-cms-tooltip')[0].offsetParent === null) {
+					if (doc.getElementsByClassName('mz-cms-tooltip')[0].offsetParent === null) {
 						showTooltip();
 					}
 				};
 
 				var showTooltip = function showTooltip() {
-					var posEl = document.querySelector('[href="#mz-cms-temp-link"]'),
+					var posEl = doc.querySelector('[href="#mz-cms-temp-link"]'),
 					    left = 0,
 					    top = posEl.offsetHeight,
 					    coordinates = getOffset(posEl);
-					console.log(posEl.offsetHeight);
 
 					posEl.setAttribute('style', 'display: inline-block;');
 					posEl.appendChild(urlTooltip);
 					urlTooltip.setAttribute('style', 'display: block; left: ' + posEl.offsetLeft + 'px; top: ' + (posEl.offsetHeight + posEl.offsetTop) + 'px;');
+
+					urlTooltip.onchange = function () {
+						this.parentNode.setAttribute('href', this.querySelector('input').value);
+						this.querySelector('input').value = '';
+						this.parentNode.removeChild(this);
+						updateWidget();
+					};
 
 					function getOffset(elem) {
 
@@ -728,12 +734,12 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
 				};
 
 				var toggleDisplay = function toggleDisplay(element) {
-					var elementStyle = document.querySelector(element).style.display;
+					var elementStyle = doc.querySelector(element).style.display;
 
 					if (elementStyle === 'none' || elementStyle === '') {
-						document.querySelector(element).style.display = 'block';
+						doc.querySelector(element).style.display = 'block';
 					} else {
-						document.querySelector(element).style.display = 'none';
+						doc.querySelector(element).style.display = 'none';
 					}
 				};
 
@@ -768,6 +774,11 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
 				_buildStyles(styles);
 
 				var updateWidget = function updateWidget() {
+					var urlBox = me.element.querySelector('.mz-cms-tooltip');
+					if (urlBox !== null) {
+						urlBox.parentNode.removeChild(urlBox);
+					}
+
 					var newData = me.element.querySelector('.mz-cms-content').innerHTML;
 					var oldData = JSON.parse(me.element.getAttribute('data-widget'));
 					oldData.config.body = newData;
@@ -802,32 +813,34 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
 					}
 				};
 
-				document.onclick = function (event) {
-					updateWidget();
+				doc.querySelector('.mz-cms-content').onclick = function (event) {
+					if (event.target.tagName == 'A') {
+						urlTooltip.setAttribute('style', 'display: block; left: ' + event.target.offsetLeft + 'px; top: ' + (event.target.offsetHeight + event.target.offsetTop) + 'px;');
+						if (event.target.getAttribute('href') != '#mz-cms-temp-link') {
+							urlTooltip.querySelector('input').value = event.target.getAttribute('href');
+						} else {
+							urlTooltip.querySelector('input').value = '';
+						}
+						event.target.appendChild(urlTooltip);
+					} else if (event.target.parentNode.className != 'mz-cms-tooltip') {
+						urlTooltip.style.display = 'none';
+						urlTooltip.querySelector('input').value = '';
+						urlTooltip.parentNode.removeChild(urlTooltip);
+					}
 				};
 
-				me.element.onkeypress = function (event) {
-					updateWidget();
-				};
-
-				document.onclick = function (event) {
-					updateWidget();
-					if (event.target.parentElement.tagName != 'LI' && event.target.parentElement.tagName != 'UL') {
-						me.element.contentEditable = false;
-						me.element.setAttribute('class', me.element.getAttribute('class').split(' mz-cms-state-editing')[0]);
+				doc.onclick = function (event) {
+					if (event.target.parentElement.tagName != 'LI' && event.target.parentElement.tagName != 'UL' && event.target.parentElement.tagName != 'A' && event.target.parentElement.tagName != 'I') {
+						updateWidget();
+						this.querySelector('.mz-cms-content').contentEditable = false;
+						me.element = removeClass(me.element, 'mz-cms-state-editing');
 						contentEditor.style.top = (-1 * contentEditor.offsetHeight).toString() + 'px';
 
-						if (document.querySelector('.mz-cms-format-bar')) {
+						if (doc.querySelector('.mz-cms-format-bar')) {
 							if (contentEditor.parentNode) {
 								contentEditor.parentNode.removeChild(contentEditor);
 							}
 						}
-					}
-				};
-
-				document.querySelector('.mz-cms-block').onclick = function (event) {
-					if (document.querySelector('.mz-cms-tooltip')) {
-						urlTooltip.style.display = 'none';
 					}
 				};
 			}
@@ -2205,8 +2218,8 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
             key: 'removeDropHint',
             value: function removeDropHint() {
 
-                if (this.element.querySelector('.content') && this.element.querySelector('.content').parentNode.isSameNode(this.element)) {
-                    this.element.querySelector('.content').remove();
+                if (this.element.querySelector('.mz-drop-hint') && this.element.querySelector('.mz-drop-hint').parentNode.isSameNode(this.element)) {
+                    this.element.querySelector('.mz-drop-hint').remove();
                 }
             }
         }, {
@@ -2214,8 +2227,10 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
             value: function addDropHint() {
 
                 var content = doc.createElement('div');
-                content.innerHTML = DROP_HINT_TEXT;
-                content.classList.add('content');
+                var text = doc.createElement('span');
+                text.innerHTML = DROP_HINT_TEXT;
+                content.appendChild(text);
+                content.classList.add('mz-drop-hint');
 
                 if (!this.element.querySelector(BLOCK_SELECTOR + ', ' + ROW_SELECTOR + ', ' + ALL_COL_SELECTOR)) {
                     this.element.appendChild(content);

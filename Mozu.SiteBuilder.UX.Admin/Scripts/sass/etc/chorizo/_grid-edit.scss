@@ -4,33 +4,35 @@
         padding: 20px !important;
     }
 
-    .content {
+    .mz-drop-hint {
         line-height: 100px;
         text-align: center;
     }
 
     .mz-layout-widget-header {
         text-align: center;
-        border: 1px solid #000000;
-        height: 21px;
+        height: 24px;
         position: relative;
 
+        .mozu-row-title {
+            display: inline-block;
+            padding-top: 3px;
+        }
+
         &.row {
-            background-color: #eee;
+            background-color: $light-bg-gray;
             color: #0000000;
 
             .mz-cms-tools {
-                background-color: #eee;
+                background-color: $light-bg-gray;
             }
         }
 
         &.col {
-            background-color: #666;
+            background-color: transparent;
             color: #FFFFF;
-
-            .mz-cms-tools {
-                background-color: #666;
-            }
+            position: absolute;
+            width: 100%;
         }
     }
 }
@@ -51,7 +53,6 @@
     position: absolute;
     right: 0;
     top: 0;
-    height: 19px;
     margin: 0;
     z-index: 1000001;
     cursor: pointer;
@@ -60,22 +61,25 @@
         display: inline-block;
         height: 26.66px;
         text-align: center;
-        width: 26.66px;
         padding-top: 6.66px;
         text-align: center;
         color: white;
         margin-left: 2px;
         margin-right: 2px;
+
         &.pencil {
-            @include icon-font(char-from-code($glyph-chorizo-pencil), 11px, rgb(255,255,255));
+            top: 4.5px;
+            @include icon-font(char-from-code($glyph-chorizo-pencil), 14px, $gray-text-dark);
         }
 
         &.trash {
-            @include icon-font(char-from-code($glyph-chorizo-trash), 11px, rgb(255,255,255));
+            top: 4.5px;
+            @include icon-font(char-from-code($glyph-chorizo-trash), 14px, $gray-text-dark);
         }
 
         &.drag-handle {
-            @include icon-font(char-from-code($glyph-chorizo-move), 11px, rgb(255,255,255));
+            top: 4.5px;
+            @include icon-font(char-from-code($glyph-chorizo-move), 14px, $gray-text-dark);
         }
     }
 }
@@ -95,8 +99,8 @@
             border: none;
 
             &.content-view {
-                border: 1px solid black;
-                outline: none !important;
+                // border: 1px solid black;
+                // outline: none !important;
             }
 
             &.mz-cms-show-zone {
@@ -120,10 +124,30 @@
         @include transition(outline-color $duration, background-color $duration);
 
         .mz-cms-tools {
+            width: 66px;
+            height: 25px;
             background-color: $hint-color;
             display: none;
             text-align: center;
-            width: 52px;
+
+            li {
+
+                &.pencil {
+                    top: 4.5px;
+                    @include icon-font(char-from-code($glyph-chorizo-pencil), 14px, white);
+                }
+
+                &.trash {
+                    top: 4.5px;
+                    left: 2px;
+                    @include icon-font(char-from-code($glyph-chorizo-trash), 14px, white);
+                }
+
+                &.drag-handle {
+                    top: 4.5px;
+                    @include icon-font(char-from-code($glyph-chorizo-move), 14px, white);
+                }
+            }
         }
 
         &.mz-content-screen {
@@ -183,7 +207,7 @@
         .mz-cms-hint-message {
             background: $hint-color;
             color: white;
-            font-family: Helvetica;
+            font-family: $font-family;
             font-size: 12px;
             padding: 5px;
             position: absolute;

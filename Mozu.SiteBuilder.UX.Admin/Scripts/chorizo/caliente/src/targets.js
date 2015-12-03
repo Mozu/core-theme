@@ -1233,9 +1233,9 @@
 
         removeDropHint() {
 
-            if (this.element.querySelector('.content')
-                    && this.element.querySelector('.content').parentNode.isSameNode(this.element)) {
-                this.element.querySelector('.content').remove();
+            if (this.element.querySelector('.mz-drop-hint')
+                    && this.element.querySelector('.mz-drop-hint').parentNode.isSameNode(this.element)) {
+                this.element.querySelector('.mz-drop-hint').remove();
             }
 
         }
@@ -1243,8 +1243,10 @@
         addDropHint() {
 
             const content = doc.createElement('div');
-            content.innerHTML = DROP_HINT_TEXT;
-            content.classList.add('content');
+            const text = doc.createElement('span');
+            text.innerHTML = DROP_HINT_TEXT;
+            content.appendChild(text);
+            content.classList.add('mz-drop-hint');
 
             if (!this.element.querySelector(`${BLOCK_SELECTOR}, ${ROW_SELECTOR}, ${ALL_COL_SELECTOR}`)) {
                 this.element.appendChild(content);

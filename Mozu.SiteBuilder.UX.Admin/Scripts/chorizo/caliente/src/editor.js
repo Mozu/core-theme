@@ -185,7 +185,7 @@
             this.hintbar.appendChild(this.hintBarMessage);
 
             this.hintbarHeight = '3px';
-            this.hintbarPadding = '-41px';
+            this.hintbarPadding = 45;
 
             doc.body.appendChild(this.hintbar);
 
@@ -355,14 +355,14 @@
             if (msg === 'top') {
                 return {
                     key: 'top',
-                    offset: this.hintbarPadding
+                    offset: '-' + this.hintbarPadding + 'px'
                 };
             }
 
             else {
                 return {
                     key: 'top',
-                    offset: parseInt(window.getComputedStyle(element, null).height, 10) - 41 + 'px'
+                    offset: parseInt(window.getComputedStyle(element, null).height, 10) - 44 + 'px'
                 };
             }
 
