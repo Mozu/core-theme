@@ -40,8 +40,11 @@ Ext.define('Taco.core.ux.mixins.NavHeader', {
         permissions: 'Taco.core.ux.mixins.Permissions'
     },
 
+    titleId: 'taco-navigate-to-parent',
+
     init: function () {
-        var me = this
+        var me = this;
+
         this.mixins.permissions.constructor.apply(this, arguments);
 
         me.navHeader = me;
@@ -93,12 +96,49 @@ Ext.define('Taco.core.ux.mixins.NavHeader', {
             },
             titlechange: {
                 fn: function (panel, newTitle) {
-                    me.titleCmp.update(newTitle);
+
+                    var me = this;
+                    var parentTitleCfg = this.parentTitleCfg ? this.parentTitleCfg : {};
+
+                    var addAction = function() {
+
+                        //reset the html
+                        document.getElementById(me.titleId).innerHTML = '';
+
+                        Ext.create('Taco.core.ux.action.Action', {
+                            text: parentTitleCfg.title || 'Edit View',
+                            renderTo: me.titleId,
+                            listeners:  {
+                                click: me.navigateToParentPage.bind(me, parentTitleCfg)
+                            }
+                        });
+                    };
+               
+                    me.titleCmp.update({
+                        title: parentTitleCfg.title || 'Edit View',
+                        subTitle: newTitle,
+                        id: this.titleId
+                    });
+
+                    me.titleCmp.on('afterrender', addAction);
 
                 },
                 scope: me
             }
         });
+    },
+
+    navigateToParentPage: function(cfg) {
+        var controller = cfg && cfg.controller ? cfg.controller : '/';
+        Taco.app.StateManager.attemptNavigate(controller);
+
+        if (controller === 'orders') {
+            //to do, figure out how to remove title
+        }
+    },
+
+    getTileByURL: function() {
+
     },
 
 
@@ -235,13 +275,25 @@ Ext.define('Taco.core.ux.mixins.NavHeader', {
                 layout: 'hbox',
                 height: 60,
                 cls: 'taco-content-header-title-container',
-                items: []
+                items: [],
+
             };
 
-            // just call view.setTitle("new title here") to update the title;
             me.titleCmp = Ext.create('Ext.Component', {
                 cls: "taco-content-header-title",
-                html: this.getTitle()
+                tpl: [  
+                    '<tpl>',
+                        '<span id="{id}"> {title} </span>',
+                        '<tpl if="subTitle">',
+                            '<span> {subTitle} </span>',
+                        '</tpl>',
+                    '</tpl>'
+                ],
+                data: {
+                    title: this.getTitle(),
+                    subTitle: '',
+                    id: this.titleId
+                }
             });
 
             me.titleContainer.items.push(me.titleCmp);

@@ -9,6 +9,10 @@ Ext.define('Taco.view.category.Edit', {
     formCls: 'Taco.view.category.Form',
     saveAndCreateButtonEnabled: true,
     enableSearchBar: false,
+    parentTitleCfg: {
+        title: 'Categories',
+        controller: 'categories'
+    },
     doCreate: function () {
         var controller = "categories",
             url;

@@ -10,6 +10,10 @@ Ext.define('Taco.view.discount.Edit', {
     ],
     enableSearchBar: false,
     formCls: 'Taco.view.discount.Form',
+    parentTitleCfg: {
+        title: 'Discounts',
+        controller: 'discounts'
+    },
     statics: {
         factory: function (cfg, callback, scope) {
             cfg = Ext.apply(cfg,

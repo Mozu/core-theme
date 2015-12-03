@@ -6,6 +6,10 @@ Ext.define('Taco.view.customers.Edit', {
     requires: ['Taco.view.customers.Form'],
     formCls: 'Taco.view.customers.Form',
     title: "Edit Customer",
+    parentTitleCfg: {
+        title: 'Customer',
+        controller: 'customer'
+    },
     initComponent: function () {
         this.callParent(arguments);
     }

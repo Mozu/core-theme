@@ -12,6 +12,11 @@
         'Taco.view.publishing.component.button.PublishButton'
     ],
 
+    parentTitleCfg: {
+        title: 'Products',
+        controller: 'product'
+    },
+
     enableSearchBar: false,
 
     statics: {
@@ -79,6 +84,7 @@
     },
 
     initComponent: function () {
+
         var me = this;
 
         if (this.checkProductPublishing()) {

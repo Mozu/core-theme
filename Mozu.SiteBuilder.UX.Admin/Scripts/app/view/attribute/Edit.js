@@ -9,6 +9,10 @@ Ext.define('Taco.view.attribute.Edit', {
     requires: [
         'Taco.view.attribute.Form'
     ],
+    parentTitleCfg: {
+        title: 'Attribute',
+        controller: 'attribute'
+    },
     enableSearchBar: false,
     formCls: 'Taco.view.attribute.Form',
     saveAndCreateButtonEnabled: true,

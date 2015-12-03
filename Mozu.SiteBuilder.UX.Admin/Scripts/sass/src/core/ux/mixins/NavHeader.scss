@@ -32,15 +32,35 @@
         }
 
         .taco-content-header-title-container {
-            border-right: 1px solid $nav-element-active-border;
+
+            .x-box-inner {
+                height: 100% !important;
+            }
+
+            .x-box-target {
+                height: 100%;
+            }
+
+            a:hover {
+                text-decoration: none !important;
+            }
+
             .taco-content-header-title{
                 font-size: 18px;
                 font-weight: 400;
+                height: 100%;
                 overflow: hidden;
-                padding: 20px 18px;
                 text-overflow: ellipsis;
                 white-space: nowrap;
+
+                span {
+                     border-right: 1px solid $nav-element-active-border;
+                     display: inline-block;
+                     padding: 20px;
+                     height: 100%;
+                }
             }
+            
             .taco-content-header-title-root {
                 color: $color-framework-blue-dark;
             }

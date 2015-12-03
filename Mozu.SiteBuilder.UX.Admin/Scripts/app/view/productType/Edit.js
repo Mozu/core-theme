@@ -12,5 +12,9 @@ Ext.define('Taco.view.productType.Edit', {
     doCreate: function () {
         var controller = "producttypes"
         Taco.app.StateManager.attemptNavigate(controller + '/create');
-    }
+    },
+    parentTitleCfg: {
+        title: 'Product Types',
+        controller: 'producttypes'
+    },
 });

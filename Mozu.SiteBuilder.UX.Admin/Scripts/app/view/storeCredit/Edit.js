@@ -20,5 +20,9 @@ Ext.define('Taco.view.storeCredit.Edit', {
         //}];
 
         this.callParent(arguments);
-    }
+    },
+    parentTitleCfg: {
+        title: 'Store Credits',
+        controller: 'storecredits'
+    },
 });

@@ -10,6 +10,11 @@ Ext.define('Taco.view.location.Edit', {
     ],
 
     formCls: 'Taco.view.location.Form',
+
+    parentTitleCfg: {
+        title: 'Locations',
+        controller: 'locations'
+    },
     
     initComponent: function () {
         var me = this;

@@ -47,6 +47,11 @@ Ext.define('Taco.view.order.Edit', {
     saveText: "Submit Order",
     saveInProgressText: "Submiting Order...",
 
+    parentTitleCfg: {
+        title: 'Orders',
+        controller: 'orders'
+    },
+
 
     initComponent: function () {
         this.saveHidden

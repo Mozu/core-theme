@@ -29,7 +29,7 @@ Ext.define('Taco.view.order.Split', {
     createButtonEnabled: true,
     saveButtonVisible: false,
     cancelButtonVisible: false,
-    
+
     statics: {
         eastConfigs: {
             placeholder: {
@@ -135,7 +135,12 @@ Ext.define('Taco.view.order.Split', {
 
 
         // }, this, {single: true});
-       
+    
+        // this.on('afterlayout', function() {
+        //     if (!window.location.href.indexOf('/edit/') !== -1) {
+
+        //     }
+        // })
         
     },
 
@@ -190,7 +195,7 @@ Ext.define('Taco.view.order.Split', {
 
     handleAddToEast: function (ct, cmp) {
         this.editor = cmp;
-        this.updateSplitTitle();
+        // this.updateSplitTitle();
 
         if (this.getRecord()) {
             this.mon(this.editor, {
@@ -248,7 +253,7 @@ Ext.define('Taco.view.order.Split', {
             this.callParent(arguments);
 
             this.showAndHideSplitActions();
-            this.updateSplitTitle();
+            // this.updateSplitTitle();
 
             Ext.resumeLayouts(true);
         }
@@ -351,7 +356,7 @@ Ext.define('Taco.view.order.Split', {
     handleChildCollapseExpand: function (panel) {
         this.callParent(arguments);
 
-        this.updateSplitTitle();
+        // this.updateSplitTitle();
 
         if (panel.getItemId() === 'west' && !panel.getCollapsed() && !this.getSplit()) {
             panel.on({
@@ -370,11 +375,11 @@ Ext.define('Taco.view.order.Split', {
         var activeTitle = this.getWestTitle() || 'Records';
 
         if (record && !eastCollapsed) {
-            activeTitle = '<a href="/admin/orders" class="taco-content-header-title-root">' + activeTitle + '</a> / Order #' + record.get('orderNumber');
+            activeTitle = record.get('siteName') + ':  #' + record.get('orderNumber');
+            Ext.suspendLayouts();
+            this.setTitle(activeTitle);
+            Ext.resumeLayouts();
         }
 
-        Ext.suspendLayouts();
-        this.setTitle(activeTitle);
-        Ext.resumeLayouts();
     }
 });
