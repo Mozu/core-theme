@@ -116,14 +116,6 @@ Ext.define('Taco.store.Navigation', {
         }
     },
 
-    filterNavLinksByPage: function(navPg) {
-        this.filter({
-            filterFn: function(item){
-                return item.get('navPage') === navPg;
-            }
-        })
-    },
-
     filters: [
         {
             filterFn: function (record) {
@@ -322,11 +314,24 @@ Ext.define('Taco.store.Navigation', {
                 }]
             },
             {
+                'id': 'sysAdminLink',
+                'label': 'System Administration',
+                'navPage': 'home',
+                'navTarget': 'sysAdm',
+                'items': []
+            }, {
+                'id': 'sysAdminBackLink',
+                'label': 'Back',
+                'navPage': 'sysAdm',
+                'navTarget': 'home',
+                'items': []
+            },
+            {
                 'id': 'settings',
                 'navPage': 'sysAdm',
                 'label': 'Site Configuration',
                 'icon': 'nav-settings',
-                'visible': false,
+                //'visible': false,
                 'items': [
                     {
                         'id': 'generalsettings',
@@ -373,18 +378,22 @@ Ext.define('Taco.store.Navigation', {
                     'address': 'producttypes'
                 }, {
                     'id': 'productAttributes',
+                    'navPage': 'sysAdm',
                     'label': 'Product Attributes',
                     'address': 'attributes'
                 }, {
                     'id': 'orderAttributes',
+                    'navPage': 'sysAdm',
                     'label': 'Order Attributes',
                     'address': 'orderattributes'
                 }, {
                     'id': 'customerAttributes',
+                    'navPage': 'sysAdm',
                     'label': 'Customer Attributes',
                     'address': 'CustomerAttributes'
                 }, {
                     'id': 'locationTypes',
+                    'navPage': 'sysAdm',
                     'label': 'Location Types',
                     'address': 'locationTypes'
                 }
@@ -405,22 +414,27 @@ Ext.define('Taco.store.Navigation', {
                     'address': 'provisioning/sites'
                 }, {
                     'id': 'channels',
+                    'navPage': 'sysAdm',
                     'label': 'Channels',
                     'address': 'channels'
                 }, {
                     'id': 'applications-manage',
+                    'navPage': 'sysAdm',
                     'label': 'Applications',
                     'address': 'capability'
                 }, {
                     'id': 'actionmanagement',
+                    'navPage': 'sysAdm',
                     'label': 'Actions',
                     'address': 'actionmanagement'
                 }, {
                     'id': 'publishing',
+                    'navPage': 'sysAdm',
                     'label': 'Settings',
                     'address': 'settings/publishing'
                 }, {
                     'id': 'ipblocking',
+                    'navPage': 'sysAdm',
                     'label': 'IP Blocking',
                     'address': 'ipblocking'
                 }
@@ -441,15 +455,7 @@ Ext.define('Taco.store.Navigation', {
                         'address': 'roles'
                     }
                 ]
-            },
-            {
-                'id': 'sysAdminLink',
-                'label': 'System Administration',
-                'navPage': 'home',
-                'navTarget': 'sysAdm',
-                'items': []
             }
-
 
             //todo: include? greg_murray on 12/1/2015
             //{

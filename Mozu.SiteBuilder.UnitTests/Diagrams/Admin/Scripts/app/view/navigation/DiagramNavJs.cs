@@ -133,5 +133,11 @@ namespace Mozu.SiteBuilder.UnitTests.Diagrams.Admin.Scripts.app.view.navigation
 
     }
 
+    class TacoCoreUxMixinsHamburgerButton
+    {
+        public TacoViewNavigationPrimaryMenu TacoAppPrimaryMenu { get; set; }
+
+        void createPrimaryMenu() { }
+    }
 
 }

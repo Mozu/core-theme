@@ -11,13 +11,12 @@ Ext.define('Taco.view.navigation.PrimaryMenu', {
     //    tag: 'div',
     //    cls: 'taco-primary-menu-ct'
     //},
-    autoShow: true,
+    autoShow: true,  //false
     autoScroll:true,
     border: false,
     floating: true,
     header: false,
     hideMode: 'offsets',
-    id: 'primaryMenu',
     mixins: { bindable: 'Ext.util.Bindable' },
     plain: true,
     resizable: false,
@@ -25,6 +24,8 @@ Ext.define('Taco.view.navigation.PrimaryMenu', {
     x: 0,
     y: 6,
     navPage: 'home',
+    id: 'primaryMenu',
+    isBound: false,
     
     initComponent: function () {
         this.callParent(arguments);
@@ -33,13 +34,12 @@ Ext.define('Taco.view.navigation.PrimaryMenu', {
             add: function (menu) { menu.hide(); }
         });
 
-        Ext.getDoc().on('click', Ext.bind(this.handleDocClick, this));
+        //Ext.getDoc().on('click', Ext.bind(this.handleDocClick, this));
 
     },
 
     bindStore: function (store, initial) {
         this.store = store;
-        this.store.filterNavLinksByPage(this.navPage);
         this.mixins.bindable.bindStore.apply(this, arguments);
 
         this.view = Ext.create('Taco.view.navigation.PrimaryMenuView', {
@@ -49,6 +49,7 @@ Ext.define('Taco.view.navigation.PrimaryMenu', {
 
         this.add(this.view);
         this.onStateChange(Taco.core.StateManager.getCurrentState());
+        this.isBound = true;
     },
 
     compareController: function(address, controllerName) {
@@ -161,10 +162,8 @@ Ext.define('Taco.view.navigation.PrimaryMenu', {
      * @private
      */
     showMenu: function () {
-
         this.show();
-
-        this.trigger.addCls('expanded');
+        //this.trigger.addCls('expanded');
     },
 
     /**
@@ -172,18 +171,16 @@ Ext.define('Taco.view.navigation.PrimaryMenu', {
      * @private
      */
     hideMenu: function () {
-
         this.hide();
-
-        this.trigger.removeCls('expanded');
-    },
+        //this.trigger.removeCls('expanded');
+    }
 
     /**
      * Hides menu when you click anywhere on document.
      * Needs a reference so listener can easily be added and removed.
      * @private
      */
-    handleDocClick: function (e, el) {
-        this.hideMenu();
-    }
+    //handleDocClick: function (e, el) {
+    //    this.hideMenu();
+    //}
 });

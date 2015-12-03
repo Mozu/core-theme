@@ -16,11 +16,11 @@ Ext.define('Taco.controller.Navigation', {
         'Taco.model.NavigationItem2'
     ],
     
-    views: ['navigation.PrimaryMenu'],
+    views: ['navigation.PrimaryMenuPanel'],
 
     refs: [{
-        ref: 'primaryMenu',
-        selector: '#primaryMenu'
+        ref: 'primaryMenuPanel',
+        selector: '#primaryMenuPanel'
     }],
 
     init: function () {
@@ -39,7 +39,7 @@ Ext.define('Taco.controller.Navigation', {
     },
 
     bindPrimaryMenu: function () {
-        var pm = this.getPrimaryMenu(),
+        var pm = this.getPrimaryMenuPanel(),
             navStore = this.getNavigationStore();
 
         // if the primary menu hasnt been instantiated, preserve the navstore
@@ -51,7 +51,7 @@ Ext.define('Taco.controller.Navigation', {
     },
 
     onStateChange: function (appState) {
-        var pm = this.getPrimaryMenu();
+        var pm = this.getPrimaryMenuPanel();
 
         if (!pm) return;
 

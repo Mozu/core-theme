@@ -10,6 +10,7 @@ Ext.define('Taco.view.navigation.PrimarySubMenu', {
     },
     itemSelector: 'li.taco-submenu-item',
     selectedItemCls: 'taco-submenu-item-active',
+    topParentMenu: null,
 
     initComponent: function () {
         var me = this,
@@ -67,8 +68,7 @@ Ext.define('Taco.view.navigation.PrimarySubMenu', {
      * @param  {Ext.EventObject} e The raw event object
      */
     navigate: function (view, record, item, index, e) {
-        var menu = Ext.ComponentQuery.query('#primaryMenu').shift(),
-            dest = record.get('address'),
+        var dest = record.get('address'),
             navTarget = record.get('navTarget'),
             items = record.get('items'),
             flyoutMenu,
@@ -82,12 +82,12 @@ Ext.define('Taco.view.navigation.PrimarySubMenu', {
 
             this.buildFlyoutMenuConfig(items, flyoutMenu);
             flyoutMenu = Ext.widget(flyoutMenu);
-            flyoutMenu.showBy(menu);
+            flyoutMenu.showBy(this.topParentMenu);
             return;
 
         }
        
         Taco.core.StateManager.attemptNavigate(dest);
-        menu.hideMenu();
+        this.topParentMenu.hideMenu();
     }
 });
