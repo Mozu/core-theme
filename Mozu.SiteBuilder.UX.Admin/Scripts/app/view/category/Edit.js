@@ -103,7 +103,6 @@ Ext.define('Taco.view.category.Edit', {
 
     },
     viewInSite: function(site, env, noPrompt) {
-        console.log("Taco.view.category.Edit --> viewInSite");
         var me = this,
             url = '/_gosite/' + site.id + '?environment=' + env + '&redir=' + encodeURIComponent('/c/' + this.record.getId());
 

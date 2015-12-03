@@ -115,14 +115,15 @@ Ext.define('Taco.view.discount.widget.CategoryPicker', {
         treeStore.on({
             //this doesn't seem to fire ???
             load: function() {
-                treeStore.filter([
-                    function(record) {
-                        var isRealTime = record.get("categoryType") === "DynamicRealTime";
-                        return !isRealTime;
-                    }
-                ]);
+                if (!me.showDynamicRealTimeCategories) {
+                    treeStore.filter([
+                        function(record) {
+                            var isRealTime = record.get("categoryType") === "DynamicRealTime";
+                            return !isRealTime;
+                        }
+                    ]);
+                }
             },
-
             beforeexpand: function(node, opts) {
                 if (!me.showDynamicRealTimeCategories) {
                     node.childNodes = node.childNodes.filter(function(childNode) {
