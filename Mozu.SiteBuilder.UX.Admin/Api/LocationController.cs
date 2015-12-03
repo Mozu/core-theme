@@ -38,7 +38,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
             }
             else
             {
-                const string responseFields = "items(code,name,isDisabled,locationTypes,address)";
+                const string responseFields = "items(code,name,isDisabled,locationTypes(name),address)";
                 string filter = extFilter.ToFilterString();
                 string sort = (pagingParams != null && pagingParams.sort != null) ? pagingParams.sort.ToSortString() : null;
                 locations = (await _locationWebApiClient.GetLocations(startIndex: pagingParams.startIndex,
