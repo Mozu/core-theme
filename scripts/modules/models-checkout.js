@@ -794,13 +794,14 @@
             },
             getPaymentTypeFromCurrentPayment: function () {
                 var billingInfoPaymentType = this.get('paymentType'),
+                    billingInfoPaymentWorkflow = this.get('paymentWorkflow'),
                     currentPayment = this.getOrder().apiModel.getCurrentPayment(),
                     currentPaymentType = currentPayment && currentPayment.billingInfo.paymentType,
                     currentPaymentWorkflow = currentPayment && currentPayment.billingInfo.paymentWorkflow,
                     currentBillingContact = currentPayment && currentPayment.billingInfo.billingContact,
                     currentCard = currentPayment && currentPayment.billingInfo.card;
 
-                if (currentPaymentType && currentPaymentType !== billingInfoPaymentType) {
+                if (currentPaymentType && (currentPaymentType !== billingInfoPaymentType || currentPaymentWorkflow !== billingInfoPaymentWorkflow)) {
                     this.set('paymentType', currentPaymentType, { silent: true });
                     this.set('paymentWorkflow', currentPaymentWorkflow, { silent: true })
                     this.set('card', currentCard, { silent: true });
