@@ -411,6 +411,7 @@
     <Compile Include="Helpers\AttributeHelpers\IAttributeHelper.cs" />
     <Compile Include="Helpers\AttributeHelpers\AttributeFilterExtensions.cs" />
     <Compile Include="Helpers\AttributeHelpers\AttributeSortExtensions.cs" />
+    <Compile Include="Helpers\CategoryHelpers\CategoryFilterExtensions.cs" />
     <Compile Include="Helpers\CategoryHelpers\CategoryHelper.cs" />
     <Compile Include="Helpers\CategoryHelpers\ICategoryHelper.cs" />
     <Compile Include="Helpers\ChannelHelpers\ChannelFilterExtensions.cs" />
@@ -536,9 +537,11 @@
     <Content Include="Scripts\app\core\ux\form\ResendEmailButton.js" />
     <Content Include="Scripts\app\core\ux\grid\ActionColumn.js" />
     <Content Include="Scripts\app\core\ux\grid\AddEntityRow.js" />
+    <Content Include="Scripts\app\core\ux\grid\PagedMemoryGrid.js" />
     <Content Include="Scripts\app\core\ux\grid\plugins\AutoSelect.js" />
     <Content Include="Scripts\app\core\ux\mixins\DeleteFromGrid.js" />
     <Content Include="Scripts\app\core\ux\mixins\GridContextMenu.js" />
+    <Content Include="Scripts\app\core\ux\mixins\ActionColumn.js" />
     <Content Include="Scripts\app\core\ux\plugins\NextPrevious.js" />
     <Content Include="Scripts\app\core\ux\PanelHeaderStat.js" />
     <Content Include="Scripts\app\core\ux\HtmlEditorImagePlugin.js" />
@@ -1411,6 +1414,7 @@
     <Content Include="Scripts\sass\src\core\ux\content\SplitContainer.scss" />
     <Content Include="Scripts\sass\src\core\ux\form\field\plugins\InputMask.scss" />
     <Content Include="Scripts\sass\src\view\order\widget\AddOrderItemToolbar.scss" />
+    <Content Include="Scripts\ux\pagingStore\data\PagingStore.js" />
     <Content Include="Scripts\Web.config" />
     <Content Include="Scripts\sass\src\core\ux\mixins\NavHeader.scss" />
     <Content Include="Scripts\sass\src\core\ux\form\FullEditor.scss" />
@@ -2650,6 +2654,13 @@
   </Choose>
   <Choose>
     <When Condition="$(TargetFrameworkIdentifier) == '.NETFramework' And ($(TargetFrameworkVersion) == 'v4.5' Or $(TargetFrameworkVersion) == 'v4.5.1')">
+      <PropertyGroup>
+        <__paket__ClearScript_Installer_targets>ClearScript.Installer</__paket__ClearScript_Installer_targets>
+      </PropertyGroup>
+    </When>
+  </Choose>
+  <Choose>
+    <When Condition="$(TargetFrameworkIdentifier) == '.NETFramework' And ($(TargetFrameworkVersion) == 'v4.5' Or $(TargetFrameworkVersion) == 'v4.5.1')">
       <ItemGroup>
         <Reference Include="ClearScript">
           <HintPath>..\packages\ClearScript.Installer\lib\net45\ClearScript.dll</HintPath>
@@ -2659,14 +2670,6 @@
       </ItemGroup>
     </When>
   </Choose>
-  <Choose>
-    <When Condition="$(TargetFrameworkIdentifier) == '.NETFramework' And ($(TargetFrameworkVersion) == 'v4.5' Or $(TargetFrameworkVersion) == 'v4.5.1')">
-      <PropertyGroup>
-        <__paket__ClearScript_Installer_targets>ClearScript.Installer</__paket__ClearScript_Installer_targets>
-      </PropertyGroup>
-    </When>
-  </Choose>
-  <Import Project="..\packages\ClearScript.Installer\build\$(__paket__ClearScript_Installer_targets).targets" Condition="Exists('..\packages\ClearScript.Installer\build\$(__paket__ClearScript_Installer_targets).targets')" Label="Paket" />
   <Choose>
     <When Condition="$(TargetFrameworkIdentifier) == '.NETFramework' And ($(TargetFrameworkVersion) == 'v4.5' Or $(TargetFrameworkVersion) == 'v4.5.1')">
       <ItemGroup>
@@ -3258,7 +3261,6 @@
       </PropertyGroup>
     </When>
   </Choose>
-  <Import Project="..\packages\OctoPack\build\$(__paket__OctoPack_targets).targets" Condition="Exists('..\packages\OctoPack\build\$(__paket__OctoPack_targets).targets')" Label="Paket" />
   <Choose>
     <When Condition="$(TargetFrameworkIdentifier) == '.NETFramework' And ($(TargetFrameworkVersion) == 'v4.5' Or $(TargetFrameworkVersion) == 'v4.5.1')">
       <ItemGroup>
@@ -3284,6 +3286,17 @@
   <Choose>
     <When Condition="$(TargetFrameworkIdentifier) == '.NETFramework' And ($(TargetFrameworkVersion) == 'v4.5' Or $(TargetFrameworkVersion) == 'v4.5.1')">
       <ItemGroup>
+        <Reference Include="Sprache">
+          <HintPath>..\packages\Sprache\lib\portable-net4+netcore45+win8+wp8+sl5+MonoAndroid1+MonoTouch1\Sprache.dll</HintPath>
+          <Private>True</Private>
+          <Paket>True</Paket>
+        </Reference>
+      </ItemGroup>
+    </When>
+  </Choose>
+  <Choose>
+    <When Condition="$(TargetFrameworkIdentifier) == '.NETFramework' And ($(TargetFrameworkVersion) == 'v4.5' Or $(TargetFrameworkVersion) == 'v4.5.1')">
+      <ItemGroup>
         <Reference Include="Stact">
           <HintPath>..\packages\Stact\lib\NET40\Stact.dll</HintPath>
           <Private>True</Private>
@@ -3292,4 +3305,6 @@
       </ItemGroup>
     </When>
   </Choose>
+  <Import Project="..\packages\ClearScript.Installer\build\$(__paket__ClearScript_Installer_targets).targets" Condition="Exists('..\packages\ClearScript.Installer\build\$(__paket__ClearScript_Installer_targets).targets')" Label="Paket" />
+  <Import Project="..\packages\OctoPack\build\$(__paket__OctoPack_targets).targets" Condition="Exists('..\packages\OctoPack\build\$(__paket__OctoPack_targets).targets')" Label="Paket" />
 </Project>

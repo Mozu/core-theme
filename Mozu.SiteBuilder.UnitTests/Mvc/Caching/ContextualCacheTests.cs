@@ -28,7 +28,7 @@ namespace Mozu.SiteBuilder.UnitTests.Mvc.Caching
             backingCache.Set(key, 5);
 
             var contextCache = new LiveModeOnlyCacheInternal(context, pageCtx,  backingCache);
-            var cachedItem = contextCache.Get<int?>(key);
+            var cachedItem = contextCache.Get<int?>(key, CacheScope.Site, StorefrontCacheTypes.Default);
             Assert.AreEqual((cachedItem == null), expectedNull); 
         }
 
@@ -57,14 +57,14 @@ namespace Mozu.SiteBuilder.UnitTests.Mvc.Caching
 
         private readonly Dictionary<ScopedName, object> _cache = new Dictionary<ScopedName,object>();
  
-        public T Get<T>(string key, CacheScope scope = CacheScope.Site)
+        public T Get<T>(string key, CacheScope scope = CacheScope.Site, StorefrontCacheTypes cacheType = StorefrontCacheTypes.Default)
         {
             var inKey = new ScopedName {key = key, scope = scope};
             if (_cache.ContainsKey(inKey)) return (T) _cache[inKey];
             return default(T);
         }
 
-        public void Set(string key, object value, CacheScope scope = CacheScope.Site)
+        public void Set(string key, object value, CacheScope scope = CacheScope.Site,  StorefrontCacheTypes cacheType = StorefrontCacheTypes.Default)
         {
             var inKey = new ScopedName{key = key, scope = scope};
             _cache[inKey] = value;

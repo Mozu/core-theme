@@ -33,7 +33,7 @@ Ext.define('Taco.view.dashboard.Index', {
                     delegate: '[data-url]',
                     fn: function (event, node) {
                         event.stopEvent();
-                        Taco.core.StateManager.attemptNavigate(node.dataset.url);
+                        Taco.core.StateManager.attemptNavigate(node.getAttribute('data-url'));
                     }
                 }
             }
