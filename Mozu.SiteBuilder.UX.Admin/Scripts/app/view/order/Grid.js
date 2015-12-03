@@ -95,24 +95,23 @@ Ext.define('Taco.view.order.Grid', {
             console.log(this.up('order-split'))
         }
 
-        //todo: need to work on disabling/enabling of actions
+        //todo: need to work on disabling/enabling of actions -- talk with commerce peeps?
 
         this.bulkActionConfig = {
             actions: [
                 {
                     itemId: 'AcceptOrder',
                     text: 'Accept',
-                    // disabled: true,
+                    disabled: true,
                     scope: this,
                     handler: function () {
-                        debugger;
                         this.doBulkAction('AcceptOrder');
                     }
                 },
                 {
                     itemId: 'CancelOrder',
                     text: 'Cancel',
-                    // disabled: true,
+                    disabled: true,
                     scope: this,
                     handler: function () {
                         this.doBulkAction('CancelOrder');
@@ -121,7 +120,7 @@ Ext.define('Taco.view.order.Grid', {
                 {
                     itemId: 'CapturePayment',
                     text: 'Capture',
-                    // disabled: true,
+                    disabled: true,
                     scope: this,
                     handler: function () {
                         this.doBulkAction('CapturePayment');
@@ -130,7 +129,7 @@ Ext.define('Taco.view.order.Grid', {
                 {
                     itemId: 'Ship',
                     text: 'Ship',
-                    // disabled: true,
+                    disabled: true,
                     scope: this,
                     handler: function () {
                         this.doBulkAction('Ship');
