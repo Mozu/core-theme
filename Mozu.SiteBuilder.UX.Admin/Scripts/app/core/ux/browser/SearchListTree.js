@@ -100,6 +100,7 @@ Ext.define('Taco.core.ux.browser.SearchListTree', {
         if (this.launchEditorOnClick) {
             //initialize the content navigation toolbar.
             this.mixins.launcheditor.constructor.apply(this);
+            this.addCls('taco-action-on-click');
         }
         
         if (!me.store) {
