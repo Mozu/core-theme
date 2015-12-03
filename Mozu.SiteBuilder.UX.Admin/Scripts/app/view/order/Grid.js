@@ -25,14 +25,14 @@ Ext.define('Taco.view.order.Grid', {
     // Will add the 20px padding needed for display in the contentView as part of the NavHeader code;
     addContentViewPadding: true,
 
-    enableSearch: true,
+    enableSearch: false,
     enablePaging: true,
     enableRowEditing: false,
     enableAutoSelect: false,
     createButtonEnabled: true,
     saveButtonEnabled: false,
     cancelButtonEnabled: false,
-
+    enableBulkActions: true,
     createButtonText: "Create New Order",
 
     showActionsColumn: true,
@@ -88,73 +88,60 @@ Ext.define('Taco.view.order.Grid', {
             selType: 'checkboxmodel',
             checkOnly: true,
             ignoreRightMouseSelection: true,
-            headerWidth: 37,
-            listeners: {
-                selectionchange: {
-                    scope: this,
-                    fn: function (selModel, selected) {
-                        this.searchToolbar.items.get('bulkActions').setVisible(selected.length);
-                    }
-                }
-            }
+            headerWidth: 37
         });
 
         if (window.location.href.indexOf('/edit/') !== -1) {
             console.log(this.up('order-split'))
         }
-        
-        me.callParent(arguments);
 
-        this.searchToolbar.insert(0, {
-            xtype: 'button',
-            ui: 'action',
-            scale: 'medium',
-            itemId: 'bulkActions',
-            text: 'Bulk Actions',
-            margin: '0 10 0 0',
-            hidden: true,
-            menu: {
-                items: [{
+        //todo: need to work on disabling/enabling of actions
+
+        this.bulkActionConfig = {
+            actions: [
+                {
                     itemId: 'AcceptOrder',
                     text: 'Accept',
-                    disabled: true,
+                    // disabled: true,
                     scope: this,
                     handler: function () {
+                        debugger;
                         this.doBulkAction('AcceptOrder');
                     }
-                }, {
+                },
+                {
                     itemId: 'CancelOrder',
                     text: 'Cancel',
-                    disabled: true,
+                    // disabled: true,
                     scope: this,
                     handler: function () {
                         this.doBulkAction('CancelOrder');
                     }
-                }, {
+                }, 
+                {
                     itemId: 'CapturePayment',
                     text: 'Capture',
-                    disabled: true,
+                    // disabled: true,
                     scope: this,
                     handler: function () {
                         this.doBulkAction('CapturePayment');
                     }
-                }, {
+                }, 
+                {
                     itemId: 'Ship',
                     text: 'Ship',
-                    disabled: true,
+                    // disabled: true,
                     scope: this,
                     handler: function () {
                         this.doBulkAction('Ship');
                     }
-                }],
-                listeners: {
-                    show: {
-                        scope: this,
-                        fn: 'getBulkActions'
-                    }
                 }
-            }
-        });
+
+            ]
+        };
+        
+        me.callParent(arguments);
+
     },
 
     getBulkActions: function (menu) {

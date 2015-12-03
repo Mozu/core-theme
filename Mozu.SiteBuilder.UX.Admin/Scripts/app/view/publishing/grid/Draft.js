@@ -25,6 +25,7 @@ Ext.define('Taco.view.publishing.grid.Draft', {
     addContentViewPadding: true,
     enableSearch: true,
     enablePaging: true,
+    enableBulkActions: true,
     enableRowEditing: false,
     enableAutoSelect: false,
     createButtonEnabled: false,
@@ -54,64 +55,24 @@ Ext.define('Taco.view.publishing.grid.Draft', {
             selType: 'checkboxmodel',
             checkOnly: true,
             ignoreRightMouseSelection: true,
-            headerWidth: 37,
-            listeners: {
-                selectionchange: {
-                    scope: this,
-                    fn: function (selModel, selected) {
-                        this.searchToolbar.items.get('bulkActions')[selected.length > 0 ? 'enable': 'disable']();
-                    }
-                }
-            }
+            headerWidth: 37
+            // listeners: {
+            //     selectionchange: {
+            //         scope: this,
+            //         fn: function (selModel, selected) {
+            //             this.searchToolbar.items.get('bulkActions')[selected.length > 0 ? 'enable': 'disable']();
+            //         }
+            //     }
+            // }
         });
 
-        this.store.on('load', this.updateTabPanelIdentifiers, this, {single: false});
-
-
-        this.callParent(arguments);
-
-        if (!this.hideSearchToolbar) this.addBulkActions();
-
-        this.on('afterrender', this.updateStyles, this, {single: true});
-    },
-
-    updateStyles: function() {
-        this.up('tabpanel').body.dom.style.border = 'none';
-    },
-
-    updateTabPanelIdentifiers: function(store, records) {
-        var index = store.type === 'product' ? 0 : 1,
-            text = store.type === 'product' ? 'Product (' + records.length + ')': 'Content (' + records.length + ')';
-
-        if (this.up('tabpanel').tabBar) {
-            this.up('tabpanel').tabBar.items.items[index].setText(text);
-        }
-    },
-
-    addBulkActions: function() {
-
-        this.searchToolbar.insert(0, {
-            xtype: 'button',
-            ui: 'action',
-            scale: 'medium',
-            itemId: 'bulkActions',
-            text: 'Bulk Actions',
-            margin: '0 10 0 0',
-            hidden: false,
-            disabled: true,
-            onMenuShow: function(cmp, eventData) {
-                var selection = eventData.scope.up('grid').getSelectionModel().getSelection(),
-                    allAreUnassigned = selection.every(function(rec) {return rec.get('publishSetCode') === '';});
-
-                cmp.down('#Remove')[allAreUnassigned ? 'hide' : 'show']();
-            },  
-            menu: [
+        this.bulkActionConfig = {
+            actions: [
                 {
                     itemId: 'Publish',
                     text: 'Publish Now',
                     scope: this,
                     handler: function (item, eventData) {
-
                         var selection = item.scope.selModel.getSelection(),
                             name = selection.length === 1 ? selection[0].get('name') : undefined,
                             msg = selection.length === 1 ? 'Are you sure you\'d like to publish the  ' + name + ' Draft?' : 'Are you sure you\'d like to publish the selected Drafts?';
@@ -176,6 +137,7 @@ Ext.define('Taco.view.publishing.grid.Draft', {
                         var total = item.scope.selModel.getSelection().length,
                             prefix = total === 1 ? 'this ' : 'these ',
                             word = total === 1 ? ' Draft?' : ' Drafts?';
+
                         this.getConfirmationModal({
                             message: 'Are you sure you\'d like to discard ' + prefix + total + word,
                             callback: this.doBulkAction.bind(this, item),
@@ -185,7 +147,26 @@ Ext.define('Taco.view.publishing.grid.Draft', {
                     }
                 }
             ]
-        });
+        };
+
+        this.store.on('load', this.updateTabPanelIdentifiers, this, {single: false});
+
+        this.callParent(arguments);
+
+        this.on('afterrender', this.updateStyles, this, {single: true});
+    },
+
+    updateStyles: function() {
+        this.up('tabpanel').body.dom.style.border = 'none';
+    },
+
+    updateTabPanelIdentifiers: function(store, records) {
+        var index = store.type === 'product' ? 0 : 1,
+            text = store.type === 'product' ? 'Product (' + records.length + ')': 'Content (' + records.length + ')';
+
+        if (this.up('tabpanel').tabBar) {
+            this.up('tabpanel').tabBar.items.items[index].setText(text);
+        }
     },
 
     getColumnConfig: function (gridType, parentContainer) {

@@ -6,28 +6,59 @@
  */
 Ext.define('Taco.core.ux.grid.Panel', {
     extend: 'Ext.grid.Panel',
-    requires: ['Taco.core.ux.grid.Header','Ext.grid.plugin.RowExpander', 'Taco.core.ux.grid.RowExpander', 'Taco.core.ux.form.SelectField', 'Taco.core.ux.grid.MenuColumn'],
+    requires: [
+        'Taco.core.ux.grid.Header',
+        'Ext.grid.plugin.RowExpander',
+        'Taco.core.ux.grid.RowExpander',
+        'Taco.core.ux.form.SelectField',
+        'Taco.core.ux.grid.MenuColumn',
+        'Taco.core.ux.grid.BulkActions'
+    ],
     alias: 'widget.taco.gridpanel',
     rowLines: true,
     viewConfig: {
         enableTextSelection:true,
         stripeRows: false
     },
+
+    enableBulkActions: false,
+
+    bulkActionConfig: {},
+
     mixins: ['Taco.core.util.GetsParentPage'],
 
     /**
      * @cfg {Object} columnDefaults
      * This option is a means of applying default settings to all added columns. Defaults are applied so as not
      * to override existing properties (see {@link Ext#applyIf}).
-     */
+     */ 
     columnDefaults: {},
 
     initComponent: function () {
         var me = this;
 
+        this.dockedItems = this.dockedItems || [];
+
+        if (this.enableBulkActions && this.bulkActionConfig) {
+            this.initBulkActions();
+        }
+
         this.columns = this.initColumns(this.columns);
 
         this.callParent(arguments);
+    },
+
+    initBulkActions: function() {
+        var bulkActionBar = Ext.create('Taco.core.ux.grid.BulkActions', {
+            actions: this.bulkActionConfig.actions,
+            grid: this,
+            renderTo: document.body
+        });
+
+        this.on('afterrender', function() {
+            var headerElement = this.headerCt.el.dom;
+            headerElement.firstChild.appendChild(bulkActionBar.el.dom);
+        })
     },
 
     /**
