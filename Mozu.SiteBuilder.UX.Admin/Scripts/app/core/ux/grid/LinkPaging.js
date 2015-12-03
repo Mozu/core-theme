@@ -157,6 +157,7 @@ Ext.define('Taco.core.ux.grid.LinkPaging', {
         if (!me.pageChooser) {
             me.pageChooser = new Ext.menu.Menu({
                 plain: true,
+                cls: Ext.baseCSSPrefix + 'page-chooser',
                 shadow: 'frame',
                 defaultAlign: 'b-t',
                 items: [{
@@ -178,21 +179,23 @@ Ext.define('Taco.core.ux.grid.LinkPaging', {
                             width: me.inputItemWidth,
                             margins: '-1 2 3 2',
                         },{
-                        text: 'Go to Page',
-                        handler: function () {
-                            var v = Ext.ComponentQuery.query("#pageNumberField")[0].getValue(),
-                                pageNum = parseInt(v, 10);
+                            text: 'Go to Page',
+                            cls: Ext.baseCSSPrefix + 'page-choose-btn',
+                            handler: function () {
+                                var v = Ext.ComponentQuery.query("#pageNumberField")[0].getValue(),
+                                    pageNum = parseInt(v, 10);
 
-                            if (v && !isNaN(pageNum)) {
-                                var pageData = me.getPageData();
-                                pageNum = Math.min(Math.max(1, pageNum), pageData.pageCount);
-                                if (me.fireEvent('beforechange', me, pageNum) !== false) {
-                                    me.store.loadPage(pageNum);
+                                if (v && !isNaN(pageNum)) {
+                                    var pageData = me.getPageData();
+                                    pageNum = Math.min(Math.max(1, pageNum), pageData.pageCount);
+                                    if (me.fireEvent('beforechange', me, pageNum) !== false) {
+                                        me.store.loadPage(pageNum);
+                                    }
                                 }
+                                me.pageChooser.hide();
                             }
-                            me.pageChooser.hide();
                         }
-                    }]
+                    ]
                 }]
             });
 

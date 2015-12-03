@@ -40,4 +40,39 @@
     }
 
   }
+
+  .#{$prefix}page-chooser .#{$prefix}toolbar-default {
+      background-color: $color-neutral-white;
+  }
+
+  .#{$prefix}page-choose-btn {
+      border-width: 0px;
+      background-color: $color-theme-green;
+      background-image: none;
+      text-decoration: none;
+      margin-left:8px;
+      height: 30px;
+      line-height: 30px;
+      vertical-align: middle;
+  }
+
+  .#{$prefix}page-choose-btn.#{$prefix}btn-over {
+      background-color: $color-theme-green;
+      background-image: none;
+      text-decoration: none;
+  }
+
+  .#{$prefix}page-choose-btn .#{$prefix}btn-button {
+      height: 30px;
+      line-height: 30px;
+  }
+
+  .#{$prefix}page-choose-btn .#{$prefix}btn-inner {
+      color: $color-neutral-white;
+      height: 30px;
+      line-height: 30px;
+      vertical-align: middle;
+      font-size: 14px;
+  }
+
 }
