@@ -5,6 +5,8 @@ Ext.define('Taco.core.ux.grid.LinkPaging', {
     extend: 'Ext.toolbar.Paging',
     alias: 'widget.taco.linkpagingtoolbar',
 
+    pageChooser: null,
+
     /**
      * Gets the standard paging items in the toolbar
      * @private
@@ -46,9 +48,12 @@ Ext.define('Taco.core.ux.grid.LinkPaging', {
             pageNumberItems.push({
                 itemId: 'prev-ellipsis',
                 cls: Ext.baseCSSPrefix + 'tbar-page-link',
-                handler: me.movePrevious,
+                handler: me.onChoosePage,
                 text: "&#x22ef;",
-                scope: me,
+                scope: {
+                    scope: me,
+                    buttonId: '#prev-ellipsis'
+                },
             });
         }
 
@@ -70,9 +75,12 @@ Ext.define('Taco.core.ux.grid.LinkPaging', {
             pageNumberItems.push({
                 itemId: 'next-ellipsis',
                 cls: Ext.baseCSSPrefix + 'tbar-page-link',
-                handler: me.moveNext,
+                handler: me.onChoosePage,
                 text: "&#x22ef;",
-                scope: me,
+                scope: {
+                    scope: me,
+                    buttonId: '#next-ellipsis'
+                },
             });
         }
 
@@ -139,7 +147,64 @@ Ext.define('Taco.core.ux.grid.LinkPaging', {
         if (me.fireEvent('beforechange', me, idx) !== false) {
             me.store.loadPage(idx);
         }
-    }
+    },
 
+    onChoosePage: function () {
+        var me = this.scope;
+        var button = me.child(this.buttonId);
+
+
+        if (!me.pageChooser) {
+            me.pageChooser = new Ext.menu.Menu({
+                plain: true,
+                shadow: 'frame',
+                defaultAlign: 'b-t',
+                items: [{
+                    xtype: 'toolbar',
+                    items: [
+                        {
+                            xtype: 'numberfield',
+                            itemId: 'pageNumberField',
+                            name: 'pageNumberField',
+                            cls: Ext.baseCSSPrefix + 'tbar-page-number',
+                            allowDecimals: false,
+                            minValue: 1,
+                            hideTrigger: true,
+                            keyNavEnabled: false,
+                            selectOnFocus: true,
+                            submitValue: false,
+                            // mark it as not a field so the form will not catch it when getting fields
+                            isFormField: false,
+                            width: me.inputItemWidth,
+                            margins: '-1 2 3 2',
+                        },{
+                        text: 'Go to Page',
+                        handler: function () {
+                            var v = Ext.ComponentQuery.query("#pageNumberField")[0].getValue(),
+                                pageNum = parseInt(v, 10);
+
+                            if (v && !isNaN(pageNum)) {
+                                var pageData = me.getPageData();
+                                pageNum = Math.min(Math.max(1, pageNum), pageData.pageCount);
+                                if (me.fireEvent('beforechange', me, pageNum) !== false) {
+                                    me.store.loadPage(pageNum);
+                                }
+                            }
+                            me.pageChooser.hide();
+                        }
+                    }]
+                }]
+            });
+
+            me.pageChooser.addListener('show', function () {
+                var pageData = me.getPageData();
+                Ext.ComponentQuery.query("#pageNumberField")[0].setValue(pageData.currentPage);
+                return true;
+            });
+
+        }
+
+        me.pageChooser.showBy(button);
+    }
 
 });
