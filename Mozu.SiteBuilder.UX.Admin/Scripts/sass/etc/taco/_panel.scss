@@ -86,6 +86,7 @@
 		.#{$prefix}html-editor-tb {
 			background: $white-color;
 			border: 1px solid $card-border;
+			border-right: none;
 			height: 30px;
 			border-radius: $border-radius-small;
 			min-width: 762px;
@@ -136,6 +137,7 @@
 					font-family: $icon-font;
 					left: -5px;
 					&:after {
+						color: $html-editor-toolbar;
 						font-size: $input-font;
 					}
 
@@ -375,6 +377,12 @@
 			td {
 				font-size: $normal-font;
 				padding: 0 10px 1px;
+			}
+		}
+
+		.#{$prefix}box-layout-ct {
+			.#{$prefix}box-inner {
+				min-height: 72px;
 			}
 		}
 
