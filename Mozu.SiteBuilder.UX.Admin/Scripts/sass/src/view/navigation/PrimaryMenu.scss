@@ -88,6 +88,15 @@
             }
         }
 
+        &.#{$vprefix}menu-item-nav-next {
+            border-top: 1px solid $color-standard-border;
+            border-bottom: 1px solid $color-standard-border;
+        }
+
+        &.#{$vprefix}menu-item-nav-prev {
+            border-bottom: 1px solid $color-standard-border;
+        }
+
         ul {
             font-size: px-to-rem(14);
             line-height: px-to-rem(18);

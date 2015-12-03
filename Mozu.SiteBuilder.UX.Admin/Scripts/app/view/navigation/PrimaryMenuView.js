@@ -25,11 +25,16 @@ Ext.define('Taco.view.navigation.PrimaryMenuView', {
                         '{label}',
                     '</li>',
                 '<tpl else>',
-                    '<li class="taco-menu-item" data-nav-target="{navTarget}" style="{[(values.visible && !values.breadCrumbOnly) ? "" : "display:none" ]}" >',
+                    '<li class="{[this.getNavTargetClass(values.navTarget)]}" data-nav-target="{navTarget}" style="{[(values.visible && !values.breadCrumbOnly) ? "" : "display:none" ]}" >',
                         '{label}',
                     '</li>',
                 '</tpl>',
-            '</tpl>'
+            '</tpl>',
+            {
+                getNavTargetClass: function(navTgt) {
+                    return (navTgt === 'home') ? 'taco-menu-item taco-menu-item-nav-prev' : 'taco-menu-item taco-menu-item-nav-next';
+                }
+            }
         ];
 
         this.menu = this.parentMenu;
