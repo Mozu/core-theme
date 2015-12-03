@@ -11,16 +11,26 @@
 			color: $dark-color;
 		}
 
-		.#{$prefix}form-field,
-		.#{$prefix}trigger-noedit {
+		.#{$prefix}form-field {
 			border: 0;
 			border-radius: 0;
 			border-bottom: 1px solid $card-border;
 		}
 
+		.#{$prefix}trigger-noedit {
+			border: 0;
+			border-radius: 0;
+			border-bottom: 1px dotted $card-border;
+		}
+
 		.#{$prefix}field-form-focus {
 			border-color: $valid-green;
 			box-shadow: 0 1px 0 0 $valid-green;
+
+			&.#{$prefix}trigger-noedit {
+				box-shadow: none;
+				border-bottom: 1px dotted $card-border;
+			}
 		}
 
 		.#{$prefix}form-item-label {
@@ -377,12 +387,6 @@
 			td {
 				font-size: $normal-font;
 				padding: 0 10px 1px;
-			}
-		}
-
-		.#{$prefix}box-layout-ct {
-			.#{$prefix}box-inner {
-				min-height: 72px;
 			}
 		}
 
