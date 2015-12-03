@@ -43,7 +43,10 @@ Ext.define('Taco.view.publishing.grid.Draft', {
 
         this.stateId = this.statefulId; 
 
-        this.advancedSearchConfig = {advancedFormCls: this.advancedFormCls};
+        this.advancedSearchConfig = {
+            advancedFormCls: this.advancedFormCls,
+            emptySearchText: 'Search'
+        };
 
         this.itemId = this.title.toLowerCase(); //establish the grid as either product or content
         

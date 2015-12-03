@@ -53,7 +53,8 @@ Ext.define('Taco.view.productType.Grid', {
 
     advancedSearchConfig : {
         advancedFormCls: 'Taco.view.productType.AdvancedSearchForm',
-        quickFilterData: []
+        quickFilterData: [],
+        emptySearchText: 'Search'
     },
 
     onCreate: Ext.emptyFn,

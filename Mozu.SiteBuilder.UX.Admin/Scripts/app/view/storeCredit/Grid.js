@@ -66,7 +66,9 @@ Ext.define('Taco.view.storeCredit.Grid', {
             //[{ orderStatus: 'Cancelled' }, 'Cancelled Orders'],
             //[{ orderStatus: 'Errored' }, 'Errored Orders'],
             //[{}, 'All Orders']
-        ]
+        ],
+
+        emptySearchText: 'Search'
     },
 
     onCreate: Ext.emptyFn,

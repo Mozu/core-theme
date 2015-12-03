@@ -26,7 +26,8 @@ Ext.define('Taco.view.fileManager.Index', {
     },
 
     advancedSearchConfig: {
-        advancedFormCls: 'Taco.view.fileManager.AdvancedSearchForm'
+        advancedFormCls: 'Taco.view.fileManager.AdvancedSearchForm',
+        emptySearchText: 'Search'
     },
 
     title: 'File Manager',

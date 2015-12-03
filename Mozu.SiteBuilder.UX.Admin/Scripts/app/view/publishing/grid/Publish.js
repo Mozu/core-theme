@@ -49,7 +49,8 @@ Ext.define('Taco.view.publishing.grid.Publish', {
     enableQuickFilters:false,
 
     advancedSearchConfig : {
-        advancedFormCls: 'Taco.view.publishing.advancedSearchForm.Publish'
+        advancedFormCls: 'Taco.view.publishing.advancedSearchForm.Publish',
+        emptySearchText: 'Search'
     },
 
     onCreate: Ext.emptyFn,

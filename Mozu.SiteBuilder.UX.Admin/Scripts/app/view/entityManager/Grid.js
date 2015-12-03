@@ -31,7 +31,8 @@ Ext.define('Taco.view.entityManager.Grid', {
     stateful: true,
     advancedSearchConfig: {
         advancedFormCls: 'Taco.view.entityManager.AdvancedSearchForm',
-        quickFilterData: []
+        quickFilterData: [],
+        emptySearchText: 'Search'
     },
 
     initComponent: function() {

@@ -62,7 +62,9 @@ Ext.define('Taco.view.settings.shipping.Rules', {
             [{ fulfillmentStatus: 'Fulfilled' }, 'Fulfilled Orders'],
             [{ orderStatus: 'Cancelled' }, 'Cancelled Orders'],
             [{}, 'All Orders']
-        ]
+        ],
+
+        emptySearchText: 'Search'
     },
 
 

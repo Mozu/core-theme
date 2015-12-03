@@ -31,7 +31,8 @@ Ext.define('Taco.view.inventory.Index', {
     },
 
     advancedSearchConfig: {
-        advancedFormCls: 'Taco.view.product.AdvancedSearchForm'
+        advancedFormCls: 'Taco.view.product.AdvancedSearchForm',
+        emptySearchText: 'Search'
     },
 
     contextConfig: {

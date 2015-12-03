@@ -87,7 +87,9 @@ Ext.define('Taco.view.couponSet.Grid', {
             [{ orderStatus: 'Cancelled' }, 'Cancelled Orders'],
             [{ orderStatus: 'Errored' }, 'Errored Orders'],
             [{}, 'All Orders']
-        ]
+        ],
+
+        emptySearchText: 'Search'
     },
 
     onCreate: Ext.emptyFn,

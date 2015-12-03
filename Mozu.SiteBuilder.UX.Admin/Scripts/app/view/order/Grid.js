@@ -59,7 +59,9 @@ Ext.define('Taco.view.order.Grid', {
             [{ orderStatus: 'Cancelled' }, 'Cancelled Orders'],
             [{ orderStatus: 'Errored' }, 'Errored Orders'],
             [{}, 'All Orders']
-        ]
+        ],
+
+        emptySearchText: 'Search'
     },
 
     onCreate: Ext.emptyFn,

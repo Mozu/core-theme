@@ -59,7 +59,9 @@ Ext.define('Taco.view.location.Index', {
     advancedSearchConfig: {
         advancedFormCls: 'Taco.view.location.AdvancedSearchForm',
 
-        quickFilterData: []
+        quickFilterData: [],
+
+        emptySearchText: 'Search'
     },
 
     onCreate: Ext.emptyFn,

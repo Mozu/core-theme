@@ -82,7 +82,8 @@ Ext.define('Taco.view.productRanking.Grid', {
         quickFilterData: [
             [{ code: 'Code' }, 'Code'],
             [{ status: 'Status' }, 'Status']
-        ]
+        ],
+        emptySearchText: 'Search'
     },
 
     onCreate: Ext.emptyFn,

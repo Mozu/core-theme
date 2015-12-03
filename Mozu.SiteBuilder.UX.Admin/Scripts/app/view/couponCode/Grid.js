@@ -73,7 +73,8 @@ Ext.define('Taco.view.couponCode.Grid', {
 
     advancedSearchConfig : {
         advancedFormCls: 'Taco.view.couponCode.AdvancedSearchForm',
-        quickFilterData: []
+        quickFilterData: [],
+        emptySearchText: 'Search'
     },
 
     onCreate: Ext.emptyFn,

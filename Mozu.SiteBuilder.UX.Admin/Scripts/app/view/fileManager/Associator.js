@@ -24,7 +24,8 @@ Ext.define('Taco.view.fileManager.Associator', {
         savable: 'Taco.shared.util.Uploadable'
     },
     advancedSearchConfig: {
-        advancedFormCls: 'Taco.view.fileManager.AdvancedSearchForm'
+        advancedFormCls: 'Taco.view.fileManager.AdvancedSearchForm',
+        emptySearchText: 'Search'
     },
     initComponent: function () {
         var selModel = this.selModel || new Ext.selection.CheckboxModel;

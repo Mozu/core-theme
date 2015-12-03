@@ -131,7 +131,8 @@ Ext.define('Taco.view.product.Index', {
     },
 
     advancedSearchConfig: {
-        advancedFormCls: 'Taco.view.product.AdvancedSearchForm'
+        advancedFormCls: 'Taco.view.product.AdvancedSearchForm',
+        emptySearchText: 'Search'
     },
 
     doCreate: function() {
