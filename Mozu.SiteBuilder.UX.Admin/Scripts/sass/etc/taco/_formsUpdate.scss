@@ -297,6 +297,9 @@
 	}
 
 	.#{$prefix}boxselect-list {
+		border-bottom: 1px solid $card-border;
+		box-shadow: none;
+		
 		.#{$prefix}boxselect-item {
 			border: 1px solid $typehead-pill-border-color;
 			border-width: 1px !important;

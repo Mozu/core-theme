@@ -232,9 +232,7 @@
                 buttonCfg = {
                     
                     glyph: (forward) ? 'XE60B@mozicons' : 'XE60C@mozicons',
-                    padding: {
-                        left: 7
-                    }
+                    cls: 'move-next-previous-arrow'
                 }
             } else {
                 // text button
@@ -249,9 +247,7 @@
                 //todo made this an icon
                 buttonCfg = {
                     glyph: (forward) ? 'XE60B@mozicons' : 'XE60C@mozicons',
-                    padding: {
-                        left: 7
-                    }
+                    cls: 'x-move-next-previous-arrow'
                 }
             } else {
                 buttonCfg = {
@@ -301,15 +297,12 @@
             //handler: me.navigateToPrevious,
             //scope: me,
             //disabled: previousButtonDisabled,
-            style:"font-size:16px;",
+            cls: 'x-move-next-previous-position',
             padding:{
                 top: 3,
                 bottom: 2,
                 left: 5,
                 right:5
-            },
-            margin: {
-                right: 10
             },
             html: positionText
         }
