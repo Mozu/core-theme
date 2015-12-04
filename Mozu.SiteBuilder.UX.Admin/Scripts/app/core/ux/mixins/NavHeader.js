@@ -33,7 +33,8 @@ Ext.define('Taco.core.ux.mixins.NavHeader', {
         'Taco.core.util.ExceptionWhiner',
         'Ext.toolbar.Spacer',
         'Taco.core.ux.mixins.HamburgerButton',
-        'Taco.core.ux.mixins.Searchable'
+        'Taco.core.ux.mixins.Searchable',
+        'Taco.view.navigation.ContextSwitcherBar'
     ],
 
     mixins: {
@@ -241,14 +242,34 @@ Ext.define('Taco.core.ux.mixins.NavHeader', {
 
 
         me.header = {
-            xtype: "container",
+            xtype: 'container',
+            itemId: 'navHeaderTop',
             cls: this.navHeaderCls,
-            // need to set the min height to 
-            style: "height:52px;",
+            style: 'height: 52px',
             items: []
         }
 
         this.createNavHeader();
+
+        this.attachContextMenu();
+    },
+
+    attachContextMenu: function () {
+        if (!this.contextConfig) {
+            return;
+        }
+
+        this.header = {
+            xtype: 'container',
+            itemId: 'navHeaderBottom',
+            items: [
+                this.header,
+                Ext.create(
+                    'Taco.view.navigation.ContextSwitcherBar',
+                    this.contextConfig
+                )
+            ]
+        }
     },
 
     createNavHeader: function () {
@@ -275,8 +296,7 @@ Ext.define('Taco.core.ux.mixins.NavHeader', {
                 layout: 'hbox',
                 height: 60,
                 cls: 'taco-content-header-title-container',
-                items: [],
-
+                items: []
             };
 
             me.titleCmp = Ext.create('Ext.Component', {
@@ -332,7 +352,6 @@ Ext.define('Taco.core.ux.mixins.NavHeader', {
         if (me.enableSearchBar) {
             me.searchBox = Ext.widget({
                 xtype: 'taco-filtercontainer',
-                cls: 'taco-filtercontainer',
                 searchType: 'navigation',
                 width: '100%',
                 flex: 1,
@@ -365,10 +384,9 @@ Ext.define('Taco.core.ux.mixins.NavHeader', {
             if (me.cancelButtonEnabled) {
                 me.cancelActionButton = Ext.widget(Ext.apply({}, me.cancelButtonCfg, {
                     xtype: 'button',
-                    height: 40,
                     text: me.cancelText,
                     margin: "0 0 0 10",
-                    ui: 'link',
+                    ui: 'action',
                     scale: 'medium',
                     hidden: !me.cancelButtonVisible || this.cancelHidden || !this.allowCreate(),
                     itemId: 'cancelActionButton',
@@ -388,7 +406,6 @@ Ext.define('Taco.core.ux.mixins.NavHeader', {
 
                 var saveButtonCfg = Ext.apply({}, me.saveButtonCfg, {
                     xtype: 'button',
-                    height: 40,
                     text: me.saveText,
                     margin: "0 0 0 10",
                     ui: 'action-primary',
@@ -400,11 +417,10 @@ Ext.define('Taco.core.ux.mixins.NavHeader', {
                     formBind: true,
                     toggleHandler: me.saveActionHandler,
                     scope: me
-                });
+                })
 
                 if (me.saveAndCreateButtonEnabled) {
                     saveButtonCfg.xtype = "splitbutton";
-                    saveButtonCfg.height = 40;
                     saveButtonCfg.menu = [{
                         text: "Save and Create New",
                         handler: me.saveAndCreate,
@@ -428,7 +444,6 @@ Ext.define('Taco.core.ux.mixins.NavHeader', {
             if (me.createButtonEnabled) {
                 me.actions.push(Ext.apply({}, me.createButtonCfg, {
                     xtype: 'button',
-                    height: 40,
                     text: this.createButtonText,
                     margin: "0 0 0 10",
                     ui: 'action-primary',
@@ -442,21 +457,21 @@ Ext.define('Taco.core.ux.mixins.NavHeader', {
 
         }
 
-        if (me.moreButtonCfg && me.moreButtonCfg.menu) {
+            if (me.moreButtonCfg && me.moreButtonCfg.menu) {
             if (!me.actions) me.actions = [];
-            me.actions.push(Ext.apply({}, me.moreButtonCfg, {
-                xtype: 'button',
+                me.actions.push(Ext.apply({}, me.moreButtonCfg, {
+                    xtype: 'button',
                 height: 40,
                 glyph: 'XE022@mozicons',
-                ui: 'action',
-                scale: 'medium',
-                itemId: 'moreActionButton',
+                    ui: 'action',
+                    scale: 'medium',
+                    itemId: 'moreActionButton',
                 cls: 'taco-more-action-button',
-                handler: Ext.emptyFn,
-                margin: '0 0 0 10',
-                scope: me
-            }));
-        }
+                    handler: Ext.emptyFn,
+                    margin: '0 0 0 10',
+                    scope: me
+                }));
+            }
 
 
         
@@ -484,10 +499,9 @@ Ext.define('Taco.core.ux.mixins.NavHeader', {
         // need to create container for buttons so that they can force the titleCmp to have elipsis
         var actionToolbar = {
             xtype: 'toolbar',
-            cls: 'navheader-action-toolbar',
             itemHeader: 'navHeaderActionContainer',            
             items: me.actions
-        };
+        }
 
         // if we have no title, the toolbar needs to flex to fill the entire container.
         if (this.title == false) {
