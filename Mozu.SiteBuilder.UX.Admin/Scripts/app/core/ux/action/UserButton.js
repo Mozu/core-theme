@@ -22,5 +22,9 @@ Ext.define('Taco.core.ux.action.UserButton', {
         data.initials = this.initials;
         data.userName = this.userName;
         return data;
+    },
+
+    getBtnWrapFrameWidth: function(side) {
+        return this.userbutton.getFrameWidth(side);
     }
 });
