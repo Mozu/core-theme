@@ -349,7 +349,7 @@ Ext.define('Taco.core.ux.mixins.NavHeader', {
             conf.items.push(me.searchBox);
         }
 
-        else {
+        else if (!me.enableSearchBar && !this.dontFloatHeaderButtons){
             //shifting over the buttons because we have no searchbar
             conf.items.push('->');
         }
@@ -439,19 +439,22 @@ Ext.define('Taco.core.ux.mixins.NavHeader', {
                 }));
             }
 
-            if (me.moreButtonCfg && me.moreButtonCfg.menu) {
-                me.actions.push(Ext.apply({}, me.moreButtonCfg, {
-                    xtype: 'button',
-                    height: 40,
-                    text: '...',
-                    ui: 'action',
-                    scale: 'medium',
-                    itemId: 'moreActionButton',
-                    handler: Ext.emptyFn,
-                    margin: '0 0 0 10',
-                    scope: me
-                }));
-            }
+        }
+
+        if (me.moreButtonCfg && me.moreButtonCfg.menu) {
+            if (!me.actions) me.actions = [];
+            me.actions.push(Ext.apply({}, me.moreButtonCfg, {
+                xtype: 'button',
+                height: 40,
+                glyph: 'XE022@mozicons',
+                ui: 'action',
+                scale: 'medium',
+                itemId: 'moreActionButton',
+                cls: 'taco-more-action-button',
+                handler: Ext.emptyFn,
+                margin: '0 0 0 10',
+                scope: me
+            }));
         }
 
 

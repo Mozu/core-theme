@@ -39,6 +39,7 @@ $prefix: 'x-';
 @import 'taco/widgets/pagesettings';
 @import 'taco/panel';
 @import 'chorizo/widgets';
+@import 'chorizo/tray';
 @import 'taco/widgets/themes';
 @import 'taco/widgets/checkout';
 @import 'taco/widgets/quickadder';
@@ -48,6 +49,7 @@ $prefix: 'x-';
 @import 'taco/widgets/imagefield';
 @import 'taco/widgets/publishIndicator';
 @import 'taco/widgets/bulkactiontoolbar';
+@import 'taco/widgets/websitesubheader';
 
 // Import views
 @import 'taco/forms';
