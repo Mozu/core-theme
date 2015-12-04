@@ -19,6 +19,7 @@ Ext.define('Taco.core.ux.picker.Selector', {
     defaultText: '',
     tagText: '',
     highlighted: false,
+    callToActionText: '',
 
     value: null,
 
@@ -49,14 +50,15 @@ Ext.define('Taco.core.ux.picker.Selector', {
             text: this.tagText,
             xtype: 'taco.lighttag'
         }, {
-            cls: 'trigger',
+            cls: 'trigger x-dropdown-trigger',
             itemId: 'trigger',
-            html: '+',
             hidden: this.disableTrigger,
             xtype: 'component'
         }, {
+            callToActionText: this.callToActionText,
             itemId: 'flyout',
             store: this.store,
+            excludeByValue: this.value,
             xtype: 'taco.selectorflyout'
         }];
 
@@ -133,13 +135,14 @@ Ext.define('Taco.core.ux.picker.Selector', {
     },
 
     highlight: function (val) {
+        return;
         var el = this.getEl();
 
         if (!el) {
             return;
         }
 
-        //el[val === false ? 'removeCls' : 'addCls']('highlight');
+        el[val === false ? 'removeCls' : 'addCls']('highlight');
     }
 
 });

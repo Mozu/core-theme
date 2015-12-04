@@ -178,4 +178,141 @@
 			}
 		}
 	}
+
+	/**
+	 * Dropdown list
+	 */
+
+	.#{$prefix}dropdown-trigger {
+		&:after {
+			content: '\E60B';
+			font-family: $icon-font;
+			color: $gray-text-dark;
+			font-size: $tag-font;
+			margin-left: -6px;
+		}
+
+		&:hover,
+		&:active,
+		&:focus {
+			&:after {
+				color: $dropdown-icon-active;
+			}
+		}
+	}
+
+	.#{$prefix}menu-plain,
+	.#{$vprefix}selector-flyout {
+		border: 1px solid $dropdown-list-outline;
+		box-shadow: $dropdown-list-shadow 0px 1px 6px 0px;
+		border-radius: $border-radius-small;
+		background-color: $white-color;
+
+		.call-to-action {
+			color: $nav-element-text;
+			font-size: $label-link-font;
+			background-color: $dark-bg;
+			padding: 0 15px;
+			line-height: 26px;
+			border-bottom: 1px solid $light-bg-gray;
+		}
+
+		li.selector,
+		.#{$prefix}menu-item {
+			font-size: $normal-font-link;
+			color: $gray-text-light;
+			line-height: 24px;
+			border-width: 1px;
+			border-bottom: 1px solid $card-button-press-bg;
+			padding: 6px 12px;
+			cursor: pointer;
+
+			span {
+				font-size: $normal-font-link;
+				color: $gray-text-light;
+			}
+
+			&:hover {
+				color: $nav-element-active;
+
+				span {
+					color: $nav-element-active;
+				}
+			}
+
+			&:active,
+			&:focus {
+				color: $nav-element-active;
+				background-color: $dark-bg;
+			}
+		}
+	}
+	  .#{$vprefix}inline-selector {
+    color: $gray-text-dark;
+    font-size: 12px;
+    line-height: 17px;
+
+    li {
+      border-bottom: 2px solid transparent;
+      cursor: pointer;
+      display: inline-block;
+      list-style: none;
+      padding: 11px 15px 7px;
+
+      &:hover {
+        color: $nav-element-active;
+      }
+    }
+
+    &.highlight li.selected {
+      border-bottom-color: $valid-green;
+      color: $nav-element-active;
+    }
+  }
+
+  .#{$vprefix}picker-selector {
+
+    border-bottom: 2px solid transparent;
+    cursor: pointer;
+
+    .title {
+      color: $gray-text-dark;
+      font-size: 12px;
+      line-height: 17px;
+      padding: 11px 5px 7px 15px;
+    }
+
+    &:hover {
+      .title {
+        color: $nav-element-active;
+      }
+    }
+
+    &.highlight {
+      border-bottom-color: $valid-green;
+
+      .title {
+        color: $nav-element-active;
+      }
+    }
+
+    .trigger {
+      color: $gray-text-dark;
+      font-size: 12px;
+      line-height: 17px;
+      padding: 11px 5px 7px 15px;
+      text-align: center;
+      width: 10px;
+    }
+  }
+
+  div.#{$vprefix}light-tag {
+    border: 1px solid $light-bg;
+    color: $gray-text-dark;
+    font-size: 8px;
+    margin: 10px 3px;
+    padding: 3px 3px 2px 3px;
+    text-transform: uppercase;
+    @include border-radius-xbrowser(3px);
+  }
 }

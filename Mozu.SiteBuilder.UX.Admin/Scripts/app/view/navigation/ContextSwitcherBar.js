@@ -88,6 +88,7 @@
             }));
         } else {
             this.selectors.push(Ext.widget({
+                callToActionText: 'Switch Master Catalog:',
                 disableSelection: this.isSupported('m'),
                 highlighted: masterCatalog === this.currentContext,
                 listeners: {
@@ -140,6 +141,7 @@
             }));
         } else {
             this.selectors.push(Ext.widget({
+                callToActionText: 'Switch Catalog:',
                 disableSelection: this.isSupported('c'),
                 highlighted: catalog === this.currentContext,
                 store: data,
@@ -221,17 +223,5 @@
 
     isVisible: function(type) {
         return this.visibleLevels.indexOf(type) > -1;
-    },
-
-    changeContext: function (field, newValue, oldValue) {
-
-    },
-
-    onGlobalContextChange: function (context) {
-
-    },
-
-    onGlobalStateChange: function (state) {
-
     }
  });

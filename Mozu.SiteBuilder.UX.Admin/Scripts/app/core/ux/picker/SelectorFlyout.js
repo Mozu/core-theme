@@ -10,8 +10,10 @@ Ext.define('Taco.core.ux.picker.SelectorFlyout', {
     floating: true,
     shadow: false,
     hidden: true,
-    alignment: 'tl-bl?',
-    alignmentOffsets: [-1, -1],
+    alignment: 'tr-br',
+    alignmentOffsets: [0, 0],
+    callToActionText: '',
+    excludeByValue: '',
 
     initComponent: function () {
 
@@ -25,7 +27,12 @@ Ext.define('Taco.core.ux.picker.SelectorFlyout', {
 
         this.buildView();
 
-        this.items = [this.view];
+        this.items = [{
+            cls: 'call-to-action',
+            hidden: !this.callToActionText,
+            html: this.callToActionText,
+            xtype: 'component'
+        }, this.view];
 
         this.callParent(arguments);
     },
@@ -33,11 +40,16 @@ Ext.define('Taco.core.ux.picker.SelectorFlyout', {
     show: function () {
         var el = this.el || this.protoEl;
 
-        this.callParent(arguments);
+        this.store.clearFilter(true);
+        this.store.filterBy(function (record) {
+            return record.get('value') !== this.excludeByValue;
+        }, this);
 
         if (!this.positionNextTo) {
             this.positionNextTo = this.up();
         }
+
+        this.callParent(arguments);
 
         this.alignTo(
             this.positionNextTo.getEl(),
