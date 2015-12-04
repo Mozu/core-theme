@@ -91,13 +91,12 @@ Ext.define('Taco.core.ux.picker.InlineSelector', {
     },
 
     highlight: function (val) {
-        return;
         var el = this.getEl();
 
         if (!el) {
             return;
         }
 
-        el[val === false ? 'removeCls' : 'addCls']('highlight');
+        //el[val === false ? 'removeCls' : 'addCls']('highlight');
     }
 });
