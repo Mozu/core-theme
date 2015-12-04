@@ -18,6 +18,16 @@
 					transform: rotate(-90deg);
 				}
 			}
+
+			&:hover {
+				box-shadow: none;
+
+				span {
+					.#{$prefix}btn-glyph {
+						color: $dark-color;
+					}
+				}
+			}
 		}
 	}
 
