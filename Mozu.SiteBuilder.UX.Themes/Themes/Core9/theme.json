@@ -667,7 +667,7 @@
             "displayName": "1 Column 100",
             "displayTemplate": "base",
             "defaultConfig": {
-                "title": "Mozu Layout Element",
+                "title": "Dropzone",
                 "mz-col1": 100
             },
             "customEditor": "layout",
@@ -687,7 +687,7 @@
             "displayName": "2 Column 50/50",
             "displayTemplate": "base",
             "defaultConfig": {
-                "title": "Mozu Layout Element",
+                "title": "Dropzone",
                 "mz-col1": 50,
                 "mz-col2": 50
             },
@@ -712,7 +712,7 @@
             "displayName": "3 Column 33/33/33",
             "displayTemplate": "base",
             "defaultConfig": {
-                "title": "Mozu Layout Element",
+                "title": "Dropzone",
                 "mz-col1": 33.33,
                 "mz-col2": 33.33,
                 "mz-col3": 33.33
@@ -742,7 +742,7 @@
             "displayName": "4 Column 25/25/25/25",
             "displayTemplate": "base",
             "defaultConfig": {
-                "title": "Mozu Layout Element",
+                "title": "Dropzone",
                 "mz-col1": 25,
                 "mz-col2": 25,
                 "mz-col3": 25,

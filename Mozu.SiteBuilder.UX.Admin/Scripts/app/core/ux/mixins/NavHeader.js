@@ -289,6 +289,7 @@ Ext.define('Taco.core.ux.mixins.NavHeader', {
                         '</tpl>',
                     '</tpl>'
                 ],
+                flex: 1,
                 data: {
                     title: this.getTitle(),
                     subTitle: '',

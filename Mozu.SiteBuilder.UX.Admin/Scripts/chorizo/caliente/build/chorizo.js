@@ -956,6 +956,7 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
     var CONTENT_SELECTOR = '.' + CONTENT_CLASSNAME;
 
     var DROP_HINT_TEXT = 'Drop an Element';
+    var ROW_TITLE = 'Dropzone';
 
     var _mouseposition = null;
 
@@ -1682,7 +1683,7 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
                 var child = this.element.firstChild;
                 var header = doc.createElement('div');
                 var layoutJSON = JSON.parse(this.element.getAttribute('data-widget'));
-                var title = layoutJSON ? layoutJSON.title : 'Mozu Layout Element';
+                var title = layoutJSON ? layoutJSON.title : ROW_TITLE;
 
                 header.classList.add('mz-layout-widget-header');
                 header.classList.add('row');
@@ -1735,7 +1736,7 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
             key: 'updateRowTitle',
             value: function updateRowTitle(cfg) {
 
-                var title = cfg.title || 'Mozu Layout Element';
+                var title = cfg.title || ROW_TITLE;
                 var titleRow = undefined;
 
                 if (this.element.querySelector('.mozu-row-title')) {

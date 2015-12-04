@@ -13,6 +13,7 @@
     const CONTENT_SELECTOR = `.${CONTENT_CLASSNAME}`;
 
     const DROP_HINT_TEXT = 'Drop an Element';
+    const ROW_TITLE = 'Dropzone';
 
     let _mouseposition = null;
 
@@ -674,7 +675,7 @@
             const child = this.element.firstChild;
             const header = doc.createElement('div');
             const layoutJSON = JSON.parse(this.element.getAttribute('data-widget'));
-            const title = layoutJSON ? layoutJSON.title : 'Mozu Layout Element';
+            const title = layoutJSON ? layoutJSON.title : ROW_TITLE;
 
             header.classList.add('mz-layout-widget-header');
             header.classList.add('row');
@@ -722,7 +723,7 @@
 
         updateRowTitle(cfg) {
 
-            const title = cfg.title || 'Mozu Layout Element';
+            const title = cfg.title || ROW_TITLE;
             let titleRow;
 
             if (this.element.querySelector('.mozu-row-title')) {
