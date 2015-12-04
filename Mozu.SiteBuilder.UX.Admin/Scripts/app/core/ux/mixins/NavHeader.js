@@ -385,6 +385,7 @@ Ext.define('Taco.core.ux.mixins.NavHeader', {
             if (me.cancelButtonEnabled) {
                 me.cancelActionButton = Ext.widget(Ext.apply({}, me.cancelButtonCfg, {
                     xtype: 'button',
+                    height: 40,
                     text: me.cancelText,
                     margin: "0 0 0 10",
                     ui: 'action',
@@ -407,6 +408,7 @@ Ext.define('Taco.core.ux.mixins.NavHeader', {
 
                 var saveButtonCfg = Ext.apply({}, me.saveButtonCfg, {
                     xtype: 'button',
+                    height: 40,
                     text: me.saveText,
                     margin: "0 0 0 10",
                     ui: 'action-primary',
@@ -445,6 +447,7 @@ Ext.define('Taco.core.ux.mixins.NavHeader', {
             if (me.createButtonEnabled) {
                 me.actions.push(Ext.apply({}, me.createButtonCfg, {
                     xtype: 'button',
+                    height: 40,
                     text: this.createButtonText,
                     margin: "0 0 0 10",
                     ui: 'action-primary',
