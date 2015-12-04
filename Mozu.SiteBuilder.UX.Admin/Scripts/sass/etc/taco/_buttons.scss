@@ -102,20 +102,59 @@
 	 * Dropdown list
 	 */
 
-	.#{$prefix}menu-plain {
+	.#{$prefix}dropdown-trigger {
+		&:after {
+			content: '\E60B';
+			font-family: $icon-font;
+			color: $gray-text-dark;
+			font-size: $tag-font;
+			margin-left: -6px;
+		}
+
+		&:hover,
+		&:active,
+		&:focus {
+			&:after {
+				color: $dropdown-icon-active;
+			}
+		}
+	}
+
+	.#{$prefix}menu-plain,
+	.#{$vprefix}selector-flyout {
+		margin-top: 2px;
 		border: 1px solid $dropdown-list-outline;
 		box-shadow: $dropdown-list-shadow 0px 1px 6px 0px;
 		border-radius: $border-radius-small;
 		background-color: $white-color;
 
+		li.selector,
 		.#{$prefix}menu-item {
+			font-size: $normal-font-link;
+			color: $gray-text-light;
+			line-height: 24px;
 			border-width: 1px;
 			border-bottom: 1px solid $card-button-press-bg;
 			padding: 6px 12px;
+			cursor: pointer;
 
 			span {
 				font-size: $normal-font-link;
 				color: $gray-text-light;
+			}
+
+			&:hover {
+				color: $nav-element-active;
+
+				span {
+					color: $nav-element-active;
+				}
+			}
+
+			&:active,
+			&:focus {
+				color: $nav-element-active;
+				background-color: $dark-bg;
 			}
 		}
 	}
