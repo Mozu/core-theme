@@ -1,14 +1,14 @@
 @mixin taco-panel {
 	/* panel */
 	.#{$prefix}panel {
-		font-family: $font-family;
-		border-radius: $border-radius;
+		@include border-radius-xbrowser($border-radius);
 		box-shadow: rgba(0, 0, 0, 0.09) 0px 0px 2px 0px;
+		font-family: $font-family;
 
 		.#{$prefix}panel-header-text {
+			color: $dark-color;
 			font-family: $font-family;
 			font-size: $card-title-font;
-			color: $dark-color;
 		}
 
 		.#{$prefix}panel-default {
@@ -21,7 +21,7 @@
 		}
 
 		.#{$prefix}component {
-			border-radius: $border-radius;
+			@include border-radius-xbrowser($border-radius);
 		}
 
 		.#{$prefix}panel-body {
@@ -50,8 +50,8 @@
 		}
 
 		.#{$prefix}grid-header-ct {
-			border: 0;
 			background-color: $white-color;
+			border: 0;
 			border-bottom: 1px solid $nav-element-active-border;
 
 			.#{$prefix}box-inner {
@@ -59,15 +59,15 @@
 			}
 
 			.#{$prefix}column-header {
-				font-family: $font-family;
-				font-size: $normal-font-link;
-				padding: 3px 10px;
-				display: inline-block;
 				background-color: $white-color;
-				color: $gray-text-dark;
 
 				/* override external styles */
 				border: 0;
+				color: $gray-text-dark;
+				display: inline-block;
+				font-family: $font-family;
+				font-size: $normal-font-link;
+				padding: 3px 10px;
 			}
 
 			.#{$prefix}column-header-text {
@@ -112,10 +112,10 @@
 		}
 
 		.#{$prefix}empty-pill {
-			padding: 4px;
-			border-radius: $border-radius-large;
 			border: 1px solid $typehead-pill-border-color;
+			@include border-radius-xbrowser($border-radius-large);
 			font-size: $tag-font;
+			padding: 4px;
 		}
 	}
 }

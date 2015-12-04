@@ -11,8 +11,8 @@
 
 			span {
 				.#{$prefix}btn-glyph {
+                    color: $item-switch-color;
 					font-size: $normal-font-link;
-					color: $item-switch-color;
 					-ms-transform: rotate(-90deg);
 					-webkit-transform: rotate(-90deg);
 					transform: rotate(-90deg);
@@ -43,8 +43,8 @@
 	.#{$vprefix}more-action-button {
 		background-color: transparent !important;
 		height: 29px !important;
-        top: 4px !important;
         margin-left: -15px !important;
+        top: 4px !important;
 
 		&:hover,
 		&.#{$prefix}btn-menu-active {
@@ -58,13 +58,13 @@
 		&.#{$prefix}focus,
 		&.#{$prefix}btn-focus,
 		&.#{$prefix}btn-action-toolbar-medium-focus {
-			box-shadow: none;
             border: none;
+			box-shadow: none;
 		}
 
 		span {
-            padding-right: 0 !important;
             height: 17px !important;
+            padding-right: 0 !important;
 
 			.#{$prefix}btn-glyph {
 				color: $card-button-text-color;
@@ -82,16 +82,16 @@
 
 	.#{$prefix}field-default-form-focus + div {
 		label {
+            font-size: $label-link-font;
 			top: 0;
-			font-size: $label-link-font;
 		}
 	}
 
 	.#{$vprefix}form-nav {
 		.#{$vprefix}form-nav-link {
+            color: $gray-text-dark;
 			font-family: $font-family;
 			font-size: $normal-font-link;
-			color: $gray-text-dark;
 
 			&:hover {
 				color: $dark-color;
@@ -99,8 +99,8 @@
 			}
 
 			&.active {
+                border-color: $valid-green;
 				color: $dark-color;
-				border-color: $valid-green;
 			}
 		}
 	}
@@ -111,9 +111,9 @@
 
 	.#{$prefix}dropdown-trigger {
 		&:after {
+            color: $gray-text-dark;
 			content: '\E60B';
 			font-family: $icon-font;
-			color: $gray-text-dark;
 			font-size: $tag-font;
 			margin-left: -6px;
 		}
@@ -133,18 +133,18 @@
 
 	.#{$prefix}menu-plain,
 	.#{$vprefix}selector-flyout {
+        background-color: $white-color;
 		border: 1px solid $dropdown-list-outline;
+        @include border-radius-xbrowser($border-radius-small);
 		box-shadow: $dropdown-list-shadow 0px 1px 6px 0px;
-		border-radius: $border-radius-small;
-		background-color: $white-color;
 
 		.call-to-action {
+            background-color: $dark-bg;
+            border-bottom: 1px solid $light-bg-gray;
 			color: $nav-element-text;
 			font-size: $label-link-font;
-			background-color: $dark-bg;
+            line-height: 26px;
 			padding: 0 15px;
-			line-height: 26px;
-			border-bottom: 1px solid $light-bg-gray;
 		}
 
 		.#{$prefix}menu-item-separator {
@@ -153,18 +153,18 @@
 
 		li.selector,
 		.#{$prefix}menu-item {
+            border-bottom: 1px solid $card-button-press-bg;
+			@include border-radius-xbrowser(0);
+            border-width: 1px;
+            color: $gray-text-light;
+            cursor: pointer;
 			font-size: $normal-font-link;
-			color: $gray-text-light;
 			line-height: 24px;
-			border-width: 1px;
-			border-bottom: 1px solid $card-button-press-bg;
 			padding: 6px 12px;
-			cursor: pointer;
-            border-radius: 0;
 
 			span {
+                color: $gray-text-light;
 				font-size: $normal-font-link;
-				color: $gray-text-light;
 			}
 
 			&:hover {
@@ -177,8 +177,8 @@
 
 			&:active,
 			&:focus {
+                background-color: $dark-bg;
 				color: $nav-element-active;
-				background-color: $dark-bg;
 			}
 		}
 	}
@@ -189,9 +189,9 @@
 
 	.#{$prefix}dropdown-trigger {
 		&:after {
+            color: $gray-text-dark;
 			content: '\E60B';
 			font-family: $icon-font;
-			color: $gray-text-dark;
 			font-size: $tag-font;
 			margin-left: -6px;
 		}
@@ -208,32 +208,32 @@
 	.#{$prefix}menu-plain,
 	.#{$vprefix}selector-flyout {
 		border: 1px solid $dropdown-list-outline;
-		box-shadow: $dropdown-list-shadow 0px 1px 6px 0px;
-		border-radius: $border-radius-small;
-		background-color: $white-color;
+        background-color: $white-color;
+		@include border-radius-xbrowser($border-radius-small);
+        box-shadow: $dropdown-list-shadow 0px 1px 6px 0px;
 
 		.call-to-action {
+            background-color: $dark-bg;
+            border-bottom: 1px solid $light-bg-gray;
 			color: $nav-element-text;
 			font-size: $label-link-font;
-			background-color: $dark-bg;
+            line-height: 26px;
 			padding: 0 15px;
-			line-height: 26px;
-			border-bottom: 1px solid $light-bg-gray;
 		}
 
 		li.selector,
 		.#{$prefix}menu-item {
+            border-bottom: 1px solid $card-button-press-bg;
+            border-width: 1px;
+            color: $gray-text-light;
+            cursor: pointer;
 			font-size: $normal-font-link;
-			color: $gray-text-light;
 			line-height: 24px;
-			border-width: 1px;
-			border-bottom: 1px solid $card-button-press-bg;
 			padding: 6px 12px;
-			cursor: pointer;
 
 			span {
+                color: $gray-text-light;
 				font-size: $normal-font-link;
-				color: $gray-text-light;
 			}
 
 			&:hover {
@@ -246,8 +246,8 @@
 
 			&:active,
 			&:focus {
+                background-color: $dark-bg;
 				color: $nav-element-active;
-				background-color: $dark-bg;
 			}
 		}
 	}

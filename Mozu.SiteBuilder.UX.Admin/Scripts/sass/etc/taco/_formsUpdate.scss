@@ -1,15 +1,15 @@
 @mixin taco-forms {
 	.#{$prefix}form-field {
 		border: 0;
-		border-radius: 0;
 		border-bottom: 1px solid $card-border;
+		@include border-radius-xbrowser(0);
 	}
 
 	.#{$prefix}trigger-noedit {
 		border: 0;
-		border-width: 1px !important;
-		border-radius: 0;
 		border-bottom: 1px dotted $card-border;
+		@include border-radius-xbrowser(0);
+		border-width: 1px !important;
 	}
 
 	.#{$prefix}field-form-focus {
@@ -22,8 +22,8 @@
 		}
 
 		&.#{$prefix}trigger-noedit {
-			box-shadow: none;
 			border-bottom: 1px dotted $card-border;
+			box-shadow: none;
 		}
 	}
 
@@ -47,8 +47,8 @@
 			}
 
 			&:after {
-				content: ' *';
 				color: $valid-green;
+				content: ' *';
 			}
 		}
 
@@ -76,19 +76,19 @@
 	}
 
 	.#{$prefix}html-editor-input {
+		border-color: $card-border;
 		border-left: none;
 		border-right: none;
-		border-color: $card-border;
 		min-width: 762px;
 	}
 
 	.#{$prefix}html-editor-tb {
 		background: $white-color;
 		border: 1px solid $card-border;
-		border-right: none;
 		border-color: $card-border !important;
+		@include border-radius-xbrowser($border-radius-small);
+		border-right: none;
 		height: 30px;
-		border-radius: $border-radius-small;
 		min-width: 762px;
 
 		.#{$prefix}horizontal-box-overflow-body {
@@ -105,15 +105,15 @@
 		}
 
 		.#{$prefix}toolbar-item {
-			padding: 6px 16px;
-			border-radius: 0;
-			position: relative !important;
-			left: auto !important;
 			background-color: $white-color;
-			border-top: none;
 			border-bottom: none;
 			border-left: none;
+			@include border-radius-xbrowser(0);
 			border-right: 1px solid $gray-border-color;
+			border-top: none;
+			left: auto !important;
+			padding: 6px 16px;
+			position: relative !important;
 
 			&:hover {
 				background: $white-color;
@@ -241,22 +241,22 @@
 	}
 
 	.#{$prefix}btn {
-		font-family: $font-family;
-		border-radius: $border-radius-small;
 		background-color: $card-button-bg;
 		border: 1px solid $gray-border-color;
+		@include border-radius-xbrowser($border-radius-small);
+		font-family: $font-family;
 
 		.#{$prefix}btn-inner-center {
-			font-size: $normal-font-link;
 			color: $card-button-text-color;
+			font-size: $normal-font-link;
 		}
 	}
 
 	.#{$prefix}btn-action-medium-over,
 	.#{$prefix}btn-link-medium-over {
 		/* override external styles */
-		-webkit-box-shadow: none;
 		box-shadow: none;
+		-webkit-box-shadow: none;
 
 		.#{$prefix}btn-inner-center {
 			color: $dark-color;
@@ -280,14 +280,18 @@
 		border-bottom: 1px solid $card-border;
 		box-shadow: none;
 
+		.#{$prefix}boxselect-input {
+			top: 13px !important;
+		}
+
 		.#{$prefix}boxselect-item {
-			border: 1px solid $typehead-pill-border-color;
-			border-width: 1px !important;
-			border-radius: $border-radius-small;
 			background-color: $white-color;
+			border: 1px solid $typehead-pill-border-color;
+			@include border-radius-xbrowser($border-radius-small);
+			border-width: 1px !important;
 			font-size: $boxselect-font;
-			text-transform: capitalize;
 			padding: 9px 27px 9px 14px !important;
+			text-transform: capitalize;
 
 			.#{$prefix}tab-close-btn {
 				background-image: none;
@@ -298,15 +302,58 @@
 				border-left: 1px solid $light-bg-gray;
 
 				&:after {
+					color: $typehead-pill-border-color;
 					content: '\E011';
-					left: 7px;
-					top: 18px;
+					display: block;
 					font-family: $icon-font;
 					font-size: $label-font;
-					color: $typehead-pill-border-color;
-					display: block;
+					left: 7px;
 					position: absolute;
+					top: 18px;
 				}
+			}
+		}
+	}
+
+	.#{$prefix}boundlist-floating {
+		background-color: $white-color;
+		border: 1px solid $dropdown-list-outline;
+		@include border-radius-xbrowser($border-radius-small);
+		box-shadow: $dropdown-list-shadow 0px 1px 6px 0px;
+
+		li.#{$prefix}boundlist-item {
+			border-bottom: 1px solid $card-button-press-bg !important;
+            @include border-radius-xbrowser(0);
+			border-width: 1px;
+			color: $dark-color;
+			cursor: pointer;
+			font-size: $normal-font-link;
+			line-height: 24px;
+			padding: 6px 12px;
+
+            &.#{$prefix}boundlist-selected {
+            	background-color: $dark-bg !important;
+            	border-left: 3px solid $valid-green !important;
+            }
+
+			span {
+				color: $gray-text-light;
+				font-size: $normal-font-link;
+			}
+
+			&:hover {
+				background-color: $dark-bg !important;
+				color: $nav-element-active !important;
+
+				span {
+					color: $nav-element-active;
+				}
+			}
+
+			&:active,
+			&:focus {
+				background-color: $dark-bg;
+				color: $nav-element-active;
 			}
 		}
 	}
