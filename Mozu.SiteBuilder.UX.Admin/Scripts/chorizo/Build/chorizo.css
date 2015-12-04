@@ -502,7 +502,28 @@
   -webkit-border-radius: 5px;
   border-radius: 5px 5px 0px 0px;
 }
-/* line 208, ../../sass/etc/chorizo/_grid-edit.scss */
+/* line 204, ../../sass/etc/chorizo/_grid-edit.scss */
+.mz-cms-editing .mz-cms-hint-bar .mz-cms-hint-message.top {
+  top: -23px;
+  -moz-border-radius: 5px;
+  -webkit-border-radius: 5px;
+  border-radius: 5px;
+}
+/* line 209, ../../sass/etc/chorizo/_grid-edit.scss */
+.mz-cms-editing .mz-cms-hint-bar .mz-cms-hint-message.bottom {
+  top: 0px;
+  -moz-border-radius: 0 0 5px 5px;
+  -webkit-border-radius: 0;
+  border-radius: 0 0 5px 5px;
+}
+/* line 214, ../../sass/etc/chorizo/_grid-edit.scss */
+.mz-cms-editing .mz-cms-hint-bar .mz-cms-hint-message.between {
+  top: -13px;
+  -moz-border-radius: 5px;
+  -webkit-border-radius: 5px;
+  border-radius: 5px;
+}
+/* line 223, ../../sass/etc/chorizo/_grid-edit.scss */
 .mz-cms-editing .mz-cms-hint-bar.mz-cms-upright .mz-cms-hint-message {
   left: -11px;
   letter-spacing: 2px;
@@ -518,7 +539,21 @@
   -webkit-text-orientation: upright;
   -webkit-writing-mode: vertical-lr;
 }
-/* line 226, ../../sass/etc/chorizo/_grid-edit.scss */
+/* line 238, ../../sass/etc/chorizo/_grid-edit.scss */
+.mz-cms-editing .mz-cms-hint-bar.mz-cms-upright .mz-cms-hint-message.left {
+  left: -22px;
+  -moz-border-radius: 5px 0 0 5px;
+  -webkit-border-radius: 5px;
+  border-radius: 5px 0 0 5px;
+}
+/* line 243, ../../sass/etc/chorizo/_grid-edit.scss */
+.mz-cms-editing .mz-cms-hint-bar.mz-cms-upright .mz-cms-hint-message.right {
+  left: 1px;
+  -moz-border-radius: 0 5px 5px 0;
+  -webkit-border-radius: 0;
+  border-radius: 0 5px 5px 0;
+}
+/* line 252, ../../sass/etc/chorizo/_grid-edit.scss */
 .mz-cms-editing .mz-cms-resizer {
   background-color: rgba(52, 173, 142, 0.03);
   display: block;
@@ -535,7 +570,7 @@
   -webkit-transition: opacity 150ms;
   transition: opacity 150ms;
 }
-/* line 239, ../../sass/etc/chorizo/_grid-edit.scss */
+/* line 265, ../../sass/etc/chorizo/_grid-edit.scss */
 .mz-cms-editing .mz-cms-resizer .mz-cms-bottom {
   background-color: #34ad8e;
   bottom: -4px;
@@ -552,40 +587,40 @@
   -webkit-box-shadow: 0px 0px 5px #FFF;
   box-shadow: 0px 0px 5px #FFF;
 }
-/* line 253, ../../sass/etc/chorizo/_grid-edit.scss */
+/* line 279, ../../sass/etc/chorizo/_grid-edit.scss */
 .mz-cms-editing .mz-cms-state-default {
   cursor: default;
 }
-/* line 256, ../../sass/etc/chorizo/_grid-edit.scss */
+/* line 282, ../../sass/etc/chorizo/_grid-edit.scss */
 .mz-cms-editing .mz-cms-state-default.mz-cms-drag-handle, .mz-cms-editing .mz-cms-state-default .mz-cms-drag-handle {
   cursor: move;
 }
-/* line 260, ../../sass/etc/chorizo/_grid-edit.scss */
+/* line 286, ../../sass/etc/chorizo/_grid-edit.scss */
 .mz-cms-editing .mz-cms-state-default .mz-cms-text-drag-handle {
   display: block;
 }
-/* line 264, ../../sass/etc/chorizo/_grid-edit.scss */
+/* line 290, ../../sass/etc/chorizo/_grid-edit.scss */
 .mz-cms-editing .mz-cms-state-default:hover {
   outline-color: #323232 !important;
 }
-/* line 266, ../../sass/etc/chorizo/_grid-edit.scss */
+/* line 292, ../../sass/etc/chorizo/_grid-edit.scss */
 .mz-cms-editing .mz-cms-state-default:hover .mz-cms-tools {
   display: block;
 }
-/* line 272, ../../sass/etc/chorizo/_grid-edit.scss */
+/* line 298, ../../sass/etc/chorizo/_grid-edit.scss */
 .mz-cms-editing .mz-cms-state-editing {
   background-color: rgba(52, 173, 142, 0.03);
   outline-color: #34ad8e;
 }
-/* line 276, ../../sass/etc/chorizo/_grid-edit.scss */
+/* line 302, ../../sass/etc/chorizo/_grid-edit.scss */
 .mz-cms-editing .mz-cms-state-editing .mz-cms-tools {
   display: none;
 }
-/* line 281, ../../sass/etc/chorizo/_grid-edit.scss */
+/* line 307, ../../sass/etc/chorizo/_grid-edit.scss */
 .mz-cms-editing .mz-cms-state-selected {
   outline-color: #34ad8e;
 }
-/* line 284, ../../sass/etc/chorizo/_grid-edit.scss */
+/* line 310, ../../sass/etc/chorizo/_grid-edit.scss */
 .mz-cms-editing .mz-cms-state-selected .mz-cms-resizer {
   opacity: 1;
   z-index: 1;

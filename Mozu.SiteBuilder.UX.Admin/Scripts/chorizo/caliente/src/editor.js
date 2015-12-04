@@ -207,11 +207,19 @@
                 this.hintbar.style[msg] = '-2px';
             }
 
-            this.hintBarMessage.innerHTML = this.getModifiedMsg('col', msg, element);
+            const hintBarMessage = this.getModifiedMsg('col', msg, element);
+
+            this.hintBarMessage.innerHTML = hintBarMessage;
+
+            this.updateHintBarMessageCls(hintBarMessage);
 
             element.appendChild(this.hintbar);
 
             this.hintbar.style.display = 'block';
+        }
+
+        updateHintBarMessageCls(message) {
+            this.hintBarMessage.classList.add(message);
         }
 
         showWidgetHintBar(element, col, x, y, height, msg) {
@@ -232,7 +240,11 @@
                 this.hintbar.style[msg] = '-2px';
             }
 
-            this.hintBarMessage.innerHTML = this.getModifiedMsg('widget', msg, element);
+            const hintBarMessage = this.getModifiedMsg('widget', msg, element);
+
+            this.hintBarMessage.innerHTML = hintBarMessage;
+
+            this.updateHintBarMessageCls(hintBarMessage);
 
             element.appendChild(this.hintbar);
 
@@ -241,6 +253,7 @@
         }
 
         cleanhintbar() {
+            this.hintBarMessage.className = 'mz-cms-hint-message';
             this.hintbar.style.right = null;
             this.hintbar.style.left = null;
             this.hintbar.style.bottom = null;
@@ -277,7 +290,11 @@
                 this.hintbar.classList.remove('mz-cms-upright');
             }
 
-            this.hintBarMessage.innerHTML = this.getModifiedMsg('row', msg, element);
+            const hintBarMessage = this.getModifiedMsg('row', msg, element);
+
+            this.hintBarMessage.innerHTML = hintBarMessage;
+
+            this.updateHintBarMessageCls(hintBarMessage);
 
             element.appendChild(this.hintbar);
 

@@ -201,6 +201,21 @@
             z-index: 101;
             @include border-radius(5px 5px 0px 0px);
 
+            &.top {
+                top: -23px;
+                @include border-radius(5px);
+            }
+
+            &.bottom {
+                top: 0px;
+                @include border-radius(0 0 5px 5px);
+            }
+
+            &.between {
+                top: -13px;
+                @include border-radius(5px);
+            }
+
         }
 
         &.mz-cms-upright {
@@ -218,6 +233,16 @@
 
                 -webkit-text-orientation: upright;
                 -webkit-writing-mode: vertical-lr;
+
+                &.left {
+                    left: -22px;
+                    @include border-radius(5px 0 0 5px);
+                }
+
+                &.right {
+                    left: 1px;
+                    @include border-radius(0 5px 5px 0);
+                }
 
             }
         }

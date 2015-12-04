@@ -221,11 +221,20 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
                     this.hintbar.style[msg] = '-2px';
                 }
 
-                this.hintBarMessage.innerHTML = this.getModifiedMsg('col', msg, element);
+                var hintBarMessage = this.getModifiedMsg('col', msg, element);
+
+                this.hintBarMessage.innerHTML = hintBarMessage;
+
+                this.updateHintBarMessageCls(hintBarMessage);
 
                 element.appendChild(this.hintbar);
 
                 this.hintbar.style.display = 'block';
+            }
+        }, {
+            key: 'updateHintBarMessageCls',
+            value: function updateHintBarMessageCls(message) {
+                this.hintBarMessage.classList.add(message);
             }
         }, {
             key: 'showWidgetHintBar',
@@ -245,7 +254,11 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
                     this.hintbar.style[msg] = '-2px';
                 }
 
-                this.hintBarMessage.innerHTML = this.getModifiedMsg('widget', msg, element);
+                var hintBarMessage = this.getModifiedMsg('widget', msg, element);
+
+                this.hintBarMessage.innerHTML = hintBarMessage;
+
+                this.updateHintBarMessageCls(hintBarMessage);
 
                 element.appendChild(this.hintbar);
 
@@ -254,6 +267,7 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
         }, {
             key: 'cleanhintbar',
             value: function cleanhintbar() {
+                this.hintBarMessage.className = 'mz-cms-hint-message';
                 this.hintbar.style.right = null;
                 this.hintbar.style.left = null;
                 this.hintbar.style.bottom = null;
@@ -289,7 +303,11 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
                     this.hintbar.classList.remove('mz-cms-upright');
                 }
 
-                this.hintBarMessage.innerHTML = this.getModifiedMsg('row', msg, element);
+                var hintBarMessage = this.getModifiedMsg('row', msg, element);
+
+                this.hintBarMessage.innerHTML = hintBarMessage;
+
+                this.updateHintBarMessageCls(hintBarMessage);
 
                 element.appendChild(this.hintbar);
 
