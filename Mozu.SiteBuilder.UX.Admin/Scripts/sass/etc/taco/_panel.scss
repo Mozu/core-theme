@@ -118,45 +118,4 @@
 			font-size: $tag-font;
 		}
 	}
-
-	.#{$prefix}btn-toolbar {
-		&.#{$prefix}move-next-previous-arrow {
-			background-color: transparent !important;
-
-			span {
-				.#{$prefix}btn-glyph {
-					font-size: $normal-font-link;
-					color: $item-switch-color;
-					-ms-transform: rotate(-90deg);
-					-webkit-transform: rotate(-90deg);
-					transform: rotate(-90deg);
-				}
-			}
-		}
-	}
-
-	.#{$prefix}move-next-previous-position {
-		color: $item-switch-color;
-		font-size: $normal-font-link;
-	}
-
-	.#{$vprefix}more-action-button {
-		background-color: transparent !important;
-		padding: 0 !important;
-		height: auto !important;
-		top: 10px !important;
-
-		span {
-			padding: 0 !important;
-			height: auto !important;
-
-			.#{$prefix}btn-glyph {
-				color: $card-button-text-color;
-			}
-
-			&:after {
-				display: none;
-			}
-		}
-	}
 }

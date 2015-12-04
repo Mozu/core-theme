@@ -1,0 +1,81 @@
+@mixin taco-buttons {
+
+	/**
+	 * Previous/Next buttons at the top
+	 * of the screen
+	 */
+
+	.#{$prefix}btn-toolbar {
+		&.#{$prefix}move-next-previous-arrow {
+			background-color: transparent !important;
+
+			span {
+				.#{$prefix}btn-glyph {
+					font-size: $normal-font-link;
+					color: $item-switch-color;
+					-ms-transform: rotate(-90deg);
+					-webkit-transform: rotate(-90deg);
+					transform: rotate(-90deg);
+				}
+			}
+		}
+	}
+
+	.#{$prefix}move-next-previous-position {
+		color: $item-switch-color;
+		font-size: $normal-font-link;
+	}
+
+	/**
+	 * More button
+	 */
+
+	.#{$vprefix}more-action-button {
+		background-color: transparent !important;
+		padding: 0 !important;
+		height: auto !important;
+		top: 10px !important;
+
+		span {
+			padding: 0 !important;
+			height: auto !important;
+
+			.#{$prefix}btn-glyph {
+				color: $card-button-text-color;
+			}
+
+			&:after {
+				display: none;
+			}
+		}
+	}
+
+	/**
+	 * Panel nav
+	 */
+	
+	.#{$prefix}field-default-form-focus + div {
+		label {
+			top: 0;
+			font-size: $label-link-font;
+		}
+	}
+
+	.#{$vprefix}form-nav {
+		.#{$vprefix}form-nav-link {
+			font-family: $font-family;
+			font-size: $normal-font-link;
+			color: $gray-text-dark;
+
+			&:hover {
+				color: $dark-color;
+				text-decoration: none;
+			}
+
+			&.active {
+				color: $dark-color;
+				border-color: $valid-green;
+			}
+		}
+	}
+}

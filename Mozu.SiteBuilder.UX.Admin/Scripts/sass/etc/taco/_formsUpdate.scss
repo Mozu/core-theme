@@ -223,31 +223,6 @@
 		}
 	}
 
-	.#{$prefix}field-default-form-focus + div {
-		label {
-			top: 0;
-			font-size: $label-link-font;
-		}
-	}
-
-	.#{$vprefix}form-nav {
-		.#{$vprefix}form-nav-link {
-			font-family: $font-family;
-			font-size: $normal-font-link;
-			color: $gray-text-dark;
-
-			&:hover {
-				color: $dark-color;
-				text-decoration: none;
-			}
-
-			&.active {
-				color: $dark-color;
-				border-color: $valid-green;
-			}
-		}
-	}
-
 	.#{$prefix}form-text {
 		padding: 0;
 	}
@@ -299,7 +274,7 @@
 	.#{$prefix}boxselect-list {
 		border-bottom: 1px solid $card-border;
 		box-shadow: none;
-		
+
 		.#{$prefix}boxselect-item {
 			border: 1px solid $typehead-pill-border-color;
 			border-width: 1px !important;
