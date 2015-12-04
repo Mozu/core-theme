@@ -1446,6 +1446,7 @@
     <Content Include="Scripts\app\mocks\auditlog.json" />
     <Content Include="Scripts\sass\src\overrides\menu\Item.scss" />
     <Content Include="Scripts\sass\src\overrides\menu\Menu.scss" />
+    <Content Include="Scripts\sass\src\view\navigation\SecondaryMenu.scss" />
     <None Include="SetupSenchaWorkspace.ps1" />
     <Content Include="Scripts\.sencha\app\build-impl.xml" />
     <Content Include="Scripts\.sencha\app\plugin.xml" />
