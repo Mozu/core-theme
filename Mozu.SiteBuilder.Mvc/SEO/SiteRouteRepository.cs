@@ -15,6 +15,7 @@ using Mozu.Core.Extensions;
 using Mozu.Content.Contracts.Clients;
 using Mozu.SiteBuilder.Mvc.SEO.Constraints;
 using Mozu.SiteBuilder.Mvc.SEO.Mappings;
+using Mozu.SiteBuilder.Mvc.Caching;
 
 namespace Mozu.SiteBuilder.Mvc.SEO
 {
@@ -24,7 +25,7 @@ namespace Mozu.SiteBuilder.Mvc.SEO
 
     public class CustomRouteRepository : ICustomRouteCollectionRepository
     {
-        readonly ObjectCache _cache;
+        readonly IStorefrontCache _cache;
         readonly ILogger _logger;
         readonly ISiteBuilderApiContext _siteBuilderApiContext;
         readonly ICustomRouteConstraintFactory _customRouteConstraintFactory;
@@ -55,7 +56,7 @@ namespace Mozu.SiteBuilder.Mvc.SEO
         public CustomRouteRepository(
             ISiteBuilderApiContext siteBuilderApiContext,
             ILogger logger,
-            ObjectCache cache,
+            IStorefrontCache  cache,
             ICustomRouteConstraintFactory customRouteConstraintFactory,
             IRouteDataMappingFactory routeDataMappingFactory,
             IGeneralSettingsWebApiClient genSettingsClient,
@@ -86,7 +87,7 @@ namespace Mozu.SiteBuilder.Mvc.SEO
                          _siteBuilderApiContext.SiteId +
                          genSettings.AuditInfo.UpdateDate.GetValueOrDefault(DateTime.MaxValue).Ticks; // TODO: go add auditInfo to the custom routes, or at least mirror the ones from general settings on the server-side./
 
-            return await _cache.AddOrGetExisting(key, async () => await CreateRouteCollectionFromSettings(routes).ConfigureAwait(false), DateTimeOffset.UtcNow.AddMinutes(5)).ConfigureAwait(false);
+            return await _cache.AddOrGetExisting(key, CacheScope.Site, StorefrontCacheTypes.CatalogIndependent, async () => await CreateRouteCollectionFromSettings(routes).ConfigureAwait(false)).ConfigureAwait(false);
         }
 
         async Task<HttpRouteCollection> CreateRouteCollectionFromSettings(CustomRouteSettings customSettings)

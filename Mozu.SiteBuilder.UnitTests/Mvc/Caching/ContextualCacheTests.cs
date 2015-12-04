@@ -63,8 +63,8 @@ namespace Mozu.SiteBuilder.UnitTests.Mvc.Caching
             if (_cache.ContainsKey(inKey)) return (T) _cache[inKey];
             return default(T);
         }
-
-        public void Set(string key, object value, CacheScope scope = CacheScope.Site,  StorefrontCacheTypes cacheType = StorefrontCacheTypes.Default)
+        
+        public void Set(string key, object value, CacheScope scope = CacheScope.Site, StorefrontCacheTypes cacheType = StorefrontCacheTypes.Default, Func<object, object> updateCallback = null)
         {
             var inKey = new ScopedName{key = key, scope = scope};
             _cache[inKey] = value;

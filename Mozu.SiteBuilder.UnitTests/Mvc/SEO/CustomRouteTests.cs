@@ -41,7 +41,8 @@ using Mozu.SiteBuilder.Mvc.Contexts;
 using Mozu.SiteBuilder.UX.Configuration;
 using Mozu.SiteBuilder.UX.Models.StoreFront.Catalog;
 using NSubstitute.Core;
-
+using Mozu.SiteBuilder.Mvc.Caching;
+using System.Linq;
 
 namespace Mozu.SiteBuilder.UnitTests.Mvc.SEO
 {
@@ -69,14 +70,30 @@ namespace Mozu.SiteBuilder.UnitTests.Mvc.SEO
         }
 
         [TestCaseSource("MalformedCases")]
-        public void MalformedMappingsBreak(Mapping mapping)
+        public void MalformedMappingsBreak(MappingTest test)
         {
             var entityListClient = Substitute.For<IEntityListsWebApiClient>();
             var factory = new RouteMappingFactory(entityListClient);
-            Assert.Throws<ArgumentException>(() => factory.BuildMapping(mapping));
+            Assert.Throws<ArgumentException>(() => factory.BuildMapping(test.Mapping));
 
         }
-        static IEnumerable<Mapping> MalformedCases()
+        public class MappingTest
+        {
+            public Mapping Mapping;
+            public string Name;
+            public override string ToString()
+            {
+                return Name;
+            }
+        }
+
+        static IEnumerable<MappingTest> MalformedCases()
+        {
+            int i = 0;
+            return MalformedCasesRaw().Select(x => new MappingTest { Mapping = x, Name = "MapTest " + ++i }).ToList();
+
+        }
+        static IEnumerable<Mapping> MalformedCasesRaw()
         {
             var mapping1 = new Mapping { type = Mapping.TypeConst.facet, mapTo = "bar" };
             yield return mapping1;
@@ -90,16 +107,40 @@ namespace Mozu.SiteBuilder.UnitTests.Mvc.SEO
 
         [TestCaseSource("HappyPathMappings")]
         [TestCaseSource("NoOpPathMappings")]
-        public async Task MappersWork(IRouteDataMapping mapping, Dictionary<string, object> inputs, Dictionary<string, object> expectedOutput)
+        public async Task MappersWork(MappersWorkTest test)
         {
-            await mapping.Initialize();
+            await test.mapping.Initialize();
             HttpRequestMessage reqMessage = new HttpRequestMessage(HttpMethod.Get, "http://localhost/foo"); ;
             reqMessage.SetRouteData(new HttpRouteData(new HttpRoute(), new HttpRouteValueDictionary()));
-            var outputs = mapping.Map(reqMessage, inputs, "foo");
-            outputs.SequenceEqual(expectedOutput).ShouldBeTrue();
+            var outputs = test.mapping.Map(reqMessage, test.inputs, "foo");
+            outputs.SequenceEqual(test.expectedOutput).ShouldBeTrue();
         }
+        public class MappersWorkTest
+        {
+            string _name;
 
-        static IEnumerable<object[]> HappyPathMappings()
+            public MappersWorkTest( string name , object[] stuff)
+            {
+                _name = name;
+                this.mapping = (IRouteDataMapping)stuff[0];
+                this.inputs =(Dictionary < string, object> )stuff[1];
+                this.expectedOutput = (Dictionary < string, object> )stuff[2];
+            }
+            public override string ToString()
+            {
+                return _name;
+            }
+            
+            public IRouteDataMapping mapping;
+            public Dictionary<string, object> inputs;
+            public Dictionary<string, object> expectedOutput;
+        }
+        static IEnumerable<MappersWorkTest> HappyPathMappings()
+        {
+            int i = 0;
+            return HappyPathMappingsRaw().Select(x => new MappersWorkTest("HappyPathMappings " + i++, x)).ToList();
+        }
+        static IEnumerable<object[]> HappyPathMappingsRaw()
         {
             yield return new object[] {
                 new SiteBuilder.Mvc.SEO.Mappings.DirectMapping(new Mapping(){ mappings =new Dictionary<string, object> { { "red", "green" } }}),
@@ -125,11 +166,19 @@ namespace Mozu.SiteBuilder.UnitTests.Mvc.SEO
             };
         }
 
+
+
+
+        static IEnumerable<MappersWorkTest> NoOpPathMappings()
+        {
+            int i = 0;
+            return HappyPathMappingsRaw().Select(x => new MappersWorkTest("NoOpPathMappingsRaw " + i++, x)).ToList();
+        }
         /// <summary>
         /// Tests that verify that a mapper does not make modifications to the route data if none of its configuration matches the data in the route data.
         /// </summary>
         /// <returns></returns>
-        static IEnumerable<object[]> NoOpPathMappings()
+        static IEnumerable<object[]> NoOpPathMappingsRaw()
         {
             yield return new object[] {
                 new SiteBuilder.Mvc.SEO.Mappings.DirectMapping(new Mapping(){ mappings =new Dictionary<string, object> { { "foo", "bar" } }}),
@@ -158,30 +207,50 @@ namespace Mozu.SiteBuilder.UnitTests.Mvc.SEO
 
 
         [TestCaseSource("ConstraintTests")]
-        public async Task ConstraintsWork(string parameterName, ICustomRouteConstraint constraint, Dictionary<string, object> inputs, bool routeShouldMatch)
+        public async Task ConstraintsWork(ConstraintTest test )
         {
             var httpRoute = Substitute.For<IHttpRoute>();
-            await constraint.Initialize();
-            constraint.DoMatch(null, null, parameterName, inputs, HttpRouteDirection.UriResolution).ShouldEqual(routeShouldMatch);
+            await test.constraint.Initialize();
+            test.constraint.DoMatch(null, null, test.parameterName, test.inputs, HttpRouteDirection.UriResolution).ShouldEqual(test.routeShouldMatch);
         }
 
-        static IEnumerable<object[]> ConstraintTests()
+        public class ConstraintTest
         {
-            yield return new object[]
+            string _name;
+            public ConstraintTest(string name, object[] parts)
+            {
+                _name = "Constraint "+ name;
+                parameterName = parts[0] as string;
+                constraint = parts[1] as ICustomRouteConstraint;
+                inputs = parts[2] as Dictionary<string, object>;
+                routeShouldMatch = (bool)parts[3];
+            }
+            public string parameterName;
+            public ICustomRouteConstraint constraint;
+            public Dictionary<string, object> inputs;
+            public bool routeShouldMatch;
+            public override string ToString()
+            {
+                return _name;
+            }
+        }
+        static IEnumerable<ConstraintTest> ConstraintTests()
+        {
+            yield return new ConstraintTest( "test1", new object[]
             {
                 "designer",
                 new StringListRouteConstraint(new List<string> {"once", "never", "always" }),
                 new Dictionary<string, object> { { "designer", "once" } },
                 true
-            };
+            });
 
-            yield return new object[]
+            yield return new ConstraintTest("test2", new object[]
             {
                 "designer",
                 new StringListRouteConstraint(new List<string> {"once", "never", "always" }),
                 new Dictionary<string, object> { { "haha", "once" } },
                 false
-            };
+            });
 
             var attrClient = Substitute.For<IAttributeWebApiClient, ICloneable>();
             (attrClient as ICloneable).Clone().Returns(attrClient);
@@ -211,34 +280,34 @@ namespace Mozu.SiteBuilder.UnitTests.Mvc.SEO
             var context = Substitute.For<IApiContext>();
             context.LocaleCode.Returns("en-US");
 
-            yield return new object[]
+            yield return new ConstraintTest("test3", new object[]
             {
                 "param",
                 new ProductAttributeRouteConstraint(attrClient, searchClient, context, "butts"),
                 new Dictionary<string, object> { { "param", "meh" } },
                 true
-            };
-            yield return new object[]
+            });
+            yield return new ConstraintTest("test4", new object[]
             {
                 "param",
                 new ProductAttributeRouteConstraint(attrClient, searchClient, context, "butts"),
                 new Dictionary<string, object> { { "param", "bing" } },
                 true
-            };
-            yield return new object[]
+            });
+            yield return new ConstraintTest("test5", new object[]
             {
                 "param",
                 new ProductAttributeRouteConstraint(attrClient, searchClient,context, "butts"),
                 new Dictionary<string, object> { { "param", "sure" } },
                 false
-            };
-            yield return new object[]
+            });
+            yield return new ConstraintTest("test6", new object[]
             {
                 "param",
                 new ProductAttributeRouteConstraint(attrClient, searchClient,context, "butts"),
                 new Dictionary<string, object> { },
                 false
-            };
+            });
 
             var mzdbClient = Substitute.For<IEntityListsWebApiClient, ICloneable>();
             (mzdbClient as ICloneable).Clone().Returns(mzdbClient);
@@ -246,28 +315,28 @@ namespace Mozu.SiteBuilder.UnitTests.Mvc.SEO
             doc["myfield"] = "value!";
             var coll = new EntityCollection() { Items = new List<JObject> { doc }, TotalCount = 1, PageCount = 1, PageSize = 50, StartIndex = 0 };
             mzdbClient.GetEntities(Arg.Any<string>(), pageSize: Arg.Any<int?>(), startIndex: Arg.Any<int?>()).Returns(Task.FromResult(Response(coll)));
-            yield return new object[]
+            yield return new ConstraintTest("test7", new object[]
             {
                 "param",
                 new MzdbRouteConstraint(mzdbClient, "mylist", null, "myfield"),
                 new Dictionary<string, object> { {"param", "value!" } },
                 true
-            };
+            });
 
-            yield return new object[]
+            yield return new ConstraintTest("test8", new object[]
             {
                 "param",
                 new MzdbRouteConstraint(mzdbClient, "mylist",null, "myfield"),
                 new Dictionary<string, object> { {"param", "sigh" } },
                 false
-            };
-            yield return new object[]
+            });
+            yield return new ConstraintTest("test9", new object[]
             {
                 "param",
                 new MzdbRouteConstraint(mzdbClient, "mylist", null,"myfield"),
                 new Dictionary<string, object> { },
                 false
-            };
+            });
         }
 
         static ProductAdmin.Contracts.AttributeVocabularyValue Vocab(string value) {
@@ -349,12 +418,25 @@ namespace Mozu.SiteBuilder.UnitTests.Mvc.SEO
 
             var constraintFactory = new ConstraintFactory(entityListClient, attrClient, searchClient, sbapiContext);
             var mappingFactory = new RouteMappingFactory(entityListClient);
-            var repo = new CustomRouteRepository(sbapiContext, logger, cache, constraintFactory, mappingFactory, siteSettingsClient, docListClient);
+            var repo = new CustomRouteRepository(sbapiContext, logger, DummyStorefrontCache.Default, constraintFactory, mappingFactory, siteSettingsClient, docListClient);
 
             var collection = await (repo as ICustomRouteCollectionRepository).GetHttpRouteCollection();
             collection.Count.ShouldEqual(numRoutes);
         }
 
+        class DummyStorefrontCache : SiteBuilder.Mvc.Caching.IStorefrontCache
+        {
+            public static DummyStorefrontCache Default = new DummyStorefrontCache();
+            public T Get<T>(string key, CacheScope scope = CacheScope.Site, StorefrontCacheTypes cacheType = StorefrontCacheTypes.Default)
+            {
+                return default(T);
+            }
+
+            public void Set(string key, object value, CacheScope scope = CacheScope.Site, StorefrontCacheTypes cacheType = StorefrontCacheTypes.Default, Func<object, object> updateCallback = null)
+            {
+
+            }
+        }
         static ServiceClientResponse<T> Response<T>(T obj)
         {
             return new ServiceClientResponse<T>

@@ -30,7 +30,8 @@ namespace Mozu.SiteBuilder.Mvc.Caching
         Default = 1,
         PartialOutput = 2,
         ProductSearch =4,
-        All = 7
+        CatalogIndependent = 8,
+        All = 15
     };
 
 
@@ -79,10 +80,11 @@ namespace Mozu.SiteBuilder.Mvc.Caching
         {
             _cacheProvidere = cacheProvidere;
             AddClientCacheContainer(StorefrontCacheTypes.Default, StoreFrontCacheDependencies.Catalog);
+            AddClientCacheContainer(StorefrontCacheTypes.Default, StoreFrontCacheDependencies.Catalog);
             AddClientCacheContainer(StorefrontCacheTypes.PartialOutput, StoreFrontCacheDependencies.Catalog);
+            AddClientCacheContainer(StorefrontCacheTypes.CatalogIndependent, StoreFrontCacheDependencies.None );
             AddClientCacheContainer(StorefrontCacheTypes.ProductSearch, StoreFrontCacheDependencies.Catalog);
-          
-
+         
         }
         void AddClientCacheContainer(StorefrontCacheTypes cacheType, StoreFrontCacheDependencies dep)
         {
