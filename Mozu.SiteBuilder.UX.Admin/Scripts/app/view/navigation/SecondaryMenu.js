@@ -35,31 +35,30 @@ Ext.define('Taco.view.navigation.SecondaryMenu', {
             html: '<div class="tenant-name-container"><span>' + tenantName + '</span></div>'
         },
         {
-            xtype: 'component',
+            xtype: 'userbutton',
             cls: 'user-initials',
-            html: '<div class="user-initials-container">' + initials + '</div>',
-        },
-        {
-            xtype: 'button',
-            ui: 'link',
-            cls: 'username-button',
-            scale: 'medium',
-            text: userName,
+            initials: initials,
+            userName: userName,
             menuAlign: 'tr-br?',
             menu: {
+                cls: 'username-menu',
                 plain: true,
                 shadow: false,
-                itemId: 'settingsMenu',
+                listeners: {
+                    beforerender: function() {
+                        this.setWidth(this.up('button').getWidth());
+                    }
+                },
                 items: [
                     /*
-                    // deprecated old views
-                    {
-                        text: 'My Account',
-                        handler: function() {
-                            Taco.app.StateManager.attemptNavigate('account');
-                        }
-                    },
-                    */
+                     // deprecated old views
+                     {
+                     text: 'My Account',
+                     handler: function() {
+                     Taco.app.StateManager.attemptNavigate('account');
+                     }
+                     },
+                     */
                     {
                         text: 'Launchpad',
                         href: '/admin/auth/launchpad'
@@ -70,7 +69,6 @@ Ext.define('Taco.view.navigation.SecondaryMenu', {
                 ]
             }
         },
-
         {
            xtype: 'button',
            ui: 'link',
@@ -117,43 +115,46 @@ Ext.define('Taco.view.navigation.SecondaryMenu', {
                 return;
             }
 
-            var subItems = item.get('items'),
-                menuItem = settingsMenu.add({
-                    xtype: 'menuitem',
-                    text: item.get('label'),
-                    handler: function () {
-                        if (item.get('address')) {
-                            Taco.app.StateManager.attemptNavigate(item.get('address'));
-                        }
-                    }
-                }),
-                subMenu;
-            
-            //temp adding 1 laver of sublinks till nav design is finalized
-            if (subItems && subItems.length) {
-                subMenu = {
-                    xtype: 'menu',
-                    plain: true,
-                    shadow: false,
-                    items: []
-                };
-                Ext.Array.each(subItems, function (subItem) {
-                    if (subItem.visible !== false) {
-                        subMenu.items.push(
-                            {
-                                xtype: 'menuitem',
-                                text: subItem.label,
-                                handler: function () {
-                                    Taco.app.StateManager.attemptNavigate(subItem.address);
-                                }
+            if (settingsMenu) {
+                var subItems = item.get('items'),
+                    menuItem = settingsMenu.add({
+                        xtype: 'menuitem',
+                        text: item.get('label'),
+                        handler: function () {
+                            if (item.get('address')) {
+                                Taco.app.StateManager.attemptNavigate(item.get('address'));
                             }
-                        );
-                    }
-                });
-                menuItem.setMenu(Ext.widget(subMenu));
+                        }
+                    }),
+                    subMenu;
 
+                //temp adding 1 laver of sublinks till nav design is finalized
+                if (subItems && subItems.length) {
+                    subMenu = {
+                        xtype: 'menu',
+                        plain: true,
+                        shadow: false,
+                        items: []
+                    };
+                    Ext.Array.each(subItems, function (subItem) {
+                        if (subItem.visible !== false) {
+                            subMenu.items.push(
+                                {
+                                    xtype: 'menuitem',
+                                    text: subItem.label,
+                                    handler: function () {
+                                        Taco.app.StateManager.attemptNavigate(subItem.address);
+                                    }
+                                }
+                            );
+                        }
+                    });
+                    menuItem.setMenu(Ext.widget(subMenu));
+
+                }
             }
-            
+
+
 
 
     });

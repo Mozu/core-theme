@@ -1,0 +1,34 @@
+﻿.#{$vprefix}userbutton {
+    .#{$vprefix}userbutton-wrapper {
+        position: relative;
+        text-align: left;
+        margin-left: auto;
+        margin-right: auto;
+        top: 1px;
+        .#{$vprefix}userbutton-dropdown-toggle {
+            padding: 1px 21px 1px 10px;
+            background-position: 94% 50%;
+            background-size: 8px;
+            .#{$vprefix}userbutton-user-avatar {
+                display: inline-block;
+                width: 23px;
+                height: 23px;
+                padding-top: 2px;
+                border: 1px solid $light-bg-gray;
+                border-radius: 100px;
+                background-color: $light-bg-gray;
+                color: $dark-color;
+                font-size: 11px;
+                line-height: 18px;
+                font-weight: 600;
+                text-align: center;
+            }
+            .#{$vprefix}userbutton-username {
+                display: inline-block;
+                margin-left: 7px;
+                line-height: 32px;
+                color: $gray-text-dark;
+            }
+        }
+    }
+}

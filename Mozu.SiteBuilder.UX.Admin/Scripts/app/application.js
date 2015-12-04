@@ -132,7 +132,8 @@ Ext.define('Taco.Application', {
         'Ext.ux.form.MultiSelect',
         'Taco.store.TooltipHelp',
         'Taco.core.ux.TooltipLabel',
-        'Taco.core.util.Filter'
+        'Taco.core.util.Filter',
+        'Taco.core.ux.action.UserButton'
     ],
     controllers: [
         //'Analytics',
