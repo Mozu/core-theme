@@ -42,9 +42,9 @@
 
 	.#{$vprefix}more-action-button {
 		background-color: transparent !important;
-		padding: 0 !important;
-		height: auto !important;
-		top: 10px !important;
+		height: 29px !important;
+        top: 3px !important;
+        margin-left: -15px !important;
 
 		&:hover,
 		&.#{$prefix}btn-menu-active {
@@ -55,9 +55,16 @@
 			}
 		}
 
+		&.#{$prefix}focus,
+		&.#{$prefix}btn-focus,
+		&.#{$prefix}btn-action-toolbar-medium-focus {
+			box-shadow: none;
+            border: none;
+		}
+
 		span {
-			padding: 0 !important;
-			height: auto !important;
+            padding-right: 0 !important;
+            height: 17px !important;
 
 			.#{$prefix}btn-glyph {
 				color: $card-button-text-color;
@@ -122,11 +129,23 @@
 
 	.#{$prefix}menu-plain,
 	.#{$vprefix}selector-flyout {
-		margin-top: 2px;
 		border: 1px solid $dropdown-list-outline;
 		box-shadow: $dropdown-list-shadow 0px 1px 6px 0px;
 		border-radius: $border-radius-small;
 		background-color: $white-color;
+
+		.call-to-action {
+			color: $nav-element-text;
+			font-size: $label-link-font;
+			background-color: $dark-bg;
+			padding: 0 15px;
+			line-height: 26px;
+			border-bottom: 1px solid $light-bg-gray;
+		}
+
+		.#{$prefix}menu-item-separator {
+			display: none;
+		}
 
 		li.selector,
 		.#{$prefix}menu-item {
@@ -137,6 +156,7 @@
 			border-bottom: 1px solid $card-button-press-bg;
 			padding: 6px 12px;
 			cursor: pointer;
+            border-radius: 0;
 
 			span {
 				font-size: $normal-font-link;
