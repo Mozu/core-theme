@@ -97,4 +97,26 @@
 			}
 		}
 	}
+
+	/**
+	 * Dropdown list
+	 */
+
+	.#{$prefix}menu-plain {
+		border: 1px solid $dropdown-list-outline;
+		box-shadow: $dropdown-list-shadow 0px 1px 6px 0px;
+		border-radius: $border-radius-small;
+		background-color: $white-color;
+
+		.#{$prefix}menu-item {
+			border-width: 1px;
+			border-bottom: 1px solid $card-button-press-bg;
+			padding: 6px 12px;
+
+			span {
+				font-size: $normal-font-link;
+				color: $gray-text-light;
+			}
+		}
+	}
 }
