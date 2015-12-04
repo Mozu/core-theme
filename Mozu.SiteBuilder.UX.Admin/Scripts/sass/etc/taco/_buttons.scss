@@ -127,6 +127,10 @@
 		}
 	}
 
+    .#{$vprefix}selector-flyout {
+        left: 0 !important;
+    }
+
 	.#{$prefix}menu-plain,
 	.#{$vprefix}selector-flyout {
 		border: 1px solid $dropdown-list-outline;
