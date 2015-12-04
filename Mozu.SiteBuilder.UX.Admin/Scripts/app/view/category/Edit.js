@@ -8,7 +8,7 @@ Ext.define('Taco.view.category.Edit', {
     requires: ['Taco.view.category.Form'],
     formCls: 'Taco.view.category.Form',
     saveAndCreateButtonEnabled: true,
-    enableSearchBar: false,
+    enableSearchBarInHeader: false,
     parentTitleCfg: {
         title: 'Categories',
         controller: 'categories'

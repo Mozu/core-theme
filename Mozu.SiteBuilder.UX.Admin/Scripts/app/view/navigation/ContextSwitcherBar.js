@@ -27,7 +27,6 @@
 
         this.callParent(arguments);
 
-
         this.currentContext = Taco.app.context.getCurrent();
 
         this.visibleLevels = this.determineVisibleContexts();

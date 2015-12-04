@@ -171,7 +171,7 @@ Ext.define('Taco.core.ux.mixins.NavHeader', {
         saveInProgress : false,
         saveInProgressText: "Saving...",
 
-        enableSearchBar: true,
+        enableSearchBarInHeader: true,
 
         // turns off all the default coloration for the content container; ie. makes everything white;
         useWhiteContainer:false,
@@ -255,7 +255,7 @@ Ext.define('Taco.core.ux.mixins.NavHeader', {
     },
 
     attachContextMenu: function () {
-        if (!this.contextConfig) {
+        if (!this.contextConfig || this.hideContextSwitcherBar) {
             return;
         }
 
@@ -349,7 +349,7 @@ Ext.define('Taco.core.ux.mixins.NavHeader', {
             }
         }
 
-        if (me.enableSearchBar) {
+        if (me.enableSearchBarInHeader) {
             me.searchBox = Ext.widget({
                 xtype: 'taco-filtercontainer',
                 searchType: 'navigation',
@@ -369,7 +369,7 @@ Ext.define('Taco.core.ux.mixins.NavHeader', {
             conf.items.push(me.searchBox);
         }
 
-        else if (!me.enableSearchBar && !this.dontFloatHeaderButtons){
+        else if (!me.enableSearchBarInHeader && !this.dontFloatHeaderButtons){
             //shifting over the buttons because we have no searchbar
             conf.items.push('->');
         }

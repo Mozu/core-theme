@@ -46,7 +46,7 @@ Ext.define('Taco.view.settings.shipping.Rules', {
     selType: 'rowmodel',
    
 
-    enableSearchBar: false,
+    enableSearchBarInHeader: false,
    
 
     autoScroll: true,

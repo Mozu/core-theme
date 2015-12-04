@@ -56,6 +56,7 @@
     margin: 0;
     z-index: 1000001;
     cursor: pointer;
+    @include border-radius(5px);
 
     li {
         display: inline-block;
@@ -139,7 +140,7 @@
 
                 &.trash {
                     top: 4.5px;
-                    left: 2px;
+                    left: 4px;
                     @include icon-font(char-from-code($glyph-chorizo-trash), 14px, white);
                 }
 

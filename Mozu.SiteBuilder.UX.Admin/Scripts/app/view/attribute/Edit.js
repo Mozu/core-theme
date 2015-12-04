@@ -13,7 +13,7 @@ Ext.define('Taco.view.attribute.Edit', {
         title: 'Attribute',
         controller: 'attribute'
     },
-    enableSearchBar: false,
+    enableSearchBarInHeader: false,
     formCls: 'Taco.view.attribute.Form',
     saveAndCreateButtonEnabled: true,
     doCreate: function () {

@@ -21,7 +21,7 @@ Ext.define('Taco.view.customerAttribute.Index', {
     stateId: 'statefulCustomerAttributesGrid',
     enableSearch: false,
     enableNavHeader: true,
-    enableSearchBar: false,
+    enableSearchBarInHeader: false,
     addContentViewPadding: true,
     createButtonEnabled: true,
     saveButtonEnabled: false,

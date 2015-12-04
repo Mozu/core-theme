@@ -27,7 +27,7 @@ Ext.define('Taco.view.category.Index', {
 
     saveButtonEnabled: false,
 
-    enableSearchBar: false,
+    enableSearchBarInHeader: false,
 
     enablePaging: false,
 

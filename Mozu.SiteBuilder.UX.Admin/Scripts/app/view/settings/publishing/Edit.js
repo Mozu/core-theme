@@ -6,7 +6,7 @@ Ext.define('Taco.view.settings.publishing.Edit', {
     formCls: 'Taco.view.settings.publishing.Form',
     cancelButtonEnabled: false,
     saveButtonEnabled: false,
-    enableSearchBar: false,
+    enableSearchBarInHeader: false,
     contextConfig: {
         supportedLevels: ['s', 'c'],
         requiresContextOfType: ['s', 'c']

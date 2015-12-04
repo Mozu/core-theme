@@ -14,7 +14,7 @@ Ext.define('Taco.view.capability.Index', {
 
     enableSearch: false,
 
-    enableSearchBar: false,
+    enableSearchBarInHeader: false,
 
     addContentViewPadding: true,
 

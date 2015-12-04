@@ -20,7 +20,7 @@ Ext.define('Taco.view.account.Users', {
 
     enablePaging: false,
 
-    enableSearchBar: false,
+    enableSearchBarInHeader: false,
 
     addContentViewPadding: true,
 

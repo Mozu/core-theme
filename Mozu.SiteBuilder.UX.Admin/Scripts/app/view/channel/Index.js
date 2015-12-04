@@ -41,7 +41,7 @@ Ext.define('Taco.view.channel.Index', {
 
     enableNavHeader: true,
 
-    enableSearchBar: false,
+    enableSearchBarInHeader: false,
 
     stateful: true,
     stateId: 'statefulChannelsGrid',

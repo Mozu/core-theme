@@ -19,7 +19,7 @@ Ext.define('Taco.view.redirects.Index', {
     },
     
     enableNavHeader: true,
-    enableSearchBar: false,
+    enableSearchBarInHeader: false,
 
     modelName: 'Taco.model.RedirectEntry',
 

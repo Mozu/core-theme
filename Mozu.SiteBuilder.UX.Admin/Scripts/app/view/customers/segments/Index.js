@@ -21,7 +21,7 @@ Ext.define('Taco.view.customers.Segments.Index', {
     defaultRowEditingData: {},
     useTilePanel: false,
     enableNavHeader: true,
-    enableSearchBar: false,
+    enableSearchBarInHeader: false,
     cancelButtonEnabled: false,
     saveButtonEnabled: false,
     createButtonEnabled: true,

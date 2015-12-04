@@ -9,7 +9,7 @@ Ext.define('Taco.view.ipblocking.Edit', {
     ],
     formCls: 'Taco.view.ipblocking.Form',
     title: 'IP Blocking',
-    enableSearchBar: false,
+    enableSearchBarInHeader: false,
     initComponent: function () {
         this.callParent(arguments);
     }

@@ -8,7 +8,7 @@ Ext.define('Taco.view.discount.Edit', {
         'Taco.view.discount.Form',
         'Taco.core.ux.action.DeleteMenuItem'
     ],
-    enableSearchBar: false,
+    enableSearchBarInHeader: false,
     formCls: 'Taco.view.discount.Form',
     parentTitleCfg: {
         title: 'Discounts',

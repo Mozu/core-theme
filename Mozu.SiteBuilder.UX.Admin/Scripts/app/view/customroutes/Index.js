@@ -11,7 +11,7 @@ Ext.define('Taco.view.customroutes.Index', {
         supportedLevels: ['s'],
         requiresContextOfType: ['s']
     },
-    enableSearchBar: false,
+    enableSearchBarInHeader: false,
 
     formCls: 'Taco.core.ux.form.Form',
     enableNavHeader: true,

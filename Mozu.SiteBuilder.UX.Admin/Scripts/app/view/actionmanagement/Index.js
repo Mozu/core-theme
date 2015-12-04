@@ -9,7 +9,7 @@ Ext.define('Taco.view.actionmanagement.Index', {
     title: 'Action Management',
     formCls: 'Taco.core.ux.form.Form',
     enableNavHeader: true,
-    enableSearchBar: false,
+    enableSearchBarInHeader: false,
     autoTitle: true,
     autoScroll: true,
     initComponent: function () {

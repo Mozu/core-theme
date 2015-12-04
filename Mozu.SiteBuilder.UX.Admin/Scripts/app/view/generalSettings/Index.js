@@ -13,7 +13,7 @@ Ext.define('Taco.view.generalSettings.Index', {
         requiresContextOfType: ['s']
     },
 
-    enableSearchBar: false,
+    enableSearchBarInHeader: false,
 
     statics: {
         factory: function (cfg, callback, scope) {

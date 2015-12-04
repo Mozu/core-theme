@@ -17,7 +17,7 @@
         controller: 'product'
     },
 
-    enableSearchBar: false,
+    enableSearchBarInHeader: false,
 
     statics: {
         sizes: {},

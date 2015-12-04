@@ -50,6 +50,7 @@ Ext.define('Taco.view.website.Index', {
     selectedTheme: '',
     itemId: 'websiteIndex',
     dontFloatHeaderButtons: true,
+    hideContextSwitcherBar: true,
     contextConfig: {
         supportedLevels: ['s'],
         requiresContextOfType: ['s'],
@@ -74,7 +75,7 @@ Ext.define('Taco.view.website.Index', {
     },
     padding: '0 0 0 0',
 
-    enableSearchBar: false,
+    enableSearchBarInHeader: false,
 
     initComponent: function () {
         var navStore,
@@ -158,38 +159,6 @@ Ext.define('Taco.view.website.Index', {
                     }, {
                         text: 'Preview Theme',
                         itemId: 'previewThemesMenu'
-                    }, {
-                        text: 'Resolution',
-                        menu: {
-                            items: [
-                                {
-                                    text: 'Default',
-                                    xtype: 'menucheckitem',
-                                    checked: true,
-                                    group: 'resolutions',
-                                    handler: function () {
-                                        me.resolutionOverride = 0;
-                                        me.resizeIframeSpacers(me.getWidthForFrameAndSpacers.call(me), me.resolutionOverride);
-                                    }
-                                }, {
-                                    text: 'Phone (480px)',
-                                    xtype: 'menucheckitem',
-                                    group: 'resolutions',
-                                    handler: function () {
-                                        me.resolutionOverride = 480;
-                                        me.resizeIframeSpacers(me.getWidthForFrameAndSpacers.call(me), me.resolutionOverride);
-                                    }
-                                }, {
-                                    text: 'Tablet (768px)',
-                                    xtype: 'menucheckitem',
-                                    group: 'resolutions',
-                                    handler: function () {
-                                        me.resolutionOverride = 768;
-                                        me.resizeIframeSpacers(me.getWidthForFrameAndSpacers.call(me), me.resolutionOverride);
-                                    }
-                                }
-                            ]
-                        }
                     },
                     {
                         text: 'Hide Dropzones',
@@ -613,13 +582,64 @@ Ext.define('Taco.view.website.Index', {
             items: [
                 me.getPageEditorButton(),
                 me.getLayoutButton(),
-                me.getSettingsButton()
+                me.getSettingsButton(),
+                '->',
+                me.getDesktopButton(),
+                me.getTabletButton(),
+                me.getPhoneButton()
             ]
         }
     },
 
     getPublishRecord: function() {
         return this.publishRecord;
+    },
+    getDesktopButton: function() {
+        return {
+            xtype: 'button',
+            cls: 'taco-website-resolution-btn desktop',
+            scale: 'small',
+            style: {
+                margin: '0 5px'
+            },
+            scope: this,
+            handler: function() {
+                this.resolutionOverride = 0;
+                this.resizeIframeSpacers(this.getWidthForFrameAndSpacers.call(this), this.resolutionOverride);
+            }
+        };
+    },
+
+    getTabletButton: function() {
+        return {
+            xtype: 'button',
+            cls: 'taco-website-resolution-btn tablet',
+            scale: 'small',
+            style: {
+                margin: '0 5px'
+            },
+            scope: this,
+            handler: function() {
+                this.resolutionOverride = 768;
+                this.resizeIframeSpacers(this.getWidthForFrameAndSpacers.call(this), this.resolutionOverride);
+            }
+        };
+    },
+
+    getPhoneButton: function() {
+        return {
+            xtype: 'button',
+            cls: 'taco-website-resolution-btn phone',
+            scale: 'small',
+            style: {
+                margin: '0 5px'
+            },
+            scope: this,
+            handler: function() {
+                this.resolutionOverride = 480;
+                this.resizeIframeSpacers(this.getWidthForFrameAndSpacers.call(this), this.resolutionOverride);
+            }
+        };
     },
 
     getPageEditorButton: function() {
@@ -1125,6 +1145,7 @@ Ext.define('Taco.view.website.Index', {
                 me.resizeIframeSpacers(me.getWidthForFrameAndSpacers.call(me), me.resolutionOverride);
             }, 150);
         });
+
         this.entitypeTypeHandler = this.createEntityTypeAdapter(pc, editor);
 
         Ext.EventManager.on(this.iframe.getDoc(), 'click', function (e, target) {

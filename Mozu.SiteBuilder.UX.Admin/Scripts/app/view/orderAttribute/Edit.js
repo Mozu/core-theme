@@ -3,7 +3,7 @@ Ext.define('Taco.view.orderAttribute.Edit', {
     requires: [
         'Taco.view.orderAttribute.Form'
     ],
-    enableSearchBar: false,
+    enableSearchBarInHeader: false,
     formCls: 'Taco.view.orderAttribute.Form',
     parentTitleCfg: {
         title: 'Order Attributes',

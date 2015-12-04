@@ -17,7 +17,7 @@ Ext.define('Taco.view.orderAttribute.Index', {
     filterProperty: 'name',
     typeName: 'Order Attributes',
     enableSearch: false,
-    enableSearchBar: false,
+    enableSearchBarInHeader: false,
     enableNavHeader: true,
     saveButtonEnabled: false,
     cancelButtonEnabled: false,

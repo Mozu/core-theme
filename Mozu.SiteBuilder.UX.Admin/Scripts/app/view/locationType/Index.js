@@ -25,7 +25,7 @@ Ext.define('Taco.view.locationType.Index', {
     
     },
 
-    enableSearchBar: false,
+    enableSearchBarInHeader: false,
     createButtonEnabled: true,
     createButtonText: 'Create New Location Type',
     saveButtonEnabled: false,

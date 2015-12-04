@@ -4,7 +4,7 @@ Ext.define('Taco.view.capability.Edit', {
         'Taco.view.capability.Form'
     ],
     formCls: 'Taco.view.capability.Form',
-    enableSearchBar: false,
+    enableSearchBarInHeader: false,
     actions: [],
     parentTitleCfg: {
         title: 'Applications',

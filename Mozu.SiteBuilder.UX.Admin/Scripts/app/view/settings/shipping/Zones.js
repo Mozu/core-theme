@@ -8,7 +8,7 @@ Ext.define('Taco.view.settings.shipping.Zones', {
 
     createButtonText: "Create New Zone",
     title: "Shipping Zones",
-    enableSearchBar: false,
+    enableSearchBarInHeader: false,
 
     createRoute: 'shipping/zonescreate',
     editorRoute: 'shipping/zonesedit',

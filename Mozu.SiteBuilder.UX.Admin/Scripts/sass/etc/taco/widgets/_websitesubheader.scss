@@ -10,6 +10,22 @@
       	padding: 7px 10px;
       	background-color: $color-framework-gray-border !important;
     }
+
+    .#{$vprefix}website-resolution-btn {
+
+    	&.desktop {
+    		@include icon-font($glyph-desktop);
+    	}
+
+    	&.tablet {
+    		@include icon-font($glyph-tablet);
+    	}
+
+    	&.phone {
+    		@include icon-font($glyph-phone);
+    	}
+    }
+
   }
 
 }

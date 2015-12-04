@@ -14,7 +14,7 @@ Ext.define('Taco.view.location.inventory.Index', {
 
     // used by create button
     typeName: 'Location Inventory',
-    enableSearchBar: false,
+    enableSearchBarInHeader: false,
     createButtonEnabled: true,
     createButtonText: 'Create New Location Inventory',
     saveButtonEnabled: false,

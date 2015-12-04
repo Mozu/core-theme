@@ -7,7 +7,7 @@ Ext.define('Taco.view.settings.tax.Edit', {
     requires: [
         'Taco.view.settings.tax.Form'
     ],
-    enableSearchBar: false,
+    enableSearchBarInHeader: false,
     formCls: 'Taco.view.settings.tax.Form',
     contextConfig: {
         supportedLevels: ['s'],
