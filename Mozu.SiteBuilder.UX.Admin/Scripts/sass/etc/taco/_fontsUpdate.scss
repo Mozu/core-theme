@@ -1,3 +1,30 @@
+@mixin font-builder($font-name, $file-name: $font-name, $font-style: normal, $font-weight: normal) {
+    font-family: $font-name;
+    src: url('fonts/' + $file-name + '.eot?#iefix') format('embedded-opentype');
+    src: url('fonts/' + $file-name + '.woff') format('woff'),
+         url('fonts/' + $file-name + '.woff2') format('woff2'),
+         url('fonts/' + $file-name + '.ttf') format('truetype'),
+         url('fonts/' + $file-name + '.svg#' + $font-name) format('svg');
+    font-style: $font-style;
+    font-weight: $font-weight;
+}
+
+@font-face {
+    @include font-builder('proxima-nova', 'proximanova-regular');
+}
+
+@font-face {
+    @include font-builder('proxima-nova', 'proximanova-regitalic', italic, normal);
+}
+
+@font-face {
+    @include font-builder('proxima-nova', 'proximanova-bold', normal, bold);
+}
+
+@font-face {
+    @include font-builder('proxima-nova', 'proximanova-boldit', italic, bold);
+}
+
 /* font family */
 $font-family:					'proxima-nova', sans-serif;
 $icon-font:						'mozicons';
