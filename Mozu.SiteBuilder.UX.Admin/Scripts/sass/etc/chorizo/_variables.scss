@@ -6,5 +6,5 @@ $font-family: 'proxima-nova', sans-serif;
 $hint-block-color: #CCC;
 $hint-block-hover-color: rgb(50,50,50);
 $hint-bar-color: rgb(41, 96, 211);
-$hint-color: rgb(45, 109, 207);
+$hint-color: adjust_hue(saturate(lighten($black-color, 44), 54), 165);
 $duration: 150ms;
