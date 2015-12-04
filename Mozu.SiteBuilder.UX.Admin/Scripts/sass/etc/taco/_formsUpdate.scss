@@ -16,6 +16,11 @@
 		border-color: $valid-green;
 		box-shadow: 0 1px 0 0 $valid-green;
 
+		&.#{$prefix}form-invalid-field {
+			border-color: $error-red;
+			box-shadow: 0 1px 0 0 $error-red;
+		}
+
 		&.#{$prefix}trigger-noedit {
 			box-shadow: none;
 			border-bottom: 1px dotted $card-border;
