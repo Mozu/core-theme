@@ -36,6 +36,15 @@
 		height: auto !important;
 		top: 10px !important;
 
+		&:hover,
+		&.#{$prefix}btn-menu-active {
+			span {
+				.#{$prefix}btn-glyph {
+					color: $vertical-ellipsis-active;
+				}
+			}
+		}
+
 		span {
 			padding: 0 !important;
 			height: auto !important;
@@ -53,7 +62,7 @@
 	/**
 	 * Panel nav
 	 */
-	
+
 	.#{$prefix}field-default-form-focus + div {
 		label {
 			top: 0;
