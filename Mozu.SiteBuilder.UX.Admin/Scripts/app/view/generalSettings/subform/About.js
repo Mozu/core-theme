@@ -211,7 +211,7 @@ Ext.define('Taco.view.generalSettings.subform.About', {
                                         me.record.save({
                                             success:function() {
                                                 me.setLoading(false);
-                                                Taco.app.fireEvent('setgrowl', 'Cache Busted', 'info', 1000);
+                                                Taco.app.fireEvent('setmessage', 'Cache Busted', 'success');
                                             },
                                             failure: function() {
                                                 me.setLoading(false);

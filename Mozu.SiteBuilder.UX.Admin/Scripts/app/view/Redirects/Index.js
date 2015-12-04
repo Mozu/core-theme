@@ -274,7 +274,7 @@ Ext.define('Taco.view.redirects.Index', {
         this.importForm.submit({
             success: function (form, action) {
                // Ext.Msg.alert('Success', action.result.message);
-                Taco.app.fireEvent('setgrowl', 'Imported!', 'info', 1000);
+                Taco.app.fireEvent('setmessage', 'Imported!', 'success');
                 this.store.reload();
 
             },

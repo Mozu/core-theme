@@ -97,7 +97,7 @@ Ext.define('Taco.view.entityManager.Index', {
                     success: function() {
                         record.data.publishState = 'active';
                         me.showHideButtons();
-                        me.showGrowl('Published', 'info', 1000);
+                        me.showMessage('Published', 'info', 1000);
                     }
                 });
             },
@@ -105,7 +105,7 @@ Ext.define('Taco.view.entityManager.Index', {
             onMoveToPublish: function(record, code) {
                 me.publishActionButton.setLoading(true);
                 record.setPublishCode(code, function() {
-                    me.showGrowl('Moved to Publish Set');
+                    me.showMessage('Moved to Publish Set');
                     me.publishActionButton.setLoading(false);
                 });
             },
@@ -118,14 +118,14 @@ Ext.define('Taco.view.entityManager.Index', {
                         me.publishActionButton.setLoading(false);
                     }
                 });
-                me.showGrowl('Removed', 'info', 1000);
+                me.showMessage('Removed', 'info', 1000);
             },
 
             onDiscardDraft: function(record) {
                 me.publishActionButton.setLoading(true);
                 record.discardDraft(function() {
                     me.publishActionButton.setLoading(false);
-                    me.showGrowl('Discarded', 'info', 1000);
+                    me.showMessage('Discarded', 'info', 1000);
                 });
                 me.lastListClicked.raw = me.lastListClicked.raw  || {};
                 me.lastListClicked.raw.metaData = me.lastListClicked.raw.metaData || {};
@@ -298,7 +298,7 @@ Ext.define('Taco.view.entityManager.Index', {
         options = options || {};
 
         if (!editor && options.editMode !== 'raw') {
-            Taco.app.fireEvent('setgrowl', 'Sorry, no editor is defined this type', 'info', 1000);
+            Taco.app.fireEvent('setmessage', 'Sorry, no editor is defined this type', 'error');
             return false;
         }
 
@@ -350,7 +350,7 @@ Ext.define('Taco.view.entityManager.Index', {
         this.mixins.navHeader.saveSuccess.call(this, arguments);
         this.showHideButtons();
     },  
-    showGrowl: function(msg) {
-        Taco.app.fireEvent('setgrowl', msg, 'info', 1000);
+    showMessage: function(msg) {
+        Taco.app.fireEvent('setmessage', msg, 'success');
     }
 });

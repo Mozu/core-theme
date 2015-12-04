@@ -146,7 +146,7 @@ Ext.define('Taco.view.publishing.Split', {
             listeners: {
                 aftersaveclose: function () {                    
                     me.down('#publish-grid').store.read();
-                    me.showGrowl('Created', null);
+                    me.showMessage('Created', null);
                     me.getWest().down('panel').getLayout().setActiveItem(0);
                 },
                 scope:me
@@ -179,7 +179,7 @@ Ext.define('Taco.view.publishing.Split', {
         Ext.resumeLayouts();
     },
 
-    showGrowl: function(msg, type) {
-        Taco.app.fireEvent('setgrowl', msg, type, 1000);
+    showMessage: function(msg, type) {
+        Taco.app.fireEvent('setmessage', msg, type);
     }
 });

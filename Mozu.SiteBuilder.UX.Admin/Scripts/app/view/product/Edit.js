@@ -79,7 +79,7 @@
     saveAndCreateButtonEnabled : true,
 
     afterDuplicate: function () {
-        Taco.app.fireEvent('setmessage', 'Please enter a product code.', 'info');
+        Taco.app.fireEvent('setmessage', 'Please enter a product code.', 'success');
         Taco.app.fireEvent('productduplicated', true);
     },
 
@@ -141,7 +141,7 @@
                         me.record.save({
                             success: function() {
                                 me.publishButton.setLoading(false);
-                                me.setGrowl('Moved to Publish Set', 'info');
+                                me.setGrowl('Moved to Publish Set', 'success');
                             }
                         });
                     });
@@ -158,8 +158,10 @@
         };
 
         this.additionalActions = [
-            this.publishingButton,
-            {
+            this.publishingButton
+        ];
+
+        this.moreButtonCfg = {
             xtype: 'button',
             height: 40,
             itemId: 'moreButton',
@@ -275,7 +277,7 @@
                     scope: this
                 }
             }
-        }];
+        };
 
         if (this.checkProductPublishing()) {
             this.setPublishStatus();
@@ -396,7 +398,7 @@
             }
             this.doPublishAfterSave = true;
             this.form.save({
-                success: me.setGrowl.bind(me, 'Published', 'info')
+                success: me.showMessage.bind(me, 'Published', 'success')
             });
         } else {
             this.doPublish();
@@ -425,7 +427,7 @@
                                 }
                                 me.setPublishStatus();
                                 me.record.save({
-                                    success: me.setGrowl.bind(me, 'Moved to Publish Set', 'info')
+                                    success: me.showMessage.bind(me, 'Moved to Publish Set', 'success')
                                 });
                             });
                         }
@@ -448,7 +450,7 @@
                 //            }
                 //            me.setPublishStatus();
                 //            me.record.save({
-                //                success: me.setGrowl.bind(me, 'Moved to Publish Set', 'info')
+                //                success: me.showMessage.bind(me, 'Moved to Publish Set', 'success')
                 //            });
                 //        });
 
@@ -472,7 +474,7 @@
         me.publishButton.setLoading(true);
         this.record.save({
             success:  function() {
-                me.setGrowl('Removed from Publish Set', 'info');
+                me.showMessage('Removed from Publish Set', 'success');
                 me.publishButton.setLoading(false);
             },
             failure: function() {
@@ -490,7 +492,7 @@
             success: function (scope, items) {
                 Taco.core.StateManager.attemptNavigate(me.getEditRoute() + '/' + me.record.getId(), { record: me.record });
                 //prevent jank of reload
-                setTimeout(me.setGrowl.bind(me, 'Discarded', 'info'), 1000);
+                setTimeout(me.showMessage.bind(me, 'Discarded', 'success'), 1000);
             },
             failure: function (response) {
                 var json = Ext.decode(response.responseText, true),
@@ -555,7 +557,7 @@
                     this.fireEvent('idchange', this, this.record);
                 }
                 this.publishButton.setLoading(false);
-                this.setGrowl('Published', 'info');
+                this.showMessage('Published', 'success');
                 this.publishButton.addRecord(this.record);
             },
             failure: function (err) {
@@ -600,8 +602,8 @@
     
     },
 
-    setGrowl: function(msg, info) {
-        Taco.app.fireEvent('setgrowl', msg, info, 1000);
+    showMessage: function(msg, info) {
+        Taco.app.fireEvent('setmessafe', msg, info);
     },
 
     doCreate : function (){

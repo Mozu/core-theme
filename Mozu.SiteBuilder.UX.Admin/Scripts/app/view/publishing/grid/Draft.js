@@ -576,7 +576,7 @@ Ext.define('Taco.view.publishing.grid.Draft', {
             data: config.records,
             success: function() {
                 config.store.read();
-                me.showGrowl('Published');
+                me.showMessage('Published');
                 me.updatePublishSetStore();
             },
             failure: this.showMessage.bind(this, 'There was an error publishing this draft!', 'error')
@@ -593,7 +593,7 @@ Ext.define('Taco.view.publishing.grid.Draft', {
             success: function() {
                 config.store.reload();
                 me.updatePublishSetStore();
-                me.showGrowl('Discarded');
+                me.showMessage('Discarded');
             },
             failure: this.showMessage.bind(this, 'There was an error discarding this draft!', 'error')
         });
@@ -677,7 +677,7 @@ Ext.define('Taco.view.publishing.grid.Draft', {
 
             if (!this.up('publish-split')) growlMessage+= '<br><br><span><a style="color:white;" href="/admin/' + Taco.app.StateManager.getCurrentState().getMetaData().ctx + '/publishing/publishsets/' + code + '">View in Publish Set</a></span>';
 
-            this.showGrowl(code === 'unassigned' ? 'Removed' : growlMessage);
+            this.showMessage(code === 'unassigned' ? 'Removed' : growlMessage);
             eventData.record.store.sync({
                 callback: this.onAfterRecordUpdate.bind(this, eventData.record.store)
             });
@@ -692,7 +692,7 @@ Ext.define('Taco.view.publishing.grid.Draft', {
 
             if (!this.up('publish-split')) growlMessage+= '<br><br><span><a style="color:white;" href="/admin/' + Taco.app.StateManager.getCurrentState().getMetaData().ctx + '/publishing/publishsets/' + code + '">View in Publish Set</a></span>';
 
-            this.showGrowl(code === 'unassigned' ? 'Removed' : growlMessage);
+            this.showMessage(code === 'unassigned' ? 'Removed' : growlMessage);
             eventData.record[0].store.sync({
                 callback: this.onAfterRecordUpdate.bind(this, eventData.record[0].store)
             });
@@ -706,11 +706,7 @@ Ext.define('Taco.view.publishing.grid.Draft', {
     },
 
     showMessage: function(msg, type) {
-        Taco.app.fireEvent('setmessage', msg, type);
-    },
-
-    showGrowl: function(msg) {
-        Taco.app.fireEvent('setgrowl', msg, null, 1000);
+        Taco.app.fireEvent('setmessage', msg, type || 'success');
     },
 
     getConfirmationModal: function(config) {
