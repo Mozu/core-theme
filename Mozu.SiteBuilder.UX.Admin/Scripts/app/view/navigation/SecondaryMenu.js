@@ -41,9 +41,10 @@ Ext.define('Taco.view.navigation.SecondaryMenu', {
             userName: userName,
             menuAlign: 'tr-br?',
             menu: {
-                cls: 'username-menu',
+                cls: Taco.baseCSSPrefix + 'username-menu',
                 plain: true,
                 shadow: false,
+                minWidth: 0,
                 listeners: {
                     beforerender: function() {
                         this.setWidth(this.up('button').getWidth());
