@@ -101,14 +101,14 @@ Ext.define('Taco.view.website.Index', {
             scope: this,
             handler: function() {
                this.onPublish();
-               me.showGrowl('Published', 'info', 1000);
+               me.showMessage('Published', 'success');
             },
 
             onMoveToPublish: function(record, code) {
                 me.publishButton.setLoading(true);
                 record.setPublishCode(code, function() {
                     me.publishButton.setLoading(false);
-                    me.showGrowl('Moved to Publish Set', 'info', 1000);
+                    me.showMessage('Moved to Publish Set', 'success');
                 });
             },
 
@@ -116,7 +116,7 @@ Ext.define('Taco.view.website.Index', {
                 me.publishButton.setLoading(true);
                 record.setPublishCode(null, function() {
                     me.publishButton.setLoading(false);
-                    me.showGrowl.bind(me, 'Removed From Publish Set', 'info', 1000);
+                    me.showMessage.bind(me, 'Removed From Publish Set', 'success');
                 });
             },
 
@@ -125,7 +125,7 @@ Ext.define('Taco.view.website.Index', {
                 record.discardDraft(function() {
                     me.setPublishable(false);
                     me.publishButton.setLoading(false);
-                    me.showGrowl('Discarded', 'info', 1000);
+                    me.showMessage('Discarded', 'success');
                     me.down('#draftIcon').hide();
                     me.cancel();
                 });
@@ -352,6 +352,7 @@ Ext.define('Taco.view.website.Index', {
                                 scope: me
                             }
                         },
+                        dockedItems: this.getSubheader(),
                         items: [
                             {
 
@@ -379,8 +380,7 @@ Ext.define('Taco.view.website.Index', {
                                         itemId: 'rightIframeOffset',
                                         width: 0
                                     }
-                                ],
-                                dockedItems: this.getSubheader()
+                                ]
                             }, 
                             {
                                 xtype: 'formform',
@@ -401,8 +401,7 @@ Ext.define('Taco.view.website.Index', {
                                             margin: '10 0 10 0'
                                         }
                                     }
-                                ],
-                                dockedItems: this.getSubheader()
+                                ]
                             }, 
                             {
                                 xtype: 'panel',
@@ -584,13 +583,34 @@ Ext.define('Taco.view.website.Index', {
             xtype: 'toolbar',
             cls: 'taco-website-subheader',
             items: [
-                me.getPageEditorButton(),
-                me.getLayoutButton(),
-                me.getSettingsButton(),
-                '->',
-                me.getDesktopButton(),
-                me.getTabletButton(),
-                me.getPhoneButton()
+                {
+                    xtype: 'panel',
+                    flex: 1,
+                    items : [
+                        { 
+                            xtype: 'panel',
+                            width: 210, // width of button group / 2 so we can center the buttons below
+                            items: [
+                                me.getPageEditorButton(),
+                                me.getLayoutButton(),
+                                me.getSettingsButton(), 
+                            ]
+                        }
+                    ]
+                },
+                {
+                    xtype: 'panel',
+                    flex: 1,
+                    style: {
+                        top: 0,
+                        marginLeft: '-105px',
+                    },
+                    items : [       
+                        me.getDesktopButton(),
+                        me.getTabletButton(),
+                        me.getPhoneButton()
+                    ]
+                }
             ]
         }
     },
@@ -709,8 +729,8 @@ Ext.define('Taco.view.website.Index', {
         return config;
     },
 
-    showGrowl: function(msg, type, duration) {
-        Taco.app.fireEvent('setgrowl', msg, type, duration);
+    showMessage: function(msg, type) {
+        Taco.app.fireEvent('setmessage', msg, type);
     },
 
     getSettingsButton: function() {
