@@ -1,3 +1,30 @@
+import { 
+    POSITION_DICTIONARY,
+    BLOCK_TYPES,
+    CONTENT_SELECTOR,
+    ALL_COL_SELECTOR,
+    HINT_BAR_CLASSNAME,
+    HINT_BAR_MESSAGE_CLASSNAME,
+    HINT_BAR_UPRIGHT_CLASSNAME,
+    CMS_EDITING_CLASSNAME,
+    RESIZER_CLASSNAME,
+    RESIZER_HANDLE_CLASSNAME,
+    DRAG_CURSOR_STYLE,
+    DEFAULT_CURSOR_STYLE,
+    DATA_WIDGET_ATTRIBUTE,
+    MIN_COLUMN_WIDTH,
+    GRID_CLASSNAME,
+    BLOCK_CLASSNAME,
+    BLOCK_SELECTOR,
+    LAYOUT_WIDGET_HEADER_CLASSNAME,
+    ROW_SELECTOR,
+    LAYOUT_WIDGET_HEADER_SELECTOR,
+    CONTENT_SCREEN_CLASSNAME,
+    CONTENT_VIEW_CLASSNAME,
+    ROW_TITLE,
+    DATA_GRID_ATTRIBUTE
+} from './constants';
+
 (function(win, doc) {
 
     class Editor {
@@ -6,7 +33,7 @@
         }
 
         init() {
-            document.body.classList.add('mz-cms-editing');
+            document.body.classList.add(CMS_EDITING_CLASSNAME);
             this.createHintBar();
             this.createDragIcon();
             this.createResizer();
@@ -17,15 +44,14 @@
 
         setDirtyState(val) {
             this._dirty = val ? val : false;
-            console.log(this._dirty);
         }
 
         createResizer() {
             this.resizer = doc.createElement('div');
             this.handle = doc.createElement('div');
 
-            this.resizer.classList.add('mz-cms-resizer');
-            this.handle.classList.add('mz-cms-bottom');
+            this.resizer.classList.add(RESIZER_CLASSNAME);
+            this.handle.classList.add(RESIZER_HANDLE_CLASSNAME);
 
             this.resizer.appendChild(this.handle);
 
@@ -48,10 +74,10 @@
 
             switch (type) {
             case 'drag':
-                cursorStyle = 'ew-resize';
+                cursorStyle = DRAG_CURSOR_STYLE;
                 break;
             default:
-                cursorStyle = 'auto';
+                cursorStyle = DEFAULT_CURSOR_STYLE;
             }
 
             document.body.style.cursor = cursorStyle;
@@ -74,7 +100,7 @@
 
                 if (block && widgetData) {
                     widgetData.config.height = newHeight;
-                    block.setAttribute('data-widget', JSON.stringify(widgetData));
+                    block.setAttribute(DATA_WIDGET_ATTRIBUTE, JSON.stringify(widgetData));
                 }
                 block = null;
                 widgetData = null;
@@ -85,10 +111,10 @@
 
                 if (this.resizing) {
                     block = this.resizer.parentNode;
-                    widgetData = JSON.parse(block.getAttribute('data-widget'));
+                    widgetData = JSON.parse(block.getAttribute(DATA_WIDGET_ATTRIBUTE));
                     newHeight = doc.body.scrollTop + e.clientY - block.offsetTop - 320;
 
-                    block.querySelector('.mz-cms-content').style.height = newHeight + 'px';
+                    block.querySelector(CONTENT_SELECTOR).style.height = newHeight + 'px';
                 }
 
                 else if (this._draggingColumn) {
@@ -133,21 +159,20 @@
             e.preventDefault();
             this.setCursorStyle('drag');
 
-            const MIN_WIDTH = 10;
             const col = this._draggingColumn;
             const nextSibling = col.nextElementSibling;
             const computedPercentage = this.getComputedPercentage(e, col) * 100;
-            const allAssociatedColumns = Array.from(col.parentNode.querySelectorAll('[class*="mz-cms-col-"]'));
+            const allAssociatedColumns = Array.from(col.parentNode.querySelectorAll(ALL_COL_SELECTOR));
             const otherColsWidth = this.getOtherColsCombinedWidth(allAssociatedColumns, col);
             let finalColumnWidth;
             let remainingColumnsWidth;
 
             // if the width of our newly computed percentage is greater than the allowed limit, return
-            if (otherColsWidth + computedPercentage + MIN_WIDTH >= 100) {
+            if (otherColsWidth + computedPercentage + MIN_COLUMN_WIDTH >= 100) {
                 return false;
             }
-            else if (computedPercentage < MIN_WIDTH) {
-                col.style.width = MIN_WIDTH + '%';
+            else if (computedPercentage < MIN_COLUMN_WIDTH) {
+                col.style.width = MIN_COLUMN_WIDTH + '%';
             }
             else {
                 col.style.width = computedPercentage + '%';
@@ -158,8 +183,8 @@
             remainingColumnsWidth = this.getWidthWithQuery(allAssociatedColumns, col.parentNode, nextSibling);
 
             // dont let them make a column smaller than 10%
-            if (remainingColumnsWidth < MIN_WIDTH) {
-                nextSibling.style.width = MIN_WIDTH + '%';
+            if (remainingColumnsWidth < MIN_COLUMN_WIDTH) {
+                nextSibling.style.width = MIN_COLUMN_WIDTH + '%';
                 finalColumnWidth = this.getWidthWithQuery(col.parentNode, col);
                 col.style.width = finalColumnWidth + '%';
             }
@@ -180,8 +205,8 @@
         createHintBar() {
             this.hintbar = doc.createElement('div');
             this.hintBarMessage = doc.createElement('div');
-            this.hintbar.className = 'mz-cms-hint-bar';
-            this.hintBarMessage.className = 'mz-cms-hint-message';
+            this.hintbar.className = HINT_BAR_CLASSNAME;
+            this.hintBarMessage.className = HINT_BAR_MESSAGE_CLASSNAME;
             this.hintbar.appendChild(this.hintBarMessage);
 
             this.hintbarHeight = '3px';
@@ -198,13 +223,13 @@
         showColHintBar(element, x, y, width, msg) {
             this.cleanhintbar();
 
-            if (msg === 'left' || msg === 'right') {
-                this.hintbar.classList.add('mz-cms-upright');
+            if (msg === POSITION_DICTIONARY.LEFT || msg === POSITION_DICTIONARY.RIGHT) {
+                this.hintbar.classList.add(HINT_BAR_UPRIGHT_CLASSNAME);
                 this.hintbar.style.position = 'absolute';
                 this.hintbar.style.height = parseInt(window.getComputedStyle(element.parentNode, null).height, 10) + 'px';
                 this.hintbar.style.top = '0';
                 this.hintbar.style.width = this.hintbarHeight;
-                this.hintbar.style[msg] = '-2px';
+                this.hintbar.style[msg.toLowerCase()] = '-2px';
             }
 
             const hintBarMessage = this.getModifiedMsg('col', msg, element);
@@ -219,41 +244,50 @@
         }
 
         updateHintBarMessageCls(message) {
-            this.hintBarMessage.classList.add(message);
+            this.hintBarMessage.classList.add(message.toLowerCase());
         }
 
         showWidgetHintBar(element, col, x, y, height, msg) {
             this.cleanhintbar();
 
             // dont need to hint, unless there are already widgets in this col
-            if (!col.querySelector('.mz-cms-block') || !msg) {
+            if (!col.querySelector(BLOCK_SELECTOR) || !msg) {
                 this.hintbar.style.display = 'none';
                 return false;
             }
 
-            else {
-                this.hintbar.classList.remove('mz-cms-upright');
+            const hintBarMessage = this.getModifiedMsg('widget', msg, element);
+
+            if (msg === POSITION_DICTIONARY.TOP || msg === POSITION_DICTIONARY.BOTTOM) {
+                this.hintbar.classList.remove(HINT_BAR_UPRIGHT_CLASSNAME);
                 this.hintbar.style.position = 'absolute';
-                this.hintbar.style[msg] = '0';
+                this.hintbar.style[msg.toLowerCase()] = '0';
                 this.hintbar.style.width = parseInt(window.getComputedStyle(element, null).width, 10) + 'px';
                 this.hintbar.style.height = this.hintbarHeight;
-                this.hintbar.style[msg] = '-2px';
+                this.hintbar.style[msg.toLowerCase()] = '-2px';
+                element.appendChild(this.hintbar);
             }
 
-            const hintBarMessage = this.getModifiedMsg('widget', msg, element);
+            else {
+                this.hintbar.classList.add(HINT_BAR_UPRIGHT_CLASSNAME);
+                this.hintbar.style.position = 'absolute';
+                this.hintbar.style.height = parseInt(window.getComputedStyle(element.parentNode, null).height, 10) + 'px';
+                this.hintbar.style.top = '0';
+                this.hintbar.style.width = this.hintbarHeight;
+                this.hintbar.style[msg.toLowerCase()] = '-2px';
+                element.parentNode.appendChild(this.hintbar);
+            }
 
             this.hintBarMessage.innerHTML = hintBarMessage;
 
             this.updateHintBarMessageCls(hintBarMessage);
-
-            element.appendChild(this.hintbar);
 
             this.hintbar.style.display = 'block';
 
         }
 
         cleanhintbar() {
-            this.hintBarMessage.className = 'mz-cms-hint-message';
+            this.hintBarMessage.className = HINT_BAR_MESSAGE_CLASSNAME;
             this.hintbar.style.right = null;
             this.hintbar.style.left = null;
             this.hintbar.style.bottom = null;
@@ -270,13 +304,13 @@
             // to do: make this css -- not awful, awful js
             this.cleanhintbar();
 
-            if (msg === 'left' || msg === 'right') {
-                this.hintbar.classList.add('mz-cms-upright');
+            if (msg === POSITION_DICTIONARY.LEFT || msg === POSITION_DICTIONARY.RIGHT) {
+                this.hintbar.classList.add(HINT_BAR_UPRIGHT_CLASSNAME);
                 this.hintbar.style.position = 'absolute';
                 this.hintbar.style.height = parseInt(window.getComputedStyle(element.parentNode, null).height, 10) + 'px';
                 this.hintbar.style.top = '0';
                 this.hintbar.style.width = this.hintbarHeight;
-                this.hintbar.style[msg] = '-2px';
+                this.hintbar.style[msg.toLowerCase()] = '-2px';
             }
 
             else {
@@ -285,12 +319,12 @@
                 this.hintbar.style.position = 'relative';
                 this.hintbar.style.width = parseInt(window.getComputedStyle(element.parentNode, null).width, 10) + 'px';
                 this.hintbar.style.height = this.hintbarHeight;
-                this.hintbar.style[offset.key] = offset.offset;
+                this.hintbar.style[offset.key.toLowerCase()] = offset.offset;
                 this.hintbar.style.left = '-21px';
-                this.hintbar.classList.remove('mz-cms-upright');
+                this.hintbar.classList.remove(HINT_BAR_UPRIGHT_CLASSNAME);
             }
 
-            const hintBarMessage = this.getModifiedMsg('row', msg, element);
+            const hintBarMessage = this.getModifiedMsg(BLOCK_TYPES.ROW, msg, element);
 
             this.hintBarMessage.innerHTML = hintBarMessage;
 
@@ -302,35 +336,35 @@
         }
 
         dragOccursOverDropZone(e, msg) {
-            return e.parentNode.parentNode.parentNode.classList.contains('mz-drop-zone')
-                   && msg === 'left' || e.parentNode.parentNode.parentNode.classList.contains('mz-drop-zone')
-                   && msg === 'right';
+            return e.parentNode.parentNode.parentNode.classList.contains(GRID_CLASSNAME)
+                   && msg === POSITION_DICTIONARY.LEFT || e.parentNode.parentNode.parentNode.classList.contains(GRID_CLASSNAME)
+                   && msg === POSITION_DICTIONARY.RIGHT;
         }
 
         getModifiedMsg(type, msg, element) {
 
-            if (type === 'row') {
+            if (type === BLOCK_TYPES.ROW) {
 
                 // ! a drag occurred in the left of a row, but theres a column to the left so we show in between;
-                if (msg === 'left' && element.parentNode.previousElementSibling
+                if (msg === POSITION_DICTIONARY.LEFT && element.parentNode.previousElementSibling
                         && element.parentNode.previousElementSibling.classList.contains('mz-layout-col')) {
                     return 'between';
                 }
 
                 // ! a drag occurred in the right of a row, but theres a column to the right so we show in between;
-                if (msg === 'right' && element.parentNode.nextElementSibling
+                if (msg === POSITION_DICTIONARY.RIGHT && element.parentNode.nextElementSibling
                         && element.parentNode.nextElementSibling.classList.contains('mz-layout-col')) {
                     return 'between';
                 }
                 // ! a drag occurred in the top of a row, but theres a row to the top so we show in between;
-                if (msg === 'top'
+                if (msg === POSITION_DICTIONARY.TOP
                         && element.previousSibling
-                        && !element.previousSibling.classList.contains('mz-layout-widget-header')) {
+                        && !element.previousSibling.classList.contains(LAYOUT_WIDGET_HEADER_CLASSNAME)) {
                     return 'between';
                 }
 
                 // ! a drag occurred in the bottom of a row, but theres a row to the bottom so we show in between;
-                if (msg === 'bottom' && element.nextSibling) {
+                if (msg === POSITION_DICTIONARY.BOTTOM && element.nextSibling) {
                     return 'between';
                 }
 
@@ -340,11 +374,11 @@
 
             else if (type === 'col') {
                 // hinting for cols only happens left to right
-                if (msg === 'left' && element.parentNode.previousElementSibling.classList.contains('mz-layout-col')) {
+                if (msg === POSITION_DICTIONARY.LEFT && element.parentNode.previousElementSibling.classList.contains('mz-layout-col')) {
                     return 'between';
                 }
 
-                if (msg === 'right'
+                if (msg === POSITION_DICTIONARY.RIGHT
                         && element.parentNode.nextElementSibling
                         && element.parentNode.nextElementSibling.classList.contains('mz-layout-col')) {
                     return 'between';
@@ -352,15 +386,29 @@
             }
 
             else if (type === 'widget') {
+
                 // hinting for widgets only happens top and bottom
-                if (msg === 'top'
+                if (msg === POSITION_DICTIONARY.TOP
                     && element.previousElementSibling
-                    && element.previousElementSibling.classList.contains('mz-cms-block')) {
+                    && element.previousElementSibling.classList.contains(BLOCK_CLASSNAME)) {
                     return 'between';
                 }
-                if (msg === 'bottom'
+
+                if (msg === POSITION_DICTIONARY.BOTTOM
                      && element.nextElementSibling
-                     && element.nextElementSibling.classList.contains('mz-cms-block')) {
+                     && element.nextElementSibling.classList.contains(BLOCK_CLASSNAME)) {
+                    return 'between';
+                }
+
+                if (msg === POSITION_DICTIONARY.LEFT
+                     && element.parentNode.previousElementSibling
+                     && element.parentNode.previousElementSibling.classList.contains('mz-layout-col')) {
+                    return 'between';
+                }
+
+                if (msg === POSITION_DICTIONARY.RIGHT
+                     && element.parentNode.nextElementSibling
+                     && element.parentNode.nextElementSibling.classList.contains('mz-layout-col')) {
                     return 'between';
                 }
             }
@@ -369,16 +417,16 @@
         }
 
         getHintBarOffset(msg, element) {
-            if (msg === 'top') {
+            if (msg === POSITION_DICTIONARY.TOP) {
                 return {
-                    key: 'top',
+                    key: POSITION_DICTIONARY.TOP,
                     offset: '-' + this.hintbarPadding + 'px'
                 };
             }
 
             else {
                 return {
-                    key: 'top',
+                    key: POSITION_DICTIONARY.TOP,
                     offset: parseInt(window.getComputedStyle(element, null).height, 10) - 44 + 'px'
                 };
             }
@@ -397,28 +445,28 @@
         }
 
         showLayoutHeaders(bool) {
-            Array.from(doc.querySelectorAll('.mz-layout-widget-header')).forEach((el) => {
+            Array.from(doc.querySelectorAll(LAYOUT_WIDGET_HEADER_SELECTOR)).forEach((el) => {
                 el.style.display = bool ? 'block' : 'none';
             });
 
             Array.from(doc.querySelectorAll('.mz-layout-widget, .mz-cms-col-')).forEach((el) => {
                 if (bool && Chorizo.helper.isInEditableDropzone(el)) {
                     if (!el.parentNode.classList.contains('mz-cms-grid')) {
-                        el.classList.add('content-view');
+                        el.classList.add(CONTENT_VIEW_CLASSNAME);
                     }
                 }
                 else {
-                    el.classList.remove('content-view');
+                    el.classList.remove(CONTENT_VIEW_CLASSNAME);
                 }
             });
 
-            Array.from(doc.querySelectorAll('.mz-cms-block')).forEach((block) => {
+            Array.from(doc.querySelectorAll(BLOCK_SELECTOR)).forEach((block) => {
                 if (bool && Chorizo.helper.isInEditableDropzone(block)) {
-                    block.classList.add('mz-content-screen');
+                    block.classList.add(CONTENT_SCREEN_CLASSNAME);
                 }
 
                 else {
-                    block.classList.remove('mz-content-screen');
+                    block.classList.remove(CONTENT_SCREEN_CLASSNAME);
                 }
             });
         }
@@ -485,11 +533,11 @@
 
                 const gridData = {
                     build: 'CALIENTE',
-                    id: JSON.parse(grid.getAttribute('data-drop-zone')).id,
+                    id: JSON.parse(grid.getAttribute(DATA_GRID_ATTRIBUTE)).id,
                     rows: []
                 };
 
-                Array.from(grid.querySelectorAll('.mz-cms-row')).forEach((row) => {
+                Array.from(grid.querySelectorAll(ROW_SELECTOR)).forEach((row) => {
 
                     // sweet spot of just the outer rows, that were not generated by the drop zone
                     if (!row.parentNode.classList.contains('mz-cms-grid')
@@ -505,14 +553,14 @@
             function getData(row) {
 
                 const rowData = {
-                    title: JSON.parse(row.getAttribute('data-widget'))
-                                ? JSON.parse(row.getAttribute('data-widget')).title
-                                : 'Mozu Layout Element',
+                    title: JSON.parse(row.getAttribute(DATA_WIDGET_ATTRIBUTE))
+                                ? JSON.parse(row.getAttribute(DATA_WIDGET_ATTRIBUTE)).title
+                                : ROW_TITLE,
                     columns: []
                 };
                 let colData;
 
-                Array.from(row.querySelectorAll('[class*=mz-cms-col]')).forEach((col) => {
+                Array.from(row.querySelectorAll(ALL_COL_SELECTOR)).forEach((col) => {
 
                     if (col.parentNode.isSameNode(row)) {
 
@@ -523,8 +571,8 @@
                             width: col.style.width
                         };
 
-                        if (col.querySelectorAll('.mz-cms-row').length > 0) {
-                            Array.from(col.querySelectorAll('.mz-cms-row')).forEach((interiorRow) => {
+                        if (col.querySelectorAll(ROW_SELECTOR).length > 0) {
+                            Array.from(col.querySelectorAll(ROW_SELECTOR)).forEach((interiorRow) => {
                                 if (interiorRow.parentNode.isSameNode(col)) {
                                     colData.rows.push(getData(interiorRow));
                                 }
@@ -532,8 +580,8 @@
                         }
 
                         else {
-                            Array.from(col.querySelectorAll('.mz-cms-block')).forEach((block) => {
-                                colData.widgets.push(JSON.parse(block.getAttribute('data-widget')));
+                            Array.from(col.querySelectorAll(BLOCK_SELECTOR)).forEach((block) => {
+                                colData.widgets.push(JSON.parse(block.getAttribute(DATA_WIDGET_ATTRIBUTE)));
                             });
                         }
 

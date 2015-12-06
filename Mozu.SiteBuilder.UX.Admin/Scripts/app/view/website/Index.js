@@ -301,8 +301,10 @@ Ext.define('Taco.view.website.Index', {
                     text: 'Pages',
                     toggleGroup: 'aboveTreeButtons',
                     pressed: true,
+                    pressedCls: 'active',
                     allowDepress: false,
                     enableToggle: true,
+                    cls: 'taco-link-button',
                     handler: function() {
                         this.sideBar.getLayout().setActiveItem(0);
                     }
@@ -317,6 +319,8 @@ Ext.define('Taco.view.website.Index', {
                     allowDepress: false,
                     enableToggle: true,
                     text: 'Widgets',
+                    pressedCls: 'active',
+                    cls: 'taco-link-button',
                     handler: function() {
                         this.sideBar.getLayout().setActiveItem(1);
                     }
@@ -645,19 +649,17 @@ Ext.define('Taco.view.website.Index', {
     getPageEditorButton: function() {
         return {
             xtype: 'button',
-            cls: 'website-editor-tab-btn',
+            cls: 'taco-link-button',
             ui: 'link',
             scale: 'small',
             text: 'Content',
+            pressedCls: 'active',
             toggleGroup: 'websiteEditorTabs',
             itemId: 'pageEditorTabButton',
             buttonGroup: 'isWebPage',
             allowDepress: false,
             enableToggle: true,
             pressed: true,
-            style: {
-                borderRadius: '2px 0px 0px 2px'
-            },
             scope: this,
             handler: function () {
                 var cardpanel = this.down('#editorCardPanel');
@@ -679,10 +681,11 @@ Ext.define('Taco.view.website.Index', {
 
         var config =  {
             xtype: 'button',
-            cls: 'website-editor-tab-btn',
+            cls: 'taco-link-button',
             ui: 'link',
             scale: 'small',
             text: 'Layout',
+            pressedCls: 'active',
             toggleGroup: 'websiteEditorTabs',
             itemId: 'layoutTabButton',
             buttonGroup: 'isWebPage',
@@ -713,9 +716,10 @@ Ext.define('Taco.view.website.Index', {
     getSettingsButton: function() {
         return {
             xtype: 'button',
-            cls: 'website-editor-tab-btn',
+            cls: 'taco-link-button',
             ui: 'link',
             scale: 'small',
+            pressedCls: 'active',
             buttonGroup: 'hasSettings',
             itemId: 'pageSettingsTabButton',
             toggleGroup: 'websiteEditorTabs',

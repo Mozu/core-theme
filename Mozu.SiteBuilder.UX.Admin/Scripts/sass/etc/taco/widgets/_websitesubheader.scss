@@ -5,12 +5,6 @@
     background-color: $color-framework-gray-border;
     height: 30px;
 
-    .#{$prefix}btn {
-    	border: none;
-      	padding: 7px 10px;
-      	background-color: $color-framework-gray-border !important;
-    }
-
     .#{$vprefix}website-resolution-btn {
 
     	&.desktop {

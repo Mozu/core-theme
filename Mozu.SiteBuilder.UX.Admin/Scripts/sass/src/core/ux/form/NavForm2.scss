@@ -4,8 +4,6 @@
     background-color: $color-framework-gray-lighter;
     border: 1px solid $color-standard-border;
     outline: 0px none;
-    //padding: 19px 39px;
-    //width: 180px;
 
     &.taco-fixed-navForm2 {
       position: fixed !important;
@@ -16,27 +14,11 @@
     li {
       border-bottom: 2px solid transparent;
       cursor: pointer;
-      font-size: px-to-rem(16);
       line-height: px-to-rem(20);
-      //margin-left: -40px;
-      //margin-top: 20px;
-      //padding-left: 38px;
       padding: 8px 15px;
       float: left;
       @include transition(color 0.2s, border-color 0.2s);
 
-      &:nth-of-type(1) {
-        //margin-top: 0px;
-      }
-
-      &:hover {
-        text-decoration: underline;
-      }
-
-      &.active {
-        color: $color-theme-base;
-        border-bottom-color: $color-theme-base;
-      }
     }
   }  
 

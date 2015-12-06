@@ -1,9 +1,144 @@
 (function e(t,n,r){function s(o,u){if(!n[o]){if(!t[o]){var a=typeof require=="function"&&require;if(!u&&a)return a(o,!0);if(i)return i(o,!0);var f=new Error("Cannot find module '"+o+"'");throw f.code="MODULE_NOT_FOUND",f}var l=n[o]={exports:{}};t[o][0].call(l.exports,function(e){var n=t[o][1][e];return s(n?n:e)},l,l.exports,e,t,n,r)}return n[o].exports}var i=typeof require=="function"&&require;for(var o=0;o<r.length;o++)s(r[o]);return s})({1:[function(require,module,exports){
+/* 
+* @Author: ben_cripps
+* @Date:   2015-12-05 15:02:05
+* @Last Modified by:   ben_cripps
+* @Last Modified time: 2015-12-05 20:30:06
+*/
+
+'use strict';
+
+Object.defineProperty(exports, '__esModule', {
+    value: true
+});
+var POSITION_DICTIONARY = {
+    TOP: 'TOP',
+    RIGHT: 'RIGHT',
+    BOTTOM: 'BOTTOM',
+    LEFT: 'LEFT'
+};
+
+exports.POSITION_DICTIONARY = POSITION_DICTIONARY;
+var BLOCK_TYPES = {
+    ROW: 'ROW',
+    COL: 'COL',
+    WIDGET: 'WIDGET'
+};
+
+exports.BLOCK_TYPES = BLOCK_TYPES;
+var CMS_EDITING_CLASSNAME = 'mz-cms-editing';
+
+exports.CMS_EDITING_CLASSNAME = CMS_EDITING_CLASSNAME;
+var GRID_CLASSNAME = 'mz-drop-zone';
+
+exports.GRID_CLASSNAME = GRID_CLASSNAME;
+var GRID_SELECTOR = '.' + GRID_CLASSNAME;
+
+exports.GRID_SELECTOR = GRID_SELECTOR;
+var COL_CLASSNAME = 'mz-cms-col-';
+
+exports.COL_CLASSNAME = COL_CLASSNAME;
+var COL_SELECTOR = '.' + COL_CLASSNAME;
+
+exports.COL_SELECTOR = COL_SELECTOR;
+var ALL_COL_SELECTOR = '[class*="' + COL_CLASSNAME + '"]';
+
+exports.ALL_COL_SELECTOR = ALL_COL_SELECTOR;
+var ROW_CLASSNAME = 'mz-cms-row';
+
+exports.ROW_CLASSNAME = ROW_CLASSNAME;
+var ROW_SELECTOR = '.' + ROW_CLASSNAME;
+
+exports.ROW_SELECTOR = ROW_SELECTOR;
+var BLOCK_CLASSNAME = 'mz-cms-block';
+
+exports.BLOCK_CLASSNAME = BLOCK_CLASSNAME;
+var BLOCK_SELECTOR = '.' + BLOCK_CLASSNAME;
+
+exports.BLOCK_SELECTOR = BLOCK_SELECTOR;
+var CONTENT_CLASSNAME = 'mz-cms-content';
+
+exports.CONTENT_CLASSNAME = CONTENT_CLASSNAME;
+var CONTENT_SELECTOR = '.' + CONTENT_CLASSNAME;
+
+exports.CONTENT_SELECTOR = CONTENT_SELECTOR;
+var DROP_HINT_TEXT = 'Drop an Element';
+
+exports.DROP_HINT_TEXT = DROP_HINT_TEXT;
+var DROP_HINT_CLASSNAME = 'mz-drop-hint';
+
+exports.DROP_HINT_CLASSNAME = DROP_HINT_CLASSNAME;
+var DROP_HINT_SELECTOR = '.' + DROP_HINT_CLASSNAME;
+
+exports.DROP_HINT_SELECTOR = DROP_HINT_SELECTOR;
+var ROW_TITLE = 'Dropzone';
+
+exports.ROW_TITLE = ROW_TITLE;
+var HINT_BAR_CLASSNAME = 'mz-cms-hint-bar';
+
+exports.HINT_BAR_CLASSNAME = HINT_BAR_CLASSNAME;
+var HINT_BAR_MESSAGE_CLASSNAME = 'mz-cms-hint-message';
+
+exports.HINT_BAR_MESSAGE_CLASSNAME = HINT_BAR_MESSAGE_CLASSNAME;
+var HINT_BAR_UPRIGHT_CLASSNAME = 'mz-cms-upright';
+
+exports.HINT_BAR_UPRIGHT_CLASSNAME = HINT_BAR_UPRIGHT_CLASSNAME;
+var RESIZER_CLASSNAME = 'mz-cms-resizer';
+
+exports.RESIZER_CLASSNAME = RESIZER_CLASSNAME;
+var RESIZER_HANDLE_CLASSNAME = 'mz-cms-bottom';
+
+exports.RESIZER_HANDLE_CLASSNAME = RESIZER_HANDLE_CLASSNAME;
+var DEFAULT_CURSOR_STYLE = 'auto';
+
+exports.DEFAULT_CURSOR_STYLE = DEFAULT_CURSOR_STYLE;
+var DRAG_CURSOR_STYLE = 'ew-resize';
+
+exports.DRAG_CURSOR_STYLE = DRAG_CURSOR_STYLE;
+var DATA_WIDGET_ATTRIBUTE = 'data-widget';
+
+exports.DATA_WIDGET_ATTRIBUTE = DATA_WIDGET_ATTRIBUTE;
+var DATA_GRID_ATTRIBUTE = 'data-drop-zone';
+
+exports.DATA_GRID_ATTRIBUTE = DATA_GRID_ATTRIBUTE;
+var LAYOUT_WIDGET_HEADER_CLASSNAME = 'mz-layout-widget-header';
+
+exports.LAYOUT_WIDGET_HEADER_CLASSNAME = LAYOUT_WIDGET_HEADER_CLASSNAME;
+var LAYOUT_WIDGET_HEADER_SELECTOR = '.' + LAYOUT_WIDGET_HEADER_CLASSNAME;
+
+exports.LAYOUT_WIDGET_HEADER_SELECTOR = LAYOUT_WIDGET_HEADER_SELECTOR;
+var CONTENT_SCREEN_CLASSNAME = 'mz-content-screen';
+
+exports.CONTENT_SCREEN_CLASSNAME = CONTENT_SCREEN_CLASSNAME;
+var CONTENT_VIEW_CLASSNAME = 'content-view';
+
+exports.CONTENT_VIEW_CLASSNAME = CONTENT_VIEW_CLASSNAME;
+var DROPOVER_CLASSNAME = 'mz-cms-drop-over';
+
+exports.DROPOVER_CLASSNAME = DROPOVER_CLASSNAME;
+var WIDGET_COPY_ID = 'mz-widget-copy';
+
+exports.WIDGET_COPY_ID = WIDGET_COPY_ID;
+var WIDGET_COPY_SELECTOR = '#' + WIDGET_COPY_ID;
+
+exports.WIDGET_COPY_SELECTOR = WIDGET_COPY_SELECTOR;
+var COL_COPY_ID = 'mz-node-copy';
+
+exports.COL_COPY_ID = COL_COPY_ID;
+var COL_COPY_SELECTOR = '#' + COL_COPY_ID;
+
+exports.COL_COPY_SELECTOR = COL_COPY_SELECTOR;
+var MIN_COLUMN_WIDTH = 10;
+exports.MIN_COLUMN_WIDTH = MIN_COLUMN_WIDTH;
+
+},{}],2:[function(require,module,exports){
 'use strict';
 
 var _createClass = (function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ('value' in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; })();
 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError('Cannot call a class as a function'); } }
+
+var _constants = require('./constants');
 
 (function (win, doc) {
     var Editor = (function () {
@@ -16,7 +151,7 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
         _createClass(Editor, [{
             key: 'init',
             value: function init() {
-                document.body.classList.add('mz-cms-editing');
+                document.body.classList.add(_constants.CMS_EDITING_CLASSNAME);
                 this.createHintBar();
                 this.createDragIcon();
                 this.createResizer();
@@ -28,7 +163,6 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
             key: 'setDirtyState',
             value: function setDirtyState(val) {
                 this._dirty = val ? val : false;
-                console.log(this._dirty);
             }
         }, {
             key: 'createResizer',
@@ -36,8 +170,8 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
                 this.resizer = doc.createElement('div');
                 this.handle = doc.createElement('div');
 
-                this.resizer.classList.add('mz-cms-resizer');
-                this.handle.classList.add('mz-cms-bottom');
+                this.resizer.classList.add(_constants.RESIZER_CLASSNAME);
+                this.handle.classList.add(_constants.RESIZER_HANDLE_CLASSNAME);
 
                 this.resizer.appendChild(this.handle);
 
@@ -63,10 +197,10 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
 
                 switch (type) {
                     case 'drag':
-                        cursorStyle = 'ew-resize';
+                        cursorStyle = _constants.DRAG_CURSOR_STYLE;
                         break;
                     default:
-                        cursorStyle = 'auto';
+                        cursorStyle = _constants.DEFAULT_CURSOR_STYLE;
                 }
 
                 document.body.style.cursor = cursorStyle;
@@ -90,7 +224,7 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
 
                     if (block && widgetData) {
                         widgetData.config.height = newHeight;
-                        block.setAttribute('data-widget', JSON.stringify(widgetData));
+                        block.setAttribute(_constants.DATA_WIDGET_ATTRIBUTE, JSON.stringify(widgetData));
                     }
                     block = null;
                     widgetData = null;
@@ -100,10 +234,10 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
 
                     if (this.resizing) {
                         block = this.resizer.parentNode;
-                        widgetData = JSON.parse(block.getAttribute('data-widget'));
+                        widgetData = JSON.parse(block.getAttribute(_constants.DATA_WIDGET_ATTRIBUTE));
                         newHeight = doc.body.scrollTop + e.clientY - block.offsetTop - 320;
 
-                        block.querySelector('.mz-cms-content').style.height = newHeight + 'px';
+                        block.querySelector(_constants.CONTENT_SELECTOR).style.height = newHeight + 'px';
                     } else if (this._draggingColumn) {
                         this.setDirtyState(true);
                         this.resizePercentage(e);
@@ -147,20 +281,19 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
                 e.preventDefault();
                 this.setCursorStyle('drag');
 
-                var MIN_WIDTH = 10;
                 var col = this._draggingColumn;
                 var nextSibling = col.nextElementSibling;
                 var computedPercentage = this.getComputedPercentage(e, col) * 100;
-                var allAssociatedColumns = Array.from(col.parentNode.querySelectorAll('[class*="mz-cms-col-"]'));
+                var allAssociatedColumns = Array.from(col.parentNode.querySelectorAll(_constants.ALL_COL_SELECTOR));
                 var otherColsWidth = this.getOtherColsCombinedWidth(allAssociatedColumns, col);
                 var finalColumnWidth = undefined;
                 var remainingColumnsWidth = undefined;
 
                 // if the width of our newly computed percentage is greater than the allowed limit, return
-                if (otherColsWidth + computedPercentage + MIN_WIDTH >= 100) {
+                if (otherColsWidth + computedPercentage + _constants.MIN_COLUMN_WIDTH >= 100) {
                     return false;
-                } else if (computedPercentage < MIN_WIDTH) {
-                    col.style.width = MIN_WIDTH + '%';
+                } else if (computedPercentage < _constants.MIN_COLUMN_WIDTH) {
+                    col.style.width = _constants.MIN_COLUMN_WIDTH + '%';
                 } else {
                     col.style.width = computedPercentage + '%';
                 }
@@ -170,8 +303,8 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
                 remainingColumnsWidth = this.getWidthWithQuery(allAssociatedColumns, col.parentNode, nextSibling);
 
                 // dont let them make a column smaller than 10%
-                if (remainingColumnsWidth < MIN_WIDTH) {
-                    nextSibling.style.width = MIN_WIDTH + '%';
+                if (remainingColumnsWidth < _constants.MIN_COLUMN_WIDTH) {
+                    nextSibling.style.width = _constants.MIN_COLUMN_WIDTH + '%';
                     finalColumnWidth = this.getWidthWithQuery(col.parentNode, col);
                     col.style.width = finalColumnWidth + '%';
                 } else {
@@ -193,8 +326,8 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
             value: function createHintBar() {
                 this.hintbar = doc.createElement('div');
                 this.hintBarMessage = doc.createElement('div');
-                this.hintbar.className = 'mz-cms-hint-bar';
-                this.hintBarMessage.className = 'mz-cms-hint-message';
+                this.hintbar.className = _constants.HINT_BAR_CLASSNAME;
+                this.hintBarMessage.className = _constants.HINT_BAR_MESSAGE_CLASSNAME;
                 this.hintbar.appendChild(this.hintBarMessage);
 
                 this.hintbarHeight = '3px';
@@ -212,13 +345,13 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
             value: function showColHintBar(element, x, y, width, msg) {
                 this.cleanhintbar();
 
-                if (msg === 'left' || msg === 'right') {
-                    this.hintbar.classList.add('mz-cms-upright');
+                if (msg === _constants.POSITION_DICTIONARY.LEFT || msg === _constants.POSITION_DICTIONARY.RIGHT) {
+                    this.hintbar.classList.add(_constants.HINT_BAR_UPRIGHT_CLASSNAME);
                     this.hintbar.style.position = 'absolute';
                     this.hintbar.style.height = parseInt(window.getComputedStyle(element.parentNode, null).height, 10) + 'px';
                     this.hintbar.style.top = '0';
                     this.hintbar.style.width = this.hintbarHeight;
-                    this.hintbar.style[msg] = '-2px';
+                    this.hintbar.style[msg.toLowerCase()] = '-2px';
                 }
 
                 var hintBarMessage = this.getModifiedMsg('col', msg, element);
@@ -234,7 +367,7 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
         }, {
             key: 'updateHintBarMessageCls',
             value: function updateHintBarMessageCls(message) {
-                this.hintBarMessage.classList.add(message);
+                this.hintBarMessage.classList.add(message.toLowerCase());
             }
         }, {
             key: 'showWidgetHintBar',
@@ -242,32 +375,41 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
                 this.cleanhintbar();
 
                 // dont need to hint, unless there are already widgets in this col
-                if (!col.querySelector('.mz-cms-block') || !msg) {
+                if (!col.querySelector(_constants.BLOCK_SELECTOR) || !msg) {
                     this.hintbar.style.display = 'none';
                     return false;
-                } else {
-                    this.hintbar.classList.remove('mz-cms-upright');
-                    this.hintbar.style.position = 'absolute';
-                    this.hintbar.style[msg] = '0';
-                    this.hintbar.style.width = parseInt(window.getComputedStyle(element, null).width, 10) + 'px';
-                    this.hintbar.style.height = this.hintbarHeight;
-                    this.hintbar.style[msg] = '-2px';
                 }
 
                 var hintBarMessage = this.getModifiedMsg('widget', msg, element);
 
+                if (msg === _constants.POSITION_DICTIONARY.TOP || msg === _constants.POSITION_DICTIONARY.BOTTOM) {
+                    this.hintbar.classList.remove(_constants.HINT_BAR_UPRIGHT_CLASSNAME);
+                    this.hintbar.style.position = 'absolute';
+                    this.hintbar.style[msg.toLowerCase()] = '0';
+                    this.hintbar.style.width = parseInt(window.getComputedStyle(element, null).width, 10) + 'px';
+                    this.hintbar.style.height = this.hintbarHeight;
+                    this.hintbar.style[msg.toLowerCase()] = '-2px';
+                    element.appendChild(this.hintbar);
+                } else {
+                    this.hintbar.classList.add(_constants.HINT_BAR_UPRIGHT_CLASSNAME);
+                    this.hintbar.style.position = 'absolute';
+                    this.hintbar.style.height = parseInt(window.getComputedStyle(element.parentNode, null).height, 10) + 'px';
+                    this.hintbar.style.top = '0';
+                    this.hintbar.style.width = this.hintbarHeight;
+                    this.hintbar.style[msg.toLowerCase()] = '-2px';
+                    element.parentNode.appendChild(this.hintbar);
+                }
+
                 this.hintBarMessage.innerHTML = hintBarMessage;
 
                 this.updateHintBarMessageCls(hintBarMessage);
-
-                element.appendChild(this.hintbar);
 
                 this.hintbar.style.display = 'block';
             }
         }, {
             key: 'cleanhintbar',
             value: function cleanhintbar() {
-                this.hintBarMessage.className = 'mz-cms-hint-message';
+                this.hintBarMessage.className = _constants.HINT_BAR_MESSAGE_CLASSNAME;
                 this.hintbar.style.right = null;
                 this.hintbar.style.left = null;
                 this.hintbar.style.bottom = null;
@@ -285,25 +427,25 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
                 // to do: make this css -- not awful, awful js
                 this.cleanhintbar();
 
-                if (msg === 'left' || msg === 'right') {
-                    this.hintbar.classList.add('mz-cms-upright');
+                if (msg === _constants.POSITION_DICTIONARY.LEFT || msg === _constants.POSITION_DICTIONARY.RIGHT) {
+                    this.hintbar.classList.add(_constants.HINT_BAR_UPRIGHT_CLASSNAME);
                     this.hintbar.style.position = 'absolute';
                     this.hintbar.style.height = parseInt(window.getComputedStyle(element.parentNode, null).height, 10) + 'px';
                     this.hintbar.style.top = '0';
                     this.hintbar.style.width = this.hintbarHeight;
-                    this.hintbar.style[msg] = '-2px';
+                    this.hintbar.style[msg.toLowerCase()] = '-2px';
                 } else {
 
                     offset = this.getHintBarOffset.call(this, msg, element);
                     this.hintbar.style.position = 'relative';
                     this.hintbar.style.width = parseInt(window.getComputedStyle(element.parentNode, null).width, 10) + 'px';
                     this.hintbar.style.height = this.hintbarHeight;
-                    this.hintbar.style[offset.key] = offset.offset;
+                    this.hintbar.style[offset.key.toLowerCase()] = offset.offset;
                     this.hintbar.style.left = '-21px';
-                    this.hintbar.classList.remove('mz-cms-upright');
+                    this.hintbar.classList.remove(_constants.HINT_BAR_UPRIGHT_CLASSNAME);
                 }
 
-                var hintBarMessage = this.getModifiedMsg('row', msg, element);
+                var hintBarMessage = this.getModifiedMsg(_constants.BLOCK_TYPES.ROW, msg, element);
 
                 this.hintBarMessage.innerHTML = hintBarMessage;
 
@@ -316,49 +458,59 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
         }, {
             key: 'dragOccursOverDropZone',
             value: function dragOccursOverDropZone(e, msg) {
-                return e.parentNode.parentNode.parentNode.classList.contains('mz-drop-zone') && msg === 'left' || e.parentNode.parentNode.parentNode.classList.contains('mz-drop-zone') && msg === 'right';
+                return e.parentNode.parentNode.parentNode.classList.contains(_constants.GRID_CLASSNAME) && msg === _constants.POSITION_DICTIONARY.LEFT || e.parentNode.parentNode.parentNode.classList.contains(_constants.GRID_CLASSNAME) && msg === _constants.POSITION_DICTIONARY.RIGHT;
             }
         }, {
             key: 'getModifiedMsg',
             value: function getModifiedMsg(type, msg, element) {
 
-                if (type === 'row') {
+                if (type === _constants.BLOCK_TYPES.ROW) {
 
                     // ! a drag occurred in the left of a row, but theres a column to the left so we show in between;
-                    if (msg === 'left' && element.parentNode.previousElementSibling && element.parentNode.previousElementSibling.classList.contains('mz-layout-col')) {
+                    if (msg === _constants.POSITION_DICTIONARY.LEFT && element.parentNode.previousElementSibling && element.parentNode.previousElementSibling.classList.contains('mz-layout-col')) {
                         return 'between';
                     }
 
                     // ! a drag occurred in the right of a row, but theres a column to the right so we show in between;
-                    if (msg === 'right' && element.parentNode.nextElementSibling && element.parentNode.nextElementSibling.classList.contains('mz-layout-col')) {
+                    if (msg === _constants.POSITION_DICTIONARY.RIGHT && element.parentNode.nextElementSibling && element.parentNode.nextElementSibling.classList.contains('mz-layout-col')) {
                         return 'between';
                     }
                     // ! a drag occurred in the top of a row, but theres a row to the top so we show in between;
-                    if (msg === 'top' && element.previousSibling && !element.previousSibling.classList.contains('mz-layout-widget-header')) {
+                    if (msg === _constants.POSITION_DICTIONARY.TOP && element.previousSibling && !element.previousSibling.classList.contains(_constants.LAYOUT_WIDGET_HEADER_CLASSNAME)) {
                         return 'between';
                     }
 
                     // ! a drag occurred in the bottom of a row, but theres a row to the bottom so we show in between;
-                    if (msg === 'bottom' && element.nextSibling) {
+                    if (msg === _constants.POSITION_DICTIONARY.BOTTOM && element.nextSibling) {
                         return 'between';
                     }
 
                     return msg;
                 } else if (type === 'col') {
                     // hinting for cols only happens left to right
-                    if (msg === 'left' && element.parentNode.previousElementSibling.classList.contains('mz-layout-col')) {
+                    if (msg === _constants.POSITION_DICTIONARY.LEFT && element.parentNode.previousElementSibling.classList.contains('mz-layout-col')) {
                         return 'between';
                     }
 
-                    if (msg === 'right' && element.parentNode.nextElementSibling && element.parentNode.nextElementSibling.classList.contains('mz-layout-col')) {
+                    if (msg === _constants.POSITION_DICTIONARY.RIGHT && element.parentNode.nextElementSibling && element.parentNode.nextElementSibling.classList.contains('mz-layout-col')) {
                         return 'between';
                     }
                 } else if (type === 'widget') {
+
                     // hinting for widgets only happens top and bottom
-                    if (msg === 'top' && element.previousElementSibling && element.previousElementSibling.classList.contains('mz-cms-block')) {
+                    if (msg === _constants.POSITION_DICTIONARY.TOP && element.previousElementSibling && element.previousElementSibling.classList.contains(_constants.BLOCK_CLASSNAME)) {
                         return 'between';
                     }
-                    if (msg === 'bottom' && element.nextElementSibling && element.nextElementSibling.classList.contains('mz-cms-block')) {
+
+                    if (msg === _constants.POSITION_DICTIONARY.BOTTOM && element.nextElementSibling && element.nextElementSibling.classList.contains(_constants.BLOCK_CLASSNAME)) {
+                        return 'between';
+                    }
+
+                    if (msg === _constants.POSITION_DICTIONARY.LEFT && element.parentNode.previousElementSibling && element.parentNode.previousElementSibling.classList.contains('mz-layout-col')) {
+                        return 'between';
+                    }
+
+                    if (msg === _constants.POSITION_DICTIONARY.RIGHT && element.parentNode.nextElementSibling && element.parentNode.nextElementSibling.classList.contains('mz-layout-col')) {
                         return 'between';
                     }
                 }
@@ -368,14 +520,14 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
         }, {
             key: 'getHintBarOffset',
             value: function getHintBarOffset(msg, element) {
-                if (msg === 'top') {
+                if (msg === _constants.POSITION_DICTIONARY.TOP) {
                     return {
-                        key: 'top',
+                        key: _constants.POSITION_DICTIONARY.TOP,
                         offset: '-' + this.hintbarPadding + 'px'
                     };
                 } else {
                     return {
-                        key: 'top',
+                        key: _constants.POSITION_DICTIONARY.TOP,
                         offset: parseInt(window.getComputedStyle(element, null).height, 10) - 44 + 'px'
                     };
                 }
@@ -396,25 +548,25 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
         }, {
             key: 'showLayoutHeaders',
             value: function showLayoutHeaders(bool) {
-                Array.from(doc.querySelectorAll('.mz-layout-widget-header')).forEach(function (el) {
+                Array.from(doc.querySelectorAll(_constants.LAYOUT_WIDGET_HEADER_SELECTOR)).forEach(function (el) {
                     el.style.display = bool ? 'block' : 'none';
                 });
 
                 Array.from(doc.querySelectorAll('.mz-layout-widget, .mz-cms-col-')).forEach(function (el) {
                     if (bool && Chorizo.helper.isInEditableDropzone(el)) {
                         if (!el.parentNode.classList.contains('mz-cms-grid')) {
-                            el.classList.add('content-view');
+                            el.classList.add(_constants.CONTENT_VIEW_CLASSNAME);
                         }
                     } else {
-                        el.classList.remove('content-view');
+                        el.classList.remove(_constants.CONTENT_VIEW_CLASSNAME);
                     }
                 });
 
-                Array.from(doc.querySelectorAll('.mz-cms-block')).forEach(function (block) {
+                Array.from(doc.querySelectorAll(_constants.BLOCK_SELECTOR)).forEach(function (block) {
                     if (bool && Chorizo.helper.isInEditableDropzone(block)) {
-                        block.classList.add('mz-content-screen');
+                        block.classList.add(_constants.CONTENT_SCREEN_CLASSNAME);
                     } else {
-                        block.classList.remove('mz-content-screen');
+                        block.classList.remove(_constants.CONTENT_SCREEN_CLASSNAME);
                     }
                 });
             }
@@ -488,11 +640,11 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
 
                     var gridData = {
                         build: 'CALIENTE',
-                        id: JSON.parse(grid.getAttribute('data-drop-zone')).id,
+                        id: JSON.parse(grid.getAttribute(_constants.DATA_GRID_ATTRIBUTE)).id,
                         rows: []
                     };
 
-                    Array.from(grid.querySelectorAll('.mz-cms-row')).forEach(function (row) {
+                    Array.from(grid.querySelectorAll(_constants.ROW_SELECTOR)).forEach(function (row) {
 
                         // sweet spot of just the outer rows, that were not generated by the drop zone
                         if (!row.parentNode.classList.contains('mz-cms-grid') && row.parentNode.parentNode.parentNode.classList.contains('mz-cms-grid')) {
@@ -506,12 +658,12 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
                 function getData(row) {
 
                     var rowData = {
-                        title: JSON.parse(row.getAttribute('data-widget')) ? JSON.parse(row.getAttribute('data-widget')).title : 'Mozu Layout Element',
+                        title: JSON.parse(row.getAttribute(_constants.DATA_WIDGET_ATTRIBUTE)) ? JSON.parse(row.getAttribute(_constants.DATA_WIDGET_ATTRIBUTE)).title : _constants.ROW_TITLE,
                         columns: []
                     };
                     var colData = undefined;
 
-                    Array.from(row.querySelectorAll('[class*=mz-cms-col]')).forEach(function (col) {
+                    Array.from(row.querySelectorAll(_constants.ALL_COL_SELECTOR)).forEach(function (col) {
 
                         if (col.parentNode.isSameNode(row)) {
 
@@ -522,15 +674,15 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
                                 width: col.style.width
                             };
 
-                            if (col.querySelectorAll('.mz-cms-row').length > 0) {
-                                Array.from(col.querySelectorAll('.mz-cms-row')).forEach(function (interiorRow) {
+                            if (col.querySelectorAll(_constants.ROW_SELECTOR).length > 0) {
+                                Array.from(col.querySelectorAll(_constants.ROW_SELECTOR)).forEach(function (interiorRow) {
                                     if (interiorRow.parentNode.isSameNode(col)) {
                                         colData.rows.push(getData(interiorRow));
                                     }
                                 });
                             } else {
-                                Array.from(col.querySelectorAll('.mz-cms-block')).forEach(function (block) {
-                                    colData.widgets.push(JSON.parse(block.getAttribute('data-widget')));
+                                Array.from(col.querySelectorAll(_constants.BLOCK_SELECTOR)).forEach(function (block) {
+                                    colData.widgets.push(JSON.parse(block.getAttribute(_constants.DATA_WIDGET_ATTRIBUTE)));
                                 });
                             }
 
@@ -583,7 +735,7 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
     });
 })(window, document);
 
-},{}],2:[function(require,module,exports){
+},{"./constants":1}],3:[function(require,module,exports){
 'use strict';
 
 var _createClass = (function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ('value' in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; })();
@@ -876,7 +1028,7 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
 	});
 })(window, document);
 
-},{}],3:[function(require,module,exports){
+},{}],4:[function(require,module,exports){
 'use strict';
 
 var _createClass = (function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ('value' in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; })();
@@ -948,7 +1100,7 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
     });
 })(window, document);
 
-},{}],4:[function(require,module,exports){
+},{}],5:[function(require,module,exports){
 'use strict';
 
 var _get = function get(_x, _x2, _x3) { var _again = true; _function: while (_again) { var object = _x, property = _x2, receiver = _x3; _again = false; if (object === null) object = Function.prototype; var desc = Object.getOwnPropertyDescriptor(object, property); if (desc === undefined) { var parent = Object.getPrototypeOf(object); if (parent === null) { return undefined; } else { _x = parent; _x2 = property; _x3 = receiver; _again = true; desc = parent = undefined; continue _function; } } else if ('value' in desc) { return desc.value; } else { var getter = desc.get; if (getter === undefined) { return undefined; } return getter.call(receiver); } } };
@@ -959,22 +1111,9 @@ function _inherits(subClass, superClass) { if (typeof superClass !== 'function' 
 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError('Cannot call a class as a function'); } }
 
+var _constants = require('./constants');
+
 (function (win, doc) {
-
-    var GRID_CLASSNAME = 'mz-drop-zone';
-    var GRID_SELECTOR = '.' + GRID_CLASSNAME;
-    var COL_CLASSNAME = 'mz-cms-col-';
-    var COL_SELECTOR = '.' + COL_CLASSNAME;
-    var ALL_COL_SELECTOR = '[class*="' + COL_CLASSNAME + '"]';
-    var ROW_CLASSNAME = 'mz-cms-row';
-    var ROW_SELECTOR = '.' + ROW_CLASSNAME;
-    var BLOCK_CLASSNAME = 'mz-cms-block';
-    var BLOCK_SELECTOR = '.' + BLOCK_CLASSNAME;
-    var CONTENT_CLASSNAME = 'mz-cms-content';
-    var CONTENT_SELECTOR = '.' + CONTENT_CLASSNAME;
-
-    var DROP_HINT_TEXT = 'Drop an Element';
-    var ROW_TITLE = 'Dropzone';
 
     var _mouseposition = null;
 
@@ -1028,11 +1167,11 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
                 }
             }
         }, {
-            key: 'setMousePosition',
-            value: function setMousePosition(x, y, w, h, el) {
+            key: 'findPosition',
+            value: function findPosition(x, y, w, h) {
                 // element is divided into four triangles
                 // using mouseX, mouseY, and width and height, we find which quad
-                var quadrants = [['left', 'bottom'], ['top', 'right']];
+                var quadrants = [[_constants.POSITION_DICTIONARY.LEFT, _constants.POSITION_DICTIONARY.BOTTOM], [_constants.POSITION_DICTIONARY.TOP, _constants.POSITION_DICTIONARY.RIGHT]];
 
                 if (y > h / w * x) {
                     quadrants = quadrants[0];
@@ -1040,10 +1179,15 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
                     quadrants = quadrants[1];
                 }
 
+                return y < -h / w * x + h ? quadrants[0] : quadrants[1];
+            }
+        }, {
+            key: 'setMousePosition',
+            value: function setMousePosition(x, y, w, h, el) {
                 _mouseposition = {
-                    position: y < -h / w * x + h ? quadrants[0] : quadrants[1],
+                    position: this.findPosition(x, y, w, h),
                     element: el,
-                    type: 'row'
+                    type: _constants.BLOCK_TYPES.ROW
                 };
             }
         }, {
@@ -1051,12 +1195,12 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
             value: function wrapLayout(isEmptyGrid) {
                 // if there is existing dropzone content, we need to wrap it with a layout element, and then init the column
                 this.element.innerHTML = ['<div class="mz-layout-widget mz-layout-row mz-cms-row mz-editing">', '<div class="mz-layout-col mz-cms-col- mz-editing" style="width:100%">', this.element.innerHTML, '</div>', '</div>'].join('');
-                var wrapper = new Col(this.element.querySelector(COL_SELECTOR), isEmptyGrid);
+                var wrapper = new Col(this.element.querySelector(_constants.COL_SELECTOR), isEmptyGrid);
 
                 // adding the class to correct padding -- not to the newly generated wrapper layout
-                Array.from(this.element.querySelectorAll(ROW_SELECTOR)).forEach(function (row) {
+                Array.from(this.element.querySelectorAll(_constants.ROW_SELECTOR)).forEach(function (row) {
                     if (!row.parentNode.classList.contains('mz-cms-grid')) {
-                        row.classList.add('content-view');
+                        row.classList.add(_constants.CONTENT_VIEW_CLASSNAME);
                     }
                 });
             }
@@ -1068,7 +1212,7 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
                 shell.outerHTML = html;
                 // first child gets around the shell div created from safe insert of outerHTML
                 this.element = this.element.firstChild;
-                this.element.classList.add('content-view');
+                this.element.classList.add(_constants.CONTENT_VIEW_CLASSNAME);
             }
         }, {
             key: 'makeDraggable',
@@ -1091,7 +1235,7 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
             value: function showResizer(e) {
                 e.stopPropagation();
 
-                Array.from(doc.querySelectorAll(ALL_COL_SELECTOR + ', ' + BLOCK_SELECTOR)).forEach(function (col) {
+                Array.from(doc.querySelectorAll(_constants.ALL_COL_SELECTOR + ', ' + _constants.BLOCK_SELECTOR)).forEach(function (col) {
                     col.classList.remove('mz-cms-state-selected');
                 });
 
@@ -1115,7 +1259,7 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
             _get(Object.getPrototypeOf(Grid.prototype), 'constructor', this).call(this, el);
             this._type = 'grid';
 
-            this.dropZoneData = JSON.parse(this.element.getAttribute('data-drop-zone'));
+            this.dropZoneData = JSON.parse(this.element.getAttribute(_constants.DATA_GRID_ATTRIBUTE));
             this.span = this.dropZoneData ? this.dropZoneData.span : null;
 
             this.attachEvents({
@@ -1130,7 +1274,7 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
             key: 'rebase',
             value: function rebase() {
 
-                if (!this.get(ROW_SELECTOR)) {
+                if (!this.get(_constants.ROW_SELECTOR)) {
                     this.createLayout(true);
                 } else {
                     this.wrapLayout(true);
@@ -1168,7 +1312,7 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
 
             _get(Object.getPrototypeOf(Block.prototype), 'constructor', this).call(this, el || doc.createElement('div'));
             this._type = 'block';
-            this.widgetData = JSON.parse(this.element.getAttribute('data-widget'));
+            this.widgetData = JSON.parse(this.element.getAttribute(_constants.DATA_WIDGET_ATTRIBUTE));
             this.content = this.element.querySelector('.mz-cms-content') || doc.createElement('div');
             this.attachEvents({
                 mouseover: this.onHover.bind(this),
@@ -1194,12 +1338,12 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
         }, {
             key: 'onDragStart',
             value: function onDragStart(e) {
-                var widgetData = JSON.parse(this.element.getAttribute('data-widget'));
+                var widgetData = JSON.parse(this.element.getAttribute(_constants.DATA_WIDGET_ATTRIBUTE));
                 var body = this.element.innerHTML;
 
                 Chorizo.editor.initDragIcon(Chorizo.editor.getWidgetIcon(widgetData.definitionId));
 
-                this.element.id = 'mz-widget-copy';
+                this.element.id = _constants.WIDGET_COPY_ID;
 
                 e.dataTransfer.setData('text/plain', JSON.stringify({
                     id: widgetData.definitionId,
@@ -1251,7 +1395,7 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
             value: function update(html, cfg) {
                 this.content.innerHTML = html;
                 this.widgetData = cfg;
-                this.element.setAttribute('data-widget', JSON.stringify(cfg));
+                this.element.setAttribute(_constants.DATA_WIDGET_ATTRIBUTE, JSON.stringify(cfg));
 
                 if (cfg.config.imageHeight) {
                     this.content.style.height = Number(cfg.config.imageHeight) ? cfg.config.imageHeight + 'px' : cfg.config.imageHeight;
@@ -1270,11 +1414,11 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
         }, {
             key: 'create',
             value: function create(cfg, html) {
-                this.element.className = BLOCK_CLASSNAME;
-                this.content.className = CONTENT_CLASSNAME;
+                this.element.className = _constants.BLOCK_CLASSNAME;
+                this.content.className = _constants.CONTENT_CLASSNAME;
                 this.element.appendChild(this.content);
                 this.widgetData = cfg;
-                this.element.setAttribute('data-widget', JSON.stringify(cfg));
+                this.element.setAttribute(_constants.DATA_WIDGET_ATTRIBUTE, JSON.stringify(cfg));
 
                 if (cfg.config && cfg.config.height) {
                     this.content.style.height = cfg.config.height + 'px';
@@ -1400,8 +1544,8 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
                 var child = this.element.firstChild;
                 var header = doc.createElement('div');
 
-                header.classList.add('mz-layout-widget-header');
-                header.classList.add('col');
+                header.classList.add(_constants.LAYOUT_WIDGET_HEADER_CLASSNAME);
+                header.classList.add(_constants.BLOCK_TYPES.COL.toLowerCase());
 
                 this.header = header;
 
@@ -1445,14 +1589,14 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
             key: 'editLayout',
             value: function editLayout(e) {
                 Chorizo.editor.edit({
-                    element: this.closest(e.target, COL_CLASSNAME),
+                    element: this.closest(e.target, _constants.COL_CLASSNAME),
                     type: 'content'
                 });
             }
         }, {
             key: 'rebase',
             value: function rebase(containingRow) {
-                var cols = Array.from(containingRow.querySelectorAll(ALL_COL_SELECTOR)).filter(function (col) {
+                var cols = Array.from(containingRow.querySelectorAll(_constants.ALL_COL_SELECTOR)).filter(function (col) {
                     return col.parentNode.isSameNode(containingRow);
                 });
 
@@ -1482,10 +1626,10 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
                 // if not, we need to readd the drophint son
 
                 children = Array.from(containingRow.childNodes).some(function (child) {
-                    return child.classList && !child.classList.contains('mz-layout-widget-header') && !child.classList.contains('mz-cms-hint-bar');
+                    return child.classList && !child.classList.contains(_constants.LAYOUT_WIDGET_HEADER_CLASSNAME) && !child.classList.contains('mz-cms-hint-bar');
                 });
 
-                parentLayout = containingRow.parentNode ? this.closest(containingRow.parentNode, COL_CLASSNAME) : null;
+                parentLayout = containingRow.parentNode ? this.closest(containingRow.parentNode, _constants.COL_CLASSNAME) : null;
 
                 // if the element has children DONT add the drop hint
                 if (!children) {
@@ -1497,7 +1641,7 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
 
                     // if the element has no children, but the parent container DOES have children
                     // do not add a drop hint
-                    if (!col.element.querySelector(ROW_SELECTOR)) {
+                    if (!col.element.querySelector(_constants.ROW_SELECTOR)) {
                         col.addDropHint();
                     }
                 } else {
@@ -1512,9 +1656,9 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
         }, {
             key: 'removeElementWhereDragStarted',
             value: function removeElementWhereDragStarted() {
-                if (doc.querySelector('#mz-node-copy')) {
+                if (doc.querySelector(_constants.COL_COPY_SELECTOR)) {
                     var tempCol = new Col();
-                    tempCol.element = doc.querySelector('#mz-node-copy');
+                    tempCol.element = doc.querySelector(_constants.COL_COPY_SELECTOR);
                     tempCol.destroy();
                 }
             }
@@ -1522,7 +1666,7 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
             key: 'dropWithContent',
             value: function dropWithContent(layout) {
 
-                var previousHTML = doc.querySelector('#mz-node-copy') ? doc.querySelector('#mz-node-copy').cloneNode(true) : null;
+                var previousHTML = doc.querySelector(_constants.COL_COPY_SELECTOR) ? doc.querySelector(_constants.COL_COPY_SELECTOR).cloneNode(true) : null;
 
                 if (previousHTML) {
                     layout.removeDropHint();
@@ -1542,9 +1686,9 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
         }, {
             key: 'reinitializeContent',
             value: function reinitializeContent(layout) {
-                var rows = layout.element.querySelectorAll(ROW_SELECTOR);
-                var cols = layout.element.querySelectorAll(ALL_COL_SELECTOR);
-                var blocks = layout.element.querySelectorAll(BLOCK_SELECTOR);
+                var rows = layout.element.querySelectorAll(_constants.ROW_SELECTOR);
+                var cols = layout.element.querySelectorAll(_constants.ALL_COL_SELECTOR);
+                var blocks = layout.element.querySelectorAll(_constants.BLOCK_SELECTOR);
                 var nodeList = Array.prototype.slice.call(rows).concat(Array.prototype.slice.call(cols)).concat(Array.prototype.slice.call(blocks));
 
                 // reinit the layouts edit events becuase theyve been destroyed
@@ -1556,9 +1700,9 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
                     var constructor = undefined;
                     var temp = undefined;
 
-                    if (el.classList.contains(ROW_CLASSNAME)) {
+                    if (el.classList.contains(_constants.ROW_CLASSNAME)) {
                         constructor = Row;
-                    } else if (el.classList.contains(BLOCK_CLASSNAME)) {
+                    } else if (el.classList.contains(_constants.BLOCK_CLASSNAME)) {
                         constructor = Block;
                     } else {
                         constructor = Col;
@@ -1592,15 +1736,15 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
             key: 'onDragStart',
             value: function onDragStart(e) {
                 var widgetData = undefined;
-                var hasContent = this.element.querySelectorAll(BLOCK_SELECTOR + ', ' + ALL_COL_SELECTOR + ', mz-cms-row').length > 0;
+                var hasContent = this.element.querySelectorAll(_constants.BLOCK_SELECTOR + ', ' + _constants.ALL_COL_SELECTOR + ', mz-cms-row').length > 0;
 
-                if (this.element.querySelector(BLOCK_SELECTOR)) {
-                    widgetData = this.element.querySelector(BLOCK_SELECTOR).getAttribute('data-widget');
+                if (this.element.querySelector(_constants.BLOCK_SELECTOR)) {
+                    widgetData = this.element.querySelector(_constants.BLOCK_SELECTOR).getAttribute(_constants.DATA_WIDGET_ATTRIBUTE);
                 }
 
                 Chorizo.editor.initDragIcon('layout');
 
-                this.element.id = 'mz-node-copy';
+                this.element.id = _constants.COL_COPY_ID;
 
                 e.dataTransfer.setData('text/plain', JSON.stringify({
                     dragMethod: 'layoutDrag',
@@ -1624,9 +1768,9 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
             _classCallCheck(this, Row);
 
             _get(Object.getPrototypeOf(Row.prototype), 'constructor', this).call(this, el || doc.createElement('div'));
-            this._type = 'row';
+            this._type = _constants.BLOCK_TYPES.ROW;
             this.init(isEmptyGrid);
-            ['mz-layout-widget', 'mz-layout-row', ROW_CLASSNAME, 'mz-editing'].forEach(function (cls) {
+            ['mz-layout-widget', 'mz-layout-row', _constants.ROW_CLASSNAME, 'mz-editing'].forEach(function (cls) {
                 return _this4.element.classList.add(cls);
             }, this);
         }
@@ -1642,8 +1786,8 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
             key: 'isValidHint',
             value: function isValidHint() {
 
-                if (_mouseposition && _mouseposition.position === 'right' || _mouseposition && _mouseposition.position === 'left') {
-                    if (this.element.parentNode.parentNode.parentNode.classList.contains(GRID_CLASSNAME)) {
+                if (_mouseposition && _mouseposition.position === _constants.POSITION_DICTIONARY.RIGHT || _mouseposition && _mouseposition.position === _constants.POSITION_DICTIONARY.LEFT) {
+                    if (this.element.parentNode.parentNode.parentNode.classList.contains(_constants.GRID_CLASSNAME)) {
                         return false;
                     }
                 }
@@ -1700,18 +1844,18 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
             value: function addRowHeader() {
                 var child = this.element.firstChild;
                 var header = doc.createElement('div');
-                var layoutJSON = JSON.parse(this.element.getAttribute('data-widget'));
-                var title = layoutJSON ? layoutJSON.title : ROW_TITLE;
+                var layoutJSON = JSON.parse(this.element.getAttribute(_constants.DATA_WIDGET_ATTRIBUTE));
+                var title = layoutJSON ? layoutJSON.title : _constants.ROW_TITLE;
 
-                header.classList.add('mz-layout-widget-header');
-                header.classList.add('row');
+                header.classList.add(_constants.LAYOUT_WIDGET_HEADER_CLASSNAME);
+                header.classList.add(_constants.BLOCK_TYPES.ROW.toLowerCase());
 
                 this.header = header;
 
                 this.updateRowTitle({ title: title });
 
                 // if the row isnt the inherited row for the dropzone
-                if (!this.element.parentNode || !this.element.parentNode.classList.contains(GRID_CLASSNAME)) {
+                if (!this.element.parentNode || !this.element.parentNode.classList.contains(_constants.GRID_CLASSNAME)) {
                     this.addHeaderEvents();
                     this.element.insertBefore(this.header, child);
                     this.addRowHeaderEvents();
@@ -1735,7 +1879,7 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
             key: 'destroy',
             value: function destroy() {
                 Chorizo.editor.setDirtyState(true);
-                var parentLayout = this.closest(this.element.parentNode, COL_CLASSNAME);
+                var parentLayout = this.closest(this.element.parentNode, _constants.COL_CLASSNAME);
                 var col = undefined;
 
                 this.element.remove();
@@ -1745,7 +1889,7 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
                 })) {
                     col = new Col();
                     col.element = parentLayout;
-                    if (!col.element.querySelector(ROW_SELECTOR)) {
+                    if (!col.element.querySelector(_constants.ROW_SELECTOR)) {
                         col.addDropHint();
                     }
                 }
@@ -1754,7 +1898,7 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
             key: 'updateRowTitle',
             value: function updateRowTitle(cfg) {
 
-                var title = cfg.title || ROW_TITLE;
+                var title = cfg.title || _constants.ROW_TITLE;
                 var titleRow = undefined;
 
                 if (this.element.querySelector('.mozu-row-title')) {
@@ -1766,7 +1910,7 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
                     this.header.appendChild(titleRow);
                 }
 
-                this.element.setAttribute('data-widget', JSON.stringify({ title: title }));
+                this.element.setAttribute(_constants.DATA_WIDGET_ATTRIBUTE, JSON.stringify({ title: title }));
             }
         }, {
             key: 'getConvertedWidth',
@@ -1779,8 +1923,8 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
                     width = col.style.width;
                 } else {
                     col.classList.forEach(function (cls) {
-                        if (cls.indexOf(COL_CLASSNAME) != -1) {
-                            str = cls.substring(COL_CLASSNAME.length);
+                        if (cls.indexOf(_constants.COL_CLASSNAME) != -1) {
+                            str = cls.substring(_constants.COL_CLASSNAME.length);
                             if (str) {
                                 nums = str.split('-');
                                 width = parseInt(nums[0], 10) / parseInt(nums[1], 10) * 100;
@@ -1798,10 +1942,10 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
 
                 var me = this;
                 var config = {};
-                var layoutJSON = JSON.parse(this.element.getAttribute('data-widget'));
+                var layoutJSON = JSON.parse(this.element.getAttribute(_constants.DATA_WIDGET_ATTRIBUTE));
                 var counter = 1;
 
-                Array.from(this.element.querySelectorAll(ALL_COL_SELECTOR)).forEach(function (col) {
+                Array.from(this.element.querySelectorAll(_constants.ALL_COL_SELECTOR)).forEach(function (col) {
 
                     if (col.parentNode.isSameNode(_this6.element)) {
 
@@ -1834,7 +1978,7 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
 
                         widths.splice(widths.indexOf('title'), 1);
 
-                        Array.from(me.element.querySelectorAll(ALL_COL_SELECTOR)).forEach(function (col) {
+                        Array.from(me.element.querySelectorAll(_constants.ALL_COL_SELECTOR)).forEach(function (col) {
                             if (col.parentNode.isSameNode(me.element)) {
                                 col.style.width = cfg.config[widths[colIndex]] + '%';
                                 colIndex++;
@@ -1857,11 +2001,11 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
             _classCallCheck(this, Col);
 
             _get(Object.getPrototypeOf(Col.prototype), 'constructor', this).call(this, el || doc.createElement('div'));
-            this._type = 'col';
+            this._type = _constants.BLOCK_TYPES.COL;
             this.init(isEmptyGrid);
             this._colmouseposition = null;
 
-            ['mz-layout-col', COL_CLASSNAME, 'mz-editing', 'content-view', 'mz-cms-show-zone'].forEach(function (cls) {
+            ['mz-layout-col', _constants.COL_CLASSNAME, 'mz-editing', _constants.CONTENT_VIEW_CLASSNAME, 'mz-cms-show-zone'].forEach(function (cls) {
                 return _this7.element.classList.add(cls);
             }, this);
 
@@ -1932,17 +2076,17 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
             value: function isValidDrop(e) {
 
                 // if werre trying to drag a layoutelement onto a a layout with a widget (YOU CANT DROP -- DONT SHOW HINT)
-                if (this.element.querySelector(BLOCK_SELECTOR) && e.type === 'dragover') {
+                if (this.element.querySelector(_constants.BLOCK_SELECTOR) && e.type === 'dragover') {
                     return false;
                 }
 
                 // if this is a drop zone, and you're trying to drop right or left
-                if ((_mouseposition && _mouseposition.position === 'right' || _mouseposition && _mouseposition.position === 'left') && this.element.parentNode.parentNode.classList.contains(GRID_CLASSNAME)) {
+                if ((_mouseposition && _mouseposition.position === _constants.POSITION_DICTIONARY.RIGHT || _mouseposition && _mouseposition.position === _constants.POSITION_DICTIONARY.LEFT) && this.element.parentNode.parentNode.classList.contains(_constants.GRID_CLASSNAME)) {
                     return false;
                 }
 
                 // if you're trying to drop a col into a place where theres already a widget
-                if (!_mouseposition && this._colmouseposition && !this._colmouseposition.position && this.element.querySelector(BLOCK_SELECTOR)) {
+                if (!_mouseposition && this._colmouseposition && !this._colmouseposition.position && this.element.querySelector(_constants.BLOCK_SELECTOR)) {
                     return false;
                 }
 
@@ -1952,7 +2096,7 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
             key: 'dragover',
             value: function dragover(e) {
                 this.resetMousePosition();
-                this.element.classList[!this.isValidDrop(e) ? 'remove' : 'add']('mz-cms-drop-over');
+                this.element.classList[!this.isValidDrop(e) ? 'remove' : 'add'](_constants.DROPOVER_CLASSNAME);
 
                 e.preventDefault();
 
@@ -1960,8 +2104,18 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
                 var y = e.offsetY;
                 var width = parseInt(window.getComputedStyle(e.target, null).width);
                 var height = parseInt(window.getComputedStyle(e.target, null).height);
+                var closetWidget = this.closest(e.target, _constants.BLOCK_CLASSNAME);
+                var target = e.target;
 
-                this._colmouseposition = this.getHintingData(Chorizo.editor.hideLayouts, x, y, width, height, this.element, e.target, e);
+                // if were dropping widgets, we need to get the width/height of the
+                // current widget were hovering over
+                if (Chorizo.editor.hideLayouts && closetWidget) {
+                    width = parseInt(window.getComputedStyle(closetWidget, null).width);
+                    height = parseInt(window.getComputedStyle(closetWidget, null).height);
+                    target = closetWidget;
+                }
+
+                this._colmouseposition = this.getHintingData(Chorizo.editor.hideLayouts, x, y, width, height, this.element, target, e);
 
                 if (!Chorizo.editor.hideLayouts) {
                     if (this._colmouseposition.position) {
@@ -1985,37 +2139,48 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
 
                     position = x / width;
 
-                    if (element.parentNode.parentNode.classList.contains(GRID_CLASSNAME)) {
+                    if (element.parentNode.parentNode.classList.contains(_constants.GRID_CLASSNAME)) {
                         pos = false;
                     } else if (position < 0.09) {
-                        pos = 'left';
+                        pos = _constants.POSITION_DICTIONARY.LEFT;
                     } else if (position > 0.89) {
-                        pos = 'right';
+                        pos = _constants.POSITION_DICTIONARY.RIGHT;
                     }
 
                     return {
                         position: pos,
                         element: element,
-                        type: 'col'
+                        type: _constants.BLOCK_TYPES.COL
                     };
                 }
 
                 // else were hinting on widgets -- top and bottom
                 else {
-                        targetedBlock = this.closest(hoveredTarget, BLOCK_CLASSNAME);
+                        targetedBlock = this.closest(hoveredTarget, _constants.BLOCK_CLASSNAME);
 
                         if (targetedBlock) {
-                            position = y / parseInt(window.getComputedStyle(targetedBlock, null).height, 10);
+                            // position = y / parseInt(window.getComputedStyle(targetedBlock, null).height, 10);
+                            position = this.findPosition(x, y, width, height);
+                        } else {
+                            position = _constants.POSITION_DICTIONARY.TOP;
                         }
 
-                        if (position < 0.49) {
-                            pos = 'top';
-                        } else {
-                            pos = 'bottom';
-                        }
+                        // if (position) {
+
+                        // }
+
+                        // // console.log(this.findPosition(x, y, width, height));
+
+                        // if (position < 0.49) {
+                        //     pos = POSITION_DICTIONARY.TOP;
+                        // }
+
+                        // else {
+                        //     pos = POSITION_DICTIONARY.BOTTOM;
+                        // }
 
                         return {
-                            position: pos,
+                            position: position,
                             element: targetedBlock,
                             type: 'widget-col'
                         };
@@ -2029,13 +2194,13 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
         }, {
             key: 'showWidgetHintBarMessage',
             value: function showWidgetHintBarMessage(x, y, width, height, element, msg) {
-                Chorizo.editor.showWidgetHintBar(this.closest(element, BLOCK_CLASSNAME), this.element, x, y, height, msg);
+                Chorizo.editor.showWidgetHintBar(this.closest(element, _constants.BLOCK_CLASSNAME), this.element, x, y, height, msg);
             }
         }, {
             key: 'dragleave',
             value: function dragleave() {
-                Array.from(doc.querySelectorAll(ALL_COL_SELECTOR)).forEach(function (col) {
-                    return col.classList.remove('mz-cms-drop-over');
+                Array.from(doc.querySelectorAll(_constants.ALL_COL_SELECTOR)).forEach(function (col) {
+                    return col.classList.remove(_constants.DROPOVER_CLASSNAME);
                 });
             }
         }, {
@@ -2068,7 +2233,7 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
                         type: widgetData.type,
                         ignoreEditor: true,
                         element: this.element,
-                        data: JSON.parse(doc.querySelector('#mz-widget-copy').getAttribute('data-widget')),
+                        data: JSON.parse(doc.querySelector('#mz-widget-copy').getAttribute(_constants.DATA_WIDGET_ATTRIBUTE)),
                         callback: this.afterDrop.bind(this, function () {
                             // destory the dragged element relic
                             var tempBlock = new Block(doc.querySelector('#mz-widget-copy'));
@@ -2112,6 +2277,34 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
                 this.resetMousePosition();
             }
         }, {
+            key: 'renderWidgetWithLayout',
+            value: function renderWidgetWithLayout(block, onlyCol) {
+                var layout = new Layout();
+                layout.create(false);
+                layout.col.removeDropHint();
+                layout.col.element.appendChild(block.element);
+
+                if (onlyCol) {
+                    return layout.col;
+                } else {
+                    return layout;
+                }
+            }
+        }, {
+            key: 'insertColWithWidget',
+            value: function insertColWithWidget(block, position) {
+                var layout = this.renderWidgetWithLayout(block, 'onlyCol');
+
+                if (position === _constants.POSITION_DICTIONARY.RIGHT) {
+                    this.element.parentNode.insertBefore(layout.element, this.element.nextElementSibling);
+                } else if (position === _constants.POSITION_DICTIONARY.LEFT) {
+                    this.element.parentNode.insertBefore(layout.element, this.element);
+                }
+
+                Chorizo.editor.showLayoutHeaders(false);
+                this.rebase(this.element.parentNode);
+            }
+        }, {
             key: 'insertWidgetElement',
             value: function insertWidgetElement(cb, html, cfg) {
                 var block = undefined;
@@ -2122,21 +2315,20 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
                 block.create(cfg, html);
 
                 // if we drop a widget into a dropzone, lets create a layout element around it
-                if (this.element.parentNode.parentNode.classList.contains(GRID_CLASSNAME)) {
-                    layout = new Layout();
-                    layout.create(false);
-                    layout.col.removeDropHint();
-                    layout.col.element.appendChild(block.element);
+                if (this.element.parentNode.parentNode.classList.contains(_constants.GRID_CLASSNAME)) {
+                    layout = this.renderWidgetWithLayout(block);
                     this.element.appendChild(layout.element);
                     Chorizo.editor.showLayoutHeaders(false);
-                } else if (this._colmouseposition.position === 'bottom') {
-                    if (!this.element.querySelector(BLOCK_SELECTOR)) {
+                } else if (this._colmouseposition.position === _constants.POSITION_DICTIONARY.BOTTOM) {
+                    if (!this.element.querySelector(_constants.BLOCK_SELECTOR)) {
                         this.element.appendChild(block.element);
                     } else {
                         this._colmouseposition.element.parentNode.insertBefore(block.element, this._colmouseposition.element.nextSibling);
                     }
-                } else if (this._colmouseposition.position === 'top') {
+                } else if (this._colmouseposition.position === _constants.POSITION_DICTIONARY.TOP) {
                     this.element.insertBefore(block.element, this._colmouseposition.element);
+                } else if (this._colmouseposition.position === _constants.POSITION_DICTIONARY.LEFT || this._colmouseposition.position === _constants.POSITION_DICTIONARY.RIGHT) {
+                    this.insertColWithWidget(block, this._colmouseposition.position);
                 }
 
                 if (cb) {
@@ -2146,7 +2338,7 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
         }, {
             key: 'containsInteriorRow',
             value: function containsInteriorRow(element) {
-                return element.classList && element.classList.contains(ROW_CLASSNAME);
+                return element.classList && element.classList.contains(_constants.ROW_CLASSNAME);
             }
         }, {
             key: 'doColumnInsert',
@@ -2158,7 +2350,7 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
 
                 Array.from(cols).forEach(function (col) {
 
-                    if (positionObject.position === 'right') {
+                    if (positionObject.position === _constants.POSITION_DICTIONARY.RIGHT) {
 
                         // if the drop element has children, we need to append it to the containing row, and not the column
                         if (_this9.containsInteriorRow(positionObject.element)) {
@@ -2208,12 +2400,12 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
 
                         if (!_mouseposition) {
                             this.element.appendChild(this.layout.element);
-                        } else if (_mouseposition.position === 'top') {
+                        } else if (_mouseposition.position === _constants.POSITION_DICTIONARY.TOP) {
                             this.element.insertBefore(this.layout.element, _mouseposition.element);
-                        } else if (_mouseposition.position === 'bottom') {
+                        } else if (_mouseposition.position === _constants.POSITION_DICTIONARY.BOTTOM) {
                             _mouseposition.element.parentNode.insertBefore(this.layout.element, _mouseposition.element.nextSibling);
-                        } else if (_mouseposition.position === 'right' || _mouseposition.position === 'left') {
-                            if (this.element.parentNode.parentNode.classList.contains(GRID_CLASSNAME)) {
+                        } else if (_mouseposition.position === _constants.POSITION_DICTIONARY.RIGHT || _mouseposition.position === _constants.POSITION_DICTIONARY.LEFT) {
+                            if (this.element.parentNode.parentNode.classList.contains(_constants.GRID_CLASSNAME)) {
                                 return false;
                             }
                             this.doColumnInsert(_mouseposition, cb);
@@ -2224,7 +2416,7 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
 
                 row.updateRowTitle(cfg.config);
 
-                Array.from(this.layout.element.querySelectorAll(ALL_COL_SELECTOR)).forEach(function (col) {
+                Array.from(this.layout.element.querySelectorAll(_constants.ALL_COL_SELECTOR)).forEach(function (col) {
                     newCol = new Col(col);
                 }, this);
 
@@ -2237,8 +2429,8 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
             key: 'removeDropHint',
             value: function removeDropHint() {
 
-                if (this.element.querySelector('.mz-drop-hint') && this.element.querySelector('.mz-drop-hint').parentNode.isSameNode(this.element)) {
-                    this.element.querySelector('.mz-drop-hint').remove();
+                if (this.element.querySelector(_constants.DROP_HINT_SELECTOR) && this.element.querySelector(_constants.DROP_HINT_SELECTOR).parentNode.isSameNode(this.element)) {
+                    this.element.querySelector(_constants.DROP_HINT_SELECTOR).remove();
                 }
             }
         }, {
@@ -2247,11 +2439,11 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
 
                 var content = doc.createElement('div');
                 var text = doc.createElement('span');
-                text.innerHTML = DROP_HINT_TEXT;
+                text.innerHTML = _constants.DROP_HINT_TEXT;
                 content.appendChild(text);
-                content.classList.add('mz-drop-hint');
+                content.classList.add(_constants.DROP_HINT_CLASSNAME);
 
-                if (!this.element.querySelector(BLOCK_SELECTOR + ', ' + ROW_SELECTOR + ', ' + ALL_COL_SELECTOR)) {
+                if (!this.element.querySelector(_constants.BLOCK_SELECTOR + ', ' + _constants.ROW_SELECTOR + ', ' + _constants.ALL_COL_SELECTOR)) {
                     this.element.appendChild(content);
                 }
             }
@@ -2273,10 +2465,10 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
 
         // init grids that aren't inherited
 
-        Chorizo.helper.factory(GRID_SELECTOR + '.mz-cms-editing', Grid);
-        Chorizo.helper.factory(ROW_SELECTOR, Row);
-        Chorizo.helper.factory(ALL_COL_SELECTOR, Col);
-        Chorizo.helper.factory(BLOCK_SELECTOR, Block);
+        Chorizo.helper.factory(_constants.GRID_SELECTOR + '.mz-cms-editing', Grid);
+        Chorizo.helper.factory(_constants.ROW_SELECTOR, Row);
+        Chorizo.helper.factory(_constants.ALL_COL_SELECTOR, Col);
+        Chorizo.helper.factory(_constants.BLOCK_SELECTOR, Block);
 
         if (Chorizo.editor.hideLayouts) {
             Chorizo.editor.showLayoutHeaders(false);
@@ -2288,7 +2480,7 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
     });
 })(window, document);
 
-},{}],5:[function(require,module,exports){
+},{"./constants":1}],6:[function(require,module,exports){
 'use strict';
 
 var _createClass = (function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ('value' in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; })();
@@ -2321,4 +2513,4 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
     });
 })(window, document);
 
-},{}]},{},[1,2,3,4,5]);
+},{}]},{},[1,2,3,4,5,6]);
