@@ -60,6 +60,19 @@ $glyph-widgets: "\E902";
 $glyph-desktop: "\E902";
 $glyph-tablet: "\E902";
 $glyph-phone: "\E902";
+$glyph-funnel: "\E600";
+$glyph-large-pencil: "\E025";
+$glyph-eye: "\E07B";
+$glyph-lightning: "\E07E";
+$glyph-barchart: "\E601";
+$glyph-locations-small: "\E602";
+$glyph-upload: "\E603";
+$glyph-sitebuilder-small: "\E604";
+$glyph-marketing-small: "\E605";
+$glyph-orders-small: "\E606";
+$glyph-catalog-small: "\E607";
+$glyph-user-small: "\E608";
+$glyph-tools-small: "\E611";
 
 // font set for chorizo -- because these are being compiled using compass, they cannot be encased in ""
 // optimized at 16px
@@ -69,6 +82,7 @@ $glyph-chorizo-move: "E609";
 
 
 // optimized at 32px
+$glyph-tools: "\E60A";
 $glyph-sitebuilder: "\E018";
 $glyph-catalog: "\E01A";
 $glyph-publishing: "\E019";
@@ -88,27 +102,27 @@ $glyph-dropimage: "\E07D";
 $glyph-dropvideo: "\E07E";
 
 @mixin icon-font ($glyph, $size: 16px, $color: rgb(51, 51, 51)) {
-  height: $size;
-  position: relative;
-  width: $size;
+    height: $size;
+    position: relative;
+    width: $size;
 
-  &::after {
-    color: $color;
-    content: $glyph;
-    display: block;
-    font-family: mozicons;
-    font-size: $size;
-    font-weight: normal !important;
-    left: 0px;
-    line-height: 1.0;
-    position: absolute;
-    top: 0px;
-    vertical-align: baseline;
-    -webkit-font-smoothing: antialiased;
-  }
+    &::after {
+        color: $color;
+        content: $glyph;
+        display: block;
+        font-family: mozicons;
+        font-size: $size;
+        font-weight: normal !important;
+        left: 0px;
+        line-height: 1.0;
+        position: absolute;
+        top: 0px;
+        vertical-align: baseline;
+        -webkit-font-smoothing: antialiased;
+    }
 }
 
 // function to take string code, and turn into char code for chorizo
 @function char-from-code($iso-char) {
-  @return unquote('\"\\#{$iso-char}\"');
+    @return unquote('\"\\#{$iso-char}\"');
 }
