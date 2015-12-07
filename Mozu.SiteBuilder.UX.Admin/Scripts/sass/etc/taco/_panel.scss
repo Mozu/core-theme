@@ -100,24 +100,19 @@
          * Styles unstriped tables
          */
         tbody tr {
-            // td {
-            //     border-bottom: 1px solid $nav-element-active-border !important;
-            // }
+            &.#{$prefix}grid-data-row {
+                td {
+                    border-bottom: 1px solid $nav-element-active-border !important;
+                }
 
-            // &:hover,
-            // &:active,
-            // &:focus,
-            // &.#{$prefix}grid-row-selected {
-            //     background-color: $card-button-bg;
-            // }
-        }
-
-        tbody.striped tr:nth-child(odd) {
-            td {
-                background-color: $white-color;
+                &:hover,
+                &:active,
+                &:focus,
+                &.#{$prefix}grid-row-selected {
+                    background-color: $card-button-bg;
+                }
             }
         }
-
 
         .#{$prefix}td {
             padding: 7px 10px 6px;
@@ -218,7 +213,7 @@
 		}  
 	}
 
-    .product-overridden-pill {
+    .#{$prefix}column-content-pill {
         padding: 3px 5px;
     }
 }

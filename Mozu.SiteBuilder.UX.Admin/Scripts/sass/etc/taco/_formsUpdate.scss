@@ -14,11 +14,11 @@
 
     .#{$prefix}field-form-focus {
         border-color: $valid-green;
-        box-shadow: 0 1px 0 0 $valid-green;
+        @include color-outer-shadow($valid-green, 1, 1px, 0, 0);
 
         &.#{$prefix}form-invalid-field {
             border-color: $error-red;
-            box-shadow: 0 1px 0 0 $error-red;
+            @include color-outer-shadow($error-red, 1, 1px, 0, 0);
         }
 
         &.#{$prefix}trigger-noedit {
@@ -335,7 +335,7 @@
         background-color: $white-color;
         border: 1px solid $dropdown-list-outline;
         @include border-radius-xbrowser($border-radius-small);
-        box-shadow: $dropdown-list-shadow 0px 1px 6px 0px;
+        @include outer-shadow(0.09, 6px, 0, 1px);
 
         li.#{$prefix}boundlist-item {
             border-bottom: 1px solid $list-item-active !important;
