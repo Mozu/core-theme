@@ -76,7 +76,6 @@ Ext.define('Taco.view.order.Split', {
             header: false, // hides the header (the title)
             addContentViewPadding: false,
             enableNavHeader: false, // disables the navHeader Mixin
-            launchEditorOnClick: false, // this disables the default behavior in the LaunchEditor Mixin
             listeners: {
                 itemkeydown: {
                     scope: this,
