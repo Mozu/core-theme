@@ -583,6 +583,10 @@ Ext.define('Taco.core.ux.mixins.NavHeader', {
         this.save(btn);
     },
 
+    dismissMessages: function()  {
+        Taco.app.fireEvent('dissmissmessages');
+    },
+
     /**
      * @private
      * The function to execute when the default save button is pressed
@@ -590,12 +594,19 @@ Ext.define('Taco.core.ux.mixins.NavHeader', {
      * Listen to the "savesuccess" event to get the final data after the save process completes
      * Subclasses should NOT override this method with their own behavior. They should override the doSave()
      */
+
     save: function (btn) {
         var me = this
 
         if (me.saveInProgress) {
             return;
         }
+
+        /**
+        *  Dismiss all error and success messages;
+        */
+        me.dismissMessages();
+        
 
         if (me.fireEvent('beforesave', me) !== false) {
             me.onSave();

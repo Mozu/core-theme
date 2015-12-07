@@ -63,7 +63,7 @@ Ext.define('Taco.view.NotifierBar', {
 
         this.messageQueue = this.down('#messageQueue');
 
-        this.showMessage();
+        this.showMessage(10);
     },
 
     resetMessages: function() {

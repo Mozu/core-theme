@@ -21,6 +21,7 @@ Ext.define('Taco.controller.Message', {
 
         me.application.on({
             setmessage: me.setMessage,
+            dissmissmessages: me.destroyMessages,
             scope: me
         });
 
