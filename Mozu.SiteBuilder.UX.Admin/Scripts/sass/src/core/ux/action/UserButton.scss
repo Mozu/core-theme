@@ -9,7 +9,7 @@
         margin-right: auto;
         top: 1px;
         .#{$vprefix}userbutton-dropdown-toggle {
-            padding: 1px 21px 1px 10px;
+            padding: 1px 0 1px 10px;
             background-position: 94% 50%;
             background-size: 8px;
             .#{$vprefix}userbutton-user-avatar {
@@ -38,7 +38,8 @@
             .#{$vprefix}userbutton-arrow {
                 display: inline-block;
                 top: 3px;
-                left: 5px;
+                left: 2px;
+                margin-right: 10px;
                 @include icon-font($glyph-arrowdown, 16px, $color-action-foreground);
             }
         }

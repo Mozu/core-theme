@@ -11,7 +11,7 @@ Ext.define('Taco.view.navigation.SecondaryMenu', {
         type: 'hbox',
         align: 'middle',
         pack: 'end',
-        defaultMargins: '0 10 0 0'
+        defaultMargins: '0 0 0 0'
     },
 
     initComponent: function () {
@@ -70,17 +70,18 @@ Ext.define('Taco.view.navigation.SecondaryMenu', {
                 ]
             }
         },
-        {
-           xtype: 'button',
-           ui: 'link',
-           scale: 'medium',
-           text: 'Help',
-           hidden: Taco.siteBuilderHelperToggle !== 'on',
-           handler: function () { 
-               //window.open(Taco.drupalLink);
-               window.open(Taco.adminHelpLink);
-           }
-        },
+            {
+                xtype: 'button',
+                cls: 'help-button',
+                ui: 'link',
+                scale: 'medium',
+                text: 'Help',
+                hidden: Taco.siteBuilderHelperToggle !== 'on',
+                handler: function () {
+                    //window.open(Taco.drupalLink);
+                    window.open(Taco.adminHelpLink);
+                }
+            },
 
         {
             xtype: 'button',

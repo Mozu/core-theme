@@ -3,4 +3,13 @@
         border: none;
         background-color: $white-color;
     }
+    .tenant-name {
+        margin-right: 10px;
+    }
+    .help-button {
+        padding: 10px 10px 8px;
+        .#{$prefix}btn-inner {
+            padding-right: 0;
+        }
+    }
 }
