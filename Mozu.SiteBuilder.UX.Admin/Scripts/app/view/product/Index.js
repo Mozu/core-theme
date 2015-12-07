@@ -171,7 +171,7 @@ Ext.define('Taco.view.product.Index', {
                 text: 'Price',
                 width: 100,
                 renderer: function (value, metaData, record) {
-                    return record.getContextualValue('price', true) || 'N/A';
+                    return record.getContextualValue('price', true) || '<span class="taco-empty-cell">N/A</span>';
 
                 }
             },
@@ -181,7 +181,7 @@ Ext.define('Taco.view.product.Index', {
                 text: 'Sale Price',
                 width: 100,
                 renderer: function (value, metaData, record) {
-                    return record.getContextualValue('salePrice', true) || 'N/A';
+                    return record.getContextualValue('salePrice', true) || '<span class="taco-empty-cell">N/A</span>';
                 }
             },
             {

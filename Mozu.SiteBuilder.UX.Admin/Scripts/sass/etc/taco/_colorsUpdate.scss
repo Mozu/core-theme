@@ -5,6 +5,7 @@ $white-color:                   rgb(255, 255, 255);                             
 /* theme colors */
 $gray-text-dark:                darken($white-color, 35);                                   /* #a5a5a5 --> #a6a6a6  165, 165, 165 */
 $gray-text-light:               darken($white-color, 36);                                   /* #a3a3a3              163, 163, 163 */
+$gray-text-extra-light:         rgba(lighten($black-color, 13), .25);                       /* #525252               082, 082, 082 */
 $card-border:                   darken($white-color, 6);                                    /* #f1f1f1 --> #f0f0f0  240, 240, 240 */
 $input-border:                  $card-border;
 $light-bg:                      darken($white-color, 9);                                    /* #eaeaea --> #e8e8e8  232, 232, 232 */

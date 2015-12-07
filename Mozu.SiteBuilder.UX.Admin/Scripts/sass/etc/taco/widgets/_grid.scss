@@ -375,6 +375,9 @@
   }
 
   .#{$vprefix}action-on-click {
-    .x-grid-row, .x-column-header { cursor: pointer; }
+      .x-grid-row, .x-column-header { cursor: pointer; }
+  }
+  .#{$vprefix}empty-cell {
+      color: $gray-text-extra-light;
   }
 }
