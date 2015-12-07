@@ -202,16 +202,16 @@ Ext.define('Taco.view.product.Index', {
                 width: 100,
                 renderer: function (value, metaData, record) {
                     var output;
-                    var cssClass = 'product-overridden-false';
+                    var cssClass = 'x-column-content-pill';
 
                     if (Ext.isEmpty(value)) {
                         output = 'N/A';
                     } else {
-                        cssClass = Ext.Array.contains(Ext.Array.pluck(value, 'isContentOverridden'), true) ? 'product-overridden-true' : 'product-overridden-false';
+                        cssClass = Ext.Array.contains(Ext.Array.pluck(value, 'isContentOverridden'), true) ? 'x-column-content-pill-true' : 'x-column-content-pill-false';
                         output = Ext.Array.contains(Ext.Array.pluck(value, 'isContentOverridden'), true) ? 'Yes' : 'No';
                     }
 
-                    return '<span class="product-overridden-pill ' + cssClass + '">' + output + '</span>';
+                    return '<span class="x-column-content-pill ' + cssClass + '">' + output + '</span>';
                 }
             },
             {
@@ -240,7 +240,6 @@ Ext.define('Taco.view.product.Index', {
             },
             {
                 xtype: 'taco.menucolumn',
-                text: '<div class="product-column-action"></div>',
                 stateId: 'actionsColumn',
                 menuItems: [{
                     itemId: 'live',

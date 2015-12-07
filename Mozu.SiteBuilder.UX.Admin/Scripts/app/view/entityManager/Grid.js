@@ -202,7 +202,6 @@ Ext.define('Taco.view.entityManager.Grid', {
 
         columns.push({
             xtype: 'taco.menucolumn',
-            text: 'Actions',
             menuItems: [{
                 text: 'Edit',
                 hideOnClick: false,

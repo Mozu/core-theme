@@ -15,6 +15,33 @@
     }
   }
 
+  .#{$vprefix}override-form {
+    margin-top: 30px;
+    position: relative;
+
+    .#{$vprefix}override-form-inner {
+      border: 1px dashed border-for($color-neutral-white);
+      padding: 20px 20px 20px;
+
+      > .#{$prefix}mask {
+        background-color: transparent;
+        background-image: -webkit-repeating-linear-gradient(-45deg, $white-color 0%, $white-color 25.5%, $dark-color 25.5%, $dark-color 51%, $white-color 51%, $white-color 76.5%,  $dark-color 76.5%,  $white-color 100%);
+        background-size: 6px 6px;
+        opacity: 0.06;
+      }
+
+      .x-html-editor-wrap {
+        .x-mask{
+          opacity:0;
+        }
+      }
+    }
+
+    .#{$vprefix}override-checkbox {
+      display: block;
+    }
+  }
+
   // combobox styles
   // .#{$prefix}form-trigger-input-cell {
   //   .#{$prefix}form-text {

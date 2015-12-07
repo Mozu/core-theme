@@ -116,6 +116,21 @@
   //   }
   // }
 
+  .#{$prefix}grid-header-ct {
+     border-bottom: 1px solid $light-gray-border-color!important;
+
+     .#{$prefix}column-header-first {
+         border-top-left-radius: 5px;
+     }
+
+     .#{$prefix}column-header-last {
+         border-top-right-radius: 5px;
+     }
+
+     border-top-left-radius: 5px;
+     border-top-right-radius: 5px;
+  }
+
   /* PLUGINS, MIXINS, COLUMNS, ETC. */
 
   .#{$prefix}grid-cell-inner {
@@ -214,9 +229,8 @@
   .#{$vprefix}grid-row-menu-trigger {
     cursor: pointer;
     height: 16px;
-    width: 50px;
-    @include icons-sprite(icon-rowactions-ellipsis); // icon is an <img>
-    background-position: 50% 50%;
+    width: 16px;
+    @include icon-font($glyph-knurling, 13px, $gray-text-dark);
   }
 
   // hide the action menu trigger image when its inside of the row editor. it causes a bunch of padding to be added;
@@ -354,6 +368,11 @@
 		position: relative;
 		z-index: 2;
 	}
+  }
+
+  .#{$prefix}toolbar-docked-bottom {
+      border-bottom-left-radius: 5px;
+      border-bottom-right-radius: 5px;
   }
 
   .#{$vprefix}action-on-click {

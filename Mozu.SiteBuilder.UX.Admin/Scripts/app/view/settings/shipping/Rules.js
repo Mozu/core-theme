@@ -129,7 +129,6 @@ Ext.define('Taco.view.settings.shipping.Rules', {
 
             }, {
                 xtype: 'taco.menucolumn',
-                text: 'Actions',
                 flex: 1,
                 menuItems: [{
                     text: 'Edit',

@@ -49,7 +49,6 @@ Ext.define('Taco.view.orderAttribute.Index', {
             minWidth: 120
         }, {
             xtype: 'taco.menucolumn',
-            text: 'Actions',
             menuItems: [{
                 text: 'Edit',
                 menuColumnHandler: 'editMenuColumnHandler'

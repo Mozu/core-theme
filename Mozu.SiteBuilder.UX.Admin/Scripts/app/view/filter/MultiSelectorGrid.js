@@ -274,7 +274,6 @@ Ext.define('Taco.view.filter.MultiSelectorGrid', {
         if (gridActions.length) {
             actionColumn = {
                 xtype: 'taco.menucolumn',
-                text: 'Actions',
                 onMenuShow: me.onActionMenuShow,
                 menuItems: gridActions
             }

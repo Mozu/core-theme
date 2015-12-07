@@ -477,7 +477,6 @@ Ext.define('Taco.view.order.Grid', {
             columns.push(
                 {                    
                     xtype: 'taco.menucolumn',
-                    text: 'Actions',
                     menuItems: [
                         {
                             text: 'Edit',

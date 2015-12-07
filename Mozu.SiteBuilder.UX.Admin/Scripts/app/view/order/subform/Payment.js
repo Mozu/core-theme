@@ -146,7 +146,6 @@ Ext.define('Taco.view.order.subform.Payment', {
                 flex: 1
             }, {
                 xtype: 'taco.menucolumn',
-                text: 'Actions',
                 menuItems: [{
                     text: 'Resend Email',
                     menuColumnHandler: function (item, eventData) {

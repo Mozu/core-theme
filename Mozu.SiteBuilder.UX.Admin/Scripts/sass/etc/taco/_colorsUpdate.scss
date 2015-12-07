@@ -12,6 +12,7 @@ $nav-element-text:              darken($white-color, 35);                       
 $nav-element-active:            lighten($black-color, 25);                                  /* #3f3f3f --> #404040  063, 063, 063 */
 $nav-element-active-border:     darken($white-color, 5);                                    /* #f3f3f3 --> #f2f2f2  242, 242, 242 */
 $light-bg-gray:                 darken($white-color, 9);                                    /* #e9e9e9 --> #e8e8e8  233, 233, 233 */
+$pill-bg-gray:					darken($white-color, 5);									/* #f3f3f3 --> #f2f2f2	242, 242, 242 */
 $dark-bg:                       darken($white-color, 3);                                    /* #f7f7f7              247, 247, 247 */
 $typehead-pill-border-color:    darken($white-color, 11);                                   /* #e2e2e2 --> #e3e3e3  226, 226, 226 */
 $card-button-bg:                #fafafa;                                                    /* could not filter for effect        */
@@ -19,6 +20,7 @@ $card-button-press-bg:          darken($white-color, 4);                        
 $card-button-text-color:        darken($white-color, 38);                                   /* #9e9e9e              158, 158, 158 */
 $gray-border-color:             darken($white-color, 8);                                    /* #ebebeb              250, 250, 250 */
 $light-gray-border-color:       darken($white-color, 13);                                   /* #dfdfdf --> #dedede  222, 222, 222 */
+$med-gray-border-color:		    darken($white-color, 12);									/* #dfdfdf --> #dedede	222, 222, 222 */
 $dark-color:                    lighten($black-color, 25);                                  /* #3f3f3f --> #404040  063, 063, 063 */
 $textarea-color:                lighten($black-color, 20);                                  /* #333333              051, 051, 051 */
 $html-editor-toolbar:           lighten($black-color, 47);                                  /* #777777 --> #787878  120, 120, 120 */

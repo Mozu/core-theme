@@ -164,7 +164,6 @@ Ext.define('Taco.view.fileManager.Index', {
             {
                 xtype: 'taco.menucolumn',
                 sortable: false,
-                text: 'Actions',
                 menuItems: [
                     {
                         text: 'Delete',

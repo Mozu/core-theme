@@ -86,7 +86,6 @@ Ext.define('Taco.view.role.Index', {
             },
             {
                 xtype: 'taco.menucolumn',
-                text: 'Actions',
                 stateId: 'actionsColumn',
                 scope: me,
                 items: [

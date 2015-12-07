@@ -289,7 +289,6 @@ Ext.define('Taco.view.location.inventory.Index', {
         gridColumns = gridColumns.concat(Taco.view.location.inventory.InventoryStockColumns.getInventoryStockColumns('productCode'));
         gridColumns.push({
             xtype: 'taco.menucolumn',
-            text: 'Actions',
             menuDisabled: true,
             menuItems: [
                 {

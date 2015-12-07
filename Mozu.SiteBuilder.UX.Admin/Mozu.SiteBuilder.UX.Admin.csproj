@@ -974,6 +974,7 @@
     <Content Include="Scripts\app\overrides\panel\Tool.js" />
     <Content Include="Scripts\packages\mozuadmintheme\resources\images\camera.png" />
     <Content Include="Scripts\packages\mozuadmintheme\resources\images\error-shipping-label.gif" />
+    <Content Include="Scripts\packages\mozuadmintheme\resources\images\icon-rowactions-ellipsis.png" />
     <Content Include="Scripts\packages\mozuadmintheme\resources\images\image.png" />
     <Content Include="Scripts\packages\mozuadmintheme\resources\images\loading-shipping-label-m.gif" />
     <Content Include="Scripts\packages\mozuadmintheme\resources\images\loading-shipping-label-spinner.gif" />

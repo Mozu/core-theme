@@ -147,7 +147,6 @@ Ext.define('Taco.view.customers.Index', {
             },
             {
                 xtype: 'taco.menucolumn',
-                text: 'Actions',
                 flex: 1,
                 menuItems: [
                     {

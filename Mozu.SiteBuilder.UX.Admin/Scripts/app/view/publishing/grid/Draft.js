@@ -362,7 +362,6 @@ Ext.define('Taco.view.publishing.grid.Draft', {
                 },         
                 actions: {
                     xtype: 'taco.menucolumn',
-                    text: 'Actions',
 
                     onMenuShow: function(cmp, eventData) {
                         var removeMenuColumn = cmp.down('#Remove'),

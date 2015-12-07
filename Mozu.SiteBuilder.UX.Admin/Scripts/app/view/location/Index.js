@@ -127,7 +127,6 @@ Ext.define('Taco.view.location.Index', {
                     sortable: false
                 }, {
                     xtype: 'taco.menucolumn',
-                    text: 'Actions',
                     onMenuShow: function (menu, eventData) {
                         var disableMenuItem = menu.down("#disableMenuItem"),
                             enableMenuItem = menu.down("#enableMenuItem");

@@ -245,7 +245,6 @@ Ext.define('Taco.view.storeCredit.Grid', {
         if (this.enableActionColumn) {
             columns.push({
                 xtype: 'taco.menucolumn',
-                text: 'Actions',
                 onMenuShow: function(menu, eventData) {
                     var customerMenu = menu.items.get('customerMenu');
                     customerMenu.setVisible(eventData.record.get('customer'));

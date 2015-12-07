@@ -126,7 +126,6 @@ Ext.define('Taco.view.theme.Index', {
                 width: 120
             }, {
                 xtype: 'taco.menucolumn',
-                text: 'Actions',
                 getClass: function(scope, cmp) {
                     if (cmp.record.isLeaf()) {
                         return 'x-action-col-icon x-action-col-0 taco-grid-row-menu-trigger';

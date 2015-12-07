@@ -47,7 +47,6 @@ Ext.define('Taco.view.customerAttribute.Index', {
             }, 
             {
                 xtype: 'taco.menucolumn',
-                text: 'Actions',
                 menuItems: [
                     {
                         text: 'Edit',

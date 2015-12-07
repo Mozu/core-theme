@@ -29,6 +29,7 @@
             /* override external styles */
             border: 0;
 
+
             .#{$prefix}column-header-over {
                 /* override external styles */
                 background-color: $white-color;
@@ -49,17 +50,24 @@
             }
         }
 
+
         .#{$prefix}grid-header-ct {
             background-color: $white-color;
             border: 0;
             border-bottom: 1px solid $nav-element-active-border;
 
+
             .#{$prefix}box-inner {
                 border-bottom: 1px solid $light-bg-gray;
             }
 
-            .#{$prefix}column-header {
-                background-color: $white-color;
+
+			.#{$prefix}column-header {
+				font-family: $font-family;
+				font-size: $normal-font-link;
+				padding: 3px 10px;
+				display: inline-block;
+				color: $gray-text-dark;
 
                 /* override external styles */
                 border: 0;
@@ -71,6 +79,7 @@
             }
 
             .#{$prefix}column-header-text {
+
 
                 /* override external styles */
                 font-weight: normal;
@@ -87,21 +96,17 @@
             }
         }
 
-        tbody tr:nth-child(odd) {
+        tbody tr {
             td {
                 background-color: $white-color;
             }
         }
 
-        tbody tr:nth-child(even) {
-            td {
-                background-color: $dark-bg;
-            }
-        }
 
         .#{$prefix}td {
             padding: 7px 10px 6px;
         }
+
 
         .#{$prefix}content {
             padding: 15px 25px 30px;
@@ -111,11 +116,89 @@
             }
         }
 
-        .#{$prefix}empty-pill {
-            border: 1px solid $typehead-pill-border-color;
-            @include border-radius-xbrowser($border-radius-large);
-            font-size: $tag-font;
-            padding: 4px;
-        }
-    }
+		.#{$prefix}empty-pill {
+			padding: 4px;
+			border-radius: $border-radius-large;
+			border: 1px solid $typehead-pill-border-color;
+			font-size: $tag-font;
+		}
+
+		// link pager styles
+		.#{$prefix}link-paging-toolbar {
+
+			padding: 8px;
+			background-color: $white-color;
+        	border-top: 1px solid $card-border!important;
+
+			.#{$prefix}tbar-page-link {
+				background-color: $color-neutral-transparent;
+				background-image: none;
+				border: none;
+				color: $dark-color;
+				text-decoration: none;
+				height: 22px;
+				width: 22px;
+				@include border-radius(2px);
+
+				.#{$prefix}btn-inner {
+					color: $gray-text-dark;
+				}
+
+				.#{$prefix}btn-over {
+					.#{$prefix}btn-inner {
+						color: $dark-color;
+					}
+				}
+			}
+
+			.#{$prefix}tbar-page-link-current {
+				background-color: $valid-green;
+				background-image: none;
+				border: none;
+				text-decoration: none;
+				height: 22px;
+				width: 22px;
+				@include border-radius(2px);
+
+				.#{$prefix}btn-inner {
+					color: $white-color;
+				}
+			}
+
+		}
+
+		.#{$prefix}page-chooser .#{$prefix}toolbar-default {
+			background-color: $white-color;
+		}
+
+		.#{$prefix}page-choose-btn {
+			border-width: 0px;
+			background-color: $valid-green;
+			background-image: none;
+			text-decoration: none;
+			margin-left:8px;
+			height: 30px;
+			line-height: 30px;
+			vertical-align: middle;
+		}
+
+		.#{$prefix}page-choose-btn.#{$prefix}btn-over {
+			background-color: $valid-green;
+			background-image: none;
+			text-decoration: none;
+		}
+
+		.#{$prefix}page-choose-btn .#{$prefix}btn-button {
+			height: 30px;
+			line-height: 30px;
+		}
+
+		.#{$prefix}page-choose-btn .#{$prefix}btn-inner {
+			color: $color-neutral-white;
+			height: 30px;
+			line-height: 30px;
+			vertical-align: middle;
+			font-size: $normal-font;
+		}  
+	}
 }

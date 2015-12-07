@@ -14,7 +14,7 @@ Ext.define('Taco.core.ux.grid.MenuColumn', {
     resizable: false,
     sortable: false,
     tdCls: Taco.baseCSSPrefix + 'menu-col-cell',
-    text: 'Actions',
+    text: '<div class="x-column-action"></div>',
     width: 100,
 
     menuItems: [],
@@ -133,7 +133,7 @@ Ext.define('Taco.core.ux.grid.MenuColumn', {
     },
 
     handler: function(grid, rowIndex, colIndex, header, e, record, item) {
-        var trigger = e.getTarget('img.' + this.iconCls, 10),
+        var trigger = e.getTarget('div.' + this.iconCls, 10),
             eventData = {};
 
         Ext.apply(eventData, {
@@ -168,5 +168,52 @@ Ext.define('Taco.core.ux.grid.MenuColumn', {
 
         // Ext.fly(el).addCls(Ext.baseCSSPrefix + 'menu');
         menu.showBy(el, eventData.menuPosition, eventData.menuOffsets);
+    },
+
+    // override default renderer to allow font icons
+    defaultRenderer: function (v, meta, record, rowIdx, colIdx, store, view) {
+        var me = this,
+            prefix = Ext.baseCSSPrefix,
+            scope = me.origScope || me,
+            items = me.items,
+            len = items.length,
+            i = 0,
+            item, ret, disabled, tooltip;
+
+
+        // Allow a configured renderer to create initial value (And set the other values in the "metadata" argument!)
+        // Assign a new variable here, since if we modify "v" it will also modify the arguments collection, meaning
+        // we will pass an incorrect value to getClass/getTip
+        ret = Ext.isFunction(me.origRenderer) ? me.origRenderer.apply(scope, arguments) || '' : '';
+
+
+        meta.tdCls += ' ' + Ext.baseCSSPrefix + 'action-col-cell';
+        for (var i = 0; i < len; i++) {
+            item = items[i];
+
+
+            disabled = item.disabled || (item.isDisabled ? item.isDisabled.call(item.scope || scope, view, rowIdx, colIdx, item, record) : false);
+            tooltip = disabled ? null : (item.tooltip || (item.getTip ? item.getTip.apply(item.scope || scope, arguments) : null));
+
+
+            // Only process the item action setup once.
+            if (!item.hasActionConfiguration) {
+
+
+                // Apply our documented default to all items
+                item.stopSelection = me.stopSelection;
+                item.disable = Ext.Function.bind(me.disableAction, me, [i], 0);
+                item.enable = Ext.Function.bind(me.enableAction, me, [i], 0);
+                item.hasActionConfiguration = true;
+            }
+
+
+            //img changed to div to accept iconFonts
+            ret += '<div role="button" class="' + prefix + 'action-col-icon ' + prefix + 'action-col-' + String(i) + ' ' + (disabled ? prefix + 'item-disabled' : ' ') +
+                ' ' + (Ext.isFunction(item.getClass) ? item.getClass.apply(item.scope || scope, arguments) : (item.iconCls || me.iconCls || '')) + '"' +
+                (tooltip ? ' data-qtip="' + tooltip + '"' : '') + ' ></div>';
+        }
+        return ret;
     }
+
 });

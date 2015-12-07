@@ -133,7 +133,6 @@ Ext.define('Taco.view.attribute.Grid', {
                 }
             }, {
                 xtype: 'taco.menucolumn',
-                text: 'Actions',
                 menuItems: [
                     {
                         text: 'Edit',

@@ -86,7 +86,6 @@ Ext.define('Taco.view.customers.Segments.Index', {
             },
             {
                 xtype: 'taco.menucolumn',
-                text: 'Actions',
                 flex:1,
                 menuItems: [{
                     text: 'Add Customers',

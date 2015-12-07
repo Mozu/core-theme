@@ -283,7 +283,6 @@ Ext.define('Taco.view.publishing.grid.Publish', {
                 },
                 {
                     xtype: 'taco.menucolumn',
-                    text: 'Actions',
 
                     onMenuShow: function(cmp, eventData) {
                         var publishNow = cmp.down('#publish-now');

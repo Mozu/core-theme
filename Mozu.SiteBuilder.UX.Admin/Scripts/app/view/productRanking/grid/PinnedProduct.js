@@ -168,7 +168,6 @@ Ext.define('Taco.view.productRanking.grid.PinnedProduct', {
         if (actions.length) {
             actionColumn = {
                 xtype: 'taco.menucolumn',
-                text: 'Actions',
                 menuItems: actions
             }
         }

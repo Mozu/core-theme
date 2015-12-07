@@ -336,7 +336,6 @@ Ext.define('Taco.view.productRanking.Grid', {
         if (actions.length) {
             actionColumn = {
                 xtype: 'taco.menucolumn',
-                text: 'Actions',
                 onMenuShow: me.onActionMenuShow,
                 menuItems: actions
             };

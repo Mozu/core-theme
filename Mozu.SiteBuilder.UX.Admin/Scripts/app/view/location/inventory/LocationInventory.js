@@ -91,7 +91,6 @@ Ext.define('Taco.view.location.inventory.LocationInventory', {
         this.columns = Taco.view.location.inventory.InventoryStockColumns.getInventoryStockColumns('locationCode');
         this.columns.push({
             xtype: 'taco.menucolumn',
-            text: 'Actions',
             menuDisabled: true,
             stateId: 'actionsColumn',
             sortable: false,

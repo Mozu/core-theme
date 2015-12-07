@@ -122,7 +122,6 @@ Ext.define('Taco.view.productRanking.grid.BlockedProduct', {
         if (actions.length) {
             actionColumn = {
                 xtype: 'taco.menucolumn',
-                text: 'Actions',
                 menuItems: actions
             }
         }

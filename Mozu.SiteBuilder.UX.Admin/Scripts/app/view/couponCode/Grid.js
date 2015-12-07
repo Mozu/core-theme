@@ -309,7 +309,6 @@ Ext.define('Taco.view.couponCode.Grid', {
                 format: 'n/j/Y g:i a'
             },{
                 xtype: 'taco.menucolumn',
-                text: 'Actions',
                 //onMenuShow: function (menu, eventData) {
                 //    // need to disable the delete menu option when discount has been used
                 //    var deleteMenuItem = menu.down("#deleteMenuItem");

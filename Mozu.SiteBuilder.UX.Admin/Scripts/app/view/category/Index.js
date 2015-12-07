@@ -84,7 +84,7 @@ Ext.define('Taco.view.category.Index', {
 
         me.viewConfig = Ext.apply(me.viewConfig, {
             animate: false,
-            stripeRows: true,
+            stripeRows: false,
             onExpand: Ext.emptyFn,
             enableTextSelection: true
         });
@@ -112,7 +112,6 @@ Ext.define('Taco.view.category.Index', {
         }, 
         {
             xtype: 'taco.menucolumn',
-            text: 'Actions',
             menuItems: [{
                 text: 'Edit',
                 requiredBehaviors: {

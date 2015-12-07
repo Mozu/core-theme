@@ -26,15 +26,7 @@
     }
 }
 
-.#{$prefix}column-header-sort-ASC {
-    color: $color-framework-black;
-}
-
-.#{$prefix}column-header-sort-DESC {
-    color: $color-framework-black;
-}
-
-.product-overridden-pill {
+.#{$prefix}column-content-pill {
     border-radius: 20px 20px;
     -moz-border-radius: 20px 20px;
     -webkit-border-radius: 20px 20px;
@@ -42,23 +34,22 @@
     -o-border-radius: 20px 20px;
     padding-left:6px;
     padding-right:6px;
+    padding-top:2px;
+    padding-bottom:2px;
     font-size: 11px;
 }
 
-.product-overridden-true {
-    background-color: $color-theme-green;
-    color: $color-neutral-white;
+.#{$prefix}column-content-pill-true {
+    background-color: $valid-green;
+    color: $white-color;
 }
 
-.product-overridden-false {
-    background-color: $color-neutral-95;
-    color:$color-neutral-65;
+.#{$prefix}column-content-pill-false {
+    background-color: $pill-bg-gray;
+    color:$gray-text-dark;
 }
 
-.product-column-action  {
-    height: 16px;
-    width: 50px;
-    @include icons-sprite(icon-rowactions-ellipsis); // icon is an <img>
-    background-position: 50% 50%;
-    line-height: 16px;
+.#{$prefix}column-action  {
+    display: block;
+    @include icon-font($glyph-knurling, 13px, $gray-text-dark);
 }

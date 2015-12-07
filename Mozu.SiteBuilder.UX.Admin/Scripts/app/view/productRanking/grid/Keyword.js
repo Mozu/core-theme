@@ -221,7 +221,6 @@ Ext.define('Taco.view.productRanking.grid.Keyword', {
             }, {
                 xtype: 'taco.menucolumn',
                 flex: 1,
-                text: 'Actions',
                 menuItems: [
                     {
                         text: 'Remove',

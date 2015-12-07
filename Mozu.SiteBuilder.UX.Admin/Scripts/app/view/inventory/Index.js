@@ -52,7 +52,8 @@ Ext.define('Taco.view.inventory.Index', {
         },
         viewConfig: {
             deferEmptyText: false,
-            emptyText: "No products to display."
+            emptyText: "No products to display.",
+            stripeRows: false
         },
         columns: [
             {

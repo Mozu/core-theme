@@ -1,7 +1,11 @@
 .x-grid-row .x-grid-cell-selected, .x-grid-row-selected .x-grid-td {
-	background-color: #cccccc;
+	background-color: $dark-bg;
 }
 
 .x-grid-row .x-grid-cell {
     font-size: 13px;
+}
+
+.x-grid-row-selected {
+	border-color: $nav-element-active-border;
 }

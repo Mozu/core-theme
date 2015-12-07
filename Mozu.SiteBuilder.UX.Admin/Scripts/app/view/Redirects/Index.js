@@ -148,7 +148,6 @@ Ext.define('Taco.view.redirects.Index', {
                  },
                  {
                     xtype: 'taco.menucolumn',
-                    text: 'Actions',
                     width: 100,
                     menuItems: [{
                         text: 'Delete',

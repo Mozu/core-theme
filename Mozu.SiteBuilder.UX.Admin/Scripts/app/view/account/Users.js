@@ -62,7 +62,7 @@ Ext.define('Taco.view.account.Users', {
 
         me.viewConfig = {
             animate: false,
-            stripeRows: true,
+            stripeRows: false,
             onExpand: Ext.emptyFn
         };
 
@@ -95,7 +95,6 @@ Ext.define('Taco.view.account.Users', {
             },
             {
                 xtype: 'taco.menucolumn',
-                text: 'Actions',
                 stateId: 'actionsColumn',
                 scope: me,
                 items: [
