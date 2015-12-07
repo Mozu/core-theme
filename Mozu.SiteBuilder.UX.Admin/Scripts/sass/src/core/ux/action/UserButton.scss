@@ -35,6 +35,17 @@
                     color: $dark-color;
                 }
             }
+            .#{$vprefix}userbutton-arrow {
+                display: inline-block;
+                top: 3px;
+                left: 5px;
+                @include icon-font($glyph-arrowdown, 16px, $color-action-foreground);
+            }
         }
+    }
+}
+.#{$vprefix}username-menu {
+    .#{$prefix}menu-body {
+        padding: 0;
     }
 }
