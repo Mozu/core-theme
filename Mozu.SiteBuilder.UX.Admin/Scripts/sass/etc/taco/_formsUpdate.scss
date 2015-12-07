@@ -158,19 +158,19 @@
 
                 &.#{$prefix}edit-justifyright {
                     &:after {
-                        content: '\E009';
+                        content: $glyph-rightalign;
                     }
                 }
 
                 &.#{$prefix}edit-justifyleft {
                     &:after {
-                        content: '\E00A';
+                        content: $glyph-leftalign;
                     }
                 }
 
                 &.#{$prefix}edit-justifycenter {
                     &:after {
-                        content: '\E00B';
+                        content: $glyph-centeralign;
                     }
                 }
 
@@ -188,55 +188,55 @@
 
                 &.#{$prefix}edit-decreasefontsize {
                     &:after {
-                        content: '\E002';
+                        content: $glyph-smaller;
                     }
                 }
 
                 &.#{$prefix}edit-increasefontsize {
                     &:after {
-                        content: '\E003';
+                        content: $glyph-larger;
                     }
                 }
 
                 &.#{$prefix}edit-underline {
                     &:after {
-                        content: '\E001';
+                        content: $glyph-underline;
                     }
                 }
 
                 &.#{$prefix}edit-italic {
                     &:after {
-                        content: '\E007';
+                        content: $glyph-italic;
                     }
                 }
 
                 &.#{$prefix}edit-bold {
                     &:after {
-                        content: '\E008';
+                        content: $glyph-bold;
                     }
                 }
 
                 &.#{$prefix}edit-createlink {
                     &:after {
-                        content: '\E006';
+                        content: $glyph-link;
                     }
                 }
 
                 &.#{$prefix}edit-insertorderedlist {
                     &:after {
-                        content: '\E004';
+                        content: $glyph-numberedlist;
                     }
                 }
 
                 &.#{$prefix}edit-insertunorderedlist {
                     &:after {
-                        content: '\E005';
+                        content: $glyph-bulletedlist;
                     }
                 }
 
                 &.#{$prefix}edit-sourceedit {
                     &:after {
-                        content: '\E000';
+                        content: $glyph-code;
                     }
                 }
             }
