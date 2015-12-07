@@ -57,12 +57,11 @@
   // }
 
   // grid row hover state
-  // .#{$prefix}grid-row-over {
-  //   .#{$prefix}grid-cell-special {
-  //     background-color: $grid-row-cell-over-background-color;
-  //     border-color: $grid-row-cell-over-border-color;
-  //   }
-  // }
+    .#{$prefix}grid-row-over {
+        .#{$vprefix}grid-row-menu-trigger::after {
+            color: $black-color;
+        }
+    }
 
   // grid row focus state
   // .#{$prefix}grid-row-focused {
