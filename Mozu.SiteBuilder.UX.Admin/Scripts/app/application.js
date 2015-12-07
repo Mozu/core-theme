@@ -458,6 +458,11 @@ Ext.define('Taco.Application', {
         });
 
 
+        //
+
+        Ext.override(Ext.grid.View, { enableTextSelection: true });
+
+
         Ext.util.Observable.prototype.removeOwnedListener =
             function (owner) {
                 var me = this;
