@@ -385,6 +385,7 @@ Ext.define('Taco.core.ux.mixins.NavHeader', {
             if (me.cancelButtonEnabled) {
                 me.cancelActionButton = Ext.widget(Ext.apply({}, me.cancelButtonCfg, {
                     xtype: 'button',
+                    cls: 'taco-linkbutton',
                     height: 40,
                     text: me.cancelText,
                     margin: "0 0 0 10",
