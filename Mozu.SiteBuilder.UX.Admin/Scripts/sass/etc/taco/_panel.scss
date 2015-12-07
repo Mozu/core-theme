@@ -1,121 +1,121 @@
 @mixin taco-panel {
-	/* panel */
-	.#{$prefix}panel {
-		@include border-radius-xbrowser($border-radius);
-		box-shadow: rgba(0, 0, 0, 0.09) 0px 0px 2px 0px;
-		font-family: $font-family;
+    /* panel */
+    .#{$prefix}panel {
+        @include border-radius-xbrowser($border-radius);
+        box-shadow: rgba(0, 0, 0, 0.09) 0px 0px 2px 0px;
+        font-family: $font-family;
 
-		.#{$prefix}panel-header-text {
-			color: $dark-color;
-			font-family: $font-family;
-			font-size: $card-title-font;
-		}
+        .#{$prefix}panel-header-text {
+            color: $dark-color;
+            font-family: $font-family;
+            font-size: $card-title-font;
+        }
 
-		.#{$prefix}panel-default {
-			/* override external styles */
-			box-shadow: none !important;
-		}
+        .#{$prefix}panel-default {
+            /* override external styles */
+            box-shadow: none !important;
+        }
 
-		.#{$prefix}panel-subform-section-child {
-			background-color: $white-color;
-		}
+        .#{$prefix}panel-subform-section-child {
+            background-color: $white-color;
+        }
 
-		.#{$prefix}component {
-			@include border-radius-xbrowser($border-radius);
-		}
+        .#{$prefix}component {
+            @include border-radius-xbrowser($border-radius);
+        }
 
-		.#{$prefix}panel-body {
+        .#{$prefix}panel-body {
 
-			/* override external styles */
-			border: 0;
+            /* override external styles */
+            border: 0;
 
-			.#{$prefix}column-header-over {
-				/* override external styles */
-				background-color: $white-color;
-			}
+            .#{$prefix}column-header-over {
+                /* override external styles */
+                background-color: $white-color;
+            }
 
-			.#{$prefix}grid-td {
-				/* override external styles */
-				border: 0;
-				outline: 0 !important;
-			}
+            .#{$prefix}grid-td {
+                /* override external styles */
+                border: 0;
+                outline: 0 !important;
+            }
 
-			.#{$prefix}grid-row-over {
-				.#{$prefix}grid-td {
-					/* override external styles */
-					border: 0;
-					outline: 0 !important;
-				}
-			}
-		}
+            .#{$prefix}grid-row-over {
+                .#{$prefix}grid-td {
+                    /* override external styles */
+                    border: 0;
+                    outline: 0 !important;
+                }
+            }
+        }
 
-		.#{$prefix}grid-header-ct {
-			background-color: $white-color;
-			border: 0;
-			border-bottom: 1px solid $nav-element-active-border;
+        .#{$prefix}grid-header-ct {
+            background-color: $white-color;
+            border: 0;
+            border-bottom: 1px solid $nav-element-active-border;
 
-			.#{$prefix}box-inner {
-				border-bottom: 1px solid $light-bg-gray;
-			}
+            .#{$prefix}box-inner {
+                border-bottom: 1px solid $light-bg-gray;
+            }
 
-			.#{$prefix}column-header {
-				background-color: $white-color;
+            .#{$prefix}column-header {
+                background-color: $white-color;
 
-				/* override external styles */
-				border: 0;
-				color: $gray-text-dark;
-				display: inline-block;
-				font-family: $font-family;
-				font-size: $normal-font-link;
-				padding: 3px 10px;
-			}
+                /* override external styles */
+                border: 0;
+                color: $gray-text-dark;
+                display: inline-block;
+                font-family: $font-family;
+                font-size: $normal-font-link;
+                padding: 3px 10px;
+            }
 
-			.#{$prefix}column-header-text {
+            .#{$prefix}column-header-text {
 
-				/* override external styles */
-				font-weight: normal;
-			}
-		}
+                /* override external styles */
+                font-weight: normal;
+            }
+        }
 
-		.#{$prefix}grid-view-default {
-			color: $dark-color;
-			font-size: $normal-font;
+        .#{$prefix}grid-view-default {
+            color: $dark-color;
+            font-size: $normal-font;
 
-			td {
-				font-size: $normal-font;
-				padding: 0 10px 1px;
-			}
-		}
+            td {
+                font-size: $normal-font;
+                padding: 0 10px 1px;
+            }
+        }
 
-		tbody tr:nth-child(odd) {
-			td {
-				background-color: $white-color;
-			}
-		}
+        tbody tr:nth-child(odd) {
+            td {
+                background-color: $white-color;
+            }
+        }
 
-		tbody tr:nth-child(even) {
-			td {
-				background-color: $dark-bg;
-			}
-		}
+        tbody tr:nth-child(even) {
+            td {
+                background-color: $dark-bg;
+            }
+        }
 
-		.#{$prefix}td {
-			padding: 7px 10px 6px;
-		}
+        .#{$prefix}td {
+            padding: 7px 10px 6px;
+        }
 
-		.#{$prefix}content {
-			padding: 15px 25px 30px;
+        .#{$prefix}content {
+            padding: 15px 25px 30px;
 
-			.#{$prefix}title {
-				font-size: $card-title-font;
-			}
-		}
+            .#{$prefix}title {
+                font-size: $card-title-font;
+            }
+        }
 
-		.#{$prefix}empty-pill {
-			border: 1px solid $typehead-pill-border-color;
-			@include border-radius-xbrowser($border-radius-large);
-			font-size: $tag-font;
-			padding: 4px;
-		}
-	}
+        .#{$prefix}empty-pill {
+            border: 1px solid $typehead-pill-border-color;
+            @include border-radius-xbrowser($border-radius-large);
+            font-size: $tag-font;
+            padding: 4px;
+        }
+    }
 }

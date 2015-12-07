@@ -1,360 +1,380 @@
 @mixin taco-forms {
-	.#{$prefix}form-field {
-		border: 0;
-		border-bottom: 1px solid $card-border;
-		@include border-radius-xbrowser(0);
-	}
+    .#{$prefix}form-field {
+        border: 0;
+        border-bottom: 1px solid $card-border;
+        @include border-radius-xbrowser(0);
+    }
 
-	.#{$prefix}trigger-noedit {
-		border: 0;
-		border-bottom: 1px dotted $card-border;
-		@include border-radius-xbrowser(0);
-		border-width: 1px !important;
-	}
+    .#{$prefix}trigger-noedit {
+        border: 0;
+        border-bottom: 1px dotted $card-border;
+        @include border-radius-xbrowser(0);
+        border-width: 1px !important;
+    }
 
-	.#{$prefix}field-form-focus {
-		border-color: $valid-green;
-		box-shadow: 0 1px 0 0 $valid-green;
+    .#{$prefix}field-form-focus {
+        border-color: $valid-green;
+        box-shadow: 0 1px 0 0 $valid-green;
 
-		&.#{$prefix}form-invalid-field {
-			border-color: $error-red;
-			box-shadow: 0 1px 0 0 $error-red;
-		}
+        &.#{$prefix}form-invalid-field {
+            border-color: $error-red;
+            box-shadow: 0 1px 0 0 $error-red;
+        }
 
-		&.#{$prefix}trigger-noedit {
-			border-bottom: 1px dotted $card-border;
-			box-shadow: none;
-		}
-	}
+        &.#{$prefix}trigger-noedit {
+            border-bottom: 1px dotted $card-border;
+            box-shadow: none;
+        }
+    }
 
-	.#{$prefix}form-item-label {
-		color: $label-color;
-		font-size: $label-link-font;
+    /**
+     * Removes border from inline editor
+     */
+    .#{$prefix}grid-row-editor {
+        input {
+            border-bottom: none;
+        }
+    }
 
-		/* override external styles */
-		font-weight: normal;
-	}
+    .#{$prefix}form-item-label {
+        color: $label-color;
+        font-size: $label-link-font;
 
-	.#{$prefix}form-type-text {
-		margin-top: -1px;
+        /* override external styles */
+        font-weight: normal;
+    }
 
-		.#{$prefix}form-item-required {
-			color: $label-color;
+    .#{$prefix}form-trigger-wrap {
+        .#{$prefix}form-text {
+            border-width: 1px;
+        }
+    }
 
-			&:before {
-				content: '';
-				display: none;
-			}
+    .#{$prefix}form-type-text {
+        margin-top: -1px;
 
-			&:after {
-				color: $valid-green;
-				content: ' *';
-			}
-		}
+        .#{$prefix}form-item-required {
+            color: $label-color;
 
-		&.#{$prefix}form-invalid {
-
-			.#{$prefix}form-item-required {
-				color: $error-red;
-
-				&:after {
-					color: $error-red;
-				}
-			}
-		}
-	}
-
-	/* html editor */
-	.#{$prefix}html-editor-container {
-		&.#{$prefix}box-layout-ct {
-			min-width: 762px;
-		}
-
-		> .#{$prefix}box-inner {
-			min-width: 762px;
-		}
-	}
-
-	.#{$prefix}html-editor-input {
-		border-color: $card-border;
-		border-left: none;
-		border-right: none;
-		min-width: 762px;
-	}
-
-	.#{$prefix}html-editor-tb {
-		background: $white-color;
-		border: 1px solid $card-border;
-		border-color: $card-border !important;
-		@include border-radius-xbrowser($border-radius-small);
-		border-right: none;
-		height: 30px;
-		min-width: 762px;
-
-		.#{$prefix}horizontal-box-overflow-body {
-			min-width: 711px;
-
-			.#{$prefix}box-target {
-				min-width: 711px;
-			}
-		}
-
-		.#{$prefix}toolbar-separator {
-			/* override external styles */
-			display: none !important;
-		}
-
-		.#{$prefix}toolbar-item {
-			background-color: $white-color;
-			border-bottom: none;
-			border-left: none;
-			@include border-radius-xbrowser(0);
-			border-right: 1px solid $gray-border-color;
-			border-top: none;
-			left: auto !important;
-			padding: 6px 16px;
-			position: relative !important;
-
-			&:hover {
-				background: $white-color;
-				text-decoration: none;
-			}
-
-			&.#{$prefix}btn-default-toolbar-small {
-				display: inline-block !important;
-
-				&:active {
-					background: $white-color;
-				}
-			}
-
-			.#{$prefix}btn-default-toolbar-small-pressed {
-				background: $white-color;
-			}
-
-			.#{$prefix}btn-icon-el {
-				background-image: none;
-				font-family: $icon-font;
-				left: -5px;
-				&:after {
-					color: $html-editor-toolbar;
-					font-size: $input-font;
-				}
-
-				&.#{$prefix}edit-justifyright {
-					&:after {
-						content: '\E009';
-					}
-				}
-
-				&.#{$prefix}edit-justifyleft {
-					&:after {
-						content: '\E00A';
-					}
-				}
-
-				&.#{$prefix}edit-justifycenter {
-					&:after {
-						content: '\E00B';
-					}
-				}
-
-				&.#{$prefix}edit-backcolor {
-					&:after {
-						content: '\E600';
-					}
-				}
-
-				&.#{$prefix}edit-forecolor {
-					&:after {
-						content: '\E027';
-					}
-				}
-
-				&.#{$prefix}edit-decreasefontsize {
-					&:after {
-						content: '\E002';
-					}
-				}
-
-				&.#{$prefix}edit-increasefontsize {
-					&:after {
-						content: '\E003';
-					}
-				}
-
-				&.#{$prefix}edit-underline {
-					&:after {
-						content: '\E001';
-					}
-				}
-
-				&.#{$prefix}edit-italic {
-					&:after {
-						content: '\E007';
-					}
-				}
-
-				&.#{$prefix}edit-bold {
-					&:after {
-						content: '\E008';
-					}
-				}
-
-				&.#{$prefix}edit-createlink {
-					&:after {
-						content: '\E006';
-					}
-				}
-
-				&.#{$prefix}edit-insertorderedlist {
-					&:after {
-						content: '\E004';
-					}
-				}
-
-				&.#{$prefix}edit-insertunorderedlist {
-					&:after {
-						content: '\E005';
-					}
-				}
-
-				&.#{$prefix}edit-sourceedit {
-					&:after {
-						content: '\E000';
-					}
-				}
-			}
-		}
-	}
-
-	.#{$prefix}form-text {
-		padding: 0;
-	}
-
-	.#{$prefix}form-trigger-wrap {
-		border: none;
-
-		input {
-			color: $card-button-text-color;
-		}
-	}
-
-	.#{$prefix}btn {
-		background-color: $card-button-bg;
-		border: 1px solid $gray-border-color;
-		@include border-radius-xbrowser($border-radius-small);
-		font-family: $font-family;
-
-		.#{$prefix}btn-inner-center {
-			color: $card-button-text-color;
-			font-size: $normal-font-link;
-		}
-	}
-
-	.#{$prefix}btn-action-medium-over,
-	.#{$prefix}btn-link-medium-over {
-		/* override external styles */
-		box-shadow: none;
-		-webkit-box-shadow: none;
-
-		.#{$prefix}btn-inner-center {
-			color: $dark-color;
-		}
-
-		&:active {
-			background-color: $card-button-press-bg;
-		}
-	}
-
-	.#{$prefix}btn-action-medium-focus,
-	.#{$prefix}btn-link-medium-focus {
-		box-shadow: none;
-
-		.#{$prefix}btn-inner-center {
-			text-decoration: none;
-		}
-	}
-
-	.#{$prefix}boxselect-list {
-		border-bottom: 1px solid $card-border;
-		box-shadow: none;
-
-		.#{$prefix}boxselect-input {
-			top: 13px !important;
-		}
-
-		.#{$prefix}boxselect-item {
-			background-color: $white-color;
-			border: 1px solid $typehead-pill-border-color;
-			@include border-radius-xbrowser($border-radius-small);
-			border-width: 1px !important;
-			font-size: $boxselect-font;
-			padding: 9px 27px 9px 14px !important;
-			text-transform: capitalize;
-
-			.#{$prefix}tab-close-btn {
-				background-image: none;
-				opacity: 1;
-				width: 27px;
-				height: 36px;
-				top: -1px;
-				border-left: 1px solid $light-bg-gray;
-
-				&:after {
-					color: $typehead-pill-border-color;
-					content: '\E011';
-					display: block;
-					font-family: $icon-font;
-					font-size: $label-font;
-					left: 7px;
-					position: absolute;
-					top: 18px;
-				}
-			}
-		}
-	}
-
-	.#{$prefix}boundlist-floating {
-		background-color: $white-color;
-		border: 1px solid $dropdown-list-outline;
-		@include border-radius-xbrowser($border-radius-small);
-		box-shadow: $dropdown-list-shadow 0px 1px 6px 0px;
-
-		li.#{$prefix}boundlist-item {
-			border-bottom: 1px solid $card-button-press-bg !important;
-            @include border-radius-xbrowser(0);
-			border-width: 1px;
-			color: $dark-color;
-			cursor: pointer;
-			font-size: $normal-font-link;
-			line-height: 24px;
-			padding: 6px 12px;
-
-            &.#{$prefix}boundlist-selected {
-            	background-color: $dark-bg !important;
-            	border-left: 3px solid $valid-green !important;
+            &:before {
+                content: '';
+                display: none;
             }
 
-			span {
-				color: $gray-text-light;
-				font-size: $normal-font-link;
-			}
+            &:after {
+                color: $valid-green;
+                content: ' *';
+            }
+        }
 
-			&:hover {
-				background-color: $dark-bg !important;
-				color: $nav-element-active !important;
+        &.#{$prefix}form-invalid {
 
-				span {
-					color: $nav-element-active;
-				}
-			}
+            .#{$prefix}form-item-required {
+                color: $error-red;
 
-			&:active,
-			&:focus {
-				background-color: $dark-bg;
-				color: $nav-element-active;
-			}
-		}
-	}
+                &:after {
+                    color: $error-red;
+                }
+            }
+        }
+    }
+
+    /* html editor */
+    .#{$prefix}html-editor-container {
+        &.#{$prefix}box-layout-ct {
+            min-width: 762px;
+        }
+
+        > .#{$prefix}box-inner {
+            min-width: 762px;
+        }
+    }
+
+    .#{$prefix}html-editor-input {
+        border-color: $card-border;
+        border-left: none;
+        border-right: none;
+        min-width: 762px;
+    }
+
+    .#{$prefix}html-editor-tb {
+        background: $white-color;
+        border: 1px solid $card-border;
+        border-color: $card-border !important;
+        @include border-radius-xbrowser($border-radius-small);
+        border-right: none;
+        height: 30px;
+        min-width: 762px;
+
+        .#{$prefix}horizontal-box-overflow-body {
+            min-width: 711px;
+
+            .#{$prefix}box-target {
+                min-width: 711px;
+            }
+        }
+
+        .#{$prefix}toolbar-separator {
+            /* override external styles */
+            display: none !important;
+        }
+
+        .#{$prefix}toolbar-item {
+            background-color: $white-color;
+            border-bottom: none;
+            border-left: none;
+            @include border-radius-xbrowser(0);
+            border-right: 1px solid $gray-border-color;
+            border-top: none;
+            left: auto !important;
+            padding: 6px 16px;
+            position: relative !important;
+
+            &:hover {
+                background: $white-color;
+                text-decoration: none;
+            }
+
+            &.#{$prefix}btn-default-toolbar-small {
+                display: inline-block !important;
+
+                &:active {
+                    background: $white-color;
+                }
+            }
+
+            .#{$prefix}btn-default-toolbar-small-pressed {
+                background: $white-color;
+            }
+
+            .#{$prefix}btn-icon-el {
+                background-image: none;
+                font-family: $icon-font;
+                left: -5px;
+                &:after {
+                    color: $html-editor-toolbar;
+                    font-size: $input-font;
+                }
+
+                &.#{$prefix}edit-justifyright {
+                    &:after {
+                        content: '\E009';
+                    }
+                }
+
+                &.#{$prefix}edit-justifyleft {
+                    &:after {
+                        content: '\E00A';
+                    }
+                }
+
+                &.#{$prefix}edit-justifycenter {
+                    &:after {
+                        content: '\E00B';
+                    }
+                }
+
+                &.#{$prefix}edit-backcolor {
+                    &:after {
+                        content: '\E600';
+                    }
+                }
+
+                &.#{$prefix}edit-forecolor {
+                    &:after {
+                        content: '\E027';
+                    }
+                }
+
+                &.#{$prefix}edit-decreasefontsize {
+                    &:after {
+                        content: '\E002';
+                    }
+                }
+
+                &.#{$prefix}edit-increasefontsize {
+                    &:after {
+                        content: '\E003';
+                    }
+                }
+
+                &.#{$prefix}edit-underline {
+                    &:after {
+                        content: '\E001';
+                    }
+                }
+
+                &.#{$prefix}edit-italic {
+                    &:after {
+                        content: '\E007';
+                    }
+                }
+
+                &.#{$prefix}edit-bold {
+                    &:after {
+                        content: '\E008';
+                    }
+                }
+
+                &.#{$prefix}edit-createlink {
+                    &:after {
+                        content: '\E006';
+                    }
+                }
+
+                &.#{$prefix}edit-insertorderedlist {
+                    &:after {
+                        content: '\E004';
+                    }
+                }
+
+                &.#{$prefix}edit-insertunorderedlist {
+                    &:after {
+                        content: '\E005';
+                    }
+                }
+
+                &.#{$prefix}edit-sourceedit {
+                    &:after {
+                        content: '\E000';
+                    }
+                }
+            }
+        }
+    }
+
+    .#{$prefix}form-text {
+        padding: 0;
+    }
+
+    .#{$prefix}form-trigger-wrap {
+        border: none;
+
+        input {
+            color: $card-button-text-color;
+        }
+    }
+
+    .#{$prefix}btn {
+        background-color: $card-button-bg;
+        border: 1px solid $gray-border-color;
+        @include border-radius-xbrowser($border-radius-small);
+        font-family: $font-family;
+
+        .#{$prefix}btn-inner-center {
+            color: $card-button-text-color;
+            font-size: $normal-font-link;
+        }
+    }
+
+    .#{$prefix}btn-action-medium-over,
+    .#{$prefix}btn-link-medium-over {
+        /* override external styles */
+        box-shadow: none;
+        -webkit-box-shadow: none;
+
+        .#{$prefix}btn-inner-center {
+            color: $dark-color;
+        }
+
+        &:active {
+            background-color: $card-button-press-bg;
+        }
+    }
+
+    .#{$prefix}btn-action-medium-focus,
+    .#{$prefix}btn-link-medium-focus {
+        box-shadow: none;
+
+        .#{$prefix}btn-inner-center {
+            text-decoration: none;
+        }
+    }
+
+    .#{$prefix}boxselect-list {
+        border-bottom: 1px solid $card-border;
+        box-shadow: none;
+        min-height: 42px;
+
+        .#{$prefix}boxselect-input {
+            top: 13px !important;
+        }
+
+        .#{$prefix}boxselect-item {
+            background-color: $white-color;
+            border: 1px solid $typehead-pill-border-color;
+            @include border-radius-xbrowser($border-radius-small);
+            border-width: 1px !important;
+            font-size: $boxselect-font;
+            padding: 9px 27px 9px 14px !important;
+            text-transform: capitalize;
+
+            .#{$prefix}tab-close-btn {
+                background-image: none;
+                opacity: 1;
+                width: 27px;
+                height: 36px;
+                top: -1px;
+                border-left: 1px solid $light-bg-gray;
+
+                &:after {
+                    color: $typehead-pill-border-color;
+                    content: '\E011';
+                    display: block;
+                    font-family: $icon-font;
+                    font-size: $label-font;
+                    left: 7px;
+                    position: absolute;
+                    top: 18px;
+                }
+            }
+        }
+    }
+
+    .#{$prefix}boundlist-floating {
+        background-color: $white-color;
+        border: 1px solid $dropdown-list-outline;
+        @include border-radius-xbrowser($border-radius-small);
+        box-shadow: $dropdown-list-shadow 0px 1px 6px 0px;
+
+        li.#{$prefix}boundlist-item {
+            border-bottom: 1px solid $card-button-press-bg !important;
+            @include border-radius-xbrowser(0);
+            border-width: 1px;
+            color: $dark-color;
+            cursor: pointer;
+            font-size: $normal-font-link;
+            line-height: 24px;
+            padding: 6px 12px;
+
+            &.#{$prefix}boundlist-selected {
+                background-color: $dark-bg !important;
+                border-left: 3px solid $valid-green !important;
+            }
+
+            span {
+                color: $gray-text-light;
+                font-size: $normal-font-link;
+            }
+
+            &:hover {
+                background-color: $dark-bg !important;
+                color: $nav-element-active !important;
+
+                span {
+                    color: $nav-element-active;
+                }
+            }
+
+            &:active,
+            &:focus {
+                background-color: $dark-bg;
+                color: $nav-element-active;
+            }
+        }
+    }
+
+    .#{$prefix}form-checkbox {
+        height: 16px;
+    }
 }
