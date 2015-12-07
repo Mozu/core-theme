@@ -28,8 +28,7 @@ Ext.define('Taco.view.product.GlobalForm', {
     
 
     // need to move the left nav up to align with the top edge of the tab bar;
-    leftNavTopOffset: -60,
-    
+    sectionNavTopOffset: 8,
 
     persistChangesToModel: true,
 

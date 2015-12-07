@@ -12,13 +12,14 @@ Ext.define('Taco.core.ux.form.NavForm2', {
     // Sure would have been nice to have some comments for what this does...
     //topOffset: 38,
 
-    // this is an offset adjustment to move the left nav up and down relative to the first subForm's top edge.
-    // By defaul the left nav will adjust itself to align with the top of the first subform;
-    // this is primarily here to support the tabs in the product navform;
-    leftNavTopOffset: 0,
-
-    
+    // whether or not the sectionNav sticks to the viewport
     enableScrollSpy: true,
+
+    // this is the fine-tuning adjustment to move the section nav when it 'sticks'
+    sectionNavTopOffset: 0,
+
+    // determines the positioning strategy for the stickyNav, true applies the 'taco-fixed-navForm2' class, false applies 'taco-relative-navForm2'
+    useFixedPosition: true,
 
 //    layout : "fit",
 
@@ -46,7 +47,7 @@ Ext.define('Taco.core.ux.form.NavForm2', {
             }
         })
 
-
+        this.stickyClass = (this.useFixedPosition) ? 'taco-fixed-navForm2' : 'taco-relative-navForm2';
 
         this.formContainer = Ext.widget({
             xtype: 'container',
@@ -164,7 +165,7 @@ Ext.define('Taco.core.ux.form.NavForm2', {
                 return;
             }            
             //this.locationMap.push(el.dom.offsetTop + this.sectionOffset - this.topOffset - this.leftNavTopOffset);
-            this.locationMap.push(el.dom.offsetTop - this.leftNavTopOffset - this.formContainerTop);
+            this.locationMap.push(el.dom.offsetTop - this.sectionNavTopOffset - this.formContainerTop);
             //this.locationMap.push(el.dom.offsetTop);
 
 
@@ -187,15 +188,18 @@ Ext.define('Taco.core.ux.form.NavForm2', {
         var scrollTop = this.getTop();
         var sectionNav = this.sectionNav;
         var navTop = this.navTop; // set in this.initSectionNav
-        var fixedClass = 'taco-fixed-navForm2';
 
-        if (scrollTop > navTop && !sectionNav.hasCls(fixedClass)) {
-            var headerHeight = this.getHeaderHeight() + 5;
-            sectionNav.addCls(fixedClass);
-            sectionNav.getEl().dom.style.top = headerHeight + 'px';
+        if (scrollTop > navTop) {
+            var headerHeight = this.getHeaderHeight();
+            sectionNav.addCls(this.stickyClass);
+            if (this.useFixedPosition) {
+                sectionNav.getEl().dom.style.top = headerHeight + this.sectionNavTopOffset + 'px';
+            } else {
+                sectionNav.getEl().dom.style.top = (scrollTop - headerHeight + this.sectionNavTopOffset) + 'px';
+            }
         }
-        else if (scrollTop < navTop && sectionNav.hasCls(fixedClass)) {
-            sectionNav.removeCls(fixedClass);
+        else if (scrollTop < navTop) {
+            sectionNav.removeCls(this.stickyClass);
             sectionNav.getEl().dom.style.top = '0px';
         }
 
@@ -235,8 +239,7 @@ Ext.define('Taco.core.ux.form.NavForm2', {
         
         if (record.raw.getEl) {
             targetY = view.store.indexOf(record)
-            //? record.raw.getEl().dom.offsetTop + this.sectionOffset - this.leftNavTopOffset
-                ? record.raw.getEl().dom.offsetTop - this.formContainerTop - this.leftNavTopOffset
+                ? record.raw.getEl().dom.offsetTop - this.formContainerTop - this.sectionNavTopOffset
                 : 0;
             wrapper.scrollTo('top', targetY, true);
         }

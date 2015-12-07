@@ -3,7 +3,7 @@
  */
 Ext.define('Taco.view.order.Form', {
     extend: 'Taco.core.ux.form.NavForm2',
-    extend: 'Taco.core.ux.form.TabForm',
+    //extend: 'Taco.core.ux.form.TabForm',
     
     alias: 'widget.taco-orderform',
     requires: [
@@ -24,6 +24,10 @@ Ext.define('Taco.view.order.Form', {
     config: {
         customer: null
     },
+
+    sectionNavTopOffset: 117,
+
+    useFixedPosition: false,
 
     editTitle: [
         'Order No. {number}',
@@ -170,7 +174,6 @@ Ext.define('Taco.view.order.Form', {
             listeners: {
                 scope: this,
                 afterlayout: function (view, width, height, oldWidth, oldHeight) {
-                    this.alignLeftNav();
                     // this one only exists if this is in navForm2 instead of tabForm; TODO: refactor navForm2 to not cache the panel heights in the store; ie get rid of the mapping.
                     if (this.rebuildMap) {
                         this.rebuildMap();

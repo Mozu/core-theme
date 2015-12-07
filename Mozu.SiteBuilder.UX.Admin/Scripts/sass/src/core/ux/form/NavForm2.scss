@@ -4,11 +4,18 @@
     background-color: $color-framework-gray-lighter;
     border: 1px solid $color-standard-border;
     outline: 0px none;
+    //padding: 19px 39px;
+    //width: 180px;
+    z-index: 500;
 
+    &.taco-relative-navForm2 {
+      position: relative !important;
+      overflow: auto;
+    }
     &.taco-fixed-navForm2 {
       position: fixed !important;
-      z-index: 500;
       width: 100% !important;
+      padding: 0 20px;
     }
 
     li {

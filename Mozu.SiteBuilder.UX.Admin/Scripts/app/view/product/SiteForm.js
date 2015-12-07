@@ -29,7 +29,7 @@ Ext.define('Taco.view.product.SiteForm', {
     
 
     // need to move the left nav up to align with the top edge of the tab bar;
-    leftNavTopOffset: -60,
+    sectionNavTopOffset: 8,
 
     bodyCls: [Taco.baseCSSPrefix + 'product-admin-form', Taco.baseCSSPrefix + 'single-site-admin-form'],
     overrideCount: 0,
