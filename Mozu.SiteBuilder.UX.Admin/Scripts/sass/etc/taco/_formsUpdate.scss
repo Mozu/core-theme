@@ -1,13 +1,13 @@
 @mixin taco-forms {
     .#{$prefix}form-field {
         border: 0;
-        border-bottom: 1px solid $card-border;
+        border-bottom: 1px solid $input-border;
         @include border-radius-xbrowser(0);
     }
 
     .#{$prefix}trigger-noedit {
         border: 0;
-        border-bottom: 1px dotted $card-border;
+        border-bottom: 1px dotted $input-border;
         @include border-radius-xbrowser(0);
         border-width: 1px !important;
     }
@@ -22,7 +22,7 @@
         }
 
         &.#{$prefix}trigger-noedit {
-            border-bottom: 1px dotted $card-border;
+            border-bottom: 1px dotted $input-border;
             box-shadow: none;
         }
     }
@@ -91,7 +91,7 @@
     }
 
     .#{$prefix}html-editor-input {
-        border-color: $card-border;
+        border-color: $input-border;
         border-left: none;
         border-right: none;
         min-width: 762px;
@@ -99,8 +99,8 @@
 
     .#{$prefix}html-editor-tb {
         background: $white-color;
-        border: 1px solid $card-border;
-        border-color: $card-border !important;
+        border: 1px solid $input-border;
+        border-color: $input-border !important;
         @include border-radius-xbrowser($border-radius-small);
         border-right: none;
         height: 30px;
@@ -251,7 +251,7 @@
         border: none;
 
         input {
-            color: $card-button-text-color;
+            color: $input-text-color;
         }
     }
 
@@ -262,7 +262,7 @@
         font-family: $font-family;
 
         .#{$prefix}btn-inner-center {
-            color: $card-button-text-color;
+            color: $input-text-color;
             font-size: $normal-font-link;
         }
     }
@@ -292,7 +292,7 @@
     }
 
     .#{$prefix}boxselect-list {
-        border-bottom: 1px solid $card-border;
+        border-bottom: 1px solid $input-border;
         box-shadow: none;
         min-height: 42px;
 
@@ -302,7 +302,7 @@
 
         .#{$prefix}boxselect-item {
             background-color: $white-color;
-            border: 1px solid $typehead-pill-border-color;
+            border: 1px solid $dark-border-gray;
             @include border-radius-xbrowser($border-radius-small);
             border-width: 1px !important;
             font-size: $boxselect-font;
@@ -315,10 +315,10 @@
                 width: 27px;
                 height: 36px;
                 top: -1px;
-                border-left: 1px solid $light-bg-gray;
+                border-left: 1px solid $light-border-gray;
 
                 &:after {
-                    color: $typehead-pill-border-color;
+                    color: $dark-border-gray;
                     content: '\E011';
                     display: block;
                     font-family: $icon-font;
@@ -338,7 +338,7 @@
         box-shadow: $dropdown-list-shadow 0px 1px 6px 0px;
 
         li.#{$prefix}boundlist-item {
-            border-bottom: 1px solid $card-button-press-bg !important;
+            border-bottom: 1px solid $list-item-active !important;
             @include border-radius-xbrowser(0);
             border-width: 1px;
             color: $dark-color;
@@ -359,17 +359,17 @@
 
             &:hover {
                 background-color: $dark-bg !important;
-                color: $nav-element-active !important;
+                color: $input-element-active !important;
 
                 span {
-                    color: $nav-element-active;
+                    color: $input-element-active;
                 }
             }
 
             &:active,
             &:focus {
                 background-color: $dark-bg;
-                color: $nav-element-active;
+                color: $input-element-active;
             }
         }
     }

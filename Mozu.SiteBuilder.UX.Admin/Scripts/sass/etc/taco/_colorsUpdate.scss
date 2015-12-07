@@ -6,18 +6,27 @@ $white-color:                   rgb(255, 255, 255);                             
 $gray-text-dark:                darken($white-color, 35);                                   /* #a5a5a5 --> #a6a6a6  165, 165, 165 */
 $gray-text-light:               darken($white-color, 36);                                   /* #a3a3a3              163, 163, 163 */
 $card-border:                   darken($white-color, 6);                                    /* #f1f1f1 --> #f0f0f0  240, 240, 240 */
+$input-border:					$card-border;
 $light-bg:                      darken($white-color, 9);                                    /* #eaeaea --> #e8e8e8  232, 232, 232 */
 $label-color:                   darken($white-color, 32);                                   /* #acacac --> #adadad  172, 172, 172 */
 $nav-element-text:              darken($white-color, 35);                                   /* #a5a5a5 --> #a6a6a6  165, 165, 165 */
+$call-to-action-color:			$nav-element-text;
 $nav-element-active:            lighten($black-color, 25);                                  /* #3f3f3f --> #404040  063, 063, 063 */
+$input-element-active:			$nav-element-active;
 $nav-element-active-border:     darken($white-color, 5);                                    /* #f3f3f3 --> #f2f2f2  242, 242, 242 */
 $light-bg-gray:                 darken($white-color, 9);                                    /* #e9e9e9 --> #e8e8e8  233, 233, 233 */
 $pill-bg-gray:					darken($white-color, 5);									/* #f3f3f3 --> #f2f2f2	242, 242, 242 */
+$light-border-gray:				$light-bg-gray;
 $dark-bg:                       darken($white-color, 3);                                    /* #f7f7f7              247, 247, 247 */
 $typehead-pill-border-color:    darken($white-color, 11);                                   /* #e2e2e2 --> #e3e3e3  226, 226, 226 */
+$dark-border-gray:				$typehead-pill-border-color;
 $card-button-bg:                #fafafa;                                                    /* could not filter for effect        */
 $card-button-press-bg:          darken($white-color, 4);                                    /* #f5f5f5              245, 245, 245 */
+$list-item-selector:			$card-button-press-bg;
+$list-item-active:				$card-button-press-bg;
 $card-button-text-color:        darken($white-color, 38);                                   /* #9e9e9e              158, 158, 158 */
+$glyph-color:					$card-button-text-color;
+$input-text-color:				$card-button-text-color;
 $gray-border-color:             darken($white-color, 8);                                    /* #ebebeb              250, 250, 250 */
 $light-gray-border-color:       darken($white-color, 13);                                   /* #dfdfdf --> #dedede  222, 222, 222 */
 $med-gray-border-color:		    darken($white-color, 12);									/* #dfdfdf --> #dedede	222, 222, 222 */
