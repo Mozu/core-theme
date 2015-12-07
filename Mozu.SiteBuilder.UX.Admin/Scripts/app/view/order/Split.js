@@ -88,6 +88,9 @@ Ext.define('Taco.view.order.Split', {
                 itemclick: {
                     scope: this,
                     fn: function (grid, record, row, index, e, opts) {
+                        if (window.getSelection().toString()) { // if the user has highlighted text, do not launch editor
+                            return;
+                        }
                         if (!e.getTarget('.' + Taco.core.ux.grid.MenuColumn.prototype.iconCls) &&
                             !e.getTarget('.' + Taco.core.ux.grid.MenuColumn.prototype.tdCls) &&
                             !e.getTarget('.x-grid-cell-row-checker')) {
