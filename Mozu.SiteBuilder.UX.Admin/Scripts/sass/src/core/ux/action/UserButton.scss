@@ -37,10 +37,9 @@
             }
             .#{$vprefix}userbutton-arrow {
                 display: inline-block;
-                top: 3px;
-                left: 2px;
+                left: 4px;
                 margin-right: 10px;
-                @include icon-font($glyph-arrowdown, 16px, $color-action-foreground);
+                @include icon-font($glyph-chevrondown, 8px, $gray-text-dark);
             }
         }
     }
