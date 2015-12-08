@@ -193,6 +193,10 @@ Ext.define('Taco.core.ux.form.FilterContainer', {
 
     },
 
+    reconfigureStore: function(store) {
+        this.store = store;
+    },
+
     onBeforeSelect:function (combo, record) {
         var newValue = record.get('field1'),
             picker = combo.getPicker();

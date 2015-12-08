@@ -7,8 +7,9 @@
 Ext.define('Taco.controller.Entities', {
     extend: 'Taco.core.Controller',
     requires: [
-        'Taco.view.entityManager.Index'
+        'Taco.view.entityManager.Split'
     ],
    
-    indexView: 'Taco.view.entityManager.Index'
+    indexView: 'Taco.view.entityManager.Split',
+   
 });

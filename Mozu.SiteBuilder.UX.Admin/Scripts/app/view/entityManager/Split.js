@@ -1,0 +1,403 @@
+/**
+ * @class Taco.view.entityManager.Split
+ */
+
+
+Ext.define('Taco.view.entityManager.Split', {
+    extend: 'Taco.core.ux.content.SplitContainer',
+    alias: [
+        'widget.entity-split',
+        'widget.entity.split'
+    ],
+    requires: [
+        'Taco.core.ux.mixins.SplitEditor',
+        'Taco.view.publishing.component.button.PublishButton',
+        'Taco.view.entityManager.Grid',
+        'Taco.core.ux.grid.MenuColumn' // just to refer to its classname
+    ],
+
+    mixins: {
+        splitEditor: 'Taco.core.ux.mixins.SplitEditor',
+        navHeader: 'Taco.core.ux.mixins.NavHeader'
+    },
+
+    stateId: 'taco-custom-schema',
+    title: 'Custom Schema',
+
+    createButtonEnabled: true,
+    createButtonText: 'Create New Custom Schema',
+    saveButtonVisible: true,
+    cancelButtonVisible: false,
+
+    contextConfig: {
+        supportedLevels: ['t', 'm', 'c', 's']
+    },
+
+    statics: {
+        factory: function (cfg, callback, scope) {
+            callback.call(scope || this, Ext.create('Taco.view.entityManager.Split', cfg));
+        }
+    },
+
+    onSaveSuccess: function() {
+
+    },
+
+    initComponent: function () {
+
+        this.config.west = [this.eastGrid()];
+
+        this.config.east = [this.westGrid()];
+
+        this.createButtonCfg = this.getCreateButton();
+
+        this.saveButtonCfg = {
+            disabled: true,
+            itemId: 'saveActionButton',
+            handler: function() {
+                Taco.app.fireEvent('dissmissmessages');
+                this.form.doSave.apply(this.form, arguments);
+            }
+        };
+        
+        this.editors = Taco.core.data.StoreManager.getOrCreate('Taco.store.EntityEditors');
+
+        this.additionalActions = this.getAdditionalActions();
+
+        this.moreButtonCfg = {
+            menu: this.getMenuItems(),
+            disabled: true
+        };
+
+        this.mixins.navHeader.init.apply(this);
+
+        this.callParent(arguments);
+
+    },
+
+    onSaveSuccess: function(record, operation, operation) {
+        if (operation && operation.success) {
+            this.showMessage('Save Complete');
+            this.enableButtons();
+        }
+    },
+
+    updateSearchContext: function(store) {
+        this.navHeader.down('taco-filtercontainer').reconfigureStore(store);
+    },
+
+    getCreateButton: function() {
+        return {
+            xtype: 'splitbutton',
+            menu: [
+                {
+                    text: 'Create Default',
+                    handler: this.onCreate.bind(this)
+                },
+                {
+                    text: 'Create Raw',
+                    handler: this.onCreate.bind(this, {editMode: 'raw'})
+                }
+            ]
+        }
+    },
+
+    enableButtons: function(record) {
+        this.publishActionButton = this.down('#publishActionButton');
+        this.moreActionButton = this.down('#moreActionButton');
+        this.saveActionButton = this.down('#saveActionButton');
+
+        this.publishActionButton.addRecord(record);
+        this.moreActionButton [record && record.get('entityType') === 'cms' ? 'enable' : 'disable']();
+
+        this.saveActionButton[record ? 'enable' : 'disable']();
+        
+    },
+
+    getAdditionalActions: function() {
+        var me = this;
+
+        return [
+            {
+                xtype: 'publishbutton',
+                itemId: 'publishActionButton',
+                scope: this,
+                disabled: true,
+                handler: function() {
+                    var record = me.getCurrentEntityRecord();
+                    record.publish({
+                        success: function() {
+                            record.data.publishState = 'active';
+                            me.showHideButtons();
+                            me.showMessage('Published', 'info', 1000);
+                        }
+                    });
+                },
+
+                onMoveToPublish: function(record, code) {
+                    me.publishActionButton.setLoading(true);
+                    record.setPublishCode(code, function() {
+                        me.showMessage('Moved to Publish Set');
+                        me.publishActionButton.setLoading(false);
+                    });
+                },
+
+                onRemoveFromPublishSet: function(record) {
+                    me.publishActionButton.setLoading(true);
+                    record.set('publishSetCode', '');
+                    record.save({
+                        success: function() {
+                            me.publishActionButton.setLoading(false);
+                        }
+                    });
+                    me.showMessage('Removed');
+                },
+
+                onDiscardDraft: function(record) {
+                    me.publishActionButton.setLoading(true);
+
+                    record.discardDraft(function() {
+                        me.publishActionButton.setLoading(false);
+                        me.publishActionButton.disable();
+                        me.showMessage('Discarded');
+                        me.cardPanel.getLayout().setActiveItem(0);
+                    });
+                    
+                }
+            }
+        ];
+    },
+
+    getMenuItems: function() {
+        var me = this;
+
+        return [
+            {
+                text: 'Preview in Live Site',
+                itemId: 'previewActionButton',
+                handler: function() {
+                    
+                    var record = me.getCurrentEntityRecord();
+                    var siteId = Taco.app.context.getContextAtLevel('s').id;
+                    var url = "/cms/" + record.get('listFQN') + "/" + record.get('name');
+
+                    window.open('/_gosite/' + siteId + '?environment=live&redir=' + encodeURIComponent(url));
+                }
+            }, 
+            {
+                text: 'Preview in Staging Site',
+                itemId: 'previewStagingActionButton',
+                handler: function() {
+
+                    var record = me.getCurrentEntityRecord();
+                    var siteId = Taco.app.context.getContextAtLevel('s').id;
+                    var url = "/cms/" + record.get('listFQN') + "/" + record.get('name');
+
+                    window.open('/_gosite/' + siteId + '?environment=staging&redir=' + encodeURIComponent(url));
+                }
+            }, 
+            {
+                text: 'Duplicate',
+                handler: function() {
+                    var copyRec = me.getCurrentEntityRecord().copy({
+                        name: null,
+                        id: null
+                    });
+                    
+                    if (copyRec.get('name')) {
+                        copyRec.set('name', null);
+                    }
+
+                    copyRec.phantom = true;
+                    me.loadEditor(copyRec);
+                }
+            }];
+    },
+
+    getCurrentEntityRecord: function() {
+        return this.record;
+    },
+
+    eastGrid: function() {
+
+    	this.entityGrid = Ext.create('Taco.view.entityManager.SchemaList', {
+    		entityType: 'mzdb',
+    		title: 'Entities',
+    		autoSelectFirstItem: true
+    	});
+
+    	this.documentGrid = Ext.create('Taco.view.entityManager.SchemaList', {
+			entityType: 'cms',
+    		title: 'Documents'
+    	});
+
+        return Ext.create('Ext.tab.Panel', {
+        	title: false,
+            ui: 'subform',
+            layout: 'fit',
+            header: false,
+            cls: 'taco-tabbar-header',
+            items: [
+            	this.entityGrid,
+            	this.documentGrid
+            ]
+        });
+    },
+
+    saveFailure: function(msg) {
+        Taco.app.fireEvent('setmessage', msg, 'error');
+    },
+
+    westGrid: function() {
+
+        var me = this;
+
+        me.contentContainer = Ext.widget('container', {
+            flex: 1,
+            layout: 'fit',
+            listeners: {
+                itemedit: me.onItemEdit,
+                savesuccess: me.onSaveSuccess.bind(me),
+                savefailure: me.saveFailure,
+                // render: me.enableButtons,
+                scope: me
+            }
+        });
+
+        me.entityGrid = Ext.create('Taco.view.entityManager.Grid');
+
+        this.cardPanel = Ext.create('Ext.panel.Panel', {
+            layout: {
+                type: 'card'
+            },
+            itemId: 'dynamicGridHolder',
+            items: [
+                me.entityGrid,
+                me.contentContainer
+            ]
+        });
+
+        return this.cardPanel;
+    },
+
+    onItemEdit: function(view, record, metaData, options) {
+        var me = this;
+
+        record.reload({
+            success: function() {
+                me.record = record;
+                me.contentContainer.removeAll();
+                me.grid = null;
+                me.form = Ext.create('Taco.view.entityManager.DynamicFormContainer', {
+                    record: record,
+                    ui: 'subform-section',
+                    defaults: {
+                        margin: '10 10 10 10',
+                    },
+                    bubbleEvents: ['savesuccess', 'saveSuccess', 'savefailure'],
+                    editMode: options ? options.editMode : null,
+                    editor: me.editors.findEditor(record)
+                });
+                me.form = me.addADRIfRequired(record);
+                me.contentContainer.add(me.form);
+                me.enableButtons(record);
+                me.cardPanel.getLayout().setActiveItem(1);
+            }
+        });
+
+        Taco.core.StateManager.addState('entities?entityType=' + metaData.entityType + '&list=' + metaData.name + '&record=' + record.get('name'));
+    },
+
+    loadEditor: function (record, opts) {
+        var me = this;
+        var editor = me.editors.findEditor(record);
+        var options = opts || {};
+
+        if (!editor && options.editMode !== 'raw') {
+            Taco.app.fireEvent('setmessage', 'No Editor defined for this schema type', 'error');
+            return false;
+        }
+
+        me.contentContainer.removeAll();
+
+        me.form = Ext.create('Taco.view.entityManager.DynamicFormContainer', {
+            record: record,
+            bubbleEvents: ['savesuccess', 'saveSuccess', 'savefailure'],
+            editor: editor,
+            editMode: options.editMode
+        });
+
+        me.addADRIfRequired(record);
+        me.contentContainer.add(me.form);
+        me.enableButtons(record);
+        me.cardPanel.getLayout().setActiveItem(1);
+    },
+
+
+    onCreate: function(options) {
+
+        var me = this;
+        var grid = me.down('#dymanicEnityGrid');
+        var currentList = grid.listMetaData;
+        var record;
+        var menu;
+        var createActionButton = me.createActionButton || me.down('#createActionButton');
+
+        if (!currentList) {
+            return false;
+        }
+
+        record = new Taco.model.Entity({
+            listFQN: currentList.get('listFQN') || currentList.get('name'),
+            tenantId: Taco.app.context.getTenantId(),
+            entityType: currentList.get('entityType'),
+            documentTypeFQN: currentList.get('documentTypes') && currentList.get('documentTypes').length ? currentList.get('documentTypes')[0] : undefined,
+            properties: {},
+            item: {}
+        });
+
+        // TODO: TALK TO THOM ABOUT THIS LOGIC
+
+        if (currentList.get('documentTypes') && currentList.get('documentTypes').length > 1) {
+            record.set('documentTypeFQN', currentList.get('documentTypes'));
+        }
+
+        me.loadEditor(record, options);
+    },
+
+    addADRIfRequired: function (record) {
+        var me = this,
+            adrPanel;
+
+        if(!me.form) return null;
+        
+        if(!record || !record.data || !record.data.listFlags || !record.data.listFlags.enableADR) return me.form;
+
+        adrPanel = Ext.create('Taco.core.ux.form.field.ActiveDateRange', {record: record});
+
+        me.form.dynamicForm.add(adrPanel);
+
+        return me.form;
+    },
+
+    handleAddToEast: function (ct, cmp) {
+        
+    },
+
+    onRecordChange: function (record) {
+       
+    },
+
+    onSelectRecord: function (record) {
+        
+    },
+
+    updateSplit: function (nextSplit) {
+
+    },
+
+    showMessage: function(msg) {
+        Taco.app.fireEvent('setmessage', msg, 'success');
+    }
+
+});

@@ -114,9 +114,16 @@ Ext.define('Taco.core.ux.grid.LinkPaging', {
 
     initComponent: function () {
         var me = this;
+
+        me.grid.on('reconfigure', me.onReconfigure, this);
+
         me.callParent();
     },
 
+    onReconfigure: function(grid, store) {
+        this.store = store;
+        this.store.on('load', this.onLoad, this, { single: true });
+    },
 
     onLoad: function () {
         var me = this;

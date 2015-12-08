@@ -45,10 +45,19 @@ Ext.define('Taco.core.ux.mixins.Pageable', {
 
         this.gridPager = Ext.create('Taco.core.ux.grid.LinkPaging', {
             componentCls: 'x-link-paging-toolbar',
+            width: '100%',
             store: this.store,
             displayInfo: true,
-            dock: 'bottom',
+            grid: me,
             inputItemWidth: 45
+        })
+
+        this.gridPagerContainer = Ext.create('Ext.toolbar.Toolbar', {
+            dock: 'bottom',
+            width: '100',
+            items: [
+                this.gridPager
+            ]
         });
 
         if (me.autoHidePagingToolbar) {
@@ -59,7 +68,7 @@ Ext.define('Taco.core.ux.mixins.Pageable', {
         }
 
         this.dockedItems = Ext.Array.clone(this.dockedItems || []);
-        this.dockedItems.push(this.gridPager);
+        this.dockedItems.push(this.gridPagerContainer);
 
         return this.gridPager;
     },

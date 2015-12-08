@@ -478,24 +478,24 @@ Ext.define('Taco.core.ux.mixins.NavHeader', {
 
         }
 
-            if (me.moreButtonCfg && me.moreButtonCfg.menu) {
+        if (me.moreButtonCfg && me.moreButtonCfg.menu) {
+            
             if (!me.actions) me.actions = [];
-                me.actions.push(Ext.apply({}, me.moreButtonCfg, {
-                    xtype: 'button',
+
+            me.actions.push(Ext.apply({}, me.moreButtonCfg, {
+                xtype: 'button',
                 height: 40,
                 glyph: 'XE90B@mozicons',
-                    ui: 'action',
-                    scale: 'medium',
-                    itemId: 'moreActionButton',
+                ui: 'action',
+                scale: 'medium',
+                itemId: 'moreActionButton',
                 cls: 'taco-more-action-button',
-                    handler: Ext.emptyFn,
-                    margin: '0 0 0 10',
-                    scope: me
-                }));
-            }
+                handler: Ext.emptyFn,
+                margin: '0 0 0 10',
+                scope: me
+            }));
+        }
 
-
-        
         // Allows class with mixin to insert additional actions. Code copied from EditorWrapper;
         Ext.each(this.additionalActions, function (additionalAction) {
             var beforeItemId = additionalAction.beforeItemId,
@@ -673,12 +673,12 @@ Ext.define('Taco.core.ux.mixins.NavHeader', {
     * Pass in data argument if you want to override the default arguments for the savesuccess event
     * @param  {mixed} data the data that was saved. Could be record, string, object, array. Optional, but strongly recommended; If data not passed the method will attempt to pull the data from a child form;
     */
-    saveSuccess: function (data) {
+    saveSuccess: function (data, store, isSuccessful) {
         var me = this;
 
-        me.onSaveSuccess(data);
+        me.onSaveSuccess(data, store, isSuccessful);
         this.resetSaveButton()
-        me.fireEvent('savesuccess', me, data);
+        me.fireEvent('savesuccess', me, data, store, isSuccessful);
         
         if (me.createOnSaveSuccess) {
             me.createOnSaveSuccess = false;

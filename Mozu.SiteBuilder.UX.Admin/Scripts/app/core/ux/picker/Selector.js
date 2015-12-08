@@ -96,7 +96,7 @@ Ext.define('Taco.core.ux.picker.Selector', {
     },
 
     handleBoxReady: function () {
-        var selectedIndex = this.store.find('value', this.value);
+        var selectedIndex = this.store ? this.store.find('value', this.value) : null;
         this.getEl().on({
             click: function (e) {
                 var record = this.store.findRecord('value', this.value);
@@ -132,7 +132,7 @@ Ext.define('Taco.core.ux.picker.Selector', {
     },
 
     selectDefaultValue: function () {
-        this.selected = this.store.findRecord('value', this.value);
+        this.selected = this.store ? this.store.findRecord('value', this.value) : null;
     },
 
     highlight: function (val) {

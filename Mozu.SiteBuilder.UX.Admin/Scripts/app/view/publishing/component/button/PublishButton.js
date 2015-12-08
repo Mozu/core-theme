@@ -144,7 +144,10 @@ Ext.define('Taco.view.publishing.component.button.PublishButton', {
 
     updateButton: function() {
 
-        if (!this.record) return false;
+        if (!this.record) {
+            this.disable();
+            return false;
+        }
 
         var state = this.record.get('publishState') || this.record.get('publishedState');
 

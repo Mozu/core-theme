@@ -1,0 +1,9 @@
+@mixin taco-entitymanager {
+	.taco-tabbar-header {
+
+		.#{$prefix}tab {
+			// width: 50%;
+		}
+		
+	}
+}

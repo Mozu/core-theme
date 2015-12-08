@@ -164,6 +164,7 @@
         }
     },
     doSave: function() {
+
         var me = this;
         if (me.persistFormValues(true) === false) {
             me.saveFailure();
@@ -186,8 +187,8 @@
                     Taco.app.fireEvent('setmessage', msg, 'error');
                 }
             },
-            callback: function(r) {
-                me.saveSuccess(r);
+            callback: function(record, store, operation) {
+                me.saveSuccess(record, store, operation);
             }
         });
     }
