@@ -68,10 +68,14 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.ModelMapping
                     : null))
                 .ForMember(x => x.MinDate, opt => opt.ResolveUsing(dc => dc.Validation != null ? dc.Validation.MinDateTime : null))
                 .ForMember(x => x.MaxDate, opt => opt.ResolveUsing(dc => dc.Validation != null ? dc.Validation.MaxDateTime : null))
+            
                 //ignores
                 .ForMember(x => x.IsOption, opt => opt.Ignore())
                 .ForMember(x => x.IsExtra, opt => opt.Ignore())
                 .ForMember(x => x.IsProperty, opt => opt.Ignore())
+                .ForMember(x => x.AllowFilteringAndSortingInStorefront, op => op.Ignore())
+                .ForMember(x => x.SearchDisplayValue, op => op.Ignore())
+                .ForMember(x => x.SearchableInStorefront, op => op.Ignore())
                 ;
 
             Mapper.CreateMap<DC.AttributeMetadataItem, AttributeMetadataItem>();

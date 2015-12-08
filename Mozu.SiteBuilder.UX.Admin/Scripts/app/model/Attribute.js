@@ -42,16 +42,26 @@ Ext.define('Taco.model.Attribute', {
         }, {
             name: 'isRequired',
             type: 'boolean'
-        },
-        {
+        }, {
             name:'isVisible',
             type:'boolean',
             defaultValue:false
-        },
-        {
+        }, {
             name: 'displayGroup',
             type: 'string',
             defaultValue: 'Admin'
+        }, {
+            name: 'SearchableInStorefront',
+            type: 'boolean',
+            defaultValue: true
+        }, {
+            name: 'SearchDisplayValue',
+            type: 'boolean',
+            defaultValue: true
+        }, {
+            name: 'AllowFilteringAndSortingInStorefront',
+            type: 'boolean',
+            defaultValue: true
         }, {    
             name: 'isProperty',
             type: 'boolean'

@@ -36,5 +36,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.Models.Attributes.Product
         public List<AttributeMetadataItem> AttributeMetadata { get; set; }
 
         public int Order { get; set; }
+
+        public bool IsProductDetailsOnlyProperty { get; set; }
     }
 }       
