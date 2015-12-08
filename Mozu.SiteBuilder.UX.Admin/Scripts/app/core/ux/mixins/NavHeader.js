@@ -483,7 +483,7 @@ Ext.define('Taco.core.ux.mixins.NavHeader', {
                 me.actions.push(Ext.apply({}, me.moreButtonCfg, {
                     xtype: 'button',
                 height: 40,
-                glyph: 'XE022@mozicons',
+                glyph: 'XE90B@mozicons',
                     ui: 'action',
                     scale: 'medium',
                     itemId: 'moreActionButton',

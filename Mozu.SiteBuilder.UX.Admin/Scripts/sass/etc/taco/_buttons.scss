@@ -55,6 +55,12 @@
             }
         }
 
+        .#{$prefix}btn-button {
+            &:after {
+                display: none !important;
+            }
+        }
+
         &.#{$prefix}focus,
         &.#{$prefix}btn-focus,
         &.#{$prefix}btn-action-toolbar-medium-focus {
