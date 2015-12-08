@@ -14,11 +14,11 @@
 
     .#{$prefix}field-form-focus {
         border-color: $valid-green;
-        @include color-outer-shadow($valid-green, 1, 1px, 0, 0);
+        @include color-outer-shadow($valid-green, 1, 0, 1px, 0, 0);
 
         &.#{$prefix}form-invalid-field {
             border-color: $error-red;
-            @include color-outer-shadow($error-red, 1, 1px, 0, 0);
+            @include color-outer-shadow($error-red, 1, 0, 1px, 0, 0);
         }
 
         &.#{$prefix}trigger-noedit {
@@ -156,89 +156,20 @@
                     font-size: $input-font;
                 }
 
-                &.#{$prefix}edit-justifyright {
-                    &:after {
-                        content: $glyph-rightalign;
-                    }
-                }
-
-                &.#{$prefix}edit-justifyleft {
-                    &:after {
-                        content: $glyph-leftalign;
-                    }
-                }
-
-                &.#{$prefix}edit-justifycenter {
-                    &:after {
-                        content: $glyph-centeralign;
-                    }
-                }
-
-                &.#{$prefix}edit-backcolor {
-                    &:after {
-                        content: '\E600';
-                    }
-                }
-
-                &.#{$prefix}edit-forecolor {
-                    &:after {
-                        content: '\E027';
-                    }
-                }
-
-                &.#{$prefix}edit-decreasefontsize {
-                    &:after {
-                        content: $glyph-smaller;
-                    }
-                }
-
-                &.#{$prefix}edit-increasefontsize {
-                    &:after {
-                        content: $glyph-larger;
-                    }
-                }
-
-                &.#{$prefix}edit-underline {
-                    &:after {
-                        content: $glyph-underline;
-                    }
-                }
-
-                &.#{$prefix}edit-italic {
-                    &:after {
-                        content: $glyph-italic;
-                    }
-                }
-
-                &.#{$prefix}edit-bold {
-                    &:after {
-                        content: $glyph-bold;
-                    }
-                }
-
-                &.#{$prefix}edit-createlink {
-                    &:after {
-                        content: $glyph-link;
-                    }
-                }
-
-                &.#{$prefix}edit-insertorderedlist {
-                    &:after {
-                        content: $glyph-numberedlist;
-                    }
-                }
-
-                &.#{$prefix}edit-insertunorderedlist {
-                    &:after {
-                        content: $glyph-bulletedlist;
-                    }
-                }
-
-                &.#{$prefix}edit-sourceedit {
-                    &:after {
-                        content: $glyph-code;
-                    }
-                }
+                @include use-glyph('edit-justifyright', $glyph-rightalign);
+                @include use-glyph('edit-justifyleft', $glyph-leftalign);
+                @include use-glyph('edit-justifycenter', $glyph-centeralign);
+                @include use-glyph('edit-backcolor', '\E600');
+                @include use-glyph('edit-forecolor', '\E027');
+                @include use-glyph('edit-decreasefontsize', $glyph-smaller);
+                @include use-glyph('edit-increasefontsize', $glyph-larger);
+                @include use-glyph('edit-underline', $glyph-underline);
+                @include use-glyph('edit-italic', $glyph-italic);
+                @include use-glyph('edit-bold', $glyph-bold);
+                @include use-glyph('edit-createlink', $glyph-link);
+                @include use-glyph('edit-insertorderedlist', $glyph-numberedlist);
+                @include use-glyph('edit-insertunorderedlist', $glyph-bulletedlist);
+                @include use-glyph('edit-sourceedit', $glyph-code);
             }
         }
     }
@@ -319,7 +250,7 @@
 
                 &:after {
                     color: $dark-border-gray;
-                    content: '\E011';
+                    content: $glyph-close;
                     display: block;
                     font-family: $icon-font;
                     font-size: $label-font;

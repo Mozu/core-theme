@@ -122,6 +122,14 @@ $glyph-dropvideo: "\E07E";
     }
 }
 
+@mixin use-glyph ($classname, $glyph) {
+    &.#{$prefix}#{$classname} {
+        &:after {
+            content: $glyph;
+        }
+    }
+}
+
 // function to take string code, and turn into char code for chorizo
 @function char-from-code($iso-char) {
     @return unquote('\"\\#{$iso-char}\"');
