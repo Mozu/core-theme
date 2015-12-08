@@ -1,15 +1,16 @@
 ﻿.#{$vprefix}splitcontainer-splitter {
-    background-color: $color-standard-border-dark;
-    border-left: 4px solid $color-standard-border-dark;
     overflow: hidden;
+    .#{$prefix}layout-split-left {
+        display: none;
+    }
 }
 
 .#{$vprefix}splitcontainer-collapsetool {
-    background-color: $base-color;
     @include icon-font($glyph-arrowleft);
 
     &::after {
         left: -2px;
+        top: 50%;
     }
 
     &.#{$prefix}component-docked-left {
