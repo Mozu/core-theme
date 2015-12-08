@@ -45,7 +45,7 @@
                 text-decoration: none !important;
             }
 
-            .taco-content-header-title{
+            .taco-content-header-title {
                 font-size: 18px;
                 font-weight: 400;
                 height: 100%;
@@ -54,10 +54,22 @@
                 white-space: nowrap;
 
                 span {
-                     border-right: 1px solid $nav-element-active-border;
                      display: inline-block;
                      padding: 20px;
                      height: 100%;
+                     text-overflow: ellipsis;
+
+                     &:first-child {
+                        border-right: 1px solid $nav-element-active-border;
+                     }
+
+                     &:nth-child(2) {
+                        padding: 20px 5px 20px 20px;
+                     }
+                }
+
+                i {
+                    font-style: initial;
                 }
             }
             

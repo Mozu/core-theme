@@ -32,7 +32,8 @@ Ext.define('Taco.view.order.Split', {
 
     parentTitleCfg: {
         title: 'Orders',
-        controller: 'orders'
+        controller: 'orders',
+        lightTagLabel: 'siteName',
     },
 
 
@@ -381,7 +382,7 @@ Ext.define('Taco.view.order.Split', {
         var activeTitle = this.getWestTitle() || 'Records';
 
         if (record && !eastCollapsed) {
-            activeTitle = record.get('siteName') + ':  #' + record.get('orderNumber');
+            activeTitle = '#' + record.get('orderNumber');
             Ext.suspendLayouts();
             this.setTitle(activeTitle);
             Ext.resumeLayouts();

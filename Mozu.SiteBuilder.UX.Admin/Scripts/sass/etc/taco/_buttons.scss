@@ -326,7 +326,7 @@
         }
     }
 
-    div.#{$vprefix}light-tag {
+    .#{$vprefix}light-tag {
         border: 1px solid $light-bg;
         color: $gray-text-dark;
         font-size: 8px;

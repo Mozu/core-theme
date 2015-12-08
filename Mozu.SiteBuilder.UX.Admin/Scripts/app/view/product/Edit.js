@@ -14,6 +14,7 @@
 
     parentTitleCfg: {
         title: 'Products',
+        lightTagLabel: 'productCode',
         controller: 'product'
     },
 

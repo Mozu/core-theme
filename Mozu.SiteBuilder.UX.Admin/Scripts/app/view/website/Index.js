@@ -494,6 +494,9 @@ Ext.define('Taco.view.website.Index', {
                                 triggerCls: 'x-form-search-trigger',
                                 flex:1,
                                 width: '100%',
+                                style: {
+                                    marginTop: 0 //DONT REMOVE
+                                },
                                 listeners: {
                                     change: this.onSearchTextChange,
                                     scope: this,

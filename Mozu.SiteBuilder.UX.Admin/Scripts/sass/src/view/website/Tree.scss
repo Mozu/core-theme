@@ -3,8 +3,17 @@
         background-color: transparent;
     }
 
+    tbody tr {
+            &.#{$prefix}grid-data-row {
+                td {
+                    border-bottom: 0px transparent !important;
+                }
+            }
+    }
+
     .#{$prefix}grid-cell {
         background-color: $color-framework-gray-lighter;
+      
     }
 
     .#{$prefix}grid-cell-treecolumn {
@@ -29,6 +38,7 @@
         .#{$prefix}tree-elbow-img {
             float: left;
         }
+
     }
 
     .#{$prefix}tree-node-text {

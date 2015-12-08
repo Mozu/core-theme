@@ -100,6 +100,7 @@ Ext.define('Taco.core.ux.mixins.NavHeader', {
 
                     var me = this;
                     var parentTitleCfg = this.parentTitleCfg ? this.parentTitleCfg : {};
+                    var lightTagLabel = parentTitleCfg.lightTagLabel && this.record ? this.record.get(parentTitleCfg.lightTagLabel) : null;
 
                     var addAction = function() {
 
@@ -128,7 +129,8 @@ Ext.define('Taco.core.ux.mixins.NavHeader', {
                         me.titleCmp.update({
                             title: parentTitleCfg.title || 'Edit View',
                             subTitle: newTitle,
-                            id: this.titleId
+                            id: this.titleId,
+                            lightTagLabel: lightTagLabel,
                         });                        
                     }
 
@@ -317,6 +319,9 @@ Ext.define('Taco.core.ux.mixins.NavHeader', {
                         '<span id="{id}"> {title} </span>',
                         '<tpl if="subTitle">',
                             '<span> {subTitle} </span>',
+                            '<tpl if="lightTagLabel">',
+                                '<i class="taco-light-tag">{lightTagLabel}</i>',
+                            '</tpl>',
                         '</tpl>',
                     '</tpl>'
                 ],
