@@ -30,6 +30,12 @@ Ext.define('Taco.view.order.Split', {
     saveButtonVisible: false,
     cancelButtonVisible: false,
 
+    parentTitleCfg: {
+        title: 'Orders',
+        controller: 'orders'
+    },
+
+
     statics: {
         eastConfigs: {
             placeholder: {
@@ -197,7 +203,6 @@ Ext.define('Taco.view.order.Split', {
 
     handleAddToEast: function (ct, cmp) {
         this.editor = cmp;
-        // this.updateSplitTitle();
 
         if (this.getRecord()) {
             this.mon(this.editor, {
@@ -240,6 +245,7 @@ Ext.define('Taco.view.order.Split', {
                 me.superclass.onRecordChange.apply(me,args);
 
                 me.showAndHideSplitActions();
+
                 me.updateSplitTitle();
 
                 Ext.resumeLayouts(true);
@@ -247,6 +253,7 @@ Ext.define('Taco.view.order.Split', {
             });
         } else {
 
+            this.updateSplitTitle();
 
             Ext.suspendLayouts();
 
@@ -255,7 +262,6 @@ Ext.define('Taco.view.order.Split', {
             this.callParent(arguments);
 
             this.showAndHideSplitActions();
-            // this.updateSplitTitle();
 
             Ext.resumeLayouts(true);
         }
@@ -358,8 +364,6 @@ Ext.define('Taco.view.order.Split', {
     handleChildCollapseExpand: function (panel) {
         this.callParent(arguments);
 
-        // this.updateSplitTitle();
-
         if (panel.getItemId() === 'west' && !panel.getCollapsed() && !this.getSplit()) {
             panel.on({
                 afterlayout: {
@@ -381,6 +385,10 @@ Ext.define('Taco.view.order.Split', {
             Ext.suspendLayouts();
             this.setTitle(activeTitle);
             Ext.resumeLayouts();
+        }
+
+        else {
+            this.setTitle('Orders');
         }
 
     }

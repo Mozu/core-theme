@@ -96,7 +96,7 @@ Ext.define('Taco.core.ux.mixins.NavHeader', {
                 scope: me
             },
             titlechange: {
-                fn: function (panel, newTitle) {
+                fn: function (panel, newTitle, override) {
 
                     var me = this;
                     var parentTitleCfg = this.parentTitleCfg ? this.parentTitleCfg : {};
@@ -114,12 +114,23 @@ Ext.define('Taco.core.ux.mixins.NavHeader', {
                             }
                         });
                     };
-               
-                    me.titleCmp.update({
-                        title: parentTitleCfg.title || 'Edit View',
-                        subTitle: newTitle,
-                        id: this.titleId
-                    });
+
+                    // override the split editor behavior 
+                    // so when we navigate back from an order, we update the title to 'Orders'
+                    if (newTitle === 'Orders') {
+                          me.titleCmp.update({
+                            title: newTitle,
+                            id: this.titleId
+                          });
+                    }
+                
+                    else {
+                        me.titleCmp.update({
+                            title: parentTitleCfg.title || 'Edit View',
+                            subTitle: newTitle,
+                            id: this.titleId
+                        });                        
+                    }
 
                     me.titleCmp.on('afterrender', addAction);
 
