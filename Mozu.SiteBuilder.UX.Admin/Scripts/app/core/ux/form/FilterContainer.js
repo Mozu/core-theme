@@ -338,7 +338,7 @@ Ext.define('Taco.core.ux.form.FilterContainer', {
                 this.modal = Ext.create('Taco.core.ux.window.Modal', {
                     cls: 'advanced-filter',
                     closeAction: 'hide',
-                    title: 'Advanced Filter',
+                    title: 'Advanced Search',
                     primaryText: 'Filter',
                     draggable: false,
                     ui: 'dialog',

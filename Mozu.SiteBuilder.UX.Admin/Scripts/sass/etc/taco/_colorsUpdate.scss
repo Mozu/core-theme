@@ -32,6 +32,7 @@ $input-text-color:              $card-button-text-color;
 $gray-border-color:             darken($white-color, 8);                                    /* #ebebeb              250, 250, 250 */
 $light-gray-border-color:       darken($white-color, 13);                                   /* #dfdfdf --> #dedede  222, 222, 222 */
 $med-gray-border-color:         darken($white-color, 12);                                   /* #dfdfdf --> #dedede  222, 222, 222 */
+$dialog-border-color:           darken($white-color, 20);                                   /* #cccccc              204, 204, 204 */
 $dark-color:                    lighten($black-color, 25);                                  /* #3f3f3f --> #404040  063, 063, 063 */
 $textarea-color:                lighten($black-color, 20);                                  /* #333333              051, 051, 051 */
 $html-editor-toolbar:           lighten($black-color, 47);                                  /* #777777 --> #787878  120, 120, 120 */
