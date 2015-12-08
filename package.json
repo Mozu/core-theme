@@ -13,8 +13,9 @@
     "grunt-contrib-copy": "^0.8.2",
     "grunt-contrib-jshint": "~0.11",
     "grunt-contrib-watch": "~0.6",
-    "grunt-mozu-appdev-sync": "^1.0.0",
-    "mozu-theme-helpers": "^1.0.1",
+    "grunt-mozu-appdev-sync": "^2.1.0",
+    "grunt-newer": "^1.1.1",
+    "mozu-theme-helpers": "^1.2.2",
     "time-grunt": "^1.2.2"
   },
   "engines": {

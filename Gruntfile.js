@@ -6,11 +6,12 @@ module.exports = function (grunt) {
   grunt.loadNpmTasks('grunt-contrib-jshint');
   grunt.loadNpmTasks('grunt-contrib-compress');
   grunt.loadNpmTasks('grunt-mozu-appdev-sync');
+  grunt.loadNpmTasks('grunt-newer');
   grunt.loadNpmTasks('mozu-theme-helpers');
   require('time-grunt')(grunt);
+
   grunt.initConfig({
-    mozuconfig: grunt.file.exists('./mozu.config.json') ?
-      grunt.file.readJSON('./mozu.config.json') : {},
+    mozuconfig: grunt.file.exists('./mozu.config.json') ? grunt.file.readJSON('./mozu.config.json') : {},
     pkg: pkg,
     copy: {
       packagedeps: {
@@ -18,10 +19,10 @@ module.exports = function (grunt) {
           {
             expand: true,
             cwd: 'node_modules/',
-            src: Object.keys(pkg.dependencies || {}).map(function(dep) {
+            src: Object.keys(pkg.dependencies || {}).map(function (dep) {
               var depPkg;
               if (pkg.exportsOverride && pkg.exportsOverride[dep]) {
-                return pkg.exportsOverride[dep].map(function(o) {
+                return pkg.exportsOverride[dep].map(function (o) {
                   return dep + '/' + o;
                 });
               } else {
@@ -29,7 +30,7 @@ module.exports = function (grunt) {
                 if (!depPkg.main) {
                   try {
                     depPkg = require(dep + '/bower.json');
-                  } catch(e) {}
+                  } catch (e) {}
                 }
                 return dep + (depPkg.main ? '/' + depPkg.main : '/**/*');
               }
@@ -115,73 +116,74 @@ module.exports = function (grunt) {
     watch: {
       javascript: {
         files: [
-          "scripts/**/*.js"
+          'scripts/**/*.js'
         ],
         tasks: [
-          "default"
+          'newer:jshint:develop',
+          'mozutheme:quickcompile',
+          'newer:mozusync:upload'
         ]
       },
       sync: {
-        files: "<%= mozusync.upload.src %>",
-        tasks: [
-          "mozusync:upload"
+        files: [
+          'admin/**/*',
+          'labels/**/*',
+          'resources/**/*',
+          'packageconfig.xml',
+          'scripts/**/*',
+          'stylesheets/**/*',
+          'templates/**/*',
+          'theme.json',
+          '*thumb.png',
+          '*thumb.jpg',
+          'theme-ui.json',
+          '!*.orig',
+          '!.inherited'
         ],
-        options: {
-          spawn: false
-        }
+        tasks: [
+          'newer:mozusync:upload'
+        ]
       }
     },
     mozusync: {
       options: {
-        applicationKey: "<%= mozuconfig.workingApplicationKey %>",
-        context: "<%= mozuconfig %>",
-        watchAdapters: [
-          {
-            src: "mozusync.upload.src",
-            action: "upload"
-          },
-          {
-            src: "mozusync.del.remove",
-            action: "delete"
-          }
-        ]
+        applicationKey: '<%= mozuconfig.workingApplicationKey %>',
+        context: '<%= mozuconfig %>'
       },
       upload: {
         options: {
-          "action": "upload",
-          "noclobber": true
+          'action': 'upload',
+          'noclobber': true
         },
         src: [
-          "admin/**/*",
-          "compiled/**/*",
-          "labels/**/*",
-          "resources/**/*",
-          "packageconfig.xml",
-          "scripts/**/*",
-          "stylesheets/**/*",
-          "templates/**/*",
-          "theme.json",
-          "*thumb.png",
-          "*thumb.jpg",
-          "theme-ui.json",
-          "!*.orig",
-          "!.inherited"
-        ],
-        filter: "isFile"
+          'admin/**/*',
+          'compiled/**/*',
+          'labels/**/*',
+          'resources/**/*',
+          'packageconfig.xml',
+          'scripts/**/*',
+          'stylesheets/**/*',
+          'templates/**/*',
+          'theme.json',
+          '*thumb.png',
+          '*thumb.jpg',
+          'theme-ui.json',
+          '!*.orig',
+          '!.inherited'
+        ]
       },
       del: {
         options: {
-          action: "delete"
+          action: 'delete'
         },
-        src: "<%= mozusync.upload.src %>",
-        filter: "isFile",
+        src: '<%= mozusync.upload.src %>',
         remove: []
       },
       wipe: {
         options: {
-          action: "deleteAll"
+          action: 'deleteAll'
         },
-        src: "<%= mozusync.upload.src %>"
+        src: '<%= mozusync.upload.src %>'
       }
     }
   });
@@ -198,6 +200,10 @@ module.exports = function (grunt) {
     'compress'
   ]);
 
-  grunt.registerTask('default', ['build']);
+  grunt.registerTask('reset', [
+    'mozusync:wipe',
+    'mozusync:upload'
+  ]);
 
+  grunt.registerTask('default', ['build']);
 };
