@@ -7,7 +7,7 @@
             display: none;
         }
 
-        @include icon-font($glyph-splitter, 22px, $splitter-border);
+        @include icon-font($glyph-splitter, 22px, $splitter-text);
         &::after {
             @include facade-transitions;
             top: 50%;
@@ -30,7 +30,7 @@
 
         .#{$vprefix}splitcontainer-collapsetool {
             overflow: visible;
-            @include icon-font($glyph-arrow-left, 12px, $splitter-border);
+            @include icon-font($glyph-arrow-left, 12px, $splitter-text);
 
             &::after {
                 @include facade-transitions;
