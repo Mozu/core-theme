@@ -196,6 +196,12 @@ namespace Mozu.SiteBuilder.UX.Admin.Helpers.CustomerHelpers
                     return String.Format("{0} eq \"{1}\"", UPDATEBY_PROPERTY, filter.value);
                 case "modifiedby":
                     return String.Format("({0} eq \"{2}\" or {1} eq \"{2}\")", UPDATEBY_PROPERTY, CREATEBY_PROPERTY, filter.value);
+                case "currentlyactiveonly":
+                    if((bool)filter.value)
+                    {
+                         return String.Format("{0} le \"{1}\" and {2} ge {1}", ACTIVATEDATE_PROPERTY, DateTime.UtcNow.ToString("o"), EXPIRATIONDATE_PROPERTY);
+                    }
+                    return null;
 
                 // need service to add support for user name and user email address
                 //case "name":
