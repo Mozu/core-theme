@@ -22,6 +22,7 @@ $dark-bg:                       darken($white-color, 3);                        
 $typehead-pill-border-color:    darken($white-color, 11);                                   /* #e2e2e2 --> #e3e3e3  226, 226, 226 */
 $dark-border-gray:              $typehead-pill-border-color;
 $card-button-bg:                #fafafa;                                                    /* could not filter for effect        */
+$row-editor-buttons-bg:			$card-button-bg;
 $card-button-press-bg:          darken($white-color, 4);                                    /* #f5f5f5              245, 245, 245 */
 $list-item-selector:            $card-button-press-bg;
 $list-item-active:              $card-button-press-bg;

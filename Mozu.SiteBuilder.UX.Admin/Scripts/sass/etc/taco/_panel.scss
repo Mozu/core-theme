@@ -28,6 +28,8 @@
 
             /* override external styles */
             border: 0;
+            border-color: $valid-green !important;
+            background-color: $white-color;
 
 
             .#{$prefix}column-header-over {
@@ -50,6 +52,14 @@
             }
         }
 
+        .#{$prefix}grid-row-editor-buttons {
+            border-color: $valid-green;
+            background-color: $row-editor-buttons-bg;
+        }
+
+        .#{$prefix}panel .#{$prefix}panel-body .#{$prefix}grid-td {
+            border: 0 !important;
+        }
 
         .#{$prefix}grid-header-ct {
             background-color: $white-color;
