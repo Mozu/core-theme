@@ -13,43 +13,20 @@ Ext.define('Taco.view.navigation.PrimaryMenuView', {
     overItemCls: 'taco-menu-item-hover',
     selectedItemCls: 'taco-menu-item-active',
     autoScroll: true,
-    parentMenu: null,
 
     initComponent: function () {
-        var me = this;
-
         this.tpl = [
             '<tpl for=".">',
-                '<tpl if="!navTarget">',
-                    '<li class="taco-menu-item"  style="{[(values.visible && !values.breadCrumbOnly) ? "" : "display:none" ]}" >',
-                        '{label}',
-                    '</li>',
-                '<tpl else>',
-                    '<li class="{[this.getNavTargetClass(values.navTarget)]}" data-nav-target="{navTarget}" style="{[(values.visible && !values.breadCrumbOnly) ? "" : "display:none" ]}" >',
-                        '{label}',
-                    '</li>',
-                '</tpl>',
-            '</tpl>',
-            {
-                getNavTargetClass: function(navTgt) {
-                    return (navTgt === 'home') ? 'taco-menu-item taco-menu-item-nav-prev' : 'taco-menu-item taco-menu-item-nav-next';
-                }
-            }
+                '<li class="taco-menu-item"  style="{[(values.visible && !values.breadCrumbOnly) ? "" : "display:none" ]}" >',
+                    '{label}',
+                '</li>',
+            '</tpl>'
         ];
 
-        this.menu = this.parentMenu;
+        this.menu = Ext.ComponentQuery.query('#primaryMenu').shift();
         this.subMenus = Ext.create('Ext.util.MixedCollection');
 
         this.callParent(arguments);
-
-        this.addEvents([
-        /**
-         * @event nav-menu-target
-         * Fired when menu item has a navTarget in order to switch menu pages
-         * @param navTarget
-         */
-            'nav-menu-target'
-        ]);
 
         this.on({
             viewready: this.injectSubmenus,
@@ -61,7 +38,6 @@ Ext.define('Taco.view.navigation.PrimaryMenuView', {
     },
 
     injectSubmenus: function () {
-        var me = this;
         this.store.each(function (record) {
             var subItems = record.items();
 
@@ -72,8 +48,7 @@ Ext.define('Taco.view.navigation.PrimaryMenuView', {
                 submenu = Ext.create('Taco.view.navigation.PrimarySubMenu', {
                     store: subItems,
                     parent: record,
-                    renderTo: node,
-                    topParentMenu: me.parentMenu
+                    renderTo: node
                 });
 
                 this.subMenus.add(submenu);
@@ -98,14 +73,7 @@ Ext.define('Taco.view.navigation.PrimaryMenuView', {
      */
     navigate: function (view, record, item, index, e) {
         var address = record.get('address'),
-            navTarget = record.get('navTarget'),
             subItem = e.getTarget('li.taco-submenu-item', 10);
-
-        if (navTarget) {
-            e.preventDefault();
-            Taco.app.fireEvent('nav-menu-target', navTarget);
-            return false;
-        }
 
         if (subItem || !address) return false;
 

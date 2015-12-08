@@ -1,7 +1,7 @@
 Ext.define('Taco.core.ux.mixins.HamburgerButton', {
 	extend: 'Taco.core.ux.action.Action',
     requires: [
-        'Taco.view.navigation.PrimaryMenuPanel'
+        'Taco.view.navigation.PrimaryMenu'
     ],
     xtype: 'action',
     text: '',
@@ -11,7 +11,11 @@ Ext.define('Taco.core.ux.mixins.HamburgerButton', {
     itemId: 'taco-hamburgerbutton',
     click: function () {
 
-        if (Taco.app.PrimaryMenu.isHidden() || !Taco.app.PrimaryMenu.isRendered()) {
+        if (!Taco.app.PrimaryMenu.store) {
+            Taco.app.PrimaryMenu.bindStore(Taco.app.NavigationStore);
+        }
+
+        if (Taco.app.PrimaryMenu.isHidden() || !Taco.app.PrimaryMenu.rendered) {
             Taco.app.PrimaryMenu.showMenu();
         } else {
             Taco.app.PrimaryMenu.hideMenu();
@@ -46,11 +50,10 @@ Ext.define('Taco.core.ux.mixins.HamburgerButton', {
         });
 
         // set this to a global variable so we dont have to reinit the menu on each navigate
-        Taco.app.PrimaryMenu = Ext.create('Taco.view.navigation.PrimaryMenuPanel', {
+        Taco.app.PrimaryMenu = Ext.create('Taco.view.navigation.PrimaryMenu', {
             trigger: this,
             breadcrumb: breadcrumb
         });
-        Taco.app.PrimaryMenu.bindStore();
     }
 
 });

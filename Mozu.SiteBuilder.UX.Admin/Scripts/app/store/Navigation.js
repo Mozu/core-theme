@@ -139,25 +139,22 @@ Ext.define('Taco.store.Navigation', {
         data: [
             {
                 'id': 'catalog',
-                'navPage': 'home',
                 'label': 'Catalog',
                 'icon': 'nav-catalog',
                 'behaviorIds': [4],
                 'items': [{
                     'id': 'products',
-                    'navPage': 'home',
                     'label': 'Products',
                     'address': 'products',
                     'behaviorIds': [4]
                 }, {
                     'id': 'categories',
-                    'navPage': 'home',
                     'label': 'Categories',
                     'address': 'categories',
                     'behaviorIds': [16]
                 }, {
                     'id': 'inventory',
-                    'label': 'Product Inventory',
+                    'label': 'Inventory',
                     'address': 'inventory',
                     'behaviorIds': [4]
                 }
@@ -165,26 +162,22 @@ Ext.define('Taco.store.Navigation', {
             },
             {
                 'id': 'marketing',
-                'navPage': 'home',
                 'label': 'Marketing',
                 'icon': 'nav-marketing',
                 'behaviorIds': [24],
                 'items': [
                     {
                         'id': 'discounts',
-                        'navPage': 'home',
                         'behaviorIds': [24],
                         'label': 'Discounts',
                         'address': 'discounts'
                     }, {
                         'id': 'couponset',
-                        'navPage': 'home',
                         'behaviorIds': [24],
                         'label': 'Coupon Sets',
                         'address': 'CouponSets'
                     }, {
                         'id': 'productRanking',
-                        'navPage': 'home',
                         'behaviorIds': [16],
                         'label': 'Product Ranking',
                         'address': 'ProductRankings'
@@ -193,30 +186,25 @@ Ext.define('Taco.store.Navigation', {
             },
             {
                 'id': 'content',
-                'navPage': 'home',
-                'label': 'Content',
+                'label': 'Site Builder',
                 'icon': 'nav-sites',
                 'showBreadCrumbs': true,
                 'items': [
                     {
                         'id': 'webedit',
-                        'navPage': 'home',
-                        'label': 'Site Editor',
+                        'label': 'Editor',
                         'address': 'website'
                     }, {
                         'id': 'themes',
-                        'navPage': 'home',
                         'label': 'Themes',
                         'address': 'themes'
                     },
                     {
                         'id': 'redirects',
-                        'navPage': 'home',
                         'label': 'Redirects',
                         'address': 'redirects'
                     }, {
                         'id': 'fileManager',
-                        'navPage': 'home',
                         'label': 'Files',
                         'address': 'fileManager'
                     }
@@ -231,20 +219,17 @@ Ext.define('Taco.store.Navigation', {
             },
             {
                 'id': 'publishing',
-                'navPage': 'home',
                 'label': 'Publishing ',
                 'icon': 'nav-publishing',
                 'behaviorIds': [8],
                 'items': [
                     {
                         'id': 'drafts',
-                        'navPage': 'home',
                         'label': 'Drafts',
                         'address': 'publishing/drafts'
                     },
                     {
                         'id': 'publishSets',
-                        'navPage': 'home',
                         'label': 'Publish Sets',
                         'address': 'publishing/publishsets'
                     }
@@ -252,50 +237,42 @@ Ext.define('Taco.store.Navigation', {
             },
             {
                 'id': 'order',
-                'navPage': 'home',
                 'label': 'Fulfillment',
                 'icon': 'nav-orders',
                 'behaviorIds': [73],
                 'items': [
                     {
                         'id': 'orders',
-                        'navPage': 'home',
                         'label': 'Orders',
                         'address': 'orders',
                         'behaviorIds': [73]
                     }, {
+                        'id': 'locations-inventory',
+                        'label': 'Inventory',
+                        'address': 'locationInventory'
+                    }, {
                         'id': 'locations',
-                        'navPage': 'home',
                         'label': 'Locations',
                         'address': 'locations',
                         'behaviorIds': [186]
-                    }, {
-                        'id': 'locations-inventory',
-                        'navPage': 'home',
-                        'label': 'Inventory',
-                        'address': 'locationInventory'
                     }
                 ]
             },
             {
                 'id': 'customer',
-                'navPage': 'home',
                 'label': 'Customers',
                 'icon': 'nav-customers',
                 'items': [{
                     'id': 'customers',
-                    'navPage': 'home',
                     'label': 'Customers',
                     'address': 'customers',
                     'behaviorIds': [41]
                 }, {
                     'id': 'customerSegments',
-                    'navPage': 'home',
-                    'label': 'Segments',
+                    'label': 'Customer Segments',
                     'address': 'customer/segments'
                 }, {
                     'id': 'storecredit',
-                    'navPage': 'home',
                     'label': 'Store Credit',
                     'address': 'StoreCredits'
                 }
@@ -304,155 +281,155 @@ Ext.define('Taco.store.Navigation', {
             {
                 'id': 'report',
                 'label': 'Reporting',
-                'navPage': 'home',
+                'navType': 'label',
                 'behaviorIds': [188],
                 'items': [{
                     'id': 'report-sales',
-                    'navPage': 'home',
-                    'label': 'Sales',
+                    'label': 'Reports',
                     'address': 'reports'
                 }]
             },
             {
-                'id': 'sysAdminLink',
-                'label': 'System Administration',
-                'navPage': 'home',
-                'navTarget': 'sysAdm',
-                'items': []
-            }, {
-                'id': 'sysAdminBackLink',
-                'label': 'Back',
-                'navPage': 'sysAdm',
-                'navTarget': 'home',
-                'items': []
-            },
-            {
                 'id': 'settings',
-                'navPage': 'sysAdm',
-                'label': 'Site Configuration',
+                'label': 'System',
                 'icon': 'nav-settings',
                 //'visible': false,
                 'items': [
                     {
-                        'id': 'generalsettings',
-                        'navPage': 'sysAdm',
-                        'label': 'General',
-                        'address': 'generalsettings'
+                        'id': 'siteConfig',
+                        'label': 'Site Configuration',
+                        'address': 'generalsettings',
+                        //'visible': false,
+                        'items':[
+                        //    {
+                        //        'id': 'generalsettings',
+                        //        'label': 'General',
+                        //        'address': 'generalsettings',
+                        //        'items': []
+                        //    },
+                        //    {
+                        //        'id': 'paymentcheckout',
+                        //        'label': 'Payments',
+                        //        'address': 'settings/paymentAndCheckout',
+                        //        'items': []
+                        //    }, {
+                        //        'id': 'tax',
+                        //        'label': 'Tax',
+                        //        'address': 'settings/tax',
+                        //        'items': []
+                        //    }, {
+                        //        'id': 'shipping4',
+                        //        'label': 'Methods and Fees',
+                        //        'address': 'shipping',
+                        //        'items': []
+                        //    }, {
+                        //        'id': 'tax',
+                        //        'label': 'Tax',
+                        //        'address': 'settings/tax',
+                        //        'items': []
+                        //    }, {
+                        //        'id': 'customroutes',
+                        //        'label': 'Custom Routes',
+                        //        'address': 'customroutes',
+                        //        'items': []
+                        //    }
+                        ]
                     },
                     {
-                        'id': 'paymentcheckout',
-                        'navPage': 'sysAdm',
-                        'label': 'Payments',
-                        'address': 'settings/paymentAndCheckout'
-                    }, {
-                        'id': 'tax',
-                        'navPage': 'sysAdm',
-                        'label': 'Tax',
-                        'address': 'settings/tax'
-                    }, {
-                        'id': 'shipping4',
-                        'navPage': 'sysAdm',
-                        'label': 'Methods and Fees',
-                        'address': 'shipping'
-                    }, {
-                        'id': 'tax',
-                        'navPage': 'sysAdm',
-                        'label': 'Tax',
-                        'address': 'settings/tax'
-                    }, {
-                        'id': 'customroutes',
-                        'navPage': 'sysAdm',
-                        'label': 'Custom Routes',
-                        'address': 'customroutes'
-                    }]
-            },
-            {
-                'id': 'typesAndAttributes',
-                'navPage': 'sysAdm',
-                'label': 'Types & Attributes',
-                'behaviorIds': [4],
-                'items': [{
-                    'id': 'productTypes',
-                    'navPage': 'sysAdm',
-                    'label': 'Product Types',
-                    'address': 'producttypes'
-                }, {
-                    'id': 'productAttributes',
-                    'navPage': 'sysAdm',
-                    'label': 'Product Attributes',
-                    'address': 'attributes'
-                }, {
-                    'id': 'orderAttributes',
-                    'navPage': 'sysAdm',
-                    'label': 'Order Attributes',
-                    'address': 'orderattributes'
-                }, {
-                    'id': 'customerAttributes',
-                    'navPage': 'sysAdm',
-                    'label': 'Customer Attributes',
-                    'address': 'CustomerAttributes'
-                }, {
-                    'id': 'locationTypes',
-                    'navPage': 'sysAdm',
-                    'label': 'Location Types',
-                    'address': 'locationTypes'
-                }
-                ]
-            },
-            {
-                'id': 'settingsEnvironment',
-                'label': 'Environment',
-                'navPage': 'sysAdm',
-                'behaviorIds': [4],
-                'items': [{
-                    'id': 'catalogprovisioning',
-                    'label': 'Catalogs',
-                    'address': 'provisioning/catalogs'
-                },{
-                    'id': 'siteprovisioning',
-                    'label': 'Sites',
-                    'address': 'provisioning/sites'
-                }, {
-                    'id': 'channels',
-                    'navPage': 'sysAdm',
-                    'label': 'Channels',
-                    'address': 'channels'
-                }, {
-                    'id': 'applications-manage',
-                    'navPage': 'sysAdm',
-                    'label': 'Applications',
-                    'address': 'capability'
-                }, {
-                    'id': 'actionmanagement',
-                    'navPage': 'sysAdm',
-                    'label': 'Actions',
-                    'address': 'actionmanagement'
-                }, {
-                    'id': 'publishing',
-                    'navPage': 'sysAdm',
-                    'label': 'Settings',
-                    'address': 'settings/publishing'
-                }, {
-                    'id': 'ipblocking',
-                    'navPage': 'sysAdm',
-                    'label': 'IP Blocking',
-                    'address': 'ipblocking'
-                }
-                ]
-            },
-            {
-                'id': 'usersRoles',
-                'navPage': 'sysAdm',
-                'label': 'Users &amp; Roles',
-                'items': [
+                        'id': 'settingsEnvironment',
+                        'label': 'Environment',
+                        'address': 'provisioning/sites',
+                        'behaviorIds': [4],
+                        'items': [
+                        //    {
+                        //        'id': 'catalogprovisioning',
+                        //        'label': 'Catalogs',
+                        //        'address': 'provisioning/catalogs',
+                        //        'items': []
+                        //    }, {
+                        //        'id': 'siteprovisioning',
+                        //        'label': 'Sites',
+                        //        'address': 'provisioning/sites',
+                        //        'items': []
+                        //    }, {
+                        //        'id': 'channels',
+                        //        'label': 'Channels',
+                        //        'address': 'channels',
+                        //        'items': []
+                        //    }, {
+                        //        'id': 'applications-manage',
+                        //        'label': 'Applications',
+                        //        'address': 'capability',
+                        //        'items': []
+                        //    }, {
+                        //        'id': 'actionmanagement',
+                        //        'label': 'Actions',
+                        //        'address': 'actionmanagement',
+                        //        'items': []
+                        //    }, {
+                        //        'id': 'publishing',
+                        //        'label': 'Settings',
+                        //        'address': 'settings/publishing',
+                        //        'items': []
+                        //    }, {
+                        //        'id': 'ipblocking',
+                        //        'label': 'IP Blocking',
+                        //        'address': 'ipblocking',
+                        //        'items': []
+                        //    }
+                        ]
+                    },
                     {
-                        'id': 'users',
-                        'label': 'Users',
-                        'address': 'account/users'
-                    }, {
-                        'id': 'roles',
-                        'label': 'Roles',
-                        'address': 'roles'
+                        'id': 'typesAndAttributes',
+                        'label': 'Types & Attributes',
+                        'address': 'producttypes',
+                        'behaviorIds': [4],
+                        'items': [
+                        //    {
+                        //        'id': 'productTypes',
+                        //        'label': 'Product Types',
+                        //        'address': 'producttypes',
+                        //        'items': []
+                        //    }, {
+                        //        'id': 'productAttributes',
+                        //        'label': 'Product Attributes',
+                        //        'address': 'attributes',
+                        //        'items': []
+                        //    }, {
+                        //        'id': 'orderAttributes',
+                        //        'label': 'Order Attributes',
+                        //        'address': 'orderattributes',
+                        //        'items': []
+                        //    }, {
+                        //        'id': 'customerAttributes',
+                        //        'label': 'Customer Attributes',
+                        //        'address': 'CustomerAttributes',
+                        //        'items': []
+                        //    }, {
+                        //        'id': 'locationTypes',
+                        //        'label': 'Location Types',
+                        //        'address': 'locationTypes',
+                        //        'items': []
+                        //    }
+                        ]
+                    },
+                    {
+                        'id': 'usersRoles',
+                        'label': 'Access',
+                        'address': 'account/users',
+                        'items': [
+                            //{
+                            //    'id': 'users',
+                            //    'label': 'Users',
+                            //    'address': 'account/users',
+                            //    'items': []
+                            //}, {
+                            //    'id': 'roles',
+                            //    'label': 'Roles',
+                            //    'address': 'roles',
+                            //    'items': []
+                            //}
+                        ]
                     }
                 ]
             }
@@ -460,7 +437,6 @@ Ext.define('Taco.store.Navigation', {
             //todo: include? greg_murray on 12/1/2015
             //{
             //    'id': 'localization',
-            //    'navPage': 'sysAdm',
             //    'locAtts': ['multiLang', 'multCurrency'],
             //    'label': 'Localization',
             //    'items': [

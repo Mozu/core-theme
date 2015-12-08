@@ -11,7 +11,7 @@ Ext.define('Taco.view.navigation.PrimaryMenu', {
     //    tag: 'div',
     //    cls: 'taco-primary-menu-ct'
     //},
-    autoShow: true,  //false
+    autoShow: true,
     autoScroll:true,
     border: false,
     floating: true,
@@ -23,7 +23,6 @@ Ext.define('Taco.view.navigation.PrimaryMenu', {
     shadow: false,
     x: 0,
     y: 6,
-    navPage: 'home',
     id: 'primaryMenu',
     isBound: false,
     
@@ -34,8 +33,7 @@ Ext.define('Taco.view.navigation.PrimaryMenu', {
             add: function (menu) { menu.hide(); }
         });
 
-        //Ext.getDoc().on('click', Ext.bind(this.handleDocClick, this));
-
+        Ext.getDoc().on('click', Ext.bind(this.handleDocClick, this));
     },
 
     bindStore: function (store, initial) {
@@ -173,14 +171,14 @@ Ext.define('Taco.view.navigation.PrimaryMenu', {
     hideMenu: function () {
         this.hide();
         //this.trigger.removeCls('expanded');
-    }
+    },
 
     /**
      * Hides menu when you click anywhere on document.
      * Needs a reference so listener can easily be added and removed.
      * @private
      */
-    //handleDocClick: function (e, el) {
-    //    this.hideMenu();
-    //}
+    handleDocClick: function (e, el) {
+        this.hideMenu();
+    }
 });
