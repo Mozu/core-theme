@@ -26,9 +26,24 @@ Ext.define('Taco.core.ux.picker.InlineSelector', {
             this.cls += ' highlight';
         }
 
+        this.inlineItems = this.buildInlineItems();
+
+        this.items = [{
+                hidden: true,
+                itemId: '',
+                xtype: 'container'
+            }, {
+                autoEl: 'ul',
+                cls: 'inline-view',
+                itemId: 'list',
+                items: this.inlineItems,
+                xtype: 'container'
+            }
+        ];
+
         this.callParent(arguments);
 
-        this.buildView();
+        this.listView = this.down('#list');
 
         this.on({
             boxready: this.handleBoxReady,
@@ -36,26 +51,32 @@ Ext.define('Taco.core.ux.picker.InlineSelector', {
         });
     },
 
-    buildView: function () {
-        var tpl = new Ext.XTemplate(
-                '<ul class="inline-view">',
-                    '<tpl for=".">',
-                        '<li class="taco-inline-selector-item">',
-                            '{text}',
-                        '</li>',
-                    '</tpl>',
-                '</ul>'
-            );
+    buildInlineItems: function () {
+        var items = [];
 
-        this.view = Ext.create('Ext.view.View', {
-            itemId: 'dataview',
-            itemSelector: 'li.taco-inline-selector-item',
-            tpl: tpl,
-            selectedItemCls: 'selected',
-            store: this.store
-        });
+        this.store.each(function (record) {
+            var cls = 'taco-inline-selector-item';
 
-        this.add(this.view);
+            if (record.get('value') === this.value) {
+                cls += ' selected';
+            }
+
+            items.push({
+                autoEl: 'li',
+                cls: cls,
+                html: Ext.String.htmlEncode(record.get('text')),
+                listeners: {
+                    click: function () {
+                        this.fireEvent('select', this, record);
+                    },
+                    element: 'el',
+                    scope: this
+                },
+                xtype: 'component'
+            });
+        }, this);
+
+        return items;
     },
 
     initStoreFromArray: function () {
@@ -74,20 +95,20 @@ Ext.define('Taco.core.ux.picker.InlineSelector', {
     },
 
     handleBoxReady: function () {
-        var selectedIndex = this.store.find('value', this.value);
+        // var selectedIndex = this.store.find('value', this.value);
 
-        if (this.highlighted) {
-            this.view.getSelectionModel().select(selectedIndex);
-        }
+        // if (this.highlighted) {
+        //     this.view.getSelectionModel().select(selectedIndex);
+        // }
 
-        this.view.on({
-            select: function (view, record) {
-                Ext.defer(function() {
-                    this.fireEvent('select', this, record);
-                }, 5, this);
-            },
-            scope: this
-        });
+        // this.view.on({
+        //     select: function (view, record) {
+        //         Ext.defer(function() {
+        //             this.fireEvent('select', this, record);
+        //         }, 5, this);
+        //     },
+        //     scope: this
+        // });
     },
 
     highlight: function (val) {
