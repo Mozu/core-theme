@@ -33,7 +33,6 @@ Ext.define('Taco.core.ux.picker.InlineSelector', {
                 itemId: '',
                 xtype: 'container'
             }, {
-                autoEl: 'ul',
                 cls: 'inline-view',
                 itemId: 'list',
                 items: this.inlineItems,
@@ -44,11 +43,6 @@ Ext.define('Taco.core.ux.picker.InlineSelector', {
         this.callParent(arguments);
 
         this.listView = this.down('#list');
-
-        this.on({
-            boxready: this.handleBoxReady,
-            scope: this
-        });
     },
 
     buildInlineItems: function () {
@@ -62,7 +56,6 @@ Ext.define('Taco.core.ux.picker.InlineSelector', {
             }
 
             items.push({
-                autoEl: 'li',
                 cls: cls,
                 html: Ext.String.htmlEncode(record.get('text')),
                 listeners: {
@@ -92,23 +85,6 @@ Ext.define('Taco.core.ux.picker.InlineSelector', {
         });
 
         this.store = store;
-    },
-
-    handleBoxReady: function () {
-        // var selectedIndex = this.store.find('value', this.value);
-
-        // if (this.highlighted) {
-        //     this.view.getSelectionModel().select(selectedIndex);
-        // }
-
-        // this.view.on({
-        //     select: function (view, record) {
-        //         Ext.defer(function() {
-        //             this.fireEvent('select', this, record);
-        //         }, 5, this);
-        //     },
-        //     scope: this
-        // });
     },
 
     highlight: function (val) {
