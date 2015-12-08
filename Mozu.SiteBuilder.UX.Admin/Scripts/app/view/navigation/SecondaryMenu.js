@@ -88,7 +88,7 @@ Ext.define('Taco.view.navigation.SecondaryMenu', {
             ui: 'link',
             scale: 'medium',
             text: '',
-            glyph: 'XE010@mozicons',
+            glyph: 'XE90E@mozicons',
             handler: Ext.bind(function (btn) {
                 this.searchBox.show();
                 btn.hide();
