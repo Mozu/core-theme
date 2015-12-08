@@ -85,7 +85,7 @@ Ext.define('Taco.core.ux.form.FilterContainer', {
             itemId: 'advancedFilter',
             ui: 'action',
             scale: 'medium',
-            glyph: 'XE600@mozicons',
+            glyph: 'XE905@mozicons',
             width: 57,
             height: 40,
             margin: '0 10 20 0',

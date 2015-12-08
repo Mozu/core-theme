@@ -55,10 +55,22 @@
         .#{$prefix}grid-row-editor-buttons {
             border-color: $valid-green;
             background-color: $row-editor-buttons-bg;
+            @include partial-border-radius(0, $border-radius, 0, $border-radius, !important);
         }
 
         .#{$prefix}panel .#{$prefix}panel-body .#{$prefix}grid-td {
             border: 0 !important;
+        }
+
+        .#{$prefix}grid-with-row-lines {
+            .#{$prefix}grid-table-focused-first {
+                border: none !important;
+
+                td {
+                    border: none !important;
+                    border-bottom: 0 !important;
+                }
+            }
         }
 
         .#{$prefix}grid-header-ct {
