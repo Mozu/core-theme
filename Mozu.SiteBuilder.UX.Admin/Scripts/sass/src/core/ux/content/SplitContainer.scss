@@ -1,10 +1,20 @@
 ﻿.#{$vprefix}splitcontainer {
     .#{$vprefix}splitcontainer-splitter {
-        overflow: hidden;
+        overflow: visible;
         z-index: 2;
-        background-color: rgba(0, 255, 0, 0.5);
+        //background-color: rgba(0, 255, 0, 0.5);
         .#{$prefix}layout-split-left {
             display: none;
+        }
+
+        @include icon-font($glyph-splitter, 12px);
+        &::after {
+            top: 50%;
+            width: 4px;
+            height: 38px;
+            line-height: 38px;
+            text-align: center;
+            left: -4px;
         }
     }
 
@@ -13,31 +23,31 @@
 
         .#{$vprefix}splitcontainer-collapsetool {
             overflow: visible;
-            @include icon-font($glyph-arrowleft);
+            @include icon-font($glyph-arrow-left, 12px);
 
             &::after {
                 width: 22px;
                 height: 38px;
                 line-height: 38px;
-                text-align: left;
+                text-align: center;
                 top: 50%;
                 border: 1px solid rgba(0, 0, 0, 0.1);
                 border-right-style: none;
                 border-top-left-radius: 100px;
                 border-bottom-left-radius: 100px;
-                background-color: rgba(255, 0, 0, 0.5);
-                left: -8px;
+                background-color: $splitter-background;
+                left: -10px;
+                //background-color: rgba(255, 0, 0, 0.5);
             }
 
             &.#{$prefix}component-docked-left {
                 &::after {
-                    content: $glyph-arrowright;
-                    text-align: right;
+                    content: $glyph-arrow-right;
                     border-right-style: solid;
                     border-left-style: none;
                     border-radius: 0 100px 100px 0;
-                    background-color: rgba(0, 0, 255, 0.5);
-                    left: -2px;
+                    left: 0;
+                    //background-color: rgba(0, 0, 255, 0.5);
                 }
             }
 

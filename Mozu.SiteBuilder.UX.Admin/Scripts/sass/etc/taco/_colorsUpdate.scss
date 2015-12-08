@@ -42,6 +42,7 @@ $error-red:                     adjust_hue(saturate(lighten($black-color, 45), 1
 $menu-btn-active-border:        adjust_hue(saturate(lighten($black-color, 36), 62), 165);   /* #23977a --> #239578  035, 151, 122 */
 $menu-btn-active-background:    adjust_hue(saturate(lighten($black-color, 41), 57), 165);   /* #2ca385 --> #2da587  044, 163, 133 */
 $item-switch-color:             rgba(lighten($black-color, 26), .32);                       /* #424242              066, 066, 066 */
+$splitter-background:           rgba($white-color, .8);
 
 $vertical-ellipsis-active:      lighten($black-color, 13);                                  /* #222222 --> #212121  033, 033, 033 */
 $dropdown-list-shadow:          rgba($black-color, 0.09);                                   /* #000000              000, 000, 000 */
