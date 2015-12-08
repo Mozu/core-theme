@@ -67,7 +67,8 @@
     },
 
     buildMasterCatalogContext: function () {
-        var masterCatalog,
+        var highlighted,
+            masterCatalog,
             data;
 
         if (!this.isVisible('m')) {
@@ -78,19 +79,27 @@
 
         data = this.generateStoreData(Taco.app.context.masterCatalogs);
 
+        highlighted = masterCatalog === this.currentContext;
+
         if (this.visibleLevels.indexOf('m') === this.visibleLevels.length - 1 && this.isSupported('m')) {
+
+            highlighted = highlighted ||
+                (this.currentContext.masterCatalog
+                    && this.currentContext.masterCatalog.id === masterCatalog.id);
+
             this.selectors.push(Ext.widget({
-                highlighted: masterCatalog === this.currentContext,
+                highlighted: highlighted,
                 labelText: 'Masters',
                 store: data,
                 value: masterCatalog.id,
                 xtype: 'taco.inlineselector'
             }));
         } else {
+
             this.selectors.push(Ext.widget({
                 callToActionText: 'Switch Master Catalog:',
                 disableSelection: this.isSupported('m'),
-                highlighted: masterCatalog === this.currentContext,
+                highlighted: highlighted,
                 listeners: {
                     select: function (view, record) {
                         Taco.app.context.setCurrentMasterCatalog(record.get('value'));
@@ -108,7 +117,8 @@
     },
 
     buildCatalogContext: function () {
-        var masterCatalog,
+        var highlighted,
+            masterCatalog,
             catalog,
             data;
 
@@ -118,6 +128,7 @@
 
         masterCatalog = Taco.app.context.getContextAtLevel('m');
         catalog = Taco.app.context.getContextAtLevel('c');
+        highlighted = catalog === this.currentContext;
 
         if (!catalog) {
             return;
@@ -126,8 +137,13 @@
         data = this.generateStoreData(masterCatalog.catalogs);
 
         if (this.visibleLevels.indexOf('c') === this.visibleLevels.length - 1 && this.isSupported('c')) {
+
+            highlighted = highlighted ||
+                (this.currentContext.catalog
+                    && this.currentContext.catalog.id === catalog.id);
+
             this.selectors.push(Ext.widget({
-                highlighted: catalog === this.currentContext,
+                highlighted: highlighted,
                 labelText: 'Catalogs',
                 listeners: {
                     select: function (view, record) {
@@ -143,7 +159,7 @@
             this.selectors.push(Ext.widget({
                 callToActionText: 'Switch Catalog:',
                 disableSelection: this.isSupported('c'),
-                highlighted: catalog === this.currentContext,
+                highlighted: highlighted,
                 store: data,
                 tagText: 'catalog',
                 value: catalog.id,
