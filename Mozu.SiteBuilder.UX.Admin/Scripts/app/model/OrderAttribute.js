@@ -27,6 +27,15 @@ Ext.define('Taco.model.OrderAttribute', {
     allowProductDataType: function () {
         return false;
     },
+    supportsSearchOptions: function () {
+        return false;
+    },
+    supportsSearchInStorefront: function () {
+        return false;
+    },
+    supportsSearchDisplayType: function () {
+        return false;
+    },
     proxy: {
         type: 'ajaxproxy',
         api: {
