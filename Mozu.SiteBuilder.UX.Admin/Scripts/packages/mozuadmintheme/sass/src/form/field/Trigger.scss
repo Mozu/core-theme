@@ -93,6 +93,8 @@
 .#{$prefix}form-search-trigger {
     &::after {
         content: $glyph-search;
+        font-size: 20px;
+        color: $dark-color;
     }
 }
 

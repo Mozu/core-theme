@@ -119,6 +119,11 @@
             .advanced-search-button {
                 border: none;
                 background-color: inherit;
+                .#{$prefix}btn-icon-el {
+                    font-size: 22px;
+                    line-height: 22px;
+                    color: $dark-color;
+                }
             }
         }
 
