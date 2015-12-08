@@ -2,19 +2,26 @@
     .#{$vprefix}splitcontainer-splitter {
         overflow: visible;
         z-index: 2;
-        //background-color: rgba(0, 255, 0, 0.5);
+
         .#{$prefix}layout-split-left {
             display: none;
         }
 
-        @include icon-font($glyph-splitter, 12px);
+        @include icon-font($glyph-splitter, 22px, $splitter-border);
         &::after {
+            @include facade-transitions;
             top: 50%;
             width: 4px;
             height: 38px;
             line-height: 38px;
             text-align: center;
-            left: -4px;
+            left: -2px;
+        }
+
+        &:hover {
+            &::after {
+                color: $splitter-hover;
+            }
         }
     }
 
@@ -23,21 +30,27 @@
 
         .#{$vprefix}splitcontainer-collapsetool {
             overflow: visible;
-            @include icon-font($glyph-arrow-left, 12px);
+            @include icon-font($glyph-arrow-left, 12px, $splitter-border);
 
             &::after {
+                @include facade-transitions;
                 width: 22px;
                 height: 38px;
                 line-height: 38px;
                 text-align: center;
                 top: 50%;
-                border: 1px solid rgba(0, 0, 0, 0.1);
+                border: 1px solid $splitter-border;
                 border-right-style: none;
                 border-top-left-radius: 100px;
                 border-bottom-left-radius: 100px;
                 background-color: $splitter-background;
                 left: -8px;
-                //background-color: rgba(255, 0, 0, 0.5);
+            }
+
+            &:hover {
+                &::after {
+                    color: $splitter-hover;
+                }
             }
 
             &.#{$prefix}component-docked-left {
@@ -47,7 +60,6 @@
                     border-left-style: none;
                     border-radius: 0 100px 100px 0;
                     left: -2px;
-                    //background-color: rgba(0, 0, 255, 0.5);
                 }
             }
 
