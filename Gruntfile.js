@@ -114,6 +114,25 @@ module.exports = function (grunt) {
       }
     },
     watch: {
+      gruntfile: {
+        files: [
+          'Gruntfile.js'
+        ],
+        tasks: [
+          'newer:jshint:develop'
+        ]
+      },
+      json: {
+        files: [
+          'theme.json',
+          'theme-ui.json',
+          'labels/*.json'
+        ],
+        tasks: [
+          'newer:jshint:develop',
+          'newer:mozusync:upload'
+        ]
+      },
       javascript: {
         files: [
           'scripts/**/*.js'
@@ -127,16 +146,12 @@ module.exports = function (grunt) {
       sync: {
         files: [
           'admin/**/*',
-          'labels/**/*',
           'resources/**/*',
           'packageconfig.xml',
-          'scripts/**/*',
           'stylesheets/**/*',
           'templates/**/*',
-          'theme.json',
           '*thumb.png',
           '*thumb.jpg',
-          'theme-ui.json',
           '!*.orig',
           '!.inherited'
         ],
