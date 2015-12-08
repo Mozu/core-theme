@@ -187,6 +187,7 @@ Ext.define('Taco.core.ux.content.SplitContainer', {
         return {
             itemId: 'east',
             title: 'East',
+            cls: 'taco-splitcontainer-panel',
             layout: 'fit',
             collapseDirection: 'right',
             collapseMode: 'mini',
@@ -220,6 +221,7 @@ Ext.define('Taco.core.ux.content.SplitContainer', {
         return {
             itemId: 'west',
             title: 'West',
+            cls: 'taco-splitcontainer-panel',
             layout: 'fit',
             collapseDirection: 'left',
             collapseMode: 'mini',

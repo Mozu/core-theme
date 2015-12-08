@@ -1,26 +1,49 @@
-﻿.#{$vprefix}splitcontainer-splitter {
-    overflow: hidden;
-    .#{$prefix}layout-split-left {
-        display: none;
-    }
-}
-
-.#{$vprefix}splitcontainer-collapsetool {
-    @include icon-font($glyph-arrowleft);
-
-    &::after {
-        left: -2px;
-        top: 50%;
-    }
-
-    &.#{$prefix}component-docked-left {
-        &::after {
-            content: $glyph-arrowright;
-            left: 1px;
+﻿.#{$vprefix}splitcontainer {
+    .#{$vprefix}splitcontainer-splitter {
+        overflow: hidden;
+        z-index: 2;
+        background-color: rgba(0, 255, 0, 0.5);
+        .#{$prefix}layout-split-left {
+            display: none;
         }
     }
 
-    .no-background-splitter & {
-        background-color: transparent;
+    .#{$vprefix}splitcontainer-panel {
+        overflow: visible;
+
+        .#{$vprefix}splitcontainer-collapsetool {
+            overflow: visible;
+            @include icon-font($glyph-arrowleft);
+
+            &::after {
+                width: 22px;
+                height: 38px;
+                line-height: 38px;
+                text-align: left;
+                top: 50%;
+                border: 1px solid rgba(0, 0, 0, 0.1);
+                border-right-style: none;
+                border-top-left-radius: 100px;
+                border-bottom-left-radius: 100px;
+                background-color: rgba(255, 0, 0, 0.5);
+                left: -8px;
+            }
+
+            &.#{$prefix}component-docked-left {
+                &::after {
+                    content: $glyph-arrowright;
+                    text-align: right;
+                    border-right-style: solid;
+                    border-left-style: none;
+                    border-radius: 0 100px 100px 0;
+                    background-color: rgba(0, 0, 255, 0.5);
+                    left: -2px;
+                }
+            }
+
+            .no-background-splitter & {
+                background-color: transparent;
+            }
+        }
     }
 }
