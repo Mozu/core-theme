@@ -46,6 +46,7 @@ Ext.define('Taco.core.ux.picker.Selector', {
             tpl: '<div class="title">{text}</div>',
             xtype: 'component'
         }, {
+            hidden: !this.tagText,
             itemId: 'tag',
             text: this.tagText,
             xtype: 'taco.lighttag'
