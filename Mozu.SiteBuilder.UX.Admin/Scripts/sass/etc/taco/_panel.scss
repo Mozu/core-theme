@@ -21,7 +21,11 @@
         }
 
         .#{$prefix}component {
-            @include border-radius-xbrowser($border-radius);
+
+            &.#{$prefix}panel-default,
+            &.#{$prefix}component-docked-top{
+                @include border-radius-xbrowser($border-radius);
+            }
         }
 
         .#{$prefix}panel-body {
@@ -178,22 +182,12 @@
 			.#{$prefix}tbar-page-link {
 				background-color: $color-neutral-transparent;
 				background-image: none;
-                border: none;
-                color: $dark-color;
-                padding-top: 4px;
-                margin: 0px 5px 0 5px;
+				border: none;
+				color: $dark-color;
 				text-decoration: none;
 				height: 22px;
 				width: 22px;
 				@include border-radius(2px);
-
-                &.#{$prefix}tbar-page-link-current {
-                    background-color: $valid-green;
-
-                    .#{$prefix}btn-inner {
-                        color: $white-color;
-                    }
-                }
 
 				.#{$prefix}btn-inner {
 					color: $gray-text-dark;
@@ -203,6 +197,20 @@
 					.#{$prefix}btn-inner {
 						color: $dark-color;
 					}
+				}
+			}
+
+			.#{$prefix}tbar-page-link-current {
+				background-color: $valid-green;
+				background-image: none;
+				border: none;
+				text-decoration: none;
+				height: 22px;
+				width: 22px;
+				@include border-radius(2px);
+
+				.#{$prefix}btn-inner {
+					color: $white-color;
 				}
 			}
 
