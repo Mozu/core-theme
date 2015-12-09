@@ -15,7 +15,7 @@
     parentTitleCfg: {
         title: 'Products',
         lightTagLabel: 'productCode',
-        controller: 'product'
+        controller: 'products'
     },
 
     enableSearchBarInHeader: false,
