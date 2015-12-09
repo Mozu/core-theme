@@ -26,7 +26,7 @@ NUGET
     Burrows.Log4Net (0.3.3.0)
       Burrows (>= 0.3.3.0)
       log4net (>= 2.0.3)
-    ClearScript.Installer (5.4.5708)
+    ClearScript.Installer (5.4.5709)
     dotless (1.4.0.0)
     FAKE (4.3.0)
     FluentAssertions (3.2.2)
