@@ -104,7 +104,7 @@ Ext.define('Taco.core.ux.picker.InlineSelector', {
         items.push({
             cls: 'inline-label',
             hidden: !this.labelText,
-            html: Ext.String.htmlEncode(this.labelText + ':'),
+            html: Ext.String.htmlEncode(this.labelText),
             xtype: 'component'
         });
 
