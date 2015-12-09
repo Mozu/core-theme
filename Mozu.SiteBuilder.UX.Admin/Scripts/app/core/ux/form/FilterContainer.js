@@ -370,7 +370,7 @@ Ext.define('Taco.core.ux.form.FilterContainer', {
                 this.add(this.modal);
             }
 
-            this.modal.showBy(this.down('#advancedFilter'), 'tl-bl?', [0, 5]);
+            this.modal.showBy(this.down('#advancedFilter'), 'tr-br?', [0, -55]);
         } else {
             if (this.modal) {
                 this.modal.close();

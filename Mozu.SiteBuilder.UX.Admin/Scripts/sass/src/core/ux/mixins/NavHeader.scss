@@ -123,6 +123,10 @@
             .advanced-search-button {
                 border: none;
                 background-color: inherit;
+                opacity: 0.35;
+                &:hover {
+                    opacity: 1;
+                }
                 .#{$prefix}btn-icon-el {
                     font-size: 22px;
                     line-height: 22px;
