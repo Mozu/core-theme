@@ -19,9 +19,9 @@
     .#{$prefix}column-header-trigger {
         background: none transparent;
         display: block !important;
-        left: -1px;
+        left: 5px;
         top: 6px;
-        @include icon-font($glyph-plus, 16px, $gray-text-light);
+        @include icon-font($glyph-knurling, 16px, $gray-text-light);
         position: absolute;
     }
 }
