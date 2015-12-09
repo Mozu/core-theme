@@ -108,6 +108,10 @@
                 padding: 3px 10px;
             }
 
+            .#{$prefix}column-header-sort-DESC, .#{$prefix}column-header-sort-ASC {
+                color: $dark-color;
+            }
+
             .#{$prefix}column-header-text {
 
 
