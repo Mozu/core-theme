@@ -107,6 +107,7 @@
     },
 
     onSave: function () {
+        debugger;
         this.record.set('isRequired', this.findField('isRequired').getValue());
         this.record.set('dataType', this.selectedAttribute.get('dataType'));
         this.record.set('attributeName', this.selectedAttribute.get('name'));
@@ -119,6 +120,8 @@
             this.record.set('selectedValues', Ext.Array.pluck(this.selectionStore.data.items, 'raw'));
             break;
         }
+        this.record.set('isAdminOnly', this.displayGroupSelector.value === 'adminonly');
+        this.record.set('isProductDetailsOnlyProperty', this.displayGroupSelector.value === 'details');
 
         this.record.set('attributeFQN', this.selectedAttribute.getId());
         this.record.phantom = true;
@@ -167,6 +170,7 @@
     },
 
     onSelectedAttributeChanged: function (selectionModel, records) {
+        console.log("onSelectedAttributeChanged fired!");
         if (!Ext.isArray(records) || records.length !== 1) {
             return;
         }
@@ -356,30 +360,36 @@
                 fields: ['id', "name"],
                 data: [
                     {
-                        name: "Admin & Storefront",
-                        id: false
+                        name: "Storefront Details and Product Listings",
+                        id: 'listings'
+                    },{
+                        name: "Storefront Details",
+                        id: 'details'
                     }, {
                         name: "Admin Only",
-                        id: true
+                        id: 'adminonly'
                     }
                 ]
             });
+            var initDisplayGroup = this.record.get('isProductDetailsOnlyProperty') ? 'details' : this.record.get('isAdminOnly') ? 'adminonly' : 'listings';
 
             this.displayGroupSelector = Ext.widget({
                 xtype: 'selectfield',
                 itemId: "displayGroupSelector",
                 fieldLabel: 'Display Group',
-                name: 'isAdminOnly',
                 queryMode: 'local',
                 margin: '0 0 10 0',
                 width: 185,
                 displayField: 'name',
                 valueField: 'id',
-                value: this.record.get('isAdminOnly'),
+                value: initDisplayGroup,
                 store: this.isAdminOnlyStore,
                 listeners: {
                     change: function (view, value) {
-                        me.isHiddenFromShopper.setDisabled(value);
+                        debugger;
+                        me.isHiddenFromShopper.setDisabled(value === 'adminonly');
+                        if (me.isHiddenFromShopper.isDisabled())
+                            me.isHiddenFromShopper.setValue(false);
                     }
                 }
             });
