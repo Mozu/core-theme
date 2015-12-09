@@ -118,6 +118,7 @@
                     border: none;
                     box-shadow: none;
                     color: $dark-color;
+                    @include placeholder-color;
                 }
             }
             .advanced-search-button {
