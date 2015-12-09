@@ -52,17 +52,6 @@
                     color: $filter-icon-hover;
                 }
             }
-            &.#{$prefix}form-trigger-wrap-focus {
-                input {
-                    color: $filter-text-focus;
-                    @include placeholder-color($filter-text-focus-placeholder);
-                }
-                .#{$prefix}trigger-cell {
-                    .#{$prefix}form-trigger::after {
-                        color: $filter-icon-focus;
-                    }
-                }
-            }
         }
     }
 }
