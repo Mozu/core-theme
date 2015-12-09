@@ -136,7 +136,7 @@ Ext.define('Taco.view.product.Index', {
     },
 
     doCreate: function() {
-        var controller = 'product';
+        var controller = 'products';
         Taco.app.StateManager.attemptNavigate(controller + '/create');
     },
 
