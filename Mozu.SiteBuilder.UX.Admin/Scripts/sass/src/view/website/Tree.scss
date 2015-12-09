@@ -104,7 +104,7 @@
         }
 
         &.drag-icon {
-            @include icon-font($glyph-knurling, 13px, rgb(179, 179, 179));
+            @include icon-font($glyph-reorder, 13px, rgb(179, 179, 179));
             float: right;
             background-color: $color-framework-gray-light;
 
