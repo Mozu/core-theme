@@ -82,6 +82,13 @@ $splitter-text:                 rgba(0, 0, 0, 0.2);
 $splitter-hover:                rgba(0, 0, 0, 0.8);
 $more-menu-active-background:   whitesmoke;
 $more-menu-active-shadow:       rgba(0, 0, 0, 0.09);
+$filter-text-inactive:          lighten($dark-color, 62);                           /* #dddddd --> #dedede  222, 222, 222 */
+$filter-text-hover:             lighten($dark-color, 45);                           /* #b3b3b3              179, 179, 179 */
+$filter-text-focus-placeholder: lighten($dark-color, 35);                           /* #999999              153, 153, 153 */
+$filter-text-focus:             $dark-color;
+$filter-icon-inactive:          lighten($dark-color, 59);                           /* #d6d6d6              214, 214, 214 */
+$filter-icon-hover:             lighten($dark-color, 39);                           /* #a3a3a3              163, 163, 163 */
+$filter-icon-focus:             lighten($dark-color, 26);                           /* #838383 --> #828282  130, 130, 130 */
 
 $vertical-ellipsis-active:      rgb(34, 34, 34);                                    /* #222222 --> #212121  033, 033, 033 */
                                 /* lighten($black-color, 13); */

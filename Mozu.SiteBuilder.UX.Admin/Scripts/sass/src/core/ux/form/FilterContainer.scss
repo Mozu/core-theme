@@ -2,28 +2,66 @@
     border: 1px solid $dialog-border-color;
     border-radius: 4px;
     @include outer-shadow(0.34, 14px, 0, 1px);
-    .#{$prefix}window-header-text-container-dialog {
-        font-size: 18px;
-        font-weight: 400;
-        line-height: 30px;
-        color: $dark-color;
+    .#{$prefix}window-header-dialog {
+        padding-top: 12px;
+        padding-bottom: 12px;
+        .#{$prefix}window-header-text-container-dialog {
+            font-size: 18px;
+            font-weight: 400;
+            line-height: 30px;
+            color: $dark-color;
+        }
     }
 }
 
+// text: #DDDDDD not hovered, #B3B3B3 hovered, #999999 focused placeholder, #3F3F3F focused text
+// icon: #D6D6D6 not hovered, #A3A3A3 hovered, #838383 focused placeholder, #838383 focused text
 .#{$vprefix}filtercontainer {
     .#{$vprefix}quickfilter {
         .#{$prefix}form-item-body {
-            opacity: 0.33;
+            input {
+                color: $filter-text-inactive;
+                @include placeholder-color($filter-text-inactive);
+            }
+            .#{$prefix}trigger-cell {
+                .#{$prefix}form-trigger::after {
+                    color: $filter-icon-inactive;
+                }
+            }
             &.#{$prefix}form-trigger-wrap-focus {
-                opacity: 1.0;
+                input {
+                    color: $filter-text-focus;
+                    @include placeholder-color($filter-text-focus-placeholder);
+                }
+                .#{$prefix}trigger-cell {
+                    .#{$prefix}form-trigger::after {
+                        color: $filter-icon-focus;
+                    }
+                }
             }
         }
     }
     .#{$vprefix}quickfilter-over {
         .#{$prefix}form-item-body {
-            opacity: 0.74;
+            input {
+                color: $filter-text-hover;
+                @include placeholder-color($filter-text-hover);
+            }
+            .#{$prefix}trigger-cell {
+                .#{$prefix}form-trigger::after {
+                    color: $filter-icon-hover;
+                }
+            }
             &.#{$prefix}form-trigger-wrap-focus {
-                opacity: 1.0;
+                input {
+                    color: $filter-text-focus;
+                    @include placeholder-color($filter-text-focus-placeholder);
+                }
+                .#{$prefix}trigger-cell {
+                    .#{$prefix}form-trigger::after {
+                        color: $filter-icon-focus;
+                    }
+                }
             }
         }
     }
