@@ -19,10 +19,7 @@
             }
         }
     }
-}
-
-.#{$vprefix}filtercontainer-over {
-    .#{$vprefix}quickfilter {
+    .#{$vprefix}quickfilter-over {
         .#{$prefix}form-item-body {
             opacity: 0.74;
             &.#{$prefix}form-trigger-wrap-focus {

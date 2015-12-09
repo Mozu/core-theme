@@ -12,7 +12,6 @@
 Ext.define('Taco.core.ux.form.FilterContainer', {
     extend: 'Ext.form.FieldContainer',
     alias: 'widget.taco-filtercontainer',
-    overCls: 'taco-filtercontainer-over',
     requires: [
         'Taco.core.ux.form.field.QuickFilter',
         'Taco.core.util.Filter'
