@@ -14,7 +14,7 @@ Ext.define('Taco.core.ux.grid.MenuColumn', {
     resizable: false,
     sortable: false,
     tdCls: Taco.baseCSSPrefix + 'menu-col-cell',
-    text: '<div class="x-column-action"></div>',
+    text: '',
     width: 100,
 
     menuItems: [],

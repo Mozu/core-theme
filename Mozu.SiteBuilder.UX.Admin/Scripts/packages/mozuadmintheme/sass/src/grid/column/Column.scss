@@ -12,16 +12,16 @@
 
 .#{$prefix}column-header-last {
     .#{$prefix}column-header-inner {
-        min-width: 50px;
-        padding-right: 32px !important;
+        //min-width: 50px;
+        min-height: 30px;
     }
 
     .#{$prefix}column-header-trigger {
         background: none transparent;
         display: block !important;
-        right: 11px;
-        top: 8px;
-        @include icon-font($glyph-plus, 16px, $color-neutral-white);
+        left: -1px;
+        top: 6px;
+        @include icon-font($glyph-plus, 16px, $gray-text-light);
         position: absolute;
     }
 }

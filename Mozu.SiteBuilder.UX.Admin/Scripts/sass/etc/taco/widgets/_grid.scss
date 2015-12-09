@@ -58,8 +58,8 @@
 
   // grid row hover state
     .#{$prefix}grid-row-over {
-        .#{$vprefix}grid-row-menu-trigger::after {
-            color: $black-color;
+        .#{$vprefix}grid-row-menu-trigger {
+            @include icon-font($glyph-knurling, 13px, $black-color);
         }
     }
 
@@ -97,9 +97,9 @@
   //     .#{$prefix}column-header-trigger {
   //       background: none transparent;
   //       display: block !important;
-  //       right: 12px;
-  //       top: 12px;
-  //       @include icon-font($glyph-plus, 16px, $color-neutral-white);
+  //       left: 0;
+  //       top: -12px;
+  //       @include icon-font($glyph-plus, 16px, $gray-text-dark);
   //       position: absolute;
   //     }
   //   }
@@ -229,7 +229,7 @@
     cursor: pointer;
     height: 16px;
     width: 16px;
-    @include icon-font($glyph-knurling, 13px, $gray-text-dark);
+    //@include icon-font($glyph-knurling, 13px, $gray-text-dark);
   }
 
   // hide the action menu trigger image when its inside of the row editor. it causes a bunch of padding to be added;
