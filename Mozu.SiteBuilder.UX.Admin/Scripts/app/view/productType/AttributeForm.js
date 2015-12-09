@@ -107,7 +107,6 @@
     },
 
     onSave: function () {
-        debugger;
         this.record.set('isRequired', this.findField('isRequired').getValue());
         this.record.set('dataType', this.selectedAttribute.get('dataType'));
         this.record.set('attributeName', this.selectedAttribute.get('name'));
@@ -386,7 +385,6 @@
                 store: this.isAdminOnlyStore,
                 listeners: {
                     change: function (view, value) {
-                        debugger;
                         me.isHiddenFromShopper.setDisabled(value === 'adminonly');
                         if (me.isHiddenFromShopper.isDisabled())
                             me.isHiddenFromShopper.setValue(false);
