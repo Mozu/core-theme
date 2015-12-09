@@ -1,7 +1,10 @@
 ﻿.#{$vprefix}userbutton {
+    cursor: pointer;
+
     &.#{$vprefix}userbutton-menu-active {
         background-color: $card-button-press-bg;
     }
+    
     .#{$vprefix}userbutton-wrapper {
         position: relative;
         text-align: left;
