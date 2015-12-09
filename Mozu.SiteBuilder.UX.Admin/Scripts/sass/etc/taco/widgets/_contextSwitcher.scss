@@ -1,18 +1,15 @@
 ﻿@mixin taco-contextSwitcher {
 
-  .#{$vprefix}context-switcher-bar {
-    background-color: $white-color;
-    margin-top: 9px;
-  }
-}
+    .#{$vprefix}context-switcher-bar {
+        background-color: $white-color;
+        margin-top: 9px;
 
-@mixin taco-contextSwitcher {
+        & > div > div > div {
+            border-right: 1px solid $nav-element-active-border;
 
-  .#{$vprefix}context-switcher-bar {
-    background-color: $white-color;
-    margin-top: 9px;
-  }
-
-
-
+            &:last-child {
+                border-right-width: 0px;
+            }
+        }
+    }
 }

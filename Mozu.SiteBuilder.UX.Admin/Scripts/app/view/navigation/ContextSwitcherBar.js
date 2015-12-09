@@ -88,9 +88,11 @@
                     && this.currentContext.masterCatalog.id === masterCatalog.id);
 
             this.selectors.push(Ext.widget({
+                callToActionText: 'Switch Master Catalog:',
                 highlighted: highlighted,
                 labelText: 'Masters',
                 store: data,
+                tagText: 'master',
                 value: masterCatalog.id,
                 xtype: 'taco.inlineselector'
             }));
@@ -143,6 +145,7 @@
                     && this.currentContext.catalog.id === catalog.id);
 
             this.selectors.push(Ext.widget({
+                callToActionText: 'Switch Catalog:',
                 highlighted: highlighted,
                 labelText: 'Catalogs',
                 listeners: {
@@ -152,6 +155,7 @@
                     }
                 },
                 store: data,
+                tagText: 'catalog',
                 value: catalog.id,
                 xtype: 'taco.inlineselector'
             }));
@@ -187,6 +191,7 @@
         }
 
         this.selectors.push(Ext.widget({
+            callToActionText: 'Switch Site:',
             highlighted: site === this.currentContext,
             labelText: 'Sites',
                 listeners: {

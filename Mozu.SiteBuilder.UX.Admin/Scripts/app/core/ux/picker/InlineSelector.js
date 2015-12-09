@@ -8,6 +8,10 @@ Ext.define('Taco.core.ux.picker.InlineSelector', {
 
     value: null,
 
+    tagText: '',
+
+    labelText: '',
+
     requires: [
         'Taco.core.ux.picker.Selector'
     ],
@@ -30,12 +34,20 @@ Ext.define('Taco.core.ux.picker.InlineSelector', {
 
         this.inlineItems = this.buildInlineItems();
 
-        this.items = [{
+        this.items = [, {
+                callToActionText: this.callToActionText,
                 defaultText: this.labelText,
                 hidden: this.isInline,
                 highlighted: this.highlighted,
                 itemId: 'selector',
+                listeners: {
+                    select: function (view, record) {
+                        this.fireEvent('select', this, record);
+                    },
+                    scope: this
+                },
                 store: this.store,
+                tagText: this.tagText,
                 value: this.value,
                 xtype: 'taco.pickerselector',
             }, {
@@ -88,6 +100,13 @@ Ext.define('Taco.core.ux.picker.InlineSelector', {
 
     buildInlineItems: function () {
         var items = [];
+
+        items.push({
+            cls: 'inline-label',
+            hidden: !this.labelText,
+            html: Ext.String.htmlEncode(this.labelText + ':'),
+            xtype: 'component'
+        });
 
         this.store.each(function (record) {
             var cls = 'taco-inline-selector-item';
