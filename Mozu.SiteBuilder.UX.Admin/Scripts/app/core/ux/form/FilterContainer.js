@@ -12,6 +12,7 @@
 Ext.define('Taco.core.ux.form.FilterContainer', {
     extend: 'Ext.form.FieldContainer',
     alias: 'widget.taco-filtercontainer',
+    overCls: 'taco-filtercontainer-over',
     requires: [
         'Taco.core.ux.form.field.QuickFilter',
         'Taco.core.util.Filter'
@@ -99,7 +100,7 @@ Ext.define('Taco.core.ux.form.FilterContainer', {
             itemId: 'textFilter',
             margin: '0 0 20 0',
             msgTarget: 'qtip',
-            cls: 'taco-advanced-search-button',
+            cls: 'taco-quickfilter',
             flex: 1,
             width: 400,
             emptyText: this.emptySearchText,

@@ -9,3 +9,25 @@
         color: $dark-color;
     }
 }
+
+.#{$vprefix}filtercontainer {
+    .#{$vprefix}quickfilter {
+        .#{$prefix}form-item-body {
+            opacity: 0.33;
+            &.#{$prefix}form-trigger-wrap-focus {
+                opacity: 1.0;
+            }
+        }
+    }
+}
+
+.#{$vprefix}filtercontainer-over {
+    .#{$vprefix}quickfilter {
+        .#{$prefix}form-item-body {
+            opacity: 0.74;
+            &.#{$prefix}form-trigger-wrap-focus {
+                opacity: 1.0;
+            }
+        }
+    }
+}
