@@ -2,8 +2,8 @@
 
     .#{$prefix}menu-plain,
     .#{$vprefix}selector-flyout {
-        border: 1px solid $dropdown-list-outline;
         background-color: $white-color;
+        border: 1px solid $dropdown-list-outline;
         @include border-radius-xbrowser($border-radius-small);
         @include outer-shadow(0.09, 6px, 0, 1px);
 
@@ -16,9 +16,14 @@
             padding: 0 15px;
         }
 
-        .selector,
+        .#{$prefix}menu-item-separator {
+            display: none;
+        }
+
+        li.selector,
         .#{$prefix}menu-item {
             border-bottom: 1px solid $list-item-selector;
+            @include border-radius-xbrowser(0);
             border-width: 1px;
             color: $gray-text-light;
             cursor: pointer;
@@ -32,7 +37,6 @@
             }
 
             &:hover {
-                background-color: transparent !important;
                 color: $nav-element-active;
 
                 span {
@@ -44,10 +48,6 @@
             &:focus {
                 background-color: $dark-bg;
                 color: $nav-element-active;
-            }
-
-            &.#{$prefix}menu-item-active {
-                background-color: transparent !important;
             }
         }
     }

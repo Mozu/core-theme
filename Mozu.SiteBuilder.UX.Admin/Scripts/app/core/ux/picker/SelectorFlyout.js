@@ -10,7 +10,7 @@ Ext.define('Taco.core.ux.picker.SelectorFlyout', {
     floating: true,
     shadow: false,
     hidden: true,
-    alignment: 'tl-bl',
+    alignment: 'tr-br?',
     alignmentOffsets: [0, 0],
     callToActionText: '',
     excludeByValue: '',

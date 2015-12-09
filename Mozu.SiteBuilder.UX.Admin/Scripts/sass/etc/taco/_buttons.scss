@@ -143,62 +143,6 @@
         }
     }
 
-    .#{$vprefix}selector-flyout {
-        left: 0 !important;
-    }
-
-    .#{$prefix}menu-plain,
-    .#{$vprefix}selector-flyout {
-        background-color: $white-color;
-        border: 1px solid $dropdown-list-outline;
-        @include border-radius-xbrowser($border-radius-small);
-        @include outer-shadow(0.09, 6px, 0, 1px);
-
-        .call-to-action {
-            background-color: $dark-bg;
-            border-bottom: 1px solid $light-border-gray;
-            color: $call-to-action-color;
-            font-size: $label-link-font;
-            line-height: 26px;
-            padding: 0 15px;
-        }
-
-        .#{$prefix}menu-item-separator {
-            display: none;
-        }
-
-        li.selector,
-        .#{$prefix}menu-item {
-            border-bottom: 1px solid $list-item-selector;
-            @include border-radius-xbrowser(0);
-            border-width: 1px;
-            color: $gray-text-light;
-            cursor: pointer;
-            font-size: $normal-font-link;
-            line-height: 24px;
-            padding: 6px 12px;
-
-            span {
-                color: $gray-text-light;
-                font-size: $normal-font-link;
-            }
-
-            &:hover {
-                color: $nav-element-active;
-
-                span {
-                    color: $nav-element-active;
-                }
-            }
-
-            &:active,
-            &:focus {
-                background-color: $dark-bg;
-                color: $nav-element-active;
-            }
-        }
-    }
-
     /**
      * Dropdown list
      */
