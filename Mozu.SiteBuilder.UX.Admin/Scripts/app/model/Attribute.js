@@ -140,8 +140,9 @@ Ext.define('Taco.model.Attribute', {
       return (this.get('inputType') !== 'YesNo');
     },
     supportsSearchDisplayType: function () {
-      return (this.get('inputType') === 'TextArea'
-                || this.get('dataType') === 'String'
+      return (this.get('searchableInStorefront')
+                && (this.get('inputType') === 'TextArea'
+                    || this.get('dataType') === 'String')
             );
     },
 

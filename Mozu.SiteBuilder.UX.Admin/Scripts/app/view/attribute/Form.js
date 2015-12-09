@@ -79,7 +79,6 @@ Ext.define('Taco.view.attribute.Form', {
                             stringField = form.findField('addValueString'),
                             numberField = form.findField('addValueNumber'),
                             productField = form.findField('addValueProductCode'),
-                            searchDisplayField = Ext.ComponentQuery.query('#searchDisplayContainer').shift(),
                             isNumber = (newValue === 'Number'),
                             isString = (newValue == 'String'),
                             isProductcode = (newValue == 'ProductCode'),
@@ -99,9 +98,7 @@ Ext.define('Taco.view.attribute.Form', {
                             girdContainer.initGrid(newValue);
                         }
 
-                        if (searchDisplayField) {
-                            searchDisplayField.setVisible(isString);
-                        }
+                        Taco.app.fireEvent('attribute-data-type-changed', newValue);
                     }
                 }
             }
@@ -678,7 +675,14 @@ Ext.define('Taco.view.attribute.Form', {
         this.searchInStorefront = Ext.widget('checkboxfield', {
             name: 'searchableInStorefront',
             boxLabel: 'Available to Storefront Search',
-            hidden: !this.record.supportsSearchInStorefront()
+            hidden: !this.record.supportsSearchInStorefront(),
+            listeners: {
+                change: function (cmp, newValue) {
+                    me.record.set('searchableInStorefront', newValue);
+                    me.searchDisplayContainer.setVisible(me.record.supportsSearchDisplayType());
+                },
+                scope: this
+            }
         });
 
         this.searchLabel = Ext.widget({
@@ -911,6 +915,10 @@ Ext.define('Taco.view.attribute.Form', {
 
         if (this.record.supportsSearchOptions()) {
             this.items.push(this.createSearchOptions());
+            this.mon(Taco.app, 'attribute-data-type-changed', function (newVal) {
+                me.record.set('dataType', newVal);
+                me.searchDisplayContainer.setVisible(me.record.supportsSearchDisplayType());
+            });
         }
 
     },
@@ -953,9 +961,9 @@ Ext.define('Taco.view.attribute.Form', {
         }
 
         if (this.record.supportsSearchOptions()) {
-            //should be in model, but inputType is not updated in record
-            this.searchInStorefront.setVisible(inputType !== 'YesNo');
-            this.searchDisplayContainer.setVisible(inputType === 'TextArea' || this.record.get('dataType') === 'String');
+            this.record.set('inputType', inputType);
+            this.searchInStorefront.setVisible(this.record.supportsSearchInStorefront());
+            this.searchDisplayContainer.setVisible(this.record.supportsSearchDisplayType());
         }
     }
 });
