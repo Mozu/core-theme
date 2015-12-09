@@ -9,7 +9,8 @@
         'Ext.form.Label',
         'Taco.store.PublishSets',
         'Taco.core.ux.content.IndicatorContainer',
-        'Taco.view.publishing.component.button.PublishButton'
+        'Taco.view.publishing.component.button.PublishButton',
+        'Taco.view.product.widget.CatalogAssignmentBar'
     ],
 
     parentTitleCfg: {
@@ -279,6 +280,10 @@
                 }
             }
         };
+
+        this.navHeaderSubConfig = Ext.create('Taco.view.product.widget.CatalogAssignmentBar', {
+            catalogs: this.record.productInCatalogsStore()
+        });
 
         if (this.checkProductPublishing()) {
             this.setPublishStatus();

@@ -10,6 +10,21 @@
 		transition-timing-function: cubic-bezier(.17,.67,.83,.67);
 		width: 100%;
 
+		.#{$vprefix}link-action-button {
+			background-color: $valid-green;
+			border: none;
+			top: 4px !important;
+
+			.#{$prefix}btn-inner-center {
+				color: $white-color !important;
+			}
+
+			&:hover {
+				background-color: $valid-green !important;
+				text-decoration: none;
+			}
+		}
+
 		// this should be done at higher level
 		.#{prefix}form-type-checkbox .#{prefix}form-item-body {
 			background-color: $light-bg-gray;

@@ -101,12 +101,14 @@ Ext.define('Taco.core.ux.grid.BulkActions', {
     },
 
     getButtonConfig: function(config) {
+        console.log(config)
     	return Ext.apply({}, config, {
     		xtype: 'button',
             text: config.text,
             ui: 'action-primary',
             scale: 'small',
             margin: '0 10 10 0',
+            cls: 'taco-link-action-button',
             handler: config.handler,
             scope: this
     	});

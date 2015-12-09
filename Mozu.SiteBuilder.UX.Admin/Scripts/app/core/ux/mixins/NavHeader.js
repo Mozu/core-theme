@@ -268,20 +268,28 @@ Ext.define('Taco.core.ux.mixins.NavHeader', {
     },
 
     attachContextMenu: function () {
-        if (!this.contextConfig || this.hideContextSwitcherBar) {
-            return;
+        var items = [];
+
+        if (this.contextConfig && !this.hideContextSwitcherBar) {
+            items.push(this.header);
+            items.push(Ext.create('Taco.view.navigation.ContextSwitcherBar', this.contextConfig));
+        }
+
+        if (this.navHeaderSubConfig) {
+
+            if (items.length === 0) items.push(this.header);
+
+            items.push(this.navHeaderSubConfig);
+        }
+
+        if (items.length === 0) {
+            return false;
         }
 
         this.header = {
             xtype: 'container',
             itemId: 'navHeaderBottom',
-            items: [
-                this.header,
-                Ext.create(
-                    'Taco.view.navigation.ContextSwitcherBar',
-                    this.contextConfig
-                )
-            ]
+            items: items
         }
     },
 

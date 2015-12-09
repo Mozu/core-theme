@@ -1,0 +1,12 @@
+@mixin taco-catalogassignmentbar {
+
+	.#{$vprefix}catalog-selector-bar {
+
+		line-height: initial;
+		background-color: $white-color;
+
+		.#{$vprefix}light-tag {
+			display: inline-block;
+		}
+	}
+}

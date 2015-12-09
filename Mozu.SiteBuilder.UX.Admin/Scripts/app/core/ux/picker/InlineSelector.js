@@ -34,7 +34,7 @@ Ext.define('Taco.core.ux.picker.InlineSelector', {
 
         this.inlineItems = this.buildInlineItems();
 
-        this.items = [, {
+        this.items = [{
                 callToActionText: this.callToActionText,
                 defaultText: this.labelText,
                 hidden: this.isInline,
@@ -42,7 +42,7 @@ Ext.define('Taco.core.ux.picker.InlineSelector', {
                 itemId: 'selector',
                 listeners: {
                     select: function (view, record) {
-                        this.fireEvent('select', this, record);
+                        this.handleSelect(record);
                     },
                     scope: this
                 },
@@ -109,7 +109,7 @@ Ext.define('Taco.core.ux.picker.InlineSelector', {
         });
 
         this.store.each(function (record) {
-            var cls = 'taco-inline-selector-item';
+            var cls = 'taco-inline-selector-item selector';
 
             if (record.get('value') === this.value) {
                 cls += ' selected';
@@ -120,7 +120,7 @@ Ext.define('Taco.core.ux.picker.InlineSelector', {
                 html: Ext.String.htmlEncode(record.get('text')),
                 listeners: {
                     click: function () {
-                        this.fireEvent('select', this, record);
+                        this.handleSelect(record);
                     },
                     element: 'el',
                     scope: this
@@ -130,6 +130,28 @@ Ext.define('Taco.core.ux.picker.InlineSelector', {
         }, this);
 
         return items;
+    },
+
+    handleSelect: function(record) {
+        if (this.highlighted && record.get('value') === this.selected) {
+            return;
+        }
+
+        this.highlight();
+
+        Ext.each(this.getEl().query('.selected'), function (dom) {
+            Ext.fly(dom).removeCls('selected')
+        });
+
+        this.value = record.get('value');
+
+        var index = this.store.findExact('value', this.value);
+
+        Ext.fly(this.listView.getEl().query('.selector')[index]).addCls('selected');
+
+        this.selectorView.selectValue(this.value);
+
+        this.fireEvent('select', this, record);
     },
 
     initStoreFromArray: function () {
@@ -150,10 +172,12 @@ Ext.define('Taco.core.ux.picker.InlineSelector', {
     highlight: function (val) {
         var el = this.getEl();
 
+        this.selectorView.highlight(val);
+
         if (!el) {
             return;
         }
 
-        //el[val === false ? 'removeCls' : 'addCls']('highlight');
+        el[val === false ? 'removeCls' : 'addCls']('highlight');
     }
 });

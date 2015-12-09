@@ -135,15 +135,22 @@ Ext.define('Taco.core.ux.picker.Selector', {
         this.selected = this.store ? this.store.findRecord('value', this.value) : null;
     },
 
+    selectValue: function (value) {
+        this.value = value;
+        this.selectDefaultValue();
+        this.title.update({
+            text: this.selected.get('text')
+        });
+    },
+
     highlight: function (val) {
-        
         var el = this.getEl();
 
         if (!el) {
             return;
         }
 
-        //el[val === false ? 'removeCls' : 'addCls']('highlight');
+        el[val === false ? 'removeCls' : 'addCls']('highlight');
     }
 
 });

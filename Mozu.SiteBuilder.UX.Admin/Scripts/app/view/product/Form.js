@@ -26,7 +26,6 @@ Ext.define('Taco.view.product.Form', {
         this.stores = [this.inSitesStore, this.record.getOptions(), this.record.getVariations(false)];
 
         this.siteForms = [];
-
         
         this.createSiteInfoCheck();
 
@@ -45,24 +44,33 @@ Ext.define('Taco.view.product.Form', {
         tabItems = this.siteForms.slice(0);
 
         tabItems.unshift(this.globalForm);
-
-        this.tabPanel = Ext.create('Taco.core.ux.tab.Panel', {
-            navigation: false,
-            items: tabItems,
-            activeItem: this.getInitialTab(tabItems),
-            pickerCfg: {
-                data: this.masterCatalog.catalogs
-            }
-        });
+        
+        // this.tabPanel = Ext.create('Taco.core.ux.tab.Panel', {
+        //     navigation: false,
+        //     items: tabItems,
+        //     activeItem: this.getInitialTab(tabItems),
+        //     pickerCfg: {
+        //         data: this.masterCatalog.catalogs
+        //     }
+        // });
 
         // need to initialize the override code for hidden site tabs        
-        Ext.Array.each(tabItems, function (tab) {
-            if (tab.$className == "Taco.view.product.SiteForm") {
-                tab.handleOverrideChange();
-            }
-        })
+        // Ext.Array.each(tabItems, function (tab) {
+        //     if (tab.$className == "Taco.view.product.SiteForm") {
+        //         tab.handleOverrideChange();
+        //     }
+        // })
 
-        this.items = [this.tabPanel];
+        this.items = [
+            Ext.create('Ext.panel.Panel', {
+                layout: {
+                    type: 'card',
+                },
+                items: tabItems
+            })
+        ];
+
+        
 
         this.callParent(arguments);
 
@@ -70,30 +78,30 @@ Ext.define('Taco.view.product.Form', {
             this.goGoSingleSite(true);
         }
 
-        this.tabPanel.on({
-            selectionchange: this.onTabSelectionChange,
-            scope: this
-        });
+        // this.tabPanel.on({
+        //     selectionchange: this.onTabSelectionChange,
+        //     scope: this
+        // });
 
-        this.tabPanel.on({            
-            tabchange: function (tabPanel, newCard, oldCard, eOpt) {
-                if (oldCard.nav) {
-                    oldCard.nav.hide();
-                }
-                if (newCard.nav) {
-                    newCard.nav.show();
-                }
+        // this.tabPanel.on({            
+        //     tabchange: function (tabPanel, newCard, oldCard, eOpt) {
+        //         if (oldCard.nav) {
+        //             oldCard.nav.hide();
+        //         }
+        //         if (newCard.nav) {
+        //             newCard.nav.show();
+        //         }
 
-            },
-            scope:this
+        //     },
+        //     scope:this
 
-        });
+        // });
         
 
-        this.on({
-            tabclose: this.onTabClose,
-            scope: this
-        });
+        // this.on({
+        //     tabclose: this.onTabClose,
+        //     scope: this
+        // });
         
     },
     
@@ -223,9 +231,9 @@ Ext.define('Taco.view.product.Form', {
 
         
 
-        me.tabPanel.hideTabAt(0);
+        // me.tabPanel.hideTabAt(0);
 
-        me.tabPanel.setActiveItemAt(1);
+        // me.tabPanel.setActiveItemAt(1);
 
         //refresh the visibility of the siteForm
         //me.tabPanel.items.getAt(1).updateSubFormVisibility();
