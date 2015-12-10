@@ -1,6 +1,6 @@
 .#{$vprefix}primary-menu-ct {
     background-color: $color-neutral-white;
-    margin-top: 40px;
+    margin-top: 0px;
     opacity: 1;
     visibility: visible !important;
     @include outer-shadow(0.4, 2px, 3px, 3px);
@@ -11,6 +11,26 @@
         opacity: 0;
         @include transition(margin 0.15s linear, opacity 0.15s linear, top 0s linear 0.15s, left 0s linear 0.15s);
     }
+}
+
+.#{$vprefix}primary-menu-logo {
+    display: block;
+    @include icon-font($glyph-mozulogo, 18px, $color-theme-base);
+    width: 68px;
+
+    &::after {
+        left: auto;
+        right: 10px;
+        text-align: right;
+        top: 1px;
+        width: 100%;
+    }
+}
+
+.#{$vprefix}primary-menu-divider {
+    padding-top: 7px;
+    padding-bottom: 2px;
+    border-bottom: 1px solid $color-framework-gray-light;
 }
 
 .#{$vprefix}primary-menu {

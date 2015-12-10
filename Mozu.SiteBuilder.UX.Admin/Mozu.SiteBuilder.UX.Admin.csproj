@@ -511,6 +511,7 @@
     <Content Include="Scripts\app\core\ux\action\UserButton.js" />
     <Content Include="Scripts\app\core\ux\browser\SearchList.js" />
     <Content Include="Scripts\app\core\ux\browser\SearchListTree.js" />
+    <Content Include="Scripts\app\core\ux\content\Logo.js" />
     <Content Include="Scripts\app\core\ux\content\IndicatorContainer.js" />
     <Content Include="Scripts\app\core\ux\content\SplitContainer.js" />
     <Content Include="Scripts\app\core\ux\content\ContextMenu.js" />
@@ -743,6 +744,9 @@
     <Content Include="Scripts\app\view\couponCode\AdvancedSearchForm.js" />
     <Content Include="Scripts\app\view\couponCode\DiscountGrid.js" />
     <Content Include="Scripts\app\view\couponCode\Grid.js" />
+    <Content Include="Scripts\app\view\navigation\PrimaryMenuSubContainer.js" />
+    <Content Include="Scripts\app\view\navigation\PrimaryMenuNavGroup.js" />
+    <Content Include="Scripts\app\view\navigation\PrimaryMenuContainer.js" />
     <Content Include="Scripts\app\view\preview\ExpressionPreviewDrawer.js" />
     <Content Include="Scripts\app\view\productRanking\Edit.js" />
     <Content Include="Scripts\app\view\productRanking\Form.js" />

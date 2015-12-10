@@ -8,7 +8,8 @@ Ext.define('Taco.view.Header', {
         'Taco.view.navigation.SecondaryMenu',
         'Taco.core.ux.action.Action',
         'Taco.view.navigation.ContextSwitcher',
-        'Ext.form.action.StandardSubmit'
+        'Ext.form.action.StandardSubmit',
+        'Taco.core.ux.content.Logo'
     ],
 
     autoEl: {
@@ -73,30 +74,15 @@ Ext.define('Taco.view.Header', {
                 type: 'hbox',
                 align: 'middle'
             },
-            items: [{
-                xtype: 'component',
-                cls: Taco.baseCSSPrefix + 'mozulogo',
-                width: 68,
-                autoEl: {
-                    tag: 'a',
-                    href: '/admin',
-                    title: ' version:[' + Taco.apiVersion + '] date:[' + Ext.Date.format(new Date(Taco.buildDate), 'Y-m-d H:i:s') + ']'
-                },
-                listeners: {
-                    click: {
-                        element: 'el', //bind to the underlying el property on the panel
-                        fn: function (e) {
-                            e.preventDefault();
-                            // Taco.app.context.setCurrentContext(Taco.app.context);
-                            Taco.core.StateManager.attemptNavigate(Taco.app.context.urlToken);
-
-                        }
-                    }
-                }
+            items: [
+                {
+                    xtype: 'contentlogo',
+                    width: 68
                 }, {
-                xtype: 'secondarymenu',
-                flex: 1
-            }]
+                    xtype: 'secondarymenu',
+                    flex: 1
+                }
+            ]
         }];
 
         this.callParent(arguments);
