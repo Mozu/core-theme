@@ -1,6 +1,23 @@
+@mixin show-dot {
+    &.show-dot {
+        &::after {
+            background-color: $valid-green;
+            content: ' ';
+            display: block;
+            height: 6px;
+            position: absolute;
+            right: 5px;
+            top: 15px;
+            width: 6px;
+            @include border-radius(3px);
+        }
+    }
+}
+
 @mixin taco-selectors {
 
     .#{$prefix}menu-plain,
+    .#{$vprefix}checkbox-flyout,
     .#{$vprefix}selector-flyout {
         background-color: $white-color;
         border: 1px solid $dropdown-list-outline;
@@ -20,7 +37,8 @@
             display: none;
         }
 
-        li.selector,
+        .selector,
+        .checkbox-item,
         .#{$prefix}menu-item {
             border-bottom: 1px solid $list-item-selector;
             @include border-radius-xbrowser(0);
@@ -29,7 +47,10 @@
             cursor: pointer;
             font-size: $normal-font-link;
             line-height: 24px;
+            margin-bottom: 0px;
             padding: 6px 12px;
+            position: relative;
+            width: 100%;
 
             span {
                 color: $gray-text-light;
@@ -49,6 +70,16 @@
                 background-color: $dark-bg;
                 color: $nav-element-active;
             }
+
+            [role="checkbox"] {
+                margin-left: 6px
+            }
+
+            label {
+                font-size: $normal-font-link;
+            }
+
+            @include show-dot;
         }
     }
 
@@ -59,7 +90,7 @@
         .inline-label {
             display: inline-block;
             font-size: 8px;
-            padding: 0px 12px;
+            padding: 0px 12px 0px 16px;
             text-transform: uppercase;
 
             &::after {
@@ -67,15 +98,32 @@
             }
         }
 
-        .#{$vprefix}inline-selector-item {
+        .#{$vprefix}inline-selector-item,
+        .inline-trigger {
             border-bottom: 2px solid transparent;
             cursor: pointer;
             display: inline-block;
             line-height: 17px;
-            list-style: none;
             padding: 11px 15px 7px;
+            position: relative;
 
             &:hover {
+                color: $nav-element-active;
+            }
+
+            @include show-dot;
+        }
+
+        .inline-trigger {
+            @include icon-font($glyph-pencil);
+
+            &::after {
+                color: $gray-text-dark;
+                left: 10px;
+                top: 10px;
+            }
+
+            &:hover::after {
                 color: $nav-element-active;
             }
         }
@@ -95,7 +143,10 @@
             color: $gray-text-dark;
             font-size: 12px;
             line-height: 17px;
-            padding: 11px 5px 7px 15px;
+            padding: 11px 13px 7px 17px;
+            position: relative;
+
+            @include show-dot;
         }
 
         &:hover {
@@ -121,7 +172,7 @@
             width: 10px;
         }
     }
-    
+
     /**
      * More button
      */
@@ -140,7 +191,7 @@
                         // }
                     }
                 }
-                
+
                 .#{$prefix}btn-toolbar {
                     &.#{$prefix}btn.#{$prefix}move-next-previous-arrow {
                         background-color: transparent;

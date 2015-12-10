@@ -2,11 +2,16 @@
 
 	.#{$vprefix}catalog-selector-bar {
 
-		line-height: initial;
-		background-color: $white-color;
+        background-color: $white-color;
+        line-height: initial;
+        margin-top: 9px;
 
-		.#{$vprefix}light-tag {
-			display: inline-block;
-		}
+        & > div > div > div {
+            border-right: 1px solid $nav-element-active-border;
+
+            &:last-child {
+                border-right-width: 0px;
+            }
+        }
 	}
 }

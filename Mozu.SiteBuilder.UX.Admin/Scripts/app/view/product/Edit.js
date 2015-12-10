@@ -282,7 +282,17 @@
         };
 
         this.navHeaderSubConfig = Ext.create('Taco.view.product.widget.CatalogAssignmentBar', {
-            catalogs: this.record.productInCatalogsStore()
+            catalogs: this.record.productInCatalogsStore(),
+            listeners: {
+                select: function (assignmentBarView, record) {
+                    alert('selection has changed:' + record.get('value') + ' ' + record.get('text') + ' ' + record.get('type'));
+                },
+                change: function (flyoutView, selectedCatalogIds) {
+                    alert('assigned catalogs has changed:' + selectedCatalogIds.join(','));
+                    // to redraw after you make changes to this.record based on new selection....
+                    // this.redraw(this.record.productInCatalogsStore())
+                }
+            }
         });
 
         if (this.checkProductPublishing()) {

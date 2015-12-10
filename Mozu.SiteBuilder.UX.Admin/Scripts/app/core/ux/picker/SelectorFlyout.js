@@ -37,7 +37,7 @@ Ext.define('Taco.core.ux.picker.SelectorFlyout', {
         this.callParent(arguments);
     },
 
-    show: function () {
+    show: function (positionNextTo) {
         var el = this.el || this.protoEl;
 
         this.store.clearFilter(true);
@@ -49,10 +49,14 @@ Ext.define('Taco.core.ux.picker.SelectorFlyout', {
             this.positionNextTo = this.up();
         }
 
+        if (!positionNextTo) {
+            positionNextTo = this.positionNextTo;
+        }
+
         this.callParent(arguments);
 
         this.alignTo(
-            this.positionNextTo.getEl(),
+            positionNextTo.getEl(),
             this.alignment,
             this.alignmentOffsets
         );

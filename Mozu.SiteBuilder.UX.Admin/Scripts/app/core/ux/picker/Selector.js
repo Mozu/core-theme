@@ -43,7 +43,7 @@ Ext.define('Taco.core.ux.picker.Selector', {
             data: { text: this.defaultText },
             flex: 1,
             itemId: 'title',
-            tpl: '<div class="title">{text}</div>',
+            tpl: '<div class="title {cls}">{text}</div>',
             xtype: 'component'
         }, {
             hidden: !this.tagText,
@@ -53,7 +53,7 @@ Ext.define('Taco.core.ux.picker.Selector', {
         }, {
             cls: 'trigger x-dropdown-trigger',
             itemId: 'trigger',
-            hidden: this.disableTrigger,
+            hidden: this.disableTrigger || this.store.count() === 0,
             xtype: 'component'
         }, {
             callToActionText: this.callToActionText,
@@ -69,9 +69,15 @@ Ext.define('Taco.core.ux.picker.Selector', {
 
         this.title = this.down('#title');
         this.flyout = this.down('#flyout');
+        this.trigger = this.down('#trigger');
+
+        if (this.store.count() === 1 && this.trigger) {
+            this.selected = this.store.getAt(0);
+            this.trigger.hide();
+        }
 
         if (this.selected) {
-            this.title.update({ text: this.selected.get('text') });
+            this.updateTitle();
         }
 
         this.on({
@@ -82,13 +88,14 @@ Ext.define('Taco.core.ux.picker.Selector', {
 
     initStoreFromArray: function () {
         var store = Ext.create('Ext.data.Store', {
-            fields: ['value', 'text']
+            fields: ['value', 'text', 'showDot']
         });
 
         Ext.each(this.store, function (val) {
             store.add({
                 value: val[0],
-                text: val[1]
+                text: val[1],
+                showDot: val[2]
             });
         });
 
@@ -138,7 +145,12 @@ Ext.define('Taco.core.ux.picker.Selector', {
     selectValue: function (value) {
         this.value = value;
         this.selectDefaultValue();
+        this.updateTitle();
+    },
+
+    updateTitle: function () {
         this.title.update({
+            cls: this.selected.get('showDot') ? 'show-dot' : '',
             text: this.selected.get('text')
         });
     },

@@ -25,6 +25,11 @@ Ext.define('Taco.view.product.widget.CatalogAssignmentBar', {
         this.rebuildSelectors();
     },
 
+    redraw: function(catalogs) {
+        this.catalogs = this.buildCatalogConfig(catalogs);
+        this.rebuildSelectors();
+    },
+
     rebuildSelectors: function () {
         this.selectors = [];
 
@@ -44,6 +49,7 @@ Ext.define('Taco.view.product.widget.CatalogAssignmentBar', {
                 select: this.handleSelect,
                 scope: this
             },
+            selectionType: 'master',
             store: [
                 [this.masterCatalog.id, this.masterCatalog.name]
             ],
@@ -55,10 +61,15 @@ Ext.define('Taco.view.product.widget.CatalogAssignmentBar', {
 
     buildCatalogContext: function () {
         var data = [],
+            triggerData = [],
             defaultValue;
 
         Ext.each(this.catalogs, function (catalog) {
-            data.push([catalog.id, catalog.name]);
+            data.push([catalog.id, catalog.name, catalog.isOverridden]);
+        }, this);
+
+        Ext.each(this.masterCatalog.catalogs, function (catalog) {
+            triggerData.push([catalog.id, catalog.name]);
         }, this);
 
         defaultValue = data.length > 0 ? data[0][0] : '';
@@ -72,6 +83,9 @@ Ext.define('Taco.view.product.widget.CatalogAssignmentBar', {
             },
             store: data,
             tagText: 'catalog',
+            triggerCallToActionText: 'Assign to Catalogs:',
+            triggerData: triggerData,
+            triggerSelected: data,
             value: defaultValue,
             xtype: 'taco.inlineselector'
         }));
@@ -83,6 +97,8 @@ Ext.define('Taco.view.product.widget.CatalogAssignmentBar', {
         });
 
         selector.highlight();
+
+        record.set('type', selector.selectionType || 'catalog');
 
         this.fireEvent('select', this, record);
     },
