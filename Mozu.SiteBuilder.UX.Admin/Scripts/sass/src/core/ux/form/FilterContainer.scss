@@ -12,9 +12,16 @@
             font-weight: 400;
             line-height: 30px;
             color: $dark-color;
+            padding-top: 2px;
         }
-        .#{$prefix}tool-close {
-            @include icon-font($glyph-close, 20px);
+        .#{$prefix}tool {
+            opacity: 0.35;
+            .#{$prefix}tool-close {
+                @include icon-font($glyph-close, 20px);
+            }
+            &.#{$prefix}tool-over {
+                opacity: 1;
+            }
         }
     }
 
