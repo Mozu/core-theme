@@ -36,6 +36,22 @@ Ext.define('Taco.view.order.Split', {
         lightTagLabel: 'siteName',
     },
 
+    advancedSearchConfig : {
+        advancedFormCls: 'Taco.view.order.AdvancedSearchForm',
+
+        quickFilterData: [
+            [{ orderStatus: 'Open' }, 'Open Orders'],
+            [{ paymentstatus: 'Unpaid,Pending', orderStatus: 'Open' }, 'Unpaid Orders'],
+            [{ paymentstatus: 'Paid', fulfillmentStatus: 'NotFulfilled' }, 'Paid, Pending Fulfillment Orders'],
+            [{ orderStatus: 'Pending', ordertype: 'Offline' }, 'Pending Orders'],
+            [{ fulfillmentStatus: 'Fulfilled' }, 'Fulfilled Orders'],
+            [{ orderStatus: 'Cancelled' }, 'Cancelled Orders'],
+            [{ orderStatus: 'Errored' }, 'Errored Orders'],
+            [{}, 'All Orders']
+        ],
+
+        emptySearchText: 'Search'
+    },
 
     statics: {
         eastConfigs: {
