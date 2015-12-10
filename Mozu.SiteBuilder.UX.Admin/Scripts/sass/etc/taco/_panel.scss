@@ -188,6 +188,10 @@
 				width: 22px;
 				@include border-radius(2px);
 
+                .#{$prefix}btn-button {
+                    top: 1.5px;
+                }
+
 				.#{$prefix}btn-inner {
 					color: $gray-text-dark;
 				}
@@ -197,20 +201,18 @@
 						color: $dark-color;
 					}
 				}
-			}
 
-			.#{$prefix}tbar-page-link-current {
-				background-color: $valid-green;
-				background-image: none;
-				border: none;
-				text-decoration: none;
-				height: 22px;
-				width: 22px;
-				@include border-radius(2px);
+                &.#{$prefix}tbar-page-link-current {
+                    background-color: $valid-green;
 
-				.#{$prefix}btn-inner {
-					color: $white-color;
-				}
+                    .#{$prefix}btn-inner {
+                        color: $white-color;
+                    }
+                }
+
+                &.#{$prefix}arrow-disabled {
+                    cursor: initial;
+                }
 			}
 
 		}

@@ -20,8 +20,8 @@ Ext.define('Taco.core.ux.grid.LinkPaging', {
         var lastPage = pageData.pageCount;
         var lastDisplayed;
         var firstDisplayed;
-        var arrowLeftCls = currPage === 1 ? this.getClsName('tbar-page-link ', 'tbar-page-link-current', 'arrow-left') : this.getClsName('tbar-page-link');
-        var arrowRightCls = currPage === lastPage ? this.getClsName('tbar-page-link ', 'tbar-page-link-current', 'arrow-right') : this.getClsName('tbar-page-link');
+        var arrowLeftCls = currPage === 1 ? this.getClsName('tbar-page-link ', 'arrow-disabled') : this.getClsName('tbar-page-link');
+        var arrowRightCls = currPage === lastPage ? this.getClsName('tbar-page-link ', 'arrow-disabled') : this.getClsName('tbar-page-link');
 
         lastDisplayed = Math.max(currPage + 2, 5);
         lastDisplayed = Math.min(lastDisplayed, lastPage);

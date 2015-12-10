@@ -40,8 +40,6 @@ Ext.define('Taco.view.theme.Index', {
                 ]
             }]
         };
-
-//        this.store.load();
         
         this.callParent(arguments);
     },
