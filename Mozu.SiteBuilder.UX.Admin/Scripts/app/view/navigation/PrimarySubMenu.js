@@ -25,67 +25,57 @@ Ext.define('Taco.view.navigation.PrimarySubMenu', {
 
         this.callParent(arguments);
 
-        this.on({
-            itemclick: this.navigate,
-            scope: this
-        });
+        this.listeners = {
+            click: {
+                element: 'el',
+                fn: me.navigate,
+                scope: this
+            }
+        };
 
         selModel = this.getSelectionModel();
         selModel.setSelectionMode('SINGLE');
         selModel.allowDeselect = true;
     },
 
-    buildFlyoutMenuConfig:function (items, menuCfg) {
-       
-        Ext.Array.each(items, function (item) {
-            var itemCfg = {
-                text: item.label
-            };
-            menuCfg.items.add(itemCfg);
-            if (item.address) {
-                item.handler =function () {
-                    alert('open' + item.address);
-                }
-            }
-            if (item.items && item.items.length ) {
-                itemCfg.menu = {
-                    xtype: 'menu',
-                    items: []
-                };
-                this.buildFlyoutMenuConfig(item.items, itemCfg.menu);
-            }
-            
-        }, this);
-    },
+    //buildFlyoutMenuConfig:function (items, menuCfg) {
+    //
+    //    Ext.Array.each(items, function (item) {
+    //        var itemCfg = {
+    //            text: item.label
+    //        };
+    //        menuCfg.items.add(itemCfg);
+    //        if (item.address) {
+    //            item.handler =function () {
+    //                alert('open' + item.address);
+    //            }
+    //        }
+    //        if (item.items && item.items.length ) {
+    //            itemCfg.menu = {
+    //                xtype: 'menu',
+    //                items: []
+    //            };
+    //            this.buildFlyoutMenuConfig(item.items, itemCfg.menu);
+    //        }
+    //
+    //    }, this);
+    //},
+
     /**
      * Navigates to the link's destination via {@link Taco.core.StateManager}'s
      * attemptNavigate method.
-     * @param  {Ext.view.View} view this
-     * @param  {Ext.data.Model} record The record that belongs to this item
-     * @param  {HTMLElement} The item's element
-     * @param  {Number} index The item's index
      * @param  {Ext.EventObject} e The raw event object
      */
-    navigate: function (view, record, item, index, e) {
-        var menu = Ext.ComponentQuery.query('#primaryMenu').shift(),
-            dest = record.get('address'),
-            items = record.get('items'),
-            flyoutMenu,
-            recurseFn;
+    navigate: function (e) {
+        var menu = Ext.ComponentQuery.query('#primaryMenuContainer').shift();
         e.preventDefault();
-        if (items && items.length > 0) {
-            flyoutMenu = {
-                xtype: 'menu',
-                items: []
-            };
-
-            this.buildFlyoutMenuConfig(items, flyoutMenu);
-            flyoutMenu = Ext.widget(flyoutMenu);
-            flyoutMenu.showBy(menu);
+        if (!e.target.hasAttribute('href')) {
+            console.log('missing href');
             return;
         }
-       
-        Taco.core.StateManager.attemptNavigate(dest);
-        menu.hideMenu();
+        Taco.core.StateManager.attemptNavigate(e.target.getAttribute('href'));
+        if (menu) {
+            menu.hideMenu();
+        }
     }
 });

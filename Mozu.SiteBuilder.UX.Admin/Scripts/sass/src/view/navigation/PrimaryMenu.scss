@@ -40,6 +40,12 @@
     &:hover {
         background-color: $color-framework-gray-lighter;
     }
+
+    &.#{$vprefix}collapsed-icon::after {
+        @include icon-font($glyph-plus);
+        margin-left: 5px;
+        content: $glyph-plus;
+    }
 }
 
 .#{$vprefix}primary-menu-divider {

@@ -36,9 +36,9 @@ Ext.define('Taco.view.navigation.PrimaryMenuNavGroup', {
                         e.stopPropagation();
                         if (me.subMenuItems.isVisible()) {
                             me.subMenuItems.hide();
-                            this.addCls('');
+                            this.addCls('taco-collapsed-icon');
                         } else {
-                            this.removeCls('');
+                            this.removeCls('taco-collapsed-icon');
                             me.subMenuItems.show();
                         }
                         return false;
