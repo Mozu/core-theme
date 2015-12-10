@@ -1,6 +1,8 @@
 ﻿.#{$vprefix}window.advanced-filter {
     border: 1px solid $dialog-border-color;
     border-radius: 4px;
+    padding-bottom: 15px;
+
     @include outer-shadow(0.34, 14px, 0, 1px);
     .#{$prefix}window-header-dialog {
         padding-top: 12px;
@@ -15,8 +17,33 @@
             @include icon-font($glyph-close, 20px);
         }
     }
+
     .#{$prefix}window-body-dialog {
         border-color: $advanced-filter-inside-border;
+    }
+
+    .#{$vprefix}window-action-toolbar {
+        padding-top: 15px;
+        .#{$prefix}btn-action-primary-toolbar-medium {
+            border: none;
+            background-color: $valid-green;
+            .#{$prefix}btn-inner-center {
+                font-size: 16px;
+                color: $white-color;
+            }
+            &:hover {
+                background-color: $valid-green-active;
+            }
+        }
+        .#{$vprefix}link-button {
+            background-color: transparent;
+            padding: 0 8px;
+            line-height: 40px;
+            border-bottom: none;
+            .#{$prefix}btn-inner {
+                padding: 0;
+            }
+        }
     }
 }
 

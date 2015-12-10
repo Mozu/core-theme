@@ -279,6 +279,7 @@ Ext.define('Taco.core.ux.window.Modal', {
                     Ext.apply(action, actionCfg, {
                         ui: 'action-primary',
                         scale: 'medium',
+                        height: 40,
                         text: windowCfg.primaryText || this.primaryText,
                         handler: windowCfg.primaryHandler || this.primaryHandler
                     });
@@ -286,6 +287,8 @@ Ext.define('Taco.core.ux.window.Modal', {
                     Ext.apply(action, actionCfg, {
                         ui: 'action',
                         scale: 'medium',
+                        cls: 'taco-link-button',
+                        height: 40,
                         text: windowCfg.secondaryText || this.secondaryText,
                         handler: windowCfg.secondaryHandler || this.secondaryHandler
                     });
