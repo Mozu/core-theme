@@ -58,25 +58,9 @@
     .#{$prefix}menu .#{$prefix}menu-item-unchecked .#{$prefix}menu-item-icon,
     .#{$prefix}grid-table .#{$prefix}grid-row-checker,
     .#{$prefix}grid-header-ct .#{$prefix}column-header-checkbox .#{$prefix}column-header-text {
-    // @include icons-sprite(icon-checkbox);
+        @include icons-sprite(checkbox-unchecked);
+        background-size: 80%;
         border: none;
-        background-image: none;
-        background-color: transparent;
-        height: 0;
-
-        &:after {
-            content: ' ';
-            font-family: 'mozicons';
-            margin-top: -12px;
-            display: inline-block;
-            overflow-x: hidden;
-            overflow-y: hidden;
-            width: 11px;
-            height: 11px;
-            border: 1px solid #ccc;
-            @include border-radius-xbrowser($border-radius-small);
-            box-shadow: rgba(0, 0, 0, 0.09) 0px 1px 0px 0px inset;
-        }
     }
 
     .#{$prefix}field .#{$prefix}form-checkbox-focus,
@@ -84,7 +68,7 @@
     .#{$prefix}menu .#{$prefix}menu-item-unchecked-focus .#{$prefix}menu-item-icon,
     .#{$prefix}grid-table .#{$prefix}grid-row-checker-focus,
     .#{$prefix}grid-header-ct .#{$prefix}column-header-checkbox-focus .#{$prefix}column-header-text {
-        @include icons-sprite(icon-checkbox-focus);
+        @include icons-sprite(checkbox-unchecked);
     }
 
     .#{$prefix}form-cb-checked .#{$prefix}form-checkbox,
@@ -92,29 +76,23 @@
     .#{$prefix}menu .#{$prefix}menu-item-checked .#{$prefix}menu-item-icon,
     .#{$prefix}grid-table .#{$prefix}grid-row-selected .#{$prefix}grid-row-checker,
     .#{$prefix}grid-header-ct .#{$prefix}grid-hd-checker-on .#{$prefix}column-header-text {
-        // @include icons-sprite(icon-checkbox-selected);
-        background-image: none;
-
-        &:after {
-            content: ' ';
-            font-family: 'mozicons';
-            color: $checkbox-checked;
-            font-size: 16px;
-            border: none;
-            width: 15px;
-            height: 14px;
-            box-shadow: none;
-            margin-left: -1px;
-            position: relative;
-            z-index: 1;
-        }
+        @include icons-sprite(checkbox-checked);
+        background-size: 80%;
     }
 
     .#{$prefix}form-cb-checked .#{$prefix}form-checkbox-focus,
     .#{$prefix}grid-cell-inner .#{$prefix}tree-checkbox-checked-focus,
     .#{$prefix}menu .#{$prefix}menu-item-checked-focus .#{$prefix}menu-item-icon,
     .#{$prefix}grid-table .#{$prefix}grid-row-selected .#{$prefix}grid-row-checker-focus {
-        @include icons-sprite(icon-checkbox-selected-focus);
+        @include icons-sprite(checkbox-checked);
+    }
+
+    .#{$prefix}grid-cell-inner {
+        .#{$prefix}tree-checkbox {
+            &.checked {
+                @include icons-sprite(checkbox-checked);
+            }
+        }
     }
 
     .#{$prefix}form-checkbox-glyph {

@@ -1,7 +1,6 @@
 @mixin taco-panel {
     /* panel */
     .#{$prefix}panel {
-        @include border-radius-xbrowser($border-radius);
         @include outer-shadow(0.09, 2px, 0, 0);
         font-family: $font-family;
 

@@ -2,6 +2,12 @@
 
     /* CORE GRID STYLES */
 
+    .#{$prefix}grid-cell-row-expander {
+        &:after {
+            content: $glyph-arrowright;
+        }
+    }
+
     // header trigger
     .#{$prefix}column-header-sort-ASC {
         .#{$prefix}column-header-text {
