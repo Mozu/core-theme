@@ -36,8 +36,13 @@
   .#{$vprefix}tree-knurling, .#{$vprefix}draghandle {
     cursor: move;
     display: block;
+    opacity: .27;
     @include icon-font($glyph-reorder);
     margin-top: 3px;
+
+    &:hover {
+      opacity: 1;
+    }
   }
 
   .#{$prefix}grid-cell-draghandlecolumn {
