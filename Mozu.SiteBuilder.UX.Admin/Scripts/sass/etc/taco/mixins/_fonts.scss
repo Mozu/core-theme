@@ -47,7 +47,7 @@ $glyph-arrowup:             "\E033";
 $glyph-arrowright:          "\E034";
 $glyph-arrowleft:           "\E035";
 $glyph-arrow-down:          "\E904";
-$glyph-arrowdown:           $glyph-arrow-down;
+$glyph-arrowdown:           "\E036";
 $glyph-chevrondown:         "\E60B";
 $glyph-chevronup:           "\E60C";
 $glyph-chevronleft:         "\EA02";
@@ -104,7 +104,7 @@ $glyph-quarter:             "\E913";
 $glyph-computer:            "\EBE5";
 $glyph-phone:               "\EC1C";
 $glyph-tablet:              "\EC37";
-$glyph-checkbox-checked:    "\E914";
+$glyph-redirect:            "\E914";
 
 // font set for chorizo -- because these are being compiled using compass, they cannot be encased in ""
 // optimized at 16px

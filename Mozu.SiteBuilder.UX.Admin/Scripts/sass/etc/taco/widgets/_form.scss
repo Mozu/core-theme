@@ -96,7 +96,7 @@
         background-image: none;
 
         &:after {
-            content: $glyph-checkbox-checked;
+            content: ' ';
             font-family: 'mozicons';
             color: $checkbox-checked;
             font-size: 16px;
