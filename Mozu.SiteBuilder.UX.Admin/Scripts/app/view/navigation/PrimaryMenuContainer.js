@@ -188,6 +188,7 @@ Ext.define('Taco.view.navigation.PrimaryMenuContainer', {
      */
     showMenu: function () {
         this.show();
+        Ext.getBody().mask();
         //this.trigger.addCls('expanded');
     },
 
@@ -197,6 +198,7 @@ Ext.define('Taco.view.navigation.PrimaryMenuContainer', {
      */
     hideMenu: function () {
         this.hide();
+        Ext.getBody().unmask();
         //this.trigger.removeCls('expanded');
     },
 
