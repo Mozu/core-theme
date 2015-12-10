@@ -147,6 +147,7 @@
                     font-size: 16px;
                     color: $white-color;
                 }
+                
                 &:hover {
                     background-color: $valid-green-active;
                 }
@@ -156,6 +157,10 @@
                 }
                 .x-btn-split-right::after {
                     top: -2px;
+                }
+
+                &.x-move-next-previous-arrow {
+                    background-color: transparent;
                 }
             }
             .x-btn.x-menu-active {

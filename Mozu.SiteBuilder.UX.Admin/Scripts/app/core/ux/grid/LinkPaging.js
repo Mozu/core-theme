@@ -28,14 +28,17 @@ Ext.define('Taco.core.ux.grid.LinkPaging', {
         firstDisplayed = Math.min(currPage - 2, lastPage - 4);
         firstDisplayed = Math.max(firstDisplayed, 1);
 
+        if (pageData.pageCount !== 0) {
 
-        pageNumberItems.push({
-            itemId: 'prev',
-            cls: arrowLeftCls,
-            handler: me.movePrevious,
-            text: "<",
-            scope: me,
-        });
+            pageNumberItems.push({
+                itemId: 'prev',
+                cls: arrowLeftCls,
+                handler: me.movePrevious,
+                text: "<",
+                scope: me,
+            });
+        }
+
 
         if (firstDisplayed - 1 > 0) {
             pageNumberItems.push({
@@ -113,13 +116,16 @@ Ext.define('Taco.core.ux.grid.LinkPaging', {
             });
         }
 
-        pageNumberItems.push({
-            itemId: 'next',
-            cls: arrowRightCls,
-            handler: me.moveNext,
-            text: ">",
-            scope: me,
-        });
+        if (pageData.pageCount !== 0) {
+            
+            pageNumberItems.push({
+                itemId: 'next',
+                cls: arrowRightCls,
+                handler: me.moveNext,
+                text: ">",
+                scope: me,
+            });
+        }
 
         if (me.displayInfo) {
             pageNumberItems.push('->');
@@ -154,7 +160,6 @@ Ext.define('Taco.core.ux.grid.LinkPaging', {
             pageData = me.getPageData();
         }
 
-        // TODO: verify that the page controls need to change before doing a layout
         me.removeAll();
         me.add(me.getPagingItems());
         me.updateInfo();
