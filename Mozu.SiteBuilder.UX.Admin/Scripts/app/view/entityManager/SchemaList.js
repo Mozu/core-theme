@@ -39,7 +39,15 @@ Ext.define('Taco.view.entityManager.SchemaList', {
 
         this.seleModel.on('selectionchange', this.handleSelection, this);
 
+        this.on('cellclick', this.showGridView, this);
+
         this.callParent(arguments);
+    },
+
+    showGridView: function() {
+        this.entitySplit = this.entitySplit || this.up('entity-split');
+        this.cardPanel = this.entitySplit.down('#dynamicGridHolder');
+        this.cardPanel.getLayout().setActiveItem(0);
     },
 
     selectFirstItem: function() {
@@ -55,8 +63,7 @@ Ext.define('Taco.view.entityManager.SchemaList', {
         if (this.entitySplit) {
             this.entitySplit.enableButtons();
             this.entitySplit.updateSearchContext();
-            this.cardPanel = this.entitySplit.down('#dynamicGridHolder');
-            this.cardPanel.getLayout().setActiveItem(0);
+            // this.showGridView();
         }
 
         if (this.dynamicGrid) {

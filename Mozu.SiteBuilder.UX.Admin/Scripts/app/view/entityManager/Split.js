@@ -240,6 +240,14 @@ Ext.define('Taco.view.entityManager.Split', {
             layout: 'fit',
             header: false,
             cls: 'taco-tabbar-header',
+            style: {
+                border: 'none'
+            },
+            tabBar: {
+                defaults: {
+                    flex: 1
+                }
+            },
             items: [
             	this.entityGrid,
             	this.documentGrid
