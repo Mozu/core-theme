@@ -11,6 +11,8 @@
                 content: $glyph-arrowdown;
                 font-family: 'mozicons';
                 display: inline-block;
+                position: absolute;
+                margin-left: 4px;
             }
         }
     }
@@ -23,6 +25,8 @@
                 content: $glyph-arrowup;
                 font-family: 'mozicons';
                 display: inline-block;
+                position: absolute;
+                margin-left: 4px;
             }
         }
     }
@@ -30,10 +34,7 @@
     // grid row hover state
     .#{$prefix}grid-row-over {
         .#{$vprefix}grid-row-menu-trigger {
-            @include icon-font($glyph-knurling, 13px, $gray-text-light);
-            &:hover::after {
-              color: $black-color;
-            }
+            @include icon-font($glyph-knurling, 13px, $black-color);
         }
     }
 
