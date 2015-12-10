@@ -70,6 +70,18 @@ Ext.define('Taco.view.publishing.grid.Draft', {
         });
 
         this.bulkActionConfig = {
+            onMenuShow: function(selModel) {
+
+                var selection = selModel.getSelection();
+
+                var allInPublishSet = Ext.Array.every(selection, function(item) {
+                    return item.get('publishSetCode');
+                });
+
+                var removeFromPublish = this.down('#Remove')
+                
+                removeFromPublish[selection.length > 0 && allInPublishSet ? 'enable' : 'disable']();
+            },
             actions: [
                 {
                     itemId: 'Publish',
@@ -102,7 +114,6 @@ Ext.define('Taco.view.publishing.grid.Draft', {
                     text: 'Remove from Publish Set',
                     scope: this,
                     handler: function (item, eventData) {
-
 
                         var me = this,
                             selection = item.scope.selModel.getSelection(),
@@ -148,7 +159,7 @@ Ext.define('Taco.view.publishing.grid.Draft', {
                             primaryText: 'Yes, Discard'
                         });
                     }
-                }
+                },
             ]
         };
 

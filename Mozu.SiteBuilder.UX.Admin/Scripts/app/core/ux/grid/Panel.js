@@ -52,6 +52,7 @@ Ext.define('Taco.core.ux.grid.Panel', {
         var bulkActionBar = Ext.create('Taco.core.ux.grid.BulkActions', {
             actions: this.bulkActionConfig.actions,
             grid: this,
+            onMenuShow: this.bulkActionConfig.onMenuShow,
             renderTo: document.body
         });
 

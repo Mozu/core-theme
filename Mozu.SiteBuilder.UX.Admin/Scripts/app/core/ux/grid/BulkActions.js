@@ -51,7 +51,9 @@ Ext.define('Taco.core.ux.grid.BulkActions', {
     	this.actions.forEach(function(item) {
     		action = this.getButtonConfig(item);
     		items.push(action);
-    	}, this);	
+    	}, this);
+
+        this.onMenuShow = this.onMenuShow || Ext.emptyFn;	
 
     	return items;
     },
@@ -70,6 +72,8 @@ Ext.define('Taco.core.ux.grid.BulkActions', {
     },
 
     updateVisibility: function(selModel) {
+
+        this.onMenuShow(selModel);
         
     	if (selModel && selModel.getSelection().length > 0) {
     		this.addCls(this.hiddenCls);

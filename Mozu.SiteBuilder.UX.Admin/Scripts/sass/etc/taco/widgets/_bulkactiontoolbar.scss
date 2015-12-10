@@ -13,22 +13,28 @@
 		.#{$vprefix}link-action-button {
 			background-color: $valid-green;
 			border: none;
-			top: 4px !important;
+			padding: 4px;
+			top: 8px !important;
+
+			&.#{$prefix}btn-disabled {
+				opacity: 0.4;
+			}
 
 			.#{$prefix}btn-inner-center {
 				color: $white-color !important;
+				font-size: 12px;
 			}
 
 			&:hover {
-				background-color: $valid-green !important;
+				background-color: $valid-green-active;  
 				text-decoration: none;
 			}
 		}
 
-		// this should be done at higher level
-		.#{prefix}form-type-checkbox .#{prefix}form-item-body {
-			background-color: $light-bg-gray;
-		}
+		// // this should be done at higher level
+		// .#{prefix}form-type-checkbox .#{prefix}form-item-body {
+		// 	background-color: $light-bg-gray;
+		// }
 
 		&.shown {
 			opacity: 1;
