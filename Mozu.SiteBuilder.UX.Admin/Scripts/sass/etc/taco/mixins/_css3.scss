@@ -42,6 +42,14 @@
 
 /* SHADOWS */
 
+@mixin no-box-shadow {
+  box-shadow: none;
+  -moz-box-shadow: none;
+  -webkit-box-shadow: none;
+  -o-box-shadow: none;
+  -ms-box-shadow: none;
+}
+
 @mixin outer-shadow ($strength: 0.3, $radius: 5px, $x: 0, $y: 0) {
   box-shadow: $x $y $radius rgba(0,0,0,$strength);
   -moz-box-shadow: $x $y $radius rgba(0,0,0,$strength);

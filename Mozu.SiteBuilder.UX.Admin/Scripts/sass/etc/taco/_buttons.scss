@@ -1,4 +1,10 @@
 @mixin taco-buttons {
+    
+    .#{$prefix}btn-action-primary-toolbar-medium {
+        &.#{$prefix}btn-focus {
+            @include no-box-shadow;
+        }
+    }
 
     .#{$prefix}btn-toolbar {
         &.#{$prefix}move-next-previous-arrow {
