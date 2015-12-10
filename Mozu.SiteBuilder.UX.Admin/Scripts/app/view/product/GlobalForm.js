@@ -24,11 +24,7 @@ Ext.define('Taco.view.product.GlobalForm', {
         bundleable: 'Taco.view.product.mixins.Bundleable'
     },
 
-
-    
-
-    // need to move the left nav up to align with the top edge of the tab bar;
-    sectionNavTopOffset: 8,
+    sectionNavTopOffset: 0,
 
     persistChangesToModel: true,
 
