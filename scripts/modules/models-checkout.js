@@ -531,6 +531,19 @@
                 return this._cachedDigitalCredits && this._cachedDigitalCredits.length > 0 && this._cachedDigitalCredits;
             },
 
+            refreshBillingInfo: function (order, updatedOrder) {
+                //clearing existing order billing info because information may have been removed (payment info) #68583
+
+                // #73389 only if there is no payment required anymore after adding a store credit try to remove the payment info
+                // which happens when the gift card can cover the order total.
+                if (order.get('amountRemainingForPayment') <= 0) {
+                    order.get('billingInfo').clear();
+                    order.set(updatedOrder, { silent: true });
+                }
+                self.trigger('orderPayment', updatedOrder, self);
+
+            },
+
             applyDigitalCredit: function (creditCode, creditAmountToApply, isEnabled) {
                 var self = this,
                     order = self.getOrder(),
@@ -593,11 +606,10 @@
                                 
                                 return order.apiAddStoreCredit({
                                     storeCreditCode: creditCode,
-                                    amount: creditAmountToApply
+                                    amount: creditAmountToApply,
+                                    email: self.get('billingContact').get('email')
                                 }).then(function (o) {
-                                    order.get('billingInfo').clear();
-                                    order.set(o.data, { silent: true });
-                                    self.trigger('orderPayment', o.data, self);
+                                    self.refreshBillingInfo(order, o.data);
                                     return o;
                                 });
                             });
@@ -621,10 +633,7 @@
                     amount: creditAmountToApply,
                     email: self.get('billingContact').get('email')
                 }).then(function (o) {
-                    //clearing existing order billing info because information may have been removed (payment info) #68583
-                    order.get('billingInfo').clear();
-                    order.set(o.data, {silent: true});
-                    self.trigger('orderPayment', o.data, self);
+                    self.refreshBillingInfo(order, o.data);
                     return o;
                 });
             },
