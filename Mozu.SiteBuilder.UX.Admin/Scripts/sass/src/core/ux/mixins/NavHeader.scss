@@ -105,7 +105,6 @@
         .taco-filtercontainer {
             height: 40px;
             top: 10px;
-            border-right: 1px solid $nav-element-active-border;
             padding-left: 10px;
             .x-trigger-cell {
                 position: absolute;
@@ -125,15 +124,27 @@
             }
             .advanced-search-button {
                 border: none;
+                border-right: 1px solid $advanced-filter-icon-active;
+                border-radius: 0;
                 background-color: inherit;
-                opacity: 0.35;
-                &:hover {
-                    opacity: 1;
+                padding: 0;
+                &:active {
+                    background-color: $advanced-filter-icon-active;
+                    border-radius: 4px;
                 }
-                .#{$prefix}btn-icon-el {
-                    font-size: 22px;
-                    line-height: 22px;
-                    color: $dark-color;
+                .#{$prefix}btn-wrap {
+                    opacity: 0.35;
+                    &:hover {
+                        opacity: 1;
+                    }
+                    .#{$prefix}btn-icon-el {
+                        font-size: 22px;
+                        line-height: 40px;
+                        text-align: center;
+                        width: 48px;
+                        height: 40px;
+                        color: $dark-color;
+                    }
                 }
             }
         }

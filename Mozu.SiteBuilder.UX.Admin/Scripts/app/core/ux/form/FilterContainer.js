@@ -86,9 +86,9 @@ Ext.define('Taco.core.ux.form.FilterContainer', {
             ui: 'action',
             scale: 'medium',
             glyph: 'XE905@mozicons',
-            width: 57,
+            width: 48,
             height: 40,
-            margin: '0 10 20 0',
+            margin: '0 0 20 0',
             enableToggle: true,
             scope: this,
             toggleHandler: this.handleButtonToggle
