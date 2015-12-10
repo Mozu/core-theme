@@ -2,6 +2,10 @@
     border-width: 0px;
     background-color: $light-bg-gray;
     padding: 0px;
+    // TODO: remove this border radius when the general panel border radius is removed
+    &.#{$prefix}panel {
+        border-radius: 0;
+    }
 
     .taco-content-navcontainer-body {                
         background-color: $base-color;
