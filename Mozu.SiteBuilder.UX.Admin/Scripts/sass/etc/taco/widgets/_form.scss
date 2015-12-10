@@ -121,7 +121,27 @@
   .#{$prefix}menu .#{$prefix}menu-item-unchecked .#{$prefix}menu-item-icon,
   .#{$prefix}grid-table .#{$prefix}grid-row-checker,
   .#{$prefix}grid-header-ct .#{$prefix}column-header-checkbox .#{$prefix}column-header-text {
-   @include icons-sprite(icon-checkbox);
+   // @include icons-sprite(icon-checkbox);
+   border: none;
+   background-image: none;
+   background-color: transparent;
+   height: 0;
+
+   &:after {
+    // content: '\E915';
+    content: ' ';
+    font-family: 'mozicons';
+    margin-top: -12px;
+    content: ' ';
+    display: inline-block;
+    overflow-x: hidden;
+    overflow-y: hidden;
+    width: 11px;
+    height: 11px;
+    border: 1px solid #ccc;
+    @include border-radius-xbrowser($border-radius-small);
+    box-shadow: rgba(0, 0, 0, 0.09) 0px 1px 0px 0px inset;
+   }
   }
   
   .#{$prefix}field .#{$prefix}form-checkbox-focus,
@@ -137,7 +157,15 @@
   .#{$prefix}menu .#{$prefix}menu-item-checked .#{$prefix}menu-item-icon,
   .#{$prefix}grid-table .#{$prefix}grid-row-selected .#{$prefix}grid-row-checker,
   .#{$prefix}grid-header-ct .#{$prefix}grid-hd-checker-on .#{$prefix}column-header-text {
-	@include icons-sprite(icon-checkbox-selected);
+	// @include icons-sprite(icon-checkbox-selected);
+
+   &:after {
+    content: "\E9FE";
+    color: $white-color;
+    font-size: 9px;
+    text-align: center;
+    background-color: $checkbox-checked;
+   }
   }
 
   .#{$prefix}form-cb-checked .#{$prefix}form-checkbox-focus,

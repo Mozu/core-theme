@@ -121,4 +121,32 @@
             width: 10px;
         }
     }
+    
+    /**
+     * More button
+     */
+
+    .#{$vprefix}navheader {
+        .#{$vprefix}navheader-toolbar {
+            .navheader-action-toolbar {
+                .#{$prefix}btn.#{$vprefix}more-action-button {
+                    background-color: transparent;
+                }
+
+                .#{$prefix}btn {
+                    .#{$prefix}btn-arrow-right {
+                        &:after {
+                            display: none;
+                        }
+                    }
+                }
+                
+                .#{$prefix}btn-toolbar {
+                    &.#{$prefix}btn.#{$prefix}move-next-previous-arrow {
+                        background-color: transparent;
+                    }
+                }
+            }
+        }
+    }
 }
