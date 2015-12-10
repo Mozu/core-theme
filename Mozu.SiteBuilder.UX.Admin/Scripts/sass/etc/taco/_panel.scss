@@ -31,8 +31,21 @@
 
             /* override external styles */
             border: 0;
-            border-color: $valid-green !important;
             background-color: $white-color;
+
+            .#{$prefix}container {
+                &.#{$vprefix}editor-wrapper {
+                    background-color: $light-bg-gray;
+                }
+            }
+
+            .#{$prefix}layout-fit {
+                background-color: transparent;
+
+                .#{$vprefix}global-admin-form {
+                    background-color: transparent;
+                }
+            }
 
 
             .#{$prefix}column-header-over {
