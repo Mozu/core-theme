@@ -15,7 +15,7 @@
             height: 38px;
             line-height: 38px;
             text-align: center;
-            left: -2px;
+            left: 0;
         }
 
         &:hover {
@@ -30,21 +30,19 @@
 
         .#{$vprefix}splitcontainer-collapsetool {
             overflow: visible;
+
             @include icon-font($glyph-arrow-left, 12px, $splitter-text);
 
             &::after {
                 @include facade-transitions;
-                width: 22px;
+                width: 24px;
                 height: 38px;
                 line-height: 38px;
                 text-align: center;
                 top: 50%;
+                left: -50%;
                 border: 1px solid $splitter-border;
-                border-right-style: none;
-                border-top-left-radius: 100px;
-                border-bottom-left-radius: 100px;
                 background-color: $splitter-background;
-                left: -8px;
             }
 
             &:hover {
@@ -53,13 +51,21 @@
                 }
             }
 
+            &.#{$prefix}component-docked-right {
+                &::after {
+                    border-right-style: none;
+                    border-top-left-radius: 100px;
+                    border-bottom-left-radius: 100px;
+                }
+            }
+
             &.#{$prefix}component-docked-left {
                 &::after {
                     content: $glyph-arrow-right;
-                    border-right-style: solid;
                     border-left-style: none;
-                    border-radius: 0 100px 100px 0;
-                    left: -2px;
+                    border-top-right-radius: 100px;
+                    border-bottom-right-radius: 100px;
+                    padding-left: 1px;
                 }
             }
 

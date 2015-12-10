@@ -141,7 +141,7 @@ Ext.define('Taco.core.ux.content.SplitContainer', {
                 cls: 'taco-splitcontainer-splitter',
                 collapseTarget: 'prev',
                 collapsible: false,
-                width: 4
+                width: 8
             });
         } else if (Ext.isString(splitter)) {
             return Ext.create(splitter, {});
