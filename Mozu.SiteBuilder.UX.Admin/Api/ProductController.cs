@@ -15,6 +15,7 @@ using Mozu.SiteBuilder.Mvc.Extensions;
 using Mozu.SiteBuilder.UX.Admin.Api.Models;
 using Mozu.SiteBuilder.UX.Admin.Helpers;
 using Mozu.SiteBuilder.UX.Admin.Helpers.ProductHelpers;
+using Mozu.Core.Logging;
 using DC = Mozu.ProductAdmin.Contracts;
 using Product = Mozu.SiteBuilder.UX.Admin.Api.Models.ProductModels.Product;
 
@@ -27,20 +28,20 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
     public class ProductController : BaseController
     {
         private readonly CollectionTaskUnMapper<Product, DC.Product> _productMapper = new CollectionTaskUnMapper<Product, DC.Product>();
-
         private readonly IProductWebApiClient _productClient;
         private readonly IProductTypeWebApiClient _productTypeWebApiClient;
         private readonly IPublishSetWebApiClient _publishSetClient;
+        private readonly ILogger _logger;
 
         /// <summary>
         /// Public constructor.
         /// </summary>
-        public ProductController(IProductWebApiClient productClient, IProductTypeWebApiClient productTypeWebApiClient, IPublishSetWebApiClient publishSetClient)
+        public ProductController(IProductWebApiClient productClient, IProductTypeWebApiClient productTypeWebApiClient, IPublishSetWebApiClient publishSetClient, ILogger logger )
         {
             _productClient = productClient;
-
             _productTypeWebApiClient = productTypeWebApiClient;
             _publishSetClient = publishSetClient;
+            _logger = logger;
         }
 
         [HttpGetRoute(UriTemplate = "list")]
@@ -253,13 +254,19 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
             DC.Product prod = result.ReadAsAsync().Result;
             var productModel = Mapper.Map<Product>(prod);
 
-
-            if (prod.PublishingInfo == null || string.IsNullOrEmpty(prod.PublishingInfo.PublishSetCode))
+            if (prod.PublishingInfo == null || string.IsNullOrEmpty(prod.PublishingInfo.PublishSetCode)) {
                 return List2(productModel);
+            }
 
-            var ps = (await _publishSetClient.GetPublishSet(prod.PublishingInfo.PublishSetCode)).ReadAsSync();
-            productModel.PublishSetName = ps.Name;
-            productModel.PublishSetDate = ps.PublishDate;
+            try {
+                var ps = (await _publishSetClient.GetPublishSet(prod.PublishingInfo.PublishSetCode)).ReadAsSync();
+                productModel.PublishSetName = ps.Name;
+                productModel.PublishSetDate = ps.PublishDate;
+            }
+            catch (Core.Api.Client.Exceptions.ApiWebClientException ex) {
+                //TODO: We should set the RoodProduct.PublishSetCode to null at some point
+                _logger.Error(string.Format("Error trying to find Publish-Set [{0}]", prod.PublishingInfo.PublishSetCode), ex.Message);
+            }
             return List2(productModel);
         }
     }
