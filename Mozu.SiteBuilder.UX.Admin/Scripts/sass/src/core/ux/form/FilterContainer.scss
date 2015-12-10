@@ -11,6 +11,12 @@
             line-height: 30px;
             color: $dark-color;
         }
+        .#{$prefix}tool-close {
+            @include icon-font($glyph-close, 20px);
+        }
+    }
+    .#{$prefix}window-body-dialog {
+        border-color: $advanced-filter-inside-border;
     }
 }
 

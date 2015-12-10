@@ -89,6 +89,7 @@ $filter-text-focus:             $dark-color;
 $filter-icon-inactive:          lighten($dark-color, 59);                           /* #d6d6d6              214, 214, 214 */
 $filter-icon-hover:             lighten($dark-color, 39);                           /* #a3a3a3              163, 163, 163 */
 $filter-icon-focus:             lighten($dark-color, 26);                           /* #838383 --> #828282  130, 130, 130 */
+$advanced-filter-inside-border: $light-bg-gray;
 
 $vertical-ellipsis-active:      rgb(34, 34, 34);                                    /* #222222 --> #212121  033, 033, 033 */
                                 /* lighten($black-color, 13); */
