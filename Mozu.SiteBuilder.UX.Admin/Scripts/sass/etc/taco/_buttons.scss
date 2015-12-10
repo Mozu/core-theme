@@ -68,7 +68,8 @@
         // there is a bug in EXT where the pressedCls of a button
         // adds x- before the class -- to be removed once that bug is fixed (so never)
         // http://stackoverflow.com/questions/31043578/extjs-how-to-set-button-css-by-using-pressedcls-config
-        &.active, &.#{$prefix}active  {
+        &.active, &.#{$prefix}active, &.#{$prefix}focus {
+            text-decoration: none;
             border-color: $valid-green;
             color: $dark-color;
         }

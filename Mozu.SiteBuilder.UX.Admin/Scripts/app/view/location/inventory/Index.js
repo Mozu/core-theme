@@ -9,7 +9,8 @@ Ext.define('Taco.view.location.inventory.Index', {
         'Taco.shared.view.field.LocationPickerField',
         'Taco.model.LocationInventory',
         'Taco.store.LocationInventories',
-        'Taco.view.location.inventory.InventoryStockColumns'
+        'Taco.view.location.inventory.InventoryStockColumns',
+        'Taco.store.Locations'
     ],
 
     // used by create button
@@ -52,24 +53,108 @@ Ext.define('Taco.view.location.inventory.Index', {
 
 
         this.store = Ext.create('Taco.store.LocationInventories', {
-            autoLoad:false
+            autoLoad: false
         });
 
-        this.loadSecondToolbar();
-
         this.initGridPanelConf();
-        
+
+        this.moreButtonCfg = {
+            menu: [
+                {
+                    text: 'Inventory',
+                    itemId: 'inventory-dropdown',
+                    menu: []
+                },
+                {
+                    text: 'Adjustment Mode',
+                    itemId: 'adjustmentmode-dropdown',
+                    menu: [
+                        {
+                            text: 'Add'
+                        },
+                        {
+                            text: 'Set'
+                        }
+                    ]
+                }
+            ]
+        };
+
         this.callParent(arguments);
+
+        this.loadIventoryMenu();
+
     },
 
-/*    
-    store: {
-        type: 'Taco.store.LocationInventories',
-        createOnly: true,
-        autoLoad:false
+    loadIventoryMenu: function() {
+
+        var me = this;
+
+        me.locationStore = Taco.core.data.StoreManager.getOrCreate({
+            createOnly: true,
+            type: 'Taco.store.Locations',
+            pageSize: 25,
+            clearSort: false,
+            remoteSort: true,
+            remoteFilter: true,
+            sorters: [{
+                property: 'name',
+                direction: 'ASC'
+            }],
+            filters: [{
+                property: 'supportsInventory',
+                value: true
+            }],
+            autoLoad: true,
+            listeners: {
+                beforeload: function (store, operation) {
+                    var proxy = store.getProxy();
+                    if (proxy.extraParams) {
+                        //reset params at proxy (e.g. advSearch)
+                        proxy.extraParams = {};
+                    }
+                    if (this.extraFilters) {
+                        store.extraFilters.add(this.extraFilters);
+                    }
+                },
+                load: function(store, records) {
+                   me.insertMenu('inventory-dropdown', records, this.onIventoryChange)
+                },
+                scope: this
+            }
+        });
     },
-    
-    */
+
+    onIventoryChange: function (record, eOpts) {
+        var gridStore = this.store,
+            code = record.get('code');
+
+        if (record.get('isDisabled')) {
+            this.fireEvent('locationchange', this, true);
+        } else {
+            this.fireEvent('locationchange', this, false);
+        }
+
+        // an extra filter to be added to each service call. note this will not be cleared when you clear the filters;
+        // adding a filter with the same id will be treated like an update
+        gridStore.extraFilters.add({ id: "locationCode", property: 'locationCode', value: code });
+        gridStore.load();
+    },
+
+    insertMenu: function(id, records, handler) {
+        var me = this;
+        var dropdown = me.down('#' + id);
+        var menuItems = Ext.Array.map(records, function(rec) {
+            return {
+                xtype: 'menuitem',
+                text: rec.get('name'),
+                handler: handler.bind(me, rec)
+            };
+        });
+
+        dropdown.menu.add(menuItems);
+
+    },  
 
     useTilePanel: false,
     

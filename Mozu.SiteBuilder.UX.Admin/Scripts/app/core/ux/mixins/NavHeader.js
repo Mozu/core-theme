@@ -492,6 +492,7 @@ Ext.define('Taco.core.ux.mixins.NavHeader', {
 
         }
 
+
         if (me.moreButtonCfg && me.moreButtonCfg.menu) {
             
             if (!me.actions) me.actions = [];

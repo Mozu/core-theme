@@ -12,7 +12,7 @@
     .#{$vprefix}website-resolution-btn {
 
     	&.desktop {
-    		@include icon-font($glyph-desktop);
+    		@include icon-font($glyph-computer);
     	}
 
     	&.tablet {
