@@ -341,6 +341,7 @@ Ext.define('Taco.core.ux.form.FilterContainer', {
             if (!this.modal) {
                 this.modal = Ext.create('Taco.core.ux.window.Modal', {
                     cls: 'advanced-filter',
+                    closable: false,
                     closeAction: 'hide',
                     title: 'Advanced Search',
                     primaryText: 'Filter',
@@ -370,6 +371,17 @@ Ext.define('Taco.core.ux.form.FilterContainer', {
             }
 
             this.modal.showBy(this.down('#advancedFilter'), 'tr-tr', [0, -8]);
+            if (!this.modal.hasUICls('closable')) {
+                this.modal.addClsWithUI('closable');
+                this.modal.addTool(Ext.widget({
+                    xtype : 'tool',
+                    type: 'close',
+                    width: 32,
+                    height: 33,
+                    margin: '0 0 0 0',
+                    handler: Ext.Function.bind(this.modal.close, this.modal, [])
+                }));
+            }
         } else {
             if (this.modal) {
                 this.modal.close();
