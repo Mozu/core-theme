@@ -27,7 +27,6 @@ Ext.define('Taco.view.navigation.PrimaryMenuContainer', {
     y: 0,
     id: 'primaryMenuContainer',
     isBound: false,
-    padding: '9 10 0 20',
     width: 280,
     height: '100%',
     
@@ -50,18 +49,21 @@ Ext.define('Taco.view.navigation.PrimaryMenuContainer', {
 
         this.view = Ext.create('Taco.view.navigation.PrimaryMenuSubContainer', {
             parentMenu: this,
-            store: store,
-            margin: '10 0 0 0'
+            store: store
         });
         this.add({
             xtype: 'panel',
             layout: 'vbox',
-            items: [
-                {
+            items: [{
+                xtype: 'panel',
+                layout: 'vbox',
+                padding: '9 10 0 10',
+                items: [{
                     xtype: 'contentlogo',
                     cls: Taco.baseCSSPrefix + 'primary-menu-logo',
                     width: 68
-                }, {
+                    }]
+                },{
                     xtype: 'component',
                     cls: Taco.baseCSSPrefix + 'primary-menu-divider',
                     width: '100%'

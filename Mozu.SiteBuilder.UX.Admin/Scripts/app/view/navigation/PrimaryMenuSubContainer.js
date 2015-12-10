@@ -8,6 +8,7 @@ Ext.define('Taco.view.navigation.PrimaryMenuSubContainer', {
     //cls: 'taco-primary-menu-ct',
     store: null,
     layout: 'vbox',
+    width: '100%',
     
     initComponent: function () {
         if (this.store) {

@@ -6,10 +6,10 @@ Ext.define('Taco.view.navigation.PrimarySubMenu', {
 
     autoEl: {
         tag: 'ul',
-        cls: 'taco-primary-menu-submenu'
+        cls: 'taco-primary-menu'
     },
-    itemSelector: 'li.taco-submenu-item',
-    selectedItemCls: 'taco-submenu-item-active',
+    itemSelector: 'li.taco-primary-menu-item',
+    selectedItemCls: 'taco-primay-menu-item-active',
 
     initComponent: function () {
         var me = this,
@@ -17,8 +17,8 @@ Ext.define('Taco.view.navigation.PrimarySubMenu', {
 
         this.tpl = [
             '<tpl for=".">',
-                '<li class="taco-submenu-item" style="{[(values.visible && !values.breadCrumbOnly) ? "" : "display:none" ]}">',
-                    '<a href="{address}" class="taco-submenu-item-link">{label}</a>',
+                '<li class="taco-menu-item" style="{[(values.visible && !values.breadCrumbOnly) ? "" : "display:none" ]}">',
+                    '<a href="{address}" class="taco-primary-menu-item-link">{label}</a>',
                 '</li>',
             '</tpl>'
         ];

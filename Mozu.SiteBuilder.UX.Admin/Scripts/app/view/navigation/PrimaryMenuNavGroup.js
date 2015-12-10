@@ -6,10 +6,10 @@ Ext.define('Taco.view.navigation.PrimaryMenuNavGroup', {
     extend: 'Ext.container.Container',
     alias: 'widget.primary-menu-nav-group',
     requires: ['Taco.view.navigation.PrimarySubMenu'],
-    cls: 'taco-menu-item',
     record: null,
     collapsible: true,
-    padding: '8 0 6 0',
+    padding: '8 0 6 10',
+    width: '100%',
     
     initComponent: function () {
         var me = this,
@@ -18,14 +18,14 @@ Ext.define('Taco.view.navigation.PrimaryMenuNavGroup', {
                 data: this.record.get('items')
             });
         this.subMenuItems = Ext.create('Taco.view.navigation.PrimarySubMenu', {
-            store: subItemStore,
-            margin: '0 0 0 10'
+            store: subItemStore
         });
         this.items = [
             {
                 xtype: 'label',
                 text:this.record.get('label'),
-                cls: this.cls,
+                width: '100%',
+                cls: 'taco-primary-menu-heading',
                 listeners: {
                     element: 'el',
                     click: function(e) {
