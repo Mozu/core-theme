@@ -106,52 +106,7 @@
             height: 38px;
         }
 
-        .taco-filtercontainer {
-            height: 40px;
-            top: 10px;
-            padding-left: 10px;
-            .x-trigger-cell {
-                position: absolute;
-                top: 5px;
-                left: 10px;
-            }
-            .x-form-trigger-input-cell {
-                position: absolute;
-                left: 40px;
-                top: 4px;
-                .x-form-field {
-                    font-size: 18px;
-                    font-weight: 300;
-                    border: none;
-                    box-shadow: none;
-                }
-            }
-            .advanced-search-button {
-                border: none;
-                border-right: 1px solid $advanced-filter-icon-active;
-                border-radius: 0;
-                background-color: inherit;
-                padding: 0;
-                &:active {
-                    background-color: $advanced-filter-icon-active;
-                    border-radius: 4px;
-                }
-                .#{$prefix}btn-wrap {
-                    opacity: 0.35;
-                    &:hover {
-                        opacity: 1;
-                    }
-                    .#{$prefix}btn-icon-el {
-                        font-size: 22px;
-                        line-height: 40px;
-                        text-align: center;
-                        width: 48px;
-                        height: 40px;
-                        color: $dark-color;
-                    }
-                }
-            }
-        }
+
 
         .navheader-action-toolbar {
             margin-right: 15px;
