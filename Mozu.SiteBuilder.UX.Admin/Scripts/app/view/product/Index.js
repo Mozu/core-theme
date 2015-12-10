@@ -32,39 +32,34 @@ Ext.define('Taco.view.product.Index', {
     saveButtonEnabled: false,
     createButtonEnabled: true,
     createButtonText: 'Create New Product',
+    plugins: [{
+        ptype: 'rowexpander',
+        pluginId: 'expander',
+        rowBodyTpl: new Ext.XTemplate(
+            '<tpl for="productInCatalogs"><tr class="x-grid-row-body">',
+            '<td colspan="2" class="x-grid-subcell"><div class="x-grid-cell-inner"></div></td>',
+            '<td class="x-grid-subcell"><div class="x-grid-cell-inner"><a href="#" class="taco-launch-editor" data-catalog-id="{catalogId}">{productName}</a></div></td>',
+            '<td class="x-grid-subcell"><div class="x-grid-cell-inner">{[this.formatPrice(values.price,values.catalogId)]}</div></td>',
+            '<td class="x-grid-subcell"><div class="x-grid-cell-inner">{[this.formatPrice(values.salePricem,values.catalogId)]}</div></td>',
+            '<td class="x-grid-subcell"><div class="x-grid-cell-inner">{catalogId:this.toCatalogName}</div></td>',
+            '<td class="x-grid-subcell"><div class="x-grid-cell-inner">{isContentOverridden:this.formatOverridden}</div></td>',
+            '<td class="x-grid-subcell"><div class="x-grid-cell-inner"></div></td>',
+            '</tr></tpl>', {
+                formatOverridden: function (value) {
+                    return value ? '<span class="overridden">Overridden</span>' : '';
+                },
+                formatPrice: function (value, catalog) {
+                    return (value || value === 0) ? Taco.app.context.findCatalog(catalog).formatCurrency(value) : 'N/A';
+                },
+                toCatalogName: function (value) {
+                    var catalog = Taco.app.context.findCatalog(value);
+                    return catalog ? catalog.name : 'n/a';
+                }
+            })
+    }],
     contextConfig: {
         supportedLevels: ['m', 'c'],
         requiresContextOfType: ['m', 'c', 's']
-    },
-    contextConf: {
-        m: {
-            useMultiGrid: true,
-            plugins: ['autoselect', {
-                ptype: 'rowexpander',
-                pluginId: 'expander',
-                rowBodyTpl: new Ext.XTemplate(
-                    '<tpl for="productInCatalogs"><tr class="x-grid-row-body">',
-                    '<td colspan="2" class="x-grid-subcell"><div class="x-grid-cell-inner"></div></td>',
-                    '<td class="x-grid-subcell"><div class="x-grid-cell-inner"><a href="#" class="taco-launch-editor" data-catalog-id="{catalogId}">{productName}</a></div></td>',
-                    '<td class="x-grid-subcell"><div class="x-grid-cell-inner">{[this.formatPrice(values.price,values.catalogId)]}</div></td>',
-                    '<td class="x-grid-subcell"><div class="x-grid-cell-inner">{[this.formatPrice(values.salePricem,values.catalogId)]}</div></td>',
-                    '<td class="x-grid-subcell"><div class="x-grid-cell-inner">{catalogId:this.toCatalogName}</div></td>',
-                    '<td class="x-grid-subcell"><div class="x-grid-cell-inner">{isContentOverridden:this.formatOverridden}</div></td>',
-                    '<td class="x-grid-subcell"><div class="x-grid-cell-inner"></div></td>',
-                    '</tr></tpl>', {
-                        formatOverridden: function (value) {
-                            return value ? '<span class="overridden">Overridden</span>' : '';
-                        },
-                        formatPrice: function (value, catalog) {
-                            return (value || value === 0) ? Taco.app.context.findCatalog(catalog).formatCurrency(value) : 'N/A';
-                        },
-                        toCatalogName: function (value) {
-                            var catalog = Taco.app.context.findCatalog(value);
-                            return catalog ? catalog.name : 'n/a';
-                        }
-                    })
-            }]
-        }
     },
     bulkEditorColumns: [{
         dataIndex: 'productCode',
