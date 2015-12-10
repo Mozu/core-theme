@@ -37,8 +37,12 @@
     cursor: move;
     display: block;
     opacity: .27;
-    @include icon-font($glyph-reorder);
     margin-top: 3px;
+    @include icon-font($glyph-reorder);
+    
+    &:after {
+      padding-left: 6px;
+    }
 
     &:hover {
       opacity: 1;
