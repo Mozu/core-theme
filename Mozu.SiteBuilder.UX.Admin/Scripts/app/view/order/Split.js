@@ -100,6 +100,7 @@ Ext.define('Taco.view.order.Split', {
                         if (!e.getTarget('.' + Taco.core.ux.grid.MenuColumn.prototype.iconCls) &&
                             !e.getTarget('.' + Taco.core.ux.grid.MenuColumn.prototype.tdCls) &&
                             !e.getTarget('.x-grid-cell-row-checker')) {
+                            this.makeActive(row);
                             this.onSelectRecord(record);
                         }
                     }
@@ -152,6 +153,14 @@ Ext.define('Taco.view.order.Split', {
         //     }
         // })
         
+    },
+
+    makeActive: function(row) {
+        var selectedClass = Ext.baseCSSPrefix + 'grid-row-selected';
+        Ext.each(document.querySelectorAll('.'+selectedClass), function(item) {
+            item.className = item.className.replace(selectedClass, '').trim();
+        });
+        row.className += ' ' + selectedClass;
     },
 
     createActionHandler: function () {
