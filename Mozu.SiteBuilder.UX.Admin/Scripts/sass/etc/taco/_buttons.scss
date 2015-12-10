@@ -1,5 +1,11 @@
 @mixin taco-buttons {
 
+    .#{$prefix}menu-item-icon {
+        &.#{$prefix}menu-item-checkbox {
+            margin-top: 11px;
+        }
+    }
+
     .#{$prefix}btn {
         &:hover {
             .#{$prefix}btn-inner-center {

@@ -5,6 +5,9 @@
     .#{$prefix}grid-cell-row-expander {
         &:after {
             content: $glyph-arrowright;
+            font-family: 'mozicons';
+            position: absolute;
+            margin-top: -22px;
         }
     }
 
