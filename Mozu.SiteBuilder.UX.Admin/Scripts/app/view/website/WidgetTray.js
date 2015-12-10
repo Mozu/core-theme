@@ -6,7 +6,7 @@
 Ext.define('Taco.view.website.WidgetTray', {
     extend: 'Ext.panel.Panel',
     alias: 'widget.taco-widget-tray',
-    id: 'taco-widget-tray',
+    itemId: 'taco-widget-tray',
     autoScroll: true,
     requires: [],
     initComponent: function () {

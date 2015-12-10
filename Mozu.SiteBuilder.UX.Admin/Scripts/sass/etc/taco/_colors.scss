@@ -210,6 +210,9 @@ $color-action-primary-outline: $color-theme-green-darker;
 $color-action-primary-outline-hover: $color-theme-green-darkest;
 $color-action-primary-outline-active: $color-theme-green-darkest;
 
+$color-action-secondary: rgb(245,245,245);
+
+
 $color-action-toggle-foreground: $color-neutral-white;
 $color-action-toggle-background: $color-theme-green;
 $color-action-toggle-background-hover: darken($color-theme-green, 5%);

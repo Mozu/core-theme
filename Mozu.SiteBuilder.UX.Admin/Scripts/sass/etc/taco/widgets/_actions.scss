@@ -27,6 +27,14 @@
         font-family: $font-family;
     }
 
+    .#{$prefix}btn.#{$vprefix}action-secondary {
+       background-color: transparent;
+
+       &:active {
+          background-color: $color-action-secondary;
+       }
+    }
+
     button.#{$vprefix}action {
         background-color: $color-action-background;
         border: 1px solid $color-action-outline;

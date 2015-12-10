@@ -68,6 +68,7 @@ Ext.define('Taco.view.website.Index', {
         documentList: 'Taco.view.website.entityAdapters.DocumentListEntityAdapter'
     },
     enableNavHeader: true,
+    cancelButtonEnabled: false,
     options: {},
 
     layout: {
@@ -138,25 +139,7 @@ Ext.define('Taco.view.website.Index', {
                 plain: true,
                 shadow: false,
                 items: [
-                    {
-                        text: 'View Live',
-                        handler: function (menuItem) {
-                            //scope is set to index on all action buttons by container.
-                            var url = menuItem.up('button').scope.url;
-                            window.open('/_gosite/' + Taco.app.context.getSiteId() + '?environment=live&redir=' + encodeURIComponent(url));
-                        }
-                    }, {
-                        text: 'View Staged',
-                        handler: function (menuItem) {
-                            //scope is set to index on all action buttons by container.
-                            var url = menuItem.up('button').scope.url;
-                            window.open('/_gosite/' + Taco.app.context.getSiteId() + '?environment=preview&redir=' + encodeURIComponent(url));
-                        }
-                    },
-                    {
-                        xtype: 'menuseparator',
-                        style: 'border: 1px solid #dddfdf;'
-                    }, {
+                    {  
                         text: 'Preview Theme',
                         itemId: 'previewThemesMenu'
                     },
@@ -231,6 +214,30 @@ Ext.define('Taco.view.website.Index', {
                     this.down('#widgetsActionButton').setDisabled(isPressed);
                 }
 
+            },
+            {
+                xtype: 'splitbutton',
+                ui: 'action',
+                cls: 'taco-action-secondary',
+                scale: 'medium',
+                text: 'View',
+                height: 40,
+                menu: [
+                    {
+                        text: 'View Live',
+                        handler: function(menuItem) {
+                            var url = me.url;
+                            window.open('/_gosite/' + Taco.app.context.getSiteId() + '?environment=live&redir=' + encodeURIComponent(url));
+                        }
+                    },
+                    {
+                        text: 'View Staged',
+                        handler: function(menuItem) {
+                            var url = me.url;
+                            window.open('/_gosite/' + Taco.app.context.getSiteId() + '?environment=preview&redir=' + encodeURIComponent(url));
+                        }
+                    }
+                ]
             },
             {
                 xtype: 'button',

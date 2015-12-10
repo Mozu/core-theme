@@ -157,15 +157,58 @@
             margin-right: 15px;
             .x-btn {
                 border: none;
-                background-color: $valid-green;
-                .x-btn-inner-center {
-                    font-size: 16px;
-                    color: $white-color;
+
+                &.x-btn-action-primary-toolbar-medium {
+                    background-color: $valid-green;
+
+                    .x-btn-inner-center {
+                        color: $white-color;
+                    }
+
+                    &:hover {
+                        .x-btn-inner-center {
+                            background-color: $valid-green-active;
+                        }
+                    }
+
+                    &.x-btn.x-menu-active {
+                        border-bottom-left-radius: 0;
+                        border-bottom-right-radius: 0;
+                        border-bottom: 1px solid $menu-btn-active-border;
+                        background-color: $menu-btn-active-background;
+                    }
+
+                    .x-btn-inner-center {
+                        font-size: 16px;
+                    }
+                    
                 }
+
+                &.x-btn-action-secondary-toolbar-medium {
+                    background-color: transparent;
+
+                    .x-btn.x-btn-inner-center {
+                        font-size: 12px;
+                        color: $nav-element-text;
+                    }
+
+                     &:hover {
+                        background-color: transparent;
+
+                        .x-btn-inner-center {
+                            color: $nav-element-active;
+                        }
+                    }
+
+                    &.x-btn.x-menu-active {
+                        border-radius: 3px;
+                        background-color: $more-menu-active-background;
+                        box-shadow: $more-menu-active-shadow 0 0 0 1px inset;
+                        opacity: 1;
+                    }
+                }
+
                 
-                &:hover {
-                    background-color: $valid-green-active;
-                }
                 .x-btn-arrow-right::after {
                     top: 5px;
                     color: $white-color;
@@ -178,12 +221,7 @@
                     background-color: transparent;
                 }
             }
-            .x-btn.x-menu-active {
-                border-bottom-left-radius: 0;
-                border-bottom-right-radius: 0;
-                border-bottom: 1px solid $menu-btn-active-border;
-                background-color: $menu-btn-active-background;
-            }
+         
             .website-editor-tab-btn {
                 .x-btn-glyph {
                     line-height: 28px;
@@ -237,6 +275,13 @@
                     .#{$prefix}btn-inner {
                         padding: 0;
                     }
+                }
+
+                &.x-btn.x-menu-active {
+                    border-radius: 3px;
+                    background-color: $more-menu-active-background;
+                    box-shadow: $more-menu-active-shadow 0 0 0 1px inset;
+                    opacity: 1;
                 }
             }
         }
