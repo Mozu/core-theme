@@ -43,6 +43,7 @@
                 left: -50%;
                 border: 1px solid $splitter-border;
                 background-color: $splitter-background;
+                cursor: pointer;
             }
 
             &:hover {
