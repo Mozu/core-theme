@@ -1,4 +1,16 @@
 @mixin taco-buttons {
+
+    .#{$prefix}btn {
+        &:hover {
+            .#{$prefix}btn-inner-center {
+                color: $dark-color;
+            }
+        }
+
+        &:active {
+            background-color: $medium-button-active-bg;
+        }
+    }
     
     .#{$prefix}btn-action-primary-toolbar-medium {
         &.#{$prefix}btn-focus {
