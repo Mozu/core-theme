@@ -28,6 +28,9 @@ Ext.define('Taco.view.entityManager.Split', {
     createButtonText: 'Create New Custom Schema',
     saveButtonVisible: true,
     cancelButtonVisible: false,
+    advancedSearchConfig: {
+        disableAdvancedSearch: true,
+    },
 
     contextConfig: {
         supportedLevels: ['t', 'm', 'c', 's']

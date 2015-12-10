@@ -5,7 +5,7 @@
     background-color: $color-framework-gray-border;
     height: 30px;
 
-    .#{$prefix}panel .#{$prefix}panel-body {
+    .#{$prefix}panel, .#{$prefix}panel-body {
         background-color: $color-framework-gray-border;
     }
 

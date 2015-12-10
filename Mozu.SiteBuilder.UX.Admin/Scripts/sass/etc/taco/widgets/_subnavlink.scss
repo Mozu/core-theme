@@ -1,0 +1,28 @@
+@mixin taco-subnavlink {
+    .#{$vprefix}subnavlink {
+        display: inline-block;
+        margin: 5px;
+        text-align: center;
+
+        span {
+            color: $gray-text-extra-light;
+            cursor: pointer;
+            display: inline-block;
+            width: 25px;
+            height: 25px;
+            vertical-align: top;
+            opacity: .8;
+
+            img {
+                width: 25px;
+                height: 25px;  
+            }
+            
+            &:hover {
+                opacity: 1;
+            }
+
+        }
+
+    }
+}

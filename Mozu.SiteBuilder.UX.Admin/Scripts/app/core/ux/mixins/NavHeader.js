@@ -34,7 +34,8 @@ Ext.define('Taco.core.ux.mixins.NavHeader', {
         'Ext.toolbar.Spacer',
         'Taco.core.ux.mixins.HamburgerButton',
         'Taco.core.ux.mixins.Searchable',
-        'Taco.view.navigation.ContextSwitcherBar'
+        'Taco.view.navigation.ContextSwitcherBar',
+        'Taco.view.navigation.SubNavLinkContainer'
     ],
 
     mixins: {
@@ -295,6 +296,8 @@ Ext.define('Taco.core.ux.mixins.NavHeader', {
 
     createNavHeader: function () {
         /*jshint maxcomplexity:1000 */
+
+
         var me = this,
             hasContextSwitcher = (!Ext.isEmpty(this.contextConfig) && !Ext.isEmpty(this.contextConfig.supportedLevels)),
             conf;
@@ -399,7 +402,10 @@ Ext.define('Taco.core.ux.mixins.NavHeader', {
             conf.items.push('->');
         }
 
-        
+        if (!me.hideSubnavLinks) {
+            me.subNavLinkContainer = Ext.create('Taco.view.navigation.SubNavLinkContainer');
+            conf.items.push(me.subNavLinkContainer);
+        }
 
         if (!me.actions) {
             me.actions = [];
