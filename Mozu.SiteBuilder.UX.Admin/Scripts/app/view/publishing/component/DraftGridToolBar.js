@@ -11,6 +11,7 @@ Ext.define('Taco.view.publishing.component.DraftGridToolBar', {
     style: {
     	backgroundColor: '#f3f3f3'
     },
+
     cls: 'taco-draft-toolbar',
     initComponent: function () {
 
@@ -30,8 +31,12 @@ Ext.define('Taco.view.publishing.component.DraftGridToolBar', {
             emptySearchText: (!me.advancedSearchConfig.emptySearchText) ? '' : me.advancedSearchConfig.emptySearchText,
             store: me.store || me.getDefaultStore(),
             filterStores: me.advancedSearchConfig.stores,
-            value: this.options && this.options.query ? this.options.query : undefined
+            value: this.options && this.options.query ? this.options.query : undefined,
         });
+
+        if (!me.store) {
+            me.searchBox.on('afterrender', this.setStore.bind(me, 'product'));
+        }
 
     	this.items = [
             {
@@ -73,10 +78,16 @@ Ext.define('Taco.view.publishing.component.DraftGridToolBar', {
         this.callParent(arguments);
     },
 
+    setStore: function(type) {
+        var grid = this.parentScope.down('#'+ type)
+        var store = grid ? grid.store : null;
+        if (store) this.searchBox.store = store;
+    },
+
     setActivePanel: function(type) {
     	var index = type === 'product' ? 0 : 1;
     	this.parentScope.panel.getLayout().setActiveItem(index);
-    	if (this.onSelection) this.onSelection(type);
+    	this.setStore(type);
     },
 
     getDefaultStore: function() {

@@ -71,7 +71,8 @@ Ext.define('Taco.view.publishing.grid.Publish', {
         this.tbar = Ext.create('Taco.view.publishing.component.DraftGridToolBar', {
             parentScope: this,
             buttons: false,
-            toolbarTitle: 'Publish Sets'
+            toolbarTitle: 'Publish Sets',
+            store: this.store
         });
 
         this.callParent(arguments);
