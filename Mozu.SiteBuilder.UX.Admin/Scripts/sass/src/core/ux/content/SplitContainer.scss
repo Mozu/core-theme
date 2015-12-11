@@ -11,16 +11,25 @@
         &::after {
             @include facade-transitions;
             top: 50%;
+            margin-top: 1px;
             width: 4px;
-            height: 38px;
-            line-height: 38px;
+            height: 36px;
+            line-height: 36px;
             text-align: center;
             left: 0;
+            background-color: $splitter-background;
+            opacity: 0.5;
         }
 
         &:hover {
             &::after {
                 color: $splitter-hover;
+            }
+        }
+
+        &.#{$vprefix}split-hover {
+            &::after {
+                opacity: 1;
             }
         }
     }
@@ -35,15 +44,15 @@
 
             &::after {
                 @include facade-transitions;
-                width: 24px;
-                height: 38px;
-                line-height: 38px;
+                width: 22px;
+                height: 36px;
+                line-height: 36px;
                 text-align: center;
                 top: 50%;
-                left: -50%;
                 border: 1px solid $splitter-border;
                 background-color: $splitter-background;
                 cursor: pointer;
+                opacity: 0.5;
             }
 
             &:hover {
@@ -52,11 +61,18 @@
                 }
             }
 
+            &.#{$vprefix}split-hover {
+                &::after {
+                    opacity: 1;
+                }
+            }
+
             &.#{$prefix}component-docked-right {
                 &::after {
                     border-right-style: none;
                     border-top-left-radius: 100px;
                     border-bottom-left-radius: 100px;
+                    left: -6px;
                 }
             }
 
@@ -66,7 +82,7 @@
                     border-left-style: none;
                     border-top-right-radius: 100px;
                     border-bottom-right-radius: 100px;
-                    padding-left: 1px;
+                    left: -4px;
                 }
             }
 

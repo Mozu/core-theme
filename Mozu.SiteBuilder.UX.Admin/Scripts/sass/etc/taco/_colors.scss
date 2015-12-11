@@ -78,7 +78,7 @@ $menu-btn-active-background:    rgb(44, 163, 133);                              
 
 $item-switch-color:             rgba(lighten($black-color, 26), .32);               /* #424242              066, 066, 066 */
 $splitter-background:           $white-color;
-$splitter-border:               rgba(0, 0, 0, 0.1);
+$splitter-border:               darken($white-color, 10);
 $splitter-text:                 rgba(0, 0, 0, 0.2);
 $splitter-hover:                rgba(0, 0, 0, 0.8);
 $more-menu-active-background:   whitesmoke;
