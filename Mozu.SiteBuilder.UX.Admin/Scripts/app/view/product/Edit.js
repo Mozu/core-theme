@@ -285,12 +285,22 @@
             catalogs: this.record.productInCatalogsStore(),
             listeners: {
                 select: function (assignmentBarView, record) {
-                    alert('selection has changed:' + record.get('value') + ' ' + record.get('text') + ' ' + record.get('type'));
+                    var tabItems = me.down('#productFormLayout').up().tabItems;
+                    var index = 0;
+
+                    Ext.Array.each(tabItems, function(page, i) { 
+                        if (page.catalogId === record.get('value')) {
+                            index = i;
+                        } 
+                    });
+
+                    if (record.get('type') === 'master') index = 0;
+
+                    me.down('#productFormLayout').getLayout().setActiveItem(index);
                 },
                 change: function (flyoutView, selectedCatalogIds) {
-                    alert('assigned catalogs has changed:' + selectedCatalogIds.join(','));
-                    // to redraw after you make changes to this.record based on new selection....
-                    // this.redraw(this.record.productInCatalogsStore())
+                    me.down('#productFormLayout').up().resetCatalogs(selectedCatalogIds);
+                    this.redraw(me.record.productInCatalogsStore());
                 }
             }
         });
