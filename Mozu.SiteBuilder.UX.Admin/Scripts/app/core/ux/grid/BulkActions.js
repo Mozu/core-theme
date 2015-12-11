@@ -18,7 +18,7 @@ Ext.define('Taco.core.ux.grid.BulkActions', {
 
 	hidden: false,
 
-	cls: 'taco-bulk-action-toolbar',
+	cls: 'taco-bulk-action-toolbar removed',
 
 	hiddenCls: 'shown',
 
@@ -76,11 +76,15 @@ Ext.define('Taco.core.ux.grid.BulkActions', {
         this.onMenuShow(selModel);
         
     	if (selModel && selModel.getSelection().length > 0) {
+            this.removeCls('removed');
     		this.addCls(this.hiddenCls);
     	}
 
     	else {
             this.removeCls(this.hiddenCls);
+            Ext.defer(function() {
+                this.addCls('removed');
+            }, 300, this);
     	}
 
         if (this.shouldSelectCheckBox()) {
@@ -105,7 +109,6 @@ Ext.define('Taco.core.ux.grid.BulkActions', {
     },
 
     getButtonConfig: function(config) {
-        console.log(config)
     	return Ext.apply({}, config, {
     		xtype: 'button',
             text: config.text,

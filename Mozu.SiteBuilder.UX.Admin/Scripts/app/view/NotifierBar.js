@@ -75,12 +75,9 @@ Ext.define('Taco.view.NotifierBar', {
 
         me.messages = [];
         me.removeCls(this.showClass);
+        
+        me.messageQueue.update({ messages: [] });
 
-        Ext.defer(function() {
-            me.messageQueue.update({
-                messages: []
-            });
-        }, 100);
     },
 
     showMessage: function(delay) {

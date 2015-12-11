@@ -14,6 +14,11 @@ Ext.define('Taco.view.entityManager.SchemaList', {
     entityType: '',
 
     initComponent: function() {
+
+        var columnsNames = {
+            mzdb: 'Entity Lists',
+            cms: 'Document Lists'
+        };
         
         this.store = Ext.create('Taco.store.EntityLists', {
             entityType: this.entityType,
@@ -21,7 +26,7 @@ Ext.define('Taco.view.entityManager.SchemaList', {
             listeners: {
                 load: this.selectFirstItem.bind(this)
             }
-        })
+        });
 
         this.columns = [
             {
@@ -29,7 +34,7 @@ Ext.define('Taco.view.entityManager.SchemaList', {
                 dataIndex: 'name',
                 stateId: 'name',
                 minWidth: 100,
-                text: 'Schema Name',
+                text: columnsNames[this.entityType],
                 flex: 2,
                 sortable: true
             }
@@ -65,7 +70,6 @@ Ext.define('Taco.view.entityManager.SchemaList', {
         if (this.entitySplit) {
             this.entitySplit.enableButtons();
             this.entitySplit.updateSearchContext();
-            // this.showGridView();
         }
 
         if (this.dynamicGrid) {

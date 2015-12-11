@@ -256,7 +256,7 @@ Ext.define('Taco.view.entityManager.Split', {
     },
 
     saveFailure: function(msg) {
-        Taco.app.fireEvent('setmessage', msg, 'error');
+        // Taco.app.fireEvent('setmessage', msg, 'error');
     },
 
     westGrid: function() {

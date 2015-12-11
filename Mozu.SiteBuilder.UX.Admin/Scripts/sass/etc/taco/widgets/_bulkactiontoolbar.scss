@@ -4,7 +4,6 @@
 		background-color: $white-color;
 		position: absolute;
 		opacity: 0;
-		top: -10000000px;
 		transition-property: opacity;
 		transition-duration: 200ms;
 		transition-timing-function: cubic-bezier(.17,.67,.83,.67);
@@ -31,14 +30,13 @@
 			}
 		}
 
-		// // this should be done at higher level
-		// .#{prefix}form-type-checkbox .#{prefix}form-item-body {
-		// 	background-color: $light-bg-gray;
-		// }
-
 		&.shown {
 			opacity: 1;
 			top: 0px;
+		}
+
+		&.removed {
+			top: -10000000px;
 		}
 	}
 
