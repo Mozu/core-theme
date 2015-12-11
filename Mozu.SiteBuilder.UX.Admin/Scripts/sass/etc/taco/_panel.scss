@@ -15,6 +15,12 @@
             box-shadow: none !important;
         }
 
+        .#{$vprefix}formform {
+            &.#{$prefix}panel-subform {
+                @include border-radius-xbrowser($border-radius);
+            }
+        }
+
         .#{$prefix}panel-subform-section-child {
             background-color: $white-color;
         }
@@ -23,7 +29,7 @@
 
             &.#{$prefix}panel-default,
             &.#{$prefix}component-docked-top{
-                @include border-radius-xbrowser($border-radius);
+                @include partial-border-radius($border-radius, 0, $border-radius, 0);
             }
         }
 
@@ -76,7 +82,7 @@
         .#{$prefix}grid-row-editor-buttons {
             border-color: $valid-green;
             background-color: $row-editor-buttons-bg;
-            @include partial-border-radius(0, $border-radius, 0, $border-radius, !important);
+            @include important-partial-border-radius(0, $border-radius, 0, $border-radius);
         }
 
         .#{$prefix}panel .#{$prefix}panel-body .#{$prefix}grid-td {
