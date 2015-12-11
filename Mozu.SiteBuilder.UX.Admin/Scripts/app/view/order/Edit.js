@@ -118,7 +118,36 @@ Ext.define('Taco.view.order.Edit', {
             
             Taco.core.StateManager.attemptNavigate('s-' + this.record.data.siteId + '/orders/edit/' + this.record.data.id);
         });
+
+        this.on({
+            boxready: this.handleBoxReady,
+            afterlayout: this.handleAfterLayout,
+            scope: this
+        });
     },
+
+    handleBoxReady: function () {
+        this.bodyEl = this.getEl().down('.x-panel-body');
+
+        this.mon(this.bodyEl, 'scroll', function () {
+            this.lastScrollTop = this.bodyEl.getScrollTop();
+        }, this);
+    },
+
+    handleAfterLayout: function () {
+        var scrollTop = 0;
+
+        if (!this.bodyEl) {
+            return;
+        }
+
+        scrollTop = this.bodyEl.getScrollTop();
+
+        if (scrollTop !== this.lastScrollTop) {
+            this.bodyEl.setScrollTop(this.lastScrollTop);
+        }
+    },
+
     navigateTo:function (forward) {
         var index = this.store.indexOfId(this.record.getId()),
             navToIndex = forward ? index + 1 : index - 1,
