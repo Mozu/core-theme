@@ -672,18 +672,20 @@ Ext.define('Taco.view.attribute.Form', {
     createSearchOptions: function () {
         var me = this;
 
-        this.searchInStorefront = Ext.widget('checkboxfield', {
-            name: 'searchableInStorefront',
-            boxLabel: 'Available to Storefront Search',
-            hidden: !this.record.supportsSearchInStorefront(),
-            listeners: {
-                change: function (cmp, newValue) {
-                    me.record.set('searchableInStorefront', newValue);
-                    me.searchDisplayContainer.setVisible(me.record.supportsSearchDisplayType());
-                },
-                scope: this
-            }
-        });
+        this.searchInStorefront = Ext.widget('checkboxfield',  
+            Taco.core.ux.TooltipLabel.wrapConfig('attribute.form.searchOptions', me,
+            {
+                name: 'searchableInStorefront',
+                boxLabel: 'Available to Storefront Search',
+                hidden: !this.record.supportsSearchInStorefront(),
+                listeners: {
+                    change: function (cmp, newValue) {
+                        me.record.set('searchableInStorefront', newValue);
+                        me.searchDisplayContainer.setVisible(me.record.supportsSearchDisplayType());
+                    },
+                    scope: this
+                }
+            }));
 
         this.searchLabel = Ext.widget({
             xtype: 'radio',
@@ -734,20 +736,22 @@ Ext.define('Taco.view.attribute.Form', {
             ]
         });
 
-        this.allowFilteringAndSorting = Ext.widget('checkboxfield', {
+        this.allowFilteringAndSorting = Ext.widget('checkboxfield',
+            Taco.core.ux.TooltipLabel.wrapConfig('attribute.form.filterandsorting', me,
+            {
             name: 'allowFilteringAndSortingInStorefront',
             boxLabel: 'Available as Filter & Sort'
-        });
+        }));
 
         return Ext.create('Ext.form.FieldContainer',
-            Taco.core.ux.TooltipLabel.wrapConfig('attribute.form.searchOptions', me, {
+           {
                 fieldLabel: "Search Options",
                 items: [
                     this.searchInStorefront,
                     this.searchDisplayContainer,
                     this.allowFilteringAndSorting
                 ]
-            })
+            }
         );
     },
 
@@ -912,7 +916,6 @@ Ext.define('Taco.view.attribute.Form', {
             },
             this.subform
         ];
-
         if (this.record.supportsSearchOptions()) {
             this.items.push(this.createSearchOptions());
             this.mon(Taco.app, 'attribute-data-type-changed', function (newVal) {
