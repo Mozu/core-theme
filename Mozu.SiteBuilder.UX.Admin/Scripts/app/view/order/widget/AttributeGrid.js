@@ -65,6 +65,9 @@ Ext.define('Taco.view.order.widget.AttributeGrid', {
 
                 return (att && !Ext.isEmpty(att.values) ? att.values.join(', ').replace(/\n/g, '<br>') : '--');
             }
+        }, {
+            text: '',
+            width: 50
         }]    
 
         return columns;
