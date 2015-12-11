@@ -806,7 +806,6 @@
     <Content Include="Scripts\app\view\order\widget\ReusePaymentPickerField.js" />
     <Content Include="Scripts\app\view\productRanking\Index.js" />
     <Content Include="Scripts\app\view\productType\AttributeForm.js" />
-    <Content Include="Scripts\app\view\productType\AttributeForm.js.wh.js" />
     <Content Include="Scripts\app\view\product\widget\productCode\Modal.js" />
     <Content Include="Scripts\app\view\publishing\advancedSearchForm\DraftContent.js" />
     <Content Include="Scripts\app\view\publishing\advancedSearchForm\DraftProduct.js" />
