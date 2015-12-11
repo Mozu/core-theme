@@ -61,6 +61,15 @@ Ext.define('Taco.core.ux.browser.SearchList', {
             flex:1
         }
     ],
+
+    listeners: {
+        beforecellmousedown: function(cmp, td, cellIndex, record, tr, rowIndex, e, eOpts) {
+            tr.className += ' taco-grid-row-active'
+        },
+        beforecellmouseup: function(cmp, td, cellIndex, record, tr, rowIndex, e, eOpts) {
+            tr.className = tr.className.replace('taco-grid-row-active', '');
+        },
+    },
     
     initComponent: function () {
         var me = this;

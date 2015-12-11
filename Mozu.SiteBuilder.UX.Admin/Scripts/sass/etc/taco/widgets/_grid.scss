@@ -10,19 +10,11 @@
     }
 
     .#{$prefix}grid-row-expander {
-        //background: red;
         &:after {
             content: $glyph-arrowdown;
             font-family: 'mozicons';
             position: absolute;
-            //margin-top: -22px;
         }
-
-/*         .#{$prefix}grid-row-expander {
-            &:after {
-                content: none;
-            }
-        } */
     }
 
     .#{$prefix}grid-row-collapsed {

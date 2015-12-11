@@ -177,6 +177,9 @@
                 &.#{$prefix}grid-row-selected {
                     background-color: $card-button-bg;
                 }
+                &.taco-grid-row-active {
+                    background-color: $card-button-press-bg;
+                }
             }
         }
 
