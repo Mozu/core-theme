@@ -88,8 +88,9 @@
         @include single-transition(background-color, 0.4s);
 
         &::after {
-            left: 20px;
-            top: 20px;
+            line-height: 60px;
+            width: 100%;
+            text-align: center;
         }
         &.expanded {
             background-color: $color-neutral-20;
