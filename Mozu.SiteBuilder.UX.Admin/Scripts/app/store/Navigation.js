@@ -61,17 +61,17 @@ Ext.define('Taco.store.Navigation', {
                     return true;
                 },
                 mergeSubnavLinks = function(subNavStore) {
-                    var me = this;
+                    var navStore = this;
                     if (Taco.store.Navigation.getSubNavLinksMerged()) {
                         return;
                     }
                     subNavStore.each(function (item) {
-                        var parent = me.getById(item.get('parentId'));
+                        var parent = navStore.getById(item.get('parentId'));
                         if (!parent) {
+                            console.log('could not find parent ');
+                            console.log(item);
                             return;
                         }
-                        console.log(item);
-
                         parent.get('items').push({
                             'id': 'subNav' + item.get('badgeInitials'),
                             'label': item.get('modalWindowTitle'),
