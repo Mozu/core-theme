@@ -6,7 +6,8 @@ Ext.define('Taco.view.publishing.Drafts', {
     extend: 'Taco.core.ux.form.FullEditor',
     requires: [
         'Taco.view.publishing.Form',
-        'Taco.core.ux.grid.plugins.AutoSelect'
+        'Taco.core.ux.grid.plugins.AutoSelect',
+        'Taco.view.publishing.component.DraftGridToolBar'
     ],
     typeName: 'Publish Set',
     formCls: 'Taco.core.ux.form.Form',
@@ -19,92 +20,109 @@ Ext.define('Taco.view.publishing.Drafts', {
     autoScroll: false,
     title: 'Drafts',
     header: false,
+    addContentViewPadding: true,
+
     cancelButtonVisible: false,
     saveButtonVisible: false,
     layout: 'fit',
     style: 'padding-top:10px;',
     initComponent: function () {
-        this.items = [
-            Ext.create('Ext.tab.Panel', {
-                title: false,
-                type: 'publishSetContents',
-                ui: 'subform',
-                layout: 'fit',
-                style: 'border-top-width:0px; background-color:transparent; padding-top: 10px;',
-                split: true,
-                minWidth: 300,
-                header: false,
-                tabBar: {
-                    style: 'padding-bottom: 10px;'
-                },
-                items: [
-                    Ext.create('Taco.view.publishing.grid.Draft', {
-                        scope: this,
-                        title: 'Product',
-                        type: 'drafts',
-                        statefulId: 'draft-product',
-                        hideSearchBar: false,
-                        storeConfig: {
-                            name: 'Taco.store.PublishSetItems',
-                            options:  {
-                                code: 'unassigned',
-                                type: 'product',
-                                listeners: {
-                                    load: {
-                                        fn: function(store) {
-                                            if (store.lastOperation.exception) {
-                                                Taco.app.fireEvent('setmessage', 'There was an error retrieving product drafts', 'error');
-                                            }
-                                        },
-                                        single: true
-                                    }
-                                }
-                            }
-                        },
-                        advancedFormCls: 'Taco.view.publishing.advancedSearchForm.DraftProduct',
-                        listeners: {
-                            afterrender: function(cmp) {
-                                cmp.searchToolbar.add(this.getFilterCheckBox('productCheckbox'));
-                            },
-                            scope:this
-                        }
-                    }),
-                    Ext.create('Taco.view.publishing.grid.Draft', {
-                        scope: this,
-                        title: 'Content',
-                        hideSearchBar: true,
-                        statefulId: 'draft-content',
-                        type: 'drafts',
-                        storeConfig: {
-                            name: 'Taco.store.PublishSetItems',
-                            options:  {
-                                code: 'unassigned',
-                                type: 'cms',
-                                listeners: {
-                                    load: {
-                                        fn: function(store) {
-                                            if (store.lastOperation.exception) {
-                                                Taco.app.fireEvent('setmessage', 'There was an error retrieving content drafts', 'error');
-                                            }
-                                        },
-                                        single: true
-                                    }
-                                }
-                            }
-                        },
-                        advancedFormCls: 'Taco.view.publishing.advancedSearchForm.DraftContent',
-                        listeners: {
-                            afterrender: function(cmp) {
-                                cmp.searchToolbar.add(this.getFilterCheckBox('contentCheckbox'));
-                            },
-                            scope:this
-                        }
-                    })
-                ]
-            })
-        ];
 
+        var me = this;
+
+        this.panel = Ext.create('Ext.panel.Panel', {
+            title: false,
+            type: 'publishSetContents',
+            ui: 'subform',
+            layout: {
+                type: 'card'
+            },
+            header: false,
+            tbar: Ext.create('Taco.view.publishing.component.DraftGridToolBar', {
+                parentScope: me,
+                toolbarTitle: 'Drafts',
+                buttons: true,
+                onSelection: me.onToolBarSelection
+            }),
+            style: {
+                backgroundColor: '#e9e9e9',
+                border: 'none'
+            },
+            items: [
+                Ext.create('Taco.view.publishing.grid.Draft', {
+                    scope: this,
+                    title: false,
+                    uniqueId: 'Product',
+                    type: 'drafts',
+                    statefulId: 'draft-product',
+                    hideSearchBar: true,
+                    storeConfig: {
+                        name: 'Taco.store.PublishSetItems',
+                        options:  {
+                            code: 'unassigned',
+                            type: 'product',
+                            listeners: {
+                                load: {
+                                    fn: function(store) {
+                                        if (store.lastOperation.exception) {
+                                            Taco.app.fireEvent('setmessage', 'There was an error retrieving product drafts', 'error');
+                                        }
+                                    },
+                                    single: true
+                                }
+                            }
+                        }
+                    },
+                    advancedFormCls: 'Taco.view.publishing.advancedSearchForm.DraftProduct',
+                    listeners: {
+                        afterrender: function(cmp) {
+                            // cmp.searchToolbar.add(this.getFilterCheckBox('productCheckbox'));
+                        },
+                        scope:this
+                    }
+                }),
+                Ext.create('Taco.view.publishing.grid.Draft', {
+                    scope: this,
+                    title: false,
+                    uniqueId: 'Content',
+                    hideSearchBar: true,
+                    statefulId: 'draft-content',
+                    type: 'drafts',
+                    storeConfig: {
+                        name: 'Taco.store.PublishSetItems',
+                        options:  {
+                            code: 'unassigned',
+                            type: 'cms',
+                            listeners: {
+                                load: {
+                                    fn: function(store) {
+                                        if (store.lastOperation.exception) {
+                                            Taco.app.fireEvent('setmessage', 'There was an error retrieving content drafts', 'error');
+                                        }
+                                    },
+                                    single: true
+                                }
+                            }
+                        }
+                    },
+                    advancedFormCls: 'Taco.view.publishing.advancedSearchForm.DraftContent',
+                    listeners: {
+                        afterrender: function(cmp) {
+                            // cmp.searchToolbar.add(this.getFilterCheckBox('contentCheckbox'));
+                        },
+                        scope:this
+                    }
+                })
+            ]
+        });
+
+        this.items = [this.panel];
+        
         this.callParent(arguments);
+    },
+
+    onToolBarSelection: function() {
+        
     },
 
     getFilterCheckBox: function(itemId) {

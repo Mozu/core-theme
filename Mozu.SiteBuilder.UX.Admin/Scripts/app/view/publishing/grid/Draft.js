@@ -23,7 +23,7 @@ Ext.define('Taco.view.publishing.grid.Draft', {
     modelName: 'Taco.model.PublishSetItem',
     enableNavHeader: false,
     addContentViewPadding: true,
-    enableSearch: true,
+    enableSearch: false,
     enablePaging: true,
     enableBulkActions: true,
     enableRowEditing: false,
@@ -48,7 +48,7 @@ Ext.define('Taco.view.publishing.grid.Draft', {
             emptySearchText: 'Search'
         };
 
-        this.itemId = this.title.toLowerCase(); //establish the grid as either product or content
+        this.itemId = this.uniqueId.toLowerCase(); //establish the grid as either product or content
         
         this.store = Ext.create(this.storeConfig.name, this.storeConfig.options);
 
@@ -167,7 +167,7 @@ Ext.define('Taco.view.publishing.grid.Draft', {
 
         this.callParent(arguments);
 
-        this.on('afterrender', this.updateStyles, this, {single: true});
+        // this.on('afterrender', this.updateStyles, this, {single: true});
     },
 
     updateStyles: function() {
@@ -178,9 +178,9 @@ Ext.define('Taco.view.publishing.grid.Draft', {
         var index = store.type === 'product' ? 0 : 1,
             text = store.type === 'product' ? 'Product (' + records.length + ')': 'Content (' + records.length + ')';
 
-        if (this.up('tabpanel').tabBar) {
-            this.up('tabpanel').tabBar.items.items[index].setText(text);
-        }
+        // if (this.up('tabpanel').tabBar) {
+        //     this.up('tabpanel').tabBar.items.items[index].setText(text);
+        // }
     },
 
     getColumnConfig: function (gridType, parentContainer) {

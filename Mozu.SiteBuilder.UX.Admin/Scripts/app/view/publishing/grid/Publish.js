@@ -68,7 +68,14 @@ Ext.define('Taco.view.publishing.grid.Publish', {
         
         this.columns = this.getColumnConfig();
 
+        this.tbar = Ext.create('Taco.view.publishing.component.DraftGridToolBar', {
+            parentScope: this,
+            buttons: false,
+            toolbarTitle: 'Publish Sets'
+        });
+
         this.callParent(arguments);
+
 
         this.getSelectionModel().on('select', this.fireSelectionEvent, this, {single: false});
 
@@ -154,17 +161,17 @@ Ext.define('Taco.view.publishing.grid.Publish', {
         //override the paramater, EXT passes the id of the record, but we only recognize true or false;
         isDelete = isDelete !== true ? false : isDelete;
         
-        var contentLayout = this.up('publish-split').down('tabpanel');
+        var contentLayout = this.up('publish-split');
 
         this.updateUrl(record);
 
-        if (!isDelete) {
-            contentLayout.setTitle('<span style="font-weight:bold;">' + record.get('name') + '</span> <span style="color:#999;">Drafts</span>');
-        }
+        // if (!isDelete) {
+        //     contentLayout.setTitle('<span style="font-weight:bold;">' + record.get('name') + '</span> <span style="color:#999;">Drafts</span>');
+        // }
 
-        else {
-            contentLayout.setTitle('<span>Publish Set Contents</span>');
-        }
+        // else {
+        //     contentLayout.setTitle('<span>Publish Set Contents</span>');
+        // }
 
         contentLayout.down('#content').store.read({code: record.get('code'), type: 'cms'});
         contentLayout.down('#product').store.read({code: record.get('code'), type: 'product'});

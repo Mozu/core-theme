@@ -90,25 +90,29 @@ Ext.define('Taco.view.publishing.Split', {
         });
     },
     westGrid: function() {
-        return Ext.create('Ext.tab.Panel', {
-            title: 'Publish Set Contents',
+        var me = this;
+
+        this.panel = Ext.create('Ext.panel.Panel', {
+            title: false,
             type: 'publishSetContents',
             ui: 'subform',
-            layout: 'fit',
+            layout: {
+                type: 'card' 
+            },
             style: 'border-top-width:0px; background-color:transparent; padding:10px',
             split: true,
             minWidth: 300,
-            header: {
-                style: 'background-color:transparent; margin-top:-20px;'
-            },
-            tabBar: {
-                style: 'padding-bottom: 10px;'
-            },
+            tbar: Ext.create('Taco.view.publishing.component.DraftGridToolBar', {
+                parentScope: me,
+                toolbarTitle: 'Drafts',
+                buttons: true
+            }),
             items: [
                 Ext.create('Taco.view.publishing.grid.Draft', {
                     scope: this,
-                    title: 'Product',
                     type: 'drafts',
+                    uniqueId: 'product',
+                    itemId: 'product',
                     statefulId: 'draft-product-publishset',
                     hideSearchBar: false,
                     storeConfig: {
@@ -123,8 +127,9 @@ Ext.define('Taco.view.publishing.Split', {
                 }),
                 Ext.create('Taco.view.publishing.grid.Draft', {
                     scope: this,
-                    title: 'Content',
+                    uniqueId: 'Content',
                     hideSearchBar: true,
+                    itemId: 'content',
                     type: 'drafts',
                     statefulId: 'draft-content-publishset',
                     storeConfig: {
@@ -139,6 +144,8 @@ Ext.define('Taco.view.publishing.Split', {
                 })
             ]
         });
+
+        return this.panel;
     },
     onCreate: function() {
         var me = this;        
