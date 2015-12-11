@@ -3,7 +3,7 @@
 * @Author: ben_cripps
 * @Date:   2015-12-05 15:02:05
 * @Last Modified by:   ben_cripps
-* @Last Modified time: 2015-12-11 14:45:27
+* @Last Modified time: 2015-12-05 20:30:06
 */
 
 'use strict';
@@ -15,9 +15,7 @@ var POSITION_DICTIONARY = {
     TOP: 'TOP',
     RIGHT: 'RIGHT',
     BOTTOM: 'BOTTOM',
-    LEFT: 'LEFT',
-    TOP_ROW: 'TOP_ROW',
-    BOTTOM_ROW: 'BOTTOM_ROW'
+    LEFT: 'LEFT'
 };
 
 exports.POSITION_DICTIONARY = POSITION_DICTIONARY;
@@ -131,10 +129,7 @@ var COL_COPY_SELECTOR = '#' + COL_COPY_ID;
 
 exports.COL_COPY_SELECTOR = COL_COPY_SELECTOR;
 var MIN_COLUMN_WIDTH = 10;
-
 exports.MIN_COLUMN_WIDTH = MIN_COLUMN_WIDTH;
-var HINT_MARGIN = 20;
-exports.HINT_MARGIN = HINT_MARGIN;
 
 },{}],2:[function(require,module,exports){
 'use strict';
@@ -1173,7 +1168,7 @@ var _constants = require('./constants');
             }
         }, {
             key: 'findPosition',
-            value: function findPosition(x, y, w, h, type) {
+            value: function findPosition(x, y, w, h) {
                 // element is divided into four triangles
                 // using mouseX, mouseY, and width and height, we find which quad
                 var quadrants = [[_constants.POSITION_DICTIONARY.LEFT, _constants.POSITION_DICTIONARY.BOTTOM], [_constants.POSITION_DICTIONARY.TOP, _constants.POSITION_DICTIONARY.RIGHT]];
@@ -1182,15 +1177,6 @@ var _constants = require('./constants');
                     quadrants = quadrants[0];
                 } else {
                     quadrants = quadrants[1];
-                }
-
-                if (type === 'widget') {
-
-                    if (y < _constants.HINT_MARGIN) {
-                        return _constants.POSITION_DICTIONARY.TOP_ROW;
-                    } else if (y > h - _constants.HINT_MARGIN) {
-                        return _constants.POSITION_DICTIONARY.BOTTOM_ROW;
-                    }
                 }
 
                 return y < -h / w * x + h ? quadrants[0] : quadrants[1];
@@ -2173,10 +2159,25 @@ var _constants = require('./constants');
                         targetedBlock = this.closest(hoveredTarget, _constants.BLOCK_CLASSNAME);
 
                         if (targetedBlock) {
-                            position = this.findPosition(x, y, width, height, 'widget');
+                            // position = y / parseInt(window.getComputedStyle(targetedBlock, null).height, 10);
+                            position = this.findPosition(x, y, width, height);
                         } else {
                             position = _constants.POSITION_DICTIONARY.TOP;
                         }
+
+                        // if (position) {
+
+                        // }
+
+                        // // console.log(this.findPosition(x, y, width, height));
+
+                        // if (position < 0.49) {
+                        //     pos = POSITION_DICTIONARY.TOP;
+                        // }
+
+                        // else {
+                        //     pos = POSITION_DICTIONARY.BOTTOM;
+                        // }
 
                         return {
                             position: position,
