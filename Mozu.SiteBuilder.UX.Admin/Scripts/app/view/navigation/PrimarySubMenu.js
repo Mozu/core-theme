@@ -38,42 +38,26 @@ Ext.define('Taco.view.navigation.PrimarySubMenu', {
         selModel.allowDeselect = true;
     },
 
-    //buildFlyoutMenuConfig:function (items, menuCfg) {
-    //
-    //    Ext.Array.each(items, function (item) {
-    //        var itemCfg = {
-    //            text: item.label
-    //        };
-    //        menuCfg.items.add(itemCfg);
-    //        if (item.address) {
-    //            item.handler =function () {
-    //                alert('open' + item.address);
-    //            }
-    //        }
-    //        if (item.items && item.items.length ) {
-    //            itemCfg.menu = {
-    //                xtype: 'menu',
-    //                items: []
-    //            };
-    //            this.buildFlyoutMenuConfig(item.items, itemCfg.menu);
-    //        }
-    //
-    //    }, this);
-    //},
-
     /**
      * Navigates to the link's destination via {@link Taco.core.StateManager}'s
      * attemptNavigate method.
      * @param  {Ext.EventObject} e The raw event object
      */
     navigate: function (e) {
-        var menu = Ext.ComponentQuery.query('#primaryMenuContainer').shift();
+        var menu = Ext.ComponentQuery.query('#primaryMenuContainer').shift(),
+            href;
         e.preventDefault();
         if (!e.target.hasAttribute('href')) {
             console.log('missing href');
             return;
         }
-        Taco.core.StateManager.attemptNavigate(e.target.getAttribute('href'));
+        href = e.target.getAttribute('href');
+        if (!href.startsWith('http')) {
+            Taco.core.StateManager.attemptNavigate(href);
+        } else {
+            window.open(href, '_new');
+        }
+
         if (menu) {
             menu.hideMenu();
         }

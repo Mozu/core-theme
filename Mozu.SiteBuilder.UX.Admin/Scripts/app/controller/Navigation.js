@@ -28,7 +28,8 @@ Ext.define('Taco.controller.Navigation', {
 
         if (!store.getCount()) return store.on('load', this.init, this);
 
-        this.bindPrimaryMenu();
+        Taco.app.NavigationStore = store;
+        //this.bindPrimaryMenu();
 
         this.callParent(arguments);
 
@@ -38,17 +39,17 @@ Ext.define('Taco.controller.Navigation', {
         });
     },
 
-    bindPrimaryMenu: function () {
-        var pm = this.getPrimaryMenuContainer(),
-            navStore = this.getNavigationStore();
-
-        // if the primary menu hasnt been instantiated, preserve the navstore
-        if (!pm) {
-            Taco.app.NavigationStore = navStore;
-            return false;
-        }
-        pm.bindStore(navStore);
-    },
+    //bindPrimaryMenu: function () {
+    //    var pm = this.getPrimaryMenuContainer(),
+    //        navStore = this.getNavigationStore();
+    //
+    //    // if the primary menu hasnt been instantiated, preserve the navstore
+    //    if (!pm) {
+    //        Taco.app.NavigationStore = navStore;
+    //        return false;
+    //    }
+    //    //pm.bindStore(navStore);
+    //},
 
     onStateChange: function (appState) {
         var pm = this.getPrimaryMenuContainer();

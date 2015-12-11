@@ -11,14 +11,19 @@ Ext.define('Taco.store.Navigation', {
     statics: {
         subNavLinksLoaded: false,
         getSubNavLinksLoaded: function () { return this.subNavLinksLoaded; },
-        setSubNavLinksLoaded: function (val) { this.subNavLinksLoaded = val; }
+        setSubNavLinksLoaded: function (val) { this.subNavLinksLoaded = val; },
+
+        subNavLinksMerged: false,
+        getSubNavLinksMerged: function () { return this.subNavLinksMerged; },
+        setSubNavLinksMerged: function (val) { this.subNavLinksMerged = val; }
     },
     listeners: {
         beforeload: function (store) {
             if (!Taco.app || !Taco.app.context) {
                 return;
             }
-            var data = store.getProxy().data,
+            var me = this,
+                data = store.getProxy().data,
                 seed = 0,
                 recursiveFind = function (key, val, items) {
                     var res;
@@ -55,6 +60,26 @@ Ext.define('Taco.store.Navigation', {
                     }
                     return true;
                 },
+                mergeSubnavLinks = function(subNavStore) {
+                    var me = this;
+                    if (Taco.store.Navigation.getSubNavLinksMerged()) {
+                        return;
+                    }
+                    subNavStore.each(function (item) {
+                        var parent = me.getById(item.get('parentId'));
+                        if (!parent) {
+                            return;
+                        }
+                        console.log(item);
+
+                        parent.get('items').push({
+                            'id': 'subNav' + item.get('badgeInitials'),
+                            'label': item.get('modalWindowTitle'),
+                            'address': item.get('href')
+                        });
+                    });
+                    Taco.store.Navigation.setSubNavLinksMerged();
+                },
                 isMultiCurrency,
                 isMultiLang;
             
@@ -67,17 +92,13 @@ Ext.define('Taco.store.Navigation', {
                 }
             });
 
-
             data = Ext.Array.filter(data, pruneInvalidLocLinks, this);
-
-
-
 
             if (Taco.store.Navigation.getSubNavLinksLoaded() || !Taco.extensiblity || !Taco.extensiblity.subNavLinks) {
                 return;
             }
+            this.mon(Taco.app, 'subnavlinksloaded', mergeSubnavLinks, me);
 
-            
             this.subNavLinksStore = Ext.create('Taco.store.SubnavLinks', {
                 filterOnLoad: true,
                 filters: [ 
@@ -91,13 +112,12 @@ Ext.define('Taco.store.Navigation', {
                             item.set('parentId', item.get('location').toLowerCase().replace('menu', ''));
                             return item;
                         }
-
                     }
                 ],
                 listeners: {
                     load: function() {
+                        Taco.app.fireEvent('subnavlinksloaded', this);
                         Taco.store.Navigation.setSubNavLinksLoaded(true);
-                        console.log(this);
                     }
                 }
             });
@@ -165,12 +185,12 @@ Ext.define('Taco.store.Navigation', {
         type: 'memory',
         data: [
             {
-                'id': 'catalog',
+                'id': 'products',
                 'label': 'Catalog',
                 'icon': 'nav-catalog',
                 'behaviorIds': [4],
                 'items': [{
-                    'id': 'products',
+                    'id': 'catalogProducts',
                     'label': 'Products',
                     'address': 'products',
                     'behaviorIds': [4]
