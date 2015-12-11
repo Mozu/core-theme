@@ -58,6 +58,12 @@ Ext.define('Taco.view.publishing.component.DraftGridToolBar', {
 	                ui: 'link',
 	                cls: 'taco-link-button',
 	                text: 'Products',
+                    toggleGroup: 'tabButtons',
+                    allowDepress: false,
+                    pressed: true,
+                    enableToggle: true,
+                    pressedCls: 'active',
+                    buttonGroup: 'draftsButtons',
 	                handler: this.setActivePanel.bind(this, 'product')
 
 	            },
@@ -66,6 +72,11 @@ Ext.define('Taco.view.publishing.component.DraftGridToolBar', {
 	                ui: 'link',
 	                cls: 'taco-link-button',
 	                text: 'Content',
+                    toggleGroup: 'tabButtons',
+                    allowDepress: false,
+                    enableToggle: true,           
+                    pressedCls: 'active',
+                    buttonGroup: 'draftsButtons',
 	                handler: this.setActivePanel.bind(this, 'content')
             	}
             ]
@@ -81,7 +92,17 @@ Ext.define('Taco.view.publishing.component.DraftGridToolBar', {
     setStore: function(type) {
         var grid = this.parentScope.down('#'+ type)
         var store = grid ? grid.store : null;
-        if (store) this.searchBox.store = store;
+        var filterInput = this.searchBox.down('#textFilter');
+        if (store) {
+            this.searchBox.store = store;
+        }
+
+        if (store) {
+            this.searchBox.down('#textFilter').setValue('');
+            store.proxy.extraParams = {};
+            store.clearFilter();
+        }
+
     },
 
     setActivePanel: function(type) {

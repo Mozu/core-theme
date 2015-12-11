@@ -100,7 +100,6 @@ Ext.define('Taco.view.publishing.Split', {
             layout: {
                 type: 'card' 
             },
-            style: 'border-top-width:0px; background-color:transparent;',
             split: true,
             minWidth: 300,
             tbar: Ext.create('Taco.view.publishing.component.DraftGridToolBar', {
@@ -108,6 +107,9 @@ Ext.define('Taco.view.publishing.Split', {
                 toolbarTitle: 'Drafts',
                 buttons: true
             }),
+            style: {
+                border: 'none'
+            },
             items: [
                 Ext.create('Taco.view.publishing.grid.Draft', {
                     scope: this,

@@ -54,7 +54,7 @@ Ext.define('Taco.view.publishing.Drafts', {
                 onSelection: me.onToolBarSelection
             }),
             style: {
-                backgroundColor: '#e9e9e9',
+                
                 border: 'none'
             },
             items: [
