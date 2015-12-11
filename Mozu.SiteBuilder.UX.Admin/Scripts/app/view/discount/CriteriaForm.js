@@ -539,18 +539,25 @@ Ext.define('Taco.view.discount.CriteriaForm', {
     launchCategoryModal: function(list) {
         var me = this,
             treeStore = Taco.core.data.StoreManager.getCategoryTreeByCatalog();
-
-        //treeStore.on({
-        //    load: function () {
-        //        if (!me.showDynamicRealTimeCategories) {
-        //            treeStore.filterBy(function (record) {
-        //                var isRealTime = record.get("categoryType") === "DynamicRealTime";
-        //                return (!isRealTime);
-        //            });
-        //        }
-        //    },
-        //    scope: this
-        //});
+        treeStore.on({
+            load: function () {
+                if (!me.showDynamicRealTimeCategories) {
+                    treeStore.filterBy(function (record) {
+                        var isRealTime = record.get("categoryType") === "DynamicRealTime";
+                        return (!isRealTime);
+                    });
+                }
+            },
+            beforeexpand: function (node, opts) {
+                if (!me.showDynamicRealTimeCategories) {
+                    node.childNodes = node.childNodes.filter(function (childNode) {
+                        var isRealtime = childNode.data.categoryType === "DynamicRealTime";
+                        return !isRealtime;
+                    });
+                }
+            },
+            scope: this
+        });
 
         this.modal = Ext.create('Taco.view.category.Modal', {
             store: treeStore
