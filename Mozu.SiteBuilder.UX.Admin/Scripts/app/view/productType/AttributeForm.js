@@ -13,10 +13,8 @@
     containerWidth: 150,
     ignoreParentFormTracking: true,
     multiSelect: null,
-    isPopulatingEditor: false,
     initComponent: function () {
         var me = this;
-
         this.addEvents([
             'save',
             'cancel'
@@ -59,7 +57,6 @@
 
     create: function () {
         this.removeAll();
-        this.addButtons();
         this.addAttributes([
             {
                 property: this.filterProperty,
@@ -73,7 +70,6 @@
 
     edit: function (ptAttribute) {
         this.removeAll();
-        this.addButtons();
         this.addAttributes([
             {
                 filterFn: this.editFilter
@@ -89,7 +85,7 @@
             text: 'Done',
             scope: this,
             handler: this.onSave
-        });
+    });
 
         this.cancelButton = Ext.widget({
             xtype: 'button',
@@ -111,7 +107,6 @@
             },
             items: [this.cancelButton, this.saveButton]
         });
-
         this.add(this.buttonContainer);
     },
 
@@ -148,31 +143,31 @@
         });
 
         this.attributeStore.resumeEvents();
-
-        this.setLoading(true);
-        this.attributeStore.load(
-            {
-                params: {
-                    type: me.filterProperty,
-                    isGrid: true, //only get basic fields
-                    id: '' //clear if needed
-                },
-                callback: function(records, operation, success) {
-                    this.createFirstLevelListEditor(this.attributeStore, attribute);
-                    this.setLoading(false);
-                },
-                scope: this
-            }
-        );
+        this.up().setLoading(true);
+        if (this.attributeStore.hasLoaded()) {
+            this.addButtons();
+            this.createFirstLevelListEditor(this.attributeStore, attribute);
+        } else {
+            this.attributeStore.load(
+                {
+                    params: {
+                        type: me.filterProperty,
+                        isGrid: true
+                    },
+                    callback: function(records, operation, success) {
+                        this.addButtons();
+                        this.createFirstLevelListEditor(this.attributeStore, attribute);
+                    },
+                    scope: this
+                }
+            );
+        }
     },
 
-    onSelectedAttributeChanged: function (selectionModel, records) {
-        if (this.isPopulatingEditor || !Ext.isArray(records) || records.length !== 1) {
-            return;
-        }
+    onSelectedAttributeChanged: function(selectionModel, records) {
         this.addEditor(records[0]);
-        // this.saveButton.setDirty(true);
         this.selectedAttribute = records[0];
+        return false;       //crucial to avoid multiple callbacks
     },
 
     selectAttributeAndUpdateValues : function(ptAttribute) {
@@ -193,50 +188,34 @@
         if (ptAttribute) {
             this.record = ptAttribute;
         }
-
-
          
         if (attribute.get('inputType') === 'List') {
-            this.setLoading(true);
             //Load attribute's values
-            this.isPopulatingEditor = true;
-            Taco.core.data.StoreManager.getOrCreate({
-                type: 'Taco.store.Attributes',
-                createOnly: true,
-                remoteFilter: false,
-                clearFilters: true,
-                clearSort: true,
-                formEl: this,
-                id: 'attributeValues',
-                autoLoad: true,
-                storeManagerConfig: {
-                    extraParams: {
-                        params: {
-                            id: attribute.get("id") 
-                        }
-                    }
+            this.up().setLoading(true);
+            var id = attribute.internalId;
+            Taco.model.Attribute.load(id, {
+                scope: this,
+                success: function (records, operation) {
+                    var datavalues = records.get('values');
+                    this.addListEditor(attribute, datavalues);
                 },
-                listeners: {
-                    load: function(store, operation, ccc) {
-                        var datavalues = store.data.items[0].get('values');
-                        this.addListEditor(attribute, datavalues);  // this.addListEditor(attribute, store);
-                        this.addCheckboxes(attribute);
-                        this.isPopulatingEditor = false;
-                        this.setLoading(false);
-                    },
-                    scope: this
+                failure: function(record, operation) {
+                    this.up().setLoading(false);
+                    if (operation.error) {
+                        Taco.core.util.ExceptionWhiner.handleRemoteFailure(operation.error);
+                    } else {
+                        Taco.app.fireEvent('setmessage', 'Unexpected error: could not find attribute values', 'error');
+                    }
                 }
             });
         } else {
-            this.isPopulatingEditor = true;
             this.addCheckboxes(attribute);
-            this.isPopulatingEditor = false;
         }
     },
 
     addListEditor: function (attribute,valuesData) {
 
-
+        this.up().setLoading(true);
         var valuesField, selectionsField, valuesStore,
             dataType = attribute.get("dataType"),
             fields = [
@@ -285,9 +264,6 @@
                 }],
             data: this.record.get('selectedValues')
         });
-
-
-        // Ext.util.Observable.capture(this.selectionStore, function (eventName, e) { console.log(eventName, e); });
 
         valuesField = Ext.create('Taco.core.ux.form.field.MultiSelect', {
             name: 'values',
@@ -345,7 +321,6 @@
                         if (!Ext.fly(e.target).hasCls('x-boundlist-item-close')) {
                             return;
                         }
-
                         this.selectionStore.remove(record);
                         valuesField.deselect(record.get('id'));
                     },
@@ -357,6 +332,8 @@
         selectionsField.boundList.selectedItemCls = 'dummy';
         this.insert(this.items.getCount() - 1, valuesField);
         this.insert(this.items.getCount() - 1, selectionsField);
+        this.addCheckboxes(attribute);
+        this.up().setLoading(false);
     },
 
     addCheckboxes: function (attribute) {
@@ -427,44 +404,41 @@
                 disabled: this.record.get('isAdminOnly'),
                 boxLabel: 'Hidden from Shopper'
             });
-
             fieldGroup.add(this.displayGroupSelector);
             fieldGroup.add(this.isHiddenFromShopper);
         }
-
-
         this.insert(this.items.getCount() - 1, fieldGroup);
     },
 
     createFirstLevelListEditor: function (store, attribute) {
         var me = this;
-        me.insert(this.items.getCount() - 1, Ext.create('Taco.core.ux.form.field.MultiSelect', {
-                name: 'attribute',
-                fieldLabel: 'Attribute',
-                store: store,
-                minWidth: me.containerWidth,
-                displayField: 'adminName',
-                height: 300,
-                ignoreParentFormTracking: true,
-                valueField: 'id',
-                value: attribute ? attribute.getId() : null,
-                maxSelections: 1,
-                listConfig: {
-                    selModel: {
-                        allowDeselect: false,
-                        deselectOnContainerClick: false,
-                        mode: 'SINGLE',
-                        listeners: {
-                            selectionchange: {
-                                fn: me.onSelectedAttributeChanged,
-                                scope: this
-                            },
-                            buffer: 1,
+        me.insert(0, Ext.create('Taco.core.ux.form.field.MultiSelect', {
+            name: 'attribute',
+            fieldLabel: 'Attribute',
+            store: store,
+            minWidth: me.containerWidth,
+            displayField: 'adminName',
+            height: 300,
+            ignoreParentFormTracking: true,
+            valueField: 'id',
+            value: attribute ? attribute.getId() : null,
+            maxSelections: 1,
+            listConfig: {
+                selModel: {
+                    allowDeselect: false,
+                    deselectOnContainerClick: false,
+                    mode: 'SINGLE',
+                    listeners: {
+                        selectionchange: {
+                            fn: me.onSelectedAttributeChanged,
                             scope: this
-                        }
+                        },
+                        buffer: 10,
+                        scope: this
                     }
                 }
-            })
-        );
+            }
+        }));
+        this.up().setLoading(false);
     }
 });
