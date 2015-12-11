@@ -13,7 +13,7 @@ Ext.define('Taco.view.navigation.PrimaryMenuContainer', {
     //    tag: 'div',
     //    cls: 'taco-primary-menu-ct'
     //},
-    autoShow: true,
+    autoShow: false,
     autoScroll:true,
     border: false,
     floating: true,
