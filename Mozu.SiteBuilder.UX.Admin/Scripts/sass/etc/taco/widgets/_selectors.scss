@@ -190,6 +190,9 @@
 
                 .#{$prefix}btn {
                     .#{$prefix}btn-arrow-right {
+                        .#{$prefix}btn-inner-center {
+                            display: none;
+                        }
                         // &:after {
                         //     display: none;
                         // }
