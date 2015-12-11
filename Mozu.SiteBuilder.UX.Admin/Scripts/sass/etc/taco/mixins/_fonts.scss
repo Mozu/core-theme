@@ -142,7 +142,7 @@ $glyph-dropvideo:           "\E07E";
         color: $color;
         content: $glyph;
         display: block;
-        font-family: mozicons;
+        font-family: $icon-font;
         font-size: $size;
         font-weight: normal !important;
         left: 0px;
