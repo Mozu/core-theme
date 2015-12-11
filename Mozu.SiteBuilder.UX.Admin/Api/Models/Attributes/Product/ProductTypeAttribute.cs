@@ -19,6 +19,8 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.Models.Attributes.Product
         
         public bool? IsAdminOnly { get; set; }
 
+        public bool? IsProductDetailsOnlyProperty { get; set; }
+
         public bool? IsLocked { get; set; }
 
         public List<AttributeValue> SelectedValues { get; set; }
@@ -36,5 +38,6 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.Models.Attributes.Product
         public List<AttributeMetadataItem> AttributeMetadata { get; set; }
 
         public int Order { get; set; }
+
     }
 }       

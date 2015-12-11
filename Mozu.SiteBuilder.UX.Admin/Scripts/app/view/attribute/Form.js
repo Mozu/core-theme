@@ -97,6 +97,8 @@ Ext.define('Taco.view.attribute.Form', {
                         if (girdContainer) {
                             girdContainer.initGrid(newValue);
                         }
+
+                        Taco.app.fireEvent('attribute-data-type-changed', newValue);
                     }
                 }
             }
@@ -579,7 +581,7 @@ Ext.define('Taco.view.attribute.Form', {
         this.buildFormComponents();
 
         this.valuesStore = this.record.getAttributeValues();
-        this.mon(this.valuesStore, 'load', this.onValudStoreLoad, this);
+        this.mon(this.valuesStore, 'load', this.onValueStoreLoad, this);
 
         this.stores = [this.valuesStore];
 
@@ -589,7 +591,7 @@ Ext.define('Taco.view.attribute.Form', {
 
         if (this.record.get('inputType')) {
             this.setAttributeInputType(this.record.get('inputType'));
-            this.onValudStoreLoad();
+            this.onValueStoreLoad();
         }
 
     },
@@ -627,7 +629,7 @@ Ext.define('Taco.view.attribute.Form', {
         }*/
     },
 
-    onValudStoreLoad: function () {
+    onValueStoreLoad: function () {
         var me = this;
         if ((this.record.get('dataType') || '').toLowerCase() != 'productcode') {
             return;
@@ -667,6 +669,88 @@ Ext.define('Taco.view.attribute.Form', {
 
     },
 
+    createSearchOptions: function () {
+        var me = this;
+
+        this.searchInStorefront = Ext.widget('checkboxfield', {
+            name: 'searchableInStorefront',
+            boxLabel: 'Available to Storefront Search',
+            hidden: !this.record.supportsSearchInStorefront(),
+            listeners: {
+                change: function (cmp, newValue) {
+                    me.record.set('searchableInStorefront', newValue);
+                    me.searchDisplayContainer.setVisible(me.record.supportsSearchDisplayType());
+                },
+                scope: this
+            }
+        });
+
+        this.searchLabel = Ext.widget({
+            xtype: 'radio',
+            name: 'searchDisplayType',
+            persistSelectedValueOnly: true,
+            boxLabel: 'Search Label',
+            inputValue: 'label',
+            width: 300,
+            checked: this.record.get('searchDisplayType') === 'label',
+            listeners: {
+                afterchange: function (cmp, newValue) {
+                    if (newValue) {
+                        this.record.set('searchDisplayValue', false);
+                    }
+                },
+                scope: this
+            }
+        });
+
+        this.searchValue = Ext.widget({
+            xtype: 'radio',
+            name: 'searchDisplayType',
+            persistSelectedValueOnly: true,
+            boxLabel: 'Search Value',
+            inputValue: 'value',
+            width: 300,
+            // default selection if the record is a create;
+            checked: this.record.get('searchDisplayType') === 'value',
+            //checked: ((this.record.phantom && !this.record.isDuplicate) || (!this.record.get('includeAllProducts') && this.record.get('products').length)),
+            listeners: {
+                afterchange: function (cmp, newValue) {
+                    if (newValue) {
+                        this.record.set('searchDisplayValue', true);
+                    }
+                },
+                scope: this
+            }
+        });
+
+        this.searchDisplayContainer = Ext.widget('fieldcontainer', {
+            id: 'searchDisplayContainer',
+            margin: '0 0 0 25',
+            layout: 'vbox',
+            hidden: !this.record.supportsSearchDisplayType(),
+            items: [
+                this.searchLabel,
+                this.searchValue
+            ]
+        });
+
+        this.allowFilteringAndSorting = Ext.widget('checkboxfield', {
+            name: 'allowFilteringAndSortingInStorefront',
+            boxLabel: 'Available as Filter & Sort'
+        });
+
+        return Ext.create('Ext.form.FieldContainer',
+            Taco.core.ux.TooltipLabel.wrapConfig('attribute.form.searchOptions', me, {
+                fieldLabel: "Search Options",
+                items: [
+                    this.searchInStorefront,
+                    this.searchDisplayContainer,
+                    this.allowFilteringAndSorting
+                ]
+            })
+        );
+    },
+
     buildFormComponents: function () {
         var me = this;
 
@@ -700,7 +784,7 @@ Ext.define('Taco.view.attribute.Form', {
             }
         });
 
-
+        
         this.items = [
             {
                 fieldLabel: 'Attribute Label',
@@ -829,6 +913,13 @@ Ext.define('Taco.view.attribute.Form', {
             this.subform
         ];
 
+        if (this.record.supportsSearchOptions()) {
+            this.items.push(this.createSearchOptions());
+            this.mon(Taco.app, 'attribute-data-type-changed', function (newVal) {
+                me.record.set('dataType', newVal);
+                me.searchDisplayContainer.setVisible(me.record.supportsSearchDisplayType());
+            });
+        }
 
     },
 
@@ -869,6 +960,10 @@ Ext.define('Taco.view.attribute.Form', {
             attributeField.allowOnlyWhitespace = !this.record.supportsAttributeType();
         }
 
-
+        if (this.record.supportsSearchOptions()) {
+            this.record.set('inputType', inputType);
+            this.searchInStorefront.setVisible(this.record.supportsSearchInStorefront());
+            this.searchDisplayContainer.setVisible(this.record.supportsSearchDisplayType());
+        }
     }
 });

@@ -4,14 +4,11 @@
 Ext.define('Taco.view.order.widget.DiscountPickerField', {
     extend: 'Ext.form.field.ComboBox',
     requires: [
-        
     ],
     
     config: {
-    
     },
     
-    displayField: 'name',
     hideLabel: true,
     hideTrigger: false,
     emptyText: "Search",
@@ -24,7 +21,10 @@ Ext.define('Taco.view.order.widget.DiscountPickerField', {
         emptyText: 'No matching discounts found.',
         // Custom rendering template for each item
         getInnerTpl: function () {
-            return "<span class='name'>{name},</span><span class='codelabel'>Coupon:</span><span class='code'>\"{couponCode}\"</span>"
+            return "<span class='name'>{name},</span>" +
+                "<tpl if='couponCode'><span class='codelabel'>Coupon:</span><span class='code'>\"{couponCode}\"</span>" +
+                "<tpl else><span class='codelabel'>Multiple Codes</span>" +
+                "</tpl>";
         },
 
         // this is an override that hides the paging toolbar when the list only contains a single page of results;

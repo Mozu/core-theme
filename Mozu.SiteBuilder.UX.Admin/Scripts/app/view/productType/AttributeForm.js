@@ -12,7 +12,8 @@
     },
     containerWidth: 150,
     ignoreParentFormTracking: true,
-
+    multiSelect: null,
+    isPopulatingEditor: false,
     initComponent: function () {
         var me = this;
 
@@ -23,12 +24,20 @@
 
         this.attributeStore = Taco.core.data.StoreManager.getOrCreate({
             type: 'Taco.store.Attributes',
-            createOnly:true,
+            createOnly: true,
             remoteFilter: false,
             clearFilters: true,
             clearSort: true,
             id: 'attributes',
-            autoLoad: true
+            autoLoad: false,
+            storeManagerConfig: {
+                extraParams: {
+                    params: {
+                        type: me.filterProperty,
+                        isGrid: true //only get basic fields
+                    }
+                }
+            }
         });
 
         this.createFilter = function (attributeRecord) {
@@ -119,7 +128,10 @@
             this.record.set('selectedValues', Ext.Array.pluck(this.selectionStore.data.items, 'raw'));
             break;
         }
-
+        if (this.displayGroupSelector) {
+            this.record.set('isAdminOnly', this.displayGroupSelector.value === 'adminonly');
+            this.record.set('isProductDetailsOnlyProperty', this.displayGroupSelector.value === 'details');
+        }
         this.record.set('attributeFQN', this.selectedAttribute.getId());
         this.record.phantom = true;
         this.fireEvent('save', this, this.record);
@@ -134,40 +146,28 @@
             property: 'adminName',
             direction: 'ASC'
         });
-        
+
         this.attributeStore.resumeEvents();
-        
-        this.insert(this.items.getCount() - 1, Ext.create('Taco.core.ux.form.field.MultiSelect', {
-            name: 'attribute',
-            fieldLabel: 'Attribute',
-            store: this.attributeStore,
-            minWidth: this.containerWidth,
-            displayField: 'adminName',
-            height: 300,
-            ignoreParentFormTracking: true,
-            valueField: 'id',
-            value: attribute ? attribute.getId() : null,
-            maxSelections: 1,
-            listConfig: {
-                selModel: {
-                    allowDeselect: false,
-                    deselectOnContainerClick: false,
-                    mode: 'SINGLE',
-                    listeners: {
-                        selectionchange: {
-                            fn: me.onSelectedAttributeChanged,
-                            scope: this
-                        },
-                        buffer: 1,
-                        scope: this
-                    }
-                }
+
+        this.setLoading(true);
+        this.attributeStore.load(
+            {
+                params: {
+                    type: me.filterProperty,
+                    isGrid: true, //only get basic fields
+                    id: '' //clear if needed
+                },
+                callback: function(records, operation, success) {
+                    this.createFirstLevelListEditor(this.attributeStore, attribute);
+                    this.setLoading(false);
+                },
+                scope: this
             }
-        }));
+        );
     },
 
     onSelectedAttributeChanged: function (selectionModel, records) {
-        if (!Ext.isArray(records) || records.length !== 1) {
+        if (this.isPopulatingEditor || !Ext.isArray(records) || records.length !== 1) {
             return;
         }
         this.addEditor(records[0]);
@@ -195,14 +195,47 @@
         }
 
 
+         
         if (attribute.get('inputType') === 'List') {
-            this.addListEditor(attribute);
+            this.setLoading(true);
+            //Load attribute's values
+            this.isPopulatingEditor = true;
+            Taco.core.data.StoreManager.getOrCreate({
+                type: 'Taco.store.Attributes',
+                createOnly: true,
+                remoteFilter: false,
+                clearFilters: true,
+                clearSort: true,
+                formEl: this,
+                id: 'attributeValues',
+                autoLoad: true,
+                storeManagerConfig: {
+                    extraParams: {
+                        params: {
+                            id: attribute.get("id") 
+                        }
+                    }
+                },
+                listeners: {
+                    load: function(store, operation, ccc) {
+                        var datavalues = store.data.items[0].get('values');
+                        this.addListEditor(attribute, datavalues);  // this.addListEditor(attribute, store);
+                        this.addCheckboxes(attribute);
+                        this.isPopulatingEditor = false;
+                        this.setLoading(false);
+                    },
+                    scope: this
+                }
+            });
+        } else {
+            this.isPopulatingEditor = true;
+            this.addCheckboxes(attribute);
+            this.isPopulatingEditor = false;
         }
-        this.addCheckboxes(attribute);
     },
 
-    addListEditor: function (attribute) {
-        
+    addListEditor: function (attribute,valuesData) {
+
 
         var valuesField, selectionsField, valuesStore,
             dataType = attribute.get("dataType"),
@@ -216,44 +249,44 @@
                     type: (dataType && dataType == "Number") ? 'float' : 'string'
                 }
             ];
-        
+
         valuesStore = Ext.create('Ext.data.Store', {
             fields: fields,
             sorters: [{
-                property: 'value',
-                direction: 'ASC',
-                sorterFn: function (a, b) {
-                    a = a.data.value;
-                    b = b.data.value;
-                    var reA = /[^a-zA-Z]/g;
-                    var reN = /[^0-9]/g;
-                    var aA = (typeof a === 'string') ? a.replace(reA, "") : a; // check for option type 'number' since its supplied as int
-                    var bA = (typeof b === 'string') ? b.replace(reA, "") : b;
-                    if (aA === bA) {
-                        var aN = parseInt(a.replace(reN, ""), 10);
-                        var bN = parseInt(b.replace(reN, ""), 10);
-                        return aN === bN ? 0 : aN > bN ? 1 : -1;
-                    } else {
-                        return aA > bA ? 1 : -1;
+                    property: 'value',
+                    direction: 'ASC',
+                    sorterFn: function (a, b) {
+                        a = a.data.value;
+                        b = b.data.value;
+                        var reA = /[^a-zA-Z]/g;
+                        var reN = /[^0-9]/g;
+                        var aA = (typeof a === 'string') ? a.replace(reA, "") : a; // check for option type 'number' since its supplied as int
+                        var bA = (typeof b === 'string') ? b.replace(reA, "") : b;
+                        if (aA === bA) {
+                            var aN = parseInt(a.replace(reN, ""), 10);
+                            var bN = parseInt(b.replace(reN, ""), 10);
+                            return aN === bN ? 0 : aN > bN ? 1 : -1;
+                        } else {
+                            return aA > bA ? 1 : -1;
+                        }
                     }
-                }
-            }],
-            data: attribute.get('values')
+                }],
+            data: valuesData
         });
 
         this.selectionStore = Ext.create('Ext.data.Store', {
             fields: fields,
             sorters:[{
-                property: 'value',
-                direction: 'ASC',
-                sorterFn: function (a, b) {
-                    return a.index - b.index;
-                }
-            }],
+                    property: 'value',
+                    direction: 'ASC',
+                    sorterFn: function (a, b) {
+                        return a.index - b.index;
+                    }
+                }],
             data: this.record.get('selectedValues')
         });
 
-        
+
         // Ext.util.Observable.capture(this.selectionStore, function (eventName, e) { console.log(eventName, e); });
 
         valuesField = Ext.create('Taco.core.ux.form.field.MultiSelect', {
@@ -301,7 +334,6 @@
             valueField: 'id',
 
             listConfig: {
-
                 itemTpl: [
                     '<span class="x-boundlist-item-drag">Drag </span>',
                     '<span class="x-boundlist-item-content">{value}</span>',
@@ -337,10 +369,10 @@
                     ignoreParentFormTracking: true
                 },
                 items: [{
-                    name: 'isRequired',
-                    checked: this.record.get('isRequired'),
-                    boxLabel: 'Required by admin'
-                }]
+                        name: 'isRequired',
+                        checked: this.record.get('isRequired'),
+                        boxLabel: 'Required by admin'
+                    }]
             });
 
         if (attribute.get('inputType') === 'List' && this.type !== 'options') {
@@ -356,30 +388,35 @@
                 fields: ['id', "name"],
                 data: [
                     {
-                        name: "Admin & Storefront",
-                        id: false
+                        name: "Storefront Details and Product Listings",
+                        id: 'listings'
+                    },{
+                        name: "Storefront Details",
+                        id: 'details'
                     }, {
                         name: "Admin Only",
-                        id: true
+                        id: 'adminonly'
                     }
                 ]
             });
+            var initDisplayGroup = this.record.get('isProductDetailsOnlyProperty') ? 'details' : this.record.get('isAdminOnly') ? 'adminonly' : 'listings';
 
             this.displayGroupSelector = Ext.widget({
                 xtype: 'selectfield',
                 itemId: "displayGroupSelector",
                 fieldLabel: 'Display Group',
-                name: 'isAdminOnly',
                 queryMode: 'local',
                 margin: '0 0 10 0',
                 width: 185,
                 displayField: 'name',
                 valueField: 'id',
-                value: this.record.get('isAdminOnly'),
+                value: initDisplayGroup,
                 store: this.isAdminOnlyStore,
                 listeners: {
                     change: function (view, value) {
-                        me.isHiddenFromShopper.setDisabled(value);
+                        me.isHiddenFromShopper.setDisabled(value === 'adminonly');
+                        if (me.isHiddenFromShopper.isDisabled())
+                            me.isHiddenFromShopper.setValue(false);
                     }
                 }
             });
@@ -397,5 +434,37 @@
 
 
         this.insert(this.items.getCount() - 1, fieldGroup);
+    },
+
+    createFirstLevelListEditor: function (store, attribute) {
+        var me = this;
+        me.insert(this.items.getCount() - 1, Ext.create('Taco.core.ux.form.field.MultiSelect', {
+                name: 'attribute',
+                fieldLabel: 'Attribute',
+                store: store,
+                minWidth: me.containerWidth,
+                displayField: 'adminName',
+                height: 300,
+                ignoreParentFormTracking: true,
+                valueField: 'id',
+                value: attribute ? attribute.getId() : null,
+                maxSelections: 1,
+                listConfig: {
+                    selModel: {
+                        allowDeselect: false,
+                        deselectOnContainerClick: false,
+                        mode: 'SINGLE',
+                        listeners: {
+                            selectionchange: {
+                                fn: me.onSelectedAttributeChanged,
+                                scope: this
+                            },
+                            buffer: 1,
+                            scope: this
+                        }
+                    }
+                }
+            })
+        );
     }
 });
