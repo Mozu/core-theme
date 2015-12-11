@@ -169,7 +169,7 @@
             itemId: 'moreButton',
             ui: 'action',
             scale: 'medium',
-            text: 'More',
+            text: '',
             menuAlign: 'tr-br?',
             menu: {
                 plain: true,
