@@ -27,7 +27,7 @@
             clearFilters: true,
             clearSort: true,
             id: 'attributes',
-            autoLoad: false,
+            autoLoad: true,
             storeManagerConfig: {
                 extraParams: {
                     params: {
