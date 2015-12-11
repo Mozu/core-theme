@@ -2,6 +2,7 @@
     background-color: $color-neutral-white;
     margin-left: 0px;
     opacity: 1;
+    overflow: scroll !important;
     visibility: visible !important;
     @include outer-shadow(0.4, 2px, 3px, 3px);
     @include transition(margin-left 300ms linear, opacity 300ms linear);
