@@ -3,27 +3,34 @@
     /* CORE GRID STYLES */
 
     .#{$prefix}grid-cell-row-expander {
+        .#{$prefix}grid-cell-inner {
+            overflow: initial;
+            padding: 8px 0px 6px;
+        }
+    }
+
+    .#{$prefix}grid-row-expander {
+        //background: red;
         &:after {
             content: $glyph-arrowdown;
             font-family: 'mozicons';
             position: absolute;
-            margin-top: -22px;
+            //margin-top: -22px;
         }
 
-        .#{$prefix}grid-row-expander {
+/*         .#{$prefix}grid-row-expander {
             &:after {
                 content: none;
             }
-        }
+        } */
     }
 
     .#{$prefix}grid-row-collapsed {
-        .#{$prefix}grid-cell-row-expander {
+        .#{$prefix}grid-row-expander {
             &:after {
                 content: $glyph-arrowright;
                 font-family: 'mozicons';
                 position: absolute;
-                margin-top: -22px;
             }
         }
     }
