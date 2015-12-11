@@ -26,6 +26,7 @@ Ext.define('Taco.view.publishing.Split', {
     createButtonText: 'Create New Publish Set',
     saveButtonVisible: false,
     cancelButtonVisible: false,
+    enableSearchBarInHeader: false,
 
     contextConfig: {
         supportedLevels: ['m'],

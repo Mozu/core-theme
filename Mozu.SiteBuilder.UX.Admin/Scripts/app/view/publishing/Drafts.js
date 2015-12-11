@@ -30,6 +30,15 @@ Ext.define('Taco.view.publishing.Drafts', {
 
         var me = this;
 
+        this.moreButtonCfg = {
+            menu: [
+                {
+                    text: 'Show Unassigned Publish Sets',
+                    handler: this.filterDrafts
+                }
+            ]
+        };
+
         this.panel = Ext.create('Ext.panel.Panel', {
             title: false,
             type: 'publishSetContents',
@@ -59,7 +68,7 @@ Ext.define('Taco.view.publishing.Drafts', {
                     storeConfig: {
                         name: 'Taco.store.PublishSetItems',
                         options:  {
-                            code: 'unassigned',
+                            code: 'all',
                             type: 'product',
                             listeners: {
                                 load: {
@@ -91,7 +100,7 @@ Ext.define('Taco.view.publishing.Drafts', {
                     storeConfig: {
                         name: 'Taco.store.PublishSetItems',
                         options:  {
-                            code: 'unassigned',
+                            code: 'all',
                             type: 'cms',
                             listeners: {
                                 load: {
@@ -121,8 +130,9 @@ Ext.define('Taco.view.publishing.Drafts', {
         this.callParent(arguments);
     },
 
-    onToolBarSelection: function() {
-        
+    filterDrafts: function() {
+        //todo 
+        // this.updateStores(cmp, val ? 'all' : 'unassigned', val);
     },
 
     getFilterCheckBox: function(itemId) {
