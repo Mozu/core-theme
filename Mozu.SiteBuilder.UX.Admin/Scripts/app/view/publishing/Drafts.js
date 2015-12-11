@@ -42,7 +42,6 @@ Ext.define('Taco.view.publishing.Drafts', {
         this.panel = Ext.create('Ext.panel.Panel', {
             title: false,
             type: 'publishSetContents',
-            ui: 'subform',
             layout: {
                 type: 'card'
             },

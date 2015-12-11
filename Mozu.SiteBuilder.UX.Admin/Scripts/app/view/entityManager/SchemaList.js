@@ -46,8 +46,10 @@ Ext.define('Taco.view.entityManager.SchemaList', {
 
     showGridView: function() {
         this.entitySplit = this.entitySplit || this.up('entity-split');
+        this.entitySplit.getEast().expand();
         this.cardPanel = this.entitySplit.down('#dynamicGridHolder');
         this.cardPanel.getLayout().setActiveItem(0);
+
     },
 
     selectFirstItem: function() {
