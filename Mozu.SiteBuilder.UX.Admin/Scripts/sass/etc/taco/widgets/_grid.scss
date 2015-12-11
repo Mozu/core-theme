@@ -11,6 +11,7 @@
 
     .#{$prefix}grid-row-expander {
         &:after {
+            color: $glyph-icon-color;
             content: $glyph-arrowdown;
             font-family: 'mozicons';
             position: absolute;
@@ -20,6 +21,7 @@
     .#{$prefix}grid-row-collapsed {
         .#{$prefix}grid-row-expander {
             &:after {
+                color: $glyph-icon-color;
                 content: $glyph-arrowright;
                 font-family: 'mozicons';
                 position: absolute;
@@ -33,6 +35,7 @@
             background-image: none;
 
             &:after {
+                color: $glyph-icon-color;
                 content: $glyph-arrowdown;
                 font-family: 'mozicons';
                 display: inline-block;
@@ -47,6 +50,7 @@
             background-image: none;
 
             &:after {
+                color: $glyph-icon-color;
                 content: $glyph-arrowup;
                 font-family: 'mozicons';
                 display: inline-block;
@@ -63,7 +67,7 @@
 
             &:hover {
                 &::after {
-                    color: $black-color
+                    color: $glyph-icon-color;
                 }
             }
         }
@@ -146,7 +150,7 @@
     }
 
     // hide the action menu trigger image when its inside of the row editor. it causes a bunch of padding to be added;
-    .x-grid-row-editor {
+    .#{$prefix}grid-row-editor {
         .#{$vprefix}grid-row-menu-trigger {
             disaply:none;
             height:0px;
@@ -236,7 +240,7 @@
     }
 
     .#{$vprefix}action-on-click {
-        .x-grid-row, .x-column-header { cursor: pointer; }
+        .#{$prefix}grid-row, .#{$prefix}column-header { cursor: pointer; }
     }
     .#{$vprefix}empty-cell {
         color: $gray-text-extra-light;

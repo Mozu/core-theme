@@ -211,7 +211,7 @@
                 }
 
                 .#{$prefix}btn-arrow-right {
-                    @include icon-font($glyph-more-vert, 20px);
+                    @include icon-font($glyph-more-vert, 20px, $glyph-icon-color);
                     &::after {
                         line-height: 40px;
                         text-align: center;

@@ -84,7 +84,7 @@
         display: block;
         overflow: hidden;
         @include box-shadow(1px 0px $color-neutral-white);
-        @include icon-font($glyph-menu, 22px, $dark-color);
+        @include icon-font($glyph-menu, 22px, $glyph-icon-color);
         @include single-transition(background-color, 0.4s);
 
         &::after {

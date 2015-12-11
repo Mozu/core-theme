@@ -101,7 +101,7 @@
     .#{$prefix}dropdown-trigger {
         &:after {
             color: $gray-text-dark;
-            content: '\E60B';
+            content: $glyph-chevrondown;
             font-family: $icon-font;
             font-size: $tag-font;
             margin-left: -6px;
@@ -111,29 +111,7 @@
         &:active,
         &:focus {
             &:after {
-                color: $dropdown-icon-active;
-            }
-        }
-    }
-
-    /**
-     * Dropdown list
-     */
-
-    .#{$prefix}dropdown-trigger {
-        &:after {
-            color: $gray-text-dark;
-            content: '\E60B';
-            font-family: $icon-font;
-            font-size: $tag-font;
-            margin-left: -6px;
-        }
-
-        &:hover,
-        &:active,
-        &:focus {
-            &:after {
-                color: $dropdown-icon-active;
+                color: $glyph-icon-color;
             }
         }
     }
