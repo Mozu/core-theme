@@ -5,6 +5,9 @@ Ext.define('Taco.store.Navigation', {
     extend: 'Ext.data.Store',
     model: 'Taco.model.NavigationItem',
     autoLoad: true,
+    requires: [
+        'Taco.store.SubnavLinks'
+    ],
     statics: {
         subNavLinksLoaded: false,
         getSubNavLinksLoaded: function () { return this.subNavLinksLoaded; },
@@ -74,45 +77,69 @@ Ext.define('Taco.store.Navigation', {
                 return;
             }
 
+            
+            this.subNavLinksStore = Ext.create('Taco.store.SubnavLinks', {
+                filterOnLoad: true,
+                filters: [ 
+                    function(item) {
 
-            Ext.Array.each(Taco.extensiblity.subNavLinks, function (link) {
-                //todo check security.
-                //todo handle escaping of delimiter
-                var parts = ['Extensions'].concat(link.path),
-                    parentNode = recursiveFind('id', link.parentId, data);
+                        if (!item.get('location')) {
+                            return false;
+                        }
 
-                if (!parentNode) {
-                    return;
-                }
+                        else if (item.get('location').toLowerCase().indexOf('menu') !== -1) {
+                            item.set('parentId', item.get('location').toLowerCase().replace('menu', ''));
+                            return item;
+                        }
 
-                Ext.Array.each(parts, function (nodePart, nodeIndex) {
-                    var node = recursiveFind('label', nodePart, parentNode.items),
-                        isLeaf = nodeIndex === parts.length - 1;
-                    parentNode.items = parentNode.items || [];
-
-
-                    if (!node || isLeaf || node.address) {
-
-                        node = {
-                            id: 'ext_sub_link_' + seed++,
-                            label: nodePart,
-                            address: isLeaf ? link.href : null,
-                            metaData: link,
-                            breadCrumbOnly: true
-                        };
-                        parentNode.items.push(node);
-                        parentNode = node;
-                        return;
                     }
-
-                    parentNode = node;
-                    return;
-
-
-                });
-
+                ],
+                listeners: {
+                    load: function() {
+                        Taco.store.Navigation.setSubNavLinksLoaded(true);
+                        console.log(this);
+                    }
+                }
             });
-            Taco.store.Navigation.setSubNavLinksLoaded(true);
+
+
+            // Ext.Array.each(Taco.extensiblity.subNavLinks, function (link) {
+            //     //todo check security.
+            //     //todo handle escaping of delimiter
+            //     var parts = ['Extensions'].concat(link.path),
+            //         parentNode = recursiveFind('id', link.parentId, data);
+
+            //     if (!parentNode) {
+            //         return;
+            //     }
+
+            //     Ext.Array.each(parts, function (nodePart, nodeIndex) {
+            //         var node = recursiveFind('label', nodePart, parentNode.items),
+            //             isLeaf = nodeIndex === parts.length - 1;
+            //         parentNode.items = parentNode.items || [];
+
+
+            //         if (!node || isLeaf || node.address) {
+
+            //             node = {
+            //                 id: 'ext_sub_link_' + seed++,
+            //                 label: nodePart,
+            //                 address: isLeaf ? link.href : null,
+            //                 metaData: link,
+            //                 breadCrumbOnly: true
+            //             };
+            //             parentNode.items.push(node);
+            //             parentNode = node;
+            //             return;
+            //         }
+
+            //         parentNode = node;
+            //         return;
+
+
+            //     });
+
+            // });
         }
     },
 

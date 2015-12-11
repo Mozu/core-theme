@@ -71,7 +71,7 @@ Ext.define('Taco.core.ux.picker.Selector', {
         this.flyout = this.down('#flyout');
         this.trigger = this.down('#trigger');
 
-        if (this.store.count() === 1 && this.trigger) {
+        if (this.store && this.store.count() === 1 && this.trigger) {
             this.selected = this.store.getAt(0);
             this.trigger.hide();
         }
