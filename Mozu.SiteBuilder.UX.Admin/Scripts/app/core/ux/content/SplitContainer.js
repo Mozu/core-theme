@@ -19,7 +19,7 @@ Ext.define('Taco.core.ux.content.SplitContainer', {
         align: 'stretch'
     },
 
-    bodyPadding: '20 20 10',
+    bodyPadding: '20 0 10',
     region: 'center',
     ui: 'page',
 
@@ -202,6 +202,7 @@ Ext.define('Taco.core.ux.content.SplitContainer', {
             itemId: 'east',
             title: 'East',
             cls: 'taco-splitcontainer-panel',
+            bodyPadding: '0 20 0 0',
             layout: 'fit',
             collapseDirection: 'right',
             collapseMode: 'mini',
@@ -249,6 +250,7 @@ Ext.define('Taco.core.ux.content.SplitContainer', {
             itemId: 'west',
             title: 'West',
             cls: 'taco-splitcontainer-panel',
+            bodyPadding: '0 0 0 20',
             layout: 'fit',
             collapseDirection: 'left',
             collapseMode: 'mini',
