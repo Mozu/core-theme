@@ -84,7 +84,6 @@
         //position: relative;
         //width: 259px;
         line-height: 24px;
-        padding-left: 20px;
 
         &:hover {
             background-color: $nav-hover-bg;
@@ -101,6 +100,8 @@
         a {
             color: $dark-color;
             display: inline-block;
+            padding-left: 20px;
+            width: 100%;
 
             //&:hover {
             //    color: $color-neutral-white;
