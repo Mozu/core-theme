@@ -1,43 +1,43 @@
-.taco-content-navcontainer {
+.#{$vprefix}content-navcontainer {
     border-width: 0px;
     background-color: $light-bg-gray;
     padding: 0px;
 
-    .taco-content-navcontainer-body {                
+    .#{$vprefix}content-navcontainer-body {                
         background-color: $base-color;
     }
 
-    .x-grid-body {
+    .#{$prefix}grid-body {
         background-color:#fff;
     }
 
 }
 
-.taco-content-navcontainer-padding {
+.#{$vprefix}content-navcontainer-padding {
     padding: 20px 20px 10px 20px;
 }
 
-.taco-editor-tools-header {
+.#{$vprefix}editor-tools-header {
     background-color: white;
 }
 
 
-.taco-navheader {
-    .taco-navheader-toolbar{        
+.#{$vprefix}navheader {
+    .#{$vprefix}navheader-toolbar{        
         border-bottom: 1px solid $color-standard-border !important;
         background-color: $color-neutral-white;
 
-        .x-toolbar-default {
+        .#{$prefix}toolbar-default {
             background-color: $color-neutral-white;
         }
 
-        .taco-content-header-title-container {
+        .#{$vprefix}content-header-title-container {
 
-            .x-box-inner {
+            > .#{$prefix}box-inner {
                 height: 100% !important;
             }
 
-            .x-box-target {
+            .#{$prefix}box-target {
                 height: 100%;
             }
 
@@ -45,7 +45,7 @@
                 text-decoration: none !important;
             }
 
-            .taco-content-header-title {
+            .#{$vprefix}content-header-title {
                 font-size: 18px;
                 font-weight: 400;
                 height: 100%;
@@ -81,7 +81,7 @@
                 }
             }
             
-            .taco-content-header-title-root {
+            .#{$vprefix}content-header-title-root {
                 color: $color-framework-blue-dark;
             }
         }
@@ -97,7 +97,7 @@
             text-overflow: ellipsis;
         }
 
-        .x-form-trigger-wrap {
+        .#{$prefix}form-trigger-wrap {
             border: none;
             height: 38px;
         }
@@ -279,7 +279,15 @@
     color:white;
     text-align:center;
     font-size:14px;
-    margin-top: 1px;
+    top: 20px !important;
+
+    a {
+        .#{$prefix}btn-inner {
+            &.#{$prefix}btn-inner-center {
+                height: 13px;
+            }
+        }
+    }
 }
 
 .taco-content-navcontainer-white {

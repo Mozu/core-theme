@@ -33,6 +33,7 @@ $light-bg-gray:                 rgb(233, 233, 233);                             
                                 /* darken($white-color, 9); */
 
 $pill-bg-gray:                  $nav-element-active-border;                         /* #f3f3f3 --> #f2f2f2  242, 242, 242 */
+$pill-text-dark:                lighten($black-color, 36);                          /* #5c5c5c              092, 092, 092 */
 $light-border-gray:             $light-bg-gray;
 $dark-bg:                       darken($white-color, 3);                            /* #f7f7f7              247, 247, 247 */
 $typehead-pill-border-color:    rgb(226, 226, 226);                                 /* #e2e2e2 --> #e3e3e3  226, 226, 226 */
@@ -78,7 +79,7 @@ $menu-btn-active-background:    rgb(44, 163, 133);                              
 
 $item-switch-color:             rgba(lighten($black-color, 26), .32);               /* #424242              066, 066, 066 */
 $splitter-background:           $white-color;
-$splitter-border:               darken($white-color, 10);
+$splitter-border:               rgba(0, 0, 0, 0.1);
 $splitter-text:                 rgba(0, 0, 0, 0.2);
 $splitter-hover:                rgba(0, 0, 0, 0.8);
 $more-menu-active-background:   whitesmoke;

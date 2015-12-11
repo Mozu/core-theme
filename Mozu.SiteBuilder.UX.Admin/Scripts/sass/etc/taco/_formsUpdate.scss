@@ -187,8 +187,8 @@
     }
 
     .#{$prefix}btn {
-        background-color: $card-button-bg;
-        border: 1px solid $gray-border-color;
+        // background-color: $card-button-bg;
+        // border: 1px solid $gray-border-color;
         @include border-radius-xbrowser($border-radius-small);
         font-family: $font-family;
 
