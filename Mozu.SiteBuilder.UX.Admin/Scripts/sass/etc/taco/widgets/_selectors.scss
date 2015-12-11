@@ -50,7 +50,6 @@
             margin-bottom: 0px;
             padding: 6px 12px;
             position: relative;
-            width: 100%;
 
             span {
                 color: $gray-text-light;
@@ -80,6 +79,11 @@
             }
 
             @include show-dot;
+        }
+
+        .selector,
+        .checkbox-item {
+            width: 100%;
         }
     }
 
