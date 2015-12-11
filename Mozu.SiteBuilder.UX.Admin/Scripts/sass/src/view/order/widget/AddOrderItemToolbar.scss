@@ -2,8 +2,8 @@
     background-color: #eee;    
 }
 
-.taco-order-addproducttoolbar-focus{
-    .x-box-inner{
+.#{$vprefix}order-addproducttoolbar-focus{
+    .#{$prefix}box-inner{
         background-color: #e4efff;
     }
 }

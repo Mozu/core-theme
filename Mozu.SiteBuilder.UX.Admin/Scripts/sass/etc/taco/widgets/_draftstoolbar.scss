@@ -1,9 +1,9 @@
 @mixin taco-draftstoolbar {
 
-	.taco-draft-toolbar {
+	.#{$vprefix}draft-toolbar {
 		border-bottom: 1px solid #e9e9e9;
 		
-		.taco-link-button {
+		.#{$vprefix}link-button {
 			background-color: transparent;
 		}
 

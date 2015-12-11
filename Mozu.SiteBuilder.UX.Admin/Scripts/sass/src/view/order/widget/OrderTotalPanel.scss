@@ -21,7 +21,7 @@
     font-size: 14px;
     line-height: 16px;
 
-	.x-grid-cell-inner {		
+	.#{$prefix}grid-cell-inner {
 	    padding: 0px 5px 0px 5px;
 	}	
 	
@@ -57,23 +57,23 @@
 		}
 	}
 		
-	.taco-editable {
+	.#{$vprefix}editable {
 		.order-action-icon {
 			visibility: visible;
 		}
 	}
 
 	// thinning out the padding and borders for total grid rows;
-	.x-grid-with-row-lines .x-grid-cell-inner{
+	.#{$prefix}grid-with-row-lines .#{$prefix}grid-cell-inner{
 		padding: 0px 5px 0px 5px;
 	}    
 
-	.x-grid-with-row-lines .x-grid-table {
+	.#{$prefix}grid-with-row-lines .#{$prefix}grid-table {
 		border-top: 0px;
 	}
 
 	// add a little padding to seperate groups within the total panel
-	.row-group-start .x-grid-table{
+	.row-group-start .#{$prefix}grid-table{
 		padding-top:10px;
 	}
 	
@@ -99,11 +99,11 @@
     
 
 
-    .taco-grid-cell{
+    .#{$vprefix}grid-cell{
     
     }
 
-    .taco-grid-cell-inner {
+    .#{$vprefix}grid-cell-inner {
         border: 1px solid transparent;
         margin: 1px 0px 1px 0px;
         padding:5px;
@@ -122,7 +122,7 @@
     }
 
     // need to reneable the background color for the other states of the menu button
-    .order-adjusment-menu.x-btn-focus, .order-adjusment-menu.x-btn-action-medium-over,.order-adjusment-menu.x-btn-action-medium-menu-active,.order-adjusment-menu.x-btn-action-medium-pressed{
+    .order-adjusment-menu.#{$prefix}btn-focus, .order-adjusment-menu.#{$prefix}btn-action-medium-over,.order-adjusment-menu.#{$prefix}btn-action-medium-menu-active,.order-adjusment-menu.#{$prefix}btn-action-medium-pressed{
         background-color: #f2f2f2;
     }
 
@@ -132,7 +132,7 @@
     
 
     /*
-    .taco-order-adjustment-label, .taco-order-adjustment-cell, .taco-shipping-adjustment-cell{
+    .#{$vprefix}order-adjustment-label, .#{$vprefix}order-adjustment-cell, .#{$vprefix}shipping-adjustment-cell{
         box-shadow: 0 0 1px 0 #a0a0a0 inset;
         border: 1px solid transparent;
         curosr:text;
@@ -143,7 +143,7 @@
 
     }
 
-    .taco-order-adjustment-label{
+    .#{$vprefix}order-adjustment-label{
         float:right;
     }
 
@@ -153,7 +153,7 @@
     }
 
     // need to reduce the text size of the standard buttons so they allign with the form fields in the table;
-    .x-btn-inner{
+    .#{$prefix}btn-inner{
         font-size: 14px;
         line-height: 16px;
     }
@@ -163,7 +163,7 @@
 
     .order-adjustment-row {
 
-        .x-form-text{
+        .#{$prefix}form-text{
             text-align:right;
             font-size: 14px;
             line-height: 16px;
@@ -182,14 +182,14 @@
     }
 
 
-    .taco-order-discount-error {
+    .#{$vprefix}order-discount-error {
         color:$color-theme-red;
         padding-top:5px;
-        .taco-couponCode{padding-right:10px;font-weight:bold}
-        .taco-reason{}
+        .#{$vprefix}couponCode{padding-right:10px;font-weight:bold}
+        .#{$vprefix}reason{}
     }
 
-	.taco-order-shipping-error{
+	.#{$vprefix}order-shipping-error{
 		color:$color-theme-red;
 	}
 }

@@ -67,7 +67,7 @@
             padding: 10px;
         }
 
-        .taco-history-collapsable {
+        .#{$vprefix}history-collapsable {
             .payment-transaction {
                 margin-left: 40px;
             }

@@ -1,4 +1,4 @@
-﻿.taco-orderform-returns {
+﻿.#{$vprefix}orderform-returns {
     .return-item-grid {
         .#{$prefix}panel-header-text-container {
             font-size: 16px;
@@ -58,7 +58,7 @@
 
 
         // setting the text size on the grid header;
-        .x-panel-header-text-taco {
+        .#{$prefix}panel-header-text-taco {
             font-size: 1.9rem;
             line-height: 2.9rem;    
         }

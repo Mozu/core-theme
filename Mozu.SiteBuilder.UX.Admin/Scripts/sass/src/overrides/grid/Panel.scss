@@ -1,11 +1,11 @@
-.x-grid-row .x-grid-cell-selected, .x-grid-row-selected .x-grid-td {
+.#{$prefix}grid-row .#{$prefix}grid-cell-selected, .#{$prefix}grid-row-selected .#{$prefix}grid-td {
 	background-color: $dark-bg;
 }
 
-.x-grid-row .x-grid-cell {
+.#{$prefix}grid-row .#{$prefix}grid-cell {
     font-size: 13px;
 }
 
-.x-grid-row-selected {
+.#{$prefix}grid-row-selected {
 	border-color: $nav-element-active-border;
 }

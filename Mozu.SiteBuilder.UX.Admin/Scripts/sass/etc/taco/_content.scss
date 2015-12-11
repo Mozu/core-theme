@@ -302,7 +302,7 @@ EXTJS Checkbox slider
     }
     &.#{$prefix}form-cb-checked{
       background: #25ae90;
-      .x-form-item-body{
+      .#{$prefix}form-item-body{
         padding-top: 6px;
         padding-right: 3px;
         padding-left: 0px;

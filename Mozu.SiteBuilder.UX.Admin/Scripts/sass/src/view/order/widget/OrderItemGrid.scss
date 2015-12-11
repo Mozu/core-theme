@@ -1,6 +1,6 @@
 ﻿
 // this is the border color seperating the order item grid rows
-.x-grid-rowwrap {
+.#{$prefix}grid-rowwrap {
     border-color:$color-neutral-95;
 }
 
@@ -16,8 +16,8 @@
 
     // fixing the font size for the buttons in the toolbar. 
     // todo: remove this when the theme is stable;
-    .x-btn {
-        .x-btn-inner {
+    .#{$prefix}btn {
+        .#{$prefix}btn-inner {
             font-size: px-to-rem(14);
         }
     }
@@ -44,8 +44,8 @@
 
     // fixing the font size for the buttons in the toolbar. 
     // todo: remove this when the theme is stable;
-    .x-btn {
-        .x-btn-inner {
+    .#{$prefix}btn {
+        .#{$prefix}btn-inner {
             font-size: px-to-rem(14);
         }
     }
@@ -77,7 +77,7 @@
 
     .order-addproducttoolbar-cell{
         padding:5px 1px 4px 1px ;
-        .order-addproducttoolbar-field, .x-form-field {
+        .order-addproducttoolbar-field, .#{$prefix}form-field {
             font-size: 14px;
             line-height: 16px;
         }
@@ -88,17 +88,17 @@
 
 
 // this is the default readonly grid;
-.taco-orderform-orderitemgrid{
+.#{$vprefix}orderform-orderitemgrid{
 	background-color:#fff;
 
 
     /* this is a temporary fix for grid cell selection with rowwrap feature enabled;*/    
-    .x-grid-data-row .x-grid-cell-selected {        
+    .#{$prefix}grid-data-row .#{$prefix}grid-cell-selected {
         background-color: #e4efff;
     }
     
-	.taco-product-column {
-		.x-grid-cell-inner {
+	.#{$vprefix}product-column {
+		.#{$prefix}grid-cell-inner {
 			/*
 			padding-top:5px;
 			padding-bottom:5px;
@@ -106,18 +106,18 @@
 		}
 	}
     
-    .x-column-header-align-right .x-column-header-text {
+    .#{$prefix}column-header-align-right .#{$prefix}column-header-text {
         margin-right: 0px;
     }
 
     // hide the column actions icon triggers when the column is disabled;  this will be the case when the grid is readonly mode;
-    .taco-grid-row-action-trigger.x-item-disabled{
+    .#{$vprefix}grid-row-action-trigger.#{$prefix}item-disabled{
         visibility:hidden
     }
 
     // adding a temporary hover state for the link buttons since they don't have one currently
-    .taco-toolbar-link.x-btn-link-medium-over, .taco-toolbar-link.x-btn-link-toolbar-medium-over {
-        .x-btn-inner{
+    .#{$vprefix}toolbar-link.#{$prefix}btn-link-medium-over, .#{$vprefix}toolbar-link.#{$prefix}btn-link-toolbar-medium-over {
+        .#{$prefix}btn-inner{
             text-decoration:underline;		
         }	    
     }
@@ -169,7 +169,7 @@
 //this is the overrides of the default read only grid. ie the editor version
 .#{$vprefix}orderform-editor {  
 
-	.taco-orderform-orderitemgrid-body{
+	.#{$vprefix}orderform-orderitemgrid-body{
         // hide the bottom border on the last row of the grid
         table tbody tr:last-child{
             td {
@@ -182,7 +182,7 @@
 
 
     // the remove icon in the right hand action column
-    .taco-grid-row-action-trigger-remove{
+    .#{$vprefix}grid-row-action-trigger-remove{
         
         @include icon-font($glyph-close);
 

@@ -206,7 +206,7 @@
             }
         }
 
-        .taco-breadcrumb-menubutton {
+        .#{$vprefix}breadcrumb-menubutton {
             padding-right:20px !important;
             background-image: none;
             @include icon-font($glyph-arrowdown, 16px, $color-action-foreground);

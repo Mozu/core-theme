@@ -38,8 +38,8 @@
 		  opacity: 0.06;
 		}
 		
-		.x-html-editor-wrap {
-			.x-mask{			    
+		.#{$prefix}html-editor-wrap {
+			.#{$prefix}mask{
 				opacity:0;
 			}
 		}
@@ -81,7 +81,7 @@
     }
   }
 
-	.#{$vprefix}attribute-form-required .x-header-text::before{
+	.#{$vprefix}attribute-form-required .#{$prefix}header-text::before{
 		color: #df3018;
 		content: "* ";
 	}

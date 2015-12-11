@@ -30,8 +30,8 @@
                 opacity: 0.06;
             }
 
-            .x-html-editor-wrap {
-                .x-mask{
+            .#{$prefix}html-editor-wrap {
+                .#{$prefix}mask{
                     opacity:0;
                 }
             }
@@ -113,13 +113,13 @@
     }
 
     // checkcolumn
-    .x-grid-checkheader {
+    .#{$prefix}grid-checkheader {
         width:17px;
         height:15px;
         background-image: url("images/icons/checkbox.gif" );
     }
 
-    .x-grid-checkheader-checked { 
+    .#{$prefix}grid-checkheader-checked {
         background-position: 0 -15px;
     }
 

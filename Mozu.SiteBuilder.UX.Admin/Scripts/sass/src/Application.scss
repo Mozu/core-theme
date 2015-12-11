@@ -34,7 +34,7 @@
 @include taco-tooltip;
 
 // body[data-current-user="travis_johnson"] {
-//     .x-border-layout-ct {
+//     .#{$prefix}border-layout-ct {
 //         background-image: url('http://i.imgur.com/igIUXoR.png');
 //     }
 // }

@@ -6,11 +6,11 @@
 
 	// fixing the font size for the buttons in the toolbar. 
 	// todo: remove this when the theme is stable;
-	.x-btn {
+	.#{$prefix}btn {
 	    margin-left:5px;
 		margin-right:5px;
 
-		.x-btn-inner {
+		.#{$prefix}btn-inner {
 		    font-size: px-to-rem(14);
 		}
 	}

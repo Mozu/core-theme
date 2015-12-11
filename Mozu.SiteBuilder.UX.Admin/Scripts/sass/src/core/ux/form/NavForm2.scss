@@ -8,11 +8,11 @@
     //width: 180px;
     z-index: 99;
 
-    &.taco-relative-navForm2 {
+    &.#{$vprefix}relative-navForm2 {
       position: relative !important;
       overflow: auto;
     }
-    &.taco-fixed-navForm2 {
+    &.#{$vprefix}fixed-navForm2 {
       position: fixed !important;
       width: 100% !important;
       padding: 0 20px;

@@ -1,5 +1,5 @@
 @mixin taco-entitymanager {
-	.taco-tabbar-header {
+	.#{$vprefix}tabbar-header {
 
 		.#{$prefix}tab {
 			// width: 50%;

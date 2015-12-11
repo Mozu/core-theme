@@ -80,7 +80,7 @@
         margin-left: 230px;
         background: transparent;
         border: transparent;
-        .x-btn-inner {
+        .#{$prefix}btn-inner {
           font-size: 18px;
           color: #08799c  
         }
@@ -256,7 +256,7 @@
 
 // menu trigger widget for order details panels 
 .editContainer-menu-trigger{            
-  .x-btn-icon{
+  .#{$prefix}btn-icon{
     width:32px !important;
     height:32px !important;
   }

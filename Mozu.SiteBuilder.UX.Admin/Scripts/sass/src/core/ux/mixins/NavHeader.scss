@@ -106,13 +106,13 @@
 
         .navheader-action-toolbar {
             margin-right: 15px;
-            .x-btn {
+            .#{$prefix}btn {
                 border: none;
 
-                &.x-btn-action-primary-toolbar-medium {
+                &.#{$prefix}btn-action-primary-toolbar-medium {
                     background-color: $valid-green;
 
-                    .x-btn-inner-center {
+                    .#{$prefix}btn-inner-center {
                         color: $white-color;
                     }
 
@@ -120,23 +120,23 @@
                         background-color: $valid-green-active;
                     }
 
-                    &.x-btn.x-menu-active {
+                    &.#{$prefix}btn.#{$prefix}menu-active {
                         border-bottom-left-radius: 0;
                         border-bottom-right-radius: 0;
                         border-bottom: 1px solid $menu-btn-active-border;
                         background-color: $menu-btn-active-background;
                     }
 
-                    .x-btn-inner-center {
+                    .#{$prefix}btn-inner-center {
                         font-size: 16px;
                     }
                     
                 }
 
-                &.x-btn-action-secondary-toolbar-medium {
+                &.#{$prefix}btn-action-secondary-toolbar-medium {
                     background-color: transparent;
 
-                    .x-btn.x-btn-inner-center {
+                    .#{$prefix}btn.#{$prefix}btn-inner-center {
                         font-size: 12px;
                         color: $nav-element-text;
                     }
@@ -144,12 +144,12 @@
                      &:hover {
                         background-color: transparent;
 
-                        .x-btn-inner-center {
+                        .#{$prefix}btn-inner-center {
                             color: $nav-element-active;
                         }
                     }
 
-                    &.x-btn.x-menu-active {
+                    &.#{$prefix}btn.#{$prefix}menu-active {
                         border-radius: 3px;
                         background-color: $more-menu-active-background;
                         box-shadow: $more-menu-active-shadow 0 0 0 1px inset;
@@ -158,35 +158,35 @@
                 }
 
                 
-                .x-btn-arrow-right::after {
+                .#{$prefix}btn-arrow-right::after {
                     top: 5px;
                     color: $white-color;
                 }
-                .x-btn-split-right::after {
+                .#{$prefix}btn-split-right::after {
                     top: -2px;
                 }
 
-                &.x-move-next-previous-arrow {
+                &.#{$prefix}move-next-previous-arrow {
                     background-color: transparent;
                 }
             }
          
             .website-editor-tab-btn {
-                .x-btn-glyph {
+                .#{$prefix}btn-glyph {
                     line-height: 28px;
                 }
             }
-            .x-btn-link-toolbar-medium {
+            .#{$prefix}btn-link-toolbar-medium {
                 background-color: inherit;
                 padding-left: 8px;
                 padding-right: 8px;
                 &:hover {
                     background-color: inherit;
                 }
-                &.x-btn-focus {
+                &.#{$prefix}btn-focus {
                     box-shadow: none;
                 }
-                .x-btn-inner-center {
+                .#{$prefix}btn-inner-center {
                     font-size: 12px;
                     color: $card-button-text-color;
                     padding: 0;
@@ -226,7 +226,7 @@
                     }
                 }
 
-                &.x-btn.x-menu-active {
+                &.#{$prefix}btn.#{$prefix}menu-active {
                     border-radius: 3px;
                     background-color: $more-menu-active-background;
                     box-shadow: $more-menu-active-shadow 0 0 0 1px inset;
@@ -235,7 +235,7 @@
             }
         }
 
-        .taco-website-header-icon {
+        .#{$vprefix}website-header-icon {
 
                 &.page-icon {
                    @include icon-font($glyph-category, 20px);
@@ -303,19 +303,19 @@
     }
 }
 
-.taco-content-navcontainer-white {
-    .taco-navheader {
-        .taco-navheader-toolbar{        
+.#{$vprefix}content-navcontainer-white {
+    .#{$vprefix}navheader {
+        .#{$vprefix}navheader-toolbar{
             border-bottom: 0px !important;
             background-color: #fff;
         }
-        .x-toolbar-default {
+        .#{$prefix}toolbar-default {
             background-color: #fff;
         }
     }
     
     background-color: #fff;
-    .taco-content-navcontainer-body {                
+    .#{$vprefix}content-navcontainer-body {
         background-color: #fff;
         border-bottom: 0px !important;
     }

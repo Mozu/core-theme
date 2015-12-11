@@ -14,7 +14,7 @@
     outline-style:none;
     outline-width:0px;
 
-    .x-item-selected {
+    .#{$prefix}item-selected {
         background-color: $color-neutral-white;
         border-right-color: $color-neutral-white;
         color: $color-standard-text;
