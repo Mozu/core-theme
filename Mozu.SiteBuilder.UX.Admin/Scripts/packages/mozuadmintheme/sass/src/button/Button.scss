@@ -195,7 +195,6 @@ $uis: $ui-link, $ui-action, $ui-action-primary, $ui-action-toggle;
 
     .#{$prefix}btn-split-right {
         &::after {
-            border-left: 1px solid $color-action-outline;
             width: 27px;
         }
     }
