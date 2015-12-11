@@ -35,6 +35,8 @@ Ext.define('Taco.view.theme.Index', {
 
     store: 'Taco.store.ThemeListingsTree',
 
+    enableRowReorder: false,
+
     initComponent: function() {
 
     	var me = this;

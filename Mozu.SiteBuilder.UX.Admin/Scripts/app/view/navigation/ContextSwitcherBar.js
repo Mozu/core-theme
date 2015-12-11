@@ -239,7 +239,7 @@
     },
 
     isSupported: function (type) {
-        return this.supportedLevels.indexOf(type) > -1;
+        return this.supportedLevels ? this.supportedLevels.indexOf(type) > -1 : false;
     },
 
     isVisible: function(type) {

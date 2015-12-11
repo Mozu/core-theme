@@ -35,8 +35,6 @@ Ext.define('Taco.core.ux.TreeList', {
             }]
         });
         
-
-
         if (this.columns[0].xtype !== 'draghandlecolumn' && this.enableRowReorder) { 
 
             this.columns.unshift({
