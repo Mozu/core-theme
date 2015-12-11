@@ -47,17 +47,12 @@
     &.#{$vprefix}collapsed-icon {
 
         &:after {
-            content: $glyph-plus;
+            content: $glyph-plus-circle;
             font-family: $icon-font;
             display: inline-block;
-            font-size: 6px;
-            border: 1px solid;
-            line-height: 6px;
-            @include border-radius-xbrowser(30px);
-            height: 5px;
-            width: 6px;
-            padding: 2px 2px 3px 2px;
+            font-size: 10px;
             margin-left: 5px;
+            position: absolute;
         }
     }
 }

@@ -10,6 +10,8 @@
     }
 
     .#{$vprefix}website-resolution-btn {
+        border: none;
+        background-color: transparent;
 
     	&.desktop {
     		@include icon-font($glyph-computer);

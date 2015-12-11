@@ -105,6 +105,7 @@ $glyph-computer:            "\EBE5";
 $glyph-phone:               "\EC1C";
 $glyph-tablet:              "\EC37";
 $glyph-redirect:            "\E914";
+$glyph-plus-circle:         "\EAEF";
 
 // font set for chorizo -- because these are being compiled using compass, they cannot be encased in ""
 // optimized at 16px
@@ -142,7 +143,7 @@ $glyph-dropvideo:           "\E07E";
         color: $color;
         content: $glyph;
         display: block;
-        font-family: $icon-font;
+        font-family: mozicons;
         font-size: $size;
         font-weight: normal !important;
         left: 0px;
