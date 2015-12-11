@@ -24,6 +24,7 @@ $nav-element-text:              rgb(165, 165, 165);                             
 $call-to-action-color:          $nav-element-text;
 $nav-element-active:            rgb(63, 63, 63);                                    /* #3f3f3f --> #404040  063, 063, 063 */
                                 /* lighten($black-color, 25); */
+$publish-icon-dark-bg:          $nav-element-active;
 
 $input-element-active:          $nav-element-active;
 $nav-element-active-border:     rgb(243, 243, 243);                                 /* #f3f3f3 --> #f2f2f2  242, 242, 242 */

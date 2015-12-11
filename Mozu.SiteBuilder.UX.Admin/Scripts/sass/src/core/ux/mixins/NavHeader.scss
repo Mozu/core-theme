@@ -273,13 +273,25 @@
     border: none;
     @include border-radius-xbrowser(2em);
     height: 18px;
-    background-color: $color-status-indicator;
+    background-color: $publish-icon-dark-bg;
     color:white;
     text-align:center;
     font-size:14px;
     top: 20px !important;
+    min-width: 56px;
+
+    div {
+        width: auto;
+    }
+
+    label {
+        text-transform: capitalize;
+        font-size: $pill-font;
+    }
 
     a {
+        display: none;
+        
         .#{$prefix}btn-inner {
             &.#{$prefix}btn-inner-center {
                 height: 13px;
