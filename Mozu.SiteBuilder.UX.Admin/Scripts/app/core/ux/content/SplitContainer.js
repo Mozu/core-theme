@@ -159,9 +159,13 @@ Ext.define('Taco.core.ux.content.SplitContainer', {
                 listeners: {
                     dragstart: function() {
                         this.addCls('taco-split-drag');
+                        this.up('contentview').down('#west-right').addCls('taco-split-drag');
+                        this.up('contentview').down('#east-left').addCls('taco-split-drag');
                     },
                     dragend: function() {
                         this.removeCls('taco-split-drag');
+                        this.up('contentview').down('#west-right').removeCls('taco-split-drag');
+                        this.up('contentview').down('#east-left').removeCls('taco-split-drag');
                     }
                 }
             });

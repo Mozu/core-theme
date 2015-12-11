@@ -52,7 +52,7 @@
 
             &::after {
                 @include facade-transitions;
-                width: 16px;
+                width: 18px;
                 height: 36px;
                 line-height: 36px;
                 text-align: center;
@@ -75,12 +75,33 @@
                 }
             }
 
+            &.#{$vprefix}split-drag {
+                &::after {
+                    opacity: 1;
+                    width: 22px;
+                }
+                &.#{$prefix}component-docked-right,
+                &.#{$prefix}component-docked-left {
+                    &::after {
+                        left: -5px;
+                        text-align: left;
+                        text-indent: 4.5px;
+                    }
+                }
+                &.#{$prefix}component-docked-left {
+                    &::after {
+                        text-indent: 8.5px;
+                        left: -4px;
+                    }
+                }
+            }
+
             &.#{$prefix}component-docked-right {
                 &::after {
                     border-right-style: none;
-                    border-top-left-radius: 100px;
-                    border-bottom-left-radius: 100px;
-                    left: -4px;
+                    border-top-left-radius: 18px;
+                    border-bottom-left-radius: 18px;
+                    left: -5px;
                 }
             }
 
@@ -88,8 +109,8 @@
                 &::after {
                     content: $glyph-arrow-right;
                     border-left-style: none;
-                    border-top-right-radius: 100px;
-                    border-bottom-right-radius: 100px;
+                    border-top-right-radius: 18px;
+                    border-bottom-right-radius: 18px;
                 }
             }
 
