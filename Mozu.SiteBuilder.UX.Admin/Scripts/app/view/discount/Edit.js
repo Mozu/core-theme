@@ -59,22 +59,26 @@ Ext.define('Taco.view.discount.Edit', {
             me.record.isDuplicate = true;
         }
 
-        menuItems.push({
-            text: 'Duplicate',
-            disabled: me.record.phantom,
-            requiredBehaviors: {
-                model: 'Taco.model.Discount',
-                behavior: 'create'
-            },
-            handler: function(item) {
-                var record = me.record,
-                    metaData = {
-                        id: record.getId()
-                    };
+        me.moreButtonCfg = {
+            menu: [
+               {
+                text: 'Duplicate',
+                    disabled: me.record.phantom,
+                    requiredBehaviors: {
+                        model: 'Taco.model.Discount',
+                        behavior: 'create'
+                    },
+                    handler: function(item) {
+                        var record = me.record,
+                            metaData = {
+                                id: record.getId()
+                            };
 
-                Taco.app.StateManager.attemptNavigate('discounts/duplicate/' + record.getId(), metaData);
-            }
-        });
+                        Taco.app.StateManager.attemptNavigate('discounts/duplicate/' + record.getId(), metaData);
+                    }
+                }
+            ]
+        };
 
         if (me.record.get('canBeDeleted')) {
             delMenuItem = Ext.create('Taco.core.ux.action.DeleteMenuItem', {
@@ -86,21 +90,6 @@ Ext.define('Taco.view.discount.Edit', {
             });
             menuItems.push(delMenuItem);
         }
-
-        this.additionalActions = [{
-            xtype: 'button',
-            height: 40,
-            itemId: 'moreButton',
-            ui: 'action',
-            scale: 'medium',
-            text: 'More',
-            menuAlign: 'tr-br?',
-            menu: {
-                plain: true,
-                shadow: false,
-                items: menuItems
-            }
-        }];
 
         this.callParent(arguments)
     },
