@@ -83,7 +83,6 @@
                 &.#{$prefix}component-docked-right,
                 &.#{$prefix}component-docked-left {
                     &::after {
-                        left: -5px;
                         text-align: left;
                         text-indent: 4.5px;
                     }
@@ -101,7 +100,7 @@
                     border-right-style: none;
                     border-top-left-radius: 18px;
                     border-bottom-left-radius: 18px;
-                    left: -5px;
+                    left: -6px;
                 }
             }
 
