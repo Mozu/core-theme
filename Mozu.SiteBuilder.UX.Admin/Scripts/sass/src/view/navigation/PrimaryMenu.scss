@@ -40,7 +40,7 @@
     text-transform: none;
     cursor: pointer;
     &:hover {
-        background-color: $color-framework-gray-lighter;
+        background-color: $nav-hover-bg;
     }
 
     &.#{$vprefix}collapsed-icon {
@@ -86,11 +86,15 @@
         padding-left: 20px;
 
         &:hover {
-            background-color: $color-framework-gray-lighter;
+            background-color: $nav-hover-bg;
 
             a {
                 text-decoration: none;
             }
+        }
+
+        &:active {
+            background-color: $dark-bg;
         }
 
         a {
