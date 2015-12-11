@@ -83,6 +83,11 @@
             border-color: $valid-green;
             background-color: $row-editor-buttons-bg;
             @include important-partial-border-radius(0, $border-radius, 0, $border-radius);
+
+            a {
+                background-color: $card-button-bg;
+                border: 1px solid $gray-border-color;
+            }
         }
 
         .#{$prefix}panel .#{$prefix}panel-body .#{$prefix}grid-td {

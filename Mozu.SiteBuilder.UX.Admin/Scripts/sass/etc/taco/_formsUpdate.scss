@@ -34,6 +34,10 @@
         input {
             border-bottom: none;
         }
+
+        .#{$prefix}panel-body {
+            border-color: $valid-green !important;
+        }
     }
 
     .#{$prefix}form-item-label {

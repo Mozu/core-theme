@@ -11,7 +11,7 @@ $form-field-color: $color;
 $form-field-empty-color: lighten($color, 60%);
 
 $form-field-border-color: border-for($color-neutral-95);
-$form-field-focus-border-color: $color-theme-support-darker;
+$form-field-focus-border-color: $valid-green;
 $form-field-invalid-border-color: $color-theme-base;
 
 $form-field-background-color: $color-neutral-white;
