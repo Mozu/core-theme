@@ -11,12 +11,14 @@
         &::after {
             @include facade-transitions;
             top: 50%;
-            margin-top: 1px;
-            width: 4px;
+            width: 8px;
             height: 36px;
             line-height: 36px;
             text-align: center;
             left: 0;
+            border: 1px solid $splitter-border;
+            border-right-width: 0;
+            border-left-width: 0;
             background-color: $splitter-background;
             opacity: 0.5;
         }
@@ -32,6 +34,12 @@
                 opacity: 1;
             }
         }
+
+        &.#{$vprefix}split-drag {
+            &::after {
+                opacity: 0;
+            }
+        }
     }
 
     .#{$vprefix}splitcontainer-panel {
@@ -44,7 +52,7 @@
 
             &::after {
                 @include facade-transitions;
-                width: 22px;
+                width: 16px;
                 height: 36px;
                 line-height: 36px;
                 text-align: center;
@@ -72,7 +80,7 @@
                     border-right-style: none;
                     border-top-left-radius: 100px;
                     border-bottom-left-radius: 100px;
-                    left: -6px;
+                    left: -4px;
                 }
             }
 
@@ -82,7 +90,6 @@
                     border-left-style: none;
                     border-top-right-radius: 100px;
                     border-bottom-right-radius: 100px;
-                    left: -4px;
                 }
             }
 

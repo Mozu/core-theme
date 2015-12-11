@@ -155,6 +155,14 @@ Ext.define('Taco.core.ux.content.SplitContainer', {
                         me.up('contentview').down('#west-right').removeCls('taco-split-hover');
                         me.up('contentview').down('#east-left').removeCls('taco-split-hover');
                     });
+                },
+                listeners: {
+                    dragstart: function() {
+                        this.addCls('taco-split-drag');
+                    },
+                    dragend: function() {
+                        this.removeCls('taco-split-drag');
+                    }
                 }
             });
         } else if (Ext.isString(splitter)) {
