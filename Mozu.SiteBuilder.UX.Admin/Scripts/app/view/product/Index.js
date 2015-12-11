@@ -46,7 +46,7 @@ Ext.define('Taco.view.product.Index', {
             '<td class="x-grid-subcell"><div class="x-grid-cell-inner"></div></td>',
             '</tr></tpl>', {
                 formatOverridden: function (value) {
-                    return value ? '<span class="overridden">Overridden</span>' : '';
+                    return value ? '<span class="x-column-content-pill x-column-content-pill-true">Yes</span>' : '';
                 },
                 formatPrice: function (value, catalog) {
                     return (value || value === 0) ? Taco.app.context.findCatalog(catalog).formatCurrency(value) : 'N/A';
@@ -194,7 +194,7 @@ Ext.define('Taco.view.product.Index', {
                 stateId: 'overridden',
                 text: 'Overridden',
                 sortable: false,
-                width: 100,
+                width: 150,
                 renderer: function (value, metaData, record) {
                     var output;
                     var cssClass = 'x-column-content-pill';
