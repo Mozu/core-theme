@@ -159,6 +159,27 @@ Ext.define('Taco.view.website.Index', {
             }
         };
 
+        this.tooltip = Ext.create('Taco.core.ux.content.Tooltip', {
+            elementId: 'draftIcon',
+            hoverTarget: 'bodyEl',
+            messageKey: 'publishset.publishsetdate',
+            arrowPosition: 'top',
+            offsetTop: -22,
+            // offsetLeft: 107,
+            defaultTpl: [
+                '<div style="line-height: 15px;">',
+                    '<span>Publish Set:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;{publishSetName}</span>',
+                '</div>',
+                '<div style="line-height: 15px;">',
+                    '<span>Publish Date:&nbsp;&nbsp;&nbsp;{publishDate}</span>',
+                '</div>'
+            ],
+            defaultTplData: {
+                publishSetName: 'Unassigned',
+                publishDate: 'Unscheduled'
+            }
+        });
+
         this.actions = [
             Ext.create('Taco.core.ux.content.ContextMenu', {
                 width: '120px',
@@ -188,15 +209,7 @@ Ext.define('Taco.view.website.Index', {
                 title: 'DRAFT',
                 margin: '0 0 0 10',
                 hidden: true,
-                afterrender: this.setAction.bind(this),
-                tooltip: Ext.create('Taco.core.ux.content.Tooltip', {
-                    elementId: 'draftIcon',
-                    hoverTarget: 'bodyEl',
-                    messageKey: 'publishset.publishsetdate',
-                    arrowPosition: 'top',
-                    offsetTop: -22,
-                    offsetLeft: 67
-                })
+                afterrender: this.setAction.bind(this)
             },
             {
                 xtype: 'button',
@@ -951,14 +964,8 @@ Ext.define('Taco.view.website.Index', {
     },
 
     updateDraftIcon: function(record) {
-
-        var me = this,
-            generateTooltipKey = function (content) {
-                return '<span style="width:90px;font-weight: bold;float:left;">' + content + '</span>';
-            },
-            generateTooltipValue = function (content, additionalStyle) {
-                return '<span style="padding-left: 5px;float:left;"' + additionalStyle + '">' + content + '</span>';
-            };
+        
+        var me = this;
 
         if (record && record.get('publishState') && record.get('publishState') && record.get('publishState') !== 'active') {
 
@@ -970,7 +977,12 @@ Ext.define('Taco.view.website.Index', {
                     var date = record.get('publishDate') ? Ext.Date.format(record.get('publishDate'), 'M j, Y g:ia T') : 'Unscheduled';
                     me.pubRecord = record;
                     me.down('#draftIcon').show();
-                    me.down('#draftIcon').setTooltipContent(generateTooltipKey('Publish Set:') + generateTooltipValue('<span id="publishSetName">' + '</span>', null) + '<br>' + generateTooltipKey('Publish Date: ') + generateTooltipValue(date, null));
+                    
+                    me.tooltip.update({
+                        publishSetName: me.pubRecord.get('name'),
+                        publishDate: Ext.util.Format.date(me.pubRecord.get('publishDate'), 'M j, Y g:ia T')
+                        
+                    });
                 };
 
                 Ext.Ajax.request({
@@ -989,7 +1001,10 @@ Ext.define('Taco.view.website.Index', {
 
             else {
                 this.down('#draftIcon').show();
-                this.down('#draftIcon').setTooltipContent(generateTooltipKey('Publish Set: ') + generateTooltipValue('None') + '<br>' + generateTooltipKey('Publish Date: ') + generateTooltipValue('Unscheduled', null));
+                me.tooltip.update({
+                    publishSetName: 'Unassigned',
+                    publishDate: 'Unscheduled'
+                });
             }
 
         }

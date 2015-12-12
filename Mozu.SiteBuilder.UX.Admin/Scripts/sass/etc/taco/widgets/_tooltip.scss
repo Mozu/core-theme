@@ -18,7 +18,7 @@
 		@include border-radius(4px);
 		@include facade-transitions;
 
-		div:first-child {
+		.message-wrapper {
 			padding: 4px;
 		}
 

@@ -18,8 +18,8 @@ Ext.define('Taco.core.ux.content.Tooltip', {
     showEvent: 'mouseenter',
     hideEvent: 'mouseleave',
     showDelay: 100,
-    offsetLeft: 100,
-    offsetTop: 0,
+    offsetLeft: null,
+    offsetTop: null,
     defaultTpl: null,
     defaultTplData: null,
     arrowPosition: 'bottom',
@@ -40,14 +40,22 @@ Ext.define('Taco.core.ux.content.Tooltip', {
         console.log(this.tooltip);
     },
 
+    getOffsetWidth: function(left, el) {
+        var messageWidth = el.getWidth();
+        var containerWidth = this.target.getWidth();
+
+        return left - (messageWidth / 2) + (containerWidth / 2);
+    },
+
     setPosition: function() {
         var position = this.target.dom.getBoundingClientRect();
         var top = position.top;
         var left = position.left;
-        var dom = this.tooltip.getEl().dom;
+        var el = this.tooltip.getEl();
+        var offsetLeft = this.offsetLeft ? left - this.offsetLeft : this.getOffsetWidth(left, el);
 
-        dom.style.left = left - this.offsetLeft + 'px';
-        dom.style.top = top - this.offsetTop + 'px';
+        el.dom.style.left = offsetLeft + 'px';
+        el.dom.style.top = top - this.offsetTop + 'px';
     },
 
     showToolTip: function(event) {
@@ -67,13 +75,24 @@ Ext.define('Taco.core.ux.content.Tooltip', {
         }
     },
 
+    getTemplate: function() {
+        var insert = this.defaultTpl ? this.defaultTpl :  [
+            '<div>{message}</div>'
+        ];
+        var tpl = ['<div class="message-wrapper">'];
+
+        tpl.push.apply(tpl, insert);
+
+        tpl.push('</div>');
+
+        return tpl;
+    },
+
     buildToolTip: function() {
 
-        var tpl = this.defaultTpl ? this.defaultTpl :  [
-                '<div>{message}</div>'
-            ];
+        var tpl = this.getTemplate();
 
-        var data = this.defaultTplData ? this.defaultTpl : {
+        var data = this.defaultTplData ? this.defaultTplData : {
             message: this.message.get('value')
         };
 
@@ -86,7 +105,7 @@ Ext.define('Taco.core.ux.content.Tooltip', {
     	this.items.push(this.tooltip);
     },
 
-    rerender: function(data) {
+    update: function(data) {
         this.tooltip.update(data);
     },
 
@@ -111,6 +130,7 @@ Ext.define('Taco.core.ux.content.Tooltip', {
 				break
             case 'bodyEl':
                 this.instantiateToolTipEvents(this.component.bodyEl);
+                break;
 			default:
 				console.warn('No hover target has been established for ' + this.hoverTarget);
 		}
@@ -129,7 +149,6 @@ Ext.define('Taco.core.ux.content.Tooltip', {
             clearTimeout(timeout);
             this.showToolTip({type: this.hideEvent });
         }, this);
-
     }
 
 });
