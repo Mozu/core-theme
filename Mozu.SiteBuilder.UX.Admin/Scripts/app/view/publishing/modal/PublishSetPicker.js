@@ -97,26 +97,49 @@ Ext.define('Taco.view.publishing.modal.PublishSetPicker', {
             ]
         });
 
-
-        this.publishDateField = Ext.create('Ext.form.field.Text',
-            Taco.core.ux.TooltipLabel.wrapConfig('publishset.publishsetdate', me, {
-                name: 'scope',
-                fieldLabel: 'Publish Date',
-                labelAlign: 'top',
-                itemId: 'publish-date-field',
-                text: 'Publish Date',
-                width: 400,
-                style: 'padding-top:30px;font:bold 14px/14px "SourceSansProRegular",helvetica,arial,verdana,sans-serif;',
-                border: false,
-                listeners: {
-                    afterrender: function(cmp) {
-                        //disable without changing css
-                        cmp.inputEl.dom.disabled = true;
-                        cmp.inputEl.dom.style.borderWidth = '0px';
-                    }
+        this.publishDateField = Ext.create('Ext.form.field.Text', {
+            name: 'scope',
+            fieldLabel: 'Publish Date',
+            labelAlign: 'top',
+            itemId: 'publish-date-field',
+            text: 'Publish Date',
+            width: 400,
+            style: 'padding-top:30px;font:bold 14px/14px "SourceSansProRegular",helvetica,arial,verdana,sans-serif;',
+            border: false,
+            tooltip: Ext.create('Taco.core.ux.content.Tooltip', {
+                elementId: 'publish-date-field',
+                hoverTarget: 'label',
+                messageKey: 'publishset.publishsetdate'
+            }),
+            listeners: {
+                afterrender: function(cmp) {
+                    //disable without changing css
+                    cmp.inputEl.dom.disabled = true;
+                    cmp.inputEl.dom.style.borderWidth = '0px';
                 }
-            })
-        );
+            }
+        });
+
+
+        // this.publishDateField = Ext.create('Ext.form.field.Text',
+        //     Taco.core.ux.TooltipLabel.wrapConfig('publishset.publishsetdate', me, {
+        //         name: 'scope',
+        //         fieldLabel: 'Publish Date',
+        //         labelAlign: 'top',
+        //         itemId: 'publish-date-field',
+        //         text: 'Publish Date',
+        //         width: 400,
+        //         style: 'padding-top:30px;font:bold 14px/14px "SourceSansProRegular",helvetica,arial,verdana,sans-serif;',
+        //         border: false,
+        //         listeners: {
+        //             afterrender: function(cmp) {
+        //                 //disable without changing css
+        //                 cmp.inputEl.dom.disabled = true;
+        //                 cmp.inputEl.dom.style.borderWidth = '0px';
+        //             }
+        //         }
+        //     })
+        // );
 
 
 

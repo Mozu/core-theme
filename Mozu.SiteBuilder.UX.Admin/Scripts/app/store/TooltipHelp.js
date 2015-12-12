@@ -97,6 +97,10 @@ Ext.define('Taco.store.TooltipHelp', {
         }, {
             key: 'productRanking.form.pinnedProduct.header',
             value: 'Only promoted products that are in the category/search results will appear.'
+        },
+        {
+            key: 'default',
+            value: 'Default Tooltip'
         }
    ]
    

@@ -1,0 +1,49 @@
+@mixin taco-tooltip {
+
+	.#{$vprefix}tooltip {
+
+		background-color: $tooltip-background-color;
+		color: $white-color;
+		font-size: 12px;
+		font-weight: initial;
+		opacity: 0;
+		padding: 3px 8px;
+		position: absolute;
+		transform: translateX(0px) translateY(0px);
+		transition-property: opacity, transform;
+		transition-delay: .3s;
+		top: 0px;
+		z-index: 100000000;
+		@include border-radius(4px);
+		@include facade-transitions;
+
+		div:first-child {
+			padding: 4px;
+		}
+
+		&::after {
+			border: solid transparent;
+			border-color: $tooltip-background-color transparent transparent;
+			border-top-color: $tooltip-background-color;
+			border-width: 6px;
+			content: " ";
+			height: 0;
+			left: 50%;
+			margin-left: -6px;
+			pointer-events: none;
+			position: absolute;
+			top: 100%;
+			width: 0;
+		}
+
+		&.removed {
+			top: -1000000px !important;
+		}
+
+		&.shown {
+			opacity: 1;
+			transform: translateY(-7px);
+		}
+	}
+
+}
