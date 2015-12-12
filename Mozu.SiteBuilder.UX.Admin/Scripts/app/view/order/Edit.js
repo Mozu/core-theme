@@ -64,11 +64,11 @@ Ext.define('Taco.view.order.Edit', {
             xtype: 'button',
             ui: 'action',
             scale: "medium",
+            cls: 'taco-btn-nextprev taco-btn-nextprev-next',
             itemId: 'next',
-            text: 'Next',
             disabled: !this.canNavigateToNext(),
 
-            margin: '0 0 0 10',
+            margin: '0 0 0 0',
             
             handler: this.navigateToNext,
             
@@ -79,8 +79,8 @@ Ext.define('Taco.view.order.Edit', {
                 xtype: 'button',
                 ui: 'action',
                 scale: "medium",
+                cls: 'taco-btn-nextprev taco-btn-nextprev-prev',
                 itemId: 'previous',
-                text: 'Previous',
                 disabled: !this.canNavigateToPrevious(),
 
                 margin: '0 0 0 10',
