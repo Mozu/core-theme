@@ -8,6 +8,7 @@
 		font-weight: initial;
 		opacity: 0;
 		padding: 3px 8px;
+		pointer-events: none;
 		position: absolute;
 		transform: translateX(0px) translateY(0px);
 		transition-property: opacity, transform;
@@ -21,19 +22,78 @@
 			padding: 4px;
 		}
 
-		&::after {
-			border: solid transparent;
-			border-color: $tooltip-background-color transparent transparent;
-			border-top-color: $tooltip-background-color;
-			border-width: 6px;
-			content: " ";
-			height: 0;
-			left: 50%;
-			margin-left: -6px;
-			pointer-events: none;
-			position: absolute;
-			top: 100%;
-			width: 0;
+		&.arrow {
+
+			&::after {
+				border: solid transparent;
+				border-color: $tooltip-background-color transparent transparent;
+				border-width: 6px;
+				content: " ";
+				height: 0;
+				left: 50%;
+				margin-left: -6px;
+				pointer-events: none;
+				position: absolute;
+				width: 0;
+			}
+
+			&.top {
+
+				&::after {
+					border-color: transparent;
+					border-bottom-color: $tooltip-background-color;
+					bottom: 100%;
+				}
+
+				&.shown {
+					transform: translateY(7px);
+				}
+			}
+
+			&.bottom {
+
+				&::after {
+					border-color: transparent;
+					border-top-color: $tooltip-background-color;
+					top: 100%;
+				}
+
+				&.shown {
+					transform: translateY(-7px);
+				}
+			}
+
+			&.right {
+
+				&::after {
+					border-color: transparent;
+					border-left-color: $tooltip-background-color;
+					left: 103%;
+					right: initial;
+					top: 50%;
+					transform: translateY(-50%);
+				}
+
+				&.shown {
+					transform: translateX(7px);
+				}
+			}
+
+			&.left {
+
+				&::after {
+					border-color: transparent;
+					border-right-color: $tooltip-background-color;
+					right: 100%;
+					left: initial;
+					top: 50%;
+					transform: translateY(-50%);
+				}
+
+				&.shown {
+					transform: translateX(-7px);
+				}
+			}
 		}
 
 		&.removed {
@@ -42,7 +102,6 @@
 
 		&.shown {
 			opacity: 1;
-			transform: translateY(-7px);
 		}
 	}
 

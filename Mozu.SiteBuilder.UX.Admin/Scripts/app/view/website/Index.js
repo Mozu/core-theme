@@ -15,6 +15,7 @@ Ext.define('Taco.view.website.Index', {
         'Taco.model.NavigationTreeNode',
         'Taco.store.NavigationTreeNodes',
         'Taco.view.website.Tree',
+        'Taco.core.ux.content.Tooltip',
         'Taco.view.website.entityAdapters.BaseEntityAdapter',
         'Taco.view.website.entityAdapters.DocumentEntityAdapter',
         'Taco.view.website.entityAdapters.CategoryEntityAdapter',
@@ -187,7 +188,15 @@ Ext.define('Taco.view.website.Index', {
                 title: 'DRAFT',
                 margin: '0 0 0 10',
                 hidden: true,
-                afterrender: this.setAction.bind(this)
+                afterrender: this.setAction.bind(this),
+                tooltip: Ext.create('Taco.core.ux.content.Tooltip', {
+                    elementId: 'draftIcon',
+                    hoverTarget: 'bodyEl',
+                    messageKey: 'publishset.publishsetdate',
+                    arrowPosition: 'top',
+                    offsetTop: -22,
+                    offsetLeft: 67
+                })
             },
             {
                 xtype: 'button',

@@ -15,9 +15,14 @@ Ext.define('Taco.core.ux.content.Tooltip', {
     tooltipCls: 'taco-tooltip',
     showCls: 'shown',
     removedCls: 'removed',
-    showEvent: 'mouseover',
-    hideEvent: 'mouseout',
+    showEvent: 'mouseenter',
+    hideEvent: 'mouseleave',
     showDelay: 100,
+    offsetLeft: 100,
+    offsetTop: 0,
+    defaultTpl: null,
+    defaultTplData: null,
+    arrowPosition: 'bottom',
     initComponent: function() {
 
     	this.items = [];
@@ -29,30 +34,32 @@ Ext.define('Taco.core.ux.content.Tooltip', {
     	this.buildToolTip();
 
     	this.on('afterrender', this.onAfterRender, this, {single: true});
-    	
+
     	this.callParent(arguments);
+
+        console.log(this.tooltip);
     },
 
     setPosition: function() {
-        var position = this.labelEl.dom.getBoundingClientRect();
+        var position = this.target.dom.getBoundingClientRect();
         var top = position.top;
         var left = position.left;
+        var dom = this.tooltip.getEl().dom;
 
-        this.tooltip.getEl().dom.style.left = left - (this.tooltip.getWidth() / 2.6) + 'px';
-        this.tooltip.getEl().dom.style.top = top - (this.tooltip.getHeight() / 1.3) + 'px';
+        dom.style.left = left - this.offsetLeft + 'px';
+        dom.style.top = top - this.offsetTop + 'px';
     },
 
     showToolTip: function(event) {
-        
+
         this.setPosition();
 
-
-        if (event.type === 'mouseover' || event.type === 'mousemove') {
+        if (event.type === 'mouseenter' || event.type === 'mousemove') {
             this.tooltip.removeCls('removed');
             this.tooltip.addCls(this.showCls);
         }
 
-        else {
+        else if (event.type === 'mouseleave') {
             this.tooltip.removeCls(this.showCls);
             Ext.defer(function() {
                 this.tooltip.addCls('removed');
@@ -61,19 +68,26 @@ Ext.define('Taco.core.ux.content.Tooltip', {
     },
 
     buildToolTip: function() {
-        
-    	this.tooltip = Ext.create('Ext.Component', {
-            cls: this.tooltipCls,
-    		tpl: [
-    			'<div class="{cls}"">{message}</div>'
-                
-    		],
-    		data: {
-                message: this.message.get('value')
-            }
-    	});
+
+        var tpl = this.defaultTpl ? this.defaultTpl :  [
+                '<div>{message}</div>'
+            ];
+
+        var data = this.defaultTplData ? this.defaultTpl : {
+            message: this.message.get('value')
+        };
+
+        this.tooltip = Ext.create('Ext.Component', {
+            cls: this.tooltipCls + ' arrow ' + this.arrowPosition.toLowerCase(),
+            tpl: tpl,
+            data: data
+        });
 
     	this.items.push(this.tooltip);
+    },
+
+    rerender: function(data) {
+        this.tooltip.update(data);
     },
 
     onAfterRender: function() {
@@ -81,38 +95,41 @@ Ext.define('Taco.core.ux.content.Tooltip', {
     },
 
     applyTooltip: function() {
-
+        
     	var component = Ext.ComponentQuery.query('#' + this.elementId);
-		
+
 		if (!component || component.length < 0) {
 			console.warn('No component found to attach tooltip to');
+            return false;
 		}
 
 		this.component = component[0];
 
 		switch (this.hoverTarget) {
-			case 'label': 
-				this.instantiateToolTipEvents();
+			case 'label':
+				this.instantiateToolTipEvents(this.component.labelEl);
 				break
+            case 'bodyEl':
+                this.instantiateToolTipEvents(this.component.bodyEl);
 			default:
 				console.warn('No hover target has been established for ' + this.hoverTarget);
 		}
     },
 
-    instantiateToolTipEvents: function() {
+    instantiateToolTipEvents: function(cmp) {
         var timeout = null;
 
-        this.labelEl = this.component.labelEl;
+        this.target = cmp;
 
-        this.labelEl.on(this.showEvent, function(e) {
+        this.target.on(this.showEvent, function(e) {
             timeout = setTimeout(this.showToolTip.bind(this, e), this.showDelay);
+        }, this, { stopPropagation: false });
+
+        this.target.on(this.hideEvent, function() {
+            clearTimeout(timeout);
+            this.showToolTip({type: this.hideEvent });
         }, this);
 
-        this.labelEl.on(this.hideEvent, function() {
-            clearTimeout(timeout);
-            this.showToolTip({type: 'mouseout'});
-        }, this);
-        
-    },
+    }
 
 });
