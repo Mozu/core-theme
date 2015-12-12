@@ -1,128 +1,217 @@
+@mixin btn-focus-no-border {
+    &.#{$prefix}btn-focus {
+        border: none;
+    }
+}
+
 @mixin taco-buttons {
 
-    .#{$prefix}menu-item-icon {
-        &.#{$prefix}menu-item-checkbox {
-            margin-top: 11px;
+    .#{$prefix}btn {
+        &.#{$prefix}btn-focus {
+            box-shadow: none;
         }
     }
 
-    .#{$prefix}btn {
+    // Primary Action Button
+
+    .#{$prefix}btn-action-primary-medium {
+        background-color: $primary-btn-background;
+        border: none;
+        .#{$prefix}btn-inner-center {
+            color: $white-color;
+            font-size: 16px;
+        }
+        &:hover {
+            background-color: $primary-btn-hover-background;
+            border: 0;
+        }
+        &:active {
+            background-color: $primary-btn-active-background;
+        }
+        @include btn-focus-no-border;
+    }
+
+    .#{$prefix}btn-action-primary-toolbar-medium {
+        @extend .#{$prefix}btn-action-primary-medium;
+        &.#{$prefix}btn-action-primary-toolbar-medium-over {
+            box-shadow: none;
+        }
+    }
+
+    // Secondary Action Button
+
+    .#{$prefix}btn-link-toolbar-medium {
+        @include btn-focus-no-border;
+        padding: 10px 8px;
+        .#{$prefix}btn-inner-center {
+            padding: 0;
+        }
         &:hover {
             .#{$prefix}btn-inner-center {
-                color: $dark-color;
+                color: $secondary-btn-hover-text;
             }
         }
-
         &:active {
-            background-color: $medium-button-active-bg;
-        }
-    }
-    
-    .#{$prefix}btn-action-primary-toolbar-medium {
-        &.#{$prefix}btn-focus {
-            @include no-box-shadow;
+            background-color: $secondary-btn-active-background;
         }
     }
 
-    .#{$prefix}btn-toolbar {
-        &.#{$prefix}move-next-previous-arrow {
+    // Dropdowns
 
-            span {
-                .#{$prefix}btn-glyph {
-                    color: $item-switch-color;
-                    font-size: $normal-font-link;
-                    -ms-transform: rotate(-90deg);
-                    -webkit-transform: rotate(-90deg);
-                    transform: rotate(-90deg);
-                }
-            }
-
-            &:hover {
-                box-shadow: none;
-
-                span {
-                    .#{$prefix}btn-glyph {
-                        color: $dark-color;
-                    }
-                }
-            }
+    .#{$prefix}btn {
+        &.#{$prefix}menu-active {
+            border-bottom-left-radius: 0;
+            border-bottom-right-radius: 0;
+            border-bottom: 1px solid $menu-btn-active-border;
+            background-color: $menu-btn-active-background;
         }
     }
 
-    .#{$prefix}move-next-previous-position {
-        color: $item-switch-color;
-        font-size: $normal-font-link;
-    }
-
-    /**
-     * Panel nav
-     */
-
-    .#{$prefix}field-default-form-focus + div {
-        label {
-            font-size: $label-link-font;
-            top: 0;
-        }
-    }
-
-    .#{$vprefix}link-button {
-        border: none;
-        border-bottom: 2px solid transparent;
-        border-radius: 0px; // we can remove this once its been removed globally
-        box-shadow: none;
-        background-color: $dark-bg;
-        color: $gray-text-dark;
-        padding: 8px 15px;
-        font-family: $font-family;
-        font-size: $normal-font-link;
-        transition: border-color;
-        @include facade-transitions();
-
-        &:hover {
-            color: $dark-color;
-            text-decoration: none;
-        }
-
-        // there is a bug in EXT where the pressedCls of a button
-        // adds x- before the class -- to be removed once that bug is fixed (so never)
-        // http://stackoverflow.com/questions/31043578/extjs-how-to-set-button-css-by-using-pressedcls-config
-        &.active, &.#{$prefix}active, &.#{$prefix}focus {
-            text-decoration: none;
-            border-color: $valid-green;
-            color: $dark-color;
-        }
-
-    }
-
-    /**
-     * Dropdown list
-     */
-
-    .#{$prefix}dropdown-trigger {
-        &:after {
-            color: $gray-text-dark;
-            content: $glyph-chevrondown;
-            font-family: $icon-font;
-            font-size: $tag-font;
-            margin-left: -6px;
-        }
-
-        &:hover,
-        &:active,
-        &:focus {
-            &:after {
-                color: $glyph-icon-color;
-            }
-        }
-    }
-
-    .#{$vprefix}light-tag {
-        border: 1px solid $light-bg;
-        color: $gray-text-dark;
-        font-size: 8px;
-        margin: 10px 3px;
-        padding: 3px 3px 2px 3px;
-        text-transform: uppercase;
-        @include border-radius-xbrowser(3px);
-    }
+    //.#{$prefix}menu-item-icon {
+    //    &.#{$prefix}menu-item-checkbox {
+    //        margin-top: 11px;
+    //    }
+    //}
+    //
+    //.#{$prefix}btn {
+    //    &:hover {
+    //        .#{$prefix}btn-inner-center {
+    //            color: $dark-color;
+    //        }
+    //    }
+    //
+    //    &:active {
+    //        background-color: $medium-button-active-bg;
+    //    }
+    //}
+    //
+    //.#{$prefix}btn-action-primary-toolbar-medium {
+    //    &.#{$prefix}btn-focus {
+    //        @include no-box-shadow;
+    //    }
+    //}
+    //
+    //.#{$prefix}btn-toolbar {
+    //    &.#{$prefix}move-next-previous-arrow {
+    //
+    //        span {
+    //            .#{$prefix}btn-glyph {
+    //                color: $item-switch-color;
+    //                font-size: $normal-font-link;
+    //                -ms-transform: rotate(-90deg);
+    //                -webkit-transform: rotate(-90deg);
+    //                transform: rotate(-90deg);
+    //            }
+    //        }
+    //
+    //        &:hover {
+    //            box-shadow: none;
+    //
+    //            span {
+    //                .#{$prefix}btn-glyph {
+    //                    color: $dark-color;
+    //                }
+    //            }
+    //        }
+    //    }
+    //}
+    //
+    //.#{$prefix}move-next-previous-position {
+    //    color: $item-switch-color;
+    //    font-size: $normal-font-link;
+    //}
+    //
+    ///**
+    // * Panel nav
+    // */
+    //
+    //.#{$prefix}field-default-form-focus + div {
+    //    label {
+    //        font-size: $label-link-font;
+    //        top: 0;
+    //    }
+    //}
+    //
+    //.#{$vprefix}link-button {
+    //    border: none;
+    //    border-bottom: 2px solid transparent;
+    //    border-radius: 0px; // we can remove this once its been removed globally
+    //    box-shadow: none;
+    //    background-color: $dark-bg;
+    //    color: $gray-text-dark;
+    //    padding: 8px 15px;
+    //    font-family: $font-family;
+    //    font-size: $normal-font-link;
+    //    transition: border-color;
+    //    @include facade-transitions();
+    //
+    //    &:hover {
+    //        color: $dark-color;
+    //        text-decoration: none;
+    //    }
+    //
+    //    // there is a bug in EXT where the pressedCls of a button
+    //    // adds x- before the class -- to be removed once that bug is fixed (so never)
+    //    // http://stackoverflow.com/questions/31043578/extjs-how-to-set-button-css-by-using-pressedcls-config
+    //    &.active, &.#{$prefix}active, &.#{$prefix}focus {
+    //        text-decoration: none;
+    //        border-color: $valid-green;
+    //        color: $dark-color;
+    //    }
+    //
+    //}
+    //
+    ///**
+    // * Dropdown list
+    // */
+    //
+    //.#{$prefix}dropdown-trigger {
+    //    &:after {
+    //        color: $gray-text-dark;
+    //        content: '\E60B';
+    //        font-family: $icon-font;
+    //        font-size: $tag-font;
+    //        margin-left: -6px;
+    //    }
+    //
+    //    &:hover,
+    //    &:active,
+    //    &:focus {
+    //        &:after {
+    //            color: $dropdown-icon-active;
+    //        }
+    //    }
+    //}
+    //
+    ///**
+    // * Dropdown list
+    // */
+    //
+    //.#{$prefix}dropdown-trigger {
+    //    &:after {
+    //        color: $gray-text-dark;
+    //        content: '\E60B';
+    //        font-family: $icon-font;
+    //        font-size: $tag-font;
+    //        margin-left: -6px;
+    //    }
+    //
+    //    &:hover,
+    //    &:active,
+    //    &:focus {
+    //        &:after {
+    //            color: $dropdown-icon-active;
+    //        }
+    //    }
+    //}
+    //
+    //.#{$vprefix}light-tag {
+    //    border: 1px solid $light-bg;
+    //    color: $gray-text-dark;
+    //    font-size: 8px;
+    //    margin: 10px 3px;
+    //    padding: 3px 3px 2px 3px;
+    //    text-transform: uppercase;
+    //    @include border-radius-xbrowser(3px);
+    //}
 }

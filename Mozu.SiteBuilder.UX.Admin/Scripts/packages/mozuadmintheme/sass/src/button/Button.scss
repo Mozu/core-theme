@@ -2,7 +2,7 @@
 
 $ui-link:
     'link',                         // 1. name
-    $color-button-link,             // 2. text color, no hover
+    $color-action-foreground,       // 2. text color
     $color-neutral-transparent,     // 3. background color, normal state
     $color-neutral-transparent,     // 4. background color, hover state
     $color-neutral-transparent,     // 5. background color, active state
@@ -11,10 +11,7 @@ $ui-link:
     $color-action-outline-active,   // 8. border color, active state
     0px,                            // 9. border width
     10px,                           // 10. left padding
-    26px,                           // 11. arrow width,
-    $color-button-link-hover,       // 12. text color, hover,
-    12px,                           // 13. font size,
-    400                             // 14. font weight
+    26px                            // 11. arrow width
 ;
 
 $ui-action:
@@ -28,10 +25,7 @@ $ui-action:
     $color-action-outline-active,
     1px,
     19px,
-    38px,
-    $color-action-foreground,
-    16px,
-    normal
+    38px
 ;
 
 $ui-action-primary:
@@ -45,10 +39,7 @@ $ui-action-primary:
     $color-action-primary-outline-active,
     1px,
     19px,
-    38px,
-    $color-action-foreground,
-    16px,
-    normal
+    38px
 ;
 
 $ui-action-toggle:
@@ -62,10 +53,7 @@ $ui-action-toggle:
     $color-action-toggle-outline-active,
     1px,
     19px,
-    38px,
-    $color-action-foreground,
-    16px,
-    normal
+    38px
 ;
 
 $uis: $ui-link, $ui-action, $ui-action-primary, $ui-action-toggle;
@@ -101,22 +89,22 @@ $uis: $ui-link, $ui-action, $ui-action-primary, $ui-action-toggle;
             $background-gradient-disabled: null,
 
             $color: nth($ui-name, 2),
-            $color-over: nth($ui-name, 12),
+            $color-over: nth($ui-name, 2),
             $color-focus: nth($ui-name, 2),
             $color-pressed: nth($ui-name, 2),
             $color-disabled: nth($ui-name, 2),
 
-            $font-size: nth($ui-name, 13),
-            $font-size-over: nth($ui-name, 13),
-            $font-size-focus: nth($ui-name, 13),
-            $font-size-pressed: nth($ui-name, 13),
-            $font-size-disabled: nth($ui-name, 13),
+            $font-size: 16px,
+            $font-size-over: 16px,
+            $font-size-focus: 16px,
+            $font-size-pressed: 16px,
+            $font-size-disabled: 16px,
 
-            $font-weight: nth($ui-name, 14),
-            $font-weight-over: nth($ui-name, 14),
-            $font-weight-focus: nth($ui-name, 14),
-            $font-weight-pressed: nth($ui-name, 14),
-            $font-weight-disabled: nth($ui-name, 14),
+            $font-weight: normal,
+            $font-weight-over: normal,
+            $font-weight-focus: normal,
+            $font-weight-pressed: normal,
+            $font-weight-disabled: normal,
 
             $font-family: $font-family,
             $font-family-over: $font-family,
@@ -195,6 +183,7 @@ $uis: $ui-link, $ui-action, $ui-action-primary, $ui-action-toggle;
 
     .#{$prefix}btn-split-right {
         &::after {
+            border-left: 1px solid $color-action-outline;
             width: 27px;
         }
     }
@@ -208,16 +197,19 @@ $uis: $ui-link, $ui-action, $ui-action-primary, $ui-action-toggle;
 
 .#{$prefix}btn-focus {
 	border: 1px solid $color-action-outline-focus;
+    @include box-shadow(inset 0 0 4px 0px transparentize($color-action-outline-focus, .5));
 }
 
 // red button focus
 .#{$prefix}btn-action-primary-toolbar-medium.#{$prefix}btn-focus {
 	border: 1px solid $color-action-outline-focus;
+    @include box-shadow(inset 0 0 0 3px rgb(252,194,0));
 }
 
 // link button focus
 .#{$prefix}btn-link-medium-focus,.#{$prefix}btn-link-small-focus {
 	border: 0px solid $color-action-outline-focus;
+	@include box-shadow(inset 0 0 0 0);
 	.x-btn-inner {
 		text-decoration:underline;
 	}
@@ -250,6 +242,14 @@ $uis: $ui-link, $ui-action, $ui-action-primary, $ui-action-toggle;
             border-left-color: $color-action-primary-outline;
         }
     }
+
+    .#{$prefix}btn-inner {
+        text-shadow: 1px 1px transparentize($color-neutral-black, 0.75);
+    }
+}
+
+.#{$prefix}btn-action-primary-medium-over {
+    @include box-shadow(inset 0px -1px $color-action-primary-outline-hover);
 }
 
 // ui: action-primary-toolbar
@@ -272,5 +272,6 @@ $uis: $ui-link, $ui-action, $ui-action-primary, $ui-action-toggle;
     @include box-shadow(inset 0px -1px darken($color-theme-green, 10%));
 
     &.#{$prefix}btn-action-toggle-medium-pressed {
+        @include box-shadow(inset 0px -1px $color-theme-blue-darker);
     }
 }

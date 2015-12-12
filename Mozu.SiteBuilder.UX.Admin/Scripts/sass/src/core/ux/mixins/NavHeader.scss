@@ -107,31 +107,6 @@
         .navheader-action-toolbar {
             margin-right: 15px;
             .#{$prefix}btn {
-                border: none;
-
-                &.#{$prefix}btn-action-primary-toolbar-medium {
-                    background-color: $valid-green;
-
-                    .#{$prefix}btn-inner-center {
-                        color: $white-color;
-                    }
-
-                    &:hover {
-                        background-color: $valid-green-active;
-                    }
-
-                    &.#{$prefix}btn.#{$prefix}menu-active {
-                        border-bottom-left-radius: 0;
-                        border-bottom-right-radius: 0;
-                        border-bottom: 1px solid $menu-btn-active-border;
-                        background-color: $menu-btn-active-background;
-                    }
-
-                    .#{$prefix}btn-inner-center {
-                        font-size: 16px;
-                    }
-                    
-                }
 
                 &.#{$prefix}btn-action-secondary-toolbar-medium {
                     background-color: transparent;
@@ -174,22 +149,6 @@
             .website-editor-tab-btn {
                 .#{$prefix}btn-glyph {
                     line-height: 28px;
-                }
-            }
-            .#{$prefix}btn-link-toolbar-medium {
-                background-color: inherit;
-                padding-left: 8px;
-                padding-right: 8px;
-                &:hover {
-                    background-color: inherit;
-                }
-                &.#{$prefix}btn-focus {
-                    box-shadow: none;
-                }
-                .#{$prefix}btn-inner-center {
-                    font-size: 12px;
-                    color: $card-button-text-color;
-                    padding: 0;
                 }
             }
 

@@ -79,6 +79,12 @@ $menu-btn-active-border:        rgb(35, 151, 122);                              
 $menu-btn-active-background:    rgb(44, 163, 133);                                  /* #2ca385 --> #2da587  044, 163, 133 */
                                 /* adjust_hue(saturate(lighten($black-color, 41), 57), 165); */
 
+$primary-btn-background:        $valid-green;
+$primary-btn-hover-background:  $valid-green-active;
+$primary-btn-active-background: rgb(48, 165, 136);
+$secondary-btn-active-background: whitesmoke;
+$secondary-btn-hover-text:      $dark-color;
+
 $item-switch-color:             rgba(lighten($black-color, 26), .32);               /* #424242              066, 066, 066 */
 $splitter-background:           $white-color;
 $splitter-border:               rgba(0, 0, 0, 0.1);
