@@ -4,6 +4,12 @@
     }
 }
 
+@mixin btn-inner-center-no-padding {
+    .#{$prefix}btn-inner-center {
+        padding: 0;
+    }
+}
+
 @mixin taco-buttons {
 
     .#{$prefix}btn {
@@ -42,10 +48,8 @@
 
     .#{$prefix}btn-link-toolbar-medium {
         @include btn-focus-no-border;
+        @include btn-inner-center-no-padding;
         padding: 10px 8px;
-        .#{$prefix}btn-inner-center {
-            padding: 0;
-        }
         &:hover {
             .#{$prefix}btn-inner-center {
                 color: $secondary-btn-hover-text;
@@ -66,6 +70,38 @@
             background-color: $menu-btn-active-background;
         }
     }
+
+    // Card Buttons
+
+    .#{$prefix}btn-action-toolbar-medium {
+        background-color: $card-button-bg;
+        color: $card-btn-text-color;
+        border: 1px solid $card-btn-border;
+        padding: 5px 12px;
+        @include btn-inner-center-no-padding;
+        .#{$prefix}btn-button {
+            height: 20px;
+        }
+        .#{$prefix}btn-inner-center {
+            line-height: 20px;
+        }
+        &:hover {
+            border-color: $card-btn-hover-border;
+        }
+        &:active {
+            border-color: $card-btn-active-border;
+            background-color: $card-btn-active-background;
+        }
+        &.#{$prefix}btn-disabled {
+            .#{$prefix}btn-inner-center {
+                color: $card-btn-disabled-text;
+            }
+            border-color: $card-btn-disabled-border;
+            background-color: $card-btn-disabled-background;
+            opacity: 1;
+        }
+    }
+
 
     //.#{$prefix}menu-item-icon {
     //    &.#{$prefix}menu-item-checkbox {
