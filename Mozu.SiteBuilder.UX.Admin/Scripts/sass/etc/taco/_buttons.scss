@@ -114,7 +114,7 @@
         }
     }
 
-    .#{$vprefix}btn-nextprev {
+    @mixin btn-nextprev {
         background-color: transparent;
         padding: 0;
         border: none;
@@ -134,17 +134,21 @@
             opacity: 0.09;
             background-color: transparent;
         }
-        &.#{$vprefix}btn-nextprev-next {
-            .#{$prefix}btn-wrap {
-                @include icon-font($glyph-arrow-right, 14px, $dark-color);
-                @include btn-nextprev-wrap;
-            }
+    }
+
+    .#{$vprefix}btn-nextprev-next {
+        @include btn-nextprev;
+        .#{$prefix}btn-wrap {
+            @include icon-font($glyph-arrow-right, 14px, $dark-color);
+            @include btn-nextprev-wrap;
         }
-        &.#{$vprefix}btn-nextprev-prev {
-            .#{$prefix}btn-wrap {
-                @include icon-font($glyph-arrow-left, 14px, $dark-color);
-                @include btn-nextprev-wrap;
-            }
+    }
+
+    .#{$vprefix}btn-nextprev-prev {
+        @include btn-nextprev;
+        .#{$prefix}btn-wrap {
+            @include icon-font($glyph-arrow-left, 14px, $dark-color);
+            @include btn-nextprev-wrap;
         }
     }
 

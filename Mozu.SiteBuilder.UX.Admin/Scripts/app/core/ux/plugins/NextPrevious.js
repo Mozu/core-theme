@@ -187,14 +187,12 @@
             buttonCfg,
             buttonCfgDefault = {
                 xtype: "button",
+                cls: (forward) ? "taco-btn-nextprev-next" : "taco-btn-nextprev-prev",
                 ui: "action",
                 scale: "medium",
                 handler: (forward) ? me.navigateToNext : me.navigateToPrevious,
                 scope: me,
-                disabled: buttonDisabled,
-                margin: {
-                    right: 10
-                }
+                disabled: buttonDisabled
             },
             index,
             navToIndex,
@@ -231,7 +229,6 @@
                 //todo made this an icon
                 buttonCfg = {
                     
-                    glyph: (forward) ? 'XE60B@mozicons' : 'XE60C@mozicons',
                     cls: 'move-next-previous-arrow'
                 }
             } else {
@@ -246,7 +243,6 @@
             if (me.buttonType == "arrows") {
                 //todo made this an icon
                 buttonCfg = {
-                    glyph: (forward) ? 'XE60B@mozicons' : 'XE60C@mozicons',
                     cls: 'x-move-next-previous-arrow'
                 }
             } else {
