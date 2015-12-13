@@ -125,12 +125,7 @@
             background-color: $card-btn-disabled-background;
             opacity: 1;
         }
-        .#{$prefix}btn-arrow-right {
-            padding-right: 20px;
-        }
-        .#{$prefix}btn-split-right {
-            padding-right: 38px;
-        }
+        // Card buttons with dropdowns
         .#{$prefix}btn-arrow-right,
         .#{$prefix}btn-split-right {
             &::after {
@@ -142,6 +137,18 @@
             }
             .#{$prefix}btn-button {
                 margin-right: -5px;
+            }
+        }
+        .#{$prefix}btn-arrow-right {
+            padding-right: 20px;
+        }
+        .#{$prefix}btn-split-right {
+            margin-right: -7px;
+            padding-right: 31px;
+            &::after {
+                height: 32px;
+                width: 22px;
+                border-left-color: $card-btn-border;
             }
         }
     }
