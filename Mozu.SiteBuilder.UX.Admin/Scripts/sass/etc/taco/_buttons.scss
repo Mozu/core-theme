@@ -52,6 +52,19 @@
                 border-left-width: 0;
             }
         }
+        .#{$prefix}btn-split-right {
+            margin-right: -7px;
+            padding-right: 45px;
+            &::after {
+                height: 40px;
+                line-height: 40px;
+                padding-top: 0;
+                top: -5px;
+                width: 36px;
+                margin-right: -12px;
+                box-shadow: $primary-btn-split-border 0 1px 3px 0;
+            }
+        }
     }
 
     .#{$prefix}btn-action-primary-toolbar-medium {

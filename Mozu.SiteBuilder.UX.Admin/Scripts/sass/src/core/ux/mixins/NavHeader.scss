@@ -137,9 +137,6 @@
                     top: 5px;
                     color: $white-color;
                 }
-                .#{$prefix}btn-split-right::after {
-                    top: -2px;
-                }
 
                 &.#{$prefix}move-next-previous-arrow {
                     background-color: transparent;
