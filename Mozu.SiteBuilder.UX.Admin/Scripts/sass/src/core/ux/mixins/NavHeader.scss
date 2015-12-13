@@ -132,12 +132,6 @@
                     }
                 }
 
-                
-                .#{$prefix}btn-arrow-right::after {
-                    top: 5px;
-                    color: $white-color;
-                }
-
                 &.#{$prefix}move-next-previous-arrow {
                     background-color: transparent;
                 }
