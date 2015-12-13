@@ -20,9 +20,11 @@
 
     // Primary Action Button
 
-    .#{$prefix}btn-action-primary-medium {
+    a.#{$prefix}btn-action-primary-medium,
+    a.#{$prefix}btn-action-primary-toolbar-medium {
         background-color: $primary-btn-background;
         border: none;
+        padding: 5px 19px;
         .#{$prefix}btn-inner-center {
             color: $white-color;
             font-size: 16px;
@@ -34,11 +36,25 @@
         &:active {
             background-color: $primary-btn-active-background;
         }
+        &.#{$prefix}btn-disabled {
+            background-color: $primary-btn-background;
+            opacity: 0.5;
+            .#{$prefix}btn-inner-center {
+                color: $white-color;
+            }
+        }
         @include btn-focus-no-border;
+        .#{$prefix}btn-arrow-right,
+        .#{$prefix}btn-split-right {
+            &::after {
+                content: $glyph-arrow-down;
+                font-size: 12px;
+                border-left-width: 0;
+            }
+        }
     }
 
     .#{$prefix}btn-action-primary-toolbar-medium {
-        @extend .#{$prefix}btn-action-primary-medium;
         &.#{$prefix}btn-action-primary-toolbar-medium-over {
             box-shadow: none;
         }
@@ -62,7 +78,8 @@
 
     // Dropdowns
 
-    .#{$prefix}btn {
+    a.#{$prefix}btn-action-primary-medium,
+    a.#{$prefix}btn-action-primary-toolbar-medium {
         &.#{$prefix}menu-active {
             border-bottom-left-radius: 0;
             border-bottom-right-radius: 0;
@@ -71,9 +88,17 @@
         }
     }
 
+    .#{$prefix}btn-action-medium,
+    .#{$prefix}btn-action-toolbar-medium {
+        &.#{$prefix}menu-active {
+            background-color: $card-button-bg;
+        }
+    }
+
     // Card Buttons
 
-    .#{$prefix}btn-action-toolbar-medium {
+    .#{$prefix}btn-action-toolbar-medium,
+    .#{$prefix}btn-action-medium {
         background-color: $card-button-bg;
         color: $card-btn-text-color;
         border: 1px solid $card-btn-border;
@@ -99,6 +124,25 @@
             border-color: $card-btn-disabled-border;
             background-color: $card-btn-disabled-background;
             opacity: 1;
+        }
+        .#{$prefix}btn-arrow-right {
+            padding-right: 20px;
+        }
+        .#{$prefix}btn-split-right {
+            padding-right: 38px;
+        }
+        .#{$prefix}btn-arrow-right,
+        .#{$prefix}btn-split-right {
+            &::after {
+                content: $glyph-arrow-down;
+                font-size: 10px;
+                line-height: 20px;
+                right: 0;
+                margin-right: -5px;
+            }
+            .#{$prefix}btn-button {
+                margin-right: -5px;
+            }
         }
     }
 
