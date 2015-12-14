@@ -103,6 +103,9 @@ Ext.define('Taco.store.TooltipHelp', {
         },{
             key: 'attribute.form.filterandsorting',
             value: 'This determines whether this attribute is available for filtering, sorting, dynamic category expressions, and as a facet in search results and on category pages. This checkbox only makes the attribute available for these purposes, and you\'ll still need to configure the theme or facet settings to actually use the attribute. Having a large number of attributes available for filtering and sorting can reduce the performance of your site. Mozu recommends only enabling this checkbox for the attributes that are most likely to be used for these purposes. You can still display this attribute on product detail pages regardless of this setting.'
+        },{
+            key: 'producttype.attribute.form.displaygroup',
+            value: '<dl><dt>Storefront details and listings</dt><dd>The property is available on storefront product listing pages like categories and search results.</dd><dt>Storefront details</dt><dd>The property is available only when displaying product details on the storefront.</dd><dt>Admin Only</dt><dd>The property is managed only within Mozu Admin and is not visible in the storefront.</dd></dl>'
         }
    ]
    

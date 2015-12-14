@@ -381,7 +381,8 @@
                 initDisplayGroup = this.record.get('isProductDetailsOnlyProperty') ? 'details' : this.record.get('isAdminOnly') ? 'adminonly' : 'listings';
             }
 
-            this.displayGroupSelector = Ext.widget({
+            this.displayGroupSelector = Ext.widget( Taco.core.ux.TooltipLabel.wrapConfig('producttype.attribute.form.displaygroup', me,
+            {
                 xtype: 'selectfield',
                 itemId: "displayGroupSelector",
                 fieldLabel: 'Display Group',
@@ -400,7 +401,7 @@
                             me.isHiddenFromShopper.setValue(false);
                     }
                 }
-            });
+            }));
 
             this.isHiddenFromShopper = Ext.create('Ext.form.field.Checkbox', {
                 name: 'isHidden',
