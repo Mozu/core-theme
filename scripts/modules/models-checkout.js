@@ -535,8 +535,8 @@
                 //clearing existing order billing info because information may have been removed (payment info) #68583
 
                 // #73389 only refresh if the payment requirement has changed after adding a store credit.
-                var activePayments = this.activePayments()
-                var hasNonStoreCreditPayment = _.filter(activePayments, function (item) { return item.paymentType !== 'StoreCredit' });
+                var activePayments = this.activePayments();
+                var hasNonStoreCreditPayment = _.filter(activePayments, function (item) { return item.paymentType !== 'StoreCredit'; });
                 if ((order.get('amountRemainingForPayment') > 0 && !hasNonStoreCreditPayment)
                     || (order.get('amountRemainingForPayment') < 0 && hasNonStoreCreditPayment)) {
                     order.get('billingInfo').clear();
