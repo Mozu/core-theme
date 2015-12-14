@@ -37,6 +37,18 @@
             }
         }
 
+        .#{$vprefix}draft-toolbar {
+            &.#{$prefix}toolbar-docked-top {
+                &+ .#{$prefix}panel-body-default {
+                    .#{$prefix}panel {
+                        .#{$prefix}grid-header-ct {
+                            @include border-radius-xbrowser(0);
+                        }
+                    }
+                }
+            }
+        }
+
         .#{$prefix}panel-body {
 
             /* override external styles */
