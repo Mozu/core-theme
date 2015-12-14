@@ -59,8 +59,10 @@
     .#{$prefix}grid-table .#{$prefix}grid-row-checker,
     .#{$prefix}grid-header-ct .#{$prefix}column-header-checkbox .#{$prefix}column-header-text {
         @include icons-sprite(checkbox-unchecked);
-        background-size: 80%;
+        background-size: 100%;
         border: none;
+        width: 14px;
+        height: 14px;
     }
 
     .#{$prefix}field .#{$prefix}form-checkbox-focus,
@@ -71,13 +73,25 @@
         @include icons-sprite(checkbox-unchecked);
     }
 
+    .#{$prefix}field {
+        .#{$prefix}form-checkbox-focus {
+            border: 2px solid $input-focus-border;
+            @include border-radius-xbrowser($border-radius-small);
+            @include color-outer-shadow($input-focus-border, 1, 2px, 0, 0);
+            background-size: 120%;
+            background-position: -1px, 0;
+        }
+    }
+
     .#{$prefix}form-cb-checked .#{$prefix}form-checkbox,
     .#{$prefix}grid-cell-inner .#{$prefix}tree-checkbox-checked,
     .#{$prefix}menu .#{$prefix}menu-item-checked .#{$prefix}menu-item-icon,
     .#{$prefix}grid-table .#{$prefix}grid-row-selected .#{$prefix}grid-row-checker,
     .#{$prefix}grid-header-ct .#{$prefix}grid-hd-checker-on .#{$prefix}column-header-text {
         @include icons-sprite(checkbox-checked);
-        background-size: 80%;
+        background-size: 100%;
+        width: 14px;
+        height: 14px;
     }
 
     .#{$prefix}form-cb-checked .#{$prefix}form-checkbox-focus,

@@ -85,6 +85,14 @@
   -ms-box-shadow: $x $y $radius rgba($color,$strength);
 }
 
+@mixin color-blur-outer-shadow ($color: #000000, $strength: 0.3, $radius: 5px, $blur: 0, $x: 0, $y: 0) {
+  box-shadow: $x $y $blur $radius rgba($color,$strength);
+  -moz-box-shadow: $x $y $blur $radius rgba($color,$strength);
+  -webkit-box-shadow: $x $y $blur $radius rgba($color,$strength);
+  -o-box-shadow: $x $y $blur $radius rgba($color,$strength);
+  -ms-box-shadow: $x $y $blur $radius rgba($color,$strength);
+}
+
 @mixin inner-shadow ($strength: 0.3, $radius: 5px, $x: 0, $y: 0) {
   box-shadow: $x $y $radius rgba(0,0,0,$strength) inset;
   -moz-box-shadow: $x $y $radius rgba(0,0,0,$strength) inset;

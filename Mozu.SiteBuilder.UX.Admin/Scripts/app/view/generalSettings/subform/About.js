@@ -15,6 +15,7 @@ Ext.define('Taco.view.generalSettings.subform.About', {
         'Ext.form.field.Checkbox',
         'Ext.form.field.Text',
         'Taco.store.TimeZones',
+        'Taco.core.ux.TooltipLabel',
    
         'Taco.store.Channels'
     ],
@@ -34,6 +35,7 @@ Ext.define('Taco.view.generalSettings.subform.About', {
         
         me.timeFormatSelect = {
             xtype: 'selectfield',
+            itemId: 'timeFormat',
             name: 'siteTimeFormat',
             fieldLabel: 'Time format',
             valueField: 'value',            
@@ -54,11 +56,18 @@ Ext.define('Taco.view.generalSettings.subform.About', {
                     ['hh:mm:ss tt', '12 hour w/ leading zeros'],
                     ['HH:mm:ss tt', '24 hour w/ leading zeros']
                 ]
+            }),
+            tooltip: Ext.create('Taco.core.ux.content.Tooltip', {
+                elementId: 'timeFormat',
+                offsetLeft: -84,
+                offsetTop: -19,
+                arrowPosition: 'left'
             })
         };
 
         me.timeZoneSelect = {
             xtype: 'selectfield',
+            itemId: 'siteTimeZone',
             name: 'siteTimeZone',
             fieldLabel: 'Time zone',
             valueField: 'name',
@@ -69,6 +78,12 @@ Ext.define('Taco.view.generalSettings.subform.About', {
             width: 350,
             store: Ext.create('Taco.store.TimeZones', {
                 autoLoad: true
+            }),
+            tooltip: Ext.create('Taco.core.ux.content.Tooltip', {
+                elementId: 'siteTimeZone',
+                offsetLeft: -76,
+                offsetTop: -19,
+                arrowPosition: 'left'
             })
         };
         
@@ -87,6 +102,7 @@ Ext.define('Taco.view.generalSettings.subform.About', {
 
         me.channelCombo = Ext.create('Ext.form.field.ComboBox', {
             name: 'channelId',
+            itemId: 'channelId',
             flex:1,
             fieldLabel: 'Channel',
             editable: false,
@@ -101,6 +117,12 @@ Ext.define('Taco.view.generalSettings.subform.About', {
                 type: 'Taco.store.Channels',
                 autoLoad: true
                 
+            }),
+            tooltip: Ext.create('Taco.core.ux.content.Tooltip', {
+                elementId: 'channelId',
+                offsetLeft: -64,
+                offsetTop: -19,
+                arrowPosition: 'left'
             })
         });
         
@@ -137,9 +159,16 @@ Ext.define('Taco.view.generalSettings.subform.About', {
         this.items = [
             {
                 xtype: 'textfield',
+                itemId: 'websiteName',
                 name: 'websiteName',
                 fieldLabel: 'Web Site Name',
-                width:"100%"
+                width:"100%",
+                tooltip: Ext.create('Taco.core.ux.content.Tooltip', {
+                    elementId: 'websiteName',
+                    offsetLeft: -94,
+                    offsetTop: -19,
+                    arrowPosition: 'left'
+                })
             },
             me.timeSettings,
             {
@@ -158,10 +187,17 @@ Ext.define('Taco.view.generalSettings.subform.About', {
                     me.channelCombo,
                     {
                         xtype: "editabledisplayfield",
+                        itemId: 'catalogName',
                         name: "catalogName",
                         fieldLabel: "Catalog",
                         value: Taco.app.context.findCatalog(Taco.app.context.getSite().catalogId).name,
-                        flex: 1
+                        flex: 1,
+                        tooltip: Ext.create('Taco.core.ux.content.Tooltip', {
+                            elementId: 'catalogName',
+                            offsetLeft: -58,
+                            offsetTop: -18,
+                            arrowPosition: 'left'
+                        })
                     }
                 ]
             },
@@ -173,13 +209,20 @@ Ext.define('Taco.view.generalSettings.subform.About', {
                 items: [
                     {
                         xtype: "textfield",
+                        itemId: 'mozuHostedStoreFront',
                         //name:"isWebSite",
                         fieldLabel: "Mozu Hosted Store Front",
                         margin: "0 4 0 0",
                       
                         value: me.record.get('isMozuWebSite') ? 'Yes' : 'No',
                         flex: 1,
-                        readOnly: true
+                        readOnly: true,
+                        tooltip: Ext.create('Taco.core.ux.content.Tooltip', {
+                            elementId: 'mozuHostedStoreFront',
+                            offsetLeft: -140,
+                            offsetTop: -18,
+                            arrowPosition: 'left'
+                        })
                     },
                     {
                         xtype: 'container',
@@ -187,10 +230,17 @@ Ext.define('Taco.view.generalSettings.subform.About', {
                         items:[
                             Taco.core.ux.TooltipLabel.wrapConfig('settings.general.customCdn', this, {
                                 xtype: 'textfield',
+                                itemId: 'customCdnHostName',
                                 name: 'customCdnHostName',
                                 fieldLabel: 'CDN Domain',
                                 emptyText:Taco.cdnPrefix,
-                                flex: 1
+                                flex: 1,
+                                tooltip: Ext.create('Taco.core.ux.content.Tooltip', {
+                                    elementId: 'customCdnHostName',
+                                    offsetLeft: -90,
+                                    offsetTop: -18,
+                                    arrowPosition: 'left'
+                                })
                             }, Ext.id()),
                             
                             Taco.core.ux.TooltipLabel.wrapConfig('settings.general.bustCdnCache', this, {

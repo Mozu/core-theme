@@ -58,7 +58,8 @@ Ext.define('Taco.view.product.Modal', {
             columns: [{
                 dataIndex: 'productCode',
                 text: 'Code',
-                width: 100
+                width: 100,
+                left: '33px'
             }, {
                 dataIndex: 'productName',
                 text: 'Name',
