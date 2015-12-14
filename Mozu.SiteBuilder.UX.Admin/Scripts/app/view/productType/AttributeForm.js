@@ -365,7 +365,7 @@
                 fields: ['id', "name"],
                 data: [
                     {
-                        name: "Storefront Details and Product Listings",
+                        name: "Storefront Details and Listings",
                         id: 'listings'
                     },{
                         name: "Storefront Details",
