@@ -277,7 +277,6 @@
     color:white;
     text-align:center;
     font-size:14px;
-    top: 20px !important;
     min-width: 56px;
 
     div {
@@ -297,6 +296,10 @@
                 height: 13px;
             }
         }
+    }
+
+    &.product {
+        top: 20px !important;
     }
 }
 
