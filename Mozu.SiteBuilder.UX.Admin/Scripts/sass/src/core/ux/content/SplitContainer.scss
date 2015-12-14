@@ -2,6 +2,7 @@
     .#{$vprefix}splitcontainer-splitter {
         overflow: visible;
         z-index: 2;
+        background-color: $light-bg;
 
         .#{$prefix}layout-split-left {
             display: none;
@@ -47,6 +48,7 @@
 
         .#{$vprefix}splitcontainer-collapsetool {
             overflow: visible;
+            background-color: $light-bg;
 
             @include icon-font($glyph-arrow-left, 12px, $splitter-text);
 

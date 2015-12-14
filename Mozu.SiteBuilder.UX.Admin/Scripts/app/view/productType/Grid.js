@@ -132,7 +132,8 @@ Ext.define('Taco.view.productType.Grid', {
                     }
                 }, {
                     xtype: 'taco.menucolumn',
-                    text: 'Actions',
+                    text: '',
+                    width: 50,
                     onMenuShow : function(menu, eventData) {
                         // need to disable the delete menu option when the record is the base product type.
                         var deleteMenuItem = menu.down("#deleteMenuItem");

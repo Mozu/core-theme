@@ -5,6 +5,10 @@
 
     .#{$vprefix}content-navcontainer-body {                
         background-color: $base-color;
+
+        &.x-panel-body {
+            background-color: $light-bg;
+        }
     }
 
     .#{$prefix}grid-body {

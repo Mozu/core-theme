@@ -52,7 +52,6 @@ Ext.define('Taco.view.order.Edit', {
         controller: 'orders'
     },
 
-
     initComponent: function () {
         this.saveHidden
             = this.cancelHidden
