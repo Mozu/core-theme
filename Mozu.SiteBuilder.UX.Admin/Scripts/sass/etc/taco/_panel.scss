@@ -10,6 +10,10 @@
             font-size: $card-title-font;
         }
 
+        .#{$vprefix}order-subform {
+            @include border-radius-xbrowser($border-radius);
+        }
+
         .#{$prefix}panel-default {
             /* override external styles */
             box-shadow: none !important;
@@ -37,7 +41,7 @@
 
             /* override external styles */
             border: 0;
-            background-color: $white-color;
+            background-color: transparent;
 
             .#{$prefix}container {
                 &.#{$vprefix}editor-wrapper {
@@ -159,6 +163,7 @@
 
         .#{$prefix}grid-view-default {
             color: $dark-color;
+            background-color: $white-color;
             font-size: $normal-font;
 
             td {
