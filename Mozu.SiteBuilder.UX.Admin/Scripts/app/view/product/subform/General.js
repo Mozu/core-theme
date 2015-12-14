@@ -641,7 +641,7 @@ Ext.define('Taco.view.product.subform.General', {
             {
                 xtype: 'fieldcontainer',
                 layout: 'hbox',
-                width: '600',                
+                width: '600',
                 items: [
                     this.productTypeField,
                     this.productUsageField
@@ -650,7 +650,7 @@ Ext.define('Taco.view.product.subform.General', {
                 xtype: 'productoverride',
                 itemId: 'contentOverride',
                 overrideFieldName: 'isContentOverridden',
-                hideOverride: this.isSingleSite,
+                hideOverride: (this.isSingleSite || this.isGlobal),
                 //width: classDef.getBufferedWidth(null, '100%'),
                 width:'100%',
                 items: [
@@ -727,7 +727,7 @@ Ext.define('Taco.view.product.subform.General', {
             //width: classDef.getBufferedWidth(),               
             width: '100%',
             overrideFieldName: 'isPriceOverridden',
-            hideOverride: this.isSingleSite,
+            hideOverride: (this.isSingleSite || this.isGlobal),
             margin: '10 0 0 0',
             items: [
                 {

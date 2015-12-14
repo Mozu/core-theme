@@ -23,7 +23,7 @@ Ext.define('Taco.view.product.subform.SEO', {
                 productInCatalogInfo :this.productInCatalogInfo,
                 persistChangesToModel : true,
                 overrideFieldName: 'isSEOContentOverridden',
-                hideOverride: this.isSingleSite,
+                hideOverride: (this.isSingleSite || this.isGlobal),
                 items: [
                     {
                         fieldLabel: 'Meta Title',
