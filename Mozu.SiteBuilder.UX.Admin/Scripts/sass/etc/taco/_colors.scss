@@ -81,6 +81,8 @@ $menu-btn-active-background:    rgb(44, 163, 133);                              
 $primary-btn-background:        $valid-green;
 $primary-btn-hover-background:  $valid-green-active;
 $primary-btn-active-background: rgb(48, 165, 136);
+$primary-btn-disabled-background: rgb(234, 234, 234);                               /* #eaeaea --> #e8e8e8  232, 232, 232 */
+$primary-btn-disabled-split-border: rgb(241, 241, 241);                             /* #f1f1f1 --> #f0f0f0  240, 240, 240 */
 $primary-btn-split-border:      rgba(0, 0, 0, 0.09);
 $secondary-btn-active-background: whitesmoke;
 $secondary-btn-hover-text:      $dark-color;

@@ -28,6 +28,7 @@
         .#{$prefix}btn-inner-center {
             color: $white-color;
             font-size: 16px;
+            text-shadow: none;
         }
         &:hover {
             background-color: $primary-btn-hover-background;
@@ -37,10 +38,15 @@
             background-color: $primary-btn-active-background;
         }
         &.#{$prefix}btn-disabled {
-            background-color: $primary-btn-background;
-            opacity: 0.5;
+            background-color: $primary-btn-disabled-background;
             .#{$prefix}btn-inner-center {
                 color: $white-color;
+            }
+            .#{$prefix}btn-split-right {
+                &::after {
+                    box-shadow: none;
+                    border-left: 1px solid $primary-btn-disabled-split-border;
+                }
             }
         }
         @include btn-focus-no-border;
