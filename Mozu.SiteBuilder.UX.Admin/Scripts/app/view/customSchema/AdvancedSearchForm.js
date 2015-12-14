@@ -2,7 +2,7 @@
  * @class Taco.view.publishing.Search.AdvancedSearchForm
  */
  
-Ext.define('Taco.view.entityManager.AdvancedSearchForm', {
+Ext.define('Taco.view.customSchema.AdvancedSearchForm', {
     extend: 'Taco.core.ux.form.Form',
     requires: [
         'Ext.form.FieldContainer'

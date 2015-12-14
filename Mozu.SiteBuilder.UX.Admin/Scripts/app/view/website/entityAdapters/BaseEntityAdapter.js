@@ -43,7 +43,7 @@ Ext.define('Taco.view.website.entityAdapters.BaseEntityAdapter', {
             customerEditor = me.manager.entityEditors.findEditor(doc);
         }
         if (customerEditor) {
-            me.dynamicFormContainer = Ext.create('Taco.view.entityManager.DynamicFormContainer', {
+            me.dynamicFormContainer = Ext.create('Taco.view.customSchema.DynamicFormContainer', {
                 editor: customerEditor,
                 record: doc,
                 showNameEditor: me.showNameEditor

@@ -1,9 +1,9 @@
 /**
- * @class Taco.view.entityManager.Split
+ * @class Taco.view.customSchema.Split
  */
 
 
-Ext.define('Taco.view.entityManager.Split', {
+Ext.define('Taco.view.customSchema.Split', {
     extend: 'Taco.core.ux.content.SplitContainer',
     alias: [
         'widget.entity-split',
@@ -12,7 +12,7 @@ Ext.define('Taco.view.entityManager.Split', {
     requires: [
         'Taco.core.ux.mixins.SplitEditor',
         'Taco.view.publishing.component.button.PublishButton',
-        'Taco.view.entityManager.Grid',
+        'Taco.view.customSchema.Grid',
         'Taco.core.ux.grid.MenuColumn' // just to refer to its classname
     ],
 
@@ -38,12 +38,8 @@ Ext.define('Taco.view.entityManager.Split', {
 
     statics: {
         factory: function (cfg, callback, scope) {
-            callback.call(scope || this, Ext.create('Taco.view.entityManager.Split', cfg));
+            callback.call(scope || this, Ext.create('Taco.view.customSchema.Split', cfg));
         }
-    },
-
-    onSaveSuccess: function() {
-
     },
 
     initComponent: function () {
@@ -78,10 +74,10 @@ Ext.define('Taco.view.entityManager.Split', {
 
     },
 
-    onSaveSuccess: function(record, operation, operation) {
+    onSaveSuccess: function(eventData, operation, operation) {
         if (operation && operation.success) {
             this.showMessage('Save Complete');
-            this.enableButtons();
+            this.enableButtons(eventData.record);
         }
     },
 
@@ -109,7 +105,6 @@ Ext.define('Taco.view.entityManager.Split', {
         this.publishActionButton = this.down('#publishActionButton');
         this.moreActionButton = this.down('#moreActionButton');
         this.saveActionButton = this.down('#saveActionButton');
-
         this.publishActionButton.addRecord(record);
         this.moreActionButton [record && record.get('entityType') === 'cms' ? 'enable' : 'disable']();
 
@@ -131,7 +126,7 @@ Ext.define('Taco.view.entityManager.Split', {
                     record.publish({
                         success: function() {
                             record.data.publishState = 'active';
-                            me.showHideButtons();
+                            me.enableButtons(record);
                             me.showMessage('Published', 'info', 1000);
                         }
                     });
@@ -223,20 +218,19 @@ Ext.define('Taco.view.entityManager.Split', {
 
     eastGrid: function() {
 
-    	this.entityGrid = Ext.create('Taco.view.entityManager.SchemaList', {
+    	this.entityGrid = Ext.create('Taco.view.customSchema.SchemaList', {
     		entityType: 'mzdb',
     		title: 'Entities',
     		autoSelectFirstItem: true
     	});
 
-    	this.documentGrid = Ext.create('Taco.view.entityManager.SchemaList', {
+    	this.documentGrid = Ext.create('Taco.view.customSchema.SchemaList', {
 			entityType: 'cms',
     		title: 'Documents'
     	});
 
         return Ext.create('Ext.tab.Panel', {
         	title: false,
-            ui: 'subform',
             layout: 'fit',
             header: false,
             cls: 'taco-tabbar-header',
@@ -251,12 +245,15 @@ Ext.define('Taco.view.entityManager.Split', {
             items: [
             	this.entityGrid,
             	this.documentGrid
-            ]
+            ],
+            listeners: {
+                afterrender: function() {
+                    Ext.Array.each(this.tabBar.items.items, function(button) {
+                       button.addCls('taco-link-button');
+                    });
+                }
+            }
         });
-    },
-
-    saveFailure: function(msg) {
-        // Taco.app.fireEvent('setmessage', msg, 'error');
     },
 
     westGrid: function() {
@@ -275,7 +272,7 @@ Ext.define('Taco.view.entityManager.Split', {
             }
         });
 
-        me.entityGrid = Ext.create('Taco.view.entityManager.Grid');
+        me.entityGrid = Ext.create('Taco.view.customSchema.Grid');
 
         this.cardPanel = Ext.create('Ext.panel.Panel', {
             layout: {
@@ -299,7 +296,7 @@ Ext.define('Taco.view.entityManager.Split', {
                 me.record = record;
                 me.contentContainer.removeAll();
                 me.grid = null;
-                me.form = Ext.create('Taco.view.entityManager.DynamicFormContainer', {
+                me.form = Ext.create('Taco.view.customSchema.DynamicFormContainer', {
                     record: record,
                     ui: 'subform-section',
                     defaults: {
@@ -316,7 +313,8 @@ Ext.define('Taco.view.entityManager.Split', {
             }
         });
 
-        Taco.core.StateManager.addState('entities?entityType=' + metaData.entityType + '&list=' + metaData.name + '&record=' + record.get('name'));
+        console.log(record);
+        Taco.core.StateManager.addState('customschema?entityType=' + record.get('entityType') + '&list=' + record.get('listFQN') + '&record=' + record.get('id'));
     },
 
     loadEditor: function (record, opts) {
@@ -331,7 +329,7 @@ Ext.define('Taco.view.entityManager.Split', {
 
         me.contentContainer.removeAll();
 
-        me.form = Ext.create('Taco.view.entityManager.DynamicFormContainer', {
+        me.form = Ext.create('Taco.view.customSchema.DynamicFormContainer', {
             record: record,
             bubbleEvents: ['savesuccess', 'saveSuccess', 'savefailure'],
             editor: editor,

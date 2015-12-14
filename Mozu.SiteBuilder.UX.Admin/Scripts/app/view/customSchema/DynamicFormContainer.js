@@ -1,4 +1,4 @@
-﻿Ext.define('Taco.view.entityManager.DynamicFormContainer', {
+﻿Ext.define('Taco.view.customSchema.DynamicFormContainer', {
     extend: 'Ext.panel.Panel',
     mixins: {
         // editorwrapper: 'Taco.core.ux.form.EditorWrapper',
@@ -55,14 +55,13 @@
             }
         }
 
-        
         if (this.editMode === 'raw') {
-            this.dynamicForm = Ext.create('Taco.view.entityManager.DynamicFormContainer.DefaultEditor', {
+            this.dynamicForm = Ext.create('Taco.view.customSchema.DynamicFormContainer.DefaultEditor', {
                 readOnly: false
             });
             this.supportsSaving = true
         } else if (!this.dynamicForm) {
-            this.dynamicForm = Ext.create('Taco.view.entityManager.DynamicFormContainer.DefaultEditor', {
+            this.dynamicForm = Ext.create('Taco.view.customSchema.DynamicFormContainer.DefaultEditor', {
                 readOnly: true
             });
             this.supportsSaving = false;
@@ -112,6 +111,9 @@
         }
         this.callParent(arguments);
     },
+    getForm: function() {
+        return  this.dynamicForm.getForm();
+    },
     persistFormValues: function(silientError) {
         var me = this,
             containerData,
@@ -145,7 +147,7 @@
         data = Ext.apply({}, data, this.record.getFields());
         containerData = containerData || {};
         //clean bad fields out.
-        Taco.view.entityManager.DynamicFormContainer.cleanContainerValues(data, containerData);
+        Taco.view.customSchema.DynamicFormContainer.cleanContainerValues(data, containerData);
         if (this.record.get('entityType') === 'mzdb') {
             this.record.set('item', data);
         } else {
@@ -193,7 +195,7 @@
         });
     }
 });
-Ext.define('Taco.view.entityManager.DynamicFormContainer.DefaultEditor', {
+Ext.define('Taco.view.customSchema.DynamicFormContainer.DefaultEditor', {
     extend: 'Taco.core.ux.form.entities.EntityEditorForm',
     //layout: {
     //    type: 'hbox',
@@ -210,7 +212,7 @@ Ext.define('Taco.view.entityManager.DynamicFormContainer.DefaultEditor', {
         flex: 1
     }],
     setData: function(data) {
-        Taco.view.entityManager.DynamicFormContainer.cleanContainerValues(data, {});
+        Taco.view.customSchema.DynamicFormContainer.cleanContainerValues(data, {});
         this.editor = this.down('#jsonData');
         this.editor.setReadOnly(this.readOnly);
         this.editor.setValue(data ? JSON.stringify(data, undefined, 2) : '');

@@ -96,7 +96,6 @@ Ext.define('Taco.view.publishing.Split', {
         this.panel = Ext.create('Ext.panel.Panel', {
             title: false,
             type: 'publishSetContents',
-            ui: 'subform',
             layout: {
                 type: 'card' 
             },

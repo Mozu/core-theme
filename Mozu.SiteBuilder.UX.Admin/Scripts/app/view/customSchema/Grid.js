@@ -1,11 +1,11 @@
 ﻿/**
- * @class Taco.view.entityManager.Grid
+ * @class Taco.view.customSchema.Grid
  */
 
-Ext.define('Taco.view.entityManager.Grid', {
+Ext.define('Taco.view.customSchema.Grid', {
     extend: 'Taco.core.ux.browser.SearchList',
     alias: 'widget.entityManagerGrid',
-    requires: ['Taco.view.entityManager.AdvancedSearchForm'],
+    requires: ['Taco.view.customSchema.AdvancedSearchForm'],
     contextConfig: {
         supportedLevels: ['t', 'm', 'c', 's']
     },
@@ -27,9 +27,10 @@ Ext.define('Taco.view.entityManager.Grid', {
     stateful: true,
     itemId: 'dymanicEnityGrid',
     advancedSearchConfig: {
-        advancedFormCls: 'Taco.view.entityManager.AdvancedSearchForm',
+        advancedFormCls: 'Taco.view.customSchema.AdvancedSearchForm',
         quickFilterData: [],
-        emptySearchText: 'Search'
+        emptySearchText: 'Search',
+        disableAdvancedSearch: true
     },
 
     initComponent: function() {
@@ -39,10 +40,36 @@ Ext.define('Taco.view.entityManager.Grid', {
             entityType: this.entityType,
             autoLoad: false,
             remoteFilter: true
-        })
+        });
+
+        if (me.standaloneGrid) this.applyViewConfig();
 
         me.callParent(arguments);
 
+    },
+
+    applyViewConfig: function() {
+        this.enableNavHeader = true;
+        
+        this.store = Ext.create('Taco.store.Entities', {
+            listName: this.listFQN,
+            entityType: this.entityType,
+            view: 'default',
+            autoLoad: true,
+            remoteSort: true,
+            remoteFilter: true
+        });
+
+        record = Ext.create('Taco.model.EntityList', {
+            entityType: this.entityType,
+            autoLoad: true
+        });
+
+        // this.getSelectionModel().on('selectionchange', this.navigateToEdit, this);
+
+        this.setTitle(this.listName);
+
+        this.columns = this.buildColumns(record, true).columns;
     },
 
     getStateFulId: function(dynamicFields) {
@@ -113,7 +140,7 @@ Ext.define('Taco.view.entityManager.Grid', {
         }
     },
 
-    buildColumns: function(record) {
+    buildColumns: function(record, ignoreStore) {
 
         var me = this;
         var split = me.up('entity-split');
@@ -246,7 +273,12 @@ Ext.define('Taco.view.entityManager.Grid', {
                 text: 'Edit',
                 hideOnClick: false,
                 menuColumnHandler: function(item, eventData) {
-                    split.onItemEdit(eventData.grid, eventData.record, eventData.grid.listMetaData);
+                    if (split) {
+                        split.onItemEdit(eventData.grid, eventData.record, eventData.grid.listMetaData);
+                    }
+                    else {
+                        me.navigateToEdit(eventData.record);
+                    }
                 }
             }, {
                 text: 'Delete',
@@ -262,29 +294,39 @@ Ext.define('Taco.view.entityManager.Grid', {
                 text: 'Edit Raw',
                 hideOnClick: false,
                 menuColumnHandler: function(item, eventData) {
+                    if (split) {
+                        split.onItemEdit(eventData.grid, eventData.record, eventData.grid.listMetaData, {
+                            editMode: 'raw'
+                        });
+                    }
 
-                    split.onItemEdit(eventData.grid, eventData.record, eventData.grid.listMetaData, {
-                        editMode: 'raw'
-                    });
+                    else {
+                        me.navigateToEdit(eventData.record);
+                    }
                 }
             });
         }
+        if (!ignoreStore) {
+            store = Ext.create('Taco.store.Entities', {
+                listName: record.get('listFQN'),
+                entityType: record.get('entityType'),
+                view: view.name,
+                autoLoad: true,
+                remoteSort: true,
+                remoteFilter: true
+            });
+        }
 
-        store = Ext.create('Taco.store.Entities', {
-            listName: record.get('listFQN'),
-            entityType: record.get('entityType'),
-            view: view.name,
-            autoLoad: true,
-            remoteSort: true,
-            remoteFilter: true
-        });
-
-        split.updateSearchContext(store);
+        if (split) split.updateSearchContext(store);
 
         return {
             columns: columns,
             store: store
         };
+    },
+
+    navigateToEdit: function(record) {
+        Taco.core.StateManager.attemptNavigate('customschema/edit?type=' + record.get('entityType') + '&list=' + record.get('listFQN') + '&record=' + record.get('id'), record.raw);
     },
 
     deleteRecordFromStore: function(record) {
@@ -306,7 +348,8 @@ Ext.define('Taco.view.entityManager.Grid', {
         }
 
         var split = this.up('entity-split');
-        split.onItemEdit(view, record, this.listMetaData);
+
+        if (split) split.onItemEdit(view, record, this.listMetaData);
     }
     
 });

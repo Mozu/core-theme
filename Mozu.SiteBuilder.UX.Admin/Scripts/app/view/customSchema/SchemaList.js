@@ -1,4 +1,4 @@
-Ext.define('Taco.view.entityManager.SchemaList', {
+Ext.define('Taco.view.customSchema.SchemaList', {
     extend: 'Taco.core.ux.grid.Panel',
     
     requires: [
@@ -54,7 +54,6 @@ Ext.define('Taco.view.entityManager.SchemaList', {
         this.entitySplit.getEast().expand();
         this.cardPanel = this.entitySplit.down('#dynamicGridHolder');
         this.cardPanel.getLayout().setActiveItem(0);
-
     },
 
     selectFirstItem: function() {

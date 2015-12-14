@@ -173,6 +173,8 @@ Ext.define('Taco.core.ux.content.Tooltip', {
 
         this.target = cmp;
 
+        if (!this.target) return false;
+
         this.target.on(this.showEvent, function(e) {
             timeout = setTimeout(this.showToolTip.bind(this, e), this.showDelay);
         }, this, { stopPropagation: false });

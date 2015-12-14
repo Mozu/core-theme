@@ -3,7 +3,7 @@
  */
 
 
-Ext.define('Taco.view.entityManager.Lists', {
+Ext.define('Taco.view.customSchema.Lists', {
     extend: 'Ext.tree.Panel',
     
     requires: [

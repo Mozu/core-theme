@@ -348,7 +348,7 @@
             
             this.tooltip.update({
                 publishSetName: pubInfo.publishSetInfo ? pubInfo.publishSetInfo.name : 'Unassigned',
-                publishDate: pubInfo.publishSetInfo ? Ext.util.Format.date(pubInfo.publishSetInfo.scheduledDate, 'M j, Y g:ia T') : 'Unscheduled'
+                publishDate: pubInfo.publishSetInfo && pubInfo.publishSetInfo.scheduledDate ? Ext.util.Format.date(pubInfo.publishSetInfo.scheduledDate, 'M j, Y g:ia T') : 'Unscheduled'
             });
 
             this.titlePanel.show();

@@ -98,7 +98,7 @@ Ext.define('Taco.core.ux.mixins.NavHeader', {
             },
             titlechange: {
                 fn: function (panel, newTitle, override) {
-
+                    
                     var me = this;
                     var parentTitleCfg = this.parentTitleCfg ? this.parentTitleCfg : {};
                     var lightTagLabel = parentTitleCfg.lightTagLabel && this.record ? this.record.get(parentTitleCfg.lightTagLabel) : null;

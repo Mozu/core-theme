@@ -142,7 +142,6 @@
     },
 
     doSave: function () {
-        
         if (this.form && this.form.save) {
             this.form.save();
         } else {

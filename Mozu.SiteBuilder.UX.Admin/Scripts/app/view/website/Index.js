@@ -34,8 +34,8 @@ Ext.define('Taco.view.website.Index', {
         'Ext.ux.IFrame',
         'Taco.store.ThemeListingsTree',
         'Ext.menu.CheckItem',
-        'Taco.view.entityManager.Grid',
-        'Taco.view.entityManager.DynamicFormContainer',
+        'Taco.view.customSchema.Grid',
+        'Taco.view.customSchema.DynamicFormContainer',
         'Taco.store.EntityEditors',
         'Taco.store.PageTypeDefinitions',
         'Ext.ux.IFrame',
@@ -980,7 +980,7 @@ Ext.define('Taco.view.website.Index', {
                     
                     me.tooltip.update({
                         publishSetName: me.pubRecord.get('name'),
-                        publishDate: Ext.util.Format.date(me.pubRecord.get('publishDate'), 'M j, Y g:ia T')  
+                        publishDate: me.pubRecord.get('publishDate') ? Ext.util.Format.date(me.pubRecord.get('publishDate'), 'M j, Y g:ia T') : 'Unscheduled'
                     });
                 };
 
@@ -1553,7 +1553,7 @@ Ext.define('Taco.view.website.Index', {
 
         contentContainer.removeAll();
         contentContainer.add(
-            Ext.create('Taco.view.entityManager.Grid', {
+            Ext.create('Taco.view.customSchema.Grid', {
                     itemId: 'entityManagerGrid',
                     listeners: {
                         itemedit: me.onContentListItemEdit,

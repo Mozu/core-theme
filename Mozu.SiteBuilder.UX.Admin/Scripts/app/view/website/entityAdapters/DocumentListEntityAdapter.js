@@ -6,7 +6,7 @@ Ext.define('Taco.view.website.entityAdapters.DocumentListEntityAdapter', {
     extend: 'Taco.view.website.entityAdapters.BaseEntityAdapter',
     requires: [
         'Taco.model.Entity',
-        'Taco.view.entityManager.DynamicFormContainer',
+        'Taco.view.customSchema.DynamicFormContainer',
         'Taco.core.ux.HtmlEditor'
     ],
     showNameEditor:false,

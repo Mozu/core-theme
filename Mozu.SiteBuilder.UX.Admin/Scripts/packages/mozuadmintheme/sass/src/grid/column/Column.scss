@@ -19,10 +19,14 @@
     .#{$prefix}column-header-trigger {
         background: none transparent;
         display: block !important;
-        left: 14px;
         top: 6px;
         @include icon-font($glyph-knurling, 16px, $gray-text-light);
         position: absolute;
+
+        &::after {
+            right: 0px;
+            left: initial;
+        }
     }
 }
 

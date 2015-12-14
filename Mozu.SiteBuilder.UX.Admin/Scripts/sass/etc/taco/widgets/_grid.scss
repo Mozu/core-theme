@@ -64,6 +64,12 @@
     .#{$prefix}grid-row-over {
         .#{$vprefix}grid-row-menu-trigger {
             @include icon-font($glyph-knurling, 16px, $gray-text-light);
+            width: initial;
+
+            &::after {
+                right: 0px;
+                left: initial;
+            }
 
             &:hover {
                 &::after {
@@ -146,13 +152,12 @@
     .#{$vprefix}grid-row-menu-trigger {
         cursor: pointer;
         height: 16px;
-        width: 16px;
     }
 
     // hide the action menu trigger image when its inside of the row editor. it causes a bunch of padding to be added;
     .#{$prefix}grid-row-editor {
         .#{$vprefix}grid-row-menu-trigger {
-            disaply:none;
+            display:none;
             height:0px;
         }
     }

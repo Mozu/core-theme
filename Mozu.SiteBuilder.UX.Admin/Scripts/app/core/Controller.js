@@ -328,6 +328,7 @@ Ext.define('Taco.core.Controller', {
      * @return {Taco.core.ux.content.Container}      The view created or passed.
      */
     createContentView: function (view, cfg) {
+
         var me = this,
             cfg = cfg || {},
             container = cfg && cfg.options && cfg.options.container ? cfg.options.container : Taco.app.contentView,
@@ -405,21 +406,23 @@ Ext.define('Taco.core.Controller', {
         return false;
     },
 
-    confirmContext: function (viewClass, callback, scope, args) {
+    confirmContext: function (viewClass, callback, scope, args, contextOverride) {
         var context = Taco.app.context.getCurrentContext(),
             requiresContextOfType,
             newContext;
             
         args = args && !Ext.isArray(args) ? Array.prototype.slice.call(args, 0) : args;
         viewClass = Ext.isString(viewClass) ? Ext.ClassManager.get(viewClass) : viewClass;
-        requiresContextOfType = (viewClass.prototype.contextConfig || {}).requiresContextOfType;
+        requiresContextOfType = (contextOverride || viewClass.prototype.contextConfig || {}).requiresContextOfType;
 
         // fix for ie8. apply doesn't like having undefined arguments;
+
         if (!args) {
             args = []
         }
 
-        if (this.worksInContext(viewClass.prototype, context)) {
+
+        if (!contextOverride && this.worksInContext(viewClass.prototype, context)) {
             return callback.apply(scope || this, args);
 
         }
@@ -438,7 +441,6 @@ Ext.define('Taco.core.Controller', {
             }
         }
 
-
         if (!newContext && Ext.Array.contains(requiresContextOfType, 'c')) {
             if (context.contextType == 't') {
                 newContext = context.masterCatalogs[0].catalogs[0];
@@ -451,6 +453,8 @@ Ext.define('Taco.core.Controller', {
                 newContext = context.masterCatalogs[0].sites[0];
             } else if (context.contextType == 'm' || context.contextType == 'c') {
                 newContext = context.sites[0];
+            } else if (context.contextType == 's') {
+                newContext = context.catalog.sites[0];
             }
         }
 
