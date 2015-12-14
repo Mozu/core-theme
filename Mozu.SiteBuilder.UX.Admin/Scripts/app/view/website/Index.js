@@ -980,8 +980,7 @@ Ext.define('Taco.view.website.Index', {
                     
                     me.tooltip.update({
                         publishSetName: me.pubRecord.get('name'),
-                        publishDate: Ext.util.Format.date(me.pubRecord.get('publishDate'), 'M j, Y g:ia T')
-                        
+                        publishDate: Ext.util.Format.date(me.pubRecord.get('publishDate'), 'M j, Y g:ia T')  
                     });
                 };
 

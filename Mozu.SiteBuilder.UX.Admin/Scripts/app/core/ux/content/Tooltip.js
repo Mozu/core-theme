@@ -17,12 +17,43 @@ Ext.define('Taco.core.ux.content.Tooltip', {
     removedCls: 'removed',
     showEvent: 'mouseenter',
     hideEvent: 'mouseleave',
+
+    /**
+    * how long it will take after the hover event occurs for the mesage to show
+    **/
     showDelay: 100,
+
+    /**
+    * the offsetleft of the tooltip
+    **/
     offsetLeft: null,
+
+    /**
+    * If the message is of dynamic width, you may pass in a function that determines the offsetleft
+    * if this paramater is not null, the component will use this value over offsetLeft
+    **/
+    offsetLeftFunc: null,
+
+    /**
+    * the offsetTop of the tooltip
+    **/
     offsetTop: null,
+
+    /**
+    * a render template can be passed to the tooltip
+    **/
     defaultTpl: null,
+
+    /**
+    * if a render template is passed, the template will default to { data: message } or you can pass in a custom object
+    **/
     defaultTplData: null,
+
+    /**
+    * where the arrow position will be on the tooltip
+    **/
     arrowPosition: 'bottom',
+    
     initComponent: function() {
 
     	this.items = [];
@@ -37,7 +68,6 @@ Ext.define('Taco.core.ux.content.Tooltip', {
 
     	this.callParent(arguments);
 
-        console.log(this.tooltip);
     },
 
     getOffsetWidth: function(left, el) {
@@ -53,6 +83,8 @@ Ext.define('Taco.core.ux.content.Tooltip', {
         var left = position.left;
         var el = this.tooltip.getEl();
         var offsetLeft = this.offsetLeft ? left - this.offsetLeft : this.getOffsetWidth(left, el);
+
+        if (this.offsetLeftFunc) offsetLeft = this.offsetLeftFunc.apply(this);
 
         el.dom.style.left = offsetLeft + 'px';
         el.dom.style.top = top - this.offsetTop + 'px';
