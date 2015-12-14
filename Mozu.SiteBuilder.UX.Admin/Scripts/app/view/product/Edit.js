@@ -90,7 +90,11 @@
         var me = this;
 
         if (this.checkProductPublishing()) {
+
             this.titlePanel = Ext.widget('taco-indicator', {
+                title: 'DRAFT',
+                itemId: 'draftIcon',
+                cls: 'taco-content-header-publish-state product',
                 afterrender: function(toolTip) {
                     var pubInfo = me.record.getPublishingInfo();
                     
@@ -101,7 +105,6 @@
                             listeners: {
                                 click: {
                                     fn: function(cmp) {
-                                        toolTip.tipContent.hide();
                                         Taco.app.StateManager.attemptNavigate('/publishing/publishsets/' + pubInfo.publishSetInfo.code);
                                     }
                                 }
@@ -111,7 +114,28 @@
                    
                 }
             });
+
+            console.log(this.titlePanel)
         }
+
+        this.tooltip = Ext.create('Taco.core.ux.content.Tooltip', {
+            elementId: 'draftIcon',
+            hoverTarget: 'bodyEl',
+            arrowPosition: 'top',
+            offsetTop: -22,
+            defaultTpl: [
+                '<div style="line-height: 15px;">',
+                    '<span>Publish Set:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;{publishSetName}</span>',
+                '</div>',
+                '<div style="line-height: 15px;">',
+                    '<span>Publish Date:&nbsp;&nbsp;&nbsp;{publishDate}</span>',
+                '</div>'
+            ],
+            defaultTplData: {
+                publishSetName: 'Unassigned',
+                publishDate: 'Unscheduled'
+            }
+        });
 
         this.publishingButton = {
             xtype: 'publishbutton',
@@ -143,7 +167,7 @@
                         me.record.save({
                             success: function() {
                                 me.publishButton.setLoading(false);
-                                me.setGrowl('Moved to Publish Set', 'success');
+                                Taco.app.fireEvent('setmessage', 'Moved to Publish Set', 'success');
                             }
                         });
                     });
@@ -314,38 +338,19 @@
     },
 
     setPublishStatus: function() {
-        var pubInfo = this.record.getPublishingInfo(),
-            tooltipContent = '',
-            extraStyle = '',
-            generateTooltipKey = function (content) {
-                return '<span style="width:90px;font-weight: bold;float:left;">' + content + '</span>';
-            },
-            generateTooltipValue = function (content, additionalStyle, id) {
-                return '<span id="' + id + '" style="padding-left: 5px;float:left;"' + additionalStyle + '">' + content + '</span>';
-            };
+        var pubInfo = this.record.getPublishingInfo();
 
         if (!this.checkProductPublishing()) {
             return;
         }
 
-        if (pubInfo.statusText) {
-            extraStyle = (!pubInfo.publishSetInfo) ? 'font-style:italic;' : '';
-            tooltipContent = generateTooltipKey('Publish Set:');
-            if (pubInfo.publishSetInfo) {
-                tooltipContent += generateTooltipValue('', '', 'publishSetName');
-            } else {
-                tooltipContent += generateTooltipValue('None', extraStyle);
-            }
-            tooltipContent += '<br/>';
-            tooltipContent += generateTooltipKey('Publish Date:');
-            tooltipContent += generateTooltipValue((pubInfo.publishSetInfo && pubInfo.publishSetInfo.scheduledDate
-                    ? Ext.Date.format(pubInfo.publishSetInfo.scheduledDate, 'M j, Y g:ia T')
-                    : 'Unscheduled'), extraStyle);
+        if (pubInfo && pubInfo.statusText) {
+            
+            this.tooltip.update({
+                publishSetName: pubInfo.publishSetInfo ? pubInfo.publishSetInfo.name : 'Unassigned',
+                publishDate: pubInfo.publishSetInfo ? Ext.util.Format.date(pubInfo.publishSetInfo.scheduledDate, 'M j, Y g:ia T') : 'Unscheduled'
+            });
 
-            this.titlePanel.setTooltipContent(tooltipContent);
-            this.titlePanel.setText('DRAFT', false);
-            // no longer updating the main text per conversation with jason muxlow 
-            // this.titlePanel.setText(pubInfo.statusText, false);
             this.titlePanel.show();
         } else {
             this.titlePanel.hide();
