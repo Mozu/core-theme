@@ -106,37 +106,7 @@
 
         .navheader-action-toolbar {
             margin-right: 15px;
-            .#{$prefix}btn {
 
-                &.#{$prefix}btn-action-secondary-toolbar-medium {
-                    background-color: transparent;
-
-                    .#{$prefix}btn.#{$prefix}btn-inner-center {
-                        font-size: 12px;
-                        color: $nav-element-text;
-                    }
-
-                     &:hover {
-                        background-color: transparent;
-
-                        .#{$prefix}btn-inner-center {
-                            color: $nav-element-active;
-                        }
-                    }
-
-                    &.#{$prefix}btn.#{$prefix}menu-active {
-                        border-radius: 3px;
-                        background-color: $more-menu-active-background;
-                        box-shadow: $more-menu-active-shadow 0 0 0 1px inset;
-                        opacity: 1;
-                    }
-                }
-
-                &.#{$prefix}move-next-previous-arrow {
-                    background-color: transparent;
-                }
-            }
-         
             .website-editor-tab-btn {
                 .#{$prefix}btn-glyph {
                     line-height: 28px;

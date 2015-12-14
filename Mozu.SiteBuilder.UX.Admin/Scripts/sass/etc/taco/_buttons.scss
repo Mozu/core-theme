@@ -217,151 +217,149 @@
         }
     }
 
-    //.#{$prefix}menu-item-icon {
-    //    &.#{$prefix}menu-item-checkbox {
-    //        margin-top: 11px;
-    //    }
-    //}
-    //
-    //.#{$prefix}btn {
-    //    &:hover {
-    //        .#{$prefix}btn-inner-center {
-    //            color: $dark-color;
-    //        }
-    //    }
-    //
-    //    &:active {
-    //        background-color: $medium-button-active-bg;
-    //    }
-    //}
-    //
-    //.#{$prefix}btn-action-primary-toolbar-medium {
-    //    &.#{$prefix}btn-focus {
-    //        @include no-box-shadow;
-    //    }
-    //}
-    //
-    //.#{$prefix}btn-toolbar {
-    //    &.#{$prefix}move-next-previous-arrow {
-    //
-    //        span {
-    //            .#{$prefix}btn-glyph {
-    //                color: $item-switch-color;
-    //                font-size: $normal-font-link;
-    //                -ms-transform: rotate(-90deg);
-    //                -webkit-transform: rotate(-90deg);
-    //                transform: rotate(-90deg);
-    //            }
-    //        }
-    //
-    //        &:hover {
-    //            box-shadow: none;
-    //
-    //            span {
-    //                .#{$prefix}btn-glyph {
-    //                    color: $dark-color;
-    //                }
-    //            }
-    //        }
-    //    }
-    //}
-    //
-    //.#{$prefix}move-next-previous-position {
-    //    color: $item-switch-color;
-    //    font-size: $normal-font-link;
-    //}
-    //
-    ///**
-    // * Panel nav
-    // */
-    //
-    //.#{$prefix}field-default-form-focus + div {
-    //    label {
-    //        font-size: $label-link-font;
-    //        top: 0;
-    //    }
-    //}
-    //
-    //.#{$vprefix}link-button {
-    //    border: none;
-    //    border-bottom: 2px solid transparent;
-    //    border-radius: 0px; // we can remove this once its been removed globally
-    //    box-shadow: none;
-    //    background-color: $dark-bg;
-    //    color: $gray-text-dark;
-    //    padding: 8px 15px;
-    //    font-family: $font-family;
-    //    font-size: $normal-font-link;
-    //    transition: border-color;
-    //    @include facade-transitions();
-    //
-    //    &:hover {
-    //        color: $dark-color;
-    //        text-decoration: none;
-    //    }
-    //
-    //    // there is a bug in EXT where the pressedCls of a button
-    //    // adds x- before the class -- to be removed once that bug is fixed (so never)
-    //    // http://stackoverflow.com/questions/31043578/extjs-how-to-set-button-css-by-using-pressedcls-config
-    //    &.active, &.#{$prefix}active, &.#{$prefix}focus {
-    //        text-decoration: none;
-    //        border-color: $valid-green;
-    //        color: $dark-color;
-    //    }
-    //
-    //}
-    //
-    ///**
-    // * Dropdown list
-    // */
-    //
-    //.#{$prefix}dropdown-trigger {
-    //    &:after {
-    //        color: $gray-text-dark;
-    //        content: '\E60B';
-    //        font-family: $icon-font;
-    //        font-size: $tag-font;
-    //        margin-left: -6px;
-    //    }
-    //
-    //    &:hover,
-    //    &:active,
-    //    &:focus {
-    //        &:after {
-    //            color: $dropdown-icon-active;
-    //        }
-    //    }
-    //}
-    //
-    ///**
-    // * Dropdown list
-    // */
-    //
-    //.#{$prefix}dropdown-trigger {
-    //    &:after {
-    //        color: $gray-text-dark;
-    //        content: '\E60B';
-    //        font-family: $icon-font;
-    //        font-size: $tag-font;
-    //        margin-left: -6px;
-    //    }
-    //
-    //    &:hover,
-    //    &:active,
-    //    &:focus {
-    //        &:after {
-    //            color: $dropdown-icon-active;
-    //        }
-    //    }
-    //}
-    //
-    //.#{$vprefix}light-tag {
-    //    border: 1px solid $light-bg;
-    //    color: $gray-text-dark;
-    //    font-size: 8px;
-    //    margin: 10px 3px;
-    //    padding: 3px 3px 2px 3px;
-    //    text-transform: uppercase;
-    //    @include border-radius-xbrowser(3px);
-    //}
+    // Additional button styles pulled from NavHeader.scss
+
+    .#{$prefix}btn {
+
+        &.#{$prefix}btn-action-secondary-toolbar-medium {
+            background-color: transparent;
+
+            .#{$prefix}btn.#{$prefix}btn-inner-center {
+                font-size: 12px;
+                color: $nav-element-text;
+            }
+
+            &:hover {
+                background-color: transparent;
+
+                .#{$prefix}btn-inner-center {
+                    color: $nav-element-active;
+                }
+            }
+
+            &.#{$prefix}btn.#{$prefix}menu-active {
+                border-radius: 3px;
+                background-color: $more-menu-active-background;
+                box-shadow: $more-menu-active-shadow 0 0 0 1px inset;
+                opacity: 1;
+            }
+        }
+
+        &.#{$prefix}move-next-previous-arrow {
+            background-color: transparent;
+        }
+    }
+
+    // Original styles from _buttons.scss before rework
+
+    .#{$prefix}menu-item-icon {
+        &.#{$prefix}menu-item-checkbox {
+            margin-top: 11px;
+        }
+    }
+
+    .#{$prefix}btn-action-primary-toolbar-medium {
+        &.#{$prefix}btn-focus {
+            @include no-box-shadow;
+        }
+    }
+
+    .#{$prefix}move-next-previous-position {
+        color: $item-switch-color;
+        font-size: $normal-font-link;
+    }
+
+    /**
+     * Panel nav
+     */
+
+    .#{$prefix}field-default-form-focus + div {
+        label {
+            font-size: $label-link-font;
+            top: 0;
+        }
+    }
+
+    .#{$vprefix}link-button {
+        border: none;
+        border-bottom: 2px solid transparent;
+        border-radius: 0px; // we can remove this once its been removed globally
+        box-shadow: none;
+        background-color: $dark-bg;
+        color: $gray-text-dark;
+        padding: 8px 15px;
+        font-family: $font-family;
+        font-size: $normal-font-link;
+        transition: border-color;
+        @include facade-transitions();
+
+        &:hover {
+            color: $dark-color;
+            text-decoration: none;
+        }
+
+        // there is a bug in EXT where the pressedCls of a button
+        // adds x- before the class -- to be removed once that bug is fixed (so never)
+        // http://stackoverflow.com/questions/31043578/extjs-how-to-set-button-css-by-using-pressedcls-config
+        &.active, &.#{$prefix}active, &.#{$prefix}focus {
+            text-decoration: none;
+            border-color: $valid-green;
+            color: $dark-color;
+        }
+
+    }
+
+    /**
+     * Dropdown list
+     */
+
+    .#{$prefix}dropdown-trigger {
+        &:after {
+            color: $gray-text-dark;
+            content: '\E60B';
+            font-family: $icon-font;
+            font-size: $tag-font;
+            margin-left: -6px;
+        }
+
+        &:hover,
+        &:active,
+        &:focus {
+            &:after {
+                color: $dropdown-icon-active;
+            }
+        }
+    }
+
+    /**
+     * Dropdown list
+     */
+
+    .#{$prefix}dropdown-trigger {
+        &:after {
+            color: $gray-text-dark;
+            content: '\E60B';
+            font-family: $icon-font;
+            font-size: $tag-font;
+            margin-left: -6px;
+        }
+
+        &:hover,
+        &:active,
+        &:focus {
+            &:after {
+                color: $dropdown-icon-active;
+            }
+        }
+    }
+
+    .#{$vprefix}light-tag {
+        border: 1px solid $light-bg;
+        color: $gray-text-dark;
+        font-size: 8px;
+        margin: 10px 3px;
+        padding: 3px 3px 2px 3px;
+        text-transform: uppercase;
+        @include border-radius-xbrowser(3px);
+    }
 }
