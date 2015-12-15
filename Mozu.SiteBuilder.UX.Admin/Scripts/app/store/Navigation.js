@@ -343,7 +343,6 @@ Ext.define('Taco.store.Navigation', {
                     'address': 'reports'
                 }]
             },
-
             {
                 'id': 'settings',
                 'navParent': 'sys',
@@ -365,23 +364,20 @@ Ext.define('Taco.store.Navigation', {
                         'label': 'Tax',
                         'address': 'settings/tax'
                     }, {
-                        'id': 'shipping4',
-                        'label': 'Methods and Fees',
+                        'id': 'shippingMain',
+                        'label': 'Shipping',
                         'address': 'shipping'
                     }, {
-                        'id': 'tax',
-                        'label': 'Tax',
-                        'address': 'settings/tax'
-                    }, {
-                        'id': 'customroutes',
-                        'label': 'Custom Routes',
-                        'address': 'customroutes'
-                    }]
+                        'id': 'publishing',
+                        'label': 'Publishing',
+                        'address': 'settings/publishing'
+                    }
+                ]
             },
             {
-                'id': 'typesAndAttributes',
+                'id': 'schema',
                 'navParent': 'sys',
-                'label': 'Types & Attributes',
+                'label': 'Schema',
                 'behaviorIds': [4],
                 'items': [{
                     'id': 'productTypes',
@@ -403,49 +399,56 @@ Ext.define('Taco.store.Navigation', {
                     'id': 'locationTypes',
                     'label': 'Location Types',
                     'address': 'locationTypes'
+                }, {
+                    'id': 'customSchema',
+                    'label': 'Custom Schema',
+                    'address': 'customSchema'
                 }
+                ]
+            }, {
+                'id': 'customization',
+                'navParent': 'sys',
+                'label': 'Customization',
+                'behaviorIds': [4],
+                'items': [{
+                        'id': 'applications-manage',
+                        'label': 'Applications',
+                        'address': 'capability'
+                    }, {
+                        'id': 'actionmanagement',
+                        'label': 'Arc.js',
+                        'address': 'actionmanagement'
+                    }, {
+                        'id': 'customroutes',
+                        'label': 'Custom Routes',
+                        'address': 'customroutes'
+                    }
                 ]
             },
             {
-                'id': 'settingsEnvironment',
+                'id': 'structure',
                 'navParent': 'sys',
-                'label': 'Environment',
+                'label': 'Structure',
                 'behaviorIds': [4],
                 'items': [{
-                    'id': 'catalogprovisioning',
-                    'label': 'Catalogs',
-                    'address': 'provisioning/catalogs'
-                },{
                     'id': 'siteprovisioning',
                     'label': 'Sites',
                     'address': 'provisioning/sites'
                 }, {
+                    'id': 'catalogprovisioning',
+                    'label': 'Catalogs',
+                    'address': 'provisioning/catalogs'
+                }, {
                     'id': 'channels',
                     'label': 'Channels',
                     'address': 'channels'
-                }, {
-                    'id': 'applications-manage',
-                    'label': 'Applications',
-                    'address': 'capability'
-                }, {
-                    'id': 'actionmanagement',
-                    'label': 'Actions',
-                    'address': 'actionmanagement'
-                }, {
-                    'id': 'publishing',
-                    'label': 'Settings',
-                    'address': 'settings/publishing'
-                }, {
-                    'id': 'ipblocking',
-                    'label': 'IP Blocking',
-                    'address': 'ipblocking'
                 }
                 ]
             },
             {
-                'id': 'usersRoles',
+                'id': 'permissions',
                 'navParent': 'sys',
-                'label': 'Users &amp; Roles',
+                'label': 'Permissions',
                 'items': [
                     {
                         'id': 'users',
@@ -455,6 +458,10 @@ Ext.define('Taco.store.Navigation', {
                         'id': 'roles',
                         'label': 'Roles',
                         'address': 'roles'
+                    }, {
+                        'id': 'ipblocking',
+                        'label': 'IP Restrictions',
+                        'address': 'ipblocking'
                     }
                 ]
             }
