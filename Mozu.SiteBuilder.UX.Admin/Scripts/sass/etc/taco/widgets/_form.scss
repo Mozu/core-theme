@@ -98,15 +98,11 @@
                 padding-right: 0;
             }
         }
-        .#{$prefix}menu-item-checked {
-            .#{$prefix}menu-item-text {
-                color: $dark-color;
-            }
+        .#{$prefix}menu-item-checked .#{$prefix}menu-item-text {
+            color: $dark-color;
         }
-        .#{$prefix}menu-item-unchecked {
-            .#{$prefix}menu-item-text {
-                color: $gray-text-light;
-            }
+        .#{$prefix}menu-item-unchecked .#{$prefix}menu-item-text {
+            color: $gray-text-light;
         }
     }
 
