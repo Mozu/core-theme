@@ -27,7 +27,6 @@ Ext.define('Taco.core.ux.grid.Header', {
             me.menu = new Ext.menu.Menu({
                 hideOnParentHide: false,
                 header: false,
-                minWidth: 150,
                 shadow: false,
                 showSeparator: false,
                 items: me.getMenuItems(),
