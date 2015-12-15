@@ -203,8 +203,7 @@ Ext.define('Taco.view.inventory.Split', {
     },
 
     onCreate: function(options) {
-
-    	//tbd
+   		this.locationList.onRowEditorCreate();
     },
 
 
