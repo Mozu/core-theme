@@ -72,6 +72,8 @@
             }
 
             &:hover {
+                background-color: $grid-row-hover-bg;
+                
                 &::after {
                     color: $glyph-icon-color;
                 }

@@ -177,7 +177,33 @@
 
             td {
                 font-size: $normal-font;
-                padding: 0 10px 1px;
+
+                table {
+                    tr {
+
+                        td {
+                            padding: 1px 0 2px 0;
+
+                            &:first-child {
+                                padding-left: 10px;
+                            }
+
+                            &:last-child {
+                                padding-right: 10px;
+                            }
+                        }
+                    }
+                }
+            }
+        }
+
+        tbody {
+            tr {
+                .#{$prefix}grid-data-row {
+                    &.#{$vprefix}grid-row-active {
+                        background-color: $dark-bg;
+                    }
+                }
             }
         }
 
