@@ -52,6 +52,7 @@ Ext.define('Taco.view.category.Index', {
         this.createButtonCfg = {
             handler: Ext.emptyFn,
             menu: {
+                cls: 'button-menu',
                 plain: true,
                 showSeparator: false,
                 listeners: {
@@ -66,6 +67,9 @@ Ext.define('Taco.view.category.Index', {
                         },
                         scope: me,
                         delegate: "x-menu-item-link"
+                    },
+                    beforerender: function () {
+                        this.setWidth(this.up('button').getWidth());
                     }
                 },
                 items: [
