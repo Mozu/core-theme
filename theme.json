@@ -196,12 +196,6 @@
       },
         {
           "entityType": "siteTemplate",
-          "id": "splash_page",
-          "template": "splash-page",
-          "title": "Splash Page Site Template"
-        },
-        {
-          "entityType": "siteTemplate",
           "id": "site_page",
           "template": "page",
           "title": "Default Site Template"
