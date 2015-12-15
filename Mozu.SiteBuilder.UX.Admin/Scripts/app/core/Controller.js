@@ -406,35 +406,7 @@ Ext.define('Taco.core.Controller', {
         return false;
     },
 
-    confirmContext: function (viewClass, callback, scope, args, contextOverride) {
-        var context = Taco.app.context.getCurrentContext(),
-            requiresContextOfType,
-            newContext;
-            
-        args = args && !Ext.isArray(args) ? Array.prototype.slice.call(args, 0) : args;
-        viewClass = Ext.isString(viewClass) ? Ext.ClassManager.get(viewClass) : viewClass;
-        requiresContextOfType = (contextOverride || viewClass.prototype.contextConfig || {}).requiresContextOfType;
-
-        // fix for ie8. apply doesn't like having undefined arguments;
-
-        if (!args) {
-            args = []
-        }
-
-
-        if (!contextOverride && this.worksInContext(viewClass.prototype, context)) {
-            return callback.apply(scope || this, args);
-
-        }
-
-        if (!Ext.isArray(requiresContextOfType)) {
-            requiresContextOfType = [requiresContextOfType];
-        }
-
-
-        // at this point we know the current context is inappropriate:
-
-
+    getNewContext: function (newContext, requiresContextOfType, context) {
         if (!newContext && Ext.Array.contains(requiresContextOfType, 'm')) {
             if (context.contextType == 't') {
                 newContext = context.masterCatalogs[0];
@@ -461,6 +433,39 @@ Ext.define('Taco.core.Controller', {
         if (!newContext) {
             throw 'oops';
         }
+        return newContext;
+    },
+
+    confirmContext: function (viewClass, callback, scope, args, contextOverride) {
+        var context = Taco.app.context.getCurrentContext(),
+            requiresContextOfType,
+            newContext;
+            
+        args = args && !Ext.isArray(args) ? Array.prototype.slice.call(args, 0) : args;
+        viewClass = Ext.isString(viewClass) ? Ext.ClassManager.get(viewClass) : viewClass;
+        requiresContextOfType = (contextOverride || viewClass.prototype.contextConfig || {}).requiresContextOfType;
+
+        // fix for ie8. apply doesn't like having undefined arguments;
+
+        if (!args) {
+            args = [];
+        }
+
+
+        if (!contextOverride && this.worksInContext(viewClass.prototype, context)) {
+            return callback.apply(scope || this, args);
+
+        }
+
+        if (!Ext.isArray(requiresContextOfType)) {
+            requiresContextOfType = [requiresContextOfType];
+        }
+
+
+        // at this point we know the current context is inappropriate:
+
+
+        newContext = this.getNewContext(newContext, requiresContextOfType, context);
 
         if (Taco.app.context.setCurrentContext(newContext, false, true) !== false) {
             return callback.apply(scope || this, args);
