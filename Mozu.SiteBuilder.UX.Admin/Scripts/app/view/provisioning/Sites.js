@@ -2,7 +2,7 @@
  * @class Taco.view.product.Sites
  */
 Ext.define('Taco.view.provisioning.Sites', {
-    extend: 'Taco.core.ux.content.Container',
+    extend: 'Taco.core.ux.browser.SearchList',
 
     requires: [
         'Taco.core.context.StoreItem',
@@ -10,12 +10,35 @@ Ext.define('Taco.view.provisioning.Sites', {
         'Taco.view.provisioning.SiteProvisionerModal'
     ],
 
+    modelName: 'Taco.model.Provisionable',
+
+    title: 'Settings | Structure',
+
+    addContentViewPadding: true,
+
+    enableNavHeader: true,
+
+    createButtonText: 'Create',
+
+    createButtonEnabled: true,
+
+    cancelButtonEnabled: false,
+
+    saveButtonEnabled: false,
+
+    hideSearchToolbar: true,
+
+    enableSearchBarInHeader: false,
+
+    advancedSearchConfig: {
+        emptySearch: 'Search'
+    },
    
     initComponent: function () {
 
         var siteData = [];
 
-        this.siteStore = Ext.create('Ext.data.Store', {
+        this.store = Ext.create('Ext.data.Store', {
             autoLoad: true,
             model: 'Taco.model.Provisionable',
             proxy: {
@@ -29,83 +52,130 @@ Ext.define('Taco.view.provisioning.Sites', {
             }
         });
 
-        this.mon(this.siteStore, 'load', this.onSiteStoreLoad, this);
+        this.catalogTreeStore = Ext.create('Ext.data.TreeStore', {
+            model: 'Taco.model.Provisionable',
+            root: { path: '/' },
+            proxy: {
+                type: 'ajax',
+                url: '/admin/app/provisioning/catalogs',
+                reader: {
+                    type: 'json',
+                    root: 'items',
+                    successProperty: 'success'
+                }
+            }
+        });
         
         var me = this;
-        this.body = {
-            layout: {
-                type: 'hbox',
-                align: 'stretch'
-            },
+        // this.body = {
+        //     layout: {
+        //         type: 'hbox',
+        //         align: 'stretch'
+        //     },
 
-            items:
-            [          
-                {
-                    xtype: 'grid',
-                    flex: 1,
-                    autoHeight: true,
-                    stateId: 'statefulSitesGrid',
-                    stateful:true,
-                    dockedItems: [
-                        {
-                            xtype: 'toolbar',
-                            dock: 'top',
-                            padding: '0 0 10 0',
-                            items: [{
-                                    xtype: 'box',
-                                    html: '<h3>Sites</h3>'
-                                }, '->',
-                                {
-                                    xtype: 'button',
-                                    ui: 'action-primary',
-                                    scale: 'medium',
-                                    handler: this.showSiteModal,
-                                    scope: this,
-                                    text: 'Create'
-                                }]
+        //     items:
+        //     [          
+        //         {
+        //             xtype: 'grid',
+        //             flex: 1,
+        //             autoHeight: true,
+        //             stateId: 'statefulSitesGrid',
+        //             stateful:true,
+        //             dockedItems: [
+        //                 {
+        //                     xtype: 'toolbar',
+        //                     dock: 'top',
+        //                     padding: '0 0 10 0',
+        //                     items: [{
+        //                             xtype: 'box',
+        //                             html: '<h3>Sites</h3>'
+        //                         }, '->',
+        //                         {
+        //                             xtype: 'button',
+        //                             ui: 'action-primary',
+        //                             scale: 'medium',
+        //                             handler: this.showSiteModal,
+        //                             scope: this,
+        //                             text: 'Create'
+        //                         }]
+        //                 }
+        //             ],
+        //             store: this.siteStore,
+        //             columns: [
+        //                 { text: 'Name', stateId:"name",  dataIndex: 'name', flex: 1 },
+        //                 { text: 'Currency', stateId: "defaultCurrencyCode", dataIndex: 'defaultCurrencyCode' },
+        //                 { text: 'Locale', stateId: "defaultLocaleCode", dataIndex: 'defaultLocaleCode' },
+        //                 { text: 'Status', stateId: "status", dataIndex: 'status' },
+        //                 {
+        //                     xtype: 'taco.menucolumn',
+        //                     text: 'Actions',
+        //                     menuItems: [
+        //                         {
+        //                             itemId: 'rename',
+        //                             text: 'Rename',
+        //                             hideOnClick: false,
+        //                             menuColumnHandler: function (item, eventData) {
+        //                                 eventData.record.raw.itemType = 'site';
+        //                                 me.showRenameModal(eventData.record.raw);
+        //                             }
+        //                         }, {
+        //                             itemId: 'Delete',
+        //                             text: 'Delete',
+        //                             hideOnClick: false,
+        //                             menuColumnHandler: function (item, eventData) {
+        //                                 eventData.record.raw.itemType = 'site';
+        //                                 me.deleteEntity(eventData.record.raw);
+        //                             }
+        //                         }
+        //                     ]
+        //                 }
+        //             ]
+        //         }]
+        // };
+
+        me.store.on('load', me.onSiteStoreLoad, this, {single: true});
+
+        this.columns = [
+            { text: 'Name', stateId:"name",  dataIndex: 'name', flex: 1 },
+            { text: 'Currency', stateId: "defaultCurrencyCode", dataIndex: 'defaultCurrencyCode' },
+            { text: 'Locale', stateId: "defaultLocaleCode", dataIndex: 'defaultLocaleCode' },
+            { text: 'Status', stateId: "status", dataIndex: 'status' },
+            {
+                xtype: 'taco.menucolumn',
+                menuItems: [
+                    {
+                        itemId: 'rename',
+                        text: 'Rename',
+                        hideOnClick: false,
+                        menuColumnHandler: function (item, eventData) {
+                            eventData.record.raw.itemType = 'site';
+                            me.showRenameModal(eventData.record.raw);
                         }
-                    ],
-                    store: this.siteStore,
-                    columns: [
-                        { text: 'Name', stateId:"name",  dataIndex: 'name', flex: 1 },
-                        { text: 'Currency', stateId: "defaultCurrencyCode", dataIndex: 'defaultCurrencyCode' },
-                        { text: 'Locale', stateId: "defaultLocaleCode", dataIndex: 'defaultLocaleCode' },
-                        { text: 'Status', stateId: "status", dataIndex: 'status' },
-                        {
-                            xtype: 'taco.menucolumn',
-                            text: 'Actions',
-                            menuItems: [
-                                {
-                                    itemId: 'rename',
-                                    text: 'Rename',
-                                    hideOnClick: false,
-                                    menuColumnHandler: function (item, eventData) {
-                                        eventData.record.raw.itemType = 'site';
-                                        me.showRenameModal(eventData.record.raw);
-                                    }
-                                }, {
-                                    itemId: 'Delete',
-                                    text: 'Delete',
-                                    hideOnClick: false,
-                                    menuColumnHandler: function (item, eventData) {
-                                        eventData.record.raw.itemType = 'site';
-                                        me.deleteEntity(eventData.record.raw);
-                                    }
-                                }
-                            ]
+                    }, {
+                        itemId: 'Delete',
+                        text: 'Delete',
+                        hideOnClick: false,
+                        menuColumnHandler: function (item, eventData) {
+                            eventData.record.raw.itemType = 'site';
+                            me.deleteEntity(eventData.record.raw);
                         }
-                    ]
-                }]
-        };
+                    }
+                ]
+            }
+        ];
+
         me.callParent(arguments);
-        me.setTitle('Settings | Structure');
 
+    },
+
+    doCreate: function() {
+        this.showSiteModal();
     },
     showSiteModal: function (config) {
 
         var me = this,
             modal = Ext.create('Taco.view.provisioning.SiteProvisionerModal', {
-                catalogStore: this.createCatalogStore(),
+                catalogStore: me.createCatalogStore(),
                 listeners: {
                     savesuccess: function (site, request) {
                         me.provision({ jsonData: request, itemType: 'site' });
@@ -151,10 +221,10 @@ Ext.define('Taco.view.provisioning.Sites', {
                 jsonData: entity,
                 success: function (response, opts) {
                     if (entity.itemType == 'site') {
-                        me.siteStore.reload();
+                        me.store.reload();
                     } else {
                         me.catalogTreeStore.reload();
-                        me.siteStore.reload();
+                        me.store.reload();
                     }
                 },
                 failure: function (response, opts) {
@@ -189,7 +259,7 @@ Ext.define('Taco.view.provisioning.Sites', {
             jsonData: entity,
             success: function (response, opts) {
                 if (entity.itemType == 'site') {
-                    me.siteStore.reload();
+                    me.store.reload();
                 } else {
                     me.catalogTreeStore.reload();
                 }
@@ -203,6 +273,21 @@ Ext.define('Taco.view.provisioning.Sites', {
         };
 
         Ext.Ajax.request(request);
+    },
+    createCatalogStore: function () {
+        var catalogs = [],
+            rootNode = this.catalogTreeStore.getRootNode();
+
+        Ext.Array.each(rootNode.childNodes, function (mcNode) {
+            catalogs = catalogs.concat(mcNode.childNodes);
+        });
+
+
+        return Ext.create('Ext.data.Store', {
+            autoLoad: true,
+            model: 'Taco.model.Provisionable',
+            data: catalogs
+        });
     },
     provision: function (config) {
         var me = this;
@@ -219,7 +304,7 @@ Ext.define('Taco.view.provisioning.Sites', {
                     jsonData: json,
                     success: function (response2, opts2) {
                         if (config.itemType == 'site') {
-                            me.siteStore.reload();
+                            me.store.reload();
                         } else {
                             me.catalogTreeStore.reload();
                         }
@@ -234,7 +319,7 @@ Ext.define('Taco.view.provisioning.Sites', {
 
 
                 if (config.itemType == 'site') {
-                    me.siteStore.reload();
+                    me.store.reload();
                 } else {
                     me.catalogTreeStore.reload();
                 }
