@@ -108,6 +108,7 @@
 
     .#{$prefix}form-cb-checked .#{$prefix}form-checkbox-focus,
     .#{$prefix}grid-cell-inner .#{$prefix}tree-checkbox-checked-focus,
+    .#{$prefix}menu .#{$prefix}menu-item-checked-focus .#{$prefix}menu-item-icon,
     .#{$prefix}grid-table .#{$prefix}grid-row-selected .#{$prefix}grid-row-checker-focus {
         @include icons-sprite(checkbox-checked);
     }
