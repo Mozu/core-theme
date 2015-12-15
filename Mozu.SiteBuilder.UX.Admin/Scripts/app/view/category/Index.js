@@ -69,7 +69,8 @@ Ext.define('Taco.view.category.Index', {
                         delegate: "x-menu-item-link"
                     },
                     beforerender: function () {
-                        this.setWidth(this.up('button').getWidth());
+                        var width = this.up('button').el.getWidth(false, true);
+                        this.setWidth(width);
                     }
                 },
                 items: [
