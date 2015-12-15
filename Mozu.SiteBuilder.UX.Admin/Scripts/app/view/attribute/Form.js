@@ -609,9 +609,10 @@ Ext.define('Taco.view.attribute.Form', {
             attributeType = me.attributeTypeCheckboxGroup,
             attributeTypeValue = (attributeType) ? attributeType.getValue() : null,
             isOption = (attributeTypeValue && attributeTypeValue.isOption),
+            isProperty = (attributeTypeValue && attributeTypeValue.isProperty),
             store = dataType.store;
 
-        if (inputType.getValue() != 'List' || isOption) {
+        if ((isOption) || (inputType.getValue() != 'List') || (inputType.getValue() === 'List' && isProperty)) {
 
             store.filterBy(function (item) {
                 return item.get('field1') !== 'ProductCode';
