@@ -23,14 +23,11 @@ Ext.define('Taco.store.SubnavLinks', {
             var controller = currentState.complexMetaData.controller;
             var action = currentState.complexMetaData.action;
             var key = controller + action;
+            var backwardCompatkey = item.get('parentId');
 
-            if (!item.get('location')) return false;
+            if (!item.get('location') && !item.get('parentId')) return false;
 
-            if (item.get('location') === 'all') {
-                return item;
-            }
-
-            if (item.get('location') === 'all' + action) {
+            if (item.get('parentId') === controller) {
                 return item;
             }
 

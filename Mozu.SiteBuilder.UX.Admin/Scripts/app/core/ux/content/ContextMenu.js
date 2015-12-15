@@ -17,9 +17,6 @@ Ext.define('Taco.core.ux.content.ContextMenu', {
     editable:false,
     maxWidth: 900,
     supportedLevels: [],
-    defaultListConfig : {
-        minWidth:300
-    }, 
     adjustWidth: function() {
         var width = this.inputEl.getValue().length * 11;
         
@@ -129,9 +126,11 @@ Ext.define('Taco.core.ux.content.ContextMenu', {
         }
     },
     tpl: Ext.create('Ext.XTemplate',
-        '<tpl for=".">',
-        '<div class="x-boundlist-item">{contextType:this.toContextLable}: {name}</div>',
+        '<div class="taco-selector-flyout">',
+            '<tpl for=".">',
+            '<div class="x-boundlist-item x-menu-item selector"><span>{name}</span></div>',
         '</tpl>',
+        '</div>',
          {
              contentTypes: {
                  t: {

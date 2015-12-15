@@ -92,6 +92,32 @@ Ext.define('Taco.view.theme.Index', {
           	}
         ];
 
+        this.additionalActions = [
+            {
+                xtype: 'splitbutton',
+                ui: 'action',
+                cls: 'taco-action-secondary',
+                scale: 'medium',
+                text: 'View',
+                height: 40,
+                menu: [
+                    {
+                        text: 'View Live',
+                        handler: function(menuItem) {
+                            window.open('/_gosite/' + Taco.app.context.getSiteId() + '?environment=live&redir=' + encodeURIComponent('/'));
+                        }
+                    },
+                    {
+                        text: 'View Staged',
+                        handler: function(menuItem) {
+                            var url = me.url;
+                            window.open('/_gosite/' + Taco.app.context.getSiteId() + '?environment=preview&redir=' + encodeURIComponent('/'));
+                        }
+                    }
+                ]
+            }
+        ];
+
         this.moreButtonCfg = {
         	menu: [
         		{

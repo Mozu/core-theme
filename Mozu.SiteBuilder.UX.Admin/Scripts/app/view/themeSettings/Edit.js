@@ -26,6 +26,6 @@ Ext.define('Taco.view.themesettings.Edit', {
 
     parentTitleCfg: {
         title: 'Theme Settings',
-        controller: 'productrankings'
+        controller: 'theme'
     }
 });

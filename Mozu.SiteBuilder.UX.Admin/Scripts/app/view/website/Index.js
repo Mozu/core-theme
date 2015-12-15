@@ -199,7 +199,6 @@ Ext.define('Taco.view.website.Index', {
             {
                 xtype: 'component',
                 itemId: 'taco-page-title',
-                flex: 1,
                 html: '',
                 maxWidth: '100px'
             },
@@ -211,6 +210,7 @@ Ext.define('Taco.view.website.Index', {
                 hidden: true,
                 afterrender: this.setAction.bind(this)
             },
+            '->',
             {
                 xtype: 'button',
                 ui: 'action',

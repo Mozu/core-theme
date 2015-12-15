@@ -8,7 +8,7 @@ Ext.define('Taco.view.customers.Edit', {
     title: "Edit Customer",
     parentTitleCfg: {
         title: 'Customer',
-        controller: 'customer'
+        controller: 'customers'
     },
     initComponent: function () {
         this.callParent(arguments);

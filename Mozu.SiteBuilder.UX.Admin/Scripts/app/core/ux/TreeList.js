@@ -48,11 +48,11 @@ Ext.define('Taco.core.ux.TreeList', {
                     return Ext.create('Taco.core.ux.action.TreeListAction', actionConf);
                 });
 
-                this.columns.push({
-                    xtype: 'actioncolumn',
-                    items: this.actions,
-                    width: this.actions.length * 60
-                });
+                // this.columns.push({
+                //     xtype: 'actioncolumn',
+                //     items: this.actions,
+                //     width: this.actions.length * 60
+                // });
 
                 Ext.each(this.columns, function (col) {
                     Ext.applyIf(col, {

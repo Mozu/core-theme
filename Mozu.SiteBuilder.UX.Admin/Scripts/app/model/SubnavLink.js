@@ -36,6 +36,10 @@ Ext.define('Taco.model.SubnavLink', {
         {
             name: 'path',
             type: 'auto'
+        },
+        {
+            name: 'parentId',
+            type: 'string'
         }
 	]
 });
