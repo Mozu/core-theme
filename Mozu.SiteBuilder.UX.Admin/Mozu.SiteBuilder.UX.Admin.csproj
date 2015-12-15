@@ -805,6 +805,7 @@
     <Content Include="Scripts\app\view\category\ConfirmDeleteOfSubcategoriesModal.js" />
     <Content Include="Scripts\app\view\order\widget\ReusePaymentPickerField.js" />
     <Content Include="Scripts\app\view\productRanking\Index.js" />
+    <Content Include="Scripts\app\view\productType\AttributeForm.js" />
     <Content Include="Scripts\app\view\product\widget\productCode\Modal.js" />
     <Content Include="Scripts\app\view\publishing\advancedSearchForm\DraftContent.js" />
     <Content Include="Scripts\app\view\publishing\advancedSearchForm\DraftProduct.js" />
@@ -1623,7 +1624,6 @@
     <Content Include="Scripts\app\view\order\widget\PaymentPanel.js" />
     <Content Include="Scripts\app\view\order\widget\UnpackagedItems.js" />
     <Content Include="Scripts\app\view\pendingChange\Cms.js" />
-    <Content Include="Scripts\app\view\productType\AttributeForm.js" />
     <Content Include="Scripts\app\view\productType\AttributeGroup.js" />
     <Content Include="Scripts\app\view\productType\Edit.js" />
     <Content Include="Scripts\app\view\productType\Form.js" />

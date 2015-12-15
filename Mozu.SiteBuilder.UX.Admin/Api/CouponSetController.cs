@@ -84,7 +84,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
                 filter = extFilter.ToFilterString(_ctx, masterNumberFormat, _tenantClient);
             }
 
-            const string responseFields = "items(id,name,couponSetCode,couponCodeType,status,canBeDeleted,maxRedemptionsPerUser,maxRedemptionsPerCouponCode,startDate,endDate,redemptionCount)";
+            const string responseFields = "items(id,name,couponSetCode,couponCodeType,status,canBeDeleted,maxRedemptionsPerUser,maxRedemptionsPerCouponCode,startDate,endDate,redemptionCount,setSize,assignedDiscountCount)";
             string sortBy = pagingParams.ToSort(_couponSetSortFormatter);
 
             try

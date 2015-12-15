@@ -135,7 +135,8 @@
             'savedPaymentMethodId',
             'billingContact.address.countryCode',
             'paymentType',
-            'isSameBillingShippingAddress'
+            'isSameBillingShippingAddress',
+            'savedPaymentMethodId'
         ],
         additionalEvents: {
             "change [data-mz-digital-credit-enable]": "enableDigitalCredit",
@@ -170,7 +171,11 @@
             this.listenTo(this.model, 'change:digitalCreditCode', this.onEnterDigitalCreditCode, this);
             this.listenTo(this.model, 'orderPayment', function (order, scope) {
                     this.render();
-                }, this);
+            }, this);
+            this.listenTo(this.model, 'change:savedPaymentMethodId', function (order, scope) {
+                $('[data-mz-saved-cvv]').val('').change();
+                this.render();
+            }, this);
             this.codeEntered = !!this.model.get('digitalCreditCode');
         },
 
