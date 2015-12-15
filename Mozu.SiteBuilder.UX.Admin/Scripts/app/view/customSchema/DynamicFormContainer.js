@@ -46,6 +46,7 @@
                 this.data['document.' + name] = this.record.data[name];
             }
         }
+
         if (this.editor) {
             try {
                 /*jslint evil: true */

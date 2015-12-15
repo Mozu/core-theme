@@ -13,7 +13,7 @@ if (Taco && Taco.app) {
             "enableActiveDateRanges": true,
             "enablePublishing": true,
             "entityType": "cms",
-            "listFQN": "files@mozu",
+            "listFQN": "pages@mozu",
             "name": "pages",
             "namespace": "mozu",
             "scopeId": 13591,
@@ -25,10 +25,48 @@ if (Taco && Taco.app) {
             "usages": [],
             "views": [
                 {
-                    "name": "default", "usages": ["usage1"], "isVisibleInStorefront": false, "filter": "", "fileds": ""
+                    "name": "default", 
+                    "usages": ["usage1"],
+                    "isVisibleInStorefront": false, 
+                    "filter": "",
+                    "feilds": [
+                        {
+                            name: "page_type_definition",
+                            target: "properties.page_type_definition"
+                        },
+                        {
+                            name: "hidden",
+                            target: "properties.hidden"
+                        },
+                        {
+                            name: "link_title",
+                            target: "properties.link_title",
+                            isVisibleInStorefront: false,
+                            name: "default",
+                            usages: ["usage1"]
+                        }
+                    ]
                 }
             ]
         }
+        // {
+        //     documentListType: "pages@mozu"
+        //     documentTypes: ["web_page@mozu"]
+        //     enableActiveDateRanges: true
+        //     enablePublishing: true
+        //     entityType: "cms"
+        //     listFQN: "pages@mozu"
+        //     name: "pages"
+        //     namespace: "mozu"
+        //     scopeId: 13595
+        //     scopeType: "Site"
+        //     security: ""
+        //     supportsActiveDateRanges: true
+        //     supportsPublishing: true
+        //     uniqueId: "cms-pages@mozu"
+        //     usages: []
+        //     views: [{name: "default", usages: ["usage1"], isVisibleInStorefront: false,…}]
+        // }
     ];
     
 }
@@ -89,21 +127,26 @@ Ext.define('Taco.controller.CustomSchema', {
             autoLoad: false
         });
 
-        me.store.load({
-            listName: cfg.list,
-            entityType: cfg.type,
-            id: cfg.record,
-            callback: me.navigateToEdit.bind(me)
-        });
+        me.editors = Taco.core.data.StoreManager.getOrCreate('Taco.store.EntityEditors');
+
+        me.editors.on('load', function(store) {
+            me.store.load({
+                listName: cfg.list,
+                entityType: cfg.type,
+                id: cfg.record,
+                callback: me.navigateToEdit.bind(me, store)
+            });
+        }, me)
+
     },
 
-    navigateToEdit: function(record, store, isSuccessful) {
+    navigateToEdit: function(editors, record, store, isSuccessful) {
         var me = this;
 
         if (isSuccessful) {
             me.confirmContext('Taco.view.customSchema.Edit', function () {
                 me.ensureRequiredStores(function () {
-                    me.createContentView('Taco.view.customSchema.Edit', {record: record[0]});
+                    me.createContentView('Taco.view.customSchema.Edit', {record: record[0], editors: editors});
                 });
             });
         }
@@ -131,6 +174,7 @@ Ext.define('Taco.controller.CustomSchema', {
             config.entityType = type;
             config.scopeType = listExists[0].scopeType;
             config.listName = listExists[0].name;
+            config.views = listExists[0].views;
         }
 
         else {

@@ -7,19 +7,20 @@ Ext.define('Taco.view.customSchema.Edit', {
     requires: [
     ],
     enableSearchBarInHeader: false,
-    formCfg: {
-        editMode: 'raw'
-    },
     formCls: 'Taco.view.customSchema.DynamicFormContainer',
     initComponent: function () {
     	var me = this;
+        var editor = me.editors.findEditor(this.record);
 
         if (!this.record) {
             console.warn('A record is required for this view');
             return false;
         }
 
-        this.editMode = 'raw';
+        this.formCfg = {
+            editMode: editor ? '' : 'raw',
+            editor: editor
+        };
 
         this.parentTitleCfg = {
             title: this.record.get('listFQN'),

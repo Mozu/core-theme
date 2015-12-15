@@ -35,41 +35,49 @@ Ext.define('Taco.view.customSchema.Grid', {
 
     initComponent: function() {
         var me = this;
+     
+        if (me.standaloneGrid) {
+            this.applyViewConfig();
+        }
 
-        me.store = Ext.create('Taco.store.EntityLists', {
-            entityType: this.entityType,
-            autoLoad: false,
-            remoteFilter: true
-        });
+        else {
 
-        if (me.standaloneGrid) this.applyViewConfig();
+            me.store = Ext.create('Taco.store.EntityLists', {
+                entityType: this.entityType,
+                autoLoad: false,
+                remoteFilter: true
+            });
+            
+        }
+
 
         me.callParent(arguments);
-
     },
 
     applyViewConfig: function() {
         this.enableNavHeader = true;
         
-        this.store = Ext.create('Taco.store.Entities', {
-            listName: this.listFQN,
-            entityType: this.entityType,
-            view: 'default',
-            autoLoad: true,
-            remoteSort: true,
-            remoteFilter: true
-        });
+        // this.store = Ext.create('Taco.store.Entities', {
+        //     listName: this.listFQN,
+        //     entityType: this.entityType,
+        //     view: 'default',
+        //     autoLoad: false,
+        //     remoteSort: true,
+        //     remoteFilter: true
+        // });
 
         this.record = Ext.create('Taco.model.EntityList', {
             entityType: this.entityType,
-            autoLoad: true
+            autoLoad: true,
+            listFQN: this.listFQN,
+            views: this.views
         });
 
-        // this.getSelectionModel().on('selectionchange', this.navigateToEdit, this);
+        // // this.getSelectionModel().on('selectionchange', this.navigateToEdit, this);
 
         this.setTitle(this.listName);
 
-        this.columns = this.buildColumns(this.record, true).columns;
+        this.initListView(this.record, true);
     },
 
     getStateFulId: function(dynamicFields) {
@@ -85,7 +93,7 @@ Ext.define('Taco.view.customSchema.Grid', {
         }
     },
 
-    initListView: function(record) {
+    initListView: function(record, isSinglePage) {
 
         var me = this,
             metaData = this.buildColumns(record);
@@ -97,12 +105,12 @@ Ext.define('Taco.view.customSchema.Grid', {
             me.store = metaData.store;
         }
 
-        me.store.on('load', me.updatePagerToolbar.bind(me, record), me);
+        me.store.on('load', me.updatePagerToolbar.bind(me, record, isSinglePage), me);
 
         me.on('cellclick', me.onCellClick, me);
     },
 
-    updatePagerToolbar: function(record) {
+    updatePagerToolbar: function(record, isSinglePage) {
 
         if (record.get('views').length > 0) {
 
@@ -135,7 +143,15 @@ Ext.define('Taco.view.customSchema.Grid', {
             }
 
             else {
-                this.gridPager.insert(this.gridPager.items.getCount() - 2, this.viewMenu);
+                if (me.gridPager && isSinglePage) {
+                    me.gridPager.on('change', function() {
+                        me.gridPager.insert(me.gridPager.items.getCount() - 2, me.viewMenu);
+                    })
+                }
+
+                else {
+                    me.gridPager.insert(me.gridPager.items.getCount() - 2, me.viewMenu);
+                }
             }
         }
     },
