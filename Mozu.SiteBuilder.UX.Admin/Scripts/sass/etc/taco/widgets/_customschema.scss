@@ -1,0 +1,13 @@
+@mixin taco-customschema {
+
+	.#{$vprefix}tabbar-header {
+
+		.#{$vprefix}link-button {
+
+			.#{$prefix}tab-inner {
+				font-size: 12px;
+			}
+		}
+
+	}
+}
