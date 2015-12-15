@@ -238,8 +238,8 @@ Ext.define('Taco.view.website.Index', {
 
             },
             {
-                xtype: 'splitbutton',
-                ui: 'action',
+                xtype: 'button',
+                ui: 'link',
                 cls: 'taco-action-secondary',
                 scale: 'medium',
                 text: 'View',
