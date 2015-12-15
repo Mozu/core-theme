@@ -125,6 +125,13 @@ Ext.define('Taco.core.ux.mixins.NavHeader', {
                             id: this.titleId
                           });
                     }
+
+                    else if (Object.keys(parentTitleCfg).length === 0) {
+                        me.titleCmp.update({
+                            title: newTitle,
+                            id: this.titleId
+                        });
+                    }
                 
                     else {
                         me.titleCmp.update({
@@ -133,9 +140,9 @@ Ext.define('Taco.core.ux.mixins.NavHeader', {
                             id: this.titleId,
                             lightTagLabel: lightTagLabel,
                         });                        
+                        me.titleCmp.on('afterrender', addAction);
                     }
 
-                    me.titleCmp.on('afterrender', addAction);
 
                 },
                 scope: me
