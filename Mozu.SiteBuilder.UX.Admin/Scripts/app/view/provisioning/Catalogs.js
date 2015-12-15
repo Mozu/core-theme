@@ -2,7 +2,7 @@
  * @class Taco.view.product.Catalogs
  */
 Ext.define('Taco.view.provisioning.Catalogs', {
-    extend: 'Taco.core.ux.content.Container',
+    extend: 'Taco.core.ux.browser.SearchListTree',
 
     requires: [
         'Taco.core.context.StoreItem',
@@ -10,10 +10,34 @@ Ext.define('Taco.view.provisioning.Catalogs', {
         'Taco.view.provisioning.CatalogProvisionerModal'
     ],
 
+    enablePaging: false,
+
+    title: 'Settings | Structure',
+
+    addContentViewPadding: true,
+
+    enableNavHeader: true,
+
+    createButtonText: 'Create',
+
+    createButtonEnabled: true,
+
+    cancelButtonEnabled: false,
+
+    saveButtonEnabled: false,
+
+    hideSearchToolbar: true,
+
+    enableSearchBarInHeader: false,
+
+    doCreate: function() {
+        this.showCatalogModal({ itemType: 'mastercatalog' });
+    },
+
    
     initComponent: function () {
 
-        this.catalogTreeStore = Ext.create('Ext.data.TreeStore', {
+        this.store = Ext.create('Ext.data.TreeStore', {
             model: 'Taco.model.Provisionable',
             root: { path: '/' },
             proxy: {
@@ -27,82 +51,111 @@ Ext.define('Taco.view.provisioning.Catalogs', {
             }
         });
 
-        this.mon(this.catalogTreeStore, 'load', this.onCatalogTreeStoreLoad, this);
+        this.mon(this.store, 'load', this.onCatalogTreeStoreLoad, this);
 
         var me = this;
-        this.body = {
-            layout: {
-                type: 'hbox',
-                align: 'stretch'
-            },
+        // this.body = {
+        //     layout: {
+        //         type: 'hbox',
+        //         align: 'stretch'
+        //     },
 
-            items:
-            [          
-                {
-                    xtype: 'treepanel',
-                    flex: 1,
-                    autoHeight: true,
-                    store: this.catalogTreeStore,
-                    rootVisible: false,
-                    stateful: true,
-                    stateId: 'statefulCatalogStructureGrid',
+        //     items:
+        //     [          
+        //         {
+        //             xtype: 'treepanel',
+        //             flex: 1,
+        //             autoHeight: true,
+        //             store: this.catalogTreeStore,
+        //             rootVisible: false,
+        //             stateful: true,
+        //             stateId: 'statefulCatalogStructureGrid',
 
-                    dockedItems: [
-                        {
-                            xtype: 'toolbar',
-                            padding: '0 0 10 0',
-                            dock: 'top',
-                            items: [{
-                                    xtype: 'box',
-                                    html: '<h3>Catalog Structure</h3>'
-                                }, '->',
-                                {
-                                    xtype: 'button',
-                                    ui: 'action-primary',
-                                    scale: 'medium',
-                                    text: 'Create',
-                                    handler: function () { this.showCatalogModal({ itemType: 'mastercatalog' }); },
-                                    scope: this
-                                }]
+        //             dockedItems: [
+        //                 {
+        //                     xtype: 'toolbar',
+        //                     padding: '0 0 10 0',
+        //                     dock: 'top',
+        //                     items: [{
+        //                             xtype: 'box',
+        //                             html: '<h3>Catalog Structure</h3>'
+        //                         }, '->',
+        //                         {
+        //                             xtype: 'button',
+        //                             ui: 'action-primary',
+        //                             scale: 'medium',
+        //                             text: 'Create',
+        //                             handler: function () { this.showCatalogModal({ itemType: 'mastercatalog' }); },
+        //                             scope: this
+        //                         }]
+        //                 }
+        //             ],
+        //             columns: [
+        //                 { xtype: 'treecolumn', stateId: 'name', text: 'Name', dataIndex: 'name', flex: 1 },
+        //                 { text: 'Currency', stateId: 'currency', dataIndex: 'defaultCurrencyCode' },
+        //                 { text: 'Locale', stateId: 'locate', dataIndex: 'defaultLocaleCode' },
+        //                 { text: 'Status', stateId: 'status', dataIndex: 'status' },
+        //                 {
+        //                     xtype: 'taco.menucolumn',
+        //                     text: 'Actions',
+        //                     menuItems: [                                       
+        //                         {
+        //                             itemId: 'rename',
+        //                             text: 'Rename',
+        //                             hideOnClick: false,
+        //                             menuColumnHandler: function (item, eventData) {
+
+        //                                 me.showRenameModal(eventData.record.raw);
+        //                             }
+        //                         }, {
+        //                             itemId: 'Delete',
+        //                             text: 'Delete',
+        //                             hideOnClick: false,
+        //                             menuColumnHandler: function (item, eventData) {
+
+        //                                 me.deleteEntity(eventData.record.raw);
+        //                             }
+        //                         }
+        //                     ]
+        //                 }                    
+        //             ]
+        //         }]
+        // };
+
+        this.columns = [
+            { xtype: 'treecolumn', stateId: 'name', text: 'Name', dataIndex: 'name', flex: 1 },
+            { text: 'Currency', stateId: 'currency', dataIndex: 'defaultCurrencyCode' },
+            { text: 'Locale', stateId: 'locate', dataIndex: 'defaultLocaleCode' },
+            { text: 'Status', stateId: 'status', dataIndex: 'status' },
+            {
+                xtype: 'taco.menucolumn',
+                text: 'Actions',
+                menuItems: [                                       
+                    {
+                        itemId: 'rename',
+                        text: 'Rename',
+                        hideOnClick: false,
+                        menuColumnHandler: function (item, eventData) {
+                            me.showRenameModal(eventData.record.raw);
                         }
-                    ],
-                    columns: [
-                        { xtype: 'treecolumn', stateId: 'name', text: 'Name', dataIndex: 'name', flex: 1 },
-                        { text: 'Currency', stateId: 'currency', dataIndex: 'defaultCurrencyCode' },
-                        { text: 'Locale', stateId: 'locate', dataIndex: 'defaultLocaleCode' },
-                        { text: 'Status', stateId: 'status', dataIndex: 'status' },
-                        {
-                            xtype: 'taco.menucolumn',
-                            text: 'Actions',
-                            menuItems: [                                       
-                                {
-                                    itemId: 'rename',
-                                    text: 'Rename',
-                                    hideOnClick: false,
-                                    menuColumnHandler: function (item, eventData) {
+                    }, {
+                        itemId: 'Delete',
+                        text: 'Delete',
+                        hideOnClick: false,
+                        menuColumnHandler: function (item, eventData) {
 
-                                        me.showRenameModal(eventData.record.raw);
-                                    }
-                                }, {
-                                    itemId: 'Delete',
-                                    text: 'Delete',
-                                    hideOnClick: false,
-                                    menuColumnHandler: function (item, eventData) {
+                            me.deleteEntity(eventData.record.raw);
+                        }
+                    }
+                ]
+            }                    
+        ];
 
-                                        me.deleteEntity(eventData.record.raw);
-                                    }
-                                }
-                            ]
-                        }                    
-                    ]
-                }]
-        };
         me.callParent(arguments);
-        me.setTitle('Settings | Structure');
 
     },
     createMasterCatalogStore: function () {
-        var rootNode = this.catalogTreeStore.getRootNode(),
+        var rootNode = this.store.getRootNode(),
             masterCats = rootNode.childNodes;
 
 
@@ -114,7 +167,7 @@ Ext.define('Taco.view.provisioning.Catalogs', {
     },
     createCatalogStore: function () {
         var catalogs = [],
-            rootNode = this.catalogTreeStore.getRootNode();
+            rootNode = this.store.getRootNode();
 
         Ext.Array.each(rootNode.childNodes, function (mcNode) {
             catalogs = catalogs.concat(mcNode.childNodes);
@@ -178,8 +231,8 @@ Ext.define('Taco.view.provisioning.Catalogs', {
                     if (entity.itemType == 'site') {
                         me.siteStore.reload();
                     } else {
-                        me.catalogTreeStore.reload();
-                        me.siteStore.reload();
+                        me.store.reload();
+                        // if (me.siteStore) me.siteStore.reload();
                     }
                 },
                 failure: function (response, opts) {
@@ -214,9 +267,9 @@ Ext.define('Taco.view.provisioning.Catalogs', {
             jsonData: entity,
             success: function (response, opts) {
                 if (entity.itemType == 'site') {
-                    me.siteStore.reload();
+                    // me.siteStore.reload();
                 } else {
-                    me.catalogTreeStore.reload();
+                    me.store.reload();
                 }
             },
             failure: function (response, opts) {
@@ -244,9 +297,9 @@ Ext.define('Taco.view.provisioning.Catalogs', {
                     jsonData: json,
                     success: function (response2, opts2) {
                         if (config.itemType == 'site') {
-                            me.siteStore.reload();
+                            // me.siteStore.reload();
                         } else {
-                            me.catalogTreeStore.reload();
+                            me.store.reload();
                         }
                     },
                     failure: function (response2, opts2) {
@@ -261,7 +314,7 @@ Ext.define('Taco.view.provisioning.Catalogs', {
                 if (config.itemType == 'site') {
                     me.siteStore.reload();
                 } else {
-                    me.catalogTreeStore.reload();
+                    me.store.reload();
                 }
             },
             failure: function (response, opts) {
