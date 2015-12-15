@@ -285,9 +285,8 @@ Ext.define('Taco.core.ux.window.Modal', {
                     });
                 } else if (actionCfg.itemId === 'secondaryAction') {
                     Ext.apply(action, actionCfg, {
-                        ui: 'action',
+                        ui: 'link',
                         scale: 'medium',
-                        cls: 'taco-link-button',
                         height: 40,
                         text: windowCfg.secondaryText || this.secondaryText,
                         handler: windowCfg.secondaryHandler || this.secondaryHandler

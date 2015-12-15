@@ -96,15 +96,6 @@
         }
     }
 
-    .#{$vprefix}link-button {
-        border: none!important;
-        background-color: transparent!important;
-        &:active {
-            background-color: $secondary-btn-active-background!important;
-            border-radius: 3px;
-        }
-    }
-
     // Dropdowns
 
     a.#{$prefix}btn-action-primary-medium,
