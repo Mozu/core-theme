@@ -73,16 +73,6 @@
         @include icons-sprite(checkbox-unchecked);
     }
 
-    .#{$prefix}field {
-        .#{$prefix}form-checkbox-focus {
-            border: 2px solid $input-focus-border;
-            @include border-radius-xbrowser($border-radius-small);
-            @include color-outer-shadow($input-focus-border, 1, 2px, 0, 0);
-            background-size: 120%;
-            background-position: -1px, 0;
-        }
-    }
-
     .#{$prefix}form-cb-checked .#{$prefix}form-checkbox,
     .#{$prefix}grid-cell-inner .#{$prefix}tree-checkbox-checked,
     .#{$prefix}menu .#{$prefix}menu-item-checked .#{$prefix}menu-item-icon,
