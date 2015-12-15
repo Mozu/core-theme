@@ -114,8 +114,6 @@
                    
                 }
             });
-
-            console.log(this.titlePanel)
         }
 
         this.tooltip = Ext.create('Taco.core.ux.content.Tooltip', {

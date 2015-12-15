@@ -186,6 +186,7 @@ Ext.define('Taco.store.Navigation', {
         data: [
             {
                 'id': 'products',
+                'navParent': 'main',
                 'label': 'Catalog',
                 'icon': 'nav-catalog',
                 'behaviorIds': [4],
@@ -209,6 +210,7 @@ Ext.define('Taco.store.Navigation', {
             },
             {
                 'id': 'marketing',
+                'navParent': 'main',
                 'label': 'Marketing',
                 'icon': 'nav-marketing',
                 'behaviorIds': [24],
@@ -233,6 +235,7 @@ Ext.define('Taco.store.Navigation', {
             },
             {
                 'id': 'content',
+                'navParent': 'main',
                 'label': 'Site Builder',
                 'icon': 'nav-sites',
                 'showBreadCrumbs': true,
@@ -266,6 +269,7 @@ Ext.define('Taco.store.Navigation', {
             },
             {
                 'id': 'publishing',
+                'navParent': 'main',
                 'label': 'Publishing ',
                 'icon': 'nav-publishing',
                 'behaviorIds': [8],
@@ -284,6 +288,7 @@ Ext.define('Taco.store.Navigation', {
             },
             {
                 'id': 'order',
+                'navParent': 'main',
                 'label': 'Fulfillment',
                 'icon': 'nav-orders',
                 'behaviorIds': [73],
@@ -307,6 +312,7 @@ Ext.define('Taco.store.Navigation', {
             },
             {
                 'id': 'customer',
+                'navParent': 'main',
                 'label': 'Customers',
                 'icon': 'nav-customers',
                 'items': [{
@@ -327,6 +333,7 @@ Ext.define('Taco.store.Navigation', {
             },
             {
                 'id': 'report',
+                'navParent': 'main',
                 'label': 'Reporting',
                 'navType': 'label',
                 'behaviorIds': [188],
@@ -336,147 +343,118 @@ Ext.define('Taco.store.Navigation', {
                     'address': 'reports'
                 }]
             },
+
             {
                 'id': 'settings',
-                'label': 'System',
+                'navParent': 'sys',
+                'label': 'Settings',
                 'icon': 'nav-settings',
                 //'visible': false,
                 'items': [
                     {
-                        'id': 'siteConfig',
-                        'label': 'Site Configuration',
-                        'address': 'generalsettings',
-                        //'visible': false,
-                        'items':[
-                        //    {
-                        //        'id': 'generalsettings',
-                        //        'label': 'General',
-                        //        'address': 'generalsettings',
-                        //        'items': []
-                        //    },
-                        //    {
-                        //        'id': 'paymentcheckout',
-                        //        'label': 'Payments',
-                        //        'address': 'settings/paymentAndCheckout',
-                        //        'items': []
-                        //    }, {
-                        //        'id': 'tax',
-                        //        'label': 'Tax',
-                        //        'address': 'settings/tax',
-                        //        'items': []
-                        //    }, {
-                        //        'id': 'shipping4',
-                        //        'label': 'Methods and Fees',
-                        //        'address': 'shipping',
-                        //        'items': []
-                        //    }, {
-                        //        'id': 'tax',
-                        //        'label': 'Tax',
-                        //        'address': 'settings/tax',
-                        //        'items': []
-                        //    }, {
-                        //        'id': 'customroutes',
-                        //        'label': 'Custom Routes',
-                        //        'address': 'customroutes',
-                        //        'items': []
-                        //    }
-                        ]
+                        'id': 'generalsettings',
+                        'label': 'General',
+                        'address': 'generalsettings'
                     },
                     {
-                        'id': 'settingsEnvironment',
-                        'label': 'Environment',
-                        'address': 'provisioning/sites',
-                        'behaviorIds': [4],
-                        'items': [
-                        //    {
-                        //        'id': 'catalogprovisioning',
-                        //        'label': 'Catalogs',
-                        //        'address': 'provisioning/catalogs',
-                        //        'items': []
-                        //    }, {
-                        //        'id': 'siteprovisioning',
-                        //        'label': 'Sites',
-                        //        'address': 'provisioning/sites',
-                        //        'items': []
-                        //    }, {
-                        //        'id': 'channels',
-                        //        'label': 'Channels',
-                        //        'address': 'channels',
-                        //        'items': []
-                        //    }, {
-                        //        'id': 'applications-manage',
-                        //        'label': 'Applications',
-                        //        'address': 'capability',
-                        //        'items': []
-                        //    }, {
-                        //        'id': 'actionmanagement',
-                        //        'label': 'Actions',
-                        //        'address': 'actionmanagement',
-                        //        'items': []
-                        //    }, {
-                        //        'id': 'publishing',
-                        //        'label': 'Settings',
-                        //        'address': 'settings/publishing',
-                        //        'items': []
-                        //    }, {
-                        //        'id': 'ipblocking',
-                        //        'label': 'IP Blocking',
-                        //        'address': 'ipblocking',
-                        //        'items': []
-                        //    }
-                        ]
-                    },
+                        'id': 'paymentcheckout',
+                        'label': 'Payments',
+                        'address': 'settings/paymentAndCheckout'
+                    }, {
+                        'id': 'tax',
+                        'label': 'Tax',
+                        'address': 'settings/tax'
+                    }, {
+                        'id': 'shipping4',
+                        'label': 'Methods and Fees',
+                        'address': 'shipping'
+                    }, {
+                        'id': 'tax',
+                        'label': 'Tax',
+                        'address': 'settings/tax'
+                    }, {
+                        'id': 'customroutes',
+                        'label': 'Custom Routes',
+                        'address': 'customroutes'
+                    }]
+            },
+            {
+                'id': 'typesAndAttributes',
+                'navParent': 'sys',
+                'label': 'Types & Attributes',
+                'behaviorIds': [4],
+                'items': [{
+                    'id': 'productTypes',
+                    'label': 'Product Types',
+                    'address': 'producttypes'
+                }, {
+                    'id': 'productAttributes',
+                    'label': 'Product Attributes',
+                    'address': 'attributes'
+                }, {
+                    'id': 'orderAttributes',
+                    'label': 'Order Attributes',
+                    'address': 'orderattributes'
+                }, {
+                    'id': 'customerAttributes',
+                    'label': 'Customer Attributes',
+                    'address': 'CustomerAttributes'
+                }, {
+                    'id': 'locationTypes',
+                    'label': 'Location Types',
+                    'address': 'locationTypes'
+                }
+                ]
+            },
+            {
+                'id': 'settingsEnvironment',
+                'navParent': 'sys',
+                'label': 'Environment',
+                'behaviorIds': [4],
+                'items': [{
+                    'id': 'catalogprovisioning',
+                    'label': 'Catalogs',
+                    'address': 'provisioning/catalogs'
+                },{
+                    'id': 'siteprovisioning',
+                    'label': 'Sites',
+                    'address': 'provisioning/sites'
+                }, {
+                    'id': 'channels',
+                    'label': 'Channels',
+                    'address': 'channels'
+                }, {
+                    'id': 'applications-manage',
+                    'label': 'Applications',
+                    'address': 'capability'
+                }, {
+                    'id': 'actionmanagement',
+                    'label': 'Actions',
+                    'address': 'actionmanagement'
+                }, {
+                    'id': 'publishing',
+                    'label': 'Settings',
+                    'address': 'settings/publishing'
+                }, {
+                    'id': 'ipblocking',
+                    'label': 'IP Blocking',
+                    'address': 'ipblocking'
+                }
+                ]
+            },
+            {
+                'id': 'usersRoles',
+                'navParent': 'sys',
+                'label': 'Users &amp; Roles',
+                'items': [
                     {
-                        'id': 'typesAndAttributes',
-                        'label': 'Types & Attributes',
-                        'address': 'producttypes',
-                        'behaviorIds': [4],
-                        'items': [
-                        //    {
-                        //        'id': 'productTypes',
-                        //        'label': 'Product Types',
-                        //        'address': 'producttypes',
-                        //        'items': []
-                        //    }, {
-                        //        'id': 'productAttributes',
-                        //        'label': 'Product Attributes',
-                        //        'address': 'attributes',
-                        //        'items': []
-                        //    }, {
-                        //        'id': 'orderAttributes',
-                        //        'label': 'Order Attributes',
-                        //        'address': 'orderattributes',
-                        //        'items': []
-                        //    }, {
-                        //        'id': 'customerAttributes',
-                        //        'label': 'Customer Attributes',
-                        //        'address': 'CustomerAttributes',
-                        //        'items': []
-                        //    }, {
-                        //        'id': 'locationTypes',
-                        //        'label': 'Location Types',
-                        //        'address': 'locationTypes',
-                        //        'items': []
-                        //    }
-                        ]
-                    },
-                    {
-                        'id': 'usersRoles',
-                        'label': 'Access',
-                        'address': 'account/users',
-                        'items': [
-                            //{
-                            //    'id': 'users',
-                            //    'label': 'Users',
-                            //    'address': 'account/users',
-                            //    'items': []
-                            //}, {
-                            //    'id': 'roles',
-                            //    'label': 'Roles',
-                            //    'address': 'roles',
-                            //    'items': []
-                            //}
-                        ]
+                        'id': 'users',
+                        'label': 'Users',
+                        'address': 'account/users'
+                    }, {
+                        'id': 'roles',
+                        'label': 'Roles',
+                        'address': 'roles'
                     }
                 ]
             }

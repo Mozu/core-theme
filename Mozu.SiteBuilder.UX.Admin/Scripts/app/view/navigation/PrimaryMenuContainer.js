@@ -47,32 +47,34 @@ Ext.define('Taco.view.navigation.PrimaryMenuContainer', {
         this.store = store;
         this.mixins.bindable.bindStore.apply(this, arguments);
 
-        this.view = Ext.create('Taco.view.navigation.PrimaryMenuSubContainer', {
+        this.viewMain = Ext.create('Taco.view.navigation.PrimaryMenuSubContainer', {
+            title: 'Main',
             parentMenu: this,
-            store: store
+            store: store,
+            navParent: 'main'
+        });
+        this.viewSystem = Ext.create('Taco.view.navigation.PrimaryMenuSubContainer', {
+            title: 'System',
+            tabConfig: {
+                title: 'System',
+                cls: 'taco-tab-heading'
+            },
+            parentMenu: this,
+            store: store,
+            navParent: 'sys'
         });
         this.add({
-            xtype: 'panel',
-            layout: 'vbox',
-            items: [{
-                xtype: 'panel',
-                layout: 'vbox',
+                xtype: 'tabpanel',
                 padding: '9 10 0 10',
-                items: [{
-                    xtype: 'contentlogo',
-                    cls: Taco.baseCSSPrefix + 'primary-menu-logo',
-                    width: 68
-                    }]
-                },{
-                    xtype: 'component',
-                    cls: Taco.baseCSSPrefix + 'primary-menu-divider',
-                    width: '100%'
-                },
-                this.view
-            ]
-        });
+                //cls: 'taco-primary-menu-ct',
+                autoShow:true,
+                items: [
+                    this.viewMain,
+                    this.viewSystem
+                ]
+            }
+        );
 
-        //this.add(this.view);
         this.onStateChange(Taco.core.StateManager.getCurrentState());
         this.isBound = true;
     },
@@ -208,6 +210,11 @@ Ext.define('Taco.view.navigation.PrimaryMenuContainer', {
      * @private
      */
     handleDocClick: function (e, el) {
+        // todo: temp check for now - Greg Murray on 2015-12-15 
+        var classAttr = el.getAttribute('class');
+        if (classAttr && classAttr.indexOf('-tab') > -1) {
+            return;
+        }
         this.hideMenu();
     }
 });

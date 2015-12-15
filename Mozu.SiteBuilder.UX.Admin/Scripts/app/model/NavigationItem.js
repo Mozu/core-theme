@@ -30,14 +30,12 @@ Ext.define('Taco.model.NavigationItem', {
             defaultValue: false
         },
         {
-            name: 'navPage',
+            name: 'navParent',
             type: 'string',
-            defaultValue: 'home'
-        }, {
-            name: 'navTarget',
-            type: 'string'
+            defaultValue: 'main'
         },
-    'items'],
+        'items'
+    ],
     // belongsTo: 'NavigationItem',
     hasMany: [{
         model: 'Taco.model.NavigationItem',

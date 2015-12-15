@@ -9,6 +9,7 @@ Ext.define('Taco.view.navigation.PrimaryMenuSubContainer', {
     store: null,
     layout: 'vbox',
     width: '100%',
+    navParent: 'main',
     
     initComponent: function () {
         if (this.store) {
@@ -22,12 +23,15 @@ Ext.define('Taco.view.navigation.PrimaryMenuSubContainer', {
     },
 
     createNavItems: function () {
-        var navItems = [];
+        var me = this,
+            navItems = [];
         this.store.each(function (item) {
-            navItems.push({
-                xtype: 'primary-menu-nav-group',
-                record: item
-            });
+            if (item.get('navParent') === me.navParent) {
+                navItems.push({
+                    xtype: 'primary-menu-nav-group',
+                    record: item
+                });
+            }
         });
         return navItems;
     }

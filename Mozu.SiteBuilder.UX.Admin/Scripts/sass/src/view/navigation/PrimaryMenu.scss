@@ -11,6 +11,15 @@
         margin-left: -300px;
         opacity: 0;
     }
+
+    &.#{$prefix}tab-heading {
+        border-color: #34ae90;
+        background-color: #34ae90;
+        box-shadow: none;
+        color: white;
+        border-top-left-radius: 4px;
+        border-bottom-left-radius: 4px;
+    }
 }
 
 .#{$vprefix}primary-menu-logo {
