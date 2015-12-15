@@ -233,13 +233,13 @@ Ext.define('Taco.core.ux.form.NavForm2', {
         Ext.fly(li).addCls('active');
     },
 
-    onNavClick: function (view, record) {
+    onNavClick: function (view, record, item, index, e, eOpts) {
         var wrapper = this.getWrapper().body.el,
             targetY;
         
         if (record.raw.getEl) {
             targetY = view.store.indexOf(record)
-                ? record.raw.getEl().dom.offsetTop - this.formContainerTop - this.sectionNavTopOffset
+                ? record.raw.getEl().dom.offsetTop
                 : 0;
             wrapper.scrollTo('top', targetY, true);
         }
