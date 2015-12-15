@@ -4,30 +4,34 @@
  * The Channels controller
  */
 
-Taco.app.entityLists = [
-    {
-        "documentListType": "pages@mozu",
-        "documentTypes": ["web_page@mozu"],
-        "enableActiveDateRanges": true,
-        "enablePublishing": true,
-        "entityType": "cms",
-        "listFQN": "files@mozu",
-        "name": "pages",
-        "namespace": "mozu",
-        "scopeId": 13591,
-        "scopeType": "Site",
-        "security": "",
-        "supportsActiveDateRanges": true,
-        "supportsPublishing": true,
-        "uniqueId": "cms-pages@mozu",
-        "usages": [],
-        "views": [
-            {
-                "name": "default", "usages": ["usage1"], "isVisibleInStorefront": false, "filter": "", "fileds": ""
-            }
-        ]
-    }
-];
+if (Taco && Taco.app) {
+
+    Taco.app.entityLists = [
+        {
+            "documentListType": "pages@mozu",
+            "documentTypes": ["web_page@mozu"],
+            "enableActiveDateRanges": true,
+            "enablePublishing": true,
+            "entityType": "cms",
+            "listFQN": "files@mozu",
+            "name": "pages",
+            "namespace": "mozu",
+            "scopeId": 13591,
+            "scopeType": "Site",
+            "security": "",
+            "supportsActiveDateRanges": true,
+            "supportsPublishing": true,
+            "uniqueId": "cms-pages@mozu",
+            "usages": [],
+            "views": [
+                {
+                    "name": "default", "usages": ["usage1"], "isVisibleInStorefront": false, "filter": "", "fileds": ""
+                }
+            ]
+        }
+    ];
+    
+}
 
 Ext.define('Taco.controller.CustomSchema', {
     extend: 'Taco.core.Controller',
