@@ -72,6 +72,7 @@
 
             .#{$prefix}column-header-over {
                 /* override external styles */
+                background-color: inherit;
             }
 
             .#{$prefix}grid-td {
@@ -131,16 +132,9 @@
             border: 0;
             border-bottom: 1px solid $nav-element-active-border;
 
-            > .#{$prefix}box-inner {
-                width: 100% !important;
-                background-color: $dark-bg;
-            }
-
-
             .#{$prefix}box-inner {
                 border-bottom: 1px solid $light-border-gray;
             }
-
 
 			.#{$prefix}column-header {
 				font-family: $font-family;
@@ -156,6 +150,8 @@
                 font-family: $font-family;
                 font-size: $normal-font-link;
                 padding: 3px 10px;
+
+                background-color: transparent;
             }
 
             .#{$prefix}column-header-sort-DESC, .#{$prefix}column-header-sort-ASC {
@@ -167,6 +163,12 @@
 
                 /* override external styles */
                 font-weight: normal;
+            }
+        }
+
+        .#{$prefix}fit-item {
+           > .#{$prefix}grid-header-ct {
+                background-color: $dark-bg;
             }
         }
 
