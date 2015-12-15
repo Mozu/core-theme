@@ -744,6 +744,14 @@
     <Content Include="Scripts\app\view\couponCode\AdvancedSearchForm.js" />
     <Content Include="Scripts\app\view\couponCode\DiscountGrid.js" />
     <Content Include="Scripts\app\view\couponCode\Grid.js" />
+    <Content Include="Scripts\app\view\customSchema\AdvancedSearchForm.js" />
+    <Content Include="Scripts\app\view\customSchema\DynamicFormContainer.js" />
+    <Content Include="Scripts\app\view\customSchema\Edit.js" />
+    <Content Include="Scripts\app\view\customSchema\Grid.js" />
+    <Content Include="Scripts\app\view\customSchema\Index.js" />
+    <Content Include="Scripts\app\view\customSchema\Lists.js" />
+    <Content Include="Scripts\app\view\customSchema\SchemaList.js" />
+    <Content Include="Scripts\app\view\customSchema\Split.js" />
     <Content Include="Scripts\app\view\navigation\PrimaryMenuSubContainer.js" />
     <Content Include="Scripts\app\view\navigation\PrimaryMenuNavGroup.js" />
     <Content Include="Scripts\app\view\navigation\PrimaryMenuContainer.js" />

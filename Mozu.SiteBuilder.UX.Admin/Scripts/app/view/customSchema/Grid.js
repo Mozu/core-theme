@@ -60,7 +60,7 @@ Ext.define('Taco.view.customSchema.Grid', {
             remoteFilter: true
         });
 
-        record = Ext.create('Taco.model.EntityList', {
+        this.record = Ext.create('Taco.model.EntityList', {
             entityType: this.entityType,
             autoLoad: true
         });
@@ -69,7 +69,7 @@ Ext.define('Taco.view.customSchema.Grid', {
 
         this.setTitle(this.listName);
 
-        this.columns = this.buildColumns(record, true).columns;
+        this.columns = this.buildColumns(this.record, true).columns;
     },
 
     getStateFulId: function(dynamicFields) {

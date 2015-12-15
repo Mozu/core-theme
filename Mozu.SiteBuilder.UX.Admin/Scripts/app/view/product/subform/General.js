@@ -140,7 +140,7 @@ Ext.define('Taco.view.product.subform.General', {
 
 
         // remove for multi site;
-        if (this.isGlobal || this.isSingleSite) {
+        if (this.isGlobal) {
 
 
             this.productCodeField = Ext.widget({
@@ -650,7 +650,7 @@ Ext.define('Taco.view.product.subform.General', {
                 xtype: 'productoverride',
                 itemId: 'contentOverride',
                 overrideFieldName: 'isContentOverridden',
-                hideOverride: (this.isSingleSite || this.isGlobal),
+                hideOverride: (this.isGlobal),
                 //width: classDef.getBufferedWidth(null, '100%'),
                 width:'100%',
                 items: [
@@ -727,7 +727,7 @@ Ext.define('Taco.view.product.subform.General', {
             //width: classDef.getBufferedWidth(),               
             width: '100%',
             overrideFieldName: 'isPriceOverridden',
-            hideOverride: (this.isSingleSite || this.isGlobal),
+            hideOverride: (this.isGlobal),
             margin: '10 0 0 0',
             items: [
                 {
