@@ -99,10 +99,10 @@ Ext.define('Taco.store.TooltipHelp', {
             value: 'Only promoted products that are in the category/search results will appear.'
         }, {
             key: 'attribute.form.searchOptions',
-            value: 'This determines whether the values of this attribute are matched on when shoppers perform a search on the site.'
+            value: 'This determines whether the value(s) of this attribute is matched on when shoppers perform a search on the site.'
         },{
             key: 'attribute.form.filterandsorting',
-            value: 'This determines whether this attribute is available for filtering, sorting, dynamic category expressions, displayed on category pages, and as a facet in search results.'
+            value: 'This determines whether this attribute is available for filtering, sorting, dynamic category expressions, and as a facet in search results and on category pages.'
         },{
             key: 'producttype.attribute.form.displaygroup',
             value: '<dl><dt><b>Storefront Details and Listings</b></dt><dd>The property is available on storefront product listing pages like categories and search results.</dd><dt><b>Storefront Details</b></dt><dd>The property is available only when displaying product details on the storefront.</dd><dt><b>Admin Only</b></dt><dd>The property is managed only within Mozu Admin and is not visible in the storefront.</dd></dl>'

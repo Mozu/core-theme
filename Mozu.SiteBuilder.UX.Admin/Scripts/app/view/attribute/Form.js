@@ -697,7 +697,7 @@ Ext.define('Taco.view.attribute.Form', {
             checked: this.record.get('searchDisplayType') === 'label',
             listeners: {
                 afterchange: function (cmp, newValue) {
-                    if (newValue) {
+                    if (newValue === 'label') {
                         this.record.set('searchDisplayValue', false);
                     }
                 },
@@ -717,7 +717,7 @@ Ext.define('Taco.view.attribute.Form', {
             //checked: ((this.record.phantom && !this.record.isDuplicate) || (!this.record.get('includeAllProducts') && this.record.get('products').length)),
             listeners: {
                 afterchange: function (cmp, newValue) {
-                    if (newValue) {
+                    if (newValue === 'value') {
                         this.record.set('searchDisplayValue', true);
                     }
                 },
