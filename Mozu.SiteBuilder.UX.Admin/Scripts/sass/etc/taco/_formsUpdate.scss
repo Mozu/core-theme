@@ -5,6 +5,10 @@
         @include border-radius-xbrowser(0);
     }
 
+    .ace_editor {
+        font-size: 12px !important;
+    }
+
     .#{$prefix}trigger-noedit {
         border: 0;
         border-bottom: 1px dotted $input-border;
@@ -163,8 +167,8 @@
                 @include use-glyph('edit-justifyright', $glyph-rightalign);
                 @include use-glyph('edit-justifyleft', $glyph-leftalign);
                 @include use-glyph('edit-justifycenter', $glyph-centeralign);
-                @include use-glyph('edit-backcolor', '\E600');
-                @include use-glyph('edit-forecolor', '\E027');
+                @include use-glyph('edit-backcolor', $glyph-highlight);
+                @include use-glyph('edit-forecolor', $glyph-color);
                 @include use-glyph('edit-decreasefontsize', $glyph-smaller);
                 @include use-glyph('edit-increasefontsize', $glyph-larger);
                 @include use-glyph('edit-underline', $glyph-underline);

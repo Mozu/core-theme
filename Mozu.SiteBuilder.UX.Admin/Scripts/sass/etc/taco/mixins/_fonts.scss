@@ -1,5 +1,5 @@
 // optimized at 16px
-$glyph-code:                "\E000";
+$glyph-code:                "\EF59";
 $glyph-underline:           "\E001";
 $glyph-smaller:             "\E002";
 $glyph-larger:              "\E003";
@@ -11,6 +11,8 @@ $glyph-bold:                "\E008";
 $glyph-rightalign:          "\E009";
 $glyph-leftalign:           "\E00A";
 $glyph-centeralign:         "\E00B";
+$glyph-color:               "\E010";
+$glyph-highlight:           "\E916";
 $glyph-list:                "\E00C";
 $glyph-grid:                "\E00D";
 $glyph-user:                "\E00E";
@@ -92,7 +94,7 @@ $glyph-more-vert:           "\E90B";
 $glyph-knurling:            $glyph-more-vert;
 $glyph-dehaze:              "\EB0B";
 $glyph-filter-list:         "\E905";
-$glyph-reorder:             "\F010";
+$glyph-reorder:             "\E915";
 $glyph-view-headline:       "\F091";
 $glyph-line:                "\E00F";
 $glyph-create:              "\EDD5";
@@ -106,6 +108,7 @@ $glyph-phone:               "\EC1C";
 $glyph-tablet:              "\EC37";
 $glyph-redirect:            "\E914";
 $glyph-plus-circle:         "\EAEF";
+$glyph-tooltip:             "\EFB2";
 
 // font set for chorizo -- because these are being compiled using compass, they cannot be encased in ""
 // optimized at 16px

@@ -10,7 +10,6 @@
     &.#{$prefix}hide-offsets {
         margin-left: -300px;
         opacity: 0;
-        @include transition(margin-left 300ms linear, opacity 300ms linear);
     }
 }
 

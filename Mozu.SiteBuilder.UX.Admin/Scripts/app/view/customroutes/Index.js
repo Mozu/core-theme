@@ -38,7 +38,7 @@ Ext.define('Taco.view.customroutes.Index', {
                 resizable: true,
                 showGutter: true,
                 mode: 'json',
-                theme: 'ace/theme/monokai'
+                theme: 'ace/theme/ambience'
             }]
         };
 

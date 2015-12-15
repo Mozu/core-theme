@@ -69,6 +69,7 @@ Ext.define('Taco.view.productRanking.form.General', {
         me.siteCombo = Ext.widget({
             xtype: 'combobox',
             fieldLabel: 'Site',
+            itemId:     'siteField',
             name: 'siteId',
             labelAlign: 'top',
             allowBlank: false,
@@ -87,12 +88,19 @@ Ext.define('Taco.view.productRanking.form.General', {
                 afterrender: function(cmp) {
                     cmp.setValue(defaultSite);
                 }
-            }
+            },
+            tooltip: Ext.create('Taco.core.ux.content.Tooltip', {
+                elementId: 'siteField',
+                offsetLeft: -45,
+                offsetTop: -19,
+                arrowPosition: 'left'
+            })
         });
 
         me.statusCombo = Ext.widget({
             xtype: 'combobox',
             fieldLabel: 'Status',
+            itemId: 'statusField',
             name: 'status',
             labelAlign: 'top',
             allowBlank: false,
@@ -133,7 +141,13 @@ Ext.define('Taco.view.productRanking.form.General', {
                 },
 
                 scope: this
-            }
+            },
+            tooltip: Ext.create('Taco.core.ux.content.Tooltip', {
+                elementId: 'statusField',
+                offsetLeft: -57,
+                offsetTop: -19,
+                arrowPosition: 'left'
+            })
         });
 
         // hbox
@@ -165,6 +179,7 @@ Ext.define('Taco.view.productRanking.form.General', {
                             items: [
                                 {
                                     name: 'name',
+                                    itemId: 'nameField',
                                     fieldLabel: 'Name',
                                     allowBlank: false,
                                     xtype: 'textfield',
@@ -173,7 +188,13 @@ Ext.define('Taco.view.productRanking.form.General', {
                                     required: true,
                                     minLength: 3,
                                     maxLength: 200,
-                                    enforceMaxLength: true
+                                    enforceMaxLength: true,
+                                    tooltip: Ext.create('Taco.core.ux.content.Tooltip', {
+                                        elementId: 'nameField',
+                                        offsetLeft: -56,
+                                        offsetTop: -19,
+                                        arrowPosition: 'left'
+                                    })
                                 }, 
                                 {
                                     name: 'code',
@@ -187,7 +208,13 @@ Ext.define('Taco.view.productRanking.form.General', {
                                     readOnly: !me.record.phantom,
                                     required: true,
                                     regex: /^[a-z0-9_\-]+$/i,
-                                    regexText: 'Invalid character. Please choose from alphanumeric, underscore, or hyphen characters.'
+                                    regexText: 'Invalid character. Please choose from alphanumeric, underscore, or hyphen characters.',
+                                    tooltip: Ext.create('Taco.core.ux.content.Tooltip', {
+                                        elementId: 'codeField',
+                                        offsetLeft: -53,
+                                        offsetTop: -19,
+                                        arrowPosition: 'left'
+                                    })
                                 }
                             ]
                         }, {
@@ -227,11 +254,18 @@ Ext.define('Taco.view.productRanking.form.General', {
                     items: [
                         {
                             xtype: 'textarea',
+                            itemId: 'descriptionField',
                             name: 'description',
                             width: '100%',
                             flex: 1,
                             fieldLabel: 'Description',
-                            maxLength: 500
+                            maxLength: 500,
+                            tooltip: Ext.create('Taco.core.ux.content.Tooltip', {
+                                elementId: 'descriptionField',
+                                offsetLeft: -76,
+                                offsetTop: -19,
+                                arrowPosition: 'left'
+                            })
                         }
                     ]
                 }

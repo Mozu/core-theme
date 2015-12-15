@@ -13,8 +13,7 @@
 		font-size: px-to-rem(24);
         line-height: px-to-rem(30);
 		font-weight: normal;		
-		border-bottom: 1px dashed $color-neutral-75 !important;
-		
+		border-bottom: 1px solid $light-gray-border-color !important;
 	}
 
 	.#{$prefix}window-body {
