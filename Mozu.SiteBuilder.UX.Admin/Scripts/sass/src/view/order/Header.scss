@@ -2,14 +2,8 @@
     background-color: $color-neutral-white;
     border: 1px solid $color-standard-border;
 
-    // links
-    a {
-        color: $color-framework-blue-dark;
-    }
-
     // all labels
     .label {
-        font-weight: bold;
         margin-right: 3px;
     }
 
@@ -17,20 +11,15 @@
     .label-light {
         color: $color-neutral-60;
         font-weight: normal;
-        text-transform: uppercase;
+        display: block;
     }
 
-    // account name "banner"
-    .account-name {
+    .taco-order-summary-header {
         border-bottom: 1px solid $color-standard-border;
-        font-size: 18px;
-        font-weight: bold;
-        padding: 7px 19px 3px;
 
-        .label {
-            font-size: 14px;
-            line-height: 18px;
-            margin-right: 10px;
+        .x-btn .x-btn-inner-center, a {
+            color: $nav-element-active;
+            border-bottom: $nav-element-active-border 1px solid;
         }
     }
 
@@ -47,7 +36,6 @@
 
     table.header-summary {
         tr td:first-child {
-            font-weight: bold;
             padding-right: 8px;
         }
         tr td:last-child {
@@ -55,46 +43,25 @@
         }
     }
 
-    table.order-addresses-table tr td {
-        vertical-align: top;
-    }
-
     .pane {
         border-right: 1px solid $color-standard-border;
-        margin: 10px 0px;
-        padding: 0px 19px;
+        margin: 0px 0px;
+        padding: 10px 19px;
 
         table {
             border-collapse: collapse;
+            width: 100%;
+
+            td {
+                vertical-align: top;
+                padding-bottom: 2px;
+            }
         }
 
         .label-light {
-            padding-bottom: 3px;
+            //padding-bottom: 3px;
         }
 
-        .order-number, .order-status, .order-addresses {
-            font-size: 22px;
-            font-weight: bold;
-            line-height: 26px;
-            margin-bottom: 8px;
-
-            .label {
-                color: $color-neutral-60;
-                font-weight: normal;
-            }
-        }
-
-        .order-status {
-            .label {
-                margin-right: 5px;
-            }
-        }
-
-        .order-addresses {
-            display: inline-block;
-            margin-right: 10px;
-            min-width: 50%;
-        }
     }
 
     .pane-addresses {
@@ -107,7 +74,7 @@
 
     &> .#{$prefix}panel-body {
         border-width: 0px;
-        font-size: 13px;
-        line-height: 1.25;
+        font-size: 12px;
+        line-height: 1.4;
     }
 }

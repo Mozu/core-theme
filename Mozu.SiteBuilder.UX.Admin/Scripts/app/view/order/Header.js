@@ -93,14 +93,43 @@ Ext.define('Taco.view.order.Header', {
         this.customerCmp = Ext.widget({
             xtype: 'component',
             itemId: 'customerCmp',
-            cls: 'account-name',
+            cls: 'pane account-name',
+            flex: 33,
             tpl: [
-                '<span class="label label-light">Account</span>',
+                '<span class="label label-light">Account:</span>',
                 '<tpl if="id">',
                 '<a href="/admin/customers/edit/{id}" data-handle="customerName">', '{[(values.lastNameSafe) ? values.firstNameSafe + " " + values.lastNameSafe : values.emailAddressSafe]}', '</a>',
                 '</tpl>'
             ],
             data: this.record.getCustomer() ? this.record.getCustomer().getData() : {}
+        });
+
+        this.siteCmp = Ext.widget({
+            xtype: 'component',
+            itemId: 'siteCmp',
+            cls: 'pane pane-site',
+            flex: 33,
+            tpl: ['<span class="label label-light">Site:</span>', '<a href="/_gosite/{siteId}" target="_blank">{siteName}</a>'],
+            data: this.record.getData()
+        });
+
+        this.changeAddressCmp = Ext.widget({
+            xtype: 'container',
+            itemId: 'changeAddressCmp',
+            cls: 'pane pane-change-address',
+            flex: 33,
+            items: [{
+                xtype: 'label',
+                text: 'Addresses:',
+                cls: 'label label-light'
+            },{
+                xtype: 'button',
+                ui: 'link',
+                text: 'Change Address',
+                itemId: "changeLink",
+                handler: this.changeAddress,
+                scope: this
+            }]
         });
 
         this.relatedCmp = Ext.widget({
@@ -119,34 +148,6 @@ Ext.define('Taco.view.order.Header', {
             data: this.record.getData()
         });
 
-        this.detailCmp = Ext.widget({
-            xtype: 'component',
-            itemId: 'detailCmp',
-            cls: 'pane pane-detail',
-            flex: 27,
-            tpl: [
-                '<div class="order-number">', '<span class="label">Order #</span>{orderNumber}', '</div>',
-                '<div class="create-date">', 
-                    '<tpl if="submittedDate">',
-                        '<span class="label">Order Date:</span>{submittedDate:date("m/d/Y h:i a")}',
-                    '<tplelse>',
-                        '<span class="label">Order Create Date:</span>{createDate:date("m/d/Y h:i a")}',
-                    '</tpl>',
-                '</div>',
-                '<div class="update-date">', '<span class="label">Last Updated:</span>{updateDate:date("m/d/Y h:i a")}', '</div>',
-                '<div class="site">', '<span class="label">Site:</span><a href="/_gosite/{siteId}" target="_blank">{siteName}</a>', '</div>',
-                '<div class="channel">', '<span class="label">Channel:</span><span data-handle="channelName">{channelName}', '</div>',
-                '<tpl if="orderType === \'Online\'">',
-                    '<div class="ip-address" data-handle="ipAddress">', '<span class="label">IP Address:</span>', '<a href="http://whatismyipaddress.com/ip/{ipAddress}" target="_blank">', '{ipAddress}', '</a>', '</div>',
-                '<tpl elseif="orderType === \'Offline\'">',
-                    '<div>Offline Order</div>',
-                '</tpl>',
-                '<div>', '', '</div>',
-                '<div>', '', '</div>'
-            ],
-            data: Ext.apply( { channelName: this.record.getChannelName() }, this.record.getData())
-        });
-
         this.statusCmp = Ext.widget({
             xtype: 'component',
             itemId: 'statusCmp',
@@ -154,7 +155,7 @@ Ext.define('Taco.view.order.Header', {
             flex: 33,
             tpl: ['<table class="order-header-status">',
 
-                '<tr>', '<td colspan="2"><div class="order-status"><span class="label">Order Status:</span><span data-handle="orderStatus">{orderStatus}</span></div></td>', '</tr>',
+                //'<tr>', '<td colspan="2"><div class="order-status"><span class="label">Order Status:</span><span data-handle="orderStatus">{orderStatus}</span></div></td>', '</tr>',
 
                 '<tr>', '<td><span class="label-light">Payment</span></td>', '<td><span class="label-light">Fulfillment</span></td>', '</tr>',
 
@@ -260,6 +261,36 @@ Ext.define('Taco.view.order.Header', {
             })
         });
 
+        this.detailCmp = Ext.widget({
+            xtype: 'component',
+            itemId: 'detailCmp',
+            cls: 'pane pane-detail',
+            flex: 33,
+            tpl: [
+                '<table>',
+                '<tr>',
+                '<td>', 
+                    '<tpl if="submittedDate">',
+                        '<span class="label label-light">Order Date:</span>{submittedDate:date("m/d/Y h:i a")}',
+                    '<tplelse>',
+                        '<span class="label label-light">Order Create Date:</span>{createDate:date("m/d/Y h:i a")}',
+                    '</tpl>',
+                '</td>',
+                '<td>', '<span class="label label-light">Channel:</span><span data-handle="channelName">{channelName}', '</td>',
+                '</tr>',
+                '<tr>',
+                '<td>', '<span class="label label-light">Last Updated:</span>{updateDate:date("m/d/Y h:i a")}', '</td>',
+                '<tpl if="orderType === \'Online\'">',
+                    '<td data-handle="ipAddress">', '<span class="label label-light">IP Address:</span>', '<a href="http://whatismyipaddress.com/ip/{ipAddress}" target="_blank">', '{ipAddress}', '</a>', '</td>',
+                '<tpl elseif="orderType === \'Offline\'">',
+                    '<td><span class="label label-light">Offline Order</span></td>',
+                '</tpl>',
+                '</tr>',
+                '</table>'
+            ],
+            data: Ext.apply( { channelName: this.record.getChannelName() }, this.record.getData())
+        });
+
         this.addressesCmp = Ext.widget({
             xtype: 'component',
             itemId: 'addressesCmp',
@@ -324,9 +355,9 @@ Ext.define('Taco.view.order.Header', {
             xtype: 'container',
             itemId: 'addressesContainer',
             cls: 'pane pane-addresses',
-            flex: 40,
+            flex: 33,
             hidden: !this.record.getCustomer(),
-            items: [{
+            items: [/*{
                     xtype: 'component',
                     cls: 'order-addresses',
                     autoEl: {
@@ -340,7 +371,7 @@ Ext.define('Taco.view.order.Header', {
                     itemId: "changeLink",
                     handler: this.changeAddress,
                     scope: this
-            },
+            },*/
                 this.addressesCmp]
         });
 
@@ -390,17 +421,30 @@ Ext.define('Taco.view.order.Header', {
                 align: 'stretch'
             },
             items: [
-                this.detailCmp,
                 this.statusCmp,
+                this.detailCmp,
                 this.addressesContainer,
                 this.customerSelectionContainer
+            ]
+        });
+
+        this.tableHeaderContainer = Ext.create('Ext.Container', {
+            layout: {
+                type: 'hbox',
+                align: 'stretch'
+            },
+            cls: 'taco-order-summary-header',
+            items: [
+                this.customerCmp,
+                this.siteCmp,
+                this.changeAddressCmp
             ]
         });
 
         this.removeAll();
 
         this.add([
-            this.customerCmp,
+            this.tableHeaderContainer,
             this.dataContainer,
             this.relatedCmp
         ]);
