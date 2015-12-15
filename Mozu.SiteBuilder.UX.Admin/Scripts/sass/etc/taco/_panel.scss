@@ -107,7 +107,8 @@
         }
 
         .#{$prefix}panel .#{$prefix}panel-body .#{$prefix}grid-td {
-            border: 0 !important;
+            // taking it out to style the orders grid, guess we'll see what it affects
+            // border: 0 !important;
         }
 
         .#{$prefix}grid-with-row-lines {
@@ -118,10 +119,6 @@
                     //border: none !important;
                     //border-bottom: 0 !important;
                 }
-            }
-
-            table {
-                width: 100% !important;
             }
         }
 

@@ -175,6 +175,16 @@
         }
     }
 
+    .#{$prefix}grid-view-default {
+        table {
+            tbody {
+                tr {
+                    border-bottom: 1px solid $light-gray-border-color;
+                }
+            }
+        }
+    }
+
     // over ride of default menu trigger focused and over behavior when the grid panel is readonly mode.
     .#{$vprefix}grid-row-menu-trigger-disabled {
         visibility: hidden;
