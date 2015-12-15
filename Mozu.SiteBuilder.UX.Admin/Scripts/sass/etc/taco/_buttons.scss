@@ -127,7 +127,9 @@
     // Card Buttons
 
     .#{$prefix}btn-action-toolbar-medium,
-    .#{$prefix}btn-action-medium {
+    .#{$prefix}btn-action-medium,
+    a.#{$prefix}btn.#{$prefix}row-editor-update-button,
+    a.#{$prefix}btn.#{$prefix}row-editor-cancel-button {
         background-color: $card-button-bg;
         color: $card-btn-text-color;
         border: 1px solid $card-btn-border;
@@ -138,9 +140,14 @@
         }
         .#{$prefix}btn-inner-center {
             line-height: 20px;
+            font-size: 12px;
+            color: $card-btn-text-color;
         }
         &:hover {
             border-color: $card-btn-hover-border;
+        }
+        &.#{$prefix}btn-over {
+            box-shadow: none;
         }
         &:active {
             border-color: $card-btn-active-border;
