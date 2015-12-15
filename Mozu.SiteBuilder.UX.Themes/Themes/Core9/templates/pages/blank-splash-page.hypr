@@ -1,0 +1,14 @@
+{% extends "splash-page" %}
+
+{% block title-tag-content %}{% firstof pageContext.metaTitle %} - {% parent %}{% endblock title-tag-content %}
+
+{% block body-tag-classes %} mz-blank-splash-page {% endblock body-tag-classes %}
+
+{% block body-content %}
+	<div class="mz-l-splash-page">
+		{% dropzone "blankpage" scope="page" %}
+	</div>
+{% endblock body-content %}
+
+{% block body-below-content %}
+{% endblock body-below-content %}
