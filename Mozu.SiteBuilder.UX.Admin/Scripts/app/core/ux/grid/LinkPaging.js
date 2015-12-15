@@ -32,9 +32,10 @@ Ext.define('Taco.core.ux.grid.LinkPaging', {
 
             pageNumberItems.push({
                 itemId: 'prev',
-                cls: arrowLeftCls,
+                cls: arrowLeftCls + ' paginationArrows',
                 handler: me.movePrevious,
-                text: "<",
+                text: '',
+                glyph: 'XE908@mozicons',
                 scope: me,
             });
         }
@@ -120,9 +121,10 @@ Ext.define('Taco.core.ux.grid.LinkPaging', {
             
             pageNumberItems.push({
                 itemId: 'next',
-                cls: arrowRightCls,
+                cls: arrowRightCls + ' paginationArrows',
                 handler: me.moveNext,
-                text: ">",
+                text: '',
+                glyph: 'XE90D@mozicons',
                 scope: me,
             });
         }

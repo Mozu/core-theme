@@ -177,6 +177,38 @@
         }
     }
 
+    .#{$prefix}panel {
+        .#{$prefix}link-paging-toolbar {
+            .#{$prefix}tbar-page-link {
+
+                &.#{$prefix}btn {
+                    .#{$prefix}btn-inner-center {
+                        font-size: $normal-font;
+                    }
+                }
+
+                &:hover {
+                    .#{$prefix}btn-inner {
+                        color: $dark-color;
+                    }
+                }
+
+                &:active {
+                    background-color: $dark-bg;
+                }
+            }
+        }
+    }
+
+    .paginationArrows {
+        &.#{$prefix}btn-default-toolbar-small {
+            .#{$prefix}btn-glyph {
+                font-size: $pill-font;
+                color: $pagination-arrow-color;
+            }
+        }
+    }
+
     .#{$prefix}grid-view-default {
         table {
             tbody {
