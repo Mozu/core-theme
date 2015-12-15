@@ -22,11 +22,25 @@
         top: 6px;
         @include icon-font($glyph-knurling, 16px, $gray-text-light);
         position: absolute;
-
+        width: 12px;
+        height: 20px;
+        border-radius: 3px;
         &::after {
             right: 0px;
             left: initial;
+            line-height: 20px;
+            width: 100%;
+            height: 100%;
+            text-align: center;
         }
+    }
+
+    .#{$prefix}column-header-open .#{$prefix}column-header-trigger {
+        box-shadow: $more-menu-active-shadow 0 0 0 1px inset;
+    }
+
+    .#{$prefix}column-header-over .#{$prefix}column-header-trigger::after {
+        color: $dark-color;
     }
 }
 
