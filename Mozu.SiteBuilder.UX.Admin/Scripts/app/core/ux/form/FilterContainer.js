@@ -229,6 +229,9 @@ Ext.define('Taco.core.ux.form.FilterContainer', {
     //},
 
     getAdvancedSearchFromStore: function () {
+
+        if (!this.store || !this.store.getProxy) return false;
+
         var params = this.store.getProxy().extraParams = this.store.getProxy().extraParams || {};
         if (params.advancedSearch) {
             return Ext.JSON.decode(params.advancedSearch);

@@ -2,7 +2,7 @@
  * @class Taco.view.inventory.Index
  */
 Ext.define('Taco.view.inventory.Index', {
-    extend: 'Taco.core.ux.browser.BrowserPage',
+    extend: 'Taco.core.ux.browser.SearchList',
     alias: 'widget.inventoryindex',
     requires: [
         'Taco.model.Product', 

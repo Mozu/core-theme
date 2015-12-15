@@ -69,11 +69,19 @@ Ext.define('Taco.view.location.inventory.Index', {
                     text: 'Adjustment Mode',
                     itemId: 'adjustmentmode-dropdown',
                     menu: [
-                        {
-                            text: 'Add'
+                        { 
+                            xtype: 'menucheckitem',
+                            text: 'Add',
+                            checked: true,
+                            itemId: 'adjustmentModeAdd',
+                            group: 'adjustmentMode'
                         },
-                        {
-                            text: 'Set'
+                        { 
+                            xtype: 'menucheckitem',
+                            text: 'Set',
+                            checked: false,
+                            itemId: 'adjustmentModeSet',
+                            group: 'adjustmentMode'
                         }
                     ]
                 }

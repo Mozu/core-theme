@@ -30,6 +30,7 @@ Ext.define('Taco.view.customSchema.Split', {
     cancelButtonVisible: false,
     advancedSearchConfig: {
         disableAdvancedSearch: true,
+        emptySearchText: 'Search'
     },
 
     contextConfig: {
@@ -243,8 +244,8 @@ Ext.define('Taco.view.customSchema.Split', {
                 }
             },
             items: [
-            	this.entityGrid,
-            	this.documentGrid
+                this.documentGrid,
+            	this.entityGrid
             ],
             listeners: {
                 afterrender: function() {

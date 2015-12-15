@@ -27,7 +27,7 @@ Ext.define('Taco.view.location.inventory.LocationInventory', {
     
     enableSearch: false,
 
-    sortableColumns:false,
+    sortableColumns: false,
     
     modelName: 'Taco.model.LocationInventory',
     
@@ -40,34 +40,6 @@ Ext.define('Taco.view.location.inventory.LocationInventory', {
 
     stateful: false,
     stateId: 'statefulLocationInventoryGrid',
-
-    secondToolbarItems: [
-        {
-            xtype:"component",
-            html: 'Inventory for: ',
-            margin: '0 10 0 0',
-            padding: '2 0 0 0'
-        }, {
-            xtype: "taco-Locationpickerfield",
-            emptyText: "Choose a location",
-            //width: 300,
-            flex: 1,
-            minWidth:150,
-            listeners: {
-                select: {
-                    fn: function (combo, records, eOpts) {
-                        var record = records[0],
-                            gridPanel = this.up('grid'),
-                            store = gridPanel.store;
-
-                        store.extraFilters.add([{ id:"locationCode", property: 'locationCode', value: record.get('code') }]);
-                    }
-                }
-            }
-        }
-    ],
-    
-   
     
     viewConfig: {
         deferEmptyText:false,
@@ -89,6 +61,7 @@ Ext.define('Taco.view.location.inventory.LocationInventory', {
         var me = this;
 
         this.columns = Taco.view.location.inventory.InventoryStockColumns.getInventoryStockColumns('locationCode');
+        
         this.columns.push({
             xtype: 'taco.menucolumn',
             menuDisabled: true,
