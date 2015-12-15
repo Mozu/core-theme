@@ -536,9 +536,9 @@
 
                 // #73389 only refresh if the payment requirement has changed after adding a store credit.
                 var activePayments = this.activePayments();
-                var hasNonStoreCreditPayment = _.filter(activePayments, function (item) { return item.paymentType !== 'StoreCredit'; });
-                if ((order.get('amountRemainingForPayment') > 0 && !hasNonStoreCreditPayment)
-                    || (order.get('amountRemainingForPayment') < 0 && hasNonStoreCreditPayment)) {
+                var hasNonStoreCreditPayment = (_.filter(activePayments, function (item) { return item.paymentType !== 'StoreCredit'; })).length > 0;
+                if ((order.get('amountRemainingForPayment') >= 0 && !hasNonStoreCreditPayment) ||
+                    (order.get('amountRemainingForPayment') < 0 && hasNonStoreCreditPayment)) {
                     order.get('billingInfo').clear();
                     order.set(updatedOrder, { silent: true });
                 }
