@@ -275,7 +275,7 @@ Ext.define('Taco.view.website.Index', {
                 },
                 scope: me,
                 text: 'Cancel',
-                margin: '0 0 0 10'
+                margin: '0 0 0 0'
             },
             this.publishButton,
             {

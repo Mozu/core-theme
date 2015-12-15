@@ -109,6 +109,10 @@
                 top: 6px;
             }
         }
+        &.#{$prefix}menu-active {
+            background-color: whitesmoke;
+            box-shadow: rgba(0, 0, 0, 0.09) 0px 0px 0px 1px inset;
+        }
     }
 
     // Dropdowns
