@@ -699,7 +699,7 @@ Ext.define('Taco.view.attribute.Form', {
             listeners: {
                 afterchange: function (cmp, newValue) {
                     if (newValue) {
-                        this.record.set('searchDisplayValue', false);
+                        this.record.set('searchDisplayValue', true);
                     }
                 },
                 scope: this
@@ -717,7 +717,7 @@ Ext.define('Taco.view.attribute.Form', {
             listeners: {
                 afterchange: function (cmp, newValue) {
                     if (newValue) {
-                        this.record.set('searchDisplayValue', true);
+                        this.record.set('searchDisplayValue', false);
                     }
                 },
                 scope: this

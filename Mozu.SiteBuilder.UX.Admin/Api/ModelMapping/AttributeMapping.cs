@@ -199,6 +199,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.ModelMapping
                 .ForMember(x => x.MaxDate, opt => opt.ResolveUsing(dc => (dc.Validation != null) 
                     ? dc.Validation.MaxDateValue 
                     : null))
+                    //SearchDisplayValue really means search label
                 .ForMember(x => x.SearchDisplayValue, op => op.ResolveUsing(dc => dc.SearchSettings != null ? dc.SearchSettings.SearchDisplayValue : true))
                 .ForMember(x => x.SearchableInStorefront, op => op.ResolveUsing(dc => dc.SearchSettings != null ? dc.SearchSettings.SearchableInStorefront : true))
                 .ForMember(x => x.AllowFilteringAndSortingInStorefront, op => op.ResolveUsing(dc => dc.SearchSettings != null ? dc.SearchSettings.AllowFilteringAndSortingInStorefront : true))
