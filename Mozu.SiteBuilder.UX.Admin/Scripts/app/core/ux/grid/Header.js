@@ -30,7 +30,11 @@ Ext.define('Taco.core.ux.grid.Header', {
                 minWidth: 150,
                 shadow: false,
                 showSeparator: false,
-                items: me.getMenuItems()
+                items: me.getMenuItems(),
+                listeners: {
+                    hide: me.onMenuHide,
+                    scope: me
+                }
             });
             me.updateMenuDisabledState();
             me.fireEvent('menucreate', me, me.menu);
