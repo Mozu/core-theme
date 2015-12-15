@@ -12,8 +12,8 @@
 
 .#{$prefix}column-header-last {
     .#{$prefix}column-header-inner {
-        //min-width: 50px;
         min-height: 30px;
+        background-color: transparent;
     }
 
     .#{$prefix}column-header-trigger {
