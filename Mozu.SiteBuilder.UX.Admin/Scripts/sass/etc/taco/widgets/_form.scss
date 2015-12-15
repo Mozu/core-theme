@@ -55,6 +55,7 @@
 
     .#{$prefix}field .#{$prefix}form-checkbox,
     .#{$prefix}grid-cell-inner .#{$prefix}tree-checkbox,
+    .#{$prefix}menu .#{$prefix}menu-item-unchecked .#{$prefix}menu-item-icon,
     .#{$prefix}grid-table .#{$prefix}grid-row-checker,
     .#{$prefix}grid-header-ct .#{$prefix}column-header-checkbox .#{$prefix}column-header-text {
         @include icons-sprite(checkbox-unchecked);
@@ -66,6 +67,7 @@
 
     .#{$prefix}field .#{$prefix}form-checkbox-focus,
     .#{$prefix}grid-cell-inner .#{$prefix}tree-checkbox-focus,
+    .#{$prefix}menu .#{$prefix}menu-item-unchecked-focus .#{$prefix}menu-item-icon,
     .#{$prefix}grid-table .#{$prefix}grid-row-checker-focus,
     .#{$prefix}grid-header-ct .#{$prefix}column-header-checkbox-focus .#{$prefix}column-header-text {
         @include icons-sprite(checkbox-unchecked);
@@ -73,10 +75,13 @@
 
     .#{$prefix}form-cb-checked .#{$prefix}form-checkbox,
     .#{$prefix}grid-cell-inner .#{$prefix}tree-checkbox-checked,
+    .#{$prefix}menu .#{$prefix}menu-item-checked .#{$prefix}menu-item-icon,
     .#{$prefix}grid-table .#{$prefix}grid-row-selected .#{$prefix}grid-row-checker,
     .#{$prefix}grid-header-ct .#{$prefix}grid-hd-checker-on .#{$prefix}column-header-text {
         @include icons-sprite(checkbox-checked);
         background-size: 100%;
+        width: 14px;
+        height: 14px;
     }
 
     .#{$prefix}menu {
@@ -85,8 +90,8 @@
         }
         .#{$prefix}menu-item-checked, .#{$prefix}menu-item-unchecked {
             .#{$prefix}menu-item-icon {
-                background-image: none;
-                left: 12px;
+                left: 10px;
+                margin-top: 10px;
             }
             .#{$prefix}menu-item-link {
                 padding-left: 21px;
@@ -102,33 +107,6 @@
             .#{$prefix}menu-item-text {
                 color: $gray-text-light;
             }
-        }
-    }
-
-    .#{$prefix}menu .#{$prefix}menu-item-unchecked .#{$prefix}menu-item-icon,
-    .#{$prefix}menu .#{$prefix}menu-item-checked .#{$prefix}menu-item-icon {
-        width: 12px;
-        height: 12px;
-        border-width: 1px;
-        border-style: solid;
-        border-radius: 3px;
-    }
-
-    .#{$prefix}menu .#{$prefix}menu-item-unchecked .#{$prefix}menu-item-icon {
-        border-color: #ccc;
-        background-color: $white-color;
-    }
-
-    .#{$prefix}menu .#{$prefix}menu-item-checked .#{$prefix}menu-item-icon {
-        border-color: #34ae90;
-        background-color: #34ae90;
-        @include icon-font($glyph-checkmark, 8px, $white-color);
-        position: absolute;
-        width: 12px;
-        height: 12px;
-        &::after {
-            line-height: 12px;
-            text-align: center;
         }
     }
 
