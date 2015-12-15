@@ -35,7 +35,7 @@ Ext.define('Taco.core.ux.picker.Selector', {
             'select'
         ]);
 
-        if (this.highlighted) {
+        if (this.highlighted && !this.disableSelection) {
             this.cls += ' highlight';
         }
 
@@ -111,6 +111,10 @@ Ext.define('Taco.core.ux.picker.Selector', {
                 if (e.target.className.indexOf('trigger') > -1) {
                     return this.togglePicker();
                 }
+
+                if (this.disableSelection) {
+                    return;
+                }
                 this.fireEvent('select', this, record);
             },
             scope: this
@@ -118,7 +122,11 @@ Ext.define('Taco.core.ux.picker.Selector', {
 
         this.flyout.on({
             select: function (view, record) {
-                this.fireEvent('select', this, record);
+                if (this.disableSelection) {
+                    this.fireEvent('change', this, record);
+                } else {
+                    this.fireEvent('select', this, record);
+                }
             },
             scope: this
         });
@@ -158,7 +166,7 @@ Ext.define('Taco.core.ux.picker.Selector', {
     highlight: function (val) {
         var el = this.getEl();
 
-        if (!el) {
+        if (!el || this.disableSelection) {
             return;
         }
 

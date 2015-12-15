@@ -30,6 +30,11 @@
 
         this.currentContext = Taco.app.context.getCurrent();
 
+        this.currentTentant = Taco.app.context.getContextAtLevel('t');
+        this.currentMasterCatalog = Taco.app.context.getContextAtLevel('m');
+        this.currentCatalog = Taco.app.context.getContextAtLevel('c');
+        this.currentSite = Taco.app.context.getContextAtLevel('s');
+
         this.visibleLevels = this.determineVisibleContexts();
 
         this.rebuildContexts();
@@ -43,7 +48,12 @@
         this.buildCatalogContext();
         this.buildSiteContext();
 
+        Ext.suspendLayouts();
+        this.removeAll();
+
         this.add(this.selectors);
+
+        Ext.resumeLayouts(true);
     },
 
     buildTenantContext: function () {
@@ -53,11 +63,11 @@
             return;
         }
 
-        tenant = Taco.app.context.getContextAtLevel('t');
+        tenant = this.currentTentant;
 
         this.selectors.push(Ext.widget({
             defaultText: tenant.name,
-            disableSelection: this.isSupported('t'),
+            disableSelection: !this.isSupported('t'),
             disableTrigger: true,
             highlighted: tenant === this.currentContext,
             tagText: 'tenant',
@@ -75,7 +85,7 @@
             return;
         }
 
-        masterCatalog = Taco.app.context.getContextAtLevel('m');
+        masterCatalog = this.currentMasterCatalog;
 
         data = this.generateStoreData(Taco.app.context.masterCatalogs);
 
@@ -100,13 +110,18 @@
 
             this.selectors.push(Ext.widget({
                 callToActionText: 'Switch Master Catalog:',
-                disableSelection: this.isSupported('m'),
+                disableSelection: !this.isSupported('m'),
                 highlighted: highlighted,
                 listeners: {
                     select: function (view, record) {
                         Taco.app.context.setCurrentMasterCatalog(record.get('value'));
                         view.highlight();
-                    }
+                    },
+                    change: function (view, record) {
+                        this.setMasterCatalogLocalContext(record);
+                        this.rebuildContexts();
+                    },
+                    scope: this
                 },
                 store: data,
                 tagText: 'master',
@@ -116,6 +131,16 @@
         }
 
 
+    },
+
+    setMasterCatalogLocalContext: function (record) {
+        var mc = Ext.Array.findBy(this.currentTentant.masterCatalogs, function (mc) {
+            return mc.id === record.get('value');
+        });
+
+        if (mc) {
+            this.currentMasterCatalog = mc;
+        }
     },
 
     buildCatalogContext: function () {
@@ -128,8 +153,8 @@
             return;
         }
 
-        masterCatalog = Taco.app.context.getContextAtLevel('m');
-        catalog = Taco.app.context.getContextAtLevel('c');
+        masterCatalog = this.currentMasterCatalog;
+        catalog = this.currentCatalog;
         highlighted = catalog === this.currentContext;
 
         if (!catalog) {
@@ -162,7 +187,7 @@
         } else {
             this.selectors.push(Ext.widget({
                 callToActionText: 'Switch Catalog:',
-                disableSelection: this.isSupported('c'),
+                disableSelection: !this.isSupported('c'),
                 highlighted: highlighted,
                 store: data,
                 tagText: 'catalog',
@@ -181,8 +206,8 @@
             return;
         }
 
-        masterCatalog = Taco.app.context.getContextAtLevel('m');
-        site = Taco.app.context.getContextAtLevel('s');
+        masterCatalog = this.currentMasterCatalog;
+        site = this.currentSite;
 
         data = this.generateStoreData(masterCatalog.sites);
 
