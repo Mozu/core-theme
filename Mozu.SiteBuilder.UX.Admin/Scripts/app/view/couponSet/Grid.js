@@ -351,8 +351,15 @@ Ext.define('Taco.view.couponSet.Grid', {
         return {
             menuAlign: 'tr-br?',
             menu: {
+                cls: 'button-menu',
                 plain: true,
                 shadow: false,
+                listeners: {
+                    beforerender: function () {
+                        var width = this.up('button').el.getWidth(false, true);
+                        this.setWidth(width);
+                    }
+                },
                 items: [
                     {
                         text: 'Manual Coupon Set',
