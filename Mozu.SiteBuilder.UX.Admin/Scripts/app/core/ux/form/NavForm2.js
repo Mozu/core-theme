@@ -216,7 +216,7 @@ Ext.define('Taco.core.ux.form.NavForm2', {
         
 
         Ext.each(this.locationMap, function (top, index) {
-            if (scrollTop >= top) max = index;
+            if (Math.round(scrollTop) >= top) max = index;
             else return false;
         }, this);
 
