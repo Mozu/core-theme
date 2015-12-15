@@ -81,6 +81,32 @@
         }
     }
 
+    tr {
+        &:hover {
+            .#{$prefix}grid-cell {
+                background-color: $grid-row-hover-bg;
+            }
+        }
+
+        &:active {
+            .#{$prefix}grid-cell {
+                background-color: $dark-bg;
+            }
+        }
+    }
+
+    .#{$prefix}grid-row-selected {
+        .#{$prefix}grid-td {
+            background-color: $grid-row-hover-bg;
+        }
+    }
+
+    .#{$prefix}grid-row-active {
+        .#{$prefix}grid-td {
+            background-color: $dark-bg;
+        }
+    }
+
     .#{$prefix}grid-header-ct {
         border-bottom: 1px solid $light-gray-border-color!important;
 
