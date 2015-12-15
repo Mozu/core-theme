@@ -250,4 +250,12 @@
     .#{$vprefix}empty-cell {
         color: $gray-text-extra-light;
     }
+
+    .#{$vprefix}menu-trigger-shifted {
+        .#{$prefix}grid-row-over {
+            .#{$vprefix}grid-row-menu-trigger {
+                left: 9px;
+            }
+        }
+    }
 }

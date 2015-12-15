@@ -17,6 +17,8 @@ Ext.define('Taco.view.productType.Grid', {
         supportedLevels: ['m'],
         requiresContextOfType: ['m', 's', 'c']
     },
+
+    cls: 'taco-menu-trigger-shifted',
     
     launchEditorOnClick:true,
     
