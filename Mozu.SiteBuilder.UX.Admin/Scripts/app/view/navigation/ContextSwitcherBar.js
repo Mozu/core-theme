@@ -189,6 +189,12 @@
                 callToActionText: 'Switch Catalog:',
                 disableSelection: !this.isSupported('c'),
                 highlighted: highlighted,
+                listeners: {
+                    select: function (view, record) {
+                        Taco.app.context.setCurrentCatalog(record.get('value'));
+                        view.highlight();
+                    }
+                },
                 store: data,
                 tagText: 'catalog',
                 value: catalog.id,
