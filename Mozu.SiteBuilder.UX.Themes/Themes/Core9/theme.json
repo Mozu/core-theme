@@ -161,52 +161,66 @@
         }
     ],
     "pageTypes": [
-        {
-            "documentType": "web_page",
-            "entityType": "webpage",
-            "id": "about-us",
-            "template": "about-us",
-            "customEditor": "about-us",
-            "title": "About Us",
-            "userCreatable": true,
-            "zones": [
-                {
-                    "id": "body",
-                    "rows": [
-                        {
-                            "columns": [
-                                {
-                                    "rows": null,
-                                    "span": 12,
-                                    "widgets": [
-                                        {
-                                            "config": {
-                                                "body": "<h2>Insert Title</h2><p>Insert Content</p>"
-                                            },
-                                            "definitionId": "content",
-                                            "isRichText": true
-                                        }
-                                    ]
-                                }
-                            ]
-                        }
+      {
+        "documentType": "web_page",
+        "entityType": "webpage",
+        "id": "about-us",
+        "template": "about-us",
+        "customEditor": "about-us",
+        "title": "About Us",
+        "userCreatable": true,
+        "zones": [
+          {
+            "id": "body",
+            "rows": [
+              {
+                "columns": [
+                  {
+                    "rows": null,
+                    "span": 12,
+                    "widgets": [
+                      {
+                        "config": {
+                          "body": "<h2>Insert Title</h2><p>Insert Content</p>"
+                        },
+                        "definitionId": "content",
+                        "isRichText": true
+                      }
                     ]
-                }
+                  }
+                ]
+              }
             ]
+          }
+        ]
+      },
+        {
+          "entityType": "siteTemplate",
+          "id": "splash_page",
+          "template": "splash-page",
+          "title": "Splash Page Site Template"
         },
         {
-            "entityType": "siteTemplate",
-            "id": "site_page",
-            "template": "page",
-            "title": "Default Site Template"
+          "entityType": "siteTemplate",
+          "id": "site_page",
+          "template": "page",
+          "title": "Default Site Template"
         },
         {
-            "documentType": "web_page",
-            "entityType": "webpage",
-            "id": "blank-page",
-            "template": "blank-page",
-            "title": "Blank Page",
-            "userCreatable": true
+          "documentType": "web_page",
+          "entityType": "webpage",
+          "id": "blank-page",
+          "template": "blank-page",
+          "title": "Blank Page",
+          "userCreatable": true
+        },
+        {
+          "documentType": "web_page",
+          "entityType": "webpage",
+          "id": "blank-splash-page",
+          "template": "blank-splash-page",
+          "title": "Blank Splash Page",
+          "userCreatable": true
         },
         {
             "documentType": "web_page",
