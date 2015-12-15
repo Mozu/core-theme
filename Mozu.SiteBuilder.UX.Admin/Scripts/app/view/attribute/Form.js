@@ -698,7 +698,7 @@ Ext.define('Taco.view.attribute.Form', {
             checked: this.record.get('searchDisplayType') === 'label',
             listeners: {
                 afterchange: function (cmp, newValue) {
-                    if (newValue === 'label') {
+                    if (newValue) {
                         this.record.set('searchDisplayValue', false);
                     }
                 },
@@ -713,12 +713,10 @@ Ext.define('Taco.view.attribute.Form', {
             boxLabel: 'Search Value',
             inputValue: 'value',
             width: 300,
-            // default selection if the record is a create;
             checked: this.record.get('searchDisplayType') === 'value',
-            //checked: ((this.record.phantom && !this.record.isDuplicate) || (!this.record.get('includeAllProducts') && this.record.get('products').length)),
             listeners: {
                 afterchange: function (cmp, newValue) {
-                    if (newValue === 'value') {
+                    if (newValue) {
                         this.record.set('searchDisplayValue', true);
                     }
                 },

@@ -64,7 +64,7 @@ Ext.define('Taco.model.Attribute', {
             defaultValue: 'label',
             persist: false,
             convert: function (v, record) {
-                return record.get("searchDisplayValue") ? 'label' : 'value';
+                return record.get("searchDisplayValue") ? 'value' : 'label';
             }
         }, {
             name: 'allowFilteringAndSortingInStorefront',
