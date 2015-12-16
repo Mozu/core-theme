@@ -31,6 +31,29 @@
         }
     }
 
+    .#{$prefix}panel {
+        &.#{$vprefix}content-navcontainer {
+            > .#{$prefix}grid-row-editor {
+                & + div {
+                    & + div {
+                        & + .#{$prefix}grid-with-row-lines {
+                            tr {
+
+                                &.#{$prefix}grid-data-row {
+                                    &.#{$prefix}grid-row-selected {
+                                        .#{$prefix}grid-td {
+                                            border-bottom: none;
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
+
     /**
      * Removes validation border from inline editor
      */
@@ -40,6 +63,7 @@
         }
 
         .#{$prefix}panel-body {
+            background-color: $white-color;
             border-color: $valid-green !important;
         }
     }
