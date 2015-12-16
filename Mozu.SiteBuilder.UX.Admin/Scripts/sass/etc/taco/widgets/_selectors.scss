@@ -37,6 +37,10 @@
             display: none;
         }
 
+        .#{$prefix}form-cb-wrap-inner {
+            padding-right: 8px;
+        }
+
         .selector,
         .checkbox-item,
         .#{$prefix}menu-item {
