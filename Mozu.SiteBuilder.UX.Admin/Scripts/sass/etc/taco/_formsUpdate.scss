@@ -192,7 +192,7 @@
                 @include use-glyph('edit-justifyleft', $glyph-leftalign);
                 @include use-glyph('edit-justifycenter', $glyph-centeralign);
                 @include use-glyph('edit-backcolor', $glyph-highlight);
-                @include use-glyph('edit-forecolor', $glyph-color);
+                @include use-glyph('edit-forecolor', $glyph-forecolor);
                 @include use-glyph('edit-decreasefontsize', $glyph-smaller);
                 @include use-glyph('edit-increasefontsize', $glyph-larger);
                 @include use-glyph('edit-underline', $glyph-underline);
