@@ -47,7 +47,7 @@ Ext.define('Taco.core.ux.form.NavForm2', {
             }
         });
 
-        this.stickyClass = (this.useFixedPosition) ? 'taco-fixed-navForm2' : 'taco-relative-navForm2';
+        this.stickyClass = 'taco-fixed-navForm2';
 
         this.formContainer = Ext.widget({
             xtype: 'container',
@@ -92,7 +92,7 @@ Ext.define('Taco.core.ux.form.NavForm2', {
         });
         
         me.dockedItems = me.dockedItems || [];
-        me.dockedItems.push(this.sectionNav)
+        me.dockedItems.push(this.sectionNav);
 
         
         var items = excludedItems;
@@ -108,6 +108,30 @@ Ext.define('Taco.core.ux.form.NavForm2', {
             boxready: this.initSectionNav,
             scope: this
         });
+    },
+
+    setNavDimensions: function() {
+        var navStyle = this.sectionNav.getEl().dom.style;
+
+        navStyle.left = this.getX() - 20 + 'px';
+        navStyle.width = this.getWidth() + 40 + 'px';
+
+        navStyle.top = this.getHeaderHeight() + 'px';
+    },
+
+    resetNavDimensions: function() {
+        var navStyle = this.sectionNav.getEl().dom.style;
+        navStyle.top = this.navCache.top;
+        navStyle.left = this.navCache.left;
+        navStyle.width = this.navCache.width;
+    },
+
+    cacheNavDimensions: function() {
+        var navStyle = this.sectionNav.getEl().dom.style;
+        this.navCache = this.navCache || {};
+        this.navCache.top = navStyle.top;
+        this.navCache.left = navStyle.left;
+        this.navCache.width = navStyle.width;
     },
 
     getWrapper: function () {
@@ -139,6 +163,8 @@ Ext.define('Taco.core.ux.form.NavForm2', {
         });
 
         this.navTop = this.sectionNav.getY() - headerHeight;
+
+        this.cacheNavDimensions();
 
     },
 
@@ -189,18 +215,13 @@ Ext.define('Taco.core.ux.form.NavForm2', {
         var sectionNav = this.sectionNav;
         var navTop = this.navTop; // set in this.initSectionNav
 
-        if (scrollTop > navTop) {
-            var headerHeight = this.getHeaderHeight();
+        if (scrollTop > navTop && !sectionNav.hasCls(this.stickyClass)) {
+            this.setNavDimensions();
             sectionNav.addCls(this.stickyClass);
-            if (this.useFixedPosition) {
-                sectionNav.getEl().dom.style.top = headerHeight + this.sectionNavTopOffset + 'px';
-            } else {
-                sectionNav.getEl().dom.style.top = (scrollTop - headerHeight + this.sectionNavTopOffset) + 'px';
-            }
         }
-        else if (scrollTop < navTop) {
+        else if (scrollTop < navTop && sectionNav.hasCls(this.stickyClass)) {
+            this.resetNavDimensions();
             sectionNav.removeCls(this.stickyClass);
-            sectionNav.getEl().dom.style.top = '0px';
         }
 
     },
