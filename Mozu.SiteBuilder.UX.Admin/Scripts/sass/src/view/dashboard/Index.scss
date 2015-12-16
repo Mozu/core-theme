@@ -26,10 +26,10 @@
         .#{$vprefix}image-holder {
             width: 100%;
             background-color: $white-color;
+            height: 160px;
 
             a {
                 color: $valid-green;
-                height: 160px;
             }
         }
 
@@ -89,6 +89,10 @@
             @include icon-font($glyph-customers, 70px, $valid-green);
             top: 46px;
             width: 74px;
+
+            &::after {
+                left: -13px;
+            }
         }
 
         .#{$vprefix}icon-products {
@@ -101,6 +105,10 @@
             @include icon-font($glyph-orders, 70px, $valid-green);
             top: 46px;
             width: 74px;
+
+            &::after {
+                left: -4px;
+            }
         }
 
         .#{$vprefix}icon-marketing {
@@ -125,6 +133,10 @@
             @include icon-font($glyph-reporting, 70px, $valid-green);
             top: 46px;
             width: 74px;
+
+            &::after {
+                left: -24px;
+            }
         }
 
         .#{$vprefix}icon-settings {
