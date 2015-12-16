@@ -63,7 +63,7 @@ $glyph-tree-sub-category:   "\E613";
 $glyph-folder:              "\E614";
 $glyph-tooltip-help:        "\E615";
 $glyph-move:                "\E609";
-$glyph-settings:            "\E901";
+$glyph-settings:            "\E91C";
 $glyph-widgets:             "\E902";
 $glyph-desktop:             "\E902";
 $glyph-tablet:              "\E902";
@@ -111,11 +111,14 @@ $glyph-plus-circle:         "\E900";
 $glyph-tooltip:             "\EFB2";
 $glyph-forecolor:           "\E010";
 $glyph-content:             "\E919";
-$glyph-fulfillment:         "\E91B";
-$glyph-reporting:           "\E91E";
+$glyph-fulfillment:         "\E922";
+$glyph-reporting:           "\E925";
 $glyph-system:              "\E91F";
 $glyph-tile:                "\E920";
-
+$glyph-schema:              "\E91B";
+$glyph-structure:           "\E91D";
+$glyph-custom:              "\E918";
+$glyph-permission:          "\E91A";
 
 // font set for chorizo -- because these are being compiled using compass, they cannot be encased in ""
 // optimized at 16px
@@ -126,19 +129,19 @@ $glyph-chorizo-move:        "E609";
 
 // optimized at 32px
 $glyph-tools:               "\E60A";
-$glyph-sitebuilder:         "\E018";
+$glyph-sitebuilder:         "\E926";
 $glyph-catalog:             "\E01A";
-$glyph-publishing:          "\E91D";
+$glyph-publishing:          "\E924";
 $glyph-orders:              "\E01B";
 $glyph-menu:                $glyph-hamburger;
-$glyph-marketing:           "\E91C";
+$glyph-marketing:           "\E923";
 $glyph-filemanager:         "\E01E";
 $glyph-dashboard:           "\E01F";
-$glyph-customers:           "\E91A";
+$glyph-customers:           "\E921";
 $glyph-locations:           "\E039";
 $glyph-back:                "\E021";
 $glyph-mozulogo:            "\E037";
-$glyph-settings:            "\E02E";
+$glyph-settings:            "\E91C";
 
 //optimized at 80px
 $glyph-dropimage:           "\E07D";

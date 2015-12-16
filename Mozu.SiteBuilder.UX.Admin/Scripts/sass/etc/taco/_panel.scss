@@ -3,6 +3,10 @@
     .#{$prefix}panel {
         @include outer-shadow(0.09, 2px, 0, 0);
         font-family: $font-family;
+        
+        .draft-toolbar {
+            background-color: transparent;
+        }
 
         .#{$prefix}panel-header-text {
             color: $dark-color;
