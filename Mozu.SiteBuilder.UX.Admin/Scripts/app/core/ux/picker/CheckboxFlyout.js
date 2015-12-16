@@ -113,7 +113,20 @@ Ext.define('Taco.core.ux.picker.CheckboxFlyout', {
                 listeners: {
                     change: function (view, val) {
                         record.set('selected', val);
-                    }
+                    },
+                    click: {
+                        fn: function (e) {
+                            var el = Ext.fly(e.target);
+
+                            if (!el.hasCls('x-form-cb-wrap-inner')) {
+                                return;
+                            }
+
+                            Ext.getCmp(el.up('table').id).setValue(!record.get('selected'));
+                        },
+                        element: 'el'
+                    },
+                    scope: this
                 },
                 xtype: 'checkboxfield'
             })
