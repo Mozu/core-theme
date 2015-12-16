@@ -10,8 +10,6 @@
     }
 
     .#{$prefix}trigger-noedit {
-        border: 0;
-        border-bottom: 1px dotted $input-border;
         @include border-radius-xbrowser(0);
         border-width: 1px !important;
     }
@@ -23,11 +21,6 @@
         &.#{$prefix}form-invalid-field {
             border-color: $error-red;
             @include color-outer-shadow($error-red, 1, 0, 1px, 0, 0);
-        }
-
-        &.#{$prefix}trigger-noedit {
-            border-bottom: 1px dotted $input-border;
-            box-shadow: none;
         }
     }
 
