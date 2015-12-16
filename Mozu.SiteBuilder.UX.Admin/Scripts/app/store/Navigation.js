@@ -464,46 +464,45 @@ Ext.define('Taco.store.Navigation', {
                         'address': 'ipblocking'
                     }
                 ]
+            },
+            {
+                'id': 'localization',
+                'navParent': 'sys',
+                'locAtts': ['multiLang', 'multCurrency'],
+                'label': 'Localization',
+                'items': [
+                    {
+                        'id': 'localizationAttr',
+                        'label': 'Attributes',
+                        'address': 'Localization',
+                        'locAtts': ['multiLang']
+                    },
+                    {
+                        'id': 'localizationAttrVal',
+                        'label': 'Attribute Values',
+                        'address': 'Localization/attributeValues',
+                        'locAtts': ['multiLang']
+                    },
+                    {
+                        'id': 'localizationProp',
+                        'label': 'Product Properties',
+                        'address': 'Localization/productProperties',
+                        'locAtts': ['multiLang']
+                    },
+                    {
+                        'id': 'localizationExtra',
+                        'label': 'Product Extras',
+                        'address': 'Localization/productExtras',
+                        'locAtts': ['multCurrency']
+                    },
+                    {
+                        'id': 'localizationVar',
+                        'label': 'Product Variants',
+                        'address': 'Localization/productVariants',
+                        'locAtts': ['multCurrency']
+                    }
+                ]
             }
-
-            //todo: include? greg_murray on 12/1/2015
-            //{
-            //    'id': 'localization',
-            //    'locAtts': ['multiLang', 'multCurrency'],
-            //    'label': 'Localization',
-            //    'items': [
-            //        {
-            //            'id': 'localizationAttr',
-            //            'label': 'Attributes',
-            //            'address': 'Localization',
-            //            'locAtts': ['multiLang']
-            //        },
-            //        {
-            //            'id': 'localizationAttrVal',
-            //            'label': 'Attribute Values',
-            //            'address': 'Localization/attributeValues',
-            //            'locAtts': ['multiLang']
-            //        },
-            //        {
-            //            'id': 'localizationProp',
-            //            'label': 'Product Properties',
-            //            'address': 'Localization/productProperties',
-            //            'locAtts': ['multiLang']
-            //        },
-            //        {
-            //            'id': 'localizationExtra',
-            //            'label': 'Product Extras',
-            //            'address': 'Localization/productExtras',
-            //            'locAtts': ['multCurrency']
-            //        },
-            //        {
-            //            'id': 'localizationVar',
-            //            'label': 'Product Variants',
-            //            'address': 'Localization/productVariants',
-            //            'locAtts': ['multCurrency']
-            //        }
-            //    ]
-            //},
             //todo: include shipping sublinks? greg_murray on 12/1/2015
             //{
             //    'id': 'shipping',
