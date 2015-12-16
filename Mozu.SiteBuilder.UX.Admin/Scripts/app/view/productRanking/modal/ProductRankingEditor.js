@@ -124,6 +124,7 @@ Ext.define('Taco.view.productRanking.modal.ProductRankingEditor', {
 
         me.container = Ext.create('Taco.view.productRanking.Form', {
             autoScroll:true,
+            useFixedPosition: false,
             record: me.record,
             isCreate: me.isCreateMode,
             isCatalogLevel: true,

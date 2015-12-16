@@ -45,7 +45,7 @@ Ext.define('Taco.core.ux.form.NavForm2', {
             } else {
                 originalItems.push(item)
             }
-        })
+        });
 
         this.stickyClass = (this.useFixedPosition) ? 'taco-fixed-navForm2' : 'taco-relative-navForm2';
 
@@ -118,7 +118,7 @@ Ext.define('Taco.core.ux.form.NavForm2', {
 
     getHeaderHeight: function() {
         var wrapper = this.getWrapper();
-        return wrapper.getY() + wrapper.header.getHeight()
+        return wrapper.getY() + (wrapper.header ? wrapper.header.getHeight() : 0);
     },
 
     initSectionNav: function() {
@@ -165,7 +165,7 @@ Ext.define('Taco.core.ux.form.NavForm2', {
                 return;
             }            
             //this.locationMap.push(el.dom.offsetTop + this.sectionOffset - this.topOffset - this.leftNavTopOffset);
-            this.locationMap.push(el.dom.offsetTop - this.sectionNavTopOffset - this.formContainerTop);
+            this.locationMap.push(el.dom.offsetTop - this.sectionNavTopOffset - (this.formContainerTop || 0));
             //this.locationMap.push(el.dom.offsetTop);
 
 
