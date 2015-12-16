@@ -168,16 +168,22 @@
         .#{$prefix}panel-body {
             tr {
 
-                &:nth-child(even) {
+                &.#{$prefix}grid-data-row,
+                &.#{$prefix}grid-row-focused,
+                &.#{$prefix}grid-row-before-focused {
                     .#{$prefix}grid-td {
                         border: none;
+                    }
+                }
+
+                &:nth-child(even) {
+                    .#{$prefix}grid-td {
                         background-color: $grid-even-stripe-bg;
                     }
                 }
 
                 &:nth-child(odd) {
                     .#{$prefix}grid-td {
-                        border: none;
                         background-color: $white-color;
                     }
                 }
@@ -198,7 +204,15 @@
 
                 & + .#{$prefix}grid-with-row-lines {
                     tr {
+
+                        &.#{$prefix}grid-data-row {
+                            .#{$prefix}grid-td {
+                                border-bottom: 1px solid $grid-row-border;
+                            }
+                        }
+
                         td {
+                            border: none;
                             background-color: $white-color;
                         }
 
@@ -305,11 +319,6 @@
         tbody {
             tr {
                 &.#{$prefix}grid-data-row {
-
-                    td {
-                        border-bottom: 1px solid $grid-row-border !important;
-                    }
-
                     &:hover {
                         background-color: $grid-row-hover-bg;
                     }
