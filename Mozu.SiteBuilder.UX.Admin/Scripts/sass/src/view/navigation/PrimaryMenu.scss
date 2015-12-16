@@ -1,14 +1,20 @@
 .#{$vprefix}primary-menu-ct {
     background-color: $color-neutral-white;
+    box-shadow: rgba(0, 0, 0, 0.09) 1px 1px 6px 0px !important;
     margin-left: 0px;
     opacity: 1;
     visibility: visible !important;
     @include outer-shadow(0.4, 2px, 3px, 3px);
-    @include transition(margin-left 300ms linear, opacity 300ms linear);
+    @include transition(margin-left 300ms ease-in-out, opacity 300ms ease-in-out);
 
-    &.#{$prefix}hide-offsets {
+    &.hidden {
         margin-left: -300px;
         opacity: 0;
+        @include transition(margin-left 150ms ease-in-out, opacity 150ms ease-in-out);
+    }
+
+    .#{$prefix}panel {
+        box-shadow: none !important;
     }
 
     .#{$prefix}tab-bar-default-horizontal {
@@ -17,6 +23,10 @@
         font-size: 13px;
         height: auto;
         padding: 10px;
+
+        .#{$prefix}tab-bar-strip {
+            border-color: $light-gray-border-color;
+        }
 
         a.#{$prefix}tab {
             border: 1px solid $light-gray-border-color;

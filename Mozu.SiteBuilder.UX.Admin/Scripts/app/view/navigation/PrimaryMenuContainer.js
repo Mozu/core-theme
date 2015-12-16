@@ -8,7 +8,7 @@ Ext.define('Taco.view.navigation.PrimaryMenuContainer', {
         'Taco.core.ux.content.Logo',
         'Taco.view.navigation.PrimaryMenuSubContainer'
     ],
-    cls: 'taco-primary-menu-ct',
+    cls: 'taco-primary-menu-ct hidden',
     //autoEl: {
     //    tag: 'div',
     //    cls: 'taco-primary-menu-ct'
@@ -34,7 +34,7 @@ Ext.define('Taco.view.navigation.PrimaryMenuContainer', {
 
         this.callParent(arguments);
         this.on({
-            add: function (menu) { menu.hide(); }
+            add: function (menu) { menu.hideMenu(); }
         });
 
         Ext.getDoc().on('click', Ext.bind(this.handleDocClick, this));
@@ -193,9 +193,9 @@ Ext.define('Taco.view.navigation.PrimaryMenuContainer', {
      * @private
      */
     showMenu: function () {
+        clearTimeout(this._hideTimeout);
         this.show();
-        Ext.getBody().mask();
-        //this.trigger.addCls('expanded');
+        this.getEl().removeCls('hidden');
     },
 
     /**
@@ -203,9 +203,17 @@ Ext.define('Taco.view.navigation.PrimaryMenuContainer', {
      * @private
      */
     hideMenu: function () {
-        this.hide();
-        Ext.getBody().unmask();
-        //this.trigger.removeCls('expanded');
+        var me = this,
+            el = this.getEl();
+
+        if (!el) {
+            return this.hide();
+        }
+
+        this.getEl().addCls('hidden');
+        this._hideTimeout = setTimeout(function () {
+            me.hide();
+        }, 300);
     },
 
     /**
