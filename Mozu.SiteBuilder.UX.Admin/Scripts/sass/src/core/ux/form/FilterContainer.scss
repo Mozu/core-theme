@@ -95,6 +95,9 @@
         border-radius: 0;
         background-color: inherit;
         padding: 0;
+        &:hover {
+            border-right-color: $advanced-filter-icon-active;
+        }
         &:active {
             background-color: $advanced-filter-icon-active;
             border-radius: 4px;
@@ -104,13 +107,12 @@
             &:hover {
                 opacity: 1;
             }
-            .#{$prefix}btn-icon-el {
-                font-size: 22px;
+            @include icon-font($glyph-filter-list, 22px, $dark-color);
+            &::after {
                 line-height: 40px;
                 text-align: center;
                 width: 48px;
                 height: 40px;
-                color: $dark-color;
             }
         }
     }
