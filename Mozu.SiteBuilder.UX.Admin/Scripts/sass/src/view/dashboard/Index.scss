@@ -1,53 +1,89 @@
 ﻿.#{$vprefix}dashboard-group {
     margin: 0px auto;
-    text-align: center;
-    width: 1040px;
+    text-align: left;
+    padding-top: 10px;
+    width: 80%;
+
+    @media screen and (max-width: 768px) {
+        width: 100%;
+        text-align: center;
+    }
 
     .#{$vprefix}dashboard-item {
         display: inline-block;
         min-height: 260px;
-        padding-top: 60px;
+        padding: 10px;
         vertical-align: top;
-        width: 260px;
+        width: 33%;
+        @include border-radius(3px);
 
-        a {
-            color: $color-standard-text;
-            cursor: pointer;
+        @media screen and (max-width: 768px) {
+            display: block;
+            margin: 0px auto;
+            width: 90%;
         }
 
-        .#{$vprefix}dashboard-item-header {
-            font-size: 16px;
-            font-weight: bold;
-            text-align: center;
-            text-shadow: 1px 1px 0px transparentize($color-neutral-white, 0.6);
-            text-transform: uppercase;
-        }
-
-        .#{$vprefix}dashboard-item-item {
-            float: left;
-            padding: 5px; 
-            line-height: 22px;
-            font-size: 14px;
-            text-align: center;
-            border: 0px;
+        .#{$vprefix}image-holder {
             width: 100%;
+            background-color: $white-color;
 
             a {
-                border-right-width: 1px;
-                border-right-style: solid;
-                padding-right: 5px;
-                margin-right: 5px;
-
-                &:last-child {
-                    border-right-width: 0px;
-                }
+                color: $valid-green;
+                background-color: $white-color;
+                cursor: pointer;
+                height: 160px;
             }
         }
+
+
+        .#{$vprefix}content-holder {
+
+
+            .#{$vprefix}dashboard-item-header {
+                background-color: $more-menu-active-background;
+                font-size: 12px;
+                color: $gray-text-light;
+                text-align: left;
+                text-shadow: 1px 1px 0px transparentize($color-neutral-white, 0.6);
+                padding: 10px 0px 0px 10px;
+            }
+
+            .#{$vprefix}dashboard-item-item {
+                background-color: $more-menu-active-background;
+                line-height: 22px;
+                padding: 4px 0px 10px 10px;
+                font-size: 13px;
+                text-align: left;
+                border: 0px;
+                width: 100%;
+
+                div {
+                    display: inline-block;
+                    padding-right: 5px;
+                    margin-right: 5px;
+
+                    a {
+                        cursor: pointer;
+                        color: $nav-element-text;
+                        border-bottom: 1px solid $light-border-gray;
+                        line-height: 16px;
+
+                        &:hover {
+                            text-decoration: none;
+                            border-bottom: 1px solid $valid-green;
+                        }
+                    }
+                }
+
+            }
+
+        }
+
 
         .#{$vprefix}dashboard-icon {
             display: block;
             height: 60px;
-            margin: 0px auto 10px;
+            margin: 0px auto;
             width: 60px;
         }
 

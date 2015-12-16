@@ -1,4 +1,4 @@
-.#{$vprefix}primary-menu-ct {
+.#{$vprefix}primary-menu-ct, .#{$vprefix}content-view {
     background-color: $color-neutral-white;
     box-shadow: rgba(0, 0, 0, 0.09) 1px 1px 6px 0px !important;
     margin-left: 0px;
@@ -6,6 +6,10 @@
     visibility: visible !important;
     @include outer-shadow(0.4, 2px, 3px, 3px);
     @include transition(margin-left 300ms ease-in-out, opacity 300ms ease-in-out);
+
+    .#{$vprefix}dashboard-body {
+        background-color: $light-bg-gray !important;
+    }
 
     &.hidden {
         margin-left: -300px;
@@ -22,7 +26,7 @@
     }
 
     .#{$prefix}tab-bar-default-horizontal {
-        background-color: $dark-bg;
+        background-color: $light-bg-gray;
         border: 0px;
         font-size: 13px;
         height: auto;

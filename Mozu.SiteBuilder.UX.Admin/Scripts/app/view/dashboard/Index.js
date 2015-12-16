@@ -3,30 +3,45 @@
  */
 
 Ext.define('Taco.view.dashboard.Index', {
-    extend: 'Taco.core.ux.content.Container',
-
+    extend: 'Ext.tab.Panel',
+    cls: 'taco-primary-menu-tabs taco-dashboard-menu',
+    defaultAlign: 'center',
+    tabBar: {
+        layout: {
+            pack: 'center'
+        }
+    },
+    bodyCls: 'taco-dashboard-body',
     initComponent: function () {
         var me = this, dashboard;
-        me.renderData = [];
-        
-       
-        me.dashboardTpl = Ext.create('Ext.Component', {
-            data: me.renderData,
-            padding: '0 0 0 50',
-            tpl: [
+
+        var tpl =  [
                 '<ul class="taco-dashboard-group">',
                     '<tpl for=".">',
                         '<li class="taco-dashboard-item">',
-                            '<a data-url="{[values.address]}" class="taco-dashboard-icon taco-icon-{[values.id]}"></a>',
-                            '<div class= "taco-dashboard-item-header"><a data-url="{[values.address]}">{[values.label]}</a></div>',
-                            '<div class= "taco-dashboard-item-item"><tpl for="subNav">',
-                                '<a data-url="{[values.address]}">{[values.label]}</a>',
-                            '</tpl></div>',
+                            '<div class="taco-image-holder">',
+                                '<a data-url="{[values.address]}" class="taco-dashboard-icon taco-icon-{[values.id]}"></a>',
+                            '</div>',
+                            '<div class="taco-content-holder">',
+                                '<div class= "taco-dashboard-item-header">{[values.label]}:</div>',
+                                '<div class= "taco-dashboard-item-item"><tpl for="subNav">',
+                                    '<div><a data-url="{[values.address]}">{[values.label]}</a></div>',
+                                '</tpl></div>',
+                            '</div>',
                         '</li>',
-                        '{[xindex % 4 === 0 && xindex !== xcount ? "</ul><ul class=\'taco-dashboard-group\'>" : ""]}',
+                        // '{[xindex % 4 === 0 && xindex !== xcount ? "</ul><ul class=\'taco-dashboard-group\'>" : ""]}',
                     '</tpl>',
                 '</ul>'
-            ],
+            ];
+
+        me.systemData = [];
+        me.mainData = [];
+
+
+    
+        me.mainDashboardTpl = Ext.create('Ext.Component', {
+            data: me.mainData,
+            tpl: tpl,
             listeners: {
                 click: {
                     element: 'el',
@@ -38,15 +53,26 @@ Ext.define('Taco.view.dashboard.Index', {
                 }
             }
         });
-       
-        me.header = {
-            hidden: true
-        };
-        
-        Ext.apply(me.body, {
-            layout: 'fit',
-            items: me.dashboardTpl
+
+        me.systemDashboardTpl = Ext.create('Ext.Component', {
+            data: me.systemData,
+            tpl: tpl,
+            listeners: {
+                click: {
+                    element: 'el',
+                    delegate: '[data-url]',
+                    fn: function (event, node) {
+                        event.stopEvent();
+                        Taco.core.StateManager.attemptNavigate(node.dataset.url);
+                    }
+                }
+            }
         });
+        
+        this.items = [
+            this.getMainPanel(),
+            this.getSettingsPanel()
+        ];
 
         me.callParent(arguments);
         
@@ -60,6 +86,35 @@ Ext.define('Taco.view.dashboard.Index', {
         
     },
 
+    getMainPanel: function() {
+        return {
+            xtype: 'panel',
+            tabConfig: {
+                cls: 'taco-tab-heading',
+                margin: '0 0 0 -3',
+                title: 'Main',
+                width: 129
+            },
+            items: [
+                this.mainDashboardTpl
+            ]
+        }
+    },
+
+    getSettingsPanel: function() {
+        return {
+            xtype: 'panel',
+            tabConfig: {
+                cls: 'taco-tab-heading',
+                width: 129,
+                title: 'System'
+            },
+            items: [
+                this.systemDashboardTpl
+            ]
+        }
+    },
+
     // combines both options objects
     mergeOptions: function (obj1, obj2) {
         var obj3 = {};
@@ -69,8 +124,10 @@ Ext.define('Taco.view.dashboard.Index', {
 
         return(obj3);
     },
+
     renderNav:function () {
         var me = this;
+
         Ext.Array.forEach(me.navigationStore.data.items, function (el, index, arr) {
 
             var pushData = {};
@@ -90,12 +147,22 @@ Ext.define('Taco.view.dashboard.Index', {
                     subNav.push(subNavData);
                 }
             }, this);
+
             pushData.subNav = subNav;
+
             if (el.get('visible')) {
-                this.renderData.push(pushData);
+                if (el.get('navParent') === 'main') {
+                    this.mainData.push(pushData);
+                }
+
+                else if (el.get('navParent') === 'sys') {
+                    this.systemData.push(pushData);
+                }
             }
 
         }, this);
-        this.dashboardTpl.update(this.renderData);
+
+        this.mainDashboardTpl.update(this.mainData);
+        this.systemDashboardTpl.update(this.systemData);
     }
 });
