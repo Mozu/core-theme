@@ -1902,7 +1902,6 @@
     <Content Include="Scripts\app\store\TimeZones.js" />
     <Content Include="Scripts\app\view\generalSettings\Index.js" />
     <Content Include="Scripts\app\model\ThemeListing.js" />
-    <Content Include="Scripts\app\view\inventory\Index.js" />
     <EmbeddedResource Include="Api\datagen.txt" />
     <Content Include="Scripts\resources\images\align\align-center-selected.png" />
     <Content Include="Scripts\resources\images\align\align-center.png" />
