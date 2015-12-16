@@ -25,7 +25,7 @@ Ext.define('Taco.view.website.WidgetTray', {
         this.setLoading(false);
     },
     buildWidgets: function(title, widgets) {
-        var html = '<div id="taco-widget-holder">';
+        var html = '<div id="taco-widget-holder" style="text-align:center;">';
 
         this.editor.widgetIconDefinitions = this.editor.widgetIconDefinitions || {};
 

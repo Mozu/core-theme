@@ -1,9 +1,17 @@
 @mixin taco-websitesubheader {
 
   .#{$vprefix}website-subheader {
-    
+
     background-color: $color-framework-gray-border;
     height: 30px;
+
+    .#{$vprefix}link-button {
+
+        .#{$prefix}btn-inner {
+            text-decoration: none !important;
+        }
+
+    }
 
     .#{$prefix}panel, .#{$prefix}panel-body {
         background-color: $color-framework-gray-border;
@@ -14,16 +22,28 @@
         background-color: transparent;
 
     	&.desktop {
-    		@include icon-font($glyph-computer);
+    		@include icon-font($glyph-computer, 21px);
+
+            &::after { 
+                top: 0px;
+            }
     	}
 
     	&.tablet {
     		@include icon-font($glyph-tablet);
+
+            &::after {
+                left: 1px;
+            }
     	}
 
     	&.phone {
-    		@include icon-font($glyph-phone);
+    		@include icon-font($glyph-phone, 17px);
     	}
+
+        &:hover {
+            text-decoration: none;
+        }
     }
 
   }
