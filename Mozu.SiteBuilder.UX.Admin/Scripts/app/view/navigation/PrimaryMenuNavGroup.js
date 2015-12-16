@@ -10,7 +10,7 @@ Ext.define('Taco.view.navigation.PrimaryMenuNavGroup', {
     collapsible: true,
     padding: '8 0 6 10',
     width: '100%',
-    
+
     initComponent: function () {
         var me = this,
             subItemStore = Ext.create('Ext.data.Store', {

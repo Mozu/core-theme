@@ -21,8 +21,18 @@
         box-shadow: none !important;
     }
 
-    .#{$prefix}collapsed-icon {
+    .#{$vprefix}collapsed-icon {
+
         @include icon-font($glyph-plus-circle);
+
+        &:after {
+            color: $dialog-border-color;
+            display: inline;
+            font-size: 13px;
+            left: 3px;
+            position: relative;
+            top: 2px;
+        }
     }
 
     .#{$prefix}tab-bar-default-horizontal {
@@ -122,18 +132,6 @@
     cursor: pointer;
     &:hover {
         background-color: $nav-hover-bg;
-    }
-
-    &.#{$vprefix}collapsed-icon {
-
-        &:after {
-            content: $glyph-plus-circle;
-            font-family: $icon-font;
-            display: inline-block;
-            font-size: 10px;
-            margin-left: 5px;
-            position: absolute;
-        }
     }
 }
 
