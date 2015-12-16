@@ -17,15 +17,20 @@ Ext.define('Taco.view.navigation.PrimaryMenuNavGroup', {
                 model: 'Taco.model.NavigationItem',
                 data: this.record.get('items')
             });
+
+        this.collapsedStateKey = 'primary-nav-collapsed-' + me.record.get('id');
+
         this.subMenuItems = Ext.create('Taco.view.navigation.PrimarySubMenu', {
+            hidden: Ext.state.Manager.get(this.collapsedStateKey),
             store: subItemStore
         });
+
         this.items = [
             {
                 xtype: 'label',
                 text:this.record.get('label'),
                 width: '100%',
-                cls: 'taco-primary-menu-heading',
+                cls: 'taco-primary-menu-heading ' + (Ext.state.Manager.get(this.collapsedStateKey) ? 'taco-collapsed-icon' : ''),
                 listeners: {
                     element: 'el',
                     click: function(e) {
@@ -37,9 +42,11 @@ Ext.define('Taco.view.navigation.PrimaryMenuNavGroup', {
                         if (me.subMenuItems.isVisible()) {
                             me.subMenuItems.hide();
                             this.addCls('taco-collapsed-icon');
+                            Ext.state.Manager.set(me.collapsedStateKey, true);
                         } else {
                             this.removeCls('taco-collapsed-icon');
                             me.subMenuItems.show();
+                            Ext.state.Manager.set(me.collapsedStateKey, false);
                         }
                         return false;
                     }

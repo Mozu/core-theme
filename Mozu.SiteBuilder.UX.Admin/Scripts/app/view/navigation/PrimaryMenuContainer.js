@@ -58,6 +58,7 @@ Ext.define('Taco.view.navigation.PrimaryMenuContainer', {
                 width: 129
             }
         });
+
         this.viewSystem = Ext.create('Taco.view.navigation.PrimaryMenuSubContainer', {
             title: 'System',
             tabConfig: {
@@ -70,16 +71,21 @@ Ext.define('Taco.view.navigation.PrimaryMenuContainer', {
             store: store,
             navParent: 'sys'
         });
+
         this.add({
-                xtype: 'tabpanel',
-                cls: 'taco-primary-menu-tabs',
-                autoShow:true,
-                items: [
-                    this.viewMain,
-                    this.viewSystem
-                ]
-            }
-        );
+            activeTab: Ext.state.Manager.get('primary-menu-tab') === 'sys' ? 1 : 0,
+            cls: 'taco-primary-menu-tabs',
+            items: [
+                this.viewMain,
+                this.viewSystem
+            ],
+            listeners: {
+                tabchange: function (view, card) {
+                    Ext.state.Manager.set('primary-menu-tab', card.navParent);
+                }
+            },
+            xtype: 'tabpanel'
+        });
 
         this.onStateChange(Taco.core.StateManager.getCurrentState());
         this.isBound = true;
