@@ -25,7 +25,7 @@ Ext.define('Taco.view.order.Form', {
         customer: null
     },
 
-    sectionNavTopOffset: 117,
+    sectionNavTopOffset: 0,
 
     useFixedPosition: false,
 

@@ -116,7 +116,7 @@ Ext.define('Taco.core.ux.form.NavForm2', {
         navStyle.left = this.getX() - 20 + 'px';
         navStyle.width = this.getWidth() + 40 + 'px';
 
-        navStyle.top = this.getHeaderHeight() + 'px';
+        navStyle.top = this.getHeaderHeight() + this.sectionNavTopOffset + 'px';
     },
 
     resetNavDimensions: function() {
@@ -219,7 +219,7 @@ Ext.define('Taco.core.ux.form.NavForm2', {
             this.setNavDimensions();
             sectionNav.addCls(this.stickyClass);
         }
-        else if (scrollTop < navTop && sectionNav.hasCls(this.stickyClass)) {
+        else if (scrollTop <= navTop && sectionNav.hasCls(this.stickyClass)) {
             this.resetNavDimensions();
             sectionNav.removeCls(this.stickyClass);
         }

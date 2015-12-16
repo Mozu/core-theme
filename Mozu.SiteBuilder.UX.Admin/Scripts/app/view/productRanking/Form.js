@@ -19,11 +19,12 @@ Ext.define('Taco.view.productRanking.Form', {
     isCreate: false,
 
     initComponent: function () {
-
         var me = this;
         // Note: the record will act as an event bus for the subForms. 
         // User interactions in a subform that cause changes in other forms will communicate via events on the record.
         // Each subform will listen for and react to these changes.
+
+        me.sectionNavTopOffset = me.isPopUp ? -12 : 9;
 
         this.items = [
             {
