@@ -23,7 +23,7 @@ Ext.define('Taco.view.order.widget.AddOrderItemToolbar', {
         type: 'hbox',
         align: 'middle'
     },
-    style: 'border:1px solid #ccc;padding-top:2px;padding-bottom:2px;',
+    style: 'padding-top:2px;padding-bottom:2px;',
 
     focusCls: 'taco-order-addproducttoolbar-focus',
 
