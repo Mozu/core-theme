@@ -268,12 +268,19 @@
                 if (this.validate()) return false;
                 var me = this;
                 this.isLoading(true);
-                this.getOrder().apiModel.update({ fulfillmentInfo: me.toJSON() }).ensure(function () {
-                    me.provisional = false;
-                    me.isLoading(false);
-                    me.calculateStepStatus();
-                    me.parent.get("billingInfo").calculateStepStatus();
-                });
+                this.getOrder().apiModel.update({ fulfillmentInfo: me.toJSON() })
+                    .then(function(o) {
+                        var billingInfo = me.parent.get('billingInfo');
+                        if (billingInfo) {
+                            billingInfo.loadCustomerDigitalCredits();
+                        }
+                    })
+                    .ensure(function() {
+                        me.provisional = false;
+                        me.isLoading(false);
+                        me.calculateStepStatus();
+                        me.parent.get("billingInfo").calculateStepStatus();
+                    });
             }
         }),
 
@@ -523,7 +530,8 @@
                                 
                                 return order.apiAddStoreCredit({
                                     storeCreditCode: creditCode,
-                                    amount: creditAmountToApply
+                                    amount: creditAmountToApply,
+                                    email: self.get('billingContact').get('email')
                                 }).then(function (o) {
                                     order.set(o.data);
                                     self.trigger('orderPayment', o.data, self);
@@ -712,10 +720,18 @@
             },
             getPaymentTypeFromCurrentPayment: function () {
                 var billingInfoPaymentType = this.get('paymentType'),
-                        currentPayment = this.getOrder().apiModel.getCurrentPayment(),
-                        currentPaymentType = currentPayment && currentPayment.billingInfo.paymentType;
-                if (currentPaymentType && currentPaymentType !== billingInfoPaymentType) {
-                    this.set('paymentType', currentPaymentType);
+                    billingInfoPaymentWorkflow = this.get('paymentWorkflow'),
+                    currentPayment = this.getOrder().apiModel.getCurrentPayment(),
+                    currentPaymentType = currentPayment && currentPayment.billingInfo.paymentType,
+                    currentPaymentWorkflow = currentPayment && currentPayment.billingInfo.paymentWorkflow,
+                    currentBillingContact = currentPayment && currentPayment.billingInfo.billingContact,
+                    currentCard = currentPayment && currentPayment.billingInfo.card;
+
+                if (currentPaymentType && (currentPaymentType !== billingInfoPaymentType || currentPaymentWorkflow !== billingInfoPaymentWorkflow)) {
+                    this.set('paymentType', currentPaymentType, { silent: true });
+                    this.set('paymentWorkflow', currentPaymentWorkflow, { silent: true });
+                    this.set('card', currentCard, { silent: true });
+                    this.set('billingContact', currentBillingContact, { silent: true });
                 }
             },
             edit: function () {
@@ -802,7 +818,15 @@
                 if (this.nonStoreCreditTotal() > 0) {
                     return order.apiAddPayment().then(function () {
                         var payment = order.apiModel.getCurrentPayment();
-                        if (payment && payment.paymentType !== "PaypalExpress") self.markComplete();
+                        var activePayments = order.apiModel.getActivePayments();
+                        var creditCardPayment = activePayments && _.findWhere(activePayments, { paymentType: 'CreditCard' });
+                        //Clear card if no credit card payments exists
+                        if (!creditCardPayment && self.get('card')) {
+                            self.get('card').clear();
+                        }
+                        if (payment && payment.paymentType !== "PaypalExpress") {
+                            self.markComplete();
+                        }
                     });
                 } else {
                     this.markComplete();
@@ -1228,7 +1252,10 @@
                 this.isSubmitting = true;
 
                 if (requiresBillingInfo && !billingContact.isValid()) {
-                    billingContact.set(this.apiModel.getCurrentPayment().billingInfo.billingContact); // reconcile the empty address after we got back from paypal and possibly other situations
+                    // reconcile the empty address after we got back from paypal and possibly other situations.
+                    // also happens with visacheckout ..
+                    var billingInfoFromPayment = this.apiModel.getCurrentPayment().billingInfo;
+                    billingInfo.set(billingInfoFromPayment, { silent: true });
                 }
 
                 this.syncBillingAndCustomerEmail();

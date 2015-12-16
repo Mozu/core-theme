@@ -3,14 +3,14 @@
 <ul class="mz-accountpaymentmethods-list mz-l-tiles">
     {% for card in model.cards %}
     {% if editing.card == card.id %}
-        {% include "modules/my-account/my-account-credit-card-form" with model=model.editingCard %}
+    {% include "modules/my-account/my-account-credit-card-form" with model=model.editingCard editingContact=model.editingContact %}
     {% else %}
-        {% include "modules/my-account/my-account-paymentmethod" with model=card %}
-         
+    {% include "modules/my-account/my-account-paymentmethod" with model=card %}
+
     {% endif %}
     {% endfor %}
     {% if editing.card == "new" %}
-        {% include "modules/my-account/my-account-credit-card-form" with model=model.editingCard editingContact=model.editingContact %}
+    {% include "modules/my-account/my-account-credit-card-form" with model=model.editingCard editingContact=model.editingContact %}
     {% endif %}
 </ul>
 {% else %}
