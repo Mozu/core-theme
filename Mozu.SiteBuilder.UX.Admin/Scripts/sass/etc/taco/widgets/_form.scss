@@ -135,6 +135,25 @@
         @include icons-sprite(icon-radio-selected);
         background-size: 14px;
     }
+    .#{$prefix}form-type-checkbox,
+    .#{$prefix}form-type-radio {
+        .#{$prefix}form-cb-label-after {
+            color: $gray-text-dark;
+        }
+        &.#{$prefix}form-cb-checked {
+            .#{$prefix}form-cb-label-after {
+                color: $dark-color;
+            }
+        }
+    }
+    .#{$prefix}form-type-checkbox.#{$prefix}form-cb-checked .#{$prefix}form-cb-label-after {
+        color: $dark-color;
+    }
+    .#{$vprefix}formform .#{$prefix}form-cb-label-after {
+        padding-left: 19px;
+        font-size: 15px;
+        margin-top: 8px;
+    }
 
     // checkcolumn
     .#{$prefix}grid-checkheader {
