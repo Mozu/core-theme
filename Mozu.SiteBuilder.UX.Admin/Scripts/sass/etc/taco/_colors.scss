@@ -31,6 +31,7 @@ $publish-icon-dark-bg:          $nav-element-active;
 $input-element-active:          $nav-element-active;
 $nav-element-active-border:     rgb(243, 243, 243);                                 /* #f3f3f3 --> #f2f2f2  242, 242, 242 */
                                 /* darken($white-color, 5); */
+$grid-row-border:               $nav-element-active-border;
 
 $light-bg-gray:                 rgb(233, 233, 233);                                 /* #e9e9e9 --> #e8e8e8  233, 233, 233 */
                                 /* darken($white-color, 9); */
@@ -48,6 +49,8 @@ $card-button-bg:                rgb(250, 250, 250);                             
 $dark-border-gray:              $typehead-pill-border-color;
 $nav-hover-bg:                  $card-button-bg;
 $grid-row-hover-bg:             $card-button-bg;
+$grid-even-stripe-bg:           rgb(249, 249, 249);                                 /* #f9f9f9 --> #fafafa  249, 249, 249 */
+                                /* darken($white-color, 2); */
 $row-editor-buttons-bg:         $card-button-bg;
 $card-button-press-bg:          darken($white-color, 4);                            /* #f5f5f5              245, 245, 245 */
 $medium-button-active-bg:       $card-button-press-bg;

@@ -69,7 +69,6 @@
                 }
             }
 
-
             .#{$prefix}column-header-over {
                 /* override external styles */
                 background-color: inherit;
@@ -77,14 +76,14 @@
 
             .#{$prefix}grid-td {
                 /* override external styles */
-                border: 0;
+                // border: 0;
                 outline: 0 !important;
             }
 
             .#{$prefix}grid-row-over {
                 .#{$prefix}grid-td {
                     /* override external styles */
-                    border: 0;
+                    // border: 0;
                     outline: 0 !important;
                 }
             }
@@ -166,9 +165,88 @@
             }
         }
 
+        .#{$prefix}panel-body {
+            tr {
+
+                &:nth-child(even) {
+                    .#{$prefix}grid-td {
+                        border: none;
+                        background-color: $grid-even-stripe-bg;
+                    }
+                }
+
+                &:nth-child(odd) {
+                    .#{$prefix}grid-td {
+                        border: none;
+                        background-color: $white-color;
+                    }
+                }
+
+                &:hover,
+                &:active {
+                    td {
+                        background-color: inherit;
+                    }
+                }
+            }
+        }
+
+        &.#{$vprefix}content-navcontainer,
         .#{$prefix}fit-item {
-           > .#{$prefix}grid-header-ct {
+            > .#{$prefix}grid-header-ct {
                 background-color: $dark-bg;
+
+                & + .#{$prefix}grid-with-row-lines {
+                    tr {
+                        &.#{$prefix}grid-data-row {
+                            border-bottom: 1px solid $grid-row-border;
+                        }
+
+                        td {
+                            background-color: $white-color;
+                        }
+
+                        &:hover {
+                            td {
+                                background-color: $grid-row-hover-bg;
+                            }
+                        }
+
+                        &:active {
+                            td {
+                                background-color: $dark-bg;
+                            }
+                        }
+                    }
+                }
+            }
+        }
+
+        .#{$vprefix}content-view {
+            > .#{$prefix}panel {
+                > .#{$prefix}grid-header-ct {
+                    background-color: $dark-bg;
+
+                    & + .#{$prefix}grid-with-row-lines {
+                        tr {
+                            td {
+                                background-color: $white-color;
+                            }
+
+                            &:hover {
+                                td {
+                                    background-color: $grid-row-hover-bg;
+                                }
+                            }
+
+                            &:active {
+                                td {
+                                    background-color: $dark-bg;
+                                }
+                            }
+                        }
+                    }
+                }
             }
         }
 
@@ -231,10 +309,6 @@
         tbody {
             tr {
                 &.#{$prefix}grid-data-row {
-
-                    td {
-                        border-bottom: 1px solid $nav-element-active-border !important;
-                    }
 
                     &:hover {
                         background-color: $grid-row-hover-bg;
