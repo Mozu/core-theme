@@ -225,7 +225,7 @@
         font-family: $font-family;
 
         .#{$prefix}btn-inner-center {
-            color: $input-text-color;
+            color: $card-btn-text-color;
             font-size: $normal-font-link;
         }
     }
@@ -339,5 +339,10 @@
 
     .#{$prefix}form-checkbox {
         height: 16px;
+    }
+
+    // Read Only Fields
+    .#{$prefix}form-readonly input.#{$prefix}form-text {
+        cursor: not-allowed;
     }
 }
