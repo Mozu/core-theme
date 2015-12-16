@@ -101,6 +101,12 @@
                 callToActionText: 'Switch Master Catalog:',
                 highlighted: highlighted,
                 labelText: 'Masters',
+                listeners: {
+                    select: function (view, record) {
+                        Taco.app.context.setCurrentMasterCatalog(record.get('value'));
+                        view.highlight();
+                    }
+                },
                 store: data,
                 tagText: 'master',
                 value: masterCatalog.id,
