@@ -2099,6 +2099,8 @@
     <Content Include="Tests\Mocks\Mystic1\Orders2Payments.json" />
     <Content Include="Tests\Mocks\Mystic1\Discounts1.json" />
     <Content Include="Tests\Mocks\Mystic1\NavigationTreeNodes1.json" />
+    <Content Include="Tests\Mocks\Mystic1\Returns2Payments.json" />
+    <Content Include="Tests\Mocks\Mystic1\SingleOrder.json" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="Content\themes\base\jquery.ui.accordion.css" />

@@ -140,18 +140,19 @@ Ext.define('Taco.model.OrderPayment', {
             'default': false
         },
         {
+            name: 'isDefault',
+            type: 'boolean',
+            'default': false
+        },
+        {
+            name: 'isExpired',
+            type: 'boolean',
+            'default': false
+        },
+        {
             name: 'externalTransactionId',
             type: 'string',
             useNull: true
-        },
-        {
-            // Display field for combo boxes!
-            name: 'paymentDisplayField',
-            type: 'string',
-            useNull: true,
-            convert: function (value, record) {
-                return record.get('cardType') + ' ' + record.get('cardNumber') + ' exp ' + record.get('expireMonth') + '/' + record.get('expireYear');
-            }
         }],
 
     associations: [

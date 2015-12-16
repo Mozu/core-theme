@@ -86,20 +86,16 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
                     }
                     return List2<Order>(single);
                 }
-                else
-                    throw new HttpResponseException(System.Net.HttpStatusCode.NotFound);
+                throw new HttpResponseException(System.Net.HttpStatusCode.NotFound);
             }
             // get list of orders
-            else
-            {
-                var filter = extFilter.ToFilterString();
-                var q = extFilter.ToQString();
-                int? qLimit = q == null ?(int?) null : 26;
-                var responseGroups = "header,payment,packageheaders,availableactions";
-                var dcOrders = (await orderWebApiClient.CloneWithApiContext(x=> x.SiteId = null).GetOrders(startIndex: startIndex, pageSize: pageSize, sortBy: pagingParams.sort.ToSortString(), filter: filter, q: q, qLimit: qLimit, responseGroups: responseGroups)).ReadAsSync();
+		    var filter = extFilter.ToFilterString();
+		    var q = extFilter.ToQString();
+		    int? qLimit = q == null ?(int?) null : 26;
+		    var responseGroups = "header,payment,packageheaders,availableactions";
+		    var dcOrders = (await orderWebApiClient.CloneWithApiContext(x=> x.SiteId = null).GetOrders(startIndex: startIndex, pageSize: pageSize, sortBy: pagingParams.sort.ToSortString(), filter: filter, q: q, qLimit: qLimit, responseGroups: responseGroups)).ReadAsSync();
                 
-                return List2(Mapper.Map<List<Order>>(dcOrders.Items), (int)dcOrders.TotalCount);
-            }
+		    return List2(Mapper.Map<List<Order>>(dcOrders.Items), (int)dcOrders.TotalCount);
         }
 
         [HttpPostRoute(UriTemplate = "create")]
@@ -159,7 +155,6 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
 
             return Single2( dc.Map<Order>() );
         }
-
 
         [HttpPostRoute(UriTemplate = "commitdraft")]
         public async Task<Response<Order>> CommitDraft(OrderIdArgs args)
