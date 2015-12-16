@@ -38,7 +38,7 @@ Ext.define('Taco.view.product.Index', {
         rowBodyTpl: new Ext.XTemplate(
             '<tpl for="productInCatalogs"><tr class="x-grid-row-body">',
             '<td colspan="2" class="x-grid-subcell"><div class="x-grid-cell-inner"></div></td>',
-            '<td class="x-grid-subcell"><div class="x-grid-cell-inner"><a href="#" class="taco-launch-editor" data-catalog-id="{catalogId}">{productName}</a></div></td>',
+            '<td class="x-grid-subcell"><div class="x-grid-cell-inner"><span class="taco-launch-editor" data-catalog-id="{catalogId}">{productName}</span></div></td>',
             '<td class="x-grid-subcell"><div class="x-grid-cell-inner">{[this.formatPrice(values.price,values.catalogId)]}</div></td>',
             '<td class="x-grid-subcell"><div class="x-grid-cell-inner">{[this.formatPrice(values.salePricem,values.catalogId)]}</div></td>',
             '<td class="x-grid-subcell"><div class="x-grid-cell-inner">{catalogId:this.toCatalogName}</div></td>',
@@ -49,7 +49,7 @@ Ext.define('Taco.view.product.Index', {
                     return value ? '<span class="x-column-content-pill x-column-content-pill-true">Yes</span>' : '';
                 },
                 formatPrice: function (value, catalog) {
-                    return (value || value === 0) ? Taco.app.context.findCatalog(catalog).formatCurrency(value) : 'N/A';
+                    return (value || value === 0) ? Taco.app.context.findCatalog(catalog).formatCurrency(value) : "<span class='taco-empty-cell'>N/A</span>";
                 },
                 toCatalogName: function (value) {
                     var catalog = Taco.app.context.findCatalog(value);
@@ -147,14 +147,13 @@ Ext.define('Taco.view.product.Index', {
                     stateId: 'productCode',
                     dataIndex: 'productCode',
                     text: 'Code',
-                    width: 100
+                    flex: 4
             },
             {
                 stateId: 'productName',
                 dataIndex: 'productName',
                 text: 'Name',
-                minWidth: 120,
-                flex: 1,
+                flex: 8,
                 renderer: function (value, metaData, record) {
                     return record.getContextualValue('productName');
 
@@ -164,7 +163,7 @@ Ext.define('Taco.view.product.Index', {
                 dataIndex: 'price',
                 stateId: 'price',
                 text: 'Price',
-                width: 100,
+                flex: 3,
                 renderer: function (value, metaData, record) {
                     return record.getContextualValue('price', true) || '<span class="taco-empty-cell">N/A</span>';
 
@@ -174,7 +173,7 @@ Ext.define('Taco.view.product.Index', {
                 dataIndex: 'salePrice',
                 stateId: 'salePrice',
                 text: 'Sale Price',
-                width: 100,
+                flex: 4,
                 renderer: function (value, metaData, record) {
                     return record.getContextualValue('salePrice', true) || '<span class="taco-empty-cell">N/A</span>';
                 }
@@ -184,7 +183,7 @@ Ext.define('Taco.view.product.Index', {
                 stateId: 'catalogs',
                 text: 'Catalogs',
                 sortable: false,
-                width: 120,
+                flex: 2,
                 renderer: function (value) {
                     return !Ext.isEmpty(value) ? value.length : 'N/A';
                 }
@@ -194,7 +193,7 @@ Ext.define('Taco.view.product.Index', {
                 stateId: 'overridden',
                 text: 'Overridden',
                 sortable: false,
-                width: 150,
+                flex: 2,
                 renderer: function (value, metaData, record) {
                     var output;
                     var cssClass = 'x-column-content-pill';
@@ -215,14 +214,16 @@ Ext.define('Taco.view.product.Index', {
                 xtype: 'datecolumn',
                 format: 'Y-m-d',
                 text: 'Last Modified',
-                hidden: true
+                hidden: true,
+                flex: 2
             },
             {
                 dataIndex: "productTypeName",
                 stateId: 'productTypeName',
                 text: 'Product Type',
                 sortable: false,
-                hidden: true
+                hidden: true,
+                flex: 4
              },
             {
                 dataIndex: "productUsage",
@@ -230,13 +231,13 @@ Ext.define('Taco.view.product.Index', {
                 text: 'Product usage',
                 stateId:"productUsage",
                 hidden: true,
-                sortable: false
-
+                sortable: false,
+                flex: 4
             },
             {
                 xtype: 'taco.menucolumn',
                 stateId: 'actionsColumn',
-                width: 50,
+                flex: 1,
                 menuItems: [{
                     itemId: 'live',
                     text: 'View Live',
