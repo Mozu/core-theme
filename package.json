@@ -2,7 +2,7 @@
   "name": "mozu-core-theme",
   "author": "Volusion, Inc.",
   "description": "The core storefront theme for Mozu.",
-  "version": "9.0.6",
+  "version": "9.1.0",
   "repository": {
     "type": "git",
     "url": "https://github.com/mozu/core-theme.git"
