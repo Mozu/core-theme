@@ -135,11 +135,6 @@
         @include icons-sprite(icon-radio-selected);
         background-size: 14px;
     }
-    .#{$prefix}form-cb-label-after {
-        padding-left: 19px;
-        font-size: 15px;
-        margin-top: 8px;
-    }
 
     // checkcolumn
     .#{$prefix}grid-checkheader {
