@@ -1,0 +1,11 @@
+@mixin taco-locationinventory {
+	.#{$prefix}toolbar-default {
+		background-color: transparent;
+		padding-bottom: 15px;
+
+		label {
+			color: $nav-element-active;
+			font-size: 16px;
+		}
+	}
+}
