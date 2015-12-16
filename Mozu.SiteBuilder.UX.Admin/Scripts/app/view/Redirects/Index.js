@@ -5,19 +5,20 @@ Ext.define('Taco.view.redirects.Index', {
     extend: 'Taco.core.ux.browser.SearchList',
     requires: [
         'Taco.model.RedirectEntry',
-        'Taco.store.RedirectEntries'
+        'Taco.store.RedirectEntries',
+        'Taco.core.ux.content.SiteViewDropdown'
     ],
     typeName: 'Redirect',
     gridHeaderLabel: 'Redirects',
     requiresContextOfType: 's',
 
     formCls: 'Taco.core.ux.form.Form',
-    
+
     contextConfig: {
         supportedLevels: ['s'],
         requiresContextOfType: ['s']
     },
-    
+
     enableNavHeader: true,
     enableSearchBarInHeader: false,
 
@@ -33,8 +34,8 @@ Ext.define('Taco.view.redirects.Index', {
     title: 'Redirects',
 
     // default data to use when creating new entity
-    defaultRowEditingData: {        
-        
+    defaultRowEditingData: {
+
     },
 
     createButtonText: 'Create New Redirect',
@@ -62,7 +63,7 @@ Ext.define('Taco.view.redirects.Index', {
     initComponent: function () {
 
         var me = this;
-        
+
         this.columns = [
                 {
                     dataIndex: 's',
@@ -78,7 +79,7 @@ Ext.define('Taco.view.redirects.Index', {
                     },
                     width: 200,
                     align: 'left'
-                }, 
+                },
                 {
                     dataIndex: 'd',
                     stateId: 'destination',
@@ -113,7 +114,7 @@ Ext.define('Taco.view.redirects.Index', {
                     text: 'Rewrite',
                     width: 100,
                     align: 'center'
-                }, 
+                },
                 {
                     dataIndex: 'q',
                     stateId: 'qs',
@@ -189,34 +190,40 @@ Ext.define('Taco.view.redirects.Index', {
             items: [this.uploadButton]
         });
 
+        this.moreButtonCfg = {
+            menu: [
+                {
+                    text: 'Import',
+                    scale: 'medium',
+                    ui: 'action',
+                    hidden: !this.allowCreate(),
+                    margin: '0 0 0 15',
+                    handler: function () {
+                        this.uploadButton.fileInputEl.set({ accept: '.csv' });
+                        this.uploadButton.fileInputEl.dom.click();
+                    },
+                    scope: this
+                }, {
+                    text: 'Export',
+                    scale: 'medium',
+                    ui: 'action',
+                    hidden: !this.allowCreate(),
+                    handler: this.onExport,
+                    margin: '0 0 0 15',
+                    scope: this
+                }
+            ]
+        };
+
         this.additionalActions = [
             {
-                xtype: 'button',
-                text: 'Import',
-                scale: 'medium',
-                ui: 'action',
-                hidden: !this.allowCreate(),
-                margin: '0 0 0 15',
-                handler: function () {
-                    this.uploadButton.fileInputEl.set({ accept: '.csv' });
-                    this.uploadButton.fileInputEl.dom.click();
-                },
-                scope: this
-            }, {
-                xtype: 'button',
-                text: 'Export',
-                scale: 'medium',
-                ui: 'action',
-                hidden: !this.allowCreate(),
-                handler: this.onExport,
-                margin: '0 0 0 15',
-                scope: this
+                xtype: 'taco-siteviewdropdown'
             }
         ];
-    
+
         this.callParent(arguments);
 
-        this.rowEditor.on('edit', function(cmp, row, e) { 
+        this.rowEditor.on('edit', function(cmp, row, e) {
             if (row.record.phantom) {
                 row.record.save({
                     success: function() {
@@ -247,8 +254,8 @@ Ext.define('Taco.view.redirects.Index', {
             primaryText: 'Yes, Continue',
             items: [{
                 xtype: 'container',
-                layout: { 
-                    type: 'hbox' 
+                layout: {
+                    type: 'hbox'
                 },
                 items: [
                     Ext.create('Ext.panel.Panel', {
@@ -288,5 +295,5 @@ Ext.define('Taco.view.redirects.Index', {
         window.location.href = '/admin/app/redirects/export?siteid=' + Taco.app.context.getSiteId();
 
     }
-    
+
 });

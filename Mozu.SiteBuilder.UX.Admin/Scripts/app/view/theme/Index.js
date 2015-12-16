@@ -5,7 +5,8 @@
 Ext.define('Taco.view.theme.Index', {
     extend: 'Taco.core.ux.browser.SearchListTree',
     requires: [
-        'Taco.store.ThemeListingsTree'
+        'Taco.store.ThemeListingsTree',
+        'Taco.core.ux.content.SiteViewDropdown'
     ],
 
     contextConfig: {
@@ -94,27 +95,7 @@ Ext.define('Taco.view.theme.Index', {
 
         this.additionalActions = [
             {
-                xtype: 'splitbutton',
-                ui: 'action',
-                cls: 'taco-action-secondary',
-                scale: 'medium',
-                text: 'View',
-                height: 40,
-                menu: [
-                    {
-                        text: 'View Live',
-                        handler: function(menuItem) {
-                            window.open('/_gosite/' + Taco.app.context.getSiteId() + '?environment=live&redir=' + encodeURIComponent('/'));
-                        }
-                    },
-                    {
-                        text: 'View Staged',
-                        handler: function(menuItem) {
-                            var url = me.url;
-                            window.open('/_gosite/' + Taco.app.context.getSiteId() + '?environment=preview&redir=' + encodeURIComponent('/'));
-                        }
-                    }
-                ]
+                xtype: 'taco-siteviewdropdown'
             }
         ];
 
@@ -133,11 +114,10 @@ Ext.define('Taco.view.theme.Index', {
         			}
         		}
         	]
-        }
-
+        };
 
     	this.callParent(arguments);
-    
+
     },
 
     buildAppliedView: function() {
@@ -184,10 +164,10 @@ Ext.define('Taco.view.theme.Index', {
                         });
                     }, 1, this);
                 }
-            }, 
+            },
             {
                 text: 'Preview',
-                menuColumnHandler: function (item, eventData) {                        
+                menuColumnHandler: function (item, eventData) {
                     var record = eventData.record;
 
                     var height = Taco.app.viewPort.getHeight();

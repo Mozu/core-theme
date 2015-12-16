@@ -46,7 +46,8 @@ Ext.define('Taco.view.website.Index', {
         'Taco.view.publishing.component.button.PublishButton',
         'Taco.view.navigation.ContextSwitcher',
         'Taco.store.WidgetDefinitions',
-        'Taco.store.LayoutWidgetDefinitions'
+        'Taco.store.LayoutWidgetDefinitions',
+        'Taco.core.ux.content.SiteViewDropdown'
     ],
     selectedTheme: '',
     itemId: 'websiteIndex',
@@ -238,28 +239,15 @@ Ext.define('Taco.view.website.Index', {
 
             },
             {
-                xtype: 'button',
-                ui: 'link',
-                cls: 'taco-action-secondary',
-                scale: 'medium',
-                text: 'View',
-                height: 40,
-                menu: [
-                    {
-                        text: 'View Live',
-                        handler: function(menuItem) {
-                            var url = me.url;
-                            window.open('/_gosite/' + Taco.app.context.getSiteId() + '?environment=live&redir=' + encodeURIComponent(url));
-                        }
-                    },
-                    {
-                        text: 'View Staged',
-                        handler: function(menuItem) {
-                            var url = me.url;
-                            window.open('/_gosite/' + Taco.app.context.getSiteId() + '?environment=preview&redir=' + encodeURIComponent(url));
-                        }
-                    }
-                ]
+                xtype: 'taco-siteviewdropdown',
+                viewLiveHandler: function() {
+                    var url = me.url;
+                    window.open('/_gosite/' + Taco.app.context.getSiteId() + '?environment=live&redir=' + encodeURIComponent(url));
+                },
+                viewStagedHandler: function() {
+                    var url = me.url;
+                    window.open('/_gosite/' + Taco.app.context.getSiteId() + '?environment=preview&redir=' + encodeURIComponent(url));
+                }
             },
             {
                 xtype: 'button',
