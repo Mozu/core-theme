@@ -168,6 +168,7 @@
         .#{$prefix}panel-body {
             tr {
 
+                &.#{$prefix}grid-row,
                 &.#{$prefix}grid-data-row,
                 &.#{$prefix}grid-row-focused,
                 &.#{$prefix}grid-row-before-focused {
@@ -179,6 +180,16 @@
                 &:nth-child(even) {
                     .#{$prefix}grid-td {
                         background-color: $grid-even-stripe-bg;
+
+                        td {
+                            &:nth-child(odd) {
+                                background-color: $grid-even-stripe-bg;
+
+                                & + td {
+                                    background-color: $grid-even-stripe-bg;
+                                }
+                            }
+                        }
                     }
                 }
 
@@ -212,19 +223,78 @@
                         }
 
                         td {
-                            border: none;
                             background-color: $white-color;
+
+                            td {
+                                &:nth-child(odd) {
+                                    background-color: $white-color;
+
+                                    & + td {
+                                        background-color: $white-color;
+                                    }
+                                }
+                            }
+
+                            &:hover {
+                                td {
+                                    background-color: $grid-row-hover-bg;
+
+                                    td {
+                                        background-color: $grid-row-hover-bg;
+                                    }
+                                }
+                            }
+
+                            &:active {
+                                td {
+                                    background-color: $dark-bg;
+
+                                    td {
+                                        background-color: $dark-bg;
+
+                                        &:nth-child(odd) {
+                                            background-color: $dark-bg;
+
+                                            & + td {
+                                                background-color: $dark-bg;
+                                            }
+                                        }
+                                    }
+                                }
+                            }
                         }
 
                         &:hover {
                             td {
                                 background-color: $grid-row-hover-bg;
+
+                                td {
+                                    &:nth-child(odd) {
+                                        background-color: $grid-row-hover-bg;
+
+                                        & + td {
+                                            background-color: $grid-row-hover-bg;
+                                        }
+                                    }
+                                }
                             }
                         }
 
                         &:active {
                             td {
                                 background-color: $dark-bg;
+
+                                td {
+                                    background-color: $dark-bg;
+
+                                    &:nth-child(odd) {
+                                        background-color: $dark-bg;
+
+                                        & + td {
+                                            background-color: $dark-bg;
+                                        }
+                                    }
+                                }
                             }
                         }
                     }
