@@ -71,7 +71,7 @@ Ext.define('Taco.core.ux.mixins.LaunchEditor', {
         }
     },
 
-    launchEditor: function (record, options) {        
+    launchEditor: function (record, options) {
         var me = this,
             modelClass = Ext.ClassManager.get(me.modelName);
         if (Ext.isString(record)) {
@@ -91,9 +91,11 @@ Ext.define('Taco.core.ux.mixins.LaunchEditor', {
             delete complexMetaData.record;
         }
 
-        Ext.defer(function () {
-            Taco.core.StateManager.attemptNavigate(Taco.core.StateManager.getCurrentState().metaData.controller + '/edit/' + record.getId(), complexMetaData);
-        }, 1, this);
+        if (Taco.core.StateManager.getCurrentState().metaData.controller != 'redirects') {
+            Ext.defer(function () {
+                Taco.core.StateManager.attemptNavigate(Taco.core.StateManager.getCurrentState().metaData.controller + '/edit/' + record.getId(), complexMetaData);
+            }, 1, this);
+        }
     },
 
     editMenuColumnHandler: function (item, eventData) {
