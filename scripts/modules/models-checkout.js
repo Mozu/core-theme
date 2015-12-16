@@ -542,7 +542,7 @@
                     order.get('billingInfo').clear();
                     order.set(updatedOrder, { silent: true });
                 }
-                self.trigger('orderPayment', updatedOrder, self);
+                this.trigger('orderPayment', updatedOrder, this);
 
             },
 
