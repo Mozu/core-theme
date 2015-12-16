@@ -29,8 +29,6 @@
 
             a {
                 color: $valid-green;
-                background-color: $white-color;
-                cursor: pointer;
                 height: 160px;
             }
         }
@@ -87,30 +85,82 @@
             width: 60px;
         }
 
-        .#{$vprefix}icon-customers {
-            @include icons-sprite(icon-home-customers);
-        }
-        .#{$vprefix}icon-catalog {
-            @include icons-sprite(icon-home-catalog);
-        }
-        .#{$vprefix}icon-orders {
-            @include icons-sprite(icon-home-orders);
+        .#{$vprefix}icon-customer {
+            @include icon-font($glyph-customers, 70px, $valid-green);
+            top: 46px;
             width: 74px;
         }
+
+        .#{$vprefix}icon-products {
+            @include icon-font($glyph-catalog, 70px, $valid-green);
+            top: 46px;
+            width: 74px;
+        }
+
+        .#{$vprefix}icon-order {
+            @include icon-font($glyph-orders, 70px, $valid-green);
+            top: 46px;
+            width: 74px;
+        }
+
         .#{$vprefix}icon-marketing {
-            @include icons-sprite(icon-home-marketing);
+            @include icon-font($glyph-marketing, 70px, $valid-green);
+            top: 46px;
+            width: 74px;
         }
-        .#{$vprefix}icon-sitebuilder {
-            @include icons-sprite(icon-home-sitebuilder);
+
+        .#{$vprefix}icon-content {
+            @include icon-font($glyph-sitebuilder, 70px, $valid-green);
+            top: 46px;
+            width: 74px;
         }
+
         .#{$vprefix}icon-publishing {
-            @include icons-sprite(icon-home-publish);
+            @include icon-font($glyph-publishing, 70px, $valid-green);
+            top: 46px;
+            width: 74px;
         }
-        .#{$vprefix}icon-locations {
-            @include icons-sprite(icon-home-locations);
+
+        .#{$vprefix}icon-report {
+            @include icon-font($glyph-reporting, 70px, $valid-green);
+            top: 46px;
+            width: 74px;
         }
-        .#{$vprefix}icon-reports {
-            @include icons-sprite(icon-home-reporting);
+
+        .#{$vprefix}icon-settings {
+            @include icon-font($glyph-settings, 70px, $valid-green);
+            top: 46px;
+            width: 74px;
+        }
+
+        .#{$vprefix}icon-schema {
+            @include icon-font($glyph-schema, 70px, $valid-green);
+            top: 46px;
+            width: 74px;
+        }
+
+        .#{$vprefix}icon-customization {
+            @include icon-font($glyph-custom, 70px, $valid-green);
+            top: 46px;
+            width: 74px;
+        }
+
+        .#{$vprefix}icon-structure {
+            @include icon-font($glyph-structure, 70px, $valid-green);
+            top: 46px;
+            width: 74px;
+        }
+
+        .#{$vprefix}icon-permissions {
+            @include icon-font($glyph-permission, 70px, $valid-green);
+            top: 46px;
+            width: 74px;
+        }
+
+        .#{$vprefix}icon-localization {
+            @include icon-font($glyph-locations, 70px, $valid-green);
+            top: 46px;
+            width: 74px;
         }
     }
 }

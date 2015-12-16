@@ -29,15 +29,12 @@ Ext.define('Taco.view.dashboard.Index', {
                                 '</tpl></div>',
                             '</div>',
                         '</li>',
-                        // '{[xindex % 4 === 0 && xindex !== xcount ? "</ul><ul class=\'taco-dashboard-group\'>" : ""]}',
                     '</tpl>',
                 '</ul>'
             ];
 
         me.systemData = [];
         me.mainData = [];
-
-
     
         me.mainDashboardTpl = Ext.create('Ext.Component', {
             data: me.mainData,
@@ -91,7 +88,6 @@ Ext.define('Taco.view.dashboard.Index', {
             xtype: 'panel',
             tabConfig: {
                 cls: 'taco-tab-heading',
-                margin: '0 0 0 -3',
                 title: 'Main',
                 width: 129
             },
@@ -107,7 +103,8 @@ Ext.define('Taco.view.dashboard.Index', {
             tabConfig: {
                 cls: 'taco-tab-heading',
                 width: 129,
-                title: 'System'
+                title: 'System',
+                margin: '0 0 0 -3',
             },
             items: [
                 this.systemDashboardTpl
