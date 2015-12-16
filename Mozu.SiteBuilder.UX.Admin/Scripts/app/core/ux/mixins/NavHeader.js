@@ -316,9 +316,10 @@ Ext.define('Taco.core.ux.mixins.NavHeader', {
             items: []
         };
 
-        me.hamburgerButton = Ext.create('Taco.core.ux.mixins.HamburgerButton');
-
-        conf.items.push(me.hamburgerButton);
+        if (!this.hideNavMenu) {
+            me.hamburgerButton = Ext.create('Taco.core.ux.mixins.HamburgerButton');
+            conf.items.push(me.hamburgerButton);
+        }
 
         if (me.title !== false) {
 

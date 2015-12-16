@@ -268,6 +268,7 @@ Ext.define("Taco.view.category.Form", {
                     deferEmptyText: false,
                     emptyText: me.record.phantom ? "Save the category to add rules." : "None Available"
                 },
+                hideNavMenu: true,
                 isCatalogLevel: true,
                 categoryCode: me.record.get('categoryCode'),
                 isPopUp: true,

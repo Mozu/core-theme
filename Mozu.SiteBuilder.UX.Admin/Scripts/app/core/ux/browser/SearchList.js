@@ -30,6 +30,9 @@ Ext.define('Taco.core.ux.browser.SearchList', {
     gridHeaderLabel: "Items",
     
     enableNavHeader: false,
+
+    hideNavMenu: false,
+
     // grids with navHeader `enabled will need extra content padding. Class will be assigned in the navHeader mixin.
     addContentPadding: false,
 
