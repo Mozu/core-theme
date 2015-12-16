@@ -1,20 +1,18 @@
 .#{$vprefix}primary-menu-ct, .#{$vprefix}content-view {
     background-color: $color-neutral-white;
-    box-shadow: rgba(0, 0, 0, 0.09) 1px 1px 6px 0px !important;
+    box-shadow: rgba(0, 0, 0, 0.09) 1px 1px 6px 0px;
     margin-left: 0px;
     opacity: 1;
-    visibility: visible !important;
-    @include outer-shadow(0.4, 2px, 3px, 3px);
     @include transition(margin-left 300ms ease-in-out, opacity 300ms ease-in-out);
-
-    .#{$vprefix}dashboard-body {
-        background-color: $light-bg-gray !important;
-    }
 
     &.hidden {
         margin-left: -300px;
         opacity: 0;
         @include transition(margin-left 150ms ease-in-out, opacity 150ms ease-in-out);
+    }
+
+    .#{$vprefix}dashboard-body {
+        background-color: $light-bg-gray !important;
     }
 
     .#{$prefix}panel {
@@ -101,6 +99,17 @@
         .#{$prefix}box-inner {
 
         }
+    }
+}
+
+.#{$vprefix}primary-menu-mask {
+    background-color: $light-bg;
+    opacity: 0.9;
+    @include transition(opacity 300ms ease-in-out);
+
+    &.hidden {
+        opacity: 0;
+        @include transition(opacity 150ms ease-in-out);
     }
 }
 

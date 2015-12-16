@@ -6,13 +6,11 @@ Ext.define('Taco.view.navigation.PrimaryMenuContainer', {
     extend: 'Ext.container.Container',
     requires: [
         'Taco.core.ux.content.Logo',
-        'Taco.view.navigation.PrimaryMenuSubContainer'
+        'Taco.view.navigation.PrimaryMenuSubContainer',
+        'Taco.view.navigation.PrimaryMenuMask'
     ],
     cls: 'taco-primary-menu-ct hidden',
-    //autoEl: {
-    //    tag: 'div',
-    //    cls: 'taco-primary-menu-ct'
-    //},
+
     autoShow: false,
     autoScroll:true,
     border: false,
@@ -29,8 +27,12 @@ Ext.define('Taco.view.navigation.PrimaryMenuContainer', {
     isBound: false,
     width: 280,
     height: '100%',
-    
+
     initComponent: function () {
+
+        this.mask = Ext.create('Taco.view.navigation.PrimaryMenuMask', {
+            renderTo: Ext.getBody()
+        });
 
         this.callParent(arguments);
         this.on({
@@ -199,6 +201,7 @@ Ext.define('Taco.view.navigation.PrimaryMenuContainer', {
      */
     showMenu: function () {
         clearTimeout(this._hideTimeout);
+        this.mask.showMask();
         this.show();
         this.updateCurrentPage();
         this.getEl().removeCls('hidden');
@@ -216,15 +219,12 @@ Ext.define('Taco.view.navigation.PrimaryMenuContainer', {
             return this.hide();
         }
 
-        this.getEl().addCls('hidden');
+        this.mask.hideMask();
+
+        el.addCls('hidden');
         this._hideTimeout = setTimeout(function () {
             me.hide();
-        }, 300);
-    },
-
-    hide: function () {
-        console.log('hide');
-        this.callParent(arguments);
+        }, 150);
     },
 
     /**
