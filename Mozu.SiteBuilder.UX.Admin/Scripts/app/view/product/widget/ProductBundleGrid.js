@@ -141,7 +141,7 @@ Ext.define('Taco.view.product.widget.ProductBundleGrid', {
                 menuDisabled: true,
                 text: '',
                 width: 40,
-                iconCls: Taco.baseCSSPrefix + 'grid-row-menu-trigger ' + Taco.baseCSSPrefix + 'grid-row-menu-trigger-remove',
+                iconCls: Taco.baseCSSPrefix + 'grid-row-menu-trigger-remove',
                 menuItems: [],
                 handler: function(grid, rowIndex, colIndex, header, e, record, item) {
                     // tell the method that we we want to move this item back to the unshippedItems list;

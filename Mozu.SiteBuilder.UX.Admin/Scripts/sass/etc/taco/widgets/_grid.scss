@@ -200,8 +200,12 @@
 
 
     // over ride of default menu trigger icon to make it a remove icon instead of a gear menu icon
-    .#{$vprefix}grid-row-menu-trigger-remove {    
-        @include icons-sprite(icon-remove); // icon is an <img>
+    .#{$vprefix}grid-row-menu-trigger-remove {
+        @include icon-font($glyph-close, 16px, $color-action-outline);
+
+        &:hover {
+            @include icon-font($glyph-close, 16px, $color-action-foreground);
+        }
     }
 
 
