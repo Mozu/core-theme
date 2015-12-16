@@ -23,3 +23,16 @@
     }
 }
 
+.#{$vprefix}grid-row-menu .#{$prefix}menu-item {
+    .#{$prefix}menu-item-arrow::after {
+        top: 13px;
+        content: $glyph-arrow-right;
+        font-size: 8px;
+        color: $gray-text-light;
+    }
+    &:hover {
+        .#{$prefix}menu-item-arrow::after {
+            color: $dark-color;
+        }
+    }
+}
