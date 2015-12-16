@@ -47,17 +47,13 @@ Ext.define('Taco.view.website.Index', {
         'Taco.view.navigation.ContextSwitcher',
         'Taco.store.WidgetDefinitions',
         'Taco.store.LayoutWidgetDefinitions',
-        'Taco.core.ux.content.SiteViewDropdown'
+        'Taco.core.ux.content.SiteViewDropdown',
+        'Taco.view.navigation.ContextSwitcherSelector'
     ],
     selectedTheme: '',
     itemId: 'websiteIndex',
     dontFloatHeaderButtons: true,
     hideContextSwitcherBar: true,
-    contextConfig: {
-        supportedLevels: ['s'],
-        requiresContextOfType: ['s'],
-        hidden: false
-    },
     title: false,
     entityTypeEditConfig: {
         blog: 'Taco.view.website.entityAdapters.DocumentEntityAdapter',
@@ -182,20 +178,9 @@ Ext.define('Taco.view.website.Index', {
         });
 
         this.actions = [
-            Ext.create('Taco.core.ux.content.ContextMenu', {
-                width: '120px',
-                fieldStyle: 'background-color: #fff;',
-                requiresContextOfType: ['s'],
+            Ext.create('Taco.view.navigation.ContextSwitcherSelector', {
                 supportedLevels: ['s'],
-                listeners: {
-                    change: function() {
-                        //if were changing website scope, we need to redirect back to homepage
-                        if (me.url !== '/') {
-                            me.url = '/';
-                            me.navigate({url: me.url});
-                        }
-                    }
-                }
+                requiresContextOfType: ['s']
             }),
             {
                 xtype: 'component',
