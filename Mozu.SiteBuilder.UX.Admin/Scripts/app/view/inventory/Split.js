@@ -57,7 +57,10 @@ Ext.define('Taco.view.inventory.Split', {
         this.additionalActions = this.getAdditionalActions();
 
         this.moreButtonCfg = {
-            menu: this.getMenuItems()
+            menu: {
+                items: this.getMenuItems(),
+                cls: 'taco-more-action-button-menu'
+            }
         };
 
         this.mixins.navHeader.init.apply(this);
