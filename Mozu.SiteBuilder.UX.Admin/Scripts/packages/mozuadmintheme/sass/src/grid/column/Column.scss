@@ -32,6 +32,7 @@
             width: 100%;
             height: 100%;
             text-align: center;
+            color: $glyph-icon-color-inactive;
         }
     }
 
@@ -40,7 +41,7 @@
     }
 
     .#{$prefix}column-header-over .#{$prefix}column-header-trigger::after {
-        color: $dark-color;
+        color: $glyph-icon-color;
     }
 }
 

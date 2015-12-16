@@ -87,7 +87,12 @@ Ext.define('Taco.core.ux.grid.MenuColumn', {
             plain: true,
             shadow: false,
             cls: Taco.baseCSSPrefix + 'grid-row-menu',
-            items: this.getMenuItems(items)
+            items: this.getMenuItems(items),
+            listeners: {
+                beforehide: function(eOpts) {
+                    Ext.fly(this.gridColumnHeaderTrigger).removeCls(Taco.baseCSSPrefix + 'grid-row-menu-trigger-active');
+                }
+            }
         });
 
         this.onMenuShow(this.menu, eventData);
@@ -134,7 +139,10 @@ Ext.define('Taco.core.ux.grid.MenuColumn', {
 
     handler: function(grid, rowIndex, colIndex, header, e, record, item) {
         var trigger = e.getTarget('div.' + this.iconCls, 10),
-            eventData = {};
+            eventData = {
+                menuPosition: 'tr-br',
+                menuOffsets: [0, 5]
+            };
 
         Ext.apply(eventData, {
             grid: grid.ownerCt,
@@ -165,8 +173,9 @@ Ext.define('Taco.core.ux.grid.MenuColumn', {
      */
     showMenuBy: function (el, eventData) {
         var menu = this.getMenu(eventData);
+        Ext.apply(menu, {gridColumnHeaderTrigger: el});
 
-        // Ext.fly(el).addCls(Ext.baseCSSPrefix + 'menu');
+        Ext.fly(el).addCls(Taco.baseCSSPrefix + 'grid-row-menu-trigger-active');
         menu.showBy(el, eventData.menuPosition, eventData.menuOffsets);
     },
 
