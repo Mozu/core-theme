@@ -19,13 +19,13 @@ Ext.define('Taco.view.location.Edit', {
     initComponent: function () {
         var me = this;
 
-        this.additionalActions = [{
+        this.moreButtonCfg = {
             xtype: 'button',
             height: 40,
             itemId: 'moreButton',
             ui: 'action',
             scale: 'medium',
-            text: 'More',
+            text: '',
             menuAlign: 'tr-br?',
             menu: {
                 plain: true,
@@ -47,7 +47,7 @@ Ext.define('Taco.view.location.Edit', {
                     }
                 }]
             }
-        }];
+        };
 
 
         this.callParent(arguments);
