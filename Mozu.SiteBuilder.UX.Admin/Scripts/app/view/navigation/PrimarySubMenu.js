@@ -17,10 +17,17 @@ Ext.define('Taco.view.navigation.PrimarySubMenu', {
 
         this.tpl = [
             '<tpl for=".">',
-                '<li class="taco-menu-item" style="{[(values.visible && !values.breadCrumbOnly) ? "" : "display:none" ]}">',
+                '<li class="taco-menu-item {[this.checkActive(values.address)]}" style="{[(values.visible && !values.breadCrumbOnly) ? "" : "display:none" ]}">',
                     '<a href="{address}" class="taco-primary-menu-item-link">{label}</a>',
                 '</li>',
-            '</tpl>'
+            '</tpl>',
+            {
+                checkActive: function (address) {
+                    return me.compareState(address)
+                        ? 'active'
+                        : '';
+                }
+            }
         ];
 
         this.callParent(arguments);
@@ -61,5 +68,37 @@ Ext.define('Taco.view.navigation.PrimarySubMenu', {
         if (menu) {
             menu.hideMenu();
         }
+    },
+
+    compareState: function (address) {
+        var data = Taco.app.StateManager.getCurrentState().complexMetaData;
+
+        return address === data.controller || address === data.controller + '/' + data.action;
+    },
+
+    updateCurrentPage: function () {
+        if (!this.getEl()) {
+            return;
+        }
+        Ext.each(this.getEl().query('li.taco-menu-item.active'), function (dom) {
+            Ext.fly(dom).removeCls('active');
+        });
+
+        var index = this.store.findBy(function (rec) {
+            return this.compareState(rec.get('address'));
+        }, this);
+
+        if (index === -1) {
+            return;
+        }
+
+        var dom = this.getEl().query('li.taco-menu-item')[index];
+
+        if (!dom) {
+            return;
+        }
+
+        Ext.fly(dom).addCls('active');
+        console.log('updateCurrentPage', this);
     }
 });

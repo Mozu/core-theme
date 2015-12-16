@@ -50,6 +50,12 @@ Ext.define('Taco.view.navigation.PrimaryMenuNavGroup', {
 
         this.callParent(arguments);
 
+    },
+
+    updateCurrentPage: function () {
+        Ext.each(this.subMenuItems, function (item) {
+            item.updateCurrentPage();
+        });
     }
 
 });

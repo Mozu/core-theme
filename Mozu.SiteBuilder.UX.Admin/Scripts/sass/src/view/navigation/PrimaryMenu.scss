@@ -157,7 +157,7 @@
         cursor: pointer;
         line-height: 24px;
 
-        &:hover {
+        &:hover, &.active {
             background-color: $nav-hover-bg;
 
             a {
@@ -167,6 +167,10 @@
 
         &:active {
             background-color: $dark-bg;
+        }
+
+        &.active {
+            border-left-color: $valid-green;
         }
 
         a {

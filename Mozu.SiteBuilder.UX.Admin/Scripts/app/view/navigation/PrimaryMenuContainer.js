@@ -83,6 +83,11 @@ Ext.define('Taco.view.navigation.PrimaryMenuContainer', {
         this.isBound = true;
     },
 
+    updateCurrentPage: function () {
+        this.viewMain.updateCurrentPage();
+        this.viewSystem.updateCurrentPage();
+    },
+
     compareController: function(address, controllerName) {
         address = (address || '').toLowerCase();
         return address === controllerName || Ext.util.Inflector.singularize(address) === Ext.util.Inflector.singularize(controllerName);
@@ -195,6 +200,7 @@ Ext.define('Taco.view.navigation.PrimaryMenuContainer', {
     showMenu: function () {
         clearTimeout(this._hideTimeout);
         this.show();
+        this.updateCurrentPage();
         this.getEl().removeCls('hidden');
     },
 
@@ -203,7 +209,6 @@ Ext.define('Taco.view.navigation.PrimaryMenuContainer', {
      * @private
      */
     hideMenu: function () {
-        console.log('hideMenu');
         var me = this,
             el = this.getEl();
 

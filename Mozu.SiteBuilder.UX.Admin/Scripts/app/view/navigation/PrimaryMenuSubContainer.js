@@ -34,6 +34,14 @@ Ext.define('Taco.view.navigation.PrimaryMenuSubContainer', {
             }
         });
         return navItems;
+    },
+
+    updateCurrentPage: function () {
+        this.items.each(function (item) {
+            if (item.updateCurrentPage) {
+                item.updateCurrentPage();
+            }
+        });
     }
 
 });

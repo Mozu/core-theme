@@ -35,5 +35,9 @@
             e.stopPropagation();
             Taco.core.StateManager.attemptNavigate(e.target.href);
             return false;
+        },
+
+        updateCurrentPage: function () {
+            console.log('updateCurrentPage', data);
         }
     });
