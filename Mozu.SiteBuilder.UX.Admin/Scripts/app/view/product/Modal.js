@@ -41,7 +41,8 @@ Ext.define('Taco.view.product.Modal', {
             filterStores: this.advancedSearchForm.stores,
             doc:'top'
         });
-        this.gridPager = Ext.create('Ext.toolbar.Paging', {
+        this.gridPager = Ext.create('Taco.core.ux.grid.LinkPaging', {
+            componentCls: 'x-link-paging-toolbar',
             store: this.store,
             displayInfo: true,
             dock: 'bottom'

@@ -27,10 +27,11 @@ Ext.define('Taco.view.customers.segments.Modal', {
       });
 
 
-      this.gridPager = Ext.create('Ext.toolbar.Paging', {
+      this.gridPager = Ext.create('Taco.core.ux.grid.LinkPaging', {
           store: this.store,
           displayInfo: true,
-          dock: 'bottom'
+          dock: 'bottom',
+          componentCls: 'x-link-paging-toolbar'
       });
 
       this.grid = Ext.create('Ext.grid.Panel', {
