@@ -52,7 +52,7 @@ Ext.define('Taco.view.navigation.PrimarySubMenu', {
             return;
         }
         href = e.target.getAttribute('href');
-        if (!href.startsWith('http')) {
+        if (href.indexOf('http') === -1) {
             Taco.core.StateManager.attemptNavigate(href);
         } else {
             window.open(href, '_new');
