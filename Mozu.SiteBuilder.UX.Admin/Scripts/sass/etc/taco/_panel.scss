@@ -198,10 +198,6 @@
 
                 & + .#{$prefix}grid-with-row-lines {
                     tr {
-                        &.#{$prefix}grid-data-row {
-                            border-bottom: 1px solid $grid-row-border;
-                        }
-
                         td {
                             background-color: $white-color;
                         }
@@ -309,6 +305,10 @@
         tbody {
             tr {
                 &.#{$prefix}grid-data-row {
+
+                    td {
+                        border-bottom: 1px solid $grid-row-border !important;
+                    }
 
                     &:hover {
                         background-color: $grid-row-hover-bg;
