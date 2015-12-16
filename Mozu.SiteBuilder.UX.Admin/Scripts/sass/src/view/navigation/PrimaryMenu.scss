@@ -2,7 +2,6 @@
     background-color: $color-neutral-white;
     margin-left: 0px;
     opacity: 1;
-    overflow: scroll !important;
     visibility: visible !important;
     @include outer-shadow(0.4, 2px, 3px, 3px);
     @include transition(margin-left 300ms linear, opacity 300ms linear);
@@ -12,13 +11,68 @@
         opacity: 0;
     }
 
-    &.#{$prefix}tab-heading {
-        border-color: #34ae90;
-        background-color: #34ae90;
-        box-shadow: none;
-        color: white;
-        border-top-left-radius: 4px;
-        border-bottom-left-radius: 4px;
+    .#{$prefix}tab-bar-default-horizontal {
+        background-color: $dark-bg;
+        border: 0px;
+        font-size: 13px;
+        height: auto;
+        padding: 10px;
+
+        a.#{$prefix}tab {
+            border: 1px solid $light-gray-border-color;
+            box-shadow: none;
+            text-shadow: none;
+
+            &:nth-of-type(1) {
+                border-top-left-radius: 5px;
+                border-bottom-left-radius: 5px;
+            }
+
+            &:nth-last-of-type(1) {
+                border-top-right-radius: 5px;
+                border-bottom-right-radius: 5px;
+            }
+
+            .#{$prefix}tab-wrap {
+                border: 0px;
+                padding: 0px;
+            }
+
+            .#{$prefix}tab-inner {
+                color: $nav-element-text;
+                font-size: 14px;
+                line-height: 26px;
+            }
+
+            &.#{$prefix}tab-active {
+                background-color: $valid-green;
+                border-color: $valid-green;
+
+                .#{$prefix}tab-inner {
+                    color: $white-color;
+                }
+            }
+
+            &:not(.#{$prefix}tab-active):hover {
+                background-color: $white-color;
+
+                .#{$prefix}tab-inner {
+                    color: $nav-element-active;
+                }
+            }
+
+            &:hover {
+                background-color: inital;
+
+                &:not(.#{$prefix}tab-active) {
+                    color: $nav-element-active;
+                }
+            }
+        }
+
+        .#{$prefix}box-inner {
+
+        }
     }
 }
 
@@ -81,11 +135,8 @@
     }
 
     li.#{$vprefix}menu-item {
-        //border-left: 5px solid $color-neutral-20;
+        border-left: 3px solid transparent;
         cursor: pointer;
-        //padding: 13px 0px 13px 20px;
-        //position: relative;
-        //width: 259px;
         line-height: 24px;
 
         &:hover {
@@ -105,111 +156,6 @@
             display: inline-block;
             padding-left: 20px;
             width: 100%;
-
-            //&:hover {
-            //    color: $color-neutral-white;
-            //}
-            &.#{$vprefix}menu-item-link {
-                // font-weight: bold;
-            }
         }
-
-        //a {
-        //    color: $color-neutral-75;
-        //    display: inline-block;
-        //
-        //    //&:hover {
-        //    //    color: $color-neutral-white;
-        //    //}
-        //    &.#{$vprefix}menu-item-link {
-        //        // font-weight: bold;
-        //    }
-        //    //&.#{$vprefix}icon {
-        //    //    @include icon-font($glyph-dashboard, 24px, $color-neutral-75);
-        //    //    height: auto;
-        //    //    width: auto;
-        //    //
-        //    //    &::after {
-        //    //        left: -51px;
-        //    //        top: -1px;
-        //    //    }
-        //    //}
-        //    //&.#{$vprefix}icon-nav-customers::after {
-        //    //    content: $glyph-customers;
-        //    //}
-        //    //&.#{$vprefix}icon-nav-catalog::after {
-        //    //    content: $glyph-catalog;
-        //    //}
-        //    //&.#{$vprefix}icon-nav-orders::after {
-        //    //    content: $glyph-orders;
-        //    //}
-        //    //&.#{$vprefix}icon-nav-marketing::after {
-        //    //    content: $glyph-marketing;
-        //    //}
-        //    //&.#{$vprefix}icon-nav-sites::after {
-        //    //    content: $glyph-sitebuilder;
-        //    //}
-        //    //&.#{$vprefix}icon-nav-publishing::after {
-        //    //    content: $glyph-publishing;
-        //    //}
-        //    //&.#{$vprefix}icon-nav-locations::after {
-        //    //    content: $glyph-locations;
-        //    //    top: 4px;
-        //    //}
-        //}
-
-        //&.#{$vprefix}menu-item-hover {
-        //    background-color: $color-neutral-white;
-        //    border-left-color: $color-framework-red;
-        //
-        //    .#{$vprefix}icon {
-        //        color: $color-neutral-white;
-        //
-        //        &::after {
-        //            color: $color-neutral-white;
-        //        }
-        //    }
-        //}
-
-        //&.#{$vprefix}menu-item-active {
-        //    a.#{$vprefix}menu-item-link {
-        //        border-bottom: 2px solid $color-theme-base;
-        //        color: $color-neutral-white;
-        //    }
-        //}
-        //
-        //&.#{$vprefix}menu-item-nav-next {
-        //    border-top: 1px solid $color-standard-border;
-        //    border-bottom: 1px solid $color-standard-border;
-        //}
-        //
-        //&.#{$vprefix}menu-item-nav-prev {
-        //    border-bottom: 1px solid $color-standard-border;
-        //}
-
-        //ul {
-        //    font-size: px-to-rem(14);
-        //    line-height: px-to-rem(18);
-        //    margin-left: -5px;
-        //
-        //    li {
-        //        display: block;
-        //        margin: 4px 0px 1px;
-        //        padding: 0px 7px 0px 5px;
-        //
-        //        &:hover {
-        //            background-color: $color-framework-gray-lighter;
-        //        }
-        //
-        //
-        //        //&.#{$vprefix}submenu-item-active {
-        //        //    a {
-        //        //        border-bottom: 2px solid $color-theme-base;
-        //        //        color: $color-neutral-white;
-        //        //        text-decoration: none;
-        //        //    }
-        //        //}
-        //    }
-        //}
     }
 }

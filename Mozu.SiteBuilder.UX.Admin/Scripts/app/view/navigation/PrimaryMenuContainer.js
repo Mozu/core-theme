@@ -51,13 +51,18 @@ Ext.define('Taco.view.navigation.PrimaryMenuContainer', {
             title: 'Main',
             parentMenu: this,
             store: store,
-            navParent: 'main'
+            navParent: 'main',
+            tabConfig: {
+                width: 129
+            }
         });
         this.viewSystem = Ext.create('Taco.view.navigation.PrimaryMenuSubContainer', {
             title: 'System',
             tabConfig: {
+                cls: 'taco-tab-heading',
+                margin: '0 0 0 -3',
                 title: 'System',
-                cls: 'taco-tab-heading'
+                width: 129
             },
             parentMenu: this,
             store: store,
@@ -65,8 +70,7 @@ Ext.define('Taco.view.navigation.PrimaryMenuContainer', {
         });
         this.add({
                 xtype: 'tabpanel',
-                padding: '9 10 0 10',
-                //cls: 'taco-primary-menu-ct',
+                cls: 'taco-primary-menu-tabs',
                 autoShow:true,
                 items: [
                     this.viewMain,
