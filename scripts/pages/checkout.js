@@ -158,7 +158,7 @@ require(["modules/jquery-mozu", "underscore", "hyprlive", "modules/backbone-mozu
                     this.render();
             }, this);
             this.listenTo(this.model, 'change:savedPaymentMethodId', function (order, scope) {
-                $("[data-mz-saved-cvv]").val("").change();
+                $('[data-mz-saved-cvv]').val('').change();
                 this.render();
             }, this);
             this.codeEntered = !!this.model.get('digitalCreditCode');
