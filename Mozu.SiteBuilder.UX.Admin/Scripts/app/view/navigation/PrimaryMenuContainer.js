@@ -203,6 +203,7 @@ Ext.define('Taco.view.navigation.PrimaryMenuContainer', {
      * @private
      */
     hideMenu: function () {
+        console.log('hideMenu');
         var me = this,
             el = this.getEl();
 
@@ -214,6 +215,11 @@ Ext.define('Taco.view.navigation.PrimaryMenuContainer', {
         this._hideTimeout = setTimeout(function () {
             me.hide();
         }, 300);
+    },
+
+    hide: function () {
+        console.log('hide');
+        this.callParent(arguments);
     },
 
     /**

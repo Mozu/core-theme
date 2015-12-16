@@ -56,7 +56,7 @@ Ext.define('Taco.controller.Navigation', {
 
         if (!pm) return;
 
-        pm.hide();
+        pm.hideMenu();
         pm.onStateChange(appState);
     }
 });

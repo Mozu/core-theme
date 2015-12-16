@@ -17,6 +17,10 @@
         box-shadow: none !important;
     }
 
+    .#{$prefix}collapsed-icon {
+        @include icon-font($glyph-plus-circle);
+    }
+
     .#{$prefix}tab-bar-default-horizontal {
         background-color: $dark-bg;
         border: 0px;
