@@ -117,6 +117,8 @@ Ext.define('Taco.view.category.Index', {
         }, 
         {
             xtype: 'taco.menucolumn',
+            text: '<span class="taco-grid-row-menu-trigger" />',
+            flex:1,
             menuItems: [{
                 text: 'Edit',
                 requiredBehaviors: {
