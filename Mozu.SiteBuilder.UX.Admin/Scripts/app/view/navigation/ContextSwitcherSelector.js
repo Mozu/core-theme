@@ -24,11 +24,9 @@
 
         this.callParent(arguments);
 
-        //Taco.app.context.setCurrentSite(this.site);
-
         this.on({
             select: function (view, record) {
-                Taco.app.context.setCurrentSite(record.get('value'));
+                if (record) Taco.app.context.setCurrentSite(record.get('value'));
             }
         });
     },

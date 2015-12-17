@@ -1184,11 +1184,12 @@ Ext.define('Taco.view.website.Index', {
         this.entitypeTypeHandler = this.createEntityTypeAdapter(pc, editor);
 
         Ext.EventManager.on(this.iframe.getDoc(), 'click', function (e, target) {
-            //cancel if over a dropzone.   dont interfere with
-            if (this.chorizoEditor && !this.chorizoEditor._dirty) {
+
+            if (this.chorizoEditor && this.chorizoEditor._dirty) {
                 e.stopEvent();
                 return;
             }
+            
             if (!e.browserEvent.defaultPrevented) {
                 me.fireEvent('beforeIframeClickNavigate', {
                     url: target.pathname + target.search,
