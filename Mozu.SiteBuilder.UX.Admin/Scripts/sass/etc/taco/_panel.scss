@@ -503,7 +503,18 @@
 			line-height: 30px;
 			vertical-align: middle;
 			font-size: $normal-font;
-		}  
+		}
+
+        &.confirm-delete-subcat-warning {
+            .#{$prefix}panel-header-body {
+                @include icon-font($glyph-warning, 16px, $color-neutral-20);
+                height: 33px;
+                &::after {
+                    opacity: 0.5;
+                    line-height: 33px;
+                }
+            }
+        }
 	}
 
     .#{$prefix}column-content-pill {

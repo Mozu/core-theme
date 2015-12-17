@@ -69,9 +69,9 @@ Ext.define('Taco.view.category.ConfirmDeleteOfSubcategoriesModal', {
                         },
                         margin: '20 0 20 0',
                         items: [{
+                                cls: 'confirm-delete-subcat-warning',
                                 xtype: 'panel',
                                 title: ' ',
-                                glyph: 'XE02F@mozicons',
                                 width: 20,
                                 margin: '0 5 0 0'
                             }, {
