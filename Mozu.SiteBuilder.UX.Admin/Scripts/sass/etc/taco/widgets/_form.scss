@@ -128,11 +128,11 @@
         border-bottom: none;
     }
     .#{$prefix}field .#{$prefix}form-radio {
-        @include icons-sprite(icon-radio);
+        @include icons-sprite(radio-unchecked);
         background-size: 14px;
     }
     .#{$prefix}form-cb-checked .#{$prefix}form-radio {
-        @include icons-sprite(icon-radio-selected);
+        @include icons-sprite(radio-checked);
         background-size: 14px;
     }
     .#{$prefix}form-type-checkbox,
