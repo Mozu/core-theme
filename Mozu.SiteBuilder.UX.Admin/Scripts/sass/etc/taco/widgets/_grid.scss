@@ -95,6 +95,10 @@
                 color: $glyph-icon-color;
             }
         }
+
+        .x-grid-tree-node-leaf & {
+            margin-right: 11px;
+        }
     }
 
     tr {
