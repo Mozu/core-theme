@@ -38,10 +38,9 @@ Ext.define('Taco.core.ux.picker.SelectorFlyout', {
     },
 
     adjustHeight: function() {
+        this.setHeight(null);
         if (this.getY() + this.getHeight() > window.innerHeight) {
             this.setHeight(window.innerHeight - this.getY());
-        } else {
-            this.setHeight(null);
         }
     },
 
