@@ -1,14 +1,15 @@
 .#{$vprefix}primary-menu-ct, .#{$vprefix}content-view {
     background-color: $color-neutral-white;
     box-shadow: rgba(0, 0, 0, 0.09) 1px 1px 6px 0px;
-    margin-left: 0px;
+    left: 0;
     opacity: 1;
-    @include transition(margin-left 300ms ease-in-out, opacity 300ms ease-in-out);
+    @include transition(transform 300ms ease-in-out, opacity 300ms ease-in-out);
 
     &.hidden {
-        margin-left: -300px;
         opacity: 0;
-        @include transition(margin-left 150ms ease-in-out, opacity 150ms ease-in-out);
+        transform-style: preserve-3d;
+        transform: translateX(-300px);
+        @include transition(transform 150ms ease-in-out, opacity 150ms ease-in-out);
     }
 
     .#{$vprefix}dashboard-body {
