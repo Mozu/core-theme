@@ -57,10 +57,26 @@ Ext.define('Taco.view.inventory.Split', {
         this.additionalActions = this.getAdditionalActions();
 
         this.moreButtonCfg = {
-            menu: {
-                items: this.getMenuItems(),
-                cls: 'taco-more-action-button-menu'
-            }
+            itemId: 'moreButton',
+            menu: [
+                {
+                    cls: 'call-to-action override',
+                    text: 'Adjustment Mode',
+                },
+                {   
+                    xtype: 'menucheckitem',
+                    text: 'Add',
+                    itemId: 'adjustmentModeAdd',
+                    group: 'adjustmentMode',
+                    checked: true
+                },
+                {   
+                    xtype: 'menucheckitem',
+                    text: 'Set',
+                    itemId: 'adjustmentModeSet',
+                    group: 'adjustmentMode'
+                }
+            ]
         };
 
         this.mixins.navHeader.init.apply(this);
@@ -91,33 +107,6 @@ Ext.define('Taco.view.inventory.Split', {
         return [
      
         ];
-    },
-
-    getMenuItems: function() {
-        var me = this;
-
-        return [
-            {
-                text: 'Adjustment Mode',
-                itemId: 'adjustmentMode',
-               	menu: [
-               		{ 
-               			xtype: 'menucheckitem',
-	                    text: 'Add',
-	                    checked: true,
-	                    itemId: 'adjustmentModeAdd',
-	                    group: 'adjustmentMode'
-                    },
-                    { 
-               			xtype: 'menucheckitem',
-	                    text: 'Set',
-	                    checked: false,
-	                    itemId: 'adjustmentModeSet',
-	                    group: 'adjustmentMode'
-                    }
-               	]
-            }
-       	];
     },
 
     getCurrentEntityRecord: function() {

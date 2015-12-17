@@ -113,27 +113,24 @@ Ext.define('Taco.view.location.inventory.Index', {
         this.secondToolbarItems = [this.locationCombo];
 
         this.moreButtonCfg = {
+            itemId: 'moreButton',
             menu: [
                 {
-                    cls: 'taco-more-action-button-menu',
+                    cls: 'call-to-action override',
                     text: 'Adjustment Mode',
-                    itemId: 'adjustmentmode-dropdown',
-                    menu: [
-                        { 
-                            xtype: 'menucheckitem',
-                            text: 'Add',
-                            checked: true,
-                            itemId: 'adjustmentModeAdd',
-                            group: 'adjustmentMode'
-                        },
-                        { 
-                            xtype: 'menucheckitem',
-                            text: 'Set',
-                            checked: false,
-                            itemId: 'adjustmentModeSet',
-                            group: 'adjustmentMode'
-                        }
-                    ]
+                },
+                {   
+                    xtype: 'menucheckitem',
+                    text: 'Add',
+                    itemId: 'adjustmentModeAdd',
+                    group: 'adjustmentMode',
+                    checked: true
+                },
+                {   
+                    xtype: 'menucheckitem',
+                    text: 'Set',
+                    itemId: 'adjustmentModeSet',
+                    group: 'adjustmentMode'
                 }
             ]
         };
@@ -186,86 +183,6 @@ Ext.define('Taco.view.location.inventory.Index', {
     },  
 
     useTilePanel: false,
-    
-    loadSecondToolbar: function () {
-        var me = this;
-
-        this.locationPicker = Ext.widget("taco-locationpickerfield", {
-            emptyText: "Choose a location",
-            displayField: 'displayName',
-            flex: null,
-            width: 300,
-            forceSelection: true,
-            editable: false,
-            extraFilters: [
-                { id: "status", property: 'status', value: 'all' },
-                { id: "supportsInventory", property: 'supportsInventory', value: 'true' }
-            ],
-            listeners: {
-                select: {
-                    fn: function (combo, records, eOpts) {
-                        var record = records[0],
-                            itemBrowser = this.up('searchlist'),
-                            gridStore = itemBrowser.store,
-                            code = record.get('code');
-
-                        if (record.get('isDisabled')) {
-                            this.fireEvent('locationchange', this, true);
-                        } else {
-                            this.fireEvent('locationchange', this, false);
-                        }
-
-                        // an extra filter to be added to each service call. note this will not be cleared when you clear the filters;
-                        // adding a filter with the same id will be treated like an update
-                        gridStore.extraFilters.add({ id: "locationCode", property: 'locationCode', value: code });
-                        gridStore.load();
-                    }
-                }
-            }
-        });
-
-        this.adjustmentMode = Ext.widget({
-            xtype: 'selectfield',
-            name: 'adjustmentMode',
-            itemId: "adjustmentMode",
-            fieldLabel: 'Adjustment Mode',
-            labelAlign: 'left',
-            labelWidth: 125,
-            width: 250,
-            required: false,
-            queryMode: 'local',
-            value: 'Delta',
-            displayField: 'name',
-            valueField: 'id',
-            store: Ext.create('Ext.data.Store', {
-                fields: ['id', "name"],
-                data: [
-                    {
-                        name: "Add",
-                        id: "Delta"
-                    }, {
-                        name: "Set",
-                        id: "Absolute"
-                    }
-                ]
-            })
-
-        });
-
-        this.mon(this.locationPicker, 'locationchange', me.onLocationChange, me);
-
-        this.secondToolbarItems = [
-            {
-                xtype: "component",
-                html: 'Inventory for: ',
-                margin: '0 10 0 0',
-                padding: '2 0 0 0'
-            },
-            this.locationPicker,
-            '->',
-            this.adjustmentMode
-        ];
-    },
 
     filterFormConf: {
         width: 600,
@@ -400,7 +317,9 @@ Ext.define('Taco.view.location.inventory.Index', {
 
             }
         ];
+
         gridColumns = gridColumns.concat(Taco.view.location.inventory.InventoryStockColumns.getInventoryStockColumns('productCode'));
+
         gridColumns.push({
             xtype: 'taco.menucolumn',
             menuDisabled: true,
@@ -455,6 +374,7 @@ Ext.define('Taco.view.location.inventory.Index', {
         // };
 
         this.columns = gridColumns;
+
         this.viewConfig = {
             deferEmptyText: false,
             emptyText: "No products with inventory at this location."
@@ -483,9 +403,11 @@ Ext.define('Taco.view.location.inventory.Index', {
 
     onRowEditorUpdate: function (editor, context) {
         var locInvRecord = context.record,
-            adjustmentType = this.adjustmentMode.getValue();
+            adjustmentTypeAdd = this.navHeader && this.navHeader.down('#adjustmentModeAdd') ? this.navHeader.down('#adjustmentModeAdd') : null,
+            adjustmentType = adjustmentTypeAdd && adjustmentTypeAdd.checked ? 'Absolute' : 'Delta';
 
         locInvRecord.set('adjustmentType', adjustmentType);
+
         if (adjustmentType === 'Delta') {
             Taco.view.location.inventory.InventoryStockColumns.removeDeltaListener(editor);
         }
