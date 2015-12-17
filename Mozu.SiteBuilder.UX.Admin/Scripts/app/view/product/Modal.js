@@ -30,7 +30,6 @@ Ext.define('Taco.view.product.Modal', {
 
         this.advancedSearchForm = Ext.create('Taco.view.product.AdvancedSearchForm');
 
-
         this.searchBox = Ext.widget({
             xtype: 'taco-filtercontainer',
             width: '100%',

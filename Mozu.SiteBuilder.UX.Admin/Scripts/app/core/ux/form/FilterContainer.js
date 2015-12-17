@@ -106,7 +106,7 @@ Ext.define('Taco.core.ux.form.FilterContainer', {
             scope: this
         };
 
-        var filterComponents = this.searchType === 'navigation' ? [this.textFilter, this.advancedSearchButton] : [this.advancedSearchButton, this.textFilter];
+        var filterComponents = this.searchType === 'navigation' ? [this.textFilter, this.advancedSearchButton] : [this.textFilter, this.advancedSearchButton];
 
         if (this.disableAdvancedSearch) {
             this.items.push(this.textFilter);
