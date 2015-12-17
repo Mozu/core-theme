@@ -3,6 +3,40 @@
         @include border-radius-xbrowser(5px);
         @include color-blur-outer-shadow ($black-color, 0.29, 0, 16px, 0, 1px);
 
+        .#{$prefix}panel {
+            .#{$prefix}grid-header-ct {
+                .#{$prefix}column-header {
+                    &:first-child {
+                        padding-left: 0;
+                    }
+
+                    .#{$prefix}column-header-over {
+                        background-color: transparent;
+                    }
+                }
+            }
+
+            .#{$prefix}grid-view-default {
+                color: $dark-color;
+                background-color: $white-color;
+                font-size: $normal-font;
+
+                > table {
+                    tbody {
+                        tr {
+                            td {
+                                padding: 1px 10px 2px 10px;
+
+                                &:first-child {
+                                    padding-left: 0;
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+
         &.#{$vprefix}drawer {
             @include border-radius-xbrowser(5px);
             @include color-blur-outer-shadow ($black-color, 0.29, 0, 16px, 0, 1px);
