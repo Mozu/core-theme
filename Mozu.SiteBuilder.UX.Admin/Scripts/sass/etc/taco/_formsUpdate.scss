@@ -104,22 +104,10 @@
         }
     }
 
-    /* html editor */
-    .#{$prefix}html-editor-container {
-        &.#{$prefix}box-layout-ct {
-            min-width: 762px;
-        }
-
-        > .#{$prefix}box-inner {
-            min-width: 762px;
-        }
-    }
-
     .#{$prefix}html-editor-input {
         border-color: $input-border;
         border-left: none;
         border-right: none;
-        min-width: 762px;
     }
 
     .#{$prefix}html-editor-tb {
@@ -127,9 +115,7 @@
         border: 1px solid $input-border;
         border-color: $input-border !important;
         @include border-radius-xbrowser($border-radius-small);
-        border-right: none;
         height: 30px;
-        min-width: 762px;
 
         .#{$prefix}horizontal-box-overflow-body {
             min-width: 711px;
@@ -155,13 +141,17 @@
             padding: 6px 16px;
             position: relative !important;
 
+            &:last-child {
+                border-right: none;
+            }
+
             &:hover {
                 background: $white-color;
                 text-decoration: none;
             }
 
             &.#{$prefix}btn-default-toolbar-small {
-                display: inline-block !important;
+                display: inline-block;
 
                 &:active {
                     background: $white-color;

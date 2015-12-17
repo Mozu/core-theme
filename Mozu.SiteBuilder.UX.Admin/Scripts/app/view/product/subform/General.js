@@ -680,7 +680,7 @@ Ext.define('Taco.view.product.subform.General', {
                         name: 'productShortDescription',
                         emptyText: 'Words',
                         //width: classDef.getBufferedWidth(null, '100%'),
-                        width: fullFieldWidth,
+                        width: 712,
                         height: 300,
 
                         listeners: {
@@ -694,6 +694,7 @@ Ext.define('Taco.view.product.subform.General', {
                         emptyText: 'Words, words, and more words.  Also, with lists.',
                         //width: classDef.getBufferedWidth(null, '100%'),
                         width: fullFieldWidth,
+                        width: 712,
                         height: 300,
 
                         listeners: {
