@@ -55,13 +55,13 @@ Ext.define('Taco.core.ux.picker.Selector', {
             itemId: 'trigger',
             hidden: this.disableTrigger || this.store.count() === 0,
             xtype: 'component'
-        }, {
+        }, Ext.apply({}, this.flyoutCfg, {
             callToActionText: this.callToActionText,
             itemId: 'flyout',
             store: this.store,
             excludeByValue: this.value,
             xtype: 'taco.selectorflyout'
-        }];
+        })];
 
         this.callParent(arguments);
 
@@ -137,13 +137,22 @@ Ext.define('Taco.core.ux.picker.Selector', {
             }
 
             if (!this.flyout.isHidden()) {
+                this.getEl().down('.trigger').removeCls('active');
                 this.flyout.hide();
             }
         }, this);
     },
 
     togglePicker: function () {
-        this.flyout[this.flyout.isHidden() ? 'show' :  'hide']();
+        var el = this.getEl();
+
+        if (this.flyout.isHidden()) {
+            this.flyout.show();
+            el.down('.trigger').addCls('active');
+        } else {
+            this.flyout.hide();
+            el.down('.trigger').removeCls('active');
+        }
     },
 
     selectDefaultValue: function () {

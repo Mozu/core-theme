@@ -13,6 +13,13 @@
 
         this.store = this.buildStore();
 
+        this.cls += ' taco-context-switcher-selector';
+
+        this.flyoutCfg = {
+            alignment: 'tl-br?',
+            alignmentOffsets: [-30, -15]
+        };
+
         this.callParent(arguments);
 
         this.on({
