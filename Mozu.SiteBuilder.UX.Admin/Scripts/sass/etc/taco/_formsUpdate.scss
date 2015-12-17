@@ -332,6 +332,20 @@
 
     .#{$prefix}form-checkbox {
         height: 16px;
+
+        &.#{$prefix}form-checkbox-focus,
+        &:focus {
+            @include inner-shadow-blur ($form-focus-color, 2px, 2px, 0, 0);
+            @include border-radius-xbrowser($border-radius-small);
+        }
+    }
+
+    .#{$prefix}form-radio {
+        &.#{$prefix}form-radio-focus,
+        &:focus {
+            @include inner-shadow-blur ($form-focus-color, 2px, 2px, 0, 0);
+            @include border-radius-xbrowser(45px);
+        }
     }
 
     // Read Only Fields

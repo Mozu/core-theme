@@ -101,6 +101,14 @@
   -ms-box-shadow: $x $y $radius rgba(0,0,0,$strength) inset;
 }
 
+@mixin inner-shadow-blur ($color: $black-color, $radius: 5px, $blur: 0, $x: 0, $y: 0) {
+  box-shadow: $x $y $blur $radius $color inset;
+  -moz-box-shadow: $x $y $blur $radius $color inset;
+  -webkit-box-shadow: $x $y $blur $radius $color inset;
+  -o-box-shadow: $x $y $blur $radius $color inset;
+  -ms-box-shadow: $x $y $blur $radius $color inset;
+}
+
 /* ANIMATIONS */
 
 @mixin facade-transitions ($speed: 0.3s, $easing: ease-in-out) {
