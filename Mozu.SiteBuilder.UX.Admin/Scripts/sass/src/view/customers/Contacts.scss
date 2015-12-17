@@ -1,8 +1,19 @@
 ﻿.#{$vprefix}customer-contacts {
-    
-    a .#{$prefix}btn-inner {
-        color: $color-standard-link;
-        font-size: 14px;
+
+    a {
+        .#{$prefix}btn-inner {
+            color: $gray-text-dark;
+            font-size: 14px;
+        }
+
+        &:hover,
+        &:active {
+            background-color: transparent;
+            
+            .#{$prefix}btn-inner {
+                color: $dark-color;
+            }
+        }
     }
 
     .address {
