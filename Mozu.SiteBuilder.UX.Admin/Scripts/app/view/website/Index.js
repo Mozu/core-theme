@@ -68,6 +68,11 @@ Ext.define('Taco.view.website.Index', {
     enableNavHeader: true,
     cancelButtonEnabled: false,
     options: {},
+    
+    contextConfig: {
+        supportedLevels: ['s'],
+        requiresContextOfType: ['s']
+    },
 
     layout: {
         type: 'fit'

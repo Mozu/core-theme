@@ -10,6 +10,8 @@
     callToActionText: 'Switch Site:',
 
     initComponent: function () {
+        
+        this.site = Taco.app.context.getContextAtLevel('s');
 
         this.store = this.buildStore();
 
@@ -21,6 +23,8 @@
         };
 
         this.callParent(arguments);
+
+        //Taco.app.context.setCurrentSite(this.site);
 
         this.on({
             select: function (view, record) {
@@ -38,7 +42,7 @@
             }, this);
         }, this);
 
-        this.value = Taco.app.context.getContextAtLevel('s').id;
+        this.value = this.site.id;
 
         return ret;
     }

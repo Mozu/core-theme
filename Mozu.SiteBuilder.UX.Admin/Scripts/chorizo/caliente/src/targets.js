@@ -1,16 +1,16 @@
-import { 
+import {
     POSITION_DICTIONARY,
-    GRID_CLASSNAME, 
-    GRID_SELECTOR,   
-    COL_CLASSNAME, 
-    COL_SELECTOR, 
+    GRID_CLASSNAME,
+    GRID_SELECTOR,
+    COL_CLASSNAME,
+    COL_SELECTOR,
     ALL_COL_SELECTOR,
     ROW_CLASSNAME,
-    ROW_SELECTOR,     
+    ROW_SELECTOR,
     BLOCK_CLASSNAME,
-    BLOCK_SELECTOR,     
-    CONTENT_CLASSNAME, 
-    CONTENT_SELECTOR, 
+    BLOCK_SELECTOR,
+    CONTENT_CLASSNAME,
+    CONTENT_SELECTOR,
     DROP_HINT_TEXT,
     ROW_TITLE,
     DATA_GRID_ATTRIBUTE,
@@ -26,6 +26,11 @@ import {
     COL_COPY_ID,
     COL_COPY_SELECTOR
 } from './constants';
+
+// ugh to fix ie11 issue; delete when browsers support Array.from
+Array.from = function() {
+    return Array.prototype.slice.call(arguments[0]);
+};
 
 (function(win, doc) {
 
@@ -944,7 +949,7 @@ import {
             let closetWidget = this.closest(e.target, BLOCK_CLASSNAME);
             let target = e.target;
 
-            // if were dropping widgets, we need to get the width/height of the 
+            // if were dropping widgets, we need to get the width/height of the
             // current widget were hovering over
             if (Chorizo.editor.hideLayouts && closetWidget) {
                 width = parseInt(window.getComputedStyle(closetWidget, null).width);
@@ -1033,7 +1038,7 @@ import {
                 // else {
                 //     pos = POSITION_DICTIONARY.BOTTOM;
                 // }
-             
+
                 return {
                     position: position,
                     element: targetedBlock,
@@ -1193,9 +1198,9 @@ import {
                 this.element.insertBefore(block.element, this._colmouseposition.element);
             }
 
-            else if (this._colmouseposition.position === POSITION_DICTIONARY.LEFT 
+            else if (this._colmouseposition.position === POSITION_DICTIONARY.LEFT
                 || this._colmouseposition.position === POSITION_DICTIONARY.RIGHT) {
-                this.insertColWithWidget(block, this._colmouseposition.position);                
+                this.insertColWithWidget(block, this._colmouseposition.position);
             }
 
             if (cb) {

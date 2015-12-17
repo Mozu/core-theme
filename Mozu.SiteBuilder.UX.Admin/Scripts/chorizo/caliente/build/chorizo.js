@@ -1113,6 +1113,11 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
 
 var _constants = require('./constants');
 
+// ugh to fix ie11 issue; delete when browsers support Array.from
+Array.from = function () {
+    return Array.prototype.slice.call(arguments[0]);
+};
+
 (function (win, doc) {
 
     var _mouseposition = null;
