@@ -115,6 +115,7 @@ Ext.define('Taco.view.location.inventory.Index', {
         this.moreButtonCfg = {
             menu: [
                 {
+                    cls: 'taco-more-action-button-menu',
                     text: 'Adjustment Mode',
                     itemId: 'adjustmentmode-dropdown',
                     menu: [

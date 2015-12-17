@@ -26,6 +26,7 @@ Ext.define('Taco.view.category.Edit', {
 
         this.moreButtonCfg = {
             menu: {
+                cls: 'taco-more-action-button-menu',
                 plain: true,
                 shadow: false,
                 items: [{

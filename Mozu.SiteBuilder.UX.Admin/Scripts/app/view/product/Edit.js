@@ -194,6 +194,7 @@
             text: '',
             menuAlign: 'tr-br?',
             menu: {
+                cls: 'taco-more-action-button-menu',
                 plain: true,
                 shadow: false,
                 items: [{

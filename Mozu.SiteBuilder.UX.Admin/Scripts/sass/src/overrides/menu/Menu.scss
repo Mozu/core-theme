@@ -24,7 +24,8 @@
 }
 
 .#{$vprefix}grid-row-menu .#{$prefix}menu-item,
-.#{$vprefix}more-action-button-menu .#{$prefix}menu-item {
+.#{$vprefix}more-action-button-menu .#{$prefix}menu-item,
+.#{$vprefix}more-action-button-menu.#{$prefix}menu-item {
     .#{$prefix}menu-item-arrow::after {
         top: 13px;
         content: $glyph-arrow-right;
