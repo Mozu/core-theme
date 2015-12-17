@@ -19,6 +19,7 @@
     .#{$prefix}menu-plain,
     .#{$vprefix}checkbox-flyout,
     .#{$vprefix}selector-flyout {
+        overflow-y: auto;
         background-color: $white-color;
         border: 1px solid $dropdown-list-outline;
         @include border-radius-xbrowser($border-radius-small);

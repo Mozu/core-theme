@@ -60,6 +60,10 @@ Ext.define('Taco.core.ux.picker.SelectorFlyout', {
             this.alignment,
             this.alignmentOffsets
         );
+
+        if (this.getY() + this.getHeight() > window.innerHeight) {
+            this.setHeight(window.innerHeight - this.getY());
+        }
     },
 
     buildView: function () {
