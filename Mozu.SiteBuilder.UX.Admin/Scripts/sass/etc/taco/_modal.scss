@@ -88,9 +88,12 @@
                 &.#{$prefix}btn-action-medium {
                     background-color: transparent;
                     border: none;
-                    padding: 0;
                     opacity: .35;
-                    @include icon-font($glyph-filter-list, $dark-color);
+                    @include icon-font($glyph-filter-list, 17px, $dark-color);
+
+                    &:after {
+                        padding: 10px;
+                    }
 
                     &:hover {
                         opacity: 1;
@@ -99,7 +102,8 @@
             }
         }
 
-        .#{$prefix}form-search-trigger {
+        .#{$prefix}form-search-trigger,
+        .#{$prefix}form-clear-trigger {
             position: absolute;
             left: 10px;
 
