@@ -32,19 +32,24 @@ Ext.define('Taco.view.product.Index', {
     saveButtonEnabled: false,
     createButtonEnabled: true,
     createButtonText: 'Create New Product',
-    plugins: [{
-        ptype: 'rowexpander',
-        pluginId: 'expander',
-        rowBodyTpl: new Ext.XTemplate(
-            '<tpl for="productInCatalogs"><tr class="x-grid-row-body">',
-            '<td colspan="2" class="x-grid-subcell"><div class="x-grid-cell-inner"></div></td>',
-            '<td class="x-grid-subcell"><div class="x-grid-cell-inner"><span class="taco-launch-editor" data-catalog-id="{catalogId}">{productName}</span></div></td>',
-            '<td class="x-grid-subcell"><div class="x-grid-cell-inner">{[this.formatPrice(values.price,values.catalogId)]}</div></td>',
-            '<td class="x-grid-subcell"><div class="x-grid-cell-inner">{[this.formatPrice(values.salePricem,values.catalogId)]}</div></td>',
-            '<td class="x-grid-subcell"><div class="x-grid-cell-inner">{catalogId:this.toCatalogName}</div></td>',
-            '<td class="x-grid-subcell"><div class="x-grid-cell-inner">{isContentOverridden:this.formatOverridden}</div></td>',
-            '<td class="x-grid-subcell"><div class="x-grid-cell-inner"></div></td>',
-            '</tr></tpl>', {
+    contextConfig: {
+        supportedLevels: ['m', 'c'],
+        requiresContextOfType: ['m', 'c', 's']
+    },
+    plugins: [
+        {
+            ptype: 'rowexpander',
+            pluginId: 'expander',
+            rowBodyTpl: new Ext.XTemplate(
+                '<tpl for="productInCatalogs"><tr class="x-grid-row-body">',
+                '<td colspan="2" class="x-grid-subcell"><div class="x-grid-cell-inner"></div></td>',
+                '<td class="x-grid-subcell"><div class="x-grid-cell-inner"><span class="taco-launch-editor" data-catalog-id="{catalogId}">{productName}</span></div></td>',
+                '<td class="x-grid-subcell"><div class="x-grid-cell-inner">{[this.formatPrice(values.price,values.catalogId)]}</div></td>',
+                '<td class="x-grid-subcell"><div class="x-grid-cell-inner">{[this.formatPrice(values.salePricem,values.catalogId)]}</div></td>',
+                '<td classass="x-grid-subcell"><div class="x-grid-cell-inner">{catalogId:this.toCatalogName}</div></td>',
+                '<td class="x-grid-subcell"><div class="x-grid-cell-inner">{isContentOverridden:this.formatOverridden}</div></td>',
+                '<td class="x-grid-subcell"><div class="x-grid-cell-inner"></div></td>',
+                '</tr></tpl>', {
                 formatOverridden: function (value) {
                     return value ? '<span class="x-column-content-pill x-column-content-pill-true">Yes</span>' : '';
                 },
@@ -55,11 +60,16 @@ Ext.define('Taco.view.product.Index', {
                     var catalog = Taco.app.context.findCatalog(value);
                     return catalog ? catalog.name : 'n/a';
                 }
-            })
-    }],
-    contextConfig: {
-        supportedLevels: ['m', 'c'],
-        requiresContextOfType: ['m', 'c', 's']
+            }),
+            hideExpanderFn: function() {
+                return Taco.app.context.getCurrent().contextType !== 'm';
+            }
+        }
+    ],
+    listeners: {
+        afterrender: function (grid) {
+            grid.getPlugin('expander').hideExpanderFn();
+        }
     },
     bulkEditorColumns: [{
         dataIndex: 'productCode',
@@ -135,11 +145,47 @@ Ext.define('Taco.view.product.Index', {
         Taco.app.StateManager.attemptNavigate(controller + '/create');
     },
 
+    // removeRowExpander: function() {
+    //     this.plugins[0].
+    // },
+
     initComponent: function() {
         var me = this;
 
         if (!me.store.isStore) {
             me.store = Taco.core.data.StoreManager.getOrCreate(me.store);
+        }
+
+        // if (Taco.app.context.getCurrent().contextType === 'm') {
+        //      this.plugins = [{
+        //         ptype: 'rowexpander',
+        //         pluginId: 'expander',
+        //         rowBodyTpl: new Ext.XTemplate(
+        //             '<tpl for="productInCatalogs"><tr class="x-grid-row-body">',
+        //             '<td colspan="2" class="x-grid-subcell"><div class="x-grid-cell-inner"></div></td>',
+        //             '<td class="x-grid-subcell"><div class="x-grid-cell-inner"><span class="taco-launch-editor" data-catalog-id="{catalogId}">{productName}</span></div></td>',
+        //             '<td class="x-grid-subcell"><div class="x-grid-cell-inner">{[this.formatPrice(values.price,values.catalogId)]}</div></td>',
+        //             '<td class="x-grid-subcell"><div class="x-grid-cell-inner">{[this.formatPrice(values.salePricem,values.catalogId)]}</div></td>',
+        //             '<td classass="x-grid-subcell"><div class="x-grid-cell-inner">{catalogId:this.toCatalogName}</div></td>',
+        //             '<td class="x-grid-subcell"><div class="x-grid-cell-inner">{isContentOverridden:this.formatOverridden}</div></td>',
+        //             '<td class="x-grid-subcell"><div class="x-grid-cell-inner"></div></td>',
+        //             '</tr></tpl>', {
+        //                 formatOverridden: function (value) {
+        //                     return value ? '<span class="x-column-content-pill x-column-content-pill-true">Yes</span>' : '';
+        //                 },
+        //                 formatPrice: function (value, catalog) {
+        //                     return (value || value === 0) ? Taco.app.context.findCatalog(catalog).formatCurrency(value) : "<span class='taco-empty-cell'>N/A</span>";
+        //                 },
+        //                 toCatalogName: function (value) {
+        //                     var catalog = Taco.app.context.findCatalog(value);
+        //                     return catalog ? catalog.name : 'n/a';
+        //                 }
+        //             })
+        //     }];
+        // }
+
+        if (Taco.app.context.getCurrent().contextType !== 'm') {
+            // this.removeRowExpander();
         }
 
         this.columns = [
@@ -332,5 +378,5 @@ Ext.define('Taco.view.product.Index', {
                 }
             }]
         this.callParent(arguments);
-    }
+    },
 });
