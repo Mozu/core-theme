@@ -38,6 +38,9 @@
 
     .#{$prefix}column-header-open .#{$prefix}column-header-trigger {
         box-shadow: $more-menu-active-shadow 0 0 0 1px inset;
+        &::after {
+            color: $glyph-icon-color;
+        }
     }
 
     .#{$prefix}column-header-over .#{$prefix}column-header-trigger::after {
