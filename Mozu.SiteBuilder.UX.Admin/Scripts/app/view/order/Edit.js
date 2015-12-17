@@ -74,8 +74,7 @@ Ext.define('Taco.view.order.Edit', {
             
             //dirtyState: this.record.get('publishedState') !== 'Live'
             scope: this
-        },
-        {
+        }, {
                 xtype: 'button',
                 ui: 'action',
                 scale: "medium",
@@ -88,7 +87,6 @@ Ext.define('Taco.view.order.Edit', {
                 handler: this.navigateToPrevious,
                 //dirtyState: this.record.get('publishedState') !== 'Live'
                 scope: this
-
             }
         ];
 

@@ -6,12 +6,34 @@ Ext.define('Taco.core.ux.PrevNextArrowButtons', {
 
     initComponent: function () {
 
-        this.tpl = '<div class="arrow prev">P</div><div class="arrow next">N</div>';
+        this.addEvents([
+            'navigateToPrevious',
+            'navigateToNext'
+        ]);
 
-        this.data = {};
+        this.tpl = '<div class="{prevCls}">P</div><div class="{nextCls}">N</div>';
 
-        this.addEvents('')
-        this.html = 'howdy';
+        this.data = {
+            prevCls: 'arrow prev',
+            nextCls: 'arrow next'
+        };
+
         this.callParent(arguments);
+
+        this.on({
+            click: function (e) {
+                var el = Ext.fly(e.target);
+
+                if (el.hasCls('prev')) {
+                    return this.fireEvent('navigateToPrevious');
+                }
+
+                if (el.hasCls('next')) {
+                    return this.fireEvent('navigateToNext');
+                }
+            },
+            element: 'el',
+            scope: this
+        })
     }
 });
