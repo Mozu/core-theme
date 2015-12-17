@@ -36,6 +36,7 @@ Ext.define('Taco.store.SubnavLinks', {
             }
         }
     ],
+
     possibleLocations: [
         'products',
         'categories',
