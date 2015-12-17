@@ -49,11 +49,21 @@
          * Search form
          */
         input {
-            border: none;
+            // border: none;
             font-size: 17px;
+
+            &:hover,
+            &:focus {
+                border-color: $light-border-gray;
+            }
         }
 
         table {
+            .#{$prefix}form-item-body {
+                > .#{$prefix}box-layout-ct {
+                    // border-bottom: 1px solid $light-border-gray;
+                }
+            }
             tr {
                 .#{$prefix}form-item-input-row {
                     display: block;
@@ -70,10 +80,13 @@
                     }
                 }
 
+                .#{$prefix}field-form-focus,
+                &.#{$vprefix}quickfilter-over,
                 &:hover,
                 &:focus,
                 &:active {
                     opacity: 1;
+                    border-color: $light-border-gray;
                 }
             }
         }
@@ -81,6 +94,13 @@
         .#{$prefix}form-trigger-input-cell {
             position: absolute;
             left: 40px;
+            top: -4px;
+
+            > input {
+                &.#{$prefix}form-text {
+                    padding-bottom: 2px;
+                }
+            }
         }
 
         a {
@@ -88,6 +108,9 @@
                 &.#{$prefix}btn-action-medium {
                     background-color: transparent;
                     border: none;
+                    border-bottom: 1px solid $light-border-gray;
+                    @include border-radius-xbrowser(0px);
+                    height: 36px !important;
                     opacity: .35;
                     @include icon-font($glyph-filter-list, 17px, $dark-color);
 
@@ -97,6 +120,7 @@
 
                     &:hover {
                         opacity: 1;
+                        border-color: $light-border-gray;
                     }
                 }
             }
@@ -105,9 +129,14 @@
         .#{$prefix}form-search-trigger,
         .#{$prefix}form-clear-trigger {
             position: absolute;
-            left: 10px;
+            left: 0;
+            top: -3px;
+            width: 40px;
+            height: 29px;
+            border-bottom: 1px solid $light-border-gray;
 
             &:after {
+                padding: 0 10px;
                 color: $search-trigger-color;
             }
 
