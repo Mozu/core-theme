@@ -65,7 +65,11 @@
         width: 12px;
         height: 20px;
         border-radius: 3px;
-        left: 13px;
+        //left: 13px;
+        cursor: pointer;
+
+        float: right;
+        margin-right: -2px;
 
         &::after {
             right: 0;
@@ -187,10 +191,6 @@
             // padding-bottom: 4px;
             // padding-top: 4px;
         }
-    }
-
-    .#{$vprefix}grid-row-menu-trigger {
-        cursor: pointer;
     }
 
     // hide the action menu trigger image when its inside of the row editor. it causes a bunch of padding to be added;
@@ -344,11 +344,4 @@
         color: $gray-text-extra-light;
     }
 
-    .#{$vprefix}menu-trigger-shifted {
-        .#{$prefix}grid-row-over {
-            .#{$vprefix}grid-row-menu-trigger {
-                left: 9px;
-            }
-        }
-    }
 }

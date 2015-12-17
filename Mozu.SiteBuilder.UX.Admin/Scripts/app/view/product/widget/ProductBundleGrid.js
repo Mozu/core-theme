@@ -140,7 +140,7 @@ Ext.define('Taco.view.product.widget.ProductBundleGrid', {
                 draggable: false,
                 menuDisabled: true,
                 text: '',
-                width: 40,
+                //width: 40,
                 iconCls: Taco.baseCSSPrefix + 'grid-row-menu-trigger-remove',
                 menuItems: [],
                 handler: function(grid, rowIndex, colIndex, header, e, record, item) {

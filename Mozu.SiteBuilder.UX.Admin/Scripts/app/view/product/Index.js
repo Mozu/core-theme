@@ -283,7 +283,6 @@ Ext.define('Taco.view.product.Index', {
             {
                 xtype: 'taco.menucolumn',
                 stateId: 'actionsColumn',
-                flex: 1,
                 menuItems: [{
                     itemId: 'live',
                     text: 'View Live',
