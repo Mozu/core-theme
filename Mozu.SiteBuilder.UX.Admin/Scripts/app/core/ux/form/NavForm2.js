@@ -18,15 +18,7 @@ Ext.define('Taco.core.ux.form.NavForm2', {
     // this is the fine-tuning adjustment to move the section nav when it 'sticks'
     sectionNavTopOffset: 0,
 
-    // determines the positioning strategy for the stickyNav, true applies the 'taco-fixed-navForm2' class, false applies 'taco-relative-navForm2'
-    useFixedPosition: true,
-
-//    layout : "fit",
-
-    
-    //cls: "taco-navform2",
-
-    //padding: "20 20 10 20",
+    stickyClass: 'taco-fixed-navForm2',
 
     initComponent: function () {
         var me = this;
@@ -46,8 +38,6 @@ Ext.define('Taco.core.ux.form.NavForm2', {
                 originalItems.push(item)
             }
         });
-
-        this.stickyClass = 'taco-fixed-navForm2';
 
         this.formContainer = Ext.widget({
             xtype: 'container',
@@ -112,9 +102,10 @@ Ext.define('Taco.core.ux.form.NavForm2', {
 
     setNavDimensions: function() {
         var navStyle = this.sectionNav.getEl().dom.style;
+        var padding = 20;
 
-        navStyle.left = this.getX() - 20 + 'px';
-        navStyle.width = this.getWidth() + 40 + 'px';
+        navStyle.left = this.getX() - padding + 'px';
+        //navStyle.width = this.getWidth() + (padding * 2) + 'px';
 
         navStyle.top = this.getHeaderHeight() + this.sectionNavTopOffset + 'px';
     },
@@ -123,7 +114,7 @@ Ext.define('Taco.core.ux.form.NavForm2', {
         var navStyle = this.sectionNav.getEl().dom.style;
         navStyle.top = this.navCache.top;
         navStyle.left = this.navCache.left;
-        navStyle.width = this.navCache.width;
+        //navStyle.width = this.navCache.width;
     },
 
     cacheNavDimensions: function() {
@@ -131,7 +122,7 @@ Ext.define('Taco.core.ux.form.NavForm2', {
         this.navCache = this.navCache || {};
         this.navCache.top = navStyle.top;
         this.navCache.left = navStyle.left;
-        this.navCache.width = navStyle.width;
+        //this.navCache.width = navStyle.width;
     },
 
     getWrapper: function () {

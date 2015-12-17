@@ -15,6 +15,7 @@
     &.#{$vprefix}fixed-navForm2 {
       position: fixed !important;
       padding: 0 20px;
+      min-width: 100%;
     }
 
     li {
