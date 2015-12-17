@@ -40,9 +40,9 @@ Ext.define('Taco.view.customSchema.SchemaList', {
             }
         ];
 
-        this.seleModel =  this.getSelectionModel();
+        this.selModel =  this.getSelectionModel();
 
-        this.seleModel.on('selectionchange', this.handleSelection, this);
+        this.selModel.on('selectionchange', this.handleSelection, this);
 
         this.on('cellclick', this.showGridView, this);
 
@@ -58,7 +58,7 @@ Ext.define('Taco.view.customSchema.SchemaList', {
 
     selectFirstItem: function() {
         if (this.autoSelectFirstItem) {
-            this.seleModel.select(this.store.getAt(0));
+            this.handleSelection(null, [this.store.getAt(0)]);
         }
     },
 
@@ -74,6 +74,10 @@ Ext.define('Taco.view.customSchema.SchemaList', {
         if (this.dynamicGrid) {
             this.dynamicGrid.initListView(record[0]);
         }
+    },
+
+    clearSelection: function() {
+        this.selModel.deselectAll();
     }
 
 

@@ -252,7 +252,11 @@ Ext.define('Taco.view.customSchema.Split', {
                     Ext.Array.each(this.tabBar.items.items, function(button) {
                        button.addCls('taco-link-button');
                     });
+                },
+                tabchange: function(tabPanel, newCard, oldCard) {
+                    oldCard.clearSelection();
                 }
+
             }
         });
     },
