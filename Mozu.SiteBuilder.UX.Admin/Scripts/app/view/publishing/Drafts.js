@@ -32,9 +32,12 @@ Ext.define('Taco.view.publishing.Drafts', {
 
         this.moreButtonCfg = {
             menu: [
-                {
-                    text: 'Show Unassigned Publish Sets',
-                    handler: this.filterDrafts
+                {   
+                    xtype: 'menucheckitem',
+                    text: 'Show Unassigned Drafts',
+                    checked: true,
+                    handler: this.updateStores.bind(this),
+
                 }
             ]
         };
@@ -113,13 +116,7 @@ Ext.define('Taco.view.publishing.Drafts', {
                             }
                         }
                     },
-                    advancedFormCls: 'Taco.view.publishing.advancedSearchForm.DraftContent',
-                    listeners: {
-                        afterrender: function(cmp) {
-                            // cmp.searchToolbar.add(this.getFilterCheckBox('contentCheckbox'));
-                        },
-                        scope:this
-                    }
+                    advancedFormCls: 'Taco.view.publishing.advancedSearchForm.DraftContent'
                 })
             ]
         });
@@ -129,43 +126,13 @@ Ext.define('Taco.view.publishing.Drafts', {
         this.callParent(arguments);
     },
 
-    filterDrafts: function() {
-        //todo 
-        // this.updateStores(cmp, val ? 'all' : 'unassigned', val);
-    },
-
-    getFilterCheckBox: function(itemId) {
-        return {
-            xtype: 'checkbox',
-            labelAlign: 'right',
-            labelSeparagtor: '',
-            margin: '0 0 0 10',
-            hideLabel: true,
-            boxLabel: 'Show Drafts assigned to Publish Sets',
-            fieldLabel: 'Show Drafts assigned to Publish Sets',
-            itemId: itemId,
-            listeners: {
-                change: function(cmp, val) {
-                    this.updateStores(cmp, val ? 'all' : 'unassigned', val);
-                },
-                afterrender: function(cmp) {
-                    // the check box for the content grid hasnt been rendered, so we need to check it, once it renders only if the product grid has been checked
-                    if (cmp.itemId === 'contentCheckbox' && cmp.up('tabpanel').down('#productCheckbox').getValue()) {
-                        cmp.setValue(true);
-                    }
-                },
-                scope: this
-            }
-        };
-    },
-
-    updateStores: function(cmp, code, val) {
-        var type = cmp.itemId === 'productCheckbox' ? '#product' : '#content',
-            othercheckbox = cmp.itemId === 'productCheckbox' ? '#contentCheckbox' : '#productCheckbox';
-
-        if (cmp.up('tabpanel').down(othercheckbox)) cmp.up('tabpanel').down(othercheckbox).setValue(val);
+    updateStores: function(cmp, eventData) {
         
-        cmp.up('tabpanel').down(type).store.read({code: code, type: type === '#content' ? 'cms' : 'product'});
+        var checked = cmp.checked;
+        var code = checked ? 'all' : 'unassigned';
+        
+        this.down('#product').store.read({code: code, type: 'product'});
+        this.down('#content').store.read({code: code, type: 'cms'});
         
     }
 });
