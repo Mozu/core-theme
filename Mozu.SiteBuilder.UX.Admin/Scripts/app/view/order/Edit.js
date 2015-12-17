@@ -7,7 +7,8 @@ Ext.define('Taco.view.order.Edit', {
     extend: 'Taco.core.ux.form.FullEditor',
     requires: [
         'Taco.view.order.Form',
-        'Taco.core.ux.form.Tasks'
+        'Taco.core.ux.form.Tasks',
+        'Taco.core.ux.PrevNextArrowButtons'
     ],
     statics: {
         factory: function (cfg, callback, scope) {
@@ -90,6 +91,18 @@ Ext.define('Taco.view.order.Edit', {
 
             }
         ];
+
+        this.additionalActions = [{
+            xtype: 'taco.prevnext',
+            canNavigateToNext: this.canNavigateToNext(),
+            canNavigateToPrevious: this.canNavigateToPrevious(),
+            itemId: 'prevnext',
+            listeners: {
+                navigateToNext: this.navigateToNext,
+                navigateToPrevious: this.navigateToPrevious,
+                scope: this
+            }
+        }];
 
 
 
