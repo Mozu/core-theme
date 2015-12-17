@@ -70,8 +70,13 @@
             disableSelection: !this.isSupported('t'),
             disableTrigger: true,
             highlighted: tenant === this.currentContext,
+            listeners: {
+                select: function (view, record) {
+                    Taco.app.context.setCurrentTenant();
+                    view.highlight();
+                }
+            },
             tagText: 'tenant',
-            value: tenant.id,
             xtype: 'taco.pickerselector',
         }));
     },

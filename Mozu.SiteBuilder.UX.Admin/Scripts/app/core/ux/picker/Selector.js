@@ -106,7 +106,7 @@ Ext.define('Taco.core.ux.picker.Selector', {
         var selectedIndex = this.store ? this.store.find('value', this.value) : null;
         this.getEl().on({
             click: function (e) {
-                var record = this.store.findRecord('value', this.value);
+                var record;
 
                 if (e.target.className.indexOf('trigger') > -1) {
                     return this.togglePicker();
@@ -115,6 +115,11 @@ Ext.define('Taco.core.ux.picker.Selector', {
                 if (this.disableSelection) {
                     return;
                 }
+
+                if (this.store) {
+                    record = this.store.findRecord('value', this.value);
+                }
+
                 this.fireEvent('select', this, record);
             },
             scope: this
