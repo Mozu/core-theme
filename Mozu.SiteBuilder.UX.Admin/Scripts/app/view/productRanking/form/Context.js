@@ -32,7 +32,7 @@ Ext.define('Taco.view.productRanking.form.Context', {
                 labelCls: 'x-header-text x-panel-header-text x-panel-header-text-subform',
                 margin: '20 0 35 0'
             });
-        me.header.xtype = 'fieldcontainer';
+        me.header.xtype = 'panel';
 
         var catStore = Taco.core.data.StoreManager.getOrCreate({
             type: 'Taco.store.Categories',
@@ -104,7 +104,7 @@ Ext.define('Taco.view.productRanking.form.Context', {
             filterProperty: 'categoryCode'
         });
 
-        this.categoriesBox = Ext.create('Ext.form.FieldContainer', {
+        this.categoriesBox = Ext.create('Ext.panel.Panel', {
             layout: 'vbox',
             width: '50%',
             style: {
@@ -118,10 +118,10 @@ Ext.define('Taco.view.productRanking.form.Context', {
             allowBlank: true,
             items: [
                 {
-                    xtype: 'fieldcontainer',
+                    xtype: 'panel',
                     layout: {
                         type: 'hbox',
-                        align: 'stretch'
+                        align: 'top'
                     },
                     width: '100%',
                     items: [
@@ -163,7 +163,7 @@ Ext.define('Taco.view.productRanking.form.Context', {
 
         });
 
-        this.keywordBox = Ext.create('Ext.form.FieldContainer', {
+        this.keywordBox = Ext.create('Ext.panel.Panel', {
             layout: 'vbox',
             width: '50%',
             style: {
@@ -174,7 +174,7 @@ Ext.define('Taco.view.productRanking.form.Context', {
             allowBlank: true,
             items: [
                 {
-                    xtype: 'fieldcontainer',
+                    xtype: 'panel',
                     layout: {
                         type: 'hbox',
                         align: 'stretch'
@@ -195,7 +195,7 @@ Ext.define('Taco.view.productRanking.form.Context', {
 
         this.items = [
             {
-                xtype: 'fieldcontainer',
+                xtype: 'panel',
                 layout: {
                     align: 'stretch',
                     type: 'hbox'

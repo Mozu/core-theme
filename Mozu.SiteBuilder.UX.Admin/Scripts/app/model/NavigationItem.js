@@ -34,6 +34,15 @@ Ext.define('Taco.model.NavigationItem', {
             type: 'string',
             defaultValue: 'main'
         },
+        {
+            name: 'label',
+            type: 'string'
+        },
+        {
+            name: 'locAtts',
+            type: 'auto',
+            defaultValue: []
+        },
         'items'
     ],
     // belongsTo: 'NavigationItem',

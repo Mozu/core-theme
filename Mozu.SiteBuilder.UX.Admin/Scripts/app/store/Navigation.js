@@ -335,7 +335,6 @@ Ext.define('Taco.store.Navigation', {
                 'id': 'report',
                 'navParent': 'main',
                 'label': 'Reporting',
-                'navType': 'label',
                 'behaviorIds': [188],
                 'items': [{
                     'id': 'report-sales',

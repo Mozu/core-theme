@@ -158,19 +158,19 @@ Ext.define('Taco.view.productRanking.form.General', {
         //   description
 
         this.items = [{
-            xtype: 'fieldcontainer',
+            xtype: 'panel',
             layout: {
                 type: 'hbox',
                 align: 'stretch'
             },
             items: [
                 {
-                    xtype: 'fieldcontainer',
+                    xtype: 'panel',
                     flex: 1,
                     layout: 'vbox',
                     items: [
                         {
-                            xtype: 'fieldcontainer',
+                            xtype: 'panel',
                             layout: {
                                 type: 'hbox',
                                 align: 'top'
@@ -218,7 +218,7 @@ Ext.define('Taco.view.productRanking.form.General', {
                                 }
                             ]
                         }, {
-                            xtype: 'fieldcontainer',
+                            xtype: 'panel',
                             layout: {
                                 type: 'hbox',
                                 align: 'top'
@@ -229,7 +229,7 @@ Ext.define('Taco.view.productRanking.form.General', {
                                 me.statusCombo
                             ]
                         }, {
-                            xtype: 'fieldcontainer',
+                            xtype: 'panel',
                             layout: {
                                 type: 'hbox',
                                 align: 'top'
@@ -243,7 +243,7 @@ Ext.define('Taco.view.productRanking.form.General', {
                     ]
                 },
                 {
-                    xtype: 'fieldcontainer',
+                    xtype: 'panel',
                     margin: {
                         left: 20
                     },

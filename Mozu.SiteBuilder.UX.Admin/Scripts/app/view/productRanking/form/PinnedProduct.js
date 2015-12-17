@@ -34,7 +34,7 @@ Ext.define('Taco.view.productRanking.form.PinnedProduct', {
                 labelCls: 'x-header-text x-panel-header-text x-panel-header-text-subform',
                 margin: '20 0 35 0'
             });
-        me.header.xtype = 'fieldcontainer';
+        me.header.xtype = 'panel';
 
         me.pinnedGrid = Ext.create('Taco.view.productRanking.grid.PinnedProduct', {
             enableSearch: false
@@ -62,6 +62,7 @@ Ext.define('Taco.view.productRanking.form.PinnedProduct', {
             queryMode: 'local',
             displayField: 'text',
             valueField: 'value',
+            width: 200,
             forceSelection: true,
             editable: false,
             margin: '10 0 10 10',
@@ -93,9 +94,10 @@ Ext.define('Taco.view.productRanking.form.PinnedProduct', {
 
         me.items = [
             {
-                xtype: 'fieldcontainer',
+                xtype: 'panel',
                 layout: 'fit',
                 width: '100%',
+                //align: 'left',
                 defaults: {
                     flex: 1
                 },
