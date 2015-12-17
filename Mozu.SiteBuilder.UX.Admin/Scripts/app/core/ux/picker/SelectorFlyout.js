@@ -37,6 +37,14 @@ Ext.define('Taco.core.ux.picker.SelectorFlyout', {
         this.callParent(arguments);
     },
 
+    adjustHeight: function() {
+        if (this.getY() + this.getHeight() > window.innerHeight) {
+            this.setHeight(window.innerHeight - this.getY());
+        } else {
+            this.setHeight(null);
+        }
+    },
+
     show: function (positionNextTo) {
         var el = this.el || this.protoEl;
 
@@ -61,9 +69,7 @@ Ext.define('Taco.core.ux.picker.SelectorFlyout', {
             this.alignmentOffsets
         );
 
-        if (this.getY() + this.getHeight() > window.innerHeight) {
-            this.setHeight(window.innerHeight - this.getY());
-        }
+        this.adjustHeight();
     },
 
     buildView: function () {

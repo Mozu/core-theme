@@ -146,6 +146,14 @@ Ext.define('Taco.core.ux.picker.Selector', {
                 this.flyout.hide();
             }
         }, this);
+
+        var me = this;
+        Ext.EventManager.onWindowResize(function() {
+            if (!me.flyout.isHidden()) {
+                me.getEl().down('.trigger').removeCls('active');
+                me.flyout.hide();
+            }
+        });
     },
 
     togglePicker: function () {
