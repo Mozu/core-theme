@@ -130,6 +130,13 @@
             @include show-dot;
         }
 
+        .#{$vprefix}inline-selector-item {
+            &:active {
+                background-color: $dark-bg;
+                color: $dark-color;
+            }
+        }
+
         .inline-trigger {
             @include icon-font($glyph-pencil);
 
