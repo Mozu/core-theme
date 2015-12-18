@@ -232,7 +232,7 @@
                     }
                 }
 
-                &:hover {
+                &:not(.#{$prefix}tbar-page-link-current):hover {
                     .#{$prefix}btn-inner {
                         color: $dark-color;
                     }
