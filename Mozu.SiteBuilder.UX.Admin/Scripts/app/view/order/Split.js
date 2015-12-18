@@ -163,7 +163,6 @@ Ext.define('Taco.view.order.Split', {
             item.className = item.className.replace(selectedClass, '').trim();
         });
         row.className += ' ' + selectedClass;
-        debugger;
     },
 
     createActionHandler: function () {
