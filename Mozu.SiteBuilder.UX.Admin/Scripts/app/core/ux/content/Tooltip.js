@@ -156,7 +156,7 @@ Ext.define('Taco.core.ux.content.Tooltip', {
         
     	var component = Ext.ComponentQuery.query('#' + this.elementId);
 
-		if (!component || component.length < 0) {
+		if (!component || component.length < 1) {
 			console.warn('No component found to attach tooltip to');
             return false;
 		}
@@ -178,10 +178,14 @@ Ext.define('Taco.core.ux.content.Tooltip', {
 		}
     },
 
-    instantiateToolTipEvents: function(cmp) {
+    instantiateToolTipEvents: function(el) {
         var timeout = null;
 
-        this.target = cmp;
+        if (!el) {
+            return;
+        }
+
+        this.target = el;
 
         if (!this.target) return false;
 
