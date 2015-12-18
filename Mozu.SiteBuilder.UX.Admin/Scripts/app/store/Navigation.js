@@ -92,7 +92,7 @@ Ext.define('Taco.store.Navigation', {
                 }
             });
 
-            data = Ext.Array.filter(data, pruneInvalidLocLinks, this);
+            store.getProxy().data = Ext.Array.filter(data, pruneInvalidLocLinks, this);
 
             if (Taco.store.Navigation.getSubNavLinksLoaded() || !Taco.extensiblity || !Taco.extensiblity.subNavLinks) {
                 return;
