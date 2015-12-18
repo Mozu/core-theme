@@ -268,9 +268,9 @@ Ext.define('Taco.view.product.Form', {
         ctx = Taco.app.context.getCurrent();
        
         if ( ctx.getCatalogId() != null) {
-            this.addCatalog(ctx.getCatalogId());
+            this.getNewCatalog(ctx.getCatalogId());
         }else if (ctx.contextType == 'm' && ctx.catalogs.length == 1) {
-            this.addCatalog(ctx.catalogs[0].getCatalogId());
+            this.getNewCatalog(ctx.catalogs[0].getCatalogId());
         }
     },
 
@@ -417,7 +417,7 @@ Ext.define('Taco.view.product.Form', {
                 removeCatalogs = Ext.Array.difference(oldValues, values);
 
             Ext.each(addCatalogs, function (catalogId) {
-                this.addCatalog(catalogId, true);
+                this.getNewCatalog(catalogId, true);
             }, this);
 
             Ext.each(removeCatalogs, function (catalogId) {
