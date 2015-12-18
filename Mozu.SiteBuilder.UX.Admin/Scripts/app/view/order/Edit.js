@@ -94,7 +94,7 @@ Ext.define('Taco.view.order.Edit', {
             xtype: 'taco.prevnext',
             canNavigateToNext: this.canNavigateToNext(),
             canNavigateToPrevious: this.canNavigateToPrevious(),
-            itemId: 'prevnext',
+            itemId: 'prevnextorder',
             listeners: {
                 navigateToNext: this.navigateToNext,
                 navigateToPrevious: this.navigateToPrevious,

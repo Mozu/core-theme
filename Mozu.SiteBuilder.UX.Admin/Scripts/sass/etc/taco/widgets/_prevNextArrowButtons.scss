@@ -2,21 +2,43 @@
 
     .#{$vprefix}prev-next-arrows {
 
-        width: 30px;
+        cursor: pointer;
+        width: 50px;
 
         .arrow {
             display: inline-block;
-            width: 25px;
 
             &.prev {
-                @include icon-font($glyph-arrowleft);
+                @include icon-font($glyph-arrow-left);
+                @include arrows;
             }
 
             &.next {
-                @include icon-font($glyph-arrowright);
+                @include icon-font($glyph-arrow-right);
+                @include arrows;
+            }
+
+            &.disabled:after {
+                color: $light-bg;
             }
         }
 
     }
 
+}
+
+
+@mixin arrows {
+    height: 25px;
+    width: 25px;
+
+    &:after {
+        color: $light-gray-border-color;
+        left: 5px;
+        top: 5px;
+    }
+
+    &:not(.disabled):hover:after {
+        color: $nav-element-text;
+    }
 }

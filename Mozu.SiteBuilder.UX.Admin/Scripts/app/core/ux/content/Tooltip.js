@@ -100,11 +100,18 @@ Ext.define('Taco.core.ux.content.Tooltip', {
         }
 
         else if (event.type === 'mouseleave') {
-            this.tooltip.removeCls(this.showCls);
-            Ext.defer(function() {
-                this.tooltip.addCls('removed');
-            }, 300, this);
+            this.hideTooltip();
         }
+    },
+
+    hideTooltip: function (cb) {
+        this.tooltip.removeCls(this.showCls);
+        Ext.defer(function() {
+            this.tooltip.addCls('removed');
+            if (cb) {
+                cb();
+            }
+        }, 300, this);
     },
 
     getTemplate: function() {
@@ -162,6 +169,9 @@ Ext.define('Taco.core.ux.content.Tooltip', {
 				break
             case 'bodyEl':
                 this.instantiateToolTipEvents(this.component.bodyEl);
+                break;
+            case 'el':
+                this.instantiateToolTipEvents(this.component.el);
                 break;
 			default:
 				console.warn('No hover target has been established for ' + this.hoverTarget);
