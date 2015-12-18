@@ -13,11 +13,11 @@ Ext.define('Taco.core.ux.content.SiteViewDropdown', {
             items: [
                 {
                     text: 'View Live',
-                    handler: this.viewStagedHandler
+                    handler: this.viewLiveHandler
                 },
                 {
                     text: 'View Staged',
-                    handler: this.viewLiveHandler
+                    handler: this.viewStagedHandler
                 }
             ]
         });
