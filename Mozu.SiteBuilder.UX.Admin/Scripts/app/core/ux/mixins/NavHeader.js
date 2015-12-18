@@ -307,16 +307,13 @@ Ext.define('Taco.core.ux.mixins.NavHeader', {
 
         var me = this,
             hasContextSwitcher = (!Ext.isEmpty(this.contextConfig) && !Ext.isEmpty(this.contextConfig.supportedLevels)),
-            conf;
+            conf,
+            actionBarPadding = '0 0 0 0';
 
         conf = {
             xtype: "toolbar",
             cls: "taco-navheader-toolbar",
             dock: 'top',
-            layout: {
-                layout: 'hbox',
-                align: 'strecth'
-            },
             items: []
         };
 
@@ -329,7 +326,6 @@ Ext.define('Taco.core.ux.mixins.NavHeader', {
 
             me.titleContainer = {
                 xtype: "container",
-                flex: 1,
                 layout: {
                     type: 'hbox',
                     align: 'strecth'
@@ -369,20 +365,6 @@ Ext.define('Taco.core.ux.mixins.NavHeader', {
             conf.items.push(me.titleContainer);
 
             if (!Ext.isEmpty(this.contextConfig) && !Ext.isEmpty(this.contextConfig.supportedLevels)) {
-                // me.titleContainer.items.push({
-                //     autoEl: 'h3',
-                //     itemId: 'forLable',
-                //     style: {
-                //         'line-height': '3rem',
-                //         'margin': '0px 10px 0px 10px',
-                //         'font-weight': 'normal'
-                //     },
-                //     xtype: 'component',
-                //     html: 'for'
-                // });
-
-                // TODO: REMOVING CONTEXT SWITCHER FROM NAV HEADER, BUT WILL NEED TO BE PUT BACK
-                // me.titleContainer.items.push(Ext.create('Taco.core.ux.content.ContextMenu', this.contextConfig));
 
             } else {
                 // In order for the title to grow and shrink dynamically and have elipsis we can only do this when there is no trailing "for [ context combo ] "
@@ -416,6 +398,14 @@ Ext.define('Taco.core.ux.mixins.NavHeader', {
         else if (!me.enableSearchBarInHeader && !this.dontFloatHeaderButtons){
             //shifting over the buttons because we have no searchbar
             //conf.items.push('->');
+            conf.layout = {
+                type: 'hbox',
+                align: 'stretch'
+            };
+
+            me.titleContainer.flex = 1;
+
+            actionBarPadding = '0 0 0 0';
         }
 
         if (!me.hideSubnavLinks) {
@@ -552,7 +542,7 @@ Ext.define('Taco.core.ux.mixins.NavHeader', {
             cls: 'navheader-action-toolbar',
             itemHeader: 'navHeaderActionContainer',            
             items: me.actions,
-            padding: '9 0 0 0'
+            padding: actionBarPadding
         }
 
         // if we have no title, the toolbar needs to flex to fill the entire container.
