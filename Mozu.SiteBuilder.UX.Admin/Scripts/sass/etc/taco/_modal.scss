@@ -18,7 +18,7 @@
         }
     .#{$prefix}window-modal {
         @include border-radius-xbrowser(5px);
-        @include color-blur-outer-shadow ($black-color, 0.29, 0, 16px, 0, 1px);
+        @include color-blur-outer-shadow ($black-color, 0.29, 0, 1px, 16px, 0);
 
         .#{$prefix}tool-close {
             opacity: .35;
