@@ -4,6 +4,10 @@ Ext.define('Taco.core.ux.PrevNextArrowButtons', {
 
     cls: 'taco-prev-next-arrows',
 
+    store: null,
+
+    record: null,
+
     initComponent: function () {
 
         this.addEvents([
@@ -56,13 +60,21 @@ Ext.define('Taco.core.ux.PrevNextArrowButtons', {
             elementId: this.itemId,
             hoverTarget: 'el',
             defaultTpl: [
-                '1 of 1'
+                '{index:number("0,000")} of {total:number("0,000")}'
             ],
-            defaultTplData: {
-                publishSetName: 'Unassigned',
-                publishDate: 'Unscheduled'
-            },
+            defaultTplData: this.getPositionData(),
             offsetTop: 25
         })
+    },
+
+    getPositionData: function () {
+        if (!this.store || !this.record) {
+            return;
+        }
+
+        return {
+            index: this.store.indexOfId(this.record.getId()),
+            total: this.store.getTotalCount()
+        };
     }
 });

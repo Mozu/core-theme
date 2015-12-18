@@ -99,7 +99,9 @@ Ext.define('Taco.view.order.Edit', {
                 navigateToNext: this.navigateToNext,
                 navigateToPrevious: this.navigateToPrevious,
                 scope: this
-            }
+            },
+            record: this.record,
+            store: this.store
         }];
 
 
