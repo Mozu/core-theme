@@ -80,7 +80,10 @@ Ext.define('Taco.view.publishing.Split', {
                             includeCounts: true
                         }
                     },
-                    advancedFormCls: 'Taco.view.publishing.advancedSearchForm.Publish'
+                    advancedSearchConfig : {
+                        advancedFormCls: 'Taco.view.publishing.advancedSearchForm.Publish',
+                        emptySearchText: 'Search'
+                    }
                 }),
                 Ext.create('Ext.panel.Panel', {
                     html: ['<span style="font-size:2.0rem;">You have no Publish Sets</span><br><br>',

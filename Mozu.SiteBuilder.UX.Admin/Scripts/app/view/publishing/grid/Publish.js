@@ -72,7 +72,8 @@ Ext.define('Taco.view.publishing.grid.Publish', {
             parentScope: this,
             buttons: false,
             toolbarTitle: 'Publish Sets',
-            store: this.store
+            store: this.store,
+            advancedSearchConfig: this.advancedSearchConfig
         });
 
         this.callParent(arguments);
