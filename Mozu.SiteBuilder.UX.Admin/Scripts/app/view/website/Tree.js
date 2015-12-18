@@ -61,6 +61,7 @@ Ext.define('Taco.view.website.Tree', {
 
                 if (Ext.Array.contains(['_navigation', '_unlinked'], record.getId()) || Ext.Array.contains(['category', 'link', 'page'], record.data.nodeType) || record.data.parentId === '_emailTemplates') {
 
+                    console.log(record)
                     /**
                      * Split the output in order
                      * to insert buttons between
@@ -68,7 +69,7 @@ Ext.define('Taco.view.website.Tree', {
                      */
                     var splitOutput = output.split('</span><span>');
 
-                    output = me.getNavOptions(record) + '</span><span class="taco-website-tree-menu-trigger"></span>' + splitOutput[0] + '</span><span>' + splitOutput[1];
+                    output = '<span class="taco-website-tree-menu-trigger"></span><span>' + me.getNavOptions(record) + '</span>' + splitOutput[0] + '</span><span>' + splitOutput[1];
                 }
 
                 return output;
@@ -301,9 +302,9 @@ Ext.define('Taco.view.website.Tree', {
                 group: function(record) {return this['parent' + record.data.id];},
                 parent_navigation: 'folder-icon',
                 parent_unlinked: 'folder-icon',
-                parent_backOffice: 'template-icon',
-                parent_templates: 'template-icon',
-                parent_emailTemplates: 'template-icon'
+                parent_backOffice: 'folder-icon',
+                parent_templates: 'folder-icon',
+                parent_emailTemplates: 'folder-icon'
             };
 
         return typeof iconDefinitions[descriptor] === 'function' ? iconDefinitions[descriptor](record) : iconDefinitions[descriptor];

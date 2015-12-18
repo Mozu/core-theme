@@ -34,7 +34,7 @@ Ext.define('Taco.view.publishing.Drafts', {
             menu: [
                 {   
                     xtype: 'menucheckitem',
-                    text: 'Show Unassigned Drafts',
+                    text: 'Show Assigned Drafts',
                     checked: true,
                     handler: this.updateStores.bind(this),
 

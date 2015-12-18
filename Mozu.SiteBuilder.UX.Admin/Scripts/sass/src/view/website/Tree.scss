@@ -1,18 +1,17 @@
 .#{$vprefix}website-tree {
-    .#{$prefix}grid-body {
-        background-color: transparent;
-    }
+    .#{$prefix}grid-body, 
+    .#{$prefix}panel-body, 
+    .#{$prefix}grid-td {
+        background-color: transparent !important;
 
-    tbody tr {
-            &.#{$prefix}grid-data-row {
-                td {
-                    border-bottom: 0px transparent !important;
-                }
-            }
+    .#{$prefix}grid-data-row {
+        &:hover {
+            background-color: $pill-bg-gray !important;
+        }
     }
 
     .#{$prefix}grid-cell {
-        background-color: $color-framework-gray-lighter;
+        background-color: $light-bg;
       
     }
 
@@ -61,17 +60,26 @@
 
     .#{$prefix}grid-row-alt {
         .#{$prefix}grid-td {
-            background-color: $color-framework-gray-light;
+            background-color: $light-bg;
         }
     }
     .#{$prefix}grid-row-selected {
         .#{$prefix}grid-td {
-            background-color: $grid-cell-selected-background-color;
+            background-color: $pill-bg-gray !important;
         }
 
         .#{$vprefix}website-tree-menu-trigger,
         .#{$vprefix}website-tree-icon.drag-icon {
-            background-color: $grid-cell-selected-background-color;
+
+            &::after {
+                color: $color-neutral-40;
+            }
+        }
+    }
+
+    .#{$prefix}grid-row-focused {
+        .#{$vprefix}website-tree-icon.drag-icon {
+            background-color: transparent;
         }
     }
 
@@ -83,20 +91,20 @@
         width: 12px;
 
         &.page-icon {
-            @include icon-font($glyph-category);
+            @include icon-font($glyph-tree-page);
             top: -1.5px;
         }
 
         &.template-icon {
-            @include icon-font($glyph-template);
+            @include icon-font($glyph-tree-template);
         }
 
         &.category-icon {
-            @include icon-font($glyph-tree-category);
+            @include icon-font($glyph-tree-layers);
         }
 
         &.folder-icon {
-            @include icon-font($glyph-folder, 12px);
+            @include icon-font($glyph-tree-folder);
         }
 
         &.link-icon {
@@ -106,10 +114,15 @@
         &.drag-icon {
             @include icon-font($glyph-reorder, 13px, rgb(179, 179, 179));
             float: right;
-            background-color: $color-framework-gray-light;
+            background-color: transparent;
 
             &.invisible {
                 visibility: hidden;
+            }
+
+            &::after {
+                left: initial;
+                right: 0px;
             }
         }
 
@@ -126,8 +139,20 @@
 
     .#{$vprefix}website-tree-menu-trigger {
         float: right;
-        background-color: $color-framework-gray-light;
-        @include icon-font($glyph-gear, 13px);
-        display: none;
+        background-color: transparent;
+        @include border-radius(3px);
+        @include icon-font($glyph-more-vert, 13px, $color-neutral-75);
+
+        &::after {
+            top: 0.5px;
+            left: 4px;
+        }
+
+        &:hover {
+
+            &::after {
+                color: $color-neutral-40;
+            }
+        }
     }
 }
