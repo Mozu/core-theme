@@ -189,18 +189,19 @@ Ext.define('Taco.view.navigation.SubNavLinkContainer', {
         var string;
 
         if (link.get('badgeImage')) {
-            // formatted = 'bimage-' + link.get('path') && link.get('path').length > 0 ? link.get('path')[0] : link.get('badgeImage');
             formatted = link.get('badgeImage');
         }
 
         else if (link.get('badgeInitials')) {
-            formatted = 'bi-' + link.get('path') && link.get('path').length > 0 ? link.get('path')[0] : link.get('badgeInitials');
+            string = link.get('badgeInitials').length !== 1 ? link.get('badgeInitials').toLowerCase().slice(0, 2) : link.get('badgeInitials');
+            formatted = string.charAt(0).toUpperCase() + string.slice(1);
         }
 
         else {
             if (!link.get('path')) { 
               return false;
             }
+
             string = link.get('path')[0].toLowerCase().slice(0, 2);
             formatted = string.charAt(0).toUpperCase() + string.slice(1);
         }
