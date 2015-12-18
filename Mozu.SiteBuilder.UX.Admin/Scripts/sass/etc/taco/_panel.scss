@@ -4,9 +4,10 @@
         @include outer-shadow(0.09, 2px, 0, 0);
         font-family: $font-family;
 
-        input {
+        input,
+        .#{$prefix}form-text {
             position: relative;
-            top: -1px;
+            top: -2px;
         }
         
         .draft-toolbar {
