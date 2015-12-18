@@ -25,9 +25,7 @@ Ext.define('Taco.view.order.Form', {
         customer: null
     },
 
-    //sectionNavTopOffset: -20,
-
-    useFixedPosition: false,
+    stickyClass: 'taco-fixed-navForm2-no-padding',
 
     editTitle: [
         'Order No. {number}',
@@ -44,6 +42,14 @@ Ext.define('Taco.view.order.Form', {
             'Site: {siteName}',
         '</span>'
     ],
+
+    setNavDimensions: function() {
+        var navStyle = this.sectionNav.getEl().dom.style;
+
+        navStyle.left = this.getX() + 'px';
+
+        navStyle.top = this.getHeaderHeight() + this.sectionNavTopOffset + 'px';
+    },
 
     initComponent: function () {
         var me = this;

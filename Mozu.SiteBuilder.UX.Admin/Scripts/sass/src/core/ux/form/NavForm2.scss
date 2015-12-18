@@ -8,14 +8,14 @@
     //width: 180px;
     z-index: 99;
 
-    &.#{$vprefix}relative-navForm2 {
-      position: relative !important;
-      overflow: auto;
-    }
     &.#{$vprefix}fixed-navForm2 {
       position: fixed !important;
       padding: 0 20px;
       min-width: 100%;
+    }
+
+    &.#{$vprefix}fixed-navForm2-no-padding {
+      position: fixed !important;
     }
 
     li {
