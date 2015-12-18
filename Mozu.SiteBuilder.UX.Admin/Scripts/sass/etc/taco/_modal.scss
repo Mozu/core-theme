@@ -115,7 +115,7 @@
         table {
             .#{$prefix}form-item-body {
                 display: inline-block;
-                
+
                 > .#{$prefix}box-layout-ct {
                     // border-bottom: 1px solid $light-border-gray;
                 }
@@ -127,6 +127,10 @@
                 }
             }
             &.#{$vprefix}quickfilter {
+
+                .#{$prefix}form-item-body {
+                    display: block;
+                }
 
                 input {
                     // border: none;
@@ -159,11 +163,15 @@
                 .#{$prefix}form-trigger-input-cell {
                     position: absolute;
                     left: 40px;
-                    top: -4px;
+                    top: -2px;
 
                     > input {
                         &.#{$prefix}form-text {
                             padding-bottom: 2px;
+                        }
+
+                        &:focus {
+                            @include no-box-shadow;
                         }
                     }
                 }
