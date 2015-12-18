@@ -53,7 +53,8 @@ Ext.define('Taco.core.ux.grid.BulkActions', {
     		items.push(action);
     	}, this);
 
-        this.onMenuShow = this.onMenuShow || Ext.emptyFn;	
+        this.onMenuShow = this.onMenuShow || Ext.emptyFn;
+        this.onMenuHide = this.onMenuHide || Ext.emptyFn;	
 
     	return items;
     },
@@ -72,12 +73,11 @@ Ext.define('Taco.core.ux.grid.BulkActions', {
     },
 
     updateVisibility: function(selModel) {
-
-        this.onMenuShow(selModel);
         
     	if (selModel && selModel.getSelection().length > 0) {
             this.removeCls('removed');
     		this.addCls(this.hiddenCls);
+            this.onMenuShow(selModel);
     	}
 
     	else {
@@ -85,6 +85,7 @@ Ext.define('Taco.core.ux.grid.BulkActions', {
             Ext.defer(function() {
                 this.addCls('removed');
             }, 300, this);
+            this.onMenuHide(selModel);
     	}
 
         if (this.shouldSelectCheckBox()) {

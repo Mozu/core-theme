@@ -98,6 +98,12 @@ Ext.define('Taco.view.order.Grid', {
         //todo: need to work on disabling/enabling of actions -- talk with commerce peeps?
 
         this.bulkActionConfig = {
+            onMenuShow: this.getBulkActions,
+            onMenuHide: function() {
+                Ext.Array.each(['#AcceptOrder', '#CancelOrder', '#CapturePayment', '#Ship'], function(id) { 
+                    this.down(id).disable();
+                }, this);
+            },
             actions: [
                 {
                     itemId: 'AcceptOrder',
@@ -143,14 +149,18 @@ Ext.define('Taco.view.order.Grid', {
 
     },
 
-    getBulkActions: function (menu) {
+    onMenuHide: function() { 
+        alert('ho');
+    },
+
+    getBulkActions: function (selmodel) {
         var me = this;
-        var selection = this.getSelectionModel().getSelection();
+        var selection = selmodel.getSelection();
         var allAvailableBulkActions = Ext.Array.flatten(Ext.Array.map(selection, function (o) { return o.get('availableBulkActions') }));
 
-        menu.items.each(function (item) {
-            item.setDisabled(!Ext.Array.contains(allAvailableBulkActions, item.getItemId()));
-        });
+        Ext.Array.each(allAvailableBulkActions, function(itemId) {
+            me.down('#' + itemId).enable();
+        }, me);
     },
     
     doBulkAction: function (action) {

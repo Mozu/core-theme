@@ -53,6 +53,7 @@ Ext.define('Taco.core.ux.grid.Panel', {
             actions: this.bulkActionConfig.actions,
             grid: this,
             onMenuShow: this.bulkActionConfig.onMenuShow,
+            onMenuHide: this.bulkActionConfig.onMenuHide,
             renderTo: document.body
         });
 
