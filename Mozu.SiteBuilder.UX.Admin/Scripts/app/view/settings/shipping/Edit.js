@@ -13,5 +13,30 @@ Ext.define('Taco.view.settings.shipping.Edit', {
         supportedLevels: ['s'],
         requiresContextOfType: ['s']
     },
-    requiredStores: ['Taco.store.Countries']
+    requiredStores: ['Taco.store.Countries'],
+
+    breadCrumbConfig: [
+        {
+            title: 'Methods',
+            tabIndex: 0,
+            route: 'shipping'
+        },
+        {
+            title: 'Carriers',
+            tabIndex: 1,
+            route: 'shipping/carriers',
+            isActive: true
+        },
+        {
+            title: 'Zones',
+            tabIndex: 2,
+            route: 'shipping/zones',
+        },
+        {
+            title: 'Product Rules',
+            tabIndex: 3,
+            route: 'shipping/productRules'
+        }
+    ],  
+
 });

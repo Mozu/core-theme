@@ -12,7 +12,6 @@ Ext.define('Taco.view.settings.shipping.MethodsAndFees', {
     ],
     formCls: 'Taco.core.ux.form.Form',
     //editorName: 'Taco.view.discount.Edit',
-    title: 'Shipping Methods and Fees',
 
     enableSearchBarInHeader: false,
 
@@ -22,6 +21,30 @@ Ext.define('Taco.view.settings.shipping.MethodsAndFees', {
         requiresContextOfType: ['s']
     },
 
+    breadCrumbConfig: [
+        {
+            title: 'Methods',
+            tabIndex: 0,
+            isActive: true,
+            route: 'shipping'
+        },
+        {
+            title: 'Carriers',
+            tabIndex: 1,
+            route: 'shipping/carriers'
+        },
+        {
+            title: 'Zones',
+            tabIndex: 2,
+            route: 'shipping/zones'
+        },
+        {
+            title: 'Product Rules',
+            tabIndex: 3,
+            route: 'shipping/productRules'
+        }
+    ],  
+
     formCfg: {
         layout: {
             type: 'vbox',
@@ -30,7 +53,7 @@ Ext.define('Taco.view.settings.shipping.MethodsAndFees', {
         defaults: {
             margin: '10px 10px 10px 10px'
         },
-        title: 'Shipping Methods and Fees',
+        title: 'Shipping',
         items: [
             {
                 xtype: 'shippinginclusionrulesform'

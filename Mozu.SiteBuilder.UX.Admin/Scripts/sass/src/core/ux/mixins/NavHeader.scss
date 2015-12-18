@@ -35,6 +35,39 @@
             background-color: $color-neutral-white;
         }
 
+        .#{$vprefix}subnav-breadcrumb {
+
+            div {
+                border-bottom: 1px solid transparent;
+                padding: 0px 10px;
+                height: 60px;
+
+                a {
+                    font-size: 16px;
+                    color: $gray-text-light;
+                    line-height: 60px;
+
+                    &:hover {
+                        color: $nav-element-active;
+                        text-decoration: none;
+                    }
+                }
+
+                &:active {
+                    color: $nav-element-active;
+                    background-color: $card-button-press-bg;
+
+                    a {
+                        color: $nav-element-active;
+                    }
+                }
+
+                &.active {
+                    border-bottom: 2px solid $valid-green;
+                }
+            }
+        }
+
         .#{$vprefix}content-header-title-container {
 
             > .#{$prefix}box-inner {

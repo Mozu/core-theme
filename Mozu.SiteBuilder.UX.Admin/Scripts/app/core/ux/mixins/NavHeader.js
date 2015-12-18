@@ -399,6 +399,12 @@ Ext.define('Taco.core.ux.mixins.NavHeader', {
             }
         }
 
+        if (me.breadCrumbConfig) {
+            Ext.Array.each(me.breadCrumbConfig, function(config) {
+                conf.items.push(me.getBreadCrumb(config));
+            }, me);
+        }
+
         if (me.enableSearchBarInHeader) {
             me.searchBox = Ext.widget({
                 xtype: 'taco-filtercontainer',
@@ -431,6 +437,11 @@ Ext.define('Taco.core.ux.mixins.NavHeader', {
             me.titleContainer.flex = 1;
 
             actionBarPadding = '0 0 0 0';
+        }
+
+        if (me.breadCrumbConfig) {
+            me.titleContainer.flex = 0;
+            conf.items.push('->');
         }
 
         if (!me.hideSubnavLinks) {
@@ -684,6 +695,34 @@ Ext.define('Taco.core.ux.mixins.NavHeader', {
 
             me.doSave();
         }
+    },
+
+    getBreadCrumb: function(config) {
+        return Ext.create('Ext.Component', {
+            cls: "taco-subnav-breadcrumb",
+            tpl: [  
+                '<tpl>',
+                    '<div class="{[this.getClass(values)]}"tabidnex="{tabIndex}"><a> {title} </a></div>',
+                '</tpl>',
+                {
+                    getClass: function(values) {
+                        return values.isActive ? 'active' : '';
+                    }
+                }
+            ],
+            style: 'text-align: center;',
+            data: {
+                title: config.title,
+                isActive: config.isActive,
+                tabIndex: config.tabIndex
+            },
+            listeners: {
+                click: function() {
+                     Taco.core.StateManager.attemptNavigate(config.route);
+                },
+                element: 'el'
+            }
+        });
     },
 
     /**

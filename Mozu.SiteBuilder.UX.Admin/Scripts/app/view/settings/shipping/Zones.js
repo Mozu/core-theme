@@ -7,7 +7,7 @@ Ext.define('Taco.view.settings.shipping.Zones', {
     alias :'widget.shippingzoneegrid',
 
     createButtonText: "Create New Zone",
-    title: "Shipping Zones",
+    title: "Shipping",
     enableSearchBarInHeader: false,
 
     createRoute: 'shipping/zonescreate',
@@ -17,6 +17,30 @@ Ext.define('Taco.view.settings.shipping.Zones', {
 
     stateful: true,
     stateId:"statefulShippingZonesGrid",
+
+    breadCrumbConfig: [
+        {
+            title: 'Methods',
+            tabIndex: 0,
+            route: 'shipping'
+        },
+        {
+            title: 'Carriers',
+            tabIndex: 1,
+            route: 'shipping/carriers'
+        },
+        {
+            title: 'Zones',
+            tabIndex: 2,
+            route: 'shipping/zones',
+            isActive: true
+        },
+        {
+            title: 'Product Rules',
+            tabIndex: 3,
+            route: 'shipping/productRules'
+        }
+    ],  
 
     contextConfig: {
         supportedLevels: ['s'],

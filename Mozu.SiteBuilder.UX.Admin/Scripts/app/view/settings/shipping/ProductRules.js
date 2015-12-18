@@ -10,7 +10,7 @@ Ext.define('Taco.view.settings.shipping.ProductRules', {
     alias: 'widget.productrulegrid',
 
     createButtonText: "Create New Product Rule",
-    title: "Product Rules",
+    title: "Shipping",
 
 
     createRoute: 'shipping/productrulescreate',
@@ -19,6 +19,30 @@ Ext.define('Taco.view.settings.shipping.ProductRules', {
     stateful: true,
     stateId: "statefulProductRulesGrid",
 
-    store: { type: 'Taco.store.ProductRules' }
+    store: { type: 'Taco.store.ProductRules' },
+
+    breadCrumbConfig: [
+        {
+            title: 'Methods',
+            tabIndex: 0,
+            route: 'shipping'
+        },
+        {
+            title: 'Carriers',
+            tabIndex: 1,
+            route: 'shipping/carriers'
+        },
+        {
+            title: 'Zones',
+            tabIndex: 2,
+            route: 'shipping/zones'
+        },
+        {
+            title: 'Product Rules',
+            tabIndex: 3,
+            route: 'shipping/productRules',
+            isActive: true
+        }
+    ]
 
 });
