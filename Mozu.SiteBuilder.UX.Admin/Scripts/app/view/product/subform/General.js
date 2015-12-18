@@ -853,17 +853,24 @@ Ext.define('Taco.view.product.subform.General', {
             dateFirstAvailable = new Date();
         }
         
-        this.items.push(
-            Taco.core.ux.TooltipLabel.wrapConfig('product.general.dateFirstAvailable', me, {
+        this.items.push({
                 xtype: 'datefield',
                 fieldLabel: 'First Available Date',
                 name: 'dateFirstAvailableInCatalog',
                 labelAlign: 'top',
-                allowBlank:false,
+                allowBlank: false,
                 hidden: this.isGlobal,
                 width: twoColumnFieldWidth,
-                value: dateFirstAvailable
-            }, Ext.id())
+                value: dateFirstAvailable,
+                itemId: 'first-avail-date',
+                tooltip: Ext.create('Taco.core.ux.content.Tooltip', {
+                    elementId: 'first-avail-date',
+                    hoverTarget: 'label',
+                    messageKey: 'product.general.dateFirstAvailable',
+                    offsetLeft: 20,
+                    offsetTop: 15
+                })
+            }
         );
 
 

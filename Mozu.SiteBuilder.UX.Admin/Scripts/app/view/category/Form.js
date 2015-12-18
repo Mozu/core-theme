@@ -52,10 +52,10 @@ Ext.define("Taco.view.category.Form", {
 
         this.items = [];
 
-        this.dynamicCategoryTypeCombo = Ext.create("Ext.form.field.ComboBox",
-            Taco.core.ux.TooltipLabel.wrapConfig("category.productMembership", me, {
+        this.dynamicCategoryTypeCombo = Ext.create("Ext.form.field.ComboBox", {
                 xtype: "combobox",
                 name: "dynamicCategoryTypeCombo",
+                itemId: "dynamic-cat-type-combo",
                 fieldLabel: "Product Membership",
                 margin: { left: 20 },
                 flex: 1,
@@ -70,6 +70,13 @@ Ext.define("Taco.view.category.Form", {
                 // temporarily disabling the ability to create real time dynamic expressions. service isn't ready yet.
                 //disabled: true,
                 value: (this.record.get("categoryType") == "DynamicPreComputed") ? "yes" : "no",
+                tooltip: Ext.create('Taco.core.ux.content.Tooltip', {
+                    elementId: "dynamic-cat-type-combo",
+                    hoverTarget: 'bodyEl',
+                    messageKey: 'category.productMembership',
+                    offsetLeft: 70,
+                    offsetTop: 45
+                }),
                 listeners: {
                     scope: me,
                     'change': function(field, newValue, oldValue, e) {
@@ -97,7 +104,8 @@ Ext.define("Taco.view.category.Form", {
                         }
                     ]
                 })
-            }));
+            }
+        );
 
 
         var secondRowItems = [

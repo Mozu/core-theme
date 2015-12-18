@@ -16,7 +16,6 @@ Ext.define('Taco.view.generalSettings.subform.About', {
         'Ext.form.field.Text',
         'Taco.store.TimeZones',
         'Taco.core.ux.TooltipLabel',
-   
         'Taco.store.Channels'
     ],
     title: 'General',
@@ -227,8 +226,7 @@ Ext.define('Taco.view.generalSettings.subform.About', {
                     {
                         xtype: 'container',
                         layout: 'hbox',
-                        items:[
-                            Taco.core.ux.TooltipLabel.wrapConfig('settings.general.customCdn', this, {
+                        items:[{
                                 xtype: 'textfield',
                                 itemId: 'customCdnHostName',
                                 name: 'customCdnHostName',
@@ -237,13 +235,13 @@ Ext.define('Taco.view.generalSettings.subform.About', {
                                 flex: 1,
                                 tooltip: Ext.create('Taco.core.ux.content.Tooltip', {
                                     elementId: 'customCdnHostName',
+                                    hoverTarget: 'label',
+                                    messageKey: 'settings.general.customCdn',
                                     offsetLeft: -90,
                                     offsetTop: -18,
                                     arrowPosition: 'left'
                                 })
-                            }, Ext.id()),
-                            
-                            Taco.core.ux.TooltipLabel.wrapConfig('settings.general.bustCdnCache', this, {
+                            }, {
                                 xtype: 'fieldcontainer',
                                 fieldLabel: 'Bust CDN Cache',
                                 margin: '0 0 0 5',
@@ -269,16 +267,21 @@ Ext.define('Taco.view.generalSettings.subform.About', {
                                             }
                                         });
                                     }
-                                }]
+                                }],
+                                itemId: 'bust-cdn-cache-button',
+                                tooltip: Ext.create('Taco.core.ux.content.Tooltip', {
+                                    elementId: 'bust-cdn-cache-button',
+                                    hoverTarget: 'bodyEl',
+                                    messageKey: 'settings.general.bustCdnCache',
+                                    offsetLeft: 20,
+                                    offsetTop: 15
+                                })
                         
-                            }, Ext.id())
+                            }
                         ],
                         flex: 1
-                    
-                        
+
                     },
-                   
-                
                    {
                        xtype: 'hiddenfield',
                        name: 'cdnCacheBustKey',

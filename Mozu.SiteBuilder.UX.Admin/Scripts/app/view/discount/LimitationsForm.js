@@ -25,8 +25,7 @@ Ext.define('Taco.view.discount.LimitationsForm', {
     initComponent: function () {
         var me = this;
 
-        this.maxDiscountLineItemValue = Ext.create('Taco.core.ux.form.CurrencyField', 
-            Taco.core.ux.TooltipLabel.wrapConfig('discount.limitations.maximumDiscountValuePerRedemption', me, {
+        this.maxDiscountLineItemValue = Ext.create('Taco.core.ux.form.CurrencyField', {
                 name: 'maximumDiscountValuePerRedemption',
                 itemId: 'maxDiscountValuePerRedemption',
                 fieldLabel: "Max Discount Value (Per Redemption)",
@@ -39,8 +38,15 @@ Ext.define('Taco.view.discount.LimitationsForm', {
                 unitAtEnd: false,
                 minValue: 0,
                 hidden: this.record.get('scope') === 'Order',
-                emptyText: 'Unlimited'
-            })
+                emptyText: 'Unlimited',
+                tooltip: Ext.create('Taco.core.ux.content.Tooltip', {
+                    elementId: 'maxDiscountValuePerRedemption',
+                    hoverTarget: 'label',
+                    messageKey: 'discount.limitations.maximumDiscountValuePerRedemption',
+                    offsetLeft: 20,
+                    offsetTop: 15
+                })
+            }
         );
 
         this.maxDiscountOrderValue = Ext.create('Taco.core.ux.form.CurrencyField', {
@@ -57,16 +63,23 @@ Ext.define('Taco.view.discount.LimitationsForm', {
             emptyText: 'Unlimited'
         });
 
-        this.redemptionLimits = Ext.create('Ext.form.field.Number', 
-            Taco.core.ux.TooltipLabel.wrapConfig('discount.limitations.maxRedemptionCount', me, {
+        this.redemptionLimits = Ext.create('Ext.form.field.Number', {
                 name: 'maxRedemptionCount',
                 hideTrigger: true,
                 width: 250,
                 margin: "0px 20px 0px 0px",
                 fieldLabel: 'Total Redemptions',
                 emptyText: 'Unlimited',
-                minValue: 0
-            }))
+                minValue: 0,
+                itemId: "max-redemption-count-number",
+                tooltip: Ext.create('Taco.core.ux.content.Tooltip', {
+                    elementId: "max-redemption-count-number",
+                    hoverTarget: 'label',
+                    messageKey: 'discount.limitations.maxRedemptionCount',
+                    offsetLeft: 20,
+                    offsetTop: 15
+                })
+            })
         ;
 
         this.maxRedemptionsPerOrder = Ext.create('Ext.form.field.Number', {
@@ -267,18 +280,25 @@ Ext.define('Taco.view.discount.LimitationsForm', {
             }
         });
 
-        this.oneTimeUsePerShopper = Ext.create('Ext.form.field.Checkbox',
-            Taco.core.ux.TooltipLabel.wrapConfig('discount.limitation.oneTimeUsePerShopper', me, {
-                name: 'oneTimeUsePerShopper',
-                boxLabel: 'Discount Can Be Redeemed One Time Per Shopper',
-                checked: this.record.get('maximumUsesPerUser') === 1,
-                listeners: {
-                    change: function (cb, newValue) {
-                        this.record.set('maximumUsesPerUser', newValue ? 1 : null);
-                    },
-                    scope: this
-                }
-        }));
+        this.oneTimeUsePerShopper = Ext.create('Ext.form.field.Checkbox', {
+            name: 'oneTimeUsePerShopper',
+            boxLabel: 'Discount Can Be Redeemed One Time Per Shopper',
+            checked: this.record.get('maximumUsesPerUser') === 1,
+            listeners: {
+                change: function (cb, newValue) {
+                    this.record.set('maximumUsesPerUser', newValue ? 1 : null);
+                },
+                scope: this
+            },
+            itemId: 'one-time-use-check',
+            tooltip: Ext.create('Taco.core.ux.content.Tooltip', {
+                elementId: 'one-time-use-check',
+                hoverTarget: 'label',
+                messageKey: 'discount.limitation.oneTimeUsePerShopper',
+                offsetLeft: 20,
+                offsetTop: 15
+            })
+        });
 
         this.items = [
             {
