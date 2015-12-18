@@ -188,6 +188,16 @@
         @include icon-font($glyph-close);
     }
 
+    .#{$prefix}grid-data-row {
+        .#{$vprefix}actioncolumn {
+            .#{$prefix}grid-cell-inner {
+                .#{$vprefix}actioncolumn-icon-remove {
+                    left: -8px;
+                }
+            }
+        }
+    }
+
     // menucolumn styles
     .#{$vprefix}menu-col-cell {
         .#{$prefix}grid-cell-inner {
