@@ -277,10 +277,6 @@
         }
     }
 
-    .#{$prefix}form-field {
-        .#{$prefix}field-form-focus
-    }
-
     .#{$prefix}boundlist-floating {
         background-color: $white-color;
         border: 1px solid $dropdown-list-outline;
