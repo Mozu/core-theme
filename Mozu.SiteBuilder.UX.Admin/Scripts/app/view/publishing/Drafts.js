@@ -53,7 +53,11 @@ Ext.define('Taco.view.publishing.Drafts', {
                 parentScope: me,
                 toolbarTitle: 'Drafts',
                 buttons: true,
-                onSelection: me.onToolBarSelection
+                onSelection: me.onToolBarSelection,
+                advancedSearchConfig: {
+                    advancedFormCls: 'Taco.view.publishing.advancedSearchForm.DraftProduct',
+                    emptySearchText: 'Search'
+                }
             }),
             style: {
                 
