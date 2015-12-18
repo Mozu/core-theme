@@ -32,7 +32,7 @@ Ext.define('Taco.view.discount.GeneralForm', {
             enableFont: false,
             fieldLabel: 'Description',
             name: 'friendlyDescription',
-            width: 600,
+            width: 712,
             height: 120,
 
             listeners: {
