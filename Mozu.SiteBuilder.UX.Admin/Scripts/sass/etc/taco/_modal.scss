@@ -112,19 +112,6 @@
             min-width: 36px;
         }
 
-        /**
-         * Search form
-         */
-        input {
-            // border: none;
-            font-size: 17px;
-
-            &:hover,
-            &:focus {
-                border-color: $light-border-gray;
-            }
-        }
-
         table {
             .#{$prefix}form-item-body {
                 > .#{$prefix}box-layout-ct {
@@ -138,6 +125,17 @@
                 }
             }
             &.#{$vprefix}quickfilter {
+
+                input {
+                    // border: none;
+                    font-size: 17px;
+
+                    &:hover,
+                    &:focus,
+                    &.#{$prefix}field-form-focus {
+                        border-color: $light-border-gray;
+                    }
+                }
 
                 .#{$prefix}form-item-body {
                     opacity: .4;

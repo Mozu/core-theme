@@ -16,11 +16,11 @@
 
     .#{$prefix}field-form-focus {
         border-color: $valid-green;
-        @include color-outer-shadow($valid-green, 1, 0, 1px, 0, 0);
+        @include color-blur-outer-shadow($valid-green, 1, 0, 1px, 0, 0);
 
         &.#{$prefix}form-invalid-field {
             border-color: $error-red;
-            @include color-outer-shadow($error-red, 1, 0, 1px, 0, 0);
+            @include color-blur-outer-shadow($error-red, 1, 0, 1px, 0, 0);
         }
     }
 

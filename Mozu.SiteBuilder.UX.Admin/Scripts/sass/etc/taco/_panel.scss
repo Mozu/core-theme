@@ -3,6 +3,11 @@
     .#{$prefix}panel {
         @include outer-shadow(0.09, 2px, 0, 0);
         font-family: $font-family;
+
+        input {
+            position: relative;
+            top: -1px;
+        }
         
         .draft-toolbar {
             background-color: transparent;
