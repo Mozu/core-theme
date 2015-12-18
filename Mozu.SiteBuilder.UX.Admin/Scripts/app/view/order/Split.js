@@ -36,6 +36,8 @@ Ext.define('Taco.view.order.Split', {
         lightTagLabel: 'siteName',
     },
 
+    enableQuickFilters: true,
+
     statics: {
         eastConfigs: {
             placeholder: {
@@ -116,7 +118,7 @@ Ext.define('Taco.view.order.Split', {
             }
         });
 
-        Ext.apply(this, {advancedSearchConfig: this.orderList.advancedSearchConfig});
+        Ext.apply(this, { advancedSearchConfig: this.orderList.advancedSearchConfig });
 
         this.createButtonCfg = this.orderList.getCreateButtonConfig();
 

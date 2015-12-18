@@ -45,8 +45,6 @@ Ext.define('Taco.view.order.Grid', {
 
     itemId: 'taco-order-grid',
 
-    enableQuickFilters:true,
-
     advancedSearchConfig : {
         advancedFormCls: 'Taco.view.order.AdvancedSearchForm',
         

@@ -126,7 +126,7 @@ Ext.define('Taco.core.ux.form.FilterContainer', {
         form.trackResetOnLoad = false;
 
         if (this.quickFilterData && this.enableQuickFilters) {
-            form.insert(0, {
+            this.quickFilterCmp = {
                 xtype: 'combo',
                 itemId: 'quickFilter',
                 fieldLabel: 'Quick Filter',
@@ -134,14 +134,16 @@ Ext.define('Taco.core.ux.form.FilterContainer', {
                 typeAhead: false,
                 isSelectField: true,
                 emptyText: 'Quick Filter',
-                store: this.quickFilterData,
-                // value: this.getQuickFilterFromStore(),
+                store: Ext.isArray(this.quickFilterData) ? this.quickFilterData[0] : this.quickFilterData,
+                value: this.getQuickFilterFromStore(),
                 listeners: {
                     change: this.onQuickFilterChange,
                     beforeselect:this.onBeforeSelect,
                     scope: this
                 }
-            });
+            };
+
+            form.insert(0, this.quickFilterCmp);
         }
 
         form.getForm().getFields().each(function (field) {
@@ -213,19 +215,23 @@ Ext.define('Taco.core.ux.form.FilterContainer', {
     },
 
     onQuickFilterChange: function (combo, newValue, oldValue) {
-        //var params = this.store.getProxy().extraParams = this.store.getProxy().extraParams || {};
-        //if (newValue && combo.findRecordByValue(newValue)) {
-        //    this.syncAndFilter(newValue);
-        //}
-        
+        if (!this.store || !this.store.getProxy) return false;
+
+        var params = this.store.getProxy().extraParams = this.store.getProxy().extraParams || {};
+        if (newValue && combo.findRecordByValue(newValue)) {
+           this.syncAndFilter(newValue);
+        }
         
     },
 
-    //getQuickFilterFromStore:function () {
-    //    var params = this.store.getProxy().extraParams = this.store.getProxy().extraParams || {};
-    //    return params.queryFilter;
+    getQuickFilterFromStore:function () {
 
-    //},
+        if (!this.store || !this.store.getProxy) return false;
+
+        var params = this.store.getProxy().extraParams = this.store.getProxy().extraParams || {};
+        return params.queryFilter;
+
+    },
 
     getAdvancedSearchFromStore: function () {
 
@@ -345,7 +351,7 @@ Ext.define('Taco.core.ux.form.FilterContainer', {
                     cls: 'advanced-filter',
                     closable: false,
                     closeAction: 'hide',
-                    title: 'Advanced Search',
+                    title: 'Advanced Filter',
                     primaryText: 'Filter',
                     draggable: false,
                     ui: 'dialog',
