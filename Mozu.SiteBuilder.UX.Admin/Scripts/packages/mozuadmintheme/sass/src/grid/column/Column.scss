@@ -47,31 +47,3 @@
         color: $glyph-icon-color;
     }
 }
-
-.#{$prefix}column-content-pill {
-    border-radius: 20px 20px;
-    -moz-border-radius: 20px 20px;
-    -webkit-border-radius: 20px 20px;
-    -ms-border-radius: 20px 20px;
-    -o-border-radius: 20px 20px;
-    padding-left:6px;
-    padding-right:6px;
-    padding-top:2px;
-    padding-bottom:2px;
-    font-size: 11px;
-}
-
-.#{$prefix}column-content-pill-true {
-    background-color: $valid-green;
-    color: $white-color;
-}
-
-.#{$prefix}column-content-pill-false {
-    background-color: $pill-bg-gray;
-    color:$gray-text-dark;
-}
-
-.#{$prefix}column-action  {
-    display: block;
-    @include icon-font($glyph-knurling, 13px, $gray-text-dark);
-}

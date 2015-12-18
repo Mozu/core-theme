@@ -57,7 +57,7 @@
                 text-overflow: ellipsis;
                 white-space: nowrap;
 
-                span {
+                .title {
                      display: inline-block;
                      padding: 20px;
                      height: 100%;
@@ -76,7 +76,7 @@
                      }
                 }
 
-                i {
+                .#{$vprefix}light-tag {
                     color: $gray-text-light;
                     font-size: 11px;
                     font-style: initial;

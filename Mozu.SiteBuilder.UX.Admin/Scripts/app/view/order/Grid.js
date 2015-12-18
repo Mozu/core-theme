@@ -332,7 +332,17 @@ Ext.define('Taco.view.order.Grid', {
                 flex: 1,
                 minWidth: 100,
                 width: 100,
-                sortable: false
+                sortable: false,
+                renderer: function (value, metaData, record) {
+                    var text = record.get('orderStatus'),
+                        type = (text === 'Processing').toString();
+
+                    if (text === 'Cancelled' || text === 'Errored') {
+                        type = 'error';
+                    }
+
+                    return '<span class="x-column-content-pill x-column-content-pill-' + type + '"">' + text + '</span>';
+                }
             }, {
                 stateId: 'paymentStatus',
                 dataIndex: 'paymentStatus',

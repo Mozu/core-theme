@@ -101,7 +101,25 @@ Ext.define('Taco.core.ux.mixins.NavHeader', {
                     
                     var me = this;
                     var parentTitleCfg = this.parentTitleCfg ? this.parentTitleCfg : {};
-                    var lightTagLabel = parentTitleCfg.lightTagLabel && this.record ? this.record.get(parentTitleCfg.lightTagLabel) : null;
+                    var lightTagLabel = parentTitleCfg.lightTagLabel && this.record
+                                            ? this.record.get(parentTitleCfg.lightTagLabel)
+                                            : null;
+
+                    var pillText = parentTitleCfg.pillText && this.record
+                                            ? this.record.get(parentTitleCfg.pillText)
+                                            : parentTitleCfg.pillText;
+
+                    if (!pillText) {
+                        pillText = parentTitleCfg.pillText;
+                    }
+
+                    var pillType = typeof parentTitleCfg.pillType === 'function'
+                                            ? parentTitleCfg.pillType(pillText)
+                                            : parentTitleCfg.pillType;
+
+                    if (!pillType) {
+                        pillType = parentTitleCfg.pillType;
+                    }
 
                     var addAction = function() {
 
@@ -139,7 +157,9 @@ Ext.define('Taco.core.ux.mixins.NavHeader', {
                             subTitle: newTitle,
                             id: this.titleId,
                             lightTagLabel: lightTagLabel,
-                        });                        
+                            pillText: pillText,
+                            pillType: pillType
+                        });
                         me.titleCmp.on('afterrender', addAction);
                     }
 
@@ -337,13 +357,18 @@ Ext.define('Taco.core.ux.mixins.NavHeader', {
 
             me.titleCmp = Ext.create('Ext.Component', {
                 cls: "taco-content-header-title",
-                tpl: [  
+                tpl: [
                     '<tpl>',
-                        '<span id="{id}"> {title} </span>',
+                        '<span class="title" id="{id}"> {title} </span>',
                         '<tpl if="subTitle">',
                             '<span> {subTitle} </span>',
                             '<tpl if="lightTagLabel">',
                                 '<i class="taco-light-tag">{lightTagLabel}</i>',
+                            '</tpl>',
+                            '<tpl if="pillText">',
+                                '<span class="x-column-content-pill x-column-content-pill-{pillType}">',
+                                    '{pillText}',
+                                '</i>',
                             '</tpl>',
                         '</tpl>',
                     '</tpl>'

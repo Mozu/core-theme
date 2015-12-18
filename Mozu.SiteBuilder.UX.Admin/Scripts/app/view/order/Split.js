@@ -33,7 +33,16 @@ Ext.define('Taco.view.order.Split', {
     parentTitleCfg: {
         title: 'Orders',
         controller: 'orders',
-        lightTagLabel: 'siteName',
+        pillText: 'orderStatus',
+        pillType: function (text) {
+            var type = (text === 'Processing').toString();
+
+            if (text === 'Cancelled' || text === 'Errored') {
+                type = 'error';
+            }
+
+            return type;
+        }
     },
 
     enableQuickFilters: true,
