@@ -277,13 +277,18 @@
         }
     }
 
+    .#{$prefix}form-field {
+        .#{$prefix}field-form-focus
+    }
+
     .#{$prefix}boundlist-floating {
         background-color: $white-color;
         border: 1px solid $dropdown-list-outline;
         @include border-radius-xbrowser($border-radius-small);
         @include outer-shadow(0.09, 6px, 0, 1px);
 
-        li.#{$prefix}boundlist-item {
+        li.#{$prefix}boundlist-item,
+        div.#{$prefix}boundlist-item {
             border-bottom: 1px solid $list-item-active !important;
             @include border-radius-xbrowser(0);
             border-width: 1px;
@@ -303,7 +308,8 @@
                 font-size: $normal-font-link;
             }
 
-            &:hover {
+            &:hover,
+            &.#{$prefix}boundlist-item-over {
                 background-color: $dark-bg !important;
                 color: $input-element-active !important;
 
