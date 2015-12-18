@@ -73,7 +73,7 @@ Ext.define('Taco.core.ux.PrevNextArrowButtons', {
         }
 
         return {
-            index: this.store.indexOfId(this.record.getId()),
+            index: this.store.indexOfId(this.record.getId()) + 1,
             total: this.store.getTotalCount()
         };
     }
