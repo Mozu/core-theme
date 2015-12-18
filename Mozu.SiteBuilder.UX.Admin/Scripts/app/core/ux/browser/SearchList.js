@@ -67,7 +67,7 @@ Ext.define('Taco.core.ux.browser.SearchList', {
 
     listeners: {
         beforecellmousedown: function(cmp, td, cellIndex, record, tr, rowIndex, e, eOpts) {
-            tr.className += ' taco-grid-row-active'
+            tr.className += ' taco-grid-row-active';
         },
         beforecellmouseup: function(cmp, td, cellIndex, record, tr, rowIndex, e, eOpts) {
             tr.className = tr.className.replace('taco-grid-row-active', '');
@@ -88,17 +88,6 @@ Ext.define('Taco.core.ux.browser.SearchList', {
         }
         
         me.columns = Ext.clone(me.columns);
-
-        if (me.enableNavHeader) {
-            //**************************
-            // this will add padding around the panel with this mixin;
-            // need to put this into a scss class;
-            Ext.apply(this,{
-                //style: "border-width: 0px;background-color: #e6e6e6;",
-                //padding: "20 20 10 20"
-            })
-            //**************************
-        }
         
         // this plugin will auto select the first record in the grid and manage reselection of the selected item after a store load
         if (this.enableAutoSelect !== false) {            
@@ -123,19 +112,6 @@ Ext.define('Taco.core.ux.browser.SearchList', {
         }
         // initialize the delete mixin
         this.mixins.deleteFromGrid.init.apply(this);
-        
-        
-        
-        /*
-        // this is deprecated since the toolbar now showing the item count
-        me.store.on({
-            load: me.onItemStoreUpdate,
-            bulkremove: me.onItemStoreUpdate,
-            scope: me
-        });
-        me.on('afterrender', this.onItemStoreUpdate, this);
-        */
-
 
         me.dockedItems = me.dockedItems || [];
         
