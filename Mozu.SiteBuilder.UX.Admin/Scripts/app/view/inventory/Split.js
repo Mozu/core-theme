@@ -154,6 +154,10 @@ Ext.define('Taco.view.inventory.Split', {
 	                        locationList = this.locationList,
 	                        record = record[0],
 	                        productCode = '';
+
+                        if (eOpts.scope.getEast().getCollapsed() == 'right') {
+                            eOpts.scope.getEast().expand();
+                        }
 	                    
 	                    if (!record) {
 	                        locationList.store.extraFilters.removeAtKey('productCode');
