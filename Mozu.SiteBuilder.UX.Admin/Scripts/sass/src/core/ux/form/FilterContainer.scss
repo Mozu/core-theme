@@ -157,3 +157,23 @@
         }
     }
 }
+
+.#{$vprefix}draft-toolbar {
+    .#{$vprefix}filtercontainer {
+        .#{$prefix}trigger-cell {
+            top: 4px;
+        }
+        .#{$vprefix}quickfilter {
+            .#{$prefix}form-trigger {
+                height: 30px;
+                background-color: $white-color;
+                &::after {
+                    padding-top: 4px;
+                }
+                &.#{$prefix}form-clear-trigger::after {
+                    top: 3px;
+                }
+            }
+        }
+    }
+}
