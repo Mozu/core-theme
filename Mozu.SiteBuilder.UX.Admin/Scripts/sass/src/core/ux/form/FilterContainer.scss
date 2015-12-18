@@ -160,6 +160,9 @@
 
 .#{$vprefix}draft-toolbar {
     .#{$vprefix}filtercontainer {
+        .#{$prefix}form-trigger-input-cell {
+            top: 5px;
+        }
         .#{$prefix}trigger-cell {
             top: 4px;
         }
