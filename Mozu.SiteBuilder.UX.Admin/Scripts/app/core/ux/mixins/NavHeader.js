@@ -313,6 +313,10 @@ Ext.define('Taco.core.ux.mixins.NavHeader', {
             xtype: "toolbar",
             cls: "taco-navheader-toolbar",
             dock: 'top',
+            layout: {
+                layout: 'hbox',
+                align: 'strecth'
+            },
             items: []
         };
 
@@ -325,7 +329,11 @@ Ext.define('Taco.core.ux.mixins.NavHeader', {
 
             me.titleContainer = {
                 xtype: "container",
-                layout: 'hbox',
+                flex: 1,
+                layout: {
+                    type: 'hbox',
+                    align: 'strecth'
+                },
                 height: 60,
                 cls: 'taco-content-header-title-container',
                 items: []
@@ -407,7 +415,7 @@ Ext.define('Taco.core.ux.mixins.NavHeader', {
 
         else if (!me.enableSearchBarInHeader && !this.dontFloatHeaderButtons){
             //shifting over the buttons because we have no searchbar
-            conf.items.push('->');
+            //conf.items.push('->');
         }
 
         if (!me.hideSubnavLinks) {
@@ -543,7 +551,8 @@ Ext.define('Taco.core.ux.mixins.NavHeader', {
             xtype: 'toolbar',
             cls: 'navheader-action-toolbar',
             itemHeader: 'navHeaderActionContainer',            
-            items: me.actions
+            items: me.actions,
+            padding: '9 0 0 0'
         }
 
         // if we have no title, the toolbar needs to flex to fill the entire container.
