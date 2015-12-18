@@ -164,9 +164,12 @@
             top: 5px;
         }
         .#{$prefix}trigger-cell {
-            top: 4px;
+            top: 3px;
         }
         .#{$vprefix}quickfilter {
+            .#{$prefix}form-item-body {
+                top: 2px;
+            }
             .#{$prefix}form-trigger {
                 height: 30px;
                 background-color: $white-color;
