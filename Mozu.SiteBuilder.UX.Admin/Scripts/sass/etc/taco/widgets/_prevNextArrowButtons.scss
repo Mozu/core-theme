@@ -1,0 +1,22 @@
+@mixin taco-prevNextArrowButtons {
+
+    .#{$vprefix}prev-next-arrows {
+
+        width: 30px;
+
+        .arrow {
+            display: inline-block;
+            width: 25px;
+
+            &.prev {
+                @include icon-font($glyph-arrowleft);
+            }
+
+            &.next {
+                @include icon-font($glyph-arrowright);
+            }
+        }
+
+    }
+
+}
