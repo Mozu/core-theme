@@ -360,7 +360,7 @@ Ext.define('Taco.view.order.Split', {
                 toolbar.remove(id);
             }
 
-            toolbar.insert(index + 2, button);
+            toolbar.insert(index + 3, button);
         }, this);
 
         // clean up the managed listener
