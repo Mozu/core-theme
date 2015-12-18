@@ -25,11 +25,17 @@ Ext.define('Taco.core.ux.grid.Header', {
 
         if (!me.menu) {
             me.menu = new Ext.menu.Menu({
+                cls: Taco.baseCSSPrefix + 'header-menu',
                 hideOnParentHide: false,
                 header: false,
                 shadow: false,
                 showSeparator: false,
                 items: me.getMenuItems(),
+                layout: {
+                    type: 'vbox',
+                    align: 'stretchmax'
+                },
+                autoScroll: true,
                 listeners: {
                     hide: me.onMenuHide,
                     scope: me
