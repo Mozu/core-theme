@@ -147,16 +147,16 @@ Ext.define('Taco.shared.view.form.Address', {
             allowBlank: !isUsaOrCanada
         });
 
-        me.postalFieldContainer = Ext.create('Ext.form.FieldContainer', {
-            xtype: "fieldcontainer",
-            layout: "hbox",
-            flex: 1,
-            margin: '0 15 0 0',
-            items: [
-                me.postalRegion,
-                me.postalCode
-            ]
-        });
+        // me.postalFieldContainer = Ext.create('Ext.form.FieldContainer', {
+        //     xtype: "fieldcontainer",
+        //     layout: "hbox",
+        //     flex: 1,
+        //     margin: '0 15 0 0',
+        //     items: [
+        //         me.postalRegion,
+        //         me.postalCode
+        //     ]
+        // });
 
         fields.push({
             xtype: "fieldcontainer",
@@ -170,7 +170,9 @@ Ext.define('Taco.shared.view.form.Address', {
                     margin: '0 15 0 0',
                     allowBlank: false
                 },
-                me.postalFieldContainer,
+                // me.postalFieldContainer,
+                me.postalRegion,
+                me.postalCode,
                 //{
                 //    xtype: "fieldcontainer",
                 //    layout: "hbox",

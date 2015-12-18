@@ -114,6 +114,8 @@
 
         table {
             .#{$prefix}form-item-body {
+                display: inline-block;
+                
                 > .#{$prefix}box-layout-ct {
                     // border-bottom: 1px solid $light-border-gray;
                 }
