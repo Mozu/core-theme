@@ -25,6 +25,54 @@
     }
 
     .#{$prefix}panel {
+        .#{$prefix}panel-body-subform {
+            .#{$prefix}container {
+                &.#{$prefix}container-default {
+                    &.#{$prefix}box-layout-ct {
+                        min-height: 42px;
+
+                        .#{$prefix}box-inner {
+                            min-height: 42px;
+
+                            .#{$prefix}field {
+                                &.#{$prefix}table-plain {
+                                    &.#{$prefix}form-item {
+                                        &.#{$prefix}form-type-text {
+                                            &.#{$prefix}box-item {
+                                                &.#{$prefix}field-default {
+                                                    &.#{$prefix}hbox-form-item {
+                                                        min-height: 42px;
+                                                    }
+                                                }
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+
+                            .#{$prefix}panel {
+                                &.#{$prefix}box-item {
+                                    &.#{$prefix}panel-default {
+                                        min-height: 42px;
+
+                                        .#{$prefix}panel-body {
+                                            &.#{$prefix}panel-body-default {
+                                                &.#{$prefix}box-layout-ct {
+                                                    &.#{$prefix}panel-body-default {
+                                                        min-height: 42px;
+                                                    }
+                                                }
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+
         &.#{$vprefix}content-navcontainer {
             > .#{$prefix}grid-row-editor {
                 & + div {
