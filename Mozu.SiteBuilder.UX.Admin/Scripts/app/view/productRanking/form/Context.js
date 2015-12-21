@@ -150,13 +150,7 @@ Ext.define('Taco.view.productRanking.form.Context', {
                     ]
                 },
                 this.categoryGrid
-            ],
-            tooltip: Ext.create('Taco.core.ux.content.Tooltip', {
-                elementId: 'categoriesField',
-                offsetLeft: -74,
-                offsetTop: -19,
-                arrowPosition: 'left'
-            })
+            ]
         });
 
         this.keywordGrid = Ext.create('Taco.view.productRanking.grid.Keyword', {
@@ -191,13 +185,7 @@ Ext.define('Taco.view.productRanking.form.Context', {
                         this.keywordGrid
                     ]
                 }
-            ],
-            tooltip: Ext.create('Taco.core.ux.content.Tooltip', {
-                elementId: 'searchKeywordsField',
-                offsetLeft: -104,
-                offsetTop: -19,
-                arrowPosition: 'left'
-            })
+            ]
         });
 
         this.items = [

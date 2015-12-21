@@ -33,25 +33,13 @@ Ext.define('Taco.view.generalSettings.subform.Notifications', {
             validator: 'email',
             required: true,
             allowBlank: false,
-            name: 'senderEmailAddress',
-            tooltip: Ext.create('Taco.core.ux.content.Tooltip', {
-                elementId: 'senderEmail',
-                offsetLeft: -93,
-                offsetTop: -18,
-                arrowPosition: 'left'
-            })
+            name: 'senderEmailAddress'
         }, {
             xtype: 'textfield',
             itemId: 'senderEmailAlias',
             fieldLabel: 'Sender e-mail alias',
             required: false,
-            name: 'senderEmailAlias',
-            tooltip: Ext.create('Taco.core.ux.content.Tooltip', {
-                elementId: 'senderEmailAlias',
-                offsetLeft: -110,
-                offsetTop: -18,
-                arrowPosition: 'left'
-            })
+            name: 'senderEmailAlias'
 
         }, {
             xtype: 'textfield',
@@ -61,13 +49,7 @@ Ext.define('Taco.view.generalSettings.subform.Notifications', {
             allowBlank: false,
             minLength: 3,
             fieldLabel: 'Reply-to e-mail',
-            name: 'replyToEmailAddress',
-            tooltip: Ext.create('Taco.core.ux.content.Tooltip', {
-                elementId: 'replyToEmailAddress',
-                offsetLeft: -99,
-                offsetTop: -18,
-                arrowPosition: 'left'
-            })
+            name: 'replyToEmailAddress'
         }, {
             xtype: 'fieldcontainer',
             fieldLabel: 'Enable Mozu Transactional Emails',

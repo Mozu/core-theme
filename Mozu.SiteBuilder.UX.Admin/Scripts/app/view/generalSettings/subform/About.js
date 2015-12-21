@@ -55,12 +55,6 @@ Ext.define('Taco.view.generalSettings.subform.About', {
                     ['hh:mm:ss tt', '12 hour w/ leading zeros'],
                     ['HH:mm:ss tt', '24 hour w/ leading zeros']
                 ]
-            }),
-            tooltip: Ext.create('Taco.core.ux.content.Tooltip', {
-                elementId: 'timeFormat',
-                offsetLeft: -84,
-                offsetTop: -19,
-                arrowPosition: 'left'
             })
         };
 
@@ -77,12 +71,6 @@ Ext.define('Taco.view.generalSettings.subform.About', {
             width: 350,
             store: Ext.create('Taco.store.TimeZones', {
                 autoLoad: true
-            }),
-            tooltip: Ext.create('Taco.core.ux.content.Tooltip', {
-                elementId: 'siteTimeZone',
-                offsetLeft: -76,
-                offsetTop: -19,
-                arrowPosition: 'left'
             })
         };
         
@@ -116,12 +104,6 @@ Ext.define('Taco.view.generalSettings.subform.About', {
                 type: 'Taco.store.Channels',
                 autoLoad: true
                 
-            }),
-            tooltip: Ext.create('Taco.core.ux.content.Tooltip', {
-                elementId: 'channelId',
-                offsetLeft: -64,
-                offsetTop: -19,
-                arrowPosition: 'left'
             })
         });
         
@@ -161,13 +143,7 @@ Ext.define('Taco.view.generalSettings.subform.About', {
                 itemId: 'websiteName',
                 name: 'websiteName',
                 fieldLabel: 'Web Site Name',
-                width:"100%",
-                tooltip: Ext.create('Taco.core.ux.content.Tooltip', {
-                    elementId: 'websiteName',
-                    offsetLeft: -94,
-                    offsetTop: -19,
-                    arrowPosition: 'left'
-                })
+                width:"100%"
             },
             me.timeSettings,
             {
@@ -190,13 +166,7 @@ Ext.define('Taco.view.generalSettings.subform.About', {
                         name: "catalogName",
                         fieldLabel: "Catalog",
                         value: Taco.app.context.findCatalog(Taco.app.context.getSite().catalogId).name,
-                        flex: 1,
-                        tooltip: Ext.create('Taco.core.ux.content.Tooltip', {
-                            elementId: 'catalogName',
-                            offsetLeft: -58,
-                            offsetTop: -18,
-                            arrowPosition: 'left'
-                        })
+                        flex: 1
                     }
                 ]
             },
@@ -215,13 +185,7 @@ Ext.define('Taco.view.generalSettings.subform.About', {
                       
                         value: me.record.get('isMozuWebSite') ? 'Yes' : 'No',
                         flex: 1,
-                        readOnly: true,
-                        tooltip: Ext.create('Taco.core.ux.content.Tooltip', {
-                            elementId: 'mozuHostedStoreFront',
-                            offsetLeft: -140,
-                            offsetTop: -18,
-                            arrowPosition: 'left'
-                        })
+                        readOnly: true
                     },
                     {
                         xtype: 'container',
