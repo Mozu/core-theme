@@ -64,6 +64,7 @@ namespace Mozu.SiteBuilder.Mvc.Models.ModelMapping
                 .ForMember(m => m.AdjustForDaylightSavingTime, op => op.Ignore())
                 .ForMember(m => m.AllowAllIPs, op => op.Ignore())
                 .ForMember(m => m.CdnCacheBustKey , op => op.ResolveUsing (x=> x.CacheSettings != null ? x.CacheSettings.CdnCacheBustKey : null))
+                .ForMember(m => m.MissingImageSubstitute, op => op.ResolveUsing(x => x.MissingImageSubstitute))
 
                 .ForMember(m => m.CustomCdnHostName, op => op.ResolveUsing(x => x.CustomCdnHostName))
              
@@ -126,6 +127,8 @@ namespace Mozu.SiteBuilder.Mvc.Models.ModelMapping
                 .ForMember(dc => dc.IsMozuWebSite, op => op.Ignore())
                 .ForMember(dc => dc.CustomCdnHostName, op => op.ResolveUsing ( x=> x.CustomCdnHostName))
                 .ForMember(dc => dc.IsWishlistCreationEnabled, op => op.ResolveUsing(x => x.IsWishlistCreationEnabled))
+                .ForMember(dc => dc.MissingImageSubstitute, op => op.ResolveUsing(x => x.MissingImageSubstitute))
+
                 .ForMember(dc => dc.TaxableTerritories, op => op.Ignore())
                 .ForMember(dc => dc.AuditInfo, op => op.Ignore())
                 .ForMember(dc => dc.Theme, op => op.ResolveUsing(x => Serialize(x.DesktopTheme)))

@@ -27,6 +27,7 @@ namespace Mozu.SiteBuilder.UX.Areas.Misc.Controllers
     public class ContentController : ApiControllerBase
     {
         static readonly ConcurrentDictionary<int, Site> _siteLookup = new ConcurrentDictionary<int, Site>();
+        static readonly ConcurrentDictionary<int, Tenant.Contracts.Tenant> _tenantLookup = new ConcurrentDictionary<int, Tenant.Contracts.Tenant>();
         static long Quality = 60;
         IApiContext _appCtx;
         readonly ISettings _settings;
@@ -54,6 +55,17 @@ namespace Mozu.SiteBuilder.UX.Areas.Misc.Controllers
                 return null;
             }
             return siteRes.ReadAsSync();
+        }
+
+        Tenant.Contracts.Tenant LookupTenant(int tenant)
+        {
+            ITenantsWebApiClient client = Request.Resolve<ITenantsWebApiClient>().CloneWithoutUserClaims();
+            ServiceClientResponse<Tenant.Contracts.Tenant> res = client.GetTenantInternal(tenant,includeSoftDeletes:false, includeInactiveChildren:false).Result;
+            if (res.ResponseMessage.StatusCode == HttpStatusCode.NotFound)
+            {
+                return null;
+            }
+            return res.ReadAsSync();
         }
 
         bool ShouldRedirectToCdn()
@@ -167,7 +179,22 @@ namespace Mozu.SiteBuilder.UX.Areas.Misc.Controllers
             if (result.ResponseMessage.StatusCode == HttpStatusCode.NotFound)
             {
                 result.ResponseMessage.Dispose();
-                return new NotFoundResult();
+                result = await ProcessNotFound(
+                    size: size,
+                    max: max, 
+                    maxWidth: maxWidth,
+                    maxHeight:maxHeight,
+                    width:width,
+                    height:height,
+                    crop:null,
+                    quality:quality
+                    ).ConfigureAwait(false);
+
+                if (result== null)
+                {
+                    return new NotFoundResult();
+                }
+                
             }
             if (result.HasException)
             {
@@ -183,6 +210,97 @@ namespace Mozu.SiteBuilder.UX.Areas.Misc.Controllers
             }
             return new MyFileStreamResult(result.ResponseMessage.Content.ReadAsStreamAsync().Result, ct, null,
                 result.ResponseMessage.Content.Headers.LastModified);
+        }
+
+        private async Task<ServiceClientResponse<StreamContent>> ProcessNotFound(
+            int? size = null,
+            int? max = null,
+            int? maxWidth = null,
+            int? maxHeight = null,
+            int? width = null,
+            int? height = null,
+            string crop = null,
+            int? quality = null)
+        {
+            ServiceClientResponse<StreamContent> result;
+            if (!this.Request.Headers.Accept.Any(x => x.MediaType != null && x.MediaType.StartsWith("image/", StringComparison.OrdinalIgnoreCase)))
+            {
+                return null;
+            }
+
+            if (!this.SbApiContext.SiteId.HasValue)
+            {
+                var tenant = _tenantLookup.GetOrAdd(this.SbApiContext.TenantId, LookupTenant);
+                var site = tenant.Sites.Where(s =>
+                {
+                    if (this.SbApiContext.MasterCatalogId.HasValue && this.SbApiContext.MasterCatalogId.Value != s.MasterCatalogId.Value)
+                    {
+                        return false;
+                    }
+                    if (this.SbApiContext.CatalogId.HasValue && this.SbApiContext.CatalogId.Value != s.CatalogId.Value)
+                    {
+                        return false;
+                    }
+                    return true;
+                }).FirstOrDefault();
+                if (site != null)
+                {
+                    ((ApiContext)this.SbApiContext).CatalogId = site.CatalogId;
+                    ((ApiContext)this.SbApiContext).MasterCatalogId = site.MasterCatalogId;
+                    ((ApiContext)this.SbApiContext).SiteId = site.Id;
+                }
+            }
+
+
+            if (this.SiteContext == null || this.SiteContext.GeneralSettings == null || string.IsNullOrEmpty(this.SiteContext.GeneralSettings.MissingImageSubstitute))
+            {
+                return null;
+            }
+            Guid guid;
+            
+           
+
+            if (Guid.TryParse(this.SiteContext.GeneralSettings.MissingImageSubstitute, out guid))
+            {
+                result = await _docRepo.TransformDocumentContent(
+                    documentListName: "files@mozu",
+                    documentId: this.SiteContext.GeneralSettings.MissingImageSubstitute,
+                    width: width.HasValue ? width : size,
+                    height: height,
+                    maxWidth: maxWidth.HasValue ? maxWidth : max,
+                    maxHeight: maxHeight.HasValue ? maxHeight : max,
+                    crop: crop,
+                    quality: quality
+                    ).ConfigureAwait(false);
+            }
+            else
+            {
+                result = await _docRepo.TransformTreeDocumentContent(
+                    documentListName: "files@mozu",
+                    documentName: this.SiteContext.GeneralSettings.MissingImageSubstitute,
+                    width: width.HasValue ? width : size,
+                    height: height,
+                    maxWidth: maxWidth.HasValue ? maxWidth : max,
+                    maxHeight: maxHeight.HasValue ? maxHeight : max,
+                    crop: crop,
+                    quality: quality
+                    ).ConfigureAwait(false);
+            }
+            if (result.ResponseMessage.IsSuccessStatusCode)
+            {
+                return result;
+            }
+            else
+            {
+                try
+                {
+                    result.ResponseMessage.Dispose();
+                }
+                catch { }
+
+                return null;
+
+            }
         }
 
         ActionResult RedirectToCdn(string list, string documentId, DateTimeOffset timeStamp)

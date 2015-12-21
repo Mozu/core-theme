@@ -15,7 +15,8 @@ Ext.define('Taco.view.generalSettings.subform.About', {
         'Ext.form.field.Checkbox',
         'Ext.form.field.Text',
         'Taco.store.TimeZones',
-        'Taco.core.ux.TooltipLabel',
+        'Taco.shared.view.field.Image',
+        'Taco.core.ux.form.field.BaseImageField',
         'Taco.store.Channels'
     ],
     title: 'General',
@@ -244,7 +245,7 @@ Ext.define('Taco.view.generalSettings.subform.About', {
                             }
                         ],
                         flex: 1
-
+                    
                     },
                    {
                        xtype: 'hiddenfield',
@@ -252,7 +253,21 @@ Ext.define('Taco.view.generalSettings.subform.About', {
                        itemId:'cdnCacheBustKey'
                    }
                 ]
+            },             
+            {
+                xtype: 'container',
+                layout: 'hbox',
+                items: [Taco.core.ux.TooltipLabel.wrapConfig('settings.general.missingImage', this, {
+                    fieldLabel: 'Substitue for Missing Images',
+                    itemId: 'missingImageSubstitute',
+                    name: 'missingImageSubstitute',
+                    allowMulti:false,
+                    xtype: 'taco.imagefield',
+                    height:250   //for some reason the links get clipped if you dont set this
+                })]
             }
+            
+
         ];
 
         this.callParent(arguments);
