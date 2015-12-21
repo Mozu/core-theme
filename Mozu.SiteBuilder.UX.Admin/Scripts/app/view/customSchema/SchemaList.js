@@ -71,7 +71,7 @@ Ext.define('Taco.view.customSchema.SchemaList', {
             this.entitySplit.updateSearchContext();
         }
 
-        if (this.dynamicGrid) {
+        if (this.dynamicGrid && record && record.length > 0) {
             this.dynamicGrid.initListView(record[0]);
         }
     },
