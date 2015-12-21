@@ -270,10 +270,10 @@ Ext.define('Taco.view.location.inventory.LocationInventory', {
      
     onRowEditorUpdate: function (editor, context, opts) {
         var locInvRecord = context.record,
-            invMode = this.down('#adjustmentMode');
-        if (invMode) {
-            locInvRecord.set('adjustmentType', invMode.getValue());
-        }
+            invMode = Ext.ComponentQuery.query('#adjustmentModeAdd'),
+            adjustmentMode = (invMode && invMode.length > 0 && invMode[0].checked) ? 'Delta' : 'Absolute';
+
+        locInvRecord.set('adjustmentType', adjustmentMode);
         this.callParent(arguments);
     }
 });

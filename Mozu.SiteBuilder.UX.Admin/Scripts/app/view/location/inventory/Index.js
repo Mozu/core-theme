@@ -404,7 +404,7 @@ Ext.define('Taco.view.location.inventory.Index', {
     onRowEditorUpdate: function (editor, context) {
         var locInvRecord = context.record,
             adjustmentTypeAdd = this.navHeader && this.navHeader.down('#adjustmentModeAdd') ? this.navHeader.down('#adjustmentModeAdd') : null,
-            adjustmentType = adjustmentTypeAdd && adjustmentTypeAdd.checked ? 'Absolute' : 'Delta';
+            adjustmentType = adjustmentTypeAdd && adjustmentTypeAdd.checked ? 'Delta' : 'Absolute';
 
         locInvRecord.set('adjustmentType', adjustmentType);
 
