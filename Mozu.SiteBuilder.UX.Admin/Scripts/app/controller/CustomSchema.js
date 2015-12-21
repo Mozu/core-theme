@@ -100,14 +100,14 @@ Ext.define('Taco.controller.CustomSchema', {
         var argArray = Array.prototype.slice.call(args);
         var documentList = argArray && argArray[0] && typeof argArray[0] === 'string' ? argArray[0] : null;
         var record = argArray && argArray[1] && typeof argArray[1] === 'string' ? argArray[1] : null;
-        var listExists = Taco.customSchema.filter(function (list) { return list.listFQN === documentList; });
+        var listExists = Taco.customSchema.filter(function (list) { return list.listFQN === documentList && type === list.entityType });
 
         if (listExists && listExists.length > 0) {
             config.standaloneGrid = true;
             config.listFQN = documentList;
             config.record = record;
             config.entityType = type;
-            config.scopeType = listExists[0].scopeType;
+            config.scopeType = listExists[0].scopeType || 'site';
             config.listName = listExists[0].name;
             config.views = listExists[0].views;
         }
