@@ -20,6 +20,12 @@
         @include border-radius-xbrowser(5px);
         @include color-blur-outer-shadow ($black-color, 0.29, 0, 1px, 16px, 0);
 
+        .#{$prefix}form-display-field-body {
+            .#{$prefix}form-display-field {
+                line-height: 20px;
+            }
+        }
+
         .#{$prefix}tool-close {
             opacity: .35;
 
