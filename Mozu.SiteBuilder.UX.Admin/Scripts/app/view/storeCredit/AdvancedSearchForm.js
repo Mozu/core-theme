@@ -49,7 +49,7 @@ Ext.define('Taco.view.storeCredit.AdvancedSearchForm', {
             //autoFetchDisplayValue:true,
             //width: 300,
             flex:1,
-            emptyText: 'Customer Search',
+            emptyText: '',
             listeners: {
                 select: function (combo, records) {
                     // need to check to see if the custtomer has an email address for the default shipping address.

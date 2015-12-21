@@ -133,7 +133,7 @@ Ext.define('Taco.core.ux.form.FilterContainer', {
                 queryMode: 'local',
                 typeAhead: false,
                 isSelectField: true,
-                emptyText: 'Quick Filter',
+                emptyText: '',
                 store: Ext.isArray(this.quickFilterData) ? this.quickFilterData[0] : this.quickFilterData,
                 value: this.getQuickFilterFromStore(),
                 listeners: {
