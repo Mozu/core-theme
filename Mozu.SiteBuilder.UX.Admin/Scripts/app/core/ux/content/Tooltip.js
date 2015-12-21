@@ -18,6 +18,13 @@ Ext.define('Taco.core.ux.content.Tooltip', {
     showEvent: 'mouseenter',
     hideEvent: 'mouseleave',
 
+    tooltipIconClass: 'taco-tooltip-icon',
+
+    /**
+    * add a tooltip icon to the hover target to identify a tooltip is available
+    **/
+    showToolTipIcon: true,
+
     /**
     * how long it will take after the hover event occurs for the mesage to show
     **/
@@ -152,6 +159,18 @@ Ext.define('Taco.core.ux.content.Tooltip', {
 		Ext.defer(this.applyTooltip, this.delay, this);
     },
 
+    applyTooltipIcon: function() {
+
+        if (this.showToolTipIcon) { 
+            var icon = document.createElement('i');
+
+            icon.classList.add(this.tooltipIconClass);
+
+            this.target.appendChild(icon);
+        }
+        
+    },
+
     applyTooltip: function() {
         
     	var component = Ext.ComponentQuery.query('#' + this.elementId);
@@ -176,6 +195,8 @@ Ext.define('Taco.core.ux.content.Tooltip', {
 			default:
 				console.warn('No hover target has been established for ' + this.hoverTarget);
 		}
+
+        this.applyTooltipIcon();
     },
 
     instantiateToolTipEvents: function(el) {

@@ -168,6 +168,7 @@ Ext.define('Taco.view.website.Index', {
             messageKey: 'publishset.publishsetdate',
             arrowPosition: 'top',
             offsetTop: -22,
+            showToolTipIcon: false,
             // offsetLeft: 107,
             defaultTpl: [
                 '<div style="line-height: 15px;">',

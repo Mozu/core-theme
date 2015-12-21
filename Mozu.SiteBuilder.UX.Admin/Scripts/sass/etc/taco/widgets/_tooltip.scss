@@ -105,4 +105,14 @@
 		}
 	}
 
+	.#{$vprefix}tooltip-icon {
+		@include icon-font($glyph-tooltip, 10px);
+
+		&::after {
+			font-style: initial;
+			left: 10px;
+			top: -2px
+		}
+	}
+
 }
