@@ -56,7 +56,7 @@ Ext.widget({
                         items: [
                             {
                                 xtype: 'radio',
-                                margin: '42 10 0 0',
+                                margin: '0 20',
                                 checked: isChecked,
                                 itemId: 'layoutCheckBox' + counter,
                                 name: 'mz-layout-radiofield',

@@ -141,6 +141,7 @@ Ext.define('Taco.view.website.Index', {
             menu: {
                 plain: true,
                 shadow: false,
+                cls: 'taco-more-action-button-menu',
                 items: [
                     {  
                         text: 'Preview Theme',
@@ -502,7 +503,7 @@ Ext.define('Taco.view.website.Index', {
                                 flex:1,
                                 width: '100%',
                                 style: {
-                                    marginTop: 0 //DONT REMOVE
+                                    marginTop: 0, //DONT REMOVE
                                 },
                                 listeners: {
                                     change: this.onSearchTextChange,

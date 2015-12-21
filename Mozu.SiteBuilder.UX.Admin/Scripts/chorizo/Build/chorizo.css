@@ -281,10 +281,10 @@
   position: relative;
   width: 14px;
 }
-/* line 95, ../../sass/etc/taco/mixins/_fonts.scss */
+/* line 162, ../../sass/etc/taco/mixins/_fonts.scss */
 .mz-cms-tools li.pencil::after {
   color: #a6a6a6;
-  content: "\E900";
+  content:     "\EDD5";
   display: block;
   font-family: mozicons;
   font-size: 14px;
@@ -303,10 +303,10 @@
   position: relative;
   width: 14px;
 }
-/* line 95, ../../sass/etc/taco/mixins/_fonts.scss */
+/* line 162, ../../sass/etc/taco/mixins/_fonts.scss */
 .mz-cms-tools li.trash::after {
   color: #a6a6a6;
-  content: "\E02A";
+  content:     "\E02A";
   display: block;
   font-family: mozicons;
   font-size: 14px;
@@ -325,10 +325,10 @@
   position: relative;
   width: 14px;
 }
-/* line 95, ../../sass/etc/taco/mixins/_fonts.scss */
+/* line 162, ../../sass/etc/taco/mixins/_fonts.scss */
 .mz-cms-tools li.drag-handle::after {
   color: #a6a6a6;
-  content: "\E609";
+  content:     "\E609";
   display: block;
   font-family: mozicons;
   font-size: 14px;
@@ -387,17 +387,17 @@
 /* line 136, ../../sass/etc/chorizo/_grid-edit.scss */
 .mz-cms-editing .mz-cms-block .mz-cms-tools li.pencil, .mz-cms-editing .mz-cms-blank-block .mz-cms-tools li.pencil {
   top: 4.5px;
-  height: 14px;
+  height: 15px;
   position: relative;
-  width: 14px;
+  width: 15px;
 }
-/* line 95, ../../sass/etc/taco/mixins/_fonts.scss */
+/* line 162, ../../sass/etc/taco/mixins/_fonts.scss */
 .mz-cms-editing .mz-cms-block .mz-cms-tools li.pencil::after, .mz-cms-editing .mz-cms-blank-block .mz-cms-tools li.pencil::after {
   color: white;
-  content: "\E900";
+  content:     "\EDD5";
   display: block;
   font-family: mozicons;
-  font-size: 14px;
+  font-size: 15px;
   font-weight: normal !important;
   left: 0px;
   line-height: 1.0;
@@ -406,7 +406,12 @@
   vertical-align: baseline;
   -webkit-font-smoothing: antialiased;
 }
-/* line 141, ../../sass/etc/chorizo/_grid-edit.scss */
+/* line 140, ../../sass/etc/chorizo/_grid-edit.scss */
+.mz-cms-editing .mz-cms-block .mz-cms-tools li.pencil::after, .mz-cms-editing .mz-cms-blank-block .mz-cms-tools li.pencil::after {
+  left: -2px;
+  top: -1px;
+}
+/* line 146, ../../sass/etc/chorizo/_grid-edit.scss */
 .mz-cms-editing .mz-cms-block .mz-cms-tools li.trash, .mz-cms-editing .mz-cms-blank-block .mz-cms-tools li.trash {
   top: 4.5px;
   left: 4px;
@@ -414,10 +419,10 @@
   position: relative;
   width: 14px;
 }
-/* line 95, ../../sass/etc/taco/mixins/_fonts.scss */
+/* line 162, ../../sass/etc/taco/mixins/_fonts.scss */
 .mz-cms-editing .mz-cms-block .mz-cms-tools li.trash::after, .mz-cms-editing .mz-cms-blank-block .mz-cms-tools li.trash::after {
   color: white;
-  content: "\E02A";
+  content:     "\E02A";
   display: block;
   font-family: mozicons;
   font-size: 14px;
@@ -429,17 +434,17 @@
   vertical-align: baseline;
   -webkit-font-smoothing: antialiased;
 }
-/* line 147, ../../sass/etc/chorizo/_grid-edit.scss */
+/* line 152, ../../sass/etc/chorizo/_grid-edit.scss */
 .mz-cms-editing .mz-cms-block .mz-cms-tools li.drag-handle, .mz-cms-editing .mz-cms-blank-block .mz-cms-tools li.drag-handle {
   top: 4.5px;
   height: 14px;
   position: relative;
   width: 14px;
 }
-/* line 95, ../../sass/etc/taco/mixins/_fonts.scss */
+/* line 162, ../../sass/etc/taco/mixins/_fonts.scss */
 .mz-cms-editing .mz-cms-block .mz-cms-tools li.drag-handle::after, .mz-cms-editing .mz-cms-blank-block .mz-cms-tools li.drag-handle::after {
   color: white;
-  content: "\E609";
+  content:     "\E609";
   display: block;
   font-family: mozicons;
   font-size: 14px;
@@ -451,28 +456,28 @@
   vertical-align: baseline;
   -webkit-font-smoothing: antialiased;
 }
-/* line 154, ../../sass/etc/chorizo/_grid-edit.scss */
+/* line 159, ../../sass/etc/chorizo/_grid-edit.scss */
 .mz-cms-editing .mz-cms-block.mz-content-screen, .mz-cms-editing .mz-cms-blank-block.mz-content-screen {
   opacity: .2;
 }
-/* line 160, ../../sass/etc/chorizo/_grid-edit.scss */
+/* line 165, ../../sass/etc/chorizo/_grid-edit.scss */
 .mz-cms-editing .mz-cms-blank-block:hover {
   background-color: rgba(0, 0, 0, 0.01);
   outline-color: #323232 !important;
   outline-style: solid !important;
 }
-/* line 165, ../../sass/etc/chorizo/_grid-edit.scss */
+/* line 170, ../../sass/etc/chorizo/_grid-edit.scss */
 .mz-cms-editing .mz-cms-blank-block > div {
   height: 150px;
   padding-top: 68px;
   text-align: center;
 }
-/* line 171, ../../sass/etc/chorizo/_grid-edit.scss */
+/* line 176, ../../sass/etc/chorizo/_grid-edit.scss */
 .mz-cms-editing .mz-cms-blank-block.mz-cms-drop-over {
   background-color: rgba(52, 173, 142, 0.1);
   outline-color: #34ad8e !important;
 }
-/* line 178, ../../sass/etc/chorizo/_grid-edit.scss */
+/* line 183, ../../sass/etc/chorizo/_grid-edit.scss */
 .mz-cms-editing .mz-cms-hint-bar {
   background: #34ad8e;
   height: 1px;
@@ -482,7 +487,7 @@
   pointer-events: none;
   display: none;
 }
-/* line 187, ../../sass/etc/chorizo/_grid-edit.scss */
+/* line 192, ../../sass/etc/chorizo/_grid-edit.scss */
 .mz-cms-editing .mz-cms-hint-bar .mz-cms-hint-message {
   background: #34ad8e;
   color: white;
@@ -502,28 +507,28 @@
   -webkit-border-radius: 5px;
   border-radius: 5px 5px 0px 0px;
 }
-/* line 204, ../../sass/etc/chorizo/_grid-edit.scss */
+/* line 209, ../../sass/etc/chorizo/_grid-edit.scss */
 .mz-cms-editing .mz-cms-hint-bar .mz-cms-hint-message.top {
   top: -23px;
   -moz-border-radius: 5px;
   -webkit-border-radius: 5px;
   border-radius: 5px;
 }
-/* line 209, ../../sass/etc/chorizo/_grid-edit.scss */
+/* line 214, ../../sass/etc/chorizo/_grid-edit.scss */
 .mz-cms-editing .mz-cms-hint-bar .mz-cms-hint-message.bottom {
   top: 0px;
   -moz-border-radius: 0 0 5px 5px;
   -webkit-border-radius: 0;
   border-radius: 0 0 5px 5px;
 }
-/* line 214, ../../sass/etc/chorizo/_grid-edit.scss */
+/* line 219, ../../sass/etc/chorizo/_grid-edit.scss */
 .mz-cms-editing .mz-cms-hint-bar .mz-cms-hint-message.between {
   top: -13px;
   -moz-border-radius: 5px;
   -webkit-border-radius: 5px;
   border-radius: 5px;
 }
-/* line 223, ../../sass/etc/chorizo/_grid-edit.scss */
+/* line 236, ../../sass/etc/chorizo/_grid-edit.scss */
 .mz-cms-editing .mz-cms-hint-bar.mz-cms-upright .mz-cms-hint-message {
   left: -11px;
   letter-spacing: 2px;
@@ -539,21 +544,21 @@
   -webkit-text-orientation: upright;
   -webkit-writing-mode: vertical-lr;
 }
-/* line 238, ../../sass/etc/chorizo/_grid-edit.scss */
+/* line 250, ../../sass/etc/chorizo/_grid-edit.scss */
 .mz-cms-editing .mz-cms-hint-bar.mz-cms-upright .mz-cms-hint-message.left {
   left: -22px;
   -moz-border-radius: 5px 0 0 5px;
   -webkit-border-radius: 5px;
   border-radius: 5px 0 0 5px;
 }
-/* line 243, ../../sass/etc/chorizo/_grid-edit.scss */
+/* line 255, ../../sass/etc/chorizo/_grid-edit.scss */
 .mz-cms-editing .mz-cms-hint-bar.mz-cms-upright .mz-cms-hint-message.right {
   left: 1px;
   -moz-border-radius: 0 5px 5px 0;
   -webkit-border-radius: 0;
   border-radius: 0 5px 5px 0;
 }
-/* line 252, ../../sass/etc/chorizo/_grid-edit.scss */
+/* line 264, ../../sass/etc/chorizo/_grid-edit.scss */
 .mz-cms-editing .mz-cms-resizer {
   background-color: rgba(52, 173, 142, 0.03);
   display: block;
@@ -570,7 +575,7 @@
   -webkit-transition: opacity 150ms;
   transition: opacity 150ms;
 }
-/* line 265, ../../sass/etc/chorizo/_grid-edit.scss */
+/* line 277, ../../sass/etc/chorizo/_grid-edit.scss */
 .mz-cms-editing .mz-cms-resizer .mz-cms-bottom {
   background-color: #34ad8e;
   bottom: -4px;
@@ -587,40 +592,40 @@
   -webkit-box-shadow: 0px 0px 5px #FFF;
   box-shadow: 0px 0px 5px #FFF;
 }
-/* line 279, ../../sass/etc/chorizo/_grid-edit.scss */
+/* line 291, ../../sass/etc/chorizo/_grid-edit.scss */
 .mz-cms-editing .mz-cms-state-default {
   cursor: default;
 }
-/* line 282, ../../sass/etc/chorizo/_grid-edit.scss */
+/* line 294, ../../sass/etc/chorizo/_grid-edit.scss */
 .mz-cms-editing .mz-cms-state-default.mz-cms-drag-handle, .mz-cms-editing .mz-cms-state-default .mz-cms-drag-handle {
   cursor: move;
 }
-/* line 286, ../../sass/etc/chorizo/_grid-edit.scss */
+/* line 298, ../../sass/etc/chorizo/_grid-edit.scss */
 .mz-cms-editing .mz-cms-state-default .mz-cms-text-drag-handle {
   display: block;
 }
-/* line 290, ../../sass/etc/chorizo/_grid-edit.scss */
+/* line 302, ../../sass/etc/chorizo/_grid-edit.scss */
 .mz-cms-editing .mz-cms-state-default:hover {
   outline-color: #323232 !important;
 }
-/* line 292, ../../sass/etc/chorizo/_grid-edit.scss */
+/* line 304, ../../sass/etc/chorizo/_grid-edit.scss */
 .mz-cms-editing .mz-cms-state-default:hover .mz-cms-tools {
   display: block;
 }
-/* line 298, ../../sass/etc/chorizo/_grid-edit.scss */
+/* line 310, ../../sass/etc/chorizo/_grid-edit.scss */
 .mz-cms-editing .mz-cms-state-editing {
   background-color: rgba(52, 173, 142, 0.03);
   outline-color: #34ad8e;
 }
-/* line 302, ../../sass/etc/chorizo/_grid-edit.scss */
+/* line 314, ../../sass/etc/chorizo/_grid-edit.scss */
 .mz-cms-editing .mz-cms-state-editing .mz-cms-tools {
   display: none;
 }
-/* line 307, ../../sass/etc/chorizo/_grid-edit.scss */
+/* line 319, ../../sass/etc/chorizo/_grid-edit.scss */
 .mz-cms-editing .mz-cms-state-selected {
   outline-color: #34ad8e;
 }
-/* line 310, ../../sass/etc/chorizo/_grid-edit.scss */
+/* line 322, ../../sass/etc/chorizo/_grid-edit.scss */
 .mz-cms-editing .mz-cms-state-selected .mz-cms-resizer {
   opacity: 1;
   z-index: 1;

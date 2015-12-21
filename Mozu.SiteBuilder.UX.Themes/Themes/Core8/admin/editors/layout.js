@@ -56,7 +56,7 @@ Ext.widget({
                         items: [
                             {
                                 xtype: 'radio',
-                                margin: '42 10 0 0',
+                                margin: '0 20',
                                 checked: isChecked,
                                 itemId: 'layoutCheckBox' + counter,
                                 name: 'mz-layout-radiofield',
@@ -118,7 +118,7 @@ Ext.widget({
 
     onWidthValueChange: function(cmp, value) {
 
-        if (parseInt(value, 10) < 10 ) cmp.setValue(10);
+        if (parseInt(value, 10) < 10) cmp.setValue(10);
 
         var numberField = this.getAssociatedNumberField(),
             formValues = cmp.up('form').getValues(),

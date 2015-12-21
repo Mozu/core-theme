@@ -135,7 +135,12 @@
 
                 &.pencil {
                     top: 4.5px;
-                    @include icon-font(char-from-code($glyph-chorizo-pencil), 14px, white);
+                    @include icon-font(char-from-code($glyph-chorizo-pencil), 15px, white);
+
+                    &::after {
+                        left: -2px;
+                        top: -1px;
+                    }
                 }
 
                 &.trash {
