@@ -27,14 +27,15 @@
     }
 
 
-    /* panel */
+    // /* panel */
     .#{$prefix}panel {
         @include outer-shadow(0.09, 2px, 0, 0);
         font-family: $font-family;
 
-        input,
-        .#{$prefix}form-text {
-            position: relative;
+        input {
+            &.#{$prefix}form-text {
+                position: relative;
+            }
         }
         
         .draft-toolbar {
