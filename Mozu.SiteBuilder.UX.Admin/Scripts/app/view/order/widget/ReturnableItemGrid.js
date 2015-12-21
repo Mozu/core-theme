@@ -145,9 +145,9 @@ Ext.define('Taco.view.order.widget.ReturnableItemGrid', {
                 width: 100,
                 editor: {
                     xtype: 'combobox',
+                    queryMode: 'local',
                     allowOnlyWhitespace: false,
                     showBorder: true,
-                    editable: false,
                     forceSelection: true,
                     store: ['Replace', 'Refund']
                 }
@@ -161,10 +161,9 @@ Ext.define('Taco.view.order.widget.ReturnableItemGrid', {
                 width: 175,
                 editor: {
                     xtype: 'combobox',
+                    queryMode: 'local',
                     showBorder: true,
                     allowOnlyWhitespace: false,
-                    showBorder: true,
-                    editable: false,
                     forceSelection: true,
                     valueField: 'name',
                     displayField: 'name',

@@ -195,9 +195,11 @@
 
     .#{$prefix}form-trigger-wrap {
         border: none;
+        background-color: transparent;
 
         input {
             color: $input-text-color;
+            background-color: transparent;
         }
     }
 
