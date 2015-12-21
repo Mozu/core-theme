@@ -3095,6 +3095,10 @@
       </None>
     </ItemGroup>
   </Target>
+  <Target Name="AfterCompile">
+    <CallTarget Targets="BuildThemes" Condition="'$(BuildingInsideVisualStudio)' != 'true'" />
+  </Target>
+  <Import Project="..\.paket\paket.targets" />
   <Choose>
     <When Condition="$(TargetFrameworkIdentifier) == '.NETFramework' And ($(TargetFrameworkVersion) == 'v4.5' Or $(TargetFrameworkVersion) == 'v4.5.1')">
       <ItemGroup>
@@ -3778,10 +3782,6 @@
       </ItemGroup>
     </When>
   </Choose>
-  <Target Name="AfterCompile">
-    <CallTarget Targets="BuildThemes" Condition="'$(BuildingInsideVisualStudio)' != 'true'" />
-  </Target>
-  <Import Project="..\.paket\paket.targets" />
   <Import Project="..\packages\ClearScript.Installer\build\$(__paket__ClearScript_Installer_targets).targets" Condition="Exists('..\packages\ClearScript.Installer\build\$(__paket__ClearScript_Installer_targets).targets')" Label="Paket" />
   <Import Project="..\packages\OctoPack\build\$(__paket__OctoPack_targets).targets" Condition="Exists('..\packages\OctoPack\build\$(__paket__OctoPack_targets).targets')" Label="Paket" />
 </Project>
