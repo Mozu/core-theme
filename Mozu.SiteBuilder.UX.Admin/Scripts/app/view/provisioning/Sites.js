@@ -26,6 +26,8 @@ Ext.define('Taco.view.provisioning.Sites', {
 
     saveButtonEnabled: false,
 
+    launchEditorOnClick: false,
+
     hideSearchToolbar: true,
 
     enableSearchBarInHeader: false,
