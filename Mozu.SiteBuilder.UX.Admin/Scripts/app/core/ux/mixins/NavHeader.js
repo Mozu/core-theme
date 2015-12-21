@@ -361,7 +361,7 @@ Ext.define('Taco.core.ux.mixins.NavHeader', {
                     '<tpl>',
                         '<span class="title" id="{id}"> {title} </span>',
                         '<tpl if="subTitle">',
-                            '<span> {subTitle} </span>',
+                            '<span class="title"> {subTitle} </span>',
                             '<tpl if="lightTagLabel">',
                                 '<i class="taco-light-tag">{lightTagLabel}</i>',
                             '</tpl>',
