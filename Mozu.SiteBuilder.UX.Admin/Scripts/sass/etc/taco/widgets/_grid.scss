@@ -115,7 +115,7 @@
         }
     }
 
-    .#{$prefix}grid-row-selected {
+    .#{$prefix}grid-row-focused {
         .#{$prefix}grid-td {
             background-color: $grid-row-hover-bg;
         }

@@ -225,6 +225,16 @@
                         background-color: $dark-bg;
                     }
                 }
+
+                .#{$vprefix}order-subform {
+                    .#{$prefix}panel {
+                        &.#{$prefix}fit-item {
+                            > .#{$prefix}grid-header-ct {
+                                background-color: $white-color;
+                            }
+                        }
+                    }
+                }
             }
         }
 
@@ -309,6 +319,7 @@
         }
 
         .#{$prefix}grid-row-focused,
+        .#{$prefix}grid-row-selected,
         .#{$prefix}grid-row-before-focused {
             .#{$prefix}grid-td {
                 border-bottom-color: $light-border-gray;
