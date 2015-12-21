@@ -92,6 +92,10 @@
              color: $color-neutral-70;
          }
      }
+
+     &:active {
+        background-color: $card-button-press-bg;
+     }
  }
 
 .#{$vprefix}navheader {
