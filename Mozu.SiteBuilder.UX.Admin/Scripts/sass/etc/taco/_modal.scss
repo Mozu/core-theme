@@ -1,21 +1,21 @@
 @mixin taco-modal {
-    
 
-        .#{$prefix}grid-checkcolumn {
+    .#{$prefix}grid-checkcolumn {
+        width: 14px;
+        height: 14px;
+        @include icons-sprite(checkbox-unchecked);
+        background-size: 15px;
+    }
+
+    .#{$prefix}grid-checkcolumn {
+        &.#{$prefix}grid-checkcolumn-checked {
             width: 14px;
             height: 14px;
-            @include icons-sprite(checkbox-unchecked);
+            @include icons-sprite(checkbox-checked);
             background-size: 15px;
         }
+    }
 
-        .#{$prefix}grid-checkcolumn {
-            &.#{$prefix}grid-checkcolumn-checked {
-                width: 14px;
-                height: 14px;
-                @include icons-sprite(checkbox-checked);
-                background-size: 15px;
-            }
-        }
     .#{$prefix}window-modal {
         @include border-radius-xbrowser(5px);
         @include color-blur-outer-shadow ($black-color, 0.29, 0, 1px, 16px, 0);
@@ -147,7 +147,7 @@
 
         table {
             .#{$prefix}form-item-body {
-                display: inline-block;
+                display: block;
 
                 > .#{$prefix}box-layout-ct {
                     // border-bottom: 1px solid $light-border-gray;
@@ -253,8 +253,28 @@
             }
         }
 
-        .#{$prefix}form-item-label {
-            padding: 0;
+        .#{$prefix}tree-elbow-img {
+            &.#{$prefix}tree-elbow-plus {
+                &.#{$prefix}tree-expander {
+                    background-image: none;
+                    position: relative;
+                    z-index: 1;
+
+                    & + img {
+                        background-image: none;
+
+                        & + .#{$prefix}tree-node-text {
+                            &:before {
+                                content: '\E927';
+                                font-family: 'mozicons';
+                                position: absolute;
+                                left: 34px;
+                                z-index: 0;
+                            }
+                        }
+                    }
+                }
+            }
         }
     }
 }
