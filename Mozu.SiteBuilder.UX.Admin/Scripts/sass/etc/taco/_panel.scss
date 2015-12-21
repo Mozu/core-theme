@@ -203,140 +203,10 @@
             }
         }
 
-        .#{$prefix}panel-body {
-            tr {
-
-                &.#{$prefix}grid-row,
-                &.#{$prefix}grid-data-row,
-                &.#{$prefix}grid-row-focused,
-                &.#{$prefix}grid-row-before-focused {
-                    .#{$prefix}grid-td {
-                        border: none;
-                    }
-                }
-
-                &:nth-child(even) {
-                    .#{$prefix}grid-td {
-                        background-color: $grid-even-stripe-bg;
-
-                        td {
-                            &:nth-child(odd) {
-                                background-color: $grid-even-stripe-bg;
-
-                                & + td {
-                                    background-color: $grid-even-stripe-bg;
-                                }
-                            }
-                        }
-                    }
-                }
-
-                &:nth-child(odd) {
-                    .#{$prefix}grid-td {
-                        background-color: $white-color;
-                    }
-                }
-
-                &:hover,
-                &:active {
-                    td {
-                        background-color: inherit;
-                    }
-                }
-            }
-        }
-
         &.#{$vprefix}content-navcontainer,
         .#{$prefix}fit-item {
             > .#{$prefix}grid-header-ct {
                 background-color: $dark-bg;
-
-                & + .#{$prefix}grid-with-row-lines {
-                    tr {
-
-                        &.#{$prefix}grid-data-row {
-                            .#{$prefix}grid-td {
-                                border-bottom: 1px solid $grid-row-border;
-                            }
-                        }
-
-                        td {
-                            background-color: $white-color;
-
-                            td {
-                                &:nth-child(odd) {
-                                    background-color: $white-color;
-
-                                    & + td {
-                                        background-color: $white-color;
-                                    }
-                                }
-                            }
-
-                            &:hover {
-                                td {
-                                    background-color: $grid-row-hover-bg;
-
-                                    td {
-                                        background-color: $grid-row-hover-bg;
-                                    }
-                                }
-                            }
-
-                            &:active {
-                                td {
-                                    background-color: $dark-bg;
-
-                                    td {
-                                        background-color: $dark-bg;
-
-                                        &:nth-child(odd) {
-                                            background-color: $dark-bg;
-
-                                            & + td {
-                                                background-color: $dark-bg;
-                                            }
-                                        }
-                                    }
-                                }
-                            }
-                        }
-
-                        &:hover {
-                            td {
-                                background-color: $grid-row-hover-bg;
-
-                                td {
-                                    &:nth-child(odd) {
-                                        background-color: $grid-row-hover-bg;
-
-                                        & + td {
-                                            background-color: $grid-row-hover-bg;
-                                        }
-                                    }
-                                }
-                            }
-                        }
-
-                        &:active {
-                            td {
-                                background-color: $dark-bg;
-
-                                td {
-                                    background-color: $dark-bg;
-
-                                    &:nth-child(odd) {
-                                        background-color: $dark-bg;
-
-                                        & + td {
-                                            background-color: $dark-bg;
-                                        }
-                                    }
-                                }
-                            }
-                        }
-                    }
-                }
             }
         }
 
@@ -344,48 +214,6 @@
             &.#{$prefix}fit-item {
                 > .#{$prefix}grid-header-ct {
                     background-color: $white-color;
-                }
-                .#{$prefix}panel-body {
-                    tr {
-
-                        &.#{$prefix}grid-row,
-                        &.#{$prefix}grid-data-row,
-                        &.#{$prefix}grid-row-focused,
-                        &.#{$prefix}grid-row-before-focused {
-                            .#{$prefix}grid-td {
-                                border: none;
-                            }
-                        }
-
-                        &:nth-child(even) {
-                            .#{$prefix}grid-td {
-                                background-color: $grid-even-stripe-bg;
-
-                                td {
-                                    &:nth-child(odd) {
-                                        background-color: $grid-even-stripe-bg;
-
-                                        & + td {
-                                            background-color: $grid-even-stripe-bg;
-                                        }
-                                    }
-                                }
-                            }
-                        }
-
-                        &:nth-child(odd) {
-                            .#{$prefix}grid-td {
-                                background-color: $white-color;
-                            }
-                        }
-
-                        &:hover,
-                        &:active {
-                            td {
-                                background-color: inherit;
-                            }
-                        }
-                    }
                 }
             }
         }
@@ -395,51 +223,6 @@
                 &.#{$prefix}fit-item {
                     > .#{$prefix}grid-header-ct {
                         background-color: $dark-bg;
-                    }
-
-                    /** this should be a mixin **/
-
-                    .#{$prefix}panel-body {
-                        tr {
-
-                            &.#{$prefix}grid-row,
-                            &.#{$prefix}grid-data-row,
-                            &.#{$prefix}grid-row-focused,
-                            &.#{$prefix}grid-row-before-focused {
-                                .#{$prefix}grid-td {
-                                    border-bottom: 1px solid $light-border-gray;
-                                }
-                            }
-
-                            &:nth-child(even) {
-                                .#{$prefix}grid-td {
-                                    background-color: $white-color;
-
-                                    td {
-                                        &:nth-child(odd) {
-                                            background-color: $white-color;
-
-                                            & + td {
-                                                background-color: $white-color;
-                                            }
-                                        }
-                                    }
-                                }
-                            }
-
-                            &:nth-child(odd) {
-                                .#{$prefix}grid-td {
-                                    background-color: $white-color;
-                                }
-                            }
-
-                            &:hover,
-                            &:active {
-                                td {
-                                    background-color: inherit;
-                                }
-                            }
-                        }
                     }
                 }
             }
@@ -522,6 +305,13 @@
                         background-color: $dark-bg;
                     }
                 }
+            }
+        }
+
+        .#{$prefix}grid-row-focused,
+        .#{$prefix}grid-row-before-focused {
+            .#{$prefix}grid-td {
+                border-bottom-color: $light-border-gray;
             }
         }
 
