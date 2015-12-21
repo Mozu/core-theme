@@ -3,7 +3,7 @@
  */
 
 Ext.define('Taco.view.dashboard.Index', {
-    extend: 'Ext.tab.Panel',
+    extend: 'Ext.Panel',
     cls: 'taco-primary-menu-tabs taco-dashboard-menu',
     defaultAlign: 'center',
     tabBar: {
@@ -11,6 +11,9 @@ Ext.define('Taco.view.dashboard.Index', {
             pack: 'center'
         }
     },
+    requires: [
+        'Taco.core.ux.mixins.HamburgerButton'
+    ],
     bodyCls: 'taco-dashboard-body',
     initComponent: function () {
         var me = this, dashboard;
@@ -35,6 +38,8 @@ Ext.define('Taco.view.dashboard.Index', {
 
         me.systemData = [];
         me.mainData = [];
+
+        me.hamburgerButton = Ext.create('Taco.core.ux.mixins.HamburgerButton');
     
         me.mainDashboardTpl = Ext.create('Ext.Component', {
             data: me.mainData,
@@ -65,22 +70,67 @@ Ext.define('Taco.view.dashboard.Index', {
                 }
             }
         });
-        
-        this.items = [
-            this.getMainPanel(),
-            this.getSettingsPanel()
-        ];
+
+        this.items = [{
+            xtype: 'toolbar',
+            cls: 'taco-dashboard-toolbar',
+            items: [
+                Ext.create('Taco.core.ux.mixins.HamburgerButton'),
+                '->',
+                {
+                    xtype: 'component',
+                    html: '<a class="tab active" href="#" data-tab="main">Main</a>',
+                    listeners: {
+                        click: this.handleMainClick,
+                        element: 'el',
+                        scope: this
+                    }
+                }, {
+                    xtype: 'component',
+                    html: '<a class="tab" href="#" data-tab="system">System</a>',
+                    listeners: {
+                        click: this.handleSystemClick,
+                        element: 'el',
+                        scope: this
+                    }
+                },
+                '->'
+            ]
+        }, {
+            xtype: 'container',
+            itemId: 'cardContainer',
+            flex: 1,
+            layout: 'card',
+            items: [
+                this.getMainPanel(),
+                this.getSettingsPanel()
+            ]
+        }];
 
         me.callParent(arguments);
-        
+
         me.navigationStore = Taco.core.data.StoreManager.getOrCreate('Taco.store.Navigation');
-        
+
         if (this.navigationStore.hasCompletedLoading()) {
             this.renderNav();
         } else {
             this.navigationStore.addListener('load', this.renderNav, this);
         }
-        
+        this.cardContainer = this.down('#cardContainer');
+    },
+
+    handleMainClick: function (e) {
+        e.preventDefault();
+        this.cardContainer.getLayout().setActiveItem(0);
+        this.getEl().down('[data-tab="main"]').addCls('active');
+        this.getEl().down('[data-tab="system"]').removeCls('active');
+    },
+
+    handleSystemClick: function (e) {
+        e.preventDefault();
+        this.cardContainer.getLayout().setActiveItem(1);
+        this.getEl().down('[data-tab="main"]').removeCls('active');
+        this.getEl().down('[data-tab="system"]').addCls('active');
     },
 
     getMainPanel: function() {

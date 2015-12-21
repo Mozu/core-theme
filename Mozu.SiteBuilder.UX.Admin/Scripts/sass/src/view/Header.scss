@@ -72,34 +72,31 @@
     }
 }
 
-/** 
- * Viewport nav
- * The light second bar
- */
+ .#{$vprefix}primary-menu-trigger {
+     border-right: 1px solid $nav-element-active-border;
+     display: block;
+     overflow: hidden;
+     @include box-shadow(1px 0px $color-neutral-white);
+     @include icon-font($glyph-menu, 22px, $glyph-icon-color);
+     @include single-transition(background-color, 0.4s);
+
+     &::after {
+         line-height: 60px;
+         width: 100%;
+         text-align: center;
+     }
+     &.expanded {
+         background-color: $color-neutral-20;
+
+         &::after {
+             color: $color-neutral-70;
+         }
+     }
+ }
 
 .#{$vprefix}navheader {
     
-    .#{$vprefix}primary-menu-trigger {
-        border-right: 1px solid $nav-element-active-border;
-        display: block;
-        overflow: hidden;
-        @include box-shadow(1px 0px $color-neutral-white);
-        @include icon-font($glyph-menu, 22px, $glyph-icon-color);
-        @include single-transition(background-color, 0.4s);
-
-        &::after {
-            line-height: 60px;
-            width: 100%;
-            text-align: center;
-        }
-        &.expanded {
-            background-color: $color-neutral-20;
-
-            &::after {
-                color: $color-neutral-70;
-            }
-        }
-    }
+    
 
     .#{$vprefix}breadcrumb {
         .#{$vprefix}icon {
