@@ -82,7 +82,11 @@ Ext.define('Taco.view.website.WidgetTray', {
     dragEvents: {
         start: function(cfg, type, e) {
             this.editor.initDragIcon(cfg.style.backgroundImage);
-            e.dataTransfer.setDragImage(this.editor.dragIcon, -10, -10);
+
+            if (e.dataTransfer.setDragImage) {
+                e.dataTransfer.setDragImage(this.editor.dragIcon, -10, -10);
+            }
+
             e.dataTransfer.setData('text/plain', JSON.stringify({id: cfg.id, type: type}));
         },
         drag: function(cfg, e) {
