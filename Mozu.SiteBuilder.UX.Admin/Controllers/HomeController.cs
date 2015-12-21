@@ -11,6 +11,7 @@ using System.Web.Http;
 using AutoMapper;
 using Mozu.AdminUser.Contracts;
 using Mozu.AdminUser.Contracts.Clients;
+using Mozu.Content.Contracts.Clients;
 using Mozu.Core;
 using Mozu.Core.Api.Client;
 using Mozu.Core.Api.Contracts;
@@ -34,6 +35,7 @@ using IProvisioningWebApiClient = Mozu.Content.Contracts.Clients.IProvisioningWe
 using User = Mozu.SiteBuilder.UX.Admin.Api.Models.Account.User;
 using Mozu.SiteBuilder.UX.Admin.Api.Models.Entities;
 using Newtonsoft.Json.Linq;
+using Newtonsoft.Json.Serialization;
 
 namespace Mozu.SiteBuilder.UX.Admin.Controllers
 {
@@ -46,6 +48,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Controllers
         private readonly IApiContext _apiContext;
         private readonly IAuthenticationHelper _authenticationHelper;
         private readonly IEntityListsWebApiClient _entityListsWebApiClient;
+        private readonly IDocumentListWebApiClient _documentListWebApiClient;
         private readonly HttpContextBase _httpContext;
         private readonly ILogger _logger;
 
@@ -54,7 +57,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Controllers
         private readonly ITenantsWebApiClient _tenantsWebApi;
         private readonly IMultiScopeAdminUserWebApiClient _usersRepo;
 
-        public HomeController(IMultiScopeAdminUserWebApiClient usersRepo, IAuthenticationHelper authHelper, ITenantsWebApiClient tenantsWebApi, IApiContext apiContext, ISettings settings, HttpContextBase httpContext, IMultiScopeAdminUserWebApiClient adminUserWebApiClient, IMasterCatalogWebApiClient masterCatalogClient, ILogger logger, IEntityListsWebApiClient entityListsWebApiClient)
+        public HomeController(IMultiScopeAdminUserWebApiClient usersRepo, IAuthenticationHelper authHelper, ITenantsWebApiClient tenantsWebApi, IApiContext apiContext, ISettings settings, HttpContextBase httpContext, IMultiScopeAdminUserWebApiClient adminUserWebApiClient, IMasterCatalogWebApiClient masterCatalogClient, ILogger logger, IEntityListsWebApiClient entityListsWebApiClient , IDocumentListWebApiClient documentListWebApiClient)
         {
             _logger = logger;
             _entityListsWebApiClient = entityListsWebApiClient.CloneWithoutUserClaims().CloneWithApiContext(x =>
@@ -76,6 +79,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Controllers
             _adminUserWebApiClient = adminUserWebApiClient.CloneWithoutUserClaims();
 
             _masterCatalogClient = masterCatalogClient.CloneWithoutUserClaims();
+            _documentListWebApiClient = documentListWebApiClient.CloneWithoutUserClaims();
         }
 
 
@@ -171,7 +175,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Controllers
             Task<ServiceClientResponse<DCproduct.MasterCatalogCollection>> masterCatalogsTask;
             masterCatalogsTask = _masterCatalogClient.GetMasterCatalogs();
 
-            await Task.WhenAll(userDcTask, rolesTask, tenantTask, siteUsersTask, masterCatalogsTask, adminSubNavExtensibiltyTask, tenantAdminSettingsTask);
+            await Task.WhenAll(userDcTask, rolesTask, tenantTask, siteUsersTask, masterCatalogsTask, adminSubNavExtensibiltyTask, tenantAdminSettingsTask).ConfigureAwait(false);
 
             //var tenants2 = tenantTask2.Result.ReadAsSync();
 
@@ -181,6 +185,13 @@ namespace Mozu.SiteBuilder.UX.Admin.Controllers
             Tenant.Contracts.Tenant tenant = tenantTask.Result.ReadAsSync();
 
             ProvisionCMSMAYBE(tenant);
+
+
+
+
+            var customSchemaTask = GetCustomSchema(tenant);
+
+
 
 
             AdminUserCollection siteUsers = siteUsersTask.Result.ReadAsSync();
@@ -361,7 +372,65 @@ namespace Mozu.SiteBuilder.UX.Admin.Controllers
                 return RazorView("Index_Compiled");
             }
 
+            await customSchemaTask.ConfigureAwait(false);
+            ViewData["customSchema"] = customSchemaTask.Result;
+
             return RazorView("index");
+        }
+
+        private async Task<List<JObject>> GetCustomSchema(Tenant.Contracts.Tenant tenant)
+        {
+            var ret = new List<JObject>();
+            if (tenant.Sites == null)
+            {
+                return ret;
+            }
+            var site = tenant.Sites.FirstOrDefault();
+            if ( site == null)
+            {
+                return ret;
+            }
+            var docListsTask = _documentListWebApiClient.CloneWithApiContext(apiContext =>
+          {
+              apiContext.SiteId = site.Id;
+              apiContext.MasterCatalogId = site.MasterCatalogId;
+              apiContext.CatalogId = site.CatalogId;
+              apiContext.LocaleCode = site.DefaultLocaleCode;
+
+          }).GetDocumentLists();
+
+            var entityListsTask = _entityListsWebApiClient.CloneWithApiContext(apiContext =>
+           {
+               apiContext.SiteId = site.Id;
+               apiContext.MasterCatalogId = site.MasterCatalogId;
+               apiContext.CatalogId = site.CatalogId;
+               apiContext.LocaleCode = site.DefaultLocaleCode;
+
+           }).GetEntityLists();
+
+            await Task.WhenAll(docListsTask, entityListsTask).ConfigureAwait(false);
+            var docLists = docListsTask.Result.ReadAsSync();
+            var entityLists = entityListsTask.Result.ReadAsSync();
+
+            var jser = JsonSerializer.Create(new JsonSerializerSettings()
+            {
+                ContractResolver = new CamelCasePropertyNamesContractResolver()
+            });
+
+            return docLists.Items.Select(x=> {
+                var jobj = JObject.FromObject(x, jser);
+                jobj["entityType"] = "cms";
+                return jobj;
+            }).Concat(entityLists.Items.Select(x =>
+            {
+                var jobj = JObject.FromObject(x, jser);
+                jobj["listName"] = x.Name;
+                jobj["listFQN"] = x.Name + "@" + x.NameSpace;
+                jobj["entityType"] = "mzdb";
+                return jobj;
+            })).ToList();
+         
+            
         }
 
         private void ProvisionCMSMAYBE(Tenant.Contracts.Tenant tenant)

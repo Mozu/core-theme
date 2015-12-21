@@ -4,72 +4,7 @@
  * The Channels controller
  */
 
-if (Taco && Taco.app) {
 
-    Taco.app.entityLists = [
-        {
-            "documentListType": "pages@mozu",
-            "documentTypes": ["web_page@mozu"],
-            "enableActiveDateRanges": true,
-            "enablePublishing": true,
-            "entityType": "cms",
-            "listFQN": "pages@mozu",
-            "name": "pages",
-            "namespace": "mozu",
-            "scopeId": 13591,
-            "scopeType": "Site",
-            "security": "",
-            "supportsActiveDateRanges": true,
-            "supportsPublishing": true,
-            "uniqueId": "cms-pages@mozu",
-            "usages": [],
-            "views": [
-                {
-                    "name": "default", 
-                    "usages": ["usage1"],
-                    "isVisibleInStorefront": false, 
-                    "filter": "",
-                    "feilds": [
-                        {
-                            name: "page_type_definition",
-                            target: "properties.page_type_definition"
-                        },
-                        {
-                            name: "hidden",
-                            target: "properties.hidden"
-                        },
-                        {
-                            name: "link_title",
-                            target: "properties.link_title",
-                            isVisibleInStorefront: false,
-                            name: "default",
-                            usages: ["usage1"]
-                        }
-                    ]
-                }
-            ]
-        }
-        // {
-        //     documentListType: "pages@mozu"
-        //     documentTypes: ["web_page@mozu"]
-        //     enableActiveDateRanges: true
-        //     enablePublishing: true
-        //     entityType: "cms"
-        //     listFQN: "pages@mozu"
-        //     name: "pages"
-        //     namespace: "mozu"
-        //     scopeId: 13595
-        //     scopeType: "Site"
-        //     security: ""
-        //     supportsActiveDateRanges: true
-        //     supportsPublishing: true
-        //     uniqueId: "cms-pages@mozu"
-        //     usages: []
-        //     views: [{name: "default", usages: ["usage1"], isVisibleInStorefront: false,…}]
-        // }
-    ];
-    
-}
 
 Ext.define('Taco.controller.CustomSchema', {
     extend: 'Taco.core.Controller',
@@ -165,7 +100,7 @@ Ext.define('Taco.controller.CustomSchema', {
         var argArray = Array.prototype.slice.call(args);
         var documentList = argArray && argArray[0] && typeof argArray[0] === 'string' ? argArray[0] : null;
         var record = argArray && argArray[1] && typeof argArray[1] === 'string' ? argArray[1] : null;
-        var listExists = Taco.app.entityLists.filter(function(list) { return list.listFQN === documentList; });
+        var listExists = Taco.customSchema.filter(function (list) { return list.listFQN === documentList; });
 
         if (listExists && listExists.length > 0) {
             config.standaloneGrid = true;
