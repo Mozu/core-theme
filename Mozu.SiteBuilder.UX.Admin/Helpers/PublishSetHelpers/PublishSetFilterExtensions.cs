@@ -35,7 +35,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Helpers.PublishSetHelpers
             switch (filter.property.ToLowerInvariant())
             {
                 case "all":
-                    return String.Format("{0} cont \"{1}\"", NAME, filter.escapedValue);
+                    return String.Format("{0} cont \"{2}\" or {1} cont \"{2}\"", NAME, CODE, filter.escapedValue);
                 case "code": 
                 case "publishset":
                     return String.Format("{0} eq \"{1}\"", CODE, filter.escapedValue);
