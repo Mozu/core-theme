@@ -62,6 +62,7 @@ Ext.define('Taco.core.ux.PrevNextArrowButtons', {
             defaultTpl: [
                 '{index:number("0,000")} of {total:number("0,000")}'
             ],
+            showToolTipIcon: false,
             defaultTplData: this.getPositionData(),
             offsetTop: 25
         })

@@ -121,6 +121,7 @@
             hoverTarget: 'bodyEl',
             arrowPosition: 'top',
             offsetTop: -22,
+            showToolTipIcon: false,
             defaultTpl: [
                 '<div style="line-height: 15px;">',
                     '<span>Publish Set:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;{publishSetName}</span>',
