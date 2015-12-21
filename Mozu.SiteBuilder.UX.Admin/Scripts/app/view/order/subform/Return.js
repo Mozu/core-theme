@@ -23,12 +23,13 @@ Ext.define('Taco.view.order.subform.Return', {
     initComponent: function () {
         this.cls += " " + Taco.baseCSSPrefix + 'orderform-returns';
 
+        // activate is not called when using the new scroll spy. see 75656
         // initialize and tear down the ui when the view becomes active;
-        this.mon(this, {
-            'activate': this.initUI,
-            'deactivate': this.destroyUI
-        }, this);
-
+        //this.mon(this, {
+        //    'activate': this.initUI,
+        //    'deactivate': this.destroyUI
+        //}, this);
+        this.initUI();
         this.callParent(arguments);
     },
 
@@ -38,8 +39,8 @@ Ext.define('Taco.view.order.subform.Return', {
     },
 
     initUI: function () {
-        var me = this;
-        var record = this.record;
+        var me = this,
+            record = this.record;
 
         this.initHeader();
 
@@ -96,7 +97,7 @@ Ext.define('Taco.view.order.subform.Return', {
             title: "return panels here"
         });
 
-        this.add(
+        this.items = [
             this.returnableItems, {
                 xtype: 'container',
                 margin: '10px 0 20px 0',
@@ -108,7 +109,8 @@ Ext.define('Taco.view.order.subform.Return', {
                 items: [this.returnableItemsErrorEl, this.createButton]
             },
             this.returnPanels
-        );
+        ];
+
     },
 
     refreshReturnableItemsGrid: function () {

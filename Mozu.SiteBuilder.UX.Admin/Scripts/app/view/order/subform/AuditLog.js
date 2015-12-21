@@ -35,11 +35,13 @@ Ext.define('Taco.view.order.subform.AuditLog', {
     closeAction: 'destroy',
 
     initComponent: function (eOpts) {
-        this.mon(this, {
-            'activate': this.initUI,
-            'deactivate': this.destroyUI
-        }, this);
+        //activate is not called when using the new scroll spy. see 75652
+        //this.mon(this, {
+        //    'activate': this.initUI,
+        //    'deactivate': this.destroyUI
+        //}, this);
 
+        this.initUI();
         this.callParent(arguments);
     },
 
@@ -60,7 +62,7 @@ Ext.define('Taco.view.order.subform.AuditLog', {
             orderId: me.orderId
         });
 
-        this.add(me.auditLogGrid);
+        this.items = [me.auditLogGrid];
     },
 
     // Destroy the UI
