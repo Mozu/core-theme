@@ -2,28 +2,9 @@
     background-color: $white-color;
 
     .tab {
-        border-bottom: 2px solid transparent;
-        color: $nav-element-text;
-        display: block;
-        font-size: 13px;
         height: 60px;
         line-height: 60px;
-        text-align: center;
-        text-decoration: none;
         width: 190px;
-
-        &.active {
-          border-bottom-color: $valid-green;
-          color: $black-color;
-        }
-
-        &:hover {
-            color: $black-color;
-        }
-
-        &:active {
-            background-color: $card-button-press-bg;
-        }
     }
 }
 

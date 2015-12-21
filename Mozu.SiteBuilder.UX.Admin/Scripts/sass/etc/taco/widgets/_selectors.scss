@@ -16,6 +16,31 @@
 
 @mixin taco-selectors {
 
+    .#{$vprefix}underline-tab-bar {
+
+        .tab {
+            border-bottom: 2px solid transparent;
+            color: $nav-element-text;
+            display: block;
+            font-size: 13px;
+            text-align: center;
+            text-decoration: none;
+
+            &.active {
+              border-bottom-color: $valid-green;
+              color: $black-color;
+            }
+
+            &:hover {
+                color: $black-color;
+            }
+
+            &:active {
+                background-color: $card-button-press-bg;
+            }
+        }
+    }
+
     .#{$prefix}menu-plain,
     .#{$vprefix}checkbox-flyout,
     .#{$vprefix}selector-flyout {

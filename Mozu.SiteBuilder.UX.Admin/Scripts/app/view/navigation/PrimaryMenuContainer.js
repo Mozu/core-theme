@@ -1,9 +1,9 @@
 /**
  * @class Taco.view.navigation.PrimaryMenuContainer
- * 
+ *
  */
 Ext.define('Taco.view.navigation.PrimaryMenuContainer', {
-    extend: 'Ext.container.Container',
+    extend: 'Ext.Panel',
     requires: [
         'Taco.core.ux.content.Logo',
         'Taco.view.navigation.PrimaryMenuSubContainer',
@@ -27,6 +27,8 @@ Ext.define('Taco.view.navigation.PrimaryMenuContainer', {
     isBound: false,
     width: 280,
     height: '100%',
+
+    layout: 'card',
 
     initComponent: function () {
 
@@ -72,6 +74,27 @@ Ext.define('Taco.view.navigation.PrimaryMenuContainer', {
         });
 
         this.add({
+            xtype: 'panel',
+            cls: 'taco-underline-tab-bar taco-primary-menu-toolbar',
+            tbar: [{
+                xtype: 'component',
+                html: '<a class="tab active" href="#" data-tab="main">Main</a>',
+                listeners: {
+                    click: this.handleMainClick,
+                    element: 'el',
+                    scope: this
+                }
+            }, {
+                xtype: 'component',
+                html: '<a class="tab" href="#" data-tab="system">System</a>',
+                listeners: {
+                    click: this.handleSystemClick,
+                    element: 'el',
+                    scope: this
+                }
+            }],
+            layout: 'card',
+            itemId: 'cardContainer',
             activeTab: Ext.state.Manager.get('primary-menu-tab') === 'sys' ? 1 : 0,
             cls: 'taco-primary-menu-tabs',
             items: [
@@ -82,12 +105,27 @@ Ext.define('Taco.view.navigation.PrimaryMenuContainer', {
                 tabchange: function (view, card) {
                     Ext.state.Manager.set('primary-menu-tab', card.navParent);
                 }
-            },
-            xtype: 'tabpanel'
+            }
         });
 
         this.onStateChange(Taco.core.StateManager.getCurrentState());
         this.isBound = true;
+
+        this.cardContainer = this.down('#cardContainer');
+    },
+
+    handleMainClick: function (e) {
+        e.preventDefault();
+        this.cardContainer.getLayout().setActiveItem(0);
+        this.getEl().down('[data-tab="main"]').addCls('active');
+        this.getEl().down('[data-tab="system"]').removeCls('active');
+    },
+
+    handleSystemClick: function (e) {
+        e.preventDefault();
+        this.cardContainer.getLayout().setActiveItem(1);
+        this.getEl().down('[data-tab="main"]').removeCls('active');
+        this.getEl().down('[data-tab="system"]').addCls('active');
     },
 
     updateCurrentPage: function () {

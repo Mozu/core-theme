@@ -38,6 +38,13 @@
         }
     }
 
+    .#{$vprefix}primary-menu-toolbar {
+        .tab {
+            line-height: 60px;
+            width: 130px;
+        }
+    }
+
     .#{$prefix}tab-bar-default-horizontal {
         background-color: $light-bg-gray;
         border: 0px;
