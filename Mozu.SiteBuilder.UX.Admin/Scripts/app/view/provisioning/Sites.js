@@ -54,6 +54,7 @@ Ext.define('Taco.view.provisioning.Sites', {
 
         this.catalogTreeStore = Ext.create('Ext.data.TreeStore', {
             model: 'Taco.model.Provisionable',
+            autoLoad: true,
             root: { path: '/' },
             proxy: {
                 type: 'ajax',
