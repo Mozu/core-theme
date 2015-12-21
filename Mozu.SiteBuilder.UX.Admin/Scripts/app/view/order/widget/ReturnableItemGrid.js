@@ -97,7 +97,7 @@ Ext.define('Taco.view.order.widget.ReturnableItemGrid', {
                 text: 'Line',
                 draggable: false,
                 resizable: true,
-                width: 50,
+                width: 60,
                 sortable: false,
                 menuDisabled: true,
                 hidden: false,
@@ -129,7 +129,7 @@ Ext.define('Taco.view.order.widget.ReturnableItemGrid', {
                 text: 'Status',
                 draggable: false,
                 resizable: true,
-                width: 120,
+                width: 150,
                 sortable: false,
                 menuDisabled: true,
                 hidden: false,
@@ -158,7 +158,7 @@ Ext.define('Taco.view.order.widget.ReturnableItemGrid', {
                 sortable: false,
                 resizable: false,
                 menuDisabled: true,
-                width: 100,
+                width: 175,
                 editor: {
                     xtype: 'combobox',
                     showBorder: true,
@@ -193,7 +193,7 @@ Ext.define('Taco.view.order.widget.ReturnableItemGrid', {
                 sortable: false,
                 resizable: false,
                 menuDisabled: true,
-                width: 100
+                width: 110
             }, {
                 dataIndex: 'quantity',
                 text: 'Qty to Return',
