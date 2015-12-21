@@ -39,7 +39,6 @@ Ext.define('Taco.view.navigation.PrimaryMenuContainer', {
             add: function (menu) { menu.hideMenu(); }
         });
 
-        Ext.getDoc().on('click', Ext.bind(this.handleDocClick, this));
     },
 
     bindStore: function (store, initial) {
@@ -211,6 +210,10 @@ Ext.define('Taco.view.navigation.PrimaryMenuContainer', {
         this.show();
         this.updateCurrentPage();
         this.getEl().removeCls('hidden');
+        this.mon(Ext.getDoc(), {
+            click: this.handleDocClick,
+            scope: this
+        });
     },
 
     /**
@@ -221,6 +224,7 @@ Ext.define('Taco.view.navigation.PrimaryMenuContainer', {
         var me = this,
             el = this.getEl();
 
+        this.mun(Ext.getDoc(), 'click', this.handleDocClick, this);
         if (!el) {
             return this.hide();
         }
@@ -239,7 +243,7 @@ Ext.define('Taco.view.navigation.PrimaryMenuContainer', {
      * @private
      */
     handleDocClick: function (e, el) {
-        // todo: temp check for now - Greg Murray on 2015-12-15 
+        // check for tab so as not to close nav menu
         var classAttr = el.getAttribute('class');
         if (classAttr && classAttr.indexOf('-tab') > -1) {
             return;
