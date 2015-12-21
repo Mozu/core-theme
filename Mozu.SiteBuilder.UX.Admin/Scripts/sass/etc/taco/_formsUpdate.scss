@@ -76,7 +76,13 @@
     }
 
     .#{$prefix}form-type-text {
-        margin-top: -1px;
+        > tbody {
+            .#{$prefix}form-item-input-row {
+                > .#{$prefix}form-item-body {
+                    top: -1px;
+                }
+            }
+        }
 
         .#{$prefix}form-item-required {
             color: $label-color;

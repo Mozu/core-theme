@@ -380,7 +380,7 @@ Ext.define('Taco.view.product.subform.General', {
             xtype: 'currencyfield',
             fieldLabel: 'Sale Price',
             name: 'salePrice',
-            margin:"0 0 0 50 ",            
+            margin:"0 0 0 50 ",
             width: defaultFieldWidth,
             currencyCode: me.currencyCode,
             hideTrigger: true,
