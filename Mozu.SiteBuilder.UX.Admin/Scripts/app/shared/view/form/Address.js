@@ -39,7 +39,7 @@ Ext.define('Taco.shared.view.form.Address', {
 
         this.layout = {
             type: "anchor"
-        }
+        };
 
         // default the country code if one is not provided;
         var countryCode = this.record.get("countryCode");
@@ -54,7 +54,7 @@ Ext.define('Taco.shared.view.form.Address', {
             layout: "hbox",
             anchor: "0",
             items: []
-        }
+        };
 
 
         if (me.showCompanyName) {
@@ -85,7 +85,7 @@ Ext.define('Taco.shared.view.form.Address', {
             fieldLabel: 'Address Type',
             forceSelection: true,
             store: ['Residential', 'Commercial']
-        }
+        };
 
         if (me.showEmail || me.showCompanyName) {
             addressType.flex = 1;
@@ -207,7 +207,7 @@ Ext.define('Taco.shared.view.form.Address', {
                     }
                 }
             ]
-        })
+        });
 
 
         if (this.showPhoneNumbers) {
@@ -219,7 +219,8 @@ Ext.define('Taco.shared.view.form.Address', {
                     name: 'homePhone',
                     flex: 1,
                     fieldLabel: 'Home Phone',
-                    margin: '0 15 0 0'
+                    margin: '0 15 0 0',
+                    allowBlank: false
                 }, {
                     xtype: 'phonefield',
                     name: 'workPhone',
