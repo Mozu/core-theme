@@ -44,7 +44,7 @@ Ext.define('Taco.view.attribute.Grid', {
 
     hideSearchToolbar: false,
     
-    title: "Attributes",
+    title: "Product Attributes",
 
     store: { type: 'Taco.store.AttributesGrid' },  
 
