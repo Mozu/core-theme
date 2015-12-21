@@ -103,9 +103,17 @@ Ext.define('Taco.view.productRanking.modal.ProductRankingEditor', {
         singleStore.load({
             scope: this,
             callback: function(records, operation, success) {
-                if (success && records.length > 0)
+                if (success && records.length > 0) {
                     me.record = records[0];
-                    me.onLoadRecord();
+                    //Refresh popup grids from fresh data
+                    var blockedProductGrid = this.down("#taco-grid-blockedproduct");
+                    blockedProductGrid.fireEvent('reloadData', this.record);
+                    var pinnedProductGrid = this.down("#taco-grid-pinnedproduct");
+                    pinnedProductGrid.fireEvent('reloadData', this.record);
+                    //TODO: do the same for keywords and categories 
+                    // ... although it currently works - so just leave it ???
+            }
+            me.onLoadRecord();
             }
         });
     },
@@ -130,6 +138,8 @@ Ext.define('Taco.view.productRanking.modal.ProductRankingEditor', {
             isCatalogLevel: true,
             categoryCode: me.categoryCode,
             isPopUp: true,
+            loadBlockedProducts: false,   //whether or not to read the blocked-products grid from current record - alternatively load manually
+            loadPinnedProducts: false,    //whether or not to read the pinned-products  grid from current record - alternatively load manually
             getWrapper: function() {
                 return this;
             }
