@@ -89,6 +89,9 @@ Ext.define('Taco.store.TooltipHelp', {
             key: 'settings.general.bustCdnCache',
             value: 'This feature requires an update to your theme.<br><br><a href="' + Taco.adminHelpLink + '" target="_blank" class="taco-help-link">See Enabling the Bust Cache Feature in Mozu Help.</a>'
         }, {
+            key: 'settings.general.missingImage',
+            value: 'Lorem ipsum dolor sit amet, ipsum mollis eum ad, sed sint dissentias no. Ut melius delectus aliquando usu. Recteque hendrerit ad vix. Usu et quaeque ocurreret. Mei et zril putent omnium. Et oblique pericula definiebas pro, probo sensibus comprehensam ea usu.'
+        }, {
             key: 'product.general.dateFirstAvailable',
             value: 'This field specifies the intended date when the product either first becomes or became available. Use this field to reference the product in an expression that uses the Days Available in Catalog entity. Setting this field to a future date doesn’t automatically publish the product live on that date.'
         }, {

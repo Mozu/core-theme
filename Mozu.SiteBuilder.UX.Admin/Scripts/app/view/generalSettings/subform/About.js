@@ -15,13 +15,14 @@ Ext.define('Taco.view.generalSettings.subform.About', {
         'Ext.form.field.Checkbox',
         'Ext.form.field.Text',
         'Taco.store.TimeZones',
-   
+        'Taco.shared.view.field.Image',
+        'Taco.core.ux.form.field.BaseImageField',
         'Taco.store.Channels'
     ],
     title: 'General',
     margin: "0 0 20 0",
     ui: "subform",
-    width:"100%",
+    width:"100%",   
     //bodyCls: Taco.baseCSSPrefix + 'product-admin-subform',
     //cls: Taco.baseCSSPrefix + 'form-section',
     initComponent: function () {
@@ -227,15 +228,21 @@ Ext.define('Taco.view.generalSettings.subform.About', {
                     
                         
                     },
-                   
-                
-                   {
-                       xtype: 'hiddenfield',
-                       name: 'cdnCacheBustKey',
-                       itemId:'cdnCacheBustKey'
-                   }
                 ]
+            },             
+            {
+                xtype: 'container',
+                layout: 'hbox',
+                items: [Taco.core.ux.TooltipLabel.wrapConfig('settings.general.missingImage', this, {
+                    fieldLabel: 'Substitue for Missing Images',
+                    name: 'missingImageSubstitute',
+                    allowMulti:false,
+                    xtype: 'taco.imagefield',
+                    height:250   //for some reason the links get clipped if you dont set this
+                })]
             }
+            
+
         ];
 
         this.callParent(arguments);

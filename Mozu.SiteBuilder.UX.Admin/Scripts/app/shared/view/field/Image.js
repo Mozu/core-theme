@@ -383,6 +383,9 @@ Ext.define('Taco.shared.view.field.Image', {
     },
 
     onBeginUpload: function (files) {
+        if ( this.allowMulti ===false) {
+            this.selectedImages.removeAll();
+        }
         this.selectedImages.add(files);
     },
 
@@ -451,7 +454,8 @@ Ext.define('Taco.shared.view.field.Image', {
 
     onAssociatorClick: function () {
         
-        var associator = Ext.create('Taco.view.fileManager.Associator', {});
+        var cfg = this.allowMulti === false ? { selModel:'rowmodel'}: {};
+        var associator = Ext.create('Taco.view.fileManager.Associator', cfg);
 
         this.mon(associator, {
             savesuccess: {
@@ -536,7 +540,10 @@ Ext.define('Taco.shared.view.field.Image', {
     },
 
     onAssociatorSave: function (associator, selectedRecords) {
-        this.selectedImages.add(selectedRecords);
+        if ( this.allowMulti ===false) {
+            this.selectedImages.removeAll();
+        }
+        this.selectedImages.add(selectedRecords);  
     },
 
     onImageUploadComplete: function (uploadedFile) {

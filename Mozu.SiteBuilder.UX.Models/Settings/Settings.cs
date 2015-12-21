@@ -244,6 +244,9 @@ namespace Mozu.SiteBuilder.UX.Models.Settings
         [DataMember/*(Name = "channelId")*/]
         public string CdnCacheBustKey { get; set; }
 
+        [DataMember/*(Name = "channelId")*/]
+        public string MissingImageSubstitute { get; set; }
+
 
 
 
