@@ -1350,7 +1350,7 @@ Array.from = function () {
 
                 this.element.id = _constants.WIDGET_COPY_ID;
 
-                e.dataTransfer.setData('text/plain', JSON.stringify({
+                e.dataTransfer.setData('text', JSON.stringify({
                     id: widgetData.definitionId,
                     body: body, type: 'content',
                     data: widgetData,
@@ -1751,7 +1751,7 @@ Array.from = function () {
 
                 this.element.id = _constants.COL_COPY_ID;
 
-                e.dataTransfer.setData('text/plain', JSON.stringify({
+                e.dataTransfer.setData('text', JSON.stringify({
                     dragMethod: 'layoutDrag',
                     id: 'mz-1-col',
                     type: 'layout',
@@ -2221,7 +2221,7 @@ Array.from = function () {
 
                 Chorizo.editor.setDirtyState(true);
 
-                var widgetData = JSON.parse(e.dataTransfer.getData('text/plain'));
+                var widgetData = JSON.parse(e.dataTransfer.getData('text'));
                 var afterDropCallback = function afterDropCallback(layout) {
                     if (widgetData.hasContent) {
                         this.dropWithContent(layout);

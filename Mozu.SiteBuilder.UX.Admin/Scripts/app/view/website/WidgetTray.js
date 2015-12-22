@@ -63,12 +63,36 @@ Ext.define('Taco.view.website.WidgetTray', {
 
     },
     makeDraggable: function() {
+
+        var dragEvents = {
+            dragStart: 'dragstart',
+            drag: 'drag',
+            drop: 'drop'
+        };
+
+        if (this.isInternetExplorer()) {
+            dragEvents = {
+                dragStart: 'ondragstart',
+                drag: 'ondrag',
+                drop: 'ondrop'
+            }
+        }
+
         Array.prototype.forEach.call(document.querySelectorAll('.mz-cms-icon'), function(wdgt) {
             wdgt.setAttribute('draggable', 'true');
-            wdgt.addEventListener('dragstart', this.dragEvents.start.bind(this, wdgt, wdgt.getAttribute('type')), false);
-            wdgt.addEventListener('drag', this.dragEvents.drag.bind(this, wdgt.id), false);
-            wdgt.addEventListener('drop', this.dragEvents.drop.bind(this, wdgt.id), false);
+            wdgt.addEventListener(dragEvents.dragStart, this.dragEvents.start.bind(this, wdgt, wdgt.getAttribute('type')), false);
+            wdgt.addEventListener(dragEvents.drag, this.dragEvents.drag.bind(this, wdgt.id), false);
+            wdgt.addEventListener(dragEvents.drop, this.dragEvents.drop.bind(this, wdgt.id), false);
         }, this);
+    },
+
+    isInternetExplorer: function() {
+        var ua = window.navigator.userAgent;
+        var msie = ua.indexOf("MSIE ");
+
+        if (msie > 0 || !!navigator.userAgent.match(/Trident.*rv\:11\./)) {
+            return true;
+        }
     },
 
     showContentWidgets: function(type) {
@@ -86,11 +110,15 @@ Ext.define('Taco.view.website.WidgetTray', {
             if (e.dataTransfer.setDragImage) {
                 e.dataTransfer.setDragImage(this.editor.dragIcon, -10, -10);
             }
-
-            e.dataTransfer.setData('text/plain', JSON.stringify({id: cfg.id, type: type}));
+            
+            e.dataTransfer.setData('text', JSON.stringify({id: cfg.id, type: type}));
         },
         drag: function(cfg, e) {
-            this.editor.updateDragIconPosition(e);
+
+            if (e.dataTransfer.setDragImage) {
+                this.editor.updateDragIconPosition(e);
+            }
+
             e.preventDefault();
         },
         drop: function(cfg, e) {
