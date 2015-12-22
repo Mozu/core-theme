@@ -1,5 +1,9 @@
 @mixin taco-panel {
 
+    .#{$prefix}form-field {
+        font-size: 15px;
+    }
+
     .#{$prefix}column-content-pill {
         border-radius: 9px;
         padding: 3px 5px;
