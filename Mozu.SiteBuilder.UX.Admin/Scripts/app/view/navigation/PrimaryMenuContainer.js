@@ -33,6 +33,11 @@ Ext.define('Taco.view.navigation.PrimaryMenuContainer', {
     initComponent: function () {
 
         this.mask = Ext.create('Taco.view.navigation.PrimaryMenuMask', {
+            listeners: {
+                click: this.hideMenu,
+                element: 'el',
+                scope: this
+            },
             renderTo: Ext.getBody()
         });
 
@@ -73,15 +78,18 @@ Ext.define('Taco.view.navigation.PrimaryMenuContainer', {
             navParent: 'sys'
         });
 
+        var activeTab = Ext.state.Manager.get('primary-menu-tab') === 'system' ? 1 : 0;
+
         this.add({
             xtype: 'panel',
+            activeTab: activeTab,
             dockedItems: [{
                 xtype: 'toolbar',
                 cls: 'taco-underline-tab-bar taco-primary-menu-toolbar',
                 dock: 'top',
                 items: [{
                     xtype: 'component',
-                    html: '<a class="tab active" href="#" data-tab="main">Main</a>',
+                    html: '<a class="tab ' + (!activeTab ? 'active' : '') + '" href="#" data-tab="main">Main</a>',
                     listeners: {
                         click: this.handleMainClick,
                         element: 'el',
@@ -89,7 +97,7 @@ Ext.define('Taco.view.navigation.PrimaryMenuContainer', {
                     }
                 }, {
                     xtype: 'component',
-                    html: '<a class="tab" href="#" data-tab="system">System</a>',
+                    html: '<a class="tab ' + (activeTab ? 'active' : '') + '" href="#" data-tab="system">System</a>',
                     listeners: {
                         click: this.handleSystemClick,
                         element: 'el',
@@ -99,17 +107,11 @@ Ext.define('Taco.view.navigation.PrimaryMenuContainer', {
             }],
             layout: 'card',
             itemId: 'cardContainer',
-            activeTab: Ext.state.Manager.get('primary-menu-tab') === 'sys' ? 1 : 0,
             cls: 'taco-primary-menu-tabs',
             items: [
                 this.viewMain,
                 this.viewSystem
-            ],
-            listeners: {
-                tabchange: function (view, card) {
-                    Ext.state.Manager.set('primary-menu-tab', card.navParent);
-                }
-            }
+            ]
         });
 
         this.onStateChange(Taco.core.StateManager.getCurrentState());
@@ -124,6 +126,7 @@ Ext.define('Taco.view.navigation.PrimaryMenuContainer', {
         this.cardContainer.getLayout().setActiveItem(0);
         this.getEl().down('[data-tab="main"]').addCls('active');
         this.getEl().down('[data-tab="system"]').removeCls('active');
+        Ext.state.Manager.set('primary-menu-tab', 'main');
     },
 
     handleSystemClick: function (e) {
@@ -132,6 +135,7 @@ Ext.define('Taco.view.navigation.PrimaryMenuContainer', {
         this.cardContainer.getLayout().setActiveItem(1);
         this.getEl().down('[data-tab="main"]').removeCls('active');
         this.getEl().down('[data-tab="system"]').addCls('active');
+        Ext.state.Manager.set('primary-menu-tab', 'system');
     },
 
     updateCurrentPage: function () {
@@ -254,10 +258,6 @@ Ext.define('Taco.view.navigation.PrimaryMenuContainer', {
         this.show();
         this.updateCurrentPage();
         this.getEl().removeCls('hidden');
-        this.mon(Ext.getDoc(), {
-            click: this.handleDocClick,
-            scope: this
-        });
     },
 
     /**
@@ -268,7 +268,6 @@ Ext.define('Taco.view.navigation.PrimaryMenuContainer', {
         var me = this,
             el = this.getEl();
 
-        this.mun(Ext.getDoc(), 'click', this.handleDocClick, this);
         if (!el) {
             return this.hide();
         }
@@ -279,24 +278,5 @@ Ext.define('Taco.view.navigation.PrimaryMenuContainer', {
         this._hideTimeout = setTimeout(function () {
             me.hide();
         }, 150);
-    },
-
-    /**
-     * Hides menu when you click anywhere on document.
-     * Needs a reference so listener can easily be added and removed.
-     * @private
-     */
-    handleDocClick: function (e) {
-        // check for tab so as not to close nav menu
-        // var classAttr = el.getAttribute('class');
-        // if (classAttr && classAttr.indexOf('-tab') > -1) {
-        //     return;
-        // }
-        // this.hideMenu();
-        // var el = Ext.fly(e.target);
-        // if (el.hasCls('tab')) {
-        //     e.preventDefault();
-        //     return;
-        // }
     }
 });
