@@ -234,7 +234,7 @@ Ext.define('Taco.view.generalSettings.subform.About', {
                 xtype: 'container',
                 layout: 'hbox',
                 items: [Taco.core.ux.TooltipLabel.wrapConfig('settings.general.missingImage', this, {
-                    fieldLabel: 'Substitue for Missing Images',
+                    fieldLabel: 'Substitute for Missing Images',
                     name: 'missingImageSubstitute',
                     allowMulti:false,
                     xtype: 'taco.imagefield',
