@@ -17,6 +17,8 @@ Ext.define('Taco.view.dashboard.Index', {
         'Taco.core.ux.card.Toolbar'
     ],
     bodyCls: 'taco-dashboard-body',
+    layout: 'auto',
+    autoScroll: true,
     initComponent: function () {
         var me = this, dashboard;
 
