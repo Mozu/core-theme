@@ -39,9 +39,15 @@
     }
 
     .#{$vprefix}primary-menu-toolbar {
+        background-color: $card-button-press-bg;
+
         .tab {
-            line-height: 60px;
-            width: 130px;
+            line-height: 36px;
+            width: 140px;
+
+            &:active {
+                background-color: $gray-border-color;
+            }
         }
     }
 

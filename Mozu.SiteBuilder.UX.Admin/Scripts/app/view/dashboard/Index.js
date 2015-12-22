@@ -73,7 +73,7 @@ Ext.define('Taco.view.dashboard.Index', {
 
         this.items = [{
             xtype: 'toolbar',
-            cls: 'taco-dashboard-toolbar',
+            cls: 'taco-dashboard-toolbar taco-underline-tab-bar',
             items: [
                 Ext.create('Taco.core.ux.mixins.HamburgerButton'),
                 '->',

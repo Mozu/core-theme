@@ -75,23 +75,27 @@ Ext.define('Taco.view.navigation.PrimaryMenuContainer', {
 
         this.add({
             xtype: 'panel',
-            cls: 'taco-underline-tab-bar taco-primary-menu-toolbar',
-            tbar: [{
-                xtype: 'component',
-                html: '<a class="tab active" href="#" data-tab="main">Main</a>',
-                listeners: {
-                    click: this.handleMainClick,
-                    element: 'el',
-                    scope: this
-                }
-            }, {
-                xtype: 'component',
-                html: '<a class="tab" href="#" data-tab="system">System</a>',
-                listeners: {
-                    click: this.handleSystemClick,
-                    element: 'el',
-                    scope: this
-                }
+            dockedItems: [{
+                xtype: 'toolbar',
+                cls: 'taco-underline-tab-bar taco-primary-menu-toolbar',
+                dock: 'top',
+                items: [{
+                    xtype: 'component',
+                    html: '<a class="tab active" href="#" data-tab="main">Main</a>',
+                    listeners: {
+                        click: this.handleMainClick,
+                        element: 'el',
+                        scope: this
+                    }
+                }, {
+                    xtype: 'component',
+                    html: '<a class="tab" href="#" data-tab="system">System</a>',
+                    listeners: {
+                        click: this.handleSystemClick,
+                        element: 'el',
+                        scope: this
+                    }
+                }]
             }],
             layout: 'card',
             itemId: 'cardContainer',
@@ -116,6 +120,7 @@ Ext.define('Taco.view.navigation.PrimaryMenuContainer', {
 
     handleMainClick: function (e) {
         e.preventDefault();
+        e.stopPropagation();
         this.cardContainer.getLayout().setActiveItem(0);
         this.getEl().down('[data-tab="main"]').addCls('active');
         this.getEl().down('[data-tab="system"]').removeCls('active');
@@ -123,6 +128,7 @@ Ext.define('Taco.view.navigation.PrimaryMenuContainer', {
 
     handleSystemClick: function (e) {
         e.preventDefault();
+        e.stopPropagation();
         this.cardContainer.getLayout().setActiveItem(1);
         this.getEl().down('[data-tab="main"]').removeCls('active');
         this.getEl().down('[data-tab="system"]').addCls('active');
@@ -280,12 +286,17 @@ Ext.define('Taco.view.navigation.PrimaryMenuContainer', {
      * Needs a reference so listener can easily be added and removed.
      * @private
      */
-    handleDocClick: function (e, el) {
+    handleDocClick: function (e) {
         // check for tab so as not to close nav menu
-        var classAttr = el.getAttribute('class');
-        if (classAttr && classAttr.indexOf('-tab') > -1) {
-            return;
-        }
-        this.hideMenu();
+        // var classAttr = el.getAttribute('class');
+        // if (classAttr && classAttr.indexOf('-tab') > -1) {
+        //     return;
+        // }
+        // this.hideMenu();
+        // var el = Ext.fly(e.target);
+        // if (el.hasCls('tab')) {
+        //     e.preventDefault();
+        //     return;
+        // }
     }
 });
