@@ -30,6 +30,78 @@
         @include icon-font($glyph-knurling, 13px, $gray-text-dark);
     }
 
+    .#{$prefix}grid-data-row {
+        img {
+            &.#{$prefix}tree-elbow-plus,
+            &.#{$prefix}tree-elbow-minus,
+            &.#{$prefix}tree-elbow-end-plus,
+            &.#{$prefix}tree-elbow-end-minus {
+                background-image: none;
+                position: relative;
+                z-index: 1;
+            }
+
+            &.#{$prefix}tree-expander {
+                & + img {
+                    &.#{$prefix}tree-icon {
+                        &.#{$prefix}tree-icon-parent {
+                            & + span {
+                                &.#{$prefix}tree-node-text {
+                                    &:before {
+                                        content: $glyph-tree-closed;
+                                        font-family: 'mozicons';
+                                        font-size: 13px;
+                                        position: absolute;
+                                        z-index: 0;
+                                        margin-left: -16px;
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+
+        &.#{$prefix}grid-tree-node-expanded {
+            img {
+                &.#{$prefix}tree-elbow-plus,
+                &.#{$prefix}tree-elbow-minus,
+                &.#{$prefix}tree-elbow-end-plus,
+                &.#{$prefix}tree-elbow-end-minus {
+                    background-image: none;
+                    position: relative;
+                    z-index: 1;
+                }
+
+                &.#{$prefix}tree-expander {
+                    & + img {
+                        &.#{$prefix}tree-icon {
+                            &.#{$prefix}tree-icon-parent {
+                                & + span {
+                                    &.#{$prefix}tree-node-text {
+                                        &:before {
+                                            content: $glyph-tree-open;
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
+
+    .#{$vprefix}website-sidebar {
+        .#{$vprefix}website-tree {
+            .#{$prefix}tree-node-text {
+                position: relative;
+                padding-left: 16px;
+                left: -16px;
+            }
+        }
+    }
 
     // /* panel */
     .#{$prefix}panel {
