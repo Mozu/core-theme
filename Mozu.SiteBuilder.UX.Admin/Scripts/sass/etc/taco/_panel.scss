@@ -320,7 +320,8 @@
 
         .#{$prefix}grid-row-focused,
         .#{$prefix}grid-row-selected,
-        .#{$prefix}grid-row-before-focused {
+        .#{$prefix}grid-row-before-focused,
+        .#{$prefix}grid-row-before-selected {
             .#{$prefix}grid-td {
                 border-bottom-color: $light-border-gray;
             }

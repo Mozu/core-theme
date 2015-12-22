@@ -1,5 +1,11 @@
 @mixin taco-modal {
 
+    .#{$prefix}layout-fit {
+        .#{$prefix}form-item-label-top {
+            padding-top: 10px;
+        }
+    }
+
     .#{$prefix}grid-checkcolumn {
         width: 14px;
         height: 14px;
