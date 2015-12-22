@@ -12,7 +12,9 @@ Ext.define('Taco.view.dashboard.Index', {
         }
     },
     requires: [
-        'Taco.core.ux.mixins.HamburgerButton'
+        'Taco.core.ux.mixins.HamburgerButton',
+        'Taco.core.ux.card.Tab',
+        'Taco.core.ux.card.Toolbar'
     ],
     bodyCls: 'taco-dashboard-body',
     initComponent: function () {
@@ -72,33 +74,21 @@ Ext.define('Taco.view.dashboard.Index', {
         });
 
         this.items = [{
-            xtype: 'toolbar',
-            cls: 'taco-dashboard-toolbar taco-underline-tab-bar',
-            items: [
-                Ext.create('Taco.core.ux.mixins.HamburgerButton'),
-                '->',
-                {
-                    xtype: 'component',
-                    html: '<a class="tab active" href="#" data-tab="main">Main</a>',
-                    listeners: {
-                        click: this.handleMainClick,
-                        element: 'el',
-                        scope: this
-                    }
-                }, {
-                    xtype: 'component',
-                    html: '<a class="tab" href="#" data-tab="system">System</a>',
-                    listeners: {
-                        click: this.handleSystemClick,
-                        element: 'el',
-                        scope: this
-                    }
-                },
-                '->'
-            ]
-        }, {
-            xtype: 'container',
-            itemId: 'cardContainer',
+            xtype: 'panel',
+            dockedItems: [{
+                xtype: 'taco-cardtabtoolbar',
+                cls: 'taco-dashboard-toolbar',
+                items: [
+                    Ext.create('Taco.core.ux.mixins.HamburgerButton'),
+                    '->',
+                    {
+                        title: 'Main'
+                    }, {
+                        title: 'System'
+                    },
+                    '->'
+                ]
+            }],
             flex: 1,
             layout: 'card',
             items: [
@@ -117,20 +107,6 @@ Ext.define('Taco.view.dashboard.Index', {
             this.navigationStore.addListener('load', this.renderNav, this);
         }
         this.cardContainer = this.down('#cardContainer');
-    },
-
-    handleMainClick: function (e) {
-        e.preventDefault();
-        this.cardContainer.getLayout().setActiveItem(0);
-        this.getEl().down('[data-tab="main"]').addCls('active');
-        this.getEl().down('[data-tab="system"]').removeCls('active');
-    },
-
-    handleSystemClick: function (e) {
-        e.preventDefault();
-        this.cardContainer.getLayout().setActiveItem(1);
-        this.getEl().down('[data-tab="main"]').removeCls('active');
-        this.getEl().down('[data-tab="system"]').addCls('active');
     },
 
     getMainPanel: function() {
