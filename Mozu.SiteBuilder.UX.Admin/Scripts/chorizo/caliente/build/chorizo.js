@@ -206,6 +206,40 @@ var _constants = require('./constants');
                 document.body.style.cursor = cursorStyle;
             }
         }, {
+            key: 'getBrowserDragEvents',
+            value: function getBrowserDragEvents() {
+
+                var dragEvents = {
+                    dragStart: 'dragstart',
+                    dragEnd: 'dragend',
+                    dragOver: 'dragover',
+                    drag: 'drag',
+                    drop: 'drop'
+                };
+
+                if (this.isInternetExplorer()) {
+                    dragEvents = {
+                        dragStart: 'dragstart',
+                        dragEnd: 'dragend',
+                        dragOver: 'dragover',
+                        drag: 'drag',
+                        drop: 'drop'
+                    };
+                }
+
+                return dragEvents;
+            }
+        }, {
+            key: 'isInternetExplorer',
+            value: function isInternetExplorer() {
+                var ua = window.navigator.userAgent;
+                var msie = ua.indexOf("MSIE ");
+
+                if (msie > 0 || !!navigator.userAgent.match(/Trident.*rv\:11\./)) {
+                    return true;
+                }
+            }
+        }, {
             key: 'initResizerEvents',
             value: function initResizerEvents() {
 
@@ -1121,6 +1155,7 @@ Array.from = function () {
 (function (win, doc) {
 
     var _mouseposition = null;
+    var DRAG_EVENTS = undefined;
 
     var Target = (function () {
         function Target(el) {
@@ -1250,6 +1285,18 @@ Array.from = function () {
                     this.element.appendChild(this.resizer);
                 }
             }
+        }, {
+            key: 'remove',
+            value: function remove(elementReference) {
+
+                // ie safe node removal
+
+                if (elementReference.remove) {
+                    elementReference.remove();
+                } else {
+                    elementReference.parentNode.removeChild(elementReference);
+                }
+            }
         }]);
 
         return Target;
@@ -1329,7 +1376,7 @@ Array.from = function () {
             this.addTools();
 
             if (this.move) {
-                this.makeDraggable(this.move, [{ type: 'dragend', func: this.onDragEnd.bind(this) }, { type: 'dragstart', func: this.onDragStart.bind(this) }, { type: 'drag', func: this.onDrag.bind(this) }]);
+                this.makeDraggable(this.move, [{ type: DRAG_EVENTS.dragEnd, func: this.onDragEnd.bind(this) }, { type: DRAG_EVENTS.dragStart, func: this.onDragStart.bind(this) }, { type: DRAG_EVENTS.drag, func: this.onDrag.bind(this) }]);
             }
         }
 
@@ -1337,12 +1384,13 @@ Array.from = function () {
             key: 'onDrag',
             value: function onDrag(e) {
                 Chorizo.editor.setDirtyState(true);
-                e.preventDefault();
+
                 Chorizo.editor.updateDragIconPosition(e);
             }
         }, {
             key: 'onDragStart',
             value: function onDragStart(e) {
+
                 var widgetData = JSON.parse(this.element.getAttribute(_constants.DATA_WIDGET_ATTRIBUTE));
                 var body = this.element.innerHTML;
 
@@ -1432,7 +1480,7 @@ Array.from = function () {
                 this.insertWidget(html);
 
                 if (this.move) {
-                    this.makeDraggable(this.move, [{ type: 'dragend', func: this.onDragEnd.bind(this) }, { type: 'dragstart', func: this.onDragStart.bind(this) }]);
+                    this.makeDraggable(this.move, [{ type: DRAG_EVENTS.dragEnd, func: this.onDragEnd.bind(this) }, { type: DRAG_EVENTS.dragStart, func: this.onDragStart.bind(this) }]);
                 }
             }
         }, {
@@ -1476,7 +1524,7 @@ Array.from = function () {
                 Chorizo.editor.setDirtyState(true);
 
                 tempCol.element = this.element.parentNode;
-                this.element.remove();
+                this.remove(this.element);
                 tempCol.addDropHint();
             }
         }, {
@@ -1624,7 +1672,7 @@ Array.from = function () {
                 var col = undefined;
                 var children = undefined;
 
-                this.element.remove();
+                this.remove(this.element);
 
                 // are there any existing columns in the element being deleted
                 // not including the hint bar | and not including the row header?
@@ -1639,7 +1687,7 @@ Array.from = function () {
                 // if the element has children DONT add the drop hint
                 if (!children) {
 
-                    containingRow.remove();
+                    this.remove(containingRow);
 
                     col = new Col();
                     col.element = parentLayout;
@@ -1670,6 +1718,7 @@ Array.from = function () {
         }, {
             key: 'dropWithContent',
             value: function dropWithContent(layout) {
+                var _this4 = this;
 
                 var previousHTML = doc.querySelector(_constants.COL_COPY_SELECTOR) ? doc.querySelector(_constants.COL_COPY_SELECTOR).cloneNode(true) : null;
 
@@ -1678,8 +1727,8 @@ Array.from = function () {
 
                     Array.from(previousHTML.querySelectorAll('.mz-cms-tools, .mz-layout-widget-header')).forEach(function (toolset) {
                         // if (toolset.parentNode.id !== 'mz-node-copy') toolset.remove();
-                        toolset.remove();
-                    });
+                        _this4.remove(toolset);
+                    }, this);
 
                     layout.element.innerHTML = previousHTML.innerHTML;
 
@@ -1723,7 +1772,7 @@ Array.from = function () {
         }, {
             key: 'setupDraggable',
             value: function setupDraggable() {
-                this.makeDraggable(this.move, [{ type: 'dragend', func: this.onDragEnd.bind(this) }, { type: 'dragstart', func: this.onDragStart.bind(this) }, { type: 'drag', func: this.onDrag.bind(this) }]);
+                this.makeDraggable(this.move, [{ type: DRAG_EVENTS.dragEnd, func: this.onDragEnd.bind(this) }, { type: DRAG_EVENTS.dragStart, func: this.onDragStart.bind(this) }, { type: DRAG_EVENTS.drag, func: this.onDrag.bind(this) }]);
             }
         }, {
             key: 'onDragEnd',
@@ -1734,7 +1783,6 @@ Array.from = function () {
         }, {
             key: 'onDrag',
             value: function onDrag(e) {
-                e.preventDefault();
                 Chorizo.editor.updateDragIconPosition(e);
             }
         }, {
@@ -1768,7 +1816,7 @@ Array.from = function () {
         _inherits(Row, _LayoutComponent);
 
         function Row(el, isEmptyGrid) {
-            var _this4 = this;
+            var _this5 = this;
 
             _classCallCheck(this, Row);
 
@@ -1776,7 +1824,7 @@ Array.from = function () {
             this._type = _constants.BLOCK_TYPES.ROW;
             this.init(isEmptyGrid);
             ['mz-layout-widget', 'mz-layout-row', _constants.ROW_CLASSNAME, 'mz-editing'].forEach(function (cls) {
-                return _this4.element.classList.add(cls);
+                return _this5.element.classList.add(cls);
             }, this);
         }
 
@@ -1874,10 +1922,10 @@ Array.from = function () {
         }, {
             key: 'addRowHeaderEvents',
             value: function addRowHeaderEvents() {
-                var _this5 = this;
+                var _this6 = this;
 
                 [{ el: this.del, ev: this.destroy }, { el: this.edit, ev: this.editLayout }].forEach(function (ob) {
-                    return ob.el.addEventListener(ob.type || 'click', ob.ev.bind(_this5));
+                    return ob.el.addEventListener(ob.type || 'click', ob.ev.bind(_this6));
                 }, this);
             }
         }, {
@@ -1887,7 +1935,7 @@ Array.from = function () {
                 var parentLayout = this.closest(this.element.parentNode, _constants.COL_CLASSNAME);
                 var col = undefined;
 
-                this.element.remove();
+                this.remove(this.element);
 
                 if (Array.from(parentLayout.childNodes).filter(function (child) {
                     return child.classList && !child.classList.contains('mz-layout-widget-col-header');
@@ -1943,7 +1991,7 @@ Array.from = function () {
         }, {
             key: 'editLayout',
             value: function editLayout() {
-                var _this6 = this;
+                var _this7 = this;
 
                 var me = this;
                 var config = {};
@@ -1952,7 +2000,7 @@ Array.from = function () {
 
                 Array.from(this.element.querySelectorAll(_constants.ALL_COL_SELECTOR)).forEach(function (col) {
 
-                    if (col.parentNode.isSameNode(_this6.element)) {
+                    if (col.parentNode.isSameNode(_this7.element)) {
 
                         config['mz-col' + counter] = me.getConvertedWidth(col);
                         counter++;
@@ -2001,7 +2049,7 @@ Array.from = function () {
         _inherits(Col, _LayoutComponent2);
 
         function Col(el, isEmptyGrid) {
-            var _this7 = this;
+            var _this8 = this;
 
             _classCallCheck(this, Col);
 
@@ -2011,7 +2059,7 @@ Array.from = function () {
             this._colmouseposition = null;
 
             ['mz-layout-col', _constants.COL_CLASSNAME, 'mz-editing', _constants.CONTENT_VIEW_CLASSNAME, 'mz-cms-show-zone'].forEach(function (cls) {
-                return _this7.element.classList.add(cls);
+                return _this8.element.classList.add(cls);
             }, this);
 
             if (Chorizo.editor.areDropzonesHidden) {
@@ -2060,11 +2108,11 @@ Array.from = function () {
         }, {
             key: 'addDragHandle',
             value: function addDragHandle() {
-                var _this8 = this;
+                var _this9 = this;
 
                 this.handle = doc.createElement('div');
                 ['ui-draggable', 'resizer-column'].forEach(function (cls) {
-                    return _this8.handle.classList.add(cls);
+                    return _this9.handle.classList.add(cls);
                 }, this);
                 this.element.appendChild(this.handle);
 
@@ -2081,7 +2129,7 @@ Array.from = function () {
             value: function isValidDrop(e) {
 
                 // if werre trying to drag a layoutelement onto a a layout with a widget (YOU CANT DROP -- DONT SHOW HINT)
-                if (this.element.querySelector(_constants.BLOCK_SELECTOR) && e.type === 'dragover') {
+                if (this.element.querySelector(_constants.BLOCK_SELECTOR) && e.type === DRAG_EVENTS.dragOver) {
                     return false;
                 }
 
@@ -2212,6 +2260,7 @@ Array.from = function () {
             key: 'drop',
             value: function drop(e) {
                 e.stopPropagation();
+                e.preventDefault();
                 this.dragleave(e);
                 Chorizo.editor.hideDragIcon();
 
@@ -2221,7 +2270,7 @@ Array.from = function () {
 
                 Chorizo.editor.setDirtyState(true);
 
-                var widgetData = JSON.parse(e.dataTransfer.getData('text'));
+                var widgetData = JSON.parse(e.dataTransfer.getData('text')) || Chorizo.editor.widgetData;
                 var afterDropCallback = function afterDropCallback(layout) {
                     if (widgetData.hasContent) {
                         this.dropWithContent(layout);
@@ -2348,7 +2397,7 @@ Array.from = function () {
         }, {
             key: 'doColumnInsert',
             value: function doColumnInsert(positionObject, cb) {
-                var _this9 = this;
+                var _this10 = this;
 
                 var cols = this.layout.element.querySelectorAll('.mz-layout-col');
                 var newlyAddedCol = undefined;
@@ -2358,10 +2407,10 @@ Array.from = function () {
                     if (positionObject.position === _constants.POSITION_DICTIONARY.RIGHT) {
 
                         // if the drop element has children, we need to append it to the containing row, and not the column
-                        if (_this9.containsInteriorRow(positionObject.element)) {
+                        if (_this10.containsInteriorRow(positionObject.element)) {
                             positionObject.element.parentNode.parentNode.insertBefore(col, positionObject.element.parentNode.nextSibling);
                             newlyAddedCol = new Col(col);
-                            _this9.rebase(positionObject.element.parentNode.parentNode);
+                            _this10.rebase(positionObject.element.parentNode.parentNode);
                         } else {
                             positionObject.element.parentNode.insertBefore(col, positionObject.element.nextSibling);
                             newlyAddedCol = new Col(col);
@@ -2370,10 +2419,10 @@ Array.from = function () {
                         // adding new columns to left
 
                         // if the drop element has children, we need to append it to the containing row, and not the column
-                        if (_this9.containsInteriorRow(positionObject.element)) {
+                        if (_this10.containsInteriorRow(positionObject.element)) {
                             positionObject.element.parentNode.parentNode.insertBefore(col, positionObject.element.parentNode);
                             newlyAddedCol = new Col(col);
-                            _this9.rebase(positionObject.element.parentNode.parentNode);
+                            _this10.rebase(positionObject.element.parentNode.parentNode);
                         } else {
                             positionObject.element.parentNode.insertBefore(col, positionObject.element);
                             newlyAddedCol = new Col(col);
@@ -2381,7 +2430,7 @@ Array.from = function () {
                     }
 
                     if (cb) {
-                        cb.call(_this9, newlyAddedCol);
+                        cb.call(_this10, newlyAddedCol);
                     }
                 });
 
@@ -2435,7 +2484,7 @@ Array.from = function () {
             value: function removeDropHint() {
 
                 if (this.element.querySelector(_constants.DROP_HINT_SELECTOR) && this.element.querySelector(_constants.DROP_HINT_SELECTOR).parentNode.isSameNode(this.element)) {
-                    this.element.querySelector(_constants.DROP_HINT_SELECTOR).remove();
+                    this.remove(this.element.querySelector(_constants.DROP_HINT_SELECTOR));
                 }
             }
         }, {
@@ -2469,6 +2518,8 @@ Array.from = function () {
         }
 
         // init grids that aren't inherited
+
+        DRAG_EVENTS = Chorizo.editor.getBrowserDragEvents();
 
         Chorizo.helper.factory(_constants.GRID_SELECTOR + '.mz-cms-editing', Grid);
         Chorizo.helper.factory(_constants.ROW_SELECTOR, Row);

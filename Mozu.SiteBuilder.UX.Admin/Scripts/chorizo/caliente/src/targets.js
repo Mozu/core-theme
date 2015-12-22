@@ -35,6 +35,7 @@ Array.from = function() {
 (function(win, doc) {
 
     let _mouseposition = null;
+    let DRAG_EVENTS;
 
     class Target {
         constructor(el) {
@@ -154,6 +155,19 @@ Array.from = function() {
             }
 
         }
+
+        remove(elementReference) {
+
+            // ie safe node removal
+
+            if (elementReference.remove) {
+                elementReference.remove();
+            }
+
+            else {
+                elementReference.parentNode.removeChild(elementReference);
+            }
+        }
     }
 
     class Grid extends Target {
@@ -217,20 +231,21 @@ Array.from = function() {
 
             if (this.move) {
                 this.makeDraggable(this.move, [
-                    { type: 'dragend', func: this.onDragEnd.bind(this) },
-                    { type: 'dragstart', func: this.onDragStart.bind(this) },
-                    { type: 'drag', func: this.onDrag.bind(this) }
+                    { type: DRAG_EVENTS.dragEnd, func: this.onDragEnd.bind(this) },
+                    { type: DRAG_EVENTS.dragStart, func: this.onDragStart.bind(this) },
+                    { type: DRAG_EVENTS.drag, func: this.onDrag.bind(this) }
                 ]);
             }
         }
 
         onDrag(e) {
             Chorizo.editor.setDirtyState(true);
-            e.preventDefault();
+            
             Chorizo.editor.updateDragIconPosition(e);
         }
 
         onDragStart(e) {
+
             const widgetData = JSON.parse(this.element.getAttribute(DATA_WIDGET_ATTRIBUTE));
             const body = this.element.innerHTML;
 
@@ -319,8 +334,8 @@ Array.from = function() {
 
             if (this.move) {
                 this.makeDraggable(this.move, [
-                    { type: 'dragend', func: this.onDragEnd.bind(this) },
-                    { type: 'dragstart', func: this.onDragStart.bind(this)}
+                    { type: DRAG_EVENTS.dragEnd, func: this.onDragEnd.bind(this) },
+                    { type: DRAG_EVENTS.dragStart, func: this.onDragStart.bind(this)}
                 ]);
             }
         }
@@ -359,7 +374,7 @@ Array.from = function() {
             Chorizo.editor.setDirtyState(true);
 
             tempCol.element = this.element.parentNode;
-            this.element.remove();
+            this.remove(this.element);
             tempCol.addDropHint();
         }
 
@@ -480,7 +495,7 @@ Array.from = function() {
             let col;
             let children;
 
-            this.element.remove();
+            this.remove(this.element);
 
             // are there any existing columns in the element being deleted
             // not including the hint bar | and not including the row header?
@@ -496,7 +511,7 @@ Array.from = function() {
             // if the element has children DONT add the drop hint
             if (!children) {
 
-                containingRow.remove();
+                this.remove(containingRow);
 
                 col = new Col();
                 col.element = parentLayout;
@@ -535,8 +550,8 @@ Array.from = function() {
                 Array.from(previousHTML.querySelectorAll('.mz-cms-tools, .mz-layout-widget-header'))
                     .forEach((toolset) => {
                         // if (toolset.parentNode.id !== 'mz-node-copy') toolset.remove();
-                        toolset.remove();
-                    });
+                        this.remove(toolset);
+                    }, this);
 
                 layout.element.innerHTML = previousHTML.innerHTML;
 
@@ -587,9 +602,9 @@ Array.from = function() {
 
         setupDraggable() {
             this.makeDraggable(this.move, [
-                { type: 'dragend', func: this.onDragEnd.bind(this) },
-                { type: 'dragstart', func: this.onDragStart.bind(this) },
-                { type: 'drag', func: this.onDrag.bind(this)}
+                { type: DRAG_EVENTS.dragEnd, func: this.onDragEnd.bind(this) },
+                { type: DRAG_EVENTS.dragStart, func: this.onDragStart.bind(this) },
+                { type: DRAG_EVENTS.drag, func: this.onDrag.bind(this)}
             ]);
         }
 
@@ -599,7 +614,6 @@ Array.from = function() {
         }
 
         onDrag(e) {
-            e.preventDefault();
             Chorizo.editor.updateDragIconPosition(e);
         }
 
@@ -735,7 +749,7 @@ Array.from = function() {
             const parentLayout = this.closest(this.element.parentNode, COL_CLASSNAME);
             let col;
 
-            this.element.remove();
+            this.remove(this.element);
 
             if (Array.from(parentLayout.childNodes)
                     .filter((child) => child.classList && !child.classList.contains('mz-layout-widget-col-header'))) {
@@ -914,7 +928,7 @@ Array.from = function() {
         isValidDrop(e) {
 
             // if werre trying to drag a layoutelement onto a a layout with a widget (YOU CANT DROP -- DONT SHOW HINT)
-            if (this.element.querySelector(BLOCK_SELECTOR) && e.type === 'dragover') {
+            if (this.element.querySelector(BLOCK_SELECTOR) && e.type === DRAG_EVENTS.dragOver) {
                 return false;
             }
 
@@ -1062,6 +1076,7 @@ Array.from = function() {
 
         drop(e) {
             e.stopPropagation();
+            e.preventDefault();
             this.dragleave(e);
             Chorizo.editor.hideDragIcon();
 
@@ -1071,7 +1086,7 @@ Array.from = function() {
 
             Chorizo.editor.setDirtyState(true);
 
-            const widgetData = JSON.parse(e.dataTransfer.getData('text'));
+            const widgetData = JSON.parse(e.dataTransfer.getData('text')) || Chorizo.editor.widgetData;
             const afterDropCallback = function(layout) {
                 if (widgetData.hasContent) {
                     this.dropWithContent(layout);
@@ -1316,7 +1331,7 @@ Array.from = function() {
 
             if (this.element.querySelector(DROP_HINT_SELECTOR)
                     && this.element.querySelector(DROP_HINT_SELECTOR).parentNode.isSameNode(this.element)) {
-                this.element.querySelector(DROP_HINT_SELECTOR).remove();
+                this.remove(this.element.querySelector(DROP_HINT_SELECTOR));
             }
 
         }
@@ -1346,6 +1361,8 @@ Array.from = function() {
         }
 
         // init grids that aren't inherited
+
+        DRAG_EVENTS = Chorizo.editor.getBrowserDragEvents();
 
         Chorizo.helper.factory(GRID_SELECTOR + '.mz-cms-editing', Grid);
         Chorizo.helper.factory(ROW_SELECTOR, Row);

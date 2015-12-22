@@ -83,6 +83,39 @@ import {
             document.body.style.cursor = cursorStyle;
         }
 
+        getBrowserDragEvents() {
+
+            let dragEvents = {
+                dragStart: 'dragstart',
+                dragEnd: 'dragend',
+                dragOver: 'dragover',
+                drag: 'drag',
+                drop: 'drop'
+            };
+
+            if (this.isInternetExplorer()) {
+                dragEvents = {
+                    dragStart: 'dragstart',
+                    dragEnd: 'dragend',
+                    dragOver: 'dragover',
+                    drag: 'drag',
+                    drop: 'drop'
+                }
+            }
+
+            return dragEvents;
+
+        }
+
+        isInternetExplorer() {
+            const ua = window.navigator.userAgent;
+            const msie = ua.indexOf("MSIE ");
+
+            if (msie > 0 || !!navigator.userAgent.match(/Trident.*rv\:11\./)) {
+                return true;
+            }
+        }
+
         initResizerEvents() {
 
             let block;

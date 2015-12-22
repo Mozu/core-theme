@@ -3,6 +3,8 @@
  * @author Jimmy Sanford
  */
 
+//@ sourceURL=widgettray.js
+
 Ext.define('Taco.view.website.WidgetTray', {
     extend: 'Ext.panel.Panel',
     alias: 'widget.taco-widget-tray',
@@ -64,25 +66,14 @@ Ext.define('Taco.view.website.WidgetTray', {
     },
     makeDraggable: function() {
 
-        var dragEvents = {
-            dragStart: 'dragstart',
-            drag: 'drag',
-            drop: 'drop'
-        };
-
-        if (this.isInternetExplorer()) {
-            dragEvents = {
-                dragStart: 'ondragstart',
-                drag: 'ondrag',
-                drop: 'ondrop'
-            }
-        }
+        var dragEvents = this.editor.getBrowserDragEvents();
 
         Array.prototype.forEach.call(document.querySelectorAll('.mz-cms-icon'), function(wdgt) {
             wdgt.setAttribute('draggable', 'true');
             wdgt.addEventListener(dragEvents.dragStart, this.dragEvents.start.bind(this, wdgt, wdgt.getAttribute('type')), false);
             wdgt.addEventListener(dragEvents.drag, this.dragEvents.drag.bind(this, wdgt.id), false);
             wdgt.addEventListener(dragEvents.drop, this.dragEvents.drop.bind(this, wdgt.id), false);
+            wdgt.addEventListener(dragEvents.dragEnd, this.dragEvents.dragEnd.bind(this, wdgt.id), false);
         }, this);
     },
 
@@ -109,19 +100,26 @@ Ext.define('Taco.view.website.WidgetTray', {
 
             if (e.dataTransfer.setDragImage) {
                 e.dataTransfer.setDragImage(this.editor.dragIcon, -10, -10);
+                e.dataTransfer.setData('Text', JSON.stringify({id: cfg.id, type: type}));
+            }
+
+            else {
+                this.editor.widgetData = JSON.stringify({id: cfg.id, type: type});
+                e.dataTransfer.setData('Text', JSON.stringify({id: cfg.id, type: type}));
             }
             
-            e.dataTransfer.setData('text', JSON.stringify({id: cfg.id, type: type}));
         },
         drag: function(cfg, e) {
-
             if (e.dataTransfer.setDragImage) {
                 this.editor.updateDragIconPosition(e);
             }
 
-            e.preventDefault();
+            // e.preventDefault(); ie breaks if you prevent default
         },
         drop: function(cfg, e) {
+            e.preventDefault();
+        },
+        dragEnd: function(cfg, e) {
             e.preventDefault();
         }
     }
