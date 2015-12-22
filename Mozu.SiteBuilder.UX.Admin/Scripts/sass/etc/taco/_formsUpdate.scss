@@ -253,7 +253,6 @@
 
         input {
             color: $input-text-color;
-            background-color: transparent;
         }
     }
 
@@ -357,7 +356,7 @@
 
             span {
                 color: $gray-text-light;
-                font-size: $normal-font-link;
+                font-size: 14px;
             }
 
             &:hover,

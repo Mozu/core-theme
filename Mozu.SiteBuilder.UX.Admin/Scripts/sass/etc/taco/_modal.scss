@@ -26,6 +26,41 @@
         @include border-radius-xbrowser(5px);
         @include color-blur-outer-shadow ($black-color, 0.29, 0, 1px, 16px, 0);
 
+
+        .#{$prefix}grid-group-hd {
+            &.#{$prefix}grid-group-hd-collapsible {
+
+                &:after {
+                    content: $glyph-tree-open;
+                    font-family: 'mozicons';
+                    font-size: 13px;
+                    position: absolute;
+                    margin-top: -15px;
+                    left: 0;
+                }
+
+                .#{$prefix}grid-group-title {
+                    background: none;
+                }
+            }
+        }
+
+        .#{$prefix}grid-group-hd-collapsed {
+            .#{$prefix}grid-group-hd {
+                &.#{$prefix}grid-group-hd-collapsible {
+
+                    &:after {
+                        content: $glyph-tree-closed;
+                        font-family: 'mozicons';
+                        font-size: 13px;
+                        position: absolute;
+                        margin-top: -15px;
+                        left: 0;
+                    }
+                }
+            }
+        }
+
         .#{$prefix}form-display-field-body {
             .#{$prefix}form-display-field {
                 line-height: 20px;
@@ -225,7 +260,7 @@
                 .#{$prefix}form-clear-trigger {
                     position: absolute;
                     left: 0;
-                    top: -3px;
+                    top: -1px;
                     width: 40px;
                     height: 29px;
                     border-bottom: 1px solid $light-border-gray;
@@ -265,28 +300,58 @@
             }
         }
 
-        .#{$prefix}tree-elbow-img {
-            &.#{$prefix}tree-elbow-plus {
-                &.#{$prefix}tree-expander {
-                    background-image: none;
-                    position: relative;
-                    z-index: 1;
+        /* style trees that use images as expand/collapse buttons */
 
-                    & + img {
-                        background-image: none;
+        // .#{$prefix}grid-row {
+        //     &.#{$prefix}grid-data-row {
+        //         > td {
+        //             &.#{$prefix}grid-cell-treecolumn {
+        //                 &:after {
+        //                     content: $glyph-tree-closed;
+        //                     font-family: 'mozicons';
+        //                     font-size: 13px;
+        //                     position: absolute;
+        //                     margin-top: -21px;
+        //                     left: 38px;
+        //                     z-index: 0;
+        //                 }
 
-                        & + .#{$prefix}tree-node-text {
-                            &:before {
-                                content: '\E927';
-                                font-family: 'mozicons';
-                                position: absolute;
-                                left: 34px;
-                                z-index: 0;
-                            }
-                        }
-                    }
-                }
-            }
-        }
+        //                 img {
+        //                     &.#{$prefix}tree-elbow-img {
+        //                         background-image: none;
+        //                         position: relative;
+        //                         z-index: 1;
+        //                     }
+        //                 }
+        //             }
+        //         }
+        //     }
+
+        //     &.#{$prefix}grid-tree-node-expanded {
+        //         > td {
+        //             &.#{$prefix}grid-cell-treecolumn {
+        //                 &:after {
+        //                     content: $glyph-tree-open;
+        //                     font-family: 'mozicons';
+        //                     font-size: 13px;
+        //                     position: absolute;
+        //                     margin-top: -21px;
+        //                     left: 38px;
+        //                     z-index: 0;
+        //                 }
+        //             }
+        //         }
+        //     }
+
+        //     &.#{$prefix}grid-tree-node-leaf {
+        //         > td {
+        //             &.#{$prefix}grid-cell-treecolumn {
+        //                 &:after {
+        //                     display: none;
+        //                 }
+        //             }
+        //         }
+        //     }
+        // }
     }
 }
