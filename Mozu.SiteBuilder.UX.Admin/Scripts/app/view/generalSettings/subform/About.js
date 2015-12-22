@@ -259,7 +259,7 @@ Ext.define('Taco.view.generalSettings.subform.About', {
                 layout: 'hbox',
                 items: [
                     {
-                        fieldLabel: 'Substitue for Missing Images',
+                        fieldLabel: 'Substitute for Missing Images',
                         itemId: 'missingImageSubstitute',
                         name: 'missingImageSubstitute',
                         allowMulti:false,
