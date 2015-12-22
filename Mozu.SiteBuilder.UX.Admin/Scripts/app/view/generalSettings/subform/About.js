@@ -257,17 +257,25 @@ Ext.define('Taco.view.generalSettings.subform.About', {
             {
                 xtype: 'container',
                 layout: 'hbox',
-                items: [Taco.core.ux.TooltipLabel.wrapConfig('settings.general.missingImage', this, {
-                    fieldLabel: 'Substitue for Missing Images',
-                    itemId: 'missingImageSubstitute',
-                    name: 'missingImageSubstitute',
-                    allowMulti:false,
-                    xtype: 'taco.imagefield',
-                    height:250   //for some reason the links get clipped if you dont set this
-                })]
+                items: [
+                    {
+                        fieldLabel: 'Substitue for Missing Images',
+                        itemId: 'missingImageSubstitute',
+                        name: 'missingImageSubstitute',
+                        allowMulti:false,
+                        xtype: 'taco.imagefield',
+                        height: 250,   //for some reason the links get clipped if you dont set this
+                        tooltip: Ext.create('Taco.core.ux.content.Tooltip', {
+                            elementId: 'missingImageSubstitute',
+                            hoverTarget: 'label',
+                            messageKey: 'settings.general.missingImage',
+                            offsetLeft: -190,
+                            offsetTop: -18,
+                            arrowPosition: 'left'
+                        })
+                    }
+                ]
             }
-            
-
         ];
 
         this.callParent(arguments);
