@@ -7,7 +7,9 @@ Ext.define('Taco.view.navigation.PrimaryMenuContainer', {
     requires: [
         'Taco.core.ux.content.Logo',
         'Taco.view.navigation.PrimaryMenuSubContainer',
-        'Taco.view.navigation.PrimaryMenuMask'
+        'Taco.view.navigation.PrimaryMenuMask',
+        'Taco.core.ux.card.Tab',
+        'Taco.core.ux.card.Toolbar'
     ],
     cls: 'taco-primary-menu-ct hidden',
 
@@ -78,36 +80,27 @@ Ext.define('Taco.view.navigation.PrimaryMenuContainer', {
             navParent: 'sys'
         });
 
-        var activeTab = Ext.state.Manager.get('primary-menu-tab') === 'system' ? 1 : 0;
+        var activeTab = Ext.state.Manager.get('primary-menu-tab') === 'System' ? 1 : 0;
 
         this.add({
             xtype: 'panel',
-            activeTab: activeTab,
             dockedItems: [{
-                xtype: 'toolbar',
-                cls: 'taco-underline-tab-bar taco-primary-menu-toolbar',
-                dock: 'top',
+                xtype: 'taco-cardtabtoolbar',
+                activeTab: activeTab,
+                cls: 'taco-primary-menu-toolbar',
                 items: [{
-                    xtype: 'component',
-                    html: '<a class="tab ' + (!activeTab ? 'active' : '') + '" href="#" data-tab="main">Main</a>',
-                    listeners: {
-                        click: this.handleMainClick,
-                        element: 'el',
-                        scope: this
-                    }
+                    title: 'Main'
                 }, {
-                    xtype: 'component',
-                    html: '<a class="tab ' + (activeTab ? 'active' : '') + '" href="#" data-tab="system">System</a>',
-                    listeners: {
-                        click: this.handleSystemClick,
-                        element: 'el',
-                        scope: this
-                    }
-                }]
+                    title: 'System'
+                }],
             }],
             layout: 'card',
-            itemId: 'cardContainer',
-            cls: 'taco-primary-menu-tabs',
+            listeners: {
+                tabchange: function (view, tab) {
+                    Ext.state.Manager.set('primary-menu-tab', tab.title);
+                },
+                scope: this
+            },
             items: [
                 this.viewMain,
                 this.viewSystem
@@ -116,26 +109,6 @@ Ext.define('Taco.view.navigation.PrimaryMenuContainer', {
 
         this.onStateChange(Taco.core.StateManager.getCurrentState());
         this.isBound = true;
-
-        this.cardContainer = this.down('#cardContainer');
-    },
-
-    handleMainClick: function (e) {
-        e.preventDefault();
-        e.stopPropagation();
-        this.cardContainer.getLayout().setActiveItem(0);
-        this.getEl().down('[data-tab="main"]').addCls('active');
-        this.getEl().down('[data-tab="system"]').removeCls('active');
-        Ext.state.Manager.set('primary-menu-tab', 'main');
-    },
-
-    handleSystemClick: function (e) {
-        e.preventDefault();
-        e.stopPropagation();
-        this.cardContainer.getLayout().setActiveItem(1);
-        this.getEl().down('[data-tab="main"]').removeCls('active');
-        this.getEl().down('[data-tab="system"]').addCls('active');
-        Ext.state.Manager.set('primary-menu-tab', 'system');
     },
 
     updateCurrentPage: function () {
