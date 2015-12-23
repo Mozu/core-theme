@@ -546,7 +546,7 @@ import {
         getSpanClass(list) {
             let str;
             let nums;
-            list.forEach((cls) => {
+            Array.from(list).forEach((cls) => {
                 if (cls.indexOf('mz-cms-col-') !== -1) {
                     str = cls.substring('mz-cms-col-'.length);
                     if (str) {

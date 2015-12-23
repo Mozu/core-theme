@@ -653,7 +653,7 @@ var _constants = require('./constants');
             value: function getSpanClass(list) {
                 var str = undefined;
                 var nums = undefined;
-                list.forEach(function (cls) {
+                Array.from(list).forEach(function (cls) {
                     if (cls.indexOf('mz-cms-col-') !== -1) {
                         str = cls.substring('mz-cms-col-'.length);
                         if (str) {
