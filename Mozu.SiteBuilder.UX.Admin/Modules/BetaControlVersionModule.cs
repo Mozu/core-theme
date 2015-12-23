@@ -37,6 +37,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Modules
                 var file = new FileInfo(path);
                 if (file.Exists)
                 {
+                    context.Response.Headers.Remove("Content-Encoding");
                     context.Response.ClearContent();
                     using (var stream = file.OpenRead())
                     {

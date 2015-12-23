@@ -24,6 +24,7 @@ using Mozu.MZDB.Contracts;
 using Mozu.MZDB.Contracts.Clients;
 using Mozu.ProductAdmin.Contracts.Clients;
 using Mozu.SiteBuilder.Mvc.ActionResults;
+using Mozu.SiteBuilder.Mvc.Contexts;
 using Mozu.SiteBuilder.Mvc.Security;
 using Mozu.SiteBuilder.Mvc.ViewEngine;
 using Mozu.SiteBuilder.UX.Admin.Api;
@@ -51,15 +52,17 @@ namespace Mozu.SiteBuilder.UX.Admin.Controllers
         private readonly IDocumentListWebApiClient _documentListWebApiClient;
         private readonly HttpContextBase _httpContext;
         private readonly ILogger _logger;
+        private readonly ITenantAdminSettingsContext _tenantAdminSettingsContext;
 
         private readonly IMasterCatalogWebApiClient _masterCatalogClient;
         private readonly ISettings _settings;
         private readonly ITenantsWebApiClient _tenantsWebApi;
         private readonly IMultiScopeAdminUserWebApiClient _usersRepo;
 
-        public HomeController(IMultiScopeAdminUserWebApiClient usersRepo, IAuthenticationHelper authHelper, ITenantsWebApiClient tenantsWebApi, IApiContext apiContext, ISettings settings, HttpContextBase httpContext, IMultiScopeAdminUserWebApiClient adminUserWebApiClient, IMasterCatalogWebApiClient masterCatalogClient, ILogger logger, IEntityListsWebApiClient entityListsWebApiClient , IDocumentListWebApiClient documentListWebApiClient)
+        public HomeController(IMultiScopeAdminUserWebApiClient usersRepo, IAuthenticationHelper authHelper, ITenantsWebApiClient tenantsWebApi, IApiContext apiContext, ISettings settings, HttpContextBase httpContext, IMultiScopeAdminUserWebApiClient adminUserWebApiClient, IMasterCatalogWebApiClient masterCatalogClient, ILogger logger, IEntityListsWebApiClient entityListsWebApiClient , IDocumentListWebApiClient documentListWebApiClient, ITenantAdminSettingsContext tenantAdminSettingsContext)
         {
             _logger = logger;
+            _tenantAdminSettingsContext = tenantAdminSettingsContext;
             _entityListsWebApiClient = entityListsWebApiClient.CloneWithoutUserClaims().CloneWithApiContext(x =>
             {
                 x.SiteId = null;
@@ -167,15 +170,15 @@ namespace Mozu.SiteBuilder.UX.Admin.Controllers
            var rolesTask = GetUserSitesRoles(_apiContext.UserClaims.UserId);
            var tenantTask = _tenantsWebApi.GetTenantInternal(_apiContext.TenantId, false);
             var adminSubNavExtensibiltyTask = _entityListsWebApiClient.GetEntities("subNavLinks@mozu", 6000);
-            var tenantAdminSettingsTask = _entityListsWebApiClient.GetEntity(entityListFullName: "tenantAdminSettings@mozu", id: "Global");
+          
 
             Task<ServiceClientResponse<AdminUserCollection>> siteUsersTask = _usersRepo.GetUsers(UserScopeType.Tenant.ToString(), _apiContext.TenantId, pageSize: 200, startIndex: 0);
 
             // TODO: the masterCatalog service is not ready. We mock it.
             Task<ServiceClientResponse<DCproduct.MasterCatalogCollection>> masterCatalogsTask;
             masterCatalogsTask = _masterCatalogClient.GetMasterCatalogs();
-
-            await Task.WhenAll(userDcTask, rolesTask, tenantTask, siteUsersTask, masterCatalogsTask, adminSubNavExtensibiltyTask, tenantAdminSettingsTask).ConfigureAwait(false);
+            
+            await Task.WhenAll(userDcTask, rolesTask, tenantTask, siteUsersTask, masterCatalogsTask, adminSubNavExtensibiltyTask, _tenantAdminSettingsContext.AsyncGet()).ConfigureAwait(false);
 
             //var tenants2 = tenantTask2.Result.ReadAsSync();
 
@@ -240,57 +243,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Controllers
                 adminSubNavExtensibiltyTask = _entityListsWebApiClient.GetEntities("subNavLinks@mozu", 6000);
                 await adminSubNavExtensibiltyTask;
             }
-            if (!tenantAdminSettingsTask.Result.ResponseMessage.IsSuccessStatusCode  )
-            {
-                await _entityListsWebApiClient.CreateEntityList(new EntityList
-                                                                {
-                                                                    NameSpace = "mozu",
-                                                                    ContextLevel = "Tenant",
-                                                                    IsVisibleInStorefront = false,
-                                                                    IdProperty =new IndexedProperty()
-                                                                                {
-                                                                                    DataType= "string",
-                                                                                    PropertyName ="name"
-                                                                                } ,
-                                                                    UseSystemAssignedId = false,
-                                                                    Name = "tenantAdminSettings",
-                                                                    Usages = new List<string>(),
-                                                                    Views = new List<ListView>
-                                                                            {
-                                                                                new ListView
-                                                                                {
-                                                                                    Usages = new List<string>(),
-                                                                                    Name = "Default",
-                                                                                    Fields = new List<ListViewField>
-                                                                                             {
-                                                                                                 new ListViewField
-                                                                                                 {
-                                                                                                     Name = "name",
-                                                                                                     Target = "name"
-                                                                                                 }
-                                                                                             }
-
-                                                                                }
-                                                                            }
-                                                                });
-
-                await _entityListsWebApiClient.InsertEntity(entityListFullName: "tenantAdminSettings@mozu", item: JObject.FromObject(new TenantAdminGlobalSettings()
-                                                                                                                               {
-                                                                                                                                   EntityManagerVisible = false,
-                                                                                                                                   CustomRoutesVisible = false,
-                                                                                                                                   SiteBuilderContentListsVisible = false
-
-                                                                                                                               }, GlobalConfiguration.Configuration.Formatters.JsonFormatter.CreateJsonSerializer()));
-
-
-                tenantAdminSettingsTask = _entityListsWebApiClient.GetEntity(entityListFullName: "tenantAdminSettings@mozu", id: "Global");
-                
-                await tenantAdminSettingsTask;
-
-
-
-            }
-
+           
             
 
 
@@ -347,7 +300,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Controllers
 
              try
             {
-                ViewData["tenantGlobalSettings"] = tenantAdminSettingsTask.Result.ReadAsSync();
+                ViewData["tenantGlobalSettings"] = _tenantAdminSettingsContext;
             }
             catch (Exception err)
             {

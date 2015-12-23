@@ -61,7 +61,7 @@ Ext.define('Taco.view.website.Tree', {
 
                 if (Ext.Array.contains(['_navigation', '_unlinked'], record.getId()) || Ext.Array.contains(['category', 'link', 'page'], record.data.nodeType) || record.data.parentId === '_emailTemplates') {
 
-                    console.log(record)
+                    
                     /**
                      * Split the output in order
                      * to insert buttons between

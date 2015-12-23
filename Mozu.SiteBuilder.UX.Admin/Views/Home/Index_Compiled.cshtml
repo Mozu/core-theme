@@ -1,4 +1,5 @@
 ﻿@using System.Configuration
+@using Mozu.SiteBuilder.Mvc.Contexts
 @{
     Layout = "";
 
@@ -9,9 +10,9 @@
 
     var ver = System.Diagnostics.FileVersionInfo.GetVersionInfo(assFile);
     var cdnHost = Mozu.Core.Settings.MozuConfigurationManager.AppSettings("CdnHost");
-    var tenantGlobalSettings = (ViewData["tenantGlobalSettings"] as Newtonsoft.Json.Linq.JObject) ?? new Newtonsoft.Json.Linq.JObject();
-    var showBeta = (bool?)tenantGlobalSettings["enableBetaAdmin"];
-    var betaControlVersion = showBeta.GetValueOrDefault(false) ? null : Mozu.Core.Settings.MozuConfigurationManager.AppSettings("sitebuilder.betaControlVersion");
+    var tenantGlobalSettings = (ITenantAdminSettingsContext)ViewData["tenantGlobalSettings"];
+
+    var betaControlVersion = tenantGlobalSettings.EnableBetaAdmin ? null : tenantGlobalSettings.BetaControlVersion;
     var cdn = Mozu.Core.Settings.MozuConfigurationManager.AppSettings("disableCDN") == "true" || string.IsNullOrEmpty(cdnHost) ? "" : ("//" + cdnHost + "/common");
     var requestSuffix = string.Format("ver={0}&verHash={1}&bcv={2}", ver.FileVersion, assemblyInfoHash, betaControlVersion);
 
@@ -35,7 +36,7 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <title>MOZU-ADMIN @showBeta</title>
+    <title>MOZU-ADMIN</title>
     <link type="image/x-icon" href="@cdn@Url.Content("~/Scripts/resources/favicon.ico")?@requestSuffix" rel="icon" />
     <link type="image/x-icon" href="@cdn@Url.Content("~/Scripts/resources/favicon.ico")?@requestSuffix" rel="shortcut icon" />
 

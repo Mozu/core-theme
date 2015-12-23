@@ -26,6 +26,11 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
         }
 
         [HttpPost]
+        public  Task<object> Preview(WidgetPreviewData<WidgetDefinition> wpd)
+        {
+            return WidgetPreview(wpd);
+        }
+        [HttpPost]
         public async Task<object> WidgetPreview(WidgetPreviewData<WidgetDefinition> wpd)
         {
             SiteContext.IsEditMode = true;
