@@ -596,7 +596,7 @@ Ext.define('Taco.view.website.Index', {
             xtype: 'button',
             ui: 'action',
             scale: 'medium',
-            glyph: 'XE900@mozicons',
+            glyph: 'XE917@mozicons',
             toggleGroup: 'websiteEditorTabs',
             itemId: 'pageEditorTabButton',
             buttonGroup: 'isWebPage',
