@@ -154,8 +154,8 @@ namespace Mozu.SiteBuilder.UX.Hypr.Tags
                 using (var sbItemDisposer = StringBuilderPool.Default.GetContainer())
                 {
                     var sb = sbItemDisposer.Item;
-                   
 
+                    sb.AppendFormat("\t\t<link rel=\"stylesheet\" href=\"{0}/resources/cms/layout.css?bcv={1}&{2},{3}\">\r", siteContext.CdnPrefix, tenantAdminSettingContext.BetaControlVersion, FileVersion, AssemblyInfoHash);
                     sb.AppendFormat("\r\n\t\t<link rel=\"stylesheet\" href=\"{3}/admin/scripts/chorizo/build/chorizo.css?bcv={0}&{1},{2},\">", tenantAdminSettingContext.BetaControlVersion, FileVersion, AssemblyInfoHash, cdn);
                     sb.AppendLine("\t\t<link rel=\"stylesheet\" href=\"//netdna.bootstrapcdn.com/font-awesome/4.0.2/css/font-awesome.min.css\">");
                     sb.AppendLine("\t\t<script src=\"//ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js\"></script>");
