@@ -96,8 +96,9 @@
         }
 
         [class*='mz-cms-col-'] {
-            transition: width 0.4s, height 0.4s;
             border: none;
+            position: relative;
+            transition: width 0.4s, height 0.4s;
 
             &.content-view {
                 // border: 1px solid black;
