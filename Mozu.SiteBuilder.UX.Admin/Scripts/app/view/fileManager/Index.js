@@ -171,7 +171,7 @@ Ext.define('Taco.view.fileManager.Index', {
                             model: 'Taco.model.Product',
                             behavior: 'destroy'
                         },
-                        menuColumnHandler: 'destroyMenuColumnHandler'
+                        menuColumnHandler: 'deleteMenuColumnHandler'
                     }, 
                     {
                         text: 'Get Url',
