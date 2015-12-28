@@ -183,6 +183,16 @@
                 }
             }
 
+            .#{$vprefix}primary-menu-toolbar {
+                & + .#{$prefix}panel-body {
+                    .#{$prefix}box-target {
+                        height: 100%;
+                        overflow: auto;
+                        overflow-x: hidden;
+                    }
+                }
+            }
+
             .#{$prefix}column-header-over {
                 /* override external styles */
                 background-color: inherit;
