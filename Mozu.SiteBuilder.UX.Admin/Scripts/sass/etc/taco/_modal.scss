@@ -114,7 +114,7 @@
 
         &.#{$vprefix}drawer {
             @include border-radius-xbrowser(5px);
-            @include color-blur-outer-shadow ($black-color, 0.29, 0, 16px, 0, 1px);
+            @include color-blur-outer-shadow ($black-color, 0.29, 0, 1px, 16px, 0);
         }
 
         .#{$prefix}header-text-container {
@@ -247,6 +247,7 @@
                     > input {
                         &.#{$prefix}form-text {
                             padding-bottom: 2px;
+                            padding-top: 4px;
                         }
 
                         &:focus {
@@ -267,6 +268,7 @@
                     &:after {
                         padding: 0 10px;
                         color: $search-trigger-color;
+                        margin-top: 4px;
                     }
 
                     &:hover {
@@ -278,6 +280,8 @@
 
         a {
             &.advanced-search-button {
+                margin-top: -9px !important;
+
                 &.#{$prefix}btn-action-medium {
                     background-color: transparent;
                     border: none;
@@ -289,6 +293,7 @@
 
                     &:after {
                         padding: 10px;
+                        top: 3px;
                     }
 
                     &:hover {
