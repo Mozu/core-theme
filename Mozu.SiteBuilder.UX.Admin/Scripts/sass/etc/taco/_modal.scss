@@ -237,6 +237,7 @@
                 &:active {
                     opacity: 1;
                     border-color: $light-border-gray;
+                    @include no-box-shadow;
                 }
             
                 .#{$prefix}form-trigger-input-cell {
@@ -245,6 +246,8 @@
                     top: -2px;
 
                     > input {
+                        height: 40px;
+
                         &.#{$prefix}form-text {
                             padding-bottom: 2px;
                             padding-top: 4px;
@@ -262,11 +265,11 @@
                     left: 0;
                     top: -1px;
                     width: 40px;
-                    height: 29px;
+                    height: 39px;
                     border-bottom: 1px solid $light-border-gray;
 
                     &:after {
-                        padding: 0 10px;
+                        padding: 4px 10px;
                         color: $search-trigger-color;
                         margin-top: 4px;
                     }
@@ -275,25 +278,37 @@
                         opacity: 1;
                     }
                 }
+
+                .#{$prefix}form-clear-trigger {
+                    top: 3px;
+                    height: 35px;
+                }
             }
         }
 
         a {
             &.advanced-search-button {
-                margin-top: -9px !important;
+                margin-top: -3px !important;
 
                 &.#{$prefix}btn-action-medium {
                     background-color: transparent;
                     border: none;
                     border-bottom: 1px solid $light-border-gray;
                     @include border-radius-xbrowser(0px);
-                    height: 36px !important;
                     opacity: .35;
                     @include icon-font($glyph-filter-list, 17px, $dark-color);
 
                     &:after {
-                        padding: 10px;
-                        top: 3px;
+                        padding: 7px;
+                        left: 5px;
+                        top: 5px;
+                    }
+
+                    &:active {
+                        &:after {
+                            background-color: $card-button-press-bg;
+                            @include border-radius-xbrowser(4px);
+                        }
                     }
 
                     &:hover {
