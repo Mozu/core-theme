@@ -72,27 +72,6 @@
                 }
             }
         }
-
-        &.#{$vprefix}content-navcontainer {
-            > .#{$prefix}grid-row-editor {
-                & + div {
-                    & + div {
-                        & + .#{$prefix}grid-with-row-lines {
-                            tr {
-
-                                &.#{$prefix}grid-data-row {
-                                    &.#{$prefix}grid-row-selected {
-                                        .#{$prefix}grid-td {
-                                            border-bottom: none;
-                                        }
-                                    }
-                                }
-                            }
-                        }
-                    }
-                }
-            }
-        }
     }
 
     /**
