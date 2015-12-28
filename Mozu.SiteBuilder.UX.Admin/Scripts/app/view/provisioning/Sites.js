@@ -12,7 +12,7 @@ Ext.define('Taco.view.provisioning.Sites', {
 
     modelName: 'Taco.model.Provisionable',
 
-    title: 'Settings | Structure',
+    title: 'Sites',
 
     addContentViewPadding: true,
 

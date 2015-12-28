@@ -12,7 +12,7 @@ Ext.define('Taco.view.provisioning.Catalogs', {
 
     enablePaging: false,
 
-    title: 'Settings | Structure',
+    title: 'Catalog',
 
     addContentViewPadding: true,
 
