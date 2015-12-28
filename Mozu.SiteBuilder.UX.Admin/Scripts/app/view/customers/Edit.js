@@ -6,6 +6,7 @@ Ext.define('Taco.view.customers.Edit', {
     requires: ['Taco.view.customers.Form'],
     formCls: 'Taco.view.customers.Form',
     title: "Edit Customer",
+    enableSearchBarInHeader: false,
     parentTitleCfg: {
         title: 'Customer',
         controller: 'customers'
