@@ -96,8 +96,16 @@
             }
         }
 
-        .x-grid-tree-node-leaf & {
+        .#{$prefix}grid-tree-node-leaf & {
             margin-right: 11px;
+        }
+    }
+
+    .#{$prefix}grid-cell-treecolumn {
+        & + .#{$prefix}grid-cell-last {
+            .#{$vprefix}grid-row-menu-trigger {
+                margin-right: 11px;
+            }
         }
     }
 
