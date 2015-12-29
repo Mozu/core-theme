@@ -1,12 +1,15 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Net.Http;
 using System.Text;
 using System.Threading.Tasks;
+using System.Web;
 using Mozu.MZDB.Contracts.Clients;
 using Mozu.Core.Api.Client;
 using Mozu.Core.Settings;
 using Newtonsoft.Json.Linq;
+
 
 namespace Mozu.SiteBuilder.Mvc.Contexts
 {
@@ -20,19 +23,20 @@ namespace Mozu.SiteBuilder.Mvc.Contexts
         bool CustomRoutesVisible { get; }
         string BetaControlVersion { get; }
         Task<ITenantAdminSettingsContext> AsyncGet();
+        string MapPath(string virtualPath);
 
     }
     public class TenantAdminSettingsContext : ITenantAdminSettingsContext
     {
         private readonly Lazy<IEntityListsWebApiClient> _entityListsWebApiClient;
         private readonly Lazy<ISettings> _settings;
-
+        HttpContextBase _context;
         Lazy<JObject> _state;
-        public TenantAdminSettingsContext(Lazy<Mozu.MZDB.Contracts.Clients.IEntityListsWebApiClient> entityListsWebApiClient, Lazy<Mozu.Core.Settings.ISettings> settings)
+        public TenantAdminSettingsContext(Lazy<Mozu.MZDB.Contracts.Clients.IEntityListsWebApiClient> entityListsWebApiClient, Lazy<Mozu.Core.Settings.ISettings> settings, HttpContextBase context)
         {
             _entityListsWebApiClient = entityListsWebApiClient;
             _settings = settings;
-
+            _context = context;
             _state = new Lazy<JObject>(GetSettings);
         }
 
@@ -41,15 +45,38 @@ namespace Mozu.SiteBuilder.Mvc.Contexts
             var res = _entityListsWebApiClient.Value.CloneWithoutUserClaims().GetEntity(entityListFullName: "tenantAdminSettings@mozu", id: "Global").Result;
             return res.ResponseMessage.IsSuccessStatusCode ? res.ReadAsSync() : new JObject();
         }
+       static string _bcv = null;
 
         public string BetaControlVersion
         {
             get
             {
-                return _settings.Value.AppSettings("sitebuilder.betaControlVersion");
+                if ( _bcv == null)
+                {
+                    var dllPath =this.MapPath("/bin/Mozu.SiteBuilder.Mvc.dll");
+                    if ( dllPath != null)
+                    {
+                        try
+                        {
+                            _bcv = System.Reflection.AssemblyName.GetAssemblyName(dllPath).Version.ToString();
+                        }
+                        catch
+                        {
+                            _bcv = "";
+                        }
+                    }
+                    else
+                    {
+                        _bcv = "";
+                    }
+                }
+                return _bcv;  // _settings.Value.AppSettings("sitebuilder.betaControlVersion");
             }
         }
-
+        public string MapPath ( string virtualPath )
+        {
+            return _context.Server.MapPath("/admin/_mzAdminBetaControl/" + virtualPath);
+        }
         public async Task<ITenantAdminSettingsContext> AsyncGet()
         {
             if (_state.IsValueCreated)

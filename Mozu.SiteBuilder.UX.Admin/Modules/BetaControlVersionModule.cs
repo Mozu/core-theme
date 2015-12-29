@@ -1,7 +1,10 @@
 ﻿using System;
 using System.IO;
 using System.Web;
+using System.Web.Http;
 using Mozu.Core.Settings;
+using Mozu.MZDB.Contracts.Clients;
+using Mozu.SiteBuilder.Mvc.Contexts;
 
 namespace Mozu.SiteBuilder.UX.Admin.Modules
 {
@@ -21,14 +24,20 @@ namespace Mozu.SiteBuilder.UX.Admin.Modules
             var bcv = context.Request.QueryString["bcv"];
             if (!string.IsNullOrEmpty(bcv))
             {
-                var sbcv = MozuConfigurationManager.Settings.AppSettings("sitebuilder.betaControlVersion");
-                if (bcv != sbcv)
+                var resolver = GlobalConfiguration.Configuration.DependencyResolver;
+             
+                var entityClient = (Lazy<IEntityListsWebApiClient>)resolver.GetService(typeof(Lazy<IEntityListsWebApiClient>));
+                var settings = (Lazy<ISettings>)resolver.GetService(typeof(Lazy<ISettings>));
+                var tasc = new TenantAdminSettingsContext(entityClient, settings, context);
+
+            
+                if (bcv != tasc.BetaControlVersion)
                 {
                     context.Response.Cache.SetExpires(DateTime.Now.AddYears(-1));
                 }
 
-                var path = context.Request.PhysicalApplicationPath + "\\..\\" + sbcv +
-                           context.Request.AppRelativeCurrentExecutionFilePath.Substring(1);
+
+                var path = tasc.MapPath(context.Request.AppRelativeCurrentExecutionFilePath.Substring(1));
                 var file = new FileInfo(path);
                 if (file.Exists)
                 {
