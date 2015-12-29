@@ -1,9 +1,8 @@
 ﻿/**
- * @class Taco.view.order.Grid
+ * @class Taco.view.settings.shipping.ProductRules
 */
 Ext.define('Taco.view.settings.shipping.ProductRules', {
     requires: [
-        'Taco.store.ShippingZones',
         'Taco.store.ProductRules'
     ],
     extend: 'Taco.view.settings.shipping.Rules',
@@ -11,7 +10,6 @@ Ext.define('Taco.view.settings.shipping.ProductRules', {
 
     createButtonText: "Create New Product Rule",
     title: "Shipping",
-
 
     createRoute: 'shipping/productrulescreate',
     editorRoute: 'shipping/productrulesedit',

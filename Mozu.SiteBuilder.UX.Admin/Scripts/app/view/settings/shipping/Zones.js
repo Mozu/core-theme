@@ -1,10 +1,10 @@
 ﻿/**
- * @class Taco.view.order.Grid
+ * @class Taco.view.settings.shipping.Zones
 */
 Ext.define('Taco.view.settings.shipping.Zones', {
     requires:['Taco.store.ShippingZones'],
     extend: 'Taco.view.settings.shipping.Rules',
-    alias :'widget.shippingzoneegrid',
+    alias: 'widget.shippingzoneegrid',
 
     createButtonText: "Create New Zone",
     title: "Shipping",
@@ -47,5 +47,3 @@ Ext.define('Taco.view.settings.shipping.Zones', {
         requiresContextOfType: ['s']
     }
 });
-
-

@@ -1446,6 +1446,7 @@
     <Content Include="Scripts\sass\src\core\ux\browser\SearchList.scss" />
     <Content Include="Scripts\app\mocks\auditlog.json" />
     <Content Include="Scripts\sass\src\overrides\menu\Item.scss" />
+    <Content Include="Scripts\sass\src\view\order\Grid.scss" />
     <None Include="SetupSenchaWorkspace.ps1" />
     <Content Include="Scripts\.sencha\app\build-impl.xml" />
     <Content Include="Scripts\.sencha\app\plugin.xml" />
@@ -2008,7 +2009,6 @@
     <Content Include="Tests\customunit\view\productType\Form.t.js" />
     <Content Include="Tests\customunit\view\product\subforms\General.t.js" />
     <Content Include="Tests\customunit\view\product\subforms\ListExtraEditor.t.js" />
-    <Content Include="Tests\customunit\core\ux\grid\grid-action-buttons.js" />
     <Content Include="Tests\customunit\view\order\pendingreview-should-not-allow-add-payment.js" />
     <Content Include="Tests\customunit\core\ux\form\model-binds.t.js" />
     <Content Include="Tests\customunit\core\ux\grid\grid-action-buttons.js" />
@@ -2023,6 +2023,7 @@
     <Content Include="Tests\customunit\view\order\header.t.js" />
     <Content Include="Tests\unit\view\discount\LimitationsForm.t.js" />
     <Content Include="Tests\unit\view\location\subform\location.t.js" />
+    <Content Include="Tests\unit\view\order\Grid.t.js" />
     <Content Include="Tests\unit\view\order\modal\AddGiftCard.t.js" />
     <Content Include="Tests\unit\view\order\modal\AddPayment.t.js" />
     <Content Include="Tests\unit\view\order\subform\Payment.t.js" />
@@ -2529,7 +2530,7 @@
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <Import Project="$(VSToolsPath)\WebApplications\Microsoft.WebApplication.targets" Condition="'$(VSToolsPath)' != ''" />
   <Import Project="$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v10.0\WebApplications\Microsoft.WebApplication.targets" Condition="false" />
-  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it.
 
        Other similar extension points exist, see Microsoft.Common.targets.
 
