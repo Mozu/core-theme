@@ -91,7 +91,6 @@ Ext.define('Taco.view.navigation.SecondaryMenu', {
             text: '',
             handler: Ext.bind(function (btn) {
                 this.searchBox.show();
-                btn.hide();
             }, this)
         },
             this.searchBox
