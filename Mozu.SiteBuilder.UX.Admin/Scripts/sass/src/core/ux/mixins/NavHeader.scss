@@ -28,6 +28,7 @@
 
 .#{$vprefix}navheader {
     .#{$vprefix}navheader-toolbar{
+        border-bottom: 1px solid $color-standard-border !important;
         background-color: $color-neutral-white;
 
         .#{$prefix}toolbar-default {
