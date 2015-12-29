@@ -2,10 +2,11 @@
 
   .#{$vprefix}website-subheader {
 
-    background-color: $color-framework-gray-border;
+    background-color: $light-bg;
     height: 30px;
 
     .#{$vprefix}link-button {
+        background-color: $light-bg;
 
         .#{$prefix}btn-inner {
             text-decoration: none !important;
@@ -14,7 +15,7 @@
     }
 
     .#{$prefix}panel, .#{$prefix}panel-body {
-        background-color: $color-framework-gray-border;
+        background-color: $light-bg;
     }
 
     .#{$vprefix}website-resolution-btn {
