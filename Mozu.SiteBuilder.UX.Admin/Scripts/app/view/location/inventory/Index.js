@@ -28,6 +28,7 @@ Ext.define('Taco.view.location.inventory.Index', {
         requiresContextOfType: ['m', 's', 'c']
     },
     addContentViewPadding: true,
+    enableAutoSelect: false,
     enableNavHeader: true,
     title: 'Inventory',
     gridHeaderLabel: 'Inventory',
@@ -96,13 +97,13 @@ Ext.define('Taco.view.location.inventory.Index', {
             cls: 'taco-floating-toolbar',
             itemId: 'inventory-dropdown',
             store: this.locationStore,
-            fieldLabel: 'Iventory for:',
+            fieldLabel: 'Inventory',
             displayField: 'name',
             valueField: 'code',
             labelAlign: 'left',
             autoSelect: true,
             forceSelection: true,
-            labelWidth: 90,
+            labelWidth: 70,
             minWidth: 250,
             listeners: {
                 change: this.onIventoryChange,

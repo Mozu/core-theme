@@ -126,8 +126,14 @@ Ext.define('Taco.core.ux.grid.LinkPaging', {
                 scope: me,
             });
         }
+        
+        if (me.displayInfo && pageData.pageCount > 1) {
+            pageNumberItems.push('->');
+            pageNumberItems.push({ xtype: 'tbtext', itemId: 'displayItem' });
+        }
 
-        if (me.displayInfo) {
+        else {
+            pageNumberItems = [];
             pageNumberItems.push('->');
             pageNumberItems.push({ xtype: 'tbtext', itemId: 'displayItem' });
         }

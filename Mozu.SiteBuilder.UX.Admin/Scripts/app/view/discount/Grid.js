@@ -24,6 +24,8 @@ Ext.define('Taco.view.discount.Grid', {
         deleteFromGrid: 'Taco.core.ux.mixins.DeleteFromGrid'
     },
 
+    enableAutoSelect: false,
+
     
 
     //contextConfig: {
@@ -50,7 +52,6 @@ Ext.define('Taco.view.discount.Grid', {
     enableSearch: false,
     enablePaging: true,
     enableRowEditing: false,
-    enableAutoSelect: true,
     createButtonEnabled: true,
     saveButtonEnabled: false,
     cancelButtonEnabled: false,
