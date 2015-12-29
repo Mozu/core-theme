@@ -296,6 +296,12 @@
             }
         }
 
+        table + &.#{$vprefix}content-navcontainer {
+            > .#{$prefix}grid-header-ct {
+                background-color: $white-color;
+            }
+        }
+
         .#{$prefix}panel {
             &.#{$prefix}fit-item {
                 > .#{$prefix}grid-header-ct {
