@@ -31,6 +31,7 @@ Ext.define('Taco.view.product.Index', {
     cancelButtonEnabled: false,
     saveButtonEnabled: false,
     createButtonEnabled: true,
+    enableAutoSelect: false,
     createButtonText: 'Create New Product',
     contextConfig: {
         supportedLevels: ['m', 'c'],
