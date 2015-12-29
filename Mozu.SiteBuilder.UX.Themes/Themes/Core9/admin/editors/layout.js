@@ -117,11 +117,14 @@ Ext.widget({
     },
 
     onWidthValueChange: function(cmp, value) {
-
-        if (parseInt(value, 10) < 10) cmp.setValue(10);
+        
+        if (parseInt(cmp.getValue(), 10) < 10) {
+            cmp.setValue(10);
+        }
 
         var numberField = this.getAssociatedNumberField(),
             formValues = cmp.up('form').getValues(),
+            newTotal,
             currentTotal = 0;
 
         Object.keys(formValues).forEach(function(key){
@@ -129,6 +132,13 @@ Ext.widget({
                 currentTotal+= formValues[key];
             }
         });
+
+        newTotal = numberField.getValue() + 100 - currentTotal;
+
+        if (newTotal < 0 || newTotal > 100) {
+            cmp.setValue(parseInt(cmp.originalValue, 10));
+            return false;
+        }
 
         numberField.setValue(numberField.getValue() + 100 - currentTotal);
     },
