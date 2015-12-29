@@ -56,7 +56,7 @@ Ext.widget({
                         items: [
                             {
                                 xtype: 'radio',
-                                margin: '0 20',
+                                margin: '25 20',
                                 checked: isChecked,
                                 itemId: 'layoutCheckBox' + counter,
                                 name: 'mz-layout-radiofield',
@@ -72,7 +72,7 @@ Ext.widget({
                                 value: widgetData[key],
                                 itemId: 'layoutWidthValue' + counter,
                                 listeners: {
-                                    change: me.onWidthValueChange.bind(me)
+                                    blur: me.onWidthValueChange.bind(me)
                                 },
                                 width: 700
                             }
