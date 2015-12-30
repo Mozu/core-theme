@@ -328,59 +328,5 @@
                 }
             }
         }
-
-        /* style trees that use images as expand/collapse buttons */
-
-        // .#{$prefix}grid-row {
-        //     &.#{$prefix}grid-data-row {
-        //         > td {
-        //             &.#{$prefix}grid-cell-treecolumn {
-        //                 &:after {
-        //                     content: $glyph-tree-closed;
-        //                     font-family: 'mozicons';
-        //                     font-size: 13px;
-        //                     position: absolute;
-        //                     margin-top: -21px;
-        //                     left: 38px;
-        //                     z-index: 0;
-        //                 }
-
-        //                 img {
-        //                     &.#{$prefix}tree-elbow-img {
-        //                         background-image: none;
-        //                         position: relative;
-        //                         z-index: 1;
-        //                     }
-        //                 }
-        //             }
-        //         }
-        //     }
-
-        //     &.#{$prefix}grid-tree-node-expanded {
-        //         > td {
-        //             &.#{$prefix}grid-cell-treecolumn {
-        //                 &:after {
-        //                     content: $glyph-tree-open;
-        //                     font-family: 'mozicons';
-        //                     font-size: 13px;
-        //                     position: absolute;
-        //                     margin-top: -21px;
-        //                     left: 38px;
-        //                     z-index: 0;
-        //                 }
-        //             }
-        //         }
-        //     }
-
-        //     &.#{$prefix}grid-tree-node-leaf {
-        //         > td {
-        //             &.#{$prefix}grid-cell-treecolumn {
-        //                 &:after {
-        //                     display: none;
-        //                 }
-        //             }
-        //         }
-        //     }
-        // }
     }
 }
