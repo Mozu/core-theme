@@ -22,9 +22,11 @@ Ext.define('Taco.view.navigation.SecondaryMenu', {
 
         searchBox = this.searchBox = Ext.create('Taco.view.navigation.GlobalSearchBox', {
             hidden: true,
-            onClick: function () {
+            onFocus: function () {
                 searchBox = this;
-                searchButtonContent = 'searchButton.el.dom.innerHTML';
+                if (typeof searchButtonContent == 'undefined') {
+                    searchButtonContent = searchButton.el.dom.innerHTML;
+                }
             },
             onChange: Ext.bind(function () {
                 if (typeof searchButtonContent === 'undefined') {
@@ -42,6 +44,10 @@ Ext.define('Taco.view.navigation.SecondaryMenu', {
                     searchButton.el.dom.innerHTML = searchButtonContent;
                     searchBox.hide();
                 }
+            }),
+            onSelect: Ext.bind(function () {
+                searchButton.el.dom.innerHTML = searchButtonContent;
+                searchBox.hide();
             })
         });
 
@@ -116,7 +122,9 @@ Ext.define('Taco.view.navigation.SecondaryMenu', {
             handler: Ext.bind(function (btn) {
                 this.searchBox.show();
                 searchButton = btn;
-            }, this),
+                clearButton = btn;
+                this.searchBox.focus();
+            }, this)
         },
             this.searchBox
         ];
