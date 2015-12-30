@@ -4,14 +4,16 @@
         margin: 15px 5px;
         text-align: center;
 
-        span {
-            color: $gray-text-extra-light;
+        .subnavlink-container {
+            color: $nav-element-active;
             cursor: pointer;
             display: inline-block;
-            width: 25px;
-            height: 25px;
-            vertical-align: top;
             opacity: .8;
+            height: 25px;
+            padding: 0px 5px;
+            vertical-align: top;
+            width: 25px;
+            @include border-radius(3px);
 
             img {
                 width: 25px;
@@ -20,6 +22,15 @@
             
             &:hover {
                 opacity: 1;
+            }
+
+            .text-only {
+                border: 1px solid $nav-element-active;
+                display: inline-block;
+                font-size: 12px;
+                padding: 3px 3px 2px 3px;
+                margin-top: 3px;
+                @include border-radius(3px);
             }
 
         }

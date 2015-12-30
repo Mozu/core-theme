@@ -150,7 +150,7 @@ Ext.define('Taco.view.navigation.SubNavLinkContainer', {
 
         return Ext.create('Ext.Component', {
             tpl: [
-                '<span>',
+                '<span class="subnavlink-container">',
                     '<tpl>{[this.getIcon(values)]}</tpl>',
                 '</span>',
                 {
@@ -161,7 +161,7 @@ Ext.define('Taco.view.navigation.SubNavLinkContainer', {
                         }
 
                         else if (record.view) {
-                            return '<span style="padding-top: 10px">' + record.view + '</span>';
+                            return '<span class="text-only">' + record.view + '</span>';
                         }
 
                     }
