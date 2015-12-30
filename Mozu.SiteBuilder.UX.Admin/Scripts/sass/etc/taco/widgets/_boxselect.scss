@@ -45,8 +45,8 @@
         border-width: 0px !important;
     }
     .#{$prefix}field:not(.#{$prefix}item-disabled) .#{$prefix}boxselect-item:hover {
-        background: #BBCEF1;
-        border: 1px solid #6D95E0;
+        background: $card-button-bg;
+        border: 1px solid $dark-bg;
     }
     .#{$prefix}field:not(.#{$prefix}item-disabled) .#{$prefix}boxselect-item.selected {
         border: 1px solid #316AD3 !important;

@@ -112,6 +112,7 @@ Ext.define('Taco.view.publishing.Split', {
             style: {
                 border: 'none'
             },
+
             items: [
                 Ext.create('Taco.view.publishing.grid.Draft', {
                     scope: this,
@@ -128,7 +129,10 @@ Ext.define('Taco.view.publishing.Split', {
                             autoLoad: true
                         }
                     },
-                    advancedFormCls: 'Taco.view.publishing.advancedSearchForm.DraftProduct'
+                    advancedSearchConfig: {
+                        advancedFormCls: 'Taco.view.publishing.advancedSearchForm.DraftProduct',
+                        emptySearchText: 'Search'
+                    }
                 }),
                 Ext.create('Taco.view.publishing.grid.Draft', {
                     scope: this,
@@ -145,7 +149,10 @@ Ext.define('Taco.view.publishing.Split', {
                             autoLoad: true
                         }
                     },
-                    advancedFormCls: 'Taco.view.publishing.advancedSearchForm.DraftContent'
+                    advancedSearchConfig: {
+                        advancedFormCls: 'Taco.view.publishing.advancedSearchForm.DraftContent',
+                        emptySearchText: 'Search'
+                    }
                 })
             ]
         });

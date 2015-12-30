@@ -60,7 +60,6 @@ Ext.define('Taco.view.publishing.Drafts', {
                 }
             }),
             style: {
-                
                 border: 'none'
             },
             items: [

@@ -25,7 +25,6 @@
         padding: 10px;
         vertical-align: top;
         width: 33%;
-        @include border-radius(3px);
 
         @media screen and (max-width: 768px) {
             display: block;
@@ -46,24 +45,24 @@
 
         .#{$vprefix}content-holder {
 
-
             .#{$vprefix}dashboard-item-header {
                 background-color: $more-menu-active-background;
                 font-size: 12px;
                 color: $gray-text-light;
                 text-align: left;
                 text-shadow: 1px 1px 0px transparentize($color-neutral-white, 0.6);
-                padding: 10px 0px 0px 10px;
+                padding: 8px 0px 0px 20px
             }
 
             .#{$vprefix}dashboard-item-item {
                 background-color: $more-menu-active-background;
-                line-height: 22px;
-                padding: 4px 0px 10px 10px;
+                line-height: 16px;
+                padding: 4px 0px 10px 20px;
                 font-size: 13px;
                 text-align: left;
                 border: 0px;
                 width: 100%;
+                @include border-radius(0px 0px 3px 3px);
 
                 div {
                     display: inline-block;

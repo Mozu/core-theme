@@ -200,6 +200,16 @@
         }
     }
 
+    .#{$prefix}form-file-btn {
+        height: 40px;
+        padding: 10px 20px;
+
+        .#{$prefix}btn-wrap {
+            padding-top: 6px;
+        }
+    }
+
+
     // Previous/Next Buttons
 
     @mixin btn-nextprev-wrap {

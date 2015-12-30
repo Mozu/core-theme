@@ -1,7 +1,7 @@
 @mixin taco-bulkactiontoolbar {
 
 	.#{$vprefix}bulk-action-toolbar {
-		background-color: $white-color;
+		background-color: $dark-bg;
 		position: absolute;
 		opacity: 0;
 		transition-property: opacity;
@@ -12,8 +12,9 @@
 		.#{$vprefix}link-action-button {
 			background-color: $valid-green;
 			border: none;
-			padding: 4px;
-			top: 8px !important;
+			margin: 0px 5px;
+			padding: 4px 8px;
+			top: 6px !important;
 
 			&.#{$prefix}btn-disabled {
 				opacity: 0.4;
@@ -22,6 +23,7 @@
 			.#{$prefix}btn-inner-center {
 				color: $white-color !important;
 				font-size: 12px;
+				line-height: 16px;
 			}
 
 			&:hover {

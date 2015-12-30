@@ -5,7 +5,7 @@
 
 .#{$vprefix}masthead {
     background-color: $color-neutral-white;
-    border-bottom: 1px solid $nav-element-active-border;
+    border-bottom: 1px solid $card-button-press-bg;
     font-size: px-to-rem(12);
     font-weight: 400;
     left: 0px;
@@ -20,7 +20,7 @@
 
         &::after {
             left: auto;
-            right: 10px;
+            right: 0px;
             text-align: right;
             top: 1px;
             width: 100%;
@@ -115,8 +115,8 @@
             width: auto;
 
             &::after {
-            left: 10px;
-            top: 10px;
+                left: 10px;
+                top: 10px;
             }
         }
         .#{$vprefix}icon-nav-customers::after {

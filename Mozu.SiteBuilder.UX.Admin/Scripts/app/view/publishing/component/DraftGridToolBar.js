@@ -3,6 +3,7 @@ Ext.define('Taco.view.publishing.component.DraftGridToolBar', {
     advancedSearchConfig: {
     	quickFilterData: [],
     	advancedFormCls: '',
+        emptySearchText: 'Search'
 
     },
     requires: [
