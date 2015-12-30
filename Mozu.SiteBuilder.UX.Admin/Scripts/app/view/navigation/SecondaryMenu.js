@@ -100,19 +100,18 @@ Ext.define('Taco.view.navigation.SecondaryMenu', {
                 ]
             }
         },
-            {
-                xtype: 'button',
-                cls: 'help-button',
-                ui: 'link',
-                scale: 'medium',
-                text: 'Help',
-                hidden: Taco.siteBuilderHelperToggle !== 'on',
-                handler: function () {
-                    //window.open(Taco.drupalLink);
-                    window.open(Taco.adminHelpLink);
-                }
-            },
-
+        {
+            xtype: 'button',
+            cls: 'help-button',
+            ui: 'link',
+            scale: 'medium',
+            text: 'Help',
+            hidden: Taco.siteBuilderHelperToggle !== 'on',
+            handler: function () {
+                //window.open(Taco.drupalLink);
+                window.open(Taco.adminHelpLink);
+            }
+        },
         {
             xtype: 'button',
             ui: 'link',
@@ -122,7 +121,6 @@ Ext.define('Taco.view.navigation.SecondaryMenu', {
             handler: Ext.bind(function (btn) {
                 this.searchBox.show();
                 searchButton = btn;
-                clearButton = btn;
                 this.searchBox.focus();
             }, this)
         },
