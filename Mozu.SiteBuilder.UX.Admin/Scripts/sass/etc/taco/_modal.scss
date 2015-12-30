@@ -79,6 +79,16 @@
         }
 
         .#{$prefix}panel {
+            .#{$vprefix}splitcontainer-panel {
+                .#{$prefix}panel {
+                    &.#{$prefix}fit-item {
+                        > .#{$prefix}grid-header-ct {
+                            background-color: transparent;
+                        }
+                    }
+                }
+            }
+            
             .#{$prefix}grid-header-ct {
                 .#{$prefix}column-header {
                     &:first-child {
