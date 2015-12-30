@@ -60,11 +60,6 @@
 }
 
 /* SHADOWS */
-
-@mixin card-shadhow {
-   box-shadow: rgba(0, 0, 0, 0.09) 0px 1px 2px 0px;
-}
-
 @mixin no-box-shadow {
   box-shadow: none;
   -moz-box-shadow: none;

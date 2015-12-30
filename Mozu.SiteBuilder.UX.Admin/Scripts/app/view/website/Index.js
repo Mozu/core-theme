@@ -501,6 +501,7 @@ Ext.define('Taco.view.website.Index', {
                                 xtype: 'taco-quickfilter',
                                 emptyText: 'Search',
                                 triggerCls: 'x-form-search-trigger',
+                                cls: 'taco-quickfilter-bar website',
                                 flex:1,
                                 width: '100%',
                                 style: {

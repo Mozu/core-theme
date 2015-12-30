@@ -2,20 +2,29 @@
 
   .#{$vprefix}website-subheader {
 
-    background-color: $light-bg;
+    background-color: $dark-bg;
     height: 30px;
+    box-shadow: rgba(0, 0, 0, 0.09) 0px 1px 2px 0px;
 
     .#{$vprefix}link-button {
-        background-color: $light-bg;
+        background-color: $dark-bg;
 
         .#{$prefix}btn-inner {
             text-decoration: none !important;
+            transition-property: color;
+            transition-duration: 300ms;
         }
 
+        &:hover {
+            .#{$prefix}btn-inner {
+                color: $nav-element-active;
+            }
+
+        }
     }
 
     .#{$prefix}panel, .#{$prefix}panel-body {
-        background-color: $light-bg;
+        background-color: $dark-bg;
     }
 
     .#{$vprefix}website-resolution-btn {
