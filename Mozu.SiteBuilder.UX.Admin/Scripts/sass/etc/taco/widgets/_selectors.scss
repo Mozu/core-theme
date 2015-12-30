@@ -7,7 +7,7 @@
             height: 6px;
             position: absolute;
             right: 5px;
-            top: 15px;
+            top: 16px;
             width: 6px;
             @include border-radius(3px);
         }
@@ -164,7 +164,7 @@
         }
 
         .inline-trigger {
-            @include icon-font($glyph-pencil);
+            @include icon-font($glyph-pencil, 12px);
 
             &::after {
                 color: $gray-text-dark;

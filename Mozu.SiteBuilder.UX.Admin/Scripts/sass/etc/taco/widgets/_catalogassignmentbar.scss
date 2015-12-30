@@ -5,6 +5,7 @@
         background-color: $white-color;
         line-height: initial;
         margin-top: 9px;
+        border-bottom: 1px solid $catalog-switcher-border-color;
 
         & > div > div > div {
             border-right: 1px solid $nav-element-active-border;
