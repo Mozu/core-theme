@@ -15,10 +15,34 @@ Ext.define('Taco.view.navigation.SecondaryMenu', {
     },
 
     initComponent: function () {
-    
 
-        this.searchBox = Ext.create('Taco.view.navigation.GlobalSearchBox', {
-            hidden: true
+        var searchButton,
+            searchBox,
+            searchButtonContent;
+
+        searchBox = this.searchBox = Ext.create('Taco.view.navigation.GlobalSearchBox', {
+            hidden: true,
+            onClick: function () {
+                searchBox = this;
+                searchButtonContent = 'searchButton.el.dom.innerHTML';
+            },
+            onChange: Ext.bind(function () {
+                if (typeof searchButtonContent === 'undefined') {
+                    searchButtonContent = searchButton.el.dom.innerHTML;
+                }
+
+                searchButton.el.dom.innerHTML = '<span style="font-family: mozicons;">&#xe903;</span>';
+                searchButton.on('click', function () {
+                    searchBox.inputEl.dom.value = '';
+                    this.el.dom.innerHTML = searchButtonContent;
+                });
+            }),
+            onBlur: Ext.bind(function () {
+                if (searchBox.inputEl.dom.value == '') {
+                    searchButton.el.dom.innerHTML = searchButtonContent;
+                    searchBox.hide();
+                }
+            })
         });
 
         var tenantName = Taco.app.context.name || '[tenant]';
@@ -91,7 +115,8 @@ Ext.define('Taco.view.navigation.SecondaryMenu', {
             text: '',
             handler: Ext.bind(function (btn) {
                 this.searchBox.show();
-            }, this)
+                searchButton = btn;
+            }, this),
         },
             this.searchBox
         ];
