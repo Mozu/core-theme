@@ -160,21 +160,21 @@
         }
 
         .#{$vprefix}home-page-medium-item{
-            float: left;
-            height: 100%;
-            width: 362px;
-            overflow-y: auto;
             background: white; 
             border: px-to-rem(1);
-            border-style: solid;
             border-color: lightgray;
+            border-style: solid;
+            float: left;
+            height: 100%;
             margin: px-to-rem(12);
+            overflow-y: auto;
+            width: 362px;
 
             hr{
                 border: 0px;
                 border-bottom-width: px-to-rem(2);
-                border-style: dashed;
                 border-color: lightgray;
+                border-style: dashed;
             }
             a{
                 color: rgba(60,134,210,1);
@@ -186,31 +186,33 @@
         }
 
         .#{$vprefix}home-page-large-item{
+            border: px-to-rem(1);
+            border-color: lightgray;
+            border-style: solid;
             float: left;
             height: 100%;
-            width: 76%;
-            border: px-to-rem(1);
-            border-style: solid;
-            border-color: lightgray;
             margin: px-to-rem(3);
             padding: px-to-rem(9);
+            width: 76%;
         }
 
         .#{$vprefix}home-page-create-new {
-            margin-left: px-to-rem(27);
             font-size: px-to-rem(12);
+            margin-left: px-to-rem(27);
         }
 
         .#{$vprefix}home-page-tree{
             font-size: px-to-rem(12);
             margin-left: px-to-rem(8);
             margin-top: px-to-rem(10);
+
             ul{
                 margin-left: px-to-rem(19);
                 li{
                     margin-bottom: px-to-rem(5);
                 }
             }
+            
             li{
                 margin-bottom: px-to-rem(5);
             }
@@ -218,8 +220,8 @@
 
         .#{$vprefix}home-page-button{
             background: white;
-            border-radius: px-to-rem(5);
             border-color: lightgray;
+            border-radius: px-to-rem(5);
             height: px-to-rem(30);
             margin-left: px-to-rem(4);
         }
@@ -231,14 +233,14 @@
         .#{$vprefix}home-page-item-header-main{
             border: 0px;
             border-bottom: px-to-rem(1);
-            border-style: solid;
             border-color: lightgray;
-            margin-bottom: px-to-rem(7);
-            padding-top:px-to-rem(9);
-            padding-bottom: px-to-rem(10);
-            padding-left: px-to-rem(14);
+            border-style: solid;
             color: #333;
             font-size: 14px;
+            margin-bottom: px-to-rem(7);
+            padding-bottom: px-to-rem(10);
+            padding-left: px-to-rem(14);
+            padding-top:px-to-rem(9);
         }
 
         .#{$vprefix}home-page-item-body{

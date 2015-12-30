@@ -44,8 +44,8 @@
             }
             .#{$prefix}btn-split-right {
                 &::after {
-                    box-shadow: none;
                     border-left: 1px solid $primary-btn-disabled-split-border;
+                    box-shadow: none;
                 }
             }
         }
@@ -53,9 +53,9 @@
         .#{$prefix}btn-arrow-right,
         .#{$prefix}btn-split-right {
             &::after {
+                border-left-width: 0;
                 content: $glyph-arrow-down;
                 font-size: 12px;
-                border-left-width: 0;
                 top: 5px;
             }
         }
@@ -63,13 +63,13 @@
             margin-right: -7px;
             padding-right: 45px;
             &::after {
+                box-shadow: $primary-btn-split-border 0 1px 3px 0;
                 height: 40px;
                 line-height: 40px;
+                margin-right: -12px;
                 padding-top: 0;
                 top: -5px;
                 width: 36px;
-                margin-right: -12px;
-                box-shadow: $primary-btn-split-border 0 1px 3px 0;
             }
         }
     }
@@ -102,10 +102,10 @@
         .#{$prefix}btn-arrow-right {
             padding-right: 16px;
             &::after {
+                border-left-width: 0;
                 color: $card-btn-text-color;
                 content: $glyph-arrow-down;
                 font-size: 8px;
-                border-left-width: 0;
                 top: 6px;
             }
         }
@@ -120,10 +120,10 @@
     a.#{$prefix}btn-action-primary-medium,
     a.#{$prefix}btn-action-primary-toolbar-medium {
         &.#{$prefix}menu-active {
+            background-color: $menu-btn-active-background;
+            border-bottom: 1px solid $menu-btn-active-border;
             border-bottom-left-radius: 0;
             border-bottom-right-radius: 0;
-            border-bottom: 1px solid $menu-btn-active-border;
-            background-color: $menu-btn-active-background;
         }
     }
 
@@ -141,17 +141,17 @@
     a.#{$prefix}btn.#{$prefix}row-editor-update-button,
     a.#{$prefix}btn.#{$prefix}row-editor-cancel-button {
         background-color: $card-button-bg;
-        color: $card-btn-text-color;
         border: 1px solid $card-btn-border;
-        padding: 5px 12px;
         @include btn-inner-center-no-padding;
+        color: $card-btn-text-color;
+        padding: 5px 12px;
         .#{$prefix}btn-button {
             height: 20px;
         }
         .#{$prefix}btn-inner-center {
-            line-height: 20px;
-            font-size: 12px;
             color: $card-btn-text-color;
+            font-size: 12px;
+            line-height: 20px;
         }
         &:hover {
             border-color: $card-btn-hover-border;
@@ -160,16 +160,17 @@
             box-shadow: none;
         }
         &:active {
-            border-color: $card-btn-active-border;
             background-color: $card-btn-active-background;
+            border-color: $card-btn-active-border;
         }
         &.#{$prefix}btn-disabled {
+            background-color: $card-btn-disabled-background;
+            border-color: $card-btn-disabled-border;
+            opacity: 1;
+
             .#{$prefix}btn-inner-center {
                 color: $card-btn-disabled-text;
             }
-            border-color: $card-btn-disabled-border;
-            background-color: $card-btn-disabled-background;
-            opacity: 1;
         }
         // Card buttons with dropdowns
         .#{$prefix}btn-arrow-right,
@@ -178,8 +179,8 @@
                 content: $glyph-arrow-down;
                 font-size: 10px;
                 line-height: 20px;
-                right: 0;
                 margin-right: -5px;
+                right: 0;
             }
             .#{$prefix}btn-button {
                 margin-right: -5px;
@@ -192,9 +193,9 @@
             margin-right: -7px;
             padding-right: 31px;
             &::after {
+                border-left-color: $card-btn-border;
                 height: 32px;
                 width: 22px;
-                border-left-color: $card-btn-border;
             }
         }
     }
@@ -202,8 +203,8 @@
     // Previous/Next Buttons
 
     @mixin btn-nextprev-wrap {
-        width: 100%;
         height: 100%;
+        width: 100%;
         &::after {
             line-height: 40px;
             text-align: center;
@@ -213,39 +214,39 @@
 
     @mixin btn-nextprev {
         background-color: transparent;
-        padding: 0;
         border: none;
-        width: 26px;
         height: 40px;
         opacity: 0.27;
+        padding: 0;
+        width: 26px;
         &:hover {
-            opacity: 1;
             background-color: transparent;
+            opacity: 1;
         }
         &:active {
+            background-color: $more-menu-active-background;
             border-radius: 3px;
             border-width: 0;
-            background-color: $more-menu-active-background;
         }
         &.#{$prefix}btn-disabled {
-            opacity: 0.09;
             background-color: transparent;
+            opacity: 0.09;
         }
     }
 
     .#{$vprefix}btn-nextprev-next {
         @include btn-nextprev;
         .#{$prefix}btn-wrap {
-            @include icon-font($glyph-arrow-right, 14px, $dark-color);
             @include btn-nextprev-wrap;
+            @include icon-font($glyph-arrow-right, 14px, $dark-color);
         }
     }
 
     .#{$vprefix}btn-nextprev-prev {
         @include btn-nextprev;
         .#{$prefix}btn-wrap {
-            @include icon-font($glyph-arrow-left, 14px, $dark-color);
             @include btn-nextprev-wrap;
+            @include icon-font($glyph-arrow-left, 14px, $dark-color);
         }
     }
 
@@ -257,8 +258,8 @@
             background-color: transparent;
 
             .#{$prefix}btn.#{$prefix}btn-inner-center {
-                font-size: 12px;
                 color: $nav-element-text;
+                font-size: 12px;
             }
 
             &:hover {
@@ -270,8 +271,8 @@
             }
 
             &.#{$prefix}btn.#{$prefix}menu-active {
-                border-radius: 3px;
                 background-color: $more-menu-active-background;
+                border-radius: 3px;
                 box-shadow: $more-menu-active-shadow 0 0 0 1px inset;
                 opacity: 1;
             }
@@ -313,17 +314,17 @@
     }
 
     .#{$vprefix}link-button {
+        background-color: $dark-bg;
         border: none;
         border-bottom: 2px solid transparent;
         border-radius: 0px; // we can remove this once its been removed globally
         box-shadow: none;
-        background-color: $dark-bg;
         color: $gray-text-dark;
-        padding: 8px 15px;
+        @include facade-transitions();
         font-family: $font-family;
         font-size: $normal-font-link;
+        padding: 8px 15px;
         transition: border-color;
-        @include facade-transitions();
 
         &:hover {
             color: $dark-color;
@@ -334,9 +335,9 @@
         // adds x- before the class -- to be removed once that bug is fixed (so never)
         // http://stackoverflow.com/questions/31043578/extjs-how-to-set-button-css-by-using-pressedcls-config
         &.active, &.#{$prefix}active, &.#{$prefix}focus {
-            text-decoration: none;
             border-color: $valid-green;
             color: $dark-color;
+            text-decoration: none;
         }
 
     }
@@ -387,11 +388,11 @@
 
     .#{$vprefix}light-tag {
         border: 1px solid $light-bg;
+        @include border-radius-xbrowser(3px);
         color: $gray-text-dark;
         font-size: 8px;
         margin: 10px 3px;
         padding: 3px 3px 2px 3px;
         text-transform: uppercase;
-        @include border-radius-xbrowser(3px);
     }
 }

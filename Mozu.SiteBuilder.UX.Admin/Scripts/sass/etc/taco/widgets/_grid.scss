@@ -60,6 +60,12 @@
         }
     }
 
+    .#{$prefix}tree-view-default {
+        .#{$vprefix}grid-row-menu-trigger {
+            margin-right: 11px;
+        }
+    }
+
     .#{$vprefix}grid-row-menu-trigger {
         @include icon-font($glyph-knurling, 16px, $gray-text-light);
         width: 12px;
