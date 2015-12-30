@@ -24,13 +24,8 @@ namespace Mozu.SiteBuilder.UX.Admin.Modules
             var bcv = context.Request.QueryString["bcv"];
             if (!string.IsNullOrEmpty(bcv))
             {
-                var resolver = GlobalConfiguration.Configuration.DependencyResolver;
-             
-                var entityClient = (Lazy<IEntityListsWebApiClient>)resolver.GetService(typeof(Lazy<IEntityListsWebApiClient>));
-                var settings = (Lazy<ISettings>)resolver.GetService(typeof(Lazy<ISettings>));
-                var tasc = new TenantAdminSettingsContext(entityClient, settings, context);
-
-            
+                var tasc = new TenantAdminSettingsContext(null, null, context);
+                
                 if (bcv != tasc.BetaControlVersion)
                 {
                     context.Response.Cache.SetExpires(DateTime.Now.AddYears(-1));

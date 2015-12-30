@@ -45,8 +45,8 @@ namespace Mozu.SiteBuilder.Mvc.Contexts
             var res = _entityListsWebApiClient.Value.CloneWithoutUserClaims().GetEntity(entityListFullName: "tenantAdminSettings@mozu", id: "Global").Result;
             return res.ResponseMessage.IsSuccessStatusCode ? res.ReadAsSync() : new JObject();
         }
-       static string _bcv = null;
-
+        string _bcv = null;
+        static System.Collections.Concurrent.ConcurrentDictionary<string, string> _bcvLookup = new System.Collections.Concurrent.ConcurrentDictionary<string, string>();
         public string BetaControlVersion
         {
             get
@@ -54,24 +54,22 @@ namespace Mozu.SiteBuilder.Mvc.Contexts
                 if ( _bcv == null)
                 {
                     var dllPath =this.MapPath("/bin/Mozu.SiteBuilder.Mvc.dll");
-                    if ( dllPath != null)
-                    {
-                        try
-                        {
-                            _bcv = System.Reflection.AssemblyName.GetAssemblyName(dllPath).Version.ToString();
-                        }
-                        catch
-                        {
-                            _bcv = "";
-                        }
-                    }
-                    else
-                    {
-                        _bcv = "";
-                    }
+                    _bcv = _bcvLookup.GetOrAdd(dllPath, GetAssemblyVersionStringByPath);
                 }
                 return _bcv;  // _settings.Value.AppSettings("sitebuilder.betaControlVersion");
             }
+        }
+        static string GetAssemblyVersionStringByPath ( string dllPath)
+        {
+            try
+            {
+                return System.Reflection.AssemblyName.GetAssemblyName(dllPath).Version.ToString();
+            }
+            catch
+            {
+                return  "";
+            }
+
         }
         public string MapPath ( string virtualPath )
         {
