@@ -217,8 +217,8 @@ Ext.define('Taco.view.product.subform.Inventory', {
                 // reverses the order of the buttons
                 reverseOrder: true,
                 msg: 'You have unsaved changes. Save changes now?',
-                closable: false,
-                buttons: Ext.Msg.YESNO,
+                closable: true,
+                buttons: Ext.Msg.OKCANCEL,
                 fn: function (rec) {
                     if (rec === 'yes') {
                         me.mon(productEditor, 'savesuccess', function() {
