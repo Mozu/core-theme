@@ -135,7 +135,7 @@ Ext.define('Taco.shared.view.field.Image', {
             xtype: 'button',
             ui: 'link',
             scale: 'medium',
-            text: 'upload from computer',
+            text: 'Upload from Computer',
             scope: this,
             handler: function () {
                 this.uploadButton.fileInputEl.dom.click();
@@ -161,7 +161,7 @@ Ext.define('Taco.shared.view.field.Image', {
             xtype: 'button',
             ui: 'link',
             scale: 'medium',
-            text: 'upload from file manager',
+            text: 'Upload from File Manager',
             scope: this,
             handler: this.onAssociatorClick
         });
