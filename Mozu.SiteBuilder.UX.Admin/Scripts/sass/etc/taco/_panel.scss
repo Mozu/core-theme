@@ -43,7 +43,15 @@
             .#{$prefix}tree-node-text {
                 position: relative;
                 padding-left: 16px;
-                left: -16px;
+            }
+
+            img {
+                &.#{$prefix}tree-elbow-plus,
+                &.#{$prefix}tree-elbow-minus,
+                &.#{$prefix}tree-elbow-end-plus,
+                &.#{$prefix}tree-elbow-end-minus {
+                    left: 16px;
+                }
             }
         }
     }
