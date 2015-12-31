@@ -17,6 +17,7 @@ Ext.define('Taco.view.customers.Segments.Index', {
     modelName: 'Taco.model.CustomerSegment',
     store: { type: 'Taco.store.CustomerSegments' },
     enableRowEditing: true,
+    enableAutoSelect: false,
     enableSearch: false,
     defaultRowEditingData: {},
     useTilePanel: false,
