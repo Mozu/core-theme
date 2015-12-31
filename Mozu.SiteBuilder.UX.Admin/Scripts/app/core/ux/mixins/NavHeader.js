@@ -373,13 +373,15 @@ Ext.define('Taco.core.ux.mixins.NavHeader', {
                         '</tpl>',
                     '</tpl>'
                 ],
-                flex: 1,
+                flex: me.titlePanel ? 0 : 1,
                 data: {
                     title: this.getTitle(),
                     subTitle: '',
                     id: this.titleId
                 }
             });
+
+            
 
             me.titleContainer.items.push(me.titleCmp);
 
