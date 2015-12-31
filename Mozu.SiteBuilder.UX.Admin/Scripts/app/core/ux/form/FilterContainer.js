@@ -122,6 +122,9 @@ Ext.define('Taco.core.ux.form.FilterContainer', {
 
         form = this.getAdvancedForm();
 
+        // add 20px of padding to all 
+        form.style = 'padding-bottom: 20px';
+
         // force the form to reset to clean state; this allows the form to be reset to empty values; otherwise the form will reset to the values that initialized it.
         form.trackResetOnLoad = false;
 

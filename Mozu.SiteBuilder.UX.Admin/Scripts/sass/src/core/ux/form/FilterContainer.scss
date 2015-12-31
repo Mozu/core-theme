@@ -153,6 +153,12 @@
                 color: $filter-text-inactive;
                 @include placeholder-color($filter-text-inactive);
             }
+
+            .#{$prefix}form-trigger-wrap {
+                position: relative;
+                top: 3px;
+            }
+
             .#{$prefix}trigger-cell {
                 .#{$prefix}form-trigger::after {
                     color: $filter-icon-inactive;
@@ -202,7 +208,14 @@
         .#{$vprefix}quickfilter {
             .#{$prefix}form-item-body {
                 top: 2px;
+                
+                .#{$prefix}form-trigger-wrap {
+                    position: relative;
+                    top: 0px;
+                }
             }
+
+
             .#{$prefix}form-trigger {
                 height: 30px;
                 background-color: $white-color;
