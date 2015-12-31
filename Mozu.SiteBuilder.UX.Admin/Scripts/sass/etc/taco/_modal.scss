@@ -253,14 +253,18 @@
                 .#{$prefix}form-trigger-input-cell {
                     position: absolute;
                     left: 40px;
+                    text-indent: 40px;
                     top: -2px;
 
                     > input {
                         height: 40px;
 
                         &.#{$prefix}form-text {
+                            left: -40px;
                             padding-bottom: 2px;
+                            padding-right: 40px;
                             padding-top: 4px;
+                            text-overflow: ellipsis;
                         }
 
                         &:focus {

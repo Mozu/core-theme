@@ -108,12 +108,23 @@
     .#{$prefix}form-trigger-input-cell {
         position: absolute;
         left: 40px;
+        text-indent: 40px;
         top: 4px;
+
         .#{$prefix}form-field {
             font-size: 18px;
             font-weight: 300;
             border: none;
             box-shadow: none;
+        }
+
+        input {
+            &.#{$prefix}form-field {
+                left: -40px;
+                overflow: hidden;
+                padding-right: 40px;
+                text-overflow: ellipsis;
+            }
         }
     }
 

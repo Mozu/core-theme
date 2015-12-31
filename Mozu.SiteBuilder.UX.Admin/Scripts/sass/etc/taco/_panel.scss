@@ -63,6 +63,7 @@
 
         input {
             &.#{$prefix}form-text {
+                text-overflow: ellipsis;
                 position: relative;
             }
         }
