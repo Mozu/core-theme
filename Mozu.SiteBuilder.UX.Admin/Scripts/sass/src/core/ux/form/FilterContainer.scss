@@ -161,7 +161,7 @@
     .#{$vprefix}quickfilter {
         .#{$prefix}form-item-body {
             input {
-                color: $filter-text-inactive;
+                color: $filter-text-focus;
                 @include placeholder-color($filter-text-inactive);
             }
 
