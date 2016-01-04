@@ -33,6 +33,10 @@
     .#{$prefix}grid-data-row {
         @include tree-state($glyph-tree-closed);
 
+        &:hover {
+            cursor: pointer;
+        }
+
         &.#{$prefix}grid-tree-node-expanded {
             @include tree-state($glyph-tree-open);
         }
