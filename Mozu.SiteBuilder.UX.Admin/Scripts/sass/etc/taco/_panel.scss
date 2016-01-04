@@ -67,8 +67,9 @@
 
         input {
             &.#{$prefix}form-text {
-                text-overflow: ellipsis;
+                height: 38px;
                 position: relative;
+                text-overflow: ellipsis;
             }
         }
         
@@ -174,6 +175,18 @@
         .#{$prefix}grid-row-editor {
             table.#{$prefix}hbox-form-item {
                 border-right: 1px solid $light-border-gray !important;
+                height: 37px;
+            }
+
+            /**
+             * Override Ext styles
+             */
+            > .#{$prefix}panel-body-default {
+                height: 39px !important;
+
+                > .#{$prefix}box-inner {
+                    height: 37px !important;
+                }
             }
         }
 
@@ -181,6 +194,11 @@
             border-color: $valid-green;
             background-color: $row-editor-buttons-bg;
             @include important-partial-border-radius(0, $border-radius, 0, $border-radius);
+
+            /**
+             * Override Ext styles
+             */
+            top: 38px !important;
 
             a {
                 background-color: $card-button-bg;
