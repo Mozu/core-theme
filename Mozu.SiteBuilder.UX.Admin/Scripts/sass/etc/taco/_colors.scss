@@ -132,6 +132,7 @@ $vertical-ellipsis-active:      rgb(34, 34, 34);                                
 $dropdown-list-shadow:          rgba($black-color, 0.09);                           /* #000000              000, 000, 000 */
 $dropdown-list-outline:         rgb(218, 218, 218);                                 /* #dadada --> #dbdbdb  219, 219, 219 */
                                 /* darken($white-color, 14); */
+$sticky-nav-border-color:       $dropdown-list-outline;
 $dropdown-icon-active:          lighten($black-color, 22);                          /* #383838              056, 056, 056 */
 $checkbox-checked:              rgb(59, 153, 252);                                  /* #3B99FC              059, 153, 252 */
 $nav-heading-color:             rgb(187, 190, 191);                                 /* #BBBEBF              187, 190, 191 */
