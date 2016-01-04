@@ -32,6 +32,10 @@
             width: 90%;
         }
 
+        .#{$vprefix}dashboard-item-box {
+            @include box-shadow(0 1px 2px 0px $more-menu-active-shadow);
+        }
+
         .#{$vprefix}image-holder {
             width: 100%;
             background-color: $white-color;
@@ -51,7 +55,7 @@
                 color: $gray-text-light;
                 text-align: left;
                 text-shadow: 1px 1px 0px transparentize($color-neutral-white, 0.6);
-                padding: 8px 0px 0px 20px
+                padding: 8px 0px 0px 20px;
             }
 
             .#{$vprefix}dashboard-item-item {

@@ -20,7 +20,6 @@ Ext.define('Taco.view.product.subform.General', {
         'Taco.store.ProductTypes',
         'Taco.core.ux.form.CurrencyField',
         'Taco.shared.view.field.ProductTypePickerField',
-        'Taco.core.ux.form.DateRange',
         'Taco.core.ux.form.DateTime',
         'Taco.core.util.Validation'
         //'Taco.core.ux.form.DateRangeContainer'
