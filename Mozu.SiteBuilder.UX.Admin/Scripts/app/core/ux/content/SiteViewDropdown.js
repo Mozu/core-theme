@@ -1,7 +1,6 @@
 Ext.define('Taco.core.ux.content.SiteViewDropdown', {
     extend: 'Ext.button.Button',
     alias: 'widget.taco-siteviewdropdown',
-    cls: Taco.baseCSSPrefix + 'site-view-dropdown',
     ui: 'link',
     cls: 'taco-action-secondary taco-siteview-dropdown',
     scale: 'medium',

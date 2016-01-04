@@ -95,7 +95,8 @@ Ext.define('Taco.view.theme.Index', {
 
         this.additionalActions = [
             {
-                xtype: 'taco-siteviewdropdown'
+                xtype: 'taco-siteviewdropdown',
+                menuAlign: 'tr-br?'
             }
         ];
 
