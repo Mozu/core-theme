@@ -255,8 +255,15 @@ Ext.define('Taco.core.ux.grid.LinkPaging', {
             });
 
             me.pageChooser.addListener('show', function () {
-                var pageData = me.getPageData();
-                Ext.ComponentQuery.query("#pageNumberField")[0].setValue(pageData.currentPage);
+                var pageData = me.getPageData(),
+                    pageNumberField = Ext.ComponentQuery.query("#pageNumberField")[0];
+
+                if (!pageNumberField) {
+                    console.log('pageNumberField not found');
+                    return;
+                }
+                pageNumberField.setValue(pageData.currentPage);
+                pageNumberField.focus(true, true);
                 return true;
             });
 
