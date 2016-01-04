@@ -270,29 +270,32 @@ Ext.define('Taco.view.product.subform.General', {
             });
 
             this.discountsRestrictedStartField = Ext.widget({
-                xtype: 'daterange',
+                xtype: 'datetime',
                 fieldLabel: 'Restriction Start Date',
                 width: defaultFieldWidth,
                 margin:"0 0 0 50",
                 name: 'discountsRestrictedStartDate',
                 itemId: 'discountDateRangeStart',
-                endDateFieldName: 'discountsRestrictedEndDate',
-                pickerOffset: 4,
                 disabled: !isDiscountRestricted,
-                allowBlank: !isDiscountRestricted  
+                allowBlank: true,
+                validator: function() {
+                    return Taco.core.util.Validation.validateDateRange(me.discountsRestrictedStartField, me.discountsRestrictedEndField, "Restricted start date must be before end date", 0);
+                }
+
             });
             
             this.discountsRestrictedEndField = Ext.widget({
-                xtype: 'daterange',
+                xtype: 'datetime',
                 fieldLabel: 'Restriction End Date',
                 name: 'discountsRestrictedEndDate',
                 width: defaultFieldWidth,
                 margin: "0 0 0 50",
                 itemId: 'discountDateRangeEnd',
-                startDateFieldName: 'discountsRestrictedStartDate',
-                pickerOffset: 4,
                 disabled: !isDiscountRestricted,
-                allowBlank: !isDiscountRestricted
+                allowBlank: true,
+                validator: function() {
+                    return Taco.core.util.Validation.validateDateRange(me.discountsRestrictedStartField, me.discountsRestrictedEndField, "Restricted end date must be after start date", 0);
+                }
             });
             
             this.mfgPartNumField = Ext.widget({
@@ -453,29 +456,31 @@ Ext.define('Taco.view.product.subform.General', {
         };
 
         this.mapStartField = Ext.widget({
-            xtype: 'daterange',
+            xtype: 'datetime',
             fieldLabel: 'MAP Start Date',
             name: 'mapStartDate',
             width: defaultFieldWidth,
             margin:"0 0 0 50",
             itemId: 'mapstartdt',
-            endDateFieldName: 'mapEndDate',
-            pickerOffset: 4,
             disabled: !isMapEnabled,
-            allowBlank: true
+            allowBlank: true,
+            validator: function() {
+                return Taco.core.util.Validation.validateDateRange(me.mapStartField, me.mapEndField, "MAP start date must be before end date", 0);
+            }
         });
         
         this.mapEndField = Ext.widget({
-            xtype: 'daterange',
+            xtype: 'datetime',
             fieldLabel: 'MAP End Date',
             name: 'mapEndDate',
             itemId: 'mapenddt',
             width: defaultFieldWidth,
             margin: "0 0 0 50",
-            startDateFieldName: 'mapStartDate',
-            pickerOffset: 4,
             disabled: !isMapEnabled,
-            allowBlank: true
+            allowBlank: true,
+            validator: function() {
+                return Taco.core.util.Validation.validateDateRange(me.mapStartField, me.mapEndField, "MAP end date must be after start date", 0);
+            }
         });
 
         this.imagesConfig = {
@@ -507,7 +512,6 @@ Ext.define('Taco.view.product.subform.General', {
             width: twoColumnFieldWidth,
             margin:"0 50 0 0",
             itemId: 'activeStartDt',
-            pickerOffset: 4,
             hidden: (!this.productInCatalogInfo || this.productInCatalogInfo.get('status') !== 'Scheduled'),
             value: this.productInCatalogInfo ? this.productInCatalogInfo.get('activeStartDate') : "",
             allowBlank: true,
@@ -532,7 +536,6 @@ Ext.define('Taco.view.product.subform.General', {
             itemId: 'activeEndDt',
             width: twoColumnFieldWidth,
             margin: "0 0 0 0",
-            pickerOffset: 4,
             hidden: (!this.productInCatalogInfo || this.productInCatalogInfo.get('status') !== 'Scheduled'),
             value: this.productInCatalogInfo ? this.productInCatalogInfo.get('activeEndDate') : "",
             allowBlank: true,
