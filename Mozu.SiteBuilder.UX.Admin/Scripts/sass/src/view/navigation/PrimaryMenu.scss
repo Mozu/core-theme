@@ -49,6 +49,25 @@
                 background-color: $gray-border-color;
             }
         }
+
+        > .#{$prefix}box-inner {
+            border-bottom: 1px solid $light-border-gray;
+            overflow: visible;
+        }
+
+        & + .#{$prefix}panel-body-default {
+            > .#{$prefix}box-layout-ct {
+                padding-top: 13px;
+            }
+
+            .#{$prefix}box-item {
+                &:last-child {
+                    > span {
+                        padding-bottom: 40px;
+                    }
+                }
+            }
+        }
     }
 
     .#{$prefix}tab-bar-default-horizontal {
@@ -175,12 +194,21 @@
 
     ul {
         padding-bottom: 20px;
+
+        &:first-child {
+
+        }
+
+        &:last-child {
+            padding-bottom: 40px;
+        }
     }
 
     li.#{$vprefix}menu-item {
         border-left: 3px solid transparent;
         cursor: pointer;
         line-height: 24px;
+        text-indent: -2px;
 
         &:hover, &.active {
             background-color: $nav-hover-bg;

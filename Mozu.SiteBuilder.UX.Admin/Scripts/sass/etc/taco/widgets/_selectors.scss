@@ -23,8 +23,10 @@
             color: $nav-element-text;
             display: block;
             font-size: 13px;
+            position: relative;
             text-align: center;
             text-decoration: none;
+            top: 1px;
 
             &.active {
               border-bottom-color: $valid-green;
