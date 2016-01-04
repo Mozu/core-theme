@@ -2,6 +2,7 @@
 
     .#{$vprefix}context-switcher-bar {
         background-color: $white-color;
+        box-shadow: rgba(0, 0, 0, 0.09) 0px 1px 3px 0px;
         margin-top: 9px;
 
         & > div > div > div {
