@@ -1,16 +1,20 @@
 /**
  * The discount editor view
  */
-Ext.define('Taco.view.settings.paymentAndCheckout.ExternalGateway', {
+Ext.define('Taco.view.settings.paymentTypes.subform.ExternalGateway', {
     extend: 'Taco.core.ux.form.Form',
     requires: [],
+    margin: "0 0 20 0",
     cascadeChildTasks: true,
-    padding: '0 0 20 0',
-    header: null,
-    fqn: null,
+    title: 'External',
+    margin: "0 0 20 0",
+    ui: "subform",
+    width: "100%",
 
     initComponent: function () {
-        this.header = null;
+        
+        this.title = this.externalPayment.get('name');
+
         var externalGateway = Ext.clone(this.record.get('externalPaymentWorkflows'));
         var credFieldDefs = this.externalPayment.get('credentials');
         var gatewayType = this.externalPayment.get('name').toUpperCase();
@@ -34,7 +38,7 @@ Ext.define('Taco.view.settings.paymentAndCheckout.ExternalGateway', {
 
         this.typeCheck = Ext.widget({
             xtype: 'checkbox',
-            boxLabel: this.externalPayment.get('name'),
+            boxLabel: 'Enable',
             checked: isEnabled,
             handler: this.onEnableChange,
             scope: this

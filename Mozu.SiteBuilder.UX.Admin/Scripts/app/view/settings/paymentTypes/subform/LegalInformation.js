@@ -1,11 +1,10 @@
 ﻿/**
- * @class Taco.view.settings.paymentAndCheckout.subform.LegalInformation
+ * @class Taco.view.settings.paymentTypes.subform.LegalInformation
  *
  */
 
-Ext.define('Taco.view.settings.paymentAndCheckout.subform.LegalInformation', {
+Ext.define('Taco.view.settings.paymentTypes.subform.LegalInformation', {
     extend: 'Taco.core.ux.form.Form',
-    requires: ['Taco.view.settings.paymentAndCheckout.Gateway'],
     title: 'Legal Information',
     margin: "0 0 20 0",
     ui: "subform",

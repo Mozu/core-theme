@@ -50,7 +50,7 @@ Ext.define('Taco.core.ux.browser.SearchList', {
     // array of toolbar items to be added to ths second toolbar below the search toolbar;
     secondToolbarItems: null,
 
-    disableContextMenuClick :false,
+    disableContextMenuClick: false,
 
     // meant to be overriden by the subclass;
     columns: [
@@ -61,19 +61,19 @@ Ext.define('Taco.core.ux.browser.SearchList', {
         }, {
             dataIndex: 'name',
             text: 'Name',
-            flex:1
+            flex: 1
         }
     ],
 
     listeners: {
-        beforecellmousedown: function(cmp, td, cellIndex, record, tr, rowIndex, e, eOpts) {
+        beforecellmousedown: function (cmp, td, cellIndex, record, tr, rowIndex, e, eOpts) {
             tr.className += ' taco-grid-row-active';
         },
-        beforecellmouseup: function(cmp, td, cellIndex, record, tr, rowIndex, e, eOpts) {
+        beforecellmouseup: function (cmp, td, cellIndex, record, tr, rowIndex, e, eOpts) {
             tr.className = tr.className.replace('taco-grid-row-active', '');
         },
     },
-    
+
     initComponent: function () {
         var me = this;
         this.viewConfig = this.viewConfig || {}
@@ -103,7 +103,7 @@ Ext.define('Taco.core.ux.browser.SearchList', {
         }
 
         if (!me.store) {
-            throw("store configuration is required.  Example store: { type: 'Taco.store.InventoryProducts' } ");
+            throw ("store configuration is required.  Example store: { type: 'Taco.store.InventoryProducts' } ");
             return;
         } else {
             if (!me.store.isStore) {
@@ -189,7 +189,7 @@ Ext.define('Taco.core.ux.browser.SearchList', {
                 scale: 'medium',
                 disabled: true,
                 text: 'Bulk Actions',
-                handler: function () {  }
+                handler: function () { }
             }, '->', me.createExpanderCollapser());
         }
 
@@ -201,5 +201,53 @@ Ext.define('Taco.core.ux.browser.SearchList', {
         me.secondToolbar = conf.items.length > 0 ? Ext.widget('toolbar', conf) : null;
 
         return me.secondToolbar;
-    }
+    },
+
+
+    destroyMenuColumnHandler: function (item, eventData) {
+        var grid = eventData.grid,
+            record = eventData.record;
+
+
+        Ext.MessageBox.show({
+            title: 'Delete',
+            // pushes the buttons to the right to be consistant with our dialog ux.
+            rightJustifyButtons: true,
+            // reverses the order of the buttons
+            reverseOrder: true,
+            msg: "Are you sure you want to delete this?",
+            closable: false,
+            buttons: Ext.Msg.YESNO,
+            fn: function (val) {
+                if (val === 'yes') {
+
+                    var store = grid.getStore();
+                    grid.setLoading(true);
+                    store.remove(record);
+                    store.sync({
+                        success: function (m) {
+                            grid.setLoading(false);
+                        },
+                        failure: function (m) {
+                            store.reload();
+                            grid.setLoading(false);
+
+                            var text = "Unknown error.";
+                            if (m.exceptions && Taco.core.util.ExceptionWhiner.wasHandled(m.exceptions)) {
+                                return;
+                            }
+                            if (m.exceptions) {
+                                text = Taco.core.util.ExceptionWhiner.createHtmlList(m.exceptions);
+                            }
+
+                            Taco.app.fireEvent('setmessage', text, 'error');
+
+                        }
+
+                    });
+                }
+            }
         });
+
+    }
+});

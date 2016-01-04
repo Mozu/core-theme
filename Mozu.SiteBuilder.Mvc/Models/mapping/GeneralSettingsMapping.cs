@@ -239,27 +239,9 @@ namespace Mozu.SiteBuilder.Mvc.Models.ModelMapping
             public ResolutionResult Resolve(ResolutionResult ctx)
             {
                 List<DC.Gateway> allGateways = ((DC.CheckoutSettings)ctx.Context.SourceValue).PaymentSettings.Gateways ?? new List<DC.Gateway>(0);
-                IEnumerable<DC.Gateway> filteredGateways;
-
-                if (ctx.Context.Options != null && ctx.Context.Options.Items != null && ctx.Context.Options.Items.ContainsKey("countryCode"))
-                {
-                    string countryCode = (string)ctx.Context.Options.Items["countryCode"];
-
-                    filteredGateways =
-                        from g in allGateways
-                        where g.GatewayAccount != null
-                        where g.GatewayAccount.IsActive
-                        where countryCode.Equals(g.GatewayAccount.CountryCode, StringComparison.InvariantCultureIgnoreCase)
-                        select g;
-                }
-                else
-                {
-                    filteredGateways =
-                        from g in allGateways
-                        where g.GatewayAccount != null
-                        where g.GatewayAccount.IsActive
-                        select g;
-                }
+                IEnumerable<DC.Gateway> filteredGateways = from g in allGateways
+                                                           where g.GatewayAccount != null
+                                                           select g;
 
                 var supportedCards = filteredGateways.Select(g => g.SupportedCards.ToDictionary(card => card)).FirstOrDefault() ?? new Dictionary<string, string>();
 

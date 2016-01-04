@@ -125,7 +125,7 @@ Ext.define('Taco.store.Navigation', {
 
                         else if (item.get('parentId')) {
                             return item;
-                        }
+            }
                     }
                 ],
                 listeners: {
@@ -198,7 +198,7 @@ Ext.define('Taco.store.Navigation', {
     proxy: {
         type: 'memory',
         data: [
-            {
+                {
                 'id': 'products',
                 'navParent': 'main',
                 'label': 'Catalog',
@@ -206,20 +206,20 @@ Ext.define('Taco.store.Navigation', {
                 'behaviorIds': [4],
                 'items': [{
                     'id': 'catalogProducts',
-                    'label': 'Products',
-                    'address': 'products',
-                    'behaviorIds': [4]
-                }, {
-                    'id': 'categories',
-                    'label': 'Categories',
-                    'address': 'categories',
-                    'behaviorIds': [16]
-                }, {
+                'label': 'Products',
+                'address': 'products',
+                'behaviorIds': [4]
+                    }, {
+                        'id': 'categories',
+                        'label': 'Categories',
+                        'address': 'categories',
+                        'behaviorIds': [16]
+                    }, {
                     'id': 'inventory',
                     'label': 'Inventory',
                     'address': 'inventory',
                     'behaviorIds': [4]
-                }
+                    }
                 ]
             },
             {
@@ -280,8 +280,8 @@ Ext.define('Taco.store.Navigation', {
                     //    'visible': !!(Taco.tenantSettings && Taco.tenantSettings.entityManagerVisible)
                     //}
                 ]
-            },
-            {
+                    },
+                    {
                 'id': 'publishing',
                 'navParent': 'main',
                 'label': 'Publishing ',
@@ -338,7 +338,7 @@ Ext.define('Taco.store.Navigation', {
                     'id': 'customerSegments',
                     'label': 'Customer Segments',
                     'address': 'customer/segments'
-                }, {
+            }, {
                     'id': 'storecredit',
                     'label': 'Store Credit',
                     'address': 'StoreCredits'
@@ -369,25 +369,31 @@ Ext.define('Taco.store.Navigation', {
                         'address': 'generalsettings'
                     },
                     {
-                        'id': 'paymentcheckout',
-                        'label': 'Payments',
-                        'address': 'settings/paymentAndCheckout'
-                    }, {
+                        'id': 'paymentgateways',
+                        'label': 'Payment Gateways',
+                        'address': 'settings/paymentGateways'
+                    },
+                    {
+                        'id': 'paymenttypes',
+                        'label': 'Payment Types',
+                        'address': 'settings/paymentTypes'
+                    },
+                    {
                         'id': 'tax',
                         'label': 'Tax',
                         'address': 'settings/tax'
                     }, {
                         'id': 'shippingMain',
                         'label': 'Shipping',
-                        'address': 'shipping'
+                                'address': 'shipping'
                     }, {
                         'id': 'publishing',
                         'label': 'Publishing',
                         'address': 'settings/publishing'
                     }
                 ]
-            },
-            {
+                            },
+                            {
                 'id': 'schema',
                 'navParent': 'sys',
                 'label': 'Schema',
@@ -437,8 +443,8 @@ Ext.define('Taco.store.Navigation', {
                         'address': 'customroutes'
                     }
                 ]
-            },
-            {
+                            },
+                            {
                 'id': 'structure',
                 'navParent': 'sys',
                 'label': 'Structure',
@@ -457,8 +463,8 @@ Ext.define('Taco.store.Navigation', {
                     'address': 'channels'
                 }
                 ]
-            },
-            {
+                            },
+                            {
                 'id': 'permissions',
                 'navParent': 'sys',
                 'label': 'Permissions',
@@ -475,49 +481,49 @@ Ext.define('Taco.store.Navigation', {
                         'id': 'ipblocking',
                         'label': 'IP Restrictions',
                         'address': 'ipblocking'
-                    }
-                ]
+                            }
+                        ]
             },
             {
-                'id': 'localization',
+                        'id': 'localization',
                 'navParent': 'sys',
-                'locAtts': ['multiLang', 'multCurrency'],
-                'label': 'Localization',
-                'items': [
-                    {
-                        'id': 'localizationAttr',
-                        'label': 'Attributes',
-                        'address': 'Localization',
-                        'locAtts': ['multiLang']
-                    },
-                    {
-                        'id': 'localizationAttrVal',
-                        'label': 'Attribute Values',
-                        'address': 'Localization/attributeValues',
-                        'locAtts': ['multiLang']
-                    },
-                    {
-                        'id': 'localizationProp',
-                        'label': 'Product Properties',
-                        'address': 'Localization/productProperties',
-                        'locAtts': ['multiLang']
-                    },
-                    {
-                        'id': 'localizationExtra',
-                        'label': 'Product Extras',
-                        'address': 'Localization/productExtras',
-                        'locAtts': ['multCurrency']
-                    },
-                    {
-                        'id': 'localizationVar',
-                        'label': 'Product Variants',
-                        'address': 'Localization/productVariants',
-                        'locAtts': ['multCurrency']
+                        'locAtts': ['multiLang', 'multCurrency'],
+                        'label': 'Localization',
+                        'items': [
+                            {
+                                'id': 'localizationAttr',
+                                'label': 'Attributes',
+                                'address': 'Localization',
+                                'locAtts': ['multiLang']
+                            },
+                            {
+                                'id': 'localizationAttrVal',
+                                'label': 'Attribute Values',
+                                'address': 'Localization/attributeValues',
+                                'locAtts': ['multiLang']
+                            },
+                            {
+                                'id': 'localizationProp',
+                                'label': 'Product Properties',
+                                'address': 'Localization/productProperties',
+                                'locAtts': ['multiLang']
+                            },
+                            {
+                                'id': 'localizationExtra',
+                                'label': 'Product Extras',
+                                'address': 'Localization/productExtras',
+                                'locAtts': ['multCurrency']
+                            },
+                            {
+                                'id': 'localizationVar',
+                                'label': 'Product Variants',
+                                'address': 'Localization/productVariants',
+                                'locAtts': ['multCurrency']
+                            }
+                        ]
                     }
-                ]
-            }
             //todo: include shipping sublinks? greg_murray on 12/1/2015
-            //{
+                //{
             //    'id': 'shipping',
             //    'label': 'Shipping',
             //    'address': 'shipping',
@@ -538,7 +544,7 @@ Ext.define('Taco.store.Navigation', {
             //            'address': 'shipping/productRules'
             //        }
             //    ]
-            //}
+                //}
         ],
         reader: {
             type: 'json',

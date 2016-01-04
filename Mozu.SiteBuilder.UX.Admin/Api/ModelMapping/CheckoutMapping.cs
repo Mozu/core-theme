@@ -20,6 +20,38 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.ModelMapping
             }
         }
 
+        //TODO: We should move this to reference service.
+        private static List<KeyValuePair<string, string>> Cards = new List<KeyValuePair<string, string>>
+                    {
+                        new KeyValuePair<string, string>("VISA", "VISA"),
+                        new KeyValuePair<string, string>("AMEX", "American Express"),
+                        new KeyValuePair<string, string>("MC", "MasterCard"),
+                        new KeyValuePair<string, string>("DISCOVER", "Discover"),
+                        new KeyValuePair<string, string>("JCB", "JCB"),
+                    };
+
+
+        private static List<CardGateway> CardGateways()
+        {
+            var result = Cards.Select(c => new CardGateway { CardType = c.Key, CardDisplay = c.Value, IsEnabled = false }).ToList();
+            return result;
+        }
+
+        private static List<CardGateway> ToCardGateways(Dictionary<string, DCss.Gateway> cardGateway)
+        {
+            var result = CardGateways();
+            foreach (var card in result)
+            {
+                if (cardGateway.ContainsKey(card.CardType))
+                {
+                    var gateway = cardGateway[card.CardType];
+                    card.GatewayId = gateway.GatewayAccount.Id;
+                    card.IsEnabled = true;
+                }
+            }
+            return result;
+        }
+
         protected override void Configure()
         {
             Mapper.CreateMap<DCss.CheckoutSettings, CheckoutSettings>()
@@ -34,6 +66,25 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.ModelMapping
                 .ForMember(x => x.PayByMail, op => op.ResolveUsing(dc => (dc.PaymentSettings != null) 
                     ? dc.PaymentSettings.PayByMail 
                     : false))
+                .ForMember(x => x.CardGatewayMap, op => op.ResolveUsing(dc => {
+                    if (dc.PaymentSettings.Gateways != null && dc.PaymentSettings.Gateways.Count > 0)
+                    {
+                        var sourceGateways = dc.PaymentSettings.Gateways.Where(g => g.GatewayAccount != null );
+                        var cardGateways = dc.PaymentSettings.Gateways
+                            .Where(g => g.SupportedCards.Count > 0)
+                            .SelectMany(g => g.SupportedCards, (g, c) => new { c, g })
+                            .ToDictionary(cg => cg.c, cg => cg.g);
+
+                        var result = ToCardGateways(cardGateways);
+                        return result;
+                    }
+                    else
+                    {
+                        return CardGateways();
+                    }
+                }))
+
+                //TODO: remove when old admin goes away.
                 .ForMember(x => x.Gateway, op => op.ResolveUsing(dc => {
                     if (dc.PaymentSettings.Gateways != null && dc.PaymentSettings.Gateways.Count > 0)
                     {
@@ -70,6 +121,8 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.ModelMapping
                 }))
                 //ignore
                 .ForMember(x => x.IsActive, op => op.Ignore())
+
+                .ForMember(x => x.Name, op => op.Ignore()) // only mapped from tenant gateway
                 ;
 
 
@@ -88,6 +141,21 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.ModelMapping
                         ExternalPaymentWorkflowDefinitions = x.ExternalPaymentWorkflows,
                     };
 
+                    if (x.CardGatewayMap != null)
+                    {
+                        var cardsLookByGateway = x.CardGatewayMap.Where(m => m.IsEnabled).ToLookup(m => m.GatewayId);
+                        foreach (var g in cardsLookByGateway)
+                        {
+                            ps.Gateways.Add(new DCss.Gateway
+                            {
+                                GatewayAccount = new DCp.GatewayAccount { Id = g.Key },
+                                SupportedCards = g.Select(cm => cm.CardType).ToList()
+                            });
+                        }
+                    }
+
+
+                    //TODO: remove when old admin goes away.
                     if (x.Gateway != null)
                         ps.Gateways.Add(Mapper.Map<DCss.Gateway>(x.Gateway));
 
@@ -143,6 +211,53 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.ModelMapping
             Mapper.CreateMap<DCp.PreAuthorizeTransactionTypeDataContract, PreAuthorizeTransactionTypeDataContract>();
             //            Mapper.CreateMap< Mozu.SiteBuilder.UX.Admin.Api.Models.Checkout.GatewayDefinition,GatewayDefinition>();
 
+            Mapper.CreateMap<DCss.TenantGateway, Gateway>()
+                .ForMember(x => x.Id, op => op.ResolveUsing(dc => (dc.GatewayAccount != null) ? dc.GatewayAccount.Id : null))
+                .ForMember(x => x.GatewayDefinitionId, op => op.ResolveUsing(dc => (dc.GatewayAccount != null)
+                    ? dc.GatewayAccount.GatewayDefinitionId
+                    : null))
+                .ForMember(x => x.Credentials, op => op.ResolveUsing(dc => {
+                    var creds = new JObject();
+                    if (dc.GatewayAccount != null && dc.GatewayAccount.CredentialFields != null)
+                    {
+                        foreach (var field in dc.GatewayAccount.CredentialFields)
+                            creds.Add(field.Name, (JToken)field.Value);
+                    }
+                    return creds;
+                }))
+                .ForMember(x => x.GatewayDefinitionName, 
+                    op => op.ResolveUsing(dc => (dc.GatewayDefinition != null) ? dc.GatewayDefinition.Name : null))
+
+                .ForMember(x => x.AreGatewayCredentialFieldsSet, opt => opt.Ignore())
+                .ForMember(x => x.SupportedCards, opt => opt.Ignore())
+                .ForMember(x => x.CountryCode, opt => opt.Ignore())
+                .ForMember(x => x.IsActive, opt => opt.Ignore())
+                ;
+
+            Mapper.CreateMap<Gateway, DCss.TenantGateway>()
+                .ForMember(dc => dc.GatewayAccount, op => op.ResolveUsing(x =>
+                {
+                    var account = new DCp.GatewayAccount
+                    {
+                        Id = x.Id,
+                        IsActive = true,
+                        CountryCode = "us",
+                        CredentialFields = new List<DCp.GatewayCredentialFieldValue>(),
+                        GatewayDefinitionId = x.GatewayDefinitionId
+                    };
+
+                    Action<KeyValuePair<string, Newtonsoft.Json.Linq.JToken>> foo = cred => account.CredentialFields.Add(new DCp.GatewayCredentialFieldValue { Name = cred.Key, Value = (string)cred.Value });
+                    if (x.Credentials != null && x.Credentials.HasValues)
+                    {
+                        foreach (var cred in x.Credentials)
+                            account.CredentialFields.Add(new DCp.GatewayCredentialFieldValue { Name = cred.Key, Value = (string)cred.Value });
+                    }
+
+                    return account;
+                }))
+                .ForMember(d => d.GatewayDefinition, opt => opt.Ignore())
+                ;
         }
     }
 }
+ 

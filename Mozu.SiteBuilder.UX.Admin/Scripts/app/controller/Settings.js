@@ -1,23 +1,32 @@
 ﻿Ext.define('Taco.controller.Settings', {
     extend: 'Taco.core.Controller',
     requires: [
-        'Taco.view.settings.paymentAndCheckout.Edit',
+        'Taco.view.settings.paymentTypes.Edit',
+        'Taco.view.settings.paymentGateways.Index',
         'Taco.view.settings.tax.Edit',
         'Taco.view.settings.shipping.Edit',
         'Taco.model.SiteShippingSettings',
         'Taco.view.settings.publishing.Edit'
     ],
     listView: null,
-    models: ['Taco.model.CheckoutSettings'],
+    models: [
+        'Taco.model.CheckoutSettings',
+        'Taco.model.PaymentGateway',
+    ],
+    stores: ['Taco.store.PaymentGateways'],
 
-    paymentAndCheckout: function () {
+    views: [
+        'Taco.view.settings.paymentGateways.Edit'
+    ],
+
+    paymentTypes: function () {
         Taco.app.setLoading();
         if (!this.requiresSiteContext()) {
 
             Taco.model.CheckoutSettings.load(123, {
                 success: function (record) {
                     Taco.app.setLoading(false);
-                    this.createContentView('Taco.view.settings.paymentAndCheckout.Edit', {
+                    this.createContentView('Taco.view.settings.paymentTypes.Edit', {
                         record: record
                     });
 
@@ -29,6 +38,22 @@
                 scope: this
             });
         }
+    },
+
+    paymentGateways: function() { 
+        if (!this.requiresSiteContext()) {
+
+            this.createContentView('Taco.view.settings.paymentGateways.Index');
+            
+        }
+    },
+
+    paymentgatewaysedit: function (id, additionalParams, appState) {
+        this.doEdit(id, additionalParams, appState, 'Taco.view.settings.paymentGateways.Edit', Taco.model.PaymentGateway);
+    },
+
+    paymentgatewayscreate: function (id, additionalParams, appState) {
+        this.doCreate(id, additionalParams, appState, 'Taco.view.settings.paymentGateways.Edit', Taco.model.PaymentGateway);
     },
 
     tax: function () {
