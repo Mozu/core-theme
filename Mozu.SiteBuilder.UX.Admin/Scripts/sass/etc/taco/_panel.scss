@@ -106,6 +106,16 @@
             &.#{$prefix}panel-default,
             &.#{$prefix}component-docked-top{
                 @include partial-border-radius($border-radius, 0, $border-radius, 0);
+
+                & + .#{$prefix}panel-body {
+                    .#{$vprefix}formform {
+                        &:first-child {
+                            &.#{$prefix}panel-subform {
+                                @include partial-border-radius(0, 4px, 0, 4px);
+                            }
+                        }
+                    }
+                }
             }
         }
 
