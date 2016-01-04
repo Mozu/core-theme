@@ -100,7 +100,7 @@ namespace Mozu.SiteBuilder.UX.Areas.Misc.Controllers
             var shouldRedirectToCdn = ShouldRedirectToCdn();
             var isRewrite = Request.Properties.ContainsKey(SeoDelegatingHandler.IsSeoRewrite) ? (bool)Request.Properties[SeoDelegatingHandler.IsSeoRewrite]  : false;
 
-            ApiContext context = null;
+           ApiContext context = null;
 
             _docRepo = _docRepo.CloneWithApiContext(x =>
             {
@@ -117,7 +117,7 @@ namespace Mozu.SiteBuilder.UX.Areas.Misc.Controllers
                     context.CatalogId = siteLookup.CatalogId;
                     context.SiteId = siteLookup.Id;
                     context.LocaleCode = siteLookup.DefaultLocaleCode;
-                    //   context.SiteId = tmp;
+                   
                 }
                 if (mastercat.HasValue)
                 {
@@ -128,6 +128,13 @@ namespace Mozu.SiteBuilder.UX.Areas.Misc.Controllers
                     context.TenantId = tenant.Value;
                 }
                 context.UserClaims = null;
+                ((ApiContext)this.SbApiContext).TenantId  = context.TenantId;
+                ((ApiContext)this.SbApiContext).MasterCatalogId = context.MasterCatalogId;
+                ((ApiContext)this.SbApiContext ).CatalogId = context.CatalogId;
+                ((ApiContext)this.SbApiContext).SiteId = context.SiteId;
+                ((ApiContext)this.SbApiContext).LocaleCode = context.LocaleCode;
+
+
             });
             Guid guid;
             ServiceClientResponse<StreamContent> result = null;
