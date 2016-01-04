@@ -85,6 +85,7 @@
         .#{$prefix}panel-body {
             background-color: $white-color;
             border-color: $valid-green !important;
+            border-bottom-width: 2px !important;
         }
     }
 

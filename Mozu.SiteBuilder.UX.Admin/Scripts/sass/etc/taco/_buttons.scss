@@ -137,9 +137,7 @@
     // Card Buttons
 
     .#{$prefix}btn-action-toolbar-medium,
-    .#{$prefix}btn-action-medium,
-    a.#{$prefix}btn.#{$prefix}row-editor-update-button,
-    a.#{$prefix}btn.#{$prefix}row-editor-cancel-button {
+    .#{$prefix}btn-action-medium {
         background-color: $card-button-bg;
         border: 1px solid $card-btn-border;
         @include btn-inner-center-no-padding;

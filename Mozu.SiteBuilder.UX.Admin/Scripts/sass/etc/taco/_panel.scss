@@ -207,17 +207,47 @@
 
         .#{$prefix}grid-row-editor-buttons {
             border-color: $valid-green;
-            background-color: $row-editor-buttons-bg;
+            border-top-color: $white-color;
+            border-width: 2px;
             @include important-partial-border-radius(0, $border-radius, 0, $border-radius);
 
             /**
              * Override Ext styles
              */
-            top: 38px !important;
+            top: 37px !important;
 
             a {
-                background-color: $card-button-bg;
-                border: 1px solid $gray-border-color;
+                &.#{$prefix}row-editor-update-button {
+                    &.#{$prefix}bt-action-medium {
+                        background-color: $valid-green;
+                        border: none;
+                    }
+                }
+
+                &.#{$prefix}btn-action-primary-medium {
+                    .#{$prefix}btn-inner-center {
+                        color: $white-color;
+                        font-size: $normal-font-link;
+                    }
+                }
+
+                &.#{$prefix}row-editor-cancel-button {
+                    &.#{$prefix}btn-action-medium {
+                        background-color: transparent;
+                        border: none;
+
+                        .#{$prefix}btn-inner-center {
+                            color: $card-btn-text-color;
+                        }
+
+                        &:hover,
+                        &:active {
+                            .#{$prefix}btn-inner-center {
+                                color: $dark-color;
+                            }
+                        }
+                    }
+                }
             }
         }
 
