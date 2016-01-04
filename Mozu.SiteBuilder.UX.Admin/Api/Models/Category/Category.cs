@@ -69,6 +69,8 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.Models.Category
     {
         public string Url { get; set; }
 
+        public string CmsId { get; set; }
+
         public string Alt { get; set; }
     }
 
