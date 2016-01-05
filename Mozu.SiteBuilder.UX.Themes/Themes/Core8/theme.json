@@ -1083,7 +1083,7 @@
                 "mz-col1": 100
             },
             "customEditor": "layout",
-            "icon": "/resources/admin/widgets/03_heading_p.png",
+            "icon": "/resources/admin/widgets/1-col_icon.png",
             "validPageTypes": [
                 "*"
             ],
@@ -1104,7 +1104,7 @@
                 "mz-col2": 50
             },
             "customEditor": "layout",
-            "icon": "/resources/admin/widgets/03_heading_p.png",
+            "icon": "/resources/admin/widgets/2-col_icon.png",
             "validPageTypes": [
                 "*"
             ],
@@ -1130,7 +1130,7 @@
                 "mz-col3": 33.33
             },
             "customEditor": "layout",
-            "icon": "/resources/admin/widgets/03_heading_p.png",
+            "icon": "/resources/admin/widgets/3-col_icon.png",
             "validPageTypes": [
                 "*"
             ],
@@ -1161,7 +1161,7 @@
                 "mz-col4": 25
             },
             "customEditor": "layout",
-            "icon": "/resources/admin/widgets/03_heading_p.png",
+            "icon": "/resources/admin/widgets/4-col_icon.png",
             "validPageTypes": [
                 "*"
             ],
