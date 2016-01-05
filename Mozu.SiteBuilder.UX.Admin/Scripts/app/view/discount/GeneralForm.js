@@ -85,8 +85,7 @@ Ext.define('Taco.view.discount.GeneralForm', {
             tooltip: Ext.create('Taco.core.ux.content.Tooltip', {
                 elementId: 'appliesToField',
                 messageKey: 'discount.general.scope',
-                offsetLeft: -86,
-                offsetTop: -5,
+                offsetLeft: -96,
                 arrowPosition: 'left'
             })
         });
@@ -158,8 +157,7 @@ Ext.define('Taco.view.discount.GeneralForm', {
             tooltip: Ext.create('Taco.core.ux.content.Tooltip', {
                 elementId: 'amountType',
                 messageKey: 'discount.general.amountType',
-                offsetLeft: -56,
-                offsetTop: 13,
+                offsetLeft: -67,
                 arrowPosition: 'left'
             })
         });

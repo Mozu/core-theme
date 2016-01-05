@@ -54,9 +54,9 @@ Ext.define('Taco.view.discount.ConditionsForm', {
                 tooltip: Ext.create('Taco.core.ux.content.Tooltip', {
                     elementId: 'included-pay-method',
                     hoverTarget: 'label',
+                    arrowPosition: 'left',
                     messageKey: 'discount.conditions.includedPaymentMethodField',
-                    offsetLeft: 20,
-                    offsetTop: 15
+                    offsetLeft: -180,
                 })
             }
         );
@@ -87,8 +87,8 @@ Ext.define('Taco.view.discount.ConditionsForm', {
                     hoverTarget: 'label',
                     messageKey: 'discount.conditions.minOrderAmount',
                     arrowPosition: 'left',
-                    offsetLeft: -160,
-                    offsetTop: -15
+                    // offsetLeft: -160,
+                    // offsetTop: -15
                 })
             }
         );
@@ -172,15 +172,15 @@ Ext.define('Taco.view.discount.ConditionsForm', {
                     elementId: 'min-cat-subtotal-pre-discount',
                     hoverTarget: 'label',
                     messageKey: 'discount.conditions.minimumCategorySubtotalBeforeDiscounts',
-                    offsetLeft: 20,
-                    offsetTop: 15
+                    offsetLeft: -230,
+                    arrowPosition: 'left'
                 })
             }
         );
 
         this.minimumLifetimeValueAmount = Ext.create('Taco.core.ux.form.CurrencyField', {
                 name: 'minimumLifetimeValueAmount',
-                itemId: 'min-cat-subtotal-pre-discount',
+                itemId: 'min-lifetime-subtotal-pre-discount',
                 hidden: this.record.get('scope') !== 'Order',
                 currencyCode: Taco.app.context.getCurrent().currencyCode,
                 forcePrecision: true,
@@ -191,11 +191,11 @@ Ext.define('Taco.view.discount.ConditionsForm', {
                 emptyText: '',
                 minValue: 0,
                 tooltip: Ext.create('Taco.core.ux.content.Tooltip', {
-                    elementId: 'min-cat-subtotal-pre-discount',
+                    elementId: 'min-lifetime-subtotal-pre-discount',
                     hoverTarget: 'label',
                     messageKey: 'discount.conditions.minimumLifetimeValueAmount',
-                    offsetLeft: 20,
-                    offsetTop: 15
+                    arrowPosition: 'left',
+                    offsetLeft: -210
                 })
             }
         );
@@ -218,10 +218,10 @@ Ext.define('Taco.view.discount.ConditionsForm', {
                 margin: '0 0 0 0',
                 tooltip: Ext.create('Taco.core.ux.content.Tooltip', {
                     elementId: 'required-item-field-container',
-                    hoverTarget: 'bodyEl',
+                    hoverTarget: 'label',
                     messageKey: 'discount.conditions.minimumQuantityRequiredProducts',
-                    offsetLeft: 20,
-                    offsetTop: 15
+                    arrowPosition: 'left',
+                    offsetLeft: -168
                 })
             },
             this.productsBox,
@@ -233,10 +233,10 @@ Ext.define('Taco.view.discount.ConditionsForm', {
                 margin: '0 0 0 0',
                 tooltip: Ext.create('Taco.core.ux.content.Tooltip', {
                     elementId: 'req-cat-purchase-field-container',
-                    hoverTarget: 'bodyEl',
+                    hoverTarget: 'label',
                     messageKey: 'discount.conditions.minimumQuantityProductsRequiredInCategories',
-                    offsetLeft: 20,
-                    offsetTop: 15
+                    arrowPosition: 'left',
+                    offsetLeft: -188
                 })
             },
             this.categoriesBox,
@@ -364,8 +364,7 @@ Ext.define('Taco.view.discount.ConditionsForm', {
                     hoverTarget: 'label',
                     messageKey: 'discount.conditions.customerSegments',
                     arrowPosition: 'left',
-                    offsetLeft: -140,
-                    offsetTop: -15
+                    offsetLeft: -140
                 })
             }
         );

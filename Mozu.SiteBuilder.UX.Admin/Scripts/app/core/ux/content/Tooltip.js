@@ -28,7 +28,7 @@ Ext.define('Taco.core.ux.content.Tooltip', {
     /**
     * how long it will take after the hover event occurs for the mesage to show
     **/
-    showDelay: 100,
+    showDelay: 200,
 
     /**
     * the offsetleft of the tooltip
@@ -81,7 +81,44 @@ Ext.define('Taco.core.ux.content.Tooltip', {
         var messageWidth = el.getWidth();
         var containerWidth = this.target.getWidth();
 
-        return left - (messageWidth / 2) + (containerWidth / 2);
+        if (!this.arrowPosition || this.arrowPosition === 'top') {
+            return left - (messageWidth / 2) + (containerWidth / 2); 
+        }
+
+        else if (this.arrowPosition === 'left') {
+            return (left + 10) - (messageWidth / 2) + (containerWidth / 2); 
+        }
+
+        else if (this.arrowPosition === 'right') {
+            return (left + 10) - (messageWidth / 2) + (containerWidth / 2); 
+        }
+
+        else if (this.arrowPosition === 'bottom') {
+            return (left + 10) - (messageWidth / 2) + (containerWidth / 2); 
+        }
+
+    },
+
+    getOffsetHeight: function(top, el) {
+
+        var messageHeight = el.getHeight();
+        var containerHeight = this.target.getHeight();
+
+        if (!this.arrowPosition || this.arrowPosition === 'top') {
+
+        }
+
+        else if (this.arrowPosition === 'left') {
+            return (top + 7) - (messageHeight / 2) + (containerHeight / 2); 
+        }
+
+        else if (this.arrowPosition === 'right') {
+            return (top + 7) - (messageHeight / 2) + (containerHeight / 2);    
+        }
+
+        else if (this.arrowPosition === 'bottom') {
+            return (top + 7) - (messageHeight / 2) + (containerHeight / 2); 
+        }
     },
 
     setPosition: function() {
@@ -90,11 +127,12 @@ Ext.define('Taco.core.ux.content.Tooltip', {
         var left = position.left;
         var el = this.tooltip.getEl();
         var offsetLeft = this.offsetLeft ? left - this.offsetLeft : this.getOffsetWidth(left, el);
+        var offsetTop = this.offsetTop ? top - this.offsetTop : this.getOffsetHeight(top, el);
 
         if (this.offsetLeftFunc) offsetLeft = this.offsetLeftFunc.apply(this);
 
         el.dom.style.left = offsetLeft + 'px';
-        el.dom.style.top = top - this.offsetTop + 'px';
+        el.dom.style.top = offsetTop + 'px';
     },
 
     showToolTip: function(event) {

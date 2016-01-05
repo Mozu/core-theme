@@ -10,6 +10,7 @@
 		padding: 3px 8px;
 		pointer-events: none;
 		position: absolute;
+		max-width: 300px;
 		transform: translateX(0px) translateY(0px);
 		transition-property: opacity, transform;
 		transition-delay: .3s;

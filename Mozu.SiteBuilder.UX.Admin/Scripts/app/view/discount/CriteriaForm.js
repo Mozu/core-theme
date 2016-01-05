@@ -464,8 +464,8 @@ Ext.define('Taco.view.discount.CriteriaForm', {
                     elementId: 'exclude-products-field-container',
                     hoverTarget: 'label',
                     messageKey: 'discount.criteria.excludeLineItemDiscounts',
-                    offsetLeft: 20,
-                    offsetTop: 15
+                    offsetLeft: -230,
+                    arrowPosition: 'left'
                 })
             }
         );

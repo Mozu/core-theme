@@ -76,8 +76,8 @@ Ext.define('Taco.view.discount.LimitationsForm', {
                     elementId: "max-redemption-count-number",
                     hoverTarget: 'label',
                     messageKey: 'discount.limitations.maxRedemptionCount',
-                    offsetLeft: 20,
-                    offsetTop: 15
+                    arrowPosition: 'left',
+                    offsetLeft: -135
                 })
             })
         ;

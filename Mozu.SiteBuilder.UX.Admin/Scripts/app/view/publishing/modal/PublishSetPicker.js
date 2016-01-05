@@ -110,7 +110,7 @@ Ext.define('Taco.view.publishing.modal.PublishSetPicker', {
                 elementId: 'publish-date-field',
                 hoverTarget: 'label',
                 messageKey: 'publishset.publishsetdate',
-                offsetLeft: 60,
+                offsetLeft: 15,
                 offsetTop: 65
             }),
             listeners: {
