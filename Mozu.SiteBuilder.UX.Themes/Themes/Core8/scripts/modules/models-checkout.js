@@ -818,7 +818,7 @@
                     me.set('savedPaymentMethodId', savedCardId, { silent: true });
                     me.setSavedPaymentMethod(savedCardId);
 
-                    if (!savedCardId) {
+                    if (!savedCardId && !me.get('paymentType')) {
                         me.setDefaultPaymentType(me);
                     }
 
