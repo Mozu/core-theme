@@ -101,7 +101,7 @@ Ext.define('Taco.view.product.Index', {
         }
         }, {
         dataIndex: 'salePrice',
-        text: 'Sale Price2',
+        text: 'Sale Price',
         width: 100,
         renderer: function (value, metaData, record) {
             return (value || value === 0) ? record.formatCurrency(value) : "<span class='taco-empty-cell'>N/A</span>";
@@ -274,7 +274,6 @@ Ext.define('Taco.view.product.Index', {
              },
             {
                 dataIndex: "productUsage",
-                stateId: 'productUseage',
                 text: 'Product usage',
                 stateId:"productUsage",
                 hidden: true,

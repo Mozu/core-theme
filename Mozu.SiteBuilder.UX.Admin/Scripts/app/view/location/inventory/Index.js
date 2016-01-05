@@ -94,31 +94,49 @@ Ext.define('Taco.view.location.inventory.Index', {
 
         this.locationCombo = {
             xtype: 'combobox',
-            cls: 'taco-floating-toolbar',
+            style: {
+                backgroundColor: 'white'
+            },
             itemId: 'inventory-dropdown',
             store: this.locationStore,
-            fieldLabel: 'Inventory',
             displayField: 'name',
             valueField: 'code',
             labelAlign: 'left',
             autoSelect: true,
             forceSelection: true,
-            labelWidth: 70,
-            minWidth: 250,
+            labelWidth: 95,
+            minWidth: 300,
             listeners: {
                 change: this.onIventoryChange,
                 scope: this
             }
         };
 
-        this.secondToolbarItems = [this.locationCombo];
+        this.secondToolbarItems = [
+            {
+                xtype: 'panel',
+                layout: 'hbox',
+                items: [{
+                        xtype: 'label',
+                        text: 'Inventory for: ',
+                        margin: '5 10 0 0'
+                    }, {
+                        xtype: 'panel',
+                        cls: '',
+                        items: [
+                            this.locationCombo
+                        ]
+                    }
+                ]
+            }
+        ];
 
         this.moreButtonCfg = {
             itemId: 'moreButton',
             menu: [
                 {
                     cls: 'call-to-action override',
-                    text: 'Adjustment Mode',
+                    text: 'Adjustment Mode'
                 },
                 {   
                     xtype: 'menucheckitem',
