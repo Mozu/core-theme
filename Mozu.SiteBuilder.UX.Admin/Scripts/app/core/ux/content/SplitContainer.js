@@ -28,6 +28,12 @@ Ext.define('Taco.core.ux.content.SplitContainer', {
     stateEvents: ['childcollapse', 'childexpand'],
 
     /**
+     * how many pixels padding are applied to each side of the collapse tool
+     */
+
+    collapseToolPadding: 3,
+
+    /**
      * @cfg {Boolean} preventCollapsedStateChange
      * True to reject any changes to the collapsed state.
      */
@@ -226,7 +232,7 @@ Ext.define('Taco.core.ux.content.SplitContainer', {
                 xtype: 'component',
                 cls: 'taco-splitcontainer-collapsetool',
                 itemId: 'east-left',
-                width: 13,
+                width: this.collapseToolPadding,
                 listeners: {
                     click: {
                         scope: this,
@@ -274,7 +280,7 @@ Ext.define('Taco.core.ux.content.SplitContainer', {
                 xtype: 'component',
                 cls: 'taco-splitcontainer-collapsetool',
                 itemId: 'west-right',
-                width: 13,
+                width: this.collapseToolPadding,
                 listeners: {
                     click: {
                         scope: this,
