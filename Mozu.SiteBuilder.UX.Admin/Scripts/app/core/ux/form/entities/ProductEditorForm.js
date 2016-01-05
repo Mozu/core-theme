@@ -31,11 +31,11 @@ Ext.define('Taco.core.ux.form.entities.ProductEditorForm', {
                     fieldLabel: 'Page Template',
                     entityType: 'product'
                 },
-                 {
-                     xtype: 'taco-codefield',
-                     minHeight: 200,
-                     maxHeight: 400,
-                     mode: 'html',
+                {
+                    xtype: 'taco-codefield',
+                    minHeight: 200,
+                    maxHeight: 400,
+                    mode: 'html',
                     name: 'extended_header_content',
                     fieldLabel: 'Additional Header Tags',
                     emptyText: '[none]'

@@ -100,6 +100,10 @@
         color: $label-color;
         font-size: $label-link-font;
 
+        &.label-focused {
+            color: $valid-green;
+        }
+
         /* override external styles */
         font-weight: normal;
     }
@@ -115,6 +119,12 @@
             .#{$prefix}form-item-input-row {
                 > .#{$prefix}form-item-body {
                     top: -1px;
+
+                    &.#{$prefix}form-trigger-wrap-focus {
+                        label {
+                            color: $valid-green;
+                        }
+                    }
                 }
             }
         }
@@ -130,6 +140,10 @@
             &:after {
                 color: $valid-green;
                 content: ' *';
+            }
+
+            &.label-focused {
+                color: $valid-green;
             }
         }
 
