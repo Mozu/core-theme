@@ -5,6 +5,13 @@
         @include border-radius-xbrowser(0);
     }
 
+    .#{$prefix}boxselect {
+        &.#{$prefix}form-field {
+            border-bottom: none;
+            min-height: 43px;
+        }
+    }
+
     .ace_editor {
         font-size: 12px !important;
     }
@@ -277,8 +284,17 @@
         box-shadow: none;
         min-height: 42px;
 
+        &.form-focus {
+            border-color: $valid-green;
+            @include color-blur-outer-shadow($valid-green, 1, 0, 1px, 0, 0);
+        }
+
         .#{$prefix}boxselect-input {
-            top: 13px !important;
+            margin-top: 13px;
+
+            input {
+                @include no-box-shadow;
+            }
         }
 
         .#{$prefix}boxselect-item {
