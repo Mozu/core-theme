@@ -875,6 +875,10 @@ Ext.define('Taco.core.ux.mixins.NavHeader', {
         if (form && form.isComponent) {
             form.getForm().getBoundItems().add(actions);
         }
+    },
+
+    checkTitleOverflow: function () {
+        console.log('checkTitleOverflow');
     }
 
 });

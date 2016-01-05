@@ -90,8 +90,11 @@ Ext.define('Taco.view.website.Index', {
         this.entityEditors = Taco.core.data.StoreManager.getOrCreate('Taco.store.EntityEditors');
         this.pageTypeDefinitions = Taco.core.data.StoreManager.getOrCreate('Taco.store.PageTypeDefinitions');
 
-        this.on('navigatestart', this.onNavigateStart, this);
-        this.on('navigatecomplete', this.onNavigateComplete, this);
+        this.on({
+            navigatecomplete: this.onNavigateComplete,
+            navigatestart: this.onNavigateStart,
+            scope: this
+        });
 
         this.resolutionOverride = 0;
 
@@ -190,20 +193,30 @@ Ext.define('Taco.view.website.Index', {
                 requiresContextOfType: ['s']
             }),
             {
-                xtype: 'component',
-                itemId: 'taco-page-title',
-                html: '',
-                maxWidth: '100px'
+                xtype: 'container',
+                itemId: 'titleDraftContainer',
+                flex: 1,
+                layout: 'hbox',
+                items: [
+                    {
+                        xtype: 'component',
+                        itemId: 'taco-page-title',
+                        html: ''
+                    },
+                    {
+                        xtype: 'taco-indicator',
+                        itemId: 'draftIcon',
+                        title: 'DRAFT',
+                        margin: '0 0 0 10',
+                        hidden: true,
+                        afterrender: this.setAction.bind(this)
+                    }
+                ],
+                listeners: {
+                    afterlayout: this.checkTitleOverflow,
+                    scope: this
+                }
             },
-            {
-                xtype: 'taco-indicator',
-                itemId: 'draftIcon',
-                title: 'DRAFT',
-                margin: '0 0 0 10',
-                hidden: true,
-                afterrender: this.setAction.bind(this)
-            },
-            '->',
             {
                 xtype: 'button',
                 ui: 'action',
@@ -542,6 +555,7 @@ Ext.define('Taco.view.website.Index', {
         this.productGrid = this.down('gridpanel');
         this.sideBar = this.down('#sideBar');
         this.container = this.down('.taco-website-holder');
+        this.titleDraftContainer = this.navHeader.down('#titleDraftContainer');
         // TODO: remove when dev complete
         window.webSiteIndex = this;
 
@@ -1667,5 +1681,37 @@ Ext.define('Taco.view.website.Index', {
         }).show();
 
     },
+
+    checkTitleOverflow: function () {
+        var innerEl = this.titleDraftContainer.getEl().down('.x-box-inner'),
+            titleEl = innerEl.down('.page-title'),
+            draftCmp = this.titleDraftContainer.items.getAt(1),
+            width = innerEl.getWidth(),
+            scrollWidth = innerEl.dom.scrollWidth,
+            maxWidth = width - 50;
+
+        if (draftCmp) {
+            maxWidth -= draftCmp.getWidth();
+        }
+
+        if (Date.now() - this.buffer < 50 || !titleEl) {
+            return;
+        }
+
+        this.buffer = Date.now();
+
+        if (width < scrollWidth) {
+            this.last = true;
+            titleEl.setWidth(maxWidth);
+            this.titleDraftContainer.updateLayout();
+        } else {
+            if (this.last) {
+                this.buffer = 0;
+            }
+            this.last = false;
+            titleEl.setWidth(null);
+            this.titleDraftContainer.updateLayout();
+        }
+    }
 });
 

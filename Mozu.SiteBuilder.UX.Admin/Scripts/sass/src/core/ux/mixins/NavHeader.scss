@@ -96,7 +96,6 @@
                      padding: 20px;
                      position: relative;
                      height: 100%;
-                     max-width: 280px; 
                      overflow:hidden;
                      text-overflow: ellipsis;
 
@@ -149,6 +148,7 @@
             padding-right: 24px;
             overflow: hidden;
             text-overflow: ellipsis;
+            white-space: nowrap;
         }
 
         .#{$prefix}form-trigger-wrap {
