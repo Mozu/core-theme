@@ -818,7 +818,7 @@
                     me.set('savedPaymentMethodId', savedCardId, { silent: true });
                     me.setSavedPaymentMethod(savedCardId);
 
-                    if (!savedCardId) {
+                    if (!savedCardId && !me.get('paymentType')) {
                         me.setDefaultPaymentType(me);
                     }
 
@@ -1175,7 +1175,7 @@
                 me.runForAllSteps(function() {
                     this.isLoading(true);
                 });
-                me.trigger('beforerefresh');
+                order.trigger('beforerefresh');
                 // void active payments; if there are none then the promise will resolve immediately
                 return api.all.apply(api, _.map(_.filter(me.apiModel.getActivePayments(), function(payment) {
                     return payment.paymentType !== 'StoreCredit' && payment.paymentType !== 'GiftCard';
