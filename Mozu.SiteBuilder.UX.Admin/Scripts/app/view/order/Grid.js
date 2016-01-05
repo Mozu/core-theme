@@ -13,7 +13,7 @@ Ext.define('Taco.view.order.Grid', {
         'Taco.view.order.modal.BulkActionMessage'
     ],
 
-    launchEditorOnClick:true,
+    launchEditorOnClick: true,
     
     // Required by mixin: Taco.core.ux.mixins.LaunchEditor defined in SearchList
     modelName: 'Taco.model.Order',
