@@ -86,8 +86,9 @@ Ext.define('Taco.view.discount.ConditionsForm', {
                     elementId: 'min-order-amt-input',
                     hoverTarget: 'label',
                     messageKey: 'discount.conditions.minOrderAmount',
-                    offsetLeft: 20,
-                    offsetTop: 15
+                    arrowPosition: 'left',
+                    offsetLeft: -160,
+                    offsetTop: -15
                 })
             }
         );
@@ -362,8 +363,9 @@ Ext.define('Taco.view.discount.ConditionsForm', {
                     elementId: 'customer-segments-select',
                     hoverTarget: 'label',
                     messageKey: 'discount.conditions.customerSegments',
-                    offsetLeft: 20,
-                    offsetTop: 15
+                    arrowPosition: 'left',
+                    offsetLeft: -140,
+                    offsetTop: -15
                 })
             }
         );
