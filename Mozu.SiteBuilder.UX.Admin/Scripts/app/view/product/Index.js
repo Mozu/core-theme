@@ -47,7 +47,7 @@ Ext.define('Taco.view.product.Index', {
                 '<td class="x-grid-subcell"><div class="x-grid-cell-inner"><span class="taco-launch-editor" data-catalog-id="{catalogId}">{productName}</span></div></td>',
                 '<td class="x-grid-subcell"><div class="x-grid-cell-inner">{[this.formatPrice(values.price,values.catalogId)]}</div></td>',
                 '<td class="x-grid-subcell"><div class="x-grid-cell-inner">{[this.formatPrice(values.salePricem,values.catalogId)]}</div></td>',
-                '<td classass="x-grid-subcell"><div class="x-grid-cell-inner">{catalogId:this.toCatalogName}</div></td>',
+                '<td class="x-grid-subcell"><div class="x-grid-cell-inner">{catalogId:this.toCatalogName}</div></td>',
                 '<td class="x-grid-subcell"><div class="x-grid-cell-inner">{isContentOverridden:this.formatOverridden}</div></td>',
                 '<td class="x-grid-subcell"><div class="x-grid-cell-inner"></div></td>',
                 '</tr></tpl>', {
@@ -59,7 +59,7 @@ Ext.define('Taco.view.product.Index', {
                 },
                 toCatalogName: function (value) {
                     var catalog = Taco.app.context.findCatalog(value);
-                    return catalog ? catalog.name : 'n/a';
+                    return catalog ? catalog.name : "<span class='taco-empty-cell'>N/A</span>";
                 }
             }),
             hideExpanderFn: function() {
@@ -89,7 +89,7 @@ Ext.define('Taco.view.product.Index', {
         text: 'Price',
         width: 100,
         renderer: function (value, metaData, record) {
-            return (value || value === 0) ? record.formatCurrency(value) : 'N/A';
+            return (value || value === 0) ? record.formatCurrency(value) : "<span class='taco-empty-cell'>N/A</span>";
         },
         editor: {
             xtype: 'currencyfield',
@@ -101,10 +101,10 @@ Ext.define('Taco.view.product.Index', {
         }
         }, {
         dataIndex: 'salePrice',
-        text: 'Sale Price',
+        text: 'Sale Price2',
         width: 100,
         renderer: function (value, metaData, record) {
-            return (value || value === 0) ? record.formatCurrency(value) : 'N/A';
+            return (value || value === 0) ? record.formatCurrency(value) : "<span class='taco-empty-cell'>N/A</span>";
         },
         editor: {
             xtype: 'currencyfield',
@@ -232,7 +232,7 @@ Ext.define('Taco.view.product.Index', {
                 sortable: false,
                 flex: 2,
                 renderer: function (value) {
-                    return !Ext.isEmpty(value) ? value.length : 'N/A';
+                    return !Ext.isEmpty(value) ? value.length : "<span class='taco-empty-cell'>N/A</span>";
                 }
             },
             {
@@ -246,7 +246,7 @@ Ext.define('Taco.view.product.Index', {
                     var cssClass = 'x-column-content-pill';
 
                     if (Ext.isEmpty(value)) {
-                        output = 'N/A';
+                        return "<span class='taco-empty-cell'>N/A</span>";
                     } else {
                         cssClass = Ext.Array.contains(Ext.Array.pluck(value, 'isContentOverridden'), true) ? 'x-column-content-pill-true' : 'x-column-content-pill-false';
                         output = Ext.Array.contains(Ext.Array.pluck(value, 'isContentOverridden'), true) ? 'Yes' : 'No';
