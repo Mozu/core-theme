@@ -293,6 +293,34 @@ Ext.define('Taco.Application', {
             }
         });
 
+        Ext.override(Ext.Component, {
+            showBy: function(cmp, pos, off) {
+                var me = this;
+
+                // check to see if this is a primary menu, and no other offset was provided 
+                // if both these are satisfied, apply 10 pixels of vertical padding
+                off = off === undefined  && !me.ownerItem ? [0, 10] : off;
+        
+                if (!me.floating) {
+                    Ext.log.warn('Using showBy on a non-floating component');
+                    return me;
+                }
+
+                if (me.floating && cmp) {
+                    me.show();
+
+                    // Show may have been vetoed
+                    if (me.rendered && !me.hidden) {
+                        // Align to Component or Element using alignTo because normal show methods
+                        // are container-relative, and we must align to the requested element or
+                        // Component:
+                        me.alignTo(cmp, pos || me.defaultAlign, off);
+                    }
+                }
+                return me;
+            }
+        });
+
         Ext.override(Ext.toolbar.Paging, {
             doRefresh: function () {
                 var me = this,

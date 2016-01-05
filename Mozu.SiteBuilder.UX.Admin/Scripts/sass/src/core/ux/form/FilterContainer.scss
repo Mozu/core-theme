@@ -67,7 +67,9 @@
 }
 
 .#{$vprefix}quickfilter-bar.website {
+    //background-color: $card-button-bg;
     height: 34px;
+
 
     .#{$prefix}trigger-cell {
         background-color: $card-button-bg;
@@ -80,9 +82,11 @@
             background-color: $card-button-bg;
             border: none;
             box-shadow: none;
-            left: -10px;
             font-size: 14px;
             font-weight: 300;
+            height: 28px;
+            left: -51px;
+            margin-top: 1px;
         }
     }
 
