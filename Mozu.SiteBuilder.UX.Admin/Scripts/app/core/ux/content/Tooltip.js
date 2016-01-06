@@ -198,20 +198,27 @@ Ext.define('Taco.core.ux.content.Tooltip', {
     },
 
     applyTooltipIcon: function() {
-
-        if (this.showToolTipIcon) { 
+        if (this.showToolTipIcon) {
             var icon = document.createElement('i');
 
             icon.classList.add(this.tooltipIconClass);
 
             this.target.appendChild(icon);
         }
-        
     },
 
     applyTooltip: function() {
-        
-    	var component = Ext.ComponentQuery.query('#' + this.elementId);
+    	var component = Ext.ComponentQuery.query('#' + this.elementId),
+            el;
+
+        if (this.elementSelector) {
+            el = Taco.app.viewPort.getEl().down(this.elementSelector);
+            if (el) {
+                this.instantiateToolTipEvents(el);
+                this.applyTooltipIcon();
+            }
+            return;
+        }
 
 		if (!component || component.length < 1) {
 			console.warn('No component found to attach tooltip to');
@@ -223,7 +230,7 @@ Ext.define('Taco.core.ux.content.Tooltip', {
 		switch (this.hoverTarget) {
 			case 'label':
 				this.instantiateToolTipEvents(this.component.labelEl);
-				break
+				break;
             case 'bodyEl':
                 this.instantiateToolTipEvents(this.component.bodyEl);
                 break;

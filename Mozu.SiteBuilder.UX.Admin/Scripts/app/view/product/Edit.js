@@ -16,7 +16,21 @@
     parentTitleCfg: {
         title: 'Products',
         lightTagLabel: 'productCode',
-        controller: 'products'
+        controller: 'products',
+        pillType: 'dark',
+        pillText: 'Draft',
+        pillTooltipTpl: [
+            '<div style="line-height: 15px;">',
+                '<span>Publish Set: {publishSetName}</span>',
+            '</div>',
+            '<div style="line-height: 15px;">',
+                '<span>Publish Date: {publishDate}</span>',
+            '</div>'
+        ],
+        pillTooltipData: {
+            publishSetName: 'Unassigned',
+            publishDate: 'Unscheduled'
+        }
     },
 
     enableSearchBarInHeader: false,
@@ -88,53 +102,6 @@
     initComponent: function () {
 
         var me = this;
-
-        if (this.checkProductPublishing()) {
-
-            this.titlePanel = Ext.widget('taco-indicator', {
-                title: 'DRAFT',
-                itemId: 'draftIcon',
-                cls: 'taco-content-header-publish-state product',
-                afterrender: function(toolTip) {
-                    var pubInfo = me.record.getPublishingInfo();
-                    
-                    if (pubInfo.publishSetInfo) {
-                        Ext.create('Taco.core.ux.action.Action', {
-                            text: pubInfo.publishSetInfo.name,
-                            renderTo: 'publishSetName',
-                            listeners: {
-                                click: {
-                                    fn: function(cmp) {
-                                        Taco.app.StateManager.attemptNavigate('/publishing/publishsets/' + pubInfo.publishSetInfo.code);
-                                    }
-                                }
-                            }
-                        });
-                    }
-                   
-                }
-            });
-        }
-
-        this.tooltip = Ext.create('Taco.core.ux.content.Tooltip', {
-            elementId: 'draftIcon',
-            hoverTarget: 'bodyEl',
-            arrowPosition: 'top',
-            offsetTop: -22,
-            showToolTipIcon: false,
-            defaultTpl: [
-                '<div style="line-height: 15px;">',
-                    '<span>Publish Set:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;{publishSetName}</span>',
-                '</div>',
-                '<div style="line-height: 15px;">',
-                    '<span>Publish Date:&nbsp;&nbsp;&nbsp;{publishDate}</span>',
-                '</div>'
-            ],
-            defaultTplData: {
-                publishSetName: 'Unassigned',
-                publishDate: 'Unscheduled'
-            }
-        });
 
         this.publishingButton = {
             xtype: 'publishbutton',
@@ -345,15 +312,17 @@
         }
 
         if (pubInfo && pubInfo.statusText) {
-            
-            this.tooltip.update({
-                publishSetName: pubInfo.publishSetInfo ? pubInfo.publishSetInfo.name : 'Unassigned',
-                publishDate: pubInfo.publishSetInfo && pubInfo.publishSetInfo.scheduledDate ? Ext.util.Format.date(pubInfo.publishSetInfo.scheduledDate, 'M j, Y g:ia T') : 'Unscheduled'
+            this.fireEvent('titlechange', this, this.record.get('productName'), {
+                pillText: 'Draft',
+                pillTooltipData: {
+                    publishSetName: pubInfo.publishSetInfo ? pubInfo.publishSetInfo.name : 'Unassigned',
+                    publishDate: pubInfo.publishSetInfo && pubInfo.publishSetInfo.scheduledDate ? Ext.util.Format.date(pubInfo.publishSetInfo.scheduledDate, 'M j, Y g:ia T') : 'Unscheduled'
+                }
             });
-
-            this.titlePanel.show();
         } else {
-            this.titlePanel.hide();
+            this.fireEvent('titlechange', this, this.record.get('productName'), {
+                pillText: null
+            });
         }
     },
 
@@ -397,6 +366,8 @@
                 },
             scope: this
         });
+
+        this.setPublishStatus();
     },
 
     checkProductPublishing: function () {
@@ -628,7 +599,7 @@
                     focusEl.focus();
                 },
                 scope:me
-    }
+            }
         });
     
     },

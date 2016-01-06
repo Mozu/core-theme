@@ -6,6 +6,7 @@
 
     .#{$prefix}column-content-pill {
         border-radius: 9px;
+        cursor: pointer;
         padding: 3px 5px;
         font-size: 11px;
     }
@@ -22,6 +23,11 @@
 
     .#{$prefix}column-content-pill-error {
         background-color: $error-red;
+        color: $white-color;
+    }
+
+    .#{$prefix}column-content-pill-dark {
+        background-color: $nav-element-active;
         color: $white-color;
     }
 

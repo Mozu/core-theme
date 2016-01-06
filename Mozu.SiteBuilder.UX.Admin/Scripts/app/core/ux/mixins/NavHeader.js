@@ -35,7 +35,8 @@ Ext.define('Taco.core.ux.mixins.NavHeader', {
         'Taco.core.ux.mixins.HamburgerButton',
         'Taco.core.ux.mixins.Searchable',
         'Taco.view.navigation.ContextSwitcherBar',
-        'Taco.view.navigation.SubNavLinkContainer'
+        'Taco.view.navigation.SubNavLinkContainer',
+        'Taco.core.ux.content.Tooltip'
     ],
 
     mixins: {
@@ -97,7 +98,7 @@ Ext.define('Taco.core.ux.mixins.NavHeader', {
                 scope: me
             },
             titlechange: {
-                fn: function (panel, newTitle, override) {
+                fn: function (panel, newTitle, pillCfg) {
                     
                     var me = this;
                     var parentTitleCfg = this.parentTitleCfg ? this.parentTitleCfg : {};
@@ -105,20 +106,26 @@ Ext.define('Taco.core.ux.mixins.NavHeader', {
                                             ? this.record.get(parentTitleCfg.lightTagLabel)
                                             : null;
 
-                    var pillText = parentTitleCfg.pillText && this.record
-                                            ? this.record.get(parentTitleCfg.pillText)
-                                            : parentTitleCfg.pillText;
-
-                    if (!pillText) {
-                        pillText = parentTitleCfg.pillText;
+                    if (!pillCfg) {
+                        pillCfg = parentTitleCfg;
+                    } else {
+                        pillCfg = Ext.apply({}, pillCfg, parentTitleCfg);
                     }
 
-                    var pillType = typeof parentTitleCfg.pillType === 'function'
-                                            ? parentTitleCfg.pillType(pillText)
-                                            : parentTitleCfg.pillType;
+                    var pillText = pillCfg.pillText && this.record
+                                            ? this.record.get(pillCfg.pillText)
+                                            : pillCfg.pillText;
+
+                    if (!pillText) {
+                        pillText = pillCfg.pillText;
+                    }
+
+                    var pillType = typeof pillCfg.pillType === 'function'
+                                            ? pillCfg.pillType(pillText)
+                                            : pillCfg.pillType;
 
                     if (!pillType) {
-                        pillType = parentTitleCfg.pillType;
+                        pillType = pillCfg.pillType;
                     }
 
                     var addAction = function() {
@@ -160,6 +167,21 @@ Ext.define('Taco.core.ux.mixins.NavHeader', {
                             pillText: pillText,
                             pillType: pillType
                         });
+
+                        if (this.pillTooltip) {
+                            Ext.destroy(this.pillTooltip);
+                        }
+
+                        if (pillCfg.pillTooltipData && pillCfg.pillTooltipTpl) {
+                            this.pillTooltip = Ext.create('Taco.core.ux.content.Tooltip', {
+                                elementSelector: '[data-role="nav-header-pill"]',
+                                arrowPosition: 'top',
+                                offsetTop: -22,
+                                showToolTipIcon: false,
+                                defaultTpl: pillCfg.pillTooltipTpl,
+                                defaultTplData: pillCfg.pillTooltipData || {}
+                            });
+                        }
                         me.titleCmp.on('afterrender', addAction);
                     }
 
@@ -321,6 +343,10 @@ Ext.define('Taco.core.ux.mixins.NavHeader', {
         }
     },
 
+    updateTitle: function (title) {
+        this.titleCmp.update({title: title});
+    },
+
     createNavHeader: function () {
         /*jshint maxcomplexity:1000 */
 
@@ -346,6 +372,7 @@ Ext.define('Taco.core.ux.mixins.NavHeader', {
 
             me.titleContainer = {
                 xtype: "container",
+                itemId: 'titleContainer',
                 layout: {
                     type: 'hbox',
                     align: 'strecth'
@@ -366,7 +393,7 @@ Ext.define('Taco.core.ux.mixins.NavHeader', {
                                 '<i class="taco-light-tag">{lightTagLabel}</i>',
                             '</tpl>',
                             '<tpl if="pillText">',
-                                '<span class="x-column-content-pill x-column-content-pill-{pillType}">',
+                                '<span class="x-column-content-pill x-column-content-pill-{pillType}" data-role="nav-header-pill">',
                                     '{pillText}',
                                 '</i>',
                             '</tpl>',
@@ -381,7 +408,16 @@ Ext.define('Taco.core.ux.mixins.NavHeader', {
                 }
             });
 
-            
+            if (this.parentTitleCfg && this.parentTitleCfg.pillTooltipTplData) {
+                this.pillTooltip = Ext.create('Taco.core.ux.content.Tooltip', {
+                    elementSelector: '[data-role="nav-header-pill"]',
+                    arrowPosition: 'top',
+                    offsetTop: -22,
+                    showToolTipIcon: false,
+                    defaultTpl: this.parentTitleCfg.pillTooltipTpl,
+                    defaultTplData: this.parentTitleCfg.pillTooltipData || {}
+                });
+            }
 
             me.titleContainer.items.push(me.titleCmp);
 
@@ -878,7 +914,35 @@ Ext.define('Taco.core.ux.mixins.NavHeader', {
     },
 
     checkTitleOverflow: function () {
-        console.log('checkTitleOverflow');
+        var innerEl = this.titleDraftContainer.getEl().down('.x-box-inner'),
+            titleEl = innerEl.down('.page-title'),
+            draftCmp = this.titleDraftContainer.items.getAt(1),
+            width = innerEl.getWidth(),
+            scrollWidth = innerEl.dom.scrollWidth,
+            maxWidth = width - 50;
+
+        if (draftCmp) {
+            maxWidth -= draftCmp.getWidth();
+        }
+
+        if (Date.now() - this.buffer < 50 || !titleEl) {
+            return;
+        }
+
+        this.buffer = Date.now();
+
+        if (width < scrollWidth) {
+            this.last = true;
+            titleEl.setWidth(maxWidth);
+            this.titleDraftContainer.updateLayout();
+        } else {
+            if (this.last) {
+                this.buffer = 0;
+            }
+            this.last = false;
+            titleEl.setWidth(null);
+            this.titleDraftContainer.updateLayout();
+        }
     }
 
 });
