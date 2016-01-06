@@ -78,6 +78,10 @@ Ext.define('Taco.core.ux.content.Tooltip', {
     },
 
     getOffsetWidth: function(left, el) {
+        if (!el) {
+            return 0;
+        }
+
         var messageWidth = el.getWidth();
         var containerWidth = this.target.getWidth();
 
@@ -122,10 +126,16 @@ Ext.define('Taco.core.ux.content.Tooltip', {
     },
 
     setPosition: function() {
+
         var position = this.target.dom.getBoundingClientRect();
         var top = position.top;
         var left = position.left;
         var el = this.tooltip.getEl();
+
+        if (!el) {
+            return;
+        }
+
         var offsetLeft = this.offsetLeft ? left - this.offsetLeft : this.getOffsetWidth(left, el);
         var offsetTop = this.offsetTop ? top - this.offsetTop : this.getOffsetHeight(top, el);
 
@@ -136,6 +146,9 @@ Ext.define('Taco.core.ux.content.Tooltip', {
     },
 
     showToolTip: function(event) {
+        if (!this.tooltip.getEl()) {
+            return;
+        }
 
         this.setPosition();
 
@@ -150,6 +163,9 @@ Ext.define('Taco.core.ux.content.Tooltip', {
     },
 
     hideTooltip: function (cb) {
+        if (!this.tooltip.getEl()) {
+            return;
+        }
         this.tooltip.removeCls(this.showCls);
         Ext.defer(function() {
             this.tooltip.addCls('removed');
