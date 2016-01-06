@@ -914,7 +914,7 @@ Ext.define('Taco.core.ux.mixins.NavHeader', {
             draftEl = innerEl.down('[data-role="nav-header-pill"]'),
             width = innerEl.getWidth(),
             scrollWidth = innerEl.dom.scrollWidth,
-            maxWidth = width - 50;
+            maxWidth = width - 10;
 
         if (!subTitleEl || Date.now() - this.buffer < 50) {
             return;
@@ -930,17 +930,15 @@ Ext.define('Taco.core.ux.mixins.NavHeader', {
             maxWidth -= draftEl.getWidth();
         }
 
-        this.buffer = Date.now();
-
         if (width < scrollWidth) {
             this.lastOverflowCheck = true;
             subTitleEl.setWidth(maxWidth);
         } else {
+            subTitleEl.setWidth(null);
             if (this.lastOverflowCheck) {
-                this.buffer = 0;
+                this.checkTimeout = setTimeout(this.checkTitleOverflow.bind(this), 0);
             }
             this.lastOverflowCheck = false;
-            subTitleEl.setWidth(null);
         }
     }
 
