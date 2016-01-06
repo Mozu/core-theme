@@ -319,6 +319,12 @@
             font-size: $boxselect-font;
             padding: 9px 27px 9px 14px !important;
             text-transform: capitalize;
+            margin-right: 4px;
+
+            &.selected {
+                background-color: $white-color !important;
+                border-color: $gray-border-color !important;
+            }
 
             .#{$prefix}tab-close-btn {
                 background-image: none;

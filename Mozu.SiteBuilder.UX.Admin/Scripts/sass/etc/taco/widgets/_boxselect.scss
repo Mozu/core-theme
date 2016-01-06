@@ -45,12 +45,12 @@
         border-width: 0px !important;
     }
     .#{$prefix}field:not(.#{$prefix}item-disabled) .#{$prefix}boxselect-item:hover {
-        background: $card-button-bg;
-        border: 1px solid $dark-bg;
+        background: $white-color;
+        border: 1px solid $gray-border-color;
     }
     .#{$prefix}field:not(.#{$prefix}item-disabled) .#{$prefix}boxselect-item.selected {
-        border: 1px solid #316AD3 !important;
-        background: #658FDC !important;
+        border: 1px solid $gray-border-color !important;
+        background: $white-color !important;
     }
     .#{$prefix}boxselect-item-text {
         line-height: 16px;
