@@ -360,6 +360,11 @@
             line-height: 24px;
             padding: 6px 12px;
 
+            &:last-child {
+                border-width: 0px !important;
+                padding-bottom: 3px;
+            }
+
             &.#{$prefix}boundlist-selected {
                 background-color: $dark-bg !important;
                 border-left: 3px solid $valid-green !important;
