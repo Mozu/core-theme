@@ -37,7 +37,7 @@ Ext.define('Taco.view.location.Index', {
     enableSearch: false,
     enablePaging: true,
     enableRowEditing: false,
-    enableAutoSelect: true,
+    enableAutoSelect: false,
     createButtonEnabled: true,
     saveButtonEnabled: false,
     cancelButtonEnabled: false,

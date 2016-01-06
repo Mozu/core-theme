@@ -29,7 +29,7 @@ Ext.define('Taco.view.settings.localization.widget.LocalizationGrid', {
     enableSearch: false,
     enablePaging: true,
     enableRowEditing: false,
-    enableAutoSelect: true,
+    enableAutoSelect: false,
 
     createButtonEnabled: false,
     saveButtonEnabled: false,

@@ -34,7 +34,7 @@ Ext.define('Taco.view.productType.Grid', {
     enableSearch: false,
     enablePaging: true,
     enableRowEditing: false,
-    enableAutoSelect: true,
+    enableAutoSelect: false,
     createButtonEnabled: true,
     saveButtonEnabled: false,
     cancelButtonEnabled: false,

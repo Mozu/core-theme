@@ -33,7 +33,7 @@ Ext.define('Taco.view.attribute.Grid', {
     enableSearch: false,
     enablePaging: true,
     enableRowEditing: false,
-    enableAutoSelect: true,
+    enableAutoSelect: false,
     createButtonEnabled: true,
     saveButtonEnabled: false,
     cancelButtonEnabled: false,
