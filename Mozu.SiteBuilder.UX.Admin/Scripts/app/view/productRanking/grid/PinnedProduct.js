@@ -73,7 +73,6 @@ Ext.define('Taco.view.productRanking.grid.PinnedProduct', {
             return;
         }
         var products = record.data.boostedProducts;
-        console.log("Grid.PinnedProduct:  .loadData; ProductCount: " + products.length);
         for (var i = products.length - 1; i >= 0; i--) {
             this.store.data.add(Ext.create('Taco.model.PinnedProduct', products[i]));
         }
@@ -82,15 +81,13 @@ Ext.define('Taco.view.productRanking.grid.PinnedProduct', {
 
     listeners: {
         afterrender: function () {
-            console.log('Grid.PinnedProduct: afterrender');
             var form = this.up('#taco-productRanking-form');
             if (form.loadPinnedProducts && form.loadPinnedProducts === true) {
-                this.populateStore(form.records);
+                this.populateStore(form.record);
             }
         },
 
         reloaddata: function (record) {
-            console.log('Grid.PinnedProduct: reloadData');
             this.populateStore(record);
         },
 
