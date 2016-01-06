@@ -31,6 +31,8 @@ Ext.define('Taco.view.productRanking.Edit', {
 
     isCreate: false,
 
+    enableSearchBarInHeader: false,
+
     initComponent: function () {
         var me = this;
 
