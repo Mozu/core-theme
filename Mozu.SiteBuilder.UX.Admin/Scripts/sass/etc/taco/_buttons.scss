@@ -398,7 +398,7 @@
         border: 1px solid $light-bg;
         @include border-radius-xbrowser(3px);
         color: $gray-text-dark;
-        cursor: pointer;
+        cursor: default;
         font-size: 8px;
         margin: 10px 3px;
         padding: 4px 3px 2px 3px;
