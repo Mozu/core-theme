@@ -191,7 +191,7 @@
 
         .#{$prefix}grid-row-editor {
             z-index: 3;
-            
+
             table.#{$prefix}hbox-form-item {
                 border-right: 1px solid $light-border-gray !important;
                 height: 37px;
@@ -205,8 +205,13 @@
                 }
 
                 .#{$vprefix}basegrid-thumbnail {
-                    img {
+                    &:after {
                         display: none;
+                    }
+                    
+                    img {
+                        left: 10px;
+                        height: 26px;
                     }
                 }
             }
@@ -231,6 +236,7 @@
             &.top-buttons {
                 border-top: 2px solid $valid-green;
                 border-bottom: none;
+                bottom: 50px !important;
                 @include important-partial-border-radius($border-radius, 0, $border-radius, 0);
             }
 

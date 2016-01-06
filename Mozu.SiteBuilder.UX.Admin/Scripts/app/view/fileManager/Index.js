@@ -20,25 +20,10 @@ Ext.define('Taco.view.fileManager.Index', {
         click: {
             element: 'el',
             fn: function (e) {
-                var parentNode          = e.target.parentNode.nodeName,
-                    grandparent         = e.target.parentNode.parentNode.nodeName,
-                    lastRow             = e.target.parentNode.parentNode.parentNode.parentNode.nodeName,
-                    parentHeight        = e.target.parentNode.offsetHeight,
-                    grandparentHeight   = e.target.parentNode.parentNode.offsetHeight;
-
-                console.log(parentNode, parentHeight);
-
-                if (parentNode == 'TD' || parentNode == 'TR') {
-                    if ((grandparentHeight > 38 && grandparent == 'TR') || parentHeight > 38) {
-                        if (document.querySelector('[id^="roweditorbuttons"]').style.bottom == (78 + 'px')) {
-                            document.querySelector('[id^="roweditorbuttons"]').className = document.querySelector('[id^="roweditorbuttons"]').className + ' top-buttons'
-                        } else {
-                            document.querySelector('[id^="roweditorbuttons"]').className = document.querySelector('[id^="roweditorbuttons"]').className.split(' top-buttons')[0];
-                        }
-                        document.querySelector('[id^="roweditorbuttons"]').style.top = 44 + 'px';
-                    } else if (grandparent == 'TD' || parentHeight == 38) {
-                        document.querySelector('[id^="roweditorbuttons"]').style.top = 44 + 'px';
-                    }
+                if (document.querySelector('[id^="roweditorbuttons"]').style.bottom == (45 + 'px')) {
+                    document.querySelector('[id^="roweditorbuttons"]').className = document.querySelector('[id^="roweditorbuttons"]').className + ' top-buttons'
+                } else {
+                    document.querySelector('[id^="roweditorbuttons"]').className = document.querySelector('[id^="roweditorbuttons"]').className.split(' top-buttons')[0];
                 }
             }
         }
