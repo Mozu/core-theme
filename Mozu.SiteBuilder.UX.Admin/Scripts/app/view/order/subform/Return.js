@@ -30,6 +30,12 @@ Ext.define('Taco.view.order.subform.Return', {
         //    'deactivate': this.destroyUI
         //}, this);
         this.initUI();
+
+        this.record.on({
+            reload: this.initUI,
+            scope: this
+        });
+
         this.callParent(arguments);
     },
 
@@ -39,6 +45,7 @@ Ext.define('Taco.view.order.subform.Return', {
     },
 
     initUI: function () {
+
         var me = this,
             record = this.record;
 
@@ -97,19 +104,40 @@ Ext.define('Taco.view.order.subform.Return', {
             title: "return panels here"
         });
 
-        this.items = [
-            this.returnableItems, {
-                xtype: 'container',
-                margin: '10px 0 20px 0',
-                layout: {
-                    type: 'hbox',
-                    align: 'stretch',
-                    pack: 'end'
+        // if the component has been rendered before, we need to add, rather than init
+        if (this.rendered) {
+            this.removeAll();
+            this.add([
+                this.returnableItems, {
+                    xtype: 'container',
+                    margin: '10px 0 20px 0',
+                    layout: {
+                        type: 'hbox',
+                        align: 'stretch',
+                        pack: 'end'
+                    },
+                    items: [this.returnableItemsErrorEl, this.createButton]
                 },
-                items: [this.returnableItemsErrorEl, this.createButton]
-            },
-            this.returnPanels
-        ];
+                this.returnPanels
+            ]);
+        }   
+
+        else { 
+            this.items = [
+                this.returnableItems, {
+                    xtype: 'container',
+                    margin: '10px 0 20px 0',
+                    layout: {
+                        type: 'hbox',
+                        align: 'stretch',
+                        pack: 'end'
+                    },
+                    items: [this.returnableItemsErrorEl, this.createButton]
+                },
+                this.returnPanels
+            ];
+        }
+
 
     },
 

@@ -322,6 +322,9 @@ Ext.define('Taco.view.order.subform.fulfillment.DirectShipPackage', {
             data: {
                 orderId: this.record.getId(),
                 packageIds: [this.packageData.id]
+            },
+            success: function() {
+                this.record.reload();
             }
         });
     },
