@@ -207,7 +207,6 @@
              * Override Ext styles
              */
             > .#{$prefix}panel-body-default {
-                height: 39px !important;
 
                 > .#{$prefix}box-inner {
                     height: 37px !important;
@@ -217,14 +216,15 @@
 
         .#{$prefix}grid-row-editor-buttons {
             border-color: $valid-green;
-            border-top-color: $white-color;
+            border-top: none;
             border-width: 2px;
             @include important-partial-border-radius(0, $border-radius, 0, $border-radius);
 
-            /**
-             * Override Ext styles
-             */
-            top: 37px !important;
+            &.top-buttons {
+                border-top: 2px solid $valid-green;
+                border-bottom: none;
+                @include important-partial-border-radius($border-radius, 0, $border-radius, 0);
+            }
 
             a {
                 &.#{$prefix}row-editor-update-button {
@@ -261,19 +261,9 @@
             }
         }
 
-        .#{$prefix}panel .#{$prefix}panel-body .#{$prefix}grid-td {
-            // taking it out to style the orders grid, guess we'll see what it affects
-            // border: 0 !important;
-        }
-
         .#{$prefix}grid-with-row-lines {
             .#{$prefix}grid-table-focused-first {
                 border: none !important;
-
-                td {
-                    //border: none !important;
-                    //border-bottom: 0 !important;
-                }
             }
         }
 

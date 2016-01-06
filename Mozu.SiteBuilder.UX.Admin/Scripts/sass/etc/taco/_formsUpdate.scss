@@ -91,7 +91,8 @@
 
         .#{$prefix}panel-body {
             background-color: $white-color;
-            border-color: $valid-green !important;
+            border-top-color: $light-border-gray !important;
+            border-bottom-color: $valid-green !important;
             border-bottom-width: 2px !important;
         }
     }
