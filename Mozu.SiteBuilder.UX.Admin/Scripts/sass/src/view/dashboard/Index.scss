@@ -40,6 +40,7 @@
             width: 100%;
             background-color: $white-color;
             height: 160px;
+            @include partial-border-radius(4px, 0, 4px, 0);
 
             a {
                 color: $valid-green;
@@ -66,7 +67,7 @@
                 text-align: left;
                 border: 0px;
                 width: 100%;
-                @include border-radius(0px 0px 3px 3px);
+                @include border-radius(0px 0px 4px 4px);
 
                 div {
                     display: inline-block;

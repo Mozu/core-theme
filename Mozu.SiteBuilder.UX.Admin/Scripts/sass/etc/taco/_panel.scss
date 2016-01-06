@@ -1,5 +1,9 @@
 @mixin taco-panel {
 
+    .#{$prefix}mask {
+        background-color: $mask-color;
+    }
+
     .#{$prefix}form-field {
         font-size: 15px;
     }

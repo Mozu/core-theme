@@ -5,6 +5,8 @@ $white-color:                   rgb(255, 255, 255);                             
 /* theme colors */
 $gray-text-dark:                rgb(165, 165, 165);                                 /* #a5a5a5 --> #a6a6a6  165, 165, 165 */
                                 /* darken($white-color, 35); */
+$mask-color:                    rgba(236, 236, 236, 0.9);                            /* #ececec --> #ebebeb  236, 236, 236 */
+                                /* rgba(darken($white-color, 8), .9); */
                                 
 $gray-text-light:               darken($white-color, 36);                           /* #a3a3a3              163, 163, 163 */
 $gray-text-extra-light:         rgba(lighten($black-color, 13), .25);               /* #525252              082, 082, 082 */
@@ -35,8 +37,6 @@ $grid-row-border:               $nav-element-active-border;
 
 $light-bg-gray:                 rgb(233, 233, 233);                                 /* #e9e9e9 --> #e8e8e8  233, 233, 233 */
                                 /* darken($white-color, 9); */
-$form-focus-color:              rgb(157, 204, 253);                                 /* #9dccfd --> #9bcafd  157, 204, 253 */
-                                /* adjust_hue(saturate(lighten(#000000, 80), 96), 211); */
 
 $pill-bg-gray:                  $nav-element-active-border;                         /* #f3f3f3 --> #f2f2f2  242, 242, 242 */
 $pill-text-dark:                lighten($black-color, 36);                          /* #5c5c5c              092, 092, 092 */
@@ -79,10 +79,12 @@ $html-editor-toolbar:           rgb(119, 119, 119);                             
                                 /* lighten($black-color, 47); */
 
 $valid-green:                   rgb(52, 174, 144);                                  /* #34ae90 --> #34ac8e  052, 174, 144 */
-                                /* adjust_hue(saturate(lighten($black-color, 44), 54), 165); */ 
+                                /* adjust_hue(saturate(lighten($black-color, 44), 54), 165); */
 
 $valid-green-active:            rgb(48, 182, 149);                                  /* #30b695 --> #26b954  048, 182, 149 */
-                                /* adjust_hue(saturate(lighten($black-color, 43), 65), 166); */ 
+                                /* adjust_hue(saturate(lighten($black-color, 43), 65), 166); */
+                                
+$form-focus-color:              rgba($valid-green, 0.6);
 
 $error-red:                     rgb(228, 45, 0);                                    /* #e42d00 --> #e62e00  228, 045, 000 */
                                 /* adjust_hue(saturate(lighten($black-color, 45), 100), 12); */
