@@ -83,6 +83,8 @@
         }
 
         .#{$prefix}panel {
+            @include no-box-shadow;
+            
             .#{$vprefix}splitcontainer-panel {
                 .#{$prefix}panel {
                     &.#{$prefix}fit-item {
