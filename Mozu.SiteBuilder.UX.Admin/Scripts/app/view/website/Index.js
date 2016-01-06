@@ -133,7 +133,7 @@ Ext.define('Taco.view.website.Index', {
                     me.setPublishable(false);
                     me.publishButton.setLoading(false);
                     me.showMessage('Discarded', 'success');
-                    me.down('#draftIcon').hide();
+                    me.down('#draftPill').hide();
                     me.cancel();
                 });
             }
@@ -166,13 +166,11 @@ Ext.define('Taco.view.website.Index', {
         };
 
         this.tooltip = Ext.create('Taco.core.ux.content.Tooltip', {
-            elementId: 'draftIcon',
-            hoverTarget: 'bodyEl',
+            elementSelector: '[data-role="website-draft-pill"]',
             messageKey: 'publishset.publishsetdate',
             arrowPosition: 'top',
             offsetTop: -22,
             showToolTipIcon: false,
-            // offsetLeft: 107,
             defaultTpl: [
                 '<div style="line-height: 15px;">',
                     '<span>Publish Set:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;{publishSetName}</span>',
@@ -204,12 +202,12 @@ Ext.define('Taco.view.website.Index', {
                         html: ''
                     },
                     {
-                        xtype: 'taco-indicator',
-                        itemId: 'draftIcon',
-                        title: 'DRAFT',
-                        margin: '0 0 0 10',
+                        xtype: 'component',
+                        itemId: 'draftPill',
                         hidden: true,
-                        afterrender: this.setAction.bind(this)
+                        afterrender: this.setAction.bind(this),
+                        tpl: '<span class="x-column-content-pill x-column-content-pill-dark" data-role="website-draft-pill">Draft</span>',
+                        data: {a: 1}
                     }
                 ],
                 listeners: {
@@ -971,7 +969,7 @@ Ext.define('Taco.view.website.Index', {
                 var callback =  function(record) {
                     var date = record.get('publishDate') ? Ext.Date.format(record.get('publishDate'), 'M j, Y g:ia T') : 'Unscheduled';
                     me.pubRecord = record;
-                    me.down('#draftIcon').show();
+                    me.down('#draftPill').show();
                     
                     me.tooltip.update({
                         publishSetName: me.pubRecord.get('name'),
@@ -994,7 +992,7 @@ Ext.define('Taco.view.website.Index', {
             }
 
             else {
-                this.down('#draftIcon').show();
+                this.down('#draftPill').show();
                 me.tooltip.update({
                     publishSetName: 'Unassigned',
                     publishDate: 'Unscheduled'
@@ -1004,7 +1002,7 @@ Ext.define('Taco.view.website.Index', {
         }
 
         else {
-            this.down('#draftIcon').hide();
+            this.down('#draftPill').hide();
         }
     },
 
