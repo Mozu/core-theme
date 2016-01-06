@@ -35,7 +35,7 @@ Ext.define('Taco.view.fileManager.Index', {
                         } else {
                             document.querySelector('[id^="roweditorbuttons"]').className = document.querySelector('[id^="roweditorbuttons"]').className.split(' top-buttons')[0];
                         }
-                        document.querySelector('[id^="roweditorbuttons"]').style.top = 77 + 'px';
+                        document.querySelector('[id^="roweditorbuttons"]').style.top = 44 + 'px';
                     } else if (grandparent == 'TD' || parentHeight == 38) {
                         document.querySelector('[id^="roweditorbuttons"]').style.top = 44 + 'px';
                     }

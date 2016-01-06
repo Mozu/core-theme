@@ -190,6 +190,8 @@
         }
 
         .#{$prefix}grid-row-editor {
+            z-index: 3;
+            
             table.#{$prefix}hbox-form-item {
                 border-right: 1px solid $light-border-gray !important;
                 height: 37px;
@@ -199,6 +201,12 @@
                         height: 38px;
                         position: relative;
                         text-overflow: ellipsis;
+                    }
+                }
+
+                .#{$vprefix}basegrid-thumbnail {
+                    img {
+                        display: none;
                     }
                 }
             }
