@@ -116,6 +116,7 @@ Ext.define('Taco.view.location.inventory.Index', {
             {
                 xtype: 'panel',
                 layout: 'hbox',
+                padding: '0 0 10 0',
                 items: [{
                         xtype: 'label',
                         text: 'Inventory for: ',
