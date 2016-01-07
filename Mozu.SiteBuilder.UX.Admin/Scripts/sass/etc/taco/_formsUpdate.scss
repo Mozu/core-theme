@@ -330,9 +330,10 @@
                 background-image: none;
                 opacity: 1;
                 width: 27px;
-                height: 36px;
-                top: -1px;
+                height: 34px;
                 border-left: 1px solid $light-border-gray;
+                right: 0;
+                top: 0;
 
                 &:after {
                     color: $dark-border-gray;
@@ -343,6 +344,16 @@
                     left: 7px;
                     position: absolute;
                     top: 18px;
+                }
+
+                &:hover {
+                    &:after {
+                        color: $boxselect-hover-color;
+                    }
+                }
+
+                &:active {
+                    background-color: $dark-bg;
                 }
             }
         }
