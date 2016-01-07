@@ -36,17 +36,20 @@ Ext.define('Taco.view.fileManager.Associator', {
             autoSync: true
         });
 
+        this.gridPager = Ext.create('Taco.core.ux.grid.LinkPaging', {
+            componentCls: 'x-link-paging-toolbar',
+            store: this.store,
+            displayInfo: true,
+            dock: 'bottom'
+        });
+
         this.grid = Ext.create('Ext.grid.Panel', {
             selModel: selModel,
             store: this.store,
+            viewConfig: {
+                stripeRows: false
+            },
             dockedItems: [
-                Ext.create('Ext.toolbar.Paging', {
-                        dock: 'bottom',
-                        displayInfo: true,
-                        store: this.store,
-                        inputItemWidth: 45,
-                        style: 'margin-top: 10px;'
-                }),
                 Ext.widget({
                     xtype: 'taco-filtercontainer',
                     width: '100%',
@@ -56,7 +59,8 @@ Ext.define('Taco.view.fileManager.Associator', {
                     store: this.store,
                     style: 'margin-bottom:10px;',
                     filterStores: this.advancedSearchConfig.stores
-                })
+                }),
+                this.gridPager
                 
                 
             ],
