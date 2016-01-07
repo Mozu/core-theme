@@ -27,7 +27,9 @@
 
 
 .#{$vprefix}navheader {
+    box-shadow: rgba(0, 0, 0, 0.09) 0px 1px 3px 0px;
     .#{$vprefix}navheader-toolbar{
+        box-shadow: rgba(0, 0, 0, 0.09) 0px 1px 3px 0px;
         border-bottom: 1px solid $color-standard-border !important;
         background-color: $color-neutral-white;
         line-height: 23px;

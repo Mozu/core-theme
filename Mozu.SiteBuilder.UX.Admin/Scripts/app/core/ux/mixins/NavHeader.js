@@ -303,7 +303,7 @@ Ext.define('Taco.core.ux.mixins.NavHeader', {
             cls: this.navHeaderCls,
             style: 'height: 52px',
             items: []
-        }
+        };
 
         this.createNavHeader();
 
@@ -332,6 +332,7 @@ Ext.define('Taco.core.ux.mixins.NavHeader', {
         this.header = {
             xtype: 'container',
             itemId: 'navHeaderBottom',
+            cls: this.navHeaderCls,
             items: items
         }
     },
