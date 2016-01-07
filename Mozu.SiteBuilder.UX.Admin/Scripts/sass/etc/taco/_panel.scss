@@ -1,5 +1,9 @@
 @mixin taco-panel {
 
+    .#{$prefix}panel-header-text-container-subform-section {
+        font-weight: normal;
+    }
+
     .#{$prefix}mask {
         background-color: $mask-color;
     }

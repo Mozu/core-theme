@@ -1,6 +1,8 @@
 ﻿.#{$vprefix}order-package {
     .label {
-        font-weight: bold;
+        font-size: $label-font;
+        color: $label-color;
+        font-weight: normal;
         margin-right: 3px;
     }
 
@@ -9,14 +11,19 @@
         padding: 0;
 
         .#{$prefix}btn-inner {
-            color: $color-standard-link;
-            font-size: 14px;
-            font-weight: bold;
+            color: $light-link-color;
+            font-size: $normal-font-link;
+            font-weight: normal;
         }
 
-        .#{$prefix}btn-arrow::after {
-            color: $color-standard-link;
-            font-size: 14px;
+        .#{$prefix}btn-arrow{
+            &:after {
+                content: $glyph-chevrondown;
+                color: $light-link-color;
+                font-size: $tag-font;
+                right: 12px;
+                top: 4px;
+            }
         }
     }
 

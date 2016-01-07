@@ -269,6 +269,14 @@
         }
     }
 
+    .#{$prefix}btn-link-medium {
+        .#{$prefix}btn-button {
+            .#{$prefix}btn-inner {
+                color: $light-link-color;
+            }
+        }
+    }
+
     .#{$prefix}btn-action-medium-over,
     .#{$prefix}btn-link-medium-over {
         /* override external styles */

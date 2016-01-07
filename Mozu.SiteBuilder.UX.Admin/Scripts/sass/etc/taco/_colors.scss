@@ -21,6 +21,7 @@ $input-focus-border:            rgb(158, 202, 237);                             
 
 $label-color:                   rgb(172, 172, 172);                                 /* #acacac --> #adadad  172, 172, 172 */
                                 /* darken($white-color, 32); */
+$light-link-color:      $label-color;
 
 $nav-element-text:              rgb(165, 165, 165);                                 /* #a5a5a5 --> #a6a6a6  165, 165, 165 */
                                 /* darken($white-color, 35); */
