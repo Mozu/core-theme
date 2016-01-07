@@ -2,6 +2,18 @@
 
   .#{$vprefix}website-subheader {
 
+    &.#{$vprefix}above-tree {
+        background-color: $white-color;
+
+        .#{$prefix}panel-body {
+            background-color: $white-color;
+
+            .#{$vprefix}link-button {
+                background-color: $white-color;                
+            }
+        }
+    }
+
     background-color: $dark-bg;
     height: 30px;
     box-shadow: rgba(0, 0, 0, 0.09) 0px 1px 2px 0px;

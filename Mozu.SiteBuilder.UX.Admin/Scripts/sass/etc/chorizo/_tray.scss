@@ -1,12 +1,12 @@
-#taco-widget-tray {
-    
+.#{$vprefix}widget-tray {
+    background-color: $card-button-bg;
+
     .tray-header {
         font-size: 16px;
         margin: 9px;
     }
     
     #taco-widget-holder {
-        text-align: center;
         margin-left: 19px;
     }
 

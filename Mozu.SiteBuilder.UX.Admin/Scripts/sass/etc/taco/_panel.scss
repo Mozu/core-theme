@@ -45,14 +45,14 @@
     }
 
     .#{$prefix}grid-data-row {
-        @include tree-state($glyph-tree-closed);
+        @include tree-state($glyph-tree-closed, 1);
 
         &:hover {
             cursor: pointer;
         }
 
         &.#{$prefix}grid-tree-node-expanded {
-            @include tree-state($glyph-tree-open);
+            @include tree-state($glyph-tree-open, .7);
         }
     }
 

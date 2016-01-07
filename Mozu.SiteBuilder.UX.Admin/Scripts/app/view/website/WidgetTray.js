@@ -9,6 +9,7 @@ Ext.define('Taco.view.website.WidgetTray', {
     extend: 'Ext.panel.Panel',
     alias: 'widget.taco-widget-tray',
     itemId: 'taco-widget-tray',
+    cls: 'taco-widget-tray',
     autoScroll: true,
     requires: [],
     initComponent: function () {
@@ -27,7 +28,7 @@ Ext.define('Taco.view.website.WidgetTray', {
         this.setLoading(false);
     },
     buildWidgets: function(title, widgets) {
-        var html = '<div id="taco-widget-holder" style="text-align:center;">';
+        var html = '<div id="taco-widget-holder">';
 
         this.editor.widgetIconDefinitions = this.editor.widgetIconDefinitions || {};
 

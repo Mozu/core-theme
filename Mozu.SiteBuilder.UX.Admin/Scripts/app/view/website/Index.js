@@ -311,7 +311,7 @@ Ext.define('Taco.view.website.Index', {
                 type: 'hbox',
                 pack: 'left'
             },
-            cls: 'taco-website-subheader',
+            cls: 'taco-website-subheader taco-above-tree',
             items: [
                 {
                     xtype: 'button',

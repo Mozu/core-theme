@@ -1,4 +1,4 @@
-@mixin tree-state($treeState) {
+@mixin tree-state($treeState, $hover-opacity) {
     img {
         &.#{$prefix}tree-elbow-plus,
         &.#{$prefix}tree-elbow-minus,
@@ -18,10 +18,27 @@
                                 &:before {
                                     content: $treeState;
                                     font-family: 'mozicons';
-                                    font-size: 13px;
+                                    font-size: 11px;
+                                    opacity: .7;
                                     position: absolute;
                                     z-index: 0;
                                     margin-left: -16px;
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+
+            &:hover {
+                & + img {
+                    &.#{$prefix}tree-icon {
+                        &.#{$prefix}tree-icon-parent {
+                            & + span {
+                                &.#{$prefix}tree-node-text {
+                                    &:before {
+                                        opacity: $hover-opacity;
+                                    }
                                 }
                             }
                         }

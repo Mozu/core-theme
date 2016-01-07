@@ -2,19 +2,27 @@
     .#{$prefix}grid-body, 
     .#{$prefix}panel-body, 
     .#{$prefix}grid-td {
-        background-color: transparent !important;
-    }
+        background-color: $card-button-bg;
 
-    .#{$prefix}grid-data-row {
-        &:hover {
-            background-color: $pill-bg-gray !important;
+        &.#{$vprefix}website-tree-node-group {
+            background-color: $white-color;
+            border-color: $nav-element-active-border;
+            border-width: 2px 0px;
+
+            .#{$prefix}tree-node-text {
+                padding: 5px 0px 5px 16px;
+            }
         }
     }
 
     .#{$prefix}grid-cell {
-        background-color: $light-bg;
-      
+        background-color: $card-button-bg;
+
+        &:hover {
+            background-color: $card-btn-disabled-border;
+        }
     }
+
 
     .#{$prefix}grid-cell-treecolumn {
         font-size: 14px;
@@ -42,7 +50,7 @@
     }
 
     .#{$prefix}tree-node-text {
-        font-size: 13px;
+        font-size: 12px;
 
             /**
              * Updated 10/08/2015
@@ -92,36 +100,37 @@
         width: 12px;
 
         &.page-icon {
-            @include icon-font($glyph-tree-page);
+            @include icon-font($glyph-tree-page, 18px, rgb(179, 179, 179));
             top: -1.5px;
         }
 
         &.template-icon {
-            @include icon-font($glyph-tree-template);
+            @include icon-font($glyph-tree-template, 16px, rgb(179, 179, 179));
         }
 
         &.category-icon {
-            @include icon-font($glyph-tree-layers);
+            @include icon-font($glyph-tree-layers, 16px, rgb(179, 179, 179));
         }
 
         &.folder-icon {
-            @include icon-font($glyph-tree-folder);
+            @include icon-font($glyph-tree-folder, 16px, rgb(179, 179, 179));
         }
 
         &.link-icon {
-            @include icon-font($glyph-link, 13px);
+            @include icon-font($glyph-link, 13px, rgb(179, 179, 179));
         }
 
         &.drag-icon {
             @include icon-font($glyph-reorder, 13px, rgb(179, 179, 179));
-            float: right;
             background-color: transparent;
+            float: right;
 
             &.invisible {
                 visibility: hidden;
             }
 
             &::after {
+                cursor: pointer;
                 left: initial;
                 right: 0px;
             }
@@ -145,6 +154,7 @@
         @include icon-font($glyph-more-vert, 13px, $color-neutral-75);
 
         &::after {
+            cursor: pointer;
             top: 0.5px;
             left: 4px;
         }
