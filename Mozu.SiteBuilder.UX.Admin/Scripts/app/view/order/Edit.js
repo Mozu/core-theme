@@ -136,6 +136,8 @@ Ext.define('Taco.view.order.Edit', {
             afterlayout: this.handleAfterLayout,
             scope: this
         });
+
+        this.navHeader.hide();
     },
 
     handleBoxReady: function () {

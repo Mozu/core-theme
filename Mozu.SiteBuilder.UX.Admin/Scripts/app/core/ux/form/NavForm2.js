@@ -24,9 +24,7 @@ Ext.define('Taco.core.ux.form.NavForm2', {
         var me = this;
         this.cls = this.cls || "";
         this.cls += " taco-navform2";
-        
-        
-        
+
         // items from subclass
         var originalItems =  [];
         var excludedItems = [];
@@ -80,20 +78,19 @@ Ext.define('Taco.core.ux.form.NavForm2', {
                 }
             ]
         });
-        
+
         me.dockedItems = me.dockedItems || [];
         me.dockedItems.push(this.sectionNav);
 
-        
         var items = excludedItems;
         items.push(this.formContainer)
-        
+
         this.items = items;
 
         this.callParent(arguments);
 
         this.nav = this.down('#navFormNav');
-        
+
         this.on({
             boxready: this.initSectionNav,
             scope: this
@@ -101,34 +98,19 @@ Ext.define('Taco.core.ux.form.NavForm2', {
     },
 
     setNavDimensions: function() {
-        var navStyle = this.sectionNav.getEl().dom.style;
-        var padding = 20;
-
-        navStyle.left = this.getX() - padding + 'px';
-        //navStyle.width = this.getWidth() + (padding * 2) + 'px';
-
-        navStyle.top = this.getHeaderHeight() + this.sectionNavTopOffset + 'px';
+        this.sectionNav.getEl().setXY([this.getX() - 20, this.getHeaderHeight() + this.sectionNavTopOffset]);
     },
 
     resetNavDimensions: function() {
-        var navStyle = this.sectionNav.getEl().dom.style;
-        navStyle.top = this.navCache.top;
-        navStyle.left = this.navCache.left;
-        //navStyle.width = this.navCache.width;
+        this.sectionNav.getEl().setXY(this.navCache);
     },
 
     cacheNavDimensions: function() {
-        var navStyle = this.sectionNav.getEl().dom.style;
-        this.navCache = this.navCache || {};
-        this.navCache.top = navStyle.top;
-        this.navCache.left = navStyle.left;
-        //this.navCache.width = navStyle.width;
+        this.navCache = this.sectionNav.getEl().getXY();
     },
 
     getWrapper: function () {
-        var wrapper = Ext.ComponentQuery.query('fulleditor')[0];
-        // need to find the fulleditor class since it is the scroll container;
-        return wrapper;
+        return Ext.ComponentQuery.query('fulleditor')[0];
     },
 
     getHeaderHeight: function() {
@@ -143,7 +125,7 @@ Ext.define('Taco.core.ux.form.NavForm2', {
         var wrapper = this.getWrapper();
         var headerHeight = this.getHeaderHeight();
 
-        wrapper.on({            
+        wrapper.on({
             afterlayout: this.rebuildMap,
             scope: this
         });
@@ -155,20 +137,19 @@ Ext.define('Taco.core.ux.form.NavForm2', {
 
         this.navTop = this.sectionNav.getY() - headerHeight;
 
+        debugger;
+
         this.cacheNavDimensions();
 
     },
 
     rebuildMap: function () {
-        
         this.locationMap = [];
         this.recordMap = [];
 
         if (!this.nav || !this.nav.store) return;
 
-                
         this.formContainerTop = (this.formContainer.el && this.formContainer.el.dom) ? this.formContainer.el.dom.offsetTop : 0;
-
 
         this.nav.store.each(function (record, index) {
             var el = record.raw.getEl();
@@ -180,12 +161,9 @@ Ext.define('Taco.core.ux.form.NavForm2', {
             if (index === 0) {
                 this.locationMap.push(0);
                 return;
-            }            
-            //this.locationMap.push(el.dom.offsetTop + this.sectionOffset - this.topOffset - this.leftNavTopOffset);
+            }
+
             this.locationMap.push(el.dom.offsetTop - this.sectionNavTopOffset - (this.formContainerTop || 0));
-            //this.locationMap.push(el.dom.offsetTop);
-
-
         }, this);
 
         this.checkTop();
@@ -198,21 +176,21 @@ Ext.define('Taco.core.ux.form.NavForm2', {
     checkTop: function () {
         this.stickNav();
         this.updateActiveNavItem();
-
     },
 
     stickNav: function() {
         var scrollTop = this.getTop();
         var sectionNav = this.sectionNav;
         var navTop = this.navTop; // set in this.initSectionNav
+        var force = this.sectionNav.getY() === 0;
 
-        if (scrollTop > navTop && !sectionNav.hasCls(this.stickyClass)) {
-            this.setNavDimensions();
+        if (scrollTop > navTop && (!sectionNav.hasCls(this.stickyClass) || force)) {
             sectionNav.addCls(this.stickyClass);
+            this.setNavDimensions();
         }
-        else if (scrollTop <= navTop && sectionNav.hasCls(this.stickyClass)) {
-            this.resetNavDimensions();
+        else if (scrollTop <= navTop && (sectionNav.hasCls(this.stickyClass) || force)) {
             sectionNav.removeCls(this.stickyClass);
+            this.resetNavDimensions();
         }
 
     },
@@ -224,8 +202,6 @@ Ext.define('Taco.core.ux.form.NavForm2', {
             active;
 
         if (this.isHidden()) return;
-        
-        
 
         Ext.each(this.locationMap, function (top, index) {
             if (Math.round(scrollTop) >= top) max = index;
@@ -248,7 +224,7 @@ Ext.define('Taco.core.ux.form.NavForm2', {
     onNavClick: function (view, record, item, index, e, eOpts) {
         var wrapper = this.getWrapper().body.el,
             targetY;
-        
+
         if (record.raw.getEl) {
             targetY = view.store.indexOf(record)
                 ? record.raw.getEl().dom.offsetTop
@@ -260,12 +236,9 @@ Ext.define('Taco.core.ux.form.NavForm2', {
     loadNavItems: function (items) {
         var components,
             recordsToAdd = [];
-        
+
         if (items) {
-            //this.formContainer.autoDestroy = false;
             this.formContainer.removeAll();
-            //this.formContainer.autoDestroy = true;
-            //destroy itemsToRemoved
             components = this.formContainer.add(items);
         } else {
             components = this.formContainer.items.items;
@@ -273,7 +246,6 @@ Ext.define('Taco.core.ux.form.NavForm2', {
 
         // need to cull hidden panels from the store so that the dataview doesn't mismatch the record to the item clicked;  It currently uses index position and the hidden records are causing the mismatch;
         Ext.Array.each(components, function (item) {
-            
             if (!item.hidden) {
                 recordsToAdd.push(item);
             }
