@@ -3,7 +3,7 @@
 * @Author: ben_cripps
 * @Date:   2015-12-05 15:02:05
 * @Last Modified by:   ben_cripps
-* @Last Modified time: 2015-12-05 20:30:06
+* @Last Modified time: 2016-01-06 16:45:32
 */
 
 'use strict';
@@ -129,9 +129,351 @@ var COL_COPY_SELECTOR = '#' + COL_COPY_ID;
 
 exports.COL_COPY_SELECTOR = COL_COPY_SELECTOR;
 var MIN_COLUMN_WIDTH = 10;
+
 exports.MIN_COLUMN_WIDTH = MIN_COLUMN_WIDTH;
+// content widget
+
+var EDITING_STATE_CLASS = 'mz-cms-state-editing';
+
+exports.EDITING_STATE_CLASS = EDITING_STATE_CLASS;
+var TEMP_LINK_ID = '#mz-cms-temp-link';
+
+exports.TEMP_LINK_ID = TEMP_LINK_ID;
+var URL_TOOLTIP_CLASS = 'mz-cms-tooltip';
+
+exports.URL_TOOLTIP_CLASS = URL_TOOLTIP_CLASS;
+var CONTENT_WIDGET_STYLE_ATTRIBUTE = 'data-style';
+
+exports.CONTENT_WIDGET_STYLE_ATTRIBUTE = CONTENT_WIDGET_STYLE_ATTRIBUTE;
+var CONTENT_WIDGET_FORMAT_BAR = 'mz-cms-format-bar';
+
+exports.CONTENT_WIDGET_FORMAT_BAR = CONTENT_WIDGET_FORMAT_BAR;
+var CONTENT_WIDGET_ROLE_ATTRIBUTE = 'data-role';
+
+exports.CONTENT_WIDGET_ROLE_ATTRIBUTE = CONTENT_WIDGET_ROLE_ATTRIBUTE;
+var CONTENT_WIDGET_STYLE_DROPDOWN_ATTRIBUTE = 'data-role="styles"';
+
+exports.CONTENT_WIDGET_STYLE_DROPDOWN_ATTRIBUTE = CONTENT_WIDGET_STYLE_DROPDOWN_ATTRIBUTE;
+var CONTENT_WIDGET_STYLE_DROPDOWN_SELECTOR = '[' + CONTENT_WIDGET_STYLE_DROPDOWN_ATTRIBUTE + '] ul';
+exports.CONTENT_WIDGET_STYLE_DROPDOWN_SELECTOR = CONTENT_WIDGET_STYLE_DROPDOWN_SELECTOR;
 
 },{}],2:[function(require,module,exports){
+'use strict';
+
+var _createClass = (function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ('value' in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; })();
+
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError('Cannot call a class as a function'); } }
+
+var _constants = require('./constants');
+
+(function (win, doc) {
+    var ContentWidget = (function () {
+        function ContentWidget() {
+            _classCallCheck(this, ContentWidget);
+
+            this.stylesDropdown = [{
+                label: 'Heading 1',
+                tagName: 'h1'
+            }, {
+                label: 'Heading 2',
+                tagName: 'h2'
+            }, {
+                label: 'Normal',
+                tagName: 'p'
+            }, {
+                label: 'Special',
+                tagName: 'div',
+                className: 'special'
+            }];
+
+            doc.addEventListener('click', (function (event) {
+
+                if (this.shouldDismissEditor(event.target, event)) {
+                    return false;
+                }
+
+                if (this.formatter) {
+                    this.hideEditor();
+                    this.updateWidget();
+                }
+            }).bind(this));
+        }
+
+        _createClass(ContentWidget, [{
+            key: 'updateWidget',
+            value: function updateWidget() {
+                var newWidgetData = this.currentBlock.element.querySelector(_constants.CONTENT_SELECTOR).innerHTML;
+                var existingData = JSON.parse(this.currentBlock.element.getAttribute(_constants.DATA_WIDGET_ATTRIBUTE));
+
+                existingData.config.body = newWidgetData;
+
+                this.currentBlock.element.setAttribute(_constants.DATA_WIDGET_ATTRIBUTE, JSON.stringify(existingData));
+            }
+        }, {
+            key: 'hideEditor',
+            value: function hideEditor() {
+                this.toggleDropdown(true);
+                this.hideUrlTooltip();
+                if (this.formatter) {
+                    this.formatter.style.top = '-60px';
+                }
+                this.toggleEditable();
+            }
+        }, {
+            key: 'shouldDismissEditor',
+            value: function shouldDismissEditor(target, event) {
+
+                if (this.contains(target, _constants.CONTENT_WIDGET_FORMAT_BAR)) {
+                    return true;
+                } else if (this.contains(target, _constants.URL_TOOLTIP_CLASS)) {
+                    return true;
+                }
+            }
+        }, {
+            key: 'contains',
+            value: function contains(el, cls) {
+                while (el !== doc.body && el && el.classList) {
+                    if (el.classList.contains(cls)) {
+                        return el;
+                    } else {
+                        el = el.parentNode;
+                    }
+                }
+            }
+        }, {
+            key: 'getUrlTooltip',
+            value: function getUrlTooltip() {
+                var urlTooltip = doc.createElement('div');
+
+                urlTooltip.classList.add(_constants.URL_TOOLTIP_CLASS);
+
+                urlTooltip.innerHTML = '<input type="text" placeholder="http://">';
+
+                urlTooltip.addEventListener('change', this.onUrlUpdate.bind(this));
+
+                doc.body.appendChild(urlTooltip);
+
+                return urlTooltip;
+            }
+        }, {
+            key: 'onUrlUpdate',
+            value: function onUrlUpdate(e) {
+
+                var url = this.urlTooltip.querySelector('input').value;
+                var linkElement = this.currentLink.startContainer.querySelector('a');
+
+                linkElement.setAttribute('href', url);
+
+                this.updateWidget();
+
+                e.target.value = '';
+            }
+        }, {
+            key: 'revealEditor',
+            value: function revealEditor(block) {
+                var _this = this;
+
+                this.toggleAllContentWidgets();
+
+                this.formatter = this.formatter || this.getFormatter();
+
+                this.urlTooltip = this.urlTooltip || this.getUrlTooltip();
+
+                this.formatter.classList.add(_constants.CONTENT_WIDGET_FORMAT_BAR);
+
+                this.currentBlock = block;
+
+                this.toggleEditable(true);
+
+                setTimeout(function () {
+                    _this.formatter.style.top = '0px';
+                }, 30);
+            }
+        }, {
+            key: 'toggleAllContentWidgets',
+            value: function toggleAllContentWidgets() {
+                Array.from(doc.querySelectorAll(_constants.CONTENT_SELECTOR)).forEach(function (widget) {
+
+                    widget.contentEditable = false;
+                    widget.parentNode.classList.remove(_constants.EDITING_STATE_CLASS);
+                });
+            }
+        }, {
+            key: 'toggleEditable',
+            value: function toggleEditable(on) {
+
+                if (!this.currentBlock) {
+                    return false;
+                }
+
+                var content = this.currentBlock.element.querySelector(_constants.CONTENT_SELECTOR);
+                var block = this.currentBlock.element;
+
+                if (!block || !content) {
+                    console.warn('An error occurred');
+                    return false;
+                }
+
+                if (on) {
+                    content.contentEditable = true;
+                    block.classList.add(_constants.EDITING_STATE_CLASS);
+                } else {
+                    content.contentEditable = false;
+                    block.classList.remove(_constants.EDITING_STATE_CLASS);
+                }
+            }
+        }, {
+            key: 'toggleDropdown',
+            value: function toggleDropdown(dismiss) {
+                if (this.dropDownMenuMount) {
+                    this.dropDownMenuMount.style.display = this.dropDownMenuMount.style.display === 'block' || dismiss === true ? 'none' : 'block';
+                }
+            }
+        }, {
+            key: 'addStyleDropdown',
+            value: function addStyleDropdown(formatterComponent) {
+                var _this2 = this;
+
+                this.dropDownMenuMount = formatterComponent.querySelector(_constants.CONTENT_WIDGET_STYLE_DROPDOWN_SELECTOR);
+
+                var dropDownMenu = this.dropDownMenuMount.parentNode;
+
+                dropDownMenu.addEventListener('click', this.toggleDropdown.bind(this));
+
+                this.stylesDropdown.forEach(function (style) {
+
+                    var li = doc.createElement('li');
+
+                    li.innerHTML = style.label;
+
+                    li.setAttribute(_constants.CONTENT_WIDGET_STYLE_ATTRIBUTE, JSON.stringify(style));
+
+                    li.setAttribute(_constants.CONTENT_WIDGET_ROLE_ATTRIBUTE, 'style');
+
+                    _this2.dropDownMenuMount.appendChild(li);
+                }, this);
+            }
+        }, {
+            key: 'doCustomStyle',
+            value: function doCustomStyle(item) {
+                var style = JSON.parse(item.getAttribute(_constants.CONTENT_WIDGET_STYLE_ATTRIBUTE));
+
+                doc.execCommand('formatBlock', false, style.tagName);
+            }
+        }, {
+            key: 'handleStyleEvent',
+            value: function handleStyleEvent(e) {
+
+                e.preventDefault();
+                e.stopImmediatePropagation();
+
+                var item = e.target;
+                var role = item.getAttribute(_constants.CONTENT_WIDGET_ROLE_ATTRIBUTE) ? item.getAttribute(_constants.CONTENT_WIDGET_ROLE_ATTRIBUTE) : item.parentElement.getAttribute(_constants.CONTENT_WIDGET_ROLE_ATTRIBUTE);
+
+                switch (role) {
+
+                    case 'style':
+                        this.doCustomStyle(item);
+                        break;
+                    case 'createLink':
+                        this.createLink();
+                    default:
+                        doc.execCommand(role, false, null);
+                        break;
+                }
+            }
+        }, {
+            key: 'createLink',
+            value: function createLink() {
+                doc.execCommand('createLink', false, _constants.TEMP_LINK_ID);
+
+                this.showUrlTooltip();
+            }
+        }, {
+            key: 'showUrlTooltip',
+            value: function showUrlTooltip() {
+                var element = doc.querySelector('[href="' + _constants.TEMP_LINK_ID + '"]');
+                var position = element.getBoundingClientRect();
+
+                this.urlTooltip.style.left = '40%';
+                this.urlTooltip.style.top = position.top + 30 + 'px';
+
+                this.urlTooltip.style.display = 'block';
+
+                this.currentLink = this.saveSelection()[0];
+            }
+        }, {
+            key: 'saveSelection',
+            value: function saveSelection() {
+                if (window.getSelection) {
+                    var sel = window.getSelection();
+                    if (sel.getRangeAt && sel.rangeCount) {
+                        var ranges = [];
+                        for (var i = 0, len = sel.rangeCount; i < len; ++i) {
+                            ranges.push(sel.getRangeAt(i));
+                        }
+                        return ranges;
+                    }
+                } else if (document.selection && document.selection.createRange) {
+                    return document.selection.createRange();
+                }
+                return null;
+            }
+        }, {
+            key: 'hideUrlTooltip',
+            value: function hideUrlTooltip() {
+                if (this.urlTooltip) {
+                    this.urlTooltip.style.display = 'none';
+                }
+            }
+        }, {
+            key: 'getFormatter',
+            value: function getFormatter() {
+
+                var iconClass = {
+                    bold: 'fa fa-bold',
+                    italic: 'fa fa-italic',
+                    underline: 'fa fa-underline',
+                    link: 'fa fa-link',
+                    unlink: 'fa fa-unlink',
+                    alignLeft: 'fa fa-align-left',
+                    alignRight: 'fa fa-align-right',
+                    alignCenter: 'fa fa-align-center',
+                    unorderedList: 'fa fa-list-ul',
+                    orderedList: 'fa fa-list-ol',
+                    indent: 'fa fa-indent',
+                    outdent: 'fa fa-outdent'
+                };
+
+                var formatterInnerHTML = ['<ul>', '<li ', _constants.CONTENT_WIDGET_STYLE_DROPDOWN_ATTRIBUTE, ' class="mz-cms-styles"', '<span>Styles</span>', '<i class="fa fa-caret-down"></i>', '<ul></ul>', '</li>', '<li data-role="bold"><i class="', iconClass.bold, '"></i></li>', '<li data-role="italic"><i class="', iconClass.italic, '"></i></li>', '<li data-role="underline"><i class="', iconClass.underline, '"></i></li>', '<li data-role="createLink"><i class="', iconClass.link, '"></i></li>', '<li data-role="unlink"><i class="', iconClass.unlink, '"></i></li>', '<li data-role="justifyLeft"><i class="', iconClass.alignLeft, '"></i></li>', '<li data-role="justifyCenter"><i class="', iconClass.alignCenter, '"></i></li>', '<li data-role="justifyRight"><i class="', iconClass.alignRight, '"></i></li>', '<li data-role="insertUnorderedList"><i class="', iconClass.unorderedList, '"></i></li>', '<li data-role="insertOrderedList"><i class="', iconClass.orderedList, '"></i></li>', '<li data-role="indent"><i class="', iconClass.indent, '"></i></li>', '<li data-role="outdent"><i class="', iconClass.outdent, '"></i></li>', '</ul>'].join('');
+
+                var formatterComponent = doc.createElement('div');
+
+                formatterComponent.innerHTML = formatterInnerHTML;
+
+                formatterComponent.addEventListener('mousedown', this.handleStyleEvent.bind(this));
+
+                doc.body.appendChild(formatterComponent);
+
+                this.addStyleDropdown(formatterComponent);
+
+                return formatterComponent;
+            }
+        }]);
+
+        return ContentWidget;
+    })();
+
+    doc.addEventListener('DOMContentLoaded', function () {
+        if (!win.Chorizo) {
+            win.Chorizo = {};
+        }
+
+        Chorizo.contentWidget = new ContentWidget();
+    });
+})(window, document);
+
+},{"./constants":1}],3:[function(require,module,exports){
 'use strict';
 
 var _createClass = (function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ('value' in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; })();
@@ -162,6 +504,8 @@ var _constants = require('./constants');
         }, {
             key: 'setDirtyState',
             value: function setDirtyState(val) {
+                Chorizo.contentWidget.toggleAllContentWidgets();
+                Chorizo.contentWidget.hideEditor();
                 this._dirty = val ? val : false;
             }
         }, {
@@ -769,7 +1113,7 @@ var _constants = require('./constants');
     });
 })(window, document);
 
-},{"./constants":1}],3:[function(require,module,exports){
+},{"./constants":1}],4:[function(require,module,exports){
 'use strict';
 
 var _createClass = (function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ('value' in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; })();
@@ -1062,7 +1406,7 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
 	});
 })(window, document);
 
-},{}],4:[function(require,module,exports){
+},{}],5:[function(require,module,exports){
 'use strict';
 
 var _createClass = (function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ('value' in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; })();
@@ -1134,7 +1478,7 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
     });
 })(window, document);
 
-},{}],5:[function(require,module,exports){
+},{}],6:[function(require,module,exports){
 'use strict';
 
 var _get = function get(_x, _x2, _x3) { var _again = true; _function: while (_again) { var object = _x, property = _x2, receiver = _x3; _again = false; if (object === null) object = Function.prototype; var desc = Object.getOwnPropertyDescriptor(object, property); if (desc === undefined) { var parent = Object.getPrototypeOf(object); if (parent === null) { return undefined; } else { _x = parent; _x2 = property; _x3 = receiver; _again = true; desc = parent = undefined; continue _function; } } else if ('value' in desc) { return desc.value; } else { var getter = desc.get; if (getter === undefined) { return undefined; } return getter.call(receiver); } } };
@@ -1284,6 +1628,11 @@ Array.from = function () {
                     this.element.classList.add('mz-cms-state-selected');
                     this.element.appendChild(this.resizer);
                 }
+
+                // showing content editor on single click
+                if (this.widgetData && this.widgetData.definitionId && this.widgetData.definitionId === 'content') {
+                    Chorizo.contentWidget.revealEditor(this);
+                }
             }
         }, {
             key: 'remove',
@@ -1429,6 +1778,8 @@ Array.from = function () {
                 var block = this;
                 var isContentWidget = block.widgetData.definitionId === 'content';
 
+                Chorizo.editor.setDirtyState(true);
+
                 if (!isContentWidget) {
                     Chorizo.editor.fireEvent('widgetedit', {
                         widgetTypeId: this.widgetData.definitionId,
@@ -1440,7 +1791,7 @@ Array.from = function () {
                         }
                     });
                 } else {
-                    Chorizo.contentEditor.revealEditor(block);
+                    Chorizo.contentWidget.revealEditor(block);
                 }
             }
         }, {
@@ -2536,7 +2887,7 @@ Array.from = function () {
     });
 })(window, document);
 
-},{"./constants":1}],6:[function(require,module,exports){
+},{"./constants":1}],7:[function(require,module,exports){
 'use strict';
 
 var _createClass = (function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ('value' in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; })();
@@ -2569,4 +2920,4 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
     });
 })(window, document);
 
-},{}]},{},[1,2,3,4,5,6]);
+},{}]},{},[1,2,3,4,5,6,7]);

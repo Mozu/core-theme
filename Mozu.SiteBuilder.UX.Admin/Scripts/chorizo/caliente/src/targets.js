@@ -154,6 +154,13 @@ Array.from = function() {
                 this.element.appendChild(this.resizer);
             }
 
+            // showing content editor on single click
+            if (this.widgetData
+                    && this.widgetData.definitionId
+                    && this.widgetData.definitionId === 'content') {
+                Chorizo.contentWidget.revealEditor(this);
+            }
+
         }
 
         remove(elementReference) {
@@ -282,6 +289,8 @@ Array.from = function() {
             const block = this;
             const isContentWidget = block.widgetData.definitionId === 'content';
 
+            Chorizo.editor.setDirtyState(true);
+
             if (!isContentWidget) {
                 Chorizo.editor.fireEvent('widgetedit', {
                     widgetTypeId: this.widgetData.definitionId,
@@ -295,7 +304,7 @@ Array.from = function() {
             }
 
             else {
-                Chorizo.contentEditor.revealEditor(block);
+                Chorizo.contentWidget.revealEditor(block);
             }
         }
 

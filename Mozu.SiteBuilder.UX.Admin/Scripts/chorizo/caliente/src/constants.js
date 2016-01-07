@@ -2,7 +2,7 @@
 * @Author: ben_cripps
 * @Date:   2015-12-05 15:02:05
 * @Last Modified by:   ben_cripps
-* @Last Modified time: 2015-12-05 20:30:06
+* @Last Modified time: 2016-01-06 16:45:32
 */
 
 
@@ -89,5 +89,20 @@ export const COL_COPY_SELECTOR = `#${COL_COPY_ID}`;
 
 export const MIN_COLUMN_WIDTH = 10;
 
+// content widget
 
+export const EDITING_STATE_CLASS = 'mz-cms-state-editing';
 
+export const TEMP_LINK_ID = '#mz-cms-temp-link';
+
+export const URL_TOOLTIP_CLASS = 'mz-cms-tooltip';
+
+export const CONTENT_WIDGET_STYLE_ATTRIBUTE = 'data-style';
+
+export const CONTENT_WIDGET_FORMAT_BAR = 'mz-cms-format-bar';
+
+export const CONTENT_WIDGET_ROLE_ATTRIBUTE = 'data-role';
+
+export const CONTENT_WIDGET_STYLE_DROPDOWN_ATTRIBUTE = 'data-role="styles"';
+
+export const CONTENT_WIDGET_STYLE_DROPDOWN_SELECTOR = `[${CONTENT_WIDGET_STYLE_DROPDOWN_ATTRIBUTE}] ul`;

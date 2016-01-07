@@ -43,6 +43,8 @@ import {
         }
 
         setDirtyState(val) {
+            Chorizo.contentWidget.toggleAllContentWidgets();
+            Chorizo.contentWidget.hideEditor();
             this._dirty = val ? val : false;
         }
 
@@ -100,7 +102,7 @@ import {
                     dragOver: 'dragover',
                     drag: 'drag',
                     drop: 'drop'
-                }
+                };
             }
 
             return dragEvents;
