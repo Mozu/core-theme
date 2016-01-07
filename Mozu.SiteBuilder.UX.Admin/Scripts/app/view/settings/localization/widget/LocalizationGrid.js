@@ -67,6 +67,7 @@ Ext.define('Taco.view.settings.localization.widget.LocalizationGrid', {
             viewConfig: {
                 deferEmptyText: false,
                 emptyText: "No items",
+                stripeRows: false,
                 plugins: [
                     {
                         ptype: 'gridviewdragdrop'
