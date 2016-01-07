@@ -74,6 +74,7 @@
     .#{$prefix}trigger-cell {
         background-color: $card-button-bg;
         left: 0px;
+        width: 21px;
     }
 
     .#{$prefix}form-trigger-input-cell {
@@ -82,10 +83,11 @@
             background-color: $card-button-bg;
             border: none;
             box-shadow: none;
-            font-size: 14px;
+            font-size: 12px;
             font-weight: 300;
+            text-indent: 14px;
             height: 28px;
-            left: -51px;
+            left: -60px;
             margin-top: 1px;
         }
     }
