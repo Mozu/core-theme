@@ -428,4 +428,26 @@
     .#{$prefix}form-readonly input.#{$prefix}form-text {
         cursor: not-allowed;
     }
+
+    .#{$prefix}form-checkboxgroup {
+
+        .#{$prefix}form-item-required {
+            color: $label-color;
+
+            &:before {
+                content: '';
+                display: none;
+            }
+
+            &:after {
+                color: $valid-green;
+                content: ' *';
+            }
+
+            &.label-focused {
+                color: $valid-green;
+            }
+        }
+
+    }
 }
