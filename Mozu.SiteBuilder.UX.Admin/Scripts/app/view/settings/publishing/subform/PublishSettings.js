@@ -179,12 +179,14 @@ Ext.define('Taco.view.settings.publishing.subform.PublishSettings', {
             	{
 	                xtype: 'fieldcontainer',
 	                fieldLabel: 'Live',
-	                cellCls: 'header radio'
+	                cellCls: 'header radio',
+                    width: 50
 	            }, 
 	            {
 	                xtype: 'fieldcontainer',
 	                fieldLabel: 'Staged',
-	                cellCls: 'header radio'
+	                cellCls: 'header radio',
+                    width: 50
 	            }, 
 	            liveEditColumnHeading,   
 	            {
