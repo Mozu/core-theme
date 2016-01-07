@@ -137,8 +137,6 @@ Ext.define('Taco.core.ux.form.NavForm2', {
 
         this.navTop = this.sectionNav.getY() - headerHeight;
 
-        debugger;
-
         this.cacheNavDimensions();
 
     },
