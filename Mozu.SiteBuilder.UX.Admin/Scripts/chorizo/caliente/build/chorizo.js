@@ -3,7 +3,7 @@
 * @Author: ben_cripps
 * @Date:   2015-12-05 15:02:05
 * @Last Modified by:   ben_cripps
-* @Last Modified time: 2016-01-06 16:45:32
+* @Last Modified time: 2016-01-07 15:53:33
 */
 
 'use strict';
@@ -133,6 +133,9 @@ var MIN_COLUMN_WIDTH = 10;
 exports.MIN_COLUMN_WIDTH = MIN_COLUMN_WIDTH;
 // content widget
 
+var TRASH_ICON = 'chorizo-icon';
+
+exports.TRASH_ICON = TRASH_ICON;
 var EDITING_STATE_CLASS = 'mz-cms-state-editing';
 
 exports.EDITING_STATE_CLASS = EDITING_STATE_CLASS;
@@ -194,7 +197,7 @@ var _constants = require('./constants');
 
                 if (this.formatter) {
                     this.hideEditor();
-                    this.updateWidget();
+                    Chorizo.editor.updateAllContentWidgets();
                 }
             }).bind(this));
         }
@@ -215,7 +218,7 @@ var _constants = require('./constants');
                 this.toggleDropdown(true);
                 this.hideUrlTooltip();
                 if (this.formatter) {
-                    this.formatter.style.top = '-60px';
+                    this.formatter.style.top = '-84px';
                 }
                 this.toggleEditable();
             }
@@ -250,6 +253,13 @@ var _constants = require('./constants');
                 urlTooltip.innerHTML = '<input type="text" placeholder="http://">';
 
                 urlTooltip.addEventListener('change', this.onUrlUpdate.bind(this));
+
+                urlTooltip.addEventListener('keydown', (function (e) {
+                    if (e.which === 13 && e.target.value !== '') {
+                        this.onUrlUpdate(e);
+                        this.hideUrlTooltip();
+                    }
+                }).bind(this));
 
                 doc.body.appendChild(urlTooltip);
 
@@ -500,6 +510,19 @@ var _constants = require('./constants');
                 this.resetDirtyState();
                 this.fireEvent('pageload', this);
                 this._dirty = false;
+            }
+        }, {
+            key: 'updateAllContentWidgets',
+            value: function updateAllContentWidgets() {
+                Array.from(doc.querySelectorAll(_constants.CONTENT_SELECTOR)).forEach(function (widget) {
+
+                    var newWidgetData = widget.innerHTML;
+                    var existingData = JSON.parse(widget.parentElement.getAttribute(_constants.DATA_WIDGET_ATTRIBUTE));
+
+                    existingData.config.body = newWidgetData;
+
+                    widget.parentElement.setAttribute(_constants.DATA_WIDGET_ATTRIBUTE, JSON.stringify(existingData));
+                });
             }
         }, {
             key: 'setDirtyState',
@@ -1011,6 +1034,8 @@ var _constants = require('./constants');
         }, {
             key: 'persistanceData',
             value: function persistanceData() {
+
+                this.updateAllContentWidgets();
 
                 var data = [];
 
@@ -1630,7 +1655,8 @@ Array.from = function () {
                 }
 
                 // showing content editor on single click
-                if (this.widgetData && this.widgetData.definitionId && this.widgetData.definitionId === 'content') {
+                if (this.widgetData && this.widgetData.definitionId && this.widgetData.definitionId === 'content' && !e.target.classList.contains('trash')) {
+
                     Chorizo.contentWidget.revealEditor(this);
                 }
             }

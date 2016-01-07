@@ -157,7 +157,9 @@ Array.from = function() {
             // showing content editor on single click
             if (this.widgetData
                     && this.widgetData.definitionId
-                    && this.widgetData.definitionId === 'content') {
+                    && this.widgetData.definitionId === 'content'
+                    && !e.target.classList.contains('trash')) {
+                
                 Chorizo.contentWidget.revealEditor(this);
             }
 

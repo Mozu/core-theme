@@ -44,7 +44,7 @@ import {
 
                 if (this.formatter) {
                     this.hideEditor();
-                    this.updateWidget();
+                    Chorizo.editor.updateAllContentWidgets();
                 }
 
             }).bind(this));
@@ -64,7 +64,7 @@ import {
             this.toggleDropdown(true);
             this.hideUrlTooltip();
             if (this.formatter) {
-                this.formatter.style.top = '-60px';
+                this.formatter.style.top = '-84px';
             }
             this.toggleEditable();
         }
@@ -99,6 +99,14 @@ import {
             urlTooltip.innerHTML = '<input type="text" placeholder="http://">';
 
             urlTooltip.addEventListener('change', this.onUrlUpdate.bind(this));
+
+            urlTooltip.addEventListener('keydown', (function(e) {
+                if (e.which === 13 && e.target.value !== '') {
+                    this.onUrlUpdate(e);
+                    this.hideUrlTooltip();
+                }
+
+            }).bind(this));
 
             doc.body.appendChild(urlTooltip);
 

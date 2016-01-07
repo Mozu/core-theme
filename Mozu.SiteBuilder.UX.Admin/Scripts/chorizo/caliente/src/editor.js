@@ -42,6 +42,18 @@ import {
             this._dirty = false;
         }
 
+        updateAllContentWidgets() {
+            Array.from(doc.querySelectorAll(CONTENT_SELECTOR)).forEach((widget) => {
+
+                const newWidgetData = widget.innerHTML;
+                const existingData = JSON.parse(widget.parentElement.getAttribute(DATA_WIDGET_ATTRIBUTE));
+
+                existingData.config.body = newWidgetData;
+
+                widget.parentElement.setAttribute(DATA_WIDGET_ATTRIBUTE, JSON.stringify(existingData));
+            });
+        }
+
         setDirtyState(val) {
             Chorizo.contentWidget.toggleAllContentWidgets();
             Chorizo.contentWidget.hideEditor();
@@ -561,6 +573,8 @@ import {
         }
 
         persistanceData() {
+
+            this.updateAllContentWidgets();
 
             const data = [];
 

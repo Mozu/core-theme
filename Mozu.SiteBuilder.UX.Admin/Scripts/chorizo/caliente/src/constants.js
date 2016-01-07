@@ -2,7 +2,7 @@
 * @Author: ben_cripps
 * @Date:   2015-12-05 15:02:05
 * @Last Modified by:   ben_cripps
-* @Last Modified time: 2016-01-06 16:45:32
+* @Last Modified time: 2016-01-07 15:53:33
 */
 
 
@@ -90,6 +90,8 @@ export const COL_COPY_SELECTOR = `#${COL_COPY_ID}`;
 export const MIN_COLUMN_WIDTH = 10;
 
 // content widget
+
+export const TRASH_ICON = 'chorizo-icon';
 
 export const EDITING_STATE_CLASS = 'mz-cms-state-editing';
 
