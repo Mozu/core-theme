@@ -96,6 +96,7 @@ Ext.define('Taco.view.order.subform.fulfillment.Grid', {
 
             this.on('viewready', function() {
                 this.getSelectionModel().selectAll(true);
+                this.getSelectionModel().setLastFocused(null);
             });
 
             this.selModel = Ext.create('Ext.selection.CheckboxModel', {

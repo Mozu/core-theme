@@ -11,7 +11,7 @@ Ext.define('Taco.view.order.widget.ReturnableItemGrid', {
 
     viewConfig: {
         deferEmptyText: false,
-        stripeRows:false,
+        stripeRows: false,
         emptyText: "No items availabe to return",
         getRowClass: function(record) {
             return record.get('parentBundleName') && "taco-returnableitem-bundled" || '';
