@@ -57,8 +57,8 @@
     }
 
     .section-header {
-        font-size: 20px;
-        font-weight: bold;
+        font-size: $input-font;
+        font-weight: normal;
     }
 
     table.section-summary {
@@ -68,8 +68,10 @@
         }
 
         tr td:first-child {
-            font-weight: bold;
+            font-size: $label-font;
+            font-weight: normal;
             padding-right: 8px;
+            color: $label-color;
         }
     }
 }

@@ -2,7 +2,8 @@
 
 .#{$vprefix}form-nav {
     background-color: $color-framework-gray-lighter;
-    border: 1px solid $color-standard-border;
+    border-bottom: 1px solid $light-border-gray;
+    border-bottom-width: 1px !important;
     outline: 0px none;
     //padding: 19px 39px;
     //width: 180px;

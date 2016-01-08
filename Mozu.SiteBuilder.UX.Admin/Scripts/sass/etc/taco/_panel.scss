@@ -4,6 +4,18 @@
         font-weight: normal;
     }
 
+    .#{$prefix}panel-subform-section {
+        border-bottom: 1px solid $light-border-gray;
+    }
+    
+    .#{$prefix}panel-header-body-subform-section-horizontal {
+        > div {
+            &.#{$prefix}box-inner {
+                border-bottom: 1px solid $light-border-gray;
+            }
+        }
+    }
+
     .#{$prefix}mask {
         background-color: $mask-color;
     }
@@ -94,6 +106,10 @@
             color: $dark-color;
             font-family: $font-family;
             font-size: $card-title-font;
+
+            &.#{$prefix}panel-header-text-subform-section {
+                font-size: $input-font;
+            }
         }
 
         .#{$vprefix}order-subform {
