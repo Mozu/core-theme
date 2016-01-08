@@ -281,8 +281,7 @@ Ext.define('Taco.view.order.subform.Payment', {
             canAddPayment = orderStatus !== 'Completed' && orderStatus !== "PendingReview",
             paymentStatus = me.record.get('paymentStatus');
         
-        this.setHeaderTitle('<div class="x-panel x-panel-header-text-container-subform"><span style="font-weight:normal;" class="x-panel-header-text">Payments</span></div><span class="label">Status:</span><span data-handle="order-payment-status">' + paymentStatus + '</span>');
-
+        this.setHeaderTitleStatus('Payments', paymentStatus);
         Ext.Object.each(me.paymentActions, function(k, paymentAction) {
             paymentAction.setDisabled(!canAddPayment);
         });

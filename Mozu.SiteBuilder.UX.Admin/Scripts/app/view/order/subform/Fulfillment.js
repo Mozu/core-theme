@@ -23,9 +23,10 @@ Ext.define('Taco.view.order.subform.Fulfillment', {
     },
 
     buildComponents: function () {
-
-        this.setHeaderTitle('<div class="x-panel x-panel-header-text-container-subform"><span style="font-weight:normal;" class="x-panel-header-text">Fullfillment</span></div><span class="label" style="color:#999;">Status:</span><span style="font-weight:bold;"> ' + this.record.get('fulfillmentStatus') + '</span>');
-
+        var fulfillmentStatus = this.record.get('fulfillmentStatus');
+        fulfillmentStatus = Taco.core.util.Common.camelToSpace(fulfillmentStatus);
+        //var fulfillmentColor = 'dark'; //replace this with obj[fullfillmentStatus]
+        this.setHeaderTitleStatus('Fullfillment', fulfillmentStatus);
         this.removeAll();
 
         if (this.record.get('packages').length || this.record.get('unShippedPackages').length || this.record.get('unpackagedItems').length) {

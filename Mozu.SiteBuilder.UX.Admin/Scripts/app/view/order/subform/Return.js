@@ -1,4 +1,4 @@
-﻿/**
+/**
  * @class Taco.view.order.subform.Return
  */
 Ext.define('Taco.view.order.subform.Return', {
@@ -163,8 +163,8 @@ Ext.define('Taco.view.order.subform.Return', {
         var returnsStore = this.getReturnsStore();
         var returnCount = returnsStore ? Ext.valueFrom(returnsStore.count(), 0) : 0;
         // var returnStatus = Taco.core.util.Common.camelToSpace(this.record.get('returnStatus'));
-
-        this.setHeaderTitle('<div class="x-panel x-panel-header-text-container-subform"><span style="font-weight:normal;" class="x-panel-header-text">Returns</span></div>Status: <strong>' + (returnCount ? returnCount : 'No') + ' Return' + (returnCount === 1 ? '' : 's') + '</strong>');
+        var returnStatus = (returnCount ? returnCount : 'No') + ' Return' + (returnCount === 1 ? '' : 's');
+        this.setHeaderTitleStatus('Returns', returnStatus);
     },
 
     initCreateButton: function () {
