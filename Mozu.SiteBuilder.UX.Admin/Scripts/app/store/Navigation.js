@@ -61,12 +61,19 @@ Ext.define('Taco.store.Navigation', {
                     return true;
                 },
                 mergeSubnavLinks = function(subNavStore) {
+
                     var navStore = this;
                     if (Taco.store.Navigation.getSubNavLinksMerged()) {
                         return;
                     }
+                    
                     subNavStore.each(function (item) {
                         var parent = navStore.getById(item.get('parentId'));
+                        
+                        if (item.get('location') && item.get('location').indexOf('menu') !== -1) {
+                            parent = navStore.getById(item.get('location').replace('menu', ''));
+                        } 
+
                         if (!parent) {
                             console.log('could not find parent ');
                             console.log(item);
@@ -75,7 +82,7 @@ Ext.define('Taco.store.Navigation', {
 
                         var subNavObject = Ext.apply({
                             id: 'subNav' + item.get('badgeInitials'),
-                            label: item.get('modalWindowTitle'),
+                            label: item.get('modalWindowTitle') || item.get('windowTitle') || 'Mozu Admin Extension',
                             address: item.get('href'),
                             isSubNavLink: true
                         }, item.data);
@@ -109,12 +116,16 @@ Ext.define('Taco.store.Navigation', {
                 filters: [ 
                     function(item) {
 
-                        if (!item.get('location')) {
+                        if (!item.get('location') && !item.get('parentId')) {
                             return false;
                         }
 
                         else if (item.get('location').toLowerCase().indexOf('menu') !== -1) {
                             item.set('parentId', item.get('location').toLowerCase().replace('menu', ''));
+                            return item;
+                        }
+
+                        else if (item.get('parentId')) {
                             return item;
                         }
                     }

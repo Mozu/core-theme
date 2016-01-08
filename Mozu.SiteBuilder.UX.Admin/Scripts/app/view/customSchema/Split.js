@@ -318,7 +318,7 @@ Ext.define('Taco.view.customSchema.Split', {
             }
         });
 
-        console.log(record);
+        
         Taco.core.StateManager.addState('customschema?entityType=' + record.get('entityType') + '&list=' + record.get('listFQN') + '&record=' + record.get('id'));
     },
 
