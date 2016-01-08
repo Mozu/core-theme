@@ -4,10 +4,15 @@
         font-weight: normal;
     }
 
+    .#{$prefix}panel-header-text-container-default {
+        border-bottom: 1px solid $light-border-gray;
+        height: 30px;
+    }
+
     .#{$prefix}panel-subform-section {
         border-bottom: 1px solid $light-border-gray;
     }
-    
+
     .#{$prefix}panel-header-body-subform-section-horizontal {
         > div {
             &.#{$prefix}box-inner {
@@ -605,15 +610,6 @@
                     opacity: 0.5;
                     line-height: 33px;
                 }
-            }
-        }
-
-        .#{$prefix}panel-header-text-container-subform {
-            display: inline-block;
-
-            & + .#{$prefix}column-content-pill {
-                position: relative;
-                top: -8px;
             }
         }
 	}
