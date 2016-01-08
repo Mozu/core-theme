@@ -220,8 +220,111 @@ Ext.define('Taco.view.navigation.SubNavLinkContainer', {
     	}
 
     	else if (displayMode === 'modal') {
-
+            this.launchExtensionWindow(record.extenstion, record.extenstion.get('href'));
     	}
+    },
+
+    launchExtensionWindow: function (extensionLink, ctx, secureForm) {
+        var me = this,
+            jsonData = {'x-vol-return-url': window.location.href};
+
+        if (ctx) jsonData = ctx;
+
+        jsonData['x-vol-return-url'] = window.location.href;
+
+        if (extensionLink.metaData.appId) {
+
+            if (!secureForm) {
+                
+                Ext.Ajax.request({
+                    url: '/admin/app/capabilities/createSecureForm?appId=' + extensionLink.metaData.appId,
+                    method: 'POST',
+                    jsonData: jsonData,
+                    success: function (response) {
+                        // success handling here
+                        var json = Ext.decode(response.responseText, true);
+                        if (!json || !json.success) {
+                            // service didnt' return data properly
+                            return;
+                        }
+                        me.launchExtensionWindow(extensionLink, ctx, json.items);
+                    }
+                });
+                return;
+            }
+
+        }
+
+
+        var configIframe = Ext.create('Ext.ux.IFrame', {
+            height: '100%',
+            src: 'about:blank'
+        });
+
+        // var formHtml = "<form id='configPost' method='POST' action='" + extensionLink.address
+        //     + "' target='" + configIframe.frameName + "'>"
+        ////     + "<input type=hidden name='x-vol-tenant-domain' value='" + this.record.get("tenantDomain") + "'/>"
+        //  //   + "<input type=hidden name='x-vol-return-url' value='" + this.record.get("configReturnUrl") + "'/>"
+        //     + "</form>";
+
+        var configForm = {
+            xtype: 'form',
+            url: extensionLink.address,
+            action: 'POST',
+            items: [],
+            hidden: true,
+            listeners: {
+                render: function (cmp) {
+                    //  cmp.getForm().target = configIframe.frameName;
+                    cmp.submit({
+                        standardSubmit: true,
+                        target: configIframe.frameName
+                    });
+                }
+            }
+        };
+
+        if (secureForm) {
+            Ext.Array.each(secureForm.body, function (kvp) {
+                configForm.items.push({
+                    xtype: 'hiddenfield',
+                    name: kvp.key,
+                    value: kvp.value
+                });
+            });
+            configForm.url = Ext.String.urlAppend(configForm.url, 'dt=' + encodeURIComponent(secureForm.dateStamp));
+            configForm.url = Ext.String.urlAppend(configForm.url, 'messageHash=' + encodeURIComponent(secureForm.messageHash));
+        }
+
+
+        var modalConfigWindow = Ext.create('Taco.core.ux.window.Drawer', {
+            autoShow: true,
+            resizable: true,
+            draggable: true,
+            layout: 'fit',
+            autoScroll: false,
+            height: '90%',
+            scale: 'large',
+            actions: [],
+            width: '90%',
+            shadow: true,
+            title: extensionLink.metaData.windowTitle,
+            items: [
+                configIframe,
+                configForm
+            ],
+            //listeners: {
+            //    close: function (cmp) {
+            //        cmp.removeAll(true);
+            //        this.record.reload();
+            //    },
+            //    scope: this
+            //}
+        });
+        
+        modalConfigWindow.center();
+
+        this.add(modalConfigWindow);
     }
 
 });
