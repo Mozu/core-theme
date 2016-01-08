@@ -54,8 +54,8 @@ Ext.define('Taco.view.productRanking.form.BlockedProduct', {
             defaults: {
                 flex: 1
             },
-            items: [ me.productList]
-        })
+            items: [me.productList]
+        });
 
         me.items = [
             {
