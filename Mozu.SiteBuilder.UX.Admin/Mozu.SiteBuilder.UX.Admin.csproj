@@ -753,9 +753,13 @@
     <Content Include="Scripts\app\view\customSchema\Lists.js" />
     <Content Include="Scripts\app\view\customSchema\SchemaList.js" />
     <Content Include="Scripts\app\view\customSchema\Split.js" />
+    <Content Include="Scripts\app\view\navigation\ContextSwitcherBar.js" />
+    <Content Include="Scripts\app\view\navigation\ContextSwitcherSelector.js" />
+    <Content Include="Scripts\app\view\navigation\PrimaryMenuMask.js" />
     <Content Include="Scripts\app\view\navigation\PrimaryMenuSubContainer.js" />
     <Content Include="Scripts\app\view\navigation\PrimaryMenuNavGroup.js" />
     <Content Include="Scripts\app\view\navigation\PrimaryMenuContainer.js" />
+    <Content Include="Scripts\app\view\navigation\SubNavLinkContainer.js" />
     <Content Include="Scripts\app\view\preview\ExpressionPreviewDrawer.js" />
     <Content Include="Scripts\app\view\productRanking\Edit.js" />
     <Content Include="Scripts\app\view\productRanking\Form.js" />
@@ -1606,7 +1610,6 @@
     <Content Include="Scripts\app\view\generalSettings\subform\Tools.js" />
     <Content Include="Scripts\app\view\navigation\ContextSwitcherView.js" />
     <Content Include="Scripts\app\view\navigation\GlobalSearchBox.js" />
-    <Content Include="Scripts\app\view\navigation\PrimaryMenuView.js" />
     <Content Include="Scripts\app\view\order\Edit.js" />
     <Content Include="Scripts\app\view\order\Form.js" />
     <Content Include="Scripts\app\view\order\Header.js" />
@@ -2340,10 +2343,8 @@
     <Content Include="Scripts\app\view\NotifierBar.js" />
     <Content Include="Scripts\app\view\dashboard\Index.js" />
     <Content Include="Scripts\app\view\Header.js" />
-    <Content Include="Scripts\app\view\navigation\PrimaryMenu.js" />
     <Content Include="Scripts\app\view\navigation\ContextSwitcher.js" />
     <Content Include="Scripts\app\view\navigation\PrimarySubMenu.js" />
-    <Content Include="Scripts\app\view\navigation\PrimarySubMenuItem.js" />
     <Content Include="Scripts\app\view\navigation\SecondaryMenu.js" />
     <Content Include="Scripts\app\view\option\ConfigurableEdit.js" />
     <Content Include="Scripts\app\view\option\preview\DropDown.js" />

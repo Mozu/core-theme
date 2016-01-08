@@ -4,7 +4,6 @@
 Ext.define('Taco.view.Header', {
     extend: 'Ext.container.Container',
     requires: [
-        'Taco.view.navigation.PrimaryMenu',
         'Taco.view.navigation.SecondaryMenu',
         'Taco.core.ux.action.Action',
         'Taco.view.navigation.ContextSwitcher',
