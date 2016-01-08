@@ -621,5 +621,30 @@
                 top: -8px;
             }
         }
+
+        .#{$vprefix}order-package-details {
+            .#{$prefix}component {
+                &.#{$prefix}box-item {
+                    &.#{$prefix}component-default {
+                        font-size: $normal-font;
+                        line-height: 17px;
+                    }
+                }
+            }
+        }
+
+        .#{$vprefix}order-package {
+            .#{$prefix}panel-body {
+                &.#{$prefix}layout-fit {
+                    background-color: $package-bg;
+                }
+            }
+
+            .#{$vprefix}orderform-shipping-shippingitemgrid {
+                .#{$prefix}grid-header-ct {
+                    background-color: transparent;
+                }
+            }
+        }
 	}
 }
