@@ -633,10 +633,24 @@
             }
         }
 
+        &.#{$prefix}panel-subform-section-child {
+            border-width: 0;
+        }
+
         .#{$vprefix}order-package {
-            .#{$prefix}panel-body {
+            > .#{$prefix}panel-body {
                 &.#{$prefix}layout-fit {
                     background-color: $package-bg;
+                    border: 1px solid $light-border-gray;
+                    @include border-radius-xbrowser(4px);
+
+                    .#{$prefix}component,
+                    .#{$prefix}container {
+                        &.#{$prefix}box-item {
+                            float: left;
+                            position: relative !important;
+                        }
+                    }
                 }
             }
 
