@@ -11,6 +11,7 @@ Ext.define('Taco.view.navigation.SubNavLinkContainer', {
 
     statics: {
         launchExtensionWindow: function (extensionLink, ctx, secureForm) {
+
             var me = this,
                 jsonData = {'x-vol-return-url': window.location.href};
 
@@ -55,7 +56,7 @@ Ext.define('Taco.view.navigation.SubNavLinkContainer', {
 
             var configForm = {
                 xtype: 'form',
-                url: extensionLink.address,
+                url: extensionLink.data.href,
                 action: 'POST',
                 items: [],
                 hidden: true,
@@ -94,7 +95,7 @@ Ext.define('Taco.view.navigation.SubNavLinkContainer', {
                 actions: [],
                 width: '90%',
                 shadow: true,
-                title: extensionLink.metaData.windowTitle,
+                title: extensionLink.data.windowTitle || 'Mozu App Extension',
                 items: [
                     configIframe,
                     configForm
