@@ -432,6 +432,21 @@
         cursor: not-allowed;
     }
 
+    .#{$prefix}multiselectfield {
+
+        li.#{$prefix}boundlist-item {
+            border-color: $dropdown-list-outline !important;
+        }
+
+        li.#{$prefix}boundlist-selected {
+            background-color: $dark-bg !important;
+            border-left: 3px solid $valid-green !important;
+            border-top-color: $dropdown-list-outline !important;
+            border-bottom-color: $dropdown-list-outline !important;
+            border-right-color: $dropdown-list-outline !important;
+        }
+    }
+
     .#{$prefix}form-checkboxgroup {
 
         .#{$prefix}form-item-required {
