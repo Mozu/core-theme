@@ -612,5 +612,14 @@
                 }
             }
         }
+
+        .#{$prefix}panel-header-text-container-subform {
+            display: inline-block;
+
+            & + .#{$prefix}column-content-pill {
+                position: relative;
+                top: -8px;
+            }
+        }
 	}
 }
