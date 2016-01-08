@@ -899,6 +899,7 @@ Ext.define('Taco.view.attribute.Form', {
                 fieldLabel: 'Input Type',
                 name: 'inputType',
                 editable: false,
+                allowOnlyWhitespace: false,
                 forceSelection: true,
                 readOnly: this.isEdit(),
                 store: [
@@ -908,8 +909,12 @@ Ext.define('Taco.view.attribute.Form', {
                     ['YesNo', 'Yes/No'],
                     ['Date', 'Date']
                 ],
+                enableKeyEvents: true,
                 listeners: {
                     change: this.onInputTypeChange,
+                    keyup: function (field, e, eOpts) {
+                        field.hadKeyEvent = true;
+                    },
                     scope: this
                 }
             },
