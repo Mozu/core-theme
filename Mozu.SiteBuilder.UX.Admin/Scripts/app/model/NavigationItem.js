@@ -43,6 +43,54 @@ Ext.define('Taco.model.NavigationItem', {
             type: 'auto',
             defaultValue: []
         },
+        {
+            name: 'location',
+            type: 'string'
+        },
+        {
+            name: 'displayMode',
+            type: 'string'
+        },
+        {
+            name: 'modalWindowTitle',
+            type: 'string'
+        },
+        {
+            name: 'href',
+            type: 'string'
+        },
+        {
+            name: 'appId',
+            type: 'string'
+        },
+        {
+            name: 'badgeInitials',
+            type: 'string'
+        },
+        {
+            name: 'badgeImage',
+            type: 'string'
+        },
+        {
+            name: 'path',
+            type: 'auto'
+        },
+        {
+            name: 'parentId',
+            type: 'string'
+        },
+        {
+            name: 'windowTitle',
+            type: 'string'
+        },
+        {
+            name: 'guid',
+            type: 'string'
+        },
+        {
+            name: 'isSubNavLink',
+            type: 'boolean'
+        },
         'items'
     ],
     // belongsTo: 'NavigationItem',

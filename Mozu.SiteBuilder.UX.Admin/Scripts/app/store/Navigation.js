@@ -72,11 +72,16 @@ Ext.define('Taco.store.Navigation', {
                             console.log(item);
                             return;
                         }
-                        parent.get('items').push({
-                            'id': 'subNav' + item.get('badgeInitials'),
-                            'label': item.get('modalWindowTitle'),
-                            'address': item.get('href')
-                        });
+
+                        var subNavObject = Ext.apply({
+                            id: 'subNav' + item.get('badgeInitials'),
+                            label: item.get('modalWindowTitle'),
+                            address: item.get('href'),
+                            isSubNavLink: true
+                        }, item.data);
+
+                        parent.get('items').push(subNavObject);
+
                     });
                     Taco.store.Navigation.setSubNavLinksMerged();
                 },

@@ -3,6 +3,9 @@
  */
 Ext.define('Taco.view.navigation.PrimarySubMenu', {
     extend: 'Ext.view.View',
+    requires: [
+        'Taco.view.navigation.SubNavLinkContainer'
+    ],
 
     autoEl: {
         tag: 'ul',
@@ -51,17 +54,32 @@ Ext.define('Taco.view.navigation.PrimarySubMenu', {
      * @param  {Ext.EventObject} e The raw event object
      */
     navigate: function (e) {
+
         var menu = Ext.ComponentQuery.query('#primaryMenuContainer').shift(),
+            subNavLinks = Ext.Array.filter(this.store.data.items, function(item) { return item.get('isSubNavLink'); }),
+            subNavLinksHrefs = Ext.Array.map(subNavLinks, function(rec) { return rec.get('href'); }),
+            subNavIndex,
             href;
+
         e.preventDefault();
+
         if (!e.target.hasAttribute('href')) {
             console.log('missing href');
             return;
         }
+
         href = e.target.getAttribute('href');
+        subNavIndex = subNavLinksHrefs.indexOf(href);
+
+        if (subNavIndex !== -1 && href.indexOf('http') !== -1) {
+            Taco.view.navigation.SubNavLinkContainer.launchExtensionWindow(subNavLinks[subNavIndex], subNavLinks[subNavIndex].data);
+        }
+
         if (href.indexOf('http') === -1) {
             Taco.core.StateManager.attemptNavigate(href);
-        } else {
+        } 
+
+        else {
             window.open(href, '_new');
         }
 
