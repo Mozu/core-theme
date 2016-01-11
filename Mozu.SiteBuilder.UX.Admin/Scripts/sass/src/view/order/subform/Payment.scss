@@ -1,4 +1,18 @@
 ﻿.#{$vprefix}orderform-payment {
+
+    .#{$vprefix}orderform-payment-amounts-summary-label {
+        font-size: $label-font;
+        color: $label-color;
+        font-weight: normal;
+        margin-right: 3px;
+
+        & + .#{$vprefix}orderform-payment-amounts-summary-value {
+        	color: $dark-color;
+        	font-size: $label-font;
+        	margin-right: 3px;
+        }
+    }
+
     &> .#{$prefix}panel-header {
 
         .label {

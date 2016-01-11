@@ -132,6 +132,12 @@
             }
         }
 
+        &.#{$vprefix}orderform-payment {
+            .#{$prefix}panel-subform-section-child {
+                background-color: transparent;
+            }
+        }
+
         .#{$prefix}panel-subform-section-child {
             background-color: $white-color;
         }
@@ -637,9 +643,11 @@
             border-width: 0;
         }
 
-        .#{$vprefix}order-package {
+        .#{$vprefix}order-package,
+        .#{$vprefix}orderform-payment {
             > .#{$prefix}panel-body {
-                &.#{$prefix}layout-fit {
+                &.#{$prefix}layout-fit,
+                &.#{$prefix}box-layout-ct {
                     background-color: $package-bg;
                     border: 1px solid $light-border-gray;
                     @include border-radius-xbrowser(4px);
