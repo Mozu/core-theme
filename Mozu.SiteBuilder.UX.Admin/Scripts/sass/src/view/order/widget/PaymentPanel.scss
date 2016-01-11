@@ -3,6 +3,12 @@
 		.#{$prefix}panel-header-text-container {
 			font-size: 20px;
 		}
+
+        .#{$prefix}grid-view-default,
+        .#{$prefix}grid-header-ct,
+        .#{$prefix}grid-cell-first {
+            background-color: $card-button-bg;
+        }
 	}
 
     .seperator {
