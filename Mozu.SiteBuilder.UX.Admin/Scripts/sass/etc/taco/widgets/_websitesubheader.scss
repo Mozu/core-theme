@@ -1,9 +1,13 @@
 @mixin taco-websitesubheader {
 
-  .#{$vprefix}website-subheader {
+    .#{$vprefix}website-iframe {
+        border: 10px solid $nav-element-active;
+    }
 
-    &.#{$vprefix}above-tree {
-        background-color: $white-color;
+    .#{$vprefix}website-subheader {
+
+        &.#{$vprefix}above-tree {
+            background-color: $white-color;
 
         .#{$prefix}panel-body {
             background-color: $white-color;

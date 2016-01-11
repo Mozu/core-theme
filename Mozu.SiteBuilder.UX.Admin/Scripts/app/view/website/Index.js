@@ -393,6 +393,7 @@ Ext.define('Taco.view.website.Index', {
                                         flex: 1,
                                         itemId: 'iframe',
                                         xtype: 'uxiframe',
+                                        cls: 'taco-website-iframe',
                                         src: this.getStartUrl()
                                     },
                                     {

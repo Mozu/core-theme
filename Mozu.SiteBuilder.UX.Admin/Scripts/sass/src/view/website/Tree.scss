@@ -190,7 +190,7 @@
         }
 
         &.active {
-            border: 1px solid $gray-text-dark;
+            box-shadow: rgba(0,0,0,0.09) 0 0 0 1px inset;
         }
 
         &:hover {
