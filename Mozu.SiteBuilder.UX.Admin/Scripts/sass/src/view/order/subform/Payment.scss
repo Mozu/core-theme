@@ -1,16 +1,73 @@
 ﻿.#{$vprefix}orderform-payment {
 
-    .#{$vprefix}orderform-payment-amounts-summary-label {
+    .#{$vprefix}orderform-payment-amounts-summary-label,
+    .orderform-payment-statusRow,
+    .paymentDetailsHeader {
         font-size: $label-font;
         color: $label-color;
         font-weight: normal;
         margin-right: 3px;
 
+        .statusField {
+        	font-size: $label-font;
+        	line-height: 17px;
+        	word-spacing: 999999px;
+        }
+
         & + .#{$vprefix}orderform-payment-amounts-summary-value {
         	color: $dark-color;
-        	font-size: $label-font;
+        	font-size: $normal-font;
+        	font-weight: normal;
         	margin-right: 3px;
         }
+    }
+
+    .#{$vprefix}history-collapsable {
+    	.title {
+    		font-size: $label-font;
+    		color: $label-color;
+    	}
+
+    	.details {
+    		font-size: $normal-font;
+
+    		.seperator {
+    		}
+    	}
+    }
+
+    .payments-actions {
+
+		.#{$prefix}btn-button {
+			font-size: 20px;
+			height: 25px;
+			opacity: .27;
+			top: 2px;
+
+			&:hover {
+				opacity: 1;
+			}
+		}
+
+		.#{$prefix}btn-arrow-right {
+			&:after {
+				display: none;
+			}
+		}
+    }
+
+    .orderform-payment-transactionlist {
+    	border-color: $light-border-gray;
+
+    	.body {
+    		border-color: $light-border-gray;
+    	}
+    }
+
+    .paymentDetailsHeader {
+    	& + div {
+    		font-size: $normal-font;
+    	}
     }
 
     &> .#{$prefix}panel-header {

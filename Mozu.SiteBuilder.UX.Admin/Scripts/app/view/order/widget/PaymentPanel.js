@@ -207,27 +207,27 @@ Ext.define('Taco.view.order.widget.PaymentPanel', {
                     style: {
                         'font-size': '14px'
                     }
-                },
-                {
-                    xtype: 'button',
-                    ui: 'action',
-                    scale: 'medium',
-                    margin: '0 2 0 0',
-                    text: 'More Actions',
-                    itemId: 'moreActionsButton',
-                    menu: me.getAvailableActions()
                 }, {
                     xtype: 'button',
                     ui: 'action',
                     scale: 'medium',
                     text: 'Capture',
-                    width: 180,
+                    width: 70,
                     itemId: 'captureButton',
                     handler: function() {
                         me.openPaymentActionModal((me.record.get('paymentType') === 'Check') ? 'ApplyCheck' : 'CapturePayment');
                     },
                     disabled: !canCapture || pendingReview
-                }
+                }, {
+                    xtype: 'button',
+                    ui: 'action',
+                    scale: 'small',
+                    width: 18,
+                    cls: 'payments-actions',
+                    glyph: 'XE90B@mozicons',
+                    itemId: 'moreActionsButton',
+                    menu: me.getAvailableActions()
+                },
             ]
         });
 
@@ -302,11 +302,11 @@ Ext.define('Taco.view.order.widget.PaymentPanel', {
                                 '<div class="payment-transaction {[xindex == 1 ? \'recent-transaction\' : \'previous-transaction\']}">',
                                     '<div class="details">',
                                         ' {createDate:date("M d g:ia")} ',
-                                        '<span class="seperator">|</span>',
+                                        '<span class="seperator"></span>',
                                             ' Amount: {[Taco.app.context.getCurrent().formatCurrency(values.amount)]} ',
-                                        '<span class="seperator">|</span>',
+                                        '<span class="seperator"></span>',
                                             'Type: {interactionType} ',
-                                        '<span class="seperator">|</span>',
+                                        '<span class="seperator"></span>',
                                             'Status: {status} ',
                                         '<tpl if="gatewayTransactionId">',
                                             '<tpl if="gatewayTransactionId != 0">',
