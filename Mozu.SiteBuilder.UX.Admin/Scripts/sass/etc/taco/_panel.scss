@@ -669,4 +669,10 @@
             }
         }
 	}
+
+    .taco-scrollable-panel {
+        .x-panel-body {
+            overflow-y: auto;
+        }
+    }
 }

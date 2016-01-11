@@ -59,6 +59,7 @@ Ext.define('Taco.view.productRanking.form.BlockedProduct', {
         me.items = [
             {
                 xtype: 'panel',
+                cls: 'taco-scrollable-panel',
                 layout: 'fit',
                 defaults: {
                     flex: 1

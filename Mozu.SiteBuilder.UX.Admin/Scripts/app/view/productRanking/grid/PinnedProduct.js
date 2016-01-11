@@ -32,7 +32,8 @@ Ext.define('Taco.view.productRanking.grid.PinnedProduct', {
         },
         plugins: {
             ptype: 'gridviewdragdrop'
-        }
+        },
+        stripeRows: false
     },
     mixins: {
       gridcontextmenu: 'Taco.core.ux.mixins.GridContextMenu'

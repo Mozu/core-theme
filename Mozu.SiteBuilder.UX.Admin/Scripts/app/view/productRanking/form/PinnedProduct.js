@@ -102,6 +102,7 @@ Ext.define('Taco.view.productRanking.form.PinnedProduct', {
         me.items = [
             {
                 xtype: 'panel',
+                cls: 'taco-scrollable-panel',
                 layout: 'fit',
                 width: '100%',
                 //align: 'left',
