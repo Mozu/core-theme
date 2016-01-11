@@ -145,7 +145,8 @@
             }
         }
         data = data || (this.record.get('entityType') === 'mzdb' ? containerData.item : containerData.properties);
-        //data = Ext.apply({}, data, this.record.getFields());
+        
+        data = Ext.apply({}, data, this.record.getFields());
         containerData = containerData || {};
         //clean bad fields out.
         Taco.view.customSchema.DynamicFormContainer.cleanContainerValues(data, containerData);
