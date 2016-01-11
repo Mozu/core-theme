@@ -14,7 +14,7 @@ Ext.define('Taco.view.publishing.Drafts', {
     enableSearchBarInHeader: false,
     contextConfig: {
         supportedLevels: ['m'],
-        requiresContextOfType: ['m', 'c', 's']
+        requiresContextOfType: ['m']
     },
     autoTitle: true,
     autoScroll: false,

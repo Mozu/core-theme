@@ -30,7 +30,7 @@ Ext.define('Taco.view.publishing.Split', {
 
     contextConfig: {
         supportedLevels: ['m'],
-        requiresContextOfType: ['m', 'c', 's']
+        requiresContextOfType: ['m']
     },
 
     statics: {

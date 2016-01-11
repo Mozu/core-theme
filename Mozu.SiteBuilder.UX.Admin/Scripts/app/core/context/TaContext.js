@@ -139,7 +139,7 @@ Ext.define('Taco.core.context.TaContext', {
 
         if (this.currentCtx != cfg) {
             if (!me.fireEvent('beforecontextchange', cfg)) {
-                return false;
+                // return false;
             }
 
 
