@@ -1190,6 +1190,8 @@
                 var visaCheckoutPayment = activePayments && _.findWhere(activePayments, { paymentWorkflow: 'VisaCheckout' });
                 if (visaCheckoutPayment) {
                     billingInfo.set('card', visaCheckoutPayment.billingInfo.card);
+                    billingInfo.set('usingSavedCard', false);
+                    billingInfo.unset('savedPaymentMethodId');
                     billingInfo.unset('billingContact');
                     billingInfo.set('billingContact', visaCheckoutPayment.billingInfo.billingContact, { silent:true });
                     billingInfo.set('paymentWorkflow', visaCheckoutPayment.paymentWorkflow);
