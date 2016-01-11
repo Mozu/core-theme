@@ -87,8 +87,11 @@ Ext.define('Taco.shared.view.field.Image', {
 
         this.emptyDropZone = Ext.widget({
             xtype: 'component',
-            cls: 'taco-image-drop-zone',
-            html: 'Drag and drop images here'
+            autoEl: {
+                tag: 'ul',
+                cls: 'taco-image-tiles'
+            },
+            html: '<li class="taco-image-drop"><div class="square">Drop images here</div></li>'
         });
 
         this.imageDropZone = Ext.widget({
