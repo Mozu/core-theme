@@ -99,15 +99,21 @@
     
 
 
-    .#{$vprefix}grid-cell{
-    
-    }
+    .#{$vprefix}grid-cell {
+        .#{$vprefix}grid-cell-inner {
+            border: 1px solid transparent;
+            margin: 1px 0px 1px 0px;
+            padding:5px;
+            display:block;
+            color: $label-color;
+        }
 
-    .#{$vprefix}grid-cell-inner {
-        border: 1px solid transparent;
-        margin: 1px 0px 1px 0px;
-        padding:5px;
-        display:block;
+        & + td {
+            .#{$vprefix}grid-cell-inner {
+                color: $dark-color;
+                font-weight: normal;
+            }
+        }
     }
 
     .negative-currency {
