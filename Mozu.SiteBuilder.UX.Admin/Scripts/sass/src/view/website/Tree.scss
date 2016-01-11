@@ -7,14 +7,14 @@
         &.#{$vprefix}website-tree-node-group {
             background-color: $white-color;
             border-color: $nav-element-active-border;
-            border-width: 1px 0px;
+            border-bottom-width: 1px;
 
             .#{$prefix}tree-node-text {
                 padding: 5px 0px 5px 16px;
             }
         }
     }
-
+    
     .#{$prefix}grid-cell {
         background-color: $card-button-bg;
 

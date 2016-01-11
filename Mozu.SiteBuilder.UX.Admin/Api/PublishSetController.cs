@@ -23,6 +23,7 @@ using Mozu.SiteBuilder.UX.Admin.Helpers.ProductHelpers;
 using Mozu.SiteBuilder.UX.Admin.Helpers.PublishSetHelpers;
 using Mozu.Tenant.Contracts.Clients;
 using Mozu.SiteBuilder.UX.Admin.Helpers.ContentHelpers;
+using Mozu.Core.Api.Client;
 
 namespace Mozu.SiteBuilder.UX.Admin.Api
 {
@@ -33,7 +34,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
     public class PublishSetController : BaseController
     {
         private readonly IDocumentPublishSetWebApiClient _cmsItemPublishingClient;
-        private readonly IProductWebApiClient _productWebApiClient;
+        private IProductWebApiClient _productWebApiClient;
         private readonly Mozu.ProductAdmin.Contracts.Clients.IPublishingWebApiClient _productItemPublishingClient;
         private readonly Mozu.ScheduledEvent.Contracts.Clients.IPublishSetWebApiClient _publishSetWebApiClient;
         private readonly IApiContext _context;
@@ -60,7 +61,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
         /// Get a list of publish set items.
         /// </summary>
         [HttpGetRoute(UriTemplate = "items/list")]
-        public async Task<Response<List<PublishSetItem>>> ListItems([FromUri]PagingParamaters pagingParams, [FromUri]FilterCollection extFilter, string code, string type)
+        public async Task<Response<List<PublishSetItem>>> ListItems([FromUri]PagingParamaters pagingParams, [FromUri]FilterCollection extFilter, string code, string type, bool filterByCatalog = true)
         {
             
             if (type == null) throw new ArgumentNullException("type");
@@ -113,6 +114,11 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
 
                 var filter = ProductFilterExtensions.ToFilterString(extFilter, false);
                 var q = extFilter.ToQString();
+                if (!filterByCatalog)
+                {
+                    _productWebApiClient = _productWebApiClient.CloneWithApiContext(x => x.CatalogId = null);
+                }
+
                 var res = (await _productWebApiClient.GetProducts(
                     startIndex: pagingParams.startIndex, 
                     q: q, 

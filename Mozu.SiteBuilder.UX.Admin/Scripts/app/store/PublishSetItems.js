@@ -12,6 +12,7 @@ Ext.define('Taco.store.PublishSetItems', {
     pageSize: 25,
     autoLoad: true,
     remoteSort: true,
+    filterByCatalog: true,
     //    sorters: {
     //        property: 'name',
     //        direction: 'ASC'
@@ -27,6 +28,7 @@ Ext.define('Taco.store.PublishSetItems', {
         options.params = options.params || {};
         options.params.code = this.code;
         options.params.type = this.type;
+        options.params.filterByCatalog = this.filterByCatalog;
 
         return this.callParent([page, options]);
     },
@@ -40,6 +42,7 @@ Ext.define('Taco.store.PublishSetItems', {
         options.params = options.params || {};
         options.params.code = this.code;
         options.params.type = this.type;
+        options.params.filterByCatalog = this.filterByCatalog;
 
         return this.callParent([options]);
     },
@@ -48,6 +51,7 @@ Ext.define('Taco.store.PublishSetItems', {
         options.params = options.params || {};
         options.params.code = this.code;
         options.params.type = this.type;
+        options.params.filterByCatalog = this.filterByCatalog;
         
         return this.callParent([options]);
     }

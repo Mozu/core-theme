@@ -75,6 +75,7 @@ Ext.define('Taco.view.publishing.Drafts', {
                         options:  {
                             code: 'all',
                             type: 'product',
+                            filterByCatalog: false,
                             listeners: {
                                 load: {
                                     fn: function(store) {
