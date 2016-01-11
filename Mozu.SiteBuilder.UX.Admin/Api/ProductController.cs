@@ -181,7 +181,13 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
                    "price(price,salePrice)" +
                    "productInCatalogs(catalogId,isContentOverridden,content(productName),price(price,salePrice))" +
                    "auditInfo(updateDate)" +
-                   "content(productName))";
+                   "content(productName)";
+
+            if (responseGroups != null && responseGroups.Contains("VariationOptions"))
+            {
+                responseFields += "VariationOptions";
+            }
+            responseFields += ")";
 
 
             var prodCollection = (await _productClient.GetProducts(startIndex: pagingParams.startIndex, pageSize: pagingParams.pageSize,
