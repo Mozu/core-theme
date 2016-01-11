@@ -246,7 +246,7 @@ Ext.define('Taco.view.order.widget.OrderItemGrid', {
                     sortable: false,
                     menuDisabled: true,
                     hidden: false,
-                    align: 'center',
+                    align: 'left',
                 },
                 {
                     text: 'Code',

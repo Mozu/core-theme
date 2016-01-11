@@ -101,7 +101,7 @@ Ext.define('Taco.view.order.widget.ReturnableItemGrid', {
                 sortable: false,
                 menuDisabled: true,
                 hidden: false,
-                align: 'center',
+                align: 'left',
                 dataIndex: 'orderLineId'
             }, {
                 dataIndex: 'productCode',
