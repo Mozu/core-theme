@@ -60,6 +60,8 @@ Ext.define('Taco.view.website.Tree', {
                 var output = me.getNavIcon(value, record);
 
                 if (Ext.Array.contains(['_navigation', '_unlinked'], record.getId()) || Ext.Array.contains(['category', 'link', 'page'], record.data.nodeType) || record.data.parentId === '_emailTemplates') {
+
+                    
                     /**
                      * Split the output in order
                      * to insert buttons between
@@ -103,7 +105,15 @@ Ext.define('Taco.view.website.Tree', {
             defaultAlign: 'tr-br',
             plain: true,
             shadow: false,
-            items: []
+            items: [],
+            listeners: {
+                hide: function() {
+                    if (this.menuTrigger && this.menuTrigger.classList) {
+                        this.menuTrigger.classList.remove('active');
+                    }
+                },
+                scope: this
+            }
         });
 
         this.callParent(arguments);
@@ -146,6 +156,8 @@ Ext.define('Taco.view.website.Tree', {
 
                         if (items.length > 0) {
                             this.menu.add(items);
+                            this.menuTrigger = e.target;
+                            this.menuTrigger.classList.add('active');
                             this.menu.showBy(item, null, [-5, 0]);
                         }
                     }

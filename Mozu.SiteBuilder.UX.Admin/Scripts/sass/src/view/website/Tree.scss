@@ -1,4 +1,14 @@
 .#{$vprefix}website-tree {
+
+    table tbody tr {
+        &:last-child {
+
+            .#{$vprefix}website-tree-node-group {
+                border-bottom-width: 1px;
+            }
+        }
+    }
+
     .#{$prefix}grid-body, 
     .#{$prefix}panel-body, 
     .#{$prefix}grid-td {
@@ -7,14 +17,24 @@
         &.#{$vprefix}website-tree-node-group {
             background-color: $white-color;
             border-color: $nav-element-active-border;
-            border-bottom-width: 1px;
+            border-top-width: 1px;
 
             .#{$prefix}tree-node-text {
                 padding: 5px 0px 5px 16px;
             }
         }
+
     }
-    
+
+    .#{$prefix}grid-tree-node-expanded {
+        .#{$prefix}grid-td {
+
+            &.#{$vprefix}website-tree-node-group {
+                border-bottom-width: 1px;
+            }
+        }
+    }
+
     .#{$prefix}grid-cell {
         background-color: $card-button-bg;
 
@@ -77,7 +97,14 @@
             background-color: $pill-bg-gray !important;
         }
 
-        .#{$vprefix}website-tree-menu-trigger,
+        .#{$vprefix}website-tree-menu-trigger {
+
+            &::after {
+                color: $color-neutral-40;
+            }
+
+        }
+
         .#{$vprefix}website-tree-icon.drag-icon {
 
             &::after {
@@ -150,17 +177,23 @@
     .#{$vprefix}website-tree-menu-trigger {
         float: right;
         background-color: transparent;
+        border: 1px solid transparent;
+        height: 16px !important;
+        width: 9px !important;
         @include border-radius(3px);
         @include icon-font($glyph-more-vert, 13px, $color-neutral-75);
 
         &::after {
             cursor: pointer;
+            left: 1px;
             top: 0.5px;
-            left: 4px;
+        }
+
+        &.active {
+            border: 1px solid $gray-text-dark;
         }
 
         &:hover {
-
             &::after {
                 color: $color-neutral-40;
             }
