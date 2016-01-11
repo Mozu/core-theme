@@ -107,12 +107,18 @@
 	}
 
 	.#{$vprefix}tooltip-icon {
-		@include icon-font($glyph-tooltip, 10px);
+		@include icon-font($glyph-tooltip, 10px, $glyph-icon-color);
 
 		&::after {
 			font-style: initial;
 			left: 10px;
-			top: -2px
+			top: -2px;
+		}
+		
+		opacity: 0.46;
+
+		&:hover {
+			opacity: 1;
 		}
 	}
 
