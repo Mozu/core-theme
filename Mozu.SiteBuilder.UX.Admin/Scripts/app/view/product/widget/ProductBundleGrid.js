@@ -38,6 +38,7 @@ Ext.define('Taco.view.product.widget.ProductBundleGrid', {
             viewConfig: {
                 deferEmptyText: false,
                 emptyText: "No items in this bundle",
+                stripeRows: false,
                 plugins: [
                     {
                         ptype: 'gridviewdragdrop'

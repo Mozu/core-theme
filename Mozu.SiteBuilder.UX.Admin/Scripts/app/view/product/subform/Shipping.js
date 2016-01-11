@@ -82,34 +82,36 @@ Ext.define('Taco.view.product.subform.Shipping', {
             allowBlank: false
         });
 
-
         field = {
             xtype: 'container',
+            layout: 'vbox',
             width: '100%',
-            items: [
-                fulfillmentContainer
-            ]
+            items: []
         };
 
         var isBundle = this.record.productUsage == "Bundle";
         if (!isBundle && isPhysical) {
             field.items.push({
-                xtype: 'checkboxfield',
-                name: 'isPackagedStandAlone',
-                width: 120,
-                margin:"10 0 0 0",
-                boxLabel: 'Ships by itself',
-                inputValue: true,
-                checked: record.get("isPackagedStandAlone")
-            })
+                xtype: 'fieldcontainer',
+                width: '100%',
+                layout: 'hbox',
+                items: [
+                    fulfillmentContainer,
+                    {
+                        xtype: 'checkboxfield',
+                        name: 'isPackagedStandAlone',
+                        margin: '0 0 0 50',
+                        boxLabel: 'Ships by itself',
+                        inputValue: true,
+                        checked: record.get("isPackagedStandAlone")
+                    }
+                ]
+            });
+        } else {
+            field.items.push(fulfillmentContainer);
         }
 
-        field.items.push({
-            xtype: 'container',
-            width: '100%',
-            layout: 'hbox',
-            items: packageFields
-        })
+        field.items.push(packageFields);
         
 
         // remove the productNameField if its null;
@@ -132,109 +134,106 @@ Ext.define('Taco.view.product.subform.Shipping', {
             isPhysical: isPhysicalFulfillmentType,
             isReadOnly: true,
             allowBlank: true,
-            isBundleComponent: true
+            isBundleComponent: true,
+            width: '25%',
+            margin: '25 0 0 0'
         });
 
         var productName = record.get("productName") + " (Qty " + record.get("quantity") + ")";
 
         var productNameField = Ext.widget({
             xtype: 'editabledisplayfield',
-            width: 240,            
+            width: 240,
             border: false,
             value: productName,
-            style: {
-                'margin-top': '41px',
-                'margin-right': '5px'
-            },
+            margin: '25 20 0 0',
             fieldLabel: ''
         });
         field = {
             xtype: 'container',
             width: '100%',
             layout: 'hbox',
-            items: [
-                productNameField
+            items: [{
+                    xtype: 'fieldcontainer',
+                    layout: 'hbox',
+                    width: '75%',
+                    margin: '0 50 0 0',
+                    items: [
+                        productNameField,
+                        packageFields
+                    ]
+                },
+                fulfillmentContainer
             ]
         };
-        packageFields.forEach(function(pkg) {
-            field.items.push(pkg);
-        });
-        field.items.push(fulfillmentContainer);
-
-        // remove the productNameField if its null;
         field.items = Taco.core.util.Common.filterNulls(field.items);
 
         return Ext.widget(field);
     },
 
     getPackageFields: function (record, isBundle, isPhysical) {
-        var packages = [
-            {
-                xtype: 'unitfield',
-                name: (isBundle) ? "" : 'packageWeight',
-                width: 120,
-                fieldLabel: 'Weight',
+        var packages = {
+            xtype: 'fieldcontainer',
+            //fieldLabel: 'Package Dimensions',
+            labelClsExtra: '',
+            disabled: (!isPhysical),
+            width: '100%',
+            layout: {
+                type: 'column',
+                align: 'top'
+            },
+            defaults: {
+                columnWidth: 0.25,
+                margin: '0 0 0 10',
                 selectOnFocus: true,
-                emptyText: 'lbs',
-                unitString: ' lbs',
-                unitAtEnd: true,
+                xtype: 'unitfield',
+                unitString: ' in',
                 decimalPrecision: 3,
-                minValue: (isPhysical ? .001 : 0),
                 hideTrigger: true,
-                value: (isPhysical ? record.get('packageWeight') : '0 lbs'),
                 keyNavEnabled: false,
-                disabled: !isPhysical,
+                disabled: (! isPhysical),
                 readOnly: (isBundle),
                 allowBlank: (isBundle),
-                mouseWheelEnabled: false,
-                style: {
-                    'margin-right': '20px'
-                }
-            }, {
-                xtype: 'fieldcontainer',
-                //fieldLabel: 'Package Dimensions',
-                labelClsExtra: '',
-                disabled: (!isPhysical),
-                width: 480,
-                layout: {
-                    type: 'hbox',
-                    align: 'top'
-                },
-                defaults: {
-                    width: 120,
-                    margin: '0 0 0 10',
+                mouseWheelEnabled: false
+            },
+            items: [
+                {
+                    name: (isBundle) ? "" : 'packageWeight',
+                    fieldLabel: 'Weight',
                     selectOnFocus: true,
-                    xtype: 'unitfield',
-                    unitString: ' in',
+                    emptyText: 'lbs',
+                    unitString: ' lbs',
+                    unitAtEnd: true,
                     decimalPrecision: 3,
+                    minValue: (isPhysical ? .001 : 0),
                     hideTrigger: true,
+                    value: (isPhysical ? record.get('packageWeight') : '0 lbs'),
                     keyNavEnabled: false,
-                    disabled: (! isPhysical),
+                    disabled: !isPhysical,
                     readOnly: (isBundle),
                     allowBlank: (isBundle),
-                    mouseWheelEnabled: false
+                    mouseWheelEnabled: false,
+                    margin: 0
                 },
-                items: [
-                    {
-                        margin: 0,
-                        fieldLabel:"Length",
-                        name: (isBundle) ? "" : 'packageLength',
-                        value:  (isPhysical ? record.get('packageLength') : '0 in'),
-                        emptyText: 'l'
-                    }, {
-                        name: (isBundle) ? "" : 'packageWidth',
-                        fieldLabel: "Width",
-                        value: (isPhysical ? record.get('packageWidth') : '0 in'),
-                        emptyText: 'w'
-                    }, {
-                        name: (isBundle) ? "" : 'packageHeight',
-                        fieldLabel: "Height",
-                        value: (isPhysical ? record.get('packageHeight') : '0 in'),
-                        emptyText: 'h'
-                    }
-                ]
-            }
-        ];
+                {
+                    fieldLabel:"Length",
+                    name: (isBundle) ? "" : 'packageLength',
+                    value:  (isPhysical ? record.get('packageLength') : '0 in'),
+                    emptyText: 'l'
+                }, {
+                    name: (isBundle) ? "" : 'packageWidth',
+                    fieldLabel: "Width",
+                    value: (isPhysical ? record.get('packageWidth') : '0 in'),
+                    emptyText: 'w'
+                }, {
+                    name: (isBundle) ? "" : 'packageHeight',
+                    fieldLabel: "Height",
+                    value: (isPhysical ? record.get('packageHeight') : '0 in'),
+                    emptyText: 'h'
+                }
+            ]
+        };
+
         if (! isPhysical) {
             record.set('packageWeight', 0);
             record.set('packageLength', 0);
@@ -279,7 +278,6 @@ Ext.define('Taco.view.product.subform.Shipping', {
                 bundleContainer.items.push(field);
                 totalWeight += record.get("packageWeight") * record.get("quantity");
             });         
-            
 
             bundleContainer.items.push({
                 xtype: 'unitfield',
@@ -288,7 +286,7 @@ Ext.define('Taco.view.product.subform.Shipping', {
                 unitAtEnd: true,
                 hideTrigger: true,
                 readOnly: true,
-                margin: "0 0 0 245",
+                margin: "0 0 0 260",
                 fieldLabel: "Total Weight",
                 value: totalWeight
             });

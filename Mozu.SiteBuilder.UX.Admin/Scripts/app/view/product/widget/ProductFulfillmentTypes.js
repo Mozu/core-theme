@@ -10,8 +10,6 @@ Ext.define('Taco.view.product.widget.ProductFulfillmentTypes', {
         'Taco.store.Products'
     ],
     fieldLabel: 'Fulfillment Types',
-    //flex: 2,
-    width: "100%",
     layout: {
         type: "hbox"
     },
