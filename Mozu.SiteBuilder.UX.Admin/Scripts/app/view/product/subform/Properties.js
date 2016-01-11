@@ -14,11 +14,6 @@ Ext.define('Taco.view.product.subform.Properties', {
 
     title: 'Properties',
 
-    layout: {
-        type: 'vbox',
-        align: 'stretch'
-    },
-
     bodyPadding: '0 0 0 0',
 
     statics: {
@@ -43,7 +38,6 @@ Ext.define('Taco.view.product.subform.Properties', {
                         fieldLabel: ptAttribute.get('adminName'),
                         allowBlank: ptAttribute.get('isRequired') === true ? false : true,
                         value: (values && values.length) ? values[0] : null,
-                        width: 600,
                         rows: 12,
                         resizable: true,
                         resizeHandles: 's'
@@ -72,7 +66,7 @@ Ext.define('Taco.view.product.subform.Properties', {
                         valueField: 'id',
                         allowBlank: ptAttribute.get('isRequired') === true ? false : true,
                         value: (values && values.length) ? (allowMulti ? values : values[0]) : (allowMulti ? [] : null),
-                        width: 400,
+                        layout: 'fit',
                         store: Ext.create('Ext.data.Store', {
                             fields: [
                                 { name: 'id', type: 'string' },
@@ -90,8 +84,7 @@ Ext.define('Taco.view.product.subform.Properties', {
                         name: this.getFieldName(ptAttribute),
                         fieldLabel: ptAttribute.get('adminName'),
                         allowBlank: ptAttribute.get('isRequired') === true ? false : true,
-                        value: (values && values.length) ? values[0] : null,
-                        width: 400
+                        value: (values && values.length) ? values[0] : null
                     }
                 ];
             },
@@ -102,7 +95,6 @@ Ext.define('Taco.view.product.subform.Properties', {
                         name: this.getFieldName(ptAttribute),
                         fieldLabel: ptAttribute.get('adminName'),
                         allowBlank: ptAttribute.get('isRequired') === true ? false : true,
-                        width: 400,
                         value: values
                     }
                 ];
@@ -165,7 +157,9 @@ Ext.define('Taco.view.product.subform.Properties', {
     loadByProductTypeId: function (id) {
         var type,
             properties,
-            items = [];
+            items = [],
+            i,
+            fldContainer;
 
         if (!id || !Ext.isNumeric(id)) {
             id = this.product.get('productTypeId');
@@ -181,9 +175,25 @@ Ext.define('Taco.view.product.subform.Properties', {
 
         this.productTypeProperties = properties = type.getProperties();
 
-        properties.each(function (ptAttribute) {
-            Ext.Array.push(items, this.buildEditor(ptAttribute));
-        }, this);
+        if (properties && properties.data && properties.data.items) {
+
+            for (i = 0; i < properties.data.items.length; i++) {
+                fldContainer = {
+                    xtype: 'fieldcontainer',
+                    layout: 'hbox',
+                    width: '100%',
+                    items: [
+                        this.buildEditor(properties.data.items[i], '10 25 0 0')
+                    ]
+                };
+                i++;
+                if (i < properties.data.items.length) {
+                    Ext.Array.push(fldContainer.items, this.buildEditor(properties.data.items[i], '10 0 0 25'));
+                }
+                Ext.Array.push(items, fldContainer);
+            }
+
+        }
 
         if (!items.length) {
             items.push(this.getEmptyComponent());
@@ -200,7 +210,7 @@ Ext.define('Taco.view.product.subform.Properties', {
         };
     },
 
-    buildEditor: function (ptAttribute) {
+    buildEditor: function (ptAttribute, margin) {
         var editor = ptAttribute.getAttributeMetaDataValue('uicontrol') || ptAttribute.get('inputType'),
             attributeFQN = ptAttribute.get('attributeFQN'),
             prop = this.product.getProperties().getById(attributeFQN),
@@ -217,7 +227,9 @@ Ext.define('Taco.view.product.subform.Properties', {
 
         return Ext.widget({
             xtype: 'container',
-            margin: '10 0 0',
+            margin: margin,
+            width: '50%',
+            layout: 'fit',
             items: this.statics().editors[editor].apply(this, [ptAttribute, values])
         });
     },
