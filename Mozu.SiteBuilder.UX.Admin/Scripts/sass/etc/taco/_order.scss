@@ -245,6 +245,12 @@
     margin-bottom: 20px;  
   }
 
+  .x-panel .orderform-payment-transaction {
+    background: $card-button-bg;
+    border: 1px solid $card-border;
+    border-radius: 4px;
+  }
+
 }
 
 
