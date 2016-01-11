@@ -143,7 +143,7 @@ Ext.define('Taco.view.product.subform.General', {
 
 
             this.productCodeField = Ext.widget({
-                fieldLabel: 'Code',
+                fieldLabel: 'Product Code',
                 name: 'productCode',
                 emptyText: '#######',
                 width: '50%',
