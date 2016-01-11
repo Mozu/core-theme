@@ -1,4 +1,3 @@
-
 /**
  * @class
  * @author Jason Cochran
@@ -409,33 +408,24 @@ Ext.define('Taco.core.Controller', {
 
     getNewContext: function (newContext, requiresContextOfType, context) {
         if (!newContext && Ext.Array.contains(requiresContextOfType, 'm')) {
-            
-            if (context.contextType === 't') {
+            if (context.contextType == 't') {
                 newContext = context.masterCatalogs[0];
-            }
-
-            if (context.contextType === 'c') {
-                newContext = context.masterCatalog;
-            }
-
-            if (context.contextType === 's') {
-                newContext = context.masterCatalog;
             }
         }
 
         if (!newContext && Ext.Array.contains(requiresContextOfType, 'c')) {
-            if (context.contextType === 't') {
+            if (context.contextType == 't') {
                 newContext = context.masterCatalogs[0].catalogs[0];
-            } else if (context.contextType === 'm') {
+            } else if (context.contextType == 'm') {
                 newContext = context.catalogs[0];
             }
         }
         if (!newContext && Ext.Array.contains(requiresContextOfType, 's')) {
-            if (context.contextType === 't') {
+            if (context.contextType == 't') {
                 newContext = context.masterCatalogs[0].sites[0];
-            } else if (context.contextType === 'm' || context.contextType === 'c') {
+            } else if (context.contextType == 'm' || context.contextType == 'c') {
                 newContext = context.sites[0];
-            } else if (context.contextType === 's') {
+            } else if (context.contextType == 's') {
                 newContext = context.catalog.sites[0];
             }
         }

@@ -8,8 +8,8 @@ Ext.define('Taco.view.publishing.Form', {
     ],
 
     contextConfig: {
-        supportedLevels: ['m'],
-        requiresContextOfType: ['m']
+        supportedLevels: ['m', 'c'],
+        requiresContextOfType: ['m', 'c']
     },
 
     initComponent: function () {
