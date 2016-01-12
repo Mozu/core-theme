@@ -6,16 +6,6 @@
         margin-right: 3px;
     }
 
-    .#{$prefix}box-inner {
-        .#{$prefix}box-target {
-            .#{$prefix}box-item {
-                color: $label-color;
-                font-size: $label-font;
-                font-weight: normal !important;
-            }
-        }
-    }
-
     a.label-link {
         
         padding: 0;
@@ -69,6 +59,14 @@
     .section-header {
         font-size: $input-font;
         font-weight: normal;
+    }
+
+    .package-data {
+        color: $dark-color;
+        display: block;
+        font-size: $normal-font;
+        font-weight: normal;
+        line-height: 19px;
     }
 
     table.section-summary {

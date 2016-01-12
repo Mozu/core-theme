@@ -73,6 +73,12 @@ Ext.define('Taco.view.order.subform.fulfillment.Package', {
             }], availableActions)
         });
 
+        if (this.packageData.status == 'Fulfilled') {
+            this.packageData.status = '<span class="x-column-content-pill x-column-content-pill-true">Fulfilled</span>';
+        } else if (this.packageData.status == 'NotFulfilled') {
+            this.packageData.status = '<span class="x-column-content-pill x-column-content-pill-false">NotFulfilled</span>';
+        }
+
         this.statusContainer = Ext.widget({
             xtype: 'container',
             cls: 'taco-order-package-details',
@@ -80,7 +86,7 @@ Ext.define('Taco.view.order.subform.fulfillment.Package', {
             items: [{
                     xtype: 'component',
                     padding: '0 0 10 0',
-                    html: '<span class="label">Status:</span>' + this.packageData.status
+                    html: '<span class="label">Status:</span>' + '<span class="x-column-content-pill x-column-content-pill-true">' + this.packageData.status + '</span>'
                 },
                 this.details
             ]

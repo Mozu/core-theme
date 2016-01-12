@@ -9,7 +9,7 @@ Ext.define('Taco.view.order.subform.fulfillment.DirectShipPackage', {
 
     initComponent: function () {
 
-        this.title = 'Package: ' + this.packageData.code;
+        this.title = '<span class="label">Package:</span>' + '<span class="package-data">' + this.packageData.code + '</span>';
 
         this.details = Ext.widget({
             xtype: 'component',
