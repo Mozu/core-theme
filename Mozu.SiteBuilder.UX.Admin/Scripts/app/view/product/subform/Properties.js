@@ -26,7 +26,8 @@ Ext.define('Taco.view.product.subform.Properties', {
                         fieldLabel: ptAttribute.get('adminName'),
                         allowBlank: ptAttribute.get('isRequired') === true ? false : true,
                         // BUG: 58777 - need to convert string dates to js dates. Normally this is done in the model but in this case the date is a child entity of an array and doesnt have a date type model to do the transform.
-                        value: (values && values.length) ? this.convertDate(values[0]) : null
+                        value: (values && values.length) ? this.convertDate(values[0]) : null,
+                        minHeight: 70
                     }
                 ];
             },
@@ -40,7 +41,8 @@ Ext.define('Taco.view.product.subform.Properties', {
                         value: (values && values.length) ? values[0] : null,
                         rows: 12,
                         resizable: true,
-                        resizeHandles: 's'
+                        resizeHandles: 's',
+                        minHeight: 70
                     }
                 ];
             },
@@ -51,7 +53,8 @@ Ext.define('Taco.view.product.subform.Properties', {
                         name: this.getFieldName(ptAttribute),
                         fieldLabel: ptAttribute.get('adminName'),
                         allowBlank: ptAttribute.get('isRequired') === true ? false : true,
-                        checked: (values && values.length) ? values[0] : null
+                        checked: (values && values.length) ? values[0] : null,
+                        minHeight: 70
                     }
                 ];
             },
@@ -67,6 +70,7 @@ Ext.define('Taco.view.product.subform.Properties', {
                         allowBlank: ptAttribute.get('isRequired') === true ? false : true,
                         value: (values && values.length) ? (allowMulti ? values : values[0]) : (allowMulti ? [] : null),
                         layout: 'fit',
+                        minHeight: 70,
                         store: Ext.create('Ext.data.Store', {
                             fields: [
                                 { name: 'id', type: 'string' },
@@ -84,7 +88,8 @@ Ext.define('Taco.view.product.subform.Properties', {
                         name: this.getFieldName(ptAttribute),
                         fieldLabel: ptAttribute.get('adminName'),
                         allowBlank: ptAttribute.get('isRequired') === true ? false : true,
-                        value: (values && values.length) ? values[0] : null
+                        value: (values && values.length) ? values[0] : null,
+                        minHeight: 70
                     }
                 ];
             },
@@ -182,13 +187,14 @@ Ext.define('Taco.view.product.subform.Properties', {
                     xtype: 'fieldcontainer',
                     layout: 'hbox',
                     width: '100%',
+                    margin: '0 0 20 0',
                     items: [
-                        this.buildEditor(properties.data.items[i], '10 25 0 0')
+                        this.buildEditor(properties.data.items[i], '0 15 0 0')
                     ]
                 };
                 i++;
                 if (i < properties.data.items.length) {
-                    Ext.Array.push(fldContainer.items, this.buildEditor(properties.data.items[i], '10 0 0 25'));
+                    Ext.Array.push(fldContainer.items, this.buildEditor(properties.data.items[i], '0 0 0 15'));
                 }
                 Ext.Array.push(items, fldContainer);
             }

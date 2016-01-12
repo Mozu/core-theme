@@ -29,7 +29,7 @@ Ext.define('Taco.view.product.subform.Inventory', {
                 ui: "action",
                 hidden: this.product.get("productUsage") == "Bundle",
                 scale: "medium",
-                margin: "0 0 0, 0",
+                margin: "0 0 0 0",
                 text: "Manage Inventory",
                 handler: me.manageInventory,
                 scope: me
@@ -44,7 +44,7 @@ Ext.define('Taco.view.product.subform.Inventory', {
             boxLabel: 'Track stock level',
             checked: track,
             width: '50%',
-            margin: '0 25 0 0',
+            margin: '5 15 0 0',
             //hidden: this.product.get("productUsage") == "Bundle",
             listeners: {
                 change: function (field, checked) {
@@ -63,7 +63,7 @@ Ext.define('Taco.view.product.subform.Inventory', {
             fieldLabel: 'If out of stock...',
             width: '50%',
             allowBlank: true,
-            margin: '0 0 0 25',
+            margin: '0 0 0 15',
             //hidden: (!track || this.product.get("productUsage") == "Component"),
             queryMode: 'local',
             store: [
