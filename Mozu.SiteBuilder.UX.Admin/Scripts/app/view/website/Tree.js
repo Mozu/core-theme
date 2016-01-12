@@ -59,6 +59,10 @@ Ext.define('Taco.view.website.Tree', {
 
                 var output = me.getNavIcon(value, record);
 
+                if (record.get('nodeType') === 'contentlist' && record.get('name') === 'Content Lists') {
+                    metaData.tdCls+= ' taco-website-tree-node-group';
+                }
+
                 if (Ext.Array.contains(['_navigation', '_unlinked'], record.getId()) || Ext.Array.contains(['category', 'link', 'page'], record.data.nodeType) || record.data.parentId === '_emailTemplates') {
 
                     

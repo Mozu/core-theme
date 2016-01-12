@@ -219,7 +219,10 @@ Ext.define('Taco.core.ux.content.Tooltip', {
 
             icon.classList.add(this.tooltipIconClass);
 
-            this.target.appendChild(icon);
+            if (this.target) {
+                this.target.appendChild(icon);
+            }
+
         }
     },
 
