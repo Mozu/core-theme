@@ -153,12 +153,16 @@ $uis: $ui-link, $ui-action, $ui-action-primary, $ui-action-toggle;
         &::after {
             height: 21px;
             left: auto;
-            padding-top: 7px;
+            padding-top: 0px;
             right: -1px;
             text-align: center;
             top: -7px;
             width: 28px;
         }
+    }
+
+    &.#{$vprefix}splitbutton .#{$prefix}btn-split-right::after {
+        padding-top: 7px;
     }
 }
 
