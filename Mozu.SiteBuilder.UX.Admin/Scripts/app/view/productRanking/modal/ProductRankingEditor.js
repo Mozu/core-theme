@@ -4,7 +4,7 @@
  */
 
 Ext.define('Taco.view.productRanking.modal.ProductRankingEditor', {
-    extend: 'Taco.core.ux.window.Drawer',
+    extend: 'Taco.core.ux.window.Modal',
 
     requires: [
         'Taco.view.productRanking.Form',
@@ -17,7 +17,7 @@ Ext.define('Taco.view.productRanking.modal.ProductRankingEditor', {
     autoShow: true,
     closable: true,
     cls: Taco.baseCSSPrefix + 'orderform-editor',
-    height: '90%',
+    height: '50%',
     title: 'New Product Ranking Rule',
     width: '80%',
     isCreateMode: true,
@@ -29,7 +29,7 @@ Ext.define('Taco.view.productRanking.modal.ProductRankingEditor', {
 
     resizable: {
         dynamic: true,
-        handles: 'w sw s se e',
+        handles: 'all',
         heightIncrement: 1,
         minHeight: 600,
         minWidth: 800,
