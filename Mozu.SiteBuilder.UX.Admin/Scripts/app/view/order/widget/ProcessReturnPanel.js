@@ -560,17 +560,15 @@ Ext.define('Taco.view.order.widget.ProcessReturnPanel', {
             tpl: [
                 '<table><tbody>',
                     '<tr>',
-                        '<td><span class="label">Status:</span>{status}</td>',
-                        '<td><span class="label">Returning:</span>{[Ext.Array.sum(Ext.Array.pluck(values.items, "quantity"))]} item(s)</td>',
-                    '</tr><tr>',
-                        '<td><span class="label">Type:</span>{returnType}</td>',
-                        '<td><span class="label">Price:</span>{[this.getUnitPriceTotal(values.items)]}</td>',
-                    '</tr><tr>',
-                        '<td><span class="label">Created:</span>{createDate:date("m/d/Y g:ia")}</td>',
-                        '<td><span class="label">Loss:</span>{[Taco.app.context.getCurrent().formatCurrency(Ext.Array.sum(Ext.Array.pluck(values.items, "productLossAmount")))]}</td>',
-                    '</tr><tpl if="returnOrderId"><tr>',
-                        '<td><span class="label">Return Order:</span><a href="/admin/s-{[Taco.app.context.getCurrent().id]}/orders/edit/{returnOrderId}">{returnOrderId}</a></td><td>&nbsp;</td>',
-                    '</tr></tpl>',
+                        '<td><span class="label">Status:<span>{status}</span></span></td>',
+                        '<td><span class="label">Returning:<span>{[Ext.Array.sum(Ext.Array.pluck(values.items, "quantity"))]} item(s)</span></span></td>',
+                        '<td><span class="label">Type:<span>{returnType}</span></span></td>',
+                        '<td><span class="label">Price:<span>{[this.getUnitPriceTotal(values.items)]}</span></span></td>',
+                        '<td><span class="label">Created:<span>{createDate:date("m/d/Y g:ia")}</span></span></td>',
+                        '<td><span class="label">Loss:<span>{[Taco.app.context.getCurrent().formatCurrency(Ext.Array.sum(Ext.Array.pluck(values.items, "productLossAmount")))]}</span></span></td>',
+                    '<tpl if="returnOrderId">',
+                        '<td><span class="label">Return Order:<span><a href="/admin/s-{[Taco.app.context.getCurrent().id]}/orders/edit/{returnOrderId}">{returnOrderId}</a></span></span></td><td>&nbsp;</td>',
+                    '</tpl></tr>',
                 '</tbody></table>', {
                     getUnitPriceTotal: function (items) {
                         var prices = Ext.Array.map(items, function (item) {
@@ -596,7 +594,6 @@ Ext.define('Taco.view.order.widget.ProcessReturnPanel', {
         return Ext.create('Ext.Component', {
             cls: 'return-summary',
             data: record.getData(),
-            margin: '0 0 0 8',
             style: {
                 'white-space': 'nowrap'
             },
