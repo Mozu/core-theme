@@ -63,9 +63,8 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
         {
             var tasks = segments.Select(x => _customerSegmentWebApiClient.AddSegment(x)).ToList();
             await Task.WhenAll(tasks);
-            var retList = tasks.Select(x => x.Result.ReadAsSync()).ToList();
-            return this.Request.CreateResponse(HttpStatusCode.OK, List2(segments));
-
+            var result = tasks.Select(x => x.Result.ReadAsSync()).Map<List<CustomerSegment>>();
+            return this.Request.CreateResponse(HttpStatusCode.OK, List2(result));
         }
 
         public class SegmentBatchUpdate
