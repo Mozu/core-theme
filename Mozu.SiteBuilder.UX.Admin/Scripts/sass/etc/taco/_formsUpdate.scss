@@ -375,6 +375,7 @@
             font-size: 14px;
             line-height: 24px;
             padding: 6px 12px;
+            border-left: 3px solid transparent !important;
 
             &:last-child {
                 border-width: 0px !important;
@@ -436,6 +437,7 @@
 
         li.#{$prefix}boundlist-item {
             border-color: $dropdown-list-outline !important;
+            border-left: 3px solid transparent !important;
         }
 
         li.#{$prefix}boundlist-selected {
