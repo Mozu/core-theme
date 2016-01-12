@@ -28,7 +28,7 @@ Ext.define('Taco.core.ux.content.Tooltip', {
     /**
     * how long it will take after the hover event occurs for the mesage to show
     **/
-    showDelay: 200,
+    showDelay: 400,
 
     /**
     * the offsetleft of the tooltip
@@ -155,10 +155,12 @@ Ext.define('Taco.core.ux.content.Tooltip', {
         if (event.type === 'mouseenter' || event.type === 'mousemove') {
             this.tooltip.removeCls('removed');
             this.tooltip.addCls(this.showCls);
+            this.icon.classList.add('active');
         }
 
         else if (event.type === 'mouseleave') {
             this.hideTooltip();
+            this.icon.classList.remove('active');
         }
     },
 
@@ -215,12 +217,12 @@ Ext.define('Taco.core.ux.content.Tooltip', {
 
     applyTooltipIcon: function() {
         if (this.showToolTipIcon) {
-            var icon = document.createElement('i');
+            this.icon = document.createElement('i');
 
-            icon.classList.add(this.tooltipIconClass);
+            this.icon.classList.add(this.tooltipIconClass);
 
             if (this.target) {
-                this.target.appendChild(icon);
+                this.target.appendChild(this.icon);
             }
 
         }
