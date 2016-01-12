@@ -184,6 +184,12 @@ Ext.define('Taco.view.order.widget.PaymentPanel', {
             // order is awaiting approval
             pendingReview = me.order.get('orderStatus') === 'PendingReview';
 
+        if (me.record.data.status === 'Authorized') {
+            me.record.data.status = '<span class="x-column-content-pill x-column-content-pill-true">Authorized</span>';
+        } else {
+            me.record.data.status = '<span class="x-column-content-pill x-column-content-pill-false">' + me.record.data.status + '</span>';
+        }
+
         me.statusRow = Ext.create('Ext.container.Container', {
             cls: "orderform-payment-statusRow",
             layout: {
@@ -197,7 +203,7 @@ Ext.define('Taco.view.order.widget.PaymentPanel', {
                     flex: 1,
                     itemId: "statusField",
                     cls: "statusField",
-                    html: 'Status: ' + me.record.data.status
+                    html: '<span class="label">Status: </label>' + me.record.data.status
                 }, {
                     xtype: 'component',
                     itemId: 'orderApprovedNotice',
@@ -245,11 +251,11 @@ Ext.define('Taco.view.order.widget.PaymentPanel', {
         if (isCollapsed) {
             el.removeCls("collapsed")
             // down arrow
-            btn.setGlyph("xe036");
+            btn.setGlyph("XE92A");
         } else {
             el.addCls("collapsed");
             // right arrow
-            btn.setGlyph("xe034");
+            btn.setGlyph("XE927");
         }
 
         this.transactionList.doLayout();
@@ -282,7 +288,7 @@ Ext.define('Taco.view.order.widget.PaymentPanel', {
                                     renderTo: btnEl,
                                     width: 30,
                                     // right arrow
-                                    glyph: "xe034@mozicons",
+                                    glyph: "XE927@mozicons",
                                     ui: 'action',
                                     scale: 'medium',
                                     handler: this.toggleTransactionList,
@@ -346,6 +352,27 @@ Ext.define('Taco.view.order.widget.PaymentPanel', {
             margin: '10 0 0 0',
             tpl: [
 
+
+                    '<tpl if="paymentType != \'StoreCredit\'">',
+                        '<div class="billingInformation">',
+                            '<h4 class="paymentDetailsHeader">Bill To:</h4>',
+                            // bad data check;
+                            '<tpl if="!values.billingContact.firstName || !values.billingContact.lastName">',
+                                '<div class="fullName">N/A</div>',
+                            '<tpl else>',
+                                '<div class="fullName">{billingContact.firstName:stripTags} {billingContact.lastName:stripTags}</div>',
+                                '<div class="address">{billingContact.address1:stripTags}</div>',
+                                '<div class="address">{billingContact.address2:stripTags}</div>',
+                                '<div class="address">',
+                                '{billingContact.cityOrTown:stripTags}',
+                                '<tpl if="billingContact.cityOrTown && billingContact.stateOrProvince">, </tpl>',
+                                '{billingContact.stateOrProvince:stripTags}  {billingContact.postalOrZipCode:stripTags}</div>',
+                                '<div class="address">{billingContact.countryCode:stripTags}</div>',
+                                '<div class="phoneNumber">{[ values.billingContact.workPhone ? values.billingContact.workPhone : values.billingContact.homePhone ]}</div>',
+                            '</tpl>',
+                        '</div>',
+                    '</tpl>',
+
                     '<tpl if="paymentType == \'Check\'">',
                         '<div class="paymentTypeCheck">',
                             '<h4 class="paymentDetailsHeader">Method:</h4>',
@@ -365,39 +392,24 @@ Ext.define('Taco.view.order.widget.PaymentPanel', {
                     '<tpl else>',
                         '<div class="authorizedCreditCard">',
                             '<h4 class="paymentDetailsHeader">Method:</h4>',
-                                '<div class="creditCard">{cardType}</div>',
-                                '<div class="creditCard">{cardNumber}</div>',
-                                '<div class="paymentType">Type: {paymentType}</div>',
-                                '<div class="referenceId">Reference ID: {externalTransactionId}</div>',
+                                '<div class="creditCard">{cardType} <span class="paymentType">{paymentType}</span> <span class="creditCard">{cardNumber}</span></div>',
                             // if the auth data has an id than its been authorized
                             '<tpl if="id">',
-                                    '<div class="authorization">Authorization ID: {id}</div>',
+                                '<div class="authorization">',
+                                    '<h4 class="paymentDetailsHeader">Authorization ID:</h4>',
+                                    '{id}',
+                                '</div>',
                             '</tpl>',
                         '</div>',
                     '</tpl>',
-                    '<div class="workflow">',
-                        '<h4 class="paymentDetailsHeader">Workflow:</h4>',
-                        '<div class="workflow">{paymentWorkflow}</div>',
-                    '</div>',
 
-
-                    '<tpl if="paymentType != \'StoreCredit\'">',
-                        '<div class="billingInformation">',
-                            '<h4 class="paymentDetailsHeader">Bill To:</h4>',
-                            // bad data check;
-                            '<tpl if="!values.billingContact.firstName || !values.billingContact.lastName">',
-                                '<div class="fullName">N/A</div>',
-                            '<tpl else>',
-                                '<div class="fullName">{billingContact.firstName:stripTags} {billingContact.lastName:stripTags}</div>',
-                                '<div class="address">{billingContact.address1:stripTags}</div>',
-                                '<div class="address">{billingContact.address2:stripTags}</div>',
-                                '<div class="address">',
-                                '{billingContact.cityOrTown:stripTags}',
-                                '<tpl if="billingContact.cityOrTown && billingContact.stateOrProvince">, </tpl>',
-                                '{billingContact.stateOrProvince:stripTags}  {billingContact.postalOrZipCode:stripTags}</div>',
-                                '<div class="address">{billingContact.countryCode:stripTags}</div>',
-                                '<div class="phoneNumber">{[ values.billingContact.workPhone ? values.billingContact.workPhone : values.billingContact.homePhone ]}</div>',
-                            '</tpl>',
+                    '<tpl>',
+                        '<div class="auth-and-workflow">',
+                            '<div class="referenceId">Reference ID: {externalTransactionId}</div>',
+                            '<div class="workflow">',
+                                '<h4 class="paymentDetailsHeader">Workflow:</h4>',
+                                '<div class="workflow">{paymentWorkflow}</div>',
+                            '</div>',
                         '</div>',
                     '</tpl>'
             ],
