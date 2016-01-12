@@ -202,8 +202,7 @@ Ext.define('Taco.view.generalSettings.subform.About', {
                                     elementId: 'customCdnHostName',
                                     hoverTarget: 'label',
                                     messageKey: 'settings.general.customCdn',
-                                    offsetLeft: -90,
-                                    offsetTop: -18,
+                                    offsetLeft: -110,
                                     arrowPosition: 'left'
                                 })
                             }, {
@@ -270,7 +269,7 @@ Ext.define('Taco.view.generalSettings.subform.About', {
                             hoverTarget: 'label',
                             messageKey: 'settings.general.missingImage',
                             offsetLeft: -190,
-                            offsetTop: -18,
+                            
                             arrowPosition: 'left'
                         })
                     }

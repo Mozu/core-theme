@@ -48,9 +48,10 @@ import {
                 const newWidgetData = widget.innerHTML;
                 const existingData = JSON.parse(widget.parentElement.getAttribute(DATA_WIDGET_ATTRIBUTE));
 
-                existingData.config.body = newWidgetData;
-
-                widget.parentElement.setAttribute(DATA_WIDGET_ATTRIBUTE, JSON.stringify(existingData));
+                if (existingData) {
+                    existingData.config.body = newWidgetData;
+                    widget.parentElement.setAttribute(DATA_WIDGET_ATTRIBUTE, JSON.stringify(existingData));
+                }
             });
         }
 

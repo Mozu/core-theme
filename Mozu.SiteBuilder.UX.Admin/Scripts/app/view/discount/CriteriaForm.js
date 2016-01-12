@@ -7,7 +7,7 @@ Ext.define('Taco.view.discount.CriteriaForm', {
     extend: 'Taco.core.ux.form.Form',
     alias: 'widget.taco-discount-criteria',
     requires: [
-        'Taco.core.ux.TooltipLabel'
+        'Taco.core.ux.content.Tooltip'
     ],
     ui: 'subform',
     margin: '0 0 39 0',
@@ -432,8 +432,8 @@ Ext.define('Taco.view.discount.CriteriaForm', {
                     elementId: 'max-qty-redemption-number',
                     hoverTarget: 'label',
                     messageKey: 'discount.criteria.maximumQuantityPerRedemption',
-                    offsetLeft: 20,
-                    offsetTop: 15
+                    offsetLeft: -80,
+                    arrowPosition: 'left'
                 })
             }
         );
@@ -482,8 +482,8 @@ Ext.define('Taco.view.discount.CriteriaForm', {
                     elementId: 'scope-field-container',
                     hoverTarget: 'label',
                     messageKey: 'discount.criteria.scope',
-                    offsetLeft: 20,
-                    offsetTop: 15
+                    offsetLeft: -70,
+                    arrowPosition: 'left'
                 })
             }
         );

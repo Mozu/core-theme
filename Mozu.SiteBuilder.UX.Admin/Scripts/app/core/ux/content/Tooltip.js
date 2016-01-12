@@ -98,7 +98,7 @@ Ext.define('Taco.core.ux.content.Tooltip', {
         }
 
         else if (this.arrowPosition === 'bottom') {
-            return (left + 10) - (messageWidth / 2) + (containerWidth / 2); 
+            return left - (messageWidth / 2) + (containerWidth / 2); 
         }
 
     },
@@ -135,7 +135,7 @@ Ext.define('Taco.core.ux.content.Tooltip', {
         if (!el) {
             return;
         }
-
+        
         var offsetLeft = this.offsetLeft ? left - this.offsetLeft : this.getOffsetWidth(left, el);
         var offsetTop = this.offsetTop ? top - this.offsetTop : this.getOffsetHeight(top, el);
 

@@ -519,9 +519,10 @@ var _constants = require('./constants');
                     var newWidgetData = widget.innerHTML;
                     var existingData = JSON.parse(widget.parentElement.getAttribute(_constants.DATA_WIDGET_ATTRIBUTE));
 
-                    existingData.config.body = newWidgetData;
-
-                    widget.parentElement.setAttribute(_constants.DATA_WIDGET_ATTRIBUTE, JSON.stringify(existingData));
+                    if (existingData) {
+                        existingData.config.body = newWidgetData;
+                        widget.parentElement.setAttribute(_constants.DATA_WIDGET_ATTRIBUTE, JSON.stringify(existingData));
+                    }
                 });
             }
         }, {

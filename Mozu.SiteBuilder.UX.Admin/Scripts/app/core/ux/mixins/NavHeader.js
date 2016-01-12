@@ -169,6 +169,7 @@ Ext.define('Taco.core.ux.mixins.NavHeader', {
                     }
 
                     if (pillCfg.pillTooltipData && pillCfg.pillTooltipTpl) {
+                        
                         this.pillTooltip = Ext.create('Taco.core.ux.content.Tooltip', {
                             elementSelector: '[data-role="nav-header-pill"]',
                             arrowPosition: 'top',
@@ -403,6 +404,7 @@ Ext.define('Taco.core.ux.mixins.NavHeader', {
             });
 
             if (this.parentTitleCfg && this.parentTitleCfg.pillTooltipTplData) {
+
                 this.pillTooltip = Ext.create('Taco.core.ux.content.Tooltip', {
                     elementSelector: '[data-role="nav-header-pill"]',
                     arrowPosition: 'top',

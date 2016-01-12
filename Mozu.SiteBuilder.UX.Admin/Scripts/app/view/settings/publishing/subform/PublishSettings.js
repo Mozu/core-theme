@@ -5,7 +5,9 @@
 
 Ext.define('Taco.view.settings.publishing.subform.PublishSettings', {
     extend: 'Taco.core.ux.form.Form',
-    requires: [],
+    requires: [
+        'Taco.core.ux.content.Tooltip'
+    ],
     title: false,
     margin: "0 0 20 0",
     ui: "subform",
@@ -169,7 +171,7 @@ Ext.define('Taco.view.settings.publishing.subform.PublishSettings', {
                         elementId: 'live-edit-field-container-' + masterCatalog.id,
                         hoverTarget: 'label',
                         messageKey: 'settings.publishing.liveEdit',
-                        offsetLeft: 20,
+                        offsetLeft: 82,
                         offsetTop: 15
                     })
                 }
