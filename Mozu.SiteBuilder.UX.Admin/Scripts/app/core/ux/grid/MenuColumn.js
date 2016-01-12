@@ -90,7 +90,9 @@ Ext.define('Taco.core.ux.grid.MenuColumn', {
             items: this.getMenuItems(items),
             listeners: {
                 beforehide: function(eOpts) {
-                    Ext.fly(this.gridColumnHeaderTrigger).removeCls(Taco.baseCSSPrefix + 'grid-row-menu-trigger-active');
+                    if (this.gridColumnHeaderTrigger) {
+                        Ext.fly(this.gridColumnHeaderTrigger).removeCls(Taco.baseCSSPrefix + 'grid-row-menu-trigger-active');
+                    }
                 }
             }
         });
