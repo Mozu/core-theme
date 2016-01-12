@@ -50,6 +50,7 @@ Ext.define('Taco.view.productRanking.modal.ProductRankingEditor', {
         this.title = (me.isCreateMode ? 'New Product Ranking Rule' : me.record.get('name'));
 
         this.initUi();
+
         this.callParent(arguments);
     },
 
@@ -138,6 +139,21 @@ Ext.define('Taco.view.productRanking.modal.ProductRankingEditor', {
         me.items = [
             me.container
         ];
+
+        this.dockedItems.push({
+            xtype: 'taco-cardtabtoolbar',
+            cls: 'taco-modal-toolbar',
+            cardPanel: this.container,
+            items: [{
+                title: 'General'
+            }, {
+                title: 'Context'
+            }, {
+                title: 'Promoted Products'
+            }, {
+                title: 'Blocked Products'
+            }]
+        });
 
     },
 

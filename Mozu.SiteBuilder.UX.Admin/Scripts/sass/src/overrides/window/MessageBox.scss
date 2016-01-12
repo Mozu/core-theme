@@ -1,5 +1,5 @@
-.#{$vprefix}messagebox {  
-	
+.#{$vprefix}messagebox {
+
 	border:1px solid #fff;
 	background-color:#fff;
 	box-shadow: 0 0.7em 3.5em rgba(0, 0, 0, 0.3);
@@ -9,19 +9,18 @@
 		padding:20px 20px 20px 20px;
 		font-size: px-to-rem(24);
         line-height: px-to-rem(30);
-		font-weight: normal;		
-		border-bottom: 1px solid $light-gray-border-color;
+		font-weight: normal;
+	}
 
-		.#{$prefix}window-header-text{
-		    
-		}
+	.#{$prefix}window-body-modal {
+		border-top: 1px solid $light-gray-border-color;
 	}
 
 	.#{$prefix}window-body{
 		border: 0px;
         padding: 10px 10px 10px 10px;
 		border-top:0px solid $color-neutral-75 !important;
-        background-color:#fff;	
+        background-color:#fff;
 	}
 
 	.#{$prefix}toolbar-footer {

@@ -59,6 +59,10 @@ Ext.define('Taco.core.ux.card.Toolbar', {
             this.cardPanel = this.up();
         }
 
+        if (!this.cardPanel.getLayout().setActiveItem) {
+            return;
+        }
+
         this.cardPanel.getLayout().setActiveItem(index);
 
         Ext.each(this.tabs, function (tab) {
