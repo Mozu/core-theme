@@ -37,6 +37,7 @@ Ext.define('Taco.view.product.widget.ProductFulfillmentTypes', {
             disabled: !this.isPhysical,
             handler: (this.isReadOnly) ? '' : me.updateFulfillmentRecord,
             scope: me,
+            margin: '0 15 0 0',
             fulfillmentType: 1
         });
 
@@ -44,7 +45,7 @@ Ext.define('Taco.view.product.widget.ProductFulfillmentTypes', {
             xtype: 'checkboxfield',
             boxLabel: 'In Store Pickup',
             name: 'inStoreCb',
-            margin:"0 0 0 50",
+            margin: '0 15 0 15',
             inputValue: 'InStorePickup',
             checked: ((this.fulfillmentTypes.indexOf('InStorePickup') != -1) && this.isPhysical),
             readOnly: this.isReadOnly,
@@ -58,7 +59,7 @@ Ext.define('Taco.view.product.widget.ProductFulfillmentTypes', {
             xtype: 'checkboxfield',
             boxLabel: 'Email',
             name: 'digitalCreditCb',
-            margin: "0 0 0 50",
+            margin: '0 0 0 15',
             inputValue: 'Digital',
             checked: ((this.fulfillmentTypes.indexOf('Digital') != -1) || !this.isPhysical),
             readOnly: true,

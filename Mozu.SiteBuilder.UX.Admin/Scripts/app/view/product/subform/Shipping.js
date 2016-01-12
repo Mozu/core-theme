@@ -89,7 +89,7 @@ Ext.define('Taco.view.product.subform.Shipping', {
             items: []
         };
 
-        var isBundle = this.record.productUsage == "Bundle";
+        var isBundle = this.record.productUsage === "Bundle";
         if (!isBundle && isPhysical) {
             field.items.push({
                 xtype: 'fieldcontainer',
@@ -100,7 +100,7 @@ Ext.define('Taco.view.product.subform.Shipping', {
                     {
                         xtype: 'checkboxfield',
                         name: 'isPackagedStandAlone',
-                        margin: '0 0 0 50',
+                        margin: '0 0 0 15',
                         boxLabel: 'Ships by itself',
                         inputValue: true,
                         checked: record.get("isPackagedStandAlone")
@@ -136,7 +136,7 @@ Ext.define('Taco.view.product.subform.Shipping', {
             allowBlank: true,
             isBundleComponent: true,
             width: '25%',
-            margin: '0 0 0 15'
+            margin: '20 0 0 15'
         });
 
         var productName = record.get("productName") + " (Qty " + record.get("quantity") + ")";
@@ -178,12 +178,13 @@ Ext.define('Taco.view.product.subform.Shipping', {
             labelClsExtra: '',
             disabled: (!isPhysical),
             width: '100%',
+            margin: '20 0 0 0',
             layout: {
                 type: 'column',
                 align: 'top'
             },
             defaults: {
-                columnWidth: 0.25,
+                columnWidth: (!isBundle) ? 0.25 : 0.20,
                 margin: '0 15 0 15',
                 selectOnFocus: true,
                 xtype: 'unitfield',
@@ -216,7 +217,7 @@ Ext.define('Taco.view.product.subform.Shipping', {
                     margin: '0 15 0 0'
                 },
                 {
-                    fieldLabel:"Length",
+                    fieldLabel: "Length",
                     name: (isBundle) ? "" : 'packageLength',
                     value:  (isPhysical ? record.get('packageLength') : '0 in'),
                     emptyText: 'l'
@@ -282,12 +283,12 @@ Ext.define('Taco.view.product.subform.Shipping', {
 
             bundleContainer.items.push({
                 xtype: 'unitfield',
-                width:120,
+                width: 120,
                 unitString: ' lbs',
                 unitAtEnd: true,
                 hideTrigger: true,
                 readOnly: true,
-                margin: "0 0 0 260",
+                margin: "20 0 0 260",
                 fieldLabel: "Total Weight",
                 value: totalWeight
             });

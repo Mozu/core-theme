@@ -336,7 +336,6 @@ Ext.define('Taco.view.product.subform.General', {
         var priceField = {
             xtype: 'currencyfield',
             fieldLabel: 'Price',
-            //flex:1,
             width: '50%',
             margin: '0 15 0 0',
             name: 'price',
@@ -365,7 +364,7 @@ Ext.define('Taco.view.product.subform.General', {
         this.rollupBundlePriceField = Ext.widget({
             xtype: "component",
             itemId: "rollupBundlePrice",
-            margins: '0 50 0 0',            
+            margin: '0 15 0 0',
             width: '50%',
             border: false,
             style: "font-size:14px;",
@@ -382,7 +381,7 @@ Ext.define('Taco.view.product.subform.General', {
             xtype: 'currencyfield',
             fieldLabel: 'Sale Price',
             name: 'salePrice',
-            margin:"0 0 0 15",
+            margin: "0 0 0 15",
             width: '50%',
             currencyCode: me.currencyCode,
             hideTrigger: true,
@@ -410,6 +409,7 @@ Ext.define('Taco.view.product.subform.General', {
             xtype: "component",
             itemId: "rollupBundleSalePrice",
             width: '50%',
+            margin: '0 0 0 15',
             border: false,
             style:"font-size:14px;",
             tpl: [
@@ -785,6 +785,7 @@ Ext.define('Taco.view.product.subform.General', {
                             xtype: 'fieldcontainer',
                             layout: 'hbox',
                             width: '100%',
+                            margin: '20 0 0 0',
                             items: [
                                 me.creditValueField,
                                 {
@@ -803,7 +804,6 @@ Ext.define('Taco.view.product.subform.General', {
                             items: [
                                 this.rollupBundlePriceField,
                                 this.rollupBundleSalePriceField
-                                
                             ]
                         },
                         {
