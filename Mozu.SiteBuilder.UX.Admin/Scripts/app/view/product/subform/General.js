@@ -488,6 +488,7 @@ Ext.define('Taco.view.product.subform.General', {
             name: 'productImages',
             xtype: 'taco.imagefield',
             width: '100%',
+            margin: '20 0 0 0',
             imageMetadata: me.record.get('productImages'),
             filters: function () {
                 var existingImages = me.record.get('productImages'),
@@ -610,6 +611,7 @@ Ext.define('Taco.view.product.subform.General', {
             allowBlank: false,
             minLength: 3,
             width: '100%',
+            margin: '0 0 20 0',
             name: 'productName',
             //hidden: (!this.isGlobal),
             required: true,
@@ -697,7 +699,26 @@ Ext.define('Taco.view.product.subform.General', {
                     layout: 'hbox',
                     width: '100%',
                     items: [
-                        me.statusCombo
+                        me.statusCombo,
+                        {
+                            xtype: 'datefield',
+                            fieldLabel: 'First Available Date',
+                            name: 'dateFirstAvailableInCatalog',
+                            labelAlign: 'top',
+                            allowBlank: false,
+                            hidden: this.isGlobal,
+                            width: '50%',
+                            margin: '0 0 0 15',
+                            value: dateFirstAvailable,
+                            itemId: 'first-avail-date',
+                            tooltip: Ext.create('Taco.core.ux.content.Tooltip', {
+                                elementId: 'first-avail-date',
+                                hoverTarget: 'label',
+                                messageKey: 'product.general.dateFirstAvailable',
+                                offsetLeft: 20,
+                                offsetTop: 15
+                            })
+                        }
                     ]
                 }
             ];
@@ -714,6 +735,7 @@ Ext.define('Taco.view.product.subform.General', {
                     xtype: 'fieldcontainer',
                     layout: 'hbox',
                     width: '100%',
+                    margin: '20 0 0 0',
                     items: [
                         this.activeStartDateField,
                         this.activeEndDateField
@@ -788,6 +810,7 @@ Ext.define('Taco.view.product.subform.General', {
                             xtype: 'fieldcontainer',
                             layout: 'hbox',
                             width: '100%',
+                            margin: '20 0 0 0',
                             items: [
                                 msrpField,
                                 {
@@ -808,7 +831,7 @@ Ext.define('Taco.view.product.subform.General', {
                     xtype: 'container',
                     ui: 'subform-subform',
                     width: '100%',
-                    margin: '10 0 0 0',
+                    margin: '20 0 0 0',
                     items: [
                         {
                             xtype: 'fieldcontainer',
@@ -834,7 +857,7 @@ Ext.define('Taco.view.product.subform.General', {
                     xtype: 'container',
                     ui: 'subform-subform',
                     width: '100%',
-                    margin: '10 0 0 0',
+                    margin: '20 0 0 0',
                     items: [
                         {
                             xtype: 'fieldcontainer',
@@ -862,7 +885,7 @@ Ext.define('Taco.view.product.subform.General', {
                     xtype: 'container',
                     ui: 'subform-subform',
                     width: '100%',
-                    margin: '10 0 0 0',
+                    margin: '20 0 0 0',
                     items: [
                         {
                             xtype: 'fieldcontainer',
@@ -879,6 +902,7 @@ Ext.define('Taco.view.product.subform.General', {
                             hidden: (!(this.isGlobal || this.isSingleSite)),
                             layout: 'hbox',
                             width: '100%',
+                            margin: '20 0 0 0',
                             items: [
                                 this.distPartNumField,
                                 {
@@ -901,46 +925,10 @@ Ext.define('Taco.view.product.subform.General', {
         if (Ext.isEmpty(dateFirstAvailable)) {
             dateFirstAvailable = new Date();
         }
-        
-        this.items.push(
-            {
-                xtype: 'fieldcontainer',
-                layout: 'hbox',
-                items: [
-                    {
-                        xtype: 'datefield',
-                        fieldLabel: 'First Available Date',
-                        name: 'dateFirstAvailableInCatalog',
-                        labelAlign: 'top',
-                        allowBlank: false,
-                        hidden: this.isGlobal,
-                        width: '25%',
-                        value: dateFirstAvailable,
-                        itemId: 'first-avail-date',
-                        tooltip: Ext.create('Taco.core.ux.content.Tooltip', {
-                            elementId: 'first-avail-date',
-                            hoverTarget: 'label',
-                            messageKey: 'product.general.dateFirstAvailable',
-                            offsetLeft: 20,
-                            offsetTop: 15
-                        })
-                    }
-                ]
-            }
-        );
-
 
         this.callParent(arguments);
 
         this.on('afterrender', function () {
-
-
-            
-            
-           
-
-
-
 
             //suspendEvents?
             //this.down('#contentOverride').add(this.imagesConfig);
@@ -959,12 +947,7 @@ Ext.define('Taco.view.product.subform.General', {
                     me.mon(productForm, 'bundleItemChange', me.updatePriceUI, me);
                 }
 
-           
-
-
         }, this, {single:true, delay:1});
-
-       
 
 
     },
