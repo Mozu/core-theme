@@ -11,6 +11,22 @@
         }
 	}
 
+    .#{$prefix}btn-toolbar {
+        .#{$prefix}btn-wrap {
+            &.#{$prefix}btn-split {
+                &.#{$prefix}btn-split-right {
+                    &:after {
+                        content: $glyph-chevrondown;
+                        color: $glyph-icon-color;
+                        font-size: $tag-font;
+                        padding-top: 12px;
+                        right: -13px;
+                    }
+                }
+            }
+        }
+    }
+
     .seperator {
         color: $color-neutral-80;
         padding: 0px 7px 0px 7px;

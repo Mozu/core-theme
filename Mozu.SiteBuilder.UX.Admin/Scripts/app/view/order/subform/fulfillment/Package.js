@@ -54,7 +54,8 @@ Ext.define('Taco.view.order.subform.fulfillment.Package', {
             },
             items: Ext.Array.push([{
                 xtype: 'button',
-                text: '-',
+                text: '',
+                glyph: 'XE92A@mozicons',
                 width: 50,
                 ui: 'action',
                 scale: 'medium',
@@ -73,10 +74,11 @@ Ext.define('Taco.view.order.subform.fulfillment.Package', {
             }], availableActions)
         });
 
+        var packageStatus;
         if (this.packageData.status == 'Fulfilled') {
-            this.packageData.status = '<span class="x-column-content-pill x-column-content-pill-true">Fulfilled</span>';
+            packageStatus = '<span class="x-column-content-pill x-column-content-pill-true">Fulfilled</span>';
         } else if (this.packageData.status == 'NotFulfilled') {
-            this.packageData.status = '<span class="x-column-content-pill x-column-content-pill-false">NotFulfilled</span>';
+            packageStatus = '<span class="x-column-content-pill x-column-content-pill-false">NotFulfilled</span>';
         }
 
         this.statusContainer = Ext.widget({
@@ -86,7 +88,7 @@ Ext.define('Taco.view.order.subform.fulfillment.Package', {
             items: [{
                     xtype: 'component',
                     padding: '0 0 10 0',
-                    html: '<span class="label">Status:</span>' + this.packageData.status
+                    html: '<span class="label">Status:</span>' + packageStatus
                 },
                 this.details
             ]
@@ -121,7 +123,8 @@ Ext.define('Taco.view.order.subform.fulfillment.Package', {
         if (this.isCollapsible) {
             this.closedContainer.add([{
                 margin: '0 10 0 0',
-                text: '+',
+                text: '',
+                glyph: 'XE927@mozicons',
                 width: 50,
                 handler: this.handleExpand
             }, {

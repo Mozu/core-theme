@@ -184,10 +184,12 @@ Ext.define('Taco.view.order.widget.PaymentPanel', {
             // order is awaiting approval
             pendingReview = me.order.get('orderStatus') === 'PendingReview';
 
+        var packageStatus;
+        
         if (me.record.data.status === 'Authorized') {
-            me.record.data.status = '<span class="x-column-content-pill x-column-content-pill-true">Authorized</span>';
+            packageStatus = '<span class="x-column-content-pill x-column-content-pill-true">Authorized</span>';
         } else {
-            me.record.data.status = '<span class="x-column-content-pill x-column-content-pill-false">' + me.record.data.status + '</span>';
+            packageStatus = '<span class="x-column-content-pill x-column-content-pill-false">' + me.record.data.status + '</span>';
         }
 
         me.statusRow = Ext.create('Ext.container.Container', {
@@ -203,7 +205,7 @@ Ext.define('Taco.view.order.widget.PaymentPanel', {
                     flex: 1,
                     itemId: "statusField",
                     cls: "statusField",
-                    html: '<span class="label">Status: </label>' + me.record.data.status
+                    html: '<span class="label">Status: </label>' + packageStatus
                 }, {
                     xtype: 'component',
                     itemId: 'orderApprovedNotice',
