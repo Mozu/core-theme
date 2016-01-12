@@ -1,9 +1,19 @@
 ﻿.#{$vprefix}order-package {
     .label {
-        font-size: $label-font;
         color: $label-color;
+        font-size: $label-font;
         font-weight: normal;
         margin-right: 3px;
+    }
+
+    .#{$prefix}box-inner {
+        .#{$prefix}box-target {
+            .#{$prefix}box-item {
+                color: $label-color;
+                font-size: $label-font;
+                font-weight: normal !important;
+            }
+        }
     }
 
     a.label-link {
