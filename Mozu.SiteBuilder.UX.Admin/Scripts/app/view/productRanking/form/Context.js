@@ -75,7 +75,7 @@ Ext.define('Taco.view.productRanking.form.Context', {
             xtype: 'combobox',
             name: 'categoryFilters',
             flex: 1,
-            emptyText: 'Search for Categories or click Add Button',
+            emptyText: 'Search for Categories',
             margin: '0 10 0 0',
             store: catStore,
             getStore: function () {

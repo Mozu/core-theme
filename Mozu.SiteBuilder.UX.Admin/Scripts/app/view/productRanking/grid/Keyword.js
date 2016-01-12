@@ -163,7 +163,7 @@ Ext.define('Taco.view.productRanking.grid.Keyword', {
                 xtype: 'textfield',
                 flex: 1,
                 margin: '0 10 0 0',
-                emptyText: 'Type keywords here and press ENTER or click Add button',
+                emptyText: 'Type Keywords Here',
                 listeners: {
                     scope: me,
                     specialkey: function (field, e) {
