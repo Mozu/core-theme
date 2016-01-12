@@ -86,7 +86,7 @@ Ext.define('Taco.view.order.subform.fulfillment.Package', {
             items: [{
                     xtype: 'component',
                     padding: '0 0 10 0',
-                    html: '<span class="label">Status:</span>' + '<span class="x-column-content-pill x-column-content-pill-true">' + this.packageData.status + '</span>'
+                    html: '<span class="label">Status:</span>' + this.packageData.status
                 },
                 this.details
             ]

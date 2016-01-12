@@ -109,28 +109,6 @@ Ext.define('Taco.view.order.widget.ProcessReturnPanel', {
 
         Ext.apply(this, {
             items: [
-                {
-                    xtype: 'container',
-                    padding: '0 0 10 0',
-                    margin: '0 0 10 0',
-                    layout: {
-                        type: 'hbox',
-                        align: 'middle'
-                    },
-                    style: {
-                        'border-bottom': '1px solid rgb(191, 191, 191)'
-                    },
-                    items: [{
-                            xtype: 'component',
-                            html: ('Return #' + record.get('returnNumber')),
-                            style: {
-                                fontWeight: 'bold'
-                            }
-                    }, {
-                            xtype: 'tbfill'
-                    },
-                        this.returnActions]
-                },
                 this.status,
                 this.itemsGrid, {
                     xtype: 'container',
@@ -609,6 +587,12 @@ Ext.define('Taco.view.order.widget.ProcessReturnPanel', {
     },
 
     initSummary: function (record) {
+        if(record.getData().status == 'Authorized') {
+            record.set('status', '<span class="x-column-content-pill x-column-content-pill-true">Authorized</span>');
+        } else {
+            record.set('status', '<span class="x-column-content-pill x-column-content-pill-false">' + record.getData().status + '</span>');
+        }
+        console.log(record.getData());
         return Ext.create('Ext.Component', {
             cls: 'return-summary',
             data: record.getData(),
@@ -617,12 +601,11 @@ Ext.define('Taco.view.order.widget.ProcessReturnPanel', {
                 'white-space': 'nowrap'
             },
             tpl: [
-                '{createDate:date("m/d/Y g:ia")}',
-                '<span class="label">Return ID:</span>{returnNumber}',
-                '<span class="label">Status:</span>{status}',
-                '<span class="label">Type:</span>{returnType}',
-                '<span class="label">Amount:</span>{[Taco.app.context.getCurrent().formatCurrency(Ext.Array.sum(Ext.Array.pluck(values.payments, "amountCredited")))]}',
-                '<span class="label">Items:</span>{[values.items.length]}'
+                '<span class="label">Return ID:<span>Return #{returnNumber} {status}</span></span>',
+                '<span class="label">Type:<span>{returnType}</span></span>',
+                '<span class="label">Time:<span>{createDate:date("m/d/Y g:ia")}</span></span>',
+                '<span class="label">Amount:<span>{[Taco.app.context.getCurrent().formatCurrency(Ext.Array.sum(Ext.Array.pluck(values.payments, "amountCredited")))]}</span></span>',
+                '<span class="label">Items:<span>{[values.items.length]}</span></span>'
             ]
         });
     },

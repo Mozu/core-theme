@@ -1,6 +1,53 @@
 ﻿.#{$vprefix}orderform-returns {
-	.#{$prefix}header-text {
-		font-size: 15px;
-		font-weight: normal;
-	}
+    .#{$prefix}header-text {
+        font-size: 15px;
+        font-weight: normal;
+    }
+
+    .#{$prefix}panel-subform-section-child {
+        &.return-item {
+            &.return-process {
+                background-color: $package-bg;
+                border-color: $light-border-gray;
+                @include border-radius-xbrowser(4px);
+
+                .#{$prefix}component-after-title {
+                    .label {
+                        color: $label-color;
+                        display: inline-block;
+                        font-size: $label-font;
+                        font-weight: normal;
+
+                        & > span {
+                            color: $dark-color;
+                            display: block;
+                            font-size: 14px;
+                            font-weight: normal;
+                            line-height: 19px;
+                        }
+                    }
+                }
+
+                .#{$prefix}container-default {
+                    &.#{$prefix}box-layout-ct {
+                        border-width: 0;
+
+                        .label {
+                            color: $label-color;
+                            font-size: $label-font;
+                            font-weight: normal !important;
+                        }
+                    }
+                }
+
+                .return-properties {
+                    .label {
+                        color: $label-color;
+                        font-size: $label-font;
+                        font-weight: normal !important;
+                    }
+                }
+            }
+        }
+    }
 }
