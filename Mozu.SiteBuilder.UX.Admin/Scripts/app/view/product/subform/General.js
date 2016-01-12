@@ -147,7 +147,7 @@ Ext.define('Taco.view.product.subform.General', {
                 name: 'productCode',
                 emptyText: '#######',
                 width: '50%',
-                margin: '0 50 0 0',
+                margin: '0 15 0 0',
                 readOnly: !this.product.phantom,
                 required: true,
                 allowBlank: false,
@@ -173,7 +173,7 @@ Ext.define('Taco.view.product.subform.General', {
                 autoFetchDisplayValue: true,
                 autoLoad:false,
                 width: '50%',
-                margin: '0 50 0 0',
+                margin: '0 15 0 0',
                 // extension method that allows the combo to use a preloaded record for its display value;
                 getDisplayRecord : function() {
                     return (me.record.productTypeRecord) ? me.record.productTypeRecord : null;
@@ -205,7 +205,7 @@ Ext.define('Taco.view.product.subform.General', {
                 required: true,
                 queryMode: 'local',                
                 width: '50%',
-                margin: '0 0 0 0',                
+                margin: '0 0 0 15',
                 displayField: 'name',
                 valueField: 'id',
                 store: this.productUsageStore,
@@ -230,11 +230,11 @@ Ext.define('Taco.view.product.subform.General', {
 
             this.isTaxableField = Ext.widget({
                 xtype: 'checkboxfield',
-                width: '15%',
+                columnWidth: 0.5,
                 fieldLabel: "",
                 hideEmptyLabel : false,
                 name: 'isTaxable',
-                margin: "10 0 0 0",
+                margin: "10 0 0 15",
                 boxLabel: 'Taxable',
                 checked: isTaxable
             });
@@ -244,8 +244,8 @@ Ext.define('Taco.view.product.subform.General', {
                 fieldLabel: 'Cost',
                 currencyCode:me.currencyCode,
                 name: 'cost',
-                width: '35%',
-                margin: "0 50 0 0",
+                columnWidth: 0.5,
+                margin: "0 15 0 0",
                 required: false,
                 hideTrigger: true,
                 mouseWheelEnabled: false,
@@ -257,7 +257,7 @@ Ext.define('Taco.view.product.subform.General', {
                 xtype: 'checkboxfield',
                 fieldLabel: 'Product Discounts',
                 width: '50%',
-                margin: "0 50 0 0",
+                margin: "0 15 0 0",
                 boxLabel: 'Restrict discounts on this product',
                 name: 'discountsRestricted',
                 checked: isDiscountRestricted,
@@ -268,8 +268,8 @@ Ext.define('Taco.view.product.subform.General', {
             this.discountsRestrictedStartField = Ext.widget({
                 xtype: 'datetime',
                 fieldLabel: 'Restriction Start Date',
-                width: '24%',
-                margin: "0 25 0 0",
+                columnWidth: 0.5,
+                margin: '0 15 0 0',
                 name: 'discountsRestrictedStartDate',
                 itemId: 'discountDateRangeStart',
                 disabled: !isDiscountRestricted,
@@ -284,8 +284,8 @@ Ext.define('Taco.view.product.subform.General', {
                 xtype: 'datetime',
                 fieldLabel: 'Restriction End Date',
                 name: 'discountsRestrictedEndDate',
-                width: '24%',
-                margin: "0 0 0 25",
+                columnWidth: 0.5,
+                margin: "0 0 0 15",
                 itemId: 'discountDateRangeEnd',
                 disabled: !isDiscountRestricted,
                 allowBlank: true,
@@ -299,6 +299,7 @@ Ext.define('Taco.view.product.subform.General', {
                 fieldLabel: 'Manufacturer Part Number',
                 name: 'mfgPartNumber',
                 width: '50%',
+                margin: '0 15 0 0',
                 maxLength: 30,
                 enforceMaxLength: true,
                 required: false,
@@ -310,7 +311,7 @@ Ext.define('Taco.view.product.subform.General', {
                 fieldLabel: 'Universal Product Code (UPC)',
                 name: 'upc',
                 width: '50%',
-                margin: "0 0 0 50",
+                margin: "0 0 0 15",
                 maxLength: 128,
                 enforceMaxLength: true,
                 required: false,
@@ -322,6 +323,7 @@ Ext.define('Taco.view.product.subform.General', {
                 fieldLabel: 'Distributor Part Number',
                 name: 'distPartNumber',
                 width: '50%',
+                margin: '0 15 0 0',
                 maxLength: 30,
                 enforceMaxLength: true,
                 required: false,
@@ -336,7 +338,7 @@ Ext.define('Taco.view.product.subform.General', {
             fieldLabel: 'Price',
             //flex:1,
             width: '50%',
-            margin: '0 25 0 0',
+            margin: '0 15 0 0',
             name: 'price',
             itemId: 'price',
             required: true,
@@ -380,7 +382,7 @@ Ext.define('Taco.view.product.subform.General', {
             xtype: 'currencyfield',
             fieldLabel: 'Sale Price',
             name: 'salePrice',
-            margin:"0 0 0 25",
+            margin:"0 0 0 15",
             width: '50%',
             currencyCode: me.currencyCode,
             hideTrigger: true,
@@ -392,7 +394,7 @@ Ext.define('Taco.view.product.subform.General', {
             xtype: 'currencyfield',
             fieldLabel: 'Gift Card/Credit Value',
             name: 'creditValue',            
-            margin: "0 25 0 0",
+            margin: "0 15 0 0",
             width: '50%',
             hidden: !isDigitalCredit,
             disabled: (!isDigitalCredit || !(this.isGlobal || this.isSingleSite)),
@@ -423,7 +425,7 @@ Ext.define('Taco.view.product.subform.General', {
             fieldLabel: 'MSRP',
             name: 'msrp',            
             width: '50%',
-            margin: "0 50 0 0",
+            margin: "0 15 0 0",
             currencyCode: me.currencyCode,
             hideTrigger: true,
             mouseWheelEnabled: false,
@@ -437,7 +439,7 @@ Ext.define('Taco.view.product.subform.General', {
             fieldLabel: 'Minimum Advertised Price',
             name: 'map',            
             width: '50%',
-            margin: '0 50 0 0',
+            margin: '0 15 0 0',
             currencyCode: me.currencyCode,
             required: false,
             hideTrigger: true,
@@ -457,8 +459,8 @@ Ext.define('Taco.view.product.subform.General', {
             xtype: 'datetime',
             fieldLabel: 'MAP Start Date',
             name: 'mapStartDate',
-            width: '24%',
-            margin:"0 25 0 0",
+            columnWidth: 0.5,
+            margin: "0 15 0 0",
             itemId: 'mapstartdt',
             disabled: !isMapEnabled,
             allowBlank: true,
@@ -472,8 +474,8 @@ Ext.define('Taco.view.product.subform.General', {
             fieldLabel: 'MAP End Date',
             name: 'mapEndDate',
             itemId: 'mapenddt',
-            width: '24%',
-            margin: "0 0 0 25",
+            columnWidth: 0.5,
+            margin: "0 0 0 15",
             disabled: !isMapEnabled,
             allowBlank: true,
             validator: function() {
@@ -507,7 +509,7 @@ Ext.define('Taco.view.product.subform.General', {
             fieldLabel: 'Active Start Date',
             name: 'activeStartDate',
             width: '50%',
-            margin:"0 50 0 0",
+            margin: "0 15 0 0",
             itemId: 'activeStartDt',
             hidden: (!this.productInCatalogInfo || this.productInCatalogInfo.get('status') !== 'Scheduled'),
             value: this.productInCatalogInfo ? this.productInCatalogInfo.get('activeStartDate') : "",
@@ -532,7 +534,7 @@ Ext.define('Taco.view.product.subform.General', {
             name: 'activeEndDate',
             itemId: 'activeEndDt',
             width: '50%',
-            margin: "0 0 0 0",
+            margin: "0 0 0 15",
             hidden: (!this.productInCatalogInfo || this.productInCatalogInfo.get('status') !== 'Scheduled'),
             value: this.productInCatalogInfo ? this.productInCatalogInfo.get('activeEndDate') : "",
             allowBlank: true,
@@ -562,6 +564,7 @@ Ext.define('Taco.view.product.subform.General', {
             listConfig: { shadow: false },
             width: '50%',
             minWidth: '200',
+            margin: '0 15 0 0',
             store: [['Active', 'Active'], ['Scheduled', 'Scheduled'], ['Disable', 'Disabled']],
             value: this.productInCatalogInfo ? this.productInCatalogInfo.get('status') : 'Disable',
             dateValidationMsg: "An active start or end date is required",
@@ -644,7 +647,7 @@ Ext.define('Taco.view.product.subform.General', {
                     name: 'productShortDescription',
                     emptyText: 'Words',
                     width: '50%',
-                    margin: '0 50 0 0',
+                    margin: '0 15 0 0',
                     height: 300,
                     listeners: {
                         editmodechange: htmlEditorEditModeChangeHandler
@@ -658,7 +661,7 @@ Ext.define('Taco.view.product.subform.General', {
                     //width: classDef.getBufferedWidth(null, '100%'),
                     width: '50%',
                     height: 300,
-
+                    margin: '0 0 0 15',
                     listeners: {
                         editmodechange: htmlEditorEditModeChangeHandler,
                         change: function (cmp, newValue) {
@@ -671,26 +674,35 @@ Ext.define('Taco.view.product.subform.General', {
         });
         productOverride.items.push(this.imagesConfig);
 
-        this.items = (this.isGlobal) ? [productTitle] : [];
-
-        this.items.push({
-            xtype: 'fieldcontainer',
-            layout: 'hbox',
-            width: '100%',
-            items: [
-                this.productCodeField,
+        if (this.isGlobal) {
+            this.items = [
+                productTitle,
+                {
+                    xtype: 'fieldcontainer',
+                    layout: 'hbox',
+                    width: '100%',
+                    items: [
+                        this.productCodeField
+                    ]
+                }
+            ];
+        } else {
+            this.items = [
                 {
                     xtype: 'formform',
                     persistChangesToModel: true,
                     record: this.productInCatalogInfo,
                     hidden: this.isGlobal,
                     header: false,
+                    layout: 'hbox',
+                    width: '100%',
                     items: [
                         me.statusCombo
                     ]
                 }
-            ]
-        });
+            ];
+        }
+
         this.items.push({
             xtype: 'formform',
             persistChangesToModel: true,
@@ -756,7 +768,7 @@ Ext.define('Taco.view.product.subform.General', {
                                 {
                                     xtype: 'component',
                                     width: '50%',
-                                    margin: '0 0 0 25'
+                                    margin: '0 0 0 15'
                                 }
                             ]
                         },
@@ -764,7 +776,7 @@ Ext.define('Taco.view.product.subform.General', {
                             xtype: 'fieldcontainer',
                             layout: 'hbox',
                             width: '100%',
-                            itemId:"rollupBundleContainer",
+                            itemId: "rollupBundleContainer",
                             hidden: (productUsage != "Bundle"),
                             items: [
                                 this.rollupBundlePriceField,
@@ -780,8 +792,9 @@ Ext.define('Taco.view.product.subform.General', {
                                 msrpField,
                                 {
                                     xtype: 'fieldcontainer',
-                                    layout: 'hbox',
-                                    width: '100%',
+                                    layout: 'column',
+                                    width: '50%',
+                                    margin: '0 0 0 15',
                                     items: [
                                         this.costField,
                                         this.isTaxableField
@@ -805,8 +818,9 @@ Ext.define('Taco.view.product.subform.General', {
                                 mapField,
                                 {
                                     xtype: 'fieldcontainer',
-                                    layout: 'hbox',
-                                    width: '100%',
+                                    layout: 'column',
+                                    width: '50%',
+                                    margin: '0 0 0 15',
                                     items: [
                                         this.mapStartField,
                                         this.mapEndField
@@ -832,8 +846,9 @@ Ext.define('Taco.view.product.subform.General', {
                                 {
                                     xtype: 'fieldcontainer',
                                     hidden: (!(this.isGlobal || this.isSingleSite)),
-                                    layout: 'hbox',
-                                    width: '100%',
+                                    layout: 'column',
+                                    width: '50%',
+                                    margin: '0 0 0 15',
                                     items: [
                                         this.discountsRestrictedStartField,
                                         this.discountsRestrictedEndField
@@ -868,8 +883,7 @@ Ext.define('Taco.view.product.subform.General', {
                                 this.distPartNumField,
                                 {
                                     xtype: "box",
-                                    margin: "0 0 0 50",
-                                    flex: 1
+                                    margin: "0 0 0 15"
                                 }
                             ]
                         }
@@ -888,23 +902,30 @@ Ext.define('Taco.view.product.subform.General', {
             dateFirstAvailable = new Date();
         }
         
-        this.items.push({
-                xtype: 'datefield',
-                fieldLabel: 'First Available Date',
-                name: 'dateFirstAvailableInCatalog',
-                labelAlign: 'top',
-                allowBlank: false,
-                hidden: this.isGlobal,
-                width: '50%',
-                value: dateFirstAvailable,
-                itemId: 'first-avail-date',
-                tooltip: Ext.create('Taco.core.ux.content.Tooltip', {
-                    elementId: 'first-avail-date',
-                    hoverTarget: 'label',
-                    messageKey: 'product.general.dateFirstAvailable',
-                    offsetLeft: 20,
-                    offsetTop: 15
-                })
+        this.items.push(
+            {
+                xtype: 'fieldcontainer',
+                layout: 'hbox',
+                items: [
+                    {
+                        xtype: 'datefield',
+                        fieldLabel: 'First Available Date',
+                        name: 'dateFirstAvailableInCatalog',
+                        labelAlign: 'top',
+                        allowBlank: false,
+                        hidden: this.isGlobal,
+                        width: '25%',
+                        value: dateFirstAvailable,
+                        itemId: 'first-avail-date',
+                        tooltip: Ext.create('Taco.core.ux.content.Tooltip', {
+                            elementId: 'first-avail-date',
+                            hoverTarget: 'label',
+                            messageKey: 'product.general.dateFirstAvailable',
+                            offsetLeft: 20,
+                            offsetTop: 15
+                        })
+                    }
+                ]
             }
         );
 
