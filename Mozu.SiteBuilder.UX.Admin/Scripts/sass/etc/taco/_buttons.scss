@@ -45,7 +45,6 @@
             .#{$prefix}btn-arrow-right,
             .#{$prefix}btn-split-right {
                 &::after {
-             //       border-left: 1px solid $primary-btn-disabled-split-border;
                     box-shadow: none;
                 }
             }
@@ -55,6 +54,7 @@
         .#{$prefix}btn-split-right {
             padding-right: 14px;
             &::after {
+                background-color: $valid-green;
                 border-left-width: 0px;
                 border-top-right-radius: 3px;
                 border-bottom-right-radius: 3px;
@@ -71,6 +71,20 @@
 
             .#{$prefix}btn-button {
                 padding-right: 15px;
+            }
+        }
+
+        &.#{$vprefix}splitbutton:hover {
+            background-color: $valid-green;
+
+            &.#{$vprefix}over-button {
+                background-color: $valid-green-active;
+            }
+
+            &.#{$vprefix}over-trigger {
+                .#{$prefix}btn-split-right::after {
+                    background-color: $valid-green-active;
+                }
             }
         }
 

@@ -101,6 +101,7 @@ Ext.define('Taco.Application', {
         'Taco.overrides.panel.Tool',
         'Taco.overrides.toolbar.Paging',
         'Taco.overrides.window.MessageBox',
+        'Taco.overrides.SplitButton',
         'Ext.data.association.HasOne',
         'Taco.core.data.RemoteException',
         'Taco.core.context.TaContext',
