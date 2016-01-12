@@ -44,8 +44,7 @@ Ext.define('Taco.store.StoreCredits', {
 
             if (onlyActiveCredits) {
                 proxy.extraParams.advancedSearch = Ext.JSON.encodeValue({
-                    'activatedateto': new Date(),     // It's been activated by now
-                    'expirationdatefrom': new Date(), // It hasn't expired yet
+                    'currentlyActiveOnly' : true, //Get only currently active 
                     'currentbalancefrom': 0.0001      // It still has a balance
                 });
             }

@@ -1,5 +1,5 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<ClassDiagram MajorVersion="1" MinorVersion="1">
+<ClassDiagram MajorVersion="1" MinorVersion="1" MembersFormat="NameAndType">
   <Class Name="Mozu.SiteBuilder.UnitTests.Diagrams.Admin.Scripts.app.view.searchTuningRule.TacoWindowWindow" Collapsed="true">
     <Position X="0.75" Y="0.75" Width="1.75" />
     <TypeIdentifier>
@@ -21,15 +21,12 @@
       <FileName>Diagrams\Admin\Scripts\app\view\searchTuningRule\cdSearchTuningRule.cs</FileName>
     </TypeIdentifier>
   </Class>
-  <Class Name="Mozu.SiteBuilder.UnitTests.Diagrams.Admin.Scripts.app.view.searchTuningRule.TacoModalSearchTuningRuleEditor">
+  <Class Name="Mozu.SiteBuilder.UnitTests.Diagrams.Admin.Scripts.app.view.searchTuningRule.TacoModalProductRankingEditor">
     <Position X="0.5" Y="4.75" Width="2.75" />
     <TypeIdentifier>
       <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAEAAAA=</HashCode>
       <FileName>Diagrams\Admin\Scripts\app\view\searchTuningRule\cdSearchTuningRule.cs</FileName>
     </TypeIdentifier>
-    <ShowAsAssociation>
-      <Field Name="Form" />
-    </ShowAsAssociation>
   </Class>
   <Class Name="Mozu.SiteBuilder.UnitTests.Diagrams.Admin.Scripts.app.view.searchTuningRule.ExtPanel" Collapsed="true">
     <Position X="8" Y="0.5" Width="1.5" />
@@ -45,15 +42,12 @@
       <FileName>Diagrams\Admin\Scripts\app\view\searchTuningRule\cdSearchTuningRule.cs</FileName>
     </TypeIdentifier>
   </Class>
-  <Class Name="Mozu.SiteBuilder.UnitTests.Diagrams.Admin.Scripts.app.view.searchTuningRule.TacoSearchTuningRuleEdit">
+  <Class Name="Mozu.SiteBuilder.UnitTests.Diagrams.Admin.Scripts.app.view.searchTuningRule.TacoProductRankingEdit">
     <Position X="12" Y="4.25" Width="2" />
     <TypeIdentifier>
       <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAEAAAA=</HashCode>
       <FileName>Diagrams\Admin\Scripts\app\view\searchTuningRule\cdSearchTuningRule.cs</FileName>
     </TypeIdentifier>
-    <ShowAsAssociation>
-      <Field Name="Form" />
-    </ShowAsAssociation>
   </Class>
   <Class Name="Mozu.SiteBuilder.UnitTests.Diagrams.Admin.Scripts.app.view.searchTuningRule.TacoFormForm" Collapsed="true">
     <Position X="8" Y="1.75" Width="1.5" />
@@ -69,41 +63,35 @@
       <FileName>Diagrams\Admin\Scripts\app\view\searchTuningRule\cdSearchTuningRule.cs</FileName>
     </TypeIdentifier>
   </Class>
-  <Class Name="Mozu.SiteBuilder.UnitTests.Diagrams.Admin.Scripts.app.view.searchTuningRule.TacoSearchTuningRuleForm">
+  <Class Name="Mozu.SiteBuilder.UnitTests.Diagrams.Admin.Scripts.app.view.searchTuningRule.TacoProductRankingForm">
     <Position X="6.75" Y="4.75" Width="2.25" />
     <TypeIdentifier>
       <HashCode>AAACAAAAAAAAAAAAIAAAAAAAQAAAAAABAAAAAAAAAAA=</HashCode>
       <FileName>Diagrams\Admin\Scripts\app\view\searchTuningRule\cdSearchTuningRule.cs</FileName>
     </TypeIdentifier>
-    <ShowAsAssociation>
-      <Field Name="general" />
-      <Field Name="blocked" />
-      <Field Name="context" />
-      <Field Name="pinned" />
-    </ShowAsAssociation>
   </Class>
-  <Class Name="Mozu.SiteBuilder.UnitTests.Diagrams.Admin.Scripts.app.view.searchTuningRule.TacoSearchTuningRuleGeneralForm" Collapsed="true">
+  <Class Name="Mozu.SiteBuilder.UnitTests.Diagrams.Admin.Scripts.app.view.searchTuningRule.TacoProductRankingGeneralForm" Collapsed="true">
     <Position X="3.75" Y="6.25" Width="2.75" />
     <TypeIdentifier>
       <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
       <FileName>Diagrams\Admin\Scripts\app\view\searchTuningRule\cdSearchTuningRule.cs</FileName>
     </TypeIdentifier>
   </Class>
-  <Class Name="Mozu.SiteBuilder.UnitTests.Diagrams.Admin.Scripts.app.view.searchTuningRule.TacoSearchTuningRuleContextForm" Collapsed="true">
+  <Class Name="Mozu.SiteBuilder.UnitTests.Diagrams.Admin.Scripts.app.view.searchTuningRule.TacoProductRankingContextForm" Collapsed="true">
     <Position X="9" Y="6.5" Width="2.75" />
     <TypeIdentifier>
       <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
       <FileName>Diagrams\Admin\Scripts\app\view\searchTuningRule\cdSearchTuningRule.cs</FileName>
     </TypeIdentifier>
   </Class>
-  <Class Name="Mozu.SiteBuilder.UnitTests.Diagrams.Admin.Scripts.app.view.searchTuningRule.TacoSearchTuningRulePinnedProductForm" Collapsed="true">
+  <Class Name="Mozu.SiteBuilder.UnitTests.Diagrams.Admin.Scripts.app.view.searchTuningRule.TacoProductRankingPinnedProductForm" Collapsed="true">
     <Position X="4" Y="7.25" Width="3.25" />
     <TypeIdentifier>
       <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
       <FileName>Diagrams\Admin\Scripts\app\view\searchTuningRule\cdSearchTuningRule.cs</FileName>
     </TypeIdentifier>
   </Class>
-  <Class Name="Mozu.SiteBuilder.UnitTests.Diagrams.Admin.Scripts.app.view.searchTuningRule.TacoSearchTuningRuleBlockedProductForm" Collapsed="true">
+  <Class Name="Mozu.SiteBuilder.UnitTests.Diagrams.Admin.Scripts.app.view.searchTuningRule.TacoProductRankingBlockedProductForm" Collapsed="true">
     <Position X="9" Y="7.5" Width="3.25" />
     <TypeIdentifier>
       <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
@@ -111,37 +99,103 @@
     </TypeIdentifier>
   </Class>
   <Class Name="Mozu.SiteBuilder.UnitTests.Diagrams.Admin.Scripts.app.view.searchTuningRule.ExtGridPanel" Collapsed="true">
-    <Position X="1" Y="6.5" Width="1.5" />
+    <Position X="1" Y="6.25" Width="1.5" />
     <TypeIdentifier>
       <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
       <FileName>Diagrams\Admin\Scripts\app\view\searchTuningRule\cdSearchTuningRule.cs</FileName>
     </TypeIdentifier>
   </Class>
-  <Class Name="Mozu.SiteBuilder.UnitTests.Diagrams.Admin.Scripts.app.view.searchTuningRule.TacoGridPanel" Collapsed="true">
-    <Position X="1.25" Y="7.75" Width="1.5" />
+  <Class Name="Mozu.SiteBuilder.UnitTests.Diagrams.Admin.Scripts.app.view.searchTuningRule.TacoSearchList">
+    <Position X="0.75" Y="9.25" Width="2.5" />
+    <TypeIdentifier>
+      <HashCode>BAEAAAEAAAgQAAAiAAAEAAAAApEAAAAAAAAgACACBAA=</HashCode>
+      <FileName>Diagrams\Admin\Scripts\app\view\searchTuningRule\cdSearchTuningRule.cs</FileName>
+    </TypeIdentifier>
+    <ShowAsAssociation>
+      <Property Name="autoSelect" />
+      <Property Name="NavHeader" />
+      <Property Name="Pageable" />
+      <Property Name="deleteFromGrid" />
+      <Property Name="gridContextMenu" />
+      <Property Name="launchEditor" />
+      <Property Name="rowEditable" />
+      <Property Name="Searchable" />
+    </ShowAsAssociation>
+  </Class>
+  <Class Name="Mozu.SiteBuilder.UnitTests.Diagrams.Admin.Scripts.app.view.searchTuningRule.TacoProductRankingIndex" Collapsed="true">
+    <Position X="1.25" Y="15.25" Width="2.5" />
     <TypeIdentifier>
       <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
       <FileName>Diagrams\Admin\Scripts\app\view\searchTuningRule\cdSearchTuningRule.cs</FileName>
     </TypeIdentifier>
   </Class>
-  <Class Name="Mozu.SiteBuilder.UnitTests.Diagrams.Admin.Scripts.app.view.searchTuningRule.TacoSearchList" Collapsed="true">
-    <Position X="1.25" Y="9" Width="1.5" />
+  <Class Name="Mozu.SiteBuilder.UnitTests.Diagrams.Admin.Scripts.app.view.searchTuningRule.TacoCoreUxGridPluginsAutoSelect" Collapsed="true">
+    <Position X="4.75" Y="8.75" Width="2.5" />
     <TypeIdentifier>
       <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
       <FileName>Diagrams\Admin\Scripts\app\view\searchTuningRule\cdSearchTuningRule.cs</FileName>
     </TypeIdentifier>
   </Class>
-  <Class Name="Mozu.SiteBuilder.UnitTests.Diagrams.Admin.Scripts.app.view.searchTuningRule.TacoSearchTuningRuleGrid" Collapsed="true">
-    <Position X="0.75" Y="10.25" Width="2.25" />
+  <Class Name="Mozu.SiteBuilder.UnitTests.Diagrams.Admin.Scripts.app.view.searchTuningRule.TacoCoreUxMixinsNavHeader" Collapsed="true">
+    <Position X="4.75" Y="9.75" Width="2.25" />
     <TypeIdentifier>
       <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
       <FileName>Diagrams\Admin\Scripts\app\view\searchTuningRule\cdSearchTuningRule.cs</FileName>
     </TypeIdentifier>
   </Class>
-  <Class Name="Mozu.SiteBuilder.UnitTests.Diagrams.Admin.Scripts.app.view.searchTuningRule.TacoSearchTuningRuleIndex" Collapsed="true">
-    <Position X="0.75" Y="11.75" Width="2.5" />
+  <Class Name="Mozu.SiteBuilder.UnitTests.Diagrams.Admin.Scripts.app.view.searchTuningRule.TacoCoreUxMixinsPageable" Collapsed="true">
+    <Position X="4.75" Y="10.5" Width="2.25" />
     <TypeIdentifier>
       <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Diagrams\Admin\Scripts\app\view\searchTuningRule\cdSearchTuningRule.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Mozu.SiteBuilder.UnitTests.Diagrams.Admin.Scripts.app.view.searchTuningRule.TacoCoreUxMixinsRowEditable" Collapsed="true">
+    <Position X="4.75" Y="11.75" Width="2.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Diagrams\Admin\Scripts\app\view\searchTuningRule\cdSearchTuningRule.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Mozu.SiteBuilder.UnitTests.Diagrams.Admin.Scripts.app.view.searchTuningRule.TacoProductRankingGrid" Collapsed="true">
+    <Position X="1.25" Y="13.25" Width="2.25" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Diagrams\Admin\Scripts\app\view\searchTuningRule\cdSearchTuningRule.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Mozu.SiteBuilder.UnitTests.Diagrams.Admin.Scripts.app.view.searchTuningRule.TacoCoreUxMixinsDeleteFromGrid" Collapsed="true">
+    <Position X="4.75" Y="12.5" Width="2.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Diagrams\Admin\Scripts\app\view\searchTuningRule\cdSearchTuningRule.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Mozu.SiteBuilder.UnitTests.Diagrams.Admin.Scripts.app.view.searchTuningRule.TacoCoreUxMixinsGridContextMenu" Collapsed="true">
+    <Position X="7.75" Y="11.25" Width="2.75" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Diagrams\Admin\Scripts\app\view\searchTuningRule\cdSearchTuningRule.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Mozu.SiteBuilder.UnitTests.Diagrams.Admin.Scripts.app.view.searchTuningRule.TacoCoreUxMixinsLaunchEditor" Collapsed="true">
+    <Position X="8.25" Y="9.25" Width="2.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Diagrams\Admin\Scripts\app\view\searchTuningRule\cdSearchTuningRule.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Mozu.SiteBuilder.UnitTests.Diagrams.Admin.Scripts.app.view.searchTuningRule.TacoCoreUxMixinsSearchable" Collapsed="true">
+    <Position X="8.25" Y="10" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Diagrams\Admin\Scripts\app\view\searchTuningRule\cdSearchTuningRule.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Mozu.SiteBuilder.UnitTests.Diagrams.Admin.Scripts.app.view.searchTuningRule.TacoCoreUxGridPanel">
+    <Position X="1" Y="7.25" Width="2.25" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAQAAAAAAAAAAAAQAAAAAAAAAAAAAAg=</HashCode>
       <FileName>Diagrams\Admin\Scripts\app\view\searchTuningRule\cdSearchTuningRule.cs</FileName>
     </TypeIdentifier>
   </Class>

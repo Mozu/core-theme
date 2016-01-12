@@ -8,18 +8,17 @@ Ext.define('Taco.view.category.Edit', {
     requires: ['Taco.view.category.Form'],
     formCls: 'Taco.view.category.Form',
     saveAndCreateButtonEnabled: true,
-    doCreate: function () {
+    doCreate: function() {
         var controller = "categories",
             url;
 
         url = (this.record.get("categoryType") != "Static") ? controller + '/createdynamic' : controller + '/create'
-        
+
         Taco.app.StateManager.attemptNavigate(url);
     },
-    initComponent: function () {
+    initComponent: function() {
         var me = this;
-
-        this.additionalActions = [            
+        this.additionalActions = [
             {
                 xtype: 'button',
                 itemId: 'moreButton',
@@ -30,38 +29,37 @@ Ext.define('Taco.view.category.Edit', {
                 menu: {
                     plain: true,
                     shadow: false,
-                    items: [{
-                        itemId: 'live',
-                        text: 'View Live',
-                        menu: {
-                            plain: true,
-                            shadow: false,
-                            items: []
+                    items: [
+                        {
+                            itemId: 'live',
+                            text: 'View Live',
+                            menu: {
+                                plain: true,
+                                shadow: false,
+                                items: []
+                            }
+                        }, {
+                            itemId: 'preview',
+                            text: 'View Staged',
+                            menu: {
+                                plain: true,
+                                shadow: false,
+                                items: []
+                            }
                         }
-                    }, {
-                        itemId: 'preview',
-                        text: 'View Staged',                        
-                        menu: {
-                            plain: true,
-                            shadow: false,
-                            items: []
-                        }
-                    }
                     ],
                     listeners: {
-                        show: function (menu) {
+                        show: function(menu) {
                             var previewItem = menu.items.get('preview'),
                                 liveItems = menu.items.get('live'),
                                 previewMenu,
                                 liveMenu,
                                 previewSites = [],
                                 liveSites = [];
-
-                        
                             if (me.record.phantom) {
-                                liveItems.disable()
-                                previewItem.disable()
-                                return; 
+                                liveItems.disable();
+                                previewItem.disable();
+                                return;
                             }
 
                             var ctx = Taco.app.context.getCurrentContext();
@@ -69,27 +67,24 @@ Ext.define('Taco.view.category.Edit', {
                             if (previewItem && previewItem.menu) {
                                 previewMenu = previewItem.menu;
                                 liveMenu = liveItems.menu;
-                                
+
                                 var sites = (ctx.sites) ? ctx.sites : (ctx.catalog && ctx.catalog.sites) ? ctx.catalog.sites : [];
 
-                                Ext.each(sites, function (site) {
-                                        if (site.isMozuRendered) {
-                                            previewSites.push({
-                                                itemId: site.id,
-                                                text: site.name,
-                                                handler: Ext.bind(me.viewInSite, me, [site, 'preview'])
-                                            });
+                                Ext.each(sites, function(site) {
+                                    if (site.isMozuRendered) {
+                                        previewSites.push({
+                                            itemId: site.id,
+                                            text: site.name,
+                                            handler: Ext.bind(me.viewInSite, me, [site, 'preview'])
+                                        });
 
-                                            liveSites.push({
-                                                itemId: site.id,
-                                                text: site.name,
-                                                handler: Ext.bind(me.viewInSite, me, [site, 'live'])
-                                            });
-                                        }
-                                    });
-                                
-
-
+                                        liveSites.push({
+                                            itemId: site.id,
+                                            text: site.name,
+                                            handler: Ext.bind(me.viewInSite, me, [site, 'live'])
+                                        });
+                                    }
+                                });
 
                                 if (!Ext.Array.equals(Ext.Array.pluck(previewSites, 'itemId'), previewMenu.items.keys)) {
                                     previewMenu.removeAll();
@@ -97,23 +92,17 @@ Ext.define('Taco.view.category.Edit', {
                                     liveMenu.removeAll();
                                     liveMenu.add(liveSites);
                                 }
-                                
-
-
-                                
                             }
                         },
                         scope: this
                     }
                 }
-            }];
-
-
-
+            }
+        ];
         this.callParent(arguments);
 
     },
-    viewInSite: function (site, env, noPrompt) {
+    viewInSite: function(site, env, noPrompt) {
         var me = this,
             url = '/_gosite/' + site.id + '?environment=' + env + '&redir=' + encodeURIComponent('/c/' + this.record.getId());
 
@@ -121,7 +110,6 @@ Ext.define('Taco.view.category.Edit', {
             window.open(url);
         } else {
             // prompt
-
             Ext.MessageBox.show({
                 title: 'Unsaved Changes',
                 // pushes the buttons to the right to be consistant with our dialog ux.
@@ -131,13 +119,12 @@ Ext.define('Taco.view.category.Edit', {
                 msg: 'You have unsaved changes that will not be reflected on the site. <br/> Do you want to continue?',
                 closable: false,
                 buttons: Ext.Msg.YESNO,
-                fn: function (val) {
+                fn: function(val) {
                     if (val === 'yes') {
                         window.open(url);
                     }
                 }
             });
-            
         }
-    }, 
+    }
 });

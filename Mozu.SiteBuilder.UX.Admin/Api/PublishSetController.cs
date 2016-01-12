@@ -211,17 +211,20 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
         [HttpGetRoute(UriTemplate = "list")]
         public async Task<Response<List<PublishSet>>> ListPublishSets([FromUri]PagingParamaters pagingParams, [FromUri]FilterCollection extFilter, [FromUri]bool includeCounts = false, [FromUri]bool includeDynamic = false)
         {
+            var responseFields = "items(name,code,notes,totalCount,publishDate,lastPublishedDate,lastPublishedBy,status,auditInfo)";
 
             sanitizeProductSortQuery(pagingParams, "publishset");
 
             var filter = PublishSetFilterExtensions.ToFilterString(extFilter);
-
+            
             var result = (await _publishSetWebApiClient.GetPublishSets(
-                startIndex: pagingParams.startIndex, 
-                pageSize: pagingParams.pageSize, 
+                startIndex: pagingParams.startIndex,
+                pageSize: pagingParams.pageSize,
                 sortBy: pagingParams.sort.ToSortString(),
-                filter: filter).ConfigureAwait(false)).ReadAsSync();
-
+                filter: filter,
+                responseFields: responseFields
+                ).ConfigureAwait(false)).ReadAsSync();
+                
 
            var items = result.Items.Map <List<PublishSet>>();
             if (includeDynamic)

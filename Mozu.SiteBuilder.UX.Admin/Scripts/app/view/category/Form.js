@@ -16,13 +16,10 @@ Ext.define("Taco.view.category.Form", {
     ],
 
     itemId: 'taco-category-form',
-
     ui: 'subform',
     editTitle: 'Edit Category',
     createTitle: 'Create New Category',
-
     header: false,
-
     bodyStyle: {
         'border-top-width': '0px'
     },
@@ -32,14 +29,11 @@ Ext.define("Taco.view.category.Form", {
             categoryType = this.record.get("categoryType");
 
         this.title = this.record.data.name;
-
+        
         if (categoryType != "Static") {
-
             var expressionData = this.record.get("dynamicExpression");
-
             //expression needs the type so that it can be validated appropriatly.
             expressionData.type = this.record.get("categoryType");
-
             this.expressionTreePanel = Ext.create("Taco.view.filter.ExpressionTreePanel", {
                 name: "dynamicExpression",
                 type: expressionData.type,
@@ -82,8 +76,6 @@ Ext.define("Taco.view.category.Form", {
                         this.expressionTreePanel.setType(type);
                     }
                     // need to validate any expressions we have currently since the rules change for each type.
-
-
                 },
                 store: Ext.create("Ext.data.Store", {
                     fields: ["id", "name"],
@@ -99,25 +91,21 @@ Ext.define("Taco.view.category.Form", {
                 })
             }));
 
-
         var secondRowItems = [
             {
                 xtype: "categorycombobox",
                 name: "parentId",
                 fieldLabel: "Parent Category",
                 flex: 1,
-
                 showDynamicRealTime: false,
                 showDynamicPreComputed: false,
                 excludedIds: [this.record.get("categoryCode")]
-
             }
         ];
 
         if (categoryType !== "Static") {
             secondRowItems.push(this.dynamicCategoryTypeCombo);
         }
-
 
         this.items.push({
             xtype: "fieldcontainer",
@@ -152,7 +140,6 @@ Ext.define("Taco.view.category.Form", {
                                     }
                                     cmp.slugField.setValue(newValue);
                                     cmp.slugField.onNameChangeValue = cmp.slugField.getValue();
-
                                 }
                             }
                         }, {
@@ -253,7 +240,6 @@ Ext.define("Taco.view.category.Form", {
             }
         );
 
-
         this.items.push(
             Ext.create('Taco.view.productRanking.Grid', {
                 title: "Product Ranking Rules",
@@ -275,6 +261,7 @@ Ext.define("Taco.view.category.Form", {
             })
         );
 
+
         this.callParent(arguments);
 
         me.mon(me, "boxready", function() {
@@ -289,7 +276,6 @@ Ext.define("Taco.view.category.Form", {
     // called by Taco.core.ux.form.Form automatically when the form panel is initializing; can be used to transform the data in the record and populate the fields manually;
     loadForm: function() {
         this.callParent(arguments);
-
     },
 
     // Called before the updateTask of Taco.core.ux.form.Form is executed; Return false to cancel the save; Can be used to manipulate the record data prior to saving;

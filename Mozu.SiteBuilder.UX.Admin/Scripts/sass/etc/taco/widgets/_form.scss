@@ -137,6 +137,7 @@
 
   .#{$prefix}field .#{$prefix}form-radio {
  @include icons-sprite(icon-radio);
+ background-size: 15px;
   }
   .#{$prefix}form-cb-checked .#{$prefix}form-radio {
  @include icons-sprite(icon-radio-selected);
@@ -144,9 +145,11 @@
 
   .#{$prefix}field .#{$prefix}form-radio-focus {
 	@include icons-sprite(icon-radio-focus);
+  background-size: 15px;
   }
   .#{$prefix}form-cb-checked .#{$prefix}form-radio-focus {
  @include icons-sprite(icon-radio-selected-focus);
+  background-size: 15px;
   }
 
 

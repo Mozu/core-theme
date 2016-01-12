@@ -37,6 +37,18 @@ Ext.define('Taco.model.GeneralSettings', {
         { "name": "siteTimeFormat", "type": "string", "useNull": true },
         { "name": "siteTimeZone", "type": "string", "useNull": true },
         { "name": "websiteName", "type": "string", "useNull": true }, 
+        { "name": "missingImageSubstitute", "type": "string", "useNull": true,
+            convert: function (value, record) {
+                    if ( value && Ext.isString(value)){
+                        return { cmsId: value };
+                    }
+                    return value;
+                },
+            serialize :function ( value, record){
+                    if ( value && Ext.isObject(value)){
+                        return value.cmsId || value.url;
+                    }
+                    return value;} }, 
 
         //viewToggle
         { "name": "isRequiredLoginForLiveEnabled", "type": "boolean", "useNull": true },

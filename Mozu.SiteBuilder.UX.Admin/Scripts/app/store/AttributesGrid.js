@@ -14,10 +14,11 @@ Ext.define('Taco.store.AttributesGrid', {
         clearFilters: true,
         contextLevel: 'mc',
         clearSort: true,
-        autoLoad: true
+        autoLoad: false,
+        createOnly: true
     },
     proxy: {
-        type: 'ajaxproxy',        
+        type: 'ajaxproxy',
         api: {
             create: '/admin/app/attribute/create',
             read: '/admin/app/attribute/read',

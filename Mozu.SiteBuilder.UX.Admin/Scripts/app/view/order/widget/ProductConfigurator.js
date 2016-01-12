@@ -107,6 +107,10 @@
         ]);
 
         me.on('loadFailure', me.onLoadFailure, me);
+        me.on('boxready', function() {
+            this.setLoading(true);
+            // Turn off after model loaded.
+        }, me);
 
         this.images = Ext.create('Taco.shared.store.Files');
 
@@ -269,10 +273,21 @@
                 ]
             }
         ];
-        
+
         this.loadProduct();
 
         this.callParent(arguments);
+
+        Ext.override(this.getForm(), {
+            // Used to disable Save button until model is loaded or while updating product configuration.
+            // Default ExtJS form logic only takes field validation into account when updating buttons with formBind=true (e.g. Save)
+            // Inject our own logic into the form (Ext.form.Panel is a panel which contains a form)
+            hasInvalidField: function() {
+                if (!me.isValid() || me.isUpdating) return true;
+
+                return this.callParent(arguments);
+            }
+        });
     },
 
     onLoadFailure : function() {
@@ -332,7 +347,6 @@
             },
             
             failure: function (response) {
-                
                 // error handling here
                 var json = Ext.decode(response.responseText, true),
                     msg = (json && json.message) ? json.message : 'Error adding coupon.';
@@ -345,7 +359,6 @@
 
         this.productName.update(this.record.get('productName'));
         this.productCodeField.update({ code:this.record.get('productCode') });
-        
 
         var description = '';
         var longDescription = this.record.get('productFullDescription');
@@ -366,12 +379,12 @@
         } else {
             this.description.update(description);
         }
-        
     },
 
     loadRuntimeProduct: function (data) {
-        this.runtimeData = data;        
+        this.runtimeData = data;
         this.buildOptions(this.runtimeData.Options);
+        this.setLoading(false);
     },
 
     buildImages: function () {
@@ -476,6 +489,10 @@
     postOptions: function () {
         var request = { Options: [] };
 
+        this.setLoading(true);
+        this.isUpdating = true;
+        this.getForm().checkValidity();
+
         Ext.each(this.runtimeData.Options, function (option) {
             if (option.Value === undefined) return;
 
@@ -500,6 +517,9 @@
                     Price: this.runtimeData.Price,
                     PriceRange: this.runtimeData.PriceRange
                 });
+                this.setLoading(false);
+                this.isUpdating = false;
+                this.getForm().checkValidity();
             },
             scope: this
         });

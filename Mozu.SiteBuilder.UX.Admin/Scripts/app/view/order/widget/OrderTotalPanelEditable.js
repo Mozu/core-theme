@@ -14,13 +14,13 @@ Ext.define('Taco.view.order.widget.OrderTotalPanelEditable', {
         pack: 'start'
     },
 
-    defaults: { xtype: "component" },    
+    defaults: { xtype: "component" },
 
-    config: {        
+    config: {
         /**
-         * width of the row total column in the associated order item grid. this keeps the labels and values aligned with the associate gdrid;   
+         * width of the row total column in the associated order item grid. this keeps the labels and values aligned with the associate gdrid;
          */
-        totalColumnWidth: 100,        
+        totalColumnWidth: 100,
 
         /**
          * Number of discounts to display in each page of the discountPicker Combobox;
@@ -31,32 +31,31 @@ Ext.define('Taco.view.order.widget.OrderTotalPanelEditable', {
     isEditable: true,
 
     /**
-         * width of the actions column in the associated order item grid. this keeps the labels and values aligned with the associated grid;   
-         */
+     * width of the actions column in the associated order item grid. this keeps the labels and values aligned with the associated grid;
+     */
     actionColumnWidth: 30,
 
     initComponent: function(eOpts) {
         var me = this;
-        me.callParent(arguments);        
-        
-        me.mon(this.masterTable, 'render', function () {
-            this.initTableComponents()
-        }, this)       
+        me.callParent(arguments);
 
+        me.mon(this.masterTable, 'render', function() {
+            this.initTableComponents();
+        }, this);
 
         if (me.isEditable) {
-            me.mon(this.masterTable, {            
+            me.mon(this.masterTable, {
                 click: {
                     element: 'el',
-                    fn: function (e, t, eOpts) {                    
+                    fn: function (e, t, eOpts) {
                         var action = t.getAttribute("action");
                         if (action) {
                             switch (action) {
                                 case "shippingAdjustment":
-                                    me.fireEvent("clearShippingAdjustment")                                    
+                                    me.fireEvent("clearShippingAdjustment");
                                     break;
                                 case "orderAdjustment":
-                                    me.fireEvent("clearOrderAdjustment")
+                                    me.fireEvent("clearOrderAdjustment");
                                     break;
                                 case "processDiscount":
                                     me.fireEvent("processDiscount", {
@@ -71,11 +70,7 @@ Ext.define('Taco.view.order.widget.OrderTotalPanelEditable', {
                 }
             });
         }
-
     },
-
-
-    
 
     initTableComponents : function (){
         var me = this;
@@ -83,9 +78,8 @@ Ext.define('Taco.view.order.widget.OrderTotalPanelEditable', {
         var shippingAdjustmentLabel = this.masterTable.el.down("[itemId = shippingAdjustmentLabel]");
         shippingAdjustmentLabel.update("");
 
-        var shippingAdjustment = this.record.data.shippingAdjustment.amount
-        var orderAdjustment = this.record.data.orderAdjustment.amount
-
+        var shippingAdjustment = this.record.data.shippingAdjustment.amount;
+        var orderAdjustment = this.record.data.orderAdjustment.amount;
 
         this.shippingAdjustmentLabelButton = new Ext.button.Button({
             ui: "action",
@@ -94,12 +88,12 @@ Ext.define('Taco.view.order.widget.OrderTotalPanelEditable', {
             //style: "font-size: 1.4rem;",
             text: me.getShippingAdjustmentText(this.record.get("shippingAdjustmentIsNegative")),
             menu: {
-                plain:true,
+                plain: true,
                 listeners: {
                     click: {
-                        fn: function (menu, item, e, eOpts) {
+                        fn: function(menu, item, e, eOpts) {
                             if (item && item.type) {
-                                me.handleNegativeAdjustmentChange(item.type, item.value)
+                                me.handleNegativeAdjustmentChange(item.type, item.value);
                             }
                         },
                         scope: me,
@@ -120,10 +114,10 @@ Ext.define('Taco.view.order.widget.OrderTotalPanelEditable', {
                 ]
             },
             renderTo: shippingAdjustmentLabel
-        })
+        });
 
         var orderAdjustmentLabel = this.masterTable.el.down("[itemId = orderAdjustmentLabel]");
-        // remove the read only version of the text label 
+        // remove the read only version of the text label
         orderAdjustmentLabel.update("");
         
         var subtractOrderLabelText = "Subtract from Order Total";
@@ -136,12 +130,12 @@ Ext.define('Taco.view.order.widget.OrderTotalPanelEditable', {
             //style: "font-size: 1.4rem;",
             text: (orderAdjustment > 0) ? addOrderLabelText : subtractOrderLabelText,
             menu: {
-                plain:true,
+                plain: true,
                 listeners: {
                     click: {
-                        fn: function (menu, item, e, eOpts) {
+                        fn: function(menu, item, e, eOpts) {
                             if (item && item.type) {
-                                me.handleNegativeAdjustmentChange(item.type, item.value)
+                                me.handleNegativeAdjustmentChange(item.type, item.value);
                             }
                         },
                         scope: me,
@@ -161,10 +155,8 @@ Ext.define('Taco.view.order.widget.OrderTotalPanelEditable', {
                     }
                 ]
             },
-            
             renderTo: orderAdjustmentLabel
-        })
-
+        });
 
         // need to hard code the field with for numberfield because there is a bug in Extjs sizing logic that sets this to a minimum of 150 px;
         var fieldWidth = 96;
@@ -189,9 +181,9 @@ Ext.define('Taco.view.order.widget.OrderTotalPanelEditable', {
         });
 
         me.mon(me.orderAdjustmentFieldInput, 'blur', me.onOrderAdjustmentChange, me);
-        me.mon(me.orderAdjustmentFieldInput, 'specialkey', function (field, e) {            
+        me.mon(me.orderAdjustmentFieldInput, 'specialkey', function (field, e) {
             if (e.getKey() == e.ENTER) {
-                me.onOrderAdjustmentChange()
+                me.onOrderAdjustmentChange();
             }
         }, me);
 
@@ -200,11 +192,9 @@ Ext.define('Taco.view.order.widget.OrderTotalPanelEditable', {
         var shippingAdjustmentValue = Math.abs(this.record.data.shippingAdjustment.amount);
         shippingAdjustmentValue = Ext.util.Format.number(shippingAdjustmentValue, ",0.00");
 
-
         this.shippingAdjustmentFieldInput = Ext.widget({
-           
             currencyCode : this.record.getCurrencyCode(),
-            xtype: "currencyfield",            
+            xtype: "currencyfield",
             spinUpEnabled: false,
             spinDownEnabled: false,
             width: fieldWidth,
@@ -216,14 +206,12 @@ Ext.define('Taco.view.order.widget.OrderTotalPanelEditable', {
         });
 
         me.mon(me.shippingAdjustmentFieldInput, 'blur', me.onOrderAdjustmentChange, me);
-        
+
         me.mon(me.shippingAdjustmentFieldInput, 'specialkey', function (field, e) {
-            
             if (e.getKey() == e.ENTER) {
-                me.onOrderAdjustmentChange()
+                me.onOrderAdjustmentChange();
             }
         }, me);
-        
     },
 
     onOrderAdjustmentChange: function () {
@@ -245,15 +233,15 @@ Ext.define('Taco.view.order.widget.OrderTotalPanelEditable', {
         // one of the adjustmentFields or the sign combos has changed and needs to be persisted;
         if (isDirty) {
             this.updateOrderAdjustment({
-                data : {            
-                    shippingAdjustment : {
+                data: {
+                    shippingAdjustment: {
                         amount: shippingAdjustment
                     },
-                    orderAdjustment : {
+                    orderAdjustment: {
                         amount: orderAdjustment
                     }
                 }
-            })
+            });
         }
     },
 
@@ -271,19 +259,18 @@ Ext.define('Taco.view.order.widget.OrderTotalPanelEditable', {
 
     handleNegativeAdjustmentChange: function (name, newValue) {
         var me = this,
-            oldValue = me.record.get(name),            
-            fieldValue
-                
+            oldValue = me.record.get(name),
+            fieldValue;
+
         if (oldValue == newValue) {
-            return
-        }        
-        me.record.set(name, newValue)       
-        
+            return;
+        }
+        me.record.set(name, newValue);
+
         if (name == "orderAdjustmentIsNegative") {
             // update the button text
             this.orderAdjustmentLabelButton.setText(me.getOrderAdjustmentText(newValue));
             fieldValue = parseFloat(this.orderAdjustmentFieldInput.getValue())
-            
         } else {
             // update the button text
             this.shippingAdjustmentLabelButton.setText(me.getShippingAdjustmentText(newValue));
@@ -299,8 +286,7 @@ Ext.define('Taco.view.order.widget.OrderTotalPanelEditable', {
         this.onOrderAdjustmentChange();
     },
 
-    
-    updateOrderAdjustment: function (config) {        
+    updateOrderAdjustment: function (config) {
         var me = this,
             jsonData = {
                 orderId: this.record.get('id'),
@@ -330,15 +316,13 @@ Ext.define('Taco.view.order.widget.OrderTotalPanelEditable', {
                     return;
                 }
 
-                
                 // need to reset the fields so that they don't show as dirty after the save
                 this.shippingAdjustmentFieldInput.originalValue = Ext.util.Format.number(this.shippingAdjustmentFieldInput.getValue(), "0.00")
                 
                 // need to reset the fields so that they don't show as dirty after the save
-                this.orderAdjustmentFieldInput.originalValue = Ext.util.Format.number(this.orderAdjustmentFieldInput.getValue(), "0.00")                
+                this.orderAdjustmentFieldInput.originalValue = Ext.util.Format.number(this.orderAdjustmentFieldInput.getValue(), "0.00")
 
                 this.fireEvent('savesuccess', json);
-                
             },
             failure: function (response) {
                 var json = Ext.decode(response.responseText, true),
@@ -348,11 +332,7 @@ Ext.define('Taco.view.order.widget.OrderTotalPanelEditable', {
             },
             scope: this
         });
-
     },
-
-
-
 
     initUI: function () {
         var me = this,
@@ -360,8 +340,6 @@ Ext.define('Taco.view.order.widget.OrderTotalPanelEditable', {
             flex = (isEditable) ? .5 : 1;
 
         this.initLeftPanel();
-
-        
 
         /*
         this.supTotalTpl = Ext.create("Ext.Component", {
@@ -376,17 +354,17 @@ Ext.define('Taco.view.order.widget.OrderTotalPanelEditable', {
             flex: flex,
             tpl: this.getMasterTemplate()
         });
-        
+
         this.items = [
             this.leftPanel,
             {
-                xtype:"container",
-                flex:.5,
-                items:[
+                xtype: "container",
+                flex: .5,
+                items: [
                     this.masterTable
                 ]
             }
-        ];        
+        ];
     },
 
     initLeftPanel : function (){
@@ -395,72 +373,85 @@ Ext.define('Taco.view.order.widget.OrderTotalPanelEditable', {
         me.callParent(arguments);
         
         me.initCouponCombo();
-        me.leftPanel.add(me.couponCombo);
+
+        me.couponPanel = Ext.create("Ext.container.Container", {
+            layout: {
+                type: 'hbox',
+                align: 'bottom'
+            },
+            items: [me.couponCombo, me.couponApply]
+        });
+        me.leftPanel.add(me.couponPanel);
         me.leftPanel.add(me.couponError);
 
-        
         var customerNotesText = me.record.get("customerNote");
         // todo: refactor editableDisplayField to allow for placeholder text
         var placeholder = ""
         if (!(this.record.get("orderStatus") == "Pending") && me.record.get("customerNote") == "") {
-            var placeholder = "None provided"
+            var placeholder = "None provided";
         }
 
         me.customerNoteField = Ext.widget({
             //xtype: (this.record.get("orderStatus") == "Pending") ? "textarea" : "editabledisplayfield",
             xtype: "textarea",
-            fieldLabel: "Customer Notes",            
+            fieldLabel: "Customer Notes",
             value: customerNotesText,
             placeholder: placeholder,
             disabled: !(this.record.get("orderStatus") == "Pending"),
             listeners: {
                 blur: {
                     fn: me.onCustomerNoteChange,
-                    scope:me
+                    scope: me
                 }
             }
-        });        
+        });
 
-        me.leftPanel.add(me.customerNoteField)
-
+        me.leftPanel.add(me.customerNoteField);
     },
 
     onCustomerNoteChange: function (field, e, eOpts) {
-
-
-        if (field.isDirty()) {          
+        if (field.isDirty()) {
             this.record.setCustomerNote({
                 jsonData: {
                     orderId: this.record.getId(),
                     note: this.customerNoteField.getValue()
                 },
-                success: function (response) {
+                success: function(response) {
                     // success handling here
                     var json = Ext.decode(response.responseText, true);
                     if (!json || !json.success) {
                         return;
                     }
-                    
+
                     // reset the orginal value of the field so that the isDirty flag is accurate;
                     this.customerNoteField.originalValue = this.customerNoteField.getValue();
                     this.fireEvent('saveSuccess', json);
                 },
-                failure: function (response) {
+                failure: function(response) {
                     this.fireEvent('saveFailure');
                 },
                 scope: this
-            })
+            });
         }
     },
 
     initCouponCombo: function () {
         var me = this;
-        
-        this.couponCombo = Ext.create('Taco.view.order.widget.DiscountPickerField', {            
+
+        function tryToApplyCoupon(code)
+        {
+            if (code) {
+                me.addOrderCoupon([code]);
+                me.couponCombo.clearValue();
+            }
+        }
+
+        this.couponCombo = Ext.create('Taco.view.order.widget.DiscountPickerField', {
             flex:1,
+            padding: '0 8 0 0',
             validOnDate: this.record.get("createDate"),
             hideLabel :false,
-            fieldLabel: "Add Coupon (Order, Item, or Shipping)",
+            fieldLabel: "Add Coupon (Order, Item, or Shipping)<br/>Note: For coupon codes belonging to a coupon set, manually enter (free type) the coupon code and select Apply.",
             labelStyle:"padding-top:16px;",
             emptyText:"Add Coupon",
             store: Taco.core.data.StoreManager.getOrCreate({
@@ -469,33 +460,47 @@ Ext.define('Taco.view.order.widget.OrderTotalPanelEditable', {
                 autoLoad: true
             }),
             pageSize: me.discountsPerPage,
+            displayField: 'couponCode',
             listeners: {
                 beforeselect: {
                     fn: function (combo, record, index, e) {
                         combo.collapse();
-                        this.addOrderCoupon([
-                           record.get("couponCode")
-                        ]);
+                        tryToApplyCoupon(record.get("couponCode"));
 
                         // cancel the selection so that the same coupon can be reselected again;
                         return false;
-                    },
-                    scope: this
+                    }
+                },
+                // Disable the apply button if there's nothing to submit.
+                change: function(combo, newValue) {
+                    me.couponApply.setDisabled(!newValue);
+                },
+                specialkey: function (combo, e) {
+                    if (e.getKey() == e.ENTER && !combo.isExpanded) {
+                        tryToApplyCoupon(combo.getValue());
+                    }
                 }
             }
         });
 
-        
+        this.couponApply = Ext.create('Ext.button.Button', {
+            ui: 'action',
+            scale: 'medium',
+            text: 'Apply',
+            disabled: true,
+            handler: function() {
+                tryToApplyCoupon(me.couponCombo.getValue());
+            }
+        });
+
         this.couponError = Ext.widget({
-            xtype: "component",            
+            xtype: "component",
             hidden: true,
             cls: "taco-order-discount-error",
-            html:""
+            html: ""
             //tpl: this.couponErrorTpl
-        })
-        
+        });
     },
-
 
     couponErrorTpl: new Ext.XTemplate(
         '<tpl for=".">',
@@ -505,7 +510,8 @@ Ext.define('Taco.view.order.widget.OrderTotalPanelEditable', {
 
     // accepts an array of order coupons configuration data objects and calls the service to persist it.
     addOrderCoupon: function (coupons) {
-        var me = this;        
+        var me = this,
+            couponList = coupons;
         this.fireEvent('save');
         
         this.record.addOrderCoupon({
@@ -520,8 +526,10 @@ Ext.define('Taco.view.order.widget.OrderTotalPanelEditable', {
                     Taco.app.fireEvent('setmessage', "Error adding coupon.", 'error');
                     return;
                 }
+
+                var missing = me.getUnusedCoupons(json.items, couponList);
                 
-                var invalidCoupons = json.items.invalidCoupons;
+                var invalidCoupons = json.items.invalidCoupons.concat(missing);
                 if (invalidCoupons.length) {
                     var couponErrorTxt = this.couponErrorTpl.apply(invalidCoupons);
                     this.couponError.update(couponErrorTxt);
@@ -542,13 +550,38 @@ Ext.define('Taco.view.order.widget.OrderTotalPanelEditable', {
             },
             scope: this
         });
+    },
 
+    getUnusedCoupons: function(order, codes) {
+        // TODO: This same logic is duplicated in the Core Theme (models-cart and models-checkout).
+        // Don't double-report on any invalid codes.
+        codes = Ext.Array.difference(codes, Ext.Array.pluck(order.invalidCoupons, "couponCode"));
+        // Extract all the various coupon codes on the order.
+        var appliedCoupons = []
+            .concat(Ext.Array.pluck(order.orderDiscounts, "couponCode"))
+            .concat(Ext.Array.pluck(order.shippingDiscounts, "couponCode"))
+            .concat(Ext.Array.pluck(Ext.Array.flatten(Ext.Array.pluck(order.items, "discounts")), "couponCode"))
+            .concat(Ext.Array.pluck(Ext.Array.flatten(Ext.Array.pluck(order.items, "shippingDiscounts")), "couponCode"));
+        // Drop discounts with no coupon code defined.
+        appliedCoupons = Ext.Array.filter(appliedCoupons, function(code) { return code; });
+        // Get a unique list.
+        appliedCoupons = Ext.Array.unique(appliedCoupons);
+        // Figure out which codes aren't in use.
+        var missing = Ext.Array.difference(codes, appliedCoupons);
+        // Map missing codes to payload for display in error template.
+        return missing.map(function(code) {
+            return {
+                couponCode: code,
+                // Reason text pulled from PricingRuntime's DiscountHandler.
+                reason: "Coupon is not valid for any applicable discount."
+                // Missing discountId, reasonCode, and createDate.
+            };
+        });
     },
 
     onShippingInfoChange: function () {
-        this.fireEvent('savesuccess', this);        
+        this.fireEvent('savesuccess', this);
     },
-
 
     applyRecord: function (record) {
         //this.updateData(record.getData());
@@ -556,7 +589,6 @@ Ext.define('Taco.view.order.widget.OrderTotalPanelEditable', {
         
         var me = this;
         if (record) {
-
             var data = Ext.clone(record.getData());
 
             // add some css class variables to the data for use in the templates
@@ -565,7 +597,7 @@ Ext.define('Taco.view.order.widget.OrderTotalPanelEditable', {
                 tdInnerCls: "taco-grid-cell-inner "
             });
 
-            // do a quick check to make sure the component hasn't been destroyed;            
+            // do a quick check to make sure the component hasn't been destroyed;
             if (!this.masterTable || !this.masterTable.el) {
                 return;
             }
@@ -578,7 +610,7 @@ Ext.define('Taco.view.order.widget.OrderTotalPanelEditable', {
             this["subTpl_1"].overwrite(subTpl_1_el, data);
             this["subTpl_2"].overwrite(subTpl_2_el, data);
             this["subTpl_3"].overwrite(subTpl_3_el, data);
-            // update the ext components 
+            // update the ext components
             this.updateShippingMethodButton(record);
             // need to hide the coupon error unless the hide was deferred. This happens because the record updates after the application of the error.
             if (!this.deferCouponErrorhide) {
@@ -589,14 +621,13 @@ Ext.define('Taco.view.order.widget.OrderTotalPanelEditable', {
             }
         }
 
-        return record
+        return record;
     },
 
     // check to see if there is unpersisted content;
     needsToPersist: function () {
         var me = this;
-         
-        
+
         if (me.customerNoteField.getValue() != me.customerNoteField.originalValue) {
             return true;
         }
@@ -605,16 +636,15 @@ Ext.define('Taco.view.order.widget.OrderTotalPanelEditable', {
             return true;
         }
 
-
         if (me.shippingAdjustmentFieldInput.getValue() != me.shippingAdjustmentFieldInput.originalValue) {
-            return true
+            return true;
         }
 
         return false;
     },
 
     /**
-     * Do any class level cleanup. Destroy and null any scoped refs.     
+     * Do any class level cleanup. Destroy and null any scoped refs.
      */
     onDestroy : function() {
         this.callParent(arguments);

@@ -345,7 +345,8 @@
                     order = self.getOrder();
                 return order.apiAddStoreCredit({
                     storeCreditCode: this.get('selectedCredit'),
-                    amount: this.get('creditAmountToApply')
+                    amount: this.get('creditAmountToApply'),
+                    email: self.get('billingContact').get('email')
                 }).then(function (o) {
                     order.set(o.data);
                     self.closeApplyCredit();

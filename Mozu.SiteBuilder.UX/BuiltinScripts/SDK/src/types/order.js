@@ -137,7 +137,10 @@ module.exports = (function () {
                 amount: payment.amount,
                 newBillingInfo: {
                     paymentType: 'StoreCredit',
-                    storeCreditCode: payment.storeCreditCode
+                    storeCreditCode: payment.storeCreditCode,
+                    billingContact: {
+                        email: payment.email
+                    }
                 }
             });
         },

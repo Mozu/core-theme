@@ -89,6 +89,9 @@ Ext.define('Taco.store.TooltipHelp', {
             key: 'settings.general.bustCdnCache',
             value: 'This feature requires an update to your theme.<br><br><a href="' + Taco.adminHelpLink + '" target="_blank" class="taco-help-link">See Enabling the Bust Cache Feature in Mozu Help.</a>'
         }, {
+            key: 'settings.general.missingImage',
+            value: 'Upload or select an image: This will be used as a replacement for all missing images on your storefront.'
+        }, {
             key: 'product.general.dateFirstAvailable',
             value: 'This field specifies the intended date when the product either first becomes or became available. Use this field to reference the product in an expression that uses the Days Available in Catalog entity. Setting this field to a future date doesn’t automatically publish the product live on that date.'
         }, {
@@ -97,6 +100,15 @@ Ext.define('Taco.store.TooltipHelp', {
         }, {
             key: 'productRanking.form.pinnedProduct.header',
             value: 'Only promoted products that are in the category/search results will appear.'
+        }, {
+            key: 'attribute.form.searchOptions',
+            value: 'This determines whether the value(s) of this attribute is matched on when shoppers perform a search on the site.'
+        },{
+            key: 'attribute.form.filterandsorting',
+            value: 'This determines whether this attribute is available for filtering, sorting, dynamic category expressions, and as a facet in search results and on category pages.'
+        },{
+            key: 'producttype.attribute.form.displaygroup',
+            value: '<dl><dt><b>Storefront Details and Listings</b></dt><dd>The property is available on storefront product listing pages like categories and search results.</dd><dt><b>Storefront Details</b></dt><dd>The property is available only when displaying product details on the storefront.</dd><dt><b>Admin Only</b></dt><dd>The property is managed only within Mozu Admin and is not visible in the storefront.</dd></dl>'
         }
    ]
    

@@ -64,6 +64,15 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.Models.Attributes.Product
 
         public List<AttributeValue> Values { get; set; }
 
+        #region search settings
+        public bool SearchableInStorefront { get; set; }
+
+        public bool SearchDisplayValue { get; set; }
+
+        public bool? AllowFilteringAndSortingInStorefront { get; set; }
+
+        #endregion
+
     }
 
 

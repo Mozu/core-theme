@@ -1,0 +1,117 @@
+{% autoescape on %}
+{% block doctype %}
+<!doctype html>
+{% endblock doctype %}
+
+{% comment %}
+    The comment tag lets you write comments that will be visible when editing the template file, but don't appear in the rendered HTML. It's essentially just an "ignore this" tag.
+{% endcomment %}
+
+{% comment %}
+    The conditional statements below detect if visitor is on a particular
+    version of IE and adds the appropriate classes to the HTML element. You can then target
+    these browsers in your CSS without hacks, like:
+
+        .thing {
+        padding: 10px;
+        }
+        .ie6 .thing {
+        padding: 12px;
+        }
+
+    no-js:
+    The Modernizr library we're using will replace the class "no-js" with "js" if javascript 
+    available. Again you can use this as a way to make sensible fallbacks if javascript
+    is not available.
+{% endcomment %}
+
+{% block open-html-tag %}
+<!--[if lt IE 7]> <html class="no-js ie6 oldie" lang="en"> <![endif]-->
+<!--[if IE 7]>    <html class="no-js ie7 oldie" lang="en"> <![endif]-->
+<!--[if IE 8]>    <html class="no-js ie8 oldie" lang="en"> <![endif]-->
+<!--[if IE 9]>    <html class="no-js ie9" lang="en"> <![endif]-->
+<!--[if (gt IE 9)|(!IE) ]><!--> 
+<html class="no-js" lang="en">
+<!--<![endif]-->
+{%endblock open-html-tag %}
+
+    {% block head-tag %}
+    <head>
+
+        {% include "modules/json-required-for-hyprlive" %}
+
+        {% block meta-tags %}
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width,initial-scale=1">
+        <meta name="description" content="{{ PageContext.MetaDescription }}">
+        <meta name="keywords" content="{{ PageContext.MetaKeywords }}">
+        <meta name="correlationId" content="{{ pageContext.correlationId }}">
+
+        {% endblock meta-tags %}
+
+        <title>{% block title-tag-content %}{{ siteContext.generalSettings.websiteName }} {% endblock title-tag-content %}</title>
+
+        {% if PageContext.FeedUrl  %}
+        <link rel="alternate" type="application/rss+xml" title="{{ PageContext.Title }}" href="{{ PageContext.FeedUrl }}" />
+        {% endif %}
+
+		{% if PageContext.CrawlerInfo.CanonicalUrl  %}
+			<link rel="canonical" href="{{PageContext.CrawlerInfo.CanonicalUrl}}">
+        {% endif %}
+
+		{% if PageContext.CrawlerInfo.PreviousUrl  %}
+			<link rel="prev" href="{{PageContext.CrawlerInfo.PreviousUrl}}">
+        {% endif %}
+
+		{% if PageContext.CrawlerInfo.NextUrl  %}
+			<link rel="next" href="{{PageContext.CrawlerInfo.NextUrl}}">
+        {% endif %}
+
+        {% block stylesheets %}
+			<link rel="stylesheet" href="{% make_url "stylesheet" "/stylesheets/pages/splash-page.less" %}" title="default" />
+        {% endblock stylesheets %}
+        
+       
+        {% cms_resources %}
+        
+
+        {%header_content%}
+
+		{% block head-tag-scripts %}
+			<script src="{% make_url "cdn" "/scripts/vendor/modernizr.min.js" %}"></script>
+        {% endblock head-tag-scripts %}
+
+    </head>
+    {% endblock head-tag %}
+    
+    {% block body-tag %}
+
+    {% block open-body-tag %}
+    <body class="{% block body-tag-classes %}{% endblock body-tag-classes %}">
+    {% endblock open-body-tag %}
+           
+        <div id="page-wrapper" class="mz-l-pagewrapper">
+            <div role="main" id="page-content" class="mz-l-pagecontent">
+
+				{% block body-content %}
+					<div class="mz-l-splash-page">
+						{% dropzone "body" %}
+					</div>
+				{% endblock body-content %}
+
+            </div>
+        </div>
+
+        {% block trailing-scripts %}
+			{% include "modules/trailing-scripts" %}
+        {% endblock trailing-scripts %}
+
+        {% visitor_tracking_pixel %}
+
+    </body>
+    {% endblock body-tag %}
+
+</html>
+{% endautoescape %}
+
+

@@ -7,16 +7,20 @@ using Mozu.Core.Api.Client;
 using Mozu.Core.Api.Client.Caching;
 using Mozu.Core.Settings;
 using Mozu.Tenant.Contracts.Clients;
+using System.Collections.Generic;
+using System.Linq;
+using Mozu.Core.Logging;
 
 namespace Mozu.SiteBuilder.Mvc.Caching
 {
     public interface IStorefrontCache
     {
         T Get<T>(string key, CacheScope scope = CacheScope.Site, StorefrontCacheTypes cacheType = StorefrontCacheTypes.Default);
-        void Set(string key, object value, CacheScope scope = CacheScope.Site, StorefrontCacheTypes cacheType = StorefrontCacheTypes.Default);
+        void Set(string key, object value, CacheScope scope = CacheScope.Site, StorefrontCacheTypes cacheType = StorefrontCacheTypes.Default, Func<object, object> updateCallback   = null);
+
+
     }
-
-
+   
    
     internal sealed class StorefrontCache : IStorefrontCache
     {
@@ -96,7 +100,65 @@ namespace Mozu.SiteBuilder.Mvc.Caching
             return (value is T) ? (T)value : default(T);
         }
 
-        public void Set(string key, object value, CacheScope scope, StorefrontCacheTypes cacheType )
+        class CacheHandler
+        {
+            public CacheHandler( CacheConfiguration config, Func<object, object> updateCallback, IEnumerable<string> dependencies)
+            {
+                this.Config = config;
+                this.UpdateCallback = updateCallback;
+                this.Dependencies = dependencies;
+            }
+           public CacheConfiguration Config { get; private set; }
+            
+            public Func<object,object> UpdateCallback { get; set; }
+            public IEnumerable<string> Dependencies { get; set; }
+            public void CacheEntryUpdateHandler (CacheEntryUpdateArguments args)
+            {
+                if ( args.RemovedReason == CacheEntryRemovedReason.Expired )
+                {
+                    return;
+                }
+                var origionalObj = args.Source.Get(args.Key);
+                object newObj = null;
+                try
+                {
+                    newObj = UpdateCallback(origionalObj);
+                }
+                catch ( Exception ex)
+                {
+                    LoggingService.LoggerFor<StorefrontCache>().Warn(string.Format("error in cache updateCallback [{0}, {1}]", args.Key, args.Source.Name), ex);
+                }
+                 
+                if ( newObj == null)
+                {
+                    return;
+                }
+                args.UpdatedCacheItem = new CacheItem(args.Key, newObj);
+                args.UpdatedCacheItemPolicy = GetPolicy(args.Key, args.Source);
+               
+            }
+
+            CacheItemPolicy GetPolicy (string key , ObjectCache cache )
+            {
+                var abskey = key + ";abs";
+                cache.AddOrGetExisting(new CacheItem(abskey, new object()), new CacheItemPolicy() { AbsoluteExpiration = DateTime.Now.AddSeconds(Config.AbsoluteExpirationSeconds.GetValueOrDefault(300)) });
+                return new CacheItemPolicy()
+                {
+                    SlidingExpiration = TimeSpan.FromSeconds(Config.SlidingExpirationSeconds.GetValueOrDefault(120)),
+                    UpdateCallback = UpdateCallback == null ? (CacheEntryUpdateCallback)null : CacheEntryUpdateHandler,
+                    ChangeMonitors = { cache.CreateCacheEntryChangeMonitor(this.Dependencies.Union(new string[] { abskey })) }
+                };
+            }
+            public void Cache( string key , object obj , ObjectCache cache)
+            {
+                var policy= GetPolicy(key, cache);
+                cache.Set(new CacheItem(key, obj), policy);
+            }
+           
+        }
+
+
+        public void Set(string key, object value, CacheScope scope, StorefrontCacheTypes cacheType, Func<object, object>  updateCallback = null)
         {
             if (String.IsNullOrWhiteSpace(key)  )
                 return;
@@ -146,24 +208,12 @@ namespace Mozu.SiteBuilder.Mvc.Caching
                 cc.Cache.AddOrGetExisting(dep, Guid.NewGuid(), new CacheItemPolicy { AbsoluteExpiration = DateTimeOffset.MaxValue });            
             }
 
-            var itemPolicy = new CacheItemPolicy {
-                // items have a configurable  absolute expiration.
-              
-                ChangeMonitors = { cc.Cache.CreateCacheEntryChangeMonitor(dependencies)}
-            };
-            if (cc.Configuration.AbsoluteExpirationSeconds.HasValue)
-            {
-                itemPolicy.AbsoluteExpiration = new DateTimeOffset(DateTime.Now.AddSeconds(cc.Configuration.AbsoluteExpirationSeconds.Value));
-                itemPolicy.SlidingExpiration = System.Runtime.Caching.ObjectCache.NoSlidingExpiration;
-            }
-            else if ( cc.Configuration.SlidingExpirationSeconds.HasValue)
-            {
-                itemPolicy.SlidingExpiration = new TimeSpan(0, 0, cc.Configuration.SlidingExpirationSeconds.Value);
-                itemPolicy.AbsoluteExpiration = System.Runtime.Caching.ObjectCache.InfiniteAbsoluteExpiration; 
-            }
-          
+            //disable update call back for staging.   product updates make this kill the system
+            updateCallback = _ctx.DataViewMode == Core.DataViewModeType.Pending ? null : updateCallback;
 
-            cc.Cache.Set(cacheKey, value, itemPolicy);
+            new CacheHandler(cc.Configuration, updateCallback, dependencies).Cache(cacheKey, value, cc.Cache);
+
+            
         }
     }
 }

@@ -5,6 +5,7 @@ using System.ServiceModel.Web;
 using System.Threading.Tasks;
 using System.Web.Http;
 using AutoMapper;
+using MoreLinq;
 using Mozu.Core.Api.Client;
 using Mozu.Core.Api.Contracts;
 using Mozu.Core.Api.Contracts.Client;
@@ -13,6 +14,7 @@ using Mozu.ProductAdmin.Contracts;
 using Mozu.ProductAdmin.Contracts.Clients;
 using Mozu.SiteBuilder.UX.Admin.Api.Models;
 using Mozu.SiteBuilder.UX.Admin.Api.Models.Category;
+using Mozu.SiteBuilder.UX.Admin.Helpers.CategoryHelpers;
 using Category = Mozu.SiteBuilder.UX.Admin.Api.Models.Category.Category;
 using DC = Mozu.ProductAdmin.Contracts;
 
@@ -21,13 +23,14 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
     [WebApi("app/category", SuppressDescriptorGeneration = true)]
     public class CategoryController : BaseController
     {
+        private readonly ICategoryHelper _categoryHelper;
         private readonly ICategoryWebApiClient  _categoriesClient;
 
-        public CategoryController(ICategoryWebApiClient categoriesClient)
+        public CategoryController(ICategoryWebApiClient categoriesClient, ICategoryHelper categoryHelper)
         {
+            _categoryHelper = categoryHelper;
 
             _categoriesClient = categoriesClient.CloneWithApiContext(x => x.SiteId = null);
-
         }
 
         [HttpGetRoute(UriTemplate = "read")]
@@ -38,8 +41,6 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
                 var cat = (await _categoriesClient.GetCategory(id)).ReadAsSync();
                 var retList = new List<Category> {Mapper.Map<Category>(cat)};
                 return List2(retList);
-               
-
             }
             //getting rid of server filtering for now.  all filtering done on the client.
             //if (pagingParams.id == null || 1==1)
@@ -61,9 +62,15 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
                     x.CatalogId = null;
                     x.SiteId = null;
                 });
+                const string responseFields = "items(id,categoryCode,isDisplayed,sequence,childCount,parentCategoryId,catalogId,categoryType,content(name))";
+                //                const string responseFields = "";
                 while (true)
                 {
-                    var cats = (await client.GetCategories(startIndex: start, pageSize: 600, sortBy:"sequence asc")).ReadAsSync();
+                    var cats = (await client.GetCategories(startIndex: start,
+                        pageSize: 600,
+                        sortBy: "sequence asc",
+                        responseFields: responseFields
+                        )).ReadAsSync();
                     categories.AddRange(Mapper.Map<List<Category>>(cats.Items));
                     start = cats.PageSize + cats.StartIndex;
                     if (cats.TotalCount <= start )
@@ -184,14 +191,38 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
         public async Task<Response<List<Category>>> UpdateCategory(List<Category> categories)
         {
             var tasks = new List<Task<ServiceClientResponse<DC.Category>>>();
-
-            foreach (var cat in categories)
+            if (categories.Count() == 1)
             {
+                //single record Create/Update
+                var cat = categories.First();
                 var dcCat = Mapper.Map<DC.Category>(cat);
                 var task = _categoriesClient.UpdateCategory(dcCat, cat.Id, false);
                 tasks.Add(task);
             }
+            else
+            {
+                //Assuming sequence update only
+                var intArrayFilterString = _categoryHelper.GetInFilterStringForIds(categories);
+                //Get current categories
+                var dbCategories = (await (_categoriesClient.GetCategories(filter: intArrayFilterString)))
+                    .ReadAsSync();
+                var dbCategoriesList =  Mapper.Map<List<DC.Category>>(dbCategories.Items).ToList();
 
+                _categoryHelper.AdjustSequence(categories, dbCategoriesList);
+                tasks.AddRange(dbCategoriesList.Select(dbCat => _categoriesClient
+                    .UpdateCategory(dbCat, dbCat.Id, false)));
+
+                //TODO: create category helper ?  make generic?
+
+                //Original
+                //                foreach (var cat in categories)
+                //                {
+                //                    var dcCat = Mapper.Map<DC.Category>(cat);
+                //                    var task = _categoriesClient.UpdateCategory(dcCat, cat.Id, false);
+                //                    tasks.Add(task);
+                //                }
+            }
+            
             await Task.WhenAll(tasks);
             var returnList = tasks.Select(t => Mapper.Map<Category>(t.Result.ReadAsSync())).ToList();
 

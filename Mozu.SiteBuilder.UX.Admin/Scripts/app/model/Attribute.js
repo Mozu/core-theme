@@ -42,17 +42,35 @@ Ext.define('Taco.model.Attribute', {
         }, {
             name: 'isRequired',
             type: 'boolean'
-        },
-        {
+        }, {
             name:'isVisible',
             type:'boolean',
             defaultValue:false
-        },
-        {
+        }, {
             name: 'displayGroup',
             type: 'string',
             defaultValue: 'Admin'
         }, {
+            name: 'searchableInStorefront',
+            type: 'boolean',
+            defaultValue: true
+        }, {
+            name: 'searchDisplayValue',
+            type: 'boolean',
+            defaultValue: true
+        }, {
+            name: 'searchDisplayType',
+            type: 'string',
+            defaultValue: 'label',
+            persist: false,
+            convert: function (v, record) {
+                return record.get("searchDisplayValue") ? 'label' : 'value';
+            }
+        }, {
+            name: 'allowFilteringAndSortingInStorefront',
+            type: 'boolean',
+            defaultValue: true
+        }, {    
             name: 'isProperty',
             type: 'boolean'
         }, {
@@ -114,6 +132,18 @@ Ext.define('Taco.model.Attribute', {
     },
     allowProductDataType: function () {
         return true;
+    },
+    supportsSearchOptions: function () {
+        return true;
+    },
+    supportsSearchInStorefront: function () {
+      return (this.get('inputType') !== 'YesNo');
+    },
+    supportsSearchDisplayType: function () {
+      return (this.get('searchableInStorefront')
+                && (this.get('inputType') === 'TextArea'
+                    || this.get('dataType') === 'String')
+            );
     },
 
     convert: function (v, r) {

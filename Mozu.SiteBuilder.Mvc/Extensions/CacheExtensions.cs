@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Mozu.SiteBuilder.Mvc.Caching;
+using System;
 using System.Runtime.Caching;
 using System.Threading.Tasks;
 
@@ -6,91 +7,47 @@ namespace Mozu.SiteBuilder.Mvc.Extensions
 {
     public static class CacheExtensions
     {
-        static async Task<T> AddOrGetFromCache<T, TExp>(Func<object> getter, Func<Task<T>> valueMaker, Func<T, TExp> expirationGenner, Func<T, TExp, object> addOrGetter)
-        {
-            var got = getter();
-            if (got != null) return (T)got;
-            var v = await valueMaker().ConfigureAwait(false);
-            var exp = expirationGenner(v);
-            var addResult = addOrGetter(v, exp);
-            if (addResult == null) return v;
-            else return (T)addResult;
-        }
-
+      
         /// <summary>
-        /// Adds an item to the cache at a given key. if the Func for the item returns null, default(T) is added to the cache for 2 minutes.
+        /// does stuff
         /// </summary>
         /// <typeparam name="T"></typeparam>
         /// <param name="cache"></param>
         /// <param name="key"></param>
+        /// <param name="scope"></param>
+        /// <param name="cacheType"></param>
         /// <param name="value"></param>
-        /// <param name="expiration"></param>
-        /// <param name="regionName"></param>
         /// <returns></returns>
-        public static T AddOrGetExisting<T>(this ObjectCache cache, string key, Func<T> value, DateTimeOffset expiration, string regionName = null)
+        public static async Task<T> AddOrGetExisting<T>(this IStorefrontCache cache, string key, CacheScope scope, StorefrontCacheTypes cacheType , Func<T,Task<T>> value )
         {
-            return AddOrGetFromCache(
-                () => cache.Get(key, regionName), 
-                () => Task.FromResult(value()), 
-                v => v == null ? DateTimeOffset.UtcNow.AddMinutes(2) : expiration, 
-                (v, exp) => cache.AddOrGetExisting(key, v, exp, regionName)).Result;
+
+            //string key, object value, CacheScope scope = CacheScope.Site, StorefrontCacheTypes cacheType = StorefrontCacheTypes.Default, Func<object, object> updateCallback  
+            var ret = cache.Get<T>(key, scope, cacheType);
+            if ( ret != null)
+            {
+                return ret;
+            }
+            ret = await value(ret).ConfigureAwait(false);
+            Func<object, object> updateFn = x => value(ret).Result;
+            cache.Set(key, ret, scope, cacheType, updateFn);
+            return ret;
         }
 
-        /// <summary>
-        /// Adds an item to the cache at a given key. if the Func for the item returns null, default(T) is added to the cache for 2 minutes.
-        /// </summary>
-        /// <typeparam name="T"></typeparam>
-        /// <param name="cache"></param>
-        /// <param name="key"></param>
-        /// <param name="value"></param>
-        /// <param name="expiration"></param>
-        /// <param name="regionName"></param>
-        /// <returns></returns>
-        public static T AddOrGetExisting<T>(this ObjectCache cache, string key, Func<T> value, CacheItemPolicy policy, string regionName = null)
+        public static async Task<T> AddOrGetExisting<T>(this IStorefrontCache cache, string key, CacheScope scope, StorefrontCacheTypes cacheType, Func<Task<T>> value)
         {
-            return AddOrGetFromCache(
-                () => cache.Get(key, regionName),
-                () => Task.FromResult(value()),
-                v => v == null ? new CacheItemPolicy { AbsoluteExpiration = DateTimeOffset.UtcNow.AddMinutes(2) } : policy,
-                (v, exp) => cache.AddOrGetExisting(key, v, exp, regionName)).Result;
+
+            //string key, object value, CacheScope scope = CacheScope.Site, StorefrontCacheTypes cacheType = StorefrontCacheTypes.Default, Func<object, object> updateCallback  
+            var ret = cache.Get<T>(key, scope, cacheType);
+            if (ret != null)
+            {
+                return ret;
+            }
+            ret = await value().ConfigureAwait(false);
+            Func<object, object> updateFn = x => value().Result;
+            cache.Set(key, ret, scope, cacheType, updateFn);
+            return ret;
         }
 
-        /// <summary>
-        /// Adds an item to the cache at a given key. if the Func for the item returns null, default(T) is added to the cache for 2 minutes.
-        /// </summary>
-        /// <typeparam name="T"></typeparam>
-        /// <param name="cache"></param>
-        /// <param name="key"></param>
-        /// <param name="value"></param>
-        /// <param name="expiration"></param>
-        /// <param name="regionName"></param>
-        /// <returns></returns>
-        public static async Task<T> AddOrGetExisting<T>(this ObjectCache cache, string key, Func<Task<T>> value, DateTimeOffset expiration, string regionName = null)
-        {
-            return await AddOrGetFromCache(
-                () => cache.Get(key, regionName),
-                value,
-                v => v == null ? DateTimeOffset.UtcNow.AddMinutes(2) : expiration,
-                (v, exp) => cache.AddOrGetExisting(key, v, exp, regionName)).ConfigureAwait(false);
-        }
 
-        /// <summary>
-        /// Adds an item to the cache at a given key. if the Func for the item returns null, default(T) is added to the cache for 2 minutes.
-        /// </summary>
-        /// <typeparam name="T"></typeparam>
-        /// <param name="cache"></param>
-        /// <param name="key"></param>
-        /// <param name="value"></param>
-        /// <param name="expiration"></param>
-        /// <param name="regionName"></param>
-        /// <returns></returns>
-        public static async Task<T> AddOrGetExisting<T>(this ObjectCache cache, string key, Func<Task<T>> value, CacheItemPolicy policy, string regionName = null)
-        {
-            return await AddOrGetFromCache(
-                            () => cache.Get(key, regionName),
-                            value,
-                            v => v == null ? new CacheItemPolicy { AbsoluteExpiration = DateTimeOffset.UtcNow.AddMinutes(2) } : policy,
-                            (v, exp) => cache.AddOrGetExisting(key, v, exp, regionName)).ConfigureAwait(false);
-        }
     }
 }

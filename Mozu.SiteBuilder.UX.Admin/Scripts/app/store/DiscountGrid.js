@@ -11,7 +11,8 @@
             clearFilters: false,
             contextLevel: 's',
             clearSort: false,
-            autoLoad: true
+            autoLoad: true,
+            createOnly: true
         },        
         remoteSort: true,
         sortInfo: {

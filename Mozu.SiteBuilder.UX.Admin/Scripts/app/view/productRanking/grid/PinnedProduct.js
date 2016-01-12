@@ -10,6 +10,7 @@ Ext.define('Taco.view.productRanking.grid.PinnedProduct', {
         'Taco.core.ux.mixins.GridContextMenu',
         'Taco.model.PinnedProduct'
     ],
+    itemId: 'taco-grid-pinnedproduct',
     stateful: false,
     enableNavHeader: false,
     autoHeight: true,
@@ -17,13 +18,10 @@ Ext.define('Taco.view.productRanking.grid.PinnedProduct', {
     launchEditorOnClick: false,
     deferEmptyText: false,
     emptyText: 'None Available',
-
     autoScroll: false,
-
     config: {
         code: null
     },
-
     viewConfig: {
         listeners: {
             drop: function() {
@@ -37,57 +35,63 @@ Ext.define('Taco.view.productRanking.grid.PinnedProduct', {
     mixins: {
       gridcontextmenu: 'Taco.core.ux.mixins.GridContextMenu'
     },
-
     deferEmtpyText: false,
-
     showActionsColumn : true,
-
     autoHidePagingToolbar:false,
-
     minHeight: 240,
     enableEditAction: false,
     enableDeleteAction: true,
     enableAutoSelect:false,
     enablePaging: false,
     filterProperty: 'productCode',
-
     initComponent: function() {
         var me = this;
-
         me.dockedItems = me.dockedItems || [];
         me.mixins = me.mixins || [];
-            
         me.viewConfig = me.viewConfig || {};
         me.viewConfig.deferEmptyText = me.deferEmptyText;
-
         me.columns = me.getColumnConfig();
-
         if (me.showActionsColumn) {
             var actionColumn = me.getActionColumn();
             if (actionColumn) {
                 me.columns.push(actionColumn);
             }
         }
-            
         me.store = Ext.create('Ext.data.Store', {
           fields: ['code', 'price', 'salePrice'],
           data: []
         });
-
         me.callParent(arguments);
+    },
 
+    /**
+    * Populates the data store from a record
+    */
+    populateStore: function (record) {
+        this.store.removeAll(); //wouldn't have to do this if we don't load it twice
+        if (record == null || record.data == null || record.data.boostedProducts == null) {
+            return;
+        }
+        var products = record.data.boostedProducts;
+        for (var i = products.length - 1; i >= 0; i--) {
+            this.store.data.add(Ext.create('Taco.model.PinnedProduct', products[i]));
+        }
+        this.getView().refresh();
     },
 
     listeners: {
-        afterrender: function() {
-          var record = this.up('#taco-productRanking-form').record;
-          var products = record.data.boostedProducts;
-          for (var i = 0; i < products.length; i++) {
-            this.store.data.add(Ext.create('Taco.model.PinnedProduct', products[i]));
-          }
+        afterrender: function () {
+            var form = this.up('#taco-productRanking-form');
+            if (form.loadPinnedProducts && form.loadPinnedProducts === true) {
+                this.populateStore(form.record);
+            }
         },
-        recordadded: function(records) {
 
+        reloaddata: function (record) {
+            this.populateStore(record);
+        },
+
+        recordadded: function(records) {
             var me = this,
                 findFunc = function(rec) {
                     return me.store.find(me.filterProperty, rec.get(me.filterProperty), 0, false, false, true) === -1;

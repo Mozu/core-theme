@@ -1291,7 +1291,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.ModelMapping
             if (orderItem == null)
                 return;
 
-            if (orderItem.BundledProducts.IsNullOrEmpty())
+            if (orderItem.BundledProducts.IsNullOrEmpty() || orderItem.ProductCode == packageItem.ProductCode)
             {
                 packageItem.ProductCode = orderItem.ProductCode;
                 packageItem.ProductName = orderItem.ProductName;
@@ -1326,7 +1326,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.ModelMapping
             if (itemInOrder == null)
                 return;
 
-            if (itemInOrder.BundledProducts.IsNullOrEmpty())
+            if (itemInOrder.BundledProducts.IsNullOrEmpty() || itemInOrder.ProductCode == pickupItem.ProductCode)
             {
                 pickupItem.ProductCode = itemInOrder.ProductCode;
                 pickupItem.ProductName = itemInOrder.ProductName;
