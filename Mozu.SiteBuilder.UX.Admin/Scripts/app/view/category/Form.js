@@ -72,10 +72,10 @@ Ext.define("Taco.view.category.Form", {
                 value: (this.record.get("categoryType") == "DynamicPreComputed") ? "yes" : "no",
                 tooltip: Ext.create('Taco.core.ux.content.Tooltip', {
                     elementId: "dynamic-cat-type-combo",
-                    hoverTarget: 'bodyEl',
+                    hoverTarget: 'label',
                     messageKey: 'category.productMembership',
-                    offsetLeft: 70,
-                    offsetTop: 45
+                    offsetLeft: 25,
+                    offsetTop: 80
                 }),
                 listeners: {
                     scope: me,
