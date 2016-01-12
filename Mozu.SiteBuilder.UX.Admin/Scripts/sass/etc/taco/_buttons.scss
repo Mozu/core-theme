@@ -44,7 +44,7 @@
             }
             .#{$prefix}btn-split-right {
                 &::after {
-                    border-left: 1px solid $primary-btn-disabled-split-border;
+             //       border-left: 1px solid $primary-btn-disabled-split-border;
                     box-shadow: none;
                 }
             }
@@ -52,25 +52,38 @@
         @include btn-focus-no-border;
         .#{$prefix}btn-arrow-right,
         .#{$prefix}btn-split-right {
+            padding-right: 14px;
             &::after {
-                border-left-width: 0;
+                border-left-width: 0px;
+                border-top-right-radius: 3px;
+                border-bottom-right-radius: 3px;
+                box-shadow: rgba(0, 0, 0, 0.09) 0px 1px 3px 0px;
                 content: $glyph-arrow-down;
                 font-size: 12px;
-                top: 5px;
+                height: 33px;
+                line-height: 25px;
+                margin-top: 2px;
+                padding-left: 2px;
+                padding-right: 2px;
+                right: -19px;
+            }
+
+            .#{$prefix}btn-button {
+                padding-right: 15px;
             }
         }
         .#{$prefix}btn-split-right {
-            margin-right: -7px;
-            padding-right: 45px;
-            &::after {
-                box-shadow: $primary-btn-split-border 0 1px 3px 0;
-                height: 40px;
-                line-height: 40px;
-                margin-right: -12px;
-                padding-top: 0;
-                top: -5px;
-                width: 36px;
-            }
+            // margin-right: -7px;
+            // padding-right: 0px;
+            // &::after {
+            //     box-shadow: $primary-btn-split-border 0 1px 3px 0;
+            //     height: 40px;
+            //     line-height: 40px;
+            //     margin-right: -12px;
+            //     padding-top: 0;
+            //     top: -5px;
+            //     width: 36px;
+            // }
         }
     }
 
@@ -173,28 +186,28 @@
         // Card buttons with dropdowns
         .#{$prefix}btn-arrow-right,
         .#{$prefix}btn-split-right {
-            &::after {
-                content: $glyph-arrow-down;
-                font-size: 10px;
-                line-height: 20px;
-                margin-right: -5px;
-                right: 0;
-            }
-            .#{$prefix}btn-button {
-                margin-right: -5px;
-            }
+            // &::after {
+            //     content: $glyph-arrow-down;
+            //     font-size: 10px;
+            //     line-height: 20px;
+            //     margin-right: -5px;
+            //     right: 0;
+            // }
+            // .#{$prefix}btn-button {
+            //     margin-right: -5px;
+            // }
         }
         .#{$prefix}btn-arrow-right {
             padding-right: 20px;
         }
         .#{$prefix}btn-split-right {
-            margin-right: -7px;
-            padding-right: 31px;
-            &::after {
-                border-left-color: $card-btn-border;
-                height: 32px;
-                width: 22px;
-            }
+            // margin-right: -7px;
+            // //padding-right: 31px;
+            // &::after {
+            //     border-left-color: $card-btn-border;
+            //     height: 32px;
+            //     width: 22px;
+            // }
         }
     }
 
