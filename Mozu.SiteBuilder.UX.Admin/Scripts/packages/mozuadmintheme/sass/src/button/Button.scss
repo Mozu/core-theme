@@ -148,13 +148,7 @@ $uis: $ui-link, $ui-action, $ui-action-primary, $ui-action-toggle;
         width: auto;
     }
 
-    .#{$prefix}btn-arrow-right {
-        &::after {
-            left: auto;
-            right: 5px;
-        }
-    }
-
+    .#{$prefix}btn-arrow-right,
     .#{$prefix}btn-split-right {
         &::after {
             height: 21px;

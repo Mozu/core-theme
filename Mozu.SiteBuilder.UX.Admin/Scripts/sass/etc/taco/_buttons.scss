@@ -42,6 +42,7 @@
             .#{$prefix}btn-inner-center {
                 color: $white-color;
             }
+            .#{$prefix}btn-arrow-right,
             .#{$prefix}btn-split-right {
                 &::after {
              //       border-left: 1px solid $primary-btn-disabled-split-border;
@@ -68,22 +69,14 @@
                 right: -19px;
             }
 
-            .#{$prefix}btn-button {
-                padding-right: 15px;
-            }
         }
-        .#{$prefix}btn-split-right {
-            // margin-right: -7px;
-            // padding-right: 0px;
-            // &::after {
-            //     box-shadow: $primary-btn-split-border 0 1px 3px 0;
-            //     height: 40px;
-            //     line-height: 40px;
-            //     margin-right: -12px;
-            //     padding-top: 0;
-            //     top: -5px;
-            //     width: 36px;
-            // }
+
+        .#{$prefix}btn-arrow-right::after {
+            box-shadow: none;
+
+            .#{$prefix}btn-button {
+                padding-right: 0px;
+            }
         }
     }
 
@@ -198,7 +191,7 @@
             // }
         }
         .#{$prefix}btn-arrow-right {
-            padding-right: 20px;
+            // padding-right: 20px;
         }
         .#{$prefix}btn-split-right {
             // margin-right: -7px;
