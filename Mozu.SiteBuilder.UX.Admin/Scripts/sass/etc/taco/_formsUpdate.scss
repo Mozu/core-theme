@@ -172,14 +172,6 @@
         @include border-radius-xbrowser($border-radius-small);
         height: 30px;
 
-        .#{$prefix}horizontal-box-overflow-body {
-            min-width: 711px;
-
-            .#{$prefix}box-target {
-                min-width: 711px;
-            }
-        }
-
         .#{$prefix}toolbar-separator {
             /* override external styles */
             display: none !important;
@@ -193,7 +185,7 @@
             border-right: 1px solid $gray-border-color;
             border-top: none;
             left: auto !important;
-            padding: 6px 16px;
+            padding: 6px 8px;
             position: relative !important;
 
             &:last-child {
