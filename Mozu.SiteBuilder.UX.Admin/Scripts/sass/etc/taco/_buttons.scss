@@ -42,7 +42,6 @@
             .#{$prefix}btn-inner-center {
                 color: $white-color;
             }
-            .#{$prefix}btn-arrow-right,
             .#{$prefix}btn-split-right {
                 &::after {
                     background-color: none;
@@ -90,14 +89,6 @@
                 .#{$prefix}btn-split-right::after {
                     background-color: $valid-green-active;
                 }
-            }
-        }
-
-        .#{$prefix}btn-arrow-right::after {
-            box-shadow: none;
-
-            .#{$prefix}btn-button {
-                padding-right: 0px;
             }
         }
     }
@@ -171,9 +162,97 @@
         @include btn-inner-center-no-padding;
         color: $card-btn-text-color;
         padding: 5px 12px;
+
+        .#{$vprefix}button-overlay {
+            background-color: $valid-green;
+            display: none;
+            height: 100%;
+            left: 0px;
+            opacity: 0;
+            position: absolute;
+            right: 0px;
+            width: 100%;
+            @include transition(opacity 0.3s cubic-bezier(.17,.67,.83,.67));
+        }
+
+        &.#{$vprefix}button-processing {
+
+            .#{$vprefix}animated-circle {
+                display: block;
+            }
+
+        }
+
+        &.#{$vprefix}button-show-processing {
+
+            .#{$vprefix}animated-circle {
+                opacity: 1;
+            }
+
+        }
+
+        &.#{$vprefix}button-processing-complete {
+
+            .#{$vprefix}check-save {
+                display: block;
+            }
+
+        }
+
+        &.#{$vprefix}button-show-processing-complete {
+
+            .#{$vprefix}check-save {
+                opacity: 1;
+            }
+
+        }
+
+        .#{$vprefix}check-save {
+            @include icon-font($glyph-checkmark, 14px, $white-color);
+            position: absolute;
+            height: 100%;
+            width: 98%;
+            z-index: 1;
+
+            &::after {
+                left: 10px;
+                top: 8px;
+            }
+        }
+
+
+        .#{$vprefix}animated-circle {
+            background-size: contain;
+            background-image: url('../../build/resources/images/icons/savebuttoncircle.gif');
+            background-repeat: no-repeat;
+            background-position: center center;
+            left: -1px;
+            z-index: 2;
+        }
+
+        &.#{$vprefix}splitbutton {
+
+            .#{$vprefix}animated-circle {
+                left: -11px;
+            }
+
+            .#{$vprefix}check-save {
+
+                left: -9px;
+                
+                &::after {
+                    left: 0;
+                    right: 0;
+                    margin: 0px auto;
+                    text-align: center;
+                }
+            }
+        }
+
         .#{$prefix}btn-button {
             height: 20px;
         }
+
         .#{$prefix}btn-inner-center {
             color: $card-btn-text-color;
             font-size: 12px;
@@ -213,7 +292,7 @@
             // }
         }
         .#{$prefix}btn-arrow-right {
-            // padding-right: 20px;
+            padding-right: 20px;
         }
         .#{$prefix}btn-split-right {
             // margin-right: -7px;

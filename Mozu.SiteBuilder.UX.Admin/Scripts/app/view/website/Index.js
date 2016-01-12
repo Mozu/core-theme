@@ -277,7 +277,37 @@ Ext.define('Taco.view.website.Index', {
                 scale: 'medium',
                 buttonGroup: 'isSavable',
                 text: 'Save',
-                margin: '0 0 0 10'
+                margin: '0 0 0 10',
+                renderTpl: [
+                    '<span id="{id}-btnWrap" role="presentation" class="{baseCls}-wrap',
+                        '<tpl if="splitCls"> {splitCls}</tpl>',
+                        '{childElCls}" unselectable="on">',
+                        '<span class="taco-check-save taco-button-overlay"></span>',
+                        '<span class="taco-animated-circle taco-button-overlay"></span>',
+                        '<span id="{id}-btnEl" class="{baseCls}-button" role="presentation">',
+                            '<span id="{id}-btnInnerEl" class="{baseCls}-inner {innerCls}',
+                                '{childElCls}" unselectable="on">',
+                                '{text}',
+                            '</span>',
+                            '<span role="presentation" id="{id}-btnIconEl" class="{baseCls}-icon-el {iconCls}',
+                                '{childElCls} {glyphCls}" unselectable="on" style="',
+                                '<tpl if="iconUrl">background-image:url({iconUrl});</tpl>',
+                                '<tpl if="glyph && glyphFontFamily">font-family:{glyphFontFamily};</tpl>">',
+                                '<tpl if="glyph">&#{glyph};</tpl><tpl if="iconCls || iconUrl">&#160;</tpl>',
+                            '</span>',
+                        '</span>',
+                    '</span>',
+                    // if "closable" (tab) add a close element icon
+                    '<tpl if="closable">',
+                        '<span id="{id}-closeEl" role="presentation"',
+                            ' class="{baseCls}-close-btn"',
+                            '<tpl if="closeText">',
+                                ' title="{closeText}" aria-label="{closeText}"',
+                            '</tpl>',
+                            '>',
+                        '</span>',
+                    '</tpl>'
+                ]
             },
             {
                 xtype: 'button',
@@ -1226,16 +1256,30 @@ Ext.define('Taco.view.website.Index', {
     onSave: function (button) {
         var tasks = this.entitypeTypeHandler.getSaveTask();
 
-        // button.setDisabled(true);
         button.addCls('taco-button-processing');
-        button.setText('Saving...');
+
+        Ext.defer(function() {
+            //add animation class to button -- to be removed on return of save
+            button.addCls('taco-button-show-processing');
+            button.addCls('taco-button-processing-complete');
+
+            Ext.defer(function() {
+                button.addCls('taco-button-show-processing-complete');
+            }, 10);
+
+        }, 50);
 
         tasks.on({
             complete: function () {
                 // button.setDisabled(false);
                 if (button) {
-                    button.removeCls('taco-button-processing');
-                    button.setText('Save');
+                    button.removeCls('taco-button-show-processing');
+            
+                    button.saveInProgress = false;
+
+                    Ext.defer(function() {
+                        button.removeCls('taco-button-show-processing-complete');
+                    }, 1000)
                 }
             }
         });

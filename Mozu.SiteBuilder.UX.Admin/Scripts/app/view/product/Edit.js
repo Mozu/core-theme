@@ -389,8 +389,10 @@
             return;
         }
 
-        this.publishButton.addCls('taco-button-processing');
-        this.publishButton.setText('Publishing...');
+        // this.publishButton.addCls('taco-button-processing');
+        // this.publishButton.setText('Publishing...');
+
+        this.publishButton.setLoading(true);
 
         // if the form is dirty, we need to persist the changes before doing the publish
         if (this.form.isDirty()) {

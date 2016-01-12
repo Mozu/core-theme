@@ -524,19 +524,48 @@ Ext.define('Taco.core.ux.mixins.NavHeader', {
                     allowDepress: false,
                     enableToggle: me.enableSaveActionToggle,
                     formBind: true,
+                    renderTpl: [
+                        '<span id="{id}-btnWrap" role="presentation" class="{baseCls}-wrap',
+                            '<tpl if="splitCls"> {splitCls}</tpl>',
+                            '{childElCls}" unselectable="on">',
+                            '<span class="taco-check-save taco-button-overlay"></span>',
+                            '<span class="taco-animated-circle taco-button-overlay"></span>',
+                            '<span id="{id}-btnEl" class="{baseCls}-button" role="presentation">',
+                                '<span id="{id}-btnInnerEl" class="{baseCls}-inner {innerCls}',
+                                    '{childElCls}" unselectable="on">',
+                                    '{text}',
+                                '</span>',
+                                '<span role="presentation" id="{id}-btnIconEl" class="{baseCls}-icon-el {iconCls}',
+                                    '{childElCls} {glyphCls}" unselectable="on" style="',
+                                    '<tpl if="iconUrl">background-image:url({iconUrl});</tpl>',
+                                    '<tpl if="glyph && glyphFontFamily">font-family:{glyphFontFamily};</tpl>">',
+                                    '<tpl if="glyph">&#{glyph};</tpl><tpl if="iconCls || iconUrl">&#160;</tpl>',
+                                '</span>',
+                            '</span>',
+                        '</span>',
+                        // if "closable" (tab) add a close element icon
+                        '<tpl if="closable">',
+                            '<span id="{id}-closeEl" role="presentation"',
+                                ' class="{baseCls}-close-btn"',
+                                '<tpl if="closeText">',
+                                    ' title="{closeText}" aria-label="{closeText}"',
+                                '</tpl>',
+                                '>',
+                            '</span>',
+                        '</tpl>'
+                    ],
                     toggleHandler: me.saveActionHandler,
                     scope: me
-                })
+                });
 
                 if (me.saveAndCreateButtonEnabled) {
-                    saveButtonCfg.xtype = "splitbutton";
+                    saveButtonCfg.xtype = 'splitbutton';
                     saveButtonCfg.menu = [{
                         text: "Save and Create New",
                         handler: me.saveAndCreate,
                         scope:me
                     }]
                 }
-
 
                 // need to cache a reference to the button since the button is moved outside of the class by the splitEditor
                 me.saveActionButton = Ext.widget(saveButtonCfg);
@@ -660,11 +689,15 @@ Ext.define('Taco.core.ux.mixins.NavHeader', {
 
     resetSaveButton: function () {
         var me = this;
-        if (me.saveActionButton) {            
+        if (me.saveActionButton) {         
             me.saveActionButton.toggle(false, true);
-            me.saveActionButton.removeCls('taco-button-processing');
-            me.saveActionButton.setText(this.saveText);
+            me.saveActionButton.removeCls('taco-button-show-processing');
+            
             me.saveInProgress = false;
+
+            Ext.defer(function() {
+                me.saveActionButton.removeCls('taco-button-show-processing-complete');
+            }, 1000)
         }
     },
 
@@ -721,9 +754,18 @@ Ext.define('Taco.core.ux.mixins.NavHeader', {
 
             if (me.saveActionButton) {
                 me.saveActionButton.addCls('taco-button-processing');
-                me.saveActionButton.setText(this.saveInProgressText);
-            };
+                Ext.defer(function() {
+                    //add animation class to button -- to be removed on return of save
+                    me.saveActionButton.addCls('taco-button-show-processing');
+                    me.saveActionButton.addCls('taco-button-processing-complete');
 
+                    Ext.defer(function() {
+                        me.saveActionButton.addCls('taco-button-show-processing-complete');
+                    }, 10);
+
+                }, 50)
+                // me.saveActionButton.setText(this.saveInProgressText);
+            };
             
             me.saveInProgress = true;
 
@@ -795,6 +837,7 @@ Ext.define('Taco.core.ux.mixins.NavHeader', {
         var me = this;
 
         me.onSaveSuccess(data, store, isSuccessful);
+
         this.resetSaveButton()
         me.fireEvent('savesuccess', me, data, store, isSuccessful);
         

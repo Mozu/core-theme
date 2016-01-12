@@ -11,7 +11,36 @@ Ext.define('Taco.view.publishing.component.button.PublishButton', {
     scale: 'medium',
     text: 'Publish Now',
     margin: '0 0 0 10',
-
+    renderTpl: [
+        '<span id="{id}-btnWrap" role="presentation" class="{baseCls}-wrap',
+            '<tpl if="splitCls"> {splitCls}</tpl>',
+            '{childElCls}" unselectable="on">',
+            '<span class="taco-check-save taco-button-overlay"></span>',
+            '<span class="taco-animated-circle taco-button-overlay"></span>',
+            '<span id="{id}-btnEl" class="{baseCls}-button" role="presentation">',
+                '<span id="{id}-btnInnerEl" class="{baseCls}-inner {innerCls}',
+                    '{childElCls}" unselectable="on">',
+                    '{text}',
+                '</span>',
+                '<span role="presentation" id="{id}-btnIconEl" class="{baseCls}-icon-el {iconCls}',
+                    '{childElCls} {glyphCls}" unselectable="on" style="',
+                    '<tpl if="iconUrl">background-image:url({iconUrl});</tpl>',
+                    '<tpl if="glyph && glyphFontFamily">font-family:{glyphFontFamily};</tpl>">',
+                    '<tpl if="glyph">&#{glyph};</tpl><tpl if="iconCls || iconUrl">&#160;</tpl>',
+                '</span>',
+            '</span>',
+        '</span>',
+        // if "closable" (tab) add a close element icon
+        '<tpl if="closable">',
+            '<span id="{id}-closeEl" role="presentation"',
+                ' class="{baseCls}-close-btn"',
+                '<tpl if="closeText">',
+                    ' title="{closeText}" aria-label="{closeText}"',
+                '</tpl>',
+                '>',
+            '</span>',
+        '</tpl>'
+    ],
     initComponent: function() {
 
         /***
@@ -72,10 +101,30 @@ Ext.define('Taco.view.publishing.component.button.PublishButton', {
     setLoading: function(isLoading) {
 
         var method = isLoading ? 'addCls' : 'removeCls',
-            text = isLoading ?  'Proccessing...': 'Publish Now';
+            text = isLoading ?  'Proccessing...': 'Publish Now',
+            me = this;
 
-        this[method]('taco-button-processing');
-        this.setText(text);
+        if (isLoading) {
+            me.addCls('taco-button-processing');
+            Ext.defer(function() {
+                //add animation class to button -- to be removed on return of save
+                me.addCls('taco-button-show-processing');
+                me.addCls('taco-button-processing-complete');
+
+                Ext.defer(function() {
+                    me.addCls('taco-button-show-processing-complete');
+                }, 10);
+
+            }, 50)
+        }
+
+        else {
+            me.removeCls('taco-button-show-processing');
+
+            Ext.defer(function() {
+                me.removeCls('taco-button-show-processing-complete');
+            }, 1000)
+        }
     },
 
     onMenuShow: function(cmp) {
@@ -143,9 +192,10 @@ Ext.define('Taco.view.publishing.component.button.PublishButton', {
     },
 
     updateButton: function() {
+        var me = this;
 
         if (!this.record) {
-            this.disable();
+            me.disable();
             return false;
         }
 
@@ -155,7 +205,10 @@ Ext.define('Taco.view.publishing.component.button.PublishButton', {
 
         if (this.record.phantom) state = 'live';
 
-        this[state.toLowerCase() === 'draft' || state.toLowerCase() === 'new' ? 'enable' : 'disable']();
+        Ext.defer(function() {
+            me[state.toLowerCase() === 'draft' || state.toLowerCase() === 'new' ? 'enable' : 'disable']();
+        }, 1100)
+
     },
 
     getPublishSetById: function(cb) {

@@ -155,12 +155,16 @@ Ext.define('Taco.core.ux.content.Tooltip', {
         if (event.type === 'mouseenter' || event.type === 'mousemove') {
             this.tooltip.removeCls('removed');
             this.tooltip.addCls(this.showCls);
-            this.icon.classList.add('active');
+            if (this.icon) {
+                this.icon.classList.add('active');
+            }
         }
 
         else if (event.type === 'mouseleave') {
             this.hideTooltip();
-            this.icon.classList.remove('active');
+            if (this.icon) {
+                this.icon.classList.remove('active');
+            }
         }
     },
 
