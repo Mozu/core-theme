@@ -31,25 +31,26 @@ Ext.define('Taco.view.product.subform.SEO', {
                     }, {
                         fieldLabel: 'Slug',
                         xtype: 'taco-slugfield',
-                        name: 'slug'
+                        name: 'slug',
+                        margin: '20 0 0 0'
                     }, {
                         xtype: 'fieldcontainer',
                         layout: 'hbox',
-                        margin: '30 0 0 0',
+                        margin: '20 0 0 0',
                         items: [
                             {
                                 fieldLabel: 'Meta Description',
                                 name: 'metaDescription',
                                 xtype: 'textarea',
                                 width: '50%',
-                                margin: '0 25 0 0',
+                                margin: '0 15 0 0',
                                 height: 250
                             }, {
                                 xtype: 'textarea',
                                 name: 'metaKeywords',
                                 fieldLabel: 'Meta Keywords',
                                 width: '50%',
-                                margin: '0 0 0 25',
+                                margin: '0 0 0 15',
                                 height: 250
                             }
                         ]

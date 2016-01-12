@@ -136,7 +136,7 @@ Ext.define('Taco.view.product.subform.Shipping', {
             allowBlank: true,
             isBundleComponent: true,
             width: '25%',
-            margin: '25 0 0 0'
+            margin: '0 0 0 15'
         });
 
         var productName = record.get("productName") + " (Qty " + record.get("quantity") + ")";
@@ -157,7 +157,7 @@ Ext.define('Taco.view.product.subform.Shipping', {
                     xtype: 'fieldcontainer',
                     layout: 'hbox',
                     width: '75%',
-                    margin: '0 50 0 0',
+                    margin: '0 15 0 0',
                     items: [
                         productNameField,
                         packageFields
@@ -184,7 +184,7 @@ Ext.define('Taco.view.product.subform.Shipping', {
             },
             defaults: {
                 columnWidth: 0.25,
-                margin: '0 0 0 10',
+                margin: '0 15 0 15',
                 selectOnFocus: true,
                 xtype: 'unitfield',
                 unitString: ' in',
@@ -213,7 +213,7 @@ Ext.define('Taco.view.product.subform.Shipping', {
                     readOnly: (isBundle),
                     allowBlank: (isBundle),
                     mouseWheelEnabled: false,
-                    margin: 0
+                    margin: '0 15 0 0'
                 },
                 {
                     fieldLabel:"Length",
@@ -229,7 +229,8 @@ Ext.define('Taco.view.product.subform.Shipping', {
                     name: (isBundle) ? "" : 'packageHeight',
                     fieldLabel: "Height",
                     value: (isPhysical ? record.get('packageHeight') : '0 in'),
-                    emptyText: 'h'
+                    emptyText: 'h',
+                    margin: '0 0 0 15'
                 }
             ]
         };
