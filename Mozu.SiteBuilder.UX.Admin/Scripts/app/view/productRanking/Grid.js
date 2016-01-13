@@ -380,20 +380,65 @@ Ext.define('Taco.view.productRanking.Grid', {
             return;
         }
 
+        //will be a popup
+        var categoryCode = (isNew) ? me.categoryCode : null;
+        if (isNew) {
+            this.createPopup(null, isNew, categoryCode);
+            return;
+        }
+
+        var id = (record == null) ? null : record.get('id');
+
+        var model = me.store.getProxy().getModel();
+        this.setLoading(true);
+        model.load(id,
+            {
+                scope: this,
+                params: {
+                    siteId: record.get('siteId')
+                },
+                success: function(dbRecord) {
+                    this.createPopup(dbRecord, isNew, categoryCode);
+                    this.setLoading(false);
+                },
+                failure: function() {
+                    this.setLoading(false);
+                }
+            });
+    },
+
+    //Create the Product Ranking Popup
+    createPopup: function(record, isNew, categoryCode) {
+        var me = this;
         Ext.create('Taco.view.productRanking.modal.ProductRankingEditor', {
             record: record,
+            parentForm: this,
             isCreateMode: isNew,
-            categoryCode: (isNew) ? me.categoryCode : null,
+            categoryCode: categoryCode,
             listeners: {
                 savesuccess: function () {
-                    if (me.store.proxy.extraParams.id) {
-                        delete me.store.proxy.extraParams.id;
-                    }
-                    me.store.reload();
+                    this.parentForm.store.reload();
                 }
             }
         });
     },
+
+
+
+    //    Ext.create('Taco.view.productRanking.modal.ProductRankingEditor', {
+    //        record: record,
+    //        isCreateMode: isNew,
+    //        categoryCode: (isNew) ? me.categoryCode : null,
+    //        listeners: {
+    //            savesuccess: function () {
+    //                if (me.store.proxy.extraParams.id) {
+    //                    delete me.store.proxy.extraParams.id;
+    //                }
+    //                me.store.reload();
+    //            }
+    //        }
+    //    });
+    //},
 
     doCreate : function (){
         this.openEditor(null, true);
