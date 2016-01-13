@@ -36,7 +36,9 @@ Ext.define('Taco.core.ux.mixins.NavHeader', {
         'Taco.core.ux.mixins.Searchable',
         'Taco.view.navigation.ContextSwitcherBar',
         'Taco.view.navigation.SubNavLinkContainer',
-        'Taco.core.ux.content.Tooltip'
+        'Taco.core.ux.content.Tooltip',
+        'Taco.core.ux.action.ProgressSplitButton',
+        'Taco.core.ux.action.ProgressButton'
     ],
 
     mixins: {
@@ -524,36 +526,6 @@ Ext.define('Taco.core.ux.mixins.NavHeader', {
                     allowDepress: false,
                     enableToggle: me.enableSaveActionToggle,
                     formBind: true,
-                    renderTpl: [
-                        '<span id="{id}-btnWrap" role="presentation" class="{baseCls}-wrap',
-                            '<tpl if="splitCls"> {splitCls}</tpl>',
-                            '{childElCls}" unselectable="on">',
-                            '<span class="taco-check-save taco-button-overlay"></span>',
-                            '<span class="taco-animated-circle taco-button-overlay"></span>',
-                            '<span id="{id}-btnEl" class="{baseCls}-button" role="presentation">',
-                                '<span id="{id}-btnInnerEl" class="{baseCls}-inner {innerCls}',
-                                    '{childElCls}" unselectable="on">',
-                                    '{text}',
-                                '</span>',
-                                '<span role="presentation" id="{id}-btnIconEl" class="{baseCls}-icon-el {iconCls}',
-                                    '{childElCls} {glyphCls}" unselectable="on" style="',
-                                    '<tpl if="iconUrl">background-image:url({iconUrl});</tpl>',
-                                    '<tpl if="glyph && glyphFontFamily">font-family:{glyphFontFamily};</tpl>">',
-                                    '<tpl if="glyph">&#{glyph};</tpl><tpl if="iconCls || iconUrl">&#160;</tpl>',
-                                '</span>',
-                            '</span>',
-                        '</span>',
-                        // if "closable" (tab) add a close element icon
-                        '<tpl if="closable">',
-                            '<span id="{id}-closeEl" role="presentation"',
-                                ' class="{baseCls}-close-btn"',
-                                '<tpl if="closeText">',
-                                    ' title="{closeText}" aria-label="{closeText}"',
-                                '</tpl>',
-                                '>',
-                            '</span>',
-                        '</tpl>'
-                    ],
                     toggleHandler: me.saveActionHandler,
                     scope: me
                 });
@@ -567,8 +539,15 @@ Ext.define('Taco.core.ux.mixins.NavHeader', {
                     }]
                 }
 
+                if (saveButtonCfg.xtype === 'splitbutton') {
+                    me.saveActionButton = Ext.create('Taco.core.ux.action.ProgressSplitButton', saveButtonCfg);
+                }
+
+                else {
+                    me.saveActionButton = Ext.create('Taco.core.ux.action.ProgressButton', saveButtonCfg);
+                }
+
                 // need to cache a reference to the button since the button is moved outside of the class by the splitEditor
-                me.saveActionButton = Ext.widget(saveButtonCfg);
 
                 // if not in the modal wrapper then put in the header.
                 if (!me.isModalWrapper) {
@@ -690,15 +669,8 @@ Ext.define('Taco.core.ux.mixins.NavHeader', {
     resetSaveButton: function () {
         var me = this;
         if (me.saveActionButton) {         
-            me.saveActionButton.toggle(false, true);
-
-            me.saveActionButton.removeCls('taco-button-show-processing');
-            
             me.saveInProgress = false;
-
-            Ext.defer(function() {
-                me.saveActionButton.removeCls('taco-button-show-processing-complete');
-            }, 1000)
+            me.saveActionButton.stopLoading();
         }
     },
 
@@ -754,20 +726,9 @@ Ext.define('Taco.core.ux.mixins.NavHeader', {
             me.fireEvent('save', me);
 
             if (me.saveActionButton) {
-                me.saveActionButton.addCls('taco-button-processing');
-
-                //add animation class to button -- to be removed on return of save
-                me.saveActionButton.addCls('taco-button-show-processing');
-                me.saveActionButton.addCls('taco-button-processing-complete');
-
-                Ext.defer(function() {
-                    me.saveActionButton.addCls('taco-button-show-processing-complete');
-                }, 10);
-
-                // me.saveActionButton.setText(this.saveInProgressText);
+                me.saveActionButton.startLoading();                
             };
 
-            
             me.saveInProgress = true;
 
             me.doSave();

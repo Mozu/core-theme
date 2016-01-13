@@ -48,7 +48,8 @@ Ext.define('Taco.view.website.Index', {
         'Taco.store.WidgetDefinitions',
         'Taco.store.LayoutWidgetDefinitions',
         'Taco.core.ux.content.SiteViewDropdown',
-        'Taco.view.navigation.ContextSwitcherSelector'
+        'Taco.view.navigation.ContextSwitcherSelector',
+        'Taco.core.ux.action.ProgressButton'
     ],
     selectedTheme: '',
     itemId: 'websiteIndex',
@@ -107,8 +108,9 @@ Ext.define('Taco.view.website.Index', {
             disabled: true,
             scope: this,
             handler: function() {
-               this.onPublish();
-               me.showMessage('Published', 'success');
+                this.publishButton.setLoading(true);
+                this.onPublish();
+                me.showMessage('Published', 'success');
             },
 
             onMoveToPublish: function(record, code) {
@@ -270,48 +272,16 @@ Ext.define('Taco.view.website.Index', {
             },
             this.publishButton,
             {
-                xtype: 'button',
+                xtype: 'progressbutton',
                 height: 40,
                 itemId: 'saveActionButton',
                 ui: 'action-primary',
                 scale: 'medium',
                 buttonGroup: 'isSavable',
-                text: 'Save',
-                margin: '0 0 0 10',
-                renderTpl: [
-                    '<span id="{id}-btnWrap" role="presentation" class="{baseCls}-wrap',
-                        '<tpl if="splitCls"> {splitCls}</tpl>',
-                        '{childElCls}" unselectable="on">',
-                        '<span class="taco-check-save taco-button-overlay"></span>',
-                        '<span class="taco-animated-circle taco-button-overlay"></span>',
-                        '<span id="{id}-btnEl" class="{baseCls}-button" role="presentation">',
-                            '<span id="{id}-btnInnerEl" class="{baseCls}-inner {innerCls}',
-                                '{childElCls}" unselectable="on">',
-                                '{text}',
-                            '</span>',
-                            '<span role="presentation" id="{id}-btnIconEl" class="{baseCls}-icon-el {iconCls}',
-                                '{childElCls} {glyphCls}" unselectable="on" style="',
-                                '<tpl if="iconUrl">background-image:url({iconUrl});</tpl>',
-                                '<tpl if="glyph && glyphFontFamily">font-family:{glyphFontFamily};</tpl>">',
-                                '<tpl if="glyph">&#{glyph};</tpl><tpl if="iconCls || iconUrl">&#160;</tpl>',
-                            '</span>',
-                        '</span>',
-                    '</span>',
-                    // if "closable" (tab) add a close element icon
-                    '<tpl if="closable">',
-                        '<span id="{id}-closeEl" role="presentation"',
-                            ' class="{baseCls}-close-btn"',
-                            '<tpl if="closeText">',
-                                ' title="{closeText}" aria-label="{closeText}"',
-                            '</tpl>',
-                            '>',
-                        '</span>',
-                    '</tpl>'
-                ]
+                margin: '0 0 0 10'
             },
             {
                 xtype: 'button',
-
                 itemId: 'createActionButton',
                 buttonGroup: 'isCreatable',
                 ui: 'action-primary',
@@ -1256,28 +1226,12 @@ Ext.define('Taco.view.website.Index', {
     onSave: function (button) {
         var tasks = this.entitypeTypeHandler.getSaveTask();
 
-        button.addCls('taco-button-processing');
-
-        //add animation class to button -- to be removed on return of save
-        button.addCls('taco-button-show-processing');
-        button.addCls('taco-button-processing-complete');
-
-        Ext.defer(function() {
-            button.addCls('taco-button-show-processing-complete');
-        }, 10);
-
+        button.startLoading();
 
         tasks.on({
             complete: function () {
-                
                 if (button) {
-                    button.removeCls('taco-button-show-processing');
-            
-                    button.saveInProgress = false;
-
-                    Ext.defer(function() {
-                        button.removeCls('taco-button-show-processing-complete');
-                    }, 1000)
+                    button.stopLoading();   
                 }
             }
         });

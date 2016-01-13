@@ -53,11 +53,23 @@
         &.#{$vprefix}splitbutton {
             .#{$prefix}btn-split-right {
                 &::after {
-                    box-shadow: rgba(0,0,0,0.05) -1px 0px 1px 0px;
+                    box-shadow: rgba(0, 0, 0, 0.09) 0px 1px 3px 0px;
                     top: -7px;
                     right: -19px;
                 }
             }
+
+            &.#{$prefix}btn-disabled {
+
+                .#{$prefix}btn-split-right {
+                     &::after {
+                        box-shadow: none;
+                     }
+                }
+            }
+        }
+
+        &.#{$prefix}btn-disabled {
         }
 
         @include btn-focus-no-border;
@@ -176,7 +188,7 @@
         padding: 5px 12px;
 
         .#{$vprefix}button-overlay {
-            background-color: $valid-green;
+            background-color: transparent;
             display: none;
             height: 100%;
             left: 0px;
@@ -184,13 +196,17 @@
             position: absolute;
             right: 0px;
             width: 100%;
-            @include transition(opacity 0.3s cubic-bezier(.17,.67,.83,.67));
+            @include transition(opacity, 0.3s cubic-bezier(.17,.67,.83,.67));
         }
 
         &.#{$vprefix}button-processing {
 
             .#{$vprefix}animated-circle {
                 display: block;
+            }
+
+            .#{$prefix}btn-inner-center {
+                color: transparent;
             }
 
         }
@@ -209,6 +225,10 @@
                 display: block;
             }
 
+            .#{$prefix}btn-inner-center {
+                color: transparent;
+            }
+
         }
 
         &.#{$vprefix}button-show-processing-complete {
@@ -220,7 +240,7 @@
         }
 
         .#{$vprefix}check-save {
-            @include icon-font($glyph-checkmark, 14px, $white-color);
+            @include icon-font($glyph-save-checkmark, 14px, $white-color);
             position: absolute;
             height: 100%;
             width: 98%;
@@ -234,6 +254,7 @@
 
 
         .#{$vprefix}animated-circle {
+            background-color: $valid-green;
             background-size: contain;
             background-image: url('../../build/resources/images/icons/savebuttoncircle.gif');
             background-repeat: no-repeat;
@@ -269,6 +290,7 @@
             color: $card-btn-text-color;
             font-size: 12px;
             line-height: 20px;
+            @include transition(color, .5s, cubic-bezier(.17,.67,.83,.67));
         }
         &:hover {
             border-color: $card-btn-hover-border;

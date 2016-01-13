@@ -175,7 +175,8 @@ Ext.define('Taco.view.website.entityAdapters.BaseEntityAdapter', {
         }, this);
         store.sync({
             success: function() {
-                this.manager.setPublishable(false);
+                var me = this;
+                me.manager.publishButton.setLoading(false, me.manager.setPublishable.bind(me.manager, false));
             },
             scope: this
         });
