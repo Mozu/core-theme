@@ -32,6 +32,12 @@
         }
     }
 
+    .#{$prefix}btn-link-small-focus {
+        .#{$prefix}btn-inner {
+            text-decoration: none;
+        }
+    }
+
     .related-orders {
         border-top: 1px solid $color-standard-border;
         padding: 7px 19px 3px;
