@@ -131,6 +131,8 @@ Ext.define('Taco.view.productRanking.modal.ProductRankingEditor', {
             isCatalogLevel: true,
             categoryCode: me.categoryCode,
             isPopUp: true,
+            enableScrollSpy: false,
+            layout: 'card',
             getWrapper: function() {
                 return this;
             }

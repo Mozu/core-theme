@@ -21,6 +21,11 @@ Ext.define('Taco.core.ux.form.NavForm2', {
     stickyClass: 'taco-fixed-navForm2',
 
     initComponent: function () {
+        if (!this.enableScrollSpy) {
+            this.callParent(arguments);
+            return;
+        }
+
         var me = this;
         this.cls = this.cls || "";
         this.cls += " taco-navform2";
@@ -142,6 +147,9 @@ Ext.define('Taco.core.ux.form.NavForm2', {
     },
 
     rebuildMap: function () {
+
+        if (!this.enableScrollSpy) return;
+
         this.locationMap = [];
         this.recordMap = [];
 
@@ -177,6 +185,9 @@ Ext.define('Taco.core.ux.form.NavForm2', {
     },
 
     stickNav: function() {
+
+        if (!this.enableScrollSpy) return;
+
         var scrollTop = this.getTop();
         var sectionNav = this.sectionNav;
         var navTop = this.navTop; // set in this.initSectionNav
@@ -194,6 +205,9 @@ Ext.define('Taco.core.ux.form.NavForm2', {
     },
 
     updateActiveNavItem: function() {
+
+        if (!this.enableScrollSpy) return;
+
         var scrollTop = this.getTop(),
             max,
             li,
@@ -232,6 +246,9 @@ Ext.define('Taco.core.ux.form.NavForm2', {
     },
 
     loadNavItems: function (items) {
+
+        if (!this.enableScrollSpy) return;
+
         var components,
             recordsToAdd = [];
 

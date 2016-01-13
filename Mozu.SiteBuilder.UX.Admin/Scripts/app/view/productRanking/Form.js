@@ -2,7 +2,7 @@
  * The Product Ranking Rule form
  */
 Ext.define('Taco.view.productRanking.Form', {
-    extend: 'Taco.core.ux.form.Form',
+    extend: 'Taco.core.ux.form.NavForm2',
     requires: [
         'Taco.view.productRanking.form.General',
         'Taco.view.productRanking.form.Context',
@@ -19,8 +19,6 @@ Ext.define('Taco.view.productRanking.Form', {
     isCatalogLevel: false,
     categoryCode: null,
     isCreate: false,
-
-    layout: 'card',
 
     initComponent: function () {
         var me = this;
@@ -70,6 +68,7 @@ Ext.define('Taco.view.productRanking.Form', {
         this.pinned = this.down('#pinned');
         this.blocked = this.down('#blocked');
 
+        this.loadNavItems();
     },
 
     /**
