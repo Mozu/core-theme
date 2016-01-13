@@ -257,10 +257,11 @@ Ext.define('Taco.view.order.subform.fulfillment.Grid', {
 
     buildMoveMenu: function() {
 
-        this.moveMenuAction = Ext.create('Ext.button.Button', {
+        this.moveMenuAction = Ext.widget('splitbutton', {
             ui: 'action',
             scale: 'medium',
-            margin: '0 2 0 0',
+            margin: '0 2px 0 0',
+            cls: 'fulfillment-move-to',
             text: 'Move to',
 
             listeners: {

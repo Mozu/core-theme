@@ -7,7 +7,9 @@
     font-size: 1.4rem;
     line-height: 1.9rem;  
     padding:7px;        
-    .customerNote{}
+    .customerNote{
+        color: $gray-text-dark;
+    }
     .label{}
 }
 
