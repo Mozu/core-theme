@@ -406,10 +406,8 @@ Ext.define('Taco.view.productRanking.Grid', {
                 }
             });
     },
-
-    //Create the Product Ranking Popup
+    
     createPopup: function(record, isNew, categoryCode) {
-        var me = this;
         Ext.create('Taco.view.productRanking.modal.ProductRankingEditor', {
             record: record,
             parentForm: this,
@@ -417,28 +415,14 @@ Ext.define('Taco.view.productRanking.Grid', {
             categoryCode: categoryCode,
             listeners: {
                 savesuccess: function () {
+                    if (this.parentForm.store.proxy.extraParams.id) {
+                        delete this.parentForm.store.proxy.extraParams.id;
+                    }
                     this.parentForm.store.reload();
                 }
             }
         });
     },
-
-
-
-    //    Ext.create('Taco.view.productRanking.modal.ProductRankingEditor', {
-    //        record: record,
-    //        isCreateMode: isNew,
-    //        categoryCode: (isNew) ? me.categoryCode : null,
-    //        listeners: {
-    //            savesuccess: function () {
-    //                if (me.store.proxy.extraParams.id) {
-    //                    delete me.store.proxy.extraParams.id;
-    //                }
-    //                me.store.reload();
-    //            }
-    //        }
-    //    });
-    //},
 
     doCreate : function (){
         this.openEditor(null, true);
