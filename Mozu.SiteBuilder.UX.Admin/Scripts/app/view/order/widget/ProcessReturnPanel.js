@@ -585,12 +585,6 @@ Ext.define('Taco.view.order.widget.ProcessReturnPanel', {
     },
 
     initSummary: function (record) {
-        if(record.getData().status == 'Authorized') {
-            record.set('status', '<span class="x-column-content-pill x-column-content-pill-true">Authorized</span>');
-        } else {
-            record.set('status', '<span class="x-column-content-pill x-column-content-pill-false">' + record.getData().status + '</span>');
-        }
-        console.log(record.getData());
         return Ext.create('Ext.Component', {
             cls: 'return-summary',
             data: record.getData(),
@@ -598,7 +592,7 @@ Ext.define('Taco.view.order.widget.ProcessReturnPanel', {
                 'white-space': 'nowrap'
             },
             tpl: [
-                '<span class="label">Return ID:<span>Return #{returnNumber} {status}</span></span>',
+                '<span class="label">Return ID:<span>Return #{returnNumber} <span class="x-column-content-pill">{status}</span></span></span>',
                 '<span class="label">Type:<span>{returnType}</span></span>',
                 '<span class="label">Time:<span>{createDate:date("m/d/Y g:ia")}</span></span>',
                 '<span class="label">Amount:<span>{[Taco.app.context.getCurrent().formatCurrency(Ext.Array.sum(Ext.Array.pluck(values.payments, "amountCredited")))]}</span></span>',

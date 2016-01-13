@@ -185,7 +185,7 @@ Ext.define('Taco.view.order.widget.PaymentPanel', {
             pendingReview = me.order.get('orderStatus') === 'PendingReview';
 
         var packageStatus;
-        
+
         if (me.record.data.status === 'Authorized') {
             packageStatus = '<span class="x-column-content-pill x-column-content-pill-true">Authorized</span>';
         } else {
@@ -347,6 +347,8 @@ Ext.define('Taco.view.order.widget.PaymentPanel', {
         var me = this,
             data = Ext.apply({ billingContact: me.order.data.billingContact }, me.record.data);
 
+        console.log(data);
+
 
         me.paymentDetails = Ext.create('Ext.Component', {
             cls: "orderform-payment-paymentDetails",
@@ -407,7 +409,10 @@ Ext.define('Taco.view.order.widget.PaymentPanel', {
 
                     '<tpl>',
                         '<div class="auth-and-workflow">',
-                            '<div class="referenceId">Reference ID: {externalTransactionId}</div>',
+                            '<div class="referenceId">',
+                                '<h4 class="paymentDetailsHeader">Reference ID:</h4>',
+                                '{externalTransactionId}',
+                            '</div>',
                             '<div class="workflow">',
                                 '<h4 class="paymentDetailsHeader">Workflow:</h4>',
                                 '<div class="workflow">{paymentWorkflow}</div>',
