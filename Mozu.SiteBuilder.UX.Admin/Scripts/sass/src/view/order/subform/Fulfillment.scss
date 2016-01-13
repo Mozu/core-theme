@@ -119,8 +119,9 @@
     .fulfillment-move-to {
         .#{$prefix}btn-split-right {
             &:after {
+                border-left-color: $light-border-gray;
                 content: $glyph-chevrondown;
-                color: $glyph-icon-color;
+                color: $card-btn-text-color;
                 font-size: $tag-font;
                 padding-top: 12px;
                 right: -13px;
