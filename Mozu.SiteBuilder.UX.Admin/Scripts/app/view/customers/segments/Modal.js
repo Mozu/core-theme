@@ -38,6 +38,9 @@ Ext.define('Taco.view.customers.segments.Modal', {
         rootVisible: false,
         store: this.store,
         selModel: this.selModel,
+        viewConfig: {
+          stripeRows: false
+        },
         dockedItems: [
             this.gridPager
         ],

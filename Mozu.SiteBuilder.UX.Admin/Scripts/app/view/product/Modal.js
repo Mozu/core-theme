@@ -55,6 +55,9 @@ Ext.define('Taco.view.product.Modal', {
                 this.searchBox,
                 this.gridPager
             ],
+            viewConfig: {
+                stripeRows: false
+            },
             columns: [{
                 dataIndex: 'productCode',
                 text: 'Code',
