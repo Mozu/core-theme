@@ -298,9 +298,14 @@ Ext.define('Taco.Application', {
             showBy: function(cmp, pos, off) {
                 var me = this;
 
+
                 // check to see if this is a primary menu, and no other offset was provided 
                 // if both these are satisfied, apply 10 pixels of vertical padding
-                off = off === undefined  && !me.ownerItem ? [0, 10] : off;
+                
+                if (cmp.el && cmp.el.dom && cmp.el.dom.classList.toString().indexOf('primary') === -1) {
+                    off = off === undefined  && !me.ownerItem ? [0, 10] : off;
+                }
+
         
                 if (!me.floating) {
                     Ext.log.warn('Using showBy on a non-floating component');
