@@ -25,13 +25,12 @@
 
 // add to the title-toolbar for the draft toolbar - only visible in the readonly version of the grid
 .draft-toolbar{
-    border-color:#CCC;
-    background-color:#f1f1f1;	
-    border-width:1px;
+    border: none;
     
     .title{	
-        color:#990000;
-        font-size: px-to-rem(14);
+        color: $gray-text-dark;
+        font-size: $normal-font;
+        font-style: italic;
     }
 }
 
