@@ -1258,20 +1258,18 @@ Ext.define('Taco.view.website.Index', {
 
         button.addCls('taco-button-processing');
 
+        //add animation class to button -- to be removed on return of save
+        button.addCls('taco-button-show-processing');
+        button.addCls('taco-button-processing-complete');
+
         Ext.defer(function() {
-            //add animation class to button -- to be removed on return of save
-            button.addCls('taco-button-show-processing');
-            button.addCls('taco-button-processing-complete');
+            button.addCls('taco-button-show-processing-complete');
+        }, 10);
 
-            Ext.defer(function() {
-                button.addCls('taco-button-show-processing-complete');
-            }, 10);
-
-        }, 50);
 
         tasks.on({
             complete: function () {
-                // button.setDisabled(false);
+                
                 if (button) {
                     button.removeCls('taco-button-show-processing');
             

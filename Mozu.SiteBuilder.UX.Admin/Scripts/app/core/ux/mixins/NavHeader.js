@@ -691,6 +691,7 @@ Ext.define('Taco.core.ux.mixins.NavHeader', {
         var me = this;
         if (me.saveActionButton) {         
             me.saveActionButton.toggle(false, true);
+
             me.saveActionButton.removeCls('taco-button-show-processing');
             
             me.saveInProgress = false;
@@ -754,18 +755,18 @@ Ext.define('Taco.core.ux.mixins.NavHeader', {
 
             if (me.saveActionButton) {
                 me.saveActionButton.addCls('taco-button-processing');
+
+                //add animation class to button -- to be removed on return of save
+                me.saveActionButton.addCls('taco-button-show-processing');
+                me.saveActionButton.addCls('taco-button-processing-complete');
+
                 Ext.defer(function() {
-                    //add animation class to button -- to be removed on return of save
-                    me.saveActionButton.addCls('taco-button-show-processing');
-                    me.saveActionButton.addCls('taco-button-processing-complete');
+                    me.saveActionButton.addCls('taco-button-show-processing-complete');
+                }, 10);
 
-                    Ext.defer(function() {
-                        me.saveActionButton.addCls('taco-button-show-processing-complete');
-                    }, 10);
-
-                }, 50)
                 // me.saveActionButton.setText(this.saveInProgressText);
             };
+
             
             me.saveInProgress = true;
 
@@ -837,7 +838,6 @@ Ext.define('Taco.core.ux.mixins.NavHeader', {
         var me = this;
 
         me.onSaveSuccess(data, store, isSuccessful);
-
         this.resetSaveButton()
         me.fireEvent('savesuccess', me, data, store, isSuccessful);
         
