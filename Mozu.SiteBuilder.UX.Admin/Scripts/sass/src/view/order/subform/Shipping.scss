@@ -24,7 +24,8 @@
 	// message that displays when the grid has no data;
     .empty-grid-message{
         padding:20px;
-        color:#990000
+        color:$gray-text-dark;
+        font-style: italic;
     }
   
     .#{$vprefix}orderform-shipping-package{
