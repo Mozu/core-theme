@@ -58,6 +58,7 @@ Ext.define('Taco.view.order.widget.ProcessReturnPanel', {
             scale: 'medium',
             text: 'Move To',
             disabled: true,
+            cls: 'fulfillment-move-to',
             menu: {
                 items: [{
                     text: 'Remove',
@@ -476,6 +477,7 @@ Ext.define('Taco.view.order.widget.ProcessReturnPanel', {
                 text: "Resend Email",
                 emailUrl: '/admin/app/return/resendemail',
                 handler: Ext.emptyFn,
+                cls: 'fulfillment-move-to',
                 listeners: {
                     menushow: function (button, menu) {
                         var status = this.record.get("status");

@@ -115,17 +115,16 @@
     }
 }
 
-.#{$vprefix}orderform-shipping-shippingitemgrid {
-    .fulfillment-move-to {
-        .#{$prefix}btn-split-right {
-            &:after {
-                border-left-color: $light-border-gray;
-                content: $glyph-chevrondown;
-                color: $card-btn-text-color;
-                font-size: $tag-font;
-                padding-top: 12px;
-                right: -13px;
-            }
+
+.fulfillment-move-to {
+    .#{$prefix}btn-arrow-right {
+        &::after {
+            border-left-color: $light-border-gray;
+            content: $glyph-chevrondown;
+            color: $card-btn-text-color;
+            font-size: $tag-font;
+            padding-top: 12px;
+            right: -13px;
         }
     }
 }
