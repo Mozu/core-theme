@@ -290,7 +290,7 @@
             color: $card-btn-text-color;
             font-size: 12px;
             line-height: 20px;
-            @include transition(color, .5s, cubic-bezier(.17,.67,.83,.67));
+            //@include transition(color, .5s, cubic-bezier(.17,.67,.83,.67));
         }
         &:hover {
             border-color: $card-btn-hover-border;
