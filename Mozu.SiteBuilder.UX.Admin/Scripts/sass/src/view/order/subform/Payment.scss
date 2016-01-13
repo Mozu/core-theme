@@ -61,11 +61,24 @@
 
     	.body {
     		border-color: $light-border-gray;
-    	}
 
-        .togglebtn {
-            //
-        }
+            .togglebtn {
+                height: 35px;
+                width: 28px;
+
+                .transaction-toggle {
+                    &.#{$prefix}btn-action-medium {
+                        height: 35px;
+                        max-width: 28px;
+
+                        .#{$prefix}btn-icon-el {
+                            left: -1px;
+                            top: 2px;
+                        }
+                    }
+                }
+            }
+    	}
     }
 
     .orderform-payment-paymentDetails {

@@ -80,25 +80,25 @@
 
                 .#{$prefix}tool-after-title {
                     border: 1px solid $light-border-gray;
-                    height: 36px !important;
-                    width: 48px !important;
+                    height: 35px !important;
+                    width: 28px !important;
                     @include border-radius-xbrowser(3px);
 
                     .#{$prefix}tool-img {
-                        height: 36px !important;
-                        width: 48px !important;
+                        height: 35px !important;
+                        width: 30px !important;
 
                         &.#{$prefix}tool-collapse-top {
                             &:after {
                                 content: $glyph-tree-open;
-                                padding: 9px 17px;
+                                padding: 8px 7px;
                             }
                         }
 
                         &.#{$prefix}tool-expand-bottom {
                             &:after {
                                 content: $glyph-tree-closed;
-                                padding: 9px 17px;
+                                padding: 8px 7px;
                             }
                         }
                     }

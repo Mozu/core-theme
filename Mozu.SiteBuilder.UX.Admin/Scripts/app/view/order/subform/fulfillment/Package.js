@@ -55,10 +55,11 @@ Ext.define('Taco.view.order.subform.fulfillment.Package', {
             items: Ext.Array.push([{
                 xtype: 'button',
                 text: '',
+                cls: 'package-details',
                 glyph: 'XE92A@mozicons',
-                width: 50,
+                width: 28,
                 ui: 'action',
-                scale: 'medium',
+                scale: 'small',
                 margin: '0 10 0 0',
                 hidden: !this.isCollapsible,
                 handler: this.handleCollapse,
@@ -113,7 +114,7 @@ Ext.define('Taco.view.order.subform.fulfillment.Package', {
             defaults: {
                 xtype: 'button',
                 ui: 'action',
-                scale: 'medium',
+                scale: 'small',
                 scope: this,
                 margin: '0 0 0 10'
             },
@@ -124,8 +125,9 @@ Ext.define('Taco.view.order.subform.fulfillment.Package', {
             this.closedContainer.add([{
                 margin: '0 10 0 0',
                 text: '',
+                cls: 'package-details',
                 glyph: 'XE927@mozicons',
-                width: 50,
+                width: 28,
                 handler: this.handleExpand
             }, {
                 xtype: 'component',

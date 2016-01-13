@@ -286,6 +286,7 @@ Ext.define('Taco.view.order.widget.PaymentPanel', {
                                 var btnEl = me.transactionList.el.down(".togglebtn");
                                 this.toggleButton = Ext.widget({
                                     xtype: "button",
+                                    cls: 'transaction-toggle',
                                     padding: '6px 0px 5px 6px',
                                     renderTo: btnEl,
                                     width: 30,

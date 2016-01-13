@@ -6,6 +6,24 @@
         margin-right: 3px;
     }
 
+    .package-details {
+        height: 35px;
+        top: 0;
+        border: 1px solid $light-border-gray;
+
+        &:hover {
+            text-decoration: none;
+        }
+
+        .#{$prefix}btn-button {
+            height: 35px;
+
+            .#{$prefix}btn-icon-el {
+                padding: 9px 0;
+            }
+        }
+    }
+
     a.label-link {
         
         padding: 0;
