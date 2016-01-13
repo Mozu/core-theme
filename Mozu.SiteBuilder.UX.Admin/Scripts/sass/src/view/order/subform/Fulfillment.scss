@@ -114,3 +114,17 @@
         margin-right: 3px;
     }
 }
+
+.#{$vprefix}orderform-shipping-shippingitemgrid {
+    .fulfillment-move-to {
+        .#{$prefix}btn-split-right {
+            &:after {
+                content: $glyph-chevrondown;
+                color: $glyph-icon-color;
+                font-size: $tag-font;
+                padding-top: 12px;
+                right: -13px;
+            }
+        }
+    }
+}
