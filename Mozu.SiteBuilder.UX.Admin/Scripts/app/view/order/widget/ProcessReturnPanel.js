@@ -125,7 +125,14 @@ Ext.define('Taco.view.order.widget.ProcessReturnPanel', {
                 },
                 this.paymentsGrid
             ],
-            tools: [this.summary]
+            tools: [
+                this.summary,
+                {
+                    xtype: 'component',
+                    flex: 1
+                },
+                this.returnActions
+            ]
         });
 
         this.callParent(arguments);
