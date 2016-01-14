@@ -12,7 +12,7 @@ Ext.define('Taco.overrides.grid.Panel', {
         var me = this,
             stateIdWarnings,
             columnName,
-            statefulColumns
+            statefulColumns;
 
         // adding warnings for any column that doesnt have a stateId. Each column in a stateful grid should have a unique (to the grid) stateId.       
         if (me.stateful) {
@@ -36,6 +36,8 @@ Ext.define('Taco.overrides.grid.Panel', {
                 console.log('Stateful grid with stateId:' + me.stateId + " is missing stateId members for columns: " + stateIdWarnings.join(","))
             }
         }
+        me.viewConfig = me.viewConfig || {};
+        me.viewConfig.stripeRows = false;
         me.callParent(arguments);
     },
 

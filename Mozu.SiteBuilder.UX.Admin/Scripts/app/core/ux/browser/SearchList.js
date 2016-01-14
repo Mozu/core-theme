@@ -42,7 +42,7 @@ Ext.define('Taco.core.ux.browser.SearchList', {
     
     hideSearchToolbar: false,
 
-    enableAutoSelect: true,
+    enableAutoSelect: false,
 
     // store: { type: 'Taco.store.InventoryProducts' },
     store: null,
