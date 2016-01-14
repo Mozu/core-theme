@@ -303,7 +303,7 @@ Ext.define('Taco.view.navigation.SubNavLinkContainer', {
         }
 
         else if (showEl.querySelector('.text-only')) {
-            showEl = sshowEl.querySelector('.text-only');   
+            showEl = showEl.querySelector('.text-only');   
         }
 
         if (config && config.menu) {
