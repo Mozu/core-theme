@@ -235,10 +235,15 @@ Ext.define('Taco.view.order.subform.fulfillment.DirectShipPackage', {
         };
 
         this.collapsedActions = [{
+            xtype: 'button',
+            ui: 'action',
+            scale: 'medium',
             text: 'Print Packing Slip',
             handler: this.handlePrintPackingSlip
         }, {
             xtype: 'resendemailbutton',
+            ui: 'action',
+            scale: 'medium',
             margin: '0 0 0 10',
             emailUrl: '/admin/app/order/shipping/package/resendshipmentemail',
             jsonData: {
