@@ -6,6 +6,7 @@ Ext.define('Taco.core.ux.content.SiteViewDropdown', {
     scale: 'medium',
     text: 'View',
     height: 40,
+    menuAlign: 'tr-br',
     initComponent: function() {
         this.menu = Ext.create('Ext.menu.Menu', {
             cls: 'taco-siteviewdropdown-menu',

@@ -15,6 +15,7 @@ Ext.define('Taco.core.ux.action.ProgressSplitButton', {
     itemId: 'saveActionButton',
     allowDepress: false,
     enableToggle: true,
+    menuAlign: 'tr-br',
     formBind: true,
     renderTpl: [
         '<span id="{id}-btnWrap" role="presentation" class="{baseCls}-wrap',

@@ -8,6 +8,7 @@ Ext.define('Taco.view.publishing.component.button.PublishButton', {
         'Taco.core.ux.action.ProgressSplitButton'
     ],
     ui: 'action-primary',
+    menuAlign: 'tr-br',
     height: 40,
     scale: 'medium',
     text: 'Publish Now',
