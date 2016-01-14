@@ -159,6 +159,24 @@
         }
     }
 
+    a.#{$prefix}btn-action-medium
+        .#{$prefix}btn-arrow-right {
+
+            color: $card-btn-text-color;
+
+            .#{$prefix}btn-inner {
+                line-height: 20px;
+            }
+
+            &::after {
+                content: $glyph-arrow-down;
+                font-size: 10px;
+                top: 5px;
+                width: 13px;
+            }
+        }
+    }
+
     // Dropdowns
 
     a.#{$prefix}btn-action-primary-medium,
