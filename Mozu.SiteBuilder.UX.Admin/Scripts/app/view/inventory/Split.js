@@ -121,6 +121,7 @@ Ext.define('Taco.view.inventory.Split', {
 
     	this.productInventoryGrid = Ext.create('Taco.core.ux.grid.Panel', {
     		store: this.store,
+            enablePaging: true,
             cls: 'taco-action-on-click',
     		columns: [
     			{
