@@ -1,8 +1,4 @@
 
-
-
-
-	
 	.#{$vprefix}editable-display-field-inner {
         text-decoration:none;
         display:block;
@@ -72,4 +68,12 @@
     .#{$prefix}form-readonly{
     
     
+    }
+
+    .#{$vprefix}label-focus {
+        > tbody {
+            label {
+                color: $valid-green;
+            }
+        }
     }
