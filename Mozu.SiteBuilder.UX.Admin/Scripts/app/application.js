@@ -301,9 +301,17 @@ Ext.define('Taco.Application', {
 
                 // check to see if this is a primary menu, and no other offset was provided 
                 // if both these are satisfied, apply 10 pixels of vertical padding
-                
-                if (cmp.el && cmp.el.dom && cmp.el.dom.classList.toString().indexOf('primary') === -1) {
-                    off = off === undefined  && !me.ownerItem ? [0, 10] : off;
+
+                if (me.ownerButton && me.ownerButton.ui) {
+                    // if were a primary button, dont apply style
+                    if (me.ownerButton.ui.indexOf('primary') === -1) {
+                        off = off === undefined  && !me.ownerItem ? [0, 10] : off;
+                    }
+
+                    // unless were a publish button
+                    else if (me.ownerButton.xtype === 'publishbutton') {
+                        off = off === undefined  && !me.ownerItem ? [0, 10] : off;   
+                    }
                 }
 
         
