@@ -164,6 +164,7 @@ Ext.define('Taco.view.order.widget.OrderTotalPanel', {
         if (this.record.get("orderStatus") == "Pending" || this.record.get("isDraft")) {            
             var shippingMethodButton = Ext.widget({
                 itemId:"shippingMethodButton",
+                cls: 'order-shipping-method',
                 xtype: 'button',
                 ui: "action",
                 scale: "medium",

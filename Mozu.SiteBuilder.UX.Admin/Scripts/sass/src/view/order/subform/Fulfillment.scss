@@ -116,7 +116,8 @@
 }
 
 
-.fulfillment-move-to {
+.fulfillment-move-to,
+.order-shipping-method {
     .#{$prefix}btn-arrow-right {
         &::after {
             border-left-color: $light-border-gray;
