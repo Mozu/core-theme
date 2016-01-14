@@ -169,6 +169,7 @@
             }
 
             &::after {
+                color: $card-btn-text-color;
                 content: $glyph-arrow-down;
                 font-size: 10px;
                 padding-top: 0px;
@@ -177,6 +178,29 @@
                 width: 13px;
             }
         }
+
+        &:hover {
+            color: $dark-color
+        }
+    }
+
+    a.#{$prefix}btn-action-medium,
+    a.#{$prefix}btn-action-toolbar-medium {
+
+        &:not(.#{$prefix}btn-disabled):hover {
+
+            .#{$prefix}btn-inner {
+                color: $dark-color;
+            }
+
+            .#{$prefix}btn-arrow-right {
+
+                &::after {
+                    color: $dark-color;
+                }
+            }
+        }
+
     }
 
     // Dropdowns
