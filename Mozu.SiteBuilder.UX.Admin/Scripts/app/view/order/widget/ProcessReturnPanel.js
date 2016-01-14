@@ -601,7 +601,11 @@ Ext.define('Taco.view.order.widget.ProcessReturnPanel', {
                 'white-space': 'nowrap'
             },
             tpl: [
-                '<span class="label">Return ID:<span>Return #{returnNumber} <span class="x-column-content-pill">{status}</span></span></span>',
+                '<tpl if="status == ' + "'Authorized'" + '">',
+                    '<span class="label">Return ID:<span>Return #{returnNumber} <span class="x-column-content-pill x-column-content-pill-true">{status}</span></span></span>',
+                '<tplelse>',
+                    '<span class="label">Return ID:<span>Return #{returnNumber} <span class="x-column-content-pill x-column-content-pill-false">{status}</span></span></span>',
+                '</tpl>',
                 '<span class="label">Type:<span>{returnType}</span></span>',
                 '<span class="label">Time:<span>{createDate:date("m/d/Y g:ia")}</span></span>',
                 '<span class="label">Amount:<span>{[Taco.app.context.getCurrent().formatCurrency(Ext.Array.sum(Ext.Array.pluck(values.payments, "amountCredited")))]}</span></span>',
