@@ -38,22 +38,65 @@
 
     .payments-actions {
 
-		.#{$prefix}btn-button {
-			font-size: 20px;
-			height: 25px;
-			opacity: .27;
-			top: 2px;
+        background-color: transparent;
+        padding: 0;
+        opacity: 0.27;
+        border: none;
 
-			&:hover {
-				opacity: 1;
-			}
-		}
+        &:hover {
+            opacity: 1;
+            background-color: transparent;
+        }
 
-		.#{$prefix}btn-arrow-right {
-			&:after {
-				display: none;
-			}
-		}
+        &.#{$prefix}menu-active {
+            border-radius: 3px;
+            background-color: $more-menu-active-background;
+            box-shadow: $more-menu-active-shadow 0 0 0 1px inset;
+            opacity: 1;
+        }
+
+        .#{$prefix}btn-arrow-right {
+            @include icon-font($glyph-more-vert, 20px, $glyph-icon-color);
+            &::after {
+                display: none;
+            }
+        }
+
+        .#{$prefix}btn-icon-el {
+            padding-left: 2px;
+            padding-top: 5px;
+        }
+
+        .#{$prefix}btn-wrap {
+            padding: 0;
+            .#{$prefix}btn-inner {
+                padding: 0;
+            }
+        }
+
+        &.#{$prefix}btn.#{$prefix}menu-active {
+            border-radius: 3px;
+            background-color: $more-menu-active-background;
+            box-shadow: $more-menu-active-shadow 0 0 0 1px inset;
+            opacity: 1;
+        }
+
+		// .#{$prefix}btn-button {
+		// 	font-size: 20px;
+		// 	height: 25px;
+		// 	opacity: .27;
+		// 	top: 2px;
+
+		// 	&:hover {
+		// 		opacity: 1;
+		// 	}
+		// }
+
+		// .#{$prefix}btn-arrow-right {
+		// 	&:after {
+		// 		display: none;
+		// 	}
+		// }
     }
 
     .orderform-payment-transactionlist {

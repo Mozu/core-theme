@@ -229,12 +229,15 @@ Ext.define('Taco.view.order.widget.PaymentPanel', {
                 }, {
                     xtype: 'button',
                     ui: 'action',
-                    scale: 'small',
-                    width: 18,
+                    scale: 'medium',
+                    menuAlign: 'tr-br?',
                     cls: 'payments-actions',
                     glyph: 'XE90B@mozicons',
                     itemId: 'moreActionsButton',
-                    menu: me.getAvailableActions()
+                    menu: me.getAvailableActions(),
+                    width: 18,
+                    height: 24,
+                    margin: '0 0 0 10'
                 },
             ]
         });

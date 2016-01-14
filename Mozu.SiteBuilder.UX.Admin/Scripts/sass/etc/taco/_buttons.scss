@@ -159,7 +159,7 @@
         }
     }
 
-    a.#{$prefix}btn-action-medium {
+    a.#{$prefix}btn-action-medium:not(.#{$prefix}btn-action-primary-toolbar-medium) {
         .#{$prefix}btn-arrow-right {
 
             color: $card-btn-text-color;
@@ -187,7 +187,7 @@
     a.#{$prefix}btn-action-medium,
     a.#{$prefix}btn-action-toolbar-medium {
 
-        &:not(.#{$prefix}btn-disabled):hover {
+        &:not(.#{$prefix}btn-action-primary-toolbar-medium):not(.#{$prefix}btn-disabled):hover {
 
             .#{$prefix}btn-inner {
                 color: $dark-color;
@@ -357,30 +357,8 @@
             }
         }
         // Card buttons with dropdowns
-        .#{$prefix}btn-arrow-right,
-        .#{$prefix}btn-split-right {
-            // &::after {
-            //     content: $glyph-arrow-down;
-            //     font-size: 10px;
-            //     line-height: 20px;
-            //     margin-right: -5px;
-            //     right: 0;
-            // }
-            // .#{$prefix}btn-button {
-            //     margin-right: -5px;
-            // }
-        }
         .#{$prefix}btn-arrow-right {
             padding-right: 20px;
-        }
-        .#{$prefix}btn-split-right {
-            // margin-right: -7px;
-            // //padding-right: 31px;
-            // &::after {
-            //     border-left-color: $card-btn-border;
-            //     height: 32px;
-            //     width: 22px;
-            // }
         }
     }
 
@@ -590,4 +568,6 @@
         padding: 4px 3px 2px 3px;
         text-transform: uppercase;
     }
+
+
 }
