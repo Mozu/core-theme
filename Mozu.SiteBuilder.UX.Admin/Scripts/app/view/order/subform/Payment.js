@@ -58,6 +58,7 @@ Ext.define('Taco.view.order.subform.Payment', {
                 }
             }),
             me.addPaymentButton = Ext.widget('splitbutton', {
+                menuAlign: 'tr-br?',
                 text: 'Add Payment',
                 handler: function() {
                     var action = me.paymentActions.addCreditCard;

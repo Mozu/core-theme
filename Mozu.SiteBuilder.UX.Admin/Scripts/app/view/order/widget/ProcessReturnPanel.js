@@ -59,7 +59,9 @@ Ext.define('Taco.view.order.widget.ProcessReturnPanel', {
             text: 'Move To',
             disabled: true,
             cls: 'fulfillment-move-to',
+            menuAlign: 'tr-br?',
             menu: {
+                plain: true,
                 items: [{
                     text: 'Remove',
                     handler: function () {

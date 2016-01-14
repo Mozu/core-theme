@@ -92,6 +92,7 @@ Ext.define('Taco.view.order.widget.OrderTotalPanelEditable', {
             scale: "medium",
             //cls:"order-adjusment-menu",
             //style: "font-size: 1.4rem;",
+            menuAlign: 'tr-br?',
             text: me.getShippingAdjustmentText(this.record.get("shippingAdjustmentIsNegative")),
             menu: {
                 plain:true,
@@ -134,6 +135,7 @@ Ext.define('Taco.view.order.widget.OrderTotalPanelEditable', {
             scale: "medium",
             //cls: "order-adjusment-menu",
             //style: "font-size: 1.4rem;",
+            menuAlign: 'tr-br?',
             text: (orderAdjustment > 0) ? addOrderLabelText : subtractOrderLabelText,
             menu: {
                 plain:true,
