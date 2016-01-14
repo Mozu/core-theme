@@ -514,14 +514,24 @@ var _constants = require('./constants');
         }, {
             key: 'updateAllContentWidgets',
             value: function updateAllContentWidgets() {
-                Array.from(doc.querySelectorAll(_constants.CONTENT_SELECTOR)).forEach(function (widget) {
+                Array.from(doc.querySelectorAll(_constants.BLOCK_SELECTOR)).forEach(function (block) {
 
-                    var newWidgetData = widget.innerHTML;
-                    var existingData = JSON.parse(widget.parentElement.getAttribute(_constants.DATA_WIDGET_ATTRIBUTE));
+                    if (!block) {
+                        return false;
+                    }
 
-                    if (existingData) {
-                        existingData.config.body = newWidgetData;
-                        widget.parentElement.setAttribute(_constants.DATA_WIDGET_ATTRIBUTE, JSON.stringify(existingData));
+                    var type = JSON.parse(block.getAttribute('data-widget'));
+
+                    if (type && type.definitionId === 'content') {
+
+                        var widget = block.querySelector(_constants.CONTENT_SELECTOR);
+                        var newWidgetData = widget.innerHTML;
+                        var existingData = JSON.parse(widget.parentElement.getAttribute(_constants.DATA_WIDGET_ATTRIBUTE));
+
+                        if (existingData) {
+                            existingData.config.body = newWidgetData;
+                            widget.parentElement.setAttribute(_constants.DATA_WIDGET_ATTRIBUTE, JSON.stringify(existingData));
+                        }
                     }
                 });
             }

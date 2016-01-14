@@ -43,15 +43,27 @@ import {
         }
 
         updateAllContentWidgets() {
-            Array.from(doc.querySelectorAll(CONTENT_SELECTOR)).forEach((widget) => {
+            Array.from(doc.querySelectorAll(BLOCK_SELECTOR)).forEach((block) => {
 
-                const newWidgetData = widget.innerHTML;
-                const existingData = JSON.parse(widget.parentElement.getAttribute(DATA_WIDGET_ATTRIBUTE));
-
-                if (existingData) {
-                    existingData.config.body = newWidgetData;
-                    widget.parentElement.setAttribute(DATA_WIDGET_ATTRIBUTE, JSON.stringify(existingData));
+                if (!block) {
+                    return false;
                 }
+
+                const type = JSON.parse(block.getAttribute('data-widget'));
+
+                if (type && type.definitionId === 'content') {
+
+                    const widget = block.querySelector(CONTENT_SELECTOR);
+                    const newWidgetData = widget.innerHTML;
+                    const existingData = JSON.parse(widget.parentElement.getAttribute(DATA_WIDGET_ATTRIBUTE));
+
+                    if (existingData) {
+                        existingData.config.body = newWidgetData;
+                        widget.parentElement.setAttribute(DATA_WIDGET_ATTRIBUTE, JSON.stringify(existingData));
+                    }
+
+                }
+
             });
         }
 
