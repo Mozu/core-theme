@@ -132,11 +132,11 @@ Ext.define('Taco.view.order.subform.fulfillment.Grid', {
             text: 'Line',
             draggable: false,
             resizable: true,
-            width: 50,
+            width: 140,
             sortable: false,
             menuDisabled: true,
             hidden: false,
-            align: 'center',
+            align: 'left',
             dataIndex: 'lineId'
         }, {
             text: 'Code',
