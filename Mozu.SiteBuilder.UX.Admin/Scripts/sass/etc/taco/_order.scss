@@ -1,5 +1,10 @@
 @mixin taco-order {
 
+  .order-no-content {
+    color: $gray-text-dark;
+    font-size: 13px;
+    font-style: italic;
+  }
 
   .#{$vprefix}address-editor-fields {
     @include flexbox($wrap: wrap, $justify: space-between);

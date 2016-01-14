@@ -16,6 +16,8 @@ Ext.define('Taco.view.order.subform.Attributes', {
         "Taco.view.order.widget.AttributeGrid"
     ],
 
+    layout: 'card',
+
     initComponent: function () {
         var me = this;
 
@@ -35,9 +37,16 @@ Ext.define('Taco.view.order.subform.Attributes', {
             store: this.attributeDefinitionStore
         });
 
-        this.items = [
+        this.items = [{
+                xtype: 'component',
+                cls: 'order-no-content',
+                html: 'N/A',
+                padding: '0 0 40 0'
+            },
             this.orderAttributesGrid
         ];
+
+        this.activeTab = this.attributeDefinitionStore.count() > 0 ? 1 : 0;
 
         this.callParent(arguments);
     },
@@ -105,5 +114,7 @@ Ext.define('Taco.view.order.subform.Attributes', {
 
     refreshGrid: function () {
         this.down('grid').getView().refresh();
+
+        this.getLayout().setActiveItem(this.attributeDefinitionStore.count() > 0 ? 1 : 0);
     }
 });
