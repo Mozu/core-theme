@@ -235,7 +235,7 @@
 
             .#{$prefix}form-trigger {
                 height: 30px;
-                background-color: $white-color;
+                background-color: transparent;
                 &::after {
                     padding-top: 4px;
                 }

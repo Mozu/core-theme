@@ -7,5 +7,13 @@
 			background-color: transparent;
 		}
 
+        .#{$vprefix}quickfilter {
+
+            input {
+                background-color: $nav-element-active-border;
+            }
+            
+        }
+
 	}
 }
