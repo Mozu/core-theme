@@ -251,6 +251,7 @@ Ext.define("Taco.view.category.Form", {
         this.items.push(
             Ext.create('Taco.view.productRanking.Grid', {
                 title: "Product Ranking Rules",
+                hideSubnavLinks: true,
                 margin: '50 0 0 0',
                 useWhiteContainer:true,
                 minHeight: 350,

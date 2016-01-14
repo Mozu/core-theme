@@ -114,8 +114,6 @@ Ext.define('Taco.view.navigation.SubNavLinkContainer', {
 
         this.items = [];
 
-        console.log(this.store);
-
         this.callParent(arguments);
     },
 
