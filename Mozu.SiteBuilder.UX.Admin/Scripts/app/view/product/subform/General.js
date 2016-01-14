@@ -14,7 +14,6 @@ Ext.define('Taco.view.product.subform.General', {
         'Taco.view.product.subform.Bundle',
         'Taco.core.ux.form.Form',
         'Ext.data.Store',
-        'Taco.core.ux.form.TextField',
         'Ext.form.field.Text',
         'Taco.shared.view.field.Image',
         'Taco.core.ux.form.SelectField',
@@ -153,7 +152,7 @@ Ext.define('Taco.view.product.subform.General', {
                 required: true,
                 allowBlank: false,
                 minLength: 3,                
-                xtype: 'taco.textfield',
+                xtype: 'textfield',
                 listeners: {
                     change:function ( cmp, newValue) {
                         this.record.tempProductCode = newValue;
@@ -296,7 +295,7 @@ Ext.define('Taco.view.product.subform.General', {
             });
             
             this.mfgPartNumField = Ext.widget({
-                xtype: 'taco.textfield',
+                xtype: 'textfield',
                 fieldLabel: 'Manufacturer Part Number',
                 name: 'mfgPartNumber',
                 width: '50%',
@@ -308,7 +307,7 @@ Ext.define('Taco.view.product.subform.General', {
             });
 
             this.upcField = Ext.widget({
-                xtype: 'taco.textfield',
+                xtype: 'textfield',
                 fieldLabel: 'Universal Product Code (UPC)',
                 name: 'upc',
                 width: '50%',
@@ -320,7 +319,7 @@ Ext.define('Taco.view.product.subform.General', {
             });
 
             this.distPartNumField = Ext.widget({
-                xtype: 'taco.textfield',
+                xtype: 'textfield',
                 fieldLabel: 'Distributor Part Number',
                 name: 'distPartNumber',
                 width: '50%',
@@ -607,7 +606,7 @@ Ext.define('Taco.view.product.subform.General', {
         });
 
         var productTitle = {
-            xtype: 'taco.textfield',
+            xtype: 'textfield',
             fieldLabel: 'Product Title',
             allowBlank: false,
             minLength: 3,

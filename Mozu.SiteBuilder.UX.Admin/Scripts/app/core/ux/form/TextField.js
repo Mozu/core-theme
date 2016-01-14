@@ -12,14 +12,6 @@ Ext.define('Taco.core.ux.form.TextField', {
         var me = this;
         this.callParent(arguments);
         this.addEvents('aftersetvalue');
-        me.on({
-            scope: me,
-            focus: me.onTextFieldFocus
-        });
-        me.on({
-            scope: me,
-            blur: me.onTextFieldBlur
-        });
     },
 
     setValue: function (val) {
@@ -32,13 +24,5 @@ Ext.define('Taco.core.ux.form.TextField', {
         }
 
         return result;
-    },
-
-    onTextFieldFocus: function(evt) {
-        this.addCls('taco-label-focus');
-    },
-
-    onTextFieldBlur: function(evt) {
-        this.removeCls('taco-label-focus');
     }
 });
