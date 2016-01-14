@@ -48,12 +48,6 @@ Ext.define('Taco.view.navigation.SubNavLinkContainer', {
                 src: 'about:blank'
             });
 
-            // var formHtml = "<form id='configPost' method='POST' action='" + extensionLink.address
-            //     + "' target='" + configIframe.frameName + "'>"
-            ////     + "<input type=hidden name='x-vol-tenant-domain' value='" + this.record.get("tenantDomain") + "'/>"
-            //  //   + "<input type=hidden name='x-vol-return-url' value='" + this.record.get("configReturnUrl") + "'/>"
-            //     + "</form>";
-
             var configForm = {
                 xtype: 'form',
                 url: extensionLink.data.href,
@@ -62,7 +56,6 @@ Ext.define('Taco.view.navigation.SubNavLinkContainer', {
                 hidden: true,
                 listeners: {
                     render: function (cmp) {
-                        //  cmp.getForm().target = configIframe.frameName;
                         cmp.submit({
                             standardSubmit: true,
                             target: configIframe.frameName
@@ -99,14 +92,7 @@ Ext.define('Taco.view.navigation.SubNavLinkContainer', {
                 items: [
                     configIframe,
                     configForm
-                ],
-                //listeners: {
-                //    close: function (cmp) {
-                //        cmp.removeAll(true);
-                //        this.record.reload();
-                //    },
-                //    scope: this
-                //}
+                ]
             });
             
             modalConfigWindow.center();
@@ -143,6 +129,7 @@ Ext.define('Taco.view.navigation.SubNavLinkContainer', {
 
     buildLink: function (link, items) {
         var normalizeBadgeId = this.normalizeBadgeId(link);
+        var title;
 
         if (!normalizeBadgeId) {
             return false;
@@ -153,10 +140,18 @@ Ext.define('Taco.view.navigation.SubNavLinkContainer', {
         });
 
         if (!item) {
+            title = link && link.get ? link.get('windowTitle') || link.get('modalWindowTitle') : null;
+
+            title = title ? title : 'Mozu Extension';
+
+            console.log(link, title)
+
             item = {
+                title: title,
                 key: 'no-' + normalizeBadgeId,
                 view: normalizeBadgeId
             };
+
             items.push(item);
         }
 
@@ -202,11 +197,18 @@ Ext.define('Taco.view.navigation.SubNavLinkContainer', {
         return components;
     },
 
-    buildNode: function(config) {
+    buildNode: function(config, callToAction) {
         var items = [];
         var menu = {};
         var subMenu = {};
         var handler;
+
+        if (callToAction) {
+            items.push({
+                cls: 'call-to-action override',
+                text: callToAction
+            });
+        }
 
         Ext.Object.each(config, function(key, value) {
 
@@ -236,10 +238,12 @@ Ext.define('Taco.view.navigation.SubNavLinkContainer', {
 
         if (Object.keys(config).join('').indexOf('path_') === -1) {
             return false;
-        }     
+        }
+
+        console.log(config)
 
         var menu = Ext.create('Ext.menu.Menu', {
-            items: this.buildNode(config),
+            items: this.buildNode(config, config.title),
             cls: 'taco-menu-item'
         });
 
@@ -284,9 +288,28 @@ Ext.define('Taco.view.navigation.SubNavLinkContainer', {
     },
 
     onMouseOver: function(config, cmp, el) {
-        if (config && config.menu) {
-            config.menu.showBy(el);
+
+        var showEl = el;
+
+        // to prevent menu jumping on different hover events
+        // we figure out which element we want to run showby on
+
+        if (!showEl || !showEl.querySelector) {
+            return false;
         }
+
+        if (showEl.querySelector('img')) {
+            showEl = showEl.querySelector('img');
+        }
+
+        else if (showEl.querySelector('.text-only')) {
+            showEl = sshowEl.querySelector('.text-only');   
+        }
+
+        if (config && config.menu) {
+            config.menu.showBy(showEl, 'tr-br', [0, 10]);
+        }
+
     },
 
     normalizeBadgeId: function(link) {
