@@ -279,7 +279,7 @@ Ext.define('Taco.view.order.subform.Payment', {
     initHeader: function () {
         var me = this,
             orderStatus = me.record.get('orderStatus'),
-            canAddPayment = orderStatus !== 'Completed' && orderStatus !== "PendingReview",
+            canAddPayment = orderStatus !== 'Completed',
             paymentStatus = me.record.get('paymentStatus');
         
         this.setHeaderTitleStatus('Payments', paymentStatus);
