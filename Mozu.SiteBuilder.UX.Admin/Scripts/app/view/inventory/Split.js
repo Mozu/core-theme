@@ -18,7 +18,8 @@ Ext.define('Taco.view.inventory.Split', {
 
     mixins: {
         splitEditor: 'Taco.core.ux.mixins.SplitEditor',
-        navHeader: 'Taco.core.ux.mixins.NavHeader'
+        navHeader: 'Taco.core.ux.mixins.NavHeader',
+        pageable: 'Taco.core.ux.mixins.Pageable'
     },
 
     stateId: 'taco-custom-schema',
@@ -119,9 +120,11 @@ Ext.define('Taco.view.inventory.Split', {
     		autoLoad: true
     	});
 
-    	this.productInventoryGrid = Ext.create('Taco.core.ux.grid.Panel', {
+    	this.productInventoryGrid = Ext.create('Taco.core.ux.browser.SearchList', {
     		store: this.store,
             enablePaging: true,
+            modelName: 'Taco.order.Model',
+            enableSearch: false,
             cls: 'taco-action-on-click',
     		columns: [
     			{
