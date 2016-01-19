@@ -174,7 +174,9 @@
     <Compile Include="Api\CategoryController.cs" />
     <Compile Include="Api\ChannelController.cs" />
     <Compile Include="Api\CouponCodeController.cs" />
+    <Compile Include="Api\PriceListController.cs" />
     <Compile Include="Api\ModelMapping\SearchTuningMapping.cs" />
+    <Compile Include="Api\Models\PriceLists\PriceList.cs" />
     <Compile Include="Api\Models\Search\SearchTuningRule.cs" />
     <Compile Include="Api\Models\Search\SimpleSearchProduct.cs" />
     <Compile Include="Api\SearchTuningRuleController.cs" />
@@ -439,6 +441,8 @@
     <Compile Include="Helpers\PasswordHelper.cs" />
     <Compile Include="Helpers\FileManagerHelpers\FileManagerHelpersFilterExtensions.cs" />
     <Compile Include="Helpers\FileManagerHelpers\FileManagerHelpersSortExtensions.cs" />
+    <Compile Include="Helpers\PriceListHelpers\PriceListFilterExtensions.cs" />
+    <Compile Include="Helpers\PriceListHelpers\PriceListPagingParametersExtensions.cs" />
     <Compile Include="Helpers\ProductHelpers\ProductFilterExtensions.cs" />
     <Compile Include="Helpers\ProductHelpers\ProductSortExtensions.cs" />
     <Compile Include="Helpers\ProductRuntimeHelpers\ProductRuntimeFilterExpressionBuilder.cs" />
@@ -482,6 +486,7 @@
     <Content Include="Scripts\.sencha\app\watch-impl.xml" />
     <Content Include="Scripts\app\app.js" />
     <Content Include="Scripts\app\controller\ActionManagement.js" />
+    <Content Include="Scripts\app\controller\PriceLists.js" />
     <Content Include="Scripts\app\controller\StoreFrontProducts.js" />
     <Content Include="Scripts\app\controller\ProductRankings.js" />
     <Content Include="Scripts\app\controller\CouponSets.js" />
@@ -559,6 +564,7 @@
     <Content Include="Scripts\app\core\ux\window\Modal.js" />
     <Content Include="Scripts\app\model\BlockedProduct.js" />
     <Content Include="Scripts\app\model\PinnedProduct.js" />
+    <Content Include="Scripts\app\model\PriceList.js" />
     <Content Include="Scripts\app\model\StorefrontProduct.js" />
     <Content Include="Scripts\app\model\FilterField.js" />
     <Content Include="Scripts\app\model\BehaviorNode.js" />
@@ -669,6 +675,7 @@
     <Content Include="Scripts\app\store\CouponCodes.js" />
     <Content Include="Scripts\app\store\PagedMemoryStore.js" />
     <Content Include="Scripts\app\store\PinnedProducts.js" />
+    <Content Include="Scripts\app\store\PriceLists.js" />
     <Content Include="Scripts\app\store\ProductRankings.js" />
     <Content Include="Scripts\app\store\CouponSets.js" />
     <Content Include="Scripts\app\store\StorefrontProducts.js" />
@@ -744,6 +751,8 @@
     <Content Include="Scripts\app\view\couponCode\DiscountGrid.js" />
     <Content Include="Scripts\app\view\couponCode\Grid.js" />
     <Content Include="Scripts\app\view\preview\ExpressionPreviewDrawer.js" />
+    <Content Include="Scripts\app\view\priceList\Grid.js" />
+    <Content Include="Scripts\app\view\priceList\Index.js" />
     <Content Include="Scripts\app\view\productRanking\Edit.js" />
     <Content Include="Scripts\app\view\productRanking\Form.js" />
     <Content Include="Scripts\app\view\productRanking\form\AdvancedSearch.js" />
