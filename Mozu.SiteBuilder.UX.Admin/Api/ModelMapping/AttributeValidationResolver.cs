@@ -138,7 +138,14 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.ModelMapping
                 ValueType = GetOrInferValueType(source),
                 IsProperty = source.IsProperty,
                 IsExtra = source.IsExtra,
-                IsOption = source.IsOption,                
+                IsOption = source.IsOption,
+                SearchSettings =  new DC.AttributeSearchSettings
+                {
+                    SearchableInStorefront = source.SearchableInStorefront,
+                    SearchDisplayValue = source.SearchDisplayValue,
+                    AllowFilteringAndSortingInStorefront = source.AllowFilteringAndSortingInStorefront,
+                    SearchableInAdmin = true
+                }
             };
 
             return destination;

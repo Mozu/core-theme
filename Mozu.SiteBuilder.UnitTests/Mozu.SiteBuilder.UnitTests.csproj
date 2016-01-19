@@ -161,6 +161,7 @@
     <Compile Include="Admin\Helpers\FacetHelpers\InheritedFacetHelperTest.cs" />
     <Compile Include="Admin\Helpers\LocationHelpers\LocationHelperTest.cs" />
     <Compile Include="Admin\Modules\ModuleTests.cs" />
+    <Compile Include="Diagrams\Admin\Scripts\app\core\ux\cdCoreUIComponents.cs" />
     <Compile Include="Diagrams\Admin\Scripts\app\view\category\cdCategories.cs" />
     <Compile Include="Diagrams\Admin\Scripts\app\view\couponSet\jsCouponSet.cs" />
     <Compile Include="Diagrams\Admin\Scripts\app\view\navigation\DiagramNavJs.cs" />
@@ -210,6 +211,8 @@
     <None Include="Diagrams\Admin\Api\Models\ProductModels\cdProductVariation.cd" />
     <None Include="Diagrams\Admin\Api\Models\ProductModels\cdProduct.cd" />
     <None Include="Diagrams\Admin\Api\Models\Search\cdSearchTuning.cd" />
+    <None Include="Diagrams\Admin\Scripts\app\core\ux\cdDrawer.cd" />
+    <None Include="Diagrams\Admin\Scripts\app\core\ux\cdSearchList.cd" />
     <None Include="Diagrams\Admin\Scripts\app\view\category\cdCategories.cd" />
     <None Include="Diagrams\Admin\Scripts\app\view\couponSet\jsCouponSet.cd" />
     <None Include="Diagrams\Admin\Scripts\app\view\navigation\cdNavigation.cd" />
@@ -246,7 +249,6 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
-    <Folder Include="Diagrams\Admin\Scripts\app\view\discount\" />
     <Folder Include="Handlers\" />
   </ItemGroup>
   <ItemGroup>

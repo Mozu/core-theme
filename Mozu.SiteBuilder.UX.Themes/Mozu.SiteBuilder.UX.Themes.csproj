@@ -3002,6 +3002,9 @@
     <Content Include="Themes\Core9\theme-ui.json" />
     <Content Include="Themes\Core9\theme.json" />
     <Content Include="Themes\Core9\templates\modules\common\contact-selector-radio.hypr.live" />
+    <Content Include="Themes\Core9\stylesheets\pages\splash-page.less" />
+    <Content Include="Themes\Core9\templates\splash-page.hypr" />
+    <Content Include="Themes\Core9\templates\pages\blank-splash-page.hypr" />
     <None Include="Web.CI.config">
       <DependentUpon>Web.config</DependentUpon>
     </None>

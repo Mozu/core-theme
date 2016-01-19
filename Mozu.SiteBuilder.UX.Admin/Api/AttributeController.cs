@@ -38,9 +38,9 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
                 return List2(item);
             }
 
-
             // search coming from the attributePickerField. Treat is like a normal keyword search;
             var query = extFilter.QueryString.Get("query");
+
             if (!String.IsNullOrEmpty(query))
             {
                 extFilter.Add(new FilterCollectionItem { comparison = "eq", field = "all", value = query });
@@ -52,15 +52,23 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
 
                 extFilter.Add(new FilterCollectionItem { comparison = "eq", field = "type", value = extFilter.QueryString.Get("type") });
             }
+           
+            var responseFields = "";
+            bool isGridOut;
+            var isGrid = extFilter.QueryString.Get("isgrid");
 
-            long totalCount;
-            var dcAttributes = await GetAttributesRaw(pagingParams, extFilter);
+            if (!string.IsNullOrEmpty(isGrid) && bool.TryParse(isGrid, out isGridOut) && bool.Parse(isGrid))
+            {
+                responseFields = "items(attributeCode,adminName,attributeFQN,inputType,isProperty,isExtra,isOption,content(name))";
+            }
+
+            var dcAttributes = await GetAttributesRaw(pagingParams, extFilter, responseFields);
 
             var mapped = Mapper.Map<List<Attribute>>(dcAttributes.Item1 );
             return List2(mapped, (int)dcAttributes.Item2);
         }
 
-        public async Task<Tuple<List<ProductAdmin.Contracts.Attribute>,long>> GetAttributesRaw(PagingParamaters pagingParams, FilterCollection extFilter)
+        public async Task<Tuple<List<ProductAdmin.Contracts.Attribute>, long>> GetAttributesRaw(PagingParamaters pagingParams, FilterCollection extFilter, string responseFields = null)
         {
             string filter = extFilter.ToFilterString();
             //string sort = null; // pagingParams.sort.ToSortString();
@@ -76,11 +84,11 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
             {
                 var result = await _attributeWebApiClient.GetAttributes(
                     startIndex: startIndex,
-                        pageSize:pagingParams.pageSize.GetValueOrDefault(200),
-                        sortBy:sort,
-                        filter:filter,
-                        responseGroups:extFilter.ResponseGroups 
-                       
+                    pageSize: pagingParams.pageSize.GetValueOrDefault(200),
+                    sortBy: sort,
+                    filter: filter,
+                    responseGroups: extFilter.ResponseGroups,
+                    responseFields: responseFields
                     ).ConfigureAwait(false);
                 var res = result.ReadAsAsync().Result;
 

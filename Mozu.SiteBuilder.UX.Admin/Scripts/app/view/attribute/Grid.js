@@ -69,13 +69,12 @@ Ext.define('Taco.view.attribute.Grid', {
         
     initComponent: function () {
         var me = this;
-
         this.columns = this.getColumnConfig();
-
         // initialize the delete mixin
         this.mixins.deleteFromGrid.init.apply(this);
-        
         me.callParent(arguments);
+        me.store.proxy.extraParams.isGrid = true;
+        me.store.load();
     },
     
     // override this method and adjust the columns if your need a grid with a subset of columns;

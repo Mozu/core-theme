@@ -1,5 +1,5 @@
 ﻿/**
- * @class Taco.view.order.widget.DiscountPickerField
+ * @class Taco.view.order.widget.ReusePaymentPickerField
  */
 Ext.define('Taco.view.order.widget.ReusePaymentPickerField', {
     extend: 'Ext.form.field.ComboBox',
@@ -7,7 +7,6 @@ Ext.define('Taco.view.order.widget.ReusePaymentPickerField', {
     ],
 
     config: {
-
     },
 
     model: 'Taco.model.OrderPayment',
@@ -26,15 +25,13 @@ Ext.define('Taco.view.order.widget.ReusePaymentPickerField', {
         // Card type (Visa) Card Mask (****) exp (month/year)
         getInnerTpl: function () {
             return '{cardType} {cardNumber} exp {expireMonth}/{expireYear}';
-        },
+        }
     },
     //pageSize: 30,
 
     initComponent: function (eOpts) {
         var me = this;
-        
+
         me.callParent(arguments);
-    },
-
-
+    }
 });

@@ -6,7 +6,8 @@
 Ext.define('Taco.view.productRanking.form.Context', {
     extend: 'Taco.core.ux.form.Form',
     alias: 'widget.taco-productRanking-context',
-    requires: [
+    requires: [        
+        'Taco.core.ux.grid.PagedMemoryGrid',
         'Taco.core.ux.TooltipLabel',
         'Taco.core.util.Validation',
         'Taco.view.productRanking.grid.Category',
@@ -69,7 +70,7 @@ Ext.define('Taco.view.productRanking.form.Context', {
             single: true,
             scope: this
         });
-
+/*
         // MultiSelect is the most optimal Field that uses BoundList without a trigger
         this.categoryList = Ext.widget({
             xtype: 'combobox',
@@ -113,13 +114,8 @@ Ext.define('Taco.view.productRanking.form.Context', {
 
         this.categoriesBox = Ext.create('Ext.panel.Panel', {
             layout: 'vbox',
-            width: '50%',
-            style: {
-                verticalAlign: 'top'
-            },
-            margin: {
-                left: 10
-            },
+            columnWidth: .5,
+            padding:"0 0 0 10",            
             itemId: 'categoriesField',
             fieldLabel: 'Categories',
             allowBlank: true,
@@ -151,17 +147,13 @@ Ext.define('Taco.view.productRanking.form.Context', {
                 },
                 this.categoryGrid
             ]
-        });
+        });*/
 
         this.keywordGrid = Ext.create('Taco.view.productRanking.grid.Keyword', {
             name: 'keywords',
             record: this.record,
-            width: '100%',
-            useWhiteContainer:true,
-            margin: {
-                right: 10
-            }
-
+            padding: "0 10 0 0",            
+            columnWidth: .5
         });
 
         this.keywordBox = Ext.create('Ext.panel.Panel', {
@@ -196,8 +188,8 @@ Ext.define('Taco.view.productRanking.form.Context', {
                     type: 'hbox'
                 },
                 items: [
-                    this.keywordBox,
-                    this.categoriesBox
+                    this.keywordGrid,
+                    this.categoryGrid
                 ]
             }
         ];

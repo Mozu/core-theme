@@ -61,6 +61,8 @@ Ext.define('Taco.core.ux.mixins.DeleteFromGrid', {
 
     deletePromptMsg : "Are you sure you want to delete this?",
 
+    deletePromptTitle: 'Delete',
+
     getDeletePromptMessage: function (record) {
         return this.deletePromptMsg;
     },
@@ -133,7 +135,7 @@ Ext.define('Taco.core.ux.mixins.DeleteFromGrid', {
         }
 
         Ext.MessageBox.show({
-            title: 'Delete',
+            title: this.deletePromptTitle,
             // pushes the buttons to the right to be consistant with our dialog ux.
             rightJustifyButtons: true,
             // reverses the order of the buttons

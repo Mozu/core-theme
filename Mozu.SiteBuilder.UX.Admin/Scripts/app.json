@@ -8,6 +8,7 @@
 	"paths":
     {
         "Ext.ux.form.field.BoxSelect": "ux/boxselect/form/field/BoxSelect.js",
+        "Ext.ux.data.PagingStore": "ux/pagingStore/data/PagingStore.js",
         "Ext.ux.layout.component.field.BoxSelectField": "ux/boxselect/layout/component/field/BoxSelectField.js"
     }
 }

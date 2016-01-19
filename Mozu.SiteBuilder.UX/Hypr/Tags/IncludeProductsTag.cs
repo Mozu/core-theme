@@ -215,7 +215,7 @@ namespace Mozu.SiteBuilder.UX.Hypr.Tags
 
                     .ToString();
 
-                pc = cache.Get<ProductSearchResult>(cacheKey);
+                pc = cache.Get<ProductSearchResult>(cacheKey, scope:CacheScope.Site , cacheType:StorefrontCacheTypes.ProductSearch);
             }
             if (pc == null)
             {
@@ -268,7 +268,7 @@ namespace Mozu.SiteBuilder.UX.Hypr.Tags
                 }
                 if (cacheResults)
                 {
-                    cache.Set(cacheKey, pc);
+                    cache.Set(cacheKey, pc, scope:CacheScope.Site, cacheType :StorefrontCacheTypes.ProductSearch);
                 }
             }
 

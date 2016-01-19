@@ -219,6 +219,7 @@ Ext.define('Taco.shared.view.form.Address', {
                     name: 'homePhone',
                     flex: 1,
                     fieldLabel: 'Home Phone',
+
                     margin: '0 15 0 0',
                     allowBlank: false
                 }, {

@@ -268,7 +268,7 @@ Ext.define('Taco.view.publishing.grid.Publish', {
                     columnWidth: 100,
                     text: 'Last Published By',
                     hidden: true,
-                    renderer: this.getAssociatedUserName,
+                    renderer: this.getAssociatedUserName,  //TODO: API is not returning a value
                     sortable: false
                 },
                 {

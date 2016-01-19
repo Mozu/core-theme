@@ -27,6 +27,7 @@ Ext.define('Taco.view.preview.ExpressionPreviewDrawer', {
     title: 'Preview Expression',
     width: '90%',
     createType: '',
+    bodyPadding: 0,
     isCreateMode: true,
     record: null,
     closeOnSave: true,
@@ -50,13 +51,22 @@ Ext.define('Taco.view.preview.ExpressionPreviewDrawer', {
             data: me.expressionData,
             title: 'Editor',
             bubbleEvents: ['itemappend', 'itemremove', 'iteminsert'],
-            padding: '0 10 0 0'
+            bodyBorder: true,
+            frame: true
         });
 
         //  when the expression tree data changes we need to update the preview panel
         me.mon(me.expressionEditor, "datachanged", function (view) {
             me.onExpressionChange(view);
         });
+
+        me.expressionPanel = Ext.create('Ext.panel.Panel', {
+            items: [me.expressionEditor],
+            padding: '24 10 0 0',
+            layout: {
+                type: 'fit'
+            }
+        })
 
         me.previewPanel = Ext.create('Ext.panel.Panel', {
             items: [me.previewGrid],
@@ -68,19 +78,19 @@ Ext.define('Taco.view.preview.ExpressionPreviewDrawer', {
                 xtype: 'container',
                 dock: 'bottom',
                 html: 'Only products that appear on the storefront are returned in this list',
-                padding: '20 10'
+                padding: '20 10 0'
             }]
         });
 
         var container = Ext.create('Taco.core.ux.content.SplitContainer', {
             config: {
-                west: [me.expressionEditor],
+                west: [me.expressionPanel],
                 east: [me.previewPanel],
                 split: true,
                 splitter: true
             },
+            bodyPadding: '0 20',
             cls: 'no-background-splitter',
-            border: false,
             initializePanels: Ext.emptyFn
         });
 

@@ -386,7 +386,6 @@
     <Compile Include="Api\TestingController.cs" />
     <Compile Include="Api\ThemeSettingController.cs" />
     <Compile Include="Api\UserHelper.cs" />
-    <Compile Include="Api\LayoutWidgetDefinitionController.cs" />
     <Compile Include="Api\WebToolsController.cs" />
     <Compile Include="Api\WidgetDefinitionController.cs" />
     <Compile Include="Api\WishlistController.cs" />
@@ -412,6 +411,7 @@
     <Compile Include="Helpers\AttributeHelpers\IAttributeHelper.cs" />
     <Compile Include="Helpers\AttributeHelpers\AttributeFilterExtensions.cs" />
     <Compile Include="Helpers\AttributeHelpers\AttributeSortExtensions.cs" />
+    <Compile Include="Helpers\CategoryHelpers\CategoryFilterExtensions.cs" />
     <Compile Include="Helpers\CategoryHelpers\CategoryHelper.cs" />
     <Compile Include="Helpers\CategoryHelpers\ICategoryHelper.cs" />
     <Compile Include="Helpers\ChannelHelpers\ChannelFilterExtensions.cs" />
@@ -511,10 +511,7 @@
     <Content Include="Scripts\app\core\util\Filter.js" />
     <Content Include="Scripts\app\core\util\Validation.js" />
     <Content Include="Scripts\app\core\ux\action\DeleteMenuItem.js" />
-    <Content Include="Scripts\app\core\ux\action\UserButton.js" />
     <Content Include="Scripts\app\core\ux\browser\SearchList.js" />
-    <Content Include="Scripts\app\core\ux\browser\SearchListTree.js" />
-    <Content Include="Scripts\app\core\ux\content\Logo.js" />
     <Content Include="Scripts\app\core\ux\content\IndicatorContainer.js" />
     <Content Include="Scripts\app\core\ux\content\SplitContainer.js" />
     <Content Include="Scripts\app\core\ux\content\ContextMenu.js" />
@@ -541,11 +538,11 @@
     <Content Include="Scripts\app\core\ux\form\ResendEmailButton.js" />
     <Content Include="Scripts\app\core\ux\grid\ActionColumn.js" />
     <Content Include="Scripts\app\core\ux\grid\AddEntityRow.js" />
-    <Content Include="Scripts\app\core\ux\grid\CheckColumnEx.js" />
+    <Content Include="Scripts\app\core\ux\grid\PagedMemoryGrid.js" />
     <Content Include="Scripts\app\core\ux\grid\plugins\AutoSelect.js" />
     <Content Include="Scripts\app\core\ux\mixins\DeleteFromGrid.js" />
     <Content Include="Scripts\app\core\ux\mixins\GridContextMenu.js" />
-    <Content Include="Scripts\app\core\ux\mixins\HamburgerButton.js" />
+    <Content Include="Scripts\app\core\ux\mixins\ActionColumn.js" />
     <Content Include="Scripts\app\core\ux\plugins\NextPrevious.js" />
     <Content Include="Scripts\app\core\ux\PanelHeaderStat.js" />
     <Content Include="Scripts\app\core\ux\HtmlEditorImagePlugin.js" />
@@ -747,17 +744,6 @@
     <Content Include="Scripts\app\view\couponCode\AdvancedSearchForm.js" />
     <Content Include="Scripts\app\view\couponCode\DiscountGrid.js" />
     <Content Include="Scripts\app\view\couponCode\Grid.js" />
-    <Content Include="Scripts\app\view\customSchema\AdvancedSearchForm.js" />
-    <Content Include="Scripts\app\view\customSchema\DynamicFormContainer.js" />
-    <Content Include="Scripts\app\view\customSchema\Edit.js" />
-    <Content Include="Scripts\app\view\customSchema\Grid.js" />
-    <Content Include="Scripts\app\view\customSchema\Index.js" />
-    <Content Include="Scripts\app\view\customSchema\Lists.js" />
-    <Content Include="Scripts\app\view\customSchema\SchemaList.js" />
-    <Content Include="Scripts\app\view\customSchema\Split.js" />
-    <Content Include="Scripts\app\view\navigation\PrimaryMenuSubContainer.js" />
-    <Content Include="Scripts\app\view\navigation\PrimaryMenuNavGroup.js" />
-    <Content Include="Scripts\app\view\navigation\PrimaryMenuContainer.js" />
     <Content Include="Scripts\app\view\preview\ExpressionPreviewDrawer.js" />
     <Content Include="Scripts\app\view\productRanking\Edit.js" />
     <Content Include="Scripts\app\view\productRanking\Form.js" />
@@ -820,6 +806,7 @@
     <Content Include="Scripts\app\view\category\ConfirmDeleteOfSubcategoriesModal.js" />
     <Content Include="Scripts\app\view\order\widget\ReusePaymentPickerField.js" />
     <Content Include="Scripts\app\view\productRanking\Index.js" />
+    <Content Include="Scripts\app\view\productType\AttributeForm.js" />
     <Content Include="Scripts\app\view\product\widget\productCode\Modal.js" />
     <Content Include="Scripts\app\view\publishing\advancedSearchForm\DraftContent.js" />
     <Content Include="Scripts\app\view\publishing\advancedSearchForm\DraftProduct.js" />
@@ -837,9 +824,6 @@
     <Content Include="Scripts\app\view\publishing\Split.js" />
     <Content Include="Scripts\app\view\role\editModal.js" />
     <Content Include="Scripts\app\view\productRanking\modal\ProductRankingEditor.js" />
-    <Content Include="Scripts\app\view\settings\publishing\Edit.js" />
-    <Content Include="Scripts\app\view\settings\publishing\Form.js" />
-    <Content Include="Scripts\app\view\settings\publishing\subform\PublishSettings.js" />
     <Content Include="Scripts\app\view\storeCredit\AdvancedSearchForm.js" />
     <Content Include="Scripts\app\view\storeCredit\Grid.js" />
     <Content Include="Scripts\app\view\storefrontProduct\Grid.js" />
@@ -988,7 +972,6 @@
     <Content Include="Scripts\app\overrides\panel\Tool.js" />
     <Content Include="Scripts\packages\mozuadmintheme\resources\images\camera.png" />
     <Content Include="Scripts\packages\mozuadmintheme\resources\images\error-shipping-label.gif" />
-    <Content Include="Scripts\packages\mozuadmintheme\resources\images\icon-rowactions-ellipsis.png" />
     <Content Include="Scripts\packages\mozuadmintheme\resources\images\image.png" />
     <Content Include="Scripts\packages\mozuadmintheme\resources\images\loading-shipping-label-m.gif" />
     <Content Include="Scripts\packages\mozuadmintheme\resources\images\loading-shipping-label-spinner.gif" />
@@ -1433,6 +1416,7 @@
     <Content Include="Scripts\sass\src\core\ux\content\SplitContainer.scss" />
     <Content Include="Scripts\sass\src\core\ux\form\field\plugins\InputMask.scss" />
     <Content Include="Scripts\sass\src\view\order\widget\AddOrderItemToolbar.scss" />
+    <Content Include="Scripts\ux\pagingStore\data\PagingStore.js" />
     <Content Include="Scripts\Web.config" />
     <Content Include="Scripts\sass\src\core\ux\mixins\NavHeader.scss" />
     <Content Include="Scripts\sass\src\core\ux\form\FullEditor.scss" />
@@ -1461,9 +1445,6 @@
     <Content Include="Scripts\sass\src\core\ux\browser\SearchList.scss" />
     <Content Include="Scripts\app\mocks\auditlog.json" />
     <Content Include="Scripts\sass\src\overrides\menu\Item.scss" />
-    <Content Include="Scripts\sass\src\overrides\menu\Menu.scss" />
-    <Content Include="Scripts\sass\src\view\navigation\SecondaryMenu.scss" />
-    <Content Include="Scripts\sass\src\core\ux\form\FilterContainer.scss" />
     <None Include="SetupSenchaWorkspace.ps1" />
     <Content Include="Scripts\.sencha\app\build-impl.xml" />
     <Content Include="Scripts\.sencha\app\plugin.xml" />
@@ -1644,7 +1625,6 @@
     <Content Include="Scripts\app\view\order\widget\PaymentPanel.js" />
     <Content Include="Scripts\app\view\order\widget\UnpackagedItems.js" />
     <Content Include="Scripts\app\view\pendingChange\Cms.js" />
-    <Content Include="Scripts\app\view\productType\AttributeForm.js" />
     <Content Include="Scripts\app\view\productType\AttributeGroup.js" />
     <Content Include="Scripts\app\view\productType\Edit.js" />
     <Content Include="Scripts\app\view\productType\Form.js" />
@@ -1905,6 +1885,7 @@
     <Content Include="Scripts\app\store\TimeZones.js" />
     <Content Include="Scripts\app\view\generalSettings\Index.js" />
     <Content Include="Scripts\app\model\ThemeListing.js" />
+    <Content Include="Scripts\app\view\inventory\Index.js" />
     <EmbeddedResource Include="Api\datagen.txt" />
     <Content Include="Scripts\resources\images\align\align-center-selected.png" />
     <Content Include="Scripts\resources\images\align\align-center.png" />
@@ -2384,6 +2365,7 @@
     <Folder Include="Scripts\app\platter\containers\" />
     <Folder Include="Scripts\app\view\address\" />
     <Folder Include="Scripts\app\view\product\option\" />
+    <Folder Include="Scripts\app\view\settings\publishing\" />
     <Folder Include="Scripts\app\view\storefrontProduct\modal\" />
     <Folder Include="Scripts\build\" />
     <Folder Include="Scripts\packages\mozuadmintheme\sass\etc\siteBuilder\" />

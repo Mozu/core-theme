@@ -15,6 +15,7 @@ using Mozu.SiteBuilder.Mvc.Extensions;
 using Mozu.SiteBuilder.UX.Admin.Api.Models;
 using Mozu.SiteBuilder.UX.Admin.Helpers;
 using Mozu.SiteBuilder.UX.Admin.Helpers.ProductHelpers;
+using Mozu.Core.Logging;
 using DC = Mozu.ProductAdmin.Contracts;
 using Product = Mozu.SiteBuilder.UX.Admin.Api.Models.ProductModels.Product;
 
@@ -27,20 +28,20 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
     public class ProductController : BaseController
     {
         private readonly CollectionTaskUnMapper<Product, DC.Product> _productMapper = new CollectionTaskUnMapper<Product, DC.Product>();
-
         private readonly IProductWebApiClient _productClient;
         private readonly IProductTypeWebApiClient _productTypeWebApiClient;
         private readonly IPublishSetWebApiClient _publishSetClient;
+        private readonly ILogger _logger;
 
         /// <summary>
         /// Public constructor.
         /// </summary>
-        public ProductController(IProductWebApiClient productClient, IProductTypeWebApiClient productTypeWebApiClient, IPublishSetWebApiClient publishSetClient)
+        public ProductController(IProductWebApiClient productClient, IProductTypeWebApiClient productTypeWebApiClient, IPublishSetWebApiClient publishSetClient, ILogger logger )
         {
             _productClient = productClient;
-
             _productTypeWebApiClient = productTypeWebApiClient;
             _publishSetClient = publishSetClient;
+            _logger = logger;
         }
 
         [HttpGetRoute(UriTemplate = "list")]
@@ -48,22 +49,11 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
         {
             if (pagingParams.id != null)
             {
-                var result = await _productClient.GetProduct(pagingParams.id, null);
-                DC.Product prod = result.ReadAsAsync().Result;
-                var productModel = Mapper.Map<Product>(prod);
-
-
-                if (prod.PublishingInfo == null || string.IsNullOrEmpty(prod.PublishingInfo.PublishSetCode)) return List2(productModel);
-
-                var ps = (await _publishSetClient.GetPublishSet(prod.PublishingInfo.PublishSetCode)).ReadAsSync();
-                productModel.PublishSetName = ps.Name;
-                productModel.PublishSetDate = ps.PublishDate;
-                return List2(productModel);
+                return await GetSingleProductAsync(pagingParams);
             }
+
             string responseGroups = !string.IsNullOrEmpty(extFilter.ResponseGroups) ? extFilter.ResponseGroups : (extFilter.SearchType == "global" || extFilter.SearchType == "picker" ? "min" : "ProductInCatalogs,Min,Price");
-
             string filter = extFilter.ToFilterString();
-
 
             if (!String.IsNullOrEmpty(extFilter.ShowProductUsages))
             {
@@ -186,8 +176,22 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
             {
                 SbApiContext.SetDataMode(DataViewModeType.Live);
             }
+
+            string responseFields = "items(productCode,productTypeId,productUsage," +
+                   "price(price,salePrice)" +
+                   "productInCatalogs(catalogId,isContentOverridden,content(productName),price(price,salePrice))" +
+                   "auditInfo(updateDate)" +
+                   "content(productName)";
+
+            if (responseGroups != null && responseGroups.Contains("VariationOptions"))
+            {
+                responseFields += "VariationOptions";
+            }
+            responseFields += ")";
+
+
             var prodCollection = (await _productClient.GetProducts(startIndex: pagingParams.startIndex, pageSize: pagingParams.pageSize,
-                        sortBy: sort, responseGroups: responseGroups, filter: filter, q: q, qLimit: qLimit)).ReadAsSync();
+                        sortBy: sort, responseGroups: responseGroups, filter: filter, q: q, qLimit: qLimit, responseFields:responseFields)).ReadAsSync();
 
             if (prodCollection.TotalCount == 0)
             {
@@ -248,6 +252,28 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
             var dcProductCodeRenames = Mapper.Map<List<DC.ProductCodeRename>>(prodCodeRenames);
             var res = (await _productClient.RenameProductCodes(dcProductCodeRenames)).ReadAsSync();
             return List2(prodCodeRenames);
+        }
+
+        private async Task<Response<List<Product>>> GetSingleProductAsync(PagingParamaters pagingParams)
+        {
+            var result = await _productClient.GetProduct(pagingParams.id, null);
+            DC.Product prod = result.ReadAsAsync().Result;
+            var productModel = Mapper.Map<Product>(prod);
+
+            if (prod.PublishingInfo == null || string.IsNullOrEmpty(prod.PublishingInfo.PublishSetCode)) {
+                return List2(productModel);
+            }
+
+            try {
+                var ps = (await _publishSetClient.GetPublishSet(prod.PublishingInfo.PublishSetCode)).ReadAsSync();
+                productModel.PublishSetName = ps.Name;
+                productModel.PublishSetDate = ps.PublishDate;
+            }
+            catch (Core.Api.Client.Exceptions.ApiWebClientException ex) {
+                //TODO: We should set the RoodProduct.PublishSetCode to null at some point
+                _logger.Error(string.Format("Error trying to find Publish-Set [{0}]", prod.PublishingInfo.PublishSetCode), ex.Message);
+            }
+            return List2(productModel);
         }
     }
 }

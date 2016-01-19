@@ -536,7 +536,7 @@ Ext.define('Taco.core.ux.browser.Browsable', {
         var r = Ext.create(modelName, this.defaultRowEditingData);
         this.store.insert(0, r);
         this.rowEditor.startEdit(0, 0);
-        this.rowEditor.editor.focusContextCell()
+        this.rowEditor.editor.focusContextCell();
     },
     
     onCellClick: function (view, td, cellIndex, record, tr, rowIndex, e, eOpts) {
@@ -547,9 +547,6 @@ Ext.define('Taco.core.ux.browser.Browsable', {
         }
         if ((header.dataIndex || header.allowNavigation === true) && header.allowNavigation!==false && this.allowNavigation !== false) {
             e.preventDefault();
-            if (e.target) {
-                metaData = Ext.apply(metaData, e.target.dataset);
-            }
             this.launchEditor(record, metaData);
         }
        
@@ -560,9 +557,6 @@ Ext.define('Taco.core.ux.browser.Browsable', {
 
         if (e.target.className === 'taco-launch-editor') {
             e.preventDefault();
-            if (e.target) {
-                metaData = Ext.apply(metaData, e.target.dataset);
-            }
             this.launchEditor(record, metaData);
         }
     }

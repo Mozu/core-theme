@@ -13,6 +13,7 @@ Ext.define('Taco.model.ProductTypeAttribute', {
         { name: 'allowMulti', type: 'boolean', defaultValue: false },
         { name: 'isHidden', type: 'boolean', defaultValue: false },
         { name: 'isAdminOnly', type: 'boolean', defaultValue: false },
+        { name: 'isProductDetailsOnlyProperty', type: 'boolean', defaultValue: false },
         { name: 'attributeName', type: 'string', persist: false },
         { name: 'allValues', type: 'auto', persist: false, defaultValue: [] },
         { name: 'selectedValues', type: 'auto', defaultValue: [] },
@@ -35,18 +36,6 @@ Ext.define('Taco.model.ProductTypeAttribute', {
     idProperty: 'attributeFQN',
     proxy: {
         type: 'ajaxproxy',
-        //api: {
-        //    create: '/admin/app/Test/testCreate',
-        //    read: '/admin/Scripts/app/mocks/producttypeattributes.json',
-        //    update: '/admin/app/Test/testUpdate',
-        //    destroy: '/admin/app/Test/testDestroy'
-        //},
-        //api: {
-        //    create: '/admin/app/Attribute/create',
-        //    read: '/admin/app/Attribute/read',
-        //    update: '/admin/app/Attribute/update',
-        //    destroy: '/admin/app/Attribute/destroy'
-        //},
         reader: {
             type: 'json',
             root: 'items',

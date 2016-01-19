@@ -249,7 +249,10 @@ Ext.define('Taco.view.product.Index', {
                         return "<span class='taco-empty-cell'>N/A</span>";
                     } else {
                         cssClass = Ext.Array.contains(Ext.Array.pluck(value, 'isContentOverridden'), true) ? 'x-column-content-pill-true' : 'x-column-content-pill-false';
-                        output = Ext.Array.contains(Ext.Array.pluck(value, 'isContentOverridden'), true) ? 'Yes' : 'No';
+                        output = Ext.Array.contains(Ext.Array.pluck(value, 'isContentOverridden'), true)
+                                    || Ext.Array.contains(Ext.Array.pluck(value, 'isPriceOverridden'), true)
+                                    || Ext.Array.contains(Ext.Array.pluck(value, 'isSEOContentOverridden'), true)
+                                    ? 'Yes' : 'No';
                     }
 
                     return '<span class="x-column-content-pill ' + cssClass + '">' + output + '</span>';

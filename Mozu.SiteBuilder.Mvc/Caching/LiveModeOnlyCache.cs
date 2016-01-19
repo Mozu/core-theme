@@ -22,16 +22,16 @@ namespace Mozu.SiteBuilder.Mvc.Caching
             _backingCache = backingCache;
         }
 
-        public T Get<T>(string key, CacheScope scope = CacheScope.Site)
+        public T Get<T>(string key, CacheScope scope , StorefrontCacheTypes cacheType)
         {
             if(CachingIsDisabled(_pageContext, _apiContext)) return default(T);
-            return  _backingCache.Get<T>(key, scope);
+            return  _backingCache.Get<T>(key, scope, cacheType);
         }
 
-        public void Set(string key, object value, CacheScope scope = CacheScope.Site)
+        public void Set(string key, object value, CacheScope scope = CacheScope.Site, StorefrontCacheTypes cacheType = StorefrontCacheTypes.Default, Func<object, object> updateCallback = null)
         {
             if (CachingIsDisabled(_pageContext, _apiContext)) return; // don't want to corrupt the cache with 'pending' stuff from a consumer.
-            _backingCache.Set(key, value, scope);
+            _backingCache.Set(key, value, scope, cacheType, updateCallback);
         }
 
         private static bool CachingIsDisabled(IEditableContext pageCtx, IApiContext apiCtx )
@@ -40,5 +40,7 @@ namespace Mozu.SiteBuilder.Mvc.Caching
                 pageCtx.IsEditMode ||
                 apiCtx.DataViewMode == DataViewModeType.Pending;
         }
+
+       
     }
 }

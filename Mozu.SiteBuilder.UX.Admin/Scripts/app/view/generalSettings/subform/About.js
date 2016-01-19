@@ -22,7 +22,7 @@ Ext.define('Taco.view.generalSettings.subform.About', {
     title: 'General',
     margin: "0 0 20 0",
     ui: "subform",
-    width:"100%",
+    width:"100%",   
     //bodyCls: Taco.baseCSSPrefix + 'product-admin-subform',
     //cls: Taco.baseCSSPrefix + 'form-section',
     initComponent: function () {
@@ -195,8 +195,9 @@ Ext.define('Taco.view.generalSettings.subform.About', {
                                 xtype: 'textfield',
                                 itemId: 'customCdnHostName',
                                 name: 'customCdnHostName',
+                                itemId: 'cdnCacheBustKey',
                                 fieldLabel: 'CDN Domain',
-                                emptyText:Taco.cdnPrefix,
+                                emptyText: Taco.cdnPrefix,
                                 flex: 1,
                                 tooltip: Ext.create('Taco.core.ux.content.Tooltip', {
                                     elementId: 'customCdnHostName',
@@ -275,6 +276,8 @@ Ext.define('Taco.view.generalSettings.subform.About', {
                     }
                 ]
             }
+            
+
         ];
 
         this.callParent(arguments);

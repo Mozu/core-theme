@@ -21,8 +21,8 @@ Ext.define('Taco.store.Categories', {
             };
         }
         options = Ext.apply({
-            catalogId: Taco.app.context.getCatalogId()
-            ,bypassCache: true,
+            catalogId: Taco.app.context.getCatalogId(),
+            bypassCache: true
         }, options);
         return me.callParent([options]);
     },
@@ -32,7 +32,8 @@ Ext.define('Taco.store.Categories', {
         options = options || {};
         if (typeof options == 'function') {
             options = {
-                callback: options
+                callback: options,
+                bypassCache: true
                 , bypassCache: true
             };
         }

@@ -51,10 +51,8 @@ Ext.define('Taco.view.redirects.Index', {
     advancedSearchConfig: {},
 
     doCreate: function() {
-
         this.onRowEditorCreate();
     },
-
 
     stateful: true,
 
@@ -169,9 +167,6 @@ Ext.define('Taco.view.redirects.Index', {
             hidden: true,
             name: 'file',
             listeners: {
-                afterrender: function (cmp) {
-                    // cmp.triggerWrap.on('click', me.showWarningModal, me);
-                },
                 change: function (cmp, v) {
                     if (this.store && this.store.getCount() > 0)  {
                         this.getModal();
@@ -279,13 +274,11 @@ Ext.define('Taco.view.redirects.Index', {
     onImport: function () {
         this.importForm.submit({
             success: function (form, action) {
-               // Ext.Msg.alert('Success', action.result.message);
                 Taco.app.fireEvent('setmessage', 'Imported!', 'success');
                 this.store.reload();
 
             },
             failure: function (form, action) {
-               // Ext.Msg.alert('Failed', action.result ? action.result.message : 'No response');
                 Taco.app.fireEvent('setmessage', 'Failed:' + action.result ? action.result.message : 'No response', 'error');
             },
             scope:this

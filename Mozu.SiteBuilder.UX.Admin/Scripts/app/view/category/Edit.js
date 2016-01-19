@@ -18,10 +18,10 @@ Ext.define('Taco.view.category.Edit', {
             url;
 
         url = (this.record.get("categoryType") != "Static") ? controller + '/createdynamic' : controller + '/create'
-        
+
         Taco.app.StateManager.attemptNavigate(url);
     },
-    initComponent: function () {
+    initComponent: function() {
         var me = this;
 
         this.moreButtonCfg = {
@@ -88,8 +88,6 @@ Ext.define('Taco.view.category.Edit', {
                                 });
                             
 
-
-
                             if (!Ext.Array.equals(Ext.Array.pluck(previewSites, 'itemId'), previewMenu.items.keys)) {
                                 previewMenu.removeAll();
                                 previewMenu.add(previewSites);
@@ -112,7 +110,7 @@ Ext.define('Taco.view.category.Edit', {
         this.callParent(arguments);
 
     },
-    viewInSite: function (site, env, noPrompt) {
+    viewInSite: function(site, env, noPrompt) {
         var me = this,
             url = '/_gosite/' + site.id + '?environment=' + env + '&redir=' + encodeURIComponent('/c/' + this.record.getId());
 
@@ -120,7 +118,6 @@ Ext.define('Taco.view.category.Edit', {
             window.open(url);
         } else {
             // prompt
-
             Ext.MessageBox.show({
                 title: 'Unsaved Changes',
                 // pushes the buttons to the right to be consistant with our dialog ux.
@@ -130,13 +127,12 @@ Ext.define('Taco.view.category.Edit', {
                 msg: 'You have unsaved changes that will not be reflected on the site. <br/> Do you want to continue?',
                 closable: false,
                 buttons: Ext.Msg.YESNO,
-                fn: function (val) {
+                fn: function(val) {
                     if (val === 'yes') {
                         window.open(url);
                     }
                 }
             });
-            
         }
-    }, 
+    }
 });

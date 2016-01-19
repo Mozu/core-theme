@@ -37,7 +37,6 @@ Ext.define('Taco.view.category.Index', {
 
     initComponent: function () {
         var me = this;
-
         this.createButtonConfig = {
             xtype: 'button',
             text: me.createButtonText,
@@ -199,17 +198,12 @@ Ext.define('Taco.view.category.Index', {
         var target= Ext.fly(e.getTarget()),
             metaData = { id: record.getId() },
             header = view.getHeaderAtIndex(cellIndex);
-
         if (target.hasCls('x-tree-expander')) {
             return;
         }
 
         if ((header.dataIndex || header.allowNavigation === true) && header.allowNavigation !== false && this.allowNavigation !== false) {
             e.preventDefault();
-
-            if (e.target) {
-                metaData = Ext.apply(metaData, e.target.dataset);
-            }
 
             this.launchEditor(record, metaData);
         }
@@ -223,7 +217,6 @@ Ext.define('Taco.view.category.Index', {
         var me = this,
             store = me.store,
             i;
-
         if (newParent && newParent.childNodes) {
             //resequence nodes if needed
             for (i = 0; i < newParent.childNodes.length; i++) {
@@ -236,7 +229,6 @@ Ext.define('Taco.view.category.Index', {
         if (store.isDirty()) {
             me.setLoading(true);
         }
-
         store.sync({
             success: function (m) {
                 me.setLoading(false);
@@ -277,7 +269,7 @@ Ext.define('Taco.view.category.Index', {
         var me = this;
         Ext.MessageBox.show({
             title: 'Delete Category',
-            // pushes the buttons to the right to be consistant with our dialog ux.
+            // pushes the buttons to the right to be consistent with our dialog ux.
             rightJustifyButtons: true,
             // reverses the order of the buttons
             reverseOrder: true,
@@ -296,7 +288,6 @@ Ext.define('Taco.view.category.Index', {
         var store = grid.getStore();
         grid.setLoading(true);
         record.remove();
-
         store.sync({
             success: function (m) {
                 grid.setLoading(false);
@@ -315,8 +306,8 @@ Ext.define('Taco.view.category.Index', {
 
     launchEditor: function (record) {
         Ext.defer(function () {
-            Taco.core.StateManager.attemptNavigate('categories/edit/' + record.getId(), { complexMetaData: { record: record} });
-        }, 1, this);
+            Taco.core.StateManager.attemptNavigate('categories/edit/' + record.getId(), { complexMetaData: { record: record } });
+            }, 1, this);
         return;
     },
 

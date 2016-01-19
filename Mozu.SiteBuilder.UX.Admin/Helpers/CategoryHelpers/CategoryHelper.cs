@@ -5,7 +5,7 @@ using Mozu.SiteBuilder.UX.Admin.Api.Models.Category;
 using DC = Mozu.ProductAdmin.Contracts;
 
 namespace Mozu.SiteBuilder.UX.Admin.Helpers.CategoryHelpers {
-    internal class CategoryHelper : ICategoryHelper {
+    public class CategoryHelper : ICategoryHelper {
         private const string ID = "id";
 
         /// <summary>
@@ -24,15 +24,15 @@ namespace Mozu.SiteBuilder.UX.Admin.Helpers.CategoryHelpers {
 
         /// <summary>
         /// Updates the sequence property for objects in one list, based on matching sequence values from another list. 
-        /// NOTE: Modifies the listToUpdate object
+        /// NOTE: Modifies the targetList object
         /// </summary>
-        /// <param name="newSequenceList">List with new sequence and lookup</param>
-        /// <param name="listToUpdate">List to update with sequence from new list</param>
-        public void AdjustSequence(List<Category> newSequenceList, List<DC.Category> listToUpdate)
+        /// <param name="sourceSequenceList">List with new sequence and lookup</param>
+        /// <param name="targetList">List to update with sequence from new list</param>
+        public void AdjustSequence(List<Mozu.SiteBuilder.UX.Admin.Api.Models.Category.Category> sourceSequenceList, List<DC.Category> targetList)
         {
-            foreach (var dbCat in listToUpdate)
+            foreach (var dbCat in targetList)
             {
-                var firstOrDefault = newSequenceList.FirstOrDefault(i => i.Id == dbCat.Id);
+                var firstOrDefault = sourceSequenceList.FirstOrDefault(i => i.Id == dbCat.Id);
                 if (firstOrDefault != null)
                 {
                     var newSequence = firstOrDefault.Sequence;

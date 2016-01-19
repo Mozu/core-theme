@@ -18,7 +18,6 @@ Ext.define('Taco.view.location.Edit', {
     
     initComponent: function () {
         var me = this;
-
         this.moreButtonCfg = {
             xtype: 'button',
             height: 40,
@@ -48,7 +47,6 @@ Ext.define('Taco.view.location.Edit', {
                 }]
             }
         };
-
 
         this.callParent(arguments);
 
@@ -80,6 +78,5 @@ Ext.define('Taco.view.location.Edit', {
             }
 
         }, this);
-
-    }
+        }
 });

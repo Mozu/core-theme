@@ -4,6 +4,8 @@ namespace Mozu.SiteBuilder.UnitTests.Diagrams.Admin.Scripts.app.view.searchTunin
 {
     class TacoWindowWindow { }
 
+   
+
     class TacoWindowModal : TacoWindowWindow
     {
          
@@ -11,48 +13,92 @@ namespace Mozu.SiteBuilder.UnitTests.Diagrams.Admin.Scripts.app.view.searchTunin
 
     class TacoCoreUxWindowDrawer : TacoWindowModal {}
 
-    class TacoModalSearchTuningRuleEditor : TacoCoreUxWindowDrawer
+    class TacoModalProductRankingEditor : TacoCoreUxWindowDrawer
     {
-        public TacoSearchTuningRuleForm Form;
+        public TacoProductRankingForm Form;
     }
 
     class ExtPanel { }
 
     class TacoFullEditor : ExtPanel { }
 
-    class TacoSearchTuningRuleEdit : TacoFullEditor
+    class TacoProductRankingEdit : TacoFullEditor
     {
-        public TacoSearchTuningRuleForm Form;
+        public TacoProductRankingForm Form;
     }
 
     class TacoFormForm : ExtPanel { }
 
     class TacoNavForm2 : TacoFormForm { }
 
-    class TacoSearchTuningRuleForm : TacoNavForm2
+    class TacoProductRankingForm : TacoNavForm2
     {
-        public TacoSearchTuningRuleGeneralForm general;
-        public TacoSearchTuningRuleContextForm context;
-        public TacoSearchTuningRulePinnedProductForm pinned;
-        public TacoSearchTuningRuleBlockedProductForm blocked;
+        public TacoProductRankingGeneralForm general;
+        public TacoProductRankingContextForm context;
+        public TacoProductRankingPinnedProductForm pinned;
+        public TacoProductRankingBlockedProductForm blocked;
     }
     
-    class TacoSearchTuningRuleGeneralForm : TacoFormForm { }
+    class TacoProductRankingGeneralForm : TacoFormForm { }
 
-    class TacoSearchTuningRuleContextForm : TacoFormForm { }
+    class TacoProductRankingContextForm : TacoFormForm { }
 
-    class TacoSearchTuningRulePinnedProductForm : TacoFormForm { }
+    class TacoProductRankingPinnedProductForm : TacoFormForm { }
             
-    class TacoSearchTuningRuleBlockedProductForm : TacoFormForm { }
+    class TacoProductRankingBlockedProductForm : TacoFormForm { }
 
     class ExtGridPanel { }
 
-    class TacoGridPanel : ExtGridPanel { }
+    class TacoCoreUxGridPanel : ExtGridPanel
+    {
+        public bool rowLines = true;
+        public bool enableTextSelection = true;
+        public bool stripeRows = false;
+    }
 
-    class TacoSearchList : TacoGridPanel { }
+    class TacoSearchList : TacoCoreUxGridPanel
+    {
+        public bool launchEditorOnClick = false;
+        public bool enableNavHeader = false;
+        public bool enableSearch = true;
+        public bool enablePaging = true;
+        public bool hideSearchToolbar = false;
+        public bool enableAutoSelect = true;
+        public object[] secondToolbarItems = null;
 
-    class TacoSearchTuningRuleGrid: TacoSearchList { }
 
-    class TacoSearchTuningRuleIndex: TacoSearchTuningRuleGrid { }
+        public TacoCoreUxMixinsNavHeader NavHeader { get; set; }
+        public TacoCoreUxMixinsPageable Pageable { get; set; }
+        public TacoCoreUxMixinsSearchable Searchable { get; set; }
+        public TacoCoreUxGridPluginsAutoSelect autoSelect { get; set; }
+
+        public TacoCoreUxMixinsLaunchEditor launchEditor { get; set; }
+
+        public TacoCoreUxMixinsRowEditable rowEditable { get; set; }
+
+        public TacoCoreUxMixinsDeleteFromGrid deleteFromGrid { get; set; }
+
+        public TacoCoreUxMixinsGridContextMenu gridContextMenu { get; set; }
+
+        public void initComponent() { }
+    }
+
+    
+
+    class TacoCoreUxMixinsNavHeader { }
+    class TacoCoreUxMixinsPageable { }
+    class TacoCoreUxMixinsSearchable { }
+    class TacoCoreUxGridPluginsAutoSelect { }
+    class TacoCoreUxMixinsLaunchEditor { }
+    class TacoCoreUxMixinsRowEditable { }
+    class TacoCoreUxMixinsDeleteFromGrid { }
+    class TacoCoreUxMixinsGridContextMenu { }
+
+    class TacoProductRankingGrid : TacoSearchList
+    {
+
+    }
+
+    class TacoProductRankingIndex: TacoProductRankingGrid { }
 
 }

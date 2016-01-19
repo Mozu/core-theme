@@ -531,7 +531,8 @@
                                 
                                 return order.apiAddStoreCredit({
                                     storeCreditCode: creditCode,
-                                    amount: creditAmountToApply
+                                    amount: creditAmountToApply,
+                                    email: self.get('billingContact').get('email')
                                 }).then(function (o) {
                                     order.set(o.data);
                                     self.trigger('orderPayment', o.data, self);

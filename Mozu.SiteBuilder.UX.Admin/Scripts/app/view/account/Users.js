@@ -333,10 +333,6 @@ Ext.define('Taco.view.account.Users', {
         if ((header.dataIndex || header.allowNavigation === true) && header.allowNavigation !== false && this.allowNavigation !== false) {
             e.preventDefault();
 
-            if (e.target) {
-                metaData = Ext.apply(metaData, e.target.dataset);
-            }
-
             this.launchEditor(record, metaData);
         }
     },

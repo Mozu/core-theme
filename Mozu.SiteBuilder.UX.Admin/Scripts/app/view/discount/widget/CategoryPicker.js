@@ -18,16 +18,7 @@ Ext.define('Taco.view.discount.widget.CategoryPicker', {
     initComponent: function () {
         var me = this;
         this.catStore.clearFilter(true);
-        
 
-        // reset the list's dirty state when its store first loads
-        this.catStore.on({
-            load: function () {
-                me.categoryList.resetOriginalValue();
-            },
-            single: true,
-            scope: this
-        });
         me.catStore.on({
             load: function () {
                 if (!me.showDynamicRealTimeCategories) {
@@ -36,12 +27,11 @@ Ext.define('Taco.view.discount.widget.CategoryPicker', {
                         return (!isRealTime);
                     });
                 }
-                
             },
             scope: this
         });
 
-        this.catStore.load();
+        //  this.catStore.load();
 
         this.addEvents(
             /**
@@ -122,20 +112,28 @@ Ext.define('Taco.view.discount.widget.CategoryPicker', {
     launchCategoryModal: function (list) {
         var me = this,
             treeStore = Taco.core.data.StoreManager.getCategoryTreeByCatalog();
-
         treeStore.on({
-            load: function () {
+            //this doesn't seem to fire ???
+            load: function() {
                 if (!me.showDynamicRealTimeCategories) {
-                    treeStore.filterBy(function(record) {
-                        var isRealTime = record.get("categoryType") === "DynamicRealTime";
-                        return (!isRealTime);
+                    treeStore.filter([
+                        function(record) {
+                            var isRealTime = record.get("categoryType") === "DynamicRealTime";
+                            return !isRealTime;
+                        }
+                    ]);
+                }
+            },
+            beforeexpand: function(node, opts) {
+                if (!me.showDynamicRealTimeCategories) {
+                    node.childNodes = node.childNodes.filter(function(childNode) {
+                        var isRealtime = childNode.data.categoryType === "DynamicRealTime";
+                        return !isRealtime;
                     });
                 }
             },
             scope: this
         });
-
-
 
         this.modal = Ext.create('Taco.view.category.Modal', {
             store: treeStore

@@ -141,25 +141,25 @@ Ext.define('Taco.view.discount.CriteriaForm', {
                 })
             }
         );
-        
+
         catStore = this.record.getCategoryStore();
         catStore.clearFilter(true);
-        catStore.load();
+        //catStore.load();
 
-        // reset the list's dirty state when its store first loads
-        catStore.on({
-            load: function (store) {
+        //// reset the list's dirty state when its store first loads
+        //catStore.on({
+        //    load: function (store) {
 
-                store.filterBy(function (record) {
-                    var isRealTime = record.get("categoryType") === "DynamicRealTime";
-                    return !isRealTime;
-                });
+        //        store.filterBy(function (record) {
+        //            var isRealTime = record.get("categoryType") === "DynamicRealTime";
+        //            return !isRealTime;
+        //        });
 
-                this.categoryList.resetOriginalValue();
-            },
-            single: true,
-            scope: this
-        });
+        //        this.categoryList.resetOriginalValue();
+        //    },
+        //    single: true,
+        //    scope: this
+        //});
 
         // MultiSelect is the most optimal Field that uses BoundList without a trigger
         this.categoryList = Ext.create('Ext.ux.form.field.BoxSelect', {
@@ -578,11 +578,9 @@ Ext.define('Taco.view.discount.CriteriaForm', {
      * Opens a modal with a TreePanel.
      * @private
      */
-    launchCategoryModal: function (list) {
+    launchCategoryModal: function(list) {
         var me = this,
             treeStore = Taco.core.data.StoreManager.getCategoryTreeByCatalog();
-
-
         treeStore.on({
             load: function () {
                 if (!me.showDynamicRealTimeCategories) {
@@ -592,21 +590,28 @@ Ext.define('Taco.view.discount.CriteriaForm', {
                     });
                 }
             },
+            beforeexpand: function (node, opts) {
+                if (!me.showDynamicRealTimeCategories) {
+                    node.childNodes = node.childNodes.filter(function (childNode) {
+                        var isRealtime = childNode.data.categoryType === "DynamicRealTime";
+                        return !isRealtime;
+                    });
+                }
+            },
             scope: this
         });
-
 
         this.modal = Ext.create('Taco.view.category.Modal', {
             store: treeStore
         });
 
         this.modal.on({
-            savesuccess: function (modal, values) {
+            savesuccess: function(modal, values) {
                 list.addValue(values);
                 me.reloadStore(list);
                 me.parentForm.getForm().checkValidity();
             },
-            aftercancelclose: function () {
+            aftercancelclose: function() {
                 me.reloadStore(list);
             },
             scope: this

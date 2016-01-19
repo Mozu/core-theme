@@ -18,12 +18,6 @@ Ext.define('Taco.model.ProductType', {
         { name: 'properties', type: 'auto', defaultValue: [] },
         { name: 'productUsages', type: 'array', defaultValue: ["Standard","Configurable", "Bundle", "Component"] },
         { name: 'modifiedDate', type: 'date', dateFormat: 'c' }
-    /*    String Array Of one or many of the following string Values
-            "Standard";
-            "Configurable";
-            "Bundle";
-            "Component"; */
-        
     ],
     getOptions: function () {
         return this.getOrCreateHasManyStore({
@@ -68,16 +62,9 @@ Ext.define('Taco.model.ProductType', {
      { type: 'presence', name: 'name' }
     ],
     proxy: {     
-     //   type: 'taco-ajaxCacheProxy',
         type: 'ajaxproxy',
         contextLevel: 'm',
         deferCacheCallback:false,
-        // api: {
-        //     create: '/admin/app/Testing/testCreate',
-        //     read: '/admin/Scripts/app/mocks/producttypes.json',
-        //     update: '/admin/app/Testing/testUpdate',
-        //     destroy: '/admin/app/Testing/testDestroy'
-        // },
         api: {
             create: '/admin/app/ProductType/create',
             read: '/admin/app/ProductType/read',

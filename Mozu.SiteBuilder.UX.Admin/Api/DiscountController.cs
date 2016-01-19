@@ -57,13 +57,8 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
         {
             if (pagingParams.id != null)
             {
-                var singleDiscount = (await _discountWebClient.GetDiscount(pagingParams.NumericId)).ReadAsSync();
-                var couponSets = (await _couponSetClient.GetCouponSets(filter: string.Format("assigneddiscountid eq {0}", pagingParams.NumericId), responseGroups: "Counts")).ReadAsSync();
-                var singleModel = Mapper.Map<Discount>(singleDiscount);
-                singleModel.CouponSets = Mapper.Map<List<CouponSet>>(couponSets.Items);
-                return List2(singleModel);
+                return await GetSingleDiscountAsync(pagingParams);
             }
-
 
             var couponSetId = extFilter.QueryString.Get("couponsetid");
             if (!String.IsNullOrEmpty(couponSetId))
@@ -88,12 +83,14 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
                 filter = extFilter.ToFilterString(_ctx, masterNumberFormat, _tenantClient);
             }
 
-
             string sortBy = pagingParams.ToSort(_discountSortFormatter);
+            string responseFields = "items(id,content(name),amountType,amount,status,currentRedemptionCount," +
+                "target(categories,products,includeAllProducts,type)," +
+                "conditions(minimumOrderAmount,startDate,expirationDate,requiresCoupon,couponCode))";
 
             try
             {
-                var discountList = (await _discountWebClient.GetDiscounts(pagingParams.startIndex, pagingParams.pageSize, sortBy, filter, null)).ReadAsSync();
+                var discountList = (await _discountWebClient.GetDiscounts(pagingParams.startIndex, pagingParams.pageSize, sortBy, filter, responseFields:responseFields)).ReadAsSync();
 
                 var discounts = Mapper.Map<List<Discount>>(discountList.Items);
 
@@ -103,7 +100,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
             {
                 return this.FailureList2<Discount>(e.Message);
             }
-        }
+        }   
 
         /// <summary>
         /// Create a new discount.
@@ -255,6 +252,18 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
                                         .ToList();
 
             return List2(enabledPaymentWorkflows);
+        }
+
+        private async Task<Response<List<Discount>>> GetSingleDiscountAsync(PagingParamaters pagingParams)
+        {
+            var singleDiscount = (await _discountWebClient.GetDiscount(pagingParams.NumericId)).ReadAsSync();
+            var couponSets =
+                (await
+                    _couponSetClient.GetCouponSets(filter: string.Format("assigneddiscountid eq {0}", pagingParams.NumericId),
+                        responseGroups: "Counts")).ReadAsSync();
+            var singleModel = Mapper.Map<Discount>(singleDiscount);
+            singleModel.CouponSets = Mapper.Map<List<CouponSet>>(couponSets.Items);
+            return List2(singleModel);
         }
     }
 }

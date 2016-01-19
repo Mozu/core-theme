@@ -10,11 +10,11 @@ Ext.define('Taco.model.RedirectEntry', {
         destroy: 165
     },
     fields: ['s', 'd',
-        {
-            name: 'rw',
-            type: 'boolean',
-            defaultValue: false
-        },
+    {
+        name: 'rw',
+        type: 'boolean',
+        defaultValue: false
+    },
     {
         name: 'q',
         type: 'boolean',
@@ -34,7 +34,7 @@ Ext.define('Taco.model.RedirectEntry', {
      {
          name: 'e',
          type: 'boolean',
-         defaultValue: false,
+         defaultValue: true,
      }
     ],
     idProperty: 's',
@@ -51,7 +51,7 @@ Ext.define('Taco.model.RedirectEntry', {
             type: 'json',
             root: 'items',
             successProperty: 'success',
-            messageProperty: "message"
+            messageProperty: 'message'
         },
         writer: {
             allowSingle: false,

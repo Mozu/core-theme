@@ -34,11 +34,11 @@ Ext.define('Taco.core.ux.mixins.LaunchEditor', {
     reFetchRecordOnEdit: false,
 
     constructor: function () {
-        var me = this
+        var me = this;
+
         if (!me.modelName) {
-            throw ("Configuration Error: modelName is a required configuration member. Example: modelName: Taco.model.YourModelHere");
-            return;
-        };
+            throw ('Configuration Error: modelName is a required configuration member. Example: modelName: Taco.model.YourModelHere');
+        }
 
         if (this.launchEditorOnClick) {
             // treat enter key as a click;
@@ -49,7 +49,7 @@ Ext.define('Taco.core.ux.mixins.LaunchEditor', {
                 }
             }, me);
 
-            me.mon(me, 'cellclick', this.onCellClick, me)
+            me.mon(me, 'cellclick', this.onCellClick, me);
         }
     },
 
@@ -64,9 +64,6 @@ Ext.define('Taco.core.ux.mixins.LaunchEditor', {
         }
         if ((header.dataIndex || header.allowNavigation === true) && header.allowNavigation !== false && this.allowNavigation !== false) {
             e.preventDefault();
-            if (e.target) {
-                metaData = Ext.apply(metaData, e.target.dataset);
-            }
             this.launchEditor(record, metaData);
         }
     },

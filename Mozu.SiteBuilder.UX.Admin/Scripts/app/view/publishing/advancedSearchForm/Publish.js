@@ -5,6 +5,7 @@
 Ext.define('Taco.view.publishing.advancedSearchForm.Publish', {
     extend: 'Taco.core.ux.form.Form',
     requires: [
+        'Taco.core.ux.form.field.AdminUser',
         'Ext.form.FieldContainer',
         'Taco.core.ux.form.DateTime'
     ],
@@ -32,19 +33,7 @@ Ext.define('Taco.view.publishing.advancedSearchForm.Publish', {
                 editable: true,
                 forceSelection: true
             },
-            //The page is already filtered on Master-Catalog
-            //            masterCatalog: {
-            //                xtype: 'combobox',
-            //                store: this.getMasterCatalogStore(),
-            //                name: 'masterCatalog',
-            //                fieldLabel: 'Master Catalog',
-            //                valueField: 'urlToken',
-            //                displayField: 'name',
-            //                queryMode: 'local',
-            //                valueNotFoundText: 'not found',
-            //                editable: true,
-            //                forceSelection: true
-            //            },
+
 
             lastModified: {
                 xtype: 'fieldcontainer',
@@ -124,6 +113,7 @@ Ext.define('Taco.view.publishing.advancedSearchForm.Publish', {
             //        }]
             //},
             modifiedBy: {
+                xtype: 'taco-adminuserfield',
                 name: 'modifiedBy',
                 fieldLabel: 'Modified By'
             },
@@ -187,6 +177,7 @@ Ext.define('Taco.view.publishing.advancedSearchForm.Publish', {
             //                fieldLabel: 'Last Published By'
             //            },
             createdBy: {
+                xtype: 'taco-adminuserfield',
                 name: 'createdBy',
                 fieldLabel: 'Created By'
             }
@@ -194,25 +185,7 @@ Ext.define('Taco.view.publishing.advancedSearchForm.Publish', {
 
         return [fields.publishSet, fields.publishSetDate, fields.createdBy, fields.modifiedBy, fields.created, fields.lastPublished];
     },
-
-
-    //The page is already filtered on the master catalog
-        //    getMasterCatalogStore: function() {
-        //
-        //        var contextStore = Taco.app.context.getStore(false);
-        //      
-        //        contextStore.filter([
-        //            {
-        //                filterFn: function (item) {
-        //                    return Ext.Array.contains(['m'], item.get('contextType'));
-        //                },
-        //                scope: this
-        //            }
-        //        ]);
-        //
-        //        return contextStore;
-        //    },
-
+    
     getPublishSetStore: function() {
         return Ext.create('Taco.store.PublishSets', { includeCounts: false });
     }
