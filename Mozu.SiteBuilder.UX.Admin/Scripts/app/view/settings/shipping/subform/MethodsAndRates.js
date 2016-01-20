@@ -162,6 +162,11 @@ Ext.define('Taco.view.settings.shipping.subform.MethodsAndRates', {
                     xtype: 'textfield',
                     name: 'appid',
                     fieldLabel: 'app id'
+                },
+                {
+                    xtype: 'textfield',
+                    name: 'aesitn',
+                    fieldLabel: 'AES/ITN'
                 }
             ]
         });

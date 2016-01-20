@@ -189,7 +189,7 @@ Ext.define('Taco.view.generalSettings.subform.About', {
                             Taco.core.ux.TooltipLabel.wrapConfig('settings.general.customCdn', this, {
                                 xtype: 'textfield',
                                 name: 'customCdnHostName',
-                                itemId: 'cdnCacheBustKey',
+                                itemId: 'customCdnHostName',
                                 fieldLabel: 'CDN Domain',
                                 emptyText: Taco.cdnPrefix,
                                 flex: 1
