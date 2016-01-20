@@ -108,7 +108,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
                     Name = string.Format("test {0}", i),
                     Ranking = i,
                     SearchIndexSequence = i,
-                    IsActive = true,
+                    IsActive = (i % 2 == 0),
                     CustomerSegments = new List<int> { 1 },
                     CreateBy = "test",
                     CreateDate = DateTime.UtcNow,

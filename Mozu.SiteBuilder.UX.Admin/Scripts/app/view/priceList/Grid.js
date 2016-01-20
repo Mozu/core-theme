@@ -23,7 +23,7 @@ Ext.define('Taco.view.priceList.Grid', {
     ],
 
     mixins: {
-        deleteFromGrid: 'Taco.core.ux.mixins.DeleteFromGrid'
+
     },
 
     contextConfig: {
@@ -55,8 +55,8 @@ Ext.define('Taco.view.priceList.Grid', {
 
     showActionsColumn: true,
 
-    enableEditAction: true,
-    enableDeleteAction:true,
+    //enableEditAction: true,
+    //enableDisableAction: true,
 
     hideSearchToolbar: false,
 
@@ -68,7 +68,7 @@ Ext.define('Taco.view.priceList.Grid', {
 
     enableQuickFilters: false,
 
-    deletePromptMsg : 'Are you sure you want to delete this price list?',
+    enableBulkActions: true,
 
     pageSize: 25,
 
@@ -102,6 +102,15 @@ Ext.define('Taco.view.priceList.Grid', {
                 this.columns.push(actionColumn);
             }
         }
+
+        this.selModel = Ext.create('Ext.selection.CheckboxModel', {
+            selType: 'checkboxmodel',
+            checkOnly: true,
+            ignoreRightMouseSelection: true,
+            headerWidth: 37
+        });
+
+        this.bulkActionConfig = this.getBulkActionsConfig();
 
         // initialize the delete mixin
         this.mixins.deleteFromGrid.init.apply(this);
@@ -177,9 +186,9 @@ Ext.define('Taco.view.priceList.Grid', {
         return columns.concat([
             {
                 xtype: 'gridcolumn',
-                dataIndex: 'active',
+                dataIndex: 'isActive',
                 stateId: 'active',
-                text: 'Active',
+                text: 'Status',
                 flex:1,
                 sortable: false
             }, {
@@ -226,11 +235,11 @@ Ext.define('Taco.view.priceList.Grid', {
             actions = [];
 
         if (this.enableEditAction) {
-            actions.push({
+                actions.push({
                 text: 'Edit',
                 //requiredBehaviors: {
-                //    model: 'Taco.model.PriceList' //,
-                //    //behavior: 'update'
+                //    model: 'Taco.model.PriceList',
+                //    behavior: 'update'
                 //},
                 menuColumnHandler: me.doEdit,
                 scope:me
@@ -238,37 +247,162 @@ Ext.define('Taco.view.priceList.Grid', {
         }
 
 
-        if (this.enableDeleteAction) {
-            actions.push({
-                text: 'Delete',
-                itemId: 'deleteMenuItem',
-                // deleteMenuColumnHandler can be found in Taco.core.ux.mixins.DeleteFromGrid
-                menuColumnHandler: 'deleteMenuColumnHandler',
-                //requiredBehaviors: {
-                //    model: 'Taco.model.PriceList',
-                //    //behavior: 'delete'
-                //},
-                scope: me
-            });
-        }
+
+        actions.push({
+            text: 'Enable',
+            itemId: 'enableMenuItem',
+            menuColumnHandler: me.doEnableBulk,
+            //requiredBehaviors: {
+            //    model: 'Taco.model.PriceList',
+            //    behavior: 'update'
+            //},
+            scope: me
+        });
+        actions.push({
+            text: 'Disable',
+            itemId: 'disableMenuItem',
+            menuColumnHandler: me.doDisableBulk,
+            //requiredBehaviors: {
+            //    model: 'Taco.model.PriceList',
+            //    behavior: 'update'
+            //},
+            scope: me
+        });
 
         return actions;
 
     },
 
     onActionMenuShow: function (menu, eventData) {
-
-        //todo: set delete message based on categories? greg_murray on 10/16/2015
-
         // need to disable the delete menu option when discount has been used
-        //var deleteMenuItem = menu.down("#deleteMenuItem");
-        //if (deleteMenuItem) {
-        //    if (eventData.record.get('canBeDeleted')) {
-        //        deleteMenuItem.show();
-        //    } else {
-        //        deleteMenuItem.hide();
-        //    }
-        //}
+        var disableMenuItem = menu.down('#disableMenuItem'),
+            enableMenuItem = menu.down('#enableMenuItem');
+        if (!disableMenuItem || !enableMenuItem) {
+            return;
+        }
+        if (eventData.record.get('isActive') === 'Active') {
+            disableMenuItem.show();
+            enableMenuItem.hide();
+        } else {
+            enableMenuItem.show();
+            disableMenuItem.hide();
+        }
+    },
+
+    getBulkActionsConfig: function () {
+        return {
+            onMenuShow: function(selModel) {
+                var selection = selModel.getSelection(),
+                    disableBulkAction = this.down('#Disable'),
+                    enableBulkAction = this.down('#Enable'),
+                    allActive,
+                    allInactive;
+
+                allActive = Ext.Array.every(selection, function(item) {
+                    return item.get('isActive') === 'Active';
+                });
+
+                if (allActive) {
+                    disableBulkAction.setDisabled(false);
+                    enableBulkAction.setDisabled(true);
+                    return;
+                }
+
+                allInactive = Ext.Array.every(selection, function(item) {
+                    return item.get('isActive') !== 'Active';
+                });
+
+                if (allInactive) {
+                    enableBulkAction.setDisabled(false);
+                    disableBulkAction.setDisabled(true);
+                    return;
+                }
+
+                enableBulkAction.setDisabled(false);
+                disableBulkAction.setDisabled(false);
+            },
+            actions: [
+                {
+                    itemId: 'Enable',
+                    text: 'Enable',
+                    scope: this,
+                    handler: function (item, eventData) {
+                        this.doBulkAction.call(this, item, eventData);
+                    }
+                },
+                {
+                    itemId: 'Disable',
+                    text: 'Disable',
+                    scope: this,
+                    handler: function (item, eventData) {
+                        var selection = item.scope.selModel.getSelection(),
+                            name = selection.length === 1 ? selection[0].get('name') : undefined,
+                            msg = selection.length === 1 ? 'Are you sure you\'d like to disable the  ' + name + ' price list?' : 'Are you sure you\'d like to disable the selected price lists?';
+
+
+                        this.getConfirmationModal({
+                            message: msg,
+                            callback: this.doBulkAction.bind(this, item),
+                            header: 'Disable Price Lists',
+                            primaryText: 'Yes, Disable'
+                        });
+                    }
+                }
+            ]
+        };
+    },
+
+    doBulkAction: function(item) {
+        var action = item.itemId,
+            records = item.scope.selModel.getSelection(),
+            method = 'do' + action + 'Bulk';
+
+        this[method](item, {record: records});
+    },
+
+    setPriceListEnabled: function(item, eventData, isActive) {
+        var growlText = (isActive) ? 'Enabled' : 'Disabled',
+            growlMessage = '<span style="font-weight:bold;">' + growlText + '</span>';
+
+        if (!Ext.isArray(eventData.record)) {
+            eventData.record.set('isActive', isActive);
+
+            this.showMessage(growlMessage);
+            eventData.record.store.sync({
+                callback: this.onAfterRecordUpdate.bind(this, eventData.record.store)
+            });
+        }
+
+        else {
+            eventData.record.forEach(function(rec){
+                rec.set('isActive', isActive);
+            });
+
+            this.showMessage(growlMessage);
+            eventData.record[0].store.sync({
+                callback: this.onAfterRecordUpdate.bind(this, eventData.record[0].store)
+            });
+        }
+
+    },
+
+    onAfterRecordUpdate: function(recordStore, response) {
+
+        if (response && response.hasException) {
+            this.showMessage(Ext.JSON.decode(response.exceptions[0].error.responseText).message, 'error');
+        } else {
+            if (recordStore) {
+                recordStore.reload();
+            }
+        }
+    },
+
+    doDisableBulk: function(item, eventData) {
+        item.scope.setPriceListEnabled(item, eventData, false);
+    },
+
+    doEnableBulk: function(item, eventData) {
+        item.scope.setPriceListEnabled(item, eventData, true);
     },
 
     getActionColumn: function () {
@@ -341,6 +475,39 @@ Ext.define('Taco.view.priceList.Grid', {
         if (advFilterButton && advFilterButton.length > 0) {
             advFilterButton[0].setDisabled(true);
         }
+    },
+
+    //move to base class?
+    getConfirmationModal: function(config) {
+        Ext.create('Taco.core.ux.window.Modal', {
+            scale: 'small',
+            title: config.header,
+            modal: true,
+            closeAction: 'destroy',
+            height: 200,
+            primaryText: config.primaryText ? config.primaryText : 'Confirm',
+            secondaryText: 'Cancel',
+            primaryHandler: function() {
+                config.callback();
+                this.save();
+            },
+            items: [{
+                xtype: 'container',
+                layout: {
+                    type: 'hbox'
+                },
+                items: [
+                    Ext.create('Ext.panel.Panel', {
+                        width: '100%',
+                        html: config.message
+                    })
+                ]
+            }]
+        }).show();
+    },
+
+    showMessage: function(msg, type) {
+        Taco.app.fireEvent('setmessage', msg, type || 'success');
     }
 
 });

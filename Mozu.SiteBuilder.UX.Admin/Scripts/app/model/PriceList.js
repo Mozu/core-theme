@@ -42,7 +42,10 @@ Ext.define('Taco.model.PriceList', {
         }, {
             name: 'isActive',
             type: 'boolean',
-            defaultValue: true
+            defaultValue: true,
+            convert: function (val) {
+                return (val) ? 'Active' : 'Disabled';
+            }
         }, {
             name: 'pricingEntries',
             type: 'auto',
