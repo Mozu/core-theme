@@ -753,6 +753,10 @@
     <Content Include="Scripts\app\view\couponCode\DiscountGrid.js" />
     <Content Include="Scripts\app\view\couponCode\Grid.js" />
     <Content Include="Scripts\app\view\preview\ExpressionPreviewDrawer.js" />
+    <Content Include="Scripts\app\view\priceList\Edit.js" />
+    <Content Include="Scripts\app\view\priceList\Form.js" />
+    <Content Include="Scripts\app\view\priceList\form\AdvancedSearch.js" />
+    <Content Include="Scripts\app\view\priceList\form\General.js" />
     <Content Include="Scripts\app\view\priceList\Grid.js" />
     <Content Include="Scripts\app\view\priceList\Index.js" />
     <Content Include="Scripts\app\view\productRanking\Edit.js" />

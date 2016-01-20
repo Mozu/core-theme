@@ -15,11 +15,11 @@ Ext.define('Taco.view.priceList.Grid', {
         'Taco.core.ux.TextFilter',
         'Taco.core.ux.FilterableDataView',
         'Taco.core.ux.TextFilter',
-        'Taco.core.ux.grid.MenuColumn'
-        //'Taco.view.priceList.form.AdvancedSearch',
+        'Taco.core.ux.grid.MenuColumn',
+        'Taco.view.priceList.form.AdvancedSearch',
         //'Taco.view.priceList.modal.priceListEditor',
-        //'Taco.view.priceList.Form',
-        //'Taco.view.priceList.Edit'
+        'Taco.view.priceList.Form',
+        'Taco.view.priceList.Edit'
     ],
 
     mixins: {
@@ -31,7 +31,7 @@ Ext.define('Taco.view.priceList.Grid', {
         requiresContextOfType: ['m']
     },
 
-    launchEditorOnClick:true,
+    launchEditorOnClick: true,
 
     // Required by mixin: Taco.core.ux.mixins.LaunchEditor defined in SearchList
     modelName: 'Taco.model.PriceList',
@@ -66,18 +66,18 @@ Ext.define('Taco.view.priceList.Grid', {
 
     autoScroll: true,
 
-    enableQuickFilters:false,
+    enableQuickFilters: false,
 
     deletePromptMsg : 'Are you sure you want to delete this price list?',
 
-    isCatalogLevel: false,
     pageSize: 25,
 
     advancedSearchConfig : {
         form: null, //set below
         quickFilterData: [
             [{ code: 'Code' }, 'Code']
-        ]
+        ],
+        emptySearchText: 'Search'
     },
 
     onCreate: Ext.emptyFn,
@@ -94,7 +94,7 @@ Ext.define('Taco.view.priceList.Grid', {
     initComponent: function () {
         var me = this;
 
-        this.columns = this.getColumnConfig(me.isCatalogLevel);
+        this.columns = this.getColumnConfig();
 
         if (this.showActionsColumn) {
             var actionColumn = this.getActionColumn();
@@ -117,9 +117,7 @@ Ext.define('Taco.view.priceList.Grid', {
             remoteFilter: true
         });
 
-        //me.advancedSearchConfig.form = Ext.create('Taco.view.priceList.form.AdvancedSearch', {
-        //    isCatalogLevel: me.isCatalogLevel
-        //});
+        me.advancedSearchConfig.form = Ext.create('Taco.view.priceList.form.AdvancedSearch', {});
 
         me.callParent(arguments);
 
@@ -129,7 +127,7 @@ Ext.define('Taco.view.priceList.Grid', {
         this.store.reload();
     },
 
-    getColumnConfig: function (includeSiteColumn) {
+    getColumnConfig: function () {
         var columns = [
             {
                 xtype: 'gridcolumn',

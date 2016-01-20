@@ -7,7 +7,7 @@ Ext.define('Taco.controller.PriceLists', {
     models: ['Taco.model.PriceList'],
     stores: ['Taco.store.PriceLists'],
     views: ['Taco.view.priceList.Index', 'Taco.view.priceList.Grid'],
-    modelName: 'priceList'
+    modelName: 'PriceList'
     
     
 });
