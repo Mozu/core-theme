@@ -25,7 +25,7 @@ Ext.define('Taco.view.attribute.Form', {
             attributeType: {
                 xtype: 'selectfield',
                 fieldLabel: 'Attribute Type',
-                allowBlank: true,
+                allowBlank: false,
                 name: 'attributeType',
                 isDirty: function () {
                     return false;
@@ -965,6 +965,7 @@ Ext.define('Taco.view.attribute.Form', {
         if (attributeField) {
             attributeField.setVisible(this.record.supportsAttributeType());
             attributeField.allowOnlyWhitespace = !this.record.supportsAttributeType();
+            attributeField.allowBlank = attributeField.allowOnlyWhitespace;
         }
 
         if (this.record.supportsSearchOptions()) {
