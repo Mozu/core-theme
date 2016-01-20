@@ -3,90 +3,88 @@
 */
 
 Ext.define('Taco.view.productRanking.grid.BlockedProduct', {
-    extend: 'Taco.core.ux.browser.SearchList',
-    alias: 'widget.productRanking-blocked-grid',
-    requires: [],
-    itemId: 'taco-grid-blockedproduct',
-    stateful: false,
-    enableNavHeader: false,
-    //minHeight: 240,
-    autoHeight: true,
-    //height:300,
-    pageSize: 5,
-    //store: {
-    //    type: 'Taco.store.DiscountGrid',
-    //    createOnly:true,
-    //    pageSize:10
-    //},
-    launchEditorOnClick: false,
-    deferEmptyText: false,
-    emptyText: 'None Available',
-    autoScroll: false,
-    config: {
-        code: null
-    },
-    deferEmtpyText: false,
-    showActionsColumn: true,
-    autoHidePagingToolbar: false,
-    minHeight: 240,
-    enableEditAction: false,
-    enableDuplicateAction: false,
-    enableDeleteAction: false,
-    enablePaging: false,
-    enableAutoSelect: false,
-    initComponent: function() {
-        var me = this;
-        me.dockedItems = me.dockedItems || [];
-        me.mixins = me.mixins || [];
-        me.viewConfig = me.viewConfig || {};
-        me.viewConfig.deferEmptyText = me.deferEmptyText;
-        me.columns = me.getColumnConfig();
-        me.store = Ext.create('Ext.data.Store', {
-            fields: ['code', 'price', 'salePrice'],
-            data: []
-        });
-        if (me.showActionsColumn) {
-            var actionColumn = me.getActionColumn();
-            if (actionColumn) {
-                me.columns.push(actionColumn);
-            }
-        }
-        me.callParent(arguments);
-    },
+   extend: 'Taco.core.ux.browser.SearchList',
+   alias: 'widget.productRanking-blocked-grid',
+   requires: [],
+   stateful: false,
+   enableNavHeader: false,
+   //minHeight: 240,
+   autoHeight: true,
+   //height:300,
+   pageSize: 5,
+   //store: {
+   //    type: 'Taco.store.DiscountGrid',
+   //    createOnly:true,
+   //    pageSize:10
+   //},
+   launchEditorOnClick: false,
+   deferEmptyText:false,
+   emptyText: 'None Available',
 
-    /**
-     * Populates the data store from a record
-     */
-    populateStore: function(record) {
-        this.store.removeAll(); //wouldn't have to do this if we don't load it twice
-        if (record == null || record.data == null || record.data.blockedProducts == null) {
-            return;
+   autoScroll: false,
+
+   config: {
+       code: null
+   },
+
+
+   deferEmtpyText: false,
+
+   showActionsColumn : true,
+
+   autoHidePagingToolbar:false,
+
+   minHeight: 240,
+   enableEditAction: false,
+   enableDuplicateAction: false,
+   enableDeleteAction: false,
+   enablePaging: false,
+
+   enableAutoSelect:false,
+
+   initComponent: function() {
+    var me = this;
+
+    me.dockedItems = me.dockedItems || [];
+    me.mixins = me.mixins || [];
+     
+    me.viewConfig = me.viewConfig || {};
+    me.viewConfig.deferEmptyText = me.deferEmptyText;
+
+    me.columns = me.getColumnConfig();
+
+    me.store = Ext.create('Ext.data.Store', {
+      fields: ['code', 'price', 'salePrice'],
+      data: []
+    });
+
+    if (me.showActionsColumn) {
+        var actionColumn = me.getActionColumn();
+        if (actionColumn) {
+            me.columns.push(actionColumn);
         }
-        var products = record.data.blockedProducts;
-        for (var i = products.length - 1; i >= 0; i--) {
-            this.store.data.add(Ext.create('Taco.model.BlockedProduct', products[i]));
-        }
-        this.getView().refresh();
-    },
+    }
+
+    me.callParent(arguments);
+
+   },
 
     listeners: {
         afterrender: function() {
-            var form = this.up('#taco-productRanking-form');
-            if (form.loadBlockedProducts && form.loadBlockedProducts === true) {
-                this.populateStore(form.record);
+            var record = this.up('#taco-productRanking-form').record;
+            var products = record.data.blockedProducts;
+
+            for (var i = products.length - 1; i >= 0; i--) {
+                this.store.data.add(Ext.create('Taco.model.BlockedProduct', products[i]));
             }
         },
-
-        reloaddata: function(record) {
-            this.populateStore(record);
-        },
-
         recordadded: function(records) {
+
             var me = this,
                 findFunc = function(rec) {
                     return me.store.find(me.filterProperty, rec.get(me.filterProperty), 0, false, false, true) === -1;
                 },
-                recordsToAdd = [];
+                recordsToAdd =[];
 
             if (!records) {
                 console.warn('No record found!');
@@ -99,7 +97,9 @@ Ext.define('Taco.view.productRanking.grid.BlockedProduct', {
                         recordsToAdd.push(rec);
                     }
                 });
-            } else {
+            }
+
+            else { 
                 if (findFunc(records)) {
                     recordsToAdd.push(records);
                 }
@@ -114,7 +114,7 @@ Ext.define('Taco.view.productRanking.grid.BlockedProduct', {
         this.store.remove(record);
     },
 
-    getActionColumn: function() {
+    getActionColumn: function () {
         var actionColumn = null,
             actions = this.getActionItems();
 
@@ -132,13 +132,12 @@ Ext.define('Taco.view.productRanking.grid.BlockedProduct', {
     getActionItems: function() {
         var me = this;
 
-        return [
-            {
-                text: 'Remove',
-                menuColumnHandler: function(item, eventData) {
-                    var record = eventData.record;
-                    me.removeProduct(record);
-                }
+        return [{
+              text: 'Remove',
+              menuColumnHandler: function(item, eventData) {
+                var record = eventData.record;
+                me.removeProduct(record);
+              }
             },
             {
                 xtype: 'menuseparator',
@@ -152,67 +151,67 @@ Ext.define('Taco.view.productRanking.grid.BlockedProduct', {
             }
         ];
     },
+  
+  getColumnConfig: function () {
+      return [
+        {
+            xtype: 'gridcolumn',
+            dataIndex: 'productName',
+            text: 'Name',
+            flex: 1,
+            minWidth: 150
+        },
+        {
+            xtype: 'gridcolumn',
+            dataIndex: 'productCode',
+            text: 'Code',
+            hideable: true,
+            flex: 1
+        },
+        {
+            xtype: 'gridcolumn',
+            dataIndex: 'price',
+            text: 'Price',
+            hideable: true,
+            flex: 1
+        },
+        {
+            xtype: 'gridcolumn',
+            dataIndex: 'salePrice',
+            text: 'Sale Price',
+            hideable: true,
+            flex: 1
+        },
+        {
+            xtype: 'gridcolumn',
+            sortable: false,
+            dataIndex: 'lastModifiedDate',
+            text: 'Last Modified',
+            hideable: true,
+            hidden: true,
+            flex: 1,
+            renderer: Ext.util.Format.dateRenderer('d M, Y, g:i a')
+        },
+        {
+            xtype: 'gridcolumn',
+            dataIndex: 'productType',
+            text: 'Product Type',
+            hideable: true,
+            hidden: true,
+            flex: 1
+        },
+        {
+            xtype: 'gridcolumn',
+            dataIndex: 'productUsage',
+            text: 'Product Usage',
+            hideable: true,
+            hidden: true,
+            flex: 1
+        }
+    ];
+  },
 
-    getColumnConfig: function() {
-        return [
-            {
-                xtype: 'gridcolumn',
-                dataIndex: 'productName',
-                text: 'Name',
-                flex: 1,
-                minWidth: 150
-            },
-            {
-                xtype: 'gridcolumn',
-                dataIndex: 'productCode',
-                text: 'Code',
-                hideable: true,
-                flex: 1
-            },
-            {
-                xtype: 'gridcolumn',
-                dataIndex: 'price',
-                text: 'Price',
-                hideable: true,
-                flex: 1
-            },
-            {
-                xtype: 'gridcolumn',
-                dataIndex: 'salePrice',
-                text: 'Sale Price',
-                hideable: true,
-                flex: 1
-            },
-            {
-                xtype: 'gridcolumn',
-                sortable: false,
-                dataIndex: 'lastModifiedDate',
-                text: 'Last Modified',
-                hideable: true,
-                hidden: true,
-                flex: 1,
-                renderer: Ext.util.Format.dateRenderer('d M, Y, g:i a')
-            },
-            {
-                xtype: 'gridcolumn',
-                dataIndex: 'productType',
-                text: 'Product Type',
-                hideable: true,
-                hidden: true,
-                flex: 1
-            },
-            {
-                xtype: 'gridcolumn',
-                dataIndex: 'productUsage',
-                text: 'Product Usage',
-                hideable: true,
-                hidden: true,
-                flex: 1
-            }
-        ];
-    },
-
-    getValues: function() {
+    getValues: function () {
         return this.store.data.items;
     }
 });

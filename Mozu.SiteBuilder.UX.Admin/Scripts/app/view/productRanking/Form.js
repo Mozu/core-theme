@@ -19,8 +19,6 @@ Ext.define('Taco.view.productRanking.Form', {
     isCatalogLevel: false,
     categoryCode: null,
     isCreate: false,
-    loadBlockedProducts: true,  //whether or not to read the blocked-products grid from current record - alternatively load manually
-    loadPinnedProducts: true,   //whether or not to read the pinned-products  grid from current record - alternatively load manually
 
     initComponent: function () {
         var me = this;
