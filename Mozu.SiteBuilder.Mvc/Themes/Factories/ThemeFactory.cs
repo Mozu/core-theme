@@ -52,6 +52,7 @@ namespace Mozu.SiteBuilder.Mvc.Themes.Factories
                     theme.BackOfficeTemplates = tmd.Configuration.BackOfficeTemplates;
                     theme.Widgets = tmd.Configuration.Widgets;
                     theme.Editors = tmd.Configuration.Editors;
+                    theme.Layouts = tmd.Configuration.Layouts;
                 }
                 else
                 {
@@ -60,7 +61,8 @@ namespace Mozu.SiteBuilder.Mvc.Themes.Factories
                     theme.EmailTemplates = Merge(tmd.Configuration.EmailTemplates, parent.EmailTemplates, pt => pt.Id).ToList();
                     theme.BackOfficeTemplates = Merge(tmd.Configuration.BackOfficeTemplates, parent.BackOfficeTemplates, pt => pt.Id).ToList();
                     theme.Editors = Merge(tmd.Configuration.Editors, parent.Editors, pt => pt.Id).ToList();
-                    theme.Widgets = Merge(tmd.Configuration.Widgets, parent.Widgets, widget => widget.Id).ToList();                   
+                    theme.Widgets = Merge(tmd.Configuration.Widgets, parent.Widgets, widget => widget.Id).ToList();
+                    theme.Layouts = Merge(tmd.Configuration.Layouts, parent.Layouts, layout => layout.Id).ToList(); 
                 }
             }
             

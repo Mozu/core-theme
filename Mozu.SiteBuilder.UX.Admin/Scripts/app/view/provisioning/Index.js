@@ -98,7 +98,6 @@ Ext.define('Taco.view.provisioning.Index', {
                         { text: 'Status', stateId: 'status', dataIndex: 'status' },
                         {
                             xtype: 'taco.menucolumn',
-                            text: 'Actions',
                             menuItems: [                                       
                                 {
                                     itemId: 'rename',
@@ -155,7 +154,6 @@ Ext.define('Taco.view.provisioning.Index', {
                         { text: 'Status', stateId: "status", dataIndex: 'status' },
                         {
                             xtype: 'taco.menucolumn',
-                            text: 'Actions',
                             menuItems: [
                                 {
                                     itemId: 'rename',

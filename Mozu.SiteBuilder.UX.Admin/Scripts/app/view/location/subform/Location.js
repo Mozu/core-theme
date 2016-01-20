@@ -175,7 +175,8 @@ Ext.define('Taco.view.location.subform.Location', {
         me.addressView = Ext.create('Taco.shared.view.field.Address', {
             name: "address",
             //allowOnlyWhitespace: false
-            allowBlank:false
+            allowBlank:false,
+            showEditButton: false
 
             // extra components to be inserted after the edit button
             
@@ -264,13 +265,13 @@ Ext.define('Taco.view.location.subform.Location', {
             me.shippingContextField,
             {
                 xtype: 'fieldcontainer',
-                width: "100%",
+                width: 400,
                 layout: 'hbox',
                 items: [{
                     xtype: 'numberfield',
                     fieldLabel: "Latitude",
                     name: "lat",
-                    margin:"0 2 0 0",
+                    margin:"0 10 0 0",
                     emptyText: "Example: 87.728056",
                     decimalPrecision: 10,
                     allowOnlyWhitespace: true,
@@ -282,7 +283,7 @@ Ext.define('Taco.view.location.subform.Location', {
                     xtype: 'numberfield',
                     fieldLabel: "Longitude",
                     emptyText: "Example: 87.728056",
-                    margin: "0 0 0 2",
+                    margin: "0 0 0 10",
                     allowOnlyWhitespace: true,
                     decimalPrecision:10,
                     hideTrigger: true,

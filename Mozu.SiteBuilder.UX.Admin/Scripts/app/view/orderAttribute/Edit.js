@@ -3,5 +3,10 @@ Ext.define('Taco.view.orderAttribute.Edit', {
     requires: [
         'Taco.view.orderAttribute.Form'
     ],
-    formCls: 'Taco.view.orderAttribute.Form'
+    enableSearchBarInHeader: false,
+    formCls: 'Taco.view.orderAttribute.Form',
+    parentTitleCfg: {
+        title: 'Order Attributes',
+        controller: 'orderattributes'
+    },
 });

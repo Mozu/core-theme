@@ -1,21 +1,23 @@
 ﻿// order customer notes row
 .orderform-detail-customerNotesRow{
-	border-width: 0px 1px 1px 1px;
-	border-style:solid;
-	background-color:#f2f2f2;
-	border-color:#cccccc;       
-	font-size: 1.4rem;
-	line-height: 1.9rem;  
-	padding:7px;        
-	.customerNote{}
-	.label{}
+    border-width: 0px 1px 1px 1px;
+    border-style:solid;
+    background-color:#f2f2f2;
+    border-color:#cccccc;       
+    font-size: 1.4rem;
+    line-height: 1.9rem;  
+    padding:7px;        
+    .customerNote{
+        color: $gray-text-dark;
+    }
+    .label{}
 }
 
 
 .#{$prefix}orderform-detail{
-	.#{$prefix}panel .#{$prefix}grid-body {
-		border-bottom-width:0px;
-	}
+    .#{$prefix}panel {
+        .#{$prefix}grid-body {
+            border-bottom-width:0px;
+        }
+    }
 }
-
-

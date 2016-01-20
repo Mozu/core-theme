@@ -61,7 +61,7 @@ Ext.define('Taco.view.product.subform.OverrideForm', {
 
         this.formContainer = Ext.widget({
             xtype: 'container',
-            cls: Taco.baseCSSPrefix + 'override-form-inner',
+            cls: (!this.hideOverride ? Taco.baseCSSPrefix + 'override-form-inner' : ''),
             width: "100%",
             items: this.subitems,
             defaults: this.defaults
@@ -75,6 +75,7 @@ Ext.define('Taco.view.product.subform.OverrideForm', {
                 labelAlign: 'right',
                 allowModal: true,
                 disabled: this.overrideChangeDisabled,
+                hidden: this.hideOverride,
                 cls: Taco.baseCSSPrefix + 'override-checkbox',
                 scope: this,
                 checked: this.isOverridden,
@@ -82,7 +83,7 @@ Ext.define('Taco.view.product.subform.OverrideForm', {
                     var overrideForm = this;
                     if (checkbox.allowModal) {
 
-                        
+
                         var title = isChecked ? 'Override Global Values' : 'Remove Global Override',
                             msg = isChecked ? 'You are about to override this section, are you sure you want to do that?' : 'You are about to remove the global override for this section, are you sure you want to do that?';
 
@@ -96,9 +97,9 @@ Ext.define('Taco.view.product.subform.OverrideForm', {
                             closable: false,
                             buttons: Ext.Msg.YESNO,
                             fn: function (val) {
-                                if (val === 'yes') {                                    
+                                if (val === 'yes') {
                                     overrideForm.setOverride(isChecked, true, checkbox);
-                                } else {                                    
+                                } else {
                                     checkbox.allowModal = false;
                                     checkbox.setValue(!isChecked);
                                     checkbox.allowModal = true;

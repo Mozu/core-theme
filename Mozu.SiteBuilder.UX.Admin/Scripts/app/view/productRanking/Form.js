@@ -1,13 +1,15 @@
 ﻿/**
  * The Product Ranking Rule form
  */
-Ext.define('Taco.view.productRanking.Form', {   
+Ext.define('Taco.view.productRanking.Form', {
     extend: 'Taco.core.ux.form.NavForm2',
     requires: [
         'Taco.view.productRanking.form.General',
         'Taco.view.productRanking.form.Context',
         'Taco.view.productRanking.form.PinnedProduct',
-        'Taco.view.productRanking.form.BlockedProduct'
+        'Taco.view.productRanking.form.BlockedProduct',
+        'Taco.core.ux.card.Tab',
+        'Taco.core.ux.card.Toolbar'
     ],
     autoDestroy: true,
     itemId: 'taco-productRanking-form',
@@ -17,49 +19,43 @@ Ext.define('Taco.view.productRanking.Form', {
     isCatalogLevel: false,
     categoryCode: null,
     isCreate: false,
-    loadBlockedProducts: true,  //whether or not to read the blocked-products grid from current record - alternatively load manually
-    loadPinnedProducts: true,   //whether or not to read the pinned-products  grid from current record - alternatively load manually
 
     initComponent: function () {
-
         var me = this;
-        // Note: the record will act as an event bus for the subForms. 
+        // Note: the record will act as an event bus for the subForms.
         // User interactions in a subform that cause changes in other forms will communicate via events on the record.
         // Each subform will listen for and react to these changes.
 
-        this.items = [
-            {
-                xtype: 'taco-productRanking-general',
-                itemId: 'general',
-                parentForm: this,
-                record: me.record,
-                isCatalogLevel: me.isCatalogLevel,
-                manageHeight: true
-            }, 
-            {
-                xtype: 'taco-productRanking-context',
-                itemId: 'context',
-                parentForm: this,
-                record: me.record,
-                categoryCode: me.categoryCode,
-                isCreate: me.isCreate,
-                manageHeight: true
-            },
-            {
-                xtype: 'taco-productRanking-pinned',
-                itemId: 'pinned',
-                parentForm: this,
-                record: this.record,
-                manageHeight: true
-            }, 
-            {
-                xtype: 'taco-productRanking-blocked',
-                itemId: 'blocked',
-                parentForm: this,
-                record: this.record,
-                manageHeight: true
-            }
-        ];
+        me.sectionNavTopOffset = me.isPopUp ? -12 : 9;
+
+        this.items = [{
+            xtype: 'taco-productRanking-general',
+            itemId: 'general',
+            parentForm: this,
+            record: me.record,
+            isCatalogLevel: me.isCatalogLevel,
+            manageHeight: true
+        }, {
+            xtype: 'taco-productRanking-context',
+            itemId: 'context',
+            parentForm: this,
+            record: me.record,
+            categoryCode: me.categoryCode,
+            isCreate: me.isCreate,
+            manageHeight: true
+        }, {
+            xtype: 'taco-productRanking-pinned',
+            itemId: 'pinned',
+            parentForm: this,
+            record: this.record,
+            manageHeight: true
+        }, {
+            xtype: 'taco-productRanking-blocked',
+            itemId: 'blocked',
+            parentForm: this,
+            record: this.record,
+            manageHeight: true
+        }];
 
         if (this.isCatalogLevel) {
             this.header = false;
@@ -72,34 +68,8 @@ Ext.define('Taco.view.productRanking.Form', {
         this.pinned = this.down('#pinned');
         this.blocked = this.down('#blocked');
 
-        //this.on({
-        //    afterrender: this.onAfterRender,
-        //    scope: this
-        //});
-
         this.loadNavItems();
     },
-
-    //setFieldVisibility: function () {
-    //    var scopeType = this.general.scopeTypeInput.getValue(),
-    //        targetType = this.general.targetTypeInput.getValue(),
-    //        discountType = this.general.amountTypeInput.getValue(),
-    //        isLineItem = this.general.isLineItem(),
-    //        isOrder = this.general.isOrder(),
-    //        appliesToShipping = this.general.appliesToShipping();
-            
-        
-    //    // need to pass all info necessary to the subforms to control their own visibility and fields.
-    //    this.criteria.setFieldVisibility(scopeType, targetType, discountType);
-    //    this.conditions.setFieldVisibility(scopeType, targetType, discountType);
-    //    this.limitations.setFieldVisibility(scopeType, targetType, discountType);
-    //    this.loadNavItems();
-    //},
-
-    //onAfterRender: function () {
-    //    this.setFieldVisibility();
-    //},
-
 
     /**
      * Preprocess form before the built in form processing. Persist field values with not matching field name in the record. Reset values no longer applicable based on current state of the form;

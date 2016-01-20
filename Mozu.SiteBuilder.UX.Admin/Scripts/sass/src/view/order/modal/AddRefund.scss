@@ -1,7 +1,7 @@
-﻿.taco-add-refund-modal{
+﻿.#{$vprefix}add-refund-modal{
 
 	// overriding some default ext behavior that changes the border color of the first row when the second row is hovered;
-    .x-grid-row-before-over .x-grid-td {	 
+    .#{$prefix}grid-row-before-over .#{$prefix}grid-td {
         border-bottom-color: #ededed;
     }
 
@@ -16,7 +16,7 @@
 
 	.editableCell {
 		// highlight editable cell when mouseover
-		.x-grid-cell-inner:hover {
+		.#{$prefix}grid-cell-inner:hover {
 			border: 1px dashed #cccccc;
 		}
 	} 

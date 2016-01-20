@@ -11,6 +11,7 @@ using System.Web.Http;
 using AutoMapper;
 using Mozu.AdminUser.Contracts;
 using Mozu.AdminUser.Contracts.Clients;
+using Mozu.Content.Contracts.Clients;
 using Mozu.Core;
 using Mozu.Core.Api.Client;
 using Mozu.Core.Api.Contracts;
@@ -23,6 +24,7 @@ using Mozu.MZDB.Contracts;
 using Mozu.MZDB.Contracts.Clients;
 using Mozu.ProductAdmin.Contracts.Clients;
 using Mozu.SiteBuilder.Mvc.ActionResults;
+using Mozu.SiteBuilder.Mvc.Contexts;
 using Mozu.SiteBuilder.Mvc.Security;
 using Mozu.SiteBuilder.Mvc.ViewEngine;
 using Mozu.SiteBuilder.UX.Admin.Api;
@@ -34,6 +36,7 @@ using IProvisioningWebApiClient = Mozu.Content.Contracts.Clients.IProvisioningWe
 using User = Mozu.SiteBuilder.UX.Admin.Api.Models.Account.User;
 using Mozu.SiteBuilder.UX.Admin.Api.Models.Entities;
 using Newtonsoft.Json.Linq;
+using Newtonsoft.Json.Serialization;
 
 namespace Mozu.SiteBuilder.UX.Admin.Controllers
 {
@@ -46,17 +49,20 @@ namespace Mozu.SiteBuilder.UX.Admin.Controllers
         private readonly IApiContext _apiContext;
         private readonly IAuthenticationHelper _authenticationHelper;
         private readonly IEntityListsWebApiClient _entityListsWebApiClient;
+        private readonly IDocumentListWebApiClient _documentListWebApiClient;
         private readonly HttpContextBase _httpContext;
         private readonly ILogger _logger;
+        private readonly ITenantAdminSettingsContext _tenantAdminSettingsContext;
 
         private readonly IMasterCatalogWebApiClient _masterCatalogClient;
         private readonly ISettings _settings;
         private readonly ITenantsWebApiClient _tenantsWebApi;
         private readonly IMultiScopeAdminUserWebApiClient _usersRepo;
 
-        public HomeController(IMultiScopeAdminUserWebApiClient usersRepo, IAuthenticationHelper authHelper, ITenantsWebApiClient tenantsWebApi, IApiContext apiContext, ISettings settings, HttpContextBase httpContext, IMultiScopeAdminUserWebApiClient adminUserWebApiClient, IMasterCatalogWebApiClient masterCatalogClient, ILogger logger, IEntityListsWebApiClient entityListsWebApiClient)
+        public HomeController(IMultiScopeAdminUserWebApiClient usersRepo, IAuthenticationHelper authHelper, ITenantsWebApiClient tenantsWebApi, IApiContext apiContext, ISettings settings, HttpContextBase httpContext, IMultiScopeAdminUserWebApiClient adminUserWebApiClient, IMasterCatalogWebApiClient masterCatalogClient, ILogger logger, IEntityListsWebApiClient entityListsWebApiClient , IDocumentListWebApiClient documentListWebApiClient, ITenantAdminSettingsContext tenantAdminSettingsContext)
         {
             _logger = logger;
+            _tenantAdminSettingsContext = tenantAdminSettingsContext;
             _entityListsWebApiClient = entityListsWebApiClient.CloneWithoutUserClaims().CloneWithApiContext(x =>
             {
                 x.SiteId = null;
@@ -76,6 +82,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Controllers
             _adminUserWebApiClient = adminUserWebApiClient.CloneWithoutUserClaims();
 
             _masterCatalogClient = masterCatalogClient.CloneWithoutUserClaims();
+            _documentListWebApiClient = documentListWebApiClient.CloneWithoutUserClaims();
         }
 
 
@@ -163,15 +170,15 @@ namespace Mozu.SiteBuilder.UX.Admin.Controllers
            var rolesTask = GetUserSitesRoles(_apiContext.UserClaims.UserId);
            var tenantTask = _tenantsWebApi.GetTenantInternal(_apiContext.TenantId, false);
             var adminSubNavExtensibiltyTask = _entityListsWebApiClient.GetEntities("subNavLinks@mozu", 6000);
-            var tenantAdminSettingsTask = _entityListsWebApiClient.GetEntity(entityListFullName: "tenantAdminSettings@mozu", id: "Global");
+          
 
             Task<ServiceClientResponse<AdminUserCollection>> siteUsersTask = _usersRepo.GetUsers(UserScopeType.Tenant.ToString(), _apiContext.TenantId, pageSize: 200, startIndex: 0);
 
             // TODO: the masterCatalog service is not ready. We mock it.
             Task<ServiceClientResponse<DCproduct.MasterCatalogCollection>> masterCatalogsTask;
             masterCatalogsTask = _masterCatalogClient.GetMasterCatalogs();
-
-            await Task.WhenAll(userDcTask, rolesTask, tenantTask, siteUsersTask, masterCatalogsTask, adminSubNavExtensibiltyTask, tenantAdminSettingsTask);
+            
+            await Task.WhenAll(userDcTask, rolesTask, tenantTask, siteUsersTask, masterCatalogsTask, adminSubNavExtensibiltyTask, _tenantAdminSettingsContext.AsyncGet()).ConfigureAwait(false);
 
             //var tenants2 = tenantTask2.Result.ReadAsSync();
 
@@ -181,6 +188,13 @@ namespace Mozu.SiteBuilder.UX.Admin.Controllers
             Tenant.Contracts.Tenant tenant = tenantTask.Result.ReadAsSync();
 
             ProvisionCMSMAYBE(tenant);
+
+
+
+
+            var customSchemaTask = GetCustomSchema(tenant);
+
+
 
 
             AdminUserCollection siteUsers = siteUsersTask.Result.ReadAsSync();
@@ -229,57 +243,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Controllers
                 adminSubNavExtensibiltyTask = _entityListsWebApiClient.GetEntities("subNavLinks@mozu", 6000);
                 await adminSubNavExtensibiltyTask;
             }
-            if (!tenantAdminSettingsTask.Result.ResponseMessage.IsSuccessStatusCode  )
-            {
-                await _entityListsWebApiClient.CreateEntityList(new EntityList
-                                                                {
-                                                                    NameSpace = "mozu",
-                                                                    ContextLevel = "Tenant",
-                                                                    IsVisibleInStorefront = false,
-                                                                    IdProperty =new IndexedProperty()
-                                                                                {
-                                                                                    DataType= "string",
-                                                                                    PropertyName ="name"
-                                                                                } ,
-                                                                    UseSystemAssignedId = false,
-                                                                    Name = "tenantAdminSettings",
-                                                                    Usages = new List<string>(),
-                                                                    Views = new List<ListView>
-                                                                            {
-                                                                                new ListView
-                                                                                {
-                                                                                    Usages = new List<string>(),
-                                                                                    Name = "Default",
-                                                                                    Fields = new List<ListViewField>
-                                                                                             {
-                                                                                                 new ListViewField
-                                                                                                 {
-                                                                                                     Name = "name",
-                                                                                                     Target = "name"
-                                                                                                 }
-                                                                                             }
-
-                                                                                }
-                                                                            }
-                                                                });
-
-                await _entityListsWebApiClient.InsertEntity(entityListFullName: "tenantAdminSettings@mozu", item: JObject.FromObject(new TenantAdminGlobalSettings()
-                                                                                                                               {
-                                                                                                                                   EntityManagerVisible = false,
-                                                                                                                                   CustomRoutesVisible = false,
-                                                                                                                                   SiteBuilderContentListsVisible = false
-
-                                                                                                                               }, GlobalConfiguration.Configuration.Formatters.JsonFormatter.CreateJsonSerializer()));
-
-
-                tenantAdminSettingsTask = _entityListsWebApiClient.GetEntity(entityListFullName: "tenantAdminSettings@mozu", id: "Global");
-                
-                await tenantAdminSettingsTask;
-
-
-
-            }
-
+           
             
 
 
@@ -336,7 +300,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Controllers
 
              try
             {
-                ViewData["tenantGlobalSettings"] = tenantAdminSettingsTask.Result.ReadAsSync();
+                ViewData["tenantGlobalSettings"] = _tenantAdminSettingsContext;
             }
             catch (Exception err)
             {
@@ -361,7 +325,65 @@ namespace Mozu.SiteBuilder.UX.Admin.Controllers
                 return RazorView("Index_Compiled");
             }
 
+            await customSchemaTask.ConfigureAwait(false);
+            ViewData["customSchema"] = customSchemaTask.Result;
+
             return RazorView("index");
+        }
+
+        private async Task<List<JObject>> GetCustomSchema(Tenant.Contracts.Tenant tenant)
+        {
+            var ret = new List<JObject>();
+            if (tenant.Sites == null)
+            {
+                return ret;
+            }
+            var site = tenant.Sites.FirstOrDefault();
+            if ( site == null)
+            {
+                return ret;
+            }
+            var docListsTask = _documentListWebApiClient.CloneWithApiContext(apiContext =>
+          {
+              apiContext.SiteId = site.Id;
+              apiContext.MasterCatalogId = site.MasterCatalogId;
+              apiContext.CatalogId = site.CatalogId;
+              apiContext.LocaleCode = site.DefaultLocaleCode;
+
+          }).GetDocumentLists();
+
+            var entityListsTask = _entityListsWebApiClient.CloneWithApiContext(apiContext =>
+           {
+               apiContext.SiteId = site.Id;
+               apiContext.MasterCatalogId = site.MasterCatalogId;
+               apiContext.CatalogId = site.CatalogId;
+               apiContext.LocaleCode = site.DefaultLocaleCode;
+
+           }).GetEntityLists();
+
+            await Task.WhenAll(docListsTask, entityListsTask).ConfigureAwait(false);
+            var docLists = docListsTask.Result.ReadAsSync();
+            var entityLists = entityListsTask.Result.ReadAsSync();
+
+            var jser = JsonSerializer.Create(new JsonSerializerSettings()
+            {
+                ContractResolver = new CamelCasePropertyNamesContractResolver()
+            });
+
+            return docLists.Items.Select(x=> {
+                var jobj = JObject.FromObject(x, jser);
+                jobj["entityType"] = "cms";
+                return jobj;
+            }).Concat(entityLists.Items.Select(x =>
+            {
+                var jobj = JObject.FromObject(x, jser);
+                jobj["listName"] = x.Name;
+                jobj["listFQN"] = x.Name + "@" + x.NameSpace;
+                jobj["entityType"] = "mzdb";
+                return jobj;
+            })).ToList();
+         
+            
         }
 
         private void ProvisionCMSMAYBE(Tenant.Contracts.Tenant tenant)

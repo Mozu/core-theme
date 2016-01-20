@@ -4,7 +4,7 @@
 Ext.define('Taco.view.settings.shipping.TargetRuleEdit', {
     extend: 'Taco.core.ux.form.FullEditor',
     //cls: Taco.baseCSSPrefix + 'searchlist',
-
+    enableSearchBarInHeader: false,
     requires: [
         'Ext.Date',
         'Ext.form.Panel', 'Taco.core.ux.BaseGrid',

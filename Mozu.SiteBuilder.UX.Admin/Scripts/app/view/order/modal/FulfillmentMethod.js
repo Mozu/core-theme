@@ -72,7 +72,6 @@ Ext.define('Taco.view.order.modal.FulfillmentMethod', {
         me.fulfillmentTypePanel = Ext.create('Ext.form.FieldContainer', {
             dock: 'top',
             layout:"hbox",
-            style: "border-bottom:1px solid #cccccc",
             items: [
                  me.directShipRadio,
                  me.inStorePickupRadio

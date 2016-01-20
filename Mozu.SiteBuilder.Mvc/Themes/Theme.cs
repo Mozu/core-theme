@@ -134,6 +134,8 @@ namespace Mozu.SiteBuilder.Mvc.Themes
         [IgnoreDataMember]
         public List<EditorDefinition> Editors { get; set; }
 
+        [IgnoreDataMember]
+        public List<LayoutWidgetDefinition> Layouts { get; set; }
 
         
         [IgnoreDataMember]

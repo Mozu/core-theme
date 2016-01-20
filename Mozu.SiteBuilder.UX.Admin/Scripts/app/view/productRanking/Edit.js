@@ -24,7 +24,14 @@ Ext.define('Taco.view.productRanking.Edit', {
         }
     },
 
+    parentTitleCfg: {
+        title: 'Product Ranking Rules',
+        controller: 'productrankings'
+    },
+
     isCreate: false,
+
+    enableSearchBarInHeader: false,
 
     initComponent: function () {
         var me = this;
@@ -55,20 +62,22 @@ Ext.define('Taco.view.productRanking.Edit', {
 
             menuItems.push(delMenuItem);
 
-            me.additionalActions = [{
+            me.moreButtonCfg = {
                 xtype: 'button',
+                height: 40,
                 itemId: 'moreButton',
                 ui: 'action',
                 scale: 'medium',
-                text: 'More',
+                text: '',
                 menuAlign: 'tr-br?',
                 disabled: disabledOnCreate,
                 menu: {
+                    cls: 'taco-more-action-button-menu',
                     plain: true,
                     shadow: false,
                     items: menuItems
                 }
-            }];
+            };
         };
 
         setupMoreButton(me.isCreate);

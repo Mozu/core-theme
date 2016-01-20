@@ -20,7 +20,9 @@ Ext.define('Taco.store.CategoriesTree', {
         return (a.get('sequence') !== null ? a.get('sequence') : 9999) - (b.get('sequence') !== null ? b.get('sequence') : 9999);
     },
     storeManagerConfig: {
+        autoLoad: false,
         createOnly: true,
+        clearFilters: true
     },
     load: function(options) {
         var me = this;

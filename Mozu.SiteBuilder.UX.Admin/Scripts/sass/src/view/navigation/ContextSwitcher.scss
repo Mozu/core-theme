@@ -23,22 +23,58 @@
 
 /* OLD CONTEXT SWITCHER */
 
-// .#{$vprefix}context-switcher-menu {
-//   ul {
-//     .#{$prefix}boundlist-item {
-//       &.context-type-t {
-//         font-weight: bold;
-//       }
-//       &.context-type-c {
-//         border-top-width: 5px;
-//         font-weight: bold;
-//         margin-top: 7px;
-//         @include box-shadow(0px -1px border-for($color-neutral-white));
-//         // padding-left: 28px;
-//       }
-//       &.context-type-s {
-//         // padding-left: 42px;
-//       }
-//     }
-//   }
-// }
+.#{$vprefix}site-context-switchermenu {
+    position: relative;
+    display: block;
+    padding: 20px 18px;
+    border-right: 1px solid #f3f3f3;
+    font-weight: 400;
+
+    .#{$prefix}form-trigger-wrap input {
+        font-size: 18px;
+        color: $dark-color;
+        border: none;
+    }
+
+    .#{$prefix}form-item-body {
+
+        &.#{$prefix}pickerfield-open {
+
+            .#{$prefix}form-trigger {
+                border-radius: 3px;
+                background-color: $more-menu-active-background;
+                box-shadow: $more-menu-active-shadow 0 0 0 1px inset;
+                opacity: 1;
+            }
+        }
+    }
+
+    .#{$prefix}form-trigger {
+        @include icon-font($glyph-arrow-down, 11px, $nav-element-text);
+        @include border-radius(3px);
+        height: 20px;
+        position: relative;
+        width: 20px;
+        left: 10px;
+        top: 9px;
+
+        &::after {
+            font-size: 11px;
+            left: -5px;
+            top: -1px;
+        }
+
+        &:hover {
+            &::after {
+                color: $dark-color;
+            }
+        }
+
+    }
+}
+
+.#{$vprefix}site-selector-flyout {
+    .#{$prefix}menu-item {
+        border-bottom: 1px solid whitesmoke !important;
+    }
+}

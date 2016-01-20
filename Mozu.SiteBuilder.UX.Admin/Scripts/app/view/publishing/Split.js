@@ -26,6 +26,7 @@ Ext.define('Taco.view.publishing.Split', {
     createButtonText: 'Create New Publish Set',
     saveButtonVisible: false,
     cancelButtonVisible: false,
+    enableSearchBarInHeader: false,
 
     contextConfig: {
         supportedLevels: ['m'],
@@ -79,7 +80,10 @@ Ext.define('Taco.view.publishing.Split', {
                             includeCounts: true
                         }
                     },
-                    advancedFormCls: 'Taco.view.publishing.advancedSearchForm.Publish'
+                    advancedSearchConfig : {
+                        advancedFormCls: 'Taco.view.publishing.advancedSearchForm.Publish',
+                        emptySearchText: 'Search'
+                    }
                 }),
                 Ext.create('Ext.panel.Panel', {
                     html: ['<span style="font-size:2.0rem;">You have no Publish Sets</span><br><br>',
@@ -90,25 +94,31 @@ Ext.define('Taco.view.publishing.Split', {
         });
     },
     westGrid: function() {
-        return Ext.create('Ext.tab.Panel', {
-            title: 'Publish Set Contents',
+        var me = this;
+
+        this.panel = Ext.create('Ext.panel.Panel', {
+            title: false,
             type: 'publishSetContents',
-            ui: 'subform',
-            layout: 'fit',
-            style: 'border-top-width:0px; background-color:transparent; padding:10px',
+            layout: {
+                type: 'card' 
+            },
             split: true,
             minWidth: 300,
-            header: {
-                style: 'background-color:transparent; margin-top:-20px;'
+            tbar: Ext.create('Taco.view.publishing.component.DraftGridToolBar', {
+                parentScope: me,
+                toolbarTitle: 'Drafts',
+                buttons: true
+            }),
+            style: {
+                border: 'none'
             },
-            tabBar: {
-                style: 'padding-bottom: 10px;'
-            },
+
             items: [
                 Ext.create('Taco.view.publishing.grid.Draft', {
                     scope: this,
-                    title: 'Product',
                     type: 'drafts',
+                    uniqueId: 'product',
+                    itemId: 'product',
                     statefulId: 'draft-product-publishset',
                     hideSearchBar: false,
                     storeConfig: {
@@ -119,12 +129,16 @@ Ext.define('Taco.view.publishing.Split', {
                             autoLoad: true
                         }
                     },
-                    advancedFormCls: 'Taco.view.publishing.advancedSearchForm.DraftProduct'
+                    advancedSearchConfig: {
+                        advancedFormCls: 'Taco.view.publishing.advancedSearchForm.DraftProduct',
+                        emptySearchText: 'Search'
+                    }
                 }),
                 Ext.create('Taco.view.publishing.grid.Draft', {
                     scope: this,
-                    title: 'Content',
+                    uniqueId: 'Content',
                     hideSearchBar: true,
+                    itemId: 'content',
                     type: 'drafts',
                     statefulId: 'draft-content-publishset',
                     storeConfig: {
@@ -135,10 +149,15 @@ Ext.define('Taco.view.publishing.Split', {
                             autoLoad: true
                         }
                     },
-                    advancedFormCls: 'Taco.view.publishing.advancedSearchForm.DraftContent'
+                    advancedSearchConfig: {
+                        advancedFormCls: 'Taco.view.publishing.advancedSearchForm.DraftContent',
+                        emptySearchText: 'Search'
+                    }
                 })
             ]
         });
+
+        return this.panel;
     },
     onCreate: function() {
         var me = this;        
@@ -146,7 +165,7 @@ Ext.define('Taco.view.publishing.Split', {
             listeners: {
                 aftersaveclose: function () {                    
                     me.down('#publish-grid').store.read();
-                    me.showGrowl('Created', null);
+                    me.showMessage('Created', null);
                     me.getWest().down('panel').getLayout().setActiveItem(0);
                 },
                 scope:me
@@ -179,7 +198,7 @@ Ext.define('Taco.view.publishing.Split', {
         Ext.resumeLayouts();
     },
 
-    showGrowl: function(msg, type) {
-        Taco.app.fireEvent('setgrowl', msg, type, 1000);
+    showMessage: function(msg, type) {
+        Taco.app.fireEvent('setmessage', msg, type);
     }
 });

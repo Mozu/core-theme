@@ -57,7 +57,7 @@ namespace Mozu.SiteBuilder.Mvc.Models.CMS.Admin
     //     public string DocumentId { get; set; }
     //}
     [DataContract()]
-    public class WidgetPreviewData : ZoneWidgetRuntimeData
+    public class WidgetPreviewData<T> : ZoneWidgetRuntimeData
     {
         [DataMember(Name = "context")]
         public CmsPageContext Context { get; set; }
@@ -65,7 +65,7 @@ namespace Mozu.SiteBuilder.Mvc.Models.CMS.Admin
         [DataMember(Name = "output")]
         public string Output { get; set; }
 
-        public WidgetDefinition Definition { get; set; }
+        public T Definition { get; set; }
 
         public bool IsPreview { get; set; }
 
@@ -75,9 +75,8 @@ namespace Mozu.SiteBuilder.Mvc.Models.CMS.Admin
         [DataMember(Name = "zoneScope")]
         public string ZoneScope { get; set; }
 
-
-
-
+        [DataMember(Name = "widgetType")]
+        public string widgetType { get; set; }
     }
 
     public enum ZoneScope
@@ -86,32 +85,61 @@ namespace Mozu.SiteBuilder.Mvc.Models.CMS.Admin
         Template,
         Site
     };
-
-    public class ZoneRuntimeData
+    public class Chorizo
     {
-        public string Id { get; set; }
-        public List<ZoneRowRuntimeData> Rows { get; set; }
-        public DocumentRequest Source { get; set; }
-        [Newtonsoft.Json.JsonIgnore]
-        public ZoneScope Scope { get; set; }
+        public class ZoneRuntimeData
+        {
+            public string Id { get; set; }
+            public List<ZoneRowRuntimeData> Rows { get; set; }
+            public DocumentRequest Source { get; set; }
+            [Newtonsoft.Json.JsonIgnore]
+            public ZoneScope Scope { get; set; }
+            public string Build { get; set; }
+        }
+
+
+        public class ZoneRowRuntimeData
+        {
+
+            public List<ZoneColumnsRuntimeData> Columns { get; set; }
+
+        }
+
+        public class ZoneColumnsRuntimeData
+        {
+            public int? Span { get; set; }
+            public string Width { get; set; }
+            public List<ZoneWidgetRuntimeData> Widgets { get; set; }
+        }
     }
 
+    public class Caliente
 
-    public class ZoneRowRuntimeData
     {
-        
-        public List<ZoneColumnsRuntimeData> Columns { get; set; } 
+        public class ZoneRuntimeData
+        {
+            public string Id { get; set; }
+            public List<ZoneRowRuntimeData> Rows { get; set; }
+            public DocumentRequest Source { get; set; }
+            [Newtonsoft.Json.JsonIgnore]
+            public ZoneScope Scope { get; set; }
+            public string Build { get; set; }
+        }
 
+        public class ZoneRowRuntimeData
+        {
+            public List<ZoneColumnsRuntimeData> Columns { get; set; }
+            public string Title { get; set; }
+        }
+
+        public class ZoneColumnsRuntimeData
+        {
+            public string Width { get; set; }
+            public List<ZoneWidgetRuntimeData> Widgets { get; set; }
+            public List<ZoneRowRuntimeData> Rows { get; set; }
+        }
     }
 
-    public class ZoneColumnsRuntimeData
-    {
-        public int Span { get; set; }
-        public List<ZoneWidgetRuntimeData> Widgets { get; set; }
-        public List<ZoneRowRuntimeData> Rows { get; set; } 
-         
-
-    }
     [DataContract]
     public class ZoneWidgetRuntimeData
     {

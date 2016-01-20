@@ -189,11 +189,27 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
         Mozu.Tenant.Contracts.Entitlement GetEntitlementFromDirectory(string directoryPath, bool allowNonProductionThemes)
         {
             var theme = _themeRepository.GetThemeSlim(new ThemeSelection() { Id = System.IO.Path.GetFileName(directoryPath) });
-            if (theme != null && !theme.AllowProduction.GetValueOrDefault(true) && !allowNonProductionThemes)
+            if (theme == null)
             {
                 return null;
             }
 
+            else if (theme.AllowProduction.GetValueOrDefault(true)) 
+            {
+                return FromTheme(theme);
+            }
+
+            else if (allowNonProductionThemes)
+            {
+                return FromTheme(theme);
+            }
+
+            return null;
+
+        }
+
+        private Mozu.Tenant.Contracts.Entitlement FromTheme(Theme theme)
+        {
             return new Mozu.Tenant.Contracts.Entitlement
             {
                 ApplicationAssetPath = theme.Id,

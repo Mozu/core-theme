@@ -13,25 +13,26 @@ Ext.define('Taco.view.order.Grid', {
         'Taco.view.order.modal.BulkActionMessage'
     ],
 
-    launchEditorOnClick:true,
+    launchEditorOnClick: true,
     
     // Required by mixin: Taco.core.ux.mixins.LaunchEditor defined in SearchList
     modelName: 'Taco.model.Order',
 
     enableNavHeader: true,
+    
 
     // adds the "taco-content-navcontainer-padding" class
     // Will add the 20px padding needed for display in the contentView as part of the NavHeader code;
     addContentViewPadding: true,
 
-    enableSearch: true,
+    enableSearch: false,
     enablePaging: true,
     enableRowEditing: false,
     enableAutoSelect: false,
     createButtonEnabled: true,
     saveButtonEnabled: false,
     cancelButtonEnabled: false,
-
+    enableBulkActions: true,
     createButtonText: "Create New Order",
 
     showActionsColumn: true,
@@ -43,8 +44,6 @@ Ext.define('Taco.view.order.Grid', {
     autoScroll: true,
 
     itemId: 'taco-order-grid',
-
-    enableQuickFilters:true,
 
     advancedSearchConfig : {
         advancedFormCls: 'Taco.view.order.AdvancedSearchForm',
@@ -58,7 +57,9 @@ Ext.define('Taco.view.order.Grid', {
             [{ orderStatus: 'Cancelled' }, 'Cancelled Orders'],
             [{ orderStatus: 'Errored' }, 'Errored Orders'],
             [{}, 'All Orders']
-        ]
+        ],
+
+        emptySearchText: 'Search'
     },
 
     onCreate: Ext.emptyFn,
@@ -87,33 +88,24 @@ Ext.define('Taco.view.order.Grid', {
             selType: 'checkboxmodel',
             checkOnly: true,
             ignoreRightMouseSelection: true,
-            headerWidth: 37,
-            listeners: {
-                selectionchange: {
-                    scope: this,
-                    fn: function (selModel, selected) {
-                        this.searchToolbar.items.get('bulkActions').setVisible(selected.length);
-                    }
-                }
-            }
+            headerWidth: 37
         });
 
         if (window.location.href.indexOf('/edit/') !== -1) {
             console.log(this.up('order-split'))
         }
-        
-        me.callParent(arguments);
 
-        this.searchToolbar.insert(0, {
-            xtype: 'button',
-            ui: 'action',
-            scale: 'medium',
-            itemId: 'bulkActions',
-            text: 'Bulk Actions',
-            margin: '0 10 0 0',
-            hidden: true,
-            menu: {
-                items: [{
+        //todo: need to work on disabling/enabling of actions -- talk with commerce peeps?
+
+        this.bulkActionConfig = {
+            onMenuShow: this.getBulkActions,
+            onMenuHide: function() {
+                Ext.Array.each(['#AcceptOrder', '#CancelOrder', '#CapturePayment', '#Ship'], function(id) { 
+                    this.down(id).disable();
+                }, this);
+            },
+            actions: [
+                {
                     itemId: 'AcceptOrder',
                     text: 'Accept',
                     disabled: true,
@@ -121,7 +113,8 @@ Ext.define('Taco.view.order.Grid', {
                     handler: function () {
                         this.doBulkAction('AcceptOrder');
                     }
-                }, {
+                },
+                {
                     itemId: 'CancelOrder',
                     text: 'Cancel',
                     disabled: true,
@@ -129,7 +122,8 @@ Ext.define('Taco.view.order.Grid', {
                     handler: function () {
                         this.doBulkAction('CancelOrder');
                     }
-                }, {
+                }, 
+                {
                     itemId: 'CapturePayment',
                     text: 'Capture',
                     disabled: true,
@@ -137,7 +131,8 @@ Ext.define('Taco.view.order.Grid', {
                     handler: function () {
                         this.doBulkAction('CapturePayment');
                     }
-                }, {
+                }, 
+                {
                     itemId: 'Ship',
                     text: 'Ship',
                     disabled: true,
@@ -145,25 +140,27 @@ Ext.define('Taco.view.order.Grid', {
                     handler: function () {
                         this.doBulkAction('Ship');
                     }
-                }],
-                listeners: {
-                    show: {
-                        scope: this,
-                        fn: 'getBulkActions'
-                    }
                 }
-            }
-        });
+
+            ]
+        };
+        
+        me.callParent(arguments);
+
     },
 
-    getBulkActions: function (menu) {
+    onMenuHide: function() { 
+        alert('ho');
+    },
+
+    getBulkActions: function (selmodel) {
         var me = this;
-        var selection = this.getSelectionModel().getSelection();
+        var selection = selmodel.getSelection();
         var allAvailableBulkActions = Ext.Array.flatten(Ext.Array.map(selection, function (o) { return o.get('availableBulkActions') }));
 
-        menu.items.each(function (item) {
-            item.setDisabled(!Ext.Array.contains(allAvailableBulkActions, item.getItemId()));
-        });
+        Ext.Array.each(allAvailableBulkActions, function(itemId) {
+            me.down('#' + itemId).enable();
+        }, me);
     },
     
     doBulkAction: function (action) {
@@ -345,7 +342,17 @@ Ext.define('Taco.view.order.Grid', {
                 flex: 1,
                 minWidth: 100,
                 width: 100,
-                sortable: false
+                sortable: false,
+                renderer: function (value, metaData, record) {
+                    var text = record.get('orderStatus'),
+                        type = (text === 'Processing').toString();
+
+                    if (text === 'Cancelled' || text === 'Errored') {
+                        type = 'error';
+                    }
+
+                    return '<span class="x-column-content-pill x-column-content-pill-' + type + '"">' + text + '</span>';
+                }
             }, {
                 stateId: 'paymentStatus',
                 dataIndex: 'paymentStatus',
@@ -488,7 +495,6 @@ Ext.define('Taco.view.order.Grid', {
             columns.push(
                 {                    
                     xtype: 'taco.menucolumn',
-                    text: 'Actions',
                     menuItems: [
                         {
                             text: 'Edit',
@@ -695,9 +701,13 @@ Ext.define('Taco.view.order.Grid', {
                             },
                             scope: me,
                             delegate: "x-menu-item-link"
+                        },
+                        beforerender: function () {
+                            this.setWidth(this.up('button').getWidth());
                         }
                     },
-                    items: menu
+                    items: menu,
+                    cls: 'button-menu'
                 }
             });
         }

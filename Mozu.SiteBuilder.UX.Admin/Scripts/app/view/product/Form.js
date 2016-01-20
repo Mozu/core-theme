@@ -26,7 +26,6 @@ Ext.define('Taco.view.product.Form', {
         this.stores = [this.inSitesStore, this.record.getOptions(), this.record.getVariations(false)];
 
         this.siteForms = [];
-
         
         this.createSiteInfoCheck();
 
@@ -42,27 +41,21 @@ Ext.define('Taco.view.product.Form', {
 
         this.buildSiteTabs();
 
-        tabItems = this.siteForms.slice(0);
+        this.tabItems = this.siteForms.slice(0);
 
-        tabItems.unshift(this.globalForm);
+        this.tabItems.unshift(this.globalForm);
 
-        this.tabPanel = Ext.create('Taco.core.ux.tab.Panel', {
-            navigation: false,
-            items: tabItems,
-            activeItem: this.getInitialTab(tabItems),
-            pickerCfg: {
-                data: this.masterCatalog.catalogs
-            }
-        });
+        this.items = [
+            Ext.create('Ext.panel.Panel', {
+                itemId: 'productFormLayout',
+                layout: {
+                    type: 'card',
+                },
+                items: this.tabItems
+            })
+        ];
 
-        // need to initialize the override code for hidden site tabs        
-        Ext.Array.each(tabItems, function (tab) {
-            if (tab.$className == "Taco.view.product.SiteForm") {
-                tab.handleOverrideChange();
-            }
-        })
-
-        this.items = [this.tabPanel];
+        
 
         this.callParent(arguments);
 
@@ -70,31 +63,6 @@ Ext.define('Taco.view.product.Form', {
             this.goGoSingleSite(true);
         }
 
-        this.tabPanel.on({
-            selectionchange: this.onTabSelectionChange,
-            scope: this
-        });
-
-        this.tabPanel.on({            
-            tabchange: function (tabPanel, newCard, oldCard, eOpt) {
-                if (oldCard.nav) {
-                    oldCard.nav.hide();
-                }
-                if (newCard.nav) {
-                    newCard.nav.show();
-                }
-
-            },
-            scope:this
-
-        });
-        
-
-        this.on({
-            tabclose: this.onTabClose,
-            scope: this
-        });
-        
     },
     
     //todo fix for omni
@@ -112,11 +80,7 @@ Ext.define('Taco.view.product.Form', {
            
         }
         return selectedTabIndex;
-
-
     },
-    
-
 
     /**
      * Will remove all the Site tabs (but not global) and rebuild all the forms
@@ -173,6 +137,7 @@ Ext.define('Taco.view.product.Form', {
         return Ext.create('Taco.view.product.SiteForm', {
             isSingleSite: this.singleSiteCheck(),
             record: productInCatalogInfo,
+            catlogId: productInCatalogInfo.get('catalogId'),
             productForm: this,
             product: this.record,
             productInCatalogInfo: productInCatalogInfo,
@@ -223,9 +188,9 @@ Ext.define('Taco.view.product.Form', {
 
         
 
-        me.tabPanel.hideTabAt(0);
+        // me.tabPanel.hideTabAt(0);
 
-        me.tabPanel.setActiveItemAt(1);
+        // me.tabPanel.setActiveItemAt(1);
 
         //refresh the visibility of the siteForm
         //me.tabPanel.items.getAt(1).updateSubFormVisibility();
@@ -303,9 +268,9 @@ Ext.define('Taco.view.product.Form', {
         ctx = Taco.app.context.getCurrent();
        
         if ( ctx.getCatalogId() != null) {
-            this.addCatalog(ctx.getCatalogId());
+            this.getNewCatalog(ctx.getCatalogId());
         }else if (ctx.contextType == 'm' && ctx.catalogs.length == 1) {
-            this.addCatalog(ctx.catalogs[0].getCatalogId());
+            this.getNewCatalog(ctx.catalogs[0].getCatalogId());
         }
     },
 
@@ -370,7 +335,7 @@ Ext.define('Taco.view.product.Form', {
      * Adds the product to a site
      * @param {String} siteId The ID of the site that will have the product
      */
-    addCatalog: function (catalogId, suspendSwitch) {
+    getNewCatalog: function (catalogId, suspendSwitch) {
         if (this.inSitesStore.getById(catalogId)) {
             return;
         }
@@ -387,54 +352,57 @@ Ext.define('Taco.view.product.Form', {
         this.inSitesStore.add(siteInfo);
         siteInfo.set('productCode', this.record.getId());
         siteInfo.phantom = true;
-        if (this.rendered) {
-            siteForm = this.buildSiteForm(siteInfo);
 
-            this.siteForms.push(siteForm);
-            this.tabPanel.add(siteForm);
+        return siteInfo;
+        // if (this.rendered) {
+        //     siteForm = this.buildSiteForm(siteInfo);
 
-            if (suspendSwitch) {
-                return;
-            }
-            this.goGoCatalogSwitch();
-        }
+        //     this.siteForms.push(siteForm);
+        //     this.tabPanel.add(siteForm);
+
+        //     if (suspendSwitch) {
+        //         return;
+        //     }
+        //     this.goGoCatalogSwitch();
+        // }
     },
 
     /**
      * Removes the product from a site
      * @param  {String} siteId The ID of the site to remove the product from
      */
-    removeCatalog: function (catalogId, suspendSwitch) {
-        var catRecord = this.inSitesStore.findRecord('catalogId', catalogId),
-            wasSingleSite, form;
+    resetCatalogs: function (catalogIds) {
+ 
+        var inactiveRecords = [];
+        var newRecords = [];
+        var currentRecordIds = this.inSitesStore.data.items.map(function(rec) { return rec.get('catalogId');});
 
-        if (!catRecord) {
-            return;
-        }
+        var addCatalogs = Ext.Array.difference(catalogIds, currentRecordIds);
+        var removeCatalogs = Ext.Array.difference(currentRecordIds, catalogIds);
 
-        Ext.each(this.siteForms, function (f) {
-            if (catRecord !== f.productInCatalogInfo) {
-                return;
+        this.inSitesStore.each(function(rec) { 
+            if (removeCatalogs.indexOf(rec.get('catalogId')) !== -1) {
+                inactiveRecords.push(rec); 
             }
-            form = f;
-            return false;
         });
 
-        if (!form) {
-            return;
+        Ext.Array.each(addCatalogs, function(id) {
+            newRecords.push(this.getNewCatalog(id));
+        }, this);
+        
+        this.inSitesStore.remove(inactiveRecords);
+
+        this.inSitesStore.add(newRecords);
+
+        if (newRecords.length > 0) {
+            Ext.Array.each(newRecords, function(page) {
+                var siteForm = this.buildSiteForm(page);
+                this.down('#productFormLayout').add(siteForm);
+                //add new panel to tabitems so it can be managed by catalog assignment bar
+                this.tabItems.push(siteForm)
+            }, this);
         }
-
-        var isRemovingActiveTab = this.tabPanel.getActiveItem() === form;
-
-        this.tabPanel.remove(form);
-
-        this.inSitesStore.remove(catRecord);
        
-        if (suspendSwitch) {
-            return;
-        }
-
-        this.goGoCatalogSwitch(isRemovingActiveTab);
     },
 
     onTabClose: function (tab, catalogId) {
@@ -449,7 +417,7 @@ Ext.define('Taco.view.product.Form', {
                 removeCatalogs = Ext.Array.difference(oldValues, values);
 
             Ext.each(addCatalogs, function (catalogId) {
-                this.addCatalog(catalogId, true);
+                this.getNewCatalog(catalogId, true);
             }, this);
 
             Ext.each(removeCatalogs, function (catalogId) {

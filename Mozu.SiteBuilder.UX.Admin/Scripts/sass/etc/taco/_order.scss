@@ -1,5 +1,10 @@
 @mixin taco-order {
 
+  .order-no-content {
+    color: $gray-text-dark;
+    font-size: 13px;
+    font-style: italic;
+  }
 
   .#{$vprefix}address-editor-fields {
     @include flexbox($wrap: wrap, $justify: space-between);
@@ -80,7 +85,7 @@
         margin-left: 230px;
         background: transparent;
         border: transparent;
-        .x-btn-inner {
+        .#{$prefix}btn-inner {
           font-size: 18px;
           color: #08799c  
         }
@@ -245,6 +250,12 @@
     margin-bottom: 20px;  
   }
 
+  .x-panel .orderform-payment-transaction {
+    background: $card-button-bg;
+    // border: 1px solid $card-border;
+    border-radius: 4px;
+  }
+
 }
 
 
@@ -256,7 +267,7 @@
 
 // menu trigger widget for order details panels 
 .editContainer-menu-trigger{            
-  .x-btn-icon{
+  .#{$prefix}btn-icon{
     width:32px !important;
     height:32px !important;
   }

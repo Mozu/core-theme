@@ -26,10 +26,7 @@ Ext.define('Taco.view.product.SiteForm', {
     },
     scrollSpyOffset: 240,
 
-    
-
-    // need to move the left nav up to align with the top edge of the tab bar;
-    leftNavTopOffset: -60,
+    sectionNavTopOffset: 0,
 
     bodyCls: [Taco.baseCSSPrefix + 'product-admin-form', Taco.baseCSSPrefix + 'single-site-admin-form'],
     overrideCount: 0,
@@ -96,25 +93,6 @@ Ext.define('Taco.view.product.SiteForm', {
         Ext.Array.push(items, [
             Ext.create('Taco.view.product.subform.General', subFormCfg)
         ]);
-        
-        // if this product has a product usage of type "Bundle" add the subPanel for managing its items. This should only occur in siteForm when there is a single site, since the global form is hidden.
-        if (this.product.get("productUsage") == "Bundle" && this.isSingleSite) {
-            Ext.Array.push(items, [
-                Ext.create('Taco.view.product.subform.Bundle', subFormCfg)
-            ]);
-        }
-
-        if (this.isSingleSite) {
-            Ext.Array.push(items, [
-                Ext.create('Taco.view.product.subform.Inventory', subFormCfg),
-                Ext.create('Taco.view.product.subform.Options', subFormCfg),
-                Ext.create('Taco.view.product.subform.Properties', subFormCfg),
-                Ext.create('Taco.view.product.subform.Extras', subFormCfg),
-                Ext.create('Taco.view.product.subform.Shipping', subFormCfg)
-            ]);
-
-            
-        }
 
         Ext.Array.push(items, [
             

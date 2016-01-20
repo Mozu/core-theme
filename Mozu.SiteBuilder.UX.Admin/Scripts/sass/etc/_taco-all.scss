@@ -10,7 +10,10 @@ $prefix: 'x-';
 // Import all mixins
 @import 'taco/mixins/css3';
 @import 'taco/mixins/fonts';
+@import 'taco/mixins/tree';
 @import 'taco/colors';
+@import 'taco/fontsUpdate';
+@import 'taco/borderRadius';
 
 @import 'taco/content';
 @import 'taco/viewport';
@@ -29,23 +32,40 @@ $prefix: 'x-';
 @import 'taco/widgets/fieldgroup';
 @import 'taco/widgets/form';
 @import 'taco/widgets/grid';
-@import 'taco/widgets/modal';
+// @import 'taco/widgets/modal';
+@import 'taco/modal';
 @import 'taco/widgets/window';
 @import 'taco/widgets/shim';
 @import 'taco/widgets/tree';
 @import 'taco/widgets/pagesettings';
-@import 'taco/widgets/panel';
+@import 'taco/panel';
+@import 'chorizo/widgets';
+@import 'chorizo/tray';
 @import 'taco/widgets/themes';
 @import 'taco/widgets/checkout';
 @import 'taco/widgets/quickadder';
 @import 'taco/widgets/standaloneAccordion';
 @import 'taco/widgets/phoneOrders';
 @import 'taco/widgets/contextSwitcher';
+@import 'taco/widgets/prevNextArrowButtons';
 @import 'taco/widgets/imagefield';
 @import 'taco/widgets/publishIndicator';
+@import 'taco/widgets/bulkactiontoolbar';
+@import 'taco/widgets/websitesubheader';
+@import 'taco/widgets/selectors';
+@import 'taco/widgets/entitymanager';
+@import 'taco/widgets/catalogassignmentbar';
+@import 'taco/widgets/subnavlink';
+@import 'taco/widgets/draftstoolbar';
+@import 'taco/widgets/tooltip';
+@import 'taco/widgets/customschema';
+@import 'taco/widgets/siteviewdropdown';
+@import 'taco/locationinventory';
 
 // Import views
-@import 'taco/forms';
+// @import 'taco/forms';
+@import 'taco/formsUpdate';
+@import 'taco/buttons';
 
 // This line changes the location of your images when creating UIs to be relative instead of within the ExtJS directory.
 // You MUST set this to true/string value if you are creating new UIs + supporting legacy browsers.

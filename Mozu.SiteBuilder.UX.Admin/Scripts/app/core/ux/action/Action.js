@@ -41,7 +41,7 @@ Ext.define('Taco.core.ux.action.Action', {
      */
     onClick: function (e) {
         if (e == this) {
-            console.log('lord...');
+           
             this.fireEvent('click', this);
             return;
         }

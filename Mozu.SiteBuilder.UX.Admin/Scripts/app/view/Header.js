@@ -8,14 +8,15 @@ Ext.define('Taco.view.Header', {
         'Taco.view.navigation.SecondaryMenu',
         'Taco.core.ux.action.Action',
         'Taco.view.navigation.ContextSwitcher',
-        'Ext.form.action.StandardSubmit'
+        'Ext.form.action.StandardSubmit',
+        'Taco.core.ux.content.Logo'
     ],
 
     autoEl: {
         tag: 'header'
     },
     componentCls: Taco.baseCSSPrefix + 'viewport-header',
-    height: 85,
+    height: 36,
     hideMode: 'offsets',
     layout: {
         type: 'vbox',
@@ -26,152 +27,124 @@ Ext.define('Taco.view.Header', {
         var me = this,
             primaryMenuTrigger, breadcrumb;
 
-        primaryMenuTrigger = Ext.create('Taco.core.ux.action.Action', {
-            xtype: 'action',
-            text: '',
-            width: 60,
-            height: 40,
-            cls: Taco.baseCSSPrefix + 'primary-menu-trigger',
-            click: function () {
-                if (me.primaryMenu.isHidden() || !me.primaryMenu.rendered) {
-                    me.primaryMenu.showMenu();
-                } else {
-                    me.primaryMenu.hideMenu();
-                }
-            }
-        });
+        // primaryMenuTrigger = Ext.create('Taco.core.ux.action.Action', {
+        //     xtype: 'action',
+        //     text: '',
+        //     width: 60,
+        //     height: 40,
+        //     cls: Taco.baseCSSPrefix + 'primary-menu-trigger',
+        //     click: function () {
+        //         if (me.primaryMenu.isHidden() || !me.primaryMenu.rendered) {
+        //             me.primaryMenu.showMenu();
+        //         } else {
+        //             me.primaryMenu.hideMenu();
+        //         }
+        //     }
+        // });
 
-        breadcrumb = Ext.create('Ext.Component', {
-            flex: 1,
-            cls: Taco.baseCSSPrefix + 'breadcrumb',
-            tpl: [
-                '<ul>',
-                '<a href="{address}" class="taco-icon taco-icon-{icon}">{label}</a>',
-                '<tpl for="items">',
-                    '<tpl if="visible !== false">',
-                    '<li class="taco-breadcrumb-item{[ values.selected ?"-selected": ""]}"> <a class="{[values.items.length ? "taco-breadcrumb-menubutton" : ""]}" href="{address}" data-nav-id="{id}"><span>{label}</span></a></li>',
-                    '</tpl>',
-                '</tpl></ul>'
-            ]
-        });
+        // breadcrumb = Ext.create('Ext.Component', {
+        //     flex: 1,
+        //     cls: Taco.baseCSSPrefix + 'breadcrumb',
+        //     tpl: [
+        //         '<ul>',
+        //         '<a href="{address}" class="taco-icon taco-icon-{icon}">{label}</a>',
+        //         '<tpl for="items">',
+        //             '<tpl if="visible !== false">',
+        //             '<li class="taco-breadcrumb-item{[ values.selected ?"-selected": ""]}"> <a class="{[values.items.length ? "taco-breadcrumb-menubutton" : ""]}" href="{address}" data-nav-id="{id}"><span>{label}</span></a></li>',
+        //             '</tpl>',
+        //         '</tpl></ul>'
+        //     ]
+        // });
 
         // contextSwitcherTrigger = Ext.create('Taco.view.navigation.ContextSwitcher');
-        this.breadCrumb = breadcrumb;
+        // this.breadCrumb = breadcrumb;
 
-        this.primaryMenu = Ext.create('Taco.view.navigation.PrimaryMenu', {
-            trigger: primaryMenuTrigger,
-            breadcrumb: breadcrumb
-        });
+        // this.primaryMenu = Ext.create('Taco.view.navigation.PrimaryMenu', {
+        //     trigger: primaryMenuTrigger,
+        //     breadcrumb: breadcrumb
+        // });
 
         this.items = [{
             xtype: 'container',
             anchor: '100%',
-            height: 45,
+            height: 36,
             cls: Taco.baseCSSPrefix + 'masthead',
             padding: '0 10 0 10',
             layout: {
                 type: 'hbox',
                 align: 'middle'
             },
-            items: [{
-                xtype: 'component',
-                cls: Taco.baseCSSPrefix + 'mozulogo',
-                width: 103,
-                autoEl: {
-                    tag: 'a',
-                    href: '/admin',
-                    title: ' version:[' + Taco.apiVersion + '] date:[' + Ext.Date.format(new Date(Taco.buildDate), 'Y-m-d H:i:s') + ']'
-                },
-                listeners: {
-                    click: {
-                        element: 'el', //bind to the underlying el property on the panel
-                        fn: function (e) {
-                            e.preventDefault();
-                            // Taco.app.context.setCurrentContext(Taco.app.context);
-                            Taco.core.StateManager.attemptNavigate(Taco.app.context.urlToken);
-
-                        }
-                    }
-                }
+            items: [
+                {
+                    xtype: 'contentlogo',
+                    width: 68
                 }, {
-                xtype: 'secondarymenu',
-                flex: 1
-            }]
-        }, {
-            xtype: 'container',
-            anchor: '100%',
-            height: 40,
-            cls: Taco.baseCSSPrefix + 'viewport-nav',
-            autoEl: {
-                tag: 'nav'
-            },
-            layout: {
-                type: 'hbox',
-                align: 'middle'
-            },
-            items: [primaryMenuTrigger, breadcrumb] //, contextSwitcherTrigger]
+                    xtype: 'secondarymenu',
+                    flex: 1
+                }
+            ]
         }];
 
         this.callParent(arguments);
 
-        breadcrumb.on({
-            click: {
-                scope: this.el,
-                element: 'el',
-                delegate: 'a',
-                fn: function (e, link) {
+        // breadcrumb.on({
+        //     click: {
+        //         scope: this.el,
+        //         element: 'el',
+        //         delegate: 'a',
+        //         fn: function (e, link) {
 
-                    var dest,
-                        id,
-                        node,
-                        linkEl,
-                        actionDictionary = {
-                            viewlive: me.getSitePreviewURL,
-                            viewstaged: me.getSitePreviewURL
-                        },
-                        keys = Object.keys(actionDictionary),
-                        key = link.getAttribute('data-nav-id') ? link.getAttribute('data-nav-id').toLowerCase() : null,
-                        flyoutMenu;
+        //             var dest,
+        //                 id,
+        //                 node,
+        //                 linkEl,
+        //                 actionDictionary = {
+        //                     viewlive: me.getSitePreviewURL,
+        //                     viewstaged: me.getSitePreviewURL
+        //                 },
+        //                 keys = Object.keys(actionDictionary),
+        //                 key = link.getAttribute('data-nav-id') ? link.getAttribute('data-nav-id').toLowerCase() : null,
+        //                 flyoutMenu;
 
-                    if (link.getAttribute('data-nav-id')) {
+        //             if (link.getAttribute('data-nav-id')) {
    
-                        if (keys.indexOf(key) !== -1) {
-                            e.preventDefault();
-                            actionDictionary[key].call(me, key);
-                            return false;
-                        }
-                    }
+        //                 if (keys.indexOf(key) !== -1) {
+        //                     e.preventDefault();
+        //                     actionDictionary[key].call(me, key);
+        //                     return false;
+        //                 }
+        //             }
 
-                    if (link) {
-                        e.preventDefault();
-                        linkEl = Ext.get(link);
-                        id = linkEl.getAttribute('data-nav-id');
-                        if (id) {
-                            Ext.Array.each(breadcrumb.data.items, function (item) {
-                                if (item.id === id) {
-                                    node = item;
-                                }
-                            });
-                        }
+        //             if (link) {
+        //                 e.preventDefault();
+        //                 linkEl = Ext.get(link);
+        //                 id = linkEl.getAttribute('data-nav-id');
+        //                 if (id) {
+        //                     Ext.Array.each(breadcrumb.data.items, function (item) {
+        //                         if (item.id === id) {
+        //                             node = item;
+        //                         }
+        //                     });
+        //                 }
 
-                        if (node && node.items && node.items.length > 0) {
-                            flyoutMenu = {
-                                xtype: 'menu',
-                                items: []
-                            };
+        //                 if (node && node.items && node.items.length > 0) {
+        //                     flyoutMenu = {
+        //                         xtype: 'menu',
+        //                         items: []
+        //                     };
 
-                            me.buildFlyoutMenuConfig(node.items, flyoutMenu);
-                            flyoutMenu = Ext.widget(flyoutMenu);
-                            flyoutMenu.showBy(linkEl);
-                            return;
+        //                     me.buildFlyoutMenuConfig(node.items, flyoutMenu);
+        //                     flyoutMenu = Ext.widget(flyoutMenu);
+        //                     flyoutMenu.showBy(linkEl);
+        //                     return;
 
-                        }
-                        dest = linkEl.getAttribute('href') || '#';
-                        Taco.core.StateManager.attemptNavigate(dest);
-                    }
-                }
-            }
-        });
+        //                 }
+        //                 dest = linkEl.getAttribute('href') || '#';
+        //                 Taco.core.StateManager.attemptNavigate(dest);
+        //             }
+        //         }
+        //     }
+        // });
 
         Taco.app.on('user.change', function (user) {
             var cmp = me.items.getAt(0);

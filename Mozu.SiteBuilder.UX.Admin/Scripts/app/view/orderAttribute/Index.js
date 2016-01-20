@@ -3,11 +3,11 @@
  */
 
 Ext.define('Taco.view.orderAttribute.Index', {
-    extend: 'Taco.core.ux.browser.BrowserPage',
+    extend: 'Taco.core.ux.browser.SearchList',
    
     requires: ['Taco.model.OrderAttribute', 'Taco.store.OrderAttributes'/*, 'Taco.view.attribute.Edit'*/],
 
-   
+    addContentViewPadding: true,
 
     modelName: 'Taco.model.OrderAttribute',
     store: {
@@ -16,7 +16,15 @@ Ext.define('Taco.view.orderAttribute.Index', {
     editorName: 'Taco.view.orderAttribute.Edit',
     filterProperty: 'name',
     typeName: 'Order Attributes',
+    enableSearch: false,
+    enableSearchBarInHeader: false,
+    enableNavHeader: true,
+    saveButtonEnabled: false,
+    cancelButtonEnabled: false,
+    createButtonEnabled: true,
+    createButtonText: 'Create New Order Attributes',
 
+    title: 'Order Attributes',
 
     gridPanelConf: {
         stateful: true,
@@ -41,7 +49,6 @@ Ext.define('Taco.view.orderAttribute.Index', {
             minWidth: 120
         }, {
             xtype: 'taco.menucolumn',
-            text: 'Actions',
             menuItems: [{
                 text: 'Edit',
                 menuColumnHandler: 'editMenuColumnHandler'
@@ -50,6 +57,11 @@ Ext.define('Taco.view.orderAttribute.Index', {
                 menuColumnHandler: 'destroyMenuColumnHandler'
             }]
         }]
+    },
+
+    doCreate: function() {
+        var controller = 'orderattributes';
+        Taco.app.StateManager.attemptNavigate(controller + '/create');
     }
     
  

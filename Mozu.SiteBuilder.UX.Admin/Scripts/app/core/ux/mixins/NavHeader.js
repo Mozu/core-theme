@@ -31,17 +31,28 @@ Ext.define('Taco.core.ux.mixins.NavHeader', {
         'Ext.toolbar.Fill',
         'Ext.toolbar.Spacer',
         'Taco.core.util.ExceptionWhiner',
-        'Ext.toolbar.Spacer'
+        'Ext.toolbar.Spacer',
+        'Taco.core.ux.mixins.HamburgerButton',
+        'Taco.core.ux.mixins.Searchable',
+        'Taco.view.navigation.ContextSwitcherBar',
+        'Taco.view.navigation.SubNavLinkContainer',
+        'Taco.core.ux.content.Tooltip',
+        'Taco.core.ux.action.ProgressSplitButton',
+        'Taco.core.ux.action.ProgressButton'
     ],
 
     mixins: {
         permissions: 'Taco.core.ux.mixins.Permissions'
     },
 
+    titleId: 'taco-navigate-to-parent',
+
     init: function () {
-        var me = this
+        var me = this;
+
         this.mixins.permissions.constructor.apply(this, arguments);
 
+        me.navHeader = me;
         me.addEvents(
            /**
             * @event
@@ -80,22 +91,114 @@ Ext.define('Taco.core.ux.mixins.NavHeader', {
 
         this.initNavHeader();
 
-        me.mon(me, {
-            render: {
-                fn: function () {
-                    // when the view is rendered we need to bind the saveButton to the form if one exists;
-                    me.bindActionsToForm();
-                },
-                scope: me
+        this.on({
+            afterlayout: this.checkTitleOverflow,
+            render: function () {
+                // when the view is rendered we need to bind the saveButton to the form if one exists;
+                me.bindActionsToForm();
             },
-            titlechange: {
-                fn: function (panel, newTitle) {
-                    me.titleCmp.update(newTitle);
+            titlechange: function (panel, newTitle, pillCfg) {
+                var me = this;
+                var parentTitleCfg = this.parentTitleCfg ? this.parentTitleCfg : {};
+                var lightTagLabel = parentTitleCfg.lightTagLabel && this.record
+                                        ? this.record.get(parentTitleCfg.lightTagLabel)
+                                        : null;
 
-                },
-                scope: me
-            }
+                if (!pillCfg) {
+                    pillCfg = parentTitleCfg;
+                } else {
+                    pillCfg = Ext.apply({}, pillCfg, parentTitleCfg);
+                }
+
+                var pillText = pillCfg.pillText && this.record
+                                        ? this.record.get(pillCfg.pillText)
+                                        : pillCfg.pillText;
+
+                if (!pillText) {
+                    pillText = pillCfg.pillText;
+                }
+
+                var pillType = typeof pillCfg.pillType === 'function'
+                                        ? pillCfg.pillType(pillText)
+                                        : pillCfg.pillType;
+
+                if (!pillType) {
+                    pillType = pillCfg.pillType;
+                }
+
+                var addAction = function() {
+
+                    //reset the html
+                    document.getElementById(me.titleId).innerHTML = '';
+
+                    Ext.create('Taco.core.ux.action.Action', {
+                        text: parentTitleCfg.title || 'Edit View',
+                        renderTo: me.titleId,
+                        listeners:  {
+                            click: me.navigateToParentPage.bind(me, parentTitleCfg)
+                        }
+                    });
+                };
+
+                // override the split editor behavior 
+                // so when we navigate back from an order, we update the title to 'Orders'
+                if (newTitle === 'Orders') {
+                      me.titleCmp.update({
+                        title: newTitle,
+                        id: this.titleId
+                      });
+                }
+
+                else if (Object.keys(parentTitleCfg).length === 0) {
+                    me.titleCmp.update({
+                        title: newTitle,
+                        id: this.titleId
+                    });
+                }
+
+                else {
+                    me.titleCmp.update({
+                        title: parentTitleCfg.title || 'Edit View',
+                        subTitle: newTitle,
+                        id: this.titleId,
+                        lightTagLabel: lightTagLabel,
+                        pillText: pillText,
+                        pillType: pillType
+                    });
+
+                    if (this.pillTooltip) {
+                        Ext.destroy(this.pillTooltip);
+                    }
+
+                    if (pillCfg.pillTooltipData && pillCfg.pillTooltipTpl) {
+                        
+                        this.pillTooltip = Ext.create('Taco.core.ux.content.Tooltip', {
+                            elementSelector: '[data-role="nav-header-pill"]',
+                            arrowPosition: 'top',
+                            offsetTop: -22,
+                            showToolTipIcon: false,
+                            defaultTpl: pillCfg.pillTooltipTpl,
+                            defaultTplData: pillCfg.pillTooltipData || {}
+                        });
+                    }
+                    me.titleCmp.on('afterrender', addAction);
+                }
+            },
+            scope: this
         });
+    },
+
+    navigateToParentPage: function(cfg) {
+        var controller = cfg && cfg.controller ? cfg.controller : '/';
+        Taco.app.StateManager.attemptNavigate(controller);
+
+        if (controller === 'orders') {
+            //to do, figure out how to remove title
+        }
+    },
+
+    getTileByURL: function() {
+
     },
 
 
@@ -127,6 +230,8 @@ Ext.define('Taco.core.ux.mixins.NavHeader', {
         saveInProgress : false,
         saveInProgressText: "Saving...",
 
+        enableSearchBarInHeader: true,
+
         // turns off all the default coloration for the content container; ie. makes everything white;
         useWhiteContainer:false,
 
@@ -144,7 +249,13 @@ Ext.define('Taco.core.ux.mixins.NavHeader', {
 
         title: null,
 
-        titlePanel: null
+        titlePanel: null,
+
+        advancedSearchConfig: {
+            quickFilterData: [],
+            advancedForm: null,
+            advancedFormCls: null
+        }
 
     },
 
@@ -190,21 +301,57 @@ Ext.define('Taco.core.ux.mixins.NavHeader', {
 
 
         me.header = {
-            xtype: "container",
+            xtype: 'container',
+            itemId: 'navHeaderTop',
             cls: this.navHeaderCls,
-            // need to set the min height to 
-            style: "height:52px;",
+            style: 'height: 52px',
             items: []
-        }
+        };
 
         this.createNavHeader();
+
+        this.attachContextMenu();
+    },
+
+    attachContextMenu: function () {
+        var items = [];
+
+        if (this.contextConfig && !this.hideContextSwitcherBar) {
+            items.push(this.header);
+            items.push(Ext.create('Taco.view.navigation.ContextSwitcherBar', this.contextConfig));
+        }
+
+        if (this.navHeaderSubConfig) {
+
+            if (items.length === 0) items.push(this.header);
+
+            items.push(this.navHeaderSubConfig);
+        }
+
+        if (items.length === 0) {
+            return false;
+        }
+
+        this.header = {
+            xtype: 'container',
+            itemId: 'navHeaderBottom',
+            cls: this.navHeaderCls,
+            items: items
+        }
+    },
+
+    updateTitle: function (title) {
+        this.titleCmp.update({title: title});
     },
 
     createNavHeader: function () {
+        /*jshint maxcomplexity:1000 */
+
+
         var me = this,
             hasContextSwitcher = (!Ext.isEmpty(this.contextConfig) && !Ext.isEmpty(this.contextConfig.supportedLevels)),
-            conf;        
-
+            conf,
+            actionBarPadding = '0 0 0 0';
 
         conf = {
             xtype: "toolbar",
@@ -213,21 +360,62 @@ Ext.define('Taco.core.ux.mixins.NavHeader', {
             items: []
         };
 
+        if (!this.hideNavMenu) {
+            me.hamburgerButton = Ext.create('Taco.core.ux.mixins.HamburgerButton');
+            conf.items.push(me.hamburgerButton);
+        }
 
         if (me.title !== false) {
 
             me.titleContainer = {
                 xtype: "container",
-                layout: 'hbox',
-                flex: 1,
+                itemId: 'titleContainer',
+                layout: {
+                    type: 'hbox',
+                    align: 'strecth'
+                },
+                height: 60,
+                cls: 'taco-content-header-title-container',
                 items: []
             };
 
-            // just call view.setTitle("new title here") to update the title;
             me.titleCmp = Ext.create('Ext.Component', {
                 cls: "taco-content-header-title",
-                html: this.getTitle()
+                tpl: [
+                    '<tpl>',
+                        '<span class="title" id="{id}" data-role="nav-title"> {title} </span>',
+                        '<tpl if="subTitle">',
+                            '<span class="title subTitle" data-role="nav-sub-title"> {subTitle} </span>',
+                            '<tpl if="lightTagLabel">',
+                                '<i class="taco-light-tag" data-role="nav-tag">{lightTagLabel}</i>',
+                            '</tpl>',
+                            '<tpl if="pillText">',
+                                '<span class="x-column-content-pill x-column-content-pill-{pillType}" data-role="nav-header-pill">',
+                                    '{pillText}',
+                                '</i>',
+                            '</tpl>',
+                        '</tpl>',
+                    '</tpl>'
+                ],
+                flex: me.titlePanel ? 0 : 1,
+                data: {
+                    title: this.getTitle(),
+                    subTitle: '',
+                    id: this.titleId
+                }
             });
+
+            if (this.parentTitleCfg && this.parentTitleCfg.pillTooltipTplData) {
+
+                this.pillTooltip = Ext.create('Taco.core.ux.content.Tooltip', {
+                    elementSelector: '[data-role="nav-header-pill"]',
+                    arrowPosition: 'top',
+                    offsetTop: -22,
+                    showToolTipIcon: false,
+                    defaultTpl: this.parentTitleCfg.pillTooltipTpl,
+                    defaultTplData: this.parentTitleCfg.pillTooltipData || {}
+                });
+            }
 
             me.titleContainer.items.push(me.titleCmp);
 
@@ -238,19 +426,6 @@ Ext.define('Taco.core.ux.mixins.NavHeader', {
             conf.items.push(me.titleContainer);
 
             if (!Ext.isEmpty(this.contextConfig) && !Ext.isEmpty(this.contextConfig.supportedLevels)) {
-                me.titleContainer.items.push({
-                    autoEl: 'h3',
-                    itemId: 'forLable',
-                    style: {
-                        'line-height': '3rem',
-                        'margin': '0px 10px 0px 10px',
-                        'font-weight': 'normal'
-                    },
-                    xtype: 'component',
-                    html: 'for'
-                });
-
-                me.titleContainer.items.push(Ext.create('Taco.core.ux.content.ContextMenu', this.contextConfig));
 
             } else {
                 // In order for the title to grow and shrink dynamically and have elipsis we can only do this when there is no trailing "for [ context combo ] "
@@ -260,7 +435,55 @@ Ext.define('Taco.core.ux.mixins.NavHeader', {
             }
         }
 
-        
+        if (me.breadCrumbConfig) {
+            Ext.Array.each(me.breadCrumbConfig, function(config) {
+                conf.items.push(me.getBreadCrumb(config));
+            }, me);
+        }
+
+        if (me.enableSearchBarInHeader) {
+            me.searchBox = Ext.widget({
+                xtype: 'taco-filtercontainer',
+                cls: 'taco-filtercontainer',
+                searchType: 'navigation',
+                width: '100%',
+                flex: 1,
+                enableQuickFilters : this.enableQuickFilters,
+                quickFilterData: [me.advancedSearchConfig.quickFilterData],
+                advancedForm: me.advancedSearchConfig.form,
+                advancedFormCls: me.advancedSearchConfig.advancedFormCls,
+                disableAdvancedSearch: (!me.advancedSearchConfig.disableAdvancedSearch) ? false : true,
+                emptySearchText: (!me.advancedSearchConfig.emptySearchText) ? '' : me.advancedSearchConfig.emptySearchText,
+                store: me.store || me.getDefaultStore(),
+                filterStores: me.advancedSearchConfig.stores,
+                value: this.options && this.options.query ? this.options.query : undefined
+            });
+
+            conf.items.push(me.searchBox);
+        }
+
+        else if (!me.enableSearchBarInHeader && !this.dontFloatHeaderButtons){
+            //shifting over the buttons because we have no searchbar
+            //conf.items.push('->');
+            conf.layout = {
+                type: 'hbox',
+                align: 'stretch'
+            };
+
+            me.titleContainer.flex = 1;
+
+            actionBarPadding = '0 0 0 0';
+        }
+
+        if (me.breadCrumbConfig) {
+            me.titleContainer.flex = 0;
+            conf.items.push('->');
+        }
+
+        if (!me.hideSubnavLinks) {
+            me.subNavLinkContainer = Ext.create('Taco.view.navigation.SubNavLinkContainer');
+            conf.items.push(me.subNavLinkContainer);
+        }
 
         if (!me.actions) {
             me.actions = [];
@@ -270,9 +493,10 @@ Ext.define('Taco.core.ux.mixins.NavHeader', {
             if (me.cancelButtonEnabled) {
                 me.cancelActionButton = Ext.widget(Ext.apply({}, me.cancelButtonCfg, {
                     xtype: 'button',
+                    height: 40,
                     text: me.cancelText,
                     margin: "0 0 0 10",
-                    ui: 'action',
+                    ui: 'link',
                     scale: 'medium',
                     hidden: !me.cancelButtonVisible || this.cancelHidden || !this.allowCreate(),
                     itemId: 'cancelActionButton',
@@ -292,6 +516,7 @@ Ext.define('Taco.core.ux.mixins.NavHeader', {
 
                 var saveButtonCfg = Ext.apply({}, me.saveButtonCfg, {
                     xtype: 'button',
+                    height: 40,
                     text: me.saveText,
                     margin: "0 0 0 10",
                     ui: 'action-primary',
@@ -303,10 +528,10 @@ Ext.define('Taco.core.ux.mixins.NavHeader', {
                     formBind: true,
                     toggleHandler: me.saveActionHandler,
                     scope: me
-                })
+                });
 
                 if (me.saveAndCreateButtonEnabled) {
-                    saveButtonCfg.xtype = "splitbutton";
+                    saveButtonCfg.xtype = 'splitbutton';
                     saveButtonCfg.menu = [{
                         text: "Save and Create New",
                         handler: me.saveAndCreate,
@@ -314,9 +539,15 @@ Ext.define('Taco.core.ux.mixins.NavHeader', {
                     }]
                 }
 
+                if (saveButtonCfg.xtype === 'splitbutton') {
+                    me.saveActionButton = Ext.create('Taco.core.ux.action.ProgressSplitButton', saveButtonCfg);
+                }
+
+                else {
+                    me.saveActionButton = Ext.create('Taco.core.ux.action.ProgressButton', saveButtonCfg);
+                }
 
                 // need to cache a reference to the button since the button is moved outside of the class by the splitEditor
-                me.saveActionButton = Ext.widget(saveButtonCfg);
 
                 // if not in the modal wrapper then put in the header.
                 if (!me.isModalWrapper) {
@@ -330,6 +561,7 @@ Ext.define('Taco.core.ux.mixins.NavHeader', {
             if (me.createButtonEnabled) {
                 me.actions.push(Ext.apply({}, me.createButtonCfg, {
                     xtype: 'button',
+                    height: 40,
                     text: this.createButtonText,
                     margin: "0 0 0 10",
                     ui: 'action-primary',
@@ -340,10 +572,27 @@ Ext.define('Taco.core.ux.mixins.NavHeader', {
                     scope: me
                 }));
             }
+
         }
 
 
-        
+        if (me.moreButtonCfg && me.moreButtonCfg.menu) {
+            
+            if (!me.actions) me.actions = [];
+
+            me.actions.push(Ext.apply({}, me.moreButtonCfg, {
+                xtype: 'button',
+                height: 40,
+                ui: 'action',
+                scale: 'medium',
+                itemId: 'moreActionButton',
+                cls: 'taco-more-action-button',
+                handler: Ext.emptyFn,
+                margin: '0 0 0 10',
+                scope: me
+            }));
+        }
+
         // Allows class with mixin to insert additional actions. Code copied from EditorWrapper;
         Ext.each(this.additionalActions, function (additionalAction) {
             var beforeItemId = additionalAction.beforeItemId,
@@ -368,8 +617,10 @@ Ext.define('Taco.core.ux.mixins.NavHeader', {
         // need to create container for buttons so that they can force the titleCmp to have elipsis
         var actionToolbar = {
             xtype: 'toolbar',
+            cls: 'navheader-action-toolbar',
             itemHeader: 'navHeaderActionContainer',            
-            items: me.actions
+            items: me.actions,
+            padding: actionBarPadding
         }
 
         // if we have no title, the toolbar needs to flex to fill the entire container.
@@ -417,11 +668,9 @@ Ext.define('Taco.core.ux.mixins.NavHeader', {
 
     resetSaveButton: function () {
         var me = this;
-        if (me.saveActionButton) {            
-            me.saveActionButton.toggle(false, true);
-            me.saveActionButton.removeCls('taco-button-processing');
-            me.saveActionButton.setText(this.saveText);
+        if (me.saveActionButton) {         
             me.saveInProgress = false;
+            me.saveActionButton.stopLoading();
         }
     },
 
@@ -447,6 +696,10 @@ Ext.define('Taco.core.ux.mixins.NavHeader', {
         this.save(btn);
     },
 
+    dismissMessages: function()  {
+        Taco.app.fireEvent('dissmissmessages');
+    },
+
     /**
      * @private
      * The function to execute when the default save button is pressed
@@ -454,6 +707,7 @@ Ext.define('Taco.core.ux.mixins.NavHeader', {
      * Listen to the "savesuccess" event to get the final data after the save process completes
      * Subclasses should NOT override this method with their own behavior. They should override the doSave()
      */
+
     save: function (btn) {
         var me = this
 
@@ -461,20 +715,52 @@ Ext.define('Taco.core.ux.mixins.NavHeader', {
             return;
         }
 
+        /**
+        *  Dismiss all error and success messages;
+        */
+        me.dismissMessages();
+        
+
         if (me.fireEvent('beforesave', me) !== false) {
             me.onSave();
             me.fireEvent('save', me);
 
             if (me.saveActionButton) {
-                me.saveActionButton.addCls('taco-button-processing');
-                me.saveActionButton.setText(this.saveInProgressText);
+                me.saveActionButton.startLoading();                
             };
 
-            
             me.saveInProgress = true;
 
             me.doSave();
         }
+    },
+
+    getBreadCrumb: function(config) {
+        return Ext.create('Ext.Component', {
+            cls: "taco-subnav-breadcrumb",
+            tpl: [  
+                '<tpl>',
+                    '<div class="{[this.getClass(values)]}"tabidnex="{tabIndex}"><a> {title} </a></div>',
+                '</tpl>',
+                {
+                    getClass: function(values) {
+                        return values.isActive ? 'active' : '';
+                    }
+                }
+            ],
+            style: 'text-align: center;',
+            data: {
+                title: config.title,
+                isActive: config.isActive,
+                tabIndex: config.tabIndex
+            },
+            listeners: {
+                click: function() {
+                     Taco.core.StateManager.attemptNavigate(config.route);
+                },
+                element: 'el'
+            }
+        });
     },
 
     /**
@@ -509,12 +795,12 @@ Ext.define('Taco.core.ux.mixins.NavHeader', {
     * Pass in data argument if you want to override the default arguments for the savesuccess event
     * @param  {mixed} data the data that was saved. Could be record, string, object, array. Optional, but strongly recommended; If data not passed the method will attempt to pull the data from a child form;
     */
-    saveSuccess: function (data) {
+    saveSuccess: function (data, store, isSuccessful) {
         var me = this;
 
-        me.onSaveSuccess(data);
+        me.onSaveSuccess(data, store, isSuccessful);
         this.resetSaveButton()
-        me.fireEvent('savesuccess', me, data);
+        me.fireEvent('savesuccess', me, data, store, isSuccessful);
         
         if (me.createOnSaveSuccess) {
             me.createOnSaveSuccess = false;
@@ -612,12 +898,54 @@ Ext.define('Taco.core.ux.mixins.NavHeader', {
         console.log("doCreate is expected to be defined on the class")
     },
 
+    getDefaultStore: function() {
+        return Ext.create('Ext.data.Store', {
+            model: 'Taco.core.data.Model'
+        });
+    },
+
     bindActionsToForm: function (form) {
-        var actions = this.header.query('[formBind]'),
+        var actions = this.header.query ? this.header.query('[formBind]') : null,
             form = form || this.form;
 
         if (form && form.isComponent) {
             form.getForm().getBoundItems().add(actions);
+        }
+    },
+
+    checkTitleOverflow: function () {
+        var innerEl = this.titleCmp.getEl(),
+            titleEl = innerEl.down('[data-role="nav-title"]'),
+            subTitleEl = innerEl.down('[data-role="nav-sub-title"]'),
+            tagEl = innerEl.down('[data-role="nav-tag"]'),
+            draftEl = innerEl.down('[data-role="nav-header-pill"]'),
+            width = innerEl.getWidth(),
+            scrollWidth = innerEl.dom.scrollWidth,
+            maxWidth = width - 10;
+
+        if (!subTitleEl || Date.now() - this.buffer < 50) {
+            return;
+        }
+
+        maxWidth -= titleEl.getWidth();
+
+        if (tagEl) {
+            maxWidth -= tagEl.getWidth();
+        }
+
+        if (draftEl) {
+            maxWidth -= draftEl.getWidth();
+        }
+
+        if (width < scrollWidth) {
+            this.lastOverflowCheck = true;
+            subTitleEl.setWidth(maxWidth);
+        } else {
+            subTitleEl.setWidth(null);
+            if (this.lastOverflowCheck) {
+                this.checkTimeout = setTimeout(this.checkTitleOverflow.bind(this), 0);
+            }
+            this.lastOverflowCheck = false;
         }
     }
 

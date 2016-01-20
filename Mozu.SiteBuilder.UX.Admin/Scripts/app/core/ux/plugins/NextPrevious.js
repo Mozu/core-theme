@@ -5,7 +5,10 @@
     mixins: {
         observable: 'Ext.util.Observable'
     },
-    requires: ['Ext.state.Manager'],
+    requires: [
+        'Ext.state.Manager',
+        'Taco.core.ux.PrevNextArrowButtons'
+    ],
 
     config: {
         // turns on the next previous feature
@@ -187,14 +190,12 @@
             buttonCfg,
             buttonCfgDefault = {
                 xtype: "button",
+                cls: (forward) ? "taco-btn-nextprev-next" : "taco-btn-nextprev-prev",
                 ui: "action",
                 scale: "medium",
                 handler: (forward) ? me.navigateToNext : me.navigateToPrevious,
                 scope: me,
-                disabled: buttonDisabled,
-                margin: {
-                    right: 10
-                }
+                disabled: buttonDisabled
             },
             index,
             navToIndex,
@@ -231,10 +232,7 @@
                 //todo made this an icon
                 buttonCfg = {
                     
-                    glyph: (forward) ? 'XE60B@mozicons' : 'XE60C@mozicons',
-                    padding: {
-                        left: 7
-                    }
+                    cls: 'move-next-previous-arrow'
                 }
             } else {
                 // text button
@@ -248,10 +246,7 @@
             if (me.buttonType == "arrows") {
                 //todo made this an icon
                 buttonCfg = {
-                    glyph: (forward) ? 'XE60B@mozicons' : 'XE60C@mozicons',
-                    padding: {
-                        left: 7
-                    }
+                    cls: 'x-move-next-previous-arrow'
                 }
             } else {
                 buttonCfg = {
@@ -301,15 +296,12 @@
             //handler: me.navigateToPrevious,
             //scope: me,
             //disabled: previousButtonDisabled,
-            style:"font-size:16px;",
+            cls: 'x-move-next-previous-position',
             padding:{
                 top: 3,
                 bottom: 2,
                 left: 5,
                 right:5
-            },
-            margin: {
-                right: 10
             },
             html: positionText
         }
@@ -324,9 +316,26 @@
         // this happens when the user refreshes the view and the current record doesn't come back in the first page of the default store result set;
         // todo: determine what to display in this use case;        
 
-        this.nextButton = ownerCt.insert(0, me.getNextButtonCfg());
-        this.positionUI = ownerCt.insert(0, me.getPositionCfg());
-        this.previousButton = ownerCt.insert(0, me.getPreviousButtonCfg());
+        //this.nextButton = ownerCt.insert(0, me.getNextButtonCfg());
+        //this.positionUI = ownerCt.insert(0, me.getPositionCfg());
+        //this.previousButton = ownerCt.insert(0, me.getPreviousButtonCfg());
+
+
+        ownerCt.insert(0, {
+            xtype: 'taco.prevnext',
+            canNavigateToNext: this.canNavigateToNext(),
+            canNavigateToPrevious: this.canNavigateToPrevious(),
+            height: 25,
+            itemId: 'prevnextrpoduct',
+            listeners: {
+                navigateToNext: this.navigateToNext,
+                navigateToPrevious: this.navigateToPrevious,
+                scope: this
+            },
+            record: this.view.record,
+            store: this.store,
+            width: 50
+        })
     },
 
     // @private
@@ -447,9 +456,9 @@
 
         if (me.view) {
             this.keyNav.destroy();
-            this.nextButton.destroy()
-            this.positionUI.destroy()
-            this.previousButton.destroy();
+            // this.nextButton.destroy()
+            // this.positionUI.destroy()
+            // this.previousButton.destroy();
 
             me.view = me.store = this.nextButton = this.positionUI = this.previousButton = null;
         }

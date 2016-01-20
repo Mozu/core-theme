@@ -43,7 +43,7 @@ Ext.define('Taco.view.website.entityAdapters.BaseEntityAdapter', {
             customerEditor = me.manager.entityEditors.findEditor(doc);
         }
         if (customerEditor) {
-            me.dynamicFormContainer = Ext.create('Taco.view.entityManager.DynamicFormContainer', {
+            me.dynamicFormContainer = Ext.create('Taco.view.customSchema.DynamicFormContainer', {
                 editor: customerEditor,
                 record: doc,
                 showNameEditor: me.showNameEditor
@@ -175,7 +175,8 @@ Ext.define('Taco.view.website.entityAdapters.BaseEntityAdapter', {
         }, this);
         store.sync({
             success: function() {
-                this.manager.setPublishable(false);
+                var me = this;
+                me.manager.publishButton.setLoading(false, me.manager.setPublishable.bind(me.manager, false));
             },
             scope: this
         });

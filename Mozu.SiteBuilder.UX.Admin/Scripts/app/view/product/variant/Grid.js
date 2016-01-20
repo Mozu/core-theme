@@ -33,9 +33,9 @@ Ext.define('Taco.view.product.variant.Grid', {
 
     enablePaging: true,
 
-    hideSearchToolbar: false,
+    hideSearchToolbar: true,
 
-    enableAutoSelect: true,
+    enableAutoSelect: false,
 
     viewConfig: {
         enableTextSelection: false,

@@ -12,17 +12,19 @@ Ext.define('Taco.view.navigation.PrimaryMenu', {
     //    cls: 'taco-primary-menu-ct'
     //},
     autoShow: true,
+    autoScroll:true,
     border: false,
     floating: true,
     header: false,
     hideMode: 'offsets',
-    id: 'primaryMenu',
     mixins: { bindable: 'Ext.util.Bindable' },
     plain: true,
     resizable: false,
     shadow: false,
     x: 0,
-    y: 45,
+    y: 6,
+    id: 'primaryMenu',
+    isBound: false,
     
     initComponent: function () {
         this.callParent(arguments);
@@ -30,6 +32,8 @@ Ext.define('Taco.view.navigation.PrimaryMenu', {
         this.on({
             add: function (menu) { menu.hide(); }
         });
+
+        Ext.getDoc().on('click', Ext.bind(this.handleDocClick, this));
     },
 
     bindStore: function (store, initial) {
@@ -43,6 +47,7 @@ Ext.define('Taco.view.navigation.PrimaryMenu', {
 
         this.add(this.view);
         this.onStateChange(Taco.core.StateManager.getCurrentState());
+        this.isBound = true;
     },
 
     compareController: function(address, controllerName) {
@@ -61,7 +66,7 @@ Ext.define('Taco.view.navigation.PrimaryMenu', {
         var self = this,
             controller = appState.metaData.controller,
             appStateAddress = appState.getUri().toLowerCase(),
-            fourndRecords;
+            foundRecords;
         
         if (appStateAddress && appState.getMetaData().ctx && appState.getUri().indexOf(appState.getMetaData().ctx)==0) {
             appStateAddress = appState.getUri().toLowerCase().substring(appState.getMetaData().ctx.length + 1);
@@ -74,46 +79,11 @@ Ext.define('Taco.view.navigation.PrimaryMenu', {
 
         this.breadcrumb[controller == 'dashboard' ? 'hide' : 'show']();
 
-        fourndRecords = this.findNavRecords(this.store, appStateAddress);
+        foundRecords = this.findNavRecords(this.store, appStateAddress);
 
-        if (fourndRecords) {
-            this.syncBreadcrumb(fourndRecords.parentRecord, fourndRecords.selectedRecord);
+        if (foundRecords) {
+            this.syncBreadcrumb(foundRecords.parentRecord, foundRecords.selectedRecord);
         }
-
-        //this.store.each(function (topParent) {
-            
-        //    if (self.compareController(topParent.data.address, controller)) {
-        //        parentRecord = topParent;
-        //        selectedRecord = topParent;
-        //    }
-        //    topParent.items().each(function (subItem) {
-        //        if (self.compareController(subItem.data.address, controller)) {
-        //            parentRecord = topParent;
-        //            selectedRecord = subItem;
-        //        }
-        //    });
-        //});
-        //if (!selectedRecord) {
-            
-        //    this.store.each(function (topParent) {
-        //        if (topParent.data.address && appStateAddress.indexOf(topParent.data.address.toLowerCase() )> -1 && appStateAddress.indexOf(topParent.data.address.toLowerCase()) == appStateAddress.length + topParent.data.address.length) {
-        //            parentRecord = topParent;
-        //            selectedRecord = topParent;
-        //        }
-        //        topParent.items().each(function (subItem) {
-        //            if (subItem.data.address && appStateAddress.indexOf(subItem.data.address.toLowerCase()) > -1 && appStateAddress.indexOf(subItem.data.address.toLowerCase()) == appStateAddress.length - subItem.data.address.length) {
-        //                parentRecord = topParent;
-        //                selectedRecord = subItem;
-        //            }
-                    
-        //        });
-        //    });
-        //}
-        //if (selectedRecord) {
-
-        //    this.syncBreadcrumb(parentRecord, selectedRecord);
-        //}
-        
 
     },
     findNavRecords: function (store, appStateAddress) {
@@ -121,10 +91,9 @@ Ext.define('Taco.view.navigation.PrimaryMenu', {
         var matches = [],
             me = this,
             ret;
-       
 
         store.each(function (item) {
-          
+
             if (item.data.address && appStateAddress.indexOf(item.data.address.toLowerCase()) == 0  ){
 
                 matches.push({
@@ -182,30 +151,17 @@ Ext.define('Taco.view.navigation.PrimaryMenu', {
         bc.update(data);
     },
 
+    setTrigger: function(trigger) {
+        this.trigger = trigger;
+    },
+
     /**
      * Shows the floating menu.
      * @private
      */
     showMenu: function () {
-        var tBox = this.trigger.getEl().getPageBox();
-
-        Ext.getDoc().addListener('click', this.onClickDoc, this);
-
-        if (Ext.isIE8m) {
-            // if IE8 or less use JS to animate
-            this.show(null, function () {
-                this.animate({
-                    duration: 400,
-                    from: { opacity: 0, x: tBox.left, y: tBox.top },
-                    to: { opacity: 1, x: tBox.left, y: tBox.bottom }
-                });
-            }, this);
-        } else {
-            // else let CSS handle the animation
-            this.show();
-        }
-
-        this.trigger.addCls('expanded');
+        this.show();
+        //this.trigger.addCls('expanded');
     },
 
     /**
@@ -213,27 +169,8 @@ Ext.define('Taco.view.navigation.PrimaryMenu', {
      * @private
      */
     hideMenu: function () {
-        var tBox = this.trigger.getEl().getPageBox();
-
-        Ext.getDoc().removeListener('click', this.onClickDoc, this);
-
-        if (Ext.isIE8m) {
-            // if IE8 or less use JS to animate
-            this.animate({
-                duration: 400,
-                from: { opacity: 1, x: tBox.left, y: tBox.bottom },
-                to: { opacity: 0, x: tBox.left, y: tBox.top },
-                callback: function () {
-                    this.hide();
-                },
-                scope: this
-            });
-        } else {
-            // else let CSS handle the animation
-            this.hide();
-        }
-
-        this.trigger.removeCls('expanded');
+        this.hide();
+        //this.trigger.removeCls('expanded');
     },
 
     /**
@@ -241,7 +178,7 @@ Ext.define('Taco.view.navigation.PrimaryMenu', {
      * Needs a reference so listener can easily be added and removed.
      * @private
      */
-    onClickDoc: function (e, el) {
+    handleDocClick: function (e, el) {
         this.hideMenu();
     }
 });

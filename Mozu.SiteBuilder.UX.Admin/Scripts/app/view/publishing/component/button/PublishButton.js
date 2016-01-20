@@ -1,16 +1,18 @@
 Ext.define('Taco.view.publishing.component.button.PublishButton', {
     alias: 'widget.publishbutton',
-    extend: 'Ext.button.Split',
+    extend: 'Taco.core.ux.action.ProgressSplitButton',
     requires: [
         'Taco.core.ux.window.Modal',
         'Taco.view.publishing.modal.PublishSetPicker',
-        'Taco.model.PublishSet'
+        'Taco.model.PublishSet',
+        'Taco.core.ux.action.ProgressSplitButton'
     ],
     ui: 'action-primary',
+    menuAlign: 'tr-br',
+    height: 40,
     scale: 'medium',
     text: 'Publish Now',
     margin: '0 0 0 10',
-
     initComponent: function() {
 
         /***
@@ -68,13 +70,19 @@ Ext.define('Taco.view.publishing.component.button.PublishButton', {
         this.callParent(arguments);
     },
 
-    setLoading: function(isLoading) {
+    setLoading: function(isLoading, cb) {
 
         var method = isLoading ? 'addCls' : 'removeCls',
-            text = isLoading ?  'Proccessing...': 'Publish Now';
+            text = isLoading ?  'Proccessing...': 'Publish Now',
+            me = this;
 
-        this[method]('taco-button-processing');
-        this.setText(text);
+        if (isLoading) {
+            me.startLoading();
+        }
+
+        else {
+            me.stopLoading(cb);
+        }
     },
 
     onMenuShow: function(cmp) {
@@ -142,8 +150,12 @@ Ext.define('Taco.view.publishing.component.button.PublishButton', {
     },
 
     updateButton: function() {
+        var me = this;
 
-        if (!this.record) return false;
+        if (!this.record) {
+            me.disable();
+            return false;
+        }
 
         var state = this.record.get('publishState') || this.record.get('publishedState');
 
@@ -151,7 +163,10 @@ Ext.define('Taco.view.publishing.component.button.PublishButton', {
 
         if (this.record.phantom) state = 'live';
 
-        this[state.toLowerCase() === 'draft' || state.toLowerCase() === 'new' ? 'enable' : 'disable']();
+        Ext.defer(function() {
+            me[state.toLowerCase() === 'draft' || state.toLowerCase() === 'new' ? 'enable' : 'disable']();
+        }, 1100)
+
     },
 
     getPublishSetById: function(cb) {

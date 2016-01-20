@@ -6,8 +6,7 @@
 Ext.define('Taco.view.productRanking.form.Context', {
     extend: 'Taco.core.ux.form.Form',
     alias: 'widget.taco-productRanking-context',
-    requires: [        
-        'Taco.core.ux.grid.PagedMemoryGrid',
+    requires: [
         'Taco.core.ux.TooltipLabel',
         'Taco.core.util.Validation',
         'Taco.view.productRanking.grid.Category',
@@ -27,13 +26,20 @@ Ext.define('Taco.view.productRanking.form.Context', {
         var me = this;
         Ext.tip.QuickTipManager.init();
 
-        me.header =
-            Taco.core.ux.TooltipLabel.wrapConfig('productRanking.form.context.header', me, {
-                fieldLabel: "Context",
-                labelCls: 'x-header-text x-panel-header-text x-panel-header-text-subform',
-                margin: '20 0 35 0'
-            });
-        me.header.xtype = 'fieldcontainer';
+        me.header = {
+            fieldLabel: "Context",
+            labelCls: 'x-header-text x-panel-header-text x-panel-header-text-subform',
+            margin: '20 0 35 0',
+            itemId: 'context-header',
+            tooltip: Ext.create('Taco.core.ux.content.Tooltip', {
+                elementId: 'context-header',
+                hoverTarget: 'label',
+                messageKey: 'productRanking.form.context.header',
+                offsetLeft: 20,
+                offsetTop: 15
+            })
+        };
+        me.header.xtype = 'panel';
 
         var catStore = Taco.core.data.StoreManager.getOrCreate({
             type: 'Taco.store.Categories',
@@ -63,13 +69,13 @@ Ext.define('Taco.view.productRanking.form.Context', {
             single: true,
             scope: this
         });
-/*
+
         // MultiSelect is the most optimal Field that uses BoundList without a trigger
         this.categoryList = Ext.widget({
             xtype: 'combobox',
             name: 'categoryFilters',
             flex: 1,
-            emptyText: 'Search for Categories or click Add Button',
+            emptyText: 'Search for Categories',
             margin: '0 10 0 0',
             store: catStore,
             getStore: function () {
@@ -105,18 +111,24 @@ Ext.define('Taco.view.productRanking.form.Context', {
             filterProperty: 'categoryCode'
         });
 
-        this.categoriesBox = Ext.create('Ext.form.FieldContainer', {
+        this.categoriesBox = Ext.create('Ext.panel.Panel', {
             layout: 'vbox',
-            columnWidth: .5,
-            padding:"0 0 0 10",            
+            width: '50%',
+            style: {
+                verticalAlign: 'top'
+            },
+            margin: {
+                left: 10
+            },
+            itemId: 'categoriesField',
             fieldLabel: 'Categories',
             allowBlank: true,
             items: [
                 {
-                    xtype: 'fieldcontainer',
+                    xtype: 'panel',
                     layout: {
                         type: 'hbox',
-                        align: 'stretch'
+                        align: 'top'
                     },
                     width: '100%',
                     items: [
@@ -139,28 +151,53 @@ Ext.define('Taco.view.productRanking.form.Context', {
                 },
                 this.categoryGrid
             ]
-        });*/
+        });
 
         this.keywordGrid = Ext.create('Taco.view.productRanking.grid.Keyword', {
             name: 'keywords',
             record: this.record,
-            padding: "0 10 0 0",            
-            columnWidth: .5
+            width: '100%',
+            useWhiteContainer:true,
+            margin: {
+                right: 10
+            }
+
         });
-        this.categoryGrid = Ext.create('Taco.view.productRanking.grid.Category', {
-            name: 'categories',
-            record: this.record,
-            padding: "0 0 0 10",            
-            columnWidth: .5
+
+        this.keywordBox = Ext.create('Ext.panel.Panel', {
+            layout: 'vbox',
+            width: '50%',
+            style: {
+                verticalAlign: 'top'
+            },
+            itemId: 'searchKeywordsField',
+            fieldLabel: 'Search Keywords',
+            allowBlank: true,
+            items: [
+                {
+                    xtype: 'panel',
+                    layout: {
+                        type: 'hbox',
+                        align: 'stretch'
+                    },
+                    width: '100%',
+                    items: [
+                        this.keywordGrid
+                    ]
+                }
+            ]
         });
 
         this.items = [
             {
-                xtype: 'container',
-                layout: "column",
+                xtype: 'panel',
+                layout: {
+                    align: 'stretch',
+                    type: 'hbox'
+                },
                 items: [
-                    this.keywordGrid,
-                    this.categoryGrid
+                    this.keywordBox,
+                    this.categoriesBox
                 ]
             }
         ];

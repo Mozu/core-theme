@@ -41,8 +41,11 @@
             });
 
             this.$body = this.$modal.find('.mz-cms-body');
-           
-            this.controller().findWidgetTypeDefinitions( window, function(widgets) {
+            
+            //to use later with widget tray
+            this.windowContext = window;
+
+            this.controller().findWidgetTypeDefinitions(window, 'widgets', function(widgets) {
                 //somehow the callback might fire twice??? so clear out the existing widgets.
                 me.$body.empty();
 

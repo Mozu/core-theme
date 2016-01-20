@@ -44,7 +44,7 @@ Ext.define('Taco.core.ux.mixins.Navigable', {
             itemId: 'navFormNav',
             cls: 'taco-form-nav',
             autoShow: true,
-            itemSelector: '.taco-form-nav-link',
+            itemSelector: '.taco-link-button',
             listeners: {
                 itemclick: this.onNavClick,
                 scope: this
@@ -53,7 +53,7 @@ Ext.define('Taco.core.ux.mixins.Navigable', {
                 '<ul>',
                     '<tpl for=".">',
                         '<tpl if="this.isVisible(values)">',
-                            '<li class="taco-form-nav-link">{title}</li>',
+                            '<li class="taco-link-button">{title}</li>',
                         '</tpl>',
                     '</tpl>',
                 '</ul>',

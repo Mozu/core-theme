@@ -18,6 +18,7 @@ Ext.define('Taco.controller.Orders', {
 
     //todo:  changing to s until orders support siteId  in resource
     createContentView: function (viewName, cfg) {
+
         var split,
             viewClass,
             cfg = cfg || {},

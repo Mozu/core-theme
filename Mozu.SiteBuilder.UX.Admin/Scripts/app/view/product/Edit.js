@@ -9,8 +9,31 @@
         'Ext.form.Label',
         'Taco.store.PublishSets',
         'Taco.core.ux.content.IndicatorContainer',
-        'Taco.view.publishing.component.button.PublishButton'
+        'Taco.view.publishing.component.button.PublishButton',
+        'Taco.view.product.widget.CatalogAssignmentBar'
     ],
+
+    parentTitleCfg: {
+        title: 'Products',
+        lightTagLabel: 'productCode',
+        controller: 'products',
+        pillType: 'dark',
+        pillText: 'Draft',
+        pillTooltipTpl: [
+            '<div style="line-height: 15px;">',
+                '<span>Publish Set: {publishSetName}</span>',
+            '</div>',
+            '<div style="line-height: 15px;">',
+                '<span>Publish Date: {publishDate}</span>',
+            '</div>'
+        ],
+        pillTooltipData: {
+            publishSetName: 'Unassigned',
+            publishDate: 'Unscheduled'
+        }
+    },
+
+    enableSearchBarInHeader: false,
 
     statics: {
         sizes: {},
@@ -72,39 +95,17 @@
     saveAndCreateButtonEnabled : true,
 
     afterDuplicate: function () {
-        Taco.app.fireEvent('setmessage', 'Please enter a product code.', 'info');
+        Taco.app.fireEvent('setmessage', 'Please enter a product code.', 'success');
         Taco.app.fireEvent('productduplicated', true);
     },
 
     initComponent: function () {
-        var me = this;
 
-        if (this.checkProductPublishing()) {
-            this.titlePanel = Ext.widget('taco-indicator', {
-                afterrender: function(toolTip) {
-                    var pubInfo = me.record.getPublishingInfo();
-                    
-                    if (pubInfo.publishSetInfo) {
-                        Ext.create('Taco.core.ux.action.Action', {
-                            text: pubInfo.publishSetInfo.name,
-                            renderTo: 'publishSetName',
-                            listeners: {
-                                click: {
-                                    fn: function(cmp) {
-                                        toolTip.tipContent.hide();
-                                        Taco.app.StateManager.attemptNavigate('/publishing/publishsets/' + pubInfo.publishSetInfo.code);
-                                    }
-                                }
-                            }
-                        });
-                    }
-                   
-                }
-            });
-        }
+        var me = this;
 
         this.publishingButton = {
             xtype: 'publishbutton',
+            height: 40,
             itemId: 'publishActionButton',
             beforeItemId: 'cancelActionButton',
             buttonGroup: 'isPublishable',
@@ -132,7 +133,7 @@
                         me.record.save({
                             success: function() {
                                 me.publishButton.setLoading(false);
-                                me.setGrowl('Moved to Publish Set', 'info');
+                                Taco.app.fireEvent('setmessage', 'Moved to Publish Set', 'success');
                             }
                         });
                     });
@@ -149,15 +150,19 @@
         };
 
         this.additionalActions = [
-            this.publishingButton,
-            {
+            this.publishingButton
+        ];
+
+        this.moreButtonCfg = {
             xtype: 'button',
+            height: 40,
             itemId: 'moreButton',
             ui: 'action',
             scale: 'medium',
-            text: 'More',
+            text: '',
             menuAlign: 'tr-br?',
             menu: {
+                cls: 'taco-more-action-button-menu',
                 plain: true,
                 shadow: false,
                 items: [{
@@ -265,7 +270,31 @@
                     scope: this
                 }
             }
-        }];
+        };
+
+        this.navHeaderSubConfig = Ext.create('Taco.view.product.widget.CatalogAssignmentBar', {
+            catalogs: this.record.productInCatalogsStore(),
+            listeners: {
+                select: function (assignmentBarView, record) {
+                    var tabItems = me.down('#productFormLayout').up().tabItems;
+                    var index = 0;
+
+                    Ext.Array.each(tabItems, function(page, i) { 
+                        if (page.catalogId === record.get('value')) {
+                            index = i;
+                        } 
+                    });
+
+                    if (record.get('type') === 'master') index = 0;
+
+                    me.down('#productFormLayout').getLayout().setActiveItem(index);
+                },
+                change: function (flyoutView, selectedCatalogIds) {
+                    me.down('#productFormLayout').up().resetCatalogs(selectedCatalogIds);
+                    this.redraw(me.record.productInCatalogsStore());
+                }
+            }
+        });
 
         if (this.checkProductPublishing()) {
             this.setPublishStatus();
@@ -276,41 +305,24 @@
     },
 
     setPublishStatus: function() {
-        var pubInfo = this.record.getPublishingInfo(),
-            tooltipContent = '',
-            extraStyle = '',
-            generateTooltipKey = function (content) {
-                return '<span style="width:90px;font-weight: bold;float:left;">' + content + '</span>';
-            },
-            generateTooltipValue = function (content, additionalStyle, id) {
-                return '<span id="' + id + '" style="padding-left: 5px;float:left;"' + additionalStyle + '">' + content + '</span>';
-            };
+        var pubInfo = this.record.getPublishingInfo();
 
         if (!this.checkProductPublishing()) {
             return;
         }
 
-        if (pubInfo.statusText) {
-            extraStyle = (!pubInfo.publishSetInfo) ? 'font-style:italic;' : '';
-            tooltipContent = generateTooltipKey('Publish Set:');
-            if (pubInfo.publishSetInfo) {
-                tooltipContent += generateTooltipValue('', '', 'publishSetName');
-            } else {
-                tooltipContent += generateTooltipValue('None', extraStyle);
-            }
-            tooltipContent += '<br/>';
-            tooltipContent += generateTooltipKey('Publish Date:');
-            tooltipContent += generateTooltipValue((pubInfo.publishSetInfo && pubInfo.publishSetInfo.scheduledDate
-                    ? Ext.Date.format(pubInfo.publishSetInfo.scheduledDate, 'M j, Y g:ia T')
-                    : 'Unscheduled'), extraStyle);
-
-            this.titlePanel.setTooltipContent(tooltipContent);
-            this.titlePanel.setText('DRAFT', false);
-            // no longer updating the main text per conversation with jason muxlow 
-            // this.titlePanel.setText(pubInfo.statusText, false);
-            this.titlePanel.show();
+        if (pubInfo && pubInfo.statusText) {
+            this.fireEvent('titlechange', this, this.record.get('productName'), {
+                pillText: 'Draft',
+                pillTooltipData: {
+                    publishSetName: pubInfo.publishSetInfo ? pubInfo.publishSetInfo.name : 'Unassigned',
+                    publishDate: pubInfo.publishSetInfo && pubInfo.publishSetInfo.scheduledDate ? Ext.util.Format.date(pubInfo.publishSetInfo.scheduledDate, 'M j, Y g:ia T') : 'Unscheduled'
+                }
+            });
         } else {
-            this.titlePanel.hide();
+            this.fireEvent('titlechange', this, this.record.get('productName'), {
+                pillText: null
+            });
         }
     },
 
@@ -354,6 +366,8 @@
                 },
             scope: this
         });
+
+        this.setPublishStatus();
     },
 
     checkProductPublishing: function () {
@@ -375,8 +389,10 @@
             return;
         }
 
-        this.publishButton.addCls('taco-button-processing');
-        this.publishButton.setText('Publishing...');
+        // this.publishButton.addCls('taco-button-processing');
+        // this.publishButton.setText('Publishing...');
+
+        this.publishButton.setLoading(true);
 
         // if the form is dirty, we need to persist the changes before doing the publish
         if (this.form.isDirty()) {
@@ -386,7 +402,7 @@
             }
             this.doPublishAfterSave = true;
             this.form.save({
-                success: me.setGrowl.bind(me, 'Published', 'info')
+                success: me.showMessage.bind(me, 'Published', 'success')
             });
         } else {
             this.doPublish();
@@ -415,7 +431,7 @@
                                 }
                                 me.setPublishStatus();
                                 me.record.save({
-                                    success: me.setGrowl.bind(me, 'Moved to Publish Set', 'info')
+                                    success: me.showMessage.bind(me, 'Moved to Publish Set', 'success')
                                 });
                             });
                         }
@@ -438,7 +454,7 @@
                 //            }
                 //            me.setPublishStatus();
                 //            me.record.save({
-                //                success: me.setGrowl.bind(me, 'Moved to Publish Set', 'info')
+                //                success: me.showMessage.bind(me, 'Moved to Publish Set', 'success')
                 //            });
                 //        });
 
@@ -462,7 +478,7 @@
         me.publishButton.setLoading(true);
         this.record.save({
             success:  function() {
-                me.setGrowl('Removed from Publish Set', 'info');
+                me.showMessage('Removed from Publish Set', 'success');
                 me.publishButton.setLoading(false);
             },
             failure: function() {
@@ -480,7 +496,7 @@
             success: function (scope, items) {
                 Taco.core.StateManager.attemptNavigate(me.getEditRoute() + '/' + me.record.getId(), { record: me.record });
                 //prevent jank of reload
-                setTimeout(me.setGrowl.bind(me, 'Discarded', 'info'), 1000);
+                setTimeout(me.showMessage.bind(me, 'Discarded', 'success'), 1000);
             },
             failure: function (response) {
                 var json = Ext.decode(response.responseText, true),
@@ -545,7 +561,7 @@
                     this.fireEvent('idchange', this, this.record);
                 }
                 this.publishButton.setLoading(false);
-                this.setGrowl('Published', 'info');
+                this.showMessage('Published', 'success');
                 this.publishButton.addRecord(this.record);
             },
             failure: function (err) {
@@ -585,13 +601,13 @@
                     focusEl.focus();
                 },
                 scope:me
-    }
+            }
         });
     
     },
 
-    setGrowl: function(msg, info) {
-        Taco.app.fireEvent('setgrowl', msg, info, 1000);
+    showMessage: function(msg, info) {
+        Taco.app.fireEvent('setmessafe', msg, info);
     },
 
     doCreate : function (){

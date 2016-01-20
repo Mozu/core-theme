@@ -12,19 +12,14 @@ Ext.define('Taco.view.navigation.PrimaryMenuView', {
     itemSelector: 'li.taco-menu-item',
     overItemCls: 'taco-menu-item-hover',
     selectedItemCls: 'taco-menu-item-active',
+    autoScroll: true,
 
     initComponent: function () {
-        var me = this;
-
         this.tpl = [
             '<tpl for=".">',
-            //    '<tpl if="visible">',
-                    '<li class="taco-menu-item"  style="{[(values.visible && !values.breadCrumbOnly) ? "" : "display:none" ]}" >',
-                       '<a href="{address}" class="taco-menu-item-link taco-icon taco-icon-{icon}">{label}</a>',
-                    '</li>',
-              //  '<tpl else>',
-               //      '<li class="taco-menu-item" style="display:none"> </li>',
-               // '</tpl>',
+                '<li class="taco-menu-item"  style="{[(values.visible && !values.breadCrumbOnly) ? "" : "display:none" ]}" >',
+                    '{label}',
+                '</li>',
             '</tpl>'
         ];
 
@@ -77,13 +72,13 @@ Ext.define('Taco.view.navigation.PrimaryMenuView', {
      * @param  {Ext.EventObject} e The raw event object
      */
     navigate: function (view, record, item, index, e) {
-        var dest = record.get('address'),
+        var address = record.get('address'),
             subItem = e.getTarget('li.taco-submenu-item', 10);
 
-        if (subItem) return false;
+        if (subItem || !address) return false;
 
         e.preventDefault();
-        Taco.core.StateManager.attemptNavigate(dest);
+        Taco.core.StateManager.attemptNavigate(address);
         this.menu.hideMenu();
     },
 

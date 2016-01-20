@@ -54,10 +54,12 @@ Ext.define('Taco.view.order.subform.fulfillment.Package', {
             },
             items: Ext.Array.push([{
                 xtype: 'button',
-                text: '-',
-                width: 50,
+                text: '',
+                cls: 'package-details',
+                glyph: 'XE92A@mozicons',
+                width: 28,
                 ui: 'action',
-                scale: 'medium',
+                scale: 'small',
                 margin: '0 10 0 0',
                 hidden: !this.isCollapsible,
                 handler: this.handleCollapse,
@@ -73,6 +75,13 @@ Ext.define('Taco.view.order.subform.fulfillment.Package', {
             }], availableActions)
         });
 
+        var packageStatus;
+        if (this.packageData.status == 'Fulfilled') {
+            packageStatus = '<span class="x-column-content-pill x-column-content-pill-true">Fulfilled</span>';
+        } else if (this.packageData.status == 'NotFulfilled') {
+            packageStatus = '<span class="x-column-content-pill x-column-content-pill-false">NotFulfilled</span>';
+        }
+
         this.statusContainer = Ext.widget({
             xtype: 'container',
             cls: 'taco-order-package-details',
@@ -80,7 +89,7 @@ Ext.define('Taco.view.order.subform.fulfillment.Package', {
             items: [{
                     xtype: 'component',
                     padding: '0 0 10 0',
-                    html: '<span class="label">Status:</span>' + this.packageData.status
+                    html: '<span class="label">Status:</span>' + packageStatus
                 },
                 this.details
             ]
@@ -105,7 +114,7 @@ Ext.define('Taco.view.order.subform.fulfillment.Package', {
             defaults: {
                 xtype: 'button',
                 ui: 'action',
-                scale: 'medium',
+                scale: 'small',
                 scope: this,
                 margin: '0 0 0 10'
             },
@@ -115,8 +124,10 @@ Ext.define('Taco.view.order.subform.fulfillment.Package', {
         if (this.isCollapsible) {
             this.closedContainer.add([{
                 margin: '0 10 0 0',
-                text: '+',
-                width: 50,
+                text: '',
+                cls: 'package-details',
+                glyph: 'XE927@mozicons',
+                width: 28,
                 handler: this.handleExpand
             }, {
                 xtype: 'component',

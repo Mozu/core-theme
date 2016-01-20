@@ -331,7 +331,6 @@ Ext.define('Taco.view.storefrontProduct.Grid', {
         if (actions.length) {
             actionColumn = {
                 xtype: 'taco.menucolumn',
-                text: 'Actions',
                 onMenuShow: me.onActionMenuShow,
                 menuItems: actions
             };

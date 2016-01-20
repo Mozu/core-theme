@@ -101,6 +101,7 @@ Ext.define('Taco.Application', {
         'Taco.overrides.panel.Tool',
         'Taco.overrides.toolbar.Paging',
         'Taco.overrides.window.MessageBox',
+        'Taco.overrides.SplitButton',
         'Ext.data.association.HasOne',
         'Taco.core.data.RemoteException',
         'Taco.core.context.TaContext',
@@ -132,7 +133,8 @@ Ext.define('Taco.Application', {
         'Ext.ux.form.MultiSelect',
         'Taco.store.TooltipHelp',
         'Taco.core.ux.TooltipLabel',
-        'Taco.core.util.Filter'
+        'Taco.core.util.Filter',
+        'Taco.core.ux.action.UserButton'
     ],
     controllers: [
         //'Analytics',
@@ -289,6 +291,47 @@ Ext.define('Taco.Application', {
                     this.cleanup(request);
                     Ext.EventManager.idleEvent.fire();
                 }
+            }
+        });
+
+        Ext.override(Ext.Component, {
+            showBy: function(cmp, pos, off) {
+                var me = this;
+
+
+                // check to see if this is a primary menu, and no other offset was provided 
+                // if both these are satisfied, apply 10 pixels of vertical padding
+
+                if (me.ownerButton && me.ownerButton.ui) {
+                    // if were a primary button, dont apply style
+                    if (me.ownerButton.ui.indexOf('primary') === -1) {
+                        off = off === undefined  && !me.ownerItem ? [0, 10] : off;
+                    }
+
+                    // unless were a publish button
+                    else if (me.ownerButton.xtype === 'publishbutton') {
+                        off = off === undefined  && !me.ownerItem ? [0, 10] : off;   
+                    }
+                }
+
+        
+                if (!me.floating) {
+                    Ext.log.warn('Using showBy on a non-floating component');
+                    return me;
+                }
+
+                if (me.floating && cmp) {
+                    me.show();
+
+                    // Show may have been vetoed
+                    if (me.rendered && !me.hidden) {
+                        // Align to Component or Element using alignTo because normal show methods
+                        // are container-relative, and we must align to the requested element or
+                        // Component:
+                        me.alignTo(cmp, pos || me.defaultAlign, off);
+                    }
+                }
+                return me;
             }
         });
 
@@ -455,6 +498,11 @@ Ext.define('Taco.Application', {
             me.fireEvent('mouseleave', me, e);
             }
         });
+
+
+        //
+
+        Ext.override(Ext.grid.View, { enableTextSelection: true });
 
 
         Ext.util.Observable.prototype.removeOwnedListener =

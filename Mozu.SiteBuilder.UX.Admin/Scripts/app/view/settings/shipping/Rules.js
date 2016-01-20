@@ -30,7 +30,7 @@ Ext.define('Taco.view.settings.shipping.Rules', {
     addContentViewPadding: true,
 
 
-    enableSearch: true,
+    enableSearch: false,
     enablePaging: true,
     enableRowEditing: false,
 
@@ -46,13 +46,10 @@ Ext.define('Taco.view.settings.shipping.Rules', {
     selType: 'rowmodel',
    
 
-
+    enableSearchBarInHeader: false,
    
 
     autoScroll: true,
-
-
-
 
     enableQuickFilters: false,
 
@@ -65,7 +62,9 @@ Ext.define('Taco.view.settings.shipping.Rules', {
             [{ fulfillmentStatus: 'Fulfilled' }, 'Fulfilled Orders'],
             [{ orderStatus: 'Cancelled' }, 'Cancelled Orders'],
             [{}, 'All Orders']
-        ]
+        ],
+
+        emptySearchText: 'Search'
     },
 
 
@@ -130,7 +129,6 @@ Ext.define('Taco.view.settings.shipping.Rules', {
 
             }, {
                 xtype: 'taco.menucolumn',
-                text: 'Actions',
                 flex: 1,
                 menuItems: [{
                     text: 'Edit',

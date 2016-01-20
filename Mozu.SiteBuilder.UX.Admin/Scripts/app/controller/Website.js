@@ -54,23 +54,25 @@ Ext.define('Taco.controller.Website', {
      *
      *************************************/
     //returns a  store of widgetTypeDefinition
-    findWidgetTypeDefinitions: function (win, callback) {
+    findWidgetTypeDefinitions: function (win, type, callback) {
 
 
-        var themeId=win.require.mozuData('pagecontext').themeId;
+        var themeId = win.require.mozuData('pagecontext').themeId,
+            storeType = type === 'widgets' ? 'Taco.store.WidgetDefinitions' : 'Taco.store.LayoutWidgetDefinitions',
+            configFunc = type === 'widgets' ? this.getWidgetObject : this.getLayoutWidgetObject;
 
 
-        var store = Taco.core.data.StoreManager.getOrCreate({
-            id:'Taco.store.WidgetDefinitions'+ themeId,
-            type:'Taco.store.WidgetDefinitions',
-            themeId:themeId
-        }),
+        var widgetStore = Taco.core.data.StoreManager.getOrCreate({
+                id: storeType + themeId,
+                type: storeType,
+                themeId: themeId
+            }),
             cb = function () {
                 var json = [],
                     convertedData = [],
                     pageContext = win.require.mozuData('pagecontext');
 
-                store.each(function (item) {
+                widgetStore.each(function (item) {
                     var validPageTypes = item.get('validPageTypes');
                     if (Ext.isEmpty(validPageTypes) || Ext.Array.contains(validPageTypes, '*') || Ext.Array.contains(validPageTypes, pageContext.pageType)) {
                         json.push(item.data);
@@ -79,23 +81,32 @@ Ext.define('Taco.controller.Website', {
 
                 json.forEach(function (widget) {
 
-                    convertedData.push({
-                        name: widget.displayName,
-                        isRichText: widget.id === 'content',
-                        icon: widget.icon,
-                        id: widget.id
-                    });
+                    convertedData.push(configFunc(widget));
                 });
                 callback(convertedData);
             };
 
-
-        if (store.hasCompletedLoading()) {
+        if (widgetStore.hasCompletedLoading()) {
             cb();
         } else {
-            store.on('load', cb, {
+            widgetStore.on('load', cb, {
                 single: true
             });
         }
+    },
+    getWidgetObject: function(widget) {
+        return {
+            name: widget.displayName,
+            isRichText: widget.id === 'content',
+            icon: widget.icon,
+            id: widget.id
+        };
+    },
+    getLayoutWidgetObject: function(widget) {
+        return {
+            name: widget.displayName,
+            icon: widget.icon,
+            id: widget.id
+        };
     }
 });

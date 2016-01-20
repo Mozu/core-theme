@@ -73,7 +73,8 @@ Ext.define('Taco.view.couponCode.Grid', {
 
     advancedSearchConfig : {
         advancedFormCls: 'Taco.view.couponCode.AdvancedSearchForm',
-        quickFilterData: []
+        quickFilterData: [],
+        emptySearchText: 'Search'
     },
 
     onCreate: Ext.emptyFn,
@@ -188,7 +189,6 @@ Ext.define('Taco.view.couponCode.Grid', {
                     //field.setValue();
                     //me.getSelectionModel().deselectAll();
                     me.mon(me.store, 'load', function () {
-                        //Taco.app.fireEvent('setgrowl', "Created", null, 2000);
                         //me.getSelectionModel().selectRange(0, 0);
                         //field.focus();
                         field.reset();
@@ -309,7 +309,6 @@ Ext.define('Taco.view.couponCode.Grid', {
                 format: 'n/j/Y g:i a'
             },{
                 xtype: 'taco.menucolumn',
-                text: 'Actions',
                 //onMenuShow: function (menu, eventData) {
                 //    // need to disable the delete menu option when discount has been used
                 //    var deleteMenuItem = menu.down("#deleteMenuItem");

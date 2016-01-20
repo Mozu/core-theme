@@ -2,9 +2,31 @@
 
     .#{$vprefix}notifierbar {
         background-color: $color-status-info;
+        display: block;
         font-size: 14px;
+        font-family: $font-family;
         line-height: 20px;
+        height: auto;
+        left: 0;
+        margin: 0px auto;
+        overflow: hidden;
         padding-bottom: 0px;
+        position: fixed;
+        width: 50%;
+        right: 0 !important;
+        z-index: 100000;
+        text-align: center;
+        top: -80px;
+        transition-property: opacity, top;
+        transition-duration: 100ms, 300ms;
+        transition-timing-function: cubic-bezier(.17,.67,.83,.67);
+        opacity: 0;
+        @include border-radius(0 0 5px 5px);
+
+        &.#{$vprefix}shown {
+            opacity: 1;
+            top: 0;
+        }
 
         &.#{$vprefix}growl {
             background-color: $growl-color-status-info;
@@ -35,8 +57,15 @@
         }
 
         .message {
+            color: $white-color;
             display: inline-block;
-            white-space: pre;
+            overflow-wrap: break-word;
+            padding: 5px;
+            word-wrap: break-word;
+
+            div {
+                padding: 5px;
+            }
         }
 
         .status-icon {
@@ -54,21 +83,28 @@
         .close-icon {
             cursor: pointer;
             display: inline-block;
-            right: 0px;
-            top: 0px;
+            right: 8px;
+            top: 7px;
             @include icon-font($glyph-close);
             position: absolute;
 
             &::after {
-                color: $color-neutral-white;
+                color: $light-bg-gray;
+            }
+
+            &:hover {
+                &::after {
+                    color: $white-color;
+                }
             }
         }
 
         &.#{$vprefix}notifierbar-success {
-            background-color: $color-status-success;
+            background-color: $valid-green;
+            z-index: 100001;
 
             .#{$prefix}window-body {
-                border-color: $color-status-success;
+                border-color:$valid-green;
             }
 
             .status-icon {
@@ -93,10 +129,11 @@
         }
 
         &.#{$vprefix}notifierbar-error {
-            background-color: $color-status-error;
+            background-color: $error-red;
+            z-index: 100000;
 
             .#{$prefix}window-body {
-                border-color: $color-status-error;
+                border-color: $error-red;
             }
 
             .status-icon {

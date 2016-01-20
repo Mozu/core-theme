@@ -1,3 +1,90 @@
+.mz-cms-row {
+
+    &.content-view {
+        padding: 20px !important;
+    }
+
+    .mz-drop-hint {
+        line-height: 100px;
+        text-align: center;
+    }
+
+    .mz-layout-widget-header {
+        text-align: center;
+        height: 24px;
+        position: relative;
+
+        .mozu-row-title {
+            display: inline-block;
+            padding-top: 3px;
+        }
+
+        &.row {
+            background-color: $light-bg-gray;
+            color: #0000000;
+
+            .mz-cms-tools {
+                background-color: $light-bg-gray;
+            }
+        }
+
+        &.col {
+            background-color: transparent;
+            color: #FFFFF;
+            position: absolute;
+            width: 100%;
+        }
+    }
+}
+
+.mz-drag-icon {
+    display: block;
+    background-repeat: round;
+    height: 50px;
+    pointer-events: none;
+    position: absolute;
+    width: 50px;
+    z-index: 1000002;
+}
+
+.mz-cms-tools {
+    display: block;
+    padding: 0;
+    position: absolute;
+    right: 0;
+    top: 0;
+    margin: 0;
+    z-index: 1000001;
+    cursor: pointer;
+    @include border-radius(5px);
+
+    li {
+        display: inline-block;
+        height: 26.66px;
+        text-align: center;
+        padding-top: 6.66px;
+        text-align: center;
+        color: white;
+        margin-left: 2px;
+        margin-right: 2px;
+
+        &.pencil {
+            top: 4.5px;
+            @include icon-font(char-from-code($glyph-chorizo-pencil), 14px, $gray-text-dark);
+        }
+
+        &.trash {
+            top: 4.5px;
+            @include icon-font(char-from-code($glyph-chorizo-trash), 14px, $gray-text-dark);
+        }
+
+        &.drag-handle {
+            top: 4.5px;
+            @include icon-font(char-from-code($glyph-chorizo-move), 14px, $gray-text-dark);
+        }
+    }
+}
+
 .mz-cms-editing {
 
     .mz-cms-grid {
@@ -7,11 +94,25 @@
             border-color: transparent;
             outline: none;
         }
+
+        [class*='mz-cms-col-'] {
+            border: none;
+            position: relative;
+            transition: width 0.4s, height 0.4s;
+
+            &.content-view {
+                // border: 1px solid black;
+                // outline: none !important;
+            }
+
+            &.mz-cms-show-zone {
+                outline-color: $hint-block-color;
+                outline-style: dashed;
+                outline-width: 1.1px;
+            }
+        }
     }
 
-    [class*='mz-cms-col-'] {
-        transition: width 0.4s, height 0.4s;
-    }
 
     .mz-cms-row {
         outline: 1px solid transparent;
@@ -23,13 +124,41 @@
         outline: 1px solid transparent;
         outline-offset: -1px;
         @include transition(outline-color $duration, background-color $duration);
-    }
 
-    .mz-cms-droppable, .mz-cms-show-zone {
+        .mz-cms-tools {
+            width: 66px;
+            height: 25px;
+            background-color: $hint-color;
+            display: none;
+            text-align: center;
 
-        .mz-cms-row, .mz-cms-block, .mz-cms-blank-block {
-            outline-color: $hint-block-color;
-            outline-style: dashed;
+            li {
+
+                &.pencil {
+                    top: 4.5px;
+                    @include icon-font(char-from-code($glyph-chorizo-pencil), 15px, white);
+
+                    &::after {
+                        left: -2px;
+                        top: -1px;
+                    }
+                }
+
+                &.trash {
+                    top: 4.5px;
+                    left: 4px;
+                    @include icon-font(char-from-code($glyph-chorizo-trash), 14px, white);
+                }
+
+                &.drag-handle {
+                    top: 4.5px;
+                    @include icon-font(char-from-code($glyph-chorizo-move), 14px, white);
+                }
+            }
+        }
+
+        &.mz-content-screen {
+            opacity: .2;
         }
     }
 
@@ -51,163 +180,84 @@
         }
     }
 
-    .mz-cms-tools {
-        background: $hint-block-hover-color;
-        margin: 0;
-        display: none;
-        padding: 0;
-        position: absolute;
-        right: 0;
-        top: 0;
-		z-index: 1000001;
-        cursor: pointer;
-
-        //@include transition(opacity $duration);
-
-        li {
-            color: white;
-            display: inline-block;
-            font-size: 10px;
-            height: 26.66px;
-            text-align: center;
-            width: 26.66px;
-            padding-top: 6.66px;
-            text-align: center;
-        }
-
-        .chorizo-icon {
-            display: inline-block;
-            overflow: hidden;
-            height: 13px;
-            position: relative;
-            font-style: normal;
-    
-            &.pencil {
-                @include icon-font(char-from-code($glyph-chorizo-pencil), 13px, rgb(255,255,255));
-                cursor: pointer;
-            }
-
-            &.drag-handle {
-                @include icon-font(char-from-code($glyph-chorizo-move), 14px, rgb(255,255,255));
-                
-            }
-
-            &.trash {
-                @include icon-font(char-from-code($glyph-chorizo-trash), 13px, rgb(255,255,255));
-                cursor: pointer;
-            }
-
-        }
-
-    }
-
 
     .mz-cms-hint-bar {
         background: $hint-color;
-        height: 3px;
+        height: 1px;
         position: absolute;
-        width: 3px;
+        width: 1px;
         z-index: 1000002;
-
-        &:before, &:after {
-            border-bottom: 0;
-            border-left: 0;
-            border-right: 6px solid $hint-color;
-            border-top: 6px solid transparent;
-            content: "";
-            display: block;
-            height: 0;
-            position: absolute;
-            right: 0;
-            bottom: 2px;
-            width: 0;
-        }
-
-        &:after {
-            border-bottom: 6px solid transparent;
-            border-top: 0;
-            bottom: initial;
-            top: 2px;
-        }
+        pointer-events: none;
+        display: none;
 
         .mz-cms-hint-message {
             background: $hint-color;
             color: white;
-            font-family: Helvetica;
-            font-size: 12px;
+            font-family: $font-family;
+            font-size: 11px;
             padding: 5px;
             position: absolute;
             text-transform: uppercase;
-            top: -11px;
+            top: -24px;
+            margin: 0 auto;
+            left: 0;
+            right: 0;
+            width: 80px;
+            text-align: center;
             z-index: 101;
+            @include border-radius(5px 5px 0px 0px);
 
-            &:before, &:after {
-                border-bottom: 0;
-                border-left: 6px solid $hint-color;
-                border-right: 0;
-                border-top: 12px solid transparent;
-                content: "";
-                display: block;
-                height: 0;
-                position: absolute;
-                right: -6px;
-                top: 0;
-                width: 0;
+            &.top {
+                top: -23px;
+                @include border-radius(5px);
             }
 
-            &:after {
-                border-bottom: 12px solid transparent;
-                border-top: 0;
-                bottom: 0;
-                top: initial;
-                color: rgba(255,255,255,0.01);
+            &.bottom {
+                top: 0px;
+                @include border-radius(0 0 5px 5px);
             }
+
+            &.between {
+                top: -13px;
+                @include border-radius(5px);
+            }
+
         }
 
         &.mz-cms-upright {
-            &:before, &:after {
-                border-bottom: 6px solid $hint-color;
-                border-left: 0;
-                border-right: 6px solid transparent;
-                border-top: 0;
-                bottom: 0;
-                left: 2px;
-                top: initial;
+
+            &.left {
 
             }
 
-            &:after {
-                left: initial;
-                border-right: 0;
-                border-left: 6px solid transparent;
-                right: 2px;
+            &.right {
+                
             }
 
             .mz-cms-hint-message {
                 left: -11px;
                 letter-spacing: 2px;
                 top: 0;
+                bottom: 0;
+                margin: auto;
+                right: initial;
+                width: initial;
+                height: 85px;
+                @include border-radius(5px);
 
                 -webkit-text-orientation: upright;
                 -webkit-writing-mode: vertical-lr;
 
-                &:before, &:after {
-                    border-bottom: 0;
-                    border-left: 12px solid transparent;
-                    border-right: 0;
-                    border-top: 6px solid $hint-color;
-                    bottom: -6px;
-                    left: 0;
-                    top: initial;
-
+                &.left {
+                    left: -22px;
+                    @include border-radius(5px 0 0 5px);
                 }
 
-                &:after {
-                    left: initial;
-                    border-left: 0;
-                    border-right: 12px solid transparent;
-                    right: 0;
+                &.right {
+                    left: 1px;
+                    @include border-radius(0 5px 5px 0);
                 }
+
             }
         }
     }
@@ -227,7 +277,7 @@
 
         .mz-cms-bottom {
             background-color: $hint-color;
-            bottom: 7px;
+            bottom: -4px;
             cursor: ns-resize;
             height: 7px;
             left: 50%;

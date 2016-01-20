@@ -28,7 +28,7 @@ Ext.define('Taco.view.publishing.grid.Publish', {
 
     addContentViewPadding: true,
 
-    enableSearch: true,
+    enableSearch: false,
     enablePaging: true,
     enableRowEditing: false,
     enableAutoSelect: false,
@@ -49,7 +49,8 @@ Ext.define('Taco.view.publishing.grid.Publish', {
     enableQuickFilters:false,
 
     advancedSearchConfig : {
-        advancedFormCls: 'Taco.view.publishing.advancedSearchForm.Publish'
+        advancedFormCls: 'Taco.view.publishing.advancedSearchForm.Publish',
+        emptySearchText: 'Search'
     },
 
     onCreate: Ext.emptyFn,
@@ -67,7 +68,16 @@ Ext.define('Taco.view.publishing.grid.Publish', {
         
         this.columns = this.getColumnConfig();
 
+        this.tbar = Ext.create('Taco.view.publishing.component.DraftGridToolBar', {
+            parentScope: this,
+            buttons: false,
+            toolbarTitle: 'Publish Sets',
+            store: this.store,
+            advancedSearchConfig: this.advancedSearchConfig
+        });
+
         this.callParent(arguments);
+
 
         this.getSelectionModel().on('select', this.fireSelectionEvent, this, {single: false});
 
@@ -76,8 +86,11 @@ Ext.define('Taco.view.publishing.grid.Publish', {
     },
 
     listeners: {
-        beforeitemdblclick: {
-            fn: function(cmp) {
+        beforeitemclick: {
+            fn: function(cmp, record, item, index, e, eOpts) {
+                if (e.target.className.indexOf('taco-grid-row-menu-trigger') > -1) { //if actions column
+                    return;
+                }
                 cmp.up('publish-split').getEast().expand();
             }
         }
@@ -150,17 +163,17 @@ Ext.define('Taco.view.publishing.grid.Publish', {
         //override the paramater, EXT passes the id of the record, but we only recognize true or false;
         isDelete = isDelete !== true ? false : isDelete;
         
-        var contentLayout = this.up('publish-split').down('tabpanel');
+        var contentLayout = this.up('publish-split');
 
         this.updateUrl(record);
 
-        if (!isDelete) {
-            contentLayout.setTitle('<span style="font-weight:bold;">' + record.get('name') + '</span> <span style="color:#999;">Drafts</span>');
-        }
+        // if (!isDelete) {
+        //     contentLayout.setTitle('<span style="font-weight:bold;">' + record.get('name') + '</span> <span style="color:#999;">Drafts</span>');
+        // }
 
-        else {
-            contentLayout.setTitle('<span>Publish Set Contents</span>');
-        }
+        // else {
+        //     contentLayout.setTitle('<span>Publish Set Contents</span>');
+        // }
 
         contentLayout.down('#content').store.read({code: record.get('code'), type: 'cms'});
         contentLayout.down('#product').store.read({code: record.get('code'), type: 'product'});
@@ -279,7 +292,6 @@ Ext.define('Taco.view.publishing.grid.Publish', {
                 },
                 {
                     xtype: 'taco.menucolumn',
-                    text: 'Actions',
 
                     onMenuShow: function(cmp, eventData) {
                         var publishNow = cmp.down('#publish-now');

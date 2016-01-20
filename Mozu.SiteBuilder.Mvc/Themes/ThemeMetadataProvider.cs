@@ -189,6 +189,7 @@ namespace Mozu.SiteBuilder.Mvc.Themes
             themecfg.BackOfficeTemplates = themecfgJson["backOfficeTemplates"] == null ? new List<PageTypeDefinition>() : themecfgJson["backOfficeTemplates"].ToObject<List<Mozu.SiteBuilder.Mvc.Models.CMS.PageTypeDefinition>>();
             themecfg.Widgets = themecfgJson["widgets"] == null ? new List<WidgetDefinition> (): themecfgJson["widgets"].ToObject<List<Mozu.SiteBuilder.Mvc.Models.CMS.WidgetDefinition>>();
             themecfg.Editors = themecfgJson["editors"] == null ? new List<EditorDefinition>() : themecfgJson["editors"].ToObject<List<EditorDefinition>>();
+            themecfg.Layouts = themecfgJson["layoutWidgets"] == null ? new List<LayoutWidgetDefinition>() : themecfgJson["layoutWidgets"].ToObject<List<LayoutWidgetDefinition>>();
             themecfg.Settings =
                 (
                 from setting in ( themecfgJson["settings"] == null ? new JArray( ) : themecfgJson["settings"] ).Children<JProperty>()

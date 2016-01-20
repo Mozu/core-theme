@@ -1,7 +1,7 @@
 // custom override of the date picker to add support for time 
-.taco-datetime-picker-wrapper {
+.#{$vprefix}datetime-picker-wrapper {
 
-    .taco-datepicker-timerow {
+    .#{$vprefix}datepicker-timerow {
         background-color:#fff;
         font-size:13px;
         padding-top:19px;
@@ -14,13 +14,13 @@
             width:60px;			
         }
 
-        .taco-label {
+        .#{$vprefix}label {
             font-weight:bold;
             padding-right:10px;
         }       
 		
         // square up the left toggle button where it meets the right toggle button
-        .taco-togglebtn-left {
+        .#{$vprefix}togglebtn-left {
             border-bottom-right-radius: 0px;
             border-top-right-radius: 0px;			
             -moz-border-radius-bottomright: 0px;
@@ -30,7 +30,7 @@
         }
 
         // square up the right toggle button where it meets the left toggle button
-        .taco-togglebtn-right {
+        .#{$vprefix}togglebtn-right {
             border-bottom-left-radius: 0px;
             border-top-left-radius: 0px;			
             -moz-border-radius-bottomleft: 0px;
@@ -40,17 +40,17 @@
         }
 		
 		// squeezing out the extra padding from our standard buttons;
-        .x-btn {
+        .#{$prefix}btn {
             padding: 7px 1px 5px 7px;
 
-            .x-btn-inner {
+            .#{$prefix}btn-inner {
                 font-size:13px;
                 padding: 0 7px 0px 0px;				
             }
         }						
     }
 
-    .taco-datepicker-time {
+    .#{$vprefix}datepicker-time {
         padding:10px 0px 10px 0px;
     }	
 }
@@ -58,7 +58,7 @@
 
 
 // this reworks the css for the standard calendar and the calendar with time row.
-.x-datepicker {
+.#{$prefix}datepicker {
     border:1px solid #b3b3b3 !important;
 	border-width:1px !important;
 	
@@ -70,56 +70,56 @@
     // adding the horizontal padding to the hard coded width defined in the theme;
     width: 215px; 
     
-    .x-datepicker-footer {
+    .#{$prefix}datepicker-footer {
         background:#ffffff;
         border-width:0px;
         padding-bottom:0px;		
         padding-top:10px;
 
-        .x-btn {
+        .#{$prefix}btn {
             background:#fff;
             border:0px;			
         }
 
-        .x-btn-inner {
-            color:#3C86D2; // blue
+        .#{$prefix}btn-inner {
+            color:$dark-color;
             font-size:13px;
             font-weight:normal;
         }
     }	
 
-    .x-datepicker-header {
+    .#{$prefix}datepicker-header {
         background:#fff;
         color:#000;
         padding-bottom:10px;
 
-        .x-datepicker-prev {
+        .#{$prefix}datepicker-prev {
             // todo: need to replace these images with ones that match the style guide
             //background-image: url(images/shared/left-btn.gif);
         }
 
-        .x-datepicker-next {
+        .#{$prefix}datepicker-next {
             // todo: need to replace these images with ones that match the style guide
             //background-image: url(images/shared/right-btn.gif);
         }
     }	
 
-    .x-datepicker-inner {
+    .#{$prefix}datepicker-inner {
         border-collapse:collapse;
         border-style: hidden;
         
-        .x-datepicker-cell {
+        .#{$prefix}datepicker-cell {
             border-color:#e6e6e6;		
             text-align:center;
 
-            .x-datepicker-date {
+            .#{$prefix}datepicker-date {
                 font-size:13px;
                 margin:0px;
                 padding: 5px 4px 3px 4px;				
             }
         }
 
-        .x-datepicker-column-header {
+        .#{$prefix}datepicker-column-header {
             background:#F2F2F2;
             border-color:#E6E6E6;
             border-width: 1px;
@@ -127,7 +127,7 @@
             font-weight:bold;
             text-align:center;			
 
-            .x-datepicker-column-header-inner {
+            .#{$prefix}datepicker-column-header-inner {
                 line-height:15px;
                 margin:0px;
                 padding: 7px 4px 4px 4px;
@@ -135,13 +135,13 @@
             }
         }
         
-        .x-datepicker-selected .x-datepicker-date {
+        .#{$prefix}datepicker-selected .#{$prefix}datepicker-date {
             background-color:#3C86D2; // blue
             color:#fff;
             font-weight:bold;
         }
 
-        .x-datepicker-today {
+        .#{$prefix}datepicker-today {
             background-color:#ccc;
             color:#fff;
             font-weight:bold;
@@ -149,10 +149,10 @@
     }	
 
 
-    .x-datepicker-month {
+    .#{$prefix}datepicker-month {
         color:#000;
     
-        .x-btn-inner {
+        .#{$prefix}btn-inner {
             color: #000;
             font-size:13px;
         }
@@ -161,17 +161,17 @@
 
 
 // the month picker that displays when you click on the month and year in the title bar;
-.x-monthpicker {    
+.#{$prefix}monthpicker {
     border-color:#ccc;
 	border-width:1px;
 
-    .x-monthpicker-body {}
+    .#{$prefix}monthpicker-body {}
 
-    .x-monthpicker-buttons {
+    .#{$prefix}monthpicker-buttons {
         background:#fff;
     }
 
-    .x-monthpicker-months {
+    .#{$prefix}monthpicker-months {
         border-color: #ccc;		
         margin-left:10px;		
         margin-top:9px;
@@ -179,9 +179,9 @@
         width: 97px;
     }
 
-    .x-monthpicker-selected {}
+    .#{$prefix}monthpicker-selected {}
 
-    .x-monthpicker-years {		
+    .#{$prefix}monthpicker-years {
         margin-top:9px;
         padding-left:10px;
         width: 98px;

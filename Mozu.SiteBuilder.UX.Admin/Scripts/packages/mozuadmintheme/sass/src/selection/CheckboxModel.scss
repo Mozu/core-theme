@@ -3,6 +3,10 @@
     width: 17px;
 }
 
+.#{$prefix}grid-cell-row-checker .#{$prefix}grid-cell-inner {
+    overflow: visible;
+}
+
 // .#{$prefix}grid-cell-row-checker {
 //     .#{$prefix}grid-cell-inner {
 //         padding: 12px 10px 11px;
@@ -13,5 +17,6 @@
     .#{$prefix}column-header-inner {
         padding-bottom: 8px !important;
         padding-top: 7px !important;
+        overflow: visible;
     }
 }

@@ -1,4 +1,4 @@
-﻿.taco-directshiplocationpanel{
+﻿.#{$vprefix}directshiplocationpanel{
 	line-height:1.4em;
 	border:1px solid #ccc; 
 	padding:19px;
@@ -14,7 +14,7 @@
 }
 
 
-.taco-directshipinventorypanel{
+.#{$vprefix}directshipinventorypanel{
 	line-height:1.4em;
 	border:1px solid #ccc; 
 	padding:19px;

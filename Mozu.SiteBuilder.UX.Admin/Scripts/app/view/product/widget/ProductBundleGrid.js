@@ -20,6 +20,8 @@ Ext.define('Taco.view.product.widget.ProductBundleGrid', {
     enablePaging: false,
     enableRowEditing: false,
     enableAutoSelect:false,
+    launchEditorOnClick: true,
+    modelName: 'Taco.model.Product',
 
     hideSearchToolbar: true,
     //selType: 'cellmodel',
@@ -36,6 +38,7 @@ Ext.define('Taco.view.product.widget.ProductBundleGrid', {
             viewConfig: {
                 deferEmptyText: false,
                 emptyText: "No items in this bundle",
+                stripeRows: false,
                 plugins: [
                     {
                         ptype: 'gridviewdragdrop'
@@ -138,8 +141,8 @@ Ext.define('Taco.view.product.widget.ProductBundleGrid', {
                 draggable: false,
                 menuDisabled: true,
                 text: '',
-                width: 40,
-                iconCls: Taco.baseCSSPrefix + 'grid-row-menu-trigger ' + Taco.baseCSSPrefix + 'grid-row-menu-trigger-remove',
+                //width: 40,
+                iconCls: Taco.baseCSSPrefix + 'grid-row-menu-trigger-remove',
                 menuItems: [],
                 handler: function(grid, rowIndex, colIndex, header, e, record, item) {
                     // tell the method that we we want to move this item back to the unshippedItems list;

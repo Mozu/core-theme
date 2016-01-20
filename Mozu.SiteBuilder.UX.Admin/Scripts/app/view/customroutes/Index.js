@@ -11,6 +11,7 @@ Ext.define('Taco.view.customroutes.Index', {
         supportedLevels: ['s'],
         requiresContextOfType: ['s']
     },
+    enableSearchBarInHeader: false,
 
     formCls: 'Taco.core.ux.form.Form',
     enableNavHeader: true,
@@ -37,10 +38,10 @@ Ext.define('Taco.view.customroutes.Index', {
                 resizable: true,
                 showGutter: true,
                 mode: 'json',
-                theme: 'ace/theme/monokai'
+                theme: 'ace/theme/ambience'
             }]
         };
-        
+
         this.callParent(arguments);
 
         me.configField = me.down('#configfield');
@@ -59,7 +60,7 @@ Ext.define('Taco.view.customroutes.Index', {
                 } else {
                     data = (data) ? Ext.JSON.encode(data) : null;
                 }
-                
+
                 me.configField.setValue(data);
             },
             failure: function (response) {

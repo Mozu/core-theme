@@ -6,6 +6,7 @@ Ext.define('Taco.view.order.subform.Fulfillment', {
     alias: 'widget.taco-order-fulfillment',
 
     tabTitle: 'Fulfillment',
+    title: 'Fulfillment',
 
     initComponent: function () {
 
@@ -22,7 +23,10 @@ Ext.define('Taco.view.order.subform.Fulfillment', {
     },
 
     buildComponents: function () {
-
+        var fulfillmentStatus = this.record.get('fulfillmentStatus');
+        fulfillmentStatus = Taco.core.util.Common.camelToSpace(fulfillmentStatus);
+        //var fulfillmentColor = 'dark'; //replace this with obj[fullfillmentStatus]
+        this.setHeaderTitleStatus('Fullfillment', fulfillmentStatus);
         this.removeAll();
 
         if (this.record.get('packages').length || this.record.get('unShippedPackages').length || this.record.get('unpackagedItems').length) {
@@ -41,7 +45,6 @@ Ext.define('Taco.view.order.subform.Fulfillment', {
             this.add(Ext.create('Taco.view.order.subform.fulfillment.DigitalDelivery', {
                 record: this.record
             }));
-        }        
-        this.setTitle('<span class="fulfillment-status"><span class="label-large">Status:</span>' + this.record.get('fulfillmentStatus') + '</span>');
+        }
     }
 });

@@ -1,0 +1,100 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<ClassDiagram MajorVersion="1" MinorVersion="1" MembersFormat="NameAndType">
+  <Class Name="Mozu.SiteBuilder.UnitTests.Diagrams.Admin.Scripts.app.view.navigation.TacoModelNavigationItem">
+    <Position X="14.5" Y="5.25" Width="2.25" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAQCAEAQAA=</HashCode>
+      <FileName>Diagrams\Admin\Scripts\app\view\navigation\DiagramNavJs.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Mozu.SiteBuilder.UnitTests.Diagrams.Admin.Scripts.app.view.navigation.TacoCoreDataModel">
+    <Position X="14.75" Y="4" Width="1.75" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Diagrams\Admin\Scripts\app\view\navigation\DiagramNavJs.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Mozu.SiteBuilder.UnitTests.Diagrams.Admin.Scripts.app.view.navigation.TacoViewNavigationPrimaryMenu">
+    <Position X="4" Y="2.75" Width="2.5" />
+    <TypeIdentifier>
+      <HashCode>AAEIAAEAAAAAAAAAAkBAAAAAAAAAAAAABQAAAAACAAA=</HashCode>
+      <FileName>Diagrams\Admin\Scripts\app\view\navigation\DiagramNavJs.cs</FileName>
+    </TypeIdentifier>
+    <ShowAsAssociation>
+      <Property Name="view" />
+    </ShowAsAssociation>
+  </Class>
+  <Class Name="Mozu.SiteBuilder.UnitTests.Diagrams.Admin.Scripts.app.view.navigation.TacoViewNavigationPrimaryMenuView">
+    <Position X="12.25" Y="1.75" Width="3" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAEAAAAAUAAAAAAAAhAAAAAAABAAAAAAAAAAAAA=</HashCode>
+      <FileName>Diagrams\Admin\Scripts\app\view\navigation\DiagramNavJs.cs</FileName>
+    </TypeIdentifier>
+    <ShowAsCollectionAssociation>
+      <Property Name="subMenus" />
+    </ShowAsCollectionAssociation>
+  </Class>
+  <Class Name="Mozu.SiteBuilder.UnitTests.Diagrams.Admin.Scripts.app.view.navigation.TacoViewNavigationPrimarySubMenu">
+    <Position X="15.75" Y="1.75" Width="2.75" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAEAAACAAAAAAAAAAAAAAAAAABAAAAAAAAAAAAA=</HashCode>
+      <FileName>Diagrams\Admin\Scripts\app\view\navigation\DiagramNavJs.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Mozu.SiteBuilder.UnitTests.Diagrams.Admin.Scripts.app.view.navigation.ExtComponent" Collapsed="true">
+    <Position X="11.5" Y="4" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Diagrams\Admin\Scripts\app\view\navigation\DiagramNavJs.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Mozu.SiteBuilder.UnitTests.Diagrams.Admin.Scripts.app.view.navigation.TacoViewNavigationPrimarySubMenuItem">
+    <Position X="10.75" Y="5.25" Width="3" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAEAAAAAAAAAAAAAAAAAAAAAAgAAAAAABAAAAAA=</HashCode>
+      <FileName>Diagrams\Admin\Scripts\app\view\navigation\DiagramNavJs.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Mozu.SiteBuilder.UnitTests.Diagrams.Admin.Scripts.app.view.navigation.ExtContainerContainer" Collapsed="true">
+    <Position X="4.25" Y="1" Width="2" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Diagrams\Admin\Scripts\app\view\navigation\DiagramNavJs.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Mozu.SiteBuilder.UnitTests.Diagrams.Admin.Scripts.app.view.navigation.ExtViewView" Collapsed="true">
+    <Position X="14" Y="0.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Diagrams\Admin\Scripts\app\view\navigation\DiagramNavJs.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Mozu.SiteBuilder.UnitTests.Diagrams.Admin.Scripts.app.view.navigation.TacoStoreNavigation">
+    <Position X="18" Y="4.5" Width="2" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAABAAAgAAAAAAQAAAAAAA=</HashCode>
+      <FileName>Diagrams\Admin\Scripts\app\view\navigation\DiagramNavJs.cs</FileName>
+    </TypeIdentifier>
+    <ShowAsCollectionAssociation>
+      <Field Name="proxyData" />
+    </ShowAsCollectionAssociation>
+  </Class>
+  <Class Name="Mozu.SiteBuilder.UnitTests.Diagrams.Admin.Scripts.app.view.navigation.TacoViewNavigationSecondaryMenu">
+    <Position X="7" Y="3.5" Width="3" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAEAAAAAAAAAAACAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Diagrams\Admin\Scripts\app\view\navigation\DiagramNavJs.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Mozu.SiteBuilder.UnitTests.Diagrams.Admin.Scripts.app.view.navigation.TacoCoreUxMixinsHamburgerButton">
+    <Position X="0.5" Y="1.75" Width="3" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAIAAgAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Diagrams\Admin\Scripts\app\view\navigation\DiagramNavJs.cs</FileName>
+    </TypeIdentifier>
+    <ShowAsAssociation>
+      <Property Name="TacoAppPrimaryMenu" />
+    </ShowAsAssociation>
+  </Class>
+  <Font Name="Segoe UI" Size="9" />
+</ClassDiagram>

@@ -45,11 +45,11 @@ Ext.define('Taco.core.ux.form.FilterContainer', {
 
     enableQuickFilters: true,
     disableAdvancedSearch: false,
-    emptySearchText: '',
+    emptySearchText: 'Search',
 
     initialValue: null,
 
-    height: 30,
+    height: 40,
     layout: 'hbox',
     msgTarget: 'qtip',
 
@@ -78,57 +78,75 @@ Ext.define('Taco.core.ux.form.FilterContainer', {
         }
 
         this.items = [];
-        if (!this.disableAdvancedSearch) {
-            this.items.push({
-                xtype: 'button',
-                itemId: 'advancedFilter',
-                ui: 'action',
-                scale: 'medium',
-                glyph: 'XE600@mozicons',
-                width: 57,
-                margin: '0 10 20 0',
-                enableToggle: true,
-                scope: this,
-                toggleHandler: this.handleButtonToggle
-            });
-        }
 
-        this.items.push({
+        this.advancedSearchButton = {
+            xtype: 'button',
+            cls: 'advanced-search-button',
+            itemId: 'advancedFilter',
+            ui: 'action',
+            scale: 'medium',
+            width: 48,
+            height: 40,
+            margin: '0 0 20 0',
+            enableToggle: true,
+            scope: this,
+            toggleHandler: this.handleButtonToggle
+        };
+
+        this.textFilter = {
             xtype: 'taco-quickfilter',
             itemId: 'textFilter',
             margin: '0 0 20 0',
             msgTarget: 'qtip',
+            cls: 'taco-quickfilter',
             flex: 1,
             width: 400,
             emptyText: this.emptySearchText,
             handler: this.handleFieldSubmit,
             scope: this
-        });
+        };
+
+        var filterComponents = this.searchType === 'navigation' ? [this.textFilter, this.advancedSearchButton] : [this.textFilter, this.advancedSearchButton];
+
+        if (this.disableAdvancedSearch) {
+            this.items.push(this.textFilter);
+        }
+
+        else {
+            Ext.Array.each(filterComponents, function(cmp) {
+                this.items.push(cmp);
+            }, this);
+        }
 
         this.callParent(arguments);
 
         form = this.getAdvancedForm();
 
+        // add 20px of padding to all 
+        form.style = 'padding-bottom: 20px';
+
         // force the form to reset to clean state; this allows the form to be reset to empty values; otherwise the form will reset to the values that initialized it.
         form.trackResetOnLoad = false;
 
         if (this.quickFilterData && this.enableQuickFilters) {
-            form.insert(0, {
+            this.quickFilterCmp = {
                 xtype: 'combo',
                 itemId: 'quickFilter',
                 fieldLabel: 'Quick Filter',
                 queryMode: 'local',
                 typeAhead: false,
                 isSelectField: true,
-                emptyText: 'Quick Filter',
-                store: this.quickFilterData,
-                // value: this.getQuickFilterFromStore(),
+                emptyText: '',
+                store: Ext.isArray(this.quickFilterData) ? this.quickFilterData[0] : this.quickFilterData,
+                value: this.getQuickFilterFromStore(),
                 listeners: {
                     change: this.onQuickFilterChange,
                     beforeselect:this.onBeforeSelect,
                     scope: this
                 }
-            });
+            };
+
+            form.insert(0, this.quickFilterCmp);
         }
 
         form.getForm().getFields().each(function (field) {
@@ -178,6 +196,10 @@ Ext.define('Taco.core.ux.form.FilterContainer', {
 
     },
 
+    reconfigureStore: function(store) {
+        this.store = store;
+    },
+
     onBeforeSelect:function (combo, record) {
         var newValue = record.get('field1'),
             picker = combo.getPicker();
@@ -196,21 +218,28 @@ Ext.define('Taco.core.ux.form.FilterContainer', {
     },
 
     onQuickFilterChange: function (combo, newValue, oldValue) {
-        //var params = this.store.getProxy().extraParams = this.store.getProxy().extraParams || {};
-        //if (newValue && combo.findRecordByValue(newValue)) {
-        //    this.syncAndFilter(newValue);
-        //}
-        
+        if (!this.store || !this.store.getProxy) return false;
+
+        var params = this.store.getProxy().extraParams = this.store.getProxy().extraParams || {};
+        if (newValue && combo.findRecordByValue(newValue)) {
+           this.syncAndFilter(newValue);
+        }
         
     },
 
-    //getQuickFilterFromStore:function () {
-    //    var params = this.store.getProxy().extraParams = this.store.getProxy().extraParams || {};
-    //    return params.queryFilter;
+    getQuickFilterFromStore:function () {
 
-    //},
+        if (!this.store || !this.store.getProxy) return false;
+
+        var params = this.store.getProxy().extraParams = this.store.getProxy().extraParams || {};
+        return params.queryFilter;
+
+    },
 
     getAdvancedSearchFromStore: function () {
+
+        if (!this.store || !this.store.getProxy) return false;
+
         var params = this.store.getProxy().extraParams = this.store.getProxy().extraParams || {};
         if (params.advancedSearch) {
             return Ext.JSON.decode(params.advancedSearch);
@@ -322,6 +351,8 @@ Ext.define('Taco.core.ux.form.FilterContainer', {
         if (state) {
             if (!this.modal) {
                 this.modal = Ext.create('Taco.core.ux.window.Modal', {
+                    cls: 'advanced-filter',
+                    closable: false,
                     closeAction: 'hide',
                     title: 'Advanced Filter',
                     primaryText: 'Filter',
@@ -350,7 +381,18 @@ Ext.define('Taco.core.ux.form.FilterContainer', {
                 this.add(this.modal);
             }
 
-            this.modal.showBy(this.down('#advancedFilter'), 'tl-bl?', [0, 5]);
+            this.modal.showBy(this.down('#advancedFilter'), 'tr-tr', [0, -8]);
+            if (!this.modal.hasUICls('closable')) {
+                this.modal.addClsWithUI('closable');
+                this.modal.addTool(Ext.widget({
+                    xtype : 'tool',
+                    type: 'close',
+                    width: 32,
+                    height: 33,
+                    margin: '0 0 0 0',
+                    handler: Ext.Function.bind(this.modal.close, this.modal, [])
+                }));
+            }
         } else {
             if (this.modal) {
                 this.modal.close();

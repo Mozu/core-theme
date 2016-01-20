@@ -7,7 +7,7 @@
 Ext.define('Taco.core.ux.content.ContextMenu', {
     extend: 'Ext.form.field.ComboBox',
     requires: [],
-    alias: 'widget.taxo-contextMenu',
+    alias: 'widget.taco-contextMenu',
     valueField: 'urlToken',
     queryMode: 'local',
     forceSelection: true,
@@ -16,13 +16,12 @@ Ext.define('Taco.core.ux.content.ContextMenu', {
     matchFieldWidth: false,
     editable:false,
     maxWidth: 900,
+    cls: 'taco-site-context-switchermenu',
     supportedLevels: [],
-    defaultListConfig : {
-        minWidth:300
-    }, 
+    defaultAlign: 'bl-br',
     adjustWidth: function() {
         var width = this.inputEl.getValue().length * 11;
-        
+
         if (width < this.maxWidth) {
             this.setWidth(width);
         }
@@ -40,7 +39,7 @@ Ext.define('Taco.core.ux.content.ContextMenu', {
         this.on('afterrender', this.adjustWidth);
 
         this.store = Taco.app.context.getStore(false);
-        
+
         this.store.filter([
             {
                 filterFn: function (item) {
@@ -49,7 +48,7 @@ Ext.define('Taco.core.ux.content.ContextMenu', {
                 scope: this
             }
         ]);
-        
+
         item = this.store.findRecord('urlToken', ctx.getCurrent().urlToken);
         if (item) {
             value = item.getId();
@@ -76,11 +75,11 @@ Ext.define('Taco.core.ux.content.ContextMenu', {
         if (!value) {
             value = ctx.urlToken;
         }
-        
+
         this.setValue(value);
-        
+
         this.callParent(arguments);
-        
+
         this.on({
             change: this.changeContext,
             scope: this
@@ -95,12 +94,12 @@ Ext.define('Taco.core.ux.content.ContextMenu', {
             statechange: this.onGlobalStateChange,
             scope: this
         });
-               
+
     },
-    
+
     changeContext: function (field, newValue, oldValue) {
         var record = field.getStore().getById(newValue);
-        
+
         if (record) {
 
             Ext.defer(function () {
@@ -129,9 +128,11 @@ Ext.define('Taco.core.ux.content.ContextMenu', {
         }
     },
     tpl: Ext.create('Ext.XTemplate',
-        '<tpl for=".">',
-        '<div class="x-boundlist-item">{contextType:this.toContextLable}: {name}</div>',
+        '<div class="taco-selector-flyout taco-site-selector-flyout">',
+            '<tpl for=".">',
+            '<div class="x-boundlist-item x-menu-item selector"><span>{name}</span></div>',
         '</tpl>',
+        '</div>',
          {
              contentTypes: {
                  t: {
@@ -153,7 +154,7 @@ Ext.define('Taco.core.ux.content.ContextMenu', {
              }
          }),
 
-    
+
     // template for the content inside text field
     displayTpl: Ext.create('Ext.XTemplate',
         '<tpl for=".">{name}</tpl>',
@@ -177,7 +178,7 @@ Ext.define('Taco.core.ux.content.ContextMenu', {
                 return this.contentTypes[value].label;
             }
         })
-    
+
 
 }
 );

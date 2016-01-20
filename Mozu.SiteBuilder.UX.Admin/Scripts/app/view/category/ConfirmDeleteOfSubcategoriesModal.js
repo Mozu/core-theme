@@ -33,15 +33,22 @@ Ext.define('Taco.view.category.ConfirmDeleteOfSubcategoriesModal', {
                                                     this.record.get('childCount'),
                                                     subcategoryText);
 
-        this.deleteSingleCategory = Ext.widget(
-            Taco.core.ux.TooltipLabel.wrapConfig(tooltipKey, me, {
+        this.deleteSingleCategory = Ext.widget({
                 xtype: 'radio',
                 name: 'cascadeDeleteType',
+                itemId: 'cascade-delete-radio',
                 persistSelectedValueOnly: true,
                 boxLabel: Ext.util.Format.format('Delete {0} ({1}) only.', this.record.get('name'), this.record.get('categoryCode')),
                 inputValue: "single",
-                checked: true
-            })
+                checked: true,
+                tooltip: Ext.create('Taco.core.ux.content.Tooltip', {
+                    elementId: 'cascade-delete-radio',
+                    hoverTarget: 'bodyEl',
+                    messageKey: tooltipKey,
+                    offsetLeft: 70,
+                    offsetTop: 45
+                })
+            }
         );
 
         this.deleteMultipleCategories = Ext.widget({
@@ -69,9 +76,9 @@ Ext.define('Taco.view.category.ConfirmDeleteOfSubcategoriesModal', {
                         },
                         margin: '20 0 20 0',
                         items: [{
+                                cls: 'confirm-delete-subcat-warning',
                                 xtype: 'panel',
                                 title: ' ',
-                                glyph: 'XE02F@mozicons',
                                 width: 20,
                                 margin: '0 5 0 0'
                             }, {

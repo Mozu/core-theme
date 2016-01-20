@@ -34,6 +34,7 @@ Ext.define('Taco.store.Categories', {
             options = {
                 callback: options,
                 bypassCache: true
+                , bypassCache: true
             };
         }
         options = Ext.apply({

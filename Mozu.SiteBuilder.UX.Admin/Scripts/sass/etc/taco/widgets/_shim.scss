@@ -103,7 +103,7 @@
   .#{$vprefix}hr-widget-container {
     @include flexbox(row, wrap, flex-start);
 
-    .x-form-item-label-top {
+    .#{$prefix}form-item-label-top {
       margin:  0 0 0.3em;
     }
 

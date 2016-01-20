@@ -12,7 +12,7 @@ Ext.define('Taco.view.product.subform.Inventory', {
     // enables the manage button; This is part of future work;
     manageEnabled: true,
 
-    bodyPadding:"10 0 0 0",
+    bodyPadding: "10 0 0 0",
     
     initComponent: function () {
         var me = this,
@@ -29,7 +29,7 @@ Ext.define('Taco.view.product.subform.Inventory', {
                 ui: "action",
                 hidden: this.product.get("productUsage") == "Bundle",
                 scale: "medium",
-                margin: "0 0 0, 0",
+                margin: "0 0 0 0",
                 text: "Manage Inventory",
                 handler: me.manageInventory,
                 scope: me
@@ -43,6 +43,8 @@ Ext.define('Taco.view.product.subform.Inventory', {
             name: 'manageStock',
             boxLabel: 'Track stock level',
             checked: track,
+            width: '50%',
+            margin: '5 15 0 0',
             //hidden: this.product.get("productUsage") == "Bundle",
             listeners: {
                 change: function (field, checked) {
@@ -59,9 +61,9 @@ Ext.define('Taco.view.product.subform.Inventory', {
         this.outOfStockState = Ext.widget({
             xtype: 'selectfield',
             fieldLabel: 'If out of stock...',
-            width: 250,
+            width: '50%',
             allowBlank: true,
-            margin: '0 0 0 20',
+            margin: '0 0 0 15',
             //hidden: (!track || this.product.get("productUsage") == "Component"),
             queryMode: 'local',
             store: [
@@ -92,7 +94,7 @@ Ext.define('Taco.view.product.subform.Inventory', {
         this.items = [{
             xtype: 'container',
             width: '100%',
-            layout: 'vbox',
+            layout: 'hbox',
             items: [
                 this.manageStock,
                 //this.viewStockLink,
@@ -217,8 +219,8 @@ Ext.define('Taco.view.product.subform.Inventory', {
                 // reverses the order of the buttons
                 reverseOrder: true,
                 msg: 'You have unsaved changes. Save changes now?',
-                closable: false,
-                buttons: Ext.Msg.YESNO,
+                closable: true,
+                buttons: Ext.Msg.OKCANCEL,
                 fn: function (rec) {
                     if (rec === 'yes') {
                         me.mon(productEditor, 'savesuccess', function() {

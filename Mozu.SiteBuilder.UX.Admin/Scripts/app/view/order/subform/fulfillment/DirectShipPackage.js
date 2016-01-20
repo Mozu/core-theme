@@ -9,7 +9,7 @@ Ext.define('Taco.view.order.subform.fulfillment.DirectShipPackage', {
 
     initComponent: function () {
 
-        this.title = 'Package: ' + this.packageData.code;
+        this.title = '<span class="label">Package:</span>' + '<span class="package-data">' + this.packageData.code + '</span>';
 
         this.details = Ext.widget({
             xtype: 'component',
@@ -235,10 +235,15 @@ Ext.define('Taco.view.order.subform.fulfillment.DirectShipPackage', {
         };
 
         this.collapsedActions = [{
+            xtype: 'button',
+            ui: 'action',
+            scale: 'medium',
             text: 'Print Packing Slip',
             handler: this.handlePrintPackingSlip
         }, {
             xtype: 'resendemailbutton',
+            ui: 'action',
+            scale: 'medium',
             margin: '0 0 0 10',
             emailUrl: '/admin/app/order/shipping/package/resendshipmentemail',
             jsonData: {
@@ -322,6 +327,9 @@ Ext.define('Taco.view.order.subform.fulfillment.DirectShipPackage', {
             data: {
                 orderId: this.record.getId(),
                 packageIds: [this.packageData.id]
+            },
+            success: function() {
+                this.record.reload();
             }
         });
     },

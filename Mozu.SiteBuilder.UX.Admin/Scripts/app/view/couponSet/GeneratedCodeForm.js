@@ -50,9 +50,9 @@ Ext.define('Taco.view.couponSet.GeneratedCodeForm', {
         });
 
 
-        this.codePrefix = Ext.create('Ext.form.field.Text',
-            Taco.core.ux.TooltipLabel.wrapConfig('couponSet.generatedCode.prefix', me,{
+        this.codePrefix = Ext.create('Ext.form.field.Text', {
                 name: 'couponSetCode',
+                itemId: 'coupon-set-prefix-field',
                 readOnly: !me.isCreateMode,
                 fieldLabel: "Code Prefix",
                 labelAlign: 'top',
@@ -64,12 +64,19 @@ Ext.define('Taco.view.couponSet.GeneratedCodeForm', {
                 enableKeyEvents: true,
                 //regex: /^[BCDFGHJKLMNPQRSTVWXYZ1-9\$!]+$/i,
                 //regexText: 'Invalid character. Vowels, the number 0, and any special characters, except "$" or "!", are not allowed.',
+                tooltip: Ext.create('Taco.core.ux.content.Tooltip', {
+                    elementId: 'coupon-set-prefix-field',
+                    hoverTarget: 'bodyEl',
+                    messageKey: 'couponSet.generatedCode.prefix',
+                    offsetLeft: 70,
+                    offsetTop: 45
+                }),
                 listeners: {
                     keyup: me.updatePreview,
                     scope: me
                 }
 
-            })
+            }
         );
 
         this.suggestButton = Ext.create('Ext.button.Button', {

@@ -12,7 +12,7 @@ Ext.define('Taco.view.order.widget.InternalNotesGrid', {
     enableRowEditing: true,
 
     viewConfig: {
-        emptyText: 'No items to display',
+        emptyText: '<span class="no-notes-available">No items to display</span>',
         deferEmptyText: false
     },
 
@@ -33,6 +33,9 @@ Ext.define('Taco.view.order.widget.InternalNotesGrid', {
             meta.style = 'white-space: normal';
             return value;
         }
+    }, {
+        text: '',
+        width: 50
     }],
 
     initComponent: function () {

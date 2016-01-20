@@ -13,30 +13,12 @@ Ext.define('Taco.view.order.subform.InternalNotes', {
     ui: 'subform-section',
     bodyPadding: '20 0 40 0',
 
+    layout: 'card',
+
     initComponent: function () {
         var me = this;
 
         this.store = this.record.getInternalNotes();
-
-        // this.store = Ext.create('Ext.data.Store', {
-        //     autoLoad: true,
-        //     fields: [{
-        //         type: 'date', name: 'date',
-        //     }, {
-        //         type: 'string', name: 'agent',
-        //     }, {
-        //         type: 'string', name: 'comment'
-        //     }],
-        //     data: [{
-        //         date: Ext.Date.parse('01/01/2014 07:43am', 'm/d/Y h:ia'),
-        //         agent: 'Patsy OrderProcessor',
-        //         comment: 'I called the customer and let them know the widget is backordered.'
-        //     }, {
-        //         date: Ext.Date.parse('01/02/2014 05:19pm', 'm/d/Y h:ia'),
-        //         agent: 'Cody CustomerCare',
-        //         comment: 'I spoke to Joe and let him know that I will cancel the widget and that it will be reflected on his CC within 3 days.'
-        //     }]
-        // });
 
         this.grid = Ext.create('Taco.view.order.widget.InternalNotesGrid', {
             record: this.record,
@@ -52,60 +34,19 @@ Ext.define('Taco.view.order.subform.InternalNotes', {
             handler: this.grid.onRowEditorCreate
         }];
 
-        this.items = [this.grid];
+        this.items = [{
+                xtype: 'component',
+                cls: 'order-no-content',
+                html: 'N/A'
+            },
+            this.grid
+        ];
+
+        this.activeTab = this.store.count() > 0 ? 1 : 0;
 
         this.callParent(arguments);
     },
 
-    // openNotesDialog: function () {
-    //     if (this.notesDialog) {
-    //         this.notesDialog.show();
-    //     } else {
-    //         this.notesDialog = Ext.create('Taco.core.ux.window.Modal', {
-    //             autoShow: true,
-    //             scale: 'large',
-    //             title: 'Internal Notes',
-    //             overflowY: 'auto',
-    //             closeAction: 'hide',
-    //             layout: {
-    //                 type: 'vbox',
-    //                 align: 'stretch'
-    //             },
-    //             items: [this.grid],
-    //             listeners: {
-    //                 savesuccess: {
-    //                     scope: this,
-    //                     fn: function () {
-    //                         var me = this;
-    //                         var orderForm = this.orderForm;
-
-    //                         console.log('todo: wire up saving of internal notes');
-
-    //                         // orderForm.setLoading(true, orderForm.body);
-
-    //                         // // rely on the subform's "beforeSave" method to save attributes to the model correctly.
-    //                         // orderForm.orderAttr.beforeSave();
-
-    //                         // orderForm.record.saveAttributes({
-    //                         //     success: function () {
-    //                         //         orderForm.setLoading(false, orderForm.body);
-
-    //                         //         me.refreshGrid();
-    //                         //     },
-    //                         //     failure: function (msg) {
-    //                         //         orderForm.setLoading(false, this.body);
-                                    
-    //                         //         var res = Ext.JSON.decode(msg.responseText);
-                                   
-    //                         //         Taco.app.fireEvent('setmessage', res.items[0].message, 'error', orderForm);
-    //                         //     }
-    //                         // });
-    //                     }
-    //                 }
-    //             }
-    //         });
-    //     }
-    // },
 
     onDestroy: function () {
         Ext.destroy(this.notesDialog);
@@ -115,5 +56,7 @@ Ext.define('Taco.view.order.subform.InternalNotes', {
 
     refreshGrid: function () {
         this.down('grid').getView().refresh();
+
+        this.getLayout().setActiveItem(this.store.count() > 0 ? 1 : 0);
     }
 });
