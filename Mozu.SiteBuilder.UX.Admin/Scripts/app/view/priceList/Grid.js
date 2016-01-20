@@ -47,7 +47,6 @@ Ext.define('Taco.view.priceList.Grid', {
     enableSearch: true,
     enablePaging: true,
     enableRowEditing: false,
-    enableAutoSelect: true,
     createButtonEnabled: true,
     saveButtonEnabled: false,
     cancelButtonEnabled: false,
@@ -72,15 +71,12 @@ Ext.define('Taco.view.priceList.Grid', {
     deletePromptMsg : 'Are you sure you want to delete this price list?',
 
     isCatalogLevel: false,
-    categoryCode: null,
     pageSize: 25,
-    isPopUp: false,
 
     advancedSearchConfig : {
         form: null, //set below
         quickFilterData: [
-            [{ code: 'Code' }, 'Code'],
-            [{ status: 'Status' }, 'Status']
+            [{ code: 'Code' }, 'Code']
         ]
     },
 

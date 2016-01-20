@@ -24,6 +24,14 @@ Ext.define('Taco.model.PriceList', {
             name: 'description',
             type: 'string'
         }, {
+            name: 'ranking',
+            type: 'int',
+            useNull: true
+        }, {
+            name: 'searchIndexSequence',
+            type: 'int',
+            useNull: true
+        }, {
             name: 'customerSegments',
             type: 'auto',
             defaultValue: []
@@ -46,7 +54,8 @@ Ext.define('Taco.model.PriceList', {
         }, {
             name: 'createByUser',
             type: 'string',
-            convert: Taco.core.util.Common.getCreateByUser
+            convert: Taco.core.util.Common.getCreateByUser,
+            persist: false
         }, {
             name: 'createDate',
             type: 'date',
@@ -59,7 +68,8 @@ Ext.define('Taco.model.PriceList', {
         }, {
             name: 'lastModifiedByUser',
             type: 'string',
-            convert: Taco.core.util.Common.getLastModifiedByUser
+            convert: Taco.core.util.Common.getLastModifiedByUser,
+            persist: false
         }, {
             name: 'lastModifiedDate',
             type: 'date',

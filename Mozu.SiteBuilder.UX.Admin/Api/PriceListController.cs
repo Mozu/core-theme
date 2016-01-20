@@ -14,6 +14,7 @@ using Mozu.SiteBuilder.UX.Admin.Api.Models.PriceLists;
 using Mozu.SiteBuilder.UX.Admin.Helpers.PriceListHelpers;
 using DC = Mozu.ProductAdmin.Contracts;
 using Mozu.Core.Api.Contracts.Client;
+using Mozu.Core.Api.Contracts;
 using System.Net.Http;
 using Mozu.SiteBuilder.UX.Admin.Helpers;
 using Mozu.SiteBuilder.Mvc.Extensions;
@@ -101,18 +102,19 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
 
             var mockData = new List<PriceList>();
             mockData.AddRange(
-                Enumerable.Range(1, 30).Select(i => new PriceList
+                Enumerable.Range(1, 25).Select(i => new PriceList
                 {
                     Code = string.Format("t_{0}{1}", (i < 10 ? "0" : ""), i),
                     Name = string.Format("test {0}", i),
                     Ranking = i,
                     SearchIndexSequence = i,
-                    CustomerSegments = new List<int> { 1 }
-                    //,
-                    //new AuditInfo
-                    //{
-                        
-                    //}
+                    IsActive = true,
+                    CustomerSegments = new List<int> { 1 },
+                    CreateBy = "test",
+                    CreateDate = DateTime.UtcNow,
+                    UpdateDate = DateTime.UtcNow,
+                    UpdateBy = "test"
+                    
 
                 }).ToList()
             );
