@@ -15,13 +15,16 @@ namespace Mozu.SiteBuilder.Mvc.Filters
              var htm = context.Resolve<ITemplateManager>();
 
              var valueString = (string) value;
-             var themeFile = vpp.GetThemeFileInfo(string.Format("templates/{0}", valueString), false);
-             if (themeFile == null) throw GetNotFound(valueString);
-
-             var parentFile = vpp.GetParentThemeFileInfo(themeFile);
-             var pathToGet = parentFile != null ? 
-                    parentFile.FullPath : 
-                    themeFile.FullPath;
+            var themeFile = vpp.GetThemeFileInfo(string.Format("templates/{0}", valueString), false);
+            if (themeFile == null) throw GetNotFound(valueString);
+            
+            var parentFile = vpp.GetParentThemeFileInfo(themeFile);
+            if ( parentFile == null)
+            {
+                throw GetParentNotFound(valueString);
+            }
+            var pathToGet = parentFile.FullPath;
+                   
              return htm.GetTemplate(pathToGet);
          }
 
@@ -44,5 +47,9 @@ namespace Mozu.SiteBuilder.Mvc.Filters
          {
              return new VaeItemNotFoundException(string.Format("template not found {0}", path));
          }
+        private static VaeItemNotFoundException GetParentNotFound(string path)
+        {
+            return new VaeItemNotFoundException(string.Format("parent template not found {0}", path));
+        }
     }
 }
