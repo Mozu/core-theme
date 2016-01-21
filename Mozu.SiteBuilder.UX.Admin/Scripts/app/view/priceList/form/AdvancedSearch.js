@@ -5,6 +5,8 @@ Ext.define('Taco.view.priceList.form.AdvancedSearch', {
     extend: 'Taco.core.ux.form.Form',
     requires: [
         'Taco.core.ux.form.field.AdminUser',
+        'Taco.store.CustomerSegments',
+        'Ext.ux.form.field.BoxSelect',
         'Ext.form.FieldContainer',
         'Taco.core.ux.form.DateTime'
     ],
@@ -16,35 +18,53 @@ Ext.define('Taco.view.priceList.form.AdvancedSearch', {
 
     initComponent: function () {
         var me = this,
-            siteStore;
-
+            segmentStore = Taco.core.data.StoreManager.getOrCreate('Taco.store.CustomerSegments'),
+            catalogStore = Ext.create('Ext.data.Store', {
+                fields: ['id', 'name'],
+                data: Taco.app.context.getMasterCatalog().catalogs
+            });
 
         this.items = [
             {
+                name: 'keyword',
+                fieldLabel: 'Keyword Search',
+                width: '100%'
+            }
+        ];
+
+        if (catalogStore.getTotalCount() > 1) {
+            this.items.push({
                 xtype: 'fieldcontainer',
                 layout: 'hbox',
-                items: [
-                    {
-                        xtype: 'textfield',
-                        name: 'name',
-                        fieldLabel: 'Name',
-                        margin: { right: 40 },
-                        flex: 1
-                    }, {
-                        xtype: 'textfield',
-                        name: 'code',
-                        fieldLabel: 'Code',
-                        flex: 1
-                    }
-                ]
-            },
+                width: '100%',
+                items: [{
+                    xtype: 'combobox',
+                    fieldLabel: 'Catalog',
+                    name: 'catalogId',
+                    labelAlign: 'top',
+                    allowBlank: true,
+                    editable: false,
+                    forceSelection: true,
+                    autoSelect: true,
+                    listConfig: {shadow: false},
+                    width: '100%',
+                    queryMode: 'local',
+                    store: catalogStore,
+                    valueField: 'id',
+                    displayField: 'name'
+                }]
+            });
+        }
+
+        this.items = this.items.concat([
             {
                 xtype: 'fieldcontainer',
                 layout: 'hbox',
+                width: '100%',
                 items: [
                     me.createStaticCombobox('status', 'Status', [
                         {
-                            name: 'Active',  //todo: can't do scheduled greg_murray on 10/21/2015
+                            name: 'Active',
                             id: 'Active'
                         }, {
                             name: 'Disabled',
@@ -53,113 +73,31 @@ Ext.define('Taco.view.priceList.form.AdvancedSearch', {
                             name: 'All',
                             id: 'All'
                         }
-                    ], 40),
-                    me.createStaticCombobox('default', 'Default', [
-                        {
-                            name: 'Yes',
-                            id: 'true'
-                        }, {
-                            name: 'No',
-                            id: 'false'
-                        }
-                    ], 0)
+                    ], 0)]
+            },
+            {
+                xtype: 'fieldcontainer',
+                layout: 'hbox',
+                width: '100%',
+                items: [
+                    {
+                        xtype: 'combobox',
+                        store: segmentStore,
+                        name: 'segments',
+                        fieldLabel: 'Segments',
+                        width: '100%',
+                        valueField: 'id',
+                        displayField: 'code',
+                        queryMode: 'local',
+                        valueNotFoundText: 'not found',
+                        editable: true,
+                        forceSelection: true
+                    }
                 ]
             }
-        ];
-
-        if (!me.isCatalogLevel) {
-            this.items.push({
-                xtype: 'combo',
-                store: { type: 'Taco.store.Categories' },
-                flex:1,
-                name: 'categoryCode',
-                fieldLabel: 'Category',
-                valueField: 'id',
-                displayField: 'nameAndCode',
-                queryMode: 'local',
-                valueNotFoundText: 'not found',
-                editable: true,
-                forceSelection: true,
-                listeners: {
-                    added: function (cmp) {
-                        cmp.hidden = !Taco.app.context.getCurrent().getSiteId();
-                    }
-                }
-            });
-        }
-        else {
-            siteStore = Ext.create('Ext.data.Store', {
-                fields: ['id', 'name'],
-                data: Taco.app.context.getContextAtLevel('c').getSites()
-            });
-            if (siteStore.getTotalCount() > 1) {
-                this.items.push({
-                    xtype: 'combobox',
-                    fieldLabel: 'Site',
-                    name: 'siteId',
-                    labelAlign: 'top',
-                    allowBlank: true,
-                    editable: false,
-                    forceSelection: true,
-                    autoSelect: true,
-                    listConfig: {shadow: false},
-                    flex: 1,
-                    queryMode: 'local',
-                    store: siteStore,
-                    valueField: 'id',
-                    displayField: 'name'
-                });
-            }
-        }
-
-        var rangeFields = [
-            me.createDateRangeFields('Active Start Date Range', 'activeStartDateFrom', 'activeStartDateTo'),
-            me.createDateRangeFields('Active End Date Range', 'activeEndDateFrom', 'activeEndDateTo'),
-            {
-                xtype: 'taco-adminuserfield',
-                name: 'createByUser',
-                fieldLabel: 'Created By',
-                flex: 1
-            },
-            me.createDateRangeFields('Created Date Range', 'createDateFrom', 'createDateTo'),
-            {
-                xtype: 'taco-adminuserfield',
-                name: 'lastModifiedByUser',
-                fieldLabel: 'Last Modified By',
-                flex: 1
-            },
-            me.createDateRangeFields('Last Modified Date Range', 'modifiedDateFrom', 'modifiedDateTo')
-        ];
-        this.items = this.items.concat(rangeFields);
+        ]);
 
         this.callParent(arguments);
-    },
-
-    createDateRangeFields: function(title, start, end) {
-        return {
-            xtype: 'fieldcontainer',
-            fieldLabel: title,
-            layout: {
-                type: 'hbox'
-            },
-            items: [{
-                xtype: 'datetime',
-                // allows the field to consume an iso foramt value;
-                altFormats: 'c',
-                name: start,
-                flex: 1
-            }, {
-                xtype: 'component',
-                html: 'to',
-                margin: '5 10'
-            }, {
-                xtype: 'datetime',
-                // allows the field to consume an iso foramt value;
-                altFormats: 'c',
-                name: end,
-                flex: 1
-            }]
-        };
     },
 
     createStaticCombobox: function(name, label, data, marginRight) {
@@ -168,7 +106,7 @@ Ext.define('Taco.view.priceList.form.AdvancedSearch', {
             name: name,
             fieldLabel: label,
             margin: { right: marginRight },
-            flex: 1,
+            width: '100%',
             valueField: 'id',
             displayField: 'name',
             queryMode: 'local',
@@ -184,5 +122,24 @@ Ext.define('Taco.view.priceList.form.AdvancedSearch', {
                 data: data
             })
         };
+    },
+
+    launchSegmentModal: function (list) {
+        var gridStore = Taco.core.data.StoreManager.getOrCreate({
+            type: 'Taco.store.CustomerSegments',
+            clearFilters: true,
+            clearSort: true,
+            autoLoad: true
+        });
+
+        this.modal = Ext.create('Taco.view.customers.segments.Modal', {
+            store: gridStore,
+            listeners: {
+                savesuccess: function (modal, values) {
+                    list.addValue(values);
+                },
+                scope: this
+            }
+        });
     }
 });
