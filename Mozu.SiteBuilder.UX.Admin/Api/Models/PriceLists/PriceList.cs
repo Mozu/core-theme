@@ -9,6 +9,8 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.Models.PriceLists
     {
         public string Code { get; set; }
 
+        public int MasterCatalogId { get; set; }
+
         public string Name { get; set; }
 
         public string Description { get; set; }
@@ -18,6 +20,8 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.Models.PriceLists
         public int? SearchIndexSequence { get; set; }
 
         public List<int> CustomerSegments { get; set; }
+
+        public List<string> CustomerSegmentNames { get; set; }
 
         public List<int> Catalogs { get; set; } 
 

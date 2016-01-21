@@ -18,6 +18,9 @@ Ext.define('Taco.model.PriceList', {
             name: 'code',
             type: 'string'
         }, {
+            name: 'masterCatalogId',
+            type: 'int'
+        }, {
             name: 'name',
             type: 'string'
         }, {
@@ -36,9 +39,20 @@ Ext.define('Taco.model.PriceList', {
             type: 'auto',
             defaultValue: []
         }, {
-            name: 'catalogs',
+            name: 'customerSegmentNames',
             type: 'auto',
             defaultValue: []
+        },{
+            name: 'catalogs',
+            type: 'auto',
+            defaultValue: [],
+            convert: function (vals) {
+                var catNames = Ext.Array.map(vals, function(catId) {
+                    var cat = Taco.app.context.findCatalog(catId);
+                    return (cat) ? cat.name : '';
+                });
+                return catNames.join(',');
+            }
         }, {
             name: 'isActive',
             type: 'boolean',

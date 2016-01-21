@@ -156,16 +156,16 @@ Ext.define('Taco.view.priceList.Grid', {
                 sortable: true
             }, {
                 xtype: 'gridcolumn',
-                dataIndex: 'catalogsJoined',
-                stateId: 'catalogsJoined',
+                dataIndex: 'catalogs',
+                stateId: 'catalogs',
                 text: 'Catalogs',
                 hideable: true,
                 flex: 3,
                 sortable: false
             }, {
                 xtype: 'gridcolumn',
-                dataIndex: 'customerSegmentsJoined',
-                stateId: 'customerSegmentsJoined',
+                dataIndex: 'customerSegmentNames',
+                stateId: 'customerSegmentNames',
                 text: 'Customer Segments',
                 hideable: true,
                 flex: 3,

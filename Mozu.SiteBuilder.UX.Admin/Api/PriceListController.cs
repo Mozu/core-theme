@@ -109,13 +109,13 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
                     Ranking = i,
                     SearchIndexSequence = i,
                     IsActive = (i % 2 == 0),
-                    CustomerSegments = new List<int> { 1 },
+                    CustomerSegments = new List<int> { 1, 2 },
+                    CustomerSegmentNames = new List<string> { "Silver", "Gold"},
+                    Catalogs = new List<int> { 1, 2},
                     CreateBy = "test",
                     CreateDate = DateTime.UtcNow,
                     UpdateDate = DateTime.UtcNow,
                     UpdateBy = "test"
-                    
-
                 }).ToList()
             );
 
