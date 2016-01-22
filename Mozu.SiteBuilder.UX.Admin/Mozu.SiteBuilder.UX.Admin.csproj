@@ -756,6 +756,7 @@
     <Content Include="Scripts\app\view\priceList\Edit.js" />
     <Content Include="Scripts\app\view\priceList\Form.js" />
     <Content Include="Scripts\app\view\priceList\form\AdvancedSearch.js" />
+    <Content Include="Scripts\app\view\priceList\form\Conditions.js" />
     <Content Include="Scripts\app\view\priceList\form\General.js" />
     <Content Include="Scripts\app\view\priceList\Grid.js" />
     <Content Include="Scripts\app\view\priceList\Index.js" />

@@ -5,7 +5,7 @@ Ext.define('Taco.view.priceList.Form', {
     extend: 'Taco.core.ux.form.NavForm2',
     requires: [
         'Taco.view.priceList.form.General',
-        //'Taco.view.priceList.form.Context',
+        'Taco.view.priceList.form.Conditions',
         //'Taco.view.priceList.form.PinnedProduct',
         //'Taco.view.priceList.form.BlockedProduct',
         'Taco.core.ux.card.Tab',
@@ -33,7 +33,12 @@ Ext.define('Taco.view.priceList.Form', {
             itemId: 'general',
             parentForm: this,
             record: me.record,
-            isCatalogLevel: me.isCatalogLevel,
+            manageHeight: true
+        }, {
+            xtype: 'taco-priceList-conditions',
+            itemId: 'conditions',
+            parentForm: this,
+            record: me.record,
             manageHeight: true
         }
         //, {
