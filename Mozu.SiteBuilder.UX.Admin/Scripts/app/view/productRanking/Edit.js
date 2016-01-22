@@ -60,6 +60,25 @@ Ext.define('Taco.view.productRanking.Edit', {
                     collectionName: 'productRankings'
             });
 
+            var duplicateMenuItem = {
+                text: 'Duplicate',
+                disabled: me.record.phantom,
+                requiredBehaviors: {
+                    model: 'Taco.model.Product',    
+                    behavior: 'create'
+                },
+                handler: function () {
+                    var record = me.record,
+                        metaData = {
+                            id: record.getId()
+                        };
+
+                    Taco.app.StateManager.attemptNavigate('ProductRankings/duplicate/' + record.getId(), metaData);
+                }
+            };
+
+            menuItems.push(duplicateMenuItem);
+
             menuItems.push(delMenuItem);
 
             me.moreButtonCfg = {
