@@ -24,11 +24,14 @@ Ext.define('Taco.view.priceList.form.General', {
 
         //   vbox
         //     hbox -
-        //        hbox
-        //          2 fields
-        //        description field
-        //     hbox
-        //       1 field
+        //        1. vbox
+        //          hbox
+        //              1.name
+        //              2.master cat
+        //          hbox
+        //              1.code
+        //              2.status
+        //        2. description field
 
         this.items = [{
             xtype: 'panel',
@@ -46,37 +49,82 @@ Ext.define('Taco.view.priceList.form.General', {
                         {
                             xtype: 'panel',
                             layout: {
-                                type: 'hbox',
+                                type: 'vbox',
                                 align: 'top'
                             },
                             width: '50%',
                             items: [
                                 {
-                                    name: 'name',
-                                    itemId: 'nameField',
-                                    fieldLabel: 'Name',
-                                    allowBlank: false,
-                                    xtype: 'textfield',
-                                    margin: '0 30 0 0',
-                                    width: '50%',
-                                    required: true,
-                                    minLength: 3,
-                                    maxLength: 200,
-                                    enforceMaxLength: true
-                                }, 
+                                    xtype: 'panel',
+                                    layout: {
+                                        type: 'hbox',
+                                        align: 'top'
+                                    },
+                                    width: '100%',
+                                    items: [
+                                        {
+                                            name: 'name',
+                                            itemId: 'nameField',
+                                            fieldLabel: 'Name',
+                                            allowBlank: false,
+                                            xtype: 'textfield',
+                                            margin: '0 30 0 0',
+                                            width: '50%',
+                                            required: true,
+                                            minLength: 3,
+                                            maxLength: 200,
+                                            enforceMaxLength: true
+                                        }, {
+                                            name: 'masterCatalog',
+                                            fieldLabel: 'Master Catalog',
+                                            itemId: 'masterCatalogField',
+                                            xtype: 'textfield',
+                                            margin: '0 30 0 0',
+                                            width: '50%',
+                                            //allowBlank: true,
+                                            maxLength: 30,
+                                            readOnly: true,
+                                            value: Taco.app.context.getMasterCatalog().name
+                                        }
+                                    ]
+                                },
                                 {
-                                    name: 'code',
-                                    fieldLabel: 'Code',
-                                    itemId: 'codeField',
-                                    xtype: 'textfield',
-                                    margin: '0 30 0 0',
-                                    width: '50%',
-                                    allowBlank: false,
-                                    maxLength: 30,
-                                    readOnly: !me.record.phantom,
-                                    required: true,
-                                    regex: /^[a-z0-9_\-]+$/i,
-                                    regexText: 'Invalid character. Please choose from alphanumeric, underscore, or hyphen characters.'
+                                    xtype: 'panel',
+                                    layout: {
+                                        type: 'hbox',
+                                        align: 'top'
+                                    },
+                                    width: '100%',
+                                    items: [
+                                        {
+                                            name: 'code',
+                                            fieldLabel: 'Code',
+                                            itemId: 'codeField',
+                                            xtype: 'textfield',
+                                            margin: '0 30 0 0',
+                                            width: '50%',
+                                            allowBlank: false,
+                                            maxLength: 30,
+                                            readOnly: !me.record.phantom,
+                                            required: true,
+                                            regex: /^[a-z0-9_\-]+$/i,
+                                            regexText: 'Invalid character. Please choose from alphanumeric, underscore, or hyphen characters.'
+                                        }, {
+                                            xtype: 'combobox',
+                                            name: 'isActive',
+                                            fieldLabel: 'Status',
+                                            width: '50%',
+                                            margin: '0 30 0 0',
+                                            valueField: 'id',
+                                            displayField: 'name',
+                                            queryMode: 'local',
+                                            valueNotFoundText: 'not found',
+                                            editable: true,
+                                            forceSelection: true,
+                                            value: me.record ? me.record.get('isActive') : true,
+                                            store: [[true, 'Active'], [false, 'Disabled']]
+                                        }
+                                    ]
                                 }
                             ]
                         },
@@ -85,59 +133,14 @@ Ext.define('Taco.view.priceList.form.General', {
                             itemId: 'descriptionField',
                             name: 'description',
                             width: '50%',
+                            height: '100%',
                             fieldLabel: 'Description',
                             maxLength: 500
                         }
                     ]
-                },
-                //row 2
-                {
-                    xtype: 'panel',
-                    layout: {
-                        type: 'hbox',
-                        align: 'top'
-                    },
-                    width: '100%',
-                    items: [
-                        //statusCombo
-                        {
-                            xtype: 'combobox',
-                            name: 'isActive',
-                            fieldLabel: 'Status',
-                            width: '50%',
-                            margin: '0 30 0 0',
-                            valueField: 'id',
-                            displayField: 'name',
-                            queryMode: 'local',
-                            valueNotFoundText: 'not found',
-                            editable: true,
-                            forceSelection: true,
-                            value: me.record ? me.record.get('isActive') : true,
-                            store: [[true, 'Active'], [false, 'Disabled']]
-                        }
-                    ]
                 }
-
-
-
-                //,
-                //{
-                //    xtype: 'panel',
-                //    margin: {
-                //        left: 20
-                //    },
-                //    layout: {
-                //        type: 'vbox'
-                //    },
-                //    flex: 1,
-                //    items: [
-                //
-                //    ]
-                //}
             ]
         }];
-
-
 
         this.callParent(arguments);
     },
