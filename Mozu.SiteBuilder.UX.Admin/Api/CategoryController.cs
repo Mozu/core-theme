@@ -190,42 +190,35 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
         [HttpPostRoute(UriTemplate = "update")]
         public async Task<Response<List<Category>>> UpdateCategory(List<Category> categories)
         {
-            var tasks = new List<Task<ServiceClientResponse<DC.Category>>>();
-            if (categories.Count() == 1)
+            var returnList = new List<Category>();
+            
+            if (categories.Count == 1)
             {
                 //single record Create/Update
-                var cat = categories.First();
+                var cat = categories.First(); //TODO: could there only be one from the category grid?  then it would delete the properties that wasn't in projection
                 var dcCat = Mapper.Map<DC.Category>(cat);
-                var task = _categoriesClient.UpdateCategory(dcCat, cat.Id, false);
-                tasks.Add(task);
+                var taskResult = (await _categoriesClient.UpdateCategory(dcCat, cat.Id, false)).ReadAsAsync();
+                returnList.Add(Mapper.Map<Category>(taskResult.Result));
+                return List2(returnList);
             }
-            else
-            {
-                //Assuming sequence update only
-                var intArrayFilterString = _categoryHelper.GetInFilterStringForIds(categories);
-                //Get current categories
-                var dbCategories = (await (_categoriesClient.GetCategories(filter: intArrayFilterString)))
-                    .ReadAsSync();
-                var dbCategoriesList =  Mapper.Map<List<DC.Category>>(dbCategories.Items).ToList();
 
-                _categoryHelper.AdjustSequence(categories, dbCategoriesList);
-                tasks.AddRange(dbCategoriesList.Select(dbCat => _categoriesClient
-                    .UpdateCategory(dbCat, dbCat.Id, false)));
 
-                //TODO: create category helper ?  make generic?
-
-                //Original
-                //                foreach (var cat in categories)
-                //                {
-                //                    var dcCat = Mapper.Map<DC.Category>(cat);
-                //                    var task = _categoriesClient.UpdateCategory(dcCat, cat.Id, false);
-                //                    tasks.Add(task);
-                //                }
-            }
+            //Multiple records in list assumes we only update the parent-id and sequence
+            var intArrayFilterString = _categoryHelper.GetInFilterStringForIds(categories); //TODO: might need to split this when the list hits maximum URI length
+            //Get current categories
+            var dbCategories = (await (_categoriesClient.GetCategories(filter: intArrayFilterString, pageSize: categories.Count)))
+                .ReadAsSync();
+            var dbCategoriesList = (dbCategories.Items).ToList();
             
-            await Task.WhenAll(tasks);
-            var returnList = tasks.Select(t => Mapper.Map<Category>(t.Result.ReadAsSync())).ToList();
-
+            //Assuming we ONLY update sequence and parentId 
+            _categoryHelper.AdjustSequence(categories, dbCategoriesList);
+            foreach (var category in dbCategoriesList)
+            {
+                //AWAIT each task and attempting to avoid deadlocks due to sproc concurrency: "Product.spAdmin_FixCategoryTreeSequences"
+                var taskResult = (await _categoriesClient.UpdateCategory(category, category.Id, false)).ReadAsAsync();
+                var mapped = Mapper.Map<Category>(taskResult.Result);
+                returnList.Add(mapped);
+            }
             return List2(returnList);
         }
 
