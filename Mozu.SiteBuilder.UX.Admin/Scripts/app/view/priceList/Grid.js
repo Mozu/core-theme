@@ -276,7 +276,7 @@ Ext.define('Taco.view.priceList.Grid', {
         if (!disableMenuItem || !enableMenuItem) {
             return;
         }
-        if (eventData.record.get('isActive') === 'Active') {
+        if (eventData.record.get('isActive')) {
             disableMenuItem.show();
             enableMenuItem.hide();
         } else {
@@ -295,7 +295,7 @@ Ext.define('Taco.view.priceList.Grid', {
                     allInactive;
 
                 allActive = Ext.Array.every(selection, function(item) {
-                    return item.get('isActive') === 'Active';
+                    return item.get('isActive');
                 });
 
                 if (allActive) {
@@ -305,7 +305,7 @@ Ext.define('Taco.view.priceList.Grid', {
                 }
 
                 allInactive = Ext.Array.every(selection, function(item) {
-                    return item.get('isActive') !== 'Active';
+                    return !item.get('isActive');
                 });
 
                 if (allInactive) {
