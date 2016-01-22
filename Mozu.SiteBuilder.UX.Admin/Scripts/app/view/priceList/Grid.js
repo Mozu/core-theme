@@ -44,7 +44,7 @@ Ext.define('Taco.view.priceList.Grid', {
     // Will add the 20px padding needed for display in the contentView as part of the NavHeader code;
     addContentViewPadding: true,
 
-    enableSearch: true,
+    enableSearch: false,
     enablePaging: true,
     enableRowEditing: false,
     createButtonEnabled: true,
@@ -73,11 +73,7 @@ Ext.define('Taco.view.priceList.Grid', {
     pageSize: 25,
 
     advancedSearchConfig : {
-        form: null, //set below
-        quickFilterData: [
-            [{ code: 'Code' }, 'Code']
-        ],
-        emptySearchText: 'Search'
+        form: null
     },
 
     onCreate: Ext.emptyFn,
