@@ -58,6 +58,7 @@ Ext.define('Taco.view.productRanking.Grid', {
     showActionsColumn: true,
 
     enableEditAction: true,
+    enableDuplicateAction: true,
     enableDeleteAction:true,
 
     hideSearchToolbar: false,
@@ -291,6 +292,24 @@ Ext.define('Taco.view.productRanking.Grid', {
                 menuColumnHandler: me.doEdit,
                 scope:me
             });
+        }
+
+        if (this.enableDuplicateAction) {
+            actions.push({
+                text: 'Duplicate',
+                requiredBehaviors: {
+                    model: 'Taco.model.ProductRanking',
+                    behavior: 'create'
+                },
+                menuColumnHandler: function(item, eventData) {
+                    var record = eventData.record,
+                        metaData = {
+                            id: record.getId()
+                        };
+
+                    Taco.app.StateManager.attemptNavigate('ProductRankings/duplicate/' + record.getId(), metaData);
+                }
+            });    
         }
 
 

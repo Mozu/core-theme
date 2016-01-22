@@ -26,7 +26,7 @@ Ext.define('Taco.view.productRanking.Edit', {
 
     parentTitleCfg: {
         title: 'Product Ranking Rules',
-        controller: 'productrankings'
+        controller: 'ProductRankings'
     },
 
     isCreate: false,
