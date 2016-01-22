@@ -16,146 +16,32 @@ Ext.define('Taco.view.priceList.form.General', {
 
     title: 'General',
     record: null,
-    dateValidationMsg: 'An active start or end date is required',
 
     initComponent: function() {
         var me = this;
 
         Ext.tip.QuickTipManager.init();
 
-        //me.scheduledStartDateField = Ext.widget({
-        //    xtype: 'datetime',
-        //    fieldLabel: 'Active Start Date',
-        //    name: 'startDate',
-        //    flex: 1,
-        //    margin: '0 20 0 0',
-        //    itemId: 'startDateFld',
-        //    pickerOffset: 4,
-        //    hidden: (!this.record || this.record.get('status') !== 'Scheduled'),
-        //    value: this.record ? this.record.get('startDate') : '',
-        //    allowBlank: true,
-        //    validateOnBlank: true,
-        //    validator: function () {
-        //        // need to update the validation message on the status combo. it will display the requirment that one or more dates is required
-        //        me.statusCombo.validate();
-        //
-        //        return true;
-        //    }
-        //});
-        //
-        //me.scheduledEndDateField = Ext.widget({
-        //    xtype: 'datetime',
-        //    fieldLabel: 'Active End Date',
-        //    name: 'endDate',
-        //    itemId: 'endDateFld',
-        //    flex: 1,
-        //    pickerOffset: 4,
-        //    hidden: (!this.record || this.record.get('status') !== 'Scheduled'),
-        //    value: this.record ? this.record.get('endDate') : '',
-        //    allowBlank: true,
-        //    validateOnBlank: true,
-        //    validator: function () {
-        //        return me.statusCombo.validate();
-        //    }
-        //});
-        //var siteStore = Ext.create('Ext.data.Store', {
-        //    fields: ['id', 'name'],
-        //    data: me.record.getSites(me.isCatalogLevel)
-        //});
-        //var defaultSite = (me.record && me.record.get('siteId'))
-        //                ? me.record.get('siteId')
-        //                : Taco.app.context.getContextAtLevel('s').getSiteId();
-        //
-        //me.siteCombo = Ext.widget({
-        //    xtype: 'combobox',
-        //    fieldLabel: 'Site',
-        //    itemId:     'siteField',
-        //    name: 'siteId',
-        //    labelAlign: 'top',
-        //    allowBlank: false,
-        //    editable: false,
-        //    readOnly: !me.record.phantom || siteStore.getTotalCount() <= 1,
-        //    forceSelection: true,
-        //    autoSelect: true,
-        //    listConfig: {shadow: false},
-        //    flex: 1,
-        //    margin:'0 20 0 0',
-        //    queryMode:'local',
-        //    store: siteStore,
-        //    valueField: 'id',
-        //    displayField: 'name',
-        //    listeners: {
-        //        afterrender: function(cmp) {
-        //            cmp.setValue(defaultSite);
-        //        }
-        //    }
-        //});
-
-        //me.statusCombo = Ext.widget({
-        //    xtype: 'combobox',
-        //    fieldLabel: 'Status',
-        //    itemId: 'statusField',
-        //    name: 'status',
-        //    labelAlign: 'top',
-        //    allowBlank: false,
-        //    editable: false,
-        //    forceSelection: true,
-        //    listConfig: { shadow: false },
-        //    flex: 1,
-        //    //maxHeight: 200,
-        //    margin: '0 0 0 0',
-        //    store: [['Active', 'Active'], ['Scheduled', 'Scheduled'], ['Disable', 'Disabled']],
-        //    value: me.record ? me.record.get('status') : 'Disable',
-        //    dateValidationMsg: 'A scheduled start or end date is required',
-        //    validator: function () {
-        //        // check to see if the start and end dates have a value;
-        //        if (this.getValue() === 'Scheduled' && Ext.isEmpty(me.scheduledStartDateField.getValue()) && Ext.isEmpty(me.scheduledEndDateField.getValue())) {
-        //            return this.dateValidationMsg;
-        //        }
-        //        return true;
-        //    },
-        //    listeners: {
-        //        change: function (cmp, newValue) {
-        //            me.record.set('isActive', newValue === 'Scheduled' || newValue === 'Active');
-        //            //show eff dates.
-        //            //me.enableDateRangeFields(me, me.scheduledStartDateField, me.scheduledEndDateField, (newValue === 'Scheduled'));
-        //            me.scheduledStartDateField.setVisible(newValue === 'Scheduled');
-        //            //me.scheduledStartDateField.setDisabled(newValue !== 'Scheduled');
-        //            me.scheduledEndDateField.setVisible(newValue === 'Scheduled');
-        //            //me.scheduledEndDateField.setDisabled(newValue !== 'Scheduled');
-        //            if (newValue !== 'Scheduled') {
-        //                me.scheduledStartDateField.setValue(null);
-        //                //me.scheduledStartDateField
-        //                me.scheduledEndDateField.setValue(null);
-        //            }
-        //            // force the combo to do a validity check and bypass the ext check for changes in validity;
-        //            cmp.wasValid = null;
-        //
-        //
-        //        },
-        //
-        //        scope: this
-        //    }
-        //});
-
-        // hbox
         //   vbox
-        //     hbox - 2 fields
-        //     hbox - 2 fields
-        //     hbox - 2 hidden fields
-        //   description
+        //     hbox -
+        //        hbox
+        //          2 fields
+        //        description field
+        //     hbox
+        //       1 field
 
         this.items = [{
             xtype: 'panel',
             layout: {
-                type: 'hbox',
+                type: 'vbox',
                 align: 'stretch'
             },
             items: [
+                //row 1
                 {
                     xtype: 'panel',
-                    flex: 1,
-                    layout: 'vbox',
+                    width: '100%',
+                    layout: 'hbox',
                     items: [
                         {
                             xtype: 'panel',
@@ -163,7 +49,7 @@ Ext.define('Taco.view.priceList.form.General', {
                                 type: 'hbox',
                                 align: 'top'
                             },
-                            width: '100%',
+                            width: '50%',
                             items: [
                                 {
                                     name: 'name',
@@ -171,8 +57,8 @@ Ext.define('Taco.view.priceList.form.General', {
                                     fieldLabel: 'Name',
                                     allowBlank: false,
                                     xtype: 'textfield',
-                                    flex: 1,
-                                    margin: '0 20 0 0',
+                                    margin: '0 30 0 0',
+                                    width: '50%',
                                     required: true,
                                     minLength: 3,
                                     maxLength: 200,
@@ -183,8 +69,8 @@ Ext.define('Taco.view.priceList.form.General', {
                                     fieldLabel: 'Code',
                                     itemId: 'codeField',
                                     xtype: 'textfield',
-                                    flex: 1,
-                                    margin: '0 0 0 0',
+                                    margin: '0 30 0 0',
+                                    width: '50%',
                                     allowBlank: false,
                                     maxLength: 30,
                                     readOnly: !me.record.phantom,
@@ -193,57 +79,65 @@ Ext.define('Taco.view.priceList.form.General', {
                                     regexText: 'Invalid character. Please choose from alphanumeric, underscore, or hyphen characters.'
                                 }
                             ]
-                        }
-                        //,
-                        //{
-                        //    xtype: 'panel',
-                        //    layout: {
-                        //        type: 'hbox',
-                        //        align: 'top'
-                        //    },
-                        //    width: '100%',
-                        //    items: [
-                        //        me.siteCombo,
-                        //        me.statusCombo
-                        //    ]
-                        //},
-                        //{
-                        //    xtype: 'panel',
-                        //    layout: {
-                        //        type: 'hbox',
-                        //        align: 'top'
-                        //    },
-                        //    width: '100%',
-                        //    items: [
-                        //        me.scheduledStartDateField,
-                        //        me.scheduledEndDateField
-                        //    ]
-                        //}
-                    ]
-                },
-                {
-                    xtype: 'panel',
-                    margin: {
-                        left: 20
-                    },
-                    layout: {
-                        type: 'vbox'
-                    },
-                    flex: 1,
-                    items: [
+                        },
                         {
                             xtype: 'textarea',
                             itemId: 'descriptionField',
                             name: 'description',
-                            width: '100%',
-                            flex: 1,
+                            width: '50%',
                             fieldLabel: 'Description',
                             maxLength: 500
                         }
                     ]
+                },
+                //row 2
+                {
+                    xtype: 'panel',
+                    layout: {
+                        type: 'hbox',
+                        align: 'top'
+                    },
+                    width: '100%',
+                    items: [
+                        //statusCombo
+                        {
+                            xtype: 'combobox',
+                            name: 'isActive',
+                            fieldLabel: 'Status',
+                            width: '50%',
+                            margin: '0 30 0 0',
+                            valueField: 'id',
+                            displayField: 'name',
+                            queryMode: 'local',
+                            valueNotFoundText: 'not found',
+                            editable: true,
+                            forceSelection: true,
+                            value: me.record ? me.record.get('isActive') : true,
+                            store: [[true, 'Active'], [false, 'Disabled']]
+                        }
+                    ]
                 }
+
+
+
+                //,
+                //{
+                //    xtype: 'panel',
+                //    margin: {
+                //        left: 20
+                //    },
+                //    layout: {
+                //        type: 'vbox'
+                //    },
+                //    flex: 1,
+                //    items: [
+                //
+                //    ]
+                //}
             ]
         }];
+
+
 
         this.callParent(arguments);
     },

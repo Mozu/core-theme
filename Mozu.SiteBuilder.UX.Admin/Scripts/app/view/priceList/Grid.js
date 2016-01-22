@@ -154,7 +154,7 @@ Ext.define('Taco.view.priceList.Grid', {
                 xtype: 'gridcolumn',
                 dataIndex: 'catalogs',
                 stateId: 'catalogs',
-                text: 'Catalogs',
+                text: 'Applied Catalogs',
                 hideable: true,
                 flex: 3,
                 sortable: false
@@ -182,8 +182,8 @@ Ext.define('Taco.view.priceList.Grid', {
         return columns.concat([
             {
                 xtype: 'gridcolumn',
-                dataIndex: 'isActive',
-                stateId: 'active',
+                dataIndex: 'status',
+                stateId: 'status',
                 text: 'Status',
                 flex:1,
                 sortable: false
