@@ -10,6 +10,7 @@ Ext.define('Taco.view.productRanking.grid.PinnedProduct', {
         'Taco.core.ux.mixins.GridContextMenu',
         'Taco.model.PinnedProduct'
     ],
+    itemId: 'taco-grid-pinnedproduct',
     stateful: false,
     enableNavHeader: false,
     autoHeight: true,
@@ -79,14 +80,31 @@ Ext.define('Taco.view.productRanking.grid.PinnedProduct', {
 
     },
 
-    listeners: {
-        afterrender: function() {
-          var record = this.up('#taco-productRanking-form').record;
-          var products = record.data.boostedProducts;
-          for (var i = 0; i < products.length; i++) {
+    /**
+    * Populates the data store from a record
+    */
+    populateStore: function (record) {
+        this.store.removeAll(); //wouldn't have to do this if we don't load it twice
+        if (record == null || record.data == null || record.data.boostedProducts == null) {
+            return;
+        }
+        var products = record.data.boostedProducts;
+        for (var i = products.length - 1; i >= 0; i--) {
             this.store.data.add(Ext.create('Taco.model.PinnedProduct', products[i]));
-          }
+        }
+        this.getView().refresh();
+    },
+
+    listeners: {
+        afterrender: function () {
+            var form = this.up('#taco-productRanking-form');
+            this.populateStore(form.record);
         },
+
+        reloaddata: function (record) {
+            this.populateStore(record);
+        },
+
         recordadded: function(records) {
 
             var me = this,
