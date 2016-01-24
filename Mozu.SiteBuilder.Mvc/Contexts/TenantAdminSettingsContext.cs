@@ -63,7 +63,7 @@ namespace Mozu.SiteBuilder.Mvc.Contexts
         {
             try
             {
-                return System.Reflection.AssemblyName.GetAssemblyName(dllPath).Version.ToString();
+                return System.Diagnostics.FileVersionInfo.GetVersionInfo(dllPath).FileVersion;
             }
             catch
             {
