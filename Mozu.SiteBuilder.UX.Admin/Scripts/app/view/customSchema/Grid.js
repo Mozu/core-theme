@@ -50,21 +50,26 @@ Ext.define('Taco.view.customSchema.Grid', {
             
         }
 
+        if (this.siteBuilderList) {
+            this.createRecord(this.listMetaData);
+            this.initListView(this.record);
+            // this.updatePagerToolbar(this.record);
+        }
 
         me.callParent(arguments);
     },
 
+    createRecord: function(data) {
+        this.record = Ext.create('Taco.model.EntityList', {
+            entityType: data.entityType,
+            autoLoad: true,
+            listFQN: data.listFQN,
+            views: data.views || []
+        });
+    },
+
     applyViewConfig: function() {
         this.enableNavHeader = true;
-        
-        // this.store = Ext.create('Taco.store.Entities', {
-        //     listName: this.listFQN,
-        //     entityType: this.entityType,
-        //     view: 'default',
-        //     autoLoad: false,
-        //     remoteSort: true,
-        //     remoteFilter: true
-        // });
 
         this.record = Ext.create('Taco.model.EntityList', {
             entityType: this.entityType,
@@ -72,8 +77,6 @@ Ext.define('Taco.view.customSchema.Grid', {
             listFQN: this.listFQN,
             views: this.views
         });
-
-        // // this.getSelectionModel().on('selectionchange', this.navigateToEdit, this);
 
         this.setTitle(this.listName);
 
@@ -108,6 +111,21 @@ Ext.define('Taco.view.customSchema.Grid', {
         me.store.on('load', me.updatePagerToolbar.bind(me, record, isSinglePage), me);
 
         me.on('cellclick', me.onCellClick, me);
+    },
+
+    addADRIfRequired: function (record) {
+        var me = this,
+            adrPanel;
+
+        if(!me.form) return null;
+        
+        if(!record || !record.data || !record.data.listFlags || !record.data.listFlags.enableADR) return me.form;
+
+        adrPanel = Ext.create('Taco.core.ux.form.field.ActiveDateRange', {record: record});
+
+        me.form.dynamicForm.add(adrPanel);
+
+        return me.form;
     },
 
     updatePagerToolbar: function(record, isSinglePage) {
@@ -292,6 +310,33 @@ Ext.define('Taco.view.customSchema.Grid', {
                     if (split) {
                         split.onItemEdit(eventData.grid, eventData.record, eventData.grid.listMetaData);
                     }
+
+                    else if (eventData.grid.siteBuilderList) {
+
+                        var editors = Taco.core.data.StoreManager.getOrCreate('Taco.store.EntityEditors');
+
+                        eventData.record.reload({
+                            success: function() {
+                                me.record = eventData.record;
+                                me.saveButton.show();
+                                me.viewContainer.removeAll();
+                                me.grid = null;
+                                me.form = Ext.create('Taco.view.customSchema.DynamicFormContainer', {
+                                    record: eventData.record,
+                                    ui: 'subform-section',
+                                    defaults: {
+                                        margin: '10 10 10 10',
+                                    },
+                                    bubbleEvents: ['savesuccess', 'saveSuccess', 'savefailure'],
+                                    editMode: 'raw',
+                                    editor: editors.findEditor(eventData.record)
+                                });
+                                me.form = me.addADRIfRequired(eventData.record);
+                                me.viewContainer.add(me.form);
+                            }
+                        });
+                    }
+
                     else {
                         me.navigateToEdit(eventData.record);
                     }
@@ -313,6 +358,31 @@ Ext.define('Taco.view.customSchema.Grid', {
                     if (split) {
                         split.onItemEdit(eventData.grid, eventData.record, eventData.grid.listMetaData, {
                             editMode: 'raw'
+                        });
+                    }
+
+                    else if (eventData.grid.siteBuilderList) {
+
+                        var editors = Taco.core.data.StoreManager.getOrCreate('Taco.store.EntityEditors');
+                        eventData.record.reload({
+                            success: function() {
+                                me.record = eventData.record;
+                                me.viewContainer.removeAll();
+                                me.saveButton.show();
+                                me.grid = null;
+                                me.form = Ext.create('Taco.view.customSchema.DynamicFormContainer', {
+                                    record: eventData.record,
+                                    ui: 'subform-section',
+                                    defaults: {
+                                        margin: '10 10 10 10',
+                                    },
+                                    bubbleEvents: ['savesuccess', 'saveSuccess', 'savefailure'],
+                                    editMode: 'raw',
+                                    editor: editors.findEditor(eventData.record)
+                                });
+                                me.form = me.addADRIfRequired(eventData.record);
+                                me.viewContainer.add(me.form);
+                            }
                         });
                     }
 

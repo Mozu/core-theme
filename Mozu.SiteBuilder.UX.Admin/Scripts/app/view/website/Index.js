@@ -277,8 +277,7 @@ Ext.define('Taco.view.website.Index', {
                 itemId: 'saveActionButton',
                 ui: 'action-primary',
                 scale: 'medium',
-                buttonGroup: 'isSavable',
-                margin: '0 0 0 10'
+                buttonGroup: 'isSavable'
             },
             {
                 xtype: 'button',
@@ -288,6 +287,7 @@ Ext.define('Taco.view.website.Index', {
                 scale: 'medium',
                 text: 'Create',
                 margin: '0 0 0 10',
+                height: 40,
                 scope: me,
                 hidden: true,
                 handler: me.OnCreateClick
@@ -1224,6 +1224,7 @@ Ext.define('Taco.view.website.Index', {
     },
 
     onSave: function (button) {
+
         var tasks = this.entitypeTypeHandler.getSaveTask();
 
         button.startLoading();
@@ -1541,8 +1542,26 @@ Ext.define('Taco.view.website.Index', {
             });
         }
 
+        this.listMetaData = new Taco.model.Entity({
+            tenantId: Taco.app.context.getTenantId(),
+            listFQN: metaData.listFQN || metaData.name,
+            entityType: metaData.entityType,
+            documentTypeFQN: metaData.documentTypes && metaData.documentTypes.length ? metaData.documentTypes[0] : undefined,
+            properties: {},
+            item: {}
+        });
+
+        this.entitypeTypeHandler = Ext.create('Taco.view.website.entityAdapters.DocumentEntityAdapter', {
+            record: this.listMetaData,
+            manager: me,
+            listeners: {
+                load: me.onEntityTypeAdapterLoad,
+                scope: me
+            }
+        });
 
         contentContainer.removeAll();
+
         contentContainer.add(
             Ext.create('Taco.view.customSchema.Grid', {
                     itemId: 'entityManagerGrid',
@@ -1550,19 +1569,19 @@ Ext.define('Taco.view.website.Index', {
                         itemedit: me.onContentListItemEdit,
                         scope: me
                     },
-                    listMetaData: metaData
+                    listMetaData: metaData,
+                    siteBuilderList: true,
+                    viewContainer: contentContainer,
+                    saveButton: me.down('#saveActionButton')
                 }
             ));
 
     },
     OnCreateClick: function () {
         var me = this,
-            grid = me.down('#entityManagerGrid'),
-            listMetaData = grid.listMetaData,
+            listMetaData = me.listMetaData,
             newRecord = new Taco.model.Entity({
                 tenantId: Taco.app.context.getTenantId(),
-
-
                 listFQN: listMetaData.listFQN || listMetaData.name,
                 entityType: listMetaData.entityType,
                 documentTypeFQN: listMetaData.documentTypes && listMetaData.documentTypes.length ? listMetaData.documentTypes[0] : undefined,
@@ -1571,7 +1590,6 @@ Ext.define('Taco.view.website.Index', {
 
             }),
             menu;
-
 
         if (listMetaData.documentTypes && listMetaData.documentTypes.length > 1) {
             menu = Ext.widget({
@@ -1593,6 +1611,7 @@ Ext.define('Taco.view.website.Index', {
             return;
 
         }
+
         me.loadEntityEditor(newRecord);
     },
 
@@ -1608,6 +1627,7 @@ Ext.define('Taco.view.website.Index', {
                 scope: this
             }
         });
+
         this.showHideButtons(['hasSettings', 'isSavable']);
         this.toggleCard(1);
     },
