@@ -1705,11 +1705,34 @@ Ext.define('Taco.view.website.Index', {
             scrollWidth = innerEl.dom.scrollWidth,
             maxWidth = width - 50;
 
+        if (!this.checkTitleOverflowStack) {
+            this.checkTitleOverflowStack = 1;
+        }
+
+        if (!this.checkTitleOverflowBufferMax) {
+            this.checkTitleOverflowBufferMax = 50;
+        }
+
+        clearTimeout(this.checkTitleOverflowStackTimeout);
+
+        this.checkTitleOverflowStackTimeout = setTimeout(function () {
+            this.checkTitleOverflowStack = 1;
+        }.bind(this), 1000);
+
+        this.checkTitleOverflowStack++;
+
+        if (this.checkTitleOverflowStack > 20) {
+            this.checkTitleOverflowBufferMax = 500;
+            return;
+        }
+
+        console.log('checkTitleOverflowStack', this.checkTitleOverflowStack, this.checkTitleOverflowBufferMax);
+
         if (draftCmp) {
             maxWidth -= draftCmp.getWidth();
         }
 
-        if (Date.now() - this.buffer < 50 || !titleEl) {
+        if (Date.now() - this.buffer < this.checkTitleOverflowBufferMax || !titleEl) {
             return;
         }
 
