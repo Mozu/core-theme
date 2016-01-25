@@ -1726,8 +1726,6 @@ Ext.define('Taco.view.website.Index', {
             return;
         }
 
-        console.log('checkTitleOverflowStack', this.checkTitleOverflowStack, this.checkTitleOverflowBufferMax);
-
         if (draftCmp) {
             maxWidth -= draftCmp.getWidth();
         }
