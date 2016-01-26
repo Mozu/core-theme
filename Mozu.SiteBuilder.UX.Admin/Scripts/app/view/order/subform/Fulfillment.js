@@ -20,6 +20,8 @@ Ext.define('Taco.view.order.subform.Fulfillment', {
         this.callParent(arguments);
 
         this.buildComponents();
+
+        this.setHeaderTitle('<div class="x-panel x-panel-header-text-container-subform"><span style="font-weight:normal;" class="x-panel-header-text">Fullfillment</span></div><span class="label" style="color:#999;">Status:</span><span style="font-weight:bold;"> ' + this.record.get('fulfillmentStatus') + '</span>');
     },
 
     buildComponents: function () {
