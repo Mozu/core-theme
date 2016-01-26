@@ -6,6 +6,7 @@ Ext.define('Taco.view.productRanking.grid.BlockedProduct', {
    extend: 'Taco.core.ux.browser.SearchList',
    alias: 'widget.productRanking-blocked-grid',
    requires: [],
+   itemId: 'taco-grid-blockedproduct',
    stateful: false,
    enableNavHeader: false,
    //minHeight: 240,
@@ -66,17 +67,28 @@ Ext.define('Taco.view.productRanking.grid.BlockedProduct', {
     }
 
     me.callParent(arguments);
-
    },
+
+    populateStore: function(record) {
+        this.store.removeAll(); //wouldn't have to do this if we don't load it twice
+        if (record == null || record.data == null || record.data.blockedProducts == null) {
+            return;
+        }
+        var products = record.data.blockedProducts;
+        for (var i = products.length - 1; i >= 0; i--) {
+            this.store.data.add(Ext.create('Taco.model.BlockedProduct', products[i]));
+        }
+        this.getView().refresh();
+    },
 
     listeners: {
         afterrender: function() {
-            var record = this.up('#taco-productRanking-form').record;
-            var products = record.data.blockedProducts;
+            var form = this.up('#taco-productRanking-form');
+            this.populateStore(form.record);
+        },
 
-            for (var i = products.length - 1; i >= 0; i--) {
-                this.store.data.add(Ext.create('Taco.model.BlockedProduct', products[i]));
-            }
+        reloaddata: function(record) {
+            this.populateStore(record);
         },
         recordadded: function(records) {
 

@@ -32,11 +32,13 @@ namespace Mozu.SiteBuilder.UX.Admin.Helpers.CategoryHelpers {
         {
             foreach (var dbCat in targetList)
             {
-                var firstOrDefault = sourceSequenceList.FirstOrDefault(i => i.Id == dbCat.Id);
-                if (firstOrDefault != null)
+                var uiCategory = sourceSequenceList.FirstOrDefault(i => i.Id == dbCat.Id);
+                if (uiCategory != null)
                 {
-                    var newSequence = firstOrDefault.Sequence;
-                    dbCat.Sequence = newSequence;
+                    dbCat.Sequence = uiCategory.Sequence;
+                    dbCat.ParentCategoryId = (uiCategory.ParentId != -1)
+                        ? uiCategory.ParentId
+                        : null;
                 }
             }
         }

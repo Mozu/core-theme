@@ -59,7 +59,6 @@ Ext.define('Taco.view.order.Edit', {
             = !Ext.Array.contains(this.record.get('availableActions'), "SubmitOrder");
         this.store = Taco.core.data.StoreManager.getOrCreate('Taco.store.OrderGrid');
 
-        
         this.additionalActions = [{
             xtype: 'button',
             ui: 'action',
@@ -67,12 +66,8 @@ Ext.define('Taco.view.order.Edit', {
             cls: 'taco-btn-nextprev taco-btn-nextprev-next',
             itemId: 'next',
             disabled: !this.canNavigateToNext(),
-
             margin: '0 0 0 0',
-            
             handler: this.navigateToNext,
-            
-            //dirtyState: this.record.get('publishedState') !== 'Live'
             scope: this
         }, {
                 xtype: 'button',
@@ -115,7 +110,6 @@ Ext.define('Taco.view.order.Edit', {
                 if (e.shiftKey) {
                     this.navigateToPrevious();
                 }
-                
             },
             pageDown: function (e) {
                 if (e.shiftKey) {
@@ -123,11 +117,8 @@ Ext.define('Taco.view.order.Edit', {
                 }
             }
         });
-        
-        
+
         this.form.on('savesuccess', function() {
-            //alert('yay');
-            
             Taco.core.StateManager.attemptNavigate('s-' + this.record.data.siteId + '/orders/edit/' + this.record.data.id);
         });
 
@@ -177,7 +168,6 @@ Ext.define('Taco.view.order.Edit', {
             if (rec) {
                 Taco.core.StateManager.attemptNavigate('/orders/edit/' + rec.getId());
             } else {
-                
                 this.store[outOfIndexMeth]({
                     scope: this,
                     callback: function () {

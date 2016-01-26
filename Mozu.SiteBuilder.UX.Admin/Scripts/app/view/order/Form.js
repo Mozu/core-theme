@@ -2,8 +2,8 @@
  * @class Taco.view.order.Form
  */
 Ext.define('Taco.view.order.Form', {
-    extend: 'Taco.core.ux.form.NavForm2',
-    //extend: 'Taco.core.ux.form.TabForm',
+    //extend: 'Taco.core.ux.form.NavForm2',
+    extend: 'Taco.core.ux.form.TabForm',
     
     alias: 'widget.taco-orderform',
     requires: [
@@ -42,6 +42,9 @@ Ext.define('Taco.view.order.Form', {
             'Site: {siteName}',
         '</span>'
     ],
+
+    // layout: 'card',
+    //enableScrollSpy: false,
 
     setNavDimensions: function() {
         var navStyle = this.sectionNav.getEl().dom.style;

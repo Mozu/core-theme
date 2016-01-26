@@ -75,8 +75,6 @@ Ext.define('Taco.store.Navigation', {
                         } 
 
                         if (!parent) {
-                            console.log('could not find parent ');
-                            console.log(item);
                             return;
                         }
 
