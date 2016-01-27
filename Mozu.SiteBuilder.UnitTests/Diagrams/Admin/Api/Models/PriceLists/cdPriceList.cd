@@ -1,21 +1,61 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <ClassDiagram MajorVersion="1" MinorVersion="1" MembersFormat="NameAndType">
   <Class Name="Mozu.SiteBuilder.UX.Admin.Api.Models.PriceLists.PriceList">
-    <Position X="1.25" Y="1.25" Width="2.75" />
+    <Position X="0.5" Y="0.5" Width="2.25" />
     <Members>
+      <Property Name="CreateBy" Hidden="true" />
+      <Property Name="CreateDate" Hidden="true" />
+      <Property Name="CustomerSegmentNames" Hidden="true" />
       <Method Name="PriceList" Hidden="true" />
+      <Property Name="UpdateBy" Hidden="true" />
+      <Property Name="UpdateDate" Hidden="true" />
     </Members>
     <TypeIdentifier />
   </Class>
   <Class Name="Mozu.SiteBuilder.UX.Admin.Api.Models.PriceLists.PriceListEntry">
-    <Position X="5" Y="1.5" Width="3.25" />
+    <Position X="5.75" Y="1.25" Width="3" />
     <Members>
+      <Property Name="CreateBy" Hidden="true" />
+      <Property Name="CreateDate" Hidden="true" />
       <Method Name="PriceListEntry" Hidden="true" />
+      <Property Name="UpdateBy" Hidden="true" />
+      <Property Name="UpdateDate" Hidden="true" />
+    </Members>
+    <TypeIdentifier />
+    <ShowAsCollectionAssociation>
+      <Property Name="Prices" />
+    </ShowAsCollectionAssociation>
+  </Class>
+  <Class Name="Mozu.SiteBuilder.UX.Admin.Api.Models.PriceLists.PriceListEntryPrice">
+    <Position X="9.75" Y="1.25" Width="2.25" />
+    <Members>
+      <Method Name="PriceListEntryPrice" Hidden="true" />
+    </Members>
+    <TypeIdentifier />
+    <ShowAsAssociation>
+      <Property Name="ListPriceCalculation" />
+      <Property Name="SalePriceCalculation" />
+    </ShowAsAssociation>
+  </Class>
+  <Class Name="Mozu.SiteBuilder.UX.Admin.Api.Models.PriceLists.PriceListEntryCalculation">
+    <Position X="7.25" Y="4.5" Width="2.25" />
+    <Members>
+      <Method Name="PriceListEntryCalculation" Hidden="true" />
     </Members>
     <TypeIdentifier />
   </Class>
+  <Class Name="Mozu.SiteBuilder.UX.Admin.Api.Models.PriceLists.PriceListProduct">
+    <Position X="3" Y="0.75" Width="1.75" />
+    <Members>
+      <Method Name="PriceListProduct" Hidden="true" />
+    </Members>
+    <TypeIdentifier />
+    <ShowAsCollectionAssociation>
+      <Property Name="Entries" />
+    </ShowAsCollectionAssociation>
+  </Class>
   <Class Name="Mozu.Core.Api.Contracts.AuditInfo" Collapsed="true">
-    <Position X="3.25" Y="4.25" Width="1.5" />
+    <Position X="3.75" Y="6.75" Width="1.5" />
     <TypeIdentifier />
   </Class>
   <Font Name="Segoe UI" Size="9" />

@@ -18,20 +18,36 @@ Ext.define('Taco.model.PriceList', {
             name: 'code',
             type: 'string'
         }, {
-            name: 'masterCatalogId',
-            type: 'int'
-        }, {
             name: 'name',
             type: 'string'
         }, {
             name: 'description',
             type: 'string'
         }, {
-            name: 'ranking',
+            name: 'parentCode',
+            type: 'string'
+        }, {
+            name: 'enabled',
+            type: 'boolean',
+            defaultValue: true
+        }, {
+            name: 'filteredInStorefront',
+            type: 'boolean',
+            defaultValue: false
+        }, {
+            name: 'validForAllSites',
+            type: 'boolean',
+            defaultValue: true
+        }, {
+            name: 'validSites',
+            type: 'auto',
+            defaultValue: []
+        }, {
+            name: 'searchIndexSequence',
             type: 'int',
             useNull: true
         }, {
-            name: 'searchIndexSequence',
+            name: 'resolutionRank',
             type: 'int',
             useNull: true
         }, {
@@ -42,7 +58,7 @@ Ext.define('Taco.model.PriceList', {
             name: 'customerSegmentNames',
             type: 'auto',
             defaultValue: []
-        },{
+        }, {
             name: 'catalogs',
             type: 'auto',
             defaultValue: [],
@@ -54,14 +70,10 @@ Ext.define('Taco.model.PriceList', {
                 return catNames.join(',');
             }
         }, {
-            name: 'isActive',
-            type: 'boolean',
-            defaultValue: true
-        }, {
             name: 'status',
             type: 'string',
             convert: function (val, record) {
-                return (record.get('isActive')) ? 'Active' : 'Disabled';
+                return (record.get('enabled')) ? 'Active' : 'Disabled';
             },
             persist: false
         }, {

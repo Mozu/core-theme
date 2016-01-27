@@ -174,7 +174,10 @@
     <Compile Include="Api\CategoryController.cs" />
     <Compile Include="Api\ChannelController.cs" />
     <Compile Include="Api\CouponCodeController.cs" />
+    <Compile Include="Api\Models\PriceLists\PriceListEntryPriceCalculation.cs" />
+    <Compile Include="Api\Models\PriceLists\PriceListEntryPrice.cs" />
     <Compile Include="Api\Models\PriceLists\PriceListEntry.cs" />
+    <Compile Include="Api\Models\PriceLists\PriceListProduct.cs" />
     <Compile Include="Api\PriceListController.cs" />
     <Compile Include="Api\ModelMapping\SearchTuningMapping.cs" />
     <Compile Include="Api\Models\PriceLists\PriceList.cs" />
@@ -760,6 +763,7 @@
     <Content Include="Scripts\app\view\priceList\form\General.js" />
     <Content Include="Scripts\app\view\priceList\Grid.js" />
     <Content Include="Scripts\app\view\priceList\Index.js" />
+    <Content Include="Scripts\app\view\priceList\widget\PriceListComboBox.js" />
     <Content Include="Scripts\app\view\productRanking\Edit.js" />
     <Content Include="Scripts\app\view\productRanking\Form.js" />
     <Content Include="Scripts\app\view\productRanking\form\AdvancedSearch.js" />

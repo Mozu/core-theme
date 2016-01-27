@@ -276,7 +276,7 @@ Ext.define('Taco.view.priceList.Grid', {
         if (!disableMenuItem || !enableMenuItem) {
             return;
         }
-        if (eventData.record.get('isActive')) {
+        if (eventData.record.get('enabled')) {
             disableMenuItem.show();
             enableMenuItem.hide();
         } else {
@@ -295,7 +295,7 @@ Ext.define('Taco.view.priceList.Grid', {
                     allInactive;
 
                 allActive = Ext.Array.every(selection, function(item) {
-                    return item.get('isActive');
+                    return item.get('enabled');
                 });
 
                 if (allActive) {
@@ -305,7 +305,7 @@ Ext.define('Taco.view.priceList.Grid', {
                 }
 
                 allInactive = Ext.Array.every(selection, function(item) {
-                    return !item.get('isActive');
+                    return !item.get('enabled');
                 });
 
                 if (allInactive) {
@@ -361,7 +361,7 @@ Ext.define('Taco.view.priceList.Grid', {
             growlMessage = '<span style="font-weight:bold;">' + growlText + '</span>';
 
         if (!Ext.isArray(eventData.record)) {
-            eventData.record.set('isActive', isActive);
+            eventData.record.set('enabled', isActive);
 
             this.showMessage(growlMessage);
             eventData.record.store.sync({
@@ -371,7 +371,7 @@ Ext.define('Taco.view.priceList.Grid', {
 
         else {
             eventData.record.forEach(function(rec){
-                rec.set('isActive', isActive);
+                rec.set('enabled', isActive);
             });
 
             this.showMessage(growlMessage);

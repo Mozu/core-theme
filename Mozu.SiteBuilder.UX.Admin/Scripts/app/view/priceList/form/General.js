@@ -9,7 +9,8 @@ Ext.define('Taco.view.priceList.form.General', {
         'Ext.form.field.ComboBox',
         'Ext.form.field.Date',
         'Taco.core.ux.TooltipLabel',
-        'Taco.core.util.Validation'
+        'Taco.core.util.Validation',
+        'Taco.view.priceList.widget.PriceListComboBox'
     ],
     ui: 'subform',
     margin: '0 0 20 0',
@@ -75,16 +76,17 @@ Ext.define('Taco.view.priceList.form.General', {
                                             maxLength: 200,
                                             enforceMaxLength: true
                                         }, {
-                                            name: 'masterCatalog',
-                                            fieldLabel: 'Master Catalog',
-                                            itemId: 'masterCatalogField',
-                                            xtype: 'textfield',
-                                            margin: '0 30 0 0',
+                                            xtype: 'pricelistcombobox',
+                                            name: 'parentCode',
+                                            fieldLabel: 'Parent Price List',
+                                            itemId: 'parentCodeField',
                                             width: '50%',
-                                            //allowBlank: true,
-                                            maxLength: 30,
-                                            readOnly: true,
-                                            value: Taco.app.context.getMasterCatalog().name
+                                            margin: '0 30 0 0',
+                                            valueNotFoundText: 'None',
+                                            editable: true,
+                                            forceSelection: false,
+                                            readOnly: !me.record.phantom,
+                                            excludedIds: !me.record.phantom ? [this.record.get("code")] : []
                                         }
                                     ]
                                 },
@@ -111,7 +113,7 @@ Ext.define('Taco.view.priceList.form.General', {
                                             regexText: 'Invalid character. Please choose from alphanumeric, underscore, or hyphen characters.'
                                         }, {
                                             xtype: 'combobox',
-                                            name: 'isActive',
+                                            name: 'enabled',
                                             fieldLabel: 'Status',
                                             width: '50%',
                                             margin: '0 30 0 0',
@@ -121,7 +123,7 @@ Ext.define('Taco.view.priceList.form.General', {
                                             valueNotFoundText: 'not found',
                                             editable: true,
                                             forceSelection: true,
-                                            value: me.record ? me.record.get('isActive') : true,
+                                            value: me.record ? me.record.get('enabled') : true,
                                             store: [[true, 'Active'], [false, 'Disabled']]
                                         }
                                     ]

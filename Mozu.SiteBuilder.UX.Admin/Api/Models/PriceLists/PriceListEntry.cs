@@ -1,10 +1,13 @@
 ﻿using System;
+using System.Collections.Generic;
 using Mozu.Core.Api.Contracts;
 
 namespace Mozu.SiteBuilder.UX.Admin.Api.Models.PriceLists
 {
     public class PriceListEntry
     {
+        public int Id { get; set; }
+
         public string PriceListCode { get; set; }
 
         public string ProductCode { get; set; }
@@ -16,6 +19,8 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.Models.PriceLists
         public int Mode { get; set; }
 
         public string CurrencyCode { get; set; }
+
+        public List<PriceListEntryPrice> Prices { get; set; }
 
         #region Restricted Discounts
         /// <summary>

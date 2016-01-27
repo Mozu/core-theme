@@ -15,7 +15,7 @@ Ext.define('Taco.view.priceList.form.Conditions', {
     ui: 'subform',
     margin: '0 0 20 0',
 
-    title: 'Conditions',
+    title: 'Customers',
     record: null,
 
     initComponent: function() {
