@@ -16,3 +16,9 @@ node_modules/
 .yo-rc.json
 mozu.config.json
 
+
+*.sln
+*.csproj
+packages.config
+Mozu.CoreTheme.nuspec
+delete_node_modules.js
