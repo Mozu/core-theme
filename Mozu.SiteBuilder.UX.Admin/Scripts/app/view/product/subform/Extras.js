@@ -54,7 +54,7 @@ Ext.define('Taco.view.product.subform.Extras', {
             extraEditor;
         
         this.productType = this.product.productTypeRecord;
-        
+
         if (!this.productType) {
             return;
         }
@@ -74,12 +74,6 @@ Ext.define('Taco.view.product.subform.Extras', {
             items.push(this.getEmptyComponent());
         } else {
 
-
-            //me.availableAttributes = Ext.create('Taco.store.ProductTypes', {
-            //    data: [].concat(me.productTypeExtras.data.items)
-            //});
-
-            
             me.availableAttributes = Ext.create('Ext.data.Store', {
                 model: 'Taco.model.ProductType',
                 remoteSort: false,
@@ -91,8 +85,6 @@ Ext.define('Taco.view.product.subform.Extras', {
                 data: [].concat(me.productTypeExtras.data.items)
             });
 
-            
-
             me.availableAttributes.addFilter([
                 new Ext.util.Filter({
                     filterFn: function (rec) {
@@ -102,7 +94,6 @@ Ext.define('Taco.view.product.subform.Extras', {
                 })
             ]);
 
-            
             me.adderCombo = Ext.widget({
                 xtype: 'combo',
                 store: me.availableAttributes,

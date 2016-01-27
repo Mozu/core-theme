@@ -37,7 +37,7 @@ Ext.define('Taco.core.ux.form.TabForm', {
                 type: 'card',
                 deferredRender: true
             },
-            cls: 'taco-form-tabform-nav-container',
+            cls: '',
             items: originalItems,
             listeners: {
                 scope: me,
@@ -59,9 +59,9 @@ Ext.define('Taco.core.ux.form.TabForm', {
             xtype: 'dataview',            
             store: this.navStore,
             itemId: 'navFormNav',
-            cls: 'taco-form-tabform-nav taco-form-nav',
+            cls: 'taco-form-nav',
             autoShow: true,
-            itemSelector: '.taco-form-tabform-nav-link',
+            itemSelector: '.taco-link-button',
             plugins: ["autoselect"],
             width: '100%',
             height: 39,
@@ -82,7 +82,7 @@ Ext.define('Taco.core.ux.form.TabForm', {
             tpl: [
                 '<ul>',
                     '<tpl for=".">',
-                        '<li tabIndex="0" class="taco-form-tabform-nav-link taco-link-button <tpl if="xindex == 1">active</tpl> "><tpl if="values.tabTitle">{tabTitle}<tpl else>{title}</tpl></li>',
+                        '<li tabIndex="0" class="taco-link-button <tpl if="xindex == 1">active</tpl> "><tpl if="values.tabTitle">{tabTitle}<tpl else>{title}</tpl></li>',
                     '</tpl>',
                 '</ul>',
                 {
@@ -112,9 +112,10 @@ Ext.define('Taco.core.ux.form.TabForm', {
         this.nav = this.down('#navFormNav');
 
         this.on({
-            boxready: function (e) {
+            boxready: function () {
                 this.getWrapper().body.el.on('scroll', this.checkScroll, this);
             },
+            afterlayout: this.checkScroll,
             scope: this
         });
 
@@ -124,7 +125,7 @@ Ext.define('Taco.core.ux.form.TabForm', {
         this.formContainer.getPosition();
     },
 
-    checkScroll: function (e) {
+    checkScroll: function () {
         var formTop = this.formContainer.getPosition()[1],
             editorTop = this.getWrapper().getPosition()[1],
             height = 39;
