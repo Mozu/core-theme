@@ -91,10 +91,6 @@ Ext.define('Taco.view.order.Grid', {
             headerWidth: 37
         });
 
-        if (window.location.href.indexOf('/edit/') !== -1) {
-            console.log(this.up('order-split'))
-        }
-
         //todo: need to work on disabling/enabling of actions -- talk with commerce peeps?
 
         this.bulkActionConfig = {

@@ -14,8 +14,6 @@ Ext.define('Taco.view.customSchema.AdvancedSearchForm', {
     initComponent: function () {
         this.items = this.buildForm();
         this.callParent(arguments);
-
-        console.log(this);
     },
 
     buildForm: function(type) {

@@ -103,6 +103,13 @@ Ext.define('Taco.view.order.Edit', {
 
 
         this.callParent(arguments);
+
+        this.mon(this.store, 'datachanged', this.handleDataChanged, this);
+
+        setInterval(function () {
+            //console.log('order-status', this.record.get('orderStatus'));
+        }.bind(this), 5000);
+
         this.keyNav = Ext.create('Ext.util.KeyNav', Ext.getDoc(), {
             // target: this.getEl(),
             scope: this,
@@ -129,6 +136,10 @@ Ext.define('Taco.view.order.Edit', {
         });
 
         this.navHeader.hide();
+    },
+
+    handleDataChanged: function () {
+        console.log('order-status', this.record.get('orderStatus'));
     },
 
     handleBoxReady: function () {

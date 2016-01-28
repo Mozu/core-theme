@@ -52,7 +52,7 @@
                 /*jslint evil: true */
                 this.dynamicForm = eval(this.editor.get('code'));
             } catch (e) {
-                console.log(e, this.editor.get('code'));
+
             }
         }
 

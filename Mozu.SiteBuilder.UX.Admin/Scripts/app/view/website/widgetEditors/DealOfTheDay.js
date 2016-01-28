@@ -88,8 +88,6 @@ Ext.define('Taco.view.website.widgetEditors.DealOfTheDay', {
                 count: record.get('products').length
             });
         }
-
-        console.log(cmp, record.get('products'), record.get('includeAllProducts'));
     },
 
     /**

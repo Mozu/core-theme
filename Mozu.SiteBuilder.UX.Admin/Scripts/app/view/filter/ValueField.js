@@ -161,7 +161,6 @@ Ext.define('Taco.view.filter.ValueField', {
         this.field = Ext.widget(fieldCfg);
 
         this.mon(this.field, "change", function() {
-            console.log("checkchange field");
             me.checkChange();
         }, me);
 

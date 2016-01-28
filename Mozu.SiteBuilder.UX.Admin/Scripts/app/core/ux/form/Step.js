@@ -120,7 +120,6 @@
         },
         
         onChange: function (field) {
-            console.log('field change!');
             this.onValidityChange(field, field.isValid());
             this.fireEvent('change', this, field);
         },

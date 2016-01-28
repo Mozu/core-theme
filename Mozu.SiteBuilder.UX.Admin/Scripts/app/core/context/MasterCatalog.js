@@ -92,7 +92,6 @@
                 publishingEnabled: this.publishingEnabled
             }
         });
-        console.log('updateContentPublishingMode for Site ID', this.id, ' -> ', value);
     },
     getSiteId: function () {
         //if (this.sites.length == 1) {

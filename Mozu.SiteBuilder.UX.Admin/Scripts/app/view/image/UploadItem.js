@@ -103,7 +103,6 @@
             var me = this;
 
             if (e.id == me.uploadRequest.id) {
-                console.log("TODO: implement error handling.");
             }
         }
 

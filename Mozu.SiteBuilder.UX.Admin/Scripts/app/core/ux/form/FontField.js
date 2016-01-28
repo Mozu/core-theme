@@ -54,7 +54,6 @@ Ext.define('Taco.core.ux.form.FontField', {
             src: '/',
             listeners: {
                 load: function () {
-                    console.log('onload', this.getValue(), this.originalValue);
                     this.suspendEvents();
                     this.setValue(this.originalValue);
                     this.resumeEvents();

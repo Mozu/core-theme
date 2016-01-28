@@ -147,8 +147,6 @@ Ext.define('Taco.core.ux.content.TripleSplitContainer', {
     handleCollapseToolClick: function (e, targetEl) {
         var itemId = Ext.getCmp(targetEl.id).getItemId();
 
-        console.log('state', this.getState());
-
         switch(itemId) {
             case 'west-right':
                 if (this.getEast().getCollapsed()) {
@@ -189,7 +187,5 @@ Ext.define('Taco.core.ux.content.TripleSplitContainer', {
 
     initializePanels: function () {
         var state = this.getState();
-
-        console.log('State', state);
     }
 });

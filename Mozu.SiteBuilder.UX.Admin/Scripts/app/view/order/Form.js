@@ -12,11 +12,18 @@ Ext.define('Taco.view.order.Form', {
         'Taco.view.order.Header',
         'Taco.view.order.subform.Customer',
         'Taco.view.order.subform.Detail',
-        'Taco.view.order.subform.Payment',        
-        'Taco.view.order.subform.Return',        
+        'Taco.view.order.subform.Payment',
+        'Taco.view.order.subform.Return',
         'Taco.view.order.subform.InternalNotes',
         'Taco.view.order.subform.Fulfillment',
-        'Taco.view.order.subform.AuditLog'
+        'Taco.view.order.subform.Attributes',
+        'Taco.view.order.subform.AuditLog',
+        'Taco.view.order.subform.fulfillment.DirectShip',
+        'Taco.store.PackagingTypes',
+        'Taco.store.Channels',
+        'Taco.store.Countries',
+        'Taco.store.Attributes',
+        'Taco.store.OrderAttributes'
     ],
 
     model: 'Taco.model.Order',

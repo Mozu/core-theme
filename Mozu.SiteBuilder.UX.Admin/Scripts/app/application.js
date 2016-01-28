@@ -134,7 +134,8 @@ Ext.define('Taco.Application', {
         'Taco.store.TooltipHelp',
         'Taco.core.ux.TooltipLabel',
         'Taco.core.util.Filter',
-        'Taco.core.ux.action.UserButton'
+        'Taco.core.ux.action.UserButton',
+        'Taco.store.Categories'
     ],
     controllers: [
         //'Analytics',
@@ -143,18 +144,18 @@ Ext.define('Taco.Application', {
         //'Reports',
         'Navigation',
         'Customers',
-        //'StoreCredits',
-        //'CustomerAttributes',
-        //'Categories',
-        //'Products',
+        'StoreCredits',
+        'CustomerAttributes',
+        'Categories',
+        'Products',
         //'PendingChanges',
-        //'Inventory',
-        'Message'
-        //'Catalog',
-        //'Testing',
-        //'Discounts',
-        //'Settings',
-        //'Provisioning',
+        'Inventory',
+        'Message',
+        'Catalog',
+        'Testing',
+        'Discounts',
+        'Settings',
+        'Provisioning',
         //'Tbd',
         //'Themes',
         //'Themesettings',
@@ -162,7 +163,7 @@ Ext.define('Taco.Application', {
 
         //'GeneralSettings',
         //'Tests',
-        //'Orders',
+        'Orders',
         //'OrderAttributes',
         //'Errors',
         //'Roles',
@@ -483,7 +484,6 @@ Ext.define('Taco.Application', {
                 }
             });
             if(visibleSubmenu) {
-                //console.log('apply fix hide submenu');
                 return;
             }
             // END FIX

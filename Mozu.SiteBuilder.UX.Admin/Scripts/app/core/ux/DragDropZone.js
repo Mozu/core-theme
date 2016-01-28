@@ -54,14 +54,11 @@
                             window.clearInterval(interval);
 
                             app.fireEvent('dragleave', e);
-                            console.log('stopfiledrag');
                         }, 150);
 
                         if (!isOver) {
                             isOver = true;
                             app.fireEvent('dragenter', e);
-
-                            console.log('startfiledrag');
                         }
 
                     },

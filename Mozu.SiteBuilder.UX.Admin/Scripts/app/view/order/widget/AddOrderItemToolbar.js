@@ -467,12 +467,10 @@ Ext.define('Taco.view.order.widget.AddOrderItemToolbar', {
     },
 
     onSaveSuccess: function () {
-        console.log('onSaveSuccess');
         me.reset();
     },
 
     onSaveFailure: function () {
-        console.log('onSaveFailure');
         // notify user of the error;
     },
 

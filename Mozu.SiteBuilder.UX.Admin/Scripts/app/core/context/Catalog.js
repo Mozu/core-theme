@@ -46,7 +46,6 @@
     },
 
     updateContentPublishingMode: function (value) {
-        console.log('updateContentPublishingMode for Catalog ID', this.id, ' -> ', value);
     },
 
     formatCurrency: function (value) {
@@ -69,6 +68,5 @@
 
             }
         });
-        console.log('updateContentPublishingMode for Site ID', this.id, ' -> ', value);
     }
 });

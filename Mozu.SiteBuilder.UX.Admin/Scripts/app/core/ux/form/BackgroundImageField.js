@@ -75,7 +75,6 @@ Ext.define('Taco.core.ux.form.BackgroundImageField', {
 
     setValue: function (value) {
         var url;
-        console.log('new value', value);
 
         if (typeof value !== 'string' && value['background-image']) {
             url = value['background-image'];

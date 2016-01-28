@@ -67,7 +67,6 @@ Ext.define('Taco.view.customers.modal.Contacts', {
                     if (contactsView.contacts.length) return;
 
                     Ext.defer(function () {
-                        console.log('Creating new customer');
                         this.down('#customerContacts').createNewContact();
                     }, 1, this);
                 },

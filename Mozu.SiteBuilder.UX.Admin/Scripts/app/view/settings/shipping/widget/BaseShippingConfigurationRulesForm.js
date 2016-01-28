@@ -9,7 +9,6 @@
     showAllMethodsWhenMethodsAreEmpty: false,
 
     getStore: function () {
-        console.log('xxx'); //Taco.core.data.StoreManager.getOrCreate('Taco.store.ShippingInclusionRules')
     },
     createRoute: 'shipping/shippingMethodCreate',
     editRoute: 'shipping/shippingMethodEdit',

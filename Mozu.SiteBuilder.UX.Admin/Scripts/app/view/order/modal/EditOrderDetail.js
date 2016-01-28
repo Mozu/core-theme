@@ -509,7 +509,6 @@ Ext.define('Taco.view.order.modal.EditOrderDetail', {
         if (me.needsToPersist() || me.saveInProgress) {
             // need to wait to save until any persistance calls complete;
             me.deferSave = true;
-            //console.log('deferSave')
         } else {
             me.detailGrid.saveDraftOrder();
         }
@@ -521,7 +520,6 @@ Ext.define('Taco.view.order.modal.EditOrderDetail', {
         if (me.needsToPersist() || me.saveInProgress) {
             // need to wait to save until any persistance calls complete;
             me.deferSave = true;
-            //console.log('deferPhoneOrderSave')
         } else {
             me.fireEvent('phoneOrderSaved', this.record.data);
             me.close();

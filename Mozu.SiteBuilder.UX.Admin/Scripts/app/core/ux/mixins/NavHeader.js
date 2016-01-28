@@ -861,7 +861,6 @@ Ext.define('Taco.core.ux.mixins.NavHeader', {
     onCancel: Ext.emptyFn,
 
     doCancel: function () {
-        console.log("doCancel")
         this.onComplete();
     },
 
@@ -869,7 +868,6 @@ Ext.define('Taco.core.ux.mixins.NavHeader', {
      * Runs whenever the save or cancel operations have completed.
      */
     onComplete: function () {
-        console.log("onComplete")
     },
 
     /**
@@ -895,7 +893,7 @@ Ext.define('Taco.core.ux.mixins.NavHeader', {
     onCreate: Ext.emptyFn,
 
     doCreate: function () {
-        console.log("doCreate is expected to be defined on the class")
+        
     },
 
     getDefaultStore: function() {

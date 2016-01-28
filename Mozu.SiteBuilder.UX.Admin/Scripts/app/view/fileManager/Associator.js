@@ -161,8 +161,6 @@ Ext.define('Taco.view.fileManager.Associator', {
                 Taco.app.DragDropZone.disallowDrop();
             }
         });
-
-        console.log(cmp)
     },
 
     /**

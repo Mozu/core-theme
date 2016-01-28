@@ -52,11 +52,6 @@ Ext.define('Taco.core.ux.form.field.BaseImageField', {
             me.getImageContainerEl().on('click', me.showImageEditor, me);
             me.getImageLabelEl().on('click', me.showImageEditor, me);
         });
-
-        //me.on('click', function (cmp) {
-        //    console.log('click');
-
-        //});
         this.callParent(arguments);
     },
     showImageEditor: function() {
