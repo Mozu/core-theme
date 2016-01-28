@@ -212,8 +212,10 @@ Ext.define('Taco.core.ux.form.TabForm', {
 
         if (this.navStore.count()) {
             this.formContainer.show();
+            this.leftNav.show();
         } else {
-            this.formContainer.hide();  
+            this.formContainer.hide();
+            this.leftNav.hide();
         }
     }
 });
