@@ -48,6 +48,8 @@ Ext.define('Taco.view.order.subform.Attributes', {
 
         this.activeTab = this.attributeDefinitionStore.count() > 0 ? 1 : 0;
 
+        this.mon(this.attributeDefinitionStore, 'load', this.changeCards, this);
+
         this.callParent(arguments);
     },
 
@@ -115,6 +117,10 @@ Ext.define('Taco.view.order.subform.Attributes', {
     refreshGrid: function () {
         this.down('grid').getView().refresh();
 
+        this.changeCards();
+    },
+
+    changeCards: function () {
         this.getLayout().setActiveItem(this.attributeDefinitionStore.count() > 0 ? 1 : 0);
     }
 });
