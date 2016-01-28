@@ -25,8 +25,11 @@ Ext.define('Taco.view.priceList.form.General', {
         Ext.tip.QuickTipManager.init();
 
         var siteData = Ext.Array.map(Taco.app.context.getMasterCatalog().sites, function (site) {
-                return { id: site.id, name: site.name};
-            });
+            return {
+                id: site.id,
+                name: site.name
+            };
+        });
 
         var siteStore = Ext.create('Ext.data.Store', {
             fields: ['id','name'],
@@ -145,7 +148,6 @@ Ext.define('Taco.view.priceList.form.General', {
                                             valueNotFoundText: 'None',
                                             editable: true,
                                             forceSelection: false,
-                                            readOnly: !me.record.phantom,
                                             excludedIds: !me.record.phantom ? [this.record.get("code")] : []
                                         }
                                     ]
@@ -223,18 +225,33 @@ Ext.define('Taco.view.priceList.form.General', {
      */
     launchSiteModal: function(list) {
         var catalogChildren = Ext.Array.map(Taco.app.context.getMasterCatalog().catalogs, function (cat) {
-                var siteChildren = Ext.Array.map(cat.sites, function (site) {
-                    return { id: site.id, text: site.name, leaf: true};
-                });
-                return { id: cat.id, text: cat.name, expanded: true, children: siteChildren};
-            }),
-
-            siteTreeStore = Ext.create('Ext.data.TreeStore', {
-                root: {
+            var siteChildren = Ext.Array.map(cat.sites, function (site) {
+                return {
+                    id: site.id,
+                    name: site.name,
+                    parentId: cat.id,
+                    type: 'site',
                     expanded: true,
-                    children: catalogChildren
-                }
+                    loaded: true,
+                    leaf: 'true'
+                };
             });
+            return {
+                id: cat.id,
+                name: cat.name,
+                type: 'catalog',
+                expanded: true,
+                loaded: true,
+                children: siteChildren
+            };
+        }),
+
+        siteTreeStore = Ext.create('Ext.data.TreeStore', {
+            root: {
+                expanded: true,
+                children: catalogChildren
+            }
+        });
 
         this.modal = Ext.widget('checkbox-tree-modal', {
             title: 'Select Sites',
@@ -245,11 +262,11 @@ Ext.define('Taco.view.priceList.form.General', {
         this.modal.on({
             savesuccess: function(modal, values) {
                 list.addValue(values);
-                this.reloadStore(list);
+                list.store.reload();
                 this.parentForm.getForm().checkValidity();
             },
             aftercancelclose: function() {
-                this.reloadStore(list);
+                list.store.reload();
             },
             scope: this
         });

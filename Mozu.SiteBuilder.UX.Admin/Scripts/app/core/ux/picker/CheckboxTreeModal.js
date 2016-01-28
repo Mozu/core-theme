@@ -18,6 +18,7 @@ Ext.define('Taco.core.ux.picker.CheckboxTreeModal', {
     title: 'Select Items',
     displayField: 'nameAndCode',
     store: null,
+    preselection: [],
 
     layout: {
         type: 'fit'
