@@ -1,5 +1,5 @@
-.taco-editable-cell-show-border {			
-	.x-grid-cell-inner {
+.#{$vprefix}editable-cell-show-border {
+	.#{$prefix}grid-cell-inner {
 		box-shadow:0px 0px 0px 1px rgba(160, 160, 160, 0.35) inset;					
 		border: 1px solid transparent;
 		padding: 7px 4px 7px 4px;
@@ -7,8 +7,8 @@
 	}
 }
 
-.taco-editable-cell-show-border.x-grid-cell-selected{
-	.x-grid-cell-inner {
+.#{$vprefix}editable-cell-show-border.#{$prefix}grid-cell-selected{
+	.#{$prefix}grid-cell-inner {
 		box-shadow:0px 0px 0px 1px $color-button-border inset;
 	}
 }

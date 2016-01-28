@@ -90,7 +90,7 @@ Ext.define('Taco.store.TooltipHelp', {
             value: 'This feature requires an update to your theme.<br><br><a href="' + Taco.adminHelpLink + '" target="_blank" class="taco-help-link">See Enabling the Bust Cache Feature in Mozu Help.</a>'
         }, {
             key: 'settings.general.missingImage',
-            value: 'Upload or select an image: This will be used as a replacement for all missing images on your storefront.'
+            value: 'Upload or select an image: This will be used as a replacement for all missing images on your storefront'
         }, {
             key: 'product.general.dateFirstAvailable',
             value: 'This field specifies the intended date when the product either first becomes or became available. Use this field to reference the product in an expression that uses the Days Available in Catalog entity. Setting this field to a future date doesn’t automatically publish the product live on that date.'
@@ -109,6 +109,10 @@ Ext.define('Taco.store.TooltipHelp', {
         },{
             key: 'producttype.attribute.form.displaygroup',
             value: '<dl><dt><b>Storefront Details and Listings</b></dt><dd>The property is available on storefront product listing pages like categories and search results.</dd><dt><b>Storefront Details</b></dt><dd>The property is available only when displaying product details on the storefront.</dd><dt><b>Admin Only</b></dt><dd>The property is managed only within Mozu Admin and is not visible in the storefront.</dd></dl>'
+        },
+        {
+            key: 'default',
+            value: 'Default Tooltip'
         }
    ]
    

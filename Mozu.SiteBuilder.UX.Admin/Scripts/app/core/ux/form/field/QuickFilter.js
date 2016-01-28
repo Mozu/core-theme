@@ -27,6 +27,7 @@ Ext.define('Taco.core.ux.form.field.QuickFilter', {
     handler: Ext.emptyFn,
 
     triggerCls: 'x-form-search-trigger',
+    overCls: 'taco-quickfilter-over',
 
     initComponent: function () {
         this.callParent(arguments);

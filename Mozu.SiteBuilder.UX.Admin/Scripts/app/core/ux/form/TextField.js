@@ -4,12 +4,12 @@
  * Adds some small extensions to the default TextField
  */
 
-
 Ext.define('Taco.core.ux.form.TextField', {
     extend: 'Ext.form.field.Text',
     alias: 'widget.taco.textfield',
 
     constructor: function () {
+        var me = this;
         this.callParent(arguments);
         this.addEvents('aftersetvalue');
     },
@@ -25,4 +25,4 @@ Ext.define('Taco.core.ux.form.TextField', {
 
         return result;
     }
-})
+});

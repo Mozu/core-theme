@@ -9,7 +9,8 @@ Ext.define('Taco.controller.Inventory', {
     listView: null,
     models: ['Taco.model.LocationInventory'],
     stores: ['Taco.store.LocationInventories'],
-    views: ['inventory.Index'],
+    views: ['Taco.view.inventory.Split'],
+    indexView: 'Taco.view.inventory.Split',
     modelName: 'LocationInventory'
 });
 

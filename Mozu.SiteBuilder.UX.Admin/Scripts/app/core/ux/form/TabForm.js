@@ -15,8 +15,8 @@ Ext.define('Taco.core.ux.form.TabForm', {
 
     initComponent: function () {
         var me = this;
-        this.cls = this.cls || "";    
-        this.cls += " taco-tabform";
+        this.cls = this.cls || '';    
+        this.cls += ' taco-tabform';
 
         var originalItems = [];
         var excludedItems = [];
@@ -51,7 +51,7 @@ Ext.define('Taco.core.ux.form.TabForm', {
         this.relayEvents(this.formContainer, ['add']);
 
         this.navStore = Ext.create('Ext.data.Store', {
-            fields: ['title', "tabTitle", "hidden"]
+            fields: ['title', 'tabTitle', 'hidden']
         });
 
         this.leftNav = Ext.widget({
@@ -122,7 +122,7 @@ Ext.define('Taco.core.ux.form.TabForm', {
     },
 
     alignLeftNav: function () {        
-        var offset = this.leftNav.el.getAlignToXY(this.formContainer.el, "tr-tl", [0, 0]);
+        var offset = this.leftNav.el.getAlignToXY(this.formContainer.el, 'tr-tl', [0, 0]);
         
         // need to account for scrolling when this gets realigned;
         var scrollTop = this.getWrapper().body.el.dom.scrollTop;
@@ -159,7 +159,7 @@ Ext.define('Taco.core.ux.form.TabForm', {
             targetY;
 
         if (record.raw.getEl) {
-            var panel = Ext.getCmp(record.get("id"));
+            var panel = Ext.getCmp(record.get('id'));
             var layout = this.formContainer.getLayout();
             
             layout.setActiveItem(panel);

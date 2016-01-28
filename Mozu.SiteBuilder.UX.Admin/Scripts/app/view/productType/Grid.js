@@ -17,6 +17,8 @@ Ext.define('Taco.view.productType.Grid', {
         supportedLevels: ['m'],
         requiresContextOfType: ['m', 's', 'c']
     },
+
+    cls: 'taco-menu-trigger-shifted',
     
     launchEditorOnClick:true,
     
@@ -24,14 +26,15 @@ Ext.define('Taco.view.productType.Grid', {
     modelName: 'Taco.model.ProductType',
 
     enableNavHeader: true,
+    enableSearchBarInHeader: false,
 
     // adds the "taco-content-navcontainer-padding" class
     // Will add the 20px padding needed for display in the contentView as part of the NavHeader code;
     addContentViewPadding: true,
-    enableSearch: true,
+    enableSearch: false,
     enablePaging: true,
     enableRowEditing: false,
-    enableAutoSelect: true,
+    enableAutoSelect: false,
     createButtonEnabled: true,
     saveButtonEnabled: false,
     cancelButtonEnabled: false,
@@ -52,7 +55,8 @@ Ext.define('Taco.view.productType.Grid', {
 
     advancedSearchConfig : {
         advancedFormCls: 'Taco.view.productType.AdvancedSearchForm',
-        quickFilterData: []
+        quickFilterData: [],
+        emptySearchText: 'Search'
     },
 
     onCreate: Ext.emptyFn,
@@ -130,7 +134,8 @@ Ext.define('Taco.view.productType.Grid', {
                     }
                 }, {
                     xtype: 'taco.menucolumn',
-                    text: 'Actions',
+                    text: '',
+                    width: 50,
                     onMenuShow : function(menu, eventData) {
                         // need to disable the delete menu option when the record is the base product type.
                         var deleteMenuItem = menu.down("#deleteMenuItem");

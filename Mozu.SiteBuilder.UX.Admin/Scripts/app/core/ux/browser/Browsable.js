@@ -5,7 +5,7 @@
  */
 
 Ext.define('Taco.core.ux.browser.Browsable', {
-    requires: ['Taco.core.util.ExceptionWhiner', 'Taco.core.ux.grid.AddEntityRow', 'Taco.core.ux.grid.plugins.AutoSelect'],
+    requires: ['Taco.core.util.ExceptionWhiner', 'Taco.core.ux.grid.AddEntityRow', 'Taco.core.ux.grid.plugins.AutoSelect', 'Taco.core.ux.grid.LinkPaging'],
     config: {
         typeName: 'Item',
         createButtonPrefix: "Create New ",
@@ -250,13 +250,12 @@ Ext.define('Taco.core.ux.browser.Browsable', {
     },
 
     createGridPager: function () {
-        this.gridPager = Ext.create('Ext.toolbar.Paging', {
+        this.gridPager = Ext.create('Taco.core.ux.grid.LinkPaging', {
             dock: 'bottom',
-            componentCls: 'x-grid-paging-toolbar',
+            componentCls: 'x-link-paging-toolbar',
             displayInfo: true,
             store: this.store,
-            inputItemWidth: 45,
-            border: '0 1 1'
+            inputItemWidth: 45
         });
         
 
@@ -312,7 +311,7 @@ Ext.define('Taco.core.ux.browser.Browsable', {
         var menuColumns = Ext.Array.filter(this.gridPanel.columns, function (col) { return col.isXType('taco.menucolumn'); });
         if (this.disableContextMenuClick !== true && menuColumns && menuColumns.length == 1) {
 
-            this.gridPanel.on('itemcontextmenu', function (cmp, record, item, index, e) {
+            /*this.gridPanel.on('itemcontextmenu', function (cmp, record, item, index, e) {
                 var eventData = {
                     grid: cmp.ownerCt,
                     rowIndex: index,
@@ -336,7 +335,7 @@ Ext.define('Taco.core.ux.browser.Browsable', {
                 //e.preventDefault();
                 e.stopEvent();
                 menu.showAt(e.xy);
-            }, this);
+            }, this);*/
 
         }
 

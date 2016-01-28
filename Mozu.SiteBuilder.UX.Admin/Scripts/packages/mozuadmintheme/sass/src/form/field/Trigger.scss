@@ -47,7 +47,6 @@
 
     .#{$prefix}form-text {
         border-width: 0px;
-        height: 28px;
     }
 
     &:hover {
@@ -94,6 +93,9 @@
 .#{$prefix}form-search-trigger {
     &::after {
         content: $glyph-search;
+        font-size: 20px;
+        color: $dark-color;
+        padding-top: 2px;
     }
 }
 

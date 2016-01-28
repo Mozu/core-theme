@@ -7,7 +7,8 @@ Ext.define('Taco.view.order.Edit', {
     extend: 'Taco.core.ux.form.FullEditor',
     requires: [
         'Taco.view.order.Form',
-        'Taco.core.ux.form.Tasks'
+        'Taco.core.ux.form.Tasks',
+        'Taco.core.ux.PrevNextArrowButtons'
     ],
     statics: {
         factory: function (cfg, callback, scope) {
@@ -47,6 +48,10 @@ Ext.define('Taco.view.order.Edit', {
     saveText: "Submit Order",
     saveInProgressText: "Submiting Order...",
 
+    parentTitleCfg: {
+        title: 'Orders',
+        controller: 'orders'
+    },
 
     initComponent: function () {
         this.saveHidden
@@ -59,23 +64,22 @@ Ext.define('Taco.view.order.Edit', {
             xtype: 'button',
             ui: 'action',
             scale: "medium",
+            cls: 'taco-btn-nextprev taco-btn-nextprev-next',
             itemId: 'next',
-            text: 'Next',
             disabled: !this.canNavigateToNext(),
 
-            margin: '0 0 0 10',
+            margin: '0 0 0 0',
             
             handler: this.navigateToNext,
             
             //dirtyState: this.record.get('publishedState') !== 'Live'
             scope: this
-        },
-        {
+        }, {
                 xtype: 'button',
                 ui: 'action',
                 scale: "medium",
+                cls: 'taco-btn-nextprev taco-btn-nextprev-prev',
                 itemId: 'previous',
-                text: 'Previous',
                 disabled: !this.canNavigateToPrevious(),
 
                 margin: '0 0 0 10',
@@ -83,9 +87,22 @@ Ext.define('Taco.view.order.Edit', {
                 handler: this.navigateToPrevious,
                 //dirtyState: this.record.get('publishedState') !== 'Live'
                 scope: this
-
             }
         ];
+
+        this.additionalActions = [{
+            xtype: 'taco.prevnext',
+            canNavigateToNext: this.canNavigateToNext(),
+            canNavigateToPrevious: this.canNavigateToPrevious(),
+            itemId: 'prevnextorder',
+            listeners: {
+                navigateToNext: this.navigateToNext,
+                navigateToPrevious: this.navigateToPrevious,
+                scope: this
+            },
+            record: this.record,
+            store: this.store
+        }];
 
 
 
@@ -113,7 +130,38 @@ Ext.define('Taco.view.order.Edit', {
             
             Taco.core.StateManager.attemptNavigate('s-' + this.record.data.siteId + '/orders/edit/' + this.record.data.id);
         });
+
+        this.on({
+            boxready: this.handleBoxReady,
+            afterlayout: this.handleAfterLayout,
+            scope: this
+        });
+
+        this.navHeader.hide();
     },
+
+    handleBoxReady: function () {
+        this.bodyEl = this.getEl().down('.x-panel-body');
+
+        this.mon(this.bodyEl, 'scroll', function () {
+            this.lastScrollTop = this.bodyEl.getScrollTop();
+        }, this);
+    },
+
+    handleAfterLayout: function () {
+        var scrollTop = 0;
+
+        if (!this.bodyEl) {
+            return;
+        }
+
+        scrollTop = this.bodyEl.getScrollTop();
+
+        if (scrollTop !== this.lastScrollTop) {
+            this.bodyEl.setScrollTop(this.lastScrollTop);
+        }
+    },
+
     navigateTo:function (forward) {
         var index = this.store.indexOfId(this.record.getId()),
             navToIndex = forward ? index + 1 : index - 1,

@@ -114,7 +114,6 @@ Ext.define('Taco.view.filter.ExpressionTreePanel', {
             this.columns.push({
                 xtype: 'taco.menucolumn',
                 menuDisabled: true,
-                text: 'Actions',
                 onMenuShow: function (menu, eventData) {
                     var deleteMenuItem = menu.down("#deleteMenuItem"),
                         createFilterMenuItem = menu.down("#createFilterMenuItem"),

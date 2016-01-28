@@ -121,7 +121,6 @@
                 {
                     xtype: 'taco.menucolumn',
                     allowNavigation: false,
-                    text: 'Actions',
                     width: 100,
                     menuDisabled: true,
                     menuItems: [

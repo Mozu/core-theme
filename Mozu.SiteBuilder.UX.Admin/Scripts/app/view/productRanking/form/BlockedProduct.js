@@ -49,19 +49,20 @@ Ext.define('Taco.view.productRanking.form.BlockedProduct', {
         me.productForm = Ext.create('Ext.container.Container', {
             layout: {
                 type: 'hbox',
-                align: 'left'
             },
             defaults: {
                 flex: 1
             },
-            items: [me.productList]
+            items: [ me.productList, Ext.create('Ext.panel.Panel', {
+                flex: 1
+            })]
         });
 
         me.items = [
             {
-                xtype: 'fieldcontainer',
+                xtype: 'panel',
+                cls: 'taco-scrollable-panel',
                 layout: 'fit',
-                width: '100%',
                 defaults: {
                     flex: 1
                 },

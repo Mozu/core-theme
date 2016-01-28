@@ -28,6 +28,7 @@ Ext.define('Taco.view.generalSettings.subform.Notifications', {
 
         this.items = [{
             xtype: 'textfield',
+            itemId: 'senderEmail',
             fieldLabel: 'Sender e-mail',
             validator: 'email',
             required: true,
@@ -35,12 +36,14 @@ Ext.define('Taco.view.generalSettings.subform.Notifications', {
             name: 'senderEmailAddress'
         }, {
             xtype: 'textfield',
+            itemId: 'senderEmailAlias',
             fieldLabel: 'Sender e-mail alias',
             required: false,
             name: 'senderEmailAlias'
 
         }, {
             xtype: 'textfield',
+            itemId: 'replyToEmailAddress',
             validator: 'email',
             required: true,
             allowBlank: false,

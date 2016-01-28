@@ -26,10 +26,10 @@ Ext.define('Taco.view.settings.localization.widget.LocalizationGrid', {
     // Will add the 20px padding needed for display in the contentView as part of the NavHeader code;
     addContentViewPadding: true,
 
-    enableSearch: true,
+    enableSearch: false,
     enablePaging: true,
     enableRowEditing: false,
-    enableAutoSelect: true,
+    enableAutoSelect: false,
 
     createButtonEnabled: false,
     saveButtonEnabled: false,
@@ -67,6 +67,7 @@ Ext.define('Taco.view.settings.localization.widget.LocalizationGrid', {
             viewConfig: {
                 deferEmptyText: false,
                 emptyText: "No items",
+                stripeRows: false,
                 plugins: [
                     {
                         ptype: 'gridviewdragdrop'

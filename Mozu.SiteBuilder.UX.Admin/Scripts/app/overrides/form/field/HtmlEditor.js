@@ -58,6 +58,7 @@ Ext.define('Taco.overrides.form.field.HtmlEditor', {
     },
 
     initEditor: function () {
+        var me = this;
 
         if (this.isDestroyed) {
             return;
@@ -92,6 +93,21 @@ Ext.define('Taco.overrides.form.field.HtmlEditor', {
         this.stripSpanTags();
 
         this.callParent(arguments);
+    },
+
+    /**
+     * @overriden method
+     * Initialize the events
+     */
+    initEvents: function () {
+        var me = this;
+
+        me.callParent(arguments);
+
+        me.on({
+            scope: me,
+            initialize: me.onInitializeHtmlEditor
+        });
     },
    
     onAfterRender: function () {
@@ -144,5 +160,40 @@ Ext.define('Taco.overrides.form.field.HtmlEditor', {
             }
 
         }, 10, this);
+    },
+
+    /**
+     * Taken from https://www.sencha.com/forum/showthread.php?142836-HTML-Editor-focus-and-blur-event-issue&p=950974&viewfull=1#post950974
+     */
+    onInitializeHtmlEditor: function () {
+        var me = this,
+            frameWin = me.getWin(),
+            fnFocus = Ext.bind(me.onHtmlEditorFocus, me),
+            fnBlur = Ext.bind(me.onHtmlEditorBlur, me);
+
+        if (frameWin.attachEvent) {
+            frameWin.addEventListener('focus', fnFocus);
+            frameWin.addEventListener('blur', fnBlur);
+        }
+        else {
+            frameWin.addEventListener('focus', fnFocus, false);
+            frameWin.addEventListener('blur', fnBlur, false);
+        }
+    },
+
+    /**
+     * Will fire the event "focus"
+     */
+    onHtmlEditorFocus: function (event) {
+        this.addCls('taco-label-focus');
+        this.fireEvent('focus', this);
+    },
+
+    /**
+     * Will fire the event "blur"
+     */
+    onHtmlEditorBlur: function (event) {
+        this.removeCls('taco-label-focus');
+        this.fireEvent('blur', this);
     }
 });

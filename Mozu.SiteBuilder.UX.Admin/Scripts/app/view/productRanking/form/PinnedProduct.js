@@ -28,13 +28,20 @@ Ext.define('Taco.view.productRanking.form.PinnedProduct', {
 
         Ext.tip.QuickTipManager.init();
 
-        me.header =
-            Taco.core.ux.TooltipLabel.wrapConfig('productRanking.form.pinnedProduct.header', me, {
-                fieldLabel: "Promoted Products",
-                labelCls: 'x-header-text x-panel-header-text x-panel-header-text-subform',
-                margin: '20 0 35 0'
-            });
-        me.header.xtype = 'fieldcontainer';
+        me.header = {
+            fieldLabel: "Promoted Products",
+            labelCls: 'x-header-text x-panel-header-text x-panel-header-text-subform',
+            margin: '20 0 35 0',
+            itemId: 'promoted-products-header',
+            tooltip: Ext.create('Taco.core.ux.content.Tooltip', {
+                elementId: 'promoted-products-header',
+                hoverTarget: 'label',
+                messageKey: 'productRanking.form.pinnedProduct.header',
+                offsetLeft: 20,
+                offsetTop: 15
+            })
+        };
+        me.header.xtype = 'panel';
 
         me.pinnedGrid = Ext.create('Taco.view.productRanking.grid.PinnedProduct', {
             enableSearch: false
@@ -62,6 +69,7 @@ Ext.define('Taco.view.productRanking.form.PinnedProduct', {
             queryMode: 'local',
             displayField: 'text',
             valueField: 'value',
+            width: 200,
             forceSelection: true,
             editable: false,
             margin: '10 0 10 10',
@@ -93,9 +101,11 @@ Ext.define('Taco.view.productRanking.form.PinnedProduct', {
 
         me.items = [
             {
-                xtype: 'fieldcontainer',
+                xtype: 'panel',
+                cls: 'taco-scrollable-panel',
                 layout: 'fit',
                 width: '100%',
+                //align: 'left',
                 defaults: {
                     flex: 1
                 },

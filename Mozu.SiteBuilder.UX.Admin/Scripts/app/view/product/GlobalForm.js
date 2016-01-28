@@ -24,12 +24,7 @@ Ext.define('Taco.view.product.GlobalForm', {
         bundleable: 'Taco.view.product.mixins.Bundleable'
     },
 
-
-    
-
-    // need to move the left nav up to align with the top edge of the tab bar;
-    leftNavTopOffset: -60,
-    
+    sectionNavTopOffset: 0,
 
     persistChangesToModel: true,
 
@@ -91,16 +86,11 @@ Ext.define('Taco.view.product.GlobalForm', {
             ]);
         }
 
-        if (!this.isSingleSite) {
-            Ext.Array.push(items, [
-                Ext.create('Taco.view.product.subform.Inventory', subFormCfg),
-                Ext.create('Taco.view.product.subform.Options', subFormCfg),
-                Ext.create('Taco.view.product.subform.Properties', subFormCfg),
-                Ext.create('Taco.view.product.subform.Extras', subFormCfg)
-            ]);
-        }
-
         Ext.Array.push(items, [
+            Ext.create('Taco.view.product.subform.Inventory', subFormCfg),
+            Ext.create('Taco.view.product.subform.Options', subFormCfg),
+            Ext.create('Taco.view.product.subform.Properties', subFormCfg),
+            Ext.create('Taco.view.product.subform.Extras', subFormCfg),
             Ext.create('Taco.view.product.subform.Shipping', subFormCfg),
             Ext.create('Taco.view.product.subform.SEO', subFormCfg)
         ]);

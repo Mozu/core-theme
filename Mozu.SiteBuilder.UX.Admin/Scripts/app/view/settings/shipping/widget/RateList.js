@@ -86,7 +86,6 @@ Ext.define('Taco.view.settings.shipping.widget.RateList', {
             },
             {
                 xtype: 'taco.menucolumn',
-                text: 'Actions',
                 menuDisabled: true,
                 sortable: false,
                 menuItems: [

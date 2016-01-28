@@ -2,7 +2,7 @@
  * @class Taco.view.channel.Index
  */
 Ext.define('Taco.view.channel.Index', {
-    extend: 'Taco.core.ux.browser.BrowserPage',
+    extend: 'Taco.core.ux.browser.SearchList',
     
     requires: [
         'Taco.store.Countries',
@@ -10,9 +10,6 @@ Ext.define('Taco.view.channel.Index', {
         'Taco.model.Channel'
     ],
 
-    typeName: 'Channel',
-    gridHeaderLabel: 'Channels',
-    
     // turn on the row editing feature for inline grid editing and inline grid creation.  typically used for simple entities with several fields.
     enableRowEditing: true,
     
@@ -27,6 +24,27 @@ Ext.define('Taco.view.channel.Index', {
     store: { type: 'Taco.store.Channels' },
 
     useTilePanel: false,
+
+    addContentViewPadding: true,
+
+    title: 'Channels',
+
+    createButtonText: 'Create New Channel',
+
+    createButtonEnabled: true,
+
+    cancelButtonEnabled: false,
+
+    saveButtonEnabled: false,
+
+    hideSearchToolbar: true,
+
+    enableNavHeader: true,
+
+    enableSearchBarInHeader: false,
+
+    stateful: true,
+    stateId: 'statefulChannelsGrid',
     //launchEditorOnClick: false,
     
     filterFormConf: {
@@ -73,68 +91,66 @@ Ext.define('Taco.view.channel.Index', {
             text: 'Name'
         }
     ],
-    
-        
-    /*
-    header: {
-        actions:[]
+
+    initComponent: function() {
+
+        this.columns = [
+            {
+                dataIndex: 'code',
+                text: 'Code',
+                stateId: "code",
+                editor: {
+                    // defaults to textfield if no xtype is supplied
+                    emptyText: "Code",
+                    msgTarget: "qtip",
+                    // optional enhancement to rowEditor. Makes the field only editable during a create;
+                    editableOnCreateOnly: true,
+                    selectOnFocus: true,
+                    allowBlank: false
+                },
+                width: 200
+            },
+            {
+                dataIndex: 'name',
+                stateId: "name",
+                editor: {
+                    // defaults to textfield if no xtype is supplied
+                    emptyText: "Name",
+                    msgTarget: "qtip",
+                    selectOnFocus: true,
+                    allowBlank: false
+                },
+                text: 'Name',
+                flex:1
+                
+            },
+            {
+                dataIndex: 'countryCode',
+                stateId: "countryCode",
+                editor: {
+                    xtype: 'combobox',
+                    fieldLabel: null,
+                    name: 'countryCode',
+                    queryMode: 'local',
+                    displayField: 'name',
+                    valueField: 'code',
+                    //store: 'Taco.store.Countries' ,
+                    store : { type: 'Taco.store.Countries' },
+                    emptyText: "Country",
+                    msgTarget: "qtip",
+                    selectOnFocus: true,
+                    allowBlank: false
+                },
+                text: 'Country',
+                width: 200
+            }
+        ];
+
+        this.callParent(arguments);
     },
-    */    
-    
 
-    gridPanelConf: {
-      
-        selModel: {},
-        stateful: true,
-        stateId: "statefulChannelsGrid",
-        columns: [{
-            dataIndex: 'code',
-            text: 'Code',
-            stateId: "code",
-            editor: {
-                // defaults to textfield if no xtype is supplied
-                emptyText: "Code",
-                msgTarget: "qtip",
-                // optional enhancement to rowEditor. Makes the field only editable during a create;
-                editableOnCreateOnly: true,
-                selectOnFocus: true,
-                allowBlank: false
-            },
-            width: 200
-        }, {
-            dataIndex: 'name',
-            stateId: "name",
-            editor: {
-                // defaults to textfield if no xtype is supplied
-                emptyText: "Name",
-                msgTarget: "qtip",
-                selectOnFocus: true,
-                allowBlank: false
-            },
-            text: 'Name',
-            flex:1
-            
-        }, {
-            dataIndex: 'countryCode',
-            stateId: "countryCode",
-            editor: {
-                xtype: 'combobox',
-                fieldLabel: null,
-                name: 'countryCode',
-                queryMode: 'local',
-                displayField: 'name',
-                valueField: 'code',
-                //store: 'Taco.store.Countries' ,
-                store : { type: 'Taco.store.Countries' },
-                emptyText: "Country",
-                msgTarget: "qtip",
-                selectOnFocus: true,
-                allowBlank: false
-            },
-            text: 'Country',
-            width: 200
-        }]
+    doCreate: function() {
+        this.onRowEditorCreate();
     }
-
    
 });

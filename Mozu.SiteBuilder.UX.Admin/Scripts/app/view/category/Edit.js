@@ -8,7 +8,12 @@ Ext.define('Taco.view.category.Edit', {
     requires: ['Taco.view.category.Form'],
     formCls: 'Taco.view.category.Form',
     saveAndCreateButtonEnabled: true,
-    doCreate: function() {
+    enableSearchBarInHeader: false,
+    parentTitleCfg: {
+        title: 'Categories',
+        controller: 'categories'
+    },
+    doCreate: function () {
         var controller = "categories",
             url;
 
@@ -18,59 +23,55 @@ Ext.define('Taco.view.category.Edit', {
     },
     initComponent: function() {
         var me = this;
-        this.additionalActions = [
-            {
-                xtype: 'button',
-                itemId: 'moreButton',
-                ui: 'action',
-                scale: 'medium',
-                text: 'More',
-                menuAlign: 'tr-br?',
-                menu: {
-                    plain: true,
-                    shadow: false,
-                    items: [
-                        {
-                            itemId: 'live',
-                            text: 'View Live',
-                            menu: {
-                                plain: true,
-                                shadow: false,
-                                items: []
-                            }
-                        }, {
-                            itemId: 'preview',
-                            text: 'View Staged',
-                            menu: {
-                                plain: true,
-                                shadow: false,
-                                items: []
-                            }
+
+        this.moreButtonCfg = {
+            menu: {
+                cls: 'taco-more-action-button-menu',
+                plain: true,
+                shadow: false,
+                items: [{
+                    itemId: 'live',
+                    text: 'View Live',
+                    menu: {
+                        plain: true,
+                        shadow: false,
+                        items: []
+                    }
+                }, {
+                    itemId: 'preview',
+                    text: 'View Staged',                        
+                    menu: {
+                        plain: true,
+                        shadow: false,
+                        items: []
+                    }
+                }
+                ],
+                listeners: {
+                    show: function (menu) {
+                        var previewItem = menu.items.get('preview'),
+                            liveItems = menu.items.get('live'),
+                            previewMenu,
+                            liveMenu,
+                            previewSites = [],
+                            liveSites = [];
+
+                    
+                        if (me.record.phantom) {
+                            liveItems.disable()
+                            previewItem.disable()
+                            return; 
                         }
-                    ],
-                    listeners: {
-                        show: function(menu) {
-                            var previewItem = menu.items.get('preview'),
-                                liveItems = menu.items.get('live'),
-                                previewMenu,
-                                liveMenu,
-                                previewSites = [],
-                                liveSites = [];
-                            if (me.record.phantom) {
-                                liveItems.disable();
-                                previewItem.disable();
-                                return;
-                            }
 
-                            var ctx = Taco.app.context.getCurrentContext();
+                        var ctx = Taco.app.context.getCurrentContext();
 
-                            if (previewItem && previewItem.menu) {
-                                previewMenu = previewItem.menu;
-                                liveMenu = liveItems.menu;
+                        if (previewItem && previewItem.menu) {
+                            previewMenu = previewItem.menu;
+                            liveMenu = liveItems.menu;
+                            
+                            var sites = (ctx.sites) ? ctx.sites : (ctx.catalog && ctx.catalog.sites) ? ctx.catalog.sites : [];
 
-                                var sites = (ctx.sites) ? ctx.sites : (ctx.catalog && ctx.catalog.sites) ? ctx.catalog.sites : [];
-
-                                Ext.each(sites, function(site) {
+                            Ext.each(sites, function (site) {
                                     if (site.isMozuRendered) {
                                         previewSites.push({
                                             itemId: site.id,
@@ -85,20 +86,27 @@ Ext.define('Taco.view.category.Edit', {
                                         });
                                     }
                                 });
+                            
 
-                                if (!Ext.Array.equals(Ext.Array.pluck(previewSites, 'itemId'), previewMenu.items.keys)) {
-                                    previewMenu.removeAll();
-                                    previewMenu.add(previewSites);
-                                    liveMenu.removeAll();
-                                    liveMenu.add(liveSites);
-                                }
+                            if (!Ext.Array.equals(Ext.Array.pluck(previewSites, 'itemId'), previewMenu.items.keys)) {
+                                previewMenu.removeAll();
+                                previewMenu.add(previewSites);
+                                liveMenu.removeAll();
+                                liveMenu.add(liveSites);
                             }
-                        },
-                        scope: this
-                    }
+                            
+
+
+                            
+                        }
+                    },
+                    scope: this
                 }
             }
-        ];
+        };
+
+
+
         this.callParent(arguments);
 
     },

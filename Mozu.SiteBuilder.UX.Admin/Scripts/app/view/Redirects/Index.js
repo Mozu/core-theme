@@ -5,7 +5,8 @@ Ext.define('Taco.view.redirects.Index', {
     extend: 'Taco.core.ux.browser.SearchList',
     requires: [
         'Taco.model.RedirectEntry',
-        'Taco.store.RedirectEntries'
+        'Taco.store.RedirectEntries',
+        'Taco.core.ux.content.SiteViewDropdown'
     ],
     typeName: 'Redirect',
     gridHeaderLabel: 'Redirects',
@@ -19,6 +20,7 @@ Ext.define('Taco.view.redirects.Index', {
     },
 
     enableNavHeader: true,
+    enableSearchBarInHeader: false,
 
     modelName: 'Taco.model.RedirectEntry',
 
@@ -145,7 +147,6 @@ Ext.define('Taco.view.redirects.Index', {
                  },
                  {
                     xtype: 'taco.menucolumn',
-                    text: 'Actions',
                     width: 100,
                     menuItems: [{
                         text: 'Delete',
@@ -184,28 +185,34 @@ Ext.define('Taco.view.redirects.Index', {
             items: [this.uploadButton]
         });
 
+        this.moreButtonCfg = {
+            menu: [
+                {
+                    text: 'Import',
+                    scale: 'medium',
+                    ui: 'action',
+                    hidden: !this.allowCreate(),
+                    margin: '0 0 0 15',
+                    handler: function () {
+                        this.uploadButton.fileInputEl.set({ accept: '.csv' });
+                        this.uploadButton.fileInputEl.dom.click();
+                    },
+                    scope: this
+                }, {
+                    text: 'Export',
+                    scale: 'medium',
+                    ui: 'action',
+                    hidden: !this.allowCreate(),
+                    handler: this.onExport,
+                    margin: '0 0 0 15',
+                    scope: this
+                }
+            ]
+        };
+
         this.additionalActions = [
             {
-                xtype: 'button',
-                text: 'Import',
-                scale: 'medium',
-                ui: 'action',
-                hidden: !this.allowCreate(),
-                margin: '0 0 0 15',
-                handler: function () {
-                    this.uploadButton.fileInputEl.set({ accept: '.csv' });
-                    this.uploadButton.fileInputEl.dom.click();
-                },
-                scope: this
-            }, {
-                xtype: 'button',
-                text: 'Export',
-                scale: 'medium',
-                ui: 'action',
-                hidden: !this.allowCreate(),
-                handler: this.onExport,
-                margin: '0 0 0 15',
-                scope: this
+                xtype: 'taco-siteviewdropdown'
             }
         ];
 
@@ -267,7 +274,7 @@ Ext.define('Taco.view.redirects.Index', {
     onImport: function () {
         this.importForm.submit({
             success: function (form, action) {
-                Taco.app.fireEvent('setgrowl', 'Imported!', 'info', 1000);
+                Taco.app.fireEvent('setmessage', 'Imported!', 'success');
                 this.store.reload();
 
             },

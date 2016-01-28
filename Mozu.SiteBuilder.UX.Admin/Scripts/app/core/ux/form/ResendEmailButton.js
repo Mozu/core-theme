@@ -11,6 +11,8 @@ Ext.define('Taco.core.ux.form.ResendEmailButton', {
     //itemId: 'resendEmailButton',
     text: 'Resend Email',
 
+    menuAlign: 'tr-br?',
+
     // required;
     emailUrl: null,
 

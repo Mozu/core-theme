@@ -24,7 +24,6 @@ Ext.define('Taco.view.productRanking.modal.ProductRankingEditor', {
     record: null,
     categoryCode: null,
     closeOnSave: true,
-    draggable: false,
 
     actionColumnWidth: 50,
 
@@ -51,6 +50,7 @@ Ext.define('Taco.view.productRanking.modal.ProductRankingEditor', {
         this.title = (me.isCreateMode ? 'New Product Ranking Rule' : me.record.get('name'));
 
         this.initUi();
+
         this.callParent(arguments);
     },
 
@@ -86,41 +86,17 @@ Ext.define('Taco.view.productRanking.modal.ProductRankingEditor', {
 
         if (me.isCreateMode) return;
 
-        me.setLoading({
-            msg: "Loading"
-        }, me.body);
-
-        var singleStore = Taco.core.data.StoreManager.getOrCreate({
-            type: 'Taco.store.ProductRankings',
-            createOnly: true,
-            autoLoad: false,
-            clearFilters: true,
-            remoteFilter: true
-        });
-        singleStore.proxy.extraParams = singleStore.proxy.extraParams || {};
-        singleStore.proxy.extraParams.id = this.record.get('code');
-        singleStore.proxy.extraParams.siteId = this.record.get('siteId');
-        singleStore.load({
-            scope: this,
-            callback: function(records, operation, success) {
-                if (success && records.length > 0) {
-                    me.record = records[0];
-                    //Refresh popup grids from fresh data
-                    var blockedProductGrid = this.down("#taco-grid-blockedproduct");
-                    blockedProductGrid.fireEvent('reloadData', this.record);
-                    var pinnedProductGrid = this.down("#taco-grid-pinnedproduct");
-                    pinnedProductGrid.fireEvent('reloadData', this.record);
-                    //TODO: do the same for keywords and categories 
-                    // ... although it currently works - so just leave it ???
-            }
-            me.onLoadRecord();
-            }
-        });
+        this.setLoading(true);
+        var blockedProductGrid = this.down("#taco-grid-blockedproduct");
+        blockedProductGrid.fireEvent('reloadData', this.record);
+        var pinnedProductGrid = this.down("#taco-grid-pinnedproduct");
+        pinnedProductGrid.fireEvent('reloadData', this.record);
+        me.onLoadRecord();
     },
 
     // when the draft record has loaded create and add the total and grid and hide the loading mask;
     onLoadRecord : function() {
-        this.setLoading(false, this.body);
+        this.setLoading(false);
     },
 
     // initialize the header and grid when the data load the first time
@@ -133,13 +109,14 @@ Ext.define('Taco.view.productRanking.modal.ProductRankingEditor', {
 
         me.container = Ext.create('Taco.view.productRanking.Form', {
             autoScroll:true,
+            useFixedPosition: false,
             record: me.record,
             isCreate: me.isCreateMode,
             isCatalogLevel: true,
             categoryCode: me.categoryCode,
             isPopUp: true,
-            loadBlockedProducts: false,   //whether or not to read the blocked-products grid from current record - alternatively load manually
-            loadPinnedProducts: false,    //whether or not to read the pinned-products  grid from current record - alternatively load manually
+            enableScrollSpy: false,
+            layout: 'card',
             getWrapper: function() {
                 return this;
             }
@@ -148,6 +125,21 @@ Ext.define('Taco.view.productRanking.modal.ProductRankingEditor', {
         me.items = [
             me.container
         ];
+
+        this.dockedItems.push({
+            xtype: 'taco-cardtabtoolbar',
+            cls: 'taco-modal-toolbar',
+            cardPanel: this.container,
+            items: [{
+                title: 'General'
+            }, {
+                title: 'Context'
+            }, {
+                title: 'Promoted Products'
+            }, {
+                title: 'Blocked Products'
+            }]
+        });
 
     },
 

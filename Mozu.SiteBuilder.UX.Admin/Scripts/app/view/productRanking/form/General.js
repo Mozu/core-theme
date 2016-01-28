@@ -69,6 +69,7 @@ Ext.define('Taco.view.productRanking.form.General', {
         me.siteCombo = Ext.widget({
             xtype: 'combobox',
             fieldLabel: 'Site',
+            itemId:     'siteField',
             name: 'siteId',
             labelAlign: 'top',
             allowBlank: false,
@@ -93,6 +94,7 @@ Ext.define('Taco.view.productRanking.form.General', {
         me.statusCombo = Ext.widget({
             xtype: 'combobox',
             fieldLabel: 'Status',
+            itemId: 'statusField',
             name: 'status',
             labelAlign: 'top',
             allowBlank: false,
@@ -144,19 +146,19 @@ Ext.define('Taco.view.productRanking.form.General', {
         //   description
 
         this.items = [{
-            xtype: 'fieldcontainer',
+            xtype: 'panel',
             layout: {
                 type: 'hbox',
                 align: 'stretch'
             },
             items: [
                 {
-                    xtype: 'fieldcontainer',
+                    xtype: 'panel',
                     flex: 1,
                     layout: 'vbox',
                     items: [
                         {
-                            xtype: 'fieldcontainer',
+                            xtype: 'panel',
                             layout: {
                                 type: 'hbox',
                                 align: 'top'
@@ -165,6 +167,7 @@ Ext.define('Taco.view.productRanking.form.General', {
                             items: [
                                 {
                                     name: 'name',
+                                    itemId: 'nameField',
                                     fieldLabel: 'Name',
                                     allowBlank: false,
                                     xtype: 'textfield',
@@ -191,7 +194,7 @@ Ext.define('Taco.view.productRanking.form.General', {
                                 }
                             ]
                         }, {
-                            xtype: 'fieldcontainer',
+                            xtype: 'panel',
                             layout: {
                                 type: 'hbox',
                                 align: 'top'
@@ -202,7 +205,7 @@ Ext.define('Taco.view.productRanking.form.General', {
                                 me.statusCombo
                             ]
                         }, {
-                            xtype: 'fieldcontainer',
+                            xtype: 'panel',
                             layout: {
                                 type: 'hbox',
                                 align: 'top'
@@ -216,7 +219,7 @@ Ext.define('Taco.view.productRanking.form.General', {
                     ]
                 },
                 {
-                    xtype: 'fieldcontainer',
+                    xtype: 'panel',
                     margin: {
                         left: 20
                     },
@@ -227,6 +230,7 @@ Ext.define('Taco.view.productRanking.form.General', {
                     items: [
                         {
                             xtype: 'textarea',
+                            itemId: 'descriptionField',
                             name: 'description',
                             width: '100%',
                             flex: 1,

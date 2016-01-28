@@ -53,7 +53,10 @@ Ext.define('Taco.core.ux.mixins.LaunchEditor', {
         }
     },
 
-    onCellClick: function (view, td, cellIndex, record, tr, rowIndex, e, eOpts) {        
+    onCellClick: function (view, td, cellIndex, record, tr, rowIndex, e, eOpts) {
+        if (this.getSelectionText()) { // if the user has highlighted text, do not launch editor
+            return;
+        }
         var metaData = { id: record.getId() },
             header = view.getHeaderAtIndex(cellIndex);
         if (!header) {
@@ -65,7 +68,7 @@ Ext.define('Taco.core.ux.mixins.LaunchEditor', {
         }
     },
 
-    launchEditor: function (record, options) {        
+    launchEditor: function (record, options) {
         var me = this,
             modelClass = Ext.ClassManager.get(me.modelName);
         if (Ext.isString(record)) {
@@ -85,9 +88,11 @@ Ext.define('Taco.core.ux.mixins.LaunchEditor', {
             delete complexMetaData.record;
         }
 
-        Ext.defer(function () {
-            Taco.core.StateManager.attemptNavigate(Taco.core.StateManager.getCurrentState().metaData.controller + '/edit/' + record.getId(), complexMetaData);
-        }, 1, this);
+        if (Taco.core.StateManager.getCurrentState().metaData.controller != 'redirects' && Taco.core.StateManager.getCurrentState().metaData.controller != 'locationInventory' && Taco.core.StateManager.getCurrentState().metaData.controller != 'inventory' && Taco.core.StateManager.getCurrentState().metaData.controller != 'locationTypes' && Taco.core.StateManager.getCurrentState().metaData.controller != 'channels') {
+            Ext.defer(function () {
+                Taco.core.StateManager.attemptNavigate(Taco.core.StateManager.getCurrentState().metaData.controller + '/edit/' + record.getId(), complexMetaData);
+            }, 1, this);
+        }
     },
 
     editMenuColumnHandler: function (item, eventData) {
@@ -95,5 +100,15 @@ Ext.define('Taco.core.ux.mixins.LaunchEditor', {
             metaData = { id: record.getId() };
 
         this.launchEditor(record, metaData);
+    },
+
+    getSelectionText: function() {
+        var text = '';
+        if (window.getSelection) {
+            text = window.getSelection().toString();
+        } else if (document.selection && document.selection.type != 'Control') {
+            text = document.selection.createRange().text;
+        }
+        return text;
     }
 });

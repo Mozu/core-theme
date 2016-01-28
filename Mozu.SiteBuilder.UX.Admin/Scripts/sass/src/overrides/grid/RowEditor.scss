@@ -1,4 +1,4 @@
 // hide the action column when displaying the rowEditor; prevents the row height from getting messed up;
-.x-form-action-col-field {
+.#{$prefix}form-action-col-field {
     display:none;
 }

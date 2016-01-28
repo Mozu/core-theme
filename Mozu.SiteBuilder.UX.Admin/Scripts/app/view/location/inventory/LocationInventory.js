@@ -27,7 +27,7 @@ Ext.define('Taco.view.location.inventory.LocationInventory', {
     
     enableSearch: false,
 
-    sortableColumns:false,
+    sortableColumns: false,
     
     modelName: 'Taco.model.LocationInventory',
     
@@ -40,34 +40,6 @@ Ext.define('Taco.view.location.inventory.LocationInventory', {
 
     stateful: false,
     stateId: 'statefulLocationInventoryGrid',
-
-    secondToolbarItems: [
-        {
-            xtype:"component",
-            html: 'Inventory for: ',
-            margin: '0 10 0 0',
-            padding: '2 0 0 0'
-        }, {
-            xtype: "taco-Locationpickerfield",
-            emptyText: "Choose a location",
-            //width: 300,
-            flex: 1,
-            minWidth:150,
-            listeners: {
-                select: {
-                    fn: function (combo, records, eOpts) {
-                        var record = records[0],
-                            gridPanel = this.up('grid'),
-                            store = gridPanel.store;
-
-                        store.extraFilters.add([{ id:"locationCode", property: 'locationCode', value: record.get('code') }]);
-                    }
-                }
-            }
-        }
-    ],
-    
-   
     
     viewConfig: {
         deferEmptyText:false,
@@ -89,9 +61,9 @@ Ext.define('Taco.view.location.inventory.LocationInventory', {
         var me = this;
 
         this.columns = Taco.view.location.inventory.InventoryStockColumns.getInventoryStockColumns('locationCode');
+        
         this.columns.push({
             xtype: 'taco.menucolumn',
-            text: 'Actions',
             menuDisabled: true,
             stateId: 'actionsColumn',
             sortable: false,
@@ -298,10 +270,10 @@ Ext.define('Taco.view.location.inventory.LocationInventory', {
      
     onRowEditorUpdate: function (editor, context, opts) {
         var locInvRecord = context.record,
-            invMode = this.down('#adjustmentMode');
-        if (invMode) {
-            locInvRecord.set('adjustmentType', invMode.getValue());
-        }
+            invMode = Ext.ComponentQuery.query('#adjustmentModeAdd'),
+            adjustmentMode = (invMode && invMode.length > 0 && invMode[0].checked) ? 'Delta' : 'Absolute';
+
+        locInvRecord.set('adjustmentType', adjustmentMode);
         this.callParent(arguments);
     }
 });

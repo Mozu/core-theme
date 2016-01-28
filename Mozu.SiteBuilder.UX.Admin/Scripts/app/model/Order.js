@@ -719,7 +719,13 @@ Ext.define('Taco.model.Order', {
         this.self.load(me.getId(), loadConfig);
     },
     formatCurrency: function (value) {
-        return Taco.app.context.findSite(this.get('siteId')).formatCurrency(value);
+        if (Taco.app.context.findSite(this.get('siteId'))) {
+            return Taco.app.context.findSite(this.get('siteId')).formatCurrency(value);
+        }
+
+        else {
+            return value;
+        }
     },
     getCurrencyCode: function () {
         return Taco.app.context.findSite(this.get('siteId')).currencyCode;

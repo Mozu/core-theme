@@ -45,10 +45,10 @@ Ext.define('Taco.view.productRanking.Grid', {
     // Will add the 20px padding needed for display in the contentView as part of the NavHeader code;
     addContentViewPadding: true,
 
-    enableSearch: true,
+    enableSearch: false,
     enablePaging: true,
     enableRowEditing: false,
-    enableAutoSelect: true,
+    enableAutoSelect: false,
     createButtonEnabled: true,
     saveButtonEnabled: false,
     cancelButtonEnabled: false,
@@ -58,6 +58,7 @@ Ext.define('Taco.view.productRanking.Grid', {
     showActionsColumn: true,
 
     enableEditAction: true,
+    enableDuplicateAction: true,
     enableDeleteAction:true,
 
     hideSearchToolbar: false,
@@ -82,7 +83,8 @@ Ext.define('Taco.view.productRanking.Grid', {
         quickFilterData: [
             [{ code: 'Code' }, 'Code'],
             [{ status: 'Status' }, 'Status']
-        ]
+        ],
+        emptySearchText: 'Search'
     },
 
     onCreate: Ext.emptyFn,
@@ -292,6 +294,24 @@ Ext.define('Taco.view.productRanking.Grid', {
             });
         }
 
+        if (this.enableDuplicateAction) {
+            actions.push({
+                text: 'Duplicate',
+                requiredBehaviors: {
+                    model: 'Taco.model.ProductRanking',
+                    behavior: 'create'
+                },
+                menuColumnHandler: function(item, eventData) {
+                    var record = eventData.record,
+                        metaData = {
+                            id: record.getId()
+                        };
+
+                    Taco.app.StateManager.attemptNavigate('ProductRankings/duplicate/' + record.getId(), metaData);
+                }
+            });    
+        }
+
 
         if (this.enableDeleteAction) {
             actions.push({
@@ -335,7 +355,6 @@ Ext.define('Taco.view.productRanking.Grid', {
         if (actions.length) {
             actionColumn = {
                 xtype: 'taco.menucolumn',
-                text: 'Actions',
                 onMenuShow: me.onActionMenuShow,
                 menuItems: actions
             };
@@ -380,16 +399,45 @@ Ext.define('Taco.view.productRanking.Grid', {
             return;
         }
 
+        //will be a popup
+        var categoryCode = (isNew) ? me.categoryCode : null;
+        if (isNew) {
+            this.createPopup(null, isNew, categoryCode);
+            return;
+        }
+
+        var id = (record == null) ? null : record.get('id');
+
+        var model = me.store.getProxy().getModel();
+        this.setLoading(true);
+        model.load(id,
+            {
+                scope: this,
+                params: {
+                    siteId: record.get('siteId')
+                },
+                success: function(dbRecord) {
+                    this.createPopup(dbRecord, isNew, categoryCode);
+                    this.setLoading(false);
+                },
+                failure: function() {
+                    this.setLoading(false);
+                }
+            });
+    },
+    
+    createPopup: function(record, isNew, categoryCode) {
         Ext.create('Taco.view.productRanking.modal.ProductRankingEditor', {
             record: record,
+            parentForm: this,
             isCreateMode: isNew,
-            categoryCode: (isNew) ? me.categoryCode : null,
+            categoryCode: categoryCode,
             listeners: {
                 savesuccess: function () {
-                    if (me.store.proxy.extraParams.id) {
-                        delete me.store.proxy.extraParams.id;
+                    if (this.parentForm.store.proxy.extraParams.id) {
+                        delete this.parentForm.store.proxy.extraParams.id;
                     }
-                    me.store.reload();
+                    this.parentForm.store.reload();
                 }
             }
         });
@@ -407,10 +455,6 @@ Ext.define('Taco.view.productRanking.Grid', {
         var createActionButton = Ext.ComponentQuery.query('button[itemId=createActionButton]');
         if (createActionButton && createActionButton.length > 0) {
             createActionButton[0].setDisabled(true);
-        }
-        var advFilterButton = Ext.ComponentQuery.query('button[itemId=advancedFilter]');
-        if (advFilterButton && advFilterButton.length > 0) {
-            advFilterButton[0].setDisabled(true);
         }
     }
 

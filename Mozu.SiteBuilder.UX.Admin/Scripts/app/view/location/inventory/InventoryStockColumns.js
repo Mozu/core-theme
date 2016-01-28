@@ -55,7 +55,8 @@ Ext.define('Taco.view.location.inventory.InventoryStockColumns', {
                     selectOnFocus: true,
                     allowBlank: true,
                     onEditorShow: function (field, editor, context) {
-                        var adjustmentMode = Ext.ComponentQuery.query('#adjustmentMode')[0].getValue(),
+                        
+                        var adjustmentMode = Ext.ComponentQuery.query('#adjustmentModeAdd')[0].checked ? 'Add' : 'Absolute',
                             onHandTotal = context.record.get('stockOnHand') || 0,
                             isNew = !context.record.get('locationCode') || !context.record.get('productCode'),
 

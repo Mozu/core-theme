@@ -1,10 +1,10 @@
 ﻿.order-addproducttoolbar{    
-    background-color: #eee;    
+    //background-color: #eee;    
 }
 
-.taco-order-addproducttoolbar-focus{
-    .x-box-inner{
-        background-color: #e4efff;
+.#{$vprefix}order-addproducttoolbar-focus{
+    .#{$prefix}box-inner{
+        //background-color: #e4efff;
     }
 }
 

@@ -70,16 +70,21 @@ namespace Mozu.SiteBuilder.UX.Models.Admin.CMS
         //public List<WidgetRuntimeData> RuntimeData { get; set; }
 
         [IgnoreDataMember()]
-        public List<ZoneRuntimeData> RuntimeData { get; set; }
+        public List<Chorizo.ZoneRuntimeData> RuntimeData { get; set; }
 
 
-      
+        [IgnoreDataMember()]
+        public List<Caliente.ZoneRuntimeData> CalienteRuntimeData { get; set; }
 
-
+        public static class LayoutTypeConstants
+        {
+            public static string Caliente = "CALIENTE";
+            public static string Chorizo = "CHORIZO";
+        }
 
         [IgnoreDataMember()]
         public bool Initialized { get; set; }
 
-   
+       
     }
 }

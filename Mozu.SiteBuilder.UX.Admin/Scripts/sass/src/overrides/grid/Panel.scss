@@ -1,15 +1,11 @@
-.x-grid-row .x-grid-cell-selected, .x-grid-row-selected .x-grid-td {
-	background-color: #cccccc;
+.#{$prefix}grid-row .#{$prefix}grid-cell-selected, .#{$prefix}grid-row-selected .#{$prefix}grid-td {
+	// background-color: $dark-bg;
 }
 
-.x-grid-focusin{
-    .x-grid-body {
-	    border-color:$color-action-outline-focus;
-		/*@include box-shadow(inset 0 0 1px 1px transparentize($color-action-outline-focus, .5));*/
-	}
+.#{$prefix}grid-row .#{$prefix}grid-cell {
+    font-size: 13px;
+}
 
-	.x-grid-row .x-grid-cell-selected, .x-grid-row-selected .x-grid-td {
-		background-color: #d4e2f0;
-	}
-
+.#{$prefix}grid-row-selected {
+	border-color: $nav-element-active-border;
 }

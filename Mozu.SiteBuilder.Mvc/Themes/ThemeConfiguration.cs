@@ -30,11 +30,13 @@ namespace Mozu.SiteBuilder.Mvc.Themes
         [DataMember(Name = "backOfficeTemplates")]
         public List<PageTypeDefinition> BackOfficeTemplates { get; set; }
         
-
         [DataMember(Name = "widgets")]
         public List<WidgetDefinition> Widgets { get; set; }
 
-            [DataMember(Name = "editors")]
+        [DataMember(Name = "layoutWidgets")]
+        public List<LayoutWidgetDefinition> Layouts { get; set; }
+
+        [DataMember(Name = "editors")]
         public List<EditorDefinition> Editors { get; set; }
 
         [DataContract]

@@ -23,7 +23,7 @@ Ext.define('Taco.view.order.subform.Payment', {
     bodyPadding:"0 0 0 0",
 
     // optional override of the title to be used in Tabs.
-    tabTitle:"Payments",
+    tabTitle: 'Payments',
 
     layout: {
         type: 'vbox',
@@ -58,6 +58,7 @@ Ext.define('Taco.view.order.subform.Payment', {
                 }
             }),
             me.addPaymentButton = Ext.widget('splitbutton', {
+                menuAlign: 'tr-br?',
                 text: 'Add Payment',
                 handler: function() {
                     var action = me.paymentActions.addCreditCard;
@@ -146,7 +147,6 @@ Ext.define('Taco.view.order.subform.Payment', {
                 flex: 1
             }, {
                 xtype: 'taco.menucolumn',
-                text: 'Actions',
                 menuItems: [{
                     text: 'Resend Email',
                     menuColumnHandler: function (item, eventData) {
@@ -282,8 +282,7 @@ Ext.define('Taco.view.order.subform.Payment', {
             canAddPayment = orderStatus !== 'Completed' && orderStatus !== "PendingReview",
             paymentStatus = me.record.get('paymentStatus');
         
-        this.setHeaderTitle('<span class="label">Status:</span><span data-handle="order-payment-status">' + paymentStatus + '</span>');
-
+        this.setHeaderTitleStatus('Payments', paymentStatus);
         Ext.Object.each(me.paymentActions, function(k, paymentAction) {
             paymentAction.setDisabled(!canAddPayment);
         });

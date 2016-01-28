@@ -35,6 +35,7 @@ Ext.define('Taco.view.generalSettings.subform.About', {
         
         me.timeFormatSelect = {
             xtype: 'selectfield',
+            itemId: 'timeFormat',
             name: 'siteTimeFormat',
             fieldLabel: 'Time format',
             valueField: 'value',            
@@ -60,6 +61,7 @@ Ext.define('Taco.view.generalSettings.subform.About', {
 
         me.timeZoneSelect = {
             xtype: 'selectfield',
+            itemId: 'siteTimeZone',
             name: 'siteTimeZone',
             fieldLabel: 'Time zone',
             valueField: 'name',
@@ -88,6 +90,7 @@ Ext.define('Taco.view.generalSettings.subform.About', {
 
         me.channelCombo = Ext.create('Ext.form.field.ComboBox', {
             name: 'channelId',
+            itemId: 'channelId',
             flex:1,
             fieldLabel: 'Channel',
             editable: false,
@@ -138,6 +141,7 @@ Ext.define('Taco.view.generalSettings.subform.About', {
         this.items = [
             {
                 xtype: 'textfield',
+                itemId: 'websiteName',
                 name: 'websiteName',
                 fieldLabel: 'Web Site Name',
                 width:"100%"
@@ -159,6 +163,7 @@ Ext.define('Taco.view.generalSettings.subform.About', {
                     me.channelCombo,
                     {
                         xtype: "editabledisplayfield",
+                        itemId: 'catalogName',
                         name: "catalogName",
                         fieldLabel: "Catalog",
                         value: Taco.app.context.findCatalog(Taco.app.context.getSite().catalogId).name,
@@ -174,6 +179,7 @@ Ext.define('Taco.view.generalSettings.subform.About', {
                 items: [
                     {
                         xtype: "textfield",
+                        itemId: 'mozuHostedStoreFront',
                         //name:"isWebSite",
                         fieldLabel: "Mozu Hosted Store Front",
                         margin: "0 4 0 0",
@@ -185,17 +191,22 @@ Ext.define('Taco.view.generalSettings.subform.About', {
                     {
                         xtype: 'container',
                         layout: 'hbox',
-                        items:[
-                            Taco.core.ux.TooltipLabel.wrapConfig('settings.general.customCdn', this, {
+                        items:[{
                                 xtype: 'textfield',
+                                itemId: 'customCdnHostName',
                                 name: 'customCdnHostName',
                                 itemId: 'customCdnHostName',
                                 fieldLabel: 'CDN Domain',
                                 emptyText: Taco.cdnPrefix,
-                                flex: 1
-                            }, Ext.id()),
-                            
-                            Taco.core.ux.TooltipLabel.wrapConfig('settings.general.bustCdnCache', this, {
+                                flex: 1,
+                                tooltip: Ext.create('Taco.core.ux.content.Tooltip', {
+                                    elementId: 'customCdnHostName',
+                                    hoverTarget: 'label',
+                                    messageKey: 'settings.general.customCdn',
+                                    offsetLeft: -110,
+                                    arrowPosition: 'left'
+                                })
+                            }, {
                                 xtype: 'fieldcontainer',
                                 fieldLabel: 'Bust CDN Cache',
                                 margin: '0 0 0 5',
@@ -213,7 +224,7 @@ Ext.define('Taco.view.generalSettings.subform.About', {
                                         me.record.save({
                                             success:function() {
                                                 me.setLoading(false);
-                                                Taco.app.fireEvent('setgrowl', 'Cache Busted', 'info', 1000);
+                                                Taco.app.fireEvent('setmessage', 'Cache Busted', 'success');
                                             },
                                             failure: function() {
                                                 me.setLoading(false);
@@ -221,26 +232,49 @@ Ext.define('Taco.view.generalSettings.subform.About', {
                                             }
                                         });
                                     }
-                                }]
+                                }],
+                                itemId: 'bust-cdn-cache-button',
+                                tooltip: Ext.create('Taco.core.ux.content.Tooltip', {
+                                    elementId: 'bust-cdn-cache-button',
+                                    hoverTarget: 'bodyEl',
+                                    messageKey: 'settings.general.bustCdnCache',
+                                    offsetLeft: 20,
+                                    offsetTop: 15
+                                })
                         
-                            }, Ext.id())
+                            }
                         ],
                         flex: 1
                     
-                        
                     },
+                   {
+                       xtype: 'hiddenfield',
+                       name: 'cdnCacheBustKey',
+                       itemId:'cdnCacheBustKey'
+                   }
                 ]
             },             
             {
                 xtype: 'container',
                 layout: 'hbox',
-                items: [Taco.core.ux.TooltipLabel.wrapConfig('settings.general.missingImage', this, {
-                    fieldLabel: 'Substitute for Missing Images',
-                    name: 'missingImageSubstitute',
-                    allowMulti:false,
-                    xtype: 'taco.imagefield',
-                    height:250   //for some reason the links get clipped if you dont set this
-                })]
+                items: [
+                    {
+                        fieldLabel: 'Substitute for Missing Images',
+                        itemId: 'missingImageSubstitute',
+                        name: 'missingImageSubstitute',
+                        allowMulti:false,
+                        xtype: 'taco.imagefield',
+                        height: 250,   //for some reason the links get clipped if you dont set this
+                        tooltip: Ext.create('Taco.core.ux.content.Tooltip', {
+                            elementId: 'missingImageSubstitute',
+                            hoverTarget: 'label',
+                            messageKey: 'settings.general.missingImage',
+                            offsetLeft: -190,
+                            
+                            arrowPosition: 'left'
+                        })
+                    }
+                ]
             }
             
 

@@ -1,89 +1,126 @@
 /**
  * @class Taco.view.productRanking.Keyword
 */
-/**
- * @class Taco.view.productRanking.Keyword
-*/
 Ext.define('Taco.view.productRanking.grid.Keyword', {
-    extend: 'Taco.core.ux.grid.PagedMemoryGrid',
+    extend: 'Taco.core.ux.grid.Panel',
     requires: [
-        'Taco.model.ProductRanking'
+        'Ext.data.proxy.Memory',
+        'Taco.model.ProductRanking',
+        'Taco.core.ux.grid.plugins.AutoSelect'
     ],
 
-    //stylizes the grid for use inside of a subform
-    ui: "subform-section",  // ""subform", "subform-subform", "subform-section", "subform-section-child" 
+    minHeight: 260,
+    useWhiteContainer:true,
+    
+    launchEditorOnClick:false,
 
-    title:"Keywords",
+    enableNavHeader: true,
 
-    // adds border to the grid;
-    bodyStyle: "border-width:1px",
+    emptyText:'No Keywords',
 
-    sorters: ["keyword"],
+    // adds the 'taco-content-navcontainer-padding' class
+    // Will add the 20px padding needed for display in the contentView as part of the NavHeader code;
+    addContentViewPadding: false,
 
-    /*
-     *  Controls whether the action column is added to the column collection.     
-     */
+    multiSelect: true,
+
+    enableSearch: true,
+    enablePaging: false,
+    enableRowEditing: false,
+    defaultRowEditingData: {
+    },
+    enableAutoSelect: false,
+    createButtonEnabled: false,
+    saveButtonEnabled: false,
+    cancelButtonEnabled: false,
+
     showActionsColumn: true,
 
-    /*
-     * the model you are displaying in the grid. this will be used to determine requiredBehaviors permissions.
-     *  Example 
-     *  requiredBehaviorsModel: 'Taco.model.CouponSet'
-     */
-    requiredBehaviorsModel: "",
+    hideSearchToolbar: false,
 
-    /* 
-     *show the default edit action in the actions and context menu;
-     */
-    enableEditAction: false,
+    title: false,
 
-    /* 
-     *show the default delete action in the actions and context menu;
-     */
-    enableDeleteAction: true,
+    pageSize: 5,
 
-    /* 
-     *show the default delete action in the actions and context menu;
-     */
-    enableDeleteAllAction: true,
+    autoScroll: false,
 
-    // often overwritten as Remove All or Delete All.
-    deleteAllActionText: "Remove All",
+    enableQuickFilters:false,
 
-    deletePromptMsg: "Are you sure you want to remove this?",
+    confirmDelete: false,
 
-    deletePromptTitle: "Remove",
+    advancedSearchConfig : {
+        disableAdvancedSearch: true
+    },
 
-    idProperty : "keyword",
+    disableAdvancedSearch: true,
 
-    model : "Taco.model.KeywordModel",
+    onCreate: Ext.emptyFn,
+    stateful: false,
+    record: null,
+    filterProperty: 'keyword',
+
+    mixins: {
+        deleteFromGrid: 'Taco.core.ux.mixins.DeleteFromGrid',
+        pageable: 'Taco.core.ux.mixins.Pageable',
+        searchable: 'Taco.core.ux.mixins.Searchable',
+        gridcontextmenu: 'Taco.core.ux.mixins.GridContextMenu'
+    },
+
+    statics: {
+        
+    },
 
     initComponent: function () {
+
         var me = this;
 
-        me.getSelectionModel().preventFocus = true;
+        this.store = this.getKeywordStore(this.formatRecords());
+
+        me.dockedItems = me.dockedItems || [];
+        me.mixins = me.mixins || [];
+
+        this.columns = Ext.Array.clone(this.getColumnConfig());
+
+        // this plugin will auto select the first record in the grid and manage reselection of the selected item after a store load
+        if (this.enableAutoSelect !== false) {
+            this.plugins = this.plugins || [];
+            this.plugins.push(Ext.create('Taco.core.ux.grid.plugins.AutoSelect'));
+        }
+
+
+        // initialize the delete mixin
+        this.mixins.deleteFromGrid.init.apply(this);
+
+        if (me.enablePaging) {
+            // initialize the grid paging toolbar mixin
+            this.mixins.pageable.constructor.apply(this);
+        }
+
         
-        // should consider putting this in the model folder if this is going to become 
-        var keywordModel = Ext.define('Taco.model.KeywordModel', {
+        me.initQuickAddBar();
+
+        me.callParent(arguments);
+
+        this.mixins.gridcontextmenu.constructor.apply(this);
+
+        me.addDocked(me.quickAddBar, 'top');
+
+    },
+
+    formatRecords: function() {
+
+        Ext.define('KeywordModel', {
             extend: 'Ext.data.Model',
             fields: [{
                 name: 'keyword',
                 type: 'string'
             }],
             idProperty: 'keyword'
-        });        
+        });
 
-        this.data = this.record.get('keywordObjects')
-        
-        me.dockedItems = me.dockedItems || [];        
-        
-        me.initQuickAddBar();
-
-        me.callParent(arguments);
-
-
-        me.addDocked(me.quickAddBar, 'top');
-
+        return Ext.Array.map(this.record.get('keywordObjects'), function(rec) {
+            return Ext.create('KeywordModel', rec);
+        });
     },
 
     onQuickAdd: function () {
@@ -94,21 +131,27 @@ Ext.define('Taco.view.productRanking.grid.Keyword', {
             valueArray = (value) ? value.split(/[,]+/) : [],
             recordsToAdd =[],
 
+            findExisting = function(val) {
+                return me.store.find(me.filterProperty, val, 0, false, false, true) !== -1;
+            };
+
         valueArray = Ext.Array.clean(valueArray);
         if (valueArray.length === 0) {
             return;
         }
 
         Ext.Array.each(valueArray, function(val) {
-            recordsToAdd.push({ 'keyword': val });
+            if (!findExisting(val)) {
+                recordsToAdd.push(Ext.create('KeywordModel', {'keyword':val}));
+            }
         });
 
         if (recordsToAdd.length === 0) {
+            //selectFirstKeywordAdded(valueArray[0]);
             field.reset();
             field.focus(false, 200);
         }
-
-        var addedRecords = this.getStore().add(recordsToAdd);
+        this.getStore().add(recordsToAdd);
         field.reset();
         field.focus(false, 200);
     },
@@ -120,7 +163,7 @@ Ext.define('Taco.view.productRanking.grid.Keyword', {
                 xtype: 'textfield',
                 flex: 1,
                 margin: '0 10 0 0',
-                emptyText: 'Type keywords here and press ENTER or click Add button',
+                emptyText: 'Type Keywords Here',
                 listeners: {
                     scope: me,
                     specialkey: function (field, e) {
@@ -175,19 +218,71 @@ Ext.define('Taco.view.productRanking.grid.Keyword', {
                 flex: 3,
                 minWidth: 100,
                 sortable: true
+            }, {
+                xtype: 'taco.menucolumn',
+                flex: 1,
+                menuItems: [
+                    {
+                        text: 'Remove',
+                        itemId: 'removeMenuItem',
+                        // deleteMenuColumnHandler can be found in Taco.core.ux.mixins.DeleteFromGrid
+                        menuColumnHandler: 'deleteMenuColumnHandler',
+                        //requiredBehaviors: {
+                        //    model: 'Taco.model.Discount',
+                        //    behavior: 'delete'
+                        //},
+                        scope: me
+                    }, {
+                        text: 'Remove All',
+                        itemId: 'removeAllMenuItems',
+                        menuColumnHandler: function() {
+                            me.store.removeAll();
+                        },
+                        scope: me
+                    }
+                ]
             }
         ];
     },
 
+    doDelete: function (records) {
 
-    // itereate all of the rcords and pluck out just the keyword members and push them into an array.
-    getValues: function () {
-        var me = this,
-            values = this.callParent(arguments);
+        Ext.Array.each(records, function(rec) {
+            rec.store.remove(rec);
+        });
 
-        return Ext.Array.map(values, function (row) {
+        this.getView().refresh();
+        this.onDeleteSuccess();
+        this.record.setDirty();
+    },
+
+    onDeleteSuccess: function () {
+        this.gridPager.doRefresh();
+    },
+
+    launchEditor: Ext.emptyFn,
+
+    getValues: function() {
+        return Ext.Array.map(this.store.data.items, function(row) {
             return row.get('keyword');
         }, this);
+    },
+
+    getKeywordStore: function (records) {
+        return Ext.create('Ext.data.Store', {
+            storeId: 'keywordStore',
+            autoLoad: false,
+            model: 'KeywordModel',
+            sorters: ['keyword'],
+            fields: ['keyword'],
+            data: records,
+            proxy: {
+                type: 'memory',
+                reader: {
+                    type: 'json'
+                }
+            }
+        });
     },
 
     /**

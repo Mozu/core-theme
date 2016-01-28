@@ -29,7 +29,24 @@ Ext.define('Taco.view.order.Split', {
     createButtonEnabled: true,
     saveButtonVisible: false,
     cancelButtonVisible: false,
-    
+
+    parentTitleCfg: {
+        title: 'Orders',
+        controller: 'orders',
+        pillText: 'orderStatus',
+        pillType: function (text) {
+            var type = (text === 'Processing').toString();
+
+            if (text === 'Cancelled' || text === 'Errored') {
+                type = 'error';
+            }
+
+            return type;
+        }
+    },
+
+    enableQuickFilters: true,
+
     statics: {
         eastConfigs: {
             placeholder: {
@@ -76,7 +93,6 @@ Ext.define('Taco.view.order.Split', {
             header: false, // hides the header (the title)
             addContentViewPadding: false,
             enableNavHeader: false, // disables the navHeader Mixin
-            launchEditorOnClick: false, // this disables the default behavior in the LaunchEditor Mixin
             listeners: {
                 itemkeydown: {
                     scope: this,
@@ -89,9 +105,14 @@ Ext.define('Taco.view.order.Split', {
                 itemclick: {
                     scope: this,
                     fn: function (grid, record, row, index, e, opts) {
+                        
+                        if (window.getSelection().toString()) { // if the user has highlighted text, do not launch editor
+                            return;
+                        }
                         if (!e.getTarget('.' + Taco.core.ux.grid.MenuColumn.prototype.iconCls) &&
                             !e.getTarget('.' + Taco.core.ux.grid.MenuColumn.prototype.tdCls) &&
                             !e.getTarget('.x-grid-cell-row-checker')) {
+                            //this.makeActive(row);
                             this.onSelectRecord(record);
                         }
                     }
@@ -106,6 +127,8 @@ Ext.define('Taco.view.order.Split', {
                 }
             }
         });
+
+        Ext.apply(this, { advancedSearchConfig: this.orderList.advancedSearchConfig });
 
         this.createButtonCfg = this.orderList.getCreateButtonConfig();
 
@@ -135,8 +158,21 @@ Ext.define('Taco.view.order.Split', {
 
 
         // }, this, {single: true});
-       
+    
+        // this.on('afterlayout', function() {
+        //     if (!window.location.href.indexOf('/edit/') !== -1) {
+
+        //     }
+        // })
         
+    },
+
+    makeActive: function(row) {
+        var selectedClass = Ext.baseCSSPrefix + 'grid-row-selected';
+        Ext.each(document.querySelectorAll('.'+selectedClass), function(item) {
+            item.className = item.className.replace(selectedClass, '').trim();
+        });
+        row.className += ' ' + selectedClass;
     },
 
     createActionHandler: function () {
@@ -190,7 +226,6 @@ Ext.define('Taco.view.order.Split', {
 
     handleAddToEast: function (ct, cmp) {
         this.editor = cmp;
-        this.updateSplitTitle();
 
         if (this.getRecord()) {
             this.mon(this.editor, {
@@ -233,6 +268,7 @@ Ext.define('Taco.view.order.Split', {
                 me.superclass.onRecordChange.apply(me,args);
 
                 me.showAndHideSplitActions();
+
                 me.updateSplitTitle();
 
                 Ext.resumeLayouts(true);
@@ -240,6 +276,7 @@ Ext.define('Taco.view.order.Split', {
             });
         } else {
 
+            this.updateSplitTitle();
 
             Ext.suspendLayouts();
 
@@ -248,7 +285,6 @@ Ext.define('Taco.view.order.Split', {
             this.callParent(arguments);
 
             this.showAndHideSplitActions();
-            this.updateSplitTitle();
 
             Ext.resumeLayouts(true);
         }
@@ -336,7 +372,7 @@ Ext.define('Taco.view.order.Split', {
                 toolbar.remove(id);
             }
 
-            toolbar.insert(index + 2, button);
+            toolbar.insert(index + 3, button);
         }, this);
 
         // clean up the managed listener
@@ -350,8 +386,6 @@ Ext.define('Taco.view.order.Split', {
 
     handleChildCollapseExpand: function (panel) {
         this.callParent(arguments);
-
-        this.updateSplitTitle();
 
         if (panel.getItemId() === 'west' && !panel.getCollapsed() && !this.getSplit()) {
             panel.on({
@@ -370,11 +404,15 @@ Ext.define('Taco.view.order.Split', {
         var activeTitle = this.getWestTitle() || 'Records';
 
         if (record && !eastCollapsed) {
-            activeTitle = '<a href="/admin/orders" class="taco-content-header-title-root">' + activeTitle + '</a> / Order #' + record.get('orderNumber');
+            activeTitle = '#' + record.get('orderNumber');
+            Ext.suspendLayouts();
+            this.setTitle(activeTitle);
+            Ext.resumeLayouts();
         }
 
-        Ext.suspendLayouts();
-        this.setTitle(activeTitle);
-        Ext.resumeLayouts();
+        else {
+            this.setTitle('Orders');
+        }
+
     }
 });

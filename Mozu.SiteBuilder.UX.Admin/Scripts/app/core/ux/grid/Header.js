@@ -25,12 +25,21 @@ Ext.define('Taco.core.ux.grid.Header', {
 
         if (!me.menu) {
             me.menu = new Ext.menu.Menu({
+                cls: Taco.baseCSSPrefix + 'header-menu',
                 hideOnParentHide: false,
                 header: false,
-                minWidth: 150,
                 shadow: false,
                 showSeparator: false,
-                items: me.getMenuItems()
+                items: me.getMenuItems(),
+                layout: {
+                    type: 'vbox',
+                    align: 'stretchmax'
+                },
+                autoScroll: true,
+                listeners: {
+                    hide: me.onMenuHide,
+                    scope: me
+                }
             });
             me.updateMenuDisabledState();
             me.fireEvent('menucreate', me, me.menu);
@@ -45,7 +54,26 @@ Ext.define('Taco.core.ux.grid.Header', {
             if (me.menu && me.menu.isVisible()) {
                 me.menu.hide();
             } else {
-                me.showMenuBy(t, header);
+                // inlined from Container.js showMenuBy to allow us to adjust the showBy offset
+                var menu = this.getMenu(),
+                    ascItem  = menu.down('#ascItem'),
+                    descItem = menu.down('#descItem'),
+                    sortableMth;
+
+                // Use ownerButton as the upward link. Menus *must have no ownerCt* - they are global floaters.
+                // Upward navigation is done using the up() method.
+                menu.activeHeader = menu.ownerButton = header;
+                header.setMenuActive(true);
+
+                // enable or disable asc & desc menu items based on header being sortable
+                sortableMth = header.sortable ? 'enable' : 'disable';
+                if (ascItem) {
+                    ascItem[sortableMth]();
+                }
+                if (descItem) {
+                    descItem[sortableMth]();
+                }
+                menu.showBy(t, 'tr-br', [0, 5]);
             }
         }
     }

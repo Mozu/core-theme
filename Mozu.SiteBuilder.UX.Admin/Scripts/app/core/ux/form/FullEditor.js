@@ -142,11 +142,10 @@
     },
 
     doSave: function () {
-        
         if (this.form && this.form.save) {
             this.form.save();
         } else {
             console.log("Warning: this class expects a doSave method if there is no form defined;")
         }
-    }    
+    }
 });

@@ -16,11 +16,11 @@ Ext.define('Taco.controller.Navigation', {
         'Taco.model.NavigationItem2'
     ],
     
-    views: ['navigation.PrimaryMenu'],
+    views: ['navigation.PrimaryMenuContainer'],
 
     refs: [{
-        ref: 'primaryMenu',
-        selector: '#primaryMenu'
+        ref: 'primaryMenuContainer',
+        selector: '#primaryMenuContainer'
     }],
 
     init: function () {
@@ -28,7 +28,8 @@ Ext.define('Taco.controller.Navigation', {
 
         if (!store.getCount()) return store.on('load', this.init, this);
 
-        this.bindPrimaryMenu();
+        Taco.app.NavigationStore = store;
+        //this.bindPrimaryMenu();
 
         this.callParent(arguments);
 
@@ -38,20 +39,24 @@ Ext.define('Taco.controller.Navigation', {
         });
     },
 
-    bindPrimaryMenu: function () {
-        var pm = this.getPrimaryMenu();
-
-        if (!pm) {
-            return;
-        }
-        pm.bindStore(this.getNavigationStore());
-    },
+    //bindPrimaryMenu: function () {
+    //    var pm = this.getPrimaryMenuContainer(),
+    //        navStore = this.getNavigationStore();
+    //
+    //    // if the primary menu hasnt been instantiated, preserve the navstore
+    //    if (!pm) {
+    //        Taco.app.NavigationStore = navStore;
+    //        return false;
+    //    }
+    //    //pm.bindStore(navStore);
+    //},
 
     onStateChange: function (appState) {
-        var pm = this.getPrimaryMenu();
+        var pm = this.getPrimaryMenuContainer();
 
         if (!pm) return;
 
+        pm.hideMenu();
         pm.onStateChange(appState);
     }
 });

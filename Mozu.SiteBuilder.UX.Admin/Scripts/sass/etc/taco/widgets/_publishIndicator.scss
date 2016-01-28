@@ -6,7 +6,7 @@
         .#{$prefix}btn-wrap {
         	.#{$prefix}btn-button {
         		.#{$prefix}btn-glyph {
-        			font-size: 12px;
+        			font-size: $pill-font;
         			margin-top: 1px;
         		}
         	}

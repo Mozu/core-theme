@@ -3,7 +3,30 @@
 		.#{$prefix}panel-header-text-container {
 			font-size: 20px;
 		}
+
+        .#{$prefix}grid-view-default,
+        .#{$prefix}grid-header-ct,
+        .#{$prefix}grid-cell-first {
+            background-color: $card-button-bg;
+        }
 	}
+
+    .#{$prefix}btn-toolbar {
+        .#{$prefix}btn-wrap {
+            &.#{$prefix}btn-split {
+                &.#{$prefix}btn-split-right {
+                    &:after {
+                        border-left-color: $light-border-gray;
+                        content: $glyph-chevrondown;
+                        color: $card-btn-text-color;
+                        font-size: $tag-font;
+                        padding-top: 12px;
+                        right: -13px;
+                    }
+                }
+            }
+        }
+    }
 
     .seperator {
         color: $color-neutral-80;
@@ -23,7 +46,7 @@
     .orderform-payment-paymentDetails {
         & > div {
             float: left;
-            width: 50%;
+            width: 30%;
             box-sizing: border-box;
             padding-right: 20px;
         }
@@ -67,7 +90,7 @@
             padding: 10px;
         }
 
-        .taco-history-collapsable {
+        .#{$vprefix}history-collapsable {
             .payment-transaction {
                 margin-left: 40px;
             }

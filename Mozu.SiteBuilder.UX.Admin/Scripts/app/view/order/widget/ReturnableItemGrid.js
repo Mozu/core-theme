@@ -11,7 +11,7 @@ Ext.define('Taco.view.order.widget.ReturnableItemGrid', {
 
     viewConfig: {
         deferEmptyText: false,
-        stripeRows:false,
+        stripeRows: false,
         emptyText: "No items availabe to return",
         getRowClass: function(record) {
             return record.get('parentBundleName') && "taco-returnableitem-bundled" || '';
@@ -97,11 +97,11 @@ Ext.define('Taco.view.order.widget.ReturnableItemGrid', {
                 text: 'Line',
                 draggable: false,
                 resizable: true,
-                width: 50,
+                width: 60,
                 sortable: false,
                 menuDisabled: true,
                 hidden: false,
-                align: 'center',
+                align: 'left',
                 dataIndex: 'orderLineId'
             }, {
                 dataIndex: 'productCode',
@@ -129,7 +129,7 @@ Ext.define('Taco.view.order.widget.ReturnableItemGrid', {
                 text: 'Status',
                 draggable: false,
                 resizable: true,
-                width: 120,
+                width: 150,
                 sortable: false,
                 menuDisabled: true,
                 hidden: false,
@@ -145,9 +145,9 @@ Ext.define('Taco.view.order.widget.ReturnableItemGrid', {
                 width: 100,
                 editor: {
                     xtype: 'combobox',
+                    queryMode: 'local',
                     allowOnlyWhitespace: false,
                     showBorder: true,
-                    editable: false,
                     forceSelection: true,
                     store: ['Replace', 'Refund']
                 }
@@ -158,13 +158,12 @@ Ext.define('Taco.view.order.widget.ReturnableItemGrid', {
                 sortable: false,
                 resizable: false,
                 menuDisabled: true,
-                width: 100,
+                width: 175,
                 editor: {
                     xtype: 'combobox',
+                    queryMode: 'local',
                     showBorder: true,
                     allowOnlyWhitespace: false,
-                    showBorder: true,
-                    editable: false,
                     forceSelection: true,
                     valueField: 'name',
                     displayField: 'name',
@@ -193,7 +192,7 @@ Ext.define('Taco.view.order.widget.ReturnableItemGrid', {
                 sortable: false,
                 resizable: false,
                 menuDisabled: true,
-                width: 100
+                width: 110
             }, {
                 dataIndex: 'quantity',
                 text: 'Qty to Return',

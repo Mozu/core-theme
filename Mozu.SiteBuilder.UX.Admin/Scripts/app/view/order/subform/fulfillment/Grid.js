@@ -96,6 +96,7 @@ Ext.define('Taco.view.order.subform.fulfillment.Grid', {
 
             this.on('viewready', function() {
                 this.getSelectionModel().selectAll(true);
+                this.getSelectionModel().setLastFocused(null);
             });
 
             this.selModel = Ext.create('Ext.selection.CheckboxModel', {
@@ -131,11 +132,11 @@ Ext.define('Taco.view.order.subform.fulfillment.Grid', {
             text: 'Line',
             draggable: false,
             resizable: true,
-            width: 50,
+            width: 140,
             sortable: false,
             menuDisabled: true,
             hidden: false,
-            align: 'center',
+            align: 'left',
             dataIndex: 'lineId'
         }, {
             text: 'Code',
@@ -256,11 +257,13 @@ Ext.define('Taco.view.order.subform.fulfillment.Grid', {
 
     buildMoveMenu: function() {
 
-        this.moveMenuAction = Ext.create('Ext.button.Button', {
+        this.moveMenuAction = Ext.widget('button', {
             ui: 'action',
             scale: 'medium',
-            margin: '0 2 0 0',
+            margin: '0 2px 0 0',
+            cls: 'fulfillment-move-to',
             text: 'Move to',
+            menuAlign: 'tr-br?',
 
             listeners: {
                 menushow: function(button, menu) {

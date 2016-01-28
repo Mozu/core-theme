@@ -5,6 +5,7 @@ Ext.define('Taco.view.storeCredit.Edit', {
         'Taco.core.ux.form.ResendEmailButton'
     ],
     formCls: 'Taco.view.storeCredit.Form',
+    enableSearchBarInHeader: false,
     initComponent: function () {
         var me = this;
 
@@ -19,5 +20,9 @@ Ext.define('Taco.view.storeCredit.Edit', {
         //}];
 
         this.callParent(arguments);
-    }
+    },
+    parentTitleCfg: {
+        title: 'Store Credits',
+        controller: 'storecredits'
+    },
 });

@@ -22,13 +22,9 @@ $compile-all: false;
 
 // colors and fonts
 $color: $color-framework-black;
-$font-size: 16px;
+$font-size: 13px;
 
-$font-family: "SourceSansProRegular", helvetica, arial, verdana, sans-serif;
-
-//$font-family: "MyriadWebProRegular", helvetica, arial, verdana, sans-serif;
-
-$font-size: 16px !default;
+$font-family: proxima-nova, helvetica, arial, verdana, sans-serif;
 
 $base-color: $color-neutral-90;
 

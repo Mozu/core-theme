@@ -24,6 +24,8 @@ Ext.define('Taco.view.discount.Grid', {
         deleteFromGrid: 'Taco.core.ux.mixins.DeleteFromGrid'
     },
 
+    enableAutoSelect: false,
+
     
 
     //contextConfig: {
@@ -47,10 +49,9 @@ Ext.define('Taco.view.discount.Grid', {
     // Will add the 20px padding needed for display in the contentView as part of the NavHeader code;
     addContentViewPadding: true,
 
-    enableSearch: true,
+    enableSearch: false,
     enablePaging: true,
     enableRowEditing: false,
-    enableAutoSelect: true,
     createButtonEnabled: true,
     saveButtonEnabled: false,
     cancelButtonEnabled: false,
@@ -84,7 +85,9 @@ Ext.define('Taco.view.discount.Grid', {
             [{ orderStatus: 'Cancelled' }, 'Cancelled Orders'],
             [{ orderStatus: 'Errored' }, 'Errored Orders'],
             [{}, 'All Orders']
-        ]
+        ],
+
+        emptySearchText: 'Search'
     },
 
     onCreate: Ext.emptyFn,
@@ -327,7 +330,6 @@ Ext.define('Taco.view.discount.Grid', {
         if (actions.length) {
             actionColumn = {
                 xtype: 'taco.menucolumn',
-                text: 'Actions',
                 onMenuShow: me.onActionMenuShow,
                 menuItems: actions
             }

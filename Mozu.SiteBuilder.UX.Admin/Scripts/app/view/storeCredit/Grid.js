@@ -28,10 +28,10 @@ Ext.define('Taco.view.storeCredit.Grid', {
     // Will add the 20px padding needed for display in the contentView as part of the NavHeader code;
     addContentViewPadding: true,
 
-    enableSearch: true,
+    enableSearch: false,
     enablePaging: true,
     enableRowEditing: false,
-    enableAutoSelect: true,
+    enableAutoSelect: false,
     createButtonEnabled: true,
     saveButtonEnabled: false,
     cancelButtonEnabled: false,
@@ -66,7 +66,9 @@ Ext.define('Taco.view.storeCredit.Grid', {
             //[{ orderStatus: 'Cancelled' }, 'Cancelled Orders'],
             //[{ orderStatus: 'Errored' }, 'Errored Orders'],
             //[{}, 'All Orders']
-        ]
+        ],
+
+        emptySearchText: 'Search'
     },
 
     onCreate: Ext.emptyFn,
@@ -243,7 +245,6 @@ Ext.define('Taco.view.storeCredit.Grid', {
         if (this.enableActionColumn) {
             columns.push({
                 xtype: 'taco.menucolumn',
-                text: 'Actions',
                 onMenuShow: function(menu, eventData) {
                     var customerMenu = menu.items.get('customerMenu');
                     customerMenu.setVisible(eventData.record.get('customer'));

@@ -173,7 +173,8 @@ Ext.define('Taco.view.customers.Segments.AddRemoveModal', {
     },
 
     advancedSearchConfig: {
-        advancedFormCls: 'Taco.view.customers.AdvancedSearchForm'
+        advancedFormCls: 'Taco.view.customers.AdvancedSearchForm',
+        emptySearchText: 'Search'
     },
 
     allowCreate: function () {

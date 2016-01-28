@@ -7,7 +7,7 @@ Ext.define('Taco.view.discount.GeneralForm', {
     extend: 'Taco.core.ux.form.Form',
     alias: 'widget.taco-discount-general',
     require: [
-        'Taco.core.ux.TooltipLabel'
+        'Taco.core.ux.content.Tooltip'
     ],
     ui: 'subform',
     margin: '0 0 39 0',
@@ -32,7 +32,7 @@ Ext.define('Taco.view.discount.GeneralForm', {
             enableFont: false,
             fieldLabel: 'Description',
             name: 'friendlyDescription',
-            width: 600,
+            width: 712,
             height: 120,
 
             listeners: {
@@ -56,8 +56,7 @@ Ext.define('Taco.view.discount.GeneralForm', {
 
         Ext.tip.QuickTipManager.init();
 
-        this.scopeTypeInput = Ext.create('Ext.form.field.ComboBox',
-            Taco.core.ux.TooltipLabel.wrapConfig('discount.general.scope', me, {
+        this.scopeTypeInput = Ext.create('Ext.form.field.ComboBox', {
             name: 'scope',
             fieldLabel: "Applies To",
             labelAlign: 'top',
@@ -66,6 +65,7 @@ Ext.define('Taco.view.discount.GeneralForm', {
             forceSelection: true,
             displayField: 'text',
             valueField: 'value',
+            itemId: 'appliesToField',
             width: 295,
             store: Ext.create('Ext.data.ArrayStore', {
                 fields: ['text', 'value'],
@@ -81,9 +81,14 @@ Ext.define('Taco.view.discount.GeneralForm', {
                     me.filterFixedPriceOptionWhenOrderProduct(newVal, null);
                 },
                 scope: me
-            }
+            },
+            tooltip: Ext.create('Taco.core.ux.content.Tooltip', {
+                elementId: 'appliesToField',
+                messageKey: 'discount.general.scope',
+                offsetLeft: -96,
+                arrowPosition: 'left'
             })
-        );
+        });
 
         this.targetTypeInput = Ext.create('Ext.form.field.ComboBox', {
             name: 'target',
@@ -130,27 +135,32 @@ Ext.define('Taco.view.discount.GeneralForm', {
             ]
         });
         
-        this.amountTypeInput = Ext.create('Ext.form.field.ComboBox',
-            Taco.core.ux.TooltipLabel.wrapConfig('discount.general.amountType', me, {
-                name: 'amountType',
-                fieldLabel: "Type",
-                labelAlign: 'top',
-                allowBlank: false,
-                editable: false,
-                forceSelection: true,
-                displayField: 'name',
-                valueField: 'value',
-                width: 295,
-                store: this.discountTypeData,
-                queryMode: 'local',
-                listeners: {
-                    change: function (cmp, newV, oldV) {
-                        this.updateAmountField();
-                    },
-                    scope: this
-                }
+        this.amountTypeInput = Ext.create('Ext.form.field.ComboBox', {
+            name: 'amountType',
+            itemId: 'amountType',
+            fieldLabel: "Type",
+            labelAlign: 'top',
+            allowBlank: false,
+            editable: false,
+            forceSelection: true,
+            displayField: 'name',
+            valueField: 'value',
+            width: 295,
+            store: this.discountTypeData,
+            queryMode: 'local',
+            listeners: {
+                change: function (cmp, newV, oldV) {
+                    this.updateAmountField();
+                },
+                scope: this
+            },
+            tooltip: Ext.create('Taco.core.ux.content.Tooltip', {
+                elementId: 'amountType',
+                messageKey: 'discount.general.amountType',
+                offsetLeft: -67,
+                arrowPosition: 'left'
             })
-        );
+        });
         
         var amountFieldLabel = "";
         switch (this.record.get("amountType")) {

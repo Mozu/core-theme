@@ -21,51 +21,11 @@ Ext.define('Taco.controller.Message', {
 
         me.application.on({
             setmessage: me.setMessage,
-            setgrowl: me.setGrowl,
+            dissmissmessages: me.destroyMessages,
             scope: me
         });
 
-        me.displayMessages = Ext.Function.createBuffered(function() {
-            var header = me.getHeader();
-
-            if (header && header.isComponent) {
-                header.addCls('taco-has-message');
-                header.updateLayout();
-            }
-
-            me.messages.each(function (item, index) {
-                var prevMessage;
-
-                if (index === 0) {
-                    item.show();
-                } else {
-                    prevMessage = me.messages.getAt(index - 1);
-
-                    if (prevMessage && prevMessage.rendered && !prevMessage.isHidden()) {
-                        item.y = prevMessage.getRegion().bottom + 25;
-                        item.show();
-                    }
-                }
-            }, me);
-        }, 300, me);
-
         me.callParent(arguments);
-
-        me.messages.on({
-            remove: {
-                scope: me,
-                fn: function () {
-                    if (me.messages.getCount() < 1) {
-                        var header = me.getHeader();
-
-                        if (header && header.isComponent) {
-                            header.removeCls('taco-has-message');
-                            header.updateLayout();
-                        }
-                    }
-                }
-            }
-        });
 
         Taco.core.StateManager.on({
             navigate: {
@@ -82,12 +42,29 @@ Ext.define('Taco.controller.Message', {
      * event has been fired.
      */
     destroyMessages: function () {
-        this.messages.each(function (item) {
-            item.close();
-            this.messages.remove(item);
-        }, this);
+        if (this.successMessageHandler) {
+            this.successMessageHandler.hideMessages();
+        }
+        if (this.errorMessageHandler) {
+            this.errorMessageHandler.hideMessages();
+        }
     },
 
+    getMessageHandler: function(message, type) {
+        return Ext.create(this.getTacoViewNotifierBarView(), {
+            messages: [ { msg: message } ],
+            messageType: type,
+            autoShow: true,
+            listeners: {
+                beforehide: {
+                    scope: this,
+                    fn: function (cmp) {
+                        this.messages.remove(cmp);
+                    }
+                }
+            }
+        });
+    },
     /**
      * Create a message dialog.
      *
@@ -96,48 +73,32 @@ Ext.define('Taco.controller.Message', {
      * @return {Taco.view.NotifierBar} The instantiated message dialog.
      */
     setMessage: function (message, type) {
-        var dialog;
-        dialog = Ext.create(this.getTacoViewNotifierBarView(), {
-            message: message,
-            messageType: type,
-            listeners: {
-                beforehide: {
-                    scope: this,
-                    fn: function (cmp) {
-                        this.messages.remove(cmp);
-                    }
+
+        switch (type) {
+
+            case 'success': 
+
+                if (!this.successMessageHandler) {
+                    this.successMessageHandler = this.getMessageHandler(message, type);
                 }
-            }
-        });
 
-        this.messages.add(dialog);
-
-        this.displayMessages();
-
-        return dialog;
-    },
-
-    setGrowl: function(message, type, duration) {
-        var growl;
-        
-        growl = Ext.create('Taco.view.Growl', {
-            message: message,
-            messageType: type,
-            duration: duration,
-            listeners: {
-                beforehide: {
-                    scope: this,
-                    fn: function (cmp) {
-                        this.messages.remove(cmp);
-                    }
+                else {
+                    this.successMessageHandler.addMessage({ msg: message });
                 }
-            }
-        });
+                break;
 
-        this.messages.add(growl);
+            case 'error': 
+                if (!this.errorMessageHandler) {
+                    this.errorMessageHandler = this.getMessageHandler(message, type);
+                }
+                else {
+                    this.errorMessageHandler.addMessage({ msg: message });
+                }
+                break;
 
-        this.displayMessages();
+            default: 
+                console.warn('This event type hasnt been established!');
 
-        return growl;
+        }
     }
 });

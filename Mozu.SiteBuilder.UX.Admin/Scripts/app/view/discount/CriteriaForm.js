@@ -7,7 +7,7 @@ Ext.define('Taco.view.discount.CriteriaForm', {
     extend: 'Taco.core.ux.form.Form',
     alias: 'widget.taco-discount-criteria',
     requires: [
-        'Taco.core.ux.TooltipLabel'
+        'Taco.core.ux.content.Tooltip'
     ],
     ui: 'subform',
     margin: '0 0 39 0',
@@ -86,10 +86,10 @@ Ext.define('Taco.view.discount.CriteriaForm', {
             }
         });
 
-        this.ApplyToProductsWithSalePrice = Ext.widget(
-            Taco.core.ux.TooltipLabel.wrapConfig('discount.criteria.applyToProductsWithSalePrice', me, {
+        this.ApplyToProductsWithSalePrice = Ext.widget({
                 xtype: 'checkbox',
                 name: 'appliesToSaleProduct',
+                itemId: 'applies-sale-products-check',
                 boxLabel: 'Applies to products on sale',
                 width: 300,
                 value: this.record.get('doesNotApplyToProductsWithSalePrice') !== true,
@@ -106,15 +106,22 @@ Ext.define('Taco.view.discount.CriteriaForm', {
                         this.record.setDirty(true);
                     },
                     scope: this
-                }
-            })
+                },
+                tooltip: Ext.create('Taco.core.ux.content.Tooltip', {
+                    elementId: 'applies-sale-products-check',
+                    hoverTarget: 'label',
+                    messageKey: 'discount.criteria.applyToProductsWithSalePrice',
+                    offsetLeft: 20,
+                    offsetTop: 15
+                })
+            }
         );
 
         // only visible when line item and product and when the this.ApplyToProductsWithSalePrice is checked;
-        this.appliesToSalePrice = Ext.widget(
-            Taco.core.ux.TooltipLabel.wrapConfig('discount.criteria.appliesToSalePrice', me, {
+        this.appliesToSalePrice = Ext.widget({
                 xtype: 'checkbox',
                 name: 'appliesToSalePrice',
+                itemId: 'applies-sale-price-check',
                 boxLabel: 'Applies to sale price',
                 width: 300,
                 value: this.record.get('doesNotApplyToSalePrice') !== true,
@@ -124,8 +131,15 @@ Ext.define('Taco.view.discount.CriteriaForm', {
                         this.record.setDirty(true);
                     },
                     scope: this
-                }
-            })
+                },
+                tooltip: Ext.create('Taco.core.ux.content.Tooltip', {
+                    elementId: 'applies-sale-price-check',
+                    hoverTarget: 'label',
+                    messageKey: 'discount.criteria.appliesToSalePrice',
+                    offsetLeft: 20,
+                    offsetTop: 15
+                })
+            }
         );
 
         catStore = this.record.getCategoryStore();
@@ -184,14 +198,21 @@ Ext.define('Taco.view.discount.CriteriaForm', {
             }
         });
 
-        this.includedCategoriesOperatorCheckbox = Ext.widget(
-            Taco.core.ux.TooltipLabel.wrapConfig('discount.criteria.includedCategoriesOperatorCheckbox', me, {
+        this.includedCategoriesOperatorCheckbox = Ext.widget({
                 xtype: 'checkbox',
                 name: 'isIncludedCategoriesAllOperator',
+                itemId: 'include-common-products-check',
                 boxLabel: 'Include only common products',
                 width: 300,
-                hidden: me.record.get('categories').length < 2
-            })
+                hidden: me.record.get('categories').length < 2,
+                tooltip: Ext.create('Taco.core.ux.content.Tooltip', {
+                    elementId: 'include-common-products-check',
+                    hoverTarget: 'label',
+                    messageKey: 'discount.criteria.includedCategoriesOperatorCheckbox',
+                    offsetLeft: 20,
+                    offsetTop: 15
+                })
+            }
         );
 
         //this.categoryMaxQuantityField = Ext.widget({
@@ -398,22 +419,29 @@ Ext.define('Taco.view.discount.CriteriaForm', {
 
         
         // note: only enabled when there is a buy item condition on the conditions subform;
-        this.maximumQuantityPerRedemptionTB = Ext.create('Ext.form.field.Number',
-            Taco.core.ux.TooltipLabel.wrapConfig('discount.criteria.maximumQuantityPerRedemption', me, {
+        this.maximumQuantityPerRedemptionTB = Ext.create('Ext.form.field.Number', {
                 name: 'maximumQuantityPerRedemptionTB',
+                itemId: 'max-qty-redemption-number',
                 emptyText: "Unlimited",
                 hideTrigger: true,
                 width: 600,
                 minValue: 0,
                 labelAlign: 'top',
-                fieldLabel: 'Quantity'
-            })
+                fieldLabel: 'Quantity',
+                tooltip: Ext.create('Taco.core.ux.content.Tooltip', {
+                    elementId: 'max-qty-redemption-number',
+                    hoverTarget: 'label',
+                    messageKey: 'discount.criteria.maximumQuantityPerRedemption',
+                    offsetLeft: -80,
+                    arrowPosition: 'left'
+                })
+            }
         );
 
         
 
-        this.excludeLineItemDiscounts = Ext.create('Ext.form.FieldContainer',
-            Taco.core.ux.TooltipLabel.wrapConfig('discount.criteria.excludeLineItemDiscounts', me, {
+        this.excludeLineItemDiscounts = Ext.create('Ext.form.FieldContainer', {
+                itemId: 'exclude-products-field-container',
                 width: 600,
                 margin: '10 0 0 0',
                 fieldLabel: "Exclude products that already have:",
@@ -431,19 +459,33 @@ Ext.define('Taco.view.discount.CriteriaForm', {
                         width: 300,
                         value: this.record.get('excludeItemsWithExistingShippingDiscounts') == true
                     }
-                ]
-            })
+                ],
+                tooltip: Ext.create('Taco.core.ux.content.Tooltip', {
+                    elementId: 'exclude-products-field-container',
+                    hoverTarget: 'label',
+                    messageKey: 'discount.criteria.excludeLineItemDiscounts',
+                    offsetLeft: -230,
+                    arrowPosition: 'left'
+                })
+            }
         );
 
-        this.scopeContainer = Ext.create('Ext.form.FieldContainer',
-            Taco.core.ux.TooltipLabel.wrapConfig('discount.criteria.scope', me, {
+        this.scopeContainer = Ext.create('Ext.form.FieldContainer', {
+                itemId: 'scope-field-container',
                 fieldLabel: "Scope",
                 items: [
                     this.includeSpecificProductsInput,
                     this.includeSpecificCatagoriesInput,
                     this.includeAllProductsInput
-                ]
-            })
+                ],
+                tooltip: Ext.create('Taco.core.ux.content.Tooltip', {
+                    elementId: 'scope-field-container',
+                    hoverTarget: 'label',
+                    messageKey: 'discount.criteria.scope',
+                    offsetLeft: -70,
+                    arrowPosition: 'left'
+                })
+            }
         );
 
         this.productCategoryContainer = Ext.create('Ext.container.Container', {

@@ -125,13 +125,13 @@ Ext.define('Taco.view.order.subform.Detail', {
             ui: "subform-section",
             title: "Customer Notes",
             margin: "0 0 20px 0 ",
-            bodyStyle: "padding:20px 0px 40px 0px ",            
+            bodyStyle: "padding:20px 0px 40px 0px ",
             tpl: [
                 '<div class="customerNote">',
                     '<tpl if="values.customerNote">',
                         '{customerNote:stripTags}',
                     '<tpl else>',
-                        'None available',
+                        '<span class="order-no-content">N/A</span>',
                     '</tpl>',
                 '</div>'
             ],

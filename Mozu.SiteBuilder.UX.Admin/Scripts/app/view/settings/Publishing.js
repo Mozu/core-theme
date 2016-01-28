@@ -158,25 +158,6 @@ Ext.define('Taco.view.settings.Publishing', {
                 }
             }, this);
 
-            //liveEditProductCheckbox = Ext.widget('checkboxfield',
-            //    Taco.core.ux.TooltipLabel.wrapConfig('settings.publishing.liveEdit', me, {
-            //        xtype: 'checkbox',
-            //        name: 'isLiveEditEnabled-' + masterCatalog.id,
-            //        itemId: 'isLiveEditEnabled-' + masterCatalog.id,
-            //        checked: isLiveEdit,
-            //        fieldLabel: 'Live Edit',
-            //        labelAlign: 'left',
-            //        labelWidth: 75,
-            //        disabled: isLiveProduct,
-            //        listeners: {
-            //            change: function (field) {
-            //                masterCatalog.updateProductPublishingMode(null, field.getValue());
-            //            },
-            //            scope: me
-            //        }
-            //    },  masterCatalog.id)
-            //);
-
             liveEditProductCheckbox = Ext.widget('checkboxfield',
                 {
                     xtype: 'checkbox',
@@ -197,18 +178,19 @@ Ext.define('Taco.view.settings.Publishing', {
                 }
             );
 
-            liveEditColumnHeading = Ext.widget('fieldcontainer',
-                Taco.core.ux.TooltipLabel.wrapConfig('settings.publishing.liveEdit', me, {
+            liveEditColumnHeading = Ext.widget('fieldcontainer', {
                     xtype: 'fieldcontainer',
-                    //name: 'isLiveEditEnabled-' + masterCatalog.id,
-                    //itemId: 'isLiveEditEnabled-' + masterCatalog.id,
-                    //checked: isLiveEdit,
                     fieldLabel: 'Live Edit',
-                    cellCls: 'header radio'
-                    //labelAlign: 'left',
-                    //labelWidth: 75,
-                    //disabled: isLiveProduct,
-                }, masterCatalog.id)
+                    cellCls: 'header radio',
+                    itemId: 'live-edit-field-container-' + masterCatalog.id,
+                    tooltip: Ext.create('Taco.core.ux.content.Tooltip', {
+                        elementId: 'live-edit-field-container-' + masterCatalog.id,
+                        hoverTarget: 'label',
+                        messageKey: 'settings.publishing.liveEdit',
+                        offsetLeft: 20,
+                        offsetTop: 15
+                    })
+                }
             );
 
             Ext.Array.push(subitems, {}, {

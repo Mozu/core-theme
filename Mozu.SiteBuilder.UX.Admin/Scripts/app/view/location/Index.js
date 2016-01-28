@@ -23,10 +23,10 @@ Ext.define('Taco.view.location.Index', {
     // adds the "taco-content-navcontainer-padding" class
     // Will add the 20px padding needed for display in the contentView as part of the NavHeader code;
     addContentViewPadding: true,
-    enableSearch: true,
+    enableSearch: false,
     enablePaging: true,
     enableRowEditing: false,
-    enableAutoSelect: true,
+    enableAutoSelect: false,
     createButtonEnabled: true,
     saveButtonEnabled: false,
     cancelButtonEnabled: false,
@@ -39,7 +39,9 @@ Ext.define('Taco.view.location.Index', {
     enableQuickFilters: false,
     advancedSearchConfig: {
         advancedFormCls: 'Taco.view.location.AdvancedSearchForm',
-        quickFilterData: []
+        quickFilterData: [],
+
+        emptySearchText: 'Search'
     },
     onCreate: Ext.emptyFn,
     stateful: true,
@@ -94,7 +96,6 @@ Ext.define('Taco.view.location.Index', {
                     sortable: false
                 }, {
                     xtype: 'taco.menucolumn',
-                    text: 'Actions',
                     onMenuShow: function(menu, eventData) {
                         var disableMenuItem = menu.down("#disableMenuItem"),
                             enableMenuItem = menu.down("#enableMenuItem");

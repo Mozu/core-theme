@@ -5,7 +5,7 @@
 .#{$vprefix}orderform-shipping {  
 
 	// need to force the actions column icons to become visible when the grid row is selected; currently only shows when the row is focused;
-	.x-grid-row-selected .taco-grid-row-menu-trigger {
+	.#{$prefix}grid-row-selected .#{$vprefix}grid-row-menu-trigger {
 	  visibility: visible !important;
 	}
 	
@@ -24,7 +24,8 @@
 	// message that displays when the grid has no data;
     .empty-grid-message{
         padding:20px;
-        color:#990000
+        color:$gray-text-dark;
+        font-style: italic;
     }
   
     .#{$vprefix}orderform-shipping-package{
@@ -55,10 +56,10 @@
 
         .#{$vprefix}orderform-shipping-orderItemGrid{     
     
-            .x-toolbar{
+            .#{$prefix}toolbar{
                 margin-bottom:0px;
                 border-width:0px;
-                .x-box-inner{
+                .#{$prefix}box-inner{
                     background-color:#ffff;
                     border-width:0px;
                     border-style:solid;

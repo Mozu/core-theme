@@ -40,7 +40,7 @@ namespace Mozu.SiteBuilder.Mvc.Models.CMS
         public Newtonsoft.Json.Linq.JObject  Properties { get; set; }
 
         [DataMember(Name = "zones")]
-        public List<ZoneRuntimeData> Zones { get; set; }
+        public List<Chorizo.ZoneRuntimeData> Zones { get; set; }
 
         public string FullPath { get; set; }
 

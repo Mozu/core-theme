@@ -18,10 +18,13 @@ Ext.define('Taco.view.productRanking.grid.PinnedProduct', {
     launchEditorOnClick: false,
     deferEmptyText: false,
     emptyText: 'None Available',
+
     autoScroll: false,
+
     config: {
         code: null
     },
+
     viewConfig: {
         listeners: {
             drop: function() {
@@ -30,38 +33,51 @@ Ext.define('Taco.view.productRanking.grid.PinnedProduct', {
         },
         plugins: {
             ptype: 'gridviewdragdrop'
-        }
+        },
+        stripeRows: false
     },
     mixins: {
       gridcontextmenu: 'Taco.core.ux.mixins.GridContextMenu'
     },
+
     deferEmtpyText: false,
+
     showActionsColumn : true,
+
     autoHidePagingToolbar:false,
+
     minHeight: 240,
     enableEditAction: false,
     enableDeleteAction: true,
     enableAutoSelect:false,
     enablePaging: false,
     filterProperty: 'productCode',
+
     initComponent: function() {
         var me = this;
+
         me.dockedItems = me.dockedItems || [];
         me.mixins = me.mixins || [];
+            
         me.viewConfig = me.viewConfig || {};
         me.viewConfig.deferEmptyText = me.deferEmptyText;
+
         me.columns = me.getColumnConfig();
+
         if (me.showActionsColumn) {
             var actionColumn = me.getActionColumn();
             if (actionColumn) {
                 me.columns.push(actionColumn);
             }
         }
+            
         me.store = Ext.create('Ext.data.Store', {
           fields: ['code', 'price', 'salePrice'],
           data: []
         });
+
         me.callParent(arguments);
+
     },
 
     /**
@@ -82,9 +98,7 @@ Ext.define('Taco.view.productRanking.grid.PinnedProduct', {
     listeners: {
         afterrender: function () {
             var form = this.up('#taco-productRanking-form');
-            if (form.loadPinnedProducts && form.loadPinnedProducts === true) {
-                this.populateStore(form.record);
-            }
+            this.populateStore(form.record);
         },
 
         reloaddata: function (record) {
@@ -92,6 +106,7 @@ Ext.define('Taco.view.productRanking.grid.PinnedProduct', {
         },
 
         recordadded: function(records) {
+
             var me = this,
                 findFunc = function(rec) {
                     return me.store.find(me.filterProperty, rec.get(me.filterProperty), 0, false, false, true) === -1;
@@ -172,7 +187,6 @@ Ext.define('Taco.view.productRanking.grid.PinnedProduct', {
         if (actions.length) {
             actionColumn = {
                 xtype: 'taco.menucolumn',
-                text: 'Actions',
                 menuItems: actions
             }
         }

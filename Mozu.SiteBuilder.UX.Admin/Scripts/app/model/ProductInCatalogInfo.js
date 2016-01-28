@@ -20,7 +20,8 @@ Ext.define('Taco.model.ProductInCatalogInfo', {
         }, {
             "name": "dateFirstAvailableInCatalog",
             "type": "date",
-            "useNull": true
+            "useNull": true,
+            defaultValue: new Date()
         },
         {
             "name": "isActive",

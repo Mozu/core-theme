@@ -19,6 +19,8 @@ Ext.define('Taco.view.discount.Form', {
     createTitle: 'Create Discount',
     editTitle: '{[values.record.data.name]}',
 
+    sectionNavTopOffset: 9,
+
     initComponent: function () {
 
         // Note: the record will act as an event bus for the subForms. 

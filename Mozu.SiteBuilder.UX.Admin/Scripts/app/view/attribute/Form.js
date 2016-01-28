@@ -902,6 +902,7 @@ Ext.define('Taco.view.attribute.Form', {
                 allowOnlyWhitespace: false,
                 forceSelection: true,
                 readOnly: this.isEdit(),
+                allowBlank: false,
                 store: [
                     ['List', 'List'],
                     ['TextBox', 'Text box'],

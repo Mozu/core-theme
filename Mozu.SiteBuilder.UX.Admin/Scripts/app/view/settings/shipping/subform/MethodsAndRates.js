@@ -14,6 +14,7 @@ Ext.define('Taco.view.settings.shipping.subform.MethodsAndRates', {
     margin: "0 0 20 0",
     ui: "subform",
     width: "100%",
+    enableSearchBarInHeader: false,
     enableStoreSyncTasks: true,
     initComponent: function () {
         var me = this;

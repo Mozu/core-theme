@@ -26,7 +26,12 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
         }
 
         [HttpPost]
-        public async Task<object> Preview(WidgetPreviewData wpd)
+        public  Task<object> Preview(WidgetPreviewData<WidgetDefinition> wpd)
+        {
+            return WidgetPreview(wpd);
+        }
+        [HttpPost]
+        public async Task<object> WidgetPreview(WidgetPreviewData<WidgetDefinition> wpd)
         {
             SiteContext.IsEditMode = true;
             SbApiContext.IsEditMode = true;
@@ -39,15 +44,43 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
             wpd.Id = wpd.Id ?? Guid.NewGuid().ToString();
             wpd.Config = wpd.Config ?? def.DefaultConfig;
             wpd.Source = wpd.Source ?? GetWidgetSource(wpd);
-            wpd.Output = await RenderTemplate(wpd, def);
+            wpd.Output = await RenderTemplate(wpd, d=> d.DisplayTemplate);
 
             return wpd;
         }
 
-        private async Task<string> RenderTemplate(WidgetPreviewData wpd, WidgetDefinition def)
+        [HttpPost]
+        public async Task<object> LayoutPreview(WidgetPreviewData<LayoutWidgetDefinition> wpd)
+        {
+            SiteContext.IsEditMode = true;
+            SbApiContext.IsEditMode = true;
+            SbApiContext.SetDataMode(DataViewModeType.Pending);
+
+            var def = SiteContext.Theme.Layouts.First(x => x.Id == wpd.DefinitionId);
+
+            wpd.Definition = def;
+            wpd.IsPreview = true;
+            wpd.Id = wpd.Id ?? Guid.NewGuid().ToString();
+            wpd.Config = wpd.Config ?? def.DefaultConfig;
+            wpd.Source = wpd.Source ?? GetWidgetSource(wpd);
+            wpd.Output = await RenderTemplate(wpd, d => d.DisplayTemplate);
+
+            return wpd;
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="wpd"></param>
+        /// <param name="displayTemplateFunc">this needs to assume the presence of some shared root, either widgets/ or layoutwidgets/</param>
+        /// <returns></returns>
+        private async Task<string> RenderTemplate<T>(WidgetPreviewData<T> wpd, Func<T, string> displayTemplateFunc)
         {
             var tw = new StringWriter();
-            var view = _viewEngine.FindModuleView("widgets/" + def.DisplayTemplate);
+            var root = string.IsNullOrEmpty(wpd.widgetType) || wpd.widgetType.Equals("content") ? "widgets/" : "layoutWidgets/";
+            var template = displayTemplateFunc(wpd.Definition);
+            var view = _viewEngine.FindModuleView(root + template);
             if (view != null)
             {
                 var viewContext = new HyprViewContext(Request, new ViewDataDictionary { Model = wpd });
@@ -56,14 +89,14 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
             }
             else
             {
-                throw new Exception("can't find template " + def.DisplayTemplate);
+                throw new Exception("can't find template " + template);
             }
 
             tw.Flush();
             return tw.ToString();
         }
 
-        private static DocumentRequest GetWidgetSource(WidgetPreviewData wpd)
+        private static DocumentRequest GetWidgetSource<T>(WidgetPreviewData<T> wpd)
         {
             switch (wpd.ZoneScope ?? "page")
             {

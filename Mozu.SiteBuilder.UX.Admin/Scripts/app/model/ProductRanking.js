@@ -183,6 +183,14 @@ Ext.define('Taco.model.ProductRanking', {
         });
     },
 
+    beforeDuplicate: function () {
+        var suffix = " - Copy";
+        this.data.name = this.data.name + suffix;
+        this.data.code = '';
+        this.data.isDefault = false;
+        this.commit();
+    },
+
     getDeletePromptMessage: function() {
         var msg = 'Are you sure you want to delete "' + this.get('name') + '"?';
         if (this.get('categoryFilters').length > 1) {

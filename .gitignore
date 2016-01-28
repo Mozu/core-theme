@@ -15,8 +15,6 @@ lib/
 *.orig
 user.app.config
 mozu.config.json
-*.swp
-*.swo
 
 *ncrunch*
 *.ide
@@ -60,8 +58,7 @@ Mozu.SiteBuilder.UX.Admin/Scripts/.sencha_backup/
 TestResult.xml
 Mozu.SiteBuilder.UX.Themes/Themes/*/compiled/*
 Mozu.SiteBuilder.UX.Themes/Themes/reptar
-Mozu.SiteBuilder.UX.Themes/Themes/core-theme-preview/
-
+Mozu.SiteBuilder.UX.Themes/Themes/core-theme-preview
 *.log
 Mozu.SiteBuilder.UX/BuiltinScripts/SDK/tests/sdk.js
 
@@ -72,3 +69,4 @@ Mozu.SiteBuilder.UX/BuiltinScripts/SDK/tests/sdk.js
 # ignore any of Chet's ideas
 .paket/
 .fake
+ext/

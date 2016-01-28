@@ -30,10 +30,10 @@ Ext.define('Taco.view.attribute.Grid', {
     // Will add the 20px padding needed for display in the contentView as part of the NavHeader code;
     addContentViewPadding: true,
 
-    enableSearch: true,
+    enableSearch: false,
     enablePaging: true,
     enableRowEditing: false,
-    enableAutoSelect: true,
+    enableAutoSelect: false,
     createButtonEnabled: true,
     saveButtonEnabled: false,
     cancelButtonEnabled: false,
@@ -44,7 +44,7 @@ Ext.define('Taco.view.attribute.Grid', {
 
     hideSearchToolbar: false,
     
-    title: "Attributes",
+    title: "Product Attributes",
 
     store: { type: 'Taco.store.AttributesGrid' },  
 
@@ -53,7 +53,8 @@ Ext.define('Taco.view.attribute.Grid', {
     enableQuickFilters:false,
 
     advancedSearchConfig : {
-        advancedFormCls: 'Taco.view.attribute.AdvancedSearchForm'
+        advancedFormCls: 'Taco.view.attribute.AdvancedSearchForm',
+        emptySearchText: 'Search'
     },
 
     onCreate: Ext.emptyFn,
@@ -131,7 +132,6 @@ Ext.define('Taco.view.attribute.Grid', {
                 }
             }, {
                 xtype: 'taco.menucolumn',
-                text: 'Actions',
                 menuItems: [
                     {
                         text: 'Edit',

@@ -1,50 +1,218 @@
-.taco-content-navcontainer {
+.#{$vprefix}content-navcontainer {
     border-width: 0px;
-    background-color: $base-color;
+    background-color: $light-bg-gray;
     padding: 0px;
 
-    .taco-content-navcontainer-body {                
+    .#{$vprefix}content-navcontainer-body {                
         background-color: $base-color;
+
+        &.x-panel-body {
+            background-color: $light-bg;
+        }
     }
 
-    .x-grid-body {
+    .#{$prefix}grid-body {
         background-color:#fff;
     }
 
 }
 
-.taco-content-navcontainer-padding {
+.#{$vprefix}content-navcontainer-padding {
     padding: 20px 20px 10px 20px;
 }
 
+.#{$vprefix}editor-tools-header {
+    background-color: white;
+}
 
-.taco-navheader {
-    .taco-navheader-toolbar{        
-        padding: 10px 20px 10px 20px;        
+
+.#{$vprefix}navheader {
+    box-shadow: rgba(0, 0, 0, 0.09) 0px 1px 3px 0px;
+    .#{$vprefix}navheader-toolbar{
+        box-shadow: rgba(0, 0, 0, 0.09) 0px 1px 3px 0px;
         border-bottom: 1px solid $color-standard-border !important;
-        .taco-content-header-title{
-            font-size: 2.1rem;
-            font-weight: bold;
-            line-height: 3rem;
-            overflow: hidden;
-            text-overflow: ellipsis;
-            white-space: nowrap;
+        background-color: $color-neutral-white;
+        line-height: 23px;
+
+        .#{$prefix}toolbar-default {
+            background-color: $color-neutral-white;
         }
-        .taco-content-header-title-root {
-            color: $color-framework-blue-dark;
+
+        .#{$vprefix}subnav-breadcrumb {
+
+            div {
+                border-bottom: 1px solid transparent;
+                padding: 0px 10px;
+                height: 60px;
+
+                a {
+                    font-size: 16px;
+                    color: $gray-text-light;
+                    line-height: 60px;
+
+                    &:hover {
+                        color: $nav-element-active;
+                        text-decoration: none;
+                    }
+                }
+
+                &:active {
+                    color: $nav-element-active;
+                    background-color: $card-button-press-bg;
+
+                    a {
+                        color: $nav-element-active;
+                    }
+                }
+
+                &.active {
+                    border-bottom: 2px solid $valid-green;
+                }
+            }
+        }
+
+        .#{$vprefix}content-header-title-container {
+
+            > .#{$prefix}box-inner {
+                height: 100% !important;
+            }
+
+            .#{$prefix}box-target {
+                height: 100%;
+            }
+
+            a:hover {
+                text-decoration: none !important;
+            }
+
+            .#{$vprefix}content-header-title {
+                font-size: 18px;
+                font-weight: 400;
+                height: 100%;
+                overflow: hidden;
+                text-overflow: ellipsis;
+                white-space: nowrap;
+
+                .title {
+                     display: inline-block;
+                     padding: 20px;
+                     position: relative;
+                     height: 100%;
+                     overflow:hidden;
+                     text-overflow: ellipsis;
+
+                     &:first-child {
+                        border-right: 1px solid $nav-element-active-border;
+                     }
+
+                     &:nth-child(2) {
+                        padding: 20px 5px 20px 20px;
+                     }
+
+                     a {
+                        color: $nav-element-active;
+                     }
+                }
+
+                .#{$vprefix}light-tag {
+                    color: $pill-text-dark;
+                    font-size: 11px;
+                    font-style: initial;
+                    padding-left: 5px;
+                    padding-right: 5px;
+                }
+
+                .#{$vprefix}light-tag, .#{$prefix}column-content-pill {
+                    position: relative;
+                }
+
+                .#{$vprefix}light-tag {
+                    top: -25px;
+                }
+
+                .#{$prefix}column-content-pill {
+                    top: -25px;
+                }
+
+            }
+            
+            .#{$vprefix}content-header-title-root {
+                color: $color-framework-blue-dark;
+            }
         }
 
         .page-title {
             margin: 2px 0px 0px 22px;
             font-weight: normal;
-            font-size: 16px;
+            font-size: 18px;
+            font-family: 'proxima-nova', sans-serif;
             width: 100%;
             padding-right: 24px;
             overflow: hidden;
             text-overflow: ellipsis;
+            white-space: nowrap;
         }
 
-        .taco-website-header-icon {
+        .#{$prefix}form-trigger-wrap {
+            border: none;
+            height: 38px;
+        }
+
+
+
+        .navheader-action-toolbar {
+            margin-right: 15px;
+
+            .website-editor-tab-btn {
+                .#{$prefix}btn-glyph {
+                    line-height: 28px;
+                }
+            }
+
+            .#{$vprefix}more-action-button {
+                background-color: transparent;
+                padding: 0;
+                opacity: 0.27;
+                border: none;
+
+                &:hover {
+                    opacity: 1;
+                    background-color: transparent;
+                }
+
+                &.#{$prefix}menu-active {
+                    border-radius: 3px;
+                    background-color: $more-menu-active-background;
+                    box-shadow: $more-menu-active-shadow 0 0 0 1px inset;
+                    opacity: 1;
+                }
+
+                .#{$prefix}btn-arrow-right {
+                    @include icon-font($glyph-more-vert, 20px, $glyph-icon-color);
+                    &::after {
+                        line-height: 40px;
+                        text-align: center;
+                        width: 100%;
+                    }
+                }
+
+                .#{$prefix}btn-wrap {
+                    padding: 0;
+                    .#{$prefix}btn-inner {
+                        padding: 0;
+                    }
+                }
+
+                &.#{$prefix}btn.#{$prefix}menu-active {
+                    border-radius: 3px;
+                    background-color: $more-menu-active-background;
+                    box-shadow: $more-menu-active-shadow 0 0 0 1px inset;
+                    opacity: 1;
+                }
+            }
+        }
+
+        .#{$vprefix}website-header-icon {
 
                 &.page-icon {
                    @include icon-font($glyph-category, 20px);
@@ -82,26 +250,49 @@
     border: none;
     @include border-radius-xbrowser(2em);
     height: 18px;
-    background-color: $color-status-indicator;
+    background-color: $publish-icon-dark-bg;
     color:white;
     text-align:center;
     font-size:14px;
-    margin-top: 1px;
+    min-width: 56px;
+
+    div {
+        width: auto;
+    }
+
+    label {
+        text-transform: capitalize;
+        font-size: $pill-font;
+    }
+
+    a {
+        display: none;
+        
+        .#{$prefix}btn-inner {
+            &.#{$prefix}btn-inner-center {
+                height: 13px;
+            }
+        }
+    }
+
+    &.product {
+        top: 22px !important;
+    }
 }
 
-.taco-content-navcontainer-white {
-    .taco-navheader {
-        .taco-navheader-toolbar{        
+.#{$vprefix}content-navcontainer-white {
+    .#{$vprefix}navheader {
+        .#{$vprefix}navheader-toolbar{
             border-bottom: 0px !important;
             background-color: #fff;
         }
-        .x-toolbar-default {
+        .#{$prefix}toolbar-default {
             background-color: #fff;
         }
     }
     
     background-color: #fff;
-    .taco-content-navcontainer-body {                
+    .#{$vprefix}content-navcontainer-body {
         background-color: #fff;
         border-bottom: 0px !important;
     }

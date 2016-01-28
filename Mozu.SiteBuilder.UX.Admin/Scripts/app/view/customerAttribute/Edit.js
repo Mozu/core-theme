@@ -8,5 +8,10 @@ Ext.define('Taco.view.customerAttribute.Edit', {
     requires: [
         'Taco.view.customerAttribute.Form'
     ],
-    formCls: 'Taco.view.customerAttribute.Form'
+    parentTitleCfg: {
+        title: 'Customer Attributes',
+        controller: 'customerattributes'
+    },
+    formCls: 'Taco.view.customerAttribute.Form',
+    enableSearchBarInHeader: false
 });

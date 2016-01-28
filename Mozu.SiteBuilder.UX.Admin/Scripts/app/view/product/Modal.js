@@ -30,7 +30,6 @@ Ext.define('Taco.view.product.Modal', {
 
         this.advancedSearchForm = Ext.create('Taco.view.product.AdvancedSearchForm');
 
-
         this.searchBox = Ext.widget({
             xtype: 'taco-filtercontainer',
             width: '100%',
@@ -41,7 +40,8 @@ Ext.define('Taco.view.product.Modal', {
             filterStores: this.advancedSearchForm.stores,
             doc:'top'
         });
-        this.gridPager = Ext.create('Ext.toolbar.Paging', {
+        this.gridPager = Ext.create('Taco.core.ux.grid.LinkPaging', {
+            componentCls: 'x-link-paging-toolbar',
             store: this.store,
             displayInfo: true,
             dock: 'bottom'
@@ -55,10 +55,14 @@ Ext.define('Taco.view.product.Modal', {
                 this.searchBox,
                 this.gridPager
             ],
+            viewConfig: {
+                stripeRows: false
+            },
             columns: [{
                 dataIndex: 'productCode',
                 text: 'Code',
-                width: 100
+                width: 100,
+                left: '33px'
             }, {
                 dataIndex: 'productName',
                 text: 'Name',

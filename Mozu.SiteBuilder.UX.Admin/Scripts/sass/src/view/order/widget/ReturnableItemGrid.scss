@@ -1,4 +1,4 @@
-﻿.taco-orderform-returns {
+﻿.#{$vprefix}orderform-returns {
     .returnable-items-grid,
     .return-item-grid {
         .#{$prefix}panel-header-text-container {
@@ -12,10 +12,8 @@
             width: 100%;
         }
         td {
-            width: 50%;
             
             &:last-child {
-                text-align: right;
             }
         }
 
@@ -51,7 +49,7 @@
 
 
         // setting the text size on the grid header;
-        .x-panel-header-text-taco {
+        .#{$prefix}panel-header-text-taco {
             font-size: 1.9rem;
             line-height: 2.9rem;    
         }

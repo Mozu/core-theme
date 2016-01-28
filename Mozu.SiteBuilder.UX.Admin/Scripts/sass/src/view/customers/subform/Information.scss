@@ -23,7 +23,7 @@
         }
     }
 
-    .no-field-padding .x-form-item-label-top {
+    .no-field-padding .#{$prefix}form-item-label-top {
         padding-top: 0 !important;
     }
 }

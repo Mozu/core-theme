@@ -19,13 +19,19 @@ Ext.define('Taco.core.ux.content.SplitContainer', {
         align: 'stretch'
     },
 
-    bodyPadding: '20 20 10',
+    bodyPadding: '20 0 10',
     region: 'center',
     ui: 'page',
 
     stateful: true,
 
     stateEvents: ['childcollapse', 'childexpand'],
+
+    /**
+     * how many pixels padding are applied to each side of the collapse tool
+     */
+
+    collapseToolPadding: 3,
 
     /**
      * @cfg {Boolean} preventCollapsedStateChange
@@ -138,10 +144,36 @@ Ext.define('Taco.core.ux.content.SplitContainer', {
         if (splitter === true) {
             return Ext.widget({
                 xtype: 'splitter',
+                itemId: 'taco-splitcontainer-splitter',
                 cls: 'taco-splitcontainer-splitter',
                 collapseTarget: 'prev',
                 collapsible: false,
-                width: 4
+                width: 8,
+                afterRender: function() {
+                    var me = this;
+                    me.mon(me.getEl(), 'mouseenter', function() {
+                        me.addCls('taco-split-hover');
+                        me.up('contentview').down('#west-right').addCls('taco-split-hover');
+                        me.up('contentview').down('#east-left').addCls('taco-split-hover');
+                    });
+                    me.mon(me.getEl(), 'mouseleave', function() {
+                        me.removeCls('taco-split-hover');
+                        me.up('contentview').down('#west-right').removeCls('taco-split-hover');
+                        me.up('contentview').down('#east-left').removeCls('taco-split-hover');
+                    });
+                },
+                listeners: {
+                    dragstart: function() {
+                        this.addCls('taco-split-drag');
+                        this.up('contentview').down('#west-right').addCls('taco-split-drag');
+                        this.up('contentview').down('#east-left').addCls('taco-split-drag');
+                    },
+                    dragend: function() {
+                        this.removeCls('taco-split-drag');
+                        this.up('contentview').down('#west-right').removeCls('taco-split-drag');
+                        this.up('contentview').down('#east-left').removeCls('taco-split-drag');
+                    }
+                }
             });
         } else if (Ext.isString(splitter)) {
             return Ext.create(splitter, {});
@@ -187,6 +219,8 @@ Ext.define('Taco.core.ux.content.SplitContainer', {
         return {
             itemId: 'east',
             title: 'East',
+            cls: 'taco-splitcontainer-panel',
+            bodyPadding: '0 20 0 0',
             layout: 'fit',
             collapseDirection: 'right',
             collapseMode: 'mini',
@@ -198,13 +232,26 @@ Ext.define('Taco.core.ux.content.SplitContainer', {
                 xtype: 'component',
                 cls: 'taco-splitcontainer-collapsetool',
                 itemId: 'east-left',
-                width: 13,
+                width: this.collapseToolPadding,
                 listeners: {
                     click: {
                         scope: this,
                         element: 'el',
                         fn: 'handleCollapseToolClick'
                     }
+                },
+                afterRender: function() {
+                    var me = this;
+                    me.mon(me.getEl(), 'mouseenter', function() {
+                        me.addCls('taco-split-hover');
+                        me.up('contentview').down('#west-right').addCls('taco-split-hover');
+                        me.up('contentview').down('#taco-splitcontainer-splitter').addCls('taco-split-hover');
+                    });
+                    me.mon(me.getEl(), 'mouseleave', function() {
+                        me.removeCls('taco-split-hover');
+                        me.up('contentview').down('#west-right').removeCls('taco-split-hover');
+                        me.up('contentview').down('#taco-splitcontainer-splitter').removeCls('taco-split-hover');
+                    });
                 }
             }
         };
@@ -220,6 +267,8 @@ Ext.define('Taco.core.ux.content.SplitContainer', {
         return {
             itemId: 'west',
             title: 'West',
+            cls: 'taco-splitcontainer-panel',
+            bodyPadding: '0 0 0 20',
             layout: 'fit',
             collapseDirection: 'left',
             collapseMode: 'mini',
@@ -231,13 +280,26 @@ Ext.define('Taco.core.ux.content.SplitContainer', {
                 xtype: 'component',
                 cls: 'taco-splitcontainer-collapsetool',
                 itemId: 'west-right',
-                width: 13,
+                width: this.collapseToolPadding,
                 listeners: {
                     click: {
                         scope: this,
                         element: 'el',
                         fn: 'handleCollapseToolClick'
                     }
+                },
+                afterRender: function() {
+                    var me = this;
+                    me.mon(me.getEl(), 'mouseenter', function() {
+                        me.addCls('taco-split-hover');
+                        me.up('contentview').down('#taco-splitcontainer-splitter').addCls('taco-split-hover');
+                        me.up('contentview').down('#east-left').addCls('taco-split-hover');
+                    });
+                    me.mon(me.getEl(), 'mouseleave', function() {
+                        me.removeCls('taco-split-hover');
+                        me.up('contentview').down('#taco-splitcontainer-splitter').removeCls('taco-split-hover');
+                        me.up('contentview').down('#east-left').removeCls('taco-split-hover');
+                    });
                 }
             }
         };

@@ -147,7 +147,10 @@ Ext.define('Taco.overrides.grid.RowEditor', {
     
     // Focus the cell on start edit based upon the current context
     focusContextCell: function () {
-        var me = this;        
+        if (!this.context) {
+            return;
+        }
+        var me = this;
         var field = me.getEditor(me.context.column);
 
         // check to see if field is focusable; if not find first field that is focusable;       

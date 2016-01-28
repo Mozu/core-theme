@@ -58,6 +58,18 @@ Ext.define('Taco.core.ux.mixins.RowEditable', {
                     me.onRowEditorCreate();
                 },
                 listeners: {
+                    'beforeedit': {
+                        fn: function(cmp, editor) {
+                            var newRecords = this.store.getNewRecords();
+                            var currentRecord = [editor.record];
+                            var difference = Ext.Array.difference(newRecords, currentRecord);
+
+                            if (difference && difference.length > 0) {
+                                this.store.remove(difference);
+                            } 
+                        },
+                        scope: this
+                    },
                     'edit': {
                         fn: this.onRowEditorUpdate,
                         scope: this
@@ -126,6 +138,6 @@ Ext.define('Taco.core.ux.mixins.RowEditable', {
         var r = Ext.create(modelName, this.defaultRowEditingData);
         this.store.insert(0, r);
         this.rowEditor.startEdit(0, 0);
-        this.rowEditor.editor.focusContextCell()
+        this.rowEditor.editor.focusContextCell();
     }
 });

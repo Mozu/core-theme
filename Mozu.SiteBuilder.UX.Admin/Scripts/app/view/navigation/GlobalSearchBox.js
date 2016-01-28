@@ -17,7 +17,7 @@ Ext.define('Taco.view.navigation.GlobalSearchBox', {
 
     listConfig: {
         loadingText: 'Searching...',
-        emptyText: 'No matching items found.',
+        emptyText: '<ul class="x-list-plain"><li class="x-boundlist-item"><div>No matching items found.</div></li></ul>',
         width: 400,
         // Custom rendering template for each item
         //removing count because of service optimization it doesnt return.

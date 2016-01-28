@@ -8,6 +8,7 @@ Ext.define('Taco.view.settings.paymentAndCheckout.Edit', {
         'Taco.view.settings.paymentAndCheckout.Form'
     ],
     formCls: 'Taco.view.settings.paymentAndCheckout.Form',
+    enableSearchBarInHeader: false,
     contextConfig: {
         supportedLevels: ['s'],
         requiresContextOfType: ['s']

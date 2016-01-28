@@ -178,15 +178,15 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
 
         public class UpdateWidgetDataMessage
         {
-            public List<AVM.ZoneRuntimeData> zones;
+            public List<AVM.Chorizo.ZoneRuntimeData> zones;
             public DocumentRequest source { get; set; }
         }
 
         [HttpPostRoute(UriTemplate = "widgetdata/update")]
-        public async Task<Response<List<AVM.ZoneRuntimeData>>> UpdateWidgetData(UpdateWidgetDataMessage message )
+        public async Task<Response<List<AVM.Chorizo.ZoneRuntimeData>>> UpdateWidgetData(UpdateWidgetDataMessage message )
         {
             var source = message.source;
-            message.zones = message.zones ?? new List<AVM.ZoneRuntimeData>();
+            message.zones = message.zones ?? new List<AVM.Chorizo.ZoneRuntimeData>();
 
             var docResult = (await _documentListWebApiClien.GetTreeDocument(documentListName: source.ListFQN, documentName: source.Path));
             DC.Document doc;
@@ -209,10 +209,10 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
                 if (!string.IsNullOrEmpty(existingZonesString))
                 {
 
-                    List<AVM.ZoneRuntimeData> existingZones = null;
+                    List<AVM.Chorizo.ZoneRuntimeData> existingZones = null;
                     try
                     {
-                        existingZones = Newtonsoft.Json.JsonConvert.DeserializeObject<List<AVM.ZoneRuntimeData>>(existingZonesString);
+                        existingZones = Newtonsoft.Json.JsonConvert.DeserializeObject<List<AVM.Chorizo.ZoneRuntimeData>>(existingZonesString);
                     }
                     catch (Exception ex)
                     {
@@ -249,7 +249,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
             {
                 doc = (await _documentListWebApiClien.CreateDocument(doc.ListFQN,doc)).ReadAsSync();
             }
-            message.zones= doc.Get<JArray>(CmsConstants.Documents.widget_prop).ToObject<List<AVM.ZoneRuntimeData>>();
+            message.zones= doc.Get<JArray>(CmsConstants.Documents.widget_prop).ToObject<List<AVM.Chorizo.ZoneRuntimeData>>();
             return List2(message.zones);
         }
 

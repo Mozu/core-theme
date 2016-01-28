@@ -17,6 +17,7 @@ Ext.define('Taco.core.ux.tab.Picker', {
     hidden: true,
     alignment: 'tr-br?',
     alignmentOffsets: [-1, -1],
+    value: null,
 
     initComponent: function () {
         var me = this;

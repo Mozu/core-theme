@@ -199,6 +199,7 @@
     <Compile Include="StoreFront\CMS\Document.cs" />
     <Compile Include="StoreFront\CMS\Facet.cs" />
     <Compile Include="StoreFront\CMS\ImageUrl.cs" />
+    <Compile Include="StoreFront\CMS\LayoutDefinition.cs" />
     <Compile Include="StoreFront\CMS\PageDefault.cs" />
     <Compile Include="StoreFront\CMS\PageTypeDefinition.cs" />
     <Compile Include="StoreFront\CMS\Post.cs" />

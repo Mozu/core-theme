@@ -307,6 +307,14 @@ Ext.define('Taco.core.context.TaContext', {
 
     },
 
+    setCurrentCatalog: function (id) {
+        return this.setCurrentContext(this.findCatalog(id));
+    },
+
+    setCurrentTenant: function () {
+        this.setCurrentContext(this);
+    },
+
     getCatalog: function () {
         var cc = this.getCurrentContext();
         if (cc === this) {
@@ -321,8 +329,8 @@ Ext.define('Taco.core.context.TaContext', {
         }
         return cc.getSite();
     },
-    getMasterCatalog: function () {
 
+    getMasterCatalog: function () {
         var cc = this.getCurrentContext();
         if (cc == this) {
             return null;

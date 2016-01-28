@@ -22,10 +22,23 @@
 @include taco-standaloneAccordion;
 @include taco-phoneOrders;
 @include taco-order;
-//@include taco-contextSwitcher;
+@include taco-bulkactiontoolbar;
+@include taco-contextSwitcher;
+@include taco-prevNextArrowButtons;
+@include taco-websitesubheader;
+@include taco-buttons;
+@include taco-selectors;
+@include taco-entitymanager;
+@include taco-catalogassignmentbar;
+@include taco-subnavlink;
+@include taco-draftstoolbar;
+@include taco-tooltip;
+@include taco-customschema;
+@include taco-siteview-dropdown;
+@include taco-locationinventory;
 
 // body[data-current-user="travis_johnson"] {
-//     .x-border-layout-ct {
+//     .#{$prefix}border-layout-ct {
 //         background-image: url('http://i.imgur.com/igIUXoR.png');
 //     }
 // }

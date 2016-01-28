@@ -5,17 +5,25 @@ Ext.define('Taco.store.Navigation', {
     extend: 'Ext.data.Store',
     model: 'Taco.model.NavigationItem',
     autoLoad: true,
+    requires: [
+        'Taco.store.SubnavLinks'
+    ],
     statics: {
         subNavLinksLoaded: false,
         getSubNavLinksLoaded: function () { return this.subNavLinksLoaded; },
-        setSubNavLinksLoaded: function (val) { this.subNavLinksLoaded = val; }
+        setSubNavLinksLoaded: function (val) { this.subNavLinksLoaded = val; },
+
+        subNavLinksMerged: false,
+        getSubNavLinksMerged: function () { return this.subNavLinksMerged; },
+        setSubNavLinksMerged: function (val) { this.subNavLinksMerged = val; }
     },
     listeners: {
         beforeload: function (store) {
             if (!Taco.app || !Taco.app.context) {
                 return;
             }
-            var data = store.getProxy().data,
+            var me = this,
+                data = store.getProxy().data,
                 seed = 0,
                 recursiveFind = function (key, val, items) {
                     var res;
@@ -52,6 +60,38 @@ Ext.define('Taco.store.Navigation', {
                     }
                     return true;
                 },
+                mergeSubnavLinks = function(subNavStore) {
+
+                    var navStore = this;
+                    if (Taco.store.Navigation.getSubNavLinksMerged()) {
+                        return;
+                    }
+                    
+                    subNavStore.each(function (item) {
+                        var parent = navStore.getById(item.get('parentId'));
+                        
+                        if (item.get('location') && item.get('location').indexOf('menu') !== -1) {
+                            parent = navStore.getById(item.get('location').replace('menu', ''));
+                        } 
+
+                        if (!parent) {
+                            console.log('could not find parent ');
+                            console.log(item);
+                            return;
+                        }
+
+                        var subNavObject = Ext.apply({
+                            id: 'subNav' + item.get('badgeInitials'),
+                            label: item.get('modalWindowTitle') || item.get('windowTitle') || 'Mozu Admin Extension',
+                            address: item.get('href'),
+                            isSubNavLink: true
+                        }, item.data);
+
+                        parent.get('items').push(subNavObject);
+
+                    });
+                    Taco.store.Navigation.setSubNavLinksMerged();
+                },
                 isMultiCurrency,
                 isMultiLang;
             
@@ -64,55 +104,78 @@ Ext.define('Taco.store.Navigation', {
                 }
             });
 
-
-            data = Ext.Array.filter(data, pruneInvalidLocLinks, this);
-
-
-
+            store.getProxy().data = Ext.Array.filter(data, pruneInvalidLocLinks, this);
 
             if (Taco.store.Navigation.getSubNavLinksLoaded() || !Taco.extensiblity || !Taco.extensiblity.subNavLinks) {
                 return;
             }
+            this.mon(Taco.app, 'subnavlinksloaded', mergeSubnavLinks, me);
 
+            this.subNavLinksStore = Ext.create('Taco.store.SubnavLinks', {
+                filterOnLoad: true,
+                filters: [ 
+                    function(item) {
 
-            Ext.Array.each(Taco.extensiblity.subNavLinks, function (link) {
-                //todo check security.
-                //todo handle escaping of delimiter
-                var parts = ['Extensions'].concat(link.path),
-                    parentNode = recursiveFind('id', link.parentId, data);
+                        if (!item.get('location') && !item.get('parentId')) {
+                            return false;
+                        }
 
-                if (!parentNode) {
-                    return;
-                }
+                        else if (item.get('location').toLowerCase().indexOf('menu') !== -1) {
+                            item.set('parentId', item.get('location').toLowerCase().replace('menu', ''));
+                            return item;
+                        }
 
-                Ext.Array.each(parts, function (nodePart, nodeIndex) {
-                    var node = recursiveFind('label', nodePart, parentNode.items),
-                        isLeaf = nodeIndex === parts.length - 1;
-                    parentNode.items = parentNode.items || [];
-
-
-                    if (!node || isLeaf || node.address) {
-
-                        node = {
-                            id: 'ext_sub_link_' + seed++,
-                            label: nodePart,
-                            address: isLeaf ? link.href : null,
-                            metaData: link,
-                            breadCrumbOnly: true
-                        };
-                        parentNode.items.push(node);
-                        parentNode = node;
-                        return;
+                        else if (item.get('parentId')) {
+                            return item;
+                        }
                     }
-
-                    parentNode = node;
-                    return;
-
-
-                });
-
+                ],
+                listeners: {
+                    load: function() {
+                        Taco.app.fireEvent('subnavlinksloaded', this);
+                        Taco.store.Navigation.setSubNavLinksLoaded(true);
+                    }
+                }
             });
-            Taco.store.Navigation.setSubNavLinksLoaded(true);
+
+
+            // Ext.Array.each(Taco.extensiblity.subNavLinks, function (link) {
+            //     //todo check security.
+            //     //todo handle escaping of delimiter
+            //     var parts = ['Extensions'].concat(link.path),
+            //         parentNode = recursiveFind('id', link.parentId, data);
+
+            //     if (!parentNode) {
+            //         return;
+            //     }
+
+            //     Ext.Array.each(parts, function (nodePart, nodeIndex) {
+            //         var node = recursiveFind('label', nodePart, parentNode.items),
+            //             isLeaf = nodeIndex === parts.length - 1;
+            //         parentNode.items = parentNode.items || [];
+
+
+            //         if (!node || isLeaf || node.address) {
+
+            //             node = {
+            //                 id: 'ext_sub_link_' + seed++,
+            //                 label: nodePart,
+            //                 address: isLeaf ? link.href : null,
+            //                 metaData: link,
+            //                 breadCrumbOnly: true
+            //             };
+            //             parentNode.items.push(node);
+            //             parentNode = node;
+            //             return;
+            //         }
+
+            //         parentNode = node;
+            //         return;
+
+
+            //     });
+
+            // });
         }
     },
 
@@ -137,142 +200,61 @@ Ext.define('Taco.store.Navigation', {
     proxy: {
         type: 'memory',
         data: [
-/*{
-            'id': 'dashboard',
-            'label': 'Dashboard',
-            'address': 'dashboard',
-            'icon': 'nav-dashboard',
-            'items': [
-                {
-                    'id': 'channels',
-                    'label': 'Channels',
-                    'address': 'channels'
-                }, {
-                    'id': 'reports',
-                    'label': 'Reports',
-                    'address': 'reports'
-                }
-            ]
-        },*/ {
-                'id': 'customers',
-                'label': 'Customers',
-                'address': 'customers',
-                'icon': 'nav-customers',
-                'behaviorIds': [41],
-                'items': [
-/*{
-                'id': 'accounts',
-                'label': 'Accounts',
-                'address': 'customers'
-            }, */{
-                        'id': 'customerAttributes',
-                        'label': 'Attributes',
-                        'address': 'CustomerAttributes'
-                    }, {
-                        'id': 'customerSegments',
-                        'label': 'Segments',
-                        'address': 'customer/segments'
-                    } /*, {
-                'id': 'contacts',
-                'label': 'Contacts',
-                'address': 'tbd/contacts'
-            }*/
-                ]
-            }, {
-                'id': 'catalog',
-                'label': 'Catalog',
-                'address': 'products',
-                'behaviorIds': [4],
-                'icon': 'nav-catalog',
-                'items': [
-/*{
+            {
                 'id': 'products',
-                'label': 'Products',
-                'address': 'products',
-                'behaviorIds': [4]
-            }, */{
-                        'id': 'inventory',
-                        'label': 'Inventory',
-                        'address': 'inventory',
-                        'behaviorIds': [4]
-                    }, {
-                        'id': 'categories',
-                        'label': 'Categories',
-                        'address': 'categories',
-                        'behaviorIds': [16]
-                    }, {
-                        'id': 'productTypes',
-                        'label': 'Product Types',
-                        'address': 'producttypes'
-                    }, {
-                        'id': 'attributes',
-                        'label': 'Attributes',
-                        'address': 'attributes'
-                    }
+                'navParent': 'main',
+                'label': 'Catalog',
+                'icon': 'nav-catalog',
+                'behaviorIds': [4],
+                'items': [{
+                    'id': 'catalogProducts',
+                    'label': 'Products',
+                    'address': 'products',
+                    'behaviorIds': [4]
+                }, {
+                    'id': 'categories',
+                    'label': 'Categories',
+                    'address': 'categories',
+                    'behaviorIds': [16]
+                }, {
+                    'id': 'inventory',
+                    'label': 'Inventory',
+                    'address': 'inventory',
+                    'behaviorIds': [4]
+                }
                 ]
-            }, {
-                'id': 'orders',
-                'label': 'Orders',
-                'address': 'orders',
-                'behaviorIds': [73],
-                'icon': 'nav-orders',
-                'items': [
-/*{
-                'id': 'orders',
-                'behaviorIds': [16],
-                'label': 'Orders',
-                'address': 'orders'
-            }, */{
-                        'id': 'orderAttributes',
-                        'label': 'Attributes',
-                        'address': 'orderattributes'
-                    }, {
-                        'id': 'storecredit',
-                        'label': 'Store Credit',
-                        'address': 'StoreCredits'
-                    }
-                ]
-            }, {
+            },
+            {
                 'id': 'marketing',
+                'navParent': 'main',
                 'label': 'Marketing',
-                'address': 'discounts',
-                'behaviorIds': [24],
                 'icon': 'nav-marketing',
+                'behaviorIds': [24],
                 'items': [
                     {
                         'id': 'discounts',
                         'behaviorIds': [24],
-
                         'label': 'Discounts',
                         'address': 'discounts'
                     }, {
                         'id': 'couponset',
                         'behaviorIds': [24],
-
                         'label': 'Coupon Sets',
                         'address': 'CouponSets'
                     }, {
                         'id': 'productRanking',
                         'behaviorIds': [16],
-
-                        'label': '<span style="display:block;">Product Ranking</span>',
+                        'label': 'Product Ranking',
                         'address': 'ProductRankings'
-                    } /*, {
-                'id': 'promotions',
-                'label': 'Promotions',
-                'address': 'tbd/promotions'
-            }, {
-                'id': 'targeting',
-                'label': 'Targeting',
-                'address': 'tbd/targeting'
-            }*/
+                    }
                 ]
-            }, {
-                'id': 'sitebuilder',
+            },
+            {
+                'id': 'content',
+                'navParent': 'main',
                 'label': 'Site Builder',
-                'address': 'website',
-                'showBreadCrumbs': true,
                 'icon': 'nav-sites',
+                'showBreadCrumbs': true,
                 'items': [
                     {
                         'id': 'webedit',
@@ -287,180 +269,24 @@ Ext.define('Taco.store.Navigation', {
                         'id': 'redirects',
                         'label': 'Redirects',
                         'address': 'redirects'
-                    },
-                    {
-                        'id': 'viewLive',
-                        'label': 'View Live',
-                        'address': '',
-                        'breadCrumbOnly': true,
-                        // 'viewDependent': 'themes|redirects'
-                    },
-                    {
-                        'id': 'viewStaged',
-                        'label': 'View Staged',
-                        'address': '',
-                        'breadCrumbOnly': true,
-                        // 'viewDependent': 'themes|redirects'
-                    }
-                    /*, {
-                'id': 'fileManager',
-                'label': 'File Manager',
-                'address': 'fileManager'
-            }*/
-                ]
-            }, {
-                'id': 'settings',
-                'label': 'Settings',
-                'icon': 'nav-settings',
-                'visible': false,
-                'items': [
-                    {
-                        'id': 'generalsettings',
-                        'label': 'General Settings',
-                        'address': 'generalsettings'
-
-                    },
-                    {
-                        'id': 'paymentcheckout',
-                        'label': 'Payment & Checkout',
-                        'address': 'settings/paymentAndCheckout'
-                    }, {
-                        'id': 'tax',
-                        'label': 'Tax',
-                        'address': 'settings/tax'
-                    },
-                    {
-                        'id': 'shipping',
-                        'label': 'Shipping',
-                        'address': 'shipping',
-                        'items': [
-                            {
-                                'id': 'shipping4',
-                                'label': 'Methods and Fees',
-                                'address': 'shipping'
-                            },
-                            {
-                                'id': 'shipping1',
-                                'label': 'Carriers and Settings',
-                                'address': 'shipping/carriers'
-                            },
-                            {
-                                'id': 'shipping2',
-                                'label': 'Zones',
-                                'address': 'shipping/zones'
-                            },
-                            {
-                                'id': 'shipping3',
-                                'label': 'Product Rules',
-                                'address': 'shipping/productRules'
-                            }
-                        ]
-
-                    }, {
-                        'id': 'localization',
-                        'locAtts': ['multiLang', 'multCurrency'],
-                        'label': 'Localization',
-                        'address': 'Localization',
-                        'items': [
-                            {
-                                'id': 'localizationAttr',
-                                'label': 'Attributes',
-                                'address': 'Localization',
-                                'locAtts': ['multiLang']
-                            },
-                            {
-                                'id': 'localizationAttrVal',
-                                'label': 'Attribute Values',
-                                'address': 'Localization/attributeValues',
-                                'locAtts': ['multiLang']
-                            },
-                            {
-                                'id': 'localizationProp',
-                                'label': 'Product Properties',
-                                'address': 'Localization/productProperties',
-                                'locAtts': ['multiLang']
-                            },
-                            {
-                                'id': 'localizationExtra',
-                                'label': 'Product Extras',
-                                'address': 'Localization/productExtras',
-                                'locAtts': ['multCurrency']
-                            },
-                            {
-                                'id': 'localizationVar',
-                                'label': 'Product Variants',
-                                'address': 'Localization/productVariants',
-                                'locAtts': ['multCurrency']
-                            }
-                        ]
-                    },
-                    {
-                        'id': 'usersRoles',
-                        'label': 'Users &amp; Roles',
-                        'items': [
-                            {
-                                'id': 'users',
-                                'label': 'Users',
-                                'address': 'account/users'
-                            }, {
-                                'id': 'roles',
-                                'label': 'Roles',
-                                'address': 'roles'
-                            }
-                        ]
-
-                    }, {
-                        'id': 'publishing',
-                        'label': 'Publishing',
-                        'address': 'settings/publishing'
-                    }, {
-                        'id': 'applications-manage',
-                        'label': 'Applications',
-                        'address': 'capability'
-                    }, {
-                        'id': 'channels',
-                        'label': 'Channels',
-                        'address': 'channels'
                     }, {
                         'id': 'fileManager',
-                        'label': 'File Manager',
+                        'label': 'Files',
                         'address': 'fileManager'
-                    }, {
-                        'id': 'entities',
-                        'label': 'Content/Entity',
-                        'address': 'entities',
-                        'visible': !!(Taco.tenantSettings && Taco.tenantSettings.entityManagerVisible)
-                    }, {
-                        'id': 'sysAdmin',
-                        'label': 'System Administration',
-                        'items': [
-                            {
-                                'id': 'provisioning',
-                                'label': 'Catalog And Site Structure',
-                                'address': 'provisioning'
-                            }, 
-                            {
-                                'id': 'actionmanagement',
-                                'label': 'Action Management',
-                                'address': 'actionmanagement'
-                            },
-                            {
-                                'id': 'customroutes',
-                                'label': 'Custom Routes',
-                                'address': 'customroutes'
-                            },
-                            {
-                                 'id': 'ipblocking',
-                                 'label': 'IP Blocking',
-                                 'address': 'ipblocking'
-                            }
-                        ]
                     }
+                    //todo: include with content? greg_murray on 12/1/2015
+                    //,{
+                    //    'id': 'entities',
+                    //    'label': 'Content/Entity',
+                    //    'address': 'entities',
+                    //    'visible': !!(Taco.tenantSettings && Taco.tenantSettings.entityManagerVisible)
+                    //}
                 ]
-            }, {
+            },
+            {
                 'id': 'publishing',
+                'navParent': 'main',
                 'label': 'Publishing ',
-                'address': 'publishing/drafts',
                 'icon': 'nav-publishing',
                 'behaviorIds': [8],
                 'items': [
@@ -473,63 +299,248 @@ Ext.define('Taco.store.Navigation', {
                         'id': 'publishSets',
                         'label': 'Publish Sets',
                         'address': 'publishing/publishsets'
-                    },
-                    {
-                        'id': 'publishing',
-                        'label': 'Settings',
-                        'address': 'settings/publishing'
                     }
                 ]
-            }, {
-                'id': 'locations',
-                'label': 'Locations',
-                'address': 'locations',
-                'icon': 'nav-locations',
-                'behaviorIds': [186],
+            },
+            {
+                'id': 'order',
+                'navParent': 'main',
+                'label': 'Fulfillment',
+                'icon': 'nav-orders',
+                'behaviorIds': [73],
                 'items': [
-/*{
-                'id': 'locations-manage',
-                'label': 'Locations',
-                'address': 'locations'
-            },*/ {
-                        'id': 'locationTypes',
-                        'label': 'Location Types',
-                        'address': 'locationTypes'
-                    }, /* {
-                'id': 'locations-orders',
-                'label': 'Orders',
-                'address': 'tbd/orders'
-            },*/ {
+                    {
+                        'id': 'orders',
+                        'label': 'Orders',
+                        'address': 'orders',
+                        'behaviorIds': [73]
+                    }, {
                         'id': 'locations-inventory',
                         'label': 'Inventory',
                         'address': 'locationInventory'
+                    }, {
+                        'id': 'locations',
+                        'label': 'Locations',
+                        'address': 'locations',
+                        'behaviorIds': [186]
                     }
                 ]
-            }, {
-                'id': 'reports',
+            },
+            {
+                'id': 'customer',
+                'navParent': 'main',
+                'label': 'Customers',
+                'icon': 'nav-customers',
+                'items': [{
+                    'id': 'customers',
+                    'label': 'Customers',
+                    'address': 'customers',
+                    'behaviorIds': [41]
+                }, {
+                    'id': 'customerSegments',
+                    'label': 'Customer Segments',
+                    'address': 'customer/segments'
+                }, {
+                    'id': 'storecredit',
+                    'label': 'Store Credit',
+                    'address': 'StoreCredits'
+                }
+                ]
+            },
+            {
+                'id': 'report',
+                'navParent': 'main',
                 'label': 'Reporting',
-                'address': 'reports',
-                'icon': 'nav-dashboard',
                 'behaviorIds': [188],
                 'items': [{
                     'id': 'report-sales',
-                    'label': 'Sales',
-                    'address': '/reports/index'
+                    'label': 'Reports',
+                    'address': 'reports'
                 }]
-                //    {
-                //        'id': 'reports',
-                //        'label': 'Reports',
-                //        'address': 'reports'
-                //    }
-                //,
-                //{
-                //    'id': 'bizIntel',
-                //    'label': 'Dashboard',
-                //    'address': 'businessIntelligence'
-                //}
-                //]
-
+            },
+            {
+                'id': 'settings',
+                'navParent': 'sys',
+                'label': 'Settings',
+                'icon': 'nav-settings',
+                //'visible': false,
+                'items': [
+                    {
+                        'id': 'generalsettings',
+                        'label': 'General',
+                        'address': 'generalsettings'
+                    },
+                    {
+                        'id': 'paymentcheckout',
+                        'label': 'Payments',
+                        'address': 'settings/paymentAndCheckout'
+                    }, {
+                        'id': 'tax',
+                        'label': 'Tax',
+                        'address': 'settings/tax'
+                    }, {
+                        'id': 'shippingMain',
+                        'label': 'Shipping',
+                        'address': 'shipping'
+                    }, {
+                        'id': 'publishing',
+                        'label': 'Publishing',
+                        'address': 'settings/publishing'
+                    }
+                ]
+            },
+            {
+                'id': 'schema',
+                'navParent': 'sys',
+                'label': 'Schema',
+                'behaviorIds': [4],
+                'items': [{
+                    'id': 'productTypes',
+                    'label': 'Product Types',
+                    'address': 'producttypes'
+                }, {
+                    'id': 'productAttributes',
+                    'label': 'Product Attributes',
+                    'address': 'attributes'
+                }, {
+                    'id': 'orderAttributes',
+                    'label': 'Order Attributes',
+                    'address': 'orderattributes'
+                }, {
+                    'id': 'customerAttributes',
+                    'label': 'Customer Attributes',
+                    'address': 'CustomerAttributes'
+                }, {
+                    'id': 'locationTypes',
+                    'label': 'Location Types',
+                    'address': 'locationTypes'
+                }, {
+                    'id': 'customSchema',
+                    'label': 'Custom Schema',
+                    'address': 'customSchema'
+                }
+                ]
+            }, {
+                'id': 'customization',
+                'navParent': 'sys',
+                'label': 'Customization',
+                'behaviorIds': [4],
+                'items': [{
+                        'id': 'applications-manage',
+                        'label': 'Applications',
+                        'address': 'capability'
+                    }, {
+                        'id': 'actionmanagement',
+                        'label': 'Arc.js',
+                        'address': 'actionmanagement'
+                    }, {
+                        'id': 'customroutes',
+                        'label': 'Custom Routes',
+                        'address': 'customroutes'
+                    }
+                ]
+            },
+            {
+                'id': 'structure',
+                'navParent': 'sys',
+                'label': 'Structure',
+                'behaviorIds': [4],
+                'items': [{
+                    'id': 'siteprovisioning',
+                    'label': 'Sites',
+                    'address': 'provisioning/sites'
+                }, {
+                    'id': 'catalogprovisioning',
+                    'label': 'Catalogs',
+                    'address': 'provisioning/catalogs'
+                }, {
+                    'id': 'channels',
+                    'label': 'Channels',
+                    'address': 'channels'
+                }
+                ]
+            },
+            {
+                'id': 'permissions',
+                'navParent': 'sys',
+                'label': 'Permissions',
+                'items': [
+                    {
+                        'id': 'users',
+                        'label': 'Users',
+                        'address': 'account/users'
+                    }, {
+                        'id': 'roles',
+                        'label': 'Roles',
+                        'address': 'roles'
+                    }, {
+                        'id': 'ipblocking',
+                        'label': 'IP Restrictions',
+                        'address': 'ipblocking'
+                    }
+                ]
+            },
+            {
+                'id': 'localization',
+                'navParent': 'sys',
+                'locAtts': ['multiLang', 'multCurrency'],
+                'label': 'Localization',
+                'items': [
+                    {
+                        'id': 'localizationAttr',
+                        'label': 'Attributes',
+                        'address': 'Localization',
+                        'locAtts': ['multiLang']
+                    },
+                    {
+                        'id': 'localizationAttrVal',
+                        'label': 'Attribute Values',
+                        'address': 'Localization/attributeValues',
+                        'locAtts': ['multiLang']
+                    },
+                    {
+                        'id': 'localizationProp',
+                        'label': 'Product Properties',
+                        'address': 'Localization/productProperties',
+                        'locAtts': ['multiLang']
+                    },
+                    {
+                        'id': 'localizationExtra',
+                        'label': 'Product Extras',
+                        'address': 'Localization/productExtras',
+                        'locAtts': ['multCurrency']
+                    },
+                    {
+                        'id': 'localizationVar',
+                        'label': 'Product Variants',
+                        'address': 'Localization/productVariants',
+                        'locAtts': ['multCurrency']
+                    }
+                ]
             }
+            //todo: include shipping sublinks? greg_murray on 12/1/2015
+            //{
+            //    'id': 'shipping',
+            //    'label': 'Shipping',
+            //    'address': 'shipping',
+            //    'items': [
+            //        {
+            //            'id': 'shipping1',
+            //            'label': 'Carriers and Settings',
+            //            'address': 'shipping/carriers'
+            //        },
+            //        {
+            //            'id': 'shipping2',
+            //            'label': 'Zones',
+            //            'address': 'shipping/zones'
+            //        },
+            //        {
+            //            'id': 'shipping3',
+            //            'label': 'Product Rules',
+            //            'address': 'shipping/productRules'
+            //        }
+            //    ]
+            //}
         ],
         reader: {
             type: 'json',

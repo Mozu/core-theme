@@ -87,8 +87,11 @@ Ext.define('Taco.shared.view.field.Image', {
 
         this.emptyDropZone = Ext.widget({
             xtype: 'component',
-            cls: 'taco-image-drop-zone',
-            html: 'Drag and drop images here'
+            autoEl: {
+                tag: 'ul',
+                cls: 'taco-image-tiles'
+            },
+            html: '<li class="taco-image-drop"><div class="square">Drop images here</div></li>'
         });
 
         this.imageDropZone = Ext.widget({
@@ -135,7 +138,7 @@ Ext.define('Taco.shared.view.field.Image', {
             xtype: 'button',
             ui: 'link',
             scale: 'medium',
-            text: 'upload from computer',
+            text: 'Upload from Computer',
             scope: this,
             handler: function () {
                 this.uploadButton.fileInputEl.dom.click();
@@ -161,7 +164,7 @@ Ext.define('Taco.shared.view.field.Image', {
             xtype: 'button',
             ui: 'link',
             scale: 'medium',
-            text: 'upload from file manager',
+            text: 'Upload from File Manager',
             scope: this,
             handler: this.onAssociatorClick
         });

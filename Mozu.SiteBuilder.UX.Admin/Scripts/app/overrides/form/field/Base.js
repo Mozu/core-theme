@@ -8,6 +8,10 @@ Ext.define('Taco.overrides.form.field.Base', {
     initComponent: function () {
         this.setAllowBlank(this.allowBlank);
         this.callParent(arguments);
+        this.on({
+            focus: function () { this.addCls('taco-label-focus'); },
+            blur: function () { this.removeCls('taco-label-focus'); }
+        });
     },
     setAllowBlank: function (allowBlank) {
         var requiredCls = "x-form-item-required"

@@ -1,4 +1,4 @@
-﻿/**
+/**
  * @class Taco.view.order.subform.Return
  */
 Ext.define('Taco.view.order.subform.Return', {
@@ -23,11 +23,18 @@ Ext.define('Taco.view.order.subform.Return', {
     initComponent: function () {
         this.cls += " " + Taco.baseCSSPrefix + 'orderform-returns';
 
+        // activate is not called when using the new scroll spy. see 75656
         // initialize and tear down the ui when the view becomes active;
-        this.mon(this, {
-            'activate': this.initUI,
-            'deactivate': this.destroyUI
-        }, this);
+        //this.mon(this, {
+        //    'activate': this.initUI,
+        //    'deactivate': this.destroyUI
+        //}, this);
+        this.initUI();
+
+        this.record.on({
+            reload: this.initUI,
+            scope: this
+        });
 
         this.callParent(arguments);
     },
@@ -38,8 +45,9 @@ Ext.define('Taco.view.order.subform.Return', {
     },
 
     initUI: function () {
-        var me = this;
-        var record = this.record;
+
+        var me = this,
+            record = this.record;
 
         this.initHeader();
 
@@ -96,19 +104,41 @@ Ext.define('Taco.view.order.subform.Return', {
             title: "return panels here"
         });
 
-        this.add(
-            this.returnableItems, {
-                xtype: 'container',
-                margin: '10px 0 20px 0',
-                layout: {
-                    type: 'hbox',
-                    align: 'stretch',
-                    pack: 'end'
+        // if the component has been rendered before, we need to add, rather than init
+        if (this.rendered) {
+            this.removeAll();
+            this.add([
+                this.returnableItems, {
+                    xtype: 'container',
+                    margin: '10px 0 20px 0',
+                    layout: {
+                        type: 'hbox',
+                        align: 'stretch',
+                        pack: 'end'
+                    },
+                    items: [this.returnableItemsErrorEl, this.createButton]
                 },
-                items: [this.returnableItemsErrorEl, this.createButton]
-            },
-            this.returnPanels
-        );
+                this.returnPanels
+            ]);
+        }   
+
+        else { 
+            this.items = [
+                this.returnableItems, {
+                    xtype: 'container',
+                    margin: '10px 0 20px 0',
+                    layout: {
+                        type: 'hbox',
+                        align: 'stretch',
+                        pack: 'end'
+                    },
+                    items: [this.returnableItemsErrorEl, this.createButton]
+                },
+                this.returnPanels
+            ];
+        }
+
+
     },
 
     refreshReturnableItemsGrid: function () {
@@ -133,8 +163,8 @@ Ext.define('Taco.view.order.subform.Return', {
         var returnsStore = this.getReturnsStore();
         var returnCount = returnsStore ? Ext.valueFrom(returnsStore.count(), 0) : 0;
         // var returnStatus = Taco.core.util.Common.camelToSpace(this.record.get('returnStatus'));
-
-        this.setHeaderTitle("Status: <strong>" + (returnCount ? returnCount : 'No') + " Return" + (returnCount === 1 ? "" : "s") + "</strong>");
+        var returnStatus = (returnCount ? returnCount : 'No') + ' Return' + (returnCount === 1 ? '' : 's');
+        this.setHeaderTitleStatus('Returns', returnStatus);
     },
 
     initCreateButton: function () {

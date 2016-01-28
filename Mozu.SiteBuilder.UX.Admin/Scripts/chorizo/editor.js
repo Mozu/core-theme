@@ -78,39 +78,6 @@
                             arguments[1].callback('<h1>Header1</h1><p>Paragraph2</p>', {});
                         }
                         console.log('Editor Event: ', name, Array.prototype.slice.call(arguments, 1));
-                    },
-                    findWidgetTypeDefinitions: function(filter, callback) {
-                        callback([{
-                            "name": "Featured Products",
-                            "isRichText": false,
-                            "icon": "/resources/admin/widgets/_0007_featured-products.png",
-                            "id": "featured_product"
-                        }, {
-                            "name": "Content",
-                            "isRichText": true,
-                            "icon": "/resources/admin/widgets/_0004_html.png",
-                            "id": "content"
-                        }, {
-                            "name": "test image",
-                            "isRichText": false,
-                            "icon": "/resources/admin/widgets/_0004_html.png",
-                            "id": "image"
-                        }, {
-                            "name": "Horizontal Rule",
-                            "isRichText": false,
-                            "icon": "/resources/admin/widgets/_0005_horizontal-divider.png",
-                            "id": "horizontal_rule"
-                        }, {
-                            "name": "AddThis",
-                            "isRichText": false,
-                            "icon": "/resources/admin/widgets/_0008_share.png",
-                            "id": "addthis"
-                        }, {
-                            "name": "Facebook Comments",
-                            "isRichText": false,
-                            "icon": "/resources/admin/widgets/_0008_share.png",
-                            "id": "facebook_comments"
-                        }]);
                     }
                 };
             }

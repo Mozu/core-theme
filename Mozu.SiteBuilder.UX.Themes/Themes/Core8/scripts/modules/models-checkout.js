@@ -818,7 +818,7 @@
                     me.set('savedPaymentMethodId', savedCardId, { silent: true });
                     me.setSavedPaymentMethod(savedCardId);
 
-                    if (!savedCardId) {
+                    if (!savedCardId && !me.get('paymentType')) {
                         me.setDefaultPaymentType(me);
                     }
 
@@ -1206,6 +1206,8 @@
                 var activePayments = this.apiModel.getActivePayments();
                 var visaCheckoutPayment = activePayments && _.findWhere(activePayments, { paymentWorkflow: 'VisaCheckout' });
                 if (visaCheckoutPayment) {
+                    billingInfo.set('usingSavedCard', false);
+                    billingInfo.unset('savedPaymentMethodId');
                     billingInfo.set('card', visaCheckoutPayment.billingInfo.card);
                     billingInfo.unset('billingContact');
                     billingInfo.set('billingContact', visaCheckoutPayment.billingInfo.billingContact, { silent:true });

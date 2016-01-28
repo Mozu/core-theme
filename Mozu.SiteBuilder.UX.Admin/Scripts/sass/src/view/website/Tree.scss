@@ -1,11 +1,48 @@
 .#{$vprefix}website-tree {
-    .#{$prefix}grid-body {
-        background-color: transparent;
+
+    table tbody tr {
+        &:last-child {
+
+            .#{$vprefix}website-tree-node-group {
+                border-bottom-width: 1px;
+            }
+        }
+    }
+
+    .#{$prefix}grid-body, 
+    .#{$prefix}panel-body, 
+    .#{$prefix}grid-td {
+        background-color: $card-button-bg;
+
+        &.#{$vprefix}website-tree-node-group {
+            background-color: $white-color;
+            border-color: $nav-element-active-border;
+            border-top-width: 1px;
+
+            .#{$prefix}tree-node-text {
+                padding: 5px 0px 5px 16px;
+            }
+        }
+
+    }
+
+    .#{$prefix}grid-tree-node-expanded {
+        .#{$prefix}grid-td {
+
+            &.#{$vprefix}website-tree-node-group {
+                border-bottom-width: 1px;
+            }
+        }
     }
 
     .#{$prefix}grid-cell {
-        background-color: $color-framework-gray-lighter;
+        background-color: $card-button-bg;
+
+        &:hover {
+            background-color: $card-btn-disabled-border;
+        }
     }
+
 
     .#{$prefix}grid-cell-treecolumn {
         font-size: 14px;
@@ -29,10 +66,11 @@
         .#{$prefix}tree-elbow-img {
             float: left;
         }
+
     }
 
     .#{$prefix}tree-node-text {
-        font-size: 13px;
+        font-size: 12px;
 
             /**
              * Updated 10/08/2015
@@ -51,17 +89,33 @@
 
     .#{$prefix}grid-row-alt {
         .#{$prefix}grid-td {
-            background-color: $color-framework-gray-light;
+            background-color: $white-color;
         }
     }
     .#{$prefix}grid-row-selected {
         .#{$prefix}grid-td {
-            background-color: $grid-cell-selected-background-color;
+            background-color: $pill-bg-gray !important;
         }
 
-        .#{$vprefix}website-tree-menu-trigger,
+        .#{$vprefix}website-tree-menu-trigger {
+
+            &::after {
+                color: $color-neutral-40;
+            }
+
+        }
+
         .#{$vprefix}website-tree-icon.drag-icon {
-            background-color: $grid-cell-selected-background-color;
+
+            &::after {
+                color: $color-neutral-40;
+            }
+        }
+    }
+
+    .#{$prefix}grid-row-focused {
+        .#{$vprefix}website-tree-icon.drag-icon {
+            background-color: transparent;
         }
     }
 
@@ -73,33 +127,39 @@
         width: 12px;
 
         &.page-icon {
-            @include icon-font($glyph-category);
+            @include icon-font($glyph-tree-page, 18px, rgb(179, 179, 179));
             top: -1.5px;
         }
 
         &.template-icon {
-            @include icon-font($glyph-template);
+            @include icon-font($glyph-tree-template, 16px, rgb(179, 179, 179));
         }
 
         &.category-icon {
-            @include icon-font($glyph-tree-category);
+            @include icon-font($glyph-tree-layers, 16px, rgb(179, 179, 179));
         }
 
         &.folder-icon {
-            @include icon-font($glyph-folder, 12px);
+            @include icon-font($glyph-tree-folder, 16px, rgb(179, 179, 179));
         }
 
         &.link-icon {
-            @include icon-font($glyph-link, 13px);
+            @include icon-font($glyph-link, 13px, rgb(179, 179, 179));
         }
 
         &.drag-icon {
-            @include icon-font($glyph-knurling, 13px, rgb(179, 179, 179));
+            @include icon-font($glyph-reorder, 13px, rgb(179, 179, 179));
+            background-color: transparent;
             float: right;
-            background-color: $color-framework-gray-light;
 
             &.invisible {
                 visibility: hidden;
+            }
+
+            &::after {
+                cursor: pointer;
+                left: initial;
+                right: 0px;
             }
         }
 
@@ -116,8 +176,27 @@
 
     .#{$vprefix}website-tree-menu-trigger {
         float: right;
-        background-color: $color-framework-gray-light;
-        @include icon-font($glyph-gear, 13px);
-        display: none;
+        background-color: transparent;
+        border: 1px solid transparent;
+        height: 16px !important;
+        width: 9px !important;
+        @include border-radius(3px);
+        @include icon-font($glyph-more-vert, 13px, $color-neutral-75);
+
+        &::after {
+            cursor: pointer;
+            left: 1px;
+            top: 0.5px;
+        }
+
+        &.active {
+            box-shadow: rgba(0,0,0,0.09) 0 0 0 1px inset;
+        }
+
+        &:hover {
+            &::after {
+                color: $color-neutral-40;
+            }
+        }
     }
 }

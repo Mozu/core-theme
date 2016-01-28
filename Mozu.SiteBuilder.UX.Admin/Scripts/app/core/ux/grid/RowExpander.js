@@ -137,7 +137,8 @@ Ext.define('Taco.core.ux.grid.RowExpander', {
             menuDisabled: true,
             cls: Ext.baseCSSPrefix + 'grid-header-special',
             renderer: function(value, metadata, record) {
-                var cls = Ext.baseCSSPrefix + 'grid-row-expander';
+
+                var cls = me.hideExpanderFn && !me.hideExpanderFn() ? Ext.baseCSSPrefix + 'grid-row-expander' : '';
 
                 metadata.tdCls = Ext.baseCSSPrefix + 'grid-cell-special ' + Ext.baseCSSPrefix + 'grid-cell-row-expander';
                 

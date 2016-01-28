@@ -24,7 +24,14 @@ Ext.define('Taco.view.productRanking.Edit', {
         }
     },
 
+    parentTitleCfg: {
+        title: 'Product Ranking Rules',
+        controller: 'ProductRankings'
+    },
+
     isCreate: false,
+
+    enableSearchBarInHeader: false,
 
     initComponent: function () {
         var me = this;
@@ -53,22 +60,43 @@ Ext.define('Taco.view.productRanking.Edit', {
                     collectionName: 'productRankings'
             });
 
+            var duplicateMenuItem = {
+                text: 'Duplicate',
+                disabled: me.record.phantom,
+                requiredBehaviors: {
+                    model: 'Taco.model.Product',    
+                    behavior: 'create'
+                },
+                handler: function () {
+                    var record = me.record,
+                        metaData = {
+                            id: record.getId()
+                        };
+
+                    Taco.app.StateManager.attemptNavigate('ProductRankings/duplicate/' + record.getId(), metaData);
+                }
+            };
+
+            menuItems.push(duplicateMenuItem);
+
             menuItems.push(delMenuItem);
 
-            me.additionalActions = [{
+            me.moreButtonCfg = {
                 xtype: 'button',
+                height: 40,
                 itemId: 'moreButton',
                 ui: 'action',
                 scale: 'medium',
-                text: 'More',
+                text: '',
                 menuAlign: 'tr-br?',
                 disabled: disabledOnCreate,
                 menu: {
+                    cls: 'taco-more-action-button-menu',
                     plain: true,
                     shadow: false,
                     items: menuItems
                 }
-            }];
+            };
         };
 
         setupMoreButton(me.isCreate);

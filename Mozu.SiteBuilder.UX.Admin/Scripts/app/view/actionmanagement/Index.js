@@ -6,9 +6,10 @@ Ext.define('Taco.view.actionmanagement.Index', {
         'Ext.form.Panel',
         'Taco.core.ux.form.field.Code'
     ],
-    title: 'Action Management',
+    title: 'Arc.js',
     formCls: 'Taco.core.ux.form.Form',
     enableNavHeader: true,
+    enableSearchBarInHeader: false,
     autoTitle: true,
     autoScroll: true,
     initComponent: function () {
@@ -30,7 +31,7 @@ Ext.define('Taco.view.actionmanagement.Index', {
                 showGutter: true,
                 selectOnRender: false,
                 mode: 'json',
-                theme: 'ace/theme/monokai'
+                theme: 'ace/theme/ambience'
             }]
         };
         
