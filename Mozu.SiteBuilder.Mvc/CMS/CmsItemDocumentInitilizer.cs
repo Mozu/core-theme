@@ -105,7 +105,7 @@ namespace Mozu.SiteBuilder.Mvc.CMS
             Task<ServiceClientResponse<DocumentWithListInfo>> pageTask = null;
             Task<ServiceClientResponse<DocumentWithListInfo>> templateTask = null;
             Task<ServiceClientResponse<DocumentWithListInfo>> siteTemplateTask = null;
-            Task<ServiceClientResponse<JObject>> LayoutFinderOuter = _EntityListWebApiClient.GetEntity("tenantAdminSettings@mozu", "global");
+          
             var tasks = new List<Task>();
             if (ProcessDocumentRequest(cmsPageContext.Page, "pages@mozu", out pageTask, pageContext.IsEditMode))
             {
@@ -120,7 +120,7 @@ namespace Mozu.SiteBuilder.Mvc.CMS
                 tasks.Add(templateTask);
             }
 
-            tasks.Add(LayoutFinderOuter);
+         
 
             await Task.WhenAll(tasks.ToArray()).ConfigureAwait(false);
             if (pageTask != null && pageTask.Result.ResponseMessage.IsSuccessStatusCode)
@@ -168,23 +168,7 @@ namespace Mozu.SiteBuilder.Mvc.CMS
                 }
             }
 
-            if (LayoutFinderOuter != null && LayoutFinderOuter.Result.ResponseMessage.IsSuccessStatusCode)
-            {
-                var tenantAdminSettingsGlobalObject = LayoutFinderOuter.Result.ReadAsSync();
-                if (tenantAdminSettingsGlobalObject != null)
-                {
-                    var layoutnode = tenantAdminSettingsGlobalObject["newLayoutEngine"] ?? new JValue(false);
-                    cmsPageContext.LayoutEngineType = layoutnode.Value<bool>() ? CmsPageContext.LayoutTypeConstants.Caliente : CmsPageContext.LayoutTypeConstants.Chorizo;
-                }
-                else
-                {
-                    cmsPageContext.LayoutEngineType = CmsPageContext.LayoutTypeConstants.Chorizo;
-                }
-            }
-            else
-            {
-                cmsPageContext.LayoutEngineType = CmsPageContext.LayoutTypeConstants.Chorizo;
-            }
+           
 
             cmsPageContext.RuntimeData = new List<Chorizo.ZoneRuntimeData>();
             cmsPageContext.CalienteRuntimeData = new List<Caliente.ZoneRuntimeData>();

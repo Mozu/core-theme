@@ -189,7 +189,7 @@ Ext.define('Taco.core.ux.browser.SearchList', {
                 scale: 'medium',
                 disabled: true,
                 text: 'Bulk Actions',
-                handler: function () { console.log('do bulk actions'); }
+                handler: function () {  }
             }, '->', me.createExpanderCollapser());
         }
 

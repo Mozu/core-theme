@@ -151,7 +151,6 @@ Ext.define('Taco.view.order.subform.Customer', {
             jsonData: this.customer,
             success: function (record) {
                 //this.setCustomer.setDirty(false);
-                console.log('setcustomer - success', record);
 
                 // need to make sure that any customer related members get reset when the customer changes
 

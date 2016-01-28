@@ -22,7 +22,7 @@ Ext.define('Taco.core.data.Model', {
 
                     if (!unmappedFields[key]) {
                         unmappedFields[key] = true;
-                        Ext.log({  level: 'warn' , dump:value }, 'unmapped field of [' + key + '] found in ' + this.modelName);
+                        //Ext.log({  level: 'warn' , dump:value }, 'unmapped field of [' + key + '] found in ' + this.modelName);
                     }
                 }
             }, this);

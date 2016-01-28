@@ -142,8 +142,6 @@ Ext.define('Taco.view.navigation.SubNavLinkContainer', {
 
             title = title ? title : 'Mozu Extension';
 
-            console.log(link, title)
-
             item = {
                 title: title,
                 key: 'no-' + normalizeBadgeId,
@@ -237,8 +235,6 @@ Ext.define('Taco.view.navigation.SubNavLinkContainer', {
         if (Object.keys(config).join('').indexOf('path_') === -1) {
             return false;
         }
-
-        console.log(config)
 
         var menu = Ext.create('Ext.menu.Menu', {
             items: this.buildNode(config, config.title),

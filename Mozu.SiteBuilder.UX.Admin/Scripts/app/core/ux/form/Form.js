@@ -31,7 +31,6 @@ Ext.define('Taco.core.ux.form.Form', {
         click: {
             element: 'el',
             fn: function (e) {
-                console.log(e);
                 if ((e.target.nodeName == 'INPUT' || e.target.nodeName == 'TEXTAREA') && e.target.previousSibling !== null) {
                     if (e.target.previousSibling.childNodes.length > 0) {
                         e.target.previousSibling.childNodes[0].className = e.target.previousSibling.childNodes[0].className + ' label-focused';

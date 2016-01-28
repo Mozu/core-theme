@@ -434,8 +434,6 @@
                         if (option.AttributeDetail.UsageType === 'Option') {
                             this.lastUpdatedOption = option;
                         }
-
-                        console.log('Change', inputType, option.Value, value);
                         return false;
                     }, this);
 
@@ -507,7 +505,6 @@
             jsonData: request,
             success: function (response) {
                 this.runtimeData = JSON.parse(response.responseText).items;
-                console.log('RUNTIME DATA UPDATE', this.runtimeData);
                 Ext.each(this.runtimeData.Options, function (option) {
                     this.updateOption(option);
                 }, this);

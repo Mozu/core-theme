@@ -456,7 +456,6 @@ Ext.define('Taco.view.website.widgetEditors.Image', {
     handleImageClickActionChange: function (newValue) {
         var isUrl = newValue.imageClickAction === 'url';
 
-        console.log(isUrl ? 'url' : 'not url');
         this.down('#linkFields').setVisible(isUrl);
         this.down('#linkSelectors').setVisible(isUrl);
     },

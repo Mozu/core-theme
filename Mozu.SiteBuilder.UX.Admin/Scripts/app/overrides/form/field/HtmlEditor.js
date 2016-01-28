@@ -130,7 +130,6 @@ Ext.define('Taco.overrides.form.field.HtmlEditor', {
             if (document.getElementById(me.iframeEl.id)) {
                 me.syncValue();
             } else {
-                console.log('damn');
             }
         }
         value = me.textareaEl.dom.value;

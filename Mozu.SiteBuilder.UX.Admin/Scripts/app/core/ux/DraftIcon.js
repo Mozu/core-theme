@@ -28,11 +28,5 @@ Ext.define('Taco.core.ux.DraftIcon', {
 
     updateMainText: function(txt) {
        
-    },
-
-    listeners: {
-        afterrender: function(cmp) {
-            // console.log(cmp);
-        }
     }
 });

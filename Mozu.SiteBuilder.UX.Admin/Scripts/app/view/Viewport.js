@@ -89,7 +89,6 @@ Ext.define('Taco.view.Viewport', {
                 ctrl: false,
                 shift: false,                
                 fn: function (key,e) {
-                    console.log("find search field");
                     var searchFields = Ext.ComponentQuery.query('taco-quickfilter');
                     if (searchFields.length) {
                         searchFields[0].focus();
@@ -105,7 +104,6 @@ Ext.define('Taco.view.Viewport', {
                 ctrl: true,
                 shift: false,
                 fn: function (key, e) {
-                    console.log("find global search field");
 
                 },
                 // prevents the event from bubbling past the modal;
@@ -158,43 +156,6 @@ Ext.define('Taco.view.Viewport', {
                 scope: me
             }
 
-            /*
-            ,
-
-            
-            {
-                
-                key: Ext.EventObject.ESC,
-                ctrl: false,
-                shift: true,
-                fn: function (key,e) {
-                    console.log("shift EXC press")
-                    if (this.escapedField) {
-                        this.escapedField.focus();
-                        delete this.escapedField                        
-                    }
-                },
-                // prevents the event from bubbling past the modal;
-                //defaultEventAction: 'stopEvent',
-                scope: me
-            }, {
-                // Escape key
-                key: Ext.EventObject.ESC,
-                ctrl: false,
-                shift: false,
-                fn: function (key, e) {                    
-                    //console.log("escape key")
-                    if (e.target.tagName == "INPUT") {
-                        this.escapedField = e.target;
-                        // todo: set focus on the viewport or window instead of just bluring the field;
-                        e.target.blur();
-                    }
-                },
-                // prevents the event from bubbling past the modal;
-                //defaultEventAction: 'stopEvent',
-                scope: me
-            }*/
-
 
             ]
         });
@@ -234,7 +195,6 @@ Ext.define('Taco.view.Viewport', {
     showContextHelp: function () {
         var me = this;
 
-        console.log("show context sensitive help menu")
         var win = Ext.create('Taco.core.ux.window.Modal', {
             autoShow: true,
             title:"Help",

@@ -129,7 +129,6 @@ Ext.define('Taco.core.ux.form.field.plugins.InputMask', {
 
     onClearTriggerClick: function () {        
         var me = this;
-        console.log("clear trigger clicked")
         
         if (!me.field.fireEvent('beforecleartriggerclick', this)) {
             
@@ -144,7 +143,6 @@ Ext.define('Taco.core.ux.form.field.plugins.InputMask', {
     onClearTriggerFocus: function () {
         var me = this;
         if (!me.isClearTriggerDisabled()) {
-            console.log("onClearTriggerFocus")
             me.field.fireEvent("cleartriggerfocus", me.field, me.clearTriggerEl);
         }
     },
@@ -153,7 +151,6 @@ Ext.define('Taco.core.ux.form.field.plugins.InputMask', {
         var me = this;
         
         if (!me.isClearTriggerDisabled()) {
-            console.log("onClearTriggerBlur")
             me.field.fireEvent("cleartriggerblur", me.field, me.clearTriggerEl);
         }
     },

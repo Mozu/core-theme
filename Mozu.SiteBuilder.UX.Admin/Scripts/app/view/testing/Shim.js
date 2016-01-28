@@ -33,7 +33,6 @@
         },
         
         load: function () {
-            console.log('load iframe', this.iframe);
             this.body = new Ext.dom.Element(this.iframe.getDoc().body);
             
             

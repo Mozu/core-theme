@@ -215,7 +215,6 @@ Ext.define('Taco.view.role.Index', {
         });
     },
     getActionEvents: function() {
-        console.log('ere');
     },
     launchEditor: function (record, action) {
         //This is a work around bc the single click calls launch Editor twice

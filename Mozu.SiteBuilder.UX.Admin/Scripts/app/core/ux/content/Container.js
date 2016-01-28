@@ -59,7 +59,7 @@ Ext.define('Taco.core.ux.content.Container', {
                 ctrl: true,
                 shift: true,
                 fn: function () {
-                     console.log("save key press")
+                     
                 },
                 // prevents the event from bubbling past the modal;
                 //defaultEventAction: 'stopEvent',

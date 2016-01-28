@@ -195,7 +195,7 @@ Ext.define('Taco.view.generalSettings.subform.About', {
                                 xtype: 'textfield',
                                 itemId: 'customCdnHostName',
                                 name: 'customCdnHostName',
-                                itemId: 'cdnCacheBustKey',
+                                itemId: 'customCdnHostName',
                                 fieldLabel: 'CDN Domain',
                                 emptyText: Taco.cdnPrefix,
                                 flex: 1,

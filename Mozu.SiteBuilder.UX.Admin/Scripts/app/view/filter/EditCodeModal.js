@@ -56,7 +56,6 @@ Ext.define('Taco.view.filter.EditCodeModal', {
             listeners: {
                 scope: me,
                 escKey: function() {
-                    console.log("esc");
                     //todo: try and figure out a way to make the code field keyboard accessable;
                     // for now just pass focus to the validate button 
                     this.validateButton.focus();
@@ -85,7 +84,6 @@ Ext.define('Taco.view.filter.EditCodeModal', {
             listeners: {
                 scope: me,
                 escKey: function () {
-                    console.log("esc");
                     //todo: try and figure out a way to make the code field keyboard accessable;
                     // for now just pass focus to the validate button 
                     this.validateButton.focus();

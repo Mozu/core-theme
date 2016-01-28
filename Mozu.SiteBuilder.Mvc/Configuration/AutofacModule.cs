@@ -75,6 +75,10 @@ namespace Mozu.SiteBuilder.Mvc.Configuration
             builder.RegisterType<SEO.CustomRouteRepository>().AsImplementedInterfaces().AsSelf();
 
             builder.RegisterType<StorefrontCacheControlImpl>().As<IStorefrontCacheControl>().SingleInstance();
+
+            builder.RegisterType<StorefrontCache>().As<IStorefrontCache>().InstancePerRequest();
+            builder.RegisterType<ThemeCache>().As<IThemeCache>().SingleInstance();
+            
         }
 
       

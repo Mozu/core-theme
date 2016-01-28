@@ -432,7 +432,7 @@ namespace Mozu.SiteBuilder.UnitTests.Mvc.SEO
                 return default(T);
             }
 
-            public void Set(string key, object value, CacheScope scope = CacheScope.Site, StorefrontCacheTypes cacheType = StorefrontCacheTypes.Default, Func<object, object> updateCallback = null)
+            public void Set(string key, object value, CacheScope scope = CacheScope.Site, StorefrontCacheTypes cacheType = StorefrontCacheTypes.Default, Func<object, object> updateCallback = null, IList<string> filePaths= null)
             {
 
             }

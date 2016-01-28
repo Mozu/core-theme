@@ -157,7 +157,6 @@ Ext.define('Taco.core.util.UploadManager', function () {
                             var options = {};
                             Taco.app.context.onBeforeAjaxRequest( null, options);
                            
-                            console.log("Document ID: " + document.getId() + " created for file " + file.name);
                             me.fireEvent('modelsavesuccess', { document: document, file: file });
                             // Step 2: upload the image.
                             xhr.open("POST", url.replace("{docid}", document.getId()));
@@ -185,7 +184,6 @@ Ext.define('Taco.core.util.UploadManager', function () {
                         },
 
                         failure: function () {
-                            console.log("Document ID: " + document.id + " creation failed for file " + file.name);
                             me.fireEvent('modelsavefailure', { document: document, file: file });
                         }
                     });

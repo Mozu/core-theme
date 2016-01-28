@@ -41,13 +41,11 @@ Ext.define('Taco.controller.Themesettings', {
                     },
                     failure: function (r) {
                         Taco.app.fireEvent('setmessage', 'Error retrieving theme settings configuration.', 'error');
-                        console.log('Error retrieving theme settings configuration.', r);
                     }
                 });
             },
             failure: function (response) {
                 Taco.app.fireEvent('setmessage', 'Error retrieving theme settings configuration.', 'error');
-                console.log('Error retrieving theme settings configuration.', response);
             }
         });
     },
@@ -72,7 +70,6 @@ Ext.define('Taco.controller.Themesettings', {
             },
             failure: function (response) {
                 Taco.app.setLoading(false);
-                console.log('Error retrieving theme settings configuration.', response);
             }
         });
     }
