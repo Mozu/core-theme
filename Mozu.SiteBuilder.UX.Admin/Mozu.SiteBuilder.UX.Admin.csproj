@@ -552,6 +552,11 @@
     <Content Include="Scripts\app\core\ux\mixins\DeleteFromGrid.js" />
     <Content Include="Scripts\app\core\ux\mixins\GridContextMenu.js" />
     <Content Include="Scripts\app\core\ux\mixins\ActionColumn.js" />
+    <Content Include="Scripts\app\core\ux\picker\CheckboxFlyout.js" />
+    <Content Include="Scripts\app\core\ux\picker\InlineSelector.js" />
+    <Content Include="Scripts\app\core\ux\picker\CheckboxTreeModal.js" />
+    <Content Include="Scripts\app\core\ux\picker\Selector.js" />
+    <Content Include="Scripts\app\core\ux\picker\SelectorFlyout.js" />
     <Content Include="Scripts\app\core\ux\plugins\NextPrevious.js" />
     <Content Include="Scripts\app\core\ux\PanelHeaderStat.js" />
     <Content Include="Scripts\app\core\ux\HtmlEditorImagePlugin.js" />

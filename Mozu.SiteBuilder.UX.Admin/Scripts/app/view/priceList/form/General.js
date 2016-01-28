@@ -10,7 +10,8 @@ Ext.define('Taco.view.priceList.form.General', {
         'Ext.form.field.Date',
         'Taco.core.ux.TooltipLabel',
         'Taco.core.util.Validation',
-        'Taco.view.priceList.widget.PriceListComboBox'
+        'Taco.view.priceList.widget.PriceListComboBox',
+        'Taco.core.ux.picker.CheckboxTreeModal'
     ],
     ui: 'subform',
     margin: '0 0 20 0',
@@ -22,6 +23,65 @@ Ext.define('Taco.view.priceList.form.General', {
         var me = this;
 
         Ext.tip.QuickTipManager.init();
+
+        var siteData = Ext.Array.map(Taco.app.context.getMasterCatalog().sites, function (site) {
+                return { id: site.id, name: site.name};
+            });
+
+        var siteStore = Ext.create('Ext.data.Store', {
+            fields: ['id','name'],
+            data: siteData
+        });
+
+        this.validSitesList = Ext.create('Ext.ux.form.field.BoxSelect', {
+            name: 'validSites',
+            flex: 9,
+            store: siteStore,
+            getStore: function () {
+                return siteStore;
+            },
+            queryMode: 'local',
+            hideTrigger: true,
+            triggerOnClick: false,
+            forceSelection: true,
+            disableKeyFilter: true,
+            typeAhead: true,
+            lastQuery:"",
+            displayField: 'name',
+            valueField: 'id',
+            fieldLabel: 'Valid Sites',
+            style: {
+                display: 'inline-table',
+                verticalAlign: 'bottom'
+            }
+        });
+
+        this.validSitesBox = Ext.create('Ext.container.Container', {
+            layout: {
+                type: 'hbox',
+                align: 'bottom'
+            },
+            width: '100%',
+            items: [
+                this.validSitesList,
+                {
+                    xtype: 'button',
+                    scale: 'medium',
+                    ui: 'action',
+                    text: 'Add',
+                    margin: '0 0 0 10',
+                    flex: 1,
+                    maxWidth: 70,
+                    style: {
+                        verticalAlign: 'bottom'
+                    },
+                    handler: function () {
+                        this.launchSiteModal(this.validSitesList);
+                    },
+                    scope: this
+                }
+            ]
+        });
 
         //   vbox
         //     hbox -
@@ -140,11 +200,59 @@ Ext.define('Taco.view.priceList.form.General', {
                             maxLength: 500
                         }
                     ]
+                },
+                {
+                    xtype: 'panel',
+                    layout: {
+                        type: 'vbox',
+                        align: 'stretch'
+                    },
+                    items: [
+                        this.validSitesBox
+                    ]
                 }
             ]
         }];
 
         this.callParent(arguments);
+    },
+
+    /**
+     * Opens a modal with a TreePanel.
+     * @private
+     */
+    launchSiteModal: function(list) {
+        var catalogChildren = Ext.Array.map(Taco.app.context.getMasterCatalog().catalogs, function (cat) {
+                var siteChildren = Ext.Array.map(cat.sites, function (site) {
+                    return { id: site.id, text: site.name, leaf: true};
+                });
+                return { id: cat.id, text: cat.name, expanded: true, children: siteChildren};
+            }),
+
+            siteTreeStore = Ext.create('Ext.data.TreeStore', {
+                root: {
+                    expanded: true,
+                    children: catalogChildren
+                }
+            });
+
+        this.modal = Ext.widget('checkbox-tree-modal', {
+            title: 'Select Sites',
+            displayField: 'name',
+            store: siteTreeStore
+        });
+
+        this.modal.on({
+            savesuccess: function(modal, values) {
+                list.addValue(values);
+                this.reloadStore(list);
+                this.parentForm.getForm().checkValidity();
+            },
+            aftercancelclose: function() {
+                this.reloadStore(list);
+            },
+            scope: this
+        });
     },
 
     beforeSave: function () {
