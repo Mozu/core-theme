@@ -82,6 +82,7 @@ namespace Mozu.SiteBuilder.Mvc.Caching
             AddClientCacheContainer(StorefrontCacheTypes.Default, StoreFrontCacheDependencies.Catalog);
             AddClientCacheContainer(StorefrontCacheTypes.Default, StoreFrontCacheDependencies.Catalog);
             AddClientCacheContainer(StorefrontCacheTypes.PartialOutput, StoreFrontCacheDependencies.Catalog);
+            AddClientCacheContainer(StorefrontCacheTypes.PartialOutput, StoreFrontCacheDependencies.None);
             AddClientCacheContainer(StorefrontCacheTypes.CatalogIndependent, StoreFrontCacheDependencies.None );
             AddClientCacheContainer(StorefrontCacheTypes.ProductSearch, StoreFrontCacheDependencies.Catalog);
          

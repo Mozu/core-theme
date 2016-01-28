@@ -10,21 +10,22 @@ using Mozu.Tenant.Contracts.Clients;
 using System.Collections.Generic;
 using System.Linq;
 using Mozu.Core.Logging;
+using Mozu.Core;
 
 namespace Mozu.SiteBuilder.Mvc.Caching
 {
     public interface IStorefrontCache
     {
         T Get<T>(string key, CacheScope scope = CacheScope.Site, StorefrontCacheTypes cacheType = StorefrontCacheTypes.Default);
-        void Set(string key, object value, CacheScope scope = CacheScope.Site, StorefrontCacheTypes cacheType = StorefrontCacheTypes.Default, Func<object, object> updateCallback   = null);
+        void Set(string key, object value, CacheScope scope = CacheScope.Site, StorefrontCacheTypes cacheType = StorefrontCacheTypes.Default, Func<object, object> updateCallback   = null , IList<string> filePaths= null);
 
 
     }
    
    
-    internal sealed class StorefrontCache : IStorefrontCache
+    internal  class StorefrontCache : IStorefrontCache
     {
-        private readonly ISiteBuilderApiContext _ctx;
+        private readonly IApiContext _ctx;
        
         private readonly ILifetimeScope _scope;
         private readonly IStorefrontCacheControl _cacheControl;
@@ -34,15 +35,11 @@ namespace Mozu.SiteBuilder.Mvc.Caching
         /// <summary>
         /// Public constructor.
         /// </summary>
-        public StorefrontCache(ISiteBuilderApiContext ctx, ILifetimeScope scope, IStorefrontCacheControl cacheControl )
+        public StorefrontCache(IApiContext ctx, ILifetimeScope scope, IStorefrontCacheControl cacheControl )
         {
             _ctx = ctx;
-           
             _scope = scope;
             _cacheControl = cacheControl;
-         
-        
-          
         }
 
         void ValidateContext()
@@ -89,6 +86,8 @@ namespace Mozu.SiteBuilder.Mvc.Caching
                     return cc.Cache.Get(CacheKeyHelper.GetCatalogCacheKey(_ctx.TenantId, _ctx.CatalogId.Value, key));
                 case CacheScope.Site:
                     return cc.Cache.Get(CacheKeyHelper.GetSiteCacheKey(_ctx.SiteId.Value, key));
+                case CacheScope.Global:
+                    return cc.Cache.Get( key);
                 default:
                     return cc.Cache.Get(CacheKeyHelper.GetTenantCacheKey(_ctx.TenantId, key));
             }
@@ -102,16 +101,19 @@ namespace Mozu.SiteBuilder.Mvc.Caching
 
         class CacheHandler
         {
-            public CacheHandler( CacheConfiguration config, Func<object, object> updateCallback, IEnumerable<string> dependencies)
+            public CacheHandler( CacheConfiguration config, Func<object, object> updateCallback, IEnumerable<string> dependencies, IList<string> filePaths)
             {
                 this.Config = config;
                 this.UpdateCallback = updateCallback;
                 this.Dependencies = dependencies;
+                this.FilePaths = filePaths;
             }
            public CacheConfiguration Config { get; private set; }
             
             public Func<object,object> UpdateCallback { get; set; }
             public IEnumerable<string> Dependencies { get; set; }
+            public IList<string> FilePaths { get; private set; }
+
             public void CacheEntryUpdateHandler (CacheEntryUpdateArguments args)
             {
                 if ( args.RemovedReason == CacheEntryRemovedReason.Expired )
@@ -142,12 +144,22 @@ namespace Mozu.SiteBuilder.Mvc.Caching
             {
                 var abskey = key + ";abs";
                 cache.AddOrGetExisting(new CacheItem(abskey, new object()), new CacheItemPolicy() { AbsoluteExpiration = DateTime.Now.AddSeconds(Config.AbsoluteExpirationSeconds.GetValueOrDefault(300)) });
-                return new CacheItemPolicy()
+
+                var cm = cache.CreateCacheEntryChangeMonitor(this.Dependencies.Union(new string[] { abskey }));
+                
+               // var cm = { cache.CreateCacheEntryChangeMonitor(this.Dependencies.Union(new string[] { abskey })) };
+
+                var cip=   new CacheItemPolicy()
                 {
                     SlidingExpiration = TimeSpan.FromSeconds(Config.SlidingExpirationSeconds.GetValueOrDefault(120)),
                     UpdateCallback = UpdateCallback == null ? (CacheEntryUpdateCallback)null : CacheEntryUpdateHandler,
-                    ChangeMonitors = { cache.CreateCacheEntryChangeMonitor(this.Dependencies.Union(new string[] { abskey })) }
+                    ChangeMonitors = { cache.CreateCacheEntryChangeMonitor(this.Dependencies.Union(new string[] { abskey })) } 
                 };
+                if (FilePaths != null && FilePaths.Count >0)
+                {
+                    cip.ChangeMonitors.Add(new HostFileChangeMonitor(FilePaths));
+                }
+                return cip;
             }
             public void Cache( string key , object obj , ObjectCache cache)
             {
@@ -158,7 +170,7 @@ namespace Mozu.SiteBuilder.Mvc.Caching
         }
 
 
-        public void Set(string key, object value, CacheScope scope, StorefrontCacheTypes cacheType, Func<object, object>  updateCallback = null)
+        public void Set(string key, object value, CacheScope scope, StorefrontCacheTypes cacheType, Func<object, object>  updateCallback = null, IList<string> filePaths = null)
         {
             if (String.IsNullOrWhiteSpace(key)  )
                 return;
@@ -192,6 +204,11 @@ namespace Mozu.SiteBuilder.Mvc.Caching
                         CacheKeyHelper.GetSiteCacheKey(_ctx.SiteId.GetValueOrDefault())
                     };
                     break;
+                case CacheScope.Global:
+                    dependencies = new string[0];
+                    cacheKey =  key;
+                    break;
+                    
                 default:
                     cacheKey = CacheKeyHelper.GetTenantCacheKey(_ctx.TenantId, key);
                     dependencies = new [] {
@@ -211,7 +228,7 @@ namespace Mozu.SiteBuilder.Mvc.Caching
             //disable update call back for staging.   product updates make this kill the system
             updateCallback = _ctx.DataViewMode == Core.DataViewModeType.Pending ? null : updateCallback;
 
-            new CacheHandler(cc.Configuration, updateCallback, dependencies).Cache(cacheKey, value, cc.Cache);
+            new CacheHandler(cc.Configuration, updateCallback, dependencies, filePaths ).Cache(cacheKey, value, cc.Cache);
 
             
         }

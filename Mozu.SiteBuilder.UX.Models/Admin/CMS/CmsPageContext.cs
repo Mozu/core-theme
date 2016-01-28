@@ -85,7 +85,6 @@ namespace Mozu.SiteBuilder.UX.Models.Admin.CMS
         [IgnoreDataMember()]
         public bool Initialized { get; set; }
 
-        [IgnoreDataMember()]
-        public string LayoutEngineType { get; set; }   
+       
     }
 }
