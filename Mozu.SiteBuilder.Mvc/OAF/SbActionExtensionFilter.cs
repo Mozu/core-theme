@@ -75,8 +75,13 @@ namespace Mozu.SiteBuilder.Mvc.OAF
             AddToActionContext<PageContext>(actionContext.Request, "pageContext");
             AddToActionContext<NavigationContext>(actionContext.Request,"navigation");
             AddToActionContext<UrlHelper>(actionContext.Request, "urlHelper");
+            var routeData = new Microsoft.ClearScript.PropertyBag();
+            foreach ( var kvp in actionContext.Request.GetRouteData().Values)
+            {
+                routeData[kvp.Key] = kvp.Value;
+            }
+            AddToActionContext<Microsoft.ClearScript.PropertyBag>(actionContext.Request, "routeData",routeData);
 
-             
             var catTreeProvider = actionContext.Request.Resolve<ICategoryTreeProvider>();
 
             if ( catTreeProvider.HasCompleted)
@@ -87,8 +92,7 @@ namespace Mozu.SiteBuilder.Mvc.OAF
                 AddToActionContext<ICategoryTree>(actionContext.Request, "categoryHelper", new CategoryHelper(catTreeProvider));
             }
             
-
-
+         
             return base.CreateFunctionContext(actionContext);
         }
 
@@ -159,9 +163,9 @@ namespace Mozu.SiteBuilder.Mvc.OAF
                 return _catTask.Value.Result.FindByCode(categoryCode);
             }
             [Microsoft.ClearScript.ScriptMember("findBySlug")]
-            public IEnumerable<Category> FindBySlug(string categorySlug)
+            public IList<Category> FindBySlug(string categorySlug)
             {
-                return _catTask.Value.Result.FindBySlug(categorySlug);
+                return _catTask.Value.Result.FindBySlug(categorySlug).ToList();
             }
         }
     }

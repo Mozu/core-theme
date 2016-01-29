@@ -654,7 +654,7 @@ namespace Mozu.SiteBuilder.UX.Models.StoreFront.Catalog
         List<Category> AllCategories { get; set; }
         Category FindById( int? categoryId);
         Category FindByCode(string categoryCode);
-        IEnumerable<Category> FindBySlug ( string categorySlug);
+        IList<Category> FindBySlug ( string categorySlug);
     }
 
     public class CategoryTree : ICategoryTree
@@ -720,14 +720,14 @@ namespace Mozu.SiteBuilder.UX.Models.StoreFront.Catalog
         }
 
         [Microsoft.ClearScript.ScriptMember("findBySlug")]
-        public IEnumerable<Category> FindBySlug ( string categorySlug)
+        public IList<Category> FindBySlug ( string categorySlug)
         {
             if (categorySlug == null)
             {
                 return null;
             }
 
-            return _allCategoriesBySlug.Value[categorySlug];
+            return _allCategoriesBySlug.Value[categorySlug].ToList();
             
         }
     }
