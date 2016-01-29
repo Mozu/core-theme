@@ -62,6 +62,8 @@ Ext.application({
         'Redirects',
         'BusinessIntelligence',
         'ActionManagement',
-        'IpBlocking'
-    ],
+        'IpBlocking',
+        'PriceLists',
+        'PriceListEntries'
+    ]
 });

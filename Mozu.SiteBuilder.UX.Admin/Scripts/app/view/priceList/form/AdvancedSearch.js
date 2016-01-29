@@ -4,6 +4,7 @@
 Ext.define('Taco.view.priceList.form.AdvancedSearch', {
     extend: 'Taco.core.ux.form.Form',
     requires: [
+        'Ext.form.field.ComboBox',
         'Taco.core.ux.form.field.AdminUser',
         'Taco.store.CustomerSegments',
         'Ext.ux.form.field.BoxSelect',

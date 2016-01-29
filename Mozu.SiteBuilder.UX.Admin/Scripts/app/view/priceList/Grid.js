@@ -16,8 +16,8 @@ Ext.define('Taco.view.priceList.Grid', {
         'Taco.core.ux.FilterableDataView',
         'Taco.core.ux.TextFilter',
         'Taco.core.ux.grid.MenuColumn',
+        'Ext.selection.CheckboxModel',
         'Taco.view.priceList.form.AdvancedSearch',
-        //'Taco.view.priceList.modal.priceListEditor',
         'Taco.view.priceList.Form',
         'Taco.view.priceList.Edit'
     ],
