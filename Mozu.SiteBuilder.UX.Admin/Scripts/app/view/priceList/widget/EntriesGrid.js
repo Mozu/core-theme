@@ -486,6 +486,7 @@ Ext.define('Taco.view.priceList.widget.EntriesGrid', {
     //},
 
     createPopup: function (record, isNew) {
+        var me = this;
         Ext.create('Taco.view.priceList.modal.PriceEntryEditor', {
             record: record,
             parentForm: this,
