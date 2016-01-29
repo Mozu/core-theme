@@ -15,8 +15,9 @@ Ext.define('Taco.view.priceList.widget.EntriesGrid', {
         'Taco.core.ux.FilterableDataView',
         'Taco.core.ux.TextFilter',
         'Taco.core.ux.grid.MenuColumn',
-        'Taco.view.priceList.form.AdvancedSearch'
-        //'Taco.view.priceList.modal.priceListEditor',
+        'Taco.view.priceList.form.AdvancedSearch',
+        'Taco.view.priceList.modal.PriceEntryEditor'
+
         //'Taco.view.priceList.Form',
         //'Taco.view.priceList.Edit'
     ],
@@ -432,7 +433,7 @@ Ext.define('Taco.view.priceList.widget.EntriesGrid', {
 
     launchEditor: function (record) {
         Ext.defer(function () {
-            this.openEditor(record, false);
+            this.createPopup(record, false);
         }, 1, this);
     },
 
@@ -440,7 +441,7 @@ Ext.define('Taco.view.priceList.widget.EntriesGrid', {
         // console.log(e.target);
         if (e.target.className === 'taco-launch-editor') {
             e.preventDefault();
-            this.openEditor(record, record.get('code'), false);
+            this.createPopup(record, false);
             //this.doEdit(record, e);
             //this.launchEditor(record);
             //Taco.app.StateManager.addState(this.controllerName + '/edit/' + record.getId(), { id: record.getId() });
@@ -449,24 +450,58 @@ Ext.define('Taco.view.priceList.widget.EntriesGrid', {
 
     doEdit : function (item, eventData) {
         var rec = eventData.record;
-        item.scope.openEditor(rec, false);
+        //item.scope.openEditor(rec, false);
+        item.scope.createPopup(rec, false);
     },
 
-    openEditor: function (record, isNew) {
-        var me = this;
+    //openEditor: function (record, isNew) {
+    //
+    //
+    //    var me = this;
+    //
+    //    if (isNew) {
+    //        this.createPopup(null, isNew);
+    //        return;
+    //    }
+    //
+    //    var model = me.store.getProxy().getModel();
+    //    this.setLoading(true);
+    //    model.load(record.get('id'),
+    //        {
+    //            scope: this,
+    //            params: {
+    //                productCode: record.get('productCode'),
+    //                currencyCode: record.get('currencyCode'),
+    //                startDate: record.get('startDate'),
+    //                endDate: record.get('endDate')
+    //            },
+    //            success: function (dbRecord) {
+    //                this.createPopup(dbRecord, isNew);
+    //                this.setLoading(false);
+    //            },
+    //            failure: function () {
+    //                this.setLoading(false);
+    //            }
+    //        });
+    //},
 
-        Ext.defer(function () {
-            if (!isNew) {
-                Taco.core.StateManager.attemptNavigate('priceLists/edit/' + record.getId(), {}); //{complexMetaData: {record: record}});
-            } else {
-                Taco.core.StateManager.attemptNavigate('priceLists/create', {});
+    createPopup: function (record, isNew) {
+        Ext.create('Taco.view.priceList.modal.PriceEntryEditor', {
+            record: record,
+            parentForm: this,
+            isCreateMode: isNew,
+            priceListCode: this.priceListCode,
+            listeners: {
+                savesuccess: function () {
+                    me.store.reload();
+                }
             }
-        }, 1, this);
-        return;
+        });
     },
 
-    doCreate : function (){
-        this.openEditor(null, true);
+    doCreate: function () {
+        this.createPopup(null, true);
+        //this.openEditor(null, true);
     },
 
     getDeletePromptMessage: function (record) {
