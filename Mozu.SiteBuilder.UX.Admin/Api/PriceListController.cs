@@ -177,6 +177,51 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
             return SuccessWithTotal2<PriceList>(PriceLists.Count);
         }
 
-        
+
+        [HttpGetRoute(UriTemplate = "entry/list")]
+        public async Task<Response<List<PriceListEntry>>> ListPriceListEntries(PagingParamaters pagingParams, FilterCollection extFilter)
+        {
+            var mockData = new List<PriceListEntry>();
+            mockData.AddRange(
+                Enumerable.Range(1, 10).Select(i => new PriceListEntry
+                {
+                    Id = i,
+                    PriceListCode = "t_01",
+                    ProductCode = string.Format("p-{0}{1}", (i < 10 ? "0" : ""), i),
+                    ProductName = string.Format("product-{0}{1}", (i < 10 ? "0" : ""), i),
+                    CurrencyCode = "USD",
+                    StartDate = DateTime.UtcNow,
+                    EndDate = new DateTime(2016,12,31),
+                    Prices = new List<PriceListEntryPrice>
+                    {
+                        new PriceListEntryPrice
+                        {
+                            Id = i + 10, ListPrice = 29.99M
+                        }
+
+                        //new PriceListEntryPrice
+                        //{
+                        //    Id = i + 10, ListPrice = 29.99M, MinQuantity = 1, MaxQuantity = 10
+                        //},
+                        //new PriceListEntryPrice
+                        //{
+                        //    Id = i + 11, ListPrice = 27.00M, MinQuantity = 11
+                        //},
+
+                    },
+                    DiscountsRestricted = true,
+                    DiscountsRestrictedStartDate = DateTime.UtcNow,
+                    DiscountsRestrictedEndDate = new DateTime(2016, 12, 31),
+                    Mode = 1,
+                    CreateBy = "test",
+                    CreateDate = DateTime.UtcNow,
+                    UpdateDate = DateTime.UtcNow,
+                    UpdateBy = "test"
+                }).ToList()
+            );
+
+            return List2(mockData, mockData.Count);
+        }
+
     }
 }

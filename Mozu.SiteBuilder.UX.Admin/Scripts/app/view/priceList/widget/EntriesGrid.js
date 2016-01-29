@@ -5,8 +5,8 @@ Ext.define('Taco.view.priceList.widget.EntriesGrid', {
     extend: 'Taco.core.ux.browser.SearchList',
     alias: 'widget.taco-priceList-entries-grid',
     requires: [
-        'Taco.model.PriceList',
-        'Taco.store.PriceLists',
+        'Taco.model.PriceListEntry',
+        'Taco.store.PriceListEntries',
         'Ext.Date',
         'Ext.form.Panel',
         'Taco.core.ux.BaseGrid',
@@ -15,7 +15,7 @@ Ext.define('Taco.view.priceList.widget.EntriesGrid', {
         'Taco.core.ux.FilterableDataView',
         'Taco.core.ux.TextFilter',
         'Taco.core.ux.grid.MenuColumn',
-        'Taco.view.priceList.form.AdvancedSearch',
+        'Taco.view.priceList.form.AdvancedSearch'
         //'Taco.view.priceList.modal.priceListEditor',
         //'Taco.view.priceList.Form',
         //'Taco.view.priceList.Edit'
@@ -37,9 +37,10 @@ Ext.define('Taco.view.priceList.widget.EntriesGrid', {
     launchEditorOnClick: true,
 
     // Required by mixin: Taco.core.ux.mixins.LaunchEditor defined in SearchList
-    modelName: 'Taco.model.PriceList',
+    modelName: 'Taco.model.PriceListEntry',
 
-    controllerName: 'PriceLists',
+    controllerName: 'PriceListEntries',
+    priceListCode: null,
 
     enableNavHeader: true,
     hideNavMenu: true,
@@ -76,7 +77,7 @@ Ext.define('Taco.view.priceList.widget.EntriesGrid', {
 
     minHeight: 350,
 
-    enableBulkActions: false,
+    enableBulkActions: true,
 
     pageSize: 25,
 
@@ -88,16 +89,15 @@ Ext.define('Taco.view.priceList.widget.EntriesGrid', {
     isDisabled: false,
 
     stateful: true,
-    stateId: 'statefulPriceListEntriesGrid',
+    stateId: 'statefulPriceListEntryGrid',
 
     statics: {
 
     },
 
-
     initComponent: function () {
         var me = this;
-        me.isDisabled = (!me.record || me.record.phantom);
+        me.isDisabled = (!this.priceListCode);
 
         this.columns = this.getColumnConfig();
 
@@ -120,16 +120,28 @@ Ext.define('Taco.view.priceList.widget.EntriesGrid', {
         // initialize the delete mixin
         this.mixins.deleteFromGrid.init.apply(this);
 
-        me.mon(Taco.app, 'pricelistcreated', me.reloadGrid, me);
+        //me.mon(Taco.app, 'pricelistcreated', me.reloadGrid, me);
+
 
         me.store = Taco.core.data.StoreManager.getOrCreate({
-            type: 'Taco.store.PriceLists',
+            type: 'Taco.store.PriceListEntries',
             createOnly: true,
             pageSize: this.pageSize,
-            autoLoad: true,
+            autoLoad: false,
             clearFilters: true,
             remoteFilter: true
         });
+        if (this.priceListCode) {
+            me.store.load({
+                params: {
+                    priceListCode: this.priceListCode
+                },
+                callback: function(records, operation, success) {
+                    console.log('priceListEntries loaded');
+                },
+                scope: this
+            });
+        }
 
         me.advancedSearchConfig.form = Ext.create('Taco.view.priceList.form.AdvancedSearch', {});
 
@@ -145,57 +157,46 @@ Ext.define('Taco.view.priceList.widget.EntriesGrid', {
         var columns = [
             {
                 xtype: 'gridcolumn',
-                dataIndex: 'code',
-                stateId: 'code',
-                text: 'Code',
+                dataIndex: 'productCode',
+                stateId: 'productCode',
+                text: 'Product Code',
                 hideable: true,
                 flex: 1,
                 sortable: true
             }, {
                 xtype: 'gridcolumn',
-                dataIndex: 'name',
-                stateId: 'name',
-                text: 'Name',
-                hideable: false,
+                dataIndex: 'productName',
+                stateId: 'productName',
+                text: 'Product Name',
+                hideable: true,
                 flex: 2,                
+                sortable: false
+            }, {
+                xtype: 'gridcolumn',
+                dataIndex: 'currencyCode',
+                stateId: 'currencyCode',
+                text: 'currency',
+                flex: 1,
                 sortable: true
-            }, {
-                xtype: 'gridcolumn',
-                dataIndex: 'catalogs',
-                stateId: 'catalogs',
-                text: 'Applied Catalogs',
-                hideable: true,
-                flex: 3,
-                sortable: false
-            }, {
-                xtype: 'gridcolumn',
-                dataIndex: 'customerSegmentNames',
-                stateId: 'customerSegmentNames',
-                text: 'Customer Segments',
-                hideable: true,
-                flex: 3,
-                sortable: false
-            }
-        ];
-        //if (includeSiteColumn) {
-        //    columns.push({
-        //        xtype: 'gridcolumn',
-        //        dataIndex: 'siteName',
-        //        stateId: 'siteName',
-        //        text: 'Site',
-        //        hideable: true,
-        //        flex: 1,
-        //        sortable: false
-        //    });
-        //}
-        return columns.concat([
+            },
             {
-                xtype: 'gridcolumn',
-                dataIndex: 'status',
-                stateId: 'status',
-                text: 'Status',
-                flex:1,
-                sortable: false
+                xtype: 'datecolumn',
+                dataIndex: 'startDate',
+                stateId: 'startDate',
+                format: 'n/j/Y g:i a',
+                flex:2,
+                text: 'Effective Date',
+                hidden: false,
+                sortable: true
+            },{
+                xtype: 'datecolumn',
+                dataIndex: 'endDate',
+                stateId: 'endDate',
+                format: 'n/j/Y g:i a',
+                flex:2,
+                text: 'End Date',
+                hidden: false,
+                sortable: true
             }, {
                 xtype: 'datecolumn',
                 dataIndex: 'createDate',
@@ -231,7 +232,8 @@ Ext.define('Taco.view.priceList.widget.EntriesGrid', {
                 hidden: true,
                 sortable: false
             }
-        ]);
+        ];
+        return columns;
     },
 
     // list of actions to put in action column and context menu;

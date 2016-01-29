@@ -21,7 +21,9 @@ Ext.define('Taco.view.priceList.form.Entries', {
 
         Ext.tip.QuickTipManager.init();
 
-        this.entriesGrid = Ext.create('Taco.view.priceList.widget.EntriesGrid', {})
+        this.entriesGrid = Ext.create('Taco.view.priceList.widget.EntriesGrid', {
+            priceListCode: (!this.record.phantom) ? this.record.get('code') : null
+        });
 
         this.items = [{
             xtype: 'panel',

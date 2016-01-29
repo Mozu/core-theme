@@ -1,5 +1,5 @@
 /**
- * @class Taco.model.ProductRanking
+ * @class Taco.model.PriceList
  */
 Ext.define('Taco.model.PriceList', {
     extend: 'Taco.core.data.Model',

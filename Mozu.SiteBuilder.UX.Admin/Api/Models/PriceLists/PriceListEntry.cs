@@ -12,6 +12,8 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.Models.PriceLists
 
         public string ProductCode { get; set; }
 
+        public string ProductName { get; set; }
+
         public DateTime? StartDate { get; set; }
 
         public DateTime? EndDate { get; set; }
