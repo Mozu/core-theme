@@ -99,16 +99,9 @@ Ext.define('Taco.view.order.Edit', {
             store: this.store
         }];
 
-
-
-
         this.callParent(arguments);
 
-        this.mon(this.store, 'datachanged', this.handleDataChanged, this);
-
-        setInterval(function () {
-            //console.log('order-status', this.record.get('orderStatus'));
-        }.bind(this), 5000);
+        this.mon(this.record, 'reload', this.handleReload, this);
 
         this.keyNav = Ext.create('Ext.util.KeyNav', Ext.getDoc(), {
             // target: this.getEl(),
@@ -138,8 +131,8 @@ Ext.define('Taco.view.order.Edit', {
         this.navHeader.hide();
     },
 
-    handleDataChanged: function () {
-        console.log('order-status', this.record.get('orderStatus'));
+    handleReload: function (r) {
+        this.up('order-split').fireEvent('titlechange', this, '#' + this.record.get('orderNumber'));
     },
 
     handleBoxReady: function () {
