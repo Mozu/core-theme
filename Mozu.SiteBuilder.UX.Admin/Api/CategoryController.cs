@@ -191,11 +191,11 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
         public async Task<Response<List<Category>>> UpdateCategory(List<Category> categories)
         {
             var returnList = new List<Category>();
-            
+
             if (categories.Count == 1)
             {
                 //single record Create/Update
-                var cat = categories.First(); //TODO: could there only be one from the category grid?  then it would delete the properties that wasn't in projection
+                var cat = categories.First();
                 var dcCat = Mapper.Map<DC.Category>(cat);
                 var taskResult = (await _categoriesClient.UpdateCategory(dcCat, cat.Id, false)).ReadAsAsync();
                 returnList.Add(Mapper.Map<Category>(taskResult.Result));
@@ -209,13 +209,13 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
             var dbCategories = (await (_categoriesClient.GetCategories(filter: intArrayFilterString, pageSize: categories.Count)))
                 .ReadAsSync();
             var dbCategoriesList = (dbCategories.Items).ToList();
-            
+
             //Assuming we ONLY update sequence and parentId 
             _categoryHelper.AdjustSequence(categories, dbCategoriesList);
             foreach (var category in dbCategoriesList)
             {
                 //AWAIT each task and attempting to avoid deadlocks due to sproc concurrency: "Product.spAdmin_FixCategoryTreeSequences"
-                var taskResult = (await _categoriesClient.UpdateCategory(category, category.Id, false)).ReadAsAsync();
+                var taskResult = (await _categoriesClient.UpdateCategory(category, category.Id, false).ConfigureAwait(false)).ReadAsAsync();
                 var mapped = Mapper.Map<Category>(taskResult.Result);
                 returnList.Add(mapped);
             }
