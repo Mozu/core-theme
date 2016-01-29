@@ -75,7 +75,7 @@ Ext.define('Taco.view.productRanking.grid.BlockedProduct', {
             return;
         }
         var products = record.data.blockedProducts;
-        for (var i = products.length - 1; i >= 0; i--) {
+        for (var i = 0; i < products.length; i++) {
             this.store.data.add(Ext.create('Taco.model.BlockedProduct', products[i]));
         }
         this.getView().refresh();
