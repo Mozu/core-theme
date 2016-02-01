@@ -29,7 +29,23 @@ Ext.define('Taco.view.category.Edit', {
                 cls: 'taco-more-action-button-menu',
                 plain: true,
                 shadow: false,
-                items: [{
+                items: [
+                {
+                    disabled: me.record.phantom,
+                    text: 'Duplicate',
+                    requiredBehaviors: {
+                        model: 'Taco.model.Category',
+                        behavior: 'create'
+                    },
+                    handler: function (item, eventData) {
+                        var record = me.record,
+                            metaData = {
+                                id: record.getId()
+                            };
+                        
+                        Taco.app.StateManager.attemptNavigate('categories/duplicate/' + record.getId(), metaData);
+                    }
+                },{
                     itemId: 'live',
                     text: 'View Live',
                     menu: {

@@ -180,7 +180,12 @@ Ext.define('Taco.model.Category', {
 
     ],
 
-   
+    beforeDuplicate: function () {
+        var suffix = " - Copy";
+        this.data.name = this.data.name + suffix;
+        this.data.categoryCode = '';
+        this.commit();
+    },
     
     getFacetSets: function () {
         if (this.facetSetStore) {
