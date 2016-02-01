@@ -88,7 +88,7 @@ Ext.define('Taco.core.ux.mixins.LaunchEditor', {
             delete complexMetaData.record;
         }
 
-        if (Taco.core.StateManager.getCurrentState().metaData.controller != 'redirects' && Taco.core.StateManager.getCurrentState().metaData.controller != 'locationInventory' && Taco.core.StateManager.getCurrentState().metaData.controller != 'inventory' && Taco.core.StateManager.getCurrentState().metaData.controller != 'locationTypes' && Taco.core.StateManager.getCurrentState().metaData.controller != 'channels') {
+        if (Taco.core.StateManager.getCurrentState().metaData.controller != 'redirects' && Taco.core.StateManager.getCurrentState().metaData.controller != 'locationInventory' && Taco.core.StateManager.getCurrentState().metaData.controller != 'inventory' && Taco.core.StateManager.getCurrentState().metaData.controller != 'locationTypes' && Taco.core.StateManager.getCurrentState().metaData.controller != 'channels' && Taco.core.StateManager.getCurrentState().metaData.controller != 'orders') {
             Ext.defer(function () {
                 Taco.core.StateManager.attemptNavigate(Taco.core.StateManager.getCurrentState().metaData.controller + '/edit/' + record.getId(), complexMetaData);
             }, 1, this);
