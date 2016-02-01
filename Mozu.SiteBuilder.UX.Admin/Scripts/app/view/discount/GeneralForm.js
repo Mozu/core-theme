@@ -11,11 +11,6 @@ Ext.define('Taco.view.discount.GeneralForm', {
     ],
     ui: 'subform',
     margin: '0 0 39 0',
-    listeners: {
-        afterrender: function() {
-            this.updateApplyDiscountToField();
-        }
-    },
 
     title: 'General',
 
@@ -82,7 +77,6 @@ Ext.define('Taco.view.discount.GeneralForm', {
             listeners: {
                 change: function (myself, newVal, oldVal) {
                     this.record.fireEvent( "scopeChange", myself, newVal, oldVal);
-                    this.updateApplyDiscountToField();
                     me.parentForm.setFieldVisibility();
                     me.filterFixedPriceOptionWhenOrderProduct(newVal, null);
                 },
@@ -116,7 +110,6 @@ Ext.define('Taco.view.discount.GeneralForm', {
             }),
             listeners: {
                 change: function (myself, newVal) {
-                    this.updateApplyDiscountToField();
                     this.parentForm.setFieldVisibility();
                     this.filterFixedPriceOptionWhenOrderProduct(null, newVal);
                 },
@@ -124,27 +117,6 @@ Ext.define('Taco.view.discount.GeneralForm', {
             },
             value: "Product"
         });
-
-        this.applyDiscountToField = Ext.create('Ext.form.field.ComboBox', {
-            name: 'applyDiscountTo',
-            fieldLabel: 'Apply Discount To',
-            labelAlign: 'top',
-            editable: false,
-            allowBlank: false,
-            width: 295,
-            hidden: true,
-            margin: '0 0 0 10',
-            forceSelection: true,
-            displayField: 'text',
-            valueField: 'value',
-            store: Ext.create('Ext.data.ArrayStore', {
-                fields: ['text', 'value'],
-                data: [
-                    ["Highest Value Product", "highest"],
-                    ["Lowest Value Product", "Lowest"]
-                ]
-            }),
-        })
 
         this.discountTypeData = Ext.create('Ext.data.Store', {
             autoLoad: true,
@@ -230,8 +202,7 @@ Ext.define('Taco.view.discount.GeneralForm', {
                 },
                 items: [
                     this.scopeTypeInput,
-                    this.targetTypeInput,
-                    this.applyDiscountToField
+                    this.targetTypeInput
                 ]
             }, {
                 xtype: 'container',
@@ -248,17 +219,6 @@ Ext.define('Taco.view.discount.GeneralForm', {
         ];
 
         this.callParent(arguments);
-    },
-
-    updateApplyDiscountToField: function() {
-        var scope = this.scopeTypeInput.getValue();
-        var target = this.targetTypeInput.getValue();
-        if (scope && target && scope.toLowerCase() === 'lineitem' && target.toLowerCase() === 'product') {
-            this.applyDiscountToField.show();
-        }
-        else {
-            this.applyDiscountToField.hide();
-        }
     },
 
     updateAmountField : function() {

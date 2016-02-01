@@ -110,7 +110,10 @@ Ext.define('Taco.model.Discount', {
             name: "doesNotApplyToProductsWithSalePrice",
             type: 'bool'
         },
-
+        {
+            name: 'appliesToLeastExpensiveProductsFirst',
+            type: 'bool'
+        },
         {
             name: "excludeItemsWithExistingProductDiscounts",
             type: 'bool'

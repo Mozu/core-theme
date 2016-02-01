@@ -124,6 +124,7 @@ Ext.define('Taco.view.discount.CriteriaForm', {
                 itemId: 'applies-sale-price-check',
                 boxLabel: 'Applies to sale price',
                 width: 300,
+                margin: '0 0 0 20',
                 value: this.record.get('doesNotApplyToSalePrice') !== true,
                 listeners: {
                     change: function (field, newValue) {
@@ -136,6 +137,21 @@ Ext.define('Taco.view.discount.CriteriaForm', {
                     elementId: 'applies-sale-price-check',
                     hoverTarget: 'label',
                     messageKey: 'discount.criteria.appliesToSalePrice',
+                    offsetLeft: 20,
+                    offsetTop: 15
+                })
+            }
+        );
+
+        this.applyDiscountTo = Ext.widget({
+                xtype: 'checkbox',
+                name: 'appliesToLeastExpensiveProductsFirst',
+                itemId: 'apply-to-highest-priced-product',
+                boxLabel: 'Apply to highest-priced qualifying product(s) first',
+                tooltip: Ext.create('Taco.core.ux.content.Tooltip', {
+                    elementId: 'apply-to-highest-priced-product',
+                    hoverTarget: 'label',
+                    messageKey: 'discount.criteria.applyDiscountToHighestPricedProduct',
                     offsetLeft: 20,
                     offsetTop: 15
                 })
@@ -505,7 +521,8 @@ Ext.define('Taco.view.discount.CriteriaForm', {
                 this.excludeCategoriesBox,
                 this.productsExcludeBox,
                 this.ApplyToProductsWithSalePrice,
-                this.appliesToSalePrice
+                this.appliesToSalePrice,
+                this.applyDiscountTo
             ]
         });
 
