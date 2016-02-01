@@ -119,7 +119,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
                 }).ToList()
             );
 
-            return List2(mockData, mockData.Count);
+            return List2(mockData, 100);
         }
 
         /// <summary>
@@ -183,7 +183,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
         {
             var mockData = new List<PriceListEntry>();
             mockData.AddRange(
-                Enumerable.Range(1, 10).Select(i => new PriceListEntry
+                Enumerable.Range(1, 25).Select(i => new PriceListEntry
                 {
                     Id = i,
                     PriceListCode = "t_01",
@@ -220,7 +220,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
                 }).ToList()
             );
 
-            return List2(mockData, mockData.Count);
+            return List2(mockData, 75);
         }
 
     }
