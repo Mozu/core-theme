@@ -32,7 +32,8 @@ Ext.define('Taco.view.product.variant.Grid', {
     },
 
     enablePaging: true,
-
+    stateful: true,
+    stateId: 'statefulProductOptionsGrid',
     hideSearchToolbar: true,
 
     enableAutoSelect: false,
@@ -66,7 +67,7 @@ Ext.define('Taco.view.product.variant.Grid', {
 
         
 
-        // if editing variataions from a previous session, you will need to pass in those modifications;
+        // if editing variations from a previous session, you will need to pass in those modifications;
         me.modifiedRecords = new Ext.util.MixedCollection();
 
         // // need to get a copy of any unsaved modifications from the product entities version of the variations store;
@@ -166,7 +167,7 @@ Ext.define('Taco.view.product.variant.Grid', {
             //        parentProductCode = record.get("parentProductCode"),
             //        fulfillmentConfig;
 
-            //    // if we have a parentProductCode, that means our productCode is really the code for the product varient; need to remamp these so that the service is happy.
+            //    // if we have a parentProductCode, that means our productCode is really the code for the product variant; need to remap these so that the service is happy.
             //    if (parentProductCode) {
             //        fulfillmentConfig = {
             //            productCode: parentProductCode,
@@ -204,7 +205,7 @@ Ext.define('Taco.view.product.variant.Grid', {
             this.plugins = Ext.clone(this.plugins);
         }
 
-        // this plugin will auto select the first record in the grid and manage reselection of the selected item after a store load
+        // this plugin will auto select the first record in the grid and manage re-selection of the selected item after a store load
         if (this.enableAutoSelect !== false) {            
             this.plugins.push("autoselect");
         }
@@ -230,7 +231,7 @@ Ext.define('Taco.view.product.variant.Grid', {
         }
 
         
-        // we shouldnt be making the load call if we have no options selected. the call throws ajax exception
+        // we shouldn't be making the load call if we have no options selected. the call throws ajax exception
         var hasOptions = this.product.getOptions().count();
 
         
@@ -293,8 +294,8 @@ Ext.define('Taco.view.product.variant.Grid', {
         var summaryColumn = [this.getSummaryColumn()]
         var optionColumns = this.getOptionColumns();
         var staticColumns = this.getStaticColumns();
-        
-        
+
+
         return Ext.Array.union(isActiveColumn, summaryColumn, optionColumns, staticColumns)
     },
 
@@ -302,6 +303,7 @@ Ext.define('Taco.view.product.variant.Grid', {
         return {
             text: 'Enabled',
             dataIndex: 'isActive',
+            stateId: 'isActive',
             xtype: "checkcolumn",
             width: 60,
             resizeable: false,
@@ -339,6 +341,7 @@ Ext.define('Taco.view.product.variant.Grid', {
         return {
             text: 'Option Summary',
             dataIndex: 'isActive',
+            stateId: 'optionSummary',
             xtype: "templatecolumn",
             hidden: true,
             width: 260,
@@ -372,6 +375,7 @@ Ext.define('Taco.view.product.variant.Grid', {
                     //flex: 1,
                     text: attributeText,
                     dataIndex: 'options',
+                    stateId: 'options',
                     hidden: false,
                     "type": "text",
                     name: "'options' + index",
@@ -413,6 +417,7 @@ Ext.define('Taco.view.product.variant.Grid', {
             text: 'Product Code',
             xtype:"templatecolumn",
             dataIndex: 'productCode',
+            stateId: 'productCode',
             width: 200,
             tpl : [
                 '<tpl if="values.productCode">',
@@ -438,6 +443,7 @@ Ext.define('Taco.view.product.variant.Grid', {
         }, {
             text: 'Extra Price',
             dataIndex: 'deltaPrice',
+            stateId: 'deltaPrice',
             editor: {
                 xtype: 'currencyfield',
                 currencyCode: this.product.getCurrencyCode(),
@@ -453,6 +459,7 @@ Ext.define('Taco.view.product.variant.Grid', {
         }, {
             text: 'Extra Cost',
             dataIndex: 'deltaCost',
+            stateId: 'deltaCost',
             hideable: true,
             hidden: true,
             editor: {
@@ -469,6 +476,7 @@ Ext.define('Taco.view.product.variant.Grid', {
         }, {
             text: 'MSRP',
             dataIndex: 'deltaMsrp',
+            stateId: 'deltaMsrp',
             hideable: true,
             hidden: true,
             editor: {
@@ -484,6 +492,7 @@ Ext.define('Taco.view.product.variant.Grid', {
         }, {
             text: 'Gift Card/Credit Value',
             dataIndex: 'creditValue',
+            stateId: 'creditValue',
             hideable: isDigitalCredit,
             hidden: !isDigitalCredit,
             required: !isDigitalCredit,
@@ -503,6 +512,7 @@ Ext.define('Taco.view.product.variant.Grid', {
         }, {
             text: 'Extra Weight',
             dataIndex: 'deltaWeight',
+            stateId: 'deltaWeight',
             hideable: true,
             hidden: isDigitalCredit,
             width: 120,
@@ -518,6 +528,7 @@ Ext.define('Taco.view.product.variant.Grid', {
         }, {
             text: 'Fulfillment Types',            
             dataIndex: 'fulfillmentTypesSupported',
+            stateId: 'fulfillmentTypesSupported',
             hideable: true,
             hidden: true,
             width: 185,
@@ -542,6 +553,7 @@ Ext.define('Taco.view.product.variant.Grid', {
         }, {
             text: 'Mfg Part #',
             dataIndex: 'mfgPartNumber',
+            stateId: 'mfgPartNumber',
             hideable: true,
             hidden: true,
             editor: {
@@ -554,6 +566,7 @@ Ext.define('Taco.view.product.variant.Grid', {
         }, {
             text: 'UPC',
             dataIndex: 'upc',
+            stateId: 'upc',
             hideable: true,
             hidden: true,
             editor: {
@@ -566,6 +579,7 @@ Ext.define('Taco.view.product.variant.Grid', {
         }, {
             text: 'Dist Part #',
             dataIndex: 'distPartNumber',
+            stateId: 'distPartNumber',
             hideable: true,
             hidden: true,
             editor: {
@@ -585,7 +599,7 @@ Ext.define('Taco.view.product.variant.Grid', {
         // update the cache;
         //me.cacheModifiedRecords();
 
-        // upadate the product.options store with the current version;
+        // update the product.options store with the current version;
         // todo change the options modal to be a helper modal that returns the options data rather than sets it on the product.options.store;
 
         // update the the product model with any changes to the options and variations.
@@ -723,7 +737,7 @@ Ext.define('Taco.view.product.variant.Grid', {
         })
     },
 
-    // reapplies the cached modified records after a store load has happend;
+    // reapplies the cached modified records after a store load has happened;
     applyModifiedRecords: function (store) {
         var me = this;
 

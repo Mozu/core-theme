@@ -89,12 +89,12 @@ Ext.define('Taco.view.productRanking.grid.PinnedProduct', {
             return;
         }
         var products = record.data.boostedProducts;
-        for (var i = products.length - 1; i >= 0; i--) {
+        for (var i = 0; i < products.length; i++) {
             this.store.data.add(Ext.create('Taco.model.PinnedProduct', products[i]));
         }
         this.getView().refresh();
     },
-
+    
     listeners: {
         afterrender: function () {
             var form = this.up('#taco-productRanking-form');

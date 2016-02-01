@@ -365,7 +365,7 @@ namespace Mozu.SiteBuilder.Mvc
 
     public static class Constants
     {
-        public const string DefaultTheme = "Core9";
+        public const string DefaultTheme = "MozuCore";
         public const string COOKIENAME = "SBCONTEXT";
         public const string DEBUGCOOKIENAME = "SBD";
 		public const string NOWCOOKIENAME = "MZ_NOW";
