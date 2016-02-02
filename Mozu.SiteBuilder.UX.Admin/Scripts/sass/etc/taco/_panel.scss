@@ -1,7 +1,6 @@
 @mixin taco-panel {
 
-    .x-form-invalid-under {
-        color: $gray-text-dark;
+    .#{$prefix}form-invalid-under {
         font-style: italic;
     }
 
