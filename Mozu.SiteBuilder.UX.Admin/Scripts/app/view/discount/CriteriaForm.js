@@ -165,8 +165,6 @@ Ext.define('Taco.view.discount.CriteriaForm', {
             }
         );
 
-        debugger;
-
         catStore = this.record.getCategoryStore();
         catStore.clearFilter(true);
         //catStore.load();
