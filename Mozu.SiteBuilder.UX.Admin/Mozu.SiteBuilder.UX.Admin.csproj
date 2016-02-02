@@ -447,6 +447,7 @@
     <Compile Include="Helpers\FileManagerHelpers\FileManagerHelpersSortExtensions.cs" />
     <Compile Include="Helpers\PriceListHelpers\PriceListFilterExtensions.cs" />
     <Compile Include="Helpers\PriceListHelpers\PriceListPagingParametersExtensions.cs" />
+    <Compile Include="Helpers\PriceListHelpers\PriceListSortExtensions.cs" />
     <Compile Include="Helpers\ProductHelpers\ProductFilterExtensions.cs" />
     <Compile Include="Helpers\ProductHelpers\ProductSortExtensions.cs" />
     <Compile Include="Helpers\ProductRuntimeHelpers\ProductRuntimeFilterExpressionBuilder.cs" />

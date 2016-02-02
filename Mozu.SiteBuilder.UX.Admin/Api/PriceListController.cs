@@ -33,7 +33,6 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
     public class PriceListController : BaseController
     {
         //private readonly IPriceListWebApiClient _priceListWebClient;
-        //private readonly IPriceListSortFormatter _priceListSortFormatter;
         private readonly IApiContext _ctx;
         private readonly ITenantsWebApiClient _tenantClient;
 
@@ -41,10 +40,9 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
         /// Public constructor.
         /// </summary>
         public PriceListController(IApiContext ctx, ITenantsWebApiClient tenantClient)
-            //IPriceListWebApiClient PriceListWebClient, IPriceListSortFormatter priceListSortFormatter) 
+            //IPriceListWebApiClient PriceListWebClient) 
         {
             //_PriceListWebClient = priceListWebClient;
-            //_PriceListSortFormatter = priceListSortFormatter;
             _ctx = ctx;
             _tenantClient = tenantClient;
         }
@@ -57,29 +55,17 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
         {
             //if (pagingParams.id != null)
             //{
-            //    var singlePriceList = (await _priceListWebClient.GetPriceList(pagingParams.id, responseGroups:"Counts")).ReadAsSync();
+            //    var singlePriceList = (await _priceListWebClient.GetPriceList(pagingParams.id)).ReadAsSync();
             //    return List2(Mapper.Map<PriceList>(singlePriceList));
             //}
-
-            //var query = extFilter.QueryString.Get("query");
-            //if (!String.IsNullOrEmpty(query))
-            //{
-            //    extFilter.Add(new FilterCollectionItem { comparison = "eq", field = "all", value = query });
-            //}
-
-            //string filter = null;
-            //if (extFilter != null && extFilter.Count > 0)
-            //{
-            //    var tenant = (await _tenantClient.GetTenant(_ctx.TenantId)).ReadAsSync();
-            //    var masterCat = tenant.MasterCatalogs.FirstOrDefault(x => x.Id == _ctx.MasterCatalogId);
-            //    var defaultLocalCode = masterCat.DefaultLocaleCode;
-            //    var masterNumberFormat = CultureInfo.GetCultureInfo(defaultLocalCode).NumberFormat;
-
-            //    filter = extFilter.ToFilterString(_ctx, masterNumberFormat, _tenantClient);
-            //}
+            string filter = null;
+            if (extFilter != null && extFilter.Count > 0)
+            {
+                filter = extFilter.ToFilterString();
+            }
+            string sortBy = pagingParams.sort.ToSortString();
 
             //const string responseFields = "items(id,name,PriceListCode,couponCodeType,status,canBeDeleted,maxRedemptionsPerUser,maxRedemptionsPerCouponCode,startDate,endDate,redemptionCount,setSize,assignedDiscountCount)";
-            //string sortBy = pagingParams.ToSort(_priceListSortFormatter);
 
             //try
             //{
