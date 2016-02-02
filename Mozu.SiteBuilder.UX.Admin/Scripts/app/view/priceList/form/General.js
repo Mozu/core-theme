@@ -64,7 +64,7 @@ Ext.define('Taco.view.priceList.form.General', {
                 type: 'hbox',
                 align: 'bottom'
             },
-            width: '100%',
+            width: '50%',
             items: [
                 this.validSitesList,
                 {
@@ -72,12 +72,9 @@ Ext.define('Taco.view.priceList.form.General', {
                     scale: 'medium',
                     ui: 'action',
                     text: 'Add',
-                    margin: '0 0 0 10',
+                    margin: '0 30 0 10',
                     flex: 1,
                     maxWidth: 70,
-                    style: {
-                        verticalAlign: 'bottom'
-                    },
                     handler: function () {
                         this.launchSiteModal(this.validSitesList);
                     },
@@ -206,11 +203,79 @@ Ext.define('Taco.view.priceList.form.General', {
                 {
                     xtype: 'panel',
                     layout: {
-                        type: 'vbox',
-                        align: 'stretch'
+                        type: 'hbox',
+                        align: 'bottom'
                     },
                     items: [
-                        this.validSitesBox
+                        this.validSitesBox,
+                        {
+                            xtype: 'panel',
+                            layout: {
+                                type: 'hbox',
+                                align: 'bottom'
+                            },
+                            width: '50%',
+                            items: [
+                                {
+                                    name: 'resolutionRank',
+                                    itemId: 'resolutionRankField',
+                                    fieldLabel: 'Resolution Rank',
+                                    allowBlank: false,
+                                    xtype: 'textfield',
+                                    margin: '0 30 0 0',
+                                    width: '50%',
+                                    required: true,
+                                    minLength: 3,
+                                    maxLength: 200,
+                                    enforceMaxLength: true
+                                },
+                                {
+                                    name: 'searchIndexSequence',
+                                    itemId: 'searchIndexSequenceField',
+                                    fieldLabel: 'Search Index Sequence',
+                                    allowBlank: false,
+                                    xtype: 'textfield',
+                                    margin: '0 30 0 0',
+                                    width: '50%',
+                                    required: true,
+                                    minLength: 3,
+                                    maxLength: 200,
+                                    enforceMaxLength: true
+                                }
+                            ]
+                        }
+                    ]
+                },
+                {
+                    xtype: 'panel',
+                    layout: {
+                        type: 'hbox',
+                        align: 'bottom'
+                    },
+                    margin: '15 0 0 0',
+                    width: '100%',
+                    items: [
+                        {
+                            xtype: 'checkbox',
+                            name: 'filteredInStorefront',
+                            itemId: 'filteredInStorefrontCheck',
+                            boxLabel: 'Hide unaltered products from eligible shoppers',
+                            value: (!this.record.phantom) ? this.record.get('filteredInStorefront') !== true : false,
+                            listeners: {
+                                change: function (field, newValue) {
+                                    this.record.set('filteredInStorefront', !newValue);
+                                    this.record.setDirty(true);
+                                },
+                                scope: this
+                            },
+                            tooltip: Ext.create('Taco.core.ux.content.Tooltip', {
+                                elementId: 'applies-sale-price-check',
+                                hoverTarget: 'label',
+                                messageKey: 'discount.criteria.appliesToSalePrice',
+                                offsetLeft: 20,
+                                offsetTop: 15
+                            })
+                        }
                     ]
                 }
             ]
