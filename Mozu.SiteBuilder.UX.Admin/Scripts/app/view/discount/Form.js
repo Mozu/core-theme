@@ -87,6 +87,17 @@ Ext.define('Taco.view.discount.Form', {
         this.loadNavItems();
     },
 
+    updateApplyToTooltip: function(newVal) {
+        if (!this.criteria) { return; }
+        var tooltip = this.criteria.applyDiscountTo.tooltip;
+        if (newVal.toLowerCase() === 'product') {
+            tooltip.update('discount.criteria.applyDiscountToHighestPricedProduct');
+        }
+        else if (newVal.toLowerCase() === 'shipping') {
+            tooltip.update('discount.criteria.applyDiscountToHighestPricedShipping');
+        }
+    },
+
     onAfterRender: function () {
         this.setFieldVisibility();
     },

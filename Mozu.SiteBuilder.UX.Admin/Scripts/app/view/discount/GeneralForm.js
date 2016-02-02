@@ -111,6 +111,7 @@ Ext.define('Taco.view.discount.GeneralForm', {
             listeners: {
                 change: function (myself, newVal) {
                     this.parentForm.setFieldVisibility();
+                    this.parentForm.updateApplyToTooltip(newVal);
                     this.filterFixedPriceOptionWhenOrderProduct(null, newVal);
                 },
                 scope: this
