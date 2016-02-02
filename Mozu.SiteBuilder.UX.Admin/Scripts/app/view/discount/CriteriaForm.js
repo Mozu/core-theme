@@ -145,7 +145,7 @@ Ext.define('Taco.view.discount.CriteriaForm', {
 
         this.applyDiscountTo = Ext.widget({
                 xtype: 'checkbox',
-                name: 'appliesToLeastExpensiveProductsFirst',
+                name: 'appliesToMostExpensiveProductsFirst',
                 value: !this.record.get('appliesToLeastExpensiveProductsFirst'),
                 itemId: 'apply-to-highest-priced-product',
                 boxLabel: 'Apply to highest-priced qualifying product(s) first',
@@ -155,7 +155,13 @@ Ext.define('Taco.view.discount.CriteriaForm', {
                     messageKey: 'discount.criteria.applyDiscountToHighestPricedProduct',
                     offsetLeft: 20,
                     offsetTop: 15
-                })
+                }),
+                listeners: {
+                    change: function(self, newValue, oldValue, eOpts) {
+                        this.record.set('appliesToLeastExpensiveProductsFirst', !newValue)
+                    },
+                    scope: me
+                }
             }
         );
 
