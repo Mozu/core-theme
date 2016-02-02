@@ -96,24 +96,34 @@ Ext.define('Taco.view.category.Index', {
         me.columns = [
         {
             xtype: 'treecolumn',
-            text: 'Name',
-            flex: 1,
-            checkboxText:'',
-            dataIndex: 'name',
-            renderer: function (value) {
-                return '<a href="#" class="taco-launch-editor">' + (value + '</a>');
-            }
-        }, 
-        {
-            xtype: 'treecolumn',
             text: 'Code',
-            flex: 2,
+            flex: 1,
             checkboxText:'',
             dataIndex: 'categoryCode',
             renderer: function (value) {
                 return '<a href="#" class="taco-launch-editor">' + (value + '</a>');
             }
-        }, 
+        },
+        {
+            xtype: 'treecolumn',
+            text: 'Name',
+            flex: 2,
+            checkboxText:'',
+            dataIndex: 'name',
+            renderer: function (value) {
+                return '<a href="#" class="taco-launch-editor">' + (value + '</a>');
+            }
+        },
+        {
+            xtype: 'treecolumn',
+            text: 'Type',
+            flex: 2,
+            checkboxText: '',
+            dataIndex: 'categoryType',
+            renderer: function (value) {
+                return '<a href="#" class="taco-launch-editor">' + ((value === 'Static') ? 'Static' : 'Dynamic') + '</a>';
+            }
+        },
         {
             xtype: 'taco.menucolumn',
             text: '<span class="taco-grid-row-menu-trigger" />',
