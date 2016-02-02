@@ -102,6 +102,10 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.ModelMapping
                     ? x.Target.ExcludeItemsWithExistingProductDiscounts
                     : null))
 
+                .ForMember(x => x.AppliesToLeastExpensiveProductsFirst, opt => opt.ResolveUsing(x => (x.Target != null)
+                ? x.Target.AppliesToLeastExpensiveProductsFirst
+                : null))
+
                 .ForMember(x => x.ExcludeItemsWithExistingShippingDiscounts, opt => opt.ResolveUsing(x => (x.Target != null)
                     ? x.Target.ExcludeItemsWithExistingShippingDiscounts
                     : null))
@@ -265,6 +269,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.ModelMapping
                                                                            ShippingMethods = (x.ShippingMethods ?? Enumerable.Empty<string>()).Select(_ => new DC.TargetedShippingMethod { Code = _ }).ToList(),
                                                                            ShippingZones = (x.ShippingZones ?? Enumerable.Empty<string>()).Select(_ => new DC.TargetedShippingZone()  { Zone  = _ }).ToList(),                                                                          
                                                                            IncludeAllProducts = x.IncludeAllProducts,
+                                                                           AppliesToLeastExpensiveProductsFirst = x.AppliesToLeastExpensiveProductsFirst,
                                                                        }))
                 .AfterMap((s, d) =>
                 {
