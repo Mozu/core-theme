@@ -16,7 +16,6 @@ using DC = Mozu.ProductAdmin.Contracts;
 using Mozu.Core.Api.Contracts.Client;
 using Mozu.Core.Api.Contracts;
 using System.Net.Http;
-using Mozu.SiteBuilder.UX.Admin.Helpers;
 using Mozu.SiteBuilder.Mvc.Extensions;
 using Mozu.SiteBuilder.UX.Admin.Api.Models;
 using Mozu.Tenant.Contracts.Clients;
@@ -32,19 +31,19 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
     [WebApi("app/priceList", SuppressDescriptorGeneration = true)]
     public class PriceListController : BaseController
     {
-        //private readonly IPriceListWebApiClient _priceListWebClient;
+        private readonly IPriceListWebApiClient _priceListWebClient;
         private readonly IApiContext _ctx;
         private readonly ITenantsWebApiClient _tenantClient;
 
         /// <summary>
         /// Public constructor.
         /// </summary>
-        public PriceListController(IApiContext ctx, ITenantsWebApiClient tenantClient)
-            //IPriceListWebApiClient PriceListWebClient) 
+        public PriceListController(IApiContext ctx, ITenantsWebApiClient tenantClient,
+            IPriceListWebApiClient priceListWebClient) 
         {
-            //_PriceListWebClient = priceListWebClient;
             _ctx = ctx;
             _tenantClient = tenantClient;
+            _priceListWebClient = priceListWebClient;
         }
 
         /// <summary>
@@ -53,11 +52,11 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
 		[HttpGetRoute(UriTemplate = "list")]
         public async Task<Response<List<PriceList>>> ListPriceLists(PagingParamaters pagingParams, FilterCollection extFilter)
         {
-            //if (pagingParams.id != null)
-            //{
-            //    var singlePriceList = (await _priceListWebClient.GetPriceList(pagingParams.id)).ReadAsSync();
-            //    return List2(Mapper.Map<PriceList>(singlePriceList));
-            //}
+            if (pagingParams.id != null)
+            {
+                var singlePriceList = (await _priceListWebClient.GetPriceList(pagingParams.id)).ReadAsSync();
+                return List2(Mapper.Map<PriceList>(singlePriceList));
+            }
             string filter = null;
             if (extFilter != null && extFilter.Count > 0)
             {
@@ -66,47 +65,23 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
             string sortBy = pagingParams.sort.ToSortString();
 
             //const string responseFields = "items(id,name,PriceListCode,couponCodeType,status,canBeDeleted,maxRedemptionsPerUser,maxRedemptionsPerCouponCode,startDate,endDate,redemptionCount,setSize,assignedDiscountCount)";
-
             //try
             //{
-            //    var PriceListList = (await _priceListWebClient.GetPriceLists(pagingParams.startIndex,
-            //        pageSize: pagingParams.pageSize,
-            //        sortBy: sortBy,
-            //        filter: filter,
-            //        responseGroups: "Counts",
-            //        responseFields: responseFields
-            //        )).ReadAsSync();
+            var priceLists = (await _priceListWebClient.GetPriceLists(pagingParams.startIndex,
+                pageSize: pagingParams.pageSize,
+                sortBy: sortBy,
+                filter: filter
+                )).ReadAsSync();
 
-            //    var PriceLists = Mapper.Map<List<PriceList>>(PriceListList.Items);
+            var result = Mapper.Map<List<PriceList>>(priceLists.Items);
 
-            //    return List2(PriceLists, (int?)PriceListList.TotalCount );
+            return List2(result, (int?)priceLists.TotalCount);
             //}
             //catch (ApiWebClientConnectionException e)
             //{
             //    return this.FailureList2<PriceList>(e.Message);
             //}
 
-            var mockData = new List<PriceList>();
-            mockData.AddRange(
-                Enumerable.Range(1, 25).Select(i => new PriceList
-                {
-                    Code = string.Format("t_{0}{1}", (i < 10 ? "0" : ""), i),
-                    Name = string.Format("test {0}", i),
-                    ResolutionRank = i,
-                    SearchIndexSequence = i,
-                    Enabled = (i % 2 == 0),
-                    FilteredInStorefront = (i % 3 == 0),
-                    CustomerSegments = new List<int> { 1, 2 },
-                    CustomerSegmentNames = new List<string> { "Silver", "Gold"},
-                    ValidSites = new []{ 1, 2 },
-                    CreateBy = "test",
-                    CreateDate = DateTime.UtcNow,
-                    UpdateDate = DateTime.UtcNow,
-                    UpdateBy = "test"
-                }).ToList()
-            );
-
-            return List2(mockData, 100);
         }
 
         /// <summary>
