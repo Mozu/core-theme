@@ -127,8 +127,66 @@ Ext.define('Taco.view.category.Index', {
         {
             xtype: 'taco.menucolumn',
             text: '<span class="taco-grid-row-menu-trigger" />',
-            //flex:1,
-            menuItems: [{
+            onMenuShow: function (menu, e) {
+                var previewItem = menu.items.get('preview'),
+                    liveItems = menu.items.get('live'),
+                    previewMenu,
+                    liveMenu,
+                    previewSites = [],
+                    liveSites = [];
+
+                var ctx = Taco.app.context.getCurrentContext();
+
+                if (previewItem && previewItem.menu) {
+                    previewMenu = previewItem.menu;
+                    liveMenu = liveItems.menu;
+                    
+                    var sites = (ctx.sites) ? ctx.sites : (ctx.catalog && ctx.catalog.sites) ? ctx.catalog.sites : [];
+
+                    Ext.each(sites, function (site) {
+                            if (site.isMozuRendered) {
+                                previewSites.push({
+                                    itemId: site.id,
+                                    text: site.name,
+                                    handler: Ext.bind(me.viewInSite, me, [site, 'preview', e.record])
+                                });
+
+                                liveSites.push({
+                                    itemId: site.id,
+                                    text: site.name,
+                                    handler: Ext.bind(me.viewInSite, me, [site, 'live', e.record])
+                                });
+                            }
+                        });
+
+                    if (!Ext.Array.equals(Ext.Array.pluck(previewSites, 'itemId'), previewMenu.items.keys)) {
+                        previewMenu.removeAll();
+                        previewMenu.add(previewSites);
+                        liveMenu.removeAll();
+                        liveMenu.add(liveSites);
+                    }
+
+                }
+            },
+            menuItems: [
+            {
+                itemId: 'live',
+                text: 'View Live',
+                menu: {
+                    plain: true,
+                    shadow: false,
+                    items: []
+                }
+            }, {
+                itemId: 'preview',
+                text: 'View Staged',                        
+                menu: {
+                    plain: true,
+                    shadow: false,
+                    items: []
+                }
+            },
+            {
                 text: 'Edit',
                 requiredBehaviors: {
                     model: 'Taco.model.Category',
@@ -335,5 +393,10 @@ Ext.define('Taco.view.category.Index', {
                 me.setHidden(item.childNodes);
             }
         });
+    },
+    viewInSite: function(site, env, record) {
+        var me = this,
+            url = '/_gosite/' + site.id + '?environment=' + env + '&redir=' + encodeURIComponent('/c/' + record.getId());
+        window.open(url);
     }
 });

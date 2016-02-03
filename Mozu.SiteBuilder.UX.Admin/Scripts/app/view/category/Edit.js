@@ -31,21 +31,6 @@ Ext.define('Taco.view.category.Edit', {
                 shadow: false,
                 items: [
                 {
-                    disabled: me.record.phantom,
-                    text: 'Duplicate',
-                    requiredBehaviors: {
-                        model: 'Taco.model.Category',
-                        behavior: 'create'
-                    },
-                    handler: function (item, eventData) {
-                        var record = me.record,
-                            metaData = {
-                                id: record.getId()
-                            };
-                        
-                        Taco.app.StateManager.attemptNavigate('categories/duplicate/' + record.getId(), metaData);
-                    }
-                },{
                     itemId: 'live',
                     text: 'View Live',
                     menu: {
@@ -60,6 +45,22 @@ Ext.define('Taco.view.category.Edit', {
                         plain: true,
                         shadow: false,
                         items: []
+                    }
+                },
+                {
+                    disabled: me.record.phantom,
+                    text: 'Duplicate',
+                    requiredBehaviors: {
+                        model: 'Taco.model.Category',
+                        behavior: 'create'
+                    },
+                    handler: function (item, eventData) {
+                        var record = me.record,
+                            metaData = {
+                                id: record.getId()
+                            };
+                        
+                        Taco.app.StateManager.attemptNavigate('categories/duplicate/' + record.getId(), metaData);
                     }
                 }
                 ],
