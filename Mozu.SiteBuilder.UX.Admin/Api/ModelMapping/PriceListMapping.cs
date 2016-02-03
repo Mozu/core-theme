@@ -32,7 +32,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.ModelMapping
 
             Mapper.CreateMap<PriceList, DC.PriceList>()
                 .ForMember(dc => dc.PriceListCode, op => op.ResolveUsing(x => x.Code))
-                .ForMember(dc => dc.ParentPriceListCode, op => op.ResolveUsing(x => x.ParentCode))
+                .ForMember(dc => dc.ParentPriceListCode, op => op.ResolveUsing(x => string.IsNullOrEmpty(x.ParentCode) ? null : x.ParentCode))
                 .ForMember(dc => dc.AuditInfo, op => op.ResolveUsing(x => new AuditInfo
                 {
                     CreateBy = x.CreateBy,

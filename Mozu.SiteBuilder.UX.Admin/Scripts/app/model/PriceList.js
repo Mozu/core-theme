@@ -22,10 +22,12 @@ Ext.define('Taco.model.PriceList', {
             type: 'string'
         }, {
             name: 'description',
-            type: 'string'
+            type: 'string',
+            useNull: true
         }, {
             name: 'parentCode',
-            type: 'string'
+            type: 'string',
+            useNull: true
         }, {
             name: 'enabled',
             type: 'boolean',

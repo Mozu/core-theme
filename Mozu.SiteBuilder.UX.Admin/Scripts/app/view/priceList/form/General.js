@@ -217,30 +217,25 @@ Ext.define('Taco.view.priceList.form.General', {
                             width: '50%',
                             items: [
                                 {
+                                    xtype: 'numberfield',
                                     name: 'resolutionRank',
                                     itemId: 'resolutionRankField',
                                     fieldLabel: 'Resolution Rank',
-                                    allowBlank: false,
-                                    xtype: 'textfield',
+                                    allowBlank: true,
+                                    hideTrigger: true,
                                     margin: '0 30 0 0',
                                     width: '50%',
-                                    required: true,
-                                    minLength: 3,
-                                    maxLength: 200,
-                                    enforceMaxLength: true
+                                    required: false
                                 },
                                 {
+                                    xtype: 'numberfield',
                                     name: 'searchIndexSequence',
                                     itemId: 'searchIndexSequenceField',
                                     fieldLabel: 'Search Index Sequence',
-                                    allowBlank: false,
-                                    xtype: 'textfield',
-                                    margin: '0 30 0 0',
-                                    width: '50%',
-                                    required: true,
-                                    minLength: 3,
-                                    maxLength: 200,
-                                    enforceMaxLength: true
+                                    allowBlank: true,
+                                    hideTrigger: true,
+                                    //margin: '0 30 0 0',
+                                    width: '50%'
                                 }
                             ]
                         }

@@ -18,6 +18,7 @@ using Mozu.Core.Api.Contracts;
 using System.Net.Http;
 using Mozu.SiteBuilder.Mvc.Extensions;
 using Mozu.SiteBuilder.UX.Admin.Api.Models;
+using Mozu.SiteBuilder.UX.Admin.Helpers;
 using Mozu.Tenant.Contracts.Clients;
 using Mozu.SiteSettings.Order.Contracts.Clients;
 
@@ -92,20 +93,20 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
         {
             var responseList = new List<PriceList>();
 
-            //foreach (var priceList in priceLists)
-            //{
-            //    var dcPriceList = Mapper.Map<DC.PriceList>(priceList);
+            foreach (var priceList in priceLists)
+            {
+                var dcPriceList = Mapper.Map<DC.PriceList>(priceList);
 
-            //    try
-            //    {
-            //        var response = (await _priceListWebClient.AddPriceList(dcPriceList)).ReadAsSync();
-            //        responseList.Add(Mapper.Map<PriceList>(response));
-            //    }
-            //    catch (ApiWebClientConnectionException e)
-            //    {
-            //        return this.FailureList2<PriceList>(e.Message);
-            //    }
-            //}
+                try
+                {
+                    var response = (await _priceListWebClient.AddPriceList(dcPriceList)).ReadAsSync();
+                    responseList.Add(Mapper.Map<PriceList>(response));
+                }
+                catch (ApiWebClientConnectionException e)
+                {
+                    return FailureList2<PriceList>(e.Message);
+                }
+            }
 
             return List2(responseList);
         }
@@ -114,29 +115,27 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
         /// Update an existing PriceList.
         /// </summary>
 		[HttpPostRoute(UriTemplate = "edit")]
-        public async Task<Response<List<PriceList>>> EditPriceList(List<PriceList> priceLists, string PriceListCode = null)
+        public async Task<Response<List<PriceList>>> EditPriceList(List<PriceList> priceLists, string priceListCode = null)
         {
-            //var retList = new List<PriceList>();
+            var results = new List<PriceList>();
 
-            //foreach (var PriceList in priceLists)
-            //{
-            //    var dc = Mapper.Map<DC.PriceList>(PriceList);
-            //    var res = (await _priceListWebClient.UpdatePriceList(dc, PriceList.PriceListCode)).ReadAsSync();
-            //    retList.Add(Mapper.Map<PriceList>(res));
-            //}
-
-            //return List2(retList);
-            return List2(priceLists);
+            foreach (var priceList in priceLists)
+            {
+                var dc = Mapper.Map<DC.PriceList>(priceList);
+                var res = (await _priceListWebClient.UpdatePriceList(dc, priceList.Code)).ReadAsSync();
+                results.Add(Mapper.Map<PriceList>(res));
+            }
+            return List2(results);
         }
 
         [HttpPostRoute(UriTemplate = "delete")]
-        public async Task<Response<PriceList>> DeletePriceList(List<PriceList> PriceLists)
+        public async Task<Response<PriceList>> DeletePriceList(List<PriceList> priceLists)
         {
-            //var tasks = PriceLists.Select(d => _priceListWebClient.DeletePriceList(d.PriceListCode)).ToList();
-            //await Task.WhenAll(tasks);
-            //tasks.Select(TaskHelper.Result).ThrowExceptionsIfAny();
+            var tasks = priceLists.Select(d => _priceListWebClient.DeletePriceList(d.Code)).ToList();
+            await Task.WhenAll(tasks);
+            tasks.Select(TaskHelper.Result).ThrowExceptionsIfAny();
 
-            return SuccessWithTotal2<PriceList>(PriceLists.Count);
+            return SuccessWithTotal2<PriceList>(priceLists.Count);
         }
 
 
