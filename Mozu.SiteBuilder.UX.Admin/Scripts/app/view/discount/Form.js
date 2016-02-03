@@ -87,6 +87,26 @@ Ext.define('Taco.view.discount.Form', {
         this.loadNavItems();
     },
 
+    updateApplyTo: function(newVal) {
+
+        if (!this.criteria) { return; }
+
+        var applyTo = this.criteria.applyDiscountTo;
+
+        if (!applyTo) { return; }
+
+        var tooltip = applyTo.tooltip;
+
+        if (newVal.toLowerCase() === 'product') {
+            applyTo.setBoxLabel('Apply discount to highest-priced qualifying product(s) first');
+            tooltip.update('discount.criteria.applyDiscountToHighestPricedProduct');
+        }
+        else if (newVal.toLowerCase() === 'shipping') {
+            applyTo.setBoxLabel('Apply discount to qualifying product(s) with highest shipping first');
+            tooltip.update('discount.criteria.applyDiscountToHighestPricedShipping');
+        }
+    },
+
     onAfterRender: function () {
         this.setFieldVisibility();
     },

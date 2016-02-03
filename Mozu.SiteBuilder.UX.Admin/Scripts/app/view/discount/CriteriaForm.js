@@ -90,7 +90,7 @@ Ext.define('Taco.view.discount.CriteriaForm', {
                 xtype: 'checkbox',
                 name: 'appliesToSaleProduct',
                 itemId: 'applies-sale-products-check',
-                boxLabel: 'Applies to products on sale',
+                boxLabel: 'Apply to products on sale',
                 width: 300,
                 value: this.record.get('doesNotApplyToProductsWithSalePrice') !== true,
                 listeners: {
@@ -122,8 +122,9 @@ Ext.define('Taco.view.discount.CriteriaForm', {
                 xtype: 'checkbox',
                 name: 'appliesToSalePrice',
                 itemId: 'applies-sale-price-check',
-                boxLabel: 'Applies to sale price',
+                boxLabel: 'Apply to sale price',
                 width: 300,
+                margin: '0 0 0 20',
                 value: this.record.get('doesNotApplyToSalePrice') !== true,
                 listeners: {
                     change: function (field, newValue) {
@@ -139,6 +140,28 @@ Ext.define('Taco.view.discount.CriteriaForm', {
                     offsetLeft: 20,
                     offsetTop: 15
                 })
+            }
+        );
+
+        this.applyDiscountTo = Ext.widget({
+                xtype: 'checkbox',
+                name: 'appliesToMostExpensiveProductsFirst',
+                value: (this.isEdit()) ? !this.record.get('appliesToLeastExpensiveProductsFirst') : false,
+                itemId: 'apply-to-highest-priced-product',
+                boxLabel: 'Apply discount to highest-priced qualifying product(s) first',
+                tooltip: Ext.create('Taco.core.ux.content.Tooltip', {
+                    elementId: 'apply-to-highest-priced-product',
+                    hoverTarget: 'label',
+                    messageKey: 'discount.criteria.applyDiscountToHighestPricedProduct',
+                    offsetLeft: 20,
+                    offsetTop: 15
+                }),
+                listeners: {
+                    change: function(self, newValue, oldValue, eOpts) {
+                        this.record.set('appliesToLeastExpensiveProductsFirst', !newValue)
+                    },
+                    scope: me
+                }
             }
         );
 
@@ -497,15 +520,11 @@ Ext.define('Taco.view.discount.CriteriaForm', {
                 this.categoriesBox,
                 this.includedCategoriesOperatorCheckbox,
                 this.maximumQuantityPerRedemptionTB,
-                {
-                    xtype: 'component',
-                    html: '<hr />',
-                    padding: '20px 0 0 0'
-                },
                 this.excludeCategoriesBox,
                 this.productsExcludeBox,
                 this.ApplyToProductsWithSalePrice,
-                this.appliesToSalePrice
+                this.appliesToSalePrice,
+                this.applyDiscountTo
             ]
         });
 

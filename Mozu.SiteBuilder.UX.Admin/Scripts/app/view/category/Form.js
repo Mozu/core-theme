@@ -131,6 +131,7 @@ Ext.define("Taco.view.category.Form", {
                             name: "name",
                             fieldLabel: "Category Name",
                             allowBlank: false,
+                            itemId: "categoryNameField",
                             xtype: "textfield",
                             width: "100%",
                             maxLength: 200,
@@ -275,7 +276,7 @@ Ext.define("Taco.view.category.Form", {
         this.callParent(arguments);
 
         me.mon(me, "boxready", function() {
-            var focusField = me.down("#categoryCodeField");
+            var focusField = me.down("#categoryNameField");
             focusField.focus();
         }, {
             delay: 1
