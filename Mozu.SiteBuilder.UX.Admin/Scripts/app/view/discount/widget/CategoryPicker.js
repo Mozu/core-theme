@@ -13,25 +13,20 @@ Ext.define('Taco.view.discount.widget.CategoryPicker', {
     listWidth: 382,
     height: 30,
 
-    showDynamicRealTimeCategories: true,
-
     initComponent: function () {
         var me = this;
         this.catStore.clearFilter(true);
 
+        //For discounts we never want to show dynamic realtime categories. Defect 76199
         me.catStore.on({
             load: function () {
-                if (!me.showDynamicRealTimeCategories) {
-                    me.catStore.filterBy(function (record) {
-                        var isRealTime = record.get("categoryType") === "DynamicRealTime";
-                        return (!isRealTime);
-                    });
-                }
+                me.catStore.filterBy(function (record) {
+                    var isRealTime = record.get("categoryType") === "DynamicRealTime";
+                    return (!isRealTime);
+                });
             },
             scope: this
         });
-
-        //  this.catStore.load();
 
         this.addEvents(
             /**
