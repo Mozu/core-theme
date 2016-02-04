@@ -55,7 +55,7 @@ Ext.define('Taco.view.priceList.Grid', {
 
     showActionsColumn: true,
 
-    //enableEditAction: true,
+    enableEditAction: false,
     //enableDisableAction: true,
 
     hideSearchToolbar: false,
@@ -69,6 +69,7 @@ Ext.define('Taco.view.priceList.Grid', {
     enableQuickFilters: false,
 
     enableBulkActions: true,
+    enableDeleteAction: true,
 
     pageSize: 25,
 
@@ -152,9 +153,9 @@ Ext.define('Taco.view.priceList.Grid', {
                 sortable: true
             }, {
                 xtype: 'gridcolumn',
-                dataIndex: 'catalogs',
-                stateId: 'catalogs',
-                text: 'Applied Catalogs',
+                dataIndex: 'validSitesDisplay',
+                stateId: 'validSitesDisplay',
+                text: 'Applied Sites',
                 hideable: true,
                 flex: 3,
                 sortable: false
@@ -186,7 +187,7 @@ Ext.define('Taco.view.priceList.Grid', {
                 stateId: 'status',
                 text: 'Status',
                 flex:1,
-                sortable: false
+                sortable: true
             }, {
                 xtype: 'datecolumn',
                 dataIndex: 'createDate',
@@ -227,11 +228,9 @@ Ext.define('Taco.view.priceList.Grid', {
 
     // list of actions to put in action column and context menu;
     getActionItems: function () {
-        var me = this,
-            actions = [];
-
-        if (this.enableEditAction) {
-                actions.push({
+        var me = this;
+        return [
+            {
                 text: 'Edit',
                 //requiredBehaviors: {
                 //    model: 'Taco.model.PriceList',
@@ -239,38 +238,39 @@ Ext.define('Taco.view.priceList.Grid', {
                 //},
                 menuColumnHandler: me.doEdit,
                 scope:me
-            });
-        }
-
-
-
-        actions.push({
-            text: 'Enable',
-            itemId: 'enableMenuItem',
-            menuColumnHandler: me.doEnableBulk,
-            //requiredBehaviors: {
-            //    model: 'Taco.model.PriceList',
-            //    behavior: 'update'
-            //},
-            scope: me
-        });
-        actions.push({
-            text: 'Disable',
-            itemId: 'disableMenuItem',
-            menuColumnHandler: me.doDisableBulk,
-            //requiredBehaviors: {
-            //    model: 'Taco.model.PriceList',
-            //    behavior: 'update'
-            //},
-            scope: me
-        });
-
-        return actions;
-
+            }, {
+                text: 'Enable',
+                itemId: 'enableMenuItem',
+                menuColumnHandler: me.doEnableBulk,
+                //requiredBehaviors: {
+                //    model: 'Taco.model.PriceList',
+                //    behavior: 'update'
+                //},
+                scope: me
+            }, {
+                text: 'Disable',
+                itemId: 'disableMenuItem',
+                menuColumnHandler: me.doDisableBulk,
+                //requiredBehaviors: {
+                //    model: 'Taco.model.PriceList',
+                //    behavior: 'update'
+                //},
+                scope: me
+            }, {
+                text: 'Delete',
+                itemId: "deleteMenuItem",
+                // deleteMenuColumnHandler can be found in Taco.core.ux.mixins.DeleteFromGrid
+                menuColumnHandler: "deleteMenuColumnHandler",
+                //requiredBehaviors: {
+                //    model: 'Taco.model.Discount',
+                //    behavior: 'delete'
+                //},
+                scope: me
+            }
+        ];
     },
 
     onActionMenuShow: function (menu, eventData) {
-        // need to disable the delete menu option when discount has been used
         var disableMenuItem = menu.down('#disableMenuItem'),
             enableMenuItem = menu.down('#enableMenuItem');
         if (!disableMenuItem || !enableMenuItem) {

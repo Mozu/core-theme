@@ -44,7 +44,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Helpers.PriceListHelpers
                     return ENABLED_PROPERTY;
                 case "createdate":
                     return CREATE_DATE_PROPERTY;
-                case "updatedate":
+                case "lastmodifieddate":
                     return UPDATE_DATE_PROPERTY;
 
                 default:

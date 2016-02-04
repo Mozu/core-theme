@@ -44,6 +44,20 @@ Ext.define('Taco.model.PriceList', {
             name: 'validSites',
             type: 'auto',
             defaultValue: []
+        },{
+            name: 'validSitesDisplay',
+            type: 'string',
+            persist: false,
+            convert: function (val, record) {
+                if (record.get('validForAllSites')) {
+                    return 'All Sites';
+                }
+                var siteNames = Ext.Array.map(record.get('validSites'), function(siteId) {
+                    var site = Taco.app.context.findSite(siteId);
+                    return (site) ? site.name : '';
+                });
+                return siteNames.join(',');
+            }
         }, {
             name: 'searchIndexSequence',
             type: 'int',

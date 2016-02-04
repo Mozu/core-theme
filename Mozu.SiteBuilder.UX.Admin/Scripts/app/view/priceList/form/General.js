@@ -83,6 +83,51 @@ Ext.define('Taco.view.priceList.form.General', {
             ]
         });
 
+        //this.includeAllProductsInput = Ext.widget({
+        //    xtype: 'radio',
+        //    name: 'includeAllProductsRadio',
+        //    persistSelectedValueOnly: true,
+        //    boxLabel: 'All',
+        //    inputValue: "all",
+        //    width: 300,
+        //    checked: this.record.get('includeAllProducts'),
+        //    listeners: {
+        //        afterchange: function (cmp, newValue, oldValue) {
+        //            if (newValue) {
+        //                me.record.fireEvent("criteriascopechange", cmp, newValue, oldValue);
+        //            }
+        //        },
+        //        scope: this
+        //    }
+        //});
+
+        //this.includeSpecificCatagoriesInput = Ext.widget({
+        //    xtype: 'radio',
+        //    name: 'includeAllProductsRadio',
+        //    persistSelectedValueOnly: true,
+        //    boxLabel: 'Specific Categories',
+        //    inputValue: "categories",
+        //    width: 300,
+        //    checked: (!this.record.get('includeAllProducts') && this.record.get('categories').length), listeners: {
+        //        afterchange: function (cmp, newValue,oldValue) {
+        //            if (newValue) {
+        //                this.record.fireEvent("criteriascopechange", cmp, newValue, oldValue);
+        //            }
+        //        },
+        //        scope: this
+        //    }
+        //});
+        //
+        //this.scopeContainer = Ext.create('Ext.form.FieldContainer', {
+        //        itemId: 'scope-field-container',
+        //        fieldLabel: "Scope",
+        //        items: [
+        //            this.includeSpecificCatagoriesInput,
+        //            this.includeAllProductsInput
+        //        ]
+        //    }
+        //);
+
         //   vbox
         //     hbox -
         //        1. vbox
@@ -234,7 +279,6 @@ Ext.define('Taco.view.priceList.form.General', {
                                     fieldLabel: 'Search Index Sequence',
                                     allowBlank: true,
                                     hideTrigger: true,
-                                    //margin: '0 30 0 0',
                                     width: '50%'
                                 }
                             ]
@@ -270,6 +314,29 @@ Ext.define('Taco.view.priceList.form.General', {
                                 offsetLeft: 20,
                                 offsetTop: 15
                             })
+                        }
+                    ]
+                }, {
+                    xtype: 'panel',
+                    layout: {
+                        type: 'hbox',
+                        align: 'bottom'
+                    },
+                    margin: '15 0 0 0',
+                    width: '100%',
+                    items: [
+                        {
+                            xtype: 'radiofield',
+                            boxLabel  : 'All Sites',
+                            name      : 'validForAllSites',
+                            inputValue: 'true',
+                            id        : 'sitesChoiceAll'
+                        }, {
+                            xtype: 'radiofield',
+                            boxLabel  : 'Select Sites',
+                            name      : 'validForAllSites',
+                            inputValue: 'false',
+                            id        : 'sitesChoiceSelect'
                         }
                     ]
                 }
