@@ -33,29 +33,29 @@ Ext.define('Taco.view.priceList.form.AdvancedSearch', {
             }
         ];
 
-        if (catalogStore.getTotalCount() > 1) {
-            this.items.push({
-                xtype: 'fieldcontainer',
-                layout: 'hbox',
-                width: '100%',
-                items: [{
-                    xtype: 'combobox',
-                    fieldLabel: 'Catalog',
-                    name: 'catalogId',
-                    labelAlign: 'top',
-                    allowBlank: true,
-                    editable: false,
-                    forceSelection: true,
-                    autoSelect: true,
-                    listConfig: {shadow: false},
-                    width: '100%',
-                    queryMode: 'local',
-                    store: catalogStore,
-                    valueField: 'id',
-                    displayField: 'name'
-                }]
-            });
-        }
+        //if (catalogStore.getTotalCount() > 1) {
+        //    this.items.push({
+        //        xtype: 'fieldcontainer',
+        //        layout: 'hbox',
+        //        width: '100%',
+        //        items: [{
+        //            xtype: 'combobox',
+        //            fieldLabel: 'Catalog',
+        //            name: 'catalogId',
+        //            labelAlign: 'top',
+        //            allowBlank: true,
+        //            editable: false,
+        //            forceSelection: true,
+        //            autoSelect: true,
+        //            listConfig: {shadow: false},
+        //            width: '100%',
+        //            queryMode: 'local',
+        //            store: catalogStore,
+        //            valueField: 'id',
+        //            displayField: 'name'
+        //        }]
+        //    });
+        //}
 
         this.items = this.items.concat([
             {
