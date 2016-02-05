@@ -260,6 +260,9 @@ Ext.define('Taco.core.ux.content.Tooltip', {
 
 		switch (this.hoverTarget) {
 			case 'label':
+                if (this.messageKey == 'discount.criteria.applyDiscountToHighestPricedProduct') {
+                    debugger;
+                }
 				this.instantiateToolTipEvents(this.component.labelEl);
 				break;
             case 'bodyEl':
