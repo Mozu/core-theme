@@ -146,7 +146,7 @@ Ext.define('Taco.view.discount.CriteriaForm', {
         this.applyDiscountTo = Ext.widget({
                 xtype: 'checkbox',
                 name: 'appliesToMostExpensiveProductsFirst',
-                value: (this.isEdit()) ? !this.record.get('appliesToLeastExpensiveProductsFirst') : false,
+                value: !this.record.get('appliesToLeastExpensiveProductsFirst'),
                 itemId: 'apply-to-highest-priced-product',
                 boxLabel: 'Apply discount to highest-priced qualifying product(s) first',
                 tooltip: Ext.create('Taco.core.ux.content.Tooltip', {
