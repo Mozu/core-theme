@@ -181,6 +181,20 @@ Ext.define('Taco.view.priceList.widget.EntriesGrid', {
                 text: 'Currency',
                 flex: 1,
                 sortable: true
+            }, {
+                xtype: 'gridcolumn',
+                dataIndex: 'priceFirst',
+                stateId: 'priceFirst',
+                text: 'Price',
+                flex: 1,
+                sortable: true
+            }, {
+                xtype: 'gridcolumn',
+                dataIndex: 'salePriceFirst',
+                stateId: 'salePriceFirst',
+                text: 'Sale Price',
+                flex: 1,
+                sortable: true
             },
             {
                 xtype: 'datecolumn',

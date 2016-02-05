@@ -21,6 +21,7 @@ Ext.define('Taco.view.priceList.form.PriceEntryPrice', {
 
     title: 'Price',
     record: null,
+    currencyCode: null,
 
     initComponent: function() {
         var me = this,
@@ -53,13 +54,14 @@ Ext.define('Taco.view.priceList.form.PriceEntryPrice', {
             name: 'price',
             itemId: 'priceField',
             fieldLabel: 'Price',
-            currencyCode: me.currencyCode,
+            currencyCode: me.currencyCode ? me.currencyCode : defaultCurrency,
             allowBlank: true,
             hideTrigger: true,
             margin: '0 30 0 0',
             flex: 9,
             required: false,
-            disabled: true
+            disabled: true,
+            fieldStyle: 'text-align:right'
         });
 
         this.enabledPrice = {
@@ -90,13 +92,14 @@ Ext.define('Taco.view.priceList.form.PriceEntryPrice', {
             name: 'salePrice',
             itemId: 'salePriceField',
             fieldLabel: 'Sale Price',
-            currencyCode: me.currencyCode,
+            currencyCode: me.currencyCode ? me.currencyCode : defaultCurrency,
             allowBlank: true,
             hideTrigger: true,
             margin: '0 30 0 0',
             flex: 9,
             required: false,
-            disabled: true
+            disabled: true,
+            fieldStyle: 'text-align:right'
         });
 
         this.enabledSalePrice = {
