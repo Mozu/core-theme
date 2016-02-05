@@ -212,12 +212,6 @@ Ext.define('Taco.core.ux.content.Tooltip', {
     },
 
     update: function(data) {
-        if (typeof data === 'string') {
-            data = {
-                message: this.store.findRecord('key', data)
-            };
-
-        }
         this.tooltip.update(data);
     },
 
@@ -260,9 +254,6 @@ Ext.define('Taco.core.ux.content.Tooltip', {
 
 		switch (this.hoverTarget) {
 			case 'label':
-                if (this.messageKey == 'discount.criteria.applyDiscountToHighestPricedProduct') {
-                    debugger;
-                }
 				this.instantiateToolTipEvents(this.component.labelEl);
 				break;
             case 'bodyEl':
