@@ -245,7 +245,9 @@ Ext.define('Taco.model.Discount', {
                     clearFilters: false,
                     remoteFilter: false,
                     filters: function (record) {
-                        return Ext.Array.indexOf((me.get('categories') || []), record.getId()) > -1;
+                        var isRealTime = record.get("categoryType") === "DynamicRealTime";
+                        return (Ext.Array.indexOf((me.get('categories') || []), record.getId()) > -1 && 
+                           !isRealTime);
                     }
                 });
 

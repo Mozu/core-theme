@@ -31,7 +31,9 @@ namespace Mozu.SiteBuilder.UX.Admin.Helpers.ProductTypeHelpers
             {
                 case "all":
                     var str = "";
-                    str += String.Format("{1} cont {0}", filter.escapedValue, PRODUCTTYPE_NAME_PROPERTY);
+                    str += string.Join(" and ", filter.escapedValue.ToString().Trim().Split(new char[] {' '}, StringSplitOptions.RemoveEmptyEntries)
+                        .Select(searchString => string.Format("{0} cont {1}", PRODUCTTYPE_NAME_PROPERTY, searchString)));
+
                     if (valueIsInt)
                     {
                         str += String.Format(" or {1} eq '{0}'", filter.value, PRODUCTTYPE_ID_PROPERTY);    

@@ -71,32 +71,39 @@ namespace Mozu.SiteBuilder.Mvc.OAF
 
         protected override ApiActionExtensionFilterContext CreateFunctionContext(HttpActionContext actionContext)
         {
-            AddToActionContext<SiteContext>(actionContext.Request, "siteContext");
-            AddToActionContext<PageContext>(actionContext.Request, "pageContext");
-            AddToActionContext<NavigationContext>(actionContext.Request,"navigation");
-            AddToActionContext<UrlHelper>(actionContext.Request, "urlHelper");
-            var routeData = new Microsoft.ClearScript.PropertyBag();
-            foreach ( var kvp in actionContext.Request.GetRouteData().Values)
-            {
-                routeData[kvp.Key] = kvp.Value;
-            }
-            AddToActionContext<Microsoft.ClearScript.PropertyBag>(actionContext.Request, "routeData",routeData);
-
-            var catTreeProvider = actionContext.Request.Resolve<ICategoryTreeProvider>();
-
-            if ( catTreeProvider.HasCompleted)
-            {
-                AddToActionContext<ICategoryTree>(actionContext.Request, "categoryHelper", catTreeProvider.GetAllCategories().Result);
-            }else
-            {
-                AddToActionContext<ICategoryTree>(actionContext.Request, "categoryHelper", new CategoryHelper(catTreeProvider));
-            }
-            
-         
+            return this.CreateFunctionContextExternal(actionContext);
+        }
+        public   ApiActionExtensionFilterContext CreateFunctionContextExternal(HttpActionContext actionContext)
+        {
+            InitSBActionContext(actionContext);
             return base.CreateFunctionContext(actionContext);
         }
 
-        
+        public static void InitSBActionContext (HttpActionContext actionContext )
+        {
+            AddToActionContext<SiteContext>(actionContext.Request, "siteContext");
+            AddToActionContext<PageContext>(actionContext.Request, "pageContext");
+            AddToActionContext<NavigationContext>(actionContext.Request, "navigation");
+            AddToActionContext<UrlHelper>(actionContext.Request, "urlHelper");
+            var routeData = new Microsoft.ClearScript.PropertyBag();
+            foreach (var kvp in actionContext.Request.GetRouteData().Values)
+            {
+                routeData[kvp.Key] = kvp.Value;
+            }
+            AddToActionContext<Microsoft.ClearScript.PropertyBag>(actionContext.Request, "routeData", routeData);
+
+            var catTreeProvider = actionContext.Request.Resolve<ICategoryTreeProvider>();
+
+            if (catTreeProvider.HasCompleted)
+            {
+                AddToActionContext<ICategoryTree>(actionContext.Request, "categoryHelper", catTreeProvider.GetAllCategories().Result);
+            }
+            else
+            {
+                AddToActionContext<ICategoryTree>(actionContext.Request, "categoryHelper", new CategoryHelper(catTreeProvider));
+            }
+            return;
+        }
 
         public static void AddToActionContext<T>(HttpRequestMessage httpRequestMessage, string name , T obj = null) where T : class
         {
