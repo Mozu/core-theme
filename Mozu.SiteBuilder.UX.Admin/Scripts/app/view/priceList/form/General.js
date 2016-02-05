@@ -83,7 +83,7 @@ Ext.define('Taco.view.priceList.form.General', {
                 }
             ]
         });
-       
+
 
         //   vbox
         //     hbox -
@@ -147,7 +147,7 @@ Ext.define('Taco.view.priceList.form.General', {
                                             valueNotFoundText: 'None',
                                             editable: true,
                                             forceSelection: false,
-                                            excludedIds: !me.record.phantom ? [this.record.get("code")] : []
+                                            excludedCode: !me.record.phantom ? this.record.get("code") : null
                                         }
                                     ]
                                 },

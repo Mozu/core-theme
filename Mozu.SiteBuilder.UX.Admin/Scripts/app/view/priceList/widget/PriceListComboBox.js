@@ -7,35 +7,35 @@ Ext.define('Taco.view.priceList.widget.PriceListComboBox', {
     alias: 'widget.pricelistcombobox',
     requires: ['Taco.store.PriceLists'],
     displayField: 'name',
-    valueField: 'id',
+    valueField: 'code',
     minChars: 1,
     queryMode: 'local',
     lastQuery:"",
     excludedIds:[],
+    excludedCode: null,
     initComponent: function () {
         var me = this;
         me.store = Taco.core.data.StoreManager.getOrCreate({
             type: 'Taco.store.PriceLists',
             createOnly: true,
             autoLoad: false,
-            filters: [
-                function (record) {
-                    //exclude any id's passed in via the excludedIds array;
-                    if (me.excludedIds.length) {
-                        var isExcluded = Ext.Array.findBy(me.excludedIds, function (id) {
-                            return id === record.get("code");
-                        });
-
-                        if (isExcluded) {
-                            return false;
-                        }
-                    }
-                    return true;
-                }
-            ]
+            filterOnLoad: true,
+            remoteFilter: false,
+            clearFilters: true
+            
         });
-
-        me.store.load();
+        me.store.load(
+            {
+                params: {
+                    isLookup: true,
+                    excludedCode: me.excludedCode
+                },
+                callback: function(records, operation, success) {
+                    //console.log('called back');
+                },
+                scope: this
+            }
+        );
 
         this.callParent(arguments);
     }

@@ -28,7 +28,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
 
     /// <summary>
     /// Controller for PriceLists.
-	/// </summary>
+    /// </summary>
     [WebApi("app/priceList", SuppressDescriptorGeneration = true)]
     public class PriceListController : BaseController
     {
@@ -40,7 +40,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
         /// Public constructor.
         /// </summary>
         public PriceListController(IApiContext ctx, ITenantsWebApiClient tenantClient,
-            IPriceListWebApiClient priceListWebClient) 
+            IPriceListWebApiClient priceListWebClient)
         {
             _ctx = ctx;
             _tenantClient = tenantClient;
@@ -50,14 +50,20 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
         /// <summary>
         /// Get a list of PriceLists.
         /// </summary>
-		[HttpGetRoute(UriTemplate = "list")]
-        public async Task<Response<List<PriceList>>> ListPriceLists(PagingParamaters pagingParams, FilterCollection extFilter)
+        [HttpGetRoute(UriTemplate = "list")]
+        public async Task<Response<List<PriceList>>> ListPriceLists(PagingParamaters pagingParams,
+            FilterCollection extFilter)
         {
             if (pagingParams.id != null)
             {
-                var singlePriceList = (await _priceListWebClient.GetPriceList(pagingParams.id)).ReadAsSync();
-                return List2(Mapper.Map<PriceList>(singlePriceList));
+                return await GetSinglePriceList(pagingParams);
             }
+
+            if (IsLookupQuery(extFilter.QueryString.Get("isLookup")))
+            {
+                return await GetPriceListLookup(extFilter.QueryString.Get("excludedCode"));
+            }
+
             string filter = null;
             if (extFilter != null && extFilter.Count > 0)
             {
@@ -76,7 +82,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
 
             var result = Mapper.Map<List<PriceList>>(priceLists.Items);
 
-            return List2(result, (int?)priceLists.TotalCount);
+            return List2(result, (int?) priceLists.TotalCount);
             //}
             //catch (ApiWebClientConnectionException e)
             //{
@@ -85,10 +91,33 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
 
         }
 
+        private async Task<Response<List<PriceList>>> GetSinglePriceList(PagingParamaters pagingParams)
+        {
+            var singlePriceList = (await _priceListWebClient.GetPriceList(pagingParams.id)).ReadAsSync();
+            return List2(Mapper.Map<PriceList>(singlePriceList));
+        }
+
+        private async Task<Response<List<PriceList>>> GetPriceListLookup(string excludedCode)
+        {
+            var filter = string.Format("enabled eq true{0}",
+                !string.IsNullOrEmpty(excludedCode) 
+                    ? " and pricelistcode ne " + excludedCode 
+                    : "");
+            var priceLists = (await _priceListWebClient.GetPriceLists(startIndex: 0,
+                pageSize: 9999,
+                sortBy: "name",
+                filter: filter,
+                responseFields: "items(priceListCode, name)"
+                )).ReadAsSync();
+
+            var result = Mapper.Map<List<PriceList>>(priceLists.Items);
+            return List2(result, (int?) priceLists.TotalCount);
+        }
+
         /// <summary>
         /// Create a new PriceList.
         /// </summary>
-		[HttpPostRoute(UriTemplate = "create")]
+        [HttpPostRoute(UriTemplate = "create")]
         public async Task<Response<List<PriceList>>> CreatePriceList(List<PriceList> priceLists)
         {
             var responseList = new List<PriceList>();
@@ -114,7 +143,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
         /// <summary>
         /// Update an existing PriceList.
         /// </summary>
-		[HttpPostRoute(UriTemplate = "edit")]
+        [HttpPostRoute(UriTemplate = "edit")]
         public async Task<Response<List<PriceList>>> EditPriceList(List<PriceList> priceLists, string priceListCode = null)
         {
             var results = new List<PriceList>();
@@ -152,12 +181,13 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
                     ProductName = string.Format("product-{0}{1}", (i < 10 ? "0" : ""), i),
                     CurrencyCode = "USD",
                     StartDate = DateTime.UtcNow,
-                    EndDate = new DateTime(2016,12,31),
+                    EndDate = new DateTime(2016, 12, 31),
                     Prices = new List<PriceListEntryPrice>
                     {
                         new PriceListEntryPrice
                         {
-                            Id = i + 10, ListPrice = 29.99M
+                            Id = i + 10,
+                            ListPrice = 29.99M
                         }
 
                         //new PriceListEntryPrice
@@ -179,10 +209,19 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
                     UpdateDate = DateTime.UtcNow,
                     UpdateBy = "test"
                 }).ToList()
-            );
+                );
 
             return List2(mockData, 75);
         }
 
+        private bool IsLookupQuery(string lookupValue)
+        {
+            bool isLookup;
+            if (!string.IsNullOrEmpty(lookupValue) && bool.TryParse(lookupValue, out isLookup))
+            {
+                return isLookup;
+            }
+            return false;
+        }
     }
 }
