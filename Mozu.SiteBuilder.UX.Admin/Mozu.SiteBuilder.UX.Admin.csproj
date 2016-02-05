@@ -770,12 +770,14 @@
     <Content Include="Scripts\app\view\priceList\form\AdvancedSearch.js" />
     <Content Include="Scripts\app\view\priceList\form\Conditions.js" />
     <Content Include="Scripts\app\view\priceList\form\Entries.js" />
+    <Content Include="Scripts\app\view\priceList\form\PriceEntryPrice.js" />
     <Content Include="Scripts\app\view\priceList\form\PriceEntryGeneral.js" />
     <Content Include="Scripts\app\view\priceList\form\General.js" />
     <Content Include="Scripts\app\view\priceList\Grid.js" />
     <Content Include="Scripts\app\view\priceList\Index.js" />
     <Content Include="Scripts\app\view\priceList\modal\PriceEntryEditor.js" />
     <Content Include="Scripts\app\view\priceList\widget\EntriesGrid.js" />
+    <Content Include="Scripts\app\view\priceList\widget\OverrideField.js" />
     <Content Include="Scripts\app\view\priceList\widget\PriceListComboBox.js" />
     <Content Include="Scripts\app\view\productRanking\Edit.js" />
     <Content Include="Scripts\app\view\productRanking\Form.js" />

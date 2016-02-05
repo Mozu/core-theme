@@ -7,7 +7,8 @@ Ext.define('Taco.view.priceList.modal.PriceEntryEditor', {
     extend: 'Taco.core.ux.window.Drawer',
 
     requires: [
-        'Taco.view.priceList.form.PriceEntryGeneral'
+        'Taco.view.priceList.form.PriceEntryGeneral',
+        'Taco.view.priceList.form.PriceEntryPrice'
     ],
 
     // this should really be the default;
@@ -204,6 +205,11 @@ Ext.define('Taco.view.priceList.modal.PriceEntryEditor', {
             record: me.record,
             isCreateMode: me.isCreateMode
         });
+
+        me.pricePanel = Ext.create('Taco.view.priceList.form.PriceEntryPrice', {
+            record: me.record,
+            isCreateMode: me.isCreateMode
+        });
         
         //me.couponCodePanel = Ext.create('Taco.view.couponCode.Grid', {
         //    autoHeight: true,
@@ -228,7 +234,8 @@ Ext.define('Taco.view.priceList.modal.PriceEntryEditor', {
         var container = Ext.create('Taco.core.ux.form.Form', {
             autoScroll:true,
             items :  [
-                me.generalPanel
+                me.generalPanel,
+                me.pricePanel
             ]
         });
 

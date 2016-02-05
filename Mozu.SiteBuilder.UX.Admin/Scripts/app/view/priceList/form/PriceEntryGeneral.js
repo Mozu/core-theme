@@ -18,7 +18,6 @@ Ext.define('Taco.view.priceList.form.PriceEntryGeneral', {
     margin: '0 0 20 0',
 
     title: 'Product',
-    productsPerPage: 25,
     record: null,
 
     initComponent: function() {

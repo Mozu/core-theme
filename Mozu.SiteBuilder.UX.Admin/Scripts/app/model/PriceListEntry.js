@@ -95,13 +95,9 @@ Ext.define('Taco.model.PriceListEntry', {
         }
     ],
 
-    //getDeletePromptMessage: function() {
-    //    var msg = 'Are you sure you want to delete "' + this.get('name') + '"?';
-    //    //if (this.get('pricingEntries').length > 1) {
-    //    //    msg += '<br/>It will affect these categories: ' + this.get('categoryNamesJoined');
-    //    //}
-    //    return msg;
-    //},
+    getDeletePromptMessage: function() {
+        return 'Are you sure you want to delete this price record?';
+    },
 
     validations: [
         { field: 'currencyCode', type: 'length', max: 3 }

@@ -63,6 +63,7 @@ Ext.define('Taco.view.priceList.widget.EntriesGrid', {
 
     //enableEditAction: true,
     //enableDisableAction: true,
+    enableDeleteAction: true,
 
     hideSearchToolbar: false,
 
@@ -79,6 +80,7 @@ Ext.define('Taco.view.priceList.widget.EntriesGrid', {
     minHeight: 350,
 
     enableBulkActions: true,
+    enableDeleteAction: true,
 
     pageSize: 25,
 
@@ -176,7 +178,7 @@ Ext.define('Taco.view.priceList.widget.EntriesGrid', {
                 xtype: 'gridcolumn',
                 dataIndex: 'currencyCode',
                 stateId: 'currencyCode',
-                text: 'currency',
+                text: 'Currency',
                 flex: 1,
                 sortable: true
             },
@@ -239,11 +241,10 @@ Ext.define('Taco.view.priceList.widget.EntriesGrid', {
 
     // list of actions to put in action column and context menu;
     getActionItems: function () {
-        var me = this,
-            actions = [];
+        var me = this;
 
-        if (this.enableEditAction) {
-                actions.push({
+        return [
+            {
                 text: 'Edit',
                 //requiredBehaviors: {
                 //    model: 'Taco.model.PriceList',
@@ -251,34 +252,36 @@ Ext.define('Taco.view.priceList.widget.EntriesGrid', {
                 //},
                 menuColumnHandler: me.doEdit,
                 scope:me
-            });
-        }
-
-
-
-        actions.push({
-            text: 'Enable',
-            itemId: 'enableMenuItem',
-            menuColumnHandler: me.doEnableBulk,
-            //requiredBehaviors: {
-            //    model: 'Taco.model.PriceList',
-            //    behavior: 'update'
-            //},
-            scope: me
-        });
-        actions.push({
-            text: 'Disable',
-            itemId: 'disableMenuItem',
-            menuColumnHandler: me.doDisableBulk,
-            //requiredBehaviors: {
-            //    model: 'Taco.model.PriceList',
-            //    behavior: 'update'
-            //},
-            scope: me
-        });
-
-        return actions;
-
+            }, {
+                text: 'Enable',
+                itemId: 'enableMenuItem',
+                menuColumnHandler: me.doEnableBulk,
+                //requiredBehaviors: {
+                //    model: 'Taco.model.PriceList',
+                //    behavior: 'update'
+                //},
+                scope: me
+            }, {
+                text: 'Disable',
+                itemId: 'disableMenuItem',
+                menuColumnHandler: me.doDisableBulk,
+                //requiredBehaviors: {
+                //    model: 'Taco.model.PriceList',
+                //    behavior: 'update'
+                //},
+                scope: me
+            }, {
+                text: 'Delete',
+                itemId: "deleteMenuItem",
+                // deleteMenuColumnHandler can be found in Taco.core.ux.mixins.DeleteFromGrid
+                menuColumnHandler: "deleteMenuColumnHandler",
+                //requiredBehaviors: {
+                //    model: 'Taco.model.Discount',
+                //    behavior: 'delete'
+                //},
+                scope: me
+            }
+        ];
     },
 
     onActionMenuShow: function (menu, eventData) {
