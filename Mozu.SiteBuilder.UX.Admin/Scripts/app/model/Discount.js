@@ -235,7 +235,8 @@ Ext.define('Taco.model.Discount', {
 
     getCategoryStore: function () {
         var me = this;
-        if (!me.categoryStore ) {
+        if (!me.categoryStore) {
+            debugger;
             me.categoryStore = Taco.core.data.StoreManager.getOrCreate(
                 {
                     type: 'Taco.store.Categories',
