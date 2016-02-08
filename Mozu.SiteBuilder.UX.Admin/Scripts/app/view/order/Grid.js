@@ -115,6 +115,10 @@ Ext.define('Taco.view.order.Grid', {
                     text: 'Cancel',
                     disabled: true,
                     scope: this,
+                    requiredBehaviors: {
+                        model: 'Taco.model.Order',
+                        behavior: 'cancel'
+                    },
                     handler: function () {
                         this.doBulkAction('CancelOrder');
                     }
@@ -545,6 +549,10 @@ Ext.define('Taco.view.order.Grid', {
                             }
                         }, {
                             text: 'Cancel Order',
+                            requiredBehaviors: {
+                                model: 'Taco.model.Order',
+                                behavior: 'cancel'
+                            },
                             itemId: "cancelAction",
                             menuColumnHandler: function (item, eventData) {
                                 var me = this,

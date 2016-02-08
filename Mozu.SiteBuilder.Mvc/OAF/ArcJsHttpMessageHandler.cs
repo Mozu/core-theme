@@ -91,17 +91,19 @@ namespace Mozu.SiteBuilder.Mvc.OAF
                 throw new FunctionException("unable to find function  named " + functionId, null, null, System.Net.HttpStatusCode.NotFound, null);
             }
 
-
+            var sbAEF = new SbActionExtensionFilter();
             var cctx = new HttpControllerContext(configuration, routeData, request);
             var desc = new ArcJSHttpActionDescriptor() { SettableActionName = functionId };
             var actionContext = new HttpActionContext(cctx, desc);
-            var arcCtx = new ApiActionExtensionFilterContext(this, actionContext);
 
 
-            var handler = new WrappedFunctionCallbackHandler(DefaultFunctionCallbackHandler.Default)
-            {
-               
-            };
+
+            var arcCtx = sbAEF.CreateFunctionContextExternal(actionContext);
+
+            var handler = sbAEF.CreateHandler(actionContext);
+
+
+
             await this.RunFunctions(arcCtx, new List<CustomFunctionBase> { fn }, handler).ConfigureAwait(false);
 
             return actionContext.Response;
