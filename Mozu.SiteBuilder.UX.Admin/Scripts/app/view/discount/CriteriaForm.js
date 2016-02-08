@@ -505,7 +505,8 @@ Ext.define('Taco.view.discount.CriteriaForm', {
                 this.excludeCategoriesBox,
                 this.productsExcludeBox,
                 this.ApplyToProductsWithSalePrice,
-                this.appliesToSalePrice
+                this.appliesToSalePrice,
+                this.applyDiscountTo
             ]
         });
 
