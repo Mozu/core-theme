@@ -1,8 +1,8 @@
 /**
- * @class  Taco.view.priceList.form.PriceEntryPrice
+ * @class  Taco.view.priceList.entry.PriceEntryPrice
  * @description Price List PriceEntryPrice Form
  */
-Ext.define('Taco.view.priceList.form.PriceEntryPrice', {
+Ext.define('Taco.view.priceList.entry.PriceEntryPrice', {
     extend: 'Taco.core.ux.form.Form',
     alias: 'widget.taco-priceList-price-entry-price',
     requires: [

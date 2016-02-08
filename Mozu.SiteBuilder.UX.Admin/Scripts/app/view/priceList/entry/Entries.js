@@ -2,7 +2,7 @@
  * @class  Taco.view.priceList.form.Conditions
  * @description Price List Conditions Form
  */
-Ext.define('Taco.view.priceList.form.Entries', {
+Ext.define('Taco.view.priceList.entry.Entries', {
     extend: 'Taco.core.ux.form.Form',
     alias: 'widget.taco-priceList-entries',
     requires: [

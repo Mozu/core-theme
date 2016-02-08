@@ -6,7 +6,7 @@ Ext.define('Taco.view.priceList.Form', {
     requires: [
         'Taco.view.priceList.form.General',
         'Taco.view.priceList.form.Conditions',
-        'Taco.view.priceList.form.Entries',
+        'Taco.view.priceList.entry.Entries',
         'Taco.core.ux.card.Tab',
         'Taco.core.ux.card.Toolbar'
     ],
@@ -46,28 +46,6 @@ Ext.define('Taco.view.priceList.Form', {
             record: me.record,
             manageHeight: true
         }
-        //, {
-        //
-        //    xtype: 'taco-priceList-context',
-        //    itemId: 'context',
-        //    parentForm: this,
-        //    record: me.record,
-        //    categoryCode: me.categoryCode,
-        //    isCreate: me.isCreate,
-        //    manageHeight: true
-        //}, {
-        //    xtype: 'taco-priceList-pinned',
-        //    itemId: 'pinned',
-        //    parentForm: this,
-        //    record: this.record,
-        //    manageHeight: true
-        //}, {
-        //    xtype: 'taco-priceList-blocked',
-        //    itemId: 'blocked',
-        //    parentForm: this,
-        //    record: this.record,
-        //    manageHeight: true
-        //}
         ];
 
         if (this.isCatalogLevel) {

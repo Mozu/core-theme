@@ -15,7 +15,7 @@ Ext.define('Taco.view.priceList.widget.EntriesGrid', {
         'Taco.core.ux.FilterableDataView',
         'Taco.core.ux.TextFilter',
         'Taco.core.ux.grid.MenuColumn',
-        'Taco.view.priceList.form.AdvancedSearch',
+        'Taco.view.priceList.entry.AdvancedEntrySearch',
         'Taco.view.priceList.modal.PriceEntryEditor'
 
         //'Taco.view.priceList.Form',
@@ -26,9 +26,9 @@ Ext.define('Taco.view.priceList.widget.EntriesGrid', {
 
     },
 
-    contextConfig: {
-        requiresContextOfType: ['m']
-    },
+    //contextConfig: {
+    //    requiresContextOfType: ['m']
+    //},
 
     //viewConfig: {
     //    deferEmptyText: false,
@@ -67,7 +67,7 @@ Ext.define('Taco.view.priceList.widget.EntriesGrid', {
 
     hideSearchToolbar: false,
 
-    //title: 'Price Lists',
+    title: 'Price Entries',
 
     store: null,
 
@@ -146,7 +146,7 @@ Ext.define('Taco.view.priceList.widget.EntriesGrid', {
             });
         }
 
-        me.advancedSearchConfig.form = Ext.create('Taco.view.priceList.form.AdvancedSearch', {});
+        me.advancedSearchConfig.form = Ext.create('Taco.view.priceList.entry.AdvancedEntrySearch', {});
 
         me.callParent(arguments);
 

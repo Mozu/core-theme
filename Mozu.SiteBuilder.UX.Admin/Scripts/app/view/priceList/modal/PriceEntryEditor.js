@@ -7,8 +7,8 @@ Ext.define('Taco.view.priceList.modal.PriceEntryEditor', {
     extend: 'Taco.core.ux.window.Drawer',
 
     requires: [
-        'Taco.view.priceList.form.PriceEntryGeneral',
-        'Taco.view.priceList.form.PriceEntryPrice'
+        'Taco.view.priceList.entry.PriceEntryGeneral',
+        'Taco.view.priceList.entry.PriceEntryPrice'
     ],
 
     // this should really be the default;
@@ -201,12 +201,12 @@ Ext.define('Taco.view.priceList.modal.PriceEntryEditor', {
             priceListCode = me.record ? me.record.get('priceListCode') : null,
             priceListId = me.record ? me.record.get('id') : null;
 
-        me.generalPanel = Ext.create('Taco.view.priceList.form.PriceEntryGeneral', {
+        me.generalPanel = Ext.create('Taco.view.priceList.entry.PriceEntryGeneral', {
             record: me.record,
             isCreateMode: me.isCreateMode
         });
 
-        me.pricePanel = Ext.create('Taco.view.priceList.form.PriceEntryPrice', {
+        me.pricePanel = Ext.create('Taco.view.priceList.entry.PriceEntryPrice', {
             record: me.record,
             isCreateMode: me.isCreateMode
         });
