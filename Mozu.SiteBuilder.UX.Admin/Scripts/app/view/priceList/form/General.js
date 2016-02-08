@@ -338,7 +338,7 @@ Ext.define('Taco.view.priceList.form.General', {
             var siteChildren = Ext.Array.map(cat.sites, function (site) {
                 return {
                     id: site.id,
-                    name: site.name,
+                    text: site.name,
                     parentId: cat.id,
                     type: 'site',
                     expanded: true,
@@ -348,7 +348,7 @@ Ext.define('Taco.view.priceList.form.General', {
             });
             return {
                 id: cat.id,
-                name: cat.name,
+                text: cat.name,
                 type: 'catalog',
                 expanded: true,
                 loaded: true,
@@ -365,13 +365,19 @@ Ext.define('Taco.view.priceList.form.General', {
 
         this.modal = Ext.widget('checkbox-tree-modal', {
             title: 'Select Sites',
-            displayField: 'name',
-            store: siteTreeStore
+            displayField: 'text',
+            store: siteTreeStore,
+            //preselectedIds: list.value,
+            selectChildrenFromParent: true
         });
 
         this.modal.on({
             savesuccess: function(modal, values) {
-                list.addValue(values);
+                Ext.Array.forEach(values, function(selectedNode){
+                    if (selectedNode.isLeaf()) {
+                        list.addValue(selectedNode);
+                    }
+                });
                 list.store.reload();
                 this.parentForm.getForm().checkValidity();
             },

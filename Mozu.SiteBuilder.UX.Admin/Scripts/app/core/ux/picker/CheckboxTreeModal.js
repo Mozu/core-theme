@@ -19,6 +19,7 @@ Ext.define('Taco.core.ux.picker.CheckboxTreeModal', {
     displayField: 'nameAndCode',
     store: null,
     preselection: [],
+    selectChildrenFromParent: false,
 
     layout: {
         type: 'fit'
@@ -71,6 +72,16 @@ Ext.define('Taco.core.ux.picker.CheckboxTreeModal', {
                         Ext.callback(callback, scope || me, [false, null]);
                     }
                 }
+            },
+
+            listeners: {
+                select: function (cmp, record) {
+                    this.selectChildren(record, 'select');
+                },
+                deselect: function (cmp, record) {
+                    this.selectChildren(record, 'deselect');
+                },
+                scope: this
             }
         });
 
@@ -83,6 +94,16 @@ Ext.define('Taco.core.ux.picker.CheckboxTreeModal', {
                 scope: this,
                 fn: 'preselect'
             }
+        });
+    },
+
+    selectChildren: function (record, selectType) {
+        var me = this;
+        if (!this.selectChildrenFromParent || !record.hasChildNodes()) {
+            return;
+        }
+        Ext.Array.forEach(record.childNodes, function(childNode) {
+            me.tree.getSelectionModel()[selectType](childNode, true);
         });
     },
 
