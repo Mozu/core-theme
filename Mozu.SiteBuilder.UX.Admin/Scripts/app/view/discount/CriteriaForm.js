@@ -142,24 +142,29 @@ Ext.define('Taco.view.discount.CriteriaForm', {
             }
         );
 
+        this.applyDiscountTo = Ext.widget({
+                xtype: 'checkbox',
+                name: 'appliesToMostExpensiveProductsFirst',
+                value: (this.isEdit()) ? !this.record.get('appliesToLeastExpensiveProductsFirst') : false,
+                itemId: 'apply-to-highest-priced-product',
+                boxLabel: 'Apply discount to highest-priced qualifying product(s) first',
+                tooltip: Ext.create('Taco.core.ux.content.Tooltip', {
+                    elementId: 'apply-to-highest-priced-product',
+                    hoverTarget: 'label',
+                    messageKey: 'discount.criteria.applyDiscountToHighestPricedProduct',
+                    offsetLeft: 20,
+                    offsetTop: 15
+                }),
+                listeners: {
+                    change: function(self, newValue, oldValue, eOpts) {
+                        this.record.set('appliesToLeastExpensiveProductsFirst', !newValue)
+                    },
+                    scope: me
+                }
+            }
+        );
+
         catStore = this.record.getCategoryStore();
-        catStore.clearFilter(true);
-        //catStore.load();
-
-        //// reset the list's dirty state when its store first loads
-        //catStore.on({
-        //    load: function (store) {
-
-        //        store.filterBy(function (record) {
-        //            var isRealTime = record.get("categoryType") === "DynamicRealTime";
-        //            return !isRealTime;
-        //        });
-
-        //        this.categoryList.resetOriginalValue();
-        //    },
-        //    single: true,
-        //    scope: this
-        //});
 
         // MultiSelect is the most optimal Field that uses BoundList without a trigger
         this.categoryList = Ext.create('Ext.ux.form.field.BoxSelect', {
@@ -500,7 +505,8 @@ Ext.define('Taco.view.discount.CriteriaForm', {
                 this.excludeCategoriesBox,
                 this.productsExcludeBox,
                 this.ApplyToProductsWithSalePrice,
-                this.appliesToSalePrice
+                this.appliesToSalePrice,
+                this.applyDiscountTo
             ]
         });
 
@@ -578,20 +584,16 @@ Ext.define('Taco.view.discount.CriteriaForm', {
             treeStore = Taco.core.data.StoreManager.getCategoryTreeByCatalog();
         treeStore.on({
             load: function () {
-                if (!me.showDynamicRealTimeCategories) {
-                    treeStore.filterBy(function (record) {
-                        var isRealTime = record.get("categoryType") === "DynamicRealTime";
-                        return (!isRealTime);
-                    });
-                }
+                treeStore.filterBy(function (record) {
+                    var isRealTime = record.get("categoryType") === "DynamicRealTime";
+                    return (!isRealTime);
+                });
             },
             beforeexpand: function (node, opts) {
-                if (!me.showDynamicRealTimeCategories) {
-                    node.childNodes = node.childNodes.filter(function (childNode) {
-                        var isRealtime = childNode.data.categoryType === "DynamicRealTime";
-                        return !isRealtime;
-                    });
-                }
+                node.childNodes = node.childNodes.filter(function (childNode) {
+                    var isRealtime = childNode.data.categoryType === "DynamicRealTime";
+                    return !isRealtime;
+                });
             },
             scope: this
         });

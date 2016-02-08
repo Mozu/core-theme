@@ -15,10 +15,11 @@ Ext.define('Taco.view.discount.widget.CategoryPicker', {
 
     initComponent: function () {
         var me = this;
-        this.catStore.clearFilter(true);
+        //debugger;
+        //this.catStore.clearFilter(true);
 
         //For discounts we never want to show dynamic realtime categories. Defect 76199
-        me.catStore.on({
+       /* me.catStore.on({
             load: function () {
                 me.catStore.filterBy(function (record) {
                     var isRealTime = record.get("categoryType") === "DynamicRealTime";
@@ -26,7 +27,7 @@ Ext.define('Taco.view.discount.widget.CategoryPicker', {
                 });
             },
             scope: this
-        });
+        });*/
 
         this.addEvents(
             /**
@@ -42,6 +43,7 @@ Ext.define('Taco.view.discount.widget.CategoryPicker', {
             name: 'categoriesList',
             width: this.listWidth,
             margin: 0,
+            allowBlank: false,
             store: this.catStore,
             getStore: function () {
                 return this.catStore;
@@ -106,26 +108,19 @@ Ext.define('Taco.view.discount.widget.CategoryPicker', {
      */
     launchCategoryModal: function (list) {
         var me = this,
-            treeStore = Taco.core.data.StoreManager.getCategoryTreeByCatalog();
+        treeStore = Taco.core.data.StoreManager.getCategoryTreeByCatalog();
         treeStore.on({
-            //this doesn't seem to fire ???
-            load: function() {
-                if (!me.showDynamicRealTimeCategories) {
-                    treeStore.filter([
-                        function(record) {
-                            var isRealTime = record.get("categoryType") === "DynamicRealTime";
-                            return !isRealTime;
-                        }
-                    ]);
-                }
+            load: function () {
+                treeStore.filterBy(function (record) {
+                    var isRealTime = record.get("categoryType") === "DynamicRealTime";
+                    return (!isRealTime);
+                });
             },
-            beforeexpand: function(node, opts) {
-                if (!me.showDynamicRealTimeCategories) {
-                    node.childNodes = node.childNodes.filter(function(childNode) {
-                        var isRealtime = childNode.data.categoryType === "DynamicRealTime";
-                        return !isRealtime;
-                    });
-                }
+            beforeexpand: function (node, opts) {
+                node.childNodes = node.childNodes.filter(function (childNode) {
+                    var isRealtime = childNode.data.categoryType === "DynamicRealTime";
+                    return !isRealtime;
+                });
             },
             scope: this
         });
