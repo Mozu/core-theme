@@ -175,10 +175,8 @@
     <Compile Include="Api\ChannelController.cs" />
     <Compile Include="Api\CouponCodeController.cs" />
     <Compile Include="Api\ModelMapping\PriceListMapping.cs" />
-    <Compile Include="Api\Models\PriceLists\PriceListEntryPriceCalculation.cs" />
     <Compile Include="Api\Models\PriceLists\PriceListEntryPrice.cs" />
     <Compile Include="Api\Models\PriceLists\PriceListEntry.cs" />
-    <Compile Include="Api\Models\PriceLists\PriceListProduct.cs" />
     <Compile Include="Api\PriceListController.cs" />
     <Compile Include="Api\ModelMapping\SearchTuningMapping.cs" />
     <Compile Include="Api\Models\PriceLists\PriceList.cs" />

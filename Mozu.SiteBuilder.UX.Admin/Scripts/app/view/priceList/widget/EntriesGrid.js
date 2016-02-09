@@ -125,15 +125,16 @@ Ext.define('Taco.view.priceList.widget.EntriesGrid', {
 
         //me.mon(Taco.app, 'pricelistcreated', me.reloadGrid, me);
 
+        me.store = Ext.create('Taco.store.PriceListEntries', {priceListCode: this.priceListCode});
 
-        me.store = Taco.core.data.StoreManager.getOrCreate({
-            type: 'Taco.store.PriceListEntries',
-            createOnly: true,
-            pageSize: this.pageSize,
-            autoLoad: false,
-            clearFilters: true,
-            remoteFilter: true
-        });
+        //me.store = Taco.core.data.StoreManager.getOrCreate({
+        //    type: 'Taco.store.PriceListEntries',
+        //    createOnly: true,
+        //    pageSize: this.pageSize,
+        //    autoLoad: false,
+        //    clearFilters: true,
+        //    remoteFilter: true
+        //});
         if (this.priceListCode) {
             me.store.load({
                 params: {
@@ -153,6 +154,8 @@ Ext.define('Taco.view.priceList.widget.EntriesGrid', {
     },
 
     reloadGrid: function() {
+        console.log('reloaded grid');
+
         this.store.reload();
     },
 

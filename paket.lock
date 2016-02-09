@@ -147,7 +147,7 @@ NUGET
     Mozu.PaymentService.Contracts (1.9.12)
     Mozu.PricingRuntime.Contracts (1.19.3)
       Mozu.Core.Prime (>= 1.18.1)
-    Mozu.ProductAdmin.Contracts (1.19.4-dev1602032244fea)
+    Mozu.ProductAdmin.Contracts (1.19.4-dev1602091649fea)
       Mozu.Core.Prime (>= 1.18.1)
     Mozu.ProductRuntime.Contracts (1.19.2)
       Mozu.Core.Prime (>= 1.18.0)

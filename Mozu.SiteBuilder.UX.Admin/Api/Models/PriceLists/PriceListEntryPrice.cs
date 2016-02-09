@@ -6,67 +6,45 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.Models.PriceLists
 {
     public class PriceListEntryPrice
     {
-        public int Id { get; set; }
+        public int MinQty { get; set; }
 
-        public string PriceListCode { get; set; }
+        #region ListPrice
 
-        public string ProductCode { get; set; }
+        public string ListPriceMode { get; set; }
 
-        public int? MinQuantity { get; set; }
-
-        public int? MaxQuantity { get; set; }
-
-        /// <summary>
-        /// The price.
-        /// </summary>
         [JsonProperty(DefaultValueHandling = DefaultValueHandling.Ignore)]
         public decimal? ListPrice { get; set; }
 
-        public PriceListEntryCalculation ListPriceCalculation { get; set; }
+        public int ListPriceCalcSrcField { get; set; }
 
-        /// <summary>
-        /// The list price.
-        /// </summary>
+        public decimal? ListPriceCalcMultiplier { get; set; }
+
+        public decimal? ListPriceCalcAdder { get; set; }
+
+        public decimal? ListPriceCalcMax { get; set; }
+
+        public decimal? ListPriceCalcMin { get; set; }
+
+        #endregion
+
+        #region SalePrice
+
+        public string SalePriceMode { get; set; }
+
         [JsonProperty(DefaultValueHandling = DefaultValueHandling.Ignore)]
         public decimal? SalePrice { get; set; }
 
-        public PriceListEntryCalculation SalePriceCalculation { get; set; }
+        public int SalePriceCalcSrcField { get; set; }
 
-        /// <summary>
-        /// Manufacturer Suggested Retail Price
-        /// </summary>
-        [JsonProperty(DefaultValueHandling = DefaultValueHandling.Ignore, PropertyName = "msrp")]
-        public decimal? MSRP { get; set; }
+        public decimal? SalePriceCalcMultiplier { get; set; }
 
-        /// <summary>
-        /// Minimum Advertised Price
-        /// </summary>
-        [JsonProperty(DefaultValueHandling = DefaultValueHandling.Ignore, PropertyName = "map")]
-        public decimal? MAP { get; set; }
+        public decimal? SalePriceCalcAdder { get; set; }
 
-        /// <summary>
-        /// Minimum Advertised Price Start Date
-        /// </summary>
-        [JsonProperty(DefaultValueHandling = DefaultValueHandling.Ignore, PropertyName = "mapStartDate")]
-        public DateTime? MAPStartDate { get; set; }
+        public decimal? SalePriceCalcMax { get; set; }
 
-        /// <summary>
-        /// Minimum Advertised Price End Date
-        /// </summary>
-        [JsonProperty(DefaultValueHandling = DefaultValueHandling.Ignore, PropertyName = "mapEndDate")]
-        public DateTime? MAPEndDate { get; set; }
+        public decimal? SalePriceCalcMin { get; set; }
 
-        /// <summary>
-        /// Cost Currency Code
-        /// </summary>
-        [JsonProperty(DefaultValueHandling = DefaultValueHandling.Ignore)]
-        public string CostCurrencyCode { get; set; }
-
-        /// <summary>
-        /// Cost
-        /// </summary>
-        [JsonProperty(DefaultValueHandling = DefaultValueHandling.Ignore)]
-        public decimal? Cost { get; set; }
-
+        #endregion
+        
     }
 }

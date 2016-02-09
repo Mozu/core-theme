@@ -169,49 +169,37 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
 
 
         [HttpGetRoute(UriTemplate = "entry/list")]
-        public async Task<Response<List<PriceListEntry>>> ListPriceListEntries(PagingParamaters pagingParams, FilterCollection extFilter)
+        public async Task<Response<List<PriceListEntry>>> ListPriceListEntries([FromUri] PagingParamaters pagingParams, [FromUri] FilterCollection extFilter, [FromUri] string priceListCode)
         {
-            var mockData = new List<PriceListEntry>();
-            mockData.AddRange(
-                Enumerable.Range(1, 25).Select(i => new PriceListEntry
-                {
-                    Id = i,
-                    PriceListCode = "t_01",
-                    ProductCode = string.Format("p-{0}{1}", (i < 10 ? "0" : ""), i),
-                    ProductName = string.Format("product-{0}{1}", (i < 10 ? "0" : ""), i),
-                    CurrencyCode = "USD",
-                    StartDate = DateTime.UtcNow,
-                    EndDate = new DateTime(2016, 12, 31),
-                    Prices = new List<PriceListEntryPrice>
-                    {
-                        new PriceListEntryPrice
-                        {
-                            Id = i + 10,
-                            ListPrice = 29.99M
-                        }
+            //if (pagingParams.id != null)
+            //{
+            //    return await GetSinglePriceList(pagingParams);
+            //}
 
-                        //new PriceListEntryPrice
-                        //{
-                        //    Id = i + 10, ListPrice = 29.99M, MinQuantity = 1, MaxQuantity = 10
-                        //},
-                        //new PriceListEntryPrice
-                        //{
-                        //    Id = i + 11, ListPrice = 27.00M, MinQuantity = 11
-                        //},
+            //if (IsLookupQuery(extFilter.QueryString.Get("isLookup")))
+            //{
+            //    return await GetPriceListLookup(extFilter.QueryString.Get("excludedCode"));
+            //}
 
-                    },
-                    DiscountsRestricted = true,
-                    DiscountsRestrictedStartDate = DateTime.UtcNow,
-                    DiscountsRestrictedEndDate = new DateTime(2016, 12, 31),
-                    Mode = 1,
-                    CreateBy = "test",
-                    CreateDate = DateTime.UtcNow,
-                    UpdateDate = DateTime.UtcNow,
-                    UpdateBy = "test"
-                }).ToList()
-                );
+            string filter = null;
+            if (extFilter != null && extFilter.Count > 0)
+            {
+                filter = extFilter.ToFilterString();
+            }
+            string sortBy = pagingParams.sort.ToSortString();
 
-            return List2(mockData, 75);
+            //const string responseFields = "items(id,name,PriceListCode,couponCodeType,status,canBeDeleted,maxRedemptionsPerUser,maxRedemptionsPerCouponCode,startDate,endDate,redemptionCount,setSize,assignedDiscountCount)";
+            //try
+            //{
+            var entries = (await _priceListWebClient.GetPriceListEntries(priceListCode: priceListCode, startIndex: pagingParams.startIndex,
+                pageSize: pagingParams.pageSize,
+                sortBy: sortBy,
+                filter: filter
+                )).ReadAsSync();
+
+            var result = Mapper.Map<List<PriceListEntry>>(entries.Items);
+
+            return List2(result, (int?)entries.TotalCount);
         }
 
         private bool IsLookupQuery(string lookupValue)
