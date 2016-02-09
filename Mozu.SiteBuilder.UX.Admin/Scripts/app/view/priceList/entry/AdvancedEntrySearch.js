@@ -9,11 +9,14 @@ Ext.define('Taco.view.priceList.entry.AdvancedEntrySearch', {
         'Taco.store.CustomerSegments',
         'Ext.ux.form.field.BoxSelect',
         'Ext.form.FieldContainer',
-        'Taco.core.ux.form.DateTime'
+        'Taco.core.ux.form.DateTime',
+        'Taco.shared.view.field.ProductPickerField'
     ],
 
+    productsPerPage: 25,
+
     defaults: {
-        width:500,
+        width: 500,
         xtype: 'textfield'
     },
 
@@ -25,78 +28,222 @@ Ext.define('Taco.view.priceList.entry.AdvancedEntrySearch', {
                 data: Taco.app.context.getMasterCatalog().catalogs
             });
 
+        me.productPickerField = Ext.create('Taco.shared.view.field.ProductPickerField', {
+            plugins: [
+                'inputmask'
+            ],
+            width: '100%',
+            flex: 10,
+            style: 'padding:5px',
+            fieldBodyCls: 'order-addproducttoolbar-cell',
+            pageSize: me.productsPerPage,
+            value: '',
+            displayTpl: Ext.create('Ext.XTemplate',
+                '<tpl if="values && values.productName"><span class="product-name">{productName}</span> <span class="product-code">{productCode}</span></tpl>'
+            ),
+            liveMode: true,
+            defaultFilters: [ { property: 'iscurrentlyactive', value: true } ],
+            listeners: {
+                focus: {
+                    fn: this.onFocus,
+                    scope:me
+                },
+                blur: {
+                    fn: this.onBlur,
+                    scope:me
+                },
+                cleartriggerfocus: {
+                    fn: this.onFocus,
+                    scope: me
+                },
+                cleartriggerblur: {
+                    fn: this.onBlur,
+                    scope: me
+                },
+                // custom event added as part of the InputMask plugin; need to cancel the event to prevent the field from reseting itself since will be reseting all fields when this field is reset;
+                'beforecleartriggerclick': function (field) {
+
+
+                    // reset everything in the toolbar but need to be carefull
+                    me.reset();
+
+                    // cancel event to prevent the default behavior from completing;
+                    return false;
+                },
+                'specialkey': {
+                    fn: function (field, e) {
+                        // if field doesnt have a flyout menu expanded and hits key up. pass focus to grid's last row;
+                        if (!field.isExpanded && (e.getKey() == e.LEFT || e.getKey() == e.UP || (e.getKey() == e.TAB && e.shiftKey))) {
+
+                            // this is a bug fix for Extjs 4.2.2 that isn't needed in the 4.2.3 nightly
+                            field.triggerBlur();
+                            field.blur();
+
+                            // need to defer the execution for this because of a bug in Extjs 4.2.2; problem doesn't exist in Extjs 4.3 nightly
+                            Ext.defer(function () {
+                                this.fireEvent('gridfocus', field, e);
+                            }, 1, this);
+                        }
+                    },
+                    scope: me
+                },
+                'expand':{
+                    fn: function (field, eOpts) {
+
+
+                    },
+                    scope:this
+                },
+                beforeselect: {
+                    fn: this.onBeforeProductSelect,
+                    scope: this
+                }
+            }
+        });
+
+        //this.items = [
+        //    {
+        //        name: 'keyword',
+        //        fieldLabel: 'Keyword Search',
+        //        width: '100%'
+        //    }
+        //];
+
         this.items = [
             {
-                name: 'keyword',
-                fieldLabel: 'Keyword Search',
-                width: '100%'
-            }
-        ];
-
-        //if (catalogStore.getTotalCount() > 1) {
-        //    this.items.push({
-        //        xtype: 'fieldcontainer',
-        //        layout: 'hbox',
-        //        width: '100%',
-        //        items: [{
-        //            xtype: 'combobox',
-        //            fieldLabel: 'Catalog',
-        //            name: 'catalogId',
-        //            labelAlign: 'top',
-        //            allowBlank: true,
-        //            editable: false,
-        //            forceSelection: true,
-        //            autoSelect: true,
-        //            listConfig: {shadow: false},
-        //            width: '100%',
-        //            queryMode: 'local',
-        //            store: catalogStore,
-        //            valueField: 'id',
-        //            displayField: 'name'
-        //        }]
-        //    });
-        //}
-
-        this.items = this.items.concat([
-            {
-                xtype: 'fieldcontainer',
-                layout: 'hbox',
-                width: '100%',
+                xtype: 'panel',
+                layout: {
+                    type: 'vbox',
+                    align: 'stretch'
+                },
                 items: [
-                    me.createStaticCombobox('status', 'Status', [
-                        {
-                            name: 'Active',
-                            id: 'Active'
-                        }, {
-                            name: 'Disabled',
-                            id: 'Disabled'
-                        }, {
-                            name: 'All',
-                            id: 'All'
-                        }
-                    ], 0)]
+                    me.productPickerField
+                ]
             },
             {
                 xtype: 'fieldcontainer',
-                layout: 'hbox',
-                width: '100%',
+                fieldLabel: 'Price Range',
+                layout: {
+                    type: 'hbox',
+                    align: 'middle'
+                },
+                items: [{
+                    xtype: 'currencyfield',
+                    name: 'minPrice',
+                    hideTrigger: true,
+                    keyNavEnabled: false,
+                    mouseWheelEnabled: false,
+                    flex:1
+                }, {
+                    xtype: 'component',
+                    html: 'to',
+                    margin: '0 10'
+                }, {
+                    xtype: 'currencyfield',
+                    name: 'maxPrice',
+                    hideTrigger: true,
+                    keyNavEnabled: false,
+                    mouseWheelEnabled: false,
+                    flex:1
+                }]
+            },
+            {
+                xtype: 'fieldcontainer',
+                fieldLabel: 'Sale Price Range',
+                layout: {
+                    type: 'hbox',
+                    align: 'middle'
+                },
+                items: [{
+                    xtype: 'currencyfield',
+                    name: 'minSalePrice',
+                    hideTrigger: true,
+                    keyNavEnabled: false,
+                    mouseWheelEnabled: false,
+                    flex:1
+                }, {
+                    xtype: 'component',
+                    html: 'to',
+                    margin: '0 10'
+                }, {
+                    xtype: 'currencyfield',
+                    name: 'maxSalePrice',
+                    hideTrigger: true,
+                    keyNavEnabled: false,
+                    mouseWheelEnabled: false,
+                    flex:1
+                }]
+            },
+            {
+                xtype: 'fieldcontainer',
+                fieldLabel: 'Effective Date Range',
+                layout: {
+                    type: 'hbox',
+                    align: 'middle'
+                },
                 items: [
                     {
-                        xtype: 'combobox',
-                        store: segmentStore,
-                        name: 'segments',
-                        fieldLabel: 'Segments',
-                        width: '100%',
-                        valueField: 'id',
-                        displayField: 'code',
-                        queryMode: 'local',
-                        valueNotFoundText: 'not found',
-                        editable: true,
-                        forceSelection: true
+                        xtype: 'datefield',
+                        name: 'startDateFrom',
+                        altFormats: "c",
+                        flex: 1
+                    }, {
+                        xtype: 'component',
+                        html: 'to',
+                        margin: '0 10'
+                    }, {
+                        xtype: 'datefield',
+                        name: 'endDateTo',
+                        altFormats: "c",
+                        flex: 1
                     }
                 ]
             }
-        ]);
+        ];
+
+
+
+
+
+            //{
+            //    xtype: 'fieldcontainer',
+            //    layout: 'hbox',
+            //    width: '100%',
+            //    items: [
+            //        me.createStaticCombobox('status', 'Status', [
+            //            {
+            //                name: 'Active',
+            //                id: 'Active'
+            //            }, {
+            //                name: 'Expired',
+            //                id: 'Expired'
+            //            }, {
+            //                name: 'All',
+            //                id: 'All'
+            //            }
+            //        ], 0)]
+            //},
+            //{
+            //    xtype: 'fieldcontainer',
+            //    layout: 'hbox',
+            //    width: '100%',
+            //    items: [
+            //        {
+            //            xtype: 'combobox',
+            //            store: segmentStore,
+            //            name: 'segments',
+            //            fieldLabel: 'Segments',
+            //            width: '100%',
+            //            valueField: 'id',
+            //            displayField: 'code',
+            //            queryMode: 'local',
+            //            valueNotFoundText: 'not found',
+            //            editable: true,
+            //            forceSelection: true
+            //        }
+            //    ]
+            //}
+
 
         this.callParent(arguments);
     },
@@ -142,5 +289,22 @@ Ext.define('Taco.view.priceList.entry.AdvancedEntrySearch', {
                 scope: this
             }
         });
+    },
+
+    // after product is selected in the productPickerfield but before the combo is closed;
+    onBeforeProductSelect: function (combo, record, index, e) {
+        var me = this,
+            productPickerField = combo,
+            productCode = record.get('productCode'),
+            isConfigurable = record.get('isConfigurable'),
+            price,
+            win,
+            productCodeToAdd;
+
+
+        combo.collapse();
+        combo.inputMask.show(record.get('productName'));
+        // cancel the selection so that the same product can be reselected again;
+        return false;
     }
 });
