@@ -54,8 +54,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.ErrorHandlers
             return new IExceptionResponseBuilder[]
             {
                 new ValidationConflictExceptionResponseBuilder(),
-                new ApiClientAbstractExceptionResponseBuilder(), 
-                //new ApiWebClientExceptionResponseBuilder(), 
+                new ApiWebClientExceptionResponseBuilder(),
                 new InvalidOrMissingTokenExceptionResponseBuilder(),
                 new MozuApplicationExceptionResponseBuilder(),
                 new AggregateExceptionResponseBuilder(),
@@ -69,8 +68,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.ErrorHandlers
             return new IExceptionResponseBuilder[]
             {
                 new ValidationConflictExceptionResponseBuilder(),
-                new ApiClientAbstractExceptionResponseBuilder(), 
-                //new ApiWebClientExceptionResponseBuilder(), 
+                new ApiWebClientExceptionResponseBuilder(), 
                 new InvalidOrMissingTokenExceptionResponseBuilder(),
                 new MozuApplicationExceptionResponseBuilder(),
                 new FriendlyAggregateExceptionResponseBuilder(), 
