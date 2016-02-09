@@ -3,7 +3,6 @@
  */
 Ext.define('Taco.model.CouponSet', {
     extend: 'Taco.core.data.Model',
-    //  requiredStores: ['Taco.store.ShippingMethods', 'Taco.store.ShippingZones'],
     behaviors: {
         read: 24,
         create: 25,
@@ -64,9 +63,11 @@ Ext.define('Taco.model.CouponSet', {
             type: 'int',
             persist: false,
             convert: function (v, record) {
-                return (record.get('couponCodeType') === 'Manual')
+                debugger;
+                var val = (record.get('couponCodeType') === 'Manual')
                     ? record.get('couponCodeCount')
                     : record.get('setSize');
+                return val || 0;
             }
         },{
             name: 'redemptionCount',
@@ -97,70 +98,7 @@ Ext.define('Taco.model.CouponSet', {
         {field: 'name', type: 'length', max: 200}
     ],
 
-    //getDiscounts
-
-    //getCouponCodes
-
-    //getProductStore: function () {
-    //    var me = this;
-
-    //    if (!me.productStore ) {
-    //        me.productStore = Taco.core.data.StoreManager.getOrCreate(
-    //            {
-    //                type: 'Taco.store.Products',
-    //                createOnly: true,
-    //                id: "prod-" + this.id,
-    //                autoLoad: true,
-    //                clearFilters: false,
-    //                remoteFilter: false,
-    //                filters: function (record) {
-    //                    return Ext.Array.indexOf((me.get('products') || []), record.getId()) > -1;
-    //                }
-    //            });
-    //    }
-    //    return me.productStore;
-    //},
-
-    //getCategoryStore: function () {
-    //    var me = this;
-    //    if (!me.categoryStore ) {
-    //        me.categoryStore = Taco.core.data.StoreManager.getOrCreate(
-    //            {
-    //                type: 'Taco.store.Categories',
-    //                createOnly: true,
-    //                id: "cat-" + this.id,
-    //                autoLoad: true,
-    //                clearFilters: false,
-    //                remoteFilter: false,
-    //                filters: function (record) {
-    //                    return Ext.Array.indexOf((me.get('categories') || []), record.getId()) > -1;
-    //                }
-    //            });
-
-    //    }
-    //    return me.categoryStore;
-
-    //},
-
-    //getCustomerSegmentStore: function() {
-    //    var me = this;
-    //    if (!me.customerSegmentStore ) {
-    //        me.customerSegmentStore = Taco.core.data.StoreManager.getOrCreate(
-    //            {
-    //                type: 'Taco.store.CustomerSegments',
-    //                createOnly: true,
-    //                id: "seg-" + me.id,
-    //                autoLoad: true,
-    //                clearFilters: false,
-    //                remoteFilter: false,
-    //                filters: function (record) {
-    //                    return Ext.Array.indexOf((me.get('customerSegments') || []), record.getId()) > -1;
-    //                }
-    //            });
-
-    //    }
-    //    return me.customerSegmentStore;
-    //},
+   
 
     getDeletePromptMessage: function () {
         return (this.get('status') === 'Active')
