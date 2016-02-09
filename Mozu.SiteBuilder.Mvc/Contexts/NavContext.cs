@@ -93,17 +93,56 @@ namespace Mozu.SiteBuilder.Mvc.Contexts
         /// </summary>
         public IRuntimeNavigationNode CurrentNode { get; private set; }
 
-        List<object> _breadCrumbs;
+        BreadCrubmsImpl _breadCrumbs;
+
 
         /// <summary>
         /// Returns a collection of NavigationRuntimeNodes representing the path from the site root to the current node.
         /// </summary>
-        public List<object> Breadcrumbs
+        public BreadCrubmsImpl Breadcrumbs
         {
-            get { return _breadCrumbs ?? (_breadCrumbs = GetBreadcrumbs(CurrentNode).Cast<object>().ToList()); }
+            get {
+
+                return _breadCrumbs ?? (_breadCrumbs = new BreadCrubmsImpl(GetBreadcrumbs(CurrentNode).Select( x=> 
+            new BreadCrumb() {
+                Id = x.Id,
+                Index = x.Index,
+                Name = x.Name,
+                NodeType = x.NodeType,
+                OriginalCollection = x.OriginalCollection,
+                OriginalDocumentListName = x.OriginalDocumentListName,
+                OriginalId = x.OriginalId,
+                ParentId = x.ParentId ,
+                Url = x.Url })
+            .ToList())); }
             set { _breadCrumbs = value; }
         }
 
+
+        public class BreadCrubmsImpl : System.Collections.ObjectModel.Collection<BreadCrumb>
+        {
+            public BreadCrubmsImpl ( IList<BreadCrumb> crumbs): base(crumbs)
+            {
+
+            }
+            public void Add ( object obj )
+            {
+                if (obj == null)
+                {
+                    return;
+                }
+                if ( obj is BreadCrumb)
+                {
+                    base.Add((BreadCrumb)obj);
+                }
+                var bc = Newtonsoft.Json.Linq.JObject.FromObject(obj).ToObject<BreadCrumb>();
+                if (obj is Microsoft.ClearScript.V8.IV8ScriptItem)
+                {
+                    ((IDisposable)obj).Dispose();
+                }
+                base.Add((BreadCrumb)bc);
+            }
+        }
         /// <summary>
         /// In the case of a product belonging to multiple categories, there are multiple breadcrumbs possible.
         /// This enumerates all of those breadcrumbs lists.
@@ -153,6 +192,56 @@ namespace Mozu.SiteBuilder.Mvc.Contexts
 
             return stack;
         }
+
+
+        public class BreadCrumb : INavigationNode
+        {
+            public string Id
+            {
+                get; set;
+            }
+
+            public int Index
+            {
+                get; set;
+            }
+
+            public string Name
+            {
+                get; set;
+            }
+
+            public NavigationNodeType NodeType
+            {
+                get; set;
+            }
+
+            public string OriginalCollection
+            {
+                get; set;
+            }
+
+            public string OriginalDocumentListName
+            {
+                get; set;
+            }
+
+            public string OriginalId
+            {
+                get; set;
+            }
+
+            public string ParentId
+            {
+                get; set;
+            }
+
+            public string Url
+            {
+                get; set;
+            }
+        }
+
 
         /// <summary>
         /// Allows a controller to set the current node.

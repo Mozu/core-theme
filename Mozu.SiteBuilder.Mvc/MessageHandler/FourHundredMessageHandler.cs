@@ -11,6 +11,7 @@ using Mozu.SiteBuilder.Mvc.CMS;
 using Mozu.SiteBuilder.Mvc.Contexts;
 using Mozu.SiteBuilder.Mvc.ViewEngine;
 using Mozu.SiteBuilder.UX.Models.Admin.CMS;
+using Mozu.SiteBuilder.Mvc.OAF;
 
 namespace Mozu.SiteBuilder.Mvc.MessageHandler
 {
@@ -32,7 +33,9 @@ namespace Mozu.SiteBuilder.Mvc.MessageHandler
                     return redir;
                 }
 
-                return await Process400(request, response).ConfigureAwait(false);
+                response = await Process400(request, response).ConfigureAwait(false);
+                var runner = request.Resolve<IArcJSHttpHandlerRunner>();
+                return await runner.SendAsync(request, response, "http.storefront.pages.404.request.after", cancellationToken).ConfigureAwait(false);
             }
             return response;
         }
@@ -58,6 +61,9 @@ namespace Mozu.SiteBuilder.Mvc.MessageHandler
                 ViewName = "404",
                 ViewData = new ViewDataDictionary()
             };
+
+        
+
             return request.CreateResponse(message.StatusCode, viewResult);
         }
     }
