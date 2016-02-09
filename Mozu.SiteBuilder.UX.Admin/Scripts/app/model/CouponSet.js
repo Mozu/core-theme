@@ -63,7 +63,6 @@ Ext.define('Taco.model.CouponSet', {
             type: 'int',
             persist: false,
             convert: function (v, record) {
-                debugger;
                 var val = (record.get('couponCodeType') === 'Manual')
                     ? record.get('couponCodeCount')
                     : record.get('setSize');
