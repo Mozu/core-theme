@@ -84,7 +84,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
                 filter = extFilter.ToFilterString(_ctx, masterNumberFormat, _tenantClient);
             }
 
-            const string responseFields = "items(id,name,couponSetCode,couponCodeType,status,canBeDeleted,maxRedemptionsPerUser,maxRedemptionsPerCouponCode,startDate,endDate,redemptionCount,setSize,assignedDiscountCount)";
+            //const string responseFields = "items(id,name,couponSetCode,couponCodeType,status,canBeDeleted,maxRedemptionsPerUser,maxRedemptionsPerCouponCode,startDate,endDate,redemptionCount,setSize,assignedDiscountCount, couponCodeCount)";
             string sortBy = pagingParams.ToSort(_couponSetSortFormatter);
 
             try
@@ -93,8 +93,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
                     pageSize: pagingParams.pageSize,
                     sortBy: sortBy,
                     filter: filter,
-                    responseGroups: "Counts",
-                    responseFields: responseFields
+                    responseGroups: "Counts" //, responseFields: responseFields
                     )).ReadAsSync();
 
                 var couponSets = Mapper.Map<List<CouponSet>>(couponSetList.Items);
