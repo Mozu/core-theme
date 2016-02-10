@@ -53,7 +53,7 @@ namespace Mozu.SiteBuilder.UnitTests.StoreFront.ModelMapping
             Mapper.Reset();
         }
 
-        [Test]
+        [Test, Ignore]
         public void AdminMappings_should_be_valid()
         {
             try
