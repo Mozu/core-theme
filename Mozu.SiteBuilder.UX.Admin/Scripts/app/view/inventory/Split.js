@@ -86,7 +86,7 @@ Ext.define('Taco.view.inventory.Split', {
 
     },
 
-    onSaveSuccess: function(eventData, operation, operation) {
+    onSaveSuccess: function(eventData, operation) {
         if (operation && operation.success) {
             this.showMessage('Save Complete');
             this.enableButtons(eventData.record);
