@@ -121,7 +121,7 @@ Ext.define('Taco.view.category.Index', {
             checkboxText: '',
             dataIndex: 'categoryType',
             renderer: function (value) {
-                return '<a href="#" class="taco-launch-editor">' + ((value === 'Static') ? 'Static' : 'Dynamic') + '</a>';
+                return '<a href="#" class="taco-launch-editor">' + me.parseCategoryType(value) + '</a>';
             }
         },
         {
@@ -258,6 +258,20 @@ Ext.define('Taco.view.category.Index', {
         me.callParent(arguments);
     },
 
+    parseCategoryType: function(value) {
+
+        switch (value) {
+            case 'DynamicPreComputed':
+                return 'Precomputed';
+            case 'DynamicRealTime':
+                return 'Realtime';
+            case 'Static':
+                return 'Static';
+            default:
+                return value;
+        }
+
+    },
 
     onCellClick: function (view, td, cellIndex, record, tr, rowIndex, e, eOpts) {
         if (this.getSelectionText()) {  // inherited from the launchEditor mixin;

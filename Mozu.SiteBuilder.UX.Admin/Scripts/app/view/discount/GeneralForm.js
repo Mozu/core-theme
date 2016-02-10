@@ -78,6 +78,7 @@ Ext.define('Taco.view.discount.GeneralForm', {
                 change: function (myself, newVal, oldVal) {
                     this.record.fireEvent( "scopeChange", myself, newVal, oldVal);
                     me.parentForm.setFieldVisibility();
+                    me.parentForm.updateApplyTo(newVal);
                     me.filterFixedPriceOptionWhenOrderProduct(newVal, null);
                 },
                 scope: me
@@ -110,8 +111,9 @@ Ext.define('Taco.view.discount.GeneralForm', {
             }),
             listeners: {
                 change: function (myself, newVal) {
-                    this.parentForm.setFieldVisibility();
-                    this.filterFixedPriceOptionWhenOrderProduct(null, newVal);
+                    me.parentForm.setFieldVisibility();
+                    me.parentForm.updateApplyTo(newVal);
+                    me.filterFixedPriceOptionWhenOrderProduct(null, newVal);
                 },
                 scope: this
             },
