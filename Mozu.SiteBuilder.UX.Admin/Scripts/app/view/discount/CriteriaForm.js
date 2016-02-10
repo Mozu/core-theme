@@ -124,6 +124,7 @@ Ext.define('Taco.view.discount.CriteriaForm', {
                 itemId: 'applies-sale-price-check',
                 boxLabel: 'Apply to sale price',
                 width: 300,
+                margin: '0 0 0 20',
                 value: this.record.get('doesNotApplyToSalePrice') !== true,
                 listeners: {
                     change: function (field, newValue) {
@@ -144,6 +145,7 @@ Ext.define('Taco.view.discount.CriteriaForm', {
 
         this.applyDiscountTo = Ext.widget({
                 xtype: 'checkbox',
+                hidden: true,
                 name: 'appliesToMostExpensiveProductsFirst',
                 value: (this.isEdit()) ? !this.record.get('appliesToLeastExpensiveProductsFirst') : false,
                 itemId: 'apply-to-highest-priced-product',
@@ -584,16 +586,16 @@ Ext.define('Taco.view.discount.CriteriaForm', {
             treeStore = Taco.core.data.StoreManager.getCategoryTreeByCatalog();
         treeStore.on({
             load: function () {
-                treeStore.filterBy(function (record) {
-                    var isRealTime = record.get("categoryType") === "DynamicRealTime";
-                    return (!isRealTime);
-                });
+                    treeStore.filterBy(function (record) {
+                        var isRealTime = record.get("categoryType") === "DynamicRealTime";
+                        return (!isRealTime);
+                    });
             },
             beforeexpand: function (node, opts) {
-                node.childNodes = node.childNodes.filter(function (childNode) {
-                    var isRealtime = childNode.data.categoryType === "DynamicRealTime";
-                    return !isRealtime;
-                });
+                    node.childNodes = node.childNodes.filter(function (childNode) {
+                        var isRealtime = childNode.data.categoryType === "DynamicRealTime";
+                        return !isRealtime;
+                    });
             },
             scope: this
         });
@@ -793,7 +795,7 @@ Ext.define('Taco.view.discount.CriteriaForm', {
         
         
 
-        
+        this.applyDiscountTo.setVisible(this.isLineItem);
         this.appliesToSalePrice.setVisible(this.isLineItem && !appliesToShipping);
         // only enabled if the other checkbox is checked;
         this.appliesToSalePrice.setDisabled(!this.ApplyToProductsWithSalePrice.checked);

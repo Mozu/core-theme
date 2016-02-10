@@ -64,7 +64,7 @@ Ext.define('Taco.view.productRanking.Edit', {
                 text: 'Duplicate',
                 disabled: me.record.phantom,
                 requiredBehaviors: {
-                    model: 'Taco.model.Product',    
+                    model: 'Taco.model.ProductRanking',
                     behavior: 'create'
                 },
                 handler: function () {

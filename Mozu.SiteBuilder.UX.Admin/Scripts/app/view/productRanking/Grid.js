@@ -285,10 +285,10 @@ Ext.define('Taco.view.productRanking.Grid', {
         if (this.enableEditAction) {
             actions.push({
                 text: 'Edit',
-                //requiredBehaviors: {
-                //    model: 'Taco.model.ProductRanking' //,
-                //    //behavior: 'update'
-                //},
+                requiredBehaviors: {
+                    model: 'Taco.model.ProductRanking',
+                    behavior: 'update'
+                },
                 menuColumnHandler: me.doEdit,
                 scope:me
             });
@@ -319,10 +319,10 @@ Ext.define('Taco.view.productRanking.Grid', {
                 itemId: 'deleteMenuItem',
                 // deleteMenuColumnHandler can be found in Taco.core.ux.mixins.DeleteFromGrid
                 menuColumnHandler: 'deleteMenuColumnHandler',
-                //requiredBehaviors: {
-                //    model: 'Taco.model.ProductRanking',
-                //    //behavior: 'delete'
-                //},
+                requiredBehaviors: {
+                    model: 'Taco.model.ProductRanking',
+                    behavior: 'delete'
+                },
                 scope: me
             });
         }

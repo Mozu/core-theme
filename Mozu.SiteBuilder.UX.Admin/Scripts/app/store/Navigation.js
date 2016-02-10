@@ -246,7 +246,7 @@ Ext.define('Taco.store.Navigation', {
                         'address': 'priceLists'
                     }, {
                         'id': 'productRanking',
-                        'behaviorIds': [16],
+                        'behaviorIds': [235],
                         'label': 'Product Ranking',
                         'address': 'ProductRankings'
                     }

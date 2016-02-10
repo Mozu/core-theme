@@ -43,7 +43,6 @@ Ext.define('Taco.view.discount.widget.CategoryPicker', {
             name: 'categoriesList',
             width: this.listWidth,
             margin: 0,
-            allowBlank: false,
             store: this.catStore,
             getStore: function () {
                 return this.catStore;
