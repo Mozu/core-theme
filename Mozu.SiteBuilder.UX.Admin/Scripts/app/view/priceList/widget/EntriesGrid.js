@@ -140,8 +140,9 @@ Ext.define('Taco.view.priceList.widget.EntriesGrid', {
                 params: {
                     priceListCode: this.priceListCode
                 },
-                callback: function(records, operation, success) {
-                    console.log('priceListEntries loaded');
+                failure: function () {
+                    Taco.app.fireEvent('setmessage', "Error loading Price List Entries", 'error');
+                    this.setLoading(false, this.body);
                 },
                 scope: this
             });

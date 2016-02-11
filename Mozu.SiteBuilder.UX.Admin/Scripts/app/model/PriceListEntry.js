@@ -18,11 +18,22 @@ Ext.define('Taco.model.PriceListEntry', {
             name: 'compositeKey',
             type: 'string',
             convert: function (v, record) {
-                return record.get('priceListCode') + '-' +
-                        record.get('productCode') + '-' +
-                        record.get('currencyCode') + '-' +
-                        record.get('startDate') ? record.get('startDate') : 'null';
+                return {
+                    priceListCode: record.get('priceListCode'),
+                    productCode: record.get('productCode'),
+                    currencyCode: record.get('currencyCode'),
+                    startDate: record.get('startDate')
+                };
             },
+            //serialize: function (v, record) {
+            //    var json = {
+            //        priceListCode: record.get('priceListCode'),
+            //        productCode: record.get('productCode'),
+            //        currencyCode: record.get('currencyCode'),
+            //        startDate: record.get('startDate')
+            //    };
+            //    return JSON.stringify(json);
+            //},
             persist: false
         },
         {
@@ -135,7 +146,7 @@ Ext.define('Taco.model.PriceListEntry', {
     ],
 
     getDeletePromptMessage: function() {
-        return 'Are you sure you want to delete this price record?';
+        return 'Are you sure you want to delete this price list entry record?';
     },
 
     validations: [

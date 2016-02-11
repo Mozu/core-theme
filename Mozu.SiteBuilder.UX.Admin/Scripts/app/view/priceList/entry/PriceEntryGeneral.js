@@ -27,16 +27,17 @@ Ext.define('Taco.view.priceList.entry.PriceEntryGeneral', {
 
         Ext.tip.QuickTipManager.init();
 
-        var currencyData = Ext.Array.map(mc.catalogs, function (catalog) {
+        var currencyData = Ext.Array.map(mc.getSupportedCurrencies(), function (currency) {
             return {
-                id: catalog.currencyCode,
-                name: catalog.currencyCode
+                id: currency,
+                name: currency
             };
         });
 
         var currencyStore = Ext.create('Ext.data.Store', {
             fields: ['id','name'],
-            data: currencyData
+            data: currencyData,
+            autoLoad: true
         });
 
         me.productPickerField = Ext.create('Taco.shared.view.field.ProductPickerField', {
@@ -49,7 +50,8 @@ Ext.define('Taco.view.priceList.entry.PriceEntryGeneral', {
             style: 'padding:5px',
             fieldBodyCls: 'order-addproducttoolbar-cell',
             pageSize: me.productsPerPage,
-            value: '',
+            disabled: !me.record.phantom,
+            value: !me.record.phantom ? me.record.get('productCode') : '',
             displayTpl: Ext.create('Ext.XTemplate',
                 '<tpl if="values && values.productName"><span class="product-name">{productName}</span> <span class="product-code">{productCode}</span></tpl>'
             ),
@@ -75,9 +77,8 @@ Ext.define('Taco.view.priceList.entry.PriceEntryGeneral', {
                 // custom event added as part of the InputMask plugin; need to cancel the event to prevent the field from reseting itself since will be reseting all fields when this field is reset;
                 'beforecleartriggerclick': function (field) {
 
-
                     // reset everything in the toolbar but need to be carefull
-                    me.reset();
+                    this.reset();
 
                     // cancel event to prevent the default behavior from completing;
                     return false;
@@ -122,7 +123,8 @@ Ext.define('Taco.view.priceList.entry.PriceEntryGeneral', {
             margin: '0 20 0 0',
             itemId: 'startDateFld',
             pickerOffset: 4,
-            value: this.record ? this.record.get('startDate') : '',
+            value: !this.record.phantom ? this.record.get('startDate') : '',
+            readOnly: !this.record.phantom,
             allowBlank: true,
             validateOnBlank: true
         });
@@ -195,12 +197,21 @@ Ext.define('Taco.view.priceList.entry.PriceEntryGeneral', {
                                     margin: '0 30 0 0',
                                     valueField: 'id',
                                     displayField: 'name',
+                                    readOnly: !me.record.phantom,
                                     queryMode: 'local',
                                     valueNotFoundText: 'not found',
-                                    editable: true,
+                                    editable: false,
                                     forceSelection: true,
-                                    value: me.record ? me.record.get('currencyCode') : defaultCurrency,
-                                    store: currencyStore
+                                    value: !me.record.phantom ? me.record.get('currencyCode') : defaultCurrency,
+                                    defaultValue: !me.record.phantom ? me.record.get('currencyCode') : defaultCurrency,
+                                    store: currencyStore,
+                                    listeners: {
+                                        afterrender: function () {
+                                            if (!this.getValue()) {
+                                                this.setValue(this.defaultValue);
+                                            }
+                                        }
+                                    }
                                 }
                             ]
                         },
@@ -220,8 +231,13 @@ Ext.define('Taco.view.priceList.entry.PriceEntryGeneral', {
                 }
             ]
         }];
-
+        me.mon(Taco.app, 'price-entry-loaded', me.onPriceEntryLoaded, me);
         this.callParent(arguments);
+    },
+
+    onPriceEntryLoaded: function (record) {
+        this.productPickerField.setValue(record.get('productCode'));
+        this.productPickerField.inputMask.show(record.get('productName'));
     },
 
     ///**

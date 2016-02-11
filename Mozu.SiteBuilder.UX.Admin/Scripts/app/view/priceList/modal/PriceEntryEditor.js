@@ -62,7 +62,6 @@ Ext.define('Taco.view.priceList.modal.PriceEntryEditor', {
 
         this.initUi();
         this.callParent(arguments);
-
     },
 
     onEsc : Ext.emptyFn,
@@ -87,28 +86,33 @@ Ext.define('Taco.view.priceList.modal.PriceEntryEditor', {
      */
     loadRecord: function () {
         var me = this,
-            //priceListCode = me.record ? me.record.get('priceListCode') : null,
             priceListModel = Ext.ModelManager.getModel('Taco.model.PriceListEntry');
 
         if (me.isCreateMode) return;
 
-         me.setLoading({
-             msg: "Loading"
-         }, me.body);
-        
-        priceListModel.load(me.record.get('compositeKey'), {
+        me.setLoading({
+            msg: "Loading"
+        }, me.body);
+
+        priceListModel.load('single', {
+            params: {
+                priceListCode: this.priceListCode,
+                productCode: me.record.get('productCode'),
+                currencyCode: me.record.get('currencyCode'),
+                startDate: me.record.get('startDate')
+            },
             failure: function () {
-                Taco.app.fireEvent('setmessage', "Error loading priceList", 'error');
-                me.setLoading(false, this.body);
+                Taco.app.fireEvent('setmessage', "Error loading Price List Entry", 'error');
+                this.setLoading(false, this.body);
             },
             success: function (record) {
-                me.record = record;
-                me.setLoading(false, this.body);
+                this.record = record;
+                Taco.app.fireEvent('price-entry-loaded', record);
+                this.setLoading(false, this.body);
             },
-            callback: function (record, operation) {
-                //do something whether the load succeeded or failed
-            }
+            scope: this
         });
+
     },
 
     // initialize the header and grid when the data load the first time

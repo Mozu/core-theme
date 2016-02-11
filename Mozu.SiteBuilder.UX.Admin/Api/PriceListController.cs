@@ -171,15 +171,10 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
         [HttpGetRoute(UriTemplate = "entry/list")]
         public async Task<Response<List<PriceListEntry>>> ListPriceListEntries([FromUri] PagingParamaters pagingParams, [FromUri] FilterCollection extFilter, [FromUri] string priceListCode)
         {
-            //if (pagingParams.id != null)
-            //{
-            //    return await GetSinglePriceList(pagingParams);
-            //}
-
-            //if (IsLookupQuery(extFilter.QueryString.Get("isLookup")))
-            //{
-            //    return await GetPriceListLookup(extFilter.QueryString.Get("excludedCode"));
-            //}
+            if (pagingParams.id != null)
+            {
+                return await GetSinglePriceListEntry(priceListCode, extFilter);
+            }
 
             string filter = null;
             if (extFilter != null && extFilter.Count > 0)
@@ -199,8 +194,25 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
 
             var result = Mapper.Map<List<PriceListEntry>>(entries.Items);
 
-            
             return List2(result, (int?)entries.TotalCount);
+        }
+
+        private async Task<Response<List<PriceListEntry>>> GetSinglePriceListEntry(string priceListCode, FilterCollection extFilter)
+        {
+            var productCode = extFilter.QueryString.Get("productCode");
+            var currencyCode = extFilter.QueryString.Get("currencyCode");
+            var startDate = extFilter.QueryString.Get("startDate");
+            DateTime? dateTime = (DateTime?) null;
+            if (!startDate.IsNullOrEmpty())
+            {
+                DateTime parsedDateTime;
+                if (DateTime.TryParse(startDate, out parsedDateTime))
+                {
+                    dateTime = parsedDateTime;
+                }
+            }
+            var singlePriceList = (await _priceListWebClient.GetPriceListEntry(priceListCode: priceListCode, productCode: productCode, currencyCode:currencyCode, startDate:dateTime)).ReadAsSync();
+            return List2(Mapper.Map<PriceListEntry>(singlePriceList));
         }
 
         /// <summary>
@@ -227,6 +239,28 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
             }
 
             return List2(responseList);
+        }
+
+        /// <summary>
+        /// Update an existing PriceList.
+        /// </summary>
+        [HttpPostRoute(UriTemplate = "entry/edit")]
+        public async Task<Response<List<PriceListEntry>>> EditPriceListEntry(List<PriceListEntry> priceEntries)
+        {
+            var results = new List<PriceListEntry>();
+
+            foreach (var entry in priceEntries)
+            {
+                var dcEntry = Mapper.Map<DC.PriceListEntry>(entry);
+                var res = (await _priceListWebClient.UpdatePriceListEntry(dcEntry, 
+                    priceListCode:dcEntry.PriceListCode, 
+                    productCode:dcEntry.ProductCode, 
+                    currencyCode:dcEntry.CurrencyCode, 
+                    startDate:dcEntry.StartDate
+                    )).ReadAsSync();
+                results.Add(Mapper.Map<PriceListEntry>(res));
+            }
+            return List2(results);
         }
 
         private bool IsLookupQuery(string lookupValue)
