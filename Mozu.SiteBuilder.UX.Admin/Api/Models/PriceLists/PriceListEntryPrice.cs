@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Runtime.Serialization;
 using Mozu.Core.Api.Contracts;
 using Newtonsoft.Json;
 
@@ -6,45 +7,58 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.Models.PriceLists
 {
     public class PriceListEntryPrice
     {
+        [DataMember(EmitDefaultValue = false)]
         public int MinQty { get; set; }
 
-        #region ListPrice
+        #region List Price
 
+        [DataMember(EmitDefaultValue = false)]
         public string ListPriceMode { get; set; }
 
-        [JsonProperty(DefaultValueHandling = DefaultValueHandling.Ignore)]
-        public decimal? ListPrice { get; set; }
+        [DataMember(EmitDefaultValue = false)]
+        public Decimal? ListPrice { get; set; }
 
-        public int ListPriceCalcSrcField { get; set; }
+        [DataMember(EmitDefaultValue = false)]
+        public string ListPriceCalcSrcField { get; set; }
 
-        public decimal? ListPriceCalcMultiplier { get; set; }
+        [DataMember(EmitDefaultValue = false)]
+        public Decimal? ListPriceCalcMultiplier { get; set; }
 
-        public decimal? ListPriceCalcAdder { get; set; }
+        [DataMember(EmitDefaultValue = false)]
+        public Decimal? ListPriceCalcAdder { get; set; }
 
-        public decimal? ListPriceCalcMax { get; set; }
+        [DataMember(EmitDefaultValue = false)]
+        public Decimal? ListPriceCalcMin { get; set; }
 
-        public decimal? ListPriceCalcMin { get; set; }
+        [DataMember(EmitDefaultValue = false)]
+        public Decimal? ListPriceCalcMax { get; set; }
 
         #endregion
 
-        #region SalePrice
+        #region Sale Price
 
+        [DataMember(EmitDefaultValue = false)]
         public string SalePriceMode { get; set; }
 
-        [JsonProperty(DefaultValueHandling = DefaultValueHandling.Ignore)]
-        public decimal? SalePrice { get; set; }
+        [DataMember(EmitDefaultValue = false)]
+        public Decimal? SalePrice { get; set; }
 
-        public int SalePriceCalcSrcField { get; set; }
+        [DataMember(EmitDefaultValue = false)]
+        public string SalePriceCalcField { get; set; }
 
-        public decimal? SalePriceCalcMultiplier { get; set; }
+        [DataMember(EmitDefaultValue = false)]
+        public Decimal? SalePriceCalcMultiplier { get; set; }
 
-        public decimal? SalePriceCalcAdder { get; set; }
+        [DataMember(EmitDefaultValue = false)]
+        public Decimal? SalePriceCalcAdder { get; set; }
 
-        public decimal? SalePriceCalcMax { get; set; }
+        [DataMember(EmitDefaultValue = false)]
+        public Decimal? SalePriceCalcMin { get; set; }
 
-        public decimal? SalePriceCalcMin { get; set; }
+        [DataMember(EmitDefaultValue = false)]
+        public Decimal? SalePriceCalcMax { get; set; }
 
         #endregion
-        
+
     }
 }

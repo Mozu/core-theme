@@ -40,6 +40,7 @@ Ext.define('Taco.view.priceList.entry.PriceEntryGeneral', {
         });
 
         me.productPickerField = Ext.create('Taco.shared.view.field.ProductPickerField', {
+            name: 'productCode',
             plugins: [
                 'inputmask'
             ],
@@ -223,58 +224,58 @@ Ext.define('Taco.view.priceList.entry.PriceEntryGeneral', {
         this.callParent(arguments);
     },
 
-    /**
-     * Opens a modal with a TreePanel.
-     * @private
-     */
-    launchSiteModal: function(list) {
-        var catalogChildren = Ext.Array.map(Taco.app.context.getMasterCatalog().catalogs, function (cat) {
-            var siteChildren = Ext.Array.map(cat.sites, function (site) {
-                return {
-                    id: site.id,
-                    name: site.name,
-                    parentId: cat.id,
-                    type: 'site',
-                    expanded: true,
-                    loaded: true,
-                    leaf: 'true'
-                };
-            });
-            return {
-                id: cat.id,
-                name: cat.name,
-                type: 'catalog',
-                expanded: true,
-                loaded: true,
-                children: siteChildren
-            };
-        }),
-
-        siteTreeStore = Ext.create('Ext.data.TreeStore', {
-            root: {
-                expanded: true,
-                children: catalogChildren
-            }
-        });
-
-        this.modal = Ext.widget('checkbox-tree-modal', {
-            title: 'Select Sites',
-            displayField: 'name',
-            store: siteTreeStore
-        });
-
-        this.modal.on({
-            savesuccess: function(modal, values) {
-                list.addValue(values);
-                list.store.reload();
-                this.parentForm.getForm().checkValidity();
-            },
-            aftercancelclose: function() {
-                list.store.reload();
-            },
-            scope: this
-        });
-    },
+    ///**
+    // * Opens a modal with a TreePanel.
+    // * @private
+    // */
+    //launchSiteModal: function(list) {
+    //    var catalogChildren = Ext.Array.map(Taco.app.context.getMasterCatalog().catalogs, function (cat) {
+    //        var siteChildren = Ext.Array.map(cat.sites, function (site) {
+    //            return {
+    //                id: site.id,
+    //                name: site.name,
+    //                parentId: cat.id,
+    //                type: 'site',
+    //                expanded: true,
+    //                loaded: true,
+    //                leaf: 'true'
+    //            };
+    //        });
+    //        return {
+    //            id: cat.id,
+    //            name: cat.name,
+    //            type: 'catalog',
+    //            expanded: true,
+    //            loaded: true,
+    //            children: siteChildren
+    //        };
+    //    }),
+    //
+    //    siteTreeStore = Ext.create('Ext.data.TreeStore', {
+    //        root: {
+    //            expanded: true,
+    //            children: catalogChildren
+    //        }
+    //    });
+    //
+    //    this.modal = Ext.widget('checkbox-tree-modal', {
+    //        title: 'Select Sites',
+    //        displayField: 'name',
+    //        store: siteTreeStore
+    //    });
+    //
+    //    this.modal.on({
+    //        savesuccess: function(modal, values) {
+    //            list.addValue(values);
+    //            list.store.reload();
+    //            this.parentForm.getForm().checkValidity();
+    //        },
+    //        aftercancelclose: function() {
+    //            list.store.reload();
+    //        },
+    //        scope: this
+    //    });
+    //},
 
     // after product is selected in the productPickerfield but before the combo is closed;
     onBeforeProductSelect: function (combo, record, index, e) {
@@ -285,8 +286,8 @@ Ext.define('Taco.view.priceList.entry.PriceEntryGeneral', {
             price,
             win,
             productCodeToAdd;
-
-
+        combo.setValue(productCode);
+        //me.record.set('productCode', productCode);
         combo.collapse();
 
         // determine if we need to show the configurator

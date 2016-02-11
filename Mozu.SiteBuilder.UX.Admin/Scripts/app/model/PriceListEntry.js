@@ -12,12 +12,20 @@ Ext.define('Taco.model.PriceListEntry', {
     //    update: 26,
     //    destroy: 27
     //},
-    idProperty: 'id',
+    idProperty: 'compositeKey',
     fields: [
         {
-            name: 'id',
-            type: 'int'
-        }, {
+            name: 'compositeKey',
+            type: 'string',
+            convert: function (v, record) {
+                return record.get('priceListCode') + '-' +
+                        record.get('productCode') + '-' +
+                        record.get('currencyCode') + '-' +
+                        record.get('startDate') ? record.get('startDate') : 'null';
+            },
+            persist: false
+        },
+        {
             name: 'priceListCode',
             type: 'string'
         }, {
@@ -40,12 +48,47 @@ Ext.define('Taco.model.PriceListEntry', {
             useNull: true,
             dateFormat: 'c'
         }, {
-            name: 'mode',
-            type: 'int'
+            name: 'priceListEntryMode',
+            type: 'string',
+            defaultValue: 'Simple'
         }, {
-            name: 'enabled',
-            type: 'boolean',
-            defaultValue: true
+            name: 'priceEntries',
+            type: 'auto',
+            defaultValue: []
+        }, {
+            name: "msrpMode",
+            type: "string",
+            defaultValue: 'UseCatalog'
+        }, {
+            name: "msrp",
+            type: "float",
+            useNull: true
+        }, {
+            name: "mapMode",
+            type: "string",
+            defaultValue: 'UseCatalog'
+        }, {
+            name: "map",
+            type: "float",
+            useNull: true
+        }, {
+            name: "mapStartDate",
+            type: "date",
+            useNull: true,
+            dateFormat: 'c'
+        }, {
+            name: "mapEndDate",
+            type: "date",
+            useNull: true,
+            dateFormat: 'c'
+        }, {
+            name: "costMode",
+            type: "string",
+            defaultValue: 'UseCatalog'
+        }, {
+            name: "cost",
+            type: "float",
+            useNull: true
         }, {
             name: "discountsRestricted",
             type: "boolean",
@@ -60,11 +103,7 @@ Ext.define('Taco.model.PriceListEntry', {
             type: "date",
             useNull: true,
             dateFormat: 'c'
-        }, {
-            name: 'prices',
-            type: 'auto',
-            defaultValue: []
-        }, {
+        },  {
             name: 'createBy',
             type: 'string',
             useNull: true

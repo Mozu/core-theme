@@ -41,6 +41,10 @@ Ext.define('Taco.view.priceList.modal.PriceEntryEditor', {
     initComponent: function (eOpts) {
         var me = this;
 
+        if (me.isCreateMode && !me.record) {
+            me.record = Ext.create('Taco.model.PriceListEntry', { priceListCode: this.priceListCode });
+        }
+
         this.layout = {
             type: 'fit'
         };
@@ -56,46 +60,10 @@ Ext.define('Taco.view.priceList.modal.PriceEntryEditor', {
             editType: me.isCreateMode ? 'Create' : 'Edit'
         });
 
-        //onBeforeClose
-        //me.mon(me, 'beforecancel', me.onBeforeCancel);
-        //me.mon(me, 'beforesave', me.onBeforeSave);
-
         this.initUi();
         this.callParent(arguments);
-        
-        //if (this.isCreateMode) {
-        //    this.managePanelsOnCreate(false, 'Save & Continue', false);  //has to be after parent call
-        //}
-    },
 
-    //managePanelsOnCreate: function (closeAfterSave, saveText, isCouponCodePanelVisible) {
-    //    var priceListCode = (this.record) ? this.record.get("priceListCode") : null,
-    //        priceListId = (this.record) ? this.record.get("id") : null;
-    //
-    //
-    //    this.closeOnSave = closeAfterSave;
-    //    var primaryBtn = this.down('#primaryAction');
-    //    if (primaryBtn) {
-    //        primaryBtn.setText(saveText);
-    //    }
-    //
-    //    if (this.createType === 'Manual') {
-    //        if (this.couponCodePanel) {
-    //            if (isCouponCodePanelVisible) {
-    //                this.couponCodePanel.setPriceEntryCode(priceListCode);
-    //            }
-    //            this.couponCodePanel.setVisible(isCouponCodePanelVisible);
-    //        }
-    //    }
-    //
-    //    if (this.discountPanel) {
-    //        if (isCouponCodePanelVisible) {
-    //            this.discountPanel.setPriceEntryCode(priceListCode);
-    //            this.discountPanel.setPriceEntryId(priceListId);
-    //        }
-    //        this.discountPanel.setVisible(isCouponCodePanelVisible);
-    //    }
-    //},
+    },
 
     onEsc : Ext.emptyFn,
 
@@ -103,32 +71,8 @@ Ext.define('Taco.view.priceList.modal.PriceEntryEditor', {
      * Show the loading mask while we wait for the service to respond with the draft record.
      */
     show: function () {
-
-
         this.callParent(arguments);
-
-
-        // need to manually listen for events that might cause the grid to blur;
-        /*
-        me.mon(me.el, {
-            click: me.onGridBlur,
-            keypress: me.onGridBlur,
-            scope: me
-        });
-        */
-
-
-
-        if (!this.record) {
-            this.loadRecord();
-        } else {
-            this.onLoadRecord();
-        }
-
-        //if (!me.isCreateMode) {
-        //    this.down('#discardAction').hide();
-        //    //this.down('#secondaryAction').hide();
-        //}
+        this.loadRecord();
     },
     
     /**
@@ -143,7 +87,7 @@ Ext.define('Taco.view.priceList.modal.PriceEntryEditor', {
      */
     loadRecord: function () {
         var me = this,
-            priceListCode = me.record ? me.record.get('priceListCode') : null,
+            //priceListCode = me.record ? me.record.get('priceListCode') : null,
             priceListModel = Ext.ModelManager.getModel('Taco.model.PriceListEntry');
 
         if (me.isCreateMode) return;
@@ -152,84 +96,32 @@ Ext.define('Taco.view.priceList.modal.PriceEntryEditor', {
              msg: "Loading"
          }, me.body);
         
-        priceListModel.load(priceListCode, {
+        priceListModel.load(me.record.get('compositeKey'), {
             failure: function () {
                 Taco.app.fireEvent('setmessage', "Error loading priceList", 'error');
                 me.setLoading(false, this.body);
             },
             success: function (record) {
                 me.record = record;
-                me.onLoadRecord();
+                me.setLoading(false, this.body);
             },
             callback: function (record, operation) {
                 //do something whether the load succeeded or failed
             }
         });
     },
-    
-    // when the draft record has loaded create and add the total and grid and hide the loading mask;
-    onLoadRecord : function() {
-        this.updateUi();
-        this.setLoading(false, this.body);
-    },
-    
-    // reloads the ui using new data
-    updateUi: function () {
-        
-        // update the record on the totalRow panel
-        //me.totalRow.setRecord(me.record);
-        //
-        //// need to determine the selection so it can be restored after updateing the records in the store;
-        //var currentPosition = me.detailGrid.getSelectionModel().getCurrentPosition();
-        //me.detailGrid.getStore().loadRecords(me.record.itemsStore.getRange());
-        //
-        //if (currentPosition) {
-        //    me.detailGrid.restoreSelection(currentPosition);
-        //} else {
-        //    // field is focused; need to scroll to it if needed;
-        //    var activeFocusEl = Ext.fly(document.activeElement);
-        //    var isHidden = activeFocusEl.isHiddenByScroll(me.body);
-        //    if (isHidden) {
-        //        activeFocusEl.scrollIntoView(me.body);
-        //    }
-        //}
-    },
 
     // initialize the header and grid when the data load the first time
     initUi: function () {
-        var me = this,
-            priceListCode = me.record ? me.record.get('priceListCode') : null,
-            priceListId = me.record ? me.record.get('id') : null;
+        var me = this;
 
         me.generalPanel = Ext.create('Taco.view.priceList.entry.PriceEntryGeneral', {
-            record: me.record,
-            isCreateMode: me.isCreateMode
+            record: me.record
         });
 
         me.pricePanel = Ext.create('Taco.view.priceList.entry.PriceEntryPrice', {
-            record: me.record,
-            isCreateMode: me.isCreateMode
+            record: me.record
         });
-        
-        //me.couponCodePanel = Ext.create('Taco.view.couponCode.Grid', {
-        //    autoHeight: true,
-        //    autoHidePagingToolbar: true,
-        //    priceListCode: priceListCode
-        //});
-        //
-        //me.discountPanel = Ext.create('Taco.view.couponCode.DiscountGrid', {
-        //    margin: {
-        //        top: 20,
-        //        right: 0,
-        //        bottom: 0,
-        //        left: 0
-        //    },
-        //    autoHidePagingToolbar: true,
-        //    autoHeight: true,
-        //    priceListCode: priceListCode,
-        //    priceListId: priceListId
-        //});
-
 
         var container = Ext.create('Taco.core.ux.form.Form', {
             autoScroll:true,
@@ -238,18 +130,6 @@ Ext.define('Taco.view.priceList.modal.PriceEntryEditor', {
                 me.pricePanel
             ]
         });
-
-        //if (me.createType === 'Generated' || (me.record && me.record.get('couponCodeType') === 'Generated')) {
-        //    me.generatedCodePanel = Ext.create('Taco.view.priceList.GeneratedCodeForm', {
-        //        record: me.record,
-        //        isCreateMode: me.isCreateMode
-        //    });
-        //    container.add(me.generatedCodePanel);
-        //} else {
-        //    container.add(me.couponCodePanel);
-        //}
-        //
-        //container.add(me.discountPanel);
 
         me.items = [
             container
@@ -261,12 +141,10 @@ Ext.define('Taco.view.priceList.modal.PriceEntryEditor', {
         this.saveSuccess(data);
         this.record = data;
         Taco.app.fireEvent('pricelistentrycreated', this.record);
-        //this.managePanelsOnCreate(true, 'Save', true);
         this.isCreateMode = false;
         Ext.defer(function() {
             this.focusEl.focus();
         }, 1, this);
-        
 
     },
 
@@ -277,8 +155,6 @@ Ext.define('Taco.view.priceList.modal.PriceEntryEditor', {
             onSuccess = (!me.isCreateMode)
                     ? me.saveSuccess
                     : me.onCreate;
-
-        // see if there is a form to extract the data from ;
 
         if (this.isCreateMode) {
             this.record = Ext.create('Taco.model.PriceListEntry', data);

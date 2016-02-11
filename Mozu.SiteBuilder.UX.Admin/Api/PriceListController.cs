@@ -199,7 +199,34 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
 
             var result = Mapper.Map<List<PriceListEntry>>(entries.Items);
 
+            
             return List2(result, (int?)entries.TotalCount);
+        }
+
+        /// <summary>
+        /// Create a new PriceListEntry
+        /// </summary>
+        [HttpPostRoute(UriTemplate = "entry/create")]
+        public async Task<Response<List<PriceListEntry>>> CreatePriceListEntry(List<PriceListEntry> priceLists)
+        {
+            var responseList = new List<PriceListEntry>();
+
+            foreach (var priceListEntry in priceLists)
+            {
+                var dcPriceListEntry = Mapper.Map<DC.PriceListEntry>(priceListEntry);
+
+                try
+                {
+                    var response = (await _priceListWebClient.AddPriceListEntry(priceListEntry.PriceListCode, dcPriceListEntry)).ReadAsSync();
+                    responseList.Add(Mapper.Map<PriceListEntry>(response));
+                }
+                catch (ApiWebClientConnectionException e)
+                {
+                    return FailureList2<PriceListEntry>(e.Message);
+                }
+            }
+
+            return List2(responseList);
         }
 
         private bool IsLookupQuery(string lookupValue)

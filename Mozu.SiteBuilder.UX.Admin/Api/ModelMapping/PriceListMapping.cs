@@ -45,6 +45,9 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.ModelMapping
             Mapper.CreateMap<PriceListEntry, DC.PriceListEntry>();
             Mapper.CreateMap<DC.PriceListEntry, PriceListEntry>();
 
+            Mapper.CreateMap<PriceListEntryPrice, DC.PriceListEntryPrice>();
+            Mapper.CreateMap<DC.PriceListEntryPrice, PriceListEntryPrice>();
+
         }
     }
 }

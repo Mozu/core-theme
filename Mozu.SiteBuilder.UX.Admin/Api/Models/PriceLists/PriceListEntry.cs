@@ -46,6 +46,13 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.Models.PriceLists
         [JsonProperty(DefaultValueHandling = DefaultValueHandling.Ignore, PropertyName = "msrp")]
         public decimal? MSRP { get; set; }
 
+        /// <summary>
+        /// MSRP Mode
+        /// </summary>
+        /// 
+        [JsonProperty(DefaultValueHandling = DefaultValueHandling.Ignore, PropertyName = "msrpMode")]
+        public string MSRPMode { get; set; }
+
         public decimal? Cost { get; set; }
 
         public string CostMode { get; set; }
