@@ -212,12 +212,6 @@ Ext.define('Taco.core.ux.content.Tooltip', {
     },
 
     update: function(data) {
-        if (typeof data === 'string') {
-            data = {
-                message: this.store.findRecord('key', data)
-            }
-
-        }
         this.tooltip.update(data);
     },
 
@@ -259,6 +253,9 @@ Ext.define('Taco.core.ux.content.Tooltip', {
 		this.component = component[0];
 
 		switch (this.hoverTarget) {
+            case 'boxLabelEl':
+                this.instantiateToolTipEvents(this.component.boxLabelEl);
+                break;
 			case 'label':
 				this.instantiateToolTipEvents(this.component.labelEl);
 				break;

@@ -90,12 +90,22 @@ Ext.define('Taco.view.discount.Form', {
     updateApplyTo: function(newVal) {
         var field = this.criteria.applyDiscountTo;
         var tooltip = field.tooltip;
+        var store = tooltip.store;
+        var record;
         if (newVal.toLowerCase() === 'shipping') {
+            record = store.findRecord('key', 'discount.criteria.applyDiscountToHighestPricedShipping');
             field.setBoxLabel('Apply discount to qualifying product(s) with highest shipping cost first');
-            tooltip.update('discount.criteria.applyDiscountToHighestPricedShipping');
+            tooltip.update({
+                message: record.get('value')
+            });
+            tooltip.applyTooltipIcon();
         } else {
             field.setBoxLabel('Apply discount to highest-priced qualifying product(s) first');
-            tooltip.update('discount.criteria.applyDiscountToHighestPricedProduct');
+            record = store.findRecord('key', 'discount.criteria.applyDiscountToHighestPricedProduct');
+            tooltip.update({
+                message: record.get('value')
+            });
+            tooltip.applyTooltipIcon();
         }
     },
 
