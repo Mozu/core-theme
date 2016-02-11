@@ -1,46 +1,39 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
-using MoreLinq;
 using Mozu.SiteBuilder.UX.Admin.Api.Models.Category;
 using DC = Mozu.ProductAdmin.Contracts;
 
 namespace Mozu.SiteBuilder.UX.Admin.Helpers.CategoryHelpers {
     public class CategoryHelper : ICategoryHelper {
-        private const string ID = "id";
-
         /// <summary>
-        /// Get a filter string for IN filter based on the id property of a given category list
+        /// Gets a category sequence collection based on input list
         /// </summary>
-        /// <param name="categories">List containing categories</param>
-        /// <returns>Filter string for IN filter</returns>
-        public string GetInFilterStringForIds(IList<Category> categories)
+        /// <param name="inputCategories">List with new category sequence</param>
+        public DC.CategorySequenceCollection GetCategorySequenceCollection(List<Category> inputCategories)
         {
-            if (categories == null || !categories.Any())
+            var categorySequenceCollection = new DC.CategorySequenceCollection();
+            if (!inputCategories.Any())
             {
-                return "";
+                return categorySequenceCollection;
             }
-            return string.Format("{0} in [{1}]", ID, categories.Select(s => s.Id).ToDelimitedString(","));
-        }
 
-        /// <summary>
-        /// Updates the sequence property for objects in one list, based on matching sequence values from another list. 
-        /// NOTE: Modifies the targetList object
-        /// </summary>
-        /// <param name="sourceSequenceList">List with new sequence and lookup</param>
-        /// <param name="targetList">List to update with sequence from new list</param>
-        public void AdjustSequence(List<Mozu.SiteBuilder.UX.Admin.Api.Models.Category.Category> sourceSequenceList, List<DC.Category> targetList)
-        {
-            foreach (var dbCat in targetList)
+            if (inputCategories.Any(c => c.Id == null))
             {
-                var uiCategory = sourceSequenceList.FirstOrDefault(i => i.Id == dbCat.Id);
-                if (uiCategory != null)
-                {
-                    dbCat.Sequence = uiCategory.Sequence;
-                    dbCat.ParentCategoryId = (uiCategory.ParentId != -1)
-                        ? uiCategory.ParentId
-                        : null;
-                }
+                throw new ArgumentNullException("id");
             }
+            if (inputCategories.Any(c => c.Sequence == null))
+            {
+                throw new ArgumentNullException("sequence");
+            }
+
+            categorySequenceCollection.Items = inputCategories.Select(c => new DC.CategorySequence
+            {
+                CategoryId = (int) c.Id,
+                ParentCategoryId = (c.ParentId < 0) ? null : c.ParentId,
+                Sequence = (int) c.Sequence
+            }).ToList();
+            return categorySequenceCollection;
         }
     }
 }
