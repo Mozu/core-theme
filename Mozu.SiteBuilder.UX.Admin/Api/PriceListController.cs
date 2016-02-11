@@ -263,6 +263,16 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
             return List2(results);
         }
 
+        [HttpPostRoute(UriTemplate = "entry/delete")]
+        public async Task<Response<PriceList>> DeletePriceListEntry(List<PriceListEntry> entries)
+        {
+            var tasks = entries.Select(d => _priceListWebClient.DeletePriceListEntry(d.PriceListCode, d.ProductCode, d.CurrencyCode, d.StartDate)).ToList();
+            await Task.WhenAll(tasks);
+            tasks.Select(TaskHelper.Result).ThrowExceptionsIfAny();
+
+            return SuccessWithTotal2<PriceList>(entries.Count);
+        }
+
         private bool IsLookupQuery(string lookupValue)
         {
             bool isLookup;

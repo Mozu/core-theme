@@ -61,7 +61,7 @@ Ext.define('Taco.view.priceList.widget.EntriesGrid', {
 
     showActionsColumn: true,
 
-    //enableEditAction: true,
+    enableEditAction: true,
     //enableDisableAction: true,
     enableDeleteAction: true,
 
@@ -270,24 +270,6 @@ Ext.define('Taco.view.priceList.widget.EntriesGrid', {
                 //},
                 menuColumnHandler: me.doEdit,
                 scope:me
-            }, {
-                text: 'Enable',
-                itemId: 'enableMenuItem',
-                menuColumnHandler: me.doEnableBulk,
-                //requiredBehaviors: {
-                //    model: 'Taco.model.PriceList',
-                //    behavior: 'update'
-                //},
-                scope: me
-            }, {
-                text: 'Disable',
-                itemId: 'disableMenuItem',
-                menuColumnHandler: me.doDisableBulk,
-                //requiredBehaviors: {
-                //    model: 'Taco.model.PriceList',
-                //    behavior: 'update'
-                //},
-                scope: me
             }, {
                 text: 'Delete',
                 itemId: "deleteMenuItem",

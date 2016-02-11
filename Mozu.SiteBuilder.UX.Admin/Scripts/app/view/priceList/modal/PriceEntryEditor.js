@@ -124,7 +124,10 @@ Ext.define('Taco.view.priceList.modal.PriceEntryEditor', {
         });
 
         me.pricePanel = Ext.create('Taco.view.priceList.entry.PriceEntryPrice', {
-            record: me.record
+            record: me.record,
+            currencyCode: !me.record.phantom
+                            ? me.record.get('currencyCode')
+                            : Taco.app.context.getMasterCatalog().currencyCode
         });
 
         var container = Ext.create('Taco.core.ux.form.Form', {

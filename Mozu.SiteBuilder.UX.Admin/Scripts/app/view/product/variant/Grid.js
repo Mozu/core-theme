@@ -1,7 +1,7 @@
 ﻿/**
  * @class  Taco.view.product.variant.Grid
  * @author Travis Johnson
- * @description The grid panelt to edit and enable variants
+ * @description The grid panel to edit and enable variants
  */
 Ext.define('Taco.view.product.variant.Grid', {
     extend: 'Ext.grid.Panel',

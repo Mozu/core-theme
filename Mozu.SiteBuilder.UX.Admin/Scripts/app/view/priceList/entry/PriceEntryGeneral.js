@@ -210,6 +210,9 @@ Ext.define('Taco.view.priceList.entry.PriceEntryGeneral', {
                                             if (!this.getValue()) {
                                                 this.setValue(this.defaultValue);
                                             }
+                                        },
+                                        change: function() {
+                                            //todo: fire event for change currency so price form can listen.
                                         }
                                     }
                                 }
