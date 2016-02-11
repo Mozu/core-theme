@@ -213,8 +213,9 @@ Ext.define('Taco.core.ux.content.Tooltip', {
 
     update: function(data) {
         if (typeof data === 'string') {
+            var tooltip = this.store.findRecord('key', data);
             data = {
-                message: this.store.findRecord('key', data)
+                message: tooltip.get('value')
             }
 
         }
