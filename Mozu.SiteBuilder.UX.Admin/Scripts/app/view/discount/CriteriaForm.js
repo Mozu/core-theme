@@ -498,6 +498,17 @@ Ext.define('Taco.view.discount.CriteriaForm', {
             }
         );
 
+        this.optionsContainer = Ext.create('Ext.form.FieldContainer', {
+                itemId: 'options-field-container',
+                fieldLabel: "Options",
+                items: [
+                    this.ApplyToProductsWithSalePrice,
+                    this.appliesToSalePrice,
+                    this.applyDiscountTo
+                ]
+            }
+        );
+
         this.productCategoryContainer = Ext.create('Ext.container.Container', {
             width: 600,
             items: [
@@ -509,9 +520,7 @@ Ext.define('Taco.view.discount.CriteriaForm', {
                 this.maximumQuantityPerRedemptionTB,
                 this.excludeCategoriesBox,
                 this.productsExcludeBox,
-                this.ApplyToProductsWithSalePrice,
-                this.appliesToSalePrice,
-                this.applyDiscountTo
+                this.optionsContainer
             ]
         });
 
