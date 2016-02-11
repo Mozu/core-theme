@@ -156,9 +156,9 @@ Ext.define('Taco.view.discount.CriteriaForm', {
                     elementId: 'apply-to-highest-priced-product',
                     hoverTarget: 'boxLabelEl',
                     messageKey: 'discount.criteria.applyDiscountToHighestPricedProduct',
-                    offsetLeft: -435,
-                    offsetTop: 22,
-                    arrowPosition: 'left'
+                    offsetLeft: -20,
+                    offsetTop: 60,
+                    arrowPosition: 'bottom'
                 }),
                 listeners: {
                     change: function(self, newValue, oldValue, eOpts) {
