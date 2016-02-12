@@ -1129,13 +1129,6 @@
                             order.cardsSaved[card.data.id] = true;
                             return card;
                         });
-                    },
-                    saveBillingContactFirst = function () {
-                        if (billingContact.id === -1 || billingContact.id === 1) delete billingContact.id;
-                        return customer.apiModel.addContact(billingContact).then(function (contact) {
-                            billingContact.id = contact.data.id;
-                            return contact;
-                        });
                     };
 
                 var contactId = billingContact.contactId;
@@ -1143,7 +1136,10 @@
 
                 if (!billingContact.id || billingContact.id === -1 || billingContact.id === 1 || billingContact.id === "new") {
                     billingContact.types = !isSameBillingShippingAddress ? [{ name: 'Billing', isPrimary: isPrimaryAddress }] : [{ name: 'Shipping', isPrimary: isPrimaryAddress }, { name: 'Billing', isPrimary: isPrimaryAddress }];
-                    return saveBillingContactFirst().then(doSaveCard);
+                    return this.addCustomerContact('billingInfo', 'billingContact', billingContact.types).then(function (contact) {
+                        billingContact.id = contact.data.id;
+                        return contact;
+                    }).then(doSaveCard);
                 } else {
                     return doSaveCard();
                 }
