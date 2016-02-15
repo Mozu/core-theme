@@ -302,17 +302,17 @@ namespace Mozu.SiteBuilder.Mvc.SEO
                 }
                 if (starPos > -1)
                 {
-                    var segments = stem.Split(new char[] { '*' }, StringSplitOptions.RemoveEmptyEntries);
+                    var segments = stem.TrimEnd('*').Split(new char[] { '*' }, StringSplitOptions.None);
                     if (segments.Length == 0)
                     {
                         continue;
                     }
 
                     Dictionary<string, List<RuntimeRedirectEntry>> indexedLookup;
-                    if (!wildCards.TryGetValue(segments[0].Length, out indexedLookup))
+                    if (!wildCards.TryGetValue(starPos, out indexedLookup))
                     {
                         indexedLookup = new Dictionary<string, List<RuntimeRedirectEntry>>(StringComparer.OrdinalIgnoreCase);
-                        wildCards[segments[0].Length] = indexedLookup;
+                        wildCards[starPos] = indexedLookup;
                     }
                     List<RuntimeRedirectEntry> indexedMatches;
                     if (!indexedLookup.TryGetValue(segments[0], out indexedMatches))

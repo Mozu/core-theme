@@ -253,6 +253,10 @@ namespace Mozu.SiteBuilder.Mvc.MessageHandler
 
         private static RedirectEntry MatchWildCards(RuntimeRedirects redirects, string stem, NameValueCollection queryString)
         {
+            if ( redirects.WildCards == null)
+            {
+                return null; 
+            }
             foreach (var indexedMatches in redirects.WildCards)
             {
                 if (indexedMatches.Item1 > stem.Length)

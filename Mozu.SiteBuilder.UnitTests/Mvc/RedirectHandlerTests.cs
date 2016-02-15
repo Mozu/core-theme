@@ -116,8 +116,19 @@ namespace Mozu.SiteBuilder.UnitTests.Mvc
                     Destination="1*2*3",
                     IsEnabled = true,
                     Source = "1*2*3"
+                } ,
+                new RedirectEntry()
+                {
+                    Destination="*stuff*",
+                    IsEnabled = true,
+                    Source = "*stuff*"
+                },new RedirectEntry()
+                {
+                    Destination="*bratwurst*good",
+                    IsEnabled = true,
+                    Source = "*bratwurst*good"
                 },
-                
+
             };
 
             rawList.Sort(RedirectComparer.Default);
@@ -183,6 +194,19 @@ namespace Mozu.SiteBuilder.UnitTests.Mvc
                 Name = "wildcard6",
                 Url = "/132",
                 RuntimeRedirects = GetWildCardRedirects(),
+
+            };
+
+            yield return
+            new TestScenario()
+            {
+                Name = "wildcard7",
+                Url = "/asdf/asdf/adsf/bratwurst-issooo-good",
+                RuntimeRedirects = GetWildCardRedirects(),
+                Result = new RedirectEntry()
+                {
+                    Destination= "*bratwurst*good"
+                }
 
             };
 
