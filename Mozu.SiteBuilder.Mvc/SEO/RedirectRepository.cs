@@ -282,6 +282,7 @@ namespace Mozu.SiteBuilder.Mvc.SEO
             foreach (var redirect in redirects.Where(x => x.IsEnabled.GetValueOrDefault(false)))
             {
                 var source = redirect.Source;
+                var stem = source;
                 var qPos = source.IndexOf('?');
                 var starPos = source.IndexOf('*');
                 if (qPos == -1 && starPos==-1)
@@ -289,7 +290,7 @@ namespace Mozu.SiteBuilder.Mvc.SEO
                     rr.Simple[source] = redirect;
                     continue;
                 }
-                var stem = source;
+               
                 
                 RuntimeRedirectEntry runtimeRedirect = new RuntimeRedirectEntry()
                 {
@@ -300,6 +301,8 @@ namespace Mozu.SiteBuilder.Mvc.SEO
                     stem = source.Substring(0, qPos);
                     runtimeRedirect.Query = System.Web.HttpUtility.ParseQueryString(source.Substring(qPos + 1));
                 }
+
+                starPos = stem.IndexOf('*');
                 if (starPos > -1)
                 {
                     var segments = stem.TrimEnd('*').Split(new char[] { '*' }, StringSplitOptions.None);

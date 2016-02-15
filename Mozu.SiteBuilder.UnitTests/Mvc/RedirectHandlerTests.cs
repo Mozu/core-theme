@@ -127,7 +127,14 @@ namespace Mozu.SiteBuilder.UnitTests.Mvc
                     Destination="*bratwurst*good",
                     IsEnabled = true,
                     Source = "*bratwurst*good"
-                },
+                }
+                ,new RedirectEntry()
+                {
+                    Destination="{bing}/product/{bing}",
+                    IsEnabled = true,
+                    Source = "phipps?bing=*"
+                }
+                
 
             };
 
@@ -209,6 +216,17 @@ namespace Mozu.SiteBuilder.UnitTests.Mvc
                 }
 
             };
+            yield return new TestScenario()
+          {
+              Name = "querystring wildcard mapped",
+              Url = "/phipps?bing=123",
+              RuntimeRedirects = GetWildCardRedirects(),
+              Result = new RedirectEntry()
+              {
+                  Destination = "123/product/123"
+              }
+
+          };
 
             yield return
                 new TestScenario()
