@@ -1,18 +1,18 @@
 ﻿/**
- * @class Taco.view.order.Grid
+ * @class Taco.view.settings.shipping.Rules
 */
 Ext.define('Taco.view.settings.shipping.Rules', {
     extend: 'Taco.core.ux.browser.SearchList',
-  
+
     requires: [
-         'Ext.Date',
+        'Ext.Date',
         'Ext.form.Panel', 'Taco.core.ux.BaseGrid',
         'Ext.tip.QuickTipManager', 'Taco.core.ux.TextFilter',
         'Taco.core.ux.FilterableDataView', 'Taco.core.ux.grid.MenuColumn',
         'Taco.store.ShippingZones',
         'Taco.model.TargetRule'
-
     ],
+
     contextConfig: {
         supportedLevels: ['m'],
         requiresContextOfType: ['m', 'c', 's']
@@ -38,43 +38,30 @@ Ext.define('Taco.view.settings.shipping.Rules', {
     saveButtonEnabled: false,
     cancelButtonEnabled: false,
 
-    
-
     showActionsColumn: true,
 
     hideSearchToolbar: false,
     selType: 'rowmodel',
-   
 
     enableSearchBarInHeader: false,
-   
-
     autoScroll: true,
 
     enableQuickFilters: false,
 
     advancedSearchConfig: {
         advancedFormCls: 'Taco.core.ux.form.Form',
-
         quickFilterData: [
-            [{ orderStatus: 'Open' }, 'Open Orders'],
-            [{ paymentstatus: 'Paid', fulfillmentStatus: 'NotFulfilled' }, 'Paid, Pending Fulfillment Orders'],
-            [{ fulfillmentStatus: 'Fulfilled' }, 'Fulfilled Orders'],
-            [{ orderStatus: 'Cancelled' }, 'Cancelled Orders'],
-            [{}, 'All Orders']
+            // Entries should be query and display value pairs formatted as follows:
+            //[{ prop: 'value' }, 'Title'],
+            //[{ prop: 'value' }, 'Title']
         ],
 
         emptySearchText: 'Search'
     },
 
-
-
-
     stateful: false,
 
     //stateId: 'statefulOrderGrid',
-
-
 
     initComponent: function () {
         var me = this;
@@ -83,7 +70,7 @@ Ext.define('Taco.view.settings.shipping.Rules', {
 
         me.callParent(arguments);
     },
-   
+
     onCreate: function () {
         return Taco.core.StateManager.attemptNavigate(this.createRoute);
     },
@@ -95,13 +82,13 @@ Ext.define('Taco.view.settings.shipping.Rules', {
 
     launchLoadedEditor: function (record, options) {
         var complexMetaData = { record: record, options: options };
-        
+
         if (this.reFetchRecordOnEdit) {
             delete complexMetaData.record;
         }
 
         Ext.defer(function () {
-            Taco.core.StateManager.attemptNavigate( this.editorRoute + '/' + record.getId(), complexMetaData);
+            Taco.core.StateManager.attemptNavigate(this.editorRoute + '/' + record.getId(), complexMetaData);
         }, 1, this);
     },
     // override this method and adjust the columns if your need a grid with a subset of columns;
@@ -111,7 +98,7 @@ Ext.define('Taco.view.settings.shipping.Rules', {
             {
                 xtype: 'gridcolumn',
                 dataIndex: 'code',
-                stateId:"code",
+                stateId: "code",
                 text: 'Code',
                 hideable: false,
 
@@ -119,89 +106,80 @@ Ext.define('Taco.view.settings.shipping.Rules', {
                 //renderer: function (value, metaData, record, rowIndex, colIndex, store) {
                 //    return '<a href="#" class="taco-launch-editor">' + (value + '</a>');
                 //}
-            }, {
+            },
+            {
                 xtype: 'gridcolumn',
                 dataIndex: 'description',
                 stateId: "description",
                 text: 'Description',
                 flex: 1,
                 width: 150,
-
-            }, {
+            },
+            {
                 xtype: 'taco.menucolumn',
                 flex: 1,
-                menuItems: [{
-                    text: 'Edit',
-                    requiredBehaviors: {
-                        model: 'Taco.model.TargetRule',
-                        behavior: 'update'
+                menuItems: [
+                    {
+                        text: 'Edit',
+                        requiredBehaviors: {
+                            model: 'Taco.model.TargetRule',
+                            behavior: 'update'
+                        },
+                        menuColumnHandler: function (item, eventData) {
+                            me.launchLoadedEditor(eventData.record);
+                        }
                     },
-                    menuColumnHandler: function (item, eventData) {
-                        me.launchLoadedEditor(eventData.record);
-                    }
-                },
-                {
-                    text: 'Duplicate',
-                    requiredBehaviors: {
-                        model: 'Taco.model.TargetRule',
-                        behavior: 'create'
-                    },
-                    menuColumnHandler: function(item, eventData) {
-                        Taco.core.StateManager.attemptNavigate(me.createRoute, {
-                            duplicateSource: {
-                                description: eventData.record.get('description'),
-                                expression: eventData.record.get('expression'),
-                            }
-                        });
-                    }
-                },
-
-                {
-                    text: 'Delete',
-                    requiredBehaviors: {
-                        model: 'Taco.model.TargetRule',
-                        behavior: 'update'
-                    },
-                    menuColumnHandler: function (item, eventData) {
-
-                        Ext.MessageBox.show({
-                            title: 'Delete',
-                            // pushes the buttons to the right to be consistant with our dialog ux.
-                            rightJustifyButtons: true,
-                            // reverses the order of the buttons
-                            reverseOrder: true,
-                            msg: "Are you sure you want to delete " + eventData.record.get('code') + "?",
-                            closable: false,
-                            buttons: Ext.Msg.YESNO,
-                            fn: function (val) {
-                                if (val === 'yes') {
-                                    me.store.remove([eventData.record]);
-                                    me.store.sync({
-                                        failure: function (batch) {
-                                            var msg = 'error occurred';
-                                            try {
-                                                msg = batch.exceptions[0].error.remoteException.getMessage();
-                                            } catch (e) {
-                                                
-                                            }
-                                            Taco.app.fireEvent('setmessage', msg, 'error');
-                                        }
-                                    });
+                    {
+                        text: 'Duplicate',
+                        requiredBehaviors: {
+                            model: 'Taco.model.TargetRule',
+                            behavior: 'create'
+                        },
+                        menuColumnHandler: function (item, eventData) {
+                            Taco.core.StateManager.attemptNavigate(me.createRoute, {
+                                duplicateSource: {
+                                    description: eventData.record.get('description'),
+                                    expression: eventData.record.get('expression'),
                                 }
-                            }
-                        });
-
+                            });
+                        }
+                    },
+                    {
+                        text: 'Delete',
+                        requiredBehaviors: {
+                            model: 'Taco.model.TargetRule',
+                            behavior: 'update'
+                        },
+                        menuColumnHandler: function (item, eventData) {
+                            Ext.MessageBox.show({
+                                title: 'Delete',
+                                // pushes the buttons to the right to be consistant with our dialog ux.
+                                rightJustifyButtons: true,
+                                // reverses the order of the buttons
+                                reverseOrder: true,
+                                msg: "Are you sure you want to delete " + eventData.record.get('code') + "?",
+                                closable: false,
+                                buttons: Ext.Msg.YESNO,
+                                fn: function (val) {
+                                    if (val === 'yes') {
+                                        me.store.remove([eventData.record]);
+                                        me.store.sync({
+                                            failure: function (batch) {
+                                                var msg = 'error occurred';
+                                                try {
+                                                    msg = batch.exceptions[0].error.remoteException.getMessage();
+                                                }
+                                                catch (e) { }
+                                                Taco.app.fireEvent('setmessage', msg, 'error');
+                                            }
+                                        });
+                                    }
+                                }
+                            });
+                        }
                     }
-                }]
+                ]
             }
         ];
-
-
-
-    },
-
-
-
+    }
 });
-
-

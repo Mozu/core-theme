@@ -46,6 +46,16 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
 		    string originalOrderId;
 		    var filter = "";
 
+		    if (!string.IsNullOrEmpty(pagingParams.id))
+		    {
+                var dcReturn = (await _returnWebApiClient.GetReturn(pagingParams.id)).ReadAsSync();
+		        if (dcReturn != null)
+		        {
+		            return List2(Mapper.Map<Return>(dcReturn));
+		        }
+                throw new HttpResponseException(HttpStatusCode.NotFound);
+		    }
+
             if (extFilter.TryGetValue("originalOrderId", out originalOrderId))
 		    {
 		        filter = string.Format("originalorderid eq \"{0}\" and status ne \"{1}\"", originalOrderId, "null");

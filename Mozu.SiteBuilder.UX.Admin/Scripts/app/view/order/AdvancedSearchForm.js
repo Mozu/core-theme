@@ -14,31 +14,22 @@ Ext.define('Taco.view.order.AdvancedSearchForm', {
     },
     initComponent: function () {
         var me = this,
-            data = [{id:null,name:'All'}],
+            data = [{ id: null, name: 'All' }],
             sites;
-        
+
         Ext.each(Taco.app.context.masterCatalogs, function (mc) {
-            Ext.Array.push(data,mc.sites);
+            Ext.Array.push(data, mc.sites);
         });
-        
+
         sites = Ext.create('Ext.data.Store', {
             fields: ['id', 'name'],
-            data:data
+            data: data
         }),
 
-        this.items = [{
+        this.items = [
+            {
                 name: 'keyword',
                 fieldLabel: 'Keyword Search'
-            },
-            {
-                xtype: 'combobox',
-                name: 'site',
-                allowBlank: true,
-                editable: false,
-                store: sites,
-                valueField: 'id',
-                displayField: 'name',
-                fieldLabel: 'Site'
             },
             {
                 name: 'firstName',
@@ -87,47 +78,24 @@ Ext.define('Taco.view.order.AdvancedSearchForm', {
                 store: Ext.create('Ext.data.Store', {
                     fields: ['id', "name"],
                     data: [
-                    {
-                        name:"Open",
-                        id:"Open"
-                    },
-                        {
-                            name: "Submitted",
-                            id: "Submitted"
-                        }, {
-                            name: "Processing",
-                            id: "Processing"
-                        }, {
-                            name: "Pending",
-                            id: "Pending"
-                        },
-                        {
-                            name: "Pending Review",
-                            id: "PendingReview"
-                        }, {
-                            name: 'Accepted',
-                            id: 'Accepted'
-                        }, {
-                            name: "Completed",
-                            id: "Completed"
-                        }, {
-                            name: "Cancelled",
-                            id: "Cancelled"
-                        }, {
-                            name: "Closed",
-                            id: "Closed"
-                        }, {
-                            name: "Validated",
-                            id: "Validated"
-                        }, {
-                            name: "Errored",
-                            id: "Errored"
-                        }
+                        { name: "Open", id: "Open" },
+                        { name: "Submitted", id: "Submitted" },
+                        { name: "Processing", id: "Processing" },
+                        { name: "Pending", id: "Pending" },
+                        { name: "Pending Review", id: "PendingReview" },
+                        { name: "Accepted", id: "Accepted" },
+                        { name: "Completed", id: "Completed" },
+                        { name: "Cancelled", id: "Cancelled" },
+                        { name: "Closed", id: "Closed" },
+                        { name: "Validated", id: "Validated" },
+                        { name: "Errored", id: "Errored" },
+                        { name: "Abandoned", id: "Abandoned" }
                     ]
                 })
-            }, {
+            },
+            {
                 xtype: 'combobox',
-                name: 'paymentstatus',
+                name: 'paymentStatus',
                 fieldLabel: 'Payment Status',
                 valueField: 'id',
                 displayField: 'name',
@@ -138,22 +106,14 @@ Ext.define('Taco.view.order.AdvancedSearchForm', {
                 store: Ext.create('Ext.data.Store', {
                     fields: ['id', "name"],
                     data: [
-                        {
-                            name: "Paid",
-                            id: "Paid"
-                        }, {
-                            name: "Unpaid",
-                            id: "Unpaid"
-                        }, {
-                            name: "Pending",
-                            id: "Pending"
-                        }, {
-                            name: "Unpaid,Pending",
-                            id:"Unpaid,Pending"
-                        }
+                        { name: "Paid", id: "Paid" },
+                        { name: "Unpaid", id: "Unpaid" },
+                        { name: "Pending", id: "Pending" },
+                        { name: "Unpaid,Pending", id: "Unpaid,Pending" }
                     ]
                 })
-            }, {
+            },
+            {
                 xtype: 'combobox',
                 name: 'fulfillmentStatus',
                 fieldLabel: 'Fulfillment Status',
@@ -166,25 +126,15 @@ Ext.define('Taco.view.order.AdvancedSearchForm', {
                 store: Ext.create('Ext.data.Store', {
                     fields: ['id', "name"],
                     data: [
-                    {
-                        name: "Not Set",
-                        id: "Null"
-                    },
-                        {
-                            name: "NotFulfilled",
-                            id: "NotFulfilled"
-                        }, {
-                            name: "PartiallyFulfilled",
-                            id: "PartiallyFulfilled"
-                        }, {
-                            name: "Fulfilled",
-                            id: "Fulfilled"
-                        }
+                        { name: "Not Fulfilled", id: "NotFulfilled" },
+                        { name: "Partially Fulfilled", id: "PartiallyFulfilled" },
+                        { name: "Fulfilled", id: "Fulfilled" }
                     ]
                 })
-            }, {
+            },
+            {
                 xtype: 'combobox',
-                name: 'ordertype',
+                name: 'orderType',
                 fieldLabel: 'Order Type',
                 valueField: 'id',
                 displayField: 'name',
@@ -193,16 +143,12 @@ Ext.define('Taco.view.order.AdvancedSearchForm', {
                 store: Ext.create('Ext.data.Store', {
                     fields: ['id', "name"],
                     data: [
-                        {
-                            name: "Online",
-                            id: "Online"
-                        }, {
-                            name: "Offline",
-                            id: "Offline"
-                        }
+                        { name: "Online", id: "Online" },
+                        { name: "Offline", id: "Offline" }
                     ]
                 })
-            }, {
+            },
+            {
                 xtype: 'combobox',
                 name: 'channel',
                 fieldLabel: 'Channel',
@@ -221,25 +167,29 @@ Ext.define('Taco.view.order.AdvancedSearchForm', {
                     type: 'hbox',
                     align: 'middle'
                 },
-                items: [{
+                items: [
+                    {
                         xtype: 'numberfield',
                         name: 'minTotal',
                         hideTrigger: true,
                         keyNavEnabled: false,
                         mouseWheelEnabled: false,
                         width: 200
-                    }, {
+                    },
+                    {
                         xtype: 'component',
                         html: 'to',
                         margin: '0 10'
-                    }, {
+                    },
+                    {
                         xtype: 'numberfield',
                         name: 'maxTotal',
                         hideTrigger: true,
                         keyNavEnabled: false,
                         mouseWheelEnabled: false,
                         width: 200
-                    }]
+                    }
+                ]
             },
             {
                 xtype: 'taco-adminuserfield',
@@ -253,23 +203,27 @@ Ext.define('Taco.view.order.AdvancedSearchForm', {
                     type: 'hbox',
                     align: 'middle'
                 },
-                items: [{
+                items: [
+                    {
                         xtype: 'datefield',
                         name: 'modifiedFrom',
                         altFormats: "c",
-                        //                    fieldLabel: 'Modified From',
+                        //fieldLabel: 'Modified From',
                         width: 200
-                    }, {
+                    },
+                    {
                         xtype: 'component',
                         html: 'to',
                         margin: '0 10'
-                    }, {
+                    },
+                    {
                         xtype: 'datefield',
                         name: 'modifiedTo',
                         altFormats: "c",
                         //fieldLabel: 'Modified To',
                         width: 200
-                    }]
+                    }
+                ]
             }];
         this.callParent(arguments);
     },

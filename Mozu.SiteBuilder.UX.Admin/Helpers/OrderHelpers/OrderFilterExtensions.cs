@@ -25,10 +25,10 @@ namespace Mozu.SiteBuilder.UX.Admin.Helpers.OrderHelpers
         /// </summary>
         public static string ToFilterString(this FilterCollection extFilter, bool? withVariations = null)
         {
-            const string defaultStatus = "(status eq 'Submitted' or status eq 'Processing' or status eq 'Completed' or status eq 'Cancelled' or status eq 'Validated' or status eq 'Accepted' or status eq 'PendingReview')";
-                //"status in['Submitted','Processing','Completed','Cancelled','Validated','Accepted','PendingReview']";
+            const string defaultStatus = "(status ne 'Null' and status ne 'Pending' and status ne 'Abandoned')";
+
             if (extFilter == null || extFilter.Count == 0)
-                return defaultStatus; //"status.in eq \"Submitted,Processing,Completed,Cancelled,Validated,Accepted,PendingReview\"";
+                return defaultStatus;
 
             // TODO: If the filter needs to include products with variations, do something with 'withVariations'
             // Note: this could change, we're waiting on changes to be applied from the services team and/or Britt G.

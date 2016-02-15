@@ -47,8 +47,7 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
 
         }
         
-        [SbActionExtensionFilter(actionId: ActionFilterConstants.NotFoundBeforeAction, executionType: ActionExtensionExecutionTypes.BeforeController)]
-        [SbActionExtensionFilter(actionId: ActionFilterConstants.NotFoundAfterAction, executionType: ActionExtensionExecutionTypes.AfterController)]
+      
         [System.Web.Http.HttpGet]
         public new HttpResponseMessage NotFound()
         {

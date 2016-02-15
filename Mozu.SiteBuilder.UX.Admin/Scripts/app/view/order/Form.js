@@ -81,7 +81,7 @@ Ext.define('Taco.view.order.Form', {
         this.loadNavItems();
     },
     
-    onCustomerChange: function (view, customerRecord) {        
+    onCustomerChange: function (view, customerRecord) {
       
     },
 
@@ -182,7 +182,7 @@ Ext.define('Taco.view.order.Form', {
         
         var subformCfg = {
             record: this.record,
-            orderForm: this                
+            orderForm: this
         };
 
         this.headerCmp = Ext.create('Taco.view.order.Header', Ext.apply({
@@ -199,15 +199,15 @@ Ext.define('Taco.view.order.Form', {
         }, subformCfg));
 
         this.mon(this.headerCmp, 'customerchanged', this.onCustomerChange, me);
-            
+
         items.push(this.headerCmp);
-                
+
         this.orderDetailPanel = Ext.create('Taco.view.order.subform.Detail', Ext.apply({}, subformCfg));
 
         this.paymentPanel = Ext.create('Taco.view.order.subform.Payment', Ext.apply({}, subformCfg));
 
         this.auditLogPanel = Ext.create('Taco.view.order.subform.AuditLog', subformCfg);
-        
+
         // we always show for online orders. for offline orders we need hide the detail panel until the header is filled out.
         if ((me.record.get("orderType")=="Online") || me.isHeaderDataComplete()) {
             items.push(this.orderDetailPanel);
@@ -218,12 +218,12 @@ Ext.define('Taco.view.order.Form', {
         }
 
         // we always show for online orders and conditionaly show for offline orders
-        if ((me.record.get("orderType")=="Online")  || (me.isHeaderDataComplete() && this.record.get("items").length)) {
+        if ((me.record.get("orderType") == "Online") || (me.isHeaderDataComplete() && this.record.get("items").length)) {
             items.push(this.paymentPanel);
         }
 
         // adding the header data check here because there are instances of old data that lack shipping and billing contact.
-        if ((me.record.get("orderType") == "Online") || (this.isEdit() && me.isHeaderDataComplete())) {
+        if (this.isEdit() && me.isHeaderDataComplete()) {
             items.push(Ext.create('Taco.view.order.subform.Return', subformCfg));
         }
 
@@ -236,14 +236,15 @@ Ext.define('Taco.view.order.Form', {
     },
 
     isEdit: function () {
-        return this.record.get('orderStatus') !== 'Pending';
+        var status = this.record.get('orderStatus');
+        return status !== 'Pending' && status !== 'Abandoned';
     },
 
     isErrored: function () {
         return this.record.get('orderStatus') === 'Errored';
     },
 
-    isValid: function () {        
+    isValid: function () {
         var me = this,
             isValid = true,
            errors = [];
@@ -284,9 +285,9 @@ Ext.define('Taco.view.order.Form', {
         return isValid;
     },
 
-    beforeSave: function () {        
-        var retVal = this.isValid();        
-        return retVal
+    beforeSave: function () {
+        var retVal = this.isValid();
+        return retVal;
     },
 
     addSaveTasks: function (tasks) {

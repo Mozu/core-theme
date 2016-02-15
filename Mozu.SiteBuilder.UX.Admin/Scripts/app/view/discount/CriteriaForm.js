@@ -598,16 +598,16 @@ Ext.define('Taco.view.discount.CriteriaForm', {
             treeStore = Taco.core.data.StoreManager.getCategoryTreeByCatalog();
         treeStore.on({
             load: function () {
-                    treeStore.filterBy(function (record) {
-                        var isRealTime = record.get("categoryType") === "DynamicRealTime";
-                        return (!isRealTime);
-                    });
+                treeStore.filterBy(function (record) {
+                    var isRealTime = record.get("categoryType") === "DynamicRealTime";
+                    return (!isRealTime);
+                });
             },
             beforeexpand: function (node, opts) {
-                    node.childNodes = node.childNodes.filter(function (childNode) {
-                        var isRealtime = childNode.data.categoryType === "DynamicRealTime";
-                        return !isRealtime;
-                    });
+                node.childNodes = node.childNodes.filter(function (childNode) {
+                    var isRealtime = childNode.data.categoryType === "DynamicRealTime";
+                    return !isRealtime;
+                });
             },
             scope: this
         });

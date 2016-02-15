@@ -29,7 +29,6 @@ Ext.define('Taco.view.couponSet.Grid', {
         deleteFromGrid: 'Taco.core.ux.mixins.DeleteFromGrid'
     },
 
-    
     contextConfig: {
         supportedLevels: ['c'],
         requiresContextOfType: ['c', 's']
@@ -77,16 +76,10 @@ Ext.define('Taco.view.couponSet.Grid', {
 
     advancedSearchConfig : {
         advancedFormCls: 'Taco.view.couponSet.AdvancedSearchForm',
-
         quickFilterData: [
-            [{ orderStatus: 'Open' }, 'Open Orders'],
-            [{ paymentstatus: 'Unpaid', orderStatus: 'Open' }, 'Unpaid Orders'],
-            [{ paymentstatus: 'Paid', fulfillmentStatus: 'NotFulfilled' }, 'Paid, Pending Fulfillment Orders'],
-            [{ orderStatus: 'Pending', ordertype: 'Offline' }, 'Pending Orders'],
-            [{ fulfillmentStatus: 'Fulfilled' }, 'Fulfilled Orders'],
-            [{ orderStatus: 'Cancelled' }, 'Cancelled Orders'],
-            [{ orderStatus: 'Errored' }, 'Errored Orders'],
-            [{}, 'All Orders']
+            // Entries should be query and display value pairs formatted as follows:
+            //[{ prop: 'value' }, 'Title'],
+            //[{ prop: 'value' }, 'Title']
         ],
 
         emptySearchText: 'Search'
@@ -97,10 +90,7 @@ Ext.define('Taco.view.couponSet.Grid', {
     stateful: true,
     stateId: 'statefulCouponSetGrid',
 
-    statics: {
-
-    },
-
+    statics: { },
 
     initComponent: function () {
         var me = this;
@@ -247,7 +237,6 @@ Ext.define('Taco.view.couponSet.Grid', {
             });
         }
 
-
         if (this.enableDeleteAction) {
             actions.push({
                 text: 'Delete',
@@ -263,7 +252,6 @@ Ext.define('Taco.view.couponSet.Grid', {
         }
 
         return actions;
-
     },
 
     onActionMenuShow: function (menu, eventData) {
@@ -300,7 +288,6 @@ Ext.define('Taco.view.couponSet.Grid', {
             this.openEditor(record, record.get('couponSetType'), false);
         }, 1, this);
     },
-
 
     onItemClick: function (view, record, elm, index, e) {
         // console.log(e.target);
@@ -415,5 +402,4 @@ Ext.define('Taco.view.couponSet.Grid', {
             }
         }
     }
-
 });
