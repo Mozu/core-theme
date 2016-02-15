@@ -451,6 +451,10 @@ Ext.define('Taco.view.order.subform.Detail', {
                 margin: {
                     right:2
                 },
+                requiredBehaviors: {
+                    model: 'Taco.model.Order',
+                    behavior: 'cancel'
+                },
                 handler: function () {
                     this.detailGrid.cancelOrder();
                 },

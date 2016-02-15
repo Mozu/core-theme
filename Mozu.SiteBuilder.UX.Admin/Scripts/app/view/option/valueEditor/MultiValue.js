@@ -139,7 +139,6 @@
         
         dirtyCheck: function () {
             var newState = this.isDirty();
-            console.log('go gary');
             if (this.dirtyState === newState) {
                 return;
             }

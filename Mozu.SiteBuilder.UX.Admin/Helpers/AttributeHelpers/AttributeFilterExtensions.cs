@@ -39,7 +39,11 @@ namespace Mozu.SiteBuilder.UX.Admin.Helpers.AttributeHelpers
             switch (filter.property.ToLowerInvariant())
             {
                 case "all":
-                    return String.Format("({1} cont {0} or {2} cont {0} or {3} cont {0})", filter.escapedValue, ATTRIBUTE_CONTENT_NAME, ATTRIBUTE_ADMIN_NAME, ATTRIBUTE_CODE);
+                    var strAll = "";
+                    var formatStr = "({1} cont {0} or {2} cont {0} or {3} cont {0})";
+                    strAll += string.Join(" and ", filter.escapedValue.ToString().Trim().Split(new char[] {' '}, StringSplitOptions.RemoveEmptyEntries)
+                        .Select(searchString => string.Format(formatStr, searchString, ATTRIBUTE_CONTENT_NAME, ATTRIBUTE_ADMIN_NAME, ATTRIBUTE_CODE)));
+                    return strAll;
                 case "id":
                 case "type":
 

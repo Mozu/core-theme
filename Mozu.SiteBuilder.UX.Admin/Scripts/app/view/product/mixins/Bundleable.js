@@ -80,7 +80,9 @@ Ext.define('Taco.view.product.mixins.Bundleable', {
             general: true,
             shipping: true,
             merchandising: true,
-            seo: true
+            seo: true,
+            properties: this.hasProperties(),
+            extras: this.hasExtras()
         };
 
         // globalForm and NOT singleSite
@@ -190,6 +192,22 @@ Ext.define('Taco.view.product.mixins.Bundleable', {
         me.loadNavItems();
 
 
+    },
+
+    hasProperties: function() {
+        var me = this;
+        if (me.product && me.product.productTypeRecord) {
+            var props = me.product.productTypeRecord.getProperties();
+            return !!props.getCount()
+        }
+    },
+
+    hasExtras: function() {
+        var me = this;
+        if (me.product && me.product.productTypeRecord) {
+            var extras = me.product.productTypeRecord.getExtras();
+            return !!extras.getCount();
+        }
     },
 
     onProductUsageChange: function (generalView, value) {

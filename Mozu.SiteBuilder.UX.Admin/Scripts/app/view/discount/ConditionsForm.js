@@ -396,10 +396,9 @@ Ext.define('Taco.view.discount.ConditionsForm', {
         var me = this;
         
         this.conditionalCategoryPanel = Ext.create('Taco.view.discount.widget.CategoryPicker', {
-            catStore: this.record.getCategoryStore(),
             record: this.record,
+            catStore: this.record.getCategoryStore(),
             name: 'conditionalCategories',
-            showDynamicRealTimeCategories:false,
             listWidth: 407,
             listeners: {
                 scope: me,

@@ -41,7 +41,6 @@
             this.store = store;
 
             this.dataView.bindStore(store);
-            console.log('bind store1');
 
             store.on({
                 datachanged: {
@@ -73,8 +72,6 @@
                 console.log('no dataview yet!');
                 return;
             }
-       
-            console.log('bind custom events', this.store.count());
 
             rows = dataViewEl.query('.taco-option-value-row');
 
@@ -87,14 +84,10 @@
                 {
                     return;
                 }
-
-                //console.log('bind record', record, index, input);
                 input.addListener('focus', function () {
                     me.focusIndex = index;
-                    //console.log('set focus index', index);
                 });
                 input.addListener('blur', function () {
-                    console.log('bluring', input.id);
                     if (record.get('value') === input.getValue())
                     {
                         return;
@@ -102,7 +95,6 @@
                     record.set('value', input.getValue());
                 });
                 input.addListener('keydown', function (e) {
-                    //console.log('keydown', e.keyCode);
                     if (e.keyCode === 13)
                     {
                         e.stopEvent();
@@ -138,7 +130,6 @@
 
             if (input)
             {
-                console.log('input.focus()');
                 input.focus();
                 return;
             }

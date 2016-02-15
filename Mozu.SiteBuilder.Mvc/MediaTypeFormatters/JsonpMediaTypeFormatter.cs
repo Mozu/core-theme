@@ -7,6 +7,7 @@ using System.Net.Http;
 using System.Net.Http.Formatting;
 using System.Net.Http.Headers;
 using System.Text;
+using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 
 namespace Mozu.SiteBuilder.Mvc.MediaTypeFormatters
@@ -18,13 +19,14 @@ namespace Mozu.SiteBuilder.Mvc.MediaTypeFormatters
         private readonly MediaTypeFormatter _jsonMediaTypeFormatter;
         private readonly string _callbackQueryParameter;
         private readonly string _callback;
-
+        static readonly Regex _cleanCallback = new Regex("^[\\w\\.-]+$");
         public JsonpMediaTypeFormatter(MediaTypeFormatter jsonMediaTypeFormatter, string callbackQueryParameter = "callback")
         {
             if (jsonMediaTypeFormatter == null)
                 throw new ArgumentNullException("jsonMediaTypeFormatter");
             if (callbackQueryParameter == null)
                 throw new ArgumentNullException("callbackQueryParameter");
+           
             this._jsonMediaTypeFormatter = jsonMediaTypeFormatter;
             this._callbackQueryParameter = callbackQueryParameter;
             this.SupportedMediaTypes.Add(new MediaTypeHeaderValue("text/javascript"));
@@ -92,8 +94,20 @@ namespace Mozu.SiteBuilder.Mvc.MediaTypeFormatters
             callback = (string)null;
             if (request == null || request.Method != HttpMethod.Get)
                 return false;
-            callback = Enumerable.FirstOrDefault<string>(Enumerable.Select<KeyValuePair<string, string>, string>(Enumerable.Where<KeyValuePair<string, string>>(request.GetQueryNameValuePairs() , (Func<KeyValuePair<string, string>, bool>)(kvp => kvp.Key.Equals(callbackQueryParameter, StringComparison.OrdinalIgnoreCase))), (Func<KeyValuePair<string, string>, string>)(kvp => kvp.Value)));
-            return !string.IsNullOrEmpty(callback);
-        }
+            callback = Enumerable.FirstOrDefault<string>(Enumerable.Select<KeyValuePair<string, string>, string>(Enumerable.Where<KeyValuePair<string, string>>(request.GetQueryNameValuePairs(), (Func<KeyValuePair<string, string>, bool>)(kvp => kvp.Key.Equals(callbackQueryParameter, StringComparison.OrdinalIgnoreCase))), (Func<KeyValuePair<string, string>, string>)(kvp => kvp.Value)));
+            if (string.IsNullOrEmpty(callback))
+            {
+                return false;
+            }
+          
+            //check for potential xxs
+            if (!_cleanCallback.IsMatch(callback))
+            {
+                throw new ArgumentException(string.Format("potentially unsafe callback {0}", callback));
+            }
+
+            return true;
+        }   
+    
     }
 }

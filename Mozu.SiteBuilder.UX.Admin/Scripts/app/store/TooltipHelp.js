@@ -56,6 +56,9 @@ Ext.define('Taco.store.TooltipHelp', {
             key: 'discount.criteria.applyToProductsWithSalePrice',
             value: 'If unchecked, items on sale will not be discounted.'
         }, {
+            key: 'discount.criteria.applyDiscountToHighestPricedProduct',
+            value: 'Placeholder.'
+        }, {
             key: 'discount.criteria.scope',
             value: 'Choose what will be discounted.'
         }, {

@@ -170,9 +170,9 @@ namespace Mozu.SiteBuilder.Mvc.OAF
                 return _catTask.Value.Result.FindByCode(categoryCode);
             }
             [Microsoft.ClearScript.ScriptMember("findBySlug")]
-            public IEnumerable<Category> FindBySlug(string categorySlug)
+            public IList<Category> FindBySlug(string categorySlug)
             {
-                return _catTask.Value.Result.FindBySlug(categorySlug);
+                return _catTask.Value.Result.FindBySlug(categorySlug).ToList();
             }
         }
     }

@@ -15,7 +15,7 @@ Ext.define('Taco.core.ux.form.TabForm', {
 
     initComponent: function () {
         var me = this;
-        this.cls = this.cls || '';    
+        this.cls = this.cls || '';
         this.cls += ' taco-tabform';
 
         var originalItems = [];
@@ -37,7 +37,7 @@ Ext.define('Taco.core.ux.form.TabForm', {
                 type: 'card',
                 deferredRender: true
             },
-            cls: 'taco-form-tabform-nav-container',
+            cls: '',
             items: originalItems,
             listeners: {
                 scope: me,
@@ -47,6 +47,7 @@ Ext.define('Taco.core.ux.form.TabForm', {
                 }
             }
         });
+
 
         this.relayEvents(this.formContainer, ['add']);
 
@@ -58,18 +59,19 @@ Ext.define('Taco.core.ux.form.TabForm', {
             xtype: 'dataview',            
             store: this.navStore,
             itemId: 'navFormNav',
-            cls: 'taco-form-tabform-nav',
+            cls: 'taco-form-nav',
             autoShow: true,
-            itemSelector: '.taco-form-tabform-nav-link',
+            itemSelector: '.taco-link-button',
             plugins: ["autoselect"],
+            width: '100%',
+            height: 39,
             selModel: Ext.create('Ext.selection.DataViewModel',{
                 enableKeyNav : false
             }),
-            listeners: {                
+            listeners: {
                 itemclick: function (view, record, item, index, e, eOpts) {
                     this.onNavClick(view, record, item, index, e);
-                    Ext.fly(item).focus();
-                },                
+                },
                 itemkeydown: function (view, record, item, index, e) {
                     if (e.getKey() == Ext.EventObject.ENTER) {
                         item.click();
@@ -80,9 +82,7 @@ Ext.define('Taco.core.ux.form.TabForm', {
             tpl: [
                 '<ul>',
                     '<tpl for=".">',
-                        //'<tpl if="this.isVisible(values)">',
-                            '<li tabIndex="0" class="taco-form-tabform-nav-link"><tpl if="values.tabTitle">{tabTitle}<tpl else>{title}</tpl></li>',
-                        //'</tpl>',
+                        '<li tabIndex="0" class="taco-link-button <tpl if="xindex == 1">active</tpl> "><tpl if="values.tabTitle">{tabTitle}<tpl else>{title}</tpl></li>',
                     '</tpl>',
                 '</ul>',
                 {
@@ -93,70 +93,81 @@ Ext.define('Taco.core.ux.form.TabForm', {
             ]
         })
 
-        
-        
-
-        
+        this.scrollSpacer = Ext.widget({
+            xtype: 'component',
+            width: '100%',
+            height: 0,
+            html: ''
+        });
 
         var items = excludedItems;
-        items.push(this.leftNav)
-        items.push(this.formContainer)
+        items.push(this.leftNav);
+        items.push(this.scrollSpacer);
+        items.push(this.formContainer);
 
-        this.items = items;        
+        this.items = items;
 
         this.callParent(arguments);
 
         this.nav = this.down('#navFormNav');
 
         this.on({
-            boxready: this.initLeftNav,
+            boxready: function () {
+                this.getWrapper().body.el.on('scroll', this.checkScroll, this);
+            },
+            afterlayout: this.checkScroll,
             scope: this
-        });        
+        });
 
+    },
+
+    initPosition: function () {
+        this.formContainer.getPosition();
+    },
+
+    checkScroll: function () {
+        var formTop = this.formContainer.getPosition()[1],
+            editorTop = this.getWrapper().getPosition()[1],
+            height = 39;
+
+        if (formTop < editorTop + height) {
+            this.leftNav.getEl().setStyle({
+                position: 'fixed',
+                top: editorTop + 'px',
+                width: this.getWrapper().getWidth() + 'px'
+            });
+            this.scrollSpacer.getEl().setStyle({
+                height: height + 'px'
+            });
+        } else {
+            this.scrollSpacer.getEl().setStyle({
+                height: '0px'
+            });
+            this.leftNav.getEl().setStyle({
+                position: 'relative',
+                top: 'auto',
+                width: '100%'
+            });
+        }
     },
 
     getWrapper: function () {
-        var wrapper = Ext.ComponentQuery.query('fulleditor')[0];
-        // need to find the fulleditor class since it is the scroll container;
-        return wrapper;
-    },
-
-    alignLeftNav: function () {        
-        var offset = this.leftNav.el.getAlignToXY(this.formContainer.el, 'tr-tl', [0, 0]);
-        
-        // need to account for scrolling when this gets realigned;
-        var scrollTop = this.getWrapper().body.el.dom.scrollTop;
-        var y = offset[1] + this.leftNavTopOffset + scrollTop;
-        //this.leftNav.el.moveTo(null, offset[1] + this.leftNavTopOffset)
-        this.leftNav.el.moveTo(null, y)
-        if (this.leftNav.store.count()) {
-            //this.leftNav.show();
-            //this.formContainer.show();
-        } else {
-            //this.leftNav.hide();
-            //this.formContainer.hide();
+        if (!this._wrapper) {
+            this._wrapper = Ext.ComponentQuery.query('fulleditor')[0];
         }
-
+        return this._wrapper;
     },
 
-    initLeftNav: function () {
-        
-        this.alignLeftNav();
-        this.getWrapper().on({
-            resize: function () {                
-
-            },
-            scope: this
-        });
-        
-        if (this.leftNav.store.count()) {
-            this.leftNav.getSelectionModel().select(0);
-        }
-    },
-
-    onNavClick: function (view, record) {
+    onNavClick: function (view, record, item) {
         var wrapper = this.getWrapper().body.el,
             targetY;
+
+        Ext.each(this.getEl().query('li.active'), function (dom) {
+            Ext.fly(dom).removeCls('active');
+        });
+
+        Ext.fly(item).focus().addCls('active');
+
 
         if (record.raw.getEl) {
             var panel = Ext.getCmp(record.get('id'));
@@ -201,8 +212,10 @@ Ext.define('Taco.core.ux.form.TabForm', {
 
         if (this.navStore.count()) {
             this.formContainer.show();
+            this.leftNav.show();
         } else {
-            this.formContainer.hide();  
+            this.formContainer.hide();
+            this.leftNav.hide();
         }
     }
 });

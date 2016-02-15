@@ -53,11 +53,6 @@
             });
             
             optionValueStore = this.option.optionValues();
-            console.log('bing') ;
-            // optionValueStore.removeAll();
-//             
-            // optionValueStore.add({});
-            //this.optionValue = optionValueStore.getAt(0);
             
             optionValueStore.on({
                 update: {
@@ -84,7 +79,6 @@
         },
         
         update: function () {
-            console.log('UPDATE');
             this.input.update({
                 placeholder: this.option.optionValues().getAt(0).get('value'),
                 min: this.option.get('min'),

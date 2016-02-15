@@ -238,8 +238,8 @@ Ext.define('Taco.view.generalSettings.subform.About', {
                                     elementId: 'bust-cdn-cache-button',
                                     hoverTarget: 'bodyEl',
                                     messageKey: 'settings.general.bustCdnCache',
-                                    offsetLeft: 20,
-                                    offsetTop: 15
+                                    arrowPosition: 'right',
+                                    offsetLeft: 300
                                 })
                         
                             }

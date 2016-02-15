@@ -310,7 +310,6 @@ Ext.define('Taco.view.filter.ExpressionTreePanel', {
                      key: 8,
 
                      fn: function () {
-                         console.log("preventing backspace key from navigating");
                      },
                      // prevents the event from bubbling past the modal;
                      defaultEventAction: 'stopEvent',
@@ -491,7 +490,6 @@ Ext.define('Taco.view.filter.ExpressionTreePanel', {
     },
 
     deleteFilter: function() {
-        console.log("delete filter")
     },
 
     containerDataTpl : {
@@ -654,30 +652,6 @@ Ext.define('Taco.view.filter.ExpressionTreePanel', {
     getExpressionText: function(jsonData, callback) {
         var me = this;
 
-        /*function hasConditionNodes(node) {
-            var childNodes = node.childNodes;
-
-            if (childNodes.length < 1) { return false; }
-
-            for (i = childNodes.length - 1; i >= 0; i--) {
-
-                var childNode = childNodes[i];
-
-                if (childNode.data.type === 'container') {
-                    return hasConditionNodes(childNode);
-                } else {
-                    return true;
-                }
-
-            }
-
-        }
-
-        var hasNodes = hasConditionNodes(me.getRootNode());
-
-        console.log(hasNodes)
-
-        if( !hasNodes ) { return; }*/
         
         var config = {
             url: '/admin/app/category/validateexpression',

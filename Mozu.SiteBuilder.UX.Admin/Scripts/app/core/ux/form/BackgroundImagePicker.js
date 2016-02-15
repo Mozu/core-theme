@@ -13,7 +13,6 @@ Ext.define('Taco.core.ux.form.BackgroundImagePicker', {
             name: 'background-image',
             listeners: {
                 change: function () {
-                    console.log('field change');
                 },
                 scope: this
             }
@@ -64,7 +63,6 @@ Ext.define('Taco.core.ux.form.BackgroundImagePicker', {
 
         this.on({
             afterrender: function () {
-                console.log(this.value);
                 this.getForm().setValues(this.value);
                 this.relayEvents(this, ['change'], 'background');
             },

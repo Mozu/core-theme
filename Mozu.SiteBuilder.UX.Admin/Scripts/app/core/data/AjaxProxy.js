@@ -12,7 +12,7 @@
             var me = this;
             this.callParent([config]);
             me.on('exception', function() {
-                console.log('ajaxproxy-exception', arguments);
+                console.warn('ajaxproxy-exception', arguments);
             }, me);
          
         },

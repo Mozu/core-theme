@@ -351,9 +351,6 @@ Ext.define('Taco.view.order.widget.PaymentPanel', {
         var me = this,
             data = Ext.apply({ billingContact: me.order.data.billingContact }, me.record.data);
 
-        console.log(data);
-
-
         me.paymentDetails = Ext.create('Ext.Component', {
             cls: "orderform-payment-paymentDetails",
             columnWidth: 1,

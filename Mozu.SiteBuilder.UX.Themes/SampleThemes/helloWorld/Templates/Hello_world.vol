@@ -1,2 +1,0 @@
-﻿{% extends "layouts\default" %}
-<img src="/resources/images/hello_world/hello.png" />

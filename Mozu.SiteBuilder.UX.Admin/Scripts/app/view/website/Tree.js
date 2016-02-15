@@ -409,7 +409,6 @@ Ext.define('Taco.view.website.Tree', {
             });
         cmsDoc.destroy({
             success: function () {
-                console.log('link deleted');
                 record.destroy();
                 me.fireEvent('navigationchange', me);
             },

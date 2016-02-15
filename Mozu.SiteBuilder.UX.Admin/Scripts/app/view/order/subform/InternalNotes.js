@@ -31,7 +31,11 @@ Ext.define('Taco.view.order.subform.InternalNotes', {
             scale: 'medium',
             text: 'Add Note',
             scope: this.grid,
-            handler: this.grid.onRowEditorCreate
+            handler: function () {
+                this.changeCards(1);
+                this.grid.onRowEditorCreate();
+            },
+            scope: this
         }];
 
         this.items = [{
@@ -45,6 +49,9 @@ Ext.define('Taco.view.order.subform.InternalNotes', {
         this.activeTab = this.store.count() > 0 ? 1 : 0;
 
         this.callParent(arguments);
+
+        this.mon(this.store, 'load', this.changeCards, this);
+        this.on('boxready', this.changeCards, this);
     },
 
 
@@ -57,6 +64,11 @@ Ext.define('Taco.view.order.subform.InternalNotes', {
     refreshGrid: function () {
         this.down('grid').getView().refresh();
 
-        this.getLayout().setActiveItem(this.store.count() > 0 ? 1 : 0);
+        this.changeCards();
+    },
+
+    changeCards: function (value) {
+        var activeItem = (typeof value === 'number') ? value : (this.store.count() > 0 ? 1 : 0);
+        this.getLayout().setActiveItem(activeItem);
     }
 });

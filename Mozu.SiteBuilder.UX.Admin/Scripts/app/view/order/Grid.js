@@ -91,10 +91,6 @@ Ext.define('Taco.view.order.Grid', {
             headerWidth: 37
         });
 
-        if (window.location.href.indexOf('/edit/') !== -1) {
-            console.log(this.up('order-split'))
-        }
-
         //todo: need to work on disabling/enabling of actions -- talk with commerce peeps?
 
         this.bulkActionConfig = {
@@ -119,6 +115,10 @@ Ext.define('Taco.view.order.Grid', {
                     text: 'Cancel',
                     disabled: true,
                     scope: this,
+                    requiredBehaviors: {
+                        model: 'Taco.model.Order',
+                        behavior: 'cancel'
+                    },
                     handler: function () {
                         this.doBulkAction('CancelOrder');
                     }
@@ -549,6 +549,10 @@ Ext.define('Taco.view.order.Grid', {
                             }
                         }, {
                             text: 'Cancel Order',
+                            requiredBehaviors: {
+                                model: 'Taco.model.Order',
+                                behavior: 'cancel'
+                            },
                             itemId: "cancelAction",
                             menuColumnHandler: function (item, eventData) {
                                 var me = this,

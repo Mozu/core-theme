@@ -18,6 +18,7 @@ using Mozu.Core.Actions.SecureAppData.Clients;
 using Mozu.Core.Logging;
 using Mozu.SiteBuilder.Mvc.ViewEngine;
 using NDjango.Interfaces;
+using Mozu.SiteBuilder.Mvc.Contexts;
 
 namespace Mozu.SiteBuilder.Mvc.OAF
 {
@@ -62,6 +63,11 @@ namespace Mozu.SiteBuilder.Mvc.OAF
             HttpRequestMessage request, 
             string functionId , 
             CancellationToken cancellationToken);
+
+        Task<HttpResponseMessage> SendAsync(HttpRequestMessage request, 
+           HttpResponseMessage response,
+           string functionId,
+           CancellationToken cancellationToken);
     }
 
     class ArcJSHttpHandlerRunner : FunctionRunner<ApiActionExtensionFilterContext>, IArcJSHttpHandlerRunner , IResourceProvider
@@ -76,7 +82,7 @@ namespace Mozu.SiteBuilder.Mvc.OAF
 
 
 
-       
+
         public async Task<HttpResponseMessage> SendAsync(HttpConfiguration configuration, 
             IHttpRouteData routeData,
             HttpRequestMessage request, 
@@ -115,10 +121,33 @@ namespace Mozu.SiteBuilder.Mvc.OAF
             task.Result.FirstOrDefault(x => string.Equals(x.FunctionId, id, StringComparison.OrdinalIgnoreCase)));
         }
 
-
+      
         Tuple<object, HttpStatusCode> IResourceProvider.GetResource(HttpActionContext ctx)
         {
             return new Tuple<object, HttpStatusCode>(null, HttpStatusCode.NotImplemented);
+        }
+
+        public async Task<HttpResponseMessage> SendAsync(HttpRequestMessage request, HttpResponseMessage response , string functionId, CancellationToken cancellationToken)
+        {
+            this.ActionId = functionId;
+          
+            if ((await this.EnsureFunctions().ConfigureAwait(false)) ==0 )
+            {
+                return response;
+            }
+
+            var sbAEF = new SbActionExtensionFilter();
+            var cctx = new HttpControllerContext(request.GetConfiguration(), request.GetRouteData(), request);
+            var desc = new ArcJSHttpActionDescriptor() { SettableActionName = functionId };
+            var actionContext = new HttpActionContext(cctx, desc) { Response = response };
+            
+
+
+            var arcCtx = sbAEF.CreateFunctionContextExternal(actionContext);
+            var handler = sbAEF.CreateHandler(actionContext);
+            await this.ExecuteFunctions(arcCtx, handler);
+            var obj = request.Resolve<NavigationContext>().Breadcrumbs;
+            return actionContext.Response;
         }
     }
 }

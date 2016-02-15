@@ -204,9 +204,9 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
                 return FromTheme(theme);
             }
 
-            return null;
+                return null;
 
-        }
+            }
 
         private Mozu.Tenant.Contracts.Entitlement FromTheme(Theme theme)
         {
@@ -297,7 +297,8 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
         [HttpGetRoute(UriTemplate = "list")]
         public async Task<Response<List<ThemeDTO>>> GetListThemes()
         {
-            var localThemeDir = _themeRepository.GetLocalThemePath();
+            var localThemeIds = _themeRepository.GetLocalThemesIds();
+          //  var localThemeDirs = _themeRepository.GetLocalThemePaths();
             var genSettings = await _generalSettingsWebApiClient.ReadSettings();
             var entitlements = (await _tenantClient.GetSiteEntitlements(this.SbApiContext.TenantId, this.SbApiContext.SiteId)).ReadAsSync();
 
@@ -309,7 +310,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
             }
 
             var coreEntitlements =
-                Directory.GetDirectories(localThemeDir)
+                localThemeIds
                 .Select(x => GetEntitlementFromDirectory(x, allowNonProductionThemes))
                 .Where(x => x != null);
 
@@ -381,7 +382,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
             var themeIds = new List<string>();
             var entitlements = (await _tenantClient.GetSiteEntitlements(this.SbApiContext.TenantId, this.SbApiContext.SiteId)).ReadAsSync();
 
-            var localThemeDir = _themeRepository.GetLocalThemePath();
+           
             var genSettings = await _generalSettingsWebApiClient.ReadSettings();
 
             if (genSettings.DesktopTheme != null && !String.IsNullOrEmpty(genSettings.DesktopTheme.Id))

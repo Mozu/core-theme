@@ -186,40 +186,32 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
 
             return List2(retList);
         }
-
+        
         [HttpPostRoute(UriTemplate = "update")]
         public async Task<Response<List<Category>>> UpdateCategory(List<Category> categories)
         {
             var returnList = new List<Category>();
-            
+
             if (categories.Count == 1)
             {
                 //single record Create/Update
-                var cat = categories.First(); //TODO: could there only be one from the category grid?  then it would delete the properties that wasn't in projection
+                var cat = categories.First();
                 var dcCat = Mapper.Map<DC.Category>(cat);
                 var taskResult = (await _categoriesClient.UpdateCategory(dcCat, cat.Id, false)).ReadAsAsync();
                 returnList.Add(Mapper.Map<Category>(taskResult.Result));
                 return List2(returnList);
             }
 
+            // Multiple records in list assumes we only update the parent-id and sequence
+            /* TODO: we really could send less data from the client when changing sequence   */
 
-            //Multiple records in list assumes we only update the parent-id and sequence
-            var intArrayFilterString = _categoryHelper.GetInFilterStringForIds(categories); //TODO: might need to split this when the list hits maximum URI length
-            //Get current categories
-            var dbCategories = (await (_categoriesClient.GetCategories(filter: intArrayFilterString, pageSize: categories.Count)))
-                .ReadAsSync();
-            var dbCategoriesList = (dbCategories.Items).ToList();
-            
-            //Assuming we ONLY update sequence and parentId 
-            _categoryHelper.AdjustSequence(categories, dbCategoriesList);
-            foreach (var category in dbCategoriesList)
+            var inputSequenceList = _categoryHelper.GetCategorySequenceCollection(categories);
+
+            if (inputSequenceList.Items.Any())
             {
-                //AWAIT each task and attempting to avoid deadlocks due to sproc concurrency: "Product.spAdmin_FixCategoryTreeSequences"
-                var taskResult = (await _categoriesClient.UpdateCategory(category, category.Id, false)).ReadAsAsync();
-                var mapped = Mapper.Map<Category>(taskResult.Result);
-                returnList.Add(mapped);
+                await Task.WhenAll(_categoriesClient.UpdateCategoryTree(inputSequenceList));
             }
-            return List2(returnList);
+            return List2(categories); //NOTE: returns the same as input
         }
 
         [HttpPostRoute(UriTemplate = "create")]
