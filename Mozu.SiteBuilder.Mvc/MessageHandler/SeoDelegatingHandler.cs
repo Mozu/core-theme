@@ -228,18 +228,19 @@ namespace Mozu.SiteBuilder.Mvc.MessageHandler
             };
         }
 
-        RedirectEntry FindRedirectForRequestUri(RuntimeRedirects redirects, string stem, NameValueCollection queryString)
+        static RedirectEntry FindRedirectForRequestUri(RuntimeRedirects redirects, string stem, NameValueCollection queryString)
         {
             RedirectEntry redir;
             if (redirects.Simple.TryGetValue(stem, out redir))
             {
                 return redir;
             }
-
+           
             List<RuntimeRedirectEntry> qsRedirectEntries;
             if (!redirects.QueryString.TryGetValue(stem, out qsRedirectEntries))
             {
-                return null;
+                // var wildCardMatches = new List<RedirectEntry>();
+                return MatchWildCards(redirects, stem, queryString);
             }
 
             var matchingRedirect = 
@@ -249,6 +250,58 @@ namespace Mozu.SiteBuilder.Mvc.MessageHandler
             if (matchingRedirect == null) return null;
             return matchingRedirect.Redirect;
         }
+
+        private static RedirectEntry MatchWildCards(RuntimeRedirects redirects, string stem, NameValueCollection queryString)
+        {
+            foreach (var indexedMatches in redirects.WildCards)
+            {
+                if (indexedMatches.Item1 > stem.Length)
+                {
+                    continue;
+                }
+                var pos = indexedMatches.Item1;
+                var segmentToMatch = stem.Substring(0, pos);
+                List<RuntimeRedirectEntry> candidates;
+                if (!indexedMatches.Item2.TryGetValue(segmentToMatch, out candidates))
+                {
+                    continue;
+                }
+                foreach (var candidate in candidates)
+                {
+                    pos = indexedMatches.Item1;
+                    var isFound = true;
+                    if (candidate.AdditionalWildcardSegments != null)
+                    {
+                        foreach (var segment in candidate.AdditionalWildcardSegments)
+                        {
+                            var nextPos = stem.IndexOf(segment, pos, StringComparison.OrdinalIgnoreCase);
+                            if (nextPos == -1)
+                            {
+                                isFound = false;
+                                break;
+                            }
+                            pos = nextPos + segment.Length;
+                        }
+                    }
+                    if (!isFound) continue;
+
+                    if (candidate.Query != null)
+                    {
+                        if (MatchesRequest(candidate.Query, queryString))
+                        {
+                            return candidate.Redirect;
+                        }
+                    }
+                    else
+                    {
+                        return candidate.Redirect;
+                    }
+                }
+            }
+
+            return null;
+        }
+
 
         static bool MatchesRequest(NameValueCollection redirectQuery, NameValueCollection incomingQuery)
         {

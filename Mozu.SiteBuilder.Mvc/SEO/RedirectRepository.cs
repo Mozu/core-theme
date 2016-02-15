@@ -74,12 +74,16 @@ namespace Mozu.SiteBuilder.Mvc.SEO
         
         public Dictionary<string, RedirectEntry> Simple { get; set; }
         public Dictionary<string, List<RuntimeRedirectEntry>> QueryString { get; set; }
+   
+        public List<Tuple<int, Dictionary<string, List<RuntimeRedirectEntry>>>> WildCards { get; internal set; }
     }
 
     public class RuntimeRedirectEntry
     {
         public System.Collections.Specialized.NameValueCollection Query { get; set; }
         public RedirectEntry Redirect{ get; set; }
+
+        public string[] AdditionalWildcardSegments { get; set; }
     }
 
     public class RedirectRepository : IRedirectRepository
@@ -265,44 +269,92 @@ namespace Mozu.SiteBuilder.Mvc.SEO
             }
             return ret;
         }
-        RuntimeRedirects BuildRuntimeRedirects (List<RedirectEntry> redirects)
+        public static RuntimeRedirects BuildRuntimeRedirects (List<RedirectEntry> redirects)
         {
             RuntimeRedirects rr = new RuntimeRedirects()
             {
                 QueryString = new Dictionary<string,List<RuntimeRedirectEntry>>(StringComparer.OrdinalIgnoreCase),
-                Simple = new Dictionary<string,RedirectEntry>(StringComparer.OrdinalIgnoreCase)
+                Simple = new Dictionary<string,RedirectEntry>(StringComparer.OrdinalIgnoreCase),
+                
             };
-            
 
+            var wildCards = new Dictionary<int, Dictionary<string, List<RuntimeRedirectEntry>>>();
             foreach (var redirect in redirects.Where(x => x.IsEnabled.GetValueOrDefault(false)))
             {
                 var source = redirect.Source;
                 var qPos = source.IndexOf('?');
-                if (qPos == -1)
+                var starPos = source.IndexOf('*');
+                if (qPos == -1 && starPos==-1)
                 {
                     rr.Simple[source] = redirect;
                     continue;
                 }
-                List<RuntimeRedirectEntry> qsEntries;
-
-
-                var stem = source.Substring(0, qPos);
-
-                if (!rr.QueryString.TryGetValue(stem, out qsEntries))
+                var stem = source;
+                
+                RuntimeRedirectEntry runtimeRedirect = new RuntimeRedirectEntry()
                 {
-                    qsEntries = new List<RuntimeRedirectEntry>();
-                    rr.QueryString[stem] = qsEntries;
+                    Redirect = redirect
+                };
+                if (qPos > -1)
+                {
+                    stem = source.Substring(0, qPos);
+                    runtimeRedirect.Query = System.Web.HttpUtility.ParseQueryString(source.Substring(qPos + 1));
                 }
-                qsEntries.Add(new RuntimeRedirectEntry()
+                if (starPos > -1)
                 {
-                    Redirect = redirect,
-                    Query = System.Web.HttpUtility.ParseQueryString(source.Substring(qPos + 1))
-                });
+                    var segments = stem.Split(new char[] { '*' }, StringSplitOptions.RemoveEmptyEntries);
+                    if (segments.Length == 0)
+                    {
+                        continue;
+                    }
+
+                    Dictionary<string, List<RuntimeRedirectEntry>> indexedLookup;
+                    if (!wildCards.TryGetValue(segments[0].Length, out indexedLookup))
+                    {
+                        indexedLookup = new Dictionary<string, List<RuntimeRedirectEntry>>(StringComparer.OrdinalIgnoreCase);
+                        wildCards[segments[0].Length] = indexedLookup;
+                    }
+                    List<RuntimeRedirectEntry> indexedMatches;
+                    if (!indexedLookup.TryGetValue(segments[0], out indexedMatches))
+                    {
+                        indexedMatches = new List<RuntimeRedirectEntry>();
+                        indexedLookup[segments[0]] = indexedMatches;
+                    }
+                   
+
+                    if (segments.Length > 1)
+                    {
+                        runtimeRedirect.AdditionalWildcardSegments = segments.Skip(1).ToArray();
+                    }
+                    
 
 
+                    indexedMatches.Add(runtimeRedirect);
+               
+                    continue;
+                }
+
+                if (qPos > -1)
+                {
+                    List<RuntimeRedirectEntry> qsEntries;
 
 
+                    stem = source.Substring(0, qPos);
+
+                    if (!rr.QueryString.TryGetValue(stem, out qsEntries))
+                    {
+                        qsEntries = new List<RuntimeRedirectEntry>();
+                        rr.QueryString[stem] = qsEntries;
+                    }
+
+                    qsEntries.Add(runtimeRedirect);
+                }
+                
             }
+
+            rr.WildCards = wildCards.Select(x => new Tuple<int, Dictionary<string, List<RuntimeRedirectEntry>>>(x.Key, x.Value)).OrderByDescending(x => x.Item1).ToList();
+
+
 
             List<RuntimeRedirectEntry> qaEntries;
             List<string> removals = null;
