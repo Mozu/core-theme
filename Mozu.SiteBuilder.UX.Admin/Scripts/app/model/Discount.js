@@ -51,8 +51,16 @@ Ext.define('Taco.model.Discount', {
             type: 'auto',
             defaultValue: []
         },
-
-
+        {
+            name: 'excludePriceListProducts',
+            type: 'boolean',
+            defaultValue: false
+        },
+        {
+            name: 'excludedPriceLists',
+            type: 'auto',
+            defaultValue: []
+        },
         {
             name: 'conditionalCategories',
             type: 'auto',

@@ -7,7 +7,8 @@ Ext.define('Taco.view.discount.CriteriaForm', {
     extend: 'Taco.core.ux.form.Form',
     alias: 'widget.taco-discount-criteria',
     requires: [
-        'Taco.core.ux.content.Tooltip'
+        'Taco.core.ux.content.Tooltip',
+        'Taco.view.priceList.widget.PriceListComboBox'
     ],
     ui: 'subform',
     margin: '0 0 39 0',
@@ -161,13 +162,50 @@ Ext.define('Taco.view.discount.CriteriaForm', {
                     arrowPosition: 'bottom'
                 }),
                 listeners: {
-                    change: function(self, newValue, oldValue, eOpts) {
+                    change: function(self, newValue) {
                         this.record.set('appliesToLeastExpensiveProductsFirst', !newValue)
                     },
                     scope: me
                 }
             }
         );
+
+        this.excludedFromPriceLists = Ext.widget({
+                xtype: 'checkbox',
+                name: 'excludePriceListProducts',
+                value: this.record.get('excludePriceListProducts'),
+                itemId: 'exclude-products-in-price-lists',
+                boxLabel: 'Exclude products in select price lists',
+                tooltip: Ext.create('Taco.core.ux.content.Tooltip', {
+                    elementId: 'exclude-products-in-price-lists',
+                    hoverTarget: 'boxLabelEl',
+                    messageKey: 'discount.criteria.excludeProductsInPriceLists',
+                    offsetLeft: -300,
+                    offsetTop: 20,
+                    arrowPosition: 'left'
+                }),
+                listeners: {
+                    change: function(self, isChecked) {
+                        this.record.set('excludePriceListProducts', isChecked);
+                        this.excludedPriceListCombo.setVisible(isChecked);
+                    },
+                    scope: me
+                }
+            }
+        );
+
+        this.excludedPriceListCombo = Ext.widget('pricelistcombobox', {
+            name: 'excludedPriceLists',
+            fieldLabel: 'Excluded Price Lists',
+            itemId: 'excludedPriceListCombo',
+            width: '100%',
+            margin: '0 0 0 20',
+            valueNotFoundText: 'None',
+            editable: true,
+            hidden: !me.record.get('excludePriceListProducts'),
+            multiSelect: true,
+            forceSelection: false
+        });
 
         catStore = this.record.getCategoryStore();
 
@@ -504,7 +542,19 @@ Ext.define('Taco.view.discount.CriteriaForm', {
                 items: [
                     this.ApplyToProductsWithSalePrice,
                     this.appliesToSalePrice,
-                    this.applyDiscountTo
+                    this.applyDiscountTo,
+                    this.excludedFromPriceLists,
+                    {
+                        xtype: 'panel',
+                        layout: {
+                            type: 'hbox',
+                            align: 'stretch'
+                        },
+                        items: [
+                            this.excludedPriceListCombo
+                        ]
+                    }
+
                 ]
             }
         );
@@ -603,7 +653,7 @@ Ext.define('Taco.view.discount.CriteriaForm', {
                     return (!isRealTime);
                 });
             },
-            beforeexpand: function (node, opts) {
+            beforeexpand: function (node) {
                 node.childNodes = node.childNodes.filter(function (childNode) {
                     var isRealtime = childNode.data.categoryType === "DynamicRealTime";
                     return !isRealtime;
