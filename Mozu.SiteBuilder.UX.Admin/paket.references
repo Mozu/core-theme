@@ -26,3 +26,4 @@ protobuf-net
 Mozu.ScheduledEvent.Contracts
 OctoPack
 Microsoft.AspNet.WebApi.Client
+JWT
