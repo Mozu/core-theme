@@ -149,7 +149,7 @@ NUGET
       Mozu.Core.Prime (>= 1.18.1)
     Mozu.ProductAdmin.Contracts (1.19.4-dev1602092340fea)
       Mozu.Core.Prime (>= 1.18.1)
-    Mozu.ProductRuntime.Contracts (1.19.2)
+    Mozu.ProductRuntime.Contracts (1.1605.3-dev1602152353fea)
       Mozu.Core.Prime (>= 1.18.0)
     Mozu.Provisioning.Contracts (1.17.5)
       Mozu.Core.Prime (>= 1.17)
