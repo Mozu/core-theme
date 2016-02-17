@@ -14,7 +14,8 @@ Ext.define('Taco.view.priceList.entry.PriceEntryPrice', {
         'Taco.core.util.Validation',
         'Taco.shared.view.field.ProductPickerField',
         'Taco.view.priceList.widget.PriceListComboBox',
-        'Taco.core.ux.picker.CheckboxTreeModal'
+        'Taco.core.ux.picker.CheckboxTreeModal',
+        'Taco.view.priceList.widget.OverrideCurrency'
     ],
     ui: 'subform',
     margin: '0 0 20 0',
@@ -28,103 +29,23 @@ Ext.define('Taco.view.priceList.entry.PriceEntryPrice', {
 
         Ext.tip.QuickTipManager.init();
 
+        this.priceOverride = Ext.widget('overridecurrency', {
+            fieldCfg: {
+                name: 'price',
+                itemId: 'priceField',
+                fieldLabel: 'Price',
+                currencyCode: me.currencyCode
+            }
+        });;
 
-
-
-
-        this.priceField = Ext.widget('currencyfield', {
-            name: 'price',
-            itemId: 'priceField',
-            fieldLabel: 'Price',
-            currencyCode: me.currencyCode,
-            allowBlank: true,
-            hideTrigger: true,
-            margin: '0 30 0 0',
-            flex: 9,
-            required: false,
-            fieldStyle: 'text-align:right',
-            listeners: {
-                change: function (cmp, newVal, oldVal, eOpts) {
-                    if (newVal && !oldVal) {
-                        this.priceFieldOverride.setValue(true);
-                    }
-                },
-                scope: this
+        this.salePriceOverride = Ext.widget('overridecurrency', {
+            fieldCfg: {
+                name: 'salePrice',
+                itemId: 'salePriceField',
+                fieldLabel: 'Sale Price',
+                currencyCode: me.currencyCode,
             }
         });
-
-        this.priceFieldOverride = Ext.widget('checkbox', {
-            margin: '0 30 0 0',
-            listeners: {
-                change: function(cmp, newVal, oldVal) {
-                    if (oldVal && !newVal) {
-                        me.priceField.setValue(null);
-                    }
-                },
-                scope: me
-            }
-        });
-
-        this.enabledPrice = {
-            xtype: 'panel',
-            layout: {
-                type: 'hbox',
-                align: 'bottom'
-            },
-            width: '50%',
-            items: [
-                this.priceFieldOverride,
-                this.priceField
-            ]
-        };
-
-        this.salePriceFieldOverride = Ext.widget('checkbox', {
-            //flex: 1,
-            margin: '0 30 0 0',
-            listeners: {
-                change: function(cmp, newVal, oldVal) {
-                    if (oldVal && !newVal) {
-                        me.salePriceField.setValue(null);
-                    }
-                },
-                scope: me
-            }
-        });
-
-
-        this.salePriceField = Ext.widget('currencyfield', {
-            name: 'salePrice',
-            itemId: 'salePriceField',
-            fieldLabel: 'Sale Price',
-            currencyCode: me.currencyCode,
-            allowBlank: true,
-            hideTrigger: true,
-            margin: '0 30 0 0',
-            flex: 9,
-            required: false,
-            fieldStyle: 'text-align:right',
-            listeners: {
-                change: function (cmp, newVal, oldVal, eOpts) {
-                    if (newVal && !oldVal) {
-                        this.salePriceFieldOverride.setValue(true);
-                    }
-                },
-                scope: this
-            }
-        });
-
-        this.enabledSalePrice = {
-            xtype: 'panel',
-            layout: {
-                type: 'hbox',
-                align: 'bottom'
-            },
-            width: '50%',
-            items: [
-                this.salePriceFieldOverride,
-                this.salePriceField
-            ]
-        };
 
         this.basicPanel = {
             xtype: 'panel',
@@ -134,7 +55,7 @@ Ext.define('Taco.view.priceList.entry.PriceEntryPrice', {
                 align: 'stretch'
             },
             width: '50%',
-            padding: '0 19 19 19',
+            padding: '20',
             items: [
                 {
                     xtype: 'panel',
@@ -144,12 +65,68 @@ Ext.define('Taco.view.priceList.entry.PriceEntryPrice', {
                     },
                     width: '50%',
                     items: [
-                        this.enabledPrice,
-                        this.enabledSalePrice
+                        this.priceOverride,
+                        this.salePriceOverride
                     ]
                 }
             ]
         };
+
+        this.msrpOverride = Ext.widget('overridecurrency', {
+            fieldCfg: {
+                name: 'msrpPrice',
+                itemId: 'msrpPriceField',
+                fieldLabel: 'MSRP',
+                currencyCode: me.currencyCode,
+            }
+        });
+        
+        this.costOverride = Ext.widget('overridecurrency', {
+            fieldCfg: {
+                name: 'costPrice',
+                itemId: 'costPriceField',
+                fieldLabel: 'Cost',
+                currencyCode: me.currencyCode,
+            }
+        });
+
+        this.mapOverride = Ext.widget('overridecurrency', {
+            fieldCfg: {
+                name: 'MAP',
+                itemId: 'MAPField',
+                fieldLabel: 'MAP',
+                currencyCode: me.currencyCode,
+            }
+        });
+
+        this.mapStartDate = Ext.create('Taco.core.ux.form.DateTime', {
+            minValue: new Date(),
+            fieldLabel: 'MAP Start Date'
+        });
+
+        this.mapEndDate = Ext.create('Taco.core.ux.form.DateTime', {
+            fieldLabel: 'MAP End Date'
+        });
+
+        this.discountRestriction = Ext.widget('selectfield', {
+            fieldLabel: 'Discounts Restriction',
+            store: Ext.create('Ext.data.ArrayStore', {
+                fields: ['text', 'value'],
+                data: [
+                    ['Default', 'Default'],
+                    ['On', 'On'],
+                    ['Off', 'Off']
+                ]
+            })
+        });
+
+        this.restrictionStartDate = Ext.create('Taco.core.ux.form.DateTime', {
+            minValue: new Date(),
+            fieldLabel: 'Restriction Start Date'
+        });
+        this.restrictionEndDate = Ext.create('Taco.core.ux.form.DateTime', {
+            fieldLabel: 'Restriction End Date'
+        });
 
         this.advancedPanel = {
             xtype: 'panel',
@@ -159,38 +136,38 @@ Ext.define('Taco.view.priceList.entry.PriceEntryPrice', {
                 align: 'stretch'
             },
             width: '50%',
-            padding: '0 19 19 19',
+            padding: '20',
+            defaults: {
+                flex: 1,
+                xtype: 'panel',
+                layout: {
+                    type: 'hbox',
+                    align: 'top'
+                },
+                defaults: {
+                    flex: 1
+                }
+            },
             items: [
                 {
-                    xtype: 'panel',
-                    layout: {
-                        type: 'hbox',
-                        align: 'bottom'
-                    },
-                    width: '50%',
                     items: [
-                        {
-                            xtype: 'currencyfield',
-                            name: 'price',
-                            itemId: 'priceField',
-                            fieldLabel: 'Price',
-                            currencyCode: me.currencyCode,
-                            allowBlank: true,
-                            hideTrigger: true,
-                            margin: '0 30 0 0',
-                            width: '50%',
-                            required: false
-                        },
-                        {
-                            xtype: 'currencyfield',
-                            name: 'salePrice',
-                            itemId: 'salePriceField',
-                            fieldLabel: 'Sale Price',
-                            allowBlank: true,
-                            hideTrigger: true,
-                            margin: '0 30 0 0',
-                            width: '50%'
-                        }
+                        this.msrpOverride,
+                        this.costOverride,
+                        {}
+                    ]
+                },
+                {
+                    items: [
+                        this.mapOverride,
+                        this.mapStartDate,
+                        this.mapEndDate
+                    ]
+                },
+                {
+                    items: [
+                        this.discountRestriction,
+                        this.restrictionStartDate,
+                        this.restrictionEndDate
                     ]
                 }
             ]
