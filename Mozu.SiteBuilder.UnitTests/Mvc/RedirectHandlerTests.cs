@@ -9,6 +9,10 @@ using Mozu.SiteBuilder.UX.Models.Navigation;
 using NUnit.Framework;
 using System.Net.Http;
 using NSubstitute;
+using AutofacContrib.NSubstitute;
+using Mozu.Content.Contracts.Clients;
+using Mozu.SiteBuilder.Mvc;
+using Mozu.Core.Logging;
 
 namespace Mozu.SiteBuilder.UnitTests.Mvc
 {
@@ -19,7 +23,7 @@ namespace Mozu.SiteBuilder.UnitTests.Mvc
     {
 
         [TestCaseSource("GetTests")]
-        public async Task DefaultTests(TestScenario test)
+        public async Task RedirectHandlerTestsExec(TestScenario test)
         {
             var uri = new Uri("http://localhost/" + test.Url);
             var repo = Substitute.For<IRedirectRepository>();
@@ -32,9 +36,10 @@ namespace Mozu.SiteBuilder.UnitTests.Mvc
             }
             if (res == null && test.Result != null || test.Result == null && res != null)
             {
-                Assert.AreNotEqual(res, test.Result);
+                Assert.Fail();
                 return;
             }
+
             Assert.AreEqual(test.Result.Destination, res.Destination);
         }
 
@@ -50,7 +55,7 @@ namespace Mozu.SiteBuilder.UnitTests.Mvc
                             {
                                 Redirect= new RedirectEntry()
                                 {
-                                    Destination = "/products-category/c/282?foo=h{foo}&moo={moo}",
+                                    Destination = "/products-category/c/282?foo2=h{foo}&moo={moo}",
                                     CopyQueryString = true,
                                     Source="1",
                                     Priority = 0,
@@ -65,20 +70,173 @@ namespace Mozu.SiteBuilder.UnitTests.Mvc
                 Simple = new Dictionary<string, RedirectEntry>(StringComparer.OrdinalIgnoreCase)
                 {
 
-                }
+                },
+                WildCards = new List<Tuple<int, Dictionary<string, List<RuntimeRedirectEntry>>>>()
             };
+        }
+        public RuntimeRedirects GetWildCardRedirects()
+        {
+
+            //IDocumentListWebApiClient documentListWebApiClient, ISiteBuilderApiContext siteBuilderApiContext, ILogger logger
+            //var repo = new RedirectRepository(Substitute.For<IDocumentListWebApiClient>(),
+            //    Substitute.For<ISiteBuilderApiContext>(),
+            //    Substitute.For<ILogger>());
+
+
+            var rawList = new List<RedirectEntry>()
+            {
+                
+                new RedirectEntry()
+                {
+                    Destination="abcd/*/efg",
+                    IsEnabled = true,
+                    Source = "abcd/*/efg"
+                },
+                new RedirectEntry()
+                {
+                    Destination="abcd/*/efg?hij=*",
+                    IsEnabled = true,
+                    Source = "abcd/*/efg?hij=*"
+                },
+                new RedirectEntry()
+                {
+                    Destination="abcd/*",
+                    IsEnabled = true,
+                    Priority = -1,
+                    Source = "abcd/*"
+                },
+                new RedirectEntry()
+                {
+                    Destination="hij-*-lmno-*p",
+                    IsEnabled = true,
+                    Source = "hij-*-lmno-*p"
+                }
+                ,new RedirectEntry()
+                {
+                    Destination="1*2*3",
+                    IsEnabled = true,
+                    Source = "1*2*3"
+                } ,
+                new RedirectEntry()
+                {
+                    Destination="*stuff*",
+                    IsEnabled = true,
+                    Source = "*stuff*"
+                },new RedirectEntry()
+                {
+                    Destination="*bratwurst*good",
+                    IsEnabled = true,
+                    Source = "*bratwurst*good"
+                }
+                ,new RedirectEntry()
+                {
+                    Destination="{bing}/product/{bing}",
+                    IsEnabled = true,
+                    Source = "phipps?bing=*"
+                }
+                
+
+            };
+
+            rawList.Sort(RedirectComparer.Default);
+
+            return RedirectRepository.BuildRuntimeRedirects(rawList);
         }
         public IEnumerable<TestScenario> GetTests()
         {
             yield return
                 new TestScenario()
                 {
+                    Name = "wildcard1",
+                    Url = "/abcd/food-is-good/food",
+                    RuntimeRedirects = GetWildCardRedirects(),
+                    Result = new RedirectEntry
+                    {
+                        Destination = "abcd/*"
+                    }
+                };
+            yield return
+                new TestScenario()
+                {
+                    Name = "wildcard2",
+                    Url = "/aBcD/food-is-good/eFg",
+                    RuntimeRedirects = GetWildCardRedirects(),
+                    Result = new RedirectEntry
+                    {
+                        Destination = "abcd/*/efg"
+                    }
+                };
+            yield return
+                new TestScenario()
+                {
+                    Name = "wildcard3",
+                    Url = "/abc",
+                    RuntimeRedirects = GetWildCardRedirects(),
+
+                };
+            yield return
+            new TestScenario()
+            {
+                Name = "wildcard4",
+                Url = "/abcd/food-is-good/efg?hij=123",
+                RuntimeRedirects = GetWildCardRedirects(),
+                Result = new RedirectEntry
+                {
+                    Destination = "abcd/*/efg?hij=*"
+                }
+            };
+            yield return new TestScenario()
+            {
+                Name = "wildcard5",
+                Url = "/123",
+                RuntimeRedirects = GetWildCardRedirects(),
+                Result = new RedirectEntry
+                {
+                    Destination = "1*2*3"
+                }
+            };
+            yield return
+            new TestScenario()
+            {
+                Name = "wildcard6",
+                Url = "/132",
+                RuntimeRedirects = GetWildCardRedirects(),
+
+            };
+
+            yield return
+            new TestScenario()
+            {
+                Name = "wildcard7",
+                Url = "/asdf/asdf/adsf/bratwurst-issooo-good",
+                RuntimeRedirects = GetWildCardRedirects(),
+                Result = new RedirectEntry()
+                {
+                    Destination= "*bratwurst*good"
+                }
+
+            };
+            yield return new TestScenario()
+          {
+              Name = "querystring wildcard mapped",
+              Url = "/phipps?bing=123",
+              RuntimeRedirects = GetWildCardRedirects(),
+              Result = new RedirectEntry()
+              {
+                  Destination = "123/product/123"
+              }
+
+          };
+
+            yield return
+                new TestScenario()
+                {
                     Name = "prefixedQsMatch",
-                    Url = "/?foo=5&moo=6",
+                    Url = "1?foo=5&moo=6",
                     RuntimeRedirects = GetDefaultRedirects(),
                     Result = new RedirectEntry
                     {
-                        Destination = "/products-category/c/282?foo=h5&moo=6"
+                        Destination = "/products-category/c/282?foo2=h5&moo=6&foo=5"
                     }
                 };
 

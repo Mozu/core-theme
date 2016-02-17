@@ -256,9 +256,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.ModelMapping
                                                                            Type = x.Target,                                                                           
                                                                            ExcludeItemsWithExistingShippingDiscounts = x.ExcludeItemsWithExistingShippingDiscounts,
                                                                            ExcludeItemsWithExistingProductDiscounts = x.ExcludeItemsWithExistingProductDiscounts,
-                                                                           MaximumQuantityPerRedemption = ((x.Categories.IsNullOrEmpty() && x.Products.IsNullOrEmpty()) || ! x.MaximumQuantityPerRedemption.HasValue)
-                                                                            ? (int?)null 
-                                                                            : Math.Max(x.MaximumQuantityPerRedemption.Value, 1),
+                                                                           MaximumQuantityPerRedemption = x.MaximumQuantityPerRedemption.HasValue ? Math.Max(x.MaximumQuantityPerRedemption.Value, 1) : (int?)null,
                                                                            Categories = (x.Categories ?? Enumerable.Empty<int>()).Select(_ => new DC.TargetedCategory {Id = _}).ToList(),
                                                                            IncludedCategoriesOperator = x.IsIncludedCategoriesAllOperator 
                                                                                 ? DC.DiscountTarget.TargetedCategoriesOperators.ALL
