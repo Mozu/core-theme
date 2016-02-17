@@ -54,7 +54,10 @@ Ext.define('Taco.model.Discount', {
         {
             name: 'excludePriceListProducts',
             type: 'boolean',
-            defaultValue: false
+            persist: false,
+            convert: function(v, record) {
+                return (record.get('excludedPriceLists') && record.get('excludedPriceLists').length > 0);
+            }
         },
         {
             name: 'excludedPriceLists',

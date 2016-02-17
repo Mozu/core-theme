@@ -186,5 +186,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.Models.Discount
         public List<CouponSet> CouponSets { get; set; }
 
         public bool? AppliesToLeastExpensiveProductsFirst { get; set; }
+
+        public List<string> ExcludedPriceLists { get; set; }
     }
 }
