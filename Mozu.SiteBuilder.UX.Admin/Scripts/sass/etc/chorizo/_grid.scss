@@ -192,9 +192,13 @@
     }
     
     [class*='mz-cms-col-'] {
+        float: none;
         margin-left: 0px;
         margin-right: 0px;
         margin-top: 0px;
         margin-bottom: 0px;
+        padding-left: 20px;
+        padding-right: 20px;
+        width: auto;
     }
 }
