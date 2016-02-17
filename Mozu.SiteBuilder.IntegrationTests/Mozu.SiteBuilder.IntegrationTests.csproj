@@ -696,15 +696,10 @@
     </When>
   </Choose>
   <Choose>
-    <When Condition="$(TargetFrameworkIdentifier) == '.NETFramework' And $(TargetFrameworkVersion) == 'v4.5.1'">
+    <When Condition="$(TargetFrameworkIdentifier) == '.NETFramework' And ($(TargetFrameworkVersion) == 'v4.5' Or $(TargetFrameworkVersion) == 'v4.5.1')">
       <ItemGroup>
-        <Reference Include="Mozu.Core.Messaging.Contracts">
-          <HintPath>..\packages\Mozu.Core.Messaging\lib\net451\Mozu.Core.Messaging.Contracts.dll</HintPath>
-          <Private>True</Private>
-          <Paket>True</Paket>
-        </Reference>
         <Reference Include="Mozu.Core.Messaging">
-          <HintPath>..\packages\Mozu.Core.Messaging\lib\net451\Mozu.Core.Messaging.dll</HintPath>
+          <HintPath>..\packages\Mozu.Core.Messaging\lib\Mozu.Core.Messaging.dll</HintPath>
           <Private>True</Private>
           <Paket>True</Paket>
         </Reference>
