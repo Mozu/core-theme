@@ -150,30 +150,43 @@
 .mz-cms-widget {
   display: inline-block;
   margin: 0 10px 10px 0;
-  cursor: move;
+  cursor: pointer;
   vertical-align: top;
   width: 60px;
 }
 /* line 53, ../../sass/etc/chorizo/_widgets.scss */
 .mz-cms-widget .mz-cms-icon {
   background-size: cover;
-  border: 1px solid #CCC;
+  border: 1px dashed #CCC;
   height: 60px;
   margin-bottom: 5px;
   width: 100%;
+  -moz-transition: all 0.2s cubic-bezier(0.165, 0.84, 0.44, 1);
+  -o-transition: all 0.2s cubic-bezier(0.165, 0.84, 0.44, 1);
+  -webkit-transition: all 0.2s cubic-bezier(0.165, 0.84, 0.44, 1);
+  transition: all 0.2s cubic-bezier(0.165, 0.84, 0.44, 1);
 }
-/* line 60, ../../sass/etc/chorizo/_widgets.scss */
+/* line 61, ../../sass/etc/chorizo/_widgets.scss */
 .mz-cms-widget .mz-cms-icon:hover {
-  background-color: rgba(45, 109, 207, 0.1);
+  border-color: #a6a6a6;
+  box-shadow: rgba(0, 0, 0, 0.2) 1px 0px 6px 0px;
 }
-/* line 65, ../../sass/etc/chorizo/_widgets.scss */
+/* line 66, ../../sass/etc/chorizo/_widgets.scss */
+.mz-cms-widget .mz-cms-icon:active {
+  border: 2px solid #34ae90;
+  box-shadow: none;
+  -moz-border-radius: 3px;
+  -webkit-border-radius: 3px;
+  border-radius: 3px;
+}
+/* line 73, ../../sass/etc/chorizo/_widgets.scss */
 .mz-cms-widget .mz-cms-label {
   color: #333;
   font-size: 11px;
   text-align: center;
 }
 
-/* line 72, ../../sass/etc/chorizo/_widgets.scss */
+/* line 80, ../../sass/etc/chorizo/_widgets.scss */
 .mz-cms-shadow {
   background-color: #333333;
   height: 470px;
@@ -190,7 +203,7 @@
   border-radius: 2px;
 }
 
-/* line 87, ../../sass/etc/chorizo/_widgets.scss */
+/* line 95, ../../sass/etc/chorizo/_widgets.scss */
 .mz-cms-cover {
   z-index: 100001;
   height: 100vh;
@@ -281,7 +294,7 @@
   position: relative;
   width: 14px;
 }
-/* line 162, ../../sass/etc/taco/mixins/_fonts.scss */
+/* line 163, ../../sass/etc/taco/mixins/_fonts.scss */
 .mz-cms-tools li.pencil::after {
   color: #a6a6a6;
   content:     "\EDD5";
@@ -303,7 +316,7 @@
   position: relative;
   width: 14px;
 }
-/* line 162, ../../sass/etc/taco/mixins/_fonts.scss */
+/* line 163, ../../sass/etc/taco/mixins/_fonts.scss */
 .mz-cms-tools li.trash::after {
   color: #a6a6a6;
   content:     "\E02A";
@@ -325,7 +338,7 @@
   position: relative;
   width: 14px;
 }
-/* line 162, ../../sass/etc/taco/mixins/_fonts.scss */
+/* line 163, ../../sass/etc/taco/mixins/_fonts.scss */
 .mz-cms-tools li.drag-handle::after {
   color: #a6a6a6;
   content:     "\E609";
@@ -392,7 +405,7 @@
   position: relative;
   width: 15px;
 }
-/* line 162, ../../sass/etc/taco/mixins/_fonts.scss */
+/* line 163, ../../sass/etc/taco/mixins/_fonts.scss */
 .mz-cms-editing .mz-cms-block .mz-cms-tools li.pencil::after, .mz-cms-editing .mz-cms-blank-block .mz-cms-tools li.pencil::after {
   color: white;
   content:     "\EDD5";
@@ -420,7 +433,7 @@
   position: relative;
   width: 14px;
 }
-/* line 162, ../../sass/etc/taco/mixins/_fonts.scss */
+/* line 163, ../../sass/etc/taco/mixins/_fonts.scss */
 .mz-cms-editing .mz-cms-block .mz-cms-tools li.trash::after, .mz-cms-editing .mz-cms-blank-block .mz-cms-tools li.trash::after {
   color: white;
   content:     "\E02A";
@@ -442,7 +455,7 @@
   position: relative;
   width: 14px;
 }
-/* line 162, ../../sass/etc/taco/mixins/_fonts.scss */
+/* line 163, ../../sass/etc/taco/mixins/_fonts.scss */
 .mz-cms-editing .mz-cms-block .mz-cms-tools li.drag-handle::after, .mz-cms-editing .mz-cms-blank-block .mz-cms-tools li.drag-handle::after {
   color: white;
   content:     "\E609";
@@ -865,5 +878,7 @@
     margin-right: 0px;
     margin-top: 0px;
     margin-bottom: 0px;
+    width: auto !important;
+    float: none;
   }
 }
