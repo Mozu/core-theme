@@ -25,7 +25,7 @@ Ext.define('Taco.view.priceList.Edit', {
     },
 
     parentTitleCfg: {
-        title: 'Price List',
+        title: 'Price Lists',
         controller: 'pricelists'
     },
 

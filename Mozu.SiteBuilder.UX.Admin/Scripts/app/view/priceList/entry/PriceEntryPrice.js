@@ -8,14 +8,13 @@ Ext.define('Taco.view.priceList.entry.PriceEntryPrice', {
     requires: [
         'Ext.form.field.ComboBox',
         'Taco.core.ux.form.CurrencyField',
-        //'Taco.view.priceList.widget.OverrideField',
         'Ext.form.field.Date',
         'Taco.core.ux.TooltipLabel',
         'Taco.core.util.Validation',
         'Taco.shared.view.field.ProductPickerField',
         'Taco.view.priceList.widget.PriceListComboBox',
         'Taco.core.ux.picker.CheckboxTreeModal',
-        'Taco.view.priceList.widget.OverrideCurrency'
+        'Taco.view.priceList.widget.OverrideField'
     ],
     ui: 'subform',
     margin: '0 0 20 0',
@@ -29,7 +28,7 @@ Ext.define('Taco.view.priceList.entry.PriceEntryPrice', {
 
         Ext.tip.QuickTipManager.init();
 
-        this.priceOverride = Ext.widget('overridecurrency', {
+        this.priceOverride = Ext.widget('overridefield', {
             fieldCfg: {
                 name: 'price',
                 itemId: 'priceField',
@@ -38,7 +37,7 @@ Ext.define('Taco.view.priceList.entry.PriceEntryPrice', {
             }
         });;
 
-        this.salePriceOverride = Ext.widget('overridecurrency', {
+        this.salePriceOverride = Ext.widget('overridefield', {
             fieldCfg: {
                 name: 'salePrice',
                 itemId: 'salePriceField',
@@ -72,7 +71,7 @@ Ext.define('Taco.view.priceList.entry.PriceEntryPrice', {
             ]
         };
 
-        this.msrpOverride = Ext.widget('overridecurrency', {
+        this.msrpOverride = Ext.widget('overridefield', {
             fieldCfg: {
                 name: 'msrpPrice',
                 itemId: 'msrpPriceField',
@@ -81,7 +80,7 @@ Ext.define('Taco.view.priceList.entry.PriceEntryPrice', {
             }
         });
         
-        this.costOverride = Ext.widget('overridecurrency', {
+        this.costOverride = Ext.widget('overridefield', {
             fieldCfg: {
                 name: 'costPrice',
                 itemId: 'costPriceField',
@@ -90,7 +89,7 @@ Ext.define('Taco.view.priceList.entry.PriceEntryPrice', {
             }
         });
 
-        this.mapOverride = Ext.widget('overridecurrency', {
+        this.mapOverride = Ext.widget('overridefield', {
             fieldCfg: {
                 name: 'MAP',
                 itemId: 'MAPField',
