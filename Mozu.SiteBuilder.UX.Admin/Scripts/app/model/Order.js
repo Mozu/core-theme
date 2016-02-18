@@ -150,6 +150,14 @@ Ext.define('Taco.model.Order', {
             type: 'auto',
             useNull: true
         }, {
+            name: 'priceListName',
+            type: 'string',
+            useNull: true
+        }, {
+            name: 'priceListCode',
+            type: 'string',
+            useNull: true
+        }, {
             name: 'orderDiscounts',
             type: 'auto',
             defaultValue: []

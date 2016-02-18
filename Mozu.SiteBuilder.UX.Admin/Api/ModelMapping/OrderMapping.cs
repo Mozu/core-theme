@@ -126,6 +126,9 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.ModelMapping
                 .ForMember(x => x.IsDraft, op => op.ResolveUsing(dc => dc.IsDraft ?? false ))
                 .ForMember(x => x.HasDraft, op => op.ResolveUsing(dc => dc.HasDraft ?? false))
 
+                .ForMember(x=> x.PriceListCode, op => op.ResolveUsing(dc => dc.PriceListCode))
+                .ForMember(x => x.PricelistName, op => op.ResolveUsing(dc => dc.PricelistName))
+
                 .ForMember(x => x.AvailableActions, op => op.ResolveUsing(dc => dc.AvailableActions))
 
                 .ForMember(x => x.ValidationResults, op => op.ResolveUsing(dc => dc.ValidationResults))
