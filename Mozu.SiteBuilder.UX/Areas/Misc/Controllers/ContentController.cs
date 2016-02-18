@@ -21,6 +21,7 @@ using Mozu.Tenant.Contracts;
 using Mozu.Tenant.Contracts.Clients;
 using Mozu.Core.Settings;
 using Mozu.SiteBuilder.Mvc.MessageHandler;
+using Mozu.SiteSettings.General.Contracts.Clients;
 
 namespace Mozu.SiteBuilder.UX.Areas.Misc.Controllers
 {
@@ -32,12 +33,14 @@ namespace Mozu.SiteBuilder.UX.Areas.Misc.Controllers
         IApiContext _appCtx;
         readonly ISettings _settings;
         IDocumentListWebApiClient _docRepo;
+        Lazy<IGeneralSettingsWebApiClient> _generalSettingsWebApiClient;
 
-        public ContentController(IDocumentListWebApiClient docRepo, IApiContext appCtx, ISettings settings)
+        public ContentController(IDocumentListWebApiClient docRepo, IApiContext appCtx, ISettings settings, Lazy<IGeneralSettingsWebApiClient> generalSettingsWebApiClient)
         {
             _docRepo = docRepo.CloneWithApiContext(x => x.SiteId = null);
             _appCtx = appCtx;
             _settings = settings;
+            _generalSettingsWebApiClient = generalSettingsWebApiClient;
             ((ServiceClientBase)_docRepo).Options.MaxSize = int.MaxValue;
         }
 
@@ -50,7 +53,7 @@ namespace Mozu.SiteBuilder.UX.Areas.Misc.Controllers
         {
             ISitesWebApiClient client = Request.Resolve<ISitesWebApiClient>().CloneWithoutUserClaims();
             ServiceClientResponse<Site> siteRes = client.GetSite(siteid, false).Result;
-            if (siteRes.ResponseMessage.StatusCode == HttpStatusCode.NotFound)
+            if (siteRes.HasException)
             {
                 return null;
             }
@@ -257,9 +260,18 @@ namespace Mozu.SiteBuilder.UX.Areas.Misc.Controllers
                     ((ApiContext)this.SbApiContext).SiteId = site.Id;
                 }
             }
+            if (! this.SbApiContext.SiteId.HasValue)
+            {
+                return null;
+            }
+            var genSettingsTask = await _generalSettingsWebApiClient.Value.GetGeneralSettings().ConfigureAwait(false);
+            if ( genSettingsTask.HasException )
+            {
+                return null;
+            }
+            var genSettings = genSettingsTask.ReadAsSync();
 
-
-            if (this.SiteContext == null || this.SiteContext.GeneralSettings == null || string.IsNullOrEmpty(this.SiteContext.GeneralSettings.MissingImageSubstitute))
+            if ( string.IsNullOrEmpty(genSettings.MissingImageSubstitute))
             {
                 return null;
             }
@@ -267,11 +279,11 @@ namespace Mozu.SiteBuilder.UX.Areas.Misc.Controllers
             
            
 
-            if (Guid.TryParse(this.SiteContext.GeneralSettings.MissingImageSubstitute, out guid))
+            if (Guid.TryParse(genSettings.MissingImageSubstitute, out guid))
             {
                 result = await _docRepo.TransformDocumentContent(
                     documentListName: "files@mozu",
-                    documentId: this.SiteContext.GeneralSettings.MissingImageSubstitute,
+                    documentId: genSettings.MissingImageSubstitute,
                     width: width.HasValue ? width : size,
                     height: height,
                     maxWidth: maxWidth.HasValue ? maxWidth : max,
@@ -284,7 +296,7 @@ namespace Mozu.SiteBuilder.UX.Areas.Misc.Controllers
             {
                 result = await _docRepo.TransformTreeDocumentContent(
                     documentListName: "files@mozu",
-                    documentName: this.SiteContext.GeneralSettings.MissingImageSubstitute,
+                    documentName: genSettings.MissingImageSubstitute,
                     width: width.HasValue ? width : size,
                     height: height,
                     maxWidth: maxWidth.HasValue ? maxWidth : max,
@@ -295,6 +307,7 @@ namespace Mozu.SiteBuilder.UX.Areas.Misc.Controllers
             }
             if (result.ResponseMessage.IsSuccessStatusCode)
             {
+                ClientCacheHeadersAttribute.Set404(Request);
                 return result;
             }
             else

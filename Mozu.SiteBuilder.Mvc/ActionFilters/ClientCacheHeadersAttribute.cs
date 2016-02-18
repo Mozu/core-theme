@@ -14,6 +14,7 @@ namespace Mozu.SiteBuilder.Mvc.ActionFilters
     using System;
     using System.Collections.Generic;
     using System.Linq;
+    using System.Net.Http;
     using System.Text;
 
     using System.Web;
@@ -49,6 +50,16 @@ namespace Mozu.SiteBuilder.Mvc.ActionFilters
             AllowCrossOrigin = true;
         }
 
+        public static void Set404 ( HttpRequestMessage request )
+        {
+            request.Properties["_mz_is404"] = true;
+        }
+        public static bool Is404(HttpRequestMessage request)
+        {
+            object tmp;
+            return request.Properties.TryGetValue ( "_mz_is404", out tmp) && (bool)tmp;
+        }
+
         public override void OnActionExecuted(HttpActionExecutedContext actionExecutedContext)
         {
 
@@ -75,6 +86,13 @@ namespace Mozu.SiteBuilder.Mvc.ActionFilters
                     cache.NoStore = true;
                     cache.NoCache = true;
                     cache.MustRevalidate = true;
+                }
+                else if (ClientCacheHeadersAttribute.Is404(actionExecutedContext.Request) )
+                {
+                    var cacheDuration = TimeSpan.FromSeconds(600);
+
+                    cache.MaxAge = cacheDuration;
+                    cache.Public = true;
                 }
                 else
                 {
