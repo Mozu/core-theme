@@ -11,6 +11,10 @@
     },
     "editors": [
         {
+            "id": "layout",
+            "path": "layout.js"
+        },
+        {
             "documentTypes": [
                 "web_page@mozu"
             ],
@@ -74,74 +78,74 @@
     "emailTemplates": [
         {
             "id": "order.shipped",
-            "properties": {},
+            "properties": { },
             "template": "email/order-shipped",
             "title": "Your Order Has Shipped"
         },
         {
             "id": "order.changed",
             "customEditor": "email-orderconfirmation",
-            "properties": {},
+            "properties": { },
             "template": "email/order-confirmation",
             "title": "Order Confirmation"
         },
         {
             "id": "refund.created",
-            "properties": {},
+            "properties": { },
             "template": "email/order-refund-issued",
             "title": "Refund Issued"
         },
         {
             "id": "return.created",
-            "properties": {},
+            "properties": { },
             "template": "email/product-return-changed",
             "title": "Return Created"
         },
         {
             "id": "return.authorized",
-            "properties": {},
+            "properties": { },
             "template": "email/product-return-authorized",
             "title": "Return Authorized"
         },
         {
             "id": "return.rejected",
-            "properties": {},
+            "properties": { },
             "template": "email/product-return-rejected",
             "title": "Return Request Rejected"
         },
         {
             "id": "return.closed",
-            "properties": {},
+            "properties": { },
             "template": "email/product-return-received",
             "title": "Return Item Received"
         },
         {
             "id": "return.changed",
-            "properties": {},
+            "properties": { },
             "template": "email/product-return-changed",
             "title": "Return Has Been Updated"
         },
         {
             "id": "user.created",
-            "properties": {},
+            "properties": { },
             "template": "email/new-user",
             "title": "Welcome"
         },
         {
             "id": "user.passwordreset",
-            "properties": {},
+            "properties": { },
             "template": "email/password-reset",
             "title": "Password Reset"
         },
         {
             "id": "product.instock",
-            "properties": {},
+            "properties": { },
             "template": "email/product-instock",
             "title": "Back in Stock"
         },
         {
             "id": "giftcard.created",
-            "properties": {},
+            "properties": { },
             "template": "email/giftcard-created",
             "title": "Gift Card Created"
         }
@@ -320,8 +324,7 @@
             "template": "login",
             "title": "Login",
             "userCreatable": false
-        },
-        {
+        },{
             "entityType": "resetPasswordConfirmDetails",
             "id": "reset_password",
             "template": "reset-password",
@@ -386,7 +389,7 @@
         "primaryFont": "Source Sans Pro",
         "fontSize": "14px",
         "gutterWidth": "25px",
-        "internal-themeAddons": [],
+        "internal-themeAddons": [ ],
         "itemListingThumbSize": 80,
         "listProductCode": true,
         "listProductShortDesc": true,
@@ -665,6 +668,118 @@
         "allowCustomerInitiatedReturns": true,
         "visaCheckoutSdkUrl": "https://sandbox-assets.secure.checkout.visa.com/checkout-widget/resources/js/integration/v1/sdk.js"
     },
+    "layoutWidgets": [
+        {
+            "id": "mz-1-col",
+            "category": "*",
+            "displayName": "1 Column 100",
+            "displayTemplate": "base",
+            "defaultConfig": {
+                "title": "Dropzone",
+                "mz-col1": 100
+            },
+            "customEditor": "layout",
+            "icon": "/resources/admin/widgets/1-col_icon.png",
+            "validPageTypes": [
+                "*"
+            ],
+            "columns": [
+                {
+                    "width": "100%"
+                }
+            ]
+        },
+        {
+            "id": "mz-2-col",
+            "category": "*",
+            "displayName": "2 Column 50/50",
+            "displayTemplate": "base",
+            "defaultConfig": {
+                "title": "Dropzone",
+                "mz-col1": 50,
+                "mz-col2": 50
+            },
+            "customEditor": "layout",
+            "icon": "/resources/admin/widgets/2-col_icon.png",
+            "validPageTypes": [
+                "*"
+            ],
+            "columns": [
+                {
+                    "width": "50%"
+                },
+                {
+
+                    "width": "50%"
+                }
+            ]
+        },
+        {
+            "id": "mz-3-col",
+            "category": "*",
+            "displayName": "3 Column 33/33/33",
+            "displayTemplate": "base",
+            "defaultConfig": {
+                "title": "Dropzone",
+                "mz-col1": 33.33,
+                "mz-col2": 33.33,
+                "mz-col3": 33.33
+            },
+            "customEditor": "layout",
+            "icon": "/resources/admin/widgets/3-col_icon.png",
+            "validPageTypes": [
+                "*"
+            ],
+            "columns": [
+                {
+                    "width": "33.3%"
+                },
+                {
+
+                    "width": "33.3%"
+                },
+                {
+
+                    "width": "33.3%"
+                }
+            ]
+        },
+        {
+            "id": "mz-4-col",
+            "category": "*",
+            "displayName": "4 Column 25/25/25/25",
+            "displayTemplate": "base",
+            "defaultConfig": {
+                "title": "Dropzone",
+                "mz-col1": 25,
+                "mz-col2": 25,
+                "mz-col3": 25,
+                "mz-col4": 25
+            },
+            "customEditor": "layout",
+            "icon": "/resources/admin/widgets/4-col_icon.png",
+            "validPageTypes": [
+                "*"
+            ],
+            "columns": [
+                {
+                    "width": "25%"
+                },
+                {
+
+                    "width": "25%"
+                },
+                {
+
+                    "width": "25%"
+                },
+                {
+
+                    "width": "25%"
+                }
+            ]
+        }
+    ],
     "widgets": [
         {
             "defaultConfig": {

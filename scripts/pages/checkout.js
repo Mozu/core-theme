@@ -1,4 +1,3 @@
-/* globals V: true */
 require(["modules/jquery-mozu", "underscore", "hyprlive", "modules/backbone-mozu", "modules/models-checkout", "modules/views-messages", "modules/cart-monitor", 'hyprlivecontext', 'modules/editable-view', 'modules/preserve-element-through-render'], function ($, _, Hypr, Backbone, CheckoutModels, messageViewFactory, CartMonitor, HyprLiveContext, EditableView, preserveElements) {
 
     var CheckoutStepView = EditableView.extend({
@@ -181,7 +180,7 @@ require(["modules/jquery-mozu", "underscore", "hyprlive", "modules/backbone-mozu
                 this.visaCheckoutInitialized = true;
             }
         },
-        updateAcceptsMarketing: function(e) {
+        updateAcceptsMarketing: function() {
             this.model.getOrder().set('acceptsMarketing', $(e.currentTarget).prop('checked'));
         },
         updatePaymentType: function(e) {
@@ -243,7 +242,8 @@ require(["modules/jquery-mozu", "underscore", "hyprlive", "modules/backbone-mozu
             var val = $(e.currentTarget).prop('value'),
                 creditCode = $(e.currentTarget).attr('data-mz-credit-code-target');  //target
             if (!creditCode) {
-                throw new Error('checkout.applyDigitalCredit could not find target.');
+                console.log('checkout.applyDigitalCredit could not find target.');
+                return;
             }
             var amtToApply = this.stripNonNumericAndParseFloat(val);
             
@@ -301,9 +301,21 @@ require(["modules/jquery-mozu", "underscore", "hyprlive", "modules/backbone-mozu
             // on success, attach the encoded payment data to the window
             // then call the sdk's api method for digital wallets, via models-checkout's helper
             V.on("payment.success", function(payment) {
+                console.log({ success: payment });
                 me.editing.savedCard = false;
                 me.model.parent.processDigitalWallet('VisaCheckout', payment);
             });
+
+            // for debugging purposes only. don't use this in production
+            V.on("payment.cancel", function(payment) {
+                console.log({ cancel: JSON.stringify(payment) });
+            });
+
+            // for debugging purposes only. don't use this in production
+            V.on("payment.error", function(payment, error) {
+                console.warn({ error: JSON.stringify(error) });
+            });
+
             V.init({
                 apikey: apiKey,
                 clientId: clientId,

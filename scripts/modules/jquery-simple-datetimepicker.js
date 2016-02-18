@@ -1,4 +1,3 @@
-/* jshint ignore:start */
 /**
  * jquery-simple-datetimepicker (jquery.simple-dtpicker.js)
  * v1.13.0
@@ -1522,4 +1521,3 @@
     });
 
 })(jQuery);
-/* jshint ignore:end */

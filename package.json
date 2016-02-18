@@ -2,40 +2,20 @@
   "name": "mozu-core-theme",
   "author": "Volusion, Inc.",
   "description": "The core storefront theme for Mozu.",
-  "version": "9.2.1",
-  "repository": {
-    "type": "git",
-    "url": "https://github.com/mozu/core-theme.git"
-  },
+  "version": "8.0.0-4",
   "devDependencies": {
     "grunt": "~0.4",
-    "grunt-contrib-compress": "^0.14.0",
-    "grunt-contrib-copy": "^0.8.2",
-    "grunt-contrib-jshint": "~0.11",
+    "grunt-bower-task": "~0.4",
+    "grunt-contrib-compress": "^0.13.0",
+    "grunt-contrib-jshint": "~0.8",
     "grunt-contrib-watch": "~0.6",
-    "grunt-mozu-appdev-sync": "^2.1.0",
-    "grunt-newer": "^1.1.1",
-    "mozu-theme-helpers": "^1.2.2",
-    "time-grunt": "^1.2.2"
+    "grunt-jsonlint": "*",
+    "grunt-mozu-appdev-sync": "^0.5.1",
+    "semver": "^5.0.1",
+    "thmaa": "^0.10.4"
   },
   "engines": {
     "node": ">=0.10"
   },
-  "dependencies": {
-    "backbone": "1.1.2",
-    "bootstrap": "3.2.0",
-    "jquery-colorbox": "1.5.15",
-    "jquery.cookie": "1.4.1",
-    "typeahead.js": "0.10.5",
-    "underscore": "1.6.0"
-  },
-  "exportsOverride": {
-    "bootstrap": [
-      "js/affix.js",
-      "js/popover.js",
-      "js/tooltip.js",
-      "js/scrollspy.js"
-    ]
-  },
-  "license": "ISC"
+  "dependencies": {}
 }
