@@ -1,4 +1,4 @@
-import { 
+import {
     POSITION_DICTIONARY,
     BLOCK_TYPES,
     CONTENT_SELECTOR,
@@ -22,8 +22,14 @@ import {
     CONTENT_SCREEN_CLASSNAME,
     CONTENT_VIEW_CLASSNAME,
     ROW_TITLE,
-    DATA_GRID_ATTRIBUTE
+    DATA_GRID_ATTRIBUTE,
+    COL_CLASSNAME
 } from './constants';
+
+import {
+    classMaker,
+    updateColSpanCls
+} from './util';
 
 (function(win, doc) {
 
@@ -37,9 +43,7 @@ import {
             this.createHintBar();
             this.createDragIcon();
             this.createResizer();
-            this.resetDirtyState();
             this.fireEvent('pageload', this);
-            this._dirty = false;
         }
 
         updateAllContentWidgets() {
@@ -252,6 +256,19 @@ import {
             else {
                 nextSibling.style.width = remainingColumnsWidth + '%';
             }
+
+            this.updateSpan(computedPercentage, 12, col, nextSibling);
+        }
+
+        updateSpan(colWithPercent, gridSpan, col, nextSibling) {
+            const colSpan = this.getSpanClass(col.classList);
+            const nextSiblingSpan = this.getSpanClass(nextSibling.classList);
+            const newSpan = Math.round((colWithPercent / 100) * gridSpan);
+            const delta = newSpan - colSpan;
+            const nextColSpan = Math.abs(delta - parseInt(nextSiblingSpan, 10));
+
+            updateColSpanCls(col, classMaker(newSpan, gridSpan));
+            updateColSpanCls(nextSibling, classMaker(nextColSpan, gridSpan));
         }
 
         getComputedWidth(el) {

@@ -1,11 +1,4 @@
 (function e(t,n,r){function s(o,u){if(!n[o]){if(!t[o]){var a=typeof require=="function"&&require;if(!u&&a)return a(o,!0);if(i)return i(o,!0);var f=new Error("Cannot find module '"+o+"'");throw f.code="MODULE_NOT_FOUND",f}var l=n[o]={exports:{}};t[o][0].call(l.exports,function(e){var n=t[o][1][e];return s(n?n:e)},l,l.exports,e,t,n,r)}return n[o].exports}var i=typeof require=="function"&&require;for(var o=0;o<r.length;o++)s(r[o]);return s})({1:[function(require,module,exports){
-/* 
-* @Author: ben_cripps
-* @Date:   2015-12-05 15:02:05
-* @Last Modified by:   ben_cripps
-* @Last Modified time: 2016-01-07 15:53:33
-*/
-
 'use strict';
 
 Object.defineProperty(exports, '__esModule', {
@@ -26,6 +19,9 @@ var BLOCK_TYPES = {
 };
 
 exports.BLOCK_TYPES = BLOCK_TYPES;
+var DEFAULT_GRID_SPAN = 12;
+
+exports.DEFAULT_GRID_SPAN = DEFAULT_GRID_SPAN;
 var CMS_EDITING_CLASSNAME = 'mz-cms-editing';
 
 exports.CMS_EDITING_CLASSNAME = CMS_EDITING_CLASSNAME;
@@ -492,6 +488,8 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
 
 var _constants = require('./constants');
 
+var _util = require('./util');
+
 (function (win, doc) {
     var Editor = (function () {
         function Editor() {
@@ -507,9 +505,7 @@ var _constants = require('./constants');
                 this.createHintBar();
                 this.createDragIcon();
                 this.createResizer();
-                this.resetDirtyState();
                 this.fireEvent('pageload', this);
-                this._dirty = false;
             }
         }, {
             key: 'updateAllContentWidgets',
@@ -722,6 +718,20 @@ var _constants = require('./constants');
                 } else {
                     nextSibling.style.width = remainingColumnsWidth + '%';
                 }
+
+                this.updateSpan(computedPercentage, 12, col, nextSibling);
+            }
+        }, {
+            key: 'updateSpan',
+            value: function updateSpan(colWithPercent, gridSpan, col, nextSibling) {
+                var colSpan = this.getSpanClass(col.classList);
+                var nextSiblingSpan = this.getSpanClass(nextSibling.classList);
+                var newSpan = Math.round(colWithPercent / 100 * gridSpan);
+                var delta = newSpan - colSpan;
+                var nextColSpan = Math.abs(delta - parseInt(nextSiblingSpan, 10));
+
+                (0, _util.updateColSpanCls)(col, (0, _util.classMaker)(newSpan, gridSpan));
+                (0, _util.updateColSpanCls)(nextSibling, (0, _util.classMaker)(nextColSpan, gridSpan));
             }
         }, {
             key: 'getComputedWidth',
@@ -1149,7 +1159,7 @@ var _constants = require('./constants');
     });
 })(window, document);
 
-},{"./constants":1}],4:[function(require,module,exports){
+},{"./constants":1,"./util":6}],4:[function(require,module,exports){
 'use strict';
 
 var _createClass = (function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ('value' in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; })();
@@ -1234,10 +1244,7 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
 
 var _constants = require('./constants');
 
-// ugh to fix ie11 issue; delete when browsers support Array.from
-Array.from = function () {
-    return Array.prototype.slice.call(arguments[0]);
-};
+var _util = require('./util');
 
 (function (win, doc) {
 
@@ -1287,6 +1294,21 @@ Array.from = function () {
             value: function closest(el, cls) {
                 while (el !== doc.body) {
                     if (el.classList.contains(cls)) {
+                        return el;
+                    } else {
+                        el = el.parentNode;
+                    }
+                }
+            }
+        }, {
+            key: 'closestByRegex',
+            value: function closestByRegex(el, cls) {
+
+                // this function is really only used once
+                // to match the closest element that has cls mz-cms-col-
+
+                while (el !== doc.body) {
+                    if (el.classList.toString().match(cls)) {
                         return el;
                     } else {
                         el = el.parentNode;
@@ -1477,7 +1499,6 @@ Array.from = function () {
             key: 'onDrag',
             value: function onDrag(e) {
                 Chorizo.editor.setDirtyState(true);
-
                 Chorizo.editor.updateDragIconPosition(e);
             }
         }, {
@@ -1744,12 +1765,22 @@ Array.from = function () {
         }, {
             key: 'rebase',
             value: function rebase(containingRow) {
+                var row = new Row();
                 var cols = Array.from(containingRow.querySelectorAll(_constants.ALL_COL_SELECTOR)).filter(function (col) {
                     return col.parentNode.isSameNode(containingRow);
                 });
 
+                var grid = this.closest(containingRow, _constants.GRID_CLASSNAME);
+                var gridSpan = (0, _util.getGridSpan)(grid);
+
+                var ans = Math.floor(gridSpan / cols.length);
+                var rem = gridSpan % cols.length;
+
                 cols.forEach(function (col) {
+                    var cls = row.getSpanClass(gridSpan, cols, ans, rem);
                     col.style.width = 1 / cols.length * 100 + '%';
+
+                    (0, _util.updateColSpanCls)(col, cls);
                 });
             }
         }, {
@@ -1777,7 +1808,8 @@ Array.from = function () {
                     return child.classList && !child.classList.contains(_constants.LAYOUT_WIDGET_HEADER_CLASSNAME) && !child.classList.contains('mz-cms-hint-bar');
                 });
 
-                parentLayout = containingRow.parentNode ? this.closest(containingRow.parentNode, _constants.COL_CLASSNAME) : null;
+                // get the column which contains the element
+                parentLayout = containingRow.parentNode ? this.closestByRegex(containingRow.parentNode, _constants.COL_CLASSNAME) : null;
 
                 // if the element has children DONT add the drop hint
                 if (!children) {
@@ -1931,6 +1963,39 @@ Array.from = function () {
                 Chorizo.editor.hideHintBar();
             }
         }, {
+            key: 'getSpanClass',
+            value: function getSpanClass(gridSpan, children, ans, rem) {
+                var width = ans + (rem-- > 0 ? 1 : 0);
+                var cls = (0, _util.classMaker)(width, gridSpan);
+                return cls;
+            }
+        }, {
+            key: 'updateColClasses',
+            value: function updateColClasses() {
+                var _this6 = this;
+
+                var children = this.getChildCols();
+                var grid = this.closest(this.element, _constants.GRID_CLASSNAME);
+                var gridSpan = (0, _util.getGridSpan)(grid);
+
+                var ans = Math.floor(gridSpan / children.length);
+                var rem = gridSpan % children.length;
+
+                children.forEach(function (col) {
+                    var cls = _this6.getSpanClass(gridSpan, children, ans, rem);
+                    (0, _util.updateColSpanCls)(col, cls);
+                });
+            }
+        }, {
+            key: 'getChildCols',
+            value: function getChildCols() {
+                var _this7 = this;
+
+                return Array.from(this.element.querySelectorAll(_constants.ALL_COL_SELECTOR)).filter(function (col) {
+                    return col.parentNode.isSameNode(_this7.element);
+                }, this);
+            }
+        }, {
             key: 'isValidHint',
             value: function isValidHint() {
 
@@ -2017,17 +2082,18 @@ Array.from = function () {
         }, {
             key: 'addRowHeaderEvents',
             value: function addRowHeaderEvents() {
-                var _this6 = this;
+                var _this8 = this;
 
                 [{ el: this.del, ev: this.destroy }, { el: this.edit, ev: this.editLayout }].forEach(function (ob) {
-                    return ob.el.addEventListener(ob.type || 'click', ob.ev.bind(_this6));
+                    return ob.el.addEventListener(ob.type || 'click', ob.ev.bind(_this8));
                 }, this);
             }
         }, {
             key: 'destroy',
             value: function destroy() {
+
                 Chorizo.editor.setDirtyState(true);
-                var parentLayout = this.closest(this.element.parentNode, _constants.COL_CLASSNAME);
+                var parentLayout = this.closestByRegex(this.element.parentNode, _constants.COL_CLASSNAME);
                 var col = undefined;
 
                 this.remove(this.element);
@@ -2037,6 +2103,7 @@ Array.from = function () {
                 })) {
                     col = new Col();
                     col.element = parentLayout;
+
                     if (!col.element.querySelector(_constants.ROW_SELECTOR)) {
                         col.addDropHint();
                     }
@@ -2086,7 +2153,7 @@ Array.from = function () {
         }, {
             key: 'editLayout',
             value: function editLayout() {
-                var _this7 = this;
+                var _this9 = this;
 
                 var me = this;
                 var config = {};
@@ -2095,7 +2162,7 @@ Array.from = function () {
 
                 Array.from(this.element.querySelectorAll(_constants.ALL_COL_SELECTOR)).forEach(function (col) {
 
-                    if (col.parentNode.isSameNode(_this7.element)) {
+                    if (col.parentNode.isSameNode(_this9.element)) {
 
                         config['mz-col' + counter] = me.getConvertedWidth(col);
                         counter++;
@@ -2144,7 +2211,7 @@ Array.from = function () {
         _inherits(Col, _LayoutComponent2);
 
         function Col(el, isEmptyGrid) {
-            var _this8 = this;
+            var _this10 = this;
 
             _classCallCheck(this, Col);
 
@@ -2154,7 +2221,7 @@ Array.from = function () {
             this._colmouseposition = null;
 
             ['mz-layout-col', _constants.COL_CLASSNAME, 'mz-editing', _constants.CONTENT_VIEW_CLASSNAME, 'mz-cms-show-zone'].forEach(function (cls) {
-                return _this8.element.classList.add(cls);
+                return _this10.element.classList.add(cls);
             }, this);
 
             if (Chorizo.editor.areDropzonesHidden) {
@@ -2203,11 +2270,11 @@ Array.from = function () {
         }, {
             key: 'addDragHandle',
             value: function addDragHandle() {
-                var _this9 = this;
+                var _this11 = this;
 
                 this.handle = doc.createElement('div');
                 ['ui-draggable', 'resizer-column'].forEach(function (cls) {
-                    return _this9.handle.classList.add(cls);
+                    return _this11.handle.classList.add(cls);
                 }, this);
                 this.element.appendChild(this.handle);
 
@@ -2456,6 +2523,7 @@ Array.from = function () {
         }, {
             key: 'insertWidgetElement',
             value: function insertWidgetElement(cb, html, cfg) {
+                var row = new Row();
                 var block = undefined;
                 var layout = undefined;
 
@@ -2468,6 +2536,7 @@ Array.from = function () {
                     layout = this.renderWidgetWithLayout(block);
                     this.element.appendChild(layout.element);
                     Chorizo.editor.showLayoutHeaders(false);
+                    layout.row.updateColClasses();
                 } else if (this._colmouseposition.position === _constants.POSITION_DICTIONARY.BOTTOM) {
                     if (!this.element.querySelector(_constants.BLOCK_SELECTOR)) {
                         this.element.appendChild(block.element);
@@ -2478,6 +2547,8 @@ Array.from = function () {
                     this.element.insertBefore(block.element, this._colmouseposition.element);
                 } else if (this._colmouseposition.position === _constants.POSITION_DICTIONARY.LEFT || this._colmouseposition.position === _constants.POSITION_DICTIONARY.RIGHT) {
                     this.insertColWithWidget(block, this._colmouseposition.position);
+                    row.element = block.element.parentNode.parentNode;
+                    row.updateColClasses();
                 }
 
                 if (cb) {
@@ -2492,8 +2563,9 @@ Array.from = function () {
         }, {
             key: 'doColumnInsert',
             value: function doColumnInsert(positionObject, cb) {
-                var _this10 = this;
+                var _this12 = this;
 
+                var row = new Row();
                 var cols = this.layout.element.querySelectorAll('.mz-layout-col');
                 var newlyAddedCol = undefined;
 
@@ -2502,10 +2574,10 @@ Array.from = function () {
                     if (positionObject.position === _constants.POSITION_DICTIONARY.RIGHT) {
 
                         // if the drop element has children, we need to append it to the containing row, and not the column
-                        if (_this10.containsInteriorRow(positionObject.element)) {
+                        if (_this12.containsInteriorRow(positionObject.element)) {
                             positionObject.element.parentNode.parentNode.insertBefore(col, positionObject.element.parentNode.nextSibling);
                             newlyAddedCol = new Col(col);
-                            _this10.rebase(positionObject.element.parentNode.parentNode);
+                            _this12.rebase(positionObject.element.parentNode.parentNode);
                         } else {
                             positionObject.element.parentNode.insertBefore(col, positionObject.element.nextSibling);
                             newlyAddedCol = new Col(col);
@@ -2514,10 +2586,10 @@ Array.from = function () {
                         // adding new columns to left
 
                         // if the drop element has children, we need to append it to the containing row, and not the column
-                        if (_this10.containsInteriorRow(positionObject.element)) {
+                        if (_this12.containsInteriorRow(positionObject.element)) {
                             positionObject.element.parentNode.parentNode.insertBefore(col, positionObject.element.parentNode);
                             newlyAddedCol = new Col(col);
-                            _this10.rebase(positionObject.element.parentNode.parentNode);
+                            _this12.rebase(positionObject.element.parentNode.parentNode);
                         } else {
                             positionObject.element.parentNode.insertBefore(col, positionObject.element);
                             newlyAddedCol = new Col(col);
@@ -2525,7 +2597,7 @@ Array.from = function () {
                     }
 
                     if (cb) {
-                        cb.call(_this10, newlyAddedCol);
+                        cb.call(_this12, newlyAddedCol);
                     }
                 });
 
@@ -2534,11 +2606,13 @@ Array.from = function () {
         }, {
             key: 'insertLayoutElement',
             value: function insertLayoutElement(cfg, cb) {
-
+                var isColInsert = false;
                 var newCol = undefined;
                 var row = undefined;
+
                 // defer to column actions first
                 if (this._colmouseposition && this._colmouseposition.position) {
+                    isColInsert = true;
                     this.doColumnInsert(this._colmouseposition, cb);
                 }
                 // else, a action happend within a row
@@ -2557,6 +2631,7 @@ Array.from = function () {
                             if (this.element.parentNode.parentNode.classList.contains(_constants.GRID_CLASSNAME)) {
                                 return false;
                             }
+                            isColInsert = true;
                             this.doColumnInsert(_mouseposition, cb);
                         }
                     }
@@ -2573,6 +2648,10 @@ Array.from = function () {
                 if (newCol && cb) {
                     cb.call(newCol, newCol);
                 }
+
+                if (!isColInsert) {
+                    row.updateColClasses();
+                }
             }
         }, {
             key: 'removeDropHint',
@@ -2585,7 +2664,6 @@ Array.from = function () {
         }, {
             key: 'addDropHint',
             value: function addDropHint() {
-
                 var content = doc.createElement('div');
                 var text = doc.createElement('span');
                 text.innerHTML = _constants.DROP_HINT_TEXT;
@@ -2623,6 +2701,7 @@ Array.from = function () {
 
         if (Chorizo.editor.hideLayouts) {
             Chorizo.editor.showLayoutHeaders(false);
+            Chorizo.editor.resetDirtyState();
         }
 
         var target = new Target();
@@ -2631,7 +2710,50 @@ Array.from = function () {
     });
 })(window, document);
 
-},{"./constants":1}],6:[function(require,module,exports){
+},{"./constants":1,"./util":6}],6:[function(require,module,exports){
+'use strict';
+
+Object.defineProperty(exports, '__esModule', {
+    value: true
+});
+exports.getGridSpan = getGridSpan;
+exports.classMaker = classMaker;
+exports.updateColSpanCls = updateColSpanCls;
+
+var _constants = require('./constants');
+
+// ugh to fix ie11 issue; delete when browsers support Array.from
+Array.from = function () {
+    return Array.prototype.slice.call(arguments[0]);
+};
+
+function getGridSpan(grid) {
+    var gridSpan = grid && grid.getAttribute(_constants.DATA_GRID_ATTRIBUTE) ? JSON.parse(grid.getAttribute(_constants.DATA_GRID_ATTRIBUTE)).span : _constants.DEFAULT_GRID_SPAN;
+
+    return gridSpan;
+}
+
+function classMaker(span, gridSpan) {
+
+    if (!span || !gridSpan) {
+        return _constants.COL_CLASSNAME;
+    }
+
+    return '' + _constants.COL_CLASSNAME + span + '-' + gridSpan;
+}
+
+function updateColSpanCls(col, newCls) {
+
+    col.classList.forEach(function (colClass) {
+
+        if (colClass.match(/col-/)) {
+            col.classList.remove(colClass);
+            col.classList.add(newCls);
+        }
+    });
+}
+
+},{"./constants":1}],7:[function(require,module,exports){
 'use strict';
 
 var _createClass = (function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ('value' in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; })();
@@ -2664,4 +2786,4 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
     });
 })(window, document);
 
-},{}]},{},[1,2,3,4,5,6]);
+},{}]},{},[1,2,3,4,5,7]);
