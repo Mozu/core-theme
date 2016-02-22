@@ -17,7 +17,7 @@ Ext.define('Taco.view.order.subform.Detail', {
     ],
     alias: 'widget.taco-orderdetail',
     itemId: 'orderDetailPanel',
-    title: 'Order Details',    
+    title: 'Order Details',   
     headerToolbar: true,
 
     bodyPadding: '0 0 0 0 ',
@@ -49,8 +49,17 @@ Ext.define('Taco.view.order.subform.Detail', {
         var me = this,
             orderItemStore;
         
-        // after the record is reloaded we will need to refresh the ui
+        this.titleTemplate = new Ext.XTemplate(
+            'Order Details<tpl if="priceListAvail"> | {priceListName} Pricing</tpl>'
+        );
 
+        this.title = this.titleTemplate.apply({
+            orderNumber: me.record ? me.record.get('orderNumber') : '<New>',
+            priceListAvail: me.record && me.record.get('priceListName').length > 0 ? true : false,
+            priceListName: me.record && me.record.get('priceListName').length > 0 ? me.record.get('priceListName') : null
+        });
+
+        // after the record is reloaded we will need to refresh the ui
         me.mon(me.record, "aftercommit", function () {            
             me.onRecordChange();
         }, me);

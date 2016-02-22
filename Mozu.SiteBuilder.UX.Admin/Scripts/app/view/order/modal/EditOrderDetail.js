@@ -81,11 +81,13 @@ Ext.define('Taco.view.order.modal.EditOrderDetail', {
         // Todo: Create override/mixin/plugin for Ext.Window to add support for relative height and width with min max values.
 
         this.titleTemplate = new Ext.XTemplate(
-            'Order No. {orderNumber}'
+            'Order No. {orderNumber}<tpl if="priceListAvail"> | {priceListName} Pricing</tpl>'
         );
 
         this.title = this.titleTemplate.apply({
-            orderNumber: me.record ? me.record.get('orderNumber') : '<New>'
+            orderNumber: me.record ? me.record.get('orderNumber') : '<New>',
+            priceListAvail: me.record && me.record.get('priceListName').length > 0 ? true : false,
+            priceListName: me.record && me.record.get('priceListName').length > 0 ? me.record.get('priceListName') : null
         });
 
         
