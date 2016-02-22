@@ -13,9 +13,30 @@
         type: 'hbox',
         align: 'top'
     },
+    fieldCfg: {},
+    checkboxFcg: {},
     afterChange: Ext.emptyFn,
     initComponent: function() {
         var me = this;
+
+        var checkboxCfg = {};
+
+        Ext.apply(checkboxCfg, me.checkboxCfg, {
+            margin: '25 30 0 0',
+            tabIndex: -1,
+            name: me.fieldCfg.name + 'Mode',
+            listeners: {
+                change: function(cmp, newVal, oldVal) {
+                    if (oldVal && !newVal) {
+                        me.overrideField.setValue(null);
+                    }
+                    me.overrideField.allowBlank = !(me.requireOverrideValue && newVal);
+                },
+                scope: me
+            }
+        });
+
+        me.override = Ext.widget('checkbox', checkboxCfg);
 
         var fieldCfg = {};
 
@@ -23,7 +44,7 @@
             xtype: 'currencyfield',
             name: me.name,
             itemId: me.itemId,
-            allowBlank: true,
+            allowBlank: !(me.requireOverrideValue && me.override.getValue()),
             hideTrigger: true,
             margin: '0 30 0 0',
             required: false,
@@ -39,24 +60,16 @@
             }
         });
 
-        me.currencyField = Ext.widget(fieldCfg);
+        me.overrideField = Ext.widget(fieldCfg);
 
-        me.override = Ext.widget('checkbox', {
-            margin: '25 30 0 0',
-            tabIndex: -1,
-            name: fieldCfg.name + 'Mode',
-            listeners: {
-                change: function(cmp, newVal, oldVal) {
-                    if (oldVal && !newVal) {
-                        me.currencyField.setValue(null);
-                    }
-                },
-                scope: me
-            }
-        });
-
-        me.items = [me.override, me.currencyField];
+        me.items = [me.override, me.overrideField];
 
         me.callParent(arguments);
+    },
+    isOverridden: function() {
+        return this.override.getValue();
+    },
+    getStatus: function() {
+        return this.isOverridden ? 'Overridden' : 'UseCatalog';
     }
  });

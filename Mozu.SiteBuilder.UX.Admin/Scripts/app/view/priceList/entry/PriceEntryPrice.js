@@ -34,10 +34,11 @@ Ext.define('Taco.view.priceList.entry.PriceEntryPrice', {
                 itemId: 'priceField',
                 fieldLabel: 'Price',
                 currencyCode: me.currencyCode
-            }
+            },
+            requireOverrideValue: true
         });;
 
-        this.salePriceOverride = Ext.widget('overridefield', {
+        me.salePriceOverride = Ext.widget('overridefield', {
             fieldCfg: {
                 name: 'salePrice',
                 itemId: 'salePriceField',
@@ -46,7 +47,7 @@ Ext.define('Taco.view.priceList.entry.PriceEntryPrice', {
             }
         });
 
-        this.basicPanel = {
+        me.basicPanel = {
             xtype: 'panel',
             title: 'Basic',
             layout: {
@@ -55,79 +56,125 @@ Ext.define('Taco.view.priceList.entry.PriceEntryPrice', {
             },
             width: '50%',
             padding: '20',
+            defaults: {
+                flex: 1,
+                defaults: {
+                    flex: 1
+                }
+            },
             items: [
                 {
                     xtype: 'panel',
                     layout: {
                         type: 'hbox',
-                        align: 'bottom'
+                        align: 'top'
                     },
                     width: '50%',
                     items: [
-                        this.priceOverride,
-                        this.salePriceOverride
+                        me.priceOverride,
+                        me.salePriceOverride
                     ]
                 }
             ]
         };
 
-        this.msrpOverride = Ext.widget('overridefield', {
+        me.msrpOverride = Ext.widget('overridefield', {
             fieldCfg: {
-                name: 'msrpPrice',
+                name: 'msrp',
                 itemId: 'msrpPriceField',
                 fieldLabel: 'MSRP',
-                currencyCode: me.currencyCode,
+                currencyCode: me.currencyCode
             }
         });
         
-        this.costOverride = Ext.widget('overridefield', {
+        me.costOverride = Ext.widget('overridefield', {
             fieldCfg: {
                 name: 'costPrice',
                 itemId: 'costPriceField',
                 fieldLabel: 'Cost',
-                currencyCode: me.currencyCode,
+                currencyCode: me.currencyCode
             }
         });
 
-        this.mapOverride = Ext.widget('overridefield', {
+        me.mapOverride = Ext.widget('overridefield', {
             fieldCfg: {
-                name: 'MAP',
+                name: 'map',
                 itemId: 'MAPField',
                 fieldLabel: 'MAP',
                 currencyCode: me.currencyCode,
+                onChange: function(newVal, oldVal) {
+                    if (newVal) {
+                        me.mapStartDate.enable();
+                        me.mapEndDate.enable();
+                    }
+                    else {
+                        me.mapStartDate.disable();
+                        me.mapStartDate.setValue(null);
+                        me.mapEndDate.disable();
+                        me.mapEndDate.setValue(null);
+                    }
+                }
             }
         });
 
-        this.mapStartDate = Ext.create('Taco.core.ux.form.DateTime', {
+        me.mapStartDate = Ext.create('Taco.core.ux.form.DateTime', {
             minValue: new Date(),
-            fieldLabel: 'MAP Start Date'
+            fieldLabel: 'MAP Start Date',
+            name: 'MAPStartDate',
+            disabled: !me.mapOverride.isOverridden(),
+            emptyText: 'Default'
         });
 
-        this.mapEndDate = Ext.create('Taco.core.ux.form.DateTime', {
-            fieldLabel: 'MAP End Date'
+        me.mapEndDate = Ext.create('Taco.core.ux.form.DateTime', {
+            minValue: new Date(),
+            fieldLabel: 'MAP End Date',
+            name: 'MAPEndDate',
+            disabled: !me.mapOverride.isOverridden(),
+            emptyText: 'Default'
         });
 
-        this.discountRestriction = Ext.widget('selectfield', {
+        me.discountRestriction = Ext.widget('selectfield', {
             fieldLabel: 'Discounts Restriction',
+            name: 'discountsRestricted',
             store: Ext.create('Ext.data.ArrayStore', {
                 fields: ['text', 'value'],
                 data: [
-                    ['Default', 'Default'],
-                    ['On', 'On'],
-                    ['Off', 'Off']
+                    ['Default', null],
+                    ['On', true],
+                    ['Off', false]
                 ]
-            })
+            }),
+            onChange: function(newVal, oldVal) {
+                if (newVal === 'On') {
+                    me.restrictionStartDate.enable();
+                    me.restrictionEndDate.enable();
+                }
+                else {
+                    me.restrictionStartDate.disable();
+                    me.restrictionStartDate.setValue(null);
+                    me.restrictionEndDate.disable();
+                    me.restrictionEndDate.setValue(null);
+                }
+            }
         });
 
-        this.restrictionStartDate = Ext.create('Taco.core.ux.form.DateTime', {
+        me.restrictionStartDate = Ext.create('Taco.core.ux.form.DateTime', {
             minValue: new Date(),
-            fieldLabel: 'Restriction Start Date'
-        });
-        this.restrictionEndDate = Ext.create('Taco.core.ux.form.DateTime', {
-            fieldLabel: 'Restriction End Date'
+            fieldLabel: 'Restriction Start Date',
+            name: 'discountsRestrictedStartDate',
+            disabled: me.discountRestriction.getValue() !== 'On',
+            emptyText: 'Default'
         });
 
-        this.advancedPanel = {
+        me.restrictionEndDate = Ext.create('Taco.core.ux.form.DateTime', {
+            minValue: new Date(),
+            fieldLabel: 'Restriction End Date',
+            name: 'discountsRestrictedEndDate',
+            disabled: me.discountRestriction.getValue() !== 'On',
+            emptyText: 'Default'
+        });
+
+        me.advancedPanel = {
             xtype: 'panel',
             title: 'Advanced',
             layout: {
@@ -150,45 +197,45 @@ Ext.define('Taco.view.priceList.entry.PriceEntryPrice', {
             items: [
                 {
                     items: [
-                        this.msrpOverride,
-                        this.costOverride,
+                        me.msrpOverride,
+                        me.costOverride,
                         {}
                     ]
                 },
                 {
                     items: [
-                        this.mapOverride,
-                        this.mapStartDate,
-                        this.mapEndDate
+                        me.mapOverride,
+                        me.mapStartDate,
+                        me.mapEndDate
                     ]
                 },
                 {
                     items: [
-                        this.discountRestriction,
-                        this.restrictionStartDate,
-                        this.restrictionEndDate
+                        me.discountRestriction,
+                        me.restrictionStartDate,
+                        me.restrictionEndDate
                     ]
                 }
             ]
         };
 
-        this.tabs = Ext.create('Ext.tab.Panel', {
+        me.tabs = Ext.create('Ext.tab.Panel', {
             width: "100%",
             minHeight: 475,
             style: {
                 borderColor: '#cccccc'
             },
             items: [
-                this.basicPanel, //move to subform file?
-                this.advancedPanel
+                me.basicPanel, //move to subform file?
+                me.advancedPanel
             ]
         });
 
-        this.items = [
-            this.tabs
+        me.items = [
+            me.tabs
         ];
 
-        this.callParent(arguments);
+        me.callParent(arguments);
     },
 
     // after product is selected in the productPickerfield but before the combo is closed;

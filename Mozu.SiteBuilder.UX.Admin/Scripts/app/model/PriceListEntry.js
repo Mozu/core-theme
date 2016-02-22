@@ -25,15 +25,16 @@ Ext.define('Taco.model.PriceListEntry', {
                     startDate: record.get('startDate')
                 };
             },
-            //serialize: function (v, record) {
-            //    var json = {
-            //        priceListCode: record.get('priceListCode'),
-            //        productCode: record.get('productCode'),
-            //        currencyCode: record.get('currencyCode'),
-            //        startDate: record.get('startDate')
-            //    };
-            //    return JSON.stringify(json);
-            //},
+            /*serialize: function (v, record) {
+               var json = {
+                   priceListCode: record.get('priceListCode'),
+                   productCode: record.get('productCode'),
+                   currencyCode: record.get('currencyCode'),
+                   startDate: record.get('startDate'),
+                   priceMode: record.get('priceMode') ? 'Overridden' : 'UseCatalog'
+               };
+               return JSON.stringify(json);
+            },*/
             persist: false
         },
         {
@@ -67,51 +68,75 @@ Ext.define('Taco.model.PriceListEntry', {
             type: 'auto',
             defaultValue: []
         }, {
-            name: "msrpMode",
-            type: "string",
-            defaultValue: 'UseCatalog'
+            name: 'msrpMode',
+            type: 'string',
+            defaultValue: 'UseCatalog',
+            convert: function(val, record) {
+                return val === 'UseCatalog' ? false : true;
+            },
+            serialize: function(val, record) {
+                return val ? 'Overridden' : 'UseCatalog';
+            }
         }, {
-            name: "msrp",
-            type: "float",
+            name: 'msrp',
+            type: 'float',
             useNull: true
         }, {
-            name: "mapMode",
-            type: "string",
-            defaultValue: 'UseCatalog'
+            name: 'mapMode',
+            type: 'string',
+            defaultValue: 'UseCatalog',
+            convert: function(val, record) {
+                return val === 'UseCatalog' ? false : true;
+            },
+            serialize: function(val, record) {
+                return val ? 'Overridden' : 'UseCatalog';
+            }
         }, {
-            name: "map",
-            type: "float",
+            name: 'map',
+            type: 'float',
             useNull: true
         }, {
-            name: "mapStartDate",
-            type: "date",
+            name: 'mapStartDate',
+            type: 'date',
             useNull: true,
             dateFormat: 'c'
         }, {
-            name: "mapEndDate",
-            type: "date",
+            name: 'mapEndDate',
+            type: 'date',
             useNull: true,
             dateFormat: 'c'
         }, {
-            name: "costMode",
-            type: "string",
-            defaultValue: 'UseCatalog'
+            name: 'costMode',
+            type: 'string',
+            defaultValue: 'UseCatalog',
+            convert: function(val, record) {
+                return val === 'UseCatalog' ? false : true;
+            },
+            serialize: function(val, record) {
+                return val ? 'Overridden' : 'UseCatalog';
+            }
         }, {
-            name: "cost",
-            type: "float",
+            name: 'cost',
+            type: 'float',
             useNull: true
         }, {
-            name: "discountsRestricted",
-            type: "boolean",
-            useNull: true
+            name: 'discountsRestricted',
+            type: 'boolean',
+            useNull: true,
+            convert: function(val, record) {
+                return val === 'On' ? true : false;
+            },
+            serialize: function(val, record) {
+                return val ? 'On' : 'Off';
+            }
         }, {
-            name: "discountsRestrictedStartDate",
-            type: "date",
+            name: 'discountsRestrictedStartDate',
+            type: 'date',
             useNull: true,
             dateFormat: 'c'
         }, {
-            name: "discountsRestrictedEndDate",
-            type: "date",
+            name: 'discountsRestrictedEndDate',
+            type: 'date',
             useNull: true,
             dateFormat: 'c'
         },  {
