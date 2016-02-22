@@ -325,7 +325,7 @@ Ext.define('Taco.view.customSchema.Split', {
         });
 
         
-        Taco.core.StateManager.addState('customschema?entityType=' + record.get('entityType') + '&list=' + record.get('listFQN') + '&record=' + record.get('id'));
+        // Taco.core.StateManager.addState('customschema?entityType=' + record.get('entityType') + '&list=' + record.get('listFQN') + '&record=' + record.get('id'));
     },
 
     loadEditor: function (record, opts) {
