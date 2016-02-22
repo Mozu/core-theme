@@ -123,12 +123,19 @@ Ext.define('Taco.model.PriceListEntry', {
             name: 'discountsRestricted',
             type: 'boolean',
             useNull: true,
-            convert: function(val, record) {
+            /*convert: function(val, record) {
                 return val === 'On' ? true : false;
             },
             serialize: function(val, record) {
-                return val ? 'On' : 'Off';
-            }
+                switch (val) {
+                    case true:
+                        return 'On';
+                    case false:
+                        return 'Off';
+                    default:
+                        return null;
+                }
+            }*/
         }, {
             name: 'discountsRestrictedStartDate',
             type: 'date',

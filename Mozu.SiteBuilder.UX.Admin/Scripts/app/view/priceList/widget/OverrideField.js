@@ -27,10 +27,14 @@
             name: me.fieldCfg.name + 'Mode',
             listeners: {
                 change: function(cmp, newVal, oldVal) {
-                    if (oldVal && !newVal) {
-                        me.overrideField.setValue(null);
-                    }
                     me.overrideField.allowBlank = !(me.requireOverrideValue && newVal);
+                    if (!newVal) {
+                        me.overrideField.setValue(null);
+                        me.overrideField.clearInvalid();
+                    }
+                    else if (!me.overrideField.getValue() && !me.overrideField.allowBlank) {
+                        me.overrideField.markInvalid(['This field is required'])
+                    }
                 },
                 scope: me
             }

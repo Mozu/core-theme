@@ -136,6 +136,8 @@ Ext.define('Taco.view.priceList.entry.PriceEntryPrice', {
         me.discountRestriction = Ext.widget('selectfield', {
             fieldLabel: 'Discounts Restriction',
             name: 'discountsRestricted',
+            displayFeild: 'text',
+            valueField: 'value',
             store: Ext.create('Ext.data.ArrayStore', {
                 fields: ['text', 'value'],
                 data: [
@@ -145,7 +147,7 @@ Ext.define('Taco.view.priceList.entry.PriceEntryPrice', {
                 ]
             }),
             onChange: function(newVal, oldVal) {
-                if (newVal === 'On') {
+                if (newVal === true) {
                     me.restrictionStartDate.enable();
                     me.restrictionEndDate.enable();
                 }
