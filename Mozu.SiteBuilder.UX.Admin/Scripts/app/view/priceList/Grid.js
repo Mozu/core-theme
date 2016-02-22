@@ -28,7 +28,7 @@ Ext.define('Taco.view.priceList.Grid', {
 
     contextConfig: {
         supportedLevels: ['m'],
-        requiresContextOfType: ['m']
+        requiresContextOfType: ['m', 'c', 's']
     },
 
     launchEditorOnClick: true,
