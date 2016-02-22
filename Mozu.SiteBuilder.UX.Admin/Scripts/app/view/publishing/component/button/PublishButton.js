@@ -163,9 +163,7 @@ Ext.define('Taco.view.publishing.component.button.PublishButton', {
 
         if (this.record.phantom) state = 'live';
 
-        Ext.defer(function() {
-            me[state.toLowerCase() === 'draft' || state.toLowerCase() === 'new' ? 'enable' : 'disable']();
-        }, 1100)
+        me[state.toLowerCase() === 'draft' || state.toLowerCase() === 'new' ? 'enable' : 'disable']();
 
     },
 
