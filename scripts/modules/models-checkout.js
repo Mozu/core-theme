@@ -339,7 +339,7 @@
                 check: PaymentMethods.Check
             },
             validatePaymentType: function(value, attr) {
-                var order = this.getOrder(); 
+                var order = this.getOrder();
                 var payment = order.apiModel.getCurrentPayment();
                 var errorMessage = Hypr.getLabel('paymentTypeMissing');
                 if (!value) return errorMessage;
@@ -981,7 +981,7 @@
                 }
             },
             applyPayment: function () {
-               var self = this, order = this.getOrder();
+                var self = this, order = this.getOrder();
                 this.syncApiModel();
                 if (this.nonStoreCreditTotal() > 0) {
                     return order.apiAddPayment().then(function() {
@@ -1159,7 +1159,7 @@
                 me.runForAllSteps(function() {
                     this.isLoading(true);
                 });
-                me.trigger('beforerefresh');
+                me.order.trigger('beforerefresh');
                 // void active payments; if there are none then the promise will resolve immediately
                 return api.all.apply(api, _.map(_.filter(me.apiModel.getActivePayments(), function(payment) {
                     return payment.paymentType !== 'StoreCredit' && payment.paymentType !== 'GiftCard';
