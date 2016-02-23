@@ -64,7 +64,7 @@ Ext.define('Taco.view.customSchema.SchemaList', {
         var uri = Taco.core.StateManager.getCurrentState().uri;
 
         if (uri && uri.indexOf('list=') !== -1) {
-            var stringMatch = uri.match(/list=[^?]*/)
+            var stringMatch = uri.match(/list=[^&]*/)
             var list = stringMatch && Ext.isArray(stringMatch) ? stringMatch[0].replace(/list=/, '') : null;
             var listIndex = this.store.findBy(function(rec) { return rec.get('listFQN') === list })
             
