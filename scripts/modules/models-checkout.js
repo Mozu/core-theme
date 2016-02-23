@@ -339,7 +339,7 @@
                 check: PaymentMethods.Check
             },
             validatePaymentType: function(value, attr) {
-                var order = this.getOrder();
+                var order = this.getOrder(); 
                 var payment = order.apiModel.getCurrentPayment();
                 var errorMessage = Hypr.getLabel('paymentTypeMissing');
                 if (!value) return errorMessage;
@@ -532,17 +532,19 @@
             },
 
             refreshBillingInfoAfterAddingStoreCredit: function (order, updatedOrder) {
+                var self = this;
                 //clearing existing order billing info because information may have been removed (payment info) #68583
 
                 // #73389 only refresh if the payment requirement has changed after adding a store credit.
                 var activePayments = this.activePayments();
                 var hasNonStoreCreditPayment = (_.filter(activePayments, function (item) { return item.paymentType !== 'StoreCredit'; })).length > 0;
                 if ((order.get('amountRemainingForPayment') >= 0 && !hasNonStoreCreditPayment) ||
-                    (order.get('amountRemainingForPayment') < 0 && hasNonStoreCreditPayment)) {
+                    (order.get('amountRemainingForPayment') < 0 && hasNonStoreCreditPayment)
+                    ) {
                     order.get('billingInfo').clear();
                     order.set(updatedOrder, { silent: true });
                 }
-                this.trigger('orderPayment', updatedOrder, this);
+                self.trigger('orderPayment', updatedOrder, self);
 
             },
 
@@ -608,8 +610,7 @@
                                 
                                 return order.apiAddStoreCredit({
                                     storeCreditCode: creditCode,
-                                    amount: creditAmountToApply,
-                                    email: self.get('billingContact').get('email')
+                                    amount: creditAmountToApply
                                 }).then(function (o) {
                                     self.refreshBillingInfoAfterAddingStoreCredit(order, o.data);
                                     return o;
@@ -980,7 +981,7 @@
                 }
             },
             applyPayment: function () {
-                var self = this, order = this.getOrder();
+               var self = this, order = this.getOrder();
                 this.syncApiModel();
                 if (this.nonStoreCreditTotal() > 0) {
                     return order.apiAddPayment().then(function() {
@@ -1349,7 +1350,7 @@
                             });
                     }];
                 var contactInfoContactName = contactInfo.get(contactName);
-                var customerContacts = this.get('customer').get('contacts');
+                var customerContacts = customer.get('contacts');
                     
                 if (!contactInfoContactName.get('accountId')) {
                     contactInfoContactName.set('accountId', customer.id);
@@ -1417,14 +1418,14 @@
                     isPrimaryAddress = this.isSavingNewCustomer(),
                     billingContact = billingInfo.get('billingContact').toJSON(),
                     card = billingInfo.get('card'),
-                    doSaveCard = function () {
+                    doSaveCard = function() {
                         order.cardsSaved = order.cardsSaved || customer.get('cards').reduce(function(saved, card) {
                             saved[card.id] = true;
                             return saved;
                         }, {});
                         var method = order.cardsSaved[card.get('id') || card.get('paymentServiceCardId')] ? 'updateCard' : 'addCard';
                         card.set('contactId', billingContact.id);
-                        return customer.apiModel[method](card.toJSON()).then(function (card) {
+                        return customer.apiModel[method](card.toJSON()).then(function(card) {
                             order.cardsSaved[card.data.id] = true;
                             return card;
                         });
