@@ -98,7 +98,7 @@ Ext.define('Taco.core.ux.mixins.NavHeader', {
                 me.bindActionsToForm();
             },
             titlechange: function (panel, newTitle, pillCfg) {
-                debugger;
+                
                 var me = this;
                 var parentTitleCfg = this.parentTitleCfg ? this.parentTitleCfg : {};
                 var lightTagLabel = parentTitleCfg.lightTagLabel && this.record
