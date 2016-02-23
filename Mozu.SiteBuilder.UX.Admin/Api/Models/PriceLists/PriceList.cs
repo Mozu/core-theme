@@ -52,7 +52,10 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.Models.PriceLists
         /// Used to prioritize price list resolution when more than 1 price list maps
         /// </summary>
         [DataMember(EmitDefaultValue = false)]
-        public int? ResolutionRank { get; set; }
+        public int? Rank { get; set; }
+
+        [DataMember(EmitDefaultValue = false)]
+        public bool? InheritableOnly { get; set; }
 
         public string CreateBy { get; set; }
 
