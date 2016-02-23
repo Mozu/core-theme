@@ -52,10 +52,28 @@ namespace Mozu.SiteBuilder.Mvc.MessageHandler
             var registry = requestScope.ComponentRegistry;
             var builder = new ContainerBuilder();
 
-            builder.Register(c => new HttpContextWrapper(HttpContext.Current)).As<HttpContextBase>().InstancePerLifetimeScope();
+          
+            builder.Register( c =>
+            {
+                if (HttpContext.Current != null)
+                {
+                    return (HttpContextBase)new HttpContextWrapper(HttpContext.Current);
+                }
+                else
+                {
+                    return (HttpContextBase)new DummyHttpContextBase();
+                }
+            }
+            ).As<HttpContextBase>().InstancePerLifetimeScope();
             builder.Update(registry);
         }
+        class DummyHttpContextBase: HttpContextBase
+        {
+
+        }
     }
+
+
 }
 
 

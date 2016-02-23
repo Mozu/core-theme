@@ -4,6 +4,11 @@ using System.Runtime.Caching;
 using FSharpx.Collections;
 using Mozu.Core.Api.Client.Caching;
 using System.Linq;
+using Mozu.Core;
+using Mozu.Core.Settings;
+using System.Collections.Concurrent;
+using System.Threading;
+
 namespace Mozu.SiteBuilder.Mvc.Caching
 {
     public interface IStorefrontCacheControl
@@ -67,7 +72,46 @@ namespace Mozu.SiteBuilder.Mvc.Caching
             return String.Format("tenant:{0}-{1}", siteId, key);
         }
     }
+    class EventDebouncer
+    {
+        class InvalidateArgs
+        {
+            public int? Tenant { get; set; }
+            public int? Catalog { get; set; }
+            public int? Site { get; set; }
+            public StoreFrontCacheDependencies SFCD { get; set; }
+            public DataViewModeType DataViewModeType { get; set; }
 
+            public override int GetHashCode()
+            {
+                return Tenant.GetValueOrDefault()
+                    + Catalog.GetValueOrDefault() +
+                    (int)SFCD +
+                    (int)DataViewModeType;
+
+            }
+            public override bool Equals(object obj)
+            {
+                if (obj == null)
+                {
+                    return false;
+                }
+                InvalidateArgs comp = (InvalidateArgs)obj;
+
+                return Tenant == comp.Tenant &&
+                    Catalog == comp.Catalog &&
+                    Site == comp.Site &&
+                    SFCD == comp.SFCD &&
+                    DataViewModeType == DataViewModeType;
+
+
+            }
+
+        }
+        System.Collections.Concurrent.ConcurrentDictionary<InvalidateArgs, int> _events = new System.Collections.Concurrent.ConcurrentDictionary<InvalidateArgs, int>();
+
+
+    }
     class StorefrontCacheControlImpl : IStorefrontCacheControl
     {
         private readonly IClientCacheProvider _cacheProvidere;
@@ -76,7 +120,14 @@ namespace Mozu.SiteBuilder.Mvc.Caching
         int _stagingKeyOffset = 2 ^ 29;
         Dictionary<int, ClientCacheContainer> _caches = new Dictionary<int, ClientCacheContainer>();
         Dictionary<StoreFrontCacheDependencies, List<StorefrontCacheTypes>> _cacheDeps = new Dictionary<StoreFrontCacheDependencies, List<StorefrontCacheTypes>>();
-        public StorefrontCacheControlImpl(IClientCacheProvider cacheProvidere)
+        System.Threading.Timer _invalidateTimer;
+        System.Threading.Timer _stagingInvalidateTimer;
+        int _stagingIntervalMiliSeconds = 10*1000;
+        int _intervalMiliSeconds = 3 * 60 *1000;
+        ConcurrentDictionary<InvalidateArgs, int> _events = new ConcurrentDictionary<InvalidateArgs, int>();
+        ConcurrentDictionary<InvalidateArgs, int> _stagingEvents = new ConcurrentDictionary<InvalidateArgs, int>();
+
+        public StorefrontCacheControlImpl(IClientCacheProvider cacheProvidere, ISettings settings )
         {
             _cacheProvidere = cacheProvidere;
             AddClientCacheContainer(StorefrontCacheTypes.Default, StoreFrontCacheDependencies.Catalog);
@@ -85,7 +136,38 @@ namespace Mozu.SiteBuilder.Mvc.Caching
             AddClientCacheContainer(StorefrontCacheTypes.PartialOutput, StoreFrontCacheDependencies.None);
             AddClientCacheContainer(StorefrontCacheTypes.CatalogIndependent, StoreFrontCacheDependencies.None );
             AddClientCacheContainer(StorefrontCacheTypes.ProductSearch, StoreFrontCacheDependencies.Catalog);
-         
+
+            var curTime = DateTime.Now;
+
+            var eventRelayInterval = settings.AppSettingsAsNullableInt("Sitebuilder.StorefrontCacheControlImpl:EventRelayInterval");
+            //if config wasnt set default to 3 mins for non sandbox and low for sandbox.
+            if ( !eventRelayInterval.HasValue)
+            {
+                if ( settings.CoreSettings.ScaleUnitId.IndexOf("sb", StringComparison.OrdinalIgnoreCase) > -1)
+                {
+                    eventRelayInterval = 0;
+                }
+                else
+                {
+                    eventRelayInterval = 3;
+                }
+            }
+
+            if (eventRelayInterval > 0)
+            {
+                var nextTimeInSeconds = (eventRelayInterval.Value - (curTime.Minute % eventRelayInterval.Value)) * 60 - curTime.Second;
+
+                _invalidateTimer = new System.Threading.Timer(OnTimedInvalidate, null, nextTimeInSeconds * 1000, Timeout.Infinite);
+                _intervalMiliSeconds = eventRelayInterval.Value * 60 * 1000;
+            }
+            else
+            {
+                _invalidateTimer = new System.Threading.Timer(OnTimedInvalidate, null, 10000, Timeout.Infinite);
+                _intervalMiliSeconds = 10 * 1000;
+            }
+            _stagingInvalidateTimer = new System.Threading.Timer(OnTimedInvalidateStaging, null, 10000, Timeout.Infinite);
+
+
         }
         void AddClientCacheContainer(StorefrontCacheTypes cacheType, StoreFrontCacheDependencies dep)
         {
@@ -128,32 +210,127 @@ namespace Mozu.SiteBuilder.Mvc.Caching
 
         }
 
-        public void InvalidateTenant(int tenantId, StoreFrontCacheDependencies cacheType, Mozu.Core.DataViewModeType dataModeType)
+        class InvalidateArgs
         {
-            var key = CacheKeyHelper.GetTenantCacheKey(tenantId);
-            foreach( var cache in this.GetCaches(cacheType, dataModeType))
+            public string Key { get; set; }
+            public StoreFrontCacheDependencies CacheType { get; set; }
+            public DataViewModeType DataViewModeType { get; set; }
+            int? _hash;
+            public override int GetHashCode()
+            {
+                _hash = _hash ?? Key.GetHashCode()+
+                    (int)CacheType +
+                    (int)DataViewModeType;
+                return _hash.Value;
+
+            }
+            public override bool Equals(object obj)
+            {
+                if (obj == null)
+                {
+                    return false;
+                }
+                InvalidateArgs comp = (InvalidateArgs)obj;
+
+                return Key == comp.Key &&
+                    CacheType == comp.CacheType &&
+                    DataViewModeType == DataViewModeType;
+
+
+            }
+
+        }
+
+        
+
+
+
+        void OnTimedInvalidate ( object obj)
+        {
+            var events = _events;
+            if (events.Count > 0)
+            {
+                _events = new ConcurrentDictionary<InvalidateArgs, int>();
+                foreach (var arg in events.Keys)
+                {
+                    Invalidate(arg.Key, arg.CacheType, arg.DataViewModeType);
+                }
+            }
+            _invalidateTimer.Change(_intervalMiliSeconds, Timeout.Infinite);
+
+        }
+
+        void OnTimedInvalidateStaging(object obj)
+        {
+            var events = _stagingEvents;
+            if (events.Count > 0)
+            {
+                _stagingEvents = new ConcurrentDictionary<InvalidateArgs, int>();
+                foreach (var arg in events.Keys)
+                {
+                    Invalidate(arg.Key, arg.CacheType, arg.DataViewModeType);
+                }
+            }
+            _stagingInvalidateTimer.Change(_stagingIntervalMiliSeconds, Timeout.Infinite);
+           
+        }
+
+        void  Invalidate (string key , StoreFrontCacheDependencies cacheType , DataViewModeType dataViewModeType)
+        {
+            foreach (var cache in this.GetCaches(cacheType, dataViewModeType))
             {
                 cache.Set(key, true, ObjectCache.InfiniteAbsoluteExpiration);
             }
-            
+        }
+
+        void AddEvent (InvalidateArgs args)
+        {
+            if (args.DataViewModeType.HasFlag( DataViewModeType.Pending))
+            {
+                _stagingEvents[args] = 1;
+            }
+            if (args.DataViewModeType.HasFlag(DataViewModeType.Live )|| args.DataViewModeType.HasFlag(DataViewModeType.NoneSet))
+            {
+                _events[args] = 1;
+            }
+
+        }
+
+        public void InvalidateTenant(int tenantId, StoreFrontCacheDependencies cacheType, Mozu.Core.DataViewModeType dataModeType)
+        {
+            AddEvent(new InvalidateArgs()
+            {
+                Key = CacheKeyHelper.GetTenantCacheKey(tenantId),
+                CacheType = cacheType,
+                DataViewModeType = dataModeType
+            });
+
         }
 
         public void InvalidateCatalog(int tenantId, int catalogId, StoreFrontCacheDependencies cacheType, Mozu.Core.DataViewModeType dataModeType)
         {
-            var key = CacheKeyHelper.GetCatalogCacheKey(tenantId, catalogId);
-            foreach (var cache in this.GetCaches(cacheType, dataModeType))
+            AddEvent(new InvalidateArgs()
             {
-                cache.Set(key, true, ObjectCache.InfiniteAbsoluteExpiration);
-            }
+                Key = CacheKeyHelper.GetCatalogCacheKey(tenantId, catalogId),
+                CacheType = cacheType,
+                DataViewModeType = dataModeType
+            });
+
+         
+           
+
         }
 
         public void InvalidateSite(int siteId, StoreFrontCacheDependencies cacheType, Mozu.Core.DataViewModeType dataModeType)
         {
-            var key = CacheKeyHelper.GetSiteCacheKey(siteId);
-            foreach (var cache in this.GetCaches(cacheType, dataModeType))
+            AddEvent(new InvalidateArgs()
             {
-                cache.Set(key, true, ObjectCache.InfiniteAbsoluteExpiration);
-            }
+                Key = CacheKeyHelper.GetSiteCacheKey(siteId),
+                CacheType = cacheType,
+                DataViewModeType = dataModeType
+            });
+          
+            
         }
 
         public ClientCacheContainer GetCache(StorefrontCacheTypes cacheType, Mozu.Core.DataViewModeType dataModeType)
@@ -161,5 +338,8 @@ namespace Mozu.SiteBuilder.Mvc.Caching
             var offSet = dataModeType == Core.DataViewModeType.Pending ? _stagingKeyOffset : 0;
             return _caches[(int)cacheType + offSet];
         }
+
+        
+
     }
 }

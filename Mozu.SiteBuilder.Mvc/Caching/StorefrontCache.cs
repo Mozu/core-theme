@@ -11,6 +11,9 @@ using System.Collections.Generic;
 using System.Linq;
 using Mozu.Core.Logging;
 using Mozu.Core;
+using Mozu.SiteBuilder.Mvc.Contexts;
+using System.Net.Http;
+using System.Web;
 
 namespace Mozu.SiteBuilder.Mvc.Caching
 {
@@ -99,6 +102,8 @@ namespace Mozu.SiteBuilder.Mvc.Caching
             return (value is T) ? (T)value : default(T);
         }
 
+       
+
         class CacheHandler
         {
             public CacheHandler( CacheConfiguration config, Func<object, object> updateCallback, IEnumerable<string> dependencies, IList<string> filePaths)
@@ -124,10 +129,13 @@ namespace Mozu.SiteBuilder.Mvc.Caching
                 object newObj = null;
                 try
                 {
+                    System.Diagnostics.Debug.WriteLine("starting refresh of" + args.Key, "cache updater");
                     newObj = UpdateCallback(origionalObj);
+                    System.Diagnostics.Debug.WriteLine("ending refresh of" + args.Key, "cache updater");
                 }
                 catch ( Exception ex)
                 {
+                    System.Diagnostics.Debug.WriteLine("error on refresh of" + args.Key + " " + ex.ToString(), "cache updater");
                     LoggingService.LoggerFor<StorefrontCache>().Warn(string.Format("error in cache updateCallback [{0}, {1}]", args.Key, args.Source.Name), ex);
                 }
                  
@@ -232,5 +240,70 @@ namespace Mozu.SiteBuilder.Mvc.Caching
 
             
         }
+    }
+
+    public class CacheCallBacker<T>: CacheCallBacker
+    {
+
+        Func<T, object, object> _handler;
+        public CacheCallBacker( ILifetimeScope existingScope , Func<T,object, object> handler): base(existingScope, (l,o)=> handler(l.Resolve<T>() , o ))
+        {
+            _handler = handler;
+        }
+    }
+
+    public class CacheCallBacker
+    {
+
+        ILifetimeScope _scope;
+        Func<ILifetimeScope, object, object> _handler;
+        public CacheCallBacker(ILifetimeScope existingScope, Func<ILifetimeScope, object, object> handler)
+        {
+            _handler = handler;
+            try {
+                var apiContext = existingScope.Resolve<ISiteBuilderApiContext>();
+                var siteContext = existingScope.Resolve<ISiteContext>();
+
+                var pageContext = existingScope.Resolve<IPageContext>();
+                var request = existingScope.Resolve<HttpRequestMessage>();
+                var httpContext = existingScope.Resolve<HttpContextBase>();
+                var cookieProvider = existingScope.Resolve<ICookieProvider>();
+                _scope = existingScope.BeginLifetimeScope(Autofac.Core.Lifetime.MatchingScopeLifetimeTags.RequestLifetimeScopeTag, cb =>
+                {
+                    cb.Register(c => apiContext).As<IApiContext>().As<ISiteBuilderApiContext>();
+                    cb.Register(c => siteContext).As<ISiteContext>();
+                    cb.Register(c => pageContext).As<IPageContext>();
+                    cb.Register(c => request).As<HttpRequestMessage>();
+                    cb.Register(c => httpContext).As<HttpContextBase>();
+                    cb.Register(c => cookieProvider).As<ICookieProvider>();
+                    if (siteContext is SiteContext)
+                    {
+                        cb.Register(c => (SiteContext)siteContext).As<SiteContext>();
+                    }
+                    if (pageContext is PageContext)
+                    {
+                        cb.Register(c => (PageContext)pageContext).As<PageContext>();
+                    }
+                });
+            }
+            catch (Exception ex)
+            {
+                //dies on tests... tbd refactor
+                System.Diagnostics.Trace.WriteLine(ex.ToString());
+            }
+
+
+
+        }
+
+
+        public object CacheCallBack(object oldCacheValue)
+        {
+            return _handler(_scope, oldCacheValue);
+        }
+
+        
+
+
     }
 }

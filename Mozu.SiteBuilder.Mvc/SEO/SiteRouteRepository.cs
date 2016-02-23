@@ -51,8 +51,8 @@ namespace Mozu.SiteBuilder.Mvc.SEO
             { FancyRoute.Cart, "index" },
             { FancyRoute.Arcjs, null },
         };
-        
 
+        Autofac.ILifetimeScope _lifetimescope;
         public CustomRouteRepository(
             ISiteBuilderApiContext siteBuilderApiContext,
             ILogger logger,
@@ -60,7 +60,8 @@ namespace Mozu.SiteBuilder.Mvc.SEO
             ICustomRouteConstraintFactory customRouteConstraintFactory,
             IRouteDataMappingFactory routeDataMappingFactory,
             IGeneralSettingsWebApiClient genSettingsClient,
-            IDocumentListWebApiClient documentListWebApiClient)
+            IDocumentListWebApiClient documentListWebApiClient,
+            Autofac.ILifetimeScope lifetimescope = null)
         {
             _siteBuilderApiContext = siteBuilderApiContext;
             _logger = logger;
@@ -69,10 +70,83 @@ namespace Mozu.SiteBuilder.Mvc.SEO
             _routeDataMappingFactory = routeDataMappingFactory;
             _genSettingsClient = genSettingsClient.CloneWithoutUserClaims();
             _documentListWebApiClient = documentListWebApiClient.CloneWithoutUserClaims();
+            _lifetimescope = lifetimescope;
         }
 
 
-        async Task<HttpRouteCollection> ICustomRouteCollectionRepository.GetHttpRouteCollection()
+        public class HttpRouteCollectionContainer
+        {
+            public HttpRouteCollection RouteCollection { get; set; }
+            public long? LastUpdate { get; set; }
+        }
+
+
+        //Task<HttpRouteCollectionContainer> GetHttpRouteCollectionContainer(bool isCacheCallback)
+        //{
+        //    var nullResp = Task.FromResult<HttpRouteCollectionContainer>(null);
+        //    return _genSettingsClient.GetGeneralSettings()
+        //         .ContinueWith < Task<HttpRouteCollectionContainer>>(genSettingsResponse =>
+        //        {
+        //            var genSettings = genSettingsResponse.Result.ReadAsSync();
+
+        //            if (genSettings == null) return nullResp;
+
+        //            var routes = genSettings.CustomRoutes;
+        //            var lastUpdate = genSettings.AuditInfo.UpdateDate.GetValueOrDefault(DateTime.MaxValue).Ticks;
+        //            if (routes == null) return nullResp;
+
+
+        //            if (isCacheCallback)
+        //            {
+        //                return CreateRouteCollectionFromSettings(routes).ContinueWith(col =>
+        //                {
+        //                    new HttpRouteCollectionContainer()
+        //                    {
+        //                        RouteCollection = col.Result,
+        //                        LastUpdate = lastUpdate
+        //                    };
+        //                })l;
+
+        //            }
+
+
+        //            var key = GetType().FullName +
+        //                  ((_siteBuilderApiContext.DataViewMode == DataViewModeType.Pending) ? "1" : "0") +
+        //                  _siteBuilderApiContext.SiteId; // TODO: go add auditInfo to the custom routes, or at least mirror the ones from general settings on the server-side./
+
+
+
+        //           var ret = _cache.Get<HttpRouteCollectionContainer>(key, CacheScope.Site, StorefrontCacheTypes.CatalogIndependent);
+        //            if (ret != null && ret.LastUpdate == lastUpdate)
+        //            {
+        //                return Task.FromResult<HttpRouteCollectionContainer>(ret);
+        //            }
+
+
+        //            return CreateRouteCollectionFromSettings(routes).ContinueWith(col =>
+        //            {
+        //                ret = new HttpRouteCollectionContainer()
+        //                {
+        //                    RouteCollection = col.Result,
+        //                    LastUpdate = lastUpdate
+        //                };
+        //                _cache.Set(key,
+        //                  ret,
+        //                  CacheScope.Site,
+        //                  StorefrontCacheTypes.CatalogIndependent,
+        //                  new CacheCallBacker<ICustomRouteCollectionRepository>(_lifetimescope, (repo, obj) => ((CustomRouteRepository)repo).GetHttpRouteCollectionContainer(true).Result).CacheCallBack
+        //                  );
+        //            });
+
+
+        //        });
+
+        //}
+
+        static System.Collections.Concurrent.ConcurrentDictionary<int, System.Threading.SemaphoreSlim> _sempDic = new System.Collections.Concurrent.ConcurrentDictionary<int, System.Threading.SemaphoreSlim>();
+
+
+        async Task<HttpRouteCollectionContainer> GetHttpRouteCollectionContainer(bool isCacheCallback)
         {
             var genSettingsRequest = await _genSettingsClient.GetGeneralSettings().ConfigureAwait(false);
             var genSettings = genSettingsRequest.ReadAsSync();
@@ -80,20 +154,102 @@ namespace Mozu.SiteBuilder.Mvc.SEO
             if (genSettings == null) return null;
 
             var routes = genSettings.CustomRoutes;
+            var lastUpdate = genSettings.AuditInfo.UpdateDate.GetValueOrDefault(DateTime.MaxValue).Ticks;
             if (routes == null) return null;
+            
+          
+            if (isCacheCallback)
+            {
+                var col = await CreateRouteCollectionFromSettings(routes).ConfigureAwait(false);
+                 return new HttpRouteCollectionContainer()
+                {
+                    RouteCollection = col,
+                    LastUpdate = lastUpdate
+                 };
+            }
+
 
             var key = GetType().FullName +
                          ((_siteBuilderApiContext.DataViewMode == DataViewModeType.Pending) ? "1" : "0") +
-                         _siteBuilderApiContext.SiteId +
-                         genSettings.AuditInfo.UpdateDate.GetValueOrDefault(DateTime.MaxValue).Ticks; // TODO: go add auditInfo to the custom routes, or at least mirror the ones from general settings on the server-side./
+                         _siteBuilderApiContext.SiteId; 
 
-            return await _cache.AddOrGetExisting(key, CacheScope.Site, StorefrontCacheTypes.CatalogIndependent, async () => await CreateRouteCollectionFromSettings(routes).ConfigureAwait(false)).ConfigureAwait(false);
+            var ret = _cache.Get<HttpRouteCollectionContainer>(key, CacheScope.Site, StorefrontCacheTypes.CatalogIndependent);
+            if (ret != null && ret.LastUpdate == lastUpdate)
+            {
+                return ret;
+            }
+
+            var sem = _sempDic.GetOrAdd(_siteBuilderApiContext.SiteId.GetValueOrDefault(), (i) => new System.Threading.SemaphoreSlim(1, 1));
+
+            var gotLock = await sem.WaitAsync(5000).ConfigureAwait(false);
+
+            try
+            {
+                ret = _cache.Get<HttpRouteCollectionContainer>(key, CacheScope.Site, StorefrontCacheTypes.CatalogIndependent);
+
+                if (ret != null && ret.LastUpdate == lastUpdate)
+                {
+                    if (gotLock)
+                    {
+                        sem.Release();
+                        sem = null;
+                    }
+                    return ret;
+                }
+
+                ret = new HttpRouteCollectionContainer()
+                {
+                    RouteCollection = await CreateRouteCollectionFromSettings(routes).ConfigureAwait(false),
+                    LastUpdate = lastUpdate
+                };
+                _cache.Set(key,
+                       ret,
+                       CacheScope.Site,
+                       StorefrontCacheTypes.CatalogIndependent,
+                       new CacheCallBacker<ICustomRouteCollectionRepository>(_lifetimescope, (repo, obj) => ((CustomRouteRepository)repo).GetHttpRouteCollectionContainer(true).Result).CacheCallBack
+                       );
+                return ret;
+            }
+            finally
+            {
+                if (gotLock && sem != null )
+                {
+                    sem.Release();
+                    sem = null;
+                }
+                else
+                {
+                    //could of become deadlocked...
+                    _sempDic.TryRemove(_siteBuilderApiContext.SiteId.Value, out sem);
+
+                }
+
+            }
         }
+        async Task<HttpRouteCollection> ICustomRouteCollectionRepository.GetHttpRouteCollection( )
+        {
+            var col = await GetHttpRouteCollectionContainer(false).ConfigureAwait(false);
+            if ( col != null)
+            {
+                return col.RouteCollection;
+            }
+            return null;
+        }
+
+
+
+
+
+
 
         async Task<HttpRouteCollection> CreateRouteCollectionFromSettings(CustomRouteSettings customSettings)
         {
             if (customSettings == null) return null;
 
+            //clone as the object gets mutated
+            customSettings = Newtonsoft.Json.Linq.JObject.FromObject(customSettings).ToObject<CustomRouteSettings>();
+          
+          
             FixCasing(customSettings);
             var constraints =
                 customSettings.Validators
@@ -213,6 +369,10 @@ namespace Mozu.SiteBuilder.Mvc.SEO
 
                 foreach (var route in routes)
                 {
+                    if ( route == null || route.Template == null )
+                    {
+                        continue;
+                    }
                     int qpos = (route.Template ?? "").IndexOf('?');
                     if (qpos == -1)
                     {

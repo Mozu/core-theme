@@ -18,6 +18,12 @@ using Mozu.SiteBuilder.Mvc.SEO;
 using Mozu.SiteBuilder.Mvc.Catalog;
 using Mozu.SiteBuilder.UX.Models.StoreFront.Catalog;
 using Mozu.SiteBuilder.Mvc.Helpers;
+using Mozu.Core.Api.Contracts.Client;
+using Mozu.Content.Contracts;
+using System.Threading;
+using Autofac;
+using System.Net.Http;
+using System.Web;
 
 namespace Mozu.SiteBuilder.Mvc.Navigation
 {
@@ -37,6 +43,7 @@ namespace Mozu.SiteBuilder.Mvc.Navigation
         readonly NavigationNodeIndexComparer _navigationNodeIndexComparer = new NavigationNodeIndexComparer();
         readonly bool _shouldRequestInactiveDocuments;
         readonly UrlHelper _urlHelper;
+        ILifetimeScope _lifetimeScope;
 
         const string NAVIGATION_LIST_INTERNAL_CACHE_KEY = "navigation_list";
         const string NAVIGATION_TREE_CACHE_KEY = "navigation_tree";
@@ -49,11 +56,11 @@ namespace Mozu.SiteBuilder.Mvc.Navigation
 
         // the special node to assign unlinked pages as a child of.
         const string UNLINKED_PAGES_NODE_ID = "_unlinked";
-        
+
         /// <summary>
         /// Public constructor.
         /// </summary>
-        public NavigationGandalfTheWhite(IDocumentListWebApiClient documentClient, INavigationRepository navRepo,  ILogger logger, PageContext pageContext, IApiContext apicontext, ICategoryTreeProvider categoryProvider, UrlHelper urlHelper, IStorefrontCache cache = null, ICustomRouteHandler customRouteHandler= null)
+        public NavigationGandalfTheWhite(IDocumentListWebApiClient documentClient, INavigationRepository navRepo, ILogger logger, PageContext pageContext, IApiContext apicontext, ICategoryTreeProvider categoryProvider, UrlHelper urlHelper, IStorefrontCache cache = null, ICustomRouteHandler customRouteHandler = null, ILifetimeScope lifetimeScope= null)
         {
             _categoryProvider = categoryProvider;
             _documentClient = documentClient.CloneWithoutUserClaims();
@@ -63,6 +70,7 @@ namespace Mozu.SiteBuilder.Mvc.Navigation
             _cache = cache;
             _customRouteHandler = customRouteHandler;
             _urlHelper = urlHelper;
+            _lifetimeScope = lifetimeScope;
             _shouldRequestInactiveDocuments = pageContext.IsEditMode || (apicontext.UserClaims != null && apicontext.UserClaims.ScopeType.EqualsIgnoreCase(UserScopeType.Tenant.ToStringQuickly())); // if tenant admin or edit mode...
         }
 
@@ -72,45 +80,97 @@ namespace Mozu.SiteBuilder.Mvc.Navigation
         /// </summary>
         public async Task<List<ITreeNavigationNode>> GetFlatList()
         {
-            var internalList = await GetListInternal().ConfigureAwait(false);
-            var ordered = internalList.OrderBy(n => n.ParentId).ThenBy(n => n.Index);
-            SetHomePage(ordered.Where(x => x.ParentId == NAV_ROOT_NODE_NAME));
-            return ordered.ToList<ITreeNavigationNode>();
+            return (await GetSuperNavList().ConfigureAwait(false)).FlatList;
+            
         }
-
+        
         /// <summary>
         /// Get navigation as a tree. This is used by themes in storefront.
         /// </summary>
         /// <returns></returns>
-        public Task<List<IRuntimeNavigationNode>> GetTreeNavigation()
+        public async Task<List<IRuntimeNavigationNode>> GetTreeNavigation()
         {
-            return GetListInternal().ContinueWith(t =>
+            return (await GetSuperNavList().ConfigureAwait(false)).TreeList;
+
+        }
+
+
+        async Task<SuperNavigationNodeList> GetSuperNavList(bool isCacheRefreshCallback= false)
+        {
+            var data = await GetListData().ConfigureAwait(false);
+
+            if (isCacheRefreshCallback)
             {
-                var list = t.Result;
-                if (_cache != null && !string.IsNullOrEmpty(list.ETag))
-                {
-                    var cached = _cache.Get<List<IRuntimeNavigationNode>>(NAVIGATION_TREE_CACHE_KEY + list.ETag, CacheScope.Site);
-                    if (cached != null)
-                        return cached;
-                }
-                var result = BuildTree(list).Cast<IRuntimeNavigationNode>().ToList();
+                return ProccessNavData(data);
+            }
 
-                if (_cache != null && !string.IsNullOrEmpty(list.ETag))
-                {
-                    _cache.Set(NAVIGATION_TREE_CACHE_KEY + list.ETag, result, CacheScope.Site);
-                }
 
-                return result;
-            });
+            var cacheKey = GetCacheKey(data.Etag);
+            var retVal = GetFromCache(cacheKey);
+
+            if (retVal != null)
+            {
+                return retVal;
+            }
+            
+            lock (cacheKey)
+            {
+                retVal = GetFromCache(cacheKey);
+                if (retVal != null)
+                {
+                    return retVal;
+                }
+                retVal = ProccessNavData(data);
+                _cache.Set(cacheKey,
+                    retVal,
+                    CacheScope.Site,
+                    StorefrontCacheTypes.Default,
+                    new CacheCallBacker<INavigationGandalf>(_lifetimeScope, (nav, obj) => ((NavigationGandalfTheWhite)nav).GetSuperNavList(true).Result).CacheCallBack
+                    );
+                return retVal;
+            }
+
+        }
+
+
+
+        
+
+
+        private static string GetCacheKey(string etag)
+        {
+            return string.Intern(NAVIGATION_LIST_INTERNAL_CACHE_KEY + etag);
+        }
+
+        private SuperNavigationNodeList GetFromCache(string cachekey)
+        {
+            if (  _cache != null)
+            {
+                return _cache.Get<SuperNavigationNodeList>(cachekey, CacheScope.Site);
+            }
+            return null;
+
         }
 
         private class SuperNavigationNodeList : List<SuperNavigationNode>
         {
             public string ETag { get; set; }
 
-            public SuperNavigationNodeList(int capacity) : base(capacity) {}
+            public List<IRuntimeNavigationNode> TreeList { get; set; }
+            public List<ITreeNavigationNode> FlatList {get;set;}
+
+            public SuperNavigationNodeList(int capacity) : base(capacity) { }
         }
-        private Task<SuperNavigationNodeList> GetListInternal()
+        class NavData
+        {
+            public CategoryTree CatTree { get; set; }
+            public DocumentCollection Pages { get; set; }
+            public IList<INavigationNode> NavRepoResult { get; set; }
+          
+            public string Etag { get; set; }
+            public string PagesEtag { get; internal set; }
+        }
+        private Task<NavData> GetListData()
         {
             // get the list of categories
             var catTask = _categoryProvider.GetAllCategories();
@@ -118,163 +178,199 @@ namespace Mozu.SiteBuilder.Mvc.Navigation
             // get the list of pages
             var pageTask = _documentClient.GetDocuments(documentListName: "pages@mozu", pageSize: 250, includeInactive: _shouldRequestInactiveDocuments);
 
-            // get the list of blogs
+            // get the list of blogs   .. ha ha ha haa  haaa ahha   aaahhhh:)
             // var blogTask = _cmsService.GetList2(contentCollection: "blogs", pageSize: 1, filter: "DocumentTypeFQN eq blog" );
 
             // get our navigation data authority
             var navTask = _navRepo.GetNavigationSetAsync();
-
-            return Task.WhenAll(catTask, pageTask, navTask).ContinueWith(t =>
+            var compTask = Task.WhenAll(catTask, pageTask, navTask);
+            
+            var cts = new CancellationTokenSource(30000);
+            return compTask.ContinueWith((tasks) =>
             {
-                var pagesResp = pageTask.Result;
-                var pages = pagesResp.ReadAsSync();
-                var categoryTree = catTask.Result;
-                var navset = navTask.Result;
-                var navsetEtag = navset is NavigationSet ? (navset as NavigationSet).ETag : null;
-
-                string etag = CompositeETag(categoryTree.ETag, pagesResp.ETag(), navsetEtag);
-
-                if (!string.IsNullOrEmpty(etag) && _cache != null)
+                return pageTask.Result.ReadAsAsync().ContinueWith(docCollectionTask =>
                 {
-                    var cached = _cache.Get<SuperNavigationNodeList>(NAVIGATION_LIST_INTERNAL_CACHE_KEY + etag, CacheScope.Site);
-                    if (cached != null)
-                        return cached;
+                    var navsetEtag = navTask.Result is NavigationSet ? (navTask.Result as NavigationSet).ETag : null;
+                    return new NavData()
+                    {
+                        CatTree = catTask.Result,
+                        Pages = docCollectionTask.Result,
+                        PagesEtag = pageTask.Result.ETag(),
+                        NavRepoResult = navTask.Result,
+                        Etag = CompositeETag(catTask.Result.ETag, pageTask.Result.ETag(), navsetEtag)
+                    };
+                });
+            }, cts.Token).Unwrap();
+           
+
+            
+            
+           
+        }
+        private SuperNavigationNodeList ProccessNavData(NavData navData)
+        {
+
+            var pages = navData.Pages;
+          
+            var categoryTree = navData.CatTree;
+            var navset = navData.NavRepoResult;
+
+
+            string etag = CompositeETag(categoryTree.ETag, navData.PagesEtag, navData.Etag);
+
+
+            var cacheKey = GetCacheKey(etag);
+
+
+
+
+            int numpages = pages != null && pages.Items != null ? pages.Items.Count : 0;
+            int numcats = categoryTree.AllCategories.Count;
+            int numNavset = navset != null ? navset.Count : 0;
+            var masterList = new SuperNavigationNodeList(numpages + numcats + numNavset + 2);
+
+
+            masterList.ETag = etag;
+
+            masterList.Add(new SuperNavigationNode
+            {
+                Name = "Navigation",
+                NodeType = NavigationNodeType.Group,
+                Id = NAV_ROOT_NODE_NAME,
+                ParentId = SUPER_ROOT_NODE_NAME,
+                IsSystemNode = true,
+                AllowDrop = true,
+                Index = 0
+            });
+
+            masterList.Add(new SuperNavigationNode
+            {
+                Name = "Single Pages",
+                NodeType = NavigationNodeType.Group,
+                Id = UNLINKED_PAGES_NODE_ID,
+                ParentId = SUPER_ROOT_NODE_NAME,
+                IsSystemNode = true,
+                AllowDrop = true,
+                Index = 1
+            });
+
+            // build the masterlist. Step 1: put the top level categories in.
+            var allCats = GetAllCategoriesFromTree(categoryTree.AllCategories);
+
+            masterList.AddRange(allCats);
+
+            // build the masterlist. Step 2: put in navigation items we know about.
+            foreach (var navmeta in (navset ?? Enumerable.Empty<INavigationNode>()))
+            {
+                SuperNavigationNode node;
+
+                if (navmeta.NodeType == null)
+                {
+                    continue;
                 }
-
-                int numpages = pages != null && pages.Items != null ? pages.Items.Count : 0;
-                int numcats = categoryTree.AllCategories.Count;
-                int numNavset = navset != null ? navset.Count : 0;
-                var masterList = new SuperNavigationNodeList(numpages + numcats + numNavset + 2);
-                masterList.ETag = etag;
-
-                masterList.Add(new SuperNavigationNode
+                else if (navmeta.NodeType.IsPage)
                 {
-                    Name = "Navigation",
-                    NodeType = NavigationNodeType.Group,
-                    Id = NAV_ROOT_NODE_NAME,
-                    ParentId = SUPER_ROOT_NODE_NAME,
-                    IsSystemNode = true,
-                    AllowDrop = true,
-                    Index = 0
-                });
+                    string pageId = navmeta.OriginalId;
+                    var page = (pages != null && pages.Items != null) ? pages.Items.FirstOrDefault(p => p.Id == pageId) : null;
 
-                masterList.Add(new SuperNavigationNode
-                {
-                    Name = "Single Pages",
-                    NodeType = NavigationNodeType.Group,
-                    Id = UNLINKED_PAGES_NODE_ID,
-                    ParentId = SUPER_ROOT_NODE_NAME,
-                    IsSystemNode = true,
-                    AllowDrop = true,
-                    Index = 1
-                });
-
-                // build the masterlist. Step 1: put the top level categories in.
-                var allCats = GetAllCategoriesFromTree(categoryTree.AllCategories);
-
-                masterList.AddRange(allCats);
-
-                // build the masterlist. Step 2: put in navigation items we know about.
-                foreach (var navmeta in (navset ?? Enumerable.Empty<INavigationNode>()))
-                {
-                    SuperNavigationNode node;
-
-                    if (navmeta.NodeType == null)
-                    {
-                        continue;
-                    }
-                    else if (navmeta.NodeType.IsPage)
-                    {
-                        string pageId = navmeta.OriginalId;
-                        var page = (pages != null && pages.Items != null) ? pages.Items.FirstOrDefault(p => p.Id == pageId) : null;
-
-                        if (page != null)
-                        {
-                            node = new SuperNavigationNode
-                            {
-                                Name = string.IsNullOrEmpty(page.Get<string>("link_title")) ? page.Name : page.Get<string>("link_title"),
-                                NodeType = NavigationNodeType.Page,
-                                Id = "page^^" + page.ListFQN + "^^" + page.Id,
-                                ParentId = navmeta.ParentId,
-                                OriginalId = page.Id,
-                                OriginalDocumentListName = page.ListFQN,
-                                Index = navmeta.Index,
-                                Url = _urlHelper.MakeUrl(UrlHelper.UrlType.Document, page, (Dictionary<string, object>)null, false)
-                            };
-                        }
-                        else
-                        {
-                            // ignore pages in the navigation document that don't exist in the cms.
-                            continue;
-                        }
-                    }
-                    else if (navmeta.NodeType.IsLink)
+                    if (page != null)
                     {
                         node = new SuperNavigationNode
                         {
-                            Id = navmeta.Id,
-                            OriginalId = navmeta.OriginalId,
-                            Name = navmeta.Name,
-                            Url = navmeta.Url,
-                            Index = navmeta.Index,
+                            Name = string.IsNullOrEmpty(page.Get<string>("link_title")) ? page.Name : page.Get<string>("link_title"),
+                            NodeType = NavigationNodeType.Page,
+                            Id = "page^^" + page.ListFQN + "^^" + page.Id,
                             ParentId = navmeta.ParentId,
-                            NodeType = NavigationNodeType.Link
+                            OriginalId = page.Id,
+                            OriginalDocumentListName = page.ListFQN,
+                            Index = navmeta.Index,
+                            Url = _urlHelper.MakeUrl(UrlHelper.UrlType.Document, page, (Dictionary<string, object>)null, false)
                         };
                     }
                     else
                     {
+                        // ignore pages in the navigation document that don't exist in the cms.
                         continue;
                     }
-
-                    // if we want to insert a node with an index that's already taken, we need to move the others
-                    var nodesToChange = masterList.Where(n => n.ParentId == node.ParentId && n.Index == node.Index).ToList();
-                    int newIndex = node.Index + 1;
-
-                    while (nodesToChange.Count > 0)
-                    {
-                        // find all the nodes at index+1
-                        var newNodesToChange = masterList.Where(n => n.ParentId == node.ParentId && n.Index == newIndex).ToList();
-
-                        // update all the nodes at our index to index+1
-                        nodesToChange.ForEach(n => n.Index = newIndex);
-
-                        // loop, changing all the nodes at index+1 to index+2
-                        nodesToChange = newNodesToChange;
-                        newIndex++;
-                    }
-
-                    masterList.Add(node);
                 }
-
-
-
-                // build the masterlist. Step 3: put in all the trash we don't know about.
-                var allUnassigned =
-                    from p in (pages != null && pages.Items != null) ? pages.Items : Enumerable.Empty<Mozu.Content.Contracts.Document>()
-                        // find pages not already included in another list
-                    where !masterList.Any(node => node.OriginalId == p.Id)
-                    // filter out these fucking autogenerated pages with a guid for a name.
-                    where !Regex.IsMatch(p.Name, "^[0-9a-f]{8}-")
-                    select new SuperNavigationNode
-                    {
-                        Name = string.IsNullOrEmpty(p.Get<string>("link_title")) ? p.Name : p.Get<string>("link_title"),
-                        NodeType = NavigationNodeType.Page,
-                        Id = "page^^" + p.ListFQN + "^^" + p.Id,
-                        ParentId = UNLINKED_PAGES_NODE_ID,
-                        OriginalId = p.Id,
-                        OriginalDocumentListName = p.ListFQN,
-                        Index = 0,
-                        Url = _urlHelper.MakeUrl(UrlHelper.UrlType.Document, p, null, false)
-                    };
-                masterList.AddRange(allUnassigned);
-
-                if (!string.IsNullOrEmpty(etag) && _cache != null)
+                else if (navmeta.NodeType.IsLink)
                 {
-                    _cache.Set(NAVIGATION_LIST_INTERNAL_CACHE_KEY + etag, masterList, CacheScope.Site);
+                    node = new SuperNavigationNode
+                    {
+                        Id = navmeta.Id,
+                        OriginalId = navmeta.OriginalId,
+                        Name = navmeta.Name,
+                        Url = navmeta.Url,
+                        Index = navmeta.Index,
+                        ParentId = navmeta.ParentId,
+                        NodeType = NavigationNodeType.Link
+                    };
                 }
-                return masterList;
-            });
+                else
+                {
+                    continue;
+                }
+
+                // if we want to insert a node with an index that's already taken, we need to move the others
+                var nodesToChange = masterList.Where(n => n.ParentId == node.ParentId && n.Index == node.Index).ToList();
+                int newIndex = node.Index + 1;
+
+                while (nodesToChange.Count > 0)
+                {
+                    // find all the nodes at index+1
+                    var newNodesToChange = masterList.Where(n => n.ParentId == node.ParentId && n.Index == newIndex).ToList();
+
+                    // update all the nodes at our index to index+1
+                    nodesToChange.ForEach(n => n.Index = newIndex);
+
+                    // loop, changing all the nodes at index+1 to index+2
+                    nodesToChange = newNodesToChange;
+                    newIndex++;
+                }
+
+
+                masterList.Add(node);
+            }
+
+
+
+            // build the masterlist. Step 3: put in all the trash we don't know about.
+            var allUnassigned =
+                from p in (pages != null && pages.Items != null) ? pages.Items : Enumerable.Empty<Mozu.Content.Contracts.Document>()
+                    // find pages not already included in another list
+                where !masterList.Any(node => node.OriginalId == p.Id)
+                // filter out these fucking autogenerated pages with a guid for a name.
+                where !Regex.IsMatch(p.Name, "^[0-9a-f]{8}-")
+                select new SuperNavigationNode
+                {
+                    Name = string.IsNullOrEmpty(p.Get<string>("link_title")) ? p.Name : p.Get<string>("link_title"),
+                    NodeType = NavigationNodeType.Page,
+                    Id = "page^^" + p.ListFQN + "^^" + p.Id,
+                    ParentId = UNLINKED_PAGES_NODE_ID,
+                    OriginalId = p.Id,
+                    OriginalDocumentListName = p.ListFQN,
+                    Index = 0,
+                    Url = _urlHelper.MakeUrl(UrlHelper.UrlType.Document, p, null, false)
+                };
+            masterList.AddRange(allUnassigned);
+
+           
+
+
+            masterList.TreeList = BuildTree(masterList).Cast<IRuntimeNavigationNode>().ToList();
+            var ordered = masterList.OrderBy(n => n.ParentId).ThenBy(n => n.Index);
+            SetHomePage(ordered.Where(x => x.ParentId == NAV_ROOT_NODE_NAME));
+            masterList.FlatList =  ordered.ToList<ITreeNavigationNode>();
+
+
+
+
+            return masterList;
+
+
         }
+           
+           
 
         /// <summary>
         /// Maps a category from the tree into a navigation node
@@ -380,5 +476,7 @@ namespace Mozu.SiteBuilder.Mvc.Navigation
             string cacheKey = BitConverter.ToString(_md5.ComputeHash(allTheBytes));
             return cacheKey;
         }
+
+      
     }
 }
