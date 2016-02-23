@@ -10,4 +10,10 @@
 		}
 
 	}
+
+    .#{$vprefix}schema-list {
+        .#{$prefix}column-header-trigger::after {
+            display: none;
+        }
+    }
 }

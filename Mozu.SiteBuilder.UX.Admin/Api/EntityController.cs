@@ -84,7 +84,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
             else if (documents.First().Value<string>("entityType") == "mzdb")
             {
                 List<Task<ServiceClientResponse<StreamContent>>> tasks = documents.Select(doc =>
-                    _entityListsWebApiClient.DeleteEntity(entityListFullName: (string) doc.GetValue("NameSpace", StringComparison.OrdinalIgnoreCase) + "." + (string) doc.GetValue(MZDB_LIST_PROPERTY, StringComparison.OrdinalIgnoreCase), id: (string) doc.GetValue(MZDB_DOCUMENT_ID_PROPERTY, StringComparison.OrdinalIgnoreCase))
+                    _entityListsWebApiClient.DeleteEntity(entityListFullName: (string) doc.GetValue("listFQN", StringComparison.OrdinalIgnoreCase), id: (string) doc.GetValue(MZDB_DOCUMENT_ID_PROPERTY, StringComparison.OrdinalIgnoreCase))
                     ).ToList();
 
 

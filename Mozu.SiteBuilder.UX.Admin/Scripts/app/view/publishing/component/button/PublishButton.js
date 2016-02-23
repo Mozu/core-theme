@@ -68,6 +68,7 @@ Ext.define('Taco.view.publishing.component.button.PublishButton', {
         };
 
         this.callParent(arguments);
+        
     },
 
     setLoading: function(isLoading, cb) {
@@ -151,7 +152,7 @@ Ext.define('Taco.view.publishing.component.button.PublishButton', {
 
     updateButton: function() {
         var me = this;
-
+        
         if (!this.record) {
             me.disable();
             return false;
@@ -163,10 +164,8 @@ Ext.define('Taco.view.publishing.component.button.PublishButton', {
 
         if (this.record.phantom) state = 'live';
 
-        Ext.defer(function() {
-            me[state.toLowerCase() === 'draft' || state.toLowerCase() === 'new' ? 'enable' : 'disable']();
-        }, 1100)
-
+        me[state.toLowerCase() === 'draft' || state.toLowerCase() === 'new' ? 'enable' : 'disable']();
+        
     },
 
     getPublishSetById: function(cb) {
