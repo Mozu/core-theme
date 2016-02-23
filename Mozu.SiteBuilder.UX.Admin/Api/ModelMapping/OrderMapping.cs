@@ -717,6 +717,8 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.ModelMapping
                 .ForMember(x => x.LineId, op => op.ResolveUsing(dc => dc.LineId))
                 .ForMember(x => x.HandlingAmount, op => op.ResolveUsing(dc => (dc.HandlingAmount != null)
                     ? dc.HandlingAmount : null))
+                .ForMember(x => x.PriceListCode, op => op.ResolveUsing(dc => dc.Product.Price.PriceListCode))
+                .ForMember(x => x.PriceListEntryMode, op => op.ResolveUsing(dc => dc.Product.Price.PriceListEntryMode))
 
                 .ForMember(x => x.IsPackagedStandAlone , op => op.ResolveUsing((OrdersDC.OrderItem dc) => (dc.Product==null)? false : dc.Product.IsPackagedStandAlone))
                 // handled by after mapper, this needs to be aggregated!
@@ -1168,7 +1170,9 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.ModelMapping
                   .ForMember(dc => dc.FulfillmentLocationCode, op => op.ResolveUsing(x => x.FulfillmentLocationCode))
                   .ForMember(dc => dc.FulfillmentMethod, op => op.ResolveUsing(x => x.FulfillmentMethod))
                   .ForMember(dc => dc.LineId, op => op.ResolveUsing(x => x.LineId))
-                  
+                  //.ForMember(dc => dc.Product.Price.PriceListCode, op => op.ResolveUsing(x => x.PriceListCode))
+                  //.ForMember(dc => dc.Product.Price.PriceListEntryMode, op => op.ResolveUsing(x => x.PriceListEntryMode))
+
                   //ignores
                   .ForMember(dc => dc.OriginalCartItemId, op => op.Ignore())
                   .ForMember(dc => dc.LocaleCode, op => op.Ignore())

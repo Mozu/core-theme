@@ -138,5 +138,19 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.Models.Order
         public string ParentProductCode { get; set; }
 
         public decimal? DutyAmount { get; set; }
+        
+        /// <summary>
+        /// Pricelist code for the product
+        /// </summary>
+        public string PriceListCode { get; set; }
+
+        /// <summary>
+        /// Pricelist entry mode of the product.
+        /// Note: possible values are below
+        /// 1. null : Product doesn't participate in pricelist
+        /// 2. Bulk : Bulk volume price available(unit price vary based on quantity)
+        /// 3. Simple:   
+        /// </summary>
+        public string PriceListEntryMode { get; set; }
     }
 }

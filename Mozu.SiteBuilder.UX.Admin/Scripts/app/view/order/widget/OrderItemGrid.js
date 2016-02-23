@@ -296,10 +296,24 @@ Ext.define('Taco.view.order.widget.OrderItemGrid', {
                             */
 
                         '</div>',
+                        '<tpl if="priceListCode">',
+                        '{[this.determineProductPriceListParticipation(values, "Bulk")]}',
+                        '</tpl>',
                         {
                             getAttributeName: function (val) {
                                 var rec = me.attributeStore.getById(val.attributeFQN);
                                 return (rec) ? rec.get('name') : '';
+                            }
+                        },
+                        {
+                            determineProductPriceListParticipation: function (val, productCheck) {
+                                if (val["Taco.model.Order"].priceListCode && val["Taco.model.Order"].priceListCode.length > 0) {
+                                    if (val.priceListEntryMode && val.priceListEntryMode.toLowerCase() === 'bulk') {
+                                        return '<div class="product-volume-price-list"><span>Volume priced item</span></div>';
+                                    }
+                                    return '<div class="product-no-price-list"><span>This item not included in price list</span></div>';
+                                }
+                                return null;
                             }
                         },
                         {
