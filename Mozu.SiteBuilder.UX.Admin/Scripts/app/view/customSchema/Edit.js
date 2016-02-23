@@ -30,6 +30,23 @@ Ext.define('Taco.view.customSchema.Edit', {
 
         if (this.record.get('entityType') === 'cms') {
 
+            this.parentTitleCfg = Ext.apply(this.parentTitleCfg, {
+                pillType: 'dark',
+                pillText: 'Draft',
+                pillTooltipTpl: [
+                    '<div style="line-height: 15px;">',
+                        '<span>Publish Set: {publishSetName}</span>',
+                    '</div>',
+                    '<div style="line-height: 15px;">',
+                        '<span>Publish Date: {publishDate}</span>',
+                    '</div>'
+                ],
+                pillTooltipData: {
+                    publishSetName: this.record.get('publishSetName') || 'Unassigned',
+                    publishDate: this.record.get('publishSetDate') || 'Unscheduled'
+                }
+            });
+
             this.publishActionButton = Ext.create('Taco.view.publishing.component.button.PublishButton', {
                 itemId: 'publishActionButton',
                 beforeItemId: 'cancelActionButton',
@@ -50,9 +67,18 @@ Ext.define('Taco.view.customSchema.Edit', {
 
                 onMoveToPublish: function(record, code) {
                     me.publishActionButton.setLoading(true);
+
                     record.setPublishCode(code, function() {
                         me.showMessage('Moved to Publish Set');
                         me.publishActionButton.setLoading(false);
+                    });
+
+                    me.fireEvent('titlechange', this, record.get('listFQN'), {
+                        pillText: 'Draft',
+                        pillTooltipData: {
+                            publishSetName: record.get('publishSetName'),
+                            publishDate: Ext.util.Format.date(record.get('publishSetDate'), 'M j, Y g:ia T') || 'Unscheduled'
+                        }
                     });
                 },
 
@@ -74,7 +100,12 @@ Ext.define('Taco.view.customSchema.Edit', {
                         me.publishActionButton.setLoading(false);
                         me.publishActionButton.disable();
                         me.showMessage('Discarded');
-                        me.cardPanel.getLayout().setActiveItem(0);
+                        
+                        me.parentTitleCfg = {
+                            title: record.get('name'),
+                            controller: me.getBreadcrumbRoute()
+                        };
+                        me.fireEvent('titlechange', this, record.get('listFQN'), null);
                     });
                     
                 },
@@ -96,6 +127,7 @@ Ext.define('Taco.view.customSchema.Edit', {
 
     saveSuccess: function() {
         Taco.app.fireEvent('setmessage', 'Save Success', 'success');
+        this.saveActionButton.stopLoading();
     },
 
     getBreadcrumbRoute: function() {
@@ -106,6 +138,11 @@ Ext.define('Taco.view.customSchema.Edit', {
 
     cancel: function() {
         Taco.core.StateManager.attemptNavigate(this.getBreadcrumbRoute());
+    },
+
+    doSave: function() {
+        debugger;
+        this.form.save();
     },
 
     showMessage: function(msg) {
