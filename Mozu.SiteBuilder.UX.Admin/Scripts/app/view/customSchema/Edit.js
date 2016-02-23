@@ -28,7 +28,7 @@ Ext.define('Taco.view.customSchema.Edit', {
             controller: this.getBreadcrumbRoute()
         };
 
-        if (this.record.get('entityType') === 'cms') {
+        if (this.record.get('entityType') === 'cms' && this.record.get('publishState') !== 'active') {
 
             this.parentTitleCfg = Ext.apply(this.parentTitleCfg, {
                 pillType: 'dark',
@@ -47,6 +47,12 @@ Ext.define('Taco.view.customSchema.Edit', {
                 }
             });
 
+            if (this.record && this.record.get('publishSetCode') !== '') {
+                this.updatePublishPill(this.record);
+            }
+        }
+
+        if (this.record.get('entityType') === 'cms') {
             this.publishActionButton = Ext.create('Taco.view.publishing.component.button.PublishButton', {
                 itemId: 'publishActionButton',
                 beforeItemId: 'cancelActionButton',
@@ -61,6 +67,7 @@ Ext.define('Taco.view.customSchema.Edit', {
                             record.data.publishState = 'active';
                             cmp.updateButton(record);
                             me.showMessage('Published', 'info', 1000);
+                            me.updatePublishPill(record);
                         }
                     });
                 },
@@ -71,15 +78,9 @@ Ext.define('Taco.view.customSchema.Edit', {
                     record.setPublishCode(code, function() {
                         me.showMessage('Moved to Publish Set');
                         me.publishActionButton.setLoading(false);
+                        me.updatePublishPill(record);
                     });
 
-                    me.fireEvent('titlechange', this, record.get('listFQN'), {
-                        pillText: 'Draft',
-                        pillTooltipData: {
-                            publishSetName: record.get('publishSetName'),
-                            publishDate: Ext.util.Format.date(record.get('publishSetDate'), 'M j, Y g:ia T') || 'Unscheduled'
-                        }
-                    });
                 },
 
                 onRemoveFromPublishSet: function(record) {
@@ -88,9 +89,11 @@ Ext.define('Taco.view.customSchema.Edit', {
                     record.save({
                         success: function() {
                             me.publishActionButton.setLoading(false);
+                            me.showMessage('Removed');
+                            me.updatePublishPill(record);
                         }
                     });
-                    me.showMessage('Removed');
+
                 },
 
                 onDiscardDraft: function(record) {
@@ -112,7 +115,9 @@ Ext.define('Taco.view.customSchema.Edit', {
 
                 listeners: {
                     afterrender: function() {
-                        me.publishActionButton.addRecord(me.record);
+                        Ext.defer(function() {
+                            me.publishActionButton.addRecord(me.record);
+                        }, 300);
                     }
                 }
             });
@@ -120,14 +125,77 @@ Ext.define('Taco.view.customSchema.Edit', {
             this.additionalActions = [this.publishActionButton];
         }
 
+        this.on('aftersave', function() {
+            me.saveActionButton.stopLoading();
+            me.form.saveInProgress = false;
+            Taco.app.fireEvent('setmessage', 'Save Success', 'success');
+        });
+
+        this.on('savesuccess', function() {
+            me.form.saveInProgress = false;
+            me.saveActionButton.stopLoading();
+            me.updatePublishPill(me.record);
+            me.publishActionButton.addRecord(me.record)
+        });
+
         this.callParent(arguments);
 
         this.setTitle(this.record.get('name'));
     },
 
-    saveSuccess: function() {
-        Taco.app.fireEvent('setmessage', 'Save Success', 'success');
-        this.saveActionButton.stopLoading();
+    updatePublishPill: function(record) {
+        var me = this;
+        var listRecord = record;
+
+        var callback = function(pubRecord) {
+            var date = pubRecord.get('publishDate') ? Ext.Date.format(pubRecord.get('publishDate'), 'M j, Y g:ia T') : 'Unscheduled';
+
+            me.fireEvent('titlechange', this, listRecord.get('name'), {
+                pillText: 'Draft',
+                pillTooltipData: {
+                    publishSetName: pubRecord.get('name') || 'Unassigned',
+                    publishDate: Ext.util.Format.date(pubRecord.get('publishSetDate'), 'M j, Y g:ia T') || 'Unscheduled'
+                }
+            });
+        };
+
+        Ext.Ajax.request({
+            url: '/admin/app/publishsets/getBy/' + record.get('publishSetCode'),
+            method: 'GET',
+            success: function (res, status) {
+                var record = Ext.create('Taco.model.PublishSet', JSON.parse(res.responseText).items[0]);
+                callback(record);
+            },
+            failure: function() {
+
+                var config = {
+                    pillText: 'Draft',
+                    pillType: 'dark',
+                    pillTooltipTpl: [
+                        '<div style="line-height: 15px;">',
+                            '<span>Publish Set: {publishSetName}</span>',
+                        '</div>',
+                        '<div style="line-height: 15px;">',
+                            '<span>Publish Date: {publishDate}</span>',
+                        '</div>'
+                    ],
+                    pillTooltipData: {
+                        publishSetName: 'Unassigned',
+                        publishDate: 'Unscheduled'
+                    }
+                };
+
+
+                if (listRecord.get('publishState') === 'active') {
+                    config = {
+                        pillText: '',
+                        pillType: ''
+                    };
+                }
+
+                me.fireEvent('titlechange', this, listRecord.get('name'), config);
+            }
+        }, this);
     },
 
     getBreadcrumbRoute: function() {
@@ -138,10 +206,6 @@ Ext.define('Taco.view.customSchema.Edit', {
 
     cancel: function() {
         Taco.core.StateManager.attemptNavigate(this.getBreadcrumbRoute());
-    },
-
-    doSave: function() {
-        this.form.save();
     },
 
     showMessage: function(msg) {

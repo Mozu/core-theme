@@ -967,7 +967,7 @@ Ext.define('Taco.view.website.Index', {
 
             if (pubInfo.publishSetInfo) {
 
-                var callback =  function(record) {
+                var callback = function(record) {
                     var date = record.get('publishDate') ? Ext.Date.format(record.get('publishDate'), 'M j, Y g:ia T') : 'Unscheduled';
                     me.pubRecord = record;
                     me.down('#draftPill').show();
