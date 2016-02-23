@@ -207,7 +207,7 @@
                     "storeFrom": "pageSizeOptions"
                 },
                 {
-                   "fieldLabel": "Default Sort Order",
+                    "fieldLabel": "Default Sort Order",
                     "xtype": "mz-input-text",
                     "name": "defaultSort",
                     "allowBlank": true      ,
