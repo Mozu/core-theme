@@ -141,7 +141,6 @@ Ext.define('Taco.view.customSchema.Edit', {
     },
 
     doSave: function() {
-        debugger;
         this.form.save();
     },
 
