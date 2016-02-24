@@ -317,7 +317,6 @@ Ext.define('Taco.view.customSchema.Split', {
                     editMode: options ? options.editMode : null,
                     editor: me.editors.findEditor(record)
                 });
-                me.form = me.addADRIfRequired(record);
                 me.contentContainer.add(me.form);
                 me.enableButtons(record);
                 me.cardPanel.getLayout().setActiveItem(1);
@@ -385,20 +384,7 @@ Ext.define('Taco.view.customSchema.Split', {
         me.loadEditor(record, options);
     },
 
-    addADRIfRequired: function (record) {
-        var me = this,
-            adrPanel;
-
-        if(!me.form) return null;
-        
-        if(!record || !record.data || !record.data.listFlags || !record.data.listFlags.enableADR) return me.form;
-
-        adrPanel = Ext.create('Taco.core.ux.form.field.ActiveDateRange', {record: record});
-
-        me.form.dynamicForm.add(adrPanel);
-
-        return me.form;
-    },
+  
 
     handleAddToEast: function (ct, cmp) {
         

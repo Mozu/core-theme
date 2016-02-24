@@ -40,6 +40,10 @@
     },
     //  padding: '20px',
     initComponent: function() {
+        var record = this.record,
+            innerForm,
+            adrPanel;
+
         this.data = Ext.clone(this.record.getFields() || {});
         for (var name in this.record.data) {
             if (this.record.data.hasOwnProperty(name) && name !== 'properties' && name !== 'item') {
@@ -52,7 +56,7 @@
                 /*jslint evil: true */
                 this.dynamicForm = eval(this.editor.get('code'));
             } catch (e) {
-
+                console.log ( 'error evaling form' , e );
             }
         }
 
@@ -67,6 +71,23 @@
             });
             this.supportsSaving = false;
         }
+
+
+        if( record && record.data && record.data.listFlags && record.data.listFlags.enableADR &&  this.dynamicForm.getForm  )
+        {
+            innerForm = this.dynamicForm.getForm()
+            if ( !innerForm.findField('document.endDate') && !innerForm.findField('document.startDate') )
+            {
+                adrPanel = Ext.create('Taco.core.ux.form.field.ActiveDateRange', {record: record});
+                this.dynamicForm.add(adrPanel);
+            }
+        }
+
+
+                
+
+
+
         this.dynamicForm.data = this.data;
         //this makes cms ugly
         //this.dynamicForm.ui = 'subform';
