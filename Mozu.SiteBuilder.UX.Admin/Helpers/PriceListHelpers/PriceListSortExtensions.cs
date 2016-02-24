@@ -10,6 +10,13 @@ namespace Mozu.SiteBuilder.UX.Admin.Helpers.PriceListHelpers
         private const string CODE_PROPERTY = "priceListcode";
         private const string PARENT_CODE_PROPERTY = "parentPriceListCode";
         private const string ENABLED_PROPERTY = "enabled";
+
+        //price list entries
+        private const string PRODUCT_CODE_PROPERTY = "productCode";
+        private const string CURRENCY_CODE_PROPERTY = "currencyCode";
+        private const string START_DATE_PROPERTY = "startDate";
+        private const string END_DATE_PROPERTY = "endDate";
+
         private const string CREATE_DATE_PROPERTY = "auditinfo.createdate";
         private const string UPDATE_DATE_PROPERTY = "auditinfo.updatedate";
 
@@ -42,6 +49,16 @@ namespace Mozu.SiteBuilder.UX.Admin.Helpers.PriceListHelpers
                     return NAME_PROPERTY;
                 case "status":
                     return ENABLED_PROPERTY;
+
+                case "productcode":
+                    return PRODUCT_CODE_PROPERTY;
+                case "currencycode":
+                    return CURRENCY_CODE_PROPERTY;
+                case "startdate":
+                    return START_DATE_PROPERTY;
+                case "enddate":
+                    return END_DATE_PROPERTY;
+
                 case "createdate":
                     return CREATE_DATE_PROPERTY;
                 case "lastmodifieddate":
