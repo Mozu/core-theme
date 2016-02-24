@@ -30,8 +30,7 @@ Ext.define('Taco.model.PriceListEntry', {
                    priceListCode: record.get('priceListCode'),
                    productCode: record.get('productCode'),
                    currencyCode: record.get('currencyCode'),
-                   startDate: record.get('startDate'),
-                   priceMode: record.get('priceMode') ? 'Overridden' : 'UseCatalog'
+                   startDate: record.get('startDate')
                };
                return JSON.stringify(json);
             },*/

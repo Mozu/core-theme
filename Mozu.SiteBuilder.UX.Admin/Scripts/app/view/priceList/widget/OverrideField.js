@@ -1,5 +1,5 @@
 ﻿/**
- * @class Taco.view.priceList.widget.OverrideCurrency
+ * @class Taco.view.priceList.widget.OverrideField
  * Numeric input field for currencies with a checkbox to show active state
  */
  Ext.define('Taco.view.priceList.widget.OverrideField', {
@@ -27,7 +27,9 @@
             name: me.fieldCfg.name + 'Mode',
             listeners: {
                 change: function(cmp, newVal, oldVal) {
+                    if (!me.overrideField) return;
                     me.overrideField.allowBlank = !(me.requireOverrideValue && newVal);
+                    
                     if (!newVal) {
                         me.overrideField.setValue(null);
                         me.overrideField.clearInvalid();
@@ -37,6 +39,9 @@
                     }
                 },
                 scope: me
+            },
+            getValue: function() {
+                return this.checked ? 'Overridden' : 'UseCatalog';
             }
         });
 

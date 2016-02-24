@@ -158,7 +158,10 @@ Ext.define('Taco.view.priceList.modal.PriceEntryEditor', {
     doSave: function () {
         var me = this,
             form = me.getForm(),
+            basic = form.down('#basicPanel'),
+            entries = basic.items,
             data = form.getValues(),
+            priceEntries = [],
             onSuccess = (!me.isCreateMode)
                     ? me.saveSuccess
                     : me.onCreate;
@@ -169,6 +172,13 @@ Ext.define('Taco.view.priceList.modal.PriceEntryEditor', {
         } else {
             Ext.Object.merge(this.record.data, data);
         }
+
+        entries.each(function(entry) {
+            priceEntries.push(entry.getValues());
+        });
+
+        this.record.set('priceEntries', priceEntries);
+
         this.record.save({
             success: onSuccess,
             failure: function(item, response) {
