@@ -37,7 +37,7 @@ Ext.define('Taco.view.order.Split', {
         pillType: function (text) {
             var type = (text === 'Processing').toString();
 
-            if (text === 'Cancelled' || text === 'Errored') {
+            if (text === 'Errored') {
                 type = 'error';
             }
 

@@ -348,7 +348,7 @@ Ext.define('Taco.view.order.Grid', {
                     var text = record.get('orderStatus'),
                         type = (text === 'Processing').toString();
 
-                    if (text === 'Cancelled' || text === 'Errored') {
+                    if (text === 'Errored') {
                         type = 'error';
                     }
 
