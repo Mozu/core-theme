@@ -11,6 +11,7 @@ Ext.define('Taco.view.customSchema.SchemaList', {
     store: { 
         type: 'Taco.store.EntityLists' 
     },
+    cls: 'taco-schema-list',
     entityType: '',
 
     initComponent: function() {
@@ -39,6 +40,8 @@ Ext.define('Taco.view.customSchema.SchemaList', {
                 sortable: true
             }
         ];
+        
+        console.log(Taco.core.StateManager)
 
         this.selModel =  this.getSelectionModel();
 
@@ -54,15 +57,28 @@ Ext.define('Taco.view.customSchema.SchemaList', {
         this.entitySplit.getEast().expand();
         this.cardPanel = this.entitySplit.down('#dynamicGridHolder');
         this.cardPanel.getLayout().setActiveItem(0);
+
     },
 
     selectFirstItem: function() {
-        if (this.autoSelectFirstItem) {
+        var uri = Taco.core.StateManager.getCurrentState().uri;
+
+        if (uri && uri.indexOf('list=') !== -1) {
+            var stringMatch = uri.match(/list=[^&]*/)
+            var list = stringMatch && Ext.isArray(stringMatch) ? stringMatch[0].replace(/list=/, '') : null;
+            var listIndex = this.store.findBy(function(rec) { return rec.get('listFQN') === list })
+            
+            if (listIndex !== -1) {
+                this.handleSelection(null, [this.store.getAt(listIndex)]);
+            }
+        }
+
+        else if (this.autoSelectFirstItem) {
             this.handleSelection(null, [this.store.getAt(0)]);
         }
     },
 
-    handleSelection: function(cmp, record) {
+    handleSelection: function(cmp, records) {
         this.entitySplit = this.entitySplit || this.up('entity-split');
         this.dynamicGrid = this.dynamicGrid || this.entitySplit.down('#dymanicEnityGrid');
 
@@ -71,9 +87,11 @@ Ext.define('Taco.view.customSchema.SchemaList', {
             this.entitySplit.updateSearchContext();
         }
 
-        if (this.dynamicGrid && record && record.length > 0) {
-            this.dynamicGrid.initListView(record[0]);
+        if (this.dynamicGrid && records && records.length > 0) {
+            this.dynamicGrid.initListView(records[0]);
         }
+
+        Taco.core.StateManager.addState('customschema?entityType=' + records[0].get('entityType') + '&list=' + records[0].get('listFQN'));
     },
 
     clearSelection: function() {

@@ -24,5 +24,4 @@ Mozu.SiteSettings.General.Contracts
 Mozu.SiteSettings.Order.Contracts
 protobuf-net
 Mozu.ScheduledEvent.Contracts
-OctoPack
 Microsoft.AspNet.WebApi.Client

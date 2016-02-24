@@ -283,7 +283,7 @@ namespace Mozu.SiteBuilder.UX.Hypr.Tags
                 {
                     if (column.Rows.SafeAny() && !column.Widgets.SafeAny())
                     {
-                        sb.AppendFormat("<div class=\"mz-cms-col-\" style=\"width:{0}\">", column.Width);
+                        sb.AppendFormat("<div class=\"mz-cms-col-{0}-{1}\"  style=\"width:{2}\">", column.Span, zoneSpan, column.Width);
                         foreach (var childRow in column.Rows)
                         {
                             await buildCalienteRow(childRow, sb, scope, zoneSpan, zoneId, isEditmode, getWidgetDefFunc, context).ConfigureAwait(false);
@@ -293,11 +293,11 @@ namespace Mozu.SiteBuilder.UX.Hypr.Tags
                     }
                     else if (column.Widgets.SafeAny() && !column.Rows.SafeAny())
                     {
-                        await WriteCalienteWidgets(sb, context, getWidgetDefFunc, column.Width, zoneSpan, isEditmode, column.Widgets).ConfigureAwait(false);
+                        await WriteCalienteWidgets(sb, context, getWidgetDefFunc, column.Width, column.Span, zoneSpan, isEditmode, column.Widgets).ConfigureAwait(false);
                     }
                     else if (!column.Widgets.SafeAny() && !column.Rows.SafeAny())
                     {
-                        AddEmptyColumn(sb, column.Width);
+                        AddEmptyColumn(sb, column.Width, column.Span, zoneSpan);
                     }
                     else if (column.Widgets.SafeAny() && column.Rows.SafeAny())
                     {
@@ -309,9 +309,9 @@ namespace Mozu.SiteBuilder.UX.Hypr.Tags
             sb.Append("</div>");
         }
 
-        private static void AddEmptyColumn(StringBuilder sb, string width)
+        private static void AddEmptyColumn(StringBuilder sb, string width, string columnSpan, int zoneSpan)
         {
-            sb.AppendFormat("<div class=\"mz-cms-col-\" style=\"width:{0}\">", width);
+            sb.AppendFormat("<div class=\"mz-cms-col-{0}-{1}\"  style=\"width:{2}\">", columnSpan, zoneSpan, width);
             sb.Append("</div>");
         }
 
@@ -409,9 +409,9 @@ namespace Mozu.SiteBuilder.UX.Hypr.Tags
             sb.Append("</div>");
         }
 
-        private static async Task WriteCalienteWidgets(StringBuilder sb, IContext context, Func<string, WidgetDefinition> getWidgetDefFunc, string columnWidth, int zoneSpan, bool isEditmode, IEnumerable<ZoneWidgetRuntimeData> widgets)
+        private static async Task WriteCalienteWidgets(StringBuilder sb, IContext context, Func<string, WidgetDefinition> getWidgetDefFunc, string columnWidth, string columnSpan, int zoneSpan, bool isEditmode, IEnumerable<ZoneWidgetRuntimeData> widgets)
         {
-            sb.AppendFormat("<div class=\"mz-cms-col-\" style=\"width:{0}\">", columnWidth);
+            sb.AppendFormat("<div class=\"mz-cms-col-{0}-{1}\"  style=\"width:{2}\">", columnSpan, zoneSpan, columnWidth);
 
             foreach (var widget in widgets)
             {

@@ -1,10 +1,3 @@
-/* 
-* @Author: ben_cripps
-* @Date:   2015-12-05 15:02:05
-* @Last Modified by:   ben_cripps
-* @Last Modified time: 2016-01-07 15:53:33
-*/
-
 
 export const POSITION_DICTIONARY = {
     TOP: 'TOP',
@@ -14,10 +7,12 @@ export const POSITION_DICTIONARY = {
 };
 
 export const BLOCK_TYPES = {
-	ROW: 'ROW',
-	COL: 'COL',
-	WIDGET: 'WIDGET'
+    ROW: 'ROW',
+    COL: 'COL',
+    WIDGET: 'WIDGET'
 };
+
+export const DEFAULT_GRID_SPAN = 12;
 
 export const CMS_EDITING_CLASSNAME = 'mz-cms-editing';
 

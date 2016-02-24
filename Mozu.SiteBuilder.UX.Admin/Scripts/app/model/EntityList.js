@@ -11,7 +11,8 @@ Ext.define('Taco.model.EntityList', {
         'name',
         'entityType',
         'views',
-        'scopeType'
+        'scopeType',
+        'documentTypes'
     ],
 
 

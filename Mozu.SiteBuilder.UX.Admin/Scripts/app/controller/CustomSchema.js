@@ -18,6 +18,7 @@ Ext.define('Taco.controller.CustomSchema', {
     indexView: 'Taco.view.customSchema.Split',
 
     documents: function(cfg) {
+
     	var me = this;
         var config = this.getConfig('cms', arguments);
 

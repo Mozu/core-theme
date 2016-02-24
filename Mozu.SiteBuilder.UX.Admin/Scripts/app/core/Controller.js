@@ -451,6 +451,9 @@ Ext.define('Taco.core.Controller', {
             args = [];
         }
 
+        if (contextOverride && contextOverride.requiresContextOfType === 't') {
+            return callback.apply(scope || this, args);
+        }
 
         if (!contextOverride && this.worksInContext(viewClass.prototype, context)) {
             return callback.apply(scope || this, args);

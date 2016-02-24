@@ -156,7 +156,7 @@ Ext.define('Taco.view.publishing.modal.PublishSetPicker', {
             listeners: {
                 load: {
                     fn: function(store, records) {
-                        if (records.length < 1) {
+                        if (Ext.isArray(records) && records.length < 1) {
                             this.down('#publish-set-picker-combobox').setValue(Ext.create('Taco.model.PublishSetItem', {
                                 name: 'No Publish Sets Have Been Created',
                                 code: '-1'

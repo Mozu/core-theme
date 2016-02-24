@@ -15,7 +15,6 @@ nuget ClearScript.Installer
 nuget Mozu.Core.Prime > 1.18
 nuget Mozu.ScheduledEvent.Contracts
 nuget Mozu.VS.PowerShell
-nuget OctoPack 2.1.3
 nuget RabbitMQ.Client 3.3.5
 nuget Burrows.Autofac 0.3.3.0 
 nuget Burrows.Log4Net 0.3.3.0 
