@@ -60,21 +60,28 @@ Ext.define('Taco.view.priceList.entry.PriceEntryPrice', {
             });
 
             var priceOverride = Ext.widget('overridefield', {
+                checkboxCfg: {
+                    checked: entry.listPriceMode === 'Overridden'
+                },
                 fieldCfg: {
                     name: 'listPrice',
                     itemId: 'priceField',
                     fieldLabel: 'Price',
-                    currencyCode: me.currencyCode
-                },
-                requireOverrideValue: true
-            });;
+                    currencyCode: me.currencyCode,
+                    value: entry.listPrice
+                }
+            });
 
             var salePriceOverride = Ext.widget('overridefield', {
+                checkboxCfg: {
+                    checked: entry.salePriceMode === 'Overridden'
+                },
                 fieldCfg: {
                     name: 'salePrice',
                     itemId: 'salePriceField',
                     fieldLabel: 'Sale Price',
                     currencyCode: me.currencyCode,
+                    value: entry.salePrice
                 }
             });
 
