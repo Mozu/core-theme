@@ -752,7 +752,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.ModelMapping
                 .ForMember(x => x.LineId, op => op.ResolveUsing(dc => dc.LineId))
                 //Coming from a bundled product, this is OK because the bundled product should already be aggregated
                 .ForMember(x => x.FulfillmentStatus, op => op.ResolveUsing(dc => dc.FulfillmentStatus))
-            
+
                 //ignores
                 .ForMember(x => x.BundledProducts, op => op.Ignore())
                 .ForMember(x => x.Id, op => op.Ignore())
@@ -772,6 +772,8 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.ModelMapping
                 .ForMember(x => x.ParentProductCode, op => op.Ignore())
                 //todo: temp to get unit test to pass - Greg Murray on 2014-05-20 
                 .ForMember(x => x.ProductDiscount, op => op.Ignore())
+                .ForMember(x => x.PriceListEntryMode, op => op.Ignore())
+                .ForMember(x => x.PriceListCode, op => op.Ignore())
                 .ForMember(dc => dc.ProductUsage, op => op.Ignore()) // todo: xverify - Greg Murray on 2014-08-28 
                 .ForMember(dc => dc.HandlingAmount, op => op.Ignore()) // todo: xverify - Greg Murray on 2014-08-28
                 .ForMember(dc => dc.DutyAmount, op => op.Ignore())
