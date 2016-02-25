@@ -191,7 +191,7 @@ Ext.define('Taco.view.priceList.widget.EntriesGrid', {
                 stateId: 'listPrice',
                 text: 'List Price',
                 flex: 1,
-                sortable: true,
+                sortable: false,
                 renderer: function(entries) {
                     if (Ext.isArray(entries)) {
                         return entries[0].listPrice || 'Default';
@@ -204,7 +204,7 @@ Ext.define('Taco.view.priceList.widget.EntriesGrid', {
                 stateId: 'salePrice',
                 text: 'Sale Price',
                 flex: 1,
-                sortable: true,
+                sortable: false,
                 renderer: function(entries) {
                     if (Ext.isArray(entries)) {
                         return entries[0].salePrice || 'Default';
