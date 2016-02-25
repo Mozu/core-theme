@@ -362,7 +362,6 @@ Ext.define('Taco.view.priceList.entry.PriceEntryPrice', {
 
     beforeSave: function () {
         Ext.Object.merge(this.record.data, this.form.getValues());
-        debugger;
         return true;
     },
 
