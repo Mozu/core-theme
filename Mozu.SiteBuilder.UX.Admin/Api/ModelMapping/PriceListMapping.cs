@@ -25,14 +25,15 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.ModelMapping
                 .ForMember(x => x.CreateDate, op => op.ResolveUsing(dc => dc.AuditInfo !=null ? dc.AuditInfo.CreateDate : null))
                 .ForMember(x => x.UpdateBy, op => op.ResolveUsing(dc => dc.AuditInfo !=null ? dc.AuditInfo.UpdateBy : null))
                 .ForMember(x => x.UpdateDate, op => op.ResolveUsing(dc => dc.AuditInfo !=null ? dc.AuditInfo.UpdateDate : null))
-
-                .ForMember(x => x.CustomerSegments, op => op.Ignore())
+                .ForMember(x => x.CustomerSegments, op => op.ResolveUsing(dc => dc.MappedCustomerSegments))
+                
                 .ForMember(x => x.CustomerSegmentNames, op => op.Ignore())
                 ;
 
             Mapper.CreateMap<PriceList, DC.PriceList>()
                 .ForMember(dc => dc.PriceListCode, op => op.ResolveUsing(x => x.Code))
                 .ForMember(dc => dc.ParentPriceListCode, op => op.ResolveUsing(x => string.IsNullOrEmpty(x.ParentCode) ? null : x.ParentCode))
+                .ForMember(dc => dc.MappedCustomerSegments, op => op.ResolveUsing(x => x.CustomerSegments))
                 .ForMember(dc => dc.AuditInfo, op => op.ResolveUsing(x => new AuditInfo
                 {
                     CreateBy = x.CreateBy,

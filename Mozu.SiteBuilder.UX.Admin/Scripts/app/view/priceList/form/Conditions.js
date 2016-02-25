@@ -35,9 +35,9 @@ Ext.define('Taco.view.priceList.form.Conditions', {
                 forceSelection: true,
                 disableKeyFilter: true,
                 typeAhead: false,
-                displayField: 'code',
+                displayField: 'name',
                 fieldLabel: 'Customer Segments',
-                valueField: 'id',
+                valueField: 'code',
                 style: {
                     display: 'inline-table',
                     verticalAlign: 'bottom'

@@ -55,7 +55,7 @@ Ext.define('Taco.view.priceList.Form', {
         this.callParent(arguments);
 
         this.general = this.down('#general');
-        //this.context = this.down('#context');
+        this.conditions = this.down('#conditions');
         //this.pinned = this.down('#pinned');
         //this.blocked = this.down('#blocked');
 
@@ -68,7 +68,7 @@ Ext.define('Taco.view.priceList.Form', {
      */
     beforeSave: function () {
         return (this.general.beforeSave()
-            //&& this.context.beforeSave()
+            && this.conditions.beforeSave()
             //&& this.pinned.beforeSave()
             //&& this.blocked.beforeSave()
             );

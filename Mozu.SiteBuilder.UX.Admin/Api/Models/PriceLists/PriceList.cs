@@ -69,7 +69,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.Models.PriceLists
 
         //todo
 
-        public List<int> CustomerSegments { get; set; }
+        public List<string> CustomerSegments { get; set; }
 
         public List<string> CustomerSegmentNames { get; set; }
 
