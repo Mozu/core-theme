@@ -62,6 +62,30 @@ Ext.define('Taco.model.PriceListEntry', {
             name: 'priceListEntryMode',
             type: 'string',
             defaultValue: 'Simple'
+        },{
+            name: 'basicListPrice',
+            type: 'float',
+            persist: false,
+            convert: function(val, record) {
+                var entryPrice;
+                if (record.get('priceListEntryMode') !== 'Simple' || record.get('priceEntries').length === 0) {
+                    return '';
+                }
+                entryPrice = record.get('priceEntries')[0];
+                return (entryPrice.listPriceMode === 'Overridden' && entryPrice.listPrice) ? entryPrice.listPrice : '';
+            }
+        },{
+            name: 'basicSalePrice',
+            type: 'float',
+            persist: false,
+            convert: function(val, record) {
+                var entryPrice;
+                if (record.get('priceListEntryMode') !== 'Simple' || record.get('priceEntries').length === 0) {
+                    return '';
+                }
+                entryPrice = record.get('priceEntries')[0];
+                return (entryPrice.salePriceMode === 'Overridden' && entryPrice.salePrice) ? entryPrice.salePrice : '';
+            }
         }, {
             name: 'priceEntries',
             type: 'auto',

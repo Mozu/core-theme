@@ -187,15 +187,15 @@ Ext.define('Taco.view.priceList.widget.EntriesGrid', {
                 sortable: true
             }, {
                 xtype: 'gridcolumn',
-                dataIndex: 'priceFirst',
-                stateId: 'priceFirst',
+                dataIndex: 'basicListPrice',
+                stateId: 'basicListPrice',
                 text: 'Price',
                 flex: 1,
                 sortable: false
             }, {
                 xtype: 'gridcolumn',
-                dataIndex: 'salePriceFirst',
-                stateId: 'salePriceFirst',
+                dataIndex: 'basicSalePrice',
+                stateId: 'basicSalePrice',
                 text: 'Sale Price',
                 flex: 1,
                 sortable: false
