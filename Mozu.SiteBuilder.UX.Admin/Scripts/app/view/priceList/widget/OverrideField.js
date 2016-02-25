@@ -28,9 +28,10 @@
             listeners: {
                 change: function(cmp, newVal, oldVal) {
                     if (!me.overrideField) return;
-                    me.overrideField.allowBlank = !(me.requireOverrideValue && newVal);
-                    
-                    if (!newVal) {
+
+                    me.overrideField.allowBlank = !(me.requireOverrideValue && this.isOverridden());
+
+                    if (!this.isOverridden()) {
                         me.overrideField.setValue(null);
                         me.overrideField.clearInvalid();
                     }
@@ -76,7 +77,7 @@
         me.callParent(arguments);
     },
     isOverridden: function() {
-        return this.override.getValue();
+        return this.override.getValue() === 'Overridden';
     },
     getStatus: function() {
         return this.isOverridden ? 'Overridden' : 'UseCatalog';

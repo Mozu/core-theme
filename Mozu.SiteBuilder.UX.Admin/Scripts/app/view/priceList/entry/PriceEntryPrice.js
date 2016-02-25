@@ -56,7 +56,8 @@ Ext.define('Taco.view.priceList.entry.PriceEntryPrice', {
                 name: 'minQty',
                 hideTrigger: true,
                 value: entry.minQty,
-                margin: '0 20 0 0'
+                margin: '0 20 0 0',
+                hidden: true
             });
 
             var priceOverride = Ext.widget('overridefield', {
@@ -117,7 +118,7 @@ Ext.define('Taco.view.priceList.entry.PriceEntryPrice', {
         
         me.costOverride = Ext.widget('overridefield', {
             fieldCfg: {
-                name: 'costPrice',
+                name: 'cost',
                 itemId: 'costPriceField',
                 fieldLabel: 'Cost',
                 currencyCode: me.currencyCode
@@ -148,17 +149,27 @@ Ext.define('Taco.view.priceList.entry.PriceEntryPrice', {
         me.mapStartDate = Ext.create('Taco.core.ux.form.DateTime', {
             minValue: new Date(),
             fieldLabel: 'MAP Start Date',
-            name: 'MAPStartDate',
-            disabled: !me.mapOverride.isOverridden(),
-            emptyText: 'Default'
+            name: 'mapStartDate',
+            emptyText: 'Default',
+            listeners: {
+                afterRender: function() {
+                    this.disabled = !me.mapOverride.isOverridden();
+                },
+                scope: me.mapStartDate
+            }
         });
 
         me.mapEndDate = Ext.create('Taco.core.ux.form.DateTime', {
             minValue: new Date(),
             fieldLabel: 'MAP End Date',
-            name: 'MAPEndDate',
-            disabled: !me.mapOverride.isOverridden(),
-            emptyText: 'Default'
+            name: 'mapEndDate',
+            emptyText: 'Default',
+            listeners: {
+                afterRender: function() {
+                    this.disabled = !me.mapOverride.isOverridden();
+                },
+                scope: me.mapEndDate
+            }
         });
 
         me.discountRestriction = Ext.widget('selectfield', {
@@ -192,16 +203,26 @@ Ext.define('Taco.view.priceList.entry.PriceEntryPrice', {
             minValue: new Date(),
             fieldLabel: 'Restriction Start Date',
             name: 'discountsRestrictedStartDate',
-            disabled: me.discountRestriction.getValue() !== 'On',
-            emptyText: 'Default'
+            emptyText: 'Default',
+            listeners: {
+                afterRender: function() {
+                    this.disabled = me.discountRestriction.getValue() !== 'On';
+                },
+                scope: me.restrictionStartDate
+            }
         });
 
         me.restrictionEndDate = Ext.create('Taco.core.ux.form.DateTime', {
             minValue: new Date(),
             fieldLabel: 'Restriction End Date',
             name: 'discountsRestrictedEndDate',
-            disabled: me.discountRestriction.getValue() !== 'On',
-            emptyText: 'Default'
+            emptyText: 'Default',
+            listeners: {
+                afterRender: function() {
+                    this.disabled = me.discountRestriction.getValue() !== 'On';
+                },
+                scope: me.restrictionEndDate
+            }
         });
 
         me.advancedPanel = {
