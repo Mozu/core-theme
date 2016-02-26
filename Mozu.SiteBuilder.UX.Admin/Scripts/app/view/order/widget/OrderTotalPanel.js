@@ -47,12 +47,12 @@ Ext.define('Taco.view.order.widget.OrderTotalPanel', {
         this.masterTable.update(record.getData());
         this.updateShippingMethodButton(record);
         this.updateShippingMethodLabel();
-        return record
+        return record;
     },
     
     updateShippingMethodButton: function (record) {
         var me = this,
-            shippingMethodButton = me.down("#shippingMethodButton")
+            shippingMethodButton = me.down("#shippingMethodButton");
          
         if (shippingMethodButton) {
             // check if there is a valid contact by checking for one of its members; must also have order items;
@@ -64,7 +64,7 @@ Ext.define('Taco.view.order.widget.OrderTotalPanel', {
             }
 
             var shippingMethodName = record.get("shippingMethodName") || "None Selected";
-            shippingMethodButton.setText(shippingMethodName)
+            shippingMethodButton.setText(shippingMethodName);
         }
     },
 
@@ -161,9 +161,9 @@ Ext.define('Taco.view.order.widget.OrderTotalPanel', {
         var items = [];
 
         //only show this field if this is a phone order in pending status or when editing a draft;
-        if (this.record.get("orderStatus") == "Pending" || this.record.get("isDraft")) {            
+        if (this.record.get("orderStatus") === "Pending" || this.record.get("isDraft")) {
             var shippingMethodButton = Ext.widget({
-                itemId:"shippingMethodButton",
+                itemId: "shippingMethodButton",
                 cls: 'order-shipping-method',
                 xtype: 'button',
                 ui: "action",
@@ -175,8 +175,8 @@ Ext.define('Taco.view.order.widget.OrderTotalPanel', {
                     showRuntimePricing: true,
                     orderId: me.record.getId(),
                     isDraft: this.record.get("isDraft"),
-                    onShippingMethodChange: function (menu, selection) {
-                        
+                    onShippingMethodChange: function(menu, selection) {
+
                         if (selection && (selection.shippingMethodName || Ext.isNumeric(selection.price))) {
                             var data = {
                                 shippingMethodName: selection.shippingMethodName,
@@ -186,7 +186,7 @@ Ext.define('Taco.view.order.widget.OrderTotalPanel', {
                         }
                     }
                 })
-            })
+            });
             
             
             items.push({
@@ -196,13 +196,13 @@ Ext.define('Taco.view.order.widget.OrderTotalPanel', {
                 html: this.getShippingLabelText()
             });
 
-            items.push(shippingMethodButton)            
+            items.push(shippingMethodButton);
         } else {
             // need to add a filler to get the panel to layout. weird.
             items.push({
-                xtype:"component",
-                html:""
-            })
+                xtype: "component",
+                html: ""
+            });
         };
 
         this.leftPanel = Ext.create("Ext.container.Container", {
@@ -217,7 +217,7 @@ Ext.define('Taco.view.order.widget.OrderTotalPanel', {
     },
     
     getShippingLabelText : function (){         
-        return shippingMethodLabelTxt = (Ext.Object.isEmpty(this.record.data.fulfillmentContact)) ? "Shipping Method <span class='taco-order-shipping-error'>(No Shipping Address Selected)</span>" : "Shipping Method";
+        return (Ext.Object.isEmpty(this.record.data.fulfillmentContact)) ? "Shipping Method <span class='taco-order-shipping-error'>(No Shipping Address Selected)</span>" : "Shipping Method";
     },
 
     // update the shipping method label based on the presence of a shipping Address Contact

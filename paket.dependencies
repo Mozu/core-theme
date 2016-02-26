@@ -12,7 +12,7 @@ nuget Microsoft.AspNet.WebPages 3.2.2
 nuget Microsoft.AspNet.Mvc 5.2.2 
 
 
-nuget Mozu.Core.Prime > 1.18
+nuget Mozu.Core.Prime 1.1605.4-dev1602252255fea
 nuget Mozu.ScheduledEvent.Contracts
 nuget Mozu.VS.PowerShell
 nuget OctoPack 2.1.3

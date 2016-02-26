@@ -9,7 +9,7 @@
         pageSize: 25,
         storeManagerConfig: {
             clearFilters: true,
-            contextLevel: 'm',
+            contextLevel: 'mc',
             clearSort: true,
             autoLoad: true
         },

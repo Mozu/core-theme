@@ -394,7 +394,7 @@ Ext.define('Taco.view.order.modal.EditOrderDetail', {
         // todo. make this a grid override so that this is fixed everywhere
         var gridSelModel = me.detailGrid.getSelectionModel();
         me.mon(gridSelModel, {
-            focuschange: function (cellmodel, oldFocused, newFocused) {
+            focuschange: function(cellmodel, oldFocused, newFocused) {
                 if (newFocused) {
                     var row = me.detailGrid.view.getNode(newFocused, true);
                     // check to see if the row is partially hidden from view within the scroll container;
@@ -403,25 +403,25 @@ Ext.define('Taco.view.order.modal.EditOrderDetail', {
                         return;
                     }
                     var isHidden = Ext.fly(row).isHiddenByScroll(me.body);
-                    if (isHidden) {                        
+                    if (isHidden) {
                         row.scrollIntoView(me.body);
                     }
                 }
             },
-            scope:me
-        })
+            scope: me
+        });
 
 
         // need to make a wrapping container to get the overflow handling working properly. when not nested, the grid gets its right edge clipped off; using a wrapping container provideds better overflow handling;
         me.add(
-            Ext.create("Ext.container.Container",{                
-                items :  [
+            Ext.create("Ext.container.Container", {
+                items: [
                     me.detailGrid,
                     me.totalRow
                 ]
             })
-        )
-        
+        );
+
     },
 
     onBeforeSave: function () {

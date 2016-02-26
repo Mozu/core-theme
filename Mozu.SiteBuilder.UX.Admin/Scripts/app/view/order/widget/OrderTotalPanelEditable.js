@@ -72,7 +72,7 @@ Ext.define('Taco.view.order.widget.OrderTotalPanelEditable', {
         }
     },
 
-    initTableComponents : function (){
+    initTableComponents : function () {
         var me = this;
 
         var shippingAdjustmentLabel = this.masterTable.el.down("[itemId = shippingAdjustmentLabel]");
@@ -388,10 +388,47 @@ Ext.define('Taco.view.order.widget.OrderTotalPanelEditable', {
 
         var customerNotesText = me.record.get("customerNote");
         // todo: refactor editableDisplayField to allow for placeholder text
-        var placeholder = ""
+        var placeholder = "";
         if (!(this.record.get("orderStatus") == "Pending") && me.record.get("customerNote") == "") {
-            var placeholder = "None provided";
+            placeholder = "None provided";
         }
+
+        me.leftPanel.add({
+            xtype: 'label',
+            itemId: 'priceListChooserLabel',
+            cls: 'x-form-item-label',
+            html: 'Price List'
+        });
+
+        me.priceListChooserButton = Ext.widget({
+            itemId: 'priceListChooserButton',
+            name: 'priceListChooserButton',
+            cls: 'order-pricelist-menu',
+            style: 'text-align:left',
+            xtype: 'button',
+            ui: 'action',
+            scale: 'medium',
+            width: 350,
+            // Need to determine when to disable this button...
+            disabled: false,
+            // Figure out how to update this button text...
+            text: me.record.get('priceListName').length > 0 ? me.record.get('priceListName') : 'Please choose a pricelist',
+            menu: Ext.create('Taco.view.order.widget.PriceListMenu', {
+                orderId: me.record.getId(),
+                width: 350,
+                onPriceListChange: function (menu, selection) {
+                    console.log('selected a menu item: ' + menu.data.name);
+                    console.log(menu.data.name);
+                    if (menu.data.isExclusive) {
+                        // Show Modal!
+                    } else {
+                        // Call the stuff
+                    }
+                }
+            })
+    });
+
+        me.leftPanel.add(me.priceListChooserButton);
 
         me.customerNoteField = Ext.widget({
             //xtype: (this.record.get("orderStatus") == "Pending") ? "textarea" : "editabledisplayfield",
