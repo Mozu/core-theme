@@ -88,10 +88,14 @@ Ext.define('Taco.view.customSchema.SchemaList', {
         }
 
         if (this.dynamicGrid && records && records.length > 0) {
-            this.dynamicGrid.initListView(records[0]);
+            var defaultView = records[0].get('views') ? records[0].get('views')[0] : null;
+            this.dynamicGrid.initListView(records[0], null, defaultView);
         }
 
-        Taco.core.StateManager.addState('customschema?entityType=' + records[0].get('entityType') + '&list=' + records[0].get('listFQN'));
+        if (records && records[0]) {
+            Taco.core.StateManager.addState('customschema?entityType=' + records[0].get('entityType') + '&list=' + records[0].get('listFQN'));
+        }
+
     },
 
     clearSelection: function() {

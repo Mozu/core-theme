@@ -56,7 +56,6 @@ Ext.define('Taco.view.customSchema.Grid', {
         if (this.siteBuilderList) {
             this.createRecord(this.listMetaData);
             this.initListView(this.record);
-            // this.updatePagerToolbar(this.record);
         }
 
         me.callParent(arguments);
@@ -99,10 +98,10 @@ Ext.define('Taco.view.customSchema.Grid', {
         }
     },
 
-    initListView: function(record, isSinglePage) {
+    initListView: function(record, isSinglePage, view) {
 
         var me = this,
-            metaData = this.buildColumns(record);
+            metaData = this.buildColumns(record, null, view);
 
         if (me.rendered) {
             me.reconfigure(metaData.store, metaData.columns);
@@ -131,7 +130,7 @@ Ext.define('Taco.view.customSchema.Grid', {
                     text: view.name,
                     view: view,
                     handler: function(cmp) {
-                        me.initListView.bind(me, record, view)
+                        me.initListView(record, null, cmp.view);
                     }
                 });
             });
@@ -151,7 +150,7 @@ Ext.define('Taco.view.customSchema.Grid', {
             }
 
             else {
-                if (me.gridPager && isSinglePage) {
+                if ((me.gridPager && isSinglePage) || this.siteBuilderList) {
                     me.gridPager.on('change', function() {
                         me.gridPager.insert(me.gridPager.items.getCount() - 2, me.viewMenu);
                     })
@@ -164,7 +163,7 @@ Ext.define('Taco.view.customSchema.Grid', {
         }
     },
 
-    buildColumns: function(record, ignoreStore) {
+    buildColumns: function(record, ignoreStore, view) {
 
         var me = this;
         var split = me.up('entity-split');
@@ -208,7 +207,7 @@ Ext.define('Taco.view.customSchema.Grid', {
             });
         }
 
-        view = record.get('views') || { fields: [] };
+        view = view || { fields: [] };
 
         Ext.Array.each(view.fields || [], function(viewField) {
             columns.push({
