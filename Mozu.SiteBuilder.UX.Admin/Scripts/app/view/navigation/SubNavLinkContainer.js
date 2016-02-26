@@ -88,7 +88,7 @@ Ext.define('Taco.view.navigation.SubNavLinkContainer', {
                 actions: [],
                 width: '90%',
                 shadow: true,
-                title: extensionLink.data.windowTitle || 'Mozu App Extension',
+                title: extensionLink.data.windowTitle || extensionLink.data.modalWindowTitle || 'Mozu App Extension',
                 items: [
                     configIframe,
                     configForm

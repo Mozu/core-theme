@@ -314,6 +314,9 @@ namespace Mozu.SiteBuilder.UX.Admin.Controllers
 
             ViewData["extlib"] = (_httpContext.Request.Cookies.Get("debugExt") != null && _httpContext.Request.Cookies.Get("debugExt").Value == "true") ? "ext-all-dev.js" : "ext-all.js";
             ViewData["applib"] = (_httpContext.Request.Cookies.Get("debugExt") != null && _httpContext.Request.Cookies.Get("debugExt").Value == "true") ? "app-dev.js" : "app.js";
+            await customSchemaTask.ConfigureAwait(false);
+
+            ViewData["customSchema"] = customSchemaTask.Result;
 
             if (HttpContext.Request["testHarnessMode"] == "true")
             {
@@ -325,8 +328,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Controllers
                 return RazorView("Index_Compiled");
             }
 
-            await customSchemaTask.ConfigureAwait(false);
-            ViewData["customSchema"] = customSchemaTask.Result;
+          
 
             return RazorView("index");
         }

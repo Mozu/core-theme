@@ -135,6 +135,7 @@ namespace Mozu.SiteBuilder.Mvc.Models.CMS.Admin
         public class ZoneColumnsRuntimeData
         {
             public string Width { get; set; }
+            public string Span { get; set; }
             public List<ZoneWidgetRuntimeData> Widgets { get; set; }
             public List<ZoneRowRuntimeData> Rows { get; set; }
         }

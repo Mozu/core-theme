@@ -6,12 +6,12 @@ Ext.define('Taco.model.ProductRanking', {
     requires: [
         'Taco.core.util.Common'
     ],
-    //behaviors: {  //todo: need behaviors.
-    //    read: 24,
-    //    create: 25,
-    //    update: 26,
-    //    destroy: 27
-    //},
+    behaviors: {
+        read: 235,
+        create: 234,
+        update: 236,
+        destroy: 237
+    },
     idProperty: 'id',
     fields: [
         {

@@ -132,15 +132,16 @@ Ext.define('Taco.core.ux.form.FilterContainer', {
             this.quickFilterCmp = {
                 xtype: 'combo',
                 itemId: 'quickFilter',
+                name: 'quickFilter',
                 fieldLabel: 'Quick Filter',
                 queryMode: 'local',
                 typeAhead: false,
                 isSelectField: true,
-                emptyText: '',
+                emptyText: 'Apply Quick Filter',
+                forceSelection: true,
                 store: Ext.isArray(this.quickFilterData) ? this.quickFilterData[0] : this.quickFilterData,
                 value: this.getQuickFilterFromStore(),
                 listeners: {
-                    change: this.onQuickFilterChange,
                     beforeselect:this.onBeforeSelect,
                     scope: this
                 }
@@ -164,6 +165,18 @@ Ext.define('Taco.core.ux.form.FilterContainer', {
                             }
                         }
                     }
+                },
+                change: {
+                    scope: this,
+                    buffer: 250,
+                    fn: function(field, newValue, oldValue) {
+                        // Allow comboboxes to be cleared if allowBlank == true
+                        if (field.xtype == "combobox" && field.allowBlank && !newValue) {
+                            field.clearValue();
+                        }
+
+                        this.syncFormToFilter();
+                    }
                 }
             });
         }, this);
@@ -171,12 +184,6 @@ Ext.define('Taco.core.ux.form.FilterContainer', {
         this.initFilterStores();
 
         this.on({
-            //beforerender: {
-            //    scope: this,
-            //    fn: function (cmp) {
-            //        this.store.reload();
-            //    }
-            //},
             boxready: {
                 scope: this,
                 fn: function (cmp) {
@@ -193,7 +200,6 @@ Ext.define('Taco.core.ux.form.FilterContainer', {
             contextchange: this.onGlobalContextChange,
             scope: this
         });
-
     },
 
     reconfigureStore: function(store) {
@@ -201,16 +207,14 @@ Ext.define('Taco.core.ux.form.FilterContainer', {
     },
 
     onBeforeSelect:function (combo, record) {
-        var newValue = record.get('field1'),
-            picker = combo.getPicker();
+        var newValue = record.get('field1');
         
         if (newValue && combo.findRecordByValue(newValue)) {
             this.setAdvancedFilterValues(newValue);
-            this.setTextFilterValue(newValue);
+            // Resulting change events on the fields will auto-update the text filter.
         }
         combo.reset();
         Ext.defer(function () {
-            //picker.hide();
             combo.reset();
         }, 1, this);
 
@@ -245,13 +249,14 @@ Ext.define('Taco.core.ux.form.FilterContainer', {
             return Ext.JSON.decode(params.advancedSearch);
         }
     },
+
     /**
      * Send a filter request to the server.
      * 
      * @param  {Object} value An object containing field keys and values.
+     * Values should be "raw" values instead of "display" values, e.g. "PendingReview" instead of "Pending Review".
      */
     doFilter: function (value) {
-        
         var existingFilter = this.getAdvancedSearchFromStore();
         if (this.hasContextChanged) {
             this.hasContextChanged = false;
@@ -262,7 +267,7 @@ Ext.define('Taco.core.ux.form.FilterContainer', {
         
         // need to format dates before jsonEncoding the value to maintain the timezone information;
         Ext.Object.each(value, function (fieldName, rawValue) {
-            if (!Ext.isEmpty(rawValue)) {                
+            if (!Ext.isEmpty(rawValue)) {
                 if (Ext.isDate(rawValue)) {
                     value[fieldName] = Ext.Date.format(rawValue, 'c');
                 }
@@ -270,7 +275,6 @@ Ext.define('Taco.core.ux.form.FilterContainer', {
         }, this);
         
         var filterString = Ext.JSON.encodeValue(value);
-
 
         if (filterString === this.currentFilterString) {
             return;
@@ -280,8 +284,6 @@ Ext.define('Taco.core.ux.form.FilterContainer', {
             this.store.abort();
         }
 
-
-        
         if (this.fireEvent('beforefilter', this, value) !== false) {
 
             if (this.store.remoteFilter) {
@@ -312,12 +314,20 @@ Ext.define('Taco.core.ux.form.FilterContainer', {
      * This method matches string-based user input to a record in the store.
      * 
      * @param  {Ext.data.Store} store The store to search.
-     * @param  {String} dataIndex The name of the record field to test.
-     * @param  {String} rawValue A string that the field value should begin with.
+     * @param  {String} fieldName The name of the record field to test.
+     * @param  {String} fieldValueOrId A string that the field value should begin with.
      * @return {Object} The value of the field, specified by returnIndex, on the record that was found.
      */
-    findNearestRecord: function (store, dataIndex, rawValue) {
-        return store.getById(rawValue) || store.getById(parseInt(rawValue, 10)) || store.findRecord(dataIndex, rawValue, 0, false, false, false);
+    findNearestRecord: function (store, fieldName, fieldValueOrId) {
+        var result = undefined;
+        // If the model's idProperty (default = 'id') doesn't exist in the data, it's 'id' will be undefined.
+        // This happens with the quick filter items that come from a 2-dimensional array, i.e.
+        // the fields will be 'field1' > data[n][0], 'field2' > data[n][1], and 'id' > nothing.
+        // In this case, looking for undefined would match everything, though only the first match is returned.
+        if (fieldValueOrId !== undefined) {
+            result = store.getById(fieldValueOrId) || store.getById(parseInt(fieldValueOrId, 10));
+        }
+        return result || store.findRecord(fieldName, fieldValueOrId, 0, false, false, false);
     },
 
     /**
@@ -326,7 +336,6 @@ Ext.define('Taco.core.ux.form.FilterContainer', {
      * @return {Ext.form.Panel} The instantiated form.
      */
     getAdvancedForm: function () {
-
         if (this.advancedForm && this.advancedForm.isComponent) {
             return this.advancedForm;
         }
@@ -337,7 +346,6 @@ Ext.define('Taco.core.ux.form.FilterContainer', {
             this.advancedForm = Ext.create('Taco.core.ux.form.Form', this.advancedForm);
         }
         return this.advancedForm;
-
     },
 
     /**
@@ -535,7 +543,6 @@ Ext.define('Taco.core.ux.form.FilterContainer', {
         return this.advSearchFields;
     },
 
-
     /**
      * Set the values in the advanced filters dialog's form fields.
      * 
@@ -545,16 +552,26 @@ Ext.define('Taco.core.ux.form.FilterContainer', {
         var form,
             comboFields;
 
-        
-        //if (this.modal && !Ext.isEmpty(values)) {
-        if (this.modal && !Ext.Object.isEmpty(values)) {
-        
+        // Based on how we're using 'values' below, it should be an object instance.
+        // An empty object, i.e. no filters, should be fine.
+        if (this.modal && Ext.isObject(values)) {
             form = this.modal.getForm();
             comboFields = form.query('combo');
-            
-            // reload the values using the current state pulled from the search box.
+
+            // Clear fields that don't have a value specified, especially when switching quick filters.
+            var allValues = form.getForm().getValues();
+            Ext.Object.each(allValues, function(fieldName) {
+                allValues[fieldName] = undefined;
+            });
+            Ext.applyIf(values, allValues);
+
+            // Reload the values using the current state pulled from the search box.
             form.getForm().setValues(values);
 
+            // Setting comboboxes needs a little extra care.
+            // Normally combobox.setValue(value) accepts a valueField value and tries to do an exact match.
+            // In the case of something like site id, the string "1234" from the search box will not match the number 1234 in the store.
+            // Additionally, we want to support matching by the displayField value.
             if (!Ext.isEmpty(comboFields)) {
                 Ext.Array.each(comboFields, function (field) {
                     var potentialValue = values[field.getName()],
@@ -578,7 +595,6 @@ Ext.define('Taco.core.ux.form.FilterContainer', {
         field.setValue(simpleValue);
     },
 
-
     serializeFilterValue:function (values) {
         var me = this,
             simpleValue = [];
@@ -600,12 +616,44 @@ Ext.define('Taco.core.ux.form.FilterContainer', {
         return Ext.String.trim(simpleValue.join(' '));
     },
 
+    syncFormToFilter: function() {
+        var me = this,
+            form = me.getAdvancedForm().getForm(),
+            values = form.getValues(),
+            textValues = Ext.apply({}, values);
+
+        Ext.Object.each(values, function (fieldName, rawValue) {
+            // If the field doesn't have a value, drop it from the text, e.g. don't do "site: firstName:Bob"
+            if (Ext.isEmpty(rawValue) || fieldName == "quickFilter") {
+                delete textValues[fieldName];
+                return true;
+            }
+
+            // If it's not a combobox with an associated store, continue on.
+            if (!me.filterStores.containsKey(fieldName)) return true;
+
+            var field = form.findField(fieldName);
+            if (field.displayField) {
+                var record = field.findRecordByValue(rawValue);
+                if (record) {
+                    textValues[fieldName] = record.get(field.displayField);
+                } else {
+                    delete textValues[fieldName];
+                }
+            }
+        }, this);
+
+        me.setTextFilterValue(textValues);
+    },
+
     /**
      * Iterate over a values object, producing one version for the textfield filter and another for
      * submission to the server, then update the textfield filter and submit the filter request.
      * 
-     * @param  {Object} values The values object.
-     * @return {Object} The nested values object, containing both textfield and JSON values objects.
+     * @param  {Object} values The values object. Values can either be raw or display values.
+     * @return {Object} The nested values object, containing both textfield (human-readable) and JSON (query) value objects.
+     * @return {Object} return.json An object containing query key-value pairs.
+     * @return {Object} return.text An object containing human-readable key-value pairs. Stringify this value for the filter text box.
      */
     syncAndFilter: function (values) {
         var me = this,
@@ -620,13 +668,11 @@ Ext.define('Taco.core.ux.form.FilterContainer', {
         function finalCallback() {
             //keep calling this finalCallback until all of the queued up calls have completed;
 
-            if (Ext.Array.findBy(remoteFilterCalls, function(task) {
-                return task.loading;
-            })) {
+            if (Ext.Array.findBy(remoteFilterCalls, function(task) { return task.loading; })) {
                 //wait until all remote records have loaded;
                 return;
             };
-            
+
             me.setTextFilterValue(syncedValues['text']);
             me.doFilter(syncedValues['json']);
         }
@@ -649,7 +695,9 @@ Ext.define('Taco.core.ux.form.FilterContainer', {
             var displayField,
                 record;
 
-            if (Ext.isEmpty(rawValue)) {
+            // Drop it from the query if not specified.
+            // Also skip the Quick Filter field value if it's open when you click Filter.
+            if (Ext.isEmpty(rawValue) || fieldName == "quickFilter") {
                 delete syncedValues['json'][fieldName];
                 delete syncedValues['text'][fieldName];
             } else {
@@ -685,20 +733,8 @@ Ext.define('Taco.core.ux.form.FilterContainer', {
                             delete syncedValues['text'][fieldName];
                         }
                     }
-                    
-                        //syncedValues['json'][fieldName] = record.getId();
-                        //syncedValues['text'][fieldName] = record.get(displayField);
-                } else {
-
-                    //syncedValues['json'][fieldName] = rawValue;
-                    //syncedValues['text'][fieldName] = rawValue;
-
-                    //delete syncedValues['json'][fieldName];
-                    //delete syncedValues['text'][fieldName];
                 }
             }
-            
-
         }, this);
 
         if (remoteFilterCalls.length) {
@@ -723,7 +759,6 @@ Ext.define('Taco.core.ux.form.FilterContainer', {
         }
 
         finalCallback();
-        
 
         return syncedValues;
     },

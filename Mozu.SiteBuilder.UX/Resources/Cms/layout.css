@@ -65,8 +65,8 @@
 }
 /* line 58, ../../sass/etc/chorizo/_grid.scss */
 [class*='mz-cms-col-'].mz-cms-drop-over {
-  background-color: rgba(45, 109, 207, 0.1);
-  outline-color: #2d6dcf !important;
+  background-color: rgba(52, 173, 142, 0.1);
+  outline-color: #34ad8e !important;
 }
 /* line 63, ../../sass/etc/chorizo/_grid.scss */
 [class*='mz-cms-col-'] .mz-cms-content {
@@ -90,7 +90,7 @@
 }
 /* line 79, ../../sass/etc/chorizo/_grid.scss */
 [class*='mz-cms-col-'] .resizer-column div {
-  background: #2d6dcf;
+  background: #34ad8e;
   height: 100%;
   width: 1px;
 }
@@ -231,5 +231,7 @@
     margin-right: 0px;
     margin-top: 0px;
     margin-bottom: 0px;
+    width: auto !important;
+    float: none;
   }
 }

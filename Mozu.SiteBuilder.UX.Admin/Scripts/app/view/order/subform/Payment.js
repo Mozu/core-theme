@@ -44,9 +44,11 @@ Ext.define('Taco.view.order.subform.Payment', {
     initComponent: function () {
         var me = this;
         var record = this.record;
+        var isUnpaid = record.get("paymentStatus") === "Unpaid";
 
         this.tools = [
             Ext.widget('button', {
+                itemId: 'refundButton',
                 ui: 'action',
                 scale: 'medium',
                 text: 'Refund',
@@ -55,7 +57,8 @@ Ext.define('Taco.view.order.subform.Payment', {
                     Ext.create('Taco.view.order.modal.Refund', {
                         order: record
                     });
-                }
+                },
+                disabled: isUnpaid
             }),
             me.addPaymentButton = Ext.widget('splitbutton', {
                 menuAlign: 'tr-br?',
@@ -84,6 +87,7 @@ Ext.define('Taco.view.order.subform.Payment', {
             },
             store: this.record.refunds(),
             tools: [{
+                itemId: 'refundsRefundButton',
                 xtype: 'button',
                 ui: 'action',
                 scale: 'medium',
@@ -93,7 +97,8 @@ Ext.define('Taco.view.order.subform.Payment', {
                     Ext.create('Taco.view.order.modal.Refund', {
                         order: record
                     });
-                }
+                },
+                disabled: isUnpaid
             }],
             columns: [{
                 xtype: 'datecolumn',
@@ -295,6 +300,16 @@ Ext.define('Taco.view.order.subform.Payment', {
         
         // re-build the record.payments() store.
         me.rebuildPayments();
+
+        var isUnpaid = this.record.get("paymentStatus") === "Unpaid";
+        var refundButton = this.down("#refundButton");
+        if (refundButton) {
+            refundButton.setDisabled(isUnpaid);
+        }
+        var refundsRefundButton = this.down("#refundsRefundButton");
+        if (refundsRefundButton) {
+            refundsRefundButton.setDisabled(isUnpaid);
+        }
 
         // we need to make this more selective.
 

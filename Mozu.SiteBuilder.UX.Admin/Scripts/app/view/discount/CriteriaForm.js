@@ -109,10 +109,11 @@ Ext.define('Taco.view.discount.CriteriaForm', {
                 },
                 tooltip: Ext.create('Taco.core.ux.content.Tooltip', {
                     elementId: 'applies-sale-products-check',
-                    hoverTarget: 'label',
+                    hoverTarget: 'boxLabelEl',
                     messageKey: 'discount.criteria.applyToProductsWithSalePrice',
-                    offsetLeft: 20,
-                    offsetTop: 15
+                    offsetLeft: -225,
+                    offsetTop: 12,
+                    arrowPosition: 'left'
                 })
             }
         );
@@ -124,6 +125,7 @@ Ext.define('Taco.view.discount.CriteriaForm', {
                 itemId: 'applies-sale-price-check',
                 boxLabel: 'Apply to sale price',
                 width: 300,
+                margin: '0 0 0 20',
                 value: this.record.get('doesNotApplyToSalePrice') !== true,
                 listeners: {
                     change: function (field, newValue) {
@@ -134,26 +136,29 @@ Ext.define('Taco.view.discount.CriteriaForm', {
                 },
                 tooltip: Ext.create('Taco.core.ux.content.Tooltip', {
                     elementId: 'applies-sale-price-check',
-                    hoverTarget: 'label',
+                    hoverTarget: 'boxLabelEl',
                     messageKey: 'discount.criteria.appliesToSalePrice',
-                    offsetLeft: 20,
-                    offsetTop: 15
+                    offsetLeft: -180,
+                    offsetTop: 29,
+                    arrowPosition: 'left'
                 })
             }
         );
 
         this.applyDiscountTo = Ext.widget({
                 xtype: 'checkbox',
+                hidden: true,
                 name: 'appliesToMostExpensiveProductsFirst',
                 value: (this.isEdit()) ? !this.record.get('appliesToLeastExpensiveProductsFirst') : false,
                 itemId: 'apply-to-highest-priced-product',
                 boxLabel: 'Apply discount to highest-priced qualifying product(s) first',
                 tooltip: Ext.create('Taco.core.ux.content.Tooltip', {
                     elementId: 'apply-to-highest-priced-product',
-                    hoverTarget: 'label',
+                    hoverTarget: 'boxLabelEl',
                     messageKey: 'discount.criteria.applyDiscountToHighestPricedProduct',
-                    offsetLeft: 20,
-                    offsetTop: 15
+                    offsetLeft: -20,
+                    offsetTop: 60,
+                    arrowPosition: 'bottom'
                 }),
                 listeners: {
                     change: function(self, newValue, oldValue, eOpts) {
@@ -493,6 +498,17 @@ Ext.define('Taco.view.discount.CriteriaForm', {
             }
         );
 
+        this.optionsContainer = Ext.create('Ext.form.FieldContainer', {
+                itemId: 'options-field-container',
+                fieldLabel: "Options",
+                items: [
+                    this.ApplyToProductsWithSalePrice,
+                    this.appliesToSalePrice,
+                    this.applyDiscountTo
+                ]
+            }
+        );
+
         this.productCategoryContainer = Ext.create('Ext.container.Container', {
             width: 600,
             items: [
@@ -504,8 +520,7 @@ Ext.define('Taco.view.discount.CriteriaForm', {
                 this.maximumQuantityPerRedemptionTB,
                 this.excludeCategoriesBox,
                 this.productsExcludeBox,
-                this.ApplyToProductsWithSalePrice,
-                this.appliesToSalePrice
+                this.optionsContainer
             ]
         });
 
@@ -792,7 +807,7 @@ Ext.define('Taco.view.discount.CriteriaForm', {
         
         
 
-        
+        this.applyDiscountTo.setVisible(this.isLineItem);
         this.appliesToSalePrice.setVisible(this.isLineItem && !appliesToShipping);
         // only enabled if the other checkbox is checked;
         this.appliesToSalePrice.setDisabled(!this.ApplyToProductsWithSalePrice.checked);

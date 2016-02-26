@@ -24,13 +24,15 @@ import {
     DROP_HINT_CLASSNAME,
     DROP_HINT_SELECTOR,
     COL_COPY_ID,
-    COL_COPY_SELECTOR
+    COL_COPY_SELECTOR,
+    DEFAULT_GRID_SPAN
 } from './constants';
 
-// ugh to fix ie11 issue; delete when browsers support Array.from
-Array.from = function() {
-    return Array.prototype.slice.call(arguments[0]);
-};
+import {
+    classMaker,
+    updateColSpanCls,
+    getGridSpan
+} from './util';
 
 (function(win, doc) {
 
@@ -64,6 +66,21 @@ Array.from = function() {
         closest(el, cls) {
             while (el !== doc.body) {
                 if (el.classList.contains(cls)) {
+                    return el;
+                }
+                else {
+                    el = el.parentNode;
+                }
+            }
+        }
+
+        closestByRegex(el, cls) {
+
+            // this function is really only used once 
+            // to match the closest element that has cls mz-cms-col-
+
+            while (el !== doc.body) {
+                if (el.classList.toString().match(cls)) {
                     return el;
                 }
                 else {
@@ -249,7 +266,6 @@ Array.from = function() {
 
         onDrag(e) {
             Chorizo.editor.setDirtyState(true);
-            
             Chorizo.editor.updateDragIconPosition(e);
         }
 
@@ -486,11 +502,21 @@ Array.from = function() {
         }
 
         rebase(containingRow) {
+            const row = new Row();
             const cols = Array.from(containingRow.querySelectorAll(ALL_COL_SELECTOR))
                 .filter((col) => col.parentNode.isSameNode(containingRow));
 
+            const grid = this.closest(containingRow, GRID_CLASSNAME);
+            const gridSpan = getGridSpan(grid);
+
+            const ans = Math.floor(gridSpan / cols.length);
+            let rem = gridSpan % cols.length;
+
             cols.forEach((col) => {
+                const cls = row.getSpanClass(gridSpan, cols, ans, rem);
                 col.style.width = (1 / cols.length) * 100 + '%';
+
+                updateColSpanCls(col, cls);
             });
         }
 
@@ -517,7 +543,9 @@ Array.from = function() {
                         && !child.classList.contains(LAYOUT_WIDGET_HEADER_CLASSNAME)
                         && !child.classList.contains('mz-cms-hint-bar'));
 
-            parentLayout = containingRow.parentNode ? this.closest(containingRow.parentNode, COL_CLASSNAME) : null;
+            // get the column which contains the element
+            parentLayout = containingRow.parentNode
+                ? this.closestByRegex(containingRow.parentNode, COL_CLASSNAME) : null;
 
             // if the element has children DONT add the drop hint
             if (!children) {
@@ -668,6 +696,32 @@ Array.from = function() {
             Chorizo.editor.hideHintBar();
         }
 
+        getSpanClass(gridSpan, children, ans, rem) {
+            const width = ans + (rem-- > 0 ? 1 : 0);
+            const cls = classMaker(width, gridSpan);
+            return cls;
+        }
+
+        updateColClasses() {
+            const children = this.getChildCols();
+            const grid = this.closest(this.element, GRID_CLASSNAME);
+            const gridSpan = getGridSpan(grid);
+
+            const ans = Math.floor(gridSpan / children.length);
+            let rem = gridSpan % children.length;
+
+            children.forEach((col) => {
+                const cls = this.getSpanClass(gridSpan, children, ans, rem);
+                updateColSpanCls(col, cls);
+            });
+        }
+
+        getChildCols() {
+            return Array.from(this.element.querySelectorAll(ALL_COL_SELECTOR)).filter((col) => {
+                return col.parentNode.isSameNode(this.element);
+            }, this);
+        }
+
         isValidHint() {
 
             if (_mouseposition && _mouseposition.position === POSITION_DICTIONARY.RIGHT
@@ -756,8 +810,9 @@ Array.from = function() {
         }
 
         destroy() {
+
             Chorizo.editor.setDirtyState(true);
-            const parentLayout = this.closest(this.element.parentNode, COL_CLASSNAME);
+            const parentLayout = this.closestByRegex(this.element.parentNode, COL_CLASSNAME);
             let col;
 
             this.remove(this.element);
@@ -766,6 +821,7 @@ Array.from = function() {
                     .filter((child) => child.classList && !child.classList.contains('mz-layout-widget-col-header'))) {
                 col = new Col();
                 col.element = parentLayout;
+
                 if (!col.element.querySelector(ROW_SELECTOR)) {
                     col.addDropHint();
                 }
@@ -1193,6 +1249,7 @@ Array.from = function() {
         }
 
         insertWidgetElement(cb, html, cfg) {
+            const row = new Row();
             let block;
             let layout;
 
@@ -1200,12 +1257,12 @@ Array.from = function() {
             block = new Block();
             block.create(cfg, html);
 
-
             // if we drop a widget into a dropzone, lets create a layout element around it
             if (this.element.parentNode.parentNode.classList.contains(GRID_CLASSNAME)) {
                 layout = this.renderWidgetWithLayout(block);
                 this.element.appendChild(layout.element);
                 Chorizo.editor.showLayoutHeaders(false);
+                layout.row.updateColClasses();
             }
 
             else if (this._colmouseposition.position === POSITION_DICTIONARY.BOTTOM) {
@@ -1227,6 +1284,8 @@ Array.from = function() {
             else if (this._colmouseposition.position === POSITION_DICTIONARY.LEFT
                 || this._colmouseposition.position === POSITION_DICTIONARY.RIGHT) {
                 this.insertColWithWidget(block, this._colmouseposition.position);
+                row.element = block.element.parentNode.parentNode;
+                row.updateColClasses();
             }
 
             if (cb) {
@@ -1239,6 +1298,7 @@ Array.from = function() {
         }
 
         doColumnInsert(positionObject, cb) {
+            const row = new Row();
             const cols = this.layout.element.querySelectorAll('.mz-layout-col');
             let newlyAddedCol;
 
@@ -1283,15 +1343,16 @@ Array.from = function() {
             });
 
             this.rebase(positionObject.element.parentNode);
-
         }
 
         insertLayoutElement(cfg, cb) {
-
+            let isColInsert = false;
             let newCol;
             let row;
+
             // defer to column actions first
             if (this._colmouseposition && this._colmouseposition.position) {
+                isColInsert = true;
                 this.doColumnInsert(this._colmouseposition, cb);
             }
             // else, a action happend within a row
@@ -1306,20 +1367,20 @@ Array.from = function() {
 
                 else if (_mouseposition.position === POSITION_DICTIONARY.TOP) {
                     this.element.insertBefore(this.layout.element, _mouseposition.element);
-
                 }
 
                 else if (_mouseposition.position === POSITION_DICTIONARY.BOTTOM) {
                     _mouseposition.element.parentNode.insertBefore(
                                                         this.layout.element,
                                                         _mouseposition.element.nextSibling);
-
                 }
 
-                else if (_mouseposition.position === POSITION_DICTIONARY.RIGHT || _mouseposition.position === POSITION_DICTIONARY.LEFT) {
+                else if (_mouseposition.position === POSITION_DICTIONARY.RIGHT
+                            || _mouseposition.position === POSITION_DICTIONARY.LEFT) {
                     if (this.element.parentNode.parentNode.classList.contains(GRID_CLASSNAME)) {
                         return false;
                     }
+                    isColInsert = true;
                     this.doColumnInsert(_mouseposition, cb);
                 }
             }
@@ -1336,6 +1397,10 @@ Array.from = function() {
             if (newCol && cb) {
                 cb.call(newCol, newCol);
             }
+
+            if (!isColInsert) {
+                row.updateColClasses();
+            }
         }
 
         removeDropHint() {
@@ -1348,7 +1413,6 @@ Array.from = function() {
         }
 
         addDropHint() {
-
             const content = doc.createElement('div');
             const text = doc.createElement('span');
             text.innerHTML = DROP_HINT_TEXT;
@@ -1382,6 +1446,7 @@ Array.from = function() {
 
         if (Chorizo.editor.hideLayouts) {
             Chorizo.editor.showLayoutHeaders(false);
+            Chorizo.editor.resetDirtyState();
         }
 
         const target = new Target();

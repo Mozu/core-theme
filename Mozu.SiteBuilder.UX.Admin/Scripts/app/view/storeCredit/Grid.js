@@ -56,16 +56,10 @@ Ext.define('Taco.view.storeCredit.Grid', {
 
     advancedSearchConfig : {
         advancedFormCls: 'Taco.view.storeCredit.AdvancedSearchForm',
-        
         quickFilterData: [
-            //[{ orderStatus: 'Open' }, 'Open Orders'],
-            //[{ paymentstatus: 'Unpaid', orderStatus: 'Open' }, 'Unpaid Orders'],
-            //[{ paymentstatus: 'Paid', fulfillmentStatus: 'NotFulfilled' }, 'Paid, Pending Fulfillment Orders'],
-            //[{ orderStatus: 'Pending', ordertype: 'Offline' }, 'Pending Orders'], 
-            //[{ fulfillmentStatus: 'Fulfilled' }, 'Fulfilled Orders'],
-            //[{ orderStatus: 'Cancelled' }, 'Cancelled Orders'],
-            //[{ orderStatus: 'Errored' }, 'Errored Orders'],
-            //[{}, 'All Orders']
+            // Entries should be query and display value pairs formatted as follows:
+            //[{ prop: 'value' }, 'Title'],
+            //[{ prop: 'value' }, 'Title']
         ],
 
         emptySearchText: 'Search'

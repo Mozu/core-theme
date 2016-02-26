@@ -1,7 +1,6 @@
 /**
  * @class Taco.view.order.modal.AddPayment
  */
-
 Ext.define('Taco.view.order.modal.AddPayment', {
     extend: 'Taco.core.ux.window.Modal',
     requires: [
@@ -18,12 +17,14 @@ Ext.define('Taco.view.order.modal.AddPayment', {
     models: ['Taco.model.CheckoutSettings'],
 
     layout: "anchor",
+    isLoading: false,
 
     // the default amount to set in the amount field;  If not provided when instantiating the editor, the amount will be auto extracted from the record;
     defaultPaymentAmount: 0,
     currentPayments: null,
+    savedPayments: null,
 
-    initComponent: function() {
+    initComponent: function () {
         var me = this,
             balance = this.record.getNewPaymentAmountHint(),
             formItems = [];
@@ -46,6 +47,7 @@ Ext.define('Taco.view.order.modal.AddPayment', {
         this.callParent(arguments);
 
         this.mon(this, "boxready", function() {
+            this.setModalLoading(this.isLoading);
             if (!this.hasValidBillingContact()) {
                 // no valid billing contact, need to force the form to open;
                 this.toggleExtraInfo(null, false);
@@ -54,50 +56,55 @@ Ext.define('Taco.view.order.modal.AddPayment', {
             } else {
                 this.toggleExtraInfo(null, true);
             }
-            // determine which object is checked, or hidden/shown on the payment modal.
-            // Enable previous payment, have it selected.
-
-            if (this.currentPayments && this.currentPayments.length > 0) {
-                // Enable previous payment, have it selected.
-                this.existingCardRadio.enable(true);
-                this.existingCardRadio.setValue(true);
-                this.newCardRadio.setValue(false);
-                // billing stuff!
-                this.newCardBillingInfo.setVisible(false);
-                this.existingCardBillingInfo.setVisible(true);
-            } else {
-                if (this.newCardRadio) {
-                    // Enable/disable savedCardRadio before this here!
-                    this.newCardRadio.setValue(true);
-                    this.existingCardRadio.disable(true);
-                    this.existingCardRadio.setValue(false);
-                    // this should be done if there are no saved cards on the customer or existing cards on the order.
-                    this.cardSelection.setVisible(false);
-                }
-                this.newCardBillingInfo.setVisible(true);
-                this.existingCardBillingInfo.setVisible(false);
+            if (!this.isLoading) {
+                this.setDisplayedItems();
             }
+
         }, this);
     },
 
+    setDisplayedItems: function () {
+        // determine which object is checked, or hidden/shown on the payment modal.
+        // Enable previous payment, have it selected.
+        var hasCurrentPayment = (this.currentPayments && this.currentPayments.length > 0);
+        var hasSavedPayment = (this.savedPayments && this.savedPayments.length > 0) || false;
+        var hasPayments = hasCurrentPayment || hasSavedPayment;
+
+        // Ext is dumb, and this is the method to enable/disable the field.
+        //  I have to ! the boolean because we want the opposite in this case.
+        this.existingCardRadio.setDisabled(!hasCurrentPayment);
+        this.existingCardRadio.setValue(hasCurrentPayment);
+
+        // If we have saved payments, but also have current payments, we don't default to the saved card view.
+        this.savedCardRadio.setDisabled(!hasSavedPayment);
+        this.savedCardRadio.setValue(hasSavedPayment && !hasCurrentPayment);
+
+        // If we have no other payments, default to the new card radio
+        this.newCardRadio.setValue(!hasPayments);
+        // This should be done if there are no saved cards on the customer or existing cards on the order.
+        this.cardSelection.setVisible(hasPayments);
+
+        // Determine what is showing after checking above:
+        this.existingCardBillingInfo.setVisible(hasPayments);
+        this.newCardBillingInfo.setVisible(!hasPayments);
+    },
 
     // method meant to be overwritten by sub class;
     getPaymentForm: function() {
         var me = this;
 
-        // Pull the existing payments for the dropdown list!
-        this.currentPayments = this.record.payments().queryBy(function (payment) {
-            return payment.get('paymentType') === 'CreditCard';
-        });
+        // This pull the existing credit card payments against the order or its
+        //   parent order. It passes in the order.
+        this.pullOrderPaymentData(this.record);
 
-        /*if (this.record.get('parentOrderId') && this.record.get('parentOrderId').length > 0) {
-            // pull the parent order, get its payments, add those payments to the this.currentPayments store.
-
-        }*/
+        // This pulls the saved card from the customer and adds the missing data
+        //  to the model for easy import down below.
+        this.pullCustomerPaymentData(this.record.customer);
 
         this.newCardRadio = Ext.create('Ext.form.field.Radio', {
             boxLabel: 'New Credit Card',
             name: 'cardUse',
+            itemId: 'useNewCard',
             inputValue: 'newCard',
             flex: 1,
             handler: function(radio) {
@@ -114,7 +121,7 @@ Ext.define('Taco.view.order.modal.AddPayment', {
         this.existingCardRadio = Ext.create('Ext.form.field.Radio', {
             boxLabel: 'Order Credit Cards',
             name: 'cardUse',
-            itemId: 'cardUse',
+            itemId: 'useExistingCard',
             inputValue: 'existingCard',
             disabled: true,
             flex: 1,
@@ -130,6 +137,7 @@ Ext.define('Taco.view.order.modal.AddPayment', {
         this.savedCardRadio = Ext.create('Ext.form.field.Radio', {
             boxLabel: 'Saved Credit Cards',
             name: 'cardUse',
+            itemId: 'useSavedCard',
             inputValue: 'savedCard',
             disabled: true,
             flex: 1,
@@ -174,7 +182,202 @@ Ext.define('Taco.view.order.modal.AddPayment', {
         return this.paymentContainer;
     },
 
-    createNewCardForm: function() {
+    pullOrderPaymentData: function(order) {
+        // Pull the existing payments for the dropdown list!
+        this.currentPayments = order.payments().queryBy(function(payment) {
+            return payment.get('paymentType') === 'CreditCard';
+        });
+
+        // Only run if no payments are on the order
+        if (this.currentPayments && !this.currentPayments.getCount()) {
+            // Pull the parent order payment data.
+            this.retrieveParentPaymentData();
+        }
+
+        // Retrieve the JSON array from the store.
+        this.currentPayments = this.currentPayments.getRange().map(function (payment) { return payment.data; });
+
+        // Filter and clear the json array, there isn't a primary so pass false to skip the search
+        this.currentPayments = this.filterAndClearArrayDuplicates(this.currentPayments, false);
+    },
+
+    // private
+    retrieveParentPaymentData: function () {
+        // If there is a parentOrderId, pull the parent order and get the used payments from it.
+        if (this.record.get('parentOrderId') && this.record.get('parentOrderId').length > 0) {
+            // This modal needs to be loading!
+            this.isLoading = true;
+            // pull the parent order, get its payments, add those payments to the this.currentPayments store.;
+            this.retrieveOrderPaymentDataAjax(this.recrod.get('parentOrderId'));
+        } else if (this.record.get('parentReturnId') && this.record.get('parentReturnId').length > 0) {
+            // This modal needs to be loading!
+            this.isLoading = true;
+            // if there is a parentReturnId, pull the parent return Id, and then pull the order from its order id.
+            var me = this;
+            Ext.Ajax.request({
+                url: '/admin/app/return/list',
+                params: {
+                    id: me.record.get('parentReturnId')
+                },
+                method: 'GET',
+                success: function (returnResponse) {
+                    // populate the stuff!
+                    // remove the loading spinny thing after the payment data is pulled and populated.
+                    var returnList = JSON.parse(returnResponse.responseText).items;
+                    if (returnList && returnList.length > 0) {
+                        var parentOrderId = returnList[0].originalOrderId;
+                        me.retrieveOrderPaymentDataAjax(parentOrderId);
+                    }
+                }
+            });
+        }
+    },
+
+    retrieveOrderPaymentDataAjax: function (orderId) {
+        var me = this;
+        Ext.Ajax.request({
+            url: '/admin/app/order/list',
+            params: {
+                id: orderId
+            },
+            method: 'GET',
+            success: function (orderResponse) {
+                var orderList = JSON.parse(orderResponse.responseText).items;
+
+                // create the store here if it doesn't exist!
+                me.currentPayments = me.currentPayments || [];
+                
+                if (orderList && orderList.length > 0) {
+                    var paymentList = orderList[0].payments;
+                    if (paymentList) {
+                        for (var i = 0; i < paymentList.length; ++i) {
+                            if (paymentList[i].paymentType.toLowerCase() === 'creditcard') {
+                                // Add this payment to the currentPayments Store!
+                                // Need to do this when there is a currentPayments created and when adding a new one.
+                                me.currentPayments.push(paymentList[i]);
+                            }
+                        }
+                    }
+                }
+                // This is needed because the parent order may have duplicates, and this is inside an async call so it
+                //  is done well after the first pass.
+                me.currentPayments = me.filterAndClearArrayDuplicates(me.currentPayments, false);
+                me.setDisplayedItems();
+                me.setModalLoading(false);
+            }
+        });
+    },
+
+    // private
+    pullCustomerPaymentData: function (customer) {
+        // if the customer attached to the record isn't anonymous, check to see if they have cards saved.
+        if (customer.get('isAnonymous') || customer.raw.paymentCards.length <= 0) {
+            return;
+        }
+
+        // Match customer credit cards with their associated billing info.
+        var curSavedPayments = customer.raw.paymentCards;
+        var contactList = customer.get('contacts');
+        for (var i in curSavedPayments) {
+            curSavedPayments[i].cardNumber = curSavedPayments[i].cardNumberPart;
+            curSavedPayments[i].isDefault = customer.raw.paymentCards[i].isDefaultPayMethod;
+
+            var foundItem = contactList.find(function(element) {
+                return (element.id === curSavedPayments[i].contactId);
+            });
+
+            // If this is ever undefined, then there is a bigger problem with the customer's data.
+            curSavedPayments[i].billingContact = foundItem;
+                    
+        }
+
+        // Prune out duplicates here!
+        this.savedPayments = this.filterAndClearArrayDuplicates(curSavedPayments, true);
+    },
+
+    /**
+     * filterAndClearArrayDuplicates - This loops through the array and removes
+     *  duplicate entries then sorts the remaining items so that the primary
+     *  card is first (if there), the current cards are next, and finally the
+     *  expired cards are on the bottom of the list.
+     * findPrimary - boolean to determine if a primary is in the list.
+     **/
+    filterAndClearArrayDuplicates: function (sourceArray, findPrimary) {
+        var retVal = [];
+        // Basically a hash array
+        var keysAdded = {};
+        // Data bins to rebuild the 
+        var primary = null;
+        var current = [];
+        var expired = [];
+
+        var test, curKey, curItem;
+        // Move the primary location to the front.
+        if (findPrimary) {
+            for (var j = 0; j < sourceArray.length; ++j) {
+                if (sourceArray[j].isDefault) {
+                    primary = sourceArray[j];
+                    // Remove the primary
+                    sourceArray.splice(j, 1);
+                    // Add to the beginning of the array.
+                    sourceArray.unshift(primary);
+                    // Jump out of the array!
+                    break;
+                }
+            }
+        }
+        // Process as normal, looking for duplicates.
+        for (var i = 0; i < sourceArray.length; ++i) {
+            curItem = sourceArray[i];
+            // Setting expiration date
+            curItem.isExpired = this.isCardExpired(curItem);
+            // Checking hash for key.
+            curKey = this.createKey(curItem).toLowerCase();
+            test = keysAdded[curKey];
+            // Was the hash already added?
+            if (!test) {
+                // If not place in the proper bin.
+                if (curItem.isDefault && !curItem.isExpired) {
+                    primary = curItem;
+                } else if (curItem.isExpired) {
+                    expired.push(curItem);
+                } else {
+                    current.push(curItem);
+                }
+                keysAdded[curKey] = curKey;
+            }
+        }
+
+        // Reorder arrays into a single return value.
+        // Make sure there is a primary and it isn't expired
+        //  'primary' can be set, if it is expired.
+        //  Set when 'findPrimary = true'.
+        if (primary && !primary.isExpired) {
+            retVal.push(primary);
+        }
+        retVal = retVal.concat(current);
+        retVal = retVal.concat(expired);
+        return retVal;
+    },
+
+    isCardExpired: function(currentItem) {
+        // Expiration checks:
+        var curDate = new Date();
+        var curYear = curDate.getFullYear();
+        var curMonth = curDate.getMonth() + 1;
+        // Expiration calculation
+        return currentItem.expireYear < curYear || currentItem.expireMonth < curMonth && currentItem.expireYear <= curYear;
+    },
+
+    createKey: function(paymentObj) {
+        return paymentObj.cardType + paymentObj.cardNumber + paymentObj.expireMonth + paymentObj.expireYear
+            + paymentObj.nameOnCard + paymentObj.billingContact.address1 + paymentObj.billingContact.cityOrTown
+            + paymentObj.billingContact.countryCode + paymentObj.billingContact.email
+            + paymentObj.billingContact.firstName + paymentObj.billingContact.lastName
+            + paymentObj.billingContact.postalOrZipCode + paymentObj.billingContact.stateOrProvince;
+    },
+
+    createNewCardForm: function () {
         return Ext.create('Ext.form.FieldContainer', {
             name: 'addNewCard',
             width: '100%',
@@ -299,7 +502,7 @@ Ext.define('Taco.view.order.modal.AddPayment', {
         var me = this;
         var curPaymentStore = Ext.create("Ext.data.Store", {
             model: 'Taco.model.OrderPayment',
-            data: this.currentPayments.items,
+            data: this.currentPayments,
             proxy: {
                 type: 'memory',
                 reader: {
@@ -309,24 +512,20 @@ Ext.define('Taco.view.order.modal.AddPayment', {
         });
 
         this.existingPaymentPicker = Ext.create('Taco.view.order.widget.ReusePaymentPickerField', {
-            showLabel: false,
+            showLabel: true,
             name: 'existingPaymentPicker',
             itemId: 'existingPaymentPicker',
             fieldLabel: "Existing Cards on Order",
             labelStyle: "padding-top:16px;",
             store: curPaymentStore,
-            width: 320,
+            width: 500,
             allowBlank: false,
             margin: '0px 5px 0px 5px',
             listeners: {
                 select: {
-                    fn: function (combo, record, index, e) {
-                        var currentPayment = combo.store.queryBy(function (payment) {
-                            return payment.get('id') === combo.value;
-                        });
-                        //me.down('#billingContactInfo').setData(currentPayment.items[0].get('billingContact'));
+                    fn: function (combo, record) {
                         // Call a method to update the billing info stuff related to this card!!
-                        me.updateBillingInfoForSelectedCard(currentPayment.items[0]);
+                        me.updateBillingInfoForSelectedCard(record[0]);
                     }
                 }
             }
@@ -388,7 +587,7 @@ Ext.define('Taco.view.order.modal.AddPayment', {
         }, this);
 
         // figure out how to prepopulate given a single item in the list...
-        if (curPaymentStore.getCount() === 1) {
+        if (curPaymentStore.getCount() === 1 && !curPaymentStore.getAt(0).get('isExpired')) {
             this.existingPaymentPicker.select(curPaymentStore.getAt(0));
             this.updateBillingInfoForSelectedCard(curPaymentStore.getAt(0));
         }
@@ -396,26 +595,115 @@ Ext.define('Taco.view.order.modal.AddPayment', {
         return existingCardForm;
     },
 
-    // This is currently not used
-    createSavedCardForm: function() {
-        return Ext.create('Ext.form.FieldContainer', {
+    createSavedCardForm: function () {
+        var me = this;
+
+        var savedPaymentStore = Ext.create("Ext.data.Store", {
+            model: 'Taco.model.OrderPayment',
+            data: this.savedPayments,
+            proxy: {
+                type: 'memory',
+                reader: {
+                    type: 'json'
+                }
+            }
+        });
+
+        this.savedPaymentPicker = Ext.create('Taco.view.order.widget.ReusePaymentPickerField', {
+            showLabel: false,
+            name: 'savedPaymentPicker',
+            itemId: 'savedPaymentPicker',
+            fieldLabel: "Saved Cards on Order",
+            labelStyle: "padding-top:16px;",
+            store: savedPaymentStore,
+            width: 500,
+            allowBlank: false,
+            margin: '0px 5px 0px 5px',
+            listeners: {
+                select: {
+                    fn: function (combo, record) {
+                        // Call a method to update the billing info stuff related to this card!!
+                        me.updateBillingInfoForSelectedCard(record[0]);
+                    }
+                }
+            }
+        });
+
+        var savedCardForm =  Ext.create('Ext.form.FieldContainer', {
             name: 'addSavedCard',
             width: '100%',
             items: [
-                
+                {
+                    xtype: 'container',
+                    layout: 'hbox',
+                    defaults: {
+                        style: {
+                            margin: '0 20 0 0'
+                        }
+                    },
+                    items:
+                    [
+                        this.savedPaymentPicker
+                    ]
+                }, {
+                    xtype: 'container',
+                    layout: 'hbox',
+                    defaults: {
+                        style: {
+                            margin: '0 20 0 0'
+                        }
+                    },
+                    items:
+                    [
+                        {
+                            xtype: 'currencyfield',
+                            width: 170,
+                            currencyCode: this.record.getCurrencyCode(),
+                            name: 'savedCardAmount',
+                            itemId: 'savedCardAmount',
+                            fieldLabel: 'Amount',
+                            validateOnChange: false,
+                            selectOnFocus: true,
+                            allowBlank: false,
+                            minValue: 0.01,
+                            margin: '0px 5px 0px 5px',
+                            value: this.getDefaultPaymentAmount()
+                        }, {
+                            xtype: 'textfield',
+                            width: 100,
+                            name: 'savedCardCvv',
+                            itemId: 'savedCardCVV',
+                            allowBlank: true,
+                            fieldLabel: 'CVV',
+                            margin: '0px 5px 0px 5px',
+                        }
+                    ]
+                }
             ],
             scope: this
         }, this);
+
+        if (savedPaymentStore.getCount() === 1 && !savedPaymentStore.getAt(0).get('isExpired')) {
+            this.savedPaymentPicker.select(savedPaymentStore.getAt(0));
+            this.updateBillingInfoForSelectedCard(savedPaymentStore.getAt(0));
+        } else {
+            var curItem;
+            for (var i = 0; i < savedPaymentStore.getCount() ; i++) {
+                curItem = savedPaymentStore.getAt(i);
+                if (curItem.get('isDefault')) {
+                    if (!curItem.get('isExpired')) {
+                        this.savedPaymentPicker.select(curItem);
+                        this.updateBillingInfoForSelectedCard(curItem);
+                    }
+                    // Quit the for loop, we found the primary.
+                    break;
+                }
+            }
+        }
+        return savedCardForm;
     },
 
-    getSelectedPayment: function (paymentId) {
-        var retVal = this.currentPayments.queryBy(function(payment) {
-            return payment.get('id') === paymentId;
-        });
-        return retVal.items[0];
-    },
-
-    createBillingLabel: function() {
+    createBillingLabel: function () {
         return Ext.widget({
             xtype: 'box',
             anchor: 0,
@@ -611,6 +899,11 @@ Ext.define('Taco.view.order.modal.AddPayment', {
         return !inValidField;
     },
 
+    setModalLoading: function (value) {
+        this.setLoading(value);
+        this.isLoading = value;
+    },
+
     /**
      * Create a PCIaaS form field.
      *
@@ -729,7 +1022,7 @@ Ext.define('Taco.view.order.modal.AddPayment', {
     /**
      * @private
      */
-    getPCIaaS: function() {
+    getPCIaaS: function () {
         return this.self.PCIaaS;
     },
 
@@ -739,7 +1032,7 @@ Ext.define('Taco.view.order.modal.AddPayment', {
      * @private
      * @return {object} The adapter.
      */
-    getPciFieldsAdapter: function() {
+    getPciFieldsAdapter: function () {
         var me = this;
         return {
             CardType: this.createPciFormField(this.down('#cardType')),
@@ -777,16 +1070,21 @@ Ext.define('Taco.view.order.modal.AddPayment', {
         var billingInfo = null;
         var contactInfo = null;
         var amount = null;
+        var curPayment = null;
+        var paymentServiceCardId = null;
 
-        //if (me.existingCardRadio && me.existingCardRadio.getValue()) {
-        var retVal = me.existingPaymentPicker.getSubmitValue();
-        var curPayment = me.existingPaymentPicker.getStore().queryBy(function (payment) {
-            return payment.get('id') === retVal;
-        });
-        curPayment = curPayment.items[0];
-
+        if (me.existingCardRadio && me.existingCardRadio.getValue()) {
+            curPayment = me.existingPaymentPicker.findRecordByValue(me.existingPaymentPicker.getSubmitValue());
+            amount = this.down('#existingCardAmount').getValue();
+            paymentServiceCardId = curPayment.data.paymentServiceCardId;
+        } else {
+            curPayment = me.savedPaymentPicker.findRecordByValue(me.savedPaymentPicker.getSubmitValue());
+            amount = this.down('#savedCardAmount').getValue();
+            paymentServiceCardId = curPayment.data.id;
+        }
+        
         billingInfo = {
-            paymentServiceCardId: curPayment.data.paymentServiceCardId,
+            paymentServiceCardId: paymentServiceCardId,
             nameOnCard: curPayment.data.nameOnCard,
             cardType: curPayment.data.cardType,
             cardNumber: curPayment.data.cardNumber,
@@ -812,8 +1110,6 @@ Ext.define('Taco.view.order.modal.AddPayment', {
             workPhone: curPayment.data.billingContact.workPhone
         };
 
-        amount = this.down('#existingCardAmount').getValue();
-
         return {
             orderId: order.getId(),
             amount: amount,
@@ -832,12 +1128,7 @@ Ext.define('Taco.view.order.modal.AddPayment', {
             // Existing card 
             var order = this.record;
             var payloadData = this.getPaymentPayload();
-            //}// else case is savedCardRadio!
-
-            //billingInfo.paymentServiceCardId = me._hiddenCardId;
-
-            me.setLoading(true, me.body);
-
+            
             order.addPayment({
                 jsonData: payloadData,
                 success: function (response) {
@@ -871,7 +1162,7 @@ Ext.define('Taco.view.order.modal.AddPayment', {
     }
 },
 /* class definition-time function */
-function() {
+function () {
     var me = this;
 
     Ext.Loader.loadScript({

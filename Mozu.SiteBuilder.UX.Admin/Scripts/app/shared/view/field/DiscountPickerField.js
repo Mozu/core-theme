@@ -14,16 +14,13 @@ Ext.define('Taco.shared.view.field.DiscountPickerField', {
     // clear out the search text when user clicks the trigger;
     clearOnTriggerClick : true,
 
-    includeBaseProductType: false,
-
     // this adds support to combos that have paged stores to use the pageup and pagedown keys to change the page in the store;
     enableKeyboardPaging: true,
 
     // hide the paging toolbar when there is less than a single page of results;
     autoHidePagingToolbar: true,
 
-    // this property controls the type of products to return; "parent" returns the parent product. "inventory" returns the all variants for the parent product;    
-    productType: 'parent',
+    
     pageSize: 10,
 
     autoLoad: false,
@@ -34,14 +31,12 @@ Ext.define('Taco.shared.view.field.DiscountPickerField', {
     valueField: 'id',
     hideLabel: false,
     hideTrigger: false,
-    //emptyText: "Product Type Search",
     selectOnFocus: true,
-    //flex: 1,
     value: "",    
     listConfig: {
         loadingText: 'Searching...',
         cls : "product-type-picker-menu",
-        emptyText: '<div style="padding:20px; 10px; ">No matching product types found.</div>'
+        emptyText: '<div style="padding:20px; 10px; ">No matching discounts found.</div>'
     },
 
     // querystring parameter name that contains the search filter data;

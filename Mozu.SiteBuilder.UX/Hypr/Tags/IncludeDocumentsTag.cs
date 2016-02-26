@@ -105,7 +105,11 @@ namespace Mozu.SiteBuilder.UX.Hypr.Tags
             // staying in line with the admin-side doc client
             if(sbContext.DataViewMode == Core.DataViewModeType.Pending)
             {
-                service = service.CloneWithConfigOptions(opts => opts.DisableCache = true);
+                service = service.CloneWithConfigOptions(opts => opts.DisableCache = true).CloneWithApiContext(ctx =>
+                {
+                    ctx.ShouldBypassCache = true;
+                    ctx.ShouldUpdateCache = false;
+                });
             }
 
             var res = await service.GetViewDocuments(documentListName: list, viewName: view, filter: query, sortBy: sortBy, pageSize: pageSize, startIndex: startIndex, includeInactive: sbContext.IsEditMode).ConfigureAwait(false);

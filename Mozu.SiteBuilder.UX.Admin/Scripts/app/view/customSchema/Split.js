@@ -12,6 +12,7 @@ Ext.define('Taco.view.customSchema.Split', {
     requires: [
         'Taco.core.ux.mixins.SplitEditor',
         'Taco.view.publishing.component.button.PublishButton',
+        'Taco.core.ux.action.ProgressButton',
         'Taco.view.customSchema.Grid',
         'Taco.core.ux.grid.MenuColumn' // just to refer to its classname
     ],
@@ -52,9 +53,11 @@ Ext.define('Taco.view.customSchema.Split', {
         this.createButtonCfg = this.getCreateButton();
 
         this.saveButtonCfg = {
+            xtype: 'progressbutton',
             disabled: true,
             itemId: 'saveActionButton',
-            handler: function() {
+            handler: function(cmp) {
+                cmp.startLoading();
                 Taco.app.fireEvent('dissmissmessages');
                 this.form.doSave.apply(this.form, arguments);
             }
@@ -75,10 +78,11 @@ Ext.define('Taco.view.customSchema.Split', {
 
     },
 
-    onSaveSuccess: function(eventData, operation, operation) {
-        if (operation && operation.success) {
+    onSaveSuccess: function(cmp, operation, isSuccessful) {
+        this.saveActionButton.stopLoading();
+        if (isSuccessful) {
             this.showMessage('Save Complete');
-            this.enableButtons(eventData.record);
+            this.enableButtons(cmp.record);
         }
     },
 
@@ -122,10 +126,12 @@ Ext.define('Taco.view.customSchema.Split', {
                 itemId: 'publishActionButton',
                 scope: this,
                 disabled: true,
-                handler: function() {
+                handler: function(cmp) {
+                    cmp.startLoading();
                     var record = me.getCurrentEntityRecord();
                     record.publish({
                         success: function() {
+                            cmp.stopLoading();
                             record.data.publishState = 'active';
                             me.enableButtons(record);
                             me.showMessage('Published', 'info', 1000);
@@ -311,7 +317,6 @@ Ext.define('Taco.view.customSchema.Split', {
                     editMode: options ? options.editMode : null,
                     editor: me.editors.findEditor(record)
                 });
-                me.form = me.addADRIfRequired(record);
                 me.contentContainer.add(me.form);
                 me.enableButtons(record);
                 me.cardPanel.getLayout().setActiveItem(1);
@@ -379,20 +384,7 @@ Ext.define('Taco.view.customSchema.Split', {
         me.loadEditor(record, options);
     },
 
-    addADRIfRequired: function (record) {
-        var me = this,
-            adrPanel;
-
-        if(!me.form) return null;
-        
-        if(!record || !record.data || !record.data.listFlags || !record.data.listFlags.enableADR) return me.form;
-
-        adrPanel = Ext.create('Taco.core.ux.form.field.ActiveDateRange', {record: record});
-
-        me.form.dynamicForm.add(adrPanel);
-
-        return me.form;
-    },
+  
 
     handleAddToEast: function (ct, cmp) {
         

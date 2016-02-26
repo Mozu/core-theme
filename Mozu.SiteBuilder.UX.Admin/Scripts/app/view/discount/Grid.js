@@ -26,8 +26,6 @@ Ext.define('Taco.view.discount.Grid', {
 
     enableAutoSelect: false,
 
-    
-
     //contextConfig: {
     //    supportedLevels: ['c'],
     //    requiresContextOfType: ['c', 's']
@@ -75,16 +73,10 @@ Ext.define('Taco.view.discount.Grid', {
 
     advancedSearchConfig : {
         advancedFormCls: 'Taco.view.discount.AdvancedSearchForm',
-        
         quickFilterData: [
-            [{ orderStatus: 'Open' }, 'Open Orders'],
-            [{ paymentstatus: 'Unpaid', orderStatus: 'Open' }, 'Unpaid Orders'],
-            [{ paymentstatus: 'Paid', fulfillmentStatus: 'NotFulfilled' }, 'Paid, Pending Fulfillment Orders'],
-            [{ orderStatus: 'Pending', ordertype: 'Offline' }, 'Pending Orders'], 
-            [{ fulfillmentStatus: 'Fulfilled' }, 'Fulfilled Orders'],
-            [{ orderStatus: 'Cancelled' }, 'Cancelled Orders'],
-            [{ orderStatus: 'Errored' }, 'Errored Orders'],
-            [{}, 'All Orders']
+            // Entries should be query and display value pairs formatted as follows:
+            //[{ prop: 'value' }, 'Title'],
+            //[{ prop: 'value' }, 'Title']
         ],
 
         emptySearchText: 'Search'
@@ -94,10 +86,7 @@ Ext.define('Taco.view.discount.Grid', {
 
     stateful: false,
     stateId: null,
-
-    statics: {
-        
-    },
+    statics: {},
         
     initComponent: function () {
         var me = this;
@@ -363,5 +352,4 @@ Ext.define('Taco.view.discount.Grid', {
     getDeletePromptMessage: function (record) {
         return record.getDeletePromptMessage();
     }
-
 });

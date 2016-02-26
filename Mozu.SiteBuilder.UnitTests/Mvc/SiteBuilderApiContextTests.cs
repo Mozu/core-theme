@@ -56,7 +56,7 @@ namespace Mozu.SiteBuilder.UnitTests.Mvc
             edit.IsEditMode().Returns(false);
             request.RequestUri = new Uri("http://foo.com/?mz_now=2012-11-10");
             var ctx = new Mozu.SiteBuilder.Mvc.SiteBuilderApiContext(cookieProvider, settings, auth, request, dvm, edit);
-            Assert.AreNotEqual(ctx.PreviewDate.Value.Year, 2012);
+            Assert.IsNull(ctx.PreviewDate);
 
         }
 

@@ -74,9 +74,9 @@ namespace Mozu.SiteBuilder.Mvc
             this.IsDebugMode = isDebugMode;
         }
 
-        private DateTime GetNowValue()
+        private DateTime? GetNowValue()
         {
-            var now = RoundMinueteToLowest10(DateTime.UtcNow);
+            DateTime? now = null;
             if (this.DataViewMode == DataViewModeType.Pending)
             {
                 HttpCookie cookie;
@@ -87,7 +87,7 @@ namespace Mozu.SiteBuilder.Mvc
                     if (DateTime.TryParse(val, out temp))
                     {
                         now = temp;
-                        cookie = new HttpCookie(Constants.NOWCOOKIENAME, now.ToUniversalTime().ToString("o"));
+                        cookie = new HttpCookie(Constants.NOWCOOKIENAME, now.Value.ToUniversalTime().ToString("o"));
                     }
                     else
                     {

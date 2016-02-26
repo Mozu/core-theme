@@ -28,7 +28,11 @@ namespace Mozu.SiteBuilder.UX.Models.Navigation
 
         [DataMember(Name = "e", EmitDefaultValue = false, IsRequired = false, Order = 6)]
         public bool? IsEnabled { get; set; }
+      
+       
     }
+
+
 
     public class RedirectComparer : IComparer<RedirectEntry>
     {
@@ -55,7 +59,7 @@ namespace Mozu.SiteBuilder.UX.Models.Navigation
             var xStem = xQPos == -1 ? x.Source : x.Source.Substring(0, xQPos);
             var yStem = yQPos == -1 ? y.Source : y.Source.Substring(0, yQPos);
 
-            var ret = StringComparer.OrdinalIgnoreCase.Compare(xStem, yStem);
+            var ret = StringComparer.OrdinalIgnoreCase.Compare(yStem, xStem);
             if (ret != 0)
             {
                 return ret;
@@ -78,6 +82,14 @@ namespace Mozu.SiteBuilder.UX.Models.Navigation
 
             var xQ = System.Web.HttpUtility.ParseQueryString((xQPos != -1 ? x.Source.Substring(xQPos) : ""));
             var yQ = System.Web.HttpUtility.ParseQueryString((yQPos != -1 ? y.Source.Substring(yQPos) : ""));
+            if( xQ.Count == 0 && yQ.Count != 0 )
+            {
+                return 1;
+            }
+            if (xQ.Count != 0 && yQ.Count == 0)
+            {
+                return -1;
+            }
             var xCount = xQ.AllKeys.Aggregate(0, (cnt, k) => xQ[k] == "*" ? cnt + 1 : cnt);
             var yCount = yQ.AllKeys.Aggregate(0, (cnt, k) => yQ[k] == "*" ? cnt + 1 : cnt);
             if (xCount != yCount)

@@ -3,7 +3,7 @@ var relPath = helpers.isBuildTask(window) ? '' : '../../',
     group: 'Commerce',
     expanded: true,
     items: [
-        {   
+        {
             group: 'Integration Tests',
             expanded: false,
             items: [
@@ -11,7 +11,7 @@ var relPath = helpers.isBuildTask(window) ? '' : '../../',
                     group: 'Product',
                     expanded: false,
                     items: []
-                }, 
+                },
                 {
                     group: 'Inventory',
                     expanded: false
@@ -49,22 +49,22 @@ var relPath = helpers.isBuildTask(window) ? '' : '../../',
                         {
                             url: relPath + 'unit/view/customers/modal/createCustomer.t.js',
                             title: 'Create Customer Modal'
-                        }, 
+                        },
                         {
                             url: relPath + 'unit/view/customers/contacts.t.js',
                             title: 'Customer Contacts selector'
-                        }, 
+                        },
                         {
                             url: relPath + 'unit/view/customers/modal/contacts.t.js',
                             title: 'Customer Contacts Modal'
                         },
                         {
-                          url: relPath + "unit/view/customers/modal/Contacts.t.js",
-                          title: "Customer Contacts Modal"
+                            url: relPath + "unit/view/customers/modal/Contacts.t.js",
+                            title: "Customer Contacts Modal"
                         },
                         {
-                          url: relPath + "unit/view/customers/modal/CreateCustomer.t.js",
-                          title: "Create Customer Modal"
+                            url: relPath + "unit/view/customers/modal/CreateCustomer.t.js",
+                            title: "Create Customer Modal"
                         }
                     ]
                 },
@@ -85,7 +85,7 @@ var relPath = helpers.isBuildTask(window) ? '' : '../../',
                             title: 'Customer Fulfillment Tests'
                         },
                         {
-                            url: relPath +"unit/view/order/widget/PaymentPanel.t.js",
+                            url: relPath + "unit/view/order/widget/PaymentPanel.t.js",
                             title: "Payment Panel Order Widget"
                         },
                         {
@@ -100,14 +100,18 @@ var relPath = helpers.isBuildTask(window) ? '' : '../../',
                             url: relPath + "unit/view/order/modal/AddPayment.t.js",
                             title: "Add Payments to Order"
                         },
-                        {   
+                        {
                             url: relPath + "unit/view/order/subform/Payment.t.js",
                             title: "Order Payment Sub Form"
                         },
                         {
                             url: relPath + "unit/view/order/subform/Fulfillment.t.js",
                             title: "Order Fullfillment Subform.js"
-                        }   
+                        },
+                        {
+                            url: relPath + "unit/view/order/Grid.t.js",
+                            title: "Order Grid"
+                        }
                     ]
                 },
                 {
@@ -133,14 +137,13 @@ var relPath = helpers.isBuildTask(window) ? '' : '../../',
                     expanded: false,
                     items: [
                         {
-                          url: relPath + "unit/view/discount/LimitationsForm.t.js",
-                          title: "LimitationsForm.js"
+                            url: relPath + "unit/view/discount/LimitationsForm.t.js",
+                            title: "LimitationsForm.js"
                         }
                     ]
                 }
             ]
         }
-
     ]
 };
 
@@ -166,7 +169,6 @@ if (!helpers.isBuildTask(window)) {
         testClass: Taco.TestClass.Core,
         preload: simAndSinPreloads,
         hostPageUrl: relPath + 'homepages/Mystic.cshtml'
-
     });
 
     Harness.start(CommerceTestObject);

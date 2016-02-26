@@ -227,10 +227,10 @@ Ext.define('Taco.view.productRanking.grid.Keyword', {
                         itemId: 'removeMenuItem',
                         // deleteMenuColumnHandler can be found in Taco.core.ux.mixins.DeleteFromGrid
                         menuColumnHandler: 'deleteMenuColumnHandler',
-                        //requiredBehaviors: {
-                        //    model: 'Taco.model.Discount',
-                        //    behavior: 'delete'
-                        //},
+                        requiredBehaviors: {
+                            model: 'Taco.model.ProductRanking',
+                            behavior: 'update'
+                        },
                         scope: me
                     }, {
                         text: 'Remove All',
