@@ -60,7 +60,7 @@ namespace Mozu.SiteBuilder.UX.Hypr.Tags
             var pageContext = context.PageContext();
             var siteContext = context.SiteContext();
             var searchContext = pageContext.Search;
-
+            var sbAPIContext = context.SiteBuilderApiContext();
 
 
 
@@ -144,7 +144,8 @@ namespace Mozu.SiteBuilder.UX.Hypr.Tags
                 searchTuningRuleCode, 
                 enableSearchTuningRules ,
                 searchTuningRuleContext ,
-                facetTemplateExclude
+                facetTemplateExclude,
+                sbAPIContext.PriceListCode 
              ).ConfigureAwait(false);
 
             var dict = new Dictionary<string, object> { { "model", pc } };
@@ -188,7 +189,8 @@ namespace Mozu.SiteBuilder.UX.Hypr.Tags
             string searchTuningRuleCode,
             bool?  enableSearchTuningRules ,
             string searchTuningRuleContext ,
-            string facetTemplateExclude
+            string facetTemplateExclude,
+            string priceList
             )
         {
             string cacheKey = null;
@@ -212,7 +214,7 @@ namespace Mozu.SiteBuilder.UX.Hypr.Tags
                     .Append(enableSearchTuningRules)
                     .Append(searchTuningRuleContext)
                     .Append(facetTemplateExclude)
-
+                    .Append (priceList)
                     .ToString();
 
                 pc = cache.Get<ProductSearchResult>(cacheKey, scope:CacheScope.Site , cacheType:StorefrontCacheTypes.ProductSearch);

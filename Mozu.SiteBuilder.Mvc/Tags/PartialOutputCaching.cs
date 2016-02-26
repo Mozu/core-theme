@@ -104,7 +104,7 @@ namespace Mozu.SiteBuilder.Mvc.Tags
                 var apiCtx = walker.context.Resolve<ISiteBuilderApiContext>();
                 var siteCtx = walker.context.Resolve<SiteContext>();
                 var pageCtx = walker.context.Resolve<PageContext>();
-
+                
                 var arguments = ProcessArguments(walker);
                 if (TagBase.ArguemntParserStrategy != null)
                 {
@@ -138,7 +138,7 @@ namespace Mozu.SiteBuilder.Mvc.Tags
 
                 var viewPath = _blockToken.Location.TemplateName;
                 var loc = _blockToken.Location.Offset;
-                var key = string.Format("{0}{1}{2}{3}{4}{5}", string.Join("|", arguments.Where(x => x.Value != null).Select(x => x.Value)), apiCtx.SiteId, siteCtx.HashString, viewPath, loc, (pageCtx.IsSecure ? "1" : "0"));
+                var key = string.Format("{0}{1}{2}{3}{4}{5}{6}", string.Join("|", arguments.Where(x => x.Value != null).Select(x => x.Value)), apiCtx.SiteId, siteCtx.HashString, viewPath, loc, (pageCtx.IsSecure ? "1" : "0"), apiCtx.PriceListCode);
                 var cachescope = GetCacheScope(apiCtx.MostSpecificContext);
 
                 var output = TryGetOutputStrings(manager, walker, key, cachescope, settings);
