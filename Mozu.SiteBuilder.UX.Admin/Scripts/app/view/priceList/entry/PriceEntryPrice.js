@@ -49,6 +49,12 @@ Ext.define('Taco.view.priceList.entry.PriceEntryPrice', {
 
         var entries = this.record.get('priceEntries');
 
+        if (entries.length === 0) {
+            entries.push({
+                minQty: 1
+            });
+        }
+
         Ext.Array.each(entries, function(entry, index, entries) {
             
             var minQty = Ext.widget('numberfield', {
@@ -177,6 +183,7 @@ Ext.define('Taco.view.priceList.entry.PriceEntryPrice', {
             name: 'discountsRestricted',
             displayFeild: 'text',
             valueField: 'value',
+            allowBlank: true,
             store: Ext.create('Ext.data.ArrayStore', {
                 fields: ['text', 'value'],
                 data: [
