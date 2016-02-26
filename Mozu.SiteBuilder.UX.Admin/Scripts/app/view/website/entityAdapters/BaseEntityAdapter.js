@@ -56,11 +56,6 @@ Ext.define('Taco.view.website.entityAdapters.BaseEntityAdapter', {
             ret.push(form);
         }
 
-        if (doc && doc.data && doc.data.listSupportsADR) {
-            if (me && me.dynamicFormContainer && me.dynamicFormContainer.dynamicForm) {
-                me.dynamicFormContainer.dynamicForm.add(Ext.create('Taco.core.ux.form.field.ActiveDateRange', {record:doc}));
-            }
-        }
 
         return ret;
     },

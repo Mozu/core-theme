@@ -35,7 +35,10 @@ Ext.define('Taco.view.customSchema.Grid', {
 
     initComponent: function() {
         var me = this;
-     
+         
+         me.editors = Taco.core.data.StoreManager.getOrCreate('Taco.store.EntityEditors');
+
+
         if (me.standaloneGrid) {
             this.applyViewConfig();
         }
@@ -113,20 +116,7 @@ Ext.define('Taco.view.customSchema.Grid', {
         me.on('cellclick', me.onCellClick, me);
     },
 
-    addADRIfRequired: function (record) {
-        var me = this,
-            adrPanel;
-
-        if(!me.form) return null;
-        
-        if(!record || !record.data || !record.data.listFlags || !record.data.listFlags.enableADR) return me.form;
-
-        adrPanel = Ext.create('Taco.core.ux.form.field.ActiveDateRange', {record: record});
-
-        me.form.dynamicForm.add(adrPanel);
-
-        return me.form;
-    },
+   
 
     updatePagerToolbar: function(record, isSinglePage) {
 
@@ -313,7 +303,7 @@ Ext.define('Taco.view.customSchema.Grid', {
 
                     else if (eventData.grid.siteBuilderList) {
 
-                        var editors = Taco.core.data.StoreManager.getOrCreate('Taco.store.EntityEditors');
+                       
 
                         eventData.record.reload({
                             success: function() {
@@ -328,10 +318,8 @@ Ext.define('Taco.view.customSchema.Grid', {
                                         margin: '10 10 10 10',
                                     },
                                     bubbleEvents: ['savesuccess', 'saveSuccess', 'savefailure'],
-                                    editMode: 'raw',
-                                    editor: editors.findEditor(eventData.record)
+                                    editor: me.editors.findEditor(eventData.record)
                                 });
-                                me.form = me.addADRIfRequired(eventData.record);
                                 me.viewContainer.add(me.form);
                             }
                         });
@@ -363,7 +351,7 @@ Ext.define('Taco.view.customSchema.Grid', {
 
                     else if (eventData.grid.siteBuilderList) {
 
-                        var editors = Taco.core.data.StoreManager.getOrCreate('Taco.store.EntityEditors');
+                       
                         eventData.record.reload({
                             success: function() {
                                 me.record = eventData.record;
@@ -378,9 +366,8 @@ Ext.define('Taco.view.customSchema.Grid', {
                                     },
                                     bubbleEvents: ['savesuccess', 'saveSuccess', 'savefailure'],
                                     editMode: 'raw',
-                                    editor: editors.findEditor(eventData.record)
+                                    editor: me.editors.findEditor(eventData.record)
                                 });
-                                me.form = me.addADRIfRequired(eventData.record);
                                 me.viewContainer.add(me.form);
                             }
                         });
