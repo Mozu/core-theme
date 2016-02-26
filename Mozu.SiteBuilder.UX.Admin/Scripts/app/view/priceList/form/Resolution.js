@@ -1,10 +1,10 @@
 /**
- * @class  Taco.view.priceList.form.Conditions
- * @description Price List Conditions Form
+ * @class  Taco.view.priceList.form.Resolution
+ * @description Price List Resolution Form
  */
-Ext.define('Taco.view.priceList.form.Conditions', {
+Ext.define('Taco.view.priceList.form.Resolution', {
     extend: 'Taco.core.ux.form.Form',
-    alias: 'widget.taco-priceList-conditions',
+    alias: 'widget.taco-priceList-resolution',
     requires: [
         'Taco.core.util.Validation',
         'Taco.store.CustomerSegments',
@@ -15,7 +15,7 @@ Ext.define('Taco.view.priceList.form.Conditions', {
     ui: 'subform',
     margin: '0 0 20 0',
 
-    title: 'Customers',
+    title: 'Resolution',
     record: null,
 
     initComponent: function() {

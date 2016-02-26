@@ -5,7 +5,7 @@ Ext.define('Taco.view.priceList.Form', {
     extend: 'Taco.core.ux.form.NavForm2',
     requires: [
         'Taco.view.priceList.form.General',
-        'Taco.view.priceList.form.Conditions',
+        'Taco.view.priceList.form.Resolution',
         'Taco.view.priceList.entry.Entries',
         'Taco.core.ux.card.Tab',
         'Taco.core.ux.card.Toolbar'
@@ -34,8 +34,8 @@ Ext.define('Taco.view.priceList.Form', {
             record: me.record,
             manageHeight: true
         }, {
-            xtype: 'taco-priceList-conditions',
-            itemId: 'conditions',
+            xtype: 'taco-priceList-resolution',
+            itemId: 'resolution',
             parentForm: this,
             record: me.record,
             manageHeight: true
@@ -55,9 +55,7 @@ Ext.define('Taco.view.priceList.Form', {
         this.callParent(arguments);
 
         this.general = this.down('#general');
-        this.conditions = this.down('#conditions');
-        //this.pinned = this.down('#pinned');
-        //this.blocked = this.down('#blocked');
+        this.resolution = this.down('#resolution');
 
         this.loadNavItems();
     },
@@ -67,11 +65,7 @@ Ext.define('Taco.view.priceList.Form', {
      * @private
      */
     beforeSave: function () {
-        return (this.general.beforeSave()
-            && this.conditions.beforeSave()
-            //&& this.pinned.beforeSave()
-            //&& this.blocked.beforeSave()
-            );
+        return ( this.general.beforeSave() && this.resolution.beforeSave() );
 
     },
 
