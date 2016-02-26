@@ -24,7 +24,7 @@ Ext.define('Taco.view.priceList.form.General', {
 
         Ext.tip.QuickTipManager.init();
 
-        var siteData = Ext.Array.map(Taco.app.context.getMasterCatalog().sites, function (site) {
+/*        var siteData = Ext.Array.map(Taco.app.context.getMasterCatalog().sites, function (site) {
             return {
                 id: site.id,
                 name: site.name
@@ -82,7 +82,7 @@ Ext.define('Taco.view.priceList.form.General', {
                     scope: this
                 }
             ]
-        });
+        });*/
 
 
         //   vbox
@@ -246,56 +246,8 @@ Ext.define('Taco.view.priceList.form.General', {
                 {
                     xtype: 'panel',
                     layout: {
-                        type: 'hbox',
-                        align: 'bottom'
-                    },
-                    width: '100%',
-                    items: [
-                        {
-                            xtype: 'fieldcontainer',
-                            itemId: 'scope-field-container',
-                            fieldLabel: "Scope",
-                            flex: 1,
-                            minWidth: 200,
-                            layout: {
-                                type: 'vbox',
-                                align: 'stretch'
-                            },
-                            margin: '0 30 0 0',
-                            items: [
-                                {
-                                    xtype: 'radiofield',
-                                    boxLabel: 'All Sites',
-                                    name: 'validForAllSites',
-                                    inputValue: 'true',
-                                    id: 'sitesChoiceAll',
-                                    checked: (!this.record.phantom) ? this.record.get('validForAllSites') : true,
-                                    margin: '0 30 0 0',
-                                    listeners: {
-                                        change: function(cmp, isValidForAll){
-                                            this.validSitesBox.setVisible(!isValidForAll);
-                                            this.validSitesList.focus(false, 200);
-                                        },
-                                        scope: this
-                                    }
-                                }, {
-                                    xtype: 'radiofield',
-                                    boxLabel: 'Specific Sites',
-                                    name: 'validForAllSites',
-                                    inputValue: 'false',
-                                    checked: (!this.record.phantom) ? !this.record.get('validForAllSites') : false,
-                                    id: 'sitesChoiceSelect'
-                                }
-                            ]
-                        },
-                        this.validSitesBox
-                    ]
-                },
-                {
-                    xtype: 'panel',
-                    layout: {
-                        type: 'hbox',
-                        align: 'bottom'
+                        type: 'vbox',
+                        align: 'left'
                     },
                     margin: '15 0 0 0',
                     width: '100%',
@@ -304,7 +256,7 @@ Ext.define('Taco.view.priceList.form.General', {
                             xtype: 'checkbox',
                             name: 'filteredInStorefront',
                             itemId: 'filteredInStorefrontCheck',
-                            boxLabel: 'Hide unaltered products from eligible shoppers',
+                            boxLabel: 'Exclusive',
                             value: (!this.record.phantom) ? this.record.get('filteredInStorefront') !== true : false,
                             listeners: {
                                 change: function (field, newValue) {
@@ -315,7 +267,29 @@ Ext.define('Taco.view.priceList.form.General', {
                             },
                             tooltip: Ext.create('Taco.core.ux.content.Tooltip', {
                                 elementId: 'applies-sale-price-check',
-                                hoverTarget: 'label',
+                                hoverTarget: 'boxLabelEl',
+                                messageKey: 'discount.criteria.appliesToSalePrice',
+                                offsetLeft: 20,
+                                offsetTop: 15
+                            })
+                        },
+                        {
+                            xtype: 'checkbox',
+                            name: 'resolvable',
+                            itemId: 'resolvableCheck',
+                            boxLabel: 'Resolvable',
+                            value: this.record.phantom || this.record.get('resolvable'),
+                            listeners: {
+                                change: function (field, newValue) {
+                                    this.parentForm.resolution.setVisible(newValue);
+                                    this.record.set('resolvable', newValue);
+                                    this.record.setDirty(true);
+                                },
+                                scope: this
+                            },
+                            tooltip: Ext.create('Taco.core.ux.content.Tooltip', {
+                                elementId: 'applies-sale-price-check',
+                                hoverTarget: 'boxLabelEl',
                                 messageKey: 'discount.criteria.appliesToSalePrice',
                                 offsetLeft: 20,
                                 offsetTop: 15

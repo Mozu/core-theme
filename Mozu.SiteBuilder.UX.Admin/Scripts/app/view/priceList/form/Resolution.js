@@ -22,6 +22,117 @@ Ext.define('Taco.view.priceList.form.Resolution', {
         var me = this,
             segStore = Taco.core.data.StoreManager.getOrCreate('Taco.store.CustomerSegments');
 
+                var siteData = Ext.Array.map(Taco.app.context.getMasterCatalog().sites, function (site) {
+            return {
+                id: site.id,
+                name: site.name
+            };
+        });
+
+        this.setVisible( this.record.phantom || this.record.get('resolvable') );
+
+        var siteStore = Ext.create('Ext.data.Store', {
+            fields: ['id','name'],
+            data: siteData
+        });
+
+        this.validSitesList = Ext.create('Ext.ux.form.field.BoxSelect', {
+            name: 'validSites',
+            flex: 9,
+            store: siteStore,
+            getStore: function () {
+                return siteStore;
+            },
+            queryMode: 'local',
+            hideTrigger: true,
+            triggerOnClick: false,
+            forceSelection: true,
+            disableKeyFilter: true,
+            typeAhead: true,
+            lastQuery:"",
+            displayField: 'name',
+            valueField: 'id',
+            fieldLabel: 'Active Sites',
+            style: {
+                display: 'inline-table',
+                verticalAlign: 'bottom'
+            }
+        });
+
+        this.validSitesBox = Ext.create('Ext.container.Container', {
+            layout: {
+                type: 'hbox',
+                align: 'bottom'
+            },
+            flex: 10,
+            hidden: (this.record.phantom || this.record.get('validForAllSites')),
+            items: [
+                this.validSitesList,
+                {
+                    xtype: 'button',
+                    scale: 'medium',
+                    ui: 'action',
+                    text: 'Add',
+                    margin: '0 0 0 10',
+                    flex: 1,
+                    maxWidth: 70,
+                    handler: function () {
+                        this.launchSiteModal(this.validSitesList);
+                    },
+                    scope: this
+                }
+            ]
+        });
+
+        this.scopePanel = {
+            xtype: 'panel',
+            layout: {
+                type: 'hbox',
+                align: 'bottom'
+            },
+            width: '100%',
+            items: [
+                {
+                    xtype: 'fieldcontainer',
+                    itemId: 'scope-field-container',
+                    fieldLabel: "Scope",
+                    flex: 1,
+                    minWidth: 200,
+                    layout: {
+                        type: 'vbox',
+                        align: 'stretch'
+                    },
+                    margin: '0 30 0 0',
+                    items: [
+                        {
+                            xtype: 'radiofield',
+                            boxLabel: 'All Sites',
+                            name: 'validForAllSites',
+                            inputValue: 'true',
+                            id: 'sitesChoiceAll',
+                            checked: (!this.record.phantom) ? this.record.get('validForAllSites') : true,
+                            margin: '0 30 0 0',
+                            listeners: {
+                                change: function(cmp, isValidForAll){
+                                    this.validSitesBox.setVisible(!isValidForAll);
+                                    this.validSitesList.focus(false, 200);
+                                },
+                                scope: this
+                            }
+                        }, {
+                            xtype: 'radiofield',
+                            boxLabel: 'Specific Sites',
+                            name: 'validForAllSites',
+                            inputValue: 'false',
+                            checked: (!this.record.phantom) ? !this.record.get('validForAllSites') : false,
+                            id: 'sitesChoiceSelect'
+                        }
+                    ]
+                },
+                this.validSitesBox
+            ]
+        };
+
         this.segmentsList = Ext.create('Ext.ux.form.field.BoxSelect', {
                 name: 'customerSegments',
                 itemId: 'customer-segments-select',
@@ -104,6 +215,7 @@ Ext.define('Taco.view.priceList.form.Resolution', {
                 align: 'stretch'
             },
             items: [
+                this.scopePanel,
                 this.segmentsBox
             ]
         }];

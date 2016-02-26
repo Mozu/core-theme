@@ -37,6 +37,10 @@ Ext.define('Taco.model.PriceList', {
             type: 'boolean',
             defaultValue: false
         }, {
+            name: 'resolvable',
+            type: 'boolean',
+            defaultValue: true
+        }, {
             name: 'validForAllSites',
             type: 'boolean',
             defaultValue: true
