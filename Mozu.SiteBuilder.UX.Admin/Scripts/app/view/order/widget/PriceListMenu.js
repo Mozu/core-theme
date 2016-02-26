@@ -50,19 +50,6 @@ Ext.define('Taco.view.order.widget.PriceListMenu', {
     initPriceListData: function() {
         var me = this;
         this.store = Taco.core.data.StoreManager.getOrCreate('Taco.store.PriceLists');
-        /*this.store = Ext.create('Ext.data.Store', {
-            model: 'Taco.store.PriceLists',
-            autoLoad: false,
-            proxy: {
-                type: 'ajax',
-                url: '/admin/app/priceList/list',
-                reader: {
-                    type: 'json',
-                    root: 'items',
-                    successProperty: 'success'
-                }
-            }
-        });*/
     },
 
     updatePriceListMenu: function(data) {
@@ -132,35 +119,16 @@ Ext.define('Taco.view.order.widget.PriceListMenu', {
     getPriceListMenu: function () {
         var me = this;
         var menuData = [];
-
-        /*me.store.load({
-            callback: function(records, operation, success) {
-                if (success) {
-                    me.store.each(function(record) {
-                        var data = { code: '', name: '', isExclusive: false, isDefault: false };
-
-                        data.code = record.get('code');
-                        data.name = record.get('name');
-                        data.isExclusive = record.get('filteredInStorefront');
-                        //data.isDefault = record.get('isDefault');
-                        menuData.add(data);
-                    });
-                    me.updatePriceListMenu(menuData);
-                } else {
-                    me.removeAll();
-                    me.add({
-                        text: 'No price lists available',
-                        disabled: true
-                    });
-                }
-            }
-        });*/
-
+        
         me.store.each(function (record) {
             var data = { code: '', name: '', isExclusive: false, isDefault: false };
             var isExclusive = record.get('filteredInStorefront');
+            //var isDefault = record.get('isDefault');
+            var name = isExclusive ? record.get('name') + " (Exclusive)" : record.get('name');
+            //name = isDefault ? name + ' (Default)' : name;
+
             data.code = record.get('code');
-            data.name = isExclusive ? record.get('name') + " (Exclusive)" : record.get('name');
+            data.name = name;
             data.isExclusive = isExclusive;
             //data.isDefault = record.get('isDefault');
             menuData.push(data);
