@@ -35,7 +35,7 @@ Ext.define('Taco.view.priceList.Grid', {
 
     // Required by mixin: Taco.core.ux.mixins.LaunchEditor defined in SearchList
     modelName: 'Taco.model.PriceList',
-
+    
     controllerName: 'PriceLists',
 
     enableNavHeader: true,
@@ -232,39 +232,39 @@ Ext.define('Taco.view.priceList.Grid', {
         return [
             {
                 text: 'Edit',
-                //requiredBehaviors: {
-                //    model: 'Taco.model.PriceList',
-                //    behavior: 'update'
-                //},
+                requiredBehaviors: {
+                    model: 'Taco.model.PriceList',
+                    behavior: 'read'
+                },
                 menuColumnHandler: me.doEdit,
                 scope:me
             }, {
                 text: 'Enable',
                 itemId: 'enableMenuItem',
+                requiredBehaviors: {
+                    model: 'Taco.model.PriceList',
+                    behavior: 'update'
+                },
                 menuColumnHandler: me.doEnableBulk,
-                //requiredBehaviors: {
-                //    model: 'Taco.model.PriceList',
-                //    behavior: 'update'
-                //},
                 scope: me
             }, {
                 text: 'Disable',
                 itemId: 'disableMenuItem',
+                requiredBehaviors: {
+                    model: 'Taco.model.PriceList',
+                    behavior: 'update'
+                },
                 menuColumnHandler: me.doDisableBulk,
-                //requiredBehaviors: {
-                //    model: 'Taco.model.PriceList',
-                //    behavior: 'update'
-                //},
                 scope: me
             }, {
                 text: 'Delete',
                 itemId: "deleteMenuItem",
                 // deleteMenuColumnHandler can be found in Taco.core.ux.mixins.DeleteFromGrid
                 menuColumnHandler: "deleteMenuColumnHandler",
-                //requiredBehaviors: {
-                //    model: 'Taco.model.Discount',
-                //    behavior: 'delete'
-                //},
+                requiredBehaviors: {
+                    model: 'Taco.model.PriceList',
+                    behavior: 'destroy'
+                },
                 scope: me
             }
         ];

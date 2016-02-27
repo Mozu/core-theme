@@ -276,10 +276,10 @@ Ext.define('Taco.view.priceList.widget.EntriesGrid', {
         return [
             {
                 text: 'Edit',
-                //requiredBehaviors: {
-                //    model: 'Taco.model.PriceList',
-                //    behavior: 'update'
-                //},
+                requiredBehaviors: {
+                    model: 'Taco.model.PriceListEntry',
+                    behavior: 'read'
+                },
                 menuColumnHandler: me.doEdit,
                 scope:me
             }, {
@@ -287,10 +287,10 @@ Ext.define('Taco.view.priceList.widget.EntriesGrid', {
                 itemId: "deleteMenuItem",
                 // deleteMenuColumnHandler can be found in Taco.core.ux.mixins.DeleteFromGrid
                 menuColumnHandler: "deleteMenuColumnHandler",
-                //requiredBehaviors: {
-                //    model: 'Taco.model.Discount',
-                //    behavior: 'delete'
-                //},
+                requiredBehaviors: {
+                    model: 'Taco.model.PriceListEntry',
+                    behavior: 'destroy'
+                },
                 scope: me
             }
         ];

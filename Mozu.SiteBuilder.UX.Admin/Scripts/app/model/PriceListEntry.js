@@ -6,12 +6,12 @@ Ext.define('Taco.model.PriceListEntry', {
     requires: [
         'Taco.core.util.Common'
     ],
-    //behaviors: {  //todo: need behaviors.
-    //    read: 24,
-    //    create: 25,
-    //    update: 26,
-    //    destroy: 27
-    //},
+    behaviors: {
+        create: 238,
+        read: 239,
+        update: 240,
+        destroy: 241
+    },
     idProperty: 'compositeKey',
     fields: [
         {
