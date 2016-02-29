@@ -19,11 +19,31 @@ Ext.define('Taco.view.priceList.form.AdvancedSearch', {
 
     initComponent: function () {
         var me = this,
-            segmentStore = Taco.core.data.StoreManager.getOrCreate('Taco.store.CustomerSegments'),
-            catalogStore = Ext.create('Ext.data.Store', {
-                fields: ['id', 'name'],
-                data: Taco.app.context.getMasterCatalog().catalogs
+            segmentStore = Taco.core.data.StoreManager.getOrCreate('Taco.store.CustomerSegments', {
+                autoLoad: false
             });
+
+        me.customerSegmentStore = Ext.create('Ext.data.Store', {
+            fields: ['id', 'name'],
+            data : []
+        });
+
+        // had to use custom store so could map code to Id, used by filter,
+        // without breaking changing to set idProperty of CustomerSegments to code
+        segmentStore.load({
+            scope: this,
+            callback: function (records, operation, success) {
+                if (!success)
+                    return;
+                var items = Ext.Array.map(records, function(record) {
+                    return {
+                        id: record.get('code'),
+                        name: record.get('name')
+                    };
+                });
+                this.customerSegmentStore.loadData(items);
+            }
+        });
 
         this.items = [
             {
@@ -32,30 +52,6 @@ Ext.define('Taco.view.priceList.form.AdvancedSearch', {
                 width: '100%'
             }
         ];
-
-        //if (catalogStore.getTotalCount() > 1) {
-        //    this.items.push({
-        //        xtype: 'fieldcontainer',
-        //        layout: 'hbox',
-        //        width: '100%',
-        //        items: [{
-        //            xtype: 'combobox',
-        //            fieldLabel: 'Catalog',
-        //            name: 'catalogId',
-        //            labelAlign: 'top',
-        //            allowBlank: true,
-        //            editable: false,
-        //            forceSelection: true,
-        //            autoSelect: true,
-        //            listConfig: {shadow: false},
-        //            width: '100%',
-        //            queryMode: 'local',
-        //            store: catalogStore,
-        //            valueField: 'id',
-        //            displayField: 'name'
-        //        }]
-        //    });
-        //}
 
         this.items = this.items.concat([
             {
@@ -83,12 +79,12 @@ Ext.define('Taco.view.priceList.form.AdvancedSearch', {
                 items: [
                     {
                         xtype: 'combobox',
-                        store: segmentStore,
+                        store: me.customerSegmentStore,
                         name: 'segments',
                         fieldLabel: 'Segments',
                         width: '100%',
                         valueField: 'id',
-                        displayField: 'code',
+                        displayField: 'name',
                         queryMode: 'local',
                         valueNotFoundText: 'not found',
                         editable: true,

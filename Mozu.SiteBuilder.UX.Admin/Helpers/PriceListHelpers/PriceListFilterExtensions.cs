@@ -16,6 +16,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Helpers.PriceListHelpers
         private const string CODE_PROPERTY = "priceListcode";
         private const string PARENT_CODE_PROPERTY = "parentPriceListCode";
         private const string ENABLED_PROPERTY = "enabled";
+        private const string SEGMENTS_PROPERTY = "mappedcustomersegments";
 
         private const string PRODUCT_CODE_PROPERTY = "productCode";
         private const string CURRENCY_CODE_PROPERTY = "currencyCode";
@@ -71,6 +72,9 @@ namespace Mozu.SiteBuilder.UX.Admin.Helpers.PriceListHelpers
                     return String.Format("{0} eq \"{1}\"", CODE_PROPERTY, filter.value);
                 case "parentcode":
                     return String.Format("{0} eq \"{1}\"", PARENT_CODE_PROPERTY, filter.value);
+
+                case "segments":
+                    return String.Format("{0} eq \"{1}\"", SEGMENTS_PROPERTY, filter.value);
 
                 case "productcode":
                     return String.Format("{0} eq \"{1}\"", PRODUCT_CODE_PROPERTY, filter.value);
