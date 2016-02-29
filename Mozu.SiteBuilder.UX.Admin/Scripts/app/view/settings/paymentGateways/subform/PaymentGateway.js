@@ -34,7 +34,8 @@ Ext.define('Taco.view.settings.paymentGateways.subform.PaymentGateway', {
             displayField: 'name',
             triggerOnClick: true,
             valueField: 'id',
-            readOnly: this.record.get('id')
+            readOnly: this.record.get('id'),
+            emptyText: 'Select a Payment Gateway Provider'
         });
 
         this.gateWayContainer = Ext.widget({

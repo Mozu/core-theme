@@ -16,9 +16,6 @@ Ext.define('Taco.view.settings.paymentTypes.subform.CreditCards', {
         var me = this;
 
         me.header = null;
-        var //supportedCards = me.record.get('gateway')['supportedCards'] || [],
-            //supportedCardsDef = me.gatewayDefinition.get('supportedCards') || [],
-            supportedCardsCbs = [];
 
         me.items = [];
         
