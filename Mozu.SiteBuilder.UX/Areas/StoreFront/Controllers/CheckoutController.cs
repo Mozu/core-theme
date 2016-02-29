@@ -181,7 +181,9 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
             var shipStateTask = GetUSShippingStates();
             var billStateTask = GetUSBillingStates();
 
-            var orderTask = _orderWebApiClient.GetOrder(id);
+            var orderTask = this.PageContext.User.IsAnonymous
+                ? _orderWebApiClient.GetOrder(id)
+                : _orderWebApiClient.ChangeOrderUserId(id);
             await Task.WhenAll(shipTask, billTask, orderTask, shipStateTask, billStateTask);
 
             try
