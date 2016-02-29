@@ -15,6 +15,7 @@
   ],
   "scripts": {
     "build": "browserify src/*.js -t babelify -o build/chorizo.js --presets [ stage-0 ]",
+    "docs": "esdoc -c .esdocrc",
     "watch": "watchify src/*.js -t babelify -o build/chorizo.js --presets [ stage-0 ]"
   },
   "dependencies": {
@@ -28,7 +29,9 @@
     "karma-phantomjs-launcher": "~0.1.4",
     "watchify": "latest"
   },
-  "devDependencies": {},
+  "devDependencies": {
+    "esdoc-es7-plugin": "0.0.3"
+  },
   "preferGlobal": "",
   "license": "MIT"
 }
