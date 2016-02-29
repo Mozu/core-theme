@@ -225,11 +225,11 @@ Ext.define('Taco.view.order.widget.OrderTotalPanelEditable', {
             orderAdjustment = (Math.abs(parseFloat(this.orderAdjustmentFieldInput.getValue())) * orderAdjustmentSign),
             isDirty = false
         
-        if (me.record.get("orderAdjustment").amount != orderAdjustment ){
+        if (me.record.get("orderAdjustment").amount !== orderAdjustment ){
             isDirty =true;
         }
         
-        if (me.record.get("shippingAdjustment").amount != shippingAdjustment ){
+        if (me.record.get("shippingAdjustment").amount !== shippingAdjustment ){
             isDirty =true;
         }
         // one of the adjustmentFields or the sign combos has changed and needs to be persisted;
@@ -264,19 +264,19 @@ Ext.define('Taco.view.order.widget.OrderTotalPanelEditable', {
             oldValue = me.record.get(name),
             fieldValue;
 
-        if (oldValue == newValue) {
+        if (oldValue === newValue) {
             return;
         }
         me.record.set(name, newValue);
 
-        if (name == "orderAdjustmentIsNegative") {
+        if (name === "orderAdjustmentIsNegative") {
             // update the button text
             this.orderAdjustmentLabelButton.setText(me.getOrderAdjustmentText(newValue));
-            fieldValue = parseFloat(this.orderAdjustmentFieldInput.getValue())
+            fieldValue = parseFloat(this.orderAdjustmentFieldInput.getValue());
         } else {
             // update the button text
             this.shippingAdjustmentLabelButton.setText(me.getShippingAdjustmentText(newValue));
-            fieldValue = parseFloat(this.shippingAdjustmentFieldInput.getValue())
+            fieldValue = parseFloat(this.shippingAdjustmentFieldInput.getValue());
         }
         
         // Check to see if this change relates to a field value that needs to be persisted. If the value == 0 then this change has no impact.
@@ -319,10 +319,10 @@ Ext.define('Taco.view.order.widget.OrderTotalPanelEditable', {
                 }
 
                 // need to reset the fields so that they don't show as dirty after the save
-                this.shippingAdjustmentFieldInput.originalValue = Ext.util.Format.number(this.shippingAdjustmentFieldInput.getValue(), "0.00")
+                this.shippingAdjustmentFieldInput.originalValue = Ext.util.Format.number(this.shippingAdjustmentFieldInput.getValue(), "0.00");
                 
                 // need to reset the fields so that they don't show as dirty after the save
-                this.orderAdjustmentFieldInput.originalValue = Ext.util.Format.number(this.orderAdjustmentFieldInput.getValue(), "0.00")
+                this.orderAdjustmentFieldInput.originalValue = Ext.util.Format.number(this.orderAdjustmentFieldInput.getValue(), "0.00");
 
                 this.fireEvent('savesuccess', json);
             },
@@ -389,7 +389,7 @@ Ext.define('Taco.view.order.widget.OrderTotalPanelEditable', {
         var customerNotesText = me.record.get("customerNote");
         // todo: refactor editableDisplayField to allow for placeholder text
         var placeholder = "";
-        if (!(this.record.get("orderStatus") == "Pending") && me.record.get("customerNote") == "") {
+        if (!(this.record.get("orderStatus") === "Pending") && me.record.get("customerNote") === "") {
             placeholder = "None provided";
         }
 
@@ -421,9 +421,32 @@ Ext.define('Taco.view.order.widget.OrderTotalPanelEditable', {
                     console.log(menu.data.name);
                     if (menu.data.isExclusive) {
                         // Show Modal!
-                    } else {
-                        // Call the stuff
+                        Ext.create('Taco.core.ux.window.Modal', {
+                            autoShow: true,
+                            //title: '',
+                            width: 400,
+                            height: 250,
+                            primaryText: 'Ok',
+                            secondaryText: 'Cancel',
+                            doSave: function() {
+                                // Call the stuff, close window
+                                this.saveSuccess(null);
+                            },
+                            items: [
+                            {
+                                xtype: 'container',
+                                flex: 1,
+                                padding: '2 2',
+                                items: [{
+                                    flex: 1,
+                                    height: '100%',
+                                    width: '100%',
+                                    html: '<div>Applying this exclusive price list may remove certain products from the order.</div>'
+                                }]
+                            }]
+                        });
                     }
+                    // Call the stuff
                 }
             })
     });
@@ -436,7 +459,7 @@ Ext.define('Taco.view.order.widget.OrderTotalPanelEditable', {
             fieldLabel: "Customer Notes",
             value: customerNotesText,
             placeholder: placeholder,
-            disabled: !(this.record.get("orderStatus") == "Pending"),
+            disabled: !(this.record.get("orderStatus") === "Pending"),
             listeners: {
                 blur: {
                     fn: me.onCustomerNoteChange,
@@ -667,15 +690,15 @@ Ext.define('Taco.view.order.widget.OrderTotalPanelEditable', {
     needsToPersist: function () {
         var me = this;
 
-        if (me.customerNoteField.getValue() != me.customerNoteField.originalValue) {
+        if (me.customerNoteField.getValue() !== me.customerNoteField.originalValue) {
             return true;
         }
 
-        if (me.orderAdjustmentFieldInput.getValue() != me.orderAdjustmentFieldInput.originalValue) {
+        if (me.orderAdjustmentFieldInput.getValue() !== me.orderAdjustmentFieldInput.originalValue) {
             return true;
         }
 
-        if (me.shippingAdjustmentFieldInput.getValue() != me.shippingAdjustmentFieldInput.originalValue) {
+        if (me.shippingAdjustmentFieldInput.getValue() !== me.shippingAdjustmentFieldInput.originalValue) {
             return true;
         }
 
