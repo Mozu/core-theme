@@ -477,18 +477,6 @@ Ext.define('Taco.view.discount.CriteriaForm', {
                 }
             ]
         }
-
-        /*this.excludedPriceListCombo = Ext.widget('pricelistcombobox', {
-            name: 'excludedPriceLists',
-            fieldLabel: 'Excluded Price Lists',
-            itemId: 'excludedPriceListCombo',
-            width: '100%',
-            margin: '0 30 0 0',
-            valueNotFoundText: 'None',
-            editable: true,
-            multiSelect: true,
-            forceSelection: false
-        });*/
         
         // note: only enabled when there is a buy item condition on the conditions subform;
         this.maximumQuantityPerRedemptionTB = Ext.create('Ext.form.field.Number', {
