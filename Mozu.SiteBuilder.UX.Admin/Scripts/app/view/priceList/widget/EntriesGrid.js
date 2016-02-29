@@ -94,12 +94,23 @@ Ext.define('Taco.view.priceList.widget.EntriesGrid', {
     stateful: true,
     stateId: 'statefulPriceListEntryGrid',
 
+    listeners: {
+        afterrender: function() {
+            var me = this;
+
+            if (me.isDisabled && me.createButton) {
+                me.createButton.disable();
+            }
+        }
+    },
+
     statics: {
 
     },
 
     initComponent: function () {
         var me = this;
+
         me.isDisabled = (!this.priceListCode);
 
         this.columns = this.getColumnConfig();
