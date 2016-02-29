@@ -420,17 +420,15 @@ Ext.define('Taco.view.order.widget.OrderTotalPanelEditable', {
                     console.log('selected a menu item: ' + menu.data.name);
                     console.log(menu.data.name);
                     if (menu.data.isExclusive) {
-                        // Show Modal!
                         Ext.create('Taco.core.ux.window.Modal', {
                             autoShow: true,
-                            //title: '',
                             width: 400,
                             height: 250,
                             primaryText: 'Ok',
                             secondaryText: 'Cancel',
                             doSave: function() {
-                                // Call the stuff, close window
                                 this.saveSuccess(null);
+                                me.setNewPriceList(me.record.getId(), menu.data.code);
                             },
                             items: [
                             {
@@ -446,10 +444,10 @@ Ext.define('Taco.view.order.widget.OrderTotalPanelEditable', {
                             }]
                         });
                     }
-                    // Call the stuff
+                    me.setNewPriceList(me.record.getId(), menu.data.code);
                 }
             })
-    });
+        });
 
         me.leftPanel.add(me.priceListChooserButton);
 
@@ -469,6 +467,43 @@ Ext.define('Taco.view.order.widget.OrderTotalPanelEditable', {
         });
 
         me.leftPanel.add(me.customerNoteField);
+    },
+
+    setNewPriceList: function (orderId, priceListCode) {
+        var me = this;
+
+        if (!me.isEditable) {
+            me.setLoading(true);
+        }
+
+        Ext.Ajax.request({
+            url: '/admin/app/order/setpricelist' + '?draft=' + this.record.get('isDraft'),
+            method: 'POST',
+            jsonData: {
+                orderId: orderId,
+                priceListCode: priceListCode
+            },
+            callback: function(record, operation) {
+                if (!me.isEditable) {
+                    me.setLoading(false);
+                }
+            },
+            success: function(response) {
+                var json = Ext.decode(response.responseText, true);
+                if (!json || !json.success) {
+                    Taco.app.fireEvent('setmessage', "Error setting price list.", 'error');
+                    return;
+                }
+
+                me.record.reload();
+            },
+            failure: function(response) {
+                var json = Ext.decode(response.responseText, true),
+                    msg = (json && json.message) ? json.message : "Error setting price list.";
+                Taco.app.fireEvent('setmessage', msg, 'error');
+                me.fireEvent('saveFailure');
+            }
+        });
     },
 
     onCustomerNoteChange: function (field, e, eOpts) {
