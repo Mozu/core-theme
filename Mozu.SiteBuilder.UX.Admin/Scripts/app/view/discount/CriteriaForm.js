@@ -20,6 +20,7 @@ Ext.define('Taco.view.discount.CriteriaForm', {
             productStore,
             zoneStore,
             shippingStore,
+            priceListStore,
             me = this;
 
         // need to listen for changes to the buy product or category items field changes in the conditions subform to alter the maximumQuantityPerRedemptionTB filed;
@@ -169,18 +170,6 @@ Ext.define('Taco.view.discount.CriteriaForm', {
                 }
             }
         );
-
-        this.excludedPriceListCombo = Ext.widget('pricelistcombobox', {
-            name: 'excludedPriceLists',
-            fieldLabel: 'Excluded Price Lists',
-            itemId: 'excludedPriceListCombo',
-            width: '100%',
-            margin: '0 30 0 0',
-            valueNotFoundText: 'None',
-            editable: true,
-            multiSelect: true,
-            forceSelection: false
-        });
 
         catStore = this.record.getCategoryStore();
 
@@ -440,6 +429,66 @@ Ext.define('Taco.view.discount.CriteriaForm', {
             ]
         });
 
+        priceListStore = this.record.getPriceListStore();
+        priceListStore.clearFilter(true);
+        priceListStore.load();
+
+        this.excludedPriceListBoxSelect = Ext.create('Ext.ux.form.field.BoxSelect', {
+            name: 'excludedPriceLists',
+            width: 520,
+            margin: 0,
+            store: priceListStore,
+            getStore: function () {
+                return priceListStore;
+            },
+            hideTrigger: true,
+            triggerOnClick: false,
+            forceSelection: true,
+            disableKeyFilter: true,
+            typeAhead: false,
+            displayField: 'productName',
+            fieldLabel: 'Excluded Price Lists',
+            valueField: 'priceListCode',
+            style: {
+                display: 'inline-table',
+                verticalAlign: 'bottom'
+            }
+        });
+
+        this.excludedPriceListsBox = {
+            xtype: 'panel',
+            layout: 'auto',
+            items: [
+                this.excludedPriceListBoxSelect,
+                {
+                    xtype: 'button',
+                    scale: 'medium',
+                    ui: 'action',
+                    text: 'Add',
+                    margin: '0 0 0 10',
+                    width: 70,
+                    style: {
+                        verticalAlign: 'bottom'
+                    },
+                    handler: function () {
+                        this.launchPriceListsModal(this.excludedPriceListBoxSelect);
+                    },
+                    scope: this
+                }
+            ]
+        }
+
+        /*this.excludedPriceListCombo = Ext.widget('pricelistcombobox', {
+            name: 'excludedPriceLists',
+            fieldLabel: 'Excluded Price Lists',
+            itemId: 'excludedPriceListCombo',
+            width: '100%',
+            margin: '0 30 0 0',
+            valueNotFoundText: 'None',
+            editable: true,
+            multiSelect: true,
+            forceSelection: false
+        });*/
         
         // note: only enabled when there is a buy item condition on the conditions subform;
         this.maximumQuantityPerRedemptionTB = Ext.create('Ext.form.field.Number', {
@@ -533,16 +582,7 @@ Ext.define('Taco.view.discount.CriteriaForm', {
                 this.maximumQuantityPerRedemptionTB,
                 this.excludeCategoriesBox,
                 this.productsExcludeBox,
-                {
-                    xtype: 'panel',
-                    layout: {
-                        type: 'hbox',
-                        align: 'stretch'
-                    },
-                    items: [
-                        this.excludedPriceListCombo
-                    ]
-                },
+                this.excludedPriceListsBox,
                 this.optionsContainer
             ]
         });
@@ -681,6 +721,39 @@ Ext.define('Taco.view.discount.CriteriaForm', {
                 me.reloadStore(list);
             },
             scope: this
+        });
+
+    },
+
+    /**
+     * Opens a modal with a list of price lists.
+     * @private
+     */
+    launchPriceListsModal: function (list) {
+        var me = this,
+            gridStore = Taco.core.data.StoreManager.getOrCreate({
+            type: 'Taco.store.PriceLists',
+            clearFilters: true,
+            clearSort: true,
+            autoLoad: true
+            });
+        gridStore.filter(true);
+        gridStore.load();
+
+        me.modal = Ext.create('Taco.view.priceList.modal.PriceListsModal', {
+            store: gridStore
+        });
+
+        me.modal.on({
+            savesuccess: function (modal, values) {
+                list.addValue(values);
+                me.reloadStore(list);
+                me.parentForm.getForm().checkValidity();
+            },
+            aftercancelclose: function () {
+                me.reloadStore(list);
+            },
+            scope: me
         });
 
     },

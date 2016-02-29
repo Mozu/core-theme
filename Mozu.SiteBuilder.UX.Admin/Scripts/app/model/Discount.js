@@ -309,6 +309,31 @@ Ext.define('Taco.model.Discount', {
 
     },
 
+    getPriceListStore: function() {
+        var me = this;
+        if (!me.priceListStore) {
+            me.priceListStore = Taco.core.data.StoreManager.getOrCreate(
+                {
+                    type: 'Taco.store.PriceLists',
+                    createOnly: true,
+                    id: 'priceLists-' + this.id,
+                    autoLoad: true,
+                    clearFilters: false,
+                    remoteFilter: false,
+                    remoteSort: false,
+                    data: this.get('excludedPriceLists'),
+                    proxy: {
+                        type: 'memory',
+                        reader: {
+                            type: 'json',
+                            root: 'items'
+                        }
+                    }
+                })
+        }
+        return me.priceListStore
+    },
+
     getDeletePromptMessage: function () {
         return (this.get('status') === 'Active')
             ? 'This discount is currently active and could affect pending orders and carts.<br/>Are you sure you want to delete this?'
