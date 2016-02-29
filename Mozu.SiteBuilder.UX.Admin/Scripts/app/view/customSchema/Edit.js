@@ -10,6 +10,7 @@ Ext.define('Taco.view.customSchema.Edit', {
     enableSearchBarInHeader: false,
     formCls: 'Taco.view.customSchema.DynamicFormContainer',
     initComponent: function () {
+
     	var me = this;
         var editor = me.editors.findEditor(this.record);
 
@@ -206,6 +207,10 @@ Ext.define('Taco.view.customSchema.Edit', {
 
     cancel: function() {
         Taco.core.StateManager.attemptNavigate(this.getBreadcrumbRoute());
+    },
+
+    doCreate: function() {
+        debugger;
     },
 
     showMessage: function(msg) {
