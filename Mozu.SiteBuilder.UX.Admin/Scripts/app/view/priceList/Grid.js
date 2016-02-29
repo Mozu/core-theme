@@ -123,6 +123,10 @@ Ext.define('Taco.view.priceList.Grid', {
             remoteFilter: true
         });
 
+        me.store.on('load', function() {
+            console.log(this.data.items)
+        })
+
         me.advancedSearchConfig.form = Ext.create('Taco.view.priceList.form.AdvancedSearch', {});
 
         me.callParent(arguments);
@@ -153,6 +157,14 @@ Ext.define('Taco.view.priceList.Grid', {
                 sortable: true
             }, {
                 xtype: 'gridcolumn',
+                dataIndex: 'parentCode',
+                stateId: 'parentCode',
+                text: 'Parent',
+                hideable: true,
+                flex: 2,
+                sortable: false
+            }, {
+                xtype: 'gridcolumn',
                 dataIndex: 'validSitesDisplay',
                 stateId: 'validSitesDisplay',
                 text: 'Applied Sites',
@@ -161,8 +173,8 @@ Ext.define('Taco.view.priceList.Grid', {
                 sortable: false
             }, {
                 xtype: 'gridcolumn',
-                dataIndex: 'customerSegmentNames',
-                stateId: 'customerSegmentNames',
+                dataIndex: 'customerSegments',
+                stateId: 'customerSegments',
                 text: 'Customer Segments',
                 hideable: true,
                 flex: 3,

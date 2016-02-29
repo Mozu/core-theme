@@ -219,6 +219,11 @@ Ext.define('Taco.store.Navigation', {
                     'label': 'Inventory',
                     'address': 'inventory',
                     'behaviorIds': [4]
+                }, {
+                    'id': 'priceLists',
+                    'behaviorIds': [239],
+                    'label': 'Price Lists',
+                    'address': 'priceLists'
                 }
                 ]
             },
@@ -239,11 +244,6 @@ Ext.define('Taco.store.Navigation', {
                         'behaviorIds': [24],
                         'label': 'Coupon Sets',
                         'address': 'CouponSets'
-                    }, {
-                        'id': 'pricelists',
-                        'behaviorIds': [239],
-                        'label': 'Price Lists',
-                        'address': 'priceLists'
                     }, {
                         'id': 'productRanking',
                         'behaviorIds': [235],

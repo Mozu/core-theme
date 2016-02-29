@@ -186,33 +186,6 @@ Ext.define('Taco.view.priceList.widget.EntriesGrid', {
                 flex: 1,
                 sortable: true
             }, {
-                xtype: 'gridcolumn',
-                dataIndex: 'priceEntries',
-                stateId: 'listPrice',
-                text: 'List Price',
-                flex: 1,
-                sortable: false,
-                renderer: function(entries) {
-                    if (Ext.isArray(entries)) {
-                        return entries[0].listPrice || 'Default';
-                    }
-                    return 'Default';
-                }
-            }, {
-                xtype: 'gridcolumn',
-                dataIndex: 'priceEntries',
-                stateId: 'salePrice',
-                text: 'Sale Price',
-                flex: 1,
-                sortable: false,
-                renderer: function(entries) {
-                    if (Ext.isArray(entries)) {
-                        return entries[0].salePrice || 'Default';
-                    }
-                    return 'Default';
-                }
-            },
-            {
                 xtype: 'datecolumn',
                 dataIndex: 'startDate',
                 stateId: 'startDate',
@@ -221,7 +194,7 @@ Ext.define('Taco.view.priceList.widget.EntriesGrid', {
                 text: 'Effective Date',
                 hidden: false,
                 sortable: true
-            },{
+            }, {
                 xtype: 'datecolumn',
                 dataIndex: 'endDate',
                 stateId: 'endDate',
@@ -264,6 +237,32 @@ Ext.define('Taco.view.priceList.widget.EntriesGrid', {
                 flex:1,
                 hidden: true,
                 sortable: false
+            }, {
+                xtype: 'gridcolumn',
+                dataIndex: 'priceEntries',
+                stateId: 'listPrice',
+                text: 'List Price',
+                flex: 1,
+                sortable: false,
+                renderer: function(entries) {
+                    if (Ext.isArray(entries)) {
+                        return entries[0].listPrice || 'Default';
+                    }
+                    return 'Default';
+                }
+            }, {
+                xtype: 'gridcolumn',
+                dataIndex: 'priceEntries',
+                stateId: 'salePrice',
+                text: 'Sale Price',
+                flex: 1,
+                sortable: false,
+                renderer: function(entries) {
+                    if (Ext.isArray(entries)) {
+                        return entries[0].salePrice || 'Default';
+                    }
+                    return 'Default';
+                }
             }
         ];
         return columns;
