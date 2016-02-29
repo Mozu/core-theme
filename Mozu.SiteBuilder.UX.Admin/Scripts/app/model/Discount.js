@@ -319,16 +319,7 @@ Ext.define('Taco.model.Discount', {
                     id: 'priceLists-' + this.id,
                     autoLoad: true,
                     clearFilters: false,
-                    remoteFilter: false,
-                    remoteSort: false,
-                    data: this.get('excludedPriceLists'),
-                    proxy: {
-                        type: 'memory',
-                        reader: {
-                            type: 'json',
-                            root: 'items'
-                        }
-                    }
+                    remoteFilter: false
                 })
         }
         return me.priceListStore
