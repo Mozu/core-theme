@@ -177,7 +177,7 @@ Ext.define('Taco.view.priceList.entry.AdvancedEntrySearch', {
                 items: [
                     {
                         xtype: 'datefield',
-                        name: 'startDateFrom',
+                        name: 'startDate',
                         altFormats: "c",
                         flex: 1
                     }, {
@@ -186,7 +186,7 @@ Ext.define('Taco.view.priceList.entry.AdvancedEntrySearch', {
                         margin: '0 10'
                     }, {
                         xtype: 'datefield',
-                        name: 'endDateTo',
+                        name: 'endDate',
                         altFormats: "c",
                         flex: 1
                     }
