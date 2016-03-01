@@ -28,6 +28,10 @@ Ext.define('Taco.model.PriceList', {
             name: 'parentCode',
             type: 'string',
             useNull: true
+        },{
+            name: 'parentName',
+            type: 'string',
+            useNull: true
         }, {
             name: 'enabled',
             type: 'boolean',
@@ -48,7 +52,11 @@ Ext.define('Taco.model.PriceList', {
             name: 'validSites',
             type: 'auto',
             defaultValue: []
-        },{
+        }, {
+            name: 'defaultForSites',
+            type: 'auto',
+            defaultValue: []
+        }, {
             name: 'validSitesDisplay',
             type: 'string',
             persist: false,

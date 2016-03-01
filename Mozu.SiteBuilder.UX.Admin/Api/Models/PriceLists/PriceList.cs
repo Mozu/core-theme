@@ -18,6 +18,11 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.Models.PriceLists
         /// Parent PriceList code, Can be null for root level priceLists
         /// </summary>
         public string ParentCode { get; set; }
+        
+        /// <summary>
+        /// Parent PriceList name, Can be null for root level priceLists
+        /// </summary>
+        public string ParentName { get; set; }
 
         /// <summary>
         /// Is the price list enabled and valid in the storefront. Default is true. 
@@ -42,6 +47,8 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.Models.PriceLists
         /// </summary>
         public int[] ValidSites { get; set; }
 
+        public int[] DefaultForSites { get; set; }
+
         /// <summary>
         /// Sequence used for indexing this price list...1-max priceList will be indexed
         /// </summary>
@@ -55,7 +62,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.Models.PriceLists
         public int? Rank { get; set; }
 
         [DataMember(EmitDefaultValue = false)]
-        public bool? InheritableOnly { get; set; }
+        public bool? Resolvable { get; set; }
 
         public string CreateBy { get; set; }
 

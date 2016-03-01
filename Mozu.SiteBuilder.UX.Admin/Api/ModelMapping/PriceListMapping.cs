@@ -21,6 +21,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.ModelMapping
             Mapper.CreateMap<DC.PriceList, PriceList>()
                 .ForMember(x => x.Code, op => op.ResolveUsing(dc => dc.PriceListCode))
                 .ForMember(x => x.ParentCode, op => op.ResolveUsing(dc => dc.ParentPriceListCode))
+                .ForMember(x => x.ParentName, op => op.ResolveUsing(dc => dc.ParentPriceListName))
                 .ForMember(x => x.CreateBy, op => op.ResolveUsing(dc => dc.AuditInfo !=null ? dc.AuditInfo.CreateBy : null))
                 .ForMember(x => x.CreateDate, op => op.ResolveUsing(dc => dc.AuditInfo !=null ? dc.AuditInfo.CreateDate : null))
                 .ForMember(x => x.UpdateBy, op => op.ResolveUsing(dc => dc.AuditInfo !=null ? dc.AuditInfo.UpdateBy : null))
@@ -41,6 +42,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.ModelMapping
                     UpdateBy = x.UpdateBy,
                     UpdateDate = x.UpdateDate
                 }))
+                .ForMember(x => x.ParentPriceListName, op => op.Ignore())
                 ;
 
             Mapper.CreateMap<PriceListEntry, DC.PriceListEntry>();

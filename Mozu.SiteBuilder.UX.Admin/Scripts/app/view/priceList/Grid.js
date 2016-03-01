@@ -157,8 +157,8 @@ Ext.define('Taco.view.priceList.Grid', {
                 sortable: true
             }, {
                 xtype: 'gridcolumn',
-                dataIndex: 'parentCode',
-                stateId: 'parentCode',
+                dataIndex: 'parentName',
+                stateId: 'parentName',
                 text: 'Parent',
                 hideable: true,
                 flex: 2,
