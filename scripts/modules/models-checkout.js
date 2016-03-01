@@ -1159,7 +1159,7 @@
                 me.runForAllSteps(function() {
                     this.isLoading(true);
                 });
-                me.order.trigger('beforerefresh');
+                me.trigger('beforerefresh');
                 // void active payments; if there are none then the promise will resolve immediately
                 return api.all.apply(api, _.map(_.filter(me.apiModel.getActivePayments(), function(payment) {
                     return payment.paymentType !== 'StoreCredit' && payment.paymentType !== 'GiftCard';
@@ -1350,7 +1350,7 @@
                             });
                     }];
                 var contactInfoContactName = contactInfo.get(contactName);
-                var customerContacts = this.order.get('customer').get('contacts');
+                var customerContacts = customer.get('contacts');
                     
                 if (!contactInfoContactName.get('accountId')) {
                     contactInfoContactName.set('accountId', customer.id);
