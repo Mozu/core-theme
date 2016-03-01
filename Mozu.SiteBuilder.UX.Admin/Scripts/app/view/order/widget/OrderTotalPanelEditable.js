@@ -476,9 +476,7 @@ Ext.define('Taco.view.order.widget.OrderTotalPanelEditable', {
             me.setLoading(true);
         }
 
-        Ext.Ajax.request({
-            url: '/admin/app/order/setpricelist' + '?draft=' + this.record.get('isDraft'),
-            method: 'POST',
+        me.record.setPriceList({
             jsonData: {
                 orderId: orderId,
                 priceListCode: priceListCode

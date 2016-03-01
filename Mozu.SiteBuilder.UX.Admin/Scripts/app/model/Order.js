@@ -2076,6 +2076,20 @@ Ext.define('Taco.model.Order', {
         Ext.Ajax.request(config);
     },
 
+    setPriceList: function (config) {
+        var me = this;
+
+        Ext.apply(config, {
+            url: '/admin/app/order/setpricelist',
+            params: {
+                'draft': me.get('isDraft')
+            },
+            method: 'POST'
+        });
+
+        Ext.Ajax.request(config);
+    },
+
     /**
  * service call to suppress an order discount. This will cause the service to look for other discounts to fall back to. If another discount exists, it will come back as active and the suppressed discount will be inactive;
  * @param {Object} config  A configuration object     
