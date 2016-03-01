@@ -24,67 +24,6 @@ Ext.define('Taco.view.priceList.form.General', {
 
         Ext.tip.QuickTipManager.init();
 
-/*        var siteData = Ext.Array.map(Taco.app.context.getMasterCatalog().sites, function (site) {
-            return {
-                id: site.id,
-                name: site.name
-            };
-        });
-
-        var siteStore = Ext.create('Ext.data.Store', {
-            fields: ['id','name'],
-            data: siteData
-        });
-
-        this.validSitesList = Ext.create('Ext.ux.form.field.BoxSelect', {
-            name: 'validSites',
-            flex: 9,
-            store: siteStore,
-            getStore: function () {
-                return siteStore;
-            },
-            queryMode: 'local',
-            hideTrigger: true,
-            triggerOnClick: false,
-            forceSelection: true,
-            disableKeyFilter: true,
-            typeAhead: true,
-            lastQuery:"",
-            displayField: 'name',
-            valueField: 'id',
-            fieldLabel: 'Valid Sites',
-            style: {
-                display: 'inline-table',
-                verticalAlign: 'bottom'
-            }
-        });
-
-        this.validSitesBox = Ext.create('Ext.container.Container', {
-            layout: {
-                type: 'hbox',
-                align: 'bottom'
-            },
-            flex: 10,
-            hidden: (this.record.phantom || this.record.get('validForAllSites')),
-            items: [
-                this.validSitesList,
-                {
-                    xtype: 'button',
-                    scale: 'medium',
-                    ui: 'action',
-                    text: 'Add',
-                    margin: '0 30 0 10',
-                    flex: 1,
-                    maxWidth: 70,
-                    handler: function () {
-                        this.launchSiteModal(this.validSitesList);
-                    },
-                    scope: this
-                }
-            ]
-        });*/
-
-
         //   vbox
         //     hbox -
         //        1. vbox
@@ -138,28 +77,6 @@ Ext.define('Taco.view.priceList.form.General', {
                                             maxLength: 200,
                                             enforceMaxLength: true
                                         }, {
-                                            xtype: 'pricelistcombobox',
-                                            name: 'parentCode',
-                                            fieldLabel: 'Parent Price List',
-                                            itemId: 'parentCodeField',
-                                            width: '50%',
-                                            margin: '0 30 0 0',
-                                            valueNotFoundText: 'None',
-                                            editable: true,
-                                            forceSelection: false,
-                                            excludedCode: !me.record.phantom ? this.record.get("code") : null
-                                        }
-                                    ]
-                                },
-                                {
-                                    xtype: 'panel',
-                                    layout: {
-                                        type: 'hbox',
-                                        align: 'top'
-                                    },
-                                    width: '100%',
-                                    items: [
-                                        {
                                             name: 'code',
                                             fieldLabel: 'Code',
                                             itemId: 'codeField',
@@ -172,6 +89,28 @@ Ext.define('Taco.view.priceList.form.General', {
                                             required: true,
                                             regex: /^[a-z0-9_\-]+$/i,
                                             regexText: 'Invalid character. Please choose from alphanumeric, underscore, or hyphen characters.'
+                                        }
+                                    ]
+                                },
+                                {
+                                    xtype: 'panel',
+                                    layout: {
+                                        type: 'hbox',
+                                        align: 'top'
+                                    },
+                                    width: '100%',
+                                    items: [
+                                        {
+                                            xtype: 'pricelistcombobox',
+                                            name: 'parentCode',
+                                            fieldLabel: 'Parent Price List',
+                                            itemId: 'parentCodeField',
+                                            width: '50%',
+                                            margin: '0 30 0 0',
+                                            valueNotFoundText: 'None',
+                                            editable: true,
+                                            forceSelection: false,
+                                            excludedCode: !me.record.phantom ? this.record.get("code") : null
                                         }, {
                                             xtype: 'combobox',
                                             name: 'enabled',
@@ -244,7 +183,8 @@ Ext.define('Taco.view.priceList.form.General', {
                     ]
                 },
                 {
-                    xtype: 'panel',
+                    xtype: 'fieldcontainer',
+                    fieldLabel: 'Options',
                     layout: {
                         type: 'vbox',
                         align: 'left'
