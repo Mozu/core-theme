@@ -1,4 +1,3 @@
-
 export const POSITION_DICTIONARY = {
     TOP: 'TOP',
     RIGHT: 'RIGHT',
@@ -9,8 +8,19 @@ export const POSITION_DICTIONARY = {
 export const BLOCK_TYPES = {
     ROW: 'ROW',
     COL: 'COL',
-    WIDGET: 'WIDGET'
+    WIDGET: 'WIDGET',
+    BLOCK: 'BLOCK'
 };
+
+export const DRAG_EVENTS = {
+    dragStart: 'dragstart',
+    dragEnd: 'dragend',
+    dragOver: 'dragover',
+    drag: 'drag',
+    drop: 'drop'
+};
+
+export const DRAG_HANDLE_CLASSES = ['ui-draggable', 'resizer-column'];
 
 export const DEFAULT_GRID_SPAN = 12;
 
@@ -20,7 +30,11 @@ export const GRID_CLASSNAME = 'mz-drop-zone';
 
 export const GRID_SELECTOR = `.${GRID_CLASSNAME}`;
 
+export const EDITABLE_GRID_SELECTOR = `${GRID_SELECTOR}.mz-cms-editing`;
+
 export const COL_CLASSNAME = 'mz-cms-col-';
+
+export const GRID_WRAPPER_SELECTOR = `.${COL_CLASSNAME}12-12`;
 
 export const COL_SELECTOR = `.${COL_CLASSNAME}`;
 
@@ -37,6 +51,12 @@ export const BLOCK_SELECTOR = `.${BLOCK_CLASSNAME}`;
 export const CONTENT_CLASSNAME = 'mz-cms-content';
 
 export const CONTENT_SELECTOR = `.${CONTENT_CLASSNAME}`;
+
+export const MZ_CMS_SHOW_CLASS = 'mz-cms-show-zone';
+
+export const MZ_CMS_TOOLS_CLASS = 'mz-cms-tools';
+
+export const MZ_CMS_TOOLS_SELECTOR = `.${MZ_CMS_TOOLS_CLASS}`;
 
 export const DROP_HINT_TEXT = 'Drop an Element';
 
