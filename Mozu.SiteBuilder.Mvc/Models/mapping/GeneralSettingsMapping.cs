@@ -243,9 +243,9 @@ namespace Mozu.SiteBuilder.Mvc.Models.ModelMapping
                                                            where g.GatewayAccount != null
                                                            select g;
 
-                var supportedCards = filteredGateways.Select(g => g.SupportedCards.ToDictionary(card => card)).FirstOrDefault() ?? new Dictionary<string, string>();
+                var cards = filteredGateways != null ? filteredGateways.SelectMany(g => g.SupportedCards).Distinct().ToDictionary(c => c) : new Dictionary<string, string>();
 
-                return ctx.New(supportedCards, typeof(Dictionary<string, string>));
+                return ctx.New(cards, typeof(Dictionary<string, string>));
             }
         }
     }
