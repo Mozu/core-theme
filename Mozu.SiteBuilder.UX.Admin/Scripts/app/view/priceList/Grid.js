@@ -123,9 +123,9 @@ Ext.define('Taco.view.priceList.Grid', {
             remoteFilter: true
         });
 
-        me.store.on('load', function() {
-            console.log(this.data.items)
-        })
+        //me.store.on('load', function() {
+        //    //console.log(this.data.items)
+        //})
 
         me.advancedSearchConfig.form = Ext.create('Taco.view.priceList.form.AdvancedSearch', {});
 

@@ -29,6 +29,7 @@ Ext.define('Taco.view.priceList.entry.AdvancedEntrySearch', {
             });
 
         me.productPickerField = Ext.create('Taco.shared.view.field.ProductPickerField', {
+            name: 'productCode',
             plugins: [
                 'inputmask'
             ],
@@ -100,14 +101,6 @@ Ext.define('Taco.view.priceList.entry.AdvancedEntrySearch', {
                 }
             }
         });
-
-        //this.items = [
-        //    {
-        //        name: 'keyword',
-        //        fieldLabel: 'Keyword Search',
-        //        width: '100%'
-        //    }
-        //];
 
         this.items = [
             {
@@ -201,50 +194,6 @@ Ext.define('Taco.view.priceList.entry.AdvancedEntrySearch', {
             }
         ];
 
-
-
-
-
-            //{
-            //    xtype: 'fieldcontainer',
-            //    layout: 'hbox',
-            //    width: '100%',
-            //    items: [
-            //        me.createStaticCombobox('status', 'Status', [
-            //            {
-            //                name: 'Active',
-            //                id: 'Active'
-            //            }, {
-            //                name: 'Expired',
-            //                id: 'Expired'
-            //            }, {
-            //                name: 'All',
-            //                id: 'All'
-            //            }
-            //        ], 0)]
-            //},
-            //{
-            //    xtype: 'fieldcontainer',
-            //    layout: 'hbox',
-            //    width: '100%',
-            //    items: [
-            //        {
-            //            xtype: 'combobox',
-            //            store: segmentStore,
-            //            name: 'segments',
-            //            fieldLabel: 'Segments',
-            //            width: '100%',
-            //            valueField: 'id',
-            //            displayField: 'code',
-            //            queryMode: 'local',
-            //            valueNotFoundText: 'not found',
-            //            editable: true,
-            //            forceSelection: true
-            //        }
-            //    ]
-            //}
-
-
         this.callParent(arguments);
     },
 
@@ -304,6 +253,7 @@ Ext.define('Taco.view.priceList.entry.AdvancedEntrySearch', {
 
         combo.collapse();
         combo.inputMask.show(record.get('productName'));
+        combo.setValue(record.get('productCode'));
         // cancel the selection so that the same product can be reselected again;
         return false;
     }
