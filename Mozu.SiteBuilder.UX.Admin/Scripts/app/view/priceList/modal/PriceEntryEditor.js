@@ -181,8 +181,8 @@ Ext.define('Taco.view.priceList.modal.PriceEntryEditor', {
 
         this.record.save({
             success: onSuccess,
-            failure: function(item, response) {
-                var message = 'There was an error saving the Price List entry';
+            failure: function (item, response) {
+                var message = (response && response.error && response.error.remoteException) ? response.error.remoteException.data.message : "An error has occured.  Unable to save changes.";
                 Taco.app.fireEvent('setmessage', message, 'error');
             },
             scope: me
