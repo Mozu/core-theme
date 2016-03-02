@@ -52,6 +52,16 @@ define(['jquery', 'shim!modules/jquery-simple-datetimepicker[jquery=jquery]>jque
                     me.setQueryString(this.value);
                 }
             });
+        },
+        sanitizeQueryString = function (qs) {
+            var result = qs;
+            if (qs.substring(0,1) === '&') {
+                result = '?' + qs.substring(1);
+            }
+            result = result.replace(/(&)+/g, '&');
+            result = result.replace(/(\?)+/g, '?');
+            result = result.replace(/(\?&)/g, '?');
+            return result;
         };
 
     ShareAction.prototype = new ButtonHandler();
@@ -129,16 +139,7 @@ define(['jquery', 'shim!modules/jquery-simple-datetimepicker[jquery=jquery]>jque
         }
     };
 
-    DateTimePicker.prototype.normalizeQueryString = function (qs) {
-        var result = qs;
-        if (qs.substring(0,1) === '&') {
-            result = '?' + qs.substring(1);
-        }
-        result = result.replace(/(&)+/g, '&');
-        result = result.replace(/(\?)+/g, '?');
-        result = result.replace(/(\?&)/g, '?');
-        return result;
-    };
+    DateTimePicker.prototype.sanitizeQueryString = sanitizeQueryString;
 
     DateTimePicker.prototype.getQueryString = function(str) {
         var queryString = '';
@@ -161,7 +162,7 @@ define(['jquery', 'shim!modules/jquery-simple-datetimepicker[jquery=jquery]>jque
         }  else {
             queryString = '?mz_now=' + str;
         }
-        return this.normalizeQueryString(queryString);
+        return this.sanitizeQueryString(queryString);
     };
 
     DateTimePicker.prototype.dateHasChanged = function() {
@@ -213,15 +214,21 @@ define(['jquery', 'shim!modules/jquery-simple-datetimepicker[jquery=jquery]>jque
             queryString = queryString.replace(/(&)+/g, '&');
         } else if (queryString.indexOf('?') !== -1) {
             queryString = queryString.replace(/[&?]*mz_pricelist[^&]*/gi, '');
-            if (queryString.length > 1) {
-                queryString += '&';
+            if (priceListVal) {
+                if (!queryString) {
+                    queryString = '?'
+                } else {
+                    queryString += '&';
+                }
+                queryString += 'mz_pricelist=' + priceListVal;
             }
-            queryString += 'mz_pricelist=' + priceListVal;
         } else {
             queryString = '?mz_pricelist=' + priceListVal;
         }
-        return queryString;
+        return this.sanitizeQueryString(queryString);
     };
+
+    PriceListPicker.prototype.sanitizeQueryString = sanitizeQueryString;
 
     PriceListPicker.prototype.setQueryString = function(priceListValue){
         var queryString = this.getQueryString(priceListValue);
