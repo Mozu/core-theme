@@ -63,26 +63,51 @@ Ext.define('Taco.view.order.Form', {
 
     initComponent: function () {
         var me = this;
+        
+        //this.addEvents([
+            /**
+             * @event pricelistloaded
+             * Fired when the header loads a customer record
+             * @param {Taco.view.order.header} header The Header object that fired the event
+             * @param {Taco.store.priceList} record The record of the Customer Account
+             */
+        //    'pricelistloaded'
+        //]);
 
         // after the record is reloaded we will need to refresh the ui
         me.mon(me.record, 'aftercommit', function () {
             me.onRecordChange();
         }, me);
 
+        me.ajaxBeforeListener = Ext.Ajax.on('beforerequest', function (conn, options) {
+            // set order price list on the ajax call!
+            // This should be called before the TaContext...find settings.
+            var priceListHeader = options.headers = options.headers || {};
+            priceListHeader['x-vol-pricelist'] = me.record.get('priceListCode');
+        }, me, { destroyable: true });
+
         this.customer = {};
         // todo: get the customer record right away if an id exists;
+
+        //this.loadPriceLists();
 
         this.updateTitleData();
 
         this.buildForm();
 
         this.callParent(arguments);
-        
         this.loadNavItems();
     },
-    
+
+    onDestroy: function () {
+        // Turn off the ajaxBeforeListener to halt the pricelist header addition.
+        if (this.ajaxBeforeListener) {
+            this.ajaxBeforeListener.destroy();
+        }
+    },
+
     onCustomerChange: function (view, customerRecord) {
-      
+
     },
 
     onBeforeReload: function () {
@@ -98,14 +123,22 @@ Ext.define('Taco.view.order.Form', {
             siteName: this.record.get('siteName')
         };
     },
-
+    /*
+    loadPriceLists: function() {
+        this.record.loadPriceLists({
+            callback: function(record) {
+                me.fireEvent('priceListLoaded', me, record);
+            }
+        });
+    },
+    */
     isHeaderDataComplete: function () {
         var me = this,
             fulfillmentContact = me.record.get("fulfillmentContact"),
             isValid = true;
 
         // BillingContact is no longer checked here. See issue #70588 for details.
-        
+
         // if we have a fulfillment contact and its not an empty object
         if (!fulfillmentContact || Ext.Object.isEmpty(fulfillmentContact)) {
             isValid = false;
