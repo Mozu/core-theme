@@ -358,9 +358,10 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
             dcCustomer = (await _customerAccountWebApiClient.GetAccount(args.CustomerAccountId)).ReadAsSync();
 
             ResolvedPriceList priceList = (await _priceListRuntimeWebApiClient.GetResolvedPriceList(args.CustomerAccountId)).ReadAsSync();
-            if (!ComparePriceList(dcOrder.PriceListCode, priceList.PriceListCode))
+            string priceListCode = priceList != null ? priceList.PriceListCode : null;
+            if (!ComparePriceList(dcOrder.PriceListCode, priceListCode))
             {
-                (_apiContext as ApiContext).PriceListCode = priceList.PriceListCode;
+                (_apiContext as ApiContext).PriceListCode = priceListCode;
                 dcOrder = (await _orderWebApiClient.ChangeOrderPriceList(args.OrderId, APPLY_TO_ORIGINAL)).ReadAsSync();
             }
 
