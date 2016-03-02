@@ -65,6 +65,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Configuration
             builder.RegisterClassesMatchingInterfaceName(typeof(Mvc.CookieProvider).Assembly);
             builder.RegisterClassesMatchingInterfaceName(typeof(Mozu.Provisioning.Contracts.Clients.IProvisioningWebApiClient).Assembly);
             builder.RegisterClassesMatchingInterfaceName(typeof(Mozu.AppDev.Contracts.Clients.IAppsWebApiClient).Assembly);
+            builder.RegisterClassesMatchingInterfaceName(typeof(Mozu.ProductRuntime.Contracts.Clients.PriceListRuntimeWebApiClient).Assembly);
 
             builder.RegisterHttpRequestMessage(GlobalConfiguration.Configuration);
 
