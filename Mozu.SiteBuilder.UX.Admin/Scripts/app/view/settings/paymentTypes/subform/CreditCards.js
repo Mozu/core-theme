@@ -45,12 +45,12 @@ Ext.define('Taco.view.settings.paymentTypes.subform.CreditCards', {
             }
         });
 
+        me.cardGatewayMap = [];
         me.syncCardGatewayMap = function () {
             var raw = Ext.Array.pluck(me.cardGatewayStore.data.items, 'data');
             me.cardGatewayMap = raw;
         };
                 
-        me.cardGatewayMap = [];
         me.syncCardGatewayMap();
         me.supportedCardsGrid = Ext.widget({
             xtype: 'grid',
@@ -99,11 +99,10 @@ Ext.define('Taco.view.settings.paymentTypes.subform.CreditCards', {
                     text: 'Payment Gateway',
                     showBorder: true,
                     editor: me.gatewayCombo,
-                    renderer: function (value) {
+                    renderer: function (value, metaData, record) {
                         if (value) {
                             var gateway = me.paymentGatewaysStore.findRecord('id', value);
-                            var cardGateway = me.cardGatewayMap.find(function (item) { return item.gatewayId === value });
-                            if (gateway && cardGateway && cardGateway.isEnabled) {
+                            if (gateway && record.get('isEnabled')) {
                                 var name = gateway.get('name');
                                 return name;
                             }
