@@ -1457,6 +1457,7 @@
     <Content Include="Scripts\app\mocks\auditlog.json" />
     <Content Include="Scripts\sass\src\overrides\menu\Item.scss" />
     <Content Include="Scripts\sass\src\view\order\Grid.scss" />
+    <Content Include="Scripts\sass\src\view\settings\paymentTypes\subform\CreditCards.scss" />
     <None Include="SetupSenchaWorkspace.ps1" />
     <Content Include="Scripts\.sencha\app\build-impl.xml" />
     <Content Include="Scripts\.sencha\app\plugin.xml" />

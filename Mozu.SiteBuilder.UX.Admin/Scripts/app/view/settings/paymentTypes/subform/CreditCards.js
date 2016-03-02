@@ -29,14 +29,36 @@ Ext.define('Taco.view.settings.paymentTypes.subform.CreditCards', {
             remoteFilter: false,
             data: me.cardGateways
         });
-        
+
+        me.gatewayCombo = Ext.create("Ext.form.field.ComboBox", {
+            store: me.paymentGatewaysStore,
+            editable: false,
+            forceSelection: true,
+            allowBlank: false,
+            displayField: 'name',
+            valueField: 'id',
+            listeners: {
+                render: function (combo) {
+                    var me = this;
+                    var editor = combo.ownerCt;
+                }
+            }
+        });
+
+        me.syncCardGatewayMap = function () {
+            var raw = Ext.Array.pluck(me.cardGatewayStore.data.items, 'data');
+            me.cardGatewayMap = raw;
+        };
+                
         me.cardGatewayMap = [];
+        me.syncCardGatewayMap();
         me.supportedCardsGrid = Ext.widget({
             xtype: 'grid',
             listeners: { },
             store: me.cardGatewayStore,
             enableColumnHide: false,
             sortableColumns: false,
+            selType: 'rowmodel',
             columns: [
                 {
                     text: 'Enable',
@@ -46,8 +68,25 @@ Ext.define('Taco.view.settings.paymentTypes.subform.CreditCards', {
                     value: 'cardType',
                     listeners: {
                         checkchange: function (col, rowIndex, checked, opts) {
-                            var raw = Ext.Array.pluck(me.cardGatewayStore.data.items, 'data');
-                            me.cardGatewayMap = raw;
+                            me.syncCardGatewayMap();
+                            
+                            if (checked) {
+                                me.paymentGatewaysStore.load({
+                                    scope: me,
+                                    callback: function (records, operation, success) {
+                                        var plugin = me.supportedCardsGrid.getPlugin('cardCellEditor');
+                                        plugin.startEdit(rowIndex, 2);
+
+                                        me.gatewayCombo.expand();
+                                        me.gatewayCombo.focus(null, 10);
+                                        var recordToSelect = me.gatewayCombo.store.getAt(0);
+                                        if (recordToSelect) {
+                                            me.gatewayCombo.select(recordToSelect);
+                                        }
+                                    }
+                                });
+                            }
+                            
                         }
                     }
                 },
@@ -58,24 +97,19 @@ Ext.define('Taco.view.settings.paymentTypes.subform.CreditCards', {
                 },
                 {
                     text: 'Payment Gateway',
-                    editor: {
-                        xtype: 'combobox',
-                        store: me.paymentGatewaysStore,
-                        editable: false,
-                        forceSelection: true,
-                        allowBlank: false,
-                        displayField: 'name',
-                        valueField: 'id'
-                    },
+                    showBorder: true,
+                    editor: me.gatewayCombo,
                     renderer: function (value) {
                         if (value) {
                             var gateway = me.paymentGatewaysStore.findRecord('id', value);
-                            if (gateway) {
-                                return gateway.get('name');
+                            var cardGateway = me.cardGatewayMap.find(function (item) { return item.gatewayId === value });
+                            if (gateway && cardGateway && cardGateway.isEnabled) {
+                                var name = gateway.get('name');
+                                return name;
                             }
                             return '';
                         }
-                        return value;
+                        return '';
                     },
                     dataIndex: 'gatewayId',
                     flex: 3,
@@ -83,11 +117,25 @@ Ext.define('Taco.view.settings.paymentTypes.subform.CreditCards', {
             ],
             plugins: [
                 Ext.create('Ext.grid.plugin.CellEditing', {
-                    clicksToEdit: 1
+                    clicksToEdit: 1,
+                    pluginId: "cardCellEditor"
                 })
             ],
-            width: 400
+            width: 500
         });
+
+        me.selectFirstGateway = function (rowIndex) {
+            me.supportedCardsGrid.getView().select(rowIndex);
+
+            me.supportedCardsGrid.fireEvent('itemclick', me.supportedCardsGrid)
+
+            me.gatewayCombo.expand();
+            me.gatewayCombo.focus(null, 10);
+            var recordToSelect = me.gatewayCombo.store.getAt(0);
+            if (recordToSelect) {
+                me.gatewayCombo.select(recordToSelect);
+            }
+        };
 
         me.supportedCardsGrid.on('beforeedit', function (grid, e) {
 
