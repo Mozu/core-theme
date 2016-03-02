@@ -62,6 +62,8 @@ Ext.define('Taco.view.settings.paymentGateways.Index', {
         }, 1, this);
     },
 
+    deleteItemMsg: 'Are you sure you want to delete this payment gateway? Please update Payment Types settings for any sites that are currently using this gateway.',
+
     getColumnConfig : function() {
         var me = this;
         

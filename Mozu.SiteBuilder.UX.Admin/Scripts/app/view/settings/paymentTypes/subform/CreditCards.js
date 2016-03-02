@@ -98,6 +98,7 @@ Ext.define('Taco.view.settings.paymentTypes.subform.CreditCards', {
                 {
                     text: 'Payment Gateway',
                     showBorder: true,
+                    msgTarget: "qtip",
                     editor: me.gatewayCombo,
                     renderer: function (value, metaData, record) {
                         if (value) {
