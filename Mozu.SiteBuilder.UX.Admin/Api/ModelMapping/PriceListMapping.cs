@@ -45,8 +45,16 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.ModelMapping
                 .ForMember(x => x.ParentPriceListName, op => op.Ignore())
                 ;
 
-            Mapper.CreateMap<PriceListEntry, DC.PriceListEntry>();
-            Mapper.CreateMap<DC.PriceListEntry, PriceListEntry>();
+            Mapper.CreateMap<PriceListEntry, DC.PriceListEntry>()
+                .ForMember(x => x.AuditInfo, op => op.Ignore())
+                ;
+            Mapper.CreateMap<DC.PriceListEntry, PriceListEntry>()
+                .ForMember(x => x.CreateBy, op => op.ResolveUsing(dc => dc.AuditInfo != null ? dc.AuditInfo.CreateBy : ""))
+                .ForMember(x => x.CreateDate, op => op.ResolveUsing(dc => dc.AuditInfo != null ? dc.AuditInfo.CreateDate : null))
+                .ForMember(x => x.UpdateBy, op => op.ResolveUsing(dc => dc.AuditInfo != null ? dc.AuditInfo.UpdateBy : ""))
+                .ForMember(x => x.UpdateDate, op => op.ResolveUsing(dc => dc.AuditInfo != null ? dc.AuditInfo.UpdateDate : null))
+                ;
+            
 
             Mapper.CreateMap<PriceListEntryPrice, DC.PriceListEntryPrice>();
             Mapper.CreateMap<DC.PriceListEntryPrice, PriceListEntryPrice>();

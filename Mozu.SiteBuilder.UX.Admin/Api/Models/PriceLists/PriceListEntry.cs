@@ -90,8 +90,10 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.Models.PriceLists
 
         public DateTime? CreateDate { get; set; }
 
+        [JsonProperty(DefaultValueHandling = DefaultValueHandling.Ignore, PropertyName = "lastModifiedBy")]
         public string UpdateBy { get; set; }
 
+        [JsonProperty(DefaultValueHandling = DefaultValueHandling.Ignore, PropertyName = "lastModifiedDate")]
         public DateTime? UpdateDate { get; set; }
 
         #endregion
