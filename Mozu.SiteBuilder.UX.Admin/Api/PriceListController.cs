@@ -160,7 +160,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
         [HttpPostRoute(UriTemplate = "delete")]
         public async Task<Response<PriceList>> DeletePriceList(List<PriceList> priceLists)
         {
-            var tasks = priceLists.Select(d => _priceListWebClient.DeletePriceList(d.Code)).ToList();
+            var tasks = priceLists.Select(d => _priceListWebClient.DeletePriceList(d.Code, true)).ToList();
             await Task.WhenAll(tasks);
             tasks.Select(TaskHelper.Result).ThrowExceptionsIfAny();
 
