@@ -25,7 +25,9 @@ Ext.define('Taco.view.order.widget.OrderTotalPanelEditable', {
         /**
          * Number of discounts to display in each page of the discountPicker Combobox;
          */
-        discountsPerPage : 50
+        discountsPerPage: 50,
+        priceListStore: null,
+        priceListName: ''
     },
 
     isEditable: true,
@@ -412,10 +414,11 @@ Ext.define('Taco.view.order.widget.OrderTotalPanelEditable', {
             // Need to determine when to disable this button...
             disabled: false,
             // Figure out how to update this button text...
-            text: me.record.get('priceListName').length > 0 ? me.record.get('priceListName') : 'Please choose a pricelist',
+            text: me.priceListName.length > 0 ? me.priceListName : 'Please choose a pricelist',
             menu: Ext.create('Taco.view.order.widget.PriceListMenu', {
                 orderId: me.record.getId(),
                 width: 350,
+                store: me.priceListStore,
                 onPriceListChange: function (menu, selection) {
                     console.log('selected a menu item: ' + menu.data.name);
                     console.log(menu.data.name);
