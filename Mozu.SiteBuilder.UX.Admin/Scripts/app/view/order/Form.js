@@ -72,8 +72,16 @@ Ext.define('Taco.view.order.Form', {
         me.ajaxBeforeListener = Ext.Ajax.on('beforerequest', function (conn, options) {
             // set order price list on the ajax call!
             // This should be called before the TaContext...find settings.
-            var priceListHeader = options.headers = options.headers || {};
+            var priceListHeader = {};
             priceListHeader['x-vol-pricelist'] = me.record.get('priceListCode');
+
+            if (options && options.headers) {
+                Ext.apply(priceListHeader, options.headers);
+            }
+
+            if (options && options.operation && options.operation.headers) {
+                Ext.apply(options.headers, options.operation.headers);
+            }
         }, me, { destroyable: true });
 
         this.customer = {};
