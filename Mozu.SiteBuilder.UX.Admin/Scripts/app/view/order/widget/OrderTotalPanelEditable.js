@@ -420,8 +420,6 @@ Ext.define('Taco.view.order.widget.OrderTotalPanelEditable', {
                 width: 350,
                 store: me.priceListStore,
                 onPriceListChange: function (menu, selection) {
-                    console.log('selected a menu item: ' + menu.data.name);
-                    console.log(menu.data.name);
                     if (menu.data.isExclusive) {
                         Ext.create('Taco.core.ux.window.Modal', {
                             autoShow: true,
@@ -434,20 +432,24 @@ Ext.define('Taco.view.order.widget.OrderTotalPanelEditable', {
                                 me.setNewPriceList(me.record.getId(), menu.data.code);
                             },
                             items: [
-                            {
-                                xtype: 'container',
-                                flex: 1,
-                                padding: '2 2',
-                                items: [{
+                                {
+                                    xtype: 'container',
                                     flex: 1,
-                                    height: '100%',
-                                    width: '100%',
-                                    html: '<div>Applying this exclusive price list may remove certain products from the order.</div>'
-                                }]
-                            }]
+                                    padding: '2 2',
+                                    items: [
+                                        {
+                                            flex: 1,
+                                            height: '100%',
+                                            width: '100%',
+                                            html: '<div>Applying this exclusive price list may remove certain products from the order.</div>'
+                                        }
+                                    ]
+                                }
+                            ]
                         });
+                    } else {
+                        me.setNewPriceList(me.record.getId(), menu.data.code);
                     }
-                    me.setNewPriceList(me.record.getId(), menu.data.code);
                 }
             })
         });
@@ -478,6 +480,7 @@ Ext.define('Taco.view.order.widget.OrderTotalPanelEditable', {
         if (!me.isEditable) {
             me.setLoading(true);
         }
+        me.fireEvent('save');
 
         me.record.setPriceList({
             jsonData: {
@@ -495,8 +498,8 @@ Ext.define('Taco.view.order.widget.OrderTotalPanelEditable', {
                     Taco.app.fireEvent('setmessage', "Error setting price list.", 'error');
                     return;
                 }
-
-                me.record.reload();
+                
+                me.fireEvent('saveSuccess', json);
             },
             failure: function(response) {
                 var json = Ext.decode(response.responseText, true),
