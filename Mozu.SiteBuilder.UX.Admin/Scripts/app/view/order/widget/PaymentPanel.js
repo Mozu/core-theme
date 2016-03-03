@@ -349,7 +349,15 @@ Ext.define('Taco.view.order.widget.PaymentPanel', {
     // Textual information about the overall order,  authorized credit card information, and shipping information
     initPaymentDetails: function () {
         var me = this,
-            data = Ext.apply({ billingContact: me.order.data.billingContact }, me.record.data);
+            billingContact = me.order.data.billingContact,
+
+            phone = billingContact ? (billingContact.workPhone ? billingContact.workPhone : billingContact.homePhone) : '',
+
+            safePhone = Ext.util.Format.htmlEncode(phone),
+
+            data = Ext.apply({ billingContact: billingContact, safePhone: safePhone }, me.record.data);
+
+       
 
         me.paymentDetails = Ext.create('Ext.Component', {
             cls: "orderform-payment-paymentDetails",
