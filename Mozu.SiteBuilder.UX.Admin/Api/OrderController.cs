@@ -402,6 +402,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
         public class SetPriceListArgs
         {
             public string OrderId { get; set; }
+            public string PriceListCode { get; set; }
         }
         [HttpPostRoute(UriTemplate = "setpricelist")]
         public async Task<Response<Order>> SetPriceList(SetPriceListArgs args, [FromUri]bool draft = false)
