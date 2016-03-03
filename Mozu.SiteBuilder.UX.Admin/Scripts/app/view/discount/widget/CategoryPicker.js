@@ -15,7 +15,7 @@ Ext.define('Taco.view.discount.widget.CategoryPicker', {
 
     initComponent: function () {
         var me = this;
-        //debugger;
+
         //this.catStore.clearFilter(true);
 
         //For discounts we never want to show dynamic realtime categories. Defect 76199

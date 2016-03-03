@@ -142,47 +142,6 @@ Ext.define('Taco.view.priceList.form.General', {
                     ]
                 },
                 {
-                    xtype: 'panel',
-                    layout: {
-                        type: 'hbox',
-                        align: 'bottom'
-                    },
-                    width: '100%',
-                    items: [
-                        {
-                            xtype: 'panel',
-                            layout: {
-                                type: 'hbox',
-                                align: 'bottom'
-                            },
-                            width: '50%',
-                            items: [
-                                {
-                                    xtype: 'numberfield',
-                                    name: 'resolutionRank',
-                                    itemId: 'resolutionRankField',
-                                    fieldLabel: 'Resolution Rank',
-                                    allowBlank: true,
-                                    hideTrigger: true,
-                                    margin: '0 30 0 0',
-                                    width: '50%',
-                                    required: false
-                                },
-                                {
-                                    xtype: 'numberfield',
-                                    name: 'searchIndexSequence',
-                                    itemId: 'searchIndexSequenceField',
-                                    fieldLabel: 'Search Index Sequence',
-                                    allowBlank: true,
-                                    hideTrigger: true,
-                                    margin: '0 30 0 0',
-                                    width: '50%'
-                                }
-                            ]
-                        }
-                    ]
-                },
-                {
                     xtype: 'fieldcontainer',
                     fieldLabel: 'Options',
                     layout: {
@@ -206,11 +165,12 @@ Ext.define('Taco.view.priceList.form.General', {
                                 scope: this
                             },
                             tooltip: Ext.create('Taco.core.ux.content.Tooltip', {
-                                elementId: 'applies-sale-price-check',
+                                elementId: 'filteredInStorefrontCheck',
                                 hoverTarget: 'boxLabelEl',
-                                messageKey: 'discount.criteria.appliesToSalePrice',
-                                offsetLeft: 20,
-                                offsetTop: 15
+                                messageKey: 'priceLists.general.exclusive',
+                                offsetLeft: -120,
+                                offsetTop: 30,
+                                arrowPosition: 'left'
                             })
                         },
                         {
@@ -228,11 +188,12 @@ Ext.define('Taco.view.priceList.form.General', {
                                 scope: this
                             },
                             tooltip: Ext.create('Taco.core.ux.content.Tooltip', {
-                                elementId: 'applies-sale-price-check',
+                                elementId: 'resolvableCheck',
                                 hoverTarget: 'boxLabelEl',
-                                messageKey: 'discount.criteria.appliesToSalePrice',
-                                offsetLeft: 20,
-                                offsetTop: 15
+                                messageKey: 'priceLists.general.resolvable',
+                                offsetLeft: -120,
+                                offsetTop: 30,
+                                arrowPosition: 'left'
                             })
                         }
                     ]

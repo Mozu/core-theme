@@ -10,7 +10,10 @@ Ext.define('Taco.view.priceList.form.Resolution', {
         'Taco.store.CustomerSegments',
         'Ext.ux.form.field.BoxSelect',
         'Ext.container.Container',
-        'Taco.view.customers.segments.Modal'
+        'Taco.view.customers.segments.Modal',
+        'Ext.tree.Panel',
+        'Ext.selection.CheckboxModel',
+        'Taco.core.ux.content.Tooltip'
     ],
     ui: 'subform',
     margin: '0 0 20 0',
@@ -22,75 +25,141 @@ Ext.define('Taco.view.priceList.form.Resolution', {
         var me = this,
             segStore = Taco.core.data.StoreManager.getOrCreate('Taco.store.CustomerSegments');
 
-                var siteData = Ext.Array.map(Taco.app.context.getMasterCatalog().sites, function (site) {
+        var catalogChildren = Ext.Array.map(Taco.app.context.getMasterCatalog().catalogs, function (cat) {
+            var validSites = me.record.get('validSites'),
+            defaultForSites = me.record.get('defaultForSites');
+            var siteChildren = Ext.Array.map(cat.sites, function (site) {
+                return {
+                    id: site.id,
+                    text: site.name,
+                    parentId: cat.id,
+                    type: 'site',
+                    expanded: true,
+                    loaded: true,
+                    leaf: 'true',
+                    checked: validSites.indexOf(site.id) !== -1,
+                    default: defaultForSites.indexOf(site.id) !== -1
+                };
+            });
             return {
-                id: site.id,
-                name: site.name
+                id: cat.id,
+                text: cat.name,
+                type: 'catalog',
+                expanded: true,
+                loaded: true,
+                children: siteChildren
             };
         });
 
-        this.setVisible( this.record.phantom || this.record.get('resolvable') );
-
-        var siteStore = Ext.create('Ext.data.Store', {
-            fields: ['id','name'],
-            data: siteData
+        this.siteTreeStore = Ext.create('Ext.data.TreeStore', {
+            root: {
+                expanded: true,
+                children: catalogChildren
+            },
+            fields: [{
+                name: 'default',
+                type: 'boolean'
+            }, {
+                name: 'text',
+                type: 'string'
+            }, {
+                name: 'id',
+                type: 'int'
+            }]
         });
 
-        this.validSitesList = Ext.create('Ext.ux.form.field.BoxSelect', {
-            name: 'validSites',
-            flex: 9,
-            store: siteStore,
-            getStore: function () {
-                return siteStore;
+        this.sitesTree = Ext.create('Ext.tree.Panel', {
+            rootVisible: false,
+            displayField: 'text',
+            store: this.siteTreeStore,
+            columns: [{
+                xtype: 'treecolumn',
+                dataIndex: 'text',
+                text: 'Name',
+                flex: 1
+            }, {
+                xtype: 'checkcolumn',
+                text: 'Default',
+                dataIndex: 'default',
+                hideable: false,
+                listeners: {
+                    checkchange: function(cmp, rowIndex, checked, eOpts) {
+                        var records = me.siteTreeStore.getUpdatedRecords();
+                        Ext.Array.each(records, function(record) {
+                            if (record.get('default') && !record.get('checked')) {
+                                record.set('checked', true);
+                            }
+                        });
+                    }
+                },
+                renderer: function(val, metaData, record, rowIndex, colIndex, store, view) {
+                    if (record.get('leaf')) {
+                        var checked = (val) ? 'x-grid-checkcolumn-checked' : '';
+                        return '<img class="x-grid-checkcolumn ' + checked + ' " src="data:image/gif;base64,R0lGODlhAQABAID/AMDAwAAAACH5BAEAAAAALAAAAAABAAEAAAICRAEAOw==">';
+                    }
+                    else {
+                        return '';
+                    }
+                }
+            }],
+            selectPath: function (path, field, separator, callback, scope) {
+                // override: set keepExisting to true when calling select()
+                var me = this,
+                    root,
+                    keys,
+                    last;
+
+                field = field || me.getRootNode().idProperty;
+                separator = separator || '/';
+
+                keys = path.split(separator);
+                last = keys.pop();
+                if (keys.length > 1) {
+                    me.expandPath(keys.join(separator), field, separator, function (success, node) {
+                        var lastNode = node;
+                        if (success && node) {
+                            node = node.findChild(field, last);
+                            if (node) {
+                                me.getSelectionModel().select(node, true);
+                                Ext.callback(callback, scope || me, [true, node]);
+                                return;
+                            }
+                        }
+                        Ext.callback(callback, scope || me, [false, lastNode]);
+                    }, me);
+                } else {
+                    root = me.getRootNode();
+                    if (root.getId() === last) {
+                        me.getSelectionModel().select(root, true);
+                        Ext.callback(callback, scope || me, [true, root]);
+                    } else {
+                        Ext.callback(callback, scope || me, [false, null]);
+                    }
+                }
             },
-            queryMode: 'local',
-            hideTrigger: true,
-            triggerOnClick: false,
-            forceSelection: true,
-            disableKeyFilter: true,
-            typeAhead: true,
-            lastQuery:"",
-            displayField: 'name',
-            valueField: 'id',
-            fieldLabel: 'Active Sites',
-            style: {
-                display: 'inline-table',
-                verticalAlign: 'bottom'
+
+            listeners: {
+                checkchange: function (node, checked, eOpts) {
+                    if (!checked && node.get('default')) {
+                        node.set('default', false);
+                    }
+                },
+                select: function (cmp, record) {
+                    this.selectChildren(record, 'select');
+                },
+                deselect: function (cmp, record) {
+                    this.selectChildren(record, 'deselect');
+                },
+                scope: this
             }
         });
 
-        this.validSitesBox = Ext.create('Ext.container.Container', {
-            layout: {
-                type: 'hbox',
-                align: 'bottom'
-            },
-            flex: 10,
-            hidden: (this.record.phantom || this.record.get('validForAllSites')),
-            items: [
-                this.validSitesList,
-                {
-                    xtype: 'button',
-                    scale: 'medium',
-                    ui: 'action',
-                    text: 'Add',
-                    margin: '0 0 0 10',
-                    flex: 1,
-                    maxWidth: 70,
-                    handler: function () {
-                        this.launchSiteModal(this.validSitesList);
-                    },
-                    scope: this
-                }
-            ]
-        });
-
-        this.scopePanel = {
+        this.sitesPanel = {
             xtype: 'panel',
             layout: {
-                type: 'hbox',
-                align: 'bottom'
+                type: 'vbox',
+                align: 'stretch'
             },
-            width: '100%',
             items: [
                 {
                     xtype: 'fieldcontainer',
@@ -114,8 +183,7 @@ Ext.define('Taco.view.priceList.form.Resolution', {
                             margin: '0 30 0 0',
                             listeners: {
                                 change: function(cmp, isValidForAll){
-                                    this.validSitesBox.setVisible(!isValidForAll);
-                                    this.validSitesList.focus(false, 200);
+                                    this.sitesTree.setVisible(!isValidForAll);
                                 },
                                 scope: this
                             }
@@ -129,7 +197,7 @@ Ext.define('Taco.view.priceList.form.Resolution', {
                         }
                     ]
                 },
-                this.validSitesBox
+                this.sitesTree
             ]
         };
 
@@ -190,6 +258,43 @@ Ext.define('Taco.view.priceList.form.Resolution', {
             ]
         });
 
+        this.rankBox = Ext.create('Ext.container.Container', {
+            layout: {
+                type: 'hbox',
+                align: 'bottom'
+            },
+            width: '100%',
+            items: [{
+                xtype: 'numberfield',
+                name: 'resolutionRank',
+                itemId: 'resolutionRankField',
+                fieldLabel: 'Resolution Rank',
+                allowBlank: true,
+                hideTrigger: true,
+                margin: '0 30 0 0',
+                width: '50%',
+                required: false,
+                tooltip: Ext.create('Taco.core.ux.content.Tooltip', {
+                    elementId: 'resolutionRankField',
+                    hoverTarget: 'label',
+                    messageKey: 'priceLists.resolution.rank',
+                    offsetLeft: -122,
+                    offsetTop: 0,
+                    arrowPosition: 'left'
+                }),
+            }/*,
+            {
+                xtype: 'numberfield',
+                name: 'searchIndexSequence',
+                itemId: 'searchIndexSequenceField',
+                fieldLabel: 'Search Index Sequence',
+                allowBlank: true,
+                hideTrigger: true,
+                margin: '0 30 0 0',
+                width: '50%'
+            }*/]
+        });
+
         Ext.tip.QuickTipManager.init();
 
         // tree control?
@@ -215,12 +320,23 @@ Ext.define('Taco.view.priceList.form.Resolution', {
                 align: 'stretch'
             },
             items: [
-                this.scopePanel,
-                this.segmentsBox
+                this.sitesPanel,
+                this.segmentsBox,
+                this.rankBox
             ]
         }];
 
         this.callParent(arguments);
+    },
+
+    selectChildren: function (record, selectType) {
+        var me = this;
+        if (!this.selectChildrenFromParent || !record.hasChildNodes()) {
+            return;
+        }
+        Ext.Array.forEach(record.childNodes, function(childNode) {
+            me.tree.getSelectionModel()[selectType](childNode, true);
+        });
     },
 
     launchSegmentModal: function (list) {
@@ -243,6 +359,13 @@ Ext.define('Taco.view.priceList.form.Resolution', {
     },
 
     beforeSave: function () {
+        var selectedSites = this.sitesTree.getChecked();
+        this.record.set('validSites', Ext.Array.map(selectedSites, function(site) {
+            return site.get('id');
+        }));
+        this.record.set('defaultForSites', Ext.Array.map(selectedSites, function(site) {
+            return site.get('default') ? site.get('id') : undefined;
+        }));
         Ext.Object.merge(this.record.data, this.form.getValues());
         return true;
     },

@@ -112,14 +112,25 @@ Ext.define('Taco.store.TooltipHelp', {
         }, {
             key: 'attribute.form.searchOptions',
             value: 'This determines whether the value(s) of this attribute is matched on when shoppers perform a search on the site.'
-        },{
+        }, {
             key: 'attribute.form.filterandsorting',
             value: 'This determines whether this attribute is available for filtering, sorting, dynamic category expressions, and as a facet in search results and on category pages.'
-        },{
+        }, {
             key: 'producttype.attribute.form.displaygroup',
             value: '<dl><dt><b>Storefront Details and Listings</b></dt><dd>The property is available on storefront product listing pages like categories and search results.</dd><dt><b>Storefront Details</b></dt><dd>The property is available only when displaying product details on the storefront.</dd><dt><b>Admin Only</b></dt><dd>The property is managed only within Mozu Admin and is not visible in the storefront.</dd></dl>'
-        },
-        {
+        }, {
+            key: 'priceLists.general.exclusive',
+            value: 'Exclusive price lists restrict the storefront\'s product availability to only products included in the price list and its parents if applicable.'
+        }, {
+            key: 'priceLists.general.resolvable',
+            value: 'By default, all price lists can be picked as being directly applicable to a customer. To improve performance, disable this setting if the price list is only meant to be a parent for others and will not be chosen for a customer directly. Refer to Mozu Docs for more info.'
+        }, {
+            key: 'priceLists.resolution.default',
+            value: 'When the resolution logic does not resolve to a valid price list for a customer, the default price list for a site will be in effect.'
+        }, {
+            key: 'priceLists.resolution.rank',
+            value: 'Mozu uses rank to break ties when multiple price lists are valid at the same time. Lower numbers equal higher priority (1 wins over 2).'
+        }, {
             key: 'default',
             value: 'Default Tooltip'
         }
