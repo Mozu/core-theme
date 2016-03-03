@@ -76,7 +76,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Helpers.PriceListHelpers
                 case "segments":
                     return String.Format("{0} eq \"{1}\"", SEGMENTS_PROPERTY, filter.value);
 
-                case "productcode":
+                case "productname":
                     return String.Format("{0} eq \"{1}\"", PRODUCT_CODE_PROPERTY, filter.value);
                 case "currencycode":
                     return String.Format("{0} eq \"{1}\"", CURRENCY_CODE_PROPERTY, filter.value);

@@ -444,6 +444,7 @@ Ext.define('Taco.core.ux.form.FilterContainer', {
         var simple = this.down('#textFilter');
         var jsonValue = this.parseTextFilterValue(simple);
         var collapseIf;
+        var dialogForm = dialog.getForm();
         
         if (dialog.rendered && !dialog.isDestroyed) {
             collapseIf = this.collapseIf;
@@ -456,7 +457,7 @@ Ext.define('Taco.core.ux.form.FilterContainer', {
             
             // annoyingly the form fields do not reset because they are updating the original value when they are being set.
             // clear out any previuos values left in the form from previous showing.
-            var form = dialog.getForm().form,
+            var form = dialogForm.form,
                 fields = form.getFields().items,
                 fLen = fields.length;
                 Ext.suspendLayouts();
@@ -471,6 +472,9 @@ Ext.define('Taco.core.ux.form.FilterContainer', {
         }
 
         this.setAdvancedFilterValues(jsonValue);
+        if (dialogForm && dialogForm.handleShow && Ext.isFunction(dialogForm.handleShow)) {
+            dialogForm.handleShow();
+        }
     },
 
     /**
