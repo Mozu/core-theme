@@ -419,6 +419,7 @@ Ext.define('Taco.view.order.widget.OrderTotalPanelEditable', {
                 orderId: me.record.getId(),
                 width: 350,
                 store: me.priceListStore,
+                orderSiteId: me.record.get('siteId'),
                 onPriceListChange: function (menu, selection) {
                     if (menu.data.isExclusive) {
                         Ext.create('Taco.core.ux.window.Modal', {

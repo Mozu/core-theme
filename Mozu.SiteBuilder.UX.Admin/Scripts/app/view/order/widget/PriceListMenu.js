@@ -15,10 +15,10 @@ Ext.define('Taco.view.order.widget.PriceListMenu', {
     showSeperator: false,
 
     config: {
-        orderId: null
+        orderId: null,
+        store: null,
+        orderSiteId: '',
     },
-
-    store: null,
 
     initComponent: function (eOpts) {
         var me = this;
@@ -123,16 +123,20 @@ Ext.define('Taco.view.order.widget.PriceListMenu', {
         me.store.each(function (record) {
             var data = { code: '', name: '', isExclusive: false, isDefault: false };
             var isExclusive = record.get('filteredInStorefront');
-            //var isDefault = record.get('isDefault');
+            var defaultSites = record.get('defaultForSites');
             var name = isExclusive ? record.get('name') + " (Exclusive)" : record.get('name');
-            //name = isDefault ? name + ' (Default)' : name;
+            var defaultSiteFound = defaultSites.indexOf(this.orderSiteId) >= 0;
+
+            name = defaultSiteFound ? name + ' (Default)' : name;
+
+
 
             data.code = record.get('code');
             data.name = name;
             data.isExclusive = isExclusive;
-            //data.isDefault = record.get('isDefault');
+            data.isDefault = defaultSiteFound;
             menuData.push(data);
-        });
+        }, me);
         me.updatePriceListMenu(menuData);
     },
 

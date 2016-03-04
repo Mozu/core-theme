@@ -58,10 +58,7 @@ Ext.define('Taco.view.order.subform.Detail', {
         // Create the PriceListStore.
         this.priceListStore = Taco.core.data.StoreManager.getOrCreate('Taco.store.PriceLists');
         this.priceListStore.mon(this.priceListStore, 'load', function(store, records, success) {
-            var foundRecord = store.findRecord('code', me.record.get('priceListCode'));
-            if (foundRecord) {
-                me.priceListName = foundRecord.get('name');
-            }
+            me.retrievePricelistName(store);
             me.setTitle(me.constructTitle());
         }, me, { single: true });
 
@@ -207,6 +204,14 @@ Ext.define('Taco.view.order.subform.Detail', {
             priceListName: me.priceListName && me.priceListName.length > 0 ? me.priceListName : me.record.get('priceListCode')
         });
     },
+
+    retrievePricelistName: function (store) {
+        var me = this;
+        var foundRecord = store.findRecord('code', me.record.get('priceListCode'));
+        if (foundRecord) {
+            me.priceListName = foundRecord.get('name');
+        }
+    },
     
     editOrder: function (focusAfterCloseCmp) {
         var me = this,
@@ -296,7 +301,10 @@ Ext.define('Taco.view.order.subform.Detail', {
     onRecordChange: function () {
         var me = this;
         Ext.suspendLayouts();
-        // need to reload the record;
+        // Update the title:
+        me.retrievePricelistName(this.priceListStore);
+        me.setTitle(me.constructTitle());
+        // Record is reloaded, need to update the ui.
         me.updateUi();
         Ext.resumeLayouts(true);        
         me.setLoading(false, this.body);
@@ -359,8 +367,8 @@ Ext.define('Taco.view.order.subform.Detail', {
     updateUi: function () {
         var me = this;        
         me.totalRow.setRecord(me.record);
-        
-        me.customerNoteRow.update(me.record.data)
+
+        me.customerNoteRow.update(me.record.data);
         
 
         // todo: update the internalNotes
