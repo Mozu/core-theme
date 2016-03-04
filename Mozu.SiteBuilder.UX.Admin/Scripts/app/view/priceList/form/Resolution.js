@@ -76,7 +76,7 @@ Ext.define('Taco.view.priceList.form.Resolution', {
                 xtype: 'treecolumn',
                 dataIndex: 'text',
                 text: 'Name',
-                flex: 1
+                flex: 1,
             }, {
                 xtype: 'checkcolumn',
                 text: 'Default',
@@ -140,7 +140,8 @@ Ext.define('Taco.view.priceList.form.Resolution', {
 
             listeners: {
                 checkchange: function (node, checked, eOpts) {
-                    if (!checked && node.get('default')) {
+                    if (!checked) {
+                        me.specificSitesRadio.setValue(true);
                         node.set('default', false);
                     }
                 },
@@ -152,6 +153,34 @@ Ext.define('Taco.view.priceList.form.Resolution', {
                 },
                 scope: this
             }
+        });
+
+        this.allSitesRadio = Ext.create('Ext.form.field.Radio', {
+            boxLabel: 'All Sites',
+            name: 'validForAllSites',
+            inputValue: 'true',
+            id: 'sitesChoiceAll',
+            checked: (!this.record.phantom) ? this.record.get('validForAllSites') : true,
+            margin: '0 30 0 0',
+            listeners: {
+                change: function(cmp, newVal, oldVal, eOpts) {
+                    if (newVal) {
+                        me.selectAllSites(me.siteTreeStore.getRootNode())
+                    }
+                },
+                render: function(cmp, eOpts) {
+                    if (cmp.getValue()) {
+                        me.selectAllSites(me.siteTreeStore.getRootNode())
+                    }
+                }
+            }
+        });
+        this.specificSitesRadio = Ext.create('Ext.form.field.Radio', {
+            boxLabel: 'Specific Sites',
+            name: 'validForAllSites',
+            inputValue: 'false',
+            checked: (!this.record.phantom) ? !this.record.get('validForAllSites') : false,
+            id: 'sitesChoiceSelect'
         });
 
         this.sitesPanel = {
@@ -173,28 +202,8 @@ Ext.define('Taco.view.priceList.form.Resolution', {
                     },
                     margin: '0 30 0 0',
                     items: [
-                        {
-                            xtype: 'radiofield',
-                            boxLabel: 'All Sites',
-                            name: 'validForAllSites',
-                            inputValue: 'true',
-                            id: 'sitesChoiceAll',
-                            checked: (!this.record.phantom) ? this.record.get('validForAllSites') : true,
-                            margin: '0 30 0 0',
-                            listeners: {
-                                change: function(cmp, isValidForAll){
-                                    this.sitesTree.setVisible(!isValidForAll);
-                                },
-                                scope: this
-                            }
-                        }, {
-                            xtype: 'radiofield',
-                            boxLabel: 'Specific Sites',
-                            name: 'validForAllSites',
-                            inputValue: 'false',
-                            checked: (!this.record.phantom) ? !this.record.get('validForAllSites') : false,
-                            id: 'sitesChoiceSelect'
-                        }
+                        me.allSitesRadio, 
+                        me.specificSitesRadio
                     ]
                 },
                 this.sitesTree
@@ -335,8 +344,19 @@ Ext.define('Taco.view.priceList.form.Resolution', {
             return;
         }
         Ext.Array.forEach(record.childNodes, function(childNode) {
-            me.tree.getSelectionModel()[selectType](childNode, true);
+            //me.sitesTree.getSelectionModel()[selectType](childNode, true);
         });
+    },
+
+    selectAllSites: function(node) {
+        var me = this;
+        if (node.get('leaf')) {
+            node.set('checked', true);
+        }
+        else {
+            Ext.Array.each(node.childNodes, me.selectAllSites.bind(me));
+        }
+
     },
 
     launchSegmentModal: function (list) {
