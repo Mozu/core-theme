@@ -216,7 +216,7 @@ define(['jquery', 'shim!modules/jquery-simple-datetimepicker[jquery=jquery]>jque
             queryString = queryString.replace(/[&?]*mz_pricelist[^&]*/gi, '');
             if (priceListVal) {
                 if (!queryString) {
-                    queryString = '?'
+                    queryString = '?';
                 } else {
                     queryString += '&';
                 }
