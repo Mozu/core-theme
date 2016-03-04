@@ -248,7 +248,7 @@ Ext.define('Taco.view.priceList.widget.EntriesGrid', {
                 sortable: false,
                 renderer: function(entries) {
                     if (Ext.isArray(entries)) {
-                        return entries[0].listPrice || 'Default';
+                        return entries[0].listPrice ? Taco.app.context.getCurrent().formatCurrency(entries[0].listPrice) : 'Default';
                     }
                     return 'Default';
                 }
@@ -261,7 +261,7 @@ Ext.define('Taco.view.priceList.widget.EntriesGrid', {
                 sortable: false,
                 renderer: function(entries) {
                     if (Ext.isArray(entries)) {
-                        return entries[0].salePrice || 'Default';
+                        return entries[0].salePrice ? Taco.app.context.getCurrent().formatCurrency(entries[0].salePrice) : 'Default';
                     }
                     return 'Default';
                 }
