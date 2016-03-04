@@ -38,7 +38,7 @@ Ext.define('Taco.view.priceList.form.Resolution', {
                     loaded: true,
                     leaf: 'true',
                     checked: validSites.indexOf(site.id) !== -1,
-                    default: defaultForSites.indexOf(site.id) !== -1
+                    "default": defaultForSites.indexOf(site.id) !== -1
                 };
             });
             return {
