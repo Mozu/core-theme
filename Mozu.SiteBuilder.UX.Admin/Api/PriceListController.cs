@@ -179,7 +179,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
             string filter = null;
             if (extFilter != null && extFilter.Count > 0)
             {
-                filter = extFilter.ToFilterString();
+                filter = extFilter.ToFilterEntryString();
             }
             string sortBy = pagingParams.sort.ToSortString();
 
