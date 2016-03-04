@@ -362,7 +362,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
             if (!ComparePriceList(dcOrder.PriceListCode, priceListCode))
             {
                 (_apiContext as ApiContext).PriceListCode = priceListCode;
-                dcOrder = (await _orderWebApiClient.ChangeOrderPriceList(args.OrderId, APPLY_TO_ORIGINAL)).ReadAsSync();
+                dcOrder = (await _orderWebApiClient.ChangeOrderPriceList(args.OrderId, priceListCode, APPLY_TO_ORIGINAL)).ReadAsSync();
             }
 
             dcOrder.CustomerAccountId = args.CustomerAccountId;
