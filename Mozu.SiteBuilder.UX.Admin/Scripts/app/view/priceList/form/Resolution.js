@@ -51,6 +51,19 @@ Ext.define('Taco.view.priceList.form.Resolution', {
             };
         });
 
+        this.defaultHeading = Ext.widget('fieldcontainer', {
+            fieldLabel: 'Default',
+            cellCls: 'header radio',
+            itemId: 'default-field-container',
+            tooltip: Ext.create('Taco.core.ux.content.Tooltip', {
+                elementId: 'default-field-container',
+                hoverTarget: 'label',
+                messageKey: 'priceList.resolution.default',
+                offsetLeft: 82,
+                offsetTop: 15
+            })
+        });
+
         this.siteTreeStore = Ext.create('Ext.data.TreeStore', {
             root: {
                 expanded: true,
