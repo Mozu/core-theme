@@ -227,11 +227,11 @@ Ext.define('Taco.view.order.widget.OrderTotalPanelEditable', {
             orderAdjustment = (Math.abs(parseFloat(this.orderAdjustmentFieldInput.getValue())) * orderAdjustmentSign),
             isDirty = false
         
-        if (me.record.get("orderAdjustment").amount !== orderAdjustment ){
+        if (me.record.get("orderAdjustment").amount != orderAdjustment ){
             isDirty =true;
         }
         
-        if (me.record.get("shippingAdjustment").amount !== shippingAdjustment ){
+        if (me.record.get("shippingAdjustment").amount != shippingAdjustment ){
             isDirty =true;
         }
         // one of the adjustmentFields or the sign combos has changed and needs to be persisted;
@@ -266,12 +266,12 @@ Ext.define('Taco.view.order.widget.OrderTotalPanelEditable', {
             oldValue = me.record.get(name),
             fieldValue;
 
-        if (oldValue === newValue) {
+        if (oldValue == newValue) {
             return;
         }
         me.record.set(name, newValue);
 
-        if (name === "orderAdjustmentIsNegative") {
+        if (name == "orderAdjustmentIsNegative") {
             // update the button text
             this.orderAdjustmentLabelButton.setText(me.getOrderAdjustmentText(newValue));
             fieldValue = parseFloat(this.orderAdjustmentFieldInput.getValue());
@@ -391,7 +391,7 @@ Ext.define('Taco.view.order.widget.OrderTotalPanelEditable', {
         var customerNotesText = me.record.get("customerNote");
         // todo: refactor editableDisplayField to allow for placeholder text
         var placeholder = "";
-        if (!(this.record.get("orderStatus") === "Pending") && me.record.get("customerNote") === "") {
+        if (!(this.record.get("orderStatus") == "Pending") && me.record.get("customerNote") == "") {
             placeholder = "None provided";
         }
 
@@ -462,7 +462,7 @@ Ext.define('Taco.view.order.widget.OrderTotalPanelEditable', {
             fieldLabel: "Customer Notes",
             value: customerNotesText,
             placeholder: placeholder,
-            disabled: !(this.record.get("orderStatus") === "Pending"),
+            disabled: !(this.record.get("orderStatus") == "Pending"),
             listeners: {
                 blur: {
                     fn: me.onCustomerNoteChange,
