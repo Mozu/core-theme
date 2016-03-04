@@ -1,0 +1,8 @@
+<div class='mz-layout-widget mz-layout-row mz-cms-row mz-editing' title={{model.config.title}}>
+    {# i hate myself ?#}
+    {% for key, value in model.config %}
+        {% if forloop.counter > 1 %}
+            <div class='mz-layout-col mz-cms-col- mz-editing' style='width:{{key}}%'></div>
+        {% endif %}
+    {% endfor %}
+</div>

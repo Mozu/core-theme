@@ -50,14 +50,6 @@
                     var rules = fields.validation;
                     var value = values[0];
 
-                    function format () {
-                        var args = Array.prototype.slice.call(arguments),
-                            text = args.shift();
-                        return text.replace(/\{(\d+)\}/g, function (match, number) {
-                            return typeof args[number] !== 'undefined' ? args[number] : match;
-                        });
-                    }
-
                     if (inputType === 'TextBox') {
                         if (rules.maxStringLength && value.length > rules.maxStringLength) return format(messages.maxLength, fields.adminName, rules.maxStringLength);
                         if (rules.minStringLength && value.length < rules.minStringLength) return format(messages.minLength, fields.adminName, rules.minStringLength);
@@ -71,6 +63,13 @@
                         if (rules.minDateTime && Date.parse(value) < Date.parse(rules.minDateTime)) return format(messages.min, fields.adminName, Date.parse(rules.minDateTime));
                     }
 
+                    function format () {
+                        var args = Array.prototype.slice.call(arguments),
+                            text = args.shift();
+                        return text.replace(/\{(\d+)\}/g, function (match, number) {
+                            return typeof args[number] !== 'undefined' ? args[number] : match;
+                        });
+                    }
                 }
             }
         }
