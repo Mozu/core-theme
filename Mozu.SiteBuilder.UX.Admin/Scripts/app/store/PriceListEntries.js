@@ -10,7 +10,7 @@ Ext.define('Taco.store.PriceListEntries', {
     ],
     remoteFilter: true,
     pageSize: 25,
-    autoLoad: true,
+    autoLoad: false,
     remoteSort: true,
     sortInfo: {
         field: 'name',
