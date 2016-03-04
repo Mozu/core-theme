@@ -57,10 +57,20 @@ Ext.define('Taco.view.order.subform.Detail', {
 
         // Create the PriceListStore.
         this.priceListStore = Taco.core.data.StoreManager.getOrCreate('Taco.store.PriceLists');
-        this.priceListStore.mon(this.priceListStore, 'load', function(store, records, success) {
-            me.retrievePricelistName(store);
-            me.setTitle(me.constructTitle());
-        }, me, { single: true });
+        // If the priceListStore has already been loaded, use it!
+        if (this.priceListStore.getTotalCount() > 0) {
+            // If this isn't used, the title and the tab will have the price list shown.
+            me.mon(me, 'afterrender', function() {
+                me.retrievePricelistName(me.priceListStore);
+                me.setTitle(me.constructTitle());
+            }, me, { single: true });
+        } else {
+            // After the priceListStore is loaded, update the title.
+            this.priceListStore.mon(this.priceListStore, 'load', function (store, records, success) {
+                me.retrievePricelistName(store);
+                me.setTitle(me.constructTitle());
+            }, me, { single: true });
+        }
 
         // after the record is reloaded we will need to refresh the ui
         me.mon(me.record, "aftercommit", function() {
