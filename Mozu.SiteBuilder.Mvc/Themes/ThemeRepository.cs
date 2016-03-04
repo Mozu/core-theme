@@ -8,6 +8,7 @@ using Mozu.SiteBuilder.Mvc.Themes.Exceptions;
 using Mozu.SiteBuilder.Mvc.Themes.Factories;
 using Mozu.SiteBuilder.UX.Models.Settings;
 using Mozu.SiteBuilder.Mvc.Caching;
+using Mozu.Core.Settings;
 
 namespace Mozu.SiteBuilder.Mvc.Themes
 {
@@ -75,6 +76,7 @@ namespace Mozu.SiteBuilder.Mvc.Themes
         static ConcurrentDictionary<string, string> _themeToThemeKey = new ConcurrentDictionary<string, string>(StringComparer.OrdinalIgnoreCase);
 
         IThemeCache _cache;
+        ISettings _settings;
 
         public static readonly ThemeSelection DefaultThemeSelection = new ThemeSelection()
         {
@@ -87,9 +89,10 @@ namespace Mozu.SiteBuilder.Mvc.Themes
         /// Public constructor.
         /// </summary>
         /// <param name="themeProvider"></param>
-        public ThemeRepository(IThemeMetaDataProvider themeMetaDataProvider, IThemeCache cache )
+        public ThemeRepository(IThemeMetaDataProvider themeMetaDataProvider, IThemeCache cache , ISettings settings )
         {
             _cache = cache;
+            _settings = settings;
             _themeMetaDataProvider = themeMetaDataProvider;
         }
 
@@ -101,7 +104,11 @@ namespace Mozu.SiteBuilder.Mvc.Themes
         private void AddToCache(string key, Theme theme, bool isSlim)
         {
             theme = theme ?? NullTheme;
-            var filePaths = theme.ThemePath != null ? new List<string> { theme.ThemePath } : null;
+            var filePaths = (_settings.AppSettingsAsNullableBool("sitebuilder.MonitorThemeChanges") ??
+                        _settings.CoreSettings.ScaleUnitId.IndexOf("sb", StringComparison.OrdinalIgnoreCase) > -1  )
+                        &&  theme.ThemePath != null 
+                        ? new List<string> { theme.ThemePath } 
+                        : null;
             _cache.Set(key, theme, CacheScope.Global, StorefrontCacheTypes.CatalogIndependent, (isSlim || Object.Equals( theme, NullTheme)) ? (Func<object,object>)null : CacheCallback, filePaths);
             _themeToThemeKey[key] = theme.Id;
 
