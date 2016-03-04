@@ -73,6 +73,8 @@ Ext.define('Taco.view.order.modal.EditOrderDetail', {
         preserveRatio: false,
         widthIncrement: 1
     },
+
+    ajaxBeforeListener: null,
     
     initComponent: function (eOpts) {
         var me = this;
@@ -91,6 +93,30 @@ Ext.define('Taco.view.order.modal.EditOrderDetail', {
         this.title = this.titleTemplate.apply({
             orderNumber: me.record ? me.record.get('orderNumber') : '<New>',
         });
+
+        me.ajaxBeforeListener = Ext.Ajax.on('beforerequest', function (conn, options) {
+            // set order price list on the ajax call!
+            // This should be called before the TaContext...find settings.
+            if (me.record && me.record.get('priceListCode')) {
+                
+                var priceListHeader = {};
+                // The Edit Order ajax listener has to take priority over the Form.js ajax listener.
+                //  This is because the version of the priceListCode can be more up to date in this UI.
+                //  Therefore, while this listener is acitve, we need to pull the priceListCode from the jsonData
+                //   or the EditOrderDetail's record. It can come from the jsonData when
+                //   the priceList is being updated on the order.
+                priceListHeader['x-vol-pricelist'] = options.jsonData
+                    && options.jsonData.priceListCode || me.record.get('priceListCode');
+
+                if (options && options.headers) {
+                    Ext.apply(options.headers, priceListHeader);
+                }
+
+                //if (options && options.operation && options.operation.headers) {
+                //    Ext.apply(options.headers, options.operation.headers);
+                //}
+            }
+        }, me, { destroyable: true });
 
         
         //onBeforeClose
@@ -555,7 +581,10 @@ Ext.define('Taco.view.order.modal.EditOrderDetail', {
     /**
     * Do any class level cleanup. Destroy and null any scoped refs.     
     */
-    onDestroy : function (destroy) {
+    onDestroy: function (destroy) {
+        if (this.ajaxBeforeListener) {
+            this.ajaxBeforeListener.destroy();
+        }
         this.callParent(arguments);
     }
 });

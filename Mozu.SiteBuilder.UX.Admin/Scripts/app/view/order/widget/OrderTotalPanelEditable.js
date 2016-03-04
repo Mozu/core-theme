@@ -485,9 +485,6 @@ Ext.define('Taco.view.order.widget.OrderTotalPanelEditable', {
                 orderId: orderId,
                 priceListCode: priceListCode
             },
-            headers: {
-                'x-vol-pricelist': priceListCode
-            },
             success: function(response) {
                 var json = Ext.decode(response.responseText, true);
                 if (!json || !json.success) {
