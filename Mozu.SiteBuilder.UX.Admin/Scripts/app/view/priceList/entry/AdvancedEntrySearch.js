@@ -112,82 +112,51 @@ Ext.define('Taco.view.priceList.entry.AdvancedEntrySearch', {
             },
             {
                 xtype: 'fieldcontainer',
-                fieldLabel: 'Price Range',
+                fieldLabel: 'Start Date Range',
                 layout: {
-                    type: 'hbox',
-                    align: 'middle'
+                    type: 'hbox'
                 },
                 items: [{
-                    xtype: 'currencyfield',
-                    name: 'minPrice',
-                    hideTrigger: true,
-                    keyNavEnabled: false,
-                    mouseWheelEnabled: false,
-                    flex:1
+                    xtype: 'datetime',
+                    // allows the field to consume an iso format value;
+                    altFormats: "c",
+                    name: 'startDateFrom',
+                    flex: 1
                 }, {
                     xtype: 'component',
                     html: 'to',
-                    margin: '0 10'
+                    margin: '7 10'
                 }, {
-                    xtype: 'currencyfield',
-                    name: 'maxPrice',
-                    hideTrigger: true,
-                    keyNavEnabled: false,
-                    mouseWheelEnabled: false,
-                    flex:1
+                    xtype: 'datetime',
+                    // allows the field to consume an iso format value;
+                    altFormats: "c",
+                    name: 'startDateTo',
+                    flex: 1
                 }]
             },
             {
                 xtype: 'fieldcontainer',
-                fieldLabel: 'Sale Price Range',
+                fieldLabel: 'End Date Range',
                 layout: {
-                    type: 'hbox',
-                    align: 'middle'
+                    type: 'hbox'
                 },
                 items: [{
-                    xtype: 'currencyfield',
-                    name: 'minSalePrice',
-                    hideTrigger: true,
-                    keyNavEnabled: false,
-                    mouseWheelEnabled: false,
-                    flex:1
+                    xtype: 'datetime',
+                    // allows the field to consume an iso foramt value;
+                    altFormats: "c",
+                    name: 'endDateFrom',
+                    flex: 1
                 }, {
                     xtype: 'component',
                     html: 'to',
-                    margin: '0 10'
+                    margin: '7 10'
                 }, {
-                    xtype: 'currencyfield',
-                    name: 'maxSalePrice',
-                    hideTrigger: true,
-                    keyNavEnabled: false,
-                    mouseWheelEnabled: false,
-                    flex:1
+                    xtype: 'datetime',
+                    // allows the field to consume an iso foramt value;
+                    altFormats: "c",
+                    name: 'endDateTo',
+                    flex: 1
                 }]
-            },
-            {
-                xtype: 'fieldcontainer',
-                fieldLabel: 'Effective Date Range',
-                layout: {
-                    type: 'hbox',
-                    align: 'middle'
-                },
-                items: [
-                    {
-                        xtype: 'datefield',
-                        name: 'startDate',
-                        altFormats: "c",
-                        flex: 1
-                    }, {
-                        xtype: 'component',
-                        html: 'to',
-                        margin: '0 10'
-                    }, {
-                        xtype: 'datefield',
-                        name: 'endDate',
-                        altFormats: "c",
-                        flex: 1
-                    }
-                ]
             }
         ];
 

@@ -76,14 +76,19 @@ namespace Mozu.SiteBuilder.UX.Admin.Helpers.PriceListHelpers
                 case "segments":
                     return String.Format("{0} eq \"{1}\"", SEGMENTS_PROPERTY, filter.value);
 
+                //pricing entry filter
                 case "productname":
                     return String.Format("{0} eq \"{1}\"", PRODUCT_CODE_PROPERTY, filter.value);
                 case "currencycode":
                     return String.Format("{0} eq \"{1}\"", CURRENCY_CODE_PROPERTY, filter.value);
-                case "startdate":
-                    return String.Format("{0} ge \"{1}\"", START_DATE_PROPERTY, filter.value);
-                case "enddate":
-                    return String.Format("{0} le \"{1}\"", END_DATE_PROPERTY, filter.value);
+                case "startdatefrom":
+                    return String.Format("{0} ge \"{1}\"", START_DATE_PROPERTY, ((DateTime)filter.value).ToUniversalTime().ToString("o"));
+                case "startdateto":
+                    return String.Format("{0} le \"{1}\"", START_DATE_PROPERTY, ((DateTime)filter.value).ToUniversalTime().ToString("o"));
+                case "enddatefrom":
+                    return String.Format("{0} ge \"{1}\"", END_DATE_PROPERTY, ((DateTime)filter.value).ToUniversalTime().ToString("o"));
+                case "enddateto":
+                    return String.Format("{0} le \"{1}\"", END_DATE_PROPERTY, ((DateTime)filter.value).ToUniversalTime().ToString("o"));
 
                 case "createdate":
                     return String.Format("{0} {1} \"{2}\"", CREATE_DATE_PROPERTY, filter.comparison, filter.value);
