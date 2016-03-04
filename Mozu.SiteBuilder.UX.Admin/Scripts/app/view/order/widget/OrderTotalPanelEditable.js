@@ -477,9 +477,6 @@ Ext.define('Taco.view.order.widget.OrderTotalPanelEditable', {
     setNewPriceList: function (orderId, priceListCode) {
         var me = this;
 
-        if (!me.isEditable) {
-            me.setLoading(true);
-        }
         me.fireEvent('save');
 
         me.record.setPriceList({
@@ -487,10 +484,8 @@ Ext.define('Taco.view.order.widget.OrderTotalPanelEditable', {
                 orderId: orderId,
                 priceListCode: priceListCode
             },
-            callback: function(record, operation) {
-                if (!me.isEditable) {
-                    me.setLoading(false);
-                }
+            headers: {
+                'x-vol-pricelist': priceListCode
             },
             success: function(response) {
                 var json = Ext.decode(response.responseText, true);
@@ -498,7 +493,10 @@ Ext.define('Taco.view.order.widget.OrderTotalPanelEditable', {
                     Taco.app.fireEvent('setmessage', "Error setting price list.", 'error');
                     return;
                 }
-                
+
+                var priceListRecord = me.priceListStore.findRecord('code', json.items.priceListCode);
+                me.priceListChooserButton.setText(priceListRecord && priceListRecord.get('name') || json.items.priceListCode || 'None');
+
                 me.fireEvent('saveSuccess', json);
             },
             failure: function(response) {
@@ -729,15 +727,15 @@ Ext.define('Taco.view.order.widget.OrderTotalPanelEditable', {
     needsToPersist: function () {
         var me = this;
 
-        if (me.customerNoteField.getValue() !== me.customerNoteField.originalValue) {
+        if (me.customerNoteField.getValue() != me.customerNoteField.originalValue) {
             return true;
         }
 
-        if (me.orderAdjustmentFieldInput.getValue() !== me.orderAdjustmentFieldInput.originalValue) {
+        if (me.orderAdjustmentFieldInput.getValue() != me.orderAdjustmentFieldInput.originalValue) {
             return true;
         }
 
-        if (me.shippingAdjustmentFieldInput.getValue() !== me.shippingAdjustmentFieldInput.originalValue) {
+        if (me.shippingAdjustmentFieldInput.getValue() != me.shippingAdjustmentFieldInput.originalValue) {
             return true;
         }
 

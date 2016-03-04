@@ -407,7 +407,9 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
         [HttpPostRoute(UriTemplate = "setpricelist")]
         public async Task<Response<Order>> SetPriceList(SetPriceListArgs args, [FromUri]bool draft = false)
         {
-            DCo.Order dcOrder = (await _orderWebApiClient.ChangeOrderPriceList(args.OrderId, args.PriceListCode, draft ? APPLY_TO_DRAFT : APPLY_TO_ORIGINAL)).ReadAsSync();
+            // TODO: Hack to set price list, using ApiContext rather than parameter.
+            var orderWebApiClient = _orderWebApiClient.CloneWithApiContext(ctx => { ctx.PriceListCode = args.PriceListCode; });
+            DCo.Order dcOrder = (await orderWebApiClient.ChangeOrderPriceList(args.OrderId, args.PriceListCode, draft ? APPLY_TO_DRAFT : APPLY_TO_ORIGINAL)).ReadAsSync();
             return Single2(Mapper.Map<Order>(dcOrder));
         }
 

@@ -27,6 +27,8 @@ using Newtonsoft.Json.Serialization;
 using Mozu.SiteBuilder.Mvc.Extensions;
 using Mozu.SiteBuilder.UX.Filters;
 using Mozu.Core.Actions;
+using Mozu.Core.Api.Contracts.Client;
+using Mozu.Core.Extensions;
 using Mozu.SiteBuilder.Mvc.OAF;
 
 namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
@@ -189,13 +191,29 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
             try
             {
                 model = orderTask.Result.ReadAsAsync().Result;
-
             }
             catch
             {
             }
             if (model == null) return Redirect("/cart");
             if (CompletedOrderStates.Contains(model.Status)) return Redirect("/checkout/" + model.Id + "/confirmation");
+
+            // TODO: Is this the right context (out of like 9) to check for PriceListCode?
+            // TODO: Null checks needed between these two values?
+            if (!this.SbApiContext.PriceListCode.EqualsIgnoreCase(model.PriceListCode))
+            {
+                var updateResponse = await _orderWebApiClient.ChangeOrderPriceList(model.Id, null);
+                if (updateResponse.HasException)
+                {
+                    // TODO: Display an error message.
+                }
+                else
+                {
+                    // If we had to reprice the order due to a price list change, refresh the page.
+                    Redirect("/checkout");
+                }
+            }
+
             bool addedPrimaryShippingContactToOrderJustNow = false;
 
             // dynamic dOrder = jOrder;

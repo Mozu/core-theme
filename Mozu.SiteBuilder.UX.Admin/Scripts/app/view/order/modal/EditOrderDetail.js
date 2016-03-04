@@ -188,11 +188,16 @@ Ext.define('Taco.view.order.modal.EditOrderDetail', {
     // when the draft record has loaded create and add the total and grid and hide the loading mask;
     onLoadRecord : function() {
         var me = this;
+        var priceListCode = me.record && me.record.get('priceListCode');
+        var priceListAvail = priceListCode.length > 0;
+        var priceListRecord = priceListAvail && me.priceListStore.findRecord('code', priceListCode);
+        var priceListName = priceListRecord && priceListRecord.get('name') || priceListCode;
+
         // had to move this to the top so it doesn't cause the body to scroll after the focus El is scrolled into view;
         me.setTitle(me.titleTemplate.apply({
             orderNumber: me.record.get('orderNumber') || '<New>',
-            priceListAvail: me.record && me.record.get('priceListCode').length > 0 ? true : false,
-            priceListName: me.priceListName && me.priceListName.length > 0 ? me.priceListName : me.record.get('priceListCode')
+            priceListAvail: priceListAvail,
+            priceListName: priceListName
         }));
 
         // initialize the ui when the record loads the first time.

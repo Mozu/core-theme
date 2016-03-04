@@ -76,12 +76,12 @@ Ext.define('Taco.view.order.Form', {
             priceListHeader['x-vol-pricelist'] = me.record.get('priceListCode');
 
             if (options && options.headers) {
-                Ext.apply(priceListHeader, options.headers);
+                Ext.applyIf(options.headers, priceListHeader);
             }
 
-            if (options && options.operation && options.operation.headers) {
-                Ext.apply(options.headers, options.operation.headers);
-            }
+            //if (options && options.operation && options.operation.headers) {
+            //    Ext.apply(options.headers, options.operation.headers);
+            //}
         }, me, { destroyable: true });
 
         this.customer = {};
