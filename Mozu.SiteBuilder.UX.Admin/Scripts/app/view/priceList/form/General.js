@@ -156,6 +156,7 @@ Ext.define('Taco.view.priceList.form.General', {
                             name: 'filteredInStorefront',
                             itemId: 'filteredInStorefrontCheck',
                             boxLabel: 'Exclusive',
+                            width: '100%',
                             value: (!this.record.phantom) ? this.record.get('filteredInStorefront') !== true : false,
                             listeners: {
                                 change: function (field, newValue) {
