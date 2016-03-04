@@ -6,7 +6,6 @@ Ext.define('Taco.view.priceList.entry.AdvancedEntrySearch', {
     requires: [
         'Ext.form.field.ComboBox',
         'Taco.core.ux.form.field.AdminUser',
-        'Taco.store.CustomerSegments',
         'Ext.ux.form.field.BoxSelect',
         'Ext.form.FieldContainer',
         'Taco.core.ux.form.DateTime',
@@ -157,6 +156,51 @@ Ext.define('Taco.view.priceList.entry.AdvancedEntrySearch', {
                     name: 'endDateTo',
                     flex: 1
                 }]
+            },
+            {
+                xtype: 'fieldcontainer',
+                layout: 'hbox',
+                width: '100%',
+                items: [
+                    me.createStaticCombobox('currencyCode', 'Currency',
+                        Ext.Array.map(Taco.app.context.getMasterCatalog().getSupportedCurrencies(), function (currencyCode) {
+                            return {
+                                name: currencyCode,
+                                id: currencyCode
+                            };
+                        }), 0)]
+            },
+            {
+                xtype: 'taco-adminuserfield',
+                name: 'modifiedBy',
+                fieldLabel: 'Modified By',
+                flex: 1,
+                forceSelection: false
+            },
+            {
+                xtype: 'fieldcontainer',
+                fieldLabel: 'Modfied Range',
+                layout: {
+                    type: 'hbox',
+                    align: 'middle'
+                },
+                items: [
+                    {
+                        xtype: 'datefield',
+                        name: 'modifiedFrom',
+                        altFormats: "c",
+                        flex: 1
+                    }, {
+                        xtype: 'component',
+                        html: 'to',
+                        margin: '0 10'
+                    }, {
+                        xtype: 'datefield',
+                        name: 'modifiedTo',
+                        altFormats: "c",
+                        flex: 1
+                    }
+                ]
             }
         ];
 

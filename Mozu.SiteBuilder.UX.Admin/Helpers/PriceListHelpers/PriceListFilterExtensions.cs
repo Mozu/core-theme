@@ -90,14 +90,13 @@ namespace Mozu.SiteBuilder.UX.Admin.Helpers.PriceListHelpers
                 case "enddateto":
                     return String.Format("{0} le \"{1}\"", END_DATE_PROPERTY, ((DateTime)filter.value).ToUniversalTime().ToString("o"));
 
-                case "createdate":
-                    return String.Format("{0} {1} \"{2}\"", CREATE_DATE_PROPERTY, filter.comparison, filter.value);
-                case "modifieddate":
-                    return String.Format("{0} {1} \"{2}\"", MODIFIED_DATE_PROPERTY, filter.comparison, filter.value);
-                case "createby":
-                    return String.Format("{0} eq \"{1}\"", CREATE_BY_PROPERTY, filter.value);
-                case "updateby":
-                    return String.Format("{0} eq \"{1}\"", UPDATE_BY_PROPERTY, filter.value);
+                case "modifiedby":
+                    return string.Format("(createby eq \"{0}\" or updateby eq \"{0}\")", filter.value);
+
+                case "modifiedfrom":
+                    return string.Format("updatedate ge {0}", ((DateTime)filter.value).ToUniversalTime().ToString("o"));
+                case "modifiedto":
+                    return string.Format("updatedate le {0}", ((DateTime)filter.value).AddDays(1).AddTicks(-1).ToUniversalTime().ToString("o"));
 
                 case "status":
                     if (filter.value == null)
