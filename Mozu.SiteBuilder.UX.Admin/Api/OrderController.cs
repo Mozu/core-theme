@@ -7,10 +7,13 @@ using System.Web;
 using System.Web.Http;
 using AutoMapper;
 using Mozu.CommerceRuntime.Contracts.Clients;
+using Mozu.Core;
 using Mozu.Core.Api.Client;
 using Mozu.Core.Api.Routing;
 using Mozu.Customer.Contracts;
 using Mozu.Customer.Contracts.Clients;
+using Mozu.ProductRuntime.Contracts;
+using Mozu.ProductRuntime.Contracts.Clients;
 using Mozu.SiteBuilder.Mvc.Extensions;
 using Mozu.SiteBuilder.UX.Admin.Api.Models;
 using Mozu.SiteBuilder.UX.Admin.Api.Models.Order;
@@ -29,6 +32,8 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
         private readonly ICustomerAccountWebApiClient _customerAccountWebApiClient;
         private readonly ICreditWebApiClient _creditWebApiClient;
         private readonly CustomerController customerController;
+        private readonly IPriceListRuntimeWebApiClient _priceListRuntimeWebApiClient;
+        private readonly IApiContext _apiContext;
 
         /*
          * All order item operations have an updateMode attribute.
@@ -42,13 +47,15 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
         /// Public constructor.
         /// </summary>
         public OrderController(IOrderWebApiClient orderWebApiClient, ICustomerAccountWebApiClient customerAccountWebApiClient, ICreditWebApiClient creditWebApiClient
-            , CustomerController customerController
+            , CustomerController customerController, IPriceListRuntimeWebApiClient priceListRuntimeWebApiClient, IApiContext apiContext
             )
         {
             _orderWebApiClient = orderWebApiClient;
             _customerAccountWebApiClient = customerAccountWebApiClient;
             _creditWebApiClient = creditWebApiClient;
             this.customerController = customerController;
+            _priceListRuntimeWebApiClient = priceListRuntimeWebApiClient;
+            _apiContext = apiContext;
         }
 
         [HttpGetRoute(UriTemplate = "list")]
@@ -350,6 +357,14 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
 
             dcCustomer = (await _customerAccountWebApiClient.GetAccount(args.CustomerAccountId)).ReadAsSync();
 
+            ResolvedPriceList priceList = (await _priceListRuntimeWebApiClient.GetResolvedPriceList(args.CustomerAccountId)).ReadAsSync();
+            string priceListCode = priceList != null ? priceList.PriceListCode : null;
+            if (!ComparePriceList(dcOrder.PriceListCode, priceListCode))
+            {
+                (_apiContext as ApiContext).PriceListCode = priceListCode;
+                dcOrder = (await _orderWebApiClient.ChangeOrderPriceList(args.OrderId, priceListCode, APPLY_TO_ORIGINAL)).ReadAsSync();
+            }
+
             dcOrder.CustomerAccountId = args.CustomerAccountId;
 
             // set BillingInfo and FulfillmentInfo to customer's default.
@@ -392,8 +407,21 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
         [HttpPostRoute(UriTemplate = "setpricelist")]
         public async Task<Response<Order>> SetPriceList(SetPriceListArgs args, [FromUri]bool draft = false)
         {
-            DCo.Order dcOrder = (await _orderWebApiClient.ChangeOrderPriceList(args.OrderId, args.PriceListCode, draft ? APPLY_TO_DRAFT : APPLY_TO_ORIGINAL)).ReadAsSync();
+            // TODO: Hack to set price list, using ApiContext rather than parameter.
+            var orderWebApiClient = _orderWebApiClient.CloneWithApiContext(ctx => { ctx.PriceListCode = args.PriceListCode; });
+            DCo.Order dcOrder = (await orderWebApiClient.ChangeOrderPriceList(args.OrderId, args.PriceListCode, draft ? APPLY_TO_DRAFT : APPLY_TO_ORIGINAL)).ReadAsSync();
             return Single2(Mapper.Map<Order>(dcOrder));
+        }
+
+        /// <summary>
+        /// Compare the string by treating null and empty value as same
+        /// </summary>
+        /// <param name="priceList1"></param>
+        /// <param name="priceList2"></param>
+        /// <returns></returns>
+        private bool ComparePriceList(string priceList1, string priceList2)
+        {
+            return String.IsNullOrEmpty(priceList1) ? String.IsNullOrEmpty(priceList2) : priceList1.Equals(priceList2, StringComparison.OrdinalIgnoreCase);
         }
     }
 }

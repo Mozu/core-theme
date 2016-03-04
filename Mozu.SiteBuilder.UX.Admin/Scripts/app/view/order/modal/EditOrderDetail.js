@@ -4,7 +4,7 @@
  */
 
 Ext.define('Taco.view.order.modal.EditOrderDetail', {
-    extend: 'Taco.core.ux.window.Drawer',    
+    extend: 'Taco.core.ux.window.Drawer',
     //extend: 'Ext.window.Window',
 
     requires: [
@@ -25,35 +25,39 @@ Ext.define('Taco.view.order.modal.EditOrderDetail', {
 
     actionColumnWidth: 50,
 
-    actions: [{
-        xtype: 'button',
-        itemId: 'discardAction',
-        ui: 'action',
-        scale: 'medium',
-        text: 'Discard Changes',
-        handler: function () {
-            this.removeDraftOrder();
+    actions: [
+        {
+            xtype: 'button',
+            itemId: 'discardAction',
+            ui: 'action',
+            scale: 'medium',
+            text: 'Discard Changes',
+            handler: function() {
+                this.removeDraftOrder();
+            }
+        }, {
+            xtype: 'tbfill'
+        }, {
+            xtype: 'button',
+            text: "Save Draft",
+            itemId: 'secondaryAction',
+            handler: function() {
+                // we just close the dialog since this ui is chatty save;
+                // need to check to see if we have any unpersisted changes;
+
+                this.close();
+            }
+        }, {
+            xtype: 'button',
+            itemId: 'primaryAction'
+            //this will call save() which will eventualy call doSave();
         }
-    }, {
-        xtype: 'tbfill'
-    }, {
-        xtype: 'button',
-        text:"Save Draft",
-        itemId: 'secondaryAction',
-        handler: function () {
-            // we just close the dialog since this ui is chatty save;
-            // need to check to see if we have any unpersisted changes;
-            
-            this.close();
-        }
-    }, {
-        xtype: 'button',
-        itemId: 'primaryAction'
-        //this will call save() which will eventualy call doSave();
-    }],
+    ],
 
     config: {
         record: null,
+        priceListStore: null,
+        priceListName: '',
         //dockTotalPanel: "inline", // possible values bottomm, right, inline
         rowTotalColumnWidth: 100,
         hasDraft: true
@@ -86,8 +90,6 @@ Ext.define('Taco.view.order.modal.EditOrderDetail', {
 
         this.title = this.titleTemplate.apply({
             orderNumber: me.record ? me.record.get('orderNumber') : '<New>',
-            priceListAvail: me.record && me.record.get('priceListName').length > 0 ? true : false,
-            priceListName: me.record && me.record.get('priceListName').length > 0 ? me.record.get('priceListName') : null
         });
 
         
@@ -186,9 +188,16 @@ Ext.define('Taco.view.order.modal.EditOrderDetail', {
     // when the draft record has loaded create and add the total and grid and hide the loading mask;
     onLoadRecord : function() {
         var me = this;
+        var priceListCode = me.record && me.record.get('priceListCode');
+        var priceListAvail = priceListCode.length > 0;
+        var priceListRecord = priceListAvail && me.priceListStore.findRecord('code', priceListCode);
+        var priceListName = priceListRecord && priceListRecord.get('name') || priceListCode;
+
         // had to move this to the top so it doesn't cause the body to scroll after the focus El is scrolled into view;
         me.setTitle(me.titleTemplate.apply({
-            orderNumber: me.record.get('orderNumber') || '<New>'
+            orderNumber: me.record.get('orderNumber') || '<New>',
+            priceListAvail: priceListAvail,
+            priceListName: priceListName
         }));
 
         // initialize the ui when the record loads the first time.
@@ -232,6 +241,8 @@ Ext.define('Taco.view.order.modal.EditOrderDetail', {
         me.totalRow = Ext.create('Taco.view.order.widget.OrderTotalPanelEditable', {                        
             data: me.record.getData(),
             record: me.record,
+            priceListStore: me.priceListStore,
+            priceListName: me.priceListName,
             totalColumnWidth: me.getRowTotalColumnWidth(),
             actionColumnWidth: me.actionColumnWidth,
             listeners: {

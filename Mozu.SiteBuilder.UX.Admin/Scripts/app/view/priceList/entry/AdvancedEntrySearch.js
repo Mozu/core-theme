@@ -6,7 +6,6 @@ Ext.define('Taco.view.priceList.entry.AdvancedEntrySearch', {
     requires: [
         'Ext.form.field.ComboBox',
         'Taco.core.ux.form.field.AdminUser',
-        'Taco.store.CustomerSegments',
         'Ext.ux.form.field.BoxSelect',
         'Ext.form.FieldContainer',
         'Taco.core.ux.form.DateTime',
@@ -21,15 +20,10 @@ Ext.define('Taco.view.priceList.entry.AdvancedEntrySearch', {
     },
 
     initComponent: function () {
-        var me = this,
-            segmentStore = Taco.core.data.StoreManager.getOrCreate('Taco.store.CustomerSegments'),
-            catalogStore = Ext.create('Ext.data.Store', {
-                fields: ['id', 'name'],
-                data: Taco.app.context.getMasterCatalog().catalogs
-            });
+        var me = this;
 
         me.productPickerField = Ext.create('Taco.shared.view.field.ProductPickerField', {
-            name: 'productCode',
+            name: 'productName',
             plugins: [
                 'inputmask'
             ],
@@ -38,7 +32,8 @@ Ext.define('Taco.view.priceList.entry.AdvancedEntrySearch', {
             style: 'padding:5px',
             fieldBodyCls: 'order-addproducttoolbar-cell',
             pageSize: me.productsPerPage,
-            value: '',
+            valueField: 'productCode',
+            displayField: 'productName',
             displayTpl: Ext.create('Ext.XTemplate',
                 '<tpl if="values && values.productName"><span class="product-name">{productName}</span> <span class="product-code">{productCode}</span></tpl>'
             ),
@@ -66,7 +61,8 @@ Ext.define('Taco.view.priceList.entry.AdvancedEntrySearch', {
 
 
                     // reset everything in the toolbar but need to be carefull
-                    me.reset();
+                    this.setValue(null);
+                    this.inputMask.reset();
 
                     // cancel event to prevent the default behavior from completing;
                     return false;
@@ -115,61 +111,75 @@ Ext.define('Taco.view.priceList.entry.AdvancedEntrySearch', {
             },
             {
                 xtype: 'fieldcontainer',
-                fieldLabel: 'Price Range',
+                fieldLabel: 'Start Date Range',
                 layout: {
-                    type: 'hbox',
-                    align: 'middle'
+                    type: 'hbox'
                 },
                 items: [{
-                    xtype: 'currencyfield',
-                    name: 'minPrice',
-                    hideTrigger: true,
-                    keyNavEnabled: false,
-                    mouseWheelEnabled: false,
-                    flex:1
+                    xtype: 'datetime',
+                    // allows the field to consume an iso format value;
+                    altFormats: "c",
+                    name: 'startDateFrom',
+                    flex: 1
                 }, {
                     xtype: 'component',
                     html: 'to',
-                    margin: '0 10'
+                    margin: '7 10'
                 }, {
-                    xtype: 'currencyfield',
-                    name: 'maxPrice',
-                    hideTrigger: true,
-                    keyNavEnabled: false,
-                    mouseWheelEnabled: false,
-                    flex:1
+                    xtype: 'datetime',
+                    // allows the field to consume an iso format value;
+                    altFormats: "c",
+                    name: 'startDateTo',
+                    flex: 1
                 }]
             },
             {
                 xtype: 'fieldcontainer',
-                fieldLabel: 'Sale Price Range',
+                fieldLabel: 'End Date Range',
                 layout: {
-                    type: 'hbox',
-                    align: 'middle'
+                    type: 'hbox'
                 },
                 items: [{
-                    xtype: 'currencyfield',
-                    name: 'minSalePrice',
-                    hideTrigger: true,
-                    keyNavEnabled: false,
-                    mouseWheelEnabled: false,
-                    flex:1
+                    xtype: 'datetime',
+                    // allows the field to consume an iso foramt value;
+                    altFormats: "c",
+                    name: 'endDateFrom',
+                    flex: 1
                 }, {
                     xtype: 'component',
                     html: 'to',
-                    margin: '0 10'
+                    margin: '7 10'
                 }, {
-                    xtype: 'currencyfield',
-                    name: 'maxSalePrice',
-                    hideTrigger: true,
-                    keyNavEnabled: false,
-                    mouseWheelEnabled: false,
-                    flex:1
+                    xtype: 'datetime',
+                    // allows the field to consume an iso foramt value;
+                    altFormats: "c",
+                    name: 'endDateTo',
+                    flex: 1
                 }]
             },
             {
                 xtype: 'fieldcontainer',
-                fieldLabel: 'Effective Date Range',
+                layout: 'hbox',
+                width: '100%',
+                items: [
+                    me.createStaticCombobox('currencyCode', 'Currency',
+                        Ext.Array.map(Taco.app.context.getMasterCatalog().getSupportedCurrencies(), function (currencyCode) {
+                            return {
+                                name: currencyCode,
+                                id: currencyCode
+                            };
+                        }), 0)]
+            },
+            {
+                xtype: 'taco-adminuserfield',
+                name: 'modifiedBy',
+                fieldLabel: 'Modified By',
+                flex: 1,
+                forceSelection: false
+            },
+            {
+                xtype: 'fieldcontainer',
+                fieldLabel: 'Modfied Range',
                 layout: {
                     type: 'hbox',
                     align: 'middle'
@@ -177,7 +187,7 @@ Ext.define('Taco.view.priceList.entry.AdvancedEntrySearch', {
                 items: [
                     {
                         xtype: 'datefield',
-                        name: 'startDate',
+                        name: 'modifiedFrom',
                         altFormats: "c",
                         flex: 1
                     }, {
@@ -186,7 +196,7 @@ Ext.define('Taco.view.priceList.entry.AdvancedEntrySearch', {
                         margin: '0 10'
                     }, {
                         xtype: 'datefield',
-                        name: 'endDate',
+                        name: 'modifiedTo',
                         altFormats: "c",
                         flex: 1
                     }
@@ -240,20 +250,28 @@ Ext.define('Taco.view.priceList.entry.AdvancedEntrySearch', {
         });
     },
 
+    handleShow: function () {
+        var val =this.productPickerField.getValue(),
+            productStore,
+            record;
+        if (!val) {
+            return;
+        }
+        productStore = this.productPickerField.getStore();
+        record = productStore.findRecord('productCode', val);
+        if (!record) {
+            return;
+        }
+        this.productPickerField.inputMask.show(record.get('productName'));
+        this.productPickerField.setValue(record);
+
+    },
+
     // after product is selected in the productPickerfield but before the combo is closed;
     onBeforeProductSelect: function (combo, record, index, e) {
-        var me = this,
-            productPickerField = combo,
-            productCode = record.get('productCode'),
-            isConfigurable = record.get('isConfigurable'),
-            price,
-            win,
-            productCodeToAdd;
-
-
         combo.collapse();
         combo.inputMask.show(record.get('productName'));
-        combo.setValue(record.get('productCode'));
+        combo.setValue(record);
         // cancel the selection so that the same product can be reselected again;
         return false;
     }

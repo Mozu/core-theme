@@ -69,6 +69,21 @@ Ext.define('Taco.view.order.Form', {
             me.onRecordChange();
         }, me);
 
+        me.ajaxBeforeListener = Ext.Ajax.on('beforerequest', function (conn, options) {
+            // set order price list on the ajax call!
+            // This should be called before the TaContext...find settings.
+            var priceListHeader = {};
+            priceListHeader['x-vol-pricelist'] = me.record.get('priceListCode');
+
+            if (options && options.headers) {
+                Ext.applyIf(options.headers, priceListHeader);
+            }
+
+            //if (options && options.operation && options.operation.headers) {
+            //    Ext.apply(options.headers, options.operation.headers);
+            //}
+        }, me, { destroyable: true });
+
         this.customer = {};
         // todo: get the customer record right away if an id exists;
 
@@ -77,12 +92,18 @@ Ext.define('Taco.view.order.Form', {
         this.buildForm();
 
         this.callParent(arguments);
-        
         this.loadNavItems();
     },
-    
+
+    onDestroy: function () {
+        // Turn off the ajaxBeforeListener to halt the pricelist header addition.
+        if (this.ajaxBeforeListener) {
+            this.ajaxBeforeListener.destroy();
+        }
+    },
+
     onCustomerChange: function (view, customerRecord) {
-      
+
     },
 
     onBeforeReload: function () {
@@ -105,7 +126,7 @@ Ext.define('Taco.view.order.Form', {
             isValid = true;
 
         // BillingContact is no longer checked here. See issue #70588 for details.
-        
+
         // if we have a fulfillment contact and its not an empty object
         if (!fulfillmentContact || Ext.Object.isEmpty(fulfillmentContact)) {
             isValid = false;

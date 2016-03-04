@@ -25,7 +25,9 @@ Ext.define('Taco.view.order.widget.OrderTotalPanelEditable', {
         /**
          * Number of discounts to display in each page of the discountPicker Combobox;
          */
-        discountsPerPage : 50
+        discountsPerPage: 50,
+        priceListStore: null,
+        priceListName: ''
     },
 
     isEditable: true,
@@ -225,11 +227,11 @@ Ext.define('Taco.view.order.widget.OrderTotalPanelEditable', {
             orderAdjustment = (Math.abs(parseFloat(this.orderAdjustmentFieldInput.getValue())) * orderAdjustmentSign),
             isDirty = false
         
-        if (me.record.get("orderAdjustment").amount !== orderAdjustment ){
+        if (me.record.get("orderAdjustment").amount != orderAdjustment ){
             isDirty =true;
         }
         
-        if (me.record.get("shippingAdjustment").amount !== shippingAdjustment ){
+        if (me.record.get("shippingAdjustment").amount != shippingAdjustment ){
             isDirty =true;
         }
         // one of the adjustmentFields or the sign combos has changed and needs to be persisted;
@@ -264,12 +266,12 @@ Ext.define('Taco.view.order.widget.OrderTotalPanelEditable', {
             oldValue = me.record.get(name),
             fieldValue;
 
-        if (oldValue === newValue) {
+        if (oldValue == newValue) {
             return;
         }
         me.record.set(name, newValue);
 
-        if (name === "orderAdjustmentIsNegative") {
+        if (name == "orderAdjustmentIsNegative") {
             // update the button text
             this.orderAdjustmentLabelButton.setText(me.getOrderAdjustmentText(newValue));
             fieldValue = parseFloat(this.orderAdjustmentFieldInput.getValue());
@@ -389,7 +391,7 @@ Ext.define('Taco.view.order.widget.OrderTotalPanelEditable', {
         var customerNotesText = me.record.get("customerNote");
         // todo: refactor editableDisplayField to allow for placeholder text
         var placeholder = "";
-        if (!(this.record.get("orderStatus") === "Pending") && me.record.get("customerNote") === "") {
+        if (!(this.record.get("orderStatus") == "Pending") && me.record.get("customerNote") == "") {
             placeholder = "None provided";
         }
 
@@ -412,13 +414,13 @@ Ext.define('Taco.view.order.widget.OrderTotalPanelEditable', {
             // Need to determine when to disable this button...
             disabled: false,
             // Figure out how to update this button text...
-            text: me.record.get('priceListName').length > 0 ? me.record.get('priceListName') : 'Please choose a pricelist',
+            text: me.priceListName.length > 0 ? me.priceListName : 'Please choose a pricelist',
             menu: Ext.create('Taco.view.order.widget.PriceListMenu', {
                 orderId: me.record.getId(),
                 width: 350,
+                store: me.priceListStore,
+                orderSiteId: me.record.get('siteId'),
                 onPriceListChange: function (menu, selection) {
-                    console.log('selected a menu item: ' + menu.data.name);
-                    console.log(menu.data.name);
                     if (menu.data.isExclusive) {
                         Ext.create('Taco.core.ux.window.Modal', {
                             autoShow: true,
@@ -431,20 +433,24 @@ Ext.define('Taco.view.order.widget.OrderTotalPanelEditable', {
                                 me.setNewPriceList(me.record.getId(), menu.data.code);
                             },
                             items: [
-                            {
-                                xtype: 'container',
-                                flex: 1,
-                                padding: '2 2',
-                                items: [{
+                                {
+                                    xtype: 'container',
                                     flex: 1,
-                                    height: '100%',
-                                    width: '100%',
-                                    html: '<div>Applying this exclusive price list may remove certain products from the order.</div>'
-                                }]
-                            }]
+                                    padding: '2 2',
+                                    items: [
+                                        {
+                                            flex: 1,
+                                            height: '100%',
+                                            width: '100%',
+                                            html: '<div>Applying this exclusive price list may remove certain products from the order.</div>'
+                                        }
+                                    ]
+                                }
+                            ]
                         });
+                    } else {
+                        me.setNewPriceList(me.record.getId(), menu.data.code);
                     }
-                    me.setNewPriceList(me.record.getId(), menu.data.code);
                 }
             })
         });
@@ -457,7 +463,7 @@ Ext.define('Taco.view.order.widget.OrderTotalPanelEditable', {
             fieldLabel: "Customer Notes",
             value: customerNotesText,
             placeholder: placeholder,
-            disabled: !(this.record.get("orderStatus") === "Pending"),
+            disabled: !(this.record.get("orderStatus") == "Pending"),
             listeners: {
                 blur: {
                     fn: me.onCustomerNoteChange,
@@ -472,21 +478,15 @@ Ext.define('Taco.view.order.widget.OrderTotalPanelEditable', {
     setNewPriceList: function (orderId, priceListCode) {
         var me = this;
 
-        if (!me.isEditable) {
-            me.setLoading(true);
-        }
+        me.fireEvent('save');
 
-        Ext.Ajax.request({
-            url: '/admin/app/order/setpricelist' + '?draft=' + this.record.get('isDraft'),
-            method: 'POST',
+        me.record.setPriceList({
             jsonData: {
                 orderId: orderId,
                 priceListCode: priceListCode
             },
-            callback: function(record, operation) {
-                if (!me.isEditable) {
-                    me.setLoading(false);
-                }
+            headers: {
+                'x-vol-pricelist': priceListCode
             },
             success: function(response) {
                 var json = Ext.decode(response.responseText, true);
@@ -495,7 +495,10 @@ Ext.define('Taco.view.order.widget.OrderTotalPanelEditable', {
                     return;
                 }
 
-                me.record.reload();
+                var priceListRecord = me.priceListStore.findRecord('code', json.items.priceListCode);
+                me.priceListChooserButton.setText(priceListRecord && priceListRecord.get('name') || json.items.priceListCode || 'None');
+
+                me.fireEvent('saveSuccess', json);
             },
             failure: function(response) {
                 var json = Ext.decode(response.responseText, true),
@@ -725,15 +728,15 @@ Ext.define('Taco.view.order.widget.OrderTotalPanelEditable', {
     needsToPersist: function () {
         var me = this;
 
-        if (me.customerNoteField.getValue() !== me.customerNoteField.originalValue) {
+        if (me.customerNoteField.getValue() != me.customerNoteField.originalValue) {
             return true;
         }
 
-        if (me.orderAdjustmentFieldInput.getValue() !== me.orderAdjustmentFieldInput.originalValue) {
+        if (me.orderAdjustmentFieldInput.getValue() != me.orderAdjustmentFieldInput.originalValue) {
             return true;
         }
 
-        if (me.shippingAdjustmentFieldInput.getValue() !== me.shippingAdjustmentFieldInput.originalValue) {
+        if (me.shippingAdjustmentFieldInput.getValue() != me.shippingAdjustmentFieldInput.originalValue) {
             return true;
         }
 

@@ -79,7 +79,7 @@ Ext.define('Taco.view.priceList.widget.EntriesGrid', {
 
     minHeight: 350,
 
-    enableBulkActions: true,
+    enableBulkActions: false,
     enableDeleteAction: true,
 
     pageSize: 25,
@@ -121,15 +121,6 @@ Ext.define('Taco.view.priceList.widget.EntriesGrid', {
                 this.columns.push(actionColumn);
             }
         }
-
-        this.selModel = Ext.create('Ext.selection.CheckboxModel', {
-            selType: 'checkboxmodel',
-            checkOnly: true,
-            ignoreRightMouseSelection: true,
-            headerWidth: 37
-        });
-
-        this.bulkActionConfig = this.getBulkActionsConfig();
 
         // initialize the delete mixin
         this.mixins.deleteFromGrid.init.apply(this);
@@ -202,7 +193,7 @@ Ext.define('Taco.view.priceList.widget.EntriesGrid', {
                 stateId: 'startDate',
                 format: 'n/j/Y g:i a',
                 flex:2,
-                text: 'Effective Date',
+                text: 'Start Date',
                 hidden: false,
                 sortable: true
             }, {
@@ -252,7 +243,7 @@ Ext.define('Taco.view.priceList.widget.EntriesGrid', {
                 xtype: 'gridcolumn',
                 dataIndex: 'priceEntries',
                 stateId: 'listPrice',
-                text: 'List Price',
+                text: 'Price',
                 flex: 1,
                 sortable: false,
                 renderer: function(entries) {

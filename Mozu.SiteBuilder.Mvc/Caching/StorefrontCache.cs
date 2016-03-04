@@ -14,6 +14,7 @@ using Mozu.Core;
 using Mozu.SiteBuilder.Mvc.Contexts;
 using System.Net.Http;
 using System.Web;
+using System.IO;
 
 namespace Mozu.SiteBuilder.Mvc.Caching
 {
@@ -117,7 +118,24 @@ namespace Mozu.SiteBuilder.Mvc.Caching
             
             public Func<object,object> UpdateCallback { get; set; }
             public IEnumerable<string> Dependencies { get; set; }
-            public IList<string> FilePaths { get; private set; }
+            IList<string> _filePaths = null;
+            public IList<string> FilePaths {
+                get { return _filePaths; }
+
+                private set {
+                    if ( value != null )
+                    {
+
+                        var subDirs = value.Select(x => new DirectoryInfo(x)).ToList();
+                        _filePaths = subDirs
+                            .Where(x => x.Attributes.HasFlag(FileAttributes.Directory))
+                            .SelectMany(x => x.GetDirectories("*.*", SearchOption.AllDirectories))
+                            .Where( x => x.FullName.IndexOf("node_modules", StringComparison.CurrentCultureIgnoreCase) ==-1)
+                            .Union(subDirs)
+                            .Select( x=> x.FullName).ToList();
+                    }
+                }
+            }
 
             public void CacheEntryUpdateHandler (CacheEntryUpdateArguments args)
             {
