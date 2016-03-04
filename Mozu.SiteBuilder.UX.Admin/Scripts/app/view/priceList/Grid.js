@@ -373,40 +373,45 @@ Ext.define('Taco.view.priceList.Grid', {
     },
 
     setPriceListEnabled: function(item, eventData, isActive) {
-        var growlText = (isActive) ? 'Enabled' : 'Disabled',
-            growlMessage = '<span style="font-weight:bold;">' + growlText + '</span>';
-
         if (!Ext.isArray(eventData.record)) {
             eventData.record.set('enabled', isActive);
-
-            this.showMessage(growlMessage);
-            eventData.record.store.sync({
-                callback: this.onAfterRecordUpdate.bind(this, eventData.record.store)
-            });
-        }
-
-        else {
+        } else {
             eventData.record.forEach(function(rec){
                 rec.set('enabled', isActive);
             });
-
-            this.showMessage(growlMessage);
-            eventData.record[0].store.sync({
-                callback: this.onAfterRecordUpdate.bind(this, eventData.record[0].store)
+        }
+        if (isActive) {
+            this.store.sync({
+                callback: this.onAfterRecordEnabled.bind(this, eventData.record.store)
+            });
+        } else {
+            this.store.sync({
+                callback: this.onAfterRecordDisabled.bind(this, eventData.record.store)
             });
         }
-
+        this.setLoading(true);
     },
 
-    onAfterRecordUpdate: function(recordStore, response) {
+    onAfterRecordUpdate: function(response, isActive) {
+        var growlText = (isActive) ? 'Enabled' : 'Disabled',
+            growlMessage = '<span style="font-weight:bold;">' + growlText + '</span>';
 
+        this.setLoading(false);
         if (response && response.hasException) {
             this.showMessage(Ext.JSON.decode(response.exceptions[0].error.responseText).message, 'error');
         } else {
-            if (recordStore) {
-                recordStore.reload();
-            }
+            this.showMessage(growlMessage);
+            this.selModel.deselectAll();
+            this.store.reload();
         }
+    },
+
+    onAfterRecordEnabled: function(recordStore, response) {
+        this.onAfterRecordUpdate(response, true);
+    },
+
+    onAfterRecordDisabled: function(recordStore, response) {
+        this.onAfterRecordUpdate(response, false);
     },
 
     doDisableBulk: function(item, eventData) {
