@@ -14,7 +14,6 @@
     <version>0.0.0.0</version>
   </metadata>
   <files>
-    <file src="*.*" target="" exclude="*.cs;*.txt;*.csproj*;.*ignore;*.nuspec"/>
-    <file src="Scripts\**" target="Scripts"/>
+    <file src="**/*" exclude="**\node_modules\**;**\src\*.log" target ="" />
   </files>
 </package>
