@@ -121,7 +121,7 @@ Ext.define('Taco.view.order.widget.PriceListMenu', {
         var menuData = [];
         
         me.store.each(function (record) {
-            if (record.enabled) {
+            if (record.get('enabled')) {
                 var data = { code: '', name: '', isExclusive: false, isDefault: false };
                 var isExclusive = record.get('filteredInStorefront');
                 var defaultSites = record.get('defaultForSites');
