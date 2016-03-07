@@ -210,7 +210,7 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
                 else
                 {
                     // If we had to reprice the order due to a price list change, refresh the page.
-                    Redirect("/checkout");
+                    model = updateResponse.ReadAsSync();
                 }
             }
 
