@@ -363,7 +363,13 @@ Ext.define('Taco.view.order.modal.AuditLogInfo', {
             padding: '2 2',
             data: lineItemData[0],
             tpl: [
-                '<div>Old Price List Code: {oldPriceListCode}</div>'
+                '<div>Old Price List Code: {[this.checkForEmptyString(values)]}</div>',
+                {
+                    checkForEmptyString: function(value) {
+                        var oldCode = value.oldPriceListCode;
+                        return !oldCode ? 'None' : oldCode;
+                    }
+                }
             ]
         });
 
@@ -372,7 +378,13 @@ Ext.define('Taco.view.order.modal.AuditLogInfo', {
             padding: '2 2',
             data: lineItemData[0],
             tpl: [
-                '<div>New Price List Code: {newPriceListCode}</div>'
+                '<div>New Price List Code: {[this.checkForEmptyString(values)]}</div>',
+                {
+                    checkForEmptyString: function (value) {
+                        var newCode = value.newPriceListCode;
+                        return !newCode ? 'None' : newCode;
+                    }
+                }
             ]
         });
 
