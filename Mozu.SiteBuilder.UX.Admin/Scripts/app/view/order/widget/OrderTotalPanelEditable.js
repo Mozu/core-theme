@@ -414,7 +414,7 @@ Ext.define('Taco.view.order.widget.OrderTotalPanelEditable', {
             // Need to determine when to disable this button...
             disabled: false,
             // Figure out how to update this button text...
-            text: me.priceListName.length > 0 ? me.priceListName : 'Please choose a pricelist',
+            text: me.priceListName.length > 0 ? me.priceListName : 'None',
             menu: Ext.create('Taco.view.order.widget.PriceListMenu', {
                 orderId: me.record.getId(),
                 width: 350,
@@ -484,9 +484,6 @@ Ext.define('Taco.view.order.widget.OrderTotalPanelEditable', {
             jsonData: {
                 orderId: orderId,
                 priceListCode: priceListCode
-            },
-            headers: {
-                'x-vol-pricelist': priceListCode
             },
             success: function(response) {
                 var json = Ext.decode(response.responseText, true);

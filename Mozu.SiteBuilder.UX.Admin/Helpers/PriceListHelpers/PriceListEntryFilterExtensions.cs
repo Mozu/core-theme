@@ -10,13 +10,14 @@ using Mozu.Tenant.Contracts.Clients;
 
 namespace Mozu.SiteBuilder.UX.Admin.Helpers.PriceListHelpers
 {
-    internal static class PriceListFilterExtensions
+    internal static class PriceListEntryFilterExtensions
     {
-        private const string NAME_PROPERTY = "name";
         private const string CODE_PROPERTY = "priceListcode";
-        private const string PARENT_CODE_PROPERTY = "parentPriceListCode";
-        private const string ENABLED_PROPERTY = "enabled";
-        private const string SEGMENTS_PROPERTY = "mappedcustomersegments";
+
+        private const string PRODUCT_CODE_PROPERTY = "productCode";
+        private const string CURRENCY_CODE_PROPERTY = "currencyCode";
+        private const string START_DATE_PROPERTY = "startDate";
+        private const string END_DATE_PROPERTY = "endDate";
 
         private const string CREATE_DATE_PROPERTY = "auditinfo.createdate";
         private const string MODIFIED_DATE_PROPERTY = "auditinfo.updatedate";
@@ -26,7 +27,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Helpers.PriceListHelpers
         /// <summary>
         /// Converts a FilterCollection for Product to a mozu services-compatible filter string.
         /// </summary>
-        public static string ToFilterString(this FilterCollection extFilter)
+        public static string ToFilterEntryString(this FilterCollection extFilter)
         {
             if (extFilter == null || extFilter.Count == 0)
                 return null;
@@ -60,15 +61,20 @@ namespace Mozu.SiteBuilder.UX.Admin.Helpers.PriceListHelpers
             switch (filter.property.ToLowerInvariant())
             {
                 case "all":
-                    return String.Format("({0} cont \"{2}\") or ({1} eq \"{2}\")", NAME_PROPERTY, CODE_PROPERTY, filter.escapedValue);
-                case "name":
-                    return String.Format("{0} cont \"{1}\"", NAME_PROPERTY, filter.escapedValue);
                 case "code":
-                    return String.Format("{0} eq \"{1}\"", CODE_PROPERTY, filter.value);
-                case "parentcode":
-                    return String.Format("{0} eq \"{1}\"", PARENT_CODE_PROPERTY, filter.value);
-                case "segments":
-                    return String.Format("{0} eq \"{1}\"", SEGMENTS_PROPERTY, filter.value);
+                case "productname":
+                    return String.Format("{0} cont \"{1}\"", PRODUCT_CODE_PROPERTY, filter.escapedValue);
+                
+                case "currencycode":
+                    return String.Format("{0} eq \"{1}\"", CURRENCY_CODE_PROPERTY, filter.value);
+                case "startdatefrom":
+                    return String.Format("{0} ge \"{1}\"", START_DATE_PROPERTY, ((DateTime)filter.value).ToUniversalTime().ToString("o"));
+                case "startdateto":
+                    return String.Format("{0} le \"{1}\"", START_DATE_PROPERTY, ((DateTime)filter.value).ToUniversalTime().ToString("o"));
+                case "enddatefrom":
+                    return String.Format("{0} ge \"{1}\"", END_DATE_PROPERTY, ((DateTime)filter.value).ToUniversalTime().ToString("o"));
+                case "enddateto":
+                    return String.Format("{0} le \"{1}\"", END_DATE_PROPERTY, ((DateTime)filter.value).ToUniversalTime().ToString("o"));
 
                 case "modifiedby":
                     return string.Format("(createby eq \"{0}\" or updateby eq \"{0}\")", filter.value);
@@ -78,25 +84,13 @@ namespace Mozu.SiteBuilder.UX.Admin.Helpers.PriceListHelpers
                 case "modifiedto":
                     return string.Format("updatedate le {0}", ((DateTime)filter.value).AddDays(1).AddTicks(-1).ToUniversalTime().ToString("o"));
 
-                case "status":
-                    if (filter.value == null)
-                    {
-                        return "";
-                    }
-                    switch (filter.value.ToString().ToLowerInvariant())
-                    {
-                        case "active":
-                            return String.Format("{0} eq \"true\"", ENABLED_PROPERTY);
-                        case "disabled":
-                            return String.Format("{0} eq \"false\"", ENABLED_PROPERTY);
-                        default:
-                            return "";
-                    }
+                
                 default:
                     {
                         throw new NotImplementedException("unable to filter on property " + filter.property);
                     }
             }
         }
+
     }
 }
