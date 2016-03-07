@@ -57,7 +57,9 @@ Ext.define('Taco.view.priceList.entry.PriceEntryPrice', {
 
         Ext.Array.each(entries, function(entry, index, entries) {
             
-            var minQty = Ext.widget('numberfield', {
+            var row = {};
+
+            row.minQty = Ext.widget('numberfield', {
                 fieldLabel: 'Minimum Quantity',
                 name: 'minQty',
                 hideTrigger: true,
@@ -66,9 +68,14 @@ Ext.define('Taco.view.priceList.entry.PriceEntryPrice', {
                 hidden: true
             });
 
-            var priceOverride = Ext.widget('overridefield', {
+            row.priceOverride = Ext.widget('overridefield', {
                 checkboxCfg: {
-                    checked: entry.listPriceMode === 'Overridden'
+                    checked: entry.listPriceMode === 'Overridden',
+                    onChange: function(newVal, oldVal) {
+                        if (newVal === 'Overridden' && row.salePriceOverride) {
+                            row.salePriceOverride.override.setValue(true);
+                        }
+                    }
                 },
                 fieldCfg: {
                     name: 'listPrice',
@@ -79,9 +86,14 @@ Ext.define('Taco.view.priceList.entry.PriceEntryPrice', {
                 }
             });
 
-            var salePriceOverride = Ext.widget('overridefield', {
+            row.salePriceOverride = Ext.widget('overridefield', {
                 checkboxCfg: {
-                    checked: entry.salePriceMode === 'Overridden'
+                    checked: entry.salePriceMode === 'Overridden',
+                    onChange: function(newVal, oldVal) {
+                        if (newVal === 'UseCatalog' && row.priceOverride) {
+                            row.priceOverride.override.setValue(false);
+                        }
+                    }
                 },
                 fieldCfg: {
                     name: 'salePrice',
@@ -92,7 +104,7 @@ Ext.define('Taco.view.priceList.entry.PriceEntryPrice', {
                 }
             });
 
-            var row = {
+            var rowForm = {
                 xtype: 'form',
                 layout: {
                     type: 'hbox',
@@ -103,13 +115,13 @@ Ext.define('Taco.view.priceList.entry.PriceEntryPrice', {
                     flex: 1
                 },
                 items: [
-                    minQty,
-                    priceOverride,
-                    salePriceOverride
+                    row.minQty,
+                    row.priceOverride,
+                    row.salePriceOverride
                 ]
             };
 
-            me.basicPanel.add(row);
+            me.basicPanel.add(rowForm);
 
         });
 
