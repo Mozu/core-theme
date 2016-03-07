@@ -121,21 +121,22 @@ Ext.define('Taco.view.order.widget.PriceListMenu', {
         var menuData = [];
         
         me.store.each(function (record) {
-            var data = { code: '', name: '', isExclusive: false, isDefault: false };
-            var isExclusive = record.get('filteredInStorefront');
-            var defaultSites = record.get('defaultForSites');
-            var name = isExclusive ? record.get('name') + " (Exclusive)" : record.get('name');
-            var defaultSiteFound = defaultSites.indexOf(this.orderSiteId) >= 0;
+            if (record.enabled) {
+                var data = { code: '', name: '', isExclusive: false, isDefault: false };
+                var isExclusive = record.get('filteredInStorefront');
+                var defaultSites = record.get('defaultForSites');
+                var name = isExclusive ? record.get('name') + " (Exclusive)" : record.get('name');
+                var defaultSiteFound = defaultSites.indexOf(this.orderSiteId) >= 0;
 
-            name = defaultSiteFound ? name + ' (Default)' : name;
+                name = defaultSiteFound ? name + ' (Default)' : name;
 
 
-
-            data.code = record.get('code');
-            data.name = name;
-            data.isExclusive = isExclusive;
-            data.isDefault = defaultSiteFound;
-            menuData.push(data);
+                data.code = record.get('code');
+                data.name = name;
+                data.isExclusive = isExclusive;
+                data.isDefault = defaultSiteFound;
+                menuData.push(data);
+            }
         }, me);
         me.updatePriceListMenu(menuData);
     },
