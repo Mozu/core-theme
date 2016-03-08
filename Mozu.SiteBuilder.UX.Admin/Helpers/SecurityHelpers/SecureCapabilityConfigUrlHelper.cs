@@ -20,12 +20,12 @@ namespace Mozu.SiteBuilder.UX.Admin.Helpers.SecurityHelpers
     {
         Capability BuildSecureUrl(Capability capability, Tenant.Contracts.Tenant tenant, Entitlement entitlement = null);
 
-        SecureForm BulidSecureForm(string hashKey, Dictionary<string, object> body);
+        SecureForm BulidSecureForm(string hashKey, Dictionary<string, string> body);
     }
 
     public class SecureForm
     {
-        public List<KeyValuePair<string, object>> Body { get; set; }
+        public List<KeyValuePair<string, string>> Body { get; set; }
 
         public string DateStamp { get; set; }
         public string MessageHash { get; set; }
@@ -103,9 +103,9 @@ namespace Mozu.SiteBuilder.UX.Admin.Helpers.SecurityHelpers
 
 
 
-        public SecureForm BulidSecureForm(string hashKey,   Dictionary<string,object> body)
+        public SecureForm BulidSecureForm(string hashKey,   Dictionary<string,string> body)
         {
-            body = body ?? new Dictionary<string, object>();
+            body = body ?? new Dictionary<string, string>();
             //var sf = new SecureForm()
             //         {
             //            // Body = body,
