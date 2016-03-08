@@ -21,6 +21,7 @@ namespace Mozu.SiteBuilder.Mvc.MessageHandler
     {
         private IRedirectHandler _redirecter = RedirectHandler.Instance;
         public const string IsSeoRewrite = "IsSeoRewrite";
+        public const string MzPreCleanedUri = "MzPreCleanedUri";
         // look in the source code for HttpRoute.cs in asp.net for this.  it's internal there, so we can't just use it.
         internal const string MS_HTTP_RoutingContextKey = "MS_RoutingContext";
 
@@ -149,6 +150,7 @@ namespace Mozu.SiteBuilder.Mvc.MessageHandler
         {
             if (message.RequestUri != null && message.RequestUri.PathAndQuery.IndexOf("_mz_", StringComparison.OrdinalIgnoreCase) > -1)
             {
+                message.Properties[SeoDelegatingHandler.MzPreCleanedUri] = message.RequestUri;
                 UriBuilder ub = new UriBuilder(message.RequestUri);
                 if (ub.Query.Length > 1)
                 {
