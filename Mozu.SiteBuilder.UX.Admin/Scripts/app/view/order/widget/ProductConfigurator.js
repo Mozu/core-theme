@@ -292,6 +292,7 @@
 
     onLoadFailure : function() {
         this.removeAll();
+        this.setLoading(false);
         this.add({
             xtype: 'component',
             flex:1,
