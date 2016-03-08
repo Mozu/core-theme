@@ -23,6 +23,8 @@ using Mozu.SiteBuilder.UX.Admin.Helpers.SecurityHelpers;
 using Mozu.Tenant.Contracts;
 using Mozu.Tenant.Contracts.Clients;
 using VM = Mozu.SiteBuilder.UX.Admin.Api.Models.AppManagement;
+using Newtonsoft.Json.Linq;
+using Newtonsoft.Json;
 
 namespace Mozu.SiteBuilder.UX.Admin.Api
 {
@@ -49,11 +51,12 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
 
 
 	    [HttpPostRoute(UriTemplate = "createSecureForm")]
-        public async Task<Response<SecureForm>> BulidSecureForm([FromBody]  Dictionary<string, string> body, [FromUri] string appId)
+        public async Task<Response<SecureForm>> BulidSecureForm([FromBody]  JObject body, [FromUri] string appId)
 	    {
-
-	        var hashKey = (await _appsWebApiClient.CloneWithoutUserClaims().GetApplicationHashkey(appId)).ReadAsSync();
-            var form = _secureConfigUrlHelper.BulidSecureForm(hashKey, body);
+            var str = body.ToString();
+            var dictionary = JsonConvert.DeserializeObject<Dictionary<string, object>>(str);
+            var hashKey = (await _appsWebApiClient.CloneWithoutUserClaims().GetApplicationHashkey(appId)).ReadAsSync();
+            var form = _secureConfigUrlHelper.BulidSecureForm(hashKey, dictionary);
 
             return this.Single2(form);
 	    }
