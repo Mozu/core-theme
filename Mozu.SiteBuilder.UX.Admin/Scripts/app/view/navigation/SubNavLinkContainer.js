@@ -96,8 +96,6 @@ Ext.define('Taco.view.navigation.SubNavLinkContainer', {
             });
             
             modalConfigWindow.center();
-
-            this.add(modalConfigWindow);
         }
     },
 
