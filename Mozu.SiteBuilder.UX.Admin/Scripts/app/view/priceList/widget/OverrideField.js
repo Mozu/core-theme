@@ -1,4 +1,4 @@
-﻿/**
+/**
  * @class Taco.view.priceList.widget.OverrideField
  * Numeric input field for currencies with a checkbox to show active state
  */
@@ -15,6 +15,7 @@
     },
     fieldCfg: {},
     checkboxFcg: {},
+    originalEmptyText: 'Default',
     afterChange: Ext.emptyFn,
     initComponent: function() {
         var me = this;
@@ -27,15 +28,25 @@
             name: me.fieldCfg.name + 'Mode',
             listeners: {
                 change: function(cmp, newVal, oldVal) {
-                    if (!me.overrideField) return;
+                    var field = me.overrideField;
+                    if (!field) return;
 
-                    me.overrideField.allowBlank = !(me.requireOverrideValue && this.isOverridden());
+                    field.allowBlank = !(me.requireOverrideValue && this.isOverridden());
 
-                    if (!this.isOverridden()) {
-                        me.overrideField.setValue(null);
-                        me.overrideField.clearInvalid();
+                    if (this.isOverridden()) {
+                        this.originalEmptyText = field.emptyText;
+                        Ext.apply(field, { emptyText: ' ' });
+                        //the field.applyEmptyText method checks for a truthy value assigned to emptyText so a empty string will not work
                     }
-                    else if (!me.overrideField.getValue() && !me.overrideField.allowBlank) {
+                    else {
+                        field.setValue(null);
+                        field.clearInvalid();
+                        Ext.apply(field, { emptyText: this.originalEmptyText });
+                    }
+
+                    field.applyEmptyText();
+
+                    if (!field.getValue() && !me.overrideField.allowBlank) {
                         me.overrideField.markInvalid(['This field is required'])
                     }
                 },
@@ -58,7 +69,7 @@
             hideTrigger: true,
             margin: '0 30 0 0',
             required: false,
-            emptyText: 'Default',
+            emptyText: me.originalEmptyText,
             fieldStyle: 'text-align: right',
             listeners: {
                 change: function (cmp, newVal, oldVal, eOpts) {
