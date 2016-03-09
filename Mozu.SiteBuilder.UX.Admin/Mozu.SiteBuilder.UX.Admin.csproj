@@ -174,6 +174,7 @@
     <Compile Include="Api\CategoryController.cs" />
     <Compile Include="Api\ChannelController.cs" />
     <Compile Include="Api\CouponCodeController.cs" />
+    <Compile Include="Api\LayoutWidgetDefinitionController.cs" />
     <Compile Include="Api\ModelMapping\PriceListMapping.cs" />
     <Compile Include="Api\Models\PriceLists\PriceListEntryPrice.cs" />
     <Compile Include="Api\Models\PriceLists\PriceListEntry.cs" />
