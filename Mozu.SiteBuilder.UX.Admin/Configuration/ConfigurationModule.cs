@@ -48,24 +48,24 @@ namespace Mozu.SiteBuilder.UX.Admin.Configuration
         }
         void RegisterServiceClients(ContainerBuilder builder)
         {
-            builder.RegisterClassesMatchingInterfaceName(typeof(Mozu.ProductAdmin.Contracts.Category  ).Assembly);
-            builder.RegisterClassesMatchingInterfaceName(typeof(Mozu.SiteBuilder.Mvc.ISiteBuilderApiContext ).Assembly);
-            builder.RegisterClassesMatchingInterfaceName(typeof(Mozu.AdminUser.Contracts.Clients.IMultiScopeInvitationWebApiClient ).Assembly);
-            builder.RegisterClassesMatchingInterfaceName(typeof(Mozu.Content.Contracts.Clients.DocumentListWebApiClient  ).Assembly);
-            builder.RegisterClassesMatchingInterfaceName(typeof(Mozu.ShippingAdmin.Contracts.CarrierConfiguration).Assembly);
-            builder.RegisterClassesMatchingInterfaceName(typeof(Mozu.ScheduledEvent.Contracts.Clients.IPublishSetWebApiClient).Assembly);
-            builder.RegisterClassesMatchingInterfaceName(typeof(IApplicationsWebApiClient).Assembly);
-            builder.RegisterClassesMatchingInterfaceName(typeof(Mozu.ShippingRuntime.Contracts.Clients.ShippingWebApiClient).Assembly);
-            builder.RegisterClassesMatchingInterfaceName(typeof(IEntityListsWebApiClient).Assembly);
-            builder.RegisterClassesMatchingInterfaceName(typeof(Mozu.SiteSettings.Order.Contracts.Clients.CheckoutSettingsWebApiClient).Assembly);
-            builder.RegisterClassesMatchingInterfaceName(typeof(Mozu.SiteSettings.General.Contracts.Clients.GeneralSettingsWebApiClient).Assembly);
-            builder.RegisterClassesMatchingInterfaceName(typeof(Mozu.Customer.Contracts.Clients.CustomerAccountWebApiClient).Assembly);
-            builder.RegisterClassesMatchingInterfaceName(typeof(Mozu.Location.Contracts.Clients.ILocationAdminWebApiClient).Assembly);
-            builder.RegisterClassesMatchingInterfaceName(typeof(Mozu.CommerceRuntime.Contracts.Products.Product).Assembly);
-            builder.RegisterClassesMatchingInterfaceName(typeof(Mvc.CookieProvider).Assembly);
-            builder.RegisterClassesMatchingInterfaceName(typeof(Mozu.Provisioning.Contracts.Clients.IProvisioningWebApiClient).Assembly);
-            builder.RegisterClassesMatchingInterfaceName(typeof(Mozu.AppDev.Contracts.Clients.IAppsWebApiClient).Assembly);
-            builder.RegisterClassesMatchingInterfaceName(typeof(Mozu.ProductRuntime.Contracts.Clients.PriceListRuntimeWebApiClient).Assembly);
+            //builder.RegisterClassesMatchingInterfaceName(typeof(Mozu.ProductAdmin.Contracts.Category  ).Assembly);
+            //builder.RegisterClassesMatchingInterfaceName(typeof(Mozu.SiteBuilder.Mvc.ISiteBuilderApiContext ).Assembly);
+            //builder.RegisterClassesMatchingInterfaceName(typeof(Mozu.AdminUser.Contracts.Clients.IMultiScopeInvitationWebApiClient ).Assembly);
+            //builder.RegisterClassesMatchingInterfaceName(typeof(Mozu.Content.Contracts.Clients.DocumentListWebApiClient  ).Assembly);
+            //builder.RegisterClassesMatchingInterfaceName(typeof(Mozu.ShippingAdmin.Contracts.CarrierConfiguration).Assembly);
+            //builder.RegisterClassesMatchingInterfaceName(typeof(Mozu.ScheduledEvent.Contracts.Clients.IPublishSetWebApiClient).Assembly);
+            //builder.RegisterClassesMatchingInterfaceName(typeof(Mozu.InstalledApplications.Contracts.Clients.IApplicationsWebApiClient).Assembly);
+            //builder.RegisterClassesMatchingInterfaceName(typeof(Mozu.ShippingRuntime.Contracts.Clients.ShippingWebApiClient).Assembly);
+            //builder.RegisterClassesMatchingInterfaceName(typeof(Mozu.MZDB.Contracts.Clients.IEntityListsWebApiClient).Assembly);
+            //builder.RegisterClassesMatchingInterfaceName(typeof(Mozu.SiteSettings.Order.Contracts.Clients.CheckoutSettingsWebApiClient).Assembly);
+            //builder.RegisterClassesMatchingInterfaceName(typeof(Mozu.SiteSettings.General.Contracts.Clients.GeneralSettingsWebApiClient).Assembly);
+            //builder.RegisterClassesMatchingInterfaceName(typeof(Mozu.Customer.Contracts.Clients.CustomerAccountWebApiClient).Assembly);
+            //builder.RegisterClassesMatchingInterfaceName(typeof(Mozu.Location.Contracts.Clients.ILocationAdminWebApiClient).Assembly);
+            //builder.RegisterClassesMatchingInterfaceName(typeof(Mozu.CommerceRuntime.Contracts.Products.Product).Assembly);
+            //builder.RegisterClassesMatchingInterfaceName(typeof(Mvc.CookieProvider).Assembly);
+            //builder.RegisterClassesMatchingInterfaceName(typeof(Mozu.Provisioning.Contracts.Clients.IProvisioningWebApiClient).Assembly);
+            //builder.RegisterClassesMatchingInterfaceName(typeof(Mozu.AppDev.Contracts.Clients.IAppsWebApiClient).Assembly);
+            //builder.RegisterClassesMatchingInterfaceName(typeof(Mozu.ProductRuntime.Contracts.Clients.PriceListRuntimeWebApiClient).Assembly);
 
             builder.RegisterHttpRequestMessage(GlobalConfiguration.Configuration);
 
@@ -78,12 +78,12 @@ namespace Mozu.SiteBuilder.UX.Admin.Configuration
 
             builder.RegisterInstance<System.Runtime.Caching.ObjectCache>(System.Runtime.Caching.MemoryCache.Default);
 
-            builder.RegisterType<ServiceClientMessageHandler>().As<IServiceClientMessageHandler>();
+            //builder.RegisterType<ServiceClientMessageHandler>().As<IServiceClientMessageHandler>();
 
             builder.RegisterType<NoOpMobileDetectionProvider>().As<IMobileDetectionProvider>().InstancePerLifetimeScope();
 
-            builder.Register(c => new ProductRuntimeWebApiClient(c.Resolve<IServiceClientMessageHandler>())).As<IProductRuntimeWebApiClient>().InstancePerLifetimeScope();
-            builder.Register(c => new ProductSearchWebApiClient(c.Resolve<IServiceClientMessageHandler>())).As<IProductSearchWebApiClient>().InstancePerLifetimeScope();
+            //builder.Register(c => new ProductRuntimeWebApiClient(c.Resolve<IServiceClientMessageHandler>())).As<IProductRuntimeWebApiClient>().InstancePerLifetimeScope();
+            //builder.Register(c => new ProductSearchWebApiClient(c.Resolve<IServiceClientMessageHandler>())).As<IProductSearchWebApiClient>().InstancePerLifetimeScope();
             
 
             builder.RegisterType<ApplicationNameLoggingContextProvider>().As<ILoggingContextProvider>().WithParameter("applicationName", ApplicationConstants.APPLICATION_NAME).InstancePerLifetimeScope();
