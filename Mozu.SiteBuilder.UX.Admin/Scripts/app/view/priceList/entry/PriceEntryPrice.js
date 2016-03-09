@@ -19,7 +19,7 @@ Ext.define('Taco.view.priceList.entry.PriceEntryPrice', {
     ui: 'subform',
     margin: '0 0 20 0',
 
-    title: 'Price',
+    title: 'Adjustments',
     record: null,
     currencyCode: null,
     bubbleEvents: ['save'],

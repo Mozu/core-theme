@@ -1,15 +1,15 @@
 @mixin taco-tabbar {
     .#{$prefix}tab-bar {
-        background-color: $white-color;
+        background-color: transparent; //$white-color;
         border: none;
 
         .#{$prefix}tab {
             border: 2px solid transparent;
             border-radius: 0;
-            background-color: $white-color;
+            background-color: transparent; //$white-color;
 
             &:hover {
-                background-color: $white-color;
+                background-color: transparent; //$white-color;
 
                 &:not(:disabled) {
                     box-shadow: none;
@@ -28,6 +28,6 @@
     }
 
     .#{$prefix}tab-bar-strip-default {
-        border: none;
+        //border: none;
     }
 }
