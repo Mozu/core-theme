@@ -578,6 +578,7 @@
     <Content Include="Scripts\app\model\PinnedProduct.js" />
     <Content Include="Scripts\app\model\PriceListEntry.js" />
     <Content Include="Scripts\app\model\PriceList.js" />
+    <Content Include="Scripts\app\model\PriceListEntryPrice.js" />
     <Content Include="Scripts\app\model\StorefrontProduct.js" />
     <Content Include="Scripts\app\model\FilterField.js" />
     <Content Include="Scripts\app\model\BehaviorNode.js" />
