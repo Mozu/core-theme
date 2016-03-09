@@ -242,7 +242,7 @@ Ext.define('Taco.view.priceList.entry.PriceEntryPrice', {
             fieldLabel: 'Restriction Start Date',
             name: 'discountsRestrictedStartDate',
             emptyText: 'Default',
-            disabled: this.record.phantom,
+            disabled: this.record.phantom || this.record.get('discountsRestricted') == null,
             listeners: {
                 afterRender: function() {
                     this.disabled = me.discountRestriction.getValue() !== 'On';
@@ -256,7 +256,7 @@ Ext.define('Taco.view.priceList.entry.PriceEntryPrice', {
             fieldLabel: 'Restriction End Date',
             name: 'discountsRestrictedEndDate',
             emptyText: 'Default',
-            disabled: this.record.phantom,
+            disabled: this.record.phantom || this.record.get('discountsRestricted') == null,
             listeners: {
                 afterRender: function() {
                     this.disabled = me.discountRestriction.getValue() !== 'On';
