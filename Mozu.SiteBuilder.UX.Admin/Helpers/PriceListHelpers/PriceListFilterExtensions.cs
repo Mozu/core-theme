@@ -60,7 +60,10 @@ namespace Mozu.SiteBuilder.UX.Admin.Helpers.PriceListHelpers
             switch (filter.property.ToLowerInvariant())
             {
                 case "all":
-                    return String.Format("({0} cont \"{2}\") or ({1} eq \"{2}\")", NAME_PROPERTY, CODE_PROPERTY, filter.escapedValue);
+                    var str = "";
+                    str += string.Join(" and ", filter.escapedValue.ToString().Trim().Split(new[] { ' ' }, StringSplitOptions.RemoveEmptyEntries)
+                        .Select(searchString => string.Format("(({0} cont \"{2}\") or ({1} eq \"{2}\"))", NAME_PROPERTY, CODE_PROPERTY, searchString)));
+                    return str;
                 case "name":
                     return String.Format("{0} cont \"{1}\"", NAME_PROPERTY, filter.escapedValue);
                 case "code":
@@ -72,7 +75,6 @@ namespace Mozu.SiteBuilder.UX.Admin.Helpers.PriceListHelpers
 
                 case "modifiedby":
                     return string.Format("(createby eq \"{0}\" or updateby eq \"{0}\")", filter.value);
-
                 case "modifiedfrom":
                     return string.Format("updatedate ge {0}", ((DateTime)filter.value).ToUniversalTime().ToString("o"));
                 case "modifiedto":
