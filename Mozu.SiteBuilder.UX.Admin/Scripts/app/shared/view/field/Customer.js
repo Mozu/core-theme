@@ -40,10 +40,11 @@ Ext.define('Taco.shared.view.field.Customer', {
         }
     ),
     
+    // Looks like the text here is already htmlEncoded, don't need to do it again.
     displayTpl: Ext.create('Ext.XTemplate',
         '<tpl for=".">',
             '<tpl if="lastName">',
-                '{lastName:stripTags}, {firstName:stripTags} - ({id}) - {emailAddress}',
+                '{lastName}, {firstName} - ({id}) - {emailAddress}',
             '<tpl else>',
                 'Customer {id}',
             '</tpl>',

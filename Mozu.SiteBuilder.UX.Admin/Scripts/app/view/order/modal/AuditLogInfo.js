@@ -65,7 +65,7 @@ Ext.define('Taco.view.order.modal.AuditLogInfo', {
                     flex: 1.5,
                     data: userObject,
                     tpl: [
-                        '<tpl if="userName && userName.length &gt; 0"><div><b>User:</b> {userName}</div></tpl>',
+                        '<tpl if="userName && userName.length &gt; 0"><div><b>User:</b> {userName:htmlEncode}</div></tpl>',
                         '<div><b>Application:</b> {appName}</div>'
                     ]
                 }, {
@@ -117,7 +117,7 @@ Ext.define('Taco.view.order.modal.AuditLogInfo', {
                 padding: '2 2',
                 data: curRecord,
                 tpl: [
-                    '<div>{message}</div>'
+                    '<div>{message:htmlEncode}</div>'
                 ]
             }]
         });
@@ -533,7 +533,7 @@ Ext.define('Taco.view.order.modal.AuditLogInfo', {
                     padding: '2 2',
                     data: orderRecordData,
                     tpl: [
-                        '<div>{message}</div>'
+                        '<div>{message:htmlEncode}</div>'
                     ]
                 });
             }
@@ -574,8 +574,10 @@ Ext.define('Taco.view.order.modal.AuditLogInfo', {
                 flex: 1,
                 padding: '2 2',
                 data: orderData[0],
+                // The value for a fulfillment change is an object. If we expand it to show the values within,
+                // we should still do htmlEncode on user-provided values to prevent XSS attacks.
                 tpl: [
-                    '<div>'+ statusLabel +': {newValue}</div>'
+                    '<div>'+ statusLabel +': {newValue:htmlEncode}</div>'
                 ]
             });
         }
@@ -598,8 +600,8 @@ Ext.define('Taco.view.order.modal.AuditLogInfo', {
                 tpl: [
                     '<div>Product Code: {productCode}</div>',
                     '<br>',
-                    '<div>Fulfillment moved from: {oldLocation}</div>',
-                    '<div>Fulfillment moved to: {newLocation}</div>',
+                    '<div>Fulfillment moved from: {oldLocation:htmlEncode}</div>',
+                    '<div>Fulfillment moved to: {newLocation:htmlEncode}</div>',
                     '<div>Fulfillment method: {newMethod}</div>'
                 ]
             }
