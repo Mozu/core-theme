@@ -31,7 +31,7 @@ Ext.define('Taco.view.order.widget.InternalNotesGrid', {
         },
         renderer: function (value, meta) {
             meta.style = 'white-space: normal';
-            return value;
+            return Ext.util.Format.htmlEncode(value);
         }
     }, {
         text: '',

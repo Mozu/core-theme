@@ -15,13 +15,13 @@ Ext.define('Taco.view.storeCredit.AdvancedSearchForm', {
     ],
 
     defaults: {
-        width:500,
+        width: 500,
         xtype: 'textfield'
     },
 
-    trackResetOnLoad:false,
+    trackResetOnLoad: false,
 
-    initComponent: function () {
+    initComponent: function() {
         var me = this;
 
         this.items = [];
@@ -34,13 +34,13 @@ Ext.define('Taco.view.storeCredit.AdvancedSearchForm', {
             flex: 1,
             margin: '0 0 0 0',
             // this helps with the reset working. not sure why but this seems to help
-            originalValue:"",
+            originalValue: "",
             fieldLabel: 'Customer Id'
         });
 
         this.customerSelector = Ext.widget({
             xtype: 'taco-customerfield',
-            name:"customer",
+            name: "customer",
             fieldLabel: "Customer Search",
             displayField: 'fullName',
             itemId: 'customerSelector',
@@ -48,10 +48,10 @@ Ext.define('Taco.view.storeCredit.AdvancedSearchForm', {
             showAnonymousCustomers: true,
             //autoFetchDisplayValue:true,
             //width: 300,
-            flex:1,
+            flex: 1,
             emptyText: '',
             listeners: {
-                select: function (combo, records) {
+                select: function(combo, records) {
                     // need to check to see if the custtomer has an email address for the default shipping address.
                     // if not, need to prompt user to edit the customer on the customer detail view.
                     if (records[0]) {
@@ -67,9 +67,9 @@ Ext.define('Taco.view.storeCredit.AdvancedSearchForm', {
             {
                 name: 'keyword',
                 originalValue: "",
-                trackResetOnLoad:false,
+                trackResetOnLoad: false,
                 fieldLabel: 'Keyword Search'
-            },            
+            },
             {
                 xtype: 'fieldcontainer',
                 //fieldLabel: 'Start Date Range',
@@ -78,9 +78,9 @@ Ext.define('Taco.view.storeCredit.AdvancedSearchForm', {
                 },
                 items: [
                     {
-                        xtype:"textfield",
+                        xtype: "textfield",
                         name: 'code',
-                        flex:1,
+                        flex: 1,
                         fieldLabel: 'Code'
                     }
                 ]
@@ -108,7 +108,7 @@ Ext.define('Taco.view.storeCredit.AdvancedSearchForm', {
                 }, {
                     xtype: 'datetime',
                     // allows the field to consume an iso foramt value;                    
-                    altFormats: "c",                 
+                    altFormats: "c",
                     name: 'activatedateto',
                     flex: 1
                 }]
@@ -133,7 +133,7 @@ Ext.define('Taco.view.storeCredit.AdvancedSearchForm', {
                 }, {
                     xtype: 'datetime',
                     // allows the field to consume an iso foramt value;                    
-                    altFormats: "c",                 
+                    altFormats: "c",
                     name: 'expirationdateto',
                     flex: 1
                 }]
@@ -159,7 +159,7 @@ Ext.define('Taco.view.storeCredit.AdvancedSearchForm', {
                 }, {
                     xtype: 'datetime',
                     // allows the field to consume an iso foramt value;
-                    altFormats: "c",                 
+                    altFormats: "c",
                     name: 'createdateto',
                     flex: 1
                 }]
@@ -200,7 +200,7 @@ Ext.define('Taco.view.storeCredit.AdvancedSearchForm', {
                     {
                         xtype: "currencyfield",
                         name: 'InitialbalanceFrom',
-                        flex: 1,                        
+                        flex: 1,
                         forcePrecision: true,
                         labelAlign: 'top',
                         currencyCode: Taco.app.context.getCurrent().currencyCode,
@@ -212,10 +212,10 @@ Ext.define('Taco.view.storeCredit.AdvancedSearchForm', {
                         xtype: 'component',
                         html: 'to',
                         margin: '7 10'
-                    },{
+                    }, {
                         xtype: "currencyfield",
                         name: 'InitialbalanceTo',
-                        flex: 1,                        
+                        flex: 1,
                         forcePrecision: true,
                         labelAlign: 'top',
                         currencyCode: Taco.app.context.getCurrent().currencyCode,
@@ -276,7 +276,7 @@ Ext.define('Taco.view.storeCredit.AdvancedSearchForm', {
                 forceSelection: true,
                 //initialValue: "StoreCredit",
                 trigger2Cls: 'x-form-clear-trigger',
-                onTrigger2Click: function () {
+                onTrigger2Click: function() {
                     this.clearValue();
                 },
                 store: Ext.create('Ext.data.Store', {
@@ -299,7 +299,7 @@ Ext.define('Taco.view.storeCredit.AdvancedSearchForm', {
                     expand: {
                         scope: me,
                         single: true,
-                        fn: function (field) {
+                        fn: function(field) {
                             // if the field has no currently set value, default the picker to a default value;
                             if (!field.getValue() && field.initialPickerValue) {
                                 field.setValue(field.initialPickerValue);
@@ -318,30 +318,30 @@ Ext.define('Taco.view.storeCredit.AdvancedSearchForm', {
                 forceSelection: true,
                 //initialValue: "USD",
                 trigger2Cls: 'x-form-clear-trigger',
-                onTrigger2Click: function () {
+                onTrigger2Click: function() {
                     this.clearValue();
                 },
                 store: { type: 'Taco.store.Currencies' }
 
             }, {
-                xtype:"taco-adminuserfield",
+                xtype: "taco-adminuserfield",
                 name: 'modifiedby',
                 fieldLabel: 'Modified by',
                 flex: 1,
                 tpl: Ext.create('Ext.XTemplate',
                   '<tpl for=".">',
-                      '<div class="x-boundlist-item">{firstName:stripTags} {lastName:stripTags}, {emailAddress}</div>',
+                      '<div class="x-boundlist-item">{firstName:htmlEncode} {lastName:htmlEncode}, {emailAddress:htmlEncode}</div>',
                   '</tpl>'
                 ),
                 trigger2Cls: 'x-form-clear-trigger',
-                onTrigger2Click: function () {
+                onTrigger2Click: function() {
                     this.clearValue();
                 },
-                store: { type: 'Taco.store.AdminUsers'}
+                store: { type: 'Taco.store.AdminUsers' }
             }
         ];
 
-            
+
         this.callParent(arguments);
     }
 });
