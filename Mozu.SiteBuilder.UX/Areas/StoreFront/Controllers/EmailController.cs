@@ -134,9 +134,9 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
             ICmsServiceWrapper cmsService,
             ICustomerAccountWebApiClient customerAccountWebApiClient,
             HyprViewEngine hyprViewEngine,
-            IServiceClientBase<ISitesWebApiClient> sitesWebApiClient,
+            ISitesWebApiClient sitesWebApiClient,
             ILogger logger,
-            IServiceClientBase<ILocationRuntimeWebApiClient> locationRuntimeWebApiClient,
+            ILocationRuntimeWebApiClient locationRuntimeWebApiClient,
             ICustomRouteHandler customRouteHandler,
             IOrderWebApiClient orderWebApiClient,
              UrlHelper urlhelper
