@@ -135,11 +135,7 @@ Ext.define('Taco.view.order.widget.AuditLogGrid', {
             resizable: true,
             minWidth: 300,
             sortable: false,
-            menuDisabled: true,
-            renderer: function (value, meta) {
-                meta.style = 'white-space: normal';
-                return Ext.util.Format.htmlEncode(value);
-            }
+            menuDisabled: true
         }];
 
         return columns;

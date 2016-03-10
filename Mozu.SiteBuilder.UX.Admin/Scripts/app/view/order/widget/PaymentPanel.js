@@ -355,7 +355,9 @@ Ext.define('Taco.view.order.widget.PaymentPanel', {
             cls: "orderform-payment-paymentDetails",
             columnWidth: 1,
             margin: '10 0 0 0',
-            tpl: Ext.create('Ext.XTemplate',
+            tpl: [
+
+
                     '<tpl if="paymentType != \'StoreCredit\'">',
                         '<div class="billingInformation">',
                             '<h4 class="paymentDetailsHeader">Bill To:</h4>',
@@ -363,15 +365,15 @@ Ext.define('Taco.view.order.widget.PaymentPanel', {
                             '<tpl if="!values.billingContact.firstName || !values.billingContact.lastName">',
                                 '<div class="fullName">N/A</div>',
                             '<tpl else>',
-                                '<div class="fullName">{billingContact.firstName:htmlEncode} {billingContact.lastName:htmlEncode}</div>',
-                                '<div class="address">{billingContact.address1:htmlEncode}</div>',
-                                '<div class="address">{billingContact.address2:htmlEncode}</div>',
+                                '<div class="fullName">{billingContact.firstName:stripTags} {billingContact.lastName:stripTags}</div>',
+                                '<div class="address">{billingContact.address1:stripTags}</div>',
+                                '<div class="address">{billingContact.address2:stripTags}</div>',
                                 '<div class="address">',
-                                '{billingContact.cityOrTown:htmlEncode}',
+                                '{billingContact.cityOrTown:stripTags}',
                                 '<tpl if="billingContact.cityOrTown && billingContact.stateOrProvince">, </tpl>',
-                                '{billingContact.stateOrProvince:htmlEncode}  {billingContact.postalOrZipCode:htmlEncode}</div>',
-                                '<div class="address">{billingContact.countryCode:htmlEncode}</div>',
-                                '<div class="phoneNumber">{[ this.getPhoneNumber(values.billingContact) ]}</div>',
+                                '{billingContact.stateOrProvince:stripTags}  {billingContact.postalOrZipCode:stripTags}</div>',
+                                '<div class="address">{billingContact.countryCode:stripTags}</div>',
+                                '<div class="phoneNumber">{[ values.billingContact.workPhone ? values.billingContact.workPhone : values.billingContact.homePhone ]}</div>',
                             '</tpl>',
                         '</div>',
                     '</tpl>',
@@ -417,14 +419,8 @@ Ext.define('Taco.view.order.widget.PaymentPanel', {
                                 '<div class="workflow">{paymentWorkflow}</div>',
                             '</div>',
                         '</div>',
-                    '</tpl>',
-                {
-                    getPhoneNumber: function(contact) {
-                        var phone = contact.workPhone || contact.homePhone;
-                        return Ext.util.Format.htmlEncode(phone);
-                    }
-                }
-            ),
+                    '</tpl>'
+            ],
             data: data,
             listeners: {
                 boxready: function() {

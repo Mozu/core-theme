@@ -118,25 +118,25 @@ Ext.define('Taco.view.customers.Contacts', {
 
                         '<tpl if="isPrimaryShipping"><div class="label-light">Default Shipping</div></tpl>',
 
-                        '<div class="name">{firstName:htmlEncode}<tpl if="middleName"> {middleName:htmlEncode}</tpl> {lastName:htmlEncode}</div>',
+                        '<div class="name">{firstName:stripTags}<tpl if="middleName"> {middleName:stripTags}</tpl> {lastName:stripTags}</div>',
 
-                        '<div data-handle="contact-address1">{address1:htmlEncode}</div>',
+                        '<div data-handle="contact-address1">{address1:stripTags}</div>',
 
-                        '<tpl if="address2"><div>{address2:htmlEncode}</div></tpl>',
+                        '<tpl if="address2"><div>{address2:stripTags}</div></tpl>',
 
-                        '<tpl if="address3"><div>{address3:htmlEncode}</div></tpl>',
+                        '<tpl if="address3"><div>{address3:stripTags}</div></tpl>',
 
-                        '<tpl if="address4"><div>{address4:htmlEncode}</div></tpl>',
+                        '<tpl if="address4"><div>{address4:stripTags}</div></tpl>',
 
-                        '<div>{cityOrTown:htmlEncode}, {stateOrProvince:htmlEncode} {postalOrZipCode:htmlEncode} {countryCode:htmlEncode}</div>',
+                        '<div>{cityOrTown:stripTags}, {stateOrProvince:stripTags} {postalOrZipCode:stripTags} {countryCode:stripTags}</div>',
 
                         '<table class="phone-numbers">',
 
-                            '<tpl if="homePhone"><tr><td>Home:</td><td>{homePhone:htmlEncode}</td></tr></tpl>',
+                            '<tpl if="homePhone"><tr><td>Home:</td><td>{homePhone:stripTags}</td></tr></tpl>',
 
-                            '<tpl if="mobilePhone"><tr><td>Mobile:</td><td>{mobilePhone:htmlEncode}</td></tr></tpl>',
+                            '<tpl if="mobilePhone"><tr><td>Mobile:</td><td>{mobilePhone:stripTags}</td></tr></tpl>',
 
-                            '<tpl if="workPhone"><tr><td>Work:</td><td>{workPhone:htmlEncode}</td></tr></tpl>',
+                            '<tpl if="workPhone"><tr><td>Work:</td><td>{workPhone:stripTags}</td></tr></tpl>',
 
                         '</table>',
 
@@ -337,19 +337,19 @@ Ext.define('Taco.view.customers.Contacts', {
                 'Are you sure you want to Delete this contact?',
                 '<div style="padding: 20px;" data-handle="contact-{id}">',
 
-                '{firstName:htmlEncode} {lastName:htmlEncode}<br>',
+                '{firstName:stripTags} {lastName:stripTags}<br>',
 
-                '<span data-handle="contact-address1">{address1:htmlEncode}</span><br>',
+                '<span data-handle="contact-address1">{address1:stripTags}</span><br>',
 
-                '<tpl if="address2">{address2:htmlEncode}<br></tpl>',
+                '<tpl if="address2">{address2:stripTags}<br></tpl>',
 
-                '{cityOrTown:htmlEncode}, {stateOrProvince:htmlEncode} {postalOrZipCode:htmlEncode} {countryCode:htmlEncode}<br>',
+                '{cityOrTown:stripTags}, {stateOrProvince:stripTags} {postalOrZipCode:stripTags} {countryCode:stripTags}<br>',
 
-                '<tpl if="homePhone">{homePhone:htmlEncode}<br></tpl>',
+                '<tpl if="homePhone">{homePhone:stripTags}<br></tpl>',
 
-                '<tpl if="mobilePhone">{mobilePhone:htmlEncode}<br></tpl>',
+                '<tpl if="mobilePhone">{mobilePhone:stripTags}<br></tpl>',
 
-                '<tpl if="workPhone">{workPhone:htmlEncode}<br></tpl>',
+                '<tpl if="workPhone">{workPhone:stripTags}<br></tpl>',
 
                 '</div>'
             );

@@ -306,19 +306,19 @@ Ext.define('Taco.view.order.Header', {
 
                 '<tpl if="billingContact && billingContact.address1">',
 
-                '<span class="label">{billingContact.firstName:htmlEncode}<tpl if="billingContact.middleName"> {billingContact.middleName:htmlEncode}</tpl> {billingContact.lastName:htmlEncode}</span><br>',
+                '<span class="label">{billingContact.firstName:stripTags}<tpl if="billingContact.middleName"> {billingContact.middleName:stripTags}</tpl> {billingContact.lastName:stripTags}</span><br>',
 
                 '<tpl if="billingContact.email">{billingContact.email}<br></tpl>',
 
-                '{billingContact.address1:htmlEncode}<br>',
+                '{billingContact.address1:stripTags}<br>',
 
-                '<tpl if="billingContact.address2">{billingContact.address2:htmlEncode}<br></tpl>',
+                '<tpl if="billingContact.address2">{billingContact.address2:stripTags}<br></tpl>',
 
-                '<tpl if="billingContact.address3">{billingContact.address3:htmlEncode}<br></tpl>',
+                '<tpl if="billingContact.address3">{billingContact.address3:stripTags}<br></tpl>',
 
-                '<tpl if="billingContact.address4">{billingContact.address4:htmlEncode}<br></tpl>',
+                '<tpl if="billingContact.address4">{billingContact.address4:stripTags}<br></tpl>',
 
-                '{billingContact.cityOrTown:htmlEncode}, {billingContact.stateOrProvince:htmlEncode} {billingContact.postalOrZipCode:htmlEncode} {billingContact.countryCode:htmlEncode}<br>',
+                '{billingContact.cityOrTown:stripTags}, {billingContact.stateOrProvince:stripTags} {billingContact.postalOrZipCode:stripTags} {billingContact.countryCode:stripTags}<br>',
 
                 '<tplelse>',
 
@@ -330,19 +330,19 @@ Ext.define('Taco.view.order.Header', {
 
                 '<tpl if="fulfillmentContact && fulfillmentContact.address1">',
 
-                '<span class="label">{fulfillmentContact.firstName:htmlEncode}<tpl if="fulfillmentContact.middleName"> {fulfillmentContact.middleName:htmlEncode}</tpl> {fulfillmentContact.lastName:htmlEncode}</span><br>',
+                '<span class="label">{fulfillmentContact.firstName:stripTags}<tpl if="fulfillmentContact.middleName"> {fulfillmentContact.middleName:stripTags}</tpl> {fulfillmentContact.lastName:stripTags}</span><br>',
 
                 '<tpl if="fulfillmentContact.email">{fulfillmentContact.email}<br></tpl>',
 
-                '{fulfillmentContact.address1:htmlEncode}<br>',
+                '{fulfillmentContact.address1:stripTags}<br>',
 
-                '<tpl if="fulfillmentContact.address2">{fulfillmentContact.address2:htmlEncode}<br></tpl>',
+                '<tpl if="fulfillmentContact.address2">{fulfillmentContact.address2:stripTags}<br></tpl>',
 
-                '<tpl if="fulfillmentContact.address3">{fulfillmentContact.address3:htmlEncode}<br></tpl>',
+                '<tpl if="fulfillmentContact.address3">{fulfillmentContact.address3:stripTags}<br></tpl>',
 
-                '<tpl if="fulfillmentContact.address4">{fulfillmentContact.address4:htmlEncode}<br></tpl>',
+                '<tpl if="fulfillmentContact.address4">{fulfillmentContact.address4:stripTags}<br></tpl>',
 
-                '{fulfillmentContact.cityOrTown:htmlEncode}, {fulfillmentContact.stateOrProvince:htmlEncode} {fulfillmentContact.postalOrZipCode:htmlEncode} {fulfillmentContact.countryCode:htmlEncode}<br>',
+                '{fulfillmentContact.cityOrTown:stripTags}, {fulfillmentContact.stateOrProvince:stripTags} {fulfillmentContact.postalOrZipCode:stripTags} {fulfillmentContact.countryCode:stripTags}<br>',
 
                 '<tplelse>',
 

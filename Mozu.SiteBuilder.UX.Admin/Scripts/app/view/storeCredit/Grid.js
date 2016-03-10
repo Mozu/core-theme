@@ -150,8 +150,7 @@ Ext.define('Taco.view.storeCredit.Grid', {
                 minWidth: 120,
                 renderer: function (customer) {
                     if (customer) {
-                        var name = Ext.util.Format.htmlEncode(customer.firstName + ' ' + customer.lastName + ' (' + customer.id + ')');
-                        return '<span style="white-space:nowrap">' + name + '</span>';
+                        return '<span style="white-space:nowrap">' + customer.firstName + ' ' + customer.lastName + '(' + customer.id + ')</span>';
                     }
                 }
             }, {
@@ -169,9 +168,7 @@ Ext.define('Taco.view.storeCredit.Grid', {
                 flex: 1,
                 minWidth: 120,
                 hidden: true,
-                renderer: function(customer) {
-                    return Ext.util.Format.htmlEncode(customer.emailAddress);
-                }
+                renderer: function (customer) { return customer.emailAddress; }
             });
         }
         
