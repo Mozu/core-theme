@@ -35,7 +35,7 @@ Ext.define('Taco.view.customers.Form', {
         });
 
         var orderStore = this.record.getOrders();
-        orderStore.sort('submittedDate', 'DESC');
+        orderStore.sort('orderNumber', 'DESC');
 
         me.orderHistory = Ext.create('Taco.view.customers.subform.OrderHistory', {
             record: orderStore
