@@ -208,7 +208,8 @@ namespace Mozu.SiteBuilder.UnitTests.StoreFront.Security
         }
         public static AutoSubstitute WithUrlFinder(this AutoSubstitute container)
         {
-            container.Provide<IRequestUrlFinderOuter>(new RequestUrlFinderOuter(container.Resolve<HttpRequestMessage>()));
+            var settings= container.Resolve<ISettings>();
+            container.Provide<IRequestUrlFinderOuter>(new RequestUrlFinderOuter(container.Resolve<HttpRequestMessage>(), settings));
             return container;
         }
 

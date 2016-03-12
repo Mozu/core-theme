@@ -21,7 +21,8 @@ namespace Mozu.SiteBuilder.Mvc.Security
         string GetStoreFrontRefreshToken();
 
         string GetStoreFrontAccessToken();
-
+        string GetStoreFrontSessionAccessToken();
+        DateTime? GetStoreFrontSessionAccessTokenDate();
         void SaveStoreFrontAccessToken(string token, string profile, DateTime? expiry = null);
 
 
