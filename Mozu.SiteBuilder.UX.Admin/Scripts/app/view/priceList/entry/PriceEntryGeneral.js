@@ -57,7 +57,10 @@ Ext.define('Taco.view.priceList.entry.PriceEntryGeneral', {
                 '<tpl if="values && values.productName"><span class="product-name">{productName}</span> <span class="product-code">{productCode}</span></tpl>'
             ),
             liveMode: true,
-            defaultFilters: [ { property: 'iscurrentlyactive', value: true } ],
+            defaultFilters: [
+                { property: 'iscurrentlyactive', value: true },
+                { property: 'includeVariations', value: true }
+            ],
             getErrors: function() {
                 return (!this.getValue()) ? ["This field is required"] : [];
             },
