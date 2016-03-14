@@ -98,7 +98,7 @@ Ext.define('Taco.view.priceList.modal.PriceEntryEditor', {
                 priceListCode: this.priceListCode,
                 productCode: me.record.get('productCode'),
                 currencyCode: me.record.get('currencyCode'),
-                startDate: me.record.get('startDate')
+                startDate: Ext.Date.format(me.record.get('startDate'), 'c')
             },
             failure: function () {
                 Taco.app.fireEvent('setmessage', "Error loading Price List Entry", 'error');
