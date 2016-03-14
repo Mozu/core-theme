@@ -398,6 +398,11 @@ namespace Mozu.SiteBuilder.Mvc
         {
             this.DataViewMode = dataViewMode;
         }
+
+        public void SetPriceListCode(string plCode)
+        {
+            this.PriceListCode = plCode;
+        }
     }
 
     public static class Constants

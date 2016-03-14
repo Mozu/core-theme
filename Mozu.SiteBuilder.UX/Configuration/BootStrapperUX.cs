@@ -37,8 +37,10 @@ namespace Mozu.SiteBuilder.UX.Configuration
         {
             base.AddMessageHandlers(httpConfiguration);
             httpConfiguration.MessageHandlers.Insert(0, new HttpContextInjectingMessageHandler());
-            httpConfiguration.MessageHandlers.Insert(1, new SiteBuilderRouteDataInitilizer());
-          
+            
+            
+            httpConfiguration.MessageHandlers.Add( new SessionHandler());
+            
             httpConfiguration.MessageHandlers.Add(new MzUnderscoreRequestCleaner());
 
             httpConfiguration.MessageHandlers.Add(new HomePageTransferHandler());
