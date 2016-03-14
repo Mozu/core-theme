@@ -38,6 +38,27 @@ Ext.define('Taco.model.ProductVariation', {
             useNull: true
         },
         {
+            name: "fixedCurrencyCode",
+            type: "string",
+            useNull: true
+        }, {
+            "name": "fixedListPrice",
+            "type": "float",
+            "useNull": true
+        }, {
+            "name": "fixedSalePrice",
+            "type": "float",
+            "useNull": true
+        }, {
+            name: "fixedMsrp",
+            type: "float",
+            useNull: true
+        }, {
+            name: "fixedCreditValue",
+            type: "float",
+            useNull: true
+        },
+        {
             "name": "isActive",
             "type": "boolean",
             "useNull": true

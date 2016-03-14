@@ -40,6 +40,40 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.Models.ProductModels
         [JsonProperty(DefaultValueHandling = DefaultValueHandling.Ignore)]
         public decimal? CreditValue { get; set; }
 
+        #region Fixed Pricing
+
+        /// <summary>
+        /// Variation currency code for fixed pricing
+        /// </summary>
+        [JsonProperty(DefaultValueHandling = DefaultValueHandling.Ignore)]
+        public string FixedCurrencyCode { get; set; }
+
+        /// <summary>
+        /// Variation list price for fixed pricing
+        /// </summary>
+        [JsonProperty(DefaultValueHandling = DefaultValueHandling.Ignore)]
+        public decimal? FixedListPrice { get; set; }
+
+        /// <summary>
+        /// Variation sale price for fixed pricing
+        /// </summary>
+        [JsonProperty(DefaultValueHandling = DefaultValueHandling.Ignore)]
+        public decimal? FixedSalePrice { get; set; }
+
+        /// <summary>
+        /// Manufacturer Suggested Retail Price for fixed pricing
+        /// </summary>
+        [JsonProperty(DefaultValueHandling = DefaultValueHandling.Ignore, PropertyName = "fixedMsrp")]
+        public decimal? FixedMSRP { get; set; }
+
+        /// <summary>
+        /// Credit amt of the product for fixed pricing
+        /// </summary>
+        [JsonProperty(DefaultValueHandling = DefaultValueHandling.Ignore)]
+        public decimal? FixedCreditValue { get; set; }
+
+        #endregion //fixed pricing
+
         [JsonProperty(DefaultValueHandling = DefaultValueHandling.Ignore)]
         public Decimal? DeltaWeight { get; set; }
 
