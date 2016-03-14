@@ -1542,23 +1542,29 @@ Ext.define('Taco.view.website.Index', {
             });
         }
 
-        this.listMetaData = new Taco.model.Entity({
+        this.listMetaData = metaData;
+
+        this.record = new Taco.model.Entity({
             tenantId: Taco.app.context.getTenantId(),
             listFQN: metaData.listFQN || metaData.name,
             entityType: metaData.entityType,
             documentTypeFQN: metaData.documentTypes && metaData.documentTypes.length ? metaData.documentTypes[0] : undefined,
             properties: {},
+            listFlags: {
+                enableADR: metaData.enableActiveDateRanges,
+                enablePublishing: metaData.enablePublishing
+            },
             item: {}
         });
 
-        this.entitypeTypeHandler = Ext.create('Taco.view.website.entityAdapters.DocumentEntityAdapter', {
-            record: this.listMetaData,
-            manager: me,
-            listeners: {
-                load: me.onEntityTypeAdapterLoad,
-                scope: me
-            }
-        });
+        // this.entitypeTypeHandler = Ext.create('Taco.view.website.entityAdapters.DocumentEntityAdapter', {
+        //     record: this.record,
+        //     manager: me,
+        //     listeners: {
+        //         load: me.onEntityTypeAdapterLoad,
+        //         scope: me
+        //     }
+        // });
 
         contentContainer.removeAll();
 
@@ -1586,6 +1592,10 @@ Ext.define('Taco.view.website.Index', {
                 entityType: listMetaData.entityType,
                 documentTypeFQN: listMetaData.documentTypes && listMetaData.documentTypes.length ? listMetaData.documentTypes[0] : undefined,
                 properties: {},
+                listFlags: {
+                    enableADR: listMetaData.enableActiveDateRanges,
+                    enablePublishing: listMetaData.enablePublishing
+                },
                 item: {}
 
             }),
