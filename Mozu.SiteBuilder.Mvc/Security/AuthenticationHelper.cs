@@ -27,7 +27,7 @@ namespace Mozu.SiteBuilder.Mvc.Security
         public AuthenticationHelper(ICookieProvider provider, ISettings settings, HttpRequestMessage httpRequestMessage)
         {
             _settings = settings;
-            string env = settings.AppSettings("Environment").ToLowerInvariant();
+            string env = settings.AppSettings("Environment");
 
             AdminAccessTokenCookieName = "sb-admin-at-" + env;
             StoreFrontAccessTokenCookieName = "sb-sf-at-" + env;
