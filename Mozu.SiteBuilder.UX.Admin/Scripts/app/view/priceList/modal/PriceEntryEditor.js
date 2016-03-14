@@ -17,9 +17,8 @@ Ext.define('Taco.view.priceList.modal.PriceEntryEditor', {
     autoShow: true,
     closable: true,
     cls: Taco.baseCSSPrefix + 'orderform-editor',
-    height: '90%',
+    height: '95%',
     width: '80%',
-    //scale: 'large',
     closeOnSave: true,
     actionColumnWidth: 50,
 
