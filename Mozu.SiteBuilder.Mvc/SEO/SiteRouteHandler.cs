@@ -214,8 +214,12 @@ namespace Mozu.SiteBuilder.Mvc.SEO
                         uri.GetComponents(UriComponents.Path , UriFormat.Unescaped),
                         _requestMessage.Value.RequestUri.GetComponents(UriComponents.Path , UriFormat.Unescaped), 
                         StringComparison.OrdinalIgnoreCase))
-                    { 
-                        uri = new Uri(uri.GetLeftPart(UriPartial.Path) + request.RequestUri.Query);
+                    {
+                        var preStrippedRequest = request.Properties.ContainsKey(SeoDelegatingHandler.MzPreCleanedUri) ?
+                             (Uri)request.Properties[SeoDelegatingHandler.MzPreCleanedUri] :
+                             request.RequestUri;
+
+                        uri = new Uri(uri.GetLeftPart(UriPartial.Path) + preStrippedRequest.Query);
                         var redirect = request.CreateResponse(HttpStatusCode.MovedPermanently);
                         redirect.Headers.Location = new Uri(uri.PathAndQuery, UriKind.Relative);
                         redirect.Headers.TryAddWithoutValidation(Constants.HEADER_CANONICAL_URL, uri.PathAndQuery);
