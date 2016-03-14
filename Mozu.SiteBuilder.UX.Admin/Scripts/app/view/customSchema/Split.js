@@ -346,7 +346,7 @@ Ext.define('Taco.view.customSchema.Split', {
             editMode: options.editMode
         });
 
-        me.addADRIfRequired(record);
+//        me.addADRIfRequired(record);
         me.contentContainer.add(me.form);
         me.enableButtons(record);
         me.cardPanel.getLayout().setActiveItem(1);
