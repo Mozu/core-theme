@@ -269,6 +269,35 @@
         }
     }
 
+    .#{$prefix}refresh-btn {
+        @include icon-font($glyph-refresh, 14px, $pagination-arrow-color);
+        &::after {
+            border-radius: 3px;
+            padding: 2px;
+            top: -2px;
+        }
+
+        &:hover {
+            text-decoration: none;
+
+            &::after {
+                color: $refresh-hover-color;
+            }
+        }
+
+        &:active {
+            &::after {
+                background-color: $dark-bg;
+            }
+        }
+
+        &.#{$prefix}btn-default-toolbar-small-over,
+        &.#{$prefix}btn-default-toolbar-small-focus {
+            border-color: transparent;
+            background: none;
+        }
+    }
+
     .paginationArrows.#{$prefix}btn-default-toolbar-small {
         &.pagination-arrow-left {
             .#{$prefix}btn-wrap {
