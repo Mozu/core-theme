@@ -434,6 +434,12 @@ Ext.define('Taco.model.Product', {
             dateFormat: 'c'
         },
         {
+            "name": "variationPricingMethod",
+            "type": "string",
+            "useNull": true,
+            "defaultValue": "Fixed"
+        },
+        {
             "name": "packageWeight",
             "type": "float",
             "defaultValue": 1
