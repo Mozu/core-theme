@@ -52,17 +52,17 @@ Ext.define('Taco.view.product.variant.Grid', {
             isPhysical = (goodsType === 'Physical'),
             isDigitalCredit = (goodsType === 'DigitalCredit'),
             fulfillmentData = (isPhysical) ? [{
-                "value": "",
-                "name": "Same as product"
+                'value': '',
+                'name': 'Same as product'
             }, {
-                "value": "DirectShip",
-                "name": "Direct Ship"
+                'value': 'DirectShip',
+                'name': 'Direct Ship'
             }, {
-                "value": "InStorePickup",
-                "name": "In Store Pickup"
+                'value': 'InStorePickup',
+                'name': 'In Store Pickup'
             }] : [{
-                "value": "Digital",
-                "name": "Email"
+                'value': 'Digital',
+                'name': 'Email'
             }];
 
         
@@ -89,7 +89,7 @@ Ext.define('Taco.view.product.variant.Grid', {
         });
 
         this.fulfillmentEditor = {
-            xtype: "combobox",
+            xtype: 'combobox',
             triggerAction: 'all',
             queryMode: 'local',
             editable:false,
@@ -99,7 +99,7 @@ Ext.define('Taco.view.product.variant.Grid', {
             autoSelect: true,
             forceSelection: true,
             store: fulfillmentTypeData,
-            emptyText: "Same as product",
+            emptyText: 'Same as product',
             listeners: {
                 select: {
                     fn: function (combo, records) {
@@ -120,7 +120,7 @@ Ext.define('Taco.view.product.variant.Grid', {
 
         
         
-        this.columns = this.rebuildColumns()
+        this.columns = this.rebuildColumns(me.pricingMode);
 
 
         //this.rowEditor = Ext.create('Ext.grid.plugin.RowEditing', {
@@ -288,15 +288,147 @@ Ext.define('Taco.view.product.variant.Grid', {
 
     },
 
-    rebuildColumns: function () {
-        var me = this;
-        var isActiveColumn = [this.getIsActiveColumn()]
-        var summaryColumn = [this.getSummaryColumn()]
-        var optionColumns = this.getOptionColumns();
-        var staticColumns = this.getStaticColumns();
+    getColumnConfig: function(pricingMode) {
+        var columns = [];
+        columns.push(this.getIsActiveColumn(), this.getSummaryColumn());
+        columns.push.apply(columns, this.getOptionColumns());
+        columns.push(this.getProductCodeColumn());
 
+        switch (pricingMode) {
+            case 'explicit':
+                columns.push.apply(columns, this.getExplicitColumns());
+                break;
+            case 'relative':
+                columns.push.apply(columns, this.getRelativeColumns());
+                break;
+            default:
+                columns.push.apply(columns, this.getRelativeColumns());
+        }
 
-        return Ext.Array.union(isActiveColumn, summaryColumn, optionColumns, staticColumns)
+        columns.push.apply(columns, this.getOtherColumns())
+
+        return columns;
+    },
+
+    getExplicitColumns: function() {
+        var me = this,
+            goodsType = this.productType.get('goodsType'),
+            isPhysical = (goodsType === 'Physical'),
+            isDigitalCredit = (goodsType === 'DigitalCredit');
+
+        return [{
+            text: 'Price',
+            dataIndex: 'deltaPrice',
+            stateId: 'deltaPrice',
+            editor: {
+                xtype: 'currencyfield',
+                currencyCode: this.product.getCurrencyCode(),
+                allowBlank: !isDigitalCredit,
+                decimalPrecision: 2,
+                showBorder: true,
+                selectOnFocus: true,
+                hideTrigger: true,
+                keyNavEnabled: false,
+                mouseWheelEnabled: false,
+                msgTarget: "qtip"
+            }
+        }, {
+            text: 'Cost',
+            dataIndex: 'deltaCost',
+            stateId: 'deltaCost',
+            hideable: true,
+            hidden: true,
+            editor: {
+                xtype: 'currencyfield',
+                currencyCode: this.product.getCurrencyCode(),
+                decimalPrecision: 2,
+                showBorder: true,
+                selectOnFocus: true,
+                hideTrigger: true,
+                selectOnFocus: true,
+                keyNavEnabled: false,
+                mouseWheelEnabled: false
+            }
+        }, {
+            text: 'Weight',
+            dataIndex: 'deltaWeight',
+            stateId: 'deltaWeight',
+            hideable: true,
+            hidden: isDigitalCredit,
+            width: 120,
+            editor: {
+                xtype: 'numberfield',
+                showBorder: true,
+                decimalPrecision: 2,
+                selectOnFocus: true,
+                hideTrigger: true,
+                keyNavEnabled: false,
+                mouseWheelEnabled: false
+            }
+        }];
+    },
+
+    getRelativeColumns: function() {
+        var me = this,
+            goodsType = this.productType.get('goodsType'),
+            isPhysical = (goodsType === 'Physical'),
+            isDigitalCredit = (goodsType === 'DigitalCredit');
+
+        return [{
+            text: 'Extra Price',
+            dataIndex: 'deltaPrice',
+            stateId: 'deltaPrice',
+            editor: {
+                xtype: 'currencyfield',
+                currencyCode: this.product.getCurrencyCode(),
+                allowBlank: !isDigitalCredit,
+                decimalPrecision: 2,
+                showBorder: true,
+                selectOnFocus: true,
+                hideTrigger: true,
+                keyNavEnabled: false,
+                mouseWheelEnabled: false,
+                msgTarget: "qtip"
+            }
+        }, {
+            text: 'Extra Cost',
+            dataIndex: 'deltaCost',
+            stateId: 'deltaCost',
+            hideable: true,
+            hidden: true,
+            editor: {
+                xtype: 'currencyfield',
+                currencyCode: this.product.getCurrencyCode(),
+                decimalPrecision: 2,
+                showBorder: true,
+                selectOnFocus: true,
+                hideTrigger: true,
+                selectOnFocus: true,
+                keyNavEnabled: false,
+                mouseWheelEnabled: false
+            }
+        }, {
+            text: 'Extra Weight',
+            dataIndex: 'deltaWeight',
+            stateId: 'deltaWeight',
+            hideable: true,
+            hidden: isDigitalCredit,
+            width: 120,
+            editor: {
+                xtype: 'numberfield',
+                showBorder: true,
+                decimalPrecision: 2,
+                selectOnFocus: true,
+                hideTrigger: true,
+                keyNavEnabled: false,
+                mouseWheelEnabled: false
+            }
+        }];
+    },
+
+    rebuildColumns: function (pricingMode) {
+        // replaced this function for legacy code compat
+        return this.getColumnConfig(pricingMode);
     },
 
     getIsActiveColumn :function (){
@@ -356,12 +488,6 @@ Ext.define('Taco.view.product.variant.Grid', {
         
         me.optionsData.each( function (option) { 
 
-        
-
-
-        //this.product.getOptions().each(function (option, index) {
-
-            
             var attribute = this.findAttribute(option.attributeFQN),
                 attributeText = attribute.get('adminName'),
                 attributeValues = attribute.get('selectedValues'),
@@ -407,13 +533,8 @@ Ext.define('Taco.view.product.variant.Grid', {
         return optionColumns
     },
 
-    getStaticColumns: function () {
-        var me = this,
-            goodsType = this.productType.get('goodsType'),
-            isPhysical = (goodsType === 'Physical'),
-            isDigitalCredit = (goodsType === 'DigitalCredit');
-
-        return [{
+    getProductCodeColumn: function() {
+        return {
             text: 'Product Code',
             xtype:"templatecolumn",
             dataIndex: 'productCode',
@@ -440,40 +561,15 @@ Ext.define('Taco.view.product.variant.Grid', {
                 xtype: 'textfield',
                 msgTarget: "qtip"
             }
-        }, {
-            text: 'Extra Price',
-            dataIndex: 'deltaPrice',
-            stateId: 'deltaPrice',
-            editor: {
-                xtype: 'currencyfield',
-                currencyCode: this.product.getCurrencyCode(),
-                allowBlank: !isDigitalCredit,
-                decimalPrecision: 2,
-                showBorder: true,
-                selectOnFocus: true,
-                hideTrigger: true,
-                keyNavEnabled: false,
-                mouseWheelEnabled: false,
-                msgTarget: "qtip"
-            }
-        }, {
-            text: 'Extra Cost',
-            dataIndex: 'deltaCost',
-            stateId: 'deltaCost',
-            hideable: true,
-            hidden: true,
-            editor: {
-                xtype: 'currencyfield',
-                currencyCode: this.product.getCurrencyCode(),
-                decimalPrecision: 2,
-                showBorder: true,
-                selectOnFocus: true,
-                hideTrigger: true,
-                selectOnFocus: true,
-                keyNavEnabled: false,
-                mouseWheelEnabled: false
-            }
-        }, {
+        };
+    },
+
+    getOtherColumns: function() {
+        var me = this,
+            goodsType = this.productType.get('goodsType'),
+            isPhysical = (goodsType === 'Physical'),
+            isDigitalCredit = (goodsType === 'DigitalCredit');
+        return [{
             text: 'MSRP',
             dataIndex: 'deltaMsrp',
             stateId: 'deltaMsrp',
@@ -509,23 +605,7 @@ Ext.define('Taco.view.product.variant.Grid', {
                 mouseWheelEnabled: false,
                 msgTarget: "qtip"
             }
-        }, {
-            text: 'Extra Weight',
-            dataIndex: 'deltaWeight',
-            stateId: 'deltaWeight',
-            hideable: true,
-            hidden: isDigitalCredit,
-            width: 120,
-            editor: {
-                xtype: 'numberfield',
-                showBorder: true,
-                decimalPrecision: 2,
-                selectOnFocus: true,
-                hideTrigger: true,
-                keyNavEnabled: false,
-                mouseWheelEnabled: false
-            }
-        }, {
+        },  {
             text: 'Fulfillment Types',            
             dataIndex: 'fulfillmentTypesSupported',
             stateId: 'fulfillmentTypesSupported',
@@ -591,6 +671,64 @@ Ext.define('Taco.view.product.variant.Grid', {
             }
         }];
     },
+
+    /*getStaticColumns: function () {
+        var me = this,
+            goodsType = this.productType.get('goodsType'),
+            isPhysical = (goodsType === 'Physical'),
+            isDigitalCredit = (goodsType === 'DigitalCredit');
+
+        return [{
+            text: 'Extra Price',
+            dataIndex: 'deltaPrice',
+            stateId: 'deltaPrice',
+            editor: {
+                xtype: 'currencyfield',
+                currencyCode: this.product.getCurrencyCode(),
+                allowBlank: !isDigitalCredit,
+                decimalPrecision: 2,
+                showBorder: true,
+                selectOnFocus: true,
+                hideTrigger: true,
+                keyNavEnabled: false,
+                mouseWheelEnabled: false,
+                msgTarget: "qtip"
+            }
+        }, {
+            text: 'Extra Cost',
+            dataIndex: 'deltaCost',
+            stateId: 'deltaCost',
+            hideable: true,
+            hidden: true,
+            editor: {
+                xtype: 'currencyfield',
+                currencyCode: this.product.getCurrencyCode(),
+                decimalPrecision: 2,
+                showBorder: true,
+                selectOnFocus: true,
+                hideTrigger: true,
+                selectOnFocus: true,
+                keyNavEnabled: false,
+                mouseWheelEnabled: false
+            }
+        }, {
+            text: 'Extra Weight',
+            dataIndex: 'deltaWeight',
+            stateId: 'deltaWeight',
+            hideable: true,
+            hidden: isDigitalCredit,
+            width: 120,
+            editor: {
+                xtype: 'numberfield',
+                showBorder: true,
+                decimalPrecision: 2,
+                selectOnFocus: true,
+                hideTrigger: true,
+                keyNavEnabled: false,
+                mouseWheelEnabled: false
+            }
+        }];
+    },*/
 
     
 

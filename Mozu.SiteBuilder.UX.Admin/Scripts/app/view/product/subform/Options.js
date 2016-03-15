@@ -15,15 +15,35 @@ Ext.define('Taco.view.product.subform.Options', {
     cls:"taco-product-subform-option",
 
     initComponent: function () {
+
+        var me = this;
         
         this.record = this.product;
+
+        this.pricingMode = Ext.widget('combobox', {
+            xtype: 'combobox',
+            labelAlign: 'left',
+            fieldLabel: 'Pricing Mode',
+            forceSelection: true,
+            editable: false,
+            autoSelect: true,
+            displayField: 'text',
+            valueField: 'value',
+            store: Ext.create('Ext.data.Store', {
+                fields: ['text', 'value'],
+                data : [
+                    {'text':'Relative', 'value':'relative'},
+                    {'text':'Explicit', 'value':'explicit'}
+                ]
+            })
+        });
 
         this.items = [{
             xtype: 'component',
                 flex:1,
                 itemId: 'list',
                 html: ''
-            }, {
+            }, this.pricingMode, {
                 xtype: 'button',
                 text: 'Select Values',
                 scale: 'medium',
@@ -79,10 +99,12 @@ Ext.define('Taco.view.product.subform.Options', {
     },
 
     editVariants: function () {
+        var me = this;
 
         Ext.create('Taco.view.product.variant.Modal', {
             product: this.product,
             productType: this.productType,
+            pricingMode: this.pricingMode.getValue(),
             listeners: {
                 aftersaveclose : this.onVariantChange,
                 close: function () {

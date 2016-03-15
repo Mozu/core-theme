@@ -14,7 +14,9 @@ Ext.define('Taco.view.product.variant.Modal', {
     primaryText: 'Save',
     closeAction :'destroy',
 
+    pricingMode: 'relative',
 
+    itemId: 'variantionModal',
 
     scale: 'large',
     title: 'Edit Variants',
@@ -50,7 +52,8 @@ Ext.define('Taco.view.product.variant.Modal', {
         this.variationGrid = Ext.create('Taco.view.product.variant.Grid', {            
             product: this.product,
             optionsData: me.optionsData,
-            productType: this.productType
+            productType: this.productType,
+            pricingMode: me.pricingMode
         })
 
 
@@ -60,10 +63,7 @@ Ext.define('Taco.view.product.variant.Modal', {
         
 
         this.form = Ext.create('Taco.core.ux.form.Form', {
-            layout: 'fit',
-            items: [
-                this.variationGrid
-            ]
+            items: [ this.variationGrid ]
         });
 
         this.items = [this.form];
