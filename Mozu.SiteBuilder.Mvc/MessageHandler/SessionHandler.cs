@@ -71,7 +71,7 @@ namespace Mozu.SiteBuilder.Mvc.MessageHandler
 
         private static bool RequiresUpdatedSession(HttpRequestMessage request, ISiteBuilderApiContext apiContext, IRequestUrlFinderOuter requestHelper, IAuthenticationHelper authHelper)
         {
-            if (apiContext.SiteId == null || requestHelper.IsCdnRequest())
+            if (apiContext.UserClaims == null || apiContext.SiteId == null || requestHelper.IsCdnRequest())
             {
                 return false;
             }
