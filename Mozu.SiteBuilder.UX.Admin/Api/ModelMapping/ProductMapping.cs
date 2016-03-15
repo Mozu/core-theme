@@ -118,6 +118,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.ModelMapping
                 .ForMember(x => x.DiscountsRestricted, op => op.ResolveUsing(dc => (dc.PricingBehavior ?? NULLPRICEBEHAVE).DiscountsRestricted))
                 .ForMember(x => x.DiscountsRestrictedStartDate, op => op.ResolveUsing(dc => (dc.PricingBehavior ?? NULLPRICEBEHAVE).DiscountsRestrictedStartDate))
                 .ForMember(x => x.DiscountsRestrictedEndDate, op => op.ResolveUsing(dc => (dc.PricingBehavior ?? NULLPRICEBEHAVE).DiscountsRestrictedEndDate))
+                .ForMember(x => x.VariationPricingMethod, op => op.ResolveUsing(dc => (dc.PricingBehavior ?? NULLPRICEBEHAVE).VariationPricingMethod))
                 .ForMember(x => x.MfgPartNumber, op => op.ResolveUsing(dc => (dc.SupplierInfo ?? NULLSUPPLIER).MfgPartNumber))
                 .ForMember(x => x.DistPartNumber, op => op.ResolveUsing(dc => (dc.SupplierInfo ?? NULLSUPPLIER).DistPartNumber))
                 .ForMember(x => x.MfgPartNumber, op => op.ResolveUsing(dc => (dc.SupplierInfo ?? NULLSUPPLIER).MfgPartNumber))
@@ -248,6 +249,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.ModelMapping
                     DiscountsRestricted = x.DiscountsRestricted,
                     DiscountsRestrictedStartDate = x.DiscountsRestrictedStartDate,
                     DiscountsRestrictedEndDate = x.DiscountsRestrictedEndDate,
+                    VariationPricingMethod = x.VariationPricingMethod
                 }))
 
                 .AfterMap((x, y) =>
