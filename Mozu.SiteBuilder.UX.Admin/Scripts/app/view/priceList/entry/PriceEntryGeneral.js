@@ -247,74 +247,16 @@ Ext.define('Taco.view.priceList.entry.PriceEntryGeneral', {
 
     onPriceEntryLoaded: function (record) {
         this.productPickerField.setValue(record.get('productCode'));
-        this.productPickerField.inputMask.show(record.get('productName'));
+        this.productPickerField.inputMask.show(record.get('productName') + ' ' + record.get('productCode'));
     },
-
-    ///**
-    // * Opens a modal with a TreePanel.
-    // * @private
-    // */
-    //launchSiteModal: function(list) {
-    //    var catalogChildren = Ext.Array.map(Taco.app.context.getMasterCatalog().catalogs, function (cat) {
-    //        var siteChildren = Ext.Array.map(cat.sites, function (site) {
-    //            return {
-    //                id: site.id,
-    //                name: site.name,
-    //                parentId: cat.id,
-    //                type: 'site',
-    //                expanded: true,
-    //                loaded: true,
-    //                leaf: 'true'
-    //            };
-    //        });
-    //        return {
-    //            id: cat.id,
-    //            name: cat.name,
-    //            type: 'catalog',
-    //            expanded: true,
-    //            loaded: true,
-    //            children: siteChildren
-    //        };
-    //    }),
-    //
-    //    siteTreeStore = Ext.create('Ext.data.TreeStore', {
-    //        root: {
-    //            expanded: true,
-    //            children: catalogChildren
-    //        }
-    //    });
-    //
-    //    this.modal = Ext.widget('checkbox-tree-modal', {
-    //        title: 'Select Sites',
-    //        displayField: 'name',
-    //        store: siteTreeStore
-    //    });
-    //
-    //    this.modal.on({
-    //        savesuccess: function(modal, values) {
-    //            list.addValue(values);
-    //            list.store.reload();
-    //            this.parentForm.getForm().checkValidity();
-    //        },
-    //        aftercancelclose: function() {
-    //            list.store.reload();
-    //        },
-    //        scope: this
-    //    });
-    //},
 
     // after product is selected in the productPickerfield but before the combo is closed;
     onBeforeProductSelect: function (combo, record, index, e) {
-        var me = this,
-            productPickerField = combo,
-            productCode = record.get('productCode'),
-            isConfigurable = record.get('isConfigurable'),
-            price,
-            win,
-            productCodeToAdd;
+        var productCode = record.get('productCode'),
+            isConfigurable = record.get('isConfigurable');
         combo.setValue(productCode);
         combo.collapse();
-        combo.inputMask.show(record.get('productName'));
+        combo.inputMask.show(record.get('productName') + ' ' + productCode);
         // cancel the selection so that the same product can be reselected again;
         return false;
     },
