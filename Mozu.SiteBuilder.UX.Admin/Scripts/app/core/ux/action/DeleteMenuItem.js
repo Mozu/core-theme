@@ -61,7 +61,7 @@ Ext.define('Taco.core.ux.action.DeleteMenuItem', {
                         },
                         failure: function (model, evt) {
                             var responseJson = JSON.parse(evt.error.responseText);
-                            Taco.app.fireEvent('setmessage', responseJson.message, 'error deleting record');
+                            Taco.app.fireEvent('setmessage', responseJson.message, 'error');
                         },
                         callback: function() {
                             me.setLoading(true, me.body);
