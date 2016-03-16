@@ -482,7 +482,8 @@
         "includeSelf": true,
         "create-from-cart": {
             "template": "{+orderService}{?cartId*}",
-            "shortcutParam": "cartId",
+          "shortcutParam": "cartId",
+          "method": "POST",
             "noBody": true
         },
         "update-shipping-info": {

@@ -35,6 +35,7 @@ namespace Mozu.SiteBuilder.Mvc
             _httpRequestMessage = httpRequestMessage;
 
             IsEditMode = editModeGetter.IsEditMode();
+            
 
             Load();
             if ( !this.MasterCatalogId.HasValue )
@@ -311,8 +312,20 @@ namespace Mozu.SiteBuilder.Mvc
                     CurrencyCode = site.DefaultCurrencyCode;
                 }
             }
+            LoadExtraInfoFromCookie(_cookieProvider);
         }
 
+        private void LoadExtraInfoFromCookie (ICookieProvider cookieProvider)
+        {
+            var cookie = cookieProvider.GetRequestCookie(Mvc.Constants.COOKIENAME);
+            if (cookie != null && cookie.HasKeys)
+            {
+                if (!string.IsNullOrEmpty(cookie["adminmode"]))
+                {
+                    this.IsAdminMode = bool.Parse(cookie["adminmode"]);
+                }
+            }
+        }
         private void LoadFromCookie(ICookieProvider cookieProvider)
         {
             var cookie = cookieProvider.GetRequestCookie(Mvc.Constants.COOKIENAME);
@@ -348,6 +361,7 @@ namespace Mozu.SiteBuilder.Mvc
                 {
                     this.CurrencyCode = cookie["currency"];
                 }
+                LoadExtraInfoFromCookie(cookieProvider);
             }
         }
 
@@ -388,6 +402,8 @@ namespace Mozu.SiteBuilder.Mvc
         }
 
         public bool IsEditMode { get; set; }
+        public bool IsAdminMode { get; set; }
+       
 
         public bool HasInvalidCredentials { get; set; }
 

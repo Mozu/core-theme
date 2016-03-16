@@ -474,6 +474,7 @@ namespace Mozu.SiteBuilder.Mvc.Contexts
 
         public bool IsEditMode { get { return _apiContext.IsEditMode;  } set { _apiContext.IsEditMode = value; } }
 
+        public bool IsAdminMode {  get { return _apiContext.IsAdminMode; } }
         public string Url { get; set; }
 
         public DataViewModeType DataViewMode { get; set; }

@@ -45,7 +45,7 @@ namespace Mozu.SiteBuilder.Mvc.ActionFilters
             // only GETS get redirected
             if (actionContext.Request.Method != HttpMethod.Get) return;
             // edit mode pages get a pass
-            if (pageContext.Url.IsNullOrEmpty() || !pageContext.IsSecure || pageContext.IsEditMode) return;
+            if (pageContext.Url.IsNullOrEmpty() || !pageContext.IsSecure || pageContext.IsEditMode || pageContext.IsAdminMode) return;
 
             // if we're on a custom route and the route specifies a scheme, then let it pass
             var customRoute = actionContext.Request.GetRouteData().Route as CustomRoute;

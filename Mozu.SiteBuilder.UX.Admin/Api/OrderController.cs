@@ -34,7 +34,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
         private readonly CustomerController customerController;
         private readonly IPriceListRuntimeWebApiClient _priceListRuntimeWebApiClient;
         private readonly IApiContext _apiContext;
-
+        ICartWebApiClient _cartWebApiClient;
         /*
          * All order item operations have an updateMode attribute.
          * Valid options are: ApplyToOriginal, ApplyToDraft, and ApplyAndCommit
@@ -47,7 +47,8 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
         /// Public constructor.
         /// </summary>
         public OrderController(IOrderWebApiClient orderWebApiClient, ICustomerAccountWebApiClient customerAccountWebApiClient, ICreditWebApiClient creditWebApiClient
-            , CustomerController customerController, IPriceListRuntimeWebApiClient priceListRuntimeWebApiClient, IApiContext apiContext
+            , CustomerController customerController, IPriceListRuntimeWebApiClient priceListRuntimeWebApiClient, IApiContext apiContext,
+            ICartWebApiClient cartWebApiClient
             )
         {
             _orderWebApiClient = orderWebApiClient;
@@ -56,6 +57,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
             this.customerController = customerController;
             _priceListRuntimeWebApiClient = priceListRuntimeWebApiClient;
             _apiContext = apiContext;
+            _cartWebApiClient = cartWebApiClient;
         }
 
         [HttpGetRoute(UriTemplate = "list")]
@@ -347,7 +349,31 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
         {
             public string OrderId { get; set; }
             public int CustomerAccountId { get; set; }
+
+            public string CartId { get; set; }
         }
+
+
+        [HttpPostRoute(UriTemplate = "addCartToOrder")]
+        public async Task<Response<string>> AddCartToOrder(SetCustomerAccountIdArgs args)
+        {
+            var cart = (await _cartWebApiClient.GetCart(args.CartId)).ReadAsSync();
+           
+            args.OrderId = (await _orderWebApiClient.CloneWithApiContext( ctx=> ctx.PriceListCode = cart.PriceListCode).CreateOrderFromCart(args.CartId)).ReadAsSync().Id;
+
+            //todo copy cart items into order instead of creating a new one.
+            var res= await SetCustomerAccountId(args);
+            if (res.Success )
+            {
+                return Single2(res.Items.Id);
+            }
+            else
+            {
+                return Single2((string)null, 0, res.Message);
+            }
+
+        }
+
         [HttpPostRoute(UriTemplate = "setcustomer")]
         public async Task<Response<Order>> SetCustomerAccountId(SetCustomerAccountIdArgs args)
         {

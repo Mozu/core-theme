@@ -349,7 +349,7 @@ namespace Mozu.SiteBuilder.Mvc.Contexts
             set { _domains = value; }
         }
 
-        public static void Save(int? site, int? masterCatalog, int tenant, bool isEditMode, DataViewModeType dataViewMode, ICookieProvider cookieProvider, int? catalogid, string locale = null, string currency = null)
+        public static void Save(int? site, int? masterCatalog, int tenant, bool isEditMode, DataViewModeType dataViewMode, ICookieProvider cookieProvider, int? catalogid, string locale = null, string currency = null, bool isAdminMode = false)
         {
             var cookie = new HttpCookie("") {Expires = DateTime.MaxValue};
 
@@ -360,6 +360,7 @@ namespace Mozu.SiteBuilder.Mvc.Contexts
             cookie["catalog"] = catalogid.HasValue ? catalogid.ToString() : null;
             cookie["tenant"] = tenant.ToString();
             cookie["editmode"] = isEditMode.ToString();
+            cookie["adminmode"] = isAdminMode.ToString();
             if (dataViewMode == DataViewModeType.Pending)
             {
                 cookie["dataview"] = DataViewModeType.Pending.ToString();
