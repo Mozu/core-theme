@@ -84,7 +84,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
             }
 
             string sortBy = pagingParams.ToSort(_discountSortFormatter);
-            string responseFields = "items(id,content(name),amountType,amount,status,currentRedemptionCount," +
+            string responseFields = "items(id,content(name,friendlyDescription),amountType,amount,status,currentRedemptionCount," +
                 "target(categories,products,includeAllProducts,type)," +
                 "conditions(minimumOrderAmount,startDate,expirationDate,requiresCoupon,couponCode))";
 
