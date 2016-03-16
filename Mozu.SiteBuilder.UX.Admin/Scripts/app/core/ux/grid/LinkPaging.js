@@ -22,6 +22,16 @@ Ext.define('Taco.core.ux.grid.LinkPaging', {
         var firstDisplayed;
         var arrowLeftCls = currPage === 1 ? this.getClsName('tbar-page-link ', 'arrow-disabled') : this.getClsName('tbar-page-link');
         var arrowRightCls = currPage === lastPage ? this.getClsName('tbar-page-link ', 'arrow-disabled') : this.getClsName('tbar-page-link');
+        var refreshCls = this.getClsName('refresh-btn');
+        var refreshBtn = {
+            itemId: 'refresh',
+            cls: refreshCls,
+            handler: function() {
+                this.store.reload();
+            },
+            text: '',
+            scope: me
+        };
 
         lastDisplayed = Math.max(currPage + 2, 5);
         lastDisplayed = Math.min(lastDisplayed, lastPage);
@@ -65,7 +75,7 @@ Ext.define('Taco.core.ux.grid.LinkPaging', {
 
         for (var pageNumber = firstDisplayed; pageNumber <= lastDisplayed; pageNumber++) {
 
-            var cls = (function() { 
+            var cls = (function() {
 
                 var iconCls = pageNumber == currPage ? this.getClsName('tbar-page-link-current', 'tbar-page-link') : this.getClsName('tbar-page-link');
 
@@ -117,7 +127,7 @@ Ext.define('Taco.core.ux.grid.LinkPaging', {
         }
 
         if (pageData.pageCount !== 0) {
-            
+
             pageNumberItems.push({
                 itemId: 'next',
                 cls: arrowRightCls + ' paginationArrows pagination-arrow-right',
@@ -126,7 +136,9 @@ Ext.define('Taco.core.ux.grid.LinkPaging', {
                 scope: me,
             });
         }
-        
+
+        pageNumberItems.push(refreshBtn);
+
         if (me.displayInfo && pageData.pageCount > 1) {
             pageNumberItems.push('->');
             pageNumberItems.push({ xtype: 'tbtext', itemId: 'displayItem' });
@@ -134,6 +146,7 @@ Ext.define('Taco.core.ux.grid.LinkPaging', {
 
         else {
             pageNumberItems = [];
+            pageNumberItems.push(refreshBtn);
             pageNumberItems.push('->');
             pageNumberItems.push({ xtype: 'tbtext', itemId: 'displayItem' });
         }
