@@ -89,7 +89,8 @@ Ext.define('Taco.view.priceList.Grid', {
 
 
     initComponent: function () {
-        var me = this;
+        var me = this,
+            model;
 
         this.columns = this.getColumnConfig();
 
@@ -100,14 +101,20 @@ Ext.define('Taco.view.priceList.Grid', {
             }
         }
 
-        this.selModel = Ext.create('Ext.selection.CheckboxModel', {
-            selType: 'checkboxmodel',
-            checkOnly: true,
-            ignoreRightMouseSelection: true,
-            headerWidth: 37
-        });
+        model = Ext.ModelManager.getModel(me.modelName);
+        me.createButtonEnabled = model.allowCreate();
 
-        this.bulkActionConfig = this.getBulkActionsConfig();
+        if (model.allowUpdate()) {
+            this.selModel = Ext.create('Ext.selection.CheckboxModel', {
+                selType: 'checkboxmodel',
+                checkOnly: true,
+                ignoreRightMouseSelection: true,
+                headerWidth: 37
+            });
+            this.bulkActionConfig = this.getBulkActionsConfig();
+        } else {
+            this.enableBulkActions = false;
+        }
 
         // initialize the delete mixin
         this.mixins.deleteFromGrid.init.apply(this);
@@ -126,7 +133,6 @@ Ext.define('Taco.view.priceList.Grid', {
         me.advancedSearchConfig.form = Ext.create('Taco.view.priceList.form.AdvancedSearch', {});
 
         me.callParent(arguments);
-
     },
 
     reloadGrid: function() {
@@ -338,6 +344,10 @@ Ext.define('Taco.view.priceList.Grid', {
                     itemId: 'Enable',
                     text: 'Enable',
                     scope: this,
+                    requiredBehaviors: {
+                        model: 'Taco.model.PriceList',
+                        behavior: 'update'
+                    },
                     handler: function (item, eventData) {
                         this.doBulkAction.call(this, item, eventData);
                     }
@@ -346,6 +356,10 @@ Ext.define('Taco.view.priceList.Grid', {
                     itemId: 'Disable',
                     text: 'Disable',
                     scope: this,
+                    requiredBehaviors: {
+                        model: 'Taco.model.PriceList',
+                        behavior: 'update'
+                    },
                     handler: function (item, eventData) {
                         var selection = item.scope.selModel.getSelection(),
                             name = selection.length === 1 ? selection[0].get('name') : undefined,

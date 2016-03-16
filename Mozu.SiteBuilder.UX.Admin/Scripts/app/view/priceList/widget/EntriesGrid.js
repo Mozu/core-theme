@@ -109,7 +109,8 @@ Ext.define('Taco.view.priceList.widget.EntriesGrid', {
     },
 
     initComponent: function () {
-        var me = this;
+        var me = this,
+            model;
 
         me.isDisabled = (!this.priceListCode);
 
@@ -151,6 +152,10 @@ Ext.define('Taco.view.priceList.widget.EntriesGrid', {
         }
 
         me.advancedSearchConfig.form = Ext.create('Taco.view.priceList.entry.AdvancedEntrySearch', {});
+
+        model = Ext.ModelManager.getModel(me.modelName);
+        me.createButtonEnabled = model.allowCreate();
+        me.allowUpdate = model.allowUpdate();
 
         me.callParent(arguments);
 
@@ -508,6 +513,11 @@ Ext.define('Taco.view.priceList.widget.EntriesGrid', {
             parentForm: this,
             isCreateMode: isNew,
             priceListCode: this.priceListCode,
+            actions: (!me.allowUpdate)
+                ? [{ xtype: 'button', itemId: 'secondaryAction'}]
+                : [{ xtype: 'button', itemId: 'secondaryAction'},
+                   { xtype: 'button', itemId: 'primaryAction', formBind: true}
+                  ],
             listeners: {
                 savesuccess: function () {
                     me.store.reload();

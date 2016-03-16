@@ -18,9 +18,11 @@ Ext.define('Taco.view.priceList.Form', {
     isCatalogLevel: false,
     categoryCode: null,
     isCreate: false,
+    modelName: 'Taco.model.PriceList',
 
     initComponent: function () {
-        var me = this;
+        var me = this,
+            model;
         // Note: the record will act as an event bus for the subForms.
         // User interactions in a subform that cause changes in other forms will communicate via events on the record.
         // Each subform will listen for and react to these changes.
@@ -51,6 +53,8 @@ Ext.define('Taco.view.priceList.Form', {
         if (this.isCatalogLevel) {
             this.header = false;
         }
+        model = Ext.ModelManager.getModel(me.modelName);
+        me.saveButtonEnabled = model.allowUpdate();
 
         this.callParent(arguments);
 
