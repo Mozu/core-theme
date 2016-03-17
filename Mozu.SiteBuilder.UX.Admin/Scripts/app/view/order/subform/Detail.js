@@ -48,29 +48,44 @@ Ext.define('Taco.view.order.subform.Detail', {
     priceListName: '',
 
     initComponent: function(eOpts) {
-        var me = this,
-            orderItemStore;
+        var me = this;
 
         this.titleTemplate = new Ext.XTemplate(
             'Order Details<tpl if="priceListAvail"> | {priceListName} Pricing</tpl>'
         );
 
         // Create the PriceListStore.
-        this.priceListStore = Taco.core.data.StoreManager.getOrCreate('Taco.store.PriceLists');
-        // If the priceListStore has already been loaded, use it!
-        if (this.priceListStore.getTotalCount() > 0) {
-            // If this isn't used, the title and the tab will have the price list shown.
-            me.mon(me, 'afterrender', function() {
-                me.retrievePricelistName(me.priceListStore);
-                me.setTitle(me.constructTitle());
-            }, me, { single: true });
-        } else {
-            // After the priceListStore is loaded, update the title.
-            this.priceListStore.mon(this.priceListStore, 'load', function (store, records, success) {
-                me.retrievePricelistName(store);
-                me.setTitle(me.constructTitle());
-            }, me, { single: true });
-        }
+        this.priceListStore = Taco.core.data.StoreManager.getOrCreate({
+            type: 'Taco.store.PriceLists',
+            createOnly: true,
+            autoLoad: false,
+            clearFilters: true,
+            remoteFilter: false,
+            filterOnLoad: true,
+            clearSort: false,
+            remoteSort: true,
+            sorters: [{ property: 'name' }],
+            pageSize: 9999
+        });
+        this.priceListStore.load(
+            {
+                //params: { },
+                callback: function(records, operation, success) {
+                    // Add a "None" option to the top to clear the price list.
+                    me.priceListStore.insert(0,
+                        Ext.create(me.priceListStore.model,
+                        {
+                            name: 'None',
+                            code: '',
+                            filteredInStorefront: false,
+                            defaultForSites: []
+                        }));
+                    me.retrievePricelistName(me.priceListStore);
+                    me.setTitle(me.constructTitle());
+                },
+                scope: this
+            }
+        );
 
         // after the record is reloaded we will need to refresh the ui
         me.mon(me.record, "aftercommit", function() {
@@ -95,7 +110,7 @@ Ext.define('Taco.view.order.subform.Detail', {
         });
 
         // store that contains the orderItems for this order model
-        orderItemStore = this.record.itemsStore;
+        var orderItemStore = this.record.itemsStore;
 
         // plugin to add suppourt to the grid for editing the price and quantity columns
         var cellEditing = Ext.create('Ext.grid.plugin.CellEditing', {

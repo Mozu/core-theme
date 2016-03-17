@@ -773,7 +773,7 @@
     <Content Include="Scripts\app\view\customSchema\Lists.js" />
     <Content Include="Scripts\app\view\customSchema\SchemaList.js" />
     <Content Include="Scripts\app\view\customSchema\Split.js" />
-    <Content Include="Scripts\app\view\order\widget\PriceListMenu.js" />
+    <Content Include="Scripts\app\view\order\widget\PriceListPickerField.js" />
     <Content Include="Scripts\app\view\preview\ExpressionPreviewDrawer.js" />
     <Content Include="Scripts\app\view\priceList\Edit.js" />
     <Content Include="Scripts\app\view\priceList\entry\AdvancedEntrySearch.js" />
