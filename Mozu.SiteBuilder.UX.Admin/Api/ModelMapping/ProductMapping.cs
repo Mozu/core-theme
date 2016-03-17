@@ -550,7 +550,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.ModelMapping
             //       CurrencyCode = DEFAULT_CURRENCY_CODE,
                     DeltaPrice = x.DeltaPrice
                 }))
-                .ForMember(dc => dc.LocalizedDeltaPrice, op => op.Ignore()) // todo: xverify - Greg Murray on 2014-08-28 
+                .ForMember(dc => dc.LocalizedDeltaPrice, op => op.Ignore()) 
                 ;
 
             Mapper.CreateMap<DC.ProductExtraValue, ProductExtraValue>()
@@ -578,10 +578,12 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.ModelMapping
             
                 .ForMember(x => x.StockOnHand, op => op.Ignore())
                 .ForMember(x => x.StockOnOrder, op => op.Ignore())
+                .ForMember(x => x.VariationPricingMethod, op => op.Ignore())
                 ;
 
             Mapper.CreateMap<ProductVariation, DC.ProductVariation>()
-                .ForMember(x => x.DeltaPrice, op => op.ResolveUsing(x => x.DeltaPriceValue.HasValue
+                .ForMember(x => x.DeltaPrice, op => op.ResolveUsing(x => !string.IsNullOrEmpty(x.VariationPricingMethod) 
+                        && x.VariationPricingMethod.ToLowerInvariant().Equals("delta")
                     ? new DC.ProductVariationDeltaPrice()
                     {
                  //       CurrencyCode = DEFAULT_CURRENCY_CODE,
@@ -599,14 +601,18 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.ModelMapping
                         Cost = x.DeltaCost
                     }
                 }))
-                .ForMember(dc => dc.FixedPrice, op => op.ResolveUsing(x => string.IsNullOrEmpty(x.FixedCurrencyCode) ? null : new DC.ProductVariationFixedPrice
-                {
-                    CurrencyCode = x.FixedCurrencyCode,
-                    ListPrice = x.FixedListPrice,
-                    SalePrice = x.FixedSalePrice,
-                    MSRP = x.FixedMSRP,
-                    CreditValue = x.FixedCreditValue
-                }))
+                .ForMember(dc => dc.FixedPrice, op => op.ResolveUsing(x => !string.IsNullOrEmpty(x.VariationPricingMethod)
+                        && x.VariationPricingMethod.ToLowerInvariant().Equals("fixed")
+                    ? new DC.ProductVariationFixedPrice
+                    {
+                        CurrencyCode = x.FixedCurrencyCode,
+                        ListPrice = x.FixedListPrice,
+                        SalePrice = x.FixedSalePrice,
+                        MSRP = x.FixedMSRP,
+                        CreditValue = x.FixedCreditValue
+                    }
+                    : null)
+                    )
                 .ForMember(dc => dc.LocalizedFixedPrice, op => op.Ignore())
                 .ForMember(dc => dc.LocalizedDeltaPrice, op => op.Ignore())
                 ;

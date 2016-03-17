@@ -42,6 +42,9 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.Models.ProductModels
 
         #region Fixed Pricing
 
+        [JsonProperty(DefaultValueHandling = DefaultValueHandling.Ignore)]
+        public string VariationPricingMethod { get; set; }
+
         /// <summary>
         /// Variation currency code for fixed pricing
         /// </summary>

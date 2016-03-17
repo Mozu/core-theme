@@ -35,6 +35,8 @@ Ext.define('Taco.view.product.variant.Grid', {
     stateful: true,
     stateId: 'statefulProductOptionsGrid',
     hideSearchToolbar: true,
+    pricingMode: 'Fixed',
+    pricingModeChanged: false,
 
     enableAutoSelect: false,
 
@@ -230,6 +232,15 @@ Ext.define('Taco.view.product.variant.Grid', {
             });
         }
 
+        //need to modify all records if pricing mode changed so that they get marked as modified.
+        if (this.pricingModeChanged) {
+            this.mon(this.store, 'load', function () {
+                var variantPricingMode = me.pricingMode;
+                me.store.each(function (item) {
+                    item.set('variationPricingMethod', variantPricingMode);
+                });
+            });
+        }
         
         // we shouldn't be making the load call if we have no options selected. the call throws ajax exception
         var hasOptions = this.product.getOptions().count();
@@ -723,66 +734,6 @@ Ext.define('Taco.view.product.variant.Grid', {
         }];
     },
 
-    /*getStaticColumns: function () {
-        var me = this,
-            goodsType = this.productType.get('goodsType'),
-            isPhysical = (goodsType === 'Physical'),
-            isDigitalCredit = (goodsType === 'DigitalCredit');
-
-        return [{
-            text: 'Extra Price',
-            dataIndex: 'deltaPrice',
-            stateId: 'deltaPrice',
-            editor: {
-                xtype: 'currencyfield',
-                currencyCode: this.product.getCurrencyCode(),
-                allowBlank: !isDigitalCredit,
-                decimalPrecision: 2,
-                showBorder: true,
-                selectOnFocus: true,
-                hideTrigger: true,
-                keyNavEnabled: false,
-                mouseWheelEnabled: false,
-                msgTarget: "qtip"
-            }
-        }, {
-            text: 'Extra Cost',
-            dataIndex: 'deltaCost',
-            stateId: 'deltaCost',
-            hideable: true,
-            hidden: true,
-            editor: {
-                xtype: 'currencyfield',
-                currencyCode: this.product.getCurrencyCode(),
-                decimalPrecision: 2,
-                showBorder: true,
-                selectOnFocus: true,
-                hideTrigger: true,
-                selectOnFocus: true,
-                keyNavEnabled: false,
-                mouseWheelEnabled: false
-            }
-        }, {
-            text: 'Extra Weight',
-            dataIndex: 'deltaWeight',
-            stateId: 'deltaWeight',
-            hideable: true,
-            hidden: isDigitalCredit,
-            width: 120,
-            editor: {
-                xtype: 'numberfield',
-                showBorder: true,
-                decimalPrecision: 2,
-                selectOnFocus: true,
-                hideTrigger: true,
-                keyNavEnabled: false,
-                mouseWheelEnabled: false
-            }
-        }];
-    },*/
-
-    
-
     doSave: function () {
         var me = this;
         // update the cache;
@@ -928,15 +879,19 @@ Ext.define('Taco.view.product.variant.Grid', {
 
     // reapplies the cached modified records after a store load has happened;
     applyModifiedRecords: function (store) {
-        var me = this;
+        var me = this,
+            priceMode = me.pricingMode,
+            store = store || this.store;
 
-        store = store || this.store;
 
         me.modifiedRecords.each(function (item) {
-            var record = store.getById(item.key)
+            var record = store.getById(item.key);
             // check to see if the record still exists in the data set; could have been removed due to option change or beccause of page change;
             if (record) {
                 record.set(item);
+                if (record.get('variationPricingMethod') !== priceMode) {
+                    record.set('variationPricingMethod', priceMode);
+                }
             }
         })
     },

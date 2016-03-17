@@ -40,7 +40,13 @@ Ext.define('Taco.model.ProductVariation', {
         {
             name: "fixedCurrencyCode",
             type: "string",
-            useNull: true
+            useNull: true,
+            serialize: function (v) {
+                if (v) {
+                    return v;
+                }
+                return Taco.app.context.getMasterCatalog().currencyCode;
+            }
         }, {
             "name": "fixedListPrice",
             "type": "float",
@@ -129,7 +135,10 @@ Ext.define('Taco.model.ProductVariation', {
                 return Taco.core.data.Model.nullIfEmpty(v);
             },
             serialize: function (v) {
-                return Taco.core.data.Model.nullIfEmpty(v);
+                if (v) {
+                    return v;
+                }
+                return Taco.app.context.getMasterCatalog().currencyCode;
             }
         },
         {
@@ -163,6 +172,11 @@ Ext.define('Taco.model.ProductVariation', {
             serialize: function (v) {
                 return Taco.core.data.Model.nullIfEmpty(v);
             }
+        }, {
+            name: "variationPricingMethod",
+            type: "string",
+            useNull: true,
+            defaultValue: "Fixed"
         },
         {
             name: 'options',

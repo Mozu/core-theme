@@ -13,8 +13,10 @@ Ext.define('Taco.view.product.variant.Modal', {
 
     primaryText: 'Save',
     closeAction :'destroy',
+    closeOnSave: true,
 
     pricingMode: 'Delta',
+    pricingModeChanged: false,
 
     itemId: 'variantionModal',
 
@@ -55,8 +57,10 @@ Ext.define('Taco.view.product.variant.Modal', {
             product: this.product,
             optionsData: me.optionsData,
             productType: this.productType,
-            pricingMode: me.pricingMode
-        })
+            pricingMode: me.pricingMode,
+            pricingModeChanged: me.pricingModeChanged,
+            stateId: me.pricingMode === 'Fixed' ? 'statefulProductOptionsGridFixed' : 'statefulProductOptionsGrid' 
+        });
 
 
         this.mon(me.variationGrid, 'savesuccess', function () {
