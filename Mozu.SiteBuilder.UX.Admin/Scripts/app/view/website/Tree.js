@@ -128,7 +128,7 @@ Ext.define('Taco.view.website.Tree', {
                     itemId: 'refresh',
                     tooltip: 'Refresh',
                     overflowText: 'Refresh',
-                    iconCls: 'x-tbar-loading',
+                    iconCls: 'x-refresh-btn x-sidebar-refresh-btn',
                    // disabled: this.store.isLoading(),
                     handler: this.store.reload,
                     scope: this.store
