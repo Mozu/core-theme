@@ -9,10 +9,10 @@ Ext.define('Taco.view.priceList.entry.AdvancedEntrySearch', {
         'Ext.ux.form.field.BoxSelect',
         'Ext.form.FieldContainer',
         'Taco.core.ux.form.DateTime',
-        'Taco.shared.view.field.ProductPickerField'
+        'Taco.view.priceList.widget.ProductAndVariantPicker'
     ],
 
-    productsPerPage: 25,
+    productsPerPage: 10,
 
     defaults: {
         width: 500,
@@ -22,12 +22,13 @@ Ext.define('Taco.view.priceList.entry.AdvancedEntrySearch', {
     initComponent: function () {
         var me = this;
 
-        me.productPickerField = Ext.create('Taco.shared.view.field.ProductPickerField', {
+        me.productPickerField = Ext.create('Taco.view.priceList.widget.ProductAndVariantPicker', {
             name: 'productName',
             plugins: [
                 'inputmask'
             ],
             width: '100%',
+            autoHidePagingToolbar: false,
             flex: 10,
             style: 'padding:5px',
             fieldBodyCls: 'order-addproducttoolbar-cell',
@@ -100,7 +101,7 @@ Ext.define('Taco.view.priceList.entry.AdvancedEntrySearch', {
                 }
             }
         });
-
+        
         this.items = [
             {
                 xtype: 'panel',

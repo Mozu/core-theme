@@ -10,7 +10,7 @@ Ext.define('Taco.view.priceList.entry.PriceEntryGeneral', {
         'Ext.form.field.Date',
         'Taco.core.ux.TooltipLabel',
         'Taco.core.util.Validation',
-        'Taco.shared.view.field.ProductPickerField',
+        'Taco.view.priceList.widget.ProductAndVariantPicker',
         'Taco.view.priceList.widget.PriceListComboBox',
         'Taco.core.ux.picker.CheckboxTreeModal'
     ],
@@ -40,22 +40,20 @@ Ext.define('Taco.view.priceList.entry.PriceEntryGeneral', {
             autoLoad: true
         });
 
-        me.productPickerField = Ext.create('Taco.shared.view.field.ProductPickerField', {
+        me.productPickerField = Ext.create('Taco.view.priceList.widget.ProductAndVariantPicker', {
             name: 'productCode',
             plugins: [
                 'inputmask'
             ],
             width: '100%',
+            autoHidePagingToolbar: false,
             allowBlank: false,
             flex: 1,
             style: 'padding:5px',
             fieldBodyCls: 'order-addproducttoolbar-cell',
-            pageSize: me.productsPerPage,
+            pageSize: 10,
             disabled: !me.record.phantom,
             value: !me.record.phantom ? me.record.get('productCode') : '',
-            displayTpl: Ext.create('Ext.XTemplate',
-                '<tpl if="values && values.productName"><span class="product-name">{productName}</span> <span class="product-code">{productCode}</span></tpl>'
-            ),
             liveMode: true,
             defaultFilters: [
                 { property: 'iscurrentlyactive', value: true },
@@ -246,19 +244,36 @@ Ext.define('Taco.view.priceList.entry.PriceEntryGeneral', {
     },
 
     onPriceEntryLoaded: function (record) {
+        var comboDisplay = record.get('productName') + ' ' + record.get('productCode');
+        if (record.get('hasConfigurableOptions')) {
+            comboDisplay += this.getConfigurableOptionList(record);
+        }
         this.productPickerField.setValue(record.get('productCode'));
-        this.productPickerField.inputMask.show(record.get('productName') + ' ' + record.get('productCode'));
+        this.productPickerField.inputMask.show(comboDisplay);
     },
 
     // after product is selected in the productPickerfield but before the combo is closed;
     onBeforeProductSelect: function (combo, record, index, e) {
-        var productCode = record.get('productCode'),
-            isConfigurable = record.get('isConfigurable');
+        var me = this,
+            productCode = record.get('productCode'),
+            hasConfigurableOptions = record.get('hasConfigurableOptions'),
+            comboDisplay = record.get('productName') + ' ' + productCode;
         combo.setValue(productCode);
         combo.collapse();
-        combo.inputMask.show(record.get('productName') + ' ' + productCode);
+        if (hasConfigurableOptions) {
+            comboDisplay += (' ' + me.getConfigurableOptionList(record));
+        }
+
+        combo.inputMask.show(comboDisplay);
         // cancel the selection so that the same product can be reselected again;
         return false;
+    },
+
+    getConfigurableOptionList: function (record) {
+        var optList = Ext.Array.map(record.get('variationOptions'), function(opt) {
+            return opt.attributeFQN.split('~')[1] + ": " + opt.value;
+        });
+        return optList.length > 0 ? ' (' + optList.join(', ') + ')' : '';
     },
 
     beforeSave: function () {

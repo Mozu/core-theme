@@ -790,6 +790,7 @@
     <Content Include="Scripts\app\view\priceList\widget\EntriesGrid.js" />
     <Content Include="Scripts\app\view\priceList\widget\OverrideField.js" />
     <Content Include="Scripts\app\view\priceList\widget\PriceListComboBox.js" />
+    <Content Include="Scripts\app\view\priceList\widget\ProductAndVariantPicker.js" />
     <Content Include="Scripts\app\view\productRanking\Edit.js" />
     <Content Include="Scripts\app\view\productRanking\Form.js" />
     <Content Include="Scripts\app\view\productRanking\form\AdvancedSearch.js" />
