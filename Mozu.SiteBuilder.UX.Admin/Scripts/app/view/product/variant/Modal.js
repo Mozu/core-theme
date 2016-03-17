@@ -5,7 +5,7 @@
  * @description Variants modal containing the variant grid
  */
 Ext.define('Taco.view.product.variant.Modal', {
-    extend: 'Taco.core.ux.window.Modal',
+    extend: 'Taco.core.ux.window.Drawer',
     requires: [
         'Taco.view.product.variant.Grid',
         'Taco.view.product.variant.Options'
@@ -14,7 +14,7 @@ Ext.define('Taco.view.product.variant.Modal', {
     primaryText: 'Save',
     closeAction :'destroy',
 
-    pricingMode: 'relative',
+    pricingMode: 'Delta',
 
     itemId: 'variantionModal',
 
@@ -22,6 +22,8 @@ Ext.define('Taco.view.product.variant.Modal', {
     title: 'Edit Variants',
 
     layout: 'fit',
+    height: '90%',
+    width: '75%',
 
     autoShow: true,
 
@@ -29,7 +31,7 @@ Ext.define('Taco.view.product.variant.Modal', {
         xtype: 'button',
         text: 'Update Options',
         ui: 'action',
-        scale: 'medium',
+        scale: 'large',
         handler: function() {
             this.updateOptions.apply(this, arguments);
         }

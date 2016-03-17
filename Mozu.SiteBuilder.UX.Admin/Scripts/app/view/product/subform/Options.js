@@ -22,6 +22,7 @@ Ext.define('Taco.view.product.subform.Options', {
 
         this.pricingMode = Ext.widget('combobox', {
             xtype: 'combobox',
+            name: 'variationPricingMethod',
             labelAlign: 'left',
             fieldLabel: 'Pricing Mode',
             forceSelection: true,
@@ -32,8 +33,8 @@ Ext.define('Taco.view.product.subform.Options', {
             store: Ext.create('Ext.data.Store', {
                 fields: ['text', 'value'],
                 data : [
-                    {'text':'Relative', 'value':'relative'},
-                    {'text':'Explicit', 'value':'explicit'}
+                    {'text':'Relative', 'value':'Delta'},
+                    {'text':'Explicit', 'value':'Fixed'}
                 ]
             })
         });

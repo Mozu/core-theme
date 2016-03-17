@@ -294,13 +294,11 @@ Ext.define('Taco.view.product.variant.Grid', {
         columns.push.apply(columns, this.getOptionColumns());
         columns.push(this.getProductCodeColumn());
 
-        switch (pricingMode) {
-            case 'explicit':
+        switch (pricingMode.toLowerCase()) {
+            case 'fixed':
                 columns.push.apply(columns, this.getExplicitColumns());
                 break;
-            case 'relative':
-                columns.push.apply(columns, this.getRelativeColumns());
-                break;
+            case 'delta':
             default:
                 columns.push.apply(columns, this.getRelativeColumns());
         }
@@ -311,15 +309,29 @@ Ext.define('Taco.view.product.variant.Grid', {
     },
 
     getExplicitColumns: function() {
-        var me = this,
-            goodsType = this.productType.get('goodsType'),
-            isPhysical = (goodsType === 'Physical'),
+        var goodsType = this.productType.get('goodsType'),
             isDigitalCredit = (goodsType === 'DigitalCredit');
 
         return [{
-            text: 'Price',
-            dataIndex: 'deltaPrice',
-            stateId: 'deltaPrice',
+            text: 'List Price',
+            dataIndex: 'fixedListPrice',
+            stateId: 'fixedListPrice',
+            editor: {
+                xtype: 'currencyfield',
+                currencyCode: this.product.getCurrencyCode(),
+                allowBlank: !isDigitalCredit,
+                decimalPrecision: 2,
+                showBorder: true,
+                selectOnFocus: true,
+                hideTrigger: true,
+                keyNavEnabled: false,
+                mouseWheelEnabled: false,
+                msgTarget: "qtip"
+            }
+        }, {
+            text: 'Sale Price',
+            dataIndex: 'fixedSalePrice',
+            stateId: 'fixedSalePrice',
             editor: {
                 xtype: 'currencyfield',
                 currencyCode: this.product.getCurrencyCode(),
@@ -350,7 +362,7 @@ Ext.define('Taco.view.product.variant.Grid', {
                 mouseWheelEnabled: false
             }
         }, {
-            text: 'Weight',
+            text: 'Extra Weight',
             dataIndex: 'deltaWeight',
             stateId: 'deltaWeight',
             hideable: true,
@@ -365,7 +377,44 @@ Ext.define('Taco.view.product.variant.Grid', {
                 keyNavEnabled: false,
                 mouseWheelEnabled: false
             }
-        }];
+        }, {
+            text: 'MSRP',
+            dataIndex: 'fixedMsrp',
+            stateId: 'fixedMsrp',
+            hideable: true,
+            hidden: true,
+            editor: {
+                xtype: 'currencyfield',
+                currencyCode: this.product.getCurrencyCode(),
+                decimalPrecision: 2,
+                selectOnFocus: true,
+                showBorder: true,
+                hideTrigger: true,
+                keyNavEnabled: false,
+                mouseWheelEnabled: false
+            }
+        }, {
+            text: 'Gift Card/Credit Value',
+            dataIndex: 'fixedCreditValue',
+            stateId: 'fixedCreditValue',
+            hideable: isDigitalCredit,
+            hidden: !isDigitalCredit,
+            required: !isDigitalCredit,
+            width: 185,
+            editor: {
+                xtype: 'currencyfield',
+                currencyCode: this.product.getCurrencyCode(),
+                showBorder: true,
+                allowBlank: !isDigitalCredit,
+                selectOnFocus: true,
+                decimalPrecision: 2,
+                hideTrigger: true,
+                keyNavEnabled: false,
+                mouseWheelEnabled: false,
+                msgTarget: "qtip"
+            }
+        }
+        ];
     },
 
     getRelativeColumns: function() {
@@ -423,7 +472,45 @@ Ext.define('Taco.view.product.variant.Grid', {
                 keyNavEnabled: false,
                 mouseWheelEnabled: false
             }
-        }];
+        }, {
+            text: 'MSRP',
+            dataIndex: 'deltaMsrp',
+            stateId: 'deltaMsrp',
+            hideable: true,
+            hidden: true,
+            editor: {
+                xtype: 'currencyfield',
+                currencyCode: this.product.getCurrencyCode(),
+                decimalPrecision: 2,
+                selectOnFocus: true,
+                showBorder: true,
+                hideTrigger: true,
+                keyNavEnabled: false,
+                mouseWheelEnabled: false
+            }
+        }, {
+            text: 'Gift Card/Credit Value',
+            dataIndex: 'creditValue',
+            stateId: 'creditValue',
+            hideable: isDigitalCredit,
+            hidden: !isDigitalCredit,
+            required: !isDigitalCredit,
+            width: 185,
+            editor: {
+                xtype: 'currencyfield',
+                currencyCode: this.product.getCurrencyCode(),
+                showBorder: true,
+                allowBlank: !isDigitalCredit,
+                selectOnFocus: true,
+                decimalPrecision: 2,
+                hideTrigger: true,
+                keyNavEnabled: false,
+                mouseWheelEnabled: false,
+                msgTarget: "qtip"
+            }
+        }
+
+        ];
     },
 
     rebuildColumns: function (pricingMode) {
@@ -569,43 +656,7 @@ Ext.define('Taco.view.product.variant.Grid', {
             goodsType = this.productType.get('goodsType'),
             isPhysical = (goodsType === 'Physical'),
             isDigitalCredit = (goodsType === 'DigitalCredit');
-        return [{
-            text: 'MSRP',
-            dataIndex: 'deltaMsrp',
-            stateId: 'deltaMsrp',
-            hideable: true,
-            hidden: true,
-            editor: {
-                xtype: 'currencyfield',
-                currencyCode: this.product.getCurrencyCode(),
-                decimalPrecision: 2,
-                selectOnFocus: true,
-                showBorder: true,
-                hideTrigger: true,
-                keyNavEnabled: false,
-                mouseWheelEnabled: false
-            }
-        }, {
-            text: 'Gift Card/Credit Value',
-            dataIndex: 'creditValue',
-            stateId: 'creditValue',
-            hideable: isDigitalCredit,
-            hidden: !isDigitalCredit,
-            required: !isDigitalCredit,
-            width: 185,
-            editor: {
-                xtype: 'currencyfield',
-                currencyCode: this.product.getCurrencyCode(),
-                showBorder: true,
-                allowBlank: !isDigitalCredit,
-                selectOnFocus: true,
-                decimalPrecision: 2,
-                hideTrigger: true,
-                keyNavEnabled: false,
-                mouseWheelEnabled: false,
-                msgTarget: "qtip"
-            }
-        },  {
+        return [  {
             text: 'Fulfillment Types',            
             dataIndex: 'fulfillmentTypesSupported',
             stateId: 'fulfillmentTypesSupported',
