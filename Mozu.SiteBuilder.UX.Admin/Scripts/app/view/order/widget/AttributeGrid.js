@@ -63,7 +63,7 @@ Ext.define('Taco.view.order.widget.AttributeGrid', {
                     return (attribute.fullyQualifiedName || '').toLowerCase() === (record.get('id') || '').toLowerCase();
                 });
 
-                return (att && !Ext.isEmpty(att.values) ? att.values.join(', ').replace(/\n/g, '<br>') : '--');
+                return (att && !Ext.isEmpty(att.values) ? att.values.map(Ext.util.Format.htmlEncode).join(', ').replace(/\n/g, '<br>') : '--');
             }
         }, {
             text: '',

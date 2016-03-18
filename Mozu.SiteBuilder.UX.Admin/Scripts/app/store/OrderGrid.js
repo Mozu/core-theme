@@ -6,15 +6,10 @@
         extend: 'Ext.data.Store',
         model: 'Taco.model.Order',
         pageSize: 50,
-        remoteSort: true,
-        remoteFilter: true,
+        remoteSort: false,
+        remoteFilter: false,
         storeManagerConfig: {
             // createOnly:false,
            autoLoad: true
-        },
-
-        sorters: [{
-            property: 'submittedDate',
-            direction: 'DESC'
-        }]
+        }
     });

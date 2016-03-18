@@ -2,20 +2,17 @@
  * @class Taco.view.order.widget.DiscountRowBody
  */
 Ext.define('Taco.view.order.widget.DiscountRowBody', {
-    extend: 'Ext.grid.feature.RowBody',   
+    extend: 'Ext.grid.feature.RowBody',
     alias: "feature.discountrowbody",
-    config: {
-    
+    config: {},
 
-    },
-    
     // This is the plugin for displaying product specific discounts (product and shipping)
     // todo: move this to a seperate class.
     // need to add support for discount suppression and activation
 
     rowBodyTrCls: "x-grid-row-adjustment x-grid-row x-grid-rowbody-tr",
-    rowBodyDivCls: "x-grid-cell-inner adjustment-cell-inner",    
-    rowBodyTdCls: "adjustment-cell x-grid-cell x-grid-td x-unselectable ",
+    rowBodyDivCls: "x-grid-cell-inner adjustment-cell-inner",
+    rowBodyTdCls: "adjustment-cell x-grid-cell x-grid-td",
 
     init: function (grid){
         var me = this,
@@ -34,10 +31,10 @@ Ext.define('Taco.view.order.widget.DiscountRowBody', {
     },
 
     onMouseDown: function (e) {
-        var me = this;       
-                        
+        var me = this;
+
         var validTrigger = null;
-        
+
         if (Ext.fly(e.target).hasCls("order-action-icon")) {
             // click on div.
             validTrigger = Ext.fly(e.target);
@@ -51,9 +48,9 @@ Ext.define('Taco.view.order.widget.DiscountRowBody', {
             var discountId = validTrigger.getAttribute("discountId"),
                 isActive = validTrigger.getAttribute("isActive"),
                 orderItemId = validTrigger.getAttribute("orderItemId");
-            
+
             if (!discountId) { return }
-            
+
             if (isActive=="true") {
                 me.grid.suppressDiscount({
                     jsonData: {
@@ -81,7 +78,7 @@ Ext.define('Taco.view.order.widget.DiscountRowBody', {
         }
     },
     getAdditionalData: function (data, rowIndex, record, orig) {
-        
+
         var discounts = record.get("discounts"),
             orderItemId = record.get("id"),
             shippingDiscounts = record.get("shippingDiscounts"),
@@ -97,7 +94,7 @@ Ext.define('Taco.view.order.widget.DiscountRowBody', {
             headerCt = this.view.headerCt,
             colspan = headerCt.getColumnCount();
 
-                        
+
         var rowBodyTemplate = new Ext.XTemplate(this.getRowBody());
         var rowBodyTxt = rowBodyTemplate.apply(rowBodyData);
 
@@ -109,7 +106,7 @@ Ext.define('Taco.view.order.widget.DiscountRowBody', {
             rowBodyColspan: colspan
         };
     },
-                    
+
     extraRowTpl: [
         '{%',
             'values.view.rowBodyFeature.setupRowData(values.record, values.recordIndex, values);',
@@ -117,13 +114,11 @@ Ext.define('Taco.view.order.widget.DiscountRowBody', {
         '%}',
 
         '{rowBody}'
-            
+
     ],
-                    
-                    
 
     getRowBody: function (values) {
-        
+
         return [
             '<tpl for="discounts">',
                 '<tr role="row" class="' + this.rowBodyTrCls + ' {rowBodyCls} ',
@@ -147,19 +142,18 @@ Ext.define('Taco.view.order.widget.DiscountRowBody', {
                         '<div style="text-align: right;" class="adjustment-cell-inner-value ' + this.rowBodyDivCls + '">({[Taco.app.context.getCurrent().formatCurrency(values.total)]})</div>',
                     '</td>',
                     '<td role="gridcell"  class="x-action-col-cell taco-menu-col-cell x-action-col-cell' + this.rowBodyTdCls + '">',
-                        
                         '<div unselectable="on" class="x-grid-cell-inner x-grid-cell-inner-action-col">',
                         '<div unselectable="on" class="order-action-icon discount-',
                             '<tpl if="isActive">',
                                 'suppress ',
                             '<tpl else>',
                                 'activate ',
-                            '</tpl>', 
+                            '</tpl>',
                             '" isActive="{isActive}" discountId="{discountId}"  orderItemId="{parent.orderItemId}"></div>',
                         '</div>',
                     '</td>',
                 '</tr>',
-            '</tpl>', 
+            '</tpl>',
             '<tpl for="shippingDiscounts">',
                 '<tr role="row" class="' + this.rowBodyTrCls + ' {rowBodyCls}" tabindex="-1">',
                     '<td role="gridcell" class="' + this.rowBodyTdCls + '"></td>',
@@ -187,7 +181,7 @@ Ext.define('Taco.view.order.widget.DiscountRowBody', {
                     '</td>',
                 '</tr>',
             '</tpl>',
-            // not a discount but adds additional cost to order itesm based on the additional fee in the shipping settings 
+            // not a discount but adds additional cost to order itesm based on the additional fee in the shipping settings
             '<tpl if="handlingAmount">',
                 '<tr role="row" class="' + this.rowBodyTrCls + ' {rowBodyCls}" tabindex="-1">',
                     '<td role="gridcell" class="' + this.rowBodyTdCls + '"></td>',
@@ -221,5 +215,5 @@ Ext.define('Taco.view.order.widget.DiscountRowBody', {
                 '</tr>',
             '</tpl>'
         ].join('');
-    }    
+    }
 });
