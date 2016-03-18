@@ -23,9 +23,10 @@ Ext.define('Taco.view.product.variant.Modal', {
     scale: 'large',
     title: 'Edit Variants',
 
+    resizable: true,
     layout: 'fit',
-    height: '90%',
-    width: '75%',
+    height: '95%',
+    width: '95%',
 
     autoShow: true,
 
