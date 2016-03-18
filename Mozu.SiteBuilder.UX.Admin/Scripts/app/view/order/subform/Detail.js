@@ -165,11 +165,11 @@ Ext.define('Taco.view.order.subform.Detail', {
             bodyStyle: "padding:20px 0px 40px 0px ",
             tpl: [
                 '<div class="customerNote">',
-                '<tpl if="values.customerNote">',
-                '{customerNote:stripTags}',
-                '<tpl else>',
-                '<span class="order-no-content">N/A</span>',
-                '</tpl>',
+                    '<tpl if="values.customerNote">',
+                        '{customerNote:htmlEncode}',
+                    '<tpl else>',
+                        '<span class="order-no-content">N/A</span>',
+                    '</tpl>',
                 '</div>'
             ],
             data: this.record.getData()

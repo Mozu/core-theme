@@ -39,15 +39,15 @@ Ext.define('Taco.view.order.subform.fulfillment.InStorePickup', {
                 padding: '0 50 0 0',
                 tpl: [
                     '<span class="label">Customer:</span><br>',
-                    '{billingContact.firstName:stripTags}<tpl if="billingContact.middleName"> {billingContact.middleName:stripTags}</tpl> {billingContact.lastName:stripTags}<br>',
-                    '{billingContact.address1:stripTags}<br>',
-                    '<tpl if="billingContact.address2">{billingContact.address2:stripTags}<br></tpl>',
-                    '<tpl if="billingContact.address3">{billingContact.address3:stripTags}<br></tpl>',
-                    '<tpl if="billingContact.address4">{billingContact.address4:stripTags}<br></tpl>',
-                    '{billingContact.cityOrTown:stripTags}, {billingContact.stateOrProvince:stripTags} {billingContact.postalOrZipCode:stripTags} {billingContact.countryCode:stripTags}',
-                    '<tpl if="billingContact.homePhone"><br>{billingContact.homePhone:stripTags}</tpl>',
-                    '<tpl if="billingContact.mobilePhone"><br>{billingContact.mobilePhone:stripTags}</tpl>',
-                    '<tpl if="billingContact.workPhone"><br>{billingContact.workPhone:stripTags}</tpl>'
+                    '{billingContact.firstName:htmlEncode}<tpl if="billingContact.middleName"> {billingContact.middleName:htmlEncode}</tpl> {billingContact.lastName:htmlEncode}<br>',
+                    '{billingContact.address1:htmlEncode}<br>',
+                    '<tpl if="billingContact.address2">{billingContact.address2:htmlEncode}<br></tpl>',
+                    '<tpl if="billingContact.address3">{billingContact.address3:htmlEncode}<br></tpl>',
+                    '<tpl if="billingContact.address4">{billingContact.address4:htmlEncode}<br></tpl>',
+                    '{billingContact.cityOrTown:htmlEncode}, {billingContact.stateOrProvince:htmlEncode} {billingContact.postalOrZipCode:htmlEncode} {billingContact.countryCode:htmlEncode}',
+                    '<tpl if="billingContact.homePhone"><br>{billingContact.homePhone:htmlEncode}</tpl>',
+                    '<tpl if="billingContact.mobilePhone"><br>{billingContact.mobilePhone:htmlEncode}</tpl>',
+                    '<tpl if="billingContact.workPhone"><br>{billingContact.workPhone:htmlEncode}</tpl>'
                 ]
             }, {
                 flex: 1,
