@@ -162,6 +162,21 @@
             }
         }
     }
+
+    .#{$vprefix}lock-radios {
+        &.#{$prefix}form-cb-checked {
+            &+.#{$prefix}form-type-text {
+                .#{$prefix}form-text {
+                    color: $gray-text-light;
+
+                    &.#{$prefix}field-form-focus {
+                        border-color: $gray-text-light;
+                        box-shadow: none;
+                    }
+                }
+            }
+        }
+    }
     .#{$prefix}form-type-checkbox,
     .#{$prefix}form-type-radio {
         .#{$prefix}form-cb-label-after {
