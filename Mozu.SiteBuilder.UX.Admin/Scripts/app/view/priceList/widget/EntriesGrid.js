@@ -42,6 +42,7 @@ Ext.define('Taco.view.priceList.widget.EntriesGrid', {
 
     controllerName: 'PriceListEntries',
     priceListCode: null,
+    priceListRecord: null,
 
     enableNavHeader: true,
     hideNavMenu: true,
@@ -277,9 +278,39 @@ Ext.define('Taco.view.priceList.widget.EntriesGrid', {
 
     // list of actions to put in action column and context menu;
     getActionItems: function () {
-        var me = this;
+        var me = this,
+            result = [];
+        result.push(
+            {
+                itemId: 'live',
+                text: 'View Live',
+                hideOnClick: false,
+                menu: {
+                    plain: true,
+                    shadow: false,
+                    cls: Taco.baseCSSPrefix + 'grid-row-menu',
+                    items: []
+                }
+            }
+        );
 
-        return [
+        if (Taco.app.context.getMasterCatalog().productPublishingMode === 'Pending'){
+            result.push(
+                {
+                    itemId: 'preview',
+                    text: 'View Staged',
+                    hideOnClick: false,
+                    menu: {
+                        plain: true,
+                        shadow: false,
+                        cls: Taco.baseCSSPrefix + 'grid-row-menu',
+                        items: []
+                    }
+                }
+            );
+        }
+
+        result.push(
             {
                 text: 'Edit',
                 requiredBehaviors: {
@@ -288,7 +319,10 @@ Ext.define('Taco.view.priceList.widget.EntriesGrid', {
                 },
                 menuColumnHandler: me.doEdit,
                 scope:me
-            }, {
+            }
+        );
+        result.push(
+            {
                 text: 'Delete',
                 itemId: "deleteMenuItem",
                 // deleteMenuColumnHandler can be found in Taco.core.ux.mixins.DeleteFromGrid
@@ -299,24 +333,50 @@ Ext.define('Taco.view.priceList.widget.EntriesGrid', {
                 },
                 scope: me
             }
-        ];
+        );
+        return result;
     },
 
     onActionMenuShow: function (menu, eventData) {
-        // need to disable the delete menu option when discount has been used
-        var disableMenuItem = menu.down('#disableMenuItem'),
-            enableMenuItem = menu.down('#enableMenuItem');
-        if (!disableMenuItem || !enableMenuItem) {
-            return;
+        var previewAction = menu.items.get('preview'),
+            liveAction = menu.items.get('live'),
+            defaults = eventData.header.menuItemDefaults,
+            mc = Taco.app.context.getMasterCatalog();
+
+        if (previewAction) {
+            previewAction.menu.removeAll();
         }
-        if (eventData.record.get('enabled')) {
-            disableMenuItem.show();
-            enableMenuItem.hide();
-        } else {
-            enableMenuItem.show();
-            disableMenuItem.hide();
-        }
+        liveAction.menu.removeAll();
+        Ext.Array.each(mc.sites, function (site) {
+            if (site.isMozuRendered && (eventData.grid.priceListRecord.get('validForAllSites')
+                || Ext.Array.indexOf(eventData.grid.priceListRecord.get('validSites'), site.id) !== -1)) {
+
+                if (mc.productPublishingMode === 'Pending') {
+                    previewAction.menu.add(Ext.applyIf({
+                        text: site.name,
+                        menuColumnHandler: function (item, eventData) {
+                            window.open('/_gosite/' + site.id
+                                + '?environment=preview&redir='
+                                + encodeURIComponent('/p/'
+                                    + eventData.record.get('productCode')
+                                    + '?mz_pricelist='
+                                    + eventData.record.get('priceListCode'))
+                            );
+                        }
+                    }, defaults));
+                }
+
+                liveAction.menu.add(Ext.applyIf({
+                    text: site.name,
+                    menuColumnHandler: function (item, eventData) {
+                        window.open('/_gosite/' + site.id + '?environment=live&redir=' + encodeURIComponent('/p/' + eventData.record.get('productCode')));
+                    }
+                }, defaults));
+            }
+        });
     },
+
+
 
     getBulkActionsConfig: function () {
         return {
@@ -459,13 +519,9 @@ Ext.define('Taco.view.priceList.widget.EntriesGrid', {
     },
 
     onItemClick: function (view, record, elm, index, e) {
-        // console.log(e.target);
         if (e.target.className === 'taco-launch-editor') {
             e.preventDefault();
             this.createPopup(record, false);
-            //this.doEdit(record, e);
-            //this.launchEditor(record);
-            //Taco.app.StateManager.addState(this.controllerName + '/edit/' + record.getId(), { id: record.getId() });
         }
     },
 
@@ -474,37 +530,6 @@ Ext.define('Taco.view.priceList.widget.EntriesGrid', {
         //item.scope.openEditor(rec, false);
         item.scope.createPopup(rec, false);
     },
-
-    //openEditor: function (record, isNew) {
-    //
-    //
-    //    var me = this;
-    //
-    //    if (isNew) {
-    //        this.createPopup(null, isNew);
-    //        return;
-    //    }
-    //
-    //    var model = me.store.getProxy().getModel();
-    //    this.setLoading(true);
-    //    model.load(record.get('id'),
-    //        {
-    //            scope: this,
-    //            params: {
-    //                productCode: record.get('productCode'),
-    //                currencyCode: record.get('currencyCode'),
-    //                startDate: record.get('startDate'),
-    //                endDate: record.get('endDate')
-    //            },
-    //            success: function (dbRecord) {
-    //                this.createPopup(dbRecord, isNew);
-    //                this.setLoading(false);
-    //            },
-    //            failure: function () {
-    //                this.setLoading(false);
-    //            }
-    //        });
-    //},
 
     createPopup: function (record, isNew) {
         var me = this;

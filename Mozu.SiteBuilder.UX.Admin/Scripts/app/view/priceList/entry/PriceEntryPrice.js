@@ -7,6 +7,7 @@ Ext.define('Taco.view.priceList.entry.PriceEntryPrice', {
     alias: 'widget.taco-priceList-price-entry-price',
     requires: [
         'Ext.form.field.ComboBox',
+        'Taco.model.PriceListEntryPrice',
         'Taco.core.ux.form.CurrencyField',
         'Ext.form.field.Date',
         'Taco.core.ux.TooltipLabel',
