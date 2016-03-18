@@ -69,11 +69,12 @@
             hideTrigger: true,
             margin: '0 30 0 0',
             required: false,
+            minValue: 0,
             emptyText: me.originalEmptyText,
             fieldStyle: 'text-align: right',
             listeners: {
                 change: function (cmp, newVal, oldVal, eOpts) {
-                    if (newVal && !oldVal) {
+                    if ((newVal === 0 || newVal) && !oldVal) {
                         me.override.setValue(true);
                     }
                 },
