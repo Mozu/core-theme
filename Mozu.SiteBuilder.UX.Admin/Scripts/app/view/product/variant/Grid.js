@@ -6,16 +6,12 @@
 Ext.define('Taco.view.product.variant.Grid', {
     extend: 'Ext.grid.Panel',
     alias: 'widget.taco-product-variant-grid',
-    //requires:['Taco.view.product.variant.Modal'],
     cls: 'taco-variant-grid',
 
     requires: [
-        //'Ext.grid.plugin.RowEditing'
         'Ext.selection.CellModel',
         'Ext.grid.column.Check'
     ],
-
-    //disableSelection: true,
 
     // optional data from grid's store that can be passed in when creating this grid to reload unpersisted data. This occurs when user updates records in the store and then updates the options. the update options use case blows the grid and store away and starts from scratch. 
     redrawData : null,
@@ -23,11 +19,6 @@ Ext.define('Taco.view.product.variant.Grid', {
     optionsData : null,
     
     mixins: {
-      //  launcheditor: 'Taco.core.ux.mixins.LaunchEditor',
-//        navHeader: 'Taco.core.ux.mixins.NavHeader',
-        
-//        searchable: 'Taco.core.ux.mixins.Searchable',
-        //rowEditable: 'Taco.core.ux.mixins.RowEditable',
         pageable: 'Taco.core.ux.mixins.Pageable'
     },
 
