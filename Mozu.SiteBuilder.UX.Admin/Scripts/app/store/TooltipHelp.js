@@ -126,7 +126,7 @@ Ext.define('Taco.store.TooltipHelp', {
             value: 'By default, all price lists can be picked as being directly applicable to a customer. To improve performance, disable this setting if the price list is only meant to be a parent for others and will not be chosen for a customer directly. Refer to Mozu Docs for more info.'
         }, {
             key: 'priceLists.resolution.default',
-            value: 'Scope determines on which sites a price list could apply. When the resolution logic does not resolve to a valid price list for a customer, the default price list for a site will be in effect.'
+            value: 'Scope determines on which sites the price list can apply to applicable customers. When the resolution logic does not resolve to a valid price list for a customer, the default price list will be in effect.'
         }, {
             key: 'priceLists.resolution.rank',
             value: 'Mozu uses rank to break ties when multiple price lists are valid at the same time. Lower numbers equal higher priority (1 wins over 2).'
