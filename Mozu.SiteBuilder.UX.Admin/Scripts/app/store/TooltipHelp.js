@@ -93,7 +93,7 @@ Ext.define('Taco.store.TooltipHelp', {
             value: 'Please contact Mozu Support or your Solution Partner to enable this feature.'
         }, {
             key: 'settings.general.bustCdnCache',
-            value: 'This feature requires an update to your theme.<br><br><a href="' + Taco.adminHelpLink + '" target="_blank" class="taco-help-link">See Enabling the Bust Cache Feature in Mozu Help.</a>'
+            value: 'This feature requires an update to your theme.<br><br><a href="' + Taco.neWadminHelpLink + '" target="_blank" class="taco-help-link">See Enabling the Bust Cache Feature in Mozu Help.</a>'
         }, {
             key: 'settings.general.missingImage',
             value: 'Upload or select an image: This will be used as a replacement for all missing images on your storefront'

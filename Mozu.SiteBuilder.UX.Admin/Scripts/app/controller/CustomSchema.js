@@ -66,12 +66,32 @@ Ext.define('Taco.controller.CustomSchema', {
         me.editors = Taco.core.data.StoreManager.getOrCreate('Taco.store.EntityEditors');
 
         me.editors.on('load', function(store) {
-            me.store.load({
-                listName: cfg.list,
-                entityType: cfg.type,
-                id: cfg.record,
-                callback: me.navigateToEdit.bind(me, store)
-            });
+
+            if (cfg.record) {
+                me.store.load({
+                    listName: cfg.list,
+                    entityType: cfg.type,
+                    id: cfg.record,
+                    callback: me.navigateToEdit.bind(me, store)
+                });
+            }
+
+            else {
+
+                var record = Ext.create('Taco.model.Entity', {
+                    listFQN: cfg.list,
+                    entityType: cfg.type
+                });
+
+                me.confirmContext('Taco.view.customSchema.Edit', function () {
+                    me.ensureRequiredStores(function () {
+                        me.createContentView('Taco.view.customSchema.Edit', {
+                            record: record, 
+                            editors: me.editors
+                        });
+                    });
+                });
+            }
         }, me)
 
     },

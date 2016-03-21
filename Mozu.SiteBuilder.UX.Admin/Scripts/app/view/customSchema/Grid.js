@@ -302,8 +302,6 @@ Ext.define('Taco.view.customSchema.Grid', {
 
                     else if (eventData.grid.siteBuilderList) {
 
-                       
-
                         eventData.record.reload({
                             success: function() {
                                 me.record = eventData.record;
@@ -398,7 +396,19 @@ Ext.define('Taco.view.customSchema.Grid', {
     },
 
     navigateToEdit: function(record) {
-        Taco.core.StateManager.attemptNavigate('customschema/edit?type=' + record.get('entityType') + '&list=' + record.get('listFQN') + '&record=' + record.get('id'), record.raw);
+        var me = this;
+
+        if (record) {
+            Taco.core.StateManager.attemptNavigate('customschema/edit?type=' + record.get('entityType') + '&list=' + record.get('listFQN') + '&record=' + record.get('id'), record.raw);
+        }
+        else {
+            var record = Ext.create('Taco.model.Entity', {
+                listFQN: me.listFQN,
+                type: me.entityType
+            });
+
+            Taco.core.StateManager.attemptNavigate('customschema/edit?type=' + this.entityType + '&list=' + this.listFQN , record.raw);   
+        }
     },
 
     deleteRecordFromStore: function(record) {
@@ -410,6 +420,10 @@ Ext.define('Taco.view.customSchema.Grid', {
                 Taco.app.fireEvent('setmessage', 'An error occurred while trying to delete this record', 'error');
             }
         });
+    },
+
+    doCreate: function(argument) {
+        this.navigateToEdit();
     },
 
     onCellClick: function(view, td, cellIndex, record, tr, rowIndex, e) {

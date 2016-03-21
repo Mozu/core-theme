@@ -134,6 +134,7 @@ namespace Mozu.SiteBuilder.Mvc.Contexts
                 if ( obj is BreadCrumb)
                 {
                     base.Add((BreadCrumb)obj);
+                    return;
                 }
                 var bc = Newtonsoft.Json.Linq.JObject.FromObject(obj).ToObject<BreadCrumb>();
                 if (obj is Microsoft.ClearScript.V8.IV8ScriptItem)

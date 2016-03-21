@@ -21,6 +21,7 @@ using Mozu.SiteBuilder.Mvc.Contexts;
 using Mozu.SiteBuilder.UX.Messaging;
 using Mozu.SiteBuilder.UX.Filters;
 using Mozu.CommerceRuntime.Contracts.Clients;
+using System.Web;
 
 namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
 {
@@ -234,7 +235,7 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
              }
             return Request.CreateResponse(HttpStatusCode.Unauthorized, new
              {
-                Message = string.Format("Login as {0} failed. Please try again.", authInfo.Account.EmailAddress)
+                Message = string.Format("Login as {0} failed. Please try again.", HttpUtility.HtmlEncode(authInfo.Account.EmailAddress))
                                                                              });
              }
 
@@ -274,7 +275,7 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
             }
             else
             {
-                string errorStr = (email != null) ? string.Format("Login as {0} failed. Please try again.", email) : "Login failed. Please specify a user.";
+                string errorStr = (email != null) ? string.Format("Login as {0} failed. Please try again.", HttpUtility.HtmlEncode(email)) : "Login failed. Please specify a user.";
                 return Request.CreateResponse(HttpStatusCode.OK, View("Login", new { email = email, Messages = new List<object> { new { Message = errorStr } } }));
             }
         }
@@ -292,14 +293,14 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
             {
                 return new
                     {
-                    Message = string.Format("Logged in as {0}.", email)
+                    Message = string.Format("Logged in as {0}.", HttpUtility.HtmlEncode(email))
                     };
                 }
             else
             {
                 return Request.CreateResponse(HttpStatusCode.Unauthorized, new
                 {
-                    Message = string.Format("Login as {0} failed. Please try again.", email)
+                    Message = string.Format("Login as {0} failed. Please try again.", HttpUtility.HtmlEncode( email))
                 });
             }
         }

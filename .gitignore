@@ -21,6 +21,7 @@ mozu.config.json
 .vs
 TestResults/
 .paket
+docs/
 
 Mozu.SiteBuilder.UX.Admin/Scripts/ext/
 Mozu.SiteBuilder.UX.Admin/Scripts/docs/

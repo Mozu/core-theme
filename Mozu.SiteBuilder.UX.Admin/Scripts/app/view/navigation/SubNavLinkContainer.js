@@ -12,12 +12,26 @@ Ext.define('Taco.view.navigation.SubNavLinkContainer', {
     statics: {
         launchExtensionWindow: function (extensionLink, ctx, secureForm) {
 
+            var removeComplexDataTypes = function(json) {
+                var returnOb = {};
+                Object.keys(json).forEach(function(k) {
+                    if (k && json[k] && typeof json[k] === 'string') {
+                        returnOb[k] = json[k];
+                    }
+                });
+
+                return returnOb;
+            };
+
             var me = this,
                 jsonData = {'x-vol-return-url': window.location.href};
 
             if (ctx) jsonData = ctx;
 
+
             jsonData['x-vol-return-url'] = window.location.href;
+
+            jsonData = removeComplexDataTypes(jsonData);
 
             if (extensionLink.data.appId) {
 
@@ -96,8 +110,6 @@ Ext.define('Taco.view.navigation.SubNavLinkContainer', {
             });
             
             modalConfigWindow.center();
-
-            this.add(modalConfigWindow);
         }
     },
 
