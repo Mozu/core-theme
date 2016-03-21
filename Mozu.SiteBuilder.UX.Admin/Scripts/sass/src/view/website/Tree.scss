@@ -9,8 +9,15 @@
         }
     }
 
-    .#{$prefix}grid-body, 
-    .#{$prefix}panel-body, 
+    .#{$prefix}sidebar-refresh-btn {
+        &::after {
+            padding: 0;
+            top: -14px;
+        }
+    }
+
+    .#{$prefix}grid-body,
+    .#{$prefix}panel-body,
     .#{$prefix}grid-td {
         background-color: $card-button-bg;
 
