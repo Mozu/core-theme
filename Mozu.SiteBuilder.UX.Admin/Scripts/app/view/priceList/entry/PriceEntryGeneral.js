@@ -17,7 +17,7 @@ Ext.define('Taco.view.priceList.entry.PriceEntryGeneral', {
     ui: 'subform',
     margin: '0 0 20 0',
 
-    title: 'Product',
+    title: 'Conditions',
     record: null,
 
     initComponent: function() {
@@ -47,6 +47,9 @@ Ext.define('Taco.view.priceList.entry.PriceEntryGeneral', {
             ],
             width: '100%',
             autoHidePagingToolbar: false,
+            required: true,
+            hideLabel: false,
+            fieldLabel: 'Product',
             allowBlank: false,
             flex: 1,
             style: 'padding:5px',
