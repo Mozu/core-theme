@@ -1,6 +1,6 @@
 Ext.define('Taco.view.customSchema.SchemaList', {
     extend: 'Taco.core.ux.grid.Panel',
-    
+
     requires: [
         'Taco.store.EntityLists'
     ],
@@ -8,8 +8,8 @@ Ext.define('Taco.view.customSchema.SchemaList', {
     height: '100%',
     isRootHeader: false,
     enablePaging: true,
-    store: { 
-        type: 'Taco.store.EntityLists' 
+    store: {
+        type: 'Taco.store.EntityLists'
     },
     cls: 'taco-schema-list',
     entityType: '',
@@ -20,7 +20,7 @@ Ext.define('Taco.view.customSchema.SchemaList', {
             mzdb: 'Entity Lists',
             cms: 'Document Lists'
         };
-        
+
         this.store = Ext.create('Taco.store.EntityLists', {
             entityType: this.entityType,
             autoLoad: true,
@@ -40,7 +40,7 @@ Ext.define('Taco.view.customSchema.SchemaList', {
                 sortable: true
             }
         ];
-        
+
         console.log(Taco.core.StateManager)
 
         this.selModel =  this.getSelectionModel();
@@ -67,7 +67,7 @@ Ext.define('Taco.view.customSchema.SchemaList', {
             var stringMatch = uri.match(/list=[^&]*/)
             var list = stringMatch && Ext.isArray(stringMatch) ? stringMatch[0].replace(/list=/, '') : null;
             var listIndex = this.store.findBy(function(rec) { return rec.get('listFQN') === list })
-            
+
             if (listIndex !== -1) {
                 this.handleSelection(null, [this.store.getAt(listIndex)]);
             }

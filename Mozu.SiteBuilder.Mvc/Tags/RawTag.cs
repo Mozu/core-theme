@@ -17,7 +17,17 @@ namespace Mozu.SiteBuilder.Mvc.Tags
         protected override IEnumerable<WalkResult> ProcessTag(ArgumentCollection arguments, IContext context, Func<string, ITemplate> getTemplateFunc)
         {
             var name = arguments[0].TokenValue;
-            var value = arguments[1].Value;
+            object value = null;
+            if (arguments.Count == 1)
+            {
+                name = arguments[0].Name;
+                value = arguments[0].Value;
+            }
+            else
+            {
+                value = arguments[1].Value;
+            }
+            
 
             return WalkResultHelpers.ContextAdditions(new Dictionary<string, object> { { name, value } }).ToFSharpList();
 

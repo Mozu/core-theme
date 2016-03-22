@@ -9,6 +9,30 @@
         }
     }
 
+    .#{$vprefix}sidebar-refresh-btn {
+        &:active,
+        &.#{$prefix}btn-default-toolbar-small-pressed {
+            background-color: $light-bg;
+            text-decoration: none;
+        }
+
+        .#{$prefix}refresh-btn {
+            &:active {
+                &::after {
+                    background-color: $light-bg;
+                }
+            }
+        }
+
+        &:focus,
+        &:hover {
+            background-image: none;
+            background-color: $light-bg;
+            border-color: transparent;
+            text-decoration: none;
+        }
+    }
+
     .#{$prefix}sidebar-refresh-btn {
         &::after {
             padding: 0;

@@ -135,6 +135,48 @@
         @include icons-sprite(radio-checked);
         background-size: 14px;
     }
+    .#{$vprefix}lock-radios {
+        &.#{$prefix}field {
+            .#{$prefix}form-radio {
+                @include icons-sprite(unlock);
+                background-size: 14px;
+
+                &:focus {
+                    border: none;
+                    border-radius: 0;
+                    box-shadow: none;
+                }
+            }
+        }
+
+        &.#{$prefix}form-cb-checked {
+            .#{$prefix}form-radio {
+                @include icons-sprite(lock);
+                background-size: 14px;
+
+                &:focus {
+                    border: none;
+                    border-radius: 0;
+                    box-shadow: none;
+                }
+            }
+        }
+    }
+
+    .#{$vprefix}lock-radios {
+        &.#{$prefix}form-cb-checked {
+            &+.#{$prefix}form-type-text {
+                .#{$prefix}form-text {
+                    color: $gray-text-light;
+
+                    &.#{$prefix}field-form-focus {
+                        border-color: $gray-text-light;
+                        box-shadow: none;
+                    }
+                }
+            }
+        }
+    }
     .#{$prefix}form-type-checkbox,
     .#{$prefix}form-type-radio {
         .#{$prefix}form-cb-label-after {
