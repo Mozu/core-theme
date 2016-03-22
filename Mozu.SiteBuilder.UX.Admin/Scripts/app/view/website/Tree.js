@@ -125,6 +125,7 @@ Ext.define('Taco.view.website.Tree', {
             xtype: 'toolbar',
             items: [
                 {
+                    cls: 'taco-sidebar-refresh-btn',
                     itemId: 'refresh',
                     tooltip: 'Refresh',
                     overflowText: 'Refresh',

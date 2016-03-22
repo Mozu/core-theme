@@ -6,7 +6,7 @@ $glyph-larger:              "\E003";
 $glyph-numberedlist:        "\E004";
 $glyph-bulletedlist:        "\E005";
 $glyph-link:                "\E006";
-$glyph-refresh:             "\F900";
+$glyph-refresh:             "\F011";
 $glyph-italic:              "\E007";
 $glyph-bold:                "\E008";
 $glyph-rightalign:          "\E009";
@@ -127,6 +127,8 @@ $glyph-tree-open:           "\E92A";
 $glyph-tree-page:           "\E92B";
 $glyph-tree-template:       "\E92C";
 $glyph-save-checkmark:      "\E90E";
+$glyph-lock:                "\E92D";
+$glyph-unlock:              "\E92E";
 
 // font set for chorizo -- because these are being compiled using compass, they cannot be encased in ""
 // optimized at 16px
