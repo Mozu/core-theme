@@ -40,6 +40,7 @@ Ext.define('Taco.view.settings.paymentTypes.subform.ExternalGateway', {
             xtype: 'checkbox',
             boxLabel: 'Enable',
             checked: isEnabled,
+            id: this.externalPayment.get('name'),
             handler: this.onEnableChange,
             scope: this
         });
@@ -139,7 +140,7 @@ Ext.define('Taco.view.settings.paymentTypes.subform.ExternalGateway', {
     persistFormValues: function () {
         var me = this;
         var isDirty = false, val = {}, creds = [];
-        var gatewayType = this.typeCheck.boxLabel.toUpperCase();
+        var gatewayType = this.typeCheck.id.toUpperCase();
         var gatewayEnabled = this.typeCheck.getRawValue();
         var externalGateway = Ext.clone(me.record.get('externalPaymentWorkflows'));
         
