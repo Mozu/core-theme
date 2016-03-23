@@ -266,6 +266,22 @@ Ext.define('Taco.view.priceList.entry.PriceEntryPrice', {
             }
         });
 
+        me.mapRow = Ext.widget('panel', {
+            items: [
+                me.mapOverride,
+                me.mapStartDate,
+                me.mapEndDate
+            ]
+        });
+
+        me.discountRestrictionRow = Ext.widget('panel', {
+            items: [
+                me.discountRestriction,
+                me.restrictionStartDate,
+                me.restrictionEndDate
+            ]
+        });
+
         me.advancedPanel = {
             xtype: 'panel',
             title: 'Advanced',
@@ -294,20 +310,8 @@ Ext.define('Taco.view.priceList.entry.PriceEntryPrice', {
                         {}
                     ]
                 },
-                {
-                    items: [
-                        me.mapOverride,
-                        me.mapStartDate,
-                        me.mapEndDate
-                    ]
-                },
-                {
-                    items: [
-                        me.discountRestriction,
-                        me.restrictionStartDate,
-                        me.restrictionEndDate
-                    ]
-                }
+                me.mapRow,
+                me.discountRestrictionRow
             ]
         };
 

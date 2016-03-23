@@ -66,6 +66,27 @@ Ext.define('Taco.view.priceList.entry.PriceEntryGeneral', {
                 return (!this.getValue()) ? ["This field is required"] : [];
             },
             listeners: {
+                change: {
+                    fn: function(cmp, newVal, oldVal, eOpts) {
+                        var record = cmp.store.getAt(cmp.store.find('productCode', newVal)),
+                            isVariant = record.get('isVariant');
+
+                        var pricePanel = me.parentContainer.pricePanel,
+                            components = [ pricePanel.mapRow, pricePanel.discountRestrictionRow ];
+
+                        Ext.Array.each(components, function(cmp) {
+                            
+                            cmp.setVisible(!isVariant);
+                            if (isVariant) {
+                                Ext.Array.each(cmp.items, function(subCmp) {
+                                    subCmp.setValue(null);
+                                });
+                            }
+
+                        });
+                    },
+                    scope: me
+                },
                 focus: {
                     fn: this.onFocus,
                     scope:me

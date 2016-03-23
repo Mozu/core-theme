@@ -122,7 +122,8 @@ Ext.define('Taco.view.priceList.modal.PriceEntryEditor', {
         var me = this;
 
         me.generalPanel = Ext.create('Taco.view.priceList.entry.PriceEntryGeneral', {
-            record: me.record
+            record: me.record,
+            parentContainer: me
         });
 
         me.pricePanel = Ext.create('Taco.view.priceList.entry.PriceEntryPrice', {
