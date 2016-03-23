@@ -185,8 +185,8 @@ Ext.define('Taco.view.priceList.Grid', {
                 xtype: 'gridcolumn',
                 dataIndex: 'defaultForSitesDisplay',
                 stateId: 'defaultForSitesDisplay',
-                text: 'Default for Sites',
-                hideable: true,
+                text: 'Default For',
+                hidden: true,
                 flex: 3,
                 sortable: false
             }, {
