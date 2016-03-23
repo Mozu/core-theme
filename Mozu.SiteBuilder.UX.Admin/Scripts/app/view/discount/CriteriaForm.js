@@ -447,7 +447,7 @@ Ext.define('Taco.view.discount.CriteriaForm', {
             disableKeyFilter: true,
             typeAhead: false,
             displayField: 'name',
-            fieldLabel: 'Included Price Lists',
+            fieldLabel: 'Applicable Price Lists',
             valueField: 'code',
             style: {
                 display: 'inline-table',
