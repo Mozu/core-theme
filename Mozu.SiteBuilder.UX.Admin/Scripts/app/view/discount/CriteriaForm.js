@@ -434,6 +434,7 @@ Ext.define('Taco.view.discount.CriteriaForm', {
         priceListStore.load();
 
         this.includedPriceListBoxSelect = Ext.create('Ext.ux.form.field.BoxSelect', {
+            itemId: 'applicable-pricelist-field-container',
             name: 'includedPriceLists',
             width: 520,
             margin: 0,
@@ -452,7 +453,14 @@ Ext.define('Taco.view.discount.CriteriaForm', {
             style: {
                 display: 'inline-table',
                 verticalAlign: 'bottom'
-            }
+            },
+            tooltip: Ext.create('Taco.core.ux.content.Tooltip', {
+                elementId: 'applicable-pricelist-field-container',
+                hoverTarget: 'label',
+                messageKey: 'discount.criteria.applicablePriceLists',
+                offsetLeft: -230,
+                arrowPosition: 'left'
+            })
         });
 
         this.includedPriceListsBox = {
