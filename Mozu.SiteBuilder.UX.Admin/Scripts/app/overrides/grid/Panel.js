@@ -4,8 +4,7 @@
  */
 
 Ext.define('Taco.overrides.grid.Panel', {
-    override: 'Ext.grid.Panel',  
-    
+    override: 'Ext.grid.Panel',
     focusinCls: "x-grid-focusin",
 
     initComponent : function (){
@@ -14,10 +13,10 @@ Ext.define('Taco.overrides.grid.Panel', {
             columnName,
             statefulColumns;
 
-        // adding warnings for any column that doesnt have a stateId. Each column in a stateful grid should have a unique (to the grid) stateId.       
+        // adding warnings for any column that doesnt have a stateId. Each column in a stateful grid should have a unique (to the grid) stateId.
         if (me.stateful) {
             stateIdWarnings = []
-            
+
             if (me.columns) {
                 if (Ext.isArray(me.columns)) {
                     statefulColumns = me.columns;
@@ -26,7 +25,7 @@ Ext.define('Taco.overrides.grid.Panel', {
                 }
             }
 
-            Ext.Array.each(statefulColumns, function (column) {                
+            Ext.Array.each(statefulColumns, function (column) {
                 if (!column.stateId && column.xtype !== "taco.menucolumn" && column.stateful!==false) {
                     columnName = column.text || column.dataIndex || "unknown";
                     stateIdWarnings.push(columnName)
@@ -42,11 +41,11 @@ Ext.define('Taco.overrides.grid.Panel', {
     },
 
     onBoxReady: function () {
-        this.mon(this.body.el, 'focusin', function () {            
+        this.mon(this.body.el, 'focusin', function () {
             this.onFocusIn();
         }, this)
 
-        this.mon(this.body.el, 'focusout', function () {            
+        this.mon(this.body.el, 'focusout', function () {
             this.onFocusOut();
         }, this)
 
