@@ -1,9 +1,24 @@
 ﻿<div class="mz-messagebar" data-mz-message-bar>
     {% if model.length > 0 %}
-    <ul class="is-showing mz-errors">
-        {% for msg in model %}
-            <li class="mz-error-item" >{{ msg.message }}</li>
-        {% endfor %}
-    </ul>
+        {% with model|first as firstItem %}
+        {% if firstItem.type == "error" %}
+        <ul class="is-showing mz-errors">
+            {% for msg in model %}
+                {% if msg.type == "error" %}
+                    <li class="mz-error-item" >{{ msg.message }}</li>
+                {% endif %}
+            {% endfor %}
+        </ul>
+        {% else %}
+        <ul class="is-showing mz-infos">
+            {% for msg in model %}
+                {% if msg.type == "info" %}
+                    <li class="mz-error-item" >{{ msg.message }}</li>
+                {% endif %}
+            {% endfor %}
+        </ul>
+        {% endif %}
+        {% endwith %}
+
     {% endif %}
 </div>
