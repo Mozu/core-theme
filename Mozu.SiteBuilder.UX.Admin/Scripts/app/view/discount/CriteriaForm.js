@@ -433,8 +433,8 @@ Ext.define('Taco.view.discount.CriteriaForm', {
         priceListStore.clearFilter(true);
         priceListStore.load();
 
-        this.excludedPriceListBoxSelect = Ext.create('Ext.ux.form.field.BoxSelect', {
-            name: 'excludedPriceLists',
+        this.includedPriceListBoxSelect = Ext.create('Ext.ux.form.field.BoxSelect', {
+            name: 'includedPriceLists',
             width: 520,
             margin: 0,
             store: priceListStore,
@@ -447,7 +447,7 @@ Ext.define('Taco.view.discount.CriteriaForm', {
             disableKeyFilter: true,
             typeAhead: false,
             displayField: 'name',
-            fieldLabel: 'Excluded Price Lists',
+            fieldLabel: 'Included Price Lists',
             valueField: 'code',
             style: {
                 display: 'inline-table',
@@ -455,11 +455,11 @@ Ext.define('Taco.view.discount.CriteriaForm', {
             }
         });
 
-        this.excludedPriceListsBox = {
+        this.includedPriceListsBox = {
             xtype: 'panel',
             layout: 'auto',
             items: [
-                this.excludedPriceListBoxSelect,
+                this.includedPriceListBoxSelect,
                 {
                     xtype: 'button',
                     scale: 'medium',
@@ -471,7 +471,7 @@ Ext.define('Taco.view.discount.CriteriaForm', {
                         verticalAlign: 'bottom'
                     },
                     handler: function () {
-                        this.launchPriceListsModal(this.excludedPriceListBoxSelect);
+                        this.launchPriceListsModal(this.includedPriceListBoxSelect);
                     },
                     scope: this
                 }
@@ -570,7 +570,7 @@ Ext.define('Taco.view.discount.CriteriaForm', {
                 this.maximumQuantityPerRedemptionTB,
                 this.excludeCategoriesBox,
                 this.productsExcludeBox,
-                this.excludedPriceListsBox,
+                this.includedPriceListsBox,
                 this.optionsContainer
             ]
         });

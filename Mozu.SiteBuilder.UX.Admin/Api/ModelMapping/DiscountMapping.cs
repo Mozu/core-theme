@@ -136,7 +136,8 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.ModelMapping
                         ? (x.Target.ExcludedProducts).Select(_ => _.ProductCode).ToList()
                         : (Enumerable.Empty<DC.TargetedProduct>()).Select(_ => _.ProductCode).ToList()))
 
-
+                .ForMember(x => x.IncludedPriceLists, op => op.ResolveUsing(dc => dc.IncludedPriceLists))
+            
 
                 .ForMember(x => x.ShippingMethods,
                     opt => opt.ResolveUsing(x => (x.Target != null && x.Target.ShippingMethods != null)
@@ -269,6 +270,9 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.ModelMapping
                                                                            IncludeAllProducts = x.IncludeAllProducts,
                                                                            AppliesToLeastExpensiveProductsFirst = x.AppliesToLeastExpensiveProductsFirst,
                                                                        }))
+
+                .ForMember(dc => dc.IncludedPriceLists, op => op.ResolveUsing(x => x.IncludedPriceLists))
+
                 .AfterMap((s, d) =>
                 {
                     if (d.Target.IncludeAllProducts.GetValueOrDefault(false))
