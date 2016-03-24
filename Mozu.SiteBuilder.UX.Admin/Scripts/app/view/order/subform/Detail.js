@@ -8,6 +8,8 @@ Ext.define('Taco.view.order.subform.Detail', {
     extend: 'Taco.view.order.subform.Subform',
     requires: [
         'Taco.model.OrderItemDiscount',
+        'Taco.store.PriceLists',
+        'Taco.store.RuntimePriceLists',
         'Taco.view.order.widget.OrderTotalPanel',
         'Taco.view.order.widget.OrderItemGrid',
         'Taco.view.order.modal.EditOrderDetail',
