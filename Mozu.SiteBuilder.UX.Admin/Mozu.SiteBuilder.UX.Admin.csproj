@@ -190,6 +190,7 @@
     <Compile Include="Api\CouponCodeController.cs" />
     <Compile Include="Api\LayoutWidgetDefinitionController.cs" />
     <Compile Include="Api\ModelMapping\PriceListMapping.cs" />
+    <Compile Include="Api\Models\Options\ProductOptionValue.cs" />
     <Compile Include="Api\Models\PriceLists\PriceListEntryPrice.cs" />
     <Compile Include="Api\Models\PriceLists\PriceListEntry.cs" />
     <Compile Include="Api\Models\PriceLists\RuntimePriceList.cs" />

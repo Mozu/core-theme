@@ -188,11 +188,45 @@ Ext.define('Taco.view.priceList.widget.EntriesGrid', {
                 sortable: false
             }, {
                 xtype: 'gridcolumn',
+                dataIndex: 'optionSummary',
+                stateId: 'optionSummary',
+                text: 'Option Summary',
+                hideable: true,
+                flex: 2,
+                sortable: false
+            }, {
+                xtype: 'gridcolumn',
                 dataIndex: 'currencyCode',
                 stateId: 'currencyCode',
                 text: 'Currency',
                 flex: 1,
                 sortable: true
+            }, {
+                xtype: 'gridcolumn',
+                dataIndex: 'priceEntries',
+                stateId: 'listPrice',
+                text: 'Price',
+                flex: 1,
+                sortable: false,
+                renderer: function(entries) {
+                    if (Ext.isArray(entries)) {
+                        return entries[0].listPrice ? Taco.app.context.getCurrent().formatCurrency(entries[0].listPrice) : 'Default';
+                    }
+                    return 'Default';
+                }
+            }, {
+                xtype: 'gridcolumn',
+                dataIndex: 'priceEntries',
+                stateId: 'salePrice',
+                text: 'Sale Price',
+                flex: 1,
+                sortable: false,
+                renderer: function(entries) {
+                    if (Ext.isArray(entries)) {
+                        return entries[0].salePrice ? Taco.app.context.getCurrent().formatCurrency(entries[0].salePrice) : 'Default';
+                    }
+                    return 'Default';
+                }
             }, {
                 xtype: 'datecolumn',
                 dataIndex: 'startDate',
@@ -245,32 +279,6 @@ Ext.define('Taco.view.priceList.widget.EntriesGrid', {
                 flex:1,
                 hidden: true,
                 sortable: false
-            }, {
-                xtype: 'gridcolumn',
-                dataIndex: 'priceEntries',
-                stateId: 'listPrice',
-                text: 'Price',
-                flex: 1,
-                sortable: false,
-                renderer: function(entries) {
-                    if (Ext.isArray(entries)) {
-                        return entries[0].listPrice ? Taco.app.context.getCurrent().formatCurrency(entries[0].listPrice) : 'Default';
-                    }
-                    return 'Default';
-                }
-            }, {
-                xtype: 'gridcolumn',
-                dataIndex: 'priceEntries',
-                stateId: 'salePrice',
-                text: 'Sale Price',
-                flex: 1,
-                sortable: false,
-                renderer: function(entries) {
-                    if (Ext.isArray(entries)) {
-                        return entries[0].salePrice ? Taco.app.context.getCurrent().formatCurrency(entries[0].salePrice) : 'Default';
-                    }
-                    return 'Default';
-                }
             }
         ];
         return columns;

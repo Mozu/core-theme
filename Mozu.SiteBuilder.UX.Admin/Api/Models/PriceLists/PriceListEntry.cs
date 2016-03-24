@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using Mozu.Core.Api.Contracts;
+using Mozu.SiteBuilder.UX.Admin.Api.Models.Options;
 using Newtonsoft.Json;
 
 namespace Mozu.SiteBuilder.UX.Admin.Api.Models.PriceLists
@@ -19,6 +20,10 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.Models.PriceLists
         public DateTime? StartDate { get; set; }
 
         public DateTime? EndDate { get; set; }
+
+        public bool IsVariation { get; set; }
+
+        public List<ProductOption> Options { get; set; }
 
         public string PriceListEntryMode { get; set; }
 
