@@ -385,5 +385,7 @@
     "notifyWidgetSuccess"   : "Sie werden benachrichtigt, sobald der Artikel wieder auf Lager ist.",
     "notifyWidgetError"   : "Es gab einen Fehler oder Forums. Bitte versuchen Sie es erneut.",
 
-    "dealOfTheDay"     : "Angebot des Tages"
+    "dealOfTheDay"     : "Angebot des Tages",
+    "exclusivePricelist": "Die folgenden Produkte sind nicht zum Kauf zur Verfügung und wurden entfernt",
+    "newPriceList": "Sie sind nun berechtigt, für spezielle Preise"
 }
