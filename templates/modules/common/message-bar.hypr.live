@@ -5,10 +5,10 @@
         {% if firstItem.message == "exclusivePricelist" %}
         <ul class="is-showing mz-infos">
             {% for msg in model %}
-                <li class="mz-error-item" >{{ labels|prop(msg.message) }}</li>
+                <li class="mz-message-item" >{{ labels|prop(msg.message) }}</li>
                 <ul>
                     {% for itemsRemoved in msg.productsRemoved %}
-                    <li class="mz-error-item">{{itemsRemoved.name}} ({{itemsRemoved.code}})</li>
+                    <li class="mz-message-item">{{itemsRemoved.name}} ({% if itemsRemoved.variationProductCode %}{{itemsRemoved.variationProductCode}}{%else%}{{itemsRemoved.productCode}}{%endif%})</li>
                     {% endfor %}
                 </ul>
             {% endfor %}
@@ -16,16 +16,16 @@
         {% else %}
 
         {% if firstItem.message == "newPricelist" %}
-        <ul class="is-showing mz-infos">
+        <ul class="is-showing mz-success">
             {% for msg in model %}
-                <li class="mz-error-item" >{{ labels|prop(msg.message) }}</li>
+                <li class="mz-message-item" >{{ labels|prop(msg.message) }}</li>
             {% endfor %}
         </ul>
         {% else %}
 
         <ul class="is-showing mz-errors">
             {% for msg in model %}
-                <li class="mz-error-item" >{{ msg.message }}</li>
+                <li class="mz-message-item" >{{ msg.message }}</li>
             {% endfor %}
         </ul>
         {% endif %}
