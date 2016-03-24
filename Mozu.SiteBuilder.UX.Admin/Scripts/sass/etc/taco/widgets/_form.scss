@@ -420,4 +420,43 @@
         background-color: $color-framework-gray-light;
     }
 
+    /** address validation */
+    .#{$vprefix}validate-address-modal {
+        height: 220px !important;
+
+        .#{$prefix}window-header-modal-top {
+            height: 59px;
+        }
+
+        .#{$prefix}window-body {
+            height: 119px !important;
+
+            .#{$prefix}box-inner {
+                height: 108px !important;
+            }
+        }
+
+        .#{$prefix}toolbar-docked-bottom {
+            top: 178px !important;
+
+            .#{$prefix}btn-action-medium {
+                margin-left: -7px !important;
+
+                &.#{$prefix}btn-action-primary-medium-noicon {
+                    &:hover {
+                        background-color: $primary-btn-hover-background;
+
+                        .#{$prefix}btn-inner-center {
+                            color: $white-color;
+                        }
+                    }
+
+                    &:active {
+                        background-color: $primary-btn-active-background;
+                    }
+                }
+            }
+        }
+    }
+
 }
