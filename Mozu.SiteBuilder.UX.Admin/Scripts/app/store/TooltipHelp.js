@@ -74,6 +74,9 @@ Ext.define('Taco.store.TooltipHelp', {
             key: 'discount.criteria.excludeProductsInPriceLists',
             value: 'Excludes products from applying this discount in the selected Price Lists.'
         }, {
+            key: 'discount.criteria.applicablePriceLists',
+            value: 'The discount applies to products that are priced by the specified price lists or their children, if applicable.'
+        }, {
             key: 'discount.limitations.maximumDiscountValuePerRedemption',
             value: 'A redemption occurs each time a discount is applied. If your discount is a buy one, get two free, each two free items is one redemption. This field limits the maximum combined value of the two free items.'
         }, {

@@ -63,6 +63,9 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.ModelMapping
             Mapper.CreateMap<PriceListEntryPrice, DC.PriceListEntryPrice>();
             Mapper.CreateMap<DC.PriceListEntryPrice, PriceListEntryPrice>();
 
+            Mapper.CreateMap<Mozu.ProductRuntime.Contracts.PriceList, RuntimePriceList>()
+                .ForMember(x => x.Code, op => op.ResolveUsing(dc => dc.PriceListCode))
+                ;
         }
     }
 }

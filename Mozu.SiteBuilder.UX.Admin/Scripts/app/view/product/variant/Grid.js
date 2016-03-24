@@ -296,6 +296,10 @@ Ext.define('Taco.view.product.variant.Grid', {
         columns.push.apply(columns, this.getOptionColumns());
         columns.push(this.getProductCodeColumn());
 
+        if (!pricingMode) {
+            pricingMode = this.pricingMode;
+        }
+
         switch (pricingMode.toLowerCase()) {
             case 'fixed':
                 columns.push.apply(columns, this.getExplicitColumns());
@@ -442,7 +446,7 @@ Ext.define('Taco.view.product.variant.Grid', {
                 msgTarget: "qtip"
             }
         }, {
-            text: 'Extra Cost',
+            text: 'Cost',
             dataIndex: 'deltaCost',
             stateId: 'deltaCost',
             hideable: true,

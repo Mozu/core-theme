@@ -433,8 +433,9 @@ Ext.define('Taco.view.discount.CriteriaForm', {
         priceListStore.clearFilter(true);
         priceListStore.load();
 
-        this.excludedPriceListBoxSelect = Ext.create('Ext.ux.form.field.BoxSelect', {
-            name: 'excludedPriceLists',
+        this.includedPriceListBoxSelect = Ext.create('Ext.ux.form.field.BoxSelect', {
+            itemId: 'applicable-pricelist-field-container',
+            name: 'includedPriceLists',
             width: 520,
             margin: 0,
             store: priceListStore,
@@ -447,19 +448,26 @@ Ext.define('Taco.view.discount.CriteriaForm', {
             disableKeyFilter: true,
             typeAhead: false,
             displayField: 'name',
-            fieldLabel: 'Excluded Price Lists',
+            fieldLabel: 'Applicable Price Lists',
             valueField: 'code',
             style: {
                 display: 'inline-table',
                 verticalAlign: 'bottom'
-            }
+            },
+            tooltip: Ext.create('Taco.core.ux.content.Tooltip', {
+                elementId: 'applicable-pricelist-field-container',
+                hoverTarget: 'label',
+                messageKey: 'discount.criteria.applicablePriceLists',
+                offsetLeft: -230,
+                arrowPosition: 'left'
+            })
         });
 
-        this.excludedPriceListsBox = {
+        this.includedPriceListsBox = {
             xtype: 'panel',
             layout: 'auto',
             items: [
-                this.excludedPriceListBoxSelect,
+                this.includedPriceListBoxSelect,
                 {
                     xtype: 'button',
                     scale: 'medium',
@@ -471,7 +479,7 @@ Ext.define('Taco.view.discount.CriteriaForm', {
                         verticalAlign: 'bottom'
                     },
                     handler: function () {
-                        this.launchPriceListsModal(this.excludedPriceListBoxSelect);
+                        this.launchPriceListsModal(this.includedPriceListBoxSelect);
                     },
                     scope: this
                 }
@@ -570,7 +578,7 @@ Ext.define('Taco.view.discount.CriteriaForm', {
                 this.maximumQuantityPerRedemptionTB,
                 this.excludeCategoriesBox,
                 this.productsExcludeBox,
-                this.excludedPriceListsBox,
+                this.includedPriceListsBox,
                 this.optionsContainer
             ]
         });

@@ -35,7 +35,7 @@ Ext.define('Taco.view.priceList.Grid', {
 
     // Required by mixin: Taco.core.ux.mixins.LaunchEditor defined in SearchList
     modelName: 'Taco.model.PriceList',
-    
+
     controllerName: 'PriceLists',
 
     enableNavHeader: true,
@@ -73,7 +73,7 @@ Ext.define('Taco.view.priceList.Grid', {
 
     pageSize: 25,
 
-    advancedSearchConfig : {
+    advancedSearchConfig: {
         form: null
     },
 
@@ -88,7 +88,7 @@ Ext.define('Taco.view.priceList.Grid', {
     },
 
 
-    initComponent: function () {
+    initComponent: function() {
         var me = this,
             model;
 
@@ -139,7 +139,7 @@ Ext.define('Taco.view.priceList.Grid', {
         this.store.reload();
     },
 
-    getColumnConfig: function () {
+    getColumnConfig: function() {
         var me = this;
         var columns = [
             {
@@ -156,7 +156,7 @@ Ext.define('Taco.view.priceList.Grid', {
                 stateId: 'name',
                 text: 'Name',
                 hideable: false,
-                flex: 2,                
+                flex: 2,
                 sortable: true
             }, {
                 xtype: 'gridcolumn',
@@ -203,49 +203,56 @@ Ext.define('Taco.view.priceList.Grid', {
         //    });
         //}
         return columns.concat([
-            {
-                xtype: 'gridcolumn',
-                dataIndex: 'status',
-                stateId: 'status',
-                text: 'Status',
-                flex:1,
-                sortable: true
-            }, {
-                xtype: 'datecolumn',
-                dataIndex: 'createDate',
-                stateId: 'createDate',
-                format: 'n/j/Y g:i a',
-                flex:2,
-                text: 'Created Date',
-                hidden: true,
-                sortable: true
-            }, {
-                xtype: 'gridcolumn',
-                dataIndex: 'createByUser',
-                stateId: 'createByUser',
-                text: 'Created By',
-                flex:1,
-                hidden: true,
-                sortable: false
-            }, {
-                xtype: 'datecolumn',
-                dataIndex: 'lastModifiedDate',
-                stateId: 'lastModifiedDate',
-                format: 'n/j/Y g:i a',
-                flex:2,
-                text: 'Last Modified Date',
-                hidden: true,
-                sortable: true
-            }, {
-                xtype: 'gridcolumn',
-                dataIndex: 'lastModifiedByUser',
-                stateId: 'lastModifiedByUser',
-                text: 'Last Modified By',
-                flex:1,
-                hidden: true,
-                sortable: false
-            }
-        ]);
+        {
+            xtype: 'gridcolumn',
+            dataIndex: 'status',
+            stateId: 'status',
+            text: 'Status',
+            flex: 1,
+            sortable: true
+        }, {
+            xtype: 'datecolumn',
+            dataIndex: 'createDate',
+            stateId: 'createDate',
+            format: 'n/j/Y g:i a',
+            flex: 2,
+            text: 'Created Date',
+            hidden: true,
+            sortable: true
+        }, {
+            xtype: 'gridcolumn',
+            dataIndex: 'createByUser',
+            stateId: 'createByUser',
+            text: 'Created By',
+            flex: 1,
+            hidden: true,
+            sortable: false
+        }, {
+            xtype: 'datecolumn',
+            dataIndex: 'lastModifiedDate',
+            stateId: 'lastModifiedDate',
+            format: 'n/j/Y g:i a',
+            flex: 2,
+            text: 'Last Modified Date',
+            hidden: true,
+            sortable: true
+        }, {
+            xtype: 'gridcolumn',
+            dataIndex: 'lastModifiedByUser',
+            stateId: 'lastModifiedByUser',
+            text: 'Last Modified By',
+            flex: 1,
+            hidden: true,
+            sortable: false
+        }, {
+            xtype: 'gridcolumn',
+            dataIndex: 'defaultForSitesDisplay',
+            stateId: 'defaultForSitesDisplay',
+            text: 'Default For',
+            hidden: true,
+            flex: 3,
+            sortable: false
+        }]);
     },
 
     // list of actions to put in action column and context menu;

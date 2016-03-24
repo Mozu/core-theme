@@ -39,17 +39,17 @@ Ext.define('Taco.view.order.widget.PriceListPickerField', {
                         '<li role="option" class="' + Ext.baseCSSPrefix + 'boundlist-item">' +
                             "<span class='name'>{name}</span>" +
                             "<tpl if='filteredInStorefront'> (Exclusive)</tpl>" +
-                            "{[this.isDefault(values.defaultForSites)]}" +
+                            "<tpl if='isSiteDefault'> (Default)</tpl>" +
+                            "<tpl if='!isActive'> (Disabled)</tpl>" +
                         '</li>' +
                     '</tpl>' +
-                '</ul>',
-                {
-                    isDefault: function(sites) {
-                        return sites.indexOf(me.orderSiteId) >= 0 ? " (Default)" : "";
-                    }
-                }
+                '</ul>'
             );
 
         me.callParent(arguments);
+
+        me.mon(this, 'beforeselect', function(combo, record, index) {
+            return record.get('isActive');
+        });
     }
 });

@@ -7,7 +7,7 @@
  */
 Ext.define('Taco.view.order.widget.OrderTotalPanelEditable', {
     extend: 'Taco.view.order.widget.OrderTotalPanel',
-    requires: ['Taco.view.order.widget.DiscountPickerField', 'Taco.view.order.widget.DiscountPickerField', 'Taco.store.Discounts', 'Taco.core.ux.form.CurrencyField', 'Ext.button.Button'],
+    requires: ['Taco.view.order.widget.DiscountPickerField', 'Taco.view.order.widget.PriceListPickerField', 'Taco.store.Discounts', 'Taco.core.ux.form.CurrencyField', 'Ext.button.Button'],
     layout: {
         type: 'hbox',
         align: 'stretch',
