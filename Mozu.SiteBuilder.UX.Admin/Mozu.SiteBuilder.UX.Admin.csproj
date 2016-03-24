@@ -178,11 +178,13 @@
     <Compile Include="Api\ModelMapping\PriceListMapping.cs" />
     <Compile Include="Api\Models\PriceLists\PriceListEntryPrice.cs" />
     <Compile Include="Api\Models\PriceLists\PriceListEntry.cs" />
+    <Compile Include="Api\Models\PriceLists\RuntimePriceList.cs" />
     <Compile Include="Api\PriceListController.cs" />
     <Compile Include="Api\ModelMapping\SearchTuningMapping.cs" />
     <Compile Include="Api\Models\PriceLists\PriceList.cs" />
     <Compile Include="Api\Models\Search\SearchTuningRule.cs" />
     <Compile Include="Api\Models\Search\SimpleSearchProduct.cs" />
+    <Compile Include="Api\PriceListRuntimeController.cs" />
     <Compile Include="Api\SearchTuningRuleController.cs" />
     <Compile Include="Api\CouponSetController.cs" />
     <Compile Include="Api\ModelMapping\ContentMapping.cs" />
@@ -579,6 +581,7 @@
     <Content Include="Scripts\app\model\PriceListEntry.js" />
     <Content Include="Scripts\app\model\PriceList.js" />
     <Content Include="Scripts\app\model\PriceListEntryPrice.js" />
+    <Content Include="Scripts\app\model\RuntimePriceList.js" />
     <Content Include="Scripts\app\model\StorefrontProduct.js" />
     <Content Include="Scripts\app\model\FilterField.js" />
     <Content Include="Scripts\app\model\BehaviorNode.js" />
@@ -693,6 +696,7 @@
     <Content Include="Scripts\app\store\PriceLists.js" />
     <Content Include="Scripts\app\store\ProductRankings.js" />
     <Content Include="Scripts\app\store\CouponSets.js" />
+    <Content Include="Scripts\app\store\RuntimePriceLists.js" />
     <Content Include="Scripts\app\store\StorefrontProducts.js" />
     <Content Include="Scripts\app\store\DiscountGrid.js" />
     <Content Include="Scripts\app\store\Discounts.js" />

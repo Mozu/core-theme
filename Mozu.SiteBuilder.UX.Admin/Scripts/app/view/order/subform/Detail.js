@@ -56,20 +56,18 @@ Ext.define('Taco.view.order.subform.Detail', {
 
         // Create the PriceListStore.
         this.priceListStore = Taco.core.data.StoreManager.getOrCreate({
-            type: 'Taco.store.PriceLists',
+            type: 'Taco.store.RuntimePriceLists',
             createOnly: true,
             autoLoad: false,
             clearFilters: true,
             remoteFilter: false,
             filterOnLoad: true,
             clearSort: false,
-            remoteSort: true,
-            sorters: [{ property: 'name' }],
-            pageSize: 9999
+            remoteSort: false,
+            sorters: [{ property: 'name' }]
         });
         this.priceListStore.load(
             {
-                //params: { },
                 callback: function(records, operation, success) {
                     // Add a "None" option to the top to clear the price list.
                     me.priceListStore.insert(0,
@@ -78,8 +76,42 @@ Ext.define('Taco.view.order.subform.Detail', {
                             name: 'None',
                             code: '',
                             filteredInStorefront: false,
-                            defaultForSites: []
+                            isSiteDefault: false
                         }));
+
+                    // Hacky crap to grab an inactive price list from ProductAdmin, then convert it to a "runtime" pricelist.
+                    var currentCode = me.record.get('priceListCode');
+                    if (currentCode) {
+                        var foundRecord = me.priceListStore.findRecord('code', me.record.get('priceListCode'));
+                        if (!foundRecord) {
+                            var adminPriceListStore = Taco.core.data.StoreManager.getOrCreate({
+                                type: 'Taco.store.PriceLists',
+                                autoLoad: false
+                            });
+                            adminPriceListStore.load({
+                                params: {
+                                    id: currentCode
+                                },
+                                callback: function(records, operation, success) {
+                                    if (!success) return;
+
+                                    var adminRecord = records[0];
+                                    me.priceListStore.add(
+                                        Ext.create(me.priceListStore.model, {
+                                            name: adminRecord.get('name'),
+                                            code: adminRecord.get('code'),
+                                            filteredInStorefront: adminRecord.get('filteredInStorefront'),
+                                            isSiteDefault: adminRecord.get('defaultForSites').indexOf(me.record.get('siteId')) > 0 ? true : false,
+                                            isActive: false
+                                        })
+                                    );
+                                    me.retrievePricelistName(me.priceListStore);
+                                    me.setTitle(me.constructTitle());
+                                }
+                            });
+                        }
+                    }
+
                     me.retrievePricelistName(me.priceListStore);
                     me.setTitle(me.constructTitle());
                 },
