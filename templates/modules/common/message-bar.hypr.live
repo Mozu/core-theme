@@ -1,23 +1,37 @@
 ﻿<div class="mz-messagebar" data-mz-message-bar>
     {% if model.length > 0 %}
         {% with model|first as firstItem %}
-        {% if firstItem.type == "error" %}
-        <ul class="is-showing mz-errors">
+        
+        {% if firstItem.message == "exclusivePricelist" %}
+        <ul class="is-showing mz-infos">
             {% for msg in model %}
-                {% if msg.type == "error" %}
-                    <li class="mz-error-item" >{{ msg.message }}</li>
-                {% endif %}
+                <li class="mz-error-item" >{{ labels|prop(msg.message) }}</li>
+                <ul>
+                    {% for itemsRemoved in msg.productsRemoved %}
+                    <li class="mz-error-item">{{itemsRemoved.name}} ({{itemsRemoved.code}})</li>
+                    {% endfor %}
+                </ul>
             {% endfor %}
         </ul>
         {% else %}
+
+        {% if firstItem.message == "newPricelist" %}
         <ul class="is-showing mz-infos">
             {% for msg in model %}
-                {% if msg.type == "info" %}
-                    <li class="mz-error-item" >{{ msg.message }}</li>
-                {% endif %}
+                <li class="mz-error-item" >{{ labels|prop(msg.message) }}</li>
+            {% endfor %}
+        </ul>
+        {% else %}
+
+        <ul class="is-showing mz-errors">
+            {% for msg in model %}
+                <li class="mz-error-item" >{{ msg.message }}</li>
             {% endfor %}
         </ul>
         {% endif %}
+
+        {% endif %}
+
         {% endwith %}
 
     {% endif %}
