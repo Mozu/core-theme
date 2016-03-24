@@ -51,6 +51,7 @@ Ext.define('Taco.view.order.subform.Attributes', {
         this.mon(this.attributeDefinitionStore, 'load', this.changeCards, this);
 
         this.callParent(arguments);
+        this.changeCards();
     },
 
     openAttributesDialog: function (focusAfterCloseCmp) {
