@@ -8,7 +8,6 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.Models.PriceLists
 {
     public class PriceListEntry
     {
-
         public string PriceListCode { get; set; }
 
         public string ProductCode { get; set; }
@@ -26,6 +25,8 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.Models.PriceLists
         public List<ProductOption> Options { get; set; }
 
         public string PriceListEntryMode { get; set; }
+
+        public int PriceListEntrySequence { get; set; }
 
         public List<PriceListEntryPrice> PriceEntries { get; set; }
 

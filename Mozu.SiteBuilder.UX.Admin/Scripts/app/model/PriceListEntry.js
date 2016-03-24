@@ -55,6 +55,9 @@ Ext.define('Taco.model.PriceListEntry', {
             defaultValue: false,
             persist: false
         }, {
+            name: 'priceListEntrySequence',
+            type: 'int'
+        }, {
             name: 'priceListEntryMode',
             type: 'string',
             defaultValue: 'Simple'

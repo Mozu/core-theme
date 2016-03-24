@@ -307,8 +307,8 @@ Ext.define('Taco.view.priceList.form.Resolution', {
             }/*,
             {
                 xtype: 'numberfield',
-                name: 'searchIndexSequence',
-                itemId: 'searchIndexSequenceField',
+                name: 'priceListSequence',
+                itemId: 'priceListSequenceField',
                 fieldLabel: 'Search Index Sequence',
                 allowBlank: true,
                 hideTrigger: true,
