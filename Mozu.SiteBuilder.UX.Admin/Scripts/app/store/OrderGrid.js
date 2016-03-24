@@ -6,8 +6,8 @@
         extend: 'Ext.data.Store',
         model: 'Taco.model.Order',
         pageSize: 50,
-        remoteSort: false,
-        remoteFilter: false,
+        remoteSort: true,
+        remoteFilter: true,
         storeManagerConfig: {
             // createOnly:false,
            autoLoad: true
