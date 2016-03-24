@@ -387,6 +387,11 @@ namespace Mozu.SiteBuilder.Mvc.Contexts
                 
 
         }
+
+        public T Resolve<T>()
+        {
+            return _request.Resolve<T>();
+        }
     }
 
    
@@ -475,8 +480,10 @@ namespace Mozu.SiteBuilder.Mvc.Contexts
         public KeyValuePair<string, string>? RemoveFacet { get; set; }
         public KeyValuePair<string,string>? AddFacet { get; set; }
 
-
-
+        public T Resolve<T>()
+        {
+            return default(T);
+        }
     }
 
     public class FacetJsonConverter : JsonConverter

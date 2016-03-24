@@ -137,7 +137,8 @@ Ext.define('Taco.Application', {
         'Taco.core.ux.TooltipLabel',
         'Taco.core.util.Filter',
         'Taco.core.ux.action.UserButton',
-        'Taco.store.Categories'
+        'Taco.store.Categories',
+        'Taco.model.SubnavLink'
     ],
     controllers: [
         //'Analytics',
@@ -613,6 +614,38 @@ Ext.define('Taco.Application', {
         this.context = Ext.create('Taco.core.context.TaContext', Taco.user.taContext);
     },
 
+    initDeepExtensionLinks: function (attempts) {
+        var qs = Ext.Object.fromQueryString(window.location.search),
+            linkId = qs['_mz_extlnk'],
+            viewWithRecord = Taco.app.viewPort.down('[record]'),
+            contextData = viewWithRecord ? viewWithRecord.record : undefined,
+            subNavLink;
+
+
+        if (!linkId || !Taco.extensiblity || !Taco.extensiblity.subNavLinks) {
+            return;
+        }
+
+        subNavLink = Ext.Array.findBy(Taco.extensiblity.subNavLinks, function (lnk) {
+            return lnk._id === linkId;
+        });
+
+        if (!subNavLink) {
+            return;
+        }
+
+        if (subNavLink.requiredContext && !contextData) {
+            attempts = (attempts || 0) + 1;
+            if (attempts < 20) {
+                setTimeout(this.initDeepExtensionLinks.bind(this, attempts), 200);
+            }
+            return
+        }
+
+        subNavLink = Ext.create('Taco.model.SubnavLink', subNavLink);
+        contextData = Taco.view.navigation.SubNavLinkContainer.getContextHash(contextData);
+        Taco.view.navigation.SubNavLinkContainer.launchExtensionWindow(subNavLink, contextData);
+    },
     doTheNeedful: function (state) {
 
 
@@ -625,6 +658,7 @@ Ext.define('Taco.Application', {
         this.initStateManager();
         this.initDocumentDragAndDrop();
         this.initPrimaryMenu();
+        this.initDeepExtensionLinks();
 
         // add some utility stuff
         Ext.apply(Ext.form.field.VTypes, {
@@ -667,5 +701,7 @@ Ext.define('Taco.Application', {
                 return Taco.app.context.findSite(siteId).formatCurrency(value);
             }
         });
+
+
     }
 });

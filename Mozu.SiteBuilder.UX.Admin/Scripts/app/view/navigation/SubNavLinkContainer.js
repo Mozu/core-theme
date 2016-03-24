@@ -1,7 +1,7 @@
 /**
  * @class Taco.view.SubNavLinkContainer
  * @author Ben Cripps
- * 
+ *
  */
 
 Ext.define('Taco.view.navigation.SubNavLinkContainer', {
@@ -12,11 +12,18 @@ Ext.define('Taco.view.navigation.SubNavLinkContainer', {
     statics: {
         launchExtensionWindow: function (extensionLink, ctx, secureForm) {
 
-            var removeComplexDataTypes = function(json) {
+            var removeComplexDataTypes = function (json) {
                 var returnOb = {};
-                Object.keys(json).forEach(function(k) {
-                    if (k && json[k] && typeof json[k] === 'string') {
-                        returnOb[k] = json[k];
+                Object.keys(json).forEach(function (k) {
+                    if (k && json[k]) {
+                        var val = json[k];
+
+                        if (Ext.isString(val) || Ext.isBoolean(val) || Ext.isNumber(val)) {
+                            returnOb[k] = val.toString()
+                        }
+                        if (Ext.isDate(val)) {
+                            returnOb[k] = Ext.Date.format(val, 'c');
+                        }
                     }
                 });
 
@@ -28,15 +35,20 @@ Ext.define('Taco.view.navigation.SubNavLinkContainer', {
 
             if (ctx) jsonData = ctx;
 
+            var returnUrl = window.location.href.replace(window.location.search, ''),
+                queryString = Ext.Object.fromQueryString(window.location.search);
+            queryString._mz_extlnk = extensionLink.data._id;
+            returnUrl += '?' + Ext.Object.toQueryString(queryString);
 
-            jsonData['x-vol-return-url'] = window.location.href;
+
+            jsonData['x-vol-return-url'] = returnUrl;
 
             jsonData = removeComplexDataTypes(jsonData);
 
             if (extensionLink.data.appId) {
 
                 if (!secureForm) {
-                    
+
                     Ext.Ajax.request({
                         url: '/admin/app/capabilities/createSecureForm?appId=' + extensionLink.data.appId,
                         method: 'POST',
@@ -108,8 +120,69 @@ Ext.define('Taco.view.navigation.SubNavLinkContainer', {
                     configForm
                 ]
             });
-            
+
             modalConfigWindow.center();
+        },
+        getContextHash: function (record, type) {
+            if (record === undefined) {
+                record = (Taco.app.viewPort.down('[record]') || {}).record;
+            }
+            if (!record || !record.data) {
+                return {};
+            }
+            if (!type) {
+                var arr = record.$className.split('.');
+                type = Ext.util.Inflector.pluralize(arr[arr.length - 1].toLowerCase());
+            }
+            switch (type) {
+                case 'orders':
+                    return {
+                        orderId: record.data.id,
+                        orderNumber: record.data.orderNumber,
+                        extOrderNumber: record.data.externalId,
+                        customerEmail: record.customer ? record.customer.data.emailAddress : undefined,
+                        customerName: record.customer ? [record.customer.data.firstName, ' ', record.customer.data.lastName].join('') : undefined,
+                        customerId: record.customer ? record.customer.data.id : undefined
+                    };
+                case 'products':
+                    return {
+                        productCode: record.data.productCode,
+                        catalogId: record.id,
+                        productType: record.productType,
+                        productUsage: record.data.productUsage
+                    };
+                case 'customers':
+                    return {
+                        customerId: record.data.id,
+                        customerAccntEmail: record.data.customerOrOrganization,
+                        shopperAccntEmail: record.data.contacts ? record.data.contacts.map(function (n) {
+                            return n.email;
+                        }) : undefined,
+                        customerSegName: record.data.segments
+                    };
+
+                case 'discounts':
+                    return {
+                        discountId: record.data.id,
+                        couponCode: record.data.couponCode
+                    };
+                case 'locations':
+                    return {
+                        locationCode: record.data.code,
+                        locationType: record.data.locationTypes
+                    };
+                case 'storecredits':
+                    return {
+                        customerId: record.data.customerId,
+                        creditCode: record.data.code
+                    };
+
+                default:
+                    var ret = {};
+                    ret[Ext.util.Inflector.singularize(type) + 'Id'] = record.getId();
+                    return ret;
+
+            }
         }
     },
 
@@ -129,12 +202,12 @@ Ext.define('Taco.view.navigation.SubNavLinkContainer', {
         this.callParent(arguments);
     },
 
-    createLinks: function() {
-    	var me = this;
-    	var links = this.formatData(this.store);
+    createLinks: function () {
+        var me = this;
+        var links = this.formatData(this.store);
         var components = this.getLinkComponents(links);
-        
-    	this.add(components);
+
+        this.add(components);
     },
 
     buildLink: function (link, items) {
@@ -183,29 +256,29 @@ Ext.define('Taco.view.navigation.SubNavLinkContainer', {
 
     },
 
-    formatData: function(store) {
+    formatData: function (store) {
         var formattedData = [];
 
-        this.store.each(function(item) {
+        this.store.each(function (item) {
             this.buildLink(item, formattedData);
         }, this);
 
         return formattedData;
     },
 
-    getLinkComponents: function(items) {
+    getLinkComponents: function (items) {
 
-    	var me = this;
+        var me = this;
         var components = [];
 
-        Ext.Array.each(items, function(item) {
-            components.push(this.getIconCmp(item)); 
+        Ext.Array.each(items, function (item) {
+            components.push(this.getIconCmp(item));
         }, this);
 
         return components;
     },
 
-    buildNode: function(config, callToAction) {
+    buildNode: function (config, callToAction) {
         var items = [];
         var menu = {};
         var subMenu = {};
@@ -218,7 +291,7 @@ Ext.define('Taco.view.navigation.SubNavLinkContainer', {
             });
         }
 
-        Ext.Object.each(config, function(key, value) {
+        Ext.Object.each(config, function (key, value) {
 
             if (key.indexOf('path_') !== -1) {
 
@@ -242,7 +315,7 @@ Ext.define('Taco.view.navigation.SubNavLinkContainer', {
         return items;
     },
 
-    buildMenu: function(config) {
+    buildMenu: function (config) {
 
         if (Object.keys(config).join('').indexOf('path_') === -1) {
             return false;
@@ -256,7 +329,7 @@ Ext.define('Taco.view.navigation.SubNavLinkContainer', {
         return menu;
     },
 
-    getIconCmp: function(config) {
+    getIconCmp: function (config) {
         var me = this;
         var data = {
             view: config.view,
@@ -267,11 +340,11 @@ Ext.define('Taco.view.navigation.SubNavLinkContainer', {
         return Ext.create('Ext.Component', {
             tpl: [
                 '<span class="subnavlink-container">',
-                    '<tpl>{[this.getIcon(values)]}</tpl>',
+                '<tpl>{[this.getIcon(values)]}</tpl>',
                 '</span>',
                 {
-                    getIcon: function(record) {
-                        
+                    getIcon: function (record) {
+
                         if (record.view.length > 2) {
                             return '<span><img src="' + record.view + '" /><span>';
                         }
@@ -293,7 +366,7 @@ Ext.define('Taco.view.navigation.SubNavLinkContainer', {
         });
     },
 
-    onMouseOver: function(config, cmp, el) {
+    onMouseOver: function (config, cmp, el) {
 
         var showEl = el;
 
@@ -309,7 +382,7 @@ Ext.define('Taco.view.navigation.SubNavLinkContainer', {
         }
 
         else if (showEl.querySelector('.text-only')) {
-            showEl = showEl.querySelector('.text-only');   
+            showEl = showEl.querySelector('.text-only');
         }
 
         if (config && config.menu) {
@@ -318,7 +391,7 @@ Ext.define('Taco.view.navigation.SubNavLinkContainer', {
 
     },
 
-    normalizeBadgeId: function(link) {
+    normalizeBadgeId: function (link) {
 
         var formatted;
         var string;
@@ -333,8 +406,8 @@ Ext.define('Taco.view.navigation.SubNavLinkContainer', {
         }
 
         else {
-            if (!link.get('path')) { 
-              return false;
+            if (!link.get('path')) {
+                return false;
             }
 
             string = link.get('path')[0].toLowerCase().slice(0, 2);
@@ -344,26 +417,33 @@ Ext.define('Taco.view.navigation.SubNavLinkContainer', {
         return formatted;
     },
 
-    onClick: function(record) {
+    onClick: function (record) {
 
         if (!record.extension) return false;
 
-    	var data = record.extension;
-        var displayMode = data.get('displayMode');
-        var href = data.get('href');
+        var linkData = record.extension,
+            configData;
 
-    	if (displayMode === 'navigate' || !displayMode) {
+        if (linkData.get('requiredContext')) {
+            configData = Taco.view.navigation.SubNavLinkContainer.getContextHash();
+        }
+
+
+        var displayMode = linkData.get('displayMode');
+        var href = linkData.get('href');
+
+        if (displayMode === 'navigate' || !displayMode) {
             if (href.indexOf('http') !== -1) {
-                Taco.view.navigation.SubNavLinkContainer.launchExtensionWindow(data, data.data);
+                Taco.view.navigation.SubNavLinkContainer.launchExtensionWindow(linkData, configData);
             }
             else {
                 Taco.core.StateManager.attemptNavigate(href);
             }
-    	}
+        }
 
-    	else if (displayMode === 'modal') {
-            Taco.view.navigation.SubNavLinkContainer.launchExtensionWindow(data, data.data);
-    	}
+        else if (displayMode === 'modal') {
+            Taco.view.navigation.SubNavLinkContainer.launchExtensionWindow(linkData, configData);
+        }
     }
 
 });

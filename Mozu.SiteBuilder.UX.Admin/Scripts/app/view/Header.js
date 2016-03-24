@@ -285,7 +285,13 @@ Ext.define('Taco.view.Header', {
 
         if (ctx) jsonData = ctx;
 
-        jsonData['x-vol-return-url'] = window.location.href;
+        var returnUrl = window.location.href.replace ( window.location.search ,''),
+            queryString = Ext.Object.fromQueryString(window.location.search);
+        queryString._mz_extlnk = extensionLink.data._id;
+        returnUrl += '?' + Ext.Object.toQueryString(queryString);
+
+
+        jsonData['x-vol-return-url'] = returnUrl;
 
         if (extensionLink.metaData.appId) {
 

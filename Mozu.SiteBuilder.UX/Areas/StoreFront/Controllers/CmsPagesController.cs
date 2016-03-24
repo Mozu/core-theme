@@ -225,7 +225,17 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
 
 
             }
-            PageContext.CrawlerInfo.CanonicalUrl = _urlhelper.MakeUrl(UrlHelper.UrlType.Document, pc.CmsContext.Page.Document, null);
+            if ( ((this.Request.GetRouteData().Route as CustomRoute)?.IsCanonicalFor(FancyRoute.CmsPage)).GetValueOrDefault(false ))
+            {
+                PageContext.CrawlerInfo.CanonicalUrl = this.Request.RequestUri.AbsolutePath;
+            }
+            else
+            {
+                PageContext.CrawlerInfo.CanonicalUrl = _urlhelper.MakeUrl(UrlHelper.UrlType.Document, pc.CmsContext.Page.Document, null);
+            }
+                
+
+            
 
 
             var result = View(template, vm);
