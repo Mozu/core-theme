@@ -26,24 +26,12 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.ModelMapping
             Mapper.CreateMap<Mozu.SiteBuilder.UX.Models.StoreFront.Catalog.Category, IDictionary<string, object>>()
                 .ConstructUsing((Mozu.SiteBuilder.UX.Models.StoreFront.Catalog.Category parent) =>
                 {
-                    
+
                     var dic = new System.Collections.Generic.Dictionary<string, object>(StringComparer.OrdinalIgnoreCase);
 
-                    var token = new CategoryToken(CategoryToken.CategoryIdentifierType.Id, 0, null);
-                   
-                    for (var i = 0; parent != null && parent.IsDisplayed && i < 10; i++)
-                    {
-                        token.IdType = CategoryToken.CategoryIdentifierType.Id;
-                        dic[token.Raw] = parent.CategoryId;
-                        token.IdType = CategoryToken.CategoryIdentifierType.Code;
-                        dic[token.Raw] = parent.CategoryCode;
-                        token.IdType = CategoryToken.CategoryIdentifierType.Slug;
-                        dic[token.Raw] = parent.Content == null ? null : parent.Content.Slug;
+                    
 
-                        parent = parent.ParentCategory;
-                        token = token.GetParent();
-                      
-                    }
+                    PopulateDictionary( parent, dic);
 
                     return dic;
                 });
@@ -61,14 +49,7 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.ModelMapping
                    if ( product.Categories != null && product.Categories.Count>0)
                    {
                        var cat = product.Categories.First();
-                       var token = new CategoryToken(CategoryToken.CategoryIdentifierType.Id, 0, null);
-                       token.IdType = CategoryToken.CategoryIdentifierType.Id;
-                       dic[token.Raw] = cat.CategoryId;
-                       token.IdType = CategoryToken.CategoryIdentifierType.Code;
-                       dic[token.Raw] = cat.CategoryCode;
-                       token.IdType = CategoryToken.CategoryIdentifierType.Slug;
-                       dic[token.Raw] = cat.Content == null ? null : cat.Content.Slug;
-
+                       PopulateDictionary(product.Categories.First(), dic);
                    }
                    
                    if ( product.Properties != null)
@@ -144,6 +125,24 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.ModelMapping
             //    }));
             //   // .AfterMap((x, y) => y.Paging.Init());
 
+        }
+
+        private static void PopulateDictionary( Category category, Dictionary<string, object> dic)
+        {
+            var token = new CategoryToken(CategoryToken.CategoryIdentifierType.Id, 0, null);
+            for (var i = 0; category != null && category.IsDisplayed && i < 10; i++)
+            {
+                token.IdType = CategoryToken.CategoryIdentifierType.Id;
+                dic[token.Raw] = category.CategoryId;
+                token.IdType = CategoryToken.CategoryIdentifierType.Code;
+                dic[token.Raw] = category.CategoryCode;
+                token.IdType = CategoryToken.CategoryIdentifierType.Slug;
+                dic[token.Raw] = category.Content == null ? null : category.Content.Slug;
+
+                category = category.ParentCategory;
+                token = token.GetParent();
+
+            }
         }
     }
 }

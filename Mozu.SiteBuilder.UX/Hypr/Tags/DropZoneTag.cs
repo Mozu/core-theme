@@ -275,7 +275,7 @@ namespace Mozu.SiteBuilder.UX.Hypr.Tags
                 title = row.Title,
             }, "widget");
 
-            sb.Append("/>");
+            sb.Append(">");
 
             if (row.Columns != null)
             {
