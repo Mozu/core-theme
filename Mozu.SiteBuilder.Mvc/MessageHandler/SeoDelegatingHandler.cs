@@ -91,7 +91,7 @@ namespace Mozu.SiteBuilder.Mvc.MessageHandler
 
             var builder = new UriBuilder(customRoute.UrlScheme.Value.ToStringQuickly(), currentUrl.Host);
             builder.Path = currentUrl.AbsolutePath;
-            builder.Query = currentUrl.Query;
+            builder.Query = currentUrl.Query?.TrimStart(new char[] { '?' }); 
             return RedirectTo(builder.Uri.ToString(), isTemporary: false, request: rerouted);
         }
 
