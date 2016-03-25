@@ -292,8 +292,11 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
             if (priceListChanged)
             {
                 // TODO: These "magic strings" should be constants somewhere. They're currently used in the hypr message-bar template.
-                var message = productsRemoved != null ? "exclusivePricelist" : "newPricelist";
-                jOrder.Add("messages", new JArray(new { message, productsRemoved }.ToJObject()));
+                var message = productsRemoved != null
+                    ? "Please note, items not available for purchase have been removed."
+                    : "You are now eligible for special pricing.";
+                var messageType = productsRemoved != null ? "exclusivePricelist" : "newPricelist";
+                jOrder.Add("messages", new JArray(new { message, messageType, productsRemoved }.ToJObject()));
             }
 
             var isFulfillmentInfoRequired = model.Items.Exists(
