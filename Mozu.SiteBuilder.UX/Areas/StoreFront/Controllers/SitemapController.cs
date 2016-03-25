@@ -9,10 +9,12 @@ using Mozu.ProductRuntime.Contracts.Clients;
 using Mozu.SiteBuilder.Mvc.Navigation;
 using System.Xml;
 using System.Threading.Tasks;
+using Mozu.SiteBuilder.Mvc.Catalog;
 using Mozu.SiteBuilder.UX.Controllers;
 using Mozu.SiteBuilder.UX.Models.StoreFront.Catalog;
 using Mozu.Tenant.Contracts.Clients;
 using Mozu.SiteBuilder.UX.Filters;
+using Mozu.SiteBuilder.Mvc.Helpers;
 
 namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
 {
@@ -26,15 +28,19 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
         private readonly IProductRuntimeWebApiClient _productSearchWebApiClient;
         private INavigationGandalf _gandalf;
         private const int PageSize = 2000;
+        ICategoryTreeProvider _categoryTreeProvider = null;
+        UrlHelper _urlHelper;
         const string NS = "http://www.sitemaps.org/schemas/sitemap/0.9";
-        public SitemapController(INavigationRepository navigationRepository,ISitesWebApiClient sitesWebApiClient , INavigationGandalf gandalf,  Mozu.ProductRuntime.Contracts.Clients.IProductRuntimeWebApiClient productSearchWebApiClient)
+        public SitemapController(INavigationRepository navigationRepository,ISitesWebApiClient sitesWebApiClient , INavigationGandalf gandalf,  Mozu.ProductRuntime.Contracts.Clients.IProductRuntimeWebApiClient productSearchWebApiClient, 
+            UrlHelper urlHelper,
+            ICategoryTreeProvider categoryTreeProvider)
         {
             _nav = navigationRepository;
             _gandalf = gandalf;
-
+            _urlHelper = urlHelper;
             _sitesWebApi = sitesWebApiClient;
             _productSearchWebApiClient = productSearchWebApiClient;
-            
+            _categoryTreeProvider = categoryTreeProvider;
         }
 
            [System.Web.Http.HttpGet]
@@ -119,15 +125,18 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
                writer.WriteStartElement("urlset", NS);
              int offset = 0;
              var startIndex = page*PageSize;
-             while (true)
+
+            //initialize the category Tree for later.
+            await _categoryTreeProvider.GetAllCategories();
+
+            while (true)
              {
+                var prods = (await _productSearchWebApiClient.CloneWithoutUserClaims().GetProducts(pageSize: PageSize, startIndex: startIndex, responseGroups: "urlonly", responseFields: "items(productCode, categories, content(SEOFriendlyUrl))")).ReadAsSync();
+                
 
-                 var prods = (await _productSearchWebApiClient.CloneWithoutUserClaims().GetProducts(pageSize: PageSize, startIndex: startIndex, responseGroups:"urlonly",  responseFields: "items(productCode, content(SEOFriendlyUrl))")).ReadAsSync();
-
-                 
-
-                 var vm = Mapper.Map<List<Product>>(prods.Items);
-                 WriteProducts(vm, writer, domain);
+                var vm = Mapper.Map<ProductCollection>(prods);
+                vm.Init(false, PageContext.Search);
+                 WriteProducts(vm, writer, domain, _urlHelper);
                  startIndex = startIndex + prods.PageSize;
                  if (startIndex >= (page+1) * PageSize || startIndex >= prods.TotalCount || prods.PageCount == 0 )
                  {
@@ -141,12 +150,16 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
 
            }
 
-        private static void WriteProducts(List<Product> vm, XmlWriter writer, string domain)
+        private static void WriteProducts(ProductCollection vm, XmlWriter writer, string domain, UrlHelper urlHelper)
         {
-            foreach (var prod in vm)
+            foreach (var prod in vm.Items)
             {
                 writer.WriteStartElement("url", NS);
-                writer.WriteElementString("loc", NS, domain + prod.Url);
+                
+               
+                var url = urlHelper.MakeUrl(UrlHelper.UrlType.Product, prod, null);
+           
+                writer.WriteElementString("loc", NS, url.StartsWith("/") ? domain + url : url);
                 //  writer.WriteElementString("lastmod", NS, );
                 writer.WriteElementString("changefreq", NS, "daily");
                 writer.WriteElementString("priority", NS, ".7");
