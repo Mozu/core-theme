@@ -29,7 +29,7 @@ namespace Mozu.SiteBuilder.IntegrationTests
             
             Mapper.AddProfile<TaxMapping>();
             Mapper.AddProfile<UX.Areas.StoreFront.ModelMapping.CustomerMapping>();
-//            Mapper.AddProfile<OrderMapping>();
+            Mapper.AddProfile<UX.Admin.Api.ModelMapping.OrderMapping>();
             Mapper.AddProfile<UX.Areas.StoreFront.ModelMapping.ProductMapping>();
             Mapper.AddProfile<CmsPagesMapping>();
             Mapper.AddProfile<NavigationMapping>();
