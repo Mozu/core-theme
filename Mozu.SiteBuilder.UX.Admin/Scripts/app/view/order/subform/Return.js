@@ -20,6 +20,16 @@ Ext.define('Taco.view.order.subform.Return', {
         returnsStore: null
     },
 
+    beforeShow: function () {
+        var store = this.record.getReturnsStore();
+        store.reload();
+        this.initCreateButton();
+    },
+
+    tabChange: function (tabPanel, newTab) {
+        console.log(newTab);
+    },
+
     initComponent: function () {
         this.cls += " " + Taco.baseCSSPrefix + 'orderform-returns';
 
