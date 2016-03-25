@@ -557,10 +557,16 @@ namespace Mozu.SiteBuilder.UX.Configuration
              *****************************************************************/
 
 
-            routes.MapHttpRoute(
-               "StoreFront_pages_seo",
-               "{documentName}",
-               new { controller = "cmspages", action = "Page", documentListName = "pages@mozu" });
+            routes.MapCustomHttpRoute(
+                "StoreFront_pages_seo",
+                 "{documentName}",
+                 new { controller = "cmspages", action = "Page", documentListName = "pages@mozu" },
+                 null,
+                 null, 
+                 FancyRoute.CmsPage,
+                true);
+
+
 
 
 
