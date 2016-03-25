@@ -118,15 +118,25 @@ Ext.define('Taco.view.discount.Grid', {
                     hideable: false,
                     flex: 1,
                     minWidth: 150
-                    //renderer: function (value, metaData, record, rowIndex, colIndex, store) {
-                    //    return '<a href="#" class="taco-launch-editor">' + (value + '</a>');
-                    //}
+                   }, {
+                    dataIndex: 'friendlyDescription',
+                    stateId: 'friendlyDescription',
+                    text: 'Description',
+                    hideable: true,
+                    hidden: true,
+                    sortable: false,
+                    flex: 1,
+                    renderer: function(value) {
+                        var txt = Ext.util.Format.ellipsis(Ext.util.Format.stripTags(value), 100, true);
+                        return txt;
+                    }
                 }, {
                     xtype: 'gridcolumn',
                     dataIndex: 'amountType',
                     stateId: 'amountType',
                     text: 'Type',
                     width: 150,
+                    flex: 1,
                     renderer: function(value, metaData, record, rowIndex, colIndex, store) {
                         var retVal = "";
                         switch (value) {
@@ -152,6 +162,7 @@ Ext.define('Taco.view.discount.Grid', {
                     stateId: 'appliesTo',
                     text: 'Applies To',
                     width: 180,
+                    flex: 1,
                     hidden: false,
                     sortable: false,
                     renderer: function(value, metaData, record, rowIndex, colIndex, store) {
@@ -187,6 +198,7 @@ Ext.define('Taco.view.discount.Grid', {
                     stateId: 'startDate',
                     format: 'n/j/Y g:i a',
                     width: 130,
+                    flex: 1,
                     text: 'Start Date'
                 }, {
                     xtype: 'datecolumn',
@@ -194,6 +206,7 @@ Ext.define('Taco.view.discount.Grid', {
                     stateId: 'expirationDate',
                     format: 'm-d-Y g:i a',
                     width: 130,
+                    flex: 1,
                     text: 'End Date',
                     renderer: function(value, metaData, record, rowIndex, colIndex, store) {
 
@@ -211,6 +224,7 @@ Ext.define('Taco.view.discount.Grid', {
                     dataIndex: 'status',
                     stateId: 'status',
                     text: 'Status',
+                    flex: 1,
                     sortable: false
                 }, {
                     xtype: 'gridcolumn',
@@ -218,6 +232,7 @@ Ext.define('Taco.view.discount.Grid', {
                     stateId: 'couponCode',
                     text: 'Coupon Code',
                     width: 130,
+                    flex: 1,
                     hidden: false,
                     renderer: function (value, metaData, record, rowIndex, colIndex, store) {
                         if (record.get("requiresCoupon") && Ext.isEmpty(record.get("couponCode"))) {
@@ -231,6 +246,7 @@ Ext.define('Taco.view.discount.Grid', {
                     stateId: 'currentRedemptionCount',
                     format: "0",
                     text: 'Used',
+                    flex: 1,
                     width: 80,
                     hidden: false
                 }

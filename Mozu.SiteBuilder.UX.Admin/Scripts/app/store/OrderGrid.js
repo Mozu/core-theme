@@ -11,10 +11,5 @@
         storeManagerConfig: {
             // createOnly:false,
            autoLoad: true
-        },
-
-        sorters: [{
-            property: 'submittedDate',
-            direction: 'DESC'
-        }]
+        }
     });

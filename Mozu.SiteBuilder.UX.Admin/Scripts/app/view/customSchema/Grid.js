@@ -401,10 +401,15 @@ Ext.define('Taco.view.customSchema.Grid', {
         if (record) {
             Taco.core.StateManager.attemptNavigate('customschema/edit?type=' + record.get('entityType') + '&list=' + record.get('listFQN') + '&record=' + record.get('id'), record.raw);
         }
+
         else {
             var record = Ext.create('Taco.model.Entity', {
                 listFQN: me.listFQN,
-                type: me.entityType
+                type: me.entityType,
+                listFlags: {
+                    enableADR: me.enableActiveDateRanges,
+                    enablePublishing: me.enablePublishing
+                }
             });
 
             Taco.core.StateManager.attemptNavigate('customschema/edit?type=' + this.entityType + '&list=' + this.listFQN , record.raw);   
@@ -422,7 +427,7 @@ Ext.define('Taco.view.customSchema.Grid', {
         });
     },
 
-    doCreate: function(argument) {
+    doCreate: function() {
         this.navigateToEdit();
     },
 
