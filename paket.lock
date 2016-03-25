@@ -95,7 +95,7 @@ NUGET
     Mozu.AppDev.Contracts (1.19.13)
       Mozu.Core.Prime (>= 1.17)
     Mozu.BuildSupport.GetAssemblyFileVersionTask (1.0.0)
-    Mozu.CommerceRuntime.Contracts (1.1605.1-dev1603232319fea)
+    Mozu.CommerceRuntime.Contracts (1.1605.1-dev1603251844fea)
       Mozu.Core.Extensible.Contracts
       Mozu.Core.Prime
       Mozu.PricingRuntime.Contracts
@@ -146,7 +146,7 @@ NUGET
     Mozu.Location.Contracts (1.18.1)
       Mozu.Core.Prime (>= 1.18.0)
     Mozu.MZDB.Contracts (1.19.3)
-    Mozu.PaymentService.Contracts (1.9.12)
+    Mozu.PaymentService.Contracts (1.9.13)
     Mozu.PricingRuntime.Contracts (1.19.5)
       Mozu.Core.Prime (>= 1.18.1)
     Mozu.ProductAdmin.Contracts (1.1605.4-dev1603241334fea)
@@ -168,7 +168,7 @@ NUGET
     Mozu.SiteSettings.Order.Contracts (1.19.1)
       Mozu.Core.Prime (>= 1.17)
       Mozu.PaymentService.Contracts (>= 1.9.6)
-    Mozu.Tenant.Contracts (1.18.2)
+    Mozu.Tenant.Contracts (1.1607.1)
       Mozu.Core.Prime (>= 1.17)
     Mozu.VS.PowerShell (1.17.1)
     OctoPack (2.1.3)
