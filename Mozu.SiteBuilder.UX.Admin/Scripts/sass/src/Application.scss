@@ -36,6 +36,7 @@
 @include taco-customschema;
 @include taco-siteview-dropdown;
 @include taco-locationinventory;
+@include taco-reporting;
 
 // body[data-current-user="travis_johnson"] {
 //     .#{$prefix}border-layout-ct {

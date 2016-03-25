@@ -913,7 +913,10 @@ Ext.define('Taco.core.ux.mixins.NavHeader', {
     },
 
     checkTitleOverflow: function () {
-        var innerEl = this.titleCmp.getEl(),
+        var innerEl = this.titleCmp ? this.titleCmp.getEl() : null;
+        if (!innerEl) return false;
+
+        var titleEl = innerEl.down('[data-role="nav-title"]'),
             titleEl = innerEl.down('[data-role="nav-title"]'),
             subTitleEl = innerEl.down('[data-role="nav-sub-title"]'),
             tagEl = innerEl.down('[data-role="nav-tag"]'),

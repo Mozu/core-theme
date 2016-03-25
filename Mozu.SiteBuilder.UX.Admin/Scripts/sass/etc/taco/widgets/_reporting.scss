@@ -1,0 +1,12 @@
+@mixin taco-reporting {
+    .#{$vprefix}reporting-view {
+
+        .#{$vprefix}filtercontainer {
+            visibility: hidden;
+        }
+        .#{$vprefix}reporting-item {
+            margin: 0px 35px !important;
+        }
+    }
+
+}
