@@ -16,19 +16,6 @@ Ext.define('Taco.view.fileManager.Index', {
         'Taco.view.fileManager.AdvancedSearchForm'
     ],
 
-    listeners: {
-        click: {
-            element: 'el',
-            fn: function (e) {
-                if (document.querySelector('[id^="roweditorbuttons"]').style.bottom == (45 + 'px')) {
-                    document.querySelector('[id^="roweditorbuttons"]').className = document.querySelector('[id^="roweditorbuttons"]').className + ' top-buttons'
-                } else {
-                    document.querySelector('[id^="roweditorbuttons"]').className = document.querySelector('[id^="roweditorbuttons"]').className.split(' top-buttons')[0];
-                }
-            }
-        }
-    },
-
     mixins: {
         uploadable: 'Taco.shared.util.Uploadable'
     },
@@ -220,12 +207,12 @@ Ext.define('Taco.view.fileManager.Index', {
         });
 
         editor.on('validateedit', function(ed, context) {
-
             //hack to get around the editor reading the enter keydown event before the boxselect can
             if (context.field === 'tags' && context.newValues.tags !== ed.approvedValue) {
 
                 Ext.defer(function() {
                     if (ed.getEditor().down('[name=\'tags\']').getValue() === context.newValues.tags) {
+                        ed.editing = true;
                         ed.approvedValue = context.newValues.tags;
                         ed.completeEdit();
                     }
