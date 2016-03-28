@@ -93,5 +93,11 @@
     },
     getStatus: function() {
         return this.isOverridden ? 'Overridden' : 'UseCatalog';
+    },
+    setValue: function(value) {
+        var me = this;
+        me.override.setValue(!!value)
+        me.overrideField.setValue(value);
+        return me;
     }
  });

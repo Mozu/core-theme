@@ -71,7 +71,7 @@ Ext.define('Taco.view.priceList.entry.PriceEntryGeneral', {
 
                         var record = cmp.store.getAt(cmp.store.find('productCode', newVal));
                         if (!record) return;
-                        var isVariation = record.get('isVariation');
+                        var isVariation = record.get('isVariation') || record.get('variationOptions').length > 0;
 
                         var pricePanel = me.parentContainer.pricePanel,
                             components = [ pricePanel.mapRow, pricePanel.discountRestrictionRow ];
@@ -80,7 +80,7 @@ Ext.define('Taco.view.priceList.entry.PriceEntryGeneral', {
 
                             cmp.setVisible(!isVariation);
                             if (isVariation) {
-                                Ext.Array.each(cmp.items, function(subCmp) {
+                                cmp.items.each(function(subCmp) {
                                     subCmp.setValue(null);
                                 });
                             }
