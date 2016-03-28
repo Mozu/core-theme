@@ -68,9 +68,11 @@ Ext.define('Taco.view.priceList.entry.PriceEntryGeneral', {
             listeners: {
                 change: {
                     fn: function(cmp, newVal, oldVal, eOpts) {
+
                         var record = cmp.store.getAt(cmp.store.find('productCode', newVal)),
                         if (!record) return;
                         var isVariation = record.get('isVariation');
+
                         var pricePanel = me.parentContainer.pricePanel,
                             components = [ pricePanel.mapRow, pricePanel.discountRestrictionRow ];
 
