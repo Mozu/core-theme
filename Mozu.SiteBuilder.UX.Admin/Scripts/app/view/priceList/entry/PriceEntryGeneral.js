@@ -69,7 +69,7 @@ Ext.define('Taco.view.priceList.entry.PriceEntryGeneral', {
                 change: {
                     fn: function(cmp, newVal, oldVal, eOpts) {
 
-                        var record = cmp.store.getAt(cmp.store.find('productCode', newVal)),
+                        var record = cmp.store.getAt(cmp.store.find('productCode', newVal));
                         if (!record) return;
                         var isVariation = record.get('isVariation');
 
