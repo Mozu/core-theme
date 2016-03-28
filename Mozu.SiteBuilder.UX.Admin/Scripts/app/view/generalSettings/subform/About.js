@@ -229,10 +229,10 @@ Ext.define('Taco.view.generalSettings.subform.About', {
                                 itemId: 'bust-cdn-cache-button',
                                 tooltip: Ext.create('Taco.core.ux.content.Tooltip', {
                                     elementId: 'bust-cdn-cache-button',
-                                    hoverTarget: 'bodyEl',
+                                    hoverTarget: 'label',
                                     messageKey: 'settings.general.bustCdnCache',
-                                    arrowPosition: 'right',
-                                    offsetLeft: 300
+                                    offsetLeft: 300,
+                                    arrowPosition: 'right'
                                 })
                             }
                         ],

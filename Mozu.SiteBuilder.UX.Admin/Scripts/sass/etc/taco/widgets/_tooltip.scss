@@ -23,6 +23,11 @@
 			padding: 4px;
 		}
 
+		.#{$vprefix}help-link {
+			color: $white-color;
+			text-decoration: underline;
+		}
+
 		&.arrow {
 
 			&::after {
