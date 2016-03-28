@@ -253,8 +253,6 @@ Ext.define('Taco.view.priceList.entry.PriceEntryPrice', {
             }
         });
 
-<<<<<<< Updated upstream
-=======
         me.mapRow = Ext.widget('panel', {
             flex: 1,
             xtype: 'panel',
@@ -291,7 +289,6 @@ Ext.define('Taco.view.priceList.entry.PriceEntryPrice', {
             ]
         });
 
->>>>>>> Stashed changes
         me.advancedPanel = {
             xtype: 'panel',
             title: 'Advanced',
