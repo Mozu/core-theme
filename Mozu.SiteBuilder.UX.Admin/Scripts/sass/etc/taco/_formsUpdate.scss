@@ -41,6 +41,10 @@
                         .#{$prefix}box-inner {
                             min-height: 42px;
 
+                            .#{$vprefix}bust-cdn-cache {
+                                margin-top: -2px !important;
+                            }
+
                             .#{$prefix}field {
                                 &.#{$prefix}table-plain {
                                     &.#{$prefix}form-item {
