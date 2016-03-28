@@ -142,7 +142,7 @@ Ext.define('Taco.view.report.Index', {
 
     getContextSwitcher: function() {
         var ctxSwitcher = Ext.create('Taco.view.navigation.ContextSwitcherSelector', {
-            callToActionText: 'Switch Context'
+            callToActionText: ''
         });
 
         // we have the tenant info
