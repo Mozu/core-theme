@@ -277,6 +277,8 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.Models.ProductModels
         [JsonProperty(DefaultValueHandling = DefaultValueHandling.Ignore)]
         public List<ProductVariationOption> VariationOptions { get; set; }
 
+        public bool IsVariation { get; set; }
+
         public bool HasConfigurableOptions { get; set; }
 
         public bool HasStandaloneOptions { get; set; }

@@ -534,6 +534,10 @@ Ext.define('Taco.model.Product', {
             }
         },
         {
+            name: "isVariation",
+            type: "boolean"
+        },
+        {
             name: "bundledProducts",
             type: "auto",
             defaultValue: []

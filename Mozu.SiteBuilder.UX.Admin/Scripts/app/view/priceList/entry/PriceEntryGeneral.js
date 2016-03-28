@@ -282,12 +282,21 @@ Ext.define('Taco.view.priceList.entry.PriceEntryGeneral', {
     onBeforeProductSelect: function (combo, record, index, e) {
         var me = this,
             productCode = record.get('productCode'),
-            hasConfigurableOptions = record.get('hasConfigurableOptions'),
+            isVariation = record.get('isVariation'),
             comboDisplay = record.get('productName') + ' ' + productCode;
         combo.setValue(productCode);
         combo.collapse();
-        if (hasConfigurableOptions) {
+        if (isVariation) {
             comboDisplay += (' ' + me.getConfigurableOptionList(record));
+            if (!this.record.get('isVariation')) {
+                this.record.set('isVariation', true);
+                Taco.app.fireEvent('price-entry-variation-changed', record);
+            }
+        } else {
+            if (this.record.get('isVariation')) {
+                this.record.set('isVariation', false);
+                Taco.app.fireEvent('price-entry-variation-changed', record);
+            }
         }
 
         combo.inputMask.show(comboDisplay);
