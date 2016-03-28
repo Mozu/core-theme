@@ -201,6 +201,7 @@ Ext.define('Taco.view.generalSettings.subform.About', {
                                     arrowPosition: 'left'
                                 })
                             }, {
+                                cls: 'taco-bust-cdn-cache',
                                 xtype: 'fieldcontainer',
                                 fieldLabel: 'Bust CDN Cache',
                                 margin: '0 0 0 5',
