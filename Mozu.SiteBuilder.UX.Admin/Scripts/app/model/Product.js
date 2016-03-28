@@ -200,6 +200,12 @@ Ext.define('Taco.model.Product', {
             "useNull": true
         },
         {
+            "name": "isVariation",
+            "type": "boolean",
+            defaultValue: false,
+            "useNull": true
+        },
+        {
             "name": "manageStock",
             "type": "boolean",
             defaultValue: false,

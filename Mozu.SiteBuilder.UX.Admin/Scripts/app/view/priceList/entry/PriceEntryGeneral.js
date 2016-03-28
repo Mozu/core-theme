@@ -58,6 +58,27 @@ Ext.define('Taco.view.priceList.entry.PriceEntryGeneral', {
             liveMode: true,
             defaultFilters: [ { property: 'iscurrentlyactive', value: true } ],
             listeners: {
+                change: {
+                    fn: function(cmp, newVal, oldVal, eOpts) {
+                        var record = cmp.store.getAt(cmp.store.find('productCode', newVal)),
+                            isVariation = record.get('isVariation');
+                            debugger;
+                        var pricePanel = me.parentContainer.pricePanel,
+                            components = [ pricePanel.mapRow, pricePanel.discountRestrictionRow ];
+
+                        Ext.Array.each(components, function(cmp) {
+                            
+                            cmp.setVisible(!isVariation);
+                            if (isVariation) {
+                                Ext.Array.each(cmp.items, function(subCmp) {
+                                    subCmp.setValue(null);
+                                });
+                            }
+
+                        });
+                    },
+                    scope: me
+                },
                 focus: {
                     fn: this.onFocus,
                     scope:me

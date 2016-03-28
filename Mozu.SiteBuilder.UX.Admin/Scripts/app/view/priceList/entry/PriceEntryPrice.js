@@ -253,6 +253,45 @@ Ext.define('Taco.view.priceList.entry.PriceEntryPrice', {
             }
         });
 
+<<<<<<< Updated upstream
+=======
+        me.mapRow = Ext.widget('panel', {
+            flex: 1,
+            xtype: 'panel',
+            layout: {
+                type: 'hbox',
+                align: 'top'
+            },
+            hidden: me.record.get('isVariation'),
+            defaults: {
+                flex: 1
+            },
+            items: [
+                me.mapOverride,
+                me.mapStartDate,
+                me.mapEndDate
+            ]
+        });
+
+        me.discountRestrictionRow = Ext.widget('panel', {
+            flex: 1,
+            xtype: 'panel',
+            layout: {
+                type: 'hbox',
+                align: 'top'
+            },
+            hidden: me.record.get('isVariation'),
+            defaults: {
+                flex: 1
+            },
+            items: [
+                me.discountRestriction,
+                me.restrictionStartDate,
+                me.restrictionEndDate
+            ]
+        });
+
+>>>>>>> Stashed changes
         me.advancedPanel = {
             xtype: 'panel',
             title: 'Advanced',
