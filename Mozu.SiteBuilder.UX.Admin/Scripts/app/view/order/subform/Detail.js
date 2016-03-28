@@ -84,7 +84,7 @@ Ext.define('Taco.view.order.subform.Detail', {
                     // Hacky crap to grab an inactive price list from ProductAdmin, then convert it to a "runtime" pricelist.
                     var currentCode = me.record.get('priceListCode');
                     if (currentCode) {
-                        var foundRecord = me.priceListStore.findRecord('code', me.record.get('priceListCode'));
+                        var foundRecord = me.priceListStore.findRecord('code', me.record.get('priceListCode'), 0, false, false, true);
                         if (!foundRecord) {
                             var adminPriceListStore = Taco.core.data.StoreManager.getOrCreate({
                                 type: 'Taco.store.PriceLists',
@@ -266,7 +266,8 @@ Ext.define('Taco.view.order.subform.Detail', {
 
     retrievePricelistName: function (store) {
         var me = this;
-        var foundRecord = store.findRecord('code', me.record.get('priceListCode'));
+        // This searches the store and finds an exact match!
+        var foundRecord = store.findRecord('code', me.record.get('priceListCode'), 0, false, false, true);
         if (foundRecord) {
             me.priceListName = foundRecord.get('name');
         }

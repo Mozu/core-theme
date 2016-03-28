@@ -216,7 +216,7 @@ Ext.define('Taco.view.order.modal.EditOrderDetail', {
         var me = this;
         var priceListCode = me.record && me.record.get('priceListCode');
         var priceListAvail = priceListCode.length > 0;
-        var priceListRecord = priceListAvail && me.priceListStore.findRecord('code', priceListCode);
+        var priceListRecord = priceListAvail && me.priceListStore.findRecord('code', priceListCode, 0, false, false, true);
         var priceListName = priceListRecord && priceListRecord.get('name') || priceListCode;
 
         // had to move this to the top so it doesn't cause the body to scroll after the focus El is scrolled into view;
