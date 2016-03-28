@@ -15,8 +15,10 @@ namespace Mozu.SiteBuilder.Mvc.Security
         readonly ISettings _settings;
         const string AccessToken = "at";
         const string ProfileToken = "pt";
+        const string CookieDate = "dt";
         readonly string AdminAccessTokenCookieName;
         readonly string StoreFrontAccessTokenCookieName;
+        readonly string StoreFrontAccessTokenSessionCookieName;
         readonly string AdminRefreshCookieName;
         readonly string StoreFrontRefershCookieName;
         readonly bool ForceSSL;
@@ -29,6 +31,7 @@ namespace Mozu.SiteBuilder.Mvc.Security
 
             AdminAccessTokenCookieName = "sb-admin-at-" + env;
             StoreFrontAccessTokenCookieName = "sb-sf-at-" + env;
+            StoreFrontAccessTokenSessionCookieName = StoreFrontAccessTokenCookieName + "-s";
             StoreFrontRefershCookieName = "sb-sf-rt-" + env;
             AdminRefreshCookieName = Mozu.Core.TokenCookie.CookieRefreshToken;
 
@@ -114,7 +117,15 @@ namespace Mozu.SiteBuilder.Mvc.Security
             var cookie = CookieProvider.GetRequestCookie(StoreFrontRefershCookieName);
             return cookie != null && !string.IsNullOrWhiteSpace(cookie.Value) ? cookie.Value : null;
         }
-
+        string IAuthenticationHelper.GetStoreFrontSessionAccessToken()
+        {
+            var cookie = CookieProvider.GetRequestCookie(StoreFrontAccessTokenSessionCookieName);
+            if (cookie != null && cookie.HasKeys)
+            {
+                return cookie[AccessToken];
+            }
+            return null;
+        }
         string IAuthenticationHelper.GetStoreFrontAccessToken()
         {
             var cookie = CookieProvider.GetRequestCookie(StoreFrontAccessTokenCookieName );
@@ -127,19 +138,40 @@ namespace Mozu.SiteBuilder.Mvc.Security
 
         void IAuthenticationHelper.SaveStoreFrontAccessToken(string accessToken, string profile, DateTime? expiry)
         {
-            var cookie = new HttpCookie(StoreFrontAccessTokenCookieName);
-            cookie[ProfileToken ] = profile;
-            cookie[AccessToken] = accessToken;
-            cookie.Expires = expiry ?? DateTime.Now.AddYears(20);
+            var pcookie = new HttpCookie(StoreFrontAccessTokenCookieName);
+            pcookie[ProfileToken ] = profile;
+            pcookie[AccessToken] = accessToken;
+            pcookie.Expires = expiry ?? DateTime.Now.AddYears(20);
 
+            var scookie = new HttpCookie(StoreFrontAccessTokenSessionCookieName);
+            scookie[ProfileToken] = profile;
+            scookie[AccessToken] = accessToken;
+            scookie[CookieDate] = DateTime.UtcNow.ToString("o");
 
-            CookieProvider.SaveResponseCookie(StoreFrontAccessTokenCookieName, cookie);
+            CookieProvider.SaveResponseCookie(scookie.Name, scookie);
+            CookieProvider.SaveResponseCookie(pcookie.Name, pcookie);
         }
 
         void IAuthenticationHelper.ClearStorefrontTokens()
         {
             (this as IAuthenticationHelper).SaveStoreFrontAccessToken(null, null);
+           
             (this as IAuthenticationHelper).SaveStoreFrontRefreshToken(null, DateTime.Now);
+        }
+
+        public DateTime? GetStoreFrontSessionAccessTokenDate()
+        {
+            var cookie = CookieProvider.GetRequestCookie(StoreFrontAccessTokenSessionCookieName);
+            if (cookie != null && cookie.HasKeys)
+            {
+                var str= cookie[CookieDate];
+                DateTime retVal;
+                if ( DateTime.TryParse( str, out retVal))
+                {
+                    return retVal;
+                }
+            }
+            return null;
         }
     }
 }

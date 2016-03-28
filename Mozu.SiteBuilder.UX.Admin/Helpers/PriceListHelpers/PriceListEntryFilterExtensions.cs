@@ -61,6 +61,10 @@ namespace Mozu.SiteBuilder.UX.Admin.Helpers.PriceListHelpers
             switch (filter.property.ToLowerInvariant())
             {
                 case "all":
+                    var str = "";
+                    str += string.Join(" and ", filter.escapedValue.ToString().Trim().Split(new[] { ' ' }, StringSplitOptions.RemoveEmptyEntries)
+                        .Select(searchString => string.Format("({0} cont \"{1}\")", PRODUCT_CODE_PROPERTY, searchString)));
+                    return str;
                 case "code":
                 case "productname":
                     return String.Format("{0} cont \"{1}\"", PRODUCT_CODE_PROPERTY, filter.escapedValue);

@@ -1,10 +1,9 @@
-﻿using System;
+﻿
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Runtime.Serialization;
-
-
-
+using System.Threading.Tasks;
 
 namespace Mozu.SiteBuilder.UX.Models.StoreFront.Catalog
 {
@@ -269,6 +268,7 @@ namespace Mozu.SiteBuilder.UX.Models.StoreFront.Catalog
         string SortBy { get; set; }
         int? StartIndex { get; set; }
 
+        T Resolve<T>();
     }
 
     
@@ -548,6 +548,7 @@ namespace Mozu.SiteBuilder.UX.Models.StoreFront.Catalog
                 }
 
             }
+            InitCategories(state);
             //CurrentPage = (int)Math.Ceiling((double)StartIndex / (double)PageSize ) + 1;
 
             Pages = new List<RepeaterItem>();
@@ -622,15 +623,35 @@ namespace Mozu.SiteBuilder.UX.Models.StoreFront.Catalog
                 }
             };
             this.PageSizes.ForEach(x => x.Selected = (int)x.Value == this.CurrentItemsPerPage );
-        
+            
         }
-        
+        void InitCategories(IProductListingState state = null)
+        {
+            if (state == null || this.Items == null)
+            {
+                return;
+            }
+            var catTreeProvider = state.Resolve<Mvc.Catalog.ICategoryTreeProvider>();
+            if (catTreeProvider == null || !catTreeProvider.HasCompleted )
+            {
+                return;
+            }
+            var catTree = catTreeProvider.GetAllCategories().Result;
+            this.Items.ForEach(prod =>
+            {
+                for (int idx = 0; idx < prod.Categories.Count; idx++)
+                {
+                    var oldCat = prod.Categories[idx];
+                    prod.Categories[idx] = catTree.FindById(oldCat?.Id) ?? oldCat;
+                }
+            });
+        }
 
-      
 
-     
 
-       
+
+
+
         //public PagingModel Paging
         //{
         //    get;
@@ -818,5 +839,18 @@ namespace Mozu.SiteBuilder.UX.Models.StoreFront.Catalog
         {
             get { return this.SalePrice.HasValue && this.Price.HasValue && this.SalePrice.Value != this.Price.Value; }
         }
+    }
+}
+
+
+namespace Mozu.SiteBuilder.Mvc.Catalog
+{
+    /// <summary>
+    /// Provides the runtime Catalog Tree to SiteContext.
+    /// </summary>
+    public interface ICategoryTreeProvider
+    {
+        Task<Mozu.SiteBuilder.UX.Models.StoreFront.Catalog.CategoryTree> GetAllCategories();
+        bool HasCompleted { get; }
     }
 }

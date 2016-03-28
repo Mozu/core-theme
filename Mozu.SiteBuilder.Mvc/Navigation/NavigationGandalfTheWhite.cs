@@ -399,7 +399,7 @@ namespace Mozu.SiteBuilder.Mvc.Navigation
                         // category "Sequence" is 1-indexed, but our navigation list is 0-indexed.. so we subtract 1.
                         // actually, "Sequence" does not appear to follow any rules, so sometimes it's zero indexed.
                         // we have to do a Math.Max to guard against negative numbers.
-                        Index = Math.Max(cat.Sequence.GetValueOrDefault(1) - 1, 0),
+                        Index = cat.Sequence.GetValueOrDefault(99),
                         IsHidden = !cat.IsDisplayed,
                         IsEmpty = !cat.Count.HasValue || cat.Count.Value <= 0
                     });

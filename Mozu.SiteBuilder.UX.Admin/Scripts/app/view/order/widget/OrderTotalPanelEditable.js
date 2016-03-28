@@ -7,7 +7,7 @@
  */
 Ext.define('Taco.view.order.widget.OrderTotalPanelEditable', {
     extend: 'Taco.view.order.widget.OrderTotalPanel',
-    requires: ['Taco.view.order.widget.DiscountPickerField', 'Taco.store.Discounts', 'Taco.core.ux.form.CurrencyField','Ext.button.Button'],
+    requires: ['Taco.view.order.widget.DiscountPickerField', 'Taco.view.order.widget.PriceListPickerField', 'Taco.store.Discounts', 'Taco.core.ux.form.CurrencyField', 'Ext.button.Button'],
     layout: {
         type: 'hbox',
         align: 'stretch',
@@ -26,6 +26,7 @@ Ext.define('Taco.view.order.widget.OrderTotalPanelEditable', {
          * Number of discounts to display in each page of the discountPicker Combobox;
          */
         discountsPerPage: 50,
+
         priceListStore: null,
         priceListName: ''
     },
@@ -395,67 +396,8 @@ Ext.define('Taco.view.order.widget.OrderTotalPanelEditable', {
             placeholder = "None provided";
         }
 
-        me.leftPanel.add({
-            xtype: 'label',
-            itemId: 'priceListChooserLabel',
-            cls: 'x-form-item-label',
-            html: 'Price List'
-        });
-
-        me.priceListChooserButton = Ext.widget({
-            itemId: 'priceListChooserButton',
-            name: 'priceListChooserButton',
-            cls: 'order-pricelist-menu',
-            style: 'text-align:left',
-            xtype: 'button',
-            ui: 'action',
-            scale: 'medium',
-            width: 350,
-            // Need to determine when to disable this button...
-            disabled: false,
-            // Figure out how to update this button text...
-            text: me.priceListName.length > 0 ? me.priceListName : 'None',
-            menu: Ext.create('Taco.view.order.widget.PriceListMenu', {
-                orderId: me.record.getId(),
-                width: 350,
-                store: me.priceListStore,
-                orderSiteId: me.record.get('siteId'),
-                onPriceListChange: function (menu, selection) {
-                    if (menu.data.isExclusive) {
-                        Ext.create('Taco.core.ux.window.Modal', {
-                            autoShow: true,
-                            width: 400,
-                            height: 250,
-                            primaryText: 'Ok',
-                            secondaryText: 'Cancel',
-                            doSave: function() {
-                                this.saveSuccess(null);
-                                me.setNewPriceList(me.record.getId(), menu.data.code);
-                            },
-                            items: [
-                                {
-                                    xtype: 'container',
-                                    flex: 1,
-                                    padding: '2 2',
-                                    items: [
-                                        {
-                                            flex: 1,
-                                            height: '100%',
-                                            width: '100%',
-                                            html: '<div>Applying this exclusive price list may remove certain products from the order.</div>'
-                                        }
-                                    ]
-                                }
-                            ]
-                        });
-                    } else {
-                        me.setNewPriceList(me.record.getId(), menu.data.code);
-                    }
-                }
-            })
-        });
-
-        me.leftPanel.add(me.priceListChooserButton);
+        me.initPriceListCombo();
+        me.leftPanel.add(me.priceListCombo);
 
         me.customerNoteField = Ext.widget({
             //xtype: (this.record.get("orderStatus") == "Pending") ? "textarea" : "editabledisplayfield",
@@ -475,33 +417,87 @@ Ext.define('Taco.view.order.widget.OrderTotalPanelEditable', {
         me.leftPanel.add(me.customerNoteField);
     },
 
-    setNewPriceList: function (orderId, priceListCode) {
+    initPriceListCombo: function () {
         var me = this;
 
-        me.fireEvent('save');
+        function applyPriceList(combo, priceListRecord)
+        {
+            if (priceListRecord.get('filteredInStorefront')) {
+                Ext.create('Taco.core.ux.window.Modal', {
+                    autoShow: true,
+                    width: 400,
+                    height: 250,
+                    primaryText: 'Ok',
+                    secondaryText: 'Cancel',
+                    doSave: function() {
+                        this.saveSuccess(null);
+                        setNewPriceList(me.record.getId(), priceListRecord.get('code'));
+                    },
+                    items: [
+                        {
+                            xtype: 'container',
+                            flex: 1,
+                            padding: '2 2',
+                            items: [
+                                {
+                                    width: '100%', height: '100%', flex: 1,
+                                    html: '<div>Applying this exclusive price list may remove certain products from the order.</div>'
+                                }
+                            ]
+                        }
+                    ]
+                });
+            } else {
+                setNewPriceList(me.record.getId(), priceListRecord.get('code'));
+            }
+        }
 
-        me.record.setPriceList({
-            jsonData: {
-                orderId: orderId,
-                priceListCode: priceListCode
-            },
-            success: function(response) {
-                var json = Ext.decode(response.responseText, true);
-                if (!json || !json.success) {
-                    Taco.app.fireEvent('setmessage', "Error setting price list.", 'error');
-                    return;
+        function setNewPriceList(orderId, priceListCode) {
+            me.fireEvent('save');
+
+            me.record.setPriceList({
+                jsonData: {
+                    orderId: orderId,
+                    priceListCode: priceListCode
+                },
+                success: function(response) {
+                    var json = Ext.decode(response.responseText, true);
+                    if (!json || !json.success) {
+                        Taco.app.fireEvent('setmessage', "Error setting price list.", 'error');
+                        return;
+                    }
+
+                    me.fireEvent('saveSuccess', json);
+                },
+                failure: function(response) {
+                    var json = Ext.decode(response.responseText, true),
+                        msg = (json && json.message) ? json.message : "Error setting price list.";
+                    Taco.app.fireEvent('setmessage', msg, 'error');
+                    me.fireEvent('saveFailure');
                 }
+            });
+        }
 
-                var priceListRecord = me.priceListStore.findRecord('code', json.items.priceListCode);
-                me.priceListChooserButton.setText(priceListRecord && priceListRecord.get('name') || json.items.priceListCode || 'None');
+        this.priceListCombo = Ext.create('Taco.view.order.widget.PriceListPickerField', {
+            flex: 1,
+            fieldLabel: "Price List",
+            labelStyle: "padding-top:16px;",
 
-                me.fireEvent('saveSuccess', json);
-            },
-            failure: function(response) {
-                var json = Ext.decode(response.responseText, true),
-                    msg = (json && json.message) ? json.message : "Error setting price list.";
-                Taco.app.fireEvent('setmessage', msg, 'error');
-                me.fireEvent('saveFailure');
+            emptyText: "None",
+            valueNotFoundText: "None",
+            editable: true,
+            forceSelection: false,
+
+            store: me.priceListStore,
+            orderSiteId: me.record.get('siteId'),
+            value: me.record.get('priceListCode'),
+            listeners: {
+                select: {
+                    fn: function (combo, records, opts) {
+                        applyPriceList(combo, records[0]);
+                    },
+                    scope: me
+                }
             }
         });
     },

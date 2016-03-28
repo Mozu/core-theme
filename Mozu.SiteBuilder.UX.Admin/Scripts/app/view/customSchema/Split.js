@@ -372,7 +372,11 @@ Ext.define('Taco.view.customSchema.Split', {
             entityType: currentList.get('entityType'),
             documentTypeFQN: currentList.get('documentTypes') && currentList.get('documentTypes').length ? currentList.get('documentTypes')[0] : undefined,
             properties: {},
-            item: {}
+            item: {},
+            listFlags: {
+                enableADR: currentList.get('enableActiveDateRanges'),
+                enablePublishing: currentList.get('enablePublishing')
+            }
         });
 
         // TODO: TALK TO THOM ABOUT THIS LOGIC

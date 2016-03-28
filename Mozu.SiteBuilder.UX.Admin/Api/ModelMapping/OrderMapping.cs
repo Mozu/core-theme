@@ -127,7 +127,6 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.ModelMapping
                 .ForMember(x => x.HasDraft, op => op.ResolveUsing(dc => dc.HasDraft ?? false))
 
                 .ForMember(x=> x.PriceListCode, op => op.ResolveUsing(dc => dc.PriceListCode))
-                .ForMember(x => x.PricelistName, op => op.ResolveUsing(dc => dc.PricelistName))
 
                 .ForMember(x => x.AvailableActions, op => op.ResolveUsing(dc => dc.AvailableActions))
 
@@ -167,6 +166,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.ModelMapping
                 .ForMember(x => x.ItemsNotDigitallyFulfilled, op => op.Ignore())
                 .ForMember(x => x.TaxDutyTotal, op => op.Ignore())
                 .ForMember(x => x.ReturnableItems, op => op.Ignore())
+            
                 .AfterMap(MapAvailableBulkActions)
                 .AfterMap(InterpolateRefundsIntoPaymentInteractions)
                 .AfterMap((dc, order) =>

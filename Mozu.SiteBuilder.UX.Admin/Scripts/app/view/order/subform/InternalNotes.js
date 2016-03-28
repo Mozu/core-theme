@@ -12,6 +12,7 @@ Ext.define('Taco.view.order.subform.InternalNotes', {
     title: 'Internal Notes',
     ui: 'subform-section',
     bodyPadding: '20 0 40 0',
+    cls: 'taco-grid-hide-more-btn', // this hides the combobox that is used to show/hide columns
 
     layout: 'card',
 

@@ -12,7 +12,11 @@ Ext.define('Taco.model.EntityList', {
         'entityType',
         'views',
         'scopeType',
-        'documentTypes'
+        'documentTypes',
+        'enableActiveDateRanges',
+        'enablePublishing',
+        'supportsActiveDateRanges',
+        'supportsPublishing'
     ],
 
 

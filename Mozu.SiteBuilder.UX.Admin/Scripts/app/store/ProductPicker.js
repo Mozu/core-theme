@@ -25,7 +25,7 @@ Ext.define('Taco.store.ProductPicker', {
                 read: '/admin/app/Product/list'
             },
             extraParams: {
-                responseGroups: 'Min,Price'
+                responseGroups: 'Min,Price,VariationOptions'
                
             },
             reader: {

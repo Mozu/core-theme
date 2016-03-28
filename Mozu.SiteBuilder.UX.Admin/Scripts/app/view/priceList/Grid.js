@@ -35,7 +35,7 @@ Ext.define('Taco.view.priceList.Grid', {
 
     // Required by mixin: Taco.core.ux.mixins.LaunchEditor defined in SearchList
     modelName: 'Taco.model.PriceList',
-    
+
     controllerName: 'PriceLists',
 
     enableNavHeader: true,
@@ -73,7 +73,7 @@ Ext.define('Taco.view.priceList.Grid', {
 
     pageSize: 25,
 
-    advancedSearchConfig : {
+    advancedSearchConfig: {
         form: null
     },
 
@@ -88,8 +88,9 @@ Ext.define('Taco.view.priceList.Grid', {
     },
 
 
-    initComponent: function () {
-        var me = this;
+    initComponent: function() {
+        var me = this,
+            model;
 
         this.columns = this.getColumnConfig();
 
@@ -100,14 +101,20 @@ Ext.define('Taco.view.priceList.Grid', {
             }
         }
 
-        this.selModel = Ext.create('Ext.selection.CheckboxModel', {
-            selType: 'checkboxmodel',
-            checkOnly: true,
-            ignoreRightMouseSelection: true,
-            headerWidth: 37
-        });
+        model = Ext.ModelManager.getModel(me.modelName);
+        me.createButtonEnabled = model.allowCreate();
 
-        this.bulkActionConfig = this.getBulkActionsConfig();
+        if (model.allowUpdate()) {
+            this.selModel = Ext.create('Ext.selection.CheckboxModel', {
+                selType: 'checkboxmodel',
+                checkOnly: true,
+                ignoreRightMouseSelection: true,
+                headerWidth: 37
+            });
+            this.bulkActionConfig = this.getBulkActionsConfig();
+        } else {
+            this.enableBulkActions = false;
+        }
 
         // initialize the delete mixin
         this.mixins.deleteFromGrid.init.apply(this);
@@ -126,14 +133,13 @@ Ext.define('Taco.view.priceList.Grid', {
         me.advancedSearchConfig.form = Ext.create('Taco.view.priceList.form.AdvancedSearch', {});
 
         me.callParent(arguments);
-
     },
 
     reloadGrid: function() {
         this.store.reload();
     },
 
-    getColumnConfig: function () {
+    getColumnConfig: function() {
         var me = this;
         var columns = [
             {
@@ -150,7 +156,7 @@ Ext.define('Taco.view.priceList.Grid', {
                 stateId: 'name',
                 text: 'Name',
                 hideable: false,
-                flex: 2,                
+                flex: 2,
                 sortable: true
             }, {
                 xtype: 'gridcolumn',
@@ -197,49 +203,56 @@ Ext.define('Taco.view.priceList.Grid', {
         //    });
         //}
         return columns.concat([
-            {
-                xtype: 'gridcolumn',
-                dataIndex: 'status',
-                stateId: 'status',
-                text: 'Status',
-                flex:1,
-                sortable: true
-            }, {
-                xtype: 'datecolumn',
-                dataIndex: 'createDate',
-                stateId: 'createDate',
-                format: 'n/j/Y g:i a',
-                flex:2,
-                text: 'Created Date',
-                hidden: true,
-                sortable: true
-            }, {
-                xtype: 'gridcolumn',
-                dataIndex: 'createByUser',
-                stateId: 'createByUser',
-                text: 'Created By',
-                flex:1,
-                hidden: true,
-                sortable: false
-            }, {
-                xtype: 'datecolumn',
-                dataIndex: 'lastModifiedDate',
-                stateId: 'lastModifiedDate',
-                format: 'n/j/Y g:i a',
-                flex:2,
-                text: 'Last Modified Date',
-                hidden: true,
-                sortable: true
-            }, {
-                xtype: 'gridcolumn',
-                dataIndex: 'lastModifiedByUser',
-                stateId: 'lastModifiedByUser',
-                text: 'Last Modified By',
-                flex:1,
-                hidden: true,
-                sortable: false
-            }
-        ]);
+        {
+            xtype: 'gridcolumn',
+            dataIndex: 'status',
+            stateId: 'status',
+            text: 'Status',
+            flex: 1,
+            sortable: true
+        }, {
+            xtype: 'datecolumn',
+            dataIndex: 'createDate',
+            stateId: 'createDate',
+            format: 'n/j/Y g:i a',
+            flex: 2,
+            text: 'Created Date',
+            hidden: true,
+            sortable: true
+        }, {
+            xtype: 'gridcolumn',
+            dataIndex: 'createByUser',
+            stateId: 'createByUser',
+            text: 'Created By',
+            flex: 1,
+            hidden: true,
+            sortable: false
+        }, {
+            xtype: 'datecolumn',
+            dataIndex: 'lastModifiedDate',
+            stateId: 'lastModifiedDate',
+            format: 'n/j/Y g:i a',
+            flex: 2,
+            text: 'Last Modified Date',
+            hidden: true,
+            sortable: true
+        }, {
+            xtype: 'gridcolumn',
+            dataIndex: 'lastModifiedByUser',
+            stateId: 'lastModifiedByUser',
+            text: 'Last Modified By',
+            flex: 1,
+            hidden: true,
+            sortable: false
+        }, {
+            xtype: 'gridcolumn',
+            dataIndex: 'defaultForSitesDisplay',
+            stateId: 'defaultForSitesDisplay',
+            text: 'Default For',
+            hidden: true,
+            flex: 3,
+            sortable: false
+        }]);
     },
 
     // list of actions to put in action column and context menu;
@@ -338,6 +351,10 @@ Ext.define('Taco.view.priceList.Grid', {
                     itemId: 'Enable',
                     text: 'Enable',
                     scope: this,
+                    requiredBehaviors: {
+                        model: 'Taco.model.PriceList',
+                        behavior: 'update'
+                    },
                     handler: function (item, eventData) {
                         this.doBulkAction.call(this, item, eventData);
                     }
@@ -346,6 +363,10 @@ Ext.define('Taco.view.priceList.Grid', {
                     itemId: 'Disable',
                     text: 'Disable',
                     scope: this,
+                    requiredBehaviors: {
+                        model: 'Taco.model.PriceList',
+                        behavior: 'update'
+                    },
                     handler: function (item, eventData) {
                         var selection = item.scope.selModel.getSelection(),
                             name = selection.length === 1 ? selection[0].get('name') : undefined,

@@ -35,7 +35,7 @@ Ext.define('Taco.view.customSchema.Grid', {
 
     initComponent: function() {
         var me = this;
-         
+
          me.editors = Taco.core.data.StoreManager.getOrCreate('Taco.store.EntityEditors');
 
 
@@ -50,7 +50,7 @@ Ext.define('Taco.view.customSchema.Grid', {
                 autoLoad: false,
                 remoteFilter: true
             });
-            
+
         }
 
         if (this.siteBuilderList) {
@@ -91,7 +91,7 @@ Ext.define('Taco.view.customSchema.Grid', {
         if (!dynamicFields) return start;
 
         if (!dynamicFields.length || dynamicFields.length === 0) return start;
-        
+
         else {
             var key = dynamicFields.fields.map(function(rec) { return rec.name; }).join(',');
             return start + key;
@@ -114,8 +114,6 @@ Ext.define('Taco.view.customSchema.Grid', {
 
         me.on('cellclick', me.onCellClick, me);
     },
-
-   
 
     updatePagerToolbar: function(record, isSinglePage) {
 
@@ -189,7 +187,7 @@ Ext.define('Taco.view.customSchema.Grid', {
                 stateId: 'name'
             });
 
-        } 
+        }
 
         else {
             columns.push({
@@ -348,7 +346,6 @@ Ext.define('Taco.view.customSchema.Grid', {
 
                     else if (eventData.grid.siteBuilderList) {
 
-                       
                         eventData.record.reload({
                             success: function() {
                                 me.record = eventData.record;
@@ -401,13 +398,18 @@ Ext.define('Taco.view.customSchema.Grid', {
         if (record) {
             Taco.core.StateManager.attemptNavigate('customschema/edit?type=' + record.get('entityType') + '&list=' + record.get('listFQN') + '&record=' + record.get('id'), record.raw);
         }
+
         else {
             var record = Ext.create('Taco.model.Entity', {
                 listFQN: me.listFQN,
-                type: me.entityType
+                type: me.entityType,
+                listFlags: {
+                    enableADR: me.enableActiveDateRanges,
+                    enablePublishing: me.enablePublishing
+                }
             });
 
-            Taco.core.StateManager.attemptNavigate('customschema/edit?type=' + this.entityType + '&list=' + this.listFQN , record.raw);   
+            Taco.core.StateManager.attemptNavigate('customschema/edit?type=' + this.entityType + '&list=' + this.listFQN , record.raw);
         }
     },
 
@@ -422,7 +424,7 @@ Ext.define('Taco.view.customSchema.Grid', {
         });
     },
 
-    doCreate: function(argument) {
+    doCreate: function() {
         this.navigateToEdit();
     },
 
@@ -434,8 +436,37 @@ Ext.define('Taco.view.customSchema.Grid', {
         }
 
         var split = this.up('entity-split');
+        var eventData = this.gridPager;
+        var me = this;
 
-        if (split) split.onItemEdit(view, record, this.listMetaData);
+        if (split) {
+            split.onItemEdit(eventData.grid, eventData.record, eventData.grid.listMetaData);
+        }
+
+        else if (eventData.grid.siteBuilderList) {
+
+            record.reload({
+                success: function() {
+                    me.record = record;
+                    me.saveButton.show();
+                    me.viewContainer.removeAll();
+                    me.grid = null;
+                    me.form = Ext.create('Taco.view.customSchema.DynamicFormContainer', {
+                        record: record,
+                        ui: 'subform-section',
+                        defaults: {
+                            margin: '10 10 10 10',
+                        },
+                        bubbleEvents: ['savesuccess', 'saveSuccess', 'savefailure'],
+                        editor: me.editors.findEditor(record)
+                    });
+                    me.viewContainer.add(me.form);
+                }
+            });
+        }
+
+        else {
+            me.navigateToEdit(eventData.record);
+        }
     }
-    
 });

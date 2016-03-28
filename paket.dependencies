@@ -6,13 +6,14 @@ source http://nuget-internal.corp.volusion.com:8200/api/odata
 source http://nuget-external.corp.volusion.com:8201/api/odata
 
 nuget 51Degrees.mobi 2.1.15.1 content: none
+nuget JWT 1.3.4
 
 nuget Microsoft.AspNet.WebApi.Core 5.2.3
 nuget Microsoft.AspNet.WebPages 3.2.2 
 nuget Microsoft.AspNet.Mvc 5.2.2 
 
 
-nuget Mozu.Core.Prime 1.1605.4-dev1602252255fea
+nuget Mozu.Core.Prime 1.1605.4-f1603121837session
 nuget Mozu.ScheduledEvent.Contracts
 nuget Mozu.VS.PowerShell
 nuget OctoPack 2.1.3
@@ -40,12 +41,12 @@ nuget Mozu.Hypr.NDjango
 nuget Mozu.InstalledApps.Contracts < 1.20
 nuget Mozu.Location.Contracts < 1.20
 nuget Mozu.MZDB.Contracts < 1.20
-nuget Mozu.ProductAdmin.Contracts prerelease
-nuget Mozu.ProductRuntime.Contracts prerelease
+nuget Mozu.ProductAdmin.Contracts > 1.20 prerelease
+nuget Mozu.ProductRuntime.Contracts > 1.20 prerelease
 nuget Mozu.Provisioning.Contracts < 1.20
 nuget Mozu.Reference.Contracts < 1.20
 nuget Mozu.ShippingAdmin.Contracts < 1.20
 nuget Mozu.SiteSettings.General.Contracts < 1.20   
-nuget Mozu.SiteSettings.Order.Contracts < 1.20 
+nuget Mozu.SiteSettings.Order.Contracts prerelease
 nuget protobuf-net 2.0.0.668 
 nuget FAKE

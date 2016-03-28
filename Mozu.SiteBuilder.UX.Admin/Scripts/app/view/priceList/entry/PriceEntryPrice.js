@@ -7,6 +7,7 @@ Ext.define('Taco.view.priceList.entry.PriceEntryPrice', {
     alias: 'widget.taco-priceList-price-entry-price',
     requires: [
         'Ext.form.field.ComboBox',
+        'Taco.model.PriceListEntryPrice',
         'Taco.core.ux.form.CurrencyField',
         'Ext.form.field.Date',
         'Taco.core.ux.TooltipLabel',
@@ -199,12 +200,14 @@ Ext.define('Taco.view.priceList.entry.PriceEntryPrice', {
             }
         });
 
-        me.discountRestriction = Ext.widget('selectfield', {
+        me.discountRestriction = Ext.widget('combobox', {
             fieldLabel: 'Discounts Restriction',
             name: 'discountsRestricted',
             displayFeild: 'text',
             valueField: 'value',
-            allowBlank: true,
+            editable: false,
+            forceSelection: true,
+            queryMode: 'local',
             store: Ext.create('Ext.data.ArrayStore', {
                 fields: ['text', 'value'],
                 data: [
@@ -213,16 +216,24 @@ Ext.define('Taco.view.priceList.entry.PriceEntryPrice', {
                     ['Off', false]
                 ]
             }),
-            onChange: function(newVal, oldVal) {
-                if (newVal === true) {
-                    me.restrictionStartDate.enable();
-                    me.restrictionEndDate.enable();
-                }
-                else {
-                    me.restrictionStartDate.disable();
-                    me.restrictionStartDate.setValue(null);
-                    me.restrictionEndDate.disable();
-                    me.restrictionEndDate.setValue(null);
+            listeners: {
+                scope: me,
+                afterrender: function() {
+                    if (this.record.phantom || this.record.get('discountsRestricted') == null) {
+                        this.discountRestriction.setValue(this.discountRestriction.getStore().getAt(0));
+                    }
+                },
+                change: function(cmp, newVal) {
+                    if (newVal === true) {
+                        this.restrictionStartDate.enable();
+                        this.restrictionEndDate.enable();
+                    }
+                    else {
+                        this.restrictionStartDate.disable();
+                        this.restrictionStartDate.setValue(null);
+                        this.restrictionEndDate.disable();
+                        this.restrictionEndDate.setValue(null);
+                    }
                 }
             }
         });
@@ -232,6 +243,7 @@ Ext.define('Taco.view.priceList.entry.PriceEntryPrice', {
             fieldLabel: 'Restriction Start Date',
             name: 'discountsRestrictedStartDate',
             emptyText: 'Default',
+            disabled: this.record.phantom || this.record.get('discountsRestricted') == null,
             listeners: {
                 afterRender: function() {
                     this.disabled = me.discountRestriction.getValue() !== 'On';
@@ -245,6 +257,7 @@ Ext.define('Taco.view.priceList.entry.PriceEntryPrice', {
             fieldLabel: 'Restriction End Date',
             name: 'discountsRestrictedEndDate',
             emptyText: 'Default',
+            disabled: this.record.phantom || this.record.get('discountsRestricted') == null,
             listeners: {
                 afterRender: function() {
                     this.disabled = me.discountRestriction.getValue() !== 'On';
@@ -317,20 +330,8 @@ Ext.define('Taco.view.priceList.entry.PriceEntryPrice', {
                         {}
                     ]
                 },
-                {
-                    items: [
-                        me.mapOverride,
-                        me.mapStartDate,
-                        me.mapEndDate
-                    ]
-                },
-                {
-                    items: [
-                        me.discountRestriction,
-                        me.restrictionStartDate,
-                        me.restrictionEndDate
-                    ]
-                }
+                me.mapRow,
+                me.discountRestrictionRow
             ]
         };
 

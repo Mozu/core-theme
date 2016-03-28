@@ -21,10 +21,16 @@ using Mozu.SiteBuilder.Mvc.Contexts;
 using Mozu.SiteBuilder.UX.Messaging;
 using Mozu.SiteBuilder.UX.Filters;
 using Mozu.CommerceRuntime.Contracts.Clients;
+using System.Web;
+using System.Threading;
+using System.Web.Http.Controllers;
+using System.Web.Http.Filters;
+using System.Linq.Expressions;
 
 namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
 {
     [DataViewModeEnforcement]
+    [AuthModelValidator]
     public class AuthController : BaseApiController
     {
         
@@ -51,7 +57,7 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
             _pageContext = pageContext;
             _visitPublisher = visitPublisher;
         }
-
+       
         protected void DoLogout() 
         {
             var user = LightweightUserClaims.CreateForAnonymousShopper(_apiContext.TenantId, _apiContext.SiteId.Value);
@@ -234,7 +240,7 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
              }
             return Request.CreateResponse(HttpStatusCode.Unauthorized, new
              {
-                Message = string.Format("Login as {0} failed. Please try again.", authInfo.Account.EmailAddress)
+                Message = string.Format("Login as {0} failed. Please try again.", HttpUtility.HtmlEncode(authInfo.Account.EmailAddress))
                                                                              });
              }
 
@@ -274,7 +280,7 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
             }
             else
             {
-                string errorStr = (email != null) ? string.Format("Login as {0} failed. Please try again.", email) : "Login failed. Please specify a user.";
+                string errorStr = (email != null) ? string.Format("Login as {0} failed. Please try again.", HttpUtility.HtmlEncode(email)) : "Login failed. Please specify a user.";
                 return Request.CreateResponse(HttpStatusCode.OK, View("Login", new { email = email, Messages = new List<object> { new { Message = errorStr } } }));
             }
         }
@@ -292,14 +298,14 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
             {
                 return new
                     {
-                    Message = string.Format("Logged in as {0}.", email)
+                    Message = string.Format("Logged in as {0}.", HttpUtility.HtmlEncode(email))
                     };
                 }
             else
             {
                 return Request.CreateResponse(HttpStatusCode.Unauthorized, new
                 {
-                    Message = string.Format("Login as {0} failed. Please try again.", email)
+                    Message = string.Format("Login as {0} failed. Please try again.", HttpUtility.HtmlEncode( email))
                 });
             }
         }
@@ -512,6 +518,80 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
         }
     }
 
+
+    public class AuthModelValidator : ActionFilterAttribute
+    {
+        public override void OnActionExecuting(HttpActionContext actionContext)
+        {
+            if ( actionContext.Request.Method != HttpMethod.Post)
+            {
+                return;
+            }
+            foreach ( var arg in actionContext.ActionArguments.Values)
+            {
+                if ( arg == null)
+                {
+                    continue;
+                }
+               
+                var customerAccountAndAuthInfo = arg as CustomerAccountAndAuthInfo;
+                if ( customerAccountAndAuthInfo != null)
+                {
+                    
+                    ValidateField(customerAccountAndAuthInfo?.Account, x => x.EmailAddress);
+                    ValidateField(customerAccountAndAuthInfo?.Account, x => x.UserName);
+                    return;
+                }
+
+                var resetPasswordInfo = arg as ResetPasswordInfo;
+                if (resetPasswordInfo != null)
+                {
+                    ValidateField(resetPasswordInfo, x => x.EmailAddress);
+                    return;
+                }
+
+                var loginDetails = arg as AuthController.LoginDetails;
+                if (loginDetails != null)
+                {
+                    ValidateField(loginDetails, x => x.email);
+                    return;
+                }
+
+                var resetPasswordConfirmDetails = arg as AuthController.ResetPasswordConfirmDetails;
+                if (resetPasswordConfirmDetails != null)
+                {
+                    ValidateField(resetPasswordConfirmDetails, x => x.username);
+                    return;
+                }
+                var orderDetails = arg as AuthController.OrderDetails;
+                if (orderDetails != null)
+                {
+                    ValidateField(orderDetails, x => x.email);
+                    ValidateField(orderDetails, x => x.orderNumber);
+                    ValidateField(orderDetails, x => x.billingZipCode);
+                    ValidateField(orderDetails, x => x.billingPhoneNumber);
+                    return;
+                }
+#if DEBUG
+                throw new Exception("missing validation routine for type " + arg.GetType().FullName);
+#endif
+            }
+        }
+        void ValidateField<T> (T parent , Expression<Func<T,string>> exp )
+        {
+            if (parent == null)
+            {
+                return;
+            }
+            var val = exp.Invoke(parent);
+
+            if (val != null && val != HttpUtility.HtmlEncode(val))
+            {
+                var name = ((MemberExpression)exp.Body).Member.Name;
+                throw new Mozu.Core.Exceptions.VaeValidationConflictException(name, "invalid input for field " + name);
+            }
+        }
+    }
     public class PantsController : BaseApiController
     {
         private readonly IAuthenticationHelper _authenticationHelper;

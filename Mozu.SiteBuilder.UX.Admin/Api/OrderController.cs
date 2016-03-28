@@ -357,8 +357,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
 
             dcCustomer = (await _customerAccountWebApiClient.GetAccount(args.CustomerAccountId)).ReadAsSync();
 
-            ResolvedPriceList priceList = (await _priceListRuntimeWebApiClient.GetResolvedPriceList(args.CustomerAccountId)).ReadAsSync();
-            string priceListCode = priceList != null ? priceList.PriceListCode : null;
+            string priceListCode = (await GetPriceListCode(args.CustomerAccountId));
             if (!ComparePriceList(dcOrder.PriceListCode, priceListCode))
             {
                 (_apiContext as ApiContext).PriceListCode = priceListCode;
@@ -422,6 +421,19 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
         private bool ComparePriceList(string priceList1, string priceList2)
         {
             return String.IsNullOrEmpty(priceList1) ? String.IsNullOrEmpty(priceList2) : priceList1.Equals(priceList2, StringComparison.OrdinalIgnoreCase);
+        }
+
+        private async Task<string> GetPriceListCode(int customerId)
+        {
+            ResolvedPriceList resolvedPriceListpriceList = (await _priceListRuntimeWebApiClient.GetResolvedPriceList(customerId)).ReadAsSync();
+            if (resolvedPriceListpriceList != null)
+            {
+                return resolvedPriceListpriceList.PriceListCode;
+            }
+            
+            PriceList defaultPriceList =  (await _priceListRuntimeWebApiClient.GetDefaultPriceList()).ReadAsSync();
+            return defaultPriceList != null ? defaultPriceList.PriceListCode : null;
+            
         }
     }
 }

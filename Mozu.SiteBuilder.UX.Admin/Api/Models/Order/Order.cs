@@ -312,11 +312,5 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.Models.Order
         /// 
         /// </summary>
         public string PriceListCode { get; set; }
-
-        /// <summary>
-        /// Name of the pricelist
-        /// 
-        /// </summary>
-        public string PricelistName { get; set; }
     }
 }

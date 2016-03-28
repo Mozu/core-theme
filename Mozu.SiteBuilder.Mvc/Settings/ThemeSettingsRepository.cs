@@ -127,41 +127,26 @@ namespace Mozu.SiteBuilder.Mvc.Settings
         private Task<JObject> _getInstanceValues;
         public Task<JObject> GetInstanceValues(string themeId)
         {
-            var key = typeof(List<ThemeRuntimeSetting>) + themeId;
-
-            var cachedResult = _cache.Get<Tuple<DateTime, JObject, byte[]>>(key);
-            if (cachedResult != null )
-            {
-                var tcs = new TaskCompletionSource<JObject>();
-                Etag = cachedResult.Item3;
-                tcs.SetResult(cachedResult.Item2 ?? new JObject());
-                _ts = cachedResult.Item1;
-                return tcs.Task  ;
-            }
-
             _getInstanceValues = _cmsService.GetByPath2("siteSettings@mozu", GetFileName(themeId)).ContinueWith(
                     res =>
                     {
+                        _ts = DateTime.MinValue;
+                        this.Etag = new byte[0];
+
                         JObject value = null;
                         if (res.Result.ResponseMessage.IsSuccessStatusCode)
                         {
                             Etag = res.Result.ETagBytes();
-                           
+
                             var doc = res.Result.ReadAsSync();
-
-                            _ts = doc.UpdateDate.GetValueOrDefault(DateTime.Today);
-
-                            value = doc.Get<JObject>("data");
-
-                            _cache.Set(key, new Tuple<DateTime, JObject, byte[]>(_ts.Value, value, Etag));
-                        }
-                        else
-                        {
-                            _ts = DateTime.Today;
-                            this.Etag = new byte[0];
-                            _cache.Set(key, new Tuple<DateTime, JObject, byte[]>(_ts.Value, value, this.Etag));
+                            if (doc != null)
+                            {
+                                _ts = doc.UpdateDate.GetValueOrDefault(DateTime.Today);
+                                value = doc.Get<JObject>("data");
+                            }
 
                         }
+
                         return value ?? new JObject();
                     });
             return _getInstanceValues;

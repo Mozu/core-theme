@@ -74,6 +74,9 @@ Ext.define('Taco.store.TooltipHelp', {
             key: 'discount.criteria.excludeProductsInPriceLists',
             value: 'Excludes products from applying this discount in the selected Price Lists.'
         }, {
+            key: 'discount.criteria.applicablePriceLists',
+            value: 'The discount applies to products that are priced by the specified price lists or their children, if applicable.'
+        }, {
             key: 'discount.limitations.maximumDiscountValuePerRedemption',
             value: 'A redemption occurs each time a discount is applied. If your discount is a buy one, get two free, each two free items is one redemption. This field limits the maximum combined value of the two free items.'
         }, {
@@ -96,7 +99,7 @@ Ext.define('Taco.store.TooltipHelp', {
             value: 'Please contact Mozu Support or your Solution Partner to enable this feature.'
         }, {
             key: 'settings.general.bustCdnCache',
-            value: 'This feature requires an update to your theme.<br><br><a href="' + Taco.adminHelpLink + '" target="_blank" class="taco-help-link">See Enabling the Bust Cache Feature in Mozu Help.</a>'
+            value: 'This feature requires an update to your theme.<br><br><a href="' + Taco.neWadminHelpLink + '" target="_blank" class="taco-help-link">See Enabling the Bust Cache Feature in Mozu Help.</a>'
         }, {
             key: 'settings.general.missingImage',
             value: 'Upload or select an image: This will be used as a replacement for all missing images on your storefront'
@@ -126,7 +129,7 @@ Ext.define('Taco.store.TooltipHelp', {
             value: 'By default, all price lists can be picked as being directly applicable to a customer. To improve performance, disable this setting if the price list is only meant to be a parent for others and will not be chosen for a customer directly. Refer to Mozu Docs for more info.'
         }, {
             key: 'priceLists.resolution.default',
-            value: 'When the resolution logic does not resolve to a valid price list for a customer, the default price list for a site will be in effect.'
+            value: 'Scope determines on which sites the price list can apply to applicable customers. When the resolution logic does not resolve to a valid price list for a customer, the default price list will be in effect.'
         }, {
             key: 'priceLists.resolution.rank',
             value: 'Mozu uses rank to break ties when multiple price lists are valid at the same time. Lower numbers equal higher priority (1 wins over 2).'

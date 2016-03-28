@@ -5,7 +5,7 @@
  * @description Variants modal containing the variant grid
  */
 Ext.define('Taco.view.product.variant.Modal', {
-    extend: 'Taco.core.ux.window.Modal',
+    extend: 'Taco.core.ux.window.Drawer',
     requires: [
         'Taco.view.product.variant.Grid',
         'Taco.view.product.variant.Options'
@@ -13,13 +13,20 @@ Ext.define('Taco.view.product.variant.Modal', {
 
     primaryText: 'Save',
     closeAction :'destroy',
+    closeOnSave: true,
 
+    pricingMode: 'Delta',
+    pricingModeChanged: false,
 
+    itemId: 'variantionModal',
 
     scale: 'large',
     title: 'Edit Variants',
 
+    resizable: true,
     layout: 'fit',
+    height: '95%',
+    width: '95%',
 
     autoShow: true,
 
@@ -27,7 +34,7 @@ Ext.define('Taco.view.product.variant.Modal', {
         xtype: 'button',
         text: 'Update Options',
         ui: 'action',
-        scale: 'medium',
+        scale: 'large',
         handler: function() {
             this.updateOptions.apply(this, arguments);
         }
@@ -50,8 +57,11 @@ Ext.define('Taco.view.product.variant.Modal', {
         this.variationGrid = Ext.create('Taco.view.product.variant.Grid', {            
             product: this.product,
             optionsData: me.optionsData,
-            productType: this.productType
-        })
+            productType: this.productType,
+            pricingMode: me.pricingMode,
+            pricingModeChanged: me.pricingModeChanged,
+            stateId: me.pricingMode === 'Fixed' ? 'statefulProductOptionsGridFixed' : 'statefulProductOptionsGrid' 
+        });
 
 
         this.mon(me.variationGrid, 'savesuccess', function () {
@@ -60,10 +70,7 @@ Ext.define('Taco.view.product.variant.Modal', {
         
 
         this.form = Ext.create('Taco.core.ux.form.Form', {
-            layout: 'fit',
-            items: [
-                this.variationGrid
-            ]
+            items: [ this.variationGrid ]
         });
 
         this.items = [this.form];

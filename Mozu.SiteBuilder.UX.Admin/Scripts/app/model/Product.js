@@ -440,6 +440,12 @@ Ext.define('Taco.model.Product', {
             dateFormat: 'c'
         },
         {
+            "name": "variationPricingMethod",
+            "type": "string",
+            "useNull": true,
+            "defaultValue": "Fixed"
+        },
+        {
             "name": "packageWeight",
             "type": "float",
             "defaultValue": 1
@@ -738,7 +744,8 @@ Ext.define('Taco.model.Product', {
         return this.getOrCreateHasManyStore({
             model: 'Taco.model.ProductProperty',
             associationKey: 'options',
-            foreignProperty: 'product'
+            foreignProperty: 'product',
+            createOnly:true
         });
     },
     getExtras: function () {

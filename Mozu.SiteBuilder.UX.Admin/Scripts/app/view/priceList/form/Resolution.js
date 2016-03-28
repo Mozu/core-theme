@@ -206,7 +206,7 @@ Ext.define('Taco.view.priceList.form.Resolution', {
                 {
                     xtype: 'fieldcontainer',
                     itemId: 'scope-field-container',
-                    fieldLabel: "Scope",
+                    fieldLabel: "Scope and Defaults",
                     flex: 1,
                     minWidth: 200,
                     layout: {
@@ -217,7 +217,14 @@ Ext.define('Taco.view.priceList.form.Resolution', {
                     items: [
                         me.allSitesRadio, 
                         me.specificSitesRadio
-                    ]
+                    ],
+                    tooltip: Ext.create('Taco.core.ux.content.Tooltip', {
+                        elementId: 'scope-field-container',
+                        hoverTarget: 'label',
+                        messageKey: 'priceLists.resolution.default',
+                        arrowPosition: 'left',
+                        offsetLeft: -140
+                    })
                 },
                 this.sitesTree
             ]
@@ -243,13 +250,6 @@ Ext.define('Taco.view.priceList.form.Resolution', {
                     display: 'inline-table',
                     verticalAlign: 'bottom'
                 }
-                //tooltip: Ext.create('Taco.core.ux.content.Tooltip', {
-                //    elementId: 'customer-segments-select',
-                //    hoverTarget: 'label',
-                //    messageKey: 'discount.conditions.customerSegments',
-                //    arrowPosition: 'left',
-                //    offsetLeft: -140
-                //})
             }
         );
 
@@ -307,8 +307,8 @@ Ext.define('Taco.view.priceList.form.Resolution', {
             }/*,
             {
                 xtype: 'numberfield',
-                name: 'searchIndexSequence',
-                itemId: 'searchIndexSequenceField',
+                name: 'priceListSequence',
+                itemId: 'priceListSequenceField',
                 fieldLabel: 'Search Index Sequence',
                 allowBlank: true,
                 hideTrigger: true,

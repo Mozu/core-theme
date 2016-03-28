@@ -22,7 +22,8 @@ Ext.define('Taco.view.priceList.entry.Entries', {
         Ext.tip.QuickTipManager.init();
 
         this.entriesGrid = Ext.create('Taco.view.priceList.widget.EntriesGrid', {
-            priceListCode: (!this.record.phantom) ? this.record.get('code') : null
+            priceListCode: (!this.record.phantom) ? this.record.get('code') : null,
+            priceListRecord: this.record
         });
 
         this.items = [{

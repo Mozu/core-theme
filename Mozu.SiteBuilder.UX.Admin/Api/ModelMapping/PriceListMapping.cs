@@ -5,6 +5,7 @@ using Mozu.Core.Extensions;
 using DC = Mozu.ProductAdmin.Contracts;
 using System.Collections.Generic;
 using Mozu.Core.Api.Contracts;
+using Mozu.SiteBuilder.UX.Admin.Api.Models.Options;
 using Mozu.SiteBuilder.UX.Admin.Api.Models.PriceLists;
 
 namespace Mozu.SiteBuilder.UX.Admin.Api.ModelMapping
@@ -46,10 +47,21 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.ModelMapping
                 .ForMember(x => x.ParentPriceListName, op => op.Ignore())
                 ;
 
+            Mapper.CreateMap<DC.ProductOption, ProductOption>();
+            Mapper.CreateMap<ProductOption, DC.ProductOption>();
+
+            Mapper.CreateMap<DC.ProductOptionValue, ProductOptionValue>();
+            Mapper.CreateMap<ProductOptionValue, DC.ProductOptionValue>();
+        
             Mapper.CreateMap<PriceListEntry, DC.PriceListEntry>()
                 .ForMember(x => x.AuditInfo, op => op.Ignore())
+                .ForMember(dc => dc.DiscountsRestrictedMode, op => op.ResolveUsing(x => x.DiscountsRestricted.HasValue ? "Overridden" : "UseCatalog"))
                 ;
             Mapper.CreateMap<DC.PriceListEntry, PriceListEntry>()
+                .ForMember(x => x.DiscountsRestricted, op => op.ResolveUsing(dc => dc.DiscountsRestrictedMode.EqualsIgnoreCase("Overridden") ? dc.DiscountsRestricted : null) )
+                .ForMember(x => x.Options, op => op.ResolveUsing(dc => dc.Options))
+            
+            
                 .ForMember(x => x.CreateBy, op => op.ResolveUsing(dc => dc.AuditInfo != null ? dc.AuditInfo.CreateBy : ""))
                 .ForMember(x => x.CreateDate, op => op.ResolveUsing(dc => dc.AuditInfo != null ? dc.AuditInfo.CreateDate : null))
                 .ForMember(x => x.UpdateBy, op => op.ResolveUsing(dc => dc.AuditInfo != null ? dc.AuditInfo.UpdateBy : ""))
@@ -60,6 +72,9 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.ModelMapping
             Mapper.CreateMap<PriceListEntryPrice, DC.PriceListEntryPrice>();
             Mapper.CreateMap<DC.PriceListEntryPrice, PriceListEntryPrice>();
 
+            Mapper.CreateMap<Mozu.ProductRuntime.Contracts.PriceList, RuntimePriceList>()
+                .ForMember(x => x.Code, op => op.ResolveUsing(dc => dc.PriceListCode))
+                ;
         }
     }
 }

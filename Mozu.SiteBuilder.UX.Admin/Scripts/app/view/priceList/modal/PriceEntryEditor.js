@@ -17,9 +17,8 @@ Ext.define('Taco.view.priceList.modal.PriceEntryEditor', {
     autoShow: true,
     closable: true,
     cls: Taco.baseCSSPrefix + 'orderform-editor',
-    height: '90%',
+    height: '95%',
     width: '80%',
-    //scale: 'large',
     closeOnSave: true,
     actionColumnWidth: 50,
 
@@ -27,6 +26,7 @@ Ext.define('Taco.view.priceList.modal.PriceEntryEditor', {
     record: null,
     isCreateMode: true,
     priceListCode: null,
+    modelName: 'Taco.model.PriceListEntry',
 
     resizable: {
         dynamic: true,
@@ -42,13 +42,15 @@ Ext.define('Taco.view.priceList.modal.PriceEntryEditor', {
         var me = this;
 
         if (me.isCreateMode && !me.record) {
-            me.record = Ext.create('Taco.model.PriceListEntry', { priceListCode: this.priceListCode });
+            me.record = Ext.create(me.modelName,
+                { priceListCode: this.priceListCode }
+            );
         }
 
         this.layout = {
             type: 'fit'
         };
-        
+
         // Todo: Need to listen for a navigation (via backbutton) and cancel the navigation if editor is dirty or prompt user to cancel and navigate.
         // Todo: Create override/mixin/plugin for Ext.Window to add support for relative height and width with min max values.
 
@@ -99,7 +101,7 @@ Ext.define('Taco.view.priceList.modal.PriceEntryEditor', {
                 priceListCode: this.priceListCode,
                 productCode: me.record.get('productCode'),
                 currencyCode: me.record.get('currencyCode'),
-                startDate: me.record.get('startDate')
+                startDate: Ext.Date.format(me.record.get('startDate'), 'c')
             },
             failure: function () {
                 Taco.app.fireEvent('setmessage', "Error loading Price List Entry", 'error');
@@ -120,7 +122,8 @@ Ext.define('Taco.view.priceList.modal.PriceEntryEditor', {
         var me = this;
 
         me.generalPanel = Ext.create('Taco.view.priceList.entry.PriceEntryGeneral', {
-            record: me.record
+            record: me.record,
+            parentContainer: me
         });
 
         me.pricePanel = Ext.create('Taco.view.priceList.entry.PriceEntryPrice', {

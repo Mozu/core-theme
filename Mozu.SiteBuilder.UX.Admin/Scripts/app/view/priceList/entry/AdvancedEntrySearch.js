@@ -9,10 +9,10 @@ Ext.define('Taco.view.priceList.entry.AdvancedEntrySearch', {
         'Ext.ux.form.field.BoxSelect',
         'Ext.form.FieldContainer',
         'Taco.core.ux.form.DateTime',
-        'Taco.shared.view.field.ProductPickerField'
+        'Taco.view.priceList.widget.ProductAndVariantPicker'
     ],
 
-    productsPerPage: 25,
+    productsPerPage: 10,
 
     defaults: {
         width: 500,
@@ -22,12 +22,13 @@ Ext.define('Taco.view.priceList.entry.AdvancedEntrySearch', {
     initComponent: function () {
         var me = this;
 
-        me.productPickerField = Ext.create('Taco.shared.view.field.ProductPickerField', {
+        me.productPickerField = Ext.create('Taco.view.priceList.widget.ProductAndVariantPicker', {
             name: 'productName',
             plugins: [
                 'inputmask'
             ],
             width: '100%',
+            autoHidePagingToolbar: false,
             flex: 10,
             style: 'padding:5px',
             fieldBodyCls: 'order-addproducttoolbar-cell',
@@ -38,7 +39,10 @@ Ext.define('Taco.view.priceList.entry.AdvancedEntrySearch', {
                 '<tpl if="values && values.productName"><span class="product-name">{productName}</span> <span class="product-code">{productCode}</span></tpl>'
             ),
             liveMode: true,
-            defaultFilters: [ { property: 'iscurrentlyactive', value: true } ],
+            defaultFilters: [
+                { property: 'iscurrentlyactive', value: true },
+                { property: 'includeVariations', value: true }
+            ],
             listeners: {
                 focus: {
                     fn: this.onFocus,
@@ -57,7 +61,7 @@ Ext.define('Taco.view.priceList.entry.AdvancedEntrySearch', {
                     scope: me
                 },
                 // custom event added as part of the InputMask plugin; need to cancel the event to prevent the field from reseting itself since will be reseting all fields when this field is reset;
-                'beforecleartriggerclick': function (field) {
+                'beforecleartriggerclick': function () {
 
 
                     // reset everything in the toolbar but need to be carefull
@@ -97,7 +101,7 @@ Ext.define('Taco.view.priceList.entry.AdvancedEntrySearch', {
                 }
             }
         });
-
+        
         this.items = [
             {
                 xtype: 'panel',
@@ -231,25 +235,6 @@ Ext.define('Taco.view.priceList.entry.AdvancedEntrySearch', {
         };
     },
 
-    launchSegmentModal: function (list) {
-        var gridStore = Taco.core.data.StoreManager.getOrCreate({
-            type: 'Taco.store.CustomerSegments',
-            clearFilters: true,
-            clearSort: true,
-            autoLoad: true
-        });
-
-        this.modal = Ext.create('Taco.view.customers.segments.Modal', {
-            store: gridStore,
-            listeners: {
-                savesuccess: function (modal, values) {
-                    list.addValue(values);
-                },
-                scope: this
-            }
-        });
-    },
-
     handleShow: function () {
         var val =this.productPickerField.getValue(),
             productStore,
@@ -262,15 +247,15 @@ Ext.define('Taco.view.priceList.entry.AdvancedEntrySearch', {
         if (!record) {
             return;
         }
-        this.productPickerField.inputMask.show(record.get('productName'));
+        this.productPickerField.inputMask.show(record.get('productName') + ' ' + record.get('productCode'));
         this.productPickerField.setValue(record);
 
     },
 
     // after product is selected in the productPickerfield but before the combo is closed;
-    onBeforeProductSelect: function (combo, record, index, e) {
+    onBeforeProductSelect: function (combo, record) {
         combo.collapse();
-        combo.inputMask.show(record.get('productName'));
+        combo.inputMask.show(record.get('productName') + ' ' + record.get('productCode'));
         combo.setValue(record);
         // cancel the selection so that the same product can be reselected again;
         return false;

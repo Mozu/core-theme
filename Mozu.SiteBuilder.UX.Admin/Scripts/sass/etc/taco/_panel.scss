@@ -546,7 +546,7 @@
 				color: $dark-color;
 				text-decoration: none;
 				height: 22px;
-				width: 22px;
+                padding: 2px 5px;
 				@include border-radius(2px);
 
                 .#{$prefix}btn-button {

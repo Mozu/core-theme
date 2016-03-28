@@ -54,7 +54,7 @@ Ext.define('Taco.controller.CustomSchema', {
     
     },
 
-    edit: function(cfg) {
+    edit: function(cfg, rec) {
         var me = this;
         
         me.store = Ext.create('Taco.store.Entities', {
@@ -80,7 +80,11 @@ Ext.define('Taco.controller.CustomSchema', {
 
                 var record = Ext.create('Taco.model.Entity', {
                     listFQN: cfg.list,
-                    entityType: cfg.type
+                    entityType: cfg.type,
+                    listFlags: {
+                        enableADR: rec && rec.listFlags ? rec.listFlags.enableADR : false,
+                        enablePublishing: rec && rec.listFlags ? rec.listFlags.enablePublishing : false
+                    }
                 });
 
                 me.confirmContext('Taco.view.customSchema.Edit', function () {
@@ -131,6 +135,8 @@ Ext.define('Taco.controller.CustomSchema', {
             config.scopeType = listExists[0].scopeType || 'site';
             config.listName = listExists[0].name;
             config.views = listExists[0].views;
+            config.enableActiveDateRanges = listExists[0].enableActiveDateRanges;
+            config.enablePublishing = listExists[0].enablePublishing;
         }
 
         else {

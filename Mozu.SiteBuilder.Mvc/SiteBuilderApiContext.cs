@@ -80,32 +80,30 @@ namespace Mozu.SiteBuilder.Mvc
 
         private string GetPriceListOverrideValue(string priceList)
         {
-           //todo://for now allow pricelist to be mocked out in both.... should swtich over before launch
-            //if (this.DataViewMode == DataViewModeType.Pending)
+            if (this.DataViewMode != DataViewModeType.Pending) return priceList;
+
+            HttpCookie cookie;
+            var val = _httpRequestMessage.GetQueryNameValuePairs().Where(x => string.Equals(x.Key, "mz_pricelist", StringComparison.OrdinalIgnoreCase)).Select(x => x.Value).FirstOrDefault();
+            if (val != null)
             {
-                HttpCookie cookie;
-                var val = _httpRequestMessage.GetQueryNameValuePairs().Where(x => string.Equals(x.Key, "mz_pricelist", StringComparison.OrdinalIgnoreCase)).Select(x => x.Value).FirstOrDefault();
-                if (val != null)
+                if (!string.IsNullOrWhiteSpace(val))
                 {
-                    if (!string.IsNullOrWhiteSpace(val))
-                    {
-                        priceList = val;
-                        cookie = new HttpCookie(Constants.PRICELISTCOOKIENAME, priceList);
-                    }
-                    else
-                    {
-                        cookie = new HttpCookie(Constants.PRICELISTCOOKIENAME, "");
-                        cookie.Expires = DateTime.MinValue;
-                    }
-                    _cookieProvider.SaveResponseCookie(Constants.PRICELISTCOOKIENAME, cookie);
+                    priceList = val;
+                    cookie = new HttpCookie(Constants.PRICELISTCOOKIENAME, priceList);
                 }
                 else
                 {
-                    cookie = _cookieProvider.GetRequestCookie(Constants.PRICELISTCOOKIENAME);
-                    if (cookie != null)
-                    {
-                        priceList = cookie.Value;
-                    }
+                    cookie = new HttpCookie(Constants.PRICELISTCOOKIENAME, "");
+                    cookie.Expires = DateTime.MinValue;
+                }
+                _cookieProvider.SaveResponseCookie(Constants.PRICELISTCOOKIENAME, cookie);
+            }
+            else
+            {
+                cookie = _cookieProvider.GetRequestCookie(Constants.PRICELISTCOOKIENAME);
+                if (cookie != null)
+                {
+                    priceList = cookie.Value;
                 }
             }
             return priceList;
@@ -204,7 +202,7 @@ namespace Mozu.SiteBuilder.Mvc
                 //todo validate tenant and site 
                 this.UserClaims = claims;
             }
-            if (!string.IsNullOrEmpty(adminAccessToken) && LightweightUserClaims.TryParse(accessToken, out claims))
+            if (!string.IsNullOrEmpty(adminAccessToken) && LightweightUserClaims.TryParse(adminAccessToken, out claims))
             {
                 this.AdminUserClaim = claims;
             }
@@ -397,6 +395,11 @@ namespace Mozu.SiteBuilder.Mvc
         public void SetDataMode(DataViewModeType dataViewMode)
         {
             this.DataViewMode = dataViewMode;
+        }
+
+        public void SetPriceListCode(string plCode)
+        {
+            this.PriceListCode = plCode;
         }
     }
 

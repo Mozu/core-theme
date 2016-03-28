@@ -9,5 +9,6 @@ namespace Mozu.SiteBuilder.Mvc
         bool IsDebugMode { get; set; }
         void SetUser(LightweightUserClaims user);
         void SetDataMode(Mozu.Core.DataViewModeType  dataViewMode);
+        void SetPriceListCode(string plCode);
     }
 }

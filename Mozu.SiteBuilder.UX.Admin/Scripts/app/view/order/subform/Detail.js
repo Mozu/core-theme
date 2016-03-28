@@ -8,6 +8,8 @@ Ext.define('Taco.view.order.subform.Detail', {
     extend: 'Taco.view.order.subform.Subform',
     requires: [
         'Taco.model.OrderItemDiscount',
+        'Taco.store.PriceLists',
+        'Taco.store.RuntimePriceLists',
         'Taco.view.order.widget.OrderTotalPanel',
         'Taco.view.order.widget.OrderItemGrid',
         'Taco.view.order.modal.EditOrderDetail',
@@ -48,29 +50,76 @@ Ext.define('Taco.view.order.subform.Detail', {
     priceListName: '',
 
     initComponent: function(eOpts) {
-        var me = this,
-            orderItemStore;
+        var me = this;
 
         this.titleTemplate = new Ext.XTemplate(
             'Order Details<tpl if="priceListAvail"> | {priceListName} Pricing</tpl>'
         );
 
         // Create the PriceListStore.
-        this.priceListStore = Taco.core.data.StoreManager.getOrCreate('Taco.store.PriceLists');
-        // If the priceListStore has already been loaded, use it!
-        if (this.priceListStore.getTotalCount() > 0) {
-            // If this isn't used, the title and the tab will have the price list shown.
-            me.mon(me, 'afterrender', function() {
-                me.retrievePricelistName(me.priceListStore);
-                me.setTitle(me.constructTitle());
-            }, me, { single: true });
-        } else {
-            // After the priceListStore is loaded, update the title.
-            this.priceListStore.mon(this.priceListStore, 'load', function (store, records, success) {
-                me.retrievePricelistName(store);
-                me.setTitle(me.constructTitle());
-            }, me, { single: true });
-        }
+        this.priceListStore = Taco.core.data.StoreManager.getOrCreate({
+            type: 'Taco.store.RuntimePriceLists',
+            createOnly: true,
+            autoLoad: false,
+            clearFilters: true,
+            remoteFilter: false,
+            filterOnLoad: true,
+            clearSort: false,
+            remoteSort: false,
+            sorters: [{ property: 'name' }]
+        });
+        this.priceListStore.load(
+            {
+                callback: function(records, operation, success) {
+                    // Add a "None" option to the top to clear the price list.
+                    me.priceListStore.insert(0,
+                        Ext.create(me.priceListStore.model,
+                        {
+                            name: 'None',
+                            code: '',
+                            filteredInStorefront: false,
+                            isSiteDefault: false
+                        }));
+
+                    // Hacky crap to grab an inactive price list from ProductAdmin, then convert it to a "runtime" pricelist.
+                    var currentCode = me.record.get('priceListCode');
+                    if (currentCode) {
+                        var foundRecord = me.priceListStore.findRecord('code', me.record.get('priceListCode'), 0, false, false, true);
+                        if (!foundRecord) {
+                            var adminPriceListStore = Taco.core.data.StoreManager.getOrCreate({
+                                type: 'Taco.store.PriceLists',
+                                autoLoad: false
+                            });
+                            adminPriceListStore.load({
+                                params: {
+                                    id: currentCode
+                                },
+                                callback: function(records, operation, success) {
+                                    if (!success) return;
+
+                                    var adminRecord = records[0];
+                                    me.priceListStore.add(
+                                        Ext.create(me.priceListStore.model, {
+                                            name: adminRecord.get('name'),
+                                            code: adminRecord.get('code'),
+                                            filteredInStorefront: adminRecord.get('filteredInStorefront'),
+                                            isSiteDefault: adminRecord.get('defaultForSites').indexOf(me.record.get('siteId')) > 0 ? true : false,
+                                            isActive: false
+                                        })
+                                    );
+                                    me.retrievePricelistName(me.priceListStore);
+                                    me.setTitle(me.constructTitle());
+                                }
+                            });
+                        }
+                    }
+
+                    me.retrievePricelistName(me.priceListStore);
+                    me.setTitle(me.constructTitle());
+                },
+                scope: this
+            }
+        );
 
         // after the record is reloaded we will need to refresh the ui
         me.mon(me.record, "aftercommit", function() {
@@ -95,7 +144,7 @@ Ext.define('Taco.view.order.subform.Detail', {
         });
 
         // store that contains the orderItems for this order model
-        orderItemStore = this.record.itemsStore;
+        var orderItemStore = this.record.itemsStore;
 
         // plugin to add suppourt to the grid for editing the price and quantity columns
         var cellEditing = Ext.create('Ext.grid.plugin.CellEditing', {
@@ -150,11 +199,11 @@ Ext.define('Taco.view.order.subform.Detail', {
             bodyStyle: "padding:20px 0px 40px 0px ",
             tpl: [
                 '<div class="customerNote">',
-                '<tpl if="values.customerNote">',
-                '{customerNote:stripTags}',
-                '<tpl else>',
-                '<span class="order-no-content">N/A</span>',
-                '</tpl>',
+                    '<tpl if="values.customerNote">',
+                        '{customerNote:htmlEncode}',
+                    '<tpl else>',
+                        '<span class="order-no-content">N/A</span>',
+                    '</tpl>',
                 '</div>'
             ],
             data: this.record.getData()
@@ -217,7 +266,8 @@ Ext.define('Taco.view.order.subform.Detail', {
 
     retrievePricelistName: function (store) {
         var me = this;
-        var foundRecord = store.findRecord('code', me.record.get('priceListCode'));
+        // This searches the store and finds an exact match!
+        var foundRecord = store.findRecord('code', me.record.get('priceListCode'), 0, false, false, true);
         if (foundRecord) {
             me.priceListName = foundRecord.get('name');
         }

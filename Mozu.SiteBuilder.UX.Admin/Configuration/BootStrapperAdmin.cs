@@ -101,9 +101,23 @@ namespace Mozu.SiteBuilder.UX.Admin.Configuration
         {
             base.InitializeContainerFactory(containerFactory);
             containerFactory
-                //.UsingAssembly(Assembly.Load("Mozu.Core.Api")) //per Wayne not needed.
-                .UsingAssembly(typeof(ISitesWebApiClient).Assembly)
-                .UsingAssembly(typeof(IPermissionsRepository).Assembly)
+                .UsingAssembly(Assembly.Load("Mozu.Tenant.Contracts"))
+                .UsingAssembly(Assembly.Load("Mozu.ProductAdmin.Contracts"))
+                .UsingAssembly(Assembly.Load("Mozu.AdminUser.Contracts"))
+                .UsingAssembly(Assembly.Load("Mozu.Content.Contracts"))
+                .UsingAssembly(Assembly.Load("Mozu.ShippingAdmin.Contracts"))
+                .UsingAssembly(Assembly.Load("Mozu.ScheduledEvent.Contracts"))
+                .UsingAssembly(Assembly.Load("Mozu.InstalledApplications.Contracts"))
+                .UsingAssembly(Assembly.Load("Mozu.ShippingRuntime.Contracts"))
+                .UsingAssembly(Assembly.Load("Mozu.MZDB.Contracts"))
+                .UsingAssembly(Assembly.Load("Mozu.SiteSettings.Order.Contracts"))
+                .UsingAssembly(Assembly.Load("Mozu.SiteSettings.General.Contracts"))
+                .UsingAssembly(Assembly.Load("Mozu.Customer.Contracts"))
+                .UsingAssembly(Assembly.Load("Mozu.Location.Contracts"))
+                .UsingAssembly(Assembly.Load("Mozu.CommerceRuntime.Contracts"))
+                .UsingAssembly(Assembly.Load("Mozu.Provisioning.Contracts"))
+                .UsingAssembly(Assembly.Load("Mozu.AppDev.Contracts"))
+                .UsingAssembly(Assembly.Load("Mozu.ProductRuntime.Contracts"))
                 .UsingAssembly(Assembly.Load("Mozu.SiteBuilder.Mvc")) //typeof preferred
                 .UsingAssembly(Assembly.GetExecutingAssembly())
               

@@ -8,7 +8,7 @@ namespace Mozu.SiteBuilder.Mvc.Tags
     using Microsoft.FSharp.Collections;
     using NDjango.FiltersCS.Compatibility;
     using System.Collections.Generic;
-
+    using System.Linq;
     [NDjango.ParserNodes.Description("sets varaible s in the current scope")]
     [Name("set_var")]
     public class SetVarTag : SimpleTagBase
@@ -17,9 +17,19 @@ namespace Mozu.SiteBuilder.Mvc.Tags
         protected override IEnumerable<WalkResult> ProcessTag(ArgumentCollection arguments, IContext context, Func<string, ITemplate> getTemplateFunc)
         {
             var name = arguments[0].TokenValue;
-            var value = arguments[1].Value;
+            object value = null;
+            if (arguments.Count == 1)
+            {
+                name = arguments[0].Name;
+                value = arguments[0].Value;
+            }
+            else
+            {
+                value = arguments[1].Value;
+            }
 
-            return WalkResultHelpers.ContextAdditions(new Dictionary<string, object> { { name, value } }).ToFSharpList();
+            context.addGlobal(new Tuple<string, object>(name, value));
+            return Enumerable.Empty<WalkResult>();
 
         }
     }

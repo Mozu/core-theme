@@ -374,10 +374,16 @@ Ext.define('Taco.store.Navigation', {
                         'address': 'generalsettings'
                     },
                     {
-                        'id': 'paymentcheckout',
-                        'label': 'Payments',
-                        'address': 'settings/paymentAndCheckout'
-                    }, {
+                        'id': 'paymentgateways',
+                        'label': 'Payment Gateways',
+                        'address': 'settings/paymentGateways'
+                    },
+                    {
+                        'id': 'paymenttypes',
+                        'label': 'Payment Types',
+                        'address': 'settings/paymentTypes'
+                    },
+                    {
                         'id': 'tax',
                         'label': 'Tax',
                         'address': 'settings/tax'

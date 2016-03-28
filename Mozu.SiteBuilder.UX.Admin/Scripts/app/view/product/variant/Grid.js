@@ -6,16 +6,12 @@
 Ext.define('Taco.view.product.variant.Grid', {
     extend: 'Ext.grid.Panel',
     alias: 'widget.taco-product-variant-grid',
-    //requires:['Taco.view.product.variant.Modal'],
     cls: 'taco-variant-grid',
 
     requires: [
-        //'Ext.grid.plugin.RowEditing'
         'Ext.selection.CellModel',
         'Ext.grid.column.Check'
     ],
-
-    //disableSelection: true,
 
     // optional data from grid's store that can be passed in when creating this grid to reload unpersisted data. This occurs when user updates records in the store and then updates the options. the update options use case blows the grid and store away and starts from scratch. 
     redrawData : null,
@@ -23,11 +19,6 @@ Ext.define('Taco.view.product.variant.Grid', {
     optionsData : null,
     
     mixins: {
-      //  launcheditor: 'Taco.core.ux.mixins.LaunchEditor',
-//        navHeader: 'Taco.core.ux.mixins.NavHeader',
-        
-//        searchable: 'Taco.core.ux.mixins.Searchable',
-        //rowEditable: 'Taco.core.ux.mixins.RowEditable',
         pageable: 'Taco.core.ux.mixins.Pageable'
     },
 
@@ -35,6 +26,8 @@ Ext.define('Taco.view.product.variant.Grid', {
     stateful: true,
     stateId: 'statefulProductOptionsGrid',
     hideSearchToolbar: true,
+    pricingMode: 'Fixed',
+    pricingModeChanged: false,
 
     enableAutoSelect: false,
 
@@ -52,17 +45,17 @@ Ext.define('Taco.view.product.variant.Grid', {
             isPhysical = (goodsType === 'Physical'),
             isDigitalCredit = (goodsType === 'DigitalCredit'),
             fulfillmentData = (isPhysical) ? [{
-                "value": "",
-                "name": "Same as product"
+                'value': '',
+                'name': 'Same as product'
             }, {
-                "value": "DirectShip",
-                "name": "Direct Ship"
+                'value': 'DirectShip',
+                'name': 'Direct Ship'
             }, {
-                "value": "InStorePickup",
-                "name": "In Store Pickup"
+                'value': 'InStorePickup',
+                'name': 'In Store Pickup'
             }] : [{
-                "value": "Digital",
-                "name": "Email"
+                'value': 'Digital',
+                'name': 'Email'
             }];
 
         
@@ -89,7 +82,7 @@ Ext.define('Taco.view.product.variant.Grid', {
         });
 
         this.fulfillmentEditor = {
-            xtype: "combobox",
+            xtype: 'combobox',
             triggerAction: 'all',
             queryMode: 'local',
             editable:false,
@@ -99,7 +92,7 @@ Ext.define('Taco.view.product.variant.Grid', {
             autoSelect: true,
             forceSelection: true,
             store: fulfillmentTypeData,
-            emptyText: "Same as product",
+            emptyText: 'Same as product',
             listeners: {
                 select: {
                     fn: function (combo, records) {
@@ -120,7 +113,7 @@ Ext.define('Taco.view.product.variant.Grid', {
 
         
         
-        this.columns = this.rebuildColumns()
+        this.columns = this.rebuildColumns(me.pricingMode);
 
 
         //this.rowEditor = Ext.create('Ext.grid.plugin.RowEditing', {
@@ -230,6 +223,15 @@ Ext.define('Taco.view.product.variant.Grid', {
             });
         }
 
+        //need to modify all records if pricing mode changed so that they get marked as modified.
+        if (this.pricingModeChanged) {
+            this.mon(this.store, 'load', function () {
+                var variantPricingMode = me.pricingMode;
+                me.store.each(function (item) {
+                    item.set('variationPricingMethod', variantPricingMode);
+                });
+            });
+        }
         
         // we shouldn't be making the load call if we have no options selected. the call throws ajax exception
         var hasOptions = this.product.getOptions().count();
@@ -288,15 +290,238 @@ Ext.define('Taco.view.product.variant.Grid', {
 
     },
 
-    rebuildColumns: function () {
-        var me = this;
-        var isActiveColumn = [this.getIsActiveColumn()]
-        var summaryColumn = [this.getSummaryColumn()]
-        var optionColumns = this.getOptionColumns();
-        var staticColumns = this.getStaticColumns();
+    getColumnConfig: function(pricingMode) {
+        var columns = [];
+        columns.push(this.getIsActiveColumn(), this.getSummaryColumn());
+        columns.push.apply(columns, this.getOptionColumns());
+        columns.push(this.getProductCodeColumn());
 
+        if (!pricingMode) {
+            pricingMode = this.pricingMode;
+        }
 
-        return Ext.Array.union(isActiveColumn, summaryColumn, optionColumns, staticColumns)
+        switch (pricingMode.toLowerCase()) {
+            case 'fixed':
+                columns.push.apply(columns, this.getExplicitColumns());
+                break;
+            case 'delta':
+            default:
+                columns.push.apply(columns, this.getRelativeColumns());
+        }
+
+        columns.push.apply(columns, this.getOtherColumns())
+
+        return columns;
+    },
+
+    getExplicitColumns: function() {
+        var goodsType = this.productType.get('goodsType'),
+            isDigitalCredit = (goodsType === 'DigitalCredit');
+
+        return [{
+            text: 'List Price',
+            dataIndex: 'fixedListPrice',
+            stateId: 'fixedListPrice',
+            editor: {
+                xtype: 'currencyfield',
+                currencyCode: this.product.getCurrencyCode(),
+                allowBlank: !isDigitalCredit,
+                decimalPrecision: 2,
+                showBorder: true,
+                selectOnFocus: true,
+                hideTrigger: true,
+                keyNavEnabled: false,
+                mouseWheelEnabled: false,
+                msgTarget: "qtip"
+            }
+        }, {
+            text: 'Sale Price',
+            dataIndex: 'fixedSalePrice',
+            stateId: 'fixedSalePrice',
+            editor: {
+                xtype: 'currencyfield',
+                currencyCode: this.product.getCurrencyCode(),
+                allowBlank: !isDigitalCredit,
+                decimalPrecision: 2,
+                showBorder: true,
+                selectOnFocus: true,
+                hideTrigger: true,
+                keyNavEnabled: false,
+                mouseWheelEnabled: false,
+                msgTarget: "qtip"
+            }
+        }, {
+            text: 'Cost',
+            dataIndex: 'deltaCost',
+            stateId: 'deltaCost',
+            hideable: true,
+            hidden: true,
+            editor: {
+                xtype: 'currencyfield',
+                currencyCode: this.product.getCurrencyCode(),
+                decimalPrecision: 2,
+                showBorder: true,
+                selectOnFocus: true,
+                hideTrigger: true,
+                selectOnFocus: true,
+                keyNavEnabled: false,
+                mouseWheelEnabled: false
+            }
+        }, {
+            text: 'Extra Weight',
+            dataIndex: 'deltaWeight',
+            stateId: 'deltaWeight',
+            hideable: true,
+            hidden: isDigitalCredit,
+            width: 120,
+            editor: {
+                xtype: 'numberfield',
+                showBorder: true,
+                decimalPrecision: 2,
+                selectOnFocus: true,
+                hideTrigger: true,
+                keyNavEnabled: false,
+                mouseWheelEnabled: false
+            }
+        }, {
+            text: 'MSRP',
+            dataIndex: 'fixedMsrp',
+            stateId: 'fixedMsrp',
+            hideable: true,
+            hidden: true,
+            editor: {
+                xtype: 'currencyfield',
+                currencyCode: this.product.getCurrencyCode(),
+                decimalPrecision: 2,
+                selectOnFocus: true,
+                showBorder: true,
+                hideTrigger: true,
+                keyNavEnabled: false,
+                mouseWheelEnabled: false
+            }
+        }, {
+            text: 'Gift Card/Credit Value',
+            dataIndex: 'fixedCreditValue',
+            stateId: 'fixedCreditValue',
+            hideable: isDigitalCredit,
+            hidden: !isDigitalCredit,
+            required: !isDigitalCredit,
+            width: 185,
+            editor: {
+                xtype: 'currencyfield',
+                currencyCode: this.product.getCurrencyCode(),
+                showBorder: true,
+                allowBlank: !isDigitalCredit,
+                selectOnFocus: true,
+                decimalPrecision: 2,
+                hideTrigger: true,
+                keyNavEnabled: false,
+                mouseWheelEnabled: false,
+                msgTarget: "qtip"
+            }
+        }
+        ];
+    },
+
+    getRelativeColumns: function() {
+        var me = this,
+            goodsType = this.productType.get('goodsType'),
+            isPhysical = (goodsType === 'Physical'),
+            isDigitalCredit = (goodsType === 'DigitalCredit');
+
+        return [{
+            text: 'Extra Price',
+            dataIndex: 'deltaPrice',
+            stateId: 'deltaPrice',
+            editor: {
+                xtype: 'currencyfield',
+                currencyCode: this.product.getCurrencyCode(),
+                allowBlank: !isDigitalCredit,
+                decimalPrecision: 2,
+                showBorder: true,
+                selectOnFocus: true,
+                hideTrigger: true,
+                keyNavEnabled: false,
+                mouseWheelEnabled: false,
+                msgTarget: "qtip"
+            }
+        }, {
+            text: 'Cost',
+            dataIndex: 'deltaCost',
+            stateId: 'deltaCost',
+            hideable: true,
+            hidden: true,
+            editor: {
+                xtype: 'currencyfield',
+                currencyCode: this.product.getCurrencyCode(),
+                decimalPrecision: 2,
+                showBorder: true,
+                selectOnFocus: true,
+                hideTrigger: true,
+                selectOnFocus: true,
+                keyNavEnabled: false,
+                mouseWheelEnabled: false
+            }
+        }, {
+            text: 'Extra Weight',
+            dataIndex: 'deltaWeight',
+            stateId: 'deltaWeight',
+            hideable: true,
+            hidden: isDigitalCredit,
+            width: 120,
+            editor: {
+                xtype: 'numberfield',
+                showBorder: true,
+                decimalPrecision: 2,
+                selectOnFocus: true,
+                hideTrigger: true,
+                keyNavEnabled: false,
+                mouseWheelEnabled: false
+            }
+        }, {
+            text: 'MSRP',
+            dataIndex: 'deltaMsrp',
+            stateId: 'deltaMsrp',
+            hideable: true,
+            hidden: true,
+            editor: {
+                xtype: 'currencyfield',
+                currencyCode: this.product.getCurrencyCode(),
+                decimalPrecision: 2,
+                selectOnFocus: true,
+                showBorder: true,
+                hideTrigger: true,
+                keyNavEnabled: false,
+                mouseWheelEnabled: false
+            }
+        }, {
+            text: 'Gift Card/Credit Value',
+            dataIndex: 'creditValue',
+            stateId: 'creditValue',
+            hideable: isDigitalCredit,
+            hidden: !isDigitalCredit,
+            required: !isDigitalCredit,
+            width: 185,
+            editor: {
+                xtype: 'currencyfield',
+                currencyCode: this.product.getCurrencyCode(),
+                showBorder: true,
+                allowBlank: !isDigitalCredit,
+                selectOnFocus: true,
+                decimalPrecision: 2,
+                hideTrigger: true,
+                keyNavEnabled: false,
+                mouseWheelEnabled: false,
+                msgTarget: "qtip"
+            }
+        }
+
+        ];
+    },
+
+    rebuildColumns: function (pricingMode) {
+        // replaced this function for legacy code compat
+        return this.getColumnConfig(pricingMode);
     },
 
     getIsActiveColumn :function (){
@@ -356,12 +581,6 @@ Ext.define('Taco.view.product.variant.Grid', {
         
         me.optionsData.each( function (option) { 
 
-        
-
-
-        //this.product.getOptions().each(function (option, index) {
-
-            
             var attribute = this.findAttribute(option.attributeFQN),
                 attributeText = attribute.get('adminName'),
                 attributeValues = attribute.get('selectedValues'),
@@ -407,13 +626,8 @@ Ext.define('Taco.view.product.variant.Grid', {
         return optionColumns
     },
 
-    getStaticColumns: function () {
-        var me = this,
-            goodsType = this.productType.get('goodsType'),
-            isPhysical = (goodsType === 'Physical'),
-            isDigitalCredit = (goodsType === 'DigitalCredit');
-
-        return [{
+    getProductCodeColumn: function() {
+        return {
             text: 'Product Code',
             xtype:"templatecolumn",
             dataIndex: 'productCode',
@@ -440,92 +654,15 @@ Ext.define('Taco.view.product.variant.Grid', {
                 xtype: 'textfield',
                 msgTarget: "qtip"
             }
-        }, {
-            text: 'Extra Price',
-            dataIndex: 'deltaPrice',
-            stateId: 'deltaPrice',
-            editor: {
-                xtype: 'currencyfield',
-                currencyCode: this.product.getCurrencyCode(),
-                allowBlank: !isDigitalCredit,
-                decimalPrecision: 2,
-                showBorder: true,
-                selectOnFocus: true,
-                hideTrigger: true,
-                keyNavEnabled: false,
-                mouseWheelEnabled: false,
-                msgTarget: "qtip"
-            }
-        }, {
-            text: 'Extra Cost',
-            dataIndex: 'deltaCost',
-            stateId: 'deltaCost',
-            hideable: true,
-            hidden: true,
-            editor: {
-                xtype: 'currencyfield',
-                currencyCode: this.product.getCurrencyCode(),
-                decimalPrecision: 2,
-                showBorder: true,
-                selectOnFocus: true,
-                hideTrigger: true,
-                selectOnFocus: true,
-                keyNavEnabled: false,
-                mouseWheelEnabled: false
-            }
-        }, {
-            text: 'MSRP',
-            dataIndex: 'deltaMsrp',
-            stateId: 'deltaMsrp',
-            hideable: true,
-            hidden: true,
-            editor: {
-                xtype: 'currencyfield',
-                currencyCode: this.product.getCurrencyCode(),
-                decimalPrecision: 2,
-                selectOnFocus: true,
-                showBorder: true,
-                hideTrigger: true,
-                keyNavEnabled: false,
-                mouseWheelEnabled: false
-            }
-        }, {
-            text: 'Gift Card/Credit Value',
-            dataIndex: 'creditValue',
-            stateId: 'creditValue',
-            hideable: isDigitalCredit,
-            hidden: !isDigitalCredit,
-            required: !isDigitalCredit,
-            width: 185,
-            editor: {
-                xtype: 'currencyfield',
-                currencyCode: this.product.getCurrencyCode(),
-                showBorder: true,
-                allowBlank: !isDigitalCredit,
-                selectOnFocus: true,
-                decimalPrecision: 2,
-                hideTrigger: true,
-                keyNavEnabled: false,
-                mouseWheelEnabled: false,
-                msgTarget: "qtip"
-            }
-        }, {
-            text: 'Extra Weight',
-            dataIndex: 'deltaWeight',
-            stateId: 'deltaWeight',
-            hideable: true,
-            hidden: isDigitalCredit,
-            width: 120,
-            editor: {
-                xtype: 'numberfield',
-                showBorder: true,
-                decimalPrecision: 2,
-                selectOnFocus: true,
-                hideTrigger: true,
-                keyNavEnabled: false,
-                mouseWheelEnabled: false
-            }
-        }, {
+        };
+    },
+
+    getOtherColumns: function() {
+        var me = this,
+            goodsType = this.productType.get('goodsType'),
+            isPhysical = (goodsType === 'Physical'),
+            isDigitalCredit = (goodsType === 'DigitalCredit');
+        return [  {
             text: 'Fulfillment Types',            
             dataIndex: 'fulfillmentTypesSupported',
             stateId: 'fulfillmentTypesSupported',
@@ -591,8 +728,6 @@ Ext.define('Taco.view.product.variant.Grid', {
             }
         }];
     },
-
-    
 
     doSave: function () {
         var me = this;
@@ -739,15 +874,19 @@ Ext.define('Taco.view.product.variant.Grid', {
 
     // reapplies the cached modified records after a store load has happened;
     applyModifiedRecords: function (store) {
-        var me = this;
+        var me = this,
+            priceMode = me.pricingMode,
+            store = store || this.store;
 
-        store = store || this.store;
 
         me.modifiedRecords.each(function (item) {
-            var record = store.getById(item.key)
+            var record = store.getById(item.key);
             // check to see if the record still exists in the data set; could have been removed due to option change or beccause of page change;
             if (record) {
                 record.set(item);
+                if (record.get('variationPricingMethod') !== priceMode) {
+                    record.set('variationPricingMethod', priceMode);
+                }
             }
         })
     },

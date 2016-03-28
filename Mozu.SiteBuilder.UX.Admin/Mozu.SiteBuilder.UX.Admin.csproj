@@ -173,16 +173,21 @@
     <Compile Include="Api\CatalogPublishingController.cs" />
     <Compile Include="Api\CategoryController.cs" />
     <Compile Include="Api\ChannelController.cs" />
+    <Compile Include="Api\ReportGenerator.cs" />
     <Compile Include="Api\CouponCodeController.cs" />
     <Compile Include="Api\LayoutWidgetDefinitionController.cs" />
     <Compile Include="Api\ModelMapping\PriceListMapping.cs" />
+    <Compile Include="Api\Models\Options\ProductOptionValue.cs" />
     <Compile Include="Api\Models\PriceLists\PriceListEntryPrice.cs" />
     <Compile Include="Api\Models\PriceLists\PriceListEntry.cs" />
+    <Compile Include="Api\Models\PriceLists\RuntimePriceList.cs" />
     <Compile Include="Api\PriceListController.cs" />
     <Compile Include="Api\ModelMapping\SearchTuningMapping.cs" />
     <Compile Include="Api\Models\PriceLists\PriceList.cs" />
+    <Compile Include="Api\Models\Checkout\TenantCheckoutSettings.cs" />
     <Compile Include="Api\Models\Search\SearchTuningRule.cs" />
     <Compile Include="Api\Models\Search\SimpleSearchProduct.cs" />
+    <Compile Include="Api\PriceListRuntimeController.cs" />
     <Compile Include="Api\SearchTuningRuleController.cs" />
     <Compile Include="Api\CouponSetController.cs" />
     <Compile Include="Api\ModelMapping\ContentMapping.cs" />
@@ -575,9 +580,13 @@
     <Content Include="Scripts\app\core\ux\window\MessageBox.js" />
     <Content Include="Scripts\app\core\ux\window\Modal.js" />
     <Content Include="Scripts\app\model\BlockedProduct.js" />
+    <Content Include="Scripts\app\model\CardGateway.js" />
+    <Content Include="Scripts\app\model\PaymentGateway.js" />
     <Content Include="Scripts\app\model\PinnedProduct.js" />
     <Content Include="Scripts\app\model\PriceListEntry.js" />
     <Content Include="Scripts\app\model\PriceList.js" />
+    <Content Include="Scripts\app\model\PriceListEntryPrice.js" />
+    <Content Include="Scripts\app\model\RuntimePriceList.js" />
     <Content Include="Scripts\app\model\StorefrontProduct.js" />
     <Content Include="Scripts\app\model\FilterField.js" />
     <Content Include="Scripts\app\model\BehaviorNode.js" />
@@ -687,11 +696,13 @@
     <Content Include="Scripts\app\store\CouponSetGrid.js" />
     <Content Include="Scripts\app\store\CouponCodes.js" />
     <Content Include="Scripts\app\store\PagedMemoryStore.js" />
+    <Content Include="Scripts\app\store\PaymentGateways.js" />
     <Content Include="Scripts\app\store\PinnedProducts.js" />
     <Content Include="Scripts\app\store\PriceListEntries.js" />
     <Content Include="Scripts\app\store\PriceLists.js" />
     <Content Include="Scripts\app\store\ProductRankings.js" />
     <Content Include="Scripts\app\store\CouponSets.js" />
+    <Content Include="Scripts\app\store\RuntimePriceLists.js" />
     <Content Include="Scripts\app\store\StorefrontProducts.js" />
     <Content Include="Scripts\app\store\DiscountGrid.js" />
     <Content Include="Scripts\app\store\Discounts.js" />
@@ -772,7 +783,7 @@
     <Content Include="Scripts\app\view\customSchema\Lists.js" />
     <Content Include="Scripts\app\view\customSchema\SchemaList.js" />
     <Content Include="Scripts\app\view\customSchema\Split.js" />
-    <Content Include="Scripts\app\view\order\widget\PriceListMenu.js" />
+    <Content Include="Scripts\app\view\order\widget\PriceListPickerField.js" />
     <Content Include="Scripts\app\view\preview\ExpressionPreviewDrawer.js" />
     <Content Include="Scripts\app\view\priceList\Edit.js" />
     <Content Include="Scripts\app\view\priceList\entry\AdvancedEntrySearch.js" />
@@ -789,6 +800,7 @@
     <Content Include="Scripts\app\view\priceList\widget\EntriesGrid.js" />
     <Content Include="Scripts\app\view\priceList\widget\OverrideField.js" />
     <Content Include="Scripts\app\view\priceList\widget\PriceListComboBox.js" />
+    <Content Include="Scripts\app\view\priceList\widget\ProductAndVariantPicker.js" />
     <Content Include="Scripts\app\view\productRanking\Edit.js" />
     <Content Include="Scripts\app\view\productRanking\Form.js" />
     <Content Include="Scripts\app\view\productRanking\form\AdvancedSearch.js" />
@@ -868,6 +880,11 @@
     <Content Include="Scripts\app\view\publishing\Split.js" />
     <Content Include="Scripts\app\view\role\editModal.js" />
     <Content Include="Scripts\app\view\productRanking\modal\ProductRankingEditor.js" />
+    <Content Include="Scripts\app\view\settings\paymentGateways\Index.js" />
+    <Content Include="Scripts\app\view\settings\paymentTypes\subform\CreditCards.js" />
+    <Content Include="Scripts\app\view\settings\paymentGateways\subform\PaymentGateway.js" />
+    <Content Include="Scripts\app\view\settings\paymentGateways\Edit.js" />
+    <Content Include="Scripts\app\view\settings\paymentTypes\subform\CheckByMail.js" />
     <Content Include="Scripts\app\view\storeCredit\AdvancedSearchForm.js" />
     <Content Include="Scripts\app\view\storeCredit\Grid.js" />
     <Content Include="Scripts\app\view\storefrontProduct\Grid.js" />
@@ -963,7 +980,7 @@
     <Content Include="Scripts\app\view\settings\localization\subform\Subform.js" />
     <Content Include="Scripts\app\view\settings\localization\util\Locales.js" />
     <Content Include="Scripts\app\view\settings\localization\util\Currencies.js" />
-    <Content Include="Scripts\app\view\settings\paymentAndCheckout\ExternalGateway.js" />
+    <Content Include="Scripts\app\view\settings\paymentTypes\subform\ExternalGateway.js" />
     <Content Include="Scripts\app\view\settings\Publishing.js" />
     <Content Include="Scripts\app\view\settings\localization\widget\LocalizationGrid.js" />
     <Content Include="Scripts\app\view\settings\shipping\ProductRules.js" />
@@ -1490,6 +1507,7 @@
     <Content Include="Scripts\app\mocks\auditlog.json" />
     <Content Include="Scripts\sass\src\overrides\menu\Item.scss" />
     <Content Include="Scripts\sass\src\view\order\Grid.scss" />
+    <Content Include="Scripts\sass\src\view\settings\paymentTypes\subform\CreditCards.scss" />
     <Content Include="Scripts\sass\src\view\order\widget\PriceListMenu.scss" />
     <None Include="SetupSenchaWorkspace.ps1" />
     <Content Include="Scripts\.sencha\app\build-impl.xml" />
@@ -1699,12 +1717,10 @@
     <Content Include="Scripts\app\view\error\Http404.js" />
     <Content Include="Scripts\app\view\error\Index.js" />
     <Content Include="Scripts\app\view\error\Http500.js" />
-    <Content Include="Scripts\app\view\settings\paymentAndCheckout\Edit.js" />
-    <Content Include="Scripts\app\view\settings\paymentAndCheckout\Form.js" />
-    <Content Include="Scripts\app\view\settings\paymentAndCheckout\Gateway.js" />
-    <Content Include="Scripts\app\view\settings\paymentAndCheckout\subform\CheckoutPreference.js" />
-    <Content Include="Scripts\app\view\settings\paymentAndCheckout\subform\LegalInformation.js" />
-    <Content Include="Scripts\app\view\settings\paymentAndCheckout\subform\PaymentType.js" />
+    <Content Include="Scripts\app\view\settings\paymentTypes\Edit.js" />
+    <Content Include="Scripts\app\view\settings\paymentTypes\Form.js" />
+    <Content Include="Scripts\app\view\settings\paymentGateways\subform\Gateway.js" />
+    <Content Include="Scripts\app\view\settings\paymentTypes\subform\PaymentType.js" />
     <Content Include="Scripts\app\view\settings\shipping\Edit.js" />
     <Content Include="Scripts\app\view\settings\shipping\Form.js" />
     <Content Include="Scripts\app\view\settings\shipping\subform\ShippingProvider.js" />
@@ -2789,6 +2805,17 @@
         </Reference>
         <Reference Include="Microsoft.Server.Common">
           <HintPath>..\packages\JsonValue\lib\40\Microsoft.Server.Common.dll</HintPath>
+          <Private>True</Private>
+          <Paket>True</Paket>
+        </Reference>
+      </ItemGroup>
+    </When>
+  </Choose>
+  <Choose>
+    <When Condition="$(TargetFrameworkIdentifier) == '.NETFramework' And ($(TargetFrameworkVersion) == 'v4.5' Or $(TargetFrameworkVersion) == 'v4.5.1')">
+      <ItemGroup>
+        <Reference Include="JWT">
+          <HintPath>..\packages\JWT\lib\3.5\JWT.dll</HintPath>
           <Private>True</Private>
           <Paket>True</Paket>
         </Reference>

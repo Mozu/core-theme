@@ -53,7 +53,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.Models.PriceLists
         /// Sequence used for indexing this price list...1-max priceList will be indexed
         /// </summary>
         [DataMember(EmitDefaultValue = false)]
-        public int? SearchIndexSequence { get; set; }
+        public int PriceListSequence { get; set; }
 
         /// <summary>
         /// Used to prioritize price list resolution when more than 1 price list maps
