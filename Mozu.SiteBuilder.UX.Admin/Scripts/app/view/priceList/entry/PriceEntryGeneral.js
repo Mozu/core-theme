@@ -269,8 +269,8 @@ Ext.define('Taco.view.priceList.entry.PriceEntryGeneral', {
 
     onPriceEntryLoaded: function (record) {
         var comboDisplay = record.get('productName') + ' ' + record.get('productCode');
-        if (record.get('hasConfigurableOptions')) {
-            comboDisplay += this.getConfigurableOptionList(record);
+        if (record.get('isVariation')) {
+            comboDisplay += (' (' + record.get('optionSummary') + ')');
         }
         this.productPickerField.setValue(record.get('productCode'));
         this.productPickerField.inputMask.show(comboDisplay);

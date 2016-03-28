@@ -26,7 +26,12 @@
 
         this.on({
             select: function (view, record) {
-                if (record) Taco.app.context.setCurrentSite(record.get('value'));
+                if (record && record.raw.type !== 'tenant') {
+                    Taco.app.context.setCurrentSite(record.get('value'));
+                }
+                else if (record.raw && record.raw.type === 'tenant') {
+                    Taco.app.context.setCurrentTenant();
+                }
             }
         });
     },

@@ -14,17 +14,17 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
     [WebApi("app/report", SuppressDescriptorGeneration = true)]
     public class ReportController : BaseController
     {
-        private readonly IBirstTokenGenerator _birstTokenGenerator;
+        private readonly IReportGenerator _reportGenerator;
 
-        public ReportController(IBirstTokenGenerator birstTokenGenerator)
+        public ReportController(IReportGenerator reportGenerator)
         {
-            _birstTokenGenerator = birstTokenGenerator;
+            _reportGenerator = reportGenerator;
         }
 
-        [HttpGetRoute(UriTemplate = "dashboard")]
-        public async Task<HttpResponseMessage> Dashboard()
+        [HttpPostRoute(UriTemplate = "dashboard")]
+        public async Task<HttpResponseMessage> Dashboard(ReportParams reportParams)
         {
-            var resp = (await _birstTokenGenerator.GenerateDashboardUri());
+            var resp = (await _reportGenerator.GenerateDashboardUri(reportParams));
 
             return this.Request.CreateResponse(HttpStatusCode.OK, Single2(resp));
         }

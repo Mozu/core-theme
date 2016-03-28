@@ -82,9 +82,9 @@ Ext.define('Taco.model.PriceList', {
                 return siteNames.join(',');
             }
         }, {
-            name: 'searchIndexSequence',
+            name: 'priceListSequence',
             type: 'int',
-            useNull: true
+            useNull: false
         }, {
             name: 'resolutionRank',
             type: 'int',

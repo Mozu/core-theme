@@ -121,6 +121,20 @@
     <ErrorReport>prompt</ErrorReport>
     <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
   </PropertyGroup>
+  <Choose>
+    <When Condition="$(TargetFrameworkIdentifier) == '.NETFramework' And ($(TargetFrameworkVersion) == 'v4.5' Or $(TargetFrameworkVersion) == 'v4.5.1')">
+      <PropertyGroup>
+        <__paket__OctoPack_targets>OctoPack</__paket__OctoPack_targets>
+      </PropertyGroup>
+    </When>
+  </Choose>
+  <Choose>
+    <When Condition="$(TargetFrameworkIdentifier) == '.NETFramework' And ($(TargetFrameworkVersion) == 'v4.5' Or $(TargetFrameworkVersion) == 'v4.5.1')">
+      <PropertyGroup>
+        <__paket__ClearScript_Installer_targets>ClearScript.Installer</__paket__ClearScript_Installer_targets>
+      </PropertyGroup>
+    </When>
+  </Choose>
   <ItemGroup>
     <!--<Reference Include="PhoneNumbers">
       <HintPath>..\packages\libphonenumber-csharp.4.10.0.62\lib\PhoneNumbers.dll</HintPath>
@@ -173,9 +187,11 @@
     <Compile Include="Api\CatalogPublishingController.cs" />
     <Compile Include="Api\CategoryController.cs" />
     <Compile Include="Api\ChannelController.cs" />
+    <Compile Include="Api\ReportGenerator.cs" />
     <Compile Include="Api\CouponCodeController.cs" />
     <Compile Include="Api\LayoutWidgetDefinitionController.cs" />
     <Compile Include="Api\ModelMapping\PriceListMapping.cs" />
+    <Compile Include="Api\Models\Options\ProductOptionValue.cs" />
     <Compile Include="Api\Models\PriceLists\PriceListEntryPrice.cs" />
     <Compile Include="Api\Models\PriceLists\PriceListEntry.cs" />
     <Compile Include="Api\Models\PriceLists\RuntimePriceList.cs" />
@@ -2709,13 +2725,6 @@
   </Choose>
   <Choose>
     <When Condition="$(TargetFrameworkIdentifier) == '.NETFramework' And ($(TargetFrameworkVersion) == 'v4.5' Or $(TargetFrameworkVersion) == 'v4.5.1')">
-      <PropertyGroup>
-        <__paket__ClearScript_Installer_targets>ClearScript.Installer</__paket__ClearScript_Installer_targets>
-      </PropertyGroup>
-    </When>
-  </Choose>
-  <Choose>
-    <When Condition="$(TargetFrameworkIdentifier) == '.NETFramework' And ($(TargetFrameworkVersion) == 'v4.5' Or $(TargetFrameworkVersion) == 'v4.5.1')">
       <ItemGroup>
         <Reference Include="ClearScript">
           <HintPath>..\packages\ClearScript.Installer\lib\net45\ClearScript.dll</HintPath>
@@ -2795,6 +2804,17 @@
         </Reference>
         <Reference Include="Microsoft.Server.Common">
           <HintPath>..\packages\JsonValue\lib\40\Microsoft.Server.Common.dll</HintPath>
+          <Private>True</Private>
+          <Paket>True</Paket>
+        </Reference>
+      </ItemGroup>
+    </When>
+  </Choose>
+  <Choose>
+    <When Condition="$(TargetFrameworkIdentifier) == '.NETFramework' And ($(TargetFrameworkVersion) == 'v4.5' Or $(TargetFrameworkVersion) == 'v4.5.1')">
+      <ItemGroup>
+        <Reference Include="JWT">
+          <HintPath>..\packages\JWT\lib\3.5\JWT.dll</HintPath>
           <Private>True</Private>
           <Paket>True</Paket>
         </Reference>
@@ -3302,13 +3322,6 @@
           <Paket>True</Paket>
         </Reference>
       </ItemGroup>
-    </When>
-  </Choose>
-  <Choose>
-    <When Condition="$(TargetFrameworkIdentifier) == '.NETFramework' And ($(TargetFrameworkVersion) == 'v4.5' Or $(TargetFrameworkVersion) == 'v4.5.1')">
-      <PropertyGroup>
-        <__paket__OctoPack_targets>OctoPack</__paket__OctoPack_targets>
-      </PropertyGroup>
     </When>
   </Choose>
   <Choose>

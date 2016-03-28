@@ -25,15 +25,6 @@ Ext.define('Taco.model.PriceListEntry', {
                     startDate: record.get('startDate')
                 };
             },
-            /*serialize: function (v, record) {
-               var json = {
-                   priceListCode: record.get('priceListCode'),
-                   productCode: record.get('productCode'),
-                   currencyCode: record.get('currencyCode'),
-                   startDate: record.get('startDate')
-               };
-               return JSON.stringify(json);
-            },*/
             persist: false
         },
         {
@@ -59,10 +50,18 @@ Ext.define('Taco.model.PriceListEntry', {
             useNull: true,
             dateFormat: 'c'
         }, {
+            name: 'isVariation',
+            type: 'boolean',
+            defaultValue: false,
+            persist: false
+        }, {
+            name: 'priceListEntrySequence',
+            type: 'int'
+        }, {
             name: 'priceListEntryMode',
             type: 'string',
             defaultValue: 'Simple'
-        },{
+        }, {
             name: 'basicListPrice',
             type: 'float',
             persist: false,
@@ -185,6 +184,26 @@ Ext.define('Taco.model.PriceListEntry', {
             type: 'date',
             useNull: true,
             dateFormat: 'c'
+        }, {
+            name: 'options',
+            type: 'auto',
+            defaultValue: [],
+            persist: false
+        }, {
+            name: 'optionSummary',
+            type: 'auto',
+            convert: function (item, record) {
+                if (!record.get('options') || record.get('options').length === 0)
+                    return '';
+                return Ext.Array
+                    .map(record.get('options'), function(opt) {
+                        return opt.attributeFQN.split('~')[1]
+                            + ': '
+                            + Ext.Array.pluck(opt.values, 'value').join(', ');
+                        })
+                    .join(', ');
+            },
+            persist: false
         }
     ],
 
