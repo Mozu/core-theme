@@ -47,6 +47,6 @@ nuget Mozu.Provisioning.Contracts < 1.20
 nuget Mozu.Reference.Contracts < 1.20
 nuget Mozu.ShippingAdmin.Contracts < 1.20
 nuget Mozu.SiteSettings.General.Contracts < 1.20   
-nuget Mozu.SiteSettings.Order.Contracts < 1.20 
+nuget Mozu.SiteSettings.Order.Contracts prerelease
 nuget protobuf-net 2.0.0.668 
 nuget FAKE
