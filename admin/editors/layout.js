@@ -58,6 +58,7 @@ Ext.widget({
                                 xtype: 'radio',
                                 margin: '25 20',
                                 checked: isChecked,
+                                cls: 'taco-lock-radios',
                                 itemId: 'layoutCheckBox' + counter,
                                 name: 'mz-layout-radiofield',
                                 submitValue: false,
