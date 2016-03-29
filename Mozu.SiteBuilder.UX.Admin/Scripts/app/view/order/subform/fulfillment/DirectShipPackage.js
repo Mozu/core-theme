@@ -90,6 +90,7 @@ Ext.define('Taco.view.order.subform.fulfillment.DirectShipPackage', {
                     },
                     menu: {
                         plain: true,
+                        baseCls: 'taco-shipping-menu',
                         listeners: {
                             click: this.handleShippingMethod,
                             scope: this,
