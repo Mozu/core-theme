@@ -9,7 +9,7 @@
         helpers: ['onSale'],
         onSale: function() {
             var salePrice = this.get('salePrice');
-            return salePrice !== null && !isNaN(salePrice) && salePrice !== this.get("price");
+            return (salePrice === 0 || salePrice) && salePrice !== this.get("price");
         }
     }),
 

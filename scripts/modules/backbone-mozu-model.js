@@ -191,7 +191,7 @@
             set: function(key, val, options) {
                 var attr, attrs, unset, changes, silent, changing, prev, current;
                 if (!key && key !== 0) return this;
-
+                
                 // Handle both `"key", value` and `{key: value}` -style arguments.
                 if (typeof key === 'object') {
                     attrs = key;
@@ -247,6 +247,15 @@
                         delete current[attr];
                     } else {
                         current[attr] = val;
+                    }
+
+                    //remove any properties from the current configurable model where there are properties no longer present in the latest api model.
+                    if (current.productUsage === 'Configurable' && current[attr] instanceof Backbone.Model) {
+                        _.each(_.difference(_.keys(current[attr].toJSON()), _.keys(attrs[attr])), function (keyName) {
+                            console.log("Removing property: " + keyName);
+                            changes.push(keyName);
+                            current[attr].unset(keyName);
+                        });
                     }
                 }
 
