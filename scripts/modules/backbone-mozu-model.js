@@ -189,9 +189,19 @@
              * @returns {Object} Returns the value of the named attribute, and `undefined` if it was never set.
              */
             set: function(key, val, options) {
-                var attr, attrs, unset, changes, silent, changing, prev, current;
+                var attr, attrs, unset, changes, silent, changing, prev, current, syncRemovedKeys;
                 if (!key && key !== 0) return this;
-                
+
+                // remove any properties from the current configurable model 
+                // where there are properties no longer present in the latest api model.
+                syncRemovedKeys = function (currentModel, attrKey) {
+                    _.each(_.difference(_.keys(currentModel[attrKey].toJSON()), _.keys(attrs[attrKey])), function (keyName) {
+                        console.log("Removing property: " + keyName);
+                        changes.push(keyName);
+                        currentModel[attrKey].unset(keyName);
+                    });
+                };
+
                 // Handle both `"key", value` and `{key: value}` -style arguments.
                 if (typeof key === 'object') {
                     attrs = key;
@@ -249,13 +259,8 @@
                         current[attr] = val;
                     }
 
-                    //remove any properties from the current configurable model where there are properties no longer present in the latest api model.
                     if (current.productUsage === 'Configurable' && current[attr] instanceof Backbone.Model) {
-                        _.each(_.difference(_.keys(current[attr].toJSON()), _.keys(attrs[attr])), function (keyName) {
-                            console.log("Removing property: " + keyName);
-                            changes.push(keyName);
-                            current[attr].unset(keyName);
-                        });
+                        syncRemovedKeys(current, attr);
                     }
                 }
 
