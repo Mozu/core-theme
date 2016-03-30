@@ -15,7 +15,8 @@ Ext.define('Taco.view.priceList.entry.PriceEntryPrice', {
         'Taco.shared.view.field.ProductPickerField',
         'Taco.view.priceList.widget.PriceListComboBox',
         'Taco.core.ux.picker.CheckboxTreeModal',
-        'Taco.view.priceList.widget.OverrideField'
+        'Taco.view.priceList.widget.OverrideField',
+        'Taco.view.product.widget.ProductBundleGrid'
     ],
     ui: 'subform',
     margin: '0 0 20 0',
@@ -335,6 +336,16 @@ Ext.define('Taco.view.priceList.entry.PriceEntryPrice', {
             ]
         };
 
+        me.extrasGrid = Ext.create('Taco.view.priceList.entry.ExtrasGrid', {});
+        
+        me.extrasPanel = Ext.create('Ext.panel.Panel', {
+            title: 'Extras',
+            itemId: 'extrasPanel',
+            layout: 'fit',
+            padding: '20',
+            items: [me.extrasGrid]
+        });
+
         me.tabs = Ext.create('Ext.tab.Panel', {
             width: "100%",
             minHeight: 475,
@@ -343,7 +354,8 @@ Ext.define('Taco.view.priceList.entry.PriceEntryPrice', {
             },
             items: [
                 me.basicPanel, //move to subform file?
-                me.advancedPanel
+                me.advancedPanel,
+                me.extrasPanel
             ]
         });
 
