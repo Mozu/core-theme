@@ -57,9 +57,9 @@ Ext.define('Taco.view.priceList.entry.PriceEntryGeneral', {
             pageSize: 10,
             disabled: !me.record.phantom,
             value: !me.record.phantom ? me.record.get('productCode') : '',
-            liveMode: true,
+            liveMode: false,
             defaultFilters: [
-                { property: 'iscurrentlyactive', value: true },
+                //{ property: 'iscurrentlyactive', value: true },
                 { property: 'includeVariations', value: true }
             ],
             getErrors: function() {

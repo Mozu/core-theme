@@ -217,6 +217,7 @@
     <None Include="Diagrams\Customer\cdCustomer_GiftCardView.cd" />
     <None Include="Diagrams\EmailTemplates\cdGiftCardEmail.cd" />
     <None Include="Diagrams\Location\cdLocation.cd" />
+    <None Include="Diagrams\ProductAdmin\cdPriceList.cd" />
     <None Include="Diagrams\ProductAdmin\cdProductLocation.cd" />
     <None Include="Diagrams\ProductAdmin\cdProduct.cd" />
     <None Include="Diagrams\ProductAdmin\cdProductType.cd" />
