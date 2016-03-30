@@ -2,7 +2,7 @@
   <div class="mz-l-slidebox-outer">
     <div class="mz-l-slidebox-inner">
       <section data-mz-role="login-form" class="mz-login-form mz-l-slidebox-panel">
-        <input name="email" data-mz-login-email placeholder="{{ labels.emailAddress }}" type="text" />
+        <input name="email" data-mz-login-email placeholder="{{ labels.logInInput }}" type="text" />
         <input name="password" data-mz-login-password placeholder="{{ labels.password }}" type="password" />
         <div class="mz-popover-action">
           (<a data-mz-action="forgotpasswordform" href="javascript:;">{{ labels.forgotPasswordLink }}</a>) <button class="mz-button" data-mz-action="submitlogin">{{ labels.logIn }}</button>

@@ -17,7 +17,7 @@
                    <div class="mz-l-formfieldgroup">
                         <div class="mz-l-formfieldgroup-row">
                             <div class="mz-l-formfieldgroup-cell">
-                                <label for="email">{{ labels.email }}</label>
+                                <label for="email">{{ labels.logInInput }}</label>
                             </div>
                             <div class="mz-l-formfieldgroup-cell">
                                 <input name="email" value="{{model.email|default:user.email}}" type="email" data-mz-login-email />

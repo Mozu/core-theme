@@ -67,6 +67,7 @@
   "phone"                : "Phone",
   "email"                : "Email",
   "emailAddress"         : "Email Address",
+  "logInInput"           : "User Name or Email Address",
   "creditCard"           : "Credit Card",
   "newCreditCard"        : "New Credit Card",
   "savedCreditCard"      : "Saved Credit Card",
