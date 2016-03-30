@@ -21,10 +21,15 @@ Ext.define('Taco.view.order.subform.Return', {
     },
 
     beforeShow: function () {
+        var me = this;
         this.setLoading(true);
         var store = this.record.getReturnsStore();
 
-        store.reload();
+        store.load(function () {
+            me.initProcessReturnPanels(store);
+            me.initHeader();
+            me.setLoading(false);
+        });
 
         this.returnPanels.removeAll(true);
         this.initCreateButton();
