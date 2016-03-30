@@ -173,6 +173,7 @@
     <Compile Include="Api\CatalogPublishingController.cs" />
     <Compile Include="Api\CategoryController.cs" />
     <Compile Include="Api\ChannelController.cs" />
+    <Compile Include="Api\Models\PriceLists\PriceListEntryExtra.cs" />
     <Compile Include="Api\ReportGenerator.cs" />
     <Compile Include="Api\CouponCodeController.cs" />
     <Compile Include="Api\LayoutWidgetDefinitionController.cs" />
@@ -585,6 +586,7 @@
     <Content Include="Scripts\app\model\PinnedProduct.js" />
     <Content Include="Scripts\app\model\PriceListEntry.js" />
     <Content Include="Scripts\app\model\PriceList.js" />
+    <Content Include="Scripts\app\model\PriceListEntryExtra.js" />
     <Content Include="Scripts\app\model\PriceListEntryPrice.js" />
     <Content Include="Scripts\app\model\RuntimePriceList.js" />
     <Content Include="Scripts\app\model\StorefrontProduct.js" />

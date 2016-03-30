@@ -21,8 +21,12 @@ Ext.define('Taco.view.order.subform.Return', {
     },
 
     beforeShow: function () {
+        this.setLoading(true);
         var store = this.record.getReturnsStore();
+
         store.reload();
+
+        this.returnPanels.removeAll(true);
         this.initCreateButton();
     },
 

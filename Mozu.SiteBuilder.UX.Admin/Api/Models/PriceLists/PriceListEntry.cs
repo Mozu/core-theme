@@ -30,6 +30,8 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.Models.PriceLists
 
         public List<PriceListEntryPrice> PriceEntries { get; set; }
 
+        public List<PriceListEntryExtra> ExtraEntries { get; set; }
+
         #region Restricted Discounts
         /// <summary>
         /// Default is false, when true dates may apply, null dates mean beginning/end of time
