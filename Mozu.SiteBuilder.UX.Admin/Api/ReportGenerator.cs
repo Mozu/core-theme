@@ -7,6 +7,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Web;
 using Mozu.Core;
+using Mozu.Core.Exceptions;
 using Mozu.Core.Settings;
 using Newtonsoft.Json.Linq;
 
@@ -44,8 +45,8 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
             var url = _settings.AppSettings(BASEURL_KEY);
 
             if (string.IsNullOrEmpty(dashboardId) || string.IsNullOrEmpty(orgId) || string.IsNullOrEmpty(secret) || string.IsNullOrEmpty(url))
-                throw new Exception("DashboardId or OrganizationId or Secret or Url is missing");
-
+                throw new VaeMissingOrInvalidParameterException("DashboardId or OrganizationId or Secret or Url is missing");
+           
             
             var dateFormat = "yyyy-MM-dd";
             var request = new Dictionary<string, object>();
