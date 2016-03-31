@@ -24,7 +24,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
         }
 
 
-        [HttpPostRoute(UriTemplate = "dashboard")]
+        [HttpGetRoute(UriTemplate = "dashboard")]
         public async Task<HttpResponseMessage> Dashboard()
         {
             var resp = (await _birstTokenGenerator.GenerateDashboardUri());
