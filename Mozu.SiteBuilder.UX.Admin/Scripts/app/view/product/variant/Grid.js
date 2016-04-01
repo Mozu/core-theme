@@ -368,9 +368,9 @@ Ext.define('Taco.view.product.variant.Grid', {
                 mouseWheelEnabled: false
             }
         }, {
-            text: 'Extra Weight',
-            dataIndex: 'deltaWeight',
-            stateId: 'deltaWeight',
+            text: 'Fixed Weight',
+            dataIndex: 'fixedWeight',
+            stateId: 'fixedWeight',
             hideable: true,
             hidden: isDigitalCredit,
             width: 120,

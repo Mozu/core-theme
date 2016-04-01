@@ -81,6 +81,9 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.Models.ProductModels
         public Decimal? DeltaWeight { get; set; }
 
         [JsonProperty(DefaultValueHandling = DefaultValueHandling.Ignore)]
+        public Decimal? FixedWeight { get; set; }
+
+        [JsonProperty(DefaultValueHandling = DefaultValueHandling.Ignore)]
         public int? StockOnHand { get; set; }
 
         [JsonProperty(DefaultValueHandling = DefaultValueHandling.Ignore)]
