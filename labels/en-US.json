@@ -422,6 +422,6 @@
   "selectSavedAddress": "Select a saved address",
   "addAddress": "Add new address",
   "editAddress": "Edit saved address",
-  "exclusivePricelist": "The following items are not available for purchase and have been removed",
-  "newPriceList": "You are now eligible for special pricing"
+  "exclusivePricelist": "The following items are not available for purchase and have been removed.",
+  "newPriceList": "You are now eligible for special pricing."
 }
