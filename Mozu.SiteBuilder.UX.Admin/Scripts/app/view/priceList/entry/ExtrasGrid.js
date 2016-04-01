@@ -5,6 +5,7 @@
 Ext.define('Taco.view.priceList.entry.ExtrasGrid', {
     extend: 'Ext.grid.Panel',
     requires: [],
+    plugins: ['cellediting'],
     columns: [{
         text: 'Name',
         dataIndex: 'name',
@@ -29,15 +30,6 @@ Ext.define('Taco.view.priceList.entry.ExtrasGrid', {
             price: 123.23
         },
         ]
-    }),
-    initComponent: function() {
-        var me = this;
-        
-        cellEditing = Ext.create('Ext.grid.plugin.CellEditing', {
-            clicksToEdit: 1
-        });
-
-        me.plugins = [cellEditing];
-    }
+    })
     
 });
