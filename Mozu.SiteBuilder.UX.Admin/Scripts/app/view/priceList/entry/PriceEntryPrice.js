@@ -8,6 +8,7 @@ Ext.define('Taco.view.priceList.entry.PriceEntryPrice', {
     requires: [
         'Ext.form.field.ComboBox',
         'Taco.model.PriceListEntryPrice',
+        'Taco.model.PriceListEntryExtra',
         'Taco.core.ux.form.CurrencyField',
         'Ext.form.field.Date',
         'Taco.core.ux.TooltipLabel',
@@ -15,7 +16,8 @@ Ext.define('Taco.view.priceList.entry.PriceEntryPrice', {
         'Taco.shared.view.field.ProductPickerField',
         'Taco.view.priceList.widget.PriceListComboBox',
         'Taco.core.ux.picker.CheckboxTreeModal',
-        'Taco.view.priceList.widget.OverrideField'
+        'Taco.view.priceList.widget.OverrideField',
+        'Taco.view.priceList.widget.EntryExtrasGrid'
     ],
     ui: 'subform',
     margin: '0 0 20 0',
@@ -302,6 +304,10 @@ Ext.define('Taco.view.priceList.entry.PriceEntryPrice', {
             ]
         });
 
+        me.extrasGrid = Ext.widget('taco-pricelist-entry-extras-grid', {
+            record: me.record
+        });
+
         me.advancedPanel = {
             xtype: 'panel',
             title: 'Advanced',
@@ -335,6 +341,31 @@ Ext.define('Taco.view.priceList.entry.PriceEntryPrice', {
             ]
         };
 
+        me.extrasPanel = {
+            xtype: 'panel',
+            title: 'Extras',
+            layout: {
+                type: 'vbox',
+                align: 'stretch'
+            },
+            width: '50%',
+            padding: '20',
+            defaults: {
+                flex: 1,
+                xtype: 'panel',
+                layout: {
+                    type: 'hbox',
+                    align: 'top'
+                },
+                defaults: {
+                    flex: 1
+                }
+            },
+            items: [
+                me.extrasGrid
+            ]
+        };
+
         me.tabs = Ext.create('Ext.tab.Panel', {
             width: "100%",
             minHeight: 475,
@@ -343,7 +374,8 @@ Ext.define('Taco.view.priceList.entry.PriceEntryPrice', {
             },
             items: [
                 me.basicPanel, //move to subform file?
-                me.advancedPanel
+                me.advancedPanel,
+                me.extrasPanel
             ]
         });
 

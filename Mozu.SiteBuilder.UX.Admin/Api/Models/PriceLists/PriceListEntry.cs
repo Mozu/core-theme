@@ -30,7 +30,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.Models.PriceLists
 
         public List<PriceListEntryPrice> PriceEntries { get; set; }
 
-        public List<PriceListEntryExtra> ExtraEntries { get; set; }
+        public List<PriceListEntryExtra> Extras { get; set; }
 
         #region Restricted Discounts
         /// <summary>

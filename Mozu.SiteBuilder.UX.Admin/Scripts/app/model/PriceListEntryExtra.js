@@ -3,8 +3,19 @@
 */
 Ext.define('Taco.model.PriceListEntryExtra', {
     extend: 'Taco.core.data.Model',
-    idProperty: 'minQty',
+    idProperty: 'compositeKey',
     fields: [
+        {
+            name: 'compositeKey',
+            type: 'string',
+            convert: function (v, record) {
+                return {
+                    attributeFqn: record.get('attributeFqn'),
+                    attributeCode: record.get('attributeCode')
+                };
+            },
+            persist: false
+        },
         {
             name: 'attributeFqn',
             type: 'string'
@@ -22,6 +33,10 @@ Ext.define('Taco.model.PriceListEntryExtra', {
             type: 'string'
         }, {
             name: 'deltaPrice',
+            type: 'float',
+            useNull: true
+        }, {
+            name: 'overridePrice',
             type: 'float',
             useNull: true
         }

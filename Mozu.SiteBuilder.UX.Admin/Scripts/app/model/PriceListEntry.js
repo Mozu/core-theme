@@ -90,6 +90,10 @@ Ext.define('Taco.model.PriceListEntry', {
             type: 'auto',
             defaultValue: []
         }, {
+            name: 'extras',
+            type: 'auto',
+            defaultValue: []
+        }, {
             name: 'msrpMode',
             type: 'string',
             defaultValue: 'UseCatalog',
