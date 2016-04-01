@@ -8,6 +8,7 @@ Ext.define('Taco.view.priceList.entry.PriceEntryPrice', {
     requires: [
         'Ext.form.field.ComboBox',
         'Taco.model.PriceListEntryPrice',
+        'Taco.model.PriceListEntryExtra',
         'Taco.core.ux.form.CurrencyField',
         'Ext.form.field.Date',
         'Taco.core.ux.TooltipLabel',
@@ -16,7 +17,8 @@ Ext.define('Taco.view.priceList.entry.PriceEntryPrice', {
         'Taco.view.priceList.widget.PriceListComboBox',
         'Taco.core.ux.picker.CheckboxTreeModal',
         'Taco.view.priceList.widget.OverrideField',
-        'Taco.view.product.widget.ProductBundleGrid'
+        'Taco.view.product.widget.ProductBundleGrid',
+        'Taco.view.priceList.widget.EntryExtrasGrid'
     ],
     ui: 'subform',
     margin: '0 0 20 0',
@@ -303,6 +305,10 @@ Ext.define('Taco.view.priceList.entry.PriceEntryPrice', {
             ]
         });
 
+        me.extrasGrid = Ext.widget('taco-pricelist-entry-extras-grid', {
+            record: me.record
+        });
+
         me.advancedPanel = {
             xtype: 'panel',
             title: 'Advanced',
@@ -336,8 +342,6 @@ Ext.define('Taco.view.priceList.entry.PriceEntryPrice', {
             ]
         };
 
-        me.extrasGrid = Ext.create('Taco.view.priceList.entry.ExtrasGrid', {});
-        
         me.extrasPanel = Ext.create('Ext.panel.Panel', {
             title: 'Extras',
             itemId: 'extrasPanel',

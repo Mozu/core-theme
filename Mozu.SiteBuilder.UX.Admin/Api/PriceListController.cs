@@ -16,6 +16,7 @@ using DC = Mozu.ProductAdmin.Contracts;
 using Mozu.Core.Api.Contracts.Client;
 using Mozu.Core.Api.Contracts;
 using System.Net.Http;
+using Mozu.Core.Extensions;
 using Mozu.SiteBuilder.Mvc.Extensions;
 using Mozu.SiteBuilder.UX.Admin.Api.Models;
 using Mozu.SiteBuilder.UX.Admin.Helpers;
@@ -33,6 +34,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
     public class PriceListController : BaseController
     {
         private readonly IPriceListWebApiClient _priceListWebClient;
+        private readonly IProductWebApiClient _productWebApiClient;
         private readonly IApiContext _ctx;
         private readonly ITenantsWebApiClient _tenantClient;
 
@@ -40,11 +42,12 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
         /// Public constructor.
         /// </summary>
         public PriceListController(IApiContext ctx, ITenantsWebApiClient tenantClient,
-            IPriceListWebApiClient priceListWebClient)
+            IPriceListWebApiClient priceListWebClient, IProductWebApiClient productWebApiClient)
         {
             _ctx = ctx;
             _tenantClient = tenantClient;
             _priceListWebClient = priceListWebClient;
+            _productWebApiClient = productWebApiClient;
         }
 
         /// <summary>
@@ -79,7 +82,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
                 sortBy: sortBy,
                 filter: filter
                 )).ReadAsSync();
-
+            
             var result = Mapper.Map<List<PriceList>>(priceLists.Items);
 
             return List2(result, (int?) priceLists.TotalCount);
@@ -211,8 +214,40 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
                     dateTime = parsedDateTime;
                 }
             }
-            var singlePriceList = (await _priceListWebClient.GetPriceListEntry(priceListCode: priceListCode, productCode: productCode, currencyCode:currencyCode, startDate:dateTime)).ReadAsSync();
-            return List2(Mapper.Map<PriceListEntry>(singlePriceList));
+            var dcPriceListEntry = (await _priceListWebClient.GetPriceListEntry(priceListCode: priceListCode, productCode: productCode, currencyCode:currencyCode, startDate:dateTime)).ReadAsSync();
+            var priceListEntry = Mapper.Map<PriceListEntry>(dcPriceListEntry);
+            List<DC.ProductExtra> dcExtras = (await _productWebApiClient.GetExtras(priceListEntry.ProductCode)).ReadAsSync();
+            var lookup = (priceListEntry.Extras.IsNullOrEmpty())
+                ? new Dictionary<string, PriceListEntryExtra>()
+                : priceListEntry.Extras.ToDictionary(x => x.AttributeFQN); //+ "-" + x.AttributeCode
+
+            var extraMergedEntries = new List<PriceListEntryExtra>();
+
+            Func<DC.AttributeVocabularyValue, string> getStringValue = (vocabVal) =>
+                (vocabVal != null && vocabVal.Content != null)
+                    ? vocabVal.Content.StringValue
+                    : (vocabVal != null)
+                        ? vocabVal.Value as string
+                        : null
+                ;
+
+            foreach (var extra in dcExtras)
+            {
+                var extras = extra.Values.Select(x => new PriceListEntryExtra
+                {
+                    AttributeFQN = extra.AttributeFQN,
+                    AttributeCode = x.AttributeVocabularyValueDetail != null
+                        ? x.AttributeVocabularyValueDetail.Value as string
+                        : null,
+                    AttributeName = "TBD",
+                    DeltaPrice = x.DeltaPrice.DeltaPrice,
+                    OverridePrice = lookup.ContainsKey(extra.AttributeFQN) ? lookup[extra.AttributeFQN].OverridePrice : (decimal?)null,
+                    StringValue = getStringValue(x.AttributeVocabularyValueDetail)
+                });
+                extraMergedEntries.AddRange(extras);
+            }
+            priceListEntry.Extras = extraMergedEntries;
+            return List2(priceListEntry);
         }
 
         /// <summary>
@@ -249,16 +284,17 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
         {
             var results = new List<PriceListEntry>();
 
-            foreach (var entry in priceEntries)
+            foreach (var priceEntry in priceEntries)
             {
-                var dcEntry = Mapper.Map<DC.PriceListEntry>(entry);
-                var res = (await _priceListWebClient.UpdatePriceListEntry(dcEntry, 
+                var dcEntry = Mapper.Map<DC.PriceListEntry>(priceEntry);
+                var entry = (await _priceListWebClient.UpdatePriceListEntry(dcEntry, 
                     priceListCode:dcEntry.PriceListCode, 
                     productCode:dcEntry.ProductCode, 
                     currencyCode:dcEntry.CurrencyCode, 
                     startDate:dcEntry.StartDate
                     )).ReadAsSync();
-                results.Add(Mapper.Map<PriceListEntry>(res));
+                
+                results.Add(Mapper.Map<PriceListEntry>(entry));
             }
             return List2(results);
         }

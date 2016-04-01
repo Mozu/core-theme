@@ -56,10 +56,14 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.ModelMapping
             Mapper.CreateMap<PriceListEntry, DC.PriceListEntry>()
                 .ForMember(x => x.AuditInfo, op => op.Ignore())
                 .ForMember(dc => dc.DiscountsRestrictedMode, op => op.ResolveUsing(x => x.DiscountsRestricted.HasValue ? "Overridden" : "UseCatalog"))
+                .ForMember(dc => dc.ExtraEntries, op => op.ResolveUsing(x => x.Extras))
+            
                 ;
             Mapper.CreateMap<DC.PriceListEntry, PriceListEntry>()
                 .ForMember(x => x.DiscountsRestricted, op => op.ResolveUsing(dc => dc.DiscountsRestrictedMode.EqualsIgnoreCase("Overridden") ? dc.DiscountsRestricted : null) )
                 .ForMember(x => x.Options, op => op.ResolveUsing(dc => dc.Options))
+                .ForMember(x => x.Extras, op => op.ResolveUsing(dc => dc.ExtraEntries))
+            
             
             
                 .ForMember(x => x.CreateBy, op => op.ResolveUsing(dc => dc.AuditInfo != null ? dc.AuditInfo.CreateBy : ""))
@@ -72,9 +76,12 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.ModelMapping
             Mapper.CreateMap<PriceListEntryPrice, DC.PriceListEntryPrice>();
             Mapper.CreateMap<DC.PriceListEntryPrice, PriceListEntryPrice>();
 
-            Mapper.CreateMap<PriceListEntryExtra, DC.PriceListEntryExtra>();
-            Mapper.CreateMap<DC.PriceListEntryExtra, PriceListEntryExtra>();
+            Mapper.CreateMap<PriceListEntryExtra, DC.PriceListEntryExtra>()
+                .ForMember(dc => dc.Value, op => op.Ignore());
 
+            Mapper.CreateMap<DC.PriceListEntryExtra, PriceListEntryExtra>()
+                .ForMember(x => x.OverridePrice, op => op.ResolveUsing(dc => dc.DeltaPrice));
+            
             Mapper.CreateMap<Mozu.ProductRuntime.Contracts.PriceList, RuntimePriceList>()
                 .ForMember(x => x.Code, op => op.ResolveUsing(dc => dc.PriceListCode))
                 ;
