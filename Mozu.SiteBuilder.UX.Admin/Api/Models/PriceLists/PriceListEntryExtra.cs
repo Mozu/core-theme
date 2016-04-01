@@ -18,16 +18,15 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.Models.PriceLists
         /// <summary>
         /// value extra
         /// </summary>
+        public string DisplayValue { get; set; }
+
         public string Value { get; set; }
 
-        public string StringValue { get; set; }
-
         /// <summary>
-        /// overriden value of the extra
+        /// Existing value of the extra
         /// </summary>
-        public decimal DeltaPrice { get; set; }
+        public decimal? CatalogPrice { get; set; }
 
         public decimal? OverridePrice { get; set; }
-
     }
 }

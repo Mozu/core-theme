@@ -240,9 +240,9 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
                         ? x.AttributeVocabularyValueDetail.Value as string
                         : null,
                     AttributeName = "TBD",
-                    DeltaPrice = x.DeltaPrice.DeltaPrice,
+                    CatalogPrice = x.DeltaPrice.DeltaPrice,
                     OverridePrice = lookup.ContainsKey(extra.AttributeFQN) ? lookup[extra.AttributeFQN].OverridePrice : (decimal?)null,
-                    StringValue = getStringValue(x.AttributeVocabularyValueDetail)
+                    DisplayValue = getStringValue(x.AttributeVocabularyValueDetail)
                 });
                 extraMergedEntries.AddRange(extras);
             }
@@ -275,6 +275,59 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
 
             return List2(responseList);
         }
+
+
+        /// <summary>
+        /// Create a new PriceListEntry
+        /// </summary>
+        //[HttpGetRoute(UriTemplate = "entry/product/{productCode}/extras")]
+        //public async Task<Response<List<PriceListEntryExtra>>> GetProductExtras(string productCode)
+        //{
+        //    List<DC.ProductExtra> dcExtras = (await _productWebApiClient.GetExtras(productCode)).ReadAsSync();
+
+        //    var result = new List<PriceListEntryExtra>();
+
+        //    Func<DC.AttributeVocabularyValue, string> getStringValue = (vocabVal) =>
+        //        (vocabVal != null && vocabVal.Content != null)
+        //            ? vocabVal.Content.StringValue
+        //            : (vocabVal != null)
+        //                ? vocabVal.Value as string
+        //                : null
+        //        ;
+
+        //    var extras = dcExtras.Select(extra => extra.Values.Select(x => new PriceListEntryExtra
+        //    {
+        //        AttributeFQN = extra.AttributeFQN,
+        //        AttributeCode = x.AttributeVocabularyValueDetail != null
+        //            ? x.AttributeVocabularyValueDetail.Value as string
+        //            : null,
+        //        AttributeName = "TBD",
+        //        CatalogPrice = x.DeltaPrice.DeltaPrice,
+        //        DisplayValue = getStringValue(x.AttributeVocabularyValueDetail)
+        //    }));
+
+        //    foreach (var extra in extras)
+        //    {
+        //        result.AddRange(extra);
+        //    }
+
+
+        
+        //    //foreach (var extras in dcExtras.Select(extra => extra.Values.Select(x => new PriceListEntryExtra
+        //    //{
+        //    //    AttributeFQN = extra.AttributeFQN,
+        //    //    AttributeCode = x.AttributeVocabularyValueDetail != null
+        //    //        ? x.AttributeVocabularyValueDetail.Value as string
+        //    //        : null,
+        //    //    AttributeName = "TBD",
+        //    //    DeltaPrice = x.DeltaPrice.DeltaPrice,
+        //    //    StringValue = getStringValue(x.AttributeVocabularyValueDetail)
+        //    //})))
+        //    //{
+        //    //    result.AddRange(extras);
+        //    //}
+        //    return List2(result);
+        //}
 
         /// <summary>
         /// Update an existing PriceList.
