@@ -1,11 +1,12 @@
-{% extends "page" %}
+﻿{% extends "page" %}
 
 {% block title-tag-content %}{% firstof pageContext.metaTitle model.name %} - {% parent %}{% endblock title-tag-content %}
 
 {% block body-tag-classes %} mz-homepage {% endblock body-tag-classes %}
 
 {% block body-content %}
-    {% dropzone "home" scope="page" %}
+    {% dropzone "home" scope="template" %}
+    {% dropzone "home2" scope="page" %}
 {% endblock body-content %}
 
 {% block body-below-content %}
