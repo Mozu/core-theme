@@ -80,7 +80,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.ModelMapping
                 .ForMember(dc => dc.Value, op => op.Ignore());
 
             Mapper.CreateMap<DC.PriceListEntryExtra, PriceListEntryExtra>()
-                .ForMember(x => x.OverridePrice, op => op.ResolveUsing(dc => dc.DeltaPrice));
+                .ForMember(x => x.OverridePrice, op => op.ResolveUsing(dc => dc.Price));
             
             Mapper.CreateMap<Mozu.ProductRuntime.Contracts.PriceList, RuntimePriceList>()
                 .ForMember(x => x.Code, op => op.ResolveUsing(dc => dc.PriceListCode))
