@@ -404,17 +404,17 @@ Ext.define('Taco.view.priceList.widget.EntryExtrasGrid', {
 
     },
 
-    addSaveTasks: function (tasks, updateRecord, saveRecord) {
-
-
-        this.callParent(arguments);
-        var storeTask = tasks.tasks.findBy(function (innerTask) {
-            return innerTask.store == this.store;
-        }, this);
-
-        storetask.dependencyFilter(function (innerTask) {
-            return innerTask.saveRecord == this.product;
-        }, this);
-        return tasks;
-    }
+    // addSaveTasks: function (tasks, updateRecord, saveRecord) {
+    //
+    //
+    //     this.callParent(arguments);
+    //     var storeTask = tasks.tasks.findBy(function (innerTask) {
+    //         return innerTask.store == this.store;
+    //     }, this);
+    //
+    //     storetask.dependencyFilter(function (innerTask) {
+    //         return innerTask.saveRecord == this.product;
+    //     }, this);
+    //     return tasks;
+    // }
 });
