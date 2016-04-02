@@ -278,56 +278,56 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
 
 
         /// <summary>
-        /// Create a new PriceListEntry
+        /// Get ProducExtras for a new PriceListEntry
+        /// Does not throw exception when 404 as it's
+        /// expected.
         /// </summary>
-        //[HttpGetRoute(UriTemplate = "entry/product/{productCode}/extras")]
-        //public async Task<Response<List<PriceListEntryExtra>>> GetProductExtras(string productCode)
-        //{
-        //    List<DC.ProductExtra> dcExtras = (await _productWebApiClient.GetExtras(productCode)).ReadAsSync();
+        [HttpGetRoute(UriTemplate = "entry/product/{productCode}/extras")]
+        public async Task<Response<List<PriceListEntryExtra>>> GetProductExtras(string productCode)
+        {
+            List<DC.ProductExtra> dcExtras;
+            var result = new List<PriceListEntryExtra>();
+            try
+            {
+                dcExtras = (await _productWebApiClient.GetExtras(productCode)).ReadAsSync();
+            }
+            catch (ApiWebClientException apiError)
+            {
+                if (apiError.ErrorCode.Equals("ITEM_NOT_FOUND"))
+                {
+                    return List2(result);
+                }
+                throw;
+            }
+            
+            Func<DC.AttributeVocabularyValue, string> getStringValue = (vocabVal) =>
+                (vocabVal != null && vocabVal.Content != null)
+                    ? vocabVal.Content.StringValue
+                    : (vocabVal != null)
+                        ? vocabVal.Value as string
+                        : null
+                ;
 
-        //    var result = new List<PriceListEntryExtra>();
+            var extras = dcExtras.Select(extra => extra.Values.Select(x => new PriceListEntryExtra
+            {
+                AttributeFQN = extra.AttributeFQN,
+                AttributeCode = x.AttributeVocabularyValueDetail != null
+                    ? x.AttributeVocabularyValueDetail.Value as string
+                    : null,
+                AttributeName = "TBD",
+                CatalogPrice = x.DeltaPrice.DeltaPrice,
+                DisplayValue = getStringValue(x.AttributeVocabularyValueDetail)
+            }));
 
-        //    Func<DC.AttributeVocabularyValue, string> getStringValue = (vocabVal) =>
-        //        (vocabVal != null && vocabVal.Content != null)
-        //            ? vocabVal.Content.StringValue
-        //            : (vocabVal != null)
-        //                ? vocabVal.Value as string
-        //                : null
-        //        ;
-
-        //    var extras = dcExtras.Select(extra => extra.Values.Select(x => new PriceListEntryExtra
-        //    {
-        //        AttributeFQN = extra.AttributeFQN,
-        //        AttributeCode = x.AttributeVocabularyValueDetail != null
-        //            ? x.AttributeVocabularyValueDetail.Value as string
-        //            : null,
-        //        AttributeName = "TBD",
-        //        CatalogPrice = x.DeltaPrice.DeltaPrice,
-        //        DisplayValue = getStringValue(x.AttributeVocabularyValueDetail)
-        //    }));
-
-        //    foreach (var extra in extras)
-        //    {
-        //        result.AddRange(extra);
-        //    }
+            foreach (var extra in extras)
+            {
+                result.AddRange(extra);
+            }
 
 
-        
-        //    //foreach (var extras in dcExtras.Select(extra => extra.Values.Select(x => new PriceListEntryExtra
-        //    //{
-        //    //    AttributeFQN = extra.AttributeFQN,
-        //    //    AttributeCode = x.AttributeVocabularyValueDetail != null
-        //    //        ? x.AttributeVocabularyValueDetail.Value as string
-        //    //        : null,
-        //    //    AttributeName = "TBD",
-        //    //    DeltaPrice = x.DeltaPrice.DeltaPrice,
-        //    //    StringValue = getStringValue(x.AttributeVocabularyValueDetail)
-        //    //})))
-        //    //{
-        //    //    result.AddRange(extras);
-        //    //}
-        //    return List2(result);
-        //}
+            
+            return List2(result);
+        }
 
         /// <summary>
         /// Update an existing PriceList.
