@@ -216,37 +216,19 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
             }
             var dcPriceListEntry = (await _priceListWebClient.GetPriceListEntry(priceListCode: priceListCode, productCode: productCode, currencyCode:currencyCode, startDate:dateTime)).ReadAsSync();
             var priceListEntry = Mapper.Map<PriceListEntry>(dcPriceListEntry);
-            //List<DC.ProductExtra> dcExtras = (await _productWebApiClient.GetExtras(priceListEntry.ProductCode)).ReadAsSync();
-            //var lookup = (priceListEntry.Extras.IsNullOrEmpty())
-            //    ? new Dictionary<string, PriceListEntryExtra>()
-            //    : priceListEntry.Extras.ToDictionary(x => x.AttributeFQN); //+ "-" + x.AttributeCode
+            var lookup = (priceListEntry.Extras.IsNullOrEmpty())
+                ? new Dictionary<string, PriceListEntryExtra>()
+                : priceListEntry.Extras.ToDictionary(x => x.AttributeFQN); //+ "-" + x.AttributeCode
 
-            //var extraMergedEntries = new List<PriceListEntryExtra>();
+            var productExtras = await GetProductExtrasInternalAsync(productCode,
+                (attrFqn, attrCode) => lookup.ContainsKey(attrFqn + attrCode)
+                    ? lookup[attrFqn + attrCode].OverridePrice
+                    : (decimal?) null);
 
-            //Func<DC.AttributeVocabularyValue, string> getStringValue = (vocabVal) =>
-            //    (vocabVal != null && vocabVal.Content != null)
-            //        ? vocabVal.Content.StringValue
-            //        : (vocabVal != null)
-            //            ? vocabVal.Value as string
-            //            : null
-            //    ;
+            // todo: Add in existing override orphans - Greg Murray on 2016-04-04 
 
-            //foreach (var extra in dcExtras)
-            //{
-            //    var extras = extra.Values.Select(x => new PriceListEntryExtra
-            //    {
-            //        AttributeFQN = extra.AttributeFQN,
-            //        AttributeCode = x.AttributeVocabularyValueDetail != null
-            //            ? x.AttributeVocabularyValueDetail.Value as string
-            //            : null,
-            //        AttributeName = "TBD",
-            //        CatalogPrice = x.DeltaPrice.DeltaPrice,
-            //        OverridePrice = lookup.ContainsKey(extra.AttributeFQN) ? lookup[extra.AttributeFQN].OverridePrice : (decimal?)null,
-            //        DisplayValue = getStringValue(x.AttributeVocabularyValueDetail)
-            //    });
-            //    extraMergedEntries.AddRange(extras);
-            //}
-            //priceListEntry.Extras = extraMergedEntries;
+            priceListEntry.Extras = productExtras;
+            
             return List2(priceListEntry);
         }
 
@@ -285,6 +267,12 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
         [HttpGetRoute(UriTemplate = "entry/product/{productCode}/extras")]
         public async Task<Response<List<PriceListEntryExtra>>> GetProductExtras(string productCode)
         {
+            var result = await GetProductExtrasInternalAsync(productCode, (attrFqn, attrCode) => (decimal?) null);
+            return List2(result);
+        }
+
+        private async Task<List<PriceListEntryExtra>> GetProductExtrasInternalAsync(string productCode, Func<string, string, decimal?> getOverridePrice)
+        {
             List<DC.ProductExtra> dcExtras;
             var result = new List<PriceListEntryExtra>();
             try
@@ -295,11 +283,11 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
             {
                 if (apiError.ErrorCode.Equals("ITEM_NOT_FOUND"))
                 {
-                    return List2(result);
+                    return result;
                 }
                 throw;
             }
-            
+
             Func<DC.AttributeVocabularyValue, string> getStringValue = (vocabVal) =>
                 (vocabVal != null && vocabVal.Content != null)
                     ? vocabVal.Content.StringValue
@@ -316,6 +304,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
                     : null,
                 AttributeName = "TBD",
                 CatalogPrice = x.DeltaPrice.DeltaPrice,
+                OverridePrice = getOverridePrice(extra.AttributeFQN, "TBD"),
                 DisplayValue = getStringValue(x.AttributeVocabularyValueDetail)
             }));
 
@@ -323,10 +312,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
             {
                 result.AddRange(extra);
             }
-
-
-            
-            return List2(result);
+            return result;
         }
 
         /// <summary>
