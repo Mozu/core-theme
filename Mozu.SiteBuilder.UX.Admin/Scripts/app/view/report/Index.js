@@ -117,7 +117,7 @@ Ext.define('Taco.view.report.Index', {
     loadDashboard: function () {
         var me = this;
         Ext.Ajax.request({
-            url: '/admin/app/report/dashboard',
+            url: '/admin/app/report/chartiodashboard',
             method: 'POST',
             params: {
                 fromDate: me.getFieldValue('#fromDateField'),
@@ -142,7 +142,7 @@ Ext.define('Taco.view.report.Index', {
 
     getContextSwitcher: function() {
         var ctxSwitcher = Ext.create('Taco.view.navigation.ContextSwitcherSelector', {
-            callToActionText: 'Switch Context'
+            callToActionText: ''
         });
 
         // we have the tenant info

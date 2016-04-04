@@ -287,7 +287,7 @@ Ext.define('Taco.view.Header', {
 
         var returnUrl = window.location.href.replace ( window.location.search ,''),
             queryString = Ext.Object.fromQueryString(window.location.search);
-        queryString._mz_extlnk = extensionLink.data._id;
+        queryString._mz_extlnk = extensionLink.raw._id;
         returnUrl += '?' + Ext.Object.toQueryString(queryString);
 
 
