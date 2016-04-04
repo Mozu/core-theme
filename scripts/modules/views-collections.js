@@ -41,7 +41,7 @@ define([
             if (url && url[0] != "/") {
                 var parser = document.createElement('a');
                 parser.href = url;
-                url = parser.pathname + parser.search;
+                url = window.location.pathname + parser.search;
             }
             return url;
         }
