@@ -33,6 +33,11 @@ Ext.define('Taco.model.ProductVariation', {
             "useNull": true
         },
         {
+            "name": "fixedWeight",
+            "type": "float",
+            "useNull": true
+        },
+        {
             name: "creditValue",
             type: "float",
             useNull: true

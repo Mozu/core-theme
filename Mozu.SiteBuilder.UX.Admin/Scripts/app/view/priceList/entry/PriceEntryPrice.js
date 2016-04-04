@@ -367,101 +367,17 @@ Ext.define('Taco.view.priceList.entry.PriceEntryPrice', {
             me.tabs
         ];
 
+        me.mon(Taco.app, 'price-entry-product-extras-changed', me.updateExtras, me);
         me.callParent(arguments);
     },
-
-    // after product is selected in the productPickerfield but before the combo is closed;
-    onBeforeProductSelect: function (combo, record, index, e) {
-        var me = this,
-            productPickerField = combo,
-            productCode = record.get('productCode'),
-            isConfigurable = record.get('isConfigurable'),
-            price,
-            win,
-            productCodeToAdd;
-
-
-        combo.collapse();
-
-        // determine if we need to show the configurator
-        //if (isConfigurable) {
-        //
-        //
-        //
-        //    win = Ext.create('Taco.view.order.modal.ProductConfigurator', {
-        //        productCode: productCode,
-        //        listeners: {
-        //            'aftersaveclose': {
-        //                fn: function (cmp, configurationData) {
-        //                    combo.inputMask.show(record.get('productName'));
-        //                    //combo.showInputMask(record.get('productName'));
-        //                    this.onProductSelect(record, Ext.clone(configurationData));
-        //                },
-        //                scope:this
-        //            },
-        //            'afterclose': {
-        //                fn: function () {
-        //                    //user cancelled the product configurator; Pass focus back to the product picker field
-        //
-        //                    me.productPickerField.focus();
-        //
-        //
-        //                },
-        //                scope: this
-        //            }
-        //        }
-        //    });
-        //
-        //} else {
-            combo.inputMask.show(record.get('productName'));
-            //this.onProductSelect(record);
-        //}
-
-        // cancel the selection so that the same product can be reselected again;
-        return false;
+    
+    updateExtras: function (data) {
+        if (!data || !data.items ) {
+            this.record.set('extras', []);
+        }
+        this.record.set('extras', data.items);
     },
-
-    // after a product is selected and optionaly configured (if product is configurable)
-    //onProductSelect : function (record,productConfig){
-    //    var me = this,
-    //        productCode = record.get('productCode'),
-    //        variationProductCode = (productConfig && productConfig.VariationProductCode) ? productConfig.VariationProductCode : '',
-    //        productCodeToAdd = variationProductCode || productCode,
-    //        price;
-    //
-    //
-    //    // if the product is configurable we need to use that configuration and extract the varient's product code
-    //    if (productConfig) {
-    //        //productCodeToAdd = productConfig.VariationProductCode || record.get('productCode');
-    //        price = productConfig.Price || productConfig.price;
-    //        if (Ext.isObject(price)) {
-    //            price = price.SalePrice || price.Price;
-    //        }
-    //    } else {
-    //        price = record.get('salePrice') || record.get('price');
-    //        // need to create a product config since one wasn't passed in;
-    //        productConfig = {
-    //            productCode: productCode
-    //        };
-    //    }
-    //
-    //    me.codeField.setValue(productCodeToAdd);
-    //    me.quantityField.setValue(1);
-    //    me.quantityField.enable();
-    //    me.priceField.setValue(price);
-    //    // cache the config object we will use to persist this new record;
-    //    me.setProductConfiguration(productConfig);
-    //    // need to manually blur this field;
-    //    me.productPickerField.blur();
-    //    me.productPickerField.triggerBlur();
-    //
-    //    //init the fulfillment field. Need to pick the fulfillment location and determined product availability;
-    //    this.loadFulfillmentPickerField({
-    //        productCode : productCode,
-    //        variationProductCode : variationProductCode
-    //    });
-    //},
-
+    
     beforeSave: function () {
         Ext.Object.merge(this.record.data, this.form.getValues());
         return true;

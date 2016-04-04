@@ -77,10 +77,14 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.ModelMapping
             Mapper.CreateMap<DC.PriceListEntryPrice, PriceListEntryPrice>();
 
             Mapper.CreateMap<PriceListEntryExtra, DC.PriceListEntryExtra>()
-                .ForMember(dc => dc.Value, op => op.Ignore());
+                .ForMember(dc => dc.Price, op => op.ResolveUsing(x => x.OverridePrice.GetValueOrDefault()));
 
             Mapper.CreateMap<DC.PriceListEntryExtra, PriceListEntryExtra>()
-                .ForMember(x => x.OverridePrice, op => op.ResolveUsing(dc => dc.DeltaPrice));
+                .ForMember(x => x.OverridePrice, op => op.ResolveUsing(dc => dc.Price))
+                .ForMember(x => x.CatalogPrice, op => op.Ignore())
+                ;
+            
+            
             
             Mapper.CreateMap<Mozu.ProductRuntime.Contracts.PriceList, RuntimePriceList>()
                 .ForMember(x => x.Code, op => op.ResolveUsing(dc => dc.PriceListCode))
