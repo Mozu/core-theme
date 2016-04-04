@@ -216,37 +216,37 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
             }
             var dcPriceListEntry = (await _priceListWebClient.GetPriceListEntry(priceListCode: priceListCode, productCode: productCode, currencyCode:currencyCode, startDate:dateTime)).ReadAsSync();
             var priceListEntry = Mapper.Map<PriceListEntry>(dcPriceListEntry);
-            List<DC.ProductExtra> dcExtras = (await _productWebApiClient.GetExtras(priceListEntry.ProductCode)).ReadAsSync();
-            var lookup = (priceListEntry.Extras.IsNullOrEmpty())
-                ? new Dictionary<string, PriceListEntryExtra>()
-                : priceListEntry.Extras.ToDictionary(x => x.AttributeFQN); //+ "-" + x.AttributeCode
+            //List<DC.ProductExtra> dcExtras = (await _productWebApiClient.GetExtras(priceListEntry.ProductCode)).ReadAsSync();
+            //var lookup = (priceListEntry.Extras.IsNullOrEmpty())
+            //    ? new Dictionary<string, PriceListEntryExtra>()
+            //    : priceListEntry.Extras.ToDictionary(x => x.AttributeFQN); //+ "-" + x.AttributeCode
 
-            var extraMergedEntries = new List<PriceListEntryExtra>();
+            //var extraMergedEntries = new List<PriceListEntryExtra>();
 
-            Func<DC.AttributeVocabularyValue, string> getStringValue = (vocabVal) =>
-                (vocabVal != null && vocabVal.Content != null)
-                    ? vocabVal.Content.StringValue
-                    : (vocabVal != null)
-                        ? vocabVal.Value as string
-                        : null
-                ;
+            //Func<DC.AttributeVocabularyValue, string> getStringValue = (vocabVal) =>
+            //    (vocabVal != null && vocabVal.Content != null)
+            //        ? vocabVal.Content.StringValue
+            //        : (vocabVal != null)
+            //            ? vocabVal.Value as string
+            //            : null
+            //    ;
 
-            foreach (var extra in dcExtras)
-            {
-                var extras = extra.Values.Select(x => new PriceListEntryExtra
-                {
-                    AttributeFQN = extra.AttributeFQN,
-                    AttributeCode = x.AttributeVocabularyValueDetail != null
-                        ? x.AttributeVocabularyValueDetail.Value as string
-                        : null,
-                    AttributeName = "TBD",
-                    CatalogPrice = x.DeltaPrice.DeltaPrice,
-                    OverridePrice = lookup.ContainsKey(extra.AttributeFQN) ? lookup[extra.AttributeFQN].OverridePrice : (decimal?)null,
-                    DisplayValue = getStringValue(x.AttributeVocabularyValueDetail)
-                });
-                extraMergedEntries.AddRange(extras);
-            }
-            priceListEntry.Extras = extraMergedEntries;
+            //foreach (var extra in dcExtras)
+            //{
+            //    var extras = extra.Values.Select(x => new PriceListEntryExtra
+            //    {
+            //        AttributeFQN = extra.AttributeFQN,
+            //        AttributeCode = x.AttributeVocabularyValueDetail != null
+            //            ? x.AttributeVocabularyValueDetail.Value as string
+            //            : null,
+            //        AttributeName = "TBD",
+            //        CatalogPrice = x.DeltaPrice.DeltaPrice,
+            //        OverridePrice = lookup.ContainsKey(extra.AttributeFQN) ? lookup[extra.AttributeFQN].OverridePrice : (decimal?)null,
+            //        DisplayValue = getStringValue(x.AttributeVocabularyValueDetail)
+            //    });
+            //    extraMergedEntries.AddRange(extras);
+            //}
+            //priceListEntry.Extras = extraMergedEntries;
             return List2(priceListEntry);
         }
 
