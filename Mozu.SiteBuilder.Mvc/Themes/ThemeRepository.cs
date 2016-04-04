@@ -124,8 +124,15 @@ namespace Mozu.SiteBuilder.Mvc.Themes
 
         }
 
+        public bool UseFileSystemCaching => !(_settings.AppSettingsAsNullableBool("sitebuilder.DisableFileSystemCaching")
+            .GetValueOrDefault(_settings.CoreSettings.ScaleUnitId.IndexOf("sb", StringComparison.OrdinalIgnoreCase) > -1));
+
         public DateTime GetLastWriteTime(string fileName)
         {
+            if (!UseFileSystemCaching)
+            {
+                return System.IO.File.GetLastWriteTimeUtc(fileName);
+            }
             var theme = _themeToThemeKey.Keys.Select( GetFromCache)
                 .Where( x=> 
                  x != null &&

@@ -35,7 +35,7 @@ namespace Mozu.SiteBuilder.Mvc.ViewEngine
         Tuple<TextReader, DateTime> ITemplateLoader.GetTemplate(string path)
         {
             var file = new System.IO.FileInfo(path);
-            return new Tuple<TextReader, DateTime>(file.OpenText(), file.LastWriteTime);
+            return new Tuple<TextReader, DateTime>(file.OpenText(), file.LastWriteTimeUtc);
         }
     }
 }
