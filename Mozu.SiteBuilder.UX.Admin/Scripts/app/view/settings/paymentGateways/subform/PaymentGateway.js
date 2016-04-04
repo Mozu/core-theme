@@ -9,12 +9,13 @@ Ext.define('Taco.view.settings.paymentGateways.subform.PaymentGateway', {
         'Taco.view.settings.paymentGateways.subform.Gateway',
         'Taco.store.GatewayDefinitions'
     ],
-    title: 'Payment Gateways',
     margin: "0 0 20 0",
     ui: "subform",
     width: "100%",
     initComponent: function () {
         var me = this;
+
+        this.title = this.record.get('name');
 
         this.defaults = {
             labelAlign: 'top',

@@ -18,6 +18,17 @@ Ext.define('Taco.view.settings.paymentGateways.Edit', {
 
     getEditRoute: function () {
         return this.editorRoute;
+    },
+    
+    initComponent: function () {
+        var me = this;
+
+        this.parentTitleCfg = {
+            title: 'Payment Gateways',
+            controller: this.indexRoute
+        };
+
+        me.callParent(arguments);
     }
 
 });
