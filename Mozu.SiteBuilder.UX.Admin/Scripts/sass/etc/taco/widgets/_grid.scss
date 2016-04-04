@@ -310,7 +310,6 @@
             .#{$prefix}btn-wrap {
                 @include icon-font($glyph-arrow-right, 11px, $pagination-arrow-color);
                 top: 4px;
-                left: 6px;
             }
         }
     }
