@@ -56,16 +56,14 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.ModelMapping
             Mapper.CreateMap<PriceListEntry, DC.PriceListEntry>()
                 .ForMember(x => x.AuditInfo, op => op.Ignore())
                 .ForMember(dc => dc.DiscountsRestrictedMode, op => op.ResolveUsing(x => x.DiscountsRestricted.HasValue ? "Overridden" : "UseCatalog"))
-                .ForMember(dc => dc.ExtraEntries, op => op.ResolveUsing(x => x.Extras))
-            
-                ;
+                .ForMember(dc => dc.ExtraEntries, op => op.ResolveUsing(x => x.Extras != null 
+                    ? x.Extras.Where(extra => extra.OverridePrice.HasValue)
+                    : new List<PriceListEntryExtra>()));
+
             Mapper.CreateMap<DC.PriceListEntry, PriceListEntry>()
                 .ForMember(x => x.DiscountsRestricted, op => op.ResolveUsing(dc => dc.DiscountsRestrictedMode.EqualsIgnoreCase("Overridden") ? dc.DiscountsRestricted : null) )
                 .ForMember(x => x.Options, op => op.ResolveUsing(dc => dc.Options))
                 .ForMember(x => x.Extras, op => op.ResolveUsing(dc => dc.ExtraEntries))
-            
-            
-            
                 .ForMember(x => x.CreateBy, op => op.ResolveUsing(dc => dc.AuditInfo != null ? dc.AuditInfo.CreateBy : ""))
                 .ForMember(x => x.CreateDate, op => op.ResolveUsing(dc => dc.AuditInfo != null ? dc.AuditInfo.CreateDate : null))
                 .ForMember(x => x.UpdateBy, op => op.ResolveUsing(dc => dc.AuditInfo != null ? dc.AuditInfo.UpdateBy : ""))
