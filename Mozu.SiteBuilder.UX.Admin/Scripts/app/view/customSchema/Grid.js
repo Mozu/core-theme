@@ -466,7 +466,7 @@ Ext.define('Taco.view.customSchema.Grid', {
         }
 
         else {
-            me.navigateToEdit(eventData.record);
+            me.navigateToEdit(record);
         }
     }
 });
