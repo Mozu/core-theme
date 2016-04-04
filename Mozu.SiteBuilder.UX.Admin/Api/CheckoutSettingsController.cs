@@ -181,21 +181,21 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
 
         private async Task UpdateSettings(DC.Gateway gateway, DC.Gateway posted, DC.PaymentSettings dcPaymentSettings, DC.OrderProcessingSettings dcOrderProcessingSettings, DC.CustomerCheckoutSettings dcCheckoutSettings)
         {
-            var tasks = new List<Task>();
 
             //TODO: remove - to keep old admin working.
             if (!_tenantAdminSettingsContext.EnableBetaAdmin)
             {
                 if (gateway != null && gateway.GatewayAccount.GatewayDefinitionId == posted.GatewayAccount.GatewayDefinitionId)
                 {
-                    tasks.Add(_checkoutSettingsWebApiClient.UpdateGateway(gateway.GatewayAccount.Id, posted));
+                    await (await _checkoutSettingsWebApiClient.UpdateGateway(gateway.GatewayAccount.Id, posted)).ReadAsAsync();
                 }
                 else
                 {
-                    tasks.Add(_checkoutSettingsWebApiClient.CreateGateway(posted));
+                    await (await _checkoutSettingsWebApiClient.CreateGateway(posted)).ReadAsAsync();
                 }
             }
 
+            var tasks = new List<Task>();
 
             tasks.Add(_checkoutSettingsWebApiClient.UpdatePaymentSettings(dcPaymentSettings));
             tasks.Add(_checkoutSettingsWebApiClient.UpdateOrderProcessingSettings(dcOrderProcessingSettings));
