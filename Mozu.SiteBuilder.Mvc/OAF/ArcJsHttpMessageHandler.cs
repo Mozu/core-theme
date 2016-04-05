@@ -15,6 +15,7 @@ using Mozu.Core.Actions;
 using Mozu.Core.Actions.Contracts;
 using Mozu.Core.Actions.Contracts.Cache;
 using Mozu.Core.Actions.SecureAppData.Clients;
+using Mozu.Core.ClearScript;
 using Mozu.Core.Logging;
 using Mozu.SiteBuilder.Mvc.ViewEngine;
 using NDjango.Interfaces;
@@ -74,8 +75,10 @@ namespace Mozu.SiteBuilder.Mvc.OAF
     {
         private readonly IFunctionProvider _functionProvider;
 
-        public ArcJSHttpHandlerRunner(IFunctionProvider functionProvider, ICacheManagerFactory cacheManagerFactory, IConfigurableLoggingService loggingService, ISecureAppDataWebApiClient secureAppDataWebApiClient, IApiContext apiContext)
-            : base(functionProvider, cacheManagerFactory, loggingService, secureAppDataWebApiClient, apiContext)
+        public ArcJSHttpHandlerRunner(IFunctionProvider functionProvider, ICacheManagerFactory cacheManagerFactory, IConfigurableLoggingService loggingService, ISecureAppDataWebApiClient secureAppDataWebApiClient, IApiContext apiContext,
+            IManagerPool managerPool)
+            : base(functionProvider, cacheManagerFactory, loggingService, secureAppDataWebApiClient, apiContext,
+                  managerPool )
         {
             _functionProvider = functionProvider;
         }
