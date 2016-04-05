@@ -27,6 +27,8 @@ Ext.define('Taco.view.priceList.entry.PriceEntryGeneral', {
 
         Ext.tip.QuickTipManager.init();
 
+        me.getExtras(me.record);
+
         var currencyData = Ext.Array.map(mc.getSupportedCurrencies(), function (currency) {
             return {
                 id: currency,

@@ -376,6 +376,7 @@ Ext.define('Taco.view.priceList.entry.PriceEntryPrice', {
             this.record.set('extras', []);
         }
         this.record.set('extras', data.items);
+        this.extrasGrid.getStore().loadData(data.items);
     },
     
     beforeSave: function () {

@@ -165,6 +165,8 @@ Ext.define('Taco.view.priceList.modal.PriceEntryEditor', {
             entries = basic.items,
             data = form.getValues(),
             priceEntries = [],
+            extrasStore = me.pricePanel.extrasGrid.getStore(),
+            extras = [],
             onSuccess = (!me.isCreateMode)
                     ? me.saveSuccess
                     : me.onCreate;
@@ -181,6 +183,14 @@ Ext.define('Taco.view.priceList.modal.PriceEntryEditor', {
         });
 
         this.record.set('priceEntries', priceEntries);
+        
+        Ext.Array.each(extrasStore.getRange(), function(extra) {
+            extras.push(extra.getData());
+        });
+
+        this.record.set('extras', extras);
+        
+        
 
         this.record.save({
             success: onSuccess,

@@ -129,7 +129,7 @@ Ext.define('Taco.view.priceList.widget.EntryExtrasGrid', {
         var columns = [
             {
                 xtype: 'gridcolumn',
-                dataIndex: 'code',
+                dataIndex: 'attributeCode',
                 stateId: 'code',
                 text: 'Code',
                 hideable: true,
@@ -137,7 +137,7 @@ Ext.define('Taco.view.priceList.widget.EntryExtrasGrid', {
                 sortable: false
             }, {
                 xtype: 'gridcolumn',
-                dataIndex: 'name',
+                dataIndex: 'attributeName',
                 stateId: 'name',
                 text: 'Name',
                 hideable: true,
@@ -145,20 +145,20 @@ Ext.define('Taco.view.priceList.widget.EntryExtrasGrid', {
                 sortable: false
             }, {
                 xtype: 'gridcolumn',
-                dataIndex: 'deltaPrice',
-                stateId: 'deltaPrice',
+                dataIndex: 'catalogPrice',
+                stateId: 'catalogPrice',
                 text: 'Catalog Price',
                 hideable: false,
                 flex: 1,
                 sortable: false
             }, {
                 text: 'Override Price',
-                dataIndex: 'price',
-                stateId: 'price',
+                dataIndex: 'overridePrice',
+                stateId: 'overridePrice',
                 flex: 1,
                 editor: {
                     xtype: 'currencyfield',
-                    currencyCode: "USD", //this.record.get('currencyCode'),
+                    currencyCode: this.record.get('currencyCode'),
                     allowBlank: true,
                     decimalPrecision: 2,
                     showBorder: true,
@@ -292,7 +292,8 @@ Ext.define('Taco.view.priceList.widget.EntryExtrasGrid', {
             model: 'Taco.model.PriceListEntryExtra',
             data: me.record.get('extras'),
             pageSize: 10,
-            autoLoad: true
+            autoLoad: true,
+            proxy: 'memory'
         });
 
         me.mon(me.priceListEntryExtrasStore, 'update', function (view, record, operation, modifiedFieldNames) {
