@@ -228,11 +228,12 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
                     ? lookup[attrFqn + "-" + attrValue].OverridePrice
                     : (decimal?) null);
 
-            // todo: Add in existing override orphans - Greg Murray on 2016-04-04 
-            // sort by override price desc? 
+            var orphans = priceListEntry.Extras.Where(x => !productExtras
+                                                            .Select(orp => orp.AttributeFQN + "-" + orp.Value)
+                                                            .Contains(x.AttributeFQN + "-" + x.Value));
 
-
-            priceListEntry.Extras = productExtras;
+            productExtras.AddRange(orphans);
+            priceListEntry.Extras = productExtras.OrderByDescending(x => x.OverridePrice).ThenByDescending(y=>y.CatalogPrice).ToList();
             
             return List2(priceListEntry);
         }
