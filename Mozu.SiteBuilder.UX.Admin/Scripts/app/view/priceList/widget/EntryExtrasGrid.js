@@ -178,6 +178,9 @@ Ext.define('Taco.view.priceList.widget.EntryExtrasGrid', {
                     keyNavEnabled: false,
                     mouseWheelEnabled: false,
                     msgTarget: "qtip"
+                },
+                renderer: function(value) {
+                    return (value || value === 0) ? Taco.app.context.getCurrent().formatCurrency(value) : 'Default';
                 }
             }
         ];
