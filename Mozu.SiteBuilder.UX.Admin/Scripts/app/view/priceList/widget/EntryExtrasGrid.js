@@ -145,12 +145,23 @@ Ext.define('Taco.view.priceList.widget.EntryExtrasGrid', {
                 sortable: false
             }, {
                 xtype: 'gridcolumn',
+                dataIndex: 'value',
+                stateId: 'value',
+                text: 'Value',
+                hideable: true,
+                flex: 1,
+                sortable: false
+            }, {
+                xtype: 'gridcolumn',
                 dataIndex: 'catalogPrice',
                 stateId: 'catalogPrice',
                 text: 'Catalog Price',
                 hideable: false,
                 flex: 1,
-                sortable: false
+                sortable: false,
+                renderer: function(catPrice) {
+                    return (catPrice || catPrice === 0) ? Taco.app.context.getCurrent().formatCurrency(catPrice) : '';
+                }
             }, {
                 text: 'Override Price',
                 dataIndex: 'overridePrice',
