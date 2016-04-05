@@ -194,50 +194,7 @@ Ext.define('Taco.view.priceList.widget.EntryExtrasGrid', {
     getActionItems: function () {
         var me = this,
             result = [];
-        result.push(
-            {
-                itemId: 'live',
-                text: 'View Live',
-                hideOnClick: false,
-                menu: {
-                    plain: true,
-                    shadow: false,
-                    cls: Taco.baseCSSPrefix + 'grid-row-menu',
-                    items: []
-                }
-            }
-        );
-
-        if (Taco.app.context.getMasterCatalog().productPublishingMode === 'Pending'){
-            result.push(
-                {
-                    itemId: 'preview',
-                    text: 'View Staged',
-                    hideOnClick: false,
-                    menu: {
-                        plain: true,
-                        shadow: false,
-                        cls: Taco.baseCSSPrefix + 'grid-row-menu',
-                        items: []
-                    }
-                }
-            );
-        }
-
-
-        result.push(
-            {
-                text: 'Delete',
-                itemId: "deleteMenuItem",
-                // deleteMenuColumnHandler can be found in Taco.core.ux.mixins.DeleteFromGrid
-                menuColumnHandler: "deleteMenuColumnHandler",
-                requiredBehaviors: {
-                    model: 'Taco.model.PriceListEntryExtra',
-                    behavior: 'destroy'
-                },
-                scope: me
-            }
-        );
+        
         return result;
     },
 

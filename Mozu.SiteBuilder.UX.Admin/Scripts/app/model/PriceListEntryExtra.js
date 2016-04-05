@@ -36,6 +36,10 @@ Ext.define('Taco.model.PriceListEntryExtra', {
             type: 'float',
             useNull: true
         }, {
+            name: 'catalogPrice',
+            type: 'float',
+            useNull: true
+        }, {
             name: 'overridePrice',
             type: 'float',
             useNull: true
