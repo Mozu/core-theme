@@ -8,7 +8,6 @@
 		font-weight: initial;
 		opacity: 0;
 		padding: 3px 8px;
-		pointer-events: none;
 		position: absolute;
 		max-width: 300px;
 		transform: translateX(0px) translateY(0px);
@@ -103,11 +102,16 @@
 		}
 
 		&.removed {
-			top: -1000000px !important;
+            visibility: hidden;
 		}
 
 		&.shown {
 			opacity: 1;
+		}
+
+		&:hover {
+			opacity: 1;
+            visibility: visible;
 		}
 	}
 
