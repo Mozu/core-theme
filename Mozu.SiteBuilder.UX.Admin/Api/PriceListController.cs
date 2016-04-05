@@ -35,6 +35,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
     {
         private readonly IPriceListWebApiClient _priceListWebClient;
         private readonly IProductWebApiClient _productWebApiClient;
+        private readonly IProductTypeWebApiClient _productTypeWebApiClient;
         private readonly IApiContext _ctx;
         private readonly ITenantsWebApiClient _tenantClient;
 
@@ -42,12 +43,14 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
         /// Public constructor.
         /// </summary>
         public PriceListController(IApiContext ctx, ITenantsWebApiClient tenantClient,
-            IPriceListWebApiClient priceListWebClient, IProductWebApiClient productWebApiClient)
+            IPriceListWebApiClient priceListWebClient, IProductWebApiClient productWebApiClient, 
+            IProductTypeWebApiClient productTypeWebApiClient)
         {
             _ctx = ctx;
             _tenantClient = tenantClient;
             _priceListWebClient = priceListWebClient;
             _productWebApiClient = productWebApiClient;
+            _productTypeWebApiClient = productTypeWebApiClient;
         }
 
         /// <summary>
@@ -218,14 +221,16 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
             var priceListEntry = Mapper.Map<PriceListEntry>(dcPriceListEntry);
             var lookup = (priceListEntry.Extras.IsNullOrEmpty())
                 ? new Dictionary<string, PriceListEntryExtra>()
-                : priceListEntry.Extras.ToDictionary(x => x.AttributeFQN); //+ "-" + x.AttributeCode
+                : priceListEntry.Extras.ToDictionary(x => x.AttributeFQN + "-" + x.Value ?? "");
 
             var productExtras = await GetProductExtrasInternalAsync(productCode,
-                (attrFqn, attrCode) => lookup.ContainsKey(attrFqn + attrCode)
-                    ? lookup[attrFqn + attrCode].OverridePrice
+                (attrFqn, attrValue) => lookup.ContainsKey(attrFqn + "-" + attrValue)
+                    ? lookup[attrFqn + "-" + attrValue].OverridePrice
                     : (decimal?) null);
 
             // todo: Add in existing override orphans - Greg Murray on 2016-04-04 
+            // sort by override price desc? 
+
 
             priceListEntry.Extras = productExtras;
             
@@ -273,11 +278,18 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
 
         private async Task<List<PriceListEntryExtra>> GetProductExtrasInternalAsync(string productCode, Func<string, string, decimal?> getOverridePrice)
         {
-            List<DC.ProductExtra> dcExtras;
+            DC.Product dcProduct;
             var result = new List<PriceListEntryExtra>();
+
+            string responseFields = "productCode,productTypeId,extras";
+                   //"price(price,salePrice)," +
+                   //"productInCatalogs(catalogId,price(price,salePrice))"
             try
             {
-                dcExtras = (await _productWebApiClient.GetExtras(productCode)).ReadAsSync();
+                dcProduct =
+                    (await
+                        _productWebApiClient.GetProduct(productCode, responseGroups: "Extras",
+                            responseFields: responseFields)).ReadAsSync();
             }
             catch (ApiWebClientException apiError)
             {
@@ -287,8 +299,18 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
                 }
                 throw;
             }
+            if (dcProduct.Extras.IsNullOrEmpty())
+            {
+                return result;
+            }
 
-            Func<DC.AttributeVocabularyValue, string> getStringValue = (vocabVal) =>
+            // get productType
+
+            DC.ProductType prodType = (await _productTypeWebApiClient.GetProductType(dcProduct.ProductTypeId, responseFields:"extras")).ReadAsSync();
+            var attrLookup = prodType.Extras.ToDictionary(x => x.AttributeFQN);
+
+
+            Func<DC.AttributeVocabularyValue, string> getDisplayValue = (vocabVal) =>
                 (vocabVal != null && vocabVal.Content != null)
                     ? vocabVal.Content.StringValue
                     : (vocabVal != null)
@@ -296,16 +318,15 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
                         : null
                 ;
 
-            var extras = dcExtras.Select(extra => extra.Values.Select(x => new PriceListEntryExtra
+            var extras = dcProduct.Extras.Select(extra => extra.Values.Select(x => new PriceListEntryExtra
             {
                 AttributeFQN = extra.AttributeFQN,
-                AttributeCode = x.AttributeVocabularyValueDetail != null
-                    ? x.AttributeVocabularyValueDetail.Value as string
-                    : null,
-                AttributeName = "TBD",
+                AttributeCode = attrLookup[extra.AttributeFQN].AttributeDetail.AttributeCode,
+                AttributeName = attrLookup[extra.AttributeFQN].AttributeDetail.AdminName,
                 CatalogPrice = x.DeltaPrice.DeltaPrice,
-                OverridePrice = getOverridePrice(extra.AttributeFQN, "TBD"),
-                DisplayValue = getStringValue(x.AttributeVocabularyValueDetail)
+                OverridePrice = getOverridePrice(extra.AttributeFQN, x.Value as string),
+                DisplayValue = getDisplayValue(x.AttributeVocabularyValueDetail),
+                Value = x.Value as string
             }));
 
             foreach (var extra in extras)
