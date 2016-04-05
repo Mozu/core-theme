@@ -32,7 +32,7 @@ Ext.define('Taco.model.PriceListEntryExtra', {
             name: 'stringValue',
             type: 'string'
         }, {
-            name: 'deltaPrice',
+            name: 'catalogPrice',
             type: 'float',
             useNull: true
         }, {
