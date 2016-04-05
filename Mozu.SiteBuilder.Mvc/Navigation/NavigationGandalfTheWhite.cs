@@ -44,6 +44,7 @@ namespace Mozu.SiteBuilder.Mvc.Navigation
         readonly bool _shouldRequestInactiveDocuments;
         readonly UrlHelper _urlHelper;
         ILifetimeScope _lifetimeScope;
+        private string _priceListCode;
 
         const string NAVIGATION_LIST_INTERNAL_CACHE_KEY = "navigation_list";
         const string NAVIGATION_TREE_CACHE_KEY = "navigation_tree";
@@ -71,6 +72,7 @@ namespace Mozu.SiteBuilder.Mvc.Navigation
             _customRouteHandler = customRouteHandler;
             _urlHelper = urlHelper;
             _lifetimeScope = lifetimeScope;
+            _priceListCode = apicontext.PriceListCode;
             _shouldRequestInactiveDocuments = pageContext.IsEditMode || (apicontext.UserClaims != null && apicontext.UserClaims.ScopeType.EqualsIgnoreCase(UserScopeType.Tenant.ToStringQuickly())); // if tenant admin or edit mode...
         }
 
@@ -104,8 +106,8 @@ namespace Mozu.SiteBuilder.Mvc.Navigation
                 return ProccessNavData(data);
             }
 
-
-            var cacheKey = GetCacheKey(data.Etag);
+           
+            var cacheKey = GetCacheKey(data.Etag, _priceListCode );
             var retVal = GetFromCache(cacheKey);
 
             if (retVal != null)
@@ -137,19 +139,14 @@ namespace Mozu.SiteBuilder.Mvc.Navigation
         
 
 
-        private static string GetCacheKey(string etag)
+        private static string GetCacheKey(string etag, string priceListCode)
         {
-            return string.Intern(NAVIGATION_LIST_INTERNAL_CACHE_KEY + etag);
+            return string.Intern(NAVIGATION_LIST_INTERNAL_CACHE_KEY  + etag);
         }
 
         private SuperNavigationNodeList GetFromCache(string cachekey)
         {
-            if (  _cache != null)
-            {
-                return _cache.Get<SuperNavigationNodeList>(cachekey, CacheScope.Site);
-            }
-            return null;
-
+            return _cache?.Get<SuperNavigationNodeList>(cachekey, CacheScope.Site);
         }
 
         private class SuperNavigationNodeList : List<SuperNavigationNode>
@@ -219,7 +216,7 @@ namespace Mozu.SiteBuilder.Mvc.Navigation
             string etag = CompositeETag(categoryTree.ETag, navData.PagesEtag, navData.Etag);
 
 
-            var cacheKey = GetCacheKey(etag);
+            var cacheKey = GetCacheKey(etag, _priceListCode);
 
 
 
