@@ -2592,6 +2592,20 @@
     <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
   </PropertyGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
+  <Choose>
+    <When Condition="$(TargetFrameworkIdentifier) == '.NETFramework' And ($(TargetFrameworkVersion) == 'v4.5' Or $(TargetFrameworkVersion) == 'v4.5.1')">
+      <PropertyGroup>
+        <__paket__OctoPack_targets>OctoPack</__paket__OctoPack_targets>
+      </PropertyGroup>
+    </When>
+  </Choose>
+  <Choose>
+    <When Condition="$(TargetFrameworkIdentifier) == '.NETFramework' And ($(TargetFrameworkVersion) == 'v4.5' Or $(TargetFrameworkVersion) == 'v4.5.1')">
+      <PropertyGroup>
+        <__paket__ClearScript_Installer_targets>ClearScript.Installer</__paket__ClearScript_Installer_targets>
+      </PropertyGroup>
+    </When>
+  </Choose>
   <Import Project="$(VSToolsPath)\WebApplications\Microsoft.WebApplication.targets" Condition="'$(VSToolsPath)' != ''" />
   <Import Project="$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v10.0\WebApplications\Microsoft.WebApplication.targets" Condition="false" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it.
@@ -2719,13 +2733,6 @@
           <Paket>True</Paket>
         </Reference>
       </ItemGroup>
-    </When>
-  </Choose>
-  <Choose>
-    <When Condition="$(TargetFrameworkIdentifier) == '.NETFramework' And ($(TargetFrameworkVersion) == 'v4.5' Or $(TargetFrameworkVersion) == 'v4.5.1')">
-      <PropertyGroup>
-        <__paket__ClearScript_Installer_targets>ClearScript.Installer</__paket__ClearScript_Installer_targets>
-      </PropertyGroup>
     </When>
   </Choose>
   <Choose>
@@ -3327,13 +3334,6 @@
           <Paket>True</Paket>
         </Reference>
       </ItemGroup>
-    </When>
-  </Choose>
-  <Choose>
-    <When Condition="$(TargetFrameworkIdentifier) == '.NETFramework' And ($(TargetFrameworkVersion) == 'v4.5' Or $(TargetFrameworkVersion) == 'v4.5.1')">
-      <PropertyGroup>
-        <__paket__OctoPack_targets>OctoPack</__paket__OctoPack_targets>
-      </PropertyGroup>
     </When>
   </Choose>
   <Choose>
