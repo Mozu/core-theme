@@ -124,6 +124,7 @@
   "forgotPasswordLink"   : "forgot password?",
   "resetPassword"        : "Reset Password",
   "resetEmailSent"       : "You should receive an email with instructions to reset your password shortly.",
+  "resetPasswordError"      : "Sorry, we cannot find this email address.",
   "resetPasswordDone"    : "Your new password has been set. Please login.",
   "unexpectedError"      : "Sorry, an unexpected error occurred. Please refresh the page and try again, or contact Support.",
   "navMore"              : "More...",

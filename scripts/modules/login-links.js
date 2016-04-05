@@ -223,13 +223,21 @@ define(['shim!vendor/bootstrap/js/popover[shim!vendor/bootstrap/js/tooltip[modul
             this.setLoading(true);
             api.action('customer', 'resetPasswordStorefront', {
                 EmailAddress: this.$parent.find('[data-mz-forgotpassword-email]').val()
-            }).then(_.bind(this.displayResetPasswordMessage,this), this.displayApiMessage);
+            }).then(_.bind(this.displayResetPasswordMessage,this), _.bind(this.displayErrorMessage,this));
         },
         handleLoginComplete: function () {
             window.location.reload();
         },
         displayResetPasswordMessage: function () {
             this.displayMessage(Hypr.getLabel('resetEmailSent'));
+        },
+        displayErrorMessage: function (xhr) {
+            if(xhr.errorCode.toLowerCase() === 'item_not_found') {
+                this.displayMessage(Hypr.getLabel('resetPasswordError'));
+            }
+            else {
+                this.displayApiMessage(xhr);
+            }
         }
     });
 

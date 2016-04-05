@@ -113,6 +113,7 @@
     "pleaseSelect"   : "Bitte wählen",
     "forgotPasswordLink"   : "Passwort vergessen?",
     "resetPassword"   : "Passwort zurücksetzen",
+    "resetPasswordError": "Leider können wir nicht diese E-Mail-Adresse finden",
     "resetEmailSent"   : "Sie sollten eine E-Mail mit Anweisungen erhalten, um Ihr Passwort zurückzusetzen kurz.",
     "resetPasswordDone"   : "Ihr neues Passwort gesetzt wurde. Bitte loggen Sie sich ein.",
     "unexpectedError"   : "Leider ist ein unerwarteter Fehler aufgetreten. Bitte aktualisieren Sie die Seite und versuchen Sie es erneut, oder kontaktieren Sie den Support.",
