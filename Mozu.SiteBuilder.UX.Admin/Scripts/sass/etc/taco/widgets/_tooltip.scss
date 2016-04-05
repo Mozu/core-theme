@@ -82,6 +82,10 @@
 				&.shown {
 					transform: translateX(7px);
 				}
+
+				&:hover {
+					transform: translateX(7px);
+				}
 			}
 
 			&.left {
@@ -96,6 +100,10 @@
 				}
 
 				&.shown {
+					transform: translateX(-7px);
+				}
+
+				&:hover {
 					transform: translateX(-7px);
 				}
 			}
