@@ -119,18 +119,11 @@ Ext.define('Taco.view.theme.Index', {
 
     	this.callParent(arguments);
 
-    },
 
-    buildAppliedView: function() {
-        this.appliedStore = Ext.create('Taco.store.ThemeListingsApplied');
+        if (!me.store.loading && typeof me.store.load === 'function') {
+            me.store.load();
+        }
 
-        this.appliedStore.load();
-
-        this.appliedView = Ext.create('Taco.view.theme.ThemeView', {
-            store: this.appliedStore,
-            margin: '5 0 0 0',
-            width: 318
-        });
     },
 
     getMenuItems: function() {

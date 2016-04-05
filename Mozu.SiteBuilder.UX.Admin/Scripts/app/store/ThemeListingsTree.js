@@ -8,8 +8,9 @@ Ext.define('Taco.store.ThemeListingsTree', {
     model: 'Taco.model.ThemeListing',
     requires: ['Taco.model.ThemeListing'],
     root: {
-     //   expanded: true,
-        isLoaded: false,
-       // id:-1
+        isLoaded: false
     },
+    storeManagerConfig: {
+
+    }
 });
