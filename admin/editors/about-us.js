@@ -10,7 +10,8 @@
         {
             fieldLabel: 'blurb',
             xtype: 'taco-htmleditor',
-            name: 'blurb'
+            name: 'blurb',
+            enableFont: false
         }
     ]
 });
