@@ -392,7 +392,7 @@ Ext.define('Taco.view.priceList.entry.PriceEntryPrice', {
         if (!record || record.get('isVariation') || record.get('productCode') === '') {
             me.tabs.remove(me.extrasPanel, false)
         } else {
-            var exists = me.tabs.items.find(function(item) { return item.itemId === me.extrasPanel.itemId })
+            var exists = Ext.Array.some(me.tabs.items.items, function(item) { return item.itemId === me.extrasPanel.itemId });
             if (!exists) {
                 me.tabs.add(me.extrasPanel);
             }
