@@ -6,7 +6,8 @@
          {
              fieldLabel: 'content',
              xtype: 'taco-htmleditor',
-             name: 'content'
+             name: 'content',
+            enableFont: false
          }
     ]
 });
