@@ -308,25 +308,44 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
             // get productType
 
             DC.ProductType prodType = (await _productTypeWebApiClient.GetProductType(dcProduct.ProductTypeId, responseFields:"extras")).ReadAsSync();
-            var attrLookup = prodType.Extras.ToDictionary(x => x.AttributeFQN);
-
-
-            Func<DC.AttributeVocabularyValue, string> getDisplayValue = (vocabVal) =>
-                (vocabVal != null && vocabVal.Content != null)
-                    ? vocabVal.Content.StringValue
-                    : (vocabVal != null)
-                        ? vocabVal.Value as string
-                        : null
-                ;
+            var attrLookup = new Dictionary<string, PriceListEntryExtra>();
+            foreach (var extra in prodType.Extras)
+            {
+                if (extra.VocabularyValues.IsNullOrEmpty())
+                {
+                    attrLookup.Add(extra.AttributeFQN + "-", new PriceListEntryExtra
+                    {
+                        AttributeFQN = extra.AttributeFQN,
+                        AttributeCode = extra.AttributeDetail.AttributeCode,
+                        AttributeName = extra.AttributeDetail.AdminName,
+                        Value = "",
+                        DisplayValue = extra.AttributeDetail.Content.Name
+                    });
+                    continue;
+                }
+                foreach (var vocabValue in extra.VocabularyValues)
+                {
+                    attrLookup.Add(extra.AttributeFQN + "-" + vocabValue.Value ?? "", new PriceListEntryExtra
+                    {
+                       AttributeFQN = extra.AttributeFQN,
+                       AttributeCode = extra.AttributeDetail.AttributeCode,
+                       AttributeName = extra.AttributeDetail.AdminName,
+                       Value = vocabValue.Value as string,
+                       DisplayValue = (vocabValue.VocabularyValueDetail !=null && vocabValue.VocabularyValueDetail.Content != null)
+                        ? vocabValue.VocabularyValueDetail.Content.StringValue
+                        : vocabValue.Value as string
+                    } );
+                }
+            }
 
             var extras = dcProduct.Extras.Select(extra => extra.Values.Select(x => new PriceListEntryExtra
             {
                 AttributeFQN = extra.AttributeFQN,
-                AttributeCode = attrLookup[extra.AttributeFQN].AttributeDetail.AttributeCode,
-                AttributeName = attrLookup[extra.AttributeFQN].AttributeDetail.AdminName,
+                AttributeCode = attrLookup[extra.AttributeFQN + "-" + x.Value].AttributeCode,
+                AttributeName = attrLookup[extra.AttributeFQN + "-" + x.Value].AttributeName,
                 CatalogPrice = x.DeltaPrice.DeltaPrice,
-                OverridePrice = getOverridePrice(extra.AttributeFQN, x.Value as string),
-                DisplayValue = getDisplayValue(x.AttributeVocabularyValueDetail),
+                OverridePrice = getOverridePrice(extra.AttributeFQN, (x.Value as string) ?? ""),
+                DisplayValue = attrLookup[extra.AttributeFQN + "-" + x.Value].DisplayValue,
                 Value = x.Value as string
             }));
 
