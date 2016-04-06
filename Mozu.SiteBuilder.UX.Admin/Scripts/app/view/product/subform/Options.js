@@ -11,19 +11,50 @@ Ext.define('Taco.view.product.subform.Options', {
         'Taco.view.product.variant.Options'],
 
     title: 'Options',
+    pricingModeChanged: false,
 
     cls:"taco-product-subform-option",
 
     initComponent: function () {
+
+        var me = this;
         
         this.record = this.product;
+
+        this.pricingMode = Ext.widget('combobox', {
+            xtype: 'combobox',
+            name: 'variationPricingMethod',
+            labelAlign: 'left',
+            fieldLabel: 'Pricing Mode',
+            forceSelection: true,
+            editable: false,
+            autoSelect: true,
+            displayField: 'text',
+            originalValue: this.record.get('variationPricingMethod'),
+            valueField: 'value',
+            store: Ext.create('Ext.data.Store', {
+                fields: ['text', 'value'],
+                data : [
+                    {'text':'Relative', 'value':'Delta'},
+                    {'text':'Explicit', 'value':'Fixed'}
+                ]
+            }),
+            listeners: {
+                change: {
+                    fn: function(cmp, newVal) {
+                        this.pricingModeChanged = (newVal != cmp.originalValue);
+                    },
+                    scope: this
+                }
+            }
+        });
 
         this.items = [{
             xtype: 'component',
                 flex:1,
                 itemId: 'list',
                 html: ''
-            }, {
+            }, this.pricingMode, {
                 xtype: 'button',
                 text: 'Select Values',
                 scale: 'medium',
@@ -79,10 +110,13 @@ Ext.define('Taco.view.product.subform.Options', {
     },
 
     editVariants: function () {
+        var me = this;
 
         Ext.create('Taco.view.product.variant.Modal', {
             product: this.product,
             productType: this.productType,
+            pricingMode: this.pricingMode.getValue(),
+            pricingModeChanged: me.pricingModeChanged,
             listeners: {
                 aftersaveclose : this.onVariantChange,
                 close: function () {

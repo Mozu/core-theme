@@ -1,6 +1,7 @@
 #adding content none to top to stop pre deploy edits from being overwritten by paket install.
 content: none
 framework: net45, net451
+redirects: on
 source http://nuget-internal.corp.volusion.com:8200/api/odata
 source http://nuget-external.corp.volusion.com:8201/api/odata
 
@@ -11,8 +12,8 @@ nuget Microsoft.AspNet.WebApi.Core 5.2.3
 nuget Microsoft.AspNet.WebPages 3.2.2 
 nuget Microsoft.AspNet.Mvc 5.2.2 
 
-nuget ClearScript.Installer 
-nuget Mozu.Core.Prime > 1.18
+
+nuget Mozu.Core.Prime 1.1605.4-f1603121837session
 nuget Mozu.ScheduledEvent.Contracts
 nuget Mozu.VS.PowerShell
 nuget OctoPack 2.1.3
@@ -29,7 +30,7 @@ nuget morelinq 1.0.16006
 nuget Mozu.AdminUser.Contracts < 1.20
 nuget Mozu.AppDev.Contracts < 1.20
 nuget Mozu.BuildSupport.GetAssemblyFileVersionTask 1.0.0 
-nuget Mozu.CommerceRuntime.Contracts < 1.20
+nuget Mozu.CommerceRuntime.Contracts prerelease
 nuget mozu.Content.Contracts < 1.20 
 nuget Mozu.Core.Messaging < 1.20
 nuget Mozu.Core.Messaging.Contracts 1.19.2
@@ -40,8 +41,8 @@ nuget Mozu.Hypr.NDjango
 nuget Mozu.InstalledApps.Contracts < 1.20
 nuget Mozu.Location.Contracts < 1.20
 nuget Mozu.MZDB.Contracts < 1.20
-nuget Mozu.ProductAdmin.Contracts prerelease
-nuget Mozu.ProductRuntime.Contracts prerelease
+nuget Mozu.ProductAdmin.Contracts > 1.20 prerelease
+nuget Mozu.ProductRuntime.Contracts > 1.20 prerelease
 nuget Mozu.Provisioning.Contracts < 1.20
 nuget Mozu.Reference.Contracts < 1.20
 nuget Mozu.ShippingAdmin.Contracts < 1.20

@@ -37,6 +37,8 @@
  * @requires Taco.controller.Discounts
  * @requires Taco.controller.CouponSets 
  * @requires Taco.controller.ProductRankings
+ * @requires Taco.controller.PriceLists
+ * @requires Taco.controller.PriceListEntries
  * @requires Taco.controller.StoreFrontProducts
  * @requires Taco.controller.Settings
  

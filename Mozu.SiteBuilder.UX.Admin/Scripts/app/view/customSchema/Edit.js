@@ -210,6 +210,7 @@ Ext.define('Taco.view.customSchema.Edit', {
     },
 
     doCreate: function() {
+
     },
 
     showMessage: function(msg) {

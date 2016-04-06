@@ -9,6 +9,7 @@ using Mozu.CommerceRuntime.Contracts.Clients;
 using Mozu.CommerceRuntime.Contracts.Commerce;
 using Mozu.CommerceRuntime.Contracts.Fulfillment;
 using Mozu.CommerceRuntime.Contracts.Orders;
+using Mozu.CommerceRuntime.Contracts.Products;
 using Mozu.Core.Api.Client;
 using Mozu.Core.Settings;
 using Mozu.Customer.Contracts;
@@ -27,6 +28,8 @@ using Newtonsoft.Json.Serialization;
 using Mozu.SiteBuilder.Mvc.Extensions;
 using Mozu.SiteBuilder.UX.Filters;
 using Mozu.Core.Actions;
+using Mozu.Core.Api.Contracts.Client;
+using Mozu.Core.Extensions;
 using Mozu.SiteBuilder.Mvc.OAF;
 
 namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
@@ -181,19 +184,53 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
             var shipStateTask = GetUSShippingStates();
             var billStateTask = GetUSBillingStates();
 
-            var orderTask = _orderWebApiClient.GetOrder(id);
+            var orderTask = this.PageContext.User.IsAnonymous
+                ? _orderWebApiClient.GetOrder(id)
+                : _orderWebApiClient.ChangeOrderUserId(id);
             await Task.WhenAll(shipTask, billTask, orderTask, shipStateTask, billStateTask);
 
             try
             {
                 model = orderTask.Result.ReadAsAsync().Result;
-
             }
             catch
             {
             }
             if (model == null) return Redirect("/cart");
             if (CompletedOrderStates.Contains(model.Status)) return Redirect("/checkout/" + model.Id + "/confirmation");
+
+            Func<Product, string> getProductCode = x => !string.IsNullOrEmpty(x.VariationProductCode) ? x.VariationProductCode : x.ProductCode;
+            var priceListChanged = !this.SbApiContext.PriceListCode.EqualsIgnoreCase(model.PriceListCode);
+            List<Product> productsRemoved = null;
+
+            // TODO: Is this the right context (out of like 9) to check for PriceListCode?
+            // TODO: Null checks needed between these two values?
+            if (priceListChanged)
+            {
+                var updateResponse = await _orderWebApiClient.ChangeOrderPriceList(model.Id, null);
+                if (updateResponse.HasException)
+                {
+                    // TODO: Display an error message.
+                }
+                else
+                {
+                    var newModel = updateResponse.ReadAsSync();
+
+                    // See if any items were dropped due to changing to an exclusive price list.
+                    if (model.Items.Count != newModel.Items.Count)
+                    {
+                        var newProductCodes = newModel.Items.Select(x => x.Product).Select(getProductCode).ToList();
+                        var uniqueProducts = model.Items // Previous order items
+                            .Select(x => x.Product)      // Get products
+                            .GroupBy(getProductCode)     // Group by product code
+                            .ToEnumerable()              // Simplify IGrouping to IEnumerable
+                            .SelectMany(x => x.First()); // Grab first product from each group
+                        productsRemoved = uniqueProducts.Where(x => !newProductCodes.Contains(getProductCode(x))).ToList();
+                    }
+                    model = newModel;
+                }
+            }
+
             bool addedPrimaryShippingContactToOrderJustNow = false;
 
             // dynamic dOrder = jOrder;
@@ -252,6 +289,16 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
             var jSerializer = new JsonSerializer() { ContractResolver = new CamelCasePropertyNamesContractResolver() };
             var jOrder = model.ToJObject();
 
+            if (priceListChanged)
+            {
+                // TODO: These "magic strings" should be constants somewhere. They're currently used in the hypr message-bar template.
+                var message = productsRemoved != null
+                    ? "Please note, items not available for purchase have been removed."
+                    : "You are now eligible for special pricing.";
+                var messageType = productsRemoved != null ? "exclusivePricelist" : "newPricelist";
+                jOrder.Add("messages", new JArray(new { message, messageType, productsRemoved }.ToJObject()));
+            }
+
             var isFulfillmentInfoRequired = model.Items.Exists(
                     x => x.FulfillmentMethod == Mozu.CommerceRuntime.Contracts.Commerce.FulfillmentMethodConst.SHIP);
 
@@ -307,7 +354,7 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
         {
             public string apiBase { get; set; }
         }
-        
+
         [SbActionExtensionFilter(actionId: ActionFilterConstants.OrderConfirmationBeforeAction, executionType: ActionExtensionExecutionTypes.BeforeController)]
         [SbActionExtensionFilter(actionId: ActionFilterConstants.OrderConfirmationAfterAction, executionType: ActionExtensionExecutionTypes.AfterController)]
         [System.Web.Http.HttpGet]

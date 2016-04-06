@@ -105,8 +105,22 @@ Ext.define('Taco.model.OrderItem', {
             "type": "float",
             "useNull": true
         },
-        
 
+        // Pricelist entry mode of the product.
+        // Note: possible values are below
+        // 1. null : Product doesn't participate in pricelist
+        // 2. Bulk : Bulk volume price available(unit price vary based on quantity)
+        // 3. Simple: 
+        {
+            "name": "priceListEntryMode",
+            "type": "string",
+            "useNull": true
+        },
+        {
+            "name": "priceListCode",
+            "type": "string",
+            "useNull": true
+        },
         
         
         {

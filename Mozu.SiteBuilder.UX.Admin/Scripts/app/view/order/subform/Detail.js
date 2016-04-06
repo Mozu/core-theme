@@ -8,6 +8,8 @@ Ext.define('Taco.view.order.subform.Detail', {
     extend: 'Taco.view.order.subform.Subform',
     requires: [
         'Taco.model.OrderItemDiscount',
+        'Taco.store.PriceLists',
+        'Taco.store.RuntimePriceLists',
         'Taco.view.order.widget.OrderTotalPanel',
         'Taco.view.order.widget.OrderItemGrid',
         'Taco.view.order.modal.EditOrderDetail',
@@ -17,7 +19,7 @@ Ext.define('Taco.view.order.subform.Detail', {
     ],
     alias: 'widget.taco-orderdetail',
     itemId: 'orderDetailPanel',
-    title: 'Order Details',    
+    title: 'Order Details',
     headerToolbar: true,
 
     bodyPadding: '0 0 0 0 ',
@@ -26,42 +28,111 @@ Ext.define('Taco.view.order.subform.Detail', {
 
         // order model
         record: null,
-        
+
         // determines whether the detailGrid allows field editing
-        editMode: false,       
-        
-        
+        editMode: false,
+
+
         totalColumnWidth: 100,
 
         // width of the row total Column. used to align the grid total container
         rowTotalColumnWidth: 100,
-        
-        itemId:"orderDetails"
-        
+
+        itemId: "orderDetails"
+
     },
 
-    
 
-    // width of the actionColumn. used to align the grid total container
+// width of the actionColumn. used to align the grid total container
     actionColumnWidth: 30,
 
-    initComponent: function (eOpts) {
-        var me = this,
-            orderItemStore;
-        
-        // after the record is reloaded we will need to refresh the ui
+    priceListStore: null,
+    priceListName: '',
 
-        me.mon(me.record, "aftercommit", function () {            
+    initComponent: function(eOpts) {
+        var me = this;
+
+        this.titleTemplate = new Ext.XTemplate(
+            'Order Details<tpl if="priceListAvail"> | {priceListName} Pricing</tpl>'
+        );
+
+        // Create the PriceListStore.
+        this.priceListStore = Taco.core.data.StoreManager.getOrCreate({
+            type: 'Taco.store.RuntimePriceLists',
+            createOnly: true,
+            autoLoad: false,
+            clearFilters: true,
+            remoteFilter: false,
+            filterOnLoad: true,
+            clearSort: false,
+            remoteSort: false,
+            sorters: [{ property: 'name' }]
+        });
+        this.priceListStore.load(
+            {
+                callback: function(records, operation, success) {
+                    // Add a "None" option to the top to clear the price list.
+                    me.priceListStore.insert(0,
+                        Ext.create(me.priceListStore.model,
+                        {
+                            name: 'None',
+                            code: '',
+                            filteredInStorefront: false,
+                            isSiteDefault: false
+                        }));
+
+                    // Hacky crap to grab an inactive price list from ProductAdmin, then convert it to a "runtime" pricelist.
+                    var currentCode = me.record.get('priceListCode');
+                    if (currentCode) {
+                        var foundRecord = me.priceListStore.findRecord('code', me.record.get('priceListCode'), 0, false, false, true);
+                        if (!foundRecord) {
+                            var adminPriceListStore = Taco.core.data.StoreManager.getOrCreate({
+                                type: 'Taco.store.PriceLists',
+                                autoLoad: false
+                            });
+                            adminPriceListStore.load({
+                                params: {
+                                    id: currentCode
+                                },
+                                callback: function(records, operation, success) {
+                                    if (!success) return;
+
+                                    var adminRecord = records[0];
+                                    me.priceListStore.add(
+                                        Ext.create(me.priceListStore.model, {
+                                            name: adminRecord.get('name'),
+                                            code: adminRecord.get('code'),
+                                            filteredInStorefront: adminRecord.get('filteredInStorefront'),
+                                            isSiteDefault: adminRecord.get('defaultForSites').indexOf(me.record.get('siteId')) > 0 ? true : false,
+                                            isActive: false
+                                        })
+                                    );
+                                    me.retrievePricelistName(me.priceListStore);
+                                    me.setTitle(me.constructTitle());
+                                }
+                            });
+                        }
+                    }
+
+                    me.retrievePricelistName(me.priceListStore);
+                    me.setTitle(me.constructTitle());
+                },
+                scope: this
+            }
+        );
+
+        // after the record is reloaded we will need to refresh the ui
+        me.mon(me.record, "aftercommit", function() {
             me.onRecordChange();
         }, me);
-        
+
         //me.tools = me.getButtonActions();
-        
+
         // var siteContext = Taco.app.context.getCurrent().urlToken;
 
         this.cls += ' ' + Taco.baseCSSPrefix + 'orderform-detail';
-        
-        
+
+
         // Sort this store by LineId first!
         this.record.itemsStore.sort({
             sorterFn: function(a, b) {
@@ -73,30 +144,30 @@ Ext.define('Taco.view.order.subform.Detail', {
         });
 
         // store that contains the orderItems for this order model
-        orderItemStore = this.record.itemsStore;
-        
+        var orderItemStore = this.record.itemsStore;
+
         // plugin to add suppourt to the grid for editing the price and quantity columns
         var cellEditing = Ext.create('Ext.grid.plugin.CellEditing', {
             clicksToEdit: 1
         });
-        
+
         // readonly list of products and discounts;
         me.detailGrid = Ext.create('Taco.view.order.widget.OrderItemGrid', {
             editMode: this.getEditMode(),
-            record : this.record,
+            record: this.record,
             store: orderItemStore,
             actionColumnWidth: me.actionColumnWidth,
             autoHeight: true,
             listeners: {
                 'draftOrderRemoved': {
-                    fn: function (data) {
+                    fn: function(data) {
                         me.detailGrid.removeDocked(me.detailGrid.hasDraftToolbar, true);
                         me.detailGrid.hasDraftToolbar = null;
                     },
                     scope: me
                 },
                 'orderAccepted': {
-                    fn: function () {
+                    fn: function() {
                         me.record.reload();
                     },
                 },
@@ -104,12 +175,12 @@ Ext.define('Taco.view.order.subform.Detail', {
                     fn: function() {
                         me.record.reload();
                     },
-                    scope:me
+                    scope: me
                 }
             }
         });
-        
-        
+
+
         // subtotals, orderlevel discounts, tax shipping, and totals
         this.totalRow = Ext.create('Taco.view.order.widget.OrderTotalPanel', {
             margin: '0 0 20 0',
@@ -118,7 +189,7 @@ Ext.define('Taco.view.order.subform.Detail', {
             totalColumnWidth: me.getRowTotalColumnWidth(),
             actionColumnWidth: me.actionColumnWidth
         });
-        
+
         // customer notes class
         this.customerNoteRow = Ext.create('Ext.panel.Panel', {
             //cls: "orderform-detail-customerNotesRow",
@@ -135,19 +206,19 @@ Ext.define('Taco.view.order.subform.Detail', {
                     '</tpl>',
                 '</div>'
             ],
-            data:this.record.getData()
+            data: this.record.getData()
         });
 
-        me.internalNoteRow = Ext.create('Taco.view.order.subform.InternalNotes', {            
+        me.internalNoteRow = Ext.create('Taco.view.order.subform.InternalNotes', {
             record: this.record,
             orderForm: this
         });
-        
+
         this.orderAttrGrid = Ext.create('Taco.view.order.subform.Attributes', {
             ui: "subform-section",
             headerToolbar: true,
             attributeDefinitionStore: Taco.core.data.StoreManager.getOrCreate({
-                type: 'Taco.store.OrderAttributes'                
+                type: 'Taco.store.OrderAttributes'
             }),
             record: this.record,
             orderForm: this
@@ -156,39 +227,51 @@ Ext.define('Taco.view.order.subform.Detail', {
         //todo refactor attributes to encapsolate this form; and to make the dialog auto destroy;
         this.orderAttr = Ext.create('Taco.shared.view.form.ExtensibleAttribute', {
             title: 'Attributes',
-            header:false,
+            header: false,
             record: this.record,
             ui: "form",
             attributeDefinitionStore: Taco.core.data.StoreManager.getOrCreate('Taco.store.OrderAttributes')
         });
-        
+
         Ext.apply(this, {
-                items: [{
+            items: [
+                {
                     xtype: "panel",
                     ui: "subform-section",
                     headerToolbar: true,
                     tools: me.getButtonActions(),
-                    title:"Items Ordered",
-                    items:[
+                    title: "Items Ordered",
+                    items: [
                         me.detailGrid,
-                        this.totalRow                        
+                        this.totalRow
                     ]
                 },
-                
                 this.orderAttrGrid,
-
                 this.customerNoteRow,
-
                 this.internalNoteRow
-
-
             ]
         });
 
         this.callParent(arguments);
     },
-        
-    
+
+    constructTitle: function () {
+        var me = this;
+        return this.titleTemplate.apply({
+            orderNumber: me.record ? me.record.get('orderNumber') : '<New>',
+            priceListAvail: me.record && me.record.get('priceListCode').length > 0 ? true : false,
+            priceListName: me.priceListName && me.priceListName.length > 0 ? me.priceListName : me.record.get('priceListCode')
+        });
+    },
+
+    retrievePricelistName: function (store) {
+        var me = this;
+        // This searches the store and finds an exact match!
+        var foundRecord = store.findRecord('code', me.record.get('priceListCode'), 0, false, false, true);
+        if (foundRecord) {
+            me.priceListName = foundRecord.get('name');
+        }
+    },
     
     editOrder: function (focusAfterCloseCmp) {
         var me = this,
@@ -198,8 +281,10 @@ Ext.define('Taco.view.order.subform.Detail', {
         win = Ext.create('Taco.view.order.modal.EditOrderDetail', {
             // if we want to edit a draft only, pass recordId.
             // otherwise, pass the record.
-            isDraftMode: isDraft, 
+            isDraftMode: isDraft,
             record: isDraft ? null : me.record,
+            priceListStore: me.priceListStore,
+            priceListName: me.priceListName,
             recordId: isDraft ? me.record.getId() : null,
 
             listeners: {
@@ -276,7 +361,10 @@ Ext.define('Taco.view.order.subform.Detail', {
     onRecordChange: function () {
         var me = this;
         Ext.suspendLayouts();
-        // need to reload the record;
+        // Update the title:
+        me.retrievePricelistName(this.priceListStore);
+        me.setTitle(me.constructTitle());
+        // Record is reloaded, need to update the ui.
         me.updateUi();
         Ext.resumeLayouts(true);        
         me.setLoading(false, this.body);
@@ -339,8 +427,8 @@ Ext.define('Taco.view.order.subform.Detail', {
     updateUi: function () {
         var me = this;        
         me.totalRow.setRecord(me.record);
-        
-        me.customerNoteRow.update(me.record.data)
+
+        me.customerNoteRow.update(me.record.data);
         
 
         // todo: update the internalNotes

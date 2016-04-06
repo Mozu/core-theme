@@ -1,13 +1,10 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
+﻿using System.Collections.Generic;
 using System.Runtime.Serialization;
-using System.Text;
-using System.Threading.Tasks;
+using Mozu.Core.Money;
 
 namespace Mozu.SiteBuilder.UX.Models.Admin
 {
-    [DataContract ]
+    [DataContract]
     public class TaContext
     {
         [DataMember(Name = "id")]
@@ -19,9 +16,8 @@ namespace Mozu.SiteBuilder.UX.Models.Admin
         [DataMember(Name = "masterCatalogs")]
         public List<MasterCatalog> MasterCatalogs { get; set; }
 
-
         [DataMember(Name = "currencies")]
-        public Dictionary<string, Mozu.Core.Money.Currency> Currencies { get; set; }
+        public Dictionary<string, Currency> Currencies { get; set; }
 
         [DataMember(Name = "contentPublishingEnabled")]
         public bool? ContentPublishingEnabled { get; set; }
@@ -54,15 +50,15 @@ namespace Mozu.SiteBuilder.UX.Models.Admin
         [DataMember(Name = "currencyCode")]
         public string Currency { get; set; }
 
-         [DataMember(Name = "contentPublishingEnabled")]
+        [DataMember(Name = "contentPublishingEnabled")]
         public bool? ContentPublishingEnabled { get; set; }
 
         /// <summary>
-        /// If the publishingMode is Pending and LiveEditsEnabled = true, DataViewMode live can be passed in the header and live products can be directly edited. 
+        ///     If the publishingMode is Pending and LiveEditsEnabled = true, DataViewMode live can be passed in the header and
+        ///     live products can be directly edited.
         /// </summary>
         [DataMember(EmitDefaultValue = false)]
         public bool? EnableLiveEdit { get; set; }
-
     }
 
 
@@ -78,15 +74,16 @@ namespace Mozu.SiteBuilder.UX.Models.Admin
         [DataMember(Name = "localeCode")]
         public string Locale { get; set; }
 
-
         [DataMember(Name = "currencyCode")]
         public string Currency { get; set; }
 
         [DataMember(Name = "contentPublishingEnabled")]
         public bool? ContentPublishingEnabled { get; set; }
 
-
+        [DataMember(Name = "masterCatalogId")]
+        public int MasterCatalogId { get; set; }
     }
+
     [DataContract]
     public class TaContextSite
     {
@@ -105,29 +102,19 @@ namespace Mozu.SiteBuilder.UX.Models.Admin
         [DataMember(Name = "contentPublishingEnabled")]
         public bool? ContentPublishingEnabled { get; set; }
 
-
-
-
-
         [DataMember(Name = "masterCatalogId")]
         public int? MasterCatalogId { get; set; }
-         [DataMember(Name = "catalogId")]
+
+        [DataMember(Name = "catalogId")]
         public int? CatalogId { get; set; }
 
-         [DataMember(Name = "isMozuRendered")]
-         public bool IsMozuRendered { get; set; }
-
-
-         [DataMember(Name = "localeCode")]
-         public string Locale { get; set; }
-
-
-         [DataMember(Name = "currencyCode")]
-         public string Currency { get; set; }
-
-      
-
-
+        [DataMember(Name = "isMozuRendered")]
+        public bool IsMozuRendered { get; set; }
         
+        [DataMember(Name = "localeCode")]
+        public string Locale { get; set; }
+
+        [DataMember(Name = "currencyCode")]
+        public string Currency { get; set; }
     }
 }

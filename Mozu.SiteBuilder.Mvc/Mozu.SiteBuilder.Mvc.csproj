@@ -217,8 +217,10 @@
     <Compile Include="Extensions\HttpRouteValueDictionaryExtensions.cs" />
     <Compile Include="Extensions\StringExtensions.cs" />
     <Compile Include="Extensions\UserClaimsExtensions.cs" />
+    <Compile Include="Handler\PriceListResolutionHandler.cs" />
     <Compile Include="Helpers\LoginAppRouteHelper.cs" />
     <Compile Include="Helpers\UrlHelper.cs" />
+    <Compile Include="MessageHandler\SessionHandler.cs" />
     <Compile Include="MessageHandler\SiteBuilderRouteDataInitilizer.cs" />
     <Compile Include="OAF\ArcJsHttpMessageHandler.cs" />
     <Compile Include="OAF\SbActionExtensionFilter.cs" />
@@ -408,6 +410,13 @@
     </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <Choose>
+    <When Condition="$(TargetFrameworkIdentifier) == '.NETFramework' And ($(TargetFrameworkVersion) == 'v4.5' Or $(TargetFrameworkVersion) == 'v4.5.1')">
+      <PropertyGroup>
+        <__paket__ClearScript_Installer_targets>ClearScript.Installer</__paket__ClearScript_Installer_targets>
+      </PropertyGroup>
+    </When>
+  </Choose>
   <PropertyGroup>
     <PostBuildEvent>
     </PostBuildEvent>
@@ -493,13 +502,6 @@
           <Paket>True</Paket>
         </Reference>
       </ItemGroup>
-    </When>
-  </Choose>
-  <Choose>
-    <When Condition="$(TargetFrameworkIdentifier) == '.NETFramework' And ($(TargetFrameworkVersion) == 'v4.5' Or $(TargetFrameworkVersion) == 'v4.5.1')">
-      <PropertyGroup>
-        <__paket__ClearScript_Installer_targets>ClearScript.Installer</__paket__ClearScript_Installer_targets>
-      </PropertyGroup>
     </When>
   </Choose>
   <Choose>
@@ -775,15 +777,10 @@
     </When>
   </Choose>
   <Choose>
-    <When Condition="$(TargetFrameworkIdentifier) == '.NETFramework' And $(TargetFrameworkVersion) == 'v4.5.1'">
+    <When Condition="$(TargetFrameworkIdentifier) == '.NETFramework' And ($(TargetFrameworkVersion) == 'v4.5' Or $(TargetFrameworkVersion) == 'v4.5.1')">
       <ItemGroup>
-        <Reference Include="Mozu.Core.Messaging.Contracts">
-          <HintPath>..\packages\Mozu.Core.Messaging\lib\net451\Mozu.Core.Messaging.Contracts.dll</HintPath>
-          <Private>True</Private>
-          <Paket>True</Paket>
-        </Reference>
         <Reference Include="Mozu.Core.Messaging">
-          <HintPath>..\packages\Mozu.Core.Messaging\lib\net451\Mozu.Core.Messaging.dll</HintPath>
+          <HintPath>..\packages\Mozu.Core.Messaging\lib\Mozu.Core.Messaging.dll</HintPath>
           <Private>True</Private>
           <Paket>True</Paket>
         </Reference>

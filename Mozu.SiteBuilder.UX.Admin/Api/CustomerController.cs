@@ -288,7 +288,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
                         IsImport = false,
                         Password = "a" + System.Web.Security.Membership.GeneratePassword(8, 3) + "1"
                     };
-                    tasks.Add(_customerWebApiClient.AddAccountAndLogin(dc).ContinueWith(t => t.Result.ReadAsSync().CustomerAccount));
+                    tasks.Add(AddCustomerAccountAndLogin(dc, customer.SegmentIds));
                 }
             }
             await Task.WhenAll(tasks);
@@ -296,6 +296,26 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
 
             return List2(results);
         }
+
+        private async Task<DC.CustomerAccount> AddCustomerAccountAndLogin(
+            DC.CustomerAccountAndAuthInfo customerAccountAndAuthInfo, List<int> segmentIds )
+        {
+            DC.CustomerAccount customerAccount =
+                (await _customerWebApiClient.AddAccountAndLogin(customerAccountAndAuthInfo)).ReadAsSync()
+                    .CustomerAccount;
+            if (segmentIds != null && segmentIds.Any())
+            {
+                foreach (int segmentId in segmentIds)
+                {
+                    await _customerSegmentWebApiClient.AddSegmentAccounts(new List<int> { customerAccount.Id }, segmentId);
+                }
+
+                customerAccount = (await _customerWebApiClient.GetAccount(customerAccount.Id)).ReadAsSync();
+            }
+
+            return customerAccount;
+        }
+
 
         /// <summary>
         /// Add/remove customer group subroutine for EditCustomers. Yes, a subroutine.

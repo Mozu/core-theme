@@ -7,7 +7,8 @@ Ext.define('Taco.view.discount.CriteriaForm', {
     extend: 'Taco.core.ux.form.Form',
     alias: 'widget.taco-discount-criteria',
     requires: [
-        'Taco.core.ux.content.Tooltip'
+        'Taco.core.ux.content.Tooltip',
+        'Taco.view.priceList.widget.PriceListComboBox'
     ],
     ui: 'subform',
     margin: '0 0 39 0',
@@ -19,6 +20,7 @@ Ext.define('Taco.view.discount.CriteriaForm', {
             productStore,
             zoneStore,
             shippingStore,
+            priceListStore,
             me = this;
 
         // need to listen for changes to the buy product or category items field changes in the conditions subform to alter the maximumQuantityPerRedemptionTB filed;
@@ -161,7 +163,7 @@ Ext.define('Taco.view.discount.CriteriaForm', {
                     arrowPosition: 'bottom'
                 }),
                 listeners: {
-                    change: function(self, newValue, oldValue, eOpts) {
+                    change: function(self, newValue) {
                         this.record.set('appliesToLeastExpensiveProductsFirst', !newValue)
                     },
                     scope: me
@@ -427,6 +429,62 @@ Ext.define('Taco.view.discount.CriteriaForm', {
             ]
         });
 
+        priceListStore = this.record.getPriceListStore();
+        priceListStore.clearFilter(true);
+        priceListStore.load();
+
+        this.includedPriceListBoxSelect = Ext.create('Ext.ux.form.field.BoxSelect', {
+            itemId: 'applicable-pricelist-field-container',
+            name: 'includedPriceLists',
+            width: 520,
+            margin: 0,
+            store: priceListStore,
+            getStore: function () {
+                return priceListStore;
+            },
+            hideTrigger: true,
+            triggerOnClick: false,
+            forceSelection: true,
+            disableKeyFilter: true,
+            typeAhead: false,
+            displayField: 'name',
+            fieldLabel: 'Applicable Price Lists',
+            valueField: 'code',
+            style: {
+                display: 'inline-table',
+                verticalAlign: 'bottom'
+            },
+            tooltip: Ext.create('Taco.core.ux.content.Tooltip', {
+                elementId: 'applicable-pricelist-field-container',
+                hoverTarget: 'label',
+                messageKey: 'discount.criteria.applicablePriceLists',
+                offsetLeft: -230,
+                arrowPosition: 'left'
+            })
+        });
+
+        this.includedPriceListsBox = {
+            xtype: 'panel',
+            layout: 'auto',
+            items: [
+                this.includedPriceListBoxSelect,
+                {
+                    xtype: 'button',
+                    scale: 'medium',
+                    ui: 'action',
+                    text: 'Add',
+                    margin: '0 0 0 10',
+                    width: 70,
+                    style: {
+                        verticalAlign: 'bottom'
+                    },
+                    handler: function () {
+                        this.launchPriceListsModal(this.includedPriceListBoxSelect);
+                    },
+                    scope: this
+                }
+            ]
+        }
         
         // note: only enabled when there is a buy item condition on the conditions subform;
         this.maximumQuantityPerRedemptionTB = Ext.create('Ext.form.field.Number', {
@@ -504,7 +562,7 @@ Ext.define('Taco.view.discount.CriteriaForm', {
                 items: [
                     this.ApplyToProductsWithSalePrice,
                     this.appliesToSalePrice,
-                    this.applyDiscountTo
+                    this.applyDiscountTo,
                 ]
             }
         );
@@ -520,6 +578,7 @@ Ext.define('Taco.view.discount.CriteriaForm', {
                 this.maximumQuantityPerRedemptionTB,
                 this.excludeCategoriesBox,
                 this.productsExcludeBox,
+                this.includedPriceListsBox,
                 this.optionsContainer
             ]
         });
@@ -603,7 +662,7 @@ Ext.define('Taco.view.discount.CriteriaForm', {
                     return (!isRealTime);
                 });
             },
-            beforeexpand: function (node, opts) {
+            beforeexpand: function (node) {
                 node.childNodes = node.childNodes.filter(function (childNode) {
                     var isRealtime = childNode.data.categoryType === "DynamicRealTime";
                     return !isRealtime;
@@ -658,6 +717,39 @@ Ext.define('Taco.view.discount.CriteriaForm', {
                 me.reloadStore(list);
             },
             scope: this
+        });
+
+    },
+
+    /**
+     * Opens a modal with a list of price lists.
+     * @private
+     */
+    launchPriceListsModal: function (list) {
+        var me = this,
+            gridStore = Taco.core.data.StoreManager.getOrCreate({
+            type: 'Taco.store.PriceLists',
+            clearFilters: true,
+            clearSort: true,
+            autoLoad: true
+            });
+        gridStore.filter(true);
+        gridStore.load();
+
+        me.modal = Ext.create('Taco.view.priceList.modal.PriceListsModal', {
+            store: gridStore
+        });
+
+        me.modal.on({
+            savesuccess: function (modal, values) {
+                list.addValue(values);
+                me.reloadStore(list);
+                me.parentForm.getForm().checkValidity();
+            },
+            aftercancelclose: function () {
+                me.reloadStore(list);
+            },
+            scope: me
         });
 
     },

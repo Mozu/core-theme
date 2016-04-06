@@ -17,6 +17,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Helpers.ProductHelpers
         private const string CATEGORY_ID_PROPERTY = "productincatalogs.productcategories.categoryId";
         private const string IS_ACTIVE_PROPERTY = "productincatalogs.isActive";
         private const string IS_CURRENTLY_ACTIVE_PROPERTY = "productincatalogs.iscurrentlyactive";
+        private const string IS_VARIATION = "isVariation";
         private const string STOCK_ON_HAND_PROPERTY = "stockOnHand";
         private const string SITE_ID_PROPERTY = "productincatalogs.siteId";
         private const string PRODUCT_FULL_DESCRIPTION = "productincatalogs.content.productFullDescription";
@@ -177,6 +178,8 @@ namespace Mozu.SiteBuilder.UX.Admin.Helpers.ProductHelpers
                     return string.Format("{1} eq {0}", filter.value, PRICE_MAP_PROPERTY);
                 case "publishsetcode":
                     return string.Format("{1} eq {0}", filter.value, PUBLISH_SET_CODE);
+                case "includevariations":
+                    return string.Format("({0} eq true or {0} eq false)", IS_VARIATION);
                 default:
                     {
                         throw new NotImplementedException("unable to filter on property " + filter.property);

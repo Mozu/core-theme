@@ -560,8 +560,7 @@ Ext.define('Taco.core.ux.mixins.NavHeader', {
             }
 
             if (me.createButtonEnabled) {
-                me.actions.push(Ext.apply({}, me.createButtonCfg, {
-                    xtype: 'button',
+                me.createButton = Ext.create('Ext.button.Button', Ext.apply({}, me.createButtonCfg, {
                     height: 40,
                     text: this.createButtonText,
                     margin: "0 0 0 10",
@@ -572,6 +571,7 @@ Ext.define('Taco.core.ux.mixins.NavHeader', {
                     handler: me.createActionHandler,
                     scope: me
                 }));
+                me.actions.push(me.createButton);
             }
 
         }

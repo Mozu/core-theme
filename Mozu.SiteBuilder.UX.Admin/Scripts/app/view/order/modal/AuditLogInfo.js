@@ -206,8 +206,10 @@ Ext.define('Taco.view.order.modal.AuditLogInfo', {
                         dataContainer = this.createPackageMessage(metaData);
                     } else if (curRecord.subject.toLowerCase().indexOf('return') >= 0) {
                         dataContainer = this.createReturnMessage(curRecord);
-                    } else if (curRecord.subject.toLowerCase().indexOf('refund') >=0) {
+                    } else if (curRecord.subject.toLowerCase().indexOf('refund') >= 0) {
                         dataContainer = this.createRefundMessage(metaData);
+                    } else if (curRecord.subject.toLowerCase().indexOf('price list changed') >= 0) {
+                        dataContainer = this.createPriceListChangedMessage(metaData);
                     } else {
                         dataContainer = this.createOrderMessage(curRecord);
                     }
@@ -350,6 +352,47 @@ Ext.define('Taco.view.order.modal.AuditLogInfo', {
                 ]
             }]
         });
+    },
+
+    createPriceListChangedMessage: function (lineItemData) {
+        var retVal = null;
+        var itemsList = [];
+
+        itemsList.push({
+            flex: 1,
+            padding: '2 2',
+            data: lineItemData[0],
+            tpl: [
+                '<div>Old Price List Code: {[this.checkForEmptyString(values)]}</div>',
+                {
+                    checkForEmptyString: function(value) {
+                        var oldCode = value.oldPriceListCode;
+                        return !oldCode ? 'None' : oldCode;
+                    }
+                }
+            ]
+        });
+
+        itemsList.push({
+            flex: 1,
+            padding: '2 2',
+            data: lineItemData[0],
+            tpl: [
+                '<div>New Price List Code: {[this.checkForEmptyString(values)]}</div>',
+                {
+                    checkForEmptyString: function (value) {
+                        var newCode = value.newPriceListCode;
+                        return !newCode ? 'None' : newCode;
+                    }
+                }
+            ]
+        });
+
+        retVal = Ext.create('Ext.container.Container', {
+            padding: '20 0 0',
+            items: itemsList
+        });
+        return retVal;
     },
 
     createRefundMessage: function(refundData) {

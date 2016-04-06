@@ -177,15 +177,15 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
                 SbApiContext.SetDataMode(DataViewModeType.Live);
             }
 
-            string responseFields = "items(productCode,productTypeId,productUsage," +
-                   "price(price,salePrice)" +
-                   "productInCatalogs(catalogId,isContentOverridden,content(productName),price(price,salePrice))" +
-                   "auditInfo(updateDate)" +
+            string responseFields = "items(productCode,productTypeId,productUsage,isVariation," +
+                   "price(price,salePrice)," +
+                   "productInCatalogs(catalogId,isContentOverridden,content(productName),price(price,salePrice))," +
+                   "auditInfo(updateDate)," +
                    "content(productName)";
 
             if (responseGroups != null && responseGroups.Contains("VariationOptions"))
             {
-                responseFields += "VariationOptions";
+                responseFields += ",VariationOptions";
             }
             responseFields += ")";
 

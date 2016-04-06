@@ -47,6 +47,7 @@ namespace Mozu.SiteBuilder.Mvc
 
             DataViewMode = dvmGetter.GetDataViewMode(UserClaims);
             PreviewDate = GetNowValue();
+            PriceListCode = GetPriceListOverrideValue(this.PriceListCode);
         }
 
         private void SetDebugMode()
@@ -72,6 +73,40 @@ namespace Mozu.SiteBuilder.Mvc
 
             }
             this.IsDebugMode = isDebugMode;
+        }
+
+       
+        
+
+        private string GetPriceListOverrideValue(string priceList)
+        {
+            if (this.DataViewMode != DataViewModeType.Pending) return priceList;
+
+            HttpCookie cookie;
+            var val = _httpRequestMessage.GetQueryNameValuePairs().Where(x => string.Equals(x.Key, "mz_pricelist", StringComparison.OrdinalIgnoreCase)).Select(x => x.Value).FirstOrDefault();
+            if (val != null)
+            {
+                if (!string.IsNullOrWhiteSpace(val))
+                {
+                    priceList = val;
+                    cookie = new HttpCookie(Constants.PRICELISTCOOKIENAME, priceList);
+                }
+                else
+                {
+                    cookie = new HttpCookie(Constants.PRICELISTCOOKIENAME, "");
+                    cookie.Expires = DateTime.MinValue;
+                }
+                _cookieProvider.SaveResponseCookie(Constants.PRICELISTCOOKIENAME, cookie);
+            }
+            else
+            {
+                cookie = _cookieProvider.GetRequestCookie(Constants.PRICELISTCOOKIENAME);
+                if (cookie != null)
+                {
+                    priceList = cookie.Value;
+                }
+            }
+            return priceList;
         }
 
         private DateTime? GetNowValue()
@@ -167,7 +202,7 @@ namespace Mozu.SiteBuilder.Mvc
                 //todo validate tenant and site 
                 this.UserClaims = claims;
             }
-            if (!string.IsNullOrEmpty(adminAccessToken) && LightweightUserClaims.TryParse(accessToken, out claims))
+            if (!string.IsNullOrEmpty(adminAccessToken) && LightweightUserClaims.TryParse(adminAccessToken, out claims))
             {
                 this.AdminUserClaim = claims;
             }
@@ -361,6 +396,11 @@ namespace Mozu.SiteBuilder.Mvc
         {
             this.DataViewMode = dataViewMode;
         }
+
+        public void SetPriceListCode(string plCode)
+        {
+            this.PriceListCode = plCode;
+        }
     }
 
     public static class Constants
@@ -369,6 +409,7 @@ namespace Mozu.SiteBuilder.Mvc
         public const string COOKIENAME = "SBCONTEXT";
         public const string DEBUGCOOKIENAME = "SBD";
 		public const string NOWCOOKIENAME = "MZ_NOW";
+        public const string PRICELISTCOOKIENAME = "MZ_PRICELIST";
         public const string HEADER_ALTERNATIVE_VIEW = "x-vol-alternative-view";
         public const string HEADER_CANONICAL_URL = "x-vol-canonical-url";
 

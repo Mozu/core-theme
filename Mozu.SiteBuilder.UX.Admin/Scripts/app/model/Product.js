@@ -200,6 +200,12 @@ Ext.define('Taco.model.Product', {
             "useNull": true
         },
         {
+            "name": "isVariation",
+            "type": "boolean",
+            defaultValue: false,
+            "useNull": true
+        },
+        {
             "name": "manageStock",
             "type": "boolean",
             defaultValue: false,
@@ -434,6 +440,12 @@ Ext.define('Taco.model.Product', {
             dateFormat: 'c'
         },
         {
+            "name": "variationPricingMethod",
+            "type": "string",
+            "useNull": true,
+            "defaultValue": "Fixed"
+        },
+        {
             "name": "packageWeight",
             "type": "float",
             "defaultValue": 1
@@ -520,6 +532,10 @@ Ext.define('Taco.model.Product', {
                 return (record.get("hasConfigurableOptions") || record.get("hasStandaloneOptions"));
                 //return (record.get("options").length || record.get("extras").length);
             }
+        },
+        {
+            name: "isVariation",
+            type: "boolean"
         },
         {
             name: "bundledProducts",
@@ -732,7 +748,8 @@ Ext.define('Taco.model.Product', {
         return this.getOrCreateHasManyStore({
             model: 'Taco.model.ProductProperty',
             associationKey: 'options',
-            foreignProperty: 'product'
+            foreignProperty: 'product',
+            createOnly:true
         });
     },
     getExtras: function () {

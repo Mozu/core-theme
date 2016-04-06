@@ -222,7 +222,7 @@ Ext.define('Taco.view.product.subform.Inventory', {
                 closable: true,
                 buttons: Ext.Msg.OKCANCEL,
                 fn: function (rec) {
-                    if (rec === 'yes') {
+                    if (rec === 'ok') {
                         me.mon(productEditor, 'savesuccess', function() {
                             Taco.core.StateManager.attemptNavigate('inventory?q=productCode:' + this.record.getId());
                         }, me);

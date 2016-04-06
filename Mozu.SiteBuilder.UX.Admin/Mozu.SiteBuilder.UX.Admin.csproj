@@ -173,13 +173,22 @@
     <Compile Include="Api\CatalogPublishingController.cs" />
     <Compile Include="Api\CategoryController.cs" />
     <Compile Include="Api\ChannelController.cs" />
+    <Compile Include="Api\Models\PriceLists\PriceListEntryExtra.cs" />
     <Compile Include="Api\ReportGenerator.cs" />
     <Compile Include="Api\CouponCodeController.cs" />
     <Compile Include="Api\LayoutWidgetDefinitionController.cs" />
+    <Compile Include="Api\ModelMapping\PriceListMapping.cs" />
+    <Compile Include="Api\Models\Options\ProductOptionValue.cs" />
+    <Compile Include="Api\Models\PriceLists\PriceListEntryPrice.cs" />
+    <Compile Include="Api\Models\PriceLists\PriceListEntry.cs" />
+    <Compile Include="Api\Models\PriceLists\RuntimePriceList.cs" />
+    <Compile Include="Api\PriceListController.cs" />
     <Compile Include="Api\ModelMapping\SearchTuningMapping.cs" />
+    <Compile Include="Api\Models\PriceLists\PriceList.cs" />
     <Compile Include="Api\Models\Checkout\TenantCheckoutSettings.cs" />
     <Compile Include="Api\Models\Search\SearchTuningRule.cs" />
     <Compile Include="Api\Models\Search\SimpleSearchProduct.cs" />
+    <Compile Include="Api\PriceListRuntimeController.cs" />
     <Compile Include="Api\SearchTuningRuleController.cs" />
     <Compile Include="Api\CouponSetController.cs" />
     <Compile Include="Api\ModelMapping\ContentMapping.cs" />
@@ -442,6 +451,9 @@
     <Compile Include="Helpers\PasswordHelper.cs" />
     <Compile Include="Helpers\FileManagerHelpers\FileManagerHelpersFilterExtensions.cs" />
     <Compile Include="Helpers\FileManagerHelpers\FileManagerHelpersSortExtensions.cs" />
+    <Compile Include="Helpers\PriceListHelpers\PriceListEntryFilterExtensions.cs" />
+    <Compile Include="Helpers\PriceListHelpers\PriceListFilterExtensions.cs" />
+    <Compile Include="Helpers\PriceListHelpers\PriceListSortExtensions.cs" />
     <Compile Include="Helpers\ProductHelpers\ProductFilterExtensions.cs" />
     <Compile Include="Helpers\ProductHelpers\ProductSortExtensions.cs" />
     <Compile Include="Helpers\ProductRuntimeHelpers\ProductRuntimeFilterExpressionBuilder.cs" />
@@ -486,6 +498,8 @@
     <Content Include="Scripts\.sencha\app\watch-impl.xml" />
     <Content Include="Scripts\app\app.js" />
     <Content Include="Scripts\app\controller\ActionManagement.js" />
+    <Content Include="Scripts\app\controller\PriceListEntries.js" />
+    <Content Include="Scripts\app\controller\PriceLists.js" />
     <Content Include="Scripts\app\controller\StoreFrontProducts.js" />
     <Content Include="Scripts\app\controller\ProductRankings.js" />
     <Content Include="Scripts\app\controller\CouponSets.js" />
@@ -546,6 +560,11 @@
     <Content Include="Scripts\app\core\ux\mixins\DeleteFromGrid.js" />
     <Content Include="Scripts\app\core\ux\mixins\GridContextMenu.js" />
     <Content Include="Scripts\app\core\ux\mixins\ActionColumn.js" />
+    <Content Include="Scripts\app\core\ux\picker\CheckboxFlyout.js" />
+    <Content Include="Scripts\app\core\ux\picker\InlineSelector.js" />
+    <Content Include="Scripts\app\core\ux\picker\CheckboxTreeModal.js" />
+    <Content Include="Scripts\app\core\ux\picker\Selector.js" />
+    <Content Include="Scripts\app\core\ux\picker\SelectorFlyout.js" />
     <Content Include="Scripts\app\core\ux\plugins\NextPrevious.js" />
     <Content Include="Scripts\app\core\ux\PanelHeaderStat.js" />
     <Content Include="Scripts\app\core\ux\HtmlEditorImagePlugin.js" />
@@ -565,6 +584,11 @@
     <Content Include="Scripts\app\model\CardGateway.js" />
     <Content Include="Scripts\app\model\PaymentGateway.js" />
     <Content Include="Scripts\app\model\PinnedProduct.js" />
+    <Content Include="Scripts\app\model\PriceListEntry.js" />
+    <Content Include="Scripts\app\model\PriceList.js" />
+    <Content Include="Scripts\app\model\PriceListEntryExtra.js" />
+    <Content Include="Scripts\app\model\PriceListEntryPrice.js" />
+    <Content Include="Scripts\app\model\RuntimePriceList.js" />
     <Content Include="Scripts\app\model\StorefrontProduct.js" />
     <Content Include="Scripts\app\model\FilterField.js" />
     <Content Include="Scripts\app\model\BehaviorNode.js" />
@@ -676,8 +700,11 @@
     <Content Include="Scripts\app\store\PagedMemoryStore.js" />
     <Content Include="Scripts\app\store\PaymentGateways.js" />
     <Content Include="Scripts\app\store\PinnedProducts.js" />
+    <Content Include="Scripts\app\store\PriceListEntries.js" />
+    <Content Include="Scripts\app\store\PriceLists.js" />
     <Content Include="Scripts\app\store\ProductRankings.js" />
     <Content Include="Scripts\app\store\CouponSets.js" />
+    <Content Include="Scripts\app\store\RuntimePriceLists.js" />
     <Content Include="Scripts\app\store\StorefrontProducts.js" />
     <Content Include="Scripts\app\store\DiscountGrid.js" />
     <Content Include="Scripts\app\store\Discounts.js" />
@@ -750,7 +777,34 @@
     <Content Include="Scripts\app\view\couponCode\AdvancedSearchForm.js" />
     <Content Include="Scripts\app\view\couponCode\DiscountGrid.js" />
     <Content Include="Scripts\app\view\couponCode\Grid.js" />
+    <Content Include="Scripts\app\view\customSchema\AdvancedSearchForm.js" />
+    <Content Include="Scripts\app\view\customSchema\DynamicFormContainer.js" />
+    <Content Include="Scripts\app\view\customSchema\Edit.js" />
+    <Content Include="Scripts\app\view\customSchema\Grid.js" />
+    <Content Include="Scripts\app\view\customSchema\Index.js" />
+    <Content Include="Scripts\app\view\customSchema\Lists.js" />
+    <Content Include="Scripts\app\view\customSchema\SchemaList.js" />
+    <Content Include="Scripts\app\view\customSchema\Split.js" />
+    <Content Include="Scripts\app\view\order\widget\PriceListPickerField.js" />
     <Content Include="Scripts\app\view\preview\ExpressionPreviewDrawer.js" />
+    <Content Include="Scripts\app\view\priceList\Edit.js" />
+    <Content Include="Scripts\app\view\priceList\entry\AdvancedEntrySearch.js" />
+    <Content Include="Scripts\app\view\priceList\entry\PriceEntryExtras.js" />
+    <Content Include="Scripts\app\view\priceList\Form.js" />
+    <Content Include="Scripts\app\view\priceList\form\AdvancedSearch.js" />
+    <Content Include="Scripts\app\view\priceList\entry\Entries.js" />
+    <Content Include="Scripts\app\view\priceList\entry\PriceEntryPrice.js" />
+    <Content Include="Scripts\app\view\priceList\entry\PriceEntryGeneral.js" />
+    <Content Include="Scripts\app\view\priceList\form\General.js" />
+    <Content Include="Scripts\app\view\priceList\form\Resolution.js" />
+    <Content Include="Scripts\app\view\priceList\Grid.js" />
+    <Content Include="Scripts\app\view\priceList\Index.js" />
+    <Content Include="Scripts\app\view\priceList\modal\PriceEntryEditor.js" />
+    <Content Include="Scripts\app\view\priceList\modal\PriceListsModal.js" />
+    <Content Include="Scripts\app\view\priceList\widget\EntriesGrid.js" />
+    <Content Include="Scripts\app\view\priceList\widget\OverrideField.js" />
+    <Content Include="Scripts\app\view\priceList\widget\PriceListComboBox.js" />
+    <Content Include="Scripts\app\view\priceList\widget\ProductAndVariantPicker.js" />
     <Content Include="Scripts\app\view\productRanking\Edit.js" />
     <Content Include="Scripts\app\view\productRanking\Form.js" />
     <Content Include="Scripts\app\view\productRanking\form\AdvancedSearch.js" />
@@ -1458,6 +1512,7 @@
     <Content Include="Scripts\sass\src\overrides\menu\Item.scss" />
     <Content Include="Scripts\sass\src\view\order\Grid.scss" />
     <Content Include="Scripts\sass\src\view\settings\paymentTypes\subform\CreditCards.scss" />
+    <Content Include="Scripts\sass\src\view\order\widget\PriceListMenu.scss" />
     <None Include="SetupSenchaWorkspace.ps1" />
     <Content Include="Scripts\.sencha\app\build-impl.xml" />
     <Content Include="Scripts\.sencha\app\plugin.xml" />
@@ -2537,6 +2592,20 @@
     <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
   </PropertyGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
+  <Choose>
+    <When Condition="$(TargetFrameworkIdentifier) == '.NETFramework' And ($(TargetFrameworkVersion) == 'v4.5' Or $(TargetFrameworkVersion) == 'v4.5.1')">
+      <PropertyGroup>
+        <__paket__OctoPack_targets>OctoPack</__paket__OctoPack_targets>
+      </PropertyGroup>
+    </When>
+  </Choose>
+  <Choose>
+    <When Condition="$(TargetFrameworkIdentifier) == '.NETFramework' And ($(TargetFrameworkVersion) == 'v4.5' Or $(TargetFrameworkVersion) == 'v4.5.1')">
+      <PropertyGroup>
+        <__paket__ClearScript_Installer_targets>ClearScript.Installer</__paket__ClearScript_Installer_targets>
+      </PropertyGroup>
+    </When>
+  </Choose>
   <Import Project="$(VSToolsPath)\WebApplications\Microsoft.WebApplication.targets" Condition="'$(VSToolsPath)' != ''" />
   <Import Project="$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v10.0\WebApplications\Microsoft.WebApplication.targets" Condition="false" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it.
@@ -2664,13 +2733,6 @@
           <Paket>True</Paket>
         </Reference>
       </ItemGroup>
-    </When>
-  </Choose>
-  <Choose>
-    <When Condition="$(TargetFrameworkIdentifier) == '.NETFramework' And ($(TargetFrameworkVersion) == 'v4.5' Or $(TargetFrameworkVersion) == 'v4.5.1')">
-      <PropertyGroup>
-        <__paket__ClearScript_Installer_targets>ClearScript.Installer</__paket__ClearScript_Installer_targets>
-      </PropertyGroup>
     </When>
   </Choose>
   <Choose>
@@ -2979,15 +3041,10 @@
     </When>
   </Choose>
   <Choose>
-    <When Condition="$(TargetFrameworkIdentifier) == '.NETFramework' And $(TargetFrameworkVersion) == 'v4.5.1'">
+    <When Condition="$(TargetFrameworkIdentifier) == '.NETFramework' And ($(TargetFrameworkVersion) == 'v4.5' Or $(TargetFrameworkVersion) == 'v4.5.1')">
       <ItemGroup>
-        <Reference Include="Mozu.Core.Messaging.Contracts">
-          <HintPath>..\packages\Mozu.Core.Messaging\lib\net451\Mozu.Core.Messaging.Contracts.dll</HintPath>
-          <Private>True</Private>
-          <Paket>True</Paket>
-        </Reference>
         <Reference Include="Mozu.Core.Messaging">
-          <HintPath>..\packages\Mozu.Core.Messaging\lib\net451\Mozu.Core.Messaging.dll</HintPath>
+          <HintPath>..\packages\Mozu.Core.Messaging\lib\Mozu.Core.Messaging.dll</HintPath>
           <Private>True</Private>
           <Paket>True</Paket>
         </Reference>
@@ -3277,13 +3334,6 @@
           <Paket>True</Paket>
         </Reference>
       </ItemGroup>
-    </When>
-  </Choose>
-  <Choose>
-    <When Condition="$(TargetFrameworkIdentifier) == '.NETFramework' And ($(TargetFrameworkVersion) == 'v4.5' Or $(TargetFrameworkVersion) == 'v4.5.1')">
-      <PropertyGroup>
-        <__paket__OctoPack_targets>OctoPack</__paket__OctoPack_targets>
-      </PropertyGroup>
     </When>
   </Choose>
   <Choose>

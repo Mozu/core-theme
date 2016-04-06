@@ -111,11 +111,27 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
 
             var cartVM = CreateCartWithLocations(cart, locations);
             var jCart = cartVM.ToJObject(_cartSerializer.Value);
+            var messagesArray = new JArray();
 
             if (error != null)
             {
                 if (PageContext.IsDebugMode) throw error;
-                jCart.Add("messages", new JArray(new { message = error.Message }.ToJObject(_cartSerializer.Value)));
+                messagesArray.Add(new {message = error.Message}.ToJObject(_cartSerializer.Value));
+            }
+
+            if (cart.CartMessage != null && !cart.CartMessage.Message.IsNullOrEmpty())
+            {
+                messagesArray.Add(new
+                    {
+                        message =  cart.CartMessage.Message,
+                        messageType = cart.CartMessage.MessageType,
+                        productsRemoved = cart.CartMessage.ProductsRemoved
+                    }.ToJObject(_cartSerializer.Value));
+            }
+
+            if (messagesArray.Count > 0)
+            {
+                jCart.Add("messages", messagesArray);
             }
 
             if (this.SiteContext.CheckoutSettings.VisaCheckout.IsEnabled)

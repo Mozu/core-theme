@@ -150,6 +150,10 @@ Ext.define('Taco.model.Order', {
             type: 'auto',
             useNull: true
         }, {
+            name: 'priceListCode',
+            type: 'string',
+            useNull: true
+        }, {
             name: 'orderDiscounts',
             type: 'auto',
             defaultValue: []
@@ -2059,6 +2063,20 @@ Ext.define('Taco.model.Order', {
 
         Ext.apply(config, {
             url: '/admin/app/order/addcoupon',
+            params: {
+                'draft': me.get('isDraft')
+            },
+            method: 'POST'
+        });
+
+        Ext.Ajax.request(config);
+    },
+
+    setPriceList: function (config) {
+        var me = this;
+
+        Ext.apply(config, {
+            url: '/admin/app/order/setpricelist',
             params: {
                 'draft': me.get('isDraft')
             },

@@ -466,7 +466,6 @@ Ext.define('Taco.view.publishing.grid.Publish', {
     //        listeners: {
     //            aftersaveclose: function () {
     //                // should be passing focus back to the thing that trggered the create;
-    //                debugger;
     //            },
     //            scope: me
     //        }
