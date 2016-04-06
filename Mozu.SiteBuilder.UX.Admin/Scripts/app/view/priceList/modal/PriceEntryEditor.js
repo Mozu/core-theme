@@ -110,6 +110,7 @@ Ext.define('Taco.view.priceList.modal.PriceEntryEditor', {
             success: function (record) {
                 this.record = record;
                 Taco.app.fireEvent('price-entry-loaded', record);
+                Taco.app.fireEvent('price-entry-product-extras-changed', { items: record.get('extras') });
                 this.setLoading(false, this.body);
             },
             scope: this
