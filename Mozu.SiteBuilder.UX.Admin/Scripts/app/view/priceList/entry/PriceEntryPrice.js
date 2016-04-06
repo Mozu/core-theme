@@ -358,15 +358,17 @@ Ext.define('Taco.view.priceList.entry.PriceEntryPrice', {
             },
             items: [
                 me.basicPanel, //move to subform file?
-                me.advancedPanel,
-                me.extrasPanel
+                me.advancedPanel
             ]
         });
+
+        me.injectExtrasTab(me.record);
 
         me.items = [
             me.tabs
         ];
 
+        me.mon(Taco.app, 'price-entry-product-changed', me.injectExtrasTab, me);
         me.mon(Taco.app, 'price-entry-product-extras-changed', me.updateExtras, me);
         var extras = me.record.get('extras');
         if (!extras) {
@@ -379,10 +381,22 @@ Ext.define('Taco.view.priceList.entry.PriceEntryPrice', {
     
     updateExtras: function (data) {
         if (!data || !data.items ) {
-            this.record.set('extras', []);
+            data.items = [];
         }
         this.record.set('extras', data.items);
         this.extrasGrid.getStore().loadData(data.items);
+    },
+
+    injectExtrasTab: function(record) {
+        var me = this;
+        if (!record || record.get('isVariation') || record.get('productCode') === '') {
+            me.tabs.remove(me.extrasPanel, false)
+        } else {
+            var exists = me.tabs.items.find(function(item) { return item.itemId === me.extrasPanel.itemId })
+            if (!exists) {
+                me.tabs.add(me.extrasPanel);
+            }
+        }
     },
     
     beforeSave: function () {
