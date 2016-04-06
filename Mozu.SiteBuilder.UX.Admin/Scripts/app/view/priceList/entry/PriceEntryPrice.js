@@ -368,6 +368,12 @@ Ext.define('Taco.view.priceList.entry.PriceEntryPrice', {
         ];
 
         me.mon(Taco.app, 'price-entry-product-extras-changed', me.updateExtras, me);
+        var extras = me.record.get('extras');
+        if (!extras) {
+            me.getExtras(me.record);
+        } else {
+            Taco.app.fireEvent('price-entry-product-extras-changed', { items: extras });
+        }
         me.callParent(arguments);
     },
     
