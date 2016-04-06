@@ -7,7 +7,7 @@
              fieldLabel: 'content',
              xtype: 'taco-htmleditor',
              name: 'content',
-            enableFont: false
+             enableFont: false
          }
     ]
 });
