@@ -5,23 +5,15 @@ using System.Linq;
 using System.Web.Http;
 using AutoMapper;
 using Mozu.Core.Api.Client.Exceptions;
-using Mozu.Core;
 using Mozu.Core.Api.Routing;
-using System.Globalization;
 using Mozu.ProductAdmin.Contracts.Clients;
-using Mozu.SiteBuilder.UX.Admin.Api.ModelMapping;
 using Mozu.SiteBuilder.UX.Admin.Api.Models.PriceLists;
 using Mozu.SiteBuilder.UX.Admin.Helpers.PriceListHelpers;
 using DC = Mozu.ProductAdmin.Contracts;
-using Mozu.Core.Api.Contracts.Client;
-using Mozu.Core.Api.Contracts;
-using System.Net.Http;
 using Mozu.Core.Extensions;
 using Mozu.SiteBuilder.Mvc.Extensions;
 using Mozu.SiteBuilder.UX.Admin.Api.Models;
 using Mozu.SiteBuilder.UX.Admin.Helpers;
-using Mozu.Tenant.Contracts.Clients;
-using Mozu.SiteSettings.Order.Contracts.Clients;
 
 namespace Mozu.SiteBuilder.UX.Admin.Api
 {
@@ -36,18 +28,13 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
         private readonly IPriceListWebApiClient _priceListWebClient;
         private readonly IProductWebApiClient _productWebApiClient;
         private readonly IProductTypeWebApiClient _productTypeWebApiClient;
-        private readonly IApiContext _ctx;
-        private readonly ITenantsWebApiClient _tenantClient;
 
         /// <summary>
         /// Public constructor.
         /// </summary>
-        public PriceListController(IApiContext ctx, ITenantsWebApiClient tenantClient,
-            IPriceListWebApiClient priceListWebClient, IProductWebApiClient productWebApiClient, 
+        public PriceListController(IPriceListWebApiClient priceListWebClient, IProductWebApiClient productWebApiClient, 
             IProductTypeWebApiClient productTypeWebApiClient)
         {
-            _ctx = ctx;
-            _tenantClient = tenantClient;
             _priceListWebClient = priceListWebClient;
             _productWebApiClient = productWebApiClient;
             _productTypeWebApiClient = productTypeWebApiClient;
@@ -71,7 +58,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
             }
 
             string filter = null;
-            if (extFilter != null && extFilter.Count > 0)
+            if (extFilter.Count > 0)
             {
                 filter = extFilter.ToFilterString();
             }
@@ -88,7 +75,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
             
             var result = Mapper.Map<List<PriceList>>(priceLists.Items);
 
-            return List2(result, (int?) priceLists.TotalCount);
+            return List2(result, priceLists.TotalCount);
             //}
             //catch (ApiWebClientConnectionException e)
             //{
@@ -117,7 +104,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
                 )).ReadAsSync();
 
             var result = Mapper.Map<List<PriceList>>(priceLists.Items);
-            return List2(result, (int?) priceLists.TotalCount);
+            return List2(result, priceLists.TotalCount);
         }
 
         /// <summary>
@@ -200,7 +187,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
 
             var result = Mapper.Map<List<PriceListEntry>>(entries.Items);
 
-            return List2(result, (int?)entries.TotalCount);
+            return List2(result, entries.TotalCount);
         }
 
         private async Task<Response<List<PriceListEntry>>> GetSinglePriceListEntry(string priceListCode, FilterCollection extFilter)
@@ -208,7 +195,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
             var productCode = extFilter.QueryString.Get("productCode");
             var currencyCode = extFilter.QueryString.Get("currencyCode");
             var startDate = extFilter.QueryString.Get("startDate");
-            DateTime? dateTime = (DateTime?) null;
+            DateTime? dateTime = null;
             if (!startDate.IsNullOrEmpty())
             {
                 DateTime parsedDateTime;
@@ -219,9 +206,12 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
             }
             var dcPriceListEntry = (await _priceListWebClient.GetPriceListEntry(priceListCode: priceListCode, productCode: productCode, currencyCode:currencyCode, startDate:dateTime)).ReadAsSync();
             var priceListEntry = Mapper.Map<PriceListEntry>(dcPriceListEntry);
+
+            if (priceListEntry.IsVariation) return List2(priceListEntry);
+
             var lookup = (priceListEntry.Extras.IsNullOrEmpty())
                 ? new Dictionary<string, PriceListEntryExtra>()
-                : priceListEntry.Extras.ToDictionary(x => x.AttributeFQN + "-" + x.Value ?? "");
+                : priceListEntry.Extras.ToDictionary(x => x.AttributeFQN + "-" + x.Value);
 
             var productExtras = await GetProductExtrasInternalAsync(productCode,
                 (attrFqn, attrValue) => lookup.ContainsKey(attrFqn + "-" + attrValue)
@@ -229,12 +219,12 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
                     : (decimal?) null);
 
             var orphans = priceListEntry.Extras.Where(x => !productExtras
-                                                            .Select(orp => orp.AttributeFQN + "-" + orp.Value)
-                                                            .Contains(x.AttributeFQN + "-" + x.Value));
+                .Select(orp => orp.AttributeFQN + "-" + orp.Value)
+                .Contains(x.AttributeFQN + "-" + x.Value));
 
             productExtras.AddRange(orphans);
-            priceListEntry.Extras = productExtras.OrderByDescending(x => x.OverridePrice).ThenByDescending(y=>y.CatalogPrice).ToList();
-            
+            priceListEntry.Extras =
+                productExtras.OrderByDescending(x => x.OverridePrice).ThenByDescending(y => y.CatalogPrice).ToList();
             return List2(priceListEntry);
         }
 
@@ -280,8 +270,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
         private async Task<List<PriceListEntryExtra>> GetProductExtrasInternalAsync(string productCode, Func<string, string, decimal?> getOverridePrice)
         {
             DC.Product dcProduct;
-            var result = new List<PriceListEntryExtra>();
-
+            
             string responseFields = "productCode,productTypeId,extras";
                    //"price(price,salePrice)," +
                    //"productInCatalogs(catalogId,price(price,salePrice))"
@@ -296,37 +285,64 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
             {
                 if (apiError.ErrorCode.Equals("ITEM_NOT_FOUND"))
                 {
-                    return result;
+                    return new List<PriceListEntryExtra>();
                 }
                 throw;
             }
             if (dcProduct.Extras.IsNullOrEmpty())
             {
-                return result;
+                return new List<PriceListEntryExtra>();
             }
 
             // get productType
 
-            DC.ProductType prodType = (await _productTypeWebApiClient.GetProductType(dcProduct.ProductTypeId, responseFields:"extras")).ReadAsSync();
-            var attrLookup = prodType.Extras.ToDictionary(x => x.AttributeFQN);
+            return await GetProductTypeAttributesAsync(getOverridePrice, dcProduct);
+        }
 
-
-            Func<DC.AttributeVocabularyValue, string> getDisplayValue = (vocabVal) =>
-                (vocabVal != null && vocabVal.Content != null)
-                    ? vocabVal.Content.StringValue
-                    : (vocabVal != null)
-                        ? vocabVal.Value as string
-                        : null
-                ;
+        private async Task<List<PriceListEntryExtra>> GetProductTypeAttributesAsync(Func<string, string, decimal?> getOverridePrice, DC.Product dcProduct)
+        {
+            var result = new List<PriceListEntryExtra>();
+            DC.ProductType prodType =
+                (await _productTypeWebApiClient.GetProductType(dcProduct.ProductTypeId, responseFields: "extras")).ReadAsSync();
+            var attrLookup = new Dictionary<string, PriceListEntryExtra>();
+            foreach (var extra in prodType.Extras)
+            {
+                if (extra.VocabularyValues.IsNullOrEmpty())
+                {
+                    attrLookup.Add(extra.AttributeFQN + "-", new PriceListEntryExtra
+                    {
+                        AttributeFQN = extra.AttributeFQN,
+                        AttributeCode = extra.AttributeDetail.AttributeCode,
+                        AttributeName = extra.AttributeDetail.AdminName,
+                        Value = "",
+                        DisplayValue = extra.AttributeDetail.Content.Name
+                    });
+                    continue;
+                }
+                foreach (var vocabValue in extra.VocabularyValues)
+                {
+                    attrLookup.Add(extra.AttributeFQN + "-" + vocabValue.Value, new PriceListEntryExtra
+                    {
+                        AttributeFQN = extra.AttributeFQN,
+                        AttributeCode = extra.AttributeDetail.AttributeCode,
+                        AttributeName = extra.AttributeDetail.AdminName,
+                        Value = vocabValue.Value as string,
+                        DisplayValue =
+                            (vocabValue.VocabularyValueDetail != null && vocabValue.VocabularyValueDetail.Content != null)
+                                ? vocabValue.VocabularyValueDetail.Content.StringValue
+                                : vocabValue.Value as string
+                    });
+                }
+            }
 
             var extras = dcProduct.Extras.Select(extra => extra.Values.Select(x => new PriceListEntryExtra
             {
                 AttributeFQN = extra.AttributeFQN,
-                AttributeCode = attrLookup[extra.AttributeFQN].AttributeDetail.AttributeCode,
-                AttributeName = attrLookup[extra.AttributeFQN].AttributeDetail.AdminName,
+                AttributeCode = attrLookup[extra.AttributeFQN + "-" + x.Value].AttributeCode,
+                AttributeName = attrLookup[extra.AttributeFQN + "-" + x.Value].AttributeName,
                 CatalogPrice = x.DeltaPrice.DeltaPrice,
-                OverridePrice = getOverridePrice(extra.AttributeFQN, x.Value as string),
-                DisplayValue = getDisplayValue(x.AttributeVocabularyValueDetail),
+                OverridePrice = getOverridePrice(extra.AttributeFQN, (x.Value as string) ?? ""),
+                DisplayValue = attrLookup[extra.AttributeFQN + "-" + x.Value].DisplayValue,
                 Value = x.Value as string
             }));
 
