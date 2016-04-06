@@ -27,8 +27,6 @@ Ext.define('Taco.view.priceList.entry.PriceEntryGeneral', {
 
         Ext.tip.QuickTipManager.init();
 
-        me.getExtras(me.record);
-
         var currencyData = Ext.Array.map(mc.getSupportedCurrencies(), function (currency) {
             return {
                 id: currency,
@@ -72,6 +70,7 @@ Ext.define('Taco.view.priceList.entry.PriceEntryGeneral', {
                     fn: function(cmp, newVal, oldVal, eOpts) {
 
                         var record = cmp.store.getAt(cmp.store.find('productCode', newVal));
+                        Taco.app.fireEvent('price-entry-product-changed', record);
                         if (!record) return;
                         var isVariation = record.get('isVariation') || record.get('variationOptions').length > 0;
 
