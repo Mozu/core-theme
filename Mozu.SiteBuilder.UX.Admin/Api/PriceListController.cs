@@ -219,6 +219,9 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
             }
             var dcPriceListEntry = (await _priceListWebClient.GetPriceListEntry(priceListCode: priceListCode, productCode: productCode, currencyCode:currencyCode, startDate:dateTime)).ReadAsSync();
             var priceListEntry = Mapper.Map<PriceListEntry>(dcPriceListEntry);
+
+            if (priceListEntry.IsVariation) return List2(priceListEntry);
+
             var lookup = (priceListEntry.Extras.IsNullOrEmpty())
                 ? new Dictionary<string, PriceListEntryExtra>()
                 : priceListEntry.Extras.ToDictionary(x => x.AttributeFQN + "-" + x.Value ?? "");
@@ -229,12 +232,12 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
                     : (decimal?) null);
 
             var orphans = priceListEntry.Extras.Where(x => !productExtras
-                                                            .Select(orp => orp.AttributeFQN + "-" + orp.Value)
-                                                            .Contains(x.AttributeFQN + "-" + x.Value));
+                .Select(orp => orp.AttributeFQN + "-" + orp.Value)
+                .Contains(x.AttributeFQN + "-" + x.Value));
 
             productExtras.AddRange(orphans);
-            priceListEntry.Extras = productExtras.OrderByDescending(x => x.OverridePrice).ThenByDescending(y=>y.CatalogPrice).ToList();
-            
+            priceListEntry.Extras =
+                productExtras.OrderByDescending(x => x.OverridePrice).ThenByDescending(y => y.CatalogPrice).ToList();
             return List2(priceListEntry);
         }
 
