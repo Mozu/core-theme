@@ -163,7 +163,7 @@ Ext.define('Taco.view.priceList.widget.EntryExtrasGrid', {
                 xtype: 'gridcolumn',
                 dataIndex: 'catalogPrice',
                 stateId: 'catalogPrice',
-                text: 'Catalog Price',
+                text: 'Master Catalog Price',
                 hideable: false,
                 flex: 1,
                 sortable: false,
