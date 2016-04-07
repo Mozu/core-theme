@@ -115,7 +115,7 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
 
             if (error != null)
             {
-                if (PageContext.IsDebugMode) throw error;
+                if (PageContext.IsDebugMode || PageContext.DebugFlags.HasFlag(DebugModeFlagValues.ShowErrors) ) throw error;
                 messagesArray.Add(new {message = error.Message}.ToJObject(_cartSerializer.Value));
             }
 
