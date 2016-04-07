@@ -18,7 +18,7 @@
         lightTagLabel: 'productCode',
         controller: 'products',
         pillType: 'dark',
-        pillText: 'Draft',
+        pillText: null,
         pillTooltipTpl: [
             '<div style="line-height: 15px;">',
                 '<span>Publish Set: {publishSetName}</span>',
@@ -102,6 +102,8 @@
     initComponent: function () {
 
         var me = this;
+
+
 
         this.publishingButton = {
             xtype: 'publishbutton',
