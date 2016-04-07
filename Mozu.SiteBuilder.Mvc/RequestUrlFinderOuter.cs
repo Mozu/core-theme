@@ -1,4 +1,6 @@
-﻿using System;
+﻿using Mozu.Core.Extensions;
+using Mozu.Core.Settings;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Net.Http;
@@ -11,21 +13,40 @@ namespace Mozu.SiteBuilder.Mvc
     public interface IRequestUrlFinderOuter
     {
         string GetRequestUrl();
+        bool IsCdnRequest();
     }
     public class RequestUrlFinderOuter : IRequestUrlFinderOuter
     {
         private readonly Lazy<string> _getter;
 
-        public RequestUrlFinderOuter(HttpRequestMessage request)
+        private readonly Lazy<bool> _cdnGetter;
+        const string AkamiHeader = "Akamai-Origin-Hop";
+        public RequestUrlFinderOuter(HttpRequestMessage request, ISettings settings)
         {
             _getter = new Lazy<string>(() => GetRequestUrl(request));
+            _cdnGetter = new Lazy<bool>(() => IsCdnRequest(request, settings, _getter));
+           
         }
 
         public string GetRequestUrl()
         {
             return _getter.Value;
         }
+        public bool IsCdnRequest()
+        {
+            return _cdnGetter.Value;
+        }
+        public static  bool IsCdnRequest(HttpRequestMessage request, ISettings settings, Lazy<string> urlGetter)
+        {
 
+            var cdnHost = settings.AppSettings("CdnHost");
+            var cdnOriginHost = settings.AppSettings("CdnOriginHost") ?? "";
+            var uri = new Uri(urlGetter.Value);
+            var hasAkamiOriginHop = request.Headers.Any(x => string.Equals(x.Key, AkamiHeader, StringComparison.OrdinalIgnoreCase));
+
+            return hasAkamiOriginHop || cdnHost.EqualsIgnoreCase(uri.Host) || cdnOriginHost.EqualsIgnoreCase(uri.Host);
+        }
+       
         public static string GetRequestUrl(HttpRequestMessage request)
         {
             IEnumerable<string> values;

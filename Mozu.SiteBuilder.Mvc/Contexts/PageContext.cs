@@ -337,6 +337,8 @@ namespace Mozu.SiteBuilder.Mvc.Contexts
         {
             get { return _apiContext.IsDebugMode; }
         }
+        public DebugModeFlagValues DebugFlags => _apiContext.DebugFlags;
+
         public SortingParameters Sorting
         {
             get; set;

@@ -1,6 +1,7 @@
 ﻿using Mozu.Core;
 using Mozu.Core.Extensions;
 using Mozu.Core.Settings;
+using Mozu.SiteBuilder.Mvc;
 using Mozu.SiteBuilder.Mvc.Contexts;
 using Mozu.SiteBuilder.Mvc.ViewEngine;
 using System;
@@ -25,31 +26,33 @@ namespace Mozu.SiteBuilder.UX.Filters
 
         public override void OnActionExecuting(HttpActionContext actionContext)
         {
-            var pageContext = actionContext.Request.Resolve<PageContext>();
+            var requestURLGetter = actionContext.Request.Resolve<IRequestUrlFinderOuter> ();
             var settings = actionContext.Request.Resolve<ISettings>();
             var cdnHost = settings.AppSettings("CdnHost");
             var cdnOriginHost = settings.AppSettings("CdnOriginHost") ?? "";
             var disableCdn = settings.AppSettingsAsNullableBool("disableCdn").GetValueOrDefault(false);
-            var noForce = actionContext.ActionDescriptor.GetCustomAttributes<NoCdnForce>().Any();
+            var sbapi = actionContext.Request.Resolve<ISiteBuilderApiContext>();
+            var noForce = actionContext.ActionDescriptor.GetCustomAttributes<NoCdnForce>().Any() || sbapi.DebugFlags.HasFlag(DebugModeFlagValues.DisableCdn);
+
        
 
 
             var hasAkamiOriginHop = actionContext.Request.Headers.Any(x => string.Equals(x.Key, "Akamai-Origin-Hop", StringComparison.OrdinalIgnoreCase));
-            if (ShouldRedirectToCdn(actionContext.Request.RequestUri, cdnHost, cdnOriginHost, hasAkamiOriginHop, disableCdn, noForce, pageContext ))
+            if (ShouldRedirectToCdn(actionContext.Request.RequestUri, cdnHost, cdnOriginHost, hasAkamiOriginHop, disableCdn, noForce , requestURLGetter))
             {
-                var sbapi = actionContext.Request.Resolve<IApiContext>();
-                actionContext.Response = RedirectToCDN(cdnHost, new Uri(pageContext.Url), sbapi.TenantId, sbapi.SiteId);
+               
+                actionContext.Response = RedirectToCDN(cdnHost, new Uri(requestURLGetter.GetRequestUrl()), sbapi.TenantId, sbapi.SiteId);
                 return;
             }
             base.OnActionExecuting(actionContext);
         }
 
-        static bool ShouldRedirectToCdn(Uri requestUri, string cdnHost, string orginCdnHost , bool hasAkamiOriginHop, bool disableCdn, bool noForce, PageContext pageContext)
+        static bool ShouldRedirectToCdn(Uri requestUri, string cdnHost, string orginCdnHost , bool hasAkamiOriginHop, bool disableCdn, bool noForce, IRequestUrlFinderOuter requestURLGetter)
         {
             var isReciever = requestUri.PathAndQuery.IndexOf("/receiver", StringComparison.OrdinalIgnoreCase) > -1;
-            var uri = new Uri(pageContext.Url);
+            var uri = new Uri(requestURLGetter.GetRequestUrl());
 
-            return !disableCdn && !isReciever && !string.IsNullOrEmpty(cdnHost) && !cdnHost.EqualsIgnoreCase(uri.Host) && !orginCdnHost.EqualsIgnoreCase(uri.Host) && !hasAkamiOriginHop && !noForce;
+            return !disableCdn && !isReciever && !requestURLGetter.IsCdnRequest() && !noForce;
         }
 
         static HttpResponseMessage RedirectToCDN(string cdnHost, Uri originalUrl, int tenantId, int? siteId)
