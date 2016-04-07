@@ -87,6 +87,11 @@ Ext.define('Taco.view.website.Index', {
             productStore,
             me = this;
 
+        // if (this && this.options && this.options.DO_NOT_RENDER) {
+        //     this.callParent(arguments);
+        //     return false;
+        // }
+
         this.LayoutEngine = Taco.tenantSettings.newLayoutEngine ? 'CALIENTE' : 'CHORIZO';
         this.entityEditors = Taco.core.data.StoreManager.getOrCreate('Taco.store.EntityEditors');
         this.pageTypeDefinitions = Taco.core.data.StoreManager.getOrCreate('Taco.store.PageTypeDefinitions');
@@ -1033,15 +1038,15 @@ Ext.define('Taco.view.website.Index', {
 
     onNavigateStart: function () {
         var me = this;
-        window.clearTimeout(this.loadingMaskTaskId);
-        this.loadingMaskTaskId = Ext.defer(function () {
-            me.getCardPanel().setLoading(true);
-        }, 500, this);
+        // window.clearTimeout(this.loadingMaskTaskId);
+        // this.loadingMaskTaskId = Ext.defer(function () {
+        //     // me.getCardPanel().setLoading(true);
+        // }, 500, this);
     },
     onNavigateComplete: function () {
         var me = this;
-        me.getCardPanel().setLoading(false);
-        window.clearTimeout(this.loadingMaskTaskId);
+        // me.getCardPanel().setLoading(false);
+        // window.clearTimeout(this.loadingMaskTaskId);
     },
 
     navigate: function (config) {

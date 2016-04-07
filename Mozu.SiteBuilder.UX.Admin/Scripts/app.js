@@ -36,6 +36,7 @@ Ext.application({
         'Discounts',
         'CouponSets',
         'ProductRankings',
+        'React',
         'StoreFrontProducts',
         'Settings',
         'Provisioning',
