@@ -169,7 +169,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Controllers
             var userDcTask = _adminUserWebApiClient.GetUser(_apiContext.UserClaims.UserId, UserScopeType.Tenant.ToString(), _apiContext.TenantId);
            var rolesTask = GetUserSitesRoles(_apiContext.UserClaims.UserId);
            var tenantTask = _tenantsWebApi.GetTenantInternal(_apiContext.TenantId, false);
-            var adminSubNavExtensibiltyTask = _entityListsWebApiClient.GetEntities("subNavLinks@mozu", 6000);
+            var adminSubNavExtensibiltyTask = _entityListsWebApiClient.GetEntityContainers("subNavLinks@mozu", 6000);
           
 
             Task<ServiceClientResponse<AdminUserCollection>> siteUsersTask = _usersRepo.GetUsers(UserScopeType.Tenant.ToString(), _apiContext.TenantId, pageSize: 200, startIndex: 0);
@@ -240,7 +240,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Controllers
                                                                                 }
                                                                             }
                                                                 });
-                adminSubNavExtensibiltyTask = _entityListsWebApiClient.GetEntities("subNavLinks@mozu", 6000);
+                adminSubNavExtensibiltyTask = _entityListsWebApiClient.GetEntityContainers("subNavLinks@mozu", 6000);
                 await adminSubNavExtensibiltyTask;
             }
            
@@ -290,7 +290,11 @@ namespace Mozu.SiteBuilder.UX.Admin.Controllers
 
             try
             {
-                ViewData["adminSubNavExtensibilty"] = adminSubNavExtensibiltyTask.Result.ReadAsSync().Items;
+                ViewData["adminSubNavExtensibilty"] = adminSubNavExtensibiltyTask.Result.ReadAsSync().Items?.Select(x =>
+              {
+                  x.Item?.Add("_id", x.Id);
+                  return x.Item;
+              }).ToList();
             }
             catch (Exception err)
             {

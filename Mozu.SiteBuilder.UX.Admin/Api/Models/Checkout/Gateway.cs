@@ -48,5 +48,16 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.Models.Checkout
         /// Corresponds to GatewayAccount.Credentials
         /// </summary>
         public JObject Credentials { get; set; }
+
+        /// <summary>
+        /// Friendly name for the gateway setting
+        /// </summary>
+        public string Name { get; set; }
+
+        /// <summary>
+        /// Friendly name for the gateway definition.
+        /// </summary>
+        public string GatewayDefinitionName { get; set; }
     }
+
 }

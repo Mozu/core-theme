@@ -33,9 +33,6 @@ Ext.define('Taco.view.order.widget.InternalNotesGrid', {
             meta.style = 'white-space: normal';
             return Ext.util.Format.htmlEncode(value);
         }
-    }, {
-        text: '',
-        width: 50
     }],
 
     initComponent: function () {

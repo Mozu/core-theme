@@ -1,5 +1,13 @@
 @mixin taco-order {
 
+  .#{$vprefix}grid-hide-more-btn {
+    .#{$prefix}column-header-last {
+      .#{$prefix}column-header-trigger {
+        display: none !important;
+      }
+    }
+  }
+
   .order-no-content {
     color: $gray-text-dark;
     font-size: 13px;

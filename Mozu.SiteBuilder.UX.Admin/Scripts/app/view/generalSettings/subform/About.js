@@ -22,7 +22,7 @@ Ext.define('Taco.view.generalSettings.subform.About', {
     title: 'General',
     margin: "0 0 20 0",
     ui: "subform",
-    width:"100%",   
+    width:"100%",
     //bodyCls: Taco.baseCSSPrefix + 'product-admin-subform',
     //cls: Taco.baseCSSPrefix + 'form-section',
     initComponent: function () {
@@ -32,13 +32,13 @@ Ext.define('Taco.view.generalSettings.subform.About', {
             labelAlign: 'top',
             labelSeparator: ''
         };
-        
+
         me.timeFormatSelect = {
             xtype: 'selectfield',
             itemId: 'timeFormat',
             name: 'siteTimeFormat',
             fieldLabel: 'Time format',
-            valueField: 'value',            
+            valueField: 'value',
             displayField: 'display',
             columnWidth: .5,
             //margin: "0 4 0 0",
@@ -74,7 +74,7 @@ Ext.define('Taco.view.generalSettings.subform.About', {
                 autoLoad: true
             })
         };
-        
+
         me.timeSettings = Ext.widget('fieldcontainer', {
             layout: 'column',
             width: "100%",
@@ -84,9 +84,7 @@ Ext.define('Taco.view.generalSettings.subform.About', {
             ]
         });
 
-
-        
-        //var channelStore = 
+        //var channelStore =
 
         me.channelCombo = Ext.create('Ext.form.field.ComboBox', {
             name: 'channelId',
@@ -104,11 +102,8 @@ Ext.define('Taco.view.generalSettings.subform.About', {
             store: Taco.core.data.StoreManager.getOrCreate({
                 type: 'Taco.store.Channels',
                 autoLoad: true
-                
             })
         });
-        
-
 
         var siteStore = Taco.app.context.getStore(true);
         siteStore.filter([{
@@ -137,7 +132,7 @@ Ext.define('Taco.view.generalSettings.subform.About', {
             hidden:this.record.get("isMozuWebSite"),
             store: siteStore
         });
-        
+
         this.items = [
             {
                 xtype: 'textfield',
@@ -183,7 +178,6 @@ Ext.define('Taco.view.generalSettings.subform.About', {
                         //name:"isWebSite",
                         fieldLabel: "Mozu Hosted Store Front",
                         margin: "0 4 0 0",
-                      
                         value: me.record.get('isMozuWebSite') ? 'Yes' : 'No',
                         flex: 1,
                         readOnly: true
@@ -207,6 +201,7 @@ Ext.define('Taco.view.generalSettings.subform.About', {
                                     arrowPosition: 'left'
                                 })
                             }, {
+                                cls: 'taco-bust-cdn-cache',
                                 xtype: 'fieldcontainer',
                                 fieldLabel: 'Bust CDN Cache',
                                 margin: '0 0 0 5',
@@ -215,7 +210,6 @@ Ext.define('Taco.view.generalSettings.subform.About', {
                                     text: 'Bust CDN Cache',
                                     ui: 'action',
                                     scale: 'medium',
-                                 
                                     handler: function () {
                                         var newKey =  '_'+new Date().getTime();
                                         me.down('#cdnCacheBustKey').setValue(newKey);
@@ -236,16 +230,14 @@ Ext.define('Taco.view.generalSettings.subform.About', {
                                 itemId: 'bust-cdn-cache-button',
                                 tooltip: Ext.create('Taco.core.ux.content.Tooltip', {
                                     elementId: 'bust-cdn-cache-button',
-                                    hoverTarget: 'bodyEl',
+                                    hoverTarget: 'label',
                                     messageKey: 'settings.general.bustCdnCache',
-                                    arrowPosition: 'right',
-                                    offsetLeft: 300
+                                    offsetLeft: 300,
+                                    arrowPosition: 'right'
                                 })
-                        
                             }
                         ],
                         flex: 1
-                    
                     },
                    {
                        xtype: 'hiddenfield',
@@ -253,7 +245,7 @@ Ext.define('Taco.view.generalSettings.subform.About', {
                        itemId:'cdnCacheBustKey'
                    }
                 ]
-            },             
+            },
             {
                 xtype: 'container',
                 layout: 'hbox',
@@ -270,18 +262,13 @@ Ext.define('Taco.view.generalSettings.subform.About', {
                             hoverTarget: 'label',
                             messageKey: 'settings.general.missingImage',
                             offsetLeft: -190,
-                            
                             arrowPosition: 'left'
                         })
                     }
                 ]
             }
-            
-
         ];
 
         this.callParent(arguments);
     }
-    
-  
 });

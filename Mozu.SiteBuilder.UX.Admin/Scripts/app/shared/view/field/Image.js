@@ -74,17 +74,6 @@ Ext.define('Taco.shared.view.field.Image', {
             }
         });
 
-        if (this.filters) {
-            this.selectedImages.load({
-                filters: this.filters
-                //,callback: function(images) {
-                //}
-            });
-        }
-
-        //this.store = Taco.core.data.StoreManager.getOrCreate('Taco.shared.store.Files');
-
-
         this.emptyDropZone = Ext.widget({
             xtype: 'component',
             autoEl: {

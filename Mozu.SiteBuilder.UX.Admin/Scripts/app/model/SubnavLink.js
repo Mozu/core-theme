@@ -4,7 +4,16 @@
 
 Ext.define('Taco.model.SubnavLink', {
 	extend: 'Taco.core.data.Model',
-	fields: [
+    idProperty:'_id',
+    fields: [
+        {
+            name: '_id',
+            type: 'string'
+        },
+        {
+            name:'requiredContext',
+            type: 'string'
+        },
 		{
             name: 'location',
             type: 'string'

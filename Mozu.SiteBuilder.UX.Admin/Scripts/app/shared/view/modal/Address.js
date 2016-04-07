@@ -144,6 +144,7 @@ Ext.define('Taco.shared.view.modal.Address', {
                 message += response.validatedAddr['postalOrZipCode'] + '<br />';
                 message += response.validatedAddr['countryCode'];
                 Ext.Msg.show({
+                    cls: 'taco-validate-address-modal',
                     title: 'Validated Address',
                     msg: 'Valid address is:<p>' + message + '</p>',
                     buttons: Ext.Msg.YESNO,

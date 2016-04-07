@@ -239,31 +239,13 @@ namespace Mozu.SiteBuilder.Mvc.Models.ModelMapping
             public ResolutionResult Resolve(ResolutionResult ctx)
             {
                 List<DC.Gateway> allGateways = ((DC.CheckoutSettings)ctx.Context.SourceValue).PaymentSettings.Gateways ?? new List<DC.Gateway>(0);
-                IEnumerable<DC.Gateway> filteredGateways;
+                IEnumerable<DC.Gateway> filteredGateways = from g in allGateways
+                                                           where g.GatewayAccount != null
+                                                           select g;
 
-                if (ctx.Context.Options != null && ctx.Context.Options.Items != null && ctx.Context.Options.Items.ContainsKey("countryCode"))
-                {
-                    string countryCode = (string)ctx.Context.Options.Items["countryCode"];
+                var cards = filteredGateways != null ? filteredGateways.SelectMany(g => g.SupportedCards).Distinct().ToDictionary(c => c) : new Dictionary<string, string>();
 
-                    filteredGateways =
-                        from g in allGateways
-                        where g.GatewayAccount != null
-                        where g.GatewayAccount.IsActive
-                        where countryCode.Equals(g.GatewayAccount.CountryCode, StringComparison.InvariantCultureIgnoreCase)
-                        select g;
-                }
-                else
-                {
-                    filteredGateways =
-                        from g in allGateways
-                        where g.GatewayAccount != null
-                        where g.GatewayAccount.IsActive
-                        select g;
-                }
-
-                var supportedCards = filteredGateways.Select(g => g.SupportedCards.ToDictionary(card => card)).FirstOrDefault() ?? new Dictionary<string, string>();
-
-                return ctx.New(supportedCards, typeof(Dictionary<string, string>));
+                return ctx.New(cards, typeof(Dictionary<string, string>));
             }
         }
     }

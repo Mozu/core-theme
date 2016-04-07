@@ -21,7 +21,7 @@ Ext.define('Taco.view.order.widget.ShippingMethodMenu', {
         showMethodsByCarrier:false,
 
         // calls the runtime service to get the pricing for configured shipping methods. Note: it applies to the entire order not a specific package, so it is not appropriate for use in the order fulfillment package class;
-        showRuntimePricing:false
+        showRuntimePricing: false
     },
 
     initComponent: function (eOpts) {
@@ -58,22 +58,24 @@ Ext.define('Taco.view.order.widget.ShippingMethodMenu', {
                 this.getRuntimePricing();
             } else {
                 // just show the menu no need to wait for pricing;
-                this.updateShippingMethodMenu()
+                this.updateShippingMethodMenu();
             }
+            me.addCls('taco-shipping-menu');
         }, me);
-        
+
         me.mon(me, {
             click: {
                 fn: me.onShippingMethodChange,
                 scope: me,
                 delegate: "x-menu-item-link"
             }
-        })
+        });
 
-        me.items = [{
-            text: "loading..."
-        }]
-        
+        me.items = [
+            {
+                text: "loading..."
+            }
+        ];
         me.callParent(arguments);
     },
     
@@ -109,7 +111,7 @@ Ext.define('Taco.view.order.widget.ShippingMethodMenu', {
                             this.updateShippingMethodMenu();
                         } else {
                             //Taco.app.fireEvent('setmessage', "No shipping methods available", 'error');
-                            me.runtimeRates = []
+                            me.runtimeRates = [];
                             me.add({
                                 text: "No shipping methods available"
                             });
@@ -147,7 +149,6 @@ Ext.define('Taco.view.order.widget.ShippingMethodMenu', {
                 });
             }
         }
-        
     },
 
     InitShippingMethodsData: function () {
@@ -175,7 +176,7 @@ Ext.define('Taco.view.order.widget.ShippingMethodMenu', {
                 delete itemConfig.id;
 
                 if (record.get("rateProvider") == 'custom') {
-                    customConfiguredRatesMenuData.push(itemConfig)
+                    customConfiguredRatesMenuData.push(itemConfig);
                 } else {
                     if (isConfigured) {
                         // clone the config so that any subsequent changes dont' leak in to the configured config                        
@@ -184,7 +185,7 @@ Ext.define('Taco.view.order.widget.ShippingMethodMenu', {
                         itemConfig.text += " (Configured)";
                     }
                     // populate secondary flyouts
-                    rateProviders[itemConfig.rateProvider].push(itemConfig)
+                    rateProviders[itemConfig.rateProvider].push(itemConfig);
                 }
             });
         }
@@ -200,17 +201,17 @@ Ext.define('Taco.view.order.widget.ShippingMethodMenu', {
             menuData = Ext.clone(me.runtimeRates);
         } else {
             // the full set of configured shipping methods;
-            menuData = Ext.Array.union(                
+            menuData = Ext.Array.union(
                 me.configuredRatesMenuData,
-                me.customConfiguredRatesMenuData 
-            )
+                me.customConfiguredRatesMenuData
+            );
         }
 
         if (me.showMethodsByCarrier) {
 
             // add in the full set of shipping methods by carrier;
             menuData = Ext.Array.union(
-                menuData,            
+                menuData,
                 {
                     xtype: "menuseparator",
                     disabled: true
@@ -232,8 +233,6 @@ Ext.define('Taco.view.order.widget.ShippingMethodMenu', {
                     disabled: !me.rateProviders["fedex"].length,
                     text: (me.rateProviders["fedex"].length) ? "FedEx" : "FedEx (Not Configured)"
                 },
-
-
                 [
                     {
                         xtype: 'menuitem',
@@ -271,13 +270,10 @@ Ext.define('Taco.view.order.widget.ShippingMethodMenu', {
                         text: (me.rateProviders["usps"].length) ? "USPS" : "USPS (Not Configured)"
                     }
                 ]
-            )
-
+            );
         }
 
-
         return menuData;
-
     },
     onDestroy: function () {
         this.callParent(arguments);

@@ -1,13 +1,10 @@
 /**
- * @class Taco.view.settings.paymentAndCheckout.subform.CheckoutPreference
+ * @class Taco.view.settings.paymentTypes.subform.CheckoutPreference
  *
  */
 
-Ext.define('Taco.view.settings.paymentAndCheckout.subform.CheckoutPreference', {
+Ext.define('Taco.view.settings.paymentTypes.subform.CheckoutPreference', {
     extend: 'Taco.core.ux.form.Form',
-    requires: [
-        'Taco.view.settings.paymentAndCheckout.Gateway'
-    ],
     title: 'Checkout Preference',
     margin: "0 0 20 0",
     ui: "subform",

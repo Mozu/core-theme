@@ -24,6 +24,7 @@ Ext.define('Taco.store.EntityLists', {
         
             options.params.entityType = this.entityType;
             options.params.view = this.view;
+            options.params.usages = this.usages;
 
             return this.callParent([page, options]);
         },
@@ -33,6 +34,7 @@ Ext.define('Taco.store.EntityLists', {
   
             options.params.entityType = this.entityType;
             options.params.view = this.view;
+            options.params.usages = this.usages;
 
             return this.callParent([options]);
         }

@@ -5,6 +5,7 @@ source http://nuget-internal.corp.volusion.com:8200/api/odata
 source http://nuget-external.corp.volusion.com:8201/api/odata
 
 nuget 51Degrees.mobi 2.1.15.1 content: none
+nuget JWT 1.3.4
 
 nuget Microsoft.AspNet.WebApi.Core 5.2.3
 nuget Microsoft.AspNet.WebPages 3.2.2 
@@ -45,6 +46,6 @@ nuget Mozu.Provisioning.Contracts < 1.20
 nuget Mozu.Reference.Contracts < 1.20
 nuget Mozu.ShippingAdmin.Contracts < 1.20
 nuget Mozu.SiteSettings.General.Contracts < 1.20   
-nuget Mozu.SiteSettings.Order.Contracts < 1.20 
+nuget Mozu.SiteSettings.Order.Contracts prerelease
 nuget protobuf-net 2.0.0.668 
 nuget FAKE

@@ -135,6 +135,48 @@
         @include icons-sprite(radio-checked);
         background-size: 14px;
     }
+    .#{$vprefix}lock-radios {
+        &.#{$prefix}field {
+            .#{$prefix}form-radio {
+                @include icons-sprite(unlock);
+                background-size: 14px;
+
+                &:focus {
+                    border: none;
+                    border-radius: 0;
+                    box-shadow: none;
+                }
+            }
+        }
+
+        &.#{$prefix}form-cb-checked {
+            .#{$prefix}form-radio {
+                @include icons-sprite(lock);
+                background-size: 14px;
+
+                &:focus {
+                    border: none;
+                    border-radius: 0;
+                    box-shadow: none;
+                }
+            }
+        }
+    }
+
+    .#{$vprefix}lock-radios {
+        &.#{$prefix}form-cb-checked {
+            &+.#{$prefix}form-type-text {
+                .#{$prefix}form-text {
+                    color: $gray-text-light;
+
+                    &.#{$prefix}field-form-focus {
+                        border-color: $gray-text-light;
+                        box-shadow: none;
+                    }
+                }
+            }
+        }
+    }
     .#{$prefix}form-type-checkbox,
     .#{$prefix}form-type-radio {
         .#{$prefix}form-cb-label-after {
@@ -376,6 +418,45 @@
         font-family:'SourceSansProRegular', 'helvetica', 'arial', 'verdana', 'sans-serif';
         padding: 0px 10px 10px 10px;
         background-color: $color-framework-gray-light;
+    }
+
+    /** address validation */
+    .#{$vprefix}validate-address-modal {
+        height: 220px !important;
+
+        .#{$prefix}window-header-modal-top {
+            height: 59px;
+        }
+
+        .#{$prefix}window-body {
+            height: 119px !important;
+
+            .#{$prefix}box-inner {
+                height: 108px !important;
+            }
+        }
+
+        .#{$prefix}toolbar-docked-bottom {
+            top: 178px !important;
+
+            .#{$prefix}btn-action-medium {
+                margin-left: -7px !important;
+
+                &.#{$prefix}btn-action-primary-medium-noicon {
+                    &:hover {
+                        background-color: $primary-btn-hover-background;
+
+                        .#{$prefix}btn-inner-center {
+                            color: $white-color;
+                        }
+                    }
+
+                    &:active {
+                        background-color: $primary-btn-active-background;
+                    }
+                }
+            }
+        }
     }
 
 }

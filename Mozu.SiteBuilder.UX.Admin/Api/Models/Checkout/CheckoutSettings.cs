@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 using Newtonsoft.Json;
 using DC = Mozu.SiteSettings.Order.Contracts;
+using System.Linq;
 
 namespace Mozu.SiteBuilder.UX.Admin.Api.Models.Checkout
 {
@@ -15,7 +16,21 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.Models.Checkout
         /// <summary>
         /// Surrogate id for ExtJS to record this object properly in a store.
         /// </summary>
-        public string Id { get { return Gateway != null ? Gateway.Id : null; } set { } }
+        public string Id
+        {
+            get
+            {
+                var gatewayId = string.Empty;
+                if (CardGatewayMap != null && CardGatewayMap.Count > 0)
+                {
+                    var card = CardGatewayMap.FirstOrDefault(g => !string.IsNullOrEmpty(g.GatewayId));
+                    if (card != null)
+                        gatewayId = card.GatewayId;
+                }
+                return gatewayId;
+            }
+            set { }
+        }
 
         /// <summary>
         /// Corresponds to OrderProcessingSettings.PaymentProcessingFlowType
@@ -32,14 +47,33 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.Models.Checkout
         /// </summary>
         public bool PayByMail { get; set; }
 
+        //TODO: remove when old admin goes away.
         /// <summary>
         /// Corresponds to PaymentSettings.Gateways[0]
         /// </summary>
         public Gateway Gateway { get; set; }
 
         /// <summary>
+        /// Corresponds to PaymentSettings.Gateways
+        /// </summary>
+        public List<CardGateway> CardGatewayMap { get; set; }
+
+        /// <summary>
         /// Corresponds to PaymentSettings.ExternalPaymentWorkflowDefinitions
         /// </summary>
         public List<DC.ExternalPaymentWorkflowDefinition> ExternalPaymentWorkflows { get; set; }
+    }
+
+    public class CardGateway
+    {
+        public string CardType { get; set; }
+
+        public string CardDisplay { get; set; }
+
+        public bool IsEnabled { get; set; }
+
+        public string GatewayId { get; set; }
+
+        public string GatewayName { get; set; }
     }
 }
