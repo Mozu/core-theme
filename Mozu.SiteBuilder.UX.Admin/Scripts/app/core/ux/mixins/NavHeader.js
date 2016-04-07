@@ -130,7 +130,11 @@ Ext.define('Taco.core.ux.mixins.NavHeader', {
                 var addAction = function() {
 
                     //reset the html
-                    document.getElementById(me.titleId).innerHTML = '';
+                    var elem = document.getElementById(me.titleId);
+                    if (!elem) {
+                        return;
+                    }
+                    elem.innerHTML = '';
 
                     Ext.create('Taco.core.ux.action.Action', {
                         text: parentTitleCfg.title || 'Edit View',
@@ -182,7 +186,11 @@ Ext.define('Taco.core.ux.mixins.NavHeader', {
                             defaultTplData: pillCfg.pillTooltipData || {}
                         });
                     }
-                    me.titleCmp.on('afterrender', addAction);
+                    if (!me.titleCmp.hasListener('afterrender')) {
+                        me.titleCmp.on('afterrender', addAction);
+                    } else if (me.titleCmp.rendered) {
+                        addAction();
+                    }
                 }
             },
             scope: this
