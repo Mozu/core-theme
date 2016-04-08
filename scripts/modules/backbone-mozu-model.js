@@ -189,9 +189,10 @@
              * @returns {Object} Returns the value of the named attribute, and `undefined` if it was never set.
              */
             set: function(key, val, options) {
-                var attr, attrs, unset, changes, silent, changing, prev, current, syncRemovedKeys;
+                var attr, attrs, unset, changes, silent, changing, prev, current, syncRemovedKeys, containsPrice;
                 if (!key && key !== 0) return this;
 
+                containsPrice = new RegExp('price', 'i');
                 // remove any properties from the current configurable model 
                 // where there are properties no longer present in the latest api model.
                 syncRemovedKeys = function (currentModel, attrKey) {
@@ -242,7 +243,7 @@
                     // Inject in the relational lookup
                     val = this.setRelation(attr, val, options);
 
-                    if (this.dataTypes && attr in this.dataTypes) {
+                    if (this.dataTypes && attr in this.dataTypes && (val !== null || !containsPrice.test(attr))) {
                         val = this.dataTypes[attr](val);
                     }
 
