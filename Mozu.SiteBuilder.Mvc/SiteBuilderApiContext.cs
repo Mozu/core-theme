@@ -49,7 +49,7 @@ namespace Mozu.SiteBuilder.Mvc
 
             DataViewMode = dvmGetter.GetDataViewMode(UserClaims);
             PreviewDate = GetNowValue();
-            PriceListCode = GetPriceListOverrideValue(this.PriceListCode);
+           
         }
 
         private void SetDebugMode()
@@ -80,36 +80,7 @@ namespace Mozu.SiteBuilder.Mvc
        
         
 
-        private string GetPriceListOverrideValue(string priceList)
-        {
-            if (this.DataViewMode != DataViewModeType.Pending) return priceList;
-
-            HttpCookie cookie;
-            var val = _httpRequestMessage.GetQueryNameValuePairs().Where(x => string.Equals(x.Key, "mz_pricelist", StringComparison.OrdinalIgnoreCase)).Select(x => x.Value).FirstOrDefault();
-            if (val != null)
-            {
-                if (!string.IsNullOrWhiteSpace(val))
-                {
-                    priceList = val;
-                    cookie = new HttpCookie(Constants.PRICELISTCOOKIENAME, priceList);
-                }
-                else
-                {
-                    cookie = new HttpCookie(Constants.PRICELISTCOOKIENAME, "");
-                    cookie.Expires = DateTime.MinValue;
-                }
-                _cookieProvider.SaveResponseCookie(Constants.PRICELISTCOOKIENAME, cookie);
-            }
-            else
-            {
-                cookie = _cookieProvider.GetRequestCookie(Constants.PRICELISTCOOKIENAME);
-                if (cookie != null)
-                {
-                    priceList = cookie.Value;
-                }
-            }
-            return priceList;
-        }
+        
 
         private DateTime? GetNowValue()
         {
@@ -413,7 +384,7 @@ namespace Mozu.SiteBuilder.Mvc
         {
             this.DataViewMode = dataViewMode;
         }
-
+     
         public void SetPriceListCode(string plCode)
         {
             this.PriceListCode = plCode;

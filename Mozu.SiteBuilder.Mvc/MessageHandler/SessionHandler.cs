@@ -6,6 +6,7 @@ using System.Net.Http;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
+using System.Web;
 using Mozu.SiteBuilder.Mvc.ActionResults;
 using Mozu.SiteBuilder.Mvc.CMS;
 using Mozu.SiteBuilder.Mvc.Contexts;
@@ -25,7 +26,7 @@ namespace Mozu.SiteBuilder.Mvc.MessageHandler
     {
         const int MaxTimeInMInutes = 30;
 
-
+        const string NULLPRICELISTCODE = "nullPriceListCode";
         protected override async Task<HttpResponseMessage> SendAsync(
            HttpRequestMessage request,
            CancellationToken cancellationToken)
@@ -33,33 +34,57 @@ namespace Mozu.SiteBuilder.Mvc.MessageHandler
             var apiContext = request.Resolve<ISiteBuilderApiContext>();
             var requestHelper = request.Resolve<IRequestUrlFinderOuter>();
             var authHelper = request.Resolve<IAuthenticationHelper>();
-            if (!RequiresUpdatedSession(request, apiContext, requestHelper, authHelper))
+            var priceListOverride = (string)null;
+            if ( !TryGetPriceListOverride(apiContext, request, out priceListOverride) && !RequiresUpdatedSession(request, apiContext, requestHelper, authHelper))
             {
                 return await base.SendAsync(request, cancellationToken).ConfigureAwait(false);
             }
 
             var session = request.Resolve<Lazy<IMozuSession>>();
-            var priceListResolutionHandler = request.Resolve<Lazy<IPriceListResolutionHandler>>();
             var logger = LoggingService.LoggerFor<SessionHandler>();
-          
-            await InitSession(apiContext, authHelper, session, priceListResolutionHandler, logger).ConfigureAwait(false);
+            if ( !object.Equals( priceListOverride , NULLPRICELISTCODE ))
+            {
+                SetOveridePriceList(apiContext, session , priceListOverride, logger);
+            }
+            else
+            {
+                await InitSession(apiContext, authHelper, session, request.Resolve<IPriceListResolutionHandler>(), logger).ConfigureAwait(false);
+            }
+            
+            
 
             return await base.SendAsync(request, cancellationToken).ConfigureAwait(false);
         }
 
 
-        private static async Task InitSession(ISiteBuilderApiContext apiContext, IAuthenticationHelper authHelper, Lazy<IMozuSession> session, Lazy<IPriceListResolutionHandler> priceListResolutionHandler, ILogger  logger)
+        private static void SetOveridePriceList(ISiteBuilderApiContext apiContext, Lazy<IMozuSession> session , string priceListOverride, ILogger logger)
+        {
+            apiContext.SetPriceListCode(priceListOverride);
+            try
+            {
+                session.Value.SetValue(SessionMessageHandler.PristListCodeKey, priceListOverride);
+            }
+            catch (Exception ex)
+            {
+                logger.Warn("error writing to session", ex);
+               
+            }
+        }
+
+
+        private static async Task InitSession(ISiteBuilderApiContext apiContext, IAuthenticationHelper authHelper, Lazy<IMozuSession> session, IPriceListResolutionHandler priceListResolutionHandler, ILogger  logger)
         {
             apiContext.UserClaims.SessionInfo = new SessionInfo();
 
             try
             {
                 apiContext.UserClaims.SessionInfo.LastModified = DateTime.UtcNow;
-                var res = await priceListResolutionHandler.Value.ResolvePriceList().ConfigureAwait(false);
+                var res = await priceListResolutionHandler.ResolvePriceList().ConfigureAwait(false);
                 if (!string.IsNullOrEmpty(res))
                 {
                     session.Value.SetValue(SessionMessageHandler.PristListCodeKey, res);
                 }
+                apiContext.SetPriceListCode(res);
                 authHelper.SaveStoreFrontAccessToken(apiContext.UserClaims.ToAccessToken(), authHelper.GetProfileToken());
             }
             catch (Exception ex)
@@ -75,6 +100,8 @@ namespace Mozu.SiteBuilder.Mvc.MessageHandler
             {
                 return false;
             }
+
+
 
             LightweightUserClaims sUserClaims;
             LightweightUserClaims pUserClaims;
@@ -110,6 +137,24 @@ namespace Mozu.SiteBuilder.Mvc.MessageHandler
 
             }
             return true;
+        }
+
+
+        private static bool TryGetPriceListOverride(ISiteBuilderApiContext apiContext, HttpRequestMessage request,  out string priceList)
+        {
+            priceList = NULLPRICELISTCODE;
+            if (apiContext.DataViewMode != DataViewModeType.Pending)
+            {
+                return false;
+            }
+            
+            var val = request.GetQueryNameValuePairs().Where(x => string.Equals(x.Key, "mz_pricelist", StringComparison.OrdinalIgnoreCase)).Select(x => x.Value).FirstOrDefault();
+            if (val != null)
+            {
+                priceList = val;
+                return true;
+            }
+            return false;
         }
     }
 }
