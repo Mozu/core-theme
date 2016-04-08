@@ -31,14 +31,16 @@ namespace Mozu.SiteBuilder.UX.Filters
             var cdnHost = settings.AppSettings("CdnHost");
             var cdnOriginHost = settings.AppSettings("CdnOriginHost") ?? "";
             var disableCdn = settings.AppSettingsAsNullableBool("disableCdn").GetValueOrDefault(false);
-            var noForce = actionContext.ActionDescriptor.GetCustomAttributes<NoCdnForce>().Any();
-       
+            var sbapi = actionContext.Request.Resolve<ISiteBuilderApiContext>();
+            var noForce = actionContext.ActionDescriptor.GetCustomAttributes<NoCdnForce>().Any() || sbapi.DebugFlags.HasFlag(DebugModeFlagValues.DisableCdn);
+
+
 
 
             var hasAkamiOriginHop = actionContext.Request.Headers.Any(x => string.Equals(x.Key, "Akamai-Origin-Hop", StringComparison.OrdinalIgnoreCase));
             if (ShouldRedirectToCdn(actionContext.Request.RequestUri, cdnHost, cdnOriginHost, hasAkamiOriginHop, disableCdn, noForce , requestURLGetter))
             {
-                var sbapi = actionContext.Request.Resolve<IApiContext>();
+               
                 actionContext.Response = RedirectToCDN(cdnHost, new Uri(requestURLGetter.GetRequestUrl()), sbapi.TenantId, sbapi.SiteId);
                 return;
             }

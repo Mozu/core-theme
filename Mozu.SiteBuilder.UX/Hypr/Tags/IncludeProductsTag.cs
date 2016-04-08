@@ -10,6 +10,7 @@ using Mozu.SiteBuilder.UX.Models.StoreFront.Catalog;
 using System.Collections.Generic;
 using System.Net.Http;
 using System.Web.Http;
+using Mozu.SiteBuilder.Mvc;
 using Mozu.SiteBuilder.Mvc.MessageHandler;
 using NDjango.Interfaces;
 using NDjango.FiltersCS.Compatibility;
@@ -243,7 +244,7 @@ namespace Mozu.SiteBuilder.UX.Hypr.Tags
 
                 if (res.HasException)
                 {
-                    if (pageContext.IsDebugMode)
+                    if (pageContext.IsDebugMode || pageContext.DebugFlags.HasFlag(DebugModeFlagValues.ShowErrors))
                     {
                         throw res.ReadException();
                     }

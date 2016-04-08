@@ -490,7 +490,9 @@ Ext.define('Taco.view.order.subform.Detail', {
             canSendEmail = !Ext.Array.contains(['Pending'], me.record.get('orderStatus')),
             acceptOrderButton = this.down("#acceptOrderButton"),
             cancelOrderButton = this.down("#cancelOrderButton"),
+            editStoreFrontButton = this.down ("#editStoreFrontButton"),
             editOrderButton = this.down("#editOrderButton"),
+            canEditInStoreFront = !(me.record.get('items') && me.record.get('items').length ),
             resendEmailButton = this.down("#resendEmailButton");
 
 
@@ -502,6 +504,9 @@ Ext.define('Taco.view.order.subform.Detail', {
         }
         if (editOrderButton) {
             editOrderButton.setDisabled(!canEdit);
+        }
+        if ( editStoreFrontButton){
+            editStoreFrontButton.setDisabled(!canEditInStoreFront);
         }
 
         if (resendEmailButton) {
@@ -516,6 +521,7 @@ Ext.define('Taco.view.order.subform.Detail', {
             canCancel = Ext.Array.indexOf(availableActions, "CancelOrder") != -1,
             canEdit = !Ext.Array.contains(['Completed', 'Cancelled', 'Abandoned'], me.record.get('orderStatus')),
             canSendEmail = !Ext.Array.contains(['Pending', 'Abandoned'], me.record.get('orderStatus')),
+            canEditInStoreFront = !(me.record.get('items') && me.record.get('items').length ),
             buttons;
         
         buttons = [
@@ -576,6 +582,18 @@ Ext.define('Taco.view.order.subform.Detail', {
                 handler: this.editOrder,
                 scope: me,
                 disabled: !canEdit
+            },
+            {
+                text: 'Edit In StoreFront',
+                xtype: "button",
+                ui: "action",
+                itemId: "editStoreFrontButton",
+                scale: "medium",
+                handler: function (){
+                    Taco.core.StateManager.attemptNavigate('/orders/storefront/' + me.record.get('customerId') +'/' + me.record.getId());
+                },
+                scope: me,
+                disabled: !canEditInStoreFront
             }
         ];
 

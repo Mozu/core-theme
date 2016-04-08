@@ -12,6 +12,7 @@ using Mozu.Core.Api.Contracts.Client;
 using Mozu.Core.Collections;
 using Mozu.MZDB.Contracts;
 using Mozu.ProductRuntime.Contracts.Clients;
+using Mozu.SiteBuilder.Mvc;
 using Mozu.SiteBuilder.Mvc.Caching;
 using Mozu.SiteBuilder.Mvc.Contexts;
 using Mozu.SiteBuilder.Mvc.Tags;
@@ -118,7 +119,7 @@ namespace Mozu.SiteBuilder.UX.Hypr.Tags
             }
 
             object model = null;
-            if (res.HasException && sbContext.IsDebugMode)
+            if (res.HasException && (sbContext.IsDebugMode || sbContext.DebugFlags.HasFlag(DebugModeFlagValues.ShowErrors)))
             {
                 throw (Exception)res.ReadException();
             }

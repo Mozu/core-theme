@@ -6,9 +6,15 @@ namespace Mozu.SiteBuilder.Mvc
     public interface ISiteBuilderApiContext : IApiContext
     {
         bool IsEditMode { get; set; }
+        bool IsAdminMode { get; }
         bool IsDebugMode { get; set; }
+
+        DebugModeFlagValues DebugFlags { get; set; }
         void SetUser(LightweightUserClaims user);
         void SetDataMode(Mozu.Core.DataViewModeType  dataViewMode);
         void SetPriceListCode(string plCode);
+
+
+        LightweightUserClaims AdminUserClaim { get; set; }
     }
 }

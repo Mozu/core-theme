@@ -24,6 +24,7 @@ Ext.define('Taco.view.customSchema.SchemaList', {
         this.store = Ext.create('Taco.store.EntityLists', {
             entityType: this.entityType,
             autoLoad: true,
+            usages: 'entityManager',
             listeners: {
                 load: this.selectFirstItem.bind(this)
             }
@@ -40,8 +41,6 @@ Ext.define('Taco.view.customSchema.SchemaList', {
                 sortable: true
             }
         ];
-
-        console.log(Taco.core.StateManager)
 
         this.selModel =  this.getSelectionModel();
 

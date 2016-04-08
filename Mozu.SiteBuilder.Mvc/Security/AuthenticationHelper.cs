@@ -151,6 +151,15 @@ namespace Mozu.SiteBuilder.Mvc.Security
             CookieProvider.SaveResponseCookie(scookie.Name, scookie);
             CookieProvider.SaveResponseCookie(pcookie.Name, pcookie);
         }
+        void IAuthenticationHelper.ClearSessionToken()
+        {
+            var scookie = new HttpCookie(StoreFrontAccessTokenSessionCookieName);
+            scookie[CookieDate] = DateTime.MinValue.ToString("o");
+            scookie.Expires = DateTime.MinValue;
+            CookieProvider.SaveResponseCookie(scookie.Name, scookie);
+           
+        }
+
 
         void IAuthenticationHelper.ClearStorefrontTokens()
         {
@@ -173,5 +182,7 @@ namespace Mozu.SiteBuilder.Mvc.Security
             }
             return null;
         }
+
+        
     }
 }

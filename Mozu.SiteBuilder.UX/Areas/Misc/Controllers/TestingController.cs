@@ -11,6 +11,8 @@ using System.Web.Http;
 using Mozu.Core;
 using Mozu.Core.Api.Client;
 using Mozu.Core.Api.Client.Caching;
+using Mozu.Core.Api.Handlers.Message;
+using Mozu.Core.Api.Session;
 using Mozu.Core.Settings;
 using Mozu.SiteBuilder.Mvc;
 using Mozu.SiteBuilder.Mvc.ActionResults;
@@ -25,6 +27,8 @@ using Mozu.SiteBuilder.UX.Models.Visit;
 using Mozu.SiteSettings.Order.Contracts.Clients;
 using Mozu.Tenant.Contracts.Clients;
 using Constants = Mozu.Core.Api.Contracts.Constants;
+using Mozu.Customer.Contracts.Clients;
+using Mozu.SiteBuilder.Mvc.Handler;
 
 namespace Mozu.SiteBuilder.UX.Areas.Misc.Controllers
 {
@@ -231,7 +235,7 @@ namespace Mozu.SiteBuilder.UX.Areas.Misc.Controllers
             var site = res.ReadAsAsync().Result;
 
             var domains = site.Domains.Where(x => x.IsInfrastructureRecord == false).ToList();
-
+            var isAdminMode = false;
             IEnumerable<string> domainList;
             var viewMode = DataViewModeType.NoneSet;
             switch ((environment ?? "").ToLower())
@@ -250,6 +254,50 @@ namespace Mozu.SiteBuilder.UX.Areas.Misc.Controllers
                     {
                         viewMode = DataViewModeType.Pending;
                         domainList = Enumerable.Empty<string>();
+                        break;
+                    }
+                case "admin":
+                    {
+                        
+                        isAdminMode = true;
+                        domainList = Enumerable.Empty<string>();
+                        if (!string.IsNullOrEmpty(redir) && redir.IndexOf("?")>-1)
+                        {
+                            var qstring = HttpUtility.ParseQueryString(redir.Substring(redir.IndexOf("?")));
+                            var tmp = qstring["mz_cust_impersonate"];
+                            var canImpersonate = (this.SbApiContext.AdminUserClaim?.HasBehavior<Core.Behaviors.CustomerUpdateBehavior>()).GetValueOrDefault(false);
+                           
+                            int customerAccountId;
+                            if (canImpersonate && int.TryParse(tmp, out customerAccountId))
+                            {
+                               
+                                var custInfo =( await Request.Resolve<ICustomerAccountWebApiClient>().CloneWithoutUserClaims().GetAccount(customerAccountId).ConfigureAwait(false)).ReadAsSync();
+                                //tbd add another switch to use userid to get users cart..
+
+
+                                var newUser =LightweightUserClaims.CreateForShopper( 
+                                    Guid.NewGuid().ToString("N"), 
+                                    custInfo.FirstName, 
+                                    custInfo.LastName, 
+                                    custInfo.Id, 
+                                    this.SbApiContext.TenantId, 
+                                    this.SbApiContext.SiteId.GetValueOrDefault(), 
+                                    DateTime.UtcNow.AddHours(1));
+
+                                var profile = new UserProfile() {
+                                    FirstName = custInfo.FirstName,
+                                    LastName = custInfo.LastName,
+                                    UserId = newUser.UserId,
+                                    EmailAddress = custInfo.EmailAddress,
+                                    UserName = custInfo.UserName };
+
+                                
+                                var authHelper = Request.Resolve<IAuthenticationHelper>();
+                                authHelper.SaveStoreFrontAccessToken(newUser.ToAccessToken(), profile.ToToken());
+                                authHelper.ClearSessionToken();
+
+                            }
+                        }
                         break;
                     }
                 case "primary":
@@ -286,7 +334,7 @@ namespace Mozu.SiteBuilder.UX.Areas.Misc.Controllers
                     Headers = headers
                 };
             }
-            SiteContext.Save(site: site.Id, masterCatalog: site.MasterCatalogId, tenant: site.TenantId, isEditMode: false, dataViewMode: viewMode, cookieProvider: _cookies, catalogid: site.CatalogId.Value, locale: site.DefaultLocaleCode, currency: site.DefaultCurrencyCode);
+            SiteContext.Save(site: site.Id, masterCatalog: site.MasterCatalogId, tenant: site.TenantId, isEditMode: false, dataViewMode: viewMode, cookieProvider: _cookies, catalogid: site.CatalogId.Value, locale: site.DefaultLocaleCode, currency: site.DefaultCurrencyCode, isAdminMode:isAdminMode);
 
             var uri = CreateRedirectUrl(redir, newHostname, doHostnameRedirect);
             return new RedirectResult(uri);

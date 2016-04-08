@@ -186,6 +186,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
         [HttpGetRoute(UriTemplate = "read")]
         public async Task<Response<List<JObject>>> Read(PagingParamaters pagingParams, FilterCollection extFilter, string entityType, string list, string view = null)
         {
+
             if (view != null && view.IndexOf("-fake")>-1)
             {
                 view = null;
@@ -279,13 +280,32 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
         }
 
         [HttpGetRoute(UriTemplate = "lists/read")]
-        public async Task<Response<List<JObject>>> ReadLists (PagingParamaters pagingParams, FilterCollection extFilter, string entityType )
+        public async Task<Response<List<JObject>>> ReadLists (PagingParamaters pagingParams, FilterCollection extFilter, string entityType, string usages = null)
         {
+            var usagesArray = usages == null ? null : usages.Split(new char[] { ',' }, StringSplitOptions.RemoveEmptyEntries);
+            var usageFilter = new Func<IEnumerable<string>, bool>(listUsages =>
+            {
+                if (usagesArray == null || usagesArray.Length == 0)
+                {
+                    return true;
+                }
+                if (listUsages == null || listUsages.Count() == 0)
+                {
+                    return false;
+                }
+                return listUsages.Any(u => usagesArray.Any(v => u.Equals(v, StringComparison.OrdinalIgnoreCase)));
+            });
+
+            if (this.HttpContext.Request.Cookies["debugext"] != null && string.Equals(this.HttpContext.Request.Cookies["debugext"].Value, "true", StringComparison.InvariantCultureIgnoreCase))
+            {
+               usageFilter = new Func<IEnumerable<string>, bool>(listUsages => true);
+            }
+
             if (entityType == "cms")
             {
                 DC.DocumentListCollection res = (await _documentListWebApiClient.GetDocumentLists(pageSize: pagingParams.pageSize, startIndex: pagingParams.startIndex)).ReadAsSync();
 
-                var items = res.Items.Select(x => JObject.FromObject(x, JsonSerializer.Create(new CaseInsensitiveJsonSerializerSettings())))
+                var items = res.Items.Where(x => usageFilter(x.Usages)).ToList().Select(x => JObject.FromObject(x, JsonSerializer.Create(new CaseInsensitiveJsonSerializerSettings())))
                     .Select(x =>
                     {
                         x["entityType"] = "cms";
@@ -298,7 +318,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
             else if (entityType == "mzdb")
             {
                 EntityListCollection res = (await _entityListsWebApiClient.GetEntityLists(pageSize: pagingParams.pageSize, startIndex: pagingParams.startIndex)).ReadAsSync();
-                var items = res.Items.Select(x => JObject.FromObject(x, JsonSerializer.Create(new CaseInsensitiveJsonSerializerSettings())))
+                var items = res.Items.Where(x => usageFilter(x.Usages)).Select(x => JObject.FromObject(x, JsonSerializer.Create(new CaseInsensitiveJsonSerializerSettings())))
                     .Select(x =>
                     {
                         x["entityType"] = "mzdb";

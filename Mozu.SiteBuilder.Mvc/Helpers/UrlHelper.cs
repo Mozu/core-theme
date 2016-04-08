@@ -188,7 +188,7 @@ namespace Mozu.SiteBuilder.Mvc.Helpers
             sb.Append("SBTHEME=").Append(HttpUtility.UrlEncode(this._siteContext.Theme.Id));
 
             // debug mode MUST be set or else the request to resources will fail
-            sb.AppendFormat("&debug={0}", _pageContext.IsDebugMode);
+            sb.AppendFormat("&debug={0}", _pageContext.IsDebugMode || _apiContext.DebugFlags.HasFlag(DebugModeFlagValues.Unminified));
 
             if (this._apiContext.DataViewMode == Core.DataViewModeType.Pending)
             {

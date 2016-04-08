@@ -12,7 +12,7 @@ namespace Mozu.SiteBuilder.Mvc.Handler
 {
     public interface IPriceListResolutionHandler
     {
-        Task<string> ResolvePriceList();
+        Task<string> ResolvePriceList(int? customerAccoutnid = null);
 
    
     }
@@ -36,36 +36,13 @@ namespace Mozu.SiteBuilder.Mvc.Handler
             _logger = logger;
         }
 
-        Task<string> IPriceListResolutionHandler.ResolvePriceList()
+        Task<string> IPriceListResolutionHandler.ResolvePriceList(int? customerAccoutnid )
         {
-            return _priceListRuntimeWebApiClient.Value.GetResolvedPriceList(customerAccountId: null)
+            return _priceListRuntimeWebApiClient.Value.GetResolvedPriceList(customerAccountId: customerAccoutnid)
                 .ContinueWith(x =>  x.Result == null ? null : x.Result.ReadAsSync().PriceListCode);
         }
 
-        //public async Task<string> ResolvePriceList()
-        //{
-
-        //    var client = _priceListRuntimeWebApiClient.Value;
-
-        //   // var newSession = _session.GetSessionForContext(newCtx);
-
-        //    var res = await client.GetResolvedPriceList(customerAccountId: null).ConfigureAwait(false);
-        //    if (res.HasException)
-        //    {
-        //        _logger.Warn("error calling price list resolver", res.ReadException());
-        //        return null ;
-        //    }
-
-        //    var plCode = res.ReadAsSync()?.PriceListCode;
-        //    if (plCode != null)
-        //    {
-        //        _session.Value.SetValue("priceListCode", plCode);
-        //        _apiContext.SetPriceListCode(plCode);
-        //        return plCode;
-        //    }
-        //    return null; ;
-
-        //}
+        
 
     }
 }

@@ -35,6 +35,7 @@ namespace Mozu.SiteBuilder.Mvc
             _httpRequestMessage = httpRequestMessage;
 
             IsEditMode = editModeGetter.IsEditMode();
+            
 
             Load();
             if ( !this.MasterCatalogId.HasValue )
@@ -44,6 +45,7 @@ namespace Mozu.SiteBuilder.Mvc
             LoadUser();
             ValidateUser();                  
             SetDebugMode();
+            SetDebugModeFlags();
 
             DataViewMode = dvmGetter.GetDataViewMode(UserClaims);
             PreviewDate = GetNowValue();
@@ -310,8 +312,20 @@ namespace Mozu.SiteBuilder.Mvc
                     CurrencyCode = site.DefaultCurrencyCode;
                 }
             }
+            LoadExtraInfoFromCookie(_cookieProvider);
         }
 
+        private void LoadExtraInfoFromCookie (ICookieProvider cookieProvider)
+        {
+            var cookie = cookieProvider.GetRequestCookie(Mvc.Constants.COOKIENAME);
+            if (cookie != null && cookie.HasKeys)
+            {
+                if (!string.IsNullOrEmpty(cookie["adminmode"]))
+                {
+                    this.IsAdminMode = bool.Parse(cookie["adminmode"]);
+                }
+            }
+        }
         private void LoadFromCookie(ICookieProvider cookieProvider)
         {
             var cookie = cookieProvider.GetRequestCookie(Mvc.Constants.COOKIENAME);
@@ -347,6 +361,7 @@ namespace Mozu.SiteBuilder.Mvc
                 {
                     this.CurrencyCode = cookie["currency"];
                 }
+                LoadExtraInfoFromCookie(cookieProvider);
             }
         }
 
@@ -387,6 +402,8 @@ namespace Mozu.SiteBuilder.Mvc
         }
 
         public bool IsEditMode { get; set; }
+        public bool IsAdminMode { get; set; }
+       
 
         public bool HasInvalidCredentials { get; set; }
 
@@ -401,8 +418,62 @@ namespace Mozu.SiteBuilder.Mvc
         {
             this.PriceListCode = plCode;
         }
+
+       
+        private void SetDebugModeFlags()
+        {
+            this.DebugFlags = DebugModeFlagValues.Default;
+            var qsVal = _httpRequestMessage.GetQueryNameValuePairs()
+                    .Where(x => string.Equals(x.Key, Mvc.Constants.DEBUGFLAGSCOOKIENAME, StringComparison.OrdinalIgnoreCase)).Select(x => x.Value).FirstOrDefault();
+
+            if (qsVal != null)
+            {
+                DebugFlags = qsVal.Split(new char[','], StringSplitOptions.RemoveEmptyEntries)
+                    .Select(x => (DebugModeFlagValues)Enum.Parse(typeof(DebugModeFlagValues), x, true))
+                    .Aggregate(DebugFlags, (a, b) => a | b);
+
+                DebugFlags = DebugFlags.HasFlag(DebugModeFlagValues.None) ? DebugModeFlagValues.None : DebugFlags;
+
+
+                var cookie = new HttpCookie(Mvc.Constants.DEBUGFLAGSCOOKIENAME, ((int)DebugFlags).ToString());
+                if (DebugFlags == DebugModeFlagValues.None)
+                {
+                    cookie.Expires = DateTime.MinValue;
+                }
+
+                _cookieProvider.SaveResponseCookie(Mvc.Constants.DEBUGFLAGSCOOKIENAME, cookie);
+
+            }
+            else
+            {
+                var cookie = _cookieProvider.GetRequestCookie(Constants.DEBUGFLAGSCOOKIENAME);
+                int cookieVal;
+                if (int.TryParse(cookie?.Value, out cookieVal))
+                {
+                    DebugFlags = (DebugModeFlagValues)cookieVal;
+                }
+
+            }
+
+        }
+
+        public DebugModeFlagValues DebugFlags
+        {
+            get; set;
+        }
+
     }
 
+    [Flags]
+    public enum DebugModeFlagValues : int
+    {
+        Default = 0,
+        None = 2,
+       
+        DisableCdn = 4,
+        Unminified = 8,
+        ShowErrors = 16
+    }
     public static class Constants
     {
         public const string DefaultTheme = "MozuCore";
@@ -413,5 +484,6 @@ namespace Mozu.SiteBuilder.Mvc
         public const string HEADER_ALTERNATIVE_VIEW = "x-vol-alternative-view";
         public const string HEADER_CANONICAL_URL = "x-vol-canonical-url";
 
+        public static string DEBUGFLAGSCOOKIENAME = "mz_DebugFlags";
     }
 }
