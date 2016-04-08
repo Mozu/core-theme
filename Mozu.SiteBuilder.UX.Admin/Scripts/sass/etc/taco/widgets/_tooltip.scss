@@ -13,7 +13,7 @@
 		transform: translateX(0px) translateY(0px);
 		transition-property: opacity, transform;
 		transition-delay: .3s;
-		top: 0px;
+		top: -1000px;
 		z-index: 100000000;
 		@include border-radius(4px);
 		@include facade-transitions;
