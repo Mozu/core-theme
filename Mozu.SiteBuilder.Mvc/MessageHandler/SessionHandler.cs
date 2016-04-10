@@ -44,7 +44,7 @@ namespace Mozu.SiteBuilder.Mvc.MessageHandler
             var logger = LoggingService.LoggerFor<SessionHandler>();
             if ( !object.Equals( priceListOverride , NULLPRICELISTCODE ))
             {
-                SetOveridePriceList(apiContext, session , priceListOverride, logger);
+                SetOveridePriceList(apiContext, authHelper , session, priceListOverride, logger);
             }
             else
             {
@@ -57,12 +57,13 @@ namespace Mozu.SiteBuilder.Mvc.MessageHandler
         }
 
 
-        private static void SetOveridePriceList(ISiteBuilderApiContext apiContext, Lazy<IMozuSession> session , string priceListOverride, ILogger logger)
+        private static void SetOveridePriceList(ISiteBuilderApiContext apiContext, IAuthenticationHelper authHelper,  Lazy<IMozuSession> session , string priceListOverride, ILogger logger)
         {
             apiContext.SetPriceListCode(priceListOverride);
             try
             {
                 session.Value.SetValue(SessionMessageHandler.PristListCodeKey, priceListOverride);
+                authHelper.SaveStoreFrontAccessToken(apiContext.UserClaims.ToAccessToken(), authHelper.GetProfileToken());
             }
             catch (Exception ex)
             {
@@ -70,7 +71,7 @@ namespace Mozu.SiteBuilder.Mvc.MessageHandler
                
             }
         }
-
+       
 
         private static async Task InitSession(ISiteBuilderApiContext apiContext, IAuthenticationHelper authHelper, Lazy<IMozuSession> session, IPriceListResolutionHandler priceListResolutionHandler, ILogger  logger)
         {
