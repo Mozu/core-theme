@@ -117,6 +117,14 @@ namespace Mozu.SiteBuilder.Mvc.Contexts
             }
         }
 
+        public bool EnableOrderEditInStorefront
+        {
+            get
+            {
+                return ((bool?)_state.Value.GetValue("enableOrderEditInStorefront")).GetValueOrDefault(false);
+            }
+        }
+
 
     }
 }

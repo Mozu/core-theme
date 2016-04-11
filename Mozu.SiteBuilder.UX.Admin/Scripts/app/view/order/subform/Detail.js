@@ -490,7 +490,7 @@ Ext.define('Taco.view.order.subform.Detail', {
             canSendEmail = !Ext.Array.contains(['Pending'], me.record.get('orderStatus')),
             acceptOrderButton = this.down("#acceptOrderButton"),
             cancelOrderButton = this.down("#cancelOrderButton"),
-            editStoreFrontButton = this.down ("#editStoreFrontButton"),
+            editStorefrontButton = this.down ("#editStorefrontButton"),
             editOrderButton = this.down("#editOrderButton"),
             canEditInStoreFront = !(me.record.get('items') && me.record.get('items').length ),
             resendEmailButton = this.down("#resendEmailButton");
@@ -505,8 +505,8 @@ Ext.define('Taco.view.order.subform.Detail', {
         if (editOrderButton) {
             editOrderButton.setDisabled(!canEdit);
         }
-        if ( editStoreFrontButton){
-            editStoreFrontButton.setDisabled(!canEditInStoreFront);
+        if ( editStorefrontButton){
+            editStorefrontButton.setDisabled(!canEditInStoreFront);
         }
 
         if (resendEmailButton) {
@@ -584,16 +584,17 @@ Ext.define('Taco.view.order.subform.Detail', {
                 disabled: !canEdit
             },
             {
-                text: 'Edit In StoreFront',
+                text: 'Edit In Storefront',
                 xtype: "button",
                 ui: "action",
-                itemId: "editStoreFrontButton",
+                itemId: "editStorefrontButton",
                 scale: "medium",
                 handler: function (){
                     Taco.core.StateManager.attemptNavigate('/orders/storefront/' + me.record.get('customerId') +'/' + me.record.getId());
                 },
                 scope: me,
-                disabled: !canEditInStoreFront
+                disabled: !canEditInStoreFront,
+                hidden: !Taco.tenantSettings.enableOrderEditInStorefront
             }
         ];
 
