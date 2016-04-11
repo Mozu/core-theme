@@ -673,20 +673,28 @@ Ext.define('Taco.view.attribute.Form', {
     createSearchOptions: function () {
         var me = this;
 
-        this.searchInStorefront = Ext.widget('checkboxfield',  
-            Taco.core.ux.TooltipLabel.wrapConfig('attribute.form.searchOptions', me,
-            {
-                name: 'searchableInStorefront',
-                boxLabel: 'Available to Storefront Search',
-                hidden: !this.record.supportsSearchInStorefront(),
-                listeners: {
-                    change: function (cmp, newValue) {
-                        me.record.set('searchableInStorefront', newValue);
-                        me.searchDisplayContainer.setVisible(me.record.supportsSearchDisplayType());
-                    },
-                    scope: this
-                }
-            }));
+        this.searchInStorefront = Ext.widget({
+            xtype: 'checkbox',
+            name: 'searchableInStorefront',
+            boxLabel: 'Available to Storefront Search',
+            hidden: !this.record.supportsSearchInStorefront(),
+            itemId: 'searchableInStorefront',
+            listeners: {
+                change: function (cmp, newValue) {
+                    me.record.set('searchableInStorefront', newValue);
+                    me.searchDisplayContainer.setVisible(me.record.supportsSearchDisplayType());
+                },
+                scope: this
+            },
+            tooltip: Ext.create('Taco.core.ux.content.Tooltip', {
+                elementId: 'searchableInStorefront',
+                hoverTarget: 'boxLabelEl',
+                messageKey: 'attribute.form.searchOptions',
+                offsetLeft: -255,
+                offsetTop: 22,
+                arrowPosition: 'left'
+            })
+        })
 
         this.searchLabel = Ext.widget({
             xtype: 'radio',
@@ -735,12 +743,19 @@ Ext.define('Taco.view.attribute.Form', {
             ]
         });
 
-        this.allowFilteringAndSorting = Ext.widget('checkboxfield',
-            Taco.core.ux.TooltipLabel.wrapConfig('attribute.form.filterandsorting', me,
-            {
+        this.allowFilteringAndSorting = Ext.widget('checkboxfield', {
             name: 'allowFilteringAndSortingInStorefront',
-            boxLabel: 'Available as Filter & Sort'
-        }));
+            boxLabel: 'Available as Filter & Sort',
+            itemId: 'allowFilteringAndSortingInStorefront',
+            tooltip: Ext.create('Taco.core.ux.content.Tooltip', {
+                elementId: 'allowFilteringAndSortingInStorefront',
+                hoverTarget: 'boxLabelEl',
+                messageKey: 'attribute.form.filterandsorting',
+                offsetLeft: -220,
+                offsetTop: 22,
+                arrowPosition: 'left'
+            })
+        });
 
         return Ext.create('Ext.form.FieldContainer',
            {
