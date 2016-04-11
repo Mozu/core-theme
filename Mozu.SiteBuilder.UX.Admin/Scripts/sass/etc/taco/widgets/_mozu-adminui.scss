@@ -2,4 +2,12 @@
     .react-grid-loading-bar {
         background-image: url('./../resources/images/mozu-loader.gif')
     }
+
+    .mozu-c-input__input[type=checkbox] {
+        background-image: url('./../resources/images/icons/checkbox-unchecked.png')
+    }
+
+    .mozu-c-input__input[type=checkbox]:checked {
+        background-image: url('./../resources/images/icons/checkbox-checked.png')
+    }
 }
