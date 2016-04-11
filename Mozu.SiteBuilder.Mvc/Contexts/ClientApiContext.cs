@@ -140,7 +140,13 @@ namespace Mozu.SiteBuilder.Mvc.Contexts
             if (apiContext.DataViewMode == DataViewModeType.Pending)
             {
                 header[APIConstants.Headers.DATA_VIEW_MODE] = apiContext.DataViewMode.ToString();
+                if ( apiContext.PreviewDate .HasValue)
+                {
+                    header[APIConstants.Headers.PREVIEW_DATE] = apiContext.PreviewDate.Value.ToString(Mozu.Core.Constants.MozuDateTimeFormat);
+                }
             }
+
+
 
 
 

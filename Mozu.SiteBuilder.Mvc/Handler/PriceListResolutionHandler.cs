@@ -39,7 +39,7 @@ namespace Mozu.SiteBuilder.Mvc.Handler
         Task<string> IPriceListResolutionHandler.ResolvePriceList(int? customerAccoutnid )
         {
             return _priceListRuntimeWebApiClient.Value.GetResolvedPriceList(customerAccountId: customerAccoutnid)
-                .ContinueWith(x =>  x.Result == null ? null : x.Result.ReadAsSync().PriceListCode);
+                .ContinueWith(x =>  x.Result == null ? null : x.Result.ReadAsSync()?.PriceListCode);
         }
 
         

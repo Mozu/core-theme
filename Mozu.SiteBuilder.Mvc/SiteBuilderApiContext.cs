@@ -43,7 +43,8 @@ namespace Mozu.SiteBuilder.Mvc
                this.MasterCatalogId = this.MasterCatalogId;
             }
             LoadUser();
-            ValidateUser();                  
+            ValidateUser();
+            LoadDefaultAnonShopperClaims();               
             SetDebugMode();
             SetDebugModeFlags();
 
@@ -197,7 +198,6 @@ namespace Mozu.SiteBuilder.Mvc
 
             if (this.UserClaims == null)
             {
-                this.HasInvalidCredentials = true;
                 return false;
             }
             if (!this.UserClaims.Bag.TryGetValue("TenantId", out bagVal) || !int.TryParse(bagVal, out tmpInt) || tmpInt != this.TenantId)
@@ -213,8 +213,8 @@ namespace Mozu.SiteBuilder.Mvc
                     this.UserClaims = LightweightUserClaims.CreateForAdminUser(Guid.NewGuid().ToString("N"), string.Empty, string.Empty, new int[0], new UserScope() { Id = this.TenantId, Type = UserScopeType.Tenant }, DateTime.Today.AddYears(1));
                     this.UserClaims.IsAnonymous = true;
                 }
-                this.HasInvalidCredentials = true;
-                return false;
+              
+               
 
             }
             if (ScopeType == UserScopeType.Shopper && (!this.UserClaims.Bag.TryGetValue("SiteId", out bagVal) || !int.TryParse(bagVal, out tmpInt) || tmpInt != this.SiteId))
@@ -223,6 +223,23 @@ namespace Mozu.SiteBuilder.Mvc
                 return false;
             }
             return true;
+        }
+
+        private void LoadDefaultAnonShopperClaims()
+        {
+            if (this.ScopeType != UserScopeType.Shopper || this.UserClaims != null)
+            {
+                return;
+            }
+            var anonClaims = LightweightUserClaims.CreateForAnonymousShopper(this.TenantId, this.SiteId.GetValueOrDefault());
+            
+            SetUser(anonClaims);
+            _authenticationHelper.SaveStoreFrontAccessToken(anonClaims.ToAccessToken(), null);
+            if (this.UserClaims != null && this.UserClaims.BehaviorIds == null)
+            {
+                this.UserClaims.BehaviorIds = new int[0];
+            }
+
         }
 
         UserScopeType ScopeType
@@ -376,7 +393,7 @@ namespace Mozu.SiteBuilder.Mvc
         public bool IsAdminMode { get; set; }
        
 
-        public bool HasInvalidCredentials { get; set; }
+       
 
         public LightweightUserClaims AdminUserClaim { get; set; }
 

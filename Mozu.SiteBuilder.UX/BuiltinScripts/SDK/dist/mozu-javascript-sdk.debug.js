@@ -1,66 +1,11 @@
 /*! 
- * Mozu JavaScript SDK - v0.3.0 - 2015-12-01
+ * Mozu JavaScript SDK - v0.3.0 - 2016-04-11
  *
- * Copyright (c) 2015 Volusion, Inc.
+ * Copyright (c) 2016 Volusion, Inc.
  *
  */
 
-!function(e){if("object"==typeof exports)module.exports=e();else if("function"==typeof define&&define.amd)define(e);else{var f;"undefined"!=typeof window?f=window:"undefined"!=typeof global?f=global:"undefined"!=typeof self&&(f=self),f.MozuSDK=e()}}(function(){var define,module,exports;return (function e(t,n,r){function s(o,u){if(!n[o]){if(!t[o]){var a=typeof require=="function"&&require;if(!u&&a)return a(o,!0);if(i)return i(o,!0);throw new Error("Cannot find module '"+o+"'")}var f=n[o]={exports:{}};t[o][0].call(f.exports,function(e){var n=t[o][1][e];return s(n?n:e)},f,f.exports,e,t,n,r)}return n[o].exports}var i=typeof require=="function"&&require;for(var o=0;o<r.length;o++)s(r[o]);return s})({1:[function(require,module,exports){
-// shim for using process in browser
-
-var process = module.exports = {};
-
-process.nextTick = (function () {
-    var canSetImmediate = typeof window !== 'undefined'
-    && window.setImmediate;
-    var canPost = typeof window !== 'undefined'
-    && window.postMessage && window.addEventListener
-    ;
-
-    if (canSetImmediate) {
-        return function (f) { return window.setImmediate(f) };
-    }
-
-    if (canPost) {
-        var queue = [];
-        window.addEventListener('message', function (ev) {
-            var source = ev.source;
-            if ((source === window || source === null) && ev.data === 'process-tick') {
-                ev.stopPropagation();
-                if (queue.length > 0) {
-                    var fn = queue.shift();
-                    fn();
-                }
-            }
-        }, true);
-
-        return function nextTick(fn) {
-            queue.push(fn);
-            window.postMessage('process-tick', '*');
-        };
-    }
-
-    return function nextTick(fn) {
-        setTimeout(fn, 0);
-    };
-})();
-
-process.title = 'browser';
-process.browser = true;
-process.env = {};
-process.argv = [];
-
-process.binding = function (name) {
-    throw new Error('process.binding is not supported');
-}
-
-// TODO(shtylman)
-process.cwd = function () { return '/' };
-process.chdir = function (dir) {
-    throw new Error('process.chdir is not supported');
-};
-
-},{}],2:[function(require,module,exports){
+!function(e){if("object"==typeof exports)module.exports=e();else if("function"==typeof define&&define.amd)define(e);else{var f;"undefined"!=typeof window?f=window:"undefined"!=typeof global?f=global:"undefined"!=typeof self&&(f=self),f.MozuSDK=e()}}(function(){var define,module,exports;return (function e(t,n,r){function s(o,u){if(!n[o]){if(!t[o]){var a=typeof require=="function"&&require;if(!u&&a)return a(o,!0);if(i)return i(o,!0);throw new Error("Cannot find module '"+o+"'")}var f=n[o]={exports:{}};t[o][0].call(f.exports,function(e){var n=t[o][1][e];return s(n?n:e)},f,f.exports,e,t,n,r)}return n[o].exports}var i=typeof require=="function"&&require;for(var o=0;o<r.length;o++)s(r[o]);return s})({1:[function(_dereq_,module,exports){
 
 
 //# sourceUrl=node_modules/microevent/microevent.js
@@ -116,8 +61,78 @@ if( typeof module !== "undefined" && ('exports' in module)){
 	module.exports	= MicroEvent
 }
 
-},{}],3:[function(require,module,exports){
-var global=typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {};
+},{}],2:[function(_dereq_,module,exports){
+
+
+//# sourceUrl=node_modules/process/browser.js
+
+// shim for using process in browser
+
+var process = module.exports = {};
+
+process.nextTick = (function () {
+    var canSetImmediate = typeof window !== 'undefined'
+    && window.setImmediate;
+    var canPost = typeof window !== 'undefined'
+    && window.postMessage && window.addEventListener
+    ;
+
+    if (canSetImmediate) {
+        return function (f) { return window.setImmediate(f) };
+    }
+
+    if (canPost) {
+        var queue = [];
+        window.addEventListener('message', function (ev) {
+            var source = ev.source;
+            if ((source === window || source === null) && ev.data === 'process-tick') {
+                ev.stopPropagation();
+                if (queue.length > 0) {
+                    var fn = queue.shift();
+                    fn();
+                }
+            }
+        }, true);
+
+        return function nextTick(fn) {
+            queue.push(fn);
+            window.postMessage('process-tick', '*');
+        };
+    }
+
+    return function nextTick(fn) {
+        setTimeout(fn, 0);
+    };
+})();
+
+process.title = 'browser';
+process.browser = true;
+process.env = {};
+process.argv = [];
+
+function noop() {}
+
+process.on = noop;
+process.addListener = noop;
+process.once = noop;
+process.off = noop;
+process.removeListener = noop;
+process.removeAllListeners = noop;
+process.emit = noop;
+
+process.binding = function (name) {
+    throw new Error('process.binding is not supported');
+}
+
+// TODO(shtylman)
+process.cwd = function () { return '/' };
+process.chdir = function (dir) {
+    throw new Error('process.chdir is not supported');
+};
+
+},{}],3:[function(_dereq_,module,exports){
+(function (global){
+
 
 //# sourceUrl=node_modules/uritemplate/bin/uritemplate.js
 
@@ -1007,7 +1022,8 @@ var UriTemplate = (function () {
     }
 ));
 
-},{}],4:[function(require,module,exports){
+}).call(this,typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
+},{}],4:[function(_dereq_,module,exports){
 
 
 //# sourceUrl=node_modules/when/monitor/aggregator.js
@@ -1106,7 +1122,7 @@ define(function() {
 });
 }(typeof define === 'function' && define.amd ? define : function(factory) { module.exports = factory(); }));
 
-},{}],5:[function(require,module,exports){
+},{}],5:[function(_dereq_,module,exports){
 
 
 //# sourceUrl=node_modules/when/monitor/array.js
@@ -1168,7 +1184,7 @@ define(function() {
 });
 }(typeof define === 'function' && define.amd ? define : function(factory) { module.exports = factory(); }));
 
-},{}],6:[function(require,module,exports){
+},{}],6:[function(_dereq_,module,exports){
 
 
 //# sourceUrl=node_modules/when/monitor/console.js
@@ -1183,18 +1199,18 @@ define(function() {
  * @author: John Hann
  */
 (function(define) { 'use strict';
-define(function(require) {
+define(function(_dereq_) {
 
 	var createAggregator, throttleReporter, simpleReporter, aggregator,
 		formatter, stackFilter, excludeRx, filter, reporter, logger,
 		rejectionMsg, reasonMsg, filteredFramesMsg, stackJumpMsg, attachPoint;
 
-	createAggregator = require('./aggregator');
-	throttleReporter = require('./throttledReporter');
-	simpleReporter = require('./simpleReporter');
-	formatter = require('./simpleFormatter');
-	stackFilter = require('./stackFilter');
-	logger = require('./logger/consoleGroup');
+	createAggregator = _dereq_('./aggregator');
+	throttleReporter = _dereq_('./throttledReporter');
+	simpleReporter = _dereq_('./simpleReporter');
+	formatter = _dereq_('./simpleFormatter');
+	stackFilter = _dereq_('./stackFilter');
+	logger = _dereq_('./logger/consoleGroup');
 
 	rejectionMsg = '=== Unhandled rejection escaped at ===';
 	reasonMsg = '=== Caused by reason ===';
@@ -1223,9 +1239,9 @@ define(function(require) {
 	}
 
 });
-}(typeof define === 'function' && define.amd ? define : function(factory) { module.exports = factory(require); }));
+}(typeof define === 'function' && define.amd ? define : function(factory) { module.exports = factory(_dereq_); }));
 
-},{"./aggregator":4,"./logger/consoleGroup":7,"./simpleFormatter":8,"./simpleReporter":9,"./stackFilter":10,"./throttledReporter":11}],7:[function(require,module,exports){
+},{"./aggregator":4,"./logger/consoleGroup":7,"./simpleFormatter":8,"./simpleReporter":9,"./stackFilter":10,"./throttledReporter":11}],7:[function(_dereq_,module,exports){
 
 
 //# sourceUrl=node_modules/when/monitor/logger/consoleGroup.js
@@ -1240,12 +1256,12 @@ define(function(require) {
  * @author: John Hann
  */
 (function(define) { 'use strict';
-define(function(require) {
+define(function(_dereq_) {
 	/*jshint maxcomplexity:7*/
 
 	var array, warn, warnAll, log;
 
-	array = require('../array');
+	array = _dereq_('../array');
 
 	if(typeof console === 'undefined') {
 		// No console, give up, but at least don't break
@@ -1305,9 +1321,9 @@ define(function(require) {
 	function consoleNotAvailable() {}
 
 });
-}(typeof define === 'function' && define.amd ? define : function(factory) { module.exports = factory(require); }));
+}(typeof define === 'function' && define.amd ? define : function(factory) { module.exports = factory(_dereq_); }));
 
-},{"../array":5}],8:[function(require,module,exports){
+},{"../array":5}],8:[function(_dereq_,module,exports){
 
 
 //# sourceUrl=node_modules/when/monitor/simpleFormatter.js
@@ -1386,7 +1402,7 @@ define(function() {
 });
 }(typeof define === 'function' && define.amd ? define : function(factory) { module.exports = factory(); }));
 
-},{}],9:[function(require,module,exports){
+},{}],9:[function(_dereq_,module,exports){
 
 
 //# sourceUrl=node_modules/when/monitor/simpleReporter.js
@@ -1450,7 +1466,7 @@ define(function() {
 });
 }(typeof define === 'function' && define.amd ? define : function(factory) { module.exports = factory(); }));
 
-},{}],10:[function(require,module,exports){
+},{}],10:[function(_dereq_,module,exports){
 
 
 //# sourceUrl=node_modules/when/monitor/stackFilter.js
@@ -1465,9 +1481,9 @@ define(function() {
  * @author: John Hann
  */
 (function(define) { 'use strict';
-define(function(require) {
+define(function(_dereq_) {
 
-	var array = require('./array');
+	var array = _dereq_('./array');
 
 	return function(isExcluded, replace) {
 		return function filterStack(stack) {
@@ -1504,9 +1520,9 @@ define(function(require) {
 	};
 
 });
-}(typeof define === 'function' && define.amd ? define : function(factory) { module.exports = factory(require); }));
+}(typeof define === 'function' && define.amd ? define : function(factory) { module.exports = factory(_dereq_); }));
 
-},{"./array":5}],11:[function(require,module,exports){
+},{"./array":5}],11:[function(_dereq_,module,exports){
 
 
 //# sourceUrl=node_modules/when/monitor/throttledReporter.js
@@ -1548,8 +1564,9 @@ define(function(require) {
 	});
 }(typeof define === 'function' && define.amd ? define : function(factory) { module.exports = factory(); }));
 
-},{}],12:[function(require,module,exports){
-var process=require("__browserify_process");
+},{}],12:[function(_dereq_,module,exports){
+(function (process){
+
 
 //# sourceUrl=node_modules/when/when.js
 
@@ -1567,7 +1584,7 @@ var process=require("__browserify_process");
  * @version 2.7.1
  */
 (function(define) { 'use strict';
-define(function (require) {
+define(function (_dereq_) {
 
 	// Public API
 
@@ -2335,7 +2352,7 @@ define(function (require) {
 		funcProto, call, arrayProto, monitorApi,
 		capturedSetTimeout, cjsRequire, MutationObs, undef;
 
-	cjsRequire = require;
+	cjsRequire = _dereq_;
 
 	//
 	// Shared handler queue processing
@@ -2480,14 +2497,15 @@ define(function (require) {
 
 	return when;
 });
-})(typeof define === 'function' && define.amd ? define : function (factory) { module.exports = factory(require); });
+})(typeof define === 'function' && define.amd ? define : function (factory) { module.exports = factory(_dereq_); });
 
-},{"__browserify_process":1}],13:[function(require,module,exports){
+}).call(this,_dereq_("v3go1D"))
+},{"v3go1D":2}],13:[function(_dereq_,module,exports){
 
 
 //# sourceUrl=src/affiliate-tracking-mixin.js
 
-﻿var utils = require('./utils');
+﻿var utils = _dereq_('./utils');
 
 function deparam(querystring) {
     // remove any preceding url and split
@@ -2694,15 +2712,15 @@ module.exports = {
 
     }
 }
-},{"./utils":36}],14:[function(require,module,exports){
+},{"./utils":36}],14:[function(_dereq_,module,exports){
 
 
 //# sourceUrl=src/collection.js
 
 // BEGIN OBJECT
 
-var utils = require('./utils');
-var ApiObject = require('./object');
+var utils = _dereq_('./utils');
+var ApiObject = _dereq_('./object');
 
     function convertItem(raw) {
         return ApiObject.create(this.itemType, raw, this.api);
@@ -2801,7 +2819,7 @@ var ApiObject = require('./object');
     });
 
     ApiCollectionConstructor.types = {
-        locations: require('./types/locations')
+        locations: _dereq_('./types/locations')
     };
     ApiCollectionConstructor.hydratedTypes = {};
 
@@ -2822,7 +2840,7 @@ var ApiObject = require('./object');
 // END OBJECT
 
 /***********/
-},{"./object":23,"./types/locations":29,"./utils":36}],15:[function(require,module,exports){
+},{"./object":23,"./types/locations":29,"./utils":36}],15:[function(_dereq_,module,exports){
 
 
 //# sourceUrl=src/constants/default.js
@@ -2873,7 +2891,7 @@ module.exports = {
     }
 };
 
-},{}],16:[function(require,module,exports){
+},{}],16:[function(_dereq_,module,exports){
 
 
 //# sourceUrl=src/context.js
@@ -2884,9 +2902,9 @@ module.exports = {
  * @classdesc The context object helps you configure the SDK to connect to a particular Mozu site. Supply it with tenant, site, mastercatalog, currency code, locale code, app claims, and user claims, and  it will produce for you an ApiInterface object.
  */
 
-var ApiInterface = require('./interface');
-var ApiReference = require('./reference');
-var utils = require('./utils');
+var ApiInterface = _dereq_('./interface');
+var ApiReference = _dereq_('./reference');
+var utils = _dereq_('./utils');
 
 /**
  * @private
@@ -2894,10 +2912,10 @@ var utils = require('./utils');
 var ApiContextConstructor = function(conf) {
     utils.extend(this, conf);
     if (ApiContextConstructor.__debug__ === true) {
-        ApiContextConstructor.__debug__ = require('when/monitor/console');
+        ApiContextConstructor.__debug__ = _dereq_('when/monitor/console');
     }
 },
-    mutableAccessors = ['app-claims', 'user-claims', 'callchain', 'currency', 'locale','dataview-mode'], //, 'bypass-cache'],
+    mutableAccessors = ['app-claims', 'user-claims', 'callchain', 'currency', 'locale','dataview-mode','preview-date'],
     immutableAccessors = ['tenant', 'site', 'master-catalog', 'catalog'],
     immutableAccessorLength = immutableAccessors.length,
     allAccessors = mutableAccessors.concat(immutableAccessors),
@@ -2980,13 +2998,13 @@ module.exports = ApiContextConstructor;
 // END CONTEXT
 
 /********/
-},{"./interface":21,"./reference":24,"./utils":36,"when/monitor/console":6}],17:[function(require,module,exports){
+},{"./interface":21,"./reference":24,"./utils":36,"when/monitor/console":6}],17:[function(_dereq_,module,exports){
 
 
 //# sourceUrl=src/errors.js
 
 // BEGIN ERRORS
-var utils = require('./utils');
+var utils = _dereq_('./utils');
 
 function errorToString() {
     return this.name + ": " + this.message;
@@ -3032,13 +3050,13 @@ var errors = {
 
 module.exports = errors;
 // END ERRORS
-},{"./utils":36}],18:[function(require,module,exports){
+},{"./utils":36}],18:[function(_dereq_,module,exports){
 
 
 //# sourceUrl=src/iframexhr.js
 
 // BEGIN IFRAMEXHR
-var utils = require('./utils');
+var utils = _dereq_('./utils');
 module.exports = (function(window, document, undefined) {
 
     var on = window.addEventListener ? function(obj, ev, handler) {
@@ -3199,35 +3217,35 @@ module.exports = (function(window, document, undefined) {
 
 }(window, document));
 // END IFRAMEXHR
-},{"./utils":36}],19:[function(require,module,exports){
+},{"./utils":36}],19:[function(_dereq_,module,exports){
 
 
 //# sourceUrl=src/init.js
 
 // BEGIN INIT
-var ApiContext = require('./context');
-require('./affiliate-tracking-mixin').mixin(require("./interface"));
+var ApiContext = _dereq_('./context');
+_dereq_('./affiliate-tracking-mixin').mixin(_dereq_("./interface"));
 var initialGlobalContext = new ApiContext();
 module.exports = initialGlobalContext;
 // END INIT
-},{"./affiliate-tracking-mixin":13,"./context":16,"./interface":21}],20:[function(require,module,exports){
+},{"./affiliate-tracking-mixin":13,"./context":16,"./interface":21}],20:[function(_dereq_,module,exports){
 
 
 //# sourceUrl=src/init_debug.js
 
 // EXPOSE DEBUGGING STUFF
-var _init = require('./init');
+var _init = _dereq_('./init');
 
-_init.Utils = require('./utils');
-_init.ApiContext = require('./context');
-_init.ApiInterface = require('./interface');
+_init.Utils = _dereq_('./utils');
+_init.ApiContext = _dereq_('./context');
+_init.ApiInterface = _dereq_('./interface');
 
 
-require('./affiliate-tracking-mixin').mixin(_init.ApiInterface);
+_dereq_('./affiliate-tracking-mixin').mixin(_init.ApiInterface);
 
-_init.ApiObject = require('./object');
-_init.ApiCollection = require('./collection');
-_init.ApiReference = require('./reference');
+_init.ApiObject = _dereq_('./object');
+_init.ApiCollection = _dereq_('./collection');
+_init.ApiReference = _dereq_('./reference');
 
 _init._expose = function (r) {
     _init.lastResult = r;
@@ -3241,7 +3259,7 @@ _init.ApiObject.prototype.inspect = function () {
 _init.ApiContext.__debug__ = true;
 
 module.exports = _init;
-},{"./affiliate-tracking-mixin":13,"./collection":14,"./context":16,"./init":19,"./interface":21,"./object":23,"./reference":24,"./utils":36}],21:[function(require,module,exports){
+},{"./affiliate-tracking-mixin":13,"./collection":14,"./context":16,"./init":19,"./interface":21,"./object":23,"./reference":24,"./utils":36}],21:[function(_dereq_,module,exports){
 
 
 //# sourceUrl=src/interface.js
@@ -3262,9 +3280,9 @@ module.exports = _init;
  * @class
  * @classdesc The interface object makes requests to the API and returns API object. You can use it to make raw requests using the ApiInterface#request method, but you're more likely to use the ApiInterface#action method to create a external:Promise# that returns an ApiObject#.
  */
-var utils = require('./utils');
-var ApiReference = require('./reference');
-var ApiObject = require('./object');
+var utils = _dereq_('./utils');
+var ApiReference = _dereq_('./reference');
+var ApiObject = _dereq_('./object');
 
 var errorMessage = "No {0} was specified. Run Mozu.Tenant(tenantId).MasterCatalog(masterCatalogId).Catalog(catalogId).Site(siteId).",
     requiredContextValues = ['Tenant', 'MasterCatalog', 'Site', 'Catalog'];
@@ -3473,7 +3491,7 @@ module.exports = ApiInterfaceConstructor;
 // END INTERFACE
 
 /*********/
-},{"./object":23,"./reference":24,"./utils":36}],22:[function(require,module,exports){
+},{"./object":23,"./reference":24,"./utils":36}],22:[function(_dereq_,module,exports){
 module.exports=
 
 //# sourceUrl=src/methods.json
@@ -3962,7 +3980,8 @@ module.exports=
         "includeSelf": true,
         "create-from-cart": {
             "template": "{+orderService}{?cartId*}",
-            "shortcutParam": "cartId",
+          "shortcutParam": "cartId",
+          "method": "POST",
             "noBody": true
         },
         "update-shipping-info": {
@@ -4190,14 +4209,14 @@ module.exports=
         }
     }
 }
-},{}],23:[function(require,module,exports){
+},{}],23:[function(_dereq_,module,exports){
 
 
 //# sourceUrl=src/object.js
 
 // BEGIN OBJECT
 
-var utils = require('./utils');
+var utils = _dereq_('./utils');
 var ApiReference;
 var ApiCollection; // lazy loading to prevent circular dep
 
@@ -4210,7 +4229,7 @@ var ApiObjectConstructor = function(type, data, iapi) {
 ApiObjectConstructor.prototype = {
     constructor: ApiObjectConstructor,
     getAvailableActions: function() {
-        ApiReference = ApiReference || require('./reference');
+        ApiReference = ApiReference || _dereq_('./reference');
         return ApiReference.getActionsFor(this.type);
     },
     prop: function(k, v) {
@@ -4234,21 +4253,21 @@ utils.addEvents(ApiObjectConstructor);
 
 ApiObjectConstructor.types = {
     //address: require('./types/address'),
-    cart: require('./types/cart'),
-    cartsummary: require('./types/cartsummary'),
-    creditcard: require('./types/creditcard'),
-    customer: require('./types/customer'),
-    login: require('./types/login'),
-    order: require('./types/order'),
-    product: require('./types/product'),
-    shipment: require('./types/shipment'),
-    user: require('./types/user'),
-    wishlist: require('./types/wishlist')
+    cart: _dereq_('./types/cart'),
+    cartsummary: _dereq_('./types/cartsummary'),
+    creditcard: _dereq_('./types/creditcard'),
+    customer: _dereq_('./types/customer'),
+    login: _dereq_('./types/login'),
+    order: _dereq_('./types/order'),
+    product: _dereq_('./types/product'),
+    shipment: _dereq_('./types/shipment'),
+    user: _dereq_('./types/user'),
+    wishlist: _dereq_('./types/wishlist')
 };
 ApiObjectConstructor.hydratedTypes = {};
 
 ApiObjectConstructor.getHydratedType = function(typeName) {
-    ApiReference = ApiReference || require('./reference');
+    ApiReference = ApiReference || _dereq_('./reference');
     if (!(typeName in this.hydratedTypes)) {
         var availableActions = ApiReference.getActionsFor(typeName),
             reflectedMethods = {};
@@ -4261,7 +4280,7 @@ ApiObjectConstructor.getHydratedType = function(typeName) {
 };
 
 ApiObjectConstructor.create = function(typeName, rawJSON, api) {
-    ApiReference = ApiReference || require('./reference');
+    ApiReference = ApiReference || _dereq_('./reference');
     var type = ApiReference.getType(typeName);
     if (!type) {
         // for forward compatibility the API should return a response,
@@ -4270,7 +4289,7 @@ ApiObjectConstructor.create = function(typeName, rawJSON, api) {
     }
     if (type.collectionOf) {
         // lazy load to prevent circular dep
-        ApiCollection = ApiCollection || require('./collection');
+        ApiCollection = ApiCollection || _dereq_('./collection');
         return ApiCollection.create(typeName, rawJSON, api, type.collectionOf);
     }
 
@@ -4284,17 +4303,17 @@ module.exports = ApiObjectConstructor;
 // END OBJECT
 
 /***********/
-},{"./collection":14,"./reference":24,"./types/cart":25,"./types/cartsummary":26,"./types/creditcard":27,"./types/customer":28,"./types/login":30,"./types/order":31,"./types/product":32,"./types/shipment":33,"./types/user":34,"./types/wishlist":35,"./utils":36}],24:[function(require,module,exports){
+},{"./collection":14,"./reference":24,"./types/cart":25,"./types/cartsummary":26,"./types/creditcard":27,"./types/customer":28,"./types/login":30,"./types/order":31,"./types/product":32,"./types/shipment":33,"./types/user":34,"./types/wishlist":35,"./utils":36}],24:[function(_dereq_,module,exports){
 
 
 //# sourceUrl=src/reference.js
 
 // BEGIN REFERENCE
-var utils = require('./utils');
-var errors = require('./errors');
+var utils = _dereq_('./utils');
+var errors = _dereq_('./errors');
 var ApiCollection;
-var ApiObject = require('./object');
-var objectTypes = require('./methods.json');
+var ApiObject = _dereq_('./object');
+var objectTypes = _dereq_('./methods.json');
 var IframeXHR;
 
 function isCrossOrigin(str) {
@@ -4342,7 +4361,7 @@ var ApiReference = {
     methods: objectTypes,
 
     getActionsFor: function(typeName) {
-        ApiCollection = ApiCollection || require('./collection');
+        ApiCollection = ApiCollection || _dereq_('./collection');
         if (!objectTypes[typeName]) return false;
         var actions = [],
             isSimpleType = (typeof objectTypes[typeName] === "string");
@@ -4393,7 +4412,7 @@ var ApiReference = {
 
         returnObj = {};
 
-        IframeXHR = IframeXHR || require('./iframexhr');
+        IframeXHR = IframeXHR || _dereq_('./iframexhr');
         tptData = {
             receiverVersion: IframeXHR.version
         };
@@ -4464,13 +4483,13 @@ module.exports = ApiReference;
 
 /***********/
 
-},{"./collection":14,"./errors":17,"./iframexhr":18,"./methods.json":22,"./object":23,"./utils":36}],25:[function(require,module,exports){
+},{"./collection":14,"./errors":17,"./iframexhr":18,"./methods.json":22,"./object":23,"./utils":36}],25:[function(_dereq_,module,exports){
 
 
 //# sourceUrl=src/types/cart.js
 
-var utils = require('../utils');
-var errors = require('../errors');
+var utils = _dereq_('../utils');
+var errors = _dereq_('../errors');
 
 errors.register({
     'ADD_COUPON_FAILED': 'Adding coupon failed for the following reason: {0}'
@@ -4524,24 +4543,24 @@ module.exports = {
         });
     }
 };
-},{"../errors":17,"../utils":36}],26:[function(require,module,exports){
+},{"../errors":17,"../utils":36}],26:[function(_dereq_,module,exports){
 
 
 //# sourceUrl=src/types/cartsummary.js
 
-var utils = require('../utils');
+var utils = _dereq_('../utils');
 module.exports = {
     count: function () {
         return this.data.totalQuantity || 0;
     }
 };
-},{"../utils":36}],27:[function(require,module,exports){
+},{"../utils":36}],27:[function(_dereq_,module,exports){
 
 
 //# sourceUrl=src/types/creditcard.js
 
-var utils = require('../utils');
-var errors = require('../errors');
+var utils = _dereq_('../utils');
+var errors = _dereq_('../errors');
 module.exports = (function() {
 
     errors.register({
@@ -4694,13 +4713,13 @@ module.exports = (function() {
     };
 
 }());
-},{"../errors":17,"../utils":36}],28:[function(require,module,exports){
+},{"../errors":17,"../utils":36}],28:[function(_dereq_,module,exports){
 
 
 //# sourceUrl=src/types/customer.js
 
-var utils = require('../utils');
-var errors = require('../errors');
+var utils = _dereq_('../utils');
+var errors = _dereq_('../errors');
 module.exports = (function () {
     return {
         postconstruct: function() {
@@ -4764,12 +4783,12 @@ module.exports = (function () {
         }
     }
 }());
-},{"../errors":17,"../utils":36}],29:[function(require,module,exports){
+},{"../errors":17,"../utils":36}],29:[function(_dereq_,module,exports){
 
 
 //# sourceUrl=src/types/locations.js
 
-var utils = require('../utils');
+var utils = _dereq_('../utils');
 module.exports = (function () {
 
     // haversine
@@ -4870,7 +4889,7 @@ module.exports = (function () {
     }
 
 }());
-},{"../utils":36}],30:[function(require,module,exports){
+},{"../utils":36}],30:[function(_dereq_,module,exports){
 
 
 //# sourceUrl=src/types/login.js
@@ -4889,14 +4908,14 @@ module.exports = {
         }
     }
 };
-},{}],31:[function(require,module,exports){
+},{}],31:[function(_dereq_,module,exports){
 
 
 //# sourceUrl=src/types/order.js
 
-var errors = require('../errors');
-var CONSTANTS = require('../constants/default');
-var utils = require('../utils');
+var errors = _dereq_('../errors');
+var CONSTANTS = _dereq_('../constants/default');
+var utils = _dereq_('../utils');
 var ApiReference;
 module.exports = (function () {
 
@@ -4929,7 +4948,7 @@ module.exports = (function () {
 
     var PaymentStrategies = {
         "PaypalExpress": function (order, billingInfo) {
-            if (!ApiReference) ApiReference = require('../reference');
+            if (!ApiReference) ApiReference = _dereq_('../reference');
             return order.createPayment({
                 returnUrl: billingInfo.paypalReturnUrl,
                 cancelUrl: billingInfo.paypalCancelUrl
@@ -5137,14 +5156,14 @@ module.exports = (function () {
         }
     };
 }());
-},{"../constants/default":15,"../errors":17,"../reference":24,"../utils":36}],32:[function(require,module,exports){
+},{"../constants/default":15,"../errors":17,"../reference":24,"../utils":36}],32:[function(_dereq_,module,exports){
 
 
 //# sourceUrl=src/types/product.js
 
-var errors = require('../errors');
-var utils = require('../utils');
-var CONSTANTS = require('../constants/default');
+var errors = _dereq_('../errors');
+var utils = _dereq_('../utils');
+var CONSTANTS = _dereq_('../constants/default');
 
 var catalogToCommerceFulfillmentTypeConstants = {};
 for (var k in CONSTANTS.COMMERCE_FULFILLMENT_METHODS) {
@@ -5190,12 +5209,12 @@ module.exports = {
         }, opts));
     }
 };
-},{"../constants/default":15,"../errors":17,"../utils":36}],33:[function(require,module,exports){
+},{"../constants/default":15,"../errors":17,"../utils":36}],33:[function(_dereq_,module,exports){
 
 
 //# sourceUrl=src/types/shipment.js
 
-var utils = require('../utils');
+var utils = _dereq_('../utils');
 module.exports = {
     getShippingMethodsFromContact: function (contact) {
         var self = this;
@@ -5207,7 +5226,7 @@ module.exports = {
         });
     }
 };
-},{"../utils":36}],34:[function(require,module,exports){
+},{"../utils":36}],34:[function(_dereq_,module,exports){
 
 
 //# sourceUrl=src/types/user.js
@@ -5248,13 +5267,13 @@ module.exports = {
         });
     }
 };
-},{}],35:[function(require,module,exports){
+},{}],35:[function(_dereq_,module,exports){
 
 
 //# sourceUrl=src/types/wishlist.js
 
-var errors = require('../errors'),
-    utils = require('../utils');
+var errors = _dereq_('../errors'),
+    utils = _dereq_('../utils');
 module.exports = (function() {
 
     errors.register({
@@ -5305,8 +5324,9 @@ module.exports = (function() {
         }
     };
 }());
-},{"../errors":17,"../utils":36}],36:[function(require,module,exports){
-var process=require("__browserify_process");
+},{"../errors":17,"../utils":36}],36:[function(_dereq_,module,exports){
+(function (process){
+
 
 //# sourceUrl=src/utils.js
 
@@ -5315,12 +5335,12 @@ var process=require("__browserify_process");
 
     var maxFlattenDepth = 100;
 
-    var MicroEvent = require('microevent');
+    var MicroEvent = _dereq_('microevent');
     var isNode = typeof process === "object" && process.title === "node";
     var XHR;
     var IframeXHR;
     var getXHR = isNode ? function() {
-        XHR = XHR || require('xmlhttprequest').XMLHttpRequest;
+        XHR = XHR || _dereq_('xmlhttprequest').XMLHttpRequest;
         return new XHR();
     } : (window.XMLHttpRequest ? function() {
         return new XMLHttpRequest();
@@ -5548,7 +5568,7 @@ var process=require("__browserify_process");
             
             var xhr;
             if (iframePath) {
-                IframeXHR = IframeXHR || require('./iframexhr');
+                IframeXHR = IframeXHR || _dereq_('./iframexhr');
                 xhr = new IframeXHR(iframePath);
             } else {
                 xhr = getXHR();
@@ -5640,8 +5660,8 @@ var process=require("__browserify_process");
             });
         },
 
-        when: require('when'),
-        uritemplate: require('uritemplate'),
+        when: _dereq_('when'),
+        uritemplate: _dereq_('uritemplate'),
 
         addEvents: function (ctor) {
             MicroEvent.mixin(ctor);
@@ -5656,6 +5676,7 @@ var process=require("__browserify_process");
 
 /*********/
 
-},{"./iframexhr":18,"__browserify_process":1,"microevent":2,"uritemplate":3,"when":12,"xmlhttprequest":false}]},{},[20])
+}).call(this,_dereq_("v3go1D"))
+},{"./iframexhr":18,"microevent":1,"uritemplate":3,"v3go1D":2,"when":12,"xmlhttprequest":false}]},{},[20])
 (20)
 });

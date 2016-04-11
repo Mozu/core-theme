@@ -138,7 +138,7 @@ namespace Mozu.SiteBuilder.UX.Configuration
             builder.RegisterType<LessTransFormer>().AsImplementedInterfaces().AsSelf();
             builder.RegisterType<MyLessFileReader>().AsImplementedInterfaces().AsSelf();
             builder.RegisterType<TemplateInheritanceHandler>().AsImplementedInterfaces().AsSelf();
-
+            builder.RegisterType<CacheItemsInvalidConsumer>().AsImplementedInterfaces().SingleInstance();
             builder
               .Register(c =>
               {
