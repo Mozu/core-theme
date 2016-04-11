@@ -198,12 +198,14 @@ Ext.define('Taco.Application', {
             var productionPath = '/admin/_mz_AdminUI_App/lib/bundle.js';
 
             var finalPath = productionPath;
+
+            var queryString = '?ver=' + (Taco.adminAppBundleVer || new Date().toISOString());
             
-            if (Taco.reactEnvironment === 'hot') {
+            if (Taco.reactEnvironment === 'hot' || Ext.util.Cookies.get('adminui-hot')) {
                 finalPath = hotPath;
             }
 
-            var script = getScript(finalPath);
+            var script = getScript(finalPath + queryString);
 
             script.addEventListener('error', function(e) {
                 var secondaryMessage = finalPath === hotPath

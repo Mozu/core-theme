@@ -321,6 +321,21 @@ namespace Mozu.SiteBuilder.UX.Admin.Controllers
             await customSchemaTask.ConfigureAwait(false);
 
             ViewData["customSchema"] = customSchemaTask.Result;
+            
+
+
+            var adminBundlePath = System.Web.Hosting.HostingEnvironment.MapPath("~/_mz_AdminUI_App")?.ToLowerInvariant();
+            if (string.IsNullOrEmpty(adminBundlePath))
+            {
+                ViewData["adminAppBundleVer"] = "1.0.0+dev" + Guid.NewGuid();
+            }
+            else
+            {
+                ViewData["adminAppBundleVer"]  = System.IO.Path.GetFileName(adminBundlePath);
+            }
+
+            
+
 
             if (HttpContext.Request["testHarnessMode"] == "true")
             {
@@ -329,6 +344,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Controllers
             string tacoAssetServer = _httpContext.Request.Cookies.Get("taco-asset-location") != null ? _httpContext.Request.Cookies.Get("taco-asset-location").Value : null;
             if (string.Equals(ConfigurationManager.AppSettings["use_compiled_taco"], "true", StringComparison.OrdinalIgnoreCase) & string.IsNullOrEmpty(tacoAssetServer))
             {
+                
                 return RazorView("Index_Compiled");
             }
 
