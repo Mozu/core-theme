@@ -201,7 +201,7 @@ Ext.define('Taco.Application', {
 
             var queryString = '?ver=' + (Taco.adminAppBundleVer || new Date().toISOString());
             
-            if (Taco.reactEnvironment === 'hot') {
+            if (Taco.reactEnvironment === 'hot' || Ext.util.Cookies.get('adminui-hot')) {
                 finalPath = hotPath;
             }
 
