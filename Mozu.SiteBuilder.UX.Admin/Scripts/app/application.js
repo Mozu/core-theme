@@ -199,7 +199,7 @@ Ext.define('Taco.Application', {
 
             var finalPath = productionPath;
 
-            var queryString = '?' + new Date().toISOString();
+            var queryString = '?ver=' + (Taco.adminAppBundleVer || new Date().toISOString());
             
             if (Taco.reactEnvironment === 'hot') {
                 finalPath = hotPath;
