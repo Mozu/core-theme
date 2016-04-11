@@ -76,4 +76,12 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.Models.Checkout
 
         public string GatewayName { get; set; }
     }
+
+    internal static class CARD_TYPE
+    {
+        /// <summary>
+        /// Application name for logging purposes.
+        /// </summary>
+        public const string OTHER = "OTHER";
+    }
 }

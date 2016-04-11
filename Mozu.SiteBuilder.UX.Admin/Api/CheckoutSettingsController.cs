@@ -122,12 +122,15 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
             }
 
             var settings = await (await _checkoutSettingsWebApiClient.CloneWithoutUserClaims().GetCheckoutSettings()).ReadAsAsync();
-            var cards = settings.PaymentSettings.Gateways.SelectMany(g => g.SupportedCards);
+            var cards = settings.PaymentSettings.Gateways.SelectMany(g => g.SupportedCards).ToList();
+
+            cards.Remove(CARD_TYPE.OTHER);
 
             var ret = cards.Select(x => new KeyValuePair<string, string>(x, x)) .ToList();
             return List2(ret);
         }
 
+        // TODO: remove .. used by old admin.
         /// <summary>
         /// Returns the active checkout settings
         /// </summary>
