@@ -25,6 +25,14 @@ Ext.define('Taco.view.productRanking.form.BlockedProduct', {
 
         Ext.tip.QuickTipManager.init();
 
+        me.header = {
+            xtype: 'label',
+            text: 'Blocked Products',
+            labelCls: 'x-header-text x-panel-header-text x-panel-header-text-subform',
+            margin: '20 0 35 0',
+            itemId: 'promoted-products-header'
+        };
+
         me.blockedGrid = Ext.create('Taco.view.productRanking.grid.BlockedProduct', {
             enableSearch: false
         });
