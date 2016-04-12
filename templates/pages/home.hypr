@@ -5,7 +5,8 @@
 {% block body-tag-classes %} mz-homepage {% endblock body-tag-classes %}
 
 {% block body-content %}
-    {% dropzone "home" scope="page" %}
+    {% dropzone "home" scope="template" %}
+    {% dropzone "home2" scope="page" %}
 {% endblock body-content %}
 
 {% block body-below-content %}
