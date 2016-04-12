@@ -27,19 +27,20 @@ Ext.define('Taco.view.productRanking.form.Context', {
         Ext.tip.QuickTipManager.init();
 
         me.header = {
-            fieldLabel: "Context",
+            xtype: 'label',
+            text: 'Context',
             labelCls: 'x-header-text x-panel-header-text x-panel-header-text-subform',
             margin: '20 0 35 0',
             itemId: 'context-header',
             tooltip: Ext.create('Taco.core.ux.content.Tooltip', {
                 elementId: 'context-header',
-                hoverTarget: 'label',
+                hoverTarget: 'el',
                 messageKey: 'productRanking.form.context.header',
-                offsetLeft: 20,
-                offsetTop: 15
+                offsetLeft: -120,
+                offsetTop: 58,
+                arrowPosition: 'left'
             })
         };
-        me.header.xtype = 'panel';
 
         var catStore = Taco.core.data.StoreManager.getOrCreate({
             type: 'Taco.store.Categories',
