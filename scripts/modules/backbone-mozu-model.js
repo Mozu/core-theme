@@ -197,7 +197,6 @@
                 // where there are properties no longer present in the latest api model.
                 syncRemovedKeys = function (currentModel, attrKey) {
                     _.each(_.difference(_.keys(currentModel[attrKey].toJSON()), _.keys(attrs[attrKey])), function (keyName) {
-                        console.log("Removing property: " + keyName);
                         changes.push(keyName);
                         currentModel[attrKey].unset(keyName);
                     });
