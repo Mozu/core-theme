@@ -18,20 +18,22 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.Models.PriceLists
         [DataMember(EmitDefaultValue = false)]
         public Decimal? ListPrice { get; set; }
 
-        [DataMember(EmitDefaultValue = false)]
-        public string ListPriceCalcSrcField { get; set; }
+        //calc fields
 
-        [DataMember(EmitDefaultValue = false)]
-        public Decimal? ListPriceCalcMultiplier { get; set; }
+        //[DataMember(EmitDefaultValue = false)]
+        //public string ListPriceCalcSrcField { get; set; }
 
-        [DataMember(EmitDefaultValue = false)]
-        public Decimal? ListPriceCalcAdder { get; set; }
+        //[DataMember(EmitDefaultValue = false)]
+        //public Decimal? ListPriceCalcMultiplier { get; set; }
 
-        [DataMember(EmitDefaultValue = false)]
-        public Decimal? ListPriceCalcMin { get; set; }
+        //[DataMember(EmitDefaultValue = false)]
+        //public Decimal? ListPriceCalcAdder { get; set; }
 
-        [DataMember(EmitDefaultValue = false)]
-        public Decimal? ListPriceCalcMax { get; set; }
+        //[DataMember(EmitDefaultValue = false)]
+        //public Decimal? ListPriceCalcMin { get; set; }
+
+        //[DataMember(EmitDefaultValue = false)]
+        //public Decimal? ListPriceCalcMax { get; set; }
 
         #endregion
 
@@ -43,20 +45,22 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.Models.PriceLists
         [DataMember(EmitDefaultValue = false)]
         public Decimal? SalePrice { get; set; }
 
-        [DataMember(EmitDefaultValue = false)]
-        public string SalePriceCalcField { get; set; }
+        //calc fields delayed
 
-        [DataMember(EmitDefaultValue = false)]
-        public Decimal? SalePriceCalcMultiplier { get; set; }
+        //[DataMember(EmitDefaultValue = false)]
+        //public string SalePriceCalcField { get; set; }
 
-        [DataMember(EmitDefaultValue = false)]
-        public Decimal? SalePriceCalcAdder { get; set; }
+        //[DataMember(EmitDefaultValue = false)]
+        //public Decimal? SalePriceCalcMultiplier { get; set; }
 
-        [DataMember(EmitDefaultValue = false)]
-        public Decimal? SalePriceCalcMin { get; set; }
+        //[DataMember(EmitDefaultValue = false)]
+        //public Decimal? SalePriceCalcAdder { get; set; }
 
-        [DataMember(EmitDefaultValue = false)]
-        public Decimal? SalePriceCalcMax { get; set; }
+        //[DataMember(EmitDefaultValue = false)]
+        //public Decimal? SalePriceCalcMin { get; set; }
+
+        //[DataMember(EmitDefaultValue = false)]
+        //public Decimal? SalePriceCalcMax { get; set; }
 
         #endregion
 
