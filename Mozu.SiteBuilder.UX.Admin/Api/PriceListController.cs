@@ -18,7 +18,6 @@ using Mozu.SiteBuilder.UX.Admin.Helpers;
 namespace Mozu.SiteBuilder.UX.Admin.Api
 {
 
-
     /// <summary>
     /// Controller for PriceLists.
     /// </summary>
@@ -321,16 +320,16 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
                 }
                 foreach (var vocabValue in extra.VocabularyValues)
                 {
-                    attrLookup.Add(extra.AttributeFQN + "-" + vocabValue.Value, new PriceListEntryExtra
+                    attrLookup.Add(extra.AttributeFQN + "-" + ToStringOrEmpty(vocabValue.Value), new PriceListEntryExtra
                     {
                         AttributeFQN = extra.AttributeFQN,
                         AttributeCode = extra.AttributeDetail.AttributeCode,
                         AttributeName = extra.AttributeDetail.AdminName,
-                        Value = vocabValue.Value as string,
+                        Value = ToStringOrEmpty(vocabValue.Value),
                         DisplayValue =
                             (vocabValue.VocabularyValueDetail != null && vocabValue.VocabularyValueDetail.Content != null)
                                 ? vocabValue.VocabularyValueDetail.Content.StringValue
-                                : vocabValue.Value as string
+                                : ToStringOrEmpty(vocabValue.Value)
                     });
                 }
             }
@@ -338,12 +337,12 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
             var extras = dcProduct.Extras.Select(extra => extra.Values.Select(x => new PriceListEntryExtra
             {
                 AttributeFQN = extra.AttributeFQN,
-                AttributeCode = attrLookup[extra.AttributeFQN + "-" + x.Value].AttributeCode,
-                AttributeName = attrLookup[extra.AttributeFQN + "-" + x.Value].AttributeName,
+                AttributeCode = attrLookup[extra.AttributeFQN + "-" + ToStringOrEmpty(x.Value)].AttributeCode,
+                AttributeName = attrLookup[extra.AttributeFQN + "-" + ToStringOrEmpty(x.Value)].AttributeName,
                 CatalogPrice = x.DeltaPrice.DeltaPrice,
-                OverridePrice = getOverridePrice(extra.AttributeFQN, (x.Value as string) ?? ""),
-                DisplayValue = attrLookup[extra.AttributeFQN + "-" + x.Value].DisplayValue,
-                Value = x.Value as string
+                OverridePrice = getOverridePrice(extra.AttributeFQN, ToStringOrEmpty(x.Value)),
+                DisplayValue = attrLookup[extra.AttributeFQN + "-" + ToStringOrEmpty(x.Value)].DisplayValue,
+                Value = ToStringOrEmpty(x.Value)
             }));
 
             foreach (var extra in extras)
@@ -352,6 +351,8 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
             }
             return result;
         }
+
+        
 
         /// <summary>
         /// Update an existing PriceList.
@@ -394,6 +395,11 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
                 return isLookup;
             }
             return false;
+        }
+
+        private string ToStringOrEmpty(object value)
+        {
+            return (value != null) ? value.ToString() : "";
         }
     }
 }
