@@ -27,16 +27,18 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
         private readonly IPriceListWebApiClient _priceListWebClient;
         private readonly IProductWebApiClient _productWebApiClient;
         private readonly IProductTypeWebApiClient _productTypeWebApiClient;
+        private readonly IPriceListExtraEntryHelper _priceListExtraEntryHelper;
 
         /// <summary>
         /// Public constructor.
         /// </summary>
         public PriceListController(IPriceListWebApiClient priceListWebClient, IProductWebApiClient productWebApiClient, 
-            IProductTypeWebApiClient productTypeWebApiClient)
+            IProductTypeWebApiClient productTypeWebApiClient, IPriceListExtraEntryHelper priceListExtraEntryHelper)
         {
             _priceListWebClient = priceListWebClient;
             _productWebApiClient = productWebApiClient;
             _productTypeWebApiClient = productTypeWebApiClient;
+            _priceListExtraEntryHelper = priceListExtraEntryHelper;
         }
 
         /// <summary>
@@ -303,56 +305,8 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
             var result = new List<PriceListEntryExtra>();
             DC.ProductType prodType =
                 (await _productTypeWebApiClient.GetProductType(dcProduct.ProductTypeId, responseFields: "extras")).ReadAsSync();
-            var attrLookup = new Dictionary<string, PriceListEntryExtra>();
-            foreach (var extra in prodType.Extras)
-            {
-                if (extra.VocabularyValues.IsNullOrEmpty())
-                {
-                    attrLookup.Add(extra.AttributeFQN + "-", new PriceListEntryExtra
-                    {
-                        AttributeFQN = extra.AttributeFQN,
-                        AttributeCode = extra.AttributeDetail.AttributeCode,
-                        AttributeName = extra.AttributeDetail.AdminName,
-                        Value = "",
-                        DisplayValue = extra.AttributeDetail.Content.Name
-                    });
-                    continue;
-                }
-                foreach (var vocabValue in extra.VocabularyValues)
-                {
-                    attrLookup.Add(extra.AttributeFQN + "-" + ToStringOrEmpty(vocabValue.Value), new PriceListEntryExtra
-                    {
-                        AttributeFQN = extra.AttributeFQN,
-                        AttributeCode = extra.AttributeDetail.AttributeCode,
-                        AttributeName = extra.AttributeDetail.AdminName,
-                        Value = ToStringOrEmpty(vocabValue.Value),
-                        DisplayValue =
-                            (vocabValue.VocabularyValueDetail != null && vocabValue.VocabularyValueDetail.Content != null)
-                                ? vocabValue.VocabularyValueDetail.Content.StringValue
-                                : ToStringOrEmpty(vocabValue.Value)
-                    });
-                }
-            }
-
-            var extras = dcProduct.Extras.Select(extra => extra.Values.Select(x => new PriceListEntryExtra
-            {
-                AttributeFQN = extra.AttributeFQN,
-                AttributeCode = attrLookup[extra.AttributeFQN + "-" + ToStringOrEmpty(x.Value)].AttributeCode,
-                AttributeName = attrLookup[extra.AttributeFQN + "-" + ToStringOrEmpty(x.Value)].AttributeName,
-                CatalogPrice = x.DeltaPrice.DeltaPrice,
-                OverridePrice = getOverridePrice(extra.AttributeFQN, ToStringOrEmpty(x.Value)),
-                DisplayValue = attrLookup[extra.AttributeFQN + "-" + ToStringOrEmpty(x.Value)].DisplayValue,
-                Value = ToStringOrEmpty(x.Value)
-            }));
-
-            foreach (var extra in extras)
-            {
-                result.AddRange(extra);
-            }
-            return result;
+            return _priceListExtraEntryHelper.MergeExtraEntries(getOverridePrice, dcProduct.Extras, prodType, result);
         }
-
-        
 
         /// <summary>
         /// Update an existing PriceList.
@@ -395,11 +349,6 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
                 return isLookup;
             }
             return false;
-        }
-
-        private string ToStringOrEmpty(object value)
-        {
-            return (value != null) ? value.ToString() : "";
         }
     }
 }
