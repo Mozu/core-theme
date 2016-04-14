@@ -43,7 +43,7 @@ Ext.define('Taco.view.provisioning.SiteProvisionerModal', {
                     name: 'catalogId',
                     store: this.catalogStore,
                     valueField: 'id',
-                    displayField: 'name',
+                    displayField: 'nameWithId',
                     fieldLabel: 'Catalog',
                     queryMode:'local'
                 },

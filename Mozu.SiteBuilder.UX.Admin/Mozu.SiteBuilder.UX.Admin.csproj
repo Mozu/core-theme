@@ -691,7 +691,6 @@
     <Content Include="Scripts\app\shared\view\modal\Wishlist.js" />
     <Content Include="Scripts\app\store\AccountUsersTree.js" />
     <Content Include="Scripts\app\store\AttributesGrid.js" />
-    <Content Include="Scripts\app\store\AuditLog.js" />
     <Content Include="Scripts\app\store\BehaviorNodes.js" />
     <Content Include="Scripts\app\store\BehaviorCategoryRoles.js" />
     <Content Include="Scripts\app\store\BehaviorCategories.js" />
@@ -705,6 +704,7 @@
     <Content Include="Scripts\app\store\PriceLists.js" />
     <Content Include="Scripts\app\store\ProductRankings.js" />
     <Content Include="Scripts\app\store\CouponSets.js" />
+    <Content Include="Scripts\app\store\PublishSetsGrid.js" />
     <Content Include="Scripts\app\store\RuntimePriceLists.js" />
     <Content Include="Scripts\app\store\StorefrontProducts.js" />
     <Content Include="Scripts\app\store\DiscountGrid.js" />
@@ -790,7 +790,6 @@
     <Content Include="Scripts\app\view\preview\ExpressionPreviewDrawer.js" />
     <Content Include="Scripts\app\view\priceList\Edit.js" />
     <Content Include="Scripts\app\view\priceList\entry\AdvancedEntrySearch.js" />
-    <Content Include="Scripts\app\view\priceList\entry\PriceEntryExtras.js" />
     <Content Include="Scripts\app\view\priceList\Form.js" />
     <Content Include="Scripts\app\view\priceList\form\AdvancedSearch.js" />
     <Content Include="Scripts\app\view\priceList\entry\Entries.js" />
@@ -803,6 +802,7 @@
     <Content Include="Scripts\app\view\priceList\modal\PriceEntryEditor.js" />
     <Content Include="Scripts\app\view\priceList\modal\PriceListsModal.js" />
     <Content Include="Scripts\app\view\priceList\widget\EntriesGrid.js" />
+    <Content Include="Scripts\app\view\priceList\widget\EntryExtrasGrid.js" />
     <Content Include="Scripts\app\view\priceList\widget\OverrideField.js" />
     <Content Include="Scripts\app\view\priceList\widget\PriceListComboBox.js" />
     <Content Include="Scripts\app\view\priceList\widget\ProductAndVariantPicker.js" />
@@ -869,6 +869,8 @@
     <Content Include="Scripts\app\view\productRanking\Index.js" />
     <Content Include="Scripts\app\view\productType\AttributeForm.js" />
     <Content Include="Scripts\app\view\product\widget\productCode\Modal.js" />
+    <Content Include="Scripts\app\view\provisioning\Catalogs.js" />
+    <Content Include="Scripts\app\view\provisioning\Sites.js" />
     <Content Include="Scripts\app\view\publishing\advancedSearchForm\DraftContent.js" />
     <Content Include="Scripts\app\view\publishing\advancedSearchForm\DraftProduct.js" />
     <Content Include="Scripts\app\view\publishing\advancedSearchForm\Publish.js" />
