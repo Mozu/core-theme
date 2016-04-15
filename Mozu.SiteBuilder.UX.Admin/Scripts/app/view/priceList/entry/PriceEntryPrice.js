@@ -51,23 +51,23 @@ Ext.define('Taco.view.priceList.entry.PriceEntryPrice', {
             items: []
         });
 
-        me.curListPrice = me.createCurrentCurrencyField('currentListPrice', 'Current Price');
-        me.curSalePrice = me.createCurrentCurrencyField('currentSalePrice', 'Current Sale Price');
-
-        me.basicPanel.add({
-            xtype: 'fieldcontainer',
-            layout: {
-                type: 'hbox',
-                align: 'top'
-            },
-            defaults: {
-                flex: 1
-            },
-            items: [
-                me.curListPrice,
-                me.curSalePrice
-            ]
-        });
+        // me.curListPrice = me.createCurrentCurrencyField('currentListPrice', 'Current Price');
+        // me.curSalePrice = me.createCurrentCurrencyField('currentSalePrice', 'Current Sale Price');
+        //
+        // me.basicPanel.add({
+        //     xtype: 'fieldcontainer',
+        //     layout: {
+        //         type: 'hbox',
+        //         align: 'top'
+        //     },
+        //     defaults: {
+        //         flex: 1
+        //     },
+        //     items: [
+        //         me.curListPrice,
+        //         me.curSalePrice
+        //     ]
+        // });
 
         var entries = this.record.get('priceEntries');
 
@@ -115,6 +115,10 @@ Ext.define('Taco.view.priceList.entry.PriceEntryPrice', {
                 }
             });
 
+            if (!me.priceOverrideFirst) {
+                me.priceOverrideFirst = row.priceOverride;
+            }
+
             row.priceOverride.overrideField.validate();
 
             row.salePriceOverride = Ext.widget('overridefield', {
@@ -134,6 +138,10 @@ Ext.define('Taco.view.priceList.entry.PriceEntryPrice', {
                     value: entry.salePrice
                 }
             });
+
+            if (!me.salePriceOverrideFirst) {
+                me.salePriceOverrideFirst = row.salePriceOverride;
+            }
 
             var rowForm = {
                 xtype: 'form',
@@ -171,8 +179,8 @@ Ext.define('Taco.view.priceList.entry.PriceEntryPrice', {
         //     ]
         // });
 
-        me.curMsrp = me.createCurrentCurrencyField('currentMsrp', 'Current MSRP');
-        me.curCost = me.createCurrentCurrencyField('currentCost', 'Current Cost');
+        // me.curMsrp = me.createCurrentCurrencyField('currentMsrp', 'Current MSRP');
+        // me.curCost = me.createCurrentCurrencyField('currentCost', 'Current Cost');
 
         me.msrpOverride = Ext.widget('overridefield', {
             fieldCfg: {
@@ -367,21 +375,6 @@ Ext.define('Taco.view.priceList.entry.PriceEntryPrice', {
             },
             items: [
                 {
-                    xtype: 'fieldcontainer',
-                    layout: {
-                        type: 'hbox',
-                        align: 'top'
-                    },
-                    defaults: {
-                        flex: 1
-                    },
-                    items: [
-                        me.curMsrp,
-                        me.curCost,
-                        {}
-                    ]
-                },
-                {
                     items: [
                         me.msrpOverride,
                         me.costOverride,
@@ -454,12 +447,6 @@ Ext.define('Taco.view.priceList.entry.PriceEntryPrice', {
         this.extrasGrid.getStore().loadData(data.items);
     },
 
-    onProductChanged: function (record) {
-        this.injectExtrasTab(record);
-        this.setCurrency(this.curListPrice, record.get('price'), this.currencyCode);
-        this.setCurrency(this.curSalePrice, record.get('salePrice'), this.currencyCode);
-    },
-
     injectExtrasTab: function(record) {
         var me = this;
         if (!record || record.get('isVariation') || record.get('productCode') === '') {
@@ -472,19 +459,53 @@ Ext.define('Taco.view.priceList.entry.PriceEntryPrice', {
         }
     },
 
+    onProductChanged: function (data) {
+        // this.updateExtras(data.extras);
+        // this.injectExtrasTab(record);
+        var currency = Taco.app.context.currencies[this.currencyCode.toLowerCase()];
+        // this.priceOverrideFirst.setCurrentPrice(this.formatCurrency(record.get('price'), currency));
+        // this.salePriceOverrideFirst.setCurrentPrice(this.formatCurrency(record.get('salePrice'), currency));
+        if (!data){
+            data = {};
+        }
+        this.record.set('currentListPrice', data.currentListPrice);
+        this.record.set('currentSalePrice', data.currentSalePrice);
+        this.record.set('currentCost', data.currentCost);
+        this.record.set('currentMsrp', data.currentMsrp);
+        this.record.set('currentDiscountsRestricted', data.currentDiscountsRestricted);
+        this.record.set('currentDiscountsStartDate', data.currentDiscountsStartDate);
+        this.record.set('currentDiscountsEndDate', data.currentDiscountsEndDate);
+        this.onPriceEntryLoaded(this.record);
+        // this.setCurrency(this.curListPrice, record.get('price'), this.currencyCode);
+        // this.setCurrency(this.curSalePrice, record.get('salePrice'), this.currencyCode);
+    },
+
     onPriceEntryLoaded: function (record) {
-        this.setCurrency(this.curListPrice, record.get('currentListPrice'), record.get('currentPriceCurrencyCode'));
-        this.setCurrency(this.curSalePrice, record.get('currentSalePrice'), record.get('currentPriceCurrencyCode'));
-        this.setCurrency(this.curMsrp, record.get('currentMsrp'), record.get('currentPriceCurrencyCode'));
-        this.setCurrency(this.curCost, record.get('currentCost'), record.get('currentPriceCurrencyCode'));
+        var currCode = record.get('currentPriceCurrencyCode') || this.currencyCode,
+            currency = Taco.app.context.currencies[currCode.toLowerCase()];
 
-
+        this.priceOverrideFirst.setCurrentPrice(this.formatCurrency(record.get('currentListPrice'), currency));
+        this.salePriceOverrideFirst.setCurrentPrice(this.formatCurrency(record.get('currentSalePrice'), currency));
+        this.msrpOverride.setCurrentPrice(this.formatCurrency(record.get('currentMsrp'), currency));
+        this.costOverride.setCurrentPrice(this.formatCurrency(record.get('currentCost'), currency));
+        this.mapOverride.setCurrentPrice(this.formatCurrency(record.get('currentMap'), currency));
+        // this.setCurrency(this.curListPrice, record.get('currentListPrice'), record.get('currentPriceCurrencyCode'));
+        // this.setCurrency(this.curSalePrice, record.get('currentSalePrice'), record.get('currentPriceCurrencyCode'));
+        // this.setCurrency(this.curMsrp, record.get('currentMsrp'), record.get('currentPriceCurrencyCode'));
+        // this.setCurrency(this.curCost, record.get('currentCost'), record.get('currentPriceCurrencyCode'));
     },
 
-    setCurrency: function (currencyField, amount, currencyCode) {
-        currencyField.currencyCode = currencyCode;
-        currencyField.setValue(amount);
+    formatCurrency: function (value, currency) {
+        if (!value && value !== 0) {
+            return '';
+        }
+        return Ext.util.Format.currency(value, currency.symbol, currency.significantDecimalDigits, false);
     },
+
+    // setCurrency: function (currencyField, amount, currencyCode) {
+    //     currencyField.currencyCode = currencyCode;
+    //     currencyField.setValue(amount);
+    // },
     
     beforeSave: function () {
         Ext.Object.merge(this.record.data, this.form.getValues());

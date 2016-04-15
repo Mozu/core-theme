@@ -236,6 +236,35 @@ Ext.define('Taco.model.PriceListEntry', {
             name: 'currentCostCurrencyCode',
             type: 'string',
             useNull: true
+        }, {
+            name: 'currentMap',
+            type: 'float',
+            useNull: true
+        }, {
+            name: 'currentMapStartDate',
+            type: 'date',
+            useNull: true,
+            dateFormat: 'c'
+        }, {
+            name: 'currentMapEndDate',
+            type: 'date',
+            useNull: true,
+            dateFormat: 'c'
+        }, {
+            name: 'currentDiscountsRestricted',
+            type: 'boolean',
+            useNull: true,
+            defaultValue: null
+        }, {
+            name: 'currentDiscountsRestrictedStartDate',
+            type: 'date',
+            useNull: true,
+            dateFormat: 'c'
+        }, {
+            name: 'currentDiscountsRestrictedEndDate',
+            type: 'date',
+            useNull: true,
+            dateFormat: 'c'
         }
     ],
 

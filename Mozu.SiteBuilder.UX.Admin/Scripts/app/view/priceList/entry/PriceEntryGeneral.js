@@ -70,7 +70,8 @@ Ext.define('Taco.view.priceList.entry.PriceEntryGeneral', {
                     fn: function(cmp, newVal, oldVal, eOpts) {
 
                         var record = cmp.store.getAt(cmp.store.find('productCode', newVal));
-                        Taco.app.fireEvent('price-entry-product-changed', record);
+                        //Taco.app.fireEvent('price-entry-product-changed', record);
+                        me.loadProduct(record);
                         if (!record) return;
                         var isVariation = record.get('isVariation') || record.get('variationOptions').length > 0;
 
@@ -301,9 +302,27 @@ Ext.define('Taco.view.priceList.entry.PriceEntryGeneral', {
         }
 
         combo.inputMask.show(comboDisplay);
-        me.getExtras(record);
+        me.loadProduct(record);
+        //me.getExtras(record);
         // cancel the selection so that the same product can be reselected again;
         return false;
+    },
+
+    loadProduct: function (productRecord) {
+        var productCode = (productRecord ? productRecord.get('productCode') : null);
+
+        if (!productCode) {
+            return;
+        }
+
+        Ext.Ajax.request({
+            url: '/admin/app/priceList/entry/create/product/' + productCode,
+            success: function (response) {
+                var data = Ext.JSON.decode(response.responseText);
+                Taco.app.fireEvent('price-entry-product-changed', data.items);
+            },
+            failure: Taco.core.util.ExceptionWhiner.handleRemoteFailure
+        });
     },
 
     getExtras: function(productRecord) {
@@ -333,7 +352,8 @@ Ext.define('Taco.view.priceList.entry.PriceEntryGeneral', {
 
     onProductPickerClear: function () {
         this.record.set('productCode', null);
-        Taco.app.fireEvent('price-entry-product-extras-changed', {});
+        //Taco.app.fireEvent('price-entry-product-extras-changed', {});
+        Taco.app.fireEvent('price-entry-product-changed', {});
     },
 
     beforeSave: function () {

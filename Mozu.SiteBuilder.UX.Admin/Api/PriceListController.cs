@@ -212,25 +212,17 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
 
             var dcProduct = await GetProduct(productCode);
             //move to method for adding current.
-            priceListEntry.CurrentPriceCurrencyCode = dcProduct.Price.ISOCurrencyCode;
-            priceListEntry.CurrentListPrice = dcProduct.Price.Price;
-            priceListEntry.CurrentSalePrice = dcProduct.Price.SalePrice;
-            priceListEntry.CurrentMSRP = dcProduct.Price.MSRP;
-            priceListEntry.CurrentCost = (dcProduct.SupplierInfo != null && dcProduct.SupplierInfo.Cost != null) 
-                                        ? dcProduct.SupplierInfo.Cost.Cost
-                                        : null;
-            priceListEntry.CurrentCost = (dcProduct.SupplierInfo != null && dcProduct.SupplierInfo.Cost != null)
-                                        ? dcProduct.SupplierInfo.Cost.Cost
-                                        : null;
+            priceListEntry = AddCurrentPrices(priceListEntry, dcProduct);
 
             var lookup = (priceListEntry.Extras.IsNullOrEmpty())
                 ? new Dictionary<string, PriceListEntryExtra>()
                 : priceListEntry.Extras.ToDictionary(x => x.AttributeFQN + "-" + x.Value);
 
-            var productExtras = await GetProductExtrasInternalAsync(productCode,
-                (attrFqn, attrValue) => lookup.ContainsKey(attrFqn + "-" + attrValue)
+            Func<string,string,decimal?> getOverridePrice = (attrFqn, attrValue) => lookup.ContainsKey(attrFqn + "-" + attrValue)
                     ? lookup[attrFqn + "-" + attrValue].OverridePrice
-                    : (decimal?) null);
+                    : (decimal?)null;
+
+            var productExtras = await GetProductTypeAttributesAsync(getOverridePrice, dcProduct);
 
             var orphans = priceListEntry.Extras.Where(x => !productExtras
                 .Select(orp => orp.AttributeFQN + "-" + orp.Value)
@@ -240,6 +232,27 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
             priceListEntry.Extras =
                 productExtras.OrderByDescending(x => x.OverridePrice).ThenByDescending(y => y.CatalogPrice).ToList();
             return List2(priceListEntry);
+        }
+
+        private static PriceListEntry AddCurrentPrices(PriceListEntry priceListEntry, DC.Product dcProduct)
+        {
+            priceListEntry.CurrentPriceCurrencyCode = dcProduct.Price.ISOCurrencyCode;
+            priceListEntry.CurrentListPrice = dcProduct.Price.Price;
+            priceListEntry.CurrentSalePrice = dcProduct.Price.SalePrice;
+            priceListEntry.CurrentMSRP = dcProduct.Price.MSRP;
+            priceListEntry.CurrentCost = (dcProduct.SupplierInfo != null && dcProduct.SupplierInfo.Cost != null)
+                ? dcProduct.SupplierInfo.Cost.Cost
+                : null;
+            priceListEntry.CurrentCost = (dcProduct.SupplierInfo != null && dcProduct.SupplierInfo.Cost != null)
+                ? dcProduct.SupplierInfo.Cost.Cost
+                : null;
+            priceListEntry.CurrentMAP = dcProduct.Price.MAP;
+            priceListEntry.CurrentMAPStartDate = dcProduct.Price.MAPStartDate;
+            priceListEntry.CurrentMAPEndDate = dcProduct.Price.MAPEndDate;
+            priceListEntry.CurrentDiscountsRestricted = dcProduct.PricingBehavior.DiscountsRestricted;
+            priceListEntry.CurrentDiscountsRestrictedStartDate = dcProduct.PricingBehavior.DiscountsRestrictedStartDate;
+            priceListEntry.CurrentDiscountsRestrictedEndDate = dcProduct.PricingBehavior.DiscountsRestrictedEndDate;
+            return priceListEntry;
         }
 
         /// <summary>
@@ -268,18 +281,35 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
             return List2(responseList);
         }
 
-
         /// <summary>
         /// Get ProducExtras for a new PriceListEntry
         /// Does not throw exception when 404 as it's
         /// expected.
         /// </summary>
-        [HttpGetRoute(UriTemplate = "entry/product/{productCode}/extras")]
-        public async Task<Response<List<PriceListEntryExtra>>> GetProductExtras(string productCode)
+        [HttpGetRoute(UriTemplate = "entry/create/product/{productCode}")]
+        public async Task<Response<PriceListEntry>> GetPriceListTemplateForProduct(string productCode)
         {
-            var result = await GetProductExtrasInternalAsync(productCode, (attrFqn, attrCode) => (decimal?) null);
-            return List2(result);
+            var dcProduct = await GetProduct(productCode);
+            //move to method for adding current.
+            var priceListEntry = AddCurrentPrices(new PriceListEntry(), dcProduct);
+            var productExtras = await GetProductTypeAttributesAsync((fqn, val) => (decimal?)null, dcProduct);
+
+            priceListEntry.Extras =
+                productExtras.OrderByDescending(x => x.CatalogPrice).ToList();
+            return Single2(priceListEntry);
         }
+
+        ///// <summary>
+        ///// Get ProducExtras for a new PriceListEntry
+        ///// Does not throw exception when 404 as it's
+        ///// expected.
+        ///// </summary>
+        //[HttpGetRoute(UriTemplate = "entry/product/{productCode}/extras")]
+        //public async Task<Response<List<PriceListEntryExtra>>> GetProductExtras(string productCode)
+        //{
+        //    var result = await GetProductExtrasInternalAsync(productCode, (attrFqn, attrCode) => (decimal?) null);
+        //    return List2(result);
+        //}
 
         private async Task<List<PriceListEntryExtra>> GetProductExtrasInternalAsync(string productCode, Func<string, string, decimal?> getOverridePrice)
         {
