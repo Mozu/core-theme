@@ -208,6 +208,34 @@ Ext.define('Taco.model.PriceListEntry', {
                     .join(', ');
             },
             persist: false
+        }, {
+            name: 'currentPriceCurrencyCode',
+            type: 'string',
+            useNull: true
+        }, {
+            name: 'currentListPrice',
+            type: 'float',
+            useNull: true
+            //persist: false
+        }, {
+            name: "currentSalePrice",
+            type: "float",
+            useNull: true
+            //persist: false
+        }, {
+            name: "currentMsrp",
+            type: "float",
+            useNull: true
+            //persist: false
+        }, {
+            name: "currentCost",
+            type: "float",
+            useNull: true
+            //persist: false
+        }, {
+            name: 'currentCostCurrencyCode',
+            type: 'string',
+            useNull: true
         }
     ],
 

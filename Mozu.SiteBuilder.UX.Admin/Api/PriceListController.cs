@@ -210,6 +210,19 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
 
             if (priceListEntry.IsVariation) return List2(priceListEntry);
 
+            var dcProduct = await GetProduct(productCode);
+            //move to method for adding current.
+            priceListEntry.CurrentPriceCurrencyCode = dcProduct.Price.ISOCurrencyCode;
+            priceListEntry.CurrentListPrice = dcProduct.Price.Price;
+            priceListEntry.CurrentSalePrice = dcProduct.Price.SalePrice;
+            priceListEntry.CurrentMSRP = dcProduct.Price.MSRP;
+            priceListEntry.CurrentCost = (dcProduct.SupplierInfo != null && dcProduct.SupplierInfo.Cost != null) 
+                                        ? dcProduct.SupplierInfo.Cost.Cost
+                                        : null;
+            priceListEntry.CurrentCost = (dcProduct.SupplierInfo != null && dcProduct.SupplierInfo.Cost != null)
+                                        ? dcProduct.SupplierInfo.Cost.Cost
+                                        : null;
+
             var lookup = (priceListEntry.Extras.IsNullOrEmpty())
                 ? new Dictionary<string, PriceListEntryExtra>()
                 : priceListEntry.Extras.ToDictionary(x => x.AttributeFQN + "-" + x.Value);
@@ -270,34 +283,27 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
 
         private async Task<List<PriceListEntryExtra>> GetProductExtrasInternalAsync(string productCode, Func<string, string, decimal?> getOverridePrice)
         {
-            DC.Product dcProduct;
-            
-            string responseFields = "productCode,productTypeId,extras";
-                   //"price(price,salePrice)," +
-                   //"productInCatalogs(catalogId,price(price,salePrice))"
-            try
-            {
-                dcProduct =
-                    (await
-                        _productWebApiClient.GetProduct(productCode, responseGroups: "Extras",
-                            responseFields: responseFields)).ReadAsSync();
-            }
-            catch (ApiWebClientException apiError)
-            {
-                if (apiError.ErrorCode.Equals("ITEM_NOT_FOUND"))
-                {
-                    return new List<PriceListEntryExtra>();
-                }
-                throw;
-            }
+            DC.Product dcProduct = await GetProduct(productCode);
+
             if (dcProduct.Extras.IsNullOrEmpty())
             {
                 return new List<PriceListEntryExtra>();
             }
 
-            // get productType
-
             return await GetProductTypeAttributesAsync(getOverridePrice, dcProduct);
+        }
+
+        private async Task<DC.Product> GetProduct(string productCode)
+        {
+            string responseFields = "productCode,productTypeId,extras,"
+                                    + "price(isoCurrencyCode,price,salePrice,msrp,map,mapStartDate,mapEndDate),"
+                                    + "pricingBehavior(discountsRestricted,discountsRestrictedStartDate,discountsRestrictedEndDate),"
+                                    + "supplierInfo(cost(isoCurrencyCode,cost)),"
+                                    + "productInCatalogs(catalogId,isActive,isPriceOverriden,"
+                                      + "price(isoCurrencyCode,price,salePrice,msrp,map,mapStartDate,mapEndDate))";
+            
+                
+             return (await _productWebApiClient.GetProduct(productCode, responseFields: responseFields)).ReadAsSync();
         }
 
         private async Task<List<PriceListEntryExtra>> GetProductTypeAttributesAsync(Func<string, string, decimal?> getOverridePrice, DC.Product dcProduct)
