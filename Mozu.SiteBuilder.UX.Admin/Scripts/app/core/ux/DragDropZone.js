@@ -75,8 +75,10 @@
                     if (this._allowDrop) {
                         return;
                     }
-                    e.browserEvent.dataTransfer.dropEffect = 'move';
-                    e.browserEvent.dataTransfer.effectAllowed = 'none';
+                    if (e.browserEvent && e.browserEvent.dataTransfer) {
+                        // e.browserEvent.dataTransfer.dropEffect = 'move';
+                        // e.browserEvent.dataTransfer.effectAllowed = 'none';
+                    }
                 };
             },
             allowDrop: function () {
@@ -121,8 +123,10 @@
                     fn: function (e) {
                         e.stopPropagation();
                         e.preventDefault();
-                        var files = e.browserEvent.dataTransfer.files;
-                        me.fireEvent("filedrop", files);
+                        if (e.browserEvent && e.browserEvent.dataTransfer) {
+                            var files = e.browserEvent.dataTransfer.files;
+                            me.fireEvent("filedrop", files);
+                        }
                     }
                 }
             });
