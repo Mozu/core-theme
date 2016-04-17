@@ -313,6 +313,24 @@ Ext.define('Taco.view.priceList.entry.PriceEntryPrice', {
             }
         });
 
+        me.currentMapStartDate = Ext.widget('label', {
+            //forId: 'myFieldId',
+            cls: 'taco-rolledup-price',
+            text: '',
+            style: 'text-align: right',
+            forId: me.itemId,
+            defaultAlign: 'br?'
+        });
+
+        me.currentMapEndDate = Ext.widget('label', {
+            //forId: 'myFieldId',
+            cls: 'taco-rolledup-price',
+            text: '',
+            style: 'text-align: right',
+            forId: me.itemId,
+            defaultAlign: 'br?'
+        });
+
         me.mapRow = Ext.widget('panel', {
             flex: 1,
             xtype: 'panel',
@@ -326,9 +344,79 @@ Ext.define('Taco.view.priceList.entry.PriceEntryPrice', {
             },
             items: [
                 me.mapOverride,
-                me.mapStartDate,
-                me.mapEndDate
+                {
+                    xtype: 'fieldcontainer',
+                    layout: 'vbox',
+                    items: [
+                        me.mapStartDate,
+                        {
+                            xtype: 'fieldcontainer',
+                            layout: 'hbox',
+                            items: [{
+                                xtype: 'label',
+                                cls: 'taco-rolledup-price',
+                                text: 'Default:',
+                                style: 'text-align: left',
+                                margin: '0 10 0 0',
+                                forId: me.itemId,
+                                defaultAlign: 'bl?'
+                            },
+                                me.currentMapStartDate
+                            ]
+                        }
+                    ]
+                },
+                {
+                    xtype: 'fieldcontainer',
+                    layout: 'vbox',
+                    items: [
+                        me.mapEndDate,
+                        {
+                            xtype: 'fieldcontainer',
+                            layout: 'hbox',
+                            items: [{
+                                xtype: 'label',
+                                cls: 'taco-rolledup-price',
+                                text: 'Default:',
+                                style: 'text-align: left',
+                                margin: '0 10 0 0',
+                                forId: me.itemId,
+                                defaultAlign: 'bl?'
+                            },
+                                me.currentMapEndDate
+                            ]
+                        }
+                    ]
+                }
+
             ]
+        });
+
+        me.currentRestriction = Ext.widget('label', {
+            //forId: 'myFieldId',
+            cls: 'taco-rolledup-price',
+            text: '',
+            style: 'text-align: right',
+            forId: me.discountRestriction.itemId,
+            defaultAlign: 'br?'
+        });
+
+        me.currentRestrictionStartDate = Ext.widget('label', {
+            //forId: 'myFieldId',
+            cls: 'taco-rolledup-price',
+            text: '',
+            style: 'text-align: right',
+            forId: me.restrictionStartDate.itemId,
+            defaultAlign: 'br?'
+        });
+
+        me.currentRestrictionEndDate = Ext.widget('label', {
+            //forId: 'myFieldId',
+            cls: 'taco-rolledup-price',
+            text: '',
+            style: 'text-align: right',
+            forId: me.restrictionEndDate,
+            defaultAlign: 'br?'
         });
 
         me.discountRestrictionRow = Ext.widget('panel', {
@@ -343,9 +431,9 @@ Ext.define('Taco.view.priceList.entry.PriceEntryPrice', {
                 flex: 1
             },
             items: [
-                me.discountRestriction,
-                me.restrictionStartDate,
-                me.restrictionEndDate
+                me.createCurrentWidget(me.discountRestriction, me.currentRestriction),
+                me.createCurrentWidget(me.restrictionStartDate, me.currentRestrictionStartDate),
+                me.createCurrentWidget(me.restrictionEndDate, me.currentRestrictionEndDate)
             ]
         });
 
@@ -438,6 +526,29 @@ Ext.define('Taco.view.priceList.entry.PriceEntryPrice', {
             //labelAlign: 'right'
         });
     },
+
+    createCurrentWidget: function(overrideField, labelField) {
+        return {
+            xtype: 'fieldcontainer',
+            layout: 'vbox',
+            items: [
+            overrideField, {
+                xtype: 'fieldcontainer',
+                layout: 'hbox',
+                items: [{
+                        xtype: 'label',
+                        cls: 'taco-rolledup-price',
+                        text: 'Default:',
+                        style: 'text-align: left',
+                        margin: '0 10 0 0',
+                        forId: overrideField.itemId,
+                        defaultAlign: 'bl?'
+                    },
+                   labelField
+                ]
+            }]
+        }
+    },
     
     updateExtras: function (data) {
         if (!data || !data.items ) {
@@ -471,6 +582,9 @@ Ext.define('Taco.view.priceList.entry.PriceEntryPrice', {
         this.record.set('currentListPrice', data.currentListPrice);
         this.record.set('currentSalePrice', data.currentSalePrice);
         this.record.set('currentCost', data.currentCost);
+        this.record.set('currentMap', data.currentMap);
+        this.record.set('currentMapStartDate', data.currentMapStartDate);
+        this.record.set('currentMapEndDate', data.currentMapEndDate);
         this.record.set('currentMsrp', data.currentMsrp);
         this.record.set('currentDiscountsRestricted', data.currentDiscountsRestricted);
         this.record.set('currentDiscountsStartDate', data.currentDiscountsStartDate);
@@ -489,6 +603,11 @@ Ext.define('Taco.view.priceList.entry.PriceEntryPrice', {
         this.msrpOverride.setCurrentPrice(this.formatCurrency(record.get('currentMsrp'), currency));
         this.costOverride.setCurrentPrice(this.formatCurrency(record.get('currentCost'), currency));
         this.mapOverride.setCurrentPrice(this.formatCurrency(record.get('currentMap'), currency));
+        this.currentMapStartDate.setText(Ext.util.Format.date(record.get('currentMapStartDate'), 'd M, Y, g:i a'));
+        this.currentMapEndDate.setText(Ext.util.Format.date(record.get('currentMapEndDate'), 'd M, Y, g:i a'));
+        this.currentRestriction.setText(record.get('currentDiscountsRestricted'));
+        this.currentRestrictionStartDate.setText(Ext.util.Format.date(record.get('currentDiscountsRestrictedStartDate'), 'd M, Y, g:i a'));
+        this.currentRestrictionEndDate.setText(Ext.util.Format.date(record.get('currentDiscountsRestrictedEndDate'), 'd M, Y, g:i a'));
         // this.setCurrency(this.curListPrice, record.get('currentListPrice'), record.get('currentPriceCurrencyCode'));
         // this.setCurrency(this.curSalePrice, record.get('currentSalePrice'), record.get('currentPriceCurrencyCode'));
         // this.setCurrency(this.curMsrp, record.get('currentMsrp'), record.get('currentPriceCurrencyCode'));
