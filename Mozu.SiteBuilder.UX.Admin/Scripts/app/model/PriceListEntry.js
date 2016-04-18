@@ -254,7 +254,10 @@ Ext.define('Taco.model.PriceListEntry', {
             name: 'currentDiscountsRestricted',
             type: 'boolean',
             useNull: true,
-            defaultValue: null
+            defaultValue: null,
+            convert: function(item){
+                return (item) ? "On" : "Off";
+            }
         }, {
             name: 'currentDiscountsRestrictedStartDate',
             type: 'date',

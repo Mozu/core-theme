@@ -51,23 +51,6 @@ Ext.define('Taco.view.priceList.entry.PriceEntryPrice', {
             items: []
         });
 
-        // me.curListPrice = me.createCurrentCurrencyField('currentListPrice', 'Current Price');
-        // me.curSalePrice = me.createCurrentCurrencyField('currentSalePrice', 'Current Sale Price');
-        //
-        // me.basicPanel.add({
-        //     xtype: 'fieldcontainer',
-        //     layout: {
-        //         type: 'hbox',
-        //         align: 'top'
-        //     },
-        //     defaults: {
-        //         flex: 1
-        //     },
-        //     items: [
-        //         me.curListPrice,
-        //         me.curSalePrice
-        //     ]
-        // });
 
         var entries = this.record.get('priceEntries');
 
@@ -494,21 +477,13 @@ Ext.define('Taco.view.priceList.entry.PriceEntryPrice', {
             ]
         });
 
-        me.injectExtrasTab(me.record);
-
         me.items = [
             me.tabs
         ];
 
         me.mon(Taco.app, 'price-entry-loaded', me.onPriceEntryLoaded, me);
         me.mon(Taco.app, 'price-entry-product-changed', me.onProductChanged, me);
-        me.mon(Taco.app, 'price-entry-product-extras-changed', me.updateExtras, me);
-        var extras = me.record.get('extras');
-        if (!extras) {
-            me.getExtras(me.record);
-        } else {
-            Taco.app.fireEvent('price-entry-product-extras-changed', { items: extras });
-        }
+
         me.callParent(arguments);
     },
 
@@ -551,31 +526,29 @@ Ext.define('Taco.view.priceList.entry.PriceEntryPrice', {
     },
     
     updateExtras: function (data) {
-        if (!data || !data.items ) {
-            data.items = [];
+        if (!data) {
+            data = [];
         }
-        this.record.set('extras', data.items);
-        this.extrasGrid.getStore().loadData(data.items);
+        this.record.set('extras', data);
+        this.extrasGrid.getStore().loadData(data);
     },
 
     injectExtrasTab: function(record) {
-        var me = this;
-        if (!record || record.get('isVariation') || record.get('productCode') === '') {
-            me.tabs.remove(me.extrasPanel, false)
-        } else {
-            var exists = Ext.Array.some(me.tabs.items.items, function(item) { return item.itemId === me.extrasPanel.itemId });
-            if (!exists) {
-                me.tabs.add(me.extrasPanel);
+        var me = this,
+            extraTabExists = Ext.Array.some(me.tabs.items.items, function(item) {
+            return item.itemId === me.extrasPanel.itemId
+        });
+        if (!record || record.get('isVariation') || record.get('extras').length === 0) {
+            if (extraTabExists) {
+                me.tabs.remove(me.extrasPanel, false);
             }
+        } else if (!extraTabExists) {
+            me.tabs.add(me.extrasPanel);
         }
     },
 
     onProductChanged: function (data) {
-        // this.updateExtras(data.extras);
-        // this.injectExtrasTab(record);
         var currency = Taco.app.context.currencies[this.currencyCode.toLowerCase()];
-        // this.priceOverrideFirst.setCurrentPrice(this.formatCurrency(record.get('price'), currency));
-        // this.salePriceOverrideFirst.setCurrentPrice(this.formatCurrency(record.get('salePrice'), currency));
         if (!data){
             data = {};
         }
@@ -589,9 +562,8 @@ Ext.define('Taco.view.priceList.entry.PriceEntryPrice', {
         this.record.set('currentDiscountsRestricted', data.currentDiscountsRestricted);
         this.record.set('currentDiscountsStartDate', data.currentDiscountsStartDate);
         this.record.set('currentDiscountsEndDate', data.currentDiscountsEndDate);
+        this.record.set('extras', data.extras);
         this.onPriceEntryLoaded(this.record);
-        // this.setCurrency(this.curListPrice, record.get('price'), this.currencyCode);
-        // this.setCurrency(this.curSalePrice, record.get('salePrice'), this.currencyCode);
     },
 
     onPriceEntryLoaded: function (record) {
@@ -608,10 +580,9 @@ Ext.define('Taco.view.priceList.entry.PriceEntryPrice', {
         this.currentRestriction.setText(record.get('currentDiscountsRestricted'));
         this.currentRestrictionStartDate.setText(Ext.util.Format.date(record.get('currentDiscountsRestrictedStartDate'), 'd M, Y, g:i a'));
         this.currentRestrictionEndDate.setText(Ext.util.Format.date(record.get('currentDiscountsRestrictedEndDate'), 'd M, Y, g:i a'));
-        // this.setCurrency(this.curListPrice, record.get('currentListPrice'), record.get('currentPriceCurrencyCode'));
-        // this.setCurrency(this.curSalePrice, record.get('currentSalePrice'), record.get('currentPriceCurrencyCode'));
-        // this.setCurrency(this.curMsrp, record.get('currentMsrp'), record.get('currentPriceCurrencyCode'));
-        // this.setCurrency(this.curCost, record.get('currentCost'), record.get('currentPriceCurrencyCode'));
+
+        this.updateExtras(record.get('extras'));
+        this.injectExtrasTab(record);
     },
 
     formatCurrency: function (value, currency) {
@@ -620,11 +591,6 @@ Ext.define('Taco.view.priceList.entry.PriceEntryPrice', {
         }
         return Ext.util.Format.currency(value, currency.symbol, currency.significantDecimalDigits, false);
     },
-
-    // setCurrency: function (currencyField, amount, currencyCode) {
-    //     currencyField.currencyCode = currencyCode;
-    //     currencyField.setValue(amount);
-    // },
     
     beforeSave: function () {
         Ext.Object.merge(this.record.data, this.form.getValues());
