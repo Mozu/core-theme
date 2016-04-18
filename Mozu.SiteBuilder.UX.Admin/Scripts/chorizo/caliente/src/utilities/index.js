@@ -32,6 +32,12 @@ Array.from = function() {
     return Array.prototype.slice.call(arguments[0]);
 };
 
+
+// ugh to the firefox issue where isSameNode isn't a function
+Element.prototype.isSameNode = Element.prototype.isSameNode || function (node) {
+    return this === node;
+};
+
 /*
 * utility function to remove a DOM node
 * IE Safe
@@ -406,7 +412,7 @@ export function classMaker(span, gridSpan) {
 **/
 export function updateColSpanCls(col, newCls) {
 
-    col.classList.forEach((colClass) => {
+    Array.from(col.classList).forEach((colClass) => {
 
         if (colClass.match(/col-/)) {
             col.classList.remove(colClass);
