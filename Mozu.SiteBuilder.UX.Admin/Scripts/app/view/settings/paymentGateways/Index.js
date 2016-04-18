@@ -41,6 +41,9 @@ Ext.define('Taco.view.settings.paymentGateways.Index', {
         emptySearch: 'Search'
     },
 
+    stateful: true,
+    stateId: 'paymentGatewaysGrid',
+
     onCreate: function () {
         return Taco.core.StateManager.attemptNavigate(this.createRoute);
     },
