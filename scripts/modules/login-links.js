@@ -171,7 +171,7 @@ define(['shim!vendor/bootstrap/js/popover[shim!vendor/bootstrap/js/tooltip[modul
             api.action('customer', 'loginStorefront', {
                 email: this.$parent.find('[data-mz-login-email]').val(),
                 password: this.$parent.find('[data-mz-login-password]').val()
-            }).then(this.handleLoginComplete, this.displayApiMessage);
+            }).then(this.handleLoginComplete.bind(this, this.$parent.find('input[name=returnUrl]').val()), this.displayApiMessage);
         },
         anonymousorder: function() {
             var email = "";
@@ -225,8 +225,12 @@ define(['shim!vendor/bootstrap/js/popover[shim!vendor/bootstrap/js/tooltip[modul
                 EmailAddress: this.$parent.find('[data-mz-forgotpassword-email]').val()
             }).then(_.bind(this.displayResetPasswordMessage,this), this.displayApiMessage);
         },
-        handleLoginComplete: function () {
-            window.location.reload();
+        handleLoginComplete: function (returnUrl) {
+            if ( returnUrl ){
+                window.location.href= returnUrl;
+            }else{
+                window.location.reload();
+            }
         },
         displayResetPasswordMessage: function () {
             this.displayMessage(Hypr.getLabel('resetEmailSent'));
