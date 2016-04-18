@@ -18,7 +18,7 @@ Ext.define('Taco.view.provisioning.Sites', {
 
     enableNavHeader: true,
 
-    createButtonText: 'Create New Site',
+    createButtonText: 'Create',
 
     createButtonEnabled: true,
 
@@ -31,7 +31,7 @@ Ext.define('Taco.view.provisioning.Sites', {
     hideSearchToolbar: true,
 
     enableSearchBarInHeader: false,
-    
+
     advancedSearchConfig: {
         emptySearch: 'Search'
     },
@@ -74,31 +74,7 @@ Ext.define('Taco.view.provisioning.Sites', {
         me.store.on('load', me.onSiteStoreLoad, this, {single: true});
 
         this.columns = [
-            { text: 'Site ID', stateId: 'id', dataIndex: 'id' },
-            { text: 'Name', stateId: 'name', dataIndex: 'name', flex: 1 },
-            {
-                text: 'Catalog',
-                stateId: "catalogName",
-                flex: 1,
-                renderer: function(value, metaData, record) {
-                    var masterCatalogId = record.get('masterCatalogId');
-                    var catalogId = record.get('catalogId');
-                    var rootNode = me.catalogTreeStore.getRootNode();
-                    if (!rootNode)
-                        return null;
-                    var catalogName = '';
-                    Ext.each(rootNode.childNodes, function (masterCat) {
-                        if (masterCat.get('id') === masterCatalogId) {
-                            Ext.each(masterCat.childNodes, function (catalog) {
-                                if (catalogId === catalog.get('id')) {
-                                    catalogName = catalog.get('nameWithId');
-                                }
-                            });
-                        }
-                    });
-                    return catalogName;
-                }
-            },
+            { text: 'Name', stateId:"name",  dataIndex: 'name', flex: 1 },
             { text: 'Currency', stateId: "defaultCurrencyCode", dataIndex: 'defaultCurrencyCode' },
             { text: 'Locale', stateId: "defaultLocaleCode", dataIndex: 'defaultLocaleCode' },
             { text: 'Status', stateId: "status", dataIndex: 'status' },
