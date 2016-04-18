@@ -89,7 +89,23 @@ Ext.define('Taco.view.theme.Index', {
                     }
 
                 },
-                menuItems: this.getMenuItems()
+                menuItems: this.getMenuItems(),
+                onMenuShow: function (cmp, menu) {
+
+                    var removeButton = cmp
+                        && cmp.items
+                        && cmp.items.items[3]
+                        ? cmp.items.items[3]
+                        : null;
+
+                    if (menu.record && !menu.record.get('applied') && removeButton) {
+                        removeButton.disable();
+                    }
+
+                    else {
+                        removeButton.enable();
+                    }
+                }
           	}
         ];
 
