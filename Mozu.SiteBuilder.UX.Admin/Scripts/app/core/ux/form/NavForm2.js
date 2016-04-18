@@ -115,7 +115,7 @@ Ext.define('Taco.core.ux.form.NavForm2', {
     },
 
     getWrapper: function () {
-        return Ext.ComponentQuery.query('fulleditor')[0];
+        return Ext.ComponentQuery.query('fulleditor[el]')[0];
     },
 
     getHeaderHeight: function() {
