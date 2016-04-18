@@ -397,7 +397,7 @@
              * Called whenever an API request begins. You may call this manually to trigger a `loadingchange` event, which {@link MozuView} automatically listens to and displays loading state in the DOM.
              * Added to the list of {@link MozuModel#helpers } automatically, to provide a boolean `model.isLoading` inside HyprLive templates.
              * @returns {boolean} True if the model is currently loading.
-             * @param {boolean} flag Set this to true to trigger a `loadingchange` event.
+             * @param {boolean} yes Set this to true to trigger a `loadingchange` event.
              */
             isLoading: function(yes, opts) {
                 if (arguments.length === 0) return !!this._isLoading;
@@ -420,7 +420,7 @@
             /**
              * Calls the provided callback immediately if `isLoading` is false, or queues it to be called the next time `isLoading` becomes false.
              * Good for queueing user actions while waiting for an API request to complete.
-             * @param {function} callback The function to be called when the `isLoading` is false.
+             * @param {function} cb The callback function to be called when the `isLoading` is false.
              */
             whenReady: function(cb) {
                 var me = this,
