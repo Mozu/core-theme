@@ -2,7 +2,7 @@
     {% if model.length > 0 %}
         {% with model|first as firstItem %}
         
-        {% if firstItem.messageType && firstItem.messageType == "exclusivePricelist" %}
+        {% if firstItem.messageType and firstItem.messageType == "exclusivePricelist" %}
         <ul class="is-showing mz-infos">
             {% for msg in model %}
                 <li class="mz-message-item" >{{ labels|prop(msg.messageType) }}</li>
@@ -15,7 +15,7 @@
         </ul>
         {% else %}
 
-        {% if firstItem.messageType && firstItem.messageType == "newPricelist" %}
+        {% if firstItem.messageType and firstItem.messageType == "newPricelist" %}
         <ul class="is-showing mz-success">
             {% for msg in model %}
                 <li class="mz-message-item" >{{ labels|prop(msg.messageType) }}</li>
