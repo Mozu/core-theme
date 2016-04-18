@@ -194,7 +194,7 @@ namespace Mozu.SiteBuilder.Mvc.Helpers
             {
                 sb.Append("&dv=p");
             }
-            sb.Append("_mzcb=").Append(_siteContext.HashString);
+            sb.Append("&_mzcb=").Append(_siteContext.HashString);
             
             
 
