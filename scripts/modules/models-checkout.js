@@ -234,7 +234,6 @@
                     // method to the info object itself.
                     // This can only be called after the order is loaded
                     // because the order data will impact the shipping costs.
-                    var message = order.get('messages');
                     me.updateShippingMethod(me.get('shippingMethodCode'), true);
                 });
             },
