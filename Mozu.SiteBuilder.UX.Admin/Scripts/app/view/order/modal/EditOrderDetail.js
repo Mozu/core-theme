@@ -97,16 +97,19 @@ Ext.define('Taco.view.order.modal.EditOrderDetail', {
         me.ajaxBeforeListener = Ext.Ajax.on('beforerequest', function (conn, options) {
             // set order price list on the ajax call!
             // This should be called before the TaContext...find settings.
-            if (me.record && me.record.get('priceListCode')) {
-                
-                var priceListHeader = {};
+            if (me.record && me.record.get('priceListCode') !== undefined) {
+                // The "None" pricelist will be empty string.
+                var hasPriceListOverride = options.jsonData && options.jsonData.priceListCode !== undefined;
+
                 // The Edit Order ajax listener has to take priority over the Form.js ajax listener.
                 //  This is because the version of the priceListCode can be more up to date in this UI.
                 //  Therefore, while this listener is acitve, we need to pull the priceListCode from the jsonData
                 //   or the EditOrderDetail's record. It can come from the jsonData when
                 //   the priceList is being updated on the order.
-                priceListHeader['x-vol-pricelist'] = options.jsonData
-                    && options.jsonData.priceListCode || me.record.get('priceListCode');
+                var priceListHeader = {};
+                priceListHeader['x-vol-pricelist'] = hasPriceListOverride
+                    ? options.jsonData.priceListCode
+                    : me.record.get('priceListCode');
 
                 if (options && options.headers) {
                     Ext.apply(options.headers, priceListHeader);
@@ -244,6 +247,9 @@ Ext.define('Taco.view.order.modal.EditOrderDetail', {
         // update the record on the totalRow panel
         me.totalRow.setRecord(me.record);
 
+        // update the record on the order grid, e.g. for new pricelist info, etc.
+        me.detailGrid.record = me.record;
+
         // need to determine the selection so it can be restored after updateing the records in the store;
         var currentPosition = me.detailGrid.getSelectionModel().getCurrentPosition();
         me.detailGrid.getStore().loadRecords(me.record.itemsStore.getRange());
@@ -264,7 +270,7 @@ Ext.define('Taco.view.order.modal.EditOrderDetail', {
     initUi: function () {
         var me = this;
 
-        me.totalRow = Ext.create('Taco.view.order.widget.OrderTotalPanelEditable', {                        
+        me.totalRow = Ext.create('Taco.view.order.widget.OrderTotalPanelEditable', {
             data: me.record.getData(),
             record: me.record,
             priceListStore: me.priceListStore,
