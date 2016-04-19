@@ -18,7 +18,8 @@ Ext.define('Taco.view.priceList.entry.PriceEntryPrice', {
         'Taco.core.ux.picker.CheckboxTreeModal',
         'Taco.view.priceList.widget.OverrideField',
         'Taco.view.product.widget.ProductBundleGrid',
-        'Taco.view.priceList.widget.EntryExtrasGrid'
+        'Taco.view.priceList.widget.EntryExtrasGrid',
+        'Taco.view.priceList.widget.CurrentValueLabel'
     ],
     ui: 'subform',
     margin: '0 0 20 0',
@@ -169,6 +170,7 @@ Ext.define('Taco.view.priceList.entry.PriceEntryPrice', {
                 name: 'map',
                 itemId: 'MAPField',
                 fieldLabel: 'MAP',
+                flex: 1,
                 currencyCode: me.currencyCode,
                 onChange: function(newVal) {
                     if (newVal) {
@@ -277,26 +279,11 @@ Ext.define('Taco.view.priceList.entry.PriceEntryPrice', {
             }
         });
 
-        me.currentMapStartDate = Ext.widget('label', {
-            cls: 'taco-rolledup-price',
-            text: '',
-            style: 'text-align: right',
-            forId: me.itemId,
-            defaultAlign: 'br?'
-        });
-
-        me.currentMapEndDate = Ext.widget('label', {
-            //forId: 'myFieldId',
-            cls: 'taco-rolledup-price',
-            text: '',
-            style: 'text-align: right',
-            forId: me.itemId,
-            defaultAlign: 'br?'
-        });
+        me.currentMapStartDate = Ext.widget('current-value-label', {});
+        me.currentMapEndDate = Ext.widget('current-value-label', {});
 
         me.mapRow = Ext.widget('panel', {
             flex: 1,
-            xtype: 'panel',
             layout: {
                 type: 'hbox',
                 align: 'top'
@@ -308,80 +295,14 @@ Ext.define('Taco.view.priceList.entry.PriceEntryPrice', {
             },
             items: [
                 me.mapOverride,
-                {
-                    xtype: 'fieldcontainer',
-                    layout: 'vbox',
-                    items: [
-                        me.mapStartDate,
-                        {
-                            xtype: 'fieldcontainer',
-                            layout: 'hbox',
-                            items: [{
-                                xtype: 'label',
-                                cls: 'taco-rolledup-price',
-                                text: 'Default:',
-                                style: 'text-align: left',
-                                margin: '0 10 0 0',
-                                forId: me.itemId,
-                                defaultAlign: 'bl?'
-                            },
-                                me.currentMapStartDate
-                            ]
-                        }
-                    ]
-                },
-                {
-                    xtype: 'fieldcontainer',
-                    layout: 'vbox',
-                    items: [
-                        me.mapEndDate,
-                        {
-                            xtype: 'fieldcontainer',
-                            layout: 'hbox',
-                            items: [{
-                                xtype: 'label',
-                                cls: 'taco-rolledup-price',
-                                text: 'Default:',
-                                style: 'text-align: left',
-                                margin: '0 10 0 0',
-                                forId: me.itemId,
-                                defaultAlign: 'bl?'
-                            },
-                                me.currentMapEndDate
-                            ]
-                        }
-                    ]
-                }
-
+                me.createCurrentWidget(me.mapStartDate, me.currentMapStartDate),
+                me.createCurrentWidget(me.mapEndDate, me.currentMapEndDate)
             ]
         });
 
-        me.currentRestriction = Ext.widget('label', {
-            //forId: 'myFieldId',
-            cls: 'taco-rolledup-price',
-            text: '',
-            style: 'text-align: right',
-            forId: me.discountRestriction.itemId,
-            defaultAlign: 'br?'
-        });
-
-        me.currentRestrictionStartDate = Ext.widget('label', {
-            //forId: 'myFieldId',
-            cls: 'taco-rolledup-price',
-            text: '',
-            style: 'text-align: right',
-            forId: me.restrictionStartDate.itemId,
-            defaultAlign: 'br?'
-        });
-
-        me.currentRestrictionEndDate = Ext.widget('label', {
-            //forId: 'myFieldId',
-            cls: 'taco-rolledup-price',
-            text: '',
-            style: 'text-align: right',
-            forId: me.restrictionEndDate,
-            defaultAlign: 'br?'
-        });
+        me.currentRestriction = Ext.widget('current-value-label', {});
+        me.currentRestrictionStartDate = Ext.widget('current-value-label', {});
+        me.currentRestrictionEndDate = Ext.widget('current-value-label', {});
 
         me.discountRestrictionRow = Ext.widget('panel', {
             flex: 1,
@@ -468,42 +389,20 @@ Ext.define('Taco.view.priceList.entry.PriceEntryPrice', {
         me.callParent(arguments);
     },
 
-    // createCurrentCurrencyField: function (fieldName, fieldLabel) {
-    //     return Ext.widget('currencyfield', {
-    //         name: fieldName,
-    //         currencyCode: this.currencyCode,
-    //         fieldLabel: fieldLabel,
-    //         itemId: fieldName,
-    //         hideTrigger: true,
-    //         margin: '0 30 0 45',
-    //         readOnly: true,
-    //         disabled: true,
-    //         fieldStyle: 'text-align: right'
-    //         //labelAlign: 'right'
-    //     });
-    // },
-
-    createCurrentWidget: function(overrideField, labelField) {
+    createCurrentWidget: function(overrideField, currentVal, marge) {
+        marge = marge || '0 20 0 0';
         return {
             xtype: 'fieldcontainer',
-            layout: 'vbox',
+            layout: {
+                type: 'vbox',
+                align: 'stretch'
+            },
+            margin: marge,
             items: [
-            overrideField, {
-                xtype: 'fieldcontainer',
-                layout: 'hbox',
-                items: [{
-                        xtype: 'label',
-                        cls: 'taco-rolledup-price',
-                        text: 'Default:',
-                        style: 'text-align: left',
-                        margin: '0 10 0 0',
-                        forId: overrideField.itemId,
-                        defaultAlign: 'bl?'
-                    },
-                   labelField
-                ]
-            }]
-        }
+                overrideField,
+                currentVal
+            ]
+        };
     },
     
     updateExtras: function (data) {
@@ -555,11 +454,11 @@ Ext.define('Taco.view.priceList.entry.PriceEntryPrice', {
         this.msrpOverride.setCurrentPrice(this.formatCurrency(record.get('currentMsrp'), currency));
         this.costOverride.setCurrentPrice(this.formatCurrency(record.get('currentCost'), currency));
         this.mapOverride.setCurrentPrice(this.formatCurrency(record.get('currentMap'), currency));
-        this.currentMapStartDate.setText(Ext.util.Format.date(record.get('currentMapStartDate'), 'd M, Y, g:i a'));
-        this.currentMapEndDate.setText(Ext.util.Format.date(record.get('currentMapEndDate'), 'd M, Y, g:i a'));
-        this.currentRestriction.setText(record.get('currentDiscountsRestricted'));
-        this.currentRestrictionStartDate.setText(Ext.util.Format.date(record.get('currentDiscountsRestrictedStartDate'), 'd M, Y, g:i a'));
-        this.currentRestrictionEndDate.setText(Ext.util.Format.date(record.get('currentDiscountsRestrictedEndDate'), 'd M, Y, g:i a'));
+        this.currentMapStartDate.setValue(Ext.util.Format.date(record.get('currentMapStartDate'), 'd M, Y, g:i a'));
+        this.currentMapEndDate.setValue(Ext.util.Format.date(record.get('currentMapEndDate'), 'd M, Y, g:i a'));
+        this.currentRestriction.setValue(record.get('currentDiscountsRestricted'));
+        this.currentRestrictionStartDate.setValue(Ext.util.Format.date(record.get('currentDiscountsRestrictedStartDate'), 'd M, Y, g:i a'));
+        this.currentRestrictionEndDate.setValue(Ext.util.Format.date(record.get('currentDiscountsRestrictedEndDate'), 'd M, Y, g:i a'));
 
         this.updateExtras(record.get('extras'));
         this.injectExtrasTab(record);
