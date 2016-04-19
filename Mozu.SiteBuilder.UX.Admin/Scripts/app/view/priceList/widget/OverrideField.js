@@ -5,7 +5,8 @@
  Ext.define('Taco.view.priceList.widget.OverrideField', {
     extend: 'Ext.container.Container',
     requires: [
-        'Taco.core.ux.form.CurrencyField'
+        'Taco.core.ux.form.CurrencyField',
+        'Taco.view.priceList.widget.CurrentValueLabel'
     ],
     alias: 'widget.overridefield',
     cls: Taco.baseCSSPrefix + 'overridefield',
@@ -27,7 +28,7 @@
             tabIndex: -1,
             name: me.fieldCfg.name + 'Mode',
             listeners: {
-                change: function(cmp, newVal, oldVal) {
+                change: function() {
                     var field = me.overrideField;
                     if (!field) return;
 
@@ -73,7 +74,7 @@
             emptyText: me.originalEmptyText,
             fieldStyle: 'text-align: right',
             listeners: {
-                change: function (cmp, newVal, oldVal, eOpts) {
+                change: function (cmp, newVal, oldVal) {
                     if ((newVal === 0 || newVal) && !oldVal) {
                         me.override.setValue(true);
                     }
@@ -84,58 +85,22 @@
 
         me.overrideField = Ext.widget(fieldCfg);
 
-        // this.rollupBundlePriceField = Ext.widget({
-        //     xtype: "component",
-        //     itemId: "rollupBundlePrice",
-        //     margin: '0 15 0 0',
-        //     width: '50%',
-        //     border: false,
-        //     style: "font-size:14px;text-align: right",
-        //     tpl: [
-        //         //"<tpl if='price'>",
-        //         "<span>Current</span>",
-        //         "<span class='taco-rolledup-price'>49.99</span>",
-        //         //"</tpl>"
-        //     ]
-        // });
-
-        me.currentPrice = Ext.widget('label', {
-            //forId: 'myFieldId',
-            cls: 'taco-rolledup-price',
-            text: '',
-            style: 'text-align: right',
-            forId: me.itemId,
-            defaultAlign: 'br?'
-            // margin: '0 0 0 0'
-        });
-
+        me.currentVal = Ext.widget('current-value-label', {});
+        
         me.items = [
             me.override, {
                 xtype: 'fieldcontainer',
-                layout: 'vbox',
-                //width: '100%',
+                layout: {
+                    type: 'vbox',
+                    align: 'stretch'
+                },
                 items: [
                     me.overrideField,
-                    {
-                        xtype: 'fieldcontainer',
-                        layout: 'hbox',
-                        items: [{
-                                xtype: 'label',
-                                cls: 'taco-rolledup-price',
-                                text: 'Default:',
-                                style: 'text-align: left',
-                                margin: '0 10 0 0',
-                                forId: me.itemId,
-                                defaultAlign: 'bl?'
-                            },
-                            me.currentPrice
-                        ]
-                    }
+                    me.currentVal
                 ]
             }
         ];
-
-
+        
         me.callParent(arguments);
     },
     isOverridden: function() {
@@ -146,11 +111,11 @@
     },
     setValue: function(value) {
         var me = this;
-        me.override.setValue(!!value)
+        me.override.setValue(!!value);
         me.overrideField.setValue(value);
         return me;
     },
-     setCurrentPrice: function(price) {
-         this.currentPrice.setText(price);
+     setCurrentPrice: function(currentPrice) {
+         this.currentVal.setValue(currentPrice);
      }
  });

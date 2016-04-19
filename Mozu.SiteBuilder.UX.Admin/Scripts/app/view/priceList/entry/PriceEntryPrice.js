@@ -22,7 +22,6 @@ Ext.define('Taco.view.priceList.entry.PriceEntryPrice', {
     ],
     ui: 'subform',
     margin: '0 0 20 0',
-
     title: 'Adjustments',
     record: null,
     currencyCode: null,
@@ -60,7 +59,7 @@ Ext.define('Taco.view.priceList.entry.PriceEntryPrice', {
             });
         }
 
-        Ext.Array.each(entries, function(entry, index, entries) {
+        Ext.Array.each(entries, function(entry) {
             
             var row = {};
 
@@ -76,7 +75,7 @@ Ext.define('Taco.view.priceList.entry.PriceEntryPrice', {
             row.priceOverride = Ext.widget('overridefield', {
                 checkboxCfg: {
                     checked: entry.listPriceMode === 'Overridden',
-                    onChange: function(newVal, oldVal) {
+                    onChange: function(newVal) {
                         var isOverridden = newVal === 'Overridden';
                         if (isOverridden && row.salePriceOverride) {
                             row.salePriceOverride.override.setValue(true);
@@ -107,7 +106,7 @@ Ext.define('Taco.view.priceList.entry.PriceEntryPrice', {
             row.salePriceOverride = Ext.widget('overridefield', {
                 checkboxCfg: {
                     checked: entry.salePriceMode === 'Overridden',
-                    onChange: function(newVal, oldVal) {
+                    onChange: function(newVal) {
                         if (newVal === 'UseCatalog' && row.priceOverride) {
                             row.priceOverride.override.setValue(false);
                         }
@@ -147,24 +146,6 @@ Ext.define('Taco.view.priceList.entry.PriceEntryPrice', {
 
         });
 
-        // me.basicPanel.add({
-        //     xtype: 'fieldcontainer',
-        //     layout: {
-        //         type: 'hbox',
-        //         align: 'top'
-        //     },
-        //     defaults: {
-        //         flex: 1
-        //     },
-        //     items: [
-        //         me.curListPrice,
-        //         me.curSalePrice
-        //     ]
-        // });
-
-        // me.curMsrp = me.createCurrentCurrencyField('currentMsrp', 'Current MSRP');
-        // me.curCost = me.createCurrentCurrencyField('currentCost', 'Current Cost');
-
         me.msrpOverride = Ext.widget('overridefield', {
             fieldCfg: {
                 name: 'msrp',
@@ -189,7 +170,7 @@ Ext.define('Taco.view.priceList.entry.PriceEntryPrice', {
                 itemId: 'MAPField',
                 fieldLabel: 'MAP',
                 currencyCode: me.currencyCode,
-                onChange: function(newVal, oldVal) {
+                onChange: function(newVal) {
                     if (newVal) {
                         me.mapStartDate.enable();
                         me.mapEndDate.enable();
@@ -297,7 +278,6 @@ Ext.define('Taco.view.priceList.entry.PriceEntryPrice', {
         });
 
         me.currentMapStartDate = Ext.widget('label', {
-            //forId: 'myFieldId',
             cls: 'taco-rolledup-price',
             text: '',
             style: 'text-align: right',
@@ -321,6 +301,7 @@ Ext.define('Taco.view.priceList.entry.PriceEntryPrice', {
                 type: 'hbox',
                 align: 'top'
             },
+            padding: '20 0 20 0',
             hidden: me.record.get('isVariation'),
             defaults: {
                 flex: 1
@@ -487,20 +468,20 @@ Ext.define('Taco.view.priceList.entry.PriceEntryPrice', {
         me.callParent(arguments);
     },
 
-    createCurrentCurrencyField: function (fieldName, fieldLabel) {
-        return Ext.widget('currencyfield', {
-            name: fieldName,
-            currencyCode: this.currencyCode,
-            fieldLabel: fieldLabel,
-            itemId: fieldName,
-            hideTrigger: true,
-            margin: '0 30 0 45',
-            readOnly: true,
-            disabled: true,
-            fieldStyle: 'text-align: right'
-            //labelAlign: 'right'
-        });
-    },
+    // createCurrentCurrencyField: function (fieldName, fieldLabel) {
+    //     return Ext.widget('currencyfield', {
+    //         name: fieldName,
+    //         currencyCode: this.currencyCode,
+    //         fieldLabel: fieldLabel,
+    //         itemId: fieldName,
+    //         hideTrigger: true,
+    //         margin: '0 30 0 45',
+    //         readOnly: true,
+    //         disabled: true,
+    //         fieldStyle: 'text-align: right'
+    //         //labelAlign: 'right'
+    //     });
+    // },
 
     createCurrentWidget: function(overrideField, labelField) {
         return {
@@ -536,7 +517,7 @@ Ext.define('Taco.view.priceList.entry.PriceEntryPrice', {
     injectExtrasTab: function(record) {
         var me = this,
             extraTabExists = Ext.Array.some(me.tabs.items.items, function(item) {
-            return item.itemId === me.extrasPanel.itemId
+            return item.itemId === me.extrasPanel.itemId;
         });
         if (!record || record.get('isVariation') || record.get('extras').length === 0) {
             if (extraTabExists) {
@@ -548,7 +529,6 @@ Ext.define('Taco.view.priceList.entry.PriceEntryPrice', {
     },
 
     onProductChanged: function (data) {
-        var currency = Taco.app.context.currencies[this.currencyCode.toLowerCase()];
         if (!data){
             data = {};
         }
@@ -599,9 +579,7 @@ Ext.define('Taco.view.priceList.entry.PriceEntryPrice', {
 
     onDestroy: function () {
         var me = this;
-
         me.clearListeners();
-
         this.callParent(arguments);
     }
 });
