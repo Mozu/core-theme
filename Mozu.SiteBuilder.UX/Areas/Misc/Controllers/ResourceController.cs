@@ -76,7 +76,7 @@ namespace Mozu.SiteBuilder.UX.Areas.Misc.Controllers
 
         [ClientCacheHeaders(ConfigKey = "stylesheets")]
         [HttpGet]
-        public HttpResponseMessage Stylesheets(string pathinfo, bool debug = false, string dv = null)
+        public HttpResponseMessage Stylesheets(string pathinfo, bool? debug = false, string dv = null)
         {
             SbApiContext.SetDataMode(Convert(dv));
 
