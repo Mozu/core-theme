@@ -87,14 +87,14 @@ namespace Mozu.SiteBuilder.UX.Areas.Misc.Controllers
 
         [ClientCacheHeaders(ConfigKey = "stylesheets")]
         [HttpGet]
-        public HttpResponseMessage Less(string pathinfo, bool debug = false)
+        public HttpResponseMessage Less(string pathinfo= null , bool? debug = false)
         {
             var res = Content("stylesheets/" + pathinfo, "text/css");
             var oc = res.Content as ObjectContent<MozuVirtualFileResult>;
             if (oc != null)
             {
                 bool emitDebugStylesheet = Request.Headers.Accept.Contains(new MediaTypeWithQualityHeaderValue("text/css"));
-                ((MozuVirtualFileResult)oc.Value).Transform = new LessTransFormer(pathinfo, debug, emitDebugStylesheet, this, _pathProvider.Value, _contentRetriever.Value).Transform;
+                ((MozuVirtualFileResult)oc.Value).Transform = new LessTransFormer(pathinfo, debug.GetValueOrDefault(false), emitDebugStylesheet, this, _pathProvider.Value, _contentRetriever.Value).Transform;
             }
 
             return res;
