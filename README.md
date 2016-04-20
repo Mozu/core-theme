@@ -1,6 +1,6 @@
 ﻿# Upgraded Mozu Core Theme
 
-For latest enhancements, see release notes [Release Notes](https://github.com/Mozu/core-theme/blob/master/RELEASE_NOTES.md).
+For latest enhancements, see release notes [Release Notes](````RELEASE_NOTES.md).
 
 
 This release includes an upgraded Core theme called **Core9**.
