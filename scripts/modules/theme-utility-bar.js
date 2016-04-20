@@ -54,6 +54,9 @@ define(['jquery', 'shim!modules/jquery-simple-datetimepicker[jquery=jquery]>jque
             });
         },
         sanitizeQueryString = function (qs) {
+            if (!qs || qs.length === 0) {
+                return '';
+            }
             var result = qs;
             if (qs.substring(0,1) === '&') {
                 result = '?' + qs.substring(1);
@@ -61,6 +64,9 @@ define(['jquery', 'shim!modules/jquery-simple-datetimepicker[jquery=jquery]>jque
             result = result.replace(/(&)+/g, '&');
             result = result.replace(/(\?)+/g, '?');
             result = result.replace(/(\?&)/g, '?');
+            if (result.substring(result.length - 1) === '&') {
+                result = result.substring(0, result.length - 1);
+            }
             return result;
         };
 
@@ -96,8 +102,11 @@ define(['jquery', 'shim!modules/jquery-simple-datetimepicker[jquery=jquery]>jque
             this.picker.show();
         }).bind(this));
         
-        $(document).on('click', (function(){
+        $(document).on('click', (function(eventData){
 
+            if (eventData.target.className.indexOf('pricelist') !== -1) {
+                return;
+            }
             if (!this.picker.isShow()) {
                 if (this.dateHasChanged.call(this)) location.search = this.getQueryString(this.sanitizeDate());   
             }
@@ -134,7 +143,6 @@ define(['jquery', 'shim!modules/jquery-simple-datetimepicker[jquery=jquery]>jque
 
     DateTimePicker.prototype.setQueryString = function(str, soft) {
         if (soft && str) {
-
             window.history.replaceState('MOZU', document.title, this.getQueryString(str));
         }
     };
@@ -188,55 +196,37 @@ define(['jquery', 'shim!modules/jquery-simple-datetimepicker[jquery=jquery]>jque
             this.changedValue = true;
         }).bind(this));
 
-        this.handler.val(this.getCookie());
+        this.handler.val(this.getQueryStringValue());
     };
 
-    PriceListPicker.prototype.getCookie = function() {
-        var cookie = document.cookie.split(';').filter(function(str) {return str.indexOf('MZ_PRICELIST') > 0;});
-        return cookie.length > 0 ? cookie[0].replace(' MZ_PRICELIST=', '') : '';
+    PriceListPicker.prototype.getQueryStringValue = function() {
+        var regExPriceList = /mz_pricelist=(.*?)(?:&.*|$)/gi;
+        var matches = regExPriceList.exec(location.search);
+        return (matches && matches.length >= 1)
+            ? matches[1]
+            : '';
     };
 
-    PriceListPicker.prototype.setCookie = function(val) {
-        var sessionExpDate = new Date();
-        sessionExpDate.setDate(sessionExpDate.getDate() -1);
-        document.cookie = ' MZ_PRICELIST=' + val + '; Path=/; Expires=' + sessionExpDate;
-    };
+    PriceListPicker.prototype.setQueryString = function(priceListVal) {
+        var queryString = location.search,
+            currentQsVal = this.getQueryStringValue();
 
-    PriceListPicker.prototype.getQueryString = function(priceListVal) {
-        var queryString = location.search;
-
-        if (priceListVal && queryString.match("mz_pricelist="+priceListVal)){
-            return queryString;
+        if (priceListVal === currentQsVal) {
+            return;
         }
 
-        if (queryString.indexOf('?') !== -1 && queryString.indexOf('mz_pricelist') === -1) {
-            queryString = queryString + '&mz_pricelist=' + priceListVal;
-            queryString = queryString.replace(/(&)+/g, '&');
-        } else if (queryString.indexOf('?') !== -1) {
-            queryString = queryString.replace(/[&?]*mz_pricelist[^&]*/gi, '');
-            if (priceListVal) {
-                if (!queryString) {
-                    queryString = '?';
-                } else {
-                    queryString += '&';
-                }
-                queryString += 'mz_pricelist=' + priceListVal;
-            }
+        if (!priceListVal) {
+            queryString = queryString.replace(('mz_pricelist=' + currentQsVal), '');
+        } else if (location.search.indexOf('mz_pricelist') === -1) {
+            queryString += (queryString.indexOf('?') !== -1)  ? '&' : '?';
+            queryString += ('mz_pricelist=' + priceListVal);
         } else {
-            queryString = '?mz_pricelist=' + priceListVal;
+            queryString = queryString.replace(('mz_pricelist=' + currentQsVal), ('mz_pricelist=' + priceListVal));
         }
-        return this.sanitizeQueryString(queryString);
+        location.search = this.sanitizeQueryString(queryString);
     };
 
     PriceListPicker.prototype.sanitizeQueryString = sanitizeQueryString;
-
-    PriceListPicker.prototype.setQueryString = function(priceListValue){
-        var queryString = this.getQueryString(priceListValue);
-        if (location.search !== queryString) {
-            this.setCookie(priceListValue);
-            location.search = queryString;
-        }
-    };
 
     ShareAction.prototype.init = function() {
         this.handler.on('click', (function() {
