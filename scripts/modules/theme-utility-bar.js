@@ -202,9 +202,7 @@ define(['jquery', 'shim!modules/jquery-simple-datetimepicker[jquery=jquery]>jque
     PriceListPicker.prototype.getQueryStringValue = function() {
         var regExPriceList = /mz_pricelist=(.*?)(?:&.*|$)/gi;
         var matches = regExPriceList.exec(location.search);
-        return (matches && matches.length >= 1)
-            ? matches[1]
-            : '';
+        return (matches && matches.length >= 1) ? matches[1] : '';
     };
 
     PriceListPicker.prototype.setQueryString = function(priceListVal) {
