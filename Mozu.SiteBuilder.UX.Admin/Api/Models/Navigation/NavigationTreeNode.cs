@@ -45,7 +45,8 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.Models.Navigation
         [DataMember(Name = "originalId", EmitDefaultValue = false)]
         public string OriginalId { get; set; }
 
-   
+        [DataMember(Name = "openInNewWindow", EmitDefaultValue = false)]
+        public bool? OpenInNewWindow { get; set; }
 
         [Obsolete]
         [DataMember(Name = "originalCollection")]

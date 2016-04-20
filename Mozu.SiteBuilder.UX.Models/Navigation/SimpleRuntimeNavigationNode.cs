@@ -36,6 +36,8 @@ namespace Mozu.SiteBuilder.UX.Models.Navigation
 
         public bool IsHidden { get; set; }
 
+        public bool? OpenInNewWindow { get; set; }
+
         private IRuntimeNavigationNode _parent;
         public IRuntimeNavigationNode Parent { get { return _parent; } set { _parentId = null; _parent = value; } }
 
