@@ -21,7 +21,6 @@
 
         me.currentVal = Ext.widget('component', {
             columnWidth: 0.75,
-            flex: 2,
             border: false,
             style: "font-size:12px;color:#acacac;text-align:right;",
             tpl: [

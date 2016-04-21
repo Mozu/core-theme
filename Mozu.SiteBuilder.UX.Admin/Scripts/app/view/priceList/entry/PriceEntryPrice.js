@@ -38,19 +38,18 @@ Ext.define('Taco.view.priceList.entry.PriceEntryPrice', {
             itemId: 'basicPanel',
             layout: {
                 type: 'vbox',
-                align: 'top'
+                align: 'stretch'
             },
             width: '50%',
-            padding: '20 0 0 20',
+            padding: '20',
             defaults: {
-                flex: 1
-                // defaults: {
-                //     flex: 1
-                // }
+                flex: 1,
+                defaults: {
+                    flex: 1
+                }
             },
             items: []
         });
-
 
         var entries = this.record.get('priceEntries');
 
@@ -170,7 +169,6 @@ Ext.define('Taco.view.priceList.entry.PriceEntryPrice', {
                 name: 'map',
                 itemId: 'MAPField',
                 fieldLabel: 'MAP',
-                flex: 1,
                 currencyCode: me.currencyCode,
                 onChange: function(newVal) {
                     if (newVal) {
@@ -288,7 +286,7 @@ Ext.define('Taco.view.priceList.entry.PriceEntryPrice', {
                 type: 'hbox',
                 align: 'top'
             },
-            padding: '20 0 20 0',
+            padding: '30 0 0 0',
             hidden: me.record.get('isVariation'),
             defaults: {
                 flex: 1
@@ -306,11 +304,11 @@ Ext.define('Taco.view.priceList.entry.PriceEntryPrice', {
 
         me.discountRestrictionRow = Ext.widget('panel', {
             flex: 1,
-            xtype: 'panel',
             layout: {
                 type: 'hbox',
                 align: 'top'
             },
+            padding: '30 0 0 0',
             hidden: me.record.get('isVariation'),
             defaults: {
                 flex: 1
@@ -389,15 +387,13 @@ Ext.define('Taco.view.priceList.entry.PriceEntryPrice', {
         me.callParent(arguments);
     },
 
-    createCurrentWidget: function(overrideField, currentVal, marge) {
-        marge = marge || '0 20 0 0';
+    createCurrentWidget: function(overrideField, currentVal) {
         return {
             xtype: 'fieldcontainer',
             layout: {
                 type: 'vbox',
                 align: 'stretch'
             },
-            margin: marge,
             items: [
                 overrideField,
                 currentVal
