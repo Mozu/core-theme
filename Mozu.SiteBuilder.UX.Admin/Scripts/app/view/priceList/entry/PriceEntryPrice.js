@@ -367,7 +367,6 @@ Ext.define('Taco.view.priceList.entry.PriceEntryPrice', {
 
         me.tabs = Ext.create('Ext.tab.Panel', {
             width: "100%",
-            //minHeight: 475,
             style: {
                 borderColor: '#cccccc'
             },

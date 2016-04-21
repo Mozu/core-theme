@@ -85,7 +85,7 @@
 
         me.overrideField = Ext.widget(fieldCfg);
 
-        me.currentVal = Ext.widget('current-value-label', {});
+        me.currentVal = Ext.widget('current-value-label', {margin: '5 30 0 0'});
         
         me.items = [
             me.override, {

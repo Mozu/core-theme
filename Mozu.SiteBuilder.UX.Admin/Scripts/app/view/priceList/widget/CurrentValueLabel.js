@@ -34,8 +34,7 @@
                 xtype: 'label',
                 columnWidth: 0.25,
                 cls: 'taco-rolledup-price',
-                text: 'Current:',
-                // text: 'Default:',
+                text: 'Master:',
                 forId: me.itemId,
                 style: "font-size:12px;color: #acacac;text-align: left;"
             },
