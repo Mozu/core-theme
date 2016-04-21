@@ -435,8 +435,8 @@ Ext.define('Taco.view.priceList.entry.PriceEntryPrice', {
         this.record.set('currentMapEndDate', data.currentMapEndDate);
         this.record.set('currentMsrp', data.currentMsrp);
         this.record.set('currentDiscountsRestricted', data.currentDiscountsRestricted);
-        this.record.set('currentDiscountsStartDate', data.currentDiscountsRestrictedStartDate);
-        this.record.set('currentDiscountsEndDate', data.currentDiscountsRestrictedEndDate);
+        this.record.set('currentDiscountsRestrictedStartDate', data.currentDiscountsRestrictedStartDate);
+        this.record.set('currentDiscountsRestrictedEndDate', data.currentDiscountsRestrictedEndDate);
         this.record.set('extras', data.extras);
         this.onPriceEntryLoaded(this.record);
     },
