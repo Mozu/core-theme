@@ -16,11 +16,11 @@ Ext.define('Taco.view.website.misc.ExternalLinkEditor', {
 
         this.record.set('editAction', 'rename');
 
-
         this.form = Ext.widget({
             xtype: 'formform',
             record: this.record,
-            items: [{
+            items: [
+                {
                     xtype: 'textfield',
                     fieldLabel: 'Navigation Link Name',
                     name: 'name',
@@ -28,14 +28,24 @@ Ext.define('Taco.view.website.misc.ExternalLinkEditor', {
                     allowBlank: false,
                     width: '100%',
                     flex: 1
-                }, {
+                },
+                {
                     xtype: 'textfield',
                     fieldLabel: 'URL',
                     name: 'url',
                     allowBlank: false,
                     width: '100%',
                     flex: 1
-                }]
+                },
+                {
+                    xtype: 'checkbox',
+                    fieldLabel: 'Open in new Tab',
+                    value: false,
+                    name: 'openInNewWindow',
+                    width: '100%',
+                    flex: 1
+                }
+            ]
         });
 
         this.items = [this.form];

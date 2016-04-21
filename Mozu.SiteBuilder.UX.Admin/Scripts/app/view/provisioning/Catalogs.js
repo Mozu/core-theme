@@ -12,13 +12,13 @@ Ext.define('Taco.view.provisioning.Catalogs', {
 
     enablePaging: false,
 
-    title: 'Catalogs',
+    title: 'Catalog',
 
     addContentViewPadding: true,
 
     enableNavHeader: true,
 
-    createButtonText: 'Create New Catalog',
+    createButtonText: 'Create',
 
     createButtonEnabled: true,
 
@@ -33,6 +33,7 @@ Ext.define('Taco.view.provisioning.Catalogs', {
     doCreate: function() {
         this.showCatalogModal({ itemType: 'mastercatalog' });
     },
+
    
     initComponent: function () {
 
@@ -53,40 +54,82 @@ Ext.define('Taco.view.provisioning.Catalogs', {
         this.mon(this.store, 'load', this.onCatalogTreeStoreLoad, this);
 
         var me = this;
+        // this.body = {
+        //     layout: {
+        //         type: 'hbox',
+        //         align: 'stretch'
+        //     },
 
+        //     items:
+        //     [          
+        //         {
+        //             xtype: 'treepanel',
+        //             flex: 1,
+        //             autoHeight: true,
+        //             store: this.catalogTreeStore,
+        //             rootVisible: false,
+        //             stateful: true,
+        //             stateId: 'statefulCatalogStructureGrid',
+
+        //             dockedItems: [
+        //                 {
+        //                     xtype: 'toolbar',
+        //                     padding: '0 0 10 0',
+        //                     dock: 'top',
+        //                     items: [{
+        //                             xtype: 'box',
+        //                             html: '<h3>Catalog Structure</h3>'
+        //                         }, '->',
+        //                         {
+        //                             xtype: 'button',
+        //                             ui: 'action-primary',
+        //                             scale: 'medium',
+        //                             text: 'Create',
+        //                             handler: function () { this.showCatalogModal({ itemType: 'mastercatalog' }); },
+        //                             scope: this
+        //                         }]
+        //                 }
+        //             ],
+        //             columns: [
+        //                 { xtype: 'treecolumn', stateId: 'name', text: 'Name', dataIndex: 'name', flex: 1 },
+        //                 { text: 'Currency', stateId: 'currency', dataIndex: 'defaultCurrencyCode' },
+        //                 { text: 'Locale', stateId: 'locate', dataIndex: 'defaultLocaleCode' },
+        //                 { text: 'Status', stateId: 'status', dataIndex: 'status' },
+        //                 {
+        //                     xtype: 'taco.menucolumn',
+        //                     text: 'Actions',
+        //                     menuItems: [                                       
+        //                         {
+        //                             itemId: 'rename',
+        //                             text: 'Rename',
+        //                             hideOnClick: false,
+        //                             menuColumnHandler: function (item, eventData) {
+
+        //                                 me.showRenameModal(eventData.record.raw);
+        //                             }
+        //                         }, {
+        //                             itemId: 'Delete',
+        //                             text: 'Delete',
+        //                             hideOnClick: false,
+        //                             menuColumnHandler: function (item, eventData) {
+
+        //                                 me.deleteEntity(eventData.record.raw);
+        //                             }
+        //                         }
+        //                     ]
+        //                 }                    
+        //             ]
+        //         }]
+        // };
 
         this.columns = [
-            {
-                xtype: 'treecolumn',
-                stateId: 'id', 
-                text: 'ID', 
-                dataIndex: 'id'
-            },
-            {
-                text: 'Name',
-                stateId: 'name',
-                dataIndex: 'name',
-                flex: 1,
-                margin: "0 0 0 -10"
-            },
-            {
-                text: 'Currency',
-                stateId: 'currency',
-                dataIndex: 'defaultCurrencyCode'
-            },
-            {
-                text: 'Locale',
-                stateId: 'locate',
-                dataIndex: 'defaultLocaleCode'
-            },
-            {
-                text: 'Status',
-                stateId: 'status',
-                dataIndex: 'status'
-            },
+            { xtype: 'treecolumn', stateId: 'name', text: 'Name', dataIndex: 'name', flex: 1 },
+            { text: 'Currency', stateId: 'currency', dataIndex: 'defaultCurrencyCode' },
+            { text: 'Locale', stateId: 'locate', dataIndex: 'defaultLocaleCode' },
+            { text: 'Status', stateId: 'status', dataIndex: 'status' },
             {
                 xtype: 'taco.menucolumn',
-                text: '',
+                text: 'Actions',
                 menuItems: [                                       
                     {
                         itemId: 'rename',

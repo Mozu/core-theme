@@ -72,6 +72,8 @@ namespace Mozu.SiteBuilder.Mvc.Navigation
 
         public bool IsHomePage { get; set; }
 
+        public bool? OpenInNewWindow { get; set; }
+
         [JsonIgnore]
         public IRuntimeNavigationNode Parent { get; set; }
 

@@ -31,7 +31,7 @@ Ext.define('Taco.view.provisioning.CatalogProvisionerModal', {
                        
                         name: 'itemType',
                         store: [
-                            ["mastercatalog", 'Master Catalog' ],
+                            ["mastercatalog", 'Master Catalog', ],
                             ["catalog", 'Catalog']
                         ],
                         listeners: {
@@ -56,7 +56,7 @@ Ext.define('Taco.view.provisioning.CatalogProvisionerModal', {
                          hidden: this.itemType == 'mastercatalog',
                          value:this.itemType == 'mastercatalog'?' ':null,
                          valueField: 'id',
-                         displayField: 'nameWithId',
+                         displayField: 'name',
                          fieldLabel: 'Master Catalog',
                          queryMode: 'local'
                      },

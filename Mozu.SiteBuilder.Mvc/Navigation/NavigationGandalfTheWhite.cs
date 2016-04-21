@@ -298,6 +298,7 @@ namespace Mozu.SiteBuilder.Mvc.Navigation
                         OriginalId = navmeta.OriginalId,
                         Name = navmeta.Name,
                         Url = navmeta.Url,
+                        OpenInNewWindow = navmeta.OpenInNewWindow,
                         Index = navmeta.Index,
                         ParentId = navmeta.ParentId,
                         NodeType = NavigationNodeType.Link

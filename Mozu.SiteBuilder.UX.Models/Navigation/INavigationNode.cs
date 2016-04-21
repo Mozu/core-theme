@@ -10,13 +10,14 @@ namespace Mozu.SiteBuilder.UX.Models.Navigation
     {
         string Id { get; }
         string OriginalId { get; set; }
-          [Obsolete]
+        [Obsolete]
         string OriginalCollection { get; set; }
         string OriginalDocumentListName { get; set; }
         string ParentId { get; set; }
         string Name { get; set; }
         string Url { get; set; }
         int Index { get; set; }
+        bool? OpenInNewWindow { get; set; }
         NavigationNodeType NodeType { get; set; }
     }
 
