@@ -29,7 +29,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.ModelMapping
                 .ForMember(x => x.UpdateDate, op => op.ResolveUsing(dc => dc.AuditInfo !=null ? dc.AuditInfo.UpdateDate : null))
                 .ForMember(x => x.CustomerSegments, op => op.ResolveUsing(dc => dc.MappedCustomerSegments))
                 .ForMember(x=>x.ResolutionRank, o=>o.ResolveUsing(s=>s.Rank))
-                .ForMember(x => x.CustomerSegmentNames, op => op.Ignore())
+                .ForMember(x => x.CustomerSegmentNames, op => op.Ignore())    
                 ;
 
             Mapper.CreateMap<PriceList, DC.PriceList>()
@@ -68,6 +68,18 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.ModelMapping
                 .ForMember(x => x.CreateDate, op => op.ResolveUsing(dc => dc.AuditInfo != null ? dc.AuditInfo.CreateDate : null))
                 .ForMember(x => x.UpdateBy, op => op.ResolveUsing(dc => dc.AuditInfo != null ? dc.AuditInfo.UpdateBy : ""))
                 .ForMember(x => x.UpdateDate, op => op.ResolveUsing(dc => dc.AuditInfo != null ? dc.AuditInfo.UpdateDate : null))
+                .ForMember(x => x.CurrentCost, op => op.Ignore())
+                .ForMember(x => x.CurrentCostCurrencyCode, op => op.Ignore())
+                .ForMember(x => x.CurrentDiscountsRestricted, op => op.Ignore())
+                .ForMember(x => x.CurrentDiscountsRestrictedEndDate, op => op.Ignore())
+                .ForMember(x => x.CurrentDiscountsRestrictedStartDate, op => op.Ignore())
+                .ForMember(x => x.CurrentListPrice, op => op.Ignore())
+                .ForMember(x => x.CurrentMAP, op => op.Ignore())
+                .ForMember(x => x.CurrentMAPStartDate, op => op.Ignore())
+                .ForMember(x => x.CurrentMAPEndDate, op => op.Ignore())
+                .ForMember(x => x.CurrentMSRP, op => op.Ignore())
+                .ForMember(x => x.CurrentSalePrice, op => op.Ignore())
+                .ForMember(x => x.CurrentPriceCurrencyCode, op => op.Ignore())
                 ;
             
 
