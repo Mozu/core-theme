@@ -227,14 +227,14 @@
             initialize: function () {
                 var me = this;
                 this.on('change:availableShippingMethods', function (me, value) {
-                    me.updateShippingMethod(me.get('shippingMethodCode'));
+                    me.updateShippingMethod(me.get('shippingMethodCode'), true);
                 });
                 _.defer(function () {
                     // This adds the price and other metadata off the chosen
                     // method to the info object itself.
                     // This can only be called after the order is loaded
                     // because the order data will impact the shipping costs.
-                    me.updateShippingMethod(me.get('shippingMethodCode'));
+                    me.updateShippingMethod(me.get('shippingMethodCode'), true);
                 });
             },
             relations: {
@@ -274,7 +274,7 @@
                 // Payment Info step has been initialized. Complete status hides the Shipping Method's Next button.
                 return this.stepStatus('complete');
             },
-            updateShippingMethod: function (code) {
+            updateShippingMethod: function (code, resetMessage) {
                 var available = this.get('availableShippingMethods'),
                     newMethod = _.findWhere(available, { shippingMethodCode: code }),
                     lowestValue = _.min(available, function(ob) { return ob.price; }); // Returns Infinity if no items in collection.
@@ -284,10 +284,10 @@
                 }
                 if (newMethod) {
                     this.set(newMethod);
-                    this.applyShipping();
+                    this.applyShipping(resetMessage);
                 }
             },
-            applyShipping: function() {
+            applyShipping: function(resetMessage) {
                 if (this.validate()) return false;
                 var me = this;
                 this.isLoading(true);
@@ -304,6 +304,9 @@
                             me.isLoading(false);
                             me.calculateStepStatus();
                             me.parent.get('billingInfo').calculateStepStatus();
+                            if(resetMessage) {
+                                me.parent.messages.reset(me.parent.get('messages'));
+                            }
                         });
                 }
             },
@@ -339,7 +342,7 @@
                 check: PaymentMethods.Check
             },
             validatePaymentType: function(value, attr) {
-                var order = this.getOrder(); 
+                var order = this.getOrder();
                 var payment = order.apiModel.getCurrentPayment();
                 var errorMessage = Hypr.getLabel('paymentTypeMissing');
                 if (!value) return errorMessage;
@@ -981,7 +984,7 @@
                 }
             },
             applyPayment: function () {
-               var self = this, order = this.getOrder();
+                var self = this, order = this.getOrder();
                 this.syncApiModel();
                 if (this.nonStoreCreditTotal() > 0) {
                     return order.apiAddPayment().then(function() {

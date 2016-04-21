@@ -189,8 +189,18 @@
              * @returns {Object} Returns the value of the named attribute, and `undefined` if it was never set.
              */
             set: function(key, val, options) {
-                var attr, attrs, unset, changes, silent, changing, prev, current;
+                var attr, attrs, unset, changes, silent, changing, prev, current, syncRemovedKeys, containsPrice;
                 if (!key && key !== 0) return this;
+
+                containsPrice = new RegExp('price', 'i');
+                // remove any properties from the current configurable model 
+                // where there are properties no longer present in the latest api model.
+                syncRemovedKeys = function (currentModel, attrKey) {
+                    _.each(_.difference(_.keys(currentModel[attrKey].toJSON()), _.keys(attrs[attrKey])), function (keyName) {
+                        changes.push(keyName);
+                        currentModel[attrKey].unset(keyName);
+                    });
+                };
 
                 // Handle both `"key", value` and `{key: value}` -style arguments.
                 if (typeof key === 'object') {
@@ -232,7 +242,7 @@
                     // Inject in the relational lookup
                     val = this.setRelation(attr, val, options);
 
-                    if (this.dataTypes && attr in this.dataTypes) {
+                    if (this.dataTypes && attr in this.dataTypes && (val !== null || !containsPrice.test(attr))) {
                         val = this.dataTypes[attr](val);
                     }
 
@@ -247,6 +257,10 @@
                         delete current[attr];
                     } else {
                         current[attr] = val;
+                    }
+
+                    if (current.productUsage === 'Configurable' && current[attr] instanceof Backbone.Model) {
+                        syncRemovedKeys(current, attr);
                     }
                 }
 
@@ -383,7 +397,7 @@
              * Called whenever an API request begins. You may call this manually to trigger a `loadingchange` event, which {@link MozuView} automatically listens to and displays loading state in the DOM.
              * Added to the list of {@link MozuModel#helpers } automatically, to provide a boolean `model.isLoading` inside HyprLive templates.
              * @returns {boolean} True if the model is currently loading.
-             * @param {boolean} flag Set this to true to trigger a `loadingchange` event.
+             * @param {boolean} yes Set this to true to trigger a `loadingchange` event.
              */
             isLoading: function(yes, opts) {
                 if (arguments.length === 0) return !!this._isLoading;
@@ -406,7 +420,7 @@
             /**
              * Calls the provided callback immediately if `isLoading` is false, or queues it to be called the next time `isLoading` becomes false.
              * Good for queueing user actions while waiting for an API request to complete.
-             * @param {function} callback The function to be called when the `isLoading` is false.
+             * @param {function} cb The callback function to be called when the `isLoading` is false.
              */
             whenReady: function(cb) {
                 var me = this,

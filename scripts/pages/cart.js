@@ -103,7 +103,7 @@ define(['modules/backbone-mozu', 'underscore', 'modules/jquery-mozu', 'modules/m
             delay = 0;
 
             if (!window.V) {
-                console.warn( 'visa checkout has not been initilized properly');
+                //console.warn( 'visa checkout has not been initilized properly');
                 return false;
             }
             // on success, attach the encoded payment data to the window

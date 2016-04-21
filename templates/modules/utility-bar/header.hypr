@@ -14,6 +14,12 @@
                         <span id='mz-date-display' class='visible-date'></span>
                         <span id='mz-date-icon'></span>
                     </div>
+
+                    <span>
+                        <span>Price List: </span>
+                        <input id='mz-pricelist-display' type="text" class='pricelist' value='{{viewData.priceListCode}}' />
+                    </span>
+
                 </span>
 
                  <span class='hidden-input'>

@@ -67,6 +67,7 @@
   "phone"                : "Phone",
   "email"                : "Email",
   "emailAddress"         : "Email Address",
+  "logInInput"           : "User Name or Email Address",
   "creditCard"           : "Credit Card",
   "newCreditCard"        : "New Credit Card",
   "savedCreditCard"      : "Saved Credit Card",
@@ -421,5 +422,7 @@
   "visaCheckoutEditReminder": "For security reasons you cannot edit the credit card information from Visa Checkout. If you proceed, your Visa Checkout details will be removed and this order will be processed without Visa Checkout.",
   "selectSavedAddress": "Select a saved address",
   "addAddress": "Add new address",
-  "editAddress": "Edit saved address" 
+  "editAddress": "Edit saved address",
+  "exclusivePricelist": "The following items are not available for purchase and have been removed.",
+  "newPriceList": "You are now eligible for special pricing."
 }

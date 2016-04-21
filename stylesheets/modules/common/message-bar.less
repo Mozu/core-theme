@@ -9,6 +9,28 @@
     to { background-color: @errorBackground; color: @errorText; }
 }
 
+@keyframes warningpop
+{
+    from { background-color: darken(saturate(@warningBackground, 40%),30%); color: saturate(@warningText, 30%); }
+    to { background-color: @warningBackground; color: @warningText; }
+}
+
+@-webkit-keyframes warningpop {
+    from { background-color: darken(saturate(@warningBackground, 40%),30%); color: saturate(@warningText, 30%); }
+    to { background-color: @warningBackground; color: @warningText; }
+}
+
+@keyframes successpop
+{
+    from { background-color: darken(saturate(@successBackground, 40%),30%); color: saturate(@successText, 30%); }
+    to { background-color: @successBackground; color: @successText; }
+}
+
+@-webkit-keyframes successpop {
+    from { background-color: darken(saturate(@successBackground, 40%),30%); color: saturate(@successText, 30%); }
+    to { background-color: @successBackground; color: @successText; }
+}
+
 .mz-notification(@bgColor, @textColor, @borderColor, @iconUri) {
 	background: @bgColor url(@iconUri) no-repeat 10px 10px;
 	border: 1px solid @borderColor;
@@ -34,9 +56,27 @@
 
 
     }
+
+    .mz-infos {
+        .mz-notification(@warningBackground, @warningText, @warningBorder, null);
+
+        &.is-showing {
+            animation: warningpop 0.5s ease-out 1 normal;
+            -webkit-animation: warningpop 0.5s ease-out 1 normal;
+        }
+    }
+
+    .mz-success {
+        .mz-notification(@successBackground, @successText, @successBorder, null);
+
+        &.is-showing {
+            animation: successpop 0.5s ease-out 1 normal;
+            -webkit-animation: successpop 0.5s ease-out 1 normal;
+        }
+    }
 }
 
-.mz-error-item {
+.mz-message-item {
     white-space: pre
 }
 
