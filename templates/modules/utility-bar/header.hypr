@@ -17,7 +17,7 @@
 
                     <span>
                         <span>Price List: </span>
-                        <input id='mz-pricelist-display' type="text" class='pricelist' />
+                        <input id='mz-pricelist-display' type="text" class='pricelist' value='{{viewData.priceListCode}}' />
                     </span>
 
                 </span>

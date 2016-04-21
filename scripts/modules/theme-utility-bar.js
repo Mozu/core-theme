@@ -196,7 +196,7 @@ define(['jquery', 'shim!modules/jquery-simple-datetimepicker[jquery=jquery]>jque
             this.changedValue = true;
         }).bind(this));
 
-        this.handler.val(this.getQueryStringValue());
+        //this.handler.val(this.getQueryStringValue());
     };
 
     PriceListPicker.prototype.getQueryStringValue = function() {
