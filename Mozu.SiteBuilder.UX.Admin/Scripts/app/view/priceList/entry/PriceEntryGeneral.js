@@ -15,8 +15,7 @@ Ext.define('Taco.view.priceList.entry.PriceEntryGeneral', {
         'Taco.core.ux.picker.CheckboxTreeModal'
     ],
     ui: 'subform',
-    margin: '0 0 20 0',
-
+    margin: '0',
     title: 'Conditions',
     record: null,
 
