@@ -66,7 +66,7 @@ Ext.define('Taco.view.priceList.entry.PriceEntryGeneral', {
             },
             listeners: {
                 change: {
-                    fn: function(cmp, newVal, oldVal, eOpts) {
+                    fn: function(cmp, newVal) {
 
                         var record = cmp.store.getAt(cmp.store.find('productCode', newVal));
                         //Taco.app.fireEvent('price-entry-product-changed', record);
@@ -107,7 +107,7 @@ Ext.define('Taco.view.priceList.entry.PriceEntryGeneral', {
                     scope: me
                 },
                 // custom event added as part of the InputMask plugin; need to cancel the event to prevent the field from reseting itself since will be reseting all fields when this field is reset;
-                'beforecleartriggerclick': function (field) {
+                'beforecleartriggerclick': function () {
 
                     // reset everything in the toolbar but need to be carefull
                     this.reset();
@@ -158,7 +158,14 @@ Ext.define('Taco.view.priceList.entry.PriceEntryGeneral', {
             value: !this.record.phantom ? this.record.get('startDate') : '',
             readOnly: !this.record.phantom,
             allowBlank: true,
-            validateOnBlank: true
+            validateOnBlank: true,
+            listeners: {
+                render: function (cmp) {
+                    if (me.record.phantom) {
+                        cmp.setValue(new Date());
+                    }
+                }
+            }
         });
 
         me.expirationDate = Ext.widget({
@@ -280,7 +287,7 @@ Ext.define('Taco.view.priceList.entry.PriceEntryGeneral', {
     },
 
     // after product is selected in the productPickerfield but before the combo is closed;
-    onBeforeProductSelect: function (combo, record, index, e) {
+    onBeforeProductSelect: function (combo, record) {
         var me = this,
             productCode = record.get('productCode'),
             isVariation = record.get('isVariation'),
