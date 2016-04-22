@@ -1,0 +1,24 @@
+﻿{% if model.priceType != "MAP" %}
+   {% if model.onSale or model.salePrice %}
+     <span class="mz-volume-price is-crossedout">
+       {{model.price|currency}}
+     </span>
+     <span itemprop="price" class="mz-volume-price is-saleprice">
+       {% if model.discount.discount.name %}
+         <span class="mz-price-discountname">{{model.discount.discount.name}} &ndash;</span>
+       {% endif %}
+       {{model.salePrice|currency}}
+     </span>
+   {% else %}
+     <span itemprop="price" class="mz-volume-price">
+       {{model.price|currency}}
+     </span>
+   {% endif %}
+{% else %}
+   <span class="mz-volume-price is-crossedout">
+     {{model.price|currency}}
+   </span>
+   <span>{{ labels.mapPrice }}</span>
+{% endif %}
+
+

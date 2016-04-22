@@ -116,7 +116,7 @@ define(['shim!vendor/bootstrap/js/popover[shim!vendor/bootstrap/js/tooltip[modul
             }
             else {
                this.$el.on('click', _.bind(this.doFormSubmit, this));
-            }
+            }    
         },
         doFormSubmit: function(e){
             e.preventDefault();
@@ -285,7 +285,7 @@ define(['shim!vendor/bootstrap/js/popover[shim!vendor/bootstrap/js/tooltip[modul
                     },
                     password: this.$parent.find('[data-mz-signup-password]').val()
                 };
-            if (this.validate(payload)) {
+            if (this.validate(payload)) {   
                 //var user = api.createSync('user', payload);
                 this.setLoading(true);
                 return api.action('customer', 'createStorefront', payload).then(function () {
@@ -297,7 +297,7 @@ define(['shim!vendor/bootstrap/js/popover[shim!vendor/bootstrap/js/tooltip[modul
                     }
                 }, self.displayApiMessage);
             }
-        }
+        } 
     });
 
     $(document).ready(function() {
@@ -328,7 +328,7 @@ define(['shim!vendor/bootstrap/js/popover[shim!vendor/bootstrap/js/tooltip[modul
                         location.href = require.mozuData('pagecontext').secureHost + '/' + returnURL;
                     }
             });
-
+           
         });
         $('[data-mz-action="launchforgotpassword"]').each(function() {
             var popover = new LoginPopover();
@@ -366,7 +366,7 @@ define(['shim!vendor/bootstrap/js/popover[shim!vendor/bootstrap/js/tooltip[modul
 
             //if were in edit mode, we override the /logout GET, to preserve the correct referrer/page location | #64822
             if (require.mozuData('pagecontext').isEditMode) {
-
+ 
                  el.on('click', function(e) {
                     e.preventDefault();
                     $.ajax({
@@ -376,7 +376,7 @@ define(['shim!vendor/bootstrap/js/popover[shim!vendor/bootstrap/js/tooltip[modul
                     });
                 });
             }
-
+            
         });
     });
 

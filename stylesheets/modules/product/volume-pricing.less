@@ -1,0 +1,38 @@
+﻿.mz-price-container {
+    float: left;
+}
+.mz-volume-price-container {
+    float: left;
+    padding-left: @gutter;
+    padding-bottom: @gutter;
+}
+.mz-volume-pricing {
+    font-size: @fontSize;
+
+    .mz-volume-price {
+        padding-left: 2px;
+        padding-right: 2px;
+    }
+    .mz-volume-price-lower {
+        &::after {
+            content: "\2014";
+        }
+    }
+    th {
+        text-align: center;
+        padding: @gutter/2 @gutter;
+        color: #eee;
+        background-color: #666;
+        border-bottom: 1px solid #fff;
+    }
+    tr.mz-volume-pricing-active-band {
+        background-color: @highlightColor;
+    }
+    td {
+        text-align: center;
+        &.mz-volume-pricing-cell-price {
+            text-align: right;
+            padding-right: 10px;
+        }
+    }
+}
