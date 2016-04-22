@@ -250,6 +250,9 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.Models.ProductModels
         /// </summary>
         public DateTime? DiscountsRestrictedEndDate { get; set; }
 
+        [JsonProperty(DefaultValueHandling = DefaultValueHandling.Ignore)]
+        public string VariationPricingMethod { get; set; }
+
         #endregion
 
         #region Properties
@@ -273,6 +276,8 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.Models.ProductModels
 
         [JsonProperty(DefaultValueHandling = DefaultValueHandling.Ignore)]
         public List<ProductVariationOption> VariationOptions { get; set; }
+
+        public bool IsVariation { get; set; }
 
         public bool HasConfigurableOptions { get; set; }
 

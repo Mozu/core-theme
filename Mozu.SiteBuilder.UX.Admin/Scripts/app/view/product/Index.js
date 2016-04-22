@@ -331,13 +331,11 @@ Ext.define('Taco.view.product.Index', {
                         behavior: 'create'
                     },                    
                     menuColumnHandler: function (item, eventData) {
-                        var page = eventData.grid,
-                            record = eventData.record,
+                        var record = eventData.record,
                             metaData = {
                                 id: record.getId()
                             };
-                        
-                        var controller = page.getControllerName();
+                        var controller = Taco.core.StateManager.getCurrentState().metaData.controller;
                         Taco.app.StateManager.attemptNavigate(controller + '/duplicate/' + record.getId(), metaData);
                     }
                 },

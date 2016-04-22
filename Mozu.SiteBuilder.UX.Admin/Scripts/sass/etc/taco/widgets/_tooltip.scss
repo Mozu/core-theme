@@ -8,13 +8,12 @@
 		font-weight: initial;
 		opacity: 0;
 		padding: 3px 8px;
-		pointer-events: none;
 		position: absolute;
 		max-width: 300px;
 		transform: translateX(0px) translateY(0px);
 		transition-property: opacity, transform;
 		transition-delay: .3s;
-		top: 0px;
+		top: -1000px;
 		z-index: 100000000;
 		@include border-radius(4px);
 		@include facade-transitions;
@@ -83,6 +82,10 @@
 				&.shown {
 					transform: translateX(7px);
 				}
+
+				&:hover {
+					transform: translateX(7px);
+				}
 			}
 
 			&.left {
@@ -99,15 +102,24 @@
 				&.shown {
 					transform: translateX(-7px);
 				}
+
+				&:hover {
+					transform: translateX(-7px);
+				}
 			}
 		}
 
 		&.removed {
-			top: -1000000px !important;
+            visibility: hidden;
 		}
 
 		&.shown {
 			opacity: 1;
+		}
+
+		&:hover {
+			opacity: 1;
+            visibility: visible;
 		}
 	}
 

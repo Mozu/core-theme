@@ -37,6 +37,8 @@
  * @requires Taco.controller.Discounts
  * @requires Taco.controller.CouponSets 
  * @requires Taco.controller.ProductRankings
+ * @requires Taco.controller.PriceLists
+ * @requires Taco.controller.PriceListEntries
  * @requires Taco.controller.StoreFrontProducts
  * @requires Taco.controller.Settings
  
@@ -157,6 +159,7 @@ Ext.define('Taco.Application', {
         'Discounts',
         'Settings',
         'Provisioning',
+        'React',
         //'Tbd',
         //'Themes',
         //'Themesettings',
@@ -183,8 +186,38 @@ Ext.define('Taco.Application', {
     context: null,
     constructor: function (config) {
 
+        var addAdminUIScript = (function() {
 
-        
+            var getScript = function(src) {
+                var tag = document.createElement('script');
+                tag.setAttribute('src', src);
+                return tag;
+            };
+
+            var hotPath = 'http://localhost:8080/lib/bundle.js';
+            var productionPath = '/admin/_mz_AdminUI_App/lib/bundle.js';
+
+            var finalPath = productionPath;
+
+            var queryString = '?ver=' + (Taco.adminAppBundleVer || new Date().toISOString());
+            
+            if (Taco.reactEnvironment === 'hot' || Ext.util.Cookies.get('adminui-hot')) {
+                finalPath = hotPath;
+            }
+
+            var script = getScript(finalPath + queryString);
+
+            script.addEventListener('error', function(e) {
+                var secondaryMessage = finalPath === hotPath
+                    ? '. Please ensure your hot server is running'
+                    : '. Please ensure the app has been deployed';
+
+                console.warn('No Script could be found at: ', finalPath, secondaryMessage);
+            })
+
+            document.head.appendChild(script);
+
+        })();
 
         Ext.override(Ext.Component, {
             beforeRender: function () {

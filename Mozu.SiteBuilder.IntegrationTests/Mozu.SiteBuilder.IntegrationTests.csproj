@@ -217,6 +217,7 @@
     <None Include="Diagrams\Customer\cdCustomer_GiftCardView.cd" />
     <None Include="Diagrams\EmailTemplates\cdGiftCardEmail.cd" />
     <None Include="Diagrams\Location\cdLocation.cd" />
+    <None Include="Diagrams\ProductAdmin\cdPriceList.cd" />
     <None Include="Diagrams\ProductAdmin\cdProductLocation.cd" />
     <None Include="Diagrams\ProductAdmin\cdProduct.cd" />
     <None Include="Diagrams\ProductAdmin\cdProductType.cd" />
@@ -256,6 +257,13 @@
     <Service Include="{82A7F48D-3B50-4B1E-B82E-3ADA8210C358}" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <Choose>
+    <When Condition="$(TargetFrameworkIdentifier) == '.NETFramework' And ($(TargetFrameworkVersion) == 'v4.5' Or $(TargetFrameworkVersion) == 'v4.5.1')">
+      <PropertyGroup>
+        <__paket__ClearScript_Installer_targets>ClearScript.Installer</__paket__ClearScript_Installer_targets>
+      </PropertyGroup>
+    </When>
+  </Choose>
   <PropertyGroup>
     <PostBuildEvent>
     </PostBuildEvent>
@@ -348,13 +356,6 @@
           <Paket>True</Paket>
         </Reference>
       </ItemGroup>
-    </When>
-  </Choose>
-  <Choose>
-    <When Condition="$(TargetFrameworkIdentifier) == '.NETFramework' And ($(TargetFrameworkVersion) == 'v4.5' Or $(TargetFrameworkVersion) == 'v4.5.1')">
-      <PropertyGroup>
-        <__paket__ClearScript_Installer_targets>ClearScript.Installer</__paket__ClearScript_Installer_targets>
-      </PropertyGroup>
     </When>
   </Choose>
   <Choose>
@@ -696,15 +697,10 @@
     </When>
   </Choose>
   <Choose>
-    <When Condition="$(TargetFrameworkIdentifier) == '.NETFramework' And $(TargetFrameworkVersion) == 'v4.5.1'">
+    <When Condition="$(TargetFrameworkIdentifier) == '.NETFramework' And ($(TargetFrameworkVersion) == 'v4.5' Or $(TargetFrameworkVersion) == 'v4.5.1')">
       <ItemGroup>
-        <Reference Include="Mozu.Core.Messaging.Contracts">
-          <HintPath>..\packages\Mozu.Core.Messaging\lib\net451\Mozu.Core.Messaging.Contracts.dll</HintPath>
-          <Private>True</Private>
-          <Paket>True</Paket>
-        </Reference>
         <Reference Include="Mozu.Core.Messaging">
-          <HintPath>..\packages\Mozu.Core.Messaging\lib\net451\Mozu.Core.Messaging.dll</HintPath>
+          <HintPath>..\packages\Mozu.Core.Messaging\lib\Mozu.Core.Messaging.dll</HintPath>
           <Private>True</Private>
           <Paket>True</Paket>
         </Reference>

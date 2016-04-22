@@ -17,7 +17,7 @@ var ApiContextConstructor = function(conf) {
         ApiContextConstructor.__debug__ = require('when/monitor/console');
     }
 },
-    mutableAccessors = ['app-claims', 'user-claims', 'callchain', 'currency', 'locale','dataview-mode'], //, 'bypass-cache'],
+    mutableAccessors = ['app-claims', 'user-claims', 'callchain', 'currency', 'locale','dataview-mode','preview-date'],
     immutableAccessors = ['tenant', 'site', 'master-catalog', 'catalog'],
     immutableAccessorLength = immutableAccessors.length,
     allAccessors = mutableAccessors.concat(immutableAccessors),

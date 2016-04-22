@@ -70,72 +70,7 @@ Ext.define('Taco.view.provisioning.Sites', {
         });
         
         var me = this;
-        // this.body = {
-        //     layout: {
-        //         type: 'hbox',
-        //         align: 'stretch'
-        //     },
-
-        //     items:
-        //     [          
-        //         {
-        //             xtype: 'grid',
-        //             flex: 1,
-        //             autoHeight: true,
-        //             stateId: 'statefulSitesGrid',
-        //             stateful:true,
-        //             dockedItems: [
-        //                 {
-        //                     xtype: 'toolbar',
-        //                     dock: 'top',
-        //                     padding: '0 0 10 0',
-        //                     items: [{
-        //                             xtype: 'box',
-        //                             html: '<h3>Sites</h3>'
-        //                         }, '->',
-        //                         {
-        //                             xtype: 'button',
-        //                             ui: 'action-primary',
-        //                             scale: 'medium',
-        //                             handler: this.showSiteModal,
-        //                             scope: this,
-        //                             text: 'Create'
-        //                         }]
-        //                 }
-        //             ],
-        //             store: this.siteStore,
-        //             columns: [
-        //                 { text: 'Name', stateId:"name",  dataIndex: 'name', flex: 1 },
-        //                 { text: 'Currency', stateId: "defaultCurrencyCode", dataIndex: 'defaultCurrencyCode' },
-        //                 { text: 'Locale', stateId: "defaultLocaleCode", dataIndex: 'defaultLocaleCode' },
-        //                 { text: 'Status', stateId: "status", dataIndex: 'status' },
-        //                 {
-        //                     xtype: 'taco.menucolumn',
-        //                     text: 'Actions',
-        //                     menuItems: [
-        //                         {
-        //                             itemId: 'rename',
-        //                             text: 'Rename',
-        //                             hideOnClick: false,
-        //                             menuColumnHandler: function (item, eventData) {
-        //                                 eventData.record.raw.itemType = 'site';
-        //                                 me.showRenameModal(eventData.record.raw);
-        //                             }
-        //                         }, {
-        //                             itemId: 'Delete',
-        //                             text: 'Delete',
-        //                             hideOnClick: false,
-        //                             menuColumnHandler: function (item, eventData) {
-        //                                 eventData.record.raw.itemType = 'site';
-        //                                 me.deleteEntity(eventData.record.raw);
-        //                             }
-        //                         }
-        //                     ]
-        //                 }
-        //             ]
-        //         }]
-        // };
-
+        
         me.store.on('load', me.onSiteStoreLoad, this, {single: true});
 
         this.columns = [

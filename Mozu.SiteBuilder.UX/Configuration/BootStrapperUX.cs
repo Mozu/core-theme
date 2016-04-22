@@ -1,11 +1,19 @@
 ﻿using System.Net.Http.Formatting;
 using System.Reflection;
 using System.Web.Http;
-
+using Mozu.AdminUser.Contracts.Clients;
+using Mozu.CommerceRuntime.Contracts.Clients;
+using Mozu.Content.Contracts.Clients;
 using Mozu.Core.Api;
 using Mozu.Core.Api.ErrorHandler;
 using Mozu.Core.Logging;
 using Mozu.Core.Settings;
+using Mozu.Customer.Contracts.Clients;
+using Mozu.Location.Contracts.Clients;
+using Mozu.MZDB.Contracts.Clients;
+using Mozu.ProductAdmin.Contracts;
+using Mozu.ProductRuntime.Contracts.Clients;
+using Mozu.Reference.Contracts.Clients;
 using Mozu.SiteBuilder.Mvc;
 using Mozu.SiteBuilder.Mvc.ActionFilters;
 using Mozu.SiteBuilder.Mvc.Logging;
@@ -14,6 +22,9 @@ using Mozu.SiteBuilder.Mvc.MessageHandler;
 using Mozu.SiteBuilder.Mvc.Users;
 
 using Mozu.SiteBuilder.UX.Filters;
+using Mozu.SiteSettings.General.Contracts.Clients;
+using Mozu.SiteSettings.Order.Contracts;
+using Mozu.SiteSettings.Order.Contracts.Clients;
 using Mozu.Tenant.Contracts.Clients;
 using Newtonsoft.Json.Serialization;
 //using Mozu.SiteBuilder.UX.MessageHandlers;
@@ -26,8 +37,10 @@ namespace Mozu.SiteBuilder.UX.Configuration
         {
             base.AddMessageHandlers(httpConfiguration);
             httpConfiguration.MessageHandlers.Insert(0, new HttpContextInjectingMessageHandler());
-            httpConfiguration.MessageHandlers.Insert(1, new SiteBuilderRouteDataInitilizer());
-          
+            
+            
+            httpConfiguration.MessageHandlers.Add( new SessionHandler());
+            
             httpConfiguration.MessageHandlers.Add(new MzUnderscoreRequestCleaner());
 
             httpConfiguration.MessageHandlers.Add(new HomePageTransferHandler());
@@ -102,10 +115,19 @@ namespace Mozu.SiteBuilder.UX.Configuration
         {
             base.InitializeContainerFactory(containerFactory);
             containerFactory
-               .UsingAssembly(Assembly.Load("Mozu.Core.Api"))
                .UsingAssembly(typeof(ISitesWebApiClient).Assembly)
-               //.UsingAssembly(typeof(IStartUpTask).Assembly)
+               .UsingAssembly(typeof(ILocationRuntimeWebApiClient).Assembly)
                .UsingAssembly(typeof(IPermissionsRepository).Assembly)
+               .UsingAssembly(typeof(CustomerAccountWebApiClient).Assembly)
+               .UsingAssembly(typeof(IMultiScopeInvitationWebApiClient).Assembly)
+               .UsingAssembly(typeof(Category).Assembly)
+               .UsingAssembly(typeof(ProductRuntimeWebApiClient).Assembly)
+               .UsingAssembly(typeof(CartWebApiClient).Assembly)
+               .UsingAssembly(typeof(CheckoutSettingsWebApiClient).Assembly)
+               .UsingAssembly(typeof(IGeneralSettingsWebApiClient).Assembly)
+               .UsingAssembly(typeof(ReferenceDataWebApiClient).Assembly)
+               .UsingAssembly(typeof(IEntityListsWebApiClient).Assembly)
+               .UsingAssembly(typeof(IDocumentListWebApiClient).Assembly)
                .UsingAssembly(Assembly.Load("Mozu.SiteBuilder.Mvc"))
                .UsingAssembly(Assembly.Load("Mozu.Core.Messaging"))
                .UsingAssembly(Assembly.GetExecutingAssembly())

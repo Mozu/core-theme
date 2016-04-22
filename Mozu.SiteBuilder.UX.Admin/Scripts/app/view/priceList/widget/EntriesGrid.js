@@ -1,0 +1,615 @@
+﻿/**
+ * @class Taco.view.priceList.Grid
+*/
+Ext.define('Taco.view.priceList.widget.EntriesGrid', {
+    extend: 'Taco.core.ux.browser.SearchList',
+    alias: 'widget.taco-priceList-entries-grid',
+    requires: [
+        'Taco.model.PriceListEntry',
+        'Taco.store.PriceListEntries',
+        'Ext.Date',
+        'Ext.form.Panel',
+        'Taco.core.ux.BaseGrid',
+        'Ext.tip.QuickTipManager',
+        'Taco.core.ux.TextFilter',
+        'Taco.core.ux.FilterableDataView',
+        'Taco.core.ux.TextFilter',
+        'Taco.core.ux.grid.MenuColumn',
+        'Taco.view.priceList.entry.AdvancedEntrySearch',
+        'Taco.view.priceList.modal.PriceEntryEditor'
+
+        //'Taco.view.priceList.Form',
+        //'Taco.view.priceList.Edit'
+    ],
+
+    mixins: {
+
+    },
+
+    //contextConfig: {
+    //    requiresContextOfType: ['m']
+    //},
+
+    //viewConfig: {
+    //    deferEmptyText: false,
+    //    emptyText: me.record.phantom ? "Save the Price List to add pricing entries" : "None Added."
+    //},
+
+    launchEditorOnClick: true,
+
+    // Required by mixin: Taco.core.ux.mixins.LaunchEditor defined in SearchList
+    modelName: 'Taco.model.PriceListEntry',
+
+    controllerName: 'PriceListEntries',
+    priceListCode: null,
+    priceListRecord: null,
+
+    enableNavHeader: true,
+    hideNavMenu: true,
+
+    // adds the "taco-content-navcontainer-padding" class
+    // Will add the 20px padding needed for display in the contentView as part of the NavHeader code;
+    addContentViewPadding: false,
+
+    enableSearch: false,
+    enablePaging: true,
+    enableRowEditing: false,
+    createButtonEnabled: true,
+    saveButtonEnabled: false,
+    cancelButtonEnabled: false,
+
+    createButtonText: 'Add Price Entry',
+
+    showActionsColumn: true,
+
+    enableEditAction: true,
+    //enableDisableAction: true,
+    enableDeleteAction: true,
+
+    hideSearchToolbar: false,
+
+    title: 'Price Entries',
+
+    store: null,
+
+    autoScroll: true,
+
+    enableQuickFilters: false,
+
+    hideSubnavLinks: true,
+
+    minHeight: 350,
+
+    enableBulkActions: false,
+    enableDeleteAction: true,
+
+    pageSize: 25,
+
+    advancedSearchConfig : {
+        form: null
+    },
+
+    onCreate: Ext.emptyFn,
+    isDisabled: false,
+
+    stateful: true,
+    stateId: 'statefulPriceListEntryGrid',
+
+    listeners: {
+        afterrender: function() {
+            var me = this;
+
+            if (me.isDisabled && me.createButton) {
+                me.createButton.disable();
+            }
+        }
+    },
+
+    statics: {
+
+    },
+
+    initComponent: function () {
+        var me = this,
+            model;
+
+        me.isDisabled = (!this.priceListCode);
+
+        this.columns = this.getColumnConfig();
+
+        if (this.showActionsColumn) {
+            var actionColumn = this.getActionColumn();
+            if (actionColumn) {
+                this.columns.push(actionColumn);
+            }
+        }
+
+        // initialize the delete mixin
+        this.mixins.deleteFromGrid.init.apply(this);
+
+        //me.mon(Taco.app, 'pricelistcreated', me.reloadGrid, me);
+
+        me.store = Ext.create('Taco.store.PriceListEntries', {priceListCode: this.priceListCode});
+
+        //me.store = Taco.core.data.StoreManager.getOrCreate({
+        //    type: 'Taco.store.PriceListEntries',
+        //    createOnly: true,
+        //    pageSize: this.pageSize,
+        //    autoLoad: false,
+        //    clearFilters: true,
+        //    remoteFilter: true
+        //});
+        if (this.priceListCode) {
+            me.store.load({
+                params: {
+                    priceListCode: this.priceListCode
+                },
+                failure: function () {
+                    Taco.app.fireEvent('setmessage', "Error loading Price List Entries", 'error');
+                    this.setLoading(false, this.body);
+                },
+                scope: this
+            });
+        }
+
+        me.advancedSearchConfig.form = Ext.create('Taco.view.priceList.entry.AdvancedEntrySearch', {});
+
+        model = Ext.ModelManager.getModel(me.modelName);
+        me.createButtonEnabled = model.allowCreate();
+        me.allowUpdate = model.allowUpdate();
+
+        me.callParent(arguments);
+
+    },
+
+    reloadGrid: function() {
+        console.log('reloaded grid');
+
+        this.store.reload();
+    },
+
+    getColumnConfig: function () {
+        var columns = [
+            {
+                xtype: 'gridcolumn',
+                dataIndex: 'productCode',
+                stateId: 'productCode',
+                text: 'Product Code',
+                hideable: true,
+                flex: 1,
+                sortable: true
+            }, {
+                xtype: 'gridcolumn',
+                dataIndex: 'productName',
+                stateId: 'productName',
+                text: 'Product Name',
+                hideable: true,
+                flex: 2,                
+                sortable: false
+            }, {
+                xtype: 'gridcolumn',
+                dataIndex: 'optionSummary',
+                stateId: 'optionSummary',
+                text: 'Option Summary',
+                hideable: true,
+                flex: 2,
+                sortable: false
+            }, {
+                xtype: 'gridcolumn',
+                dataIndex: 'currencyCode',
+                stateId: 'currencyCode',
+                text: 'Currency',
+                flex: 1,
+                sortable: true
+            }, {
+                xtype: 'gridcolumn',
+                dataIndex: 'priceEntries',
+                stateId: 'listPrice',
+                text: 'Price',
+                flex: 1,
+                sortable: false,
+                renderer: function(entries) {
+                    if (Ext.isArray(entries)) {
+                        return entries[0].listPrice ? Taco.app.context.getCurrent().formatCurrency(entries[0].listPrice) : 'Default';
+                    }
+                    return 'Default';
+                }
+            }, {
+                xtype: 'gridcolumn',
+                dataIndex: 'priceEntries',
+                stateId: 'salePrice',
+                text: 'Sale Price',
+                flex: 1,
+                sortable: false,
+                renderer: function(entries) {
+                    if (Ext.isArray(entries)) {
+                        return entries[0].salePrice ? Taco.app.context.getCurrent().formatCurrency(entries[0].salePrice) : 'Default';
+                    }
+                    return 'Default';
+                }
+            }, {
+                xtype: 'datecolumn',
+                dataIndex: 'startDate',
+                stateId: 'startDate',
+                format: 'n/j/Y g:i a',
+                flex:2,
+                text: 'Start Date',
+                hidden: false,
+                sortable: true
+            }, {
+                xtype: 'datecolumn',
+                dataIndex: 'endDate',
+                stateId: 'endDate',
+                format: 'n/j/Y g:i a',
+                flex:2,
+                text: 'End Date',
+                hidden: false,
+                sortable: true
+            }, {
+                xtype: 'datecolumn',
+                dataIndex: 'createDate',
+                stateId: 'createDate',
+                format: 'n/j/Y g:i a',
+                flex:2,
+                text: 'Created Date',
+                hidden: true,
+                sortable: true
+            }, {
+                xtype: 'gridcolumn',
+                dataIndex: 'createByUser',
+                stateId: 'createByUser',
+                text: 'Created By',
+                flex:1,
+                hidden: true,
+                sortable: false
+            }, {
+                xtype: 'datecolumn',
+                dataIndex: 'lastModifiedDate',
+                stateId: 'lastModifiedDate',
+                format: 'n/j/Y g:i a',
+                flex:2,
+                text: 'Last Modified Date',
+                hidden: true,
+                sortable: true
+            }, {
+                xtype: 'gridcolumn',
+                dataIndex: 'lastModifiedByUser',
+                stateId: 'lastModifiedByUser',
+                text: 'Last Modified By',
+                flex:1,
+                hidden: true,
+                sortable: false
+            }
+        ];
+        return columns;
+    },
+
+    // list of actions to put in action column and context menu;
+    getActionItems: function () {
+        var me = this,
+            result = [];
+        result.push(
+            {
+                itemId: 'live',
+                text: 'View Live',
+                hideOnClick: false,
+                menu: {
+                    plain: true,
+                    shadow: false,
+                    cls: Taco.baseCSSPrefix + 'grid-row-menu',
+                    items: []
+                }
+            }
+        );
+
+        if (Taco.app.context.getMasterCatalog().productPublishingMode === 'Pending'){
+            result.push(
+                {
+                    itemId: 'preview',
+                    text: 'View Staged',
+                    hideOnClick: false,
+                    menu: {
+                        plain: true,
+                        shadow: false,
+                        cls: Taco.baseCSSPrefix + 'grid-row-menu',
+                        items: []
+                    }
+                }
+            );
+        }
+
+        result.push(
+            {
+                text: 'Edit',
+                requiredBehaviors: {
+                    model: 'Taco.model.PriceListEntry',
+                    behavior: 'read'
+                },
+                menuColumnHandler: me.doEdit,
+                scope:me
+            }
+        );
+        result.push(
+            {
+                text: 'Delete',
+                itemId: "deleteMenuItem",
+                // deleteMenuColumnHandler can be found in Taco.core.ux.mixins.DeleteFromGrid
+                menuColumnHandler: "deleteMenuColumnHandler",
+                requiredBehaviors: {
+                    model: 'Taco.model.PriceListEntry',
+                    behavior: 'destroy'
+                },
+                scope: me
+            }
+        );
+        return result;
+    },
+
+    onActionMenuShow: function (menu, eventData) {
+        var previewAction = menu.items.get('preview'),
+            liveAction = menu.items.get('live'),
+            defaults = eventData.header.menuItemDefaults,
+            mc = Taco.app.context.getMasterCatalog();
+
+        if (previewAction) {
+            previewAction.menu.removeAll();
+        }
+        liveAction.menu.removeAll();
+        Ext.Array.each(mc.sites, function (site) {
+            if (site.isMozuRendered && (eventData.grid.priceListRecord.get('validForAllSites')
+                || Ext.Array.indexOf(eventData.grid.priceListRecord.get('validSites'), site.id) !== -1)) {
+
+                if (mc.productPublishingMode === 'Pending') {
+                    previewAction.menu.add(Ext.applyIf({
+                        text: site.name,
+                        menuColumnHandler: function (item, eventData) {
+                            window.open('/_gosite/' + site.id
+                                + '?environment=preview&redir='
+                                + encodeURIComponent('/p/'
+                                    + eventData.record.get('productCode')
+                                    + '?mz_pricelist='
+                                    + eventData.record.get('priceListCode'))
+                            );
+                        }
+                    }, defaults));
+                }
+
+                liveAction.menu.add(Ext.applyIf({
+                    text: site.name,
+                    menuColumnHandler: function (item, eventData) {
+                        window.open('/_gosite/' + site.id + '?environment=live&redir=' + encodeURIComponent('/p/' + eventData.record.get('productCode')));
+                    }
+                }, defaults));
+            }
+        });
+    },
+
+
+
+    getBulkActionsConfig: function () {
+        return {
+            onMenuShow: function(selModel) {
+                var selection = selModel.getSelection(),
+                    disableBulkAction = this.down('#Disable'),
+                    enableBulkAction = this.down('#Enable'),
+                    allActive,
+                    allInactive;
+
+                allActive = Ext.Array.every(selection, function(item) {
+                    return item.get('enabled');
+                });
+
+                if (allActive) {
+                    disableBulkAction.setDisabled(false);
+                    enableBulkAction.setDisabled(true);
+                    return;
+                }
+
+                allInactive = Ext.Array.every(selection, function(item) {
+                    return !item.get('enabled');
+                });
+
+                if (allInactive) {
+                    enableBulkAction.setDisabled(false);
+                    disableBulkAction.setDisabled(true);
+                    return;
+                }
+
+                enableBulkAction.setDisabled(false);
+                disableBulkAction.setDisabled(false);
+            },
+            actions: [
+                {
+                    itemId: 'Enable',
+                    text: 'Enable',
+                    scope: this,
+                    handler: function (item, eventData) {
+                        this.doBulkAction.call(this, item, eventData);
+                    }
+                },
+                {
+                    itemId: 'Disable',
+                    text: 'Disable',
+                    scope: this,
+                    handler: function (item, eventData) {
+                        var selection = item.scope.selModel.getSelection(),
+                            name = selection.length === 1 ? selection[0].get('name') : undefined,
+                            msg = selection.length === 1 ? 'Are you sure you\'d like to disable the  ' + name + ' price list?' : 'Are you sure you\'d like to disable the selected price lists?';
+
+
+                        this.getConfirmationModal({
+                            message: msg,
+                            callback: this.doBulkAction.bind(this, item),
+                            header: 'Disable Price Lists',
+                            primaryText: 'Yes, Disable'
+                        });
+                    }
+                }
+            ]
+        };
+    },
+
+    doBulkAction: function(item) {
+        var action = item.itemId,
+            records = item.scope.selModel.getSelection(),
+            method = 'do' + action + 'Bulk';
+
+        this[method](item, {record: records});
+    },
+
+    setPriceListEnabled: function(item, eventData, isActive) {
+        var growlText = (isActive) ? 'Enabled' : 'Disabled',
+            growlMessage = '<span style="font-weight:bold;">' + growlText + '</span>';
+
+        if (!Ext.isArray(eventData.record)) {
+            eventData.record.set('enabled', isActive);
+
+            this.showMessage(growlMessage);
+            eventData.record.store.sync({
+                callback: this.onAfterRecordUpdate.bind(this, eventData.record.store)
+            });
+        }
+
+        else {
+            eventData.record.forEach(function(rec){
+                rec.set('enabled', isActive);
+            });
+
+            this.showMessage(growlMessage);
+            eventData.record[0].store.sync({
+                callback: this.onAfterRecordUpdate.bind(this, eventData.record[0].store)
+            });
+        }
+
+    },
+
+    onAfterRecordUpdate: function(recordStore, response) {
+
+        if (response && response.hasException) {
+            this.showMessage(Ext.JSON.decode(response.exceptions[0].error.responseText).message, 'error');
+        } else {
+            if (recordStore) {
+                recordStore.reload();
+            }
+        }
+    },
+
+    doDisableBulk: function(item, eventData) {
+        item.scope.setPriceListEnabled(item, eventData, false);
+    },
+
+    doEnableBulk: function(item, eventData) {
+        item.scope.setPriceListEnabled(item, eventData, true);
+    },
+
+    getActionColumn: function () {
+        var me = this,
+            actionColumn = null,
+            actions = this.getActionItems();
+
+        // as long as we have actions;
+        if (actions.length) {
+            actionColumn = {
+                xtype: 'taco.menucolumn',
+                text: 'Actions',
+                onMenuShow: me.onActionMenuShow,
+                menuItems: actions
+            };
+        }
+
+        return actionColumn;
+    },
+
+    launchEditor: function (record) {
+        Ext.defer(function () {
+            this.createPopup(record, false);
+        }, 1, this);
+    },
+
+    onItemClick: function (view, record, elm, index, e) {
+        if (e.target.className === 'taco-launch-editor') {
+            e.preventDefault();
+            this.createPopup(record, false);
+        }
+    },
+
+    doEdit : function (item, eventData) {
+        var rec = eventData.record;
+        //item.scope.openEditor(rec, false);
+        item.scope.createPopup(rec, false);
+    },
+
+    createPopup: function (record, isNew) {
+        var me = this;
+        Ext.create('Taco.view.priceList.modal.PriceEntryEditor', {
+            record: record,
+            parentForm: this,
+            isCreateMode: isNew,
+            priceListCode: this.priceListCode,
+            actions: (!me.allowUpdate)
+                ? [{ xtype: 'button', itemId: 'secondaryAction'}]
+                : [{ xtype: 'button', itemId: 'secondaryAction'},
+                   { xtype: 'button', itemId: 'primaryAction', formBind: true}
+                  ],
+            listeners: {
+                savesuccess: function () {
+                    me.store.reload();
+                }
+            }
+        });
+    },
+
+    doCreate: function () {
+        this.createPopup(null, true);
+        //this.openEditor(null, true);
+    },
+
+    getDeletePromptMessage: function (record) {
+        return record.getDeletePromptMessage();
+    },
+
+    disablePriceLists: function () {
+        var createActionButton = Ext.ComponentQuery.query('button[itemId=createActionButton]');
+        if (createActionButton && createActionButton.length > 0) {
+            createActionButton[0].setDisabled(true);
+        }
+        var advFilterButton = Ext.ComponentQuery.query('button[itemId=advancedFilter]');
+        if (advFilterButton && advFilterButton.length > 0) {
+            advFilterButton[0].setDisabled(true);
+        }
+    },
+
+    //move to base class?
+    getConfirmationModal: function(config) {
+        Ext.create('Taco.core.ux.window.Modal', {
+            scale: 'small',
+            title: config.header,
+            modal: true,
+            closeAction: 'destroy',
+            height: 200,
+            primaryText: config.primaryText ? config.primaryText : 'Confirm',
+            secondaryText: 'Cancel',
+            primaryHandler: function() {
+                config.callback();
+                this.save();
+            },
+            items: [{
+                xtype: 'container',
+                layout: {
+                    type: 'hbox'
+                },
+                items: [
+                    Ext.create('Ext.panel.Panel', {
+                        width: '100%',
+                        html: config.message
+                    })
+                ]
+            }]
+        }).show();
+    },
+
+    showMessage: function(msg, type) {
+        Taco.app.fireEvent('setmessage', msg, type || 'success');
+    }
+
+});

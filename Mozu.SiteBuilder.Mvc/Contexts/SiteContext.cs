@@ -299,11 +299,16 @@ namespace Mozu.SiteBuilder.Mvc.Contexts
             {
                 if (_cdnPrefix == null)
                 {
+                    if (this._siteBuilderApiContext.DebugFlags.HasFlag(DebugModeFlagValues.DisableCdn))
+                    {
+                        _cdnPrefix = this._currentHost;
+                    }
+                    else {
+                        _cdnPrefix = "//" + (
+                            string.IsNullOrWhiteSpace(this.GeneralSettings.CustomCdnHostName) ? _settings.AppSettings("CdnHost") : this.GeneralSettings.CustomCdnHostName)
+                            + "/" + _siteBuilderApiContext.TenantId + "-" + _siteBuilderApiContext.SiteId;
+                    }
 
-                    _cdnPrefix = "//" + (
-                        string.IsNullOrWhiteSpace(this.GeneralSettings.CustomCdnHostName) ? _settings.AppSettings("CdnHost") : this.GeneralSettings.CustomCdnHostName)
-                        + "/" + _siteBuilderApiContext.TenantId + "-" + _siteBuilderApiContext.SiteId;
-                    
                     if (_settings.AppSettings("disableCDN") == "true")
                     {
                         _cdnPrefix = ""; ;
@@ -344,7 +349,7 @@ namespace Mozu.SiteBuilder.Mvc.Contexts
             set { _domains = value; }
         }
 
-        public static void Save(int? site, int? masterCatalog, int tenant, bool isEditMode, DataViewModeType dataViewMode, ICookieProvider cookieProvider, int? catalogid, string locale = null, string currency = null)
+        public static void Save(int? site, int? masterCatalog, int tenant, bool isEditMode, DataViewModeType dataViewMode, ICookieProvider cookieProvider, int? catalogid, string locale = null, string currency = null, bool isAdminMode = false)
         {
             var cookie = new HttpCookie("") {Expires = DateTime.MaxValue};
 
@@ -355,6 +360,7 @@ namespace Mozu.SiteBuilder.Mvc.Contexts
             cookie["catalog"] = catalogid.HasValue ? catalogid.ToString() : null;
             cookie["tenant"] = tenant.ToString();
             cookie["editmode"] = isEditMode.ToString();
+            cookie["adminmode"] = isAdminMode.ToString();
             if (dataViewMode == DataViewModeType.Pending)
             {
                 cookie["dataview"] = DataViewModeType.Pending.ToString();

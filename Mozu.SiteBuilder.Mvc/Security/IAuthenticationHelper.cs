@@ -14,14 +14,15 @@ namespace Mozu.SiteBuilder.Mvc.Security
         string GetProfileToken();
         string GetAdminRefreshToken();
 
-
+        void ClearSessionToken();
         void ClearStorefrontTokens();
         void SaveStoreFrontRefreshToken(string token, DateTime? expiryTime);
 
         string GetStoreFrontRefreshToken();
 
         string GetStoreFrontAccessToken();
-
+        string GetStoreFrontSessionAccessToken();
+        DateTime? GetStoreFrontSessionAccessTokenDate();
         void SaveStoreFrontAccessToken(string token, string profile, DateTime? expiry = null);
 
 

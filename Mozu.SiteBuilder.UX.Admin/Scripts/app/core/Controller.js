@@ -9,6 +9,10 @@ Ext.define('Taco.core.Controller', {
     listView: null,
     modelName: null,
 
+    requires: [
+        'Taco.view.react.Index'
+    ],
+
     /**
      * @cfg contextPlaceHolders
      * @type {Object}
@@ -352,10 +356,12 @@ Ext.define('Taco.core.Controller', {
             }
         }
 
-
-        //removing initial view  to aviod events firing from the create of the view from messin with the 
-
+        //once weve set the context, if this is a react view, 
+        if (cfg && cfg.options && cfg.options.DO_NOT_RENDER) {
+            view = Ext.create('Taco.view.react.Index', cfg);
+        }
         view = view.$className ? view : Ext.create(view, cfg);
+
         if (view.contextConfig && view.contextConfig.requiresContextOfType) {
             view.mon(Taco.app.context, "beforecontextchange", function (newContext) {
                 var works = this.worksInContext(view, newContext);

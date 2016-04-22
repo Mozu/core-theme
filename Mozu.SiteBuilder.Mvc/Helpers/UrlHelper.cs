@@ -179,35 +179,22 @@ namespace Mozu.SiteBuilder.Mvc.Helpers
 
         private string MakeStylesheetUrl(object obj, Dictionary<string, object> config)
         {
-            var url = MakeCdnUrl(obj, config);
-            var sb = new StringBuilder(url);
 
-            // the url gets a '?' added to it from makecdn uy
-            //sb.Append(url.IndexOf('?') == -1 ? '?' : '&');
-
-            sb.Append("SBTHEME=").Append(HttpUtility.UrlEncode(this._siteContext.Theme.Id));
-
-            // debug mode MUST be set or else the request to resources will fail
-            sb.AppendFormat("&debug={0}", _pageContext.IsDebugMode);
+            config["SBTHEME"] = this._siteContext.Theme.Id;
+           
+            config["mzsh"] = _siteContext.HashString;
 
             if (this._apiContext.DataViewMode == Core.DataViewModeType.Pending)
             {
-                sb.Append("&dv=p");
+                config["dv"] = "p";
             }
-            sb.Append("_mzcb=").Append(_siteContext.HashString);
-            
-            
-
-            foreach (var kvp in config)
+            if (_pageContext.IsDebugMode || _apiContext.DebugFlags.HasFlag(DebugModeFlagValues.Unminified))
             {
-                if (kvp.Value == null)
-                {
-                    continue;
-                }
-                sb.Append('&').Append(kvp.Key).Append("=").Append(HttpUtility.UrlEncode(kvp.Value.ToString()));
+                config["debug"] = true;
             }
-
-            return sb.ToString();
+            
+            return MakeCdnUrl(obj, config);
+            
 
         }
         string MakeDocumentUrl(object o, Dictionary<string, object> config)

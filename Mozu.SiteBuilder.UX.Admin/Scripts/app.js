@@ -36,6 +36,7 @@ Ext.application({
         'Discounts',
         'CouponSets',
         'ProductRankings',
+        'React',
         'StoreFrontProducts',
         'Settings',
         'Provisioning',
@@ -62,6 +63,8 @@ Ext.application({
         'Redirects',
         'BusinessIntelligence',
         'ActionManagement',
-        'IpBlocking'
-    ],
+        'IpBlocking',
+        'PriceLists',
+        'PriceListEntries'
+    ]
 });

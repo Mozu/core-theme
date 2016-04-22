@@ -13,7 +13,10 @@
 
 Ext.define('Taco.core.StateManager', {
     extend: 'Ext.util.Observable',
-    requires: ['Taco.core.AppState'],
+    requires: [
+        'Taco.core.AppState',
+        'Taco.view.navigation.PrimaryMenuContainer'
+    ],
 
     singleton: true,
 
@@ -67,20 +70,82 @@ Ext.define('Taco.core.StateManager', {
             },
             newMetadata,
             controller;
+
         if (this.fireEvent('beforenavigate', newState, retryFn) !== false) {
             this.suspendAllHandlers = true;
             this.addState(newState, metadata, useReplace);
             this.suspendAllHandlers = false;
+
             if (this.fireEvent('navigate', newState) !== false) {
                 newMetadata = newState.getMetaData(true);
+
+                // dont do a navigate, if the new uri is registered with the React State Manager
+                if (this.isReactView(uriOrState)) {
+
+                    // since the react app relies on the primary menu, if it hasnt been initialized
+                    // initialize it once so it can be called upon via those views
+                    if (!Taco.app.PrimaryMenu) {
+                        Taco.app.PrimaryMenu = this.createPrimaryMenu();
+                    }
+
+                    newMetadata.options = newMetadata.options || {};
+
+                    newMetadata.options.DO_NOT_RENDER = true;
+                    
+                }
+
                 this.initController(newMetadata);
                 this.dispatchController(newMetadata);
-
-
             }
             this.fireEvent('statechange', newState);
         }
         return newState;
+    },
+
+    createPrimaryMenu: function() {
+        var breadcrumb = Ext.create('Ext.Component', {
+            flex: 1,
+            cls: Taco.baseCSSPrefix + 'breadcrumb',
+            tpl: [
+                '<ul>',
+                '<a href="{address}" class="taco-icon taco-icon-{icon}">{label}</a>',
+                '<tpl for="items">',
+                    '<tpl if="visible !== false">',
+                    '<li class="taco-breadcrumb-item{[ values.selected ?"-selected": ""]}"> <a class="{[values.items.length ? "taco-breadcrumb-menubutton" : ""]}" href="{address}" data-nav-id="{id}"><span>{label}</span></a></li>',
+                    '</tpl>',
+                '</tpl></ul>'
+            ]
+        });
+
+        return Ext.create('Taco.view.navigation.PrimaryMenuContainer', {
+            trigger: this,
+            breadcrumb: breadcrumb
+        });
+    },
+
+    isReactView: function(uriOrState) {
+
+        var VIEWS = [
+            'redirects',
+            'filemanager',
+            'ipblocking'
+        ];
+
+        if (this.REACT_VIEWS
+            && Array.isArray(this.REACT_VIEWS)
+            && this.REACT_VIEWS.indexOf(uriOrState.toLowerCase()) !== -1) {
+            return true;
+        }
+
+        for (var i =0; i < VIEWS.length; i++) {
+            var route = VIEWS[i];
+
+            if (uriOrState.toLowerCase().indexOf(route) !== -1) {
+                return true;
+            }
+        };
+
+        return false;
     },
 
     //allows for late loading of controller... speeds up dev mode
@@ -298,7 +363,6 @@ Ext.define('Taco.core.StateManager', {
                 }
             }
             if (controller[params.action]) {
-
                 return controller[params.action].apply(controller, Ext.Array.union(params.args, [params]));
             } else {
                 return Taco.app.getController("Errors").Http404();

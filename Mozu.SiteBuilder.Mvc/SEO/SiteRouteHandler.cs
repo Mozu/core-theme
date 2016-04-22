@@ -172,7 +172,7 @@ namespace Mozu.SiteBuilder.Mvc.SEO
 
         public async Task<HttpResponseMessage> RedirectWithContext(HttpRequestMessage request, FancyRoute internalRoute, Func<IDictionary<string, object>> viewDataAdditionFunc)
         {
-            if (_siteBuilderApiContext.Value.IsEditMode)
+            if (_siteBuilderApiContext.Value.IsEditMode || _siteBuilderApiContext.Value.IsAdminMode)
             {
                 return null;
             }

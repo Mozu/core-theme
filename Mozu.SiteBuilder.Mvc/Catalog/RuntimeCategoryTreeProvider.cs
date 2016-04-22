@@ -4,6 +4,7 @@ using System.Linq;
 using System.Runtime.Caching;
 using System.Threading.Tasks;
 using AutoMapper;
+using Mozu.Core;
 using Mozu.Core.Api.Client;
 using Mozu.Core.Api.Contracts.Client;
 using Mozu.ProductRuntime.Contracts;
@@ -11,6 +12,7 @@ using Mozu.ProductRuntime.Contracts.Clients;
 using Mozu.SiteBuilder.Mvc.Extensions;
 using Mozu.SiteBuilder.UX.Models.StoreFront.Catalog;
 using Mozu.Core.Logging;
+using Mozu.SiteBuilder.Mvc.Caching;
 using Category = Mozu.SiteBuilder.UX.Models.StoreFront.Catalog.Category;
 
 namespace Mozu.SiteBuilder.Mvc.Catalog
@@ -23,11 +25,19 @@ namespace Mozu.SiteBuilder.Mvc.Catalog
         private IProductCategoryRuntimeWebApiClient _productCategoryRuntimeWebApiClient;
         private Task<CategoryTree> _categoryTreeTask;
         private ILogger _logger;
+        private readonly IStorefrontCache _cache;
+        private string _priceListCode;
+        private DataViewModeType _dataViewMode;
 
-        public RuntimeCategoryTreeProvider(IProductCategoryRuntimeWebApiClient productCategoryRuntimeWebApiClient, ILogger logger)
+
+        public RuntimeCategoryTreeProvider(IProductCategoryRuntimeWebApiClient productCategoryRuntimeWebApiClient, ILogger logger, IApiContext apiContext, IStorefrontCache cache )
         {
             _productCategoryRuntimeWebApiClient = productCategoryRuntimeWebApiClient.CloneWithoutUserClaims();
             _logger = logger;
+            _cache = cache;
+            _priceListCode = apiContext.PriceListCode;
+            _dataViewMode = apiContext.DataViewMode;
+            
         }
 
         public bool HasCompleted
@@ -55,7 +65,7 @@ namespace Mozu.SiteBuilder.Mvc.Catalog
                     CategoryTree catTree = null;
                     if (!string.IsNullOrEmpty(etag))
                     {
-                        cachekey = etag + this.GetType().FullName;
+                        cachekey = etag + this.GetType().FullName + _priceListCode + _dataViewMode;
                         catTree = (CategoryTree)MemoryCache.Default[cachekey];
                         if (catTree != null)
                         {

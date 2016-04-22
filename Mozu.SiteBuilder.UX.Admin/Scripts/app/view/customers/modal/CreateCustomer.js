@@ -85,8 +85,13 @@ Ext.define('Taco.view.customers.modal.CreateCustomer', {
                         }
 
                         this.order.set('customerId', this.record.getId());
-                        this.order.set(Ext.decode(response.responseText).items[0]);
-
+                        var retOrder = Ext.decode(response.responseText).items;
+                        if (Array.isArray(retOrder)) {
+                            this.order.set(retOrder[0]);
+                        } else {
+                            this.order.set(retOrder);
+                        }
+                        
                         this.order.commit();
 
                         this.order.loadCustomer({

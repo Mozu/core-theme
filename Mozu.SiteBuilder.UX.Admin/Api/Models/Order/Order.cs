@@ -306,5 +306,11 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.Models.Order
         public Customer Customer { get; set; }
 
         public List<OrderReturnableItem> ReturnableItems { get; set; }
+        
+        /// <summary>
+        /// Pricelist code for the order
+        /// 
+        /// </summary>
+        public string PriceListCode { get; set; }
     }
 }

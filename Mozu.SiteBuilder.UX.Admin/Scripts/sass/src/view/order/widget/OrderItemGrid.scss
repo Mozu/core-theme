@@ -138,6 +138,24 @@
         white-space: normal;    
     }
 
+    .product-volume-price-list {
+        @include icons-sprite(icon-volume-15x15);
+        span {
+            margin-left: 20px;
+            color:$gray-text-dark;
+            font-style: italic;
+        }
+    }
+
+    .product-no-price-list {
+        @include icons-sprite(icon-no-15x15);
+        span {
+            margin-left: 20px;
+            color:$gray-text-dark;
+            font-style: italic;
+        }
+    }
+
     // descriptive options for the product in the order detail product column
     // forces the content to wrap in the cell
     .product-options{

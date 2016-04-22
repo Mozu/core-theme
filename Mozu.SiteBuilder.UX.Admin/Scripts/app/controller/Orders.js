@@ -9,7 +9,8 @@ Ext.define('Taco.controller.Orders', {
         'Taco.view.order.Index',
         'Taco.view.order.Split',
         'Taco.view.order.Grid',
-        'Taco.view.order.Edit'
+        'Taco.view.order.Edit',
+        'Taco.view.order.Storefront'
     ],
     editorView: 'Taco.view.order.Edit',
     indexView: 'Taco.view.order.Split',
@@ -150,7 +151,12 @@ Ext.define('Taco.controller.Orders', {
         });
 
     },
-
+    storefront: function(customerId, orderId){
+        this.superclass.createContentView('Taco.view.order.Storefront', {
+            customerId: customerId,
+            orderId:orderId
+        });
+    },
 
     create: function () {
         var ctx = Taco.app.context.getCurrentContext(),

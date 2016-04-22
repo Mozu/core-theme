@@ -7,7 +7,7 @@
  */
 Ext.define('Taco.view.order.widget.OrderTotalPanelEditable', {
     extend: 'Taco.view.order.widget.OrderTotalPanel',
-    requires: ['Taco.view.order.widget.DiscountPickerField', 'Taco.store.Discounts', 'Taco.core.ux.form.CurrencyField','Ext.button.Button'],
+    requires: ['Taco.view.order.widget.DiscountPickerField', 'Taco.view.order.widget.PriceListPickerField', 'Taco.store.Discounts', 'Taco.core.ux.form.CurrencyField', 'Ext.button.Button'],
     layout: {
         type: 'hbox',
         align: 'stretch',
@@ -25,7 +25,10 @@ Ext.define('Taco.view.order.widget.OrderTotalPanelEditable', {
         /**
          * Number of discounts to display in each page of the discountPicker Combobox;
          */
-        discountsPerPage : 50
+        discountsPerPage: 50,
+
+        priceListStore: null,
+        priceListName: ''
     },
 
     isEditable: true,
@@ -72,7 +75,7 @@ Ext.define('Taco.view.order.widget.OrderTotalPanelEditable', {
         }
     },
 
-    initTableComponents : function (){
+    initTableComponents : function () {
         var me = this;
 
         var shippingAdjustmentLabel = this.masterTable.el.down("[itemId = shippingAdjustmentLabel]");
@@ -272,11 +275,11 @@ Ext.define('Taco.view.order.widget.OrderTotalPanelEditable', {
         if (name == "orderAdjustmentIsNegative") {
             // update the button text
             this.orderAdjustmentLabelButton.setText(me.getOrderAdjustmentText(newValue));
-            fieldValue = parseFloat(this.orderAdjustmentFieldInput.getValue())
+            fieldValue = parseFloat(this.orderAdjustmentFieldInput.getValue());
         } else {
             // update the button text
             this.shippingAdjustmentLabelButton.setText(me.getShippingAdjustmentText(newValue));
-            fieldValue = parseFloat(this.shippingAdjustmentFieldInput.getValue())
+            fieldValue = parseFloat(this.shippingAdjustmentFieldInput.getValue());
         }
         
         // Check to see if this change relates to a field value that needs to be persisted. If the value == 0 then this change has no impact.
@@ -319,10 +322,10 @@ Ext.define('Taco.view.order.widget.OrderTotalPanelEditable', {
                 }
 
                 // need to reset the fields so that they don't show as dirty after the save
-                this.shippingAdjustmentFieldInput.originalValue = Ext.util.Format.number(this.shippingAdjustmentFieldInput.getValue(), "0.00")
+                this.shippingAdjustmentFieldInput.originalValue = Ext.util.Format.number(this.shippingAdjustmentFieldInput.getValue(), "0.00");
                 
                 // need to reset the fields so that they don't show as dirty after the save
-                this.orderAdjustmentFieldInput.originalValue = Ext.util.Format.number(this.orderAdjustmentFieldInput.getValue(), "0.00")
+                this.orderAdjustmentFieldInput.originalValue = Ext.util.Format.number(this.orderAdjustmentFieldInput.getValue(), "0.00");
 
                 this.fireEvent('savesuccess', json);
             },
@@ -388,10 +391,13 @@ Ext.define('Taco.view.order.widget.OrderTotalPanelEditable', {
 
         var customerNotesText = me.record.get("customerNote");
         // todo: refactor editableDisplayField to allow for placeholder text
-        var placeholder = ""
+        var placeholder = "";
         if (!(this.record.get("orderStatus") == "Pending") && me.record.get("customerNote") == "") {
-            var placeholder = "None provided";
+            placeholder = "None provided";
         }
+
+        me.initPriceListCombo();
+        me.leftPanel.add(me.priceListCombo);
 
         me.customerNoteField = Ext.widget({
             //xtype: (this.record.get("orderStatus") == "Pending") ? "textarea" : "editabledisplayfield",
@@ -409,6 +415,91 @@ Ext.define('Taco.view.order.widget.OrderTotalPanelEditable', {
         });
 
         me.leftPanel.add(me.customerNoteField);
+    },
+
+    initPriceListCombo: function () {
+        var me = this;
+
+        function applyPriceList(combo, priceListRecord)
+        {
+            if (priceListRecord.get('filteredInStorefront')) {
+                Ext.create('Taco.core.ux.window.Modal', {
+                    autoShow: true,
+                    width: 400,
+                    height: 250,
+                    primaryText: 'Ok',
+                    secondaryText: 'Cancel',
+                    doSave: function() {
+                        this.saveSuccess(null);
+                        setNewPriceList(me.record.getId(), priceListRecord.get('code'));
+                    },
+                    items: [
+                        {
+                            xtype: 'container',
+                            flex: 1,
+                            padding: '2 2',
+                            items: [
+                                {
+                                    width: '100%', height: '100%', flex: 1,
+                                    html: '<div>Applying this exclusive price list may remove certain products from the order.</div>'
+                                }
+                            ]
+                        }
+                    ]
+                });
+            } else {
+                setNewPriceList(me.record.getId(), priceListRecord.get('code'));
+            }
+        }
+
+        function setNewPriceList(orderId, priceListCode) {
+            me.fireEvent('save');
+
+            me.record.setPriceList({
+                jsonData: {
+                    orderId: orderId,
+                    priceListCode: priceListCode
+                },
+                success: function(response) {
+                    var json = Ext.decode(response.responseText, true);
+                    if (!json || !json.success) {
+                        Taco.app.fireEvent('setmessage', "Error setting price list.", 'error');
+                        return;
+                    }
+
+                    me.fireEvent('saveSuccess', json);
+                },
+                failure: function(response) {
+                    var json = Ext.decode(response.responseText, true),
+                        msg = (json && json.message) ? json.message : "Error setting price list.";
+                    Taco.app.fireEvent('setmessage', msg, 'error');
+                    me.fireEvent('saveFailure');
+                }
+            });
+        }
+
+        this.priceListCombo = Ext.create('Taco.view.order.widget.PriceListPickerField', {
+            flex: 1,
+            fieldLabel: "Price List",
+            labelStyle: "padding-top:16px;",
+
+            emptyText: "None",
+            valueNotFoundText: "None",
+            editable: true,
+            forceSelection: false,
+
+            store: me.priceListStore,
+            orderSiteId: me.record.get('siteId'),
+            value: me.record.get('priceListCode'),
+            listeners: {
+                select: {
+                    fn: function (combo, records, opts) {
+                        applyPriceList(combo, records[0]);
+                    },
+                    scope: me
+                }
+            }
+        });
     },
 
     onCustomerNoteChange: function (field, e, eOpts) {

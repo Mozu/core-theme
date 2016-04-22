@@ -51,13 +51,13 @@ namespace Mozu.SiteBuilder.Mvc.Filters
 
         object NDjango.Interfaces.IFilterWithContext.PerformWithParamAndContext(object value, IEnumerable<object> parameters, NDjango.Interfaces.IContext context)
         {
-
+           
             var ctx = context.SiteContext()  ;
             var theme = ctx.Theme.Id;
             var themeSettingsTs = context.Resolve<IThemeSettingsRepository>().GetTimeStamp(theme).Result;
             var themeTs = ctx.Theme.TimeStamp;
-            var cdn = context.Resolve<SiteContext>().CdnPrefix;
-            var apiContext = context.Resolve<IApiContext>();
+            var cdn = ctx.CdnPrefix;
+            var apiContext = context.Resolve<ISiteBuilderApiContext>();
 
             var pc = context.PageContext();
             return string.Format("<link rel=\"stylesheet\" href=\"{4}{0}?SBTHEME={1}&dt={2}-{3}{5}{6}\"  type=\"text/css\">",
@@ -66,12 +66,10 @@ namespace Mozu.SiteBuilder.Mvc.Filters
                 themeSettingsTs.Ticks.ToString("X2"),
                 themeTs.Ticks.ToString("X2"),
                 string.IsNullOrEmpty(cdn) ? null : (cdn + "/"), 
-                (pc.IsDebugMode ? "&debug=true" : ""),
+                (pc.IsDebugMode || apiContext.DebugFlags.HasFlag( DebugModeFlagValues.Unminified) ? "&debug=true" : ""),
                 (apiContext.DataViewMode == DataViewModeType.Pending ? "&dv=p":"") );
                 
-             
-
-        }
+         }
 
         
 

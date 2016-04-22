@@ -440,7 +440,7 @@ Ext.define('Taco.view.customSchema.Grid', {
         var me = this;
 
         if (split) {
-            split.onItemEdit(eventData.grid, eventData.record, eventData.grid.listMetaData);
+            split.onItemEdit(eventData.grid, record, eventData.grid.listMetaData);
         }
 
         else if (eventData.grid.siteBuilderList) {
@@ -466,7 +466,7 @@ Ext.define('Taco.view.customSchema.Grid', {
         }
 
         else {
-            me.navigateToEdit(eventData.record);
+            me.navigateToEdit(record);
         }
     }
 });

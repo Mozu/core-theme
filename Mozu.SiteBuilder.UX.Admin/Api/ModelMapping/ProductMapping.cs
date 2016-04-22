@@ -118,6 +118,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.ModelMapping
                 .ForMember(x => x.DiscountsRestricted, op => op.ResolveUsing(dc => (dc.PricingBehavior ?? NULLPRICEBEHAVE).DiscountsRestricted))
                 .ForMember(x => x.DiscountsRestrictedStartDate, op => op.ResolveUsing(dc => (dc.PricingBehavior ?? NULLPRICEBEHAVE).DiscountsRestrictedStartDate))
                 .ForMember(x => x.DiscountsRestrictedEndDate, op => op.ResolveUsing(dc => (dc.PricingBehavior ?? NULLPRICEBEHAVE).DiscountsRestrictedEndDate))
+                .ForMember(x => x.VariationPricingMethod, op => op.ResolveUsing(dc => (dc.PricingBehavior ?? NULLPRICEBEHAVE).VariationPricingMethod))
                 .ForMember(x => x.MfgPartNumber, op => op.ResolveUsing(dc => (dc.SupplierInfo ?? NULLSUPPLIER).MfgPartNumber))
                 .ForMember(x => x.DistPartNumber, op => op.ResolveUsing(dc => (dc.SupplierInfo ?? NULLSUPPLIER).DistPartNumber))
                 .ForMember(x => x.MfgPartNumber, op => op.ResolveUsing(dc => (dc.SupplierInfo ?? NULLSUPPLIER).MfgPartNumber))
@@ -248,6 +249,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.ModelMapping
                     DiscountsRestricted = x.DiscountsRestricted,
                     DiscountsRestrictedStartDate = x.DiscountsRestrictedStartDate,
                     DiscountsRestrictedEndDate = x.DiscountsRestrictedEndDate,
+                    VariationPricingMethod = x.VariationPricingMethod
                 }))
 
                 .AfterMap((x, y) =>
@@ -548,15 +550,12 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.ModelMapping
             //       CurrencyCode = DEFAULT_CURRENCY_CODE,
                     DeltaPrice = x.DeltaPrice
                 }))
-                .ForMember(dc => dc.LocalizedDeltaPrice, op => op.Ignore()) // todo: xverify - Greg Murray on 2014-08-28 
+                .ForMember(dc => dc.LocalizedDeltaPrice, op => op.Ignore()) 
                 ;
 
             Mapper.CreateMap<DC.ProductExtraValue, ProductExtraValue>()
                   .ForMember(x => x.DeltaPrice, op => op.ResolveUsing(x => x.DeltaPrice != null
                       ? x.DeltaPrice.DeltaPrice : 0));
-
-
-
 
             Mapper.CreateMap<DC.ProductVariation, ProductVariation>()
                 //.ForMember(x => x.Options, op => op.ResolveUsing(x => x.Options))
@@ -571,12 +570,20 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.ModelMapping
                 .ForMember(x => x.DeltaCost, op => op.ResolveUsing(dc => (dc.SupplierInfo != null && dc.SupplierInfo.Cost != null)
                     ? dc.SupplierInfo.Cost.Cost
                     : NULLCOST.Cost))
+                .ForMember(x => x.FixedCurrencyCode, op => op.ResolveUsing(dc => dc.FixedPrice != null ? dc.FixedPrice.CurrencyCode : null))
+                .ForMember(x => x.FixedListPrice, op => op.ResolveUsing(dc => dc.FixedPrice != null ? dc.FixedPrice.ListPrice : null))
+                .ForMember(x => x.FixedSalePrice, op => op.ResolveUsing(dc => dc.FixedPrice != null ? dc.FixedPrice.SalePrice : null))
+                .ForMember(x => x.FixedMSRP, op => op.ResolveUsing(dc => dc.FixedPrice != null ? dc.FixedPrice.MSRP : null))
+                .ForMember(x => x.FixedCreditValue, op => op.ResolveUsing(dc => dc.FixedPrice != null ? dc.FixedPrice.CreditValue : null))
+            
                 .ForMember(x => x.StockOnHand, op => op.Ignore())
                 .ForMember(x => x.StockOnOrder, op => op.Ignore())
+                .ForMember(x => x.VariationPricingMethod, op => op.Ignore())
                 ;
 
             Mapper.CreateMap<ProductVariation, DC.ProductVariation>()
-                .ForMember(x => x.DeltaPrice, op => op.ResolveUsing(x => x.DeltaPriceValue.HasValue
+                .ForMember(x => x.DeltaPrice, op => op.ResolveUsing(x => !string.IsNullOrEmpty(x.VariationPricingMethod) 
+                        && x.VariationPricingMethod.ToLowerInvariant().Equals("delta")
                     ? new DC.ProductVariationDeltaPrice()
                     {
                  //       CurrencyCode = DEFAULT_CURRENCY_CODE,
@@ -594,7 +601,20 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.ModelMapping
                         Cost = x.DeltaCost
                     }
                 }))
-                .ForMember(dc => dc.LocalizedDeltaPrice, op => op.Ignore()) // todo: xverify - Greg Murray on 2014-08-26
+                .ForMember(dc => dc.FixedPrice, op => op.ResolveUsing(x => !string.IsNullOrEmpty(x.VariationPricingMethod)
+                        && x.VariationPricingMethod.ToLowerInvariant().Equals("fixed")
+                    ? new DC.ProductVariationFixedPrice
+                    {
+                        CurrencyCode = x.FixedCurrencyCode,
+                        ListPrice = x.FixedListPrice,
+                        SalePrice = x.FixedSalePrice,
+                        MSRP = x.FixedMSRP,
+                        CreditValue = x.FixedCreditValue
+                    }
+                    : null)
+                    )
+                .ForMember(dc => dc.LocalizedFixedPrice, op => op.Ignore())
+                .ForMember(dc => dc.LocalizedDeltaPrice, op => op.Ignore())
                 ;
 
             Mapper.CreateMap<ProductAdmin.Contracts.ProductCodeRename, ProductCodeRename>();

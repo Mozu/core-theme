@@ -9,6 +9,7 @@ using NDjango;
 using NDjango.Interfaces;
 using NDjango.FiltersCS.Compatibility;
 using Mozu.Core.Api.Client;
+using Mozu.SiteBuilder.Mvc;
 
 namespace Mozu.SiteBuilder.UX.Hypr.Tags
 {
@@ -115,7 +116,7 @@ namespace Mozu.SiteBuilder.UX.Hypr.Tags
             var res = await service.GetViewDocuments(documentListName: list, viewName: view, filter: query, sortBy: sortBy, pageSize: pageSize, startIndex: startIndex, includeInactive: sbContext.IsEditMode).ConfigureAwait(false);
        
             object model = null;
-            if (res.HasException && sbContext.IsDebugMode)
+            if (res.HasException && (sbContext.IsDebugMode || sbContext.DebugFlags.HasFlag(DebugModeFlagValues.ShowErrors)))
             {
                 throw res.ReadException();
             }

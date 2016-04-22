@@ -4,7 +4,7 @@
  */
 
 Ext.define('Taco.view.order.modal.EditOrderDetail', {
-    extend: 'Taco.core.ux.window.Drawer',    
+    extend: 'Taco.core.ux.window.Drawer',
     //extend: 'Ext.window.Window',
 
     requires: [
@@ -25,35 +25,39 @@ Ext.define('Taco.view.order.modal.EditOrderDetail', {
 
     actionColumnWidth: 50,
 
-    actions: [{
-        xtype: 'button',
-        itemId: 'discardAction',
-        ui: 'action',
-        scale: 'medium',
-        text: 'Discard Changes',
-        handler: function () {
-            this.removeDraftOrder();
+    actions: [
+        {
+            xtype: 'button',
+            itemId: 'discardAction',
+            ui: 'action',
+            scale: 'medium',
+            text: 'Discard Changes',
+            handler: function() {
+                this.removeDraftOrder();
+            }
+        }, {
+            xtype: 'tbfill'
+        }, {
+            xtype: 'button',
+            text: "Save Draft",
+            itemId: 'secondaryAction',
+            handler: function() {
+                // we just close the dialog since this ui is chatty save;
+                // need to check to see if we have any unpersisted changes;
+
+                this.close();
+            }
+        }, {
+            xtype: 'button',
+            itemId: 'primaryAction'
+            //this will call save() which will eventualy call doSave();
         }
-    }, {
-        xtype: 'tbfill'
-    }, {
-        xtype: 'button',
-        text:"Save Draft",
-        itemId: 'secondaryAction',
-        handler: function () {
-            // we just close the dialog since this ui is chatty save;
-            // need to check to see if we have any unpersisted changes;
-            
-            this.close();
-        }
-    }, {
-        xtype: 'button',
-        itemId: 'primaryAction'
-        //this will call save() which will eventualy call doSave();
-    }],
+    ],
 
     config: {
         record: null,
+        priceListStore: null,
+        priceListName: '',
         //dockTotalPanel: "inline", // possible values bottomm, right, inline
         rowTotalColumnWidth: 100,
         hasDraft: true
@@ -69,6 +73,8 @@ Ext.define('Taco.view.order.modal.EditOrderDetail', {
         preserveRatio: false,
         widthIncrement: 1
     },
+
+    ajaxBeforeListener: null,
     
     initComponent: function (eOpts) {
         var me = this;
@@ -81,12 +87,39 @@ Ext.define('Taco.view.order.modal.EditOrderDetail', {
         // Todo: Create override/mixin/plugin for Ext.Window to add support for relative height and width with min max values.
 
         this.titleTemplate = new Ext.XTemplate(
-            'Order No. {orderNumber}'
+            'Order No. {orderNumber}<tpl if="priceListAvail"> | {priceListName} Pricing</tpl>'
         );
 
         this.title = this.titleTemplate.apply({
-            orderNumber: me.record ? me.record.get('orderNumber') : '<New>'
+            orderNumber: me.record ? me.record.get('orderNumber') : '<New>',
         });
+
+        me.ajaxBeforeListener = Ext.Ajax.on('beforerequest', function (conn, options) {
+            // set order price list on the ajax call!
+            // This should be called before the TaContext...find settings.
+            if (me.record && me.record.get('priceListCode') !== undefined) {
+                // The "None" pricelist will be empty string.
+                var hasPriceListOverride = options.jsonData && options.jsonData.priceListCode !== undefined;
+
+                // The Edit Order ajax listener has to take priority over the Form.js ajax listener.
+                //  This is because the version of the priceListCode can be more up to date in this UI.
+                //  Therefore, while this listener is acitve, we need to pull the priceListCode from the jsonData
+                //   or the EditOrderDetail's record. It can come from the jsonData when
+                //   the priceList is being updated on the order.
+                var priceListHeader = {};
+                priceListHeader['x-vol-pricelist'] = hasPriceListOverride
+                    ? options.jsonData.priceListCode
+                    : me.record.get('priceListCode');
+
+                if (options && options.headers) {
+                    Ext.apply(options.headers, priceListHeader);
+                }
+
+                //if (options && options.operation && options.operation.headers) {
+                //    Ext.apply(options.headers, options.operation.headers);
+                //}
+            }
+        }, me, { destroyable: true });
 
         
         //onBeforeClose
@@ -184,9 +217,16 @@ Ext.define('Taco.view.order.modal.EditOrderDetail', {
     // when the draft record has loaded create and add the total and grid and hide the loading mask;
     onLoadRecord : function() {
         var me = this;
+        var priceListCode = me.record && me.record.get('priceListCode');
+        var priceListAvail = priceListCode.length > 0;
+        var priceListRecord = priceListAvail && me.priceListStore.findRecord('code', priceListCode, 0, false, false, true);
+        var priceListName = priceListRecord && priceListRecord.get('name') || priceListCode;
+
         // had to move this to the top so it doesn't cause the body to scroll after the focus El is scrolled into view;
         me.setTitle(me.titleTemplate.apply({
-            orderNumber: me.record.get('orderNumber') || '<New>'
+            orderNumber: me.record.get('orderNumber') || '<New>',
+            priceListAvail: priceListAvail,
+            priceListName: priceListName
         }));
 
         // initialize the ui when the record loads the first time.
@@ -206,6 +246,9 @@ Ext.define('Taco.view.order.modal.EditOrderDetail', {
         
         // update the record on the totalRow panel
         me.totalRow.setRecord(me.record);
+
+        // update the record on the order grid, e.g. for new pricelist info, etc.
+        me.detailGrid.record = me.record;
 
         // need to determine the selection so it can be restored after updateing the records in the store;
         var currentPosition = me.detailGrid.getSelectionModel().getCurrentPosition();
@@ -227,9 +270,11 @@ Ext.define('Taco.view.order.modal.EditOrderDetail', {
     initUi: function () {
         var me = this;
 
-        me.totalRow = Ext.create('Taco.view.order.widget.OrderTotalPanelEditable', {                        
+        me.totalRow = Ext.create('Taco.view.order.widget.OrderTotalPanelEditable', {
             data: me.record.getData(),
             record: me.record,
+            priceListStore: me.priceListStore,
+            priceListName: me.priceListName,
             totalColumnWidth: me.getRowTotalColumnWidth(),
             actionColumnWidth: me.actionColumnWidth,
             listeners: {
@@ -392,7 +437,7 @@ Ext.define('Taco.view.order.modal.EditOrderDetail', {
         // todo. make this a grid override so that this is fixed everywhere
         var gridSelModel = me.detailGrid.getSelectionModel();
         me.mon(gridSelModel, {
-            focuschange: function (cellmodel, oldFocused, newFocused) {
+            focuschange: function(cellmodel, oldFocused, newFocused) {
                 if (newFocused) {
                     var row = me.detailGrid.view.getNode(newFocused, true);
                     // check to see if the row is partially hidden from view within the scroll container;
@@ -401,25 +446,25 @@ Ext.define('Taco.view.order.modal.EditOrderDetail', {
                         return;
                     }
                     var isHidden = Ext.fly(row).isHiddenByScroll(me.body);
-                    if (isHidden) {                        
+                    if (isHidden) {
                         row.scrollIntoView(me.body);
                     }
                 }
             },
-            scope:me
-        })
+            scope: me
+        });
 
 
         // need to make a wrapping container to get the overflow handling working properly. when not nested, the grid gets its right edge clipped off; using a wrapping container provideds better overflow handling;
         me.add(
-            Ext.create("Ext.container.Container",{                
-                items :  [
+            Ext.create("Ext.container.Container", {
+                items: [
                     me.detailGrid,
                     me.totalRow
                 ]
             })
-        )
-        
+        );
+
     },
 
     onBeforeSave: function () {
@@ -542,7 +587,10 @@ Ext.define('Taco.view.order.modal.EditOrderDetail', {
     /**
     * Do any class level cleanup. Destroy and null any scoped refs.     
     */
-    onDestroy : function (destroy) {
+    onDestroy: function (destroy) {
+        if (this.ajaxBeforeListener) {
+            this.ajaxBeforeListener.destroy();
+        }
         this.callParent(arguments);
     }
 });

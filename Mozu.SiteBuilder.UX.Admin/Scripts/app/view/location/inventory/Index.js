@@ -169,7 +169,7 @@ Ext.define('Taco.view.location.inventory.Index', {
     },
 
     onIventoryChange: function (cmp, code) {
-        // debugger;
+
         // var gridStore = this.store,
         //     code = record.get('code');
 

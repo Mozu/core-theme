@@ -28,6 +28,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.ModelMapping
                         new KeyValuePair<string, string>("MC", "MasterCard"),
                         new KeyValuePair<string, string>("DISCOVER", "Discover"),
                         new KeyValuePair<string, string>("JCB", "JCB"),
+                        new KeyValuePair<string, string>(CARD_TYPE.OTHER, CARD_TYPE.OTHER)
                     };
 
 

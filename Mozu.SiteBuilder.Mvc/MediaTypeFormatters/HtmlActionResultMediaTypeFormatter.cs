@@ -93,6 +93,13 @@ namespace Mozu.SiteBuilder.Mvc.MediaTypeFormatters
             return new HttpResponseException(errorResp);
         }
 
+        void InitAdditioanViewContext (HyprViewContext context)
+        {
+            var apiContext = RequestMessage.Resolve<ISiteBuilderApiContext>();
+
+            context.ViewData["priceListCode"] = apiContext.PriceListCode;
+        }
+
         public override Task WriteToStreamAsync(Type type, object value, Stream writeStream, System.Net.Http.HttpContent content, System.Net.TransportContext transportContext)
         {
             var vrb = value as ViewResultBase;
@@ -111,6 +118,7 @@ namespace Mozu.SiteBuilder.Mvc.MediaTypeFormatters
 
                 var view = vrb.View ?? viewEngine.FindPageView(vrb.ViewName);
                 var hvc = new HyprViewContext(this.RequestMessage, vrb.ViewData, null);
+                InitAdditioanViewContext(hvc);
                 var httpContext = this.RequestMessage.HttpContext();
                 httpContext.Response.Buffer = true;
                 var sw = new StreamWriter(writeStream);

@@ -35,6 +35,7 @@ namespace Mozu.SiteBuilder.Mvc
             _httpRequestMessage = httpRequestMessage;
 
             IsEditMode = editModeGetter.IsEditMode();
+            
 
             Load();
             if ( !this.MasterCatalogId.HasValue )
@@ -42,11 +43,14 @@ namespace Mozu.SiteBuilder.Mvc
                this.MasterCatalogId = this.MasterCatalogId;
             }
             LoadUser();
-            ValidateUser();                  
+            ValidateUser();
+            LoadDefaultAnonShopperClaims();               
             SetDebugMode();
+            SetDebugModeFlags();
 
             DataViewMode = dvmGetter.GetDataViewMode(UserClaims);
             PreviewDate = GetNowValue();
+           
         }
 
         private void SetDebugMode()
@@ -73,6 +77,11 @@ namespace Mozu.SiteBuilder.Mvc
             }
             this.IsDebugMode = isDebugMode;
         }
+
+       
+        
+
+        
 
         private DateTime? GetNowValue()
         {
@@ -167,7 +176,7 @@ namespace Mozu.SiteBuilder.Mvc
                 //todo validate tenant and site 
                 this.UserClaims = claims;
             }
-            if (!string.IsNullOrEmpty(adminAccessToken) && LightweightUserClaims.TryParse(accessToken, out claims))
+            if (!string.IsNullOrEmpty(adminAccessToken) && LightweightUserClaims.TryParse(adminAccessToken, out claims))
             {
                 this.AdminUserClaim = claims;
             }
@@ -189,7 +198,6 @@ namespace Mozu.SiteBuilder.Mvc
 
             if (this.UserClaims == null)
             {
-                this.HasInvalidCredentials = true;
                 return false;
             }
             if (!this.UserClaims.Bag.TryGetValue("TenantId", out bagVal) || !int.TryParse(bagVal, out tmpInt) || tmpInt != this.TenantId)
@@ -205,8 +213,8 @@ namespace Mozu.SiteBuilder.Mvc
                     this.UserClaims = LightweightUserClaims.CreateForAdminUser(Guid.NewGuid().ToString("N"), string.Empty, string.Empty, new int[0], new UserScope() { Id = this.TenantId, Type = UserScopeType.Tenant }, DateTime.Today.AddYears(1));
                     this.UserClaims.IsAnonymous = true;
                 }
-                this.HasInvalidCredentials = true;
-                return false;
+              
+               
 
             }
             if (ScopeType == UserScopeType.Shopper && (!this.UserClaims.Bag.TryGetValue("SiteId", out bagVal) || !int.TryParse(bagVal, out tmpInt) || tmpInt != this.SiteId))
@@ -215,6 +223,23 @@ namespace Mozu.SiteBuilder.Mvc
                 return false;
             }
             return true;
+        }
+
+        private void LoadDefaultAnonShopperClaims()
+        {
+            if (this.ScopeType != UserScopeType.Shopper || this.UserClaims != null)
+            {
+                return;
+            }
+            var anonClaims = LightweightUserClaims.CreateForAnonymousShopper(this.TenantId, this.SiteId.GetValueOrDefault());
+            
+            SetUser(anonClaims);
+            _authenticationHelper.SaveStoreFrontAccessToken(anonClaims.ToAccessToken(), null);
+            if (this.UserClaims != null && this.UserClaims.BehaviorIds == null)
+            {
+                this.UserClaims.BehaviorIds = new int[0];
+            }
+
         }
 
         UserScopeType ScopeType
@@ -275,8 +300,20 @@ namespace Mozu.SiteBuilder.Mvc
                     CurrencyCode = site.DefaultCurrencyCode;
                 }
             }
+            LoadExtraInfoFromCookie(_cookieProvider);
         }
 
+        private void LoadExtraInfoFromCookie (ICookieProvider cookieProvider)
+        {
+            var cookie = cookieProvider.GetRequestCookie(Mvc.Constants.COOKIENAME);
+            if (cookie != null && cookie.HasKeys)
+            {
+                if (!string.IsNullOrEmpty(cookie["adminmode"]))
+                {
+                    this.IsAdminMode = bool.Parse(cookie["adminmode"]);
+                }
+            }
+        }
         private void LoadFromCookie(ICookieProvider cookieProvider)
         {
             var cookie = cookieProvider.GetRequestCookie(Mvc.Constants.COOKIENAME);
@@ -312,6 +349,7 @@ namespace Mozu.SiteBuilder.Mvc
                 {
                     this.CurrencyCode = cookie["currency"];
                 }
+                LoadExtraInfoFromCookie(cookieProvider);
             }
         }
 
@@ -352,8 +390,10 @@ namespace Mozu.SiteBuilder.Mvc
         }
 
         public bool IsEditMode { get; set; }
+        public bool IsAdminMode { get; set; }
+       
 
-        public bool HasInvalidCredentials { get; set; }
+       
 
         public LightweightUserClaims AdminUserClaim { get; set; }
 
@@ -361,16 +401,77 @@ namespace Mozu.SiteBuilder.Mvc
         {
             this.DataViewMode = dataViewMode;
         }
+     
+        public void SetPriceListCode(string plCode)
+        {
+            this.PriceListCode = plCode;
+        }
+
+       
+        private void SetDebugModeFlags()
+        {
+            this.DebugFlags = DebugModeFlagValues.Default;
+            var qsVal = _httpRequestMessage.GetQueryNameValuePairs()
+                    .Where(x => string.Equals(x.Key, Mvc.Constants.DEBUGFLAGSCOOKIENAME, StringComparison.OrdinalIgnoreCase)).Select(x => x.Value).FirstOrDefault();
+
+            if (qsVal != null)
+            {
+                DebugFlags = qsVal.Split(new char[','], StringSplitOptions.RemoveEmptyEntries)
+                    .Select(x => (DebugModeFlagValues)Enum.Parse(typeof(DebugModeFlagValues), x, true))
+                    .Aggregate(DebugFlags, (a, b) => a | b);
+
+                DebugFlags = DebugFlags.HasFlag(DebugModeFlagValues.None) ? DebugModeFlagValues.None : DebugFlags;
+
+
+                var cookie = new HttpCookie(Mvc.Constants.DEBUGFLAGSCOOKIENAME, ((int)DebugFlags).ToString());
+                if (DebugFlags == DebugModeFlagValues.None)
+                {
+                    cookie.Expires = DateTime.MinValue;
+                }
+
+                _cookieProvider.SaveResponseCookie(Mvc.Constants.DEBUGFLAGSCOOKIENAME, cookie);
+
+            }
+            else
+            {
+                var cookie = _cookieProvider.GetRequestCookie(Constants.DEBUGFLAGSCOOKIENAME);
+                int cookieVal;
+                if (int.TryParse(cookie?.Value, out cookieVal))
+                {
+                    DebugFlags = (DebugModeFlagValues)cookieVal;
+                }
+
+            }
+
+        }
+
+        public DebugModeFlagValues DebugFlags
+        {
+            get; set;
+        }
+
     }
 
+    [Flags]
+    public enum DebugModeFlagValues : int
+    {
+        Default = 0,
+        None = 2,
+       
+        DisableCdn = 4,
+        Unminified = 8,
+        ShowErrors = 16
+    }
     public static class Constants
     {
         public const string DefaultTheme = "MozuCore";
         public const string COOKIENAME = "SBCONTEXT";
         public const string DEBUGCOOKIENAME = "SBD";
 		public const string NOWCOOKIENAME = "MZ_NOW";
+        public const string PRICELISTCOOKIENAME = "MZ_PRICELIST";
         public const string HEADER_ALTERNATIVE_VIEW = "x-vol-alternative-view";
         public const string HEADER_CANONICAL_URL = "x-vol-canonical-url";
 
+        public static string DEBUGFLAGSCOOKIENAME = "mz_DebugFlags";
     }
 }

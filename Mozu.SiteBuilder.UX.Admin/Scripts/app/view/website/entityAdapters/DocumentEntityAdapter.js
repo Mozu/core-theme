@@ -16,18 +16,13 @@ Ext.define('Taco.view.website.entityAdapters.DocumentEntityAdapter', {
         this.callParent(arguments);
         
         tasks.on('complete', function () {
-
             if(this.pageContext && this.pageContext.cmsContext && this.pageContext.cmsContext.page.path != this.get().data.name) {
-                Taco.core.StateManager.attemptNavigate('/website/page/' + this.get().data.name);
+                Taco.core.StateManager.attemptNavigate('/website/page/cms/' + this.get().data.listFQN + '/' + this.get().data.name);
             } 
         }, this, {
             delay: 200
         });
         return tasks;
     }
-
-   
-  
-   
   
 });

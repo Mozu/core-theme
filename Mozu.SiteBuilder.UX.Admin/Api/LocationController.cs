@@ -5,6 +5,7 @@ using System.Net.Http;
 using System.Threading.Tasks;
 using System.Web.Http;
 using Mozu.Core.Api.Routing;
+using Mozu.Core.EnsureThat;
 using Mozu.Location.Contracts.Clients;
 using Mozu.SiteBuilder.Mvc.MediaTypeFormatters;
 using Mozu.SiteBuilder.UX.Admin.Api.Models;
@@ -38,7 +39,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
             }
             else
             {
-                const string responseFields = "items(code,name,isDisabled,locationTypes(name),address)";
+                const string responseFields = "items(code,name,isDisabled,locationTypes(name, code),address)";
                 string filter = extFilter.ToFilterString();
                 string sort = (pagingParams != null && pagingParams.sort != null) ? pagingParams.sort.ToSortString() : null;
                 locations = (await _locationWebApiClient.GetLocations(startIndex: pagingParams.startIndex,
@@ -67,7 +68,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
         [HttpPostRoute(UriTemplate = "edit")]
         public async Task<HttpResponseMessage> Edit(DC.Location loc)
         {
-            
+            Ensure.That(loc.Code, "location code").IsNotNullOrEmpty();
             var resp = (await _locationWebApiClient.UpdateLocation(loc.Code, loc)).ReadAsSync();
             EnsureLocationContract(resp);
             return this.Request.CreateResponse(HttpStatusCode.OK, Single2(resp));

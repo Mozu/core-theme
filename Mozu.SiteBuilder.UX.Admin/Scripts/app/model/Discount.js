@@ -51,8 +51,11 @@ Ext.define('Taco.model.Discount', {
             type: 'auto',
             defaultValue: []
         },
-
-
+        {
+            name: 'includedPriceLists',
+            type: 'auto',
+            defaultValue: []
+        },
         {
             name: 'conditionalCategories',
             type: 'auto',
@@ -304,6 +307,22 @@ Ext.define('Taco.model.Discount', {
         }
         return me.couponSetStore;
 
+    },
+
+    getPriceListStore: function() {
+        var me = this;
+        if (!me.priceListStore) {
+            me.priceListStore = Taco.core.data.StoreManager.getOrCreate(
+                {
+                    type: 'Taco.store.PriceLists',
+                    createOnly: true,
+                    id: 'priceLists-' + this.id,
+                    autoLoad: true,
+                    clearFilters: false,
+                    remoteFilter: false
+                })
+        }
+        return me.priceListStore
     },
 
     getDeletePromptMessage: function () {

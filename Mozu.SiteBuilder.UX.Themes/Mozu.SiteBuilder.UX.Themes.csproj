@@ -166,6 +166,13 @@
     <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
   </PropertyGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <Choose>
+    <When Condition="$(TargetFrameworkIdentifier) == '.NETFramework' And ($(TargetFrameworkVersion) == 'v4.5' Or $(TargetFrameworkVersion) == 'v4.5.1')">
+      <PropertyGroup>
+        <__paket__OctoPack_targets>OctoPack</__paket__OctoPack_targets>
+      </PropertyGroup>
+    </When>
+  </Choose>
   <Import Project="$(VSToolsPath)\WebApplications\Microsoft.WebApplication.targets" Condition="'$(VSToolsPath)' != ''" />
   <Import Project="$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v10.0\WebApplications\Microsoft.WebApplication.targets" Condition="false" />
   <ProjectExtensions>
@@ -178,12 +185,5 @@
     </VisualStudio>
   </ProjectExtensions>
   <Import Project="..\.paket\paket.targets" />
-  <Choose>
-    <When Condition="$(TargetFrameworkIdentifier) == '.NETFramework' And ($(TargetFrameworkVersion) == 'v4.5' Or $(TargetFrameworkVersion) == 'v4.5.1')">
-      <PropertyGroup>
-        <__paket__OctoPack_targets>OctoPack</__paket__OctoPack_targets>
-      </PropertyGroup>
-    </When>
-  </Choose>
   <Import Project="..\packages\OctoPack\build\$(__paket__OctoPack_targets).targets" Condition="Exists('..\packages\OctoPack\build\$(__paket__OctoPack_targets).targets')" Label="Paket" />
 </Project>

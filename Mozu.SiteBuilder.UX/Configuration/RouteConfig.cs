@@ -317,6 +317,13 @@ namespace Mozu.SiteBuilder.UX.Configuration
                 }
                 );
 
+            routes.MapHttpRoute(
+                "StoreFront_Sitemap",
+                "sitemap.xml/{action}/{page}",
+                new { controller = "Sitemap", action = "Index", page = RouteParameter.Optional });
+
+
+
 
 
             routes.Add("SiteRoutes", new NonSystemRoute());
@@ -480,12 +487,7 @@ namespace Mozu.SiteBuilder.UX.Configuration
                 "localization/collections/{keys}",
                 new {controller = "Localization", action = "collections"});
 
-            routes.MapHttpRoute(
-                "StoreFront_Sitemap",
-                "sitemap.xml/{action}/{page}",
-                new { controller = "Sitemap", action = "Index", page = RouteParameter.Optional });
-
-            
+    
 
             routes.MapHttpRoute(
                 "vlegacy_product",
