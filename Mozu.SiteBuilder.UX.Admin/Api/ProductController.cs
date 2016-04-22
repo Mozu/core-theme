@@ -52,27 +52,29 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
                 return await GetSingleProductAsync(pagingParams);
             }
 
-            string responseGroups = !string.IsNullOrEmpty(extFilter.ResponseGroups) ? extFilter.ResponseGroups : (extFilter.SearchType == "global" || extFilter.SearchType == "picker" ? "min" : "ProductInCatalogs,Min,Price");
-            string filter = extFilter.ToFilterString();
+            string responseGroups = !string.IsNullOrEmpty(extFilter.ResponseGroups)
+                ? extFilter.ResponseGroups
+                : (extFilter.SearchType == "global" || extFilter.SearchType == "picker"
+                    ? "min"
+                    : "ProductInCatalogs,Min,Price");
+
+            StringBuilder strBuilder = new StringBuilder(extFilter.ToFilterString(extFilter.ShowVariations));
 
             if (!String.IsNullOrEmpty(extFilter.ShowProductUsages))
             {
-                StringBuilder filterB = new StringBuilder("productUsage eq ");
-
-                filterB.Append(string.Join(" or productUsage eq ", extFilter.ShowProductUsages.Split(',')));
-
-                if (extFilter.ShowVariations)
-                {
-                    filterB.Insert(0, "isVariation eq true or ");
-                }
-
-                filter = filterB.ToString();
+                if (strBuilder.Length > 0)
+                    strBuilder.Append(" and ");
+                strBuilder.Append("(productUsage eq ");
+                strBuilder.Append(string.Join(" or productUsage eq ", extFilter.ShowProductUsages.Split(',')));
+                strBuilder.Append(")");
             }
 
+            var filter = strBuilder.ToString();
             var q = extFilter.ToQString();
             var isGlobalSearchType = extFilter.SearchType.EqualsIgnoreCase("global");
 
-            return await SearchProducts(pagingParams, filter, q, responseGroups, isGlobalSearchType, extFilter.UseLiveMode);
+            var results = await SearchProducts(pagingParams, filter, q, responseGroups, isGlobalSearchType, extFilter.UseLiveMode);
+            return results;
         }
 
         /// <summary>
