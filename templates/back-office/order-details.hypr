@@ -133,7 +133,10 @@
                         <div class="product-name">{{ item.product.name }}</div>
                         {% for option in item.product.options %}
                             <div class="product-option">
-                                <em class="product-option-label">[option]</em>{{ option.name }}: {{ option.value }}
+                                <em class="product-option-label">[option]</em>{{ option.name }}: {{ option.stringValue|default(option.shopperEnteredValue)|default(option.value) }}
+                                {% if option.stringValue %}
+                                <span class="product-option-raw">({{ option.value }})</span>
+                                {% endif %}
                             </div>
                         {% endfor %}
                         {% for product in item.product.bundledProducts %}
