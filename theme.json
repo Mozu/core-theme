@@ -400,6 +400,7 @@
         "itemListingThumbSize": 80,
         "listProductCode": true,
         "listProductShortDesc": true,
+        "listVolumePricing": false,
         "listProductThumbSize": 160,
         "maxProductImageThumbnailSize": 50,
         "maxProductSummaryWords": 40,

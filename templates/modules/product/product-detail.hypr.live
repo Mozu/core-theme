@@ -11,12 +11,12 @@
   {% include "modules/product/product-options" %}
 </div>
 {% endif %}
-    
+
 <div itemprop="offers" itemscope itemtype="http://schema.org/Offer" class="mz-productdetail-price mz-l-stack-section">
   <h4 class="mz-l-stack-sectiontitle">{{ labels.price }}</h4>
 {% include "modules/product/price-stack" %}
 </div>
-
+<div class="mz-price-container">
 <dl class="mz-productcodes mz-propertylist mz-pagetitle-note mz-l-stack-section">
 	<dt class="mz-productcodes-productcode-label">{{ labels.productCode }}</dt>
 	<dd class="mz-productcodes-productcode" itemprop="sku">{{ model.variationProductCode|default(model.productCode) }}</dd>
@@ -33,29 +33,29 @@
 <section class="mz-l-stack-section mz-productdetail-conversion">
 <div class="mz-productdetail-conversion-controls">
   <span class="mz-qty-label">{{ labels.qty }}</span>
-  <input class="mz-productdetail-qty" type="number" value="1" min="1" {% if not model.purchasableState.isPurchasable %} disabled="disabled" {% endif %} data-mz-value="quantity" />
+  <input class="mz-productdetail-qty" type="number" {% if model.quantity %} value="{{ model.quantity }}" {% else %} value="1" {% endif %} min="1" {% if not model.isPurchasable %} disabled="disabled" {% endif %} data-mz-value="quantity" />
   <span class="mz-validationmessage" data-mz-validationmessage-for="quantity"></span>
 </div>
   <div class="mz-productdetail-conversion-buttons">
-  <button id="add-to-cart" class="mz-productdetail-addtocart mz-button mz-button-large {% if not model.purchasableState.isPurchasable %}is-disabled{% endif %}" {% if not model.purchasableState.isPurchasable %} disabled="disabled" {% endif %} data-mz-action="addToCart" >
+  <button id="add-to-cart" class="mz-productdetail-addtocart mz-button mz-button-large {% if not model.isPurchasable %}is-disabled{% endif %}" {% if not model.isPurchasable %} disabled="disabled" {% endif %} data-mz-action="addToCart" >
       {{ labels.addToCart }}
   </button>
 
   {% if siteContext.generalSettings.isWishlistCreationEnabled and not user.isAnonymous %}
-  <button id="add-to-wishlist" {% if model.notDoneConfiguring or not model.purchasableState.isPurchasable %} disabled="disabled" {% else %} {% if model.inventoryInfo.outOfStockBehavior == 'HideProduct' and not model.inventoryInfo.onlineStockAvailable %} disabled="disabled" {% endif %} {% endif %} class="mz-productdetail-addtowishlist mz-button {% if not model.purchasableState.isPurchasable %}is-disabled{% endif %}" data-mz-action="addToWishlist">
+  <button id="add-to-wishlist" {% if model.notDoneConfiguring or not model.isPurchasable %} disabled="disabled" {% else %} {% if model.inventoryInfo.outOfStockBehavior == 'HideProduct' and not model.inventoryInfo.onlineStockAvailable %} disabled="disabled" {% endif %} {% endif %} class="mz-productdetail-addtowishlist mz-button {% if not model.isPurchasable %}is-disabled{% endif %}" data-mz-action="addToWishlist">
       {{ labels.addToWishlist }}
   </button>
   {% endif %}
 
   {% if siteContext.supportsInStorePickup %}
   <form class="mz-instorepickup" method="POST" data-mz-localstoresform action="/location/product">
-    <button type="submit" {% if model.notDoneConfiguring or not model.purchasableState.isPurchasable or not model.supportsInStorePickup %} disabled="disabled" {% endif %} class="mz-button mz-instorepickuplink-button {% if model.notDoneConfiguring or not model.purchasableState.isPurchasable or not model.supportsInStorePickup %}is-disabled{% endif %}" data-mz-action="checkLocalStores">{{ labels.checkLocalStores }}</button>
+    <button type="submit" {% if model.notDoneConfiguring or not model.isPurchasable or not model.supportsInStorePickup %} disabled="disabled" {% endif %} class="mz-button mz-instorepickuplink-button {% if model.notDoneConfiguring or not model.isPurchasable or not model.supportsInStorePickup %}is-disabled{% endif %}" data-mz-action="checkLocalStores">{{ labels.checkLocalStores }}</button>
     <input type="hidden" data-mz-localstoresform-input name="item" value="{% json_attribute model %}" />
   </form>
   {% endif %}
   </div>
 
-  {% if not model.purchasableState.isPurchasable %}
+  {% if not model.isPurchasable %}
   <p class="mz-productdetail-notpurchasable">
     {{ labels.notPurchasable }}:
     {% for message in model.purchasableState.messages %}
@@ -64,6 +64,13 @@
   </p>
   {% endif %}
 </section>
+</div>
+
+{% if model.hasVolumePricing %}
+<div class="mz-volume-price-container">
+  {% include "modules/product/volume-pricing" %}
+</div>
+{% endif %}
 
 <div class="mz-productdetail-fulldesc mz-l-stack-section">
   <h4 class="mz-l-stack-sectiontitle">{{ labels.fullDesc }}</h4>

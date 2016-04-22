@@ -1,0 +1,10 @@
+﻿{% if model.priceRange %}
+    <span itemprop="minPrice" class="mz-volume-price-lower">
+        {% include "modules/common/volume-price" with model=model.priceRange.lower %}
+    </span>
+    <span itemprop="maxPrice" class="mz-volume-price-upper">
+      {% include "modules/common/volume-price" with model=model.priceRange.upper %}
+    </span>
+{% else %}
+    {% include "modules/common/volume-price" with model=model.price %}
+{% endif %}

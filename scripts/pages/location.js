@@ -57,11 +57,10 @@ require(['modules/jquery-mozu', 'hyprlive', 'modules/backbone-mozu', 'modules/mo
                 });
             },
             addToCartForPickup: function (e) {
-                var self = this,
-                    $target = $(e.currentTarget),
+                var $target = $(e.currentTarget),
                     loc = $target.data('mzLocation');
                 $target.parent().addClass('is-loading');
-                this.product.addToCartForPickup(loc);
+                this.product.addToCartForPickup(loc, this.product.get('quantity'));
             },
             setProduct: function (product) {
                 var me = this;
@@ -72,6 +71,15 @@ require(['modules/jquery-mozu', 'hyprlive', 'modules/backbone-mozu', 'modules/mo
                     });
                     window.location.href = "/cart";
                 });
+                this.listenTo(me.product, 'error', function () {
+                    this.$('.is-loading').removeClass('is-loading');
+                    this.render();
+                });
+            },
+            getRenderContext: function () {
+                var c = Backbone.MozuView.prototype.getRenderContext.apply(this, arguments);
+                c.model.messages = (this.product.messages) ? this.product.messages.toJSON() : [];
+                return c;
             }
         });
 

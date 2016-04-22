@@ -16,3 +16,6 @@ node_modules/
 .yo-rc.json
 mozu.config.json
 
+# WebStorm project files
+.idea/
+
