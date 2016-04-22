@@ -6,7 +6,7 @@ using Mozu.SiteBuilder.UX.Admin.Api.Models;
 
 namespace Mozu.SiteBuilder.UX.Admin.Helpers.ProductHelpers
 {
-    internal static class ProductFilterExtensions
+    public static class ProductFilterExtensions
     {
         
         private const string PRODUCT_NAME_PROPERTY = "productincatalogs.content.productName";
@@ -60,7 +60,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Helpers.ProductHelpers
 
             if (withVariations.GetValueOrDefault(false))
             {
-                var item = extFilter.FirstOrDefault(x => x.field == "productCode" || x.property == "productCode");
+                var item = extFilter.FirstOrDefault(x => string.Equals(x.field, "productcode" ,StringComparison.OrdinalIgnoreCase));
                 if (item != null)
                 {
                     item.property = item.field = "productinventorycode";
@@ -121,18 +121,15 @@ namespace Mozu.SiteBuilder.UX.Admin.Helpers.ProductHelpers
                 case "productfulldescription":
                     return string.Format("{1} cont \"{0}\"", filter.value, PRODUCT_FULL_DESCRIPTION);
                 case "productcode" :
-                    return
-                        "("+
-                        (value.ToString().Split(',')
-                        .Select(code => string.Format("ProductCode eq \"{0}\"", code.Trim()))
-                        .Aggregate((comp, next) => comp + " or " + next)) + ")";
-
+                    return string.Format("(productCode in [{0}])",
+                        value.ToString().Split(',')
+                            .Select(code => string.Format("\"{0}\"", code.Trim()))
+                            .Aggregate((a, b) => a + "," + b));
                 case "productinventorycode":
-                    return "(IsVariation eq true or IsVariation eq false) and (" +
-                        (value.ToString().Split(',')
-                        .Select(code => string.Format("(baseProductCode eq \"{0}\" or  ProductCode eq \"{0}\")", code.Trim()))
-                        .Aggregate((comp, next) => comp + " or " + next)) + ")";
-                    
+                    return string.Format("(IsVariation eq true or IsVariation eq false) and (productCode in [{0}])",
+                        value.ToString().Split(',')
+                            .Select(code => string.Format("\"{0}\"", code.Trim()))
+                            .Aggregate((a, b) => a + "," + b));
                 case "producttypeid":
                 case "producttype":
                     return string.Format("productTypeId eq {0}", value);

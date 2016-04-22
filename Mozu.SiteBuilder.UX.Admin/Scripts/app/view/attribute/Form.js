@@ -386,8 +386,8 @@ Ext.define('Taco.view.attribute.Form', {
                         name: 'addValueProductCode',
                         multiSelect: false,
 
-                        showVariations: true,
-                        showProductUsages: 'standard,bundle',
+                        showVariations: false,//currently the runtime can't support variants
+                        showProductUsages: 'standard,component', //only standard and component will work in runtime at this time
                         ignoreParentFormTracking: true,
                         submitValue: false,
                         width: 600,
@@ -647,6 +647,7 @@ Ext.define('Taco.view.attribute.Form', {
         }
         store = Taco.core.data.StoreManager.getOrCreate('Taco.store.ProductComboBox');
         store.load({
+            limit: 200, //max API will allow
             filters: [
                 {
                     property: 'productcode',
