@@ -1577,7 +1577,7 @@ Ext.define('Taco.view.website.Index', {
             Ext.create('Taco.view.customSchema.Grid', {
                     itemId: 'entityManagerGrid',
                     listeners: {
-                        itemedit: me.onContentListItemEdit,
+                        itemclick: me.onContentListItemEdit,
                         scope: me
                     },
                     listMetaData: metaData,

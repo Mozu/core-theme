@@ -632,10 +632,11 @@ namespace Mozu.SiteBuilder.UX.Models.StoreFront.Catalog
                 return;
             }
             var catTreeProvider = state.Resolve<Mvc.Catalog.ICategoryTreeProvider>();
-            if (catTreeProvider == null || !catTreeProvider.HasCompleted )
+            if (catTreeProvider == null  )
             {
                 return;
             }
+         
             var catTree = catTreeProvider.GetAllCategories().Result;
             this.Items.ForEach(prod =>
             {

@@ -104,6 +104,14 @@ Ext.define('Taco.view.priceList.entry.PriceEntryPrice', {
             row.priceOverride.overrideField.validate();
 
             row.salePriceOverride = Ext.widget('overridefield', {
+                listeners: {
+                    beforerender: function(cmp) {
+                        if (cmp.isOverridden()) {
+                            Ext.apply(cmp.overrideField, { emptyText: '' })
+                        }
+                    },
+                    scope: row.salePriceOverride
+                },
                 checkboxCfg: {
                     checked: entry.salePriceMode === 'Overridden',
                     onChange: function(newVal) {
