@@ -322,8 +322,8 @@ Ext.define('Taco.view.priceList.entry.PriceEntryPrice', {
                 flex: 1
             },
             items: [
-                me.createCurrentWidget(me.discountRestriction, me.currentRestriction),
-                me.createCurrentWidget(me.restrictionStartDate, me.currentRestrictionStartDate),
+                me.createCurrentWidget(me.discountRestriction, me.currentRestriction), //, '0 50 0 0'),
+                me.createCurrentWidget(me.restrictionStartDate, me.currentRestrictionStartDate), //, '0 50 0 0'),
                 me.createCurrentWidget(me.restrictionEndDate, me.currentRestrictionEndDate)
             ]
         });
@@ -390,17 +390,20 @@ Ext.define('Taco.view.priceList.entry.PriceEntryPrice', {
 
         me.mon(Taco.app, 'price-entry-loaded', me.onPriceEntryLoaded, me);
         me.mon(Taco.app, 'price-entry-product-changed', me.onProductChanged, me);
+        me.mon(Taco.app, 'price-entry-product-variation-changed', me.onProductVariationChanged, me);
 
         me.callParent(arguments);
     },
 
-    createCurrentWidget: function(overrideField, currentVal) {
+    createCurrentWidget: function(overrideField, currentVal) { // ,margin) {
+        //margin = margin || '0';
         return {
             xtype: 'fieldcontainer',
             layout: {
                 type: 'vbox',
                 align: 'stretch'
             },
+            //padding: margin,
             items: [
                 overrideField,
                 currentVal
@@ -445,6 +448,18 @@ Ext.define('Taco.view.priceList.entry.PriceEntryPrice', {
         this.record.set('currentDiscountsRestrictedStartDate', data.currentDiscountsRestrictedStartDate);
         this.record.set('currentDiscountsRestrictedEndDate', data.currentDiscountsRestrictedEndDate);
         this.record.set('extras', data.extras);
+        this.onPriceEntryLoaded(this.record);
+    },
+
+    onProductVariationChanged: function (data) {
+        if (!data){
+            data = {};
+        }
+        this.record.set('isVariation', true);
+        this.record.set('currentListPrice', data.currentListPrice);
+        this.record.set('currentSalePrice', data.currentSalePrice);
+        this.record.set('currentCost', data.currentCost);
+        this.record.set('currentMsrp', data.currentMsrp);
         this.onPriceEntryLoaded(this.record);
     },
 

@@ -82,7 +82,9 @@ Ext.define('Taco.view.priceList.entry.PriceEntryGeneral', {
                             cmp.setVisible(!isVariation);
                             if (isVariation) {
                                 cmp.items.each(function(subCmp) {
-                                    subCmp.setValue(null);
+                                    if (subCmp && subCmp.setValue !== undefined) {
+                                        subCmp.setValue(null);
+                                    }
                                 });
                             }
 
@@ -308,17 +310,19 @@ Ext.define('Taco.view.priceList.entry.PriceEntryGeneral', {
         }
 
         combo.inputMask.show(comboDisplay);
-        me.loadProduct(record);
-        //me.getExtras(record);
         // cancel the selection so that the same product can be reselected again;
         return false;
     },
 
     loadProduct: function (productRecord) {
-        var productCode = (productRecord ? productRecord.get('productCode') : null);
+        var productCode = productRecord ? productRecord.get('productCode') : null;
 
-        if (!productCode) {
+        if (!productRecord || !productCode)
+        {
             return;
+        }
+        if (productRecord.get('isVariation')){
+            return this.loadProductVariant(productRecord);
         }
 
         Ext.Ajax.request({
@@ -331,22 +335,18 @@ Ext.define('Taco.view.priceList.entry.PriceEntryGeneral', {
         });
     },
 
-    getExtras: function(productRecord) {
-        var productCode = (productRecord ? productRecord.get('productCode') : null);
-
-        if (!productCode) {
-            return;
-        }
+    loadProductVariant: function (productRecord) {
+        var productCode = productRecord.get('baseProductCode'),
+            variantCode = productRecord.get('productCode');
 
         Ext.Ajax.request({
-            url: '/admin/app/priceList/entry/product/' + productCode + '/extras',
+            url: '/admin/app/priceList/entry/create/product/' + productCode + '/variation/' + variantCode,
             success: function (response) {
                 var data = Ext.JSON.decode(response.responseText);
-                Taco.app.fireEvent('price-entry-product-extras-changed', data);
+                Taco.app.fireEvent('price-entry-product-variation-changed', data.items);
             },
             failure: Taco.core.util.ExceptionWhiner.handleRemoteFailure
         });
-
     },
 
     getConfigurableOptionList: function (record) {
