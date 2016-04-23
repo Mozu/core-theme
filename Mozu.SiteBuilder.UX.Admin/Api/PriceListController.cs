@@ -75,14 +75,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
                 )).ReadAsSync();
             
             var result = Mapper.Map<List<PriceList>>(priceLists.Items);
-
             return List2(result, priceLists.TotalCount);
-            //}
-            //catch (ApiWebClientConnectionException e)
-            //{
-            //    return this.FailureList2<PriceList>(e.Message);
-            //}
-
         }
 
         private async Task<Response<List<PriceList>>> GetSinglePriceList(PagingParamaters pagingParams)
@@ -94,8 +87,8 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
         private async Task<Response<List<PriceList>>> GetPriceListLookup(string excludedCode)
         {
             var filter = string.Format("enabled eq true{0}",
-                !string.IsNullOrEmpty(excludedCode) 
-                    ? " and pricelistcode ne " + excludedCode 
+                !string.IsNullOrEmpty(excludedCode)
+                    ? " and pricelistcode ne " + excludedCode
                     : "");
             var priceLists = (await _priceListWebClient.GetPriceLists(startIndex: 0,
                 pageSize: 9999,
@@ -160,7 +153,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
 
             return SuccessWithTotal2<PriceList>(priceLists.Count);
         }
-
+  
 
         [HttpGetRoute(UriTemplate = "entry/list")]
         public async Task<Response<List<PriceListEntry>>> ListPriceListEntries([FromUri] PagingParamaters pagingParams, [FromUri] FilterCollection extFilter, [FromUri] string priceListCode)
@@ -205,22 +198,29 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
                     dateTime = parsedDateTime;
                 }
             }
-            var dcPriceListEntry = (await _priceListWebClient.GetPriceListEntry(priceListCode: priceListCode, productCode: productCode, currencyCode:currencyCode, startDate:dateTime)).ReadAsSync();
+            var dcPriceListEntry = (await _priceListWebClient.GetPriceListEntry(priceListCode: priceListCode, productCode: productCode, currencyCode: currencyCode, startDate: dateTime)).ReadAsSync();
             var priceListEntry = Mapper.Map<PriceListEntry>(dcPriceListEntry);
 
-            if (priceListEntry.IsVariation) return List2(priceListEntry);
+            if (priceListEntry.IsVariation)
+            {
+                DC.Product baseProduct = await GetBaseProduct(productCode);
+                if (baseProduct == null) return List2(priceListEntry);
+                AddCurrentBaseProductPricing(priceListEntry, baseProduct);
+                DC.ProductVariation variant = await GetProductVariation(baseProduct.BaseProductCode, productCode);
+                AddCurrentVariationPricing(priceListEntry, variant);
+                return List2(priceListEntry);
+            }
 
             var dcProduct = await GetProduct(productCode);
-            //move to method for adding current.
             priceListEntry = AddCurrentPrices(priceListEntry, dcProduct);
 
             var lookup = (priceListEntry.Extras.IsNullOrEmpty())
                 ? new Dictionary<string, PriceListEntryExtra>()
                 : priceListEntry.Extras.ToDictionary(x => x.AttributeFQN + "-" + x.Value);
 
-            Func<string,string,decimal?> getOverridePrice = (attrFqn, attrValue) => lookup.ContainsKey(attrFqn + "-" + attrValue)
-                    ? lookup[attrFqn + "-" + attrValue].OverridePrice
-                    : (decimal?)null;
+            Func<string, string, decimal?> getOverridePrice = (attrFqn, attrValue) => lookup.ContainsKey(attrFqn + "-" + attrValue)
+                      ? lookup[attrFqn + "-" + attrValue].OverridePrice
+                      : (decimal?)null;
 
             var productExtras = await GetProductTypeAttributesAsync(getOverridePrice, dcProduct);
 
@@ -299,30 +299,6 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
             return Single2(priceListEntry);
         }
 
-        ///// <summary>
-        ///// Get ProducExtras for a new PriceListEntry
-        ///// Does not throw exception when 404 as it's
-        ///// expected.
-        ///// </summary>
-        //[HttpGetRoute(UriTemplate = "entry/product/{productCode}/extras")]
-        //public async Task<Response<List<PriceListEntryExtra>>> GetProductExtras(string productCode)
-        //{
-        //    var result = await GetProductExtrasInternalAsync(productCode, (attrFqn, attrCode) => (decimal?) null);
-        //    return List2(result);
-        //}
-
-        private async Task<List<PriceListEntryExtra>> GetProductExtrasInternalAsync(string productCode, Func<string, string, decimal?> getOverridePrice)
-        {
-            DC.Product dcProduct = await GetProduct(productCode);
-
-            if (dcProduct.Extras.IsNullOrEmpty())
-            {
-                return new List<PriceListEntryExtra>();
-            }
-
-            return await GetProductTypeAttributesAsync(getOverridePrice, dcProduct);
-        }
-
         private async Task<DC.Product> GetProduct(string productCode)
         {
             string responseFields = "productCode,productTypeId,extras,"
@@ -331,9 +307,23 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
                                     + "supplierInfo(cost(isoCurrencyCode,cost)),"
                                     + "productInCatalogs(catalogId,isActive,isPriceOverriden,"
                                       + "price(isoCurrencyCode,price,salePrice,msrp,map,mapStartDate,mapEndDate))";
-            
-                
-             return (await _productWebApiClient.GetProduct(productCode, responseFields: responseFields)).ReadAsSync();
+
+
+            return (await _productWebApiClient.GetProduct(productCode, responseFields: responseFields)).ReadAsSync();
+        }
+
+        /// <summary>
+        /// Get ProducExtras for a new PriceListEntry
+        /// Does not throw exception when 404 as it's
+        /// expected.
+        /// </summary>
+        [HttpGetRoute(UriTemplate = "entry/create/product/{productCode}/variation/{variationCode}")]
+        public async Task<Response<PriceListEntry>> GetPriceListTemplateForProductVariation(string productCode, string variationCode)
+        {
+            DC.ProductVariation variant = await GetProductVariation(productCode, variationCode);
+            var priceListEntry = new PriceListEntry();
+            AddCurrentVariationPricing(priceListEntry, variant);
+            return Single2(priceListEntry);
         }
 
         private async Task<List<PriceListEntryExtra>> GetProductTypeAttributesAsync(Func<string, string, decimal?> getOverridePrice, DC.Product dcProduct)
@@ -375,6 +365,62 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
             tasks.Select(TaskHelper.Result).ThrowExceptionsIfAny();
 
             return SuccessWithTotal2<PriceList>(entries.Count);
+        }
+
+        private async Task<DC.ProductVariation> GetProductVariation(string productCode, string variationCode)
+        {
+            var dcProductVariants = (await _productWebApiClient.GetProductVariations(productCode)).ReadAsSync();
+
+            DC.ProductVariation variant =
+                dcProductVariants.Items.FirstOrDefault(x => x.VariationProductCode == variationCode);
+            return variant;
+        }
+
+        private async Task<DC.Product> GetBaseProduct(string variantProductCode)
+        {
+            string responseFields = "items(baseProductCode,price,pricingBehavior)";
+            var filter = string.Format("isVariation eq true and ProductCode eq {0}", variantProductCode);
+            var dcBaseProducts = (await _productWebApiClient.GetProducts(filter: filter, responseFields: responseFields)).ReadAsSync();
+            return dcBaseProducts.Items.FirstOrDefault();
+        }
+
+        private static void AddCurrentBaseProductPricing(PriceListEntry variantPriceListEntry, DC.Product baseProduct)
+        {
+            variantPriceListEntry.CurrentListPrice = baseProduct.Price.Price;
+            variantPriceListEntry.CurrentSalePrice = baseProduct.Price.SalePrice;
+            variantPriceListEntry.CurrentMSRP = baseProduct.Price.MSRP;
+            if (baseProduct.SupplierInfo != null && baseProduct.SupplierInfo.Cost != null)
+            {
+                variantPriceListEntry.CurrentCost = baseProduct.SupplierInfo.Cost.Cost;
+                variantPriceListEntry.CurrentCostCurrencyCode = baseProduct.SupplierInfo.Cost.ISOCurrencyCode;
+            }
+        }
+
+        private void AddCurrentVariationPricing(PriceListEntry priceListEntry, DC.ProductVariation variant)
+        {
+            if (variant == null)
+            {
+                return;
+            }
+
+            if (variant.DeltaPrice != null)
+            {
+                priceListEntry.CurrentListPrice = variant.DeltaPrice.Value;
+                priceListEntry.CurrencyCode = variant.DeltaPrice.CurrencyCode;
+                priceListEntry.CurrentMSRP = variant.DeltaPrice.MSRP;
+            }
+            else if (variant.FixedPrice != null)
+            {
+                priceListEntry.CurrentListPrice = variant.FixedPrice.ListPrice;
+                priceListEntry.CurrentSalePrice = variant.FixedPrice.SalePrice;
+                priceListEntry.CurrencyCode = variant.FixedPrice.CurrencyCode;
+                priceListEntry.CurrentMSRP = variant.FixedPrice.MSRP;
+            }
+            if (variant.SupplierInfo != null && variant.SupplierInfo.Cost != null)
+            {
+                priceListEntry.CurrentCost = variant.SupplierInfo.Cost.Cost;
+                priceListEntry.CurrentCostCurrencyCode = variant.SupplierInfo.Cost.ISOCurrencyCode;
+            }
         }
 
         private bool IsLookupQuery(string lookupValue)

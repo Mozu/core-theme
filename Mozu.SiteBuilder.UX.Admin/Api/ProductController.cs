@@ -179,7 +179,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
                 SbApiContext.SetDataMode(DataViewModeType.Live);
             }
 
-            string responseFields = "items(productCode,productTypeId,productUsage,isVariation," +
+            string responseFields = "items(productCode,productTypeId,productUsage,isVariation,baseProductCode," +
                    "price(price,salePrice)," +
                    "productInCatalogs(catalogId,isContentOverridden,content(productName),price(price,salePrice))," +
                    "auditInfo(updateDate)," +
