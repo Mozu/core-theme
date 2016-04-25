@@ -57,6 +57,10 @@ Ext.define('Taco.model.PriceList', {
             type: 'auto',
             defaultValue: []
         }, {
+            name: 'indexedForSites',
+            type: 'auto',
+            defaultValue: []
+        }, {
             name: 'validSitesDisplay',
             type: 'string',
             persist: false,
