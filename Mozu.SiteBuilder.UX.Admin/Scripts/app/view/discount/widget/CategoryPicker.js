@@ -11,7 +11,7 @@ Ext.define('Taco.view.discount.widget.CategoryPicker', {
     record: null,
     name: 'categories',
     listWidth: 382,
-    height: 30,
+    //height: 30,
 
     initComponent: function () {
         var me = this;
