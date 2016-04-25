@@ -17,23 +17,11 @@ Ext.define('Taco.view.priceList.widget.EntriesGrid', {
         'Taco.core.ux.grid.MenuColumn',
         'Taco.view.priceList.entry.AdvancedEntrySearch',
         'Taco.view.priceList.modal.PriceEntryEditor'
-
-        //'Taco.view.priceList.Form',
-        //'Taco.view.priceList.Edit'
     ],
 
     mixins: {
 
     },
-
-    //contextConfig: {
-    //    requiresContextOfType: ['m']
-    //},
-
-    //viewConfig: {
-    //    deferEmptyText: false,
-    //    emptyText: me.record.phantom ? "Save the Price List to add pricing entries" : "None Added."
-    //},
 
     launchEditorOnClick: true,
 
@@ -127,18 +115,8 @@ Ext.define('Taco.view.priceList.widget.EntriesGrid', {
         // initialize the delete mixin
         this.mixins.deleteFromGrid.init.apply(this);
 
-        //me.mon(Taco.app, 'pricelistcreated', me.reloadGrid, me);
-
         me.store = Ext.create('Taco.store.PriceListEntries', {priceListCode: this.priceListCode});
 
-        //me.store = Taco.core.data.StoreManager.getOrCreate({
-        //    type: 'Taco.store.PriceListEntries',
-        //    createOnly: true,
-        //    pageSize: this.pageSize,
-        //    autoLoad: false,
-        //    clearFilters: true,
-        //    remoteFilter: true
-        //});
         if (this.priceListCode) {
             me.store.load({
                 params: {
@@ -210,7 +188,10 @@ Ext.define('Taco.view.priceList.widget.EntriesGrid', {
                 sortable: false,
                 renderer: function(entries) {
                     if (Ext.isArray(entries)) {
-                        return entries[0].listPrice ? Taco.app.context.getCurrent().formatCurrency(entries[0].listPrice) : 'Default';
+                        if (entries[0].listPriceMode === 'UseCatalog') {
+                            return "Default";
+                        }
+                        return (entries[0].listPrice || entries[0].listPrice === 0) ? Taco.app.context.getCurrent().formatCurrency(entries[0].listPrice) : '';
                     }
                     return 'Default';
                 }
@@ -223,7 +204,10 @@ Ext.define('Taco.view.priceList.widget.EntriesGrid', {
                 sortable: false,
                 renderer: function(entries) {
                     if (Ext.isArray(entries)) {
-                        return entries[0].salePrice ? Taco.app.context.getCurrent().formatCurrency(entries[0].salePrice) : 'Default';
+                        if (entries[0].salePriceMode === 'UseCatalog') {
+                            return "Default";
+                        }
+                        return (entries[0].salePrice || entries[0].salePrice === 0) ? Taco.app.context.getCurrent().formatCurrency(entries[0].salePrice) : '';
                     }
                     return 'Default';
                 }

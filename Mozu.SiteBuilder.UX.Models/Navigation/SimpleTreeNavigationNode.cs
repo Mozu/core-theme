@@ -29,6 +29,8 @@ namespace Mozu.SiteBuilder.UX.Models.Navigation
 
         public bool IsLeaf { get; set; }
 
+        public bool? OpenInNewWindow { get; set; }
+
         public bool AllowDrag { get; set; }
 
         public bool AllowDrop { get; set; }

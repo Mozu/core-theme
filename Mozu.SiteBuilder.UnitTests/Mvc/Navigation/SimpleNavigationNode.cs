@@ -23,6 +23,7 @@ namespace Mozu.SiteBuilder.UnitTests.Mvc.Navigation
         public string Name { get; set; }
         public string Url { get; set; }
         public int Index { get; set; }
+        public bool? OpenInNewWindow { get; set; }
         public NavigationNodeType NodeType { get; set; }
     }
 }

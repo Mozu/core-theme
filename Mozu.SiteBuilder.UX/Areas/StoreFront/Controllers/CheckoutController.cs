@@ -223,8 +223,7 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
                         var uniqueProducts = model.Items // Previous order items
                             .Select(x => x.Product)      // Get products
                             .GroupBy(getProductCode)     // Group by product code
-                            .ToEnumerable()              // Simplify IGrouping to IEnumerable
-                            .SelectMany(x => x.First()); // Grab first product from each group
+                            .Select(x => x.First()); // Grab first product from each group
                         productsRemoved = uniqueProducts.Where(x => !newProductCodes.Contains(getProductCode(x))).ToList();
                     }
                     model = newModel;

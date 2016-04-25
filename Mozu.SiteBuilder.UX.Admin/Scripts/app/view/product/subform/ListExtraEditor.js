@@ -257,6 +257,7 @@ Ext.define('Taco.view.product.subform.ListExtraEditor', {
         }
         productStore = Taco.core.data.StoreManager.getOrCreate('Taco.store.ProductComboBox');
         productStore.load({
+            limit:200,
             filters: [
                 {
                     property: 'productcode',

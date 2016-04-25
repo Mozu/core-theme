@@ -15,8 +15,7 @@ Ext.define('Taco.view.priceList.entry.PriceEntryGeneral', {
         'Taco.core.ux.picker.CheckboxTreeModal'
     ],
     ui: 'subform',
-    margin: '0 0 20 0',
-
+    margin: '0',
     title: 'Conditions',
     record: null,
 
@@ -67,10 +66,11 @@ Ext.define('Taco.view.priceList.entry.PriceEntryGeneral', {
             },
             listeners: {
                 change: {
-                    fn: function(cmp, newVal, oldVal, eOpts) {
+                    fn: function(cmp, newVal) {
 
                         var record = cmp.store.getAt(cmp.store.find('productCode', newVal));
-                        Taco.app.fireEvent('price-entry-product-changed', record);
+                        //Taco.app.fireEvent('price-entry-product-changed', record);
+                        me.loadProduct(record);
                         if (!record) return;
                         var isVariation = record.get('isVariation') || record.get('variationOptions').length > 0;
 
@@ -82,7 +82,9 @@ Ext.define('Taco.view.priceList.entry.PriceEntryGeneral', {
                             cmp.setVisible(!isVariation);
                             if (isVariation) {
                                 cmp.items.each(function(subCmp) {
-                                    subCmp.setValue(null);
+                                    if (subCmp && subCmp.setValue !== undefined) {
+                                        subCmp.setValue(null);
+                                    }
                                 });
                             }
 
@@ -107,7 +109,7 @@ Ext.define('Taco.view.priceList.entry.PriceEntryGeneral', {
                     scope: me
                 },
                 // custom event added as part of the InputMask plugin; need to cancel the event to prevent the field from reseting itself since will be reseting all fields when this field is reset;
-                'beforecleartriggerclick': function (field) {
+                'beforecleartriggerclick': function () {
 
                     // reset everything in the toolbar but need to be carefull
                     this.reset();
@@ -158,7 +160,14 @@ Ext.define('Taco.view.priceList.entry.PriceEntryGeneral', {
             value: !this.record.phantom ? this.record.get('startDate') : '',
             readOnly: !this.record.phantom,
             allowBlank: true,
-            validateOnBlank: true
+            validateOnBlank: true,
+            listeners: {
+                render: function (cmp) {
+                    if (me.record.phantom) {
+                        cmp.setValue(new Date());
+                    }
+                }
+            }
         });
 
         me.expirationDate = Ext.widget({
@@ -280,7 +289,7 @@ Ext.define('Taco.view.priceList.entry.PriceEntryGeneral', {
     },
 
     // after product is selected in the productPickerfield but before the combo is closed;
-    onBeforeProductSelect: function (combo, record, index, e) {
+    onBeforeProductSelect: function (combo, record) {
         var me = this,
             productCode = record.get('productCode'),
             isVariation = record.get('isVariation'),
@@ -301,27 +310,43 @@ Ext.define('Taco.view.priceList.entry.PriceEntryGeneral', {
         }
 
         combo.inputMask.show(comboDisplay);
-        me.getExtras(record);
         // cancel the selection so that the same product can be reselected again;
         return false;
     },
 
-    getExtras: function(productRecord) {
-        var productCode = (productRecord ? productRecord.get('productCode') : null);
+    loadProduct: function (productRecord) {
+        var productCode = productRecord ? productRecord.get('productCode') : null;
 
-        if (!productCode) {
+        if (!productRecord || !productCode)
+        {
             return;
+        }
+        if (productRecord.get('isVariation')){
+            return this.loadProductVariant(productRecord);
         }
 
         Ext.Ajax.request({
-            url: '/admin/app/priceList/entry/product/' + productCode + '/extras',
+            url: '/admin/app/priceList/entry/create/product/' + productCode,
             success: function (response) {
                 var data = Ext.JSON.decode(response.responseText);
-                Taco.app.fireEvent('price-entry-product-extras-changed', data);
+                Taco.app.fireEvent('price-entry-product-changed', data.items);
             },
             failure: Taco.core.util.ExceptionWhiner.handleRemoteFailure
         });
+    },
 
+    loadProductVariant: function (productRecord) {
+        var productCode = productRecord.get('baseProductCode'),
+            variantCode = productRecord.get('productCode');
+
+        Ext.Ajax.request({
+            url: '/admin/app/priceList/entry/create/product/' + productCode + '/variation/' + variantCode,
+            success: function (response) {
+                var data = Ext.JSON.decode(response.responseText);
+                Taco.app.fireEvent('price-entry-product-variation-changed', data.items);
+            },
+            failure: Taco.core.util.ExceptionWhiner.handleRemoteFailure
+        });
     },
 
     getConfigurableOptionList: function (record) {
@@ -333,7 +358,8 @@ Ext.define('Taco.view.priceList.entry.PriceEntryGeneral', {
 
     onProductPickerClear: function () {
         this.record.set('productCode', null);
-        Taco.app.fireEvent('price-entry-product-extras-changed', {});
+        //Taco.app.fireEvent('price-entry-product-extras-changed', {});
+        Taco.app.fireEvent('price-entry-product-changed', {});
     },
 
     beforeSave: function () {

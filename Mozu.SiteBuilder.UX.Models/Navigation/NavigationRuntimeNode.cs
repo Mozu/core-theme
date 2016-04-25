@@ -52,6 +52,8 @@ namespace Mozu.SiteBuilder.UX.Models.Navigation
         [DataMember(Name = "isHidden")]
         public bool? IsHidden { get; set; }
 
+        [DataMember(Name = "openInNewWindow")]
+        public bool? OpenInNewWindow { get; set; }
 
         [DataMember(Name = "originalId")]
         public string OriginalId { get; set; }

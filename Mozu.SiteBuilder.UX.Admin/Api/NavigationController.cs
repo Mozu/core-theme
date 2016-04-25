@@ -545,6 +545,8 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
                         originalNode.Url = change.Url;
                     }
 
+                    originalNode.OpenInNewWindow = change.OpenInNewWindow;
+
                     return _navRepo.SaveSetAsync(navSet);
                 })
                 .Unwrap()

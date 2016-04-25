@@ -37,6 +37,11 @@ Ext.define('Taco.model.NavigationTreeNode', {
         persist: false
     },
     {
+        name: 'openInNewWindow',
+        type: 'boolean',
+        defaultValue: false
+    },
+    {
         name: 'parentId',
         type: 'string',
         useNull: true

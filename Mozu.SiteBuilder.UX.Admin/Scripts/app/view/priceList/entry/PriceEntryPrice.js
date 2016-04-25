@@ -18,11 +18,11 @@ Ext.define('Taco.view.priceList.entry.PriceEntryPrice', {
         'Taco.core.ux.picker.CheckboxTreeModal',
         'Taco.view.priceList.widget.OverrideField',
         'Taco.view.product.widget.ProductBundleGrid',
-        'Taco.view.priceList.widget.EntryExtrasGrid'
+        'Taco.view.priceList.widget.EntryExtrasGrid',
+        'Taco.view.priceList.widget.CurrentValueLabel'
     ],
     ui: 'subform',
     margin: '0 0 20 0',
-
     title: 'Adjustments',
     record: null,
     currencyCode: null,
@@ -59,7 +59,7 @@ Ext.define('Taco.view.priceList.entry.PriceEntryPrice', {
             });
         }
 
-        Ext.Array.each(entries, function(entry, index, entries) {
+        Ext.Array.each(entries, function(entry) {
             
             var row = {};
 
@@ -75,7 +75,7 @@ Ext.define('Taco.view.priceList.entry.PriceEntryPrice', {
             row.priceOverride = Ext.widget('overridefield', {
                 checkboxCfg: {
                     checked: entry.listPriceMode === 'Overridden',
-                    onChange: function(newVal, oldVal) {
+                    onChange: function(newVal) {
                         var isOverridden = newVal === 'Overridden';
                         if (isOverridden && row.salePriceOverride) {
                             row.salePriceOverride.override.setValue(true);
@@ -97,12 +97,24 @@ Ext.define('Taco.view.priceList.entry.PriceEntryPrice', {
                 }
             });
 
+            if (!me.priceOverrideFirst) {
+                me.priceOverrideFirst = row.priceOverride;
+            }
+
             row.priceOverride.overrideField.validate();
 
             row.salePriceOverride = Ext.widget('overridefield', {
+                listeners: {
+                    beforerender: function(cmp) {
+                        if (cmp.isOverridden()) {
+                            Ext.apply(cmp.overrideField, { emptyText: '' })
+                        }
+                    },
+                    scope: row.salePriceOverride
+                },
                 checkboxCfg: {
                     checked: entry.salePriceMode === 'Overridden',
-                    onChange: function(newVal, oldVal) {
+                    onChange: function(newVal) {
                         if (newVal === 'UseCatalog' && row.priceOverride) {
                             row.priceOverride.override.setValue(false);
                         }
@@ -116,6 +128,10 @@ Ext.define('Taco.view.priceList.entry.PriceEntryPrice', {
                     value: entry.salePrice
                 }
             });
+
+            if (!me.salePriceOverrideFirst) {
+                me.salePriceOverrideFirst = row.salePriceOverride;
+            }
 
             var rowForm = {
                 xtype: 'form',
@@ -162,7 +178,7 @@ Ext.define('Taco.view.priceList.entry.PriceEntryPrice', {
                 itemId: 'MAPField',
                 fieldLabel: 'MAP',
                 currencyCode: me.currencyCode,
-                onChange: function(newVal, oldVal) {
+                onChange: function(newVal) {
                     if (newVal) {
                         me.mapStartDate.enable();
                         me.mapEndDate.enable();
@@ -269,39 +285,46 @@ Ext.define('Taco.view.priceList.entry.PriceEntryPrice', {
             }
         });
 
+        me.currentMapStartDate = Ext.widget('current-value-label', {});
+        me.currentMapEndDate = Ext.widget('current-value-label', {});
+
         me.mapRow = Ext.widget('panel', {
             flex: 1,
-            xtype: 'panel',
             layout: {
                 type: 'hbox',
                 align: 'top'
             },
+            padding: '30 0 0 0',
             hidden: me.record.get('isVariation'),
             defaults: {
                 flex: 1
             },
             items: [
                 me.mapOverride,
-                me.mapStartDate,
-                me.mapEndDate
+                me.createCurrentWidget(me.mapStartDate, me.currentMapStartDate),
+                me.createCurrentWidget(me.mapEndDate, me.currentMapEndDate)
             ]
         });
 
+        me.currentRestriction = Ext.widget('current-value-label', {});
+        me.currentRestrictionStartDate = Ext.widget('current-value-label', {});
+        me.currentRestrictionEndDate = Ext.widget('current-value-label', {});
+
         me.discountRestrictionRow = Ext.widget('panel', {
             flex: 1,
-            xtype: 'panel',
             layout: {
                 type: 'hbox',
                 align: 'top'
             },
+            padding: '30 0 0 0',
             hidden: me.record.get('isVariation'),
             defaults: {
                 flex: 1
             },
             items: [
-                me.discountRestriction,
-                me.restrictionStartDate,
-                me.restrictionEndDate
+                me.createCurrentWidget(me.discountRestriction, me.currentRestriction), //, '0 50 0 0'),
+                me.createCurrentWidget(me.restrictionStartDate, me.currentRestrictionStartDate), //, '0 50 0 0'),
+                me.createCurrentWidget(me.restrictionEndDate, me.currentRestrictionEndDate)
             ]
         });
 
@@ -352,7 +375,6 @@ Ext.define('Taco.view.priceList.entry.PriceEntryPrice', {
 
         me.tabs = Ext.create('Ext.tab.Panel', {
             width: "100%",
-            minHeight: 475,
             style: {
                 borderColor: '#cccccc'
             },
@@ -362,41 +384,109 @@ Ext.define('Taco.view.priceList.entry.PriceEntryPrice', {
             ]
         });
 
-        me.injectExtrasTab(me.record);
-
         me.items = [
             me.tabs
         ];
 
-        me.mon(Taco.app, 'price-entry-product-changed', me.injectExtrasTab, me);
-        me.mon(Taco.app, 'price-entry-product-extras-changed', me.updateExtras, me);
-        var extras = me.record.get('extras');
-        if (!extras) {
-            me.getExtras(me.record);
-        } else {
-            Taco.app.fireEvent('price-entry-product-extras-changed', { items: extras });
-        }
+        me.mon(Taco.app, 'price-entry-loaded', me.onPriceEntryLoaded, me);
+        me.mon(Taco.app, 'price-entry-product-changed', me.onProductChanged, me);
+        me.mon(Taco.app, 'price-entry-product-variation-changed', me.onProductVariationChanged, me);
+
         me.callParent(arguments);
+    },
+
+    createCurrentWidget: function(overrideField, currentVal) { // ,margin) {
+        //margin = margin || '0';
+        return {
+            xtype: 'fieldcontainer',
+            layout: {
+                type: 'vbox',
+                align: 'stretch'
+            },
+            //padding: margin,
+            items: [
+                overrideField,
+                currentVal
+            ]
+        };
     },
     
     updateExtras: function (data) {
-        if (!data || !data.items ) {
-            data.items = [];
+        if (!data) {
+            data = [];
         }
-        this.record.set('extras', data.items);
-        this.extrasGrid.getStore().loadData(data.items);
+        this.record.set('extras', data);
+        this.extrasGrid.getStore().loadData(data);
     },
 
     injectExtrasTab: function(record) {
-        var me = this;
-        if (!record || record.get('isVariation') || record.get('productCode') === '') {
-            me.tabs.remove(me.extrasPanel, false)
-        } else {
-            var exists = Ext.Array.some(me.tabs.items.items, function(item) { return item.itemId === me.extrasPanel.itemId });
-            if (!exists) {
-                me.tabs.add(me.extrasPanel);
+        var me = this,
+            extraTabExists = Ext.Array.some(me.tabs.items.items, function(item) {
+            return item.itemId === me.extrasPanel.itemId;
+        });
+        if (!record || record.get('isVariation') || record.get('extras').length === 0) {
+            if (extraTabExists) {
+                me.tabs.remove(me.extrasPanel, false);
             }
+        } else if (!extraTabExists) {
+            me.tabs.add(me.extrasPanel);
         }
+    },
+
+    onProductChanged: function (data) {
+        if (!data){
+            data = {};
+        }
+        this.record.set('currentListPrice', data.currentListPrice);
+        this.record.set('currentSalePrice', data.currentSalePrice);
+        this.record.set('currentCost', data.currentCost);
+        this.record.set('currentMap', data.currentMap);
+        this.record.set('currentMapStartDate', data.currentMapStartDate);
+        this.record.set('currentMapEndDate', data.currentMapEndDate);
+        this.record.set('currentMsrp', data.currentMsrp);
+        this.record.set('currentDiscountsRestricted', data.currentDiscountsRestricted);
+        this.record.set('currentDiscountsRestrictedStartDate', data.currentDiscountsRestrictedStartDate);
+        this.record.set('currentDiscountsRestrictedEndDate', data.currentDiscountsRestrictedEndDate);
+        this.record.set('extras', data.extras);
+        this.onPriceEntryLoaded(this.record);
+    },
+
+    onProductVariationChanged: function (data) {
+        if (!data){
+            data = {};
+        }
+        this.record.set('isVariation', true);
+        this.record.set('currentListPrice', data.currentListPrice);
+        this.record.set('currentSalePrice', data.currentSalePrice);
+        this.record.set('currentCost', data.currentCost);
+        this.record.set('currentMsrp', data.currentMsrp);
+        this.onPriceEntryLoaded(this.record);
+    },
+
+    onPriceEntryLoaded: function (record) {
+        var currCode = record.get('currentPriceCurrencyCode') || this.currencyCode,
+            currency = Taco.app.context.currencies[currCode.toLowerCase()];
+
+        this.priceOverrideFirst.setCurrentPrice(this.formatCurrency(record.get('currentListPrice'), currency));
+        this.salePriceOverrideFirst.setCurrentPrice(this.formatCurrency(record.get('currentSalePrice'), currency));
+        this.msrpOverride.setCurrentPrice(this.formatCurrency(record.get('currentMsrp'), currency));
+        this.costOverride.setCurrentPrice(this.formatCurrency(record.get('currentCost'), currency));
+        this.mapOverride.setCurrentPrice(this.formatCurrency(record.get('currentMap'), currency));
+        this.currentMapStartDate.setValue(Ext.util.Format.date(record.get('currentMapStartDate'), 'd M, Y, g:i a'));
+        this.currentMapEndDate.setValue(Ext.util.Format.date(record.get('currentMapEndDate'), 'd M, Y, g:i a'));
+        this.currentRestriction.setValue(record.get('currentDiscountsRestricted'));
+        this.currentRestrictionStartDate.setValue(Ext.util.Format.date(record.get('currentDiscountsRestrictedStartDate'), 'd M, Y, g:i a'));
+        this.currentRestrictionEndDate.setValue(Ext.util.Format.date(record.get('currentDiscountsRestrictedEndDate'), 'd M, Y, g:i a'));
+
+        this.updateExtras(record.get('extras'));
+        this.injectExtrasTab(record);
+    },
+
+    formatCurrency: function (value, currency) {
+        if (!value && value !== 0) {
+            return '';
+        }
+        return Ext.util.Format.currency(value, currency.symbol, currency.significantDecimalDigits, false);
     },
     
     beforeSave: function () {
@@ -406,9 +496,7 @@ Ext.define('Taco.view.priceList.entry.PriceEntryPrice', {
 
     onDestroy: function () {
         var me = this;
-
         me.clearListeners();
-
         this.callParent(arguments);
     }
 });

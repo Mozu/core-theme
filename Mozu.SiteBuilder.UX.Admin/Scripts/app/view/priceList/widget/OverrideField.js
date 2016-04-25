@@ -5,7 +5,8 @@
  Ext.define('Taco.view.priceList.widget.OverrideField', {
     extend: 'Ext.container.Container',
     requires: [
-        'Taco.core.ux.form.CurrencyField'
+        'Taco.core.ux.form.CurrencyField',
+        'Taco.view.priceList.widget.CurrentValueLabel'
     ],
     alias: 'widget.overridefield',
     cls: Taco.baseCSSPrefix + 'overridefield',
@@ -27,7 +28,7 @@
             tabIndex: -1,
             name: me.fieldCfg.name + 'Mode',
             listeners: {
-                change: function(cmp, newVal, oldVal) {
+                change: function() {
                     var field = me.overrideField;
                     if (!field) return;
 
@@ -73,7 +74,7 @@
             emptyText: me.originalEmptyText,
             fieldStyle: 'text-align: right',
             listeners: {
-                change: function (cmp, newVal, oldVal, eOpts) {
+                change: function (cmp, newVal, oldVal) {
                     if ((newVal === 0 || newVal) && !oldVal) {
                         me.override.setValue(true);
                     }
@@ -84,8 +85,22 @@
 
         me.overrideField = Ext.widget(fieldCfg);
 
-        me.items = [me.override, me.overrideField];
-
+        me.currentVal = Ext.widget('current-value-label', {margin: '5 30 0 0'});
+        
+        me.items = [
+            me.override, {
+                xtype: 'fieldcontainer',
+                layout: {
+                    type: 'vbox',
+                    align: 'stretch'
+                },
+                items: [
+                    me.overrideField,
+                    me.currentVal
+                ]
+            }
+        ];
+        
         me.callParent(arguments);
     },
     isOverridden: function() {
@@ -96,8 +111,11 @@
     },
     setValue: function(value) {
         var me = this;
-        me.override.setValue(!!value)
+        me.override.setValue(!!value);
         me.overrideField.setValue(value);
         return me;
-    }
+    },
+     setCurrentPrice: function(currentPrice) {
+         this.currentVal.setValue(currentPrice);
+     }
  });
