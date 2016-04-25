@@ -86,6 +86,7 @@ Ext.define('Taco.view.couponCode.DiscountGrid', {
         if (couponSetId) {
             this.store.proxy.extraParams = this.store.proxy.extraParams || {};
             this.store.proxy.extraParams.couponsetid = couponSetId;
+            this.store.proxy.extraParams.advancedSearch = Ext.JSON.encodeValue({"status":"all"});
             this.store.load();
         }
 
@@ -168,7 +169,7 @@ Ext.define('Taco.view.couponCode.DiscountGrid', {
         var me = this;
         if (!me.quickAddField) {
             me.quickAddField = Ext.create('Taco.shared.view.field.DiscountPickerField',{
-                //xtype: "textfield",
+                statusFilter: 'active,scheduled',
                 flex: 1,
                 emptyText: "Search for discount and hit ENTER key to Add",
                 listeners: {

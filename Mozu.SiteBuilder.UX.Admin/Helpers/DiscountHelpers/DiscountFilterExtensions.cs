@@ -223,7 +223,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Helpers.DiscountHelpers
                 case "couponcode":
                     return String.Format("{0} cont \"{1}\"", COUPON_CODE_PROPERTY, filter.escapedValue);
                 case "status":
-                    return String.Format("{0} eq \"{1}\"", STATUS_PROPERTY, filter.value);
+                    return SplitStatus(filter.value);
                 case "amount":
                     return String.Format("{0} eq \"{1}\"", AMOUNT_PROPERTY, filter.value);
                 case "type":
@@ -289,6 +289,24 @@ namespace Mozu.SiteBuilder.UX.Admin.Helpers.DiscountHelpers
                         throw new NotImplementedException("unable to filter on property " + filter.property);
                     }
             }
+        }
+
+        private static string SplitStatus(object filterValue)
+        {
+            if (filterValue == null) return "";
+
+            var statuses = filterValue.ToString().Split(',');
+            if (statuses.Length == 1)
+            {
+                return String.Format("{0} eq {1}", STATUS_PROPERTY, statuses[0]);
+            }
+            var statusFilter = new StringBuilder(String.Format("({0} eq {1}", STATUS_PROPERTY, statuses[0]));
+            for (var i = 1; i < statuses.Length; i++)
+            {
+                statusFilter.Append(String.Format(" or {0} eq {1}", STATUS_PROPERTY, statuses[i]));
+            }
+            statusFilter.Append(")");
+            return statusFilter.ToString();
         }
     }
 }
