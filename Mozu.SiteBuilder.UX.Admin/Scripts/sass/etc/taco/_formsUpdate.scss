@@ -168,16 +168,18 @@
 
     .#{$prefix}html-editor-input {
         border-color: $input-border;
-        border-left: none;
-        border-right: none;
     }
 
     .#{$prefix}html-editor-tb {
         background: $white-color;
         border: 1px solid $input-border;
         border-color: $input-border !important;
-        @include border-radius-xbrowser($border-radius-small);
+        @include partial-border-radius($border-radius-small, 0, $border-radius-small, 0);
         height: 30px;
+
+        &:focus {
+            border-color: $valid-green;
+        }
 
         .#{$prefix}toolbar-separator {
             /* override external styles */
