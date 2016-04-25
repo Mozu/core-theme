@@ -91,6 +91,10 @@ Ext.define('Taco.model.NavigationItem', {
             name: 'isSubNavLink',
             type: 'boolean'
         },
+        {
+            name: '_id',
+            type: 'string'
+        },
         'items'
     ],
     // belongsTo: 'NavigationItem',
