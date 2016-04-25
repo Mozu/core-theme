@@ -14,7 +14,7 @@ $gray-text-extra-light:         rgba(lighten($black-color, 13), .25);           
 $card-border:                   rgb(241, 241, 241);                                 /* #f1f1f1 --> #f0f0f0  240, 240, 240 */
                                 /* darken($white-color, 6); */
 
-$input-border:                  $card-border;
+$input-border:                  rgb(220, 220, 220);
 $light-bg:                      rgb(234, 234, 234);                                 /* #eaeaea --> #e8e8e8  232, 232, 232 */
                                 /* darken($white-color, 9); */
 $input-focus-border:            rgb(158, 202, 237);                                 /* #9ecaed              158, 202, 237 */

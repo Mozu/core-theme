@@ -1,9 +1,8 @@
-
 	.#{$vprefix}editable-display-field-inner {
         text-decoration:none;
         display:block;
 		color: #333333;
-		padding: 6px 11px 4px 11px;	
+		padding: 6px 11px 4px 11px;
 		background: white repeat-x 0 0;
 		//border-width: 1px;
 		//border-style: solid;
@@ -15,17 +14,12 @@
 	}
 
     .#{$vprefix}editable-display-field-inner-border{
-		padding: 5px 10px 3px 10px;	
+		padding: 5px 10px 3px 10px;
 		border-width: 1px;
 		border-style: solid;
 		border-color: #bfbfbf;
 	}
 
-    .#{$vprefix}editable-display-field {
-
-    
-    }
-    
     .#{$vprefix}editable-display-field-over {
         .#{$vprefix}editable-display-field-inner {
             background-color:$color-neutral-95;
@@ -40,7 +34,7 @@
 
     .#{$vprefix}editable-display-field-focus{
         border-color: $color-action-outline-focus;
-        background-color:$color-neutral-95;        
+        background-color:$color-neutral-95;
 		@include box-shadow(inset 0 0 4px 0px transparentize($color-action-outline-focus, .5));
     }
 
@@ -64,16 +58,15 @@
         opacity: .3;
     }
 
-
-    .#{$prefix}form-readonly{
-    
-    
-    }
-
     .#{$vprefix}label-focus {
         > tbody {
             label {
                 color: $valid-green;
+            }
+
+            .#{$prefix}htmleditor-iframe {
+                border: 1px solid $valid-green;
+                box-shadow: 0 0 1px 1px $valid-green;
             }
         }
     }
