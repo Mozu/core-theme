@@ -45,7 +45,8 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.ModelMapping
                                {
                                    Id = x.id,
                                    Settings = new List<MSC.Setting>(),
-                                   Enabled = x.Enabled
+                                   Enabled = x.Enabled,
+                                   AreCredentialsSet = x.AreCredentialsSet
                                };
                     foreach (var carSet in x.Settings)
                     {
