@@ -9,6 +9,8 @@
             border-left: 1px solid $input-border;
             border-right: 1px solid $input-border;
             border-radius: 0;
+            color: $textarea-color;
+            line-height: 21px;
             padding: 8px 12px;
 
             &:focus {
