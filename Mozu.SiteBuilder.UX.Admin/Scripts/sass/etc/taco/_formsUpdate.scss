@@ -231,6 +231,12 @@
                 background: $white-color;
             }
 
+            &.#{$prefix}btn-icon {
+                &:first-child {
+                    border-top-left-radius: 3px;
+                }
+            }
+
             .#{$prefix}btn-icon-el {
                 background-image: none;
                 font-family: $icon-font;
