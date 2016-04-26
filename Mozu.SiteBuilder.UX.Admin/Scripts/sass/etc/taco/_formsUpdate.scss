@@ -3,6 +3,19 @@
         border: 0;
         border-bottom: 1px solid $input-border;
         @include border-radius-xbrowser(0);
+
+        &.#{$prefix}form-textarea {
+            border-top: 1px solid $input-border;
+            border-left: 1px solid $input-border;
+            border-right: 1px solid $input-border;
+            border-radius: 0;
+            padding: 8px 12px;
+
+            &:focus {
+                border-color: $valid-green;
+                box-shadow: 0 0 0 1px $valid-green inset;
+            }
+        }
     }
 
     .#{$prefix}boxselect {
