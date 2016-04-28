@@ -43,7 +43,7 @@ Ext.define('Taco.view.generalsettings.Form', {
 
         me.callParent(arguments);
         
-        this.loadNavItems();
+        // this.loadNavItems();
     },
 
     loadForm: function (record, noCascade) {
