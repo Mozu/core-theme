@@ -18,8 +18,13 @@
     "mozu-theme-helpers": "^1.2.2",
     "time-grunt": "^1.2.2"
   },
+  "scripts": {
+    "clean": "rm -rf compiled",
+    "ci": "grunt build",
+    "prod": "grunt build-production"
+  },
   "engines": {
-    "node": ">=0.10"
+    "node": ">=4.0"
   },
   "dependencies": {
     "backbone": "1.1.2",
