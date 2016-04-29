@@ -644,6 +644,7 @@ Ext.define('Taco.view.product.subform.General', {
             items: [
                 {
                     xtype: 'htmleditor',
+                    flex: 1,
                     enableFont: false,
                     fieldLabel: 'Short Description',
                     name: 'productShortDescription',
@@ -656,6 +657,7 @@ Ext.define('Taco.view.product.subform.General', {
                     }
                 }, {
                     xtype: 'htmleditor',
+                    flex: 1,
                     enableFont: false,
                     fieldLabel: 'Long Description',
                     name: 'productFullDescription',
