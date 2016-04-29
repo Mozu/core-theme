@@ -4,8 +4,8 @@ The Mozu Core theme is the foundation upon which you can build your own Mozu the
 
 ## Merge the Latest Core Updates
 
-Mozu continually updates the Core theme. Sometimes, you may have to merge an update from Core into your theme to enable a newly-released feature in Admin or a new Mozu application that you installed through the Mozu Marketplace.
+Mozu continually updates the Core theme. Sometimes, you may have to merge an update from Core into your theme to enable a newly-released feature in Admin or complete the installation of a Mozu application that you obtained through the [Mozu Marketplace](https://www.mozu.com/marketplace).
 
-For the latest enhancements, see the release notes [Release Notes](https://github.com/Mozu/core-theme/blob/master/RELEASE_NOTES.md).
+For the latest enhancements, see the [Release Notes](https://github.com/Mozu/core-theme/blob/master/RELEASE_NOTES.md).
 
 
