@@ -42,11 +42,13 @@ Ext.define('Taco.view.product.subform.SEO', {
                                 fieldLabel: 'Meta Description',
                                 name: 'metaDescription',
                                 xtype: 'textarea',
+                                flex: 1,
                                 width: '50%',
                                 margin: '0 15 0 0',
                                 height: 250
                             }, {
                                 xtype: 'textarea',
+                                flex: 1,
                                 name: 'metaKeywords',
                                 fieldLabel: 'Meta Keywords',
                                 width: '50%',
