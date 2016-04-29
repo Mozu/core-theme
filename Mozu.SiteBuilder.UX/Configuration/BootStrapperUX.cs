@@ -1,6 +1,7 @@
 ﻿using System.Net.Http.Formatting;
 using System.Reflection;
 using System.Web.Http;
+using System.Web.WebPages;
 using Mozu.AdminUser.Contracts.Clients;
 using Mozu.CommerceRuntime.Contracts.Clients;
 using Mozu.Content.Contracts.Clients;
@@ -66,8 +67,39 @@ namespace Mozu.SiteBuilder.UX.Configuration
                 System.Threading.ThreadPool.SetMinThreads(minThreadWorker.Value, minThreadIO.Value);
 
 
-            
+            FixupDisplayMode();
+
+
+
         }
+
+        void FixupDisplayMode()
+        {
+            DisplayModeProvider.Instance.Modes.Clear();
+
+            DisplayModeProvider.Instance.Modes.Add(new PathErrorWorkaroundDisplayMode()
+            {
+                ContextCondition = context => context.GetOverriddenBrowser().IsMobileDevice
+            });
+            DisplayModeProvider.Instance.Modes.Add(new DefaultDisplayMode());
+        }
+
+        class PathErrorWorkaroundDisplayMode : DefaultDisplayMode
+        {
+            //used to fault if the virutal path wasnt a valid Path ( using System.Path ) 
+            protected override string TransformPath(string virtualPath, string suffix)
+            {
+                try
+                {
+                   return base.TransformPath(virtualPath, suffix);
+                }
+                catch
+                {
+                    return base.TransformPath(virtualPath, null);
+                }
+            }
+        }
+
 
         protected override void InitializeFormatters(HttpConfiguration httpConfiguration)
         {

@@ -215,9 +215,14 @@ namespace Mozu.SiteBuilder.Mvc.SEO
                         _requestMessage.Value.RequestUri.GetComponents(UriComponents.Path , UriFormat.Unescaped), 
                         StringComparison.OrdinalIgnoreCase))
                     {
+                        if (!IsValidForExistingContext(request , uri, routeCollection))
+                        {
+                            return null;
+                        }
+
                         var preStrippedRequest = request.Properties.ContainsKey(SeoDelegatingHandler.MzPreCleanedUri) ?
-                             (Uri)request.Properties[SeoDelegatingHandler.MzPreCleanedUri] :
-                             request.RequestUri;
+                        (Uri)request.Properties[SeoDelegatingHandler.MzPreCleanedUri] :
+                        request.RequestUri;
 
                         uri = new Uri(uri.GetLeftPart(UriPartial.Path) + preStrippedRequest.Query);
                         var redirect = request.CreateResponse(HttpStatusCode.MovedPermanently);
@@ -242,7 +247,24 @@ namespace Mozu.SiteBuilder.Mvc.SEO
             }
             return null;
         }
-      
+
+        private static bool IsValidForExistingContext(HttpRequestMessage currentRequest, Uri candidateUri, HttpRouteCollection routeCollection)
+        {
+            var testHttmMessage = new HttpRequestMessage(currentRequest.Method, candidateUri);
+            testHttmMessage.Properties[HttpPropertyKeys.DependencyScope] =currentRequest.Properties[HttpPropertyKeys.DependencyScope];
+            var reverseResolvedRoute = routeCollection.GetRouteData(testHttmMessage)?.Route as CustomRoute;
+            var resolvedRoute = currentRequest.GetRouteData().Route as CustomRoute;
+            if (reverseResolvedRoute == null)
+            {
+                return false;
+            }
+            if (resolvedRoute != null && resolvedRoute.InternalRoute != reverseResolvedRoute.InternalRoute)
+            {
+                return false;
+            }
+            return true;
+        }
+
         static int? GetPortForScheme(int incomingPort, CustomRoute.Scheme desiredScheme)
         {
             if (incomingPort == 80 && desiredScheme == CustomRoute.Scheme.Http) return null;

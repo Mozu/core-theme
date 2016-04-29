@@ -43,13 +43,14 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.ModelMapping
                    var dic = new System.Collections.Generic.Dictionary<string, object>(StringComparer.OrdinalIgnoreCase);
                    dic["productCode"] = product.ProductCode;
                    dic["productName"] = product.ProductName;
-                   dic["productSlug"] = product.Content == null ? null : product.Content.SEOFriendlyUrl;
+                   dic["productSlug"] = product.Content?.SEOFriendlyUrl;
                    dic["productType"] = product.ProductType;
+                   dic["productTypeId"] = product.ProductTypeId;
                    dic["variationProductCode"] = product.VariationProductCode;
                    if ( product.Categories != null && product.Categories.Count>0)
                    {
-                       var cat = product.Categories.First();
-                       PopulateDictionary(product.Categories.First(), dic);
+                       var cat = product.Categories.FirstOrDefault(x => x.IsDisplayed) ?? product.Categories.First();
+                       PopulateDictionary(cat, dic);
                    }
                    
                    if ( product.Properties != null)
