@@ -16,8 +16,17 @@ namespace Mozu.SiteBuilder.UX.Admin.Helpers.PriceListHelpers
     public class PriceListExtraEntryHelper : IPriceListExtraEntryHelper
     {
         public List<PriceListEntryExtra> MergeExtraEntries(Func<string, string, decimal?> getOverridePrice, 
-            List<DC.ProductExtra> dcProductExtras, DC.ProductType prodType, List<PriceListEntryExtra> result)
+            List<DC.ProductExtra> dcProductExtras, DC.ProductType prodType, List<PriceListEntryExtra> overrides)
         {
+            if (dcProductExtras.IsNullOrEmpty())
+            {
+                if (overrides.IsNullOrEmpty())
+                {
+                    return new List<PriceListEntryExtra>();
+                }
+                dcProductExtras = dcProductExtras ?? new List<DC.ProductExtra>();
+            }
+            
             var attrLookup = new Dictionary<string, PriceListEntryExtra>();
             foreach (var extra in prodType.Extras)
             {
@@ -62,9 +71,9 @@ namespace Mozu.SiteBuilder.UX.Admin.Helpers.PriceListHelpers
 
             foreach (var extra in extras)
             {
-                result.AddRange(extra);
+                overrides.AddRange(extra);
             }
-            return result;
+            return overrides;
         }
 
         private string ToStringOrEmpty(object value)

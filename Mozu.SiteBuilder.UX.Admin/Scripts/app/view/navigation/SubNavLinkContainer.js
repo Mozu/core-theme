@@ -183,6 +183,30 @@ Ext.define('Taco.view.navigation.SubNavLinkContainer', {
                     return ret;
 
             }
+        },
+        doClick: function (linkData) {
+            var configData;
+
+            if (linkData.get('requiredContext')) {
+                configData = Taco.view.navigation.SubNavLinkContainer.getContextHash();
+            }
+
+            var displayMode = linkData.get('displayMode');
+            var href = linkData.get('href');
+
+            if (displayMode === 'navigate' || !displayMode) {
+                if (href.indexOf('http') !== -1) {
+                    Taco.view.navigation.SubNavLinkContainer.launchExtensionWindow(linkData, configData);
+                }
+                else {
+                    Taco.core.StateManager.attemptNavigate(href);
+                }
+            }
+
+            else if (displayMode === 'modal') {
+                Taco.view.navigation.SubNavLinkContainer.launchExtensionWindow(linkData, configData);
+            }
+            return true;
         }
     },
 
@@ -418,32 +442,9 @@ Ext.define('Taco.view.navigation.SubNavLinkContainer', {
     },
 
     onClick: function (record) {
-
         if (!record.extension) return false;
 
-        var linkData = record.extension,
-            configData;
-
-        if (linkData.get('requiredContext')) {
-            configData = Taco.view.navigation.SubNavLinkContainer.getContextHash();
-        }
-
-
-        var displayMode = linkData.get('displayMode');
-        var href = linkData.get('href');
-
-        if (displayMode === 'navigate' || !displayMode) {
-            if (href.indexOf('http') !== -1) {
-                Taco.view.navigation.SubNavLinkContainer.launchExtensionWindow(linkData, configData);
-            }
-            else {
-                Taco.core.StateManager.attemptNavigate(href);
-            }
-        }
-
-        else if (displayMode === 'modal') {
-            Taco.view.navigation.SubNavLinkContainer.launchExtensionWindow(linkData, configData);
-        }
+        return Taco.view.navigation.SubNavLinkContainer.doClick(record.extension);
     }
 
 });

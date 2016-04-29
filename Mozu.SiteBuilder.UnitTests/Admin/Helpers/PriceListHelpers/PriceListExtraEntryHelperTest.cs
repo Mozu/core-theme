@@ -37,6 +37,31 @@ namespace Mozu.SiteBuilder.UnitTests.Admin.Helpers.PriceListHelpers
             Assert.That(actual.First(x => x.AttributeFQN.EqualsIgnoreCase("tenant~extra-list-number")).Value, Is.Not.Null, "value should not be null");
         }
 
+        [Test]
+        public void ShouldHandleNoProductExtras()
+        {
+            //setup
+            var prodType = CreateProductType();
+            List<DC.ProductExtra> dcProductExtras = null;
+            var overridenEntries = CreateExistingPriceListEntries();
+            var lookup = (overridenEntries.IsNullOrEmpty())
+                ? new Dictionary<string, PriceListEntryExtra>()
+                : overridenEntries.ToDictionary(x => x.AttributeFQN + "-" + x.Value);
+
+
+            var sut = new PriceListExtraEntryHelper();
+
+            //execute
+            var actual = sut.MergeExtraEntries(
+                ((attrFqn, attrValue) => lookup.ContainsKey(attrFqn + "-" + attrValue)
+                    ? lookup[attrFqn + "-" + attrValue].OverridePrice
+                    : (decimal?)null), 
+                dcProductExtras, prodType, overridenEntries);
+
+            //assert
+            Assert.That(actual.Count, Is.GreaterThanOrEqualTo(1), "overrides should not be empty");
+        }
+
         private List<DC.ProductExtra> CreateProductExtras()
         {
             return new List<DC.ProductExtra>

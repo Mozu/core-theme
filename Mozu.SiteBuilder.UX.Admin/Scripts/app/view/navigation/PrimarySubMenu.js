@@ -72,7 +72,7 @@ Ext.define('Taco.view.navigation.PrimarySubMenu', {
         subNavIndex = subNavLinksHrefs.indexOf(href);
 
         if (subNavIndex !== -1 && href.indexOf('http') !== -1) {
-            Taco.view.navigation.SubNavLinkContainer.launchExtensionWindow(subNavLinks[subNavIndex], subNavLinks[subNavIndex].data);
+            Taco.view.navigation.SubNavLinkContainer.doClick( subNavLinks[subNavIndex]);
             return false;
         }
 

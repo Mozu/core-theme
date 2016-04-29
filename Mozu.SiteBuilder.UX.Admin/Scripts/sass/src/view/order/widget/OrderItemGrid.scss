@@ -160,7 +160,12 @@
     // forces the content to wrap in the cell
     .product-options{
         white-space: normal;
-    } 
+    }
+
+    .product-options-raw{
+        color:$color-neutral-60;
+        font-style: italic;
+    }
 
 	.bundledProduct{
 		padding-left:20px;

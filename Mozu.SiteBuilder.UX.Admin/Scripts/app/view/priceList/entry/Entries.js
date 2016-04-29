@@ -1,6 +1,6 @@
 /**
- * @class  Taco.view.priceList.form.Conditions
- * @description Price List Conditions Form
+ * @class  Taco.view.priceList.entry.Entries'
+ * @description Price List Entry Form
  */
 Ext.define('Taco.view.priceList.entry.Entries', {
     extend: 'Taco.core.ux.form.Form',

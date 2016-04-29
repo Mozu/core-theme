@@ -158,9 +158,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
         {
             var dcUser = (await _adminUserWebApiClient.GetUserRoles(accountUser.Id, scopeType: "Tenant", scopeId: _apiContext.TenantId)).ReadAsSync();
 
-            //await Task.WhenAll(dcUser.Items.Select(role => _adminUserWebApiClient.RemoveUserRole(accountUser.Id, role.RoleId, scopeType: UserScopeType.Tenant.ToString(), scopeId: _apiContext.TenantId)));
-
-            //await _adminUserWebApiClient.RemoveUserRole(accountUser.Id, accountUser.RoleId, scopeType: UserScopeType.Tenant.ToString(), scopeId: _apiContext.TenantId);
+            await Task.WhenAll(dcUser.Items.Select(role => _adminUserWebApiClient.RemoveUserRole(accountUser.Id, role.RoleId, scopeType: UserScopeType.Tenant.ToString(), scopeId: _apiContext.TenantId)));
 
             return EmptySingle2<AccountUser>();
         }

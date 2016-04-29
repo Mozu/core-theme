@@ -241,6 +241,11 @@ namespace Mozu.SiteBuilder.Mvc.Contexts
             {
                 get; set;
             }
+
+            public bool? OpenInNewWindow
+            {
+                get; set;
+            }
         }
 
 

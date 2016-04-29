@@ -11,15 +11,11 @@ Ext.define('Taco.view.priceList.widget.EntryExtrasGrid', {
         'Taco.model.PriceListEntryExtra'
     ],
 
-    
     mixins: {
-        pageable: 'Taco.core.ux.mixins.Pageable',
-        rowEditable: 'Taco.core.ux.mixins.RowEditable',
-        deleteFromGrid: 'Taco.core.ux.mixins.DeleteFromGrid'
+
     },
     showActionsColumn: true,
-    enablePaging: true,
-    //stateful: true,
+    stateful: true,
     stateId: 'statefulPriceListEntryExtrasGrid',
     hideSearchToolbar: true,
 
@@ -43,21 +39,6 @@ Ext.define('Taco.view.priceList.widget.EntryExtrasGrid', {
             }
         }
 
-        // initialize the delete mixin
-        this.mixins.deleteFromGrid.init.apply(this);
-
-        //this.rowEditor = Ext.create('Ext.grid.plugin.RowEditing', {
-        //    clicksToMoveEditor: 1,
-        //    clicksToEdit: 1,
-        //    autoCancel: false,
-        //    errorSummary: false,
-        //    listeners: {
-        //        edit: this.onRowEdit,
-        //        canceledit: this.onRowCancelEdit,
-        //        scope: this
-        //    }
-        //});
-
         this.mon(this, 'beforeedit', function (editorPlugin, e, eOpts) {
             
             var editor = e.column.getEditor(),
@@ -71,11 +52,6 @@ Ext.define('Taco.view.priceList.widget.EntryExtrasGrid', {
 
         this.store = this.getStore();
 
-        if (me.enablePaging) {
-            // initialize the grid paging toolbar mixin
-            this.mixins.pageable.constructor.apply(this);
-        }
-        
         if (!this.plugins) {
             this.plugins = [];
         } else {
