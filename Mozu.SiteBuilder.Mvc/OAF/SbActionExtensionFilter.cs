@@ -159,6 +159,22 @@ namespace Mozu.SiteBuilder.Mvc.OAF
                 set { }
             }
 
+            public List<Category> Top
+            {
+                get
+                {
+                    return _catTask.Value.Result.Top;
+                }
+            }
+
+            public List<Category> All
+            {
+                get
+                {
+                    return _catTask.Value.Result.All;
+                }
+            }
+
             [Microsoft.ClearScript.ScriptMember("findById")]
             public Category FindById(int? categoryId)
             {

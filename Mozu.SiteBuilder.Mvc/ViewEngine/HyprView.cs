@@ -6,7 +6,9 @@ using System.Net.Http;
 using System.Threading.Tasks;
 using Autofac;
 using Microsoft.FSharp.Core;
+using Mozu.SiteBuilder.Mvc.Catalog;
 using Mozu.SiteBuilder.Mvc.Contexts;
+using Mozu.SiteBuilder.UX.Models.StoreFront.Catalog;
 using NDjango.Interfaces;
 using NDjango.Misc;
 
@@ -30,12 +32,13 @@ namespace Mozu.SiteBuilder.Mvc.ViewEngine
             var pageContext = viewContext.LifetimeScope.Resolve<PageContext>();
             var siteContext = viewContext.LifetimeScope.Resolve<SiteContext>();
             var requestContext = new Dictionary<string, object>(StringComparer.OrdinalIgnoreCase);
-
+            var catHelper = viewContext.LifetimeScope.Resolve<ICategoryTreeProvider>();
             AddConstants(requestContext);
             AddViewPath(requestContext, virtualPath);
             AddViewContextData(requestContext, viewContext);
             AddPageContextData(requestContext, pageContext);
             AddSiteContextData(requestContext, siteContext);
+            AddCategoryContextData(requestContext, catHelper.GetAllCategories().Result);
             AddNavigationContextData(requestContext, navigationContext);
             AddClientApiContextData(requestContext, clientApiContext);
             
@@ -70,6 +73,13 @@ namespace Mozu.SiteBuilder.Mvc.ViewEngine
             requestContext["labels"] = siteContext.Labels;
         }
 
+        private static void AddCategoryContextData(Dictionary<string, object> requestContext, ICategoryTree categoryTree)
+        {
+            requestContext["categoryHelper"] = categoryTree;
+            requestContext["categories"] = categoryTree;
+        }
+
+
         private static void AddPageContextData(Dictionary<string, object> requestContext, PageContext pageContext)
         {
             requestContext["pageContext"] = pageContext;
@@ -103,6 +113,12 @@ namespace Mozu.SiteBuilder.Mvc.ViewEngine
         {
             var requestContext = CreateRequestContext(viewContext, _virtualPath);
             var templateManager = viewContext.RequestMessage.Resolve<ITemplateManager>();
+
+            var catTreeProvider = viewContext.RequestMessage.Resolve<ICategoryTreeProvider>();
+            if (!catTreeProvider.HasCompleted)
+            {
+                await catTreeProvider.GetAllCategories();
+            }
             try
             {
                 var template = templateManager.GetTemplate(_mappedPath);

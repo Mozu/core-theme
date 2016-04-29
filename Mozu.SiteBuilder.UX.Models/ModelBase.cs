@@ -6,8 +6,12 @@
 
 using Mozu.SiteBuilder.UX.Models.ModelMetaData;
 
+
+
 namespace Mozu.SiteBuilder.UX.Models
 {
+
+
     using System;
     using System.Collections.Generic;
     using System.Linq;
@@ -18,7 +22,13 @@ namespace Mozu.SiteBuilder.UX.Models
     /// <summary>
     /// TODO: Update summary.
     /// </summary>
-    
+
+
+    public interface ITagFilterFindable
+    {
+        object Filter(IEnumerable<object> parameter);
+    }
+
     [DataContract]
     public abstract class ModelBase 
     {

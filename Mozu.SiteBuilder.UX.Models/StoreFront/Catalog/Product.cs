@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Runtime.Serialization;
 using System.Threading.Tasks;
+using Newtonsoft.Json;
 
 namespace Mozu.SiteBuilder.UX.Models.StoreFront.Catalog
 {
@@ -672,6 +673,8 @@ namespace Mozu.SiteBuilder.UX.Models.StoreFront.Catalog
     public interface ICategoryTree
     {
         string ETag { get; set; }
+        List<Category> Top { get; }
+        List<Category> All { get;  }
         List<Category> RootCategories { get; }
         List<Category> AllCategories { get; set; }
         Category FindById( int? categoryId);
@@ -679,11 +682,14 @@ namespace Mozu.SiteBuilder.UX.Models.StoreFront.Catalog
         IList<Category> FindBySlug ( string categorySlug);
     }
 
-    public class CategoryTree : ICategoryTree
+    public class CategoryTree : ICategoryTree,  ITagFilterFindable
     {
+      
+    
         public string ETag { get; set; }
 
         List<Category> _rootCategories;
+        [JsonIgnore]
         public List<Category> RootCategories
         {
             get
@@ -702,6 +708,12 @@ namespace Mozu.SiteBuilder.UX.Models.StoreFront.Catalog
        Lazy<ILookup<string, Category>> _allCategoriesBySlug;
         List<Category> _allCategories;
 
+
+        public List<Category> All => AllCategories;
+        
+        public List<Category> Top => RootCategories;
+
+        [JsonIgnore]
         public List<Category> AllCategories
         {
             get { return _allCategories; }
@@ -751,6 +763,20 @@ namespace Mozu.SiteBuilder.UX.Models.StoreFront.Catalog
 
             return _allCategoriesBySlug.Value[categorySlug].ToList();
             
+        }
+
+        public object Filter(IEnumerable<object> parameters)
+        {
+            var token = parameters.FirstOrDefault();
+            if (token == null)
+            {
+                return null;
+            }
+            if ( token is int || token is double || token is long)
+            {
+                return FindById((int)token);
+            }
+            return FindByCode(token as string) ?? FindBySlug(token as string).FirstOrDefault();
         }
     }
 
