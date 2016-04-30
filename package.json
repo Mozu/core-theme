@@ -3,6 +3,11 @@
   "author": "Volusion, Inc.",
   "description": "The core storefront theme for Mozu.",
   "version": "9.4.0",
+  "scripts": {
+    "clean": "rm -rf compiled",
+    "ci": "grunt",
+    "prod": "grunt build-production"
+  },
   "repository": {
     "type": "git",
     "url": "https://github.com/mozu/core-theme.git"
