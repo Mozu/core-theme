@@ -287,6 +287,12 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
                     {
                         methods = resp.ReadAsSync();
                     }
+                    else
+                    {
+                        var message = resp.ReadException().Message;
+                        var messageType = "error";
+                        jOrder.Add("messages", new JArray(new { message, messageType }.ToJObject()));
+                    }
                 }
 
                 var asm = (methods ?? new List<ShippingRate>(0)).ToJArray();
