@@ -250,6 +250,10 @@ namespace Mozu.SiteBuilder.Mvc.SEO
 
         private static bool IsValidForExistingContext(HttpRequestMessage currentRequest, Uri candidateUri, HttpRouteCollection routeCollection)
         {
+            if (routeCollection == null)
+            {
+                return false;
+            }
             var testHttmMessage = new HttpRequestMessage(currentRequest.Method, candidateUri);
             testHttmMessage.Properties[HttpPropertyKeys.DependencyScope] =currentRequest.Properties[HttpPropertyKeys.DependencyScope];
             var reverseResolvedRoute = routeCollection.GetRouteData(testHttmMessage)?.Route as CustomRoute;
