@@ -147,16 +147,17 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.ModelMapping
                     : null))
                 .ForMember(dc => dc.Value, opt => opt.ResolveUsing(x => x.Id))
                 // TODO: do not hard code this.
-                .ForMember(dc => dc.ValueSequence, opt => opt.ResolveUsing((AttributeValue x) => 0))
+                .ForMember(dc => dc.ValueSequence, opt => opt.ResolveUsing(x => x.ValueSequence))
                 .ForMember(dc => dc.LocalizedContent, op => op.Ignore()); // todo: xverify - Greg Murray on 2014-08-26 
             
             ;
             Mapper.CreateMap<DC.AttributeVocabularyValue, AttributeValue>()
-                .ForMember(dc => dc.Value, opt => opt.ResolveUsing(x => x.Content != null &&!string.IsNullOrEmpty( x.Content.StringValue) 
+                .ForMember(dc => dc.Value, opt => opt.ResolveUsing(x => x.Content != null && !string.IsNullOrEmpty( x.Content.StringValue) 
                     ? x.Content.StringValue 
                     :  x.Value))
                 .ForMember(x => x.Id, op => op.ResolveUsing(( DC.AttributeVocabularyValue x) => (x.Value != null) ? x.Value.ToString() : null))
                 .ForMember(x => x.AttributeFQN, op => op.Ignore())
+                //.ForMember(x => x.ValueSequence, op => op.ResolveUsing(dc => dc.ValueSequence))
                 ;
 
             Mapper.CreateMap<AttributeValue, DC.AttributeVocabularyValueInProductType>()
@@ -172,7 +173,10 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.ModelMapping
                 .ForMember(x=> x.Value , opt => opt.ResolveUsing( dc=> dc.VocabularyValueDetail != null && dc.VocabularyValueDetail.Content != null && !string.IsNullOrEmpty( dc.VocabularyValueDetail.Content.StringValue) 
                     ? dc.VocabularyValueDetail.Content.StringValue 
                     : dc.Value ))
-                .ForMember(x => x.AttributeFQN, op => op.Ignore());
+                .ForMember(x => x.AttributeFQN, op => op.Ignore())
+                .ForMember(x => x.ValueSequence, op => op.Ignore())
+            ;
+            
             #endregion
 
             #region Attributes

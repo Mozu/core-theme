@@ -116,6 +116,9 @@ Ext.define('Taco.model.Facet', {
                 }, {
                     id: "ValuesDescending",
                     name: valDescDisplay
+                }, {
+                    id: "AttributeDefinition",
+                    name: "By Attribute Definition"
                 }
             ]
         });

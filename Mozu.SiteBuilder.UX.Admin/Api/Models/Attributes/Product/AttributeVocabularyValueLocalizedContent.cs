@@ -5,7 +5,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.Models.Attributes.Product
     
     public class AttributeVocabularyValue
     {
-        [JsonProperty(DefaultValueHandling = DefaultValueHandling.Ignore, PropertyName = "sequence")]
+        [JsonProperty(DefaultValueHandling = DefaultValueHandling.Ignore)]
         public int? ValueSequence { get; set; }
 
         [JsonProperty(DefaultValueHandling = DefaultValueHandling.Ignore)]

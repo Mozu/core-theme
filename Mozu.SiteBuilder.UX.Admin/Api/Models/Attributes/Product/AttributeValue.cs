@@ -3,13 +3,12 @@
     
     public class AttributeValue
     {
-     
-
         public object  Id{ get; set; }
        
-
         public string AttributeFQN { get; set; }
 
         public object Value { get; set; }
+
+        public int? ValueSequence { get; set; }
     }
 }

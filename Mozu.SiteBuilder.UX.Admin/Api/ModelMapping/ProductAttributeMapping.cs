@@ -42,6 +42,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.ModelMapping
                     ? x.Content.Value :  x.Value))
                 .ForMember(x => x.Id, op => op.ResolveUsing((DC.AttributeVocabularyValue x) => (x.Value != null ? x.Value.ToString() : null)))
                 .ForMember(x => x.AttributeFQN, opt => opt.Ignore())
+                .ForMember(x => x.ValueSequence, op => op.ResolveUsing(dc => dc.Sequence))
                 ;
 
             Mapper.CreateMap<Attribute, DC.Attribute>()

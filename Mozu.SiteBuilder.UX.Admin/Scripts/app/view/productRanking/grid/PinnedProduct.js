@@ -8,7 +8,8 @@ Ext.define('Taco.view.productRanking.grid.PinnedProduct', {
     requires: [
         'Ext.MessageBox',
         'Taco.core.ux.mixins.GridContextMenu',
-        'Taco.model.PinnedProduct'
+        'Taco.model.PinnedProduct',
+        'Taco.core.ux.DragHandleColumn'
     ],
     itemId: 'taco-grid-pinnedproduct',
     stateful: false,
@@ -179,8 +180,7 @@ Ext.define('Taco.view.productRanking.grid.PinnedProduct', {
     },
 
     getActionColumn: function () {
-        var me = this,
-            actionColumn = null,
+        var actionColumn = null,
             actions = this.getActionItems();
 
         // as long as we have actions;
@@ -237,16 +237,34 @@ Ext.define('Taco.view.productRanking.grid.PinnedProduct', {
           },
           {
             text: 'Remove All',
-            menuColumnHandler: function(item, eventData) {
-              me.store.removeAll();
+            menuColumnHandler: function() {
+                Ext.MessageBox.show({
+                    title: 'Confirm',
+                    // pushes the buttons to the right to be consistant with our dialog ux.
+                    rightJustifyButtons: true,
+                    // reverses the order of the buttons
+                    reverseOrder: true,
+                    msg: 'Are you sure you want to remove all records?',
+                    closable: false,
+                    buttons: Ext.Msg.YESNO,
+                    fn: function (val) {
+                        if (val === 'yes') {
+                            me.store.removeAll();
+                        }
+                    }
+                });
             }
           }
         ];
     },
 
   getColumnConfig: function () {
-    var me = this,
-      columns = [
+    return [{
+          xtype: 'draghandlecolumn',
+          stateId: 'dragHandle',
+          width: 35,
+          hideable: false
+        },
         {
           xtype: 'gridcolumn',
           sortable: false,
@@ -319,8 +337,6 @@ Ext.define('Taco.view.productRanking.grid.PinnedProduct', {
           flex: 1
         }
       ];
-
-    return columns;
   },
 
   getValues: function () {

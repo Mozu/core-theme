@@ -770,6 +770,7 @@
     <Content Include="Scripts\app\view\actionmanagement\Index.js" />
     <Content Include="Scripts\app\view\attribute\AdvancedSearchForm.js" />
     <Content Include="Scripts\app\view\attribute\Grid.js" />
+    <Content Include="Scripts\app\view\attribute\AttributeValueGrid.js" />
     <Content Include="Scripts\app\view\businessIntelligence\Index.js" />
     <Content Include="Scripts\app\view\capability\Edit.js" />
     <Content Include="Scripts\app\view\capability\Form.js" />
