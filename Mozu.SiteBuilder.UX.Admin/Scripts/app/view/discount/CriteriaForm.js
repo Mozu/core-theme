@@ -861,8 +861,9 @@ Ext.define('Taco.view.discount.CriteriaForm', {
         }
         
         // only available when scope is specific categories or all
-        this.excludeCategoriesBox.setVisible(!targetSpecifcProducts);
-        this.productsExcludeBox.setVisible(!targetSpecifcProducts);
+        var showExclusions = !targetSpecifcProducts || this.parentForm.general.isOrder();
+        this.excludeCategoriesBox.setVisible(showExclusions);
+        this.productsExcludeBox.setVisible(showExclusions);
 
         
 
