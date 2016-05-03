@@ -62,6 +62,11 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.Models.Checkout
         /// Corresponds to PaymentSettings.ExternalPaymentWorkflowDefinitions
         /// </summary>
         public List<DC.ExternalPaymentWorkflowDefinition> ExternalPaymentWorkflows { get; set; }
+
+        /// <summary>
+        /// Corresponds to PaymentSettings.PurchaseOrder
+        /// </summary>
+        public DC.PurchaseOrderPaymentDefinition PurchaseOrder { get; set; }
     }
 
     public class CardGateway
