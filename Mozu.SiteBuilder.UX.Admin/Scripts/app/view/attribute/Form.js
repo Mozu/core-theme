@@ -244,7 +244,9 @@ Ext.define('Taco.view.attribute.Form', {
                             }
                         },
                         validateedit: function (editor, e) {
-                            if (e.field == 'id' && e.grid.store.getById(e.value)) {
+                            var existing = e.grid.store.findRecord('id', e.value, 0, false, false);
+                            if (e.field == 'id' && existing) {
+                                Taco.app.fireEvent('setmessage', ('The same value ' + existing.getId() + ' already exists'), 'error');
                                 return false;
                             }
                             return true;
@@ -330,7 +332,7 @@ Ext.define('Taco.view.attribute.Form', {
                                 margin: '0 10 0 0',
                                 hideMode: 'display',
                                 fieldLabel: 'Values',
-                                emptyText: 'Add value or "Label:Value"',
+                                emptyText: 'Add Value or Label:Value',
                                 checkDirty: Ext.emptyFn,
                                 isDirty: function () {
                                     return false;
@@ -467,17 +469,21 @@ Ext.define('Taco.view.attribute.Form', {
                                 if (records && records.length) {
                                     var productName = records[0].get('productName'),
                                         productCode = records[0].getId(),
-                                        attributeId = me.record.getId(),
-                                        record;
-
-
+                                        attributeId = me.record.getId();
+                                    
                                     field.reset();
 
-                                    record = me.valuesStore.add({
+                                    var existing = me.valuesStore.findRecord('id', productCode, 0, false, false);
+                                    if (existing) {
+                                        Taco.app.fireEvent('setmessage', ('Product "' + existing.get('value') + '" already exists'), 'error');
+                                        return;
+                                    }
+
+                                    me.valuesStore.add({
                                         attributeId: attributeId,
                                         id: productCode,
                                         value: productName
-                                    })[0];
+                                    });
                                 }
 
                             }

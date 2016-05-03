@@ -143,6 +143,8 @@ Ext.define('Taco.view.couponCode.DiscountGrid', {
                     }, me, {
                         single: true
                     });
+                    me.store.proxy.extraParams = this.store.proxy.extraParams || {};
+                    me.store.proxy.extraParams.advancedSearch = Ext.JSON.encodeValue({"status":"all"});
                     me.store.reload();
                 }
 

@@ -26,7 +26,6 @@ Ext.define('Taco.view.attribute.AttributeValueGrid', {
     config: {
         code: null
     },
-    // selModel: 'cellmodel',
     viewConfig: {
         stripeRows: false,
         plugins: {
@@ -72,15 +71,6 @@ Ext.define('Taco.view.attribute.AttributeValueGrid', {
             
         me.viewConfig = me.viewConfig || {};
         me.viewConfig.deferEmptyText = me.deferEmptyText;
-
-        // if (this.columns[0].xtype !== 'draghandlecolumn' && this.enableRowReorder) {
-        //
-        //     this.columns.unshift({
-        //         xtype: 'draghandlecolumn',
-        //         stateId: 'dragHandle',
-        //         width: 22
-        //     });
-        // }
 
         if (me.showActionsColumn) {
             var actionColumn = me.getActionColumn();
@@ -137,12 +127,10 @@ Ext.define('Taco.view.attribute.AttributeValueGrid', {
     },
 
     addRow: function(rec, index) {
-        var existingIndex,
-            existing = Ext.Array.findBy(this.store.data.items, function(item) { return item.getId() === rec.getId();});
+
+        var existing = this.store.findRecord('id', rec.getId(), 0, false, false, true);
         if (existing) {
-            existingIndex = Ext.Array.indexOf(this.store.data.items, existing);
-            Taco.app.fireEvent('setmessage', 'Record already exists', 'error');
-            this.getView().select(existingIndex);
+            Taco.app.fireEvent('setmessage', ('Record ' + existing.getId() + ' already exists'), 'error');
             return;
         }
         this.store.insert(index, rec);
