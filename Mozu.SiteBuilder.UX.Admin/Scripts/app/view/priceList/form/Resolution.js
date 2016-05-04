@@ -28,7 +28,7 @@ Ext.define('Taco.view.priceList.form.Resolution', {
         var catalogChildren = Ext.Array.map(Taco.app.context.getMasterCatalog().catalogs, function (cat) {
             var validSites = me.record.get('validSites'),
                 defaultForSites = me.record.get('defaultForSites'),
-                indexedForSites = me.record.get('indexedForSites');
+                indexedSites = me.record.get('indexedSites');
             var siteChildren = Ext.Array.map(cat.sites, function (site) {
                 return {
                     id: site.id,
@@ -40,7 +40,7 @@ Ext.define('Taco.view.priceList.form.Resolution', {
                     leaf: 'true',
                     checked: validSites.indexOf(site.id) !== -1,
                     "default": defaultForSites.indexOf(site.id) !== -1,
-                    indexed: indexedForSites.indexOf(site.id) !== -1
+                    indexed: indexedSites.indexOf(site.id) !== -1
                 };
             });
             return {
@@ -409,7 +409,7 @@ Ext.define('Taco.view.priceList.form.Resolution', {
         this.record.set('defaultForSites', Ext.Array.map(selectedSites, function(site) {
             return site.get('default') ? site.get('id') : undefined;
         }));
-        this.record.set('indexedForSites', Ext.Array.map(selectedSites, function(site) {
+        this.record.set('indexedSites', Ext.Array.map(selectedSites, function(site) {
             return site.get('indexed') ? site.get('id') : undefined;
         }));
         Ext.Object.merge(this.record.data, this.form.getValues());

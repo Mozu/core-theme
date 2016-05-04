@@ -183,6 +183,14 @@ Ext.define('Taco.view.priceList.Grid', {
                 sortable: false
             }, {
                 xtype: 'gridcolumn',
+                dataIndex: 'indexedSitesDisplay',
+                stateId: 'indexedSitesDisplay',
+                text: 'Indexed Sites',
+                hideable: true,
+                flex: 3,
+                sortable: false
+            }, {
+                xtype: 'gridcolumn',
                 dataIndex: 'customerSegments',
                 stateId: 'customerSegments',
                 text: 'Customer Segments',
