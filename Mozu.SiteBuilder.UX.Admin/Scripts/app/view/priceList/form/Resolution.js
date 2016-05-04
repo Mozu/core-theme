@@ -27,8 +27,8 @@ Ext.define('Taco.view.priceList.form.Resolution', {
 
         var catalogChildren = Ext.Array.map(Taco.app.context.getMasterCatalog().catalogs, function (cat) {
             var validSites = me.record.get('validSites'),
-            defaultForSites = me.record.get('defaultForSites');
-            indexedForSites = me.record.get('indexedForSites');
+                defaultForSites = me.record.get('defaultForSites'),
+                indexedForSites = me.record.get('indexedForSites');
             var siteChildren = Ext.Array.map(cat.sites, function (site) {
                 return {
                     id: site.id,
