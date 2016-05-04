@@ -103,7 +103,7 @@ export default class Block {
             });
         }
 
-        else {
+        else if (Chorizo.contentWidget && Chorizo.contentWidget.revealEditor) {
             Chorizo.contentWidget.revealEditor(block);
         }
     }
