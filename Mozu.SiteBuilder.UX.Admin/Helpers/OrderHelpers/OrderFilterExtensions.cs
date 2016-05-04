@@ -43,6 +43,14 @@ namespace Mozu.SiteBuilder.UX.Admin.Helpers.OrderHelpers
                 statements = statements.Concat(new[] { string.Format("({0})", defaultStatus) });
             }
 
+            // HACK: If you've specified a return number, you're searching for 1 particular order. Ignore all other filters.
+            // TODO: Once we have a return grid, searching by return number should be removed as a "filter" from the order grid.
+            var returnNumberQuery = extFilter.FirstOrDefault( x => string.Equals(x.property, "returnnumber", StringComparison.OrdinalIgnoreCase));
+            if (returnNumberQuery != null)
+            {
+                statements = new[] { GetFilter(returnNumberQuery) };
+            }
+
             return string.Join(" and ", statements);
         }
 
@@ -80,7 +88,11 @@ namespace Mozu.SiteBuilder.UX.Admin.Helpers.OrderHelpers
                 }
                 case "fulfillmentstatus":
                 {
-                    return "fulfillmentStatus eq " + filter.value; ;
+                    return "fulfillmentStatus eq " + filter.value;
+                }
+                case "returnnumber":
+                {
+                    return "returnNumber eq " + filter.value;
                 }
                 case "id":
                 {
