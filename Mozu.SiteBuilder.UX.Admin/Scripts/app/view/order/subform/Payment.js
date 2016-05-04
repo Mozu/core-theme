@@ -6,6 +6,7 @@ Ext.define('Taco.view.order.subform.Payment', {
     alias: 'widget.taco-orderpayment',
     requires: [
         'Taco.view.order.modal.Refund',
+        'Taco.view.order.modal.AddPurchaseOrder',
         'Taco.view.order.modal.CreditPayment',
         'Taco.view.order.modal.RequestCheck',
         'Taco.view.order.modal.ApplyCheck',
@@ -233,6 +234,7 @@ Ext.define('Taco.view.order.subform.Payment', {
 
         var me = this,
             actions = me.paymentActions = {
+                addPurchaseOrder: makeAction('Purchase Order', 'Taco.view.order.modal.AddPurchaseOrder'),
                 addCreditCard: makeAction('Credit Card', 'Taco.view.order.modal.AddPayment'),
                 requestCheck: makeAction('Check', 'Taco.view.order.modal.RequestCheck'),
                 addManualCreditCard: makeAction('Credit Card (Manual)', 'Taco.view.order.modal.AddPaymentManual'),
