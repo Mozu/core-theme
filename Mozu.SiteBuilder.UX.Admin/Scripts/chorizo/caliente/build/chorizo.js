@@ -1022,7 +1022,7 @@ var Block = (function () {
                         block.update(html, cfg);
                     }
                 });
-            } else {
+            } else if (Chorizo.contentWidget && Chorizo.contentWidget.revealEditor) {
                 Chorizo.contentWidget.revealEditor(block);
             }
         }
