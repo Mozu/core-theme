@@ -3026,7 +3026,7 @@ function reinitializeContent(layout) {
         temp = new constructor(el);
 
         if (temp instanceof _uiComponentsColumn2['default']) {
-            temp.removeDropHint();
+            removeDropHint(temp.element);
         }
     });
 }

@@ -1161,7 +1161,7 @@ export function reinitializeContent(layout) {
         temp = new constructor(el);
 
         if (temp instanceof Column) {
-            temp.removeDropHint();
+            removeDropHint(temp.element);
         }
 
     });
