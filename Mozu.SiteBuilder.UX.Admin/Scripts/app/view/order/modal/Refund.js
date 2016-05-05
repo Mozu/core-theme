@@ -8,6 +8,7 @@ Ext.define('Taco.view.order.modal.Refund', {
     autoShow: true,
     scale: 'large',
     title: 'Refund',
+    height: 640,
 
     layout: {
         type: 'vbox',
@@ -227,7 +228,7 @@ Ext.define('Taco.view.order.modal.Refund', {
         });
 
         this.setForm(Ext.create('Taco.core.ux.form.Form', {
-            layout: 'auto',
+            layout: 'vbox',
             items: [{
                 xtype: 'container',
                 minHeight: 115,

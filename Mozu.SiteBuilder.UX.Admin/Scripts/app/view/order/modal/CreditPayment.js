@@ -7,6 +7,7 @@ Ext.define('Taco.view.order.modal.CreditPayment', {
     autoShow: true,
     scale: 'medium',
     title: 'Issue Credit',
+    height: 430,
 
     initComponent: function (eOpts) {
         var amountCollected = this.record.get('amountCollected'),
@@ -16,9 +17,7 @@ Ext.define('Taco.view.order.modal.CreditPayment', {
 
         this.form = Ext.create('Taco.core.ux.form.Form', {
             requireDirty: false,
-            layout: {
-                type: 'auto'
-            },
+            layout: 'vbox',
             items: [{
                 xtype: 'currencyfield',
                 currencyCode: this.order.getCurrencyCode(),
@@ -26,10 +25,19 @@ Ext.define('Taco.view.order.modal.CreditPayment', {
                 itemId : 'amount',
                 fieldLabel: 'Amount',
                 required: true,
+                allowBlank: false,
                 value: availableForCredit,
                 maxValue: availableForCredit,
                 width: 160
-            }, {
+            },
+            {
+                xtype: 'checkbox',
+                name: 'creditToPurchaseOrders',
+                itemId: 'purchaseOrderCredit',
+                checked: true,
+                boxLabel: 'Credit to Purchase Orders balance'
+            },
+            {
                 xtype: 'textarea',
                 name: 'reason',
                 fieldLabel: 'Reason',

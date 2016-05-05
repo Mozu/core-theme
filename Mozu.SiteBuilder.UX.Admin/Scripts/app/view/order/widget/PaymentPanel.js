@@ -13,6 +13,7 @@ Ext.define('Taco.view.order.widget.PaymentPanel', {
         'Taco.view.order.modal.CreditPayment',
         'Taco.view.order.modal.RequestCheck',
         'Taco.view.order.modal.ApplyCheck',
+        'Taco.view.order.modal.AddPurchaseOrder',
         'Taco.view.order.modal.CapturePayment',
         'Taco.view.order.modal.AuthorizePayment',
         'Taco.view.order.modal.AuthAndCapture',
@@ -186,6 +187,77 @@ Ext.define('Taco.view.order.widget.PaymentPanel', {
 
         var packageStatus;
 
+        var buttonLeft = null,
+            buttonRight = null;
+
+        if (me.record.get('paymentType') == 'PurchaseOrder' && me.record.data.status !== 'Authorized') {
+            buttonLeft = {
+                xtype: 'button',
+                ui: 'action',
+                scale: 'medium',
+                text: 'Authorize',
+                width: 77,
+                itemId: 'authorizeButton',
+                handler: function () {
+                    me.openPaymentActionModal('AuthorizePurchaseOrder');
+                }
+            };
+        } else if (me.record.data.status !== 'Authorized') {
+            buttonLeft = {
+                xtype: 'button',
+                ui: 'action',
+                scale: 'medium',
+                text: 'Capture',
+                width: 70,
+                itemId: 'captureButton',
+                handler: function () {
+                    me.openPaymentActionModal((me.record.get('paymentType') === 'Check') ? 'ApplyCheck' : 'CapturePayment');
+                },
+                disabled: !canCapture || pendingReview
+            };
+        } else if (me.record.data.status === 'Authorized') {
+            buttonLeft = {
+                xtype: 'button',
+                ui: 'action',
+                scale: 'medium',
+                text: 'Mark as Invoiced',
+                width: 115,
+                itemId: 'invoicedButton',
+                handler: function () {
+                    me.openPaymentActionModal((me.record.get('paymentType') === 'Check') ? 'ApplyCheck' : 'CapturePayment');
+                },
+                disabled: !canCapture || pendingReview
+            };
+            buttonRight = {
+                xtype: 'button',
+                ui: 'action',
+                scale: 'medium',
+                text: 'Capture',
+                width: 70,
+                itemId: 'captureButton',
+                handler: function () {
+                    me.openPaymentActionModal((me.record.get('paymentType') === 'Check') ? 'ApplyCheck' : 'CapturePayment');
+                },
+                disabled: !canCapture || pendingReview
+            };
+        } else if (me.record.data.status === 'Invoiced') {
+            buttonLeft = {
+                xtype: 'button',
+                ui: 'action',
+                scale: 'medium',
+                text: 'Capture',
+                width: 70,
+                itemId: 'captureButton',
+                handler: function () {
+                    me.openPaymentActionModal((me.record.get('paymentType') === 'Check') ? 'ApplyCheck' : 'CapturePayment');
+                },
+                disabled: !canCapture || pendingReview
+            };
+        } else if (me.record.data.status === 'Collected') {
+            buttonLeft = null;
+            buttonRight = null;
+        }
+
         if (me.record.data.status === 'Authorized') {
             packageStatus = '<span class="x-column-content-pill x-column-content-pill-true">Authorized</span>';
         } else {
@@ -206,7 +278,8 @@ Ext.define('Taco.view.order.widget.PaymentPanel', {
                     itemId: "statusField",
                     cls: "statusField",
                     html: '<span class="label">Status: </label>' + packageStatus
-                }, {
+                },
+                {
                     xtype: 'component',
                     itemId: 'orderApprovedNotice',
                     html: 'Order must be approved first',
@@ -215,18 +288,10 @@ Ext.define('Taco.view.order.widget.PaymentPanel', {
                     style: {
                         'font-size': '14px'
                     }
-                }, {
-                    xtype: 'button',
-                    ui: 'action',
-                    scale: 'medium',
-                    text: 'Capture',
-                    width: 70,
-                    itemId: 'captureButton',
-                    handler: function() {
-                        me.openPaymentActionModal((me.record.get('paymentType') === 'Check') ? 'ApplyCheck' : 'CapturePayment');
-                    },
-                    disabled: !canCapture || pendingReview
-                }, {
+                },
+                buttonLeft,
+                buttonRight,
+                {
                     xtype: 'button',
                     ui: 'action',
                     scale: 'medium',
