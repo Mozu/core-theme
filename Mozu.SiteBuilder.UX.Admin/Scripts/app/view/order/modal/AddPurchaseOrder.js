@@ -88,7 +88,7 @@ Ext.define('Taco.view.order.modal.AddPurchaseOrder', {
     },
 
     getBalance: function () {
-        var availableBalance = 7099;    // todo: replace this with an API call
+        var availableBalance = 7099;    // todo: = this.record.get('availableBalance');
 
         return Ext.widget({
             anchor: 0,
@@ -107,7 +107,7 @@ Ext.define('Taco.view.order.modal.AddPurchaseOrder', {
     },
 
     getLimit: function () {
-        var creditLimit = 10000;    // todo: replace this with an API call
+        var creditLimit = 10000;    // todo: = this.record.get('creditLimit');
 
         return Ext.widget({
             flex: 1,
@@ -126,7 +126,7 @@ Ext.define('Taco.view.order.modal.AddPurchaseOrder', {
     },
 
     getTerms: function () {
-        var netTerms = ['30 Days', '60 Days'],   // todo: replace this with an API call
+        var netTerms = ['30 Days', '60 Days'],   // todo: = this.record.get('netTerms'),
             netTermsItem = netTerms[0];
 
         /*
@@ -134,11 +134,14 @@ Ext.define('Taco.view.order.modal.AddPurchaseOrder', {
          * Otherwise, show a dropdown with each option
          */
         if (netTerms.length > 1) {
-            netTermsItem = '<select>';
-            netTerms.forEach(function (term) {
-                netTermsItem += '<option>' + term + '</option>';
+            return Ext.widget({
+                fieldLabel: 'Net Terms',
+                flex: 1,
+                forceSelection: true,
+                name: 'netTerms',
+                store: netTerms,
+                xtype: 'selectfield'
             });
-            netTermsItem += '</select>';
         }
 
         return Ext.widget({
