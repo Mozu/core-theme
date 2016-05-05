@@ -1505,8 +1505,10 @@
                 if (requiresBillingInfo && !billingContact.isValid()) {
                     // reconcile the empty address after we got back from paypal and possibly other situations.
                     // also happens with visacheckout ..
+                    var billingInfoData = billingInfo.get("data");
                     var billingInfoFromPayment = this.apiModel.getCurrentPayment().billingInfo;
                     billingInfo.set(billingInfoFromPayment, { silent: true });
+                    billingInfo.set("data", billingInfoData);
                 }
 
                 this.syncBillingAndCustomerEmail();
