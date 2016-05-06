@@ -197,7 +197,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
         private async Task<List<SimpleSearchProduct>> GetSimpleSearchProducts(List<string> productCodes)
         {
             const string responseFields = "items(ProductCode, ProductUsage, Content, Price, AuditInfo, ProductTypeId)";
-
+            const int batchSize = 50;
             var results = new List<SimpleSearchProduct>();
             var filters = new List<string>();
 
@@ -208,11 +208,11 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
             {
                 var remaining = productCodes.Count - start;
                 string filter;
-                if (productCodes.Count - start > 200)
+                if (productCodes.Count - start > batchSize)
                 {
-                    filter = BuildSearchProductFilter(productCodes.GetRange(start, 200));
+                    filter = BuildSearchProductFilter(productCodes.GetRange(start, batchSize));
                     filters.Add(filter);
-                    start += 200;
+                    start += batchSize;
                     continue;
                 }
                 filter = BuildSearchProductFilter(productCodes.GetRange(start, remaining));
@@ -221,7 +221,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
             }
 
             //why doesn't the product model inclue the string representation of the product type?  DOH!
-            var queries = filters.Select(f => _productWebApiClient.Value.GetProducts(0, 200, filter: f, responseFields: responseFields)).ToList();
+            var queries = filters.Select(f => _productWebApiClient.Value.GetProducts(0, batchSize, filter: f, responseFields: responseFields)).ToList();
             await Task.WhenAll(queries);
             foreach (var result in queries.Select(q => q.Result))
             {
@@ -281,9 +281,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
         private string BuildSearchProductFilter(List<string> productCodesList)
         {
             if (productCodesList.IsNullOrEmpty()) return String.Empty;
-
-            var predicates = productCodesList.Select(pc => string.Format("productCode eq {0}", pc));
-            return predicates.Join(" or ").Trim();
+            return "(productCode in [" + string.Join(",", productCodesList) + "])";
         }
 
         /// <summary>
