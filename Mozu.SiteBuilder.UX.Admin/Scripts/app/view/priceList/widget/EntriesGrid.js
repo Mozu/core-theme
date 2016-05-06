@@ -378,83 +378,111 @@ Ext.define('Taco.view.priceList.widget.EntriesGrid', {
             previewAction = menu.items.get('preview'),
             liveAction = menu.items.get('live'),
             mc = Taco.app.context.getMasterCatalog(),
-            startDt = (startDate) ? new Date(startDate) : null,
-            endDt = (endDate) ? new Date(endDate) : null,
-            hasExpired = (endDt && endDt < new Date()),
+            entryStartDt = (startDate) ? new Date(startDate) : null,
+            entryEndDt = (endDate) ? new Date(endDate) : null,
+            hasExpired = (entryEndDt && entryEndDt < new Date()),
+            setMenuVisibility = function () {
+                if (previewAction && previewAction.menu.items.items.length === 0) {
+                    previewAction.setVisible(false);
+                }
+                if (liveAction && liveAction.menu.items.items.length === 0) {
+                    liveAction.setVisible(false);
+                }
+            },
             showPending = function (masterCat, site, priceListRec, hasExpired) {
-
                 if (hasExpired || masterCat.productPublishingMode !== 'Pending' || !priceListRec.get('resolvable')) {
                     return false;
                 }
-
-                // site is valid for price list
-                if (priceListRec.get('validForAllSites')
-                    || Ext.Array.indexOf(priceListRec.get('validSites'), site.id) !== -1) {
+                return (priceListRec.get('validForAllSites')
+                        || Ext.Array.indexOf(priceListRec.get('validSites'), site.id) !== -1);
+            },
+            findProductInCatalogBySite = function(site, productInCatalogs) {
+                var productInCat = Ext.Array.findBy(productInCatalogs, function(cat) {
+                    return cat.catalogId === site.catalogId;
+                });
+                return productInCat;
+            },
+            getCatalogScheduledDate = function (productInCatalog, fldName) {
+                return (productInCatalog[fldName]) ? new Date(productInCatalog[fldName]) : null;
+            },
+            isCatalogCurrentlyActive = function (catStartDt, catEndDt) {
+                return ( (!catStartDt || catStartDt < new Date())
+                    && (!catEndDt || catEndDt > new Date()) );
+            },
+            isWithinRange = function(startDt, endDt, catStartDt, catEndDt) {
+                if ((!catStartDt && !catEndDt) || (!startDt && !endDt)) {
                     return true;
                 }
-                return false;
+                return ( ((startDt && catEndDt) && (startDt < catEndDt))
+                      || ((endDt && catStartDt) && (endDt > catStartDt)));
             },
-            isCatalogActive = function (masterCat, site, productInCatalogs) {
-                var productInCat,
-                    siteCat;
-
-                if (!site.isMozuRendered || !productInCatalogs) {
-                    return false;
+            calculatePreviewDate = function(startDt, catStartDt) {
+                if (isCatalogCurrentlyActive(catStartDt)) {
+                    return startDt;
                 }
-                // active in catalog
-                siteCat = Ext.Array.findBy(masterCat.sites, function(mcSite){
-                    return mcSite.id === site.id;
-                });
-
-                if (!siteCat) return false;
-
-                productInCat = Ext.Array.findBy(productInCatalogs, function(cat) {
-                    return cat.catalogId === siteCat.catalogId;
-                });
-
-                return (productInCat && productInCat.isActive);
+                if (!startDt && catStartDt) {
+                    return catStartDt;
+                }
+                if (startDt && catStartDt && startDt < catStartDt) {
+                    return catStartDt;
+                }
+                return startDt;
             };
 
+        if (!productInCatalogInfo || productInCatalogInfo.length === 0) {
+            setMenuVisibility();
+            return;
+        }
         Ext.Array.each(mc.sites, function (site) {
-
-            if (isCatalogActive(mc, site, productInCatalogInfo)) {
+            var prodInCat,
+                catalogStartDt,
+                catalogEndDt,
+                previewDt;
+            if (!site.isMozuRendered) {
+                return false;
+            }
+            prodInCat = findProductInCatalogBySite(site, productInCatalogInfo);
+            if (!prodInCat || !prodInCat.isActive) {
+                return false;
+            }
+            catalogStartDt = getCatalogScheduledDate(prodInCat, 'activeStartDate');
+            catalogEndDt = getCatalogScheduledDate(prodInCat, 'activeEndDate');
+            if (isCatalogCurrentlyActive(catalogStartDt, catalogEndDt)) {
                 liveAction.menu.add(Ext.applyIf({
                     text: site.name,
                     handler: function () {
                         window.open('/_gosite/' + site.id + '?environment=live&redir=' + encodeURIComponent('/p/' + productCode));
                     }
                 }, menuItemDefaults));
+            }
 
-                if (previewAction && showPending(mc, site, me.priceListRecord, hasExpired)) {
-                    previewAction.menu.add(Ext.applyIf({
-                        text: site.name,
-                        handler: function () {
-                            var mzNow = '&mz_now=';
-                            if (startDt && startDt > new Date()) {
-                                startDt.setMinutes(startDt.getMinutes() + 1);
-                                mzNow += startDt.toISOString();
-                            }
+            if (previewAction && showPending(mc, site, me.priceListRecord, hasExpired)
+                && isWithinRange(entryStartDt,entryEndDt,catalogStartDt,catalogEndDt)) {
 
-                            window.open('/_gosite/' + site.id
-                                + '?environment=preview&redir='
-                                + encodeURIComponent('/p/'
-                                    + productCode
-                                    + '?mz_pricelist='
-                                    + me.priceListCode
-                                    + mzNow)
-                            );
+                previewDt = calculatePreviewDate(entryStartDt, catalogStartDt);
+                previewAction.menu.add(Ext.applyIf({
+                    text: site.name,
+                    handler: function () {
+                        var mzNow = '&mz_now=';
+                        if (previewDt && previewDt > new Date()) {
+                            previewDt.setMinutes(previewDt.getMinutes() + 1);
+                            mzNow += previewDt.toISOString();
                         }
-                    }, menuItemDefaults));
-                }
+
+                        window.open('/_gosite/' + site.id
+                            + '?environment=preview&redir='
+                            + encodeURIComponent('/p/'
+                                + productCode
+                                + '?mz_pricelist='
+                                + me.priceListCode
+                                + mzNow)
+                        );
+                    }
+                }, menuItemDefaults));
             }
         });
 
-        if (previewAction && previewAction.menu.items.items.length === 0) {
-            previewAction.setVisible(false);
-        }
-        if (liveAction && liveAction.menu.items.items.length === 0) {
-            liveAction.setVisible(false);
-        }
+        setMenuVisibility();
     },
     
     onAfterRecordUpdate: function(recordStore, response) {
