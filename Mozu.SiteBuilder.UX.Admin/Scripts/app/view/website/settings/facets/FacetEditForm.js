@@ -46,7 +46,7 @@ Ext.define('Taco.view.website.settings.facets.FacetEditForm', {
                 },
                 items: [me.inheritedVisible, me.inheritedHidden]
             }
-        }
+        };
 
         var setInheritedDisplayCheckbox = function(isInheritedHidden) {
             if (isInheritedHidden) {
@@ -56,7 +56,7 @@ Ext.define('Taco.view.website.settings.facets.FacetEditForm', {
                 me.inheritedHidden.setValue(false);
                 me.inheritedVisible.setValue(true);
             }
-        }
+        };
         
         me.valueDisplayStyle = Ext.widget({
             xtype: 'radio',
@@ -212,7 +212,7 @@ Ext.define('Taco.view.website.settings.facets.FacetEditForm', {
             this.rangeQueries.hide();
             this.cachedRangeQueries = this.rangeQueries.getValue();
             this.rangeQueries.setValue([]);
-            this.valueSort.setValue('CountDescending');
+            this.valueSort.setValue('AttributeDefinition');
             this.valueSort.show();
         }
         this.fireEvent('heightchange');

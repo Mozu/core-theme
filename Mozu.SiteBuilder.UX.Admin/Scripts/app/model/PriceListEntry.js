@@ -34,6 +34,9 @@ Ext.define('Taco.model.PriceListEntry', {
             name: 'productCode',
             type: 'string'
         }, {
+            name: 'baseProductCode',
+            type: 'string'
+        }, {
             name: 'productName',
             type: 'string'
         }, {
@@ -97,10 +100,10 @@ Ext.define('Taco.model.PriceListEntry', {
             name: 'msrpMode',
             type: 'string',
             defaultValue: 'UseCatalog',
-            convert: function(val, record) {
-                return val === 'UseCatalog' ? false : true;
+            convert: function(val) {
+                return val !== 'UseCatalog';
             },
-            serialize: function(val, record) {
+            serialize: function(val) {
                 return val ? 'Overridden' : 'UseCatalog';
             }
         }, {
@@ -111,10 +114,10 @@ Ext.define('Taco.model.PriceListEntry', {
             name: 'mapMode',
             type: 'string',
             defaultValue: 'UseCatalog',
-            convert: function(val, record) {
-                return val === 'UseCatalog' ? false : true;
+            convert: function(val) {
+                return val !== 'UseCatalog';
             },
-            serialize: function(val, record) {
+            serialize: function(val) {
                 return val ? 'Overridden' : 'UseCatalog';
             }
         }, {
@@ -135,10 +138,10 @@ Ext.define('Taco.model.PriceListEntry', {
             name: 'costMode',
             type: 'string',
             defaultValue: 'UseCatalog',
-            convert: function(val, record) {
-                return val === 'UseCatalog' ? false : true;
+            convert: function(val) {
+                return val !== 'UseCatalog';
             },
-            serialize: function(val, record) {
+            serialize: function(val) {
                 return val ? 'Overridden' : 'UseCatalog';
             }
         }, {
@@ -207,6 +210,11 @@ Ext.define('Taco.model.PriceListEntry', {
                         })
                     .join(', ');
             },
+            persist: false
+        }, {
+            name: 'productInCatalogInfo',
+            type: 'auto',
+            defaultValue: [],
             persist: false
         }, {
             name: 'currentPriceCurrencyCode',

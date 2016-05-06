@@ -69,7 +69,6 @@ Ext.define('Taco.view.priceList.widget.EntriesGrid', {
     minHeight: 350,
 
     enableBulkActions: false,
-    enableDeleteAction: true,
 
     pageSize: 25,
 
@@ -147,7 +146,7 @@ Ext.define('Taco.view.priceList.widget.EntriesGrid', {
     },
 
     getColumnConfig: function () {
-        var columns = [
+        return [
             {
                 xtype: 'gridcolumn',
                 dataIndex: 'productCode',
@@ -265,7 +264,6 @@ Ext.define('Taco.view.priceList.widget.EntriesGrid', {
                 sortable: false
             }
         ];
-        return columns;
     },
 
     // list of actions to put in action column and context menu;
@@ -332,141 +330,133 @@ Ext.define('Taco.view.priceList.widget.EntriesGrid', {
     onActionMenuShow: function (menu, eventData) {
         var previewAction = menu.items.get('preview'),
             liveAction = menu.items.get('live'),
-            defaults = eventData.header.menuItemDefaults,
-            mc = Taco.app.context.getMasterCatalog();
+            productCode = eventData.record.get('productCode'),
+            priceListCode = eventData.record.get('priceListCode'),
+            currencyCode = eventData.record.get('currencyCode'),
+            startDate = eventData.record.get('startDate'),
+            endDate = eventData.record.get('endDate');
 
         if (previewAction) {
             previewAction.menu.removeAll();
         }
         liveAction.menu.removeAll();
-        Ext.Array.each(mc.sites, function (site) {
-            if (site.isMozuRendered && (eventData.grid.priceListRecord.get('validForAllSites')
-                || Ext.Array.indexOf(eventData.grid.priceListRecord.get('validSites'), site.id) !== -1)) {
 
-                if (mc.productPublishingMode === 'Pending') {
-                    previewAction.menu.add(Ext.applyIf({
-                        text: site.name,
-                        menuColumnHandler: function (item, eventData) {
-                            window.open('/_gosite/' + site.id
-                                + '?environment=preview&redir='
-                                + encodeURIComponent('/p/'
-                                    + eventData.record.get('productCode')
-                                    + '?mz_pricelist='
-                                    + eventData.record.get('priceListCode'))
-                            );
-                        }
-                    }, defaults));
-                }
+        eventData.grid.getProductDetail(priceListCode, productCode, currencyCode, startDate, endDate, menu, eventData.header.menuItemDefaults);
+    },
 
-                liveAction.menu.add(Ext.applyIf({
-                    text: site.name,
-                    menuColumnHandler: function (item, eventData) {
-                        window.open('/_gosite/' + site.id + '?environment=live&redir=' + encodeURIComponent('/p/' + eventData.record.get('productCode')));
-                    }
-                }, defaults));
-            }
+    getProductDetail: function (priceListCode, productCode, currencyCode, startDate, endDate, menu, menuDefaults) {
+        var me = this,
+            priceListModel = Ext.ModelManager.getModel('Taco.model.PriceListEntry');
+
+        me.setLoading({
+            msg: "Loading"
+        }, me.body);
+
+        priceListModel.load('single', {
+            params: {
+                priceListCode: priceListCode,
+                productCode: productCode,
+                currencyCode: currencyCode,
+                startDate: Ext.Date.format(startDate, 'c')
+            },
+            failure: function () {
+                Taco.app.fireEvent('setmessage', "Error loading Price List Entry", 'error');
+                this.setLoading(false, this.body);
+            },
+            success: function (record) {
+                var productCode;
+                this.setLoading(false, this.body);
+                productCode = !record.get('isVariation') ? record.get('productCode') : record.get('baseProductCode');
+                this.addValidSites(productCode, startDate, endDate, menu, menuDefaults, record.get('productInCatalogInfo'));
+            },
+            scope: this
         });
     },
 
+    addValidSites: function (productCode, startDate, endDate, menu, menuItemDefaults, productInCatalogInfo) {
+        var me = this,
+            previewAction = menu.items.get('preview'),
+            liveAction = menu.items.get('live'),
+            mc = Taco.app.context.getMasterCatalog(),
+            startDt = (startDate) ? new Date(startDate) : null,
+            endDt = (endDate) ? new Date(endDate) : null,
+            hasExpired = (endDt && endDt < new Date()),
+            showPending = function (masterCat, site, priceListRec, hasExpired) {
 
-
-    getBulkActionsConfig: function () {
-        return {
-            onMenuShow: function(selModel) {
-                var selection = selModel.getSelection(),
-                    disableBulkAction = this.down('#Disable'),
-                    enableBulkAction = this.down('#Enable'),
-                    allActive,
-                    allInactive;
-
-                allActive = Ext.Array.every(selection, function(item) {
-                    return item.get('enabled');
-                });
-
-                if (allActive) {
-                    disableBulkAction.setDisabled(false);
-                    enableBulkAction.setDisabled(true);
-                    return;
+                if (hasExpired || masterCat.productPublishingMode !== 'Pending' || !priceListRec.get('resolvable')) {
+                    return false;
                 }
 
-                allInactive = Ext.Array.every(selection, function(item) {
-                    return !item.get('enabled');
-                });
-
-                if (allInactive) {
-                    enableBulkAction.setDisabled(false);
-                    disableBulkAction.setDisabled(true);
-                    return;
+                // site is valid for price list
+                if (priceListRec.get('validForAllSites')
+                    || Ext.Array.indexOf(priceListRec.get('validSites'), site.id) !== -1) {
+                    return true;
                 }
-
-                enableBulkAction.setDisabled(false);
-                disableBulkAction.setDisabled(false);
+                return false;
             },
-            actions: [
-                {
-                    itemId: 'Enable',
-                    text: 'Enable',
-                    scope: this,
-                    handler: function (item, eventData) {
-                        this.doBulkAction.call(this, item, eventData);
-                    }
-                },
-                {
-                    itemId: 'Disable',
-                    text: 'Disable',
-                    scope: this,
-                    handler: function (item, eventData) {
-                        var selection = item.scope.selModel.getSelection(),
-                            name = selection.length === 1 ? selection[0].get('name') : undefined,
-                            msg = selection.length === 1 ? 'Are you sure you\'d like to disable the  ' + name + ' price list?' : 'Are you sure you\'d like to disable the selected price lists?';
+            isCatalogActive = function (masterCat, site, productInCatalogs) {
+                var productInCat,
+                    siteCat;
 
-
-                        this.getConfirmationModal({
-                            message: msg,
-                            callback: this.doBulkAction.bind(this, item),
-                            header: 'Disable Price Lists',
-                            primaryText: 'Yes, Disable'
-                        });
-                    }
+                if (!site.isMozuRendered || !productInCatalogs) {
+                    return false;
                 }
-            ]
-        };
-    },
+                // active in catalog
+                siteCat = Ext.Array.findBy(masterCat.sites, function(mcSite){
+                    return mcSite.id === site.id;
+                });
 
-    doBulkAction: function(item) {
-        var action = item.itemId,
-            records = item.scope.selModel.getSelection(),
-            method = 'do' + action + 'Bulk';
+                if (!siteCat) return false;
 
-        this[method](item, {record: records});
-    },
+                productInCat = Ext.Array.findBy(productInCatalogs, function(cat) {
+                    return cat.catalogId === siteCat.catalogId;
+                });
 
-    setPriceListEnabled: function(item, eventData, isActive) {
-        var growlText = (isActive) ? 'Enabled' : 'Disabled',
-            growlMessage = '<span style="font-weight:bold;">' + growlText + '</span>';
+                return (productInCat && productInCat.isActive);
+            };
 
-        if (!Ext.isArray(eventData.record)) {
-            eventData.record.set('enabled', isActive);
+        Ext.Array.each(mc.sites, function (site) {
 
-            this.showMessage(growlMessage);
-            eventData.record.store.sync({
-                callback: this.onAfterRecordUpdate.bind(this, eventData.record.store)
-            });
+            if (isCatalogActive(mc, site, productInCatalogInfo)) {
+                liveAction.menu.add(Ext.applyIf({
+                    text: site.name,
+                    handler: function () {
+                        window.open('/_gosite/' + site.id + '?environment=live&redir=' + encodeURIComponent('/p/' + productCode));
+                    }
+                }, menuItemDefaults));
+
+                if (previewAction && showPending(mc, site, me.priceListRecord, hasExpired)) {
+                    previewAction.menu.add(Ext.applyIf({
+                        text: site.name,
+                        handler: function () {
+                            var mzNow = '&mz_now=';
+                            if (startDt && startDt > new Date()) {
+                                startDt.setMinutes(startDt.getMinutes() + 1);
+                                mzNow += startDt.toISOString();
+                            }
+
+                            window.open('/_gosite/' + site.id
+                                + '?environment=preview&redir='
+                                + encodeURIComponent('/p/'
+                                    + productCode
+                                    + '?mz_pricelist='
+                                    + me.priceListCode
+                                    + mzNow)
+                            );
+                        }
+                    }, menuItemDefaults));
+                }
+            }
+        });
+
+        if (previewAction && previewAction.menu.items.items.length === 0) {
+            previewAction.setVisible(false);
         }
-
-        else {
-            eventData.record.forEach(function(rec){
-                rec.set('enabled', isActive);
-            });
-
-            this.showMessage(growlMessage);
-            eventData.record[0].store.sync({
-                callback: this.onAfterRecordUpdate.bind(this, eventData.record[0].store)
-            });
+        if (liveAction && liveAction.menu.items.items.length === 0) {
+            liveAction.setVisible(false);
         }
-
     },
-
+    
     onAfterRecordUpdate: function(recordStore, response) {
 
         if (response && response.hasException) {
@@ -477,15 +467,7 @@ Ext.define('Taco.view.priceList.widget.EntriesGrid', {
             }
         }
     },
-
-    doDisableBulk: function(item, eventData) {
-        item.scope.setPriceListEnabled(item, eventData, false);
-    },
-
-    doEnableBulk: function(item, eventData) {
-        item.scope.setPriceListEnabled(item, eventData, true);
-    },
-
+    
     getActionColumn: function () {
         var me = this,
             actionColumn = null,
@@ -551,18 +533,7 @@ Ext.define('Taco.view.priceList.widget.EntriesGrid', {
     getDeletePromptMessage: function (record) {
         return record.getDeletePromptMessage();
     },
-
-    disablePriceLists: function () {
-        var createActionButton = Ext.ComponentQuery.query('button[itemId=createActionButton]');
-        if (createActionButton && createActionButton.length > 0) {
-            createActionButton[0].setDisabled(true);
-        }
-        var advFilterButton = Ext.ComponentQuery.query('button[itemId=advancedFilter]');
-        if (advFilterButton && advFilterButton.length > 0) {
-            advFilterButton[0].setDisabled(true);
-        }
-    },
-
+    
     //move to base class?
     getConfirmationModal: function(config) {
         Ext.create('Taco.core.ux.window.Modal', {

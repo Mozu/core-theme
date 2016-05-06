@@ -75,7 +75,7 @@ Ext.define('Taco.model.Facet', {
         name: 'valueSortType',
         type: 'string',
         useNull: true,
-        defaultValue: 'CountDescending'
+        defaultValue: 'AttributeDefinition'
     }],
 
     isInherited: function() {
@@ -105,20 +105,24 @@ Ext.define('Taco.model.Facet', {
             fields: ['id', "name"],
             data: [
                 {
-                    id: "CountAscending",
-                    name: "Facet Count: Low to High"
+                    id: "AttributeDefinition",
+                    name: "Attribute Definition"
+                }, {
+                    id: "AttributeDefinitionDescending",
+                    name: "Attribute Definition (Reverse)"
                 }, {
                     id: "CountDescending",
                     name: "Facet Count: High to Low"
-                }, {
+                },
+                {
+                    id: "CountAscending",
+                    name: "Facet Count: Low to High"
+                },  {
                     id: "ValuesAscending",
                     name: valAscDisplay
                 }, {
                     id: "ValuesDescending",
                     name: valDescDisplay
-                }, {
-                    id: "AttributeDefinition",
-                    name: "Attribute Definition"
                 }
             ]
         });
