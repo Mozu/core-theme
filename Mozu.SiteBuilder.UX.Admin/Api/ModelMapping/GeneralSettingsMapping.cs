@@ -19,6 +19,12 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.ModelMapping
 
         protected override void Configure()
         {
+
+
+            Mapper.CreateMap<Mozu.SiteSettings.General.Contracts.EmailTypeSetting, EmailTypeSettingVM>();
+            Mapper.CreateMap<EmailTypeSettingVM,Mozu.SiteSettings.General.Contracts.EmailTypeSetting>();
+
+
             Mapper.CreateMap<Mozu.Reference.Contracts.TimeZone, UX.Models.Settings.TimeZone>()
                 .ForMember(x => x.Selected, op => op.Ignore());
 

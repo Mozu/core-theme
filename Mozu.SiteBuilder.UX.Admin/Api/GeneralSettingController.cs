@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.ServiceModel;
@@ -10,6 +11,9 @@ using Mozu.Core.Api.Client;
 using Mozu.Core.Api.Routing;
 using Mozu.SiteBuilder.UX.Admin.Api.Models;
 using Mozu.SiteBuilder.UX.Models.Settings;
+using Mozu.SiteSettings.General.Contracts.Clients;
+using Newtonsoft.Json.Linq;
+using TimeZone = Mozu.SiteBuilder.UX.Models.Settings.TimeZone;
 
 namespace Mozu.SiteBuilder.UX.Admin.Api
 {
@@ -17,11 +21,13 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
     public class GeneralSettingController : BaseController
     {
         private readonly IGeneralSettingWrapper _wrapper;
+        private readonly IGeneralSettingsWebApiClient _generalSettingsWebApiClient;
         private readonly IChannelWebApiClient _channelWebApiClient;
 
-        public GeneralSettingController(IGeneralSettingWrapper wrapper, Mozu.CommerceRuntime.Contracts.Clients.IChannelWebApiClient channelWebApiClient)
+        public GeneralSettingController(IGeneralSettingWrapper wrapper, Mozu.CommerceRuntime.Contracts.Clients.IChannelWebApiClient channelWebApiClient, Mozu.SiteSettings.General.Contracts.Clients.IGeneralSettingsWebApiClient generalSettingsWebApiClient)
         {
             _wrapper = wrapper;
+            _generalSettingsWebApiClient = generalSettingsWebApiClient;
             _channelWebApiClient = channelWebApiClient.CloneWithoutUserClaims();
         }
 
@@ -73,12 +79,64 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
             return List2(results);
         }
 
-        //[HttpGetRoute(UriTemplate = "ipranges/read")]
-        //public Response<List<IPBlock>> GetIpRanges([FromUri]PagingParamaters pagingParams, [FromUri]FilterCollection extFilter)
-        //{
-        //    var results = _wrapper.GetIPBlocks().ToList();
 
-        //    return List2(results);
-        //}
+
+
+        [HttpGetRoute(UriTemplate = "emailTypes/read")]
+        public async Task< Response<List<EmailTypeSettingVM>>> GetEmailTypes([FromUri]PagingParamaters pagingParams, [FromUri]FilterCollection extFilter)
+        {
+            var results = (await _generalSettingsWebApiClient.GetGeneralSettings()).ReadAsSync();
+            
+            var convertedTypes =  Mapper.Map<List< EmailTypeSettingVM>>(  results.EmailTypes);
+            var props = typeof(Mozu.SiteSettings.General.Contracts.EmailTransactionSettings).GetProperties();
+            var dic = new Dictionary<string, EmailTypeSettingVM>(StringComparer.OrdinalIgnoreCase);
+            foreach ( string name in Enum.GetNames( typeof ( EmailTypes)))
+            {
+                dic[name] = new EmailTypeSettingVM()
+                {
+                    Id = name,
+                    Enabled = true
+                };
+            }
+            if ( results.EmailTypes != null)
+            {
+                foreach (var emailEntry in convertedTypes)
+                {
+                    var prop = props.FirstOrDefault(x => x.Name.Equals(emailEntry.Id));
+                    var supporessed =(bool?) prop.GetValue(results.SupressedEmailTransactions);
+                    emailEntry.Enabled = !supporessed.GetValueOrDefault(false);
+                    dic[emailEntry.Id] = emailEntry;
+                }
+            }
+            
+            return List2(dic.Values.ToList());
+        }
+
+
+
+        [HttpPostRoute(UriTemplate = "emailTypes/edit")]
+        public async Task<Response<List<EmailTypeSettingVM>>> EditEmailTypes(List<EmailTypeSettingVM> updates)
+        {
+            var existing = (await _generalSettingsWebApiClient.GetGeneralSettings()).ReadAsSync();
+            var props = typeof(Mozu.SiteSettings.General.Contracts.EmailTransactionSettings).GetProperties();
+            foreach ( var update in updates )
+            {
+                existing.EmailTypes.Remove(existing.EmailTypes.FirstOrDefault(x => x.Id.Equals(update.Id, StringComparison.OrdinalIgnoreCase)));
+                existing.EmailTypes.Add(Mapper.Map<Mozu.SiteSettings.General.Contracts.EmailTypeSetting>(update));
+                var prop = props.First(x => x.Name.Equals(update.Id, StringComparison.OrdinalIgnoreCase));
+                prop.SetValue(existing.SupressedEmailTransactions, !update.Enabled.GetValueOrDefault(false));
+            }
+            var res =await _generalSettingsWebApiClient.UpdateGeneralSettings(existing);
+            if ( res.HasException)
+            {
+                throw res.ReadException();
+            }
+
+            return await GetEmailTypes(new PagingParamaters(), new FilterCollection());
+        }
+
+
+
+
     }
 }
