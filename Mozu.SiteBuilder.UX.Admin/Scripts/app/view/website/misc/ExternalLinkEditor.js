@@ -6,6 +6,7 @@
 Ext.define('Taco.view.website.misc.ExternalLinkEditor', {
     extend: 'Taco.core.ux.window.Modal',
     autoShow: true,
+    height: 460,
     initComponent: function () {
 
         this.record = this.record || Ext.create('Taco.model.NavigationTreeNode', {
@@ -19,6 +20,7 @@ Ext.define('Taco.view.website.misc.ExternalLinkEditor', {
         this.form = Ext.widget({
             xtype: 'formform',
             record: this.record,
+            height: 300,
             items: [
                 {
                     xtype: 'textfield',

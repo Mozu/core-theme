@@ -7,6 +7,7 @@ using Mozu.Content.Contracts;
 using Mozu.SiteBuilder.Mvc.Filters;
 using Mozu.SiteBuilder.Mvc.Models.CMS;
 using Mozu.SiteBuilder.Mvc.Navigation;
+using Mozu.SiteBuilder.UX.Models;
 using Mozu.SiteBuilder.UX.Models.Navigation;
 using Mozu.SiteBuilder.UX.Models.StoreFront.Catalog;
 

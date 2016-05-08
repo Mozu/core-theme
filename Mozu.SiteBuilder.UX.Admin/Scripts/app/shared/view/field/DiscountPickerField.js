@@ -7,9 +7,9 @@ Ext.define('Taco.shared.view.field.DiscountPickerField', {
     requires: [
         'Taco.store.Discounts'
     ],
-    
+
     config: {
-    
+
     },
     // clear out the search text when user clicks the trigger;
     clearOnTriggerClick : true,
@@ -20,7 +20,7 @@ Ext.define('Taco.shared.view.field.DiscountPickerField', {
     // hide the paging toolbar when there is less than a single page of results;
     autoHidePagingToolbar: true,
 
-    
+
     pageSize: 10,
 
     autoLoad: false,
@@ -32,7 +32,7 @@ Ext.define('Taco.shared.view.field.DiscountPickerField', {
     hideLabel: false,
     hideTrigger: false,
     selectOnFocus: true,
-    value: "",    
+    value: "",
     listConfig: {
         loadingText: 'Searching...',
         cls : "product-type-picker-menu",
@@ -42,9 +42,11 @@ Ext.define('Taco.shared.view.field.DiscountPickerField', {
     // querystring parameter name that contains the search filter data;
     queryParam: "query",
 
+    statusFilter: null,
+
     // default filter parameter used to get the full list
     allQuery: "",
-    
+
     onTriggerClick : function() {
         var me = this;
         // if there is text in the field and user clicks the trigger clear out the text so that we get a full search result
@@ -56,12 +58,12 @@ Ext.define('Taco.shared.view.field.DiscountPickerField', {
 
     // modify the format of the query data to fit the service filtering pattern.
     formatQuery: function (queryEvent, e) {
-        
+
         // need to format the search text from the combobox into a filter structure the service wants;
         // always force the query to match what's in the field.
         // after a selection the queryEvent.query is initially set to "" which is incorrect in this situation;
 
-        // delete the last query to force a new request; 
+        // delete the last query to force a new request;
         delete this.lastQuery;
 
         var queryText = queryEvent.combo.getValue() || "";
@@ -69,7 +71,7 @@ Ext.define('Taco.shared.view.field.DiscountPickerField', {
             // need to force the load of the full list. just returning a value of "" causes the control to reload the last query;
             queryEvent.forceAll = true;
         } else {
-            //the formated query f's the min char check.... 
+            //the formated query f's the min char check....
             if (queryText.length < this.minChars) {
                 return false;
             }
@@ -83,9 +85,9 @@ Ext.define('Taco.shared.view.field.DiscountPickerField', {
 
     initComponent: function(eOpts) {
         var me = this;
-        
+
         if (!me.store) {
-            
+
             me.store = Taco.core.data.StoreManager.getOrCreate({
                 type: 'Taco.store.Discounts',
                 pageSize: me.pageSize,
@@ -97,6 +99,10 @@ Ext.define('Taco.shared.view.field.DiscountPickerField', {
                         if (!proxy.extraParams) {
                             proxy.extraParams = {};
                         }
+                        if (me.statusFilter) {
+                            proxy.extraParams.advancedSearch = Ext.JSON.encodeValue({"status": me.statusFilter});
+                        }
+
                         //proxy.extraParams.isbaseproducttype = this.includeBaseProductType;
                     },
                     scope: this

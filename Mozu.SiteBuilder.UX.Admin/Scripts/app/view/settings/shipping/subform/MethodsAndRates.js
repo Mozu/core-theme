@@ -73,7 +73,9 @@ Ext.define('Taco.view.settings.shipping.subform.MethodsAndRates', {
                     xtype: 'textfield',
                     name: 'apipassword',
                     fieldLable: 'API password',
-                    fieldLabel: 'password'
+                    fieldLabel: 'password',
+                    inputType: 'password',
+                    emptyText: '*****'
                 },
                 {
                     xtype: 'textfield',
@@ -124,7 +126,9 @@ Ext.define('Taco.view.settings.shipping.subform.MethodsAndRates', {
                     xtype: 'textfield',
                     name: 'apipassword',
                     fieldLable: 'API password',
-                    fieldLabel: 'password'
+                    fieldLabel: 'password',
+                    inputType: 'password',
+                    emptyText: '*****'
                 },
                 {
                     xtype: 'textfield',
@@ -157,7 +161,9 @@ Ext.define('Taco.view.settings.shipping.subform.MethodsAndRates', {
                     xtype: 'textfield',
                     name: 'apipassword',
                     fieldLable: 'API password',
-                    fieldLabel: 'password'
+                    fieldLabel: 'password',
+                    inputType: 'password',
+                    emptyText: '*****'
                 },
                 {
                     xtype: 'textfield',
@@ -176,5 +182,12 @@ Ext.define('Taco.view.settings.shipping.subform.MethodsAndRates', {
         this.tabs.add([this.fedex, this.UPS, this.USPS]);
 
 
+    },
+
+    persistFormValues: function () {
+        var me = this;
+        me.fedex.record.data.areCredentialsSet = !(me.fedex.record.data.settings.apipassword === null || me.fedex.record.data.settings.apipassword === '');
+        me.UPS.record.data.areCredentialsSet = !(me.UPS.record.data.settings.apipassword === null || me.UPS.record.data.settings.apipassword === '');
+        me.USPS.record.data.areCredentialsSet = !(me.USPS.record.data.settings.apipassword === null || me.USPS.record.data.settings.apipassword === '');
     }
 });

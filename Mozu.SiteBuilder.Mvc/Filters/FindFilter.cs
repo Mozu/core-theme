@@ -2,13 +2,11 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using Mozu.SiteBuilder.UX.Models;
 
 namespace Mozu.SiteBuilder.Mvc.Filters
 {
-    public interface ITagFilterFindable
-    {
-        object Filter(IEnumerable<object> parameter);
-    }
+   
     /// <summary>
     /// searches a collectoin by an id and returns the item or filtered collection
     /// example: the below woudl return the item or filtered items that had the id of 30.

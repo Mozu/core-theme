@@ -3,6 +3,21 @@
         border: 0;
         border-bottom: 1px solid $input-border;
         @include border-radius-xbrowser(0);
+
+        &.#{$prefix}form-textarea {
+            border-top: 1px solid $input-border;
+            border-left: 1px solid $input-border;
+            border-right: 1px solid $input-border;
+            border-radius: 0;
+            color: $textarea-color;
+            line-height: 21px;
+            padding: 8px 12px;
+
+            &:focus {
+                border-color: $valid-green;
+                box-shadow: 0 0 0 1px $valid-green inset;
+            }
+        }
     }
 
     .#{$prefix}boxselect {
@@ -168,16 +183,18 @@
 
     .#{$prefix}html-editor-input {
         border-color: $input-border;
-        border-left: none;
-        border-right: none;
     }
 
     .#{$prefix}html-editor-tb {
         background: $white-color;
         border: 1px solid $input-border;
         border-color: $input-border !important;
-        @include border-radius-xbrowser($border-radius-small);
+        @include partial-border-radius($border-radius-small, 0, $border-radius-small, 0);
         height: 30px;
+
+        &:focus {
+            border-color: $valid-green;
+        }
 
         .#{$prefix}toolbar-separator {
             /* override external styles */
@@ -214,6 +231,12 @@
 
             .#{$prefix}btn-default-toolbar-small-pressed {
                 background: $white-color;
+            }
+
+            &.#{$prefix}btn-icon {
+                &:first-child {
+                    border-top-left-radius: 3px;
+                }
             }
 
             .#{$prefix}btn-icon-el {
