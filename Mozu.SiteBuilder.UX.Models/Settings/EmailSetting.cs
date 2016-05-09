@@ -6,9 +6,28 @@ using System.Threading.Tasks;
 
 namespace Mozu.SiteBuilder.UX.Models.Settings
 {
-    public class EmailTypeSettingVM : Mozu.SiteSettings.General.Contracts.EmailTypeSetting
+    public class EmailTypeSettingVM 
     {
+        [Newtonsoft.Json.JsonProperty(DefaultValueHandling = Newtonsoft.Json.DefaultValueHandling.Include)]
         public bool? Enabled { get; set; }
+
+        [Newtonsoft.Json.JsonProperty(DefaultValueHandling = Newtonsoft.Json.DefaultValueHandling.Include)]
+        public string Id { get; set; }
+
+
+        [Newtonsoft.Json.JsonProperty(DefaultValueHandling = Newtonsoft.Json.DefaultValueHandling.Include)]
+        public string SenderEmailAddressOverride { get; set; }
+
+        [Newtonsoft.Json.JsonProperty(DefaultValueHandling = Newtonsoft.Json.DefaultValueHandling.Include)]
+        public string SenderEmailAliasOverride { get; set; }
+
+        [Newtonsoft.Json.JsonProperty(DefaultValueHandling = Newtonsoft.Json.DefaultValueHandling.Include)]
+        public string ReplyToEmailAddressOverride { get; set; }
+        
+        [Newtonsoft.Json.JsonProperty(DefaultValueHandling = Newtonsoft.Json.DefaultValueHandling.Include)]
+        public string BccEmailAddressOverride { get; set; }
+
+
     }
     public enum EmailTypes
     {
