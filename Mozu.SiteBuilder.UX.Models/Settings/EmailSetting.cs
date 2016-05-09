@@ -12,7 +12,7 @@ namespace Mozu.SiteBuilder.UX.Models.Settings
     }
     public enum EmailTypes
     {
-        NotSet,
+       
         BackInStock,
         OrderChanged,
         OrderShipped,
