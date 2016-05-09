@@ -1022,8 +1022,6 @@ var Block = (function () {
                         block.update(html, cfg);
                     }
                 });
-            } else if (Chorizo.contentWidget && Chorizo.contentWidget.revealEditor) {
-                Chorizo.contentWidget.revealEditor(block);
             }
         }
     }, {
@@ -1040,6 +1038,12 @@ var Block = (function () {
     }, {
         key: 'onDoubleClick',
         value: function onDoubleClick() {
+
+            // if this is a content widget, do nothing
+            if (this && this.widgetData && this.widgetData.definitionId === 'content') {
+                return false;
+            }
+
             this.doEdit();
         }
     }, {
@@ -3099,6 +3103,10 @@ var ContentWidget = (function () {
                 return false;
             }
 
+            if (window.getSelection().type === 'Range') {
+                return false;
+            }
+
             if (this.formatter) {
                 this.hideEditor();
                 Chorizo.editor.updateAllContentWidgets();
@@ -3174,7 +3182,7 @@ var ContentWidget = (function () {
         value: function onUrlUpdate(e) {
 
             var url = this.urlTooltip.querySelector('input').value;
-            var linkElement = this.currentLink.startContainer.querySelector('a');
+            var linkElement = this.currentLink.startContainer.parentNode;
 
             linkElement.setAttribute('href', url);
 
@@ -3187,9 +3195,9 @@ var ContentWidget = (function () {
         value: function revealEditor(block) {
             var _this = this;
 
-            this.toggleAllContentWidgets();
-
             this.formatter = this.formatter || this.getFormatter();
+
+            this.toggleAllContentWidgets();
 
             this.urlTooltip = this.urlTooltip || this.getUrlTooltip();
 
@@ -3315,6 +3323,10 @@ var ContentWidget = (function () {
             this.urlTooltip.style.display = 'block';
 
             this.currentLink = this.saveSelection()[0];
+
+            if (this.urlTooltip.querySelector('input')) {
+                this.urlTooltip.querySelector('input').focus();
+            }
         }
     }, {
         key: 'saveSelection',
