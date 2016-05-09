@@ -279,7 +279,7 @@ Ext.define('Taco.view.settings.paymentTypes.subform.PurchaseOrder', {
             if (!Ext.isEmpty(customField)) {
                 var model = Ext.create('Taco.model.PurchaseOrderCustomField', {
                     code: customCode,
-                    value: customField,
+                    label: customField,
                     isEnabled: customEnabled,
                     isRequired: customRequired
                 });
