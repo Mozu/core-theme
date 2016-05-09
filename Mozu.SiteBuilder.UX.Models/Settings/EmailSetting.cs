@@ -3,28 +3,47 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Newtonsoft.Json;
 
 namespace Mozu.SiteBuilder.UX.Models.Settings
 {
     public class EmailTypeSettingVM 
     {
-        [Newtonsoft.Json.JsonProperty(DefaultValueHandling = Newtonsoft.Json.DefaultValueHandling.Include)]
+        [JsonProperty(
+           DefaultValueHandling = DefaultValueHandling.Include,
+           NullValueHandling = NullValueHandling.Include
+           )]
         public bool? Enabled { get; set; }
 
-        [Newtonsoft.Json.JsonProperty(DefaultValueHandling = Newtonsoft.Json.DefaultValueHandling.Include)]
+        [JsonProperty(
+           DefaultValueHandling = DefaultValueHandling.Include,
+           NullValueHandling = NullValueHandling.Include
+           )]
         public string Id { get; set; }
 
 
-        [Newtonsoft.Json.JsonProperty(DefaultValueHandling = Newtonsoft.Json.DefaultValueHandling.Include)]
+        [JsonProperty(
+           DefaultValueHandling = DefaultValueHandling.Include,
+           NullValueHandling = NullValueHandling.Include
+           )]
         public string SenderEmailAddressOverride { get; set; }
 
-        [Newtonsoft.Json.JsonProperty(DefaultValueHandling = Newtonsoft.Json.DefaultValueHandling.Include)]
+        [JsonProperty(
+            DefaultValueHandling = DefaultValueHandling.Include, 
+            NullValueHandling = NullValueHandling.Include
+            )]
         public string SenderEmailAliasOverride { get; set; }
 
-        [Newtonsoft.Json.JsonProperty(DefaultValueHandling = Newtonsoft.Json.DefaultValueHandling.Include)]
+        [JsonProperty(
+           DefaultValueHandling = DefaultValueHandling.Include,
+           NullValueHandling = NullValueHandling.Include
+           )]
         public string ReplyToEmailAddressOverride { get; set; }
-        
-        [Newtonsoft.Json.JsonProperty(DefaultValueHandling = Newtonsoft.Json.DefaultValueHandling.Include)]
+
+        [JsonProperty(
+            DefaultValueHandling = DefaultValueHandling.Include,
+            NullValueHandling = NullValueHandling.Include
+            )]
         public string BccEmailAddressOverride { get; set; }
 
 
