@@ -1294,6 +1294,19 @@ Ext.define('Taco.model.Order', {
         Ext.Ajax.request(config);
     },
 
+    addPurchaseOrder: function (config) {
+
+        Ext.applyIf(config, {
+            url: '/admin/app/order/payment/purchaseorder',
+            method: 'POST'
+        });
+
+        config.errorMsg = config.errorMsg || 'Error adding purchase order';
+        this.addErrorHandling(config);
+
+        Ext.Ajax.request(config);
+    },
+
 
     /*
      ****************************************************

@@ -35,7 +35,7 @@ Ext.define('Taco.view.order.modal.CreditPayment', {
                 name: 'creditToPurchaseOrders',
                 itemId: 'purchaseOrderCredit',
                 checked: true,
-                boxLabel: 'Credit to Purchase Orders balance'
+                boxLabel: 'Apply refund to the customer\'s available balance for purchase orders'
             },
             {
                 xtype: 'textarea',

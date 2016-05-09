@@ -57,7 +57,7 @@ Ext.define('Taco.view.order.modal.AddRefund', {
         });
 
         this.instoreCreditRadio = Ext.create('Ext.form.field.Radio', {
-            boxLabel: 'Issue Credit',
+            boxLabel: 'Issue Store Credit',
             name: 'paymentType',
             inputValue: 'credit',
             handler: function (radio) {

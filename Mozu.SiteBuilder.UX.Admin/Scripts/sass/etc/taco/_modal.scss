@@ -26,6 +26,16 @@
         @include border-radius-xbrowser(5px);
         @include color-blur-outer-shadow ($black-color, 0.2, 0, 1px, 16px, 0);
 
+        .#{$vprefix}static-text {
+            h2 {
+                font-weight: 100;
+            }
+
+            p {
+                padding-bottom: 21px;
+            }
+        }
+
         .#{$prefix}panel-body {
             overflow-y: auto;
         }

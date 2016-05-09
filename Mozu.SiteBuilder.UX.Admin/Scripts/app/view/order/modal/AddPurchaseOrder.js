@@ -23,17 +23,85 @@ Ext.define('Taco.view.order.modal.AddPurchaseOrder', {
     initComponent: function () {
         var balance = this.getBalance(),
             limit = this.getLimit(),
-            terms = this.getTerms();
+            terms = this.getTerms(),
+            fields = [
+                {
+                    code: 'department-code',
+                    enabled: true,
+                    label: 'Department Code',
+                    required: false
+                },
+                {
+                    code: 'department-id',
+                    enabled: true,
+                    label: 'Department ID',
+                    required: true
+                }
+            ],  // todo: = this.record.get('purchaseOrder').extraFields
+            extraFields = [],
+            fieldMargin = '0 0 0 0';
+
+        /**
+         * Iterate through extra fields, build array to display
+         */
+
+        var childFields = [];
+
+        fields.forEach(function (field) {
+            if (field.enabled) {
+
+                /**
+                 * If the field is not the left-most field, add left padding
+                 */
+
+                if (childFields.length > 0) {
+                    fieldMargin = '0 0 0 30';
+                }
+
+                var newField = {
+                    allowBlank: !field.required,
+                    fieldLabel: field.label,
+                    flex: 1,
+                    margin: fieldMargin,
+                    name: field.code,
+                    xtype: 'textfield'
+                };
+
+                childFields.push(newField);
+
+                if (childFields.length == 3) {
+                    extraFields.push({
+                        items: childFields,
+                        layout: 'hbox',
+                        xtype: 'fieldcontainer'
+                    });
+                    childFields = [];
+                    fieldMargin = '0 0 0 0';
+                }
+            }
+        });
+
+        if (childFields.length) {
+            extraFields.push({
+                items: childFields,
+                layout: 'hbox',
+                xtype: 'fieldcontainer'
+            });
+        }
 
         this.form = Ext.create('Ext.form.Panel', {
             items: [
                 {
                     xtype: 'fieldcontainer',
                     layout: 'hbox',
+                    flex: 1,
                     items: [
                         balance,
                         limit,
-                        terms
+                        terms,
+                        {
+                            flex: 3
+                        }
                     ]
                 },
                 {
@@ -60,24 +128,12 @@ Ext.define('Taco.view.order.modal.AddPurchaseOrder', {
                     ]
                 },
                 {
-                    xtype: 'fieldcontainer',
-                    layout: 'hbox',
-                    items: [
-                        {
-                            fieldLabel: 'Department Code',
-                            flex: 1,
-                            name: 'departmentCode',
-                            xtype: 'textfield'
-                        },
-                        {
-                            allowBlank: false,
-                            fieldLabel: 'Department ID',
-                            flex: 1,
-                            margin: '0 0 0 30',
-                            name: 'departmentId',
-                            xtype: 'textfield'
-                        }
-                    ]
+                    items: extraFields,
+                    layout: {
+                        align: 'stretch',
+                        type: 'vbox'
+                    },
+                    xtype: 'fieldcontainer'
                 }
             ]
         });
@@ -88,17 +144,25 @@ Ext.define('Taco.view.order.modal.AddPurchaseOrder', {
     },
 
     getBalance: function () {
-        var availableBalance = 7099;    // todo: = this.record.get('availableBalance');
+        var availableBalance = 7099,    // todo: = this.record.get('purchaseOrder').availableBalance;
+            content = {
+                cls: 'taco-static-text',
+                children: [
+                    {
+                        html: 'Available Balance',
+                        tag: 'p'
+                    },
+                    {
+                        html: this.record.formatCurrency(availableBalance),
+                        tag: 'h2'
+                    }
+                ],
+                tag: 'span'
+            };
 
         return Ext.widget({
             anchor: 0,
-            autoEl: {
-                html: '<p>Available Balance</p>'
-                    + '<br />'
-                    + '<p>'
-                    + this.record.formatCurrency(availableBalance)
-                    + '</p>'
-            },
+            autoEl: content,
             flex: 1,
             itemId: 'availableBalance',
             margin: '20 0 10 0',
@@ -107,7 +171,21 @@ Ext.define('Taco.view.order.modal.AddPurchaseOrder', {
     },
 
     getLimit: function () {
-        var creditLimit = 10000;    // todo: = this.record.get('creditLimit');
+        var creditLimit = 10000,    // todo: = this.record.get('purchaseOrder').creditLimit;
+            content = {
+                cls: 'taco-static-text',
+                children: [
+                    {
+                        html: 'Credit Limit',
+                        tag: 'p'
+                    },
+                    {
+                        html: this.record.formatCurrency(creditLimit),
+                        tag: 'h2'
+                    }
+                ],
+                tag: 'span'
+            };
 
         return Ext.widget({
             flex: 1,
@@ -115,23 +193,17 @@ Ext.define('Taco.view.order.modal.AddPurchaseOrder', {
             anchor: 0,
             margin: '20 0 10 0',
             itemId: 'creditLimit',
-            autoEl: {
-                html: '<p>Credit Limit</p>'
-                    + '<br />'
-                    + '<p>'
-                    + this.record.formatCurrency(creditLimit)
-                    + '</p>'
-            }
+            autoEl: content
         });
     },
 
     getTerms: function () {
-        var netTerms = ['30 Days', '60 Days'],   // todo: = this.record.get('netTerms'),
+        var netTerms = ['30 Days', '60 Days'],   // todo: = this.record.get('purchaseOrder').netTerms,
             netTermsItem = netTerms[0];
 
         /*
          * If Net Terms is only one item, show it as a static string
-         * Otherwise, show a dropdown with each option
+         * Otherwise, show a select input with each option
          */
         if (netTerms.length > 1) {
             return Ext.widget({
