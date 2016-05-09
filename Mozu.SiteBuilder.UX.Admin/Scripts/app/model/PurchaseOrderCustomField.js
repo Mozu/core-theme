@@ -6,7 +6,7 @@ Ext.define('Taco.model.PurchaseOrderCustomField', {
     fields: [
         { name: 'id', type: 'auto' },
         { name: 'code', type: 'string' },
-        { name: 'value', type: 'string' },
+        { name: 'label', type: 'string' },
         { name: 'isEnabled', type: 'bool' },
         { name: 'isRequired', type: 'bool' }
     ]

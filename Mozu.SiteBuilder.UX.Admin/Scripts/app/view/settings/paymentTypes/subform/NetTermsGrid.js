@@ -18,6 +18,6 @@ Ext.define('Taco.view.settings.paymentTypes.subform.NetTermsGrid', {
             var model = Ext.create('Taco.model.NetTerms', val),
                 index = this.getPlacementIndex(val.position);
             this.addRow(model, index);
-        });
+        }, me);
     }
 });

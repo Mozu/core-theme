@@ -12,6 +12,7 @@ Ext.define('Taco.view.settings.paymentTypes.subform.PurchaseOrder', {
     extend: 'Taco.core.ux.form.Form',
     requires: [
         'Taco.view.settings.paymentTypes.subform.NetTermsGrid',
+        'Taco.view.attribute.AttributeValueGrid',
         'Taco.model.NetTerms',
         'Taco.model.PurchaseOrderCustomField'
     ],
@@ -23,9 +24,12 @@ Ext.define('Taco.view.settings.paymentTypes.subform.PurchaseOrder', {
     initComponent: function() {
         var me = this;
 
-        me.purchaseOrderEnabled = me.record.get('purchaseOrder').isEnabled;
+        this.purchaseOrderEnabled = me.record.get('purchaseOrder').isEnabled;
+        this.purchaseOrderSplitPaymentEnabled = me.record.get('purchaseOrder').allowSplitPayment;
+        this.customFieldsStore = null;
+        this.netTermsStore = null;
 
-        me.purchaseOrderEnabledToggle = Ext.create('Ext.form.Checkbox', {
+        this.purchaseOrderEnabledToggle = Ext.create('Ext.form.Checkbox', {
             itemId: 'purchaseOrderEnabled',
             name: 'purchaseOrderEnabled',
             checked: me.purchaseOrderEnabled,
@@ -34,10 +38,10 @@ Ext.define('Taco.view.settings.paymentTypes.subform.PurchaseOrder', {
             scope: this
         });
 
-        me.purchaseOrderNetTerms = this.initializeNetTermsGrid();
-        me.purchaseOrderCustomTextFields = this.initializeTextFieldsGrid();
+        this.purchaseOrderNetTerms = this.initializeNetTermsGrid();
+        this.purchaseOrderCustomTextFields = this.initializeTextFieldsGrid();
 
-        me.purchaseOrderContent = Ext.create('Ext.form.FieldContainer', {
+        this.purchaseOrderContent = Ext.create('Ext.form.FieldContainer', {
             layout: 'hbox',
             width: '100%',
             itemId: 'purchaseOrderContent',
@@ -50,7 +54,15 @@ Ext.define('Taco.view.settings.paymentTypes.subform.PurchaseOrder', {
             ]
         });
 
-        me.purchaseOrderSplitPayment = Ext.create('Ext.form.FieldContainer', {
+        this.purchaseOrderSplitPaymentToggle = Ext.create('Ext.form.Checkbox', {
+            itemId: 'purchaseOrderSplitPayment',
+            name: 'purchaseOrderSplitPayment',
+            checked: me.purchaseOrderSplitPaymentEnabled,
+            boxLabel: 'Allow split-payment',
+            scope: this
+        });
+
+        this.purchaseOrderSplitPayment = Ext.create('Ext.form.FieldContainer', {
             layout: 'vbox',
             width: '100%',
             itemId: 'purchaseOrderOptions',
@@ -58,16 +70,11 @@ Ext.define('Taco.view.settings.paymentTypes.subform.PurchaseOrder', {
             fieldLabel: 'Options',
             hidden: !me.purchaseOrderEnabled,
             items: [
-                {
-                    xtype: 'checkbox',
-                    name: 'purchaseOrderSplitPayment',
-                    itemId: 'purchaseOrderSplitPayment',
-                    boxLabel: 'Allow split-payment'
-                }
+                me.purchaseOrderSplitPaymentToggle
             ]
         });
 
-        me.items = [
+        this.items = [
             Ext.create('Ext.panel.Panel', {
                 width: '100%',
                 items: [
@@ -85,14 +92,20 @@ Ext.define('Taco.view.settings.paymentTypes.subform.PurchaseOrder', {
     initializeNetTermsGrid: function() {
         var me = this;
 
-        me.netTermsStore = Ext.create('Ext.data.ArrayStore', {
+        this.netTermsStore = Ext.create('Ext.data.ArrayStore', {
             model: 'Taco.model.NetTerms',
             data: me.record.get('purchaseOrder').netTerms
         });
 
-        me.netTermsGrid = {
+        /*var model = Ext.create('Taco.model.NetTerms', {
+            id: 5,
+            value: '10 Days',
+            sequenceNumber: 1
+        });
+        this.netTermsStore.add(model);*/
+
+        this.netTermsGrid = {
             xtype: 'net-terms-grid',
-            width: 400,
             sortableColumns: false,
             disableSelection: false,
             hideHeaders: false,
@@ -145,10 +158,11 @@ Ext.define('Taco.view.settings.paymentTypes.subform.PurchaseOrder', {
             }
         };
 
-        me.purchaseOrderNetTermsGridCont = {
+        this.purchaseOrderNetTermsGridCont = {
             xtype: 'form',
             itemId: 'netTermsGridContainer',
             gridCfg: me.netTermsGrid,
+            width: '100%',
             items: [],
             initGrid: function() {
                 if (Ext.isArray(this.items)) {
@@ -163,7 +177,7 @@ Ext.define('Taco.view.settings.paymentTypes.subform.PurchaseOrder', {
             }
         };
 
-        me.purchaseOrderNetTermsGridCont.initGrid();
+        this.purchaseOrderNetTermsGridCont.initGrid();
 
         return Ext.create('Ext.form.FieldContainer', {
             layout: {
@@ -173,6 +187,7 @@ Ext.define('Taco.view.settings.paymentTypes.subform.PurchaseOrder', {
             itemId: 'purchaseOrderNetTerms',
             name: 'purchaseOrderNetTerms',
             flex: 1,
+            margin: '0 50 0 0',
             items: [
                 {
                     xtype: 'textfield',
@@ -210,7 +225,7 @@ Ext.define('Taco.view.settings.paymentTypes.subform.PurchaseOrder', {
                                     var position = (positionSelector.length > 0) ? positionSelector[0].getValue() : 'bottom';
                                     var id = value;
 
-                                    Taco.app.fireEvent('added-attribute-value', {
+                                    Taco.app.fireEvent('added-net-term-value', {
                                         value: value,
                                         id: id.replace(/[^a-zA-Z0-9-_//.]/g, "-"),
                                         position: position
@@ -226,16 +241,23 @@ Ext.define('Taco.view.settings.paymentTypes.subform.PurchaseOrder', {
 
     initializeTextFieldsGrid: function() {
         var me = this;
-        me.addCustomField = false;
+        this.shouldAddCustomField = false;
 
-        var customFieldsStore = Ext.create('Ext.data.ArrayStore', {
+        this.customFieldsStore = Ext.create('Ext.data.ArrayStore', {
             model: 'Taco.model.PurchaseOrderCustomField',
             data: me.record.get('purchaseOrder').memoFields
         });
 
-        me.handleCustomTextField = function () {
+        /*var model = Ext.create('Taco.model.PurchaseOrderCustomField', {
+            code: 'dept-id',
+            label: 'Dept Id',
+            isEnabled: true,
+            isRequired: true
+        });
+        this.customFieldsStore.add(model);*/
 
-            if (!me.addCustomField) {
+        this.handleCustomTextField = function() {
+            if (!me.shouldAddCustomField) {
                 me.customFieldAddButton.hide();
                 me.customFieldTextAdd.show();
             } else {
@@ -243,20 +265,42 @@ Ext.define('Taco.view.settings.paymentTypes.subform.PurchaseOrder', {
                 me.customFieldTextAdd.hide();
             }
 
-            me.addCustomField = !me.addCustomField;
-        }
+            me.shouldAddCustomField = !me.shouldAddCustomField;
+        };
 
-        me.customFieldAddButton = Ext.create('Ext.Button', {
+        this.addCustomFieldtoGrid = function() {
+            var me = this;
+            var customFieldGrid = this.down('#purchaseOrderCustomFieldGrid');
+            var customField = this.down('#customFieldTextLabel').getValue();
+            var customCode = customField.toLowerCase().replace(/[^a-zA-Z0-9-_//.]/g, "-");
+            var customRequired = this.down('#customFieldTextRequired').getValue();
+            var customEnabled = this.down('#customFieldTextEnabled').getValue();
+
+            if (!Ext.isEmpty(customField)) {
+                var model = Ext.create('Taco.model.PurchaseOrderCustomField', {
+                    code: customCode,
+                    value: customField,
+                    isEnabled: customEnabled,
+                    isRequired: customRequired
+                });
+
+                me.customFieldsStore.add(model);
+                if (me.customFieldsStore.count() > 0) {
+                    customFieldGrid.show();
+                }
+            }
+        };
+
+        this.customFieldAddButton = Ext.create('Ext.Button', {
             text: 'Add a Text Field',
-            itemId: 'addCustomField',
-            name: 'addCustomField',
+            itemId: 'addNewCustomField',
+            name: 'addNewCustomField',
             height: 32,
-            handler: me.handleCustomTextField
+            handler: me.handleCustomTextField,
+            scope: me
         });
 
-
-
-        me.customFieldTextAdd = Ext.create('Ext.form.FieldContainer', {
+        this.customFieldTextAdd = Ext.create('Ext.form.FieldContainer', {
             layout: {
                 type: 'hbox'
             },
@@ -267,8 +311,8 @@ Ext.define('Taco.view.settings.paymentTypes.subform.PurchaseOrder', {
             items: [
                 {
                     xtype: 'textfield',
-                    width: 300,
-                    emptyText: 'This still needs work...',//'Text Field Label',
+                    flex: 2,
+                    emptyText: 'Text Field Label',
                     itemId: 'customFieldTextLabel',
                     name: 'customFieldTextLabel',
                     enableKeyEvents: true,
@@ -289,27 +333,46 @@ Ext.define('Taco.view.settings.paymentTypes.subform.PurchaseOrder', {
                     }
                 }, {
                     xtype: 'checkbox',
-                    label: 'Required',
-                    width: 100,
+                    boxLabel: 'Required',
+                    flex: 1,
+                    checked: false,
+                    margin: '0 10 0 0',
                     itemId: 'customFieldTextRequired',
                     name: 'customFieldTextRequired'
                 }, {
                     xtype: 'checkbox',
-                    label: 'Enabled',
-                    width: 100,
+                    boxLabel: 'Enabled',
+                    flex: 1,
                     checked: true,
-                    itemId: 'customFieldTextRequired',
-                    name: 'customFieldTextRequired'
+                    margin: '0 10 0 0',
+                    itemId: 'customFieldTextEnabled',
+                    name: 'customFieldTextEnabled'
+                }, {
+                    xtype: 'button',
+                    text: 'Close',
+                    itemId: 'closeCustomField',
+                    name: 'closeCustomField',
+                    margin: '0 10 0 0',
+                    handler: me.handleCustomTextField,
+                    scope: me
+                }, {
+                    xtype: 'button',
+                    text: 'Save',
+                    itemId: 'addCustomField',
+                    name: 'addCustomField',
+                    margin: '0 10 0 0',
+                    handler: me.addCustomFieldtoGrid,
+                    scope: me
                 }
             ]
         });
 
-        me.customFieldAddContainer = Ext.create('Ext.form.FieldContainer', {
+        this.customFieldAddContainer = Ext.create('Ext.form.FieldContainer', {
             layout: {
                 type: 'hbox',
                 align: 'bottom'
             },
-            width: 500,
+            width: '100%',
             itemId: 'purchaseOrderAddFieldContainer',
             name: 'purchaseOrderAddFieldContainer',
             fieldLabel: 'Custom Text Fields',
@@ -319,16 +382,96 @@ Ext.define('Taco.view.settings.paymentTypes.subform.PurchaseOrder', {
             ]
         });
 
+        this.customFieldGrid = Ext.create('Taco.view.attribute.AttributeValueGrid', {
+            modelName: 'Taco.model.PurchaseOrderCustomField',
+            itemId: 'purchaseOrderCustomFieldGrid',
+            name: 'purchaseOrderCustomFieldGrid',
+            width: '100%',
+            hidden: me.customFieldsStore.count() < 1,
+            store: me.customFieldsStore,
+            enableEditAction: false,
+            enableDeleteAction: true,
+            enableAutoSelect: false,
+            enablePaging: false,
+            enableRowReorder: false,
+            columns: [
+                {
+                    text: 'Label',
+                    dataIndex: 'label',
+                    align: 'left',
+                    flex: 2,
+                    editor: {
+                        xtype: 'textfield',
+                        hideTrigger: true,
+                        ignoreParentFormTracking: true,
+                        keyNavEnabled: false,
+                        mouseWheelEnabled: false
+
+                    }
+                }, {
+                    text: 'Code',
+                    dataIndex: 'code',
+                    align: 'left',
+                    flex: 2,
+                    editor: {
+                        xtype: 'textfield',
+                        hideTrigger: true,
+                        ignoreParentFormTracking: true,
+                        keyNavEnabled: false,
+                        mouseWheelEnabled: false
+
+                    }
+                }, {
+                    xtype: 'checkcolumn',
+                    text: 'Required',
+                    label: 'Required',
+                    dataIndex: 'isRequired',
+                    align: 'left',
+                    flex: 1
+                }, {
+                    xtype: 'checkcolumn',
+                    text: 'Enabled',
+                    label: 'Enabled',
+                    dataIndex: 'isEnabled',
+                    align: 'left',
+                    flex: 1
+                }
+            ],
+            getActionItems: function () {
+                var me = this;
+                return [{
+                    text: 'Remove',
+                    menuColumnHandler: function (item, eventData) {
+                        var record = eventData.record;
+                        me.removeRow(record);
+                    }
+                }];
+            }
+
+        });
+
+        this.customFieldGridContainer = Ext.create('Ext.form.FieldContainer', {
+            itemId: 'customFieldGridContainer',
+            name: 'customFieldGridContainer',
+            fieldLabel: 'Saved Custom Text Fields',
+            width: '100%',
+            items: [
+                me.customFieldGrid
+            ]
+        });
+
         return Ext.create('Ext.form.FieldContainer', {
             layout: {
                 type: 'vbox',
                 align: 'bottom'
             },
+            margin: '0 50 0 0',
             flex: 1,
             itemId: 'purchaseOrderCustomFields',
             name: 'purchaseOrderCustomFields',
             items: [
-                me.customFieldAddContainer
+                me.customFieldAddContainer,
+                me.customFieldGridContainer
             ]
         });
     },
@@ -343,10 +486,38 @@ Ext.define('Taco.view.settings.paymentTypes.subform.PurchaseOrder', {
         }
     },
 
-    persistFormValue: function () {
+    persistFormValues: function () {
         //TODO finish this to save the data!
         var me = this;
-        var isDirty = false;
+        var purchaseOrderEnabled = this.purchaseOrderEnabledToggle.getValue();
+        var purchaseOrderSplitPayment = this.purchaseOrderSplitPaymentToggle.getValue();
 
+        // fix this array stuff
+        var customFields = [];
+        this.customFieldsStore.each(function(value) {
+            customFields.push({
+                code: value.get('code'),
+                label: value.get('label'),
+                isEnabled: value.get('isEnabled'),
+                isRequired: value.get('isRequired')
+            });
+        });
+
+        var netTerms = [];
+        this.netTermsStore.each(function(value) {
+            netTerms.push({
+                value: value.get('value'),
+                sequenceNumber: value.get('sequenceNumber'),
+            });
+        });
+
+        var purchaseOrder = {
+            "isEnabled": purchaseOrderEnabled,
+            "netTerms": netTerms,
+            "memoFields": customFields,
+            "allowSplitPayment": purchaseOrderSplitPayment
+        };
+
+        this.record.set('purchaseOrder', purchaseOrder);
     }
 });
