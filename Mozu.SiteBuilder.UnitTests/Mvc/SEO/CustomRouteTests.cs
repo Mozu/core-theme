@@ -697,6 +697,9 @@ namespace Mozu.SiteBuilder.UnitTests.Mvc.SEO
 
             var catClient = Substitute.For<IProductCategoryRuntimeWebApiClient, ICloneable>();
             (catClient as ICloneable).Clone().Returns(catClient);
+
+            ((IServiceClientBase<IProductCategoryRuntimeWebApiClient>)catClient).Options = new ConfigOptions();
+
             subber.Provide<IProductCategoryRuntimeWebApiClient>(catClient);
             var catTree = GetResource<ProductRuntime.Contracts.CategoryCollection>("IProductCategoryRuntimeWebApiClient.GetCategoryTree");
             catClient.GetCategoryTree().ReturnsForAnyArgs(Task.FromResult(Response(catTree)));
