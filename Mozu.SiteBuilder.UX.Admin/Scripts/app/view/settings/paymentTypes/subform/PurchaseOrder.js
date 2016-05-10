@@ -91,11 +91,15 @@ Ext.define('Taco.view.settings.paymentTypes.subform.PurchaseOrder', {
 
     initializeNetTermsGrid: function() {
         var me = this;
+        var netTerms = me.record.get('purchaseOrder').netTerms;
 
         this.netTermsStore = Ext.create('Ext.data.ArrayStore', {
-            model: 'Taco.model.NetTerms',
-            data: me.record.get('purchaseOrder').netTerms
+            model: 'Taco.model.NetTerms'
         });
+
+        for (var i = 0; i < netTerms.length; ++i) {
+            this.netTermsStore.add(Ext.create('Taco.model.NetTerms', netTerms[i]));
+        }
 
         /*var model = Ext.create('Taco.model.NetTerms', {
             id: 5,
@@ -242,11 +246,15 @@ Ext.define('Taco.view.settings.paymentTypes.subform.PurchaseOrder', {
     initializeTextFieldsGrid: function() {
         var me = this;
         this.shouldAddCustomField = false;
+        var memoFields = me.record.get('purchaseOrder').memoFields;
 
         this.customFieldsStore = Ext.create('Ext.data.ArrayStore', {
-            model: 'Taco.model.PurchaseOrderCustomField',
-            data: me.record.get('purchaseOrder').memoFields
+            model: 'Taco.model.PurchaseOrderCustomField'
         });
+
+        for (var i = 0; i < memoFields.length; ++i) {
+            this.customFieldsStore.add(Ext.create('Taco.model.PurchaseOrderCustomField', memoFields[i]));
+        }
 
         /*var model = Ext.create('Taco.model.PurchaseOrderCustomField', {
             code: 'dept-id',
