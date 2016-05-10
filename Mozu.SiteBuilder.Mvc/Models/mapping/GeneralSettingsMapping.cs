@@ -57,14 +57,16 @@ namespace Mozu.SiteBuilder.Mvc.Models.ModelMapping
             Mapper.CreateMap<Mozu.Reference.Contracts.TimeZone, UX.Models.Settings.TimeZone>()
                 .ForMember(x => x.Selected, op => op.Ignore());
 
-          
 
+            Mapper.CreateMap<GDC.EmailTypeSetting, EmailTypeSettingVM>()
+                .ForMember(m => m.Enabled, op => op.Ignore());
             Mapper.CreateMap<GDC.GeneralSettings, GeneralSettings>()
                 //ignores
                 .ForMember(m => m.AdjustForDaylightSavingTime, op => op.Ignore())
                 .ForMember(m => m.AllowAllIPs, op => op.Ignore())
                 .ForMember(m => m.CdnCacheBustKey , op => op.ResolveUsing (x=> x.CacheSettings != null ? x.CacheSettings.CdnCacheBustKey : null))
                 .ForMember(m => m.MissingImageSubstitute, op => op.ResolveUsing(x => x.MissingImageSubstitute))
+                .ForMember(m=> m.EmailTypes, op => op.ResolveUsing(x => x.EmailTypes))
 
                 .ForMember(m => m.CustomCdnHostName, op => op.ResolveUsing(x => x.CustomCdnHostName))
              
