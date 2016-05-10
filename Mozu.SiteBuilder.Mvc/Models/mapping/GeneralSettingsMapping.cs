@@ -77,6 +77,7 @@ namespace Mozu.SiteBuilder.Mvc.Models.ModelMapping
                 .ForMember(m => m.SupressedEmailTransactions, op => op.ResolveUsing(x => x.SupressedEmailTransactions))
                 .ForMember(m => m.ChannelId, op => op.Ignore())
                 .ForMember(m => m.TemplateSiteId, op => op.ResolveUsing(dc => dc.TemplateSiteId))
+                 .ForMember(m => m.BccEmailAddress, op => op.ResolveUsing(dc => dc.BccEmailAddress))
                 .ForMember(m => m.DesktopTheme, opt => opt.ResolveUsing(x =>
                 {
                     if (!string.IsNullOrEmpty(x.Theme))
@@ -130,6 +131,7 @@ namespace Mozu.SiteBuilder.Mvc.Models.ModelMapping
                 .ForMember(dc => dc.CustomCdnHostName, op => op.ResolveUsing ( x=> x.CustomCdnHostName))
                 .ForMember(dc => dc.IsWishlistCreationEnabled, op => op.ResolveUsing(x => x.IsWishlistCreationEnabled))
                 .ForMember(dc => dc.MissingImageSubstitute, op => op.ResolveUsing(x => x.MissingImageSubstitute))
+                .ForMember(m => m.BccEmailAddress, op => op.ResolveUsing(dc => dc.BccEmailAddress))
 
                 .ForMember(dc => dc.TaxableTerritories, op => op.Ignore())
                 .ForMember(dc => dc.AuditInfo, op => op.Ignore())

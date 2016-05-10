@@ -247,7 +247,8 @@ namespace Mozu.SiteBuilder.UX.Models.Settings
         [DataMember/*(Name = "channelId")*/]
         public string MissingImageSubstitute { get; set; }
 
-
+        [DataMember]
+        public string BccEmailAddress { get; set; }
 
 
         [DataMember/*(Name = "replyToEmail")*/]
