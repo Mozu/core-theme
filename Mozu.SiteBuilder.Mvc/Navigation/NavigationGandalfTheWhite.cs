@@ -173,7 +173,7 @@ namespace Mozu.SiteBuilder.Mvc.Navigation
             var catTask = _categoryProvider.GetAllCategories();
 
             // get the list of pages
-            var pageTask = _documentClient.GetDocuments(documentListName: "pages@mozu", pageSize: 250, includeInactive: _shouldRequestInactiveDocuments);
+            var pageTask = _documentClient.GetDocuments(documentListName: "pages@mozu", pageSize: 2000, includeInactive: _shouldRequestInactiveDocuments, responseFields: "items(id, name, listFQN, properties( link_title ) )");
 
             // get the list of blogs   .. ha ha ha haa  haaa ahha   aaahhhh:)
             // var blogTask = _cmsService.GetList2(contentCollection: "blogs", pageSize: 1, filter: "DocumentTypeFQN eq blog" );

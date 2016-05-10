@@ -73,7 +73,7 @@ namespace Mozu.SiteBuilder.Mvc.Security
         string IAuthenticationHelper.GetAdminAccessToken()
         {
             var cookie = CookieProvider.GetRequestCookie(AdminAccessTokenCookieName);
-            if (cookie != null && cookie.HasKeys)
+            if (cookie?.Values != null)
             {
                 return cookie[AccessToken];
             }
@@ -83,7 +83,7 @@ namespace Mozu.SiteBuilder.Mvc.Security
         string IAuthenticationHelper.GetProfileToken()
         {
             var cookie = CookieProvider.GetRequestCookie(StoreFrontAccessTokenCookieName);
-            if (cookie != null && cookie.HasKeys)
+            if (cookie?.Values != null)
             {
                 return cookie[ProfileToken];
             }
@@ -93,7 +93,7 @@ namespace Mozu.SiteBuilder.Mvc.Security
         string IAuthenticationHelper.GetAdminRefreshToken()
         {
             var cookie = CookieProvider.GetRequestCookie(AdminRefreshCookieName);
-            if (cookie != null && cookie.HasKeys )
+            if (cookie?.Values != null)
             {
                 return cookie["Token"];
             }
@@ -120,7 +120,7 @@ namespace Mozu.SiteBuilder.Mvc.Security
         string IAuthenticationHelper.GetStoreFrontSessionAccessToken()
         {
             var cookie = CookieProvider.GetRequestCookie(StoreFrontAccessTokenSessionCookieName);
-            if (cookie != null && cookie.HasKeys)
+            if (cookie?.Values != null)
             {
                 return cookie[AccessToken];
             }
@@ -129,7 +129,7 @@ namespace Mozu.SiteBuilder.Mvc.Security
         string IAuthenticationHelper.GetStoreFrontAccessToken()
         {
             var cookie = CookieProvider.GetRequestCookie(StoreFrontAccessTokenCookieName );
-            if (cookie != null && cookie.HasKeys )
+            if (cookie?.Values != null)
             {
                 return cookie[AccessToken];
             }
@@ -171,7 +171,7 @@ namespace Mozu.SiteBuilder.Mvc.Security
         public DateTime? GetStoreFrontSessionAccessTokenDate()
         {
             var cookie = CookieProvider.GetRequestCookie(StoreFrontAccessTokenSessionCookieName);
-            if (cookie != null && cookie.HasKeys)
+            if (cookie?.Values != null)
             {
                 var str= cookie[CookieDate];
                 DateTime retVal;

@@ -46,7 +46,7 @@ Ext.define('Taco.view.website.settings.facets.FacetEditForm', {
                 },
                 items: [me.inheritedVisible, me.inheritedHidden]
             }
-        }
+        };
 
         var setInheritedDisplayCheckbox = function(isInheritedHidden) {
             if (isInheritedHidden) {
@@ -56,7 +56,7 @@ Ext.define('Taco.view.website.settings.facets.FacetEditForm', {
                 me.inheritedHidden.setValue(false);
                 me.inheritedVisible.setValue(true);
             }
-        }
+        };
         
         me.valueDisplayStyle = Ext.widget({
             xtype: 'radio',
@@ -146,9 +146,19 @@ Ext.define('Taco.view.website.settings.facets.FacetEditForm', {
             valueNotFoundText: 'not found',
             editable: false,
             forceSelection: true,
+            defaultValue: me.record.getDefaultSortValue(),
             disabled: (this.record.isInherited() || this.record.get('isOverridden')),
             hidden: (me.record.get('facetType') === 'RangeQuery'),
-            store: me.record.getFacetSortingStore()
+            store: me.record.getFacetSortingStore(),
+            listeners: {
+                afterrender: function () {
+                    if (!this.getValue()) {
+                        console.log('setting default...');
+
+                        this.setValue(this.defaultValue);
+                    }
+                }
+            }
         });
 
         if (!(me.record.isInherited() || me.record.get('isOverridden'))) {
@@ -212,7 +222,7 @@ Ext.define('Taco.view.website.settings.facets.FacetEditForm', {
             this.rangeQueries.hide();
             this.cachedRangeQueries = this.rangeQueries.getValue();
             this.rangeQueries.setValue([]);
-            this.valueSort.setValue('CountDescending');
+            this.valueSort.setValue(this.record.getDefaultSortValue());
             this.valueSort.show();
         }
         this.fireEvent('heightchange');

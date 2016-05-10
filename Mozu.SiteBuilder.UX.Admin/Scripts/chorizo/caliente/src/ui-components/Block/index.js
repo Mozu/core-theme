@@ -102,10 +102,6 @@ export default class Block {
                 }
             });
         }
-
-        else {
-            Chorizo.contentWidget.revealEditor(block);
-        }
     }
 
     update(html, cfg) {
@@ -121,6 +117,14 @@ export default class Block {
     }
 
     onDoubleClick() {
+
+        // if this is a content widget, do nothing
+        if (this 
+            && this.widgetData
+            && this.widgetData.definitionId === 'content') {
+            return false;
+        }
+
         this.doEdit();
     }
 

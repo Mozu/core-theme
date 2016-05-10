@@ -142,9 +142,6 @@
     <NoWarn>1591,1572,1571,1573,1587,1570</NoWarn>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="Mozu.Reporting.Contracts">
-      <HintPath>..\packages\Mozu.Reporting.Contracts.1.13.1-dev1409220943-svr\lib\net45\Mozu.Reporting.Contracts.dll</HintPath>
-    </Reference>
     <Reference Include="System" />
     <Reference Include="System.ComponentModel.DataAnnotations" />
     <Reference Include="System.Configuration" />

@@ -414,6 +414,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.ModelMapping
                 .ForMember(x => x.IsPriceOverridden, op => op.ResolveUsing(dc => dc.IsPriceOverridden))
                 .ForMember(x => x.Price, op => op.ResolveUsing(dc => (dc.Price ?? NULLPRICE).Price))
                 .ForMember(x => x.SalePrice, op => op.ResolveUsing(dc => (dc.Price ?? NULLPRICE).SalePrice))
+                .ForMember(x => x.ISOCurrencyCode, op => op.ResolveUsing(dc => (dc.Price ?? NULLPRICE).ISOCurrencyCode))
                 .ForMember(x => x.IsSEOContentOverridden, op => op.ResolveUsing(dc => dc.IsSEOContentOverridden))
                 .ForMember(x => x.MetaTagTitle, op => op.ResolveUsing(dc => dc.SEOContent == null ? null : dc.SEOContent.MetaTagTitle))
                 .ForMember(x => x.MetaTagDescription, op => op.ResolveUsing(dc => dc.SEOContent == null ? null : dc.SEOContent.MetaTagDescription))
@@ -465,7 +466,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.ModelMapping
                 .ForMember(dc => dc.Price, op => op.ResolveUsing(p =>
                     new DC.ProductPrice
                     {
-                      //  ISOCurrencyCode = DEFAULT_CURRENCY_CODE,
+                        ISOCurrencyCode = p.ISOCurrencyCode,
                         // ListPrice = p.ListPrice,
                         Price = p.Price,
                         SalePrice = p.SalePrice,

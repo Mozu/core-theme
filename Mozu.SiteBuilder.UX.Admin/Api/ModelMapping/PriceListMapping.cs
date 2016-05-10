@@ -80,9 +80,10 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.ModelMapping
                 .ForMember(x => x.CurrentMSRP, op => op.Ignore())
                 .ForMember(x => x.CurrentSalePrice, op => op.Ignore())
                 .ForMember(x => x.CurrentPriceCurrencyCode, op => op.Ignore())
+                .ForMember(x => x.BaseProductCode, op => op.Ignore())
+                .ForMember(x => x.ProductInCatalogInfo, op => op.Ignore())
                 ;
             
-
             Mapper.CreateMap<PriceListEntryPrice, DC.PriceListEntryPrice>();
             Mapper.CreateMap<DC.PriceListEntryPrice, PriceListEntryPrice>();
 

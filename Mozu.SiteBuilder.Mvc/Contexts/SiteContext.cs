@@ -145,7 +145,7 @@ namespace Mozu.SiteBuilder.Mvc.Contexts
            
             else
             {
-                HttpCookie cookie = cookieProvider.GetRequestCookie(FORCE_THEME_COOKIE_NAME);
+                var cookie = cookieProvider.GetRequestCookie(FORCE_THEME_COOKIE_NAME);
                 if (cookie != null && !string.IsNullOrEmpty(cookie.Value ))
                 {
                    return  cookie.Value;

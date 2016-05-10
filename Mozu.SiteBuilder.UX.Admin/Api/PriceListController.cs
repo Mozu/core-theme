@@ -13,6 +13,7 @@ using DC = Mozu.ProductAdmin.Contracts;
 using Mozu.Core.Extensions;
 using Mozu.SiteBuilder.Mvc.Extensions;
 using Mozu.SiteBuilder.UX.Admin.Api.Models;
+using Mozu.SiteBuilder.UX.Admin.Api.Models.ProductModels;
 using Mozu.SiteBuilder.UX.Admin.Helpers;
 
 namespace Mozu.SiteBuilder.UX.Admin.Api
@@ -205,14 +206,17 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
             {
                 DC.Product baseProduct = await GetBaseProduct(productCode);
                 if (baseProduct == null) return List2(priceListEntry);
+                priceListEntry.BaseProductCode = baseProduct.BaseProductCode;
                 AddCurrentBaseProductPricing(priceListEntry, baseProduct);
+                AddCurrentProductCatalogInfo(priceListEntry, baseProduct);
                 DC.ProductVariation variant = await GetProductVariation(baseProduct.BaseProductCode, productCode);
                 AddCurrentVariationPricing(priceListEntry, variant);
                 return List2(priceListEntry);
             }
 
             var dcProduct = await GetProduct(productCode);
-            priceListEntry = AddCurrentPrices(priceListEntry, dcProduct);
+            AddCurrentPrices(priceListEntry, dcProduct);
+            AddCurrentProductCatalogInfo(priceListEntry, dcProduct);
 
             var lookup = (priceListEntry.Extras.IsNullOrEmpty())
                 ? new Dictionary<string, PriceListEntryExtra>()
@@ -234,7 +238,26 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
             return List2(priceListEntry);
         }
 
-        private static PriceListEntry AddCurrentPrices(PriceListEntry priceListEntry, DC.Product dcProduct)
+        private static void AddCurrentProductCatalogInfo(PriceListEntry priceListEntry, DC.Product dcProduct)
+        {
+            priceListEntry.ProductInCatalogInfo = dcProduct.ProductInCatalogs.Select(x => new ProductInCatalogInfo
+            {
+                ActiveStartDate = (x.ActiveDateRange != null) ? x.ActiveDateRange.StartDate : null,
+                ActiveEndDate = (x.ActiveDateRange != null) ? x.ActiveDateRange.EndDate : null,
+                IsActive = x.IsActive.GetValueOrDefault(),
+                CatalogId = x.CatalogId,
+                IsPriceOverridden = x.IsPriceOverridden.GetValueOrDefault(),
+                ISOCurrencyCode = x.Price.ISOCurrencyCode,
+                ListPrice = x.Price.Price,
+                SalePrice = x.Price.SalePrice,
+                MAP = x.Price.MAP,
+                MAPStartDate = x.Price.MAPStartDate,
+                MAPEndDate = x.Price.MAPEndDate,
+                MSRP = x.Price.MSRP
+            }).ToList();
+        }
+
+        private static void AddCurrentPrices(PriceListEntry priceListEntry, DC.Product dcProduct)
         {
             priceListEntry.CurrentPriceCurrencyCode = dcProduct.Price.ISOCurrencyCode;
             priceListEntry.CurrentListPrice = dcProduct.Price.Price;
@@ -252,7 +275,6 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
             priceListEntry.CurrentDiscountsRestricted = dcProduct.PricingBehavior.DiscountsRestricted;
             priceListEntry.CurrentDiscountsRestrictedStartDate = dcProduct.PricingBehavior.DiscountsRestrictedStartDate;
             priceListEntry.CurrentDiscountsRestrictedEndDate = dcProduct.PricingBehavior.DiscountsRestrictedEndDate;
-            return priceListEntry;
         }
 
         /// <summary>
@@ -291,7 +313,9 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
         {
             var dcProduct = await GetProduct(productCode);
             //move to method for adding current.
-            var priceListEntry = AddCurrentPrices(new PriceListEntry(), dcProduct);
+            var priceListEntry = new PriceListEntry();
+            AddCurrentPrices(priceListEntry, dcProduct);
+            AddCurrentProductCatalogInfo(priceListEntry, dcProduct);
             var productExtras = await GetProductTypeAttributesAsync((fqn, val) => (decimal?)null, dcProduct);
 
             priceListEntry.Extras =
@@ -305,7 +329,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
                                     + "price(isoCurrencyCode,price,salePrice,msrp,map,mapStartDate,mapEndDate),"
                                     + "pricingBehavior(discountsRestricted,discountsRestrictedStartDate,discountsRestrictedEndDate),"
                                     + "supplierInfo(cost(isoCurrencyCode,cost)),"
-                                    + "productInCatalogs(catalogId,isActive,isPriceOverriden,"
+                                    + "productInCatalogs(catalogId,isActive,activeDateRange(startDate,endDate),isPriceOverriden,"
                                       + "price(isoCurrencyCode,price,salePrice,msrp,map,mapStartDate,mapEndDate))";
 
 
@@ -378,7 +402,10 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
 
         private async Task<DC.Product> GetBaseProduct(string variantProductCode)
         {
-            string responseFields = "items(baseProductCode,price,pricingBehavior)";
+            string responseFields = "items(baseProductCode,price,pricingBehavior," 
+                + "productInCatalogs(catalogId, isActive, isPriceOverriden,activeDateRange(startDate,endDate),"
+                +   "price(isoCurrencyCode,price,salePrice,msrp,map,mapStartDate,mapEndDate)"
+                +  "))";
             var filter = string.Format("isVariation eq true and ProductCode eq {0}", variantProductCode);
             var dcBaseProducts = (await _productWebApiClient.GetProducts(filter: filter, responseFields: responseFields)).ReadAsSync();
             return dcBaseProducts.Items.FirstOrDefault();
