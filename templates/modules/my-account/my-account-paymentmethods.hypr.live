@@ -1,6 +1,26 @@
-﻿<h3 class="mz-l-stack-sectiontitle">{{ labels.paymentMethods }} <a href="javascript:;" data-mz-card="new" data-mz-action="beginEditCard">{{ labels.addNewCard }}</a></h3>
+﻿<script>
+/**
+ * this is filling in for the model until
+ * our API is up to date for
+ * Purchase Order
+ */
+var tempModel = {
+    purchaseOrder: {
+        purchaseOrder: true,
+        netTerms: '30 Days',
+        creditLimit: 10000,
+        availableBalance: 5098.5
+    }
+};
+</script>
+
+<h3 class="mz-l-stack-sectiontitle">{{ labels.paymentMethods }} <a href="javascript:;" data-mz-card="new" data-mz-action="beginEditCard">{{ labels.addNewCard }}</a></h3>
 {% if model.hasSavedCards || editing.card == "new" %}
 <ul class="mz-accountpaymentmethods-list mz-l-tiles">
+    {% if tempModel %}
+    {% include "modules/my-account/my-account-paymentmethod" with model=tempModel.purchaseOrder %}
+    {% endif %}
+
     {% for card in model.cards %}
     {% if editing.card == card.id %}
     {% include "modules/my-account/my-account-credit-card-form" with model=model.editingCard editingContact=model.editingContact %}
