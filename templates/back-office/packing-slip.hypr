@@ -67,6 +67,33 @@
             <td>{{ model.shippingMethodName }}</td>
         </tr></tbody>
     </table>
+    <table class="grid payment-details
+                {% for payment in order.payments %}
+                    {% if payment.PaymentType == 'PurchaseOrder' %}
+                        show
+                    {% endif %}
+                {% endfor %}
+            ">
+        <thead>
+            <tr>
+                <th>Purchase Order</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for payment in order.payments %}
+                {% if payment.status != "Voided" and payment.paymentType == "PurchaseOrder" %}
+                    <tr>
+                        <td><b>PO #</b></td>
+                        <td>{{ payment.billingInfo.purchaseOrder.purchaseOrderNumber }}</td>
+                    </tr>
+                    <tr>
+                        <td><b>Payment terms:</b></td>
+                        <td>{{ payment.billingInfo.purchaseOrder.paymentTerm.description }}</td>
+                    </tr>
+                {% endif %}
+            {% endfor %}
+        </tbody>
+    </table>
     <table class="grid">
         <thead><tr>
             <th>Product Code</th>

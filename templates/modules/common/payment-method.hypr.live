@@ -1,14 +1,33 @@
-﻿<div class="mz-paymentmethod {% block module-classes %}{% endblock module-classes %}">
-    <div class="mz-paymentmethod-actions">
-      {% block payment-method-actions %}
-      {% endblock payment-method-actions %}
+﻿{% if model.isEnabled %}
+    <div class="mz-paymentmethod {% block module-classes %}{% endblock module-classes %}">
+        <div class="mz-paymentmethod-details">
+                {% block payment-method-details %}
+                    <strong class="mz-paymentmethod-methodtype">{{ labels.purchaseOrder }}</strong>
+                    <br/>
+                    <br/>
+                    <div class="mz-paymentmethod-methodtype">{{ labels.purchaseOrderPaymentTerms }}: {% for term in model.paymentTerms %} {{ term.description }}{% if not forloop.last %},{% endif %} {% endfor %}</div>
+                    <div class="mz-paymentmethod-methodtype">{{ labels.creditLimit }} {{ model.creditLimit | currency }}</div>
+                    <div class="mz-paymentmethod-methodtype">{{ labels.availableBalance }} {{ model.availableBalance | currency }}</div>
+                    <br/>
+                    <em class="is-primary">{{ labels.defaultPaymentMethod }}</em>
+                {% endblock payment-method-details %}
+        </div>
     </div>
-   <div class="mz-paymentmethod-methoddetails">
-     {% block payment-method-details %}
-     <strong class="mz-paymentmethod-methodtype">{{ model.cardType }}</strong>
-     <div class="mz-paymentmethod-cardnumber">{{ model.cardNumberPart }}</div>
-     <div class="mz-paymentmethod-cardexp">{{ labels.expires }} {{ model.expireMonth }}/{{model.expireYear }}</div>
-       {% if model.isDefaultPayMethod %}<em class="is-primary">({{ labels.primary }})</em>{% endif %}
-       {% endblock payment-method-details %}
-   </div>
- </div>
+{% else %}
+    <div class="mz-paymentmethod {% block module-classes %}{% endblock module-classes %}">
+        <div class="mz-paymentmethod-actions">
+            {% block payment-method-actions %}
+            {% endblock payment-method-actions %}
+        </div>
+        <div class="mz-paymentmethod-methoddetails">
+            {% block payment-method-details %}
+
+                <strong class="mz-paymentmethod-methodtype">{{ model.cardType }}</strong>
+                <div class="mz-paymentmethod-cardnumber">{{ model.cardNumberPart }}</div>
+                <div class="mz-paymentmethod-cardexp">{{ labels.expires }} {{ model.expireMonth }}/{{model.expireYear }}</div>
+                {% if model.isDefaultPayMethod %}<em class="is-primary">({{ labels.primary }})</em>{% endif %}
+
+            {% endblock payment-method-details %}
+        </div>
+    </div>
+{% endif %}

@@ -1,4 +1,4 @@
-﻿{% extends "back-office/base" %}
+{% extends "back-office/base" %}
 {% block body-content %}
 <table class="mz-printable-order mz-printable-order-details">
 <thead class="header"><tr>
@@ -133,7 +133,10 @@
                         <div class="product-name">{{ item.product.name }}</div>
                         {% for option in item.product.options %}
                             <div class="product-option">
-                                <em class="product-option-label">[option]</em>{{ option.name }}: {{ option.value }}
+                                <em class="product-option-label">[option]</em>{{ option.name }}: {{ option.stringValue|default(option.shopperEnteredValue)|default(option.value) }}
+                                {% if option.stringValue %}
+                                <span class="product-option-raw">({{ option.value }})</span>
+                                {% endif %}
                             </div>
                         {% endfor %}
                         {% for product in item.product.bundledProducts %}
@@ -163,7 +166,13 @@
             <p class="message">No payment details were provided.</p>
         {% endif %}
         {% if model.payments.length > 0 %}
-            <table class="grid">
+            <table class="grid payment-details
+                {% for payment in model.payments %}
+                    {% if payment.PaymentType != 'PurchaseOrder' %}
+                        show
+                    {% endif %}
+                {% endfor %}
+            ">
                 <thead><tr>
                     <th>Date</th>
                     <th>Status</th>
@@ -174,7 +183,7 @@
                 </tr></thead>
                 <tbody>
                 {% for payment in model.payments %}
-                    {% if payment.status != "Voided" %}
+                    {% if payment.status != "Voided" and payment.paymentType != "PurchaseOrder" %}
                     <tr>
                         <td>{{ payment.auditInfo.createDate|date(themeSettings.backofficeDateTimeFormat) }}</td>
                         <td>{{ payment.status }}</td>
@@ -217,6 +226,68 @@
                 {% endfor %}
                 </tbody>
             </table>
+
+            <table class="grid payment-details
+                {% for payment in model.payments %}
+                    {% if payment.PaymentType == 'PurchaseOrder' %}
+                        show
+                    {% endif %}
+                {% endfor %}
+            ">
+                <thead>
+                    <tr>
+                        <th>Date</th>
+                        <th>Status</th>
+                        <th>Type</th>
+                        <th>Info</th>
+                        <th>Payment terms</th>
+                        <th>Amount</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for payment in model.payments %}
+                        {% if payment.status != "Voided" and payment.paymentType == "PurchaseOrder" %}
+                            <tr>
+                                <td>{{ payment.auditInfo.createDate|date(themeSettings.backofficeDateTimeFormat) }}</td>
+                                <td>{{ payment.status }}</td>
+                                <td>{{ labels.purchaseOrder }}</td>
+                                <td>{{ payment.billingInfo.purchaseOrder.purchaseOrderNumber }}</td>
+                                <td>{{ payment.billingInfo.purchaseOrder.paymentTerm.description }}</td>
+                                <td>{% if payment.amountCollected > 0 %}{{ payment.amountCollected | currency }}
+                                    {% else %}{{ payment.amountRequested | currency }}
+                                    {% endif %}</td>
+                            </tr>
+                        {% endif %}
+                    {% endfor %}
+                </tbody>
+            </table>
+
+            <table class="grid payment-details
+                {% for payment in model.payments %}
+                    {% if payment.PaymentType == 'PurchaseOrder' %}
+                        show
+                    {% endif %}
+                {% endfor %}
+            ">
+                <thead>
+                    <tr>
+                        <th>Additional information</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for payment in model.payments %}
+                        {% if payment.status != "Voided" and payment.paymentType == "PurchaseOrder" %}
+                            {% for field in payment.billingInfo.purchaseOrder.customFields %}
+                            <tr>
+                                <td>{{ field.label }}</td>
+                                <td>{{ field.value }}</td>
+                            </tr>
+                            {% endfor %}
+                        {% endif %}
+                    {% endfor %}
+                </tbody>
+            </table>
+
         {% endif %}
     </div>
     {% if model.shopperNotes %}
