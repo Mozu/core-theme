@@ -146,19 +146,9 @@ Ext.define('Taco.view.website.settings.facets.FacetEditForm', {
             valueNotFoundText: 'not found',
             editable: false,
             forceSelection: true,
-            defaultValue: me.record.getDefaultSortValue(),
             disabled: (this.record.isInherited() || this.record.get('isOverridden')),
             hidden: (me.record.get('facetType') === 'RangeQuery'),
-            store: me.record.getFacetSortingStore(),
-            listeners: {
-                afterrender: function () {
-                    if (!this.getValue()) {
-                        console.log('setting default...');
-
-                        this.setValue(this.defaultValue);
-                    }
-                }
-            }
+            store: me.record.getFacetSortingStore()
         });
 
         if (!(me.record.isInherited() || me.record.get('isOverridden'))) {

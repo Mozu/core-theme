@@ -161,7 +161,7 @@ Ext.define('Taco.view.attribute.Form', {
 
                 grid = {
                     xtype: 'attribute-value-grid',
-                    width: 600,
+                    width: 800,
                     sortableColumns: false,
                     disableSelection: false,
                     hideHeaders: false,
@@ -224,12 +224,13 @@ Ext.define('Taco.view.attribute.Form', {
                             positionColumn,
                             {
                                 dataIndex: 'id',
-                                text: 'Product Code'
+                                text: 'Product Code',
+                                flex: 1
                             },
                             {
                                 dataIndex: 'value',
                                 text: 'Product Name',
-                                flex: 1
+                                flex: 2
                             }
                         ],
                         all: [
@@ -319,7 +320,7 @@ Ext.define('Taco.view.attribute.Form', {
                             type: 'hbox',
                             align: 'bottom'
                         },
-                        width: 608,
+                        width: 808,
                         itemId: 'addValueStringContainer',
                         items: [
                             {
@@ -380,7 +381,7 @@ Ext.define('Taco.view.attribute.Form', {
                             type: 'hbox',
                             align: 'bottom'
                         },
-                        width: 608,
+                        width: 808,
                         itemId: 'addValueNumberContainer',
                         items: [{
                             xtype: 'numberfield',
@@ -436,59 +437,70 @@ Ext.define('Taco.view.attribute.Form', {
                         }, createPlacementSelector('Number')
                         ]
                     }, {
-                        xtype: 'taco-productfield',
-                        name: 'addValueProductCode',
-                        multiSelect: false,
-
-                        showVariations: false,//currently the runtime can't support variants
-                        showProductUsages: 'standard,component', //only standard and component will work in runtime at this time
-                        ignoreParentFormTracking: true,
-                        submitValue: false,
-                        width: 600,
-                        hideMode: 'display',
-                        fieldLabel: 'Values',
-                        //emptyText: 'Add another',
-                        // "queryMode": "local",
-                        checkDirty: Ext.emptyFn,
-                        isDirty: function () {
-                            return false;
+                        xtype: 'fieldcontainer',
+                        layout: {
+                            type: 'hbox',
+                            align: 'bottom'
                         },
-                        validate: function () {
-                            var me = this,
-                                isValid = me.isValid();
-                            if (isValid !== me.wasValid) {
-                                me.wasValid = isValid;
-                            } 
-                            return isValid;
-                        },
-                        listeners: {
-                            beforerender: function () {
-                                this.setVisible(me.getForm().findField('dataType').getValue() === 'ProductCode');
+                        width: 808,
+                        itemId: 'addProductContainer',
+                        items: [{
+                            xtype: 'taco-productfield',
+                            name: 'addValueProductCode',
+                            multiSelect: false,
+                            showVariations: false,//currently the runtime can't support variants
+                            showProductUsages: 'standard,component', //only standard and component will work in runtime at this time
+                            ignoreParentFormTracking: true,
+                            submitValue: false,
+                            width: 600,
+                            hideMode: 'display',
+                            fieldLabel: 'Values',
+                            checkDirty: Ext.emptyFn,
+                            isDirty: function () {
+                                return false;
                             },
-                            select: function (field, records) {
-                                if (records && records.length) {
-                                    var productName = records[0].get('productName'),
-                                        productCode = records[0].getId(),
-                                        attributeId = me.record.getId();
-                                    
-                                    field.reset();
-
-                                    var existing = me.valuesStore.findRecord('id', productCode, 0, false, false);
-                                    if (existing) {
-                                        Taco.app.fireEvent('setmessage', ('Product "' + existing.get('value') + '" already exists'), 'error');
-                                        return;
-                                    }
-
-                                    me.valuesStore.add({
-                                        attributeId: attributeId,
-                                        id: productCode,
-                                        value: productName
-                                    });
+                            validate: function () {
+                                var me = this,
+                                    isValid = me.isValid();
+                                if (isValid !== me.wasValid) {
+                                    me.wasValid = isValid;
                                 }
+                                return isValid;
+                            },
+                            listeners: {
+                                beforerender: function () {
+                                    this.setVisible(me.getForm().findField('dataType').getValue() === 'ProductCode');
+                                },
+                                select: function (field, records) {
+                                    if (records && records.length) {
+                                        var productName = records[0].get('productName'),
+                                            productCode = records[0].getId(),
+                                            attributeId = me.record.getId();
 
+                                        field.reset();
+
+                                        var existing = me.valuesStore.findRecord('id', productCode, 0, false, false);
+                                        if (existing) {
+                                            Taco.app.fireEvent('setmessage', ('Product "' + existing.get('value') + '" already exists'), 'error');
+                                            return;
+                                        }
+
+                                        var positionSelector = Ext.ComponentQuery.query('#attr-productcode-value-placement-selector');
+                                        var position = (positionSelector.length > 0) ? positionSelector[0].getValue() : 'bottom';
+                                        Taco.app.fireEvent('added-attribute-value', {
+                                            attributeId: attributeId,
+                                            value: productName,
+                                            id: productCode,
+                                            position: position
+                                        });
+                                    }
+                                }
                             }
-                        }
-                    }, gridContainer
+                            },
+                            createPlacementSelector('ProductCode')
+                        ]
+                    },
+                    gridContainer
                 ];
             },
 
