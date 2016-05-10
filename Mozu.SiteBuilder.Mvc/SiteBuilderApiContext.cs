@@ -66,13 +66,13 @@ namespace Mozu.SiteBuilder.Mvc
             {
                 isDebugMode = string.Equals(val, Boolean.TrueString , StringComparison.OrdinalIgnoreCase);
 
-                cookie =new HttpCookie(Mvc.Constants.DEBUGCOOKIENAME, isDebugMode ? "t" : "f");
+                var newCookie =new HttpCookie(Mvc.Constants.DEBUGCOOKIENAME, isDebugMode ? "t" : "f");
                 if (!isDebugMode)
                 {
-                    cookie.Expires = DateTime.MinValue;
+                    newCookie.Expires = DateTime.MinValue;
                 }
                 
-                _cookieProvider.SaveResponseCookie(Mvc.Constants.DEBUGCOOKIENAME, cookie);
+                _cookieProvider.SaveResponseCookie(Mvc.Constants.DEBUGCOOKIENAME, newCookie);
 
             }
             this.IsDebugMode = isDebugMode;
@@ -111,11 +111,11 @@ namespace Mozu.SiteBuilder.Mvc
                 else
                 {
 
-                    cookie = _cookieProvider.GetRequestCookie(Constants.NOWCOOKIENAME);
-                    if (cookie != null)
+                    var reqCookie = _cookieProvider.GetRequestCookie(Constants.NOWCOOKIENAME);
+                    if (reqCookie != null)
                     {
 
-                        if (DateTime.TryParse(cookie.Value, out temp))
+                        if (DateTime.TryParse(reqCookie.Value, out temp))
                         {
                             now = temp;
                         }
@@ -306,7 +306,7 @@ namespace Mozu.SiteBuilder.Mvc
         private void LoadExtraInfoFromCookie (ICookieProvider cookieProvider)
         {
             var cookie = cookieProvider.GetRequestCookie(Mvc.Constants.COOKIENAME);
-            if (cookie != null && cookie.HasKeys)
+            if (cookie?.Values != null)
             {
                 if (!string.IsNullOrEmpty(cookie["adminmode"]))
                 {
@@ -317,7 +317,7 @@ namespace Mozu.SiteBuilder.Mvc
         private void LoadFromCookie(ICookieProvider cookieProvider)
         {
             var cookie = cookieProvider.GetRequestCookie(Mvc.Constants.COOKIENAME);
-            if (cookie != null && cookie.HasKeys)
+            if (cookie?.Values != null)
             {
                 int tmpInt;
                 if (int.TryParse(cookie["site"], out tmpInt))

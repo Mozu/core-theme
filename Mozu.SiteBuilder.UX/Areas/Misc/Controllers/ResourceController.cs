@@ -26,6 +26,7 @@ using Mozu.SiteBuilder.UX.Filters;
 namespace Mozu.SiteBuilder.UX.Areas.Misc.Controllers
 {
     [ForceCDNUseFilter]
+    [NoCookieFilter]
     public class ResourceController : BaseApiController
     {
         readonly Lazy<IMozuVirtualPathProvider> _pathProvider;
