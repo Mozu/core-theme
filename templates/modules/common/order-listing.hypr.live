@@ -11,6 +11,10 @@
         <dl class="mz-propertylist">
             <dt>{{ labels.orderNumber }}</dt>
             <dd>{{ model.orderNumber }}</dd>
+            {% if model.purchaseOrder %}
+                <dd>{{ labels.purchaseOrder }}</dd>
+                <dd>{{ model.purchaseOrder.number }}</dd>
+            {% endif %}
             <dt>{{ labels.orderStatus }}</dt>
             <dd>{{ model.status }}</dd>
             <dt>{{ labels.total }}</dt>
