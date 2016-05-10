@@ -80,7 +80,11 @@ Ext.define('Taco.model.Facet', {
     isInherited: function() {
         return this.get('categoryId') !== this.get('categoryId2');
     },
-    
+
+    setDefaultSortValue: function () {
+        this.set('valueSortType', this.getDefaultSortValue());
+    },
+
     getDefaultSortValue: function () {
         if (this.get('facetType') === 'RangeQuery') {
             return 'ValuesAscending';
