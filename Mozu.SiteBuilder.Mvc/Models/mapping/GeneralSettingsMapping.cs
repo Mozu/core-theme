@@ -54,6 +54,9 @@ namespace Mozu.SiteBuilder.Mvc.Models.ModelMapping
                 .ForMember(x => x.Term, opt => opt.ResolveUsing(dc => dc.Term))
                 ;
 
+            Mapper.CreateMap<DC.PurchaseOrderPaymentDefinition, PurchaseOrderSettings>()
+                ;
+
             Mapper.CreateMap<DC.CheckoutSettings, UX.Models.Settings.CheckoutSettings>()
                   .ForMember(x => x.CustomerCheckoutType, opt => opt.ResolveUsing(x => x.CustomerCheckoutSettings.CustomerCheckoutType))
                   .ForMember(x => x.IsPayPalEnabled, opt => opt.ResolveUsing(x => x.PaymentSettings.ExternalPaymentWorkflowDefinitions != null && x.PaymentSettings.ExternalPaymentWorkflowDefinitions.Any(expwd => String.Equals(expwd.Name, DC.Constants.ThirdPartyPayment.PAYPAL_EXPRESS, System.StringComparison.OrdinalIgnoreCase) && expwd.IsEnabled)))
