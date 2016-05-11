@@ -201,7 +201,7 @@ Ext.define('Taco.view.settings.paymentTypes.subform.PurchaseOrder', {
                     xtype: 'textfield',
                     name: 'addNetTermsField',
                     itemId: 'addNetTermsField',
-                    width: 400,
+                    width: '100%',
                     enableKeyEvents: true,
                     ignoreParentFormTracking: true,
                     submitValue: false,
@@ -265,15 +265,13 @@ Ext.define('Taco.view.settings.paymentTypes.subform.PurchaseOrder', {
             var customFieldGrid = this.down('#purchaseOrderCustomFieldGrid');
             var customField = this.down('#customFieldTextLabel');
             var customCode = customField.getValue().toLowerCase().replace(/[^a-zA-Z0-9-_//.]/g, "-");
-            var customRequired = this.down('#customFieldTextRequired');
-            var customEnabled = this.down('#customFieldTextEnabled');
 
             if (!Ext.isEmpty(customField.getValue())) {
                 var model = Ext.create('Taco.model.PurchaseOrderCustomField', {
                     code: customCode,
                     label: customField.getValue(),
-                    isEnabled: customEnabled.getValue(),
-                    isRequired: customRequired.getValue()
+                    isEnabled: true,
+                    isRequired: false
                 });
 
                 me.customFieldsStore.add(model);
@@ -283,8 +281,6 @@ Ext.define('Taco.view.settings.paymentTypes.subform.PurchaseOrder', {
             }
 
             customField.setValue('');
-            customEnabled.setValue(true);
-            customRequired.setValue(false);
         };
 
         this.customFieldTextAdd = Ext.create('Ext.form.FieldContainer', {
@@ -297,8 +293,8 @@ Ext.define('Taco.view.settings.paymentTypes.subform.PurchaseOrder', {
             items: [
                 {
                     xtype: 'textfield',
-                    flex: 2,
-                    emptyText: 'Text Field Label',
+                    flex: 1,
+                    emptyText: 'Enter labels for any additional text fields visible during checkout and press ENTER',
                     itemId: 'customFieldTextLabel',
                     name: 'customFieldTextLabel',
                     enableKeyEvents: true,
@@ -327,30 +323,6 @@ Ext.define('Taco.view.settings.paymentTypes.subform.PurchaseOrder', {
                             }
                         }
                     }
-                }, {
-                    xtype: 'checkbox',
-                    boxLabel: 'Required',
-                    flex: 1,
-                    checked: false,
-                    margin: '0 10 0 0',
-                    itemId: 'customFieldTextRequired',
-                    name: 'customFieldTextRequired'
-                }, {
-                    xtype: 'checkbox',
-                    boxLabel: 'Enabled',
-                    flex: 1,
-                    checked: true,
-                    margin: '0 10 0 0',
-                    itemId: 'customFieldTextEnabled',
-                    name: 'customFieldTextEnabled'
-                }, {
-                    xtype: 'button',
-                    text: 'Add',
-                    itemId: 'addCustomField',
-                    name: 'addCustomField',
-                    margin: '0 10 0 0',
-                    handler: me.addCustomFieldtoGrid,
-                    scope: me
                 }
             ]
         });
@@ -390,7 +362,14 @@ Ext.define('Taco.view.settings.paymentTypes.subform.PurchaseOrder', {
             enablePaging: false,
             enableRowReorder: false,
             columns: [
-                {
+                 {
+                     xtype: 'checkcolumn',
+                     text: 'Enabled',
+                     label: 'Enabled',
+                     dataIndex: 'isEnabled',
+                     align: 'left',
+                     flex: 1
+                 }, {
                     text: 'Label',
                     dataIndex: 'label',
                     align: 'left',
@@ -421,13 +400,6 @@ Ext.define('Taco.view.settings.paymentTypes.subform.PurchaseOrder', {
                     text: 'Required',
                     label: 'Required',
                     dataIndex: 'isRequired',
-                    align: 'left',
-                    flex: 1
-                }, {
-                    xtype: 'checkcolumn',
-                    text: 'Enabled',
-                    label: 'Enabled',
-                    dataIndex: 'isEnabled',
                     align: 'left',
                     flex: 1
                 }
