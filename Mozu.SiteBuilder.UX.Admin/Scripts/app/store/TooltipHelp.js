@@ -134,6 +134,12 @@ Ext.define('Taco.store.TooltipHelp', {
             key: 'priceLists.resolution.rank',
             value: 'Mozu uses rank to break ties when multiple price lists are valid at the same time. Lower numbers equal higher priority (1 wins over 2).'
         }, {
+            key: 'purchaseOrder.siteSettings.splitPayment',
+            value: 'Allow use of Credit Card as a supplemental payment method when Order Total exceeds Available Balance.'
+        }, {
+            key: 'purchaseOrder.siteSettings.customFields',
+            value: 'Use Additional fields to capture additional information from the shopper on the checkout page when Purchase Order is used as the payment method. The label entered below will be the label for the text fields displayed on the storefront and admin.'
+        }, {
             key: 'default',
             value: 'Default Tooltip'
         }

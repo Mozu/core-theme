@@ -14,7 +14,8 @@ Ext.define('Taco.view.settings.paymentTypes.subform.PurchaseOrder', {
         'Taco.view.settings.paymentTypes.subform.NetTermsGrid',
         'Taco.view.attribute.AttributeValueGrid',
         'Taco.model.NetTerms',
-        'Taco.model.PurchaseOrderCustomField'
+        'Taco.model.PurchaseOrderCustomField',
+        'Taco.core.ux.content.Tooltip'
     ],
     title: 'Purchase Order',
     margin: "0 0 20 0",
@@ -28,7 +29,7 @@ Ext.define('Taco.view.settings.paymentTypes.subform.PurchaseOrder', {
         this.purchaseOrderSplitPaymentEnabled = me.record.get('purchaseOrder').allowSplitPayment;
         this.customFieldsStore = null;
         this.netTermsStore = null;
-
+        
         this.purchaseOrderEnabledToggle = Ext.create('Ext.form.Checkbox', {
             itemId: 'purchaseOrderEnabled',
             name: 'purchaseOrderEnabled',
@@ -54,12 +55,22 @@ Ext.define('Taco.view.settings.paymentTypes.subform.PurchaseOrder', {
             ]
         });
 
-        this.purchaseOrderSplitPaymentToggle = Ext.create('Ext.form.Checkbox', {
+        Ext.tip.QuickTipManager.init();
+
+        this.purchaseOrderSplitPaymentToggle = Ext.widget({
+            xtype: 'checkbox',
             itemId: 'purchaseOrderSplitPayment',
             name: 'purchaseOrderSplitPayment',
             checked: me.purchaseOrderSplitPaymentEnabled,
             boxLabel: 'Allow split-payment',
-            scope: this
+            tooltip: Ext.create('Taco.core.ux.content.Tooltip', {
+                elementId: 'purchaseOrderSplitPayment',
+                messageKey: 'purchaseOrder.siteSettings.splitPayment',
+                hoverTarget: 'boxLabelEl',
+                offsetTop: 15,
+                offsetLeft: -165,
+                arrowPosition: 'left'
+            })
         });
 
         this.purchaseOrderSplitPayment = Ext.create('Ext.form.FieldContainer', {
@@ -256,40 +267,20 @@ Ext.define('Taco.view.settings.paymentTypes.subform.PurchaseOrder', {
             this.customFieldsStore.add(Ext.create('Taco.model.PurchaseOrderCustomField', memoFields[i]));
         }
 
-        /*var model = Ext.create('Taco.model.PurchaseOrderCustomField', {
-            code: 'dept-id',
-            label: 'Dept Id',
-            isEnabled: true,
-            isRequired: true
-        });
-        this.customFieldsStore.add(model);*/
-
-        this.handleCustomTextField = function() {
-            if (!me.shouldAddCustomField) {
-                me.customFieldAddButton.hide();
-                me.customFieldTextAdd.show();
-            } else {
-                me.customFieldAddButton.show();
-                me.customFieldTextAdd.hide();
-            }
-
-            me.shouldAddCustomField = !me.shouldAddCustomField;
-        };
-
         this.addCustomFieldtoGrid = function() {
             var me = this;
             var customFieldGrid = this.down('#purchaseOrderCustomFieldGrid');
-            var customField = this.down('#customFieldTextLabel').getValue();
-            var customCode = customField.toLowerCase().replace(/[^a-zA-Z0-9-_//.]/g, "-");
-            var customRequired = this.down('#customFieldTextRequired').getValue();
-            var customEnabled = this.down('#customFieldTextEnabled').getValue();
+            var customField = this.down('#customFieldTextLabel');
+            var customCode = customField.getValue().toLowerCase().replace(/[^a-zA-Z0-9-_//.]/g, "-");
+            var customRequired = this.down('#customFieldTextRequired');
+            var customEnabled = this.down('#customFieldTextEnabled');
 
-            if (!Ext.isEmpty(customField)) {
+            if (!Ext.isEmpty(customField.getValue())) {
                 var model = Ext.create('Taco.model.PurchaseOrderCustomField', {
                     code: customCode,
-                    label: customField,
-                    isEnabled: customEnabled,
-                    isRequired: customRequired
+                    label: customField.getValue(),
+                    isEnabled: customEnabled.getValue(),
+                    isRequired: customRequired.getValue()
                 });
 
                 me.customFieldsStore.add(model);
@@ -297,23 +288,17 @@ Ext.define('Taco.view.settings.paymentTypes.subform.PurchaseOrder', {
                     customFieldGrid.show();
                 }
             }
-        };
 
-        this.customFieldAddButton = Ext.create('Ext.Button', {
-            text: 'Add a Text Field',
-            itemId: 'addNewCustomField',
-            name: 'addNewCustomField',
-            height: 32,
-            handler: me.handleCustomTextField,
-            scope: me
-        });
+            customField.setValue('');
+            customEnabled.setValue(true);
+            customRequired.setValue(false);
+        };
 
         this.customFieldTextAdd = Ext.create('Ext.form.FieldContainer', {
             layout: {
                 type: 'hbox'
             },
             width: '100%',
-            hidden: true,
             itemId: 'customFieldTextAdd',
             name: 'customFieldTextAdd',
             items: [
@@ -338,6 +323,16 @@ Ext.define('Taco.view.settings.paymentTypes.subform.PurchaseOrder', {
                             me.wasValid = isValid;
                         }
                         return isValid;
+                    }, listeners: {
+                        keydown: function (field, e) {
+                            if (e.getKey() === e.ENTER && field.isValid()) {
+                                var value = field.getValue();
+
+                                if (!Ext.isEmpty(Ext.String.trim(value))) {
+                                    me.addCustomFieldtoGrid();
+                                }
+                            }
+                        }
                     }
                 }, {
                     xtype: 'checkbox',
@@ -357,15 +352,7 @@ Ext.define('Taco.view.settings.paymentTypes.subform.PurchaseOrder', {
                     name: 'customFieldTextEnabled'
                 }, {
                     xtype: 'button',
-                    text: 'Close',
-                    itemId: 'closeCustomField',
-                    name: 'closeCustomField',
-                    margin: '0 10 0 0',
-                    handler: me.handleCustomTextField,
-                    scope: me
-                }, {
-                    xtype: 'button',
-                    text: 'Save',
+                    text: 'Add',
                     itemId: 'addCustomField',
                     name: 'addCustomField',
                     margin: '0 10 0 0',
@@ -385,9 +372,16 @@ Ext.define('Taco.view.settings.paymentTypes.subform.PurchaseOrder', {
             name: 'purchaseOrderAddFieldContainer',
             fieldLabel: 'Custom Text Fields',
             items: [
-                me.customFieldAddButton,
                 me.customFieldTextAdd
-            ]
+            ],
+            tooltip: Ext.create('Taco.core.ux.content.Tooltip', {
+                elementId: 'purchaseOrderAddFieldContainer',
+                messageKey: 'purchaseOrder.siteSettings.customFields',
+                hoverTarget: 'label',
+                offsetTop: 0,
+                offsetLeft: -135,
+                arrowPosition: 'left'
+            })
         });
 
         this.customFieldGrid = Ext.create('Taco.view.attribute.AttributeValueGrid', {
