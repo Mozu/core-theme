@@ -583,7 +583,7 @@
     <Content Include="Scripts\app\core\ux\window\Modal.js" />
     <Content Include="Scripts\app\model\BlockedProduct.js" />
     <Content Include="Scripts\app\model\CardGateway.js" />
-    <Content Include="Scripts\app\model\NetTerms.js" />
+    <Content Include="Scripts\app\model\PurchaseOrderNetTerms.js" />
     <Content Include="Scripts\app\model\PaymentGateway.js" />
     <Content Include="Scripts\app\model\PinnedProduct.js" />
     <Content Include="Scripts\app\model\PriceListEntry.js" />

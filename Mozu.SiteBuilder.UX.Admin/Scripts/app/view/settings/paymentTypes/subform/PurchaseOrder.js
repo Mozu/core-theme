@@ -13,7 +13,7 @@ Ext.define('Taco.view.settings.paymentTypes.subform.PurchaseOrder', {
     requires: [
         'Taco.view.settings.paymentTypes.subform.NetTermsGrid',
         'Taco.view.attribute.AttributeValueGrid',
-        'Taco.model.NetTerms',
+        'Taco.model.PurchaseOrderNetTerms',
         'Taco.model.PurchaseOrderCustomField',
         'Taco.core.ux.content.Tooltip'
     ],
@@ -105,19 +105,12 @@ Ext.define('Taco.view.settings.paymentTypes.subform.PurchaseOrder', {
         var netTerms = me.record.get('purchaseOrder').netTerms;
 
         this.netTermsStore = Ext.create('Ext.data.ArrayStore', {
-            model: 'Taco.model.NetTerms'
+            model: 'Taco.model.PurchaseOrderNetTerms'
         });
 
         for (var i = 0; i < netTerms.length; ++i) {
-            this.netTermsStore.add(Ext.create('Taco.model.NetTerms', netTerms[i]));
+            this.netTermsStore.add(Ext.create('Taco.model.PurchaseOrderNetTerms', netTerms[i]));
         }
-
-        /*var model = Ext.create('Taco.model.NetTerms', {
-            id: 5,
-            value: '10 Days',
-            sequenceNumber: 1
-        });
-        this.netTermsStore.add(model);*/
 
         this.netTermsGrid = {
             xtype: 'net-terms-grid',
@@ -135,7 +128,7 @@ Ext.define('Taco.view.settings.paymentTypes.subform.PurchaseOrder', {
                 }, {
                     xtype: 'gridcolumn',
                     sortable: false,
-                    dataIndex: 'position',
+                    dataIndex: 'sequenceNumber',
                     text: 'Pos',
                     hideable: false,
                     width: 100,
@@ -143,8 +136,8 @@ Ext.define('Taco.view.settings.paymentTypes.subform.PurchaseOrder', {
                         return index + 1;
                     }
                 }, {
-                    dataIndex: 'value',
-                    text: 'Value',
+                    dataIndex: 'term',
+                    text: 'Term',
                     flex: 2,
                     editor: {
                         xtype: 'textfield',
@@ -241,7 +234,7 @@ Ext.define('Taco.view.settings.paymentTypes.subform.PurchaseOrder', {
                                     var id = value;
 
                                     Taco.app.fireEvent('added-net-term-value', {
-                                        value: value,
+                                        term: value,
                                         id: id.replace(/[^a-zA-Z0-9-_//.]/g, "-"),
                                         position: position
                                     });
@@ -506,12 +499,10 @@ Ext.define('Taco.view.settings.paymentTypes.subform.PurchaseOrder', {
         });
 
         var netTerms = [];
-        this.netTermsStore.each(function(value) {
-            netTerms.push({
-                value: value.get('value'),
-                sequenceNumber: value.get('sequenceNumber'),
-            });
-        });
+        var netTermsToAdd = this.netTermsStore.data.items;
+        for (var i = 0; i < netTermsToAdd.length; ++i) {
+            netTerms.push({ term: netTermsToAdd[i].get('term'), sequenceNumber: i });
+        }
 
         var purchaseOrder = {
             "isEnabled": purchaseOrderEnabled,
