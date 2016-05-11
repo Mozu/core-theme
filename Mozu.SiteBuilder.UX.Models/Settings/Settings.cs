@@ -90,6 +90,8 @@ namespace Mozu.SiteBuilder.UX.Models.Settings
     
         public bool IsPayPalEnabled { get; set; }
 
+        public PurchaseOrderSettings PurchaseOrder { get; set; }
+
         public Dictionary<string, string> SupportedCards { get; set; }
 
         public VisaCheckoutSettings VisaCheckout { get; set; }
@@ -127,6 +129,28 @@ namespace Mozu.SiteBuilder.UX.Models.Settings
         public string LocaleCode { get; set; }
 
         public string Value { get; set; }
+    }
+
+    public class PurchaseOrderSettings
+    {
+        public bool IsEnabled { get; set; }
+        public bool AllowSplitPayment { get; set; }
+        public List<CustomField> CustomFields { get; set; } 
+        public List<NetTerm> NetTerms { get; set; } 
+    }
+
+    public class CustomField
+    {
+        public string Code { get; set; }
+        public string Label { get; set; }
+        public bool IsEnabled { get; set; }
+        public bool IsRequired { get; set; }
+    }
+
+    public class NetTerm
+    {
+        public string Term { get; set; }
+        public int SequenceNumber { get; set; }
     }
 
     /// <summary>
