@@ -126,16 +126,6 @@ Ext.define('Taco.view.settings.paymentTypes.subform.PurchaseOrder', {
                     stateId: 'dragHandle',
                     width: 35
                 }, {
-                    xtype: 'gridcolumn',
-                    sortable: false,
-                    dataIndex: 'sequenceNumber',
-                    text: 'Pos',
-                    hideable: false,
-                    width: 100,
-                    renderer: function(cmp, metaData, record, index) {
-                        return index + 1;
-                    }
-                }, {
                     dataIndex: 'term',
                     text: 'Term',
                     flex: 2,
