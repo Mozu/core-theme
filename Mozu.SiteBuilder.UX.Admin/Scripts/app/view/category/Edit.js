@@ -55,8 +55,10 @@ Ext.define('Taco.view.category.Edit', {
                         behavior: 'create'
                     },
                     handler: function (item, eventData) {
+                        //debugger;
                         var record = me.record,
                             metaData = {
+                                record: record,
                                 id: record.getId()
                             };
                         

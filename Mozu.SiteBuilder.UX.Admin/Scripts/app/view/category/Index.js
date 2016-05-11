@@ -210,9 +210,9 @@ Ext.define('Taco.view.category.Index', {
                 menuColumnHandler: function (item, eventData) {                        
                     var record = eventData.record,
                         metaData = {
+                            record: record,
                             id: record.getId()
                         };
-                    
                     Taco.app.StateManager.attemptNavigate('categories/duplicate/' + record.getId(), metaData);
                 }
             }, {
