@@ -85,17 +85,21 @@ Ext.define('Taco.model.Facet', {
         this.set('valueSortType', this.getDefaultSortValue());
     },
 
+    getDataTypeLower: function() {
+        return this.get('sourceDataType') ? this.get('sourceDataType').toLowerCase() : 'string';
+    },
+
     getDefaultSortValue: function () {
         if (this.get('facetType') === 'RangeQuery') {
             return 'ValuesAscending';
         }
-        return (this.get('sourceType') === 'Attribute') ? 'AttributeDefinition' : 'CountDescending';
+        return (this.get('sourceType') === 'Attribute' && this.getDataTypeLower() !== 'datetime') ? 'AttributeDefinition' : 'CountDescending';
     },
 
     getFacetSortingStore: function () {
         var valAscDisplay,
             valDescDisplay,
-            dataTypeLower = this.get('sourceDataType') ? this.get('sourceDataType').toLowerCase() : 'string',
+            dataTypeLower = this.getDataTypeLower(),
             isAttributeType = this.get('sourceType') === 'Attribute',
             sortData = [];
 
@@ -105,15 +109,15 @@ Ext.define('Taco.model.Facet', {
                 valDescDisplay = 'Numerical: High to Low';
                 break;
             case 'datetime':
-                valAscDisplay = 'Date: Recent to Old';
-                valDescDisplay = 'Date: Old to Recent';
+                valAscDisplay = 'Date: Old to Recent';
+                valDescDisplay = 'Date: Recent to Old';
                 break;
             default:
                 valAscDisplay = 'Alphabetical: A to Z';
                 valDescDisplay = 'Alphabetical: Z to A';
         }
-
-        if (isAttributeType) {
+        
+        if (isAttributeType && dataTypeLower !== 'datetime') {  
             sortData = [
                 {
                     id: "AttributeDefinition",
@@ -123,17 +127,16 @@ Ext.define('Taco.model.Facet', {
                     name: "Attribute Definition (Reverse)"
                 }
             ];
-        } 
+        }   
 
         sortData = sortData.concat([
             {
                 id: "CountDescending",
                 name: "Facet Count: High to Low"
-            },
-            {
+            }, {
                 id: "CountAscending",
                 name: "Facet Count: Low to High"
-            },  {
+            }, {
                 id: "ValuesAscending",
                 name: valAscDisplay
             }, {
@@ -141,12 +144,11 @@ Ext.define('Taco.model.Facet', {
                 name: valDescDisplay
             }
         ]);
-
+        
         return Ext.create('Ext.data.Store', {
             fields: ['id', "name"],
             data: sortData
         });
     }
 
-    
 });
