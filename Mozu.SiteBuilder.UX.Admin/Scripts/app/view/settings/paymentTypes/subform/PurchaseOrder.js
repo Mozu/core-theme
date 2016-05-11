@@ -127,7 +127,7 @@ Ext.define('Taco.view.settings.paymentTypes.subform.PurchaseOrder', {
                     width: 35
                 }, {
                     dataIndex: 'term',
-                    text: 'Term',
+                    text: 'Terms',
                     flex: 2,
                     editor: {
                         xtype: 'textfield',
