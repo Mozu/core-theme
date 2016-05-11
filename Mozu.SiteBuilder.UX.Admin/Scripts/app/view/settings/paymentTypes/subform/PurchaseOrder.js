@@ -294,7 +294,7 @@ Ext.define('Taco.view.settings.paymentTypes.subform.PurchaseOrder', {
                 {
                     xtype: 'textfield',
                     flex: 1,
-                    emptyText: 'Enter labels for any additional text fields visible during checkout and press ENTER',
+                    emptyText: 'Enter label and press ENTER',
                     itemId: 'customFieldTextLabel',
                     name: 'customFieldTextLabel',
                     enableKeyEvents: true,
