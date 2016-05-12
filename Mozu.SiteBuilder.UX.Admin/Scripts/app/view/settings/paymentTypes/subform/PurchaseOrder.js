@@ -127,7 +127,7 @@ Ext.define('Taco.view.settings.paymentTypes.subform.PurchaseOrder', {
                     width: 35
                 }, {
                     dataIndex: 'term',
-                    text: 'Terms',
+                    text: 'Net Terms',
                     flex: 2,
                     editor: {
                         xtype: 'textfield',
@@ -198,7 +198,7 @@ Ext.define('Taco.view.settings.paymentTypes.subform.PurchaseOrder', {
                     flex: 1,
                     margin: '0 10 0 0',
                     fieldLabel: 'Net Terms Options',
-                    emptyText: 'Enter terms and press ENTER',
+                    emptyText: 'Enter net terms and press ENTER',
                     checkDirty: Ext.emptyFn,
                     isDirty: function() {
                         return false;
