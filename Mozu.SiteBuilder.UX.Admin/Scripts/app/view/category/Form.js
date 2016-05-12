@@ -29,7 +29,7 @@ Ext.define("Taco.view.category.Form", {
             categoryType = this.record.get("categoryType");
 
         this.title = this.record.data.name;
-        //debugger;
+
         if (categoryType != "Static") {
             var expressionData = this.record.get("dynamicExpression");
             //expression needs the type so that it can be validated appropriatly.

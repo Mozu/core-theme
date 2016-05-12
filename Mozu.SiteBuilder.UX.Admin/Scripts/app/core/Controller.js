@@ -154,7 +154,7 @@ Ext.define('Taco.core.Controller', {
             options = options || {};
             options.container = appState.container;
         }
-        
+
         if (record) {
             Taco.app.setLoading();
             record.reload({
