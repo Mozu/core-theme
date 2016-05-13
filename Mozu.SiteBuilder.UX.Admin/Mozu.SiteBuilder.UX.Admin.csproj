@@ -897,6 +897,7 @@
     <Content Include="Scripts\app\view\settings\paymentGateways\subform\PaymentGateway.js" />
     <Content Include="Scripts\app\view\settings\paymentGateways\Edit.js" />
     <Content Include="Scripts\app\view\settings\paymentTypes\subform\CheckByMail.js" />
+    <Content Include="Scripts\app\view\settings\paymentTypes\subform\PurchaseOrderCustomFieldGrid.js" />
     <Content Include="Scripts\app\view\settings\paymentTypes\subform\PurchaseOrderPaymentTermsGrid.js" />
     <Content Include="Scripts\app\view\settings\paymentTypes\subform\PurchaseOrder.js" />
     <Content Include="Scripts\app\view\storeCredit\AdvancedSearchForm.js" />

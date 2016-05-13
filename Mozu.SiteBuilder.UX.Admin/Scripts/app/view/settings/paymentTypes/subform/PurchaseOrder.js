@@ -7,6 +7,7 @@ Ext.define('Taco.view.settings.paymentTypes.subform.PurchaseOrder', {
     extend: 'Taco.core.ux.form.Form',
     requires: [
         'Taco.view.settings.paymentTypes.subform.PurchaseOrderPaymentTermsGrid',
+        'Taco.view.settings.paymentTypes.subform.PurchaseOrderCustomFieldGrid',
         'Taco.view.attribute.AttributeValueGrid',
         'Taco.model.PurchaseOrderPaymentTerms',
         'Taco.model.PurchaseOrderCustomField',
@@ -132,6 +133,17 @@ Ext.define('Taco.view.settings.paymentTypes.subform.PurchaseOrder', {
                         mouseWheelEnabled: false
 
                     }
+                }, {
+                    dataIndex: 'code',
+                    text: 'Code',
+                    flex: 1,
+                    editor: {
+                        xtype: 'textfield',
+                        hideTrigger: true,
+                        ignoreParentFormTracking: true,
+                        keyNavEnabled: false,
+                        mouseWheelEnabled: false
+                    }
                 }
             ],
             listeners: {
@@ -216,11 +228,12 @@ Ext.define('Taco.view.settings.paymentTypes.subform.PurchaseOrder', {
 
                                     var positionSelector = Ext.ComponentQuery.query('#attr-string-value-placement-selector');
                                     var position = (positionSelector.length > 0) ? positionSelector[0].getValue() : 'bottom';
-                                    var id = value;
+                                    var id = value.replace(/[^a-zA-Z0-9-_//.]/g, "-");
 
                                     Taco.app.fireEvent('added-payment-term-value', {
                                         description: value,
-                                        id: id.replace(/[^a-zA-Z0-9-_//.]/g, "-"),
+                                        id: id,
+                                        code: id,
                                         position: position
                                     });
                                 }
@@ -234,7 +247,6 @@ Ext.define('Taco.view.settings.paymentTypes.subform.PurchaseOrder', {
 
     initializeTextFieldsGrid: function() {
         var me = this;
-        this.shouldAddCustomField = false;
         var customFields = me.record.get('purchaseOrder').customFields;
 
         this.customFieldsStore = Ext.create('Ext.data.ArrayStore', {
@@ -244,30 +256,7 @@ Ext.define('Taco.view.settings.paymentTypes.subform.PurchaseOrder', {
         for (var i = 0; i < customFields.length; ++i) {
             this.customFieldsStore.add(Ext.create('Taco.model.PurchaseOrderCustomField', customFields[i]));
         }
-
-        this.addCustomFieldtoGrid = function() {
-            var me = this;
-            var customFieldGrid = this.down('#purchaseOrderCustomFieldGrid');
-            var customField = this.down('#customFieldTextLabel');
-            var customCode = customField.getValue().toLowerCase().replace(/[^a-zA-Z0-9-_//.]/g, "-");
-
-            if (!Ext.isEmpty(customField.getValue())) {
-                var model = Ext.create('Taco.model.PurchaseOrderCustomField', {
-                    code: customCode,
-                    label: customField.getValue(),
-                    isEnabled: true,
-                    isRequired: false
-                });
-
-                me.customFieldsStore.add(model);
-                if (me.customFieldsStore.count() > 0) {
-                    customFieldGrid.show();
-                }
-            }
-
-            customField.setValue('');
-        };
-
+        
         this.customFieldTextAdd = Ext.create('Ext.form.FieldContainer', {
             layout: {
                 type: 'hbox'
@@ -303,7 +292,17 @@ Ext.define('Taco.view.settings.paymentTypes.subform.PurchaseOrder', {
                                 var value = field.getValue();
 
                                 if (!Ext.isEmpty(Ext.String.trim(value))) {
-                                    me.addCustomFieldtoGrid();
+                                    field.reset();
+
+                                    var customCode = value.toLowerCase().replace(/[^a-zA-Z0-9-_//.]/g, "-");
+                                    var positionSelector = Ext.ComponentQuery.query('#attr-string-value-placement-selector');
+                                    var position = (positionSelector.length > 0) ? positionSelector[0].getValue() : 'bottom';
+
+                                    Taco.app.fireEvent('added-custom-field-value', {
+                                        id: customCode,
+                                        label: value,
+                                        position: position
+                                    });
                                 }
                             }
                         }
@@ -334,20 +333,20 @@ Ext.define('Taco.view.settings.paymentTypes.subform.PurchaseOrder', {
             })
         });
 
-        this.customFieldGrid = Ext.create('Taco.view.attribute.AttributeValueGrid', {
+        this.customFieldGrid = {
+            xtype: 'custom-field-grid',
             modelName: 'Taco.model.PurchaseOrderCustomField',
             itemId: 'purchaseOrderCustomFieldGrid',
             name: 'purchaseOrderCustomFieldGrid',
             width: '100%',
-            hidden: me.customFieldsStore.count() < 1,
             store: me.customFieldsStore,
-            enableEditAction: false,
-            enableDeleteAction: true,
-            enableAutoSelect: false,
-            enablePaging: false,
-            enableRowReorder: false,
+            record: me.record,
             columns: [
                  {
+                     xtype: 'draghandlecolumn',
+                     stateId: 'dragHandle',
+                     width: 35
+                 }, {
                      xtype: 'checkcolumn',
                      text: 'Enabled',
                      label: 'Enabled',
@@ -365,7 +364,6 @@ Ext.define('Taco.view.settings.paymentTypes.subform.PurchaseOrder', {
                         ignoreParentFormTracking: true,
                         keyNavEnabled: false,
                         mouseWheelEnabled: false
-
                     }
                 }, {
                     text: 'Code',
@@ -378,7 +376,6 @@ Ext.define('Taco.view.settings.paymentTypes.subform.PurchaseOrder', {
                         ignoreParentFormTracking: true,
                         keyNavEnabled: false,
                         mouseWheelEnabled: false
-
                     }
                 }, {
                     xtype: 'checkcolumn',
@@ -389,28 +386,53 @@ Ext.define('Taco.view.settings.paymentTypes.subform.PurchaseOrder', {
                     flex: 1
                 }
             ],
-            getActionItems: function () {
-                var me = this;
-                return [{
-                    text: 'Remove',
-                    menuColumnHandler: function (item, eventData) {
-                        var record = eventData.record;
-                        me.removeRow(record);
+            listeners: {
+                cellclick: function (view, td, cellIndex, record, tr, rowIndex, e) {
+                    if (e.getTarget('.taco-actioncolumn-icon-remove', 10)) {
+                        view.getStore().remove(record);
                     }
-                }];
+                },
+                validateedit: function (editor, e) {
+                    var existing = e.grid.store.findRecord('id', e.value, 0, false, false);
+                    if (e.field == 'id' && existing) {
+                        Taco.app.fireEvent('setmessage', ('The same value ' + existing.getId() + ' already exists'), 'error');
+                        return false;
+                    }
+                    return true;
+                }
+            }, updateParentValues: function() {
+                var rawValues = Ext.Array.map(this.getValues(), function(val) {
+                    return val.raw;
+                });
+                this.record.set('customFieldValues', rawValues);
             }
 
-        });
+        };
 
-        this.customFieldGridContainer = Ext.create('Ext.form.FieldContainer', {
+        this.customFieldGridContainer = {
+            xtype: 'form',
             itemId: 'customFieldGridContainer',
             name: 'customFieldGridContainer',
+            gridCfg: me.customFieldGrid,
             fieldLabel: 'Saved Custom Text Fields',
             width: '100%',
             items: [
                 me.customFieldGrid
-            ]
-        });
+            ],
+            initGrid: function () {
+                if (Ext.isArray(this.items)) {
+                    this.items = [this.gridCfg];
+                } else {
+                    this.removeAll(true);
+                    this.add(this.gridCfg);
+                }
+            },
+            removeGrid: function () {
+
+            }
+        };
+
+        this.customFieldGridContainer.initGrid();
 
         return Ext.create('Ext.form.FieldContainer', {
             layout: {
@@ -446,19 +468,21 @@ Ext.define('Taco.view.settings.paymentTypes.subform.PurchaseOrder', {
 
         // fix this array stuff
         var customFields = [];
-        this.customFieldsStore.each(function(value) {
+        var customFieldsToAdd = this.customFieldsStore.data.items;
+        for (var j = 0; j < customFieldsToAdd.length; ++j) {
             customFields.push({
-                code: value.get('code'),
-                label: value.get('label'),
-                isEnabled: value.get('isEnabled'),
-                isRequired: value.get('isRequired')
+                code: customFieldsToAdd[j].get('code'),
+                label: customFieldsToAdd[j].get('label'),
+                isEnabled: customFieldsToAdd[j].get('isEnabled'),
+                isRequired: customFieldsToAdd[j].get('isRequired'),
+                sequenceNumber: j
             });
-        });
+        }
 
         var paymentTerms = [];
         var paymentTermsToAdd = this.paymentTermsStore.data.items;
         for (var i = 0; i < paymentTermsToAdd.length; ++i) {
-            paymentTerms.push({ description: paymentTermsToAdd[i].get('description'), sequenceNumber: i });
+            paymentTerms.push({ description: paymentTermsToAdd[i].get('description'), sequenceNumber: i, code: paymentTermsToAdd[i].get('code') });
         }
 
         var purchaseOrder = {

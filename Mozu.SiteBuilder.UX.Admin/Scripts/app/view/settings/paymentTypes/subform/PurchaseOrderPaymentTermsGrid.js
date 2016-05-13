@@ -1,5 +1,5 @@
 ﻿/*
- * @class Taco.view.settings.paymentTypes.subform.NetTermsGrid
+ * @class Taco.view.settings.paymentTypes.subform.PurchaseOrderPaymentTermsGrid
  */
 
 Ext.define('Taco.view.settings.paymentTypes.subform.PurchaseOrderPaymentTermsGrid', {
