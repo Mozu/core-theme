@@ -1,7 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-//using VMCart = Mozu.SiteBuilder.UX.Models.StoreFront.Cart.Cart;
-//using CartItem = Mozu.SiteBuilder.UX.Models.StoreFront.Cart.CartItem;
 using System.Linq;
 using System.Threading.Tasks;
 using AutoMapper;
@@ -11,13 +9,14 @@ using Mozu.CommerceRuntime.Contracts.Commerce;
 using Mozu.CommerceRuntime.Contracts.Orders;
 using Mozu.Core;
 using Mozu.Core.Api.Client;
+using Mozu.Core.Api.Client.Exceptions;
+using Mozu.Core.ErrorHandling;
 using Mozu.Core.Settings;
 using Mozu.Location.Contracts;
 using Mozu.Location.Contracts.Clients;
 using Mozu.SiteBuilder.Mvc;
 using Mozu.SiteBuilder.Mvc.ActionFilters;
 using Mozu.SiteBuilder.Mvc.ActionResults;
-using Mozu.SiteBuilder.Mvc.Contexts;
 using Mozu.SiteBuilder.UX.Controllers;
 using Mozu.SiteBuilder.UX.Models.Admin.CMS;
 using Newtonsoft.Json.Linq;
@@ -188,8 +187,7 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
                 
                 if (!model.DigitalWalletData.IsNullOrEmpty() && !model.DigitalWalletType.IsNullOrEmpty())
                 {
-                    order = (await orderWebApiClient.ProcessDigitalWallet(model.Id,
-                                                            model.DigitalWalletType, 
+                    order = (await orderWebApiClient.ProcessDigitalWallet(model.Id, model.DigitalWalletType, 
                                                             new DigitalWallet { DigitalWalletData = model.DigitalWalletData, CartId = model.Id}
                                                             )).ReadAsSync();
                 }
@@ -205,6 +203,34 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
             // lame, can't await a task in an exception handler so have to do this here
             if (error != null)
             {
+                var apiException = error as ApiWebClientException;
+                if (apiException != null && apiException.ErrorCode.Equals(ErrorCodes.VALIDATION_CONFLICT))
+                {
+                    // If order failed validation, show the message to say what happened and refresh the cart to try to fix the problem.
+                    // Price change - item repriced
+                    // Product/variant no longer active - item dropped
+                    // Misconfigured product - item dropped
+                    // Inadequate inventory - item remains (shopper can remove/reduce quantity)
+
+                    try
+                    {
+                        cart = cart ?? (await _cartClient.GetOrCreateCart()).ReadAsSync();
+                        var updatedCart = (await _cartClient.UpdateCart(cart)).ReadAsSync();
+                        var cartHasItems = updatedCart.Items != null && updatedCart.Items.Any();
+
+                        const string prefix = "Validation Error: "; // Automatically added by VaeValidationConflictException in Mozu.Core
+                        var message = error.Message.StartsWith(prefix) ? error.Message.Substring(prefix.Length) : error.Message;
+                        if (cartHasItems)
+                        {
+                            message = message + " Please review your cart and proceed to checkout.";
+                        }
+                        error = new Exception(message, error);
+                    }
+                    catch (Exception ex)
+                    {
+                        // ignored
+                    }
+                }
                 return await RenderCartViewWithMessage(error);
             }
             
@@ -228,7 +254,5 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
             }
             return redirectUrl;
         }
-
-       
     }
 }
