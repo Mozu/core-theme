@@ -8,7 +8,9 @@ Ext.define('Taco.view.attribute.Form', {
         'Taco.view.option.valueEditor.MultiValue',
         'Taco.shared.view.field.Product',
         'Taco.core.ux.form.SlugField',
-        'Taco.core.ux.form.DateRange'
+        'Taco.core.ux.form.DateRange',
+        'Taco.core.ux.DragHandleColumn',
+        'Taco.view.attribute.AttributeValueGrid'
     ],
     createTitle: 'Create New Attribute',
     alias: ['widget.taco-attributeform'],
@@ -31,7 +33,7 @@ Ext.define('Taco.view.attribute.Form', {
                     return false;
                 },
                 listeners: {
-                    select: function (field, records) {
+                    select: function (field) {
                         var record = this.up('form').record,
                             isProperty = false,
                             isExtra = false;
@@ -73,7 +75,7 @@ Ext.define('Taco.view.attribute.Form', {
                         form.owner.updateDataTypeOptions();
                         
                     },
-                    change: function (field, newValue, oldValue) {
+                    change: function (field, newValue) {
 
                         var form = field.up('formform').getForm(),
                             stringField = form.findField('addValueString'),
@@ -108,39 +110,72 @@ Ext.define('Taco.view.attribute.Form', {
                 var me = this,
                     grid,
                     gridContainer,
-                    dataType = statics.fieldCfg.dataType;
+                    dataType = statics.fieldCfg.dataType,
+                    dragHandleColumn = {
+                        xtype: 'draghandlecolumn',
+                        stateId: 'dragHandle',
+                        width: 35
+                    },
+                    positionColumn = {
+                        xtype: 'gridcolumn',
+                        sortable: false,
+                        dataIndex: 'position',
+                        text: 'Pos',
+                        hideable: false,
+                        width: 100,
+                        renderer: function(cmp, metaData, record, index) {
+                            return index + 1;
+                        }
+                    },
+                    createPlacementSelector = function (type) {
+                      return {
+                          xtype: 'combobox',
+                          queryMode: 'local',
+                          itemId: ('attr-' + type.toLocaleLowerCase() + '-value-placement-selector'),
+                          displayField: 'text',
+                          valueField: 'value',
+                          width: 200,
+                          forceSelection: true,
+                          editable: false,
+                          margin: '0 0 0 10',
+                          store: Ext.create('Ext.data.Store', {
+                              fields: ['text', 'value'],
+                              data: [
+                                  { text: 'Insert at bottom', value: 'bottom' },
+                                  { text: 'Insert at top', value: 'top' },
+                                  { text: 'Insert above selected', value: 'above' },
+                                  { text: 'Insert below selected', value: 'below' }
+                              ]
+                          }),
+                          listeners: {
+                              afterrender: function () {
+                                  this.setVisible(me.getForm().findField('dataType').getValue() === type);
+                                  this.select(this.getStore().getAt(0));
+                              }
+                          }
+                      };
+                    };
 
                 dataType.readOnly = this.isEdit();
                 dataType.allowProductDataType = this.record.allowProductDataType();
 
                 grid = {
-                    xtype: 'grid',
-                    width: 600,
+                    xtype: 'attribute-value-grid',
+                    width: 800,
                     sortableColumns: false,
-                    disableSelection: true,
+                    disableSelection: false,
                     hideHeaders: false,
                     enableColumnHide: false,
                     store: this.valuesStore,
-                    plugins: [
-                        {
-                            ptype: 'cellediting',
-                            clicksToEdit: 1
-                        }
-                    ],
-                    viewConfig: {
-                        stripeRows: false,
-                        onRowFocus: Ext.emptyFn,
-                        markDirty: false
-                    },
+                    record: this.record,
                     configureGrid: function (attributeDataType) {
-
                         this.columns = (this.columnConfigs[attributeDataType.toLowerCase()]).concat(this.columnConfigs.all);
                         this.hideHeaders = attributeDataType == 'number';
-
-
                     },
                     columnConfigs: {
                         number: [
+                            dragHandleColumn,
+                            positionColumn,
                             {
                                 dataIndex: 'value',
                                 text: 'Value',
@@ -156,6 +191,8 @@ Ext.define('Taco.view.attribute.Form', {
                             }
                         ],
                         string: [
+                            dragHandleColumn,
+                            positionColumn,
                             {
                                 dataIndex: 'value',
                                 text: 'Label',
@@ -183,28 +220,21 @@ Ext.define('Taco.view.attribute.Form', {
                             }
                         ],
                         productcode: [
+                            dragHandleColumn,
+                            positionColumn,
                             {
                                 dataIndex: 'id',
-                                text: 'Product Code'
-
-
+                                text: 'Product Code',
+                                flex: 1
                             },
                             {
                                 dataIndex: 'value',
                                 text: 'Product Name',
-                                flex: 1
+                                flex: 2
                             }
                         ],
                         all: [
-                            {
-                                xtype: 'templatecolumn',
-                                // text: '',
-                                tdCls: 'taco-actioncolumn',
-                                width: 26,
-                                tpl: ['<div class="taco-actioncolumn-icon taco-actioncolumn-icon-remove"></div>']
-                            }
                         ]
-
                     },
                     columns: [],
                     listeners: {
@@ -214,9 +244,10 @@ Ext.define('Taco.view.attribute.Form', {
                                 view.getStore().remove(record);
                             }
                         },
-                        validateedit:function (editor, e) {
-                            if (e.field == 'id' && e.grid.store.getById(e.value)) {
-
+                        validateedit: function (editor, e) {
+                            var existing = e.grid.store.findRecord('id', e.value, 0, false, false);
+                            if (e.field == 'id' && existing) {
+                                Taco.app.fireEvent('setmessage', ('The same value ' + existing.getId() + ' already exists'), 'error');
                                 return false;
                             }
                             return true;
@@ -246,7 +277,6 @@ Ext.define('Taco.view.attribute.Form', {
                 if (this.isEdit()) {
                     gridContainer.initGrid(me.record.get('dataType'));
                 }
-
 
                 return [
                     {
@@ -285,153 +315,192 @@ Ext.define('Taco.view.attribute.Form', {
                         }
                     },
                     dataType, {
-                        xtype: 'textfield',
-                        name: 'addValueString',
-                        enableKeyEvents: true,
-                        ignoreParentFormTracking: true,
-                        submitValue: false,
-                        maxLength: 50,
-                        width: 600,
-                        hideMode: 'display',
-                        fieldLabel: 'Values',
-                        emptyText: 'Add another',
-                        checkDirty: Ext.emptyFn,
-                        isDirty: function () {
-                            return false;
+                        xtype: 'fieldcontainer',
+                        layout: {
+                            type: 'hbox',
+                            align: 'bottom'
                         },
-                        validate: function () {
-                            var me = this,
-                                isValid = me.isValid();
-                            if (isValid !== me.wasValid) {
-                                me.wasValid = isValid;
-                            }
-                            return isValid;
-                        },
-                        listeners: {
-                            boxready: function (field) {
-                                this.setVisible(me.getForm().findField('dataType').getValue() === 'String');
+                        width: 808,
+                        itemId: 'addValueStringContainer',
+                        items: [
+                            {
+                                xtype: 'textfield',
+                                name: 'addValueString',
+                                enableKeyEvents: true,
+                                ignoreParentFormTracking: true,
+                                submitValue: false,
+                                flex: 1,
+                                margin: '0 10 0 0',
+                                hideMode: 'display',
+                                fieldLabel: 'Values',
+                                emptyText: 'Add Value or Label:Value',
+                                checkDirty: Ext.emptyFn,
+                                isDirty: function () {
+                                    return false;
+                                },
+                                validate: function () {
+                                    var me = this,
+                                        isValid = me.isValid();
+                                    if (isValid !== me.wasValid) {
+                                        me.wasValid = isValid;
+                                    }
+                                    return isValid;
+                                },
+                                listeners: {
+                                    boxready: function () {
+                                        this.setVisible(me.getForm().findField('dataType').getValue() === 'String');
+                                    },
+                                    keydown: function (field, e) {
+                                        if (e.getKey() === e.ENTER && field.isValid()) {
+                                            var value = field.getValue(),
+                                                attributeId = me.record.getId();
+
+                                            if (!Ext.isEmpty(Ext.String.trim(value))) {
+                                                field.reset();
+
+                                                var positionSelector = Ext.ComponentQuery.query('#attr-string-value-placement-selector');
+                                                var position = (positionSelector.length > 0) ? positionSelector[0].getValue() : 'bottom';
+                                                var labelValue = value.split(':');
+                                                var id = labelValue.length > 1 ? labelValue[1] : value;
+                                                Taco.app.fireEvent('added-attribute-value', {
+                                                    attributeId: attributeId,
+                                                    value: labelValue[0],
+                                                    id: id.replace(/[^a-zA-Z0-9-_//.]/g, "-"),
+                                                    position: position
+                                                });
+                                            }
+                                        }
+                                    }
+                                }
                             },
-                            keydown: function (field, e) {
-                                if (e.getKey() === e.ENTER && field.isValid()) {
-                                    var value = field.getValue(),
-                                        attributeId = me.record.getId(),
-                                        record;
+                            createPlacementSelector('String')
+                        ]
+                    }, {
+                        xtype: 'fieldcontainer',
+                        layout: {
+                            type: 'hbox',
+                            align: 'bottom'
+                        },
+                        width: 808,
+                        itemId: 'addValueNumberContainer',
+                        items: [{
+                            xtype: 'numberfield',
+                            name: 'addValueNumber',
+                            enableKeyEvents: true,
+                            hideTrigger: true,
+                            ignoreParentFormTracking: true,
+                            keyNavEnabled: false,
+                            mouseWheelEnabled: false,
+                            submitValue: false,
+                            maxLength: 50,
+                            flex: 1,
+                            margin: '0 10 0 0',
+                            hideMode: 'display',
+                            fieldLabel: 'Values',
+                            emptyText: 'Add another',
+                            checkDirty: Ext.emptyFn,
+                            isDirty: function () {
+                                return false;
+                            },
+                            validate: function () {
+                                var me = this,
+                                    isValid = me.isValid();
+                                if (isValid !== me.wasValid) {
+                                    me.wasValid = isValid;
+                                }
+                                return isValid;
+                            },
+                            listeners: {
+                                boxready: function () {
+                                    this.setVisible(me.getForm().findField('dataType').getValue() === 'Number');
+                                },
+                                keydown: function (field, e) {
+                                    if (e.getKey() === e.ENTER && field.isValid()) {
+                                        var value = field.getValue(),
+                                            attributeId = me.record.getId();
 
-                                    if (!Ext.isEmpty(Ext.String.trim(value))) {
-                                        field.reset();
+                                        if (!Ext.isEmpty(value)) {
+                                            field.reset();
 
-
-                                        record = me.valuesStore.add({
-                                            attributeId: attributeId,
-                                            value: value
-                                        })[0];
-
-                                        record.set('id', value.replace(/[^a-zA-Z0-9-_//.]/g, "-"));
-                                   
+                                            var positionSelector = Ext.ComponentQuery.query('#attr-number-value-placement-selector');
+                                            var position = (positionSelector.length > 0) ? positionSelector[0].getValue() : 'bottom';
+                                            Taco.app.fireEvent('added-attribute-value', {
+                                                attributeId: attributeId,
+                                                value: value,
+                                                id: value,
+                                                position: position
+                                            });
+                                        }
                                     }
                                 }
                             }
-                        }
+                        }, createPlacementSelector('Number')
+                        ]
                     }, {
-                        xtype: 'numberfield',
-                        name: 'addValueNumber',
-                        enableKeyEvents: true,
-                        hideTrigger: true,
-                        ignoreParentFormTracking: true,
-                        keyNavEnabled: false,
-                        mouseWheelEnabled: false,
-                        submitValue: false,
-                        maxLength: 50,
-                        width: 600,
-                        hideMode: 'display',
-                        fieldLabel: 'Values',
-                        emptyText: 'Add another',
-                        checkDirty: Ext.emptyFn,
-                        isDirty: function () {
-                            return false;
+                        xtype: 'fieldcontainer',
+                        layout: {
+                            type: 'hbox',
+                            align: 'bottom'
                         },
-                        validate: function () {
-                            var me = this,
-                                isValid = me.isValid();
-                            if (isValid !== me.wasValid) {
-                                me.wasValid = isValid;
-                            }
-                            return isValid;
-                        },
-                        listeners: {
-                            boxready: function (field) {
-                                this.setVisible(me.getForm().findField('dataType').getValue() === 'Number');
+                        width: 808,
+                        itemId: 'addProductContainer',
+                        items: [{
+                            xtype: 'taco-productfield',
+                            name: 'addValueProductCode',
+                            multiSelect: false,
+                            showVariations: false,//currently the runtime can't support variants
+                            showProductUsages: 'standard,component', //only standard and component will work in runtime at this time
+                            ignoreParentFormTracking: true,
+                            submitValue: false,
+                            width: 600,
+                            hideMode: 'display',
+                            fieldLabel: 'Values',
+                            checkDirty: Ext.emptyFn,
+                            isDirty: function () {
+                                return false;
                             },
-                            keydown: function (field, e) {
-                                if (e.getKey() === e.ENTER && field.isValid()) {
-                                    var value = field.getValue(),
-                                        attributeId = me.record.getId(),
-                                        record;
+                            validate: function () {
+                                var me = this,
+                                    isValid = me.isValid();
+                                if (isValid !== me.wasValid) {
+                                    me.wasValid = isValid;
+                                }
+                                return isValid;
+                            },
+                            listeners: {
+                                beforerender: function () {
+                                    this.setVisible(me.getForm().findField('dataType').getValue() === 'ProductCode');
+                                },
+                                select: function (field, records) {
+                                    if (records && records.length) {
+                                        var productName = records[0].get('productName'),
+                                            productCode = records[0].getId(),
+                                            attributeId = me.record.getId();
 
-                                    if (!Ext.isEmpty(value)) {
                                         field.reset();
 
-                                        record = me.valuesStore.add({
-                                            attributeId: attributeId,
-                                            value: value
-                                        })[0];
+                                        var existing = me.valuesStore.findRecord('id', productCode, 0, false, false);
+                                        if (existing) {
+                                            Taco.app.fireEvent('setmessage', ('Product "' + existing.get('value') + '" already exists'), 'error');
+                                            return;
+                                        }
 
-                                        record.set('id', value.toString());
+                                        var positionSelector = Ext.ComponentQuery.query('#attr-productcode-value-placement-selector');
+                                        var position = (positionSelector.length > 0) ? positionSelector[0].getValue() : 'bottom';
+                                        Taco.app.fireEvent('added-attribute-value', {
+                                            attributeId: attributeId,
+                                            value: productName,
+                                            id: productCode,
+                                            position: position
+                                        });
                                     }
                                 }
                             }
-                        }
-                    }, {
-                        xtype: 'taco-productfield',
-                        name: 'addValueProductCode',
-                        multiSelect: false,
-
-                        showVariations: false,//currently the runtime can't support variants
-                        showProductUsages: 'standard,component', //only standard and component will work in runtime at this time
-                        ignoreParentFormTracking: true,
-                        submitValue: false,
-                        width: 600,
-                        hideMode: 'display',
-                        fieldLabel: 'Values',
-                        //emptyText: 'Add another',
-                        // "queryMode": "local",
-                        checkDirty: Ext.emptyFn,
-                        isDirty: function () {
-                            return false;
-                        },
-                        validate: function () {
-                            var me = this,
-                                isValid = me.isValid();
-                            if (isValid !== me.wasValid) {
-                                me.wasValid = isValid;
-                            } 
-                            return isValid;
-                        },
-                        listeners: {
-                            beforerender: function (field) {
-                                this.setVisible(me.getForm().findField('dataType').getValue() === 'ProductCode');
                             },
-                            select: function (field, records) {
-                                if (records && records.length) {
-                                    var productName = records[0].get('productName'),
-                                        productCode = records[0].getId(),
-                                        attributeId = me.record.getId(),
-                                        record;
-
-
-                                    field.reset();
-
-                                    record = me.valuesStore.add({
-                                        attributeId: attributeId,
-                                        value: productName
-                                    })[0];
-
-                                    record.set('id', productCode);
-                                }
-
-                            }
-                        }
-                    }, gridContainer
+                            createPlacementSelector('ProductCode')
+                        ]
+                    },
+                    gridContainer
                 ];
             },
 
@@ -596,7 +665,7 @@ Ext.define('Taco.view.attribute.Form', {
 
     },
 
-    handleAttributeTypeChange: function (checkboxGroup, newValue, oldValue, eOpts) {
+    handleAttributeTypeChange: function () {
         this.updateDataTypeOptions();
     },
 
@@ -674,20 +743,28 @@ Ext.define('Taco.view.attribute.Form', {
     createSearchOptions: function () {
         var me = this;
 
-        this.searchInStorefront = Ext.widget('checkboxfield',  
-            Taco.core.ux.TooltipLabel.wrapConfig('attribute.form.searchOptions', me,
-            {
-                name: 'searchableInStorefront',
-                boxLabel: 'Available to Storefront Search',
-                hidden: !this.record.supportsSearchInStorefront(),
-                listeners: {
-                    change: function (cmp, newValue) {
-                        me.record.set('searchableInStorefront', newValue);
-                        me.searchDisplayContainer.setVisible(me.record.supportsSearchDisplayType());
-                    },
-                    scope: this
-                }
-            }));
+        this.searchInStorefront = Ext.widget({
+            xtype: 'checkbox',
+            name: 'searchableInStorefront',
+            boxLabel: 'Available to Storefront Search',
+            hidden: !this.record.supportsSearchInStorefront(),
+            itemId: 'searchableInStorefront',
+            listeners: {
+                change: function (cmp, newValue) {
+                    me.record.set('searchableInStorefront', newValue);
+                    me.searchDisplayContainer.setVisible(me.record.supportsSearchDisplayType());
+                },
+                scope: this
+            },
+            tooltip: Ext.create('Taco.core.ux.content.Tooltip', {
+                elementId: 'searchableInStorefront',
+                hoverTarget: 'boxLabelEl',
+                messageKey: 'attribute.form.searchOptions',
+                offsetLeft: -255,
+                offsetTop: 22,
+                arrowPosition: 'left'
+            })
+        })
 
         this.searchLabel = Ext.widget({
             xtype: 'radio',
@@ -736,12 +813,19 @@ Ext.define('Taco.view.attribute.Form', {
             ]
         });
 
-        this.allowFilteringAndSorting = Ext.widget('checkboxfield',
-            Taco.core.ux.TooltipLabel.wrapConfig('attribute.form.filterandsorting', me,
-            {
+        this.allowFilteringAndSorting = Ext.widget('checkboxfield', {
             name: 'allowFilteringAndSortingInStorefront',
-            boxLabel: 'Available as Filter & Sort'
-        }));
+            boxLabel: 'Available as Filter & Sort',
+            itemId: 'allowFilteringAndSortingInStorefront',
+            tooltip: Ext.create('Taco.core.ux.content.Tooltip', {
+                elementId: 'allowFilteringAndSortingInStorefront',
+                hoverTarget: 'boxLabelEl',
+                messageKey: 'attribute.form.filterandsorting',
+                offsetLeft: -220,
+                offsetTop: 22,
+                arrowPosition: 'left'
+            })
+        });
 
         return Ext.create('Ext.form.FieldContainer',
            {
@@ -799,7 +883,7 @@ Ext.define('Taco.view.attribute.Form', {
                 maxLength: 30,
                 enableKeyEvents: true,
                 listeners: {
-                    keyup: function (field, e, eOpts) {
+                    keyup: function (field) {
                         var adminName = this.findField('adminName'),
                             attributeCode = this.findField('code');
 
@@ -820,7 +904,7 @@ Ext.define('Taco.view.attribute.Form', {
                 width: 300,
                 enableKeyEvents: true,
                 listeners: {
-                    keyup: function (field, e, eOpts) {
+                    keyup: function (field) {
                         field.hadKeyEvent = true;
                     },
                     scope: this
@@ -837,7 +921,7 @@ Ext.define('Taco.view.attribute.Form', {
                     : 'textfield',      //display as-is for existing records
                 enableKeyEvents: true,
                 listeners: {
-                    keyup: function (field, e, eOpts) {
+                    keyup: function (field) {
                         field.hadKeyEvent = true;
                     },
                     scope: this
@@ -914,7 +998,7 @@ Ext.define('Taco.view.attribute.Form', {
                 enableKeyEvents: true,
                 listeners: {
                     change: this.onInputTypeChange,
-                    keyup: function (field, e, eOpts) {
+                    keyup: function (field) {
                         field.hadKeyEvent = true;
                     },
                     scope: this

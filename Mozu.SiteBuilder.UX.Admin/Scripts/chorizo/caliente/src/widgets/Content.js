@@ -40,6 +40,10 @@ export default class ContentWidget {
                 return false;
             }
 
+            if (window.getSelection().type === 'Range') {
+                return false;
+            }
+
             if (this.formatter) {
                 this.hideEditor();
                 Chorizo.editor.updateAllContentWidgets();
@@ -114,7 +118,7 @@ export default class ContentWidget {
     onUrlUpdate(e) {
 
         const url = this.urlTooltip.querySelector('input').value;
-        const linkElement = this.currentLink.startContainer.querySelector('a');
+        const linkElement = this.currentLink.startContainer.parentNode
 
         linkElement.setAttribute('href', url);
 
@@ -124,10 +128,10 @@ export default class ContentWidget {
     }
 
     revealEditor(block) {
+        
+        this.formatter = this.formatter || this.getFormatter();
 
         this.toggleAllContentWidgets();
-
-        this.formatter = this.formatter || this.getFormatter();
 
         this.urlTooltip = this.urlTooltip || this.getUrlTooltip();
 
@@ -252,8 +256,13 @@ export default class ContentWidget {
         this.urlTooltip.style.top = `${position.top + 30}px`;
 
         this.urlTooltip.style.display = 'block';
-
+        
         this.currentLink = this.saveSelection()[0];
+
+        if (this.urlTooltip.querySelector('input')) {
+            this.urlTooltip.querySelector('input').focus();
+        }
+
 
     }
 

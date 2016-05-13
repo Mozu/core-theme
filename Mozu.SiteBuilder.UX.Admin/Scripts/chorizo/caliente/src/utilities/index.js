@@ -1161,7 +1161,7 @@ export function reinitializeContent(layout) {
         temp = new constructor(el);
 
         if (temp instanceof Column) {
-            temp.removeDropHint();
+            removeDropHint(temp.element);
         }
 
     });
@@ -1178,7 +1178,7 @@ export function reinitializeContent(layout) {
 **/
 export function showResizer(block, e) {
     e.stopPropagation();
-
+    
     Array.from(document.querySelectorAll(`${ALL_COL_SELECTOR}, ${BLOCK_SELECTOR}`)).forEach((col) => {
         col.classList.remove('mz-cms-state-selected');
     });
@@ -1197,7 +1197,7 @@ export function showResizer(block, e) {
             && this.widgetData.definitionId
             && this.widgetData.definitionId === 'content'
             && !e.target.classList.contains('trash')) {
-
+        
         contentWidget.revealEditor(this);
     }
 }

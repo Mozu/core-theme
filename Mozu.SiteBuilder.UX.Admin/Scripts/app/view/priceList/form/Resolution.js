@@ -27,7 +27,8 @@ Ext.define('Taco.view.priceList.form.Resolution', {
 
         var catalogChildren = Ext.Array.map(Taco.app.context.getMasterCatalog().catalogs, function (cat) {
             var validSites = me.record.get('validSites'),
-            defaultForSites = me.record.get('defaultForSites');
+                defaultForSites = me.record.get('defaultForSites'),
+                indexedSites = me.record.get('indexedSites');
             var siteChildren = Ext.Array.map(cat.sites, function (site) {
                 return {
                     id: site.id,
@@ -38,7 +39,8 @@ Ext.define('Taco.view.priceList.form.Resolution', {
                     loaded: true,
                     leaf: 'true',
                     checked: validSites.indexOf(site.id) !== -1,
-                    "default": defaultForSites.indexOf(site.id) !== -1
+                    "default": defaultForSites.indexOf(site.id) !== -1,
+                    indexed: indexedSites.indexOf(site.id) !== -1
                 };
             });
             return {
@@ -51,25 +53,15 @@ Ext.define('Taco.view.priceList.form.Resolution', {
             };
         });
 
-        /*this.defaultHeading = Ext.widget('fieldcontainer', {
-            fieldLabel: 'Default',
-            cellCls: 'header radio',
-            itemId: 'default-field-container',
-            tooltip: Ext.create('Taco.core.ux.content.Tooltip', {
-                elementId: 'default-field-container',
-                hoverTarget: 'label',
-                messageKey: 'priceList.resolution.default',
-                offsetLeft: 82,
-                offsetTop: 15
-            })
-        });*/
-
         this.siteTreeStore = Ext.create('Ext.data.TreeStore', {
             root: {
                 expanded: true,
                 children: catalogChildren
             },
             fields: [{
+                name: 'indexed',
+                type: 'boolean'
+            },{
                 name: 'default',
                 type: 'boolean'
             }, {
@@ -99,10 +91,40 @@ Ext.define('Taco.view.priceList.form.Resolution', {
                     checkchange: function(cmp, rowIndex, checked, eOpts) {
                         var records = me.siteTreeStore.getUpdatedRecords();
                         Ext.Array.each(records, function(record) {
-                            if (record.get('default') && !record.get('checked')) {
-                                record.set('checked', true);
+                            if (record.get('default')) {
+                                record.set('indexed', true);
+                                if (!record.get('checked')) {
+                                    record.set('checked', true);
+                                }
                             }
                         });
+                    }
+                },
+                renderer: function(val, metaData, record, rowIndex, colIndex, store, view) {
+                    if (record.get('leaf')) {
+                        var checked = (val) ? 'x-grid-checkcolumn-checked' : '';
+                        return '<img class="x-grid-checkcolumn ' + checked + ' " src="data:image/gif;base64,R0lGODlhAQABAID/AMDAwAAAACH5BAEAAAAALAAAAAABAAEAAAICRAEAOw==">';
+                    }
+                    else {
+                        return '';
+                    }
+                }
+            }, {
+                xtype: 'checkcolumn',
+                text: 'Indexed',
+                dataIndex: 'indexed',
+                hideable: false,
+                listeners: {
+                    checkchange: function(cmp, rowIndex, checked, eOpts) {
+                        var records = me.siteTreeStore.getUpdatedRecords();
+                        Ext.Array.each(records, function(record) {
+                            if (!record.get('indexed')) {
+                                record.set('default', false);
+                            }
+                            if (!record.get('checked')) {
+                                record.set('checked', true);
+                            }
+                    });
                     }
                 },
                 renderer: function(val, metaData, record, rowIndex, colIndex, store, view) {
@@ -156,6 +178,7 @@ Ext.define('Taco.view.priceList.form.Resolution', {
                     if (!checked) {
                         me.specificSitesRadio.setValue(true);
                         node.set('default', false);
+                        node.set('indexed', false);
                     }
                 },
                 select: function (cmp, record) {
@@ -393,12 +416,15 @@ Ext.define('Taco.view.priceList.form.Resolution', {
 
     beforeSave: function () {
         var selectedSites = this.sitesTree.getChecked();
-        this.record.set('validSites', Ext.Array.map(selectedSites, function(site) {
+        this.record.set('validSites', Ext.Array.clean(Ext.Array.map(selectedSites, function(site) {
             return site.get('id');
-        }));
-        this.record.set('defaultForSites', Ext.Array.map(selectedSites, function(site) {
+        })));
+        this.record.set('defaultForSites', Ext.Array.clean(Ext.Array.map(selectedSites, function(site) {
             return site.get('default') ? site.get('id') : undefined;
-        }));
+        })));
+        this.record.set('indexedSites', Ext.Array.clean(Ext.Array.map(selectedSites, function(site) {
+            return site.get('indexed') ? site.get('id') : undefined;
+        })));
         Ext.Object.merge(this.record.data, this.form.getValues());
         return true;
     },

@@ -49,6 +49,8 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.Models.PriceLists
 
         public int[] DefaultForSites { get; set; }
 
+        public int[] IndexedSites { get; set; }
+
         /// <summary>
         /// Sequence used for indexing this price list...1-max priceList will be indexed
         /// </summary>

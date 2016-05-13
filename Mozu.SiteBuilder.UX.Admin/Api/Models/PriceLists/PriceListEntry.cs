@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using Mozu.Core.Api.Contracts;
 using Mozu.SiteBuilder.UX.Admin.Api.Models.Options;
+using Mozu.SiteBuilder.UX.Admin.Api.Models.ProductModels;
 using Newtonsoft.Json;
 
 namespace Mozu.SiteBuilder.UX.Admin.Api.Models.PriceLists
@@ -11,6 +12,8 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.Models.PriceLists
         public string PriceListCode { get; set; }
 
         public string ProductCode { get; set; }
+
+        public string BaseProductCode { get; set; }
 
         public string ProductName { get; set; }
 
@@ -93,6 +96,8 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.Models.PriceLists
         #endregion
 
         #region Current
+
+        public List<ProductInCatalogInfo> ProductInCatalogInfo { get; set; } 
 
         public string CurrentPriceCurrencyCode { get; set; }
 

@@ -84,6 +84,9 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.Models.ProductModels
 		[JsonProperty(DefaultValueHandling = DefaultValueHandling.Ignore)]
         public bool IsPriceOverridden { get; set; }
 
+        [JsonProperty(DefaultValueHandling = DefaultValueHandling.Ignore, PropertyName = "isoCurrencyCode")]
+        public string ISOCurrencyCode { get; set; }
+
         /// <summary>
         /// The list price.
         /// </summary>

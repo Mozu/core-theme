@@ -57,31 +57,34 @@ Ext.define('Taco.model.PriceList', {
             type: 'auto',
             defaultValue: []
         }, {
+            name: 'indexedSites',
+            type: 'auto',
+            defaultValue: []
+        }, {
             name: 'validSitesDisplay',
             type: 'string',
             persist: false,
-            convert: function (val, record) {
+            convert: function (val, record, eOpt) {
                 if (record.get('validForAllSites')) {
                     return 'All Sites';
                 }
-                var siteNames = Ext.Array.map(record.get('validSites'), function(siteId) {
-                    var site = Taco.app.context.findSite(siteId);
-                    return (site) ? site.name : '';
-                });
-                return siteNames.join(',');
+                return record.getSiteNames(record.get('validSites'));
             }
         }, {
             name: 'defaultForSitesDisplay',
             type: 'string',
             persist: false,
             convert: function (val, record) {
-                var siteNames = Ext.Array.map(record.get('defaultForSites'), function (siteId) {
-                    var site = Taco.app.context.findSite(siteId);
-                    return (site) ? site.name : '';
-                });
-                return siteNames.join(',');
+                return record.getSiteNames(record.get('defaultForSites'));
             }
         }, {
+            name: 'indexedSitesDisplay',
+            type: 'string',
+            persist: false,
+            convert: function (val, record) {
+                return record.getSiteNames(record.get('indexedSites'));
+            }
+        },{
             name: 'priceListSequence',
             type: 'int',
             useNull: false
@@ -149,6 +152,14 @@ Ext.define('Taco.model.PriceList', {
             dateFormat: 'c'
         }
     ],
+
+    getSiteNames: function (sites) {
+        var siteNames = Ext.Array.map(sites, function(siteId) {
+            var site = Taco.app.context.findSite(siteId);
+            return (site) ? site.name : '';
+        });
+        return siteNames.join(',');
+    },
 
     getDeletePromptMessage: function() {
         var msg = 'Are you sure you want to delete "' + this.get('name') + '"?';

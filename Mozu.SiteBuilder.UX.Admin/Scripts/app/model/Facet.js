@@ -74,18 +74,30 @@ Ext.define('Taco.model.Facet', {
     }, {
         name: 'valueSortType',
         type: 'string',
-        useNull: true,
-        defaultValue: 'CountDescending'
+        useNull: true
     }],
 
     isInherited: function() {
         return this.get('categoryId') !== this.get('categoryId2');
     },
 
+    setDefaultSortValue: function () {
+        this.set('valueSortType', this.getDefaultSortValue());
+    },
+
+    getDefaultSortValue: function () {
+        if (this.get('facetType') === 'RangeQuery') {
+            return 'ValuesAscending';
+        }
+        return (this.get('sourceType') === 'Attribute') ? 'AttributeDefinition' : 'CountDescending';
+    },
+
     getFacetSortingStore: function () {
         var valAscDisplay,
             valDescDisplay,
-            dataTypeLower = this.get('sourceDataType') ? this.get('sourceDataType').toLowerCase() : 'string';
+            dataTypeLower = this.get('sourceDataType') ? this.get('sourceDataType').toLowerCase() : 'string',
+            isAttributeType = this.get('sourceType') === 'Attribute',
+            sortData = [];
 
         switch (dataTypeLower) {
             case 'number':
@@ -101,23 +113,38 @@ Ext.define('Taco.model.Facet', {
                 valDescDisplay = 'Alphabetical: Z to A';
         }
 
+        if (isAttributeType) {
+            sortData = [
+                {
+                    id: "AttributeDefinition",
+                    name: "Attribute Definition"
+                }, {
+                    id: "AttributeDefinitionDescending",
+                    name: "Attribute Definition (Reverse)"
+                }
+            ];
+        } 
+
+        sortData = sortData.concat([
+            {
+                id: "CountDescending",
+                name: "Facet Count: High to Low"
+            },
+            {
+                id: "CountAscending",
+                name: "Facet Count: Low to High"
+            },  {
+                id: "ValuesAscending",
+                name: valAscDisplay
+            }, {
+                id: "ValuesDescending",
+                name: valDescDisplay
+            }
+        ]);
+
         return Ext.create('Ext.data.Store', {
             fields: ['id', "name"],
-            data: [
-                {
-                    id: "CountAscending",
-                    name: "Facet Count: Low to High"
-                }, {
-                    id: "CountDescending",
-                    name: "Facet Count: High to Low"
-                }, {
-                    id: "ValuesAscending",
-                    name: valAscDisplay
-                }, {
-                    id: "ValuesDescending",
-                    name: valDescDisplay
-                }
-            ]
+            data: sortData
         });
     }
 

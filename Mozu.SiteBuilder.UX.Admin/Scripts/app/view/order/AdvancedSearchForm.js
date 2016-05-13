@@ -224,6 +224,10 @@ Ext.define('Taco.view.order.AdvancedSearchForm', {
                         width: 200
                     }
                 ]
+            },
+            {
+                name: 'returnNumber',
+                fieldLabel: 'Return Number'
             }];
         this.callParent(arguments);
     },

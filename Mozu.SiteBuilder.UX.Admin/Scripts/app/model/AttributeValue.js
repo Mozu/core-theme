@@ -6,7 +6,8 @@ Ext.define('Taco.model.AttributeValue', {
     fields: [
         { name: 'id', type: 'auto' },
         { name: 'attributeId', type: 'auto' },
-        { name: 'value', type: 'any' }
+        { name: 'value', type: 'any' },
+        { name: 'valueSequence', type: 'int', useNull: true}
     ]
 
     
