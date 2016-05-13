@@ -8,6 +8,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.Models.Account
 {
     public class CustomerPurchaseOrderAccount
     {
+        public int AccountId { get; set; }
         public decimal AvailableBalance { get; set; }
         public decimal CreditLimit { get; set; }
         public List<PurchaseOrderPaymentTerm> CustomerPurchaseOrderPaymentTerms { get; set; }
@@ -21,5 +22,6 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.Models.Account
     {
         public string Description { get; set; }
         public int SiteId { get; set; }
+        public int Id { get; set; }
     }
 }
