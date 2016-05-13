@@ -42,16 +42,16 @@ namespace Mozu.SiteBuilder.Mvc.Models.ModelMapping
                 .ForMember(x => x.Credentials, opt => opt.MapFrom(src => src.Credentials.Where(c => c.IsSensitive.HasValue && !c.IsSensitive.Value)))
                 ;
 
-            Mapper.CreateMap<DC.PurchaseOrderMemoField, CustomField>()
+            Mapper.CreateMap<DC.PurchaseOrderCustomField, CustomField>()
                 .ForMember(x => x.IsEnabled, opt => opt.ResolveUsing(dc => dc.IsEnabled))
                 .ForMember(x => x.IsRequired, opt => opt.ResolveUsing(dc => dc.IsRequired))
                 .ForMember(x => x.Code, opt => opt.ResolveUsing(dc => dc.Code))
                 .ForMember(x => x.Label, opt => opt.ResolveUsing(dc => dc.Label))
                 ;
 
-            Mapper.CreateMap<DC.PurchaseOrderNetTerm, NetTerm>()
+            Mapper.CreateMap<DC.PurchaseOrderPaymentTerm, PaymentTerm>()
                 .ForMember(x => x.SequenceNumber, opt => opt.ResolveUsing(dc => dc.SequenceNumber))
-                .ForMember(x => x.Term, opt => opt.ResolveUsing(dc => dc.Term))
+                .ForMember(x => x.Description, opt => opt.ResolveUsing(dc => dc.Description))
                 ;
 
             Mapper.CreateMap<DC.PurchaseOrderPaymentDefinition, PurchaseOrderSettings>()

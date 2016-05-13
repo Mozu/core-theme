@@ -173,6 +173,7 @@
     <Compile Include="Api\CatalogPublishingController.cs" />
     <Compile Include="Api\CategoryController.cs" />
     <Compile Include="Api\ChannelController.cs" />
+    <Compile Include="Api\Models\Account\CustomerPurchaseOrderAccount.cs" />
     <Compile Include="Api\Models\PriceLists\PriceListEntryExtra.cs" />
     <Compile Include="Api\ReportGenerator.cs" />
     <Compile Include="Api\CouponCodeController.cs" />
@@ -583,7 +584,7 @@
     <Content Include="Scripts\app\core\ux\window\Modal.js" />
     <Content Include="Scripts\app\model\BlockedProduct.js" />
     <Content Include="Scripts\app\model\CardGateway.js" />
-    <Content Include="Scripts\app\model\PurchaseOrderNetTerms.js" />
+    <Content Include="Scripts\app\model\PurchaseOrderPaymentTerms.js" />
     <Content Include="Scripts\app\model\PaymentGateway.js" />
     <Content Include="Scripts\app\model\PinnedProduct.js" />
     <Content Include="Scripts\app\model\PriceListEntry.js" />
@@ -896,7 +897,7 @@
     <Content Include="Scripts\app\view\settings\paymentGateways\subform\PaymentGateway.js" />
     <Content Include="Scripts\app\view\settings\paymentGateways\Edit.js" />
     <Content Include="Scripts\app\view\settings\paymentTypes\subform\CheckByMail.js" />
-    <Content Include="Scripts\app\view\settings\paymentTypes\subform\NetTermsGrid.js" />
+    <Content Include="Scripts\app\view\settings\paymentTypes\subform\PurchaseOrderPaymentTermsGrid.js" />
     <Content Include="Scripts\app\view\settings\paymentTypes\subform\PurchaseOrder.js" />
     <Content Include="Scripts\app\view\storeCredit\AdvancedSearchForm.js" />
     <Content Include="Scripts\app\view\storeCredit\Grid.js" />

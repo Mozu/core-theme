@@ -1,19 +1,14 @@
 ﻿/**
  * @class Taco.view.settings.paymentTypes.subform.PurchaseOrder
  *
- "purchaseOrder": {
-  "isEnabled": false,
-  "netTerms": [],
-  "allowSplitPayment": false
- }
  */
 
 Ext.define('Taco.view.settings.paymentTypes.subform.PurchaseOrder', {
     extend: 'Taco.core.ux.form.Form',
     requires: [
-        'Taco.view.settings.paymentTypes.subform.NetTermsGrid',
+        'Taco.view.settings.paymentTypes.subform.PurchaseOrderPaymentTermsGrid',
         'Taco.view.attribute.AttributeValueGrid',
-        'Taco.model.PurchaseOrderNetTerms',
+        'Taco.model.PurchaseOrderPaymentTerms',
         'Taco.model.PurchaseOrderCustomField',
         'Taco.core.ux.content.Tooltip'
     ],
@@ -28,7 +23,7 @@ Ext.define('Taco.view.settings.paymentTypes.subform.PurchaseOrder', {
         this.purchaseOrderEnabled = me.record.get('purchaseOrder').isEnabled;
         this.purchaseOrderSplitPaymentEnabled = me.record.get('purchaseOrder').allowSplitPayment;
         this.customFieldsStore = null;
-        this.netTermsStore = null;
+        this.paymentTermsStore = null;
         
         this.purchaseOrderEnabledToggle = Ext.create('Ext.form.Checkbox', {
             itemId: 'purchaseOrderEnabled',
@@ -39,7 +34,7 @@ Ext.define('Taco.view.settings.paymentTypes.subform.PurchaseOrder', {
             scope: this
         });
 
-        this.purchaseOrderNetTerms = this.initializeNetTermsGrid();
+        this.purchaseOrderPaymentTerms = this.initializePaymentTermsGrid();
         this.purchaseOrderCustomTextFields = this.initializeTextFieldsGrid();
 
         this.purchaseOrderContent = Ext.create('Ext.form.FieldContainer', {
@@ -50,7 +45,7 @@ Ext.define('Taco.view.settings.paymentTypes.subform.PurchaseOrder', {
             hidden: !me.purchaseOrderEnabled,
             margin: '0px 0px 20px 0px',
             items: [
-                me.purchaseOrderNetTerms,
+                me.purchaseOrderPaymentTerms,
                 me.purchaseOrderCustomTextFields
             ]
         });
@@ -100,25 +95,25 @@ Ext.define('Taco.view.settings.paymentTypes.subform.PurchaseOrder', {
 
     },
 
-    initializeNetTermsGrid: function() {
+    initializePaymentTermsGrid: function() {
         var me = this;
-        var netTerms = me.record.get('purchaseOrder').netTerms;
+        var paymentTerms = me.record.get('purchaseOrder').paymentTerms;
 
-        this.netTermsStore = Ext.create('Ext.data.ArrayStore', {
-            model: 'Taco.model.PurchaseOrderNetTerms'
+        this.paymentTermsStore = Ext.create('Ext.data.ArrayStore', {
+            model: 'Taco.model.PurchaseOrderPaymentTerms'
         });
 
-        for (var i = 0; i < netTerms.length; ++i) {
-            this.netTermsStore.add(Ext.create('Taco.model.PurchaseOrderNetTerms', netTerms[i]));
+        for (var i = 0; i < paymentTerms.length; ++i) {
+            this.paymentTermsStore.add(Ext.create('Taco.model.PurchaseOrderPaymentTerms', paymentTerms[i]));
         }
 
-        this.netTermsGrid = {
-            xtype: 'net-terms-grid',
+        this.paymentTermsGrid = {
+            xtype: 'payment-terms-grid',
             sortableColumns: false,
             disableSelection: false,
             hideHeaders: false,
             enableColumnHide: false,
-            store: me.netTermsStore,
+            store: me.paymentTermsStore,
             record: me.record,
             columns: [
                 {
@@ -126,8 +121,8 @@ Ext.define('Taco.view.settings.paymentTypes.subform.PurchaseOrder', {
                     stateId: 'dragHandle',
                     width: 35
                 }, {
-                    dataIndex: 'term',
-                    text: 'Net Terms',
+                    dataIndex: 'description',
+                    text: 'Payment Terms',
                     flex: 2,
                     editor: {
                         xtype: 'textfield',
@@ -156,10 +151,10 @@ Ext.define('Taco.view.settings.paymentTypes.subform.PurchaseOrder', {
             }
         };
 
-        this.purchaseOrderNetTermsGridCont = {
+        this.purchaseOrderPaymentTermsGridCont = {
             xtype: 'form',
-            itemId: 'netTermsGridContainer',
-            gridCfg: me.netTermsGrid,
+            itemId: 'paymentTermsGridContainer',
+            gridCfg: me.paymentTermsGrid,
             width: '100%',
             items: [],
             initGrid: function() {
@@ -175,30 +170,30 @@ Ext.define('Taco.view.settings.paymentTypes.subform.PurchaseOrder', {
             }
         };
 
-        this.purchaseOrderNetTermsGridCont.initGrid();
+        this.purchaseOrderPaymentTermsGridCont.initGrid();
 
         return Ext.create('Ext.form.FieldContainer', {
             layout: {
                 type: 'vbox',
                 align: 'bottom'
             },
-            itemId: 'purchaseOrderNetTerms',
-            name: 'purchaseOrderNetTerms',
+            itemId: 'purchaseOrderPaymentTerms',
+            name: 'purchaseOrderPaymentTerms',
             flex: 1,
             margin: '0 50 0 0',
             items: [
                 {
                     xtype: 'textfield',
-                    name: 'addNetTermsField',
-                    itemId: 'addNetTermsField',
+                    name: 'addPaymentTermsField',
+                    itemId: 'addPaymentTermsField',
                     width: '100%',
                     enableKeyEvents: true,
                     ignoreParentFormTracking: true,
                     submitValue: false,
                     flex: 1,
                     margin: '0 10 0 0',
-                    fieldLabel: 'Net Terms Options',
-                    emptyText: 'Enter net terms and press ENTER',
+                    fieldLabel: 'Payment Terms Options',
+                    emptyText: 'Enter payment terms and press ENTER',
                     checkDirty: Ext.emptyFn,
                     isDirty: function() {
                         return false;
@@ -223,8 +218,8 @@ Ext.define('Taco.view.settings.paymentTypes.subform.PurchaseOrder', {
                                     var position = (positionSelector.length > 0) ? positionSelector[0].getValue() : 'bottom';
                                     var id = value;
 
-                                    Taco.app.fireEvent('added-net-term-value', {
-                                        term: value,
+                                    Taco.app.fireEvent('added-payment-term-value', {
+                                        description: value,
                                         id: id.replace(/[^a-zA-Z0-9-_//.]/g, "-"),
                                         position: position
                                     });
@@ -232,7 +227,7 @@ Ext.define('Taco.view.settings.paymentTypes.subform.PurchaseOrder', {
                             }
                         }
                     }
-                }, me.purchaseOrderNetTermsGridCont
+                }, me.purchaseOrderPaymentTermsGridCont
             ]
         });
     },
@@ -240,14 +235,14 @@ Ext.define('Taco.view.settings.paymentTypes.subform.PurchaseOrder', {
     initializeTextFieldsGrid: function() {
         var me = this;
         this.shouldAddCustomField = false;
-        var memoFields = me.record.get('purchaseOrder').memoFields;
+        var customFields = me.record.get('purchaseOrder').customFields;
 
         this.customFieldsStore = Ext.create('Ext.data.ArrayStore', {
             model: 'Taco.model.PurchaseOrderCustomField'
         });
 
-        for (var i = 0; i < memoFields.length; ++i) {
-            this.customFieldsStore.add(Ext.create('Taco.model.PurchaseOrderCustomField', memoFields[i]));
+        for (var i = 0; i < customFields.length; ++i) {
+            this.customFieldsStore.add(Ext.create('Taco.model.PurchaseOrderCustomField', customFields[i]));
         }
 
         this.addCustomFieldtoGrid = function() {
@@ -460,16 +455,16 @@ Ext.define('Taco.view.settings.paymentTypes.subform.PurchaseOrder', {
             });
         });
 
-        var netTerms = [];
-        var netTermsToAdd = this.netTermsStore.data.items;
-        for (var i = 0; i < netTermsToAdd.length; ++i) {
-            netTerms.push({ term: netTermsToAdd[i].get('term'), sequenceNumber: i });
+        var paymentTerms = [];
+        var paymentTermsToAdd = this.paymentTermsStore.data.items;
+        for (var i = 0; i < paymentTermsToAdd.length; ++i) {
+            paymentTerms.push({ description: paymentTermsToAdd[i].get('description'), sequenceNumber: i });
         }
 
         var purchaseOrder = {
             "isEnabled": purchaseOrderEnabled,
-            "netTerms": netTerms,
-            "memoFields": customFields,
+            "paymentTerms": paymentTerms,
+            "customFields": customFields,
             "allowSplitPayment": purchaseOrderSplitPayment
         };
 

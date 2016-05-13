@@ -136,7 +136,7 @@ namespace Mozu.SiteBuilder.UX.Models.Settings
         public bool IsEnabled { get; set; }
         public bool AllowSplitPayment { get; set; }
         public List<CustomField> CustomFields { get; set; } 
-        public List<NetTerm> NetTerms { get; set; } 
+        public List<PaymentTerm> PaymentTerms { get; set; } 
     }
 
     public class CustomField
@@ -147,9 +147,9 @@ namespace Mozu.SiteBuilder.UX.Models.Settings
         public bool IsRequired { get; set; }
     }
 
-    public class NetTerm
+    public class PaymentTerm
     {
-        public string Term { get; set; }
+        public string Description { get; set; }
         public int SequenceNumber { get; set; }
     }
 

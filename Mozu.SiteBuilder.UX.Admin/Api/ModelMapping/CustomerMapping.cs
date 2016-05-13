@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using AutoMapper;
+using Mozu.SiteBuilder.UX.Admin.Api.Models.Account;
 using DC = Mozu.Customer.Contracts;
 using ApiCustomer = Mozu.SiteBuilder.UX.Admin.Api.Models.Customer;
 using Contact = Mozu.SiteBuilder.UX.Admin.Api.Models.Contact;
@@ -93,6 +94,33 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.ModelMapping
                 .ForMember(dc => dc.IsActive, op => op.ResolveUsing(x => !x.IsDisabled))
                 ;
 
+            Mapper.CreateMap<DC.CustomerPurchaseOrderAccount, CustomerPurchaseOrderAccount>()
+                .ForMember(x => x.IsEnabled, op => op.ResolveUsing(dc =>dc.IsEnabled))
+                .ForMember(x => x.AvailableBalance, op => op.ResolveUsing(dc => dc.AvailableBalance))
+                .ForMember(x => x.CreditLimit, op => op.ResolveUsing(dc => dc.CreditLimit))
+                .ForMember(x => x.CustomerPurchaseOrderPaymentTerms, op => op.ResolveUsing(dc => dc.CustomerPurchaseOrderPaymentTerms))
+                .ForMember(x => x.Id, op => op.ResolveUsing(dc => dc.Id))
+                .ForMember(x => x.OverdraftType, op => op.ResolveUsing(dc => dc.OverdraftType))
+                .ForMember(x => x.OverdraftValue, op => op.ResolveUsing(dc => dc.OverdraftValue))
+                ;
+            Mapper.CreateMap<CustomerPurchaseOrderAccount, DC.CustomerPurchaseOrderAccount>()
+                .ForMember(dc => dc.IsEnabled, op => op.ResolveUsing(x => x.IsEnabled))
+                .ForMember(dc => dc.AvailableBalance, op => op.ResolveUsing(x => x.AvailableBalance))
+                .ForMember(dc => dc.CreditLimit, op => op.ResolveUsing(x => x.CreditLimit))
+                .ForMember(dc => dc.CustomerPurchaseOrderPaymentTerms, op => op.ResolveUsing(x => x.CustomerPurchaseOrderPaymentTerms))
+                .ForMember(dc => dc.Id, op => op.ResolveUsing(x => x.Id))
+                .ForMember(dc => dc.OverdraftType, op => op.ResolveUsing(x => x.OverdraftType))
+                .ForMember(dc => dc.OverdraftValue, op => op.ResolveUsing(x => x.OverdraftValue))
+                ;
+            
+            Mapper.CreateMap<DC.CustomerPurchaseOrderPaymentTerm, PurchaseOrderPaymentTerm>()
+                .ForMember(x => x.Description, op => op.ResolveUsing(dc => dc.Description))
+                .ForMember(x => x.SiteId, op => op.ResolveUsing(dc => dc.SiteId))
+                ;
+            Mapper.CreateMap<PurchaseOrderPaymentTerm, DC.CustomerPurchaseOrderPaymentTerm>()
+                .ForMember(dc => dc.Description, op => op.ResolveUsing(x => x.Description))
+                .ForMember(dc => dc.SiteId, op => op.ResolveUsing(x => x.SiteId))
+                ;
 
             Mapper.CreateMap<Mozu.SiteBuilder.UX.Admin.Api.Models.CustomerSegment, DC.CustomerSegment>()
                 .ForMember(x => x.Id, op => op.ResolveUsing(x => x.Id))
