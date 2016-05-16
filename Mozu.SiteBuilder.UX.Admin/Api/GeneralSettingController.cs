@@ -44,7 +44,18 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
             return List2(settings);
         }
 
-		[HttpPostRoute(UriTemplate = "save")]
+        [HttpPostRoute(UriTemplate = "updateCacheKey")]
+        public async Task<Response<GeneralSettings>> UpdateCacheKey(GeneralSettings settings)
+        {
+            var previousSettings = (await this.GetSettings()).Items.First();
+            previousSettings.CdnCacheBustKey = settings.CdnCacheBustKey;
+
+            var savedSettings = _wrapper.UpdateGeneralSettings(previousSettings);
+
+            return Single2((await this.GetSettings()).Items.First());
+        }
+
+        [HttpPostRoute(UriTemplate = "save")]
         public async Task<Response<GeneralSettings>> Save(GeneralSettings settingsToSave)
         {
             
