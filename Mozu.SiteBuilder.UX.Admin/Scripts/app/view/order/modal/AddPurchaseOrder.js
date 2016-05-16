@@ -25,12 +25,10 @@ Ext.define('Taco.view.order.modal.AddPurchaseOrder', {
         var me = this,
             balance = me.getBalance(7099),
             limit = me.getLimit(10000),
-            terms = me.record.checkoutSettings.get('purchaseOrder').netTerms
-                    ? me.getTerms(me.record.checkoutSettings.get('purchaseOrder').netTerms)
+            terms = me.record.checkoutSettings.get('purchaseOrder').paymentTerms
+                    ? me.getTerms(me.record.checkoutSettings.get('purchaseOrder').paymentTerms)
                     : me.getTerms(['No terms specified']),
-            fields = me.record.checkoutSettings.get('purchaseOrder').memoFields
-                     ? me.getFields(me.record.checkoutSettings.get('purchaseOrder').memoFields)
-                     : me.getFields([]);
+            fields = me.getFields(me.record.checkoutSettings.get('purchaseOrder').customFields);
 
         me.form = Ext.create('Ext.form.Panel', {
             items: [
@@ -139,17 +137,17 @@ Ext.define('Taco.view.order.modal.AddPurchaseOrder', {
     },
 
     getTerms: function (terms) {
-        var netTermsSelect = null,
-            netTermsItem = terms[0],
+        var paymentTermsSelect = null,
+            paymentTermsItem = terms[0],
             content = {
                 cls: 'taco-static-text',
                 children: [
                     {
-                        html: 'Net Terms',
+                        html: 'Payment Terms',
                         tag: 'p'
                     },
                     {
-                        html: netTermsItem,
+                        html: paymentTermsItem,
                         tag: 'p'
                     }
                 ],
@@ -162,10 +160,10 @@ Ext.define('Taco.view.order.modal.AddPurchaseOrder', {
          */
         if (terms.length > 1) {
             return Ext.widget({
-                fieldLabel: 'Net Terms',
+                fieldLabel: 'Payment Terms',
                 flex: 1,
                 forceSelection: true,
-                name: 'netTerms',
+                name: 'paymentTerms',
                 store: terms,
                 xtype: 'selectfield'
             });
@@ -176,7 +174,7 @@ Ext.define('Taco.view.order.modal.AddPurchaseOrder', {
             xtype: 'box',
             anchor: 0,
             margin: '20 0 10 0',
-            itemId: 'netTerms',
+            itemId: 'paymentTerms',
             autoEl: content
         });
     },
@@ -190,7 +188,7 @@ Ext.define('Taco.view.order.modal.AddPurchaseOrder', {
          * Iterate through extra fields, build array to display
          */
         fields.forEach(function (field) {
-            if (field.enabled) {
+            if (field.isEnabled) {
 
                 /**
                  * If the field is not the left-most field, add left padding
@@ -200,7 +198,7 @@ Ext.define('Taco.view.order.modal.AddPurchaseOrder', {
                 }
 
                 var newField = {
-                    allowBlank: !field.required,
+                    allowBlank: !field.isRequired,
                     fieldLabel: field.label,
                     flex: 1,
                     margin: fieldMargin,
