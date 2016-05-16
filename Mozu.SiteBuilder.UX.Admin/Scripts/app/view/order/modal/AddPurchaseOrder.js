@@ -22,78 +22,66 @@ Ext.define('Taco.view.order.modal.AddPurchaseOrder', {
 
     initComponent: function () {
 
-        var me = this;
+        var me = this,
+            balance = me.getBalance(7099),
+            limit = me.getLimit(10000),
+            terms = me.record.checkoutSettings.get('purchaseOrder').netTerms
+                    ? me.getTerms(me.record.checkoutSettings.get('purchaseOrder').netTerms)
+                    : me.getTerms(['No terms specified']),
+            fields = me.record.checkoutSettings.get('purchaseOrder').memoFields
+                     ? me.getFields(me.record.checkoutSettings.get('purchaseOrder').memoFields)
+                     : me.getFields([]);
 
-        Taco.model.CheckoutSettings.load(123, {
-            failure: function () {
-                console.log('it failed')
-            },
-            success: function (record) {
-                var balance = me.getBalance(7099),
-                    limit = me.getLimit(10000),
-                    terms = record.get('purchaseOrder').netTerms
-                            ? me.getTerms(record.get('purchaseOrder').netTerms)
-                            : ['No terms specified'],
-                    fields = record.get('purchaseOrder').memoFields
-                             ? me.getFields(record.get('purchaseOrder').memoFields)
-                             : [];
-                console.log(terms)
-                console.log(fields)
-
-                me.form = Ext.create('Ext.form.Panel', {
+        me.form = Ext.create('Ext.form.Panel', {
+            items: [
+                {
+                    xtype: 'fieldcontainer',
+                    layout: 'hbox',
+                    flex: 1,
                     items: [
+                        balance,
+                        limit,
+                        terms,
                         {
-                            xtype: 'fieldcontainer',
-                            layout: 'hbox',
-                            flex: 1,
-                            items: [
-                                balance,
-                                limit,
-                                terms,
-                                {
-                                    flex: 3
-                                }
-                            ]
-                        },
-                        {
-                            xtype: 'fieldcontainer',
-                            layout: 'hbox',
-                            items: [
-                                {
-                                    allowBlank: false,
-                                    fieldLabel: 'Purchase Order #',
-                                    flex: 1,
-                                    name: 'purchaseOrderNumber',
-                                    xtype: 'textfield'
-                                },
-                                {
-                                    allowBlank: false,
-                                    currencyCode: me.record.getCurrencyCode(),
-                                    fieldLabel: 'Amount',
-                                    flex: 1,
-                                    margin: '0 0 0 30',
-                                    name: 'amount',
-                                    value: me.record.formatCurrency(me.record.get('total')),
-                                    xtype: 'textfield'
-                                }
-                            ]
-                        },
-                        {
-                            items: fields,
-                            layout: {
-                                align: 'stretch',
-                                type: 'vbox'
-                            },
-                            xtype: 'fieldcontainer'
+                            flex: 3
                         }
                     ]
-                });
-
-                me.items = [me.form];
-                me.self.superclass.initComponent.call(arguments);
-            },
-            scope: this
+                },
+                {
+                    xtype: 'fieldcontainer',
+                    layout: 'hbox',
+                    items: [
+                        {
+                            allowBlank: false,
+                            fieldLabel: 'Purchase Order #',
+                            flex: 1,
+                            name: 'purchaseOrderNumber',
+                            xtype: 'textfield'
+                        },
+                        {
+                            allowBlank: false,
+                            currencyCode: me.record.getCurrencyCode(),
+                            fieldLabel: 'Amount',
+                            flex: 1,
+                            margin: '0 0 0 30',
+                            name: 'amount',
+                            value: me.record.formatCurrency(me.record.get('total')),
+                            xtype: 'textfield'
+                        }
+                    ]
+                },
+                {
+                    items: fields,
+                    layout: {
+                        align: 'stretch',
+                        type: 'vbox'
+                    },
+                    xtype: 'fieldcontainer'
+                }
+            ]
         });
+
+        me.items = [me.form];
 
         this.callParent(arguments);
     },
@@ -251,7 +239,7 @@ Ext.define('Taco.view.order.modal.AddPurchaseOrder', {
 
         data.orderId = this.record.getId();
 
-        met.setLoading({
+        me.setLoading({
             msg: "Saving"
         }, me.body);
 
