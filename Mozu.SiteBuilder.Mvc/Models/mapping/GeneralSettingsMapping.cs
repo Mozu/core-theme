@@ -59,11 +59,13 @@ namespace Mozu.SiteBuilder.Mvc.Models.ModelMapping
             Mapper.CreateMap<DC.PurchaseOrderPaymentTerm, PaymentTerm>()
                 .ForMember(x => x.SequenceNumber, opt => opt.ResolveUsing(dc => dc.SequenceNumber))
                 .ForMember(x => x.Description, opt => opt.ResolveUsing(dc => dc.Description))
+                .ForMember(x => x.Code, op => op.ResolveUsing(dc => dc.Code))
                 ;
 
             Mapper.CreateMap<PaymentTerm, DC.PurchaseOrderPaymentTerm>()
                 .ForMember(dc => dc.SequenceNumber, opt => opt.ResolveUsing(x => x.SequenceNumber))
                 .ForMember(dc => dc.Description, opt => opt.ResolveUsing(x => x.Description))
+                .ForMember(dc => dc.Code, op => op.ResolveUsing(x => x.Code))
                 ;
 
             Mapper.CreateMap<DC.PurchaseOrderPaymentDefinition, PurchaseOrderSettings>()

@@ -151,6 +151,7 @@ namespace Mozu.SiteBuilder.UX.Models.Settings
     {
         public string Description { get; set; }
         public int SequenceNumber { get; set; }
+        public string Code { get; set; }
     }
 
     /// <summary>

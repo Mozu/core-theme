@@ -229,7 +229,7 @@ Ext.define('Taco.view.settings.paymentTypes.subform.PurchaseOrder', {
 
                                     var positionSelector = Ext.ComponentQuery.query('#attr-string-value-placement-selector');
                                     var position = (positionSelector.length > 0) ? positionSelector[0].getValue() : 'bottom';
-                                    var id = value.replace(/[^a-zA-Z0-9-_//.]/g, "-");
+                                    var id = value.toLowerCase().replace(/[^a-zA-Z0-9-_//.]/g, "-");
 
                                     Taco.app.fireEvent('added-payment-term-value', {
                                         description: value,
@@ -462,7 +462,6 @@ Ext.define('Taco.view.settings.paymentTypes.subform.PurchaseOrder', {
     },
 
     persistFormValues: function () {
-        //TODO finish this to save the data!
         var me = this;
         var purchaseOrderEnabled = this.purchaseOrderEnabledToggle.getValue();
         var purchaseOrderSplitPayment = this.purchaseOrderSplitPaymentToggle.getValue();
