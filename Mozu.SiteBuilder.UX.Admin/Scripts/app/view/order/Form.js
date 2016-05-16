@@ -23,7 +23,8 @@ Ext.define('Taco.view.order.Form', {
         'Taco.store.Channels',
         'Taco.store.Countries',
         'Taco.store.Attributes',
-        'Taco.store.OrderAttributes'
+        'Taco.store.OrderAttributes',
+        'Taco.model.CheckoutSettings'
     ],
 
     model: 'Taco.model.Order',
@@ -63,6 +64,29 @@ Ext.define('Taco.view.order.Form', {
 
     initComponent: function () {
         var me = this;
+        this.checkoutSettings = null;
+
+        var fields = Taco.model.CheckoutSettings.getFields(),
+            purchaseOrder = {};
+
+        fields.forEach(function (field) {
+            if (field.name == 'purchaseOrder') {
+                purchaseOrder = field;
+                return;
+            }
+        });
+
+        Taco.model.CheckoutSettings.load(123, {
+            scope: this,
+            failure: function () {
+                console.log('you failed')
+            },
+            success: function (record) {
+            },
+            callback: function (record) {
+                me.checkoutSettings = record;
+            }
+        });
 
         // after the record is reloaded we will need to refresh the ui
         me.mon(me.record, 'aftercommit', function () {

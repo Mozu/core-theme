@@ -47,6 +47,18 @@ Ext.define('Taco.view.order.subform.Payment', {
         var record = this.record;
         var isUnpaid = record.get("paymentStatus") === "Unpaid";
 
+        Taco.model.CheckoutSettings.load(123, {
+            scope: this,
+            failure: function () {
+                console.log('you failed')
+            },
+            success: function (record) {
+            },
+            callback: function (record) {
+                this.record.checkoutSettings = record;
+            }
+        });
+
         this.tools = [
             Ext.widget('button', {
                 itemId: 'refundButton',
