@@ -58,10 +58,16 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
             _visitPublisher = visitPublisher;
         }
        
-        protected void DoLogout() 
+        protected void DoLogout(bool? saveUserId = false) 
         {
             var user = LightweightUserClaims.CreateForAnonymousShopper(_apiContext.TenantId, _apiContext.SiteId.Value);
+            if (saveUserId.HasValue && saveUserId.Value)
+            {
+                user.Bag["PreviousRegisteredUserId"] = _apiContext.GetUserId();
+            }
+
             _authenticationHelper.ClearStorefrontTokens();
+            _authenticationHelper.SaveStoreFrontAccessToken(user.ToAccessToken(), null);
             _apiContext.SetUser(user);
         }
 
@@ -154,9 +160,9 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
 
         [HttpGet]
         [SslOnlyActionFilter]
-        public HttpResponseMessage LogOut(string returnUrl = null)
+        public HttpResponseMessage LogOut(string returnUrl = null, bool saveUserId = false)
         {
-            DoLogout();
+            DoLogout(saveUserId);
 
             var redir = this.Request.CreateResponse(statusCode: System.Net.HttpStatusCode.Redirect);
            
