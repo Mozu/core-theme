@@ -24,6 +24,7 @@ using Mozu.SiteBuilder.Mvc.Mobile;
 using Mozu.SiteBuilder.Mvc.Navigation;
 using Mozu.SiteBuilder.Mvc.ViewEngine;
 using Mozu.InstalledApplications.Contracts.Clients;
+using Mozu.SiteBuilder.Mvc.Caching;
 using Mozu.SiteBuilder.Mvc.SEO;
 using Mozu.SiteBuilder.UX.Admin.Api;
 using Mozu.SiteBuilder.UX.Admin.Api.ErrorHandlers;
@@ -108,6 +109,9 @@ namespace Mozu.SiteBuilder.UX.Admin.Configuration
                 .As<IPublisher>().SingleInstance();
 
             builder.RegisterType<SearchTuningRuleFilterBuilder>().As<ISearchTuningRuleFilterBuilder>().SingleInstance();
+
+
+            builder.RegisterType<AdminStorefrontCache>().As<IStorefrontCache>();
         }
     }
 }

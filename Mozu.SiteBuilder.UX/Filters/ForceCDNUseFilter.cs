@@ -9,13 +9,24 @@ using System.Linq;
 using System.Net;
 using System.Net.Http;
 using System.Net.Http.Headers;
+using System.Web;
 using System.Web.Http.Controllers;
 using System.Web.Http.Filters;
 
 namespace Mozu.SiteBuilder.UX.Filters
 {
+    public class NoCookieFilter : ActionFilterAttribute
+    {
+        public override void OnActionExecuted(HttpActionExecutedContext actionExecutedContext)
+        {
+            actionExecutedContext.Response.Headers.Remove("Set-Cookie");
+            actionExecutedContext.Request.Resolve<HttpContextBase>().Response.Cookies.Clear();
+        }
+    }
+
     public  class NoCdnForce : Attribute
     { }
+
 
     public class ForceCDNUseFilter : ActionFilterAttribute
     {

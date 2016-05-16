@@ -91,12 +91,11 @@ Ext.define('Taco.view.attribute.AttributeValueGrid', {
             this.refresh();
             this.updateParentValues();
         }, me);
-
     },
 
     updateParentValues: function () {
         var rawValues = Ext.Array.map(this.getValues(), function(val) {
-            return val.raw;
+            return val.getData();
         });
         this.record.set('values', rawValues);
     },

@@ -6,7 +6,7 @@ using Mozu.SiteBuilder.UX.Admin.Api.Models;
 
 namespace Mozu.SiteBuilder.UX.Admin.Helpers.ProductHelpers
 {
-    public static class ProductFilterExtensions
+    public static class     ProductFilterExtensions
     {
         
         private const string PRODUCT_NAME_PROPERTY = "productincatalogs.content.productName";
@@ -60,7 +60,8 @@ namespace Mozu.SiteBuilder.UX.Admin.Helpers.ProductHelpers
 
             if (withVariations.GetValueOrDefault(false))
             {
-                var item = extFilter.FirstOrDefault(x => string.Equals(x.field, "productcode" ,StringComparison.OrdinalIgnoreCase));
+                var item = extFilter.FirstOrDefault(x => string.Equals(x.field, "productcode", StringComparison.OrdinalIgnoreCase)
+                                                         || string.Equals(x.property, "productcode", StringComparison.OrdinalIgnoreCase));
                 if (item != null)
                 {
                     item.property = item.field = "productinventorycode";
@@ -126,10 +127,11 @@ namespace Mozu.SiteBuilder.UX.Admin.Helpers.ProductHelpers
                             .Select(code => string.Format("\"{0}\"", code.Trim()))
                             .Aggregate((a, b) => a + "," + b));
                 case "productinventorycode":
-                    return string.Format("(IsVariation eq true or IsVariation eq false) and (productCode in [{0}])",
-                        value.ToString().Split(',')
-                            .Select(code => string.Format("\"{0}\"", code.Trim()))
-                            .Aggregate((a, b) => a + "," + b));
+                    var filterString = value.ToString()
+                        .Split(',')
+                        .Select(code => string.Format("\"{0}\"", code.Trim()))
+                        .Aggregate((a, b) => a + "," + b);
+                    return string.Format("(IsVariation eq true or IsVariation eq false) and (productCode in [{0}] or baseProductCode in [{0}])",filterString);
                 case "producttypeid":
                 case "producttype":
                     return string.Format("productTypeId eq {0}", value);
