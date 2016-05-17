@@ -214,7 +214,6 @@ Ext.define('Taco.view.category.Index', {
                         metaData = {
                             id: record.getId()
                         };
-                    
                     Taco.app.StateManager.attemptNavigate('categories/duplicate/' + record.getId(), metaData);
                 }
             }, {

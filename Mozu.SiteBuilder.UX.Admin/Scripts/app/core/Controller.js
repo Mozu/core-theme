@@ -155,7 +155,6 @@ Ext.define('Taco.core.Controller', {
             options.container = appState.container;
         }
 
-        
         if (record) {
             Taco.app.setLoading();
             record.reload({
@@ -446,7 +445,7 @@ Ext.define('Taco.core.Controller', {
         var context = Taco.app.context.getCurrentContext(),
             requiresContextOfType,
             newContext;
-            
+
         args = args && !Ext.isArray(args) ? Array.prototype.slice.call(args, 0) : args;
         viewClass = Ext.isString(viewClass) ? Ext.ClassManager.get(viewClass) : viewClass;
         requiresContextOfType = (contextOverride || viewClass.prototype.contextConfig || {}).requiresContextOfType;

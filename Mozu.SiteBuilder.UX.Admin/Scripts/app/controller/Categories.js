@@ -86,5 +86,64 @@ Ext.define('Taco.controller.Categories', {
         } else {
             fnLoadEditor();
         }
-    }
+    },
+    doDuplicateModelInternal: function (id, additionalParams, appState, viewName, model) {
+        var record = appState ? appState.record : null,
+            options = appState ? appState.options : null;
+        if (appState && appState.container) {
+            options = options || {};
+            options.container = appState.container;
+        }
+
+        if (record) {
+            
+            record.raw = undefined;
+
+            // do any class specific modifications to the source model that is being cloned
+            if (record.beforeDuplicate) {
+                record.beforeDuplicate();
+            }
+
+            record.phantom = true;
+            Ext.data.Model.id(record);                    
+            this.ensureRequiredStores(function () {
+                this.createContentView(viewName, {
+                    isDuplicate:true,
+                    record: record,
+                    options: options
+                });
+            });
+
+
+        } else {
+            Taco.app.setLoading();
+            model.load(id, {
+                success: function (record) {
+                    Taco.app.setLoading(false);
+
+                    record.raw = undefined;
+
+                    // do any class specific modifications to the source model that is being cloned                    
+                    if (record.beforeDuplicate) {
+                        record.beforeDuplicate();
+                    }
+
+                    record.phantom = true;
+                    Ext.data.Model.id(record);
+
+                    this.ensureRequiredStores(function () {
+                        this.createContentView(viewName, {
+                            isDuplicate: true,
+                            record: record,
+                            options: options
+                        });
+                    });
+                },
+                failure: function () {
+                    Taco.app.setLoading(false);
+                },
+                scope: this
+            });
+        }
+    },
 });

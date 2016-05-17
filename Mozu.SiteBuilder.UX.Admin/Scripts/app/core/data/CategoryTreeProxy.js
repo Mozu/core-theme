@@ -25,7 +25,7 @@ Ext.define('Taco.core.data.CategoryTreeProxy', {
 
             var cbw,
                 me = this,
-                data = me.getData(),
+                data, // removed to not use cache for duplication calls - Brandon // = me.getData(),
                 filters = operation.filters;
 
             if (!data || operation.bypassCache) {
