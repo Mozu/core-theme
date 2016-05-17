@@ -48,7 +48,7 @@ Ext.define('Taco.view.settings.paymentTypes.subform.PurchaseOrderPaymentTermsGri
                         });
                     }
 
-                } else if (actions[i].toLowerCase() === 'remove all') {
+                } else if (actions[i].text.toLowerCase() === 'remove all') {
                     actions[i].menuColumnHandler = function() {
                         Ext.MessageBox.show({
                             title: 'Confirm',
