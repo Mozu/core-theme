@@ -23,25 +23,32 @@ Ext.define('Taco.view.settings.paymentTypes.subform.PurchaseOrderPaymentTermsGri
         }, me);
     },
 
-    removeRow: function (rec) {
+    getActionItems: function() {
         var me = this;
-        Ext.MessageBox.show({
-            title: 'Confirm',
-            // pushes the buttons to the right to be consistant with our dialog ux.
-            rightJustifyButtons: true,
-            // reverses the order of the buttons
-            reverseOrder: true,
-            msg: 'This may be assigned to a customer, are you sure you want to delete this payment term?',
-            closable: false,
-            buttons: Ext.Msg.YESNO,
-            fn: function (val) {
-                if (val === 'yes') {
-                    me.store.remove(rec);
-                    me.refresh();
-                    me.updateParentValues();
+        var actions = me.callParent(arguments);
+        for (var i = 0; i < actions.length; ++i) {
+            if (actions[i].text && actions[i].text.toLowerCase() === 'remove') {
+                actions[i].menuColumnHandler = function (item, eventData) {
+                    var record = eventData.record;
+                    Ext.MessageBox.show({
+                        title: 'Confirm',
+                        // pushes the buttons to the right to be consistant with our dialog ux.
+                        rightJustifyButtons: true,
+                        // reverses the order of the buttons
+                        reverseOrder: true,
+                        msg: 'This may be assigned to a customer, are you sure you want to delete this payment term?',
+                        closable: false,
+                        buttons: Ext.Msg.YESNO,
+                        fn: function (val) {
+                            if (val === 'yes') {
+                                me.removeRow(record);
+                            }
+                        }
+                    });
                 }
             }
-        });
+        }
+        return actions;
     }
 
 

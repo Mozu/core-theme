@@ -340,6 +340,10 @@ Ext.define('Taco.view.settings.paymentTypes.subform.PurchaseOrder', {
             itemId: 'purchaseOrderCustomFieldGrid',
             name: 'purchaseOrderCustomFieldGrid',
             width: '100%',
+            sortableColumns: false,
+            disableSelection: false,
+            hideHeaders: false,
+            enableColumnHide: false,
             store: me.customFieldsStore,
             record: me.record,
             columns: [
