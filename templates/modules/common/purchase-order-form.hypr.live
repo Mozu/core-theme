@@ -55,6 +55,16 @@
                 isRequired: true,
                 name: 'Do Not Use'
             }
+        ],
+        paymentTerms = [
+            {
+                text: '30 Days',
+                value: 30
+            },
+            {
+                text: '60 Days',
+                value: 60
+            }
         ];
 </script>
 {% block purchase-order-form %}
@@ -82,7 +92,16 @@
                     <label for="mz-payment-purchase-order-payment-terms">{{ labels.purchaseOrderPaymentTerms }}</label>
                 </div>
                 <div class="mz-l-formfieldgroup-cell">
-                    <span class="mz-payment-purchase-order-payment-terms">{{ theTerms }}</span>
+                    {% if paymentTerms.length > 1 %}
+                        <select class="mz-l-formfieldgroup-halfsize" id="mz-payment-purchase-order-terms" name="payment-terms" data-mz-value="{{ purchaseordercontext }}terms">
+                            <option></option>
+                            {% for term in paymentTerms %}
+                                <option value="{{ term.value }}">{{ term.text }}</option>
+                            {% endfor %}
+                        </select>
+                    {% else %}
+                        <span class="mz-payment-purchase-order-payment-terms">{{ paymentTerms | first.text }}</span>
+                    {% endif %}
                 </div>
             </div>
             {% for field in customFields %}
