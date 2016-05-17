@@ -10,9 +10,9 @@ Ext.define('Taco.view.category.AdvancedSearchForm', {
     },
     items: [
         {
-            name: 'categorycode',
+            name: 'keyword',
             flex: 1,
-            fieldLabel: 'Code'
+            fieldLabel: 'Keyword'
         }
         // {
         //     name: 'id',

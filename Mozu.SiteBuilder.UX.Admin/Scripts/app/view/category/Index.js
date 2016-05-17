@@ -264,6 +264,8 @@ Ext.define('Taco.view.category.Index', {
         me.callParent(arguments);
 
         me.selectCurrentPath();
+
+        console.log(me.store)
     },
 
     selectCurrentPath: function() {
