@@ -69,7 +69,7 @@ Ext.define('Taco.view.priceList.entry.PriceEntryPrice', {
                 hideTrigger: true,
                 value: entry.minQty,
                 margin: '0 20 0 0',
-                hidden: true
+                hidden: false
             });
 
             row.priceOverride = Ext.widget('overridefield', {
