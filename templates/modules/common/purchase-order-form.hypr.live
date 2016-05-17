@@ -1,34 +1,3 @@
-<<<<<<< HEAD
-{% block purchase-order-form %}
-
-    <div class="mz-l-formfieldgroup-row mz-payment-purchase-order-amount-row">
-        <div class="mz-l-formfieldgroup-cell">
-            <label for="mz-purchase-order-amount">{{labels.purchaseOrderAmount}}:</label>
-        </div>
-        <div class="mz-l-formfieldgroup-cell">
-            <div id="mz-purchase-order-amount">$2000</div>
-        </div>
-    </div>
-
-    <div class="mz-l-formfieldgroup-row mz-payment-purchase-order-number-row">
-        <div class="mz-l-formfieldgroup-cell">
-            <label for="mz-purchase-order-number">{{labels.purchaseOrderNumber}}:</label>
-        </div>
-        <div class="mz-l-formfieldgroup-cell">
-            <input type="text" id="mz-purchase-order-number" name="purchase-order-number" data-mz-value="{{purchaseOrder.purchaseOrderNumber}}" value="{{model.purchaseOrderNumber}}" autocomplete="off">
-        </div>
-    </div>
-
-    <div class="mz-l-formfieldgroup-row mz-payment-purchase-order-net-terms-row">
-        <div class="mz-l-formfieldgroup-cell">
-            <label for="mz-purchase-order-net-terms">{{labels.purchaseOrderNetTerms}}:</label>
-        </div>
-        <div class="mz-l-formfieldgroup-cell">
-            <input type="text" id="mz-purchase-order-net-terms" name="purchase-order-net-terms" data-mz-value="{{purchaseOrder.netTerm}}" value="{{model.netTerm}}" autocomplete="off">
-        </div>
-    </div>
-
-=======
 <script>
     /**
      * test data
@@ -143,5 +112,4 @@
             </div>
         </div>
     </div>
->>>>>>> Added purchase order checkout form
 {% endblock purchase-order-form %}
