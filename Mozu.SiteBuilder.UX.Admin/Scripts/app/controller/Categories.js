@@ -117,7 +117,6 @@ Ext.define('Taco.controller.Categories', {
 
         } else {
             Taco.app.setLoading();
-            debugger;
             model.load(id, {
                 success: function (record) {
                     Taco.app.setLoading(false);
