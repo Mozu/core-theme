@@ -145,6 +145,7 @@ namespace Mozu.SiteBuilder.UX.Models.Settings
         public string Label { get; set; }
         public bool IsEnabled { get; set; }
         public bool IsRequired { get; set; }
+        public int SequenceNumber { get; set; }
     }
 
     public class PaymentTerm

@@ -47,6 +47,7 @@ namespace Mozu.SiteBuilder.Mvc.Models.ModelMapping
                 .ForMember(x => x.IsRequired, opt => opt.ResolveUsing(dc => dc.IsRequired))
                 .ForMember(x => x.Code, opt => opt.ResolveUsing(dc => dc.Code))
                 .ForMember(x => x.Label, opt => opt.ResolveUsing(dc => dc.Label))
+                .ForMember(x => x.SequenceNumber, opt => opt.ResolveUsing(dc => dc.SequenceNumber))
                 ;
 
             Mapper.CreateMap<CustomField, DC.PurchaseOrderCustomField>()
@@ -54,6 +55,7 @@ namespace Mozu.SiteBuilder.Mvc.Models.ModelMapping
                 .ForMember(dc => dc.IsRequired, op => op.ResolveUsing(x => x.IsRequired))
                 .ForMember(dc => dc.Code, op => op.ResolveUsing(x => x.Code))
                 .ForMember(dc => dc.Label, op => op.ResolveUsing(x => x.Label))
+                .ForMember(dc => dc.SequenceNumber, opt => opt.ResolveUsing(x => x.SequenceNumber))
                 ;
 
             Mapper.CreateMap<DC.PurchaseOrderPaymentTerm, PaymentTerm>()

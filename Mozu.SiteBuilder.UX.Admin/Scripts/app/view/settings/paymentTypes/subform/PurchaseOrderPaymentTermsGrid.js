@@ -27,24 +27,45 @@ Ext.define('Taco.view.settings.paymentTypes.subform.PurchaseOrderPaymentTermsGri
         var me = this;
         var actions = me.callParent(arguments);
         for (var i = 0; i < actions.length; ++i) {
-            if (actions[i].text && actions[i].text.toLowerCase() === 'remove') {
-                actions[i].menuColumnHandler = function (item, eventData) {
-                    var record = eventData.record;
-                    Ext.MessageBox.show({
-                        title: 'Confirm',
-                        // pushes the buttons to the right to be consistant with our dialog ux.
-                        rightJustifyButtons: true,
-                        // reverses the order of the buttons
-                        reverseOrder: true,
-                        msg: 'This may be assigned to a customer, are you sure you want to delete this payment term?',
-                        closable: false,
-                        buttons: Ext.Msg.YESNO,
-                        fn: function (val) {
-                            if (val === 'yes') {
-                                me.removeRow(record);
+            if (actions[i].text) {
+                if (actions[i].text.toLowerCase() === 'remove') {
+                    actions[i].menuColumnHandler = function(item, eventData) {
+                        var record = eventData.record;
+                        Ext.MessageBox.show({
+                            title: 'Confirm',
+                            // pushes the buttons to the right to be consistant with our dialog ux.
+                            rightJustifyButtons: true,
+                            // reverses the order of the buttons
+                            reverseOrder: true,
+                            msg: 'This may be assigned to a customer, are you sure you want to delete this payment term?',
+                            closable: false,
+                            buttons: Ext.Msg.YESNO,
+                            fn: function(val) {
+                                if (val === 'yes') {
+                                    me.removeRow(record);
+                                }
                             }
-                        }
-                    });
+                        });
+                    }
+
+                } else if (actions[i].toLowerCase() === 'remove all') {
+                    actions[i].menuColumnHandler = function() {
+                        Ext.MessageBox.show({
+                            title: 'Confirm',
+                            // pushes the buttons to the right to be consistant with our dialog ux.
+                            rightJustifyButtons: true,
+                            // reverses the order of the buttons
+                            reverseOrder: true,
+                            msg: 'Some of these may be assigned to a customer, are you sure you want to delete all payment terms?',
+                            closable: false,
+                            buttons: Ext.Msg.YESNO,
+                            fn: function(val) {
+                                if (val === 'yes') {
+                                    me.store.removeAll();
+                                }
+                            }
+                        });
+                    }
                 }
             }
         }
