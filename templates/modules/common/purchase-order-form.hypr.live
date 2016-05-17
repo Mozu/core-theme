@@ -33,8 +33,7 @@
     /**
      * test data
      */
-    var theBalance = 2300,
-        theTerms = '60 days',
+    var theTerms = '60 days',
         creditLimit = 10000,
         availableBalance = 3000,
         customFields = [
@@ -66,7 +65,7 @@
                     <label for="mz-payment-purchase-order-amount">{{ labels.purchaseOrderAmount }}</label>
                 </div>
                 <div class="mz-l-formfieldgroup-cell">
-                    <span class="mz-payment-purchase-order-amount">{{ theBalance | currency }}</span>
+                    <span class="mz-payment-purchase-order-amount">{{ model.total | currency }}</span>
                 </div>
             </div>
             <div class="mz-l-formfieldgroup-row mz-payment-purchase-order-number-row">

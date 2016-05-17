@@ -9,7 +9,6 @@
                 <label class="mz-paymentselector-label mz-paymentselector-label-newcreditcard mz-checkoutform-radio" for="paymentType-newcreditcard-{{ paymentId }}">{% if model.savedPaymentMethods %}{{ labels.newCreditCard }}{% else %}{{ labels.creditCard }}{% endif %}</label>
             </div>
         </div>
-        <h1>{{ model.paymentType }}</h1>
         {% if model.paymentType == "PurchaseOrder" %}
         {% include "modules/checkout/billing-purchase-order-form" with model=model.purchaseorder %}
         <div class="mz-l-stack-section">
