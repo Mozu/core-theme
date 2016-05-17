@@ -37,6 +37,7 @@ Ext.define('Taco.view.category.Index', {
 
     initComponent: function () {
         var me = this;
+
         this.createButtonConfig = {
             xtype: 'button',
             text: me.createButtonText,
@@ -196,6 +197,7 @@ Ext.define('Taco.view.category.Index', {
                 menuColumnHandler: function (item, eventData) {
                     var record = eventData.record;
                     Ext.defer(function () {
+                        me.addRecordToBrowserHistory(record);
                         Taco.core.StateManager.attemptNavigate('categories/edit/' + record.getId(), { complexMetaData: { record: record } });
                     }, 1, this);
 
@@ -256,6 +258,38 @@ Ext.define('Taco.view.category.Index', {
         };
 
         me.callParent(arguments);
+
+        me.selectCurrentPath();
+    },
+
+    selectCurrentPath: function() {
+
+        var me = this;
+        var currentState = Taco.app.StateManager.getCurrentState().getMetaData().args;
+        var id = null;
+
+        var doSelect = function() {
+            var node = this.getNodeById(id);
+
+            if (node && node.getPath) {
+                me.selectPath(node.getPath());
+            }
+        };
+        
+        if (currentState && currentState[0] && currentState[0].view) {
+            id = currentState[0].view;
+        }
+
+        if (id) {
+            if (this.store.loading) {
+                this.store.on('load', doSelect);
+            }
+
+            else {
+                doSelect();
+            }
+        }
+
     },
 
     parseCategoryType: function(value) {
@@ -273,10 +307,25 @@ Ext.define('Taco.view.category.Index', {
 
     },
 
+    addRecordToBrowserHistory: function(record) {
+        console.log('rec', record);
+        var URIStem = '/categories?view=';
+        var id = record.get('id');
+
+        if (!id) {
+            return false;
+        }
+
+        Taco.core.StateManager.addState(URIStem + id);
+    },
+
     onCellClick: function (view, td, cellIndex, record, tr, rowIndex, e, eOpts) {
+
+
         if (this.getSelectionText()) {  // inherited from the launchEditor mixin;
             return;                     // if the user has highlighted text, do not launch editor
         }
+
         var target= Ext.fly(e.getTarget()),
             metaData = { id: record.getId() },
             header = view.getHeaderAtIndex(cellIndex);
@@ -286,6 +335,8 @@ Ext.define('Taco.view.category.Index', {
 
         if ((header.dataIndex || header.allowNavigation === true) && header.allowNavigation !== false && this.allowNavigation !== false) {
             e.preventDefault();
+
+            this.addRecordToBrowserHistory(record);
 
             this.launchEditor(record, metaData);
         }
