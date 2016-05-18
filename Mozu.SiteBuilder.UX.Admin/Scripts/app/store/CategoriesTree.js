@@ -9,12 +9,12 @@ Ext.define('Taco.store.CategoriesTree', {
     requires: ['Taco.model.Category'],
     remoteFilter: true,
     batchUpdateMode: "operation",
-    defaultRootId: -1,
-    nodeParam: 'nodeQuery',
+    defaultRootId: null,
+    nodeParam: 'id',
     root: {
         expanded: true,
         isLoaded: false,
-        id: -1
+        id: null
     },
     nodeSorter: function(a, b) {
         return (a.get('sequence') !== null ? a.get('sequence') : 9999) - (b.get('sequence') !== null ? b.get('sequence') : 9999);
