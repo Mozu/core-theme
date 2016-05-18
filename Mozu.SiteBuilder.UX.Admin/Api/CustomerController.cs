@@ -7,12 +7,14 @@ using System.Net.Http;
 using System.Threading.Tasks;
 using System.Web.Http;
 using AutoMapper;
+using MongoDB.Driver;
 using Mozu.Core.Api.Contracts.Client;
 using Mozu.Core.Api.Routing;
 using Mozu.Customer.Contracts.Clients;
 using Mozu.Customer.Contracts.Credit;
 using Mozu.SiteBuilder.Mvc.Extensions;
 using Mozu.SiteBuilder.UX.Admin.Api.Models;
+using Mozu.SiteBuilder.UX.Admin.Api.Models.Account;
 using Mozu.SiteBuilder.UX.Admin.Helpers.CustomerHelpers;
 using ApiCustomer = Mozu.SiteBuilder.UX.Admin.Api.Models.Customer;
 using Credit = Mozu.SiteBuilder.UX.Admin.Api.Models.Credit;
@@ -416,6 +418,66 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
 
             return Task.WhenAll(attributeTasks);
         }
+
+        [HttpGetRoute(UriTemplate = "purchaseOrder/get")]
+        public async Task<Response<CustomerPurchaseOrderAccount>> GetPurchaseOrder([FromUri] int? customerId)
+        {
+            if (!customerId.HasValue)
+            {
+                throw new ArgumentException("No customerId provided.");
+            }
+
+            var result = (await _customerWebApiClient.GetCustomerPurchaseOrderAccount(customerId.Value)).ReadAsSync();
+
+            var results = result.Map<CustomerPurchaseOrderAccount>();
+
+            return Single2(results);
+        }
+
+        [HttpPostRoute(UriTemplate = "purchaseOrder/edit")]
+        public async Task<Response<CustomerPurchaseOrderAccount>> EditCustomerPurchaseOrder(CustomerPurchaseOrderAccount customerPurchaseOrderAccount)
+        {
+            var results = customerPurchaseOrderAccount;
+            var dcExistingCustomer = (await _customerWebApiClient.GetAccount(customerPurchaseOrderAccount.AccountId)).ReadAsSync();
+            if (dcExistingCustomer.IsActive)
+            {
+                var dcCustomerPurchaseOrderAccount = customerPurchaseOrderAccount.Map<DC.CustomerPurchaseOrderAccount>();
+                var result =
+                    _customerWebApiClient.UpdateCustomerPurchaseOrderAccount(customerPurchaseOrderAccount.AccountId,
+                        dcCustomerPurchaseOrderAccount);
+                results = result.Map<CustomerPurchaseOrderAccount>();
+            }
+            else
+            {
+                throw new ArgumentException("Customer is disabled");
+            }
+
+            return Single2(results);
+        }
+
+        [HttpPostRoute(UriTemplate = "purchaseOrder/create")]
+        public async Task<Response<CustomerPurchaseOrderAccount>> CreateCustomerPurchaseOrder(
+            CustomerPurchaseOrderAccount customerPurchaseOrderAccount)
+        {
+            var results = customerPurchaseOrderAccount;
+            var dcExistingCustomer = (await _customerWebApiClient.GetAccount(customerPurchaseOrderAccount.AccountId)).ReadAsSync();
+            if (dcExistingCustomer.IsActive)
+            {
+                var dcCustomerPurchaseOrderAccount = customerPurchaseOrderAccount.Map<DC.CustomerPurchaseOrderAccount>();
+                var result =
+                    _customerWebApiClient.CreateCustomerPurchaseOrderAccount(customerPurchaseOrderAccount.AccountId,
+                        dcCustomerPurchaseOrderAccount);
+                results = result.Map<CustomerPurchaseOrderAccount>();
+            }
+            else
+            {
+                throw new ArgumentException("Customer is disabled");
+            }
+            return Single2(results);
+        }
+
+        /*[HttpGetRoute(UriTemplate = "purchaseOrder/transaction/list")]
+        public async  Task<Response<List<PurchaseOrderTransaction>>>*/
 
         [HttpGetRoute(UriTemplate = "cards/list")]
         public async Task<Response<List<DC.Card>>> GetCards([FromUri]int? customerId = null)

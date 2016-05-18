@@ -112,7 +112,6 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.ModelMapping
                 .ForMember(dc => dc.Id, op => op.ResolveUsing(x => x.Id))
                 .ForMember(dc => dc.OverdraftType, op => op.ResolveUsing(x => x.OverdraftType))
                 .ForMember(dc => dc.OverdraftValue, op => op.ResolveUsing(x => x.OverdraftValue))
-                // TODO Remove this!
                 .ForMember(dc => dc.AuditInfo, op => op.Ignore())
                 ;
             
@@ -125,6 +124,12 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.ModelMapping
                 .ForMember(dc => dc.Description, op => op.ResolveUsing(x => x.Description))
                 .ForMember(dc => dc.SiteId, op => op.ResolveUsing(x => x.SiteId))
                 .ForMember(dc => dc.Id, op => op.ResolveUsing(x => x.Id))
+                ;
+
+            Mapper.CreateMap<DC.PurchaseOrderTransaction, CustomerPurchaseOrderTransaction>()
+                ;
+            Mapper.CreateMap<CustomerPurchaseOrderTransaction, DC.PurchaseOrderTransaction>()
+                .ForMember(dc => dc.AuditInfo, opt => opt.Ignore())
                 ;
 
             Mapper.CreateMap<Mozu.SiteBuilder.UX.Admin.Api.Models.CustomerSegment, DC.CustomerSegment>()
