@@ -5,7 +5,7 @@ Ext.define('Taco.view.category.Index', {
     extend: 'Taco.core.ux.browser.SearchListTree',
     requires: [
         'Taco.core.ux.TreeList',
-     
+        'Taco.view.category.AdvancedSearchForm',
         'Taco.store.CategoriesTree'
     ],
 
@@ -15,6 +15,11 @@ Ext.define('Taco.view.category.Index', {
     contextConfig: {
         supportedLevels: ['c'],
         requiresContextOfType: [ 'c', 's']
+    },
+
+    advancedSearchConfig: {
+        advancedFormCls: 'Taco.view.category.AdvancedSearchForm',
+        emptySearchText: 'Search'
     },
 
     enableNavHeader: true,
@@ -27,7 +32,7 @@ Ext.define('Taco.view.category.Index', {
 
     saveButtonEnabled: false,
 
-    enableSearchBarInHeader: false,
+    enableSearchBarInHeader: true,
 
     enablePaging: false,
 
@@ -86,6 +91,22 @@ Ext.define('Taco.view.category.Index', {
         };
 
         me.store = Taco.core.data.StoreManager.getCategoryTreeByCatalog();
+
+        // if were filter categories, turn off drag and drop because
+        // that would be crazy, amirite?
+        me.store.on('datachanged', function(store) {
+            if (store.lastOperation.request) {
+                var search = store.lastOperation.request.params.advancedSearch;
+
+                if (search && search.length > 2) {
+                    me.down('draghandlecolumn').hide();
+                }
+
+                else {
+                    me.down('draghandlecolumn').show();
+                }
+            }
+        })
 
         me.viewConfig = Ext.apply(me.viewConfig, {
             animate: false,
@@ -307,7 +328,7 @@ Ext.define('Taco.view.category.Index', {
     },
 
     addRecordToBrowserHistory: function(record) {
-        console.log('rec', record);
+
         var URIStem = '/categories?view=';
         var id = record.get('id');
 

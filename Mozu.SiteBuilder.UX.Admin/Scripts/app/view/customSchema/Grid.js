@@ -290,47 +290,69 @@ Ext.define('Taco.view.customSchema.Grid', {
 
         columns.push({
             xtype: 'taco.menucolumn',
-            menuItems: [{
-                text: 'Edit',
-                hideOnClick: false,
-                menuColumnHandler: function(item, eventData) {
-                    if (split) {
-                        split.onItemEdit(eventData.grid, eventData.record, eventData.grid.listMetaData);
+            onMenuShow: function(cmp, item) {
+                var isPublishable = item.record.get('publishState') === 'draft';
+                cmp.down('#publish-handler')[isPublishable ? 'enable' : 'disable']();
+            },
+            menuItems: [
+                {
+                    text: 'Edit',
+                    hideOnClick: false,
+                    menuColumnHandler: function(item, eventData) {
+                        if (split) {
+                            split.onItemEdit(eventData.grid, eventData.record, eventData.grid.listMetaData);
+                        }
+
+                        else if (eventData.grid.siteBuilderList) {
+
+                            eventData.record.reload({
+                                success: function() {
+                                    me.record = eventData.record;
+                                    me.saveButton.show();
+                                    me.viewContainer.removeAll();
+                                    me.grid = null;
+                                    me.form = Ext.create('Taco.view.customSchema.DynamicFormContainer', {
+                                        record: eventData.record,
+                                        ui: 'subform-section',
+                                        defaults: {
+                                            margin: '10 10 10 10',
+                                        },
+                                        bubbleEvents: ['savesuccess', 'saveSuccess', 'savefailure'],
+                                        editor: me.editors.findEditor(eventData.record)
+                                    });
+                                    me.viewContainer.add(me.form);
+                                }
+                            });
+                        }
+
+                        else {
+                            me.navigateToEdit(eventData.record);
+                        }
                     }
+                },
+                {
+                    text: 'Delete',
+                    hideOnClick: false,
+                    menuColumnHandler: function(item, eventData) {
+                        me.deleteRecordFromStore(eventData.record);
+                    }
+                },
+                {
+                    text: 'Publish',
+                    hideOnClick: false,
+                    itemId: 'publish-handler',
+                    menuColumnHandler: function(item, eventData) {
+                        var record = eventData.record;
 
-                    else if (eventData.grid.siteBuilderList) {
-
-                        eventData.record.reload({
+                        record.publish({
                             success: function() {
-                                me.record = eventData.record;
-                                me.saveButton.show();
-                                me.viewContainer.removeAll();
-                                me.grid = null;
-                                me.form = Ext.create('Taco.view.customSchema.DynamicFormContainer', {
-                                    record: eventData.record,
-                                    ui: 'subform-section',
-                                    defaults: {
-                                        margin: '10 10 10 10',
-                                    },
-                                    bubbleEvents: ['savesuccess', 'saveSuccess', 'savefailure'],
-                                    editor: me.editors.findEditor(eventData.record)
-                                });
-                                me.viewContainer.add(me.form);
+                                 Taco.app.fireEvent('setmessage', 'Published', 'success');
+                                 eventData.grid.store.reload();
                             }
                         });
                     }
-
-                    else {
-                        me.navigateToEdit(eventData.record);
-                    }
                 }
-            }, {
-                text: 'Delete',
-                hideOnClick: false,
-                menuColumnHandler: function(item, eventData) {
-                    me.deleteRecordFromStore(eventData.record);
-                }
-            }]
+            ]
         });
 
         if (Ext.util.Cookies.get('debugext') === 'true') {

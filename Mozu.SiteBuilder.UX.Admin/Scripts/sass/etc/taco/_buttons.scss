@@ -18,6 +18,52 @@
         }
     }
 
+    .#{$vprefix}more-action-button.#{$vprefix}general-more-action {
+        background-color: transparent;
+        border: none;
+        padding: 3px 0px;
+        margin: 5px 0px;
+        @include icon-font($glyph-more-vert, 16px, $glyph-icon-color-inactive);
+
+        &::after {
+            border: 1px solid transparent;
+            @include border-radius(3px);
+            background-color: transparent;
+            padding: 0px 2px;
+        }
+
+        .#{$prefix}btn-icon-el {
+            color: $glyph-icon-color-inactive;
+        }
+
+        &:hover {
+             .#{$prefix}btn-icon-el {
+                color: black;
+             }
+        }
+
+        .#{$prefix}btn-arrow {
+            padding: 0px;
+
+            &::after {
+                display: none;
+            }
+            
+        }
+
+        &.#{$prefix}btn-menu-active {
+            background-color: transparent;
+
+            &::after {
+                border: 1px solid $glyph-icon-color-inactive;
+                background-color: $more-menu-active-background;
+                box-shadow: rgba(0,0,0,0.09) 0 0 0 1px inset;
+                color: $glyph-icon-color;
+            }
+
+        }
+    }
+
     // Primary Action Button
 
     a.#{$prefix}btn-action-primary-medium,
