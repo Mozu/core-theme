@@ -3,24 +3,14 @@
  */
 Ext.define('Taco.view.order.modal.AddPurchaseOrder', {
     extend: 'Taco.core.ux.window.Modal',
-    requires: [
-        'Taco.core.ux.form.DateTime',
-        'Taco.core.ux.form.CurrencyField',
-        'Taco.shared.view.form.Address',
-        'Taco.core.ux.form.TextField',
-        'Taco.view.order.widget.ReusePaymentPickerField'
-    ],
 
+    autoShow: true,
     scale: 'large',
     title: 'Create Purchase Order',
-    models: ['Taco.model.CheckoutSettings'],
-
-    layout: 'anchor',
-    isLoading: false,
 
     primaryText: 'Done',
 
-    initComponent: function () {
+    initComponent: function (eOpts) {
 
         var me = this,
             balance = me.getBalance(7099),
@@ -29,6 +19,8 @@ Ext.define('Taco.view.order.modal.AddPurchaseOrder', {
                     ? me.getTerms(me.record.checkoutSettings.get('purchaseOrder').paymentTerms)
                     : me.getTerms(['No terms specified']),
             fields = me.getFields(me.record.checkoutSettings.get('purchaseOrder').customFields);
+
+        var formItems = this.getPaymentForm();
 
         me.form = Ext.create('Ext.form.Panel', {
             items: [
@@ -82,6 +74,114 @@ Ext.define('Taco.view.order.modal.AddPurchaseOrder', {
         me.items = [me.form];
 
         this.callParent(arguments);
+    },
+
+    getPaymentForm: function () {
+        var me = this;
+
+        this.pullOrderPaymentData(this.record);
+
+        this.pullCustomerPaymentData(this.record.customer);
+
+        this.paymentContainer = Ext.create('Ext.container.Container', {
+            anchor: 0,
+            width: '100%',
+            items: [],
+            scope: this
+        }, this);
+
+        return this.paymentContainer;
+    },
+
+    pullOrderPaymentData: function (order) {
+        this.currentPayments = order.payments().queryBy(function (payment) {
+            return payment.get('paymentType') === 'PurchaseOrder';
+        });
+
+        if (this.currentPayments && !this.currentPayments.getCount()) {
+            this.retrieveParentPaymentData();
+        }
+
+        this.currentPayments = this.currentPayments.getRange().map(function (payment) { return payment.data; });
+    },
+
+    retrieveParentPaymentData: function () {
+        if (this.record.get('parentOrderId') && this.record.get('parentOrderId').length > 0) {
+            this.isLoading = true;
+            this.retrieveOrderPaymentDataAjax(this.record.get('parentOrderId'));
+        } else if (this.record.get('parentReturnId') && this.record.get('parentReturnId').length > 0) {
+            this.isLoading = true;
+
+            var me = this;
+
+            Ext.Ajax.request({
+                url: '/admin/app/return/list',
+                params: {
+                    id: me.record.get('parentReturnId')
+                },
+                method: 'GET',
+                success: function (returnResponse) {
+                    var returnList = JSON.parse(returnResponse.responseText).items;
+                    if (returnList && returnList.length > 0) {
+                        var parentOrderId = returnList[0].originalOrderId;
+                        me.retrieveOrderPaymentDataAjax(parentOrderId);
+                    }
+                }
+            });
+        }
+    },
+
+    retrieveOrderPaymentDataAjax: function (orderId) {
+        var me = this;
+
+        Ext.Ajax.request({
+            url: '/admin/app/order/list',
+            params: {
+                id: orderId
+            },
+            method: 'GET',
+            success: function (orderResponse) {
+                var orderList = JSON.parse(orderResponse.responseText).items;
+
+                me.currentPayments = me.currentPayments || [];
+
+                if (orderList && orderList.length > 0) {
+                    var paymentList = orderList[0].payments;
+                    if (paymentList) {
+                        for (var i = 0; i < paymentList.length; ++i) {
+                            if (paymentList[i].paymentType.toLowerCase() === 'purchaseorder') {
+                                me.currentPayments.push(paymentList[i]);
+                            }
+                        }
+                    }
+                }
+
+                me.currentPayments = me.filterAndClearArrayDuplicates(me.currentPayments, false);
+                me.setDisplayedItems();
+                me.setModalLoading(false);
+            }
+        });
+    },
+
+    pullCustomerPaymentData: function (customer) {
+        if (customer.get('isAnonymous') || customer.raw.paymentCards.length <= 0) {
+            return;
+        }
+
+        var curSavedPayments = customer.raw.paymentCards;
+        var contactList = customer.get('contacts');
+        for (var i in curSavedPayments) {
+            curSavedPayments[i].cardNumber = curSavedPayments[i].cardNumberPart;
+            curSavedPayments[i].isDefault = customer.raw.paymentCards[i].isDefaultPayMethod;
+
+            var foundItem = contactList.find(function (element) {
+                return (element.id === curSavedPayments[i].contactId);
+            });
+
+            curSavedPayments[i].billingContact = foundItem;
+        }
+
+        this.savedPayments = this.filterAndClearArrayDuplicates(curSavedPayments, true);
     },
 
     getBalance: function (balance) {
@@ -231,31 +331,87 @@ Ext.define('Taco.view.order.modal.AddPurchaseOrder', {
         return extraFields;
     },
 
+    getPaymentPayload: function () {
+        var me = this;
+        var order = this.record;
+
+        var billingInfo = null;
+        var contactInfo = null;
+        var amount = order.get('total');
+        var curPayment = null;
+        var paymentServiceCardId = null;
+
+        billingInfo = {
+            paymentWorkflow: 'Mozu',
+            billingContact: {
+                email: 'pBilling@test.com',
+                firstName: 'PF1',
+                lastNameOrSurname: 'PL1',
+                phoneNumbers: {
+                    home: '5128598745'
+                },
+                address: {
+                    address1: 'Addr1',
+                    cityOrTown: 'Austin',
+                    stateOrProvince: 'TX',
+                    postalOrZipCode: '78758',
+                    countryCode: 'US',
+                    addressType: 'Residential'
+                }
+            },
+            purchaseOrderPayment: {
+                customerPurchaseOrderAccountId: '11111111',
+                purchaseOrderNumber: 'P#22222222',
+                paymentTerm: {
+                    code: '30-day',
+                    description: '30 days'
+                },
+                customFields: [
+                    {
+                        code: 'Dep',
+                        label: 'Department code:',
+                        value: 'Marketing'
+                    }
+                ]
+            }
+        };
+
+        contactInfo = {};
+
+        return {
+            actionName: 'CreatePayment',
+            currencyCode: 'USD',
+            amount: amount,
+            billingInfo: billingInfo,
+            orderId: order.getId()
+        };
+    },
+
     doSave: function () {
-        var me = this,
-            data = this.form.getValues();
+        var me = this;
+        this.setLoading(true, this.body);
 
-        data.orderId = this.record.getId();
+        var order = this.record;
+        var payloadData = this.getPaymentPayload();
 
-        me.setLoading({
-            msg: "Saving"
-        }, me.body);
-
-        this.record.addPurchaseOrder({
-            jsonData: data,
+        order.addPayment({
+            jsonData: payloadData,
             success: function (response) {
                 me.setLoading(false, me.body);
-                var json = Ext.decode(response.responseText, true),
-                    data;
+                var json = Ext.decode(response.responseText, true);
+                if (!json || !json.success) {
+                    return;
+                }
 
-                if (!json) { return }
-
-                data = json.items;
-                me.record.reload();
-                me.saveSuccess(data);
+                order.reload();
+                me.saveSuccess(json);
             },
-            failure: function () {
+            failure: function (response) {
                 me.setLoading(false, me.body);
+                order.reload();
+
+                // close the dialog
+                me.close();
             }
         });
     }
