@@ -7,14 +7,10 @@
 Ext.define('Taco.view.generalSettings.Index', {
     extend: 'Taco.view.react.Index',
 
-    formCls: 'Taco.view.generalsettings.Form',
     contextConfig: {
         supportedLevels: ['s'],
         requiresContextOfType: ['s']
     },
-
-    enableSearchBarInHeader: false,
-
 
     initComponent: function () {
 
