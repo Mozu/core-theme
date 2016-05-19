@@ -1,4 +1,4 @@
-Ext.define('Taco.view.report.Index', {
+/*Ext.define('Taco.view.report.Index', {
     extend: 'Ext.panel.Panel',
     mixins: {
         navHeader: 'Taco.core.ux.mixins.NavHeader',
@@ -157,3 +157,4 @@ Ext.define('Taco.view.report.Index', {
         return ctxSwitcher;
     }
 })
+*/
