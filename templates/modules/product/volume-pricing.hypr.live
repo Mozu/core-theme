@@ -1,0 +1,26 @@
+﻿<div class="mz-checkout-digitalcredit-table">
+<table class="mz-table">
+  <thead>
+    <tr>
+      <th class="mz-checkout-digitalcredit-header-balance">{{ labels.volumePriceQuantity }}</th>
+      <th class="mz-checkout-digitalcredit-header-balance">{{ labels.volumePriceUnitPrice }}</th>
+    </tr>
+  </thead>
+  <tbody>
+    {% for priceBand in model.volumePriceBands %}
+    <tr class="mz-checkout-digitalcredit-row">
+      <td class="mz-checkout-digitalcredit-cell-balance">
+      {% if priceBand.maxQty %}
+        {{ labels.volumePriceMinMaxQty|string_format(priceBand.minQty,priceBand.maxQty) }}
+      {% else %}
+        {{ labels.volumePriceMinOnlyQty|string_format(priceBand.minQty) }}
+      {% endif %}
+      </td>
+      <td class="mz-checkout-digitalcredit-cell-balance">
+        {% include "modules/common/price" with model=priceBand.price %}
+      </td>
+    </tr>
+    {% endfor %}
+  </tbody>
+</table>
+</div>

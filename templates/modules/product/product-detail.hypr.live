@@ -14,7 +14,10 @@
     
 <div itemprop="offers" itemscope itemtype="http://schema.org/Offer" class="mz-productdetail-price mz-l-stack-section">
   <h4 class="mz-l-stack-sectiontitle">{{ labels.price }}</h4>
-{% include "modules/product/price-stack" %}
+    {% include "modules/product/price-stack" %}
+    {% if model.volumePriceBands and model.volumePriceBands.length > 0 %}
+      {% include "modules/product/volume-pricing" %}
+    {% endif %}
 </div>
 
 <dl class="mz-productcodes mz-propertylist mz-pagetitle-note mz-l-stack-section">

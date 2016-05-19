@@ -388,5 +388,11 @@
 
     "dealOfTheDay"     : "Angebot des Tages",
     "exclusivePricelist": "Die folgenden Produkte sind nicht zum Kauf zur Verfügung und wurden entfernt.",
-    "newPriceList": "Sie sind nun berechtigt, für spezielle Preise."
+    "newPriceList": "Sie sind nun berechtigt, für spezielle Preise.",
+
+    "volumePriceQuantity": "Menge",
+    "volumePriceUnitPrice": "Einzelpreis",
+    "volumePriceSavings": "Ersparnisse",
+    "volumePriceMinMaxQty": "{0} - {1}",
+    "volumePriceMinOnlyQty": "{0}+"
 }
