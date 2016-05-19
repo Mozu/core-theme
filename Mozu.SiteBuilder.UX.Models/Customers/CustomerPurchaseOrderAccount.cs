@@ -27,6 +27,8 @@ namespace Mozu.SiteBuilder.UX.Models.Customers
 
     public class PurchaseOrderPaymentTerm
     {
+        [DataMember(Name = "code")]
+        public string Code { get; set; }
         [DataMember(Name = "Description")]
         public string Description { get; set; }
         [DataMember(Name = "id")]

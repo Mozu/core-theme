@@ -58,6 +58,8 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.ModelMapping
                 ;
             Mapper.CreateMap<UX.Models.Customers.CustomerPurchaseOrderAccount, PurchaseOrder>()
                 .ForMember(dc => dc.CustomerPurchaseOrderPaymentTerms, opt => opt.ResolveUsing(x => x.PaymentTerms))
+                .ForMember(dc => dc.OverdraftAllowance, opt => opt.Ignore())
+                .ForMember(dc => dc.OverdraftAllowanceType, opt => opt.Ignore())
                 .ForMember(dc => dc.AuditInfo, opt => opt.Ignore())
                 ;
 

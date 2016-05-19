@@ -111,7 +111,7 @@ NUGET
       Mozu.Core.Prime (>= 1.19)
     Mozu.Core.Messaging.Contracts (1.19.2)
       Mozu.Core.Prime (>= 1.18)
-    Mozu.Core.Prime (1.1613.4-f1605171629purchas)
+    Mozu.Core.Prime (1.1617.5)
       Autofac (>= 3.5.2)
       Autofac.WebApi2 (>= 3.4)
       AutoMapper (>= 3.3)
@@ -133,7 +133,7 @@ NUGET
       NSubstitute (>= 1.8.1)
       NUnit (>= 2.6.4)
       Should (>= 1.1.20)
-    Mozu.Customer.Contracts (1.1613.1-dev1605131805fea)
+    Mozu.Customer.Contracts (1.1613.1-dev1605181439fea)
       Mozu.Core.Extensible.Contracts
     Mozu.DeployWeb (2.0.4)
       OctoPack (>= 2.1.3)
