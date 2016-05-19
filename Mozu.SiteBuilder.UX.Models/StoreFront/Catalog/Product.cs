@@ -867,6 +867,26 @@ namespace Mozu.SiteBuilder.UX.Models.StoreFront.Catalog
             get { return this.SalePrice.HasValue && this.Price.HasValue && this.SalePrice.Value != this.Price.Value; }
         }
     }
+
+    public class ProductVolumePrice : Mozu.ProductRuntime.Contracts.ProductVolumePrice
+    {
+
+        [DataMember]
+        public virtual new ProductPriceRange PriceRange
+        {
+            get; set;
+        }
+
+
+        [DataMember]
+        public virtual new ProductPrice Price
+        {
+            get; set;
+        }
+
+    }
+
+
 }
 
 
