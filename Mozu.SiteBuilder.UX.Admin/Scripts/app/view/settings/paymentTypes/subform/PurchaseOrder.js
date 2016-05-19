@@ -105,8 +105,10 @@ Ext.define('Taco.view.settings.paymentTypes.subform.PurchaseOrder', {
             model: 'Taco.model.PurchaseOrderPaymentTerms'
         });
 
-        for (var i = 0; i < paymentTerms.length; ++i) {
-            this.paymentTermsStore.add(Ext.create('Taco.model.PurchaseOrderPaymentTerms', paymentTerms[i]));
+        if (paymentTerms && paymentTerms.length > 0) {
+            for (var i = 0; i < paymentTerms.length; ++i) {
+                this.paymentTermsStore.add(Ext.create('Taco.model.PurchaseOrderPaymentTerms', paymentTerms[i]));
+            }
         }
 
         this.paymentTermsGrid = {
@@ -254,10 +256,12 @@ Ext.define('Taco.view.settings.paymentTypes.subform.PurchaseOrder', {
             model: 'Taco.model.PurchaseOrderCustomField'
         });
 
-        for (var i = 0; i < customFields.length; ++i) {
-            this.customFieldsStore.add(Ext.create('Taco.model.PurchaseOrderCustomField', customFields[i]));
+        if (customFields && customFields.length > 0) {
+            for (var i = 0; i < customFields.length; ++i) {
+                this.customFieldsStore.add(Ext.create('Taco.model.PurchaseOrderCustomField', customFields[i]));
+            }
         }
-        
+
         this.customFieldTextAdd = Ext.create('Ext.form.FieldContainer', {
             layout: {
                 type: 'hbox'
