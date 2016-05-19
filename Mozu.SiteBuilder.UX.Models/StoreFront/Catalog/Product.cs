@@ -64,6 +64,11 @@ namespace Mozu.SiteBuilder.UX.Models.StoreFront.Catalog
         [DataMember(EmitDefaultValue = false)]
         public new ProductPriceRange PriceRange { get; set; }
 
+
+        [DataMember(EmitDefaultValue = false)]
+        public new List<ProductVolumePrice> VolumePriceBands { get; set; }
+
+
         [DataMember(EmitDefaultValue = false)]
         public bool SupportsInStorePickup
         {
@@ -862,6 +867,7 @@ namespace Mozu.SiteBuilder.UX.Models.StoreFront.Catalog
     [DataContract()]
     public class ProductPrice : Mozu.ProductRuntime.Contracts.ProductPrice
     {
+        [DataMember]
         public bool OnSale
         {
             get { return this.SalePrice.HasValue && this.Price.HasValue && this.SalePrice.Value != this.Price.Value; }
@@ -872,17 +878,17 @@ namespace Mozu.SiteBuilder.UX.Models.StoreFront.Catalog
     {
 
         [DataMember]
-        public virtual new ProductPriceRange PriceRange
-        {
-            get; set;
-        }
-
+        public virtual new ProductPriceRange PriceRange { get; set; }
 
         [DataMember]
-        public virtual new ProductPrice Price
-        {
-            get; set;
-        }
+        public virtual new ProductPrice Price { get; set; }
+
+        //[DataMember]
+        public decimal? AmountSavings { get; set; }
+
+        //[DataMember]
+        //public decimal? PercentSavings { get; set; }
+
 
     }
 
