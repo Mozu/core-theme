@@ -33,6 +33,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.ModelMapping
             Map_DcAppliedProductDiscount_to_OrderItemDiscount();
             Map_DcShippingDiscount_to_ShippingDiscount();
             Map_DcPayment_to_OrderPayment();
+            Map_DcPurchaseOrderPayment_to_PurchaseOrderPayment();
             Map_DcPaymentInteraction_to_PaymentInteraction();
             Map_DcRefund_to_Refund();
             Map_DcPackage_to_OrderPackage();
@@ -912,6 +913,15 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.ModelMapping
                     // sort AvailableActions to put "Rollback" operations at the bottom.
                     payment.AvailableActions = payment.AvailableActions.OrderBy(a => a.StartsWith("Rollback")).ToList();
                 })
+                ;
+        }
+        private void Map_DcPurchaseOrderPayment_to_PurchaseOrderPayment()
+        {
+            Mapper.CreateMap<PaymentsDC.PurchaseOrderPayment, PurchaseOrderPayment>()
+                ;
+            Mapper.CreateMap<PaymentsDC.PurchaseOrderPaymentTerm, PurchaseOrderPaymentTerm>()
+                ;
+            Mapper.CreateMap<PaymentsDC.PurchaseOrderCustomField, PurchaseOrderCustomField>()
                 ;
         }
 

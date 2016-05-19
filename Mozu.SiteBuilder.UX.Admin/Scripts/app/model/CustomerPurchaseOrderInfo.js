@@ -36,10 +36,10 @@ Ext.define('Taco.model.CustomerPurchaseOrderInfo', {
             type: 'boolean',
             defaultValue: false
         }, {
-            name: 'overdraftType',
+            name: 'overdraftAllowance',
             type: 'string'
         }, {
-            name: 'overdraftType',
+            name: 'overdraftAllowanceType',
             type: 'auto'
         }
     ],
