@@ -581,14 +581,15 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
                         // if new value is closer to the bottom of the list, then some displaced items need to decrease in index.
                         if (change.Index > original.Index)
                         {
-                            siblings.Where(n => n.Index > original.Index && n.Index <= change.Index).ToList().ForEach(n => n.Index =  n.Index--);
+                            siblings.Where(n => n.Index > original.Index && n.Index <= change.Index).ToList().ForEach(n => n.Index--);
                         }
                             // if new value is closer to the top of the list, then some displaced items need to increase in index.
                         else if (change.Index < original.Index)
                         {
-                            siblings.Where(n => n.Index >= change.Index && n.Index < original.Index).ToList().ForEach(n => n.Index = n.Index++);
+                            siblings.Where(n => n.Index >= change.Index && n.Index < original.Index).ToList().ForEach(n => n.Index++);
                         }
-
+                        //validate that we dont have multiple items with the same index
+                       
                         // set the index
                         original.Index = change.Index;
                     }
@@ -608,15 +609,36 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
                             select n;
 
                         // any old siblings that came after this node need to move closer to the top.
-                        oldSiblings.Where(n => n.Index > original.Index).ToList().ForEach(n => n.Index = n.Index--);
+                        oldSiblings.Where(n => n.Index > original.Index).ToList().ForEach(n =>n.Index--);
 
                         // any new siblings that will be displaced by this node need to move closer to the bottom.
-                        newSiblings.Where(n => n.Index <= change.Index).ToList().ForEach(n => n.Index = n.Index++);
+                        newSiblings.Where(n => n.Index <= change.Index).ToList().ForEach(n =>  n.Index++);
 
                         // set the index and parent
                         original.Index = change.Index;
                         original.ParentId = change.ParentId;
                     }
+
+                    //validate the children all have unique indexes.
+                    foreach (var grounp in navSet.GroupBy(x => x.ParentId))
+                    {
+                        var orderedChildren = grounp.OrderBy(x => x.Index);
+                        var seen = new HashSet<int>();
+                        var offset = 0;
+                        foreach (var child in orderedChildren)
+                        {
+                            child.Index += offset;
+                            if (seen.Contains(child.Index))
+                            {
+                                child.Index += ++offset;
+                            }
+                            seen.Add(child.Index);
+                        }
+                    }
+                  
+                   
+
+
 
                     // finally, save the document.
                     return _navRepo.SaveSetAsync(navSet);
