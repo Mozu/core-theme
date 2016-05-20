@@ -45,6 +45,7 @@ Ext.define('Taco.view.order.modal.AddPurchaseOrder', {
                             allowBlank: false,
                             fieldLabel: 'Purchase Order #',
                             flex: 1,
+                            itemId: 'purchaseOrderNumber',
                             name: 'purchaseOrderNumber',
                             xtype: 'textfield'
                         },
@@ -74,6 +75,31 @@ Ext.define('Taco.view.order.modal.AddPurchaseOrder', {
         me.items = [me.form];
 
         this.callParent(arguments);
+    },
+
+    getAddress: function (billingAddress) {
+        return {
+            paymentWorkflow: 'Mozu',
+            billingContact: {
+                email: billingAddress.email,
+                firstName: billingAddress.firstName,
+                lastNameOrSurname: billingAddress.lastName,
+                phoneNumbers: {
+                    home: billingAddress.homePhone
+                },
+                address: {
+                    address1: billingAddress.address1,
+                    address2: billingAddress.address2,
+                    address3: billingAddress.address3,
+                    address4: billingAddress.address4,
+                    cityOrTown: billingAddress.cityOrTown,
+                    stateOrProvince: billingAddress.stateOrProvince,
+                    postalOrZipCode: billingAddress.postalOrZipCode,
+                    countryCode: billingAddress.countryCode,
+                    addressType: billingAddress.addressType
+                }
+            }
+        };
     },
 
     getPaymentForm: function () {
@@ -256,13 +282,25 @@ Ext.define('Taco.view.order.modal.AddPurchaseOrder', {
          */
         if (terms.length > 1) {
             terms.forEach(function (term) {
-                termsContent.push(term.description);
+                termsContent.push([term.description, term.code]);
+            });
+
+            return Ext.create('Ext.form.field.ComboBox', {
+                fieldLabel: 'Payment Terms',
+                allowBlank: false,
+                itemId: 'paymentTerms',
+                name: 'paymentTerms',
+                store: Ext.create('Ext.data.ArrayStore', {
+                    fields: ['text', 'value'],
+                    data: termsContent
+                })
             });
 
             return Ext.widget({
                 fieldLabel: 'Payment Terms',
                 flex: 1,
                 forceSelection: true,
+                itemId: 'paymentTerms',
                 name: 'paymentTerms',
                 store: termsContent,
                 xtype: 'selectfield'
@@ -301,6 +339,7 @@ Ext.define('Taco.view.order.modal.AddPurchaseOrder', {
                     allowBlank: !field.isRequired,
                     fieldLabel: field.label,
                     flex: 1,
+                    itemId: 'custom-field-' + field.code,
                     margin: fieldMargin,
                     name: field.code,
                     xtype: 'textfield'
@@ -331,54 +370,48 @@ Ext.define('Taco.view.order.modal.AddPurchaseOrder', {
         return extraFields;
     },
 
-    getPaymentPayload: function () {
+    getPaymentPayload: function (fields) {
         var me = this;
         var order = this.record;
 
-        var billingInfo = null;
+        var billingInfo = this.getAddress(this.record.get('billingContact'));
         var contactInfo = null;
         var amount = order.get('total');
         var curPayment = null;
         var paymentServiceCardId = null;
         var purchaseOrderInfo = null;
+        var purchaseOrderNumber = this.down('#purchaseOrderNumber').value;
+        var paymentTermsCode = this.down('#paymentTerms').valueModels[0].get('value');
+        var paymentTermsDescription = this.down('#paymentTerms').valueModels[0].get('text');
+        var customFields = [];
+        var fieldId = null;
+        var fieldData = null;
+        var fieldObj = null;
 
-        billingInfo = {
-            paymentWorkflow: 'Mozu',
-            billingContact: {
-                email: 'pBilling@test.com',
-                firstName: 'PF1',
-                lastNameOrSurname: 'PL1',
-                phoneNumbers: {
-                    home: '5128598745'
-                },
-                address: {
-                    address1: 'Addr1',
-                    cityOrTown: 'Austin',
-                    stateOrProvince: 'TX',
-                    postalOrZipCode: '78758',
-                    countryCode: 'US',
-                    addressType: 'Residential'
-                }
-            }
-        };
+        fields.forEach(function (field) {
+            fieldId = '#custom-field-' + field.code;
+            console.log(fieldId)
+            fieldData = me.down(fieldId);
+            fieldObj = {
+                code: field.code,
+                label: fieldData.fieldLabel,
+                value: fieldData.value
+            };
+            customFields.push(fieldObj);
+        });
 
         purchaseOrderInfo = {
             purchaseOrderPayment: {
-                customerPurchaseOrderAccountId: '11111111',
-                purchaseOrderNumber: 'P#22222222',
+                purchaseOrderNumber: purchaseOrderNumber,
                 paymentTerm: {
-                    code: '30-day',
-                    description: '30 days'
+                    code: paymentTermsCode,
+                    description: paymentTermsDescription
                 },
-                customFields: [
-                    {
-                        code: 'Dep',
-                        label: 'Department code:',
-                        value: 'Marketing'
-                    }
-                ]
+                customFields: customFields
             }
         };
+
+        console.log(purchaseOrderInfo)
 
         contactInfo = {};
 
@@ -398,7 +431,7 @@ Ext.define('Taco.view.order.modal.AddPurchaseOrder', {
         this.setLoading(true, this.body);
 
         var order = this.record;
-        var payloadData = this.getPaymentPayload();
+        var payloadData = this.getPaymentPayload(me.record.checkoutSettings.get('purchaseOrder').customFields);
 
         order.addPayment({
             jsonData: payloadData,
