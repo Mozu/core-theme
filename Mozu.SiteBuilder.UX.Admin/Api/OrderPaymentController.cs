@@ -188,8 +188,8 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
                         PurchaseOrderPayment = new DCp.PurchaseOrderPayment()
                         {
                             CustomerPurchaseOrderAccountId = args.PurchaseOrderInfo.CustomerPurchaseOrderAccountId,
-                            PaymentTerm = args.PurchaseOrderInfo.Map<DCp.PurchaseOrderPaymentTerm>(),
-                            CustomFields = args.PurchaseOrderInfo.Map<List<DCp.PurchaseOrderCustomField>>(),
+                            PaymentTerm = args.PurchaseOrderInfo.PaymentTerm.Map<DCp.PurchaseOrderPaymentTerm>(),
+                            CustomFields = args.PurchaseOrderInfo.CustomFields.Map<List<DCp.PurchaseOrderCustomField>>(),
                             PurchaseOrderNumber = args.PurchaseOrderInfo.PurchaseOrderNumber
                         },
                         IsSameBillingShippingAddress = args.BillingInfo.IsSameBillingShippingAddress,
