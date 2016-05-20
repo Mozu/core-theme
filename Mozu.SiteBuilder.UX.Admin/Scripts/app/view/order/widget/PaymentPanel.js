@@ -190,44 +190,75 @@ Ext.define('Taco.view.order.widget.PaymentPanel', {
         var buttonLeft = null,
             buttonRight = null;
 
-        if (me.record.get('paymentType') == 'PurchaseOrder' && me.record.data.status !== 'Authorized') {
-            buttonLeft = {
-                xtype: 'button',
-                ui: 'action',
-                scale: 'medium',
-                text: 'Authorize',
-                width: 77,
-                itemId: 'authorizeButton',
-                handler: function () {
-                    me.openPaymentActionModal('AuthorizePurchaseOrder');
-                }
-            };
-        } else if (me.record.data.status !== 'Authorized') {
-            buttonLeft = {
-                xtype: 'button',
-                ui: 'action',
-                scale: 'medium',
-                text: 'Capture',
-                width: 70,
-                itemId: 'captureButton',
-                handler: function () {
-                    me.openPaymentActionModal((me.record.get('paymentType') === 'Check') ? 'ApplyCheck' : 'CapturePayment');
-                },
-                disabled: !canCapture || pendingReview
-            };
-        } else if (me.record.data.status === 'Authorized') {
-            buttonLeft = {
-                xtype: 'button',
-                ui: 'action',
-                scale: 'medium',
-                text: 'Mark as Invoiced',
-                width: 115,
-                itemId: 'invoicedButton',
-                handler: function () {
-                    me.openPaymentActionModal((me.record.get('paymentType') === 'Check') ? 'ApplyCheck' : 'CapturePayment');
-                },
-                disabled: !canCapture || pendingReview
-            };
+        if (me.record.get('paymentType') == 'PurchaseOrder') {
+            if (me.record.data.status !== 'Authorized') {
+                buttonLeft = {
+                    xtype: 'button',
+                    ui: 'action',
+                    scale: 'medium',
+                    text: 'Authorize',
+                    width: 77,
+                    itemId: 'authorizeButton',
+                    handler: function () {
+                        me.openPaymentActionModal('AuthorizePurchaseOrder');
+                    }
+                };
+            } else if (me.record.data.status !== 'Authorized') {
+                buttonLeft = {
+                    xtype: 'button',
+                    ui: 'action',
+                    scale: 'medium',
+                    text: 'Capture',
+                    width: 70,
+                    itemId: 'captureButton',
+                    handler: function () {
+                        me.openPaymentActionModal((me.record.get('paymentType') === 'Check') ? 'ApplyCheck' : 'CapturePayment');
+                    },
+                    disabled: !canCapture || pendingReview
+                };
+            } else if (me.record.data.status === 'Authorized') {
+                buttonLeft = {
+                    xtype: 'button',
+                    ui: 'action',
+                    scale: 'medium',
+                    text: 'Mark as Invoiced',
+                    width: 115,
+                    itemId: 'invoicedButton',
+                    handler: function () {
+                        me.openPaymentActionModal((me.record.get('paymentType') === 'Check') ? 'ApplyCheck' : 'CapturePayment');
+                    },
+                    disabled: !canCapture || pendingReview
+                };
+                buttonRight = {
+                    xtype: 'button',
+                    ui: 'action',
+                    scale: 'medium',
+                    text: 'Capture',
+                    width: 70,
+                    itemId: 'captureButton',
+                    handler: function () {
+                        me.openPaymentActionModal((me.record.get('paymentType') === 'Check') ? 'ApplyCheck' : 'CapturePayment');
+                    },
+                    disabled: !canCapture || pendingReview
+                };
+            } else if (me.record.data.status === 'Invoiced') {
+                buttonLeft = {
+                    xtype: 'button',
+                    ui: 'action',
+                    scale: 'medium',
+                    text: 'Capture',
+                    width: 70,
+                    itemId: 'captureButton',
+                    handler: function () {
+                        me.openPaymentActionModal((me.record.get('paymentType') === 'Check') ? 'ApplyCheck' : 'CapturePayment');
+                    },
+                    disabled: !canCapture || pendingReview
+                };
+            } else if (me.record.data.status === 'Collected') {
+                buttonLeft = null;
+                buttonRight = null;
+            }
+        } else {
             buttonRight = {
                 xtype: 'button',
                 ui: 'action',
@@ -240,22 +271,6 @@ Ext.define('Taco.view.order.widget.PaymentPanel', {
                 },
                 disabled: !canCapture || pendingReview
             };
-        } else if (me.record.data.status === 'Invoiced') {
-            buttonLeft = {
-                xtype: 'button',
-                ui: 'action',
-                scale: 'medium',
-                text: 'Capture',
-                width: 70,
-                itemId: 'captureButton',
-                handler: function () {
-                    me.openPaymentActionModal((me.record.get('paymentType') === 'Check') ? 'ApplyCheck' : 'CapturePayment');
-                },
-                disabled: !canCapture || pendingReview
-            };
-        } else if (me.record.data.status === 'Collected') {
-            buttonLeft = null;
-            buttonRight = null;
         }
 
         if (me.record.data.status === 'Authorized') {
