@@ -176,6 +176,7 @@
     <Compile Include="Api\Models\Account\CustomerPurchaseOrderTransaction.cs" />
     <Compile Include="Api\Models\Account\CustomerPurchaseOrderAccount.cs" />
     <Compile Include="Api\Models\Order\PurchaseOrderPayment.cs" />
+    <Compile Include="Api\Models\Order\PurchaseOrderPaymentInformation.cs" />
     <Compile Include="Api\Models\PriceLists\PriceListEntryExtra.cs" />
     <Compile Include="Api\ReportGenerator.cs" />
     <Compile Include="Api\CouponCodeController.cs" />
@@ -323,7 +324,7 @@
     <Compile Include="Api\NavigationController.cs">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="Api\OrderCardPaymentController.cs" />
+    <Compile Include="Api\OrderPaymentController.cs" />
     <Compile Include="Api\OrderCheckPaymentController.cs" />
     <Compile Include="Api\OrderController.cs">
       <SubType>Code</SubType>
