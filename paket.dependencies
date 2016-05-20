@@ -13,7 +13,7 @@ nuget Microsoft.AspNet.WebPages 3.2.2
 nuget Microsoft.AspNet.Mvc 5.2.2 
 
 
-nuget Mozu.Core.Prime 1.1617.5
+nuget Mozu.Core.Prime 1.1613.4-f1605171629purchas
 nuget Mozu.ScheduledEvent.Contracts
 nuget Mozu.VS.PowerShell
 nuget OctoPack 2.1.3
@@ -30,12 +30,12 @@ nuget morelinq 1.0.16006
 nuget Mozu.AdminUser.Contracts < 1.20
 nuget Mozu.AppDev.Contracts < 1.20
 nuget Mozu.BuildSupport.GetAssemblyFileVersionTask 1.0.0 
-nuget Mozu.CommerceRuntime.Contracts prerelease
+nuget Mozu.CommerceRuntime.Contracts 1.1618.1-dev1605191659fea
 nuget mozu.Content.Contracts < 1.20 
 nuget Mozu.Core.Messaging < 1.20
 nuget Mozu.Core.Messaging.Contracts 1.19.2
 nuget Mozu.Core.Test < 1.20 
-nuget Mozu.Customer.Contracts prerelease 
+nuget Mozu.Customer.Contracts 1.1613.1-dev1605181439fea 
 nuget Mozu.DeployWeb
 nuget Mozu.Hypr.NDjango
 nuget Mozu.InstalledApps.Contracts < 1.20
@@ -47,6 +47,6 @@ nuget Mozu.Provisioning.Contracts < 1.20
 nuget Mozu.Reference.Contracts < 1.20
 nuget Mozu.ShippingAdmin.Contracts 1.1617.1
 nuget Mozu.SiteSettings.General.Contracts < 1.20   
-nuget Mozu.SiteSettings.Order.Contracts prerelease
+nuget Mozu.SiteSettings.Order.Contracts 1.1613.1-dev1605171728fea
 nuget protobuf-net 2.0.0.668 
 nuget FAKE
