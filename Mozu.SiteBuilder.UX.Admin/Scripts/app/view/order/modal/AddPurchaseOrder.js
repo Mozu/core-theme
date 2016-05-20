@@ -97,12 +97,6 @@ Ext.define('Taco.view.order.modal.AddPurchaseOrder', {
         this.currentPayments = order.payments().queryBy(function (payment) {
             return payment.get('paymentType') === 'PurchaseOrder';
         });
-
-        if (this.currentPayments && !this.currentPayments.getCount()) {
-            this.retrieveParentPaymentData();
-        }
-
-        this.currentPayments = this.currentPayments.getRange().map(function (payment) { return payment.data; });
     },
 
     retrieveParentPaymentData: function () {
@@ -239,6 +233,7 @@ Ext.define('Taco.view.order.modal.AddPurchaseOrder', {
     getTerms: function (terms) {
         var paymentTermsSelect = null,
             paymentTermsItem = terms[0],
+            termsContent = [],
             content = {
                 cls: 'taco-static-text',
                 children: [
@@ -247,7 +242,8 @@ Ext.define('Taco.view.order.modal.AddPurchaseOrder', {
                         tag: 'p'
                     },
                     {
-                        html: paymentTermsItem,
+                        html: paymentTermsItem.description,
+                        name: paymentTermsItem.code,
                         tag: 'p'
                     }
                 ],
@@ -259,12 +255,16 @@ Ext.define('Taco.view.order.modal.AddPurchaseOrder', {
          * Otherwise, show a select input with each option
          */
         if (terms.length > 1) {
+            terms.forEach(function (term) {
+                termsContent.push(term.description);
+            });
+
             return Ext.widget({
                 fieldLabel: 'Payment Terms',
                 flex: 1,
                 forceSelection: true,
                 name: 'paymentTerms',
-                store: terms,
+                store: termsContent,
                 xtype: 'selectfield'
             });
         }
@@ -340,6 +340,7 @@ Ext.define('Taco.view.order.modal.AddPurchaseOrder', {
         var amount = order.get('total');
         var curPayment = null;
         var paymentServiceCardId = null;
+        var purchaseOrderInfo = null;
 
         billingInfo = {
             paymentWorkflow: 'Mozu',
@@ -358,7 +359,10 @@ Ext.define('Taco.view.order.modal.AddPurchaseOrder', {
                     countryCode: 'US',
                     addressType: 'Residential'
                 }
-            },
+            }
+        };
+
+        purchaseOrderInfo = {
             purchaseOrderPayment: {
                 customerPurchaseOrderAccountId: '11111111',
                 purchaseOrderNumber: 'P#22222222',
@@ -382,7 +386,9 @@ Ext.define('Taco.view.order.modal.AddPurchaseOrder', {
             actionName: 'CreatePayment',
             currencyCode: 'USD',
             amount: amount,
+            paymentType: 'PurchaseOrder',
             billingInfo: billingInfo,
+            purchaseOrderInfo: purchaseOrderInfo,
             orderId: order.getId()
         };
     },
