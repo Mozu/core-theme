@@ -2,39 +2,39 @@
     /**
      * test data
      */
-    var theTerms = '60 days',
-        creditLimit = 10000,
-        availableBalance = 3000,
-        customFields = [
-            {
-                codeId: 'department-code',
-                isEnabled: true,
-                isRequired: false,
-                name: 'Department Code'
-            },
-            {
-                codeId: 'department-id',
-                isEnabled: true,
-                isRequired: true,
-                name: 'Department ID'
-            },
-            {
-                codeId: 'do-not-use',
-                isEnabled: false,
-                isRequired: true,
-                name: 'Do Not Use'
-            }
-        ],
-        paymentTerms = [
-            {
-                text: '30 Days',
-                value: 30
-            },
-            {
-                text: '60 Days',
-                value: 60
-            }
-        ];
+    var theTerms = '60 days';
+    var creditLimit = 10000;
+    var availableBalance = 3000;
+    var customFields = [
+        {
+            codeId: 'department-code',
+            isEnabled: true,
+            isRequired: false,
+            name: 'Department Code'
+        },
+        {
+            codeId: 'department-id',
+            isEnabled: true,
+            isRequired: true,
+            name: 'Department ID'
+        },
+        {
+            codeId: 'do-not-use',
+            isEnabled: false,
+            isRequired: true,
+            name: 'Do Not Use'
+        }
+    ];
+    var paymentTerms = [
+        {
+            text: '30 Days',
+            value: 30
+        },
+        {
+            text: '60 Days',
+            value: 60
+        }
+    ];
 </script>
 {% block purchase-order-form %}
     <div class="mz-l-formfieldgroup-row">
@@ -61,6 +61,7 @@
                     <label for="mz-payment-purchase-order-payment-terms">{{ labels.purchaseOrderPaymentTerms }}</label>
                 </div>
                 <div class="mz-l-formfieldgroup-cell">
+                    <h1>{{ theTerms }}</h1>
                     {% if paymentTerms.length > 1 %}
                         <select class="mz-l-formfieldgroup-halfsize" id="mz-payment-purchase-order-terms" name="payment-terms" data-mz-value="{{ purchaseordercontext }}terms">
                             <option></option>

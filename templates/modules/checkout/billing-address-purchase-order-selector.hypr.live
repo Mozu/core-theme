@@ -1,0 +1,17 @@
+{% if model.requiresFulfillmentInfo %}
+<div class="mz-l-formfieldgroup mz-l-formfieldgroup-norows">
+    <label>
+        <input type="checkbox" data-mz-value="isSameBillingShippingAddressPO" value="true" {% if model.isSameBillingShippingAddressPO %}checked="checked"{% endif %}>{{ labels.useShippingAddress }}
+    </label>
+</div>
+{% endif %}
+{% if model.isSameBillingShippingAddressPO %}
+    <div class="mz-addresssummary mz-same-as-shipping-summary" id="mz-same-as-shipping-summary">
+        {% include "modules/common/address-summary" with model=model.purchaseOrder.billingContact %}
+    </div>
+{% else %}
+<div class="mz-l-formfieldgroup mz-l-formfieldgroup-address">
+  {% include "modules/checkout/purchase-order-billing-address-form" with model=model.purchaseOrder.billingContact countries=pageContext.billingCountries states=pageContext.billingStates %}
+</div>
+{% endif %}
+<span class="mz-validationmessage" data-mz-validationmessage-for="{{ purchaseordercontext }}balance"></span>
