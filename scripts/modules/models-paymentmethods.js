@@ -22,6 +22,35 @@
         "6": "DISCOVER"
     };
 
+    var PurchaseOrder = PaymentMethod.extend({
+
+        isEnabled: false,
+        creditAmountApplied: null,
+        remainingBalance: null,
+        isTiedToCustomer: true,
+        addRemainderToCustomer: false,
+
+        initialize: function () {
+            this.set({ isEnabled: this.isEnabled });
+            this.set({ creditAmountApplied: this.creditAmountApplied });
+            this.set({ remainingBalance: this.remainingBalance });
+            this.set({ isTiedToCustomer: this.isTiedToCustomer });
+            this.set({ addRemainderToCustomer: this.addRemainderToCustomer });
+        },
+
+        helpers: ['calculateRemainingBalance'],
+
+        calculateRemainingBalance: function () {
+            return (! this.get('creditAmountApplied')) ? this.get('currentBalance') : this.get('currentBalance') - this.get('creditAmountApplied');
+        },
+
+        validate: function (attrs, options) {
+            if ( (attrs.creditAmountApplied) && (attrs.creditAmountApplied > attr.currentBalance) ) {
+                return 'Exceeds purchase order balance.';
+            }
+        }
+    });
+
     var CreditCard = PaymentMethod.extend({
         mozuType: 'creditcard',
         defaults: {
@@ -183,6 +212,7 @@
         CreditCard: CreditCard,
         CreditCardWithCVV: CreditCardWithCVV,
         Check: Check,
-        DigitalCredit: DigitalCredit
+        DigitalCredit: DigitalCredit,
+        PurchaseOrder: PurchaseOrder
     };
 });

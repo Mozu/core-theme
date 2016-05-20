@@ -870,11 +870,17 @@
                 }
                 me.get('check').selected = newPaymentType === 'Check';
                 me.get('card').selected = newPaymentType === 'CreditCard';
+                me.get('purchaseorder').selected = newPaymentType === 'PurchaseOrder';
             },
             setDefaultPaymentType: function(me) {
-                me.set('paymentType', 'CreditCard');
-                if (me.savedPaymentMethods() && me.savedPaymentMethods().length > 0) {
-                    me.set('usingSavedCard', true);
+                if (me.checkoutSettings.get('purchaseOrder').isEnabled) {
+                    me.set('paymentType', 'PurchaseOrder');
+                }
+                else {
+                    me.set('paymentType', 'CreditCard');
+                    if (me.savedPaymentMethods() && me.savedPaymentMethods().length > 0) {
+                        me.set('usingSavedCard', true);
+                    }
                 }
             },
             calculateStepStatus: function () {

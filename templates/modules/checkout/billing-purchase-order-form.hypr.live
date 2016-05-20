@@ -1,0 +1,8 @@
+<<<<<<< HEAD
+{% extends "modules/common/purchase-order-form" %}
+{% block purchase-order-form %}
+    {% parent %}
+{% endblock purchase-order-form %}
+=======
+{% extends "modules/common/purchase-order-form" %}
+>>>>>>> Added purchase order checkout form
