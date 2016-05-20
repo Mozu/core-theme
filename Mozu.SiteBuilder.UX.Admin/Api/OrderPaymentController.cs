@@ -144,7 +144,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
             public string OrderId { get; set; }
             public decimal Amount { get; set; }
             public CardPaymentInformation BillingInfo { get; set; }
-            public PurchaseOrderPaymentInformation PurchaseOrderInfo { get; set; }
+            public PurchaseOrderPayment PurchaseOrderInfo { get; set; }
             public Contact BillingContact { get; set; }
         }
         /// <summary>
