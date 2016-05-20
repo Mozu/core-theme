@@ -106,6 +106,10 @@
             model: product
         });
 
+        product.on('volumepricequantitychange', function () {
+            productView.render();
+        });
+
         window.productView = productView;
 
         productView.render();

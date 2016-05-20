@@ -251,9 +251,17 @@
             this._hasPriceRange = json && !!json.priceRange;
         },
         initialize: function(conf) {
-            var slug = this.get('content').get('seoFriendlyUrl');
+            var minQty,
+                slug = this.get('content').get('seoFriendlyUrl');
             _.bindAll(this, 'calculateHasPriceRange', 'onOptionChange');
             this.listenTo(this.get("options"), "optionchange", this.onOptionChange);
+            if (this.get('volumePriceBands')) {
+                this.on("change:quantity", this.onQuantityChange, this);
+                minQty = _.min(_.pluck(this.get('volumePriceBands'), 'minQty'));
+                if (minQty > 1 && this.get('quantity') <= 1) {
+                    this.set('quantity', minQty);
+                }
+            }
             this.updateConfiguration = _.debounce(this.updateConfiguration, 300);
             this.set({ url: slug ? "/" + slug + "/p/" + this.get("productCode") : "/p/" + this.get("productCode") });
             this.lastConfiguration = [];
@@ -324,6 +332,38 @@
         onOptionChange: function() {
             this.isLoading(true);
             this.updateConfiguration();
+        },
+        onQuantityChange: function (e) {
+            var me = this,
+                activePriceBand,
+                activePrice,
+                activeQty = e.changed.quantity,
+                priceBands = this.get('volumePriceBands');
+            if (!priceBands || priceBands.length === 0) return;
+
+            activePriceBand = _.find(priceBands, function(band) {
+                return band.minQty <= activeQty && (!band.maxQty || activeQty <= band.maxQty);
+            });
+            if (!activePriceBand) {
+                console.log('does not meet minimum quantity');
+
+                //todo set as not purchasable?
+                return;
+            }
+            console.log('price band=' + activePriceBand.price.price);
+            activePrice = this.get('price');
+            activePrice.set('catalogListPrice', activePriceBand.price.catalogListPrice);
+            activePrice.set('catalogSalePrice', activePriceBand.price.catalogSalePrice);
+            activePrice.set('msrp', activePriceBand.price.msrp);
+            activePrice.set('price', activePriceBand.price.price);
+            activePrice.set('priceListEntryMode', activePriceBand.price.priceListEntryMode);
+            activePrice.set('priceType', activePriceBand.price.priceType);
+            activePrice.set('salePrice', activePriceBand.price.salePrice);
+            activePrice.set('salePriceType', activePriceBand.price.salePriceType);
+
+            this.trigger('volumepricequantitychange', activePrice, me);
+            //this.set('price', activePriceBand.price);
+
         },
         updateConfiguration: function() {
             var newConfiguration = this.getConfiguredOptions();
