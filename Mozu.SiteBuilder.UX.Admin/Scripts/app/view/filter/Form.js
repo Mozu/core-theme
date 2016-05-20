@@ -1,4 +1,4 @@
-﻿/**
+/**
  * The discount editor view
  */
 Ext.define('Taco.view.filter.Form', {   

@@ -51,107 +51,21 @@ Ext.define('Taco.view.priceList.entry.PriceEntryPrice', {
             items: []
         });
 
-        var entries = this.record.get('priceEntries');
+        var entries = Ext.Array.sort(this.record.get('priceEntries'), function(a, b) {
+            return a.minQty > b.minQty;
+        });
 
         if (entries.length === 0) {
-            entries.push({
-                minQty: 1
-            });
+            entries.push(
+                me.getNewRow({
+                    minQty: 1
+                })
+            );
         }
 
-        Ext.Array.each(entries, function(entry) {
-            
-            var row = {};
-
-            row.minQty = Ext.widget('numberfield', {
-                fieldLabel: 'Minimum Quantity',
-                name: 'minQty',
-                hideTrigger: true,
-                value: entry.minQty,
-                margin: '0 20 0 0',
-                hidden: false
-            });
-
-            row.priceOverride = Ext.widget('overridefield', {
-                checkboxCfg: {
-                    checked: entry.listPriceMode === 'Overridden',
-                    onChange: function(newVal) {
-                        var isOverridden = newVal === 'Overridden';
-                        if (isOverridden && row.salePriceOverride) {
-                            row.salePriceOverride.override.setValue(true);
-                        }
-                        if (row.priceOverride) {
-                            Ext.apply(row.priceOverride.overrideField, { allowBlank: !isOverridden});
-                            row.priceOverride.overrideField.validate();
-                        }
-                        
-                    }
-                },
-                fieldCfg: {
-                    name: 'listPrice',
-                    itemId: 'priceField',
-                    fieldLabel: 'Price',
-                    currencyCode: me.currencyCode,
-                    value: entry.listPrice,
-                    allowBlank: entry.listPriceMode !== 'Overridden'
-                }
-            });
-
-            if (!me.priceOverrideFirst) {
-                me.priceOverrideFirst = row.priceOverride;
-            }
-
-            row.priceOverride.overrideField.validate();
-
-            row.salePriceOverride = Ext.widget('overridefield', {
-                listeners: {
-                    beforerender: function(cmp) {
-                        if (cmp.isOverridden()) {
-                            Ext.apply(cmp.overrideField, { emptyText: '' })
-                        }
-                    },
-                    scope: row.salePriceOverride
-                },
-                checkboxCfg: {
-                    checked: entry.salePriceMode === 'Overridden',
-                    onChange: function(newVal) {
-                        if (newVal === 'UseCatalog' && row.priceOverride) {
-                            row.priceOverride.override.setValue(false);
-                        }
-                    }
-                },
-                fieldCfg: {
-                    name: 'salePrice',
-                    itemId: 'salePriceField',
-                    fieldLabel: 'Sale Price',
-                    currencyCode: me.currencyCode,
-                    value: entry.salePrice
-                }
-            });
-
-            if (!me.salePriceOverrideFirst) {
-                me.salePriceOverrideFirst = row.salePriceOverride;
-            }
-
-            var rowForm = {
-                xtype: 'form',
-                layout: {
-                    type: 'hbox',
-                    align: 'top'
-                },
-                record: Ext.create('Taco.model.PriceListEntryPrice', entry),
-                defaults: {
-                    flex: 1
-                },
-                items: [
-                    row.minQty,
-                    row.priceOverride,
-                    row.salePriceOverride
-                ]
-            };
-
-            me.basicPanel.add(rowForm);
-
+        Ext.Array.each(entries, function(entry, index) {
+            entry.showRemove = index !== 0;
+            me.basicPanel.add(me.getNewRow(entry));
         });
 
         me.msrpOverride = Ext.widget('overridefield', {
@@ -393,6 +307,141 @@ Ext.define('Taco.view.priceList.entry.PriceEntryPrice', {
         me.mon(Taco.app, 'price-entry-product-variation-changed', me.onProductVariationChanged, me);
 
         me.callParent(arguments);
+    },
+
+    getNewRow: function(entry) {
+        
+        var me = this;
+
+        entry = entry || {};
+
+        var row = {};
+
+        row.minQty = Ext.widget('numberfield', {
+            fieldLabel: 'Minimum Quantity',
+            name: 'minQty',
+            hideTrigger: true,
+            value: entry.minQty,
+            margin: '0 20 0 0',
+            hidden: false,
+        });
+
+        row.priceOverride = Ext.widget('overridefield', {
+            checkboxCfg: {
+                checked: entry.listPriceMode === 'Overridden',
+                onChange: function(newVal) {
+                    var isOverridden = newVal === 'Overridden';
+                    if (isOverridden && row.salePriceOverride) {
+                        row.salePriceOverride.override.setValue(true);
+                    }
+                    if (row.priceOverride) {
+                        Ext.apply(row.priceOverride.overrideField, { allowBlank: !isOverridden});
+                        row.priceOverride.overrideField.validate();
+                    }
+                    
+                }
+            },
+            fieldCfg: {
+                name: 'listPrice',
+                itemId: 'priceField',
+                fieldLabel: 'Price',
+                currencyCode: me.currencyCode,
+                value: entry.listPrice,
+                allowBlank: entry.listPriceMode !== 'Overridden'
+            }
+        });
+
+        if (!me.priceOverrideFirst) {
+            me.priceOverrideFirst = row.priceOverride;
+        }
+
+        row.priceOverride.overrideField.validate();
+
+        row.salePriceOverride = Ext.widget('overridefield', {
+            listeners: {
+                beforerender: function(cmp) {
+                    if (cmp.isOverridden()) {
+                        Ext.apply(cmp.overrideField, { emptyText: '' })
+                    }
+                },
+                scope: row.salePriceOverride
+            },
+            checkboxCfg: {
+                checked: entry.salePriceMode === 'Overridden',
+                onChange: function(newVal) {
+                    if (newVal === 'UseCatalog' && row.priceOverride) {
+                        row.priceOverride.override.setValue(false);
+                    }
+                }
+            },
+            fieldCfg: {
+                name: 'salePrice',
+                itemId: 'salePriceField',
+                fieldLabel: 'Sale Price',
+                currencyCode: me.currencyCode,
+                value: entry.salePrice
+            }
+        });
+
+        if (!me.salePriceOverrideFirst) {
+            me.salePriceOverrideFirst = row.salePriceOverride;
+        }
+
+        row.addButton = Ext.widget('button', {
+            text: 'add',
+            handler: function() {
+                var button = this,
+                    formRow = button.up('form'),
+                    parent = formRow.up(),
+                    index = 0;
+
+                parent.items.each(function(item, indx) { 
+                    if (item.isAncestor(button)) { index = indx + 1 }
+                });
+                me.basicPanel.insert(index,
+                    me.getNewRow({
+                        showRemove: true
+                    })
+                );
+            }
+        })
+
+        if (entry.showRemove) {
+            row.removeButton = Ext.widget('button', {
+                text: 'remove',
+                handler: function() {
+                    var formRow = this.up('form');
+                    formRow.up().remove(formRow);
+                }
+            })
+        }
+
+        var rowForm = {
+            xtype: 'form',
+            layout: {
+                type: 'hbox',
+                align: 'top'
+            },
+            record: Ext.create('Taco.model.PriceListEntryPrice', entry),
+            defaults: {
+                flex: 1
+            },
+            items: [
+                row.minQty,
+                row.priceOverride,
+                row.salePriceOverride,
+                {
+                    xtype: 'container',
+                    items: [
+                        row.addButton,
+                        row.removeButton
+                    ]
+                }
+            ]
+        };
+
+        return rowForm;
+
     },
 
     createCurrentWidget: function(overrideField, currentVal) { // ,margin) {

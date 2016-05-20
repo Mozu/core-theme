@@ -179,6 +179,8 @@ Ext.define('Taco.view.priceList.modal.PriceEntryEditor', {
             Ext.Object.merge(this.record.data, data);
         }
 
+        this.record.set('priceListEntryMode', (entries.length > 1 || entries.getAt(0).record.get('minQty') > 1) ? 'Bulk' : 'Simple')
+
         entries.each(function(entry) {
             priceEntries.push(entry.getValues());
         });
