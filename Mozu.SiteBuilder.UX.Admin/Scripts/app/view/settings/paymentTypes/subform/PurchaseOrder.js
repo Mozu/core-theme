@@ -76,7 +76,7 @@ Ext.define('Taco.view.settings.paymentTypes.subform.PurchaseOrder', {
             itemId: 'purchaseOrderOptions',
             name: 'purchaseOrderOptions',
             fieldLabel: 'Options',
-            hidden: !me.purchaseOrderEnabled,
+            hidden: true,//!me.purchaseOrderEnabled,
             items: [
                 me.purchaseOrderSplitPaymentToggle
             ]
@@ -106,6 +106,9 @@ Ext.define('Taco.view.settings.paymentTypes.subform.PurchaseOrder', {
         });
 
         if (paymentTerms && paymentTerms.length > 0) {
+            // sort array by sequenceNumber!
+            paymentTerms = this.sortArrayAscending(paymentTerms);
+            // add to store:
             for (var i = 0; i < paymentTerms.length; ++i) {
                 this.paymentTermsStore.add(Ext.create('Taco.model.PurchaseOrderPaymentTerms', paymentTerms[i]));
             }
@@ -257,6 +260,9 @@ Ext.define('Taco.view.settings.paymentTypes.subform.PurchaseOrder', {
         });
 
         if (customFields && customFields.length > 0) {
+            // Sort array by sequenceNumber!
+            customFields = this.sortArrayAscending(customFields);
+            // add array to store:
             for (var i = 0; i < customFields.length; ++i) {
                 this.customFieldsStore.add(Ext.create('Taco.model.PurchaseOrderCustomField', customFields[i]));
             }
@@ -501,5 +507,12 @@ Ext.define('Taco.view.settings.paymentTypes.subform.PurchaseOrder', {
         };
 
         this.record.set('purchaseOrder', purchaseOrder);
+    },
+    
+    // Both arrays have sequenceNumber, sort by that!
+    sortArrayAscending: function(arrayToSort) {
+        return arrayToSort.sort(function(a, b) {
+            return a.sequenceNumber - b.sequenceNumber;
+        });
     }
 });
