@@ -14,20 +14,20 @@ Ext.define('Taco.controller.GeneralSettings', {
     modelName: 'GeneralSettings',
     index: function () {
         var me = this;
-        Taco.app.setLoading();
-        if (!this.requiresSiteContext()) {
-            Taco.model.GeneralSettings.load('', {
-                success: function (record) {
-                    Taco.app.setLoading(false);
-                    me.createContentView('Taco.view.generalSettings.Index', {
-                        record: record      
-                    });
-                },
-                failure: function () {
-                    Taco.app.setLoading(false);
-                }
+        // Taco.app.setLoading();
+        // if (!this.requiresSiteContext()) {
+            // Taco.model.GeneralSettings.load('', {
+            //     success: function (record) {
+            //         Taco.app.setLoading(false);
+            me.createContentView('Taco.view.generalSettings.Index', {
+                record: {}      
             });
-        }
+            //     },
+            //     failure: function () {
+            //         Taco.app.setLoading(false);
+            //     }
+            // });
+        // }
     },
     site: function () {
         Taco.core.StateManager.attemptNavigate('generalsettings');
