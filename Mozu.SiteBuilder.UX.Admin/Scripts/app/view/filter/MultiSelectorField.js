@@ -215,7 +215,7 @@ Ext.define('Taco.view.filter.MultiSelectorField', {
                              listeners: {
                                 aftersaveclose: function() {
                                     var formValue = this.down('#bulkvalue-field').getValue();
-                                    var values = formValue.split(/[ ,]+/);
+                                    var values = formValue.split(/\s|[ ,]+/);
                                     var cleanedValues = Ext.unique(
                                         values.map(function(val) {
                                             return {
@@ -228,7 +228,7 @@ Ext.define('Taco.view.filter.MultiSelectorField', {
 
                                     me.store.removeAll();
 
-                                    cleanedValues.forEach(function(rec) {
+                                    cleanedValues.reverse().forEach(function(rec) {
                                         me.addValue(rec.data.id, rec);
                                     })
                                 }

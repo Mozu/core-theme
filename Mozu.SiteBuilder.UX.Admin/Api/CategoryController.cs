@@ -36,7 +36,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
         [HttpGetRoute(UriTemplate = "read")]
         public async Task<Response<List<Category>>> GetCategories([FromUri]PagingParamaters pagingParams, [FromUri] FilterCollection filterCollection, int? nodeQuery= null, int? id=null)
         {
-            if (id.HasValue)
+            if (id.HasValue && id != 666)
             {
                 var cat = (await _categoriesClient.GetCategory(id)).ReadAsSync();
                 var retList = new List<Category> {Mapper.Map<Category>(cat)};
