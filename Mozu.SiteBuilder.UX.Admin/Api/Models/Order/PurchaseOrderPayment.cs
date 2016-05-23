@@ -8,7 +8,6 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.Models.Order
 {
     public class PurchaseOrderPayment
     {
-        public int CustomerPurchaseOrderAccountId { get; set; }
         public List <PurchaseOrderCustomField> CustomFields { get; set; }
         public PurchaseOrderPaymentTerm PaymentTerm { get; set; }
         public string PurchaseOrderNumber { get; set; }
