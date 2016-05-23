@@ -59,7 +59,7 @@ Ext.define('Taco.view.settings.paymentTypes.subform.PurchaseOrder', {
             name: 'purchaseOrderSplitPayment',
             checked: me.purchaseOrderSplitPaymentEnabled,
             boxLabel: 'Allow split-payment',
-            width: 175,
+            width: 175/*,
             tooltip: Ext.create('Taco.core.ux.content.Tooltip', {
                 elementId: 'purchaseOrderSplitPayment',
                 messageKey: 'purchaseOrder.siteSettings.splitPayment',
@@ -67,7 +67,7 @@ Ext.define('Taco.view.settings.paymentTypes.subform.PurchaseOrder', {
                 offsetTop: 15,
                 offsetLeft: -185,
                 arrowPosition: 'left'
-            })
+            })*/
         });
 
         this.purchaseOrderSplitPayment = Ext.create('Ext.form.FieldContainer', {

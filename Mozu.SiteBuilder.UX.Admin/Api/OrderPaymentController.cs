@@ -185,9 +185,8 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
                 case DCp.PaymentTypeConst.PURCHASE_ORDER:
                     action.NewBillingInfo = new DCp.BillingInfo
                     {
-                        PurchaseOrderPayment = new DCp.PurchaseOrderPayment()
+                        PurchaseOrder = new DCp.PurchaseOrderPayment()
                         {
-                            CustomerPurchaseOrderAccountId = args.PurchaseOrderInfo.CustomerPurchaseOrderAccountId,
                             PaymentTerm = args.PurchaseOrderInfo.PaymentTerm.Map<DCp.PurchaseOrderPaymentTerm>(),
                             CustomFields = args.PurchaseOrderInfo.CustomFields.Map<List<DCp.PurchaseOrderCustomField>>(),
                             PurchaseOrderNumber = args.PurchaseOrderInfo.PurchaseOrderNumber
