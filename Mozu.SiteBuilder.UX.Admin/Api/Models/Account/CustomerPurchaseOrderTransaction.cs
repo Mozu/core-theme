@@ -14,6 +14,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.Models.Account
         public int TenantId { get; set; }
         public decimal TransactionAmount { get; set; }
         public DateTime TransactionDate { get; set; }
-        public string TransactionType { get; set; }
+        public string TransactionDescription { get; set; }
+        public int TransactionTypeId { get; set; }
     }
 }

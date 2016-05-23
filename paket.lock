@@ -103,8 +103,8 @@ NUGET
       Newtonsoft.Json
     Mozu.Content.Contracts (1.19.2)
       Mozu.Core.Prime (>= 1.17)
-    Mozu.Core.Extensible.Contracts (1.18.1)
-      Mozu.Core.Prime (>= 1.17)
+    Mozu.Core.Extensible.Contracts (1.1613.1)
+      Mozu.Core.Prime (>= 1.18)
     Mozu.Core.Messaging (1.19.4)
       Burrows (>= 0.3.3)
       Mozu.Core.Messaging.Contracts (>= 1.19)
@@ -133,7 +133,7 @@ NUGET
       NSubstitute (>= 1.8.1)
       NUnit (>= 2.6.4)
       Should (>= 1.1.20)
-    Mozu.Customer.Contracts (1.1613.1-dev1605181439fea)
+    Mozu.Customer.Contracts (1.1618.1-dev1605231648fea)
       Mozu.Core.Extensible.Contracts
     Mozu.DeployWeb (2.0.4)
       OctoPack (>= 2.1.3)

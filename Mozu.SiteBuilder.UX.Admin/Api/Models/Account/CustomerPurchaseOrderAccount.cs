@@ -21,8 +21,6 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.Models.Account
     public class PurchaseOrderPaymentTerm
     {
         public string Code { get; set; }
-        public string Description { get; set; }
         public int SiteId { get; set; }
-        public int Id { get; set; }
     }
 }
