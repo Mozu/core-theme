@@ -50,8 +50,6 @@ Ext.define('Taco.view.order.widget.PaymentPanel', {
             me.items.push(me.transactionList)
         }
 
-        
-
         this.callParent(arguments);
     },
 
@@ -430,14 +428,13 @@ Ext.define('Taco.view.order.widget.PaymentPanel', {
     initPaymentDetails: function () {
         var me = this,
             billingContact = me.order.data.billingContact,
+            purchaseOrder = me.order.data.purchaseOrderInfo,
 
             phone = billingContact ? (billingContact.workPhone ? billingContact.workPhone : billingContact.homePhone) : '',
 
             safePhone = Ext.util.Format.htmlEncode(phone),
 
             data = Ext.apply({ billingContact: billingContact, safePhone: safePhone }, me.record.data);
-
-       
 
         me.paymentDetails = Ext.create('Ext.Component', {
             cls: "orderform-payment-paymentDetails",
@@ -450,7 +447,7 @@ Ext.define('Taco.view.order.widget.PaymentPanel', {
                             // bad data check;
                             '<tpl if="!values.billingContact.firstName || !values.billingContact.lastName">',
                                 '<div class="fullName">N/A</div>',
-                            '<tpl else>',
+                            '<tpl elseif="values.billingContact.firstName">',
                                 '<div class="fullName">{billingContact.firstName:htmlEncode} {billingContact.lastName:htmlEncode}</div>',
                                 '<div class="address">{billingContact.address1:htmlEncode}</div>',
                                 '<div class="address">{billingContact.address2:htmlEncode}</div>',
@@ -479,6 +476,11 @@ Ext.define('Taco.view.order.widget.PaymentPanel', {
                         '<div class="paymentTypePaypalExpress">',
                             '<h4 class="paymentDetailsHeader">Method:</h4>',
                             '<div class="ppx">Paypal Express (Transaction ID: {paymentServiceTransactionId})</div>',
+                        '</div>',
+                    '<tpl elseif="paymentType == \'PurchaseOrder\'">',
+                        '<div class="paymentTypePurchaseOrder">',
+                            '<h4 class="paymentDetailsHeader">Payment Terms:</h4>',
+                            '<div class="paymentterms">{purchaseOrderInfo.paymentTerm.description}</div>',
                         '</div>',
                     '<tpl else>',
                         '<div class="authorizedCreditCard">',
