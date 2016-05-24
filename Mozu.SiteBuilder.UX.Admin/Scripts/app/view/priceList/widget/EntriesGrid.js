@@ -324,6 +324,14 @@ Ext.define('Taco.view.priceList.widget.EntriesGrid', {
                 scope: me
             }
         );
+        result.push(
+            {
+                text: 'Duplicate',
+                itemId: 'duplicateMenuItem',
+                menuColumnHandler: me.doDuplicate,
+                scope: me
+            }
+        )
         return result;
     },
 
@@ -528,8 +536,18 @@ Ext.define('Taco.view.priceList.widget.EntriesGrid', {
 
     doEdit : function (item, eventData) {
         var rec = eventData.record;
-        //item.scope.openEditor(rec, false);
         item.scope.createPopup(rec, false);
+    },
+
+    doDuplicate: function(item, eventData) {
+        var rec = item.scope.doDuplicateInternal(eventData.record);
+        item.scope.createPopup(rec, true);
+    },
+
+    doDuplicateInternal: function(record) {
+        record = record.copy();
+        record.phantom = true;
+        return record;
     },
 
     createPopup: function (record, isNew) {
@@ -554,7 +572,6 @@ Ext.define('Taco.view.priceList.widget.EntriesGrid', {
 
     doCreate: function () {
         this.createPopup(null, true);
-        //this.openEditor(null, true);
     },
 
     getDeletePromptMessage: function (record) {

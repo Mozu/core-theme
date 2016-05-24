@@ -55,7 +55,7 @@ Ext.define('Taco.view.priceList.entry.PriceEntryGeneral', {
             fieldBodyCls: 'order-addproducttoolbar-cell',
             pageSize: 10,
             disabled: !me.record.phantom,
-            value: !me.record.phantom ? me.record.get('productCode') : '',
+            value: me.record.get('productCode'),
             liveMode: false,
             defaultFilters: [
                 //{ property: 'iscurrentlyactive', value: true },
