@@ -65,7 +65,7 @@ Ext.define('Taco.view.location.inventory.Index', {
         this.locationStore = Taco.core.data.StoreManager.getOrCreate({
             createOnly: true,
             type: 'Taco.store.Locations',
-            pageSize: 25,
+            pageSize: 1000,
             clearSort: false,
             remoteSort: true,
             remoteFilter: true,

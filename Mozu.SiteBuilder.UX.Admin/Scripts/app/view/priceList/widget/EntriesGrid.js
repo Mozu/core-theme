@@ -409,12 +409,11 @@ Ext.define('Taco.view.priceList.widget.EntriesGrid', {
                 return ( (!catStartDt || catStartDt < new Date())
                     && (!catEndDt || catEndDt > new Date()) );
             },
-            isWithinRange = function(startDt, endDt, catStartDt, catEndDt) {
-                if ((!catStartDt && !catEndDt) || (!startDt && !endDt)) {
+            isOutsideRange = function(startDt, endDt, catStartDt, catEndDt) {
+                if ((startDt && catEndDt) && (startDt > catEndDt)) {
                     return true;
                 }
-                return ( ((startDt && catEndDt) && (startDt < catEndDt))
-                      || ((endDt && catStartDt) && (endDt > catStartDt)));
+                return ((endDt && catStartDt) && (endDt < catStartDt));
             },
             calculatePreviewDate = function(startDt, catStartDt) {
                 if (isCatalogCurrentlyActive(catStartDt)) {
@@ -457,7 +456,7 @@ Ext.define('Taco.view.priceList.widget.EntriesGrid', {
             }
 
             if (previewAction && showPending(mc, site, me.priceListRecord, hasExpired)
-                && isWithinRange(entryStartDt,entryEndDt,catalogStartDt,catalogEndDt)) {
+                && !isOutsideRange(entryStartDt,entryEndDt,catalogStartDt,catalogEndDt)) {
 
                 previewDt = calculatePreviewDate(entryStartDt, catalogStartDt);
                 previewAction.menu.add(Ext.applyIf({
