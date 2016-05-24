@@ -24,7 +24,7 @@
         var checkboxCfg = {};
 
         Ext.apply(checkboxCfg, me.checkboxCfg, {
-            margin: '25 30 0 0',
+            margin: '0 20 0 0',
             tabIndex: -1,
             name: me.fieldCfg.name + 'Mode',
             listeners: {
@@ -95,8 +95,8 @@
                     align: 'stretch'
                 },
                 items: [
-                    me.overrideField,
-                    me.currentVal
+                    me.overrideField/*,
+                    me.currentVal*/
                 ]
             }
         ];

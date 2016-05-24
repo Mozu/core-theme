@@ -33,22 +33,48 @@ Ext.define('Taco.view.priceList.entry.PriceEntryPrice', {
 
         Ext.tip.QuickTipManager.init();
 
-        me.basicPanel = Ext.create('Ext.panel.Panel', {
-            title: 'Basic',
-            itemId: 'basicPanel',
+        me.basicEntries = Ext.create('Ext.panel.Panel', {
+            itemId: 'basicEntries',
             layout: {
                 type: 'vbox',
-                align: 'stretch'
-            },
-            width: '50%',
-            padding: '20',
-            defaults: {
-                flex: 1,
+                align: 'stretch',
                 defaults: {
                     flex: 1
                 }
+            }
+        })
+
+        me.basicPanel = Ext.create('Ext.panel.Panel', {
+            title: 'Basic',
+            itemId: 'basicPanel',
+            width: '50%',
+            padding: '20',
+            items: [{
+                xtype: 'container',
+                defaults: {
+                    flex: 1,
+                    xtype: 'label'
+                },
+                layout: {
+                    type: 'hbox',
+                    align: 'stretch'
+                },
+                items: [
+                    {
+                        text: 'Minimum Quantity',
+                        flex: 0.5,
+                        margin: '0 20 0 0'
+                    },
+                    {
+                        text: 'Price'
+                    },
+                    {
+                        text: 'Sale Price'
+                    },
+                    {}
+                ]
             },
-            items: []
+            me.basicEntries]
         });
 
         var entries = Ext.Array.sort(this.record.get('priceEntries'), function(a, b) {
@@ -65,7 +91,7 @@ Ext.define('Taco.view.priceList.entry.PriceEntryPrice', {
 
         Ext.Array.each(entries, function(entry, index) {
             entry.showRemove = index !== 0;
-            me.basicPanel.add(me.getNewRow(entry));
+            me.basicEntries.add(me.getNewRow(entry));
         });
 
         me.msrpOverride = Ext.widget('overridefield', {
@@ -315,15 +341,15 @@ Ext.define('Taco.view.priceList.entry.PriceEntryPrice', {
 
         entry = entry || {};
 
-        var row = {};
+        var row = Ext.widget('container');
 
         row.minQty = Ext.widget('numberfield', {
-            fieldLabel: 'Minimum Quantity',
+            //fieldLabel: 'Minimum Quantity',
             name: 'minQty',
             hideTrigger: true,
             value: entry.minQty,
             margin: '0 20 0 0',
-            hidden: false,
+            flex: 0.5
         });
 
         row.priceOverride = Ext.widget('overridefield', {
@@ -344,7 +370,6 @@ Ext.define('Taco.view.priceList.entry.PriceEntryPrice', {
             fieldCfg: {
                 name: 'listPrice',
                 itemId: 'priceField',
-                fieldLabel: 'Price',
                 currencyCode: me.currencyCode,
                 value: entry.listPrice,
                 allowBlank: entry.listPriceMode !== 'Overridden'
@@ -377,7 +402,6 @@ Ext.define('Taco.view.priceList.entry.PriceEntryPrice', {
             fieldCfg: {
                 name: 'salePrice',
                 itemId: 'salePriceField',
-                fieldLabel: 'Sale Price',
                 currencyCode: me.currencyCode,
                 value: entry.salePrice
             }
@@ -387,34 +411,48 @@ Ext.define('Taco.view.priceList.entry.PriceEntryPrice', {
             me.salePriceOverrideFirst = row.salePriceOverride;
         }
 
-        row.addButton = Ext.widget('button', {
-            text: 'add',
-            handler: function() {
-                var button = this,
-                    formRow = button.up('form'),
-                    parent = formRow.up(),
-                    index = 0;
+        row.addButton = Ext.widget('component', {
+            cls: 'taco-btn-add-row',
+            listeners: {
+                click: {
+                    element: 'el',
+                    scope: row,
+                    fn: function() {
+                        var formRow = this.addButton.up('form'),
+                            parent = formRow.up(),
+                            index = 0;
 
-                parent.items.each(function(item, indx) { 
-                    if (item.isAncestor(button)) { index = indx + 1 }
-                });
-                me.basicPanel.insert(index,
-                    me.getNewRow({
-                        showRemove: true
-                    })
-                );
+                        parent.items.each(function(item, indx) { 
+                            if (item.isAncestor(this.addButton)) { 
+                                index = indx + 1;
+                                return false;
+                            }
+                        }, this);
+                        me.basicEntries.insert(index,
+                            me.getNewRow({
+                                showRemove: index > 0
+                            })
+                        );
+                    }
+                }
             }
         })
 
-        if (entry.showRemove) {
-            row.removeButton = Ext.widget('button', {
-                text: 'remove',
-                handler: function() {
-                    var formRow = this.up('form');
-                    formRow.up().remove(formRow);
+        row.removeButton = Ext.widget('component', {
+            cls: 'taco-btn-remove-row',
+            hidden: !entry.showRemove,
+            listeners: {
+                click: {
+                    element: 'el',
+                    scope: row,
+                    fn: function() {
+                        var formRow = this.removeButton.up('form');
+                        formRow.up().remove(formRow);
+                    }
                 }
-            })
-        }
+            }
+        })
+
 
         var rowForm = {
             xtype: 'form',
@@ -422,6 +460,8 @@ Ext.define('Taco.view.priceList.entry.PriceEntryPrice', {
                 type: 'hbox',
                 align: 'top'
             },
+            margin: '0',
+            height: 60,
             record: Ext.create('Taco.model.PriceListEntryPrice', entry),
             defaults: {
                 flex: 1
@@ -432,10 +472,17 @@ Ext.define('Taco.view.priceList.entry.PriceEntryPrice', {
                 row.salePriceOverride,
                 {
                     xtype: 'container',
+                    defaults: {
+                        margin: '10 20 0 0'
+                    },
                     items: [
                         row.addButton,
                         row.removeButton
-                    ]
+                    ],
+                    layout: {
+                        type: 'hbox',
+                        align: 'top'
+                    }
                 }
             ]
         };

@@ -162,8 +162,7 @@ Ext.define('Taco.view.priceList.modal.PriceEntryEditor', {
     doSave: function () {
         var me = this,
             form = me.getForm(),
-            basic = form.down('#basicPanel'),
-            entries = basic.items,
+            entries = form.down('#basicEntries').items,
             data = form.getValues(),
             priceEntries = [],
             extrasStore = me.pricePanel.extrasGrid.getStore(),
