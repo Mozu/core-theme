@@ -67,7 +67,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
                 while (true)
                 {
                     var cats = (await client.GetCategories(startIndex: start,
-                        pageSize: 600,
+                        pageSize: 200, //current API maximum is 200 - May 2016
                         sortBy: "sequence asc",
                         filter: filterCollection.ToFilterString(),
                         responseFields: responseFields
@@ -118,7 +118,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
         [HttpGetRoute(UriTemplate = "autocomplete/?query={query}&value={categoryIdsString}")]
         public async Task<Response<List<AutoCompleteField<int>>>> SearchByName(string query, FilterCollection extFilter, string categoryIdsString)
         {
-            var allCategories = (await _categoriesClient.GetCategories(0, 600, null, null, null)).ReadAsSync().Items
+            var allCategories = (await _categoriesClient.GetCategories(0, 200, null, null, null)).ReadAsSync().Items
                     //.Where(x => x.IsSystemDefault == false && x.Content != null && x.Content.Name != null)
                     .OrderBy(f => f.Content.Name);
             var catDic = allCategories.ToDictionary(x => x.Id);
