@@ -989,7 +989,8 @@ Ext.define('Taco.view.order.modal.AddPayment', {
                             orderId: order.getId(),
                             amount: amount,
                             billingInfo: billingInfo,
-                            billingContact: contactInfo
+                            billingContact: contactInfo,
+                            paymentType: 'CreditCard'
                         },
                         success: function (response) {
                             me.setLoading(false, me.body);
@@ -1113,6 +1114,7 @@ Ext.define('Taco.view.order.modal.AddPayment', {
         return {
             orderId: order.getId(),
             amount: amount,
+            paymentType: 'CreditCard',
             billingInfo: billingInfo,
             billingContact: contactInfo
         };
