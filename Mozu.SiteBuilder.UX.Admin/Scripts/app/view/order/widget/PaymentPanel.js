@@ -480,7 +480,7 @@ Ext.define('Taco.view.order.widget.PaymentPanel', {
                     '<tpl elseif="paymentType == \'PurchaseOrder\'">',
                         '<div class="paymentTypePurchaseOrder">',
                             '<h4 class="paymentDetailsHeader">Payment Terms:</h4>',
-                            '<div class="paymentterms">{purchaseOrderInfo.paymentTerm.description}</div>',
+                            '<span class="paymentterms">{purchaseOrderInfo.paymentTerm.description}</span>',
                         '</div>',
                     '<tpl else>',
                         '<div class="authorizedCreditCard">',
