@@ -138,7 +138,7 @@ Ext.define('Taco.store.TooltipHelp', {
             value: 'Allows a credit card to be used as a supplemental payment method when the order total exceeds the available purchase order balance.'
         }, {
             key: 'purchaseOrder.siteSettings.customFields',
-            value: 'Use Additional fields to capture additional information from the shopper on the checkout page when Purchase Order is used as the payment method. The label entered below will be the label for the text fields displayed on the storefront and admin.'
+            value: 'Use custom fields to capture additional information from the shopper on the checkout page when purchase order is used as the payment method. The label entered below will be the label for the text fields displayed on the storefront and admin.'
         }, {
             key: 'default',
             value: 'Default Tooltip'

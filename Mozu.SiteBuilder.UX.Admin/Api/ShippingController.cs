@@ -267,7 +267,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
         }
 
 
-        async Task<string> GetProfileCode(bool? flag= null  )
+        async Task<string> GetProfileCode()
         {
             var res = await _shippingProfileWebApiClient.GetProfiles();
             if (res.ResponseMessage.IsSuccessStatusCode)
@@ -283,22 +283,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
                 }
             }
 
-            if (flag.HasValue && flag.Value)
-            {
-                throw new InvalidOperationException("New Site provisioning in progress.");
-            }
-
-            await _shippingAdminProvisioningWebApiClient.CloneWithoutUserClaims().CreateSite(new CreateSiteRequest()
-                                                              {
-                                                                  MasterCatalogId = this.SbApiContext.MasterCatalogId ,
-                                                                  CatalogId = this.SbApiContext.CatalogId,
-                                                                  SiteId = this.SbApiContext.SiteId.Value ,
-                                                                  TenantId = this.SbApiContext.TenantId
-                                                              },1);
-
-            
-            return await GetProfileCode(true );
-
+            throw new InvalidOperationException(string.Format("Couldn't find a profile for site: {0}", SbApiContext.SiteId.Value));
         }
 
         [HttpGetRoute(UriTemplate = "ShippingInclusionRules/read")]

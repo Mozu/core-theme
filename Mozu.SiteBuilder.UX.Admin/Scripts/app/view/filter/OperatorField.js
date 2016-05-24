@@ -37,6 +37,8 @@ Ext.define('Taco.view.filter.OperatorField', {
             boxLabel: this.recurseText
         });
 
+        me.mon(me.parentForm.leftField, 'change', me.onLeftFieldChange, me)
+
         // recursive equal and eq share the same combo value;
         var comboValue = (this.value && this.value == "req") ? "eq" : this.value;
 
@@ -121,6 +123,13 @@ Ext.define('Taco.view.filter.OperatorField', {
     onOperatorChange: function (field, newValue, oldValue, e) {
         if (this.recurseField) {
             this.recurseField.setVisible(this.isRecursiveOperator(newValue));
+        }
+    },
+
+    onLeftFieldChange: function (field, newValue, oldValue, e) {
+        if (this.recurseField) {
+            this.recurseField.setVisible(newValue.indexOf('categories') > -1);
+            this.recurseField.setValue(newValue.indexOf('categories') > -1 ? this.recurseField.getValue() : false);
         }
     },
 

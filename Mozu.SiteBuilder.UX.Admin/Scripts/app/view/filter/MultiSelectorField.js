@@ -13,7 +13,8 @@ Ext.define('Taco.view.filter.MultiSelectorField', {
         'Ext.form.field.Date',
         'Ext.form.field.ComboBox',
         'Taco.core.ux.form.CurrencyField',
-        'Taco.view.filter.MultiSelectorGrid'
+        'Taco.view.filter.MultiSelectorGrid',
+        'Taco.view.filter.BulkEditModal'
     ],
 
 
@@ -195,6 +196,48 @@ Ext.define('Taco.view.filter.MultiSelectorField', {
                 scope: me
             });
         }
+
+        this.addBarItems.push({
+            xtype: 'button',
+            ui: 'action',
+            scale: 'medium',
+            menuAlign: 'tr-br?',
+            cls: 'taco-more-action-button taco-general-more-action',
+            itemId: 'moreActionsButton',
+            disabled: me.singleSelect,
+            menu: [
+                {  
+                    text: 'Bulk Edit',
+                    itemId: 'bulkEdit',
+                    handler: function() {
+                        Ext.create('Taco.view.filter.BulkEditModal', {
+                            values: me.store.data.items,
+                             listeners: {
+                                aftersaveclose: function() {
+                                    var formValue = this.down('#bulkvalue-field').getValue();
+                                    var values = formValue.split(/\s|[ ,]+/);
+                                    var cleanedValues = Ext.unique(
+                                        values.map(function(val) {
+                                            return {
+                                                data: {
+                                                    id: val.replace(/\s/g,'')
+                                                }
+                                            };
+                                        })
+                                    );
+
+                                    me.store.removeAll();
+
+                                    cleanedValues.reverse().forEach(function(rec) {
+                                        me.addValue(rec.data.id, rec);
+                                    })
+                                }
+                            }
+                        });
+                    },
+                }
+            ]
+        });
         
         //  insert any field actions (buttons typically) to the right of the field and its add button
         if (this.fieldActions.length) {

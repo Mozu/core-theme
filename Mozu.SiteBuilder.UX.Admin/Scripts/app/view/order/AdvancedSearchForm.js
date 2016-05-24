@@ -227,7 +227,11 @@ Ext.define('Taco.view.order.AdvancedSearchForm', {
             },
             {
                 name: 'returnNumber',
-                fieldLabel: 'Return Number'
+                fieldLabel: 'Return Number',
+                xtype: 'numberfield',
+                hideTrigger: true,
+                keyNavEnabled: false,
+                mouseWheelEnabled: false
             }];
         this.callParent(arguments);
     },

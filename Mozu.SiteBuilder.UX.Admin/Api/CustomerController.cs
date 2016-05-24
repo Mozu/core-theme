@@ -477,8 +477,18 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
             return Single2(results);
         }
 
-        /*[HttpGetRoute(UriTemplate = "purchaseOrder/transaction/list")]
-        public async  Task<Response<List<PurchaseOrderTransaction>>>*/
+        [HttpGetRoute(UriTemplate = "purchaseOrder/transaction/list")]
+        public async Task<HttpResponseMessage> GetCustomerPurchaseOrderTransactions([FromUri]int? customerId, [FromUri]PagingParamaters pagingParams = null)
+        {
+            if (!customerId.HasValue)
+            {
+                throw new ArgumentException("No customerId provided.");
+            }
+            int? startIndex = pagingParams.startIndex;
+            int? pageSize = pagingParams.pageSize ?? 20;
+            var result =(await _customerWebApiClient.GetCustomerPurchaseOrderTransactions(customerId.Value, startIndex,pageSize)).ReadAsAsync().Result;
+            return this.Request.CreateResponse(HttpStatusCode.OK, List2(result.Items, (int)result.TotalCount));
+        }
 
         [HttpGetRoute(UriTemplate = "cards/list")]
         public async Task<Response<List<DC.Card>>> GetCards([FromUri]int? customerId = null)

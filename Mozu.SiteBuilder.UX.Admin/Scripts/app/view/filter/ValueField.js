@@ -279,7 +279,7 @@ Ext.define('Taco.view.filter.ValueField', {
                     }),
                     queryMode: 'local',
                     valueNotFoundText: 'not found',
-                    editable: false,
+                    editable: true,
                     forceSelection: true,
                     displayField: displayField,
                     triggerOnClick: true,

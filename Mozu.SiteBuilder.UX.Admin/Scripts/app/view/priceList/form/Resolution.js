@@ -114,6 +114,19 @@ Ext.define('Taco.view.priceList.form.Resolution', {
                 text: 'Indexed',
                 dataIndex: 'indexed',
                 hideable: false,
+                listeners: {
+                    checkchange: function(cmp, rowIndex, checked, eOpts) {
+                        var records = me.siteTreeStore.getUpdatedRecords();
+                        Ext.Array.each(records, function(record) {
+                            if (!record.get('indexed')) {
+                                record.set('default', false);
+                            }
+                            if (!record.get('checked')) {
+                                record.set('checked', true);
+                            }
+                    });
+                    }
+                },
                 renderer: function(val, metaData, record, rowIndex, colIndex, store, view) {
                     if (record.get('leaf')) {
                         var checked = (val) ? 'x-grid-checkcolumn-checked' : '';
@@ -403,15 +416,15 @@ Ext.define('Taco.view.priceList.form.Resolution', {
 
     beforeSave: function () {
         var selectedSites = this.sitesTree.getChecked();
-        this.record.set('validSites', Ext.Array.map(selectedSites, function(site) {
+        this.record.set('validSites', Ext.Array.clean(Ext.Array.map(selectedSites, function(site) {
             return site.get('id');
-        }));
-        this.record.set('defaultForSites', Ext.Array.map(selectedSites, function(site) {
+        })));
+        this.record.set('defaultForSites', Ext.Array.clean(Ext.Array.map(selectedSites, function(site) {
             return site.get('default') ? site.get('id') : undefined;
-        }));
-        this.record.set('indexedSites', Ext.Array.map(selectedSites, function(site) {
+        })));
+        this.record.set('indexedSites', Ext.Array.clean(Ext.Array.map(selectedSites, function(site) {
             return site.get('indexed') ? site.get('id') : undefined;
-        }));
+        })));
         Ext.Object.merge(this.record.data, this.form.getValues());
         return true;
     },

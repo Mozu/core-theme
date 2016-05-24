@@ -295,16 +295,6 @@ Ext.define('Taco.view.order.modal.AddPurchaseOrder', {
                     data: termsContent
                 })
             });
-
-            return Ext.widget({
-                fieldLabel: 'Payment Terms',
-                flex: 1,
-                forceSelection: true,
-                itemId: 'paymentTerms',
-                name: 'paymentTerms',
-                store: termsContent,
-                xtype: 'selectfield'
-            });
         }
 
         return Ext.widget({

@@ -306,11 +306,12 @@ Ext.define('Taco.view.discount.ConditionsForm', {
                     minValue: 1,
                     allowBlank: true,
                     labelAlign: 'right',
-                    hideLable: true
+                    hideLable: true,
+                    margin: '6 0 0 0'
                 }, {
                     xtype: 'component',
                     html: 'of',
-                    padding: '0 10px 0 10px',
+                    padding: '10px 10px 0 10px',
                     cls: 'x-form-item-label x-unselectable x-form-item-label-left'
                 },
                 this.productList, {
@@ -431,11 +432,12 @@ Ext.define('Taco.view.discount.ConditionsForm', {
                     minValue: 1,
                     allowBlank: true,
                     labelAlign: 'right',
-                    hideLable: true
+                    hideLable: true,
+                    margin: '6 0 0 0'
                 }, {
                     xtype: 'component',
                     html: 'of',
-                    padding: '0 10px 0 10px',
+                    padding: '10px 10px 0 10px',
                     cls: 'x-form-item-label x-unselectable x-form-item-label-left'
                 },
                 this.conditionalCategoryPanel

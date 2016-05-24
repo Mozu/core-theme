@@ -44,7 +44,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
         {
             var list = await _redirectRepository.FetchRedirectEntries();
             var tot = list.Count;
-            var retlist = list.Skip(pagingParams.SkipAmount).Take(pagingParams.pageSize.Value).ToList();
+            var retlist = list.Skip((int)pagingParams.startIndex).Take(pagingParams.pageSize.Value).ToList();
             return List2(retlist, tot);
         }
 

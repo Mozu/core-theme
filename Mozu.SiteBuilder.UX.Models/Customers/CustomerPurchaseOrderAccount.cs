@@ -31,8 +31,6 @@ namespace Mozu.SiteBuilder.UX.Models.Customers
         public string Code { get; set; }
         [DataMember(Name = "Description")]
         public string Description { get; set; }
-        [DataMember(Name = "id")]
-        public int Id { get; set; }
         [DataMember(Name = "siteId")]
         public int SiteId { get; set; }
     }

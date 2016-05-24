@@ -186,7 +186,7 @@ Ext.define('Taco.model.Category', {
         this.data.categoryCode = '';
         this.commit();
     },
-    
+
     getFacetSets: function () {
         if (this.facetSetStore) {
             return this.facetSetStore;

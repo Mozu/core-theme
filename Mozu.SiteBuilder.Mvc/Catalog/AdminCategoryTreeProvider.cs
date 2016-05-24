@@ -25,18 +25,19 @@ namespace Mozu.SiteBuilder.Mvc.Catalog
         {
         }
 
-        public class AdminStorefrontCache : IStorefrontCache
+       
+    }
+    public class AdminStorefrontCache : IStorefrontCache
+    {
+        T IStorefrontCache.Get<T>(string key, CacheScope scope, StorefrontCacheTypes cacheType)
         {
-            T IStorefrontCache.Get<T>(string key, CacheScope scope, StorefrontCacheTypes cacheType)
-            {
-                return (T)MemoryCache.Default[key];
-            }
+            return default(T);
+        }
 
-            void IStorefrontCache.Set(string key, object value, CacheScope scope, StorefrontCacheTypes cacheType, Func<object, object> updateCallback, IList<string> filePaths)
-            {
-                MemoryCache.Default.Add(new CacheItem(key, value), new CacheItemPolicy() { AbsoluteExpiration = DateTime.Now.AddMinutes(15), Priority = CacheItemPriority.NotRemovable });
+        void IStorefrontCache.Set(string key, object value, CacheScope scope, StorefrontCacheTypes cacheType, Func<object, object> updateCallback, IList<string> filePaths)
+        {
+           
 
-            }
         }
     }
 }

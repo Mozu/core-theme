@@ -95,7 +95,7 @@ NUGET
     Mozu.AppDev.Contracts (1.19.13)
       Mozu.Core.Prime (>= 1.17)
     Mozu.BuildSupport.GetAssemblyFileVersionTask (1.0.0)
-    Mozu.CommerceRuntime.Contracts (1.1618.1-dev1605191659fea)
+    Mozu.CommerceRuntime.Contracts (1.1618.1-dev1605232155fea)
       Mozu.Core.Extensible.Contracts
       Mozu.Core.Prime
       Mozu.PricingRuntime.Contracts
@@ -103,8 +103,8 @@ NUGET
       Newtonsoft.Json
     Mozu.Content.Contracts (1.19.2)
       Mozu.Core.Prime (>= 1.17)
-    Mozu.Core.Extensible.Contracts (1.18.1)
-      Mozu.Core.Prime (>= 1.17)
+    Mozu.Core.Extensible.Contracts (1.1613.1)
+      Mozu.Core.Prime (>= 1.18)
     Mozu.Core.Messaging (1.19.4)
       Burrows (>= 0.3.3)
       Mozu.Core.Messaging.Contracts (>= 1.19)

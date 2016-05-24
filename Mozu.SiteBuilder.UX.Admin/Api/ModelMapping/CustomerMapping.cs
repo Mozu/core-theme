@@ -103,6 +103,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.ModelMapping
             Mapper.CreateMap<DC.CustomerPurchaseOrderPaymentTerm, PurchaseOrderPaymentTerm>()
                 ;
             Mapper.CreateMap<PurchaseOrderPaymentTerm, DC.CustomerPurchaseOrderPaymentTerm>()
+                .ForMember(dc => dc.AuditInfo, opt => opt.Ignore())
                 ;
 
             Mapper.CreateMap<DC.PurchaseOrderTransaction, CustomerPurchaseOrderTransaction>()

@@ -97,6 +97,7 @@
                              categoryId: thisCategoryId,
                              isvalid: true
                          }));
+                         newFacet.setDefaultSortValue();
                          box.applyEmptyText();
                          configuredFacetsStore.add(newFacet);
                      }
