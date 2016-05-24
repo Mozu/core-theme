@@ -94,19 +94,19 @@ Ext.define('Taco.view.category.Index', {
 
         // if were filter categories, turn off drag and drop because
         // that would be crazy, amirite?
-        me.store.on('datachanged', function(store) {
-            if (store.lastOperation.request) {
-                var search = store.lastOperation.request.params.advancedSearch;
+        // me.store.on('datachanged', function(store) {
+        //     if (store.lastOperation.request) {
+        //         var search = store.lastOperation.request.params.advancedSearch;
 
-                if (search && search.length > 2) {
-                    me.down('draghandlecolumn').hide();
-                }
+        //         if (search && search.length > 2) {
+        //             me.down('draghandlecolumn').hide();
+        //         }
 
-                else {
-                    me.down('draghandlecolumn').show();
-                }
-            }
-        })
+        //         else {
+        //             me.down('draghandlecolumn').show();
+        //         }
+        //     }
+        // })
 
         me.viewConfig = Ext.apply(me.viewConfig, {
             animate: false,
@@ -289,10 +289,24 @@ Ext.define('Taco.view.category.Index', {
         var id = null;
 
         var doSelect = function() {
+            var cmp = this;
             var node = this.getNodeById(id);
-
+            
+            
             if (node && node.getPath) {
-                me.selectPath(node.getPath());
+                var fixed = node.getPath();
+
+                while (fixed[0] === '/') {
+                    fixed = fixed.substring(1);
+                }
+
+                var parts = fixed.split('/');
+
+                parts.forEach ( function (part){
+                    cmp.getNodeById(part).expand();
+                });
+
+                me.getSelectionModel().select(node);
             }
         };
         
