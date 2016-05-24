@@ -17,7 +17,16 @@
       {% endif %}
       </td>
       <td class="mz-checkout-digitalcredit-cell-balance">
-        {% include "modules/common/price" with model=priceBand.price %}
+        {% if priceBand.priceRange %}
+          <span itemprop="minPrice" class="mz-pricestack-price-lower">
+            {% include "modules/common/volume-price" with model=priceBand.priceRange.lower %}
+          </span>
+          <span itemprop="maxPrice" class="mz-pricestack-price-upper">
+            {% include "modules/common/volume-price" with model=priceBand.priceRange.upper %}
+          </span>
+        {% else %}
+          {% include "modules/common/volume-price" with model=priceBand.price %}
+        {% endif %}
       </td>
     </tr>
     {% endfor %}
