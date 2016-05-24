@@ -155,9 +155,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
         {
 
             var action = new DCp.PaymentAction
-            {
-                // TODO: should determine ActionName from store preferences
-                ActionName = /*"AuthAndCapture"*/ "AuthorizePayment",
+            { 
                 CurrencyCode = SbApiContext.CurrencyCode,
                 Amount = args.Amount
             };
@@ -181,6 +179,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
                         BillingContact = args.BillingContact.Map<Core.Api.Contracts.Contact>(),
                         PaymentType = DCp.PaymentTypeConst.CREDIT_CARD
                     };
+                    action.ActionName = "AuthorizePayment";
                     break;
                 case DCp.PaymentTypeConst.PURCHASE_ORDER:
                     action.NewBillingInfo = new DCp.BillingInfo
@@ -195,6 +194,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
                         BillingContact = args.BillingContact.Map<Core.Api.Contracts.Contact>(),
                         PaymentType = DCp.PaymentTypeConst.PURCHASE_ORDER
                     };
+                    action.ActionName = "CreatePayment";
                     break;
             }
            
