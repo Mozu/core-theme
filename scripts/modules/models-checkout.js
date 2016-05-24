@@ -339,7 +339,8 @@
             relations: {
                 billingContact: CustomerModels.Contact,
                 card: PaymentMethods.CreditCardWithCVV,
-                check: PaymentMethods.Check
+                check: PaymentMethods.Check,
+                purchaseOrder: PaymentMethods.PurchaseOrder
             },
             validatePaymentType: function(value, attr) {
                 var order = this.getOrder();
@@ -814,30 +815,79 @@
                     currentPaymentType = currentPayment && currentPayment.billingInfo.paymentType,
                     currentPaymentWorkflow = currentPayment && currentPayment.billingInfo.paymentWorkflow,
                     currentBillingContact = currentPayment && currentPayment.billingInfo.billingContact,
-                    currentCard = currentPayment && currentPayment.billingInfo.card;
+                    currentCard = currentPayment && currentPayment.billingInfo.card,
+                    purchaseOrderSiteSettings = HyprLiveContext.locals.siteContext.checkoutSettings.purchaseOrder ?
+                        HyprLiveContext.locals.siteContext.checkoutSettings.purchaseOrder.isEnabled : false
+                    purchaseOrderCustomerSettings = this.getOrder().get('customer').get('purchaseOrder') ? 
+                        this.getOrder().get('customer').get('purchaseOrder').isEnabled : false;
 
-                if (currentPaymentType && (currentPaymentType !== billingInfoPaymentType || currentPaymentWorkflow !== billingInfoPaymentWorkflow)) {
-                    this.set('paymentType', currentPaymentType, { silent: true });
-                    this.set('paymentWorkflow', currentPaymentWorkflow, { silent: true });
-                    this.set('card', currentCard, { silent: true });
-                    this.set('billingContact', currentBillingContact, { silent: true });
+                if(purchaseOrderSiteSettings && purchaseOrderCustomerSettings) {
+                    this.set('paymentType', 'PurchaseOrder');
+                    this.set('paymentWorkflow', 'Mozu');
+                } else {
+                    if (currentPaymentType && (currentPaymentType !== billingInfoPaymentType || currentPaymentWorkflow !== billingInfoPaymentWorkflow)) {
+                        this.set('paymentType', currentPaymentType, { silent: true });
+                        this.set('paymentWorkflow', currentPaymentWorkflow, { silent: true });
+                        this.set('card', currentCard, { silent: true });
+                        this.set('billingContact', currentBillingContact, { silent: true });
+                    }
                 }
             },
             edit: function () {
                 this.getPaymentTypeFromCurrentPayment();
                 CheckoutStep.prototype.edit.apply(this, arguments);
             },
+            setPurchaseOrderInfo: function(purchaseOrderInfo) {
+                var me = this,
+                    order = me.getOrder(),
+                    purchaseOrder = {},
+                    customerPurchaseOrderPaymentTerms = purchaseOrderInfo.customerPurchaseOrderPaymentTerms,
+                    siteSettingsPaymentTerms = HyprLiveContext.locals.siteContext.checkoutSettings.purchaseOrder.paymentTerms;
+
+                // Set information:
+
+                purchaseOrder.amount = purchaseOrderInfo.availableBalance > order.get('amountRemainingForPayment') ?
+                    order.get('amountRemainingForPayment') : purchaseOrderInfo.availableBalance;
+                purchaseOrder.availableBalance = purchaseOrderInfo.availableBalance;
+                purchaseOrder.creditLimit = purchaseOrderInfo.creditLimit;
+                if(purchaseOrder.amount < order.get('amountRemainingForPayment')) {
+                    purchaseOrder.splitPayment = true;
+                }
+                purchaseOrder.isEnabled = true;
+
+                purchaseOrder.paymentTermOptions = [];
+                for( var i = 0; i < customerPurchaseOrderPaymentTerms.length; ++i) {
+                    var j = 0,
+                        found = false;
+                    while(j < siteSettingsPaymentTerms.length && !found) {
+                        if(siteSettingsPaymentTerms[j].code === customerPurchaseOrderPaymentTerms[i].code) {
+                            var term = customerPurchaseOrderPaymentTerms[i];
+                            term.description = siteSettingsPaymentTerms[j].description;
+                            purchaseOrder.paymentTermOptions.push(term);
+                            found = true;
+                        }
+                        ++j;
+                    }
+                }
+                me.set('purchaseOrder', purchaseOrder);
+                // use this to pull custom field data from checkout: purchase-order-custom-field-{{customField.code}}
+            },
             initialize: function () {
                 var me = this;
 
                 _.defer(function () {
                     me.getPaymentTypeFromCurrentPayment();
-                    var savedCardId = me.get('card.paymentServiceCardId');
-                    me.set('savedPaymentMethodId', savedCardId, { silent: true });
-                    me.setSavedPaymentMethod(savedCardId);
+                    if(me.get('paymentType') && me.get('paymentType').toLowerCase() === 'purchaseorder') {
+                        //set purchaseOrder defaults here.
+                        me.setPurchaseOrderInfo(me.getOrder().get('customer').get('purchaseOrder'));
+                    } else {
+                        var savedCardId = me.get('card.paymentServiceCardId');
+                        me.set('savedPaymentMethodId', savedCardId, { silent: true });
+                        me.setSavedPaymentMethod(savedCardId);
 
-                    if (!savedCardId) {
-                        me.setDefaultPaymentType(me);
+                        if (!savedCardId) {
+                            me.setDefaultPaymentType(me);
+                        }
                     }
 
                     me.on('change:usingSavedCard', function (me, yes) {
@@ -870,17 +920,11 @@
                 }
                 me.get('check').selected = newPaymentType === 'Check';
                 me.get('card').selected = newPaymentType === 'CreditCard';
-                me.get('purchaseorder').selected = newPaymentType === 'PurchaseOrder';
             },
             setDefaultPaymentType: function(me) {
-                if (me.checkoutSettings.get('purchaseOrder').isEnabled) {
-                    me.set('paymentType', 'PurchaseOrder');
-                }
-                else {
-                    me.set('paymentType', 'CreditCard');
-                    if (me.savedPaymentMethods() && me.savedPaymentMethods().length > 0) {
-                        me.set('usingSavedCard', true);
-                    }
+                me.set('paymentType', 'CreditCard');
+                if (me.savedPaymentMethods() && me.savedPaymentMethods().length > 0) {
+                    me.set('usingSavedCard', true);
                 }
             },
             calculateStepStatus: function () {

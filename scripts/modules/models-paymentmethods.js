@@ -22,35 +22,6 @@
         "6": "DISCOVER"
     };
 
-    var PurchaseOrder = PaymentMethod.extend({
-
-        isEnabled: false,
-        creditAmountApplied: null,
-        remainingBalance: null,
-        isTiedToCustomer: true,
-        addRemainderToCustomer: false,
-
-        initialize: function () {
-            this.set({ isEnabled: this.isEnabled });
-            this.set({ creditAmountApplied: this.creditAmountApplied });
-            this.set({ remainingBalance: this.remainingBalance });
-            this.set({ isTiedToCustomer: this.isTiedToCustomer });
-            this.set({ addRemainderToCustomer: this.addRemainderToCustomer });
-        },
-
-        helpers: ['calculateRemainingBalance'],
-
-        calculateRemainingBalance: function () {
-            return (! this.get('creditAmountApplied')) ? this.get('currentBalance') : this.get('currentBalance') - this.get('creditAmountApplied');
-        },
-
-        validate: function (attrs, options) {
-            if ( (attrs.creditAmountApplied) && (attrs.creditAmountApplied > attr.currentBalance) ) {
-                return 'Exceeds purchase order balance.';
-            }
-        }
-    });
-
     var CreditCard = PaymentMethod.extend({
         mozuType: 'creditcard',
         defaults: {
@@ -208,11 +179,41 @@
         }
     });
 
+    var PurchaseOrder = PaymentMethod.extend({
+        //Payment specific:
+        paymentTerm: null,
+        customFields: [],
+        purchaseOrderNumber: null,
+        // Stuff required for book keeping on storefront
+        isEnabled: false,
+        splitPayment: false,
+        amount: null,
+        availableBalance: null,
+        creditLimit: null,
+        paymentTermOptions: [],
+        
+        initialize: function() {
+            
+        },
+
+        dataTypes: {
+            paymentTerm: Backbone.MozuModel.DataTypes.String,
+            purchaseOrderNumber: Backbone.MozuModel.DataTypes.String,
+            
+            isEnabled: Backbone.MozuModel.DataTypes.Boolean,
+            splitPayment: Backbone.MozuModel.DataTypes.Boolean,
+            amount: Backbone.MozuModel.DataTypes.Float,
+            availableBalance: Backbone.MozuModel.DataTypes.Float,
+            creditLimit: Backbone.MozuModel.DataTypes.Float
+        }
+
+    });
+
     return {
+        PurchaseOrder: PurchaseOrder,
         CreditCard: CreditCard,
         CreditCardWithCVV: CreditCardWithCVV,
         Check: Check,
-        DigitalCredit: DigitalCredit,
-        PurchaseOrder: PurchaseOrder
+        DigitalCredit: DigitalCredit
     };
 });
