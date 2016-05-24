@@ -1,5 +1,5 @@
 /*! 
- * Mozu JavaScript SDK - v0.3.0 - 2016-04-11
+ * Mozu JavaScript SDK - v0.3.0 - 2016-05-24
  *
  * Copyright (c) 2016 Volusion, Inc.
  *
@@ -3638,9 +3638,10 @@ module.exports=
         },
         "configure": {
             "verb": "POST",
-            "template": "{+productService}{productCode}/configure{?includeOptionDetails}",
+            "template": "{+productService}{productCode}/configure{?includeOptionDetails,quantity}",
             "defaultParams": {
-                "includeOptionDetails": true
+                "includeOptionDetails": true,
+                "quantity": 1
             },
             "includeSelf": true
         },

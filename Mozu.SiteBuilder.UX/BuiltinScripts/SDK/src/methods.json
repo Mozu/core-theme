@@ -140,9 +140,10 @@
         },
         "configure": {
             "verb": "POST",
-            "template": "{+productService}{productCode}/configure{?includeOptionDetails}",
+            "template": "{+productService}{productCode}/configure{?includeOptionDetails,quantity}",
             "defaultParams": {
-                "includeOptionDetails": true
+                "includeOptionDetails": true,
+                "quantity": 1
             },
             "includeSelf": true
         },
