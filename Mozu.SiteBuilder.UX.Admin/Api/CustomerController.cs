@@ -8,6 +8,7 @@ using System.Threading.Tasks;
 using System.Web.Http;
 using AutoMapper;
 using MongoDB.Driver;
+using Mozu.Core.Actions;
 using Mozu.Core.Api.Contracts.Client;
 using Mozu.Core.Api.Routing;
 using Mozu.Customer.Contracts.Clients;
@@ -638,5 +639,21 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
             await (await _creditWebApiClient.ResendCreditCreatedEmail(args.Code)).ReadAsAsync();
             return this.EmptySingle2<Credit>();
         }
+
+
+        [HttpGetRoute(UriTemplate = "{accountId}/auditLog/list")]
+        public async Task<Response<List<CustomerAuditEntry>>> GetAuditLog([FromUri] int? accountId)
+        {
+            if (!accountId.HasValue)
+            {
+                throw new ArgumentException("No customerId provided.");
+            }
+
+            var auditEntryCollection = (await _customerWebApiClient.GetAccountAuditLog(accountId.Value)).ReadAsSync();
+            var results = auditEntryCollection.Items.Select(entry =>  entry.Map<CustomerAuditEntry>()).ToList();
+            return List2(results);
+        }
+
+
     }
 }

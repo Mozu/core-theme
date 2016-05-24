@@ -111,6 +111,9 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.ModelMapping
                 .ForMember(dc => dc.AuditInfo, opt => opt.Ignore())
                 ;
 
+            Mapper.CreateMap<DC.CustomerAuditEntry, CustomerAuditEntry>();
+            Mapper.CreateMap<CustomerAuditEntry, DC.CustomerAuditEntry>();
+
             Mapper.CreateMap<Mozu.SiteBuilder.UX.Admin.Api.Models.CustomerSegment, DC.CustomerSegment>()
                 .ForMember(x => x.Id, op => op.ResolveUsing(x => x.Id))
                 .ForMember(x => x.AuditInfo, op => op.ResolveUsing(x => x.AuditInfo))
