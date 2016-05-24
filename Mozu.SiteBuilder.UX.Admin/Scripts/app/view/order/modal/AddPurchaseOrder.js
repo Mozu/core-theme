@@ -378,7 +378,6 @@ Ext.define('Taco.view.order.modal.AddPurchaseOrder', {
         var fieldId = null;
         var fieldData = null;
         var fieldObj = null;
-        console.log(billingInfo);
 
         fields.forEach(function (field) {
             fieldId = '#custom-field-' + field.code;
