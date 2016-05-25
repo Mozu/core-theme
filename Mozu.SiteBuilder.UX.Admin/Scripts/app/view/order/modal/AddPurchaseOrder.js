@@ -273,7 +273,8 @@ Ext.define('Taco.view.order.modal.AddPurchaseOrder', {
                         tag: 'p'
                     }
                 ],
-                tag: 'span'
+                tag: 'span',
+                value: paymentTermsItem.code
             };
 
         /**
@@ -380,30 +381,39 @@ Ext.define('Taco.view.order.modal.AddPurchaseOrder', {
 
         fields.forEach(function (field) {
             fieldId = '#custom-field-' + field.code;
-            console.log(fieldId)
             fieldData = me.down(fieldId);
             fieldObj = {
                 code: field.code,
                 label: fieldData.fieldLabel,
                 value: fieldData.value
             };
+
             customFields.push(fieldObj);
         });
 
         purchaseOrderInfo = {
-            purchaseOrderPayment: {
-                purchaseOrderNumber: purchaseOrderNumber,
-                paymentTerm: {
-                    code: paymentTermsCode,
-                    description: paymentTermsDescription
-                },
-                customFields: customFields
-            }
+            purchaseOrderNumber: purchaseOrderNumber,
+            paymentTerm: {
+                code: paymentTermsCode,
+                description: paymentTermsDescription
+            },
+            customFields: customFields
         };
 
-        console.log(purchaseOrderInfo)
-
-        contactInfo = {};
+        contactInfo = {
+            email: billingInfo.billingContact.email,
+            firstName: billingInfo.billingContact.firstName,
+            lastName: billingInfo.billingContact.lastNameOrSurname,
+            address1: billingInfo.billingContact.address.address1,
+            address2: billingInfo.billingContact.address.address2,
+            address3: billingInfo.billingContact.address.address3,
+            address4: billingInfo.billingContact.address.address4,
+            cityOrTown: billingInfo.billingContact.address.cityOrTown,
+            countryCode: billingInfo.billingContact.address.countryCode,
+            postalOrZipCode: billingInfo.billingContact.address.postalOrZipCode,
+            stateOrProvince: billingInfo.billingContact.address.stateOrProvince,
+            homePhone: billingInfo.billingContact.phoneNumbers.home
+        };
 
         return {
             actionName: 'CreatePayment',
@@ -411,6 +421,7 @@ Ext.define('Taco.view.order.modal.AddPurchaseOrder', {
             amount: amount,
             paymentType: 'PurchaseOrder',
             billingInfo: billingInfo,
+            billingContact: contactInfo,
             purchaseOrderInfo: purchaseOrderInfo,
             orderId: order.getId()
         };

@@ -22,7 +22,12 @@ Ext.define('Taco.model.OrderPayment', {
         {
             name: "billingContact",
             type: "auto",
-            persist:false
+            persist: false
+        },
+        {
+            name: "purchaseOrderInfo",
+            type: "auto",
+            persist: false
         },
         {
             name: 'paymentServiceTransactionId',
