@@ -30,8 +30,12 @@ Ext.define('Taco.view.order.modal.AuthorizePayment', {
         });
 
         this.items = [this.form];
-        
+
         this.callParent(arguments);
+    },
+
+    getNewPaymentAmountHint: function () {
+        return Math.min(this.record.data.amountRequested, this.order.getCaptureAmountHint());
     },
 
     doSave: function () {

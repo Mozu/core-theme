@@ -198,7 +198,7 @@ Ext.define('Taco.view.order.widget.PaymentPanel', {
                     width: 77,
                     itemId: 'authorizeButton',
                     handler: function () {
-                        me.openPaymentActionModal('AuthorizePurchaseOrder');
+                        me.openPaymentActionModal('AuthorizePayment');
                     }
                 };
             } else if (me.record.data.status !== 'Authorized') {
