@@ -608,6 +608,14 @@ Ext.define('Taco.view.order.widget.PaymentPanel', {
     // removes the authorized transaction (first item in the payments collection). Will call service, reload the record, and update the ui;
     voidTransaction: function() {
         var me = this,
+            msg = me.record.get('paymentType') === 'PurchaseOrder'
+                  ? '<p>Amount voided will be applied to the customer\'s line of credit for purchase orders.</p>'
+                  + '<br />'
+                  + '<p>Void Amount</p>'
+                  + '<h2>$500.00</h2>'
+                  + '<br />'
+                  + '<p>Are you certain you want to void this payment?</p>'
+                  : 'Are you certain you want to void this payment?',
             config = {
                 jsonData: {
                     orderId: me.order.getId(),
@@ -635,7 +643,9 @@ Ext.define('Taco.view.order.widget.PaymentPanel', {
             title: 'Void Payment',
             rightJustifyButtons: true,
             reverseOrder: true,
-            msg: 'Are you certain you want to void this payment?',
+            cls: 'void-purchase-order',
+            msg: msg,
+            height: 260,
             closable: false,
             buttons: Ext.Msg.YESNO,
             fn: function(val) {
@@ -646,6 +656,8 @@ Ext.define('Taco.view.order.widget.PaymentPanel', {
                 me.order.voidTransaction(config);
             }
         });
+
+        this.actionModal.height = 400;
     },
 
     manualDeclinePayment: function() {
