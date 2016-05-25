@@ -76,7 +76,7 @@ Ext.define('Taco.view.settings.paymentTypes.subform.PurchaseOrder', {
             itemId: 'purchaseOrderOptions',
             name: 'purchaseOrderOptions',
             fieldLabel: 'Options',
-            hidden: true,//!me.purchaseOrderEnabled,
+            hidden: !me.purchaseOrderEnabled,
             items: [
                 me.purchaseOrderSplitPaymentToggle
             ]
@@ -88,7 +88,7 @@ Ext.define('Taco.view.settings.paymentTypes.subform.PurchaseOrder', {
                 items: [
                     me.purchaseOrderEnabledToggle,
                     me.purchaseOrderContent,
-                    me.purchaseOrderSplitPayment
+                    //me.purchaseOrderSplitPayment
                 ]
             })
         ];
