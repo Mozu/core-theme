@@ -259,8 +259,12 @@
                 minQty = _.min(_.pluck(this.get('volumePriceBands'), 'minQty'));
                 if (minQty > 1 && this.get('quantity') <= 1) {
                     this.set('quantity', minQty);
+                    this.validation.quantity.min = minQty;
+                    this.validation.quantity.msg = Hypr.getLabel('enterMinProductQuantity', minQty);
                 }
-                this.on("change:quantity", this.onQuantityChange, this);
+                if (this.get('productUsage') === 'Configurable') {
+                    this.on("change:quantity", this.onQuantityChange, this);
+                }
             }
             this.updateConfiguration = _.debounce(this.updateConfiguration, 300);
             this.set({ url: slug ? "/" + slug + "/p/" + this.get("productCode") : "/p/" + this.get("productCode") });

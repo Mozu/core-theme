@@ -329,6 +329,7 @@
     "chooseShippingMethod"   : "Bitte wählen Sie eine Versandmethode.",
     "didNotAgreeToTerms"   : "Sie müssen zu den Bedingungen einverstanden",
     "enterProductQuantity"   : "Bitte geben Sie eine Produktmenge über 0",
+    "enterMinProductQuantity" : "Bitte geben Sie eine minimale Produktmenge von {0}",
     "enterReturnReason"   : "Bitte wählen Sie ein Rückgabegrund.",
     "enterReturnQuantity"   : "Bitte geben Sie eine Menge über 1 zurückzukehren.",
     "enterOtherComments"   : "Bitte geben Sie einen Kommentar, die die Gründe für diese Rückkehr.",

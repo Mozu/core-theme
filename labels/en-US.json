@@ -357,6 +357,7 @@
   "chooseShippingMethod" : "Please select a shipping method.",
   "didNotAgreeToTerms"   : "You must agree to the terms and conditions",
   "enterProductQuantity" : "Please enter a product quantity above 0",
+  "enterMinProductQuantity" : "Please enter a minimum product quantity of {0}",
   "enterReturnReason"    : "Please select a return reason.",
   "enterReturnQuantity"  : "Please enter a quantity above 1 to return.",
   "enterOtherComments"   : "Please enter a comment explaining the reason for this return.",
