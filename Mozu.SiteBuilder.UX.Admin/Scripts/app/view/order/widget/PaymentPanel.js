@@ -189,7 +189,7 @@ Ext.define('Taco.view.order.widget.PaymentPanel', {
             buttonRight = null;
 
         if (me.record.get('paymentType') == 'PurchaseOrder') {
-            if (me.record.data.status !== 'Authorized') {
+            if (me.record.data.status === 'PaymentRequested') {
                 buttonLeft = {
                     xtype: 'button',
                     ui: 'action',
@@ -200,19 +200,6 @@ Ext.define('Taco.view.order.widget.PaymentPanel', {
                     handler: function () {
                         me.openPaymentActionModal('AuthorizePayment');
                     }
-                };
-            } else if (me.record.data.status !== 'Authorized') {
-                buttonLeft = {
-                    xtype: 'button',
-                    ui: 'action',
-                    scale: 'medium',
-                    text: 'Capture',
-                    width: 70,
-                    itemId: 'captureButton',
-                    handler: function () {
-                        me.openPaymentActionModal((me.record.get('paymentType') === 'Check') ? 'ApplyCheck' : 'CapturePayment');
-                    },
-                    disabled: !canCapture || pendingReview
                 };
             } else if (me.record.data.status === 'Authorized') {
                 buttonLeft = {
@@ -252,6 +239,7 @@ Ext.define('Taco.view.order.widget.PaymentPanel', {
                     },
                     disabled: !canCapture || pendingReview
                 };
+                buttonRight = null;
             } else if (me.record.data.status === 'Collected') {
                 buttonLeft = null;
                 buttonRight = null;
