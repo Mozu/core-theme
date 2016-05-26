@@ -380,15 +380,17 @@ Ext.define('Taco.view.order.modal.AddPurchaseOrder', {
         var fieldObj = null;
 
         fields.forEach(function (field) {
-            fieldId = '#custom-field-' + field.code;
-            fieldData = me.down(fieldId);
-            fieldObj = {
-                code: field.code,
-                label: fieldData.fieldLabel,
-                value: fieldData.value
-            };
+            if (field.isEnabled) {
+                fieldId = '#custom-field-' + field.code;
+                fieldData = me.down(fieldId);
+                fieldObj = {
+                    code: field.code,
+                    label: fieldData.fieldLabel,
+                    value: fieldData.value
+                };
 
-            customFields.push(fieldObj);
+                customFields.push(fieldObj);
+            }
         });
 
         purchaseOrderInfo = {
