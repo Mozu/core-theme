@@ -843,8 +843,8 @@
                     order = me.getOrder(),
                     purchaseOrderInfo = order.get('customer').get('purchaseOrder'),
                     purchaseOrderSiteSettings = HyprLiveContext.locals.siteContext.checkoutSettings.purchaseOrder ?
-                        HyprLiveContext.locals.siteContext.checkoutSettings.purchaseOrder.isEnabled : false
-                    purchaseOrderEnabled = purchaseOrderSiteSettings && purchaseOrderInfo.isEnabled,
+                        HyprLiveContext.locals.siteContext.checkoutSettings.purchaseOrder.isEnabled : false,
+                    purchaseOrderEnabled = purchaseOrderSiteSettings && purchaseOrderInfo?purchaseOrderInfo.isEnabled:false,
                     currentPurchaseOrder = me.get('purchaseOrder');
 
                 currentPurchaseOrder.set('isEnabled', purchaseOrderEnabled);
@@ -1007,6 +1007,49 @@
                 
                 return !_.isEqual(normalizedSavedPaymentInfo, normalizedLiveBillingInfo);
             },
+            addDataToPurchaseOrder: function() {
+                var purchaseOrder = this.get('purchaseOrder');
+                var siteSettingsCustomFields = HyprLiveContext.locals.siteContext.checkoutSettings.purchaseOrder.customFields;
+                var paymentTermOptions = purchaseOrder.get('paymentTermOptions');
+                var customFields = [];
+
+                // will be deleted!
+                if(!purchaseOrder.get('purchaseOrderNumber')) {
+                    purchaseOrder.set('purchaseOrderNumber', $('#mz-payment-purchase-order-number').val());
+                }
+
+                // Custom field data fields: code, label, value
+                siteSettingsCustomFields.forEach(function(val) {
+                    var customField = {};
+                    if(val.isEnabled) {
+                        var fieldInput = $('#purchase-order-custom-field-' + val.code).val();
+                        if(fieldInput.length > 0) {
+                            customField.code = val.code;
+                            customField.label = val.label;
+                            customField.value = fieldInput;
+                            // add the populated custom field to the customField array.
+                            customFields.push(customField);
+                        }
+                    }
+                });
+                if(customFields.length > 0) {
+                    purchaseOrder.set('customFields', customFields);
+                }
+
+                // Payment term data fields: code, description
+                var paymentTerm = {};
+                if(paymentTermOptions.length === 1) {
+                    paymentTerm.code = paymentTermOptions[0].code;
+                    paymentTerm.description = paymentTermOptions[0].description;
+                    purchaseOrder.set('paymentTerm', paymentTerm);
+                } else {
+                    var selectedTerm = $('#mz-payment-purchase-order-payment-terms option:selected');
+                    paymentTerm.code = selectedTerm.val();
+                    paymentTerm.description = selectedTerm.text();
+                    purchaseOrder.set('paymentTerm', paymentTerm);
+                }
+
+            },
             submit: function () {
                 
                 var order = this.getOrder();
@@ -1040,6 +1083,11 @@
                         order.onCheckoutError(error);
                     }
                     return false;
+                }
+
+                if(this.get('paymentType').toLowerCase() === 'purchaseorder') {
+                    // this may be altered/removed to fix purchase order stuff.
+                    this.addDataToPurchaseOrder();
                 }
 
                 var card = this.get('card');
