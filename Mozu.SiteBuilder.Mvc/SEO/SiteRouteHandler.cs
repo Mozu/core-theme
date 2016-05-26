@@ -215,7 +215,7 @@ namespace Mozu.SiteBuilder.Mvc.SEO
                         _requestMessage.Value.RequestUri.GetComponents(UriComponents.Path , UriFormat.Unescaped), 
                         StringComparison.OrdinalIgnoreCase))
                     {
-                        if (!IsValidForExistingContext(request , uri, routeCollection))
+                        if (!IsValidForExistingContext(request , uri, routeCollection, _routeconfig.DefaultRoutes))
                         {
                             return null;
                         }
@@ -248,15 +248,15 @@ namespace Mozu.SiteBuilder.Mvc.SEO
             return null;
         }
 
-        private static bool IsValidForExistingContext(HttpRequestMessage currentRequest, Uri candidateUri, HttpRouteCollection routeCollection)
+        private static bool IsValidForExistingContext(HttpRequestMessage currentRequest, Uri candidateUri, HttpRouteCollection siteCollection, HttpRouteCollection defaultCollection)
         {
-            if (routeCollection == null)
+            if (siteCollection == null)
             {
                 return false;
             }
             var testHttmMessage = new HttpRequestMessage(currentRequest.Method, candidateUri);
             testHttmMessage.Properties[HttpPropertyKeys.DependencyScope] =currentRequest.Properties[HttpPropertyKeys.DependencyScope];
-            var reverseResolvedRoute = routeCollection.GetRouteData(testHttmMessage)?.Route as CustomRoute;
+            var reverseResolvedRoute = (siteCollection.GetRouteData(testHttmMessage)?.Route as CustomRoute) ?? (defaultCollection.GetRouteData(testHttmMessage)?.Route as CustomRoute);
             var resolvedRoute = currentRequest.GetRouteData().Route as CustomRoute;
             if (reverseResolvedRoute == null)
             {
