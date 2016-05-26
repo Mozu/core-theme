@@ -1,5 +1,5 @@
 /*! 
- * Mozu JavaScript SDK - v0.3.0 - 2016-05-19
+ * Mozu JavaScript SDK - v0.3.0 - 2016-05-26
  *
  * Copyright (c) 2016 Volusion, Inc.
  *
@@ -5074,8 +5074,8 @@ module.exports = (function () {
                 amount: payment.amount,
                 newBillingInfo: {
                     paymentType: 'PurchaseOrder',
-                    billingContact: payment.billingInfo,
-                    purchaseOrderPayment: payment.purchaseOrder
+                    billingContact: payment.billingContact,
+                    purchaseOrder: payment.purchaseOrder
                 }
             });
         },

@@ -159,7 +159,7 @@ module.exports = (function () {
                 amount: payment.amount,
                 newBillingInfo: {
                     paymentType: 'PurchaseOrder',
-                    billingContact: payment.billingInfo,
+                    billingContact: payment.billingContact,
                     purchaseOrder: payment.purchaseOrder
                 }
             });
