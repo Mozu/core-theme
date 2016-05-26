@@ -95,19 +95,15 @@
             $('#add-to-wishlist').prop('disabled', 'disabled').text(Hypr.getLabel('addedToWishlist'));
         });
 
-        var productView = new ProductView({
-            el: $('#product-detail'),
-            model: product,
-            messagesEl: $('[data-mz-message-bar]')
-        });
-
         var productImagesView = new ProductImageViews.ProductPageImagesView({
             el: $('[data-mz-productimages]'),
             model: product
         });
 
-        product.on('volumepricequantitychange', function () {
-            productView.render();
+        var productView = new ProductView({
+            el: $('#product-detail'),
+            model: product,
+            messagesEl: $('[data-mz-message-bar]')
         });
 
         window.productView = productView;

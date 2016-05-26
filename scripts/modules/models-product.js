@@ -251,20 +251,20 @@
             this._hasPriceRange = json && !!json.priceRange;
         },
         initialize: function(conf) {
-            var minQty,
-                slug = this.get('content').get('seoFriendlyUrl');
+            var minQty = 1,
+              slug = this.get('content').get('seoFriendlyUrl');
             _.bindAll(this, 'calculateHasPriceRange', 'onOptionChange');
             this.listenTo(this.get("options"), "optionchange", this.onOptionChange);
-            if (this.get('volumePriceBands')) {
+            if (this.get('volumePriceBands') && this.get('volumePriceBands').length > 0) {
                 minQty = _.min(_.pluck(this.get('volumePriceBands'), 'minQty'));
-                if (minQty > 1 && this.get('quantity') <= 1) {
-                    this.set('quantity', minQty);
+                if (minQty > 1) {
+                    if (this.get('quantity') <= 1) {
+                        this.set('quantity', minQty);
+                    }
                     this.validation.quantity.min = minQty;
                     this.validation.quantity.msg = Hypr.getLabel('enterMinProductQuantity', minQty);
                 }
-                if (this.get('productUsage') === 'Configurable') {
-                    this.on("change:quantity", this.onQuantityChange, this);
-                }
+                this.on("change:quantity", this.onQuantityChange, this);
             }
             this.updateConfiguration = _.debounce(this.updateConfiguration, 300);
             this.set({ url: slug ? "/" + slug + "/p/" + this.get("productCode") : "/p/" + this.get("productCode") });
@@ -339,13 +339,15 @@
             this.updateConfiguration();
         },
         onQuantityChange: function () {
-            this.isLoading(true);
-            this.updateQuantity();
+            if (!this.validate()) {
+                this.isLoading(true);
+                this.updateQuantity();
+            }
         },
         updateQuantity: function() {
             if (this.lastQuantity != this.get('quantity')) {
                 this.lastQuantity = this.get('quantity');
-                this.apiConfigure({ options: this.lastConfiguration }, { useExistingInstances: true });
+                this.apiConfigure({ options: this.getConfiguredOptions() }, { useExistingInstances: true });
             } else {
                 this.isLoading(false);
             }
