@@ -658,8 +658,28 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
             {
                 throw new ArgumentException("No customerId provided.");
             }
+            // Labes. this needs to change when adding localizability to the admin
+            Dictionary<string,string> labels = new Dictionary<string, string>()
+            {
+                { "@LineofCreditChangeLabel","Line of Credit Change"},
+                {"@PurchaseOrderEnableLabel","Purchase Orders Enabled" },
+                {"@PurchaseOrderDisableLabel","Purchase Orders Disabled" },
+                {"@OverdraftAllowanceLabel", "Overdraft Allowance Change" },
+                {"@OverdraftAllowanceTypeLabel", "Overdraft Allowance Type Change" },
+                {"@paymentTermAddedLabel", "Net Term Change" },
+                {"@paymentTermRemovedLabel", "Net Term Changed" },
+            };
 
             var auditEntryCollection = (await _customerWebApiClient.GetAccountAuditLog(accountId.Value)).ReadAsSync();
+
+            //Replace labels with localized content
+            foreach (var auditEntry in auditEntryCollection.Items)
+            {
+                if (labels.ContainsKey(auditEntry.Description))
+                {
+                    auditEntry.Description = labels[auditEntry.Description];
+                }
+            }
             var results = auditEntryCollection.Items.Select(entry =>  entry.Map<CustomerAuditEntry>()).ToList();
             return List2(results);
         }
