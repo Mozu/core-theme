@@ -139,6 +139,8 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
 
                 customer.PaymentCards = (await _customerWebApiClient.GetAccountCards(customer.Id.Value)).ReadAsSync().Items;
 
+                customer.PurchaseOrderAccount = (await _customerWebApiClient.GetCustomerPurchaseOrderAccount(customer.Id.Value)).ReadAsAsync().Result;
+
                 return List2(customer);
             }
 
@@ -178,6 +180,13 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
                             )).ReadAsSync();
 
             var customers = Mapper.Map<List<ApiCustomer>>(dcCustomers.Items);
+
+            //TODO:this flag info should ideally come from getAccounts api call  
+            foreach (var customer in customers)
+            {
+                var result = (await _customerWebApiClient.GetCustomerPurchaseOrderAccount(customer.Id.Value)).ReadAsAsync().Result;
+                customer.IsPoEnabled = result?.IsEnabled ?? false;
+            }
 
             return List2(customers, total: (int)dcCustomers.TotalCount);
         }
