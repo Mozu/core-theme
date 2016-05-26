@@ -20,7 +20,7 @@
             </div>
             <div class="mz-l-formfieldgroup-row mz-payment-purchase-order-payment-terms-row">
                 <div class="mz-l-formfieldgroup-cell">
-                    <label for="mz-payment-purchase-order-payment-terms">{{ labels.purchaseOrderPaymentTerms }}:</label>
+                    <label for="mz-payment-purchase-order-payment-terms">{{ labels.purchaseOrderPaymentTerms }}<span class="is-required"> *</span>:</label>
                 </div>
                 <div class="mz-l-formfieldgroup-cell">
                     {% if model.paymentTermOptions.length > 1 %}
@@ -33,6 +33,7 @@
                     {% else %}
                         <span class="mz-payment-purchase-order-payment-terms">{{ model.paymentTermOptions | first.description }}</span>
                     {% endif %}
+                    <span class="mz-validationmessage" data-mz-validationmessage-for="{{ purchaseordercontext }}paymentTerm"></span>
                 </div>
             </div>
             {% for field in siteContext.checkoutSettings.purchaseOrder.customFields %}
@@ -48,6 +49,7 @@
                         </div>
                         <div class="mz-l-formfieldgroup-cell">
                             <input type="text" name="purchase-order-custom-field-{{ field.code }}" id="purchase-order-custom-field-{{ field.code }}"/>
+                            <span class="mz-validationmessage" id="purchase-order-custom-field-{{ field.code }}-validation" data-mz-validationmessage-for="purchase-order-custom-field-{{ field.code }}"></span>
                         </div>
                     </div>
                 {% endif %}

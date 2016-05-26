@@ -1,4 +1,4 @@
-﻿define(['modules/jquery-mozu', 'underscore', 'modules/backbone-mozu', 'hyprlive'], function ($, _, Backbone, Hypr) {
+﻿define(['modules/jquery-mozu', 'underscore', 'modules/backbone-mozu', 'hyprlive', 'hyprlivecontext'], function ($, _, Backbone, Hypr, HyprLiveContext) {
     // payment methods only validate if they are selected!
     var PaymentMethod = Backbone.MozuModel.extend({
         present: function (value, attr) {
@@ -179,21 +179,161 @@
         }
     });
 
+    var PurchaseOrderCustomField = Backbone.MozuModel.extend({
+        //code: null,
+        //label: null,
+        //value: null,
+        validation: {
+            code: {
+                // set from code, before validation call
+                fn: 'present'
+            },
+            label: {
+                // set from code, before validation call
+                fn: 'present'
+            },
+            value: {
+                // set from user, but should be set before validation call:
+
+                fn: function(value, attrs) {
+                    // validate value of purchase order custom field
+                    // Try validation from below:
+                    /*
+                    function(value, attr) {
+                        var siteSettingsCustomFields = HyprLiveContext.locals.siteContext.checkoutSettings.purchaseOrder.customFields;
+                        var result = null;
+                        siteSettingsCustomFields.forEach(function(field) {
+                            if(field.isEnabled && field.isRequired) {
+                                var fieldInput = $('#purchase-order-custom-field-' + field.code);
+                                if(fieldInput.val().length < 1) {
+                                    var errorMessage = field.label + " " + Hypr.getLabel('missing');
+                                    fieldInput.addClass('is-invalid');
+                                    $('#purchase-order-custom-field-' + field.code + '-validation').text(errorMessage);
+                                    result = Hypr.getLabel('purchaseOrderCustomFieldMissing');
+                                } else {
+                                    fieldInput.removeClass('is-invalid');
+                                    $('#purchase-order-custom-field-' + field.code + '-validation').empty();
+                                }
+                            }
+                        });
+                        return result;
+                    }
+                    */
+                    var siteSettingsCustomFields = HyprLiveContext.locals.siteContext.checkoutSettings.purchaseOrder.customFields;
+                    var result = null;
+                    siteSettingsCustomFields.forEach(function(field) {
+                        if(field.isEnabled && field.isRequired) {
+                            var fieldInput = $('#purchase-order-custom-field-' + field.code);
+                            if(fieldInput.val().length < 1) {
+                                var errorMessage = field.label + " " + Hypr.getLabel('missing');
+                                fieldInput.addClass('is-invalid');
+                                $('#purchase-order-custom-field-' + field.code + '-validation').text(errorMessage);
+                                result = Hypr.getLabel('purchaseOrderCustomFieldMissing');
+                            } else {
+                                fieldInput.removeClass('is-invalid');
+                                $('#purchase-order-custom-field-' + field.code + '-validation').empty();
+                            }
+                        }
+                    });
+                    return result;
+                }
+            }
+        },
+        dataTypes: {
+            code: Backbone.MozuModel.DataTypes.String,
+            label: Backbone.MozuModel.DataTypes.String,
+            value: Backbone.MozuModel.DataTypes.String
+        }
+    });
+
+    var PurchaseOrderPaymentTerm = Backbone.MozuModel.extend({
+        //code: null,
+        //description: null,
+        // validation should pass! This is set from code and not sent to server.
+        validation: {
+            code: {
+                fn: 'present'
+            },
+            description: {
+                fn: 'present'
+            }
+        },
+        dataTypes: {
+            code: Backbone.MozuModel.DataTypes.String,
+            description: Backbone.MozuModel.DataTypes.String
+        }
+    });
+
     var PurchaseOrder = PaymentMethod.extend({
+        mozuType: 'purchaseorder',
+        defaults: {
+            isEnabled: false,
+            splitPayment: false,
+            amount: 0,
+            availableBalance: 0,
+            creditLimit: 0
+        },
         //Payment specific:
-        paymentTerm: null,
-        customFields: [],
-        purchaseOrderNumber: null,
+        //paymentTerm: null,
+        //purchaseOrderNumber: null,
         // Stuff required for book keeping on storefront
-        isEnabled: false,
-        splitPayment: false,
-        amount: null,
-        availableBalance: null,
-        creditLimit: null,
-        paymentTermOptions: [],
+
+        relations: {
+            customFields: Backbone.Collection.extend({
+                model: PurchaseOrderCustomField
+            }),
+            paymentTermOptions: Backbone.Collection.extend({
+                model: PurchaseOrderPaymentTerm
+            })
+        },
         
         initialize: function() {
             
+        },
+
+        validation: {
+            purchaseOrderNumber: {
+                fn: function(value, attr){
+                    if(!value) {
+                        return Hypr.getLabel('purchaseOrderNumberMissing');
+                    }
+                    return;
+                }
+            },
+            customFields: {
+                fn: function(value, attr) {
+                    var siteSettingsCustomFields = HyprLiveContext.locals.siteContext.checkoutSettings.purchaseOrder.customFields;
+                    var result = null;
+                    siteSettingsCustomFields.forEach(function(field) {
+                        if(field.isEnabled && field.isRequired) {
+                            var fieldInput = $('#purchase-order-custom-field-' + field.code);
+                            if(fieldInput.val().length < 1) {
+                                var errorMessage = field.label + " " + Hypr.getLabel('missing');
+                                fieldInput.addClass('is-invalid');
+                                $('#purchase-order-custom-field-' + field.code + '-validation').text(errorMessage);
+                                result = Hypr.getLabel('purchaseOrderCustomFieldMissing');
+                            } else {
+                                fieldInput.removeClass('is-invalid');
+                                $('#purchase-order-custom-field-' + field.code + '-validation').empty();
+                            }
+                        }
+                    });
+                    return result;
+                }
+            },
+            paymentTerm: {
+                fn: function(value, attr) {
+                    var paymentTermOptions = this.get('purchaseOrder').get('paymentTermOptions');
+                    if(!value && paymentTermOptions.length === 1) {
+                        // this should be set before validation occurs.
+                        return;
+                    }
+                    if(!value) {
+                        return Hypr.getLabel('purchaseOrderPaymentTermMissing');
+                    }
+                    return;
+                }
+            }
         },
 
         dataTypes: {

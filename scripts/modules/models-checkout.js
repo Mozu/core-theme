@@ -816,21 +816,22 @@
                     currentPaymentWorkflow = currentPayment && currentPayment.billingInfo.paymentWorkflow,
                     currentBillingContact = currentPayment && currentPayment.billingInfo.billingContact,
                     currentCard = currentPayment && currentPayment.billingInfo.card,
+                    currentPurchaseOrder = currentPayment && currentPayment.billingInfo.purchaseorder,
                     purchaseOrderSiteSettings = HyprLiveContext.locals.siteContext.checkoutSettings.purchaseOrder ?
-                        HyprLiveContext.locals.siteContext.checkoutSettings.purchaseOrder.isEnabled : false
+                        HyprLiveContext.locals.siteContext.checkoutSettings.purchaseOrder.isEnabled : false,
                     purchaseOrderCustomerSettings = this.getOrder().get('customer').get('purchaseOrder') ? 
                         this.getOrder().get('customer').get('purchaseOrder').isEnabled : false;
 
-                if(purchaseOrderSiteSettings && purchaseOrderCustomerSettings) {
-                    this.set('paymentType', 'PurchaseOrder');
-                    this.set('paymentWorkflow', 'Mozu');
-                } else {
-                    if (currentPaymentType && (currentPaymentType !== billingInfoPaymentType || currentPaymentWorkflow !== billingInfoPaymentWorkflow)) {
-                        this.set('paymentType', currentPaymentType, { silent: true });
-                        this.set('paymentWorkflow', currentPaymentWorkflow, { silent: true });
-                        this.set('card', currentCard, { silent: true });
-                        this.set('billingContact', currentBillingContact, { silent: true });
-                    }
+                if(purchaseOrderSiteSettings && purchaseOrderCustomerSettings && !currentPayment) {
+                    currentPaymentType = 'PurchaseOrder';
+                }
+
+                if (currentPaymentType && (currentPaymentType !== billingInfoPaymentType || currentPaymentWorkflow !== billingInfoPaymentWorkflow)) {
+                    this.set('paymentType', currentPaymentType, { silent: true });
+                    this.set('paymentWorkflow', currentPaymentWorkflow, { silent: true });
+                    this.set('card', currentCard, { silent: true });
+                    this.set('billingContact', currentBillingContact, { silent: true });
+                    this.set('purchaseOrder', currentPurchaseOrder, { silent: true });
                 }
             },
             edit: function () {
@@ -842,12 +843,15 @@
                     order = me.getOrder(),
                     purchaseOrder = {},
                     customerPurchaseOrderPaymentTerms = purchaseOrderInfo.customerPurchaseOrderPaymentTerms,
-                    siteSettingsPaymentTerms = HyprLiveContext.locals.siteContext.checkoutSettings.purchaseOrder.paymentTerms;
+                    siteSettingsPaymentTerms = HyprLiveContext.locals.siteContext.checkoutSettings.purchaseOrder.paymentTerms,
+                    //newPurchaseOrder = PaymentMethods.PurchaseOrder(),
+                    currentPurchaseOrder = me.get('purchaseOrder');
 
-                // Set information:
-
-                purchaseOrder.amount = purchaseOrderInfo.availableBalance > order.get('amountRemainingForPayment') ?
-                    order.get('amountRemainingForPayment') : purchaseOrderInfo.availableBalance;
+                // Set information, only if the current purchase order does not have it:
+                if(!currentPurchaseOrder.get('amount')) {
+                    purchaseOrder.amount = purchaseOrderInfo.availableBalance > order.get('amountRemainingForPayment') ?
+                        order.get('amountRemainingForPayment') : purchaseOrderInfo.availableBalance;
+                }
                 purchaseOrder.availableBalance = purchaseOrderInfo.availableBalance;
                 purchaseOrder.creditLimit = purchaseOrderInfo.creditLimit;
                 if(purchaseOrder.amount < order.get('amountRemainingForPayment')) {
@@ -861,7 +865,8 @@
                         found = false;
                     while(j < siteSettingsPaymentTerms.length && !found) {
                         if(siteSettingsPaymentTerms[j].code === customerPurchaseOrderPaymentTerms[i].code) {
-                            var term = customerPurchaseOrderPaymentTerms[i];
+                            var term = {};
+                            term.code = customerPurchaseOrderPaymentTerms[i].code;
                             term.description = siteSettingsPaymentTerms[j].description;
                             purchaseOrder.paymentTermOptions.push(term);
                             found = true;
@@ -869,6 +874,7 @@
                         ++j;
                     }
                 }
+                // Make the currentPurchaseOrder have the purchaseOrder data, don't overwrite.
                 me.set('purchaseOrder', purchaseOrder);
                 // use this to pull custom field data from checkout: purchase-order-custom-field-{{customField.code}}
             },
@@ -920,6 +926,7 @@
                 }
                 me.get('check').selected = newPaymentType === 'Check';
                 me.get('card').selected = newPaymentType === 'CreditCard';
+                me.get('purchaseOrder').selected = newPaymentType === 'PurchaseOrder';
             },
             setDefaultPaymentType: function(me) {
                 me.set('paymentType', 'CreditCard');
