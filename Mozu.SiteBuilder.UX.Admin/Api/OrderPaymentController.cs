@@ -85,6 +85,27 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
             return Single2(order.Map<Order>());
         }
 
+        /// <summary>
+        /// Performs the "InvoicePayment" action on an authorized payment.
+        /// </summary>
+        [HttpPostRoute(UriTemplate = "payment/invoice")]
+        public async Task<Response<Order>> InVoicePayment(CapturePaymentArgs args)
+        {
+            // Possible actions can be "AuthAndCapture","InvoicePayment", "AuthorizePayment", "CapturePayment", "VoidPayment", "CreditPayment", "RequestCheck", "ApplyCheck", "DeclineCheck"
+            var action = new DCp.PaymentAction
+            {
+                ActionName = "InvoicePayment",
+                CurrencyCode = SbApiContext.CurrencyCode,
+                Amount = args.Amount,
+                ReferenceSourcePaymentId = null
+            };
+
+            var order = (await _orderWebApiClient.PerformPaymentAction(args.OrderId, args.PaymentId, action)).ReadAsSync();
+
+            //_orderWebApiClient.GetPackageLabel
+            return Single2(order.Map<Order>());
+        }
+
         public class CreditPaymentArgs
         {
             public string OrderId { get; set; }
