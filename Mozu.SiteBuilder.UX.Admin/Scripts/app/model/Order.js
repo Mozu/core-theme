@@ -932,6 +932,18 @@ Ext.define('Taco.model.Order', {
         Ext.Ajax.request(config);
     },
 
+    markAsInvoiced: function (config) {
+        Ext.applyIf(config, {
+            url: '/admin/app/order/payment/invoice',
+            method: 'POST'
+        });
+
+        config.errorMsg = config.errorMsg || 'Error marking payment as invoiced';
+        this.addErrorHandling(config);
+
+        Ext.Ajax.request(config);
+    },
+
     authorize: function (config) {
         Ext.applyIf(config, {
             url: '/admin/app/order/payment/authorize',

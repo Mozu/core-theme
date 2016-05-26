@@ -211,7 +211,33 @@ Ext.define('Taco.view.order.widget.PaymentPanel', {
                     margin: '0 10 0 0',
                     itemId: 'invoicedButton',
                     handler: function () {
-                        me.openPaymentActionModal((me.record.get('paymentType') === 'Check') ? 'ApplyCheck' : 'CapturePayment');
+                        var data = {
+                                orderId: me.order.getId(),
+                                paymentId: me.record.getId()
+                            },
+                            cfg = {
+                            jsonData: data,
+                            success: function (response) {
+                                var json = Ext.decode(response.responseText, true);
+
+                                if (!json || !json.success) {
+                                    return;
+                                }
+
+                                me.setLoading(false, me.body);
+                                me.order.reload();
+                            },
+                            failure: function () {
+                                me.setLoading(false, me.body)
+                            },
+                            scope: this
+                        };
+
+                        me.setLoading({
+                            msg: 'Saving'
+                        }, me.body);
+
+                        me.order.markAsInvoiced(cfg);
                     },
                     disabled: !canCapture || pendingReview
                 };
