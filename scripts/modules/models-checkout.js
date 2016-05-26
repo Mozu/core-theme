@@ -838,28 +838,41 @@
                 this.getPaymentTypeFromCurrentPayment();
                 CheckoutStep.prototype.edit.apply(this, arguments);
             },
-            setPurchaseOrderInfo: function(purchaseOrderInfo) {
+            setPurchaseOrderInfo: function() {
                 var me = this,
                     order = me.getOrder(),
-                    purchaseOrder = {},
-                    customerPurchaseOrderPaymentTerms = purchaseOrderInfo.customerPurchaseOrderPaymentTerms,
-                    siteSettingsPaymentTerms = HyprLiveContext.locals.siteContext.checkoutSettings.purchaseOrder.paymentTerms,
-                    //newPurchaseOrder = PaymentMethods.PurchaseOrder(),
+                    purchaseOrderInfo = order.get('customer').get('purchaseOrder'),
+                    purchaseOrderSiteSettings = HyprLiveContext.locals.siteContext.checkoutSettings.purchaseOrder ?
+                        HyprLiveContext.locals.siteContext.checkoutSettings.purchaseOrder.isEnabled : false
+                    purchaseOrderEnabled = purchaseOrderSiteSettings && purchaseOrderInfo.isEnabled,
                     currentPurchaseOrder = me.get('purchaseOrder');
 
-                // Set information, only if the current purchase order does not have it:
-                if(!currentPurchaseOrder.get('amount')) {
-                    purchaseOrder.amount = purchaseOrderInfo.availableBalance > order.get('amountRemainingForPayment') ?
-                        order.get('amountRemainingForPayment') : purchaseOrderInfo.availableBalance;
+                currentPurchaseOrder.set('isEnabled', purchaseOrderEnabled);
+                if(!purchaseOrderEnabled) {
+                    // if purchase order isn't enabled, don't populate stuff!
+                    return;
                 }
-                purchaseOrder.availableBalance = purchaseOrderInfo.availableBalance;
-                purchaseOrder.creditLimit = purchaseOrderInfo.creditLimit;
-                if(purchaseOrder.amount < order.get('amountRemainingForPayment')) {
-                    purchaseOrder.splitPayment = true;
-                }
-                purchaseOrder.isEnabled = true;
 
-                purchaseOrder.paymentTermOptions = [];
+
+                var customerPurchaseOrderPaymentTerms = purchaseOrderInfo.customerPurchaseOrderPaymentTerms,
+                    siteSettingsPaymentTerms = HyprLiveContext.locals.siteContext.checkoutSettings.purchaseOrder.paymentTerms;
+
+                // Set information, only if the current purchase order does not have it:
+                var amount = purchaseOrderInfo.availableBalance > order.get('amountRemainingForPayment') ?
+                        order.get('amountRemainingForPayment') : purchaseOrderInfo.availableBalance;
+
+                if(!currentPurchaseOrder.get('amount')) {
+                    currentPurchaseOrder.set('amount', amount);
+                }
+
+                currentPurchaseOrder.set('availableBalance', purchaseOrderInfo.availableBalance);
+                currentPurchaseOrder.set('creditLimit', purchaseOrderInfo.creditLimit);
+
+                if(purchaseOrderInfo.availableBalance < order.get('amountRemainingForPayment')) {
+                    currentPurchaseOrder.set('splitPayment', true);
+                }
+
+                var paymentTermOptions = [];
                 for( var i = 0; i < customerPurchaseOrderPaymentTerms.length; ++i) {
                     var j = 0,
                         found = false;
@@ -868,25 +881,26 @@
                             var term = {};
                             term.code = customerPurchaseOrderPaymentTerms[i].code;
                             term.description = siteSettingsPaymentTerms[j].description;
-                            purchaseOrder.paymentTermOptions.push(term);
+                            paymentTermOptions.push(term);
                             found = true;
                         }
                         ++j;
                     }
                 }
-                // Make the currentPurchaseOrder have the purchaseOrder data, don't overwrite.
-                me.set('purchaseOrder', purchaseOrder);
+                
+                currentPurchaseOrder.set('paymentTermOptions', paymentTermOptions);
                 // use this to pull custom field data from checkout: purchase-order-custom-field-{{customField.code}}
             },
             initialize: function () {
                 var me = this;
 
                 _.defer(function () {
+                    //set purchaseOrder defaults here.
+                    me.setPurchaseOrderInfo();
                     me.getPaymentTypeFromCurrentPayment();
-                    if(me.get('paymentType') && me.get('paymentType').toLowerCase() === 'purchaseorder') {
-                        //set purchaseOrder defaults here.
-                        me.setPurchaseOrderInfo(me.getOrder().get('customer').get('purchaseOrder'));
-                    } else {
+                    // if we aren't using a purchase order, we don't want to do this stuff.
+                    if(me.get('paymentType') && me.get('paymentType').toLowerCase() !== 'purchaseorder') {
+                        
                         var savedCardId = me.get('card.paymentServiceCardId');
                         me.set('savedPaymentMethodId', savedCardId, { silent: true });
                         me.setSavedPaymentMethod(savedCardId);

@@ -238,12 +238,12 @@
                     return result;
                 }
             }
-        },
+        }/*,
         dataTypes: {
             code: Backbone.MozuModel.DataTypes.String,
             label: Backbone.MozuModel.DataTypes.String,
             value: Backbone.MozuModel.DataTypes.String
-        }
+        }*/
     });
 
     var PurchaseOrderPaymentTerm = Backbone.MozuModel.extend({
@@ -257,11 +257,11 @@
             description: {
                 fn: 'present'
             }
-        },
+        }/*,
         dataTypes: {
             code: Backbone.MozuModel.DataTypes.String,
             description: Backbone.MozuModel.DataTypes.String
-        }
+        }*/
     });
 
     var PurchaseOrder = PaymentMethod.extend({
@@ -274,8 +274,8 @@
             creditLimit: 0
         },
         //Payment specific:
-        //paymentTerm: null,
-        //purchaseOrderNumber: null,
+        paymentTerm: null,
+        purchaseOrderNumber: null,
         // Stuff required for book keeping on storefront
 
         relations: {
@@ -299,7 +299,8 @@
                     }
                     return;
                 }
-            },
+                //fn: 'present'
+            }/*,
             customFields: {
                 fn: function(value, attr) {
                     var siteSettingsCustomFields = HyprLiveContext.locals.siteContext.checkoutSettings.purchaseOrder.customFields;
@@ -320,7 +321,7 @@
                     });
                     return result;
                 }
-            },
+            }*/,
             paymentTerm: {
                 fn: function(value, attr) {
                     var paymentTermOptions = this.get('purchaseOrder').get('paymentTermOptions');
@@ -337,9 +338,6 @@
         },
 
         dataTypes: {
-            paymentTerm: Backbone.MozuModel.DataTypes.String,
-            purchaseOrderNumber: Backbone.MozuModel.DataTypes.String,
-            
             isEnabled: Backbone.MozuModel.DataTypes.Boolean,
             splitPayment: Backbone.MozuModel.DataTypes.Boolean,
             amount: Backbone.MozuModel.DataTypes.Float,
