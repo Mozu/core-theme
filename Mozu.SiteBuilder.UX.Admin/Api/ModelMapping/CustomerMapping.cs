@@ -49,6 +49,8 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.ModelMapping
                 .ForMember(x => x.WishlistCount, op => op.Ignore())
                 .ForMember(x => x.PaymentCards, op => op.Ignore())
                 .ForMember(x => x.IsDisabled, op => op.ResolveUsing(dc => !dc.IsActive))
+                .ForMember(x=>x.PurchaseOrderAccount,op=>op.Ignore())
+                .ForMember(x=>x.IsPoEnabled,op=>op.Ignore())
                 ;
 
             //todo: Greg Murray on 2014-01-23 redundant mappings, ex FirstName => FirstName, Remove?
