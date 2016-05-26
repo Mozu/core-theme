@@ -281,7 +281,7 @@ Ext.define('Taco.view.order.modal.AddPurchaseOrder', {
          * If Net Terms is only one item, show it as a static string
          * Otherwise, show a select input with each option
          */
-        if (terms.length > 1) {
+        // if (terms.length > 1) {
             terms.forEach(function (term) {
                 termsContent.push([term.description, term.code]);
             });
@@ -296,16 +296,16 @@ Ext.define('Taco.view.order.modal.AddPurchaseOrder', {
                     data: termsContent
                 })
             });
-        }
+        // }
 
-        return Ext.widget({
-            flex: 1,
-            xtype: 'box',
-            anchor: 0,
-            margin: '20 0 10 0',
-            itemId: 'paymentTerms',
-            autoEl: content
-        });
+        // return Ext.widget({
+        //     flex: 1,
+        //     xtype: 'box',
+        //     anchor: 0,
+        //     margin: '20 0 10 0',
+        //     itemId: 'paymentTerms',
+        //     autoEl: content
+        // });
     },
 
     getFields: function (fields) {
