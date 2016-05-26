@@ -44,6 +44,9 @@ module.exports = (function () {
                 window.location = ApiReference.urls.paypalExpress + (ApiReference.urls.paypalExpress.indexOf('?') === -1 ? '?' : '&') + "token=" + payment.paymentServiceTransactionId; //utils.formatString(CONSTANTS.BASE_PAYPAL_URL, payment.paymentServiceTransactionId);
                 });
         },
+        "PurchaseOrder": function(order, billingInfo) {
+            return order.addPurchaseOrder(billingInfo);
+        },
         "CreditCard": function (order, billingInfo) {
             var card = order.api.createSync('creditcard', billingInfo.card);
             errors.passFrom(card, order);
@@ -149,6 +152,17 @@ module.exports = (function () {
             if (!billingInfo) errors.throwOnObject(this, 'BILLING_INFO_MISSING');
             if (!billingInfo.paymentType || !(billingInfo.paymentType in PaymentStrategies)) errors.throwOnObject(this, 'PAYMENT_TYPE_MISSING_OR_UNRECOGNIZED');
             return PaymentStrategies[billingInfo.paymentType](this, billingInfo);
+        },
+        addPurchaseOrder: function (payment) {
+            // add purchase order stuff as the 'extraProps' call.
+            return this.createPayment({
+                amount: payment.amount,
+                newBillingInfo: {
+                    paymentType: 'PurchaseOrder',
+                    billingContact: payment.billingInfo,
+                    purchaseOrder: payment.purchaseOrder
+                }
+            });
         },
         getActivePayments: function() {
             var payments = this.prop('payments'),
