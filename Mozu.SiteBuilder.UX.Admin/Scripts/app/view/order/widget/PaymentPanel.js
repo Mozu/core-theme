@@ -208,6 +208,7 @@ Ext.define('Taco.view.order.widget.PaymentPanel', {
                     scale: 'medium',
                     text: 'Mark as Invoiced',
                     width: 115,
+                    margin: '0 10 0 0',
                     itemId: 'invoicedButton',
                     handler: function () {
                         me.openPaymentActionModal((me.record.get('paymentType') === 'Check') ? 'ApplyCheck' : 'CapturePayment');
