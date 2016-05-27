@@ -21,10 +21,12 @@ using Mozu.Tenant.Contracts;
 using Mozu.Tenant.Contracts.Clients;
 using Mozu.Core.Settings;
 using Mozu.SiteBuilder.Mvc.MessageHandler;
+using Mozu.SiteBuilder.UX.Filters;
 using Mozu.SiteSettings.General.Contracts.Clients;
 
 namespace Mozu.SiteBuilder.UX.Areas.Misc.Controllers
 {
+    [NoCookieFilter]
     public class ContentController : ApiControllerBase
     {
         static readonly ConcurrentDictionary<int, Site> _siteLookup = new ConcurrentDictionary<int, Site>();

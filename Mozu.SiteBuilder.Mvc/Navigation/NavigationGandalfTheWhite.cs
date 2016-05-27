@@ -257,77 +257,75 @@ namespace Mozu.SiteBuilder.Mvc.Navigation
             masterList.AddRange(allCats);
 
             // build the masterlist. Step 2: put in navigation items we know about.
-            foreach (var navmeta in (navset ?? Enumerable.Empty<INavigationNode>()))
+            foreach (var group in (navset ?? Enumerable.Empty<INavigationNode>()).GroupBy(x => x.ParentId))
             {
-                SuperNavigationNode node;
+                var groupCats = allCats.Where(x => x.ParentId == group.Key).ToList();
 
-                if (navmeta.NodeType == null)
-                {
-                    continue;
-                }
-                else if (navmeta.NodeType.IsPage)
-                {
-                    string pageId = navmeta.OriginalId;
-                    var page = (pages != null && pages.Items != null) ? pages.Items.FirstOrDefault(p => p.Id == pageId) : null;
 
-                    if (page != null)
+                foreach (var navmeta in group.OrderBy(x=> x.Index))
+                {
+                    SuperNavigationNode node;
+
+                    if (navmeta.NodeType == null)
+                    {
+                        continue;
+                    }
+                    else if (navmeta.NodeType.IsPage)
+                    {
+                        string pageId = navmeta.OriginalId;
+                        var page = (pages != null && pages.Items != null) ? pages.Items.FirstOrDefault(p => p.Id == pageId) : null;
+
+                        if (page != null)
+                        {
+                            node = new SuperNavigationNode
+                            {
+                                Name = string.IsNullOrEmpty(page.Get<string>("link_title")) ? page.Name : page.Get<string>("link_title"),
+                                NodeType = NavigationNodeType.Page,
+                                Id = "page^^" + page.ListFQN + "^^" + page.Id,
+                                ParentId = navmeta.ParentId,
+                                OriginalId = page.Id,
+                                OriginalDocumentListName = page.ListFQN,
+                                Index = navmeta.Index,
+                                Url = _urlHelper.MakeUrl(UrlHelper.UrlType.Document, page, (Dictionary<string, object>)null, false)
+                            };
+                        }
+                        else
+                        {
+                            // ignore pages in the navigation document that don't exist in the cms.
+                            continue;
+                        }
+                    }
+                    else if (navmeta.NodeType.IsLink)
                     {
                         node = new SuperNavigationNode
                         {
-                            Name = string.IsNullOrEmpty(page.Get<string>("link_title")) ? page.Name : page.Get<string>("link_title"),
-                            NodeType = NavigationNodeType.Page,
-                            Id = "page^^" + page.ListFQN + "^^" + page.Id,
-                            ParentId = navmeta.ParentId,
-                            OriginalId = page.Id,
-                            OriginalDocumentListName = page.ListFQN,
+                            Id = navmeta.Id,
+                            OriginalId = navmeta.OriginalId,
+                            Name = navmeta.Name,
+                            Url = navmeta.Url,
+                            OpenInNewWindow = navmeta.OpenInNewWindow,
                             Index = navmeta.Index,
-                            Url = _urlHelper.MakeUrl(UrlHelper.UrlType.Document, page, (Dictionary<string, object>)null, false)
+                            ParentId = navmeta.ParentId,
+                            NodeType = NavigationNodeType.Link
                         };
                     }
                     else
                     {
-                        // ignore pages in the navigation document that don't exist in the cms.
                         continue;
                     }
-                }
-                else if (navmeta.NodeType.IsLink)
-                {
-                    node = new SuperNavigationNode
+                    if (groupCats.Count > 0)
                     {
-                        Id = navmeta.Id,
-                        OriginalId = navmeta.OriginalId,
-                        Name = navmeta.Name,
-                        Url = navmeta.Url,
-                        OpenInNewWindow = navmeta.OpenInNewWindow,
-                        Index = navmeta.Index,
-                        ParentId = navmeta.ParentId,
-                        NodeType = NavigationNodeType.Link
-                    };
-                }
-                else
-                {
-                    continue;
-                }
-
-                // if we want to insert a node with an index that's already taken, we need to move the others
-                var nodesToChange = masterList.Where(n => n.ParentId == node.ParentId && n.Index == node.Index).ToList();
-                int newIndex = node.Index + 1;
-
-                while (nodesToChange.Count > 0)
-                {
-                    // find all the nodes at index+1
-                    var newNodesToChange = masterList.Where(n => n.ParentId == node.ParentId && n.Index == newIndex).ToList();
-
-                    // update all the nodes at our index to index+1
-                    nodesToChange.ForEach(n => n.Index = newIndex);
-
-                    // loop, changing all the nodes at index+1 to index+2
-                    nodesToChange = newNodesToChange;
-                    newIndex++;
+                        foreach (var catnode in groupCats.Where(x => x.Index >= node.Index))
+                        {
+                            catnode.Index++;
+                        }
+                    }
+                    masterList.Add(node);
                 }
 
 
-                masterList.Add(node);
+               
+            
             }
 
 
