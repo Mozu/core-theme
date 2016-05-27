@@ -1,5 +1,5 @@
 ﻿<nav class="mz-sitenav">
-    <ul class="mz-sitenav-list"
+    <ul class="mz-sitenav-list" 
         data-mz-contextify='.mz-sitenav-link[href="{{ navigation.currentNode.url }}"]'
         data-mz-contextify-attr='class'
         data-mz-contextify-val='is-current'>
