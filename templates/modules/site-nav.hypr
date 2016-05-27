@@ -14,7 +14,7 @@
               {% for sublink in link.items %}
                     {% if not sublink.isHidden and not sublink.isEmpty %}
               <li data-mz-role="sitemenu-item" class="mz-sitenav-item">
-                <a class="mz-sitenav-link" {% if link.openInNewWindow %}target='_blank'{% endif %} href="{{sublink.url}}">{{ sublink.name|safe }}</a>
+                <a class="mz-sitenav-link" {% if sublink.openInNewWindow %}target='_blank'{% endif %} href="{{sublink.url}}">{{ sublink.name|safe }}</a>
                 {%comment%}
                 <!-- uncoment out  this block to get 3rd laver of nav -->
                 {% if sublink.items %}
@@ -22,7 +22,7 @@
                   {% for subsublink in sublink.items %}
                             {% if not subsublink.isHidden and not subsublink.isEmpty %}
                   <li class="mz-sitenav-item">
-                          <a class="mz-sitenav-link" {% if link.openInNewWindow %}target='_blank'{% endif %} href="{{subsublink.url}}">{{ subsublink.name|safe }}</a>
+                          <a class="mz-sitenav-link" {% if sublink.openInNewWindow %}target='_blank'{% endif %} href="{{subsublink.url}}">{{ subsublink.name|safe }}</a>
                   </li>
                             {% endif %}
                   {% endfor %}
@@ -41,12 +41,12 @@
         {% if navigation.tree.length > themeSettings.maxTopLevelNavItems %}
         <li class="mz-sitenav-item mz-sitenav-item-more">
             <div class="mz-sitenav-item-inner">
-                <a class="mz-sitenav-link" href="javascript:;">{{ labels.navMore }}</a>
+                <a class="mz-sitenav-link" {% if link.openInNewWindow %}target='_blank'{% endif %} href="javascript:;">{{ labels.navMore }}</a>
                 <ul class="mz-sitenav-sub">
                     {% for sublink in navigation.tree %}
                     {% if sublink.index >= themeSettings.maxTopLevelNavItems and not sublink.isHidden and not sublink.isEmpty %}
                         <li data-mz-role="sitemenu-item" class="mz-sitenav-item">
-                                <a class="mz-sitenav-link" {% if link.openInNewWindow %}target='_blank'{% endif %} href="{{sublink.url}}">{{sublink.name|safe}}</a>
+                                <a class="mz-sitenav-link" {% if sublink.openInNewWindow %}target='_blank'{% endif %} href="{{sublink.url}}">{{sublink.name|safe}}</a>
                               {% if sublink.items %}
                         {% comment %}
                         <!-- uncomment out  this block to get 3rd laver of nav -->
@@ -54,7 +54,7 @@
                                             {% for subsublink in sublink.items %}
                             {% if not subsublink.isHidden and not subsublink.isEmpty %}
                                                 <li class="mz-sitenav-item">
-                                                    <a class="mz-sitenav-link" {% if link.openInNewWindow %}target='_blank'{% endif %} href="{{subsublink.url}}">{{subsublink.name|safe}}</a>
+                                                    <a class="mz-sitenav-link" {% if sublink.openInNewWindow %}target='_blank'{% endif %} href="{{subsublink.url}}">{{subsublink.name|safe}}</a>
                                                 </li>
                             {% endif %}
                                             {% endfor %}
