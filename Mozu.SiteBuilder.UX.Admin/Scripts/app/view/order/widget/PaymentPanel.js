@@ -638,7 +638,7 @@ Ext.define('Taco.view.order.widget.PaymentPanel', {
                   ? '<p>Amount voided will be applied to the customer\'s line of credit for purchase orders.</p>'
                   + '<br />'
                   + '<p>Void Amount</p>'
-                  + '<h2>$500.00</h2>'
+                  + '<h2>' + me.order.formatCurrency(me.record.get('amountRequested')) + '</h2>'
                   + '<br />'
                   + '<p>Are you certain you want to void this payment?</p>'
                   : 'Are you certain you want to void this payment?',
