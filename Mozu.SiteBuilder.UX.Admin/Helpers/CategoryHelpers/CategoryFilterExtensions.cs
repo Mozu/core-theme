@@ -40,6 +40,9 @@ namespace Mozu.SiteBuilder.UX.Admin.Helpers.CategoryHelpers
                 case "id":
                     return String.Format("{2} {1} {0}", filter.value, filter.comparison, ID);
 
+                case "all":
+                    return String.Format("( content.name cont \"{0}\" or content.slug cont \"{0}\" or categorycode eq \"{0}\")", filter.value);
+
                 case "categorycode":
                     return String.Format("{2} {1} {0}", filter.value, filter.comparison, CATEGORY_CODE);
 

@@ -36,26 +36,26 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
         [HttpGetRoute(UriTemplate = "read")]
         public async Task<Response<List<Category>>> GetCategories([FromUri]PagingParamaters pagingParams, [FromUri] FilterCollection filterCollection, int? nodeQuery= null, int? id=null)
         {
-            if (id.HasValue)
+            if (id.HasValue && id != 666)
             {
                 var cat = (await _categoriesClient.GetCategory(id)).ReadAsSync();
                 var retList = new List<Category> {Mapper.Map<Category>(cat)};
                 return List2(retList);
             }
             //getting rid of server filtering for now.  all filtering done on the client.
-            //if (pagingParams.id == null || 1==1)
+           if (pagingParams.id == null || 1==1)
             {
                 int start = 0;
-                //var ctxLevel = TargetContextLevelType.MasterCatalog;
+                var ctxLevel = TargetContextLevelType.MasterCatalog;
                 
-                //int siteId = -1;
-                //ICategoryWebApiClient catClient = _categoriesClient;
-                //if (nodeQuery.HasValue && filterCollection.TryGetValue("SiteId", out siteId))
-                //{
-                //    ctxLevel = TargetContextLevelType.Site;
-                //    catClient = _categoriesClient.CloneWith(x => x.SiteId = siteId);
+                int siteId = -1;
+                ICategoryWebApiClient catClient = _categoriesClient;
+                if (nodeQuery.HasValue && filterCollection.TryGetValue("SiteId", out siteId))
+                {
+                    ctxLevel = TargetContextLevelType.Site;
+                    catClient = _categoriesClient.CloneWithApiContext(x => x.SiteId = siteId);
 
-                //}
+                }
                 List<Category> categories = new List<Category>();
                 var client = _categoriesClient.CloneWithApiContext(x =>
                 {
@@ -69,6 +69,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
                     var cats = (await client.GetCategories(startIndex: start,
                         pageSize: 600,
                         sortBy: "sequence asc",
+                        filter: filterCollection.ToFilterString(),
                         responseFields: responseFields
                         )).ReadAsSync();
                     categories.AddRange(Mapper.Map<List<Category>>(cats.Items));
@@ -109,9 +110,9 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
                 return List2(categories);
             }
 
-            // var category = (await _categoriesClient.GetCategory(pagingParams.NumericId)).ReadAsSync();
-            // 
-            // return List2(Mapper.Map<Category>(category));
+            var category = (await _categoriesClient.GetCategory(pagingParams.NumericId)).ReadAsSync();
+             
+            return List2(Mapper.Map<Category>(category));
         }
 
         [HttpGetRoute(UriTemplate = "autocomplete/?query={query}&value={categoryIdsString}")]

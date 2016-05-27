@@ -5,43 +5,16 @@
  *
  */
 Ext.define('Taco.view.generalSettings.Index', {
-    extend: 'Taco.core.ux.form.FullEditor',
-    requires: ['Taco.view.generalsettings.Form'],
-    formCls: 'Taco.view.generalsettings.Form',
+    extend: 'Taco.view.react.Index',
+
     contextConfig: {
         supportedLevels: ['s'],
         requiresContextOfType: ['s']
     },
 
-    enableSearchBarInHeader: false,
-
-    statics: {
-        factory: function (cfg, callback, scope) {
-            cfg = Ext.apply(cfg,
-            {
-                timeZonesStores: Taco.core.data.StoreManager.getOrCreate('Taco.store.TimeZones'),
-                channelsStores: Taco.core.data.StoreManager.getOrCreate('Taco.store.Channels')
-            });
-            
-            Ext.create('Taco.core.ux.form.Tasks', {
-                finalCallback: function () {
-                    callback.call(scope || this, Ext.create('Taco.view.generalSettings.Index', cfg));
-                },
-                tasks: [
-                    {
-                        storeToLoad: cfg.timeZonesStores
-                    },
-                     {
-                         storeToLoad: cfg.channelsStores
-                     }
-                ],
-                autoExecute: true,
-            });
-        }
-    },
-
-
     initComponent: function () {
+
+        // no longer an EXT view
 
         //if (Ext.Array.contains(Taco.user.behaviors, 137)) {
         //    this.additionalActions = [{
@@ -55,6 +28,8 @@ Ext.define('Taco.view.generalSettings.Index', {
         //        }
         //    }];
         //}
+
+        this.items = [];
 
        
         this.callParent(arguments);
