@@ -259,7 +259,7 @@
                         current[attr] = val;
                     }
 
-                    if (current.productUsage === 'Configurable' && current[attr] instanceof Backbone.Model) {
+                    if (current[attr] instanceof Backbone.Model) {
                         syncRemovedKeys(current, attr);
                     }
                 }
