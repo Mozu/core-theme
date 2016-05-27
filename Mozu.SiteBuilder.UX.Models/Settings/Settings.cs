@@ -247,7 +247,8 @@ namespace Mozu.SiteBuilder.UX.Models.Settings
         [DataMember/*(Name = "channelId")*/]
         public string MissingImageSubstitute { get; set; }
 
-
+        [DataMember]
+        public string BccEmailAddress { get; set; }
 
 
         [DataMember/*(Name = "replyToEmail")*/]
@@ -332,9 +333,11 @@ namespace Mozu.SiteBuilder.UX.Models.Settings
         public bool? IsRequiredLoginForStagingEnabled { get; set; }
          [DataMember]
         public string CustomCdnHostName { get; set; }
+        [DataMember]
+        public List<EmailTypeSettingVM> EmailTypes { get; set; }
 
         //public ViewModeToggles ViewModeToggles { get; set; }
-         
+
     }
 
     public class ViewModeToggles {
