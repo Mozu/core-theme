@@ -369,9 +369,9 @@ Ext.define('Taco.view.order.modal.AddPurchaseOrder', {
         var curPayment = null;
         var paymentServiceCardId = null;
         var purchaseOrderInfo = null;
-        var purchaseOrderNumber = this.down('#purchaseOrderNumber').value;
-        var paymentTermsCode = this.down('#paymentTerms').valueModels[0].get('value');
-        var paymentTermsDescription = this.down('#paymentTerms').valueModels[0].get('text');
+        var purchaseOrderNumber = Ext.util.Format.htmlEncode(this.down('#purchaseOrderNumber').value);
+        var paymentTermsCode = Ext.util.Format.htmlEncode(this.down('#paymentTerms').valueModels[0].get('value'));
+        var paymentTermsDescription = Ext.util.Format.htmlEncode(this.down('#paymentTerms').valueModels[0].get('text'));
         var customFields = [];
         var fieldId = null;
         var fieldData = null;
@@ -384,7 +384,7 @@ Ext.define('Taco.view.order.modal.AddPurchaseOrder', {
                 fieldObj = {
                     code: field.code,
                     label: fieldData.fieldLabel,
-                    value: fieldData.value
+                    value: Ext.util.Format.htmlEncode(fieldData.value)
                 };
 
                 customFields.push(fieldObj);
