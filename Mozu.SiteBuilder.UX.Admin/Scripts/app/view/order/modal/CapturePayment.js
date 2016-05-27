@@ -11,22 +11,37 @@ Ext.define('Taco.view.order.modal.CapturePayment', {
 
     autoShow: true,
     scale: 'small',
+    height: 400,
     title: 'Collect Payment',
 
     initComponent: function () {
+        var notes = null;
+
+        if (this.record.get('paymentType') === 'PurchaseOrder') {
+            notes = {
+                xtype: 'textareafield',
+                name: 'notes',
+                fieldLabel: 'Notes',
+                anchor: '100%'
+            };
+        }
+
         this.form = Ext.create('Taco.core.ux.form.Form', {
             layout: {
-                type: 'hbox'
+                type: 'vbox'
             },
-            items: [{
-                xtype: 'currencyfield',
-                name: 'amount',
-                fieldLabel: 'Amount to Capture',
-                currencyCode: this.order.getCurrencyCode(),
-                selectOnFocus: true,
-                width: 170,
-                value: Math.min(this.record.data.amountAuthorized, this.order.getCaptureAmountHint())
-            }]
+            items: [
+                {
+                    xtype: 'currencyfield',
+                    name: 'amount',
+                    fieldLabel: 'Amount to Capture',
+                    currencyCode: this.order.getCurrencyCode(),
+                    selectOnFocus: true,
+                    width: 170,
+                    value: Math.min(this.record.data.amountAuthorized, this.order.getCaptureAmountHint())
+                },
+                notes
+            ]
         });
 
         this.items = [this.form];
@@ -39,16 +54,21 @@ Ext.define('Taco.view.order.modal.CapturePayment', {
             basic = this.form.getForm(),
             formValues = this.form.getValues(),
             data,
-            cfg;
+            cfg,
+            notesValue = null;
         
         // if (!basic.findField('amount').isValid()) {
         //     return;
         // }
+        if (this.record.get('paymentType') === 'PurchaseOrder') {
+            notesValue = formValues.notes;
+        }
 
         data = {
             orderId: this.order.getId(),
             paymentId: this.record.getId(),
-            amount: formValues.amount
+            amount: formValues.amount,
+            notes: notesValue
         };
 
         me.down('#primaryAction').hide();
