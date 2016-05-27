@@ -263,8 +263,7 @@ Ext.define('Taco.view.order.widget.PaymentPanel', {
                     itemId: 'captureButton',
                     handler: function () {
                         me.openPaymentActionModal((me.record.get('paymentType') === 'Check') ? 'ApplyCheck' : 'CapturePayment');
-                    },
-                    disabled: !canCapture || pendingReview
+                    }
                 };
                 buttonRight = null;
             } else if (me.record.data.status === 'Collected') {
