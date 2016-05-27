@@ -149,13 +149,16 @@ Ext.define('Taco.view.order.widget.PaymentPanel', {
         this.displayAmount = Ext.widget('component', {
             cls: cls,
             tpl: [
-                '<tpl if="payment.amountCollected == 0 && payment.amountAuthorized == 0 && payment.amountCredited == 0">',
+                '<tpl if="payment.amountCollected == 0 && payment.amountAuthorized == 0 && payment.amountCredited == 0 && payment.paymentType != \'PurchaseOrder\'">',
                 lbl('Amount Requested: ', '{[values.orderRecord.formatCurrency(values.payment.amountRequested)]}'),
                 '</tpl>',
                 '<tpl if="payment.amountAuthorized != 0">',
                 lbl('Amount Authorized: ', '{[values.orderRecord.formatCurrency(values.payment.amountAuthorized)]}'),
                 '</tpl>',
                 lbl('Amount Collected: ', '{[values.orderRecord.formatCurrency(values.payment.amountCollected)]}'),
+                '<tpl if="payment.paymentType == \'PurchaseOrder\'">',
+                lbl('Amount Remaining: ', '{[values.orderRecord.formatCurrency(values.payment.amountRequested - values.payment.amountCollected)]}'),
+                '</tpl>',
                 '<tpl if="payment.amountCredited != 0">',
                 lbl('Amount Credited: ', '{[values.orderRecord.formatCurrency(values.payment.amountCredited)]}'),
                 '</tpl>',

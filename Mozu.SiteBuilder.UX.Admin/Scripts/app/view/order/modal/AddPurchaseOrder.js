@@ -200,8 +200,6 @@ Ext.define('Taco.view.order.modal.AddPurchaseOrder', {
 
             curSavedPayments[i].billingContact = foundItem;
         }
-
-        this.savedPayments = this.filterAndClearArrayDuplicates(curSavedPayments, true);
     },
 
     getBalance: function (balance) {
