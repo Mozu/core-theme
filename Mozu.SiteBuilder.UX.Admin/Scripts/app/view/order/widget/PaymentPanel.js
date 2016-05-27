@@ -189,7 +189,12 @@ Ext.define('Taco.view.order.widget.PaymentPanel', {
         var packageStatus;
 
         var buttonLeft = null,
-            buttonRight = null;
+            buttonRight = null,
+            purchaseOrderNumber = null;
+
+        if (me.record.get('paymentType') === 'PurchaseOrder') {
+            purchaseOrderNumber = '<br />#' + me.record.get('purchaseOrderInfo').purchaseOrderNumber;
+        }
 
         if (me.record.get('paymentType') == 'PurchaseOrder') {
             if (me.record.data.status === 'PaymentRequested') {
@@ -307,7 +312,8 @@ Ext.define('Taco.view.order.widget.PaymentPanel', {
                     flex: 1,
                     itemId: "statusField",
                     cls: "statusField",
-                    html: '<span class="label">Status: </label>' + packageStatus
+                    html: '<span class="label">Status: </label>' + packageStatus +
+                        purchaseOrderNumber
                 },
                 {
                     xtype: 'component',

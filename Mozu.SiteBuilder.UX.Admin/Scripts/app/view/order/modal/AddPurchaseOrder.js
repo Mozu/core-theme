@@ -13,8 +13,8 @@ Ext.define('Taco.view.order.modal.AddPurchaseOrder', {
     initComponent: function (eOpts) {
 
         var me = this,
-            balance = me.getBalance(7099),
-            limit = me.getLimit(10000),
+            balance = me.getBalance(me.record.get('customer').purchaseOrderAccount.availableBalance),
+            limit = me.getLimit(me.record.get('customer').purchaseOrderAccount.creditLimit),
             terms = me.record.checkoutSettings.get('purchaseOrder').paymentTerms
                     ? me.getTerms(me.record.checkoutSettings.get('purchaseOrder').paymentTerms)
                     : me.getTerms(['No terms specified']),
