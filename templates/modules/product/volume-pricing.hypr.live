@@ -1,22 +1,54 @@
-﻿<div class="mz-checkout-digitalcredit-table">
+﻿<div class="mz-productdetail-properties mz-l-stack-section">
+  <dl class="mz-propertylist mz-propertylist-justified">
+    <dt class="mz-volume-pricing-header-quantity">{{ labels.volumePriceQuantity }}</dt>
+    <dd class="mz-volume-pricing-header-price">{{ labels.volumePriceUnitPrice }}</dd>
+    {% for priceBand in model.volumePriceBands %}
+      <dt>
+        {% if priceBand.maxQty %}
+          {{ labels.volumePriceMinMaxQty|string_format(priceBand.minQty,priceBand.maxQty) }}
+        {% else %}
+          {{ labels.volumePriceMinOnlyQty|string_format(priceBand.minQty) }}
+        {% endif %}
+      </dt>
+      <dd>
+        {% if priceBand.priceRange %}
+          <span itemprop="minPrice" class="mz-pricestack-price-lower">
+            {% include "modules/common/volume-price" with model=priceBand.priceRange.lower %}
+          </span>
+          <span itemprop="maxPrice" class="mz-pricestack-price-upper">
+            {% include "modules/common/volume-price" with model=priceBand.priceRange.upper %}
+          </span>
+        {% else %}
+          {% include "modules/common/volume-price" with model=priceBand.price %}
+        {% endif %}
+      </dd>
+    {% endfor %}
+  </dl>
+</div>
+
+
+
+
+
+<div class="mz-volume-pricing">
 <table class="mz-table">
   <thead>
     <tr>
-      <th class="mz-checkout-digitalcredit-header-balance">{{ labels.volumePriceQuantity }}</th>
-      <th class="mz-checkout-digitalcredit-header-balance">{{ labels.volumePriceUnitPrice }}</th>
+      <th class="mz-volume-pricing-header-quantity">{{ labels.volumePriceQuantity }}</th>
+      <th class="mz-volume-pricing-header-price">{{ labels.volumePriceUnitPrice }}</th>
     </tr>
   </thead>
   <tbody>
     {% for priceBand in model.volumePriceBands %}
-    <tr class="mz-checkout-digitalcredit-row">
-      <td class="mz-checkout-digitalcredit-cell-balance">
+    <tr class="mz-volume-pricing-row">
+      <td class="mz-volume-pricing-cell-quantity">
       {% if priceBand.maxQty %}
         {{ labels.volumePriceMinMaxQty|string_format(priceBand.minQty,priceBand.maxQty) }}
       {% else %}
         {{ labels.volumePriceMinOnlyQty|string_format(priceBand.minQty) }}
       {% endif %}
       </td>
-      <td class="mz-checkout-digitalcredit-cell-balance">
+      <td class="mz-volume-pricing-cell-price">
         {% if priceBand.priceRange %}
           <span itemprop="minPrice" class="mz-pricestack-price-lower">
             {% include "modules/common/volume-price" with model=priceBand.priceRange.lower %}

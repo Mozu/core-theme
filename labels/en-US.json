@@ -431,6 +431,7 @@
   "volumePriceUnitPrice": "Unit Price",
   "volumePriceSavings": "Savings",
   "volumePriceMinMaxQty": "{0} - {1}",
-  "volumePriceMinOnlyQty": "{0}+"
+  "volumePriceMinOnlyQty": "{0}+",
+  "mapPrice": "add to cart to see final price"
 
 }

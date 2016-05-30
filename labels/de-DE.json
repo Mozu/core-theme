@@ -395,5 +395,6 @@
     "volumePriceUnitPrice": "Einzelpreis",
     "volumePriceSavings": "Ersparnisse",
     "volumePriceMinMaxQty": "{0} - {1}",
-    "volumePriceMinOnlyQty": "{0}+"
+    "volumePriceMinOnlyQty": "{0}+",
+    "mapPrice": "in den Warenkorb Endpreis zu sehen"
 }
