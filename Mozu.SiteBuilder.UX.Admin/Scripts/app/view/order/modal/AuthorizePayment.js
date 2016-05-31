@@ -14,20 +14,36 @@ Ext.define('Taco.view.order.modal.AuthorizePayment', {
     title: 'Authorize Payment',
 
     initComponent: function () {
+        var amount = this.record.get('paymentType') == 'PurchaseOrder'
+                     ? {
+                        xtype: 'hiddenfield',
+                        name: 'amount',
+                        value: this.record.get('amountRequested')
+                     }
+                     : {
+                        xtype: 'currencyfield',
+                        currencyCode: this.order.getCurrencyCode(),
+                        name: 'amount',
+                        readOnly: true,
+                        fieldLabel: 'Amount to Authorize',
+                        selectOnFocus: true,
+                        width: 170,
+                        value: this.record.get('amountRequested')
+                     },
+            label = this.record.get('paymentType') == 'PurchaseOrder'
+                    ? {
+                        xtype: 'label',
+                        text: this.order.formatCurrency(this.record.get('amountRequested'))
+                    }
+                    : null;
         this.form = Ext.create('Taco.core.ux.form.Form', {
             layout: {
                 type: 'hbox'
             },
-            items: [{
-                xtype: 'currencyfield',
-                currencyCode: this.order.getCurrencyCode(),
-                name: 'amount',
-                readOnly: true,
-                fieldLabel: 'Amount to Authorize',
-                selectOnFocus: true,
-                width: 170,
-                value: this.record.get('amountRequested')
-            }]
+            items: [
+                label,
+                amount
+            ]
         });
 
         this.items = [this.form];

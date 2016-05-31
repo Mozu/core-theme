@@ -61,7 +61,7 @@ Ext.define('Taco.view.order.modal.CapturePayment', {
         //     return;
         // }
         if (this.record.get('paymentType') === 'PurchaseOrder') {
-            notesValue = formValues.notes;
+            notesValue = Ext.util.Format.htmlEncode(formValues.notes);
         }
 
         data = {
