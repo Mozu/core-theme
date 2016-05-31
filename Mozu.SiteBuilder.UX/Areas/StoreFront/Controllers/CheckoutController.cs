@@ -325,7 +325,7 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
                         }
                     }
                     var purchaseOrderJObject = customerPurchaseOrder.ToJObject();
-                    accountJson.Add("purchaseOrder", purchaseOrderJObject.ToJObject());
+                    accountJson.Add("purchaseOrder", purchaseOrderJObject);
                 }
                 jOrder.Add("customer", accountJson);
             }
