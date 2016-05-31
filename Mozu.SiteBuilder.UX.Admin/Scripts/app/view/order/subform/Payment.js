@@ -79,7 +79,18 @@ Ext.define('Taco.view.order.subform.Payment', {
                 handler: function() {
                     var action = me.paymentActions.addCreditCard;
                     var lastValidPayment = me.getLastValidPayment();
-                    if (lastValidPayment && lastValidPayment.get('paymentType') === "Check") action = me.paymentActions.requestCheck;
+                    var paymentType;
+
+                    if (lastValidPayment) {
+                        paymentType = lastValidPayment.get('paymentType');
+
+                        if (paymentType === "Check") {
+                            action = me.paymentActions.requestCheck;
+                        } else if (paymentType === "PurchaseOrder") {
+                            action = me.paymentActions.addPurchaseOrder;
+                        }
+                    }
+
                     return action.execute();
                 },
                 menu: me.getNewPaymentActions(),
