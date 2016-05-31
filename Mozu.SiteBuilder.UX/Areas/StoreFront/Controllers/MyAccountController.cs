@@ -118,7 +118,6 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
             var purchaseOrderAccount =
                 (await _customerAccountWebApiClient.GetCustomerPurchaseOrderAccount(this.PageContext.User.AccountId))
                     .ReadAsSync();
-            var customerPurchaseOrder = Mapper.Map<Mozu.SiteBuilder.UX.Models.Customers.CustomerPurchaseOrderAccount>(purchaseOrderAccount);
 
             var shipTask = GetShippableCountries();
             var billTask = GetBillingCountries();
@@ -167,8 +166,9 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
             jAccount.Add("hasSavedContacts", account.Contacts.Count > 0);
             jAccount.Add("cards", cards.Items.ToJArray());
 
-            if (SiteContext.CheckoutSettings.PurchaseOrder != null && SiteContext.CheckoutSettings.PurchaseOrder.IsEnabled && customerPurchaseOrder != null)
+            if (SiteContext.CheckoutSettings.PurchaseOrder != null && SiteContext.CheckoutSettings.PurchaseOrder.IsEnabled && purchaseOrderAccount != null)
             {
+                var customerPurchaseOrder = Mapper.Map<Mozu.SiteBuilder.UX.Models.Customers.CustomerPurchaseOrderAccount>(purchaseOrderAccount);
                 var paymentTermOptions = this.SiteContext.CheckoutSettings.PurchaseOrder.PaymentTerms;
                 // helper object that inherits from contract and add description, then create new payment array and apply it to accountPurchaseOrder before doing .toJObject()
                 foreach (var term in customerPurchaseOrder.PaymentTerms)

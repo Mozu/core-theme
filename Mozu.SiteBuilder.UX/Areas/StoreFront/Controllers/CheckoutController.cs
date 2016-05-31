@@ -32,6 +32,7 @@ using Mozu.Core.Actions;
 using Mozu.Core.Api.Contracts.Client;
 using Mozu.Core.Extensions;
 using Mozu.SiteBuilder.Mvc.OAF;
+using AutoMapper;
 
 namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
 {
@@ -310,9 +311,21 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
                 var accountJson = account.ToJObject();
                 accountJson.Add("cards", cards.Items.ToJArray());
                 accountJson.Add("credits", credits.Items.ToJArray());
-                if (accountPurchaseOrder != null)
+                if (SiteContext.CheckoutSettings.PurchaseOrder != null && SiteContext.CheckoutSettings.PurchaseOrder.IsEnabled && accountPurchaseOrder != null)
                 {
-                    accountJson.Add("purchaseOrder", accountPurchaseOrder.ToJObject());
+                    var customerPurchaseOrder = Mapper.Map<Mozu.SiteBuilder.UX.Models.Customers.CustomerPurchaseOrderAccount>(accountPurchaseOrder);
+                    var paymentTermOptions = this.SiteContext.CheckoutSettings.PurchaseOrder.PaymentTerms;
+                    // helper object that inherits from contract and add description, then create new payment array and apply it to accountPurchaseOrder before doing .toJObject()
+                    foreach (var term in customerPurchaseOrder.PaymentTerms)
+                    {
+                        var siteSettingsPaymentTerm = paymentTermOptions.Find(paymentTerm => paymentTerm.Code == term.Code);
+                        if (siteSettingsPaymentTerm != null)
+                        {
+                            term.Description = siteSettingsPaymentTerm.Description;
+                        }
+                    }
+                    var purchaseOrderJObject = customerPurchaseOrder.ToJObject();
+                    accountJson.Add("purchaseOrder", purchaseOrderJObject.ToJObject());
                 }
                 jOrder.Add("customer", accountJson);
             }
