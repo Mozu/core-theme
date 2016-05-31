@@ -853,10 +853,6 @@
                     return;
                 }
 
-
-                var customerPurchaseOrderPaymentTerms = purchaseOrderInfo.customerPurchaseOrderPaymentTerms,
-                    siteSettingsPaymentTerms = HyprLiveContext.locals.siteContext.checkoutSettings.purchaseOrder.paymentTerms;
-
                 // Set information, only if the current purchase order does not have it:
                 var amount = purchaseOrderInfo.availableBalance > order.get('amountRemainingForPayment') ?
                         order.get('amountRemainingForPayment') : purchaseOrderInfo.availableBalance;
@@ -872,23 +868,16 @@
                     currentPurchaseOrder.set('splitPayment', true);
                 }
 
-                var paymentTermOptions = [];
-                for( var i = 0; i < customerPurchaseOrderPaymentTerms.length; ++i) {
-                    var j = 0,
-                        found = false;
-                    while(j < siteSettingsPaymentTerms.length && !found) {
-                        if(siteSettingsPaymentTerms[j].code === customerPurchaseOrderPaymentTerms[i].code) {
-                            var term = {};
-                            term.code = customerPurchaseOrderPaymentTerms[i].code;
-                            term.description = siteSettingsPaymentTerms[j].description;
-                            paymentTermOptions.push(term);
-                            found = true;
-                        }
-                        ++j;
-                    }
+                if(currentPurchaseOrder.get('paymentTermOptions').length === 0) {
+                    var paymentTerms = [];
+                    purchaseOrderInfo.paymentTerms.forEach(function(term) {
+                        var newTerm = {};
+                        newTerm.code = term.code;
+                        newTerm.description = term.description;
+                        paymentTerms.push(term);
+                    });
+                    currentPurchaseOrder.set('paymentTermOptions', paymentTerms);
                 }
-                
-                currentPurchaseOrder.set('paymentTermOptions', paymentTermOptions);
                 // use this to pull custom field data from checkout: purchase-order-custom-field-{{customField.code}}
             },
             initialize: function () {
