@@ -16,7 +16,8 @@
   <h4 class="mz-l-stack-sectiontitle">{{ labels.price }}</h4>
     {% include "modules/product/price-stack" %}
 </div>
-
+<div class="mz-l-2column">
+<div class="mz-l-column">
 <dl class="mz-productcodes mz-propertylist mz-pagetitle-note mz-l-stack-section">
 	<dt class="mz-productcodes-productcode-label">{{ labels.productCode }}</dt>
 	<dd class="mz-productcodes-productcode" itemprop="sku">{{ model.variationProductCode|default(model.productCode) }}</dd>
@@ -64,10 +65,11 @@
   </p>
   {% endif %}
 </section>
-
+</div>
 {% if model.volumePriceBands and model.volumePriceBands.length > 0 %}
-  {% include "modules/product/volume-pricing" %}
+   {% include "modules/product/volume-pricing" %}
 {% endif %}
+</div>
 
 <div class="mz-productdetail-fulldesc mz-l-stack-section">
   <h4 class="mz-l-stack-sectiontitle">{{ labels.fullDesc }}</h4>

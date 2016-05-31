@@ -1,5 +1,8 @@
 ﻿
 .mz-volume-pricing {
+    .mz-volume-price {
+        font-size: @fontSizeSmall;
+    }
     th {
         font-size: @fontSizeSmall;
         text-align: left;
@@ -18,11 +21,13 @@
     td {
         text-align: left;
         font-size: @fontSizeSmall;
-        padding: @gutter/2 @gutter;
+        //padding: @gutter/2 @gutter;
         &.mz-volume-pricing-cell-price {
             text-align: left;
-            padding-right: 0;
+            padding: 0;
+            font-size: @fontSizeSmall;
         }
+
     }
 
 }
