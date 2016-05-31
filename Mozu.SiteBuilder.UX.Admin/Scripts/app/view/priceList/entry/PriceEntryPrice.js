@@ -420,21 +420,17 @@ Ext.define('Taco.view.priceList.entry.PriceEntryPrice', {
 
         row.addButton = Ext.widget('button', {
             cls: 'taco-btn-add-row',
-            html: '',
             handler: function() {
-                var formRow = this.up('form'),
-                    parent = formRow.up(),
-                    index = 0;
-
-                parent.items.each(function(item, indx) { 
+                var index = 0;
+                me.basicEntries.items.each(function(item, indx) { 
                     if (item.isAncestor(this)) { 
                         index = indx + 1;
                         return false;
                     }
-                }, this);
+                }, this, true); // true to reverse since its most likely to be adding one to the end
                 me.basicEntries.insert(index,
                     me.getNewRow({
-                        showRemove: index > 0
+                        showRemove: true
                     })
                 );
             }
@@ -442,11 +438,10 @@ Ext.define('Taco.view.priceList.entry.PriceEntryPrice', {
 
         row.removeButton = Ext.widget('button', {
             cls: 'taco-btn-remove-row',
-            html: '',
             hidden: !entry.showRemove,
             handler: function() {
                 var formRow = this.up('form');
-                formRow.up().remove(formRow);
+                me.basicEntries.remove(formRow);
             }
         })
 
