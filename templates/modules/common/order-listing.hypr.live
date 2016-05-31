@@ -11,10 +11,14 @@
         <dl class="mz-propertylist">
             <dt>{{ labels.orderNumber }}</dt>
             <dd>{{ model.orderNumber }}</dd>
-            {% if model.billingInfo.paymentType == "PurchaseOrder" %}
+            
+            {% for payment in model.payments %}
+            {% if payment.billingInfo.paymentType == "PurchaseOrder" and payment.status != "Voided" %}
                 <dt>{{ labels.purchaseOrder }}</dt>
-                <dd>{{ model.billingInfo.purchaseOrder.purchaseOrderNumber }}</dd>
+                <dd>{{ payment.billingInfo.purchaseOrder.purchaseOrderNumber }}</dd>
             {% endif %}
+            {% endfor %}
+
             <dt>{{ labels.orderStatus }}</dt>
             <dd>{{ model.status }}</dd>
             <dt>{{ labels.total }}</dt>
