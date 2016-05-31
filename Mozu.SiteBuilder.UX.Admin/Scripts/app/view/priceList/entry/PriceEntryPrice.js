@@ -42,7 +42,9 @@ Ext.define('Taco.view.priceList.entry.PriceEntryPrice', {
                     flex: 1
                 }
             }
-        })
+        });
+
+        //me.catalogTableBasic = Ext.create('Taco.view.priceList.widget.CatalogTableBasic');
 
         me.basicPanel = Ext.create('Ext.panel.Panel', {
             title: 'Basic',
@@ -51,30 +53,35 @@ Ext.define('Taco.view.priceList.entry.PriceEntryPrice', {
             padding: '20',
             items: [{
                 xtype: 'container',
-                defaults: {
-                    flex: 1,
-                    xtype: 'label'
-                },
-                layout: {
-                    type: 'hbox',
-                    align: 'stretch'
-                },
                 items: [
                     {
-                        text: 'Minimum Quantity',
-                        flex: 0.5,
-                        margin: '0 20 0 0'
+                        xtype: 'container',
+                        defaults: {
+                            flex: 1,
+                            xtype: 'label'
+                        },
+                        layout: {
+                            type: 'hbox',
+                            align: 'stretch'
+                        },
+                        items: [
+                            {
+                                text: 'Minimum Quantity',
+                                flex: 0.5,
+                                margin: '0 20 0 0'
+                            },
+                            {
+                                text: 'Price'
+                            },
+                            {
+                                text: 'Sale Price'
+                            },
+                            {}
+                        ]
                     },
-                    {
-                        text: 'Price'
-                    },
-                    {
-                        text: 'Sale Price'
-                    },
-                    {}
+                    me.basicEntries
                 ]
-            },
-            me.basicEntries]
+            }, me.catalogTableBasic]
         });
 
         var entries = Ext.Array.sort(this.record.get('priceEntries'), function(a, b) {
@@ -411,45 +418,35 @@ Ext.define('Taco.view.priceList.entry.PriceEntryPrice', {
             me.salePriceOverrideFirst = row.salePriceOverride;
         }
 
-        row.addButton = Ext.widget('component', {
+        row.addButton = Ext.widget('button', {
             cls: 'taco-btn-add-row',
-            listeners: {
-                click: {
-                    element: 'el',
-                    scope: row,
-                    fn: function() {
-                        var formRow = this.addButton.up('form'),
-                            parent = formRow.up(),
-                            index = 0;
+            html: '',
+            handler: function() {
+                var formRow = this.up('form'),
+                    parent = formRow.up(),
+                    index = 0;
 
-                        parent.items.each(function(item, indx) { 
-                            if (item.isAncestor(this.addButton)) { 
-                                index = indx + 1;
-                                return false;
-                            }
-                        }, this);
-                        me.basicEntries.insert(index,
-                            me.getNewRow({
-                                showRemove: index > 0
-                            })
-                        );
+                parent.items.each(function(item, indx) { 
+                    if (item.isAncestor(this)) { 
+                        index = indx + 1;
+                        return false;
                     }
-                }
+                }, this);
+                me.basicEntries.insert(index,
+                    me.getNewRow({
+                        showRemove: index > 0
+                    })
+                );
             }
         })
 
-        row.removeButton = Ext.widget('component', {
+        row.removeButton = Ext.widget('button', {
             cls: 'taco-btn-remove-row',
+            html: '',
             hidden: !entry.showRemove,
-            listeners: {
-                click: {
-                    element: 'el',
-                    scope: row,
-                    fn: function() {
-                        var formRow = this.removeButton.up('form');
-                        formRow.up().remove(formRow);
-                    }
-                }
+            handler: function() {
+                var formRow = this.up('form');
+                formRow.up().remove(formRow);
             }
         })
 
@@ -563,11 +560,11 @@ Ext.define('Taco.view.priceList.entry.PriceEntryPrice', {
         var currCode = record.get('currentPriceCurrencyCode') || this.currencyCode,
             currency = Taco.app.context.currencies[currCode.toLowerCase()];
 
-        this.priceOverrideFirst.setCurrentPrice(this.formatCurrency(record.get('currentListPrice'), currency));
+        /*this.priceOverrideFirst.setCurrentPrice(this.formatCurrency(record.get('currentListPrice'), currency));
         this.salePriceOverrideFirst.setCurrentPrice(this.formatCurrency(record.get('currentSalePrice'), currency));
         this.msrpOverride.setCurrentPrice(this.formatCurrency(record.get('currentMsrp'), currency));
         this.costOverride.setCurrentPrice(this.formatCurrency(record.get('currentCost'), currency));
-        this.mapOverride.setCurrentPrice(this.formatCurrency(record.get('currentMap'), currency));
+        this.mapOverride.setCurrentPrice(this.formatCurrency(record.get('currentMap'), currency));*/
         this.currentMapStartDate.setValue(Ext.util.Format.date(record.get('currentMapStartDate'), 'd M, Y, g:i a'));
         this.currentMapEndDate.setValue(Ext.util.Format.date(record.get('currentMapEndDate'), 'd M, Y, g:i a'));
         this.currentRestriction.setValue(record.get('currentDiscountsRestricted'));
