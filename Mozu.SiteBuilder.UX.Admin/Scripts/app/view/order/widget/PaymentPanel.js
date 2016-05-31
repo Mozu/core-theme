@@ -206,7 +206,39 @@ Ext.define('Taco.view.order.widget.PaymentPanel', {
                     width: 77,
                     itemId: 'authorizeButton',
                     handler: function () {
-                        me.openPaymentActionModal('AuthorizePayment');
+                        var data,
+                            cfg;
+
+                        data = {
+                            orderId: me.order.getId(),
+                            paymentId: me.record.getId(),
+                            amount: me.record.get('amountRequested')
+                        };
+
+                        me.setLoading({
+                            msg: "Saving"
+                        }, me.body);
+
+                        cfg = {
+                            jsonData: data,
+                            success: function (response) {
+                                me.setLoading(false, me.body);
+
+                                var json = Ext.decode(response.responseText, true);
+
+                                if (!json || !json.success) {
+                                    return;
+                                }
+
+                                me.order.reload();
+                            },
+                            failure: function () {
+                                me.setLoading(false, me.body);
+                            },
+                            scope: this
+                        };
+
+                        me.order.authorize(cfg);
                     }
                 };
             } else if (me.record.data.status === 'Authorized') {
