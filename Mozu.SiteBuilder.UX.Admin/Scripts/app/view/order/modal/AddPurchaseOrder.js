@@ -15,8 +15,8 @@ Ext.define('Taco.view.order.modal.AddPurchaseOrder', {
         var me = this,
             balance = me.getBalance(me.record.get('customer').purchaseOrderAccount.availableBalance),
             limit = me.getLimit(me.record.get('customer').purchaseOrderAccount.creditLimit),
-            terms = me.record.checkoutSettings.get('purchaseOrder').paymentTerms
-                    ? me.getTerms(me.record.checkoutSettings.get('purchaseOrder').paymentTerms)
+            terms = me.record.customer.raw.purchaseOrderAccount.customerPurchaseOrderPaymentTerms
+                    ? me.getTerms(me.record.customer.raw.purchaseOrderAccount.customerPurchaseOrderPaymentTerms)
                     : me.getTerms(['No terms specified']),
             fields = me.getFields(me.record.checkoutSettings.get('purchaseOrder').customFields);
 
@@ -255,7 +255,9 @@ Ext.define('Taco.view.order.modal.AddPurchaseOrder', {
     },
 
     getTerms: function (terms) {
-        var paymentTermsSelect = null,
+        var me = this,
+            paymentTermsSelect = null,
+            description,
             paymentTermsItem = terms[0],
             termsContent = [],
             content = {
@@ -281,6 +283,11 @@ Ext.define('Taco.view.order.modal.AddPurchaseOrder', {
          */
         // if (terms.length > 1) {
             terms.forEach(function (term) {
+                me.record.checkoutSettings.get('purchaseOrder').paymentTerms.forEach(function (desc) {
+                    if (desc.code == term.code) {
+                        term.description = desc.description;
+                    }
+                });
                 termsContent.push([term.description, term.code]);
             });
 

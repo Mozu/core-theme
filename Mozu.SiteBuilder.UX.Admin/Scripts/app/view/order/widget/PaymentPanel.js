@@ -545,7 +545,7 @@ Ext.define('Taco.view.order.widget.PaymentPanel', {
                             '<tpl else>',
                                 '<tpl for="purchaseOrderInfo.customFields">',
                                     '<h4 class="paymentDetailsHeader">{label}:</h4>',
-                                    '<div>{code}</div>',
+                                    '<div>{value}</div>',
                                     '<br />',
                                 '</tpl>',
                             '</tpl>',
