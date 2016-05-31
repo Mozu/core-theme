@@ -15,7 +15,6 @@ Ext.define('Taco.view.order.widget.PaymentPanel', {
         'Taco.view.order.modal.ApplyCheck',
         'Taco.view.order.modal.AddPurchaseOrder',
         'Taco.view.order.modal.CapturePayment',
-        'Taco.view.order.modal.AuthorizePayment',
         'Taco.view.order.modal.AuthAndCapture',
         'Taco.view.order.modal.ManualCapturePayment',
         'Taco.view.order.modal.ManualDeclinePayment',
