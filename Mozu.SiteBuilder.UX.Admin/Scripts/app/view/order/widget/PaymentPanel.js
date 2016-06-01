@@ -15,7 +15,6 @@ Ext.define('Taco.view.order.widget.PaymentPanel', {
         'Taco.view.order.modal.ApplyCheck',
         'Taco.view.order.modal.AddPurchaseOrder',
         'Taco.view.order.modal.CapturePayment',
-        'Taco.view.order.modal.AuthorizePayment',
         'Taco.view.order.modal.AuthAndCapture',
         'Taco.view.order.modal.ManualCapturePayment',
         'Taco.view.order.modal.ManualDeclinePayment',
@@ -149,13 +148,16 @@ Ext.define('Taco.view.order.widget.PaymentPanel', {
         this.displayAmount = Ext.widget('component', {
             cls: cls,
             tpl: [
-                '<tpl if="payment.amountCollected == 0 && payment.amountAuthorized == 0 && payment.amountCredited == 0">',
+                '<tpl if="payment.amountCollected == 0 && payment.amountAuthorized == 0 && payment.amountCredited == 0 && payment.paymentType != \'PurchaseOrder\'">',
                 lbl('Amount Requested: ', '{[values.orderRecord.formatCurrency(values.payment.amountRequested)]}'),
                 '</tpl>',
                 '<tpl if="payment.amountAuthorized != 0">',
                 lbl('Amount Authorized: ', '{[values.orderRecord.formatCurrency(values.payment.amountAuthorized)]}'),
                 '</tpl>',
                 lbl('Amount Collected: ', '{[values.orderRecord.formatCurrency(values.payment.amountCollected)]}'),
+                '<tpl if="payment.paymentType == \'PurchaseOrder\'">',
+                lbl('Amount Remaining: ', '{[values.orderRecord.formatCurrency(values.payment.amountRequested - values.payment.amountCollected)]}'),
+                '</tpl>',
                 '<tpl if="payment.amountCredited != 0">',
                 lbl('Amount Credited: ', '{[values.orderRecord.formatCurrency(values.payment.amountCredited)]}'),
                 '</tpl>',
@@ -186,7 +188,12 @@ Ext.define('Taco.view.order.widget.PaymentPanel', {
         var packageStatus;
 
         var buttonLeft = null,
-            buttonRight = null;
+            buttonRight = null,
+            purchaseOrderNumber = '';
+
+        if (me.record.get('paymentType') === 'PurchaseOrder') {
+            purchaseOrderNumber = '<br />#' + me.record.get('purchaseOrderInfo').purchaseOrderNumber;
+        }
 
         if (me.record.get('paymentType') == 'PurchaseOrder') {
             if (me.record.data.status === 'PaymentRequested') {
@@ -198,7 +205,39 @@ Ext.define('Taco.view.order.widget.PaymentPanel', {
                     width: 77,
                     itemId: 'authorizeButton',
                     handler: function () {
-                        me.openPaymentActionModal('AuthorizePayment');
+                        var data,
+                            cfg;
+
+                        data = {
+                            orderId: me.order.getId(),
+                            paymentId: me.record.getId(),
+                            amount: me.record.get('amountRequested')
+                        };
+
+                        me.setLoading({
+                            msg: "Saving"
+                        }, me.body);
+
+                        cfg = {
+                            jsonData: data,
+                            success: function (response) {
+                                me.setLoading(false, me.body);
+
+                                var json = Ext.decode(response.responseText, true);
+
+                                if (!json || !json.success) {
+                                    return;
+                                }
+
+                                me.order.reload();
+                            },
+                            failure: function () {
+                                me.setLoading(false, me.body);
+                            },
+                            scope: this
+                        };
+
+                        me.order.authorize(cfg);
                     }
                 };
             } else if (me.record.data.status === 'Authorized') {
@@ -263,8 +302,7 @@ Ext.define('Taco.view.order.widget.PaymentPanel', {
                     itemId: 'captureButton',
                     handler: function () {
                         me.openPaymentActionModal((me.record.get('paymentType') === 'Check') ? 'ApplyCheck' : 'CapturePayment');
-                    },
-                    disabled: !canCapture || pendingReview
+                    }
                 };
                 buttonRight = null;
             } else if (me.record.data.status === 'Collected') {
@@ -305,7 +343,8 @@ Ext.define('Taco.view.order.widget.PaymentPanel', {
                     flex: 1,
                     itemId: "statusField",
                     cls: "statusField",
-                    html: '<span class="label">Status: </label>' + packageStatus
+                    html: '<span class="label">Status: </label>' + packageStatus +
+                        purchaseOrderNumber
                 },
                 {
                     xtype: 'component',
@@ -506,7 +545,7 @@ Ext.define('Taco.view.order.widget.PaymentPanel', {
                             '<tpl else>',
                                 '<tpl for="purchaseOrderInfo.customFields">',
                                     '<h4 class="paymentDetailsHeader">{label}:</h4>',
-                                    '<div>{code}</div>',
+                                    '<div>{value}</div>',
                                     '<br />',
                                 '</tpl>',
                             '</tpl>',
@@ -639,7 +678,7 @@ Ext.define('Taco.view.order.widget.PaymentPanel', {
                   ? '<p>Amount voided will be applied to the customer\'s line of credit for purchase orders.</p>'
                   + '<br />'
                   + '<p>Void Amount</p>'
-                  + '<h2>$500.00</h2>'
+                  + '<h2>' + me.order.formatCurrency(me.record.get('amountRequested')) + '</h2>'
                   + '<br />'
                   + '<p>Are you certain you want to void this payment?</p>'
                   : 'Are you certain you want to void this payment?',

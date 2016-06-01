@@ -1,5 +1,5 @@
 /*! 
- * Mozu JavaScript SDK - v0.3.0 - 2016-04-11
+ * Mozu JavaScript SDK - v0.3.0 - 2016-05-26
  *
  * Copyright (c) 2016 Volusion, Inc.
  *
@@ -8,63 +8,7 @@
 !function(e){if("object"==typeof exports)module.exports=e();else if("function"==typeof define&&define.amd)define(e);else{var f;"undefined"!=typeof window?f=window:"undefined"!=typeof global?f=global:"undefined"!=typeof self&&(f=self),f.MozuSDK=e()}}(function(){var define,module,exports;return (function e(t,n,r){function s(o,u){if(!n[o]){if(!t[o]){var a=typeof require=="function"&&require;if(!u&&a)return a(o,!0);if(i)return i(o,!0);throw new Error("Cannot find module '"+o+"'")}var f=n[o]={exports:{}};t[o][0].call(f.exports,function(e){var n=t[o][1][e];return s(n?n:e)},f,f.exports,e,t,n,r)}return n[o].exports}var i=typeof require=="function"&&require;for(var o=0;o<r.length;o++)s(r[o]);return s})({1:[function(_dereq_,module,exports){
 
 
-//# sourceUrl=node_modules/microevent/microevent.js
-
-/**
- * MicroEvent - to make any js object an event emitter (server or browser)
- * 
- * - pure javascript - server compatible, browser compatible
- * - dont rely on the browser doms
- * - super simple - you get it immediatly, no mistery, no magic involved
- *
- * - create a MicroEventDebug with goodies to debug
- *   - make it safer to use
-*/
-
-var MicroEvent	= function(){}
-MicroEvent.prototype	= {
-	bind	: function(event, fct){
-		this._events = this._events || {};
-		this._events[event] = this._events[event]	|| [];
-		this._events[event].push(fct);
-	},
-	unbind	: function(event, fct){
-		this._events = this._events || {};
-		if( event in this._events === false  )	return;
-		this._events[event].splice(this._events[event].indexOf(fct), 1);
-	},
-	trigger	: function(event /* , args... */){
-		this._events = this._events || {};
-		if( event in this._events === false  )	return;
-		for(var i = 0; i < this._events[event].length; i++){
-			this._events[event][i].apply(this, Array.prototype.slice.call(arguments, 1))
-		}
-	}
-};
-
-/**
- * mixin will delegate all MicroEvent.js function in the destination object
- *
- * - require('MicroEvent').mixin(Foobar) will make Foobar able to use MicroEvent
- *
- * @param {Object} the object which will support MicroEvent
-*/
-MicroEvent.mixin	= function(destObject){
-	var props	= ['bind', 'unbind', 'trigger'];
-	for(var i = 0; i < props.length; i ++){
-		destObject.prototype[props[i]]	= MicroEvent.prototype[props[i]];
-	}
-}
-
-// export in common js
-if( typeof module !== "undefined" && ('exports' in module)){
-	module.exports	= MicroEvent
-}
-
-},{}],2:[function(_dereq_,module,exports){
-
-
-//# sourceUrl=node_modules/process/browser.js
+//# sourceUrl=node_modules/browserify/node_modules/process/browser.js
 
 // shim for using process in browser
 
@@ -129,6 +73,62 @@ process.cwd = function () { return '/' };
 process.chdir = function (dir) {
     throw new Error('process.chdir is not supported');
 };
+
+},{}],2:[function(_dereq_,module,exports){
+
+
+//# sourceUrl=node_modules/microevent/microevent.js
+
+/**
+ * MicroEvent - to make any js object an event emitter (server or browser)
+ * 
+ * - pure javascript - server compatible, browser compatible
+ * - dont rely on the browser doms
+ * - super simple - you get it immediatly, no mistery, no magic involved
+ *
+ * - create a MicroEventDebug with goodies to debug
+ *   - make it safer to use
+*/
+
+var MicroEvent	= function(){}
+MicroEvent.prototype	= {
+	bind	: function(event, fct){
+		this._events = this._events || {};
+		this._events[event] = this._events[event]	|| [];
+		this._events[event].push(fct);
+	},
+	unbind	: function(event, fct){
+		this._events = this._events || {};
+		if( event in this._events === false  )	return;
+		this._events[event].splice(this._events[event].indexOf(fct), 1);
+	},
+	trigger	: function(event /* , args... */){
+		this._events = this._events || {};
+		if( event in this._events === false  )	return;
+		for(var i = 0; i < this._events[event].length; i++){
+			this._events[event][i].apply(this, Array.prototype.slice.call(arguments, 1))
+		}
+	}
+};
+
+/**
+ * mixin will delegate all MicroEvent.js function in the destination object
+ *
+ * - require('MicroEvent').mixin(Foobar) will make Foobar able to use MicroEvent
+ *
+ * @param {Object} the object which will support MicroEvent
+*/
+MicroEvent.mixin	= function(destObject){
+	var props	= ['bind', 'unbind', 'trigger'];
+	for(var i = 0; i < props.length; i ++){
+		destObject.prototype[props[i]]	= MicroEvent.prototype[props[i]];
+	}
+}
+
+// export in common js
+if( typeof module !== "undefined" && ('exports' in module)){
+	module.exports	= MicroEvent
+}
 
 },{}],3:[function(_dereq_,module,exports){
 (function (global){
@@ -2499,8 +2499,8 @@ define(function (_dereq_) {
 });
 })(typeof define === 'function' && define.amd ? define : function (factory) { module.exports = factory(_dereq_); });
 
-}).call(this,_dereq_("v3go1D"))
-},{"v3go1D":2}],13:[function(_dereq_,module,exports){
+}).call(this,_dereq_("Zbi7gb"))
+},{"Zbi7gb":1}],13:[function(_dereq_,module,exports){
 
 
 //# sourceUrl=src/affiliate-tracking-mixin.js
@@ -4959,6 +4959,9 @@ module.exports = (function () {
                 window.location = ApiReference.urls.paypalExpress + (ApiReference.urls.paypalExpress.indexOf('?') === -1 ? '?' : '&') + "token=" + payment.paymentServiceTransactionId; //utils.formatString(CONSTANTS.BASE_PAYPAL_URL, payment.paymentServiceTransactionId);
                 });
         },
+        "PurchaseOrder": function(order, billingInfo) {
+            return order.addPurchaseOrder(billingInfo);
+        },
         "CreditCard": function (order, billingInfo) {
             var card = order.api.createSync('creditcard', billingInfo.card);
             errors.passFrom(card, order);
@@ -5064,6 +5067,17 @@ module.exports = (function () {
             if (!billingInfo) errors.throwOnObject(this, 'BILLING_INFO_MISSING');
             if (!billingInfo.paymentType || !(billingInfo.paymentType in PaymentStrategies)) errors.throwOnObject(this, 'PAYMENT_TYPE_MISSING_OR_UNRECOGNIZED');
             return PaymentStrategies[billingInfo.paymentType](this, billingInfo);
+        },
+        addPurchaseOrder: function (payment) {
+            // add purchase order stuff as the 'extraProps' call.
+            return this.createPayment({
+                amount: payment.amount,
+                newBillingInfo: {
+                    paymentType: 'PurchaseOrder',
+                    billingContact: payment.billingContact,
+                    purchaseOrder: payment.purchaseOrder
+                }
+            });
         },
         getActivePayments: function() {
             var payments = this.prop('payments'),
@@ -5676,7 +5690,7 @@ module.exports = (function() {
 
 /*********/
 
-}).call(this,_dereq_("v3go1D"))
-},{"./iframexhr":18,"microevent":1,"uritemplate":3,"v3go1D":2,"when":12,"xmlhttprequest":false}]},{},[20])
+}).call(this,_dereq_("Zbi7gb"))
+},{"./iframexhr":18,"Zbi7gb":1,"microevent":2,"uritemplate":3,"when":12,"xmlhttprequest":false}]},{},[20])
 (20)
 });

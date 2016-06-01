@@ -13,7 +13,16 @@ Ext.define('Taco.view.order.modal.CreditPayment', {
         var amountCollected = this.record.get('amountCollected'),
             amountCredited = this.record.get('amountCredited'),
             amountRefunded = this.record.get('amountRefunded'),
-            availableForCredit = Math.max(amountCollected - amountCredited - amountRefunded, 0);
+            availableForCredit = Math.max(amountCollected - amountCredited - amountRefunded, 0),
+            poCheckbox = this.record.get('paymentType') == 'PurchaseOrder'
+                         ? {
+                                xtype: 'checkbox',
+                                name: 'creditToPurchaseOrders',
+                                itemId: 'purchaseOrderCredit',
+                                checked: true,
+                                boxLabel: 'Apply refund to the customer\'s available balance for purchase orders'
+                            }
+                         : null;
 
         this.form = Ext.create('Taco.core.ux.form.Form', {
             requireDirty: false,
@@ -30,13 +39,7 @@ Ext.define('Taco.view.order.modal.CreditPayment', {
                 maxValue: availableForCredit,
                 width: 160
             },
-            {
-                xtype: 'checkbox',
-                name: 'creditToPurchaseOrders',
-                itemId: 'purchaseOrderCredit',
-                checked: true,
-                boxLabel: 'Apply refund to the customer\'s available balance for purchase orders'
-            },
+            poCheckbox,
             {
                 xtype: 'textarea',
                 name: 'reason',
