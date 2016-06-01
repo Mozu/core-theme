@@ -11,13 +11,12 @@
   {% include "modules/product/product-options" %}
 </div>
 {% endif %}
-    
+
 <div itemprop="offers" itemscope itemtype="http://schema.org/Offer" class="mz-productdetail-price mz-l-stack-section">
   <h4 class="mz-l-stack-sectiontitle">{{ labels.price }}</h4>
-    {% include "modules/product/price-stack" %}
+  {% include "modules/product/price-stack" %}
 </div>
-<div class="mz-l-2column">
-<div class="mz-l-column">
+<div class="mz-price-container">
 <dl class="mz-productcodes mz-propertylist mz-pagetitle-note mz-l-stack-section">
 	<dt class="mz-productcodes-productcode-label">{{ labels.productCode }}</dt>
 	<dd class="mz-productcodes-productcode" itemprop="sku">{{ model.variationProductCode|default(model.productCode) }}</dd>
@@ -66,10 +65,12 @@
   {% endif %}
 </section>
 </div>
+
 {% if model.volumePriceBands and model.volumePriceBands.length > 0 %}
-   {% include "modules/product/volume-pricing" %}
-{% endif %}
+<div class="mz-volume-price-container">
+  {% include "modules/product/volume-pricing" %}
 </div>
+{% endif %}
 
 <div class="mz-productdetail-fulldesc mz-l-stack-section">
   <h4 class="mz-l-stack-sectiontitle">{{ labels.fullDesc }}</h4>
