@@ -69,7 +69,7 @@
   "phone"                                 : "Phone",
   "purchaseOrder"                         : "Purchase Order",
   "purchaseOrderAmount"                   : "Amount",
-  "purchaseOrderNumber"                   : "PO #",
+  "purchaseOrderNumber"                   : "PO Number",
   "purchaseOrderNumberMissing"            : "Purchase order number required",
   "purchaseOrderPaymentTerms"             : "Payment Terms",
   "purchaseOrderPaymentTermMissing"       : "Payment term required",

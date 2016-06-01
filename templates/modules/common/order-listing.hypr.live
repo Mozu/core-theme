@@ -14,7 +14,7 @@
             
             {% for payment in model.payments %}
             {% if payment.billingInfo.paymentType == "PurchaseOrder" and payment.status != "Voided" %}
-                <dt>{{ labels.purchaseOrder }}</dt>
+                <dt>{{ labels.purchaseOrderNumber }}</dt>
                 <dd>{{ payment.billingInfo.purchaseOrder.purchaseOrderNumber }}</dd>
             {% endif %}
             {% endfor %}
