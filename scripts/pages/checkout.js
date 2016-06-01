@@ -135,7 +135,9 @@ require(["modules/jquery-mozu", "underscore", "hyprlive", "modules/backbone-mozu
             'billingContact.phoneNumbers.home',
             'billingContact.email',
             'creditAmountToApply',
-            'digitalCreditCode'
+            'digitalCreditCode',
+            'purchaseOrder.purchaseOrderNumber',
+            'purchaseOrder.paymentTerm'
         ],
         renderOnChange: [
             'billingContact.address.countryCode',
@@ -148,7 +150,8 @@ require(["modules/jquery-mozu", "underscore", "hyprlive", "modules/backbone-mozu
             "change [data-mz-digital-credit-enable]": "enableDigitalCredit",
             "change [data-mz-digital-credit-amount]": "applyDigitalCredit",
             "change [data-mz-digital-add-remainder-to-customer]": "addRemainderToCustomer",
-            "change [name='paymentType']": "resetPaymentData"
+            "change [name='paymentType']": "resetPaymentData",
+            "change [data-mz-purchase-order-payment-term]": "updatePaymentTerm",
         },
 
         initialize: function () {
@@ -171,6 +174,10 @@ require(["modules/jquery-mozu", "underscore", "hyprlive", "modules/backbone-mozu
             if(HyprLiveContext.locals.siteContext.checkoutSettings.purchaseOrder.isEnabled) {
                 this.model.setPurchaseOrderInfo();
             }
+        },
+        updatePaymentTerm: function(e) {
+            console.log(e);
+            this.model.setPurchaseOrderPaymentTerm(e.target.value);
         },
         render: function() {
             preserveElements(this, ['.v-button'], function() {

@@ -1,4 +1,4 @@
-﻿define(['modules/jquery-mozu', 'underscore', 'modules/backbone-mozu', 'hyprlive', 'hyprlivecontext'], function ($, _, Backbone, Hypr, HyprLiveContext) {
+﻿define(['modules/jquery-mozu', 'underscore', 'modules/backbone-mozu', 'hyprlive', 'hyprlivecontext', 'modules/models-address'], function ($, _, Backbone, Hypr, HyprLiveContext, Address) {
     // payment methods only validate if they are selected!
     var PaymentMethod = Backbone.MozuModel.extend({
         present: function (value, attr) {
@@ -238,13 +238,13 @@
             availableBalance: 0,
             creditLimit: 0
         },
-        //Payment specific:
-        //paymentTerm: null,
-        //purchaseOrderNumber: null,
 
         relations: {
             customFields: Backbone.Collection.extend({
                 model: PurchaseOrderCustomField
+            }),
+            paymentTerm: Backbone.MozuModel.extend({
+                model: PurchaseOrderPaymentTerm
             }),
             paymentTermOptions: Backbone.Collection.extend({
                 model: PurchaseOrderPaymentTerm
@@ -265,16 +265,10 @@
 
         validation: {
             purchaseOrderNumber: {
-                /*fn: function(value, attr){
-                    if(!value) {
-                        return Hypr.getLabel('purchaseOrderNumberMissing');
-                    }
-                    return;
-                }*/
                 fn: "present",
                 msg: Hypr.getLabel('purchaseOrderNumberMissing')
-            }/*,
-            customFields: {
+            },
+            /*customFields: {
                 fn: function(value, attr) {
                     var siteSettingsCustomFields = HyprLiveContext.locals.siteContext.checkoutSettings.purchaseOrder.customFields;
                     var result = null;

@@ -844,7 +844,7 @@
                     purchaseOrderInfo = order.get('customer').get('purchaseOrder'),
                     purchaseOrderSiteSettings = HyprLiveContext.locals.siteContext.checkoutSettings.purchaseOrder ?
                         HyprLiveContext.locals.siteContext.checkoutSettings.purchaseOrder.isEnabled : false,
-                    purchaseOrderEnabled = purchaseOrderSiteSettings && purchaseOrderInfo?purchaseOrderInfo.isEnabled:false,
+                    purchaseOrderEnabled = purchaseOrderSiteSettings && purchaseOrderInfo?purchaseOrderInfo.isEnabled : false,
                     currentPurchaseOrder = me.get('purchaseOrder');
 
                 currentPurchaseOrder.set('isEnabled', purchaseOrderEnabled);
@@ -852,6 +852,9 @@
                     // if purchase order isn't enabled, don't populate stuff!
                     return;
                 }
+
+
+                var contacts = order.get('customer').get('contacts');
 
                 // Set information, only if the current purchase order does not have it:
                 var amount = purchaseOrderInfo.availableBalance > order.get('amountRemainingForPayment') ?
@@ -876,9 +879,29 @@
                         newTerm.description = term.description;
                         paymentTerms.push(term);
                     });
-                    currentPurchaseOrder.set('paymentTermOptions', paymentTerms);
+                    currentPurchaseOrder.set('paymentTermOptions', paymentTerms, {silent: true});
+                }
+
+                if(contacts.length > 0) {
+                    var foundBillingContact = null;
+                    contacts.models.forEach(function(item){
+                        if(item.get('isPrimaryBillingContact')) {
+                            foundBillingContact = item.toJSON();
+                        }
+                    });
+                    this.set('billingContact', foundBillingContact, {silent: true});
+                    currentPurchaseOrder.set('usingBillingContact', true);
                 }
                 // use this to pull custom field data from checkout: purchase-order-custom-field-{{customField.code}}
+            },
+            setPurchaseOrderPaymentTerm: function(termCode) {
+                var currentPurchaseOrder = this.get('purchaseOrder'),
+                    paymentTermOptions = currentPurchaseOrder.get('paymentTermOptions');
+                    paymentTermOptions.forEach(function(term) {
+                        if(term.get('code') === termCode) {
+                            currentPurchaseOrder.set('paymentTerm', term, {silent: true});
+                        }
+                    });
             },
             initialize: function () {
                 var me = this;
