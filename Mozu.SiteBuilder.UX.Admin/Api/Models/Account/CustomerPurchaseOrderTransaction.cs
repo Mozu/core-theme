@@ -5,9 +5,11 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.Models.Account
     public class CustomerPurchaseOrderTransaction
     {
         public string AdditionalTransactionDetail { get; set; }
+        public string Author { get; set; }
         public decimal AvailableBalance { get; set; }
         public decimal CreditLimit { get; set; }
         public int CustomerPurchaseOrderAccountId { get; set; }
+        public string ExternalId { get; set; }
         public string OrderId { get; set; }
         public string PurchaseOrderNumber { get; set; }
         public int SiteId { get; set; }

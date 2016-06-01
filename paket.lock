@@ -133,7 +133,7 @@ NUGET
       NSubstitute (>= 1.8.1)
       NUnit (>= 2.6.4)
       Should (>= 1.1.20)
-    Mozu.Customer.Contracts (1.1618.1-dev1605231826fea)
+    Mozu.Customer.Contracts (1.1621.1-dev1606011938fea)
       Mozu.Core.Extensible.Contracts
     Mozu.DeployWeb (2.0.4)
       OctoPack (>= 2.1.3)
