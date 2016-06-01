@@ -1073,7 +1073,7 @@
     <When Condition="$(TargetFrameworkIdentifier) == '.NETFramework' And ($(TargetFrameworkVersion) == 'v4.5' Or $(TargetFrameworkVersion) == 'v4.5.1')">
       <ItemGroup>
         <Reference Include="RabbitMQ.Client">
-          <HintPath>..\packages\RabbitMQ.Client\lib\net20\RabbitMQ.Client.dll</HintPath>
+          <HintPath>..\packages\RabbitMQ.Client\lib\net30\RabbitMQ.Client.dll</HintPath>
           <Private>True</Private>
           <Paket>True</Paket>
         </Reference>
