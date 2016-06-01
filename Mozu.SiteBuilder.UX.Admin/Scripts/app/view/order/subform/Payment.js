@@ -50,7 +50,7 @@ Ext.define('Taco.view.order.subform.Payment', {
         Taco.model.CheckoutSettings.load(123, {
             scope: this,
             failure: function () {
-                console.log('you failed')
+                // there should be a message here
             },
             success: function (record) {
             },
@@ -81,7 +81,9 @@ Ext.define('Taco.view.order.subform.Payment', {
                     var lastValidPayment = me.getLastValidPayment();
                     var paymentType;
 
-                    if (lastValidPayment) {
+                    if (me.record.customer.raw.purchaseOrderAccount.isEnabled) {
+                        action = me.paymentActions.addPurchaseOrder;
+                    } else if (lastValidPayment) {
                         paymentType = lastValidPayment.get('paymentType');
 
                         if (paymentType === "Check") {
