@@ -109,6 +109,8 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.ModelMapping
                 ;
 
             Mapper.CreateMap<DC.PurchaseOrderTransaction, CustomerPurchaseOrderTransaction>()
+                .ForMember(dc=>dc.OrderNumber, opt=>opt.Ignore())
+                .ForMember(dc => dc.OrderType, opt => opt.Ignore())
                 ;
             Mapper.CreateMap<CustomerPurchaseOrderTransaction, DC.PurchaseOrderTransaction>()
                 .ForMember(dc => dc.AuditInfo, opt => opt.Ignore())
