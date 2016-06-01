@@ -176,7 +176,6 @@ require(["modules/jquery-mozu", "underscore", "hyprlive", "modules/backbone-mozu
             }
         },
         updatePaymentTerm: function(e) {
-            console.log(e);
             this.model.setPurchaseOrderPaymentTerm(e.target.value);
         },
         render: function() {
