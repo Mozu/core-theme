@@ -882,6 +882,14 @@
                     currentPurchaseOrder.set('paymentTermOptions', paymentTerms, {silent: true});
                 }
 
+                var paymentTermOptions = currentPurchaseOrder.get('paymentTermOptions');
+                if(!currentPurchaseOrder.get('paymentTerm').get('code') && paymentTermOptions.length === 1) {
+                    var paymentTerm = {};
+                    paymentTerm.code = paymentTermOptions.models[0].get('code');
+                    paymentTerm.description = paymentTermOptions.models[0].get('description');
+                    currentPurchaseOrder.set('paymentTerm', paymentTerm);
+                }
+
                 if(contacts.length > 0) {
                     var foundBillingContact = null;
                     contacts.models.forEach(function(item){
@@ -1047,20 +1055,6 @@
                 if(customFields.length > 0) {
                     purchaseOrder.set('customFields', customFields);
                 }
-
-                // Payment term data fields: code, description
-                var paymentTerm = {};
-                if(paymentTermOptions.length === 1) {
-                    paymentTerm.code = paymentTermOptions[0].code;
-                    paymentTerm.description = paymentTermOptions[0].description;
-                    purchaseOrder.set('paymentTerm', paymentTerm);
-                } else {
-                    var selectedTerm = $('#mz-payment-purchase-order-payment-terms option:selected');
-                    paymentTerm.code = selectedTerm.val();
-                    paymentTerm.description = selectedTerm.text();
-                    purchaseOrder.set('paymentTerm', paymentTerm);
-                }
-
             },
             submit: function () {
                 
