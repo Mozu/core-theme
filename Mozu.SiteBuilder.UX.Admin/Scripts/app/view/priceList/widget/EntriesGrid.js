@@ -104,6 +104,8 @@ Ext.define('Taco.view.priceList.widget.EntriesGrid', {
 
         this.columns = this.getColumnConfig();
 
+        me.mon(me, 'priceList-duplicateEntry', me.doDuplicate);
+
         if (this.showActionsColumn) {
             var actionColumn = this.getActionColumn();
             if (actionColumn) {
@@ -328,7 +330,9 @@ Ext.define('Taco.view.priceList.widget.EntriesGrid', {
             {
                 text: 'Duplicate',
                 itemId: 'duplicateMenuItem',
-                menuColumnHandler: me.doDuplicate,
+                menuColumnHandler: function(item, eventData) {
+                    me.fireEvent('priceList-duplicateEntry', eventData.record);
+                },
                 scope: me
             }
         )
@@ -539,9 +543,9 @@ Ext.define('Taco.view.priceList.widget.EntriesGrid', {
         item.scope.createPopup(rec, false);
     },
 
-    doDuplicate: function(item, eventData) {
-        var rec = item.scope.doDuplicateInternal(eventData.record);
-        item.scope.createPopup(rec, true);
+    doDuplicate: function(record) {
+        var me = this;
+        me.createPopup(me.doDuplicateInternal(record), true);
     },
 
     doDuplicateInternal: function(record) {
@@ -554,13 +558,35 @@ Ext.define('Taco.view.priceList.widget.EntriesGrid', {
         var me = this;
         Ext.create('Taco.view.priceList.modal.PriceEntryEditor', {
             record: record,
+            itemId: 'PriceEntryEditor',
             parentForm: this,
             isCreateMode: isNew,
             priceListCode: this.priceListCode,
             actions: (!me.allowUpdate)
                 ? [{ xtype: 'button', itemId: 'secondaryAction'}]
-                : [{ xtype: 'button', itemId: 'secondaryAction'},
-                   { xtype: 'button', itemId: 'primaryAction', formBind: true}
+                : [
+                    { xtype: 'button', itemId: 'secondaryAction'},
+                    {
+                        xtype: 'splitbutton',
+                        itemId: 'primaryAction',
+                        formBind: true,
+                        menu: Ext.create('Ext.menu.Menu', {
+                            items: [{
+                                text: 'Save and Duplicate',
+                                handler: function() {
+                                    var editor = this.up('#PriceEntryEditor');
+                                    editor.onSaveSuccess = function(updatedRecord) {
+                                        me.fireEvent('priceList-duplicateEntry', updatedRecord);
+                                        editor.onSaveSuccess = Ext.emptyFn;
+                                    }
+                                    editor.save();
+                                }
+                            }]
+                        }),
+                        handler: function(btn, e) {
+                            this.save();
+                        }
+                    }
                   ],
             listeners: {
                 savesuccess: function () {

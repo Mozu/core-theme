@@ -163,6 +163,7 @@ Ext.define('Taco.view.priceList.modal.PriceEntryEditor', {
         var me = this,
             form = me.getForm(),
             entries = form.down('#basicEntries').items,
+            isBulk = (entries.getCount() > 1 || entries.getAt(0).record.get('minQty') > 1),
             data = form.getValues(),
             priceEntries = [],
             extrasStore = me.pricePanel.extrasGrid.getStore(),
@@ -178,21 +179,19 @@ Ext.define('Taco.view.priceList.modal.PriceEntryEditor', {
             Ext.Object.merge(this.record.data, data);
         }
 
-        this.record.set('priceListEntryMode', (entries.length > 1 || entries.getAt(0).record.get('minQty') > 1) ? 'Bulk' : 'Simple')
+        this.record.set('priceListEntryMode', isBulk ? 'Bulk' : 'Simple');
 
         entries.each(function(entry) {
             priceEntries.push(entry.getValues());
         });
-
+        this.record.data.priceEntries = null; // hack to fix a recursion/call stack size issue, on create
         this.record.set('priceEntries', priceEntries);
-        
+
         Ext.Array.each(extrasStore.getRange(), function(extra) {
             extras.push(extra.getData());
         });
 
         this.record.set('extras', extras);
-        
-        
 
         this.record.save({
             success: onSuccess,
