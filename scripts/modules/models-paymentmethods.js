@@ -267,7 +267,7 @@
             purchaseOrderNumber: {
                 fn: "present",
                 msg: Hypr.getLabel('purchaseOrderNumberMissing')
-            },
+            }//,
             /*customFields: {
                 fn: function(value, attr) {
                     var siteSettingsCustomFields = HyprLiveContext.locals.siteContext.checkoutSettings.purchaseOrder.customFields;

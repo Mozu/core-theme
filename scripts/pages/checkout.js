@@ -151,7 +151,7 @@ require(["modules/jquery-mozu", "underscore", "hyprlive", "modules/backbone-mozu
             "change [data-mz-digital-credit-amount]": "applyDigitalCredit",
             "change [data-mz-digital-add-remainder-to-customer]": "addRemainderToCustomer",
             "change [name='paymentType']": "resetPaymentData",
-            "change [data-mz-purchase-order-payment-term]": "updatePaymentTerm",
+            "change [data-mz-purchase-order-payment-term]": "updatePaymentTerm"
         },
 
         initialize: function () {
