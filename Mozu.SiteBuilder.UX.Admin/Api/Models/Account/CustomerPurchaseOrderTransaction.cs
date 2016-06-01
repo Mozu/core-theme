@@ -11,6 +11,8 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.Models.Account
         public string OrderId { get; set; }
         public string PurchaseOrderNumber { get; set; }
         public int SiteId { get; set; }
+        public string OrderType { get; set; }
+        public string OrderNumber { get; set; }
         public int TenantId { get; set; }
         public decimal TransactionAmount { get; set; }
         public DateTime TransactionDate { get; set; }

@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections;
+using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Linq;
 using System.Net;
@@ -7,10 +8,10 @@ using System.Net.Http;
 using System.Threading.Tasks;
 using System.Web.Http;
 using AutoMapper;
-using MongoDB.Driver;
-using Mozu.Core.Actions;
+using Mozu.CommerceRuntime.Contracts.Clients;
 using Mozu.Core.Api.Contracts.Client;
 using Mozu.Core.Api.Routing;
+using Mozu.Core.Logging;
 using Mozu.Customer.Contracts.Clients;
 using Mozu.Customer.Contracts.Credit;
 using Mozu.SiteBuilder.Mvc.Extensions;
@@ -32,16 +33,20 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
         //  private readonly ICustomerGroupWebApiClient _customerGroupWebApiClient;
         private readonly ICreditWebApiClient _creditWebApiClient;
         //private readonly ICustomerVisitWebApiClient _customerVisitWebApiClient;
+        private readonly IOrderWebApiClient _orderWebApiClient;
+        private readonly ILogger _log;
 
         public CustomerController(ICustomerAccountWebApiClient customerWebApiClient,
             ICustomerSegmentWebApiClient customerSegmentWebApiClient,
             //Mozu.Customer.Contracts.Clients.ICustomerGroupWebApiClient customerGroupWebApiClient, 
-            ICreditWebApiClient creditWebApiClient/*, ICustomerVisitWebApiClient customerVisitWebApiClient*/)
+            ICreditWebApiClient creditWebApiClient, IOrderWebApiClient orderWebApiClient, ILogger log /*, ICustomerVisitWebApiClient customerVisitWebApiClient*/)
         {
             _customerWebApiClient = customerWebApiClient;
             _customerSegmentWebApiClient = customerSegmentWebApiClient;
             // _customerGroupWebApiClient = customerGroupWebApiClient;
             _creditWebApiClient = creditWebApiClient;
+            _orderWebApiClient = orderWebApiClient;
+            _log = log;
             //_customerVisitWebApiClient = customerVisitWebApiClient;
         }
 
@@ -487,7 +492,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
         }
 
         [HttpGetRoute(UriTemplate = "purchaseOrder/transaction/list")]
-        public async Task<HttpResponseMessage> GetCustomerPurchaseOrderTransactions([FromUri]int? customerId, [FromUri]PagingParamaters pagingParams = null)
+        public async Task<Response<List<CustomerPurchaseOrderTransaction>>> GetCustomerPurchaseOrderTransactions([FromUri]int? customerId, [FromUri]PagingParamaters pagingParams = null)
         {
             if (!customerId.HasValue)
             {
@@ -496,7 +501,32 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
             int? startIndex = pagingParams.startIndex;
             int? pageSize = pagingParams.pageSize ?? 20;
             var result =(await _customerWebApiClient.GetCustomerPurchaseOrderTransactions(customerId.Value, startIndex,pageSize)).ReadAsAsync().Result;
-            return this.Request.CreateResponse(HttpStatusCode.OK, List2(result.Items, (int)result.TotalCount));
+
+            var results = result.Items.Select(entry => entry.Map<CustomerPurchaseOrderTransaction>()).ToList();
+            var orderIds = results.Where(trans => !string.IsNullOrEmpty(trans.OrderId)).Select(x =>x.OrderId).Distinct().ToList();
+            var exceptions = new ConcurrentQueue<Exception>();
+            Parallel.ForEach(orderIds, new ParallelOptions {MaxDegreeOfParallelism = 20}, (orderId) =>
+            {
+                try
+                {
+                    var order =
+                        (_orderWebApiClient.GetOrder(orderId, responseFields: "OrderNumber,Type").Result.ReadAsAsync())
+                            .Result;
+                    Parallel.ForEach(results.Where(x => x.OrderId == orderId),
+                        new ParallelOptions {MaxDegreeOfParallelism = 20}, (transaction) =>
+                        {
+                            transaction.OrderNumber = order?.OrderNumber.ToString();
+                            transaction.OrderType = order?.Type;
+                        });
+                }
+                catch (Exception ex)
+                {
+                    _log.Error($"Error getting order info for orderId - {orderId}", ex, orderId);
+                    exceptions.Enqueue(ex);
+                }
+            });
+           
+            return List2(results);
         }
 
         [HttpGetRoute(UriTemplate = "cards/list")]
@@ -620,6 +650,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
         public async Task<HttpResponseMessage> GetCreditTransactions(string code)
         {
             var resp = (await _creditWebApiClient.GetTransactions(code)).ReadAsSync();
+
             return this.Request.CreateResponse(HttpStatusCode.OK, List2(resp.Items));
         }
 
