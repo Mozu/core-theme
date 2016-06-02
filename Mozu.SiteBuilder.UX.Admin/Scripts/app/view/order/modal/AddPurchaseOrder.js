@@ -56,8 +56,8 @@ Ext.define('Taco.view.order.modal.AddPurchaseOrder', {
                             flex: 1,
                             margin: '0 0 0 30',
                             name: 'amount',
-                            value: me.record.formatCurrency(me.record.get('total')),
-                            xtype: 'textfield'
+                            value: me.getDefaultPaymentAmount(),
+                            xtype: 'currencyfield'
                         }
                     ]
                 },
@@ -75,6 +75,21 @@ Ext.define('Taco.view.order.modal.AddPurchaseOrder', {
         me.items = [me.form];
 
         this.callParent(arguments);
+    },
+
+    getDefaultPaymentAmount: function () {
+        var me = this,
+            retVal = "",
+            authInfo;
+
+        if (!this.defaultPaymentAmount) {
+            retVal = this.record.getNewPaymentAmountHint();
+        } else {
+            retVal = this.defaultPaymentAmount;
+        }
+
+        retVal = (retVal < 0) ? "" : retVal;
+        return retVal;
     },
 
     getAddress: function (billingAddress) {
