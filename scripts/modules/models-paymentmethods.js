@@ -285,7 +285,6 @@
             if(customFields.length > 0) {
                 this.set('customFields', customFields, {silent: true});
             }
-            debugger;
         },
 
         validation: {
@@ -326,11 +325,11 @@
             },*/
             paymentTerm: {
                 fn: function(value, attr) {
-                    var selectedPaymentTerm = null
-                    if(!(attr.indexOf('billingInfo') > -1)) {
-                        selectedPaymentTerm = this.get('purchaseOrder').get('paymentTerm');
-                    } else {
+                    var selectedPaymentTerm = null;
+                    if(attr.indexOf('billingInfo') > -1) {
                         selectedPaymentTerm = this.get('billingInfo').get('purchaseOrder').get('paymentTerm');
+                    } else {
+                        selectedPaymentTerm = this.get('purchaseOrder').get('paymentTerm');
                     }
                     
                     if(!selectedPaymentTerm.get('description')) {
