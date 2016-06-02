@@ -109,8 +109,8 @@ require(["modules/jquery-mozu", "underscore", "hyprlive", "modules/backbone-mozu
         
         var fieldDefs = [];
 
-        var isEnabled = HyprLiveContext.locals.siteContext.checkoutSettings.purchaseOrder
-            && HyprLiveContext.locals.siteContext.checkoutSettings.purchaseOrder.isEnabled;
+        var isEnabled = HyprLiveContext.locals.siteContext.checkoutSettings.purchaseOrder &&
+            HyprLiveContext.locals.siteContext.checkoutSettings.purchaseOrder.isEnabled;
 
             if (isEnabled) {
                 var siteSettingsCustomFields = HyprLiveContext.locals.siteContext.checkoutSettings.purchaseOrder.customFields;
@@ -121,7 +121,7 @@ require(["modules/jquery-mozu", "underscore", "hyprlive", "modules/backbone-mozu
                 }, this);
             }
 
-        return fieldDefs
+        return fieldDefs;
 
     };
 

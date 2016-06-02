@@ -285,6 +285,7 @@
             if(customFields.length > 0) {
                 this.set('customFields', customFields, {silent: true});
             }
+            debugger;
         },
 
         validation: {
@@ -325,7 +326,12 @@
             },*/
             paymentTerm: {
                 fn: function(value, attr) {
-                    var selectedPaymentTerm = this.get('purchaseOrder').get('paymentTerm');
+                    var selectedPaymentTerm = null
+                    if(!(attr.indexOf('billingInfo') > -1)) {
+                        selectedPaymentTerm = this.get('purchaseOrder').get('paymentTerm');
+                    } else {
+                        selectedPaymentTerm = this.get('billingInfo').get('purchaseOrder').get('paymentTerm');
+                    }
                     
                     if(!selectedPaymentTerm.get('description')) {
                         return Hypr.getLabel('purchaseOrderPaymentTermMissing');

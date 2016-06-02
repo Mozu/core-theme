@@ -857,17 +857,6 @@
                 //  field a first class item against the purchase order model. Also populates the field if the
                 //  custom field has a value.
                 currentPurchaseOrder.deflateCustomFields();
-                // Update models-checkout validation with flat purchaseOrderCustom fields for validation.
-                for(var validateField in currentPurchaseOrder.validation) {
-                    if(!this.validation['purchaseOrder.'+validateField]) {
-                        this.validation['purchaseOrder.'+validateField] = currentPurchaseOrder.validation[validateField];
-                    }
-                    // Is this level needed?
-                    if(!this.parent.validation['billingInfo.purchaseOrder.'+validateField]) {
-                        this.parent.validation['billingInfo.purchaseOrder.'+validateField] =
-                            currentPurchaseOrder.validation[validateField];
-                    }
-                }
 
                 var contacts = order.get('customer').get('contacts');
 
@@ -920,11 +909,10 @@
             setPurchaseOrderPaymentTerm: function(termCode) {
                 var currentPurchaseOrder = this.get('purchaseOrder'),
                     paymentTermOptions = currentPurchaseOrder.get('paymentTermOptions');
-                    paymentTermOptions.forEach(function(term) {
-                        if(term.get('code') === termCode) {
-                            currentPurchaseOrder.set('paymentTerm', term, {silent: true});
-                        }
+                    var foundTerm = paymentTermOptions.find(function(term) {
+                        return term.get('code') === termCode;
                     });
+                    currentPurchaseOrder.set('paymentTerm', foundTerm, {silent: true});
             },
             initialize: function () {
                 var me = this;
@@ -1078,6 +1066,9 @@
                 }
 
                 var card = this.get('card');
+                if(this.get('paymentType').toLowerCase() === "purchaseorder") {
+                    this.get('purchaseOrder').inflateCustomFields();
+                }
 
                 if (!currentPayment) {
                     return this.applyPayment();
