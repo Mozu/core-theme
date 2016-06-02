@@ -43,9 +43,112 @@ using Mozu.SiteBuilder.UX.Models.StoreFront.Catalog;
 using NSubstitute.Core;
 using Mozu.SiteBuilder.Mvc.Caching;
 using System.Linq;
+using FiftyOne.Foundation.Mobile.Detection.Handlers;
+using Mozu.Core.Api.Contracts.Caching;
 
 namespace Mozu.SiteBuilder.UnitTests.Mvc.SEO
 {
+    class TestHandler : IServiceClientMessageHandler
+    {
+        public TestHandler()
+        {
+            this.MozuApiContext = new ApiContext();
+        }
+        public object MozuApiContext
+        {
+            get; private set;
+        }
+
+        public IServiceClientMessageHandler CloneWithNewApiContext(object apiContext)
+        {
+            return new TestHandler() { MozuApiContext = apiContext ?? new ApiContext() };
+        }
+
+        public string GetBaseUrlById(string serviceId, string environment = null, string scaleUnit = null)
+        {
+            throw new NotImplementedException();
+        }
+
+        public Task<ServiceClientResponse<T>> SendAsync<T>(string verb, string relpath, string serviceId, ConfigOptions options)
+        {
+            throw new NotImplementedException();
+        }
+
+        public Task<ServiceClientResponse<T>> SendAsync<T>(string verb, string relpath, string serviceId, ConfigOptions options, IGeneratedClientPerformanceCounters clientPerformanceCounters)
+        {
+            throw new NotImplementedException();
+        }
+
+        public Task<ServiceClientResponse<T>> SendAsync<T>(string verb, string relpath, string serviceId, ConfigOptions options, ClientCacheOptions cacheOptions)
+        {
+            throw new NotImplementedException();
+        }
+
+        public Task<ServiceClientResponse<T>> SendAsync<T>(string verb, string relpath, string serviceId, ConfigOptions options, TargetContextLevelType targetContextLevel)
+        {
+            throw new NotImplementedException();
+        }
+
+        public Task<ServiceClientResponse<T>> SendAsync<T>(string verb, string relpath, string serviceId, ConfigOptions options, ClientCacheOptions cacheOptions, IGeneratedClientPerformanceCounters clientPerformanceCounters)
+        {
+            throw new NotImplementedException();
+        }
+
+        public Task<ServiceClientResponse<T>> SendAsync<T>(string verb, string relpath, string serviceId, ConfigOptions options, TargetContextLevelType targetContextLevel, IGeneratedClientPerformanceCounters clientPerformanceCounters)
+        {
+            throw new NotImplementedException();
+        }
+
+        public Task<ServiceClientResponse<T>> SendAsync<T>(string verb, string relpath, string serviceId, ConfigOptions options, TargetContextLevelType targetContextLevel, ClientCacheOptions cacheOptions)
+        {
+            throw new NotImplementedException();
+        }
+
+        public Task<ServiceClientResponse<T>> SendAsync<T>(string verb, string relpath, string serviceId, ConfigOptions options, TargetContextLevelType targetContextLevel, ClientCacheOptions cacheOptions, IGeneratedClientPerformanceCounters clientPerformanceCounters)
+        {
+            throw new NotImplementedException();
+        }
+
+        public Task<ServiceClientResponse<T>> SendAsync<T, S>(string verb, string relpath, S sval, string serviceId, ConfigOptions options)
+        {
+            throw new NotImplementedException();
+        }
+
+        public Task<ServiceClientResponse<T>> SendAsync<T, S>(string verb, string relpath, S sval, string serviceId, ConfigOptions options, IGeneratedClientPerformanceCounters clientPerformanceCounters)
+        {
+            throw new NotImplementedException();
+        }
+
+        public Task<ServiceClientResponse<T>> SendAsync<T, S>(string verb, string relpath, S sval, string serviceId, ConfigOptions options, ClientCacheOptions cacheOptions)
+        {
+            throw new NotImplementedException();
+        }
+
+        public Task<ServiceClientResponse<T>> SendAsync<T, S>(string verb, string relpath, S sval, string serviceId, ConfigOptions options, TargetContextLevelType targetContextLevel)
+        {
+            throw new NotImplementedException();
+        }
+
+        public Task<ServiceClientResponse<T>> SendAsync<T, S>(string verb, string relpath, S sval, string serviceId, ConfigOptions options, ClientCacheOptions cacheOptions, IGeneratedClientPerformanceCounters clientPerformanceCounters)
+        {
+            throw new NotImplementedException();
+        }
+
+        public Task<ServiceClientResponse<T>> SendAsync<T, S>(string verb, string relpath, S sval, string serviceId, ConfigOptions options, TargetContextLevelType targetContextLevel, IGeneratedClientPerformanceCounters clientPerformanceCounters)
+        {
+            throw new NotImplementedException();
+        }
+
+        public Task<ServiceClientResponse<T>> SendAsync<T, S>(string verb, string relpath, S sval, string serviceId, ConfigOptions options, TargetContextLevelType targetContextLevel, ClientCacheOptions cacheOptions)
+        {
+            throw new NotImplementedException();
+        }
+
+        public Task<ServiceClientResponse<T>> SendAsync<T, S>(string verb, string relpath, S sval, string serviceId, ConfigOptions options, TargetContextLevelType targetContextLevel, ClientCacheOptions cacheOptions, IGeneratedClientPerformanceCounters clientPerformanceCounters)
+        {
+            throw new NotImplementedException();
+        }
+    }
     [TestFixture, Category("CustomRoutes")]
     public class CustomRouteTests
     {
@@ -156,6 +259,7 @@ namespace Mozu.SiteBuilder.UnitTests.Mvc.SEO
 
             var entityClientMock = Substitute.For<IEntityListsWebApiClient, ICloneable>();
             (entityClientMock as ICloneable).Clone().Returns(entityClientMock);
+            entityClientMock.Handler.ReturnsForAnyArgs(new TestHandler());
 
             entityClientMock.GetEntity(Arg.Any<string>(), Arg.Any<string>()).Returns(ctx => Task.FromResult(new ServiceClientResponse<JObject>() { ReadAsSync = () => JObject.Parse("{\"red\":\"green\"}") }));
             yield return new object[] {
@@ -194,6 +298,7 @@ namespace Mozu.SiteBuilder.UnitTests.Mvc.SEO
 
             var entityClientMock = Substitute.For<IEntityListsWebApiClient, ICloneable>();
             (entityClientMock as ICloneable).Clone().Returns(entityClientMock);
+           entityClientMock .Handler.ReturnsForAnyArgs(new TestHandler());
             var obj = new JObject();
             obj["blah"] = "foo";
 
@@ -234,6 +339,7 @@ namespace Mozu.SiteBuilder.UnitTests.Mvc.SEO
                 return _name;
             }
         }
+        
         static IEnumerable<ConstraintTest> ConstraintTests()
         {
             yield return new ConstraintTest( "test1", new object[]
@@ -254,6 +360,7 @@ namespace Mozu.SiteBuilder.UnitTests.Mvc.SEO
 
             var attrClient = Substitute.For<IAttributeWebApiClient, ICloneable>();
             (attrClient as ICloneable).Clone().Returns(attrClient);
+            attrClient.Handler.Returns(new TestHandler());
             var vocabs = new List<ProductAdmin.Contracts.AttributeVocabularyValue>{
                 Vocab("meh"),
                 Vocab("whatevs")
@@ -261,9 +368,11 @@ namespace Mozu.SiteBuilder.UnitTests.Mvc.SEO
 
             var searchClient = Substitute.For<IProductSearchWebApiClient, ICloneable>();
             (searchClient as ICloneable).Clone().Returns(searchClient);
+            searchClient.Handler.Returns(new TestHandler());
 
 
             attrClient.GetAttributeVocabularyValues(Arg.Any<string>()).Returns(Task.FromResult(Response(vocabs)));
+            attrClient.Handler.Returns(new TestHandler());
             searchClient.Search().ReturnsForAnyArgs(Task.FromResult(Response(new ProductRuntime.Contracts.ProductSearchResult()
             {
                 Facets =
@@ -309,16 +418,14 @@ namespace Mozu.SiteBuilder.UnitTests.Mvc.SEO
                 false
             });
 
-            var mzdbClient = Substitute.For<IEntityListsWebApiClient, ICloneable>();
-            (mzdbClient as ICloneable).Clone().Returns(mzdbClient);
-            var doc = new JObject();
-            doc["myfield"] = "value!";
-            var coll = new EntityCollection() { Items = new List<JObject> { doc }, TotalCount = 1, PageCount = 1, PageSize = 50, StartIndex = 0 };
-            mzdbClient.GetEntities(Arg.Any<string>(), pageSize: Arg.Any<int?>(), startIndex: Arg.Any<int?>()).Returns(Task.FromResult(Response(coll)));
+           
+           // MakeEntityListsWebApiClient();
+
+            
             yield return new ConstraintTest("test7", new object[]
             {
                 "param",
-                new MzdbRouteConstraint(mzdbClient, "mylist", null, "myfield"),
+                new MzdbRouteConstraint(MakeEntityListsWebApiClient(), "mylist", null, "myfield"),
                 new Dictionary<string, object> { {"param", "value!" } },
                 true
             });
@@ -326,17 +433,34 @@ namespace Mozu.SiteBuilder.UnitTests.Mvc.SEO
             yield return new ConstraintTest("test8", new object[]
             {
                 "param",
-                new MzdbRouteConstraint(mzdbClient, "mylist",null, "myfield"),
+                new MzdbRouteConstraint(MakeEntityListsWebApiClient(), "mylist",null, "myfield"),
                 new Dictionary<string, object> { {"param", "sigh" } },
                 false
             });
             yield return new ConstraintTest("test9", new object[]
             {
                 "param",
-                new MzdbRouteConstraint(mzdbClient, "mylist", null,"myfield"),
+                new MzdbRouteConstraint(MakeEntityListsWebApiClient(), "mylist", null,"myfield"),
                 new Dictionary<string, object> { },
                 false
             });
+        }
+
+        private static IEntityListsWebApiClient MakeEntityListsWebApiClient()
+        {
+            var mzdbClient = Substitute.For<IEntityListsWebApiClient, ICloneable>();
+            (mzdbClient as ICloneable).Clone().Returns(mzdbClient);
+
+            var  mozuApiContext = (object) new ApiContext();
+            mzdbClient.Handler.Returns(new TestHandler());
+
+            var doc = new JObject();
+            doc["myfield"] = "value!";
+            var coll = new EntityCollection() { Items = new List<JObject> { doc }, TotalCount = 1, PageCount = 1, PageSize = 50, StartIndex = 0 };
+            mzdbClient.GetEntities(Arg.Any<string>(), pageSize: Arg.Any<int?>(), startIndex: Arg.Any<int?>()).Returns(Task.FromResult(Response(coll)));
+
+
+            return mzdbClient;
         }
 
         static ProductAdmin.Contracts.AttributeVocabularyValue Vocab(string value) {
@@ -354,6 +478,7 @@ namespace Mozu.SiteBuilder.UnitTests.Mvc.SEO
         {
             var entityClient = Substitute.For<IEntityListsWebApiClient, ICloneable>();
             ((ICloneable)entityClient).Clone().Returns(entityClient);
+            entityClient.Handler.Returns(new TestHandler());
 
             var fact = new ConstraintFactory(entityClient, Substitute.For<IAttributeWebApiClient>(), Substitute.For<IProductSearchWebApiClient>(), Substitute.For<IApiContext>());
             fact.BuildConstraint(validator).GetType().ShouldEqual(expectedType);
@@ -401,21 +526,26 @@ namespace Mozu.SiteBuilder.UnitTests.Mvc.SEO
             var sbapiContext = Substitute.For<ISiteBuilderApiContext>();
             var logger = Substitute.For<ILogger>();
             var cache = new MemoryCache("testcache");
-
+            var mozuApiContext = (object)new ApiContext();
             var entityListClient = Substitute.For<IEntityListsWebApiClient, ICloneable>();
+            entityListClient.Handler.Returns(new TestHandler());
             (entityListClient as ICloneable).Clone().Returns(entityListClient);
+            entityListClient.Handler.ReturnsForAnyArgs(new TestHandler());
             var attrClient = Substitute.For<IAttributeWebApiClient, ICloneable>();
             (attrClient as ICloneable).Clone().Returns(attrClient);
+            attrClient.Handler.ReturnsForAnyArgs(new TestHandler());
             var searchClient = Substitute.For<IProductSearchWebApiClient, ICloneable>();
             (searchClient as ICloneable).Clone().Returns(searchClient);
+            searchClient.Handler.ReturnsForAnyArgs(new TestHandler());
 
             var siteSettingsClient = Substitute.For<IGeneralSettingsWebApiClient, ICloneable>();
             (siteSettingsClient as ICloneable).Clone().Returns(siteSettingsClient);
+            siteSettingsClient.Handler.ReturnsForAnyArgs(new TestHandler());
             siteSettingsClient.GetGeneralSettings().Returns(ctx => Task.FromResult(Response(gensettings)));
-
+            siteSettingsClient.Handler.Returns(new TestHandler());
             var docListClient = Substitute.For<IDocumentListWebApiClient, ICloneable>();
             (docListClient as ICloneable).Clone().Returns(docListClient);
-
+            docListClient.Handler.Returns(new TestHandler());
             var constraintFactory = new ConstraintFactory(entityListClient, attrClient, searchClient, sbapiContext);
             var mappingFactory = new RouteMappingFactory(entityListClient);
             var repo = new CustomRouteRepository(sbapiContext, logger, DummyStorefrontCache.Default, constraintFactory, mappingFactory, siteSettingsClient, docListClient);
@@ -560,6 +690,7 @@ namespace Mozu.SiteBuilder.UnitTests.Mvc.SEO
                 }
             };
         }
+
         [Test]
         [TestCaseSource("GetTests")]
         public void Run(TestCase test )
@@ -664,6 +795,7 @@ namespace Mozu.SiteBuilder.UnitTests.Mvc.SEO
         {
             var attrClient = Substitute.For<IAttributeWebApiClient, ICloneable>();
             (attrClient as ICloneable).Clone().Returns(attrClient);
+            attrClient.Handler.ReturnsForAnyArgs(new TestHandler());
             subber.Provide<IAttributeWebApiClient>(attrClient);
 
 
@@ -677,6 +809,7 @@ namespace Mozu.SiteBuilder.UnitTests.Mvc.SEO
 
             var searchClient = Substitute.For<IProductSearchWebApiClient, ICloneable>();
             (searchClient as ICloneable).Clone().Returns(searchClient);
+            searchClient.Handler.ReturnsForAnyArgs(new TestHandler());
             subber.Provide<IProductSearchWebApiClient>(searchClient);
 
 
@@ -697,16 +830,18 @@ namespace Mozu.SiteBuilder.UnitTests.Mvc.SEO
 
             var catClient = Substitute.For<IProductCategoryRuntimeWebApiClient, ICloneable>();
             (catClient as ICloneable).Clone().Returns(catClient);
+            catClient.Handler.ReturnsForAnyArgs(new TestHandler());
 
             ((IServiceClientBase<IProductCategoryRuntimeWebApiClient>)catClient).Options = new ConfigOptions();
 
             subber.Provide<IProductCategoryRuntimeWebApiClient>(catClient);
             var catTree = GetResource<ProductRuntime.Contracts.CategoryCollection>("IProductCategoryRuntimeWebApiClient.GetCategoryTree");
             catClient.GetCategoryTree().ReturnsForAnyArgs(Task.FromResult(Response(catTree)));
-
+            catClient.Handler.ReturnsForAnyArgs(new TestHandler());
 
             var docClient = Substitute.For<IDocumentListWebApiClient, ICloneable>();
             (docClient as ICloneable).Clone().Returns(docClient);
+            docClient.Handler.ReturnsForAnyArgs(new TestHandler());
             subber.Provide<IDocumentListWebApiClient>(docClient);
            
 
@@ -716,6 +851,7 @@ namespace Mozu.SiteBuilder.UnitTests.Mvc.SEO
 
             var genSettingsClient = Substitute.For<IGeneralSettingsWebApiClient, ICloneable>();
             (genSettingsClient as ICloneable).Clone().Returns(genSettingsClient);
+            genSettingsClient.Handler.ReturnsForAnyArgs(new TestHandler());
             subber.Provide<IGeneralSettingsWebApiClient>(genSettingsClient);
             var genSettings = GetResource<SiteSettings.General.Contracts.GeneralSettings>("IGeneralSettingsWebApiClient.GetGeneralSettings");
             genSettingsClient.GetGeneralSettings(Arg.Any<string>(), Arg.Any<TargetContextLevelType>()).ReturnsForAnyArgs(Task.FromResult(Response(genSettings)));
