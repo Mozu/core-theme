@@ -64,6 +64,13 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
             return Single2(ret);
         }
 
+        [HttpGetRoute(UriTemplate = "read/paymentTerms")]
+        public async Task<Response<DC.PaymentSettings>> GetPaymentTerms()
+        {
+            var dcSettings = (await _checkoutSettingsWebApiClient.GetPaymentSettings()).ReadAsSync();
+            return Single2(dcSettings);
+        }
+
         /// <summary>
         /// Returns the active checkout settings
         /// </summary>
