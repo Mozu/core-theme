@@ -853,6 +853,22 @@
                     return;
                 }
 
+                // Breaks the custom field array into individual items, and makes the value
+                //  field a first class item against the purchase order model. Also populates the field if the
+                //  custom field has a value.
+                currentPurchaseOrder.deflateCustomFields();
+                // Update models-checkout validation with flat purchaseOrderCustom fields for validation.
+                for(var validateField in currentPurchaseOrder.validation) {
+                    if(!this.validation['purchaseOrder.'+validateField]) {
+                        this.validation['purchaseOrder.'+validateField] = currentPurchaseOrder.validation[validateField];
+                    }
+                    // Is this level needed?
+                    if(!this.parent.validation['billingInfo.purchaseOrder.'+validateField]) {
+                        this.parent.validation['billingInfo.purchaseOrder.'+validateField] =
+                            currentPurchaseOrder.validation[validateField];
+                    }
+                }
+                debugger;
 
                 var contacts = order.get('customer').get('contacts');
 
@@ -891,16 +907,16 @@
                 }
 
                 if(contacts.length > 0) {
-                    var foundBillingContact = null;
-                    contacts.models.forEach(function(item){
-                        if(item.get('isPrimaryBillingContact')) {
-                            foundBillingContact = item.toJSON();
-                        }
+                    var foundBillingContact = contacts.models.find(function(item){
+                        return item.get('isPrimaryBillingContact');
+                            
                     });
-                    this.set('billingContact', foundBillingContact, {silent: true});
-                    currentPurchaseOrder.set('usingBillingContact', true);
+
+                    if(foundBillingContact) {
+                        this.set('billingContact', foundBillingContact, {silent: true});
+                        currentPurchaseOrder.set('usingBillingContact', true);
+                    }
                 }
-                // use this to pull custom field data from checkout: purchase-order-custom-field-{{customField.code}}
             },
             setPurchaseOrderPaymentTerm: function(termCode) {
                 var currentPurchaseOrder = this.get('purchaseOrder'),
@@ -1027,35 +1043,6 @@
                 
                 return !_.isEqual(normalizedSavedPaymentInfo, normalizedLiveBillingInfo);
             },
-            addDataToPurchaseOrder: function() {
-                var purchaseOrder = this.get('purchaseOrder');
-                var siteSettingsCustomFields = HyprLiveContext.locals.siteContext.checkoutSettings.purchaseOrder.customFields;
-                var paymentTermOptions = purchaseOrder.get('paymentTermOptions');
-                var customFields = [];
-
-                // will be deleted!
-                if(!purchaseOrder.get('purchaseOrderNumber')) {
-                    purchaseOrder.set('purchaseOrderNumber', $('#mz-payment-purchase-order-number').val());
-                }
-
-                // Custom field data fields: code, label, value
-                siteSettingsCustomFields.forEach(function(val) {
-                    var customField = {};
-                    if(val.isEnabled) {
-                        var fieldInput = $('#purchase-order-custom-field-' + val.code).val();
-                        if(fieldInput.length > 0) {
-                            customField.code = val.code;
-                            customField.label = val.label;
-                            customField.value = fieldInput;
-                            // add the populated custom field to the customField array.
-                            customFields.push(customField);
-                        }
-                    }
-                });
-                if(customFields.length > 0) {
-                    purchaseOrder.set('customFields', customFields);
-                }
-            },
             submit: function () {
                 
                 var order = this.getOrder();
@@ -1089,11 +1076,6 @@
                         order.onCheckoutError(error);
                     }
                     return false;
-                }
-
-                if(this.get('paymentType').toLowerCase() === 'purchaseorder') {
-                    // this may be altered/removed to fix purchase order stuff.
-                    this.addDataToPurchaseOrder();
                 }
 
                 var card = this.get('card');

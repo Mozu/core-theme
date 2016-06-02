@@ -24,20 +24,21 @@
                 </div>
                 <div class="mz-l-formfieldgroup-cell">
                     {% if model.paymentTermOptions.length > 1 %}
-                        <select class="mz-l-formfieldgroup-halfsize" id="mz-payment-purchase-order-payment-terms" name="payment-terms" data-mz-value="{{ purchaseordercontext }}paymentTerm" data-mz-purchase-order-payment-term>
+                        <select class="mz-l-formfieldgroup-halfsize" id="mz-payment-purchase-order-payment-terms" name="payment-terms" data-mz-value="{{ purchaseordercontext }}paymentTerm" data-mz-purchase-order-payment-term >
                             <option></option>
                             {% for term in model.paymentTermOptions %}
                                 <option value="{{ term.code }}">{{ term.description }}</option>
                             {% endfor %}
                         </select>
                     {% else %}
-                        <span class="mz-payment-purchase-order-payment-terms">{{ model.paymentTermOptions | first.description }}</span>
+                        <span class="mz-payment-purchase-order-payment-terms">{{ model.paymentTerm.description }}</span>
                     {% endif %}
                     <span class="mz-validationmessage" data-mz-validationmessage-for="{{ purchaseordercontext }}paymentTerm"></span>
                 </div>
             </div>
             {% for field in siteContext.checkoutSettings.purchaseOrder.customFields %}
                 {% if field.isEnabled %}
+                {% with 'pOCustomField-'+field.code as modelName %}
                     <div class="mz-l-formfieldgroup-row mz-payment-purchase-order-custom-field-row">
                         <div class="mz-l-formfieldgroup-cell">
                             <label for="mz-payment-purchase-order-custom-field-{{ field.code }}">
@@ -48,10 +49,11 @@
                             :</label>
                         </div>
                         <div class="mz-l-formfieldgroup-cell">
-                            <input type="text" name="purchase-order-custom-field-{{ field.code }}" id="purchase-order-custom-field-{{ field.code }}"/>
-                            <span class="mz-validationmessage" id="purchase-order-custom-field-{{ field.code }}-validation" data-mz-validationmessage-for="purchase-order-custom-field-{{ field.code }}"></span>
+                            <input type="text" name="po-custom-field-{{ field.code }}" id="mz-payment-pOCustomField-{{ field.code }}" data-mz-value="{{ purchaseordercontext }}pOCustomField-{{field.code}}" value="{{model|prop(modelName)}}" />
+                            <span class="mz-validationmessage" id="mz-payment-pOCustomField-{{ field.code }}-validation" data-mz-validationmessage-for="{{ purchaseordercontext }}pOCustomField-{{field.code}}"></span>
                         </div>
                     </div>
+                {% endwith %}
                 {% endif %}
             {% endfor %}
         </div>
