@@ -65,25 +65,34 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
         }
 
         [HttpGetRoute(UriTemplate = "read/paymentTerms/all")]
-        public async Task<Response<List<DC.PurchaseOrderPaymentTerm>>> GetPaymentTerms()
+        public async Task<Response<List<SitePaymentTerm>>> GetPaymentTerms()
         {
             var tenant = (await _tenantClient.GetTenant(this.SbApiContext.TenantId)).ReadAsSync();
+            var sites = tenant.Sites.Take(10);
 
-            var tasks = tenant.Sites.Take(10).Select(site => _checkoutSettingsWebApiClient.CloneWithApiContext(ctx =>
+            var terms = new List<SitePaymentTerm>();
+
+            foreach (var site in sites)
             {
-                ctx.SiteId = site.Id;
-                ctx.CurrencyCode = site.CurrencyCode;
-                ctx.MasterCatalogId = tenant.MasterCatalogs.FirstOrDefault(mc => mc.Catalogs.Any(cat => cat.Id == site.CatalogId))?.Id;
-                ctx.CatalogId = site.CatalogId;               
-            }).GetPaymentSettings()).ToList();
+                var result = (await _checkoutSettingsWebApiClient.CloneWithApiContext(ctx =>
+                {
+                    ctx.SiteId = site.Id;
+                    ctx.CurrencyCode = site.CurrencyCode;
+                    ctx.MasterCatalogId = tenant.MasterCatalogs.FirstOrDefault(mc => mc.Catalogs.Any(cat => cat.Id == site.CatalogId))?.Id;
+                    ctx.CatalogId = site.CatalogId;
+                }).GetPaymentSettings()).ReadAsSync();
 
-            await Task.WhenAll(tasks);
+                var thing = new SitePaymentTerm
+                {
+                    siteId = site.Id,
+                    isPoEnabled = result.PurchaseOrder.IsEnabled,
+                    paymentTerms = result.PurchaseOrder.PaymentTerms
+                };
 
-            Dictionary<string, DC.PurchaseOrderPaymentTerm> hash = new Dictionary<string, DC.PurchaseOrderPaymentTerm>();
+                terms.Add(thing);
+            }
 
-            tasks.Select(x => x.Result.ReadAsSync()).Where(setting => setting.PurchaseOrder?.PaymentTerms != null).SelectMany(setting => setting.PurchaseOrder.PaymentTerms).ToList().ForEach(term => hash[term.Code] = term);
-
-            return List2(hash.Values.ToList());
+            return List2(terms.ToList());
         }
 
 
@@ -94,6 +103,13 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
             var dcSettings = (await _checkoutSettingsWebApiClient.GetPaymentSettings()).ReadAsSync();
             return List2(dcSettings.PurchaseOrder?.PaymentTerms ?? new List<DC.PurchaseOrderPaymentTerm>());
             
+        }
+
+        public class SitePaymentTerm
+        {
+            public int siteId { get; set; }
+            public bool isPoEnabled { get; set; }
+            public List<DC.PurchaseOrderPaymentTerm> paymentTerms { get; set; }
         }
 
         /// <summary>
