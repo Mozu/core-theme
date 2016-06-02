@@ -211,6 +211,7 @@ Ext.define('Taco.view.customSchema.Split', {
                     
                     if (copyRec.get('name')) {
                         copyRec.set('name', null);
+                        copyRec.set('id', null);
                     }
 
                     copyRec.phantom = true;
