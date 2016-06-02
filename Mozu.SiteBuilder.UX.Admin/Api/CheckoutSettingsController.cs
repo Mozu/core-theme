@@ -64,11 +64,36 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
             return Single2(ret);
         }
 
-        [HttpGetRoute(UriTemplate = "read/paymentTerms")]
-        public async Task<Response<DC.PaymentSettings>> GetPaymentTerms()
+        [HttpGetRoute(UriTemplate = "read/paymentTerms/all")]
+        public async Task<Response<List<DC.PurchaseOrderPaymentTerm>>> GetPaymentTerms()
         {
+            var tenant = (await _tenantClient.GetTenant(this.SbApiContext.TenantId)).ReadAsSync();
+
+            var tasks = tenant.Sites.Take(10).Select(site => _checkoutSettingsWebApiClient.CloneWithApiContext(ctx =>
+            {
+                ctx.SiteId = site.Id;
+                ctx.CurrencyCode = site.CurrencyCode;
+                ctx.MasterCatalogId = tenant.MasterCatalogs.FirstOrDefault(mc => mc.Catalogs.Any(cat => cat.Id == site.CatalogId))?.Id;
+                ctx.CatalogId = site.CatalogId;               
+            }).GetPaymentSettings()).ToList();
+
+            await Task.WhenAll(tasks);
+
+            Dictionary<string, DC.PurchaseOrderPaymentTerm> hash = new Dictionary<string, DC.PurchaseOrderPaymentTerm>();
+
+            tasks.Select(x => x.Result.ReadAsSync()).Where(setting => setting.PurchaseOrder?.PaymentTerms != null).SelectMany(setting => setting.PurchaseOrder.PaymentTerms).ToList().ForEach(term => hash[term.Code] = term);
+
+            return List2(hash.Values.ToList());
+        }
+
+
+        [HttpGetRoute(UriTemplate = "read/paymentTerms/site")]
+        public async Task<Response<List<DC.PurchaseOrderPaymentTerm>>> GetSitePaymentTerms()
+        {
+            
             var dcSettings = (await _checkoutSettingsWebApiClient.GetPaymentSettings()).ReadAsSync();
-            return Single2(dcSettings);
+            return List2(dcSettings.PurchaseOrder?.PaymentTerms ?? new List<DC.PurchaseOrderPaymentTerm>());
+            
         }
 
         /// <summary>
