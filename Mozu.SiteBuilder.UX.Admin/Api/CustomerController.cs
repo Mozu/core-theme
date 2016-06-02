@@ -146,6 +146,8 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
 
                 customer.PurchaseOrderAccount = (await _customerWebApiClient.GetCustomerPurchaseOrderAccount(customer.Id.Value)).ReadAsAsync().Result;
 
+                customer.IsPoEnabled = customer.PurchaseOrderAccount.IsEnabled;
+
                 return List2(customer);
             }
 
@@ -223,6 +225,23 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
         {
             var retList = new List<ApiCustomer>();
             var dcCustomers = Mapper.Map<List<DC.CustomerAccount>>(customers);
+
+            // save purchase orderInfo
+            foreach (var cust in customers)
+            {
+                var purchaseOrder = Mapper.Map<CustomerPurchaseOrderAccount>(cust.PurchaseOrderAccount);
+
+                if (purchaseOrder.Id != 0)
+                {
+                    var res = await EditCustomerPurchaseOrder(purchaseOrder);
+                }
+
+                else
+                {
+                    var res = await CreateCustomerPurchaseOrder(purchaseOrder);
+                }
+            } 
+
             foreach (var dcCust in dcCustomers)
             {
                 var dcExistingCustomer = await GetAccountWithAttributes(dcCust.Id);
@@ -458,8 +477,8 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
             {
                 var dcCustomerPurchaseOrderAccount = customerPurchaseOrderAccount.Map<DC.CustomerPurchaseOrderAccount>();
                 var result =
-                    _customerWebApiClient.UpdateCustomerPurchaseOrderAccount(customerPurchaseOrderAccount.AccountId,
-                        dcCustomerPurchaseOrderAccount);
+                    (await _customerWebApiClient.UpdateCustomerPurchaseOrderAccount(customerPurchaseOrderAccount.AccountId,
+                        dcCustomerPurchaseOrderAccount)).ReadAsSync();
                 results = result.Map<CustomerPurchaseOrderAccount>();
             }
             else
@@ -480,8 +499,8 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
             {
                 var dcCustomerPurchaseOrderAccount = customerPurchaseOrderAccount.Map<DC.CustomerPurchaseOrderAccount>();
                 var result =
-                    _customerWebApiClient.CreateCustomerPurchaseOrderAccount(customerPurchaseOrderAccount.AccountId,
-                        dcCustomerPurchaseOrderAccount);
+                   (await _customerWebApiClient.CreateCustomerPurchaseOrderAccount(customerPurchaseOrderAccount.AccountId,
+                        dcCustomerPurchaseOrderAccount)).ReadAsSync();
                 results = result.Map<CustomerPurchaseOrderAccount>();
             }
             else
