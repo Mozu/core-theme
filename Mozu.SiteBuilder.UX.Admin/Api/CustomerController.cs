@@ -230,6 +230,8 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
             foreach (var cust in customers)
             {
                 var purchaseOrder = Mapper.Map<CustomerPurchaseOrderAccount>(cust.PurchaseOrderAccount);
+                // set the poEnabled flag from the customer
+                purchaseOrder.IsEnabled = cust.IsPoEnabled;
 
                 if (purchaseOrder.Id != 0)
                 {
@@ -472,19 +474,12 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
         public async Task<Response<CustomerPurchaseOrderAccount>> EditCustomerPurchaseOrder(CustomerPurchaseOrderAccount customerPurchaseOrderAccount)
         {
             var results = customerPurchaseOrderAccount;
-            var dcExistingCustomer = (await _customerWebApiClient.GetAccount(customerPurchaseOrderAccount.AccountId)).ReadAsSync();
-            if (dcExistingCustomer.IsActive)
-            {
-                var dcCustomerPurchaseOrderAccount = customerPurchaseOrderAccount.Map<DC.CustomerPurchaseOrderAccount>();
-                var result =
-                    (await _customerWebApiClient.UpdateCustomerPurchaseOrderAccount(customerPurchaseOrderAccount.AccountId,
-                        dcCustomerPurchaseOrderAccount)).ReadAsSync();
-                results = result.Map<CustomerPurchaseOrderAccount>();
-            }
-            else
-            {
-                throw new ArgumentException("Customer is disabled");
-            }
+            
+            var dcCustomerPurchaseOrderAccount = customerPurchaseOrderAccount.Map<DC.CustomerPurchaseOrderAccount>();
+            var result =
+                (await _customerWebApiClient.UpdateCustomerPurchaseOrderAccount(customerPurchaseOrderAccount.AccountId,
+                    dcCustomerPurchaseOrderAccount)).ReadAsSync();
+            results = result.Map<CustomerPurchaseOrderAccount>();
 
             return Single2(results);
         }
