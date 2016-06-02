@@ -868,7 +868,6 @@
                             currentPurchaseOrder.validation[validateField];
                     }
                 }
-                debugger;
 
                 var contacts = order.get('customer').get('contacts');
 

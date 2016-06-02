@@ -105,6 +105,26 @@ require(["modules/jquery-mozu", "underscore", "hyprlive", "modules/backbone-mozu
         }
     });
 
+    var poCustomFields = function() {
+        
+        var fieldDefs = [];
+
+        var isEnabled = HyprLiveContext.locals.siteContext.checkoutSettings.purchaseOrder
+            && HyprLiveContext.locals.siteContext.checkoutSettings.purchaseOrder.isEnabled;
+
+            if (isEnabled) {
+                var siteSettingsCustomFields = HyprLiveContext.locals.siteContext.checkoutSettings.purchaseOrder.customFields;
+                siteSettingsCustomFields.forEach(function(field) {
+                    if (field.isEnabled) {
+                        fieldDefs.push('purchaseOrder.pOCustomField-' + field.code);
+                    }
+                }, this);
+            }
+
+        return fieldDefs
+
+    };
+
     var visaCheckoutSettings = HyprLiveContext.locals.siteContext.checkoutSettings.visaCheckout;
     var pageContext = require.mozuData('pagecontext');
     var BillingInfoView = CheckoutStepView.extend({
@@ -138,7 +158,7 @@ require(["modules/jquery-mozu", "underscore", "hyprlive", "modules/backbone-mozu
             'digitalCreditCode',
             'purchaseOrder.purchaseOrderNumber',
             'purchaseOrder.paymentTerm'
-        ],
+        ].concat(poCustomFields()),
         renderOnChange: [
             'billingContact.address.countryCode',
             'paymentType',
@@ -155,6 +175,7 @@ require(["modules/jquery-mozu", "underscore", "hyprlive", "modules/backbone-mozu
         },
 
         initialize: function () {
+            // this.addPOCustomFieldAutoUpdate();
             this.listenTo(this.model, 'change:digitalCreditCode', this.onEnterDigitalCreditCode, this);
             this.listenTo(this.model, 'orderPayment', function (order, scope) {
                     this.render();
@@ -164,18 +185,6 @@ require(["modules/jquery-mozu", "underscore", "hyprlive", "modules/backbone-mozu
                 this.render();
             }, this);
             this.codeEntered = !!this.model.get('digitalCreditCode');
-            this.addPOCustomFieldAutoUpdate();
-        },
-        addPOCustomFieldAutoUpdate: function() {
-            if(HyprLiveContext.locals.siteContext.checkoutSettings.purchaseOrder &&
-                HyprLiveContext.locals.siteContext.checkoutSettings.purchaseOrder.isEnabled) {
-                var siteSettingsCustomFields = HyprLiveContext.locals.siteContext.checkoutSettings.purchaseOrder.customFields;
-                siteSettingsCustomFields.forEach(function(field) {
-                    if(field.isEnabled) {
-                        this.autoUpdate.push("purchaseOrder.pOCustomField-"+field.code);
-                    }
-                }, this);
-            }
         },
         resetPaymentData: function (e) {
             if (e.target !== $('[data-mz-saved-credit-card]')[0]) {
