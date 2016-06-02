@@ -141,6 +141,8 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
 
                 customer.PurchaseOrderAccount = (await _customerWebApiClient.GetCustomerPurchaseOrderAccount(customer.Id.Value)).ReadAsAsync().Result;
 
+                customer.IsPoEnabled = customer.PurchaseOrderAccount.IsEnabled;
+
                 return List2(customer);
             }
 
