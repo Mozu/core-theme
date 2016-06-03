@@ -240,7 +240,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
 
                     else
                     {
-                        var res = await CreateCustomerPurchaseOrder(purchaseOrder);
+                        var res = await CreateCustomerPurchaseOrder(purchaseOrder, cust.Id);
                     }
                 }
             } 
@@ -487,10 +487,10 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
 
         [HttpPostRoute(UriTemplate = "purchaseOrder/create")]
         public async Task<Response<CustomerPurchaseOrderAccount>> CreateCustomerPurchaseOrder(
-            CustomerPurchaseOrderAccount customerPurchaseOrderAccount)
+            CustomerPurchaseOrderAccount customerPurchaseOrderAccount, int? id)
         {
             var results = customerPurchaseOrderAccount;
-            var dcExistingCustomer = (await _customerWebApiClient.GetAccount(customerPurchaseOrderAccount.AccountId)).ReadAsSync();
+            var dcExistingCustomer = (await _customerWebApiClient.GetAccount(id)).ReadAsSync();
             if (dcExistingCustomer.IsActive)
             {
                 var dcCustomerPurchaseOrderAccount = customerPurchaseOrderAccount.Map<DC.CustomerPurchaseOrderAccount>();
