@@ -128,6 +128,12 @@ Ext.define('Taco.view.order.Form', {
 
     onCustomerChange: function (view, customerRecord) {
 
+        var subformCfg = {
+            record: this.record,
+            orderForm: this
+        };
+
+        this.paymentPanel = Ext.create('Taco.view.order.subform.Payment', Ext.apply({}, subformCfg));
     },
 
     onBeforeReload: function () {
@@ -248,8 +254,6 @@ Ext.define('Taco.view.order.Form', {
         items.push(this.headerCmp);
 
         this.orderDetailPanel = Ext.create('Taco.view.order.subform.Detail', Ext.apply({}, subformCfg));
-
-        this.paymentPanel = Ext.create('Taco.view.order.subform.Payment', Ext.apply({}, subformCfg));
 
         this.auditLogPanel = Ext.create('Taco.view.order.subform.AuditLog', subformCfg);
 
