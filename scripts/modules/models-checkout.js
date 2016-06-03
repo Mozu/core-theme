@@ -863,10 +863,11 @@
                     purchaseOrderSiteSettings = HyprLiveContext.locals.siteContext.checkoutSettings.purchaseOrder ?
                         HyprLiveContext.locals.siteContext.checkoutSettings.purchaseOrder.isEnabled : false,
                     purchaseOrderEnabled = purchaseOrderSiteSettings && purchaseOrderInfo?purchaseOrderInfo.isEnabled : false,
-                    currentPurchaseOrder = me.get('purchaseOrder');
+                    currentPurchaseOrder = me.get('purchaseOrder'),
+                    siteId = require.mozuData('checkout').siteId;
 
                 currentPurchaseOrder.set('isEnabled', purchaseOrderEnabled);
-                if(!purchaseOrderEnabled) {
+                if(!purchaseOrderEnabled || purchaseOrderInfo.availableBalance <= 0) {
                     // if purchase order isn't enabled, don't populate stuff!
                     return;
                 }
@@ -907,10 +908,12 @@
                 if(currentPurchaseOrder.get('paymentTermOptions').length === 0) {
                     var paymentTerms = [];
                     purchaseOrderInfo.paymentTerms.forEach(function(term) {
-                        var newTerm = {};
-                        newTerm.code = term.code;
-                        newTerm.description = term.description;
-                        paymentTerms.push(term);
+                        if(term.siteId === siteId) {
+                            var newTerm = {};
+                            newTerm.code = term.code;
+                            newTerm.description = term.description;
+                            paymentTerms.push(term);
+                        }
                     });
                     currentPurchaseOrder.set('paymentTermOptions', paymentTerms, {silent: true});
                 }

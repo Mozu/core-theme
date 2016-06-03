@@ -68,6 +68,7 @@
     "purchaseOrderNumber"   : "PO Number",
     "purchaseOrderNumberMissing"    : "Purchase order number required",
     "purchaseOrderPaymentTerms" : "Payment Terms",
+    "selectPurchaseOrderPaymentTerm" : "Select a Payment Term",
     "purchaseOrderPaymentTermMissing"   : "Payment term required",
     "purchaseOrderCustomFieldMissing"   : "Purchase order field required, see below",
     "missing"   : "missing",

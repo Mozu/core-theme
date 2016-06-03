@@ -25,7 +25,7 @@
                 <div class="mz-l-formfieldgroup-cell">
                     {% if model.paymentTermOptions.length > 1 %}
                         <select class="mz-l-formfieldgroup-halfsize" id="mz-payment-purchase-order-payment-terms" name="payment-terms" data-mz-value="{{ purchaseordercontext }}paymentTerm" data-mz-purchase-order-payment-term >
-                            <option></option>
+                            <option selected="selected" value="">{{labels.selectPurchaseOrderPaymentTerm}}</option>
                             {% for term in model.paymentTermOptions %}
                                 <option value="{{ term.code }}">{{ term.description }}</option>
                             {% endfor %}
