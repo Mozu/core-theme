@@ -81,11 +81,6 @@ Ext.define('Taco.view.order.widget.PaymentPanel', {
                 hidden: me.record.get('amountCollected') <= 0
             },
             {
-                text: 'Authorize Payment',
-                itemId: 'AuthorizePayment',
-                disabled: isDeclined
-            },
-            {
                 text: 'Auth and Capture',
                 itemId: 'AuthAndCapture',
                 disabled: isDeclined
