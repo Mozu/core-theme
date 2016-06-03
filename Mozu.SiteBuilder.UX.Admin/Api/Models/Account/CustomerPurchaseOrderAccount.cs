@@ -12,7 +12,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.Models.Account
         public decimal AvailableBalance { get; set; }
         public decimal CreditLimit { get; set; }
         public List<PurchaseOrderPaymentTerm> CustomerPurchaseOrderPaymentTerms { get; set; }
-        public int Id { get; set; }
+        public int? Id { get; set; }
         public bool IsEnabled { get; set; }
         public string OverdraftAllowanceType { get; set; }
         public decimal? OverdraftAllowance { get; set; }

@@ -233,13 +233,15 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
                 {
                     var purchaseOrder = Mapper.Map<CustomerPurchaseOrderAccount>(cust.PurchaseOrderAccount);
                     
-                    if (purchaseOrder.Id != 0)
+                    if (purchaseOrder.Id != null && purchaseOrder.Id != 0)
                     {
+                        purchaseOrder.AccountId = cust.Id.Value;
                         var res = await EditCustomerPurchaseOrder(purchaseOrder);
                     }
 
                     else
                     {
+                        purchaseOrder.AccountId = cust.Id.Value;
                         var res = await CreateCustomerPurchaseOrder(purchaseOrder, cust.Id);
                     }
                 }
