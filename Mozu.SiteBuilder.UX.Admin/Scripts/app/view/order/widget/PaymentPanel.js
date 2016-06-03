@@ -187,7 +187,7 @@ Ext.define('Taco.view.order.widget.PaymentPanel', {
             purchaseOrderNumber = '';
 
         if (me.record.get('paymentType') === 'PurchaseOrder') {
-            purchaseOrderNumber = '<br />#' + me.record.get('purchaseOrderInfo').purchaseOrderNumber;
+            purchaseOrderNumber = '<br />Purchase Order #' + me.record.get('purchaseOrderInfo').purchaseOrderNumber;
         }
 
         if (me.record.get('paymentType') == 'PurchaseOrder') {
