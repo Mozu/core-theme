@@ -795,6 +795,8 @@
     <Content Include="Scripts\app\view\customSchema\Lists.js" />
     <Content Include="Scripts\app\view\customSchema\SchemaList.js" />
     <Content Include="Scripts\app\view\customSchema\Split.js" />
+    <Content Include="Scripts\app\view\order\modal\AddPurchaseOrder.js" />
+    <Content Include="Scripts\app\view\order\modal\ManualDeclinePayment.js" />
     <Content Include="Scripts\app\view\order\widget\PriceListPickerField.js" />
     <Content Include="Scripts\app\view\preview\ExpressionPreviewDrawer.js" />
     <Content Include="Scripts\app\view\priceList\Edit.js" />
@@ -1529,6 +1531,8 @@
     <Content Include="Scripts\sass\src\view\order\Grid.scss" />
     <Content Include="Scripts\sass\src\view\settings\paymentTypes\subform\CreditCards.scss" />
     <Content Include="Scripts\sass\src\view\order\widget\PriceListMenu.scss" />
+    <Content Include="Scripts\sass\src\view\order\modal\Refund.scss" />
+    <Content Include="Scripts\sass\src\view\order\modal\AddPurchaseOrder.scss" />
     <None Include="SetupSenchaWorkspace.ps1" />
     <Content Include="Scripts\.sencha\app\build-impl.xml" />
     <Content Include="Scripts\.sencha\app\plugin.xml" />
