@@ -229,18 +229,19 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
             // save purchase orderInfo
             foreach (var cust in customers)
             {
-                var purchaseOrder = Mapper.Map<CustomerPurchaseOrderAccount>(cust.PurchaseOrderAccount);
-                // set the poEnabled flag from the customer
-                purchaseOrder.IsEnabled = cust.IsPoEnabled;
-
-                if (purchaseOrder.Id != 0)
+                if (cust.PurchaseOrderAccount != null)
                 {
-                    var res = await EditCustomerPurchaseOrder(purchaseOrder);
-                }
+                    var purchaseOrder = Mapper.Map<CustomerPurchaseOrderAccount>(cust.PurchaseOrderAccount);
+                    
+                    if (purchaseOrder.Id != 0)
+                    {
+                        var res = await EditCustomerPurchaseOrder(purchaseOrder);
+                    }
 
-                else
-                {
-                    var res = await CreateCustomerPurchaseOrder(purchaseOrder);
+                    else
+                    {
+                        var res = await CreateCustomerPurchaseOrder(purchaseOrder);
+                    }
                 }
             } 
 
