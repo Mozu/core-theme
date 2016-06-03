@@ -127,13 +127,7 @@ Ext.define('Taco.view.order.Form', {
     },
 
     onCustomerChange: function (view, customerRecord) {
-
-        var subformCfg = {
-            record: this.record,
-            orderForm: this
-        };
-
-        this.paymentPanel = Ext.create('Taco.view.order.subform.Payment', Ext.apply({}, subformCfg));
+        this.createPaymentTab();
     },
 
     onBeforeReload: function () {
@@ -257,6 +251,10 @@ Ext.define('Taco.view.order.Form', {
 
         this.auditLogPanel = Ext.create('Taco.view.order.subform.AuditLog', subformCfg);
 
+        if (me.record.get('customer')) {
+            this.createPaymentTab();
+        }
+
         // we always show for online orders. for offline orders we need hide the detail panel until the header is filled out.
         if ((me.record.get("orderType")=="Online") || me.isHeaderDataComplete()) {
             items.push(this.orderDetailPanel);
@@ -282,6 +280,15 @@ Ext.define('Taco.view.order.Form', {
         }
 
         this.items = items;
+    },
+
+    createPaymentTab: function() {
+        var subformCfg = {
+            record: this.record,
+            orderForm: this
+        };
+
+        this.paymentPanel = Ext.create('Taco.view.order.subform.Payment', Ext.apply({}, subformCfg));
     },
 
     isEdit: function () {
