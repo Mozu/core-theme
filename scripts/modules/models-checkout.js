@@ -298,6 +298,7 @@
                             var billingInfo = me.parent.get('billingInfo');
                             if (billingInfo) {
                                 billingInfo.loadCustomerDigitalCredits();
+                                billingInfo.updatePurchaseOrderAmount();
                             }
                         })
                         .ensure(function() {
@@ -838,6 +839,23 @@
                 this.getPaymentTypeFromCurrentPayment();
                 CheckoutStep.prototype.edit.apply(this, arguments);
             },
+            updatePurchaseOrderAmount: function() {
+                if(!this.get('purchaseOrder').isEnabled) {
+                    return;
+                }
+                var me = this,
+                    order = me.getOrder(),
+                    currentPurchaseOrder = this.get('purchaseOrder'),
+                    pOAvailableBalance = currentPurchaseOrder.get('availableBalance'),
+                    orderAmountRemaining = order.get('amountRemainingForPayment'),
+                    amount = pOAvailableBalance > orderAmountRemaining ?
+                        orderAmountRemaining : pOAvailableBalance;
+
+                currentPurchaseOrder.set('amount', amount);
+                if(amount < orderAmountRemaining) {
+                    currentPurchaseOrder.set('splitPayment', true);
+                }
+            },
             setPurchaseOrderInfo: function() {
                 var me = this,
                     order = me.getOrder(),
@@ -857,6 +875,17 @@
                 //  field a first class item against the purchase order model. Also populates the field if the
                 //  custom field has a value.
                 currentPurchaseOrder.deflateCustomFields();
+                // Update models-checkout validation with flat purchaseOrderCustom fields for validation.
+                for(var validateField in currentPurchaseOrder.validation) {
+                    if(!this.validation['purchaseOrder.'+validateField]) {
+                        this.validation['purchaseOrder.'+validateField] = currentPurchaseOrder.validation[validateField];
+                    }
+                    // Is this level needed?
+                    if(!this.parent.validation['billingInfo.purchaseOrder.'+validateField]) {
+                        this.parent.validation['billingInfo.purchaseOrder.'+validateField] =
+                            currentPurchaseOrder.validation[validateField];
+                    }
+                }
 
                 var contacts = order.get('customer').get('contacts');
 
