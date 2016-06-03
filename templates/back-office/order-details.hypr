@@ -261,6 +261,33 @@
                     {% endfor %}
                 </tbody>
             </table>
+
+            <table class="grid payment-details
+                {% for payment in model.payments %}
+                    {% if payment.PaymentType == 'PurchaseOrder' %}
+                        show
+                    {% endif %}
+                {% endfor %}
+            ">
+                <thead>
+                    <tr>
+                        <th>Additional information</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for payment in model.payments %}
+                        {% if payment.status != "Voided" and payment.paymentType == "PurchaseOrder" %}
+                            {% for field in payment.billingInfo.purchaseOrder.customFields %}
+                            <tr>
+                                <td>{{ field.label }}</td>
+                                <td>{{ field.value }}</td>
+                            </tr>
+                            {% endfor %}
+                        {% endif %}
+                    {% endfor %}
+                </tbody>
+            </table>
+
         {% endif %}
     </div>
     {% if model.shopperNotes %}
