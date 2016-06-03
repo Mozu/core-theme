@@ -81,7 +81,7 @@ Ext.define('Taco.view.order.subform.Payment', {
                     var lastValidPayment = me.getLastValidPayment();
                     var paymentType;
 
-                    if (me.record.customer.raw.purchaseOrderAccount.isEnabled) {
+                    if (me.record.customer.raw.isPoEnabled) {
                         action = me.paymentActions.addPurchaseOrder;
                     } else if (lastValidPayment) {
                         paymentType = lastValidPayment.get('paymentType');
@@ -258,14 +258,22 @@ Ext.define('Taco.view.order.subform.Payment', {
         }
 
         var me = this,
-            actions = me.paymentActions = {
-                addPurchaseOrder: makeAction('Purchase Order', 'Taco.view.order.modal.AddPurchaseOrder'),
-                addCreditCard: makeAction('Credit Card', 'Taco.view.order.modal.AddPayment'),
-                requestCheck: makeAction('Check', 'Taco.view.order.modal.RequestCheck'),
-                addManualCreditCard: makeAction('Credit Card (Manual)', 'Taco.view.order.modal.AddPaymentManual'),
-                addGiftCard: makeAction('Gift Card', 'Taco.view.order.modal.AddGiftCard'),
-                addStoreCredit: makeAction('Store Credit', 'Taco.view.order.modal.AddGiftCard')
-            };
+            actions = me.record.customer.raw.isPoEnabled
+                    ? me.paymentActions = {
+                        addPurchaseOrder: makeAction('Purchase Order', 'Taco.view.order.modal.AddPurchaseOrder'),
+                        addCreditCard: makeAction('Credit Card', 'Taco.view.order.modal.AddPayment'),
+                        requestCheck: makeAction('Check', 'Taco.view.order.modal.RequestCheck'),
+                        addManualCreditCard: makeAction('Credit Card (Manual)', 'Taco.view.order.modal.AddPaymentManual'),
+                        addGiftCard: makeAction('Gift Card', 'Taco.view.order.modal.AddGiftCard'),
+                        addStoreCredit: makeAction('Store Credit', 'Taco.view.order.modal.AddGiftCard')
+                    }
+                    : me.paymentActions = {
+                        addCreditCard: makeAction('Credit Card', 'Taco.view.order.modal.AddPayment'),
+                        requestCheck: makeAction('Check', 'Taco.view.order.modal.RequestCheck'),
+                        addManualCreditCard: makeAction('Credit Card (Manual)', 'Taco.view.order.modal.AddPaymentManual'),
+                        addGiftCard: makeAction('Gift Card', 'Taco.view.order.modal.AddGiftCard'),
+                        addStoreCredit: makeAction('Store Credit', 'Taco.view.order.modal.AddGiftCard')
+                    };
 
         return Ext.Object.getValues(actions);
     },
