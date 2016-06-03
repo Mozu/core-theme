@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Runtime.Serialization;
 using System.Text;
+using Newtonsoft.Json;
 
 namespace Mozu.SiteBuilder.UX.Models.Customers
 {
@@ -24,5 +25,8 @@ namespace Mozu.SiteBuilder.UX.Models.Customers
          public bool IsAnonymous { get; set; }
          [DataMember(Name = "accountId")]
         public int? AccountId { get; set; }
+        [IgnoreDataMember()]
+        [JsonIgnore()]
+        public List<string> Segments { get; set; }
     }
 }

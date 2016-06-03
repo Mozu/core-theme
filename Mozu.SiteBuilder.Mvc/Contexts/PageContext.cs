@@ -259,7 +259,7 @@ namespace Mozu.SiteBuilder.Mvc.Contexts
             if ( userClaims == null ) return null;
             var profile = userProfile.Value;
             if ( profile == null ) return null;
-
+            var segments = new List<string>();
             if (userClaims.Bag != null)
             {
 
@@ -269,6 +269,14 @@ namespace Mozu.SiteBuilder.Mvc.Contexts
                     {
                         accountId = -1;
                     }
+                }
+                if (userClaims.Bag.TryGetValue("segments", out tempStr) && !string.IsNullOrEmpty(tempStr))
+                {
+                    try
+                    {
+                        segments = JsonConvert.DeserializeObject<List<string>>(tempStr);
+                    }
+                    catch { }
                 }
             }
             
@@ -280,7 +288,8 @@ namespace Mozu.SiteBuilder.Mvc.Contexts
                 UserId = userClaims.UserId,
                 AccountId = accountId > 0 ? accountId : (int?)null,
                 IsAuthenticated = !userClaims.IsAnonymous && userClaims.IsAuthenticationHot,
-                IsAnonymous = userClaims.IsAnonymous
+                IsAnonymous = userClaims.IsAnonymous,
+                Segments = segments
             };
         }
 
