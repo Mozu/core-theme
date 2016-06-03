@@ -14,6 +14,11 @@ Ext.define('Taco.model.ProductInCatalogInfo', {
             "useNull": true
         },
         {
+            "name": "isoCurrencyCode",
+            "type": "string",
+            "defaultValue": "USD"
+        },
+        {
             "name": "productShortDescription",
             "type": "string",
             "useNull": true
