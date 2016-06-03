@@ -146,8 +146,6 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
 
                 customer.PurchaseOrderAccount = (await _customerWebApiClient.GetCustomerPurchaseOrderAccount(customer.Id.Value)).ReadAsAsync().Result;
 
-                customer.IsPoEnabled = customer.PurchaseOrderAccount != null && customer.PurchaseOrderAccount.IsEnabled;
-
                 return List2(customer);
             }
 
@@ -225,6 +223,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
         {
             var retList = new List<ApiCustomer>();
             var dcCustomers = Mapper.Map<List<DC.CustomerAccount>>(customers);
+            Response<CustomerPurchaseOrderAccount> poResponse;
 
             // save purchase orderInfo
             foreach (var cust in customers)
@@ -236,13 +235,13 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
                     if (purchaseOrder.Id != null && purchaseOrder.Id != 0)
                     {
                         purchaseOrder.AccountId = cust.Id.Value;
-                        var res = await EditCustomerPurchaseOrder(purchaseOrder);
+                        poResponse = await EditCustomerPurchaseOrder(purchaseOrder);
                     }
 
                     else
                     {
                         purchaseOrder.AccountId = cust.Id.Value;
-                        var res = await CreateCustomerPurchaseOrder(purchaseOrder, cust.Id);
+                        poResponse = await CreateCustomerPurchaseOrder(purchaseOrder, cust.Id);
                     }
                 }
             } 
@@ -284,7 +283,11 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
                     }
                 }
 
-                retList.Add(updatedCustomer.Map<ApiCustomer>());
+                var cust = updatedCustomer.Map<ApiCustomer>();
+
+                cust.PurchaseOrderAccount = (await _customerWebApiClient.GetCustomerPurchaseOrderAccount(cust.Id.Value)).ReadAsAsync().Result;
+
+                retList.Add(cust);
             }
             return List2(retList);
         }
