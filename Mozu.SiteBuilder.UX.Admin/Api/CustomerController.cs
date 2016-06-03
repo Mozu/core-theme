@@ -285,6 +285,8 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
 
                 var cust = updatedCustomer.Map<ApiCustomer>();
 
+                cust.IsDisabled = !dcCust.IsActive;
+                cust.IsLocked = dcCust.IsLocked;
                 cust.PurchaseOrderAccount = (await _customerWebApiClient.GetCustomerPurchaseOrderAccount(cust.Id.Value)).ReadAsAsync().Result;
 
                 retList.Add(cust);
