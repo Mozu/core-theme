@@ -433,7 +433,8 @@ Ext.define('Taco.view.priceList.entry.PriceEntryPrice', {
                 itemId: 'priceField',
                 currencyCode: me.currencyCode,
                 value: entry.listPrice,
-                allowBlank: entry.listPriceMode !== 'Overridden'
+                allowBlank: (entry.listPriceMode !== 'Overridden') || (entry.showRemove),
+                emptyText: entry.showRemove || entry.minQty > 1 ? '' : 'Default'
             }
         });
 
@@ -464,7 +465,8 @@ Ext.define('Taco.view.priceList.entry.PriceEntryPrice', {
                 name: 'salePrice',
                 itemId: 'salePriceField',
                 currencyCode: me.currencyCode,
-                value: entry.salePrice
+                value: entry.salePrice,
+                emptyText: entry.showRemove || entry.minQty > 1 ? '' : 'Default'
             }
         });
 
@@ -599,6 +601,7 @@ Ext.define('Taco.view.priceList.entry.PriceEntryPrice', {
             data = {};
         }
         this.record.set('isVariation', true);
+        this.record.set('productInCatalogInfo', data.productInCatalogInfo);
         this.record.set('currentListPrice', data.currentListPrice);
         this.record.set('currentSalePrice', data.currentSalePrice);
         this.record.set('currentCost', data.currentCost);

@@ -16,10 +16,11 @@
     },
     fieldCfg: {},
     checkboxFcg: {},
-    originalEmptyText: 'Default',
     afterChange: Ext.emptyFn,
     initComponent: function() {
         var me = this;
+
+        me.originalEmptyText = me.fieldCfg.emptyText;
 
         var checkboxCfg = {};
 
