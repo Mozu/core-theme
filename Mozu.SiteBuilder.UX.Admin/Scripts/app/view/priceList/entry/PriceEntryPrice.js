@@ -341,6 +341,7 @@ Ext.define('Taco.view.priceList.entry.PriceEntryPrice', {
                 dataIndex: 'catalogId',
                 flex: 1,
                 text: 'Catalog',
+                hideable: false,
                 renderer: function(val, metaData, record, rowIndex, colIndex, store, view) {
                     var catalog = Ext.Array.findBy(Taco.app.context.getMasterCatalog().catalogs, function(catalog) {
                         return val === catalog.id;
