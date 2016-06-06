@@ -579,6 +579,7 @@ Ext.define('Taco.view.priceList.entry.PriceEntryPrice', {
         if (!data){
             data = {};
         }
+        this.record.set('productInCatalogInfo', data.productInCatalogInfo);
         this.record.set('currentListPrice', data.currentListPrice);
         this.record.set('currentSalePrice', data.currentSalePrice);
         this.record.set('currentCost', data.currentCost);
@@ -625,7 +626,9 @@ Ext.define('Taco.view.priceList.entry.PriceEntryPrice', {
     },
 
     populatePricingTable: function(record) {
-        this.pricingTable.getStore().loadData(record.get('productInCatalogInfo'));
+        var store = this.pricingTable.getStore();
+        store.removeAll();
+        store.loadData(record.get('productInCatalogInfo'));
     },
     
     beforeSave: function () {
