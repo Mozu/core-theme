@@ -18,7 +18,7 @@
    <span class="mz-volume-price is-crossedout">
      {{model.price|currency}}
    </span>
-   <div>{{ labels.mapPrice }}</div>
+   <span>{{ labels.mapPrice }}</span>
 {% endif %}
 
 

@@ -10,7 +10,13 @@
 
     .mz-volume-price {
         font-size: @fontSize;
-        padding-right: 5px;
+        padding-left: 2px;
+        padding-right: 2px;
+    }
+    .mz-volume-price-lower {
+        &::after {
+            content: "\2014";
+        }
     }
     th {
         font-size: @fontSize;
