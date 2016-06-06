@@ -289,7 +289,18 @@
 
         validation: {
             purchaseOrderNumber: {
-                fn: function(value, attr){
+                fn: function(value, attr){var selectedPaymentTerm = null;
+                    var purchaseOrder = null;
+                    if(attr.indexOf('billingInfo') > -1) {
+                        purchaseOrder = this.get('billingInfo').get('purchaseOrder');
+                    } else {
+                        purchaseOrder = this.get('purchaseOrder');
+                    }
+
+                    if(!purchaseOrder.selected) {
+                        return;
+                    }
+
                     if(!value) {
                         return Hypr.getLabel('purchaseOrderNumberMissing');
                     }
@@ -325,11 +336,19 @@
             },*/
             paymentTerm: {
                 fn: function(value, attr) {
+
                     var selectedPaymentTerm = null;
+                    var purchaseOrder = null;
                     if(attr.indexOf('billingInfo') > -1) {
+                        purchaseOrder = this.get('billingInfo').get('purchaseOrder');
                         selectedPaymentTerm = this.get('billingInfo').get('purchaseOrder').get('paymentTerm');
                     } else {
+                        purchaseOrder = this.get('purchaseOrder');
                         selectedPaymentTerm = this.get('purchaseOrder').get('paymentTerm');
+                    }
+
+                    if(!purchaseOrder.selected) {
+                        return;
                     }
                     
                     if(!selectedPaymentTerm.get('description')) {
