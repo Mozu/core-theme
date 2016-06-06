@@ -1,5 +1,5 @@
 ﻿{% if model.priceType != "MAP" %}
-   {% if model.onSale %}
+   {% if model.onSale or model.salePrice %}
      <span class="mz-volume-price is-crossedout">
        {{model.price|currency}}
      </span>
@@ -15,7 +15,10 @@
      </span>
    {% endif %}
 {% else %}
-   <span>{{ labels.mapPrice }}</span>
+   <span class="mz-volume-price is-crossedout">
+     {{model.price|currency}}
+   </span>
+   <div>{{ labels.mapPrice }}</div>
 {% endif %}
 
 
