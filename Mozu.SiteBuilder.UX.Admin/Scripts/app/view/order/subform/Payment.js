@@ -82,7 +82,7 @@ Ext.define('Taco.view.order.subform.Payment', {
                     var lastValidPayment = me.getLastValidPayment();
                     var paymentType;
 
-                    if (me.record.customer.raw.isPoEnabled) {
+                    if (me.record.customer.raw.purchaseOrderAccount.isEnabled) {
                         action = me.paymentActions.addPurchaseOrder;
                     } else if (lastValidPayment) {
                         paymentType = lastValidPayment.get('paymentType');
