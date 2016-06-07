@@ -551,6 +551,59 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
             return List2(results);
         }
 
+        [HttpGetRoute(UriTemplate = "purchaseOrder/transactions/export")]
+        public async Task<CustomerPoTransactionsCsvFileResult> Export([FromUri]int? customerId)
+        {
+            if (!customerId.HasValue)
+            {
+                throw new ArgumentException("No customerId provided.");
+            }
+            var customerPoTransactions = new List<DC.PurchaseOrderTransaction>();
+            var startIndex = 0;
+            var pageSize = 200;
+            while (true)
+            {
+                var result = (await _customerWebApiClient.GetCustomerPurchaseOrderTransactions(customerId.Value, startIndex, pageSize)).ReadAsAsync().Result;
+                var totalCount = result.TotalCount;
+                customerPoTransactions.AddRange(result.Items);
+                startIndex = result.PageSize + result.StartIndex;
+                if (startIndex >= startIndex + pageSize || startIndex >= totalCount)
+                {
+                    break;
+                }
+            }
+
+            var results = customerPoTransactions.Select(transaction => transaction.Map<CustomerPurchaseOrderTransaction>()).ToList();
+            var orderIds = results.Where(trans => !string.IsNullOrEmpty(trans.OrderId)).Select(x => x.OrderId).Distinct().ToList();
+            var exceptions = new ConcurrentQueue<Exception>();
+            Parallel.ForEach(orderIds, new ParallelOptions { MaxDegreeOfParallelism = 20 }, (orderId) =>
+            {
+                try
+                {
+                    var order =
+                        (_orderWebApiClient.GetOrder(orderId, responseFields: "OrderNumber,Type").Result.ReadAsAsync())
+                            .Result;
+                    Parallel.ForEach(results.Where(x => x.OrderId == orderId),
+                        new ParallelOptions { MaxDegreeOfParallelism = 20 }, (transaction) =>
+                        {
+                            transaction.OrderNumber = order?.OrderNumber.ToString();
+                            transaction.OrderType = order?.Type;
+                        });
+                }
+                catch (Exception ex)
+                {
+                    _log.Error($"Error getting order info for orderId - {orderId}", ex, orderId);
+                    exceptions.Enqueue(ex);
+                }
+            });
+            return new CustomerPoTransactionsCsvFileResult("text/csv")
+            {
+                FileDownloadName = "purchaseOrderTransactions_export.csv",
+                CustomerPurchaseOrderTransactions = results
+            };
+
+        }
+
         [HttpGetRoute(UriTemplate = "cards/list")]
         public async Task<Response<List<DC.Card>>> GetCards([FromUri]int? customerId = null)
         {

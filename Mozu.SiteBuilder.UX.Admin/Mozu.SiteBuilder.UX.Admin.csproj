@@ -175,6 +175,7 @@
     <Compile Include="Api\ChannelController.cs" />
     <Compile Include="Api\ModelMapping\PurchaseOrderMapping.cs" />
     <Compile Include="Api\Models\Account\CustomerAuditEntry.cs" />
+    <Compile Include="Api\Models\Account\CustomerPoTransactionsCsvFileResult.cs" />
     <Compile Include="Api\Models\Account\CustomerPurchaseOrderTransaction.cs" />
     <Compile Include="Api\Models\Account\CustomerPurchaseOrderAccount.cs" />
     <Compile Include="Api\Models\Order\PurchaseOrderPayment.cs" />
