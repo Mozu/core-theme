@@ -840,7 +840,7 @@
                 CheckoutStep.prototype.edit.apply(this, arguments);
             },
             updatePurchaseOrderAmount: function() {
-                if(!this.get('purchaseOrder').isEnabled) {
+                if(!this.get('purchaseOrder').get('isEnabled')) {
                     return;
                 }
                 var me = this,
@@ -855,6 +855,7 @@
                 if(amount < orderAmountRemaining) {
                     currentPurchaseOrder.set('splitPayment', true);
                 }
+                //refresh ui when split payment is working?
             },
             setPurchaseOrderInfo: function() {
                 var me = this,
