@@ -1,31 +1,22 @@
 ﻿using System;
-using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using System.Linq;
-using System.Web.Http;
 using AutoMapper;
 using Mozu.Core.Api.Client.Exceptions;
 using Mozu.Core;
 using Mozu.Core.Api.Routing;
-using System.Globalization;
 using Mozu.ProductAdmin.Contracts.Clients;
-using Mozu.SiteBuilder.UX.Admin.Api.ModelMapping;
 using Mozu.SiteBuilder.UX.Admin.Api.Models.Search;
-//using Mozu.SiteBuilder.UX.Admin.Helpers.SearchTuningRuleHelpers;
 using DC = Mozu.ProductAdmin.Contracts.Search;
-using Mozu.Core.Api.Contracts.Client;
-using System.Net.Http;
 using System.Text;
 using Mozu.Core.Api.Client;
 using Mozu.Core.Extensions;
+using Mozu.ProductAdmin.Contracts;
 using Mozu.SiteBuilder.UX.Admin.Helpers;
 using Mozu.SiteBuilder.Mvc.Extensions;
 using Mozu.SiteBuilder.UX.Admin.Api.Models;
-using Mozu.SiteBuilder.UX.Admin.Api.Models.ProductModels;
 using Mozu.SiteBuilder.UX.Admin.Helpers.SearchTuningHelpers;
-using Mozu.Tenant.Contracts.Clients;
-using Mozu.SiteSettings.Order.Contracts.Clients;
 
 namespace Mozu.SiteBuilder.UX.Admin.Api
 {
@@ -131,23 +122,48 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
                 return this.FailureList2<SearchTuningRule>(e.Message);
             }
         }
-
+        
         private async Task AddCategoryNames(List<SearchTuningRule> searchTuningRules)
         {
-            var cats =
-                (await _categoryWebApiClient.Value.GetCategories(pageSize: 900,
-                    responseFields: "items(categoryCode,content(name)"))
-                .ReadAsSync();
-            if (cats == null || cats.TotalCount == 0)
-            {
+            var cats = await GetAllCategories() ;
+          
+            if (!cats.Any())
                 return;
-            }
-            var catLookup = cats.Items.ToDictionary(x => x.CategoryCode, y => y.Content.Name);
+
+            var catLookup = cats.ToDictionary(x => x.CategoryCode, y => y.Content.Name);
             foreach (var rule in searchTuningRules)
             {
-                rule.CategoryNames = rule.Filters.Where(x => x.Key == "categoryCode" && catLookup.ContainsKey(x.Value))
-                                           .Select(y => catLookup[y.Value]).OrderBy(z => z).ToArray();
+                rule.CategoryNames = rule.Filters
+                    .Where(x => x.Key == "categoryCode" && catLookup.ContainsKey(x.Value))
+                    .Select(y => catLookup[y.Value]).OrderBy(z => z).ToArray();
             }
+        }
+
+        /// <summary>
+        ///     Get all categories, using paging if required
+        /// </summary>
+        /// <returns></returns>
+        private async Task<List<Category>> GetAllCategories()
+        {
+            int start = 0;
+            var categories = new List<Category>();
+
+            while (true)
+            {
+                var cats = (await _categoryWebApiClient.Value
+                    .GetCategories(startIndex: start,
+                        pageSize: 200, //current API maximum is 200 - May 2016
+                        responseFields: "items(categoryCode,content(name)"
+                    ))
+                    .ReadAsSync();
+                categories.AddRange(Mapper.Map<List<Category>>(cats.Items));
+                start = cats.PageSize + cats.StartIndex;
+                if (cats.TotalCount <= start)
+                {
+                    break;
+                }
+            }
+            return categories;
         }
 
         private async Task AddSearchProducts(SearchTuningRule singleSearchTuningRule)
