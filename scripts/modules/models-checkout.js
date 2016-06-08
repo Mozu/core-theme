@@ -1376,6 +1376,7 @@
                     else if (me.get('total') === 0) {
                         me.trigger('complete');
                     }
+                    me.updatePurchaseOrderAmount();
                     me.isLoading(false);
                 });
             },
