@@ -289,23 +289,8 @@
 
         validation: {
             purchaseOrderNumber: {
-                fn: function(value, attr){var selectedPaymentTerm = null;
-                    var purchaseOrder = null;
-                    if(attr.indexOf('billingInfo') > -1) {
-                        purchaseOrder = this.get('billingInfo').get('purchaseOrder');
-                    } else {
-                        purchaseOrder = this.get('purchaseOrder');
-                    }
-
-                    if(!purchaseOrder.selected) {
-                        return;
-                    }
-
-                    if(!value) {
-                        return Hypr.getLabel('purchaseOrderNumberMissing');
-                    }
-                    return;
-                }
+                fn: 'present',
+                msg: Hypr.getLabel('purchaseOrderNumberMissing')
             },/*
             customFields: {
                 fn: function(value, attr) {

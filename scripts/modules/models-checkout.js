@@ -938,6 +938,10 @@
                         currentPurchaseOrder.set('usingBillingContact', true);
                     }
                 }
+
+                if(!this.get('paymentTerm')) {
+                    this.selectPaymentType(this, 'PurchaseOrder');
+                }
             },
             setPurchaseOrderPaymentTerm: function(termCode) {
                 var currentPurchaseOrder = this.get('purchaseOrder'),
