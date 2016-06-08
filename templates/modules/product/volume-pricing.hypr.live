@@ -8,7 +8,7 @@
   </thead>
   <tbody>
     {% for priceBand in model.volumePriceBands %}
-    <tr class="mz-volume-pricing-row">
+    <tr class="mz-volume-pricing-row{% if priceBand.isCurrent %} mz-volume-pricing-active-band{% endif %}">
       <td class="mz-volume-pricing-cell-quantity">
       {% if priceBand.maxQty %}
         {{ labels.volumePriceMinMaxQty|string_format(priceBand.minQty,priceBand.maxQty) }}
