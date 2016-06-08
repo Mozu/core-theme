@@ -14,7 +14,9 @@
         type: 'hbox',
         align: 'top'
     },
-    fieldCfg: {},
+    fieldCfg: {
+        emptyText: 'Default'
+    },
     checkboxFcg: {},
     afterChange: Ext.emptyFn,
     initComponent: function() {
@@ -29,6 +31,15 @@
             tabIndex: -1,
             name: me.fieldCfg.name + 'Mode',
             listeners: {
+                afterrender: function() {
+                    if (this.isOverridden()) {
+                        var field = me.overrideField;
+                        if (!field) return;
+                        Ext.apply(field, { emptyText: ' ' });
+                        field.applyEmptyText();
+                        //the field.applyEmptyText method checks for a truthy value assigned to emptyText so an empty string will not work
+                    }
+                },
                 change: function() {
                     var field = me.overrideField;
                     if (!field) return;
@@ -36,9 +47,8 @@
                     field.allowBlank = !(me.requireOverrideValue && this.isOverridden());
 
                     if (this.isOverridden()) {
-                        this.originalEmptyText = field.emptyText;
                         Ext.apply(field, { emptyText: ' ' });
-                        //the field.applyEmptyText method checks for a truthy value assigned to emptyText so a empty string will not work
+                        //the field.applyEmptyText method checks for a truthy value assigned to emptyText so an empty string will not work
                     }
                     else {
                         field.setValue(null);
@@ -72,8 +82,7 @@
             margin: '0 30 0 0',
             required: false,
             minValue: 0,
-            emptyText: me.originalEmptyText,
-            fieldStyle: 'text-align: right',
+            emptyText: 'Default',
             listeners: {
                 change: function (cmp, newVal, oldVal) {
                     if ((newVal === 0 || newVal) && !oldVal) {
@@ -86,8 +95,6 @@
 
         me.overrideField = Ext.widget(fieldCfg);
 
-        me.currentVal = Ext.widget('current-value-label', {margin: '5 30 0 0'});
-        
         me.items = [
             me.override, {
                 xtype: 'fieldcontainer',
@@ -96,8 +103,7 @@
                     align: 'stretch'
                 },
                 items: [
-                    me.overrideField/*,
-                    me.currentVal*/
+                    me.overrideField
                 ]
             }
         ];
@@ -115,8 +121,5 @@
         me.override.setValue(!!value);
         me.overrideField.setValue(value);
         return me;
-    },
-     setCurrentPrice: function(currentPrice) {
-         this.currentVal.setValue(currentPrice);
-     }
+    }
  });

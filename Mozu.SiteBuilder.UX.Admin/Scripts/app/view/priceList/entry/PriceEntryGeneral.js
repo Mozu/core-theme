@@ -69,7 +69,6 @@ Ext.define('Taco.view.priceList.entry.PriceEntryGeneral', {
                     fn: function(cmp, newVal) {
 
                         var record = cmp.store.getAt(cmp.store.find('productCode', newVal));
-                        //Taco.app.fireEvent('price-entry-product-changed', record);
                         me.loadProduct(record);
                         if (!record) return;
                         var isVariation = record.get('isVariation') || record.get('variationOptions').length > 0;
@@ -317,11 +316,10 @@ Ext.define('Taco.view.priceList.entry.PriceEntryGeneral', {
     loadProduct: function (productRecord) {
         var productCode = productRecord ? productRecord.get('productCode') : null;
 
-        if (!productRecord || !productCode)
-        {
+        if (!productRecord || !productCode) {
             return;
         }
-        if (productRecord.get('isVariation')){
+        if (productRecord.get('isVariation')) {
             return this.loadProductVariant(productRecord);
         }
 
@@ -329,7 +327,7 @@ Ext.define('Taco.view.priceList.entry.PriceEntryGeneral', {
             url: '/admin/app/priceList/entry/create/product/' + productCode,
             success: function (response) {
                 var data = Ext.JSON.decode(response.responseText);
-                Taco.app.fireEvent('price-entry-product-changed', data.items);
+                Taco.app.fireEvent('price-entry-product-changed', Ext.Object.merge(data.items, { productCode: productCode}));
             },
             failure: Taco.core.util.ExceptionWhiner.handleRemoteFailure
         });
@@ -343,7 +341,7 @@ Ext.define('Taco.view.priceList.entry.PriceEntryGeneral', {
             url: '/admin/app/priceList/entry/create/product/' + productCode + '/variation/' + variantCode,
             success: function (response) {
                 var data = Ext.JSON.decode(response.responseText);
-                Taco.app.fireEvent('price-entry-product-variation-changed', data.items);
+                Taco.app.fireEvent('price-entry-product-variation-changed', Ext.Object.merge(data.items, { productCode: productCode}));
             },
             failure: Taco.core.util.ExceptionWhiner.handleRemoteFailure
         });

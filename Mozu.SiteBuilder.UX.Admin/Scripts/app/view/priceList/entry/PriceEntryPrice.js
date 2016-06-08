@@ -44,6 +44,44 @@ Ext.define('Taco.view.priceList.entry.PriceEntryPrice', {
             }
         });
 
+        me.pricingStore = Ext.create('Ext.data.Store', {
+            model: 'Taco.model.ProductInCatalogInfo'
+        });
+
+        me.basicPricingTable = Ext.create('Ext.grid.Panel', {
+            title: 'Reference Pricing',
+            store: me.pricingStore,
+            /*stateful: true,
+            stateId: 'priceListBasicPricingTable',*/
+            columns: [{
+                dataIndex: 'catalog',
+                flex: 1,
+                text: 'Catalog',
+                hideable: false,
+                renderer: function(val, metaData, record, rowIndex, colIndex, store, view) {
+                    return val.name
+                }
+            }, {
+                dataIndex: 'listPrice',
+                flex: 1,
+                text: 'Price',
+                renderer: function(val, metaData, record, rowIndex, colIndex, store, view) {
+                    var currCode = record.get('isoCurrencyCode'),
+                        currency = Taco.app.context.currencies[currCode.toLowerCase()];
+                    return me.formatCurrency(val, currency);
+                }
+            }, {
+                dataIndex: 'salePrice',
+                flex: 1,
+                text: 'Sale Price',
+                renderer: function(val, metaData, record, rowIndex, colIndex, store, view) {
+                    var currCode = record.get('isoCurrencyCode'),
+                        currency = Taco.app.context.currencies[currCode.toLowerCase()];
+                    return me.formatCurrency(val, currency);
+                }
+            }]
+        });
+
         me.basicPanel = Ext.create('Ext.panel.Panel', {
             title: 'Basic',
             itemId: 'basicPanel',
@@ -77,7 +115,8 @@ Ext.define('Taco.view.priceList.entry.PriceEntryPrice', {
                             {}
                         ]
                     },
-                    me.basicEntries
+                    me.basicEntries,
+                    me.basicPricingTable
                 ]
             }]
         });
@@ -87,11 +126,9 @@ Ext.define('Taco.view.priceList.entry.PriceEntryPrice', {
         });
 
         if (entries.length === 0) {
-            entries.push(
-                me.getNewRow({
-                    minQty: 1
-                })
-            );
+            entries.push({
+                minQty: 1
+            });
         }
 
         Ext.Array.each(entries, function(entry, index) {
@@ -277,6 +314,87 @@ Ext.define('Taco.view.priceList.entry.PriceEntryPrice', {
             record: me.record
         });
 
+        me.advancedPricingTable = Ext.create('Ext.grid.Panel', {
+            title: 'Reference Pricing',
+            store: me.pricingStore,
+            margin: '40 0 0 0',
+            /*stateful: true,
+            stateId: 'priceListAdvancedPricingTable',*/
+            columns: [{
+                dataIndex: 'catalog',
+                flex: 1,
+                text: 'Catalog',
+                hideable: false,
+                renderer: function(val, metaData, record, rowIndex, colIndex, store, view) {
+                    return val.name
+                }
+            }, {
+                dataIndex: 'msrp',
+                flex: 1,
+                text: 'MSRP',
+                renderer: function(val, metaData, record, rowIndex, colIndex, store, view) {
+                    var currCode = record.get('isoCurrencyCode'),
+                        currency = Taco.app.context.currencies[currCode.toLowerCase()];
+                    return me.formatCurrency(val, currency);
+                }
+            }, {
+                dataIndex: 'cost',
+                flex: 1,
+                text: 'Cost',
+                renderer: function(val, metaData, record, rowIndex, colIndex, store, view) {
+                    var currCode = record.get('isoCurrencyCode'),
+                        currency = Taco.app.context.currencies[currCode.toLowerCase()];
+                    return me.formatCurrency(val, currency);
+                }
+            }, {
+                dataIndex: 'map',
+                flex: 1,
+                text: 'MAP',
+                renderer: function(val, metaData, record, rowIndex, colIndex, store, view) {
+                    var currCode = record.get('isoCurrencyCode'),
+                        currency = Taco.app.context.currencies[currCode.toLowerCase()];
+                    return me.formatCurrency(val, currency);
+                }
+            }, {
+                dataIndex: 'mapStartDate',
+                flex: 1,
+                text: 'MAP Start Date',
+                renderer: function(val, metaData, record, rowIndex, colIndex, store, view) {
+                    return Ext.util.Format.date(val, 'd M, Y, g:i a');
+                }
+            }, {
+                dataIndex: 'mapEndDate',
+                flex: 1,
+                text: 'MAP End Date',
+                renderer: function(val, metaData, record, rowIndex, colIndex, store, view) {
+                    return Ext.util.Format.date(val, 'd M, Y, g:i a');
+                }
+            }, {
+                dataIndex: 'discountsRestricted',
+                flex: 1,
+                text: 'Discounts Restriction',
+                renderer: function(val, metaData, record, rowIndex, colIndex, store, view) {
+                    var currCode = record.get('isoCurrencyCode'),
+                        currency = Taco.app.context.currencies[currCode.toLowerCase()];
+                    return me.formatCurrency(val, currency);
+                }
+            }, {
+                dataIndex: 'discountsRestrictedStartDate',
+                flex: 1,
+                text: 'Discounts Restriction Start Date',
+                renderer: function(val, metaData, record, rowIndex, colIndex, store, view) {
+                    return Ext.util.Format.date(val, 'd M, Y, g:i a');
+                }
+            }, {
+                dataIndex: 'discountsRestrictedEndDate',
+                flex: 1,
+                text: 'Discounts Restriction End Date',
+                renderer: function(val, metaData, record, rowIndex, colIndex, store, view) {
+                    return Ext.util.Format.date(val, 'd M, Y, g:i a');
+                }
+            }]
+        });
+
         me.advancedPanel = {
             xtype: 'panel',
             title: 'Advanced',
@@ -306,7 +424,8 @@ Ext.define('Taco.view.priceList.entry.PriceEntryPrice', {
                     ]
                 },
                 me.mapRow,
-                me.discountRestrictionRow
+                me.discountRestrictionRow,
+                me.advancedPricingTable
             ]
         };
 
@@ -329,65 +448,8 @@ Ext.define('Taco.view.priceList.entry.PriceEntryPrice', {
             ]
         });
 
-
-        me.pricingTable = Ext.create('Ext.grid.Panel', {
-            title: 'Pricing',
-            store: Ext.create('Ext.data.Store', {
-                model: 'Taco.model.ProductInCatalogInfo'
-            }),
-            /*stateful: true,
-            stateId: 'priceListPricingTable',*/
-            columns: [{
-                dataIndex: 'catalogId',
-                flex: 1,
-                text: 'Catalog',
-                hideable: false,
-                renderer: function(val, metaData, record, rowIndex, colIndex, store, view) {
-                    var catalog = Ext.Array.findBy(Taco.app.context.getMasterCatalog().catalogs, function(catalog) {
-                        return val === catalog.id;
-                    })
-                    return catalog.name
-                }
-            }, /*{
-                dataIndex: 'minQty',
-                flex: 1,
-                text: 'Minimum Quantity',
-                renderer: function(val, metaData, record, rowIndex, colIndex, store, view) {
-                    return val;
-                }
-            },*/ {
-                dataIndex: 'listPrice',
-                flex: 1,
-                text: 'Price',
-                renderer: function(val, metaData, record, rowIndex, colIndex, store, view) {
-                    var currCode = record.get('isoCurrencyCode'),
-                        currency = Taco.app.context.currencies[currCode.toLowerCase()];
-                    return me.formatCurrency(val, currency);
-                }
-            }, {
-                dataIndex: 'salePrice',
-                flex: 1,
-                text: 'Sale Price',
-                renderer: function(val, metaData, record, rowIndex, colIndex, store, view) {
-                    var currCode = record.get('isoCurrencyCode'),
-                        currency = Taco.app.context.currencies[currCode.toLowerCase()];
-                    return me.formatCurrency(val, currency);
-                }
-            }, {
-                dataIndex: 'msrp',
-                flex: 1,
-                text: 'MSRP',
-                renderer: function(val, metaData, record, rowIndex, colIndex, store, view) {
-                    var currCode = record.get('isoCurrencyCode'),
-                        currency = Taco.app.context.currencies[currCode.toLowerCase()];
-                    return me.formatCurrency(val, currency);
-                }
-            },]
-        });
-
         me.items = [
-            me.tabs,
-            me.pricingTable
+            me.tabs
         ];
 
         me.mon(Taco.app, 'price-entry-loaded', me.onPriceEntryLoaded, me);
@@ -406,7 +468,6 @@ Ext.define('Taco.view.priceList.entry.PriceEntryPrice', {
         var row = Ext.widget('container');
 
         row.minQty = Ext.widget('numberfield', {
-            //fieldLabel: 'Minimum Quantity',
             name: 'minQty',
             hideTrigger: true,
             value: entry.minQty,
@@ -434,26 +495,13 @@ Ext.define('Taco.view.priceList.entry.PriceEntryPrice', {
                 itemId: 'priceField',
                 currencyCode: me.currencyCode,
                 value: entry.listPrice,
-                allowBlank: (entry.listPriceMode !== 'Overridden') || (entry.showRemove),
-                emptyText: entry.showRemove || entry.minQty > 1 ? '' : 'Default'
+                allowBlank: (entry.listPriceMode !== 'Overridden') || (entry.showRemove)
             }
         });
-
-        if (!me.priceOverrideFirst) {
-            me.priceOverrideFirst = row.priceOverride;
-        }
 
         row.priceOverride.overrideField.validate();
 
         row.salePriceOverride = Ext.widget('overridefield', {
-            listeners: {
-                beforerender: function(cmp) {
-                    if (cmp.isOverridden()) {
-                        Ext.apply(cmp.overrideField, { emptyText: '' })
-                    }
-                },
-                scope: row.salePriceOverride
-            },
             checkboxCfg: {
                 checked: entry.salePriceMode === 'Overridden',
                 onChange: function(newVal) {
@@ -466,14 +514,9 @@ Ext.define('Taco.view.priceList.entry.PriceEntryPrice', {
                 name: 'salePrice',
                 itemId: 'salePriceField',
                 currencyCode: me.currencyCode,
-                value: entry.salePrice,
-                emptyText: entry.showRemove || entry.minQty > 1 ? '' : 'Default'
+                value: entry.salePrice
             }
         });
-
-        if (!me.salePriceOverrideFirst) {
-            me.salePriceOverrideFirst = row.salePriceOverride;
-        }
 
         row.addButton = Ext.widget('button', {
             cls: 'taco-btn-add-row',
@@ -583,6 +626,7 @@ Ext.define('Taco.view.priceList.entry.PriceEntryPrice', {
             data = {};
         }
         this.record.set('productInCatalogInfo', data.productInCatalogInfo);
+        this.record.set('productCode', data.productCode);
         this.record.set('currentListPrice', data.currentListPrice);
         this.record.set('currentSalePrice', data.currentSalePrice);
         this.record.set('currentCost', data.currentCost);
@@ -602,6 +646,7 @@ Ext.define('Taco.view.priceList.entry.PriceEntryPrice', {
             data = {};
         }
         this.record.set('isVariation', true);
+        this.record.set('productCode', data.productCode);
         this.record.set('productInCatalogInfo', data.productInCatalogInfo);
         this.record.set('currentListPrice', data.currentListPrice);
         this.record.set('currentSalePrice', data.currentSalePrice);
@@ -611,7 +656,6 @@ Ext.define('Taco.view.priceList.entry.PriceEntryPrice', {
     },
 
     onPriceEntryLoaded: function (record) {
-        this.populatePricingTable(record);
         this.currentMapStartDate.setValue(Ext.util.Format.date(record.get('currentMapStartDate'), 'd M, Y, g:i a'));
         this.currentMapEndDate.setValue(Ext.util.Format.date(record.get('currentMapEndDate'), 'd M, Y, g:i a'));
         this.currentRestriction.setValue(record.get('currentDiscountsRestricted'));
@@ -620,6 +664,7 @@ Ext.define('Taco.view.priceList.entry.PriceEntryPrice', {
 
         this.updateExtras(record.get('extras'));
         this.injectExtrasTab(record);
+        this.populatePricingTable(record);
     },
 
     formatCurrency: function (value, currency) {
@@ -630,9 +675,9 @@ Ext.define('Taco.view.priceList.entry.PriceEntryPrice', {
     },
 
     populatePricingTable: function(record) {
-        var store = this.pricingTable.getStore();
+        var store = this.pricingStore;
         store.removeAll();
-        store.loadData(record.get('productInCatalogInfo'));
+        store.add(record.get('productInCatalogInfo'))
     },
     
     beforeSave: function () {
