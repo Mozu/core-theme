@@ -251,25 +251,23 @@
             this._hasPriceRange = json && !!json.priceRange;
         },
         initialize: function(conf) {
-            var minQty = 1,
-              slug = this.get('content').get('seoFriendlyUrl');
+            var slug = this.get('content').get('seoFriendlyUrl');
+            this.minQty = 1;
             _.bindAll(this, 'calculateHasPriceRange', 'onOptionChange');
             this.listenTo(this.get("options"), "optionchange", this.onOptionChange);
             if (this.get('volumePriceBands') && this.get('volumePriceBands').length > 0) {
-                minQty = _.min(_.pluck(this.get('volumePriceBands'), 'minQty'));
-                if (minQty > 1) {
+                this.minQty = _.min(_.pluck(this.get('volumePriceBands'), 'minQty'));
+                if (this.minQty > 1) {
                     if (this.get('quantity') <= 1) {
-                        this.set('quantity', minQty);
+                        this.set('quantity', this.minQty);
                     }
-                    this.validation.quantity.min = minQty;
-                    this.validation.quantity.msg = Hypr.getLabel('enterMinProductQuantity', minQty);
+                    this.validation.quantity.msg = Hypr.getLabel('enterMinProductQuantity', this.minQty);
                 }
                 this.on("change:quantity", _.debounce(this.onQuantityChange, 600), this);
             }
             this.updateConfiguration = _.debounce(this.updateConfiguration, 300);
             this.set({ url: slug ? "/" + slug + "/p/" + this.get("productCode") : "/p/" + this.get("productCode") });
             this.lastConfiguration = [];
-            this.lastQuantity = this.get('quantity');
             this.calculateHasPriceRange(conf);
             this.on('sync', this.calculateHasPriceRange);
         },
@@ -338,19 +336,17 @@
             this.isLoading(true);
             this.updateConfiguration();
         },
-        onQuantityChange: function () {
-            if (!this.validate()) {
-                this.isLoading(true);
-                this.updateQuantity();
+        onQuantityChange: function (e, newQty) {
+            if (newQty < this.minQty) {
+                return this.showBelowQuantityWarning();
             }
+            this.isLoading(true);
+            this.apiConfigure({ options: this.getConfiguredOptions() }, { useExistingInstances: true });
         },
-        updateQuantity: function() {
-            if (this.lastQuantity != this.get('quantity')) {
-                this.lastQuantity = this.get('quantity');
-                this.apiConfigure({ options: this.getConfiguredOptions() }, { useExistingInstances: true });
-            } else {
-                this.isLoading(false);
-            }
+        showBelowQuantityWarning: function () {
+            this.validation.quantity.min = this.minQty;
+            this.validate();
+            this.validation.quantity.min = 1;
         },
         updateConfiguration: function() {
             var newConfiguration = this.getConfiguredOptions();
