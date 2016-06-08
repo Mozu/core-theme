@@ -243,8 +243,8 @@ Ext.define('Taco.view.order.subform.Payment', {
     },
 
     isPurchaseOrderEnalbled: function () {
-        var checkoutSettings = this.record && this.record.checkoutSettings ? this.record.checkoutSettings.get('purchaseOrder').isEnabled : false;
-        var customerSettings = this.record.customer ? this.record.customer.raw.purchaseOrderAccount.isEnabled : false;
+        var checkoutSettings = this.record && this.record.checkoutSettings && this.record.checkoutSettings.get('purchaseOrder') ? this.record.checkoutSettings.get('purchaseOrder').isEnabled : false;
+        var customerSettings = this.record.customer && this.record.customer.raw.purchaseOrderAccount ? this.record.customer.raw.purchaseOrderAccount.isEnabled : false;
 
         return checkoutSettings && customerSettings;
     },
