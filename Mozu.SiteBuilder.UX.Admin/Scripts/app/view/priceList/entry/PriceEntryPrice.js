@@ -322,7 +322,7 @@ Ext.define('Taco.view.priceList.entry.PriceEntryPrice', {
             stateId: 'priceListAdvancedPricingTable',*/
             columns: [{
                 dataIndex: 'catalog',
-                flex: 1,
+                flex: 2,
                 text: 'Catalog',
                 hideable: false,
                 renderer: function(val, metaData, record, rowIndex, colIndex, store, view) {
@@ -357,40 +357,41 @@ Ext.define('Taco.view.priceList.entry.PriceEntryPrice', {
                 }
             }, {
                 dataIndex: 'mapStartDate',
-                flex: 1,
+                flex: 2,
                 text: 'MAP Start Date',
                 renderer: function(val, metaData, record, rowIndex, colIndex, store, view) {
-                    return Ext.util.Format.date(val, 'd M, Y, g:i a');
+                    return Ext.util.Format.date(val, 'n/j/Y g:i a');
                 }
             }, {
                 dataIndex: 'mapEndDate',
-                flex: 1,
+                flex: 2,
                 text: 'MAP End Date',
                 renderer: function(val, metaData, record, rowIndex, colIndex, store, view) {
-                    return Ext.util.Format.date(val, 'd M, Y, g:i a');
+                    return Ext.util.Format.date(val, 'n/j/Y g:i a');
                 }
             }, {
                 dataIndex: 'discountsRestricted',
-                flex: 1,
+                flex: 2,
+                hidden: true,
                 text: 'Discounts Restriction',
                 renderer: function(val, metaData, record, rowIndex, colIndex, store, view) {
-                    var currCode = record.get('isoCurrencyCode'),
-                        currency = Taco.app.context.currencies[currCode.toLowerCase()];
-                    return me.formatCurrency(val, currency);
+                    return val;
                 }
             }, {
                 dataIndex: 'discountsRestrictedStartDate',
-                flex: 1,
+                flex: 2,
+                hidden: true,
                 text: 'Discounts Restriction Start Date',
                 renderer: function(val, metaData, record, rowIndex, colIndex, store, view) {
-                    return Ext.util.Format.date(val, 'd M, Y, g:i a');
+                    return Ext.util.Format.date(val, 'n/j/Y g:i a');
                 }
             }, {
                 dataIndex: 'discountsRestrictedEndDate',
-                flex: 1,
+                flex: 2,
+                hidden: true,
                 text: 'Discounts Restriction End Date',
                 renderer: function(val, metaData, record, rowIndex, colIndex, store, view) {
-                    return Ext.util.Format.date(val, 'd M, Y, g:i a');
+                    return Ext.util.Format.date(val, 'n/j/Y g:i a');
                 }
             }]
         });
@@ -677,7 +678,14 @@ Ext.define('Taco.view.priceList.entry.PriceEntryPrice', {
     populatePricingTable: function(record) {
         var store = this.pricingStore;
         store.removeAll();
-        store.add(record.get('productInCatalogInfo'))
+        var entries = record.get('productInCatalogInfo');
+        Ext.Array.each(entries, function(entry) {
+            entry.cost = record.get('currentCost');
+            entry.discountsRestricted = record.get('currentDiscountsRestricted');
+            entry.discountsRestrictedStartDate = record.get('currentDiscountsRestrictedEndDate');
+            entry.discountsRestrictedEndDate = record.get('currentDiscountsRestrictedEndDate');
+        });
+        store.add(entries);
     },
     
     beforeSave: function () {
