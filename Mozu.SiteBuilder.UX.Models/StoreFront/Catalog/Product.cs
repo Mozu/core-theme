@@ -79,13 +79,7 @@ namespace Mozu.SiteBuilder.UX.Models.StoreFront.Catalog
         }
 
     }
-    //public class ProductPrice: Mozu.ProductRuntime.Contracts.ProductPrice
-    //{
-        
-    //}
-   
-
-
+    
 
     public class RepeaterItem
     {
@@ -882,13 +876,6 @@ namespace Mozu.SiteBuilder.UX.Models.StoreFront.Catalog
 
         [DataMember]
         public virtual new ProductPrice Price { get; set; }
-
-        //[DataMember]
-        public decimal? AmountSavings { get; set; }
-
-        //[DataMember]
-        //public decimal? PercentSavings { get; set; }
-
 
     }
 
