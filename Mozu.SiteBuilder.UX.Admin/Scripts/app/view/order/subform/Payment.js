@@ -82,7 +82,7 @@ Ext.define('Taco.view.order.subform.Payment', {
                     var lastValidPayment = me.getLastValidPayment();
                     var paymentType;
 
-                    if (me.record.customer.raw.purchaseOrderAccount.isEnabled) {
+                    if (me.isPurchaseOrderEnalbled()) {
                         action = me.paymentActions.addPurchaseOrder;
                     } else if (lastValidPayment) {
                         paymentType = lastValidPayment.get('paymentType');
@@ -99,9 +99,7 @@ Ext.define('Taco.view.order.subform.Payment', {
                 menu: me.getNewPaymentActions(),
                 listeners: {
                     menushow: function (cmp, menu) {
-                        var checkoutSettings = this.record && this.record.checkoutSettings ? this.record.checkoutSettings.get('purchaseOrder').isEnabled : false;
-                        var customerSettings = this.record.customer ? this.record.customer.raw.purchaseOrderAccount.isEnabled : false;
-                        var poEnabled = checkoutSettings && customerSettings;
+                        var poEnabled = this.isPurchaseOrderEnalbled();
                         var purchaseOrder = cmp.down('#purchaseOrderOption');
                         purchaseOrder[poEnabled ? 'show' : 'hide']();
                     }, scope: this
@@ -242,6 +240,13 @@ Ext.define('Taco.view.order.subform.Payment', {
                 }
             }
         });
+    },
+
+    isPurchaseOrderEnalbled: function () {
+        var checkoutSettings = this.record && this.record.checkoutSettings && this.record.checkoutSettings.get('purchaseOrder') ? this.record.checkoutSettings.get('purchaseOrder').isEnabled : false;
+        var customerSettings = this.record.customer && this.record.customer.raw.purchaseOrderAccount ? this.record.customer.raw.purchaseOrderAccount.isEnabled : false;
+
+        return checkoutSettings && customerSettings;
     },
 
     getNewPaymentActions: function() {
