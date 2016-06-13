@@ -263,7 +263,7 @@
                     }
                     this.validation.quantity.msg = Hypr.getLabel('enterMinProductQuantity', this.minQty);
                 }
-                this.on("change:quantity", _.debounce(this.onQuantityChange, 600), this);
+                this.on("change:quantity", _.debounce(this.onQuantityChange, 500), this);
             }
             this.updateConfiguration = _.debounce(this.updateConfiguration, 300);
             this.set({ url: slug ? "/" + slug + "/p/" + this.get("productCode") : "/p/" + this.get("productCode") });
