@@ -26,19 +26,20 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.Models.Account
                 sw.Write(',');
                 EscapeWrite(sw, x.SiteId.ToString());
                 sw.Write(',');
-                EscapeWrite(sw, x.OrderNumber);
+                sw.Write(x.OrderNumber);
                 sw.Write(',');
-                EscapeWrite(sw, x.OrderType);
+                sw.Write(x.OrderType);
                 sw.Write(',');
-                EscapeWrite(sw, x.PurchaseOrderNumber);
+                EscapeWrite(sw, x.PurchaseOrderNumber ?? "");
                 sw.Write(',');
-                EscapeWrite(sw, x.Author);
+                EscapeWrite(sw, x.Author ?? "");
                 sw.Write(',');
-                EscapeWrite(sw, x.TransactionDescription);
+                EscapeWrite(sw, x.TransactionDescription ?? "") ;
                 sw.Write(',');
                 sw.Write(x.TransactionAmount);
                 sw.Write(',');
                 sw.Write(x.AvailableBalance);
+                sw.WriteLine();
             });
         }
 
