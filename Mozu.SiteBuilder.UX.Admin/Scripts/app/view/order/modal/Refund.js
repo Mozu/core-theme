@@ -239,6 +239,7 @@ Ext.define('Taco.view.order.modal.Refund', {
                 items: [{
                     xtype: 'combobox',
                     name: 'refundMethod',
+                    id : 'refundMethod',
                     fieldLabel: 'Refund Method',
                     margin: 0,
                     allowOnlyWhitespace: false,
@@ -319,6 +320,17 @@ Ext.define('Taco.view.order.modal.Refund', {
                                     payment: nextValue ? ccStore.getById(nextValue).getData() : null
                                 });
                             }
+                        },
+                        select: {
+                            scope: this,
+                            fn: function (combo, rec, eOpts) {
+
+                                if (rec[0].get('paymentType').toLowerCase() === 'purchaseorder'
+                                        && combo.up().down('#refundMethod').rawValue === "Direct Refund") {
+                                    // show text field below.
+                                    combo.up().up().down('#poInformation').show();
+                                }
+                            }
                         }
                     }
                 }, {
@@ -386,6 +398,13 @@ Ext.define('Taco.view.order.modal.Refund', {
                 //         'line-height': '1'
                 //     }
                 }]
+            }, {
+                xtype: 'component',
+                name: 'poInformation',
+                id: 'poInformation',
+                width: '100%',
+                html: "For Purchase Orders, the amount refunded will be applied to the Customer's available balance",
+                hidden: true
             }, {
                 xtype: 'textarea',
                 name: 'reason',

@@ -781,8 +781,8 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
                 {"@PurchaseOrderDisableLabel","Purchase Orders Disabled" },
                 {"@OverdraftAllowanceLabel", "Overdraft Allowance Change" },
                 {"@OverdraftAllowanceTypeLabel", "Overdraft Allowance Type Change" },
-                {"@paymentTermAddedLabel", "Net Term Change" },
-                {"@paymentTermRemovedLabel", "Net Term Changed" },
+                {"@paymentTermAddedLabel", "Payment Term Change" },
+                {"@paymentTermRemovedLabel", "Payment Term Changed" },
             };
 
             var auditEntryCollection = (await _customerWebApiClient.GetAccountAuditLog(accountId.Value)).ReadAsSync();
@@ -796,7 +796,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
                 }
             }
             var results = auditEntryCollection.Items.Select(entry =>  entry.Map<CustomerAuditEntry>()).ToList();
-            return List2(results);
+            return List2(results, auditEntryCollection.TotalCount);
         }
 
 

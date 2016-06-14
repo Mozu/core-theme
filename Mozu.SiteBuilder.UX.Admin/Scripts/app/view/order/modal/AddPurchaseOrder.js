@@ -54,6 +54,7 @@ Ext.define('Taco.view.order.modal.AddPurchaseOrder', {
                             currencyCode: me.record.getCurrencyCode(),
                             fieldLabel: 'Amount',
                             flex: 1,
+                            itemId: 'amount',
                             margin: '0 0 0 30',
                             name: 'amount',
                             value: me.getDefaultPaymentAmount(),
@@ -387,7 +388,7 @@ Ext.define('Taco.view.order.modal.AddPurchaseOrder', {
 
         var billingInfo = this.getAddress(this.record.get('billingContact'));
         var contactInfo = null;
-        var amount = order.get('total');
+        var amount = Ext.util.Format.htmlEncode(this.down('#amount').value);
         var curPayment = null;
         var paymentServiceCardId = null;
         var purchaseOrderInfo = null;
