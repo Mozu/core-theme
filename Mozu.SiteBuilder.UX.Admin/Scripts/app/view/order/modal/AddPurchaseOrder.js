@@ -275,8 +275,17 @@ Ext.define('Taco.view.order.modal.AddPurchaseOrder', {
             paymentTermsSelect = null,
             description,
             paymentTermsItem = terms[0],
-            termsContent = [],
-            content = {
+            termsContent = [];
+
+        if (!terms.isArray) {
+            me.record.checkoutSettings.get('purchaseOrder').paymentTerms.forEach(function (desc) {
+                if (desc.code == paymentTermsItem.code) {
+                    paymentTermsItem.description = desc.description;
+                }
+            });
+        }
+
+        var content = {
                 cls: 'taco-static-text',
                 children: [
                     {
@@ -285,8 +294,12 @@ Ext.define('Taco.view.order.modal.AddPurchaseOrder', {
                     },
                     {
                         html: paymentTermsItem.description,
-                        name: paymentTermsItem.code,
-                        tag: 'p'
+                        tag: 'h2'
+                    },
+                    {
+                        xtype: 'hiddenfield',
+                        name: 'paymentTerms',
+                        value: paymentTermsItem.code
                     }
                 ],
                 tag: 'span',
@@ -297,7 +310,7 @@ Ext.define('Taco.view.order.modal.AddPurchaseOrder', {
          * If Net Terms is only one item, show it as a static string
          * Otherwise, show a select input with each option
          */
-        // if (terms.length > 1) {
+        if (terms.length > 1) {
             terms.forEach(function (term) {
                 me.record.checkoutSettings.get('purchaseOrder').paymentTerms.forEach(function (desc) {
                     if (desc.code == term.code) {
@@ -317,16 +330,18 @@ Ext.define('Taco.view.order.modal.AddPurchaseOrder', {
                     data: termsContent
                 })
             });
-        // }
+        }
 
-        // return Ext.widget({
-        //     flex: 1,
-        //     xtype: 'box',
-        //     anchor: 0,
-        //     margin: '20 0 10 0',
-        //     itemId: 'paymentTerms',
-        //     autoEl: content
-        // });
+        return Ext.widget({
+            flex: 1,
+            xtype: 'box',
+            anchor: 0,
+            margin: '20 0 10 0',
+            itemId: 'paymentTerms',
+            value: paymentTermsItem.code,
+            autoEl: content,
+            text: paymentTermsItem.description
+        });
     },
 
     getFields: function (fields) {
@@ -393,8 +408,12 @@ Ext.define('Taco.view.order.modal.AddPurchaseOrder', {
         var paymentServiceCardId = null;
         var purchaseOrderInfo = null;
         var purchaseOrderNumber = Ext.util.Format.htmlEncode(this.down('#purchaseOrderNumber').value);
-        var paymentTermsCode = Ext.util.Format.htmlEncode(this.down('#paymentTerms').valueModels[0].get('value'));
-        var paymentTermsDescription = Ext.util.Format.htmlEncode(this.down('#paymentTerms').valueModels[0].get('text'));
+        var paymentTermsCode = this.down('#paymentTerms').valueModels
+            ? Ext.util.Format.htmlEncode(this.down('#paymentTerms').valueModels[0].get('value'))
+            : Ext.util.Format.htmlEncode(this.down('#paymentTerms').value);
+        var paymentTermsDescription = this.down('#paymentTerms').valueModels
+            ? Ext.util.Format.htmlEncode(this.down('#paymentTerms').valueModels[0].get('text'))
+            : Ext.util.Format.htmlEncode(this.down('#paymentTerms').text);
         var customFields = [];
         var fieldId = null;
         var fieldData = null;
