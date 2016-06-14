@@ -33,6 +33,7 @@ using Mozu.Core.Api.Contracts.Client;
 using Mozu.Core.Extensions;
 using Mozu.SiteBuilder.Mvc.OAF;
 using AutoMapper;
+using Mozu.SiteBuilder.UX.Models.Customers;
 
 namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
 {
@@ -316,14 +317,21 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
                     var customerPurchaseOrder = Mapper.Map<Mozu.SiteBuilder.UX.Models.Customers.CustomerPurchaseOrderAccount>(accountPurchaseOrder);
                     var paymentTermOptions = this.SiteContext.CheckoutSettings.PurchaseOrder.PaymentTerms;
                     // helper object that inherits from contract and add description, then create new payment array and apply it to accountPurchaseOrder before doing .toJObject()
+                    var paymentTermList = new List<PurchaseOrderPaymentTerm>();
                     foreach (var term in customerPurchaseOrder.PaymentTerms)
                     {
-                        var siteSettingsPaymentTerm = paymentTermOptions.Find(paymentTerm => paymentTerm.Code == term.Code);
-                        if (siteSettingsPaymentTerm != null)
+                        if (term.SiteId == SiteContext.SiteId)
                         {
-                            term.Description = siteSettingsPaymentTerm.Description;
+                            var siteSettingsPaymentTerm =
+                                paymentTermOptions.Find(paymentTerm => paymentTerm.Code == term.Code);
+                            if (siteSettingsPaymentTerm != null)
+                            {
+                                term.Description = siteSettingsPaymentTerm.Description;
+                            }
+                            paymentTermList.Add(term);
                         }
                     }
+                    customerPurchaseOrder.PaymentTerms = paymentTermList;
                     var purchaseOrderJObject = customerPurchaseOrder.ToJObject();
                     accountJson.Add("purchaseOrder", purchaseOrderJObject);
                 }
