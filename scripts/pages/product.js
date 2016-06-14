@@ -2,9 +2,9 @@
 
     var ProductView = Backbone.MozuView.extend({
         templateName: 'modules/product/product-detail',
-        autoUpdate: ['quantity'],
         additionalEvents: {
             "change [data-mz-product-option]": "onOptionChange",
+            "change [data-mz-value='quantity']": "onQuantityChange",
             "blur [data-mz-product-option]": "onOptionChange"
         },
         render: function () {
@@ -17,13 +17,20 @@
         onOptionChange: function (e) {
             return this.configure($(e.currentTarget));
         },
+        onQuantityChange: _.debounce(function (e) {
+            var $qField = $(e.currentTarget),
+              newQuantity = parseInt($qField.val(), 10);
+            if (!isNaN(newQuantity)) {
+                this.model.updateQuantity(newQuantity);
+            }
+        },500),
         configure: function ($optionEl) {
             var newValue = $optionEl.val(),
-                oldValue,
-                id = $optionEl.data('mz-product-option'),
-                optionEl = $optionEl[0],
-                isPicked = (optionEl.type !== "checkbox" && optionEl.type !== "radio") || optionEl.checked,
-                option = this.model.get('options').get(id);
+              oldValue,
+              id = $optionEl.data('mz-product-option'),
+              optionEl = $optionEl[0],
+              isPicked = (optionEl.type !== "checkbox" && optionEl.type !== "radio") || optionEl.checked,
+              option = this.model.get('options').get(id);
             if (option) {
                 if (option.get('attributeDetail').inputType === "YesNo") {
                     option.set("value", isPicked);
@@ -46,7 +53,7 @@
             e.preventDefault();
             this.model.whenReady(function () {
                 var $localStoresForm = $(e.currentTarget).parents('[data-mz-localstoresform]'),
-                    $input = $localStoresForm.find('[data-mz-localstoresform-input]');
+                  $input = $localStoresForm.find('[data-mz-localstoresform-input]');
                 if ($input.length > 0) {
                     $input.val(JSON.stringify(me.model.toJSON()));
                     $localStoresForm[0].submit();
