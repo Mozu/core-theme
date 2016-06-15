@@ -11,6 +11,8 @@ namespace Mozu.SiteBuilder.UX.Models.Customers
         public int AccountId { get; set; }
         [DataMember(Name = "availableBalance")]
         public decimal AvailableBalance { get; set; }
+        [DataMember(Name = "totalAvailableBalance")]
+        public decimal TotalAvailableBalance { get; set; }
         [DataMember(Name = "creditLimit")]
         public decimal CreditLimit { get; set; }
         [DataMember(Name = "paymentTerms")]
