@@ -255,6 +255,12 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
                 var attrTasks = ManageAttributes(dcCust, dcExistingCustomer);
                 var segmentTasks = ManageSegments(dcCust, dcExistingCustomer);
 
+                // on customer save, if he is no longer locked 
+                if (!dcCust.IsLocked && dcExistingCustomer.IsLocked)
+                {
+                    await Unlock(dcExistingCustomer.Id);
+                }
+
                 await Task.WhenAll(contactsManagementTasks, contactsDeleteTasks, attrTasks, segmentTasks);
                 IfTaskHasExceptionThenThrow(contactsManagementTasks);
                 IfTaskHasExceptionThenThrow(contactsDeleteTasks);

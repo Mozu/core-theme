@@ -92,7 +92,6 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.ModelMapping
                 //ignore
                 .ForMember(dc => dc.LocaleCode, op => op.Ignore())
                 .ForMember(dc => dc.AuditInfo, op => op.Ignore())
-                .ForMember(dc => dc.IsLocked, op => op.Ignore())
                 .ForMember(dc => dc.IsActive, op => op.ResolveUsing(x => !x.IsDisabled))
                 ;
 
