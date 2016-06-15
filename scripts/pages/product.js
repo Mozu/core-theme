@@ -4,7 +4,6 @@
         templateName: 'modules/product/product-detail',
         additionalEvents: {
             "change [data-mz-product-option]": "onOptionChange",
-            "change [data-mz-value='quantity']": "onQuantityChange",
             "blur [data-mz-product-option]": "onOptionChange"
         },
         render: function () {
@@ -81,6 +80,10 @@
                     }
                 }
             });
+            if (this.model.hasVolumePricing()) {
+                this.additionalEvents["change [data-mz-value='quantity']"] = "onQuantityChange";
+                this.additionalEvents["keyup :input[data-mz-value='quantity']"] = "onQuantityChange";
+            }
         }
     });
 

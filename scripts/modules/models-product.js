@@ -247,6 +247,9 @@
           hasPriceRange: function() {
               return this._hasPriceRange;
           },
+          hasVolumePricing: function() {
+              return this._hasVolumePricing;
+          },
           calculateHasPriceRange: function(json) {
               this._hasPriceRange = json && !!json.priceRange;
           },
@@ -254,16 +257,16 @@
               var slug = this.get('content').get('seoFriendlyUrl');
               _.bindAll(this, 'calculateHasPriceRange', 'onOptionChange');
               this.listenTo(this.get("options"), "optionchange", this.onOptionChange);
-              this.hasVolumePricing = false;
-              this.minQty = 1;
+              this._hasVolumePricing = false;
+              this._minQty = 1;
               if (this.get('volumePriceBands') && this.get('volumePriceBands').length > 0) {
-                  this.hasVolumePricing = true;
-                  this.minQty = _.min(_.pluck(this.get('volumePriceBands'), 'minQty'));
-                  if (this.minQty > 1) {
+                  this._hasVolumePricing = true;
+                  this._minQty = _.min(_.pluck(this.get('volumePriceBands'), 'minQty'));
+                  if (this._minQty > 1) {
                       if (this.get('quantity') <= 1) {
-                          this.set('quantity', this.minQty);
+                          this.set('quantity', this._minQty);
                       }
-                      this.validation.quantity.msg = Hypr.getLabel('enterMinProductQuantity', this.minQty);
+                      this.validation.quantity.msg = Hypr.getLabel('enterMinProductQuantity', this._minQty);
                   }
               }
               this.updateConfiguration = _.debounce(this.updateConfiguration, 300);
@@ -339,17 +342,17 @@
           },
           updateQuantity: function (newQty) {
               this.set('quantity', newQty);
-              if (!this.hasVolumePricing) {
+              if (!this._hasVolumePricing) {
                   return;
               }
-              if (newQty < this.minQty) {
+              if (newQty < this._minQty) {
                   return this.showBelowQuantityWarning();
               }
               this.isLoading(true);
               this.apiConfigure({ options: this.getConfiguredOptions() }, { useExistingInstances: true });
           },
           showBelowQuantityWarning: function () {
-              this.validation.quantity.min = this.minQty;
+              this.validation.quantity.min = this._minQty;
               this.validate();
               this.validation.quantity.min = 1;
           },
