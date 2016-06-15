@@ -858,7 +858,9 @@
                 //refresh ui when split payment is working?
             },
             isPurchaseOrderEnabled: function() {
-                var purchaseOrderInfo = order.get('customer').get('purchaseOrder'),
+                var me = this,
+                    order = me.getOrder(),
+                    purchaseOrderInfo = order.get('customer').get('purchaseOrder'),
                     purchaseOrderSiteSettings = HyprLiveContext.locals.siteContext.checkoutSettings.purchaseOrder ?
                         HyprLiveContext.locals.siteContext.checkoutSettings.purchaseOrder.isEnabled : false,
                     purchaseOrderCustomerEnabled = purchaseOrderInfo ? purchaseOrderInfo.isEnabled : false,
@@ -1030,6 +1032,7 @@
             },
             hasPaymentChanged: function(payment) {
 
+                // fix this for purchase orders, currently it constantly voids, then re-applys the payment even if nothing changes.
                 function normalizeBillingInfos(obj) {
                     return {
                         paymentType: obj.paymentType,
