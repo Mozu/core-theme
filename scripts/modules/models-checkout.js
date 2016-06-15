@@ -864,7 +864,7 @@
                     purchaseOrderSiteSettings = HyprLiveContext.locals.siteContext.checkoutSettings.purchaseOrder ?
                         HyprLiveContext.locals.siteContext.checkoutSettings.purchaseOrder.isEnabled : false,
                     purchaseOrderCustomerEnabled = purchaseOrderInfo ? purchaseOrderInfo.isEnabled : false,
-                    customerAvailableBalance = purchaseOrderCustomerEnabled ? purchaseOrderInfo.availableBalance > 0 : false,
+                    customerAvailableBalance = purchaseOrderCustomerEnabled ? purchaseOrderInfo.totalAvailableBalance > 0 : false,
                     purchaseOrderEnabled = purchaseOrderSiteSettings && purchaseOrderCustomerEnabled && customerAvailableBalance;
 
                 return purchaseOrderEnabled;
@@ -909,7 +909,7 @@
                     currentPurchaseOrder.set('amount', amount);
                 }
 
-                currentPurchaseOrder.set('availableBalance', purchaseOrderInfo.availableBalance);
+                currentPurchaseOrder.set('availableBalance', purchaseOrderInfo.totalAvailableBalance);
                 currentPurchaseOrder.set('creditLimit', purchaseOrderInfo.creditLimit);
 
                 if(purchaseOrderInfo.availableBalance < order.get('amountRemainingForPayment')) {
@@ -1009,7 +1009,7 @@
                 if(me.isPurchaseOrderEnabled()) {
                     me.selectPaymentType(me, 'PurchaseOrder');
                 } else {
-                    me.selectPaymentType('paymentType', 'CreditCard');
+                    me.selectPaymentType(me, 'CreditCard');
                     if (me.savedPaymentMethods() && me.savedPaymentMethods().length > 0) {
                         me.set('usingSavedCard', true);
                     }
