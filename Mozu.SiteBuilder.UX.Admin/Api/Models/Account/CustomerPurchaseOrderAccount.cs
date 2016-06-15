@@ -10,6 +10,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.Models.Account
     {
         public int AccountId { get; set; }
         public decimal AvailableBalance { get; set; }
+        public decimal TotalAvailableBalance { get; set; }
         public decimal CreditLimit { get; set; }
         public List<PurchaseOrderPaymentTerm> CustomerPurchaseOrderPaymentTerms { get; set; }
         public int? Id { get; set; }
