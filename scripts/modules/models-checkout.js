@@ -857,13 +857,21 @@
                 }
                 //refresh ui when split payment is working?
             },
+            isPurchaseOrderEnabled: function() {
+                var purchaseOrderInfo = order.get('customer').get('purchaseOrder'),
+                    purchaseOrderSiteSettings = HyprLiveContext.locals.siteContext.checkoutSettings.purchaseOrder ?
+                        HyprLiveContext.locals.siteContext.checkoutSettings.purchaseOrder.isEnabled : false,
+                    purchaseOrderCustomerEnabled = purchaseOrderInfo ? purchaseOrderInfo.isEnabled : false,
+                    customerAvailableBalance = purchaseOrderCustomerEnabled ? purchaseOrderInfo.availableBalance > 0 : false,
+                    purchaseOrderEnabled = purchaseOrderSiteSettings && purchaseOrderCustomerEnabled && customerAvailableBalance;
+
+                return purchaseOrderEnabled;
+            },
             setPurchaseOrderInfo: function() {
                 var me = this,
                     order = me.getOrder(),
                     purchaseOrderInfo = order.get('customer').get('purchaseOrder'),
-                    purchaseOrderSiteSettings = HyprLiveContext.locals.siteContext.checkoutSettings.purchaseOrder ?
-                        HyprLiveContext.locals.siteContext.checkoutSettings.purchaseOrder.isEnabled : false,
-                    purchaseOrderEnabled = purchaseOrderSiteSettings && purchaseOrderInfo?purchaseOrderInfo.isEnabled : false,
+                    purchaseOrderEnabled = this.isPurchaseOrderEnabled(),
                     currentPurchaseOrder = me.get('purchaseOrder'),
                     siteId = require.mozuData('checkout').siteId;
 
@@ -938,10 +946,6 @@
                         currentPurchaseOrder.set('usingBillingContact', true);
                     }
                 }
-
-                if(!this.get('paymentTerm')) {
-                    this.selectPaymentType(this, 'PurchaseOrder');
-                }
             },
             setPurchaseOrderPaymentTerm: function(termCode) {
                 var currentPurchaseOrder = this.get('purchaseOrder'),
@@ -958,16 +962,13 @@
                     //set purchaseOrder defaults here.
                     me.setPurchaseOrderInfo();
                     me.getPaymentTypeFromCurrentPayment();
-                    // if we aren't using a purchase order, we don't want to do this stuff.
-                    if(me.get('paymentType') && me.get('paymentType').toLowerCase() !== 'purchaseorder') {
-                        
-                        var savedCardId = me.get('card.paymentServiceCardId');
-                        me.set('savedPaymentMethodId', savedCardId, { silent: true });
-                        me.setSavedPaymentMethod(savedCardId);
 
-                        if (!savedCardId) {
-                            me.setDefaultPaymentType(me);
-                        }
+                    var savedCardId = me.get('card.paymentServiceCardId');
+                    me.set('savedPaymentMethodId', savedCardId, { silent: true });
+                    me.setSavedPaymentMethod(savedCardId);
+
+                    if (!savedCardId) {
+                        me.setDefaultPaymentType(me);
                     }
 
                     me.on('change:usingSavedCard', function (me, yes) {
@@ -1003,9 +1004,13 @@
                 me.get('purchaseOrder').selected = newPaymentType === 'PurchaseOrder';
             },
             setDefaultPaymentType: function(me) {
-                me.set('paymentType', 'CreditCard');
-                if (me.savedPaymentMethods() && me.savedPaymentMethods().length > 0) {
-                    me.set('usingSavedCard', true);
+                if(me.isPurchaseOrderEnabled()) {
+                    me.selectPaymentType(me, 'PurchaseOrder');
+                } else {
+                    me.selectPaymentType('paymentType', 'CreditCard');
+                    if (me.savedPaymentMethods() && me.savedPaymentMethods().length > 0) {
+                        me.set('usingSavedCard', true);
+                    }
                 }
             },
             calculateStepStatus: function () {
@@ -1043,7 +1048,7 @@
                                 'postalOrZipCode',
                                 'stateOrProvince') : {}
                         }),
-                        card: _.extend(_.pick(obj.card,
+                        card: obj.card ? _.extend(_.pick(obj.card,
                             'expireMonth',
                             'expireYear',
                             'nameOnCard',
@@ -1053,7 +1058,8 @@
                             cardNumber: obj.card.cardNumberPartOrMask || obj.card.cardNumberPart || obj.card.cardNumber,
                             id: obj.card.paymentServiceCardId || obj.card.id,
                             isCardInfoSaved: obj.card.isCardInfoSaved || false
-                        }),
+                        }) : {},
+                        purchaseOrder: obj.purchaseOrder || {},
                         check: obj.check || {}
                     };
                 }

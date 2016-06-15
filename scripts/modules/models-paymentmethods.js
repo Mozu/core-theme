@@ -257,11 +257,10 @@
 
                     if(field.isRequired) {
                         this.validation['pOCustomField-'+field.code] =
-                            {fn: function(value, attr) {
-                                if(!value) {
-                                    return field.label+ " " + Hypr.getLabel('missing');
-                                }
-                            }};
+                            {
+                                fn: 'present',
+                                msg: field.label+ " " + Hypr.getLabel('missing')
+                            };
                     }
                 }
             }, this);
