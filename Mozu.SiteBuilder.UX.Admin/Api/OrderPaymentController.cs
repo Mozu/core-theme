@@ -7,6 +7,7 @@ using Mozu.Core.Api.Routing;
 using Mozu.SiteBuilder.Mvc.Extensions;
 using Mozu.SiteBuilder.UX.Admin.Api.Models;
 using Mozu.SiteBuilder.UX.Admin.Api.Models.Order;
+using Newtonsoft.Json.Linq;
 using DCp = Mozu.CommerceRuntime.Contracts.Payments;
 
 namespace Mozu.SiteBuilder.UX.Admin.Api
@@ -112,6 +113,9 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
             public string PaymentId { get; set; }
             public decimal Amount { get; set; }
             public string Reason { get; set; }
+            //flag for PO orders
+            public bool RefundToAvailableBalance { get; set; }
+          
         }
         /// <summary>
         /// Performs the "CreditPayment" action on a payment where money has been captured.
@@ -124,7 +128,8 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
             {
                 ActionName = "CreditPayment",
                 CurrencyCode = SbApiContext.CurrencyCode,
-                Amount = args.Amount
+                Amount = args.Amount,
+                Data = new JObject(new JProperty("RefundToAvailableBalance",args.RefundToAvailableBalance))
             };
 
             var order = (await _orderWebApiClient.PerformPaymentAction(args.OrderId, args.PaymentId, action)).ReadAsSync();
