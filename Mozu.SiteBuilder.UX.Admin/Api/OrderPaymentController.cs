@@ -19,6 +19,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
             public string OrderId { get; set; }
             public string PaymentId { get; set; }
             public decimal Amount { get; set; }
+            public string Notes { get; set; }
         }
         /// <summary>
         /// Performs the "CapturePayment" action on an authorized payment.
@@ -33,7 +34,8 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
 //              if not provided, commerceruntime defers to what's provisioned for the tenant
                 CurrencyCode = SbApiContext.CurrencyCode,
                 Amount = args.Amount,
-                ReferenceSourcePaymentId = null
+                ReferenceSourcePaymentId = null,
+                Data = new JObject(new JProperty("Notes",args.Notes))
             };
 
             var order = (await _orderWebApiClient.PerformPaymentAction(args.OrderId, args.PaymentId, action)).ReadAsSync();
