@@ -15,6 +15,8 @@ Ext.define('Taco.core.ux.window.Modal', {
     extend: 'Taco.core.ux.window.Window',
     alias: 'widget.taco-modal',
 
+    requires: ['Taco.core.ux.plugins.NextPrevious'],
+
     /**
      * @cfg {Object} actionBar
      * Optional configuration for the internal action toolbar. If present, this is passed straight through to the
@@ -79,6 +81,8 @@ Ext.define('Taco.core.ux.window.Modal', {
     },
 
     showActionsBar: true,
+
+    enableNextPrevious: false,
 
     constructor: function (config) {
         var actions,
@@ -168,6 +172,19 @@ Ext.define('Taco.core.ux.window.Modal', {
                 me.initKeyMap();
             }, me)
         }
+
+        // this plugin will auto select the first record in the grid and manage reselection of the selected item after a store load
+        if (this.enableNextPrevious == true) {
+            this.plugins = this.plugins || [];
+
+            var nextPreviousConfig = Ext.applyIf(this.nextPreviousCfg, {
+                ptype: "nextprevious",
+                enableNextPrevious: this.enableNextPrevious
+            })
+            
+
+            this.plugins.push(nextPreviousConfig);
+        };
 
         me.callParent(arguments);
 

@@ -8,8 +8,14 @@ Ext.define('Taco.view.priceList.modal.PriceEntryEditor', {
 
     requires: [
         'Taco.view.priceList.entry.PriceEntryGeneral',
-        'Taco.view.priceList.entry.PriceEntryPrice'
+        'Taco.view.priceList.entry.PriceEntryPrice',
+        'Taco.core.ux.plugins.NextPrevious'
     ],
+
+/*    plugins: [{
+        ptype: 'nextprevious',
+        enableNextPrevious: true
+    }],*/
 
     // this should really be the default;
     closeAction: 'destroy',
@@ -129,6 +135,7 @@ Ext.define('Taco.view.priceList.modal.PriceEntryEditor', {
 
         me.pricePanel = Ext.create('Taco.view.priceList.entry.PriceEntryPrice', {
             record: me.record,
+            parentContainer: me,
             currencyCode: !me.record.phantom
                             ? me.record.get('currencyCode')
                             : Taco.app.context.getMasterCatalog().currencyCode

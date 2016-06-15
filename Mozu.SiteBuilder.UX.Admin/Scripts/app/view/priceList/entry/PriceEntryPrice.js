@@ -121,20 +121,7 @@ Ext.define('Taco.view.priceList.entry.PriceEntryPrice', {
             }]
         });
 
-        var entries = Ext.Array.sort(this.record.get('priceEntries'), function(a, b) {
-            return a.minQty > b.minQty;
-        });
-
-        if (entries.length === 0) {
-            entries.push({
-                minQty: 1
-            });
-        }
-
-        Ext.Array.each(entries, function(entry, index) {
-            entry.showRemove = index !== 0;
-            me.basicEntries.add(me.getNewRow(entry));
-        });
+        me.loadEntries(this.record.get('priceEntries'))
 
         me.msrpOverride = Ext.widget('overridefield', {
             fieldCfg: {
@@ -473,7 +460,8 @@ Ext.define('Taco.view.priceList.entry.PriceEntryPrice', {
             hideTrigger: true,
             value: entry.minQty,
             margin: '0 20 0 0',
-            flex: 0.5
+            flex: 0.5,
+            minValue: 1
         });
 
         row.priceOverride = Ext.widget('overridefield', {
@@ -622,6 +610,25 @@ Ext.define('Taco.view.priceList.entry.PriceEntryPrice', {
         }
     },
 
+    loadEntries: function(entries) {
+        var me = this;
+        me.basicEntries.removeAll();
+        entries = Ext.Array.sort(entries, function(a, b) {
+            return a.minQty > b.minQty;
+        });
+
+        if (entries.length === 0) {
+            entries.push({
+                minQty: 1
+            });
+        }
+
+        Ext.Array.each(entries, function(entry, index) {
+            entry.showRemove = index !== 0;
+            me.basicEntries.add(me.getNewRow(entry));
+        });
+    },
+
     onProductChanged: function (data) {
         if (!data){
             data = {};
@@ -663,6 +670,7 @@ Ext.define('Taco.view.priceList.entry.PriceEntryPrice', {
         this.currentRestrictionStartDate.setValue(Ext.util.Format.date(record.get('currentDiscountsRestrictedStartDate'), 'd M, Y, g:i a'));
         this.currentRestrictionEndDate.setValue(Ext.util.Format.date(record.get('currentDiscountsRestrictedEndDate'), 'd M, Y, g:i a'));
 
+        this.loadEntries(record.get('priceEntries'));
         this.updateExtras(record.get('extras'));
         this.injectExtrasTab(record);
         this.populatePricingTable(record);
@@ -678,7 +686,8 @@ Ext.define('Taco.view.priceList.entry.PriceEntryPrice', {
     populatePricingTable: function(record) {
         var store = this.pricingStore;
         store.removeAll();
-        var entries = record.get('productInCatalogInfo');
+        var entries = record.get('productInCatalogInfo') || [];
+        //if (!entries) { return; }
         Ext.Array.each(entries, function(entry) {
             entry.cost = record.get('currentCost');
             entry.discountsRestricted = record.get('currentDiscountsRestricted');

@@ -285,6 +285,9 @@ Ext.define('Taco.view.priceList.entry.PriceEntryGeneral', {
         }
         this.productPickerField.setValue(record.get('productCode'));
         this.productPickerField.inputMask.show(comboDisplay);
+
+        this.effectiveDate.setValue(record.get('startDate'));
+        this.expirationDate.setValue(record.get('endDate'));
     },
 
     // after product is selected in the productPickerfield but before the combo is closed;

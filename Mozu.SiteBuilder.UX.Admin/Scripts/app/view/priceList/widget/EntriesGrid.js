@@ -556,8 +556,9 @@ Ext.define('Taco.view.priceList.widget.EntriesGrid', {
 
     createPopup: function (record, isNew) {
         var me = this;
-        Ext.create('Taco.view.priceList.modal.PriceEntryEditor', {
+        me.editor = Ext.create('Taco.view.priceList.modal.PriceEntryEditor', {
             record: record,
+            store: me.store,
             itemId: 'PriceEntryEditor',
             parentForm: this,
             isCreateMode: isNew,
@@ -565,6 +566,19 @@ Ext.define('Taco.view.priceList.widget.EntriesGrid', {
             actions: (!me.allowUpdate)
                 ? [{ xtype: 'button', itemId: 'secondaryAction'}]
                 : [
+                    {
+                        xtype: 'taco.prevnext',
+                        canNavigateToNext: true,
+                        canNavigateToPrevious: true,
+                        itemId: 'prevnextorder',
+                        listeners: {
+                            navigateToNext: me.navigateToNext,
+                            navigateToPrevious: me.navigateToPrevious,
+                            scope: me
+                        },
+                        record: record,
+                        store: me.store
+                    },
                     { xtype: 'button', itemId: 'secondaryAction'},
                     {
                         xtype: 'splitbutton',
@@ -635,6 +649,63 @@ Ext.define('Taco.view.priceList.widget.EntriesGrid', {
 
     showMessage: function(msg, type) {
         Taco.app.fireEvent('setmessage', msg, type || 'success');
+    },
+
+    navigateTo:function (forward) {
+        var index = this.getIndexOfPriceListEntry(this.editor.record.getId()),
+            navToIndex = forward ? index + 1 : index - 1,
+            outOfIndexMeth = forward ? 'nextPage' : 'previousPage',
+            validCheck = forward ? 'canNavigateToNext' : 'canNavigateToPrevious',
+            rec;
+
+        if (!this[validCheck]())
+            return;
+
+        if (index != -1) {
+            this.setLoading();
+            rec = this.store.data.getAt(navToIndex);
+            if (rec) {
+                this.editor.record = rec;
+                this.editor.loadRecord();
+                this.setLoading(false);
+                //Taco.core.StateManager.attemptNavigate('/priceLists/edit/' + rec.getId());
+            } else {
+                this.store[outOfIndexMeth]({
+                    scope: this,
+                    callback: function () {
+                        this.setLoading(false);
+                        navToIndex = forward ? 0: this.store.count() - 1;
+                        rec = this.store.data.getAt(navToIndex);
+                        if (rec) {
+                            Taco.core.StateManager.attemptNavigate('/priceLists/edit/' + rec.getId());
+                        }
+                    }
+                });
+            }
+
+        }
+    },
+    canNavigateToNext:function() {
+        var index = this.getIndexOfPriceListEntry(this.editor.record.getId());
+        return this.store.getTotalCount() > 1 && index < this.store.getTotalCount() ;
+    },
+    canNavigateToPrevious: function () {
+        var index = this.getIndexOfPriceListEntry(this.editor.record.getId());
+        return index != 0;
+    },
+    navigateToPrevious: function () {
+        this.navigateTo(false);
+    },
+    navigateToNext: function () {
+        this.navigateTo(true);
+    },
+    getIndexOfPriceListEntry: function(compositeKey, store) {
+        store = store || this.store;
+        var index = store.findBy(function(record) {
+            var key = record.get('compositeKey');
+            return key.currencyCode === compositeKey.currencyCode && key.priceListCode === compositeKey.priceListCode && key.productCode === compositeKey.productCode && key.startDate.toString() == compositeKey.startDate.toString();
+        });
+        return index;
     }
 
 });
