@@ -1,38 +1,26 @@
 ﻿<div class="mz-messagebar" data-mz-message-bar>
     {% if model.length > 0 %}
-        {% with model|first as firstItem %}
-        
-        {% if firstItem.messageType and firstItem.messageType == "exclusivePricelist" %}
-        <ul class="is-showing mz-infos">
-            {% for msg in model %}
-                <li class="mz-message-item" >{{ labels|prop(msg.messageType) }}</li>
-                <ul>
-                    {% for itemsRemoved in msg.productsRemoved %}
-                    <li class="mz-message-item">{{itemsRemoved.name}} ({% if itemsRemoved.variationProductCode %}{{itemsRemoved.variationProductCode}}{%else%}{{itemsRemoved.productCode}}{%endif%})</li>
-                    {% endfor %}
+        {% for msg in model %}
+            {% if msg.messageType and msg.messageType == "exclusivePricelist" %}
+                <ul class="is-showing mz-infos">
+                    <li class="mz-message-item" >{{ labels|prop(msg.messageType) }}</li>
+                    <ul>
+                        {% for itemsRemoved in msg.productsRemoved %}
+                        <li class="mz-message-item">{{itemsRemoved.name}} ({% if itemsRemoved.variationProductCode %}{{itemsRemoved.variationProductCode}}{%else%}{{itemsRemoved.productCode}}{%endif%})</li>
+                        {% endfor %}
+                    </ul>
                 </ul>
-            {% endfor %}
-        </ul>
-        {% else %}
-
-        {% if firstItem.messageType and firstItem.messageType == "newPricelist" %}
-        <ul class="is-showing mz-success">
-            {% for msg in model %}
-                <li class="mz-message-item" >{{ labels|prop(msg.messageType) }}</li>
-            {% endfor %}
-        </ul>
-        {% else %}
-
-        <ul class="is-showing mz-errors">
-            {% for msg in model %}
-                <li class="mz-message-item" >{{ msg.message }}</li>
-            {% endfor %}
-        </ul>
-        {% endif %}
-
-        {% endif %}
-
-        {% endwith %}
-
+            {% else %}
+                {% if msg.messageType and msg.messageType == "newPricelist" %}
+                    <ul class="is-showing mz-success">
+                        <li class="mz-message-item" >{{ labels|prop(msg.messageType) }}</li>
+                    </ul>
+                {% else %}
+                    <ul class="is-showing mz-errors">
+                        <li class="mz-message-item" >{{ msg.message }}</li>
+                    </ul>
+                {% endif %}
+            {% endif %}
+        {% endfor %}
     {% endif %}
 </div>
