@@ -19,6 +19,9 @@ define(['jquery', 'shim!modules/jquery-simple-datetimepicker[jquery=jquery]>jque
             };
         },
         ButtonHandler = function(selector) {
+            if (!selector) {
+                return;
+            }
             this.handler = $(selector);
             this.urlBar = $('#mz-url-copy');
         },
