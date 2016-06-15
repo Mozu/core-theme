@@ -14,7 +14,7 @@ Ext.define('Taco.view.order.modal.CreditPayment', {
             amountCredited = this.record.get('amountCredited'),
             amountRefunded = this.record.get('amountRefunded'),
             availableForCredit = Math.max(amountCollected - amountCredited - amountRefunded, 0),
-            poCheckbox = this.record.get('paymentType') == 'PurchaseOrder'
+            poCheckbox = this.record.get('paymentType') === 'PurchaseOrder'
                          ? {
                                 xtype: 'checkbox',
                                 name: 'creditToPurchaseOrders',
@@ -69,11 +69,13 @@ Ext.define('Taco.view.order.modal.CreditPayment', {
     doSave: function () {
         var me = this,
             fmValues = this.form.getValues(),
+            shouldCreditPo = fmValues.creditToPurchaseOrders ? fmValues.creditToPurchaseOrders : null,
             data = {
                 orderId: me.order.getId(),
                 paymentId: me.record.getId(),
                 amount: fmValues.amount,
-                reason: fmValues.reason
+                reason: fmValues.reason,
+                refundToAvailableBalance: shouldCreditPo
             };
         
         me.setLoading({
