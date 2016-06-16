@@ -277,10 +277,7 @@ Ext.define('Taco.view.order.modal.AddPurchaseOrder', {
             paymentTermsItem = terms[0],
             termsContent = [];
 
-        console.log(me.record)
-
-        if (typeof terms === 'string') {
-            console.log('it ISN\'T an array')
+        if (!terms.isArray) {
             me.record.checkoutSettings.get('purchaseOrder').paymentTerms.forEach(function (desc) {
                 if (desc.code == paymentTermsItem.code) {
                     paymentTermsItem.description = desc.description;
@@ -314,13 +311,13 @@ Ext.define('Taco.view.order.modal.AddPurchaseOrder', {
          * Otherwise, show a select input with each option
          */
         if (terms.length > 1) {
-            console.log('it IS an array')
             terms.forEach(function (term) {
-                console.log(term)
                 me.record.checkoutSettings.get('purchaseOrder').paymentTerms.forEach(function (desc) {
                     if (desc.code == term.code) {
-                        console.log(desc)
                         term.description = desc.description;
+                    } else {
+                        console.log(desc)
+                        console.log(term)
                     }
                 });
                 termsContent.push([term.description, term.code]);
