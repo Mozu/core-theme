@@ -278,7 +278,7 @@ Ext.define('Taco.view.order.modal.AddPurchaseOrder', {
             termsContent = [];
 
         if (!terms.isArray) {
-            me.record.checkoutSettings.get('purchaseOrder').paymentTerms.forEach(function (desc) {
+            me.record.customer.raw.purchaseOrderAccount.customerPurchaseOrderPaymentTerms.forEach(function (desc) {
                 if (desc.code == paymentTermsItem.code) {
                     paymentTermsItem.description = desc.description;
                 }
@@ -312,7 +312,7 @@ Ext.define('Taco.view.order.modal.AddPurchaseOrder', {
          */
         if (terms.length > 1) {
             terms.forEach(function (term) {
-                me.record.checkoutSettings.get('purchaseOrder').paymentTerms.forEach(function (desc) {
+                me.record.customer.raw.purchaseOrderAccount.customerPurchaseOrderPaymentTerms.forEach(function (desc) {
                     if (desc.code == term.code) {
                         term.description = desc.description;
                     }
