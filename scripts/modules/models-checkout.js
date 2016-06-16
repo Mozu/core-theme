@@ -846,7 +846,7 @@
                 var me = this,
                     order = me.getOrder(),
                     currentPurchaseOrder = this.get('purchaseOrder'),
-                    pOAvailableBalance = currentPurchaseOrder.get('availableBalance'),
+                    pOAvailableBalance = currentPurchaseOrder.get('totalAvailableBalance'),
                     orderAmountRemaining = order.get('amountRemainingForPayment'),
                     amount = pOAvailableBalance > orderAmountRemaining ?
                         orderAmountRemaining : pOAvailableBalance;
@@ -907,6 +907,7 @@
                     currentPurchaseOrder.set('amount', amount);
                 }
 
+                currentPurchaseOrder.set('totalAvailableBalance', purchaseOrderInfo.totalAvailableBalance);
                 currentPurchaseOrder.set('availableBalance', purchaseOrderInfo.availableBalance);
                 currentPurchaseOrder.set('creditLimit', purchaseOrderInfo.creditLimit);
 
