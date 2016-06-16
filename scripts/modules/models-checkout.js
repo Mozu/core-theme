@@ -1013,7 +1013,7 @@
                 me.get('card').selected = newPaymentType === 'CreditCard';
                 me.get('purchaseOrder').selected = newPaymentType === 'PurchaseOrder';
                 if(newPaymentType === 'PurchaseOrder') {
-                    me.setPurchaseOrderBillingInfo()
+                    me.setPurchaseOrderBillingInfo();
                 }
             },
             setDefaultPaymentType: function(me) {
