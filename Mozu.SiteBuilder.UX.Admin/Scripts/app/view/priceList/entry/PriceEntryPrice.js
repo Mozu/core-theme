@@ -270,8 +270,8 @@ Ext.define('Taco.view.priceList.entry.PriceEntryPrice', {
             },
             items: [
                 me.mapOverride,
-                me.createCurrentWidget(me.mapStartDate, me.currentMapStartDate),
-                me.createCurrentWidget(me.mapEndDate, me.currentMapEndDate)
+                me.mapStartDate,
+                me.mapEndDate
             ]
         });
 
@@ -291,9 +291,9 @@ Ext.define('Taco.view.priceList.entry.PriceEntryPrice', {
                 flex: 1
             },
             items: [
-                me.createCurrentWidget(me.discountRestriction, me.currentRestriction), //, '0 50 0 0'),
-                me.createCurrentWidget(me.restrictionStartDate, me.currentRestrictionStartDate), //, '0 50 0 0'),
-                me.createCurrentWidget(me.restrictionEndDate, me.currentRestrictionEndDate)
+                me.discountRestriction,
+                me.restrictionStartDate,
+                me.restrictionEndDate
             ]
         });
 
@@ -571,23 +571,7 @@ Ext.define('Taco.view.priceList.entry.PriceEntryPrice', {
         return rowForm;
 
     },
-
-    createCurrentWidget: function(overrideField, currentVal) { // ,margin) {
-        //margin = margin || '0';
-        return {
-            xtype: 'fieldcontainer',
-            layout: {
-                type: 'vbox',
-                align: 'stretch'
-            },
-            //padding: margin,
-            items: [
-                overrideField,
-                currentVal
-            ]
-        };
-    },
-    
+ 
     updateExtras: function (data) {
         if (!data) {
             data = [];
