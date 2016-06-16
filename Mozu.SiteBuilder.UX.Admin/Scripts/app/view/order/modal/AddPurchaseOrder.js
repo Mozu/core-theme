@@ -278,10 +278,12 @@ Ext.define('Taco.view.order.modal.AddPurchaseOrder', {
             termsContent = [];
 
         if (!terms.isArray) {
-            me.record.customer.raw.purchaseOrderAccount.customerPurchaseOrderPaymentTerms.forEach(function (desc) {
-                if (desc.code == paymentTermsItem.code) {
-                    paymentTermsItem.description = desc.description;
-                }
+            me.record.customer.raw.purchaseOrderAccount.customerPurchaseOrderPaymentTerms.forEach(function (userTerm) {
+                me.record.checkoutSettings.get('purchaseOrder').paymentTerms.forEach(function (desc) {
+                    if (desc.code == userTerm.code) {
+                        paymentTermsItem.description = desc.description;
+                    }
+                });
             });
         }
 
@@ -312,7 +314,7 @@ Ext.define('Taco.view.order.modal.AddPurchaseOrder', {
          */
         if (terms.length > 1) {
             terms.forEach(function (term) {
-                me.record.customer.raw.purchaseOrderAccount.customerPurchaseOrderPaymentTerms.forEach(function (desc) {
+                me.record.checkoutSettings.get('purchaseOrder').paymentTerms.forEach(function (desc) {
                     if (desc.code == term.code) {
                         term.description = desc.description;
                     }
