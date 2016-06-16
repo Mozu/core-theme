@@ -315,12 +315,9 @@ Ext.define('Taco.view.order.modal.AddPurchaseOrder', {
                 me.record.checkoutSettings.get('purchaseOrder').paymentTerms.forEach(function (desc) {
                     if (desc.code == term.code) {
                         term.description = desc.description;
-                    } else {
-                        console.log(desc)
-                        console.log(term)
+                        termsContent.push([term.description, term.code]);
                     }
                 });
-                termsContent.push([term.description, term.code]);
             });
 
             return Ext.create('Ext.form.field.ComboBox', {
