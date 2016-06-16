@@ -277,7 +277,7 @@ Ext.define('Taco.view.order.modal.AddPurchaseOrder', {
             paymentTermsItem = terms[0],
             termsContent = [];
 
-        if (!terms.isArray) {
+        if (typeof terms === 'string') {
             console.log('it ISN\'T an array')
             me.record.checkoutSettings.get('purchaseOrder').paymentTerms.forEach(function (desc) {
                 if (desc.code == paymentTermsItem.code) {
