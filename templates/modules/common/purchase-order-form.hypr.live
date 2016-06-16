@@ -27,7 +27,7 @@
                         <select class="mz-l-formfieldgroup-halfsize" id="mz-payment-purchase-order-payment-terms" name="payment-terms" data-mz-value="{{ purchaseordercontext }}paymentTerm" data-mz-purchase-order-payment-term >
                             <option selected="selected" value="">{{labels.selectPurchaseOrderPaymentTerm}}</option>
                             {% for term in model.paymentTermOptions %}
-                                <option value="{{ term.code }}">{{ term.description }}</option>
+                                <option {% if model.paymentTerm.code == term.code %} selected="selected" {% endif %} value="{{ term.code }}">{{ term.description }}</option>
                             {% endfor %}
                         </select>
                     {% else %}

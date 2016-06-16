@@ -878,7 +878,7 @@
                     siteId = require.mozuData('checkout').siteId;
 
                 currentPurchaseOrder.set('isEnabled', purchaseOrderEnabled);
-                if(!purchaseOrderEnabled || purchaseOrderInfo.availableBalance <= 0) {
+                if(!purchaseOrderEnabled) {
                     // if purchase order isn't enabled, don't populate stuff!
                     return;
                 }
@@ -899,20 +899,18 @@
                     }
                 }
 
-                var contacts = order.get('customer').get('contacts');
-
                 // Set information, only if the current purchase order does not have it:
-                var amount = purchaseOrderInfo.availableBalance > order.get('amountRemainingForPayment') ?
-                        order.get('amountRemainingForPayment') : purchaseOrderInfo.availableBalance;
+                var amount = purchaseOrderInfo.totalAvailableBalance > order.get('amountRemainingForPayment') ?
+                        order.get('amountRemainingForPayment') : purchaseOrderInfo.totalAvailableBalance;
 
                 if(!currentPurchaseOrder.get('amount')) {
                     currentPurchaseOrder.set('amount', amount);
                 }
 
-                currentPurchaseOrder.set('availableBalance', purchaseOrderInfo.totalAvailableBalance);
+                currentPurchaseOrder.set('availableBalance', purchaseOrderInfo.availableBalance);
                 currentPurchaseOrder.set('creditLimit', purchaseOrderInfo.creditLimit);
 
-                if(purchaseOrderInfo.availableBalance < order.get('amountRemainingForPayment')) {
+                if(purchaseOrderInfo.totalAvailableBalance < order.get('amountRemainingForPayment')) {
                     currentPurchaseOrder.set('splitPayment', true);
                 }
 
@@ -937,15 +935,25 @@
                     currentPurchaseOrder.set('paymentTerm', paymentTerm);
                 }
 
-                if(contacts.length > 0) {
-                    var foundBillingContact = contacts.models.find(function(item){
-                        return item.get('isPrimaryBillingContact');
-                            
-                    });
+                this.setPurchaseOrderBillingInfo();
+            },
+            setPurchaseOrderBillingInfo: function() {
+                var me = this,
+                    order = me.getOrder(),
+                    purchaseOrderEnabled = this.isPurchaseOrderEnabled(),
+                    currentPurchaseOrder = me.get('purchaseOrder'),
+                    contacts = order.get('customer').get('contacts');
+                if(purchaseOrderEnabled) {
+                    if(currentPurchaseOrder.selected && contacts.length > 0) {
+                        var foundBillingContact = contacts.models.find(function(item){
+                            return item.get('isPrimaryBillingContact');
+                                
+                        });
 
-                    if(foundBillingContact) {
-                        this.set('billingContact', foundBillingContact, {silent: true});
-                        currentPurchaseOrder.set('usingBillingContact', true);
+                        if(foundBillingContact) {
+                            this.set('billingContact', foundBillingContact, {silent: true});
+                            currentPurchaseOrder.set('usingBillingContact', true);
+                        }
                     }
                 }
             },
@@ -1004,6 +1012,9 @@
                 me.get('check').selected = newPaymentType === 'Check';
                 me.get('card').selected = newPaymentType === 'CreditCard';
                 me.get('purchaseOrder').selected = newPaymentType === 'PurchaseOrder';
+                if(newPaymentType === 'PurchaseOrder') {
+                    me.setPurchaseOrderBillingInfo()
+                }
             },
             setDefaultPaymentType: function(me) {
                 if(me.isPurchaseOrderEnabled()) {
