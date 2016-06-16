@@ -350,7 +350,14 @@ Ext.define('Taco.view.order.widget.AddOrderItemToolbar', {
         }
 
         me.codeField.setValue(productCodeToAdd);
-        me.quantityField.setValue(1);
+        // TODO: Refactor with productConfig undefined check above.
+        if (productConfig.VolumePriceBands.length) {
+            var minQty = Ext.Array.min(Ext.Array.pluck(productConfig.VolumePriceBands, 'MinQty'));
+            me.quantityField.setValue(minQty);
+            me.quantityField.setMinValue(minQty);
+        } else {
+            me.quantityField.setValue(1);
+        }
         me.quantityField.enable();
         me.priceField.setValue(price);
         // cache the config object we will use to persist this new record;
@@ -383,35 +390,52 @@ Ext.define('Taco.view.order.widget.AddOrderItemToolbar', {
         // determine if we need to show the configurator
         if (isConfigurable) {
 
-
-
             win = Ext.create('Taco.view.order.modal.ProductConfigurator', {
                 productCode: productCode,
-                listeners: {                    
+                listeners: {
                     'aftersaveclose': {
-                        fn: function (cmp, configurationData) {
+                        fn: function(cmp, configurationData) {
                             combo.inputMask.show(record.get('productName'));
                             //combo.showInputMask(record.get('productName'));
                             this.onProductSelect(record, Ext.clone(configurationData));
                         },
-                        scope:this
-                    },                    
+                        scope: this
+                    },
                     'afterclose': {
-                        fn: function () {                            
+                        fn: function() {
                             //user cancelled the product configurator; Pass focus back to the product picker field
-                            
+
                             me.productPickerField.focus();
-                            
-                            
                         },
                         scope: this
                     }
                 }
             });
-
         } else {
+            var handleLoadFailure = function(response) {
+                var json = Ext.decode(response.responseText, true),
+                    msg = (json && json.message) ? json.message : 'Unable to load product information.';
+                Taco.app.fireEvent('setmessage', msg, 'error');
+                me.fireEvent('loadFailure');
+            }
+
             combo.inputMask.show(record.get('productName'));
-            this.onProductSelect(record);
+            // We still want to do configure product to get ProductRuntime info, like pricelist pricing and volume pricing bands.
+            Taco.model.Product.load(productCode, {
+                success: function (product) {
+                    product.configureRuntimeProduct({
+                        jsonData: { Options: [] },
+                        success: function (response) {
+                            var runtimeData = JSON.parse(response.responseText).items;
+                            this.onProductSelect(record, runtimeData);
+                        },
+                        failure: handleLoadFailure,
+                        scope: me
+                    });
+                },
+                failure: handleLoadFailure,
+                scope: me
+            });
         }
 
         // cancel the selection so that the same product can be reselected again;

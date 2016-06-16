@@ -570,7 +570,12 @@ Ext.define('Taco.view.order.Header', {
             },
             callback: function (options, success, response) {
                 if (!success) {
-                    Taco.app.fireEvent('setmessage', 'Failed to set Assign Customer Account to this Order');
+                    var message = 'Failed to assign customer account on this order.';
+                    try {
+                        var responseMessage = JSON.parse(response.responseText).message;
+                        message = message + ' ' + responseMessage;
+                    } catch (e) { } 
+                    Taco.app.fireEvent('setmessage', message, 'error');
                     console.error(options, response);
                     return;
                 }

@@ -208,7 +208,11 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
                 var updateResponse = await _orderWebApiClient.ChangeOrderPriceList(model.Id, null);
                 if (updateResponse.HasException)
                 {
-                    // TODO: Display an error message.
+                    // Changing pricelist could cause odd things to happen. For example:
+                    // - An exclusive pricelist is applied and all items are removed, resulting in an empty order.
+                    // - An item now has volume pricing applied but an item doesn't meet minimum quantity.
+                    // Dump them back to the cart to fix the problem. The error message should show on the cart page.
+                    return Redirect("/cart");
                 }
                 else
                 {
