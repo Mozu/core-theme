@@ -89,6 +89,7 @@ namespace Mozu.SiteBuilder.UX.Hypr.Tags
             var searchTuningRuleContext = arguments.GetValueOrDefault<string>("searchTuningRuleContext");
             var facetTemplateExclude = arguments.GetValueOrDefault<string>("facetTemplateExclude");
             var facetPrefix = arguments.GetValueOrDefault<string>("facetPrefix");
+            var responseOptions = arguments.GetValueOrDefault<string>("responseOptions");
             int? facetCategoryId;
             int? categoryId;
             GetCategoryCodes(arguments, context, pageContext, out facetCategoryId, out categoryId);
@@ -147,7 +148,8 @@ namespace Mozu.SiteBuilder.UX.Hypr.Tags
                 searchTuningRuleContext ,
                 facetTemplateExclude,
                 sbAPIContext.PriceListCode,
-                facetPrefix
+                facetPrefix,
+                responseOptions
              ).ConfigureAwait(false);
 
             var dict = new Dictionary<string, object> { { "model", pc } };
@@ -193,11 +195,13 @@ namespace Mozu.SiteBuilder.UX.Hypr.Tags
             string searchTuningRuleContext,
             string facetTemplateExclude,
             string priceList,
-            string facetPrefix
+            string facetPrefix,
+            string responseOptions
             )
         {
             string cacheKey = null;
-           
+            // todo: remove - Greg Murray on 2016-06-16 
+            responseOptions = "volumePriceBands";
             ProductSearchResult pc = null;
             if (cacheResults)
             {
@@ -219,6 +223,7 @@ namespace Mozu.SiteBuilder.UX.Hypr.Tags
                     .Append(facetTemplateExclude)
                     .Append (priceList)
                     .Append(facetPrefix)
+                    .Append(responseOptions)
                     .ToString();
 
                 pc = cache.Get<ProductSearchResult>(cacheKey, scope:CacheScope.Site , cacheType:StorefrontCacheTypes.ProductSearch);
@@ -237,6 +242,7 @@ namespace Mozu.SiteBuilder.UX.Hypr.Tags
                     startIndex: startIndex,
                     sortBy: sortBy.sortValue,
                     responseFields: responseFields,
+                    responseOptions: responseOptions,
                     pageSize: pageSize,
                     searchTuningRuleCode: searchTuningRuleCode,
                     enableSearchTuningRules: enableSearchTuningRules,

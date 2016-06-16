@@ -75,6 +75,8 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
             string facetHierValue = null;
             string facetHierDepth = null;
             string searchTuningRuleContext = null;
+            // todo: get from somewhere - Greg Murray on 2016-06-16 
+            string responseOptions = "volumePriceBands";
 
             string facets = null;
             int? pageSize = PageContext.Search.PageSize;
@@ -113,7 +115,7 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
                 }
             }
 
-            var searchResponse = (await _searchClient.Search(query, searchQuery.ToString(), facetHierValue: facetHierValue, facetTemplate: facetTemplate, facetHierDepth: facetHierDepth, facetValueFilter: PageContext.Search.ToFacetValueFilter(), startIndex: startIndex.Value, sortBy: PageContext.Search.SortBy, pageSize: pageSize.Value, facet: facets , searchTuningRuleContext: searchTuningRuleContext)).ReadAsSync();
+            var searchResponse = (await _searchClient.Search(query, searchQuery.ToString(), facetHierValue: facetHierValue, facetTemplate: facetTemplate, facetHierDepth: facetHierDepth, facetValueFilter: PageContext.Search.ToFacetValueFilter(), startIndex: startIndex.Value, sortBy: PageContext.Search.SortBy, pageSize: pageSize.Value, facet: facets, searchTuningRuleContext: searchTuningRuleContext, responseOptions:responseOptions)).ReadAsSync();
             var pc = Mapper.Map<ProductSearchResult>(searchResponse);
            
             pc.Init(true, this.PageContext.Search);
