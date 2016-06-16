@@ -275,9 +275,10 @@ Ext.define('Taco.view.order.modal.AddPurchaseOrder', {
             paymentTermsSelect = null,
             description,
             paymentTermsItem = terms[0],
-            termsContent = [];
+            termsContent = [],
+            siteId = me.record.get('siteId');
 
-        if (!terms.isArray) {
+        if (typeof terms == 'string') {
             me.record.checkoutSettings.get('purchaseOrder').paymentTerms.forEach(function (desc) {
                 if (desc.code == paymentTermsItem.code) {
                     paymentTermsItem.description = desc.description;
@@ -313,12 +314,49 @@ Ext.define('Taco.view.order.modal.AddPurchaseOrder', {
         if (terms.length > 1) {
             terms.forEach(function (term) {
                 me.record.checkoutSettings.get('purchaseOrder').paymentTerms.forEach(function (desc) {
-                    if (desc.code == term.code) {
+                    if (desc.code == term.code && term.siteId == siteId) {
                         term.description = desc.description;
                         termsContent.push([term.description, term.code]);
                     }
                 });
             });
+
+            if (termsContent.length == 1) {
+                var description = termsContent[0][0],
+                    value = termsContent[0][1];
+
+                content = {
+                    cls: 'taco-static-text',
+                    children: [
+                        {
+                            html: 'Payment Terms',
+                            tag: 'p'
+                        },
+                        {
+                            html: description,
+                            tag: 'h2'
+                        },
+                        {
+                            xtype: 'hiddenfield',
+                            name: 'paymentTerms',
+                            value: value
+                        }
+                    ],
+                    tag: 'span',
+                    value: paymentTermsItem.code
+                };
+
+                return Ext.widget({
+                    flex: 1,
+                    xtype: 'box',
+                    anchor: 0,
+                    margin: '20 0 10 0',
+                    itemId: 'paymentTerms',
+                    text: description,
+                    value: value,
+                    autoEl: content
+                });
+            }
 
             return Ext.create('Ext.form.field.ComboBox', {
                 fieldLabel: 'Payment Terms',
