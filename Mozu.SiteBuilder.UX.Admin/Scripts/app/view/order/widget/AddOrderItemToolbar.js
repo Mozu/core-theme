@@ -326,11 +326,12 @@ Ext.define('Taco.view.order.widget.AddOrderItemToolbar', {
     },
 
     // after a product is selected and optionaly configured (if product is configurable)
-    onProductSelect : function (record,productConfig){
-        var me = this,            
+    onProductSelect : function (record,productConfig) {
+        var me = this,
             productCode = record.get('productCode'),
             variationProductCode = (productConfig && productConfig.VariationProductCode) ? productConfig.VariationProductCode : '',
             productCodeToAdd = variationProductCode || productCode,
+            minQty = 1,
             price;
 
 
@@ -341,6 +342,12 @@ Ext.define('Taco.view.order.widget.AddOrderItemToolbar', {
             if (Ext.isObject(price)) {
                 price = price.SalePrice || price.Price;
             }
+
+            // Grab minimum quantity if volume pricing used.
+            var volumePriceBands = productConfig.VolumePriceBands || [];
+            if (volumePriceBands.length) {
+                minQty = Ext.Array.min(Ext.Array.pluck(productConfig.VolumePriceBands, 'MinQty'));
+            }
         } else {
             price = record.get('salePrice') || record.get('price');
             // need to create a product config since one wasn't passed in;
@@ -350,14 +357,8 @@ Ext.define('Taco.view.order.widget.AddOrderItemToolbar', {
         }
 
         me.codeField.setValue(productCodeToAdd);
-        // TODO: Refactor with productConfig undefined check above.
-        if (productConfig.VolumePriceBands.length) {
-            var minQty = Ext.Array.min(Ext.Array.pluck(productConfig.VolumePriceBands, 'MinQty'));
-            me.quantityField.setValue(minQty);
-            me.quantityField.setMinValue(minQty);
-        } else {
-            me.quantityField.setValue(1);
-        }
+        me.quantityField.setValue(minQty);
+        me.quantityField.setMinValue(minQty);
         me.quantityField.enable();
         me.priceField.setValue(price);
         // cache the config object we will use to persist this new record;
