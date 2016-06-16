@@ -121,7 +121,7 @@ Ext.define('Taco.view.priceList.entry.PriceEntryPrice', {
             }]
         });
 
-        me.loadEntries(this.record.get('priceEntries'))
+        me.loadEntries(this.record.get('priceEntries'));
 
         me.msrpOverride = Ext.widget('overridefield', {
             fieldCfg: {
@@ -254,9 +254,6 @@ Ext.define('Taco.view.priceList.entry.PriceEntryPrice', {
             }
         });
 
-        me.currentMapStartDate = Ext.widget('current-value-label', {});
-        me.currentMapEndDate = Ext.widget('current-value-label', {});
-
         me.mapRow = Ext.widget('panel', {
             flex: 1,
             layout: {
@@ -274,10 +271,6 @@ Ext.define('Taco.view.priceList.entry.PriceEntryPrice', {
                 me.mapEndDate
             ]
         });
-
-        me.currentRestriction = Ext.widget('current-value-label', {});
-        me.currentRestrictionStartDate = Ext.widget('current-value-label', {});
-        me.currentRestrictionEndDate = Ext.widget('current-value-label', {});
 
         me.discountRestrictionRow = Ext.widget('panel', {
             flex: 1,
@@ -305,10 +298,11 @@ Ext.define('Taco.view.priceList.entry.PriceEntryPrice', {
             title: 'Reference Pricing',
             store: me.pricingStore,
             margin: '40 0 0 0',
-            /*stateful: true,
-            stateId: 'priceListAdvancedPricingTable',*/
+            stateful: true,
+            stateId: 'priceListAdvancedPricingTable',
             columns: [{
                 dataIndex: 'catalog',
+                stateId: 'advCat',
                 flex: 2,
                 text: 'Catalog',
                 hideable: false,
@@ -317,6 +311,7 @@ Ext.define('Taco.view.priceList.entry.PriceEntryPrice', {
                 }
             }, {
                 dataIndex: 'msrp',
+                stateId: 'advMsrp',
                 flex: 1,
                 text: 'MSRP',
                 renderer: function(val, metaData, record, rowIndex, colIndex, store, view) {
@@ -326,15 +321,18 @@ Ext.define('Taco.view.priceList.entry.PriceEntryPrice', {
                 }
             }, {
                 dataIndex: 'cost',
+                stateId: 'advCost',
                 flex: 1,
                 text: 'Cost',
                 renderer: function(val, metaData, record, rowIndex, colIndex, store, view) {
+                    //todo:  should be cost currency code greg_murray on 6/16/2016
                     var currCode = record.get('isoCurrencyCode'),
                         currency = Taco.app.context.currencies[currCode.toLowerCase()];
                     return me.formatCurrency(val, currency);
                 }
             }, {
                 dataIndex: 'map',
+                stateId: 'advMap',
                 flex: 1,
                 text: 'MAP',
                 renderer: function(val, metaData, record, rowIndex, colIndex, store, view) {
@@ -344,6 +342,7 @@ Ext.define('Taco.view.priceList.entry.PriceEntryPrice', {
                 }
             }, {
                 dataIndex: 'mapStartDate',
+                stateId: 'advMapStart',
                 flex: 2,
                 text: 'MAP Start Date',
                 renderer: function(val, metaData, record, rowIndex, colIndex, store, view) {
@@ -351,6 +350,7 @@ Ext.define('Taco.view.priceList.entry.PriceEntryPrice', {
                 }
             }, {
                 dataIndex: 'mapEndDate',
+                stateId: 'advMapEnd',
                 flex: 2,
                 text: 'MAP End Date',
                 renderer: function(val, metaData, record, rowIndex, colIndex, store, view) {
@@ -358,6 +358,7 @@ Ext.define('Taco.view.priceList.entry.PriceEntryPrice', {
                 }
             }, {
                 dataIndex: 'discountsRestricted',
+                stateId: 'advDiscRestrict',
                 flex: 2,
                 hidden: true,
                 text: 'Discounts Restriction',
@@ -366,6 +367,7 @@ Ext.define('Taco.view.priceList.entry.PriceEntryPrice', {
                 }
             }, {
                 dataIndex: 'discountsRestrictedStartDate',
+                stateId: 'advDiscRestrictStart',
                 flex: 2,
                 hidden: true,
                 text: 'Discounts Restriction Start Date',
@@ -374,6 +376,7 @@ Ext.define('Taco.view.priceList.entry.PriceEntryPrice', {
                 }
             }, {
                 dataIndex: 'discountsRestrictedEndDate',
+                stateId: 'advDiscRestrictEnd',
                 flex: 2,
                 hidden: true,
                 text: 'Discounts Restriction End Date',
@@ -619,13 +622,8 @@ Ext.define('Taco.view.priceList.entry.PriceEntryPrice', {
         }
         this.record.set('productInCatalogInfo', data.productInCatalogInfo);
         this.record.set('productCode', data.productCode);
-        this.record.set('currentListPrice', data.currentListPrice);
-        this.record.set('currentSalePrice', data.currentSalePrice);
+        this.record.set('currentCostCurrencyCode', data.currentCostCurrencyCode);
         this.record.set('currentCost', data.currentCost);
-        this.record.set('currentMap', data.currentMap);
-        this.record.set('currentMapStartDate', data.currentMapStartDate);
-        this.record.set('currentMapEndDate', data.currentMapEndDate);
-        this.record.set('currentMsrp', data.currentMsrp);
         this.record.set('currentDiscountsRestricted', data.currentDiscountsRestricted);
         this.record.set('currentDiscountsRestrictedStartDate', data.currentDiscountsRestrictedStartDate);
         this.record.set('currentDiscountsRestrictedEndDate', data.currentDiscountsRestrictedEndDate);
@@ -640,20 +638,15 @@ Ext.define('Taco.view.priceList.entry.PriceEntryPrice', {
         this.record.set('isVariation', true);
         this.record.set('productCode', data.productCode);
         this.record.set('productInCatalogInfo', data.productInCatalogInfo);
-        this.record.set('currentListPrice', data.currentListPrice);
-        this.record.set('currentSalePrice', data.currentSalePrice);
         this.record.set('currentCost', data.currentCost);
-        this.record.set('currentMsrp', data.currentMsrp);
+        this.record.set('currentCostCurrencyCode', data.currentCostCurrencyCode);
+        this.record.set('currentDiscountsRestricted', data.currentDiscountsRestricted);
+        this.record.set('currentDiscountsRestrictedStartDate', data.currentDiscountsRestrictedStartDate);
+        this.record.set('currentDiscountsRestrictedEndDate', data.currentDiscountsRestrictedEndDate);
         this.onPriceEntryLoaded(this.record);
     },
 
     onPriceEntryLoaded: function (record) {
-        this.currentMapStartDate.setValue(Ext.util.Format.date(record.get('currentMapStartDate'), 'd M, Y, g:i a'));
-        this.currentMapEndDate.setValue(Ext.util.Format.date(record.get('currentMapEndDate'), 'd M, Y, g:i a'));
-        this.currentRestriction.setValue(record.get('currentDiscountsRestricted'));
-        this.currentRestrictionStartDate.setValue(Ext.util.Format.date(record.get('currentDiscountsRestrictedStartDate'), 'd M, Y, g:i a'));
-        this.currentRestrictionEndDate.setValue(Ext.util.Format.date(record.get('currentDiscountsRestrictedEndDate'), 'd M, Y, g:i a'));
-
         this.loadEntries(record.get('priceEntries'));
         this.updateExtras(record.get('extras'));
         this.injectExtrasTab(record);
@@ -674,8 +667,9 @@ Ext.define('Taco.view.priceList.entry.PriceEntryPrice', {
         //if (!entries) { return; }
         Ext.Array.each(entries, function(entry) {
             entry.cost = record.get('currentCost');
+            entry.currentCostCurrencyCode = record.get('currentCostCurrencyCode');
             entry.discountsRestricted = record.get('currentDiscountsRestricted');
-            entry.discountsRestrictedStartDate = record.get('currentDiscountsRestrictedEndDate');
+            entry.discountsRestrictedStartDate = record.get('currentDiscountsRestrictedStartDate');
             entry.discountsRestrictedEndDate = record.get('currentDiscountsRestrictedEndDate');
         });
         store.add(entries);

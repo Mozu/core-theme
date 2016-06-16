@@ -97,13 +97,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.Models.PriceLists
 
         #region Current
 
-        public List<ProductInCatalogInfo> ProductInCatalogInfo { get; set; } 
-
-        public string CurrentPriceCurrencyCode { get; set; }
-
-        public Decimal? CurrentListPrice { get; set; }
-
-        public Decimal? CurrentSalePrice { get; set; }
+        public List<ProductInCatalogInfo> ProductInCatalogInfo { get; set; }
 
         /// <summary>
         /// Default is false, when true dates may apply, null dates mean beginning/end of time
@@ -120,34 +114,10 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.Models.PriceLists
         /// </summary>
         public DateTime? CurrentDiscountsRestrictedEndDate { get; set; }
 
-        /// <summary>
-        /// Manufacturer Suggested Retail Price
-        /// </summary>
-        [JsonProperty(DefaultValueHandling = DefaultValueHandling.Ignore, PropertyName = "currentMsrp")]
-        public decimal? CurrentMSRP { get; set; }
 
         public string CurrentCostCurrencyCode { get; set; }
 
         public decimal? CurrentCost { get; set; }
-
-        /// <summary>
-        /// Minimum Advertised Price
-        /// </summary>
-        [JsonProperty(DefaultValueHandling = DefaultValueHandling.Ignore, PropertyName = "currentMap")]
-        public decimal? CurrentMAP { get; set; }
-
-        /// <summary>
-        /// Minimum Advertised Price Start Date
-        /// </summary>
-        [JsonProperty(DefaultValueHandling = DefaultValueHandling.Ignore, PropertyName = "currentMapStartDate")]
-        public DateTime? CurrentMAPStartDate { get; set; }
-
-        /// <summary>
-        /// Minimum Advertised Price End Date
-        /// </summary>
-        [JsonProperty(DefaultValueHandling = DefaultValueHandling.Ignore, PropertyName = "currentMapEndDate")]
-        public DateTime? CurrentMAPEndDate { get; set; }
-
         #endregion
 
         #region AuditInfo

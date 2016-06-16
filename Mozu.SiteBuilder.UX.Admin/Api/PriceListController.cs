@@ -209,8 +209,8 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
             }
 
             var dcProduct = await GetProduct(productCode);
-            AddCurrentPrices(priceListEntry, dcProduct);
-            AddCurrentProductCatalogInfo(priceListEntry, dcProduct);
+            AddMasterCatalogData(priceListEntry, dcProduct);
+            AddReferenceProductCatalogInfo(priceListEntry, dcProduct);
 
             var lookup = (priceListEntry.Extras.IsNullOrEmpty())
                 ? new Dictionary<string, PriceListEntryExtra>()
@@ -237,13 +237,11 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
             DC.Product baseProduct = await GetBaseProduct(variationProductCode);
             if (baseProduct == null) return;
             priceListEntry.BaseProductCode = baseProduct.BaseProductCode;
-            AddCurrentBaseProductPricing(priceListEntry, baseProduct);
-            AddCurrentProductCatalogInfo(priceListEntry, baseProduct);
-            DC.ProductVariation variant = await GetProductVariation(baseProduct.BaseProductCode, variationProductCode);
-            AddCurrentVariationPricing(priceListEntry, variant);
+            AddReferenceProductCatalogInfo(priceListEntry, baseProduct);
+            AddMasterCatalogData(priceListEntry, baseProduct);
         }
 
-        private static void AddCurrentProductCatalogInfo(PriceListEntry priceListEntry, DC.Product dcProduct)
+        private static void AddReferenceProductCatalogInfo(PriceListEntry priceListEntry, DC.Product dcProduct)
         {
             priceListEntry.ProductInCatalogInfo = dcProduct.ProductInCatalogs.Select(x => new ProductInCatalogInfo
             {
@@ -262,21 +260,15 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
             }).ToList();
         }
 
-        private static void AddCurrentPrices(PriceListEntry priceListEntry, DC.Product dcProduct)
+        private static void AddMasterCatalogData(PriceListEntry priceListEntry, DC.Product dcProduct)
         {
-            priceListEntry.CurrentPriceCurrencyCode = dcProduct.Price.ISOCurrencyCode;
-            priceListEntry.CurrentListPrice = dcProduct.Price.Price;
-            priceListEntry.CurrentSalePrice = dcProduct.Price.SalePrice;
-            priceListEntry.CurrentMSRP = dcProduct.Price.MSRP;
-            priceListEntry.CurrentCost = (dcProduct.SupplierInfo != null && dcProduct.SupplierInfo.Cost != null)
-                ? dcProduct.SupplierInfo.Cost.Cost
+            priceListEntry.CurrentCostCurrencyCode = (dcProduct.SupplierInfo != null && dcProduct.SupplierInfo.Cost != null)
+                ? dcProduct.SupplierInfo.Cost.ISOCurrencyCode
                 : null;
             priceListEntry.CurrentCost = (dcProduct.SupplierInfo != null && dcProduct.SupplierInfo.Cost != null)
                 ? dcProduct.SupplierInfo.Cost.Cost
                 : null;
-            priceListEntry.CurrentMAP = dcProduct.Price.MAP;
-            priceListEntry.CurrentMAPStartDate = dcProduct.Price.MAPStartDate;
-            priceListEntry.CurrentMAPEndDate = dcProduct.Price.MAPEndDate;
+
             priceListEntry.CurrentDiscountsRestricted = dcProduct.PricingBehavior.DiscountsRestricted;
             priceListEntry.CurrentDiscountsRestrictedStartDate = dcProduct.PricingBehavior.DiscountsRestrictedStartDate;
             priceListEntry.CurrentDiscountsRestrictedEndDate = dcProduct.PricingBehavior.DiscountsRestrictedEndDate;
@@ -318,10 +310,9 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
         {
             var priceListEntry = new PriceListEntry();
             var dcProduct = await GetProduct(productCode);
-            //move to method for adding current.
 
-            AddCurrentPrices(priceListEntry, dcProduct);
-            AddCurrentProductCatalogInfo(priceListEntry, dcProduct);
+            AddMasterCatalogData(priceListEntry, dcProduct);
+            AddReferenceProductCatalogInfo(priceListEntry, dcProduct);
             var productExtras = await GetProductTypeAttributesAsync((fqn, val) => (decimal?)null, dcProduct);
 
             priceListEntry.Extras =
@@ -335,9 +326,8 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
                                     + "price(isoCurrencyCode,price,salePrice,msrp,map,mapStartDate,mapEndDate),"
                                     + "pricingBehavior(discountsRestricted,discountsRestrictedStartDate,discountsRestrictedEndDate),"
                                     + "supplierInfo(cost(isoCurrencyCode,cost)),"
-                                    + "productInCatalogs(catalogId,isActive,activeDateRange(startDate,endDate),isPriceOverriden,"
+                                    + "productInCatalogs(catalogId,isActive,isPriceOverriden,activeDateRange(startDate,endDate),"
                                       + "price(isoCurrencyCode,price,salePrice,msrp,map,mapStartDate,mapEndDate))";
-
 
             return (await _productWebApiClient.GetProduct(productCode, responseFields: responseFields)).ReadAsSync();
         }
@@ -396,63 +386,19 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
             return SuccessWithTotal2<PriceList>(entries.Count);
         }
 
-        private async Task<DC.ProductVariation> GetProductVariation(string productCode, string variationCode)
-        {
-            var dcProductVariants = (await _productWebApiClient.GetProductVariations(productCode)).ReadAsSync();
-
-            DC.ProductVariation variant =
-                dcProductVariants.Items.FirstOrDefault(x => x.VariationProductCode == variationCode);
-            return variant;
-        }
-
         private async Task<DC.Product> GetBaseProduct(string variantProductCode)
         {
-            string responseFields = "items(baseProductCode,price,pricingBehavior," 
-                + "productInCatalogs(catalogId, isActive, isPriceOverriden,activeDateRange(startDate,endDate),"
-                +   "price(isoCurrencyCode,price,salePrice,msrp,map,mapStartDate,mapEndDate)"
-                +  "))";
+            string responseFields = "items(baseProductCode,"
+                + "price(isoCurrencyCode,price,salePrice,msrp,map,mapStartDate,mapEndDate),"
+                + "pricingBehavior(discountsRestricted,discountsRestrictedStartDate,discountsRestrictedEndDate),"
+                + "supplierInfo(cost(isoCurrencyCode,cost)),"
+                + "productInCatalogs(catalogId,isActive,isPriceOverriden,activeDateRange(startDate,endDate),"
+                + "price(isoCurrencyCode,price,salePrice,msrp,map,mapStartDate,mapEndDate)"
+                + "))";
+
             var filter = string.Format("isVariation eq true and ProductCode eq {0}", variantProductCode);
             var dcBaseProducts = (await _productWebApiClient.GetProducts(filter: filter, responseFields: responseFields)).ReadAsSync();
             return dcBaseProducts.Items.FirstOrDefault();
-        }
-
-        private static void AddCurrentBaseProductPricing(PriceListEntry variantPriceListEntry, DC.Product baseProduct)
-        {
-            variantPriceListEntry.CurrentListPrice = baseProduct.Price.Price;
-            variantPriceListEntry.CurrentSalePrice = baseProduct.Price.SalePrice;
-            variantPriceListEntry.CurrentMSRP = baseProduct.Price.MSRP;
-            if (baseProduct.SupplierInfo != null && baseProduct.SupplierInfo.Cost != null)
-            {
-                variantPriceListEntry.CurrentCost = baseProduct.SupplierInfo.Cost.Cost;
-                variantPriceListEntry.CurrentCostCurrencyCode = baseProduct.SupplierInfo.Cost.ISOCurrencyCode;
-            }
-        }
-
-        private void AddCurrentVariationPricing(PriceListEntry priceListEntry, DC.ProductVariation variant)
-        {
-            if (variant == null)
-            {
-                return;
-            }
-
-            if (variant.DeltaPrice != null)
-            {
-                priceListEntry.CurrentListPrice = variant.DeltaPrice.Value;
-                priceListEntry.CurrencyCode = variant.DeltaPrice.CurrencyCode;
-                priceListEntry.CurrentMSRP = variant.DeltaPrice.MSRP;
-            }
-            else if (variant.FixedPrice != null)
-            {
-                priceListEntry.CurrentListPrice = variant.FixedPrice.ListPrice;
-                priceListEntry.CurrentSalePrice = variant.FixedPrice.SalePrice;
-                priceListEntry.CurrencyCode = variant.FixedPrice.CurrencyCode;
-                priceListEntry.CurrentMSRP = variant.FixedPrice.MSRP;
-            }
-            if (variant.SupplierInfo != null && variant.SupplierInfo.Cost != null)
-            {
-                priceListEntry.CurrentCost = variant.SupplierInfo.Cost.Cost;
-                priceListEntry.CurrentCostCurrencyCode = variant.SupplierInfo.Cost.ISOCurrencyCode;
-            }
         }
 
         private bool IsLookupQuery(string lookupValue)
