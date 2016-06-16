@@ -204,13 +204,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
 
             if (priceListEntry.IsVariation)
             {
-                DC.Product baseProduct = await GetBaseProduct(productCode);
-                if (baseProduct == null) return List2(priceListEntry);
-                priceListEntry.BaseProductCode = baseProduct.BaseProductCode;
-                AddCurrentBaseProductPricing(priceListEntry, baseProduct);
-                AddCurrentProductCatalogInfo(priceListEntry, baseProduct);
-                DC.ProductVariation variant = await GetProductVariation(baseProduct.BaseProductCode, productCode);
-                AddCurrentVariationPricing(priceListEntry, variant);
+                await AddVariationPricing(productCode, priceListEntry);
                 return List2(priceListEntry);
             }
 
@@ -236,6 +230,17 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
             priceListEntry.Extras =
                 productExtras.OrderByDescending(x => x.OverridePrice).ThenByDescending(y => y.CatalogPrice).ToList();
             return List2(priceListEntry);
+        }
+
+        private async Task AddVariationPricing(string variationProductCode, PriceListEntry priceListEntry)
+        {
+            DC.Product baseProduct = await GetBaseProduct(variationProductCode);
+            if (baseProduct == null) return;
+            priceListEntry.BaseProductCode = baseProduct.BaseProductCode;
+            AddCurrentBaseProductPricing(priceListEntry, baseProduct);
+            AddCurrentProductCatalogInfo(priceListEntry, baseProduct);
+            DC.ProductVariation variant = await GetProductVariation(baseProduct.BaseProductCode, variationProductCode);
+            AddCurrentVariationPricing(priceListEntry, variant);
         }
 
         private static void AddCurrentProductCatalogInfo(PriceListEntry priceListEntry, DC.Product dcProduct)
@@ -311,9 +316,10 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
         [HttpGetRoute(UriTemplate = "entry/create/product/{productCode}")]
         public async Task<Response<PriceListEntry>> GetPriceListTemplateForProduct(string productCode)
         {
+            var priceListEntry = new PriceListEntry();
             var dcProduct = await GetProduct(productCode);
             //move to method for adding current.
-            var priceListEntry = new PriceListEntry();
+
             AddCurrentPrices(priceListEntry, dcProduct);
             AddCurrentProductCatalogInfo(priceListEntry, dcProduct);
             var productExtras = await GetProductTypeAttributesAsync((fqn, val) => (decimal?)null, dcProduct);
@@ -344,9 +350,8 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
         [HttpGetRoute(UriTemplate = "entry/create/product/{productCode}/variation/{variationCode}")]
         public async Task<Response<PriceListEntry>> GetPriceListTemplateForProductVariation(string productCode, string variationCode)
         {
-            DC.ProductVariation variant = await GetProductVariation(productCode, variationCode);
             var priceListEntry = new PriceListEntry();
-            AddCurrentVariationPricing(priceListEntry, variant);
+            await AddVariationPricing(variationCode, priceListEntry);
             return Single2(priceListEntry);
         }
 
