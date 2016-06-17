@@ -188,7 +188,7 @@ Ext.define('Taco.view.priceList.widget.EntriesGrid', {
                 flex: 1,
                 sortable: false,
                 renderer: function(entries) {
-                    if (Ext.isArray(entries)) {
+                    if (Ext.isArray(entries) && entries.length > 0) {
                         if (entries[0].listPriceMode === 'UseCatalog') {
                             return "Default";
                         }
@@ -204,7 +204,7 @@ Ext.define('Taco.view.priceList.widget.EntriesGrid', {
                 flex: 1,
                 sortable: false,
                 renderer: function(entries) {
-                    if (Ext.isArray(entries)) {
+                    if (Ext.isArray(entries) && entries.length > 0) {
                         if (entries[0].salePriceMode === 'UseCatalog') {
                             return "Default";
                         }
