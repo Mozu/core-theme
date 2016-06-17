@@ -55,6 +55,7 @@ Ext.define('Taco.view.order.Grid', {
             [{ orderStatus: 'Pending', orderType: 'Online' }, 'Pending Online Orders'], 
             [{ orderStatus: 'Pending', orderType: 'Offline' }, 'Pending Offline Orders'], 
             [{ fulfillmentStatus: 'Fulfilled' }, 'Fulfilled Orders'],
+            [{ returnStatus: 'InProgress' }, 'Returns in Progress'],
             [{ orderStatus: 'Cancelled' }, 'Cancelled Orders'],
             [{ orderStatus: 'Errored' }, 'Errored Orders'],
             [{}, 'All Orders']
@@ -365,6 +366,14 @@ Ext.define('Taco.view.order.Grid', {
                 stateId: 'fulfillmentStatus',
                 dataIndex: 'fulfillmentStatus',
                 text: 'Fulfillment Status',
+                flex: 1,
+                minWidth: 100,
+                width: 100,
+                sortable: false
+            }, {
+                stateId: 'returnStatus',
+                dataIndex: 'returnStatus',
+                text: 'Return Status',
                 flex: 1,
                 minWidth: 100,
                 width: 100,

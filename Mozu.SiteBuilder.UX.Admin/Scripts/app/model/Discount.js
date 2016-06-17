@@ -243,23 +243,20 @@ Ext.define('Taco.model.Discount', {
         var me = this;
         if (!me.categoryStore) {
             me.categoryStore = Taco.core.data.StoreManager.getOrCreate(
-                {
-                    type: 'Taco.store.Categories',
-                    createOnly: true,
-                    id: "cat-" + this.id,
-                    autoLoad: true,
-                    clearFilters: false,
-                    remoteFilter: false,
-                    filters: function (record) {
-                        var isRealTime = record.get("categoryType") === "DynamicRealTime";
-                        return (Ext.Array.indexOf((me.get('categories') || []), record.getId()) > -1 && 
-                           !isRealTime);
-                    }
-                });
-
+            {
+                type: 'Taco.store.Categories',
+                createOnly: true,
+                id: "cat-" + this.id,
+                autoLoad: true,
+                clearFilters: false,
+                remoteFilter: false,
+                filters: function (record) {
+                    var isRealTime = record.get("categoryType") === "DynamicRealTime";
+                    return !isRealTime;
+                }
+            });
         }
         return me.categoryStore;
-
     },
 
     getCustomerSegmentStore: function() {

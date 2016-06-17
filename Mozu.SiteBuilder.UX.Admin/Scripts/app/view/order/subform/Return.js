@@ -151,10 +151,10 @@ Ext.define('Taco.view.order.subform.Return', {
     },
 
     initHeader: function () {
-        var returnsStore = this.getReturnsStore();
-        var returnCount = returnsStore ? Ext.valueFrom(returnsStore.count(), 0) : 0;
-        // var returnStatus = Taco.core.util.Common.camelToSpace(this.record.get('returnStatus'));
-        var returnStatus = (returnCount ? returnCount : 'No') + ' Return' + (returnCount === 1 ? '' : 's');
+        //var returnsStore = this.getReturnsStore();
+        //var returnCount = returnsStore ? Ext.valueFrom(returnsStore.count(), 0) : 0;
+        //var returnStatus = (returnCount ? returnCount : 'No') + ' Return' + (returnCount === 1 ? '' : 's');
+        var returnStatus = Taco.core.util.Common.camelToSpace(this.record.get('returnStatus'));
         this.setHeaderTitleStatus('Returns', returnStatus);
     },
 
@@ -253,7 +253,7 @@ Ext.define('Taco.view.order.subform.Return', {
 
         erroredReturns = Ext.Array.filter(selected, function (item) { return item.get('reason') === 'Select'; });
         if (erroredReturns.length > 0) {
-            this.returnableItemsErrorEl.setError('Please choose a reason other then "Select".');
+            this.returnableItemsErrorEl.setError('Please choose a return reason.');
             return false;
         }
 

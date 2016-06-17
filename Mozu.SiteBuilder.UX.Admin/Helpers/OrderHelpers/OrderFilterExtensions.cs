@@ -90,6 +90,10 @@ namespace Mozu.SiteBuilder.UX.Admin.Helpers.OrderHelpers
                 {
                     return "fulfillmentStatus eq " + filter.value;
                 }
+                case "returnstatus":
+                {
+                    return "returnStatus eq " + filter.value;
+                }
                 case "returnnumber":
                 {
                     return "returnNumber eq " + filter.value;
