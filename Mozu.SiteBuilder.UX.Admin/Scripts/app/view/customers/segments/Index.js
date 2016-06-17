@@ -8,7 +8,7 @@ Ext.define('Taco.view.customers.Segments.Index', {
     requires: [
        // 'Taco.model.CustomerAccount',
      //   'Taco.store.CustomerSegments',
-       'Taco.view.customers.AdvancedSearchForm',
+       // 'Taco.view.customers.AdvancedSearchForm',
         'Taco.store.CustomerSegments',
     'Taco.view.customers.Segments.AddRemoveModal'
     ],
