@@ -23,7 +23,7 @@ Ext.define('Taco.view.order.modal.AddPurchaseOrder', {
 
         var formItems = this.getPaymentForm();
 
-        me.form = Ext.create('Ext.form.Panel', {
+        me.form = Ext.create('Ext.form.Panel', { 
             items: [
                 {
                     xtype: 'fieldcontainer',
