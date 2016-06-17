@@ -23,7 +23,7 @@ Ext.define('Taco.view.order.modal.AddPurchaseOrder', {
 
         var formItems = this.getPaymentForm();
 
-        me.form = Ext.create('Ext.form.Panel', { 
+        me.form = Ext.create('Ext.form.Panel', {
             items: [
                 {
                     xtype: 'fieldcontainer',
@@ -285,6 +285,7 @@ Ext.define('Taco.view.order.modal.AddPurchaseOrder', {
     },
 
     getTerms: function (terms) {
+        console.log(terms)
         var me = this,
             paymentTermsSelect = null,
             description,
@@ -292,7 +293,7 @@ Ext.define('Taco.view.order.modal.AddPurchaseOrder', {
             termsContent = [],
             siteId = me.record.get('siteId');
 
-        if (typeof terms == 'string') {
+        if (typeof terms == 'string' || terms.length == 1) {
             me.record.checkoutSettings.get('purchaseOrder').paymentTerms.forEach(function (desc) {
                 if (desc.code == paymentTermsItem.code) {
                     paymentTermsItem.description = desc.description;
