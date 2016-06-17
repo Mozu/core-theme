@@ -14,6 +14,7 @@ Ext.define('Taco.view.order.modal.AddPurchaseOrder', {
 
         var me = this,
             balance = me.getBalance(me.record.get('customer').purchaseOrderAccount.availableBalance),
+            totalBalance = me.record.get('customer').purchaseOrderAccount.totalAvailableBalance,
             limit = me.getLimit(me.record.get('customer').purchaseOrderAccount.creditLimit),
             terms = me.record.customer.raw.purchaseOrderAccount.customerPurchaseOrderPaymentTerms
                     ? me.getTerms(me.record.customer.raw.purchaseOrderAccount.customerPurchaseOrderPaymentTerms)
@@ -58,6 +59,19 @@ Ext.define('Taco.view.order.modal.AddPurchaseOrder', {
                             margin: '0 0 0 30',
                             name: 'amount',
                             value: me.getDefaultPaymentAmount(),
+                            validator: function (value) {
+                                var valueBalance = parseFloat(value[0].split("$")[1]);
+
+                                if (isNaN(valueBalance)) {
+                                    valueBalance = value[0];
+                                }
+
+                                if (valueBalance > totalBalance) {
+                                    return 'Amount must not exceed your total available balance';
+                                } else {
+                                    return true;
+                                }
+                            },
                             xtype: 'currencyfield'
                         }
                     ]
