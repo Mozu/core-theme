@@ -16,6 +16,7 @@ using NDjango.Interfaces;
 using NDjango.FiltersCS.Compatibility;
 using Mozu.SiteBuilder.Mvc.Catalog;
 using Mozu.SiteBuilder.Mvc.Contexts;
+using Newtonsoft.Json.Linq;
 
 namespace Mozu.SiteBuilder.UX.Hypr.Tags
 {
@@ -60,11 +61,11 @@ namespace Mozu.SiteBuilder.UX.Hypr.Tags
         {
             var pageContext = context.PageContext();
             var siteContext = context.SiteContext();
+            var themeSettings = siteContext.ThemeSettings;
             var searchContext = pageContext.Search;
             var sbAPIContext = context.SiteBuilderApiContext();
-
-
-
+            
+            
             var template = arguments.GetValueOrDefault<string>("viewName") ?? (string)arguments[0].Value;
             var includeFacets = arguments.GetValueOrDefault("includeFacets", false);
             var pageWithUrl = arguments.GetValueOrDefault("pageWithUrl", false);
@@ -89,13 +90,13 @@ namespace Mozu.SiteBuilder.UX.Hypr.Tags
             var searchTuningRuleContext = arguments.GetValueOrDefault<string>("searchTuningRuleContext");
             var facetTemplateExclude = arguments.GetValueOrDefault<string>("facetTemplateExclude");
             var facetPrefix = arguments.GetValueOrDefault<string>("facetPrefix");
-            var responseOptions = arguments.GetValueOrDefault<string>("responseOptions");
             int? facetCategoryId;
             int? categoryId;
             GetCategoryCodes(arguments, context, pageContext, out facetCategoryId, out categoryId);
 
-
-
+            var isVolumePricingBandsEnabled = ((bool?)(JToken)themeSettings["listVolumePricing"]);
+            var responseOptions = isVolumePricingBandsEnabled.GetValueOrDefault() ? "volumePriceBands" : null;
+            
             var productSearchWebApiClient = context.Resolve<IProductSearchWebApiClient>();
           
             
@@ -200,8 +201,6 @@ namespace Mozu.SiteBuilder.UX.Hypr.Tags
             )
         {
             string cacheKey = null;
-            // todo: remove - Greg Murray on 2016-06-16 
-            responseOptions = "volumePriceBands";
             ProductSearchResult pc = null;
             if (cacheResults)
             {
@@ -246,9 +245,7 @@ namespace Mozu.SiteBuilder.UX.Hypr.Tags
                     pageSize: pageSize,
                     searchTuningRuleCode: searchTuningRuleCode,
                     enableSearchTuningRules: enableSearchTuningRules,
-                    searchTuningRuleContext: searchTuningRuleContext                
-              // facetTemplateExclude: facetTemplateExclude
-
+                    searchTuningRuleContext: searchTuningRuleContext
                     ).ConfigureAwait(false);
 
 

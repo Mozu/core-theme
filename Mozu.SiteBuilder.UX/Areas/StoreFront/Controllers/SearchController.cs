@@ -75,9 +75,9 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
             string facetHierValue = null;
             string facetHierDepth = null;
             string searchTuningRuleContext = null;
-            // todo: get from somewhere - Greg Murray on 2016-06-16 
-            string responseOptions = "volumePriceBands";
 
+            var isVolumePricingBandsEnabled = ((bool?)(JToken)themeSettings["listVolumePricing"]);
+            string responseOptions = isVolumePricingBandsEnabled.GetValueOrDefault() ? "volumePriceBands" : null;
             string facets = null;
             int? pageSize = PageContext.Search.PageSize;
             int? startIndex = PageContext.Search.StartIndex;
