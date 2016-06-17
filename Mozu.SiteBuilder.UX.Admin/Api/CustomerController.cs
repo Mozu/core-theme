@@ -773,7 +773,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
 
 
         [HttpGetRoute(UriTemplate = "{accountId}/auditLog/list")]
-        public async Task<Response<List<CustomerAuditEntry>>> GetAuditLog([FromUri] int? accountId)
+        public async Task<Response<List<CustomerAuditEntry>>> GetAuditLog([FromUri] int? accountId, [FromUri]PagingParamaters pagingParams = null)
         {
             if (!accountId.HasValue)
             {
@@ -791,7 +791,9 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
                 {"@paymentTermRemovedLabel", "Payment Term Changed" },
             };
 
-            var auditEntryCollection = (await _customerWebApiClient.GetAccountAuditLog(accountId.Value)).ReadAsSync();
+            int? startIndex = pagingParams.startIndex;
+
+            var auditEntryCollection = (await _customerWebApiClient.GetAccountAuditLog(accountId.Value, startIndex: startIndex)).ReadAsSync();
 
             //Replace labels with localized content
             foreach (var auditEntry in auditEntryCollection.Items)
