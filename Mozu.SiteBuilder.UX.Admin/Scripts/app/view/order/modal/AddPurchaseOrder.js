@@ -67,7 +67,7 @@ Ext.define('Taco.view.order.modal.AddPurchaseOrder', {
                                 }
 
                                 if (valueBalance > totalBalance) {
-                                    return 'Amount must not exceed your total available balance';
+                                    return 'Amount must not exceed your total available balance. Please select an alternative payment method.';
                                 } else {
                                     return true;
                                 }
