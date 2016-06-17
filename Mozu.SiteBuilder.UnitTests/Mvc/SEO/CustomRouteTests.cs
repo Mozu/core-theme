@@ -43,7 +43,7 @@ using Mozu.SiteBuilder.UX.Models.StoreFront.Catalog;
 using NSubstitute.Core;
 using Mozu.SiteBuilder.Mvc.Caching;
 using System.Linq;
-using FiftyOne.Foundation.Mobile.Detection.Handlers;
+
 using Mozu.Core.Api.Contracts.Caching;
 
 namespace Mozu.SiteBuilder.UnitTests.Mvc.SEO
