@@ -8,7 +8,7 @@ Ext.define('Taco.view.customers.Segments.Index', {
     requires: [
        // 'Taco.model.CustomerAccount',
      //   'Taco.store.CustomerSegments',
-     //   'Taco.view.customers.AdvancedSearchForm',
+       // 'Taco.view.customers.AdvancedSearchForm',
         'Taco.store.CustomerSegments',
     'Taco.view.customers.Segments.AddRemoveModal'
     ],
@@ -30,8 +30,9 @@ Ext.define('Taco.view.customers.Segments.Index', {
     title: 'Customer Segments',
     addContentViewPadding: true,
     stateful: true,
-    stateId: 'statefulCustomerSegmentsGrid',    
-    
+    stateId: 'statefulCustomerSegmentsGrid',
+    launchEditorOnClick: false,
+
     initComponent: function () {
         var me = this;
 
@@ -50,14 +51,13 @@ Ext.define('Taco.view.customers.Segments.Index', {
                     // defaults to textfield if no xtype is supplied
                     emptyText: "Code",
                     msgTarget: "qtip",
-                   
+
                     // optional enhancement to rowEditor. Makes the field only editable during a create;
                     editableOnCreateOnly: true,
                     selectOnFocus: true,
                     allowOnlyWhitespace: false
                 },
                 width: 200
-                
             },
             {
                 dataIndex: 'name',
@@ -144,7 +144,7 @@ Ext.define('Taco.view.customers.Segments.Index', {
                 }]
             }
         ];
-                
+
         this.callParent(arguments);
     },
 
