@@ -840,9 +840,10 @@
                 CheckoutStep.prototype.edit.apply(this, arguments);
             },
             updatePurchaseOrderAmount: function() {
-                if(!this.get('purchaseOrder').get('isEnabled')) {
+                if(!this.get('purchaseOrder').get('isEnabled') && this.get('purchaseOrder').selected) {
                     return;
                 }
+
                 var me = this,
                     order = me.getOrder(),
                     currentPurchaseOrder = this.get('purchaseOrder'),
@@ -851,16 +852,19 @@
                     amount = pOAvailableBalance > orderAmountRemaining ?
                         orderAmountRemaining : pOAvailableBalance;
 
+
                 currentPurchaseOrder.set('amount', amount);
                 if(amount < orderAmountRemaining) {
                     currentPurchaseOrder.set('splitPayment', true);
                 }
+
                 //refresh ui when split payment is working?
+                me.trigger('stepstatuschange'); // trigger a rerender
             },
             isPurchaseOrderEnabled: function() {
                 var me = this,
                     order = me.getOrder(),
-                    purchaseOrderInfo = order.get('customer').get('purchaseOrder'),
+                    purchaseOrderInfo = order ?  order.get('customer').get('purchaseOrder') : null,
                     purchaseOrderSiteSettings = HyprLiveContext.locals.siteContext.checkoutSettings.purchaseOrder ?
                         HyprLiveContext.locals.siteContext.checkoutSettings.purchaseOrder.isEnabled : false,
                     purchaseOrderCustomerEnabled = purchaseOrderInfo ? purchaseOrderInfo.isEnabled : false,
@@ -872,7 +876,7 @@
             setPurchaseOrderInfo: function() {
                 var me = this,
                     order = me.getOrder(),
-                    purchaseOrderInfo = order.get('customer').get('purchaseOrder'),
+                    purchaseOrderInfo = order ? order.get('customer').get('purchaseOrder') : null,
                     purchaseOrderEnabled = this.isPurchaseOrderEnabled(),
                     currentPurchaseOrder = me.get('purchaseOrder'),
                     siteId = require.mozuData('checkout').siteId;
@@ -943,7 +947,7 @@
                     order = me.getOrder(),
                     purchaseOrderEnabled = this.isPurchaseOrderEnabled(),
                     currentPurchaseOrder = me.get('purchaseOrder'),
-                    contacts = order.get('customer').get('contacts');
+                    contacts = order ? order.get('customer').get('contacts') : null;
                 if(purchaseOrderEnabled) {
                     if(currentPurchaseOrder.selected && contacts.length > 0) {
                         var foundBillingContact = contacts.models.find(function(item){
@@ -1401,7 +1405,7 @@
                     else if (me.get('total') === 0) {
                         me.trigger('complete');
                     }
-                    me.updatePurchaseOrderAmount();
+                    //me.get('billingInfo').updatePurchaseOrderAmount();
                     me.isLoading(false);
                 });
             },
