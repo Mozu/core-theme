@@ -351,10 +351,9 @@
               this.updateConfiguration();
           },
           updateQuantity: function (newQty) {
+              if (this.get('quantity') === newQty) return;
               this.set('quantity', newQty);
-              if (!this._hasVolumePricing) {
-                  return;
-              }
+              if (!this._hasVolumePricing) return;
               if (newQty < this._minQty) {
                   return this.showBelowQuantityWarning();
               }
