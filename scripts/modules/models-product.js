@@ -185,7 +185,7 @@
           mozuType: 'product',
           idAttribute: 'productCode',
           handlesMessages: true,
-          helpers: ['mainImage', 'notDoneConfiguring', 'hasPriceRange', 'supportsInStorePickup'],
+          helpers: ['mainImage', 'notDoneConfiguring', 'hasPriceRange', 'supportsInStorePickup', 'isPurchasable'],
           defaults: {
               purchasableState: {},
               quantity: 1
@@ -282,6 +282,17 @@
           notDoneConfiguring: function() {
               return this.get('productUsage') === Product.Constants.ProductUsage.Configurable && !this.get('variationProductCode');
           },
+          isPurchasable: function() {
+              var purchaseState = this.get('purchasableState');
+              if (purchaseState.isPurchasable){
+                  return true;
+              }
+              if (this._hasVolumePricing && purchaseState.messages && purchaseState.messages.length === 1
+                && purchaseState.messages[0].validationType === 'MinQtyNotMet') {
+                  return true;
+              }
+              return false;
+          },
           supportsInStorePickup: function() {
               return _.contains(this.get('fulfillmentTypesSupported'), Product.Constants.FulfillmentTypes.IN_STORE_PICKUP);
           },
@@ -356,11 +367,26 @@
               this.validate();
               this.validation.quantity.min = 1;
           },
+          handleMixedVolumePricingTransitions: function (data) {
+              if (!data || !data.volumePriceBands || data.volumePriceBands.length === 0) return;
+              if (this._minQty === data.volumePriceBands[0].minQty) return;
+              this._minQty = data.volumePriceBands[0].minQty;
+              this.validation.quantity.msg = Hypr.getLabel('enterMinProductQuantity', this._minQty);
+              if (this.get('quantity') < this._minQty) {
+                  this.showBelowQuantityWarning();
+              }
+          },
           updateConfiguration: function() {
-              var newConfiguration = this.getConfiguredOptions();
+              var me = this,
+                newConfiguration = this.getConfiguredOptions();
               if (JSON.stringify(this.lastConfiguration) !== JSON.stringify(newConfiguration)) {
                   this.lastConfiguration = newConfiguration;
-                  this.apiConfigure({ options: newConfiguration }, { useExistingInstances: true });
+                  this.apiConfigure({ options: newConfiguration }, { useExistingInstances: true })
+                      .then(function (apiModel) {
+                          if (me._hasVolumePricing) {
+                              me.handleMixedVolumePricingTransitions(apiModel.data);
+                          }
+                       });
               } else {
                   this.isLoading(false);
               }
