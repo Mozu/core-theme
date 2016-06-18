@@ -287,8 +287,7 @@
               if (purchaseState.isPurchasable){
                   return true;
               }
-              if (this._hasVolumePricing && purchaseState.messages && purchaseState.messages.length === 1
-                && purchaseState.messages[0].validationType === 'MinQtyNotMet') {
+              if (this._hasVolumePricing && purchaseState.messages && purchaseState.messages.length === 1 && purchaseState.messages[0].validationType === 'MinQtyNotMet') {
                   return true;
               }
               return false;
