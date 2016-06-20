@@ -371,7 +371,7 @@
               this._minQty = data.volumePriceBands[0].minQty;
               this.validation.quantity.msg = Hypr.getLabel('enterMinProductQuantity', this._minQty);
               if (this.get('quantity') < this._minQty) {
-                  this.set('quantity', this._minQty);
+                  this.updateQuantity(this._minQty);
               }
           },
           updateConfiguration: function() {
