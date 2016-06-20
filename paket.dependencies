@@ -5,7 +5,7 @@ redirects: on
 source http://nuget-internal.corp.volusion.com:8200/api/odata
 source http://nuget-external.corp.volusion.com:8201/api/odata
 
-nuget 51Degrees.mobi 3.1.12.6 content: none
+nuget 51Degrees.mobi 3.2.8.1 content: none
 nuget JWT 1.3.4
 
 nuget Microsoft.AspNet.WebApi.Core 5.2.3
@@ -47,6 +47,6 @@ nuget Mozu.Provisioning.Contracts < 1.20
 nuget Mozu.Reference.Contracts < 1.20
 nuget Mozu.ShippingAdmin.Contracts 1.1617.1
 nuget Mozu.SiteSettings.General.Contracts
-nuget Mozu.SiteSettings.Order.Contracts 1.1613.1-dev1605171728fea
+nuget Mozu.SiteSettings.Order.Contracts > 1.1624
 nuget protobuf-net 2.0.0.668 
 nuget FAKE
