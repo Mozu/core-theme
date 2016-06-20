@@ -60,7 +60,7 @@ Ext.define('Taco.view.order.modal.AddPurchaseOrder', {
                             name: 'amount',
                             value: me.getDefaultPaymentAmount(),
                             validator: function (value) {
-                                var valueBalance = parseFloat(value[0].split("$")[1]);
+                                var valueBalance = parseFloat(value[0].replace(/,/, '').split("$")[1]);
 
                                 if (isNaN(valueBalance)) {
                                     valueBalance = value[0];
@@ -285,7 +285,6 @@ Ext.define('Taco.view.order.modal.AddPurchaseOrder', {
     },
 
     getTerms: function (terms) {
-        console.log(terms)
         var me = this,
             paymentTermsSelect = null,
             description,
