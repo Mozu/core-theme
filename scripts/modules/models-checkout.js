@@ -373,6 +373,9 @@
                 return order.apiVoidPayment(currentPayment.id).then(function() {
                     self.clear();
                     self.stepStatus('incomplete');
+                    // need to re-enable purchase order information if purchase order is available.
+                    self.setPurchaseOrderInfo();
+                    // Set the defualt payment method for the customer.
                     self.setDefaultPaymentType(self);
                 });
             },
@@ -1023,8 +1026,10 @@
             },
             setDefaultPaymentType: function(me) {
                 if(me.isPurchaseOrderEnabled()) {
+                    me.set('paymentType', 'PurchaseOrder');
                     me.selectPaymentType(me, 'PurchaseOrder');
                 } else {
+                    me.set('paymentType', 'CreditCard');
                     me.selectPaymentType(me, 'CreditCard');
                     if (me.savedPaymentMethods() && me.savedPaymentMethods().length > 0) {
                         me.set('usingSavedCard', true);
