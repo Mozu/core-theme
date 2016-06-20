@@ -35,7 +35,7 @@ nuget mozu.Content.Contracts < 1.20
 nuget Mozu.Core.Messaging < 1.20
 nuget Mozu.Core.Messaging.Contracts 1.19.2
 nuget Mozu.Core.Test < 1.20 
-nuget Mozu.Customer.Contracts 1.1621.1-dev1606201530fea
+nuget Mozu.Customer.Contracts > 1.1624
 nuget Mozu.DeployWeb
 nuget Mozu.Hypr.NDjango
 nuget Mozu.InstalledApps.Contracts < 1.20
