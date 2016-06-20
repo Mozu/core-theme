@@ -491,43 +491,58 @@
     },
 
     postOptions: function () {
+        var me = this;
         var request = { Options: [] };
 
         this.setLoading(true);
         this.isUpdating = true;
         this.getForm().checkValidity();
 
-        var pricingBands = this.runtimeData.VolumePriceBands || [];
-        var minQty = pricingBands.length ? Ext.Array.min(Ext.Array.pluck(pricingBands, 'MinQty')) : 1;
-
         Ext.each(this.runtimeData.Options, function (option) {
             if (option.Value === undefined) return;
 
             delete option.Values;
 
-            if (option.AttributeDetail.InputType !== 'List') option.ShopperEnteredValue = option.Value;
-            
+            if (option.AttributeDetail.InputType !== 'List') {
+                option.ShopperEnteredValue = option.Value;
+            } else {
+                delete option.ShopperEnteredValue;
+            }
+
             request.Options.push(option);
         });
 
-        this.record.configureRuntimeProduct({
-            jsonData: request,
-            success: function (response) {
-                this.runtimeData = JSON.parse(response.responseText).items;
-                Ext.each(this.runtimeData.Options, function (option) {
-                    this.updateOption(option);
-                }, this);
-                
-                // update the price
-                this.price.update({
-                    Price: this.runtimeData.Price,
-                    PriceRange: this.runtimeData.PriceRange
-                });
-                this.setLoading(false);
-                this.isUpdating = false;
-                this.getForm().checkValidity();
-            },
-            scope: this
-        }, minQty);
+        function configureProduct(quantity) {
+            me.record.configureRuntimeProduct({
+                jsonData: request,
+                success: function(response) {
+                    this.runtimeData = JSON.parse(response.responseText).items;
+                    var state = this.runtimeData.PurchasableState;
+                    try {
+                        if (!state.IsPurchasable && Ext.Array.findBy(state.Messages, function(msg) { return msg.ValidationType === 'MinQtyNotMet'; })) {
+                            var minQty = Ext.Array.min(Ext.Array.pluck(this.runtimeData.VolumePriceBands, 'MinQty'));
+                            configureProduct(minQty);
+                            return;
+                        }
+                    } catch (e) { }
+
+                    Ext.each(this.runtimeData.Options, function(option) {
+                        this.updateOption(option);
+                    }, this);
+
+                    // update the price
+                    this.price.update({
+                        Price: this.runtimeData.Price,
+                        PriceRange: this.runtimeData.PriceRange
+                    });
+                    this.setLoading(false);
+                    this.isUpdating = false;
+                    this.getForm().checkValidity();
+                },
+                scope: me
+            }, quantity || 1);
+        };
+
+        configureProduct();
     }
 });
