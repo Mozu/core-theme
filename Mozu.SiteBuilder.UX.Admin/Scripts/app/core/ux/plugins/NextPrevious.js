@@ -107,7 +107,7 @@
                         if (e.shiftKey) {
 
                             //Ext.bind(nextPreviousPlugin.navigateToPrevious, nextPreviousPlugin)();
-                            me.navigateToPrevious()
+                            //me.navigateToPrevious()
                         }
 
                     },
@@ -115,7 +115,7 @@
                         if (e.shiftKey) {
 
                             //Ext.bind(nextPreviousPlugin.navigateToNext, nextPreviousPlugin)();
-                            me.navigateToNext();
+                            //me.navigateToNext();
                         }
                     }
                 });

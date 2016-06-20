@@ -312,7 +312,19 @@ Ext.define('Taco.model.Order', {
             name: 'returnStatus',
             type: 'string',
             useNull: true,
-            defaultValue: null
+            defaultValue: null,
+            convert: function (value, record) {
+                if (value === "Closed") {
+                    return "Order Partially Returned";
+                }
+                if (value === "ReturnedInFull") {
+                    return "Order Fully Returned";
+                }
+                if (value === "InProgress") {
+                    return "In Progress";
+                }
+                return value;
+            }
         }, {
             name: 'customerNote',
             type: 'string',

@@ -58,6 +58,9 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
         [HttpPostRoute(UriTemplate = "save")]
         public async Task<Response<GeneralSettings>> Save(GeneralSettings settingsToSave)
         {
+            var previousSettings = (await _wrapper.ReadSettings());
+            var cdnCacheKey = previousSettings.CdnCacheBustKey;
+            settingsToSave.CdnCacheBustKey = cdnCacheKey;
             
             var savedSettings = _wrapper.UpdateGeneralSettings(settingsToSave);
             if (settingsToSave.ChannelId != null)

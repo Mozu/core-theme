@@ -3,8 +3,7 @@ CONTENT: NONE
 FRAMEWORK: NET45, NET451
 NUGET
   remote: http://nuget-external.corp.volusion.com:8201/api/odata
-  specs:
-    51Degrees.mobi (2.1.15.1) - content: none
+    51Degrees.mobi (3.2.8.1) - content: none
       Microsoft.Web.Infrastructure (>= 1.0)
     Autofac (3.5.2)
     Autofac.WebApi2 (3.4.0)
@@ -74,7 +73,16 @@ NUGET
       Owin (>= 1.0)
     Microsoft.Web.Infrastructure (1.0.0.0) - content: none
     Microsoft.Web.Xdt (2.1.1)
-    mongocsharpdriver (1.10.0)
+    mongocsharpdriver (2.2.4)
+      MongoDB.Bson (>= 2.2.4)
+      MongoDB.Driver (>= 2.2.4)
+      MongoDB.Driver.Core (>= 2.2.4)
+    MongoDB.Bson (2.2.4)
+    MongoDB.Driver (2.2.4)
+      MongoDB.Bson (>= 2.2.4)
+      MongoDB.Driver.Core (>= 2.2.4)
+    MongoDB.Driver.Core (2.2.4)
+      MongoDB.Bson (>= 2.2.4)
     morelinq (1.0.16006)
     Newtonsoft.Json (8.0.2)
     NSubstitute (1.8.1.0)
@@ -87,7 +95,6 @@ NUGET
     Stact (1.1.2)
       Magnum (>= 2.1.2)
   remote: http://nuget-internal.corp.volusion.com:8200/api/odata
-  specs:
     Jolt (1.0.0)
     Mozu.AdminUser.Contracts (1.18.1)
       Mozu.Core.Prime (>= 1.17)
@@ -111,7 +118,7 @@ NUGET
       Mozu.Core.Prime (>= 1.19)
     Mozu.Core.Messaging.Contracts (1.19.2)
       Mozu.Core.Prime (>= 1.18)
-    Mozu.Core.Prime (1.1613.4-f1605171629purchas)
+    Mozu.Core.Prime (1.1624.1)
       Autofac (>= 3.5.2)
       Autofac.WebApi2 (>= 3.4)
       AutoMapper (>= 3.3)
@@ -123,7 +130,7 @@ NUGET
       Microsoft.AspNet.WebApi.Core (>= 5.2.3)
       Microsoft.AspNet.WebApi.WebHost (>= 5.2.3)
       Microsoft.Web.Xdt (>= 2.1.1)
-      mongocsharpdriver (>= 1.10)
+      mongocsharpdriver (>= 2.2.4)
       Newtonsoft.Json (>= 6.0.8)
       Sprache (>= 2.0.0.45)
     Mozu.Core.Test (1.18.17)
@@ -151,7 +158,7 @@ NUGET
       Mozu.Core.Prime (>= 1.18.1)
     Mozu.ProductAdmin.Contracts (1.1618.1)
       Mozu.Core.Prime (>= 1.18.1)
-    Mozu.ProductRuntime.Contracts (1.1613.3)
+    Mozu.ProductRuntime.Contracts (1.1624.1)
       Mozu.Core.Prime (>= 1.18)
     Mozu.Provisioning.Contracts (1.17.5)
       Mozu.Core.Prime (>= 1.17)
