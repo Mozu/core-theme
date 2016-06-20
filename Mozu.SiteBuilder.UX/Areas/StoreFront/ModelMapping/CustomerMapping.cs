@@ -64,7 +64,6 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.ModelMapping
                 ;
 
             Mapper.CreateMap<CustomerPurchaseOrderPaymentTerm, UX.Models.Customers.PurchaseOrderPaymentTerm>()
-                .ForMember(x => x.Description, opt => opt.Ignore())
                 ;
             Mapper.CreateMap<UX.Models.Customers.PurchaseOrderPaymentTerm, CustomerPurchaseOrderPaymentTerm>()
                 .ForMember(dc => dc.AuditInfo, opt=> opt.Ignore())

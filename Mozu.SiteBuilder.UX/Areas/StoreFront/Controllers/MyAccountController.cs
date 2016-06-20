@@ -170,18 +170,12 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
             {
                 var customerPurchaseOrder = Mapper.Map<Mozu.SiteBuilder.UX.Models.Customers.CustomerPurchaseOrderAccount>(purchaseOrderAccount);
                 var paymentTermOptions = this.SiteContext.CheckoutSettings.PurchaseOrder.PaymentTerms;
-                // helper object that inherits from contract and add description, then create new payment array and apply it to accountPurchaseOrder before doing .toJObject()
+                // helper object that inherits from contract, filters for specific site, then create new payment array and apply it to accountPurchaseOrder before doing .toJObject()
                 var paymentTermList = new List<PurchaseOrderPaymentTerm>();
                 foreach (var term in customerPurchaseOrder.PaymentTerms)
                 {
                     if (term.SiteId == SiteContext.SiteId)
                     {
-                        var siteSettingsPaymentTerm =
-                            paymentTermOptions.Find(paymentTerm => paymentTerm.Code == term.Code);
-                        if (siteSettingsPaymentTerm != null)
-                        {
-                            term.Description = siteSettingsPaymentTerm.Description;
-                        }
                         paymentTermList.Add(term);
                     }
                 }
