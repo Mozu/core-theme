@@ -57,7 +57,6 @@ Ext.define('Taco.view.order.widget.AddOrderItemToolbar', {
             width: this.gridColumns[3].width,
             value: ''
         });
-        
 
         me.codeField = Ext.widget({
             xtype: 'displayfield',
@@ -94,27 +93,28 @@ Ext.define('Taco.view.order.widget.AddOrderItemToolbar', {
             width: this.gridColumns[6].width,
             value: '',
             listeners: {
+                change: { fn: this.onQuantityChange, buffer: 500 },
                 focus: this.onFocus,
                 blur: this.onBlur,
                 scope: me
             }
         });
 
-        me.addItemButton = Ext.widget({            
+        me.addItemButton = Ext.widget({
             xtype: 'button',
             ui: 'action',
-            scale:'medium',
-            fieldBodyCls: 'order-addproducttoolbar-cell',            
+            scale: 'medium',
+            fieldBodyCls: 'order-addproducttoolbar-cell',
             text: 'Add',
             itemId: 'addButton',
-            disabled: true,            
+            disabled: true,
             width: this.gridColumns[7].width,
-            handler: function () {
+            handler: function() {
                 // the handler also gets called, when the enter key is hit. But there is already a handler for enter, so we cancel it
                 if (arguments[1].keyCode != 13)
                     this.save();
             },
-            scope:this,
+            scope: this,
             value: ''
         });
 
@@ -152,7 +152,6 @@ Ext.define('Taco.view.order.widget.AddOrderItemToolbar', {
                 },
                 // custom event added as part of the InputMask plugin; need to cancel the event to prevent the field from reseting itself since will be reseting all fields when this field is reset;
                 'beforecleartriggerclick': function (field) {
-                    
 
                     // reset everything in the toolbar but need to be carefull
                     me.reset();
@@ -334,6 +333,8 @@ Ext.define('Taco.view.order.widget.AddOrderItemToolbar', {
             minQty = 1,
             price;
 
+        // Clear out old volume price bands.
+        me.volumePriceBands = [];
 
         // if the product is configurable we need to use that configuration and extract the varient's product code
         if (productConfig) {
@@ -344,9 +345,9 @@ Ext.define('Taco.view.order.widget.AddOrderItemToolbar', {
             }
 
             // Grab minimum quantity if volume pricing used.
-            var volumePriceBands = productConfig.VolumePriceBands || [];
-            if (volumePriceBands.length) {
-                minQty = Ext.Array.min(Ext.Array.pluck(productConfig.VolumePriceBands, 'MinQty'));
+            me.volumePriceBands = productConfig.VolumePriceBands || [];
+            if (me.volumePriceBands.length) {
+                minQty = Ext.Array.min(Ext.Array.pluck(me.volumePriceBands, 'MinQty'));
             }
         } else {
             price = record.get('salePrice') || record.get('price');
@@ -443,6 +444,17 @@ Ext.define('Taco.view.order.widget.AddOrderItemToolbar', {
         return false;
     },
 
+    onQuantityChange: function(field, newValue) {
+        if (!this.volumePriceBands || !this.volumePriceBands.length) return;
+        var band = Ext.Array.findBy(this.volumePriceBands, function(band) {
+            return (!band.hasOwnProperty('MinQty') || newValue >= band.MinQty) && (!band.hasOwnProperty('MaxQty') || newValue <= band.MaxQty);
+        });
+        if (!band || !band.Price) return;
+        if (this.priceField.getValue() !== band.Price.Price) {
+            this.priceField.setValue(band.Price.Price);
+        }
+    },
+
     // code will be productCode
     loadFulfillmentPickerField: function (config) {
         var me = this;
@@ -473,8 +485,6 @@ Ext.define('Taco.view.order.widget.AddOrderItemToolbar', {
         if (!me.isValid()) {
             return;
         } 
-        
-        
 
         // build up the productConfiguraiton data object to send to the service;
         
@@ -486,7 +496,6 @@ Ext.define('Taco.view.order.widget.AddOrderItemToolbar', {
             fulfillmentLocationCode: locationCode,
             fulfillmentId: fulfillmentMethod + '(' + locationCode + ')'
         });
-
 
         me.fireEvent('save', me, Ext.clone(productConfiguration));
     },

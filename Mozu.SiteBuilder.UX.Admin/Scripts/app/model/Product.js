@@ -647,14 +647,13 @@ Ext.define('Taco.model.Product', {
         Ext.Ajax.request(options);
 
     },
-    configureRuntimeProduct: function (cfg) {
-
-
+    configureRuntimeProduct: function (cfg, qty) {
         var me = this,
+            qtyParam = qty ? '&quantity=' + qty : '';
             options = Ext.apply(
             {
                 method: 'POST',
-                url: '/admin/app/productruntime/configure?productCode=' + this.getId(),
+                url: '/admin/app/productruntime/configure?productCode=' + this.getId() + qtyParam,
                 success: function (response) {
                     var res = Ext.JSON.decode(response.responseText) || {};
                     if (cfg.callback) {

@@ -92,9 +92,9 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
 
         [HttpPostRoute(UriTemplate = "configure")]
         public async Task<Response<JObject>> Configure([FromBody] ProductOptionSelections selections,
-            [FromUri] string productCode)
+            [FromUri] string productCode, [FromUri] int? quantity = null)
         {
-            var res = (await _productRuntimeWebApiClient.Value.ConfiguredProduct(selections, productCode, true)).ReadAsSync();
+            var res = (await _productRuntimeWebApiClient.Value.ConfiguredProduct(selections, productCode, true, quantity:quantity)).ReadAsSync();
             var jobj = JObject.FromObject(res);
             return Single2(jobj);
         }
