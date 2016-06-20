@@ -1,4 +1,5 @@
 ﻿/**
+/**
  * @class Taco.view.priceList.Grid
 */
 Ext.define('Taco.view.priceList.widget.EntriesGrid', {
@@ -677,7 +678,9 @@ Ext.define('Taco.view.priceList.widget.EntriesGrid', {
                         navToIndex = forward ? 0: this.store.count() - 1;
                         rec = this.store.data.getAt(navToIndex);
                         if (rec) {
-                            Taco.core.StateManager.attemptNavigate('/priceLists/edit/' + rec.getId());
+                            this.editor.record = rec;
+                            this.editor.loadRecord();
+                            this.setLoading(false);
                         }
                     }
                 });
@@ -703,7 +706,11 @@ Ext.define('Taco.view.priceList.widget.EntriesGrid', {
         store = store || this.store;
         var index = store.findBy(function(record) {
             var key = record.get('compositeKey');
-            return key.currencyCode === compositeKey.currencyCode && key.priceListCode === compositeKey.priceListCode && key.productCode === compositeKey.productCode && key.startDate.toString() == compositeKey.startDate.toString();
+            var currencyCode = key.currencyCode === compositeKey.currencyCode;
+            var priceListCode = key.priceListCode === compositeKey.priceListCode;
+            var productCode = key.productCode === compositeKey.productCode;
+            var startDate = (key.startDate && compositeKey.startDate) ? key.startDate.toString() == compositeKey.startDate.toString() : key.startDate == compositeKey.startDate;
+            return currencyCode && priceListCode && productCode && startDate;
         });
         return index;
     }
