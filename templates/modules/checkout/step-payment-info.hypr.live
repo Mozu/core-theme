@@ -40,23 +40,23 @@
             <div class="mz-l-stack-section mz-checkout-current-payment">
                 <div class="mz-l-formfieldgroup-row mz-payment-purchase-order-amount-row">
                     <div class="mz-l-formfieldgroup-cell">
-                        <label for="mz-payment-purchase-order-amount">{{ labels.purchaseOrderAmount }}:</label> <span>{{ payment.amountRequested | currency }}</span>
+                        <span>{{ labels.purchaseOrderAmount }}: </span> <span>{{ payment.amountRequested | currency }}</span>
                     </div>
                 </div>
                 <div class="mz-l-formfieldgroup-row mz-payment-purchase-order-number-row">
                     <div class="mz-l-formfieldgroup-cell">
-                        <label for="mz-payment-purchase-order-number">{{ labels.purchaseOrderNumber }}:</label><span name="purchase-order-number" id="mz-payment-purchase-order-number">{{ payment.billingInfo.purchaseOrder.purchaseOrderNumber }}</span>
+                        <span >{{ labels.purchaseOrderNumber }}: </span><span name="purchase-order-number" id="mz-payment-purchase-order-number">{{ payment.billingInfo.purchaseOrder.purchaseOrderNumber }}</span>
                     </div>
                 </div>
                 <div class="mz-l-formfieldgroup-row mz-payment-purchase-order-payment-terms-row">
                     <div class="mz-l-formfieldgroup-cell">
-                        <label for="mz-payment-purchase-order-payment-terms">{{ labels.purchaseOrderPaymentTerms }}:</label><span id="mz-payment-purchase-order-payment-terms">{{ payment.billingInfo.purchaseOrder.paymentTerm.description }}</span>
+                        <span>{{ labels.purchaseOrderPaymentTerms }}: </span><span id="mz-payment-purchase-order-payment-terms">{{ payment.billingInfo.purchaseOrder.paymentTerm.description }}</span>
                     </div>
                 </div>
                 {% for field in payment.billingInfo.purchaseOrder.customFields %}
                 <div class="mz-l-formfieldgroup-row mz-payment-purchase-order-custom-field-row">
                     <div class="mz-l-formfieldgroup-cell">
-                        <label for="mz-payment-purchase-order-custom-field-{{ field.code }}">{{ field.label }}:</label><span id="mz-payment-purchase-order-custom-field-{{ field.code }}">{{ field.value }}</span>
+                        <span>{{ field.label }}: </span><span id="mz-payment-purchase-order-custom-field-{{ field.code }}">{{ field.value }}</span>
                     </div>
                 </div>
                 {% endfor %}
