@@ -38,7 +38,9 @@ Ext.define('Taco.view.order.modal.CapturePayment', {
                     currencyCode: this.order.getCurrencyCode(),
                     selectOnFocus: true,
                     width: 170,
-                    value: Math.min(this.record.data.amountAuthorized, this.order.getCaptureAmountHint())
+                    value: this.record.get('status') == 'Invoiced'
+                        ? this.record.data.amountRequested
+                        : Math.min(this.record.data.amountAuthorized, this.order.getCaptureAmountHint())
                 },
                 notes
             ]
