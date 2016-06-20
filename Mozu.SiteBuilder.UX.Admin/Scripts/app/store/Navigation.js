@@ -25,9 +25,11 @@ Ext.define('Taco.store.Navigation', {
             var me = this,
                 data = store.getProxy().data,
                 seed = 0,
-                recursiveFind = function (key, val, items) {
+                isMultiCurrency,
+                isMultiLang,
+                recursiveFind = function(key, val, items) {
                     var res;
-                    Ext.Array.each(items, function (item) {
+                    Ext.Array.each(items, function(item) {
                         if (Ext.isFunction(key)) {
                             if (key(item)) {
                                 res = item;
@@ -44,7 +46,7 @@ Ext.define('Taco.store.Navigation', {
 
                     return res;
                 },
-                pruneInvalidLocLinks = function (item) {
+                pruneInvalidLocLinks = function(item) {
                     if (item.items) {
                         item.items = Ext.Array.filter(item.items, pruneInvalidLocLinks, this);
                     }
@@ -52,9 +54,9 @@ Ext.define('Taco.store.Navigation', {
                     if (item.locAtts) {
                         if (item.locAtts.length === 2 && !(isMultiLang || isMultiCurrency)) {
                             return false;
-                        } else if (  Ext.Array.indexOf( item.locAtts,'multiLang') > -1 && !isMultiLang) {
+                        } else if (Ext.Array.indexOf(item.locAtts, 'multiLang') > -1 && !isMultiLang) {
                             return false;
-                        } else if (Ext.Array.indexOf( item.locAtts,'multCurrency') > -1 && !isMultiCurrency) {
+                        } else if (Ext.Array.indexOf(item.locAtts, 'multCurrency') > -1 && !isMultiCurrency) {
                             return false;
                         }
                     }
@@ -66,13 +68,13 @@ Ext.define('Taco.store.Navigation', {
                     if (Taco.store.Navigation.getSubNavLinksMerged()) {
                         return;
                     }
-                    
-                    subNavStore.each(function (item) {
+
+                    subNavStore.each(function(item) {
                         var parent = navStore.getById(item.get('parentId'));
-                        
+
                         if (item.get('location') && item.get('location').indexOf('menu') !== -1) {
                             parent = navStore.getById(item.get('location').replace('menu', ''));
-                        } 
+                        }
 
                         if (!parent) {
                             return;
@@ -89,9 +91,7 @@ Ext.define('Taco.store.Navigation', {
 
                     });
                     Taco.store.Navigation.setSubNavLinksMerged();
-                },
-                isMultiCurrency,
-                isMultiLang;
+                };
             
             Ext.Array.each(Taco.app.context.masterCatalogs, function (mc) {
                 if (mc.getSupportedCurrencies().length > 1) {

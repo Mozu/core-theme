@@ -649,7 +649,7 @@ Ext.define('Taco.model.Product', {
     },
     configureRuntimeProduct: function (cfg, qty) {
         var me = this,
-            qtyParam = qty ? '&quantity=' + qty : '';
+            qtyParam = qty ? '&quantity=' + qty : '',
             options = Ext.apply(
             {
                 method: 'POST',

@@ -209,6 +209,7 @@ Ext.define('Taco.view.order.subform.Payment', {
     },
 
     getNewPaymentActions: function() {
+        var me = this;
 
         function makeAction(text, cls) {
             return Ext.create('Ext.Action', {
@@ -231,8 +232,7 @@ Ext.define('Taco.view.order.subform.Payment', {
             });
         }
 
-        var me = this,
-            actions = me.paymentActions = {
+        var actions = me.paymentActions = {
                 addCreditCard: makeAction('Credit Card', 'Taco.view.order.modal.AddPayment'),
                 requestCheck: makeAction('Check', 'Taco.view.order.modal.RequestCheck'),
                 addManualCreditCard: makeAction('Credit Card (Manual)', 'Taco.view.order.modal.AddPaymentManual'),
