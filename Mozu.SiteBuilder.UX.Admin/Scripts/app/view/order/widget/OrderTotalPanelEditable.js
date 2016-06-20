@@ -420,6 +420,34 @@ Ext.define('Taco.view.order.widget.OrderTotalPanelEditable', {
     initPriceListCombo: function () {
         var me = this;
 
+        function setNewPriceList(orderId, priceListCode) {
+            me.fireEvent('save');
+
+            me.record.setPriceList({
+                jsonData: {
+                    orderId: orderId,
+                    priceListCode: priceListCode
+                },
+                success: function(response) {
+                    var json = Ext.decode(response.responseText, true);
+                    if (!json || !json.success) {
+                        Taco.app.fireEvent('setmessage', "Error setting price list.", 'error');
+                        return;
+                    }
+
+                    me.fireEvent('saveSuccess', json);
+                },
+                failure: function(response) {
+                    // Reset pricelist combo value.
+                    me.priceListCombo.setValue(me.record.get('priceListCode'));
+                    var json = Ext.decode(response.responseText, true),
+                        msg = (json && json.message) ? json.message : "Error setting price list.";
+                    Taco.app.fireEvent('setmessage', msg, 'error');
+                    me.fireEvent('saveFailure');
+                }
+            });
+        }
+
         function applyPriceList(combo, priceListRecord)
         {
             if (priceListRecord.get('filteredInStorefront')) {
@@ -450,32 +478,6 @@ Ext.define('Taco.view.order.widget.OrderTotalPanelEditable', {
             } else {
                 setNewPriceList(me.record.getId(), priceListRecord.get('code'));
             }
-        }
-
-        function setNewPriceList(orderId, priceListCode) {
-            me.fireEvent('save');
-
-            me.record.setPriceList({
-                jsonData: {
-                    orderId: orderId,
-                    priceListCode: priceListCode
-                },
-                success: function(response) {
-                    var json = Ext.decode(response.responseText, true);
-                    if (!json || !json.success) {
-                        Taco.app.fireEvent('setmessage', "Error setting price list.", 'error');
-                        return;
-                    }
-
-                    me.fireEvent('saveSuccess', json);
-                },
-                failure: function(response) {
-                    var json = Ext.decode(response.responseText, true),
-                        msg = (json && json.message) ? json.message : "Error setting price list.";
-                    Taco.app.fireEvent('setmessage', msg, 'error');
-                    me.fireEvent('saveFailure');
-                }
-            });
         }
 
         this.priceListCombo = Ext.create('Taco.view.order.widget.PriceListPickerField', {

@@ -118,14 +118,17 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
                 messagesArray.Add(new {message = error.Message}.ToJObject(_cartSerializer.Value));
             }
 
-            if (cart.CartMessage != null && !cart.CartMessage.Message.IsNullOrEmpty())
+            if (cart.CartMessages != null)
             {
-                messagesArray.Add(new
-                    {
-                        message =  cart.CartMessage.Message,
-                        messageType = cart.CartMessage.MessageType,
-                        productsRemoved = cart.CartMessage.ProductsRemoved
-                    }.ToJObject(_cartSerializer.Value));
+                foreach (var cartMessage in cart.CartMessages.Where(x => !string.IsNullOrEmpty(x.Message)))
+                {
+                    messagesArray.Add(new
+                        {
+                            message =  cartMessage.Message,
+                            messageType = cartMessage.MessageType,
+                            productsRemoved = cartMessage.ProductsRemoved
+                        }.ToJObject(_cartSerializer.Value));
+                }
             }
 
             if (messagesArray.Count > 0)

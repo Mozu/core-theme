@@ -590,13 +590,41 @@
   <Choose>
     <When Condition="$(TargetFrameworkIdentifier) == '.NETFramework' And ($(TargetFrameworkVersion) == 'v4.5' Or $(TargetFrameworkVersion) == 'v4.5.1')">
       <ItemGroup>
-        <Reference Include="MongoDB.Bson">
-          <HintPath>..\packages\mongocsharpdriver\lib\net35\MongoDB.Bson.dll</HintPath>
+        <Reference Include="MongoDB.Driver.Legacy">
+          <HintPath>..\packages\mongocsharpdriver\lib\net45\MongoDB.Driver.Legacy.dll</HintPath>
           <Private>True</Private>
           <Paket>True</Paket>
         </Reference>
+      </ItemGroup>
+    </When>
+  </Choose>
+  <Choose>
+    <When Condition="$(TargetFrameworkIdentifier) == '.NETFramework' And ($(TargetFrameworkVersion) == 'v4.5' Or $(TargetFrameworkVersion) == 'v4.5.1')">
+      <ItemGroup>
+        <Reference Include="MongoDB.Bson">
+          <HintPath>..\packages\MongoDB.Bson\lib\net45\MongoDB.Bson.dll</HintPath>
+          <Private>True</Private>
+          <Paket>True</Paket>
+        </Reference>
+      </ItemGroup>
+    </When>
+  </Choose>
+  <Choose>
+    <When Condition="$(TargetFrameworkIdentifier) == '.NETFramework' And ($(TargetFrameworkVersion) == 'v4.5' Or $(TargetFrameworkVersion) == 'v4.5.1')">
+      <ItemGroup>
         <Reference Include="MongoDB.Driver">
-          <HintPath>..\packages\mongocsharpdriver\lib\net35\MongoDB.Driver.dll</HintPath>
+          <HintPath>..\packages\MongoDB.Driver\lib\net45\MongoDB.Driver.dll</HintPath>
+          <Private>True</Private>
+          <Paket>True</Paket>
+        </Reference>
+      </ItemGroup>
+    </When>
+  </Choose>
+  <Choose>
+    <When Condition="$(TargetFrameworkIdentifier) == '.NETFramework' And ($(TargetFrameworkVersion) == 'v4.5' Or $(TargetFrameworkVersion) == 'v4.5.1')">
+      <ItemGroup>
+        <Reference Include="MongoDB.Driver.Core">
+          <HintPath>..\packages\MongoDB.Driver.Core\lib\net45\MongoDB.Driver.Core.dll</HintPath>
           <Private>True</Private>
           <Paket>True</Paket>
         </Reference>

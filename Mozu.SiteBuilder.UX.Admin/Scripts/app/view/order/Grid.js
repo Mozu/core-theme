@@ -9,7 +9,6 @@ Ext.define('Taco.view.order.Grid', {
         'Taco.model.Category',
         'Taco.model.Order',
         'Taco.store.OrderGrid',
-        'Taco.view.order.modal.ProductConfigurator',
         'Taco.view.order.modal.BulkActionMessage'
     ],
 

@@ -181,10 +181,13 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
             //todo do i need to replace recurese
             // recurse: recurse,
 
+            var isVolumePricingBandsEnabled = ((bool?)(JToken)SiteContext.ThemeSettings["listVolumePricing"]);
+            string responseOptions = isVolumePricingBandsEnabled.GetValueOrDefault() ? "volumePriceBands" : null;
+
             if (includeFacets.GetValueOrDefault(false) && categoryId.HasValue)
             {
                 string facetValueFilter = HttpRequestBase.QueryString["facetValueFilter"];
-                ProductSearchResult pcDC = await (await _searchClient.Search(query: "*:*", filter: filter, startIndex: startIdx, pageSize: itemsPerPage, sortBy: sortBy, facetTemplate: "categoryId:" + categoryId, facetHierValue: "categoryId:" + categoryId, facetHierDepth: "categoryId:2", facetValueFilter: facetValueFilter)).ReadAsAsync();
+                ProductSearchResult pcDC = await (await _searchClient.Search(query: "*:*", filter: filter, startIndex: startIdx, pageSize: itemsPerPage, sortBy: sortBy, facetTemplate: "categoryId:" + categoryId, facetHierValue: "categoryId:" + categoryId, facetHierDepth: "categoryId:2", facetValueFilter: facetValueFilter, responseOptions: responseOptions)).ReadAsAsync();
                 var pc = Mapper.Map<UX.Models.StoreFront.Catalog.ProductSearchResult>(pcDC);
                 pc.Init(true, this.PageContext.Search);
                 return pc;

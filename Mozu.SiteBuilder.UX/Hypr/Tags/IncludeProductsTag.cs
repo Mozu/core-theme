@@ -16,6 +16,7 @@ using NDjango.Interfaces;
 using NDjango.FiltersCS.Compatibility;
 using Mozu.SiteBuilder.Mvc.Catalog;
 using Mozu.SiteBuilder.Mvc.Contexts;
+using Newtonsoft.Json.Linq;
 
 namespace Mozu.SiteBuilder.UX.Hypr.Tags
 {
@@ -60,11 +61,11 @@ namespace Mozu.SiteBuilder.UX.Hypr.Tags
         {
             var pageContext = context.PageContext();
             var siteContext = context.SiteContext();
+            var themeSettings = siteContext.ThemeSettings;
             var searchContext = pageContext.Search;
             var sbAPIContext = context.SiteBuilderApiContext();
-
-
-
+            
+            
             var template = arguments.GetValueOrDefault<string>("viewName") ?? (string)arguments[0].Value;
             var includeFacets = arguments.GetValueOrDefault("includeFacets", false);
             var pageWithUrl = arguments.GetValueOrDefault("pageWithUrl", false);
@@ -93,8 +94,9 @@ namespace Mozu.SiteBuilder.UX.Hypr.Tags
             int? categoryId;
             GetCategoryCodes(arguments, context, pageContext, out facetCategoryId, out categoryId);
 
-
-
+            var isVolumePricingBandsEnabled = ((bool?)(JToken)themeSettings["listVolumePricing"]);
+            var responseOptions = isVolumePricingBandsEnabled.GetValueOrDefault() ? "volumePriceBands" : null;
+            
             var productSearchWebApiClient = context.Resolve<IProductSearchWebApiClient>();
           
             
@@ -147,7 +149,8 @@ namespace Mozu.SiteBuilder.UX.Hypr.Tags
                 searchTuningRuleContext ,
                 facetTemplateExclude,
                 sbAPIContext.PriceListCode,
-                facetPrefix
+                facetPrefix,
+                responseOptions
              ).ConfigureAwait(false);
 
             var dict = new Dictionary<string, object> { { "model", pc } };
@@ -193,11 +196,11 @@ namespace Mozu.SiteBuilder.UX.Hypr.Tags
             string searchTuningRuleContext,
             string facetTemplateExclude,
             string priceList,
-            string facetPrefix
+            string facetPrefix,
+            string responseOptions
             )
         {
             string cacheKey = null;
-           
             ProductSearchResult pc = null;
             if (cacheResults)
             {
@@ -219,6 +222,7 @@ namespace Mozu.SiteBuilder.UX.Hypr.Tags
                     .Append(facetTemplateExclude)
                     .Append (priceList)
                     .Append(facetPrefix)
+                    .Append(responseOptions)
                     .ToString();
 
                 pc = cache.Get<ProductSearchResult>(cacheKey, scope:CacheScope.Site , cacheType:StorefrontCacheTypes.ProductSearch);
@@ -237,12 +241,11 @@ namespace Mozu.SiteBuilder.UX.Hypr.Tags
                     startIndex: startIndex,
                     sortBy: sortBy.sortValue,
                     responseFields: responseFields,
+                    responseOptions: responseOptions,
                     pageSize: pageSize,
                     searchTuningRuleCode: searchTuningRuleCode,
                     enableSearchTuningRules: enableSearchTuningRules,
-                    searchTuningRuleContext: searchTuningRuleContext                
-              // facetTemplateExclude: facetTemplateExclude
-
+                    searchTuningRuleContext: searchTuningRuleContext
                     ).ConfigureAwait(false);
 
 
