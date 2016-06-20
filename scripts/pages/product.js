@@ -4,7 +4,9 @@
         templateName: 'modules/product/product-detail',
         additionalEvents: {
             "change [data-mz-product-option]": "onOptionChange",
-            "blur [data-mz-product-option]": "onOptionChange"
+            "blur [data-mz-product-option]": "onOptionChange",
+            "change [data-mz-value='quantity']": "onQuantityChange",
+            "keyup input[data-mz-value='quantity']": "onQuantityChange"
         },
         render: function () {
             var me = this;
@@ -80,10 +82,6 @@
                     }
                 }
             });
-            if (this.model.hasVolumePricing()) {
-                this.additionalEvents["change [data-mz-value='quantity']"] = "onQuantityChange";
-                this.additionalEvents["keyup :input[data-mz-value='quantity']"] = "onQuantityChange";
-            }
         }
     });
 
