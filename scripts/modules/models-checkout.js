@@ -552,6 +552,8 @@
                     order.get('billingInfo').clear();
                     order.set(updatedOrder, { silent: true });
                 }
+                self.setPurchaseOrderInfo();
+                self.setDefaultPaymentType(self);
                 self.trigger('orderPayment', updatedOrder, self);
 
             },
@@ -602,6 +604,8 @@
                         if (creditAmountToApply === 0) {
                             return order.apiVoidPayment(sameCreditPayment.id).then(function(o) {
                                 order.set(o.data);
+                                self.setPurchaseOrderInfo();
+                                self.setDefaultPaymentType(self);
                                 self.trigger('orderPayment', o.data, self);
                                 return o;
                             });
