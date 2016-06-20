@@ -82,14 +82,14 @@ Ext.define('Taco.view.order.subform.Payment', {
                     var lastValidPayment = me.getLastValidPayment();
                     var paymentType;
 
-                    if (me.isPurchaseOrderEnalbled()) {
+                    if (me.isPurchaseOrderEnabled() && me.record.customer.raw.purchaseOrderAccount.customerPurchaseOrderPaymentTerms.length > 0) {
                         action = me.paymentActions.addPurchaseOrder;
                     } else if (lastValidPayment) {
                         paymentType = lastValidPayment.get('paymentType');
 
                         if (paymentType === "Check") {
                             action = me.paymentActions.requestCheck;
-                        } else if (paymentType === "PurchaseOrder") {
+                        } else if (paymentType === "PurchaseOrder" && me.record.customer.raw.purchaseOrderAccount.customerPurchaseOrderPaymentTerms.length > 0) {
                             action = me.paymentActions.addPurchaseOrder;
                         }
                     }
@@ -99,7 +99,7 @@ Ext.define('Taco.view.order.subform.Payment', {
                 menu: me.getNewPaymentActions(),
                 listeners: {
                     menushow: function (cmp, menu) {
-                        var poEnabled = this.isPurchaseOrderEnalbled();
+                        var poEnabled = this.isPurchaseOrderEnabled();
                         var purchaseOrder = cmp.down('#purchaseOrderOption');
                         purchaseOrder[poEnabled ? 'show' : 'hide']();
                     }, scope: this
@@ -242,7 +242,7 @@ Ext.define('Taco.view.order.subform.Payment', {
         });
     },
 
-    isPurchaseOrderEnalbled: function () {
+    isPurchaseOrderEnabled: function () {
         var checkoutSettings = this.record && this.record.checkoutSettings && this.record.checkoutSettings.get('purchaseOrder') ? this.record.checkoutSettings.get('purchaseOrder').isEnabled : false;
         var customerSettings = this.record.customer && this.record.customer.raw.purchaseOrderAccount ? this.record.customer.raw.purchaseOrderAccount.isEnabled : false;
 
