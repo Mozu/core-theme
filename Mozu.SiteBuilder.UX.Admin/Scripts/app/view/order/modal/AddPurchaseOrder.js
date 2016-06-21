@@ -7,7 +7,7 @@ Ext.define('Taco.view.order.modal.AddPurchaseOrder', {
     autoShow: true,
     scale: 'large',
     title: 'Create Purchase Order',
-
+ 
     primaryText: 'Done',
 
     initComponent: function (eOpts) {
