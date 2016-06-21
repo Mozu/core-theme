@@ -12,13 +12,19 @@ Ext.define('Taco.view.order.modal.AddPurchaseOrder', {
 
     initComponent: function (eOpts) {
 
+        // Throw an error if there are no payment terms assigned
+        if (this.record.customer.raw.purchaseOrderAccount.customerPurchaseOrderPaymentTerms.length == 0) {
+            Taco.app.fireEvent('setmessage', 'All required fields for Purchase Order are not configured for this customer', 'error');
+            return false;
+        }
+
         var me = this,
             balance = me.getBalance(me.record.get('customer').purchaseOrderAccount.availableBalance),
             totalBalance = me.record.get('customer').purchaseOrderAccount.totalAvailableBalance,
             limit = me.getLimit(me.record.get('customer').purchaseOrderAccount.creditLimit),
             terms = me.record.customer.raw.purchaseOrderAccount.customerPurchaseOrderPaymentTerms
                     ? me.getTerms(me.record.customer.raw.purchaseOrderAccount.customerPurchaseOrderPaymentTerms)
-                    : me.getTerms(['No terms specified']),
+                    : [],
             fields = me.getFields(me.record.checkoutSettings.get('purchaseOrder').customFields);
 
         var formItems = this.getPaymentForm();
