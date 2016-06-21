@@ -225,6 +225,12 @@ namespace Mozu.SiteBuilder.UX.Configuration
                 new { acceptConstraint = new AcceptConstraint("application/json", false) });
 
             routes.MapHttpRoute(
+                "Order Status",
+                "user/order-status",
+                new { controller = "Auth", action = "OrderStatus" },
+                new { acceptConstraint = new AcceptConstraint("application/json", false) });
+
+            routes.MapHttpRoute(
                 "Order Status Login",
                 "user/anonymous-login",
                 new { controller = "Auth", action = "AnonymousOrderLogin" },
