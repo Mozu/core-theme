@@ -194,7 +194,7 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
             }
             else
             {
-                var pcDC = await (await _productClient.GetProducts(filter: filter, startIndex: startIdx, pageSize: itemsPerPage, sortBy: sortBy, responseGroups: "Categories,Measurements,Properties,Options")).ReadAsAsync();
+                var pcDC = await (await _productClient.GetProducts(filter: filter, startIndex: startIdx, pageSize: itemsPerPage, sortBy: sortBy, responseOptions: responseOptions)).ReadAsAsync();
                 var pc = Mapper.Map<UX.Models.StoreFront.Catalog.ProductCollection>(pcDC);
                 pc.Init(true, this.PageContext.Search);
                 return pc;
