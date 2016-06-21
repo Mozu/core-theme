@@ -120,7 +120,19 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
 
             if (cart.CartMessages != null)
             {
-                foreach (var cartMessage in cart.CartMessages.Where(x => !string.IsNullOrEmpty(x.Message)))
+                Func<string, int> rank = messageType =>
+                {
+                    switch (messageType)
+                    {
+                        case "newPriceList": return 2;
+                        case "exclusivePriceList": return 1;
+                        default: return 0;
+                    }
+                };
+
+                var messages = cart.CartMessages.Where(x => !string.IsNullOrEmpty(x.Message)).ToList();
+                messages.Sort((a, b) => rank(b.MessageType).CompareTo(rank(a.MessageType))); // Sort descending
+                foreach (var cartMessage in messages)
                 {
                     messagesArray.Add(new
                         {
