@@ -274,15 +274,14 @@ Ext.define('Taco.view.order.subform.Payment', {
             });
         }
 
-        var me = this,
-            actions = me.paymentActions = {
-                        addPurchaseOrder: makeAction('Purchase Order', 'Taco.view.order.modal.AddPurchaseOrder', 'purchaseOrderOption'),
-                        addCreditCard: makeAction('Credit Card', 'Taco.view.order.modal.AddPayment', 'creditCardOption'),
-                        requestCheck: makeAction('Check', 'Taco.view.order.modal.RequestCheck', 'checkOptions'),
-                        addManualCreditCard: makeAction('Credit Card (Manual)', 'Taco.view.order.modal.AddPaymentManual', 'creditCardManualOption'),
-                        addGiftCard: makeAction('Gift Card', 'Taco.view.order.modal.AddGiftCard', 'giftCardOption'),
-                        addStoreCredit: makeAction('Store Credit', 'Taco.view.order.modal.AddGiftCard', 'storeCreditOption')
-                    };
+        var actions = me.paymentActions = {
+            addPurchaseOrder: makeAction('Purchase Order', 'Taco.view.order.modal.AddPurchaseOrder', 'purchaseOrderOption'),
+            addCreditCard: makeAction('Credit Card', 'Taco.view.order.modal.AddPayment', 'creditCardOption'),
+            requestCheck: makeAction('Check', 'Taco.view.order.modal.RequestCheck', 'checkOptions'),
+            addManualCreditCard: makeAction('Credit Card (Manual)', 'Taco.view.order.modal.AddPaymentManual', 'creditCardManualOption'),
+            addGiftCard: makeAction('Gift Card', 'Taco.view.order.modal.AddGiftCard', 'giftCardOption'),
+            addStoreCredit: makeAction('Store Credit', 'Taco.view.order.modal.AddGiftCard', 'storeCreditOption')
+        };
 
         return Ext.Object.getValues(actions);
     },
