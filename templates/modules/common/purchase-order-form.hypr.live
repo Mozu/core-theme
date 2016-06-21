@@ -61,7 +61,7 @@
             <div style="border: 2px solid black; padding: 4px;">
                 <div class="mz-l-formfieldgroup-row">
                     <div class="mz-l-formfieldgroup-cell">
-                        <strong>Credit Limit:</strong>
+                        <strong>{{labels.creditLimit}}:</strong>
                     </div>
                     <div class="mz-l-formfieldgroup-cell">
                         <span>{{ model.creditLimit | currency }}</span>
@@ -69,7 +69,7 @@
                 </div>
                 <div class="mz-l-formfieldgroup-row">
                     <div class="mz-l-formfieldgroup-cell">
-                        <strong>Available Balance:</strong>
+                        <strong>{{labels.availableBalance}}:</strong>
                     </div>
                     <div class="mz-l-formfieldgroup-cell">
                         <span>{{ model.availableBalance | currency }}
