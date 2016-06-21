@@ -1,4 +1,4 @@
-﻿define(['modules/jquery-mozu', 'underscore', 'modules/backbone-mozu', 'hyprlive'], function ($, _, Backbone, Hypr) {
+﻿define(['modules/jquery-mozu', 'underscore', 'modules/backbone-mozu', 'hyprlive', 'hyprlivecontext', 'modules/models-address'], function ($, _, Backbone, Hypr, HyprLiveContext, Address) {
     // payment methods only validate if they are selected!
     var PaymentMethod = Backbone.MozuModel.extend({
         present: function (value, attr) {
@@ -179,7 +179,189 @@
         }
     });
 
+    var PurchaseOrderCustomField = Backbone.MozuModel.extend({
+        /*validation: {
+            code: {
+                // set from code, before validation call
+                fn: 'present'
+            },
+            label: {
+                // set from code, before validation call
+                fn: 'present'
+            },
+            value: {
+                // set from user, but should be set before validation call:
+                fn: 'present'
+            }
+        }*/
+    });
+
+    var PurchaseOrderPaymentTerm = Backbone.MozuModel.extend({
+        // validation should pass! This is set from code and not sent to server.
+        /*validation: {
+            code: {
+                fn: 'present'
+            },
+            description: {
+                fn: 'present'
+            }
+        }*/
+    });
+
+    var PurchaseOrder = PaymentMethod.extend({
+        mozuType: 'purchaseorder',
+        defaults: {
+            isEnabled: false,
+            splitPayment: false,
+            amount: 0,
+            availableBalance: 0,
+            creditLimit: 0
+        },
+
+        relations: {
+            paymentTerm: PurchaseOrderPaymentTerm,
+            customFields: Backbone.Collection.extend({
+                model: PurchaseOrderCustomField
+            }),
+            paymentTermOptions: Backbone.Collection.extend({
+                model: PurchaseOrderPaymentTerm
+            })
+        },
+        
+        initialize: function() {
+            var self = this;
+        },
+
+        // take the custom fields array and add them to the model as individual .
+        deflateCustomFields: function() {
+            //"pOCustomField-"+field.code
+            var customFields = this.get('customFields').models;
+            var siteSettingsCustomFields = HyprLiveContext.locals.siteContext.checkoutSettings.purchaseOrder.customFields;
+            /*if(customFields.length > 0) {
+                customFields.forEach(function(field) {
+                    var ssCustomField = siteSettingsCustomFields.find(function(searchField) {
+                        return field.get('code') === searchField.code;
+                    }, this);
+
+                }, this);
+            }*/
+            siteSettingsCustomFields.forEach(function(field) {
+                if(field.isEnabled) {
+                    var data = customFields.find(function(val) {
+                        return val.get('code') === field.code;
+                    });
+
+                    if(data && data.get('value').length > 0) {
+                        this.set('pOCustomField-'+field.code, data.get('value'));
+                    }
+
+                    if(field.isRequired) {
+                        this.validation['pOCustomField-'+field.code] =
+                            {
+                                fn: 'present',
+                                msg: field.label+ " " + Hypr.getLabel('missing')
+                            };
+                    }
+                }
+            }, this);
+        },
+
+        inflateCustomFields: function() {
+            var customFields = [];
+            var siteSettingsCustomFields = HyprLiveContext.locals.siteContext.checkoutSettings.purchaseOrder.customFields;
+            
+            siteSettingsCustomFields.forEach(function(field) {
+                if(field.isEnabled) {
+                    var value = this.get("pOCustomField-"+field.code);
+                    var customField = {"code":field.code, "label": field.label, "value":value};
+                    // we only want this if it had data!
+                    if(value && value.length > 0) {
+                        customFields.push(customField);
+                    }
+                }
+            }, this);
+
+            if(customFields.length > 0) {
+                this.set('customFields', customFields, {silent: true});
+            }
+        },
+
+        validation: {
+            purchaseOrderNumber: {
+                fn: 'present',
+                msg: Hypr.getLabel('purchaseOrderNumberMissing')
+            },/*
+            customFields: {
+                fn: function(value, attr) {
+                    var siteSettingsCustomFields = HyprLiveContext.locals.siteContext.checkoutSettings.purchaseOrder.customFields;
+                    var purchaseOrderCustomFields = this.get('purchaseOrder').get('customFields').models;
+                    var result = null;
+                    siteSettingsCustomFields.forEach(function(field) {
+                        if(field.isEnabled && field.isRequired) {
+                            var fieldInput = $('#mz-payment-pOCustomField-' + field.code);
+
+                            var foundField = purchaseOrderCustomFields.find(function(poField){
+                                return poField.code === field.code;
+                            });
+
+                            if(foundField && foundField.get('code') && foundField.get('value').length > 0) {
+                                fieldInput.removeClass('is-invalid');
+                                $('#mz-payment-pOCustomField-' + field.code + '-validation').empty();
+                            } else {
+                                var errorMessage = field.label + " " + Hypr.getLabel('missing');
+                                fieldInput.addClass('is-invalid');
+                                $('#mz-payment-pOCustomField-' + field.code + '-validation').text(errorMessage);
+                                result = Hypr.getLabel('purchaseOrderCustomFieldMissing');
+                            }
+                        }
+                    });
+                    return result;
+                }
+            },*/
+            paymentTerm: {
+                fn: function(value, attr) {
+
+                    var selectedPaymentTerm = null;
+                    var purchaseOrder = null;
+                    if(attr.indexOf('billingInfo') > -1) {
+                        purchaseOrder = this.get('billingInfo').get('purchaseOrder');
+                        selectedPaymentTerm = this.get('billingInfo').get('purchaseOrder').get('paymentTerm');
+                    } else {
+                        purchaseOrder = this.get('purchaseOrder');
+                        selectedPaymentTerm = this.get('purchaseOrder').get('paymentTerm');
+                    }
+
+                    if(!purchaseOrder.selected) {
+                        return;
+                    }
+                    
+                    if(!selectedPaymentTerm.get('description')) {
+                        return Hypr.getLabel('purchaseOrderPaymentTermMissing');
+                    }
+
+                    return;
+                }
+            }
+        },
+        // the toJSON method should omit the CVV so it is not sent to the wrong API
+        toJSON: function (options) {
+            var j = PaymentMethod.prototype.toJSON.apply(this);
+            
+            return j;
+        },
+
+        dataTypes: {
+            isEnabled: Backbone.MozuModel.DataTypes.Boolean,
+            splitPayment: Backbone.MozuModel.DataTypes.Boolean,
+            amount: Backbone.MozuModel.DataTypes.Float,
+            availableBalance: Backbone.MozuModel.DataTypes.Float,
+            creditLimit: Backbone.MozuModel.DataTypes.Float
+        }
+
+    });
+
     return {
+        PurchaseOrder: PurchaseOrder,
         CreditCard: CreditCard,
         CreditCardWithCVV: CreditCardWithCVV,
         Check: Check,

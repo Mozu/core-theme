@@ -105,6 +105,26 @@ require(["modules/jquery-mozu", "underscore", "hyprlive", "modules/backbone-mozu
         }
     });
 
+    var poCustomFields = function() {
+        
+        var fieldDefs = [];
+
+        var isEnabled = HyprLiveContext.locals.siteContext.checkoutSettings.purchaseOrder &&
+            HyprLiveContext.locals.siteContext.checkoutSettings.purchaseOrder.isEnabled;
+
+            if (isEnabled) {
+                var siteSettingsCustomFields = HyprLiveContext.locals.siteContext.checkoutSettings.purchaseOrder.customFields;
+                siteSettingsCustomFields.forEach(function(field) {
+                    if (field.isEnabled) {
+                        fieldDefs.push('purchaseOrder.pOCustomField-' + field.code);
+                    }
+                }, this);
+            }
+
+        return fieldDefs;
+
+    };
+
     var visaCheckoutSettings = HyprLiveContext.locals.siteContext.checkoutSettings.visaCheckout;
     var pageContext = require.mozuData('pagecontext');
     var BillingInfoView = CheckoutStepView.extend({
@@ -135,8 +155,10 @@ require(["modules/jquery-mozu", "underscore", "hyprlive", "modules/backbone-mozu
             'billingContact.phoneNumbers.home',
             'billingContact.email',
             'creditAmountToApply',
-            'digitalCreditCode'
-        ],
+            'digitalCreditCode',
+            'purchaseOrder.purchaseOrderNumber',
+            'purchaseOrder.paymentTerm'
+        ].concat(poCustomFields()),
         renderOnChange: [
             'billingContact.address.countryCode',
             'paymentType',
@@ -148,10 +170,12 @@ require(["modules/jquery-mozu", "underscore", "hyprlive", "modules/backbone-mozu
             "change [data-mz-digital-credit-enable]": "enableDigitalCredit",
             "change [data-mz-digital-credit-amount]": "applyDigitalCredit",
             "change [data-mz-digital-add-remainder-to-customer]": "addRemainderToCustomer",
-            "change [name='paymentType']": "resetPaymentData"
+            "change [name='paymentType']": "resetPaymentData",
+            "change [data-mz-purchase-order-payment-term]": "updatePurchaseOrderPaymentTerm"
         },
 
         initialize: function () {
+            // this.addPOCustomFieldAutoUpdate();
             this.listenTo(this.model, 'change:digitalCreditCode', this.onEnterDigitalCreditCode, this);
             this.listenTo(this.model, 'orderPayment', function (order, scope) {
                     this.render();
@@ -168,6 +192,12 @@ require(["modules/jquery-mozu", "underscore", "hyprlive", "modules/backbone-mozu
             }
             this.model.clear();
             this.model.resetAddressDefaults();
+            if(HyprLiveContext.locals.siteContext.checkoutSettings.purchaseOrder.isEnabled) {
+                this.model.setPurchaseOrderInfo();
+            }
+        },
+        updatePurchaseOrderPaymentTerm: function(e) {
+            this.model.setPurchaseOrderPaymentTerm(e.target.value);
         },
         render: function() {
             preserveElements(this, ['.v-button'], function() {
