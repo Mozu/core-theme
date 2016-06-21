@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using AutoMapper;
+using Mozu.SiteBuilder.UX.Admin.Api.Models.Account;
 using DC = Mozu.Customer.Contracts;
 using ApiCustomer = Mozu.SiteBuilder.UX.Admin.Api.Models.Customer;
 using Contact = Mozu.SiteBuilder.UX.Admin.Api.Models.Contact;
@@ -48,6 +49,8 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.ModelMapping
                 .ForMember(x => x.WishlistCount, op => op.Ignore())
                 .ForMember(x => x.PaymentCards, op => op.Ignore())
                 .ForMember(x => x.IsDisabled, op => op.ResolveUsing(dc => !dc.IsActive))
+                .ForMember(x=>x.PurchaseOrderAccount,op=>op.Ignore())
+                .ForMember(x=>x.IsPoEnabled,op=>op.Ignore())
                 ;
 
             //todo: Greg Murray on 2014-01-23 redundant mappings, ex FirstName => FirstName, Remove?
@@ -89,10 +92,31 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.ModelMapping
                 //ignore
                 .ForMember(dc => dc.LocaleCode, op => op.Ignore())
                 .ForMember(dc => dc.AuditInfo, op => op.Ignore())
-                .ForMember(dc => dc.IsLocked, op => op.Ignore())
                 .ForMember(dc => dc.IsActive, op => op.ResolveUsing(x => !x.IsDisabled))
                 ;
 
+            Mapper.CreateMap<DC.CustomerPurchaseOrderAccount, CustomerPurchaseOrderAccount>()
+                ;
+            Mapper.CreateMap<CustomerPurchaseOrderAccount, DC.CustomerPurchaseOrderAccount>()
+                .ForMember(dc => dc.AuditInfo, op => op.Ignore())
+                ;
+            
+            Mapper.CreateMap<DC.CustomerPurchaseOrderPaymentTerm, PurchaseOrderPaymentTerm>()
+                ;
+            Mapper.CreateMap<PurchaseOrderPaymentTerm, DC.CustomerPurchaseOrderPaymentTerm>()
+                .ForMember(dc => dc.AuditInfo, opt => opt.Ignore())
+                ;
+
+            Mapper.CreateMap<DC.PurchaseOrderTransaction, CustomerPurchaseOrderTransaction>()
+                .ForMember(dc=>dc.OrderNumber, opt=>opt.Ignore())
+                .ForMember(dc => dc.OrderType, opt => opt.Ignore())
+                ;
+            Mapper.CreateMap<CustomerPurchaseOrderTransaction, DC.PurchaseOrderTransaction>()
+                .ForMember(dc => dc.AuditInfo, opt => opt.Ignore())
+                ;
+
+            Mapper.CreateMap<DC.CustomerAuditEntry, CustomerAuditEntry>();
+            Mapper.CreateMap<CustomerAuditEntry, DC.CustomerAuditEntry>();
 
             Mapper.CreateMap<Mozu.SiteBuilder.UX.Admin.Api.Models.CustomerSegment, DC.CustomerSegment>()
                 .ForMember(x => x.Id, op => op.ResolveUsing(x => x.Id))

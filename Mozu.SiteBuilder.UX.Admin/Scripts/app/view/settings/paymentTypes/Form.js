@@ -15,10 +15,12 @@ Ext.define('Taco.view.settings.paymentTypes.Form', {
                
         me.creditCards = Ext.create('Taco.view.settings.paymentTypes.subform.CreditCards', me);
         me.checkByMail = Ext.create('Taco.view.settings.paymentTypes.subform.CheckByMail', me);
+        me.purchaseOrder = Ext.create('Taco.view.settings.paymentTypes.subform.PurchaseOrder', me);
         
         me.items = [
             me.creditCards,
-            me.checkByMail
+            me.checkByMail,
+            me.purchaseOrder
         ];
 
         me.externalGateWayDefinitionsStore = Taco.core.data.StoreManager.getOrCreate('Taco.store.ExternalGatewayDefinitions');

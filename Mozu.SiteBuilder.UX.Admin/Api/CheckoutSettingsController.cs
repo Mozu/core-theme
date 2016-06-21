@@ -64,6 +64,52 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
             return Single2(ret);
         }
 
+        [HttpGetRoute(UriTemplate = "read/paymentTerms/all")]
+        public async Task<Response<List<SitePaymentTerm>>> GetPaymentTerms()
+        {
+            var tenant = (await _tenantClient.GetTenant(this.SbApiContext.TenantId)).ReadAsSync();
+
+            var tasks = tenant.Sites.Take(10).Select(site => _checkoutSettingsWebApiClient.CloneWithApiContext(ctx =>
+            {
+                ctx.SiteId = site.Id;
+                ctx.CurrencyCode = site.CurrencyCode;
+                ctx.MasterCatalogId = tenant.MasterCatalogs.FirstOrDefault(mc => mc.Catalogs.Any(cat => cat.Id == site.CatalogId))?.Id;
+                ctx.CatalogId = site.CatalogId;               
+            }).GetPaymentSettings().ContinueWith( res=>
+            {
+                var po = res.Result.ReadAsSync()?.PurchaseOrder;
+                return new SitePaymentTerm()
+                {
+                    siteId = site.Id,
+                    isPoEnabled = po?.IsEnabled == true,
+                    paymentTerms = po?.PaymentTerms ?? new System.Collections.Generic.List<DC.PurchaseOrderPaymentTerm>()
+                };
+                
+            })).ToList();
+
+            var list = (await Task.WhenAll(tasks)).ToList();
+
+
+            return List2(list);
+        }
+
+        public class SitePaymentTerm
+        {
+            public int siteId { get; set; }
+            public bool isPoEnabled { get; set; }
+            public List<DC.PurchaseOrderPaymentTerm> paymentTerms { get; set; }
+        }
+
+
+        [HttpGetRoute(UriTemplate = "read/paymentTerms/site")]
+        public async Task<Response<List<DC.PurchaseOrderPaymentTerm>>> GetSitePaymentTerms()
+        {
+            
+            var dcSettings = (await _checkoutSettingsWebApiClient.GetPaymentSettings()).ReadAsSync();
+            return List2(dcSettings.PurchaseOrder?.PaymentTerms ?? new List<DC.PurchaseOrderPaymentTerm>());
+            
+        }
+
         /// <summary>
         /// Returns the active checkout settings
         /// </summary>

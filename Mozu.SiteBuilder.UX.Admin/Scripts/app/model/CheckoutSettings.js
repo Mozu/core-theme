@@ -20,6 +20,7 @@ Ext.define('Taco.model.CheckoutSettings', {
             }
 
         },
+        { name: "purchaseOrder", type: "any", defaultValue: {} }
         /*
         {
             name: "supportedCards",

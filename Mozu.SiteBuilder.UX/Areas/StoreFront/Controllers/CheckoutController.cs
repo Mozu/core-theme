@@ -5,6 +5,7 @@ using System.Net;
 using System.Net.Http;
 using System.Net.Sockets;
 using System.Threading.Tasks;
+using MongoDB.Bson;
 using Mozu.CommerceRuntime.Contracts.Clients;
 using Mozu.CommerceRuntime.Contracts.Commerce;
 using Mozu.CommerceRuntime.Contracts.Fulfillment;
@@ -31,6 +32,8 @@ using Mozu.Core.Actions;
 using Mozu.Core.Api.Contracts.Client;
 using Mozu.Core.Extensions;
 using Mozu.SiteBuilder.Mvc.OAF;
+using AutoMapper;
+using Mozu.SiteBuilder.UX.Models.Customers;
 
 namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
 {
@@ -177,6 +180,7 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
             Customer.Contracts.CustomerAccount account = null;
             CardCollection cards = null;
             Customer.Contracts.Credit.CreditCollection credits = null;
+            Customer.Contracts.CustomerPurchaseOrderAccount accountPurchaseOrder = null;
 
 
             var shipTask = GetShippableCountries();
@@ -247,6 +251,7 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
             {
                 account = (await _customerAccountWebApiClient.GetAccount(this.PageContext.User.AccountId)).ReadAsSync();
                 cards = (await _customerAccountWebApiClient.GetAccountCards(this.PageContext.User.AccountId)).ReadAsSync();
+                accountPurchaseOrder = (await _customerAccountWebApiClient.GetCustomerPurchaseOrderAccount(this.PageContext.User.AccountId)).ReadAsSync();
                 credits = (await _creditWebApiClient.GetCredits(0, 25, null, String.Format("CustomerId eq \"{0}\" and activationdate le \"{1}\" and expirationdate ge \"{1}\"", this.PageContext.User.AccountId, DateTime.UtcNow.ToString("o")))).ReadAsSync();
                 CustomerContact primaryShippingContact = null;
                 //CustomerContact primaryBillingContact = null;
@@ -311,6 +316,23 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
                 var accountJson = account.ToJObject();
                 accountJson.Add("cards", cards.Items.ToJArray());
                 accountJson.Add("credits", credits.Items.ToJArray());
+                if (SiteContext.CheckoutSettings.PurchaseOrder != null && SiteContext.CheckoutSettings.PurchaseOrder.IsEnabled && accountPurchaseOrder != null)
+                {
+                    var customerPurchaseOrder = Mapper.Map<Mozu.SiteBuilder.UX.Models.Customers.CustomerPurchaseOrderAccount>(accountPurchaseOrder);
+                    var paymentTermOptions = this.SiteContext.CheckoutSettings.PurchaseOrder.PaymentTerms;
+                    // helper object that inherits from contract, filters for specific site, then create new payment array and apply it to accountPurchaseOrder before doing .toJObject()
+                    var paymentTermList = new List<PurchaseOrderPaymentTerm>();
+                    foreach (var term in customerPurchaseOrder.PaymentTerms)
+                    {
+                        if (term.SiteId == SiteContext.SiteId)
+                        {
+                            paymentTermList.Add(term);
+                        }
+                    }
+                    customerPurchaseOrder.PaymentTerms = paymentTermList;
+                    var purchaseOrderJObject = customerPurchaseOrder.ToJObject();
+                    accountJson.Add("purchaseOrder", purchaseOrderJObject);
+                }
                 jOrder.Add("customer", accountJson);
             }
 

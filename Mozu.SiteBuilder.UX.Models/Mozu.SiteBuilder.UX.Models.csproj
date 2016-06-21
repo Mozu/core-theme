@@ -162,6 +162,7 @@
     <Compile Include="Admin\Email\GiftCardEmailOrderCredit.cs" />
     <Compile Include="Admin\TaContext.cs" />
     <Compile Include="Customers\Address.cs" />
+    <Compile Include="Customers\CustomerPurchaseOrderAccount.cs" />
     <Compile Include="Customers\Contact.cs" />
     <Compile Include="Customers\CurrencyAmount.cs" />
     <Compile Include="Customers\CustomerAccount.cs" />

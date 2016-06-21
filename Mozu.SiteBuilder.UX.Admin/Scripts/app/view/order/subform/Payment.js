@@ -6,6 +6,7 @@ Ext.define('Taco.view.order.subform.Payment', {
     alias: 'widget.taco-orderpayment',
     requires: [
         'Taco.view.order.modal.Refund',
+        'Taco.view.order.modal.AddPurchaseOrder',
         'Taco.view.order.modal.CreditPayment',
         'Taco.view.order.modal.RequestCheck',
         'Taco.view.order.modal.ApplyCheck',
@@ -46,6 +47,18 @@ Ext.define('Taco.view.order.subform.Payment', {
         var record = this.record;
         var isUnpaid = record.get("paymentStatus") === "Unpaid";
 
+        Taco.model.CheckoutSettings.load(123, {
+            scope: this,
+            failure: function () {
+                // there should be a message here
+            },
+            success: function (record) {
+            },
+            callback: function (record) {
+                this.record.checkoutSettings = record;
+            }
+        });
+
         this.tools = [
             Ext.widget('button', {
                 itemId: 'refundButton',
@@ -63,13 +76,34 @@ Ext.define('Taco.view.order.subform.Payment', {
             me.addPaymentButton = Ext.widget('splitbutton', {
                 menuAlign: 'tr-br?',
                 text: 'Add Payment',
-                handler: function() {
+                itemId: 'paymentSplitButton',
+                handler: function () {
                     var action = me.paymentActions.addCreditCard;
                     var lastValidPayment = me.getLastValidPayment();
-                    if (lastValidPayment && lastValidPayment.get('paymentType') === "Check") action = me.paymentActions.requestCheck;
+                    var paymentType;
+
+                    if (me.isPurchaseOrderEnalbled()) {
+                        action = me.paymentActions.addPurchaseOrder;
+                    } else if (lastValidPayment) {
+                        paymentType = lastValidPayment.get('paymentType');
+
+                        if (paymentType === "Check") {
+                            action = me.paymentActions.requestCheck;
+                        } else if (paymentType === "PurchaseOrder") {
+                            action = me.paymentActions.addPurchaseOrder;
+                        }
+                    }
+
                     return action.execute();
                 },
                 menu: me.getNewPaymentActions(),
+                listeners: {
+                    menushow: function (cmp, menu) {
+                        var poEnabled = this.isPurchaseOrderEnalbled();
+                        var purchaseOrder = cmp.down('#purchaseOrderOption');
+                        purchaseOrder[poEnabled ? 'show' : 'hide']();
+                    }, scope: this
+                },
                 ui: 'action',
                 scale: 'medium',
                 margin: '0 2px 0 0'
@@ -208,12 +242,20 @@ Ext.define('Taco.view.order.subform.Payment', {
         });
     },
 
+    isPurchaseOrderEnalbled: function () {
+        var checkoutSettings = this.record && this.record.checkoutSettings && this.record.checkoutSettings.get('purchaseOrder') ? this.record.checkoutSettings.get('purchaseOrder').isEnabled : false;
+        var customerSettings = this.record.customer && this.record.customer.raw.purchaseOrderAccount ? this.record.customer.raw.purchaseOrderAccount.isEnabled : false;
+
+        return checkoutSettings && customerSettings;
+    },
+
     getNewPaymentActions: function() {
         var me = this;
 
-        function makeAction(text, cls) {
+        function makeAction(text, cls, itemId) {
             return Ext.create('Ext.Action', {
                 text: text,
+                itemId: itemId,
                 handler: function() {
                     Ext.create(cls, {
                         record: me.record,  listeners: {
@@ -232,13 +274,15 @@ Ext.define('Taco.view.order.subform.Payment', {
             });
         }
 
-        var actions = me.paymentActions = {
-                addCreditCard: makeAction('Credit Card', 'Taco.view.order.modal.AddPayment'),
-                requestCheck: makeAction('Check', 'Taco.view.order.modal.RequestCheck'),
-                addManualCreditCard: makeAction('Credit Card (Manual)', 'Taco.view.order.modal.AddPaymentManual'),
-                addGiftCard: makeAction('Gift Card', 'Taco.view.order.modal.AddGiftCard'),
-                addStoreCredit: makeAction('Store Credit', 'Taco.view.order.modal.AddGiftCard')
-            };
+        var me = this,
+            actions = me.paymentActions = {
+                        addPurchaseOrder: makeAction('Purchase Order', 'Taco.view.order.modal.AddPurchaseOrder', 'purchaseOrderOption'),
+                        addCreditCard: makeAction('Credit Card', 'Taco.view.order.modal.AddPayment', 'creditCardOption'),
+                        requestCheck: makeAction('Check', 'Taco.view.order.modal.RequestCheck', 'checkOptions'),
+                        addManualCreditCard: makeAction('Credit Card (Manual)', 'Taco.view.order.modal.AddPaymentManual', 'creditCardManualOption'),
+                        addGiftCard: makeAction('Gift Card', 'Taco.view.order.modal.AddGiftCard', 'giftCardOption'),
+                        addStoreCredit: makeAction('Store Credit', 'Taco.view.order.modal.AddGiftCard', 'storeCreditOption')
+                    };
 
         return Ext.Object.getValues(actions);
     },

@@ -23,7 +23,8 @@ Ext.define('Taco.view.order.Form', {
         'Taco.store.Channels',
         'Taco.store.Countries',
         'Taco.store.Attributes',
-        'Taco.store.OrderAttributes'
+        'Taco.store.OrderAttributes',
+        'Taco.model.CheckoutSettings'
     ],
 
     model: 'Taco.model.Order',
@@ -63,6 +64,29 @@ Ext.define('Taco.view.order.Form', {
 
     initComponent: function () {
         var me = this;
+        this.checkoutSettings = null;
+
+        var fields = Taco.model.CheckoutSettings.getFields(),
+            purchaseOrder = {};
+
+        fields.forEach(function (field) {
+            if (field.name == 'purchaseOrder') {
+                purchaseOrder = field;
+                return;
+            }
+        });
+
+        Taco.model.CheckoutSettings.load(123, {
+            scope: this,
+            failure: function () {
+                console.log('you failed')
+            },
+            success: function (record) {
+            },
+            callback: function (record) {
+                me.checkoutSettings = record;
+            }
+        });
 
         // after the record is reloaded we will need to refresh the ui
         me.mon(me.record, 'aftercommit', function () {
@@ -103,7 +127,7 @@ Ext.define('Taco.view.order.Form', {
     },
 
     onCustomerChange: function (view, customerRecord) {
-
+        this.createPaymentTab();
     },
 
     onBeforeReload: function () {
@@ -225,9 +249,11 @@ Ext.define('Taco.view.order.Form', {
 
         this.orderDetailPanel = Ext.create('Taco.view.order.subform.Detail', Ext.apply({}, subformCfg));
 
-        this.paymentPanel = Ext.create('Taco.view.order.subform.Payment', Ext.apply({}, subformCfg));
-
         this.auditLogPanel = Ext.create('Taco.view.order.subform.AuditLog', subformCfg);
+
+        if (me.record.get('customer')) {
+            this.createPaymentTab();
+        }
 
         // we always show for online orders. for offline orders we need hide the detail panel until the header is filled out.
         if ((me.record.get("orderType")=="Online") || me.isHeaderDataComplete()) {
@@ -254,6 +280,15 @@ Ext.define('Taco.view.order.Form', {
         }
 
         this.items = items;
+    },
+
+    createPaymentTab: function() {
+        var subformCfg = {
+            record: this.record,
+            orderForm: this
+        };
+
+        this.paymentPanel = Ext.create('Taco.view.order.subform.Payment', Ext.apply({}, subformCfg));
     },
 
     isEdit: function () {
@@ -333,7 +368,7 @@ Ext.define('Taco.view.order.Form', {
 
                         // this is the validation message that you get when you have not met the min. requirements for saving a form.
                         if (msg = "Item not found: Action 'SubmitOrder' not found or available. ") {
-                            msg = "Unable to submit order. Check to make sure order "
+                            msg = "Insufficient funds. Please choose an alternate method of payment."
                         }
 
                         Taco.app.fireEvent('setmessage', msg, 'error');

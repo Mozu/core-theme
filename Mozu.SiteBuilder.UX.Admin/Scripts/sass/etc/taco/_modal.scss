@@ -339,4 +339,14 @@
             }
         }
     }
+
+    .void-purchase-order {
+        .#{$prefix}box-item {
+            &.#{$prefix}window-item {
+                .#{$prefix}box-inner {
+                    min-height: 130px;
+                }
+            }
+        }
+    }
 }
