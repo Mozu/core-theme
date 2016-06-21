@@ -7,9 +7,9 @@
     padding-bottom: @gutter;
 }
 .mz-volume-pricing {
+    font-size: @fontSize;
 
     .mz-volume-price {
-        font-size: @fontSize;
         padding-left: 2px;
         padding-right: 2px;
     }
@@ -19,18 +19,11 @@
         }
     }
     th {
-        font-size: @fontSize;
         text-align: center;
         padding: @gutter/2 @gutter;
         color: #eee;
         background-color: #666;
         border-bottom: 1px solid #fff;
-        &.mz-volume-pricing-header-quantity {
-
-        }
-        &.mz-volume-pricing-header-price {
-
-        }
     }
     tr {
         &.mz-volume-pricing-active-band {
@@ -39,13 +32,9 @@
     }
     td {
         text-align: center;
-        font-size: @fontSize;
         &.mz-volume-pricing-cell-price {
             text-align: right;
             padding-right: 10px;
-            font-size: @fontSize;
         }
-
     }
-
 }

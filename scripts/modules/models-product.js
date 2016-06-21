@@ -185,7 +185,7 @@
           mozuType: 'product',
           idAttribute: 'productCode',
           handlesMessages: true,
-          helpers: ['mainImage', 'notDoneConfiguring', 'hasPriceRange', 'supportsInStorePickup', 'isPurchasable'],
+          helpers: ['mainImage', 'notDoneConfiguring', 'hasPriceRange', 'supportsInStorePickup', 'isPurchasable','hasVolumePricing'],
           defaults: {
               purchasableState: {},
               quantity: 1
@@ -261,7 +261,7 @@
               this._minQty = 1;
               if (this.get('volumePriceBands') && this.get('volumePriceBands').length > 0) {
                   this._hasVolumePricing = true;
-                  this._minQty = _.min(_.pluck(this.get('volumePriceBands'), 'minQty'));
+                  this._minQty = _.first(this.get('volumePriceBands')).minQty;
                   if (this._minQty > 1) {
                       if (this.get('quantity') <= 1) {
                           this.set('quantity', this._minQty);
