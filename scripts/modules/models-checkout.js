@@ -1416,7 +1416,8 @@
                     else if (me.get('total') === 0) {
                         me.trigger('complete');
                     }
-                    //me.get('billingInfo').updatePurchaseOrderAmount();
+                    // only do this when there isn't a payment on the order...
+                    me.get('billingInfo').updatePurchaseOrderAmount();
                     me.isLoading(false);
                 });
             },
