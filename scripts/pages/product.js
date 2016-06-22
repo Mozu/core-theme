@@ -27,11 +27,11 @@
         },500),
         configure: function ($optionEl) {
             var newValue = $optionEl.val(),
-              oldValue,
-              id = $optionEl.data('mz-product-option'),
-              optionEl = $optionEl[0],
-              isPicked = (optionEl.type !== "checkbox" && optionEl.type !== "radio") || optionEl.checked,
-              option = this.model.get('options').get(id);
+                oldValue,
+                id = $optionEl.data('mz-product-option'),
+                optionEl = $optionEl[0],
+                isPicked = (optionEl.type !== "checkbox" && optionEl.type !== "radio") || optionEl.checked,
+                option = this.model.get('options').get(id);
             if (option) {
                 if (option.get('attributeDetail').inputType === "YesNo") {
                     option.set("value", isPicked);
@@ -54,7 +54,7 @@
             e.preventDefault();
             this.model.whenReady(function () {
                 var $localStoresForm = $(e.currentTarget).parents('[data-mz-localstoresform]'),
-                  $input = $localStoresForm.find('[data-mz-localstoresform-input]');
+                    $input = $localStoresForm.find('[data-mz-localstoresform-input]');
                 if ($input.length > 0) {
                     $input.val(JSON.stringify(me.model.toJSON()));
                     $localStoresForm[0].submit();
@@ -117,7 +117,6 @@
         window.productView = productView;
 
         productView.render();
-
 
     });
 
