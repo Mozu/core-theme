@@ -298,6 +298,7 @@
                             var billingInfo = me.parent.get('billingInfo');
                             if (billingInfo) {
                                 billingInfo.loadCustomerDigitalCredits();
+                                // This should happen only when order doesn't have payments..
                                 billingInfo.updatePurchaseOrderAmount();
                             }
                         })
@@ -847,9 +848,6 @@
                 CheckoutStep.prototype.edit.apply(this, arguments);
             },
             updatePurchaseOrderAmount: function() {
-                if(!this.get('purchaseOrder').get('isEnabled') && this.get('purchaseOrder').selected) {
-                    return;
-                }
 
                 var me = this,
                     order = me.getOrder(),
@@ -858,6 +856,10 @@
                     orderAmountRemaining = order.get('amountRemainingForPayment'),
                     amount = pOAvailableBalance > orderAmountRemaining ?
                         orderAmountRemaining : pOAvailableBalance;
+
+                if((!this.get('purchaseOrder').get('isEnabled') && this.get('purchaseOrder').selected) || order.get('payments').length > 0) {
+                    return;
+                }
 
 
                 currentPurchaseOrder.set('amount', amount);
