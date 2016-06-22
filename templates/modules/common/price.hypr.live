@@ -7,8 +7,8 @@
      <span class="mz-price-discountname">{{model.discount.discount.name}} &ndash;</span>
      {% endif %}
 
-	   {% if model.priceType != "MAP" %}
-	       {{model.salePrice|currency}}
+     {% if model.priceType != "MAP" %}
+         {{model.salePrice|currency}}
      {% else %}
          <div>{{ labels.mapPrice }}</div>
      {% endif %}
@@ -17,7 +17,7 @@
  <span itemprop="price" class="mz-price">
 
      {% if model.priceType != "MAP" %}
-	       {{model.price|currency}}
+         {{model.price|currency}}
      {% else %}
          <span class="mz-price is-crossedout">
          {{model.price|currency}}
