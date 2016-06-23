@@ -888,7 +888,8 @@
                     purchaseOrderInfo = order ? order.get('customer').get('purchaseOrder') : null,
                     purchaseOrderEnabled = this.isPurchaseOrderEnabled(),
                     currentPurchaseOrder = me.get('purchaseOrder'),
-                    siteId = require.mozuData('checkout').siteId;
+                    siteId = require.mozuData('checkout').siteId,
+                    currentPurchaseOrderAmount = currentPurchaseOrder.get('amount');
 
                 currentPurchaseOrder.set('isEnabled', purchaseOrderEnabled);
                 if(!purchaseOrderEnabled) {
@@ -916,7 +917,7 @@
                 var amount = purchaseOrderInfo.totalAvailableBalance > order.get('amountRemainingForPayment') ?
                         order.get('amountRemainingForPayment') : purchaseOrderInfo.totalAvailableBalance;
 
-                if(!currentPurchaseOrder.get('amount')) {
+                if(!currentPurchaseOrderAmount || currentPurchaseOrderAmount !== amount) {
                     currentPurchaseOrder.set('amount', amount);
                 }
 

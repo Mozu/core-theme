@@ -38,11 +38,13 @@
         {% if payment.billingInfo.paymentType == "PurchaseOrder" %}
         <div class="mz-l-stack-section mz-checkout-payment  mz-checkoutform">
             <div class="mz-l-stack-section mz-checkout-current-payment">
+            <!--
                 <div class="mz-l-formfieldgroup-row mz-payment-purchase-order-amount-row">
                     <div class="mz-l-formfieldgroup-cell">
                         <span>{{ labels.purchaseOrderAmount }}: </span> <span>{{ payment.amountRequested | currency }}</span>
                     </div>
                 </div>
+                -->
                 <div class="mz-l-formfieldgroup-row mz-payment-purchase-order-number-row">
                     <div class="mz-l-formfieldgroup-cell">
                         <span >{{ labels.purchaseOrderNumber }}: </span><span name="purchase-order-number" id="mz-payment-purchase-order-number">{{ payment.billingInfo.purchaseOrder.purchaseOrderNumber }}</span>
