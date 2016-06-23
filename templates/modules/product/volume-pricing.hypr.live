@@ -17,16 +17,7 @@
       {% endif %}
       </td>
       <td class="mz-volume-pricing-cell-price">
-        {% if priceBand.priceRange %}
-          <span itemprop="minPrice" class="mz-volume-price-lower">
-            {% include "modules/common/volume-price" with model=priceBand.priceRange.lower %}
-          </span>
-          <span itemprop="maxPrice" class="mz-volume-price-upper">
-            {% include "modules/common/volume-price" with model=priceBand.priceRange.upper %}
-          </span>
-        {% else %}
-          {% include "modules/common/volume-price" with model=priceBand.price %}
-        {% endif %}
+        {% include "modules/product/volume-price-stack" with model=priceBand %}
       </td>
     </tr>
     {% endfor %}
