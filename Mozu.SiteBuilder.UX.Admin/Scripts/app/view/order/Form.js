@@ -368,7 +368,8 @@ Ext.define('Taco.view.order.Form', {
 
                         // this is the validation message that you get when you have not met the min. requirements for saving a form.
                         if (msg = "Item not found: Action 'SubmitOrder' not found or available. ") {
-                            msg = "Insufficient funds. Please choose an alternate method of payment."
+                            // TODO: This is probably not the only reason submit can fail. Handle this scenario better.
+                            msg = "Unable to submit order. Please review and try again.";
                         }
 
                         Taco.app.fireEvent('setmessage', msg, 'error');
