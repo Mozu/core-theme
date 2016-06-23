@@ -266,7 +266,7 @@ namespace Mozu.SiteBuilder.UX.Areas.Misc.Controllers
             {
                 return null;
             }
-            var genSettingsTask = await _generalSettingsWebApiClient.Value.GetGeneralSettings().ConfigureAwait(false);
+            var genSettingsTask = await _generalSettingsWebApiClient.Value.CloneWithoutUserClaims().GetGeneralSettings().ConfigureAwait(false);
             if ( genSettingsTask.HasException )
             {
                 return null;
