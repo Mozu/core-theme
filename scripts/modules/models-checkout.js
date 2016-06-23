@@ -298,6 +298,7 @@
                             var billingInfo = me.parent.get('billingInfo');
                             if (billingInfo) {
                                 billingInfo.loadCustomerDigitalCredits();
+                                // This should happen only when order doesn't have payments..
                                 billingInfo.updatePurchaseOrderAmount();
                             }
                         })
@@ -847,9 +848,6 @@
                 CheckoutStep.prototype.edit.apply(this, arguments);
             },
             updatePurchaseOrderAmount: function() {
-                if(!this.get('purchaseOrder').get('isEnabled') && this.get('purchaseOrder').selected) {
-                    return;
-                }
 
                 var me = this,
                     order = me.getOrder(),
@@ -858,6 +856,10 @@
                     orderAmountRemaining = order.get('amountRemainingForPayment'),
                     amount = pOAvailableBalance > orderAmountRemaining ?
                         orderAmountRemaining : pOAvailableBalance;
+
+                if((!this.get('purchaseOrder').get('isEnabled') && this.get('purchaseOrder').selected) || order.get('payments').length > 0) {
+                    return;
+                }
 
 
                 currentPurchaseOrder.set('amount', amount);
@@ -886,7 +888,8 @@
                     purchaseOrderInfo = order ? order.get('customer').get('purchaseOrder') : null,
                     purchaseOrderEnabled = this.isPurchaseOrderEnabled(),
                     currentPurchaseOrder = me.get('purchaseOrder'),
-                    siteId = require.mozuData('checkout').siteId;
+                    siteId = require.mozuData('checkout').siteId,
+                    currentPurchaseOrderAmount = currentPurchaseOrder.get('amount');
 
                 currentPurchaseOrder.set('isEnabled', purchaseOrderEnabled);
                 if(!purchaseOrderEnabled) {
@@ -914,7 +917,7 @@
                 var amount = purchaseOrderInfo.totalAvailableBalance > order.get('amountRemainingForPayment') ?
                         order.get('amountRemainingForPayment') : purchaseOrderInfo.totalAvailableBalance;
 
-                if(!currentPurchaseOrder.get('amount')) {
+                if(!currentPurchaseOrderAmount || currentPurchaseOrderAmount !== amount) {
                     currentPurchaseOrder.set('amount', amount);
                 }
 
@@ -1414,7 +1417,8 @@
                     else if (me.get('total') === 0) {
                         me.trigger('complete');
                     }
-                    //me.get('billingInfo').updatePurchaseOrderAmount();
+                    // only do this when there isn't a payment on the order...
+                    me.get('billingInfo').updatePurchaseOrderAmount();
                     me.isLoading(false);
                 });
             },
@@ -1446,13 +1450,7 @@
                     }
                 });
 
-                //on an error, if the card is declined -- and the service returns no card data, lets unset the model.card
-                this.apiGet().then(function(res) {
-                    if (res.data.billingInfo && !res.data.billingInfo.card) {
-                         order.unset('billingInfo.card', {silent: true});
-                    }
-                    order.trigger('error', error);
-                });
+                this.trigger('error', error);
 
                 if (!errorHandled) order.messages.reset(error.items);
                 order.isSubmitting = false;

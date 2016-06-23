@@ -1,6 +1,7 @@
 {% block purchase-order-form %}
     <div class="mz-l-formfieldgroup-row">
         <div class="mz-l-formfieldgroup-cell">
+        <!--
             <div class="mz-l-formfieldgroup-row mz-payment-purchase-order-amount-row">
                 <div class="mz-l-formfieldgroup-cell">
                     <label for="mz-payment-purchase-order-amount">{{ labels.purchaseOrderAmount }}:</label>
@@ -9,6 +10,7 @@
                     <span class="mz-payment-purchase-order-amount">{{ model.amount | currency }}</span>
                 </div>
             </div>
+            -->
             <div class="mz-l-formfieldgroup-row mz-payment-purchase-order-number-row">
                 <div class="mz-l-formfieldgroup-cell">
                     <label for="mz-payment-purchase-order-number">{{ labels.purchaseOrderNumber }}<span class="is-required"> *</span>:</label>
@@ -41,7 +43,7 @@
                 {% with 'pOCustomField-'+field.code as modelName %}
                     <div class="mz-l-formfieldgroup-row mz-payment-purchase-order-custom-field-row">
                         <div class="mz-l-formfieldgroup-cell">
-                            <label for="mz-payment-purchase-order-custom-field-{{ field.code }}">
+                            <label for="mz-payment-pOCustomField-{{ field.code }}">
                                 {{ field.label }}
                                 {% if field.isRequired %}
                                     <span class="is-required"> *</span>
