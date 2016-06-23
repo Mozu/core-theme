@@ -450,8 +450,9 @@ Ext.define('Taco.view.order.widget.AddOrderItemToolbar', {
             return (!band.hasOwnProperty('MinQty') || newValue >= band.MinQty) && (!band.hasOwnProperty('MaxQty') || newValue <= band.MaxQty);
         });
         if (!band || !band.Price) return;
-        if (this.priceField.getValue() !== band.Price.Price) {
-            this.priceField.setValue(band.Price.Price);
+        var price = band.Price.SalePrice || band.Price.Price;
+        if (this.priceField.getValue() !== price) {
+            this.priceField.setValue(price);
         }
     },
 
