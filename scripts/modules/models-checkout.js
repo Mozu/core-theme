@@ -1450,13 +1450,7 @@
                     }
                 });
 
-                //on an error, if the card is declined -- and the service returns no card data, lets unset the model.card
-                this.apiGet().then(function(res) {
-                    if (res.data.billingInfo && !res.data.billingInfo.card) {
-                         order.unset('billingInfo.card', {silent: true});
-                    }
-                    order.trigger('error', error);
-                });
+                this.trigger('error', error);
 
                 if (!errorHandled) order.messages.reset(error.items);
                 order.isSubmitting = false;
