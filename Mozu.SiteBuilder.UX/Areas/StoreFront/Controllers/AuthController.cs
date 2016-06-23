@@ -194,23 +194,6 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
 
         [System.Web.Http.HttpGet]
         [SslOnlyActionFilter]
-        public ActionResult OrderStatus(string returnUrl = null)
-        {
-            var pc = this.PageContext;
-            pc.CmsContext = new CmsPageContext()
-            {
-                Template = new DocumentRequest()
-                {
-                    Path = "order-status",
-                    DocumentTypeFQN = "pageTemplateContent@mozu"
-                }
-            };
-
-            return View("Order-Status", new { ReturnUrl = returnUrl });
-        }
-
-        [System.Web.Http.HttpGet]
-        [SslOnlyActionFilter]
         public ActionResult AjaxForgotPassword(string returnUrl = null)
         {
 
