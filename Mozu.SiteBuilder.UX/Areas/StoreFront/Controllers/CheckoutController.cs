@@ -248,7 +248,7 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
                 account = (await _customerAccountWebApiClient.GetAccount(this.PageContext.User.AccountId)).ReadAsSync();
                 cards = (await _customerAccountWebApiClient.GetAccountCards(this.PageContext.User.AccountId)).ReadAsSync();
                 accountPurchaseOrder = (await _customerAccountWebApiClient.GetCustomerPurchaseOrderAccount(this.PageContext.User.AccountId)).ReadAsSync();
-                credits = (await _creditWebApiClient.GetCredits(0, 25, null, String.Format("CustomerId eq \"{0}\" and activationdate le \"{1}\" and expirationdate ge \"{1}\" and currentBalance ge 0.01", this.PageContext.User.AccountId, DateTime.UtcNow.ToString("o")))).ReadAsSync();
+                credits = (await _creditWebApiClient.GetCredits(0, 25, null, String.Format("CustomerId eq \"{0}\" and activationdate le \"{1}\" and expirationdate ge \"{1}\"", this.PageContext.User.AccountId, DateTime.UtcNow.ToString("o")))).ReadAsSync();
                 CustomerContact primaryShippingContact = null;
                 //CustomerContact primaryBillingContact = null;
 
