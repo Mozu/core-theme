@@ -351,7 +351,14 @@
             "template": "forgot-password",
             "title": "Forgot Password",
             "userCreatable": false
-        }
+        },
+        {
+            "entityType": "orderStatus",
+            "id": "orderStatus",
+            "template": "order-status",
+            "title": "Order Status",
+            "userCreatable": false
+        },
     ],
     "settings": {
         "backofficeDateTimeFormat": "m/d/Y H:i:s O",
