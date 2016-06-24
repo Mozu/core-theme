@@ -15,7 +15,7 @@ define(['shim!vendor/bootstrap/js/popover[shim!vendor/bootstrap/js/tooltip[modul
     returnUrl = function() {
         var returnURL = $('input[name=returnUrl]').val();
         if(!returnURL) {
-            returnURL = '/'
+            returnURL = '/';
         }
         return returnURL;
     },
