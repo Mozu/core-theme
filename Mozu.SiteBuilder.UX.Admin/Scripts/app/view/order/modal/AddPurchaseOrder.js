@@ -11,14 +11,14 @@ Ext.define('Taco.view.order.modal.AddPurchaseOrder', {
     primaryText: 'Done',
 
     initComponent: function (eOpts) {
+        var me = this;
 
         // Throw an error if there are no payment terms assigned
         if (this.record.customer.raw.purchaseOrderAccount.customerPurchaseOrderPaymentTerms.length == 0) {
             Taco.app.fireEvent('setmessage', 'All required fields for Purchase Order are not configured for this customer', 'error');
         } else {
 
-            var me = this,
-                balance = me.getBalance(me.record.get('customer').purchaseOrderAccount.availableBalance),
+            var balance = me.getBalance(me.record.get('customer').purchaseOrderAccount.availableBalance),
                 totalBalance = me.record.get('customer').purchaseOrderAccount.totalAvailableBalance,
                 limit = me.getLimit(me.record.get('customer').purchaseOrderAccount.creditLimit),
                 terms = me.record.customer.raw.purchaseOrderAccount.customerPurchaseOrderPaymentTerms
@@ -93,9 +93,9 @@ Ext.define('Taco.view.order.modal.AddPurchaseOrder', {
             });
         }
 
-            me.items = [me.form];
+        me.items = [me.form];
 
-            this.callParent(arguments);
+        this.callParent(arguments);
     },
 
     getDefaultPaymentAmount: function () {
