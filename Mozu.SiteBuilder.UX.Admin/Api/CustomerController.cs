@@ -793,7 +793,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
 
             int? startIndex = pagingParams.startIndex;
 
-            var auditEntryCollection = (await _customerWebApiClient.GetAccountAuditLog(accountId.Value, startIndex: startIndex)).ReadAsSync();
+            var auditEntryCollection = (await _customerWebApiClient.GetAccountAuditLog(accountId.Value, startIndex: startIndex, pageSize: pagingParams.pageSize)).ReadAsSync();
 
             //Replace labels with localized content
             foreach (var auditEntry in auditEntryCollection.Items)

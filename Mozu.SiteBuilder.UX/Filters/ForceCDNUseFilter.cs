@@ -19,8 +19,8 @@ namespace Mozu.SiteBuilder.UX.Filters
     {
         public override void OnActionExecuted(HttpActionExecutedContext actionExecutedContext)
         {
-            actionExecutedContext.Response.Headers.Remove("Set-Cookie");
-            actionExecutedContext.Request.Resolve<HttpContextBase>().Response.Cookies.Clear();
+            actionExecutedContext.Response?.Headers.Remove("Set-Cookie");
+            actionExecutedContext.Request.Resolve<HttpContextBase>()?.Response.Cookies.Clear();
         }
     }
 
