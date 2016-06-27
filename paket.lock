@@ -3,7 +3,6 @@ CONTENT: NONE
 FRAMEWORK: NET45, NET451
 NUGET
   remote: http://nuget-external.corp.volusion.com:8201/api/odata
-  specs:
     51Degrees.mobi (3.2.8.1) - content: none
       Microsoft.Web.Infrastructure (>= 1.0)
     Autofac (3.5.2)
@@ -96,7 +95,6 @@ NUGET
     Stact (1.1.2)
       Magnum (>= 2.1.2)
   remote: http://nuget-internal.corp.volusion.com:8200/api/odata
-  specs:
     Jolt (1.0.0)
     Mozu.AdminUser.Contracts (1.18.1)
       Mozu.Core.Prime (>= 1.17)
@@ -120,7 +118,7 @@ NUGET
       Mozu.Core.Prime (>= 1.19)
     Mozu.Core.Messaging.Contracts (1.19.2)
       Mozu.Core.Prime (>= 1.18)
-    Mozu.Core.Prime (1.1624.5)
+    Mozu.Core.Prime (1.1624.8)
       Autofac (>= 3.5.2)
       Autofac.WebApi2 (>= 3.4)
       AutoMapper (>= 3.3)
@@ -172,7 +170,7 @@ NUGET
       Mozu.Core.Prime (>= 1.17)
     Mozu.ShippingRuntime.Contracts (1.1623.1)
       Mozu.Core.Prime (>= 1.17)
-    Mozu.SiteSettings.General.Contracts (1.1618.3)
+    Mozu.SiteSettings.General.Contracts (1.1624.1)
       Mozu.Core.Prime (>= 1.17)
     Mozu.SiteSettings.Order.Contracts (1.1624.1)
       Mozu.Core.Prime (>= 1.17)
