@@ -3,6 +3,7 @@ CONTENT: NONE
 FRAMEWORK: NET45, NET451
 NUGET
   remote: http://nuget-external.corp.volusion.com:8201/api/odata
+  specs:
     51Degrees.mobi (3.2.8.1) - content: none
       Microsoft.Web.Infrastructure (>= 1.0)
     Autofac (3.5.2)
@@ -95,6 +96,7 @@ NUGET
     Stact (1.1.2)
       Magnum (>= 2.1.2)
   remote: http://nuget-internal.corp.volusion.com:8200/api/odata
+  specs:
     Jolt (1.0.0)
     Mozu.AdminUser.Contracts (1.18.1)
       Mozu.Core.Prime (>= 1.17)
@@ -102,7 +104,7 @@ NUGET
     Mozu.AppDev.Contracts (1.19.13)
       Mozu.Core.Prime (>= 1.17)
     Mozu.BuildSupport.GetAssemblyFileVersionTask (1.0.0)
-    Mozu.CommerceRuntime.Contracts (1.1621.1-dev1606211841fea)
+    Mozu.CommerceRuntime.Contracts (1.1625.1)
       Mozu.Core.Extensible.Contracts
       Mozu.Core.Prime
       Mozu.PricingRuntime.Contracts
@@ -118,7 +120,7 @@ NUGET
       Mozu.Core.Prime (>= 1.19)
     Mozu.Core.Messaging.Contracts (1.19.2)
       Mozu.Core.Prime (>= 1.18)
-    Mozu.Core.Prime (1.1624.1)
+    Mozu.Core.Prime (1.1624.5)
       Autofac (>= 3.5.2)
       Autofac.WebApi2 (>= 3.4)
       AutoMapper (>= 3.3)
@@ -154,11 +156,11 @@ NUGET
       Mozu.Core.Prime (>= 1.18)
     Mozu.MZDB.Contracts (1.19.3)
     Mozu.PaymentService.Contracts (1.9.13)
-    Mozu.PricingRuntime.Contracts (1.19.5)
+    Mozu.PricingRuntime.Contracts (1.1625.1)
       Mozu.Core.Prime (>= 1.18.1)
-    Mozu.ProductAdmin.Contracts (1.1618.1)
+    Mozu.ProductAdmin.Contracts (1.1625.1)
       Mozu.Core.Prime (>= 1.18.1)
-    Mozu.ProductRuntime.Contracts (1.1621.1-f1606162023volume-)
+    Mozu.ProductRuntime.Contracts (1.1625.1)
       Mozu.Core.Prime (>= 1.18)
     Mozu.Provisioning.Contracts (1.17.5)
       Mozu.Core.Prime (>= 1.17)
@@ -168,7 +170,7 @@ NUGET
       Mozu.Core.Prime (>= 1.18)
     Mozu.ShippingAdmin.Contracts (1.1617.1)
       Mozu.Core.Prime (>= 1.17)
-    Mozu.ShippingRuntime.Contracts (1.21.1)
+    Mozu.ShippingRuntime.Contracts (1.1623.1)
       Mozu.Core.Prime (>= 1.17)
     Mozu.SiteSettings.General.Contracts (1.1618.3)
       Mozu.Core.Prime (>= 1.17)
