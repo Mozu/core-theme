@@ -12,84 +12,90 @@ Ext.define('Taco.view.order.modal.AddPurchaseOrder', {
 
     initComponent: function (eOpts) {
 
-        var me = this,
-            balance = me.getBalance(me.record.get('customer').purchaseOrderAccount.availableBalance),
-            totalBalance = me.record.get('customer').purchaseOrderAccount.totalAvailableBalance,
-            limit = me.getLimit(me.record.get('customer').purchaseOrderAccount.creditLimit),
-            terms = me.record.customer.raw.purchaseOrderAccount.customerPurchaseOrderPaymentTerms
-                    ? me.getTerms(me.record.customer.raw.purchaseOrderAccount.customerPurchaseOrderPaymentTerms)
-                    : me.getTerms(['No terms specified']),
-            fields = me.getFields(me.record.checkoutSettings.get('purchaseOrder').customFields);
+        // Throw an error if there are no payment terms assigned
+        if (this.record.customer.raw.purchaseOrderAccount.customerPurchaseOrderPaymentTerms.length == 0) {
+            Taco.app.fireEvent('setmessage', 'All required fields for Purchase Order are not configured for this customer', 'error');
+        } else {
 
-        var formItems = this.getPaymentForm();
+            var me = this,
+                balance = me.getBalance(me.record.get('customer').purchaseOrderAccount.availableBalance),
+                totalBalance = me.record.get('customer').purchaseOrderAccount.totalAvailableBalance,
+                limit = me.getLimit(me.record.get('customer').purchaseOrderAccount.creditLimit),
+                terms = me.record.customer.raw.purchaseOrderAccount.customerPurchaseOrderPaymentTerms
+                        ? me.getTerms(me.record.customer.raw.purchaseOrderAccount.customerPurchaseOrderPaymentTerms)
+                        : [],
+                fields = me.getFields(me.record.checkoutSettings.get('purchaseOrder').customFields);
 
-        me.form = Ext.create('Ext.form.Panel', {
-            items: [
-                {
-                    xtype: 'fieldcontainer',
-                    layout: 'hbox',
-                    flex: 1,
-                    items: [
-                        balance,
-                        limit,
-                        terms,
-                        {
-                            flex: 3
-                        }
-                    ]
-                },
-                {
-                    xtype: 'fieldcontainer',
-                    layout: 'hbox',
-                    items: [
-                        {
-                            allowBlank: false,
-                            fieldLabel: 'Purchase Order #',
-                            flex: 1,
-                            itemId: 'purchaseOrderNumber',
-                            name: 'purchaseOrderNumber',
-                            xtype: 'textfield'
-                        },
-                        {
-                            allowBlank: false,
-                            currencyCode: me.record.getCurrencyCode(),
-                            fieldLabel: 'Amount',
-                            flex: 1,
-                            itemId: 'amount',
-                            margin: '0 0 0 30',
-                            name: 'amount',
-                            value: me.getDefaultPaymentAmount(),
-                            validator: function (value) {
-                                var valueBalance = parseFloat(value[0].replace(/,/, '').split("$")[1]);
+            var formItems = this.getPaymentForm();
 
-                                if (isNaN(valueBalance)) {
-                                    valueBalance = value[0];
-                                }
-
-                                if (valueBalance > totalBalance) {
-                                    return 'Amount must not exceed your total available balance. Please select an alternative payment method.';
-                                } else {
-                                    return true;
-                                }
-                            },
-                            xtype: 'currencyfield'
-                        }
-                    ]
-                },
-                {
-                    items: fields,
-                    layout: {
-                        align: 'stretch',
-                        type: 'vbox'
+            me.form = Ext.create('Ext.form.Panel', {
+                items: [
+                    {
+                        xtype: 'fieldcontainer',
+                        layout: 'hbox',
+                        flex: 1,
+                        items: [
+                            balance,
+                            limit,
+                            terms,
+                            {
+                                flex: 3
+                            }
+                        ]
                     },
-                    xtype: 'fieldcontainer'
-                }
-            ]
-        });
+                    {
+                        xtype: 'fieldcontainer',
+                        layout: 'hbox',
+                        items: [
+                            {
+                                allowBlank: false,
+                                fieldLabel: 'Purchase Order #',
+                                flex: 1,
+                                itemId: 'purchaseOrderNumber',
+                                name: 'purchaseOrderNumber',
+                                xtype: 'textfield'
+                            },
+                            {
+                                allowBlank: false,
+                                currencyCode: me.record.getCurrencyCode(),
+                                fieldLabel: 'Amount',
+                                flex: 1,
+                                itemId: 'amount',
+                                margin: '0 0 0 30',
+                                name: 'amount',
+                                value: me.getDefaultPaymentAmount(),
+                                validator: function (value) {
+                                    var valueBalance = parseFloat(value[0].replace(/,/, '').split("$")[1]);
 
-        me.items = [me.form];
+                                    if (isNaN(valueBalance)) {
+                                        valueBalance = value[0];
+                                    }
 
-        this.callParent(arguments);
+                                    if (valueBalance > totalBalance) {
+                                        return 'Amount must not exceed your total available balance. Please select an alternative payment method.';
+                                    } else {
+                                        return true;
+                                    }
+                                },
+                                xtype: 'currencyfield'
+                            }
+                        ]
+                    },
+                    {
+                        items: fields,
+                        layout: {
+                            align: 'stretch',
+                            type: 'vbox'
+                        },
+                        xtype: 'fieldcontainer'
+                    }
+                ]
+            });
+        }
+
+            me.items = [me.form];
+
+            this.callParent(arguments);
     },
 
     getDefaultPaymentAmount: function () {
