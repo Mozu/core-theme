@@ -133,7 +133,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
         }
 
         [HttpGetRoute(UriTemplate = "list")]
-        public async Task<Response<List<ApiCustomer>>> List([FromUri]PagingParamaters pagingParameters, [FromUri]FilterCollection extFilter, bool? showAnonymous = null)
+        public async Task<Response<List<ApiCustomer>>> List([FromUri]PagingParamaters pagingParameters, [FromUri]FilterCollection extFilter, bool? showAnonymous = null, bool? isPOFlagRequired = null)
         {
             int customerId;
             if (pagingParameters.id != null)
@@ -187,10 +187,13 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
             var customers = Mapper.Map<List<ApiCustomer>>(dcCustomers.Items);
 
             //TODO:this flag info should ideally come from getAccounts api call  
-            foreach (var customer in customers)
+            if (isPOFlagRequired.GetValueOrDefault(false))
             {
-                var result = (await _customerWebApiClient.GetCustomerPurchaseOrderAccount(customer.Id.Value)).ReadAsAsync().Result;
-                customer.IsPoEnabled = result?.IsEnabled ?? false;
+                foreach (var customer in customers)
+                {
+                    var result = (await _customerWebApiClient.GetCustomerPurchaseOrderAccount(customer.Id.Value)).ReadAsAsync().Result;
+                    customer.IsPoEnabled = result?.IsEnabled ?? false;
+                }
             }
 
             return List2(customers, total: (int)dcCustomers.TotalCount);
