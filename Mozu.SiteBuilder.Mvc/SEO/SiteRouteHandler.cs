@@ -115,6 +115,12 @@ namespace Mozu.SiteBuilder.Mvc.SEO
 
         public async Task<bool> RouteIncomingRequest()
         {
+            var path = _requestMessage.Value.RequestUri.AbsolutePath;
+            if ( path.Contains( "=") || path.Contains("?"))
+            {
+                return false;
+            }
+            
             var routeCollection = await GetRouteCollectionAsync().ConfigureAwait(false);
             if (routeCollection == null)
             {

@@ -62,6 +62,8 @@ namespace Mozu.SiteBuilder.Mvc.SEO.Constraints
                     return new StringListRouteConstraint(validator.values);
                 case Validator.TypeConst.mzdb:
                     return new MzdbRouteConstraint(_entityListClient, validator.listFqn,validator.docId, validator.field);
+                case Validator.TypeConst.regex:
+                    return new RegexRouteConstraint(validator.pattern);
                 case QueryStringConstraint.TypeName:
                     return new QueryStringConstraint(validator);
 
@@ -698,7 +700,49 @@ namespace Mozu.SiteBuilder.Mvc.SEO.Constraints
             return _values.Contains(curRouteValue);
         }
     }
+    public class RegexRouteConstraint : ConstraintBase
+    {
+        string _pattern;
+        public RegexRouteConstraint ( string pattern)
+        {
+            //test if good regex pattern.  If not hold null for null op later.
+            try
+            {
+                pattern = "^" + pattern + "$";
+                if (Regex.IsMatch("abc", pattern))
+                {
+                    _pattern = pattern;
+                }
+            }
+            catch (Exception ex ){
+                Mozu.Core.Logging.LoggingService.LoggerFor<RegexRouteConstraint>().Warn("bad regex pattern in route : " + pattern ,  ex);
+            }
+        
+        }
 
+        public override bool DoMatch(HttpRequestMessage request, IHttpRoute route, string parameterName, IDictionary<string, object> values, HttpRouteDirection routeDirection)
+        {
+           
+            if(_pattern == null)
+            {
+                //no pattern return false;
+                return false;
+            }
+            object temp;
+            if (!values.TryGetValue(parameterName, out temp))
+            {
+                return false;
+            }
+            var curRouteValue = temp?.ToString();
+
+            return Regex.IsMatch(curRouteValue, _pattern, RegexOptions.IgnoreCase | RegexOptions.CultureInvariant);
+        }
+
+        public override Task<bool> Initialize()
+        {
+            return Task.FromResult(true);
+        }
+    }
     public class StringListRouteConstraint : ConstraintBase
     {
         readonly HashSet<string> _values;
