@@ -10,6 +10,7 @@ using Mozu.SiteBuilder.Mvc.Extensions;
 using Mozu.SiteBuilder.Mvc.SEO;
 using Mozu.SiteBuilder.Mvc.SEO.Mappings;
 using Mozu.SiteSettings.General.Contracts.General.Routing;
+using Mozu.SiteBuilder.Mvc.SEO.Constraints;
 
 namespace Mozu.SiteBuilder.UX.Configuration
 {
@@ -563,8 +564,8 @@ namespace Mozu.SiteBuilder.UX.Configuration
                 "StoreFront_pages_seo",
                  "{documentName}",
                  new { controller = "cmspages", action = "Page", documentListName = "pages@mozu" },
+                 new Dictionary<ICustomRouteConstraint, string[]> { { new RegexRouteConstraint("[^=\\?]+"), new string[] { "documentName" } } },
                  null,
-                 null, 
                  FancyRoute.CmsPage,
                 true);
 
