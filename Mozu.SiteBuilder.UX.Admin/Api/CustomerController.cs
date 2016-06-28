@@ -252,7 +252,9 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
                 var contactsTuple = ManageContacts(dcCust, dcExistingCustomer);
                 var contactsManagementTasks = contactsTuple.Item1;
                 var contactsDeleteTasks = contactsTuple.Item2;
-                var attrTasks = ManageAttributes(dcCust, dcExistingCustomer);
+                var attrTuple = ManageAttributes(dcCust, dcExistingCustomer);
+                var attrTasks = contactsTuple.Item1;
+                var attrDeleteTasks = contactsTuple.Item2;
                 var segmentTasks = ManageSegments(dcCust, dcExistingCustomer);
 
                 // on customer save, if he is no longer locked 
@@ -261,10 +263,11 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
                     await Unlock(dcExistingCustomer.Id);
                 }
 
-                await Task.WhenAll(contactsManagementTasks, contactsDeleteTasks, attrTasks, segmentTasks);
+                await Task.WhenAll(contactsManagementTasks, contactsDeleteTasks, attrTasks, attrDeleteTasks, segmentTasks);
                 IfTaskHasExceptionThenThrow(contactsManagementTasks);
                 IfTaskHasExceptionThenThrow(contactsDeleteTasks);
                 IfTaskHasExceptionThenThrow(attrTasks);
+                IfTaskHasExceptionThenThrow(attrDeleteTasks);
                 IfTaskHasExceptionThenThrow(segmentTasks);
 
                 var response = await _customerWebApiClient.UpdateAccount(dcCust, dcCust.Id);
@@ -447,14 +450,18 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
         /// <summary>
         /// Update attributes subroutine for EditCustomers. Yes, a subroutine.
         /// </summary>
-        private Task<ServiceClientResponse<DC.CustomerAttribute>[]> ManageAttributes(DC.CustomerAccount dcCustomer, DC.CustomerAccount dcExistingCustomer)
+        private Tuple<Task<ServiceClientResponse<DC.CustomerAttribute>[]>, Task<ServiceClientResponse<StreamContent>[]>> ManageAttributes(DC.CustomerAccount dcCustomer, DC.CustomerAccount dcExistingCustomer)
         {
             var attributeTasks = new List<Task<ServiceClientResponse<DC.CustomerAttribute>>>();
+            var deleteTasks = new List<Task<ServiceClientResponse<StreamContent>>>();
+
             var custAttrIds = (dcCustomer.Attributes ?? new List<DC.CustomerAttribute>()).Where(attribute => attribute.Values != null && attribute.Values.All(o => o != null)).Select(attr => attr.FullyQualifiedName);
             var existingAttrIds = (dcExistingCustomer.Attributes ?? new List<DC.CustomerAttribute>()).Select(attr => attr.FullyQualifiedName);
+            var nullAttrIds = (dcCustomer.Attributes ?? new List<DC.CustomerAttribute>()).Where(attribute => attribute.Values == null).Select(attr => attr.FullyQualifiedName);
 
             var createdAttributeIds = custAttrIds.Except(existingAttrIds).ToList();
             var updatedAttributeIds = custAttrIds.Intersect(existingAttrIds).ToList();
+            var deleteAttributeIds = nullAttrIds.ToList();
 
             if (createdAttributeIds.Count > 0)
             {
@@ -465,8 +472,13 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
                 attributeTasks.AddRange(dcCustomer.Attributes.Where(a => updatedAttributeIds.Contains(a.FullyQualifiedName))
                     .Select(a => _customerWebApiClient.UpdateAccountAttribute(a, dcCustomer.Id, a.FullyQualifiedName)));
             }
+            if (deleteAttributeIds.Count > 0)
+            {
+                deleteTasks.AddRange(dcCustomer.Attributes.Where(a => deleteAttributeIds.Contains(a.FullyQualifiedName))
+                    .Select(a => _customerWebApiClient.DeleteAccountAttribute(dcCustomer.Id, a.FullyQualifiedName)));
+            }
 
-            return Task.WhenAll(attributeTasks);
+            return new Tuple<Task<ServiceClientResponse<DC.CustomerAttribute>[]>, Task<ServiceClientResponse<StreamContent>[]>>(Task.WhenAll(attributeTasks), Task.WhenAll(deleteTasks));
         }
 
         [HttpGetRoute(UriTemplate = "purchaseOrder/get")]
