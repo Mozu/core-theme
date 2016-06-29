@@ -241,7 +241,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
                         poResponse = await EditCustomerPurchaseOrder(purchaseOrder);
                     }
 
-                    else
+                    else if(purchaseOrder.IsEnabled)
                     {
                         purchaseOrder.AccountId = cust.Id.Value;
                         poResponse = await CreateCustomerPurchaseOrder(purchaseOrder, cust.Id);
