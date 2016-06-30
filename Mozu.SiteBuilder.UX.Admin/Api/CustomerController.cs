@@ -21,7 +21,7 @@ using Mozu.SiteBuilder.UX.Admin.Helpers.CustomerHelpers;
 using ApiCustomer = Mozu.SiteBuilder.UX.Admin.Api.Models.Customer;
 using Credit = Mozu.SiteBuilder.UX.Admin.Api.Models.Credit;
 using DC = Mozu.Customer.Contracts;
-
+using Mozu.Core.Api.Client;
 
 namespace Mozu.SiteBuilder.UX.Admin.Api
 {
@@ -45,7 +45,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
             _customerSegmentWebApiClient = customerSegmentWebApiClient;
             // _customerGroupWebApiClient = customerGroupWebApiClient;
             _creditWebApiClient = creditWebApiClient;
-            _orderWebApiClient = orderWebApiClient;
+            _orderWebApiClient = orderWebApiClient.CloneWithApiContext(ctx => { ctx.SiteId = null; });
             _log = log;
             //_customerVisitWebApiClient = customerVisitWebApiClient;
         }
