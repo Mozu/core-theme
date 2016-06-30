@@ -40,7 +40,9 @@ Ext.define('Taco.view.customSchema.Grid', {
 
         var getDefaultView = function(list) {
 
-            var views = list.views;
+            var views = list
+                ? list.views
+                : [];
 
             if (!views || !Array.isArray(views) || views.length < 1) { 
                 return null;
