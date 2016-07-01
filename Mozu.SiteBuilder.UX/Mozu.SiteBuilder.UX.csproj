@@ -321,7 +321,7 @@
     <Folder Include="MessageHandlers\" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="App_Data\51Degrees-PremiumV3_2.dat.gz" />
+    <Content Include="App_Data\51Degrees-PremiumV3_2.dat" />
     <None Include="paket.references" />
   </ItemGroup>
   <ItemGroup>
