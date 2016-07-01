@@ -33,7 +33,7 @@ namespace Mozu.SiteBuilder.Mvc.SEO.Constraints
         private readonly IProductSearchWebApiClient _productSearchWebApiClient;
         readonly IApiContext _context;
         readonly IEntityListsWebApiClient _entityListClient;
-
+        public const string SearchFacetConstraintType = "searchfacetconstrainttype";
         public ConstraintFactory(IEntityListsWebApiClient entityListClient, 
             IAttributeWebApiClient attributeClient,
             ProductRuntime.Contracts.Clients.IProductSearchWebApiClient productSearchWebApiClient,
@@ -52,6 +52,8 @@ namespace Mozu.SiteBuilder.Mvc.SEO.Constraints
             {
                 case Validator.TypeConst.attribute:
                     return new ProductAttributeRouteConstraint(_attributeClient, _productSearchWebApiClient, _context, validator.attributeFQN);
+                case SearchFacetConstraintType:
+                    return new ProductAttributeRouteConstraint(null, _productSearchWebApiClient, _context, validator.attributeFQN);
                 case Validator.TypeConst.categoryCode:
                 case Validator.TypeConst.categorySlug:
                 case Validator.TypeConst.categorySlugPath:
@@ -527,7 +529,7 @@ namespace Mozu.SiteBuilder.Mvc.SEO.Constraints
         private string _localeCode;
         IDictionary<string, AttributeVocabularyValue> _attributeValues { get; set; }
         IDictionary<string, FacetValue> _facetValues { get; set; }
-
+       
         public ProductAttributeRouteConstraint(IAttributeWebApiClient attributeClient, IProductSearchWebApiClient _productSearchWebApiClient,  IApiContext context, string attributeCode)
         {
             AttributeCode = attributeCode;
@@ -537,9 +539,20 @@ namespace Mozu.SiteBuilder.Mvc.SEO.Constraints
                 query: "*:*",
                 pageSize: 0,
                 facet: attributeCode);
-            attFn = () => attributeClient.CloneWithoutUserClaims().GetAttributeVocabularyValues(attributeCode);
+           
+            attFn = () => (attributeClient == null ? CreateNullAttTask() : attributeClient.CloneWithoutUserClaims().GetAttributeVocabularyValues(attributeCode));
             _localeCode = context.LocaleCode;
         }
+
+        static Task<ServiceClientResponse<List<AttributeVocabularyValue>>> CreateNullAttTask()
+        {
+            var resp = new  ServiceClientResponse<List<AttributeVocabularyValue>>();
+            resp.HasException = false;
+            resp.ReadAsSync = () => new List<AttributeVocabularyValue>();
+            return Task.FromResult(resp);
+        }
+
+
         public string AttributeCode { get; set; }
         public override async Task<bool> Initialize()
         {
