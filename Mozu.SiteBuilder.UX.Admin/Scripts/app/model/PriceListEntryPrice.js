@@ -13,8 +13,8 @@ Ext.define('Taco.model.PriceListEntryPrice', {
             name: 'listPriceMode',
             type: 'string',
             defaultValue: 'Simple',
-            convert: function(val, record) {
-                return val === 'UseCatalog' ? false : true;
+            convert: function(val) {
+                return val !== 'UseCatalog';
             }
         }, {
             name: 'listPrice',
@@ -25,8 +25,8 @@ Ext.define('Taco.model.PriceListEntryPrice', {
             name: 'salePriceMode',
             type: 'string',
             defaultValue: 'Simple',
-            convert: function(val, record) {
-                return val === 'UseCatalog' ? false : true;
+            convert: function(val) {
+                return val !== 'UseCatalog';
             }
         },
         {
