@@ -16,7 +16,6 @@ Ext.define('Taco.controller.Themesettings', {
         var me = this,
             theme = appState ? appState.record : null;
 
-
         Ext.Ajax.request({
             url: '/admin/app/themesetting/ui/read/' + id,
             method: 'GET',

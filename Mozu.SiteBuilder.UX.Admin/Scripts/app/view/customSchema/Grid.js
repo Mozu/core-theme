@@ -36,26 +36,40 @@ Ext.define('Taco.view.customSchema.Grid', {
     initComponent: function() {
         var me = this;
 
-         me.editors = Taco.core.data.StoreManager.getOrCreate('Taco.store.EntityEditors');
+        me.editors = Taco.core.data.StoreManager.getOrCreate('Taco.store.EntityEditors');
 
+        var getDefaultView = function(list) {
+
+            var views = list
+                ? list.views
+                : [];
+
+            if (!views || !Array.isArray(views) || views.length < 1) { 
+                return null;
+            }
+
+            else {
+                return views[0];
+            }
+
+        };
 
         if (me.standaloneGrid) {
             this.applyViewConfig();
         }
 
         else {
-
             me.store = Ext.create('Taco.store.EntityLists', {
                 entityType: this.entityType,
                 autoLoad: false,
-                remoteFilter: true
+                remoteFilter: true,
+                view: (getDefaultView(me.listMetaData) || {}).name
             });
-
         }
 
         if (this.siteBuilderList) {
             this.createRecord(this.listMetaData);
-            this.initListView(this.record);
+            this.initListView(this.record, null, getDefaultView(this.listMetaData));
         }
 
         me.callParent(arguments);

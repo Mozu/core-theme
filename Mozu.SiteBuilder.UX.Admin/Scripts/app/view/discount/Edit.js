@@ -76,6 +76,14 @@ Ext.define('Taco.view.discount.Edit', {
 
                         Taco.app.StateManager.attemptNavigate('discounts/duplicate/' + record.getId(), metaData);
                     }
+                },
+                {
+                    text: 'Delete',
+                    requiredBehaviors: {
+                        model: 'Taco.model.Discount',
+                        behavior: 'destroy'
+                    },
+                    handler: Ext.bind(me.destroyRecord, me)
                 }
             ]
         };
@@ -105,6 +113,45 @@ Ext.define('Taco.view.discount.Edit', {
 
             }, this);
         }
+    },
+
+    destroyRecord: function () {
+        var me = this;
+    
+        Ext.MessageBox.show({
+            title: 'Delete',
+            // pushes the buttons to the right to be consistant with our dialog ux.
+            rightJustifyButtons: true,
+            // reverses the order of the buttons
+            reverseOrder: true,
+            msg: 'Are you sure you want to delete this?',
+            closable: false,
+            buttons: Ext.Msg.YESNO,
+            fn: function (val) {
+                if (val === 'yes') {                    
+                    me.setLoading(true, me.body);
+                    me.record.destroy({
+                        success: function (m) {
+                            var discountStore = Taco.core.data.StoreManager.getOrCreate('Taco.store.DiscountGrid');
+                            if (discountStore) {
+                                discountStore.needsRefresh = true;
+                            }
+
+                            var contextUrl = Taco.app.context.getCurrentContext().urlToken;                            
+                            // need to invalidate the grid store so that the record is removed;
+                            Taco.core.StateManager.attemptNavigate(contextUrl + '/discounts');
+                        },
+                        failure: function (m) {
+                            Taco.app.fireEvent('setmessage', 'error deleting discount', 'error');
+                        },
+                        callback: function () {
+                            me.setLoading(true, me.body);
+                        }
+                    });
+                }
+            }
+        });
+
     },
 
     onDestroy: function () {

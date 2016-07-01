@@ -201,6 +201,7 @@ Ext.define('Taco.core.ux.mixins.NavHeader', {
         var controller = cfg && cfg.controller ? cfg.controller : '/';
         Taco.app.StateManager.attemptNavigate(controller);
 
+
         if (controller === 'orders') {
             //to do, figure out how to remove title
         }

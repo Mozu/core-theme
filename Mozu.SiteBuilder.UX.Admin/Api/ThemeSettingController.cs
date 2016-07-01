@@ -11,6 +11,7 @@ using Mozu.SiteBuilder.Mvc.Themes;
 using Mozu.SiteBuilder.UX.Admin.Api.Models;
 using Mozu.SiteBuilder.UX.Models.Settings;
 using Newtonsoft.Json.Linq;
+using Mozu.Content.Contracts.Clients;
 
 namespace Mozu.SiteBuilder.UX.Admin.Api
 {
@@ -21,8 +22,9 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
         private readonly IThemeSettingsRepository _themeSettingsRepository;
         private readonly IThemeRepository _themeRepository;
         private readonly IThemeContentRetriever _contentRetriever;
+        private readonly IDocumentListWebApiClient _documentListWebApiClient;
 
-        public ThemeSettingController( IThemeSettingsRepository themeSettingsRepository, IThemeRepository themeRepository, IThemeContentRetriever contentRetriever)
+        public ThemeSettingController( IThemeSettingsRepository themeSettingsRepository, IThemeRepository themeRepository, IThemeContentRetriever contentRetriever, IDocumentListWebApiClient documentListRepository)
         {
             if(themeSettingsRepository == null)
             {
@@ -33,6 +35,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
             _themeSettingsRepository = themeSettingsRepository;
             _themeRepository = themeRepository;
             _contentRetriever = contentRetriever;
+            _documentListWebApiClient = documentListRepository;
         }
 
         /// <summary>
@@ -55,7 +58,24 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
         public async Task<HttpResponseMessage> ReadInstance(string themeId)
         {
             var values = await _themeSettingsRepository.GetInstanceValues(themeId);
+            var docId = String.Join("", "theme_settings_", themeId); 
+            var documents = (await _documentListWebApiClient.GetDocuments(documentListName: "siteSettings@mozu", pageSize: 200)).ReadAsSync();
+            var docList = (await _documentListWebApiClient.GetDocumentList(documentListName: "siteSettings@mozu")).ReadAsSync();
+            var theme = _themeRepository.GetThemeOrDefault(new ThemeSelection() { Id = themeId });
+
             var configSettings = this.ReadConfiguration(themeId);
+            string cmsDocId = null;
+            bool? isPublishingEnabled = docList.EnablePublishing;
+
+            if (documents != null)
+            {
+                var doc = documents.Items.Find(x => x.Name == docId);
+                if (doc != null)
+                {
+                    cmsDocId = doc.Id;
+                }
+            }
+
             foreach (var setting in configSettings.Items)
             {
                 JToken o = null;
@@ -65,6 +85,9 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
                     values.Add(setting.Id, jToken);
                 }
             }
+
+            values.Add("MozuDocumentId", cmsDocId);
+            values.Add("MozuPublishingEnabled", isPublishingEnabled);
 
             return this.Request.CreateResponse(HttpStatusCode.OK, values);
         }
