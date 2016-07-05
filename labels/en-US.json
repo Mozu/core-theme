@@ -159,12 +159,12 @@
 
   "checkout"                              : "Checkout",
   "orderSummary"                          : "Order Summary",
-  "shippingInformation"                   : "Ship To",
+  "shippingInformation"                   : "Shipping",
   "noFulfillmentInfoRequired"             : "No shipping information is required since all items will be picked up in the store or digitally fulfilled.",
   "selectValidAddress"                    : "Select an address from these alternatives:",
   "addressValidationError"                : "We could not validate this address. Please check the address you entered and try again.",
   "suggestionNum"                         : "Suggestion #{0}",
-  "shippingMethod"                        : "Ship Method",
+  "shippingMethod"                        : "Shipping Method",
   "noShippingMethods"                     : "Sorry, no shipping methods are available.",
   "digitalFulfillmentContact"             : "Digital Gift Card",
   "paymentInformation"                    : "Payment",
@@ -251,7 +251,7 @@
   "applyCredit"                           : "Apply Credit",
 
   "mailCheckTo"                           : "Mail check to",
-  "shipTo"                                : "Ship to",
+  "shipTo"                                : "Ship To",
   "shippedTo"                             : "Shipped to",
   "giftMessage"                           : "Gift Message",
   "customerAlreadyExists"                 : "A customer is already registered as {0}. <a href=\"/user/login?returnUrl={1}\">Login as this customer</a>",
@@ -445,5 +445,6 @@
   "volumePriceSavings"                    : "Savings",
   "volumePriceMinMaxQty"                  : "{0} - {1}",
   "volumePriceMinOnlyQty"                 : "{0}+",
-  "mapPrice"                              : "add to cart to see final price"
+  "mapPrice"                              : "add to cart to see final price",
+  "additionalInformation"                 : "Additional Information"
 }

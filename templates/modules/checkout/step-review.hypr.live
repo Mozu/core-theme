@@ -5,6 +5,10 @@
         {% if model.isReady %}
             <p class="mz-formstep-desc">{{ labels.reviewOrderText }}</p>
 
+            <div class="mz-orderattributes">
+                {% include "modules/checkout/checkout-attributes" with model=model.orderAttributes %}
+            </div>
+
             {% if themeSettings.requireCheckoutAgreeToTerms %}
             <div class="mz-l-formfieldgroup mz-l-formfieldgroup-norows mz-checkoutform">
             <label class='inline'>

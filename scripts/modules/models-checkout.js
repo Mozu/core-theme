@@ -470,7 +470,6 @@
                     return order.update();
                 });
             },
-
             // digital
 
             onCreditAmountChanged: function(digCredit, amt) {
@@ -1196,14 +1195,14 @@
                     this.markComplete();
                 }
             },
+
             markComplete: function () {
                 this.stepStatus('complete');
                 this.isLoading(false);
                 var order = this.getOrder();
-                _.defer(function() {
-                    order.isReady(true);    
+                _.defer(function() { 
+                    order.isReady(true);   
                 });
-                
             },
             toJSON: function(options) {
                 var j = CheckoutStep.prototype.toJSON.apply(this, arguments), loggedInEmail;
@@ -1244,6 +1243,23 @@
             };
         }
 
+        var storefrontOrderAttributes = require.mozuData('pagecontext').storefrontOrderAttributes;
+        if(storefrontOrderAttributes && storefrontOrderAttributes.length > 0){
+
+            var requiredAttributes = _.filter(storefrontOrderAttributes, 
+                function(attr) { return attr.isRequired && attr.isVisible && attr.valueType !== 'AdminEntered' ;  });
+            requiredAttributes.forEach(function(attr) {
+                if(attr.isRequired) {
+
+                    checkoutPageValidation['orderAttribute-' + attr.attributeFQN] = 
+                    {
+                        required: true,
+                        msg: attr.content.value + " " + Hypr.getLabel('missing')
+                    };
+                }
+            }, this);
+        }
+
         var CheckoutPage = Backbone.MozuModel.extend({
             mozuType: 'order',
             handlesMessages: true,
@@ -1265,6 +1281,7 @@
                     user = require.mozuData('user');
 
                 _.defer(function() {
+
                     var latestPayment = self.apiModel.getCurrentPayment(),
                         activePayments = self.apiModel.getActivePayments(),
                         fulfillmentInfo = self.get('fulfillmentInfo'),
@@ -1321,6 +1338,8 @@
                     var billingEmail = billingInfo.get('billingContact.email');
                     if (!billingEmail && user.email) billingInfo.set('billingContact.email', user.email);
 
+                    self.applyAttributes();
+
                 });
                 if (user.isAuthenticated) {
                     this.set('customer', { id: user.accountId });
@@ -1329,11 +1348,19 @@
                 if (data.acceptsMarketing === null) {
                     self.set('acceptsMarketing', true);
                 }
-                _.bindAll(this, 'update', 'onCheckoutSuccess', 'onCheckoutError', 'addNewCustomer', 'saveCustomerCard',/* 'finalPaymentReconcile', */'apiCheckout', 'addDigitalCreditToCustomerAccount', 'addCustomerContact', 'addBillingContact', 'addShippingContact', 'addShippingAndBillingContact');
 
-
+                _.bindAll(this, 'update', 'onCheckoutSuccess', 'onCheckoutError', 'addNewCustomer', 'saveCustomerCard', 'apiCheckout', 
+                    'addDigitalCreditToCustomerAccount', 'addCustomerContact', 'addBillingContact', 'addShippingContact', 'addShippingAndBillingContact');
 
             },
+
+            applyAttributes: function() {
+                var storefrontOrderAttributes = require.mozuData('pagecontext').storefrontOrderAttributes;
+                if(storefrontOrderAttributes && storefrontOrderAttributes.length > 0) {
+                    this.set('orderAttributes', storefrontOrderAttributes);
+                }
+            },
+
             processDigitalWallet: function(digitalWalletType, payment) {
                 var me = this;
                 me.runForAllSteps(function() {
@@ -1653,6 +1680,20 @@
                 return this.get('createAccount') && !this.customerCreated;
             },
 
+            validateReviewCheckoutFields: function(){
+                var validationResults = [];
+                for (var field in checkoutPageValidation) {
+                    if(checkoutPageValidation.hasOwnProperty(field)) {
+                        var result = this.validate(field);
+                        if(result) {
+                            validationResults.push(result);
+                        }
+                    }
+                }
+
+                return validationResults.length > 0;
+            },
+
             submit: function () {
                 var order = this,
                     billingInfo = this.get('billingInfo'),
@@ -1671,6 +1712,28 @@
                         });
                     }];
 
+                var storefrontOrderAttributes = require.mozuData('pagecontext').storefrontOrderAttributes;
+                if(storefrontOrderAttributes && storefrontOrderAttributes.length > 0) {
+                    var updateAttrs = [];
+                    storefrontOrderAttributes.forEach(function(attr){
+                        var attrVal = order.get('orderAttribute-' + attr.attributeFQN);
+                        if(attrVal) {
+                            updateAttrs.push({
+                                'fullyQualifiedName': attr.attributeFQN,
+                                'values': [ attrVal ]
+                            });
+                        }
+                    });
+
+                    if(updateAttrs.length > 0){
+                        process.push(function(){
+                            return order.apiUpdateAttributes(updateAttrs);
+                        }, function() {
+                            return order.apiGet();
+                        });
+                    }
+                }
+
                 if (this.isSubmitting) return;
 
                 this.isSubmitting = true;
@@ -1678,17 +1741,19 @@
                 if (requiresBillingInfo && !billingContact.isValid()) {
                     // reconcile the empty address after we got back from paypal and possibly other situations.
                     // also happens with visacheckout ..
-                    var billingInfoFromPayment = this.apiModel.getCurrentPayment().billingInfo;
+                    var billingInfoFromPayment = (this.apiModel.getCurrentPayment() || {}).billingInfo;
                     billingInfo.set(billingInfoFromPayment, { silent: true });
                 }
 
                 this.syncBillingAndCustomerEmail();
                 this.setFulfillmentContactEmail();
 
-                if (nonStoreCreditTotal > 0 && this.validate()) {
+                // skip payment validation, if there are no payments, but run the attributes and accept terms validation.
+                if ((nonStoreCreditTotal > 0 && this.validate()) || this.validateReviewCheckoutFields()) {
                     this.isSubmitting = false;
                     return false;
-                }
+                } 
+
                 this.isLoading(true);
 
                 if (isSavingNewCustomer) {
