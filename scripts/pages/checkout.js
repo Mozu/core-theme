@@ -408,6 +408,23 @@ require(["modules/jquery-mozu", "underscore", "hyprlive", "modules/backbone-mozu
         autoUpdate: ['shopperNotes.comments']
     });
 
+    var attributeFields = function(){
+        var me = this;
+
+        var fields = [];
+
+        var storefrontOrderAttributes = require.mozuData('pagecontext').storefrontOrderAttributes;
+        if(storefrontOrderAttributes && storefrontOrderAttributes.length > 0) {
+
+            storefrontOrderAttributes.forEach(function(attributeDef){
+                fields.push('orderAttribute.' + attributeDef.attributeFQN);
+            }, this);
+
+        }
+
+        return fields;
+    };
+
     var ReviewOrderView = Backbone.MozuView.extend({
         templateName: 'modules/checkout/step-review',
         autoUpdate: [
@@ -416,7 +433,7 @@ require(["modules/jquery-mozu", "underscore", "hyprlive", "modules/backbone-mozu
             'emailAddress',
             'password',
             'confirmPassword'
-        ],
+        ].concat(attributeFields()),
         renderOnChange: [
             'createAccount',
             'isReady'
@@ -436,6 +453,7 @@ require(["modules/jquery-mozu", "underscore", "hyprlive", "modules/backbone-mozu
                 me.$('[data-mz-validationmessage-for="emailAddress"]').html(Hypr.getLabel("customerAlreadyExists", user, encodeURIComponent(window.location.pathname)));
             });
         },
+
         submit: function () {
             var self = this;
             _.defer(function () {

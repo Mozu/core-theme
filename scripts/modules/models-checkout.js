@@ -470,7 +470,6 @@
                     return order.update();
                 });
             },
-
             // digital
 
             onCreditAmountChanged: function(digCredit, amt) {
@@ -1196,14 +1195,14 @@
                     this.markComplete();
                 }
             },
+
             markComplete: function () {
                 this.stepStatus('complete');
                 this.isLoading(false);
                 var order = this.getOrder();
-                _.defer(function() {
-                    order.isReady(true);    
+                _.defer(function() { 
+                    order.isReady(true);   
                 });
-                
             },
             toJSON: function(options) {
                 var j = CheckoutStep.prototype.toJSON.apply(this, arguments), loggedInEmail;
@@ -1265,6 +1264,7 @@
                     user = require.mozuData('user');
 
                 _.defer(function() {
+
                     var latestPayment = self.apiModel.getCurrentPayment(),
                         activePayments = self.apiModel.getActivePayments(),
                         fulfillmentInfo = self.get('fulfillmentInfo'),
@@ -1321,6 +1321,8 @@
                     var billingEmail = billingInfo.get('billingContact.email');
                     if (!billingEmail && user.email) billingInfo.set('billingContact.email', user.email);
 
+                    self.applyAttributes();
+
                 });
                 if (user.isAuthenticated) {
                     this.set('customer', { id: user.accountId });
@@ -1329,11 +1331,19 @@
                 if (data.acceptsMarketing === null) {
                     self.set('acceptsMarketing', true);
                 }
-                _.bindAll(this, 'update', 'onCheckoutSuccess', 'onCheckoutError', 'addNewCustomer', 'saveCustomerCard',/* 'finalPaymentReconcile', */'apiCheckout', 'addDigitalCreditToCustomerAccount', 'addCustomerContact', 'addBillingContact', 'addShippingContact', 'addShippingAndBillingContact');
 
-
+                _.bindAll(this, 'update', 'onCheckoutSuccess', 'onCheckoutError', 'addNewCustomer', 'saveCustomerCard', 'apiCheckout', 
+                    'addDigitalCreditToCustomerAccount', 'addCustomerContact', 'addBillingContact', 'addShippingContact', 'addShippingAndBillingContact');
 
             },
+
+            applyAttributes: function() {
+                var storefrontOrderAttributes = require.mozuData('pagecontext').storefrontOrderAttributes;
+                if(storefrontOrderAttributes && storefrontOrderAttributes.length > 0) {
+                    order.set('orderAttributes', storefrontOrderAttributes);
+                }
+            },
+
             processDigitalWallet: function(digitalWalletType, payment) {
                 var me = this;
                 me.runForAllSteps(function() {
