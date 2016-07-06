@@ -89,7 +89,12 @@ Ext.define('Taco.view.order.modal.AddPurchaseOrder', {
                         },
                         xtype: 'fieldcontainer'
                     }
-                ]
+                ],
+                listeners: {
+                    afterrender: function (form, me) {
+                        form.down('#amount').isValid();
+                    }
+                }
             });
         }
 
