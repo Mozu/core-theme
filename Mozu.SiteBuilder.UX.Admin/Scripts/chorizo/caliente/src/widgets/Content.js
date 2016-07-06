@@ -93,12 +93,12 @@ export default class ContentWidget {
         }
     }
 
-    getUrlTooltip() {
+    getUrlTooltip(url) {
         const urlTooltip = document.createElement('div');
 
         urlTooltip.classList.add(URL_TOOLTIP_CLASS);
 
-        urlTooltip.innerHTML = '<input type="text" placeholder="http://">';
+        urlTooltip.innerHTML = '<input type="text" placeholder="http://" value="' + url + '">';
 
         urlTooltip.addEventListener('change', this.onUrlUpdate.bind(this));
 
@@ -127,13 +127,19 @@ export default class ContentWidget {
         e.target.value = '';
     }
 
-    revealEditor(block) {
-        
+    revealEditor(block, e) {
+
+        let url = '';
+
+        if (e.target.hasAttribute('href')) {
+            url = e.target.getAttribute('href');
+        }
+
         this.formatter = this.formatter || this.getFormatter();
 
         this.toggleAllContentWidgets();
 
-        this.urlTooltip = this.urlTooltip || this.getUrlTooltip();
+        this.urlTooltip = this.getUrlTooltip(url) || this.urlTooltip;
 
         this.formatter.classList.add(CONTENT_WIDGET_FORMAT_BAR);
 
