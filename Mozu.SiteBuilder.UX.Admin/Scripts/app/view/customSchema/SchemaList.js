@@ -86,7 +86,7 @@ Ext.define('Taco.view.customSchema.SchemaList', {
             this.entitySplit.updateSearchContext();
         }
 
-        if (this.dynamicGrid && records && records.length > 0) {
+        if (this.dynamicGrid && records && records.length > 0 && records[0]) {
             var defaultView = records[0].get('views') ? records[0].get('views')[0] : null;
             this.dynamicGrid.initListView(records[0], null, defaultView);
         }
