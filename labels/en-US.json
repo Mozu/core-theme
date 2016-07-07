@@ -370,6 +370,7 @@
   "chooseShippingMethod"                  : "Please select a shipping method.",
   "didNotAgreeToTerms"                    : "You must agree to the terms and conditions",
   "enterProductQuantity"                  : "Please enter a product quantity above 0",
+  "enterMinProductQuantity"               : "Minimum required quantity for purchase is {0}",
   "enterReturnReason"                     : "Please select a return reason.",
   "enterReturnQuantity"                   : "Please enter a quantity above 1 to return.",
   "enterOtherComments"                    : "Please enter a comment explaining the reason for this return.",
@@ -437,5 +438,12 @@
   "addAddress"                            : "Add new address",
   "editAddress"                           : "Edit saved address",
   "exclusivePricelist"                    : "The following items are not available for purchase and have been removed.",
-  "newPriceList"                          : "You are now eligible for special pricing."
+  "newPriceList"                          : "You are now eligible for special pricing.",
+
+  "volumePriceQuantity"                   : "Quantity",
+  "volumePriceUnitPrice"                  : "Unit Price",
+  "volumePriceSavings"                    : "Savings",
+  "volumePriceMinMaxQty"                  : "{0} - {1}",
+  "volumePriceMinOnlyQty"                 : "{0}+",
+  "mapPrice"                              : "add to cart to see final price"
 }

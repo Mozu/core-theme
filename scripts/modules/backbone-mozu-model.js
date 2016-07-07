@@ -185,7 +185,7 @@
              * @example
              * // sets the value of Customer.EditingContact.FirstName
              * customerModel.set('editingContact.firstName');
-             * @param {string} propName The name, or dot-separated path, of the property to return.
+             * @param {string} key The name, or dot-separated path, of the property to return.
              * @returns {Object} Returns the value of the named attribute, and `undefined` if it was never set.
              */
             set: function(key, val, options) {
@@ -193,8 +193,11 @@
                 if (!key && key !== 0) return this;
 
                 containsPrice = new RegExp('price', 'i');
-                // remove any properties from the current configurable model 
+                
+                // Remove any properties from the current model 
                 // where there are properties no longer present in the latest api model.
+                // This is to fix an issue when sale price is only on certain configurations or volume price bands, 
+                // so that the sale price does not persist.
                 syncRemovedKeys = function (currentModel, attrKey) {
                     _.each(_.difference(_.keys(currentModel[attrKey].toJSON()), _.keys(attrs[attrKey])), function (keyName) {
                         changes.push(keyName);
@@ -259,7 +262,7 @@
                         current[attr] = val;
                     }
 
-                    if (current.productUsage === 'Configurable' && current[attr] instanceof Backbone.Model) {
+                    if (current[attr] instanceof Backbone.Model && containsPrice.test(attr)) {
                         syncRemovedKeys(current, attr);
                     }
                 }
