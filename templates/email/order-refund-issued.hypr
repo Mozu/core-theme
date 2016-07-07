@@ -36,11 +36,15 @@
 				{% if refund.payment.paymentType == "CreditCard" %}
 					{{ refund.payment.billingInfo.card.paymentOrCardType }} {{ refund.payment.billingInfo.card.cardNumberPartOrMask }}
 				{% else %}
-					{% if refund.payment.paymentType == "PaypalExpress" %}
-						{{ labels.payPal }}
+					{% if refund.payment.paymentType == "PurchaseOrder" %}
+						{{ labels.purchaseOrder }}
 					{% else %}
-						{% if refund.payment.paymentType == "StoreCredit" %}
-							{{ labels.storeCredit }} {{ refund.payment.billingInfo.storeCreditCode|default("") }}
+						{% if refund.payment.paymentType == "PaypalExpress" %}
+							{{ labels.payPal }}
+						{% else %}
+							{% if refund.payment.paymentType == "StoreCredit" %}
+								{{ labels.storeCredit }} {{ refund.payment.billingInfo.storeCreditCode|default("") }}
+							{% endif %}
 						{% endif %}
 					{% endif %}
 				{% endif %}

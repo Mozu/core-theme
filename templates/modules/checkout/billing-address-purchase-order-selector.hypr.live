@@ -1,0 +1,22 @@
+{% if model.requiresFulfillmentInfo and not model.purchaseOrder.usingBillingContact %}
+<div class="mz-l-formfieldgroup mz-l-formfieldgroup-norows">
+    <label>
+        <input type="checkbox" data-mz-value="isSameBillingShippingAddress" value="true" {% if model.isSameBillingShippingAddress %}checked="checked"{% endif %}>{{ labels.useShippingAddress }}
+    </label>
+</div>
+{% endif %}
+{% if model.isSameBillingShippingAddress %}
+<div class="mz-addresssummary mz-same-as-shipping-summary" id="mz-same-as-shipping-summary">
+    {% include "modules/common/address-summary" with model=model.billingContact %}
+</div>
+{% else %}
+{% if model.purchaseOrder.usingBillingContact %}
+<div class="mz-addresssummary mz-same-as-shipping-summary" id="mz-same-as-shipping-summary">
+    {% include "modules/common/address-summary" with model=model.billingContact %}
+</div>
+{% else %}
+<div class="mz-l-formfieldgroup mz-l-formfieldgroup-address">
+    {% include "modules/checkout/billing-address-form" with model=model.billingContact countries=pageContext.billingCountries states=pageContext.billingStates %}
+</div>
+{% endif %}
+{% endif %}

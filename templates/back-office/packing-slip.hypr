@@ -61,6 +61,29 @@
                         {% if type.grouper == "DigitalCredit" %}{{ labels.digitalCredit }}{% endif %}
                         {% if type.grouper == "Paypal" %}{{ labels.payPal }}{% endif %}
                         {% if type.grouper == "PaypalExpress" %}{{ labels.paypalExpress }}{% endif %}
+                        {% if type.grouper == "PurchaseOrder" %}{{ labels.purchaseOrder }}
+                        <table class="
+                                {% for payment in order.payments %}
+                                    {% if payment.PaymentType == 'PurchaseOrder' %}
+                                        show
+                                    {% endif %}
+                                {% endfor %}
+                            ">
+                        <tbody>
+                            {% for payment in order.payments %}
+                                {% if payment.status != "Voided" and payment.paymentType == "PurchaseOrder" %}
+                                    <tr>
+                                        <td><b>{{labels.purchaseOrderNumber}}</b></td>
+                                        <td>{{ payment.billingInfo.purchaseOrder.purchaseOrderNumber }}</td>
+                                    </tr>
+                                    <tr>
+                                        <td><b>{{labels.purchaseOrderPaymentTerms}}</b></td>
+                                        <td>{{ payment.billingInfo.purchaseOrder.paymentTerm.description }}</td>
+                                    </tr>
+                                {% endif %}
+                            {% endfor %}
+                        </tbody>
+                    </table>{% endif %}
                    
                 {% endfor %}
             </td>
