@@ -1,5 +1,24 @@
 {% with paymentId|default(0) as paymentId %}
 <div class="mz-l-formfieldgroup mz-paymentselector">
+    {% if siteContext.checkoutSettings.purchaseOrder.isEnabled and model.purchaseOrder.isEnabled %}
+    <div class="mz-l-formfieldgroup-row mz-paymentselector-option mz-paymentselector-newcreditcard mz-checkoutform {% if model.paymentType == "PurchaseOrder" %}mz-checkoutform-active{% endif %}">
+        <div class="mz-l-formfieldgroup-row">
+            <div class="mz-l-formfieldgroup-cell">
+                <input data-mz-value="paymentType" data-mz-purchase-order data-mz-payment-type id="paymentType-purchase-order-{{ paymentId }}" name="paymentType" type="radio" class="mz-paymenttype-input" value="PurchaseOrder" {% if model.paymentType == "PurchaseOrder" %}checked="true"{% endif %} />
+            </div>
+            <div class="mz-l-formfieldgroup-cell">
+                <label class="mz-paymentselector-label mz-paymentselector-label-purchaseorder mz-checkoutform-radio" for="paymentType-purchase-order-{{ paymentId }}">{{ labels.purchaseOrder }}</label>
+            </div>
+        </div>
+        {% if model.paymentType == "PurchaseOrder" %}
+        {% include "modules/checkout/billing-purchase-order-form" with model=model.purchaseOrder %}
+        <div class = "mz-l-stack-section">
+            <h4 class="mz-checkoutform-title">{{ labels.billingAddress }}</h4>
+            {% include "modules/checkout/billing-address-purchase-order-selector" %}
+        </div>
+        {% endif %}
+    </div>
+    {% endif %}
     <div class="mz-l-formfieldgroup-row mz-paymentselector-option mz-paymentselector-newcreditcard mz-checkoutform {% if model.paymentType == "CreditCard" and not model.usingSavedCard %}mz-checkoutform-active{% endif %}">
         <div class="mz-l-formfieldgroup-row">
             <div class="mz-l-formfieldgroup-cell">
@@ -10,11 +29,11 @@
             </div>
         </div>
         {% if model.paymentType == "CreditCard" and not model.usingSavedCard %}
-        {% include "modules/checkout/billing-credit-card-form" with model=model.card %}
-        <div class="mz-l-stack-section">
-            <h4 class="mz-checkoutform-title">{{ labels.billingAddress }}</h4>
-            {% include "modules/checkout/billing-address-selector" %}
-        </div>
+            {% include "modules/checkout/billing-credit-card-form" with model=model.card %}
+            <div class="mz-l-stack-section">
+                <h4 class="mz-checkoutform-title">{{ labels.billingAddress }}</h4>
+                {% include "modules/checkout/billing-address-selector" %}
+            </div>
         {% endif %}
     </div>
     {% if model.savedPaymentMethods %}

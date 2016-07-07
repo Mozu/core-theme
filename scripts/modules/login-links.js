@@ -12,6 +12,13 @@ define(['shim!vendor/bootstrap/js/popover[shim!vendor/bootstrap/js/tooltip[modul
     returnFalse = function () {
         return false;
     },
+    returnUrl = function() {
+        var returnURL = $('input[name=returnUrl]').val();
+        if(!returnURL) {
+            returnURL = '/';
+        }
+        return returnURL;
+    },
     $docBody,
 
     polyfillPlaceholders = !('placeholder' in $('<input>')[0]);
@@ -109,7 +116,7 @@ define(['shim!vendor/bootstrap/js/popover[shim!vendor/bootstrap/js/tooltip[modul
             }
             else {
                this.$el.on('click', _.bind(this.doFormSubmit, this));
-            }    
+            }
         },
         doFormSubmit: function(e){
             e.preventDefault();
@@ -278,7 +285,7 @@ define(['shim!vendor/bootstrap/js/popover[shim!vendor/bootstrap/js/tooltip[modul
                     },
                     password: this.$parent.find('[data-mz-signup-password]').val()
                 };
-            if (this.validate(payload)) {   
+            if (this.validate(payload)) {
                 //var user = api.createSync('user', payload);
                 this.setLoading(true);
                 return api.action('customer', 'createStorefront', payload).then(function () {
@@ -295,6 +302,7 @@ define(['shim!vendor/bootstrap/js/popover[shim!vendor/bootstrap/js/tooltip[modul
 
     $(document).ready(function() {
         $docBody = $(document.body);
+
         $('[data-mz-action="login"]').each(function() {
             var popover = new LoginPopover();
             popover.init(this);
@@ -304,6 +312,23 @@ define(['shim!vendor/bootstrap/js/popover[shim!vendor/bootstrap/js/tooltip[modul
             var popover = new SignupPopover();
             popover.init(this);
             $(this).data('mz.popover', popover);
+        });
+        $('[data-mz-action="continueAsGuest"]').on('click', function(e) {
+            e.preventDefault();
+            var returnURL = returnUrl();
+            if(returnURL .indexOf('checkout') === -1) {
+                returnURL = '';
+            }
+
+            //saveUserId=true Will logut the current user while persisting the state of the current shopping cart
+            $.ajax({
+                    method: 'GET',
+                    url: '../../logout?saveUserId=true&returnUrl=' + returnURL,
+                    complete: function(data) {
+                        location.href = require.mozuData('pagecontext').secureHost + '/' + returnURL;
+                    }
+            });
+
         });
         $('[data-mz-action="launchforgotpassword"]').each(function() {
             var popover = new LoginPopover();
@@ -341,7 +366,7 @@ define(['shim!vendor/bootstrap/js/popover[shim!vendor/bootstrap/js/tooltip[modul
 
             //if were in edit mode, we override the /logout GET, to preserve the correct referrer/page location | #64822
             if (require.mozuData('pagecontext').isEditMode) {
- 
+
                  el.on('click', function(e) {
                     e.preventDefault();
                     $.ajax({
@@ -351,7 +376,7 @@ define(['shim!vendor/bootstrap/js/popover[shim!vendor/bootstrap/js/tooltip[modul
                     });
                 });
             }
-            
+
         });
     });
 
