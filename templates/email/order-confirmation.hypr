@@ -30,8 +30,18 @@
                 <td>
                     <b>{{ labels.billingInformation }}</b>:<br><br>{% include "modules/common/email-address-summary" with model=model.billingInfo.billingContact %}<br><br>
                         {% if model.billingInfo.paymentType == "CreditCard" %}
-                            <b>{{ labels.paymentMethod }}</b>: {{ model.billingInfo.card.paymentOrCardType }} {{ model.billingInfo.card.cardNumberPartOrMask }}
+                            <b>{{ labels.paymentMethod }}</b>: {{ model.billingInfo.card.paymentOrCardType }} {{ model.billingInfo.card.cardNumberPartOrMask }}<br>
                         {% endif %}                        
+                        {% if model.billingInfo.paymentType == "PurchaseOrder" %}
+                            <b>{{ labels.paymentMethod }}</b>: {{ label.purchaseOrder }}<br>
+                            <b>{{ labels.purchaseOrderNumber }}</b>: {{ model.billingInfo.purchaseOrder.purchaseOrderNumber }}<br>
+                            {% if model.billingInfo.purchaseOrder.customFields.length > 0 %}
+                                {% for field in model.billingInfo.purchaseOrder.customFields %}
+                                    <b>{{ field.label }}</b>: {{ field.value }}<br>
+                                {% endfor %}
+                            {% endif %}
+                            <b>{{ labels.purchaseOrderPaymentTerms }}</b>: {{ model.billingInfo.purchaseOrder.paymentTerm.description }}
+                        {% endif %}
                 </td>
             </tr>
 
