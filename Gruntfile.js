@@ -8,6 +8,7 @@ module.exports = function (grunt) {
   grunt.loadNpmTasks('grunt-mozu-appdev-sync');
   grunt.loadNpmTasks('grunt-newer');
   grunt.loadNpmTasks('mozu-theme-helpers');
+  grunt.loadNpmTasks('grunt-contrib-watch');
   require('time-grunt')(grunt);
 
   grunt.initConfig({
@@ -220,5 +221,8 @@ module.exports = function (grunt) {
     'mozusync:upload'
   ]);
 
-  grunt.registerTask('default', ['build']);
+  grunt.registerTask('default', [
+    'build',
+    'mozusync:upload'
+    ]);
 };

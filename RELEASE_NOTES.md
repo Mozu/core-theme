@@ -10,10 +10,18 @@
 ### April 29, 2016
 * Price List
    - Added preview of price lists in the staging environment.
-   - See commit ____
+   - Added capability to message customers who are eligible for special pricing.
+   - See the following files in [merge commit ab38b1a2559b5a993347d7ff4300cfab86fc4003](/core-theme/commit/ab38b1a2559b5a993347d7ff4300cfab86fc4003?diff=split)
+     - labels/en-US.json
+     - scripts/modules/theme-utility-bar.js
+     - stylesheets/modules/theme-utility-bar/header.less
+     - templates/modules/common/message-bar.hypr.live
+     - templates/modules/utility-bar/header.hypr
 * Fixed variant pricing
    - Supports explicit list and sale price for configurable product variants, in addition to the current delta pricing, on the Product Details page.
-   - See commit ____
+   - See the following file in [merge commit ab38b1a2559b5a993347d7ff4300cfab86fc4003](/core-theme/commit/ab38b1a2559b5a993347d7ff4300cfab86fc4003?diff=split)
+        - scripts/modules/backbone-mozu-model.js
+
 
 ### January 18, 2016
 

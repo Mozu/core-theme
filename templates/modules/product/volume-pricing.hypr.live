@@ -1,0 +1,26 @@
+﻿<div class="mz-volume-pricing mz-l-column">
+<table class="mz-table">
+  <thead>
+    <tr>
+      <th class="mz-volume-pricing-header-quantity">{{ labels.volumePriceQuantity }}</th>
+      <th class="mz-volume-pricing-header-price">{{ labels.volumePriceUnitPrice }}</th>
+    </tr>
+  </thead>
+  <tbody>
+    {% for priceBand in model.volumePriceBands %}
+    <tr class="mz-volume-pricing-row{% if priceBand.isCurrent %} mz-volume-pricing-active-band{% endif %}">
+      <td class="mz-volume-pricing-cell-quantity">
+      {% if priceBand.maxQty %}
+        {{ labels.volumePriceMinMaxQty|string_format(priceBand.minQty,priceBand.maxQty) }}
+      {% else %}
+        {{ labels.volumePriceMinOnlyQty|string_format(priceBand.minQty) }}
+      {% endif %}
+      </td>
+      <td class="mz-volume-pricing-cell-price">
+        {% include "modules/product/volume-price-stack" with model=priceBand %}
+      </td>
+    </tr>
+    {% endfor %}
+  </tbody>
+</table>
+</div>

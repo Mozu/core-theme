@@ -48,6 +48,11 @@
                     "xtype": "mz-input-checkbox",
                     "name": "listProductShortDesc",
                     "fieldLabel": "Show product short description in product lists"
+                },
+                {
+                    "xtype": "mz-input-checkbox",
+                    "name": "listVolumePricing",
+                    "fieldLabel": "Show volume pricing bands in product lists"
                 }
             ]
         },

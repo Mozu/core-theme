@@ -6,23 +6,26 @@
      {% if model.discount.discount.name %}
      <span class="mz-price-discountname">{{model.discount.discount.name}} &ndash;</span>
      {% endif %}
-	
-     {{model.salePrice|currency}}
-	  {% if model.priceType == "MAP" %}
-		<div>add to cart to see final price</div>
+
+     {% if model.priceType != "MAP" %}
+         {{model.salePrice|currency}}
+     {% else %}
+         <div>{{ labels.mapPrice }}</div>
      {% endif %}
  </span>
  {% else %}
  <span itemprop="price" class="mz-price">
-	
-     {{model.price|currency}}
-	 {% if model.priceType == "MAP" %}
-		<div>add to cart to see final price</div>
+
+     {% if model.priceType != "MAP" %}
+         {{model.price|currency}}
+     {% else %}
+         <span class="mz-price is-crossedout">
+         {{model.price|currency}}
+         </span>
+         <div>{{ labels.mapPrice }}</div>
      {% endif %}
  </span>
  {% endif %}
  {% if themeSettings.showMSRP and model.msrp %}
  <span class="mz-price-msrp">{{ labels.msrp}}: <span class="mz-price">{{ model.msrp|currency }}</span></span>
  {% endif %}
-
-
