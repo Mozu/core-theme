@@ -21,7 +21,7 @@ using Mozu.SiteBuilder.UX.Admin.Helpers.CustomerHelpers;
 using ApiCustomer = Mozu.SiteBuilder.UX.Admin.Api.Models.Customer;
 using Credit = Mozu.SiteBuilder.UX.Admin.Api.Models.Credit;
 using DC = Mozu.Customer.Contracts;
-
+using Mozu.Core.Api.Client;
 
 namespace Mozu.SiteBuilder.UX.Admin.Api
 {
@@ -45,7 +45,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
             _customerSegmentWebApiClient = customerSegmentWebApiClient;
             // _customerGroupWebApiClient = customerGroupWebApiClient;
             _creditWebApiClient = creditWebApiClient;
-            _orderWebApiClient = orderWebApiClient;
+            _orderWebApiClient = orderWebApiClient.CloneWithApiContext(ctx => { ctx.SiteId = null; });
             _log = log;
             //_customerVisitWebApiClient = customerVisitWebApiClient;
         }
@@ -133,7 +133,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
         }
 
         [HttpGetRoute(UriTemplate = "list")]
-        public async Task<Response<List<ApiCustomer>>> List([FromUri]PagingParamaters pagingParameters, [FromUri]FilterCollection extFilter, bool? showAnonymous = null)
+        public async Task<Response<List<ApiCustomer>>> List([FromUri]PagingParamaters pagingParameters, [FromUri]FilterCollection extFilter, bool? showAnonymous = null, bool? isPOFlagRequired = null)
         {
             int customerId;
             if (pagingParameters.id != null)
@@ -187,10 +187,13 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
             var customers = Mapper.Map<List<ApiCustomer>>(dcCustomers.Items);
 
             //TODO:this flag info should ideally come from getAccounts api call  
-            foreach (var customer in customers)
+            if (isPOFlagRequired.GetValueOrDefault(false))
             {
-                var result = (await _customerWebApiClient.GetCustomerPurchaseOrderAccount(customer.Id.Value)).ReadAsAsync().Result;
-                customer.IsPoEnabled = result?.IsEnabled ?? false;
+                foreach (var customer in customers)
+                {
+                    var result = (await _customerWebApiClient.GetCustomerPurchaseOrderAccount(customer.Id.Value)).ReadAsAsync().Result;
+                    customer.IsPoEnabled = result?.IsEnabled ?? false;
+                }
             }
 
             return List2(customers, total: (int)dcCustomers.TotalCount);
@@ -238,7 +241,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
                         poResponse = await EditCustomerPurchaseOrder(purchaseOrder);
                     }
 
-                    else
+                    else if(purchaseOrder.IsEnabled)
                     {
                         purchaseOrder.AccountId = cust.Id.Value;
                         poResponse = await CreateCustomerPurchaseOrder(purchaseOrder, cust.Id);

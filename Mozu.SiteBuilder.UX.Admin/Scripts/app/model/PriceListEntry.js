@@ -104,7 +104,7 @@ Ext.define('Taco.model.PriceListEntry', {
                 return val !== 'UseCatalog';
             },
             serialize: function(val) {
-                return val ? val : 'UseCatalog';
+                return val ? 'Overridden' : 'UseCatalog';
             }
         }, {
             name: 'msrp',
@@ -118,7 +118,7 @@ Ext.define('Taco.model.PriceListEntry', {
                 return val !== 'UseCatalog';
             },
             serialize: function(val) {
-                return val ? val : 'UseCatalog';
+                return val ? 'Overridden' : 'UseCatalog';
             }
         }, {
             name: 'map',
@@ -142,7 +142,7 @@ Ext.define('Taco.model.PriceListEntry', {
                 return val !== 'UseCatalog';
             },
             serialize: function(val) {
-                return val ? val : 'UseCatalog';
+                return val ? 'Overridden' : 'UseCatalog';
             }
         }, {
             name: 'cost',

@@ -121,7 +121,7 @@ namespace Mozu.SiteBuilder.Mvc.SEO
                 var client = siteId == null ? _systemDocumentClient : _systemDocumentClient.CloneWithSbContext(_siteBuilderApiContext).CloneWithSiteId(siteId);
                 
                 _redirectEntryListTask = client
-                    .CloneWithConfigOptions(x => x.TimeoutMilliseconds = 5000)
+                   // .CloneWithConfigOptions(x => x.TimeoutMilliseconds = 5000)
                     .GetTreeDocument("siteSettings@mozu", FileName)
                     .ContinueWith(gdt => LookupRedirectsFromCmsMetaDoc(gdt, siteId, client))
                     .Unwrap();
@@ -176,7 +176,8 @@ namespace Mozu.SiteBuilder.Mvc.SEO
         Task<List<RedirectEntry>> DoFetchEntries( IDocumentListWebApiClient client)
         {
 
-            return client.CloneWithConfigOptions(x => x.TimeoutMilliseconds = 8000)
+            return client
+                //.CloneWithConfigOptions(x => x.TimeoutMilliseconds = 8000)
 
                             .GetTreeDocumentContent("siteSettings@mozu", FileName)
                             .ContinueWith(x =>
