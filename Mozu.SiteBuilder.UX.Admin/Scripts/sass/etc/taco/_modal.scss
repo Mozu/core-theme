@@ -1,5 +1,16 @@
 @mixin taco-modal {
 
+    .#{$vprefix}category-condition-value-field {
+        .#{$vprefix}more-action-button {
+            &.#{$prefix}btn-action-medium {
+                &.#{$prefix}btn-disabled {
+                    background-color: $white-color;
+                    cursor: not-allowed;
+                }
+            }
+        }
+    }
+
     .#{$prefix}layout-fit {
         .#{$prefix}form-item-label-top {
             padding-top: 10px;
