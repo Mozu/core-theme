@@ -130,6 +130,8 @@ Ext.define('Taco.core.StateManager', {
             'filemanager',
             'ipblocking',
             'generalsettings',
+            'synonyms',
+            'generalsettings',
             'customers'
         ];
 

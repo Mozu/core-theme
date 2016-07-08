@@ -180,6 +180,7 @@
     <Compile Include="Api\Models\Account\CustomerPurchaseOrderAccount.cs" />
     <Compile Include="Api\Models\Order\PurchaseOrderPayment.cs" />
     <Compile Include="Api\Models\PriceLists\PriceListEntryExtra.cs" />
+    <Compile Include="Api\Models\Search\SynonymDefinition.cs" />
     <Compile Include="Api\ReportGenerator.cs" />
     <Compile Include="Api\CouponCodeController.cs" />
     <Compile Include="Api\LayoutWidgetDefinitionController.cs" />
@@ -473,6 +474,7 @@
     <Compile Include="Helpers\SearchTuningHelpers\SearchTuningRuleFilterBuilder.cs" />
     <Compile Include="Helpers\SearchTuningHelpers\SearchTuningRuleSortBuilder.cs" />
     <Compile Include="Helpers\SecurityHelpers\SecureCapabilityConfigUrlHelper.cs" />
+    <Compile Include="Helpers\SynonymHelpers\SynonymFilterBuilder.cs" />
     <Compile Include="Helpers\TaskHelper.cs" />
     <Compile Include="MessageHandlers\AuthRedirectMessageHandler.cs" />
     <Compile Include="MockServices\AbstractInMemoryResourceApiClient.cs" />
