@@ -2,7 +2,7 @@
 
 ### July 7, 2016
 * Added support for purchase order as a payment method - [Pull Request](https://github.com/Mozu/core-theme/pull/37)
-* Added support for volume pricing - [Pull Request](https://github.com/Mozu/core-theme/pull/38)
+* Added support for volume pricing - [Pull Request](https://github.com/Mozu/core-theme/pull/39)
 
 ### May 5, 2016
 * Create links that open in new windows - [Pull Request](https://github.com/Mozu/core-theme/pull/34)
