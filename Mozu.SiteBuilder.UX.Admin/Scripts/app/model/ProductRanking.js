@@ -207,10 +207,10 @@ Ext.define('Taco.model.ProductRanking', {
     proxy: {
         type: 'ajaxproxy',
         api: {
-            read: '/admin/app/search/tuningRule/list',
-            create: '/admin/app/search/tuningRule/create',
-            update: '/admin/app/search/tuningRule/edit',
-            destroy: '/admin/app/search/tuningRule/delete'
+            read: '/admin/app/SearchTuningRule/list',
+            create: '/admin/app/SearchTuningRule/create',
+            update: '/admin/app/SearchTuningRule/edit',
+            destroy: '/admin/app/SearchTuningRule/delete'
         },
         reader: {
             type: 'json',
