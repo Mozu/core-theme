@@ -17,19 +17,17 @@ using Mozu.SiteBuilder.UX.Admin.Helpers;
 using Mozu.SiteBuilder.Mvc.Extensions;
 using Mozu.SiteBuilder.UX.Admin.Api.Models;
 using Mozu.SiteBuilder.UX.Admin.Helpers.SearchTuningHelpers;
-using Mozu.SiteBuilder.UX.Admin.Helpers.SynonymHelpers;
 
 namespace Mozu.SiteBuilder.UX.Admin.Api
 {
     /// <summary>
-    /// Controller for searchTuningRules and synonyms
+    /// Controller for searchTuningRules.
     /// </summary>
-    [WebApi("app/search", SuppressDescriptorGeneration = true)]
+    [WebApi("app/searchtuningrule", SuppressDescriptorGeneration = true)]
     public class SearchTuningRuleController : BaseController
     {
         private readonly ISearchWebApiClient _searchWebApiClient;
         private readonly Lazy<ISearchTuningRuleFilterBuilder> _searchTuningRuleFilterBuilder;
-        private readonly Lazy<ISynonymFilterBuilder> _synonymFilterBuilder;
         private readonly Lazy<ISearchTuningRuleSortBuilder> _searchtuningRuleSortBuilder;
         private readonly Lazy<IProductWebApiClient> _productWebApiClient;
         private readonly Lazy<IProductTypeWebApiClient> _productTypeWebApiClient;
@@ -47,8 +45,8 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
             Lazy<ISearchTuningRuleSortBuilder> searchtuningRuleSortBuilder,
             Lazy<IProductWebApiClient> productWebApiClient,
             Lazy<IProductTypeWebApiClient> productTypeWebApiClient,
-            Lazy<ICategoryWebApiClient> categoryWebApiClient,
-            Lazy<ISynonymFilterBuilder> synonymFilterBuilder)
+            Lazy<ICategoryWebApiClient> categoryWebApiClient)
+        //
         {
             _searchWebApiClient = searchWebApiClient;
             _searchTuningRuleFilterBuilder = searchTuningRuleFilterBuilder;
@@ -57,13 +55,12 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
             _productTypeWebApiClient = productTypeWebApiClient;
             _categoryWebApiClient = categoryWebApiClient;
             _apiCtx = apiCtx;
-            _synonymFilterBuilder = synonymFilterBuilder;
         }
 
         /// <summary>
         /// Get a list of searchTuningRules.
         /// </summary>
-        [HttpGetRoute(UriTemplate = "tuningrule/list")]
+		[HttpGetRoute(UriTemplate = "list")]
         public async Task<Response<List<SearchTuningRule>>> ListSearchTuningRules(PagingParamaters pagingParams, FilterCollection extFilter)
         {
             if (pagingParams.id != null)
@@ -107,10 +104,10 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
             const string responseFields = "items(searchTuningRuleCode,searchTuningRuleName,active,activeStartDate,activeEndDate,keywords,filters,isDefault,auditInfo)";
             try
             {
-                var searchTuningRuleList = (await searchListClient.GetSearchTuningRules(pagingParams.startIndex,
-                    pagingParams.pageSize,
-                    sortBy: sortBy,
-                    filter: filter,
+                var searchTuningRuleList = (await searchListClient.GetSearchTuningRules(pagingParams.startIndex, 
+                    pagingParams.pageSize, 
+                    sortBy: sortBy, 
+                    filter: filter, 
                     responseFields:responseFields)).ReadAsSync();
 
                 var searchTuningRules = Mapper.Map<List<SearchTuningRule>>(searchTuningRuleList.Items);
@@ -125,11 +122,11 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
                 return this.FailureList2<SearchTuningRule>(e.Message);
             }
         }
-
+        
         private async Task AddCategoryNames(List<SearchTuningRule> searchTuningRules)
         {
-            var cats = await GetAllCategories();
-
+            var cats = await GetAllCategories() ;
+          
             if (!cats.Any())
                 return;
 
@@ -262,11 +259,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
 
             var theList = results.Distinct(SimpleSearchProduct.CodeComparer).ToList();
 
-            var productTypes =
-                theList.Where(ssp => ssp.ProductTypeId.HasValue)
-                    .Select(ssp => ssp.ProductTypeId.Value)
-                    .Distinct()
-                    .ToList();
+            var productTypes = theList.Where(ssp => ssp.ProductTypeId.HasValue).Select(ssp => ssp.ProductTypeId.Value).Distinct().ToList();
 
             //Copied all of this from product controller because you have to do it every time.  Make it part of the contract on product...
             var productTypeFilter = new StringBuilder();
@@ -295,7 +288,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
                 if (product.ProductTypeId.HasValue && ptLookUp.TryGetValue(product.ProductTypeId, out productName))
                 {
                     product.ProductTypeName = productName;
-                }
+                };
             }
             return theList;
         }
@@ -310,7 +303,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
         /// <summary>
         /// Create a new searchTuningRule.
         /// </summary>
-        [HttpPostRoute(UriTemplate = "tuningrule/create")]
+		[HttpPostRoute(UriTemplate = "create")]
         public async Task<Response<List<SearchTuningRule>>> CreateSearchTuningRule(List<SearchTuningRule> searchTuningRules)
         {
             var responseList = new List<SearchTuningRule>();
@@ -339,7 +332,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
         /// Update an existing searchTuningRule.
         /// have to call ProductAdmin/runtime to get product names
         /// </summary>
-        [HttpPostRoute(UriTemplate = "tuningrule/edit")]
+		[HttpPostRoute(UriTemplate = "edit")]
         public async Task<Response<List<SearchTuningRule>>> EditSearchTuningRule(List<SearchTuningRule> searchTuningRules, string searchTuningRuleCode = null)
         {
             var retList = new List<SearchTuningRule>();
@@ -355,154 +348,29 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
             return List2(retList);
         }
 
-        [HttpPostRoute(UriTemplate = "tuningrule/delete")]
+        [HttpPostRoute(UriTemplate = "delete")]
         public async Task<Response<SearchTuningRule>> DeleteSearchTuningRule(List<SearchTuningRule> tuningRules)
         {
             var tasks = tuningRules.Select(d => (GetSearchClientForSite(d.SiteId.GetValueOrDefault()))
-                .DeleteSearchTuningRule(d.Code)).ToList();
+                                                    .DeleteSearchTuningRule(d.Code)).ToList();
             await Task.WhenAll(tasks);
             tasks.Select(TaskHelper.Result).ThrowExceptionsIfAny();
 
             return SuccessWithTotal2<SearchTuningRule>(tuningRules.Count);
         }
 
-        private ISearchWebApiClient GetSearchClientForSite(int? siteId, string localeCode = null)
+        private ISearchWebApiClient GetSearchClientForSite(int? siteId)
         {
             _lazySearchClient = new Lazy<ISearchWebApiClient>(() =>
-                _searchWebApiClient.CloneWithApiContext(x => SetSite(x, siteId, localeCode)));
+                _searchWebApiClient.CloneWithApiContext(x => SetSite(x, siteId)));
             return _lazySearchClient.Value;
         }
 
-        private void SetSite(ApiContext apiContext, int? siteId, string localeCode)
+        private void SetSite(ApiContext apiContext, int? siteId)
         {
             apiContext.SiteId = siteId;
-            if (!string.IsNullOrEmpty(localeCode))
-            {
-                apiContext.LocaleCode = localeCode;
-            }
         }
 
-        #region synonyms
 
-        /// <summary>
-        /// Get a list of search synonyms by locale
-        /// </summary>
-        [HttpGetRoute(UriTemplate = "synonyms/list")]
-        public async Task<Response<List<SynonymDefinition>>> ListSearchSynonyms(PagingParamaters pagingParams,
-            FilterCollection extFilter)
-        {
-            if (pagingParams.id != null)
-            {
-                return await GetSingleSynonymDefinition(pagingParams, extFilter);
-            }
-
-            var searchListClient = _searchWebApiClient;
-
-            var query = extFilter.QueryString.Get("query");
-            if (!String.IsNullOrEmpty(query))
-            {
-                extFilter.Add(new FilterCollectionItem {comparison = "eq", field = "all", value = query});
-            }
-            // todo: Check with Kevin if ability to filter will be added to API - Greg Murray on 2016-06-24 
-            //string filter = null;
-            string filter = null;
-            if (extFilter.Count > 0)
-            {
-                filter = _synonymFilterBuilder.Value.ToFilterString(extFilter);
-            }
-            string sortBy = _searchtuningRuleSortBuilder.Value.ToSortString(pagingParams.sort);
-
-            try
-            {
-                var synonymDefinitionPagedCollection = (await searchListClient.GetSynonymDefinitions(pagingParams.startIndex,
-                        pagingParams.pageSize,
-                        sortBy: sortBy,
-                        filter: filter)).ReadAsSync(); //filter: filter,
-
-                var searchSynonymDefintions = Mapper.Map<List<SynonymDefinition>>(synonymDefinitionPagedCollection.Items);
-                return List2(searchSynonymDefintions, (int?) synonymDefinitionPagedCollection.TotalCount);
-            }
-            catch (ApiWebClientConnectionException e)
-            {
-                return this.FailureList2<SynonymDefinition>(e.Message);
-            }
-        }
-
-        /// <summary>
-        /// Create a new synonym definition
-        /// </summary>
-        [HttpPostRoute(UriTemplate = "synonyms/create")]
-        public async Task<Response<List<SynonymDefinition>>> CreateSynonymDefinition(List<SynonymDefinition> synonymDefinitions, string localeCode=null)
-        {
-            var result = new List<SynonymDefinition>();
-            var searchClient = GetSearchClientForSite(_apiCtx.SiteId, localeCode ?? _apiCtx.LocaleCode);
-
-            foreach (var searchRule in synonymDefinitions)
-            {
-                var dc = Mapper.Map<DC.SynonymDefinition>(searchRule);
-
-                try
-                {
-                    var createdSynonymDef = (await searchClient.AddSynonymDefinition(dc)).ReadAsSync();
-                    result.Add(Mapper.Map<SynonymDefinition>(createdSynonymDef));
-                }
-                catch (ApiWebClientConnectionException e)
-                {
-                    return this.FailureList2<SynonymDefinition>(e.Message);
-                }
-            }
-
-            return List2(result);
-        }
-
-        /// <summary>
-        /// Update an existing synonym definition.
-        /// </summary>
-        [HttpPostRoute(UriTemplate = "synonyms/edit")]
-        public async Task<Response<List<SynonymDefinition>>> EditSynonymDefinition(List<SynonymDefinition> synonymDefinitions, string localeCode=null)
-        {
-            var result = new List<SynonymDefinition>();
-            var searchClient = GetSearchClientForSite(_apiCtx.SiteId, localeCode ?? _apiCtx.LocaleCode);
-
-            foreach (var synonymDef in synonymDefinitions)
-            {
-                var dc = Mapper.Map<DC.SynonymDefinition>(synonymDef);
-               
-                var updatedDef = (await searchClient.UpdateSynonymDefinition(dc, dc.SynonymId)).ReadAsSync();
-                result.Add(Mapper.Map<SynonymDefinition>(updatedDef));
-            }
-
-            return List2(result);
-        }
-
-        [HttpPostRoute(UriTemplate = "synonyms/delete")]
-        public async Task<Response<SynonymDefinition>> DeleteSynonymDefintion(List<SynonymDefinition> synonymDefinitions, string localeCode=null)
-        {
-            var searchClient = GetSearchClientForSite(_apiCtx.SiteId, localeCode ?? _apiCtx.LocaleCode);
-
-            var tasks = synonymDefinitions.Select(d => searchClient.DeleteSynonymDefinition(d.SynonymId)).ToList();
-            await Task.WhenAll(tasks);
-            tasks.Select(TaskHelper.Result).ThrowExceptionsIfAny();
-
-            return SuccessWithTotal2<SynonymDefinition>(synonymDefinitions.Count);
-        }
-
-        private async Task<Response<List<SynonymDefinition>>> GetSingleSynonymDefinition(PagingParamaters pagingParams, FilterCollection extFilter)
-        {
-            var searchClient = _searchWebApiClient;
-            var siteIdQueryString = extFilter.QueryString.Get("siteId");
-            var localeCodeString = extFilter.QueryString.Get("localeCode");
-            int siteId;
-            if (!string.IsNullOrEmpty(siteIdQueryString) && int.TryParse(siteIdQueryString, out siteId))
-            {
-                searchClient = GetSearchClientForSite(siteId, localeCodeString);
-            }
-            var singleSynonymDef = (await searchClient.GetSynonymDefinition(pagingParams.NumericId)).ReadAsSync();
-            //We only add the whole blocked products & boosted products when there is a single item requested (edit mode)  Greg made me do this....
-            var mapped = Mapper.Map<SynonymDefinition>(singleSynonymDef);
-            return List2(mapped);
-        }
     }
 }
-
-#endregion
