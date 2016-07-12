@@ -118,7 +118,7 @@ export default class ContentWidget {
     onUrlUpdate(e) {
 
         const url = this.urlTooltip.querySelector('input').value;
-        const linkElement = this.currentLink.startContainer.parentNode
+        const linkElement = this.currentLink.startContainer.parentNode;
 
         linkElement.setAttribute('href', url);
 
