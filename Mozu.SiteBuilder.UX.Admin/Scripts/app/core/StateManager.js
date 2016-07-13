@@ -132,6 +132,7 @@ Ext.define('Taco.core.StateManager', {
             'synonyms',
             'generalsettings',
             'customers',
+            'orderattributes',
             'synonyms'
         ];
 

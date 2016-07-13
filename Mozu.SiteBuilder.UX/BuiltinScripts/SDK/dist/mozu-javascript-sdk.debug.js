@@ -1,5 +1,5 @@
 /*! 
- * Mozu JavaScript SDK - v0.3.0 - 2016-06-21
+ * Mozu JavaScript SDK - v0.3.0 - 2016-07-18
  *
  * Copyright (c) 2016 Volusion, Inc.
  *
@@ -4078,6 +4078,17 @@ module.exports=
             "template": "{+orderService}{id}/digitalWallet/VisaCheckout",
             "includeSelf": true,
             "useIframeTransport": "{+storefrontUserService}../../receiver{?receiverVersion}"
+        },
+        "get-attribute-definitions": {
+            "template": "{+orderAttributeDefService}",
+            "returnType": "orderattribute"
+        },
+        "update-attributes": {
+            "verb": "PUT",
+            "includeSelf": true,
+            "template": "{+orderService}{id}/attributes{?removeMissing}",
+            "shortcutParam": "removeMissing",
+            "returnType": "orderattributes"
         }
     },
     "rma": {

@@ -117,6 +117,10 @@ Ext.define('Taco.model.Attribute', {
             name: 'value', //added as a hack for the multiselector field in category creation
             type: 'auto',
             defaultValue: ''
+        }, {
+            name: 'isReadOnly',
+            type: 'boolean',
+            defaultValue: false
         }
     ],
     supportsAttributeType:function () {

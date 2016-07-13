@@ -8,6 +8,9 @@ using Mozu.ShippingRuntime.Contracts.Clients;
 using Mozu.SiteBuilder.Mvc.ActionFilters;
 using Mozu.SiteBuilder.Mvc.Controllers;
 using Mozu.SiteBuilder.Mvc.ViewEngine;
+using Mozu.CommerceRuntime.Contracts.Clients;
+using Mozu.Core.Extensible.Contracts;
+using System;
 
 namespace Mozu.SiteBuilder.UX.Controllers
 {
@@ -97,6 +100,56 @@ namespace Mozu.SiteBuilder.UX.Controllers
                 .OrderBy(s => s.Name)
                 .Select(s => new KeyValuePair<string, string>(s.Code, s.Name)).ToList();
             return states;
+        }
+
+
+        public async Task<List<Core.Extensible.Contracts.Attribute>> GetShopperOrderAttributes()
+        {
+            var attributes = await GetAllOrderAttributes();
+            var result = attributes.Where(a => a.IsActive == true).ToList();
+            return result;
+        }
+
+        // the attribute defintions are cached if we don't send in a fitler.. so get all of them then filter.. there shouldn't be that many.
+        private async Task<List<Core.Extensible.Contracts.Attribute>> GetAllOrderAttributes()
+        {
+            var orderAttributeWebApiClient = this.Request.Resolve<IOrderAttributeWebApiClient>();
+
+            var startIndex = 0;
+            var pageSize = 100;
+
+            var targetCollection = new List<Core.Extensible.Contracts.Attribute>();
+            AttributeCollection interimCollection = null;
+
+            while (true)
+            {
+                try
+                {
+                    interimCollection = await (await orderAttributeWebApiClient.GetAttributes(startIndex, pageSize).ConfigureAwait(false)).ReadAsAsync();
+                }
+                catch (Exception ex)
+                {
+                }
+
+                if (interimCollection == null || interimCollection.Items == null || interimCollection.Items.Count == 0)
+                    break;
+
+                targetCollection.AddRange(interimCollection.Items.ToList());
+
+                if (interimCollection.PageSize < pageSize)
+                    pageSize = interimCollection.PageSize;
+
+                if (interimCollection.TotalCount < pageSize)
+                    break;
+
+                startIndex = startIndex + pageSize;
+
+                if (startIndex > interimCollection.TotalCount)
+                    break;
+            }
+
+            return targetCollection;
+
         }
     }
 }

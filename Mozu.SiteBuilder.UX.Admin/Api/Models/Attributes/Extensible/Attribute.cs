@@ -64,6 +64,8 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.Models.Attributes.Extensible
 
         public List<AttributeValue> Values { get; set; }
 
+        public bool? IsReadOnly { get; set; }
+
     }
 
 

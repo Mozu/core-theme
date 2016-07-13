@@ -19,8 +19,8 @@ Ext.define('Taco.shared.view.form.ExtensibleAttribute', {
                     name: this.getFieldName(ptAttribute),
                     fieldLabel: ptAttribute.get('adminName'),
                     allowBlank: ptAttribute.get('isRequired') === true ? false: true,
-                    value: date,
-                    disabled: ptAttribute.get('valueType') === 'ShopperEntered'
+                    value: Ext.util.Format.date(date, 'm/d/Y'),
+                    disabled: ptAttribute.get('valueType') === 'ShopperEntered' || this.isFieldReadonly(ptAttribute)
                 }];
             },
             'TextArea': function (ptAttribute, values) {
@@ -34,16 +34,22 @@ Ext.define('Taco.shared.view.form.ExtensibleAttribute', {
                     rows: 12,
                     resizable: true,
                     resizeHandles: 's',
-                    disabled: ptAttribute.get('valueType') === 'ShopperEntered'
+                    disabled: ptAttribute.get('valueType') === 'ShopperEntered' || this.isFieldReadonly(ptAttribute)
                 }];
             },
             'YesNo': function (ptAttribute, values) {
+                var currentValue = (values[0] || '').toLowerCase();
+
                 return [{
-                    xtype: 'checkboxfield',
+                    xtype: 'radiogroup',
                     name: this.getFieldName(ptAttribute),
+                    allowBlank: ptAttribute.get('isRequired') === true ? false : true,
                     fieldLabel: ptAttribute.get('adminName'),
-                    checked: values[0],
-                    disabled: ptAttribute.get('valueType') === 'ShopperEntered'
+                    items: [
+                        { boxLabel: 'Yes', name: ptAttribute.get('id'), inputValue: 'true', checked: currentValue === 'true' },
+                        { boxLabel: 'No', name: ptAttribute.get('id'), inputValue: 'false', checked: currentValue === 'false' }
+                    ],
+                    disabled: ptAttribute.get('valueType') === 'ShopperEntered' || this.isFieldReadonly(ptAttribute)
                 }];
             },
             'List': function (ptAttribute, values) {
@@ -68,7 +74,7 @@ Ext.define('Taco.shared.view.form.ExtensibleAttribute', {
                         ],
                         data: ptAttribute.get('values')
                     }),
-                    disabled: ptAttribute.get('valueType') === 'ShopperEntered'
+                    disabled: ptAttribute.get('valueType') === 'ShopperEntered' || this.isFieldReadonly(ptAttribute)
                 }];
             },
             'TextBox': function (ptAttribute, values) {
@@ -81,7 +87,7 @@ Ext.define('Taco.shared.view.form.ExtensibleAttribute', {
                     width: '100%',
                     hideTrigger: true,
                     mouseWheelEnabled: false,
-                    disabled: ptAttribute.get('valueType') === 'ShopperEntered'
+                    disabled: ptAttribute.get('valueType') === 'ShopperEntered' || this.isFieldReadonly(ptAttribute)
                 };
 
                 if (ptAttribute.get('dataType') === 'Number') {
@@ -138,7 +144,11 @@ Ext.define('Taco.shared.view.form.ExtensibleAttribute', {
         if (!this.attributeDefinitions) return;
 
         Ext.Array.each(this.attributeDefinitions, function (attributeDefinition) {
-            items.push(this.buildContainer(attributeDefinition));
+
+            if (attributeDefinition.get('isActive')) {
+                items.push(this.buildContainer(attributeDefinition));
+            }
+
         }, this);
 
         if (!items.length) items.push(this.getEmptyComponent());
@@ -184,6 +194,7 @@ Ext.define('Taco.shared.view.form.ExtensibleAttribute', {
             this.record.getAttributes().add(attrValue);
         }
 
+
         editorCfg = this.buildEditor(attributeDefinition, attr, attrValue);
 
         return Ext.widget({
@@ -218,6 +229,14 @@ Ext.define('Taco.shared.view.form.ExtensibleAttribute', {
         return fieldName.replace(/^attribute-/, '');
     },
 
+    isFieldReadonly: function (att) {
+        var submittedDate = this.record.get('submittedDate'),
+            orderHasBeenSubmitted = submittedDate !== null && submittedDate !== undefined;
+
+        var result = orderHasBeenSubmitted && att.get('isReadOnly');
+        return result;
+    },
+
     beforeSave: function () {
         var me = this,
             form = me.getForm(),
@@ -229,21 +248,38 @@ Ext.define('Taco.shared.view.form.ExtensibleAttribute', {
                 definition = me.attributeDefinitionStore.getById(fqn),
                 val = field.getValue(),
                 item = {};
-            
-            item['attributeDefinitionId'] = definition.get('attributeId');
-            item['fullyQualifiedName'] = fqn;
-            item['id'] = null;
 
+            // we get only active ones, hence the check.
+            if (definition)
+            {
+                item['attributeDefinitionId'] = definition.get('attributeId');
+                item['fullyQualifiedName'] = fqn;
+                item['id'] = null;
 
+                var inputType = definition.get('inputType');
 
-            //if (field.getXType() != 'datefield') {
-            if (!Ext.isDate(val)) {
-                item['values'] = [val];
-            } else {
-                item['values'] = [Ext.isEmpty(val) ? val : Ext.Date.format(val, 'c')];
+                //if (field.getXType() != 'datefield') {
+                if (!Ext.isDate(val)) {
+
+                    if (inputType == 'YesNo') {
+                        if (val[fqn]) {
+                            item['values'] = [val[fqn]];
+                        }
+                    }
+                    else {
+                        if (val) {
+                            item['values'] = [val];
+                        }
+                    }
+
+                } else {
+                    item['values'] = [Ext.isEmpty(val) ? val : Ext.Date.format(val, 'c')];
+                }
+
+                if (item.values) {
+                    attrs.push(item);
+                }
             }
-            
-            attrs.push(item);
         });
 
         this.record.set('attributes', attrs);

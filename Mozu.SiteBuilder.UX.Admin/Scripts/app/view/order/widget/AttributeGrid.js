@@ -53,7 +53,12 @@ Ext.define('Taco.view.order.widget.AttributeGrid', {
         var columns = [{
             dataIndex: 'adminName',
             text: 'Name',
-            flex: 2
+            flex: 2,
+            renderer: function (value, meta, record, index) {
+
+                return value + (!record.get('isActive') ? ' <i>(disabled)</i>' : '');
+
+            }
         }, {
             dataIndex: 'values',
             text: 'Value',
@@ -63,11 +68,12 @@ Ext.define('Taco.view.order.widget.AttributeGrid', {
                     return (attribute.fullyQualifiedName || '').toLowerCase() === (record.get('id') || '').toLowerCase();
                 });
 
+                if (record.get('inputType') == "YesNo") {
+                    return att && !Ext.isEmpty(att.values) && att.values[0] ? (att.values[0].toLowerCase() === 'true' ? 'Yes' : 'No') : '--';
+                }
+
                 return (att && !Ext.isEmpty(att.values) ? att.values.map(Ext.util.Format.htmlEncode).join(', ').replace(/\n/g, '<br>') : '--');
             }
-        }, {
-            text: '',
-            width: 50
         }]    
 
         return columns;
