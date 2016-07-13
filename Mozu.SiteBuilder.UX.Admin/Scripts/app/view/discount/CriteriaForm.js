@@ -78,7 +78,26 @@ Ext.define('Taco.view.discount.CriteriaForm', {
             boxLabel: 'Specific Categories',
             inputValue: "categories",
             width: 300,
-            checked: (!this.record.get('includeAllProducts') && this.record.get('categories').length), listeners: {
+            checked: (!this.record.get('includeAllProducts') && this.record.get('categories').length), 
+            listeners: {
+                afterchange: function (cmp, newValue,oldValue) {
+                    if (newValue) {
+                        this.record.fireEvent("criteriascopechange", cmp, newValue, oldValue);
+                    }
+                },
+                scope: this
+            }
+        });
+
+        this.qualifyingProductsInput = Ext.widget({
+            xtype: 'radio',
+            name: 'includeAllProductsRadio',
+            persistSelectedValueOnly: true,
+            boxLabel: 'Qualify Products',
+            inputValue: 'qualifying',
+            width: 300,
+            disabled: false,
+            listeners: {
                 afterchange: function (cmp, newValue,oldValue) {
                     if (newValue) {
                         this.record.fireEvent("criteriascopechange", cmp, newValue, oldValue);
@@ -544,6 +563,7 @@ Ext.define('Taco.view.discount.CriteriaForm', {
                 items: [
                     this.includeSpecificProductsInput,
                     this.includeSpecificCatagoriesInput,
+                    this.qualifyingProductsInput,
                     this.includeAllProductsInput
                 ],
                 tooltip: Ext.create('Taco.core.ux.content.Tooltip', {
@@ -823,18 +843,19 @@ Ext.define('Taco.view.discount.CriteriaForm', {
     setProductCategoryContainerVisibility: function () {
         var me = this,
             isLineItem = (this.scopeType === 'LineItem'),
-            targetSpecifcProducts = this.includeSpecificProductsInput.checked;
+            targetSpecifcProducts = this.includeSpecificProductsInput.checked,
+            includeQualifyingProducts = this.qualifyingProductsInput.checked;
         
         // show when order level;
-        this.excludeLineItemDiscounts.setVisible(!isLineItem);
+        me.excludeLineItemDiscounts.setVisible(!isLineItem);
         
         //set visibility for the all products, specific products, categories radio buttons
-        this.scopeContainer.setVisible(isLineItem);
+        me.scopeContainer.setVisible(isLineItem);
 
 
         if (isLineItem) {
-            //if user toggles from order to line item and there is no product or category data. then preselect the all products ratio
-            if (!me.includeAllProductsInput.checked && !this.includeSpecificProductsInput.checked && !this.includeSpecificCatagoriesInput.checked) {
+            // if user toggles from order to line item and there is no product or category data. then preselect the all products radio
+            if (!me.includeAllProductsInput.checked && !me.includeSpecificProductsInput.checked && !me.includeSpecificCatagoriesInput.checked && !me.qualifyingProductsInput.checked) {
                 me.includeAllProductsInput.setValue(true);
             }
             
@@ -842,28 +863,28 @@ Ext.define('Taco.view.discount.CriteriaForm', {
             me.productsBox.setVisible(targetSpecifcProducts);
             me.productList.setDisabled(!targetSpecifcProducts);
 
-            me.categoriesBox.setVisible(this.includeSpecificCatagoriesInput.checked);
-            if (this.includeSpecificCatagoriesInput.checked && this.categoryList.getValue().length >= 2) {
+            me.categoriesBox.setVisible(me.includeSpecificCatagoriesInput.checked);
+            if (me.includeSpecificCatagoriesInput.checked && me.categoryList.getValue().length >= 2) {
                 me.includedCategoriesOperatorCheckbox.setVisible(true);
             } else {
                 me.hideAndResetField(me.includedCategoriesOperatorCheckbox, false);
             }
-            me.categoryList.setDisabled(!this.includeSpecificCatagoriesInput.checked);
+            me.categoryList.setDisabled(!me.includeSpecificCatagoriesInput.checked);
             
         } else {
-            this.productsBox.setVisible(false);
-            this.productList.setDisabled(true);
+            me.productsBox.setVisible(false);
+            me.productList.setDisabled(true);
             
-            this.categoriesBox.setVisible(false);
+            me.categoriesBox.setVisible(false);
             me.hideAndResetField(me.includedCategoriesOperatorCheckbox, false);
             
-            this.categoryList.setDisabled(true);
+            me.categoryList.setDisabled(true);
         }
         
         // only available when scope is specific categories or all
-        var showExclusions = !targetSpecifcProducts || this.parentForm.general.isOrder();
-        this.excludeCategoriesBox.setVisible(showExclusions);
-        this.productsExcludeBox.setVisible(showExclusions);
+        var showExclusions = !targetSpecifcProducts || !includeQualifyingProducts || me.parentForm.general.isOrder();
+        me.excludeCategoriesBox.setVisible(showExclusions);
+        me.productsExcludeBox.setVisible(showExclusions);
 
         
 
