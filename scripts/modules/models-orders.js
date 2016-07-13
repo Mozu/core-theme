@@ -75,6 +75,12 @@
         mozuType: 'order',
         relations: {
             items: OrderItemsList
+        },
+        initialize: function() {
+            var self = this;
+            var pageContext = require.mozuData('pagecontext'),
+                orderAttributeDefinitions = pageContext.storefrontOrderAttributes;
+            self.set('orderAttributeDefinitions', orderAttributeDefinitions);
         }
     }),
 

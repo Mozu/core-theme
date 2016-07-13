@@ -417,7 +417,7 @@ require(["modules/jquery-mozu", "underscore", "hyprlive", "modules/backbone-mozu
         if(storefrontOrderAttributes && storefrontOrderAttributes.length > 0) {
 
             storefrontOrderAttributes.forEach(function(attributeDef){
-                fields.push('orderAttribute.' + attributeDef.attributeFQN);
+                fields.push('orderAttribute-' + attributeDef.attributeFQN);
             }, this);
 
         }

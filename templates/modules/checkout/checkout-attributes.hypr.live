@@ -1,54 +1,93 @@
-﻿<h3 class="mz-l-stack-sectiontitle">{{ labels.checkoutattributes }}</h3>
-
-<div class="mz-checkoutattributes-section mz-checkoutattributes-attributes">
+﻿<div class="mz-checkoutattributes-section mz-checkoutattributes-attributes">
 
   {% for attribute in model %}
-    <div class="mz-checkoutattributes-attribute mz-checkoutattributes-attribute-{{ attribute.inputType|lower }}">
+    <div class="mz-l-formfieldgroup mz-l-formfieldgroup-norows mz-checkoutform">
       {% if attribute.inputType === "YesNo" %}
-        {% if attribute.valueType !== "AdminEntered" %}
-          <input type="checkbox" name="checkout-attribute-{{ attribute.attributeFQN }}" value="{{ attribute.content.value }}"
-            data-mz-attribute="{{ attribute.attributeFQN }}" data-mz-value="attribute" {% if attribute.values[0] === true %}checked="checked"{% endif %}
-          <label for="checkout-attribute-{{ attribute.attributeFQN }}">{{ attribute.content.value }}</label>
+        {% if attribute.valueType !== "AdminEntered" and attribute.isVisible %}
+          <label class="inline" for="checkout-attribute-{{ attribute.attributeFQN }}">
+          {{ attribute.content.value }}
+            {% if attribute.isRequired %}
+              <span class="is-required"> *</span>
+            {% endif %}
+          </label>
+          <div>
+          <input id="checkout-attribute-{{ attribute.attribute.FQN }}" type="radio" name="checkout-attribute-{{ attribute.attributeFQN }}" value="true"
+              data-mz-attribute="{{ attribute.attributeFQN }}" data-mz-value="orderAttribute-{{attribute.attributeFQN}}" {% if attribute.values[0] === true %}checked="checked"{% endif %} /> Yes
+
+          </div>
+          <div>
+            <input id="checkout-attribute-{{ attribute.attribute.FQN }}" type="radio" name="checkout-attribute-{{ attribute.attributeFQN }}" value="false"
+              data-mz-attribute="{{ attribute.attributeFQN }}" data-mz-value="orderAttribute-{{attribute.attributeFQN}}" {% if attribute.values[0] === true %}checked="checked"{% endif %} /> No
+          </div>
+          <span class="mz-validationmessage" data-mz-validationmessage-for="orderAttribute-{{attribute.attributeFQN}}"></span>
         {% endif %}
       {% endif %}
       {% if attribute.inputType === "TextBox" %}
-        {% if attribute.valueType !== "AdminEntered" %}
-          <span class="mz-checkoutattributes-label">{{ attribute.content.value }}</span>
-          <input type="text" name="checkout-attribute-{{ attribute.attributeFQN }}" value="{{ attribute.values|first }}"
-            data-mz-attribute="{{ attribute.attributeFQN }}" data-mz-value="attribute" />
-          <span class="mz-validationmessage" data-mz-validationmessage-for="values"></span>
+        {% if attribute.valueType !== "AdminEntered"  and attribute.isVisible %}
+          <label for="checkout-attribute-{{ attribute.attributeFQN }}">{{ attribute.content.value }}
+            {% if attribute.isRequired %}
+              <span class="is-required"> *</span>
+            {% endif %}
+          </label>
+          <div>
+          <input type="text" id="checkout-attribute-{{ attribute.attribute.FQN }}" name="checkout-attribute-{{ attribute.attributeFQN }}" value="{{ attribute.values|first }}"
+            data-mz-attribute="{{ attribute.attributeFQN }}" data-mz-value="orderAttribute-{{attribute.attributeFQN}}" />
+          <span class="mz-validationmessage" data-mz-validationmessage-for="orderAttribute-{{attribute.attributeFQN}}"></span>
+          </div>
         {% endif %}
       {% endif %}
       {% if attribute.inputType === "Date" %}
-        {% if attribute.valueType !== "AdminEntered" %}
-          <span class="mz-checkoutattributes-label">{{ attribute.content.value }}</span>
-          <input type="text" name="checkout-attribute-{{ attribute.attributeFQN }}" value="{{ attribute.values|first }}"
-            placeholder="MM/DD/YYYY" data-mz-attribute="{{ attribute.attributeFQN }}" data-mz-value="attribute" />
-          <span class="mz-validationmessage" data-mz-validationmessage-for="values"></span>
+        {% if attribute.valueType !== "AdminEntered"  and attribute.isVisible %}
+          <label for="checkout-attribute-{{ attribute.attributeFQN }}">{{ attribute.content.value }}
+            {% if attribute.isRequired %}
+              <span class="is-required"> *</span>
+            {% endif %}
+          </label>
+          <div>
+          <input type="text" id="checkout-attribute-{{ attribute.attributeFQN }}"
+            name="checkout-attribute-{{ attribute.attributeFQN }}" value="{{ attribute.values|first }}"
+            placeholder="MM/DD/YYYY" data-mz-attribute="{{ attribute.attributeFQN }}" data-mz-value="orderAttribute-{{attribute.attributeFQN}}" />
+          <span class="mz-validationmessage" data-mz-validationmessage-for="orderAttribute-{{attribute.attributeFQN}}"></span>
+          </div>
         {% endif %}
       {% endif %}
       {% if attribute.inputType === "List" %}
-        {% if attribute.valueType !== "AdminEntered" %} 
-          <span class="mz-checkoutattributes-label">{{ attribute.content.value }}</span>
-          <select name="checkout-attribute-{{ attribute.attributeFQN }}" 
-          class="mz-checkoutattributes-label" for="checkout-attribute-{{ attribute.attributeFQN }}">
+        {% if attribute.valueType !== "AdminEntered"  and attribute.isVisible %} 
+          <label for="checkout-attribute-{{ attribute.attributeFQN }}">{{ attribute.content.value }}
+            {% if attribute.isRequired %}
+              <span class="is-required"> *</span>
+            {% endif %}
+          </label>
+          <div>
+          <select id="checkout-attribute-{{ attribute.attribute.FQN }}" name="checkout-attribute-{{ attribute.attributeFQN }}" 
+          class="mz-checkoutattributes-label" for="checkout-attribute-{{ attribute.attributeFQN }}"
+          data-mz-value="orderAttribute-{{attribute.attributeFQN}}">
           <option></option>
           {% for option in attribute.vocabularyValues %}
             <option id="checkout-attribute-{{ attribute.attributeFQN }}-{{ option.value }}"
                value="{{ option.value }}" data-mz-attribute="{{ attribute.attributeFQN }}"
-              data-mz-value="attribute" {% if attribute.values[0] === option.value %}selected="selected"{% endif %}>
+              {% if attribute.values[0] === option.value %}selected="selected"{% endif %}>
               {{ option.content.value }}
             </option>
           {% endfor %}
           </select >
+          <span class="mz-validationmessage" data-mz-validationmessage-for="orderAttribute-{{attribute.attributeFQN}}"></span>
+          </div>
         {% endif %}
       {% endif %}
       {% if attribute.inputType === "TextArea" %}
-        {% if attribute.valueType !== "AdminEntered" %}
-          <span class="mz-checkoutattributes-label">{{ attribute.content.value }}</span>
-          <textarea cols="60" rows="3" name="checkout-attribute-{{ attribute.attribute.FQN }}" data-mz-attribute="{{ attribute.attributeFQN }}"
-            data-mz-value="attribute">{{ attribute.values|first }}</textarea>
-          <span class="mz-validationmessage" data-mz-validationmessage-for="values"></span>
+        {% if attribute.valueType !== "AdminEntered"  and attribute.isVisible %}
+          <label for="checkout-attribute-{{ attribute.attributeFQN }}">{{ attribute.content.value }}
+            {% if attribute.isRequired %}
+              <span class="is-required"> *</span>
+            {% endif %}
+          </label>
+          <div>
+          <textarea cols="60" rows="3" id="checkout-attribute-{{ attribute.attribute.FQN }}"
+          name="checkout-attribute-{{ attribute.attribute.FQN }}" data-mz-attribute="{{ attribute.attributeFQN }}"
+            data-mz-value="orderAttribute-{{attribute.attributeFQN}}">{{ attribute.values|first }}</textarea>
+          <span class="mz-validationmessage" data-mz-validationmessage-for="orderAttribute-{{attribute.attributeFQN}}"></span>
+          </div>
         {% endif %}
       {% endif %}
     </div>

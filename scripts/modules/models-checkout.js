@@ -1243,6 +1243,23 @@
             };
         }
 
+        var storefrontOrderAttributes = require.mozuData('pagecontext').storefrontOrderAttributes;
+        if(storefrontOrderAttributes && storefrontOrderAttributes.length > 0){
+
+            var requiredAttributes = _.filter(storefrontOrderAttributes, 
+                function(attr) { return attr.isRequired && attr.isVisible && attr.valueType !== 'AdminEntered' ;  });
+            requiredAttributes.forEach(function(attr) {
+                if(attr.isRequired) {
+
+                    checkoutPageValidation['orderAttribute-' + attr.attributeFQN] = 
+                    {
+                        required: true,
+                        msg: attr.content.value + " " + Hypr.getLabel('missing')
+                    };
+                }
+            }, this);
+        }
+
         var CheckoutPage = Backbone.MozuModel.extend({
             mozuType: 'order',
             handlesMessages: true,
@@ -1340,7 +1357,7 @@
             applyAttributes: function() {
                 var storefrontOrderAttributes = require.mozuData('pagecontext').storefrontOrderAttributes;
                 if(storefrontOrderAttributes && storefrontOrderAttributes.length > 0) {
-                    order.set('orderAttributes', storefrontOrderAttributes);
+                    this.set('orderAttributes', storefrontOrderAttributes);
                 }
             },
 
@@ -1680,6 +1697,28 @@
                             shopperNotes: order.get('shopperNotes').toJSON()
                         });
                     }];
+
+                var storefrontOrderAttributes = require.mozuData('pagecontext').storefrontOrderAttributes;
+                if(storefrontOrderAttributes && storefrontOrderAttributes.length > 0) {
+                    var updateAttrs = [];
+                    storefrontOrderAttributes.forEach(function(attr){
+                        var attrVal = order.get('orderAttribute-' + attr.attributeFQN);
+                        if(attrVal) {
+                            updateAttrs.push({
+                                'fullyQualifiedName': attr.attributeFQN,
+                                'values': [ attrVal ]
+                            });
+                        }
+                    });
+
+                    if(updateAttrs.length > 0){
+                        process.push(function(){
+                            return order.apiUpdateAttributes(updateAttrs);
+                        }, function() {
+                            return order.apiGet();
+                        });
+                    }
+                }
 
                 if (this.isSubmitting) return;
 
