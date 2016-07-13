@@ -281,6 +281,7 @@ Ext.define('Taco.view.discount.ConditionsForm', {
                     if (Ext.isEmpty(newValue) !== Ext.isEmpty(oldValue)) {
                         this.onBuyItemConditionChange();
                     }
+                    this.record.fireEvent('discount-UpdateQualifyingProductsRadioButton', newValue, this.conditionalCategoryPanel.getValue());
                     this.onProductsCategoriesChange();
                 },
                 scope: this
@@ -407,6 +408,7 @@ Ext.define('Taco.view.discount.ConditionsForm', {
                     if (newValue.length && !this.minimumQuantityProductsRequiredInCategories.getValue()) {
                         this.minimumQuantityProductsRequiredInCategories.setValue(1);
                     }
+                    this.record.fireEvent('discount-UpdateQualifyingProductsRadioButton', this.productList.getValue(), newValue);
                 }
             }
         });

@@ -33,6 +33,8 @@ Ext.define('Taco.view.discount.CriteriaForm', {
             me.handleCriteriaScopeChange(cmp, newValue, oldValue);
         }, me);
 
+        me.mon(me.record, 'discount-UpdateQualifyingProductsRadioButton', me.updateQualifyingProductsRadioButton, me);
+
 
         this.includeAllProductsInput = Ext.widget({
             xtype: 'radio',
@@ -96,7 +98,7 @@ Ext.define('Taco.view.discount.CriteriaForm', {
             boxLabel: 'Qualify Products',
             inputValue: 'qualifying',
             width: 300,
-            disabled: false,
+            disabled: true,
             listeners: {
                 afterchange: function (cmp, newValue,oldValue) {
                     if (newValue) {
@@ -882,7 +884,7 @@ Ext.define('Taco.view.discount.CriteriaForm', {
         }
         
         // only available when scope is specific categories or all
-        var showExclusions = !targetSpecifcProducts || !includeQualifyingProducts || me.parentForm.general.isOrder();
+        var showExclusions = (!targetSpecifcProducts || me.parentForm.general.isOrder()) && !includeQualifyingProducts;
         me.excludeCategoriesBox.setVisible(showExclusions);
         me.productsExcludeBox.setVisible(showExclusions);
 
@@ -918,9 +920,6 @@ Ext.define('Taco.view.discount.CriteriaForm', {
             this.setVisible(true);        
         }
 
-        
-        
-
         this.applyDiscountTo.setVisible(this.isLineItem);
         this.appliesToSalePrice.setVisible(this.isLineItem && !appliesToShipping);
         // only enabled if the other checkbox is checked;
@@ -929,6 +928,14 @@ Ext.define('Taco.view.discount.CriteriaForm', {
         this.setProductCategoryContainerVisibility();
         this.updateMaximumQuantityPerRedemptionField();
         this.setShippingListVisibility();
+    },
+
+    updateQualifyingProductsRadioButton: function(products, categories) {
+        var me = this;
+        var isDisabled = !( (products.length || categories.length) && !(products.length && categories.length) );
+        if (this.qualifyingProductsInput) {
+            this.qualifyingProductsInput.setDisabled(isDisabled);
+        }
     },
 
     hideAndResetField: function (targetField, defaultVal) {
@@ -982,7 +989,6 @@ Ext.define('Taco.view.discount.CriteriaForm', {
             categoriesActive = false;
             productActive = false;
         }
-
 
         //reset the hidden fields when lineItem
         if (isLineItem) {
