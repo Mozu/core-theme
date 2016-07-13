@@ -7,10 +7,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.Models.Discount
 
     public class Discount
     {
-       
         public int? Id { get; set; }
-
-        // Flattened
 
         public string Name { get; set; }
 
@@ -19,11 +16,9 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.Models.Discount
         /// <summary>
         /// : Order, LineItem
         /// </summary>
-
         public bool DoesNotApplyToSalePrice { get; set; }
 
         public bool DoesNotApplyToProductsWithSalePrice { get; set; }
-
 
         public string Scope { get; set; }
 
@@ -33,9 +28,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.Models.Discount
         /// Valid values are Shipping, Product
         /// </summary>
         public string Target { get; set; }
-
-
-     
+             
         public bool? IncludeAllProducts { get; set; }
 
         /// <summary>
@@ -47,8 +40,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.Models.Discount
         /// prevents application of order level discounts when an line item has a shipping line item discount applied
         /// </summary>
         public bool? ExcludeItemsWithExistingShippingDiscounts { get; set; }
-
-
+        
         /// <summary>
         /// Maximum impact this discount can apply to an order.
         /// </summary>
@@ -64,18 +56,14 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.Models.Discount
         /// <summary>
         /// List of categories this discount applies to.
         /// </summary>
-     
         public List<int> ExcludedCategories { get; set; }
 
         /// <summary>
         /// List of products this discount applies to.
         /// </summary>
-      
         public List<string> ExcludedProducts { get; set; }
 
-
         public int? MaximumQuantityPerRedemption { get; set; }
-
         
         public int? MaximumRedemptionsPerOrder { get; set; }
         
@@ -109,18 +97,15 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.Models.Discount
         public List<string> DiscountConditionExcludedProducts { get; set; }
 
         public List<int> CustomerSegments { get; set; }
-
-
+        
         /// <summary>
         /// List of categories this discount applies to.
         /// </summary>
-
         public List<int> Categories { get; set; }
 
         /// <summary>
         /// List of products this discount applies to.
         /// </summary>
-  
         public List<string> Products { get; set; }
 
         /// <summary>
@@ -132,21 +117,15 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.Models.Discount
         /// <summary>
         /// List of shipping methods this discount applies to.
         /// </summary>
-
         public List<string> ShippingMethods { get; set; }
 
-
         public List<string> ShippingZones { get; set; }
-
    
         public Decimal? MinimumOrderAmount { get; set; }
-
       
         public Decimal? MinimumLifetimeValueAmount { get; set; }
-
       
         public int? MaxRedemptionCount { get; set; }
-
         
         public int? CurrentRedemptionCount { get; set; }
 
@@ -155,7 +134,6 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.Models.Discount
         public bool RequiresCoupon { get; set; }
 
         public string CouponCode { get; set; }
-
    
         public decimal? Amount { get; set; }
 
@@ -165,7 +143,6 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.Models.Discount
         /// </summary>
  
         public string AmountType { get; set; }
-
         
         public DateTime? StartDate { get; set; }
 
@@ -180,7 +157,9 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.Models.Discount
         public bool CanBeDeleted { get; set; }
 
         public int? MinimumQuantityProductsRequiredInCategories { get; set; }
+
         public int? MinimumQuantityRequiredProducts { get; set; }
+
         public decimal? MinimumCategorySubtotalBeforeDiscounts { get; set; }
 
         public List<CouponSet> CouponSets { get; set; }
@@ -188,5 +167,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.Models.Discount
         public bool? AppliesToLeastExpensiveProductsFirst { get; set; }
 
         public List<string> IncludedPriceLists { get; set; }
+
+        public bool? UsePurchaseRequirementAsTarget { get; set; }
     }
 }

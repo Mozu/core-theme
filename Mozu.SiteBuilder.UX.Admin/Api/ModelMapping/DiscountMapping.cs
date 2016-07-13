@@ -217,6 +217,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.ModelMapping
                 .ForMember(x => x.DoesNotApplyToProductsWithSalePrice, op => op.ResolveUsing(dc => dc.DoesNotApplyToProductsWithSalePrice))
                 .ForMember(x => x.Name, op => op.ResolveUsing(dc => dc.Content != null ? dc.Content.Name : string.Empty))
                 .ForMember(x => x.FriendlyDescription, op => op.ResolveUsing(dc => dc.Content != null ? dc.Content.FriendlyDescription : string.Empty))
+                .ForMember(d=> d.UsePurchaseRequirementAsTarget, o=>o.ResolveUsing(s=>s.Target.AppliesToPurchaseConditionItems))
                 .ForMember(x => x.CouponSets, op => op.Ignore());
             
             // To data contract
