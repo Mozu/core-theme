@@ -169,5 +169,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.Models.Discount
         public List<string> IncludedPriceLists { get; set; }
 
         public bool? UsePurchaseRequirementAsTarget { get; set; }
+
+        public bool? IsBxGx { get; set; }
     }
 }
