@@ -249,6 +249,11 @@ Ext.define('Taco.store.Navigation', {
                         'behaviorIds': [235],
                         'label': 'Product Ranking',
                         'address': 'ProductRankings'
+                    }, {
+                        'id': 'searchSynonyms',
+                        'behaviorIds': [24],
+                        'label': 'Search Synonyms',
+                        'address': 'synonyms'
                     }
                 ]
             },
