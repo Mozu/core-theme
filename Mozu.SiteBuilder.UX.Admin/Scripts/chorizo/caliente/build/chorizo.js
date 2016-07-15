@@ -3060,8 +3060,7 @@ function showResizer(block, e) {
 
     // showing content editor on single click
     if (this.widgetData && this.widgetData.definitionId && this.widgetData.definitionId === 'content' && !e.target.classList.contains('trash')) {
-
-        _widgetsContent.contentWidget.revealEditor(this);
+        _widgetsContent.contentWidget.revealEditor(this, e);
     }
 }
 
@@ -3157,12 +3156,12 @@ var ContentWidget = (function () {
         }
     }, {
         key: 'getUrlTooltip',
-        value: function getUrlTooltip() {
+        value: function getUrlTooltip(url) {
             var urlTooltip = document.createElement('div');
 
             urlTooltip.classList.add(_constants.URL_TOOLTIP_CLASS);
 
-            urlTooltip.innerHTML = '<input type="text" placeholder="http://">';
+            urlTooltip.innerHTML = '<input type="text" placeholder="http://" value="' + url + '">';
 
             urlTooltip.addEventListener('change', this.onUrlUpdate.bind(this));
 
@@ -3192,14 +3191,20 @@ var ContentWidget = (function () {
         }
     }, {
         key: 'revealEditor',
-        value: function revealEditor(block) {
+        value: function revealEditor(block, e) {
             var _this = this;
+
+            var url = '';
+
+            if (e.target.hasAttribute('href')) {
+                url = e.target.getAttribute('href');
+            }
 
             this.formatter = this.formatter || this.getFormatter();
 
             this.toggleAllContentWidgets();
 
-            this.urlTooltip = this.urlTooltip || this.getUrlTooltip();
+            this.urlTooltip = this.getUrlTooltip(url) || this.urlTooltip;
 
             this.formatter.classList.add(_constants.CONTENT_WIDGET_FORMAT_BAR);
 

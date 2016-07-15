@@ -150,7 +150,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.ModelMapping
                 .ForMember(dc => dc.ValueSequence, opt => opt.ResolveUsing(x => x.ValueSequence))
                 .ForMember(dc => dc.LocalizedContent, op => op.Ignore()) // todo: xverify - Greg Murray on 2014-08-26 
                 .ForMember(x => x.DisplayOrder, op => op.Ignore());
-
+            
             Mapper.CreateMap<DC.AttributeVocabularyValue, AttributeValue>()
                 .ForMember(dc => dc.Value, opt => opt.ResolveUsing(x => x.Content != null && !string.IsNullOrEmpty( x.Content.StringValue) 
                     ? x.Content.StringValue 

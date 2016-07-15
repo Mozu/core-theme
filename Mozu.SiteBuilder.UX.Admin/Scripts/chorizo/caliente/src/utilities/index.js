@@ -32,7 +32,6 @@ Array.from = function() {
     return Array.prototype.slice.call(arguments[0]);
 };
 
-
 // ugh to the firefox issue where isSameNode isn't a function
 Element.prototype.isSameNode = Element.prototype.isSameNode || function (node) {
     return this === node;
@@ -1178,7 +1177,7 @@ export function reinitializeContent(layout) {
 **/
 export function showResizer(block, e) {
     e.stopPropagation();
-    
+
     Array.from(document.querySelectorAll(`${ALL_COL_SELECTOR}, ${BLOCK_SELECTOR}`)).forEach((col) => {
         col.classList.remove('mz-cms-state-selected');
     });
@@ -1197,7 +1196,6 @@ export function showResizer(block, e) {
             && this.widgetData.definitionId
             && this.widgetData.definitionId === 'content'
             && !e.target.classList.contains('trash')) {
-        
-        contentWidget.revealEditor(this);
+        contentWidget.revealEditor(this, e);
     }
 }

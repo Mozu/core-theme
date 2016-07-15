@@ -29,6 +29,7 @@ Mozu.SiteBuilder.UX.Admin/Scripts/bootstrap.js
 Mozu.SiteBuilder.UX.Admin/Scripts/bootstrap.json
 Mozu.SiteBuilder.UX/App_Data/[Ll]og.txt
 Mozu.SiteBuilder.UX.Admin/App_Data/
+Mozu.SiteBuilder.UX/App_Data/
 
 # Mozu SDK
 Mozu.SiteBuilder.UX/BuiltinScripts/SDK/bower_components/
