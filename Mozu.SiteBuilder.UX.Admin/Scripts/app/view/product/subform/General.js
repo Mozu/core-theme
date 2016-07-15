@@ -947,6 +947,9 @@ Ext.define('Taco.view.product.subform.General', {
                 if (productForm) {
                     me.mon(productForm, 'productusagechange', me.updatePriceUI, me);
                     me.mon(productForm, 'bundleItemChange', me.updatePriceUI, me);
+                    if (!me.isGlobal) {
+                        me.mon(Taco.app, 'bundle-item-catalog-added', me.updatePriceUI, me);
+                    }
                 }
 
         }, this, {single:true, delay:1});
