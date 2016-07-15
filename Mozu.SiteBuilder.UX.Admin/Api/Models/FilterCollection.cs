@@ -222,12 +222,11 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.Models
         // source: http://tfs.corp.volusion.com:8080/tfs/VNext/v2Mozu/_git/Mozu.Core#path=%2FMozu.Core.FilterParsing%2FFilterParser.cs&version=GBmaster&_a=contents
         public string EscapeFilter(string stringValue)
         {
-            if (stringValue != null)
+            if (stringValue == null) return stringValue;
+
+            foreach (var pair in _escapeMap)
             {
-                foreach (KeyValuePair<string, string> pair in _escapeMap)
-                {
-                    stringValue = stringValue.Replace(pair.Key.ToString(), pair.Value.ToString());
-                }
+                stringValue = stringValue.Replace(pair.Key, pair.Value);
             }
 
             return stringValue;
@@ -255,10 +254,9 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.Models
                 //var stringValue = this.value as string;
                 var stringValue = "";
 
-                if (this.value != null)
+                if (value != null)
                 {
-                    stringValue = this.value.ToString();
-                    stringValue = this.EscapeFilter(stringValue);
+                    stringValue = EscapeFilter(value.ToString());
                 }
 
                 return stringValue;

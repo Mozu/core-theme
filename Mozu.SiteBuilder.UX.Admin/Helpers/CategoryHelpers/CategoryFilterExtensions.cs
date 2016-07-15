@@ -41,10 +41,10 @@ namespace Mozu.SiteBuilder.UX.Admin.Helpers.CategoryHelpers
                     return String.Format("{2} {1} {0}", filter.value, filter.comparison, ID);
 
                 case "all":
-                    return String.Format("( content.name cont \"{0}\" or content.slug cont \"{0}\" or categorycode eq \"{0}\")", filter.value);
+                    return String.Format("( content.name cont \"{0}\" or content.slug cont \"{0}\" or categorycode eq \"{0}\")", filter.escapedValue);
 
                 case "categorycode":
-                    return String.Format("{2} {1} {0}", filter.value, filter.comparison, CATEGORY_CODE);
+                    return String.Format("{2} {1} {0}", filter.escapedValue, filter.comparison, CATEGORY_CODE);
 
                 // dc contract is isDisplay, mvc & js is isHidden, therefore have to switch comparison.
                 case "ishidden":
@@ -67,10 +67,10 @@ namespace Mozu.SiteBuilder.UX.Admin.Helpers.CategoryHelpers
                     return String.Format("{2} {1} {0}", filter.value, filter.comparison, UPDATE_DATE);
 
                 case "createby":
-                    return String.Format("{2} {1} {0}", filter.value, filter.comparison, CREATE_BY);
+                    return String.Format("{2} {1} {0}", filter.escapedValue, filter.comparison, CREATE_BY);
 
                 case "updateby":
-                    return String.Format("{2} {1} {0}", filter.value, filter.comparison, UPDATE_BY);
+                    return String.Format("{2} {1} {0}", filter.escapedValue, filter.comparison, UPDATE_BY);
 
                 default:
                     return "";
