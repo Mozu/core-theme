@@ -101,6 +101,8 @@ Ext.define('Taco.view.product.widget.ProductBundleGrid', {
             var mergedBundleItem = Ext.Object.merge(bundleItem.data, {price: match.price, salePrice: match.salePrice, productName: match.productName });
             me.store.add(mergedBundleItem);
         });
+        // to signal to refresh totals since AJAX call takes longer.
+        Taco.app.fireEvent('bundle-item-catalog-added', bundleItems);
         this.getView().refresh();
         if (catWarnings.length > 0) {
             catName = this.productInCatalogInfo.get('catalog').name;
