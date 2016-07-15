@@ -43,6 +43,8 @@ namespace Mozu.SiteBuilder.Mvc.Navigation
         readonly NavigationNodeIndexComparer _navigationNodeIndexComparer = new NavigationNodeIndexComparer();
         readonly bool _shouldRequestInactiveDocuments;
         readonly UrlHelper _urlHelper;
+        readonly Lazy<string> _primaryDomain;
+
         ILifetimeScope _lifetimeScope;
         private string _priceListCode;
 
@@ -61,7 +63,8 @@ namespace Mozu.SiteBuilder.Mvc.Navigation
         /// <summary>
         /// Public constructor.
         /// </summary>
-        public NavigationGandalfTheWhite(IDocumentListWebApiClient documentClient, INavigationRepository navRepo, ILogger logger, PageContext pageContext, IApiContext apicontext, ICategoryTreeProvider categoryProvider, UrlHelper urlHelper, IStorefrontCache cache = null, ICustomRouteHandler customRouteHandler = null, ILifetimeScope lifetimeScope= null)
+        public NavigationGandalfTheWhite(IDocumentListWebApiClient documentClient, INavigationRepository navRepo, ILogger logger, PageContext pageContext, IApiContext apicontext, ICategoryTreeProvider categoryProvider, UrlHelper urlHelper, IStorefrontCache cache = null, ICustomRouteHandler customRouteHandler = null, ILifetimeScope lifetimeScope= null,
+            Lazy<ISiteContext> siteContext = null)
         {
             _categoryProvider = categoryProvider;
             _documentClient = documentClient.CloneWithoutUserClaims();
@@ -74,7 +77,11 @@ namespace Mozu.SiteBuilder.Mvc.Navigation
             _lifetimeScope = lifetimeScope;
             _priceListCode = apicontext.PriceListCode;
             _shouldRequestInactiveDocuments = pageContext.IsEditMode || (apicontext.UserClaims != null && apicontext.UserClaims.ScopeType.EqualsIgnoreCase(UserScopeType.Tenant.ToStringQuickly())); // if tenant admin or edit mode...
+            _primaryDomain =new Lazy<string>( ()=> siteContext.Value?.Domains?.Primary?.DomainName);
         }
+
+
+       
 
         /// <summary>
         /// Gets all navigation nodes in a flat list.
@@ -286,7 +293,8 @@ namespace Mozu.SiteBuilder.Mvc.Navigation
                                 OriginalId = page.Id,
                                 OriginalDocumentListName = page.ListFQN,
                                 Index = navmeta.Index,
-                                Url = _urlHelper.MakeUrl(UrlHelper.UrlType.Document, page, (Dictionary<string, object>)null, false)
+                                Url = _urlHelper.MakeUrl(UrlHelper.UrlType.Document, page, (Dictionary<string, object>)null, false),
+                                FqUrl= _urlHelper.MakeUrl(UrlHelper.UrlType.Document, page, (Dictionary<string, object>)null, false, _primaryDomain.Value)
                             };
                         }
                         else
@@ -346,7 +354,8 @@ namespace Mozu.SiteBuilder.Mvc.Navigation
                     OriginalId = p.Id,
                     OriginalDocumentListName = p.ListFQN,
                     Index = 0,
-                    Url = _urlHelper.MakeUrl(UrlHelper.UrlType.Document, p, null, false)
+                    Url = _urlHelper.MakeUrl(UrlHelper.UrlType.Document, p, null, false),
+                    FqUrl = _urlHelper.MakeUrl(UrlHelper.UrlType.Document, p, null, false, hostname: _primaryDomain.Value),
                 };
             masterList.AddRange(allUnassigned);
 
@@ -390,6 +399,8 @@ namespace Mozu.SiteBuilder.Mvc.Navigation
                         ParentId = cat.ParentCategory != null ? "cat^^" + cat.ParentCategory.CategoryId : NAV_ROOT_NODE_NAME,
                         OriginalId = cat.CategoryId.ToString(),
                         Url = _urlHelper.MakeUrl(UrlHelper.UrlType.Category, cat, new Dictionary<string, object>(), false),
+                        FqUrl = _urlHelper.MakeUrl(UrlHelper.UrlType.Category, cat, new Dictionary<string, object>(), false, hostname: _primaryDomain.Value),
+
                         Name = cat.Content.Name,
                         
                         // category "Sequence" is 1-indexed, but our navigation list is 0-indexed.. so we subtract 1.

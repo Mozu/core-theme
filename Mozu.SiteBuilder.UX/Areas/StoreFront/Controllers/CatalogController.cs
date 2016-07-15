@@ -283,12 +283,15 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
                 }
                    
             }
-
-            if (currentIdx+defaultPageSize < totCount.Value)
+            try
             {
-                var nextIndx = currentIdx + defaultPageSize;
-                this.PageContext.CrawlerInfo.NextUrl = this.PageContext.Search.ToUrl(new SearchContextOverrides() { UrlBase = urlBase, StartIndex = nextIndx });
+                if (currentIdx + defaultPageSize < totCount.Value)
+                {
+                    var nextIndx = currentIdx + defaultPageSize;
+                    this.PageContext.CrawlerInfo.NextUrl = this.PageContext.Search.ToUrl(new SearchContextOverrides() { UrlBase = urlBase, StartIndex = nextIndx });
+                }
             }
+            catch { }
 
 
             return category;

@@ -13,7 +13,7 @@ namespace Mozu.SiteBuilder.Mvc.Navigation
     /// This class should only be used by NavigationGandalf and NavigationRepository 
 	/// and always exposed as an interface!
     /// </summary>
-    internal class SuperNavigationNode : IRuntimeNavigationNode, ITreeNavigationNode
+    public class SuperNavigationNode : IRuntimeNavigationNode, ITreeNavigationNode
     {
         private const string STRING_SPLIT_DELIM = "^^";
 
@@ -110,5 +110,6 @@ namespace Mozu.SiteBuilder.Mvc.Navigation
         public bool IsHidden { get; set; }
 
         public bool IsEmpty { get; set; }
+        public string FqUrl { get; internal set; }
     }
 }

@@ -18,6 +18,7 @@ using System.Web.Http.Routing;
 using Mozu.Core.Extensions;
 using Mozu.Core;
 using System.Linq;
+using Mozu.Content.Contracts;
 
 namespace Mozu.SiteBuilder.Mvc.Helpers
 {
@@ -63,7 +64,7 @@ namespace Mozu.SiteBuilder.Mvc.Helpers
         static JsonCleaningCaseInsensitiveMemberResolver _resolver = new JsonCleaningCaseInsensitiveMemberResolver();
 
         [Microsoft.ClearScript.ScriptMember("getUrl")]
-        public string MakeUrl(string type, object obj, DynamicObject config)
+        public string MakeUrl(string type, object obj, DynamicObject config, string hostname = null)
         {
             UrlType urlType;
             if (FastEnum<UrlType>.TryParse(type, out urlType))
@@ -77,7 +78,7 @@ namespace Mozu.SiteBuilder.Mvc.Helpers
                         dic[name] = configValue;
                     }
                 }
-                return MakeUrl(urlType, obj, dic, false);
+                return MakeUrl(urlType, obj, dic, false, hostname: hostname);
             }
             throw new RenderingError(string.Format("unknown urltag type: {0}. Tags must be one of [{1}]", type, string.Join(",", Enum.GetNames(typeof(UrlType)).Select(x => x.ToLowerInvariant()))), Microsoft.FSharp.Core.FSharpOption<Exception>.None);
         }
@@ -99,11 +100,11 @@ namespace Mozu.SiteBuilder.Mvc.Helpers
                 return null;
             }
         }
-        public string MakeUrl(UrlType type, object obj, Dictionary<string, object> config)
+        public string MakeUrl(UrlType type, object obj, Dictionary<string, object> config, string hostname=null)
         {
-            return MakeUrl(type, obj, config, false);
+            return MakeUrl(type, obj, config, false,hostname: hostname);
         }
-        public string MakeUrl(UrlType type, object obj, Dictionary<string, object> config, bool includeContext)
+        public string MakeUrl(UrlType type, object obj, Dictionary<string, object> config, bool includeContext, string hostname = null )
         {
 
             var url = "#";
@@ -112,7 +113,7 @@ namespace Mozu.SiteBuilder.Mvc.Helpers
             {
                 case UrlType.Facet:
                     {
-                        url = MakeFacetUrl(obj);
+                        url = MakeFacetUrl(obj, hostname);
                         break;
                     }
                 case UrlType.Paging:
@@ -130,12 +131,12 @@ namespace Mozu.SiteBuilder.Mvc.Helpers
                     }
                 case UrlType.Category:
                     {
-                        url = MakeCategoryUrl(obj, config, includeContext, false);
+                        url = MakeCategoryUrl(obj, config, includeContext, false, hostname);
                         break;
                     }
                 case UrlType.Product:
                     {
-                        url = MakeProductUrl(obj);
+                        url = MakeProductUrl(obj, hostname);
                         break;
                     }
                 case UrlType.Stylesheet:
@@ -150,31 +151,31 @@ namespace Mozu.SiteBuilder.Mvc.Helpers
                     }
                 case UrlType.Document:
                     {
-                        url = MakeDocumentUrl(obj, config);
+                        url = MakeDocumentUrl(obj, config, hostname);
                         break;
                     }
                 case UrlType.Search:
                     {
-                        url = MakeSearchUrl();
+                        url = MakeSearchUrl(hostname);
                         break;
                     }
                 case UrlType.Cart:
                     {
-                        url = MakeCartUrl();
+                        url = MakeCartUrl(hostname);
                         break;
                     }
             }
             return url;
         }
 
-        private string MakeCartUrl()
+        private string MakeCartUrl(string hostName)
         {
-            return _customRouteHandler.GetCanonicalUrl(FancyRoute.Cart, null, false).Result ?? "/cart";
+            return _customRouteHandler.GetCanonicalUrl(FancyRoute.Cart, null, false, hostName:hostName).Result ?? "/cart";
         }
 
-        private string MakeSearchUrl()
+        private string MakeSearchUrl(string hostName)
         {
-            return _customRouteHandler.GetCanonicalUrl(FancyRoute.Search, null, false).Result ?? "/search";
+            return _customRouteHandler.GetCanonicalUrl(FancyRoute.Search, null, false, hostName:hostName).Result ?? "/search";
         }
 
         private string MakeStylesheetUrl(object obj, Dictionary<string, object> config)
@@ -197,19 +198,19 @@ namespace Mozu.SiteBuilder.Mvc.Helpers
             
 
         }
-        string MakeDocumentUrl(object o, Dictionary<string, object> config)
+        string MakeDocumentUrl(object o, Dictionary<string, object> config, string hostName )
         {
             Mozu.Content.Contracts.Document doc = null;
             if (o is string)
             {
                 doc = new Mozu.Content.Contracts.Document() { Name = (string)o };
-                return DoMakeDocumentUrl(doc, config);
+                return DoMakeDocumentUrl(doc, config, hostName);
 
             }
             doc = o as Mozu.Content.Contracts.Document;
             if (doc != null)
             {
-                return DoMakeDocumentUrl(doc, config);
+                return DoMakeDocumentUrl(doc, config, hostName);
             }
 
             var name = _resolver.ResolveMemberOrDefault<string>(o, "name", null);
@@ -225,13 +226,13 @@ namespace Mozu.SiteBuilder.Mvc.Helpers
                 Properties = _resolver.ResolveMemberOrDefault<JObject>(0, "Properties")
             };
 
-            return DoMakeDocumentUrl(doc, config);
+            return DoMakeDocumentUrl(doc, config,hostName);
         }
 
-        string DoMakeDocumentUrl(Mozu.Content.Contracts.Document doc, Dictionary<string, object> config)
+        string DoMakeDocumentUrl(Mozu.Content.Contracts.Document doc, Dictionary<string, object> config, string hostName)
         {
             return 
-                _customRouteHandler.GetCanonicalUrl(FancyRoute.CmsPage, () => Mapper.Map<IDictionary<string, object>>(doc).ChainSet(config), false).Result ??
+                _customRouteHandler.GetCanonicalUrl(FancyRoute.CmsPage, () => Mapper.Map<IDictionary<string, object>>(doc).ChainSet(config), false, hostName:hostName).Result ??
                 (doc.ListFQN.EqualsIgnoreCase("pages@mozu") ? // the default routes for cms documents on the UX side are the source here.
                     "/" + doc.Name : // pages have a default route of /{documentName}
                     string.Format("/cms/{0}/{1}", doc.ListFQN, doc.Name) // all other documents have a default route of /cms/{doclistFQN}/{docName}
@@ -357,7 +358,9 @@ namespace Mozu.SiteBuilder.Mvc.Helpers
 
         }
 
-        string MakeProductUrl(object obj)
+       
+
+        string MakeProductUrl(object obj, string hostName=null)
         {
 
             Product product = obj as Product;
@@ -380,11 +383,11 @@ namespace Mozu.SiteBuilder.Mvc.Helpers
 
 
 
-            return _customRouteHandler.GetCanonicalUrl(FancyRoute.ProductDetails, () => Mapper.Map<IDictionary<string, object>>(product), false).Result ?? "/p/" + product.ProductCode;
+            return _customRouteHandler.GetCanonicalUrl(FancyRoute.ProductDetails, () => Mapper.Map<IDictionary<string, object>>(product), false, hostName:hostName).Result ?? "/p/" + product.ProductCode;
 
         }
 
-        string MakeCategoryUrl(object obj, Dictionary<string, object> config, bool includeContxt, bool forFaceting)
+        string MakeCategoryUrl(object obj, Dictionary<string, object> config, bool includeContxt, bool forFaceting, string hostname=null)
         {
             int categoryId = -1;
             string categoryCode = null;
@@ -448,7 +451,7 @@ namespace Mozu.SiteBuilder.Mvc.Helpers
 
 
             // we know we're doing a category facet, so we can kill the pagination
-            var url = _customRouteHandler.GetCanonicalUrl(FancyRoute.Category, () => Mapper.Map<IDictionary<string, object>>(cat).ChainSet(config), includeContxt).Result;
+            var url = _customRouteHandler.GetCanonicalUrl(FancyRoute.Category, () => Mapper.Map<IDictionary<string, object>>(cat).ChainSet(config), includeContxt, hostName: hostname).Result;
             if (url == null)
             {
                 url = "/c/" + cat.CategoryId;
@@ -511,7 +514,7 @@ namespace Mozu.SiteBuilder.Mvc.Helpers
             return sb.ToString();
         }
 
-        string MakeFacetUrl(object obj)
+        string MakeFacetUrl(object obj, string hostname)
         {
             var routeData = _httpRequestMessage.GetRouteData();
 
@@ -549,7 +552,7 @@ namespace Mozu.SiteBuilder.Mvc.Helpers
             int catId;
             if (facetPairKey.Equals("categoryId", StringComparison.OrdinalIgnoreCase) && int.TryParse(facetPairValue, out catId))
             {
-                var url = MakeCategoryUrl(catId, null, true, true );
+                var url = MakeCategoryUrl(catId, null, true, true);
                 return searchContext.ToUrl(new SearchContextOverrides() { UrlBase = url , StartIndex = 0, CategoryId = catId });
             }
 
