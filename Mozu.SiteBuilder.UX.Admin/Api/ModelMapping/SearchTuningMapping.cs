@@ -86,6 +86,14 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.ModelMapping
                     : null))
                 .ForMember(x => x.CategoryNames, op => op.Ignore())
             ;
+
+            Mapper.CreateMap<DC.SynonymDefinition, SynonymDefinition>()
+                .ForMember(x => x.DefinitionType,
+                    op => op.ResolveUsing(dc => string.IsNullOrEmpty(dc.Key) ? "bidirectional" : "directed"));
+
+            Mapper.CreateMap<SynonymDefinition, DC.SynonymDefinition>()
+                .ForMember(dc => dc.SynonymId, op => op.ResolveUsing(x => x.SynonymId.GetValueOrDefault()));
+
         }
     }
 }
