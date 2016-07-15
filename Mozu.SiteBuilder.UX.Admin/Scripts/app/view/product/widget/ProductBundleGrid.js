@@ -7,6 +7,7 @@ Ext.define('Taco.view.product.widget.ProductBundleGrid', {
     requires: [
         'Ext.form.field.Number',
         'Ext.grid.plugin.DragDrop',
+        'Taco.core.ux.DragHandleColumn',
         'Ext.data.Store',
         'Ext.grid.plugin.CellEditing',
         'Taco.store.Products',
@@ -19,65 +20,58 @@ Ext.define('Taco.view.product.widget.ProductBundleGrid', {
     enableSearch: false,
     enablePaging: false,
     enableRowEditing: false,
+    enableRowReorder: true,
     enableAutoSelect:false,
-    launchEditorOnClick: true,
+    launchEditorOnClick: false,
     modelName: 'Taco.model.Product',
     hideSearchToolbar: true,
     isReadOnly: false,
     isGlobal: false,
     bundleProductSource: null,
-    //selType: 'cellmodel',
     width: "100%",
+    viewConfig: {
+        deferEmptyText: false,
+        emptyText: "No items in this bundle",
+        stripeRows: false,
+        plugins: {
+            ptype: 'gridviewdragdrop',
+            ddGroup: 'dd',
+            dragGroup: 'dd',
+            dropGroup: 'dd'
+        }
+    },
+    plugins: [
+        {
+            ptype: 'cellediting',
+            clicksToEdit: 1
+        }, {
+            ptype: 'classhandleddragdrop'
+        }
+    ],
 
     initComponent: function () {
-        var me = this;        
-        
-        Ext.apply(me, {
-            selModel: Ext.create('Ext.selection.CellModel', {
-                enableFieldTabbing: true
-                //    enableKeyNav: false // to disable cell traversal when clicks on keys(es: TAB) 
-            }),
-            viewConfig: {
-                deferEmptyText: false,
-                emptyText: "No items in this bundle",
-                stripeRows: false,
-                plugins: [
-                    {
-                        ptype: 'gridviewdragdrop'
-                    }
-                ]
-            },
-            listeners: {                
-                'edit': {
-                    fn: function(editor, column) {
-                        column.record.commit();                        
-                        column.record.save();
-                    }
-                }
-            },
-            plugins: [
-                Ext.create('Ext.grid.plugin.CellEditing', {
-                    clicksToEdit: 1
-                })
-            ],
-            columns: this.getColumnConfig()
-        });
 
+        this.viewConfig = this.viewConfig || {};
+        this.columns = this.getColumnConfig();
         this.store = this.bundleProductSource.getBundledProducts();
-
         this.callParent(arguments);
 
-        this.mon(this.view, 'drop', function (node, data) {
-            // need top set a model member to dirty the record so that the store will persist the change; the value you set isn't persisted;
-            data.records[0].set('index', 1);
-        }, this);
+        if (this.isGlobal) {
+            this.mon(this.view, 'drop', function (node, data) {
+                // need top set a model member to dirty the record so that the store will persist the change; the value you set isn't persisted;
+                data.records[0].set('index', 1);
+            }, this);
 
-        // hook up events only for catalog tabs to listen to global tab
-        if (this.isGlobal) return;
-
-        this.mon(Taco.app, 'bundle-items-added', this.onBundleItemsAdded, this);
-        this.mon(Taco.app, 'bundle-item-quantity-changed', this.onBundleItemQuantityChanged, this);
-        this.mon(Taco.app, 'bundle-item-removed', this.onBundleItemRemoved, this);
+            this.mon(this.view, 'edit', function (editor, column) {
+                column.record.commit();
+                column.record.save();
+            }, this);
+        } else {
+            // hook up events only for catalog tabs to subscribe to global tab events
+            this.mon(Taco.app, 'bundle-items-added', this.onBundleItemsAdded, this);
+            this.mon(Taco.app, 'bundle-item-quantity-changed', this.onBundleItemQuantityChanged, this);
+            this.mon(Taco.app, 'bundle-item-removed', this.onBundleItemRemoved, this);
+        }
     },
 
     onBundleItemsAdded: function (bundleItems) {
@@ -134,7 +128,7 @@ Ext.define('Taco.view.product.widget.ProductBundleGrid', {
     
     getColumnConfig: function () {
         var me = this,
-          columns,
+          columns = [],
           qtyEditor = null;
         if (!this.isReadOnly) {
             qtyEditor = {
@@ -151,8 +145,16 @@ Ext.define('Taco.view.product.widget.ProductBundleGrid', {
                 allowBlank: false
             };
         }
+        if (!this.isReadOnly) {
+            columns.push({
+                xtype: 'draghandlecolumn',
+                stateId: 'dragHandle',
+                width: 35,
+                hideable: false
+            });
+        }
 
-        columns = [
+        columns = Ext.Array.push(columns, [
             {
                 dataIndex: "quantity",
                 text: "Quantity",
@@ -202,7 +204,7 @@ Ext.define('Taco.view.product.widget.ProductBundleGrid', {
                 width: 150,
                 text: (!me.isGlobal ? 'Catalog ' : '') + 'Sale Price'
             }
-        ];
+        ]);
 
         if (!this.isReadOnly) {
             columns.push({
@@ -291,5 +293,8 @@ Ext.define('Taco.view.product.widget.ProductBundleGrid', {
                 }
             }
         });
+    },
+    refresh: function() {
+        this.getView().refresh();
     }
 });
