@@ -10,7 +10,7 @@ Ext.define('Taco.view.themesettings.Edit', {
         'Taco.view.themesettings.Form',
         'Taco.model.Entity'
     ],
-
+    enableSearchBarInHeader: false,
     formCls: 'Taco.view.themesettings.Form',
     showIndexOnCancel: false,
     initComponent: function () {
@@ -115,8 +115,5 @@ Ext.define('Taco.view.themesettings.Edit', {
             });        
     },
 
-    parentTitleCfg: {
-        title: 'Theme Settings',
-        controller: 'themes'
-    }
+    parentTitleCfg: {}
 });
