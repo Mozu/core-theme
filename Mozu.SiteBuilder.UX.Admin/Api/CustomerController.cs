@@ -35,11 +35,13 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
         //private readonly ICustomerVisitWebApiClient _customerVisitWebApiClient;
         private readonly IOrderWebApiClient _orderWebApiClient;
         private readonly ILogger _log;
-
+        ICustomerSetWebApiClient _customerSetWebApiClient;
         public CustomerController(ICustomerAccountWebApiClient customerWebApiClient,
             ICustomerSegmentWebApiClient customerSegmentWebApiClient,
             //Mozu.Customer.Contracts.Clients.ICustomerGroupWebApiClient customerGroupWebApiClient, 
-            ICreditWebApiClient creditWebApiClient, IOrderWebApiClient orderWebApiClient, ILogger log /*, ICustomerVisitWebApiClient customerVisitWebApiClient*/)
+            ICreditWebApiClient creditWebApiClient, IOrderWebApiClient orderWebApiClient, ILogger log /*, ICustomerVisitWebApiClient customerVisitWebApiClient*/
+            ,ICustomerSetWebApiClient customerSetWebApiClient
+            )
         {
             _customerWebApiClient = customerWebApiClient;
             _customerSegmentWebApiClient = customerSegmentWebApiClient;
@@ -47,6 +49,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
             _creditWebApiClient = creditWebApiClient;
             _orderWebApiClient = orderWebApiClient.CloneWithApiContext(ctx => { ctx.SiteId = null; });
             _log = log;
+            _customerSetWebApiClient = customerSetWebApiClient;
             //_customerVisitWebApiClient = customerVisitWebApiClient;
         }
 
@@ -131,6 +134,93 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
             var retList = tasks.Select(x => x.Result.ReadAsSync()).ToList();
             return this.Request.CreateResponse(HttpStatusCode.OK, List2(segments));
         }
+
+
+
+        /*********** 
+         *  customer set start
+         **********/
+
+
+        [HttpGetRoute(UriTemplate = "customerSets/list")]
+        public async Task<HttpResponseMessage> GetCustomerSets([FromUri]PagingParamaters pagingParameters, [FromUri]FilterCollection extFilter)
+        {
+            // var ret =(await _customerGroupWebApiClient.GetGroups(0, 200)).ReadAsSync().Items.OrderBy(x => x.Name).Select(x => new KeyValuePair<int, string>(x.Id, x.Name)).ToList();
+            var customerSets = (await _customerSetWebApiClient.GetCustomerSets(startIndex: pagingParameters.startIndex, pageSize: pagingParameters.pageSize, responseGroups: "AggregateInfo")).ReadAsSync();
+
+            return this.Request.CreateResponse(HttpStatusCode.OK, List2(customerSets.Items, (int)customerSets.TotalCount));
+        }
+        [HttpPostRoute(UriTemplate = "customerSets/create")]
+        public async Task<HttpResponseMessage> CraeteCustomerSets(List<DC.CustomerSet> customerSets)
+        {
+            var tasks = customerSets.Select(x => _customerSetWebApiClient.AddCustomerSet(x)).ToList();
+            await Task.WhenAll(tasks);
+            var result = tasks.Select(x => x.Result.ReadAsSync()).ToList();
+            return this.Request.CreateResponse(HttpStatusCode.OK, List2(result));
+        }
+
+       
+
+        
+
+        [HttpPostRoute(UriTemplate = "customerSets/delete")]
+        public async Task<HttpResponseMessage> DeleteCustomerSets(List<Newtonsoft.Json.Linq.JObject> customerSets)
+        {
+
+            var tasks = customerSets.Select(x => _customerSetWebApiClient.DeleteCustomerSet((string)x["code"], (string)x["replacementCode"])).ToList();
+            await Task.WhenAll(tasks);
+
+            foreach (var task in tasks.Where(x => !x.Result.ResponseMessage.IsSuccessStatusCode))
+            {
+                throw task.Result.ReadException();
+            }
+
+            return this.Request.CreateResponse(HttpStatusCode.OK, new List<int>());
+        }
+
+        [HttpPostRoute(UriTemplate = "customerSets/edit")]
+        public async Task<HttpResponseMessage> EditCustomerSets(List<DC.CustomerSet> customerSets)
+        {
+            //update name/code/desc
+            var tasks = customerSets.Select(x => _customerSetWebApiClient.UpdateCustomerSet(x, x.Code)).ToList();
+            await Task.WhenAll(tasks);
+            var retList = tasks.Select(x => x.Result.ReadAsSync()).ToList();
+            //update assignments  ... remove when assignemnt moved to gen settings
+            var readTasks = customerSets.Select(x => _customerSetWebApiClient.GetCustomerSet(x.Code)).ToList();
+            await Task.WhenAll(readTasks);
+            var currentCustomerSets = readTasks.Select(x => x.Result.ReadAsSync()).ToList();
+            List<Task> assignTasks = new System.Collections.Generic.List<Task>();
+            foreach ( var cs in customerSets)
+            {
+                var existingCS = currentCustomerSets.FirstOrDefault(x => string.Equals(x.Code, cs.Code, StringComparison.OrdinalIgnoreCase));
+                assignTasks.AddRange(cs.Sites?
+                    .Where(x => existingCS?.Sites.Any(s => s.SiteId == x.SiteId) == false)
+                    .Select(y => _customerSetWebApiClient.AssignToSite(y, cs.Code)));
+            }
+            if ( assignTasks.Count > 0 )
+            {
+                await Task.WhenAll(assignTasks);
+
+                //readTasks = customerSets.Select(x => _customerSetWebApiClient.GetCustomerSet(x.Code)).ToList();
+                //await Task.WhenAll(readTasks);
+            }
+            //refresh 
+
+            var ret = (await _customerSetWebApiClient.GetCustomerSets(pageSize: 600)).ReadAsSync().Items;
+
+            return this.Request.CreateResponse(HttpStatusCode.OK, List2(ret));
+        }
+
+
+        /************
+         * cust set end
+         * **********/
+
+
+
+
+
+
 
         [HttpGetRoute(UriTemplate = "list")]
         public async Task<Response<List<ApiCustomer>>> List([FromUri]PagingParamaters pagingParameters, [FromUri]FilterCollection extFilter, bool? showAnonymous = null, bool? isPOFlagRequired = null)
