@@ -14,6 +14,11 @@ Ext.define('Taco.model.ProductInCatalogInfo', {
             "useNull": true
         },
         {
+            "name": "isoCurrencyCode",
+            "type": "string",
+            "defaultValue": "USD"
+        },
+        {
             "name": "productShortDescription",
             "type": "string",
             "useNull": true
@@ -188,6 +193,32 @@ Ext.define('Taco.model.ProductInCatalogInfo', {
             name: "activeEndDate",
             type: "date",
             useNull: true,
+            dateFormat: 'c'
+        },
+        {
+            name: "cost",
+            type: "float",
+            useNull: true,
+            persist: false
+        },
+        {
+            name: "discountsRestricted",
+            type: "string",
+            useNull: true,
+            persist: false
+        },
+        {
+            name: "discountsRestrictedStartDate",
+            type: "date",
+            useNull: true,
+            persist: false,
+            dateFormat: 'c'
+        },
+        {
+            name: "discountsRestrictedEndDate",
+            type: "date",
+            useNull: true,
+            persist: false,
             dateFormat: 'c'
         }
 

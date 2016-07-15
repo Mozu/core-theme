@@ -58,24 +58,6 @@ Ext.define('Taco.core.ux.TooltipLabel', {
                 }
             },
 
-            tooltipButtonRenderer = function(cmp, opts) {
-                var renderLabel = Ext.get(spanId),
-                tooltipBtn = Ext.create('Ext.Button', {
-                    ui: 'link',
-                    cls: Taco.baseCSSPrefix + 'icon-tooltip-help',
-                    text: '',
-                    handler: function(btn, evt) {
-                        onTooltipClick(btn, evt);
-                    },
-                    itemId: spanId + '.button',
-                    tooltip: {
-                        text: 'Click for info',
-                        cls: Taco.baseCSSPrefix + 'tooltip',
-                    },
-                    renderTo: renderLabel
-                });
-            },
-
             attachRenderer = function(tooltipRenderer) {
                 if (!config.listeners) {
                     config.listeners = {};
@@ -88,6 +70,22 @@ Ext.define('Taco.core.ux.TooltipLabel', {
                 } else {
                     throw 'Tooltip label requires either empty render or afterrender listener.';
                 }
+            },
+
+            onClickAnywhereCloseTip = function (evt) {
+                var target = Ext.fly(evt.target);
+                // need to allow the links to the help content to work;
+                if (target && target.dom.tagName == "A" && target.hasCls("taco-help-link")) {
+                    return;
+                }
+
+                scope.mun(Ext.getBody(), 'click', onClickAnywhereCloseTip, this);
+                if (!tipContent) {
+                    return;
+                }
+                evt.stopEvent();
+                tipContent.destroy();
+                tipContent = null;
             },
 
             onTooltipClick = function (btn, evt) {
@@ -134,26 +132,26 @@ Ext.define('Taco.core.ux.TooltipLabel', {
                 }
             },
 
-            onClickAnywhereCloseTip = function (evt) {
-                var target = Ext.fly(evt.target);
-                // need to allow the links to the help content to work;
-                if (target && target.dom.tagName == "A" && target.hasCls("taco-help-link")) {
-                    return;
-                }
-
-                scope.mun(Ext.getBody(), 'click', onClickAnywhereCloseTip, this);
-                if (!tipContent) {
-                    return;
-                }
-                evt.stopEvent();
-                tipContent.destroy();
-                tipContent = null;
+            tooltipButtonRenderer = function(cmp, opts) {
+                var renderLabel = Ext.get(spanId),
+                tooltipBtn = Ext.create('Ext.Button', {
+                    ui: 'link',
+                    cls: Taco.baseCSSPrefix + 'icon-tooltip-help',
+                    text: '',
+                    handler: function(btn, evt) {
+                        onTooltipClick(btn, evt);
+                    },
+                    itemId: spanId + '.button',
+                    tooltip: {
+                        text: 'Click for info',
+                        cls: Taco.baseCSSPrefix + 'tooltip',
+                    },
+                    renderTo: renderLabel
+                });
             };
 
         attachAfterLabelTpl();
         attachRenderer(tooltipButtonRenderer);
         return config;
     }
-
-
 });

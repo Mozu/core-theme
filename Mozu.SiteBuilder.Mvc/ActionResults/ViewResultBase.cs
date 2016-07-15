@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Net.Http;
 using Mozu.SiteBuilder.Mvc.ViewEngine;
+using Newtonsoft.Json;
 
 namespace Mozu.SiteBuilder.Mvc.ActionResults
 {
@@ -11,7 +12,7 @@ namespace Mozu.SiteBuilder.Mvc.ActionResults
     public class ViewResultBase : ActionResult, Mozu.Core.Actions.Contracts.Http.IViewResult
     {
         private ViewDataDictionary _viewDataDictionary;
-
+        [JsonIgnore]
         public ViewDataDictionary ViewData
         {
             get
@@ -31,10 +32,10 @@ namespace Mozu.SiteBuilder.Mvc.ActionResults
         }
 
         public string ViewName { get; set; }
-
+        [JsonIgnore]
         public HyprView View { get; set; }
 
-
+        [JsonIgnore]
         public object Model
         {
             get
@@ -43,7 +44,7 @@ namespace Mozu.SiteBuilder.Mvc.ActionResults
             }
             set { this.ViewData.Model = value; }
         }
-
+        [JsonIgnore]
         System.Collections.Generic.IDictionary<string, object> Core.Actions.Contracts.Http.IViewResult.ViewData
         {
             get { return this.ViewData; }

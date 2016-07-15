@@ -1,5 +1,5 @@
 /*! 
- * Mozu JavaScript SDK - v0.3.0 - 2016-04-11
+ * Mozu JavaScript SDK - v0.3.0 - 2016-06-21
  *
  * Copyright (c) 2016 Volusion, Inc.
  *
@@ -3603,7 +3603,7 @@ module.exports=
         "returnType": "json"
     },
     "search": {
-        "template": "{+searchService}search{?query,filter,facetTemplate,facetTemplateSubset,facet,facetFieldRangeQuery,facetHierPrefix,facetHierValue,facetHierDepth,facetStartIndex,facetPageSize,facetSettings,facetValueFilter,sortBy,pageSize,PageSize,startIndex,StartIndex}",
+        "template": "{+searchService}search{?query,filter,facetTemplate,facetTemplateSubset,facet,facetFieldRangeQuery,facetHierPrefix,facetHierValue,facetHierDepth,facetStartIndex,facetPageSize,facetSettings,facetValueFilter,facetPrefix,sortBy,pageSize,PageSize,startIndex,StartIndex}",
         "shortcutParam": "query",
         "defaultParams": {
             "startIndex": 0,
@@ -3638,9 +3638,10 @@ module.exports=
         },
         "configure": {
             "verb": "POST",
-            "template": "{+productService}{productCode}/configure{?includeOptionDetails}",
+            "template": "{+productService}{productCode}/configure{?includeOptionDetails,quantity}",
             "defaultParams": {
-                "includeOptionDetails": true
+                "includeOptionDetails": true,
+                "quantity": 1
             },
             "includeSelf": true
         },
@@ -4959,6 +4960,9 @@ module.exports = (function () {
                 window.location = ApiReference.urls.paypalExpress + (ApiReference.urls.paypalExpress.indexOf('?') === -1 ? '?' : '&') + "token=" + payment.paymentServiceTransactionId; //utils.formatString(CONSTANTS.BASE_PAYPAL_URL, payment.paymentServiceTransactionId);
                 });
         },
+        "PurchaseOrder": function(order, billingInfo) {
+            return order.addPurchaseOrder(billingInfo);
+        },
         "CreditCard": function (order, billingInfo) {
             var card = order.api.createSync('creditcard', billingInfo.card);
             errors.passFrom(card, order);
@@ -5064,6 +5068,17 @@ module.exports = (function () {
             if (!billingInfo) errors.throwOnObject(this, 'BILLING_INFO_MISSING');
             if (!billingInfo.paymentType || !(billingInfo.paymentType in PaymentStrategies)) errors.throwOnObject(this, 'PAYMENT_TYPE_MISSING_OR_UNRECOGNIZED');
             return PaymentStrategies[billingInfo.paymentType](this, billingInfo);
+        },
+        addPurchaseOrder: function (payment) {
+            // add purchase order stuff as the 'extraProps' call.
+            return this.createPayment({
+                amount: payment.amount,
+                newBillingInfo: {
+                    paymentType: 'PurchaseOrder',
+                    billingContact: payment.billingContact,
+                    purchaseOrder: payment.purchaseOrder
+                }
+            });
         },
         getActivePayments: function() {
             var payments = this.prop('payments'),

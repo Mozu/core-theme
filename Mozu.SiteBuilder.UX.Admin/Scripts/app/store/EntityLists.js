@@ -8,7 +8,7 @@ Ext.define('Taco.store.EntityLists', {
         model: 'Taco.model.EntityList',
  
         storeManagerConfig: {
-            createOnly:true,
+            createOnly: true,
             autoLoad: true
         },
         constructor: function (cfg) {
@@ -18,7 +18,6 @@ Ext.define('Taco.store.EntityLists', {
             this.callParent(arguments);
         },
         loadPage: function (page, options) {
-
             options = options || {};
             options.params = options.params || {};
         
@@ -29,6 +28,7 @@ Ext.define('Taco.store.EntityLists', {
             return this.callParent([page, options]);
         },
         load: function (options) {
+
             options = options || {};
             options.params = options.params || {};
   

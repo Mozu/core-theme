@@ -209,20 +209,6 @@
             ]
         });
 
-        this.quantity = Ext.widget({
-            xtype: 'numberfield',
-            anchor:'100%',
-            labelAlign: 'left',
-            mouseWheelEnabled: false,
-            hideTrigger: true,
-            hidden: true,
-            fieldLabel: 'Quantity',
-            allowBlank: false,
-            minValue: 1,
-            allowDecimals: false,
-            value: 1
-        });
-
         this.items = [
             {
                 layout: 'hbox',
@@ -252,8 +238,7 @@
                                         layout:'anchor',
                                         items: [
                                             this.optionsHeading,
-                                            this.optionsContainer,
-                                            this.quantity
+                                            this.optionsContainer
                                         ]
                                     },
                                     {
@@ -278,7 +263,10 @@
 
         this.callParent(arguments);
 
-        Ext.override(this.getForm(), {
+        var form = this.getForm();
+        // Before we override the hasInvalidField method, let's provide an alternate hook to the original.
+        form.hasInvalidFieldOriginal = form.hasInvalidField;
+        Ext.override(form, {
             // Used to disable Save button until model is loaded or while updating product configuration.
             // Default ExtJS form logic only takes field validation into account when updating buttons with formBind=true (e.g. Save)
             // Inject our own logic into the form (Ext.form.Panel is a panel which contains a form)
@@ -288,6 +276,21 @@
                 return this.callParent(arguments);
             }
         });
+    },
+
+    areAllFieldsStatisfied: function() {
+        // Copied from Ext source
+        var originalHasInvalidField = function() {
+            return !!this.getFields().findBy(function(field) {
+                var preventMark = field.preventMark,
+                    isValid;
+                field.preventMark = true;
+                isValid = field.isValid();
+                field.preventMark = preventMark;
+                return !isValid;
+            });
+        }
+        return Ext.bind(originalHasInvalidField, this.getForm())();
     },
 
     onLoadFailure : function() {
@@ -310,7 +313,6 @@
     },
 
     getData: function () {
-        if (this.runtimeData) this.runtimeData.Quantity = this.quantity.getValue() || 1;
         return this.runtimeData;
     },
 
@@ -337,7 +339,6 @@
         this.record.loadRuntimeProduct({
             success: function (response) {
                 Ext.suspendLayouts();
-                this.quantity.show();
                 this.buildImages();
                 this.loadRuntimeProduct(response);
                 Ext.resumeLayouts(true);
@@ -350,7 +351,7 @@
             failure: function (response) {
                 // error handling here
                 var json = Ext.decode(response.responseText, true),
-                    msg = (json && json.message) ? json.message : 'Error adding coupon.';
+                    msg = (json && json.message) ? json.message : 'Unable to load product information.';
                 Taco.app.fireEvent('setmessage', msg, 'error');
                 this.fireEvent('loadFailure');
             },
@@ -386,6 +387,11 @@
         this.runtimeData = data;
         this.buildOptions(this.runtimeData.Options);
         this.setLoading(false);
+
+        // All done loading. If all fields are currently satisfied, see if we can save as-is.
+        if (!this.getForm().hasInvalidFieldOriginal()) {
+            this.postOptions();
+        }
     },
 
     buildImages: function () {
@@ -399,12 +405,12 @@
         this.optionsContainer.removeAll();
         
         if (options && options.length) {
-            Ext.each(options, function (option) {                
+            Ext.each(options, function (option) {
                 items.push(this.buildOption(option));
             }, this);
             this.optionsContainer.add(items);
         }
-        
+
         this.price.update({
             Price: this.runtimeData.Price,
             PriceRange: this.runtimeData.PriceRange
@@ -415,7 +421,6 @@
         var builds = this.statics().builds,
             inputType = option.AttributeDetail.InputType,
             saves = this.statics().saves;
-
 
         if (!builds[inputType]) return;
 
@@ -486,6 +491,7 @@
     },
 
     postOptions: function () {
+        var me = this;
         var request = { Options: [] };
 
         this.setLoading(true);
@@ -497,29 +503,46 @@
 
             delete option.Values;
 
-            if (option.AttributeDetail.InputType !== 'List') option.ShopperEnteredValue = option.Value;
-            
+            if (option.AttributeDetail.InputType !== 'List') {
+                option.ShopperEnteredValue = option.Value;
+            } else {
+                delete option.ShopperEnteredValue;
+            }
+
             request.Options.push(option);
         });
 
-        this.record.configureRuntimeProduct({
-            jsonData: request,
-            success: function (response) {
-                this.runtimeData = JSON.parse(response.responseText).items;
-                Ext.each(this.runtimeData.Options, function (option) {
-                    this.updateOption(option);
-                }, this);
-                
-                // update the price
-                this.price.update({
-                    Price: this.runtimeData.Price,
-                    PriceRange: this.runtimeData.PriceRange
-                });
-                this.setLoading(false);
-                this.isUpdating = false;
-                this.getForm().checkValidity();
-            },
-            scope: this
-        });
+        function configureProduct(quantity) {
+            me.record.configureRuntimeProduct({
+                jsonData: request,
+                success: function(response) {
+                    this.runtimeData = JSON.parse(response.responseText).items;
+                    var state = this.runtimeData.PurchasableState;
+                    try {
+                        if (!state.IsPurchasable && Ext.Array.findBy(state.Messages, function(msg) { return msg.ValidationType === 'MinQtyNotMet'; })) {
+                            var minQty = Ext.Array.min(Ext.Array.pluck(this.runtimeData.VolumePriceBands, 'MinQty'));
+                            configureProduct(minQty);
+                            return;
+                        }
+                    } catch (e) { }
+
+                    Ext.each(this.runtimeData.Options, function(option) {
+                        this.updateOption(option);
+                    }, this);
+
+                    // update the price
+                    this.price.update({
+                        Price: this.runtimeData.Price,
+                        PriceRange: this.runtimeData.PriceRange
+                    });
+                    this.setLoading(false);
+                    this.isUpdating = false;
+                    this.getForm().checkValidity();
+                },
+                scope: me
+            }, quantity || 1);
+        };
+
+        configureProduct();
     }
 });

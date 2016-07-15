@@ -64,6 +64,11 @@ namespace Mozu.SiteBuilder.UX.Models.StoreFront.Catalog
         [DataMember(EmitDefaultValue = false)]
         public new ProductPriceRange PriceRange { get; set; }
 
+
+        [DataMember(EmitDefaultValue = false)]
+        public new List<ProductVolumePrice> VolumePriceBands { get; set; }
+
+
         [DataMember(EmitDefaultValue = false)]
         public bool SupportsInStorePickup
         {
@@ -74,13 +79,7 @@ namespace Mozu.SiteBuilder.UX.Models.StoreFront.Catalog
         }
 
     }
-    //public class ProductPrice: Mozu.ProductRuntime.Contracts.ProductPrice
-    //{
-        
-    //}
-   
-
-
+    
 
     public class RepeaterItem
     {
@@ -862,11 +861,25 @@ namespace Mozu.SiteBuilder.UX.Models.StoreFront.Catalog
     [DataContract()]
     public class ProductPrice : Mozu.ProductRuntime.Contracts.ProductPrice
     {
+        [DataMember]
         public bool OnSale
         {
             get { return this.SalePrice.HasValue && this.Price.HasValue && this.SalePrice.Value != this.Price.Value; }
         }
     }
+
+    public class ProductVolumePrice : Mozu.ProductRuntime.Contracts.ProductVolumePrice
+    {
+
+        [DataMember]
+        public virtual new ProductPriceRange PriceRange { get; set; }
+
+        [DataMember]
+        public virtual new ProductPrice Price { get; set; }
+
+    }
+
+
 }
 
 

@@ -45,19 +45,31 @@ Ext.define('Taco.view.order.modal.AddRefund', {
             boxLabel: 'Refund Payment',
             name: 'paymentType',
             inputValue: 'card',
+            // If this changes, change the determinePOInfoDisplay function.
             checked: true,
             handler: function (radio) {
                 this.checkValidity();
                 if (radio.getValue()) {
                     this.grid.show();
                     this.storeCreditPanel.hide();
+                    this.determinePOInfoDisplay(true);
                 }
             },
             scope: this
         });
 
+        this.poInformation = Ext.create('Ext.Component', {
+            name: 'poRefundInformation',
+            id: 'poRefundInformation',
+            width: '100%',
+            html: "For Purchase Orders, the amount refunded will be applied to the Customer's available balance",
+            hidden: true
+        });
+
+        this.determinePOInfoDisplay(true);
+
         this.instoreCreditRadio = Ext.create('Ext.form.field.Radio', {
-            boxLabel: 'Issue Credit',
+            boxLabel: 'Issue Store Credit',
             name: 'paymentType',
             inputValue: 'credit',
             handler: function (radio) {
@@ -65,6 +77,7 @@ Ext.define('Taco.view.order.modal.AddRefund', {
                     //show other panel
                     this.storeCreditPanel.show();
                     this.grid.hide();
+                    this.determinePOInfoDisplay(false);
                 }
             },
             scope: this
@@ -74,7 +87,7 @@ Ext.define('Taco.view.order.modal.AddRefund', {
             defaultType: 'radiofield',
             vertical: true,
             items: [
-                 this.creditCardRadio, this.instoreCreditRadio
+                 this.creditCardRadio, this.poInformation, this.instoreCreditRadio
             ],
             scope: this
         }, this);
@@ -202,6 +215,20 @@ Ext.define('Taco.view.order.modal.AddRefund', {
         });
 
         this.primaryAction = this.down('#primaryAction');
+    },
+
+    determinePOInfoDisplay: function(shouldShow) {
+        var poPayments = this.store.findBy(function(rec, id) {
+            if (rec.get('paymentType') === 'PurchaseOrder' && rec.get('status') !== 'Voided')
+                return rec;
+        }, this);
+        if (poPayments > -1) {
+            if (shouldShow) {
+                this.poInformation.show();
+            } else {
+                this.poInformation.hide();
+            }
+        }
     },
 
     checkValidity: function () {

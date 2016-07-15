@@ -1,4 +1,5 @@
 ﻿/**
+/**
  * @class Taco.view.priceList.Grid
 */
 Ext.define('Taco.view.priceList.widget.EntriesGrid', {
@@ -104,6 +105,8 @@ Ext.define('Taco.view.priceList.widget.EntriesGrid', {
 
         this.columns = this.getColumnConfig();
 
+        me.mon(me, 'priceList-duplicateEntry', me.doDuplicate);
+
         if (this.showActionsColumn) {
             var actionColumn = this.getActionColumn();
             if (actionColumn) {
@@ -186,7 +189,7 @@ Ext.define('Taco.view.priceList.widget.EntriesGrid', {
                 flex: 1,
                 sortable: false,
                 renderer: function(entries) {
-                    if (Ext.isArray(entries)) {
+                    if (Ext.isArray(entries) && entries.length > 0) {
                         if (entries[0].listPriceMode === 'UseCatalog') {
                             return "Default";
                         }
@@ -202,7 +205,7 @@ Ext.define('Taco.view.priceList.widget.EntriesGrid', {
                 flex: 1,
                 sortable: false,
                 renderer: function(entries) {
-                    if (Ext.isArray(entries)) {
+                    if (Ext.isArray(entries) && entries.length > 0) {
                         if (entries[0].salePriceMode === 'UseCatalog') {
                             return "Default";
                         }
@@ -324,6 +327,16 @@ Ext.define('Taco.view.priceList.widget.EntriesGrid', {
                 scope: me
             }
         );
+        result.push(
+            {
+                text: 'Duplicate',
+                itemId: 'duplicateMenuItem',
+                menuColumnHandler: function(item, eventData) {
+                    me.fireEvent('priceList-duplicateEntry', eventData.record);
+                },
+                scope: me
+            }
+        )
         return result;
     },
 
@@ -528,21 +541,67 @@ Ext.define('Taco.view.priceList.widget.EntriesGrid', {
 
     doEdit : function (item, eventData) {
         var rec = eventData.record;
-        //item.scope.openEditor(rec, false);
         item.scope.createPopup(rec, false);
+    },
+
+    doDuplicate: function(record) {
+        var me = this;
+        me.createPopup(me.doDuplicateInternal(record), true);
+    },
+
+    doDuplicateInternal: function(record) {
+        record = record.copy();
+        record.phantom = true;
+        return record;
     },
 
     createPopup: function (record, isNew) {
         var me = this;
-        Ext.create('Taco.view.priceList.modal.PriceEntryEditor', {
+        me.editor = Ext.create('Taco.view.priceList.modal.PriceEntryEditor', {
             record: record,
+            store: me.store,
+            itemId: 'PriceEntryEditor',
             parentForm: this,
             isCreateMode: isNew,
             priceListCode: this.priceListCode,
             actions: (!me.allowUpdate)
                 ? [{ xtype: 'button', itemId: 'secondaryAction'}]
-                : [{ xtype: 'button', itemId: 'secondaryAction'},
-                   { xtype: 'button', itemId: 'primaryAction', formBind: true}
+                : [
+                    {
+                        xtype: 'taco.prevnext',
+                        canNavigateToNext: true,
+                        canNavigateToPrevious: true,
+                        itemId: 'prevnextorder',
+                        listeners: {
+                            navigateToNext: me.navigateToNext,
+                            navigateToPrevious: me.navigateToPrevious,
+                            scope: me
+                        },
+                        record: record,
+                        store: me.store
+                    },
+                    { xtype: 'button', itemId: 'secondaryAction'},
+                    {
+                        xtype: 'splitbutton',
+                        itemId: 'primaryAction',
+                        formBind: true,
+                        menu: Ext.create('Ext.menu.Menu', {
+                            items: [{
+                                text: 'Save and Duplicate',
+                                handler: function() {
+                                    var editor = this.up('#PriceEntryEditor');
+                                    editor.onSaveSuccess = function(updatedRecord) {
+                                        me.fireEvent('priceList-duplicateEntry', updatedRecord);
+                                        editor.onSaveSuccess = Ext.emptyFn;
+                                    }
+                                    editor.save();
+                                }
+                            }]
+                        }),
+                        handler: function(btn, e) {
+                            this.save();
+                        }
+                    }
                   ],
             listeners: {
                 savesuccess: function () {
@@ -554,7 +613,6 @@ Ext.define('Taco.view.priceList.widget.EntriesGrid', {
 
     doCreate: function () {
         this.createPopup(null, true);
-        //this.openEditor(null, true);
     },
 
     getDeletePromptMessage: function (record) {
@@ -592,6 +650,69 @@ Ext.define('Taco.view.priceList.widget.EntriesGrid', {
 
     showMessage: function(msg, type) {
         Taco.app.fireEvent('setmessage', msg, type || 'success');
+    },
+
+    navigateTo:function (forward) {
+        var index = this.getIndexOfPriceListEntry(this.editor.record.getId()),
+            navToIndex = forward ? index + 1 : index - 1,
+            outOfIndexMeth = forward ? 'nextPage' : 'previousPage',
+            validCheck = forward ? 'canNavigateToNext' : 'canNavigateToPrevious',
+            rec;
+
+        if (!this[validCheck]())
+            return;
+
+        if (index != -1) {
+            this.setLoading();
+            rec = this.store.data.getAt(navToIndex);
+            if (rec) {
+                this.editor.record = rec;
+                this.editor.loadRecord();
+                this.setLoading(false);
+                //Taco.core.StateManager.attemptNavigate('/priceLists/edit/' + rec.getId());
+            } else {
+                this.store[outOfIndexMeth]({
+                    scope: this,
+                    callback: function () {
+                        this.setLoading(false);
+                        navToIndex = forward ? 0: this.store.count() - 1;
+                        rec = this.store.data.getAt(navToIndex);
+                        if (rec) {
+                            this.editor.record = rec;
+                            this.editor.loadRecord();
+                            this.setLoading(false);
+                        }
+                    }
+                });
+            }
+
+        }
+    },
+    canNavigateToNext:function() {
+        var index = this.getIndexOfPriceListEntry(this.editor.record.getId());
+        return this.store.getTotalCount() > 1 && index < this.store.getTotalCount() ;
+    },
+    canNavigateToPrevious: function () {
+        var index = this.getIndexOfPriceListEntry(this.editor.record.getId());
+        return index != 0;
+    },
+    navigateToPrevious: function () {
+        this.navigateTo(false);
+    },
+    navigateToNext: function () {
+        this.navigateTo(true);
+    },
+    getIndexOfPriceListEntry: function(compositeKey, store) {
+        store = store || this.store;
+        var index = store.findBy(function(record) {
+            var key = record.get('compositeKey');
+            var currencyCode = key.currencyCode === compositeKey.currencyCode;
+            var priceListCode = key.priceListCode === compositeKey.priceListCode;
+            var productCode = key.productCode === compositeKey.productCode;
+            var startDate = (key.startDate && compositeKey.startDate) ? key.startDate.toString() == compositeKey.startDate.toString() : key.startDate == compositeKey.startDate;
+            return currencyCode && priceListCode && productCode && startDate;
+        });
+        return index;
     }
 
 });

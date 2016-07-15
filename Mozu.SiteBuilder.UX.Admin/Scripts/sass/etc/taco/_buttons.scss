@@ -458,6 +458,30 @@
         }
     }
 
+    // Add/remove row buttons
+
+    .#{$vprefix}btn-add-row {
+        cursor: pointer;
+        @include icon-font($glyph-plus, 14px, $white-color);
+        background: $glyph-color;
+        border-radius: 50%;
+        border: 0;
+        &:focus, &:hover {
+            background: $dark-color;
+        }
+    }
+
+    .#{$vprefix}btn-remove-row {
+        cursor: pointer;
+        @include icon-font($glyph-minus, 14px, $white-color);
+        background: $glyph-color;
+        border-radius: 50%;
+        border: 0;
+        &:focus, &:hover {
+            background: $dark-color;
+        }
+    }
+
     // Additional button styles pulled from NavHeader.scss
 
     .#{$prefix}btn {

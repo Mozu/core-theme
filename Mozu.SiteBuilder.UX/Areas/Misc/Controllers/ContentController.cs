@@ -211,7 +211,17 @@ namespace Mozu.SiteBuilder.UX.Areas.Misc.Controllers
             if (result.HasException)
             {
                 result.ResponseMessage.Dispose();
-                throw result.ReadException();
+                var ex = result.ReadException();
+                var isTransform = size.HasValue || max.HasValue || maxWidth.HasValue || maxHeight.HasValue || width.HasValue || height.HasValue || !string.IsNullOrEmpty(crop) || quality.HasValue;
+                if (isTransform) 
+                {
+                    var apiEx = ex as Mozu.Core.Api.Client.Exceptions.ApiWebClientException;
+                    if ( apiEx?.MessageContains("corrupted") == true )
+                    {
+                         return RedirectToCdn(list, documentId, DateTimeOffset.UtcNow.AddDays(1), "xformErr=true&correlationId=" + this._appCtx.TraceContext?.CorrelationId);
+                    }
+                }
+                throw ex;
             }
             string ct = result.ResponseMessage.Content.Headers.ContentType != null
                 ? result.ResponseMessage.Content.Headers.ContentType.MediaType
@@ -266,7 +276,7 @@ namespace Mozu.SiteBuilder.UX.Areas.Misc.Controllers
             {
                 return null;
             }
-            var genSettingsTask = await _generalSettingsWebApiClient.Value.GetGeneralSettings().ConfigureAwait(false);
+            var genSettingsTask = await _generalSettingsWebApiClient.Value.CloneWithoutUserClaims().GetGeneralSettings().ConfigureAwait(false);
             if ( genSettingsTask.HasException )
             {
                 return null;
@@ -325,7 +335,7 @@ namespace Mozu.SiteBuilder.UX.Areas.Misc.Controllers
             }
         }
 
-        ActionResult RedirectToCdn(string list, string documentId, DateTimeOffset timeStamp)
+        ActionResult RedirectToCdn(string list, string documentId, DateTimeOffset timeStamp, string queryOverride = null)
         {
             var cdnHost = this._settings.AppSettings("CdnHost");
             var originalUri = new Uri(PageContext.Url);
@@ -353,7 +363,7 @@ namespace Mozu.SiteBuilder.UX.Areas.Misc.Controllers
                     (this.SbApiContext.SiteId.HasValue
                         ? this.SbApiContext.SiteId.Value.ToString()
                         : "m-" + this.SbApiContext.MasterCatalogId.GetValueOrDefault(1)), list, documentId);
-            ub.Query = originalQuery.ToString();
+            ub.Query = queryOverride ?? originalQuery.ToString();
 
 
             return new RedirectResult(ub.ToString(), true);

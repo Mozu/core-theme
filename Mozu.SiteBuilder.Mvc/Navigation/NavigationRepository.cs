@@ -145,7 +145,7 @@ namespace Mozu.SiteBuilder.Mvc.Navigation
                         UpdateNavigationDocument(doc, navset);
                         return _cmsService.Update2(doc);
                     }
-                });
+                }).Unwrap();
         }
 
     }

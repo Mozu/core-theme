@@ -9,6 +9,8 @@ using CustomerAccountContact = Mozu.Customer.Contracts.CustomerContact;
 using CustomerAccountNote = Mozu.Customer.Contracts.CustomerNote;
 //using CustomerGroup = Mozu.Customer.Contracts.CustomerGroup;
 using Phone = Mozu.SiteBuilder.UX.Models.Customers.Phone;
+using PurchaseOrder = Mozu.Customer.Contracts.CustomerPurchaseOrderAccount;
+using CustomerPurchaseOrderPaymentTerm = Mozu.Customer.Contracts.CustomerPurchaseOrderPaymentTerm;
 
 namespace Mozu.SiteBuilder.UX.Areas.StoreFront.ModelMapping
 {
@@ -50,6 +52,22 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.ModelMapping
 
             Mapper.CreateMap<CustomerGroup, UX.Models.Customers.CustomerGroup>();
             Mapper.CreateMap<UX.Models.Customers.CustomerGroup, CustomerGroup>();
+
+            Mapper.CreateMap<PurchaseOrder, UX.Models.Customers.CustomerPurchaseOrderAccount>()
+                .ForMember(x => x.PaymentTerms, opt => opt.ResolveUsing(dc => dc.CustomerPurchaseOrderPaymentTerms))
+                ;
+            Mapper.CreateMap<UX.Models.Customers.CustomerPurchaseOrderAccount, PurchaseOrder>()
+                .ForMember(dc => dc.CustomerPurchaseOrderPaymentTerms, opt => opt.ResolveUsing(x => x.PaymentTerms))
+                .ForMember(dc => dc.OverdraftAllowance, opt => opt.Ignore())
+                .ForMember(dc => dc.OverdraftAllowanceType, opt => opt.Ignore())
+                .ForMember(dc => dc.AuditInfo, opt => opt.Ignore())
+                ;
+
+            Mapper.CreateMap<CustomerPurchaseOrderPaymentTerm, UX.Models.Customers.PurchaseOrderPaymentTerm>()
+                ;
+            Mapper.CreateMap<UX.Models.Customers.PurchaseOrderPaymentTerm, CustomerPurchaseOrderPaymentTerm>()
+                .ForMember(dc => dc.AuditInfo, opt=> opt.Ignore())
+                ;
         }
     }
 }

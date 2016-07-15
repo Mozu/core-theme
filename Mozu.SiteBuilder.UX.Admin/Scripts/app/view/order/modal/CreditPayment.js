@@ -7,18 +7,26 @@ Ext.define('Taco.view.order.modal.CreditPayment', {
     autoShow: true,
     scale: 'medium',
     title: 'Issue Credit',
+    height: 430,
 
     initComponent: function (eOpts) {
         var amountCollected = this.record.get('amountCollected'),
             amountCredited = this.record.get('amountCredited'),
             amountRefunded = this.record.get('amountRefunded'),
-            availableForCredit = Math.max(amountCollected - amountCredited - amountRefunded, 0);
+            availableForCredit = Math.max(amountCollected - amountCredited - amountRefunded, 0),
+            poCheckbox = this.record.get('paymentType') === 'PurchaseOrder'
+                         ? {
+                                xtype: 'checkbox',
+                                name: 'creditToPurchaseOrders',
+                                itemId: 'purchaseOrderCredit',
+                                checked: true,
+                                boxLabel: 'Apply refund to the customer\'s available balance for purchase orders'
+                            }
+                         : null;
 
         this.form = Ext.create('Taco.core.ux.form.Form', {
             requireDirty: false,
-            layout: {
-                type: 'auto'
-            },
+            layout: 'vbox',
             items: [{
                 xtype: 'currencyfield',
                 currencyCode: this.order.getCurrencyCode(),
@@ -26,10 +34,13 @@ Ext.define('Taco.view.order.modal.CreditPayment', {
                 itemId : 'amount',
                 fieldLabel: 'Amount',
                 required: true,
+                allowBlank: false,
                 value: availableForCredit,
                 maxValue: availableForCredit,
                 width: 160
-            }, {
+            },
+            poCheckbox,
+            {
                 xtype: 'textarea',
                 name: 'reason',
                 fieldLabel: 'Reason',
@@ -58,11 +69,13 @@ Ext.define('Taco.view.order.modal.CreditPayment', {
     doSave: function () {
         var me = this,
             fmValues = this.form.getValues(),
+            shouldCreditPo = fmValues.creditToPurchaseOrders ? fmValues.creditToPurchaseOrders : null,
             data = {
                 orderId: me.order.getId(),
                 paymentId: me.record.getId(),
                 amount: fmValues.amount,
-                reason: fmValues.reason
+                reason: fmValues.reason,
+                refundToAvailableBalance: shouldCreditPo
             };
         
         me.setLoading({

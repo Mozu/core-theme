@@ -258,10 +258,15 @@
     margin-bottom: 20px;  
   }
 
-  .x-panel .orderform-payment-transaction {
-    background: $card-button-bg;
+  .#{$prefix}panel .orderform-payment-transaction {
     // border: 1px solid $card-border;
     border-radius: 4px;
+    background-color: $package-bg;
+    border: 1px solid $light-border-gray;
+
+    &.#{$prefix}panel-subform-section-child {
+      background-color: $package-bg;
+    }
   }
 
 }

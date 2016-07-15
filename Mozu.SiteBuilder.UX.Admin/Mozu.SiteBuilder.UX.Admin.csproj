@@ -173,6 +173,12 @@
     <Compile Include="Api\CatalogPublishingController.cs" />
     <Compile Include="Api\CategoryController.cs" />
     <Compile Include="Api\ChannelController.cs" />
+    <Compile Include="Api\ModelMapping\PurchaseOrderMapping.cs" />
+    <Compile Include="Api\Models\Account\CustomerAuditEntry.cs" />
+    <Compile Include="Api\Models\Account\CustomerPoTransactionsCsvFileResult.cs" />
+    <Compile Include="Api\Models\Account\CustomerPurchaseOrderTransaction.cs" />
+    <Compile Include="Api\Models\Account\CustomerPurchaseOrderAccount.cs" />
+    <Compile Include="Api\Models\Order\PurchaseOrderPayment.cs" />
     <Compile Include="Api\Models\PriceLists\PriceListEntryExtra.cs" />
     <Compile Include="Api\ReportGenerator.cs" />
     <Compile Include="Api\CouponCodeController.cs" />
@@ -320,7 +326,7 @@
     <Compile Include="Api\NavigationController.cs">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="Api\OrderCardPaymentController.cs" />
+    <Compile Include="Api\OrderPaymentController.cs" />
     <Compile Include="Api\OrderCheckPaymentController.cs" />
     <Compile Include="Api\OrderController.cs">
       <SubType>Code</SubType>
@@ -583,12 +589,15 @@
     <Content Include="Scripts\app\core\ux\window\Modal.js" />
     <Content Include="Scripts\app\model\BlockedProduct.js" />
     <Content Include="Scripts\app\model\CardGateway.js" />
+    <Content Include="Scripts\app\model\CustomerPurchaseOrderInfo.js" />
+    <Content Include="Scripts\app\model\PurchaseOrderPaymentTerms.js" />
     <Content Include="Scripts\app\model\PaymentGateway.js" />
     <Content Include="Scripts\app\model\PinnedProduct.js" />
     <Content Include="Scripts\app\model\PriceListEntry.js" />
     <Content Include="Scripts\app\model\PriceList.js" />
     <Content Include="Scripts\app\model\PriceListEntryExtra.js" />
     <Content Include="Scripts\app\model\PriceListEntryPrice.js" />
+    <Content Include="Scripts\app\model\PurchaseOrderCustomField.js" />
     <Content Include="Scripts\app\model\RuntimePriceList.js" />
     <Content Include="Scripts\app\model\StorefrontProduct.js" />
     <Content Include="Scripts\app\model\FilterField.js" />
@@ -787,6 +796,8 @@
     <Content Include="Scripts\app\view\customSchema\Lists.js" />
     <Content Include="Scripts\app\view\customSchema\SchemaList.js" />
     <Content Include="Scripts\app\view\customSchema\Split.js" />
+    <Content Include="Scripts\app\view\order\modal\AddPurchaseOrder.js" />
+    <Content Include="Scripts\app\view\order\modal\ManualDeclinePayment.js" />
     <Content Include="Scripts\app\view\order\widget\PriceListPickerField.js" />
     <Content Include="Scripts\app\view\preview\ExpressionPreviewDrawer.js" />
     <Content Include="Scripts\app\view\priceList\Edit.js" />
@@ -894,6 +905,9 @@
     <Content Include="Scripts\app\view\settings\paymentGateways\subform\PaymentGateway.js" />
     <Content Include="Scripts\app\view\settings\paymentGateways\Edit.js" />
     <Content Include="Scripts\app\view\settings\paymentTypes\subform\CheckByMail.js" />
+    <Content Include="Scripts\app\view\settings\paymentTypes\subform\PurchaseOrderCustomFieldGrid.js" />
+    <Content Include="Scripts\app\view\settings\paymentTypes\subform\PurchaseOrderPaymentTermsGrid.js" />
+    <Content Include="Scripts\app\view\settings\paymentTypes\subform\PurchaseOrder.js" />
     <Content Include="Scripts\app\view\storeCredit\AdvancedSearchForm.js" />
     <Content Include="Scripts\app\view\storeCredit\Grid.js" />
     <Content Include="Scripts\app\view\storefrontProduct\Grid.js" />
@@ -1518,6 +1532,8 @@
     <Content Include="Scripts\sass\src\view\order\Grid.scss" />
     <Content Include="Scripts\sass\src\view\settings\paymentTypes\subform\CreditCards.scss" />
     <Content Include="Scripts\sass\src\view\order\widget\PriceListMenu.scss" />
+    <Content Include="Scripts\sass\src\view\order\modal\Refund.scss" />
+    <Content Include="Scripts\sass\src\view\order\modal\AddPurchaseOrder.scss" />
     <None Include="SetupSenchaWorkspace.ps1" />
     <Content Include="Scripts\.sencha\app\build-impl.xml" />
     <Content Include="Scripts\.sencha\app\plugin.xml" />
@@ -2966,13 +2982,41 @@
   <Choose>
     <When Condition="$(TargetFrameworkIdentifier) == '.NETFramework' And ($(TargetFrameworkVersion) == 'v4.5' Or $(TargetFrameworkVersion) == 'v4.5.1')">
       <ItemGroup>
-        <Reference Include="MongoDB.Bson">
-          <HintPath>..\packages\mongocsharpdriver\lib\net35\MongoDB.Bson.dll</HintPath>
+        <Reference Include="MongoDB.Driver.Legacy">
+          <HintPath>..\packages\mongocsharpdriver\lib\net45\MongoDB.Driver.Legacy.dll</HintPath>
           <Private>True</Private>
           <Paket>True</Paket>
         </Reference>
+      </ItemGroup>
+    </When>
+  </Choose>
+  <Choose>
+    <When Condition="$(TargetFrameworkIdentifier) == '.NETFramework' And ($(TargetFrameworkVersion) == 'v4.5' Or $(TargetFrameworkVersion) == 'v4.5.1')">
+      <ItemGroup>
+        <Reference Include="MongoDB.Bson">
+          <HintPath>..\packages\MongoDB.Bson\lib\net45\MongoDB.Bson.dll</HintPath>
+          <Private>True</Private>
+          <Paket>True</Paket>
+        </Reference>
+      </ItemGroup>
+    </When>
+  </Choose>
+  <Choose>
+    <When Condition="$(TargetFrameworkIdentifier) == '.NETFramework' And ($(TargetFrameworkVersion) == 'v4.5' Or $(TargetFrameworkVersion) == 'v4.5.1')">
+      <ItemGroup>
         <Reference Include="MongoDB.Driver">
-          <HintPath>..\packages\mongocsharpdriver\lib\net35\MongoDB.Driver.dll</HintPath>
+          <HintPath>..\packages\MongoDB.Driver\lib\net45\MongoDB.Driver.dll</HintPath>
+          <Private>True</Private>
+          <Paket>True</Paket>
+        </Reference>
+      </ItemGroup>
+    </When>
+  </Choose>
+  <Choose>
+    <When Condition="$(TargetFrameworkIdentifier) == '.NETFramework' And ($(TargetFrameworkVersion) == 'v4.5' Or $(TargetFrameworkVersion) == 'v4.5.1')">
+      <ItemGroup>
+        <Reference Include="MongoDB.Driver.Core">
+          <HintPath>..\packages\MongoDB.Driver.Core\lib\net45\MongoDB.Driver.Core.dll</HintPath>
           <Private>True</Private>
           <Paket>True</Paket>
         </Reference>

@@ -84,6 +84,8 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.ModelMapping
                         return CardGateways();
                     }
                 }))
+                .ForMember(x => x.PurchaseOrder, op => op.ResolveUsing(dc => dc.PaymentSettings.PurchaseOrder))
+                
 
                 //TODO: remove when old admin goes away.
                 .ForMember(x => x.Gateway, op => op.ResolveUsing(dc => {
@@ -140,6 +142,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.ModelMapping
                         PayByMail = x.PayByMail,
                         Gateways = new List<DCss.Gateway>(),
                         ExternalPaymentWorkflowDefinitions = x.ExternalPaymentWorkflows,
+                        PurchaseOrder = x.PurchaseOrder
                     };
 
                     if (x.CardGatewayMap != null)

@@ -73,13 +73,6 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.ModelMapping
                 .ForMember(x => x.CurrentDiscountsRestricted, op => op.Ignore())
                 .ForMember(x => x.CurrentDiscountsRestrictedEndDate, op => op.Ignore())
                 .ForMember(x => x.CurrentDiscountsRestrictedStartDate, op => op.Ignore())
-                .ForMember(x => x.CurrentListPrice, op => op.Ignore())
-                .ForMember(x => x.CurrentMAP, op => op.Ignore())
-                .ForMember(x => x.CurrentMAPStartDate, op => op.Ignore())
-                .ForMember(x => x.CurrentMAPEndDate, op => op.Ignore())
-                .ForMember(x => x.CurrentMSRP, op => op.Ignore())
-                .ForMember(x => x.CurrentSalePrice, op => op.Ignore())
-                .ForMember(x => x.CurrentPriceCurrencyCode, op => op.Ignore())
                 .ForMember(x => x.BaseProductCode, op => op.Ignore())
                 .ForMember(x => x.ProductInCatalogInfo, op => op.Ignore())
                 ;

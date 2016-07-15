@@ -652,9 +652,6 @@
             > .#{$prefix}panel-body {
                 &.#{$prefix}layout-fit,
                 &.#{$prefix}box-layout-ct {
-                    background-color: $package-bg;
-                    border: 1px solid $light-border-gray;
-                    @include border-radius-xbrowser(4px);
 
                     .#{$prefix}component,
                     .#{$prefix}container {

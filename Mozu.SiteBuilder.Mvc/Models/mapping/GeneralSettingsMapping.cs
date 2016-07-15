@@ -41,13 +41,45 @@ namespace Mozu.SiteBuilder.Mvc.Models.ModelMapping
             Mapper.CreateMap<DC.ExternalPaymentWorkflowDefinition, ExternalPaymentWorkflowSettings>()
                 .ForMember(x => x.Credentials, opt => opt.MapFrom(src => src.Credentials.Where(c => c.IsSensitive.HasValue && !c.IsSensitive.Value)))
                 ;
-            
+
+            Mapper.CreateMap<DC.PurchaseOrderCustomField, CustomField>()
+                .ForMember(x => x.IsEnabled, opt => opt.ResolveUsing(dc => dc.IsEnabled))
+                .ForMember(x => x.IsRequired, opt => opt.ResolveUsing(dc => dc.IsRequired))
+                .ForMember(x => x.Code, opt => opt.ResolveUsing(dc => dc.Code))
+                .ForMember(x => x.Label, opt => opt.ResolveUsing(dc => dc.Label))
+                .ForMember(x => x.SequenceNumber, opt => opt.ResolveUsing(dc => dc.SequenceNumber))
+                ;
+
+            Mapper.CreateMap<CustomField, DC.PurchaseOrderCustomField>()
+                .ForMember(dc => dc.IsEnabled, op => op.ResolveUsing(x => x.IsEnabled))
+                .ForMember(dc => dc.IsRequired, op => op.ResolveUsing(x => x.IsRequired))
+                .ForMember(dc => dc.Code, op => op.ResolveUsing(x => x.Code))
+                .ForMember(dc => dc.Label, op => op.ResolveUsing(x => x.Label))
+                .ForMember(dc => dc.SequenceNumber, opt => opt.ResolveUsing(x => x.SequenceNumber))
+                ;
+
+            Mapper.CreateMap<DC.PurchaseOrderPaymentTerm, PaymentTerm>()
+                .ForMember(x => x.SequenceNumber, opt => opt.ResolveUsing(dc => dc.SequenceNumber))
+                .ForMember(x => x.Description, opt => opt.ResolveUsing(dc => dc.Description))
+                .ForMember(x => x.Code, op => op.ResolveUsing(dc => dc.Code))
+                ;
+
+            Mapper.CreateMap<PaymentTerm, DC.PurchaseOrderPaymentTerm>()
+                .ForMember(dc => dc.SequenceNumber, opt => opt.ResolveUsing(x => x.SequenceNumber))
+                .ForMember(dc => dc.Description, opt => opt.ResolveUsing(x => x.Description))
+                .ForMember(dc => dc.Code, op => op.ResolveUsing(x => x.Code))
+                ;
+
+            Mapper.CreateMap<DC.PurchaseOrderPaymentDefinition, PurchaseOrderSettings>()
+                ;
+
             Mapper.CreateMap<DC.CheckoutSettings, UX.Models.Settings.CheckoutSettings>()
                   .ForMember(x => x.CustomerCheckoutType, opt => opt.ResolveUsing(x => x.CustomerCheckoutSettings.CustomerCheckoutType))
                   .ForMember(x => x.IsPayPalEnabled, opt => opt.ResolveUsing(x => x.PaymentSettings.ExternalPaymentWorkflowDefinitions != null && x.PaymentSettings.ExternalPaymentWorkflowDefinitions.Any(expwd => String.Equals(expwd.Name, DC.Constants.ThirdPartyPayment.PAYPAL_EXPRESS, System.StringComparison.OrdinalIgnoreCase) && expwd.IsEnabled)))
                   .ForMember(x => x.ExternalPaymentWorkflowSettings, opt => opt.ResolveUsing(GetExternalPaymentWorkflowSettings))
                   .ForMember(x => x.VisaCheckout, opt => opt.ResolveUsing(GetVisaCheckoutSettings))
                   .ForMember(x => x.PayByMail, opt => opt.ResolveUsing(x => x.PaymentSettings.PayByMail))
+                  .ForMember(x => x.PurchaseOrder, opt => opt.ResolveUsing(x => x.PaymentSettings.PurchaseOrder))
                   .ForMember(x => x.PaymentProcessingFlowType, opt => opt.ResolveUsing(x => x.OrderProcessingSettings.PaymentProcessingFlowType))
                   // .ForMember(x => x.SupportedCards, opt => opt.ResolveUsing(x => (x.PaymentSettings.Gateways ?? Enumerable.Empty<DC.Gateway>()).Where(g => g.GatewayAccount != null && g.GatewayAccount.IsActive).Select(g => g.SupportedCards.ToDictionary(card => card)).FirstOrDefault() ?? new Dictionary<string, string>()))
                   .ForMember(x => x.SupportedCards, opt => opt.ResolveUsing<SupportedCardsWithCountryCodeContextResolver>())

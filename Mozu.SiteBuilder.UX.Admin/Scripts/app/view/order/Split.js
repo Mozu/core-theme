@@ -14,7 +14,6 @@ Ext.define('Taco.view.order.Split', {
         'Taco.view.order.Grid',
         'Taco.store.OrderGrid',
         'Taco.view.order.Form',
-        'Taco.view.order.modal.ProductConfigurator',
         'Taco.view.order.AdvancedSearchForm',
         'Taco.core.ux.grid.MenuColumn' // just to refer to its classname
     ],

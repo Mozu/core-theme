@@ -118,14 +118,29 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
                 messagesArray.Add(new {message = error.Message}.ToJObject(_cartSerializer.Value));
             }
 
-            if (cart.CartMessage != null && !cart.CartMessage.Message.IsNullOrEmpty())
+            if (cart.CartMessages != null)
             {
-                messagesArray.Add(new
+                Func<string, int> rank = messageType =>
+                {
+                    switch (messageType)
                     {
-                        message =  cart.CartMessage.Message,
-                        messageType = cart.CartMessage.MessageType,
-                        productsRemoved = cart.CartMessage.ProductsRemoved
-                    }.ToJObject(_cartSerializer.Value));
+                        case "newPriceList": return 2;
+                        case "exclusivePriceList": return 1;
+                        default: return 0;
+                    }
+                };
+
+                var messages = cart.CartMessages.Where(x => !string.IsNullOrEmpty(x.Message)).ToList();
+                messages.Sort((a, b) => rank(b.MessageType).CompareTo(rank(a.MessageType))); // Sort descending
+                foreach (var cartMessage in messages)
+                {
+                    messagesArray.Add(new
+                        {
+                            message =  cartMessage.Message,
+                            messageType = cartMessage.MessageType,
+                            productsRemoved = cartMessage.ProductsRemoved
+                        }.ToJObject(_cartSerializer.Value));
+                }
             }
 
             if (messagesArray.Count > 0)

@@ -7,6 +7,7 @@ using Mozu.Core.Api.Routing;
 using Mozu.SiteBuilder.Mvc.Extensions;
 using Mozu.SiteBuilder.UX.Admin.Api.Models;
 using Mozu.SiteBuilder.UX.Admin.Api.Models.Order;
+using Newtonsoft.Json.Linq;
 using DCp = Mozu.CommerceRuntime.Contracts.Payments;
 
 namespace Mozu.SiteBuilder.UX.Admin.Api
@@ -18,6 +19,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
             public string OrderId { get; set; }
             public string PaymentId { get; set; }
             public decimal Amount { get; set; }
+            public string Notes { get; set; }
         }
         /// <summary>
         /// Performs the "CapturePayment" action on an authorized payment.
@@ -32,7 +34,8 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
 //              if not provided, commerceruntime defers to what's provisioned for the tenant
                 CurrencyCode = SbApiContext.CurrencyCode,
                 Amount = args.Amount,
-                ReferenceSourcePaymentId = null
+                ReferenceSourcePaymentId = null,
+                Data = new JObject(new JProperty("Notes",args.Notes))
             };
 
             var order = (await _orderWebApiClient.PerformPaymentAction(args.OrderId, args.PaymentId, action)).ReadAsSync();
@@ -85,12 +88,36 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
             return Single2(order.Map<Order>());
         }
 
+        /// <summary>
+        /// Performs the "InvoicePayment" action on an authorized payment.
+        /// </summary>
+        [HttpPostRoute(UriTemplate = "payment/invoice")]
+        public async Task<Response<Order>> InVoicePayment(CapturePaymentArgs args)
+        {
+            // Possible actions can be "AuthAndCapture","InvoicePayment", "AuthorizePayment", "CapturePayment", "VoidPayment", "CreditPayment", "RequestCheck", "ApplyCheck", "DeclineCheck"
+            var action = new DCp.PaymentAction
+            {
+                ActionName = "InvoicePayment",
+                CurrencyCode = SbApiContext.CurrencyCode,
+                Amount = args.Amount,
+                ReferenceSourcePaymentId = null
+            };
+
+            var order = (await _orderWebApiClient.PerformPaymentAction(args.OrderId, args.PaymentId, action)).ReadAsSync();
+
+            //_orderWebApiClient.GetPackageLabel
+            return Single2(order.Map<Order>());
+        }
+
         public class CreditPaymentArgs
         {
             public string OrderId { get; set; }
             public string PaymentId { get; set; }
             public decimal Amount { get; set; }
             public string Reason { get; set; }
+            //flag for PO orders
+            public bool RefundToAvailableBalance { get; set; }
+          
         }
         /// <summary>
         /// Performs the "CreditPayment" action on a payment where money has been captured.
@@ -103,7 +130,8 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
             {
                 ActionName = "CreditPayment",
                 CurrencyCode = SbApiContext.CurrencyCode,
-                Amount = args.Amount
+                Amount = args.Amount,
+                Data = new JObject(new JProperty("RefundToAvailableBalance",args.RefundToAvailableBalance))
             };
 
             var order = (await _orderWebApiClient.PerformPaymentAction(args.OrderId, args.PaymentId, action)).ReadAsSync();
@@ -140,9 +168,11 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
 
         public class CreatePaymentArgs
         {
+            public string PaymentType { get; set; }
             public string OrderId { get; set; }
             public decimal Amount { get; set; }
             public CardPaymentInformation BillingInfo { get; set; }
+            public PurchaseOrderPayment PurchaseOrderInfo { get; set; }
             public Contact BillingContact { get; set; }
         }
         /// <summary>
@@ -151,31 +181,51 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
         [HttpPostRoute(UriTemplate = "payment/create")]
         public async Task<Response<Order>> CreatePayment(CreatePaymentArgs args)
         {
+
             var action = new DCp.PaymentAction
-            {
-                // TODO: should determine ActionName from store preferences
-                ActionName = /*"AuthAndCapture"*/ "AuthorizePayment",
+            { 
                 CurrencyCode = SbApiContext.CurrencyCode,
-                NewBillingInfo = new DCp.BillingInfo
-                {
-                    Card = new DCp.PaymentCard
-                    {
-                        PaymentServiceCardId = args.BillingInfo.PaymentServiceCardId,
-                        NameOnCard = args.BillingInfo.NameOnCard,
-                        PaymentOrCardType = args.BillingInfo.CardType,
-                        CardNumberPartOrMask = args.BillingInfo.CardNumber,
-                        ExpireMonth = args.BillingInfo.ExpireMonth,
-                        ExpireYear = args.BillingInfo.ExpireYear,
-                        IsCardInfoSaved = false,
-                        IsUsedRecurring = false
-                    },
-                    IsSameBillingShippingAddress = args.BillingInfo.IsSameBillingShippingAddress,
-                    BillingContact = args.BillingContact.Map<Core.Api.Contracts.Contact>(),
-                    PaymentType = DCp.PaymentTypeConst.CREDIT_CARD
-                },
                 Amount = args.Amount
             };
-
+            switch (args.PaymentType)
+            {
+                case DCp.PaymentTypeConst.CREDIT_CARD:
+                    action.NewBillingInfo = new DCp.BillingInfo
+                    {
+                        Card = new DCp.PaymentCard
+                        {
+                            PaymentServiceCardId = args.BillingInfo.PaymentServiceCardId,
+                            NameOnCard = args.BillingInfo.NameOnCard,
+                            PaymentOrCardType = args.BillingInfo.CardType,
+                            CardNumberPartOrMask = args.BillingInfo.CardNumber,
+                            ExpireMonth = args.BillingInfo.ExpireMonth,
+                            ExpireYear = args.BillingInfo.ExpireYear,
+                            IsCardInfoSaved = false,
+                            IsUsedRecurring = false
+                        },
+                        IsSameBillingShippingAddress = args.BillingInfo.IsSameBillingShippingAddress,
+                        BillingContact = args.BillingContact.Map<Core.Api.Contracts.Contact>(),
+                        PaymentType = DCp.PaymentTypeConst.CREDIT_CARD
+                    };
+                    action.ActionName = "AuthorizePayment";
+                    break;
+                case DCp.PaymentTypeConst.PURCHASE_ORDER:
+                    action.NewBillingInfo = new DCp.BillingInfo
+                    {
+                        PurchaseOrder = new DCp.PurchaseOrderPayment()
+                        {
+                            PaymentTerm = args.PurchaseOrderInfo.PaymentTerm.Map<DCp.PurchaseOrderPaymentTerm>(),
+                            CustomFields = args.PurchaseOrderInfo.CustomFields.Map<List<DCp.PurchaseOrderCustomField>>(),
+                            PurchaseOrderNumber = args.PurchaseOrderInfo.PurchaseOrderNumber
+                        },
+                        IsSameBillingShippingAddress = args.BillingInfo.IsSameBillingShippingAddress,
+                        BillingContact = args.BillingContact.Map<Core.Api.Contracts.Contact>(),
+                        PaymentType = DCp.PaymentTypeConst.PURCHASE_ORDER
+                    };
+                    action.ActionName = "CreatePayment";
+                    break;
+            }
+           
             var order = (await _orderWebApiClient.CreatePaymentAction(args.OrderId, action)).ReadAsSync();
 
             return Single2( order.Map<Order>() );

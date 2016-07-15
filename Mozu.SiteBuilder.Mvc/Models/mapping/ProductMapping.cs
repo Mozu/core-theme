@@ -86,6 +86,8 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.ModelMapping
             Mapper.CreateMap<Mozu.ProductRuntime.Contracts.ProductPrice, ProductPrice>();
           
             Mapper.CreateMap<Mozu.ProductRuntime.Contracts.ProductPriceRange, ProductPriceRange>();
+            Mapper.CreateMap<Mozu.ProductRuntime.Contracts.ProductVolumePrice, ProductVolumePrice>();
+
             Mapper.CreateMap<Mozu.ProductRuntime.Contracts.Product, Product>();
               
             Mapper.CreateMap<Mozu.ProductRuntime.Contracts.ProductContent, ProductContent>()

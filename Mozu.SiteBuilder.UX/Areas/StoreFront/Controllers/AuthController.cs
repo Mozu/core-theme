@@ -295,6 +295,10 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
         [SslOnlyActionFilter]
         public async Task<object> AjaxLogin(LoginDetails details)
         {
+            if ( details == null)
+            {
+                throw new Mozu.Core.Exceptions.VaeValidationConflictException( "invalid input");
+            }
             string email = details.email;
             string password = details.password;
             string returnUrl = details.returnUrl;

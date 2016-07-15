@@ -195,9 +195,18 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
 
             if (categories.Count == 1)
             {
+
                 //single record Create/Update
                 var cat = categories.First();
+                var existingCategory = (await _categoriesClient.GetCategory(cat.Id)).ReadAsSync();
                 var dcCat = Mapper.Map<DC.Category>(cat);
+
+                // from sitebuilder, when saving a category we dont have the category images, so we go get them
+                if (cat.CategoryImages == null && existingCategory.Content.CategoryImages != null)
+                {
+                    dcCat.Content.CategoryImages = existingCategory.Content.CategoryImages;
+                }
+
                 var taskResult = (await _categoriesClient.UpdateCategory(dcCat, cat.Id, false)).ReadAsAsync();
                 returnList.Add(Mapper.Map<Category>(taskResult.Result));
                 return List2(returnList);

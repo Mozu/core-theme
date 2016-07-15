@@ -1,9 +1,11 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Net;
 using System.Net.Http;
 using System.Threading.Tasks;
 using System.Web.Http;
+using AutoMapper;
 using Mozu.CommerceRuntime.Contracts.Clients;
 using Mozu.Core;
 using Mozu.Core.Api.Client;
@@ -21,6 +23,7 @@ using Mozu.SiteBuilder.Mvc.Extensions;
 using Mozu.SiteBuilder.UX.Filters;
 using Mozu.Core.Actions;
 using Mozu.SiteBuilder.Mvc.OAF;
+using StorefrontModel = Mozu.SiteBuilder.UX.Areas.StoreFront.Models;
 
 namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
 {
@@ -112,6 +115,9 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
             var reasonList = _returnApiClient.GetReasons();
             var storeCreditsTask = _creditApiClient.GetCredits(0, 25, "activationDate DESC", String.Format("CustomerId eq \"{0}\" and activationdate le \"{1}\" and expirationdate ge \"{1}\"", account.Id, DateTime.UtcNow.ToString("o")));
             var wishlistTask = _wishlistApiClient.GetWishlistByName(account.Id, DEFAULT_WISHLIST_NAME);
+            var purchaseOrderAccount =
+                (await _customerAccountWebApiClient.GetCustomerPurchaseOrderAccount(this.PageContext.User.AccountId))
+                    .ReadAsSync();
 
             var shipTask = GetShippableCountries();
             var billTask = GetBillingCountries();
@@ -159,6 +165,26 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
             jAccount.Add("hasSavedCards", cards.Items.Count > 0);
             jAccount.Add("hasSavedContacts", account.Contacts.Count > 0);
             jAccount.Add("cards", cards.Items.ToJArray());
+
+            if (SiteContext.CheckoutSettings.PurchaseOrder != null && SiteContext.CheckoutSettings.PurchaseOrder.IsEnabled && purchaseOrderAccount != null)
+            {
+                var customerPurchaseOrder = Mapper.Map<Mozu.SiteBuilder.UX.Models.Customers.CustomerPurchaseOrderAccount>(purchaseOrderAccount);
+                var paymentTermOptions = this.SiteContext.CheckoutSettings.PurchaseOrder.PaymentTerms;
+                // helper object that inherits from contract, filters for specific site, then create new payment array and apply it to accountPurchaseOrder before doing .toJObject()
+                var paymentTermList = new List<PurchaseOrderPaymentTerm>();
+                foreach (var term in customerPurchaseOrder.PaymentTerms)
+                {
+                    if (term.SiteId == SiteContext.SiteId)
+                    {
+                        paymentTermList.Add(term);
+                    }
+                }
+                customerPurchaseOrder.PaymentTerms = paymentTermList;
+                var purchaseOrderJObject = customerPurchaseOrder.ToJObject();
+
+                jAccount.Add("purchaseOrder", purchaseOrderJObject);
+            }
+
             if (credits.Items.Count > 0)
             {
                 jAccount.Add("credits", credits.Items.ToJArray());

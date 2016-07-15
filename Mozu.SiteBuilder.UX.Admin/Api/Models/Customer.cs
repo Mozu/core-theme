@@ -122,6 +122,9 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.Models
         public DateTime? CreateDate { get; set; }
 
         public List<DC.Card> PaymentCards { get; set; }
+        public DC.CustomerPurchaseOrderAccount PurchaseOrderAccount { get; set; }
+
+        public bool IsPoEnabled;
 
         #endregion
 

@@ -8,8 +8,14 @@ Ext.define('Taco.view.priceList.modal.PriceEntryEditor', {
 
     requires: [
         'Taco.view.priceList.entry.PriceEntryGeneral',
-        'Taco.view.priceList.entry.PriceEntryPrice'
+        'Taco.view.priceList.entry.PriceEntryPrice',
+        'Taco.core.ux.plugins.NextPrevious'
     ],
+
+/*    plugins: [{
+        ptype: 'nextprevious',
+        enableNextPrevious: true
+    }],*/
 
     // this should really be the default;
     closeAction: 'destroy',
@@ -129,6 +135,7 @@ Ext.define('Taco.view.priceList.modal.PriceEntryEditor', {
 
         me.pricePanel = Ext.create('Taco.view.priceList.entry.PriceEntryPrice', {
             record: me.record,
+            parentContainer: me,
             currencyCode: !me.record.phantom
                             ? me.record.get('currencyCode')
                             : Taco.app.context.getMasterCatalog().currencyCode
@@ -162,8 +169,8 @@ Ext.define('Taco.view.priceList.modal.PriceEntryEditor', {
     doSave: function () {
         var me = this,
             form = me.getForm(),
-            basic = form.down('#basicPanel'),
-            entries = basic.items,
+            entries = form.down('#basicEntries').items,
+            isBulk = (entries.getCount() > 1 || entries.getAt(0).record.get('minQty') > 1),
             data = form.getValues(),
             priceEntries = [],
             extrasStore = me.pricePanel.extrasGrid.getStore(),
@@ -179,19 +186,19 @@ Ext.define('Taco.view.priceList.modal.PriceEntryEditor', {
             Ext.Object.merge(this.record.data, data);
         }
 
+        this.record.set('priceListEntryMode', isBulk ? 'Bulk' : 'Simple');
+
         entries.each(function(entry) {
             priceEntries.push(entry.getValues());
         });
-
+        this.record.data.priceEntries = null; // hack to fix a recursion/call stack size issue, on create
         this.record.set('priceEntries', priceEntries);
-        
+
         Ext.Array.each(extrasStore.getRange(), function(extra) {
             extras.push(extra.getData());
         });
 
         this.record.set('extras', extras);
-        
-        
 
         this.record.save({
             success: onSuccess,

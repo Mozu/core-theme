@@ -67,8 +67,24 @@ Ext.define('Taco.view.publishing.component.button.PublishButton', {
             ]
         };
 
+
         this.callParent(arguments);
+
+        var me = this;
+
+        this.on('enable', this.afterEnable);
         
+    },
+
+    afterEnable: function(argument) {
+        var me = this;
+
+        // on validty change events
+        // check after the event, to confirm actual buttonstate
+
+        Ext.defer(function() {
+            me.updateButton();
+        }, 100)
     },
 
     setLoading: function(isLoading, cb) {
@@ -152,20 +168,28 @@ Ext.define('Taco.view.publishing.component.button.PublishButton', {
 
     updateButton: function() {
         var me = this;
-        
+
         if (!this.record) {
             me.disable();
             return false;
         }
 
-        var state = this.record.get('publishState') || this.record.get('publishedState');
+        var state = ((
+            this.record.get('publishState') || this.record.get('publishedState')
+        ) || '').toLowerCase();
 
         if (!state && !this.record.phantom) return false;
 
         if (this.record.phantom) state = 'live';
 
-        me[state.toLowerCase() === 'draft' || state.toLowerCase() === 'new' ? 'enable' : 'disable']();
-        
+        var func = state === 'draft'
+            || state === 'new'
+            || state !== 'active'
+            ? 'enable'
+            : 'disable';
+
+        me[func]();
+
     },
 
     getPublishSetById: function(cb) {

@@ -133,7 +133,8 @@ namespace Mozu.SiteBuilder.Mvc.Catalog
                 CategoryTree lastGoodTree;
                 _persistentCache.TryGetValue(this.Cachekey, out lastGoodTree);
                 var catTreeFromCache = origVal as CategoryTree;
-                return Client.CloneWithConfigOptions(x=> x.TimeoutMilliseconds = 15000)
+                return Client
+                    //.CloneWithConfigOptions(x=> x.TimeoutMilliseconds = 15000)
                     .GetCategoryTree()
                     .ContinueWith(t => {
                         if (t.IsFaulted && t.Exception != null)

@@ -100,7 +100,9 @@ Ext.define('Taco.view.product.subform.Properties', {
                         name: this.getFieldName(ptAttribute),
                         fieldLabel: ptAttribute.get('adminName'),
                         allowBlank: ptAttribute.get('isRequired') === true ? false : true,
-                        value: values
+                        value: values,
+                        showVariations: true,
+                        showProductUsages: 'Standard,Configurable,Bundle'
                     }
                 ];
             }
