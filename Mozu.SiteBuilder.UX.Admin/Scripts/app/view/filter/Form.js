@@ -250,6 +250,7 @@ Ext.define('Taco.view.filter.Form', {
         });
 
         this.rightField = Ext.create('Taco.view.filter.ValueField', {
+            cls: 'taco-category-condition-value-field',
             name: "right",
             flex: 1,
             allowBlank: this.fieldRecord.get("allowBlank"),
