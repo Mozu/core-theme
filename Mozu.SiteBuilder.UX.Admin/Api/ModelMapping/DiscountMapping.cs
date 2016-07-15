@@ -225,8 +225,6 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.ModelMapping
             Mapper.CreateMap<Discount, DC.Discount>()
                 .ForMember(x => x.DoesNotApplyToSalePrice, opt => opt.ResolveUsing(x => x.DoesNotApplyToSalePrice))
                 .ForMember(x => x.DoesNotApplyToProductsWithSalePrice, opt => opt.ResolveUsing(x => x.DoesNotApplyToProductsWithSalePrice))
-                
-
                 .ForMember(dc => dc.Amount, op => op.ResolveUsing(x => (x.AmountType == null || x.AmountType.EqualsIgnoreCase(DC.Discount.AmountTypes.FREE))
                     ? null
                     : x.Amount))
@@ -271,6 +269,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.ModelMapping
                                                                            ShippingZones = (x.ShippingZones ?? Enumerable.Empty<string>()).Select(_ => new DC.TargetedShippingZone()  { Zone  = _ }).ToList(),                                                                          
                                                                            IncludeAllProducts = x.IncludeAllProducts,
                                                                            AppliesToLeastExpensiveProductsFirst = x.AppliesToLeastExpensiveProductsFirst,
+                                                                           AppliesToPurchaseConditionItems = x.UsePurchaseRequirementAsTarget
                                                                        }))
 
                 .ForMember(dc => dc.IncludedPriceLists, op => op.ResolveUsing(x => x.IncludedPriceLists))
