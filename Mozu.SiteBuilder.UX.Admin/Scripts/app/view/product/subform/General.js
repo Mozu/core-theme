@@ -970,7 +970,7 @@ Ext.define('Taco.view.product.subform.General', {
         if (productUsageValue == 'Bundle') {
             //store
             rollupBundleContainer.show();
-            bundleItemTotals = this.record.getBundleItemTotals();
+            bundleItemTotals = (this.isGlobal) ? this.record.getBundleItemTotals() : this.productInCatalogInfo.getBundleItemTotals();
 
             this.rollupBundlePriceField.update({
                 price: this.record.formatCurrency(bundleItemTotals.price)

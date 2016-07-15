@@ -22,8 +22,10 @@ Ext.define('Taco.view.product.widget.ProductBundleGrid', {
     enableAutoSelect:false,
     launchEditorOnClick: true,
     modelName: 'Taco.model.Product',
-
     hideSearchToolbar: true,
+    isReadOnly: false,
+    isGlobal: false,
+    bundleProductSource: null,
     //selType: 'cellmodel',
     width: "100%",
 
@@ -47,7 +49,7 @@ Ext.define('Taco.view.product.widget.ProductBundleGrid', {
             },
             listeners: {                
                 'edit': {
-                    fn: function(editor, column, e) {
+                    fn: function(editor, column) {
                         column.record.commit();                        
                         column.record.save();
                     }
@@ -61,21 +63,94 @@ Ext.define('Taco.view.product.widget.ProductBundleGrid', {
             columns: this.getColumnConfig()
         });
 
-        this.store = this.product.getBundledProducts();
+        this.store = this.bundleProductSource.getBundledProducts();
 
         this.callParent(arguments);
 
-        this.mon(this.view, 'drop', function (node, data, overModel, dropPosition, eOpts) {            
+        this.mon(this.view, 'drop', function (node, data) {
             // need top set a model member to dirty the record so that the store will persist the change; the value you set isn't persisted;
             data.records[0].set('index', 1);
-        }, this)
+        }, this);
 
+        // hook up events only for catalog tabs to listen to global tab
+        if (this.isGlobal) return;
+
+        this.mon(Taco.app, 'bundle-items-added', this.onBundleItemsAdded, this);
+        this.mon(Taco.app, 'bundle-item-quantity-changed', this.onBundleItemQuantityChanged, this);
+        this.mon(Taco.app, 'bundle-item-removed', this.onBundleItemRemoved, this);
+    },
+
+    onBundleItemsAdded: function (bundleItems) {
+        var me = this,
+            catalogId,
+            catWarnings = [],
+            catName,
+            warningMsg;
+        if (this.isGlobal) return;
+
+        catalogId = this.productInCatalogInfo.get('catalogId');
+        //have to check cat id?
+        Ext.Array.each(bundleItems, function (bundleItem) {
+            var match = Ext.Array.findBy(bundleItem.get('productInCatalogs'), function(prodInCatalog){
+                return prodInCatalog.catalogId === catalogId;
+            });
+            if (!match) {
+              catWarnings.push(bundleItem.get('productName'));
+              return;
+            }
+            var mergedBundleItem = Ext.Object.merge(bundleItem.data, {price: match.price, salePrice: match.salePrice, productName: match.productName });
+            me.store.add(mergedBundleItem);
+        });
+        this.getView().refresh();
+        if (catWarnings.length > 0) {
+            catName = this.productInCatalogInfo.get('catalog').name;
+            warningMsg = 'Warning: ';
+            if (catWarnings.length === 1) {
+              warningMsg += ('"' + catWarnings[0] + '" is');
+            } else {
+              warningMsg += ('These bundle items, "' + catWarnings.join('", "') + '" are');
+            }
+            warningMsg += (' not active in "' + catName + '"');
+            Taco.app.fireEvent('setmessage', warningMsg, 'error');
+        }
+    },
+    onBundleItemQuantityChanged: function (masterCatBundleItem) {
+        if (this.isGlobal) return;
+        var bundleItem = this.store.findRecord('productCode', masterCatBundleItem.get('productCode'));
+        if (!bundleItem) return;
+        bundleItem.set('quantity', masterCatBundleItem.get('quantity'));
+        this.getView().refresh();
+    },
+
+    onBundleItemRemoved: function (masterCatBundleItem) {
+      if (this.isGlobal) return;
+      var bundleItem = this.store.findRecord('productCode', masterCatBundleItem.get('productCode'));
+      if (!bundleItem) return;
+      this.store.remove(bundleItem);
+      this.getView().refresh();
     },
     
     getColumnConfig: function () {
-        var me = this;
-        
-        return [
+        var me = this,
+          columns,
+          qtyEditor = null;
+        if (!this.isReadOnly) {
+            qtyEditor = {
+                // defaults to textfield if no xtype is supplied
+                xtype: "numberfield",
+                showBorder:true,
+                hideTrigger: true,
+                mouseWheelEnabled: false,
+                emptyText: "quantity",
+                msgTarget: "qtip",
+                // optional enhancement to rowEditor. Makes the field only editable during a create;
+                //editableOnCreateOnly: true,
+                selectOnFocus: true,
+                allowBlank: false
+            };
+        }
+
+        columns = [
             {
                 dataIndex: "quantity",
                 text: "Quantity",
@@ -83,19 +158,7 @@ Ext.define('Taco.view.product.widget.ProductBundleGrid', {
                 sortable: false,
                 resizable: true,
                 menuDisabled: true,
-                editor: {
-                    // defaults to textfield if no xtype is supplied
-                    xtype: "numberfield",
-                    showBorder:true,
-                    hideTrigger: true,
-                    mouseWheelEnabled: false,
-                    emptyText: "quantity",
-                    msgTarget: "qtip",
-                    // optional enhancement to rowEditor. Makes the field only editable during a create;
-                    //editableOnCreateOnly: true,
-                    selectOnFocus: true,
-                    allowBlank: false
-                },
+                editor: qtyEditor,
                 width: 100
             },
             {
@@ -105,7 +168,7 @@ Ext.define('Taco.view.product.widget.ProductBundleGrid', {
                 resizable: true,
                 menuDisabled: true,
                 text: 'Code',
-                width: 100
+                width: 150
             }, {
                 dataIndex: 'productName',
                 sortable: false,
@@ -123,8 +186,8 @@ Ext.define('Taco.view.product.widget.ProductBundleGrid', {
                 sortable: false,
                 resizable: true,
                 menuDisabled: true,
-                width: 100,
-                text: 'Price'
+                width: 150,
+                text: (!me.isGlobal ? 'Catalog ' : '') + 'Price'
             }, {
                 dataIndex: 'salePrice',
                 stateId: "salePrice",
@@ -134,23 +197,28 @@ Ext.define('Taco.view.product.widget.ProductBundleGrid', {
                 sortable: false,
                 resizable: true,
                 menuDisabled: true,
-                width: 100,
-                text: 'Sale Price'
-            }, {
+                width: 150,
+                text: (!me.isGlobal ? 'Catalog ' : '') + 'Sale Price'
+            }
+        ];
+
+        if (!this.isReadOnly) {
+            columns.push({
                 xtype: 'taco.menucolumn',
                 draggable: false,
                 menuDisabled: true,
                 text: '',
-                //width: 40,
                 iconCls: Taco.baseCSSPrefix + 'grid-row-menu-trigger-remove',
                 menuItems: [],
-                handler: function(grid, rowIndex, colIndex, header, e, record, item) {
-                    // tell the method that we we want to move this item back to the unshippedItems list;
+                handler: function(grid, rowIndex, colIndex, header, e, record) {
+                // tell the method that we we want to move this item back to the unshippedItems list;
                     me.removeItem(record);
                 },
                 scope: me
-            }
-        ];
+            });
+        }
+
+        return columns;
     },
 
     /**
@@ -192,6 +260,7 @@ Ext.define('Taco.view.product.widget.ProductBundleGrid', {
                         });
 
                         bundleStore.add(itemsToAdd);
+                      // fire itemsToAdd ??
                     },
                     scope: me
                 }

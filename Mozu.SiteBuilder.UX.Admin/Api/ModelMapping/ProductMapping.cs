@@ -433,6 +433,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.ModelMapping
 
                 .ForMember(x => x.ProductCode, op => op.Ignore())
                 .ForMember(x => x.ListPrice, op => op.Ignore())
+                .ForMember(x => x.BundledProducts, op => op.Ignore())
                 ;
 
             Mapper.CreateMap<ProductInCatalogInfo, DC.ProductInCatalogInfo>()

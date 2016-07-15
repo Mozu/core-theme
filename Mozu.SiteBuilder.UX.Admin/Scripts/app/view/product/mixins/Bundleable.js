@@ -33,8 +33,6 @@ Ext.define('Taco.view.product.mixins.Bundleable', {
     },
     
     initBundleable: function () {
-        var me = this;
-        
 
     },
     
@@ -112,23 +110,11 @@ Ext.define('Taco.view.product.mixins.Bundleable', {
                 Ext.apply(viewConfig, {
                     options: false
                 });
-                
-                if (this.isGlobal || this.isSingleSite) {
-                    
-                    // a global site or a siteForm when there is a singleSite enabled;
-                    this.enableBundling();
-                    Ext.apply(viewConfig, {
-                        bundle: true
-                    });
-                    
-                } else {
-                    
-                    // this is when you have multiple sites enabled and this is a siteform
-                    this.disableBundling();
-                    Ext.apply(viewConfig, {
-                        bundle: false
-                    });
-                }
+
+                this.enableBundling(this.isGlobal);
+                Ext.apply(viewConfig, {
+                    bundle: true
+                });
 
                 break;
             case "Standard":
@@ -178,7 +164,7 @@ Ext.define('Taco.view.product.mixins.Bundleable', {
         }
 
         Ext.suspendLayouts();
-        Ext.Object.each(viewConfig, function (key, value, me) {
+        Ext.Object.each(viewConfig, function (key, value) {
             // only toggle visiblity if its present in the form;
             // note: categories will not be present until the user enables a site;
             if (subForms[key]) {
@@ -222,16 +208,17 @@ Ext.define('Taco.view.product.mixins.Bundleable', {
         me.up("productform").fireEvent('productusagechange', me, value);
     },
     
-    enableBundling : function() {
+    enableBundling : function(isGlobal) {
         var me = this,
-            bundleSubForm = me.down('#bundleSubForm')
+            bundleSubForm = me.down('#bundleSubForm');
         
         if (!bundleSubForm) {
             me.formContainer.insert(
                 1,
                 Ext.create('Taco.view.product.subform.Bundle', {
-                    isGlobal: true,
+                    isGlobal: isGlobal,
                     product: me.product,
+                    productInCatalogInfo: me.productInCatalogInfo,
                     persistChangesToModel: true
                 }
                 )
@@ -241,7 +228,7 @@ Ext.define('Taco.view.product.mixins.Bundleable', {
 
     disableBundling: function () {
         var me = this,
-            bundleSubForm = me.down('#bundleSubForm')
+            bundleSubForm = me.down('#bundleSubForm');
         
         if (bundleSubForm) {
             // if we already have a bundle subForm destroy it;

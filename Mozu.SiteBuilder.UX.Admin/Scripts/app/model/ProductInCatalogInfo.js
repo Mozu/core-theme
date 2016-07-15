@@ -6,6 +6,9 @@
 
 Ext.define('Taco.model.ProductInCatalogInfo', {
     extend: 'Taco.core.data.Model',
+    requires: [
+        'Taco.model.BundledProduct'
+    ],
 
     fields: [
         {
@@ -220,8 +223,12 @@ Ext.define('Taco.model.ProductInCatalogInfo', {
             useNull: true,
             persist: false,
             dateFormat: 'c'
+        },
+        {
+            name: "bundledProducts",
+            type: "auto",
+            defaultValue: []
         }
-
     ],
 
     idProperty: "catalogId",
@@ -271,6 +278,36 @@ Ext.define('Taco.model.ProductInCatalogInfo', {
         return me.categoryStoreUnfiltered;
 
     },
+
+    getBundledProducts: function () {
+        return this.getOrCreateHasManyStore({
+            model: 'Taco.model.BundledProduct',
+            associationKey: 'bundledProducts',
+            foreignProperty: 'product'
+        });
+    },
+
+  getBundleItemTotals: function (bundledProducts) {
+    var price = 0,
+      salePrice = 0,
+      bundleItems = bundledProducts || this.getBundledProducts();
+
+    bundleItems.each(function (item) {
+      price += item.data.price * item.data.quantity;
+
+      if (item.data.salePrice !== null) {
+        salePrice += item.data.salePrice * item.data.quantity;
+      } else {
+        // no sale price for this item, use the full price
+        salePrice += item.data.price * item.data.quantity;
+      }
+    });
+
+    return {
+      price: price,
+      salePrice: salePrice
+    }
+  },
 
     validations: [
 

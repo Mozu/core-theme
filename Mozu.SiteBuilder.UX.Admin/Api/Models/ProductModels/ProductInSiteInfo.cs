@@ -165,5 +165,8 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.Models.ProductModels
         public string SEOFriendlyUrl { get; set; }
 
         #endregion
+
+        [JsonProperty(DefaultValueHandling = DefaultValueHandling.Ignore)]
+        public List<BundledProduct> BundledProducts { get; set; }
     }
 }
