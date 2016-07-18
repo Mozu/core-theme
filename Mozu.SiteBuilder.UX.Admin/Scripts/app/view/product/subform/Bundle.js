@@ -63,7 +63,6 @@ Ext.define('Taco.view.product.subform.Bundle', {
             return;
         }
 
-        me.mon(me.productBundleGrid.store, 'datachanged', me.onStoreDataChanged, me);
         // communicates to catalog tabs
         me.mon(me.productBundleGrid.store, 'add', me.onBundleItemAdded, me);
         me.mon(me.productBundleGrid.store, 'update', me.onBundleItemUpdated, me);
@@ -120,16 +119,19 @@ Ext.define('Taco.view.product.subform.Bundle', {
             return item.get('productCode');
         });
         this.retrieveBundleItemCatalogInfo(productCodes, records);
+        this.onStoreDataChanged();
     },
 
     onBundleItemUpdated: function (store, masterCatBundleItem, operation, modifiedFieldNames) {
         if (operation !== 'edit' || !modifiedFieldNames) return;
 
         Taco.app.fireEvent('bundle-item-quantity-changed', masterCatBundleItem);
+        this.onStoreDataChanged();
     },
 
     onBundleItemRemoved: function (store, masterCatBundleItem) {
         Taco.app.fireEvent('bundle-item-removed', masterCatBundleItem);
+        this.onStoreDataChanged();
     },
 
     onStoreDataChanged: function () {

@@ -77,9 +77,7 @@ Ext.define('Taco.view.product.widget.ProductBundleGrid', {
     onBundleItemsAdded: function (bundleItems) {
         var me = this,
             catalogId,
-            catWarnings = [],
-            catName,
-            warningMsg;
+            catWarnings = [];
         if (this.isGlobal) return;
 
         catalogId = this.productInCatalogInfo.get('catalogId');
@@ -95,35 +93,42 @@ Ext.define('Taco.view.product.widget.ProductBundleGrid', {
             var mergedBundleItem = Ext.Object.merge(bundleItem.data, {price: match.price, salePrice: match.salePrice, productName: match.productName });
             me.store.add(mergedBundleItem);
         });
-        // to signal to refresh totals since AJAX call takes longer.
-        Taco.app.fireEvent('bundle-item-catalog-added', bundleItems);
+        Taco.app.fireEvent('bundle-item-catalog-sync', bundleItems);
         this.getView().refresh();
+        this.warnInactiveBundleItemsInCatalog(catWarnings);
+    },
+
+    warnInactiveBundleItemsInCatalog: function (catWarnings) {
+        var catName, warningMsg;
         if (catWarnings.length > 0) {
             catName = this.productInCatalogInfo.get('catalog').name;
             warningMsg = 'Warning: ';
             if (catWarnings.length === 1) {
-              warningMsg += ('"' + catWarnings[0] + '" is');
+                warningMsg += ('"' + catWarnings[0] + '" is');
             } else {
-              warningMsg += ('These bundle items, "' + catWarnings.join('", "') + '" are');
+                warningMsg += ('These bundle items, "' + catWarnings.join('", "') + '" are');
             }
             warningMsg += (' not active in "' + catName + '"');
             Taco.app.fireEvent('setmessage', warningMsg, 'error');
         }
     },
+
     onBundleItemQuantityChanged: function (masterCatBundleItem) {
         if (this.isGlobal) return;
         var bundleItem = this.store.findRecord('productCode', masterCatBundleItem.get('productCode'));
         if (!bundleItem) return;
         bundleItem.set('quantity', masterCatBundleItem.get('quantity'));
+        Taco.app.fireEvent('bundle-item-catalog-sync', bundleItem);
         this.getView().refresh();
     },
 
     onBundleItemRemoved: function (masterCatBundleItem) {
-      if (this.isGlobal) return;
-      var bundleItem = this.store.findRecord('productCode', masterCatBundleItem.get('productCode'));
-      if (!bundleItem) return;
-      this.store.remove(bundleItem);
-      this.getView().refresh();
+        if (this.isGlobal) return;
+        var bundleItem = this.store.findRecord('productCode', masterCatBundleItem.get('productCode'));
+        if (!bundleItem) return;
+        this.store.remove(bundleItem);
+        Taco.app.fireEvent('bundle-item-catalog-sync', bundleItem);
+        this.getView().refresh();
     },
     
     getColumnConfig: function () {

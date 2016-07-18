@@ -930,6 +930,10 @@ Ext.define('Taco.view.product.subform.General', {
 
         this.callParent(arguments);
 
+        if (!this.isGlobal) {
+            this.mon(Taco.app, 'bundle-item-catalog-sync', this.updatePriceUI, this);
+        }
+
         this.on('afterrender', function () {
 
             //suspendEvents?
@@ -944,13 +948,10 @@ Ext.define('Taco.view.product.subform.General', {
             }
 
             var productForm = me.up("productform");
-                if (productForm) {
-                    me.mon(productForm, 'productusagechange', me.updatePriceUI, me);
-                    me.mon(productForm, 'bundleItemChange', me.updatePriceUI, me);
-                    if (!me.isGlobal) {
-                        me.mon(Taco.app, 'bundle-item-catalog-added', me.updatePriceUI, me);
-                    }
-                }
+            if (productForm) {
+                me.mon(productForm, 'productusagechange', me.updatePriceUI, me);
+                me.mon(productForm, 'bundleItemChange', me.updatePriceUI, me);
+            }
 
         }, this, {single:true, delay:1});
 
