@@ -61,6 +61,7 @@ Ext.application({
         'Website',
         'LocationInventory',
         'Redirects',
+        'Synonyms',
         'BusinessIntelligence',
         'ActionManagement',
         'IpBlocking',
