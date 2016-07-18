@@ -95,7 +95,7 @@ Ext.define('Taco.view.discount.CriteriaForm', {
             xtype: 'radio',
             name: 'includeAllProductsRadio',
             persistSelectedValueOnly: true,
-            boxLabel: 'Qualify Products',
+            boxLabel: 'Required Purchase',
             inputValue: 'qualifying',
             checked: me.record.get('isBxGx'),
             width: 300,
@@ -116,7 +116,7 @@ Ext.define('Taco.view.discount.CriteriaForm', {
             xtype: 'checkbox',
             name: 'usePurchaseRequirementAsTarget',
             itemId: 'apply-to-purchases-of-condition',
-            boxLabel: 'Apply to purchases satisfying condition',
+            boxLabel: 'Apply to items satisfying Required Purchase condition',
             width: 300,
             hidden: !me.record.get('isBxGx'),
             tooltip: Ext.create('Taco.core.ux.content.Tooltip', {
