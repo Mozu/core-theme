@@ -118,7 +118,7 @@ Ext.define('Taco.view.discount.CriteriaForm', {
             itemId: 'apply-to-purchases-of-condition',
             boxLabel: 'Apply to purchases satisfying condition',
             width: 300,
-            //hidden: !me.record.get('isBxGx'),
+            hidden: !me.record.get('isBxGx'),
             tooltip: Ext.create('Taco.core.ux.content.Tooltip', {
                 elementId: 'apply-to-purchases-of-condition',
                 hoverTarget: 'boxLabelEl',
