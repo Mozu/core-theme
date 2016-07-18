@@ -62,7 +62,7 @@ Ext.define('Taco.view.discount.CriteriaForm', {
             inputValue: "products",
             width: 300,
             // default selection if the record is a create;
-            checked: ((this.record.phantom &&!this.record.isDuplicate) || (!this.record.get('includeAllProducts') && this.record.get('products').length)),
+            checked: ((this.record.phantom &&!this.record.isDuplicate) || (!this.record.get('includeAllProducts') && this.record.get('products').length)) && !me.record.get('isBxGx'),
             listeners: {
                 afterchange: function (cmp, newValue, oldValue) {
                     if (newValue) {
@@ -80,7 +80,7 @@ Ext.define('Taco.view.discount.CriteriaForm', {
             boxLabel: 'Specific Categories',
             inputValue: "categories",
             width: 300,
-            checked: (!this.record.get('includeAllProducts') && this.record.get('categories').length), 
+            checked: (!this.record.get('includeAllProducts') && this.record.get('categories').length && !me.record.get('isBxGx')), 
             listeners: {
                 afterchange: function (cmp, newValue,oldValue) {
                     if (newValue) {
@@ -91,22 +91,42 @@ Ext.define('Taco.view.discount.CriteriaForm', {
             }
         });
 
-        this.qualifyingProductsInput = Ext.widget({
+        me.qualifyingProductsInput = Ext.widget({
             xtype: 'radio',
             name: 'includeAllProductsRadio',
             persistSelectedValueOnly: true,
             boxLabel: 'Qualify Products',
             inputValue: 'qualifying',
+            checked: me.record.get('isBxGx'),
             width: 300,
             disabled: true,
             listeners: {
                 afterchange: function (cmp, newValue,oldValue) {
+                    me.ApplyToPurchasesOfCondition.setVisible(newValue).setValue(false);
                     if (newValue) {
-                        this.record.fireEvent("criteriascopechange", cmp, newValue, oldValue);
+
+                        me.record.fireEvent("criteriascopechange", cmp, newValue, oldValue);
                     }
                 },
-                scope: this
+                scope: me
             }
+        });
+
+        me.ApplyToPurchasesOfCondition = Ext.widget({
+            xtype: 'checkbox',
+            name: 'usePurchaseRequirementAsTarget',
+            itemId: 'apply-to-purchases-of-condition',
+            boxLabel: 'Apply to purchases satisfying condition',
+            width: 300,
+            //hidden: !me.record.get('isBxGx'),
+            tooltip: Ext.create('Taco.core.ux.content.Tooltip', {
+                elementId: 'apply-to-purchases-of-condition',
+                hoverTarget: 'boxLabelEl',
+                messageKey: 'discount.criteria.applyToPurchasesOfCondition',
+                offsetLeft: -225,
+                offsetTop: 12,
+                arrowPosition: 'left'
+            })
         });
 
         this.ApplyToProductsWithSalePrice = Ext.widget({
@@ -582,6 +602,7 @@ Ext.define('Taco.view.discount.CriteriaForm', {
                 itemId: 'options-field-container',
                 fieldLabel: "Options",
                 items: [
+                    this.ApplyToPurchasesOfCondition,
                     this.ApplyToProductsWithSalePrice,
                     this.appliesToSalePrice,
                     this.applyDiscountTo,
@@ -932,7 +953,7 @@ Ext.define('Taco.view.discount.CriteriaForm', {
 
     updateQualifyingProductsRadioButton: function(products, categories) {
         var me = this;
-        var isDisabled = !( (products.length || categories.length) && !(products.length && categories.length) );
+        var isDisabled = !( (products.length === 1 || categories.length === 1) && !(products.length && categories.length) );
         if (this.qualifyingProductsInput) {
             this.qualifyingProductsInput.setDisabled(isDisabled);
         }
@@ -978,9 +999,10 @@ Ext.define('Taco.view.discount.CriteriaForm', {
         var me = this,
             categoriesActive = me.includeSpecificCatagoriesInput.checked,
             productActive = me.includeSpecificProductsInput.checked,
-            isLineItem = (this.scopeType === 'LineItem');
+            isLineItem = (me.scopeType === 'LineItem'),
+            isQualifyingProducts = me.qualifyingProductsInput.checked;
 
-        var includeAllProductsSelected = this.includeAllProductsInput.checked;
+        var includeAllProductsSelected = me.includeAllProductsInput.checked;
 
         // reset fields not applicable for order scoped discounts
         if (me.scopeType === "order") {
@@ -990,13 +1012,26 @@ Ext.define('Taco.view.discount.CriteriaForm', {
             productActive = false;
         }
 
-        //reset the hidden fields when lineItem
-        if (isLineItem) {
-            this.findField("excludeItemsWithExistingShippingDiscounts").setValue(false);
-            this.findField("excludeItemsWithExistingProductDiscounts").setValue(false);
+        me.record.set('isBxGx', isQualifyingProducts); // unused, service computes 
+        me.record.set('usePurchaseRequirementAsTarget', me.ApplyToPurchasesOfCondition.getValue());
+
+        if (isQualifyingProducts) {
+            var conditionsForm = me.parentForm.conditions,
+            products = conditionsForm.productList.getValue(),
+            categories = conditionsForm.conditionalCategoryPanel.getValue(),
+            isValid = (products.length || categories.length) && !(products.length && categories.length);
+
+            me.record.set('products', products);
+            me.record.set('categories', categories);
         }
 
-        this.record.set("includeAllProducts", includeAllProductsSelected);
+        //reset the hidden fields when lineItem
+        if (isLineItem) {
+            me.findField("excludeItemsWithExistingShippingDiscounts").setValue(false);
+            me.findField("excludeItemsWithExistingProductDiscounts").setValue(false);
+        }
+
+        me.record.set("includeAllProducts", includeAllProductsSelected);
 
         // reset product field if category is active;
         if (categoriesActive) {
@@ -1010,7 +1045,7 @@ Ext.define('Taco.view.discount.CriteriaForm', {
             me.record.set("categories", []);
         }
 
-        this.record.set("maximumQuantityPerRedemption", me.maximumQuantityPerRedemptionTB.getValue());
+        me.record.set("maximumQuantityPerRedemption", me.maximumQuantityPerRedemptionTB.getValue());
 
         return true;
     },

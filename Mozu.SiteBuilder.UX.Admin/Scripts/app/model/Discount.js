@@ -218,15 +218,14 @@ Ext.define('Taco.model.Discount', {
         }, {
             name: 'usePurchaseRequirementAsTarget',
             type: 'boolean',
-            useNull: true,
-            defaultValue: null
+            defaultValue: null,
+            useNull: true
         }, {
             name: 'isBxGx',
             type: 'boolean',
-            useNull: true,
-            defaultValue: null
+            defaultValue: null,
+            useNull: true
         }
-
 
     ],
 
