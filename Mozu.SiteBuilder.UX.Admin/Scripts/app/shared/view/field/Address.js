@@ -43,6 +43,7 @@ Ext.define('Taco.shared.view.field.Address', {
     editOnFieldClick: true,
 
     addressValidationRequired: false,
+    optionalValidationEnabled: false,
 
     defaultValue : {
         "address1": "",
@@ -183,6 +184,7 @@ Ext.define('Taco.shared.view.field.Address', {
             showEmail: false,
             showPhoneNumbers: false,
             validateAddress: false,
+            optionalValidationEnabled: me.optionalValidationEnabled,
             listeners: {
                 close:function (){
                     me.addressField.focus();
