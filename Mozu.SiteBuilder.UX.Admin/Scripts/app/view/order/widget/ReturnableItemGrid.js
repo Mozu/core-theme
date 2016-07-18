@@ -103,7 +103,8 @@ Ext.define('Taco.view.order.widget.ReturnableItemGrid', {
                 hidden: false,
                 align: 'left',
                 dataIndex: 'orderLineId'
-            }, {
+            },
+            {
                 dataIndex: 'productCode',
                 text: 'Code',
                 draggable: false,
@@ -112,7 +113,8 @@ Ext.define('Taco.view.order.widget.ReturnableItemGrid', {
                 menuDisabled: false,
                 minWidth: 100,
                 flex: 1
-            }, {
+            },
+            {
                 dataIndex: 'productName',
                 text: 'Products',
                 draggable: false,
@@ -125,7 +127,8 @@ Ext.define('Taco.view.order.widget.ReturnableItemGrid', {
                     var parentBundleName = record.get('parentBundleName');
                     return parentBundleName ? val + " <em class=\"taco-bundleditem-note\">(Bundled with <strong>" + parentBundleName + "</strong>)</em>" : val;
                 }
-            }, {
+            },
+            {
                 text: 'Status',
                 draggable: false,
                 resizable: true,
@@ -135,25 +138,37 @@ Ext.define('Taco.view.order.widget.ReturnableItemGrid', {
                 hidden: false,
                 align: 'left',
                 dataIndex: 'fulfillmentStatus'
-            }, {
-                dataIndex: 'returnType',
-                text: 'Type',
+            },
+            {
+                dataIndex: 'quantityOrdered',
+                text: 'Qty Ordered',
                 draggable: false,
                 sortable: false,
                 resizable: false,
                 menuDisabled: true,
-                width: 100,
-                editor: {
-                    xtype: 'combobox',
-                    queryMode: 'local',
-                    allowOnlyWhitespace: false,
-                    showBorder: true,
-                    forceSelection: true,
-                    store: ['Replace', 'Refund']
-                }
-            }, {
+                width: 100
+            },
+            {
+                dataIndex: 'quantityFulfilled',
+                text: 'Qty Fulfilled',
+                draggable: false,
+                sortable: false,
+                resizable: false,
+                menuDisabled: true,
+                width: 100
+            },
+            {
+                dataIndex: 'quantityReturned',
+                text: 'Qty Returned',
+                draggable: false,
+                sortable: false,
+                resizable: false,
+                menuDisabled: true,
+                width: 110
+            },
+            {
                 dataIndex: 'reason',
-                text: 'Reason',
+                text: 'Reported Issue',
                 draggable: false,
                 sortable: false,
                 resizable: false,
@@ -169,31 +184,25 @@ Ext.define('Taco.view.order.widget.ReturnableItemGrid', {
                     displayField: 'name',
                     store: this.reasonStore
                 }
-            }, {
-                dataIndex: 'quantityOrdered',
-                text: 'Qty Ordered',
+            },
+            {
+                dataIndex: 'returnType',
+                text: 'Resolusion',
                 draggable: false,
                 sortable: false,
                 resizable: false,
                 menuDisabled: true,
-                width: 100
-            }, {
-                dataIndex: 'quantityFulfilled',
-                text: 'Qty Fulfilled',
-                draggable: false,
-                sortable: false,
-                resizable: false,
-                menuDisabled: true,
-                width: 100
-            }, {
-                dataIndex: 'quantityReturned',
-                text: 'Qty Returned',
-                draggable: false,
-                sortable: false,
-                resizable: false,
-                menuDisabled: true,
-                width: 110
-            }, {
+                width: 100,
+                editor: {
+                    xtype: 'combobox',
+                    queryMode: 'local',
+                    allowOnlyWhitespace: false,
+                    showBorder: true,
+                    forceSelection: true,
+                    store: ['Replace', 'Refund']
+                }
+            },
+            {
                 dataIndex: 'quantity',
                 text: 'Qty to Return',
                 draggable: false,
@@ -253,10 +262,17 @@ Ext.define('Taco.view.order.widget.ReturnableItemGrid', {
                     var i, matchingReturnableItems, returnableItem;
 
                     for (i = 1; i <= item.quantity; i++) {
-                        matchingReturnableItems = Ext.Array.filter(returnableItems, function (ri) { return ri.productCode === item.productCode && ri.orderLineId === item.orderLineId && ri.orderItemOptionAttributeFQN == item.orderItemOptionAttributeFQN && ri.quantityReturned < ri.quantityOrdered });
+                        matchingReturnableItems = Ext.Array.filter(returnableItems, function(ri) {
+                            return ri.productCode === item.productCode &&
+                                ri.orderLineId === item.orderLineId &&
+                                ri.orderItemOptionAttributeFQN === item.orderItemOptionAttributeFQN &&
+                                ri.quantityReturned < ri.quantityOrdered;
+                        });
                         if (!matchingReturnableItems || !matchingReturnableItems.length) continue;
                         // in case multiple returnable items exist for the same product code, round-robin over them all and increment quantity returned.
-                        returnableItem = Ext.Array.sort(matchingReturnableItems, function (a, b) { return a.quantityReturned < b.quantityReturned ? -1 : 1 })[0];
+                        returnableItem = Ext.Array.sort(matchingReturnableItems, function(a, b) {
+                            return a.quantityReturned < b.quantityReturned ? -1 : 1;
+                        })[0];
                         returnableItem.quantityReturned++;
                     }
                 });

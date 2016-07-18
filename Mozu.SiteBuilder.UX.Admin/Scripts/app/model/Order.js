@@ -20,7 +20,8 @@ Ext.define('Taco.model.Order', {
                 NOT_FULFILLED: 'NotFulfilled',
                 PARTIALLY_FULFILLED: 'PartiallyFulfilled'
             }
-        }
+        },
+        userCache: {}
     },
 
     extend: 'Taco.core.data.Model',
@@ -47,7 +48,6 @@ Ext.define('Taco.model.Order', {
         type: 'string',
         useNull: true
     },
-
         {
             name: 'isDraft',
             type: 'boolean',
@@ -63,7 +63,17 @@ Ext.define('Taco.model.Order', {
         useNull: true
     },
     {
+        name: 'parentOrderNumber',
+        type: 'string',
+        useNull: true
+    },
+    {
         name: 'parentReturnId',
+        type: 'string',
+        useNull: true
+    },
+    {
+        name: 'parentReturnNumber',
         type: 'string',
         useNull: true
     },
@@ -124,10 +134,28 @@ Ext.define('Taco.model.Order', {
             useNull: true,
             dateFormat: 'c'
         }, {
+            name: 'createBy',
+            type: 'auto',
+            useNull: true
+        },
+        {
+            name: "createByName",
+            type: "string",
+            useNull: true,
+            persist: false,
+            convert: function location(v, record) {
+                return '';
+                // return record.getCreatorUserName(v, record);
+            }
+        }, {
             name: 'updateDate',
             type: 'date',
             useNull: true,
             dateFormat: 'c'
+        }, {
+            name: 'updateBy',
+            type: 'auto',
+            useNull: true
         }, {
             name: 'submittedDate',
             type: 'date',
@@ -1104,6 +1132,26 @@ Ext.define('Taco.model.Order', {
 
  *
  */
+    getCreatorUserName: function (v, record) {
+        var userStore, cache = this.statics().userCache, user = cache[record.data.createBy];
+        if (v) {
+            return v;
+        }
+        if (!user) {
+            Ext.ModelManager.getModel('Taco.model.AdminUser').load(record.data.createBy, {
+                success: function (user) {
+                    cache[record.data.createBy] = user;
+                    record.set('createByName', user.get('firstName') + ' ' + user.get('lastName'));
+                }
+            });
+            return record.data.createBy;
+        }
+        else {
+            return user.get('firstName') + ' ' + user.get('lastName');
+
+        }
+    },
+
     addPayment: function (config) {
         Ext.apply(config, {
             url: '/admin/app/order/payment/create',

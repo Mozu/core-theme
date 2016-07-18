@@ -52,6 +52,7 @@ Ext.application({
         'Tests',
         'Orders',
         'OrderAttributes',
+        'Returns',
         'Errors',
         'Roles',
         'ProductTypes',

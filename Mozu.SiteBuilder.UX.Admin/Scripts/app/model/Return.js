@@ -3,25 +3,47 @@
  */
 Ext.define('Taco.model.Return', {
     extend: 'Taco.core.data.Model',
-    requires: ['Taco.model.ReturnItem', 'Taco.model.OrderPayment'],
+    requires: [
+        'Taco.model.ReturnItem',
+        'Taco.model.OrderPayment',
+        'Taco.model.ReturnInternalNote',
+        'Ext.data.association.HasMany'
+    ],
 
     statics: (function () {
 
         var constants = {
-                statuses: {
-                    AUTHORIZED: "Authorized",
-                    CANCELLED: "Cancelled",
-                    CLOSED: "Closed",
-                    CREATED: "Created",
-                    PENDING: "Pending",
-                    RECEIVED: "Received",
-                    REFUNDED: "Refunded",
-                    REJECTED: "Rejected",
-                    RESTOCKED: "Restocked",
-                    SHIPPED: "Shipped"
-                }
+            statuses: {
+                AUTHORIZED: "Authorized",
+                CANCELLED: "Cancelled",
+                CLOSED: "Closed",
+                CREATED: "Created",
+                PENDING: "Pending",
+                RECEIVED: "Received",
+                REFUNDED: "Refunded",
+                REJECTED: "Rejected",
+                RESTOCKED: "Restocked",
+                SHIPPED: "Shipped"
+            },
+            receivedStatuses: {
+                NOT_REQUESTED: "NotRequested",
+                NOT_RECEIVED: "NotReceived",
+                PARTIALLY_RECEIVED: "PartiallyReceived",
+                FULLY_RECEIVED: "FullyReceived"
+            },
+            refundedStatuses: {
+                NOT_REQUESTED: "NotRequested",
+                NOT_REFUNDED: "NotRefunded",
+                PARTIALLY_REFUNDED: "PartiallyRefunded",
+                FULLY_REFUNDED: "FullyRefunded"
+            },
+            replacedStatuses: {
+                NOT_REQUESTED: "NotRequested",
+                NOT_REPLACED: "NotReplaced",
+                PARTIALLY_REPLACED: "PartiallyReplaced",
+                FULLY_REPLACED: "FullyReplaced"
+            }
         }
-
 
         return {
             constants: constants
@@ -53,6 +75,12 @@ Ext.define('Taco.model.Return', {
             defaultValue: null
         },
         {
+            "name": "originalOrderNumber",
+            "type": "string",
+            "useNull": true,
+            defaultValue: null
+        },
+        {
             "name": "returnOrderId",
             "type": "string",
             "useNull": true,
@@ -71,16 +99,28 @@ Ext.define('Taco.model.Return', {
             defaultValue: null
         },
         {
+            "name": "receiveStatus",
+            "type": "string",
+            "useNull": true,
+            defaultValue: null
+        },
+        {
+            "name": "refundStatus",
+            "type": "string",
+            "useNull": true,
+            defaultValue: null
+        },
+        {
+            "name": "replaceStatus",
+            "type": "string",
+            "useNull": true,
+            defaultValue: null
+        },
+        {
             "name": "items",
             "type": "auto",
             "useNull": true,
             defaultValue: []
-        },
-        {
-            "name": "rmaNote",
-            "type": "string",
-            "useNull": true,
-            defaultValue: null
         },
         {
             "name": "payments",
@@ -113,6 +153,12 @@ Ext.define('Taco.model.Return', {
             defaultValue: null
         },
         {
+            "name": "productTotal",
+            "type": "number",
+            "useNull": true,
+            defaultValue: null
+        },
+        {
             "name": "rmaDeadline",
             "type": "date",
             "useNull": true,
@@ -132,6 +178,19 @@ Ext.define('Taco.model.Return', {
             "useNull": true,
             defaultValue: null,
             dateFormat: 'c'
+        },
+        {
+            name: 'notes',
+            persist: false
+        }
+    ],
+
+    associations: [
+        {
+            type: 'hasMany',
+            model: 'Taco.model.ReturnInternalNote',
+            name: 'notes',
+            reader: 'json'
         }
     ],
 
@@ -146,7 +205,7 @@ Ext.define('Taco.model.Return', {
         var store = this.getOrCreateHasManyStore({
             model: 'Taco.model.OrderPayment',
             associationKey: 'payments',
-            foreignProperty: 'return',
+            foreignProperty: 'return'
         });
         store.filter({
             filterFn: function (payment) {
@@ -156,6 +215,13 @@ Ext.define('Taco.model.Return', {
         return store;
     },
 
+    getInternalNotes: function() {
+        return this.getOrCreateHasManyStore({
+            model: 'Taco.model.ReturnInternalNote',
+            associationKey: 'notes',
+            foreignProperty: 'id'
+        });
+    },
 
     proxy: {
         type: 'ajaxproxy',
@@ -217,6 +283,44 @@ Ext.define('Taco.model.Return', {
             url: '/admin/app/return/action',
             method: "POST"
 
+        });
+
+        Ext.Ajax.request(config);
+    },
+
+    createReplacementOrder: function (config) {
+        var me = this;
+        if (config.success) {
+            config.success2 = config.success;
+            config.scope2 = config.scope;
+        }
+        if (config.failure) {
+            config.failure2 = config.failure;
+            config.scope2 = config.scope;
+        }
+        Ext.apply(config, {
+            url: '/admin/app/return/createReplacementOrder',
+            method: 'POST',
+            jsonData: {
+                returnId: this.getId()
+            },
+            success: function (response) {
+                var json = Ext.decode(response.responseText, true);
+
+                if (config.success2) {
+                    config.success2.apply(config.scope2 || me, arguments);
+                }
+            },
+            failure: function (response, options) {
+                var json = Ext.decode(response.responseText, true),
+                    msg;
+                if (config.failure2) {
+                    config.failure2.apply(config.scope2 || me, [response, options, json]);
+                } else {
+                    msg = json && json.message ? json.message : 'Error creating a replacement order.';
+                    Taco.app.fireEvent('setmessage', msg, 'error');
+                }
+            }
         });
 
         Ext.Ajax.request(config);

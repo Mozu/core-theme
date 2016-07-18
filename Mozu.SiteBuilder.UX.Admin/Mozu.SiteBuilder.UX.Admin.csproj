@@ -201,6 +201,7 @@
     <Compile Include="Api\Models\Search\SearchTuningRule.cs" />
     <Compile Include="Api\Models\Search\SimpleSearchProduct.cs" />
     <Compile Include="Api\PriceListRuntimeController.cs" />
+    <Compile Include="Api\ReturnInternalNotesController.cs" />
     <Compile Include="Api\SearchTuningRuleController.cs" />
     <Compile Include="Api\CouponSetController.cs" />
     <Compile Include="Api\ModelMapping\ContentMapping.cs" />
@@ -447,8 +448,8 @@
     <Compile Include="Helpers\CouponCodeHelpers\CouponCodeSortExtensions.cs" />
     <Compile Include="Helpers\CouponSetHelpers\CouponSetFilterExtensions.cs" />
     <Compile Include="Helpers\CouponSetHelpers\CouponSetPagingParametersExtensions.cs" />
-    <Compile Include="Helpers\DiscountHelpers\CustomerHelpers\CustomerFilterExtensions.cs" />
-    <Compile Include="Helpers\DiscountHelpers\CustomerHelpers\CustomerSortExtensions.cs" />
+    <Compile Include="Helpers\CustomerHelpers\CustomerFilterExtensions.cs" />
+    <Compile Include="Helpers\CustomerHelpers\CustomerSortExtensions.cs" />
     <Compile Include="Helpers\DiscountHelpers\DiscountPagingParametersExtensions.cs" />
     <Compile Include="Helpers\DiscountHelpers\DiscountFilterExtensions.cs" />
     <Compile Include="Helpers\FacetHelpers\IInheritedFacetHelper.cs" />
@@ -478,6 +479,8 @@
     <Compile Include="Helpers\ProductTypeHelpers\ProductTypeFilterExtensions.cs" />
     <Compile Include="Helpers\PublishSetHelpers\PublishSetFilterExtensions.cs" />
     <Compile Include="Helpers\PublishSetHelpers\PublishSetSortExtensions.cs" />
+    <Compile Include="Helpers\ReturnHelpers\ReturnFilterExtensions.cs" />
+    <Compile Include="Helpers\ReturnHelpers\ReturnSortExtensions.cs" />
     <Compile Include="Helpers\RolesHelper.cs" />
     <Compile Include="Helpers\SearchTuningHelpers\SearchTuningRuleFilterBuilder.cs" />
     <Compile Include="Helpers\SearchTuningHelpers\SearchTuningRuleSortBuilder.cs" />
@@ -520,6 +523,7 @@
     <Content Include="Scripts\app\controller\CustomerSets.js" />
     <Content Include="Scripts\app\controller\PriceListEntries.js" />
     <Content Include="Scripts\app\controller\PriceLists.js" />
+    <Content Include="Scripts\app\controller\Returns.js" />
     <Content Include="Scripts\app\controller\StoreFrontProducts.js" />
     <Content Include="Scripts\app\controller\ProductRankings.js" />
     <Content Include="Scripts\app\controller\CouponSets.js" />
@@ -612,6 +616,7 @@
     <Content Include="Scripts\app\model\PriceListEntryPrice.js" />
     <Content Include="Scripts\app\model\PurchaseOrderCustomField.js" />
     <Content Include="Scripts\app\model\ReportList.js" />
+    <Content Include="Scripts\app\model\ReturnInternalNote.js" />
     <Content Include="Scripts\app\model\RuntimePriceList.js" />
     <Content Include="Scripts\app\model\StorefrontProduct.js" />
     <Content Include="Scripts\app\model\FilterField.js" />
@@ -820,6 +825,7 @@
     <Content Include="Scripts\app\view\order\modal\AddPurchaseOrder.js" />
     <Content Include="Scripts\app\view\order\modal\ManualDeclinePayment.js" />
     <Content Include="Scripts\app\view\order\widget\PriceListPickerField.js" />
+    <Content Include="Scripts\app\view\order\widget\ReturnReplacementGrid.js" />
     <Content Include="Scripts\app\view\preview\ExpressionPreviewDrawer.js" />
     <Content Include="Scripts\app\view\priceList\Edit.js" />
     <Content Include="Scripts\app\view\priceList\entry\AdvancedEntrySearch.js" />
@@ -922,6 +928,9 @@
     <Content Include="Scripts\app\view\react\Index.js" />
     <Content Include="Scripts\app\view\report\ReportList.js" />
     <Content Include="Scripts\app\view\report\Split.js" />
+    <Content Include="Scripts\app\view\returns\Edit.js" />
+    <Content Include="Scripts\app\view\returns\Index.js" />
+    <Content Include="Scripts\app\view\order\widget\ReturnInternalNotesGrid.js" />
     <Content Include="Scripts\app\view\role\editModal.js" />
     <Content Include="Scripts\app\view\productRanking\modal\ProductRankingEditor.js" />
     <Content Include="Scripts\app\view\settings\paymentGateways\Index.js" />
@@ -1731,7 +1740,6 @@
     <Content Include="Scripts\app\view\order\subform\Payment.js" />
     <Content Include="Scripts\app\view\order\subform\Detail.js" />
     <Content Include="Scripts\app\view\order\widget\ProcessReturnPanel.js" />
-    <Content Include="Scripts\app\view\order\widget\CreateReturnPanel.js" />
     <Content Include="Scripts\app\view\order\widget\DiscountPickerField.js" />
     <Content Include="Scripts\app\view\order\widget\OrderItemGrid.js" />
     <Content Include="Scripts\app\view\order\widget\ProductConfigurator.js" />

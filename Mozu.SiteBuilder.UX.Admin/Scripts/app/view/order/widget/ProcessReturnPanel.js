@@ -4,7 +4,8 @@
 Ext.define('Taco.view.order.widget.ProcessReturnPanel', {
     extend: 'Ext.panel.Panel',
     requires: [
-        'Taco.view.order.modal.AddRefund'
+        'Taco.view.order.modal.AddRefund',
+        'Taco.view.order.widget.ReturnInternalNotesGrid'
     ],
 
     ui: 'subform-section-child',
@@ -14,7 +15,8 @@ Ext.define('Taco.view.order.widget.ProcessReturnPanel', {
 
     config: {
         order: null,
-        record: null
+        record: null,
+        returnId: null,
     },
 
     initComponent: function () {
@@ -24,7 +26,10 @@ Ext.define('Taco.view.order.widget.ProcessReturnPanel', {
         // set up stores
         this.itemsStore = record.getItems();
         this.paymentsStore = record.getPayments();
-        this.orderItemsStore = order.items();
+        this.internalNoteStore = record.getInternalNotes();
+        this.orderItemsStore = order.items('returnOrderId');
+        // here we will need to get the orders that have 
+        //this.replacementOrderStore = 
 
         // Sort the stores:
         this.itemsStore.sort({
@@ -48,6 +53,8 @@ Ext.define('Taco.view.order.widget.ProcessReturnPanel', {
         // set up major components
         this.itemsGrid = this.initItemsGrid();
         this.paymentsGrid = this.initPaymentsGrid();
+        this.replacementsGrid = this.initReplacementsGrid();
+        this.internalNotesGrid = this.initInternalNotesGrid();
         this.status = this.initStatus(record);
         this.summary = this.initSummary(record);
         this.returnActions = this.initReturnActions();
@@ -111,6 +118,8 @@ Ext.define('Taco.view.order.widget.ProcessReturnPanel', {
         });
 
         Ext.apply(this, {
+            id: this.returnId,
+            name: this.returnId,
             items: [
                 this.status,
                 this.itemsGrid, {
@@ -126,7 +135,9 @@ Ext.define('Taco.view.order.widget.ProcessReturnPanel', {
                     },
                         this.moveButton]
                 },
-                this.paymentsGrid
+                this.paymentsGrid,
+                this.replacementsGrid,
+                this.internalNotesGrid
             ],
             tools: [
                 this.summary,
@@ -152,6 +163,17 @@ Ext.define('Taco.view.order.widget.ProcessReturnPanel', {
                     header.move(0, 2);
                     header.doComponentLayout();
                     this.addCls('return-item return-process');
+
+                    this.mon(this, 'update-return-buttons', function (r) {
+                        //get the menu item that is 'Close' and set hidden to false!
+                        var menuItems = this.returnFinishedButton.menu.items.items;
+                        for (var item in menuItems) {
+                            if (menuItems[item].hasOwnProperty('itemId')
+                                && menuItems[item].itemId === "Close") {
+                                menuItems[item].hidden = false;
+                            }
+                        }
+                    });
                 }
             }
         });
@@ -182,6 +204,11 @@ Ext.define('Taco.view.order.widget.ProcessReturnPanel', {
                         scope: me
                     });
                 }
+                // Fire an event here that will trigger the close button hide to display. This event would be called 'update-return-buttons'
+                //  and would only fire when the buttonId === 'Authorize'
+                if (buttonId === 'Authorize') {
+                    me.fireEvent('update-return-buttons');
+                }
             },
             callback: function () {
                 me.setLoading(false);
@@ -190,12 +217,94 @@ Ext.define('Taco.view.order.widget.ProcessReturnPanel', {
     },
 
     handleRefundClick: function () {
-        this.refundDialog = Ext.create('Taco.view.order.modal.AddRefund', {
-            order: this.getOrder(),
-            record: this.getRecord()
+        var me = this;
+        var retRecord = me.getRecord();
+        var payments = me.getOrder().get('payments');
+
+        if (!Ext.isArray(payments)) {
+            payments = [];
+        }
+
+        // dont allow Declined or Voided payments to be refunded
+        payments = payments.filter(function(p) { 
+            // Copied logic from CommerceRuntime CreditPayment.CanPerform()
+            var isCreditedWithBalance = (p.status === 'Credited' || p.status === 'CreditPending') && (p.amountCollected > p.amountCredited);
+            var isCollected = p.status === 'Collected';
+            var isCheckOrStoreCredit = p.paymentType === 'Check' || p.paymentType === 'StoreCredit';
+            return isCreditedWithBalance || isCollected || isCheckOrStoreCredit;
         });
 
-        this.refundDialog.show();
+        // ugh removing _keys
+        // for bug #94350
+        payments.forEach(function(p) {
+            delete p._key;
+        });
+
+        var returnItems = retRecord.get('items');
+        var key = retRecord.get('id');
+
+        var containsNewPayments = payments.find(function(p) {
+            return p && (p.paymentType === 'newStoreCredit' || p.paymentType === 'newCheck');
+        });
+
+        // adding new store credit to grid
+        if (!containsNewPayments) {
+            payments.push(
+                { paymentType: 'newStoreCredit' },
+                { paymentType: 'newCheck' }
+            );
+        }
+
+        var config = {
+            metadata: {
+                orderPayments: payments,
+                returnItems: returnItems,
+                returnNumber: retRecord.get('returnNumber'),
+                returnId: retRecord.get('id'),
+                refundFailure: function() {
+                    me.setLoading(false);
+                    Taco.app.fireEvent('setmessage', 'There was an error processsing this refund', 'error');
+                },
+                refundSuccess: me.handleRefundSuccess.bind(me),
+                refundDismiss: function() {
+                    me.setLoading(false);
+                }
+            }
+        };
+
+        me.setLoading(true);
+
+        // This is coming from mozu-adminui
+        window.globalModalEmitter.emit('open', {
+            modalType: 'ReturnRefundModal',
+            key: key,
+            config: config
+        });
+    },
+
+    handleRefundSuccess: function (record) {
+        var me = this;
+        // update current record with new data.
+        me.getOrder().reload({
+            success: function() {
+                me.getRecord().reload();
+                me.setLoading(false);
+            }
+        });
+    },
+
+    handleShipClick: function () {
+        var me = this;
+        this.setLoading(true);
+        this.getRecord().createReplacementOrder({
+            success: function (response) {
+                var json = Ext.decode(response.responseText, true).items;
+                Taco.core.StateManager.attemptNavigate('s-' + json.siteId + '/orders/edit/' + json.id);
+            },
+            callback: function () {
+                me.setLoading(false);
+            }
+        });
     },
 
     initItemsGrid: function () {
@@ -225,6 +334,7 @@ Ext.define('Taco.view.order.widget.ProcessReturnPanel', {
                 resizable: false,
                 menuDisabled: true,
                 flex: 1,
+                minWidth: 120,
                 renderer: function (value, meta, record) {
                     var productCode = record.get('productCode'),
                         oItem = productCode ? me.orderItemsStore.getById(record.get('orderItemId')) : null;
@@ -232,7 +342,8 @@ Ext.define('Taco.view.order.widget.ProcessReturnPanel', {
                     if (productCode) return productCode;
                     return oItem ? oItem.get('productCode') : '--';
                 }
-            }, {
+            },
+            {
                 dataIndex: 'orderItemId',
                 text: 'Name',
                 draggable: false,
@@ -240,6 +351,7 @@ Ext.define('Taco.view.order.widget.ProcessReturnPanel', {
                 resizable: false,
                 menuDisabled: true,
                 flex: 1,
+                minWidth: 120,
                 renderer: function (value, meta, record) {
                     var productCode = record.get('productCode'),
                         orderItemId = record.get('orderItemId'),
@@ -250,20 +362,20 @@ Ext.define('Taco.view.order.widget.ProcessReturnPanel', {
                     var productNameFromReturnItem = rItem ? rItem.productName : null;
                     return productNameFromOrderItem || productNameFromReturnItem ||  '--';
                 }
-            }, {
-                dataIndex: 'orderItemId',
-                text: 'Price',
+            },
+            {
+                dataIndex: 'productTotal',
+                text: 'Price & Tax',
                 draggable: false,
                 sortable: false,
                 resizable: false,
                 menuDisabled: true,
                 width: 100,
                 renderer: function (value, meta, record) {
-                    var oItem = me.orderItemsStore.getById(record.get('orderItemId'));
-
-                    return oItem ? Taco.app.context.getCurrent().formatCurrency(oItem.get('unitPrice')) : '--';
+                    return Taco.app.context.getCurrent().formatCurrency(value);
                 }
-            }, {
+            },
+            {
                 dataIndex: 'productLossAmount',
                 text: 'Loss',
                 draggable: false,
@@ -281,22 +393,17 @@ Ext.define('Taco.view.order.widget.ProcessReturnPanel', {
                 renderer: function (value) {
                     return Taco.app.context.getCurrent().formatCurrency(value);
                 }
-            }, {
-                dataIndex: 'quantityRestockable',
-                text: 'Restockable',
+            },
+            {
+                dataIndex: 'returnType',
+                text: 'Return Type',
                 draggable: false,
                 sortable: false,
                 resizable: false,
                 menuDisabled: true,
-                width: 100,
-                editor: {
-                    xtype: 'numberfield',
-                    showBorder: true,
-                    hideTrigger: true,
-                    mouseWheelEnabled: false,
-                    minValue: 0
-                }
-            }, {
+                width: 100
+            },
+            {
                 dataIndex: 'returnReason',
                 text: 'Reason',
                 draggable: false,
@@ -304,7 +411,8 @@ Ext.define('Taco.view.order.widget.ProcessReturnPanel', {
                 resizable: false,
                 menuDisabled: true,
                 width: 120
-            }, {
+            },
+            {
                 dataIndex: 'quantity',
                 text: 'Qty',
                 draggable: false,
@@ -312,7 +420,8 @@ Ext.define('Taco.view.order.widget.ProcessReturnPanel', {
                 resizable: false,
                 menuDisabled: true,
                 width: 80
-            }, {
+            },
+            {
                 dataIndex: 'quantityReceived',
                 text: 'Qty Ret\'d',
                 draggable: false,
@@ -327,7 +436,45 @@ Ext.define('Taco.view.order.widget.ProcessReturnPanel', {
                     mouseWheelEnabled: false,
                     minValue: 0
                 }
-            }],
+            },
+            {
+                dataIndex: 'quantityRestockable',
+                text: 'Restockable',
+                draggable: false,
+                sortable: false,
+                resizable: false,
+                menuDisabled: true,
+                width: 100,
+                editor: {
+                    xtype: 'numberfield',
+                    showBorder: true,
+                    hideTrigger: true,
+                    mouseWheelEnabled: false,
+                    minValue: 0
+                }
+            },
+            {
+                dataIndex: 'refundAmount',
+                text: 'Refunded',
+                draggable: false,
+                sortable: false,
+                resizable: false,
+                menuDisabled: true,
+                width: 100,
+                renderer: function (value, meta, record) {
+                    return Taco.app.context.getCurrent().formatCurrency(value);
+                }
+            },
+            {
+                dataIndex: 'quantityReplaced',
+                text: 'Replaced',
+                draggable: false,
+                sortable: false,
+                resizable: false,
+                menuDisabled: true,
+                width: 80
+            }
+            ],
             plugins: [
                 Ext.create('Ext.grid.plugin.CellEditing', {
                     clicksToEdit: 1
@@ -352,6 +499,157 @@ Ext.define('Taco.view.order.widget.ProcessReturnPanel', {
                 }
             }
         });
+    },
+
+    initReplacementsGrid: function() {
+        var me = this;
+        var repOrderId = this.getRecord().get('returnOrderId');
+
+        me.replacementsStore = Ext.create('Ext.data.Store', {
+            model: 'Taco.model.Order'
+        });
+
+        var repGrid = Ext.create('Taco.view.order.widget.ReturnReplacementGrid', {
+            store: me.replacementsStore
+        });
+
+        if (repOrderId) {
+            var config = {
+                success: function (response) {
+                    if (response) {
+                        me.replacementsStore.add(response);
+                    }
+                }
+            };
+            Taco.model.Order.load(repOrderId, config);
+        }
+
+        return Ext.create('Ext.panel.Panel', {
+            hidden: !repOrderId ? true : false,
+            margin: '10 0 0 0',
+            items: [
+                repGrid
+            ]
+        });
+    },
+
+    initInternalNotesGrid: function () {
+        var me = this;
+        var notesGrid = Ext.create('Taco.view.order.widget.ReturnInternalNotesGrid', {
+            store: this.internalNoteStore
+        });
+        return Ext.create('Ext.panel.Panel', {
+            margin: '10 0 0 0',
+            items: [
+                  {
+                    xtype: 'container',
+                    padding: '10 0 0 0',
+                    layout: {
+                        type: 'hbox',
+                        align: 'top',
+                        pack: 'end'
+                    },
+                    items: [
+                        {
+                            xtype: 'button',
+                            ui: 'action',
+                            scale: 'medium',
+                            text: 'Add Internal Note',
+                            name: 'addInternalNoteButton',
+                            itemId: 'addInternalNoteButton',
+                            scope: this,
+                            handler: function() {
+                                me.addInternalNoteDialog();
+                            }
+                        }
+                    ]
+                },
+                notesGrid
+            ]
+        });
+    },
+
+    addInternalNoteDialog: function(callbackFn, callbackArgs) {
+        var me = this;
+
+        if (this.internalNotesDialog) {
+            this.internalNotesDialog.show();
+        } else {
+            this.internalNotesDialog = Ext.create('Taco.core.ux.window.Modal', {
+                autoShow: true,
+                scale: 'small',
+                title: 'Add Internal Note',
+                // overflowY: 'auto',
+                closeOnSave: true,
+                layout: {
+                    type: 'hbox'
+                },
+                items: [
+                    {
+                        xtype: 'textareafield',
+                        name: 'noteText',
+                        itemId: 'noteText',
+                        fieldLabel: 'Internal Note',
+                        allowBlack: false,
+                        width: '100%',
+                        height: '100%'
+                    }
+                ],
+                doSave: function () {
+                    var modal = this;
+                    var newNote = modal.down('#noteText').getValue();
+                    // If newNote is empty, don't make request.
+                    if (newNote) {
+                        var config = {
+                            url: '/admin/app/return/internalnotes/create',
+                            method: 'POST',
+                            jsonData: [
+                                {
+                                    returnId: me.record.get('id'),
+                                    text: newNote
+                                }
+                            ],
+                            success: function(response) {
+                                if (response && response.responseText) {
+                                    var data = JSON.parse(response.responseText);
+                                    for (var i in data.items) {
+                                        var newModel = Ext.create('Taco.model.ReturnInternalNote', data.items[i]);
+                                        me.internalNoteStore.add(newModel);
+                                    }
+                                }
+                                modal.down('#noteText').setValue('');
+                                if (callbackFn) {
+                                    callbackFn.bind(me, callbackArgs)();
+                                }
+                                modal.saveSuccess(newNote);
+                            },
+                            failure: function(response) {
+                                if (response && response.responseText) {
+                                    var retData = JSON.parse(response.responseText);
+                                    Taco.app.fireEvent('setmessage', retData.items[0].message, 'error');
+                                }
+                            }
+                        }
+                        Ext.Ajax.request(config);
+                    } else {
+                        modal.down('#noteText').setValue('');
+                        me.internalNotesDialog.close();
+                    }
+                },
+                listeners: {
+                    cancel: {
+                        fn: function () {
+                            // DETERMINE THIS AND CLEAR TEXT ON CANCEL.
+                            this.down('#noteText').setValue("");
+                            if (callbackFn) {
+                                callbackFn.bind(me, callbackArgs)();
+                                return;
+                            }
+                        }
+                    }
+                }
+            });
+        }
     },
 
     initPaymentsGrid: function () {
@@ -407,6 +705,39 @@ Ext.define('Taco.view.order.widget.ProcessReturnPanel', {
     },
 
     initReturnActions: function () {
+        var me = this;
+        this.returnFinishedButton = Ext.widget('splitbutton', {
+            cls: 'return-end-menu',
+            menuAlign: 'tr-br?',
+            itemId: 'Cancel',
+            text: 'Cancel',
+            handler: function (button) {
+                me.addInternalNoteDialog(me.handleActionClick, button);
+            },
+            menu: new Ext.menu.Menu({
+                items: [
+                    {
+                        itemId: 'Close',
+                        text: 'Close',
+                        handler: function (button) {
+                            me.addInternalNoteDialog(me.handleActionClick, button);
+                        },
+                        hidden: me.getRecord().get('status') === 'Created',
+                        scope: me
+                    }, {
+                        itemId: 'Reject',
+                        text: 'Reject',
+                        handler: function (button) {
+                            me.addInternalNoteDialog(me.handleActionClick, button);
+                        },
+                        scope: me
+                    }
+                ]
+            }),
+            scope: me,
+            ui: 'action',
+            scale: 'medium'
+        });
         
         return Ext.create('Ext.toolbar.Toolbar', {
             defaults: {
@@ -431,7 +762,7 @@ Ext.define('Taco.view.order.widget.ProcessReturnPanel', {
                 itemId: 'Authorize',
                 text: 'Authorize'
             }, {
-                itemId: 'IssueRefund',
+                itemId: 'Refund',
                 text: 'Refund',
                 handler: this.handleRefundClick
             }, {
@@ -445,11 +776,13 @@ Ext.define('Taco.view.order.widget.ProcessReturnPanel', {
                 text: 'Restock'
             }, {
                 itemId: 'Ship',
-                text: 'Ship'
-            }, {
-                itemId: 'Refund',
+                text: 'Replace',
+                handler: this.handleShipClick
+            },{
+                itemId: 'RefundComplete',
                 text: 'Refund Complete'
-            }, {
+            },
+            /*{
                 itemId: 'Close',
                 text: 'Close',
                 listeners: {
@@ -468,13 +801,17 @@ Ext.define('Taco.view.order.widget.ProcessReturnPanel', {
                                 });
 
                                 orders.on('load', function (store, records) {
-                                    button.setDisabled(records[0].get('orderStatus') !== 'Completed');
+                                    if (button) {
+                                        button.setDisabled(records[0].get('orderStatus') !== 'Completed');
+                                    }
                                 });
                             }
                         }
                     }
                 }
-            }, {
+            },*/
+            this.returnFinishedButton,
+            {
                 xtype:"resendemailbutton",
                 itemId: "resendEmailButton",
                 text: "Resend Email",
@@ -485,10 +822,10 @@ Ext.define('Taco.view.order.widget.ProcessReturnPanel', {
                     menushow: function (button, menu) {
                         var status = this.record.get("status");
                         //iterate the child items and enable them and disable them based on the status of the rma entity;
-                        Ext.Array.each(menu.items.items, function (item) {                            
-                            var isEnabled = Ext.Array.contains(item.enabledWhen, status);                            
+                        Ext.Array.each(menu.items.items, function(item) {
+                            var isEnabled = Ext.Array.contains(item.enabledWhen, status);
                             item.setVisible(isEnabled);
-                        })
+                        });
                     },
                     scope: this
                 },
@@ -572,15 +909,24 @@ Ext.define('Taco.view.order.widget.ProcessReturnPanel', {
             tpl: [
                 '<table><tbody>',
                     '<tr>',
-                        '<td><span class="label">Status:<span>{status}</span></span></td>',
-                        '<td><span class="label">Returning:<span>{[Ext.Array.sum(Ext.Array.pluck(values.items, "quantity"))]} item(s)</span></span></td>',
-                        '<td><span class="label">Type:<span>{returnType}</span></span></td>',
-                        '<td><span class="label">Price:<span>{[this.getUnitPriceTotal(values.items)]}</span></span></td>',
+                        '<tpl if="this.checkStatusColor(receiveStatus)">',
+                            '<td><span class="label">Receive Status:<span><span class="x-column-content-pill x-column-content-pill-false">{[Taco.core.util.Common.camelToSpace(values.receiveStatus)]}</span></span></span></td>',
+                        '<tplelse>',
+                            '<td><span class="label">Receive Status:<span><span class="x-column-content-pill x-column-content-pill-true">{[Taco.core.util.Common.camelToSpace(values.receiveStatus)]}</span></span></span></td>',
+                        '</tpl>',
+                        '<tpl if="this.checkStatusColor(refundStatus)">',
+                            '<td><span class="label">Refund Status:<span><span class="x-column-content-pill x-column-content-pill-false">{[Taco.core.util.Common.camelToSpace(values.refundStatus)]}</span></span></span></td>',
+                        '<tplelse>',
+                            '<td><span class="label">Refund Status:<span><span class="x-column-content-pill x-column-content-pill-true">{[Taco.core.util.Common.camelToSpace(values.refundStatus)]}</span></span></span></td>',
+                        '</tpl>',
+                        '<tpl if="this.checkStatusColor(replaceStatus)">',
+                            '<td><span class="label">Replace Status:<span><span class="x-column-content-pill x-column-content-pill-false">{[Taco.core.util.Common.camelToSpace(values.replaceStatus)]}</span></span></span></td>',
+                        '<tplelse>',
+                            '<td><span class="label">Replace Status:<span><span class="x-column-content-pill x-column-content-pill-true">{[Taco.core.util.Common.camelToSpace(values.replaceStatus)]}</span></span></span></td>',
+                        '</tpl>',
+                        '<td><span class="label">Total Price & Tax:<span>{[Taco.app.context.getCurrent().formatCurrency(values.productTotal)]}</span></span></td>',
                         '<td><span class="label">Created:<span>{createDate:date("m/d/Y g:ia")}</span></span></td>',
                         '<td><span class="label">Loss:<span>{[Taco.app.context.getCurrent().formatCurrency(Ext.Array.sum(Ext.Array.pluck(values.items, "productLossAmount")))]}</span></span></td>',
-                    '<tpl if="returnOrderId">',
-                        '<td><span class="label">Return Order:<span><a href="/admin/s-{[Taco.app.context.getCurrent().id]}/orders/edit/{returnOrderId}">{returnOrderId}</a></span></span></td><td>&nbsp;</td>',
-                    '</tpl></tr>',
                 '</tbody></table>', {
                     getUnitPriceTotal: function (items) {
                         var prices = Ext.Array.map(items, function (item) {
@@ -590,6 +936,13 @@ Ext.define('Taco.view.order.widget.ProcessReturnPanel', {
                         }, me);
 
                         return Taco.app.context.getCurrent().formatCurrency(Ext.Array.sum(prices));
+                    },
+                    checkStatusColor: function (status) {
+                        var lowerCaseStatus = status.toLowerCase();
+                        return lowerCaseStatus === 'fullyreceived'
+                            || lowerCaseStatus === 'fullyrefunded'
+                            || lowerCaseStatus === 'fullyreplaced'
+                            || lowerCaseStatus === 'notrequested';
                     }
                 }
             ]
@@ -611,7 +964,7 @@ Ext.define('Taco.view.order.widget.ProcessReturnPanel', {
                 '</tpl>',
                 '<span class="label">Type:<span>{returnType}</span></span>',
                 '<span class="label">Time:<span>{createDate:date("m/d/Y g:ia")}</span></span>',
-                '<span class="label">Amount:<span>{[Taco.app.context.getCurrent().formatCurrency(Ext.Array.sum(Ext.Array.pluck(values.payments, "amountCredited")))]}</span></span>',
+                '<span class="label">Amount Refunded:<span>{[Taco.app.context.getCurrent().formatCurrency(Ext.Array.sum(Ext.Array.pluck(values.payments, "amountCredited")))]}</span></span>',
                 '<span class="label">Items:<span>{[values.items.length]}</span></span>'
             ]
         });
@@ -703,13 +1056,29 @@ Ext.define('Taco.view.order.widget.ProcessReturnPanel', {
 
     updateReturnActions: function () {
         var record = this.getRecord();
-        var validActions = record.get('availableActions');
+        var returnStatus = record.get('status');
+        //var validActions = record.get('availableActions');
+        var validActions = ['Authorize', 'Refund', 'Ship'];
 
+        validActions.push("resendEmailButton");
 
-        if (record.get('status') != "Cancelled") {
-            validActions.push("resendEmailButton");
+        if (returnStatus !== 'Cancelled' &&
+            returnStatus !== 'Rejected' &&
+            returnStatus !== 'Closed' &&
+            returnStatus !== 'Completed') {
+            validActions.push('Cancel');
         }
 
+        if (returnStatus === 'Cancelled' ||
+            returnStatus === 'Rejected' ||
+            returnStatus === 'Closed' ||
+            returnStatus === 'Completed' ||
+            returnStatus === 'Created') {
+            Ext.Array.remove(validActions, 'Refund');
+            Ext.Array.remove(validActions, 'Ship');
+        }
+
+        /*
         // remove the Refund action if the return type is not Refund
         if (record.get('type') === 'Replace') {
             Ext.Array.remove(validActions, 'Refund');
@@ -720,10 +1089,11 @@ Ext.define('Taco.view.order.widget.ProcessReturnPanel', {
         // if Refund is a valid action, Refund Complete must also be a valid action
         if (Ext.Array.contains(validActions, 'Refund')) {
             validActions.push('IssueRefund');
+        }
+        */
 
-            if (record.get('status') === 'Authorized') {
-                Ext.Array.remove(validActions, 'Refund');
-            }
+        if (returnStatus !== 'Created') {
+            Ext.Array.remove(validActions, 'Authorize');
         }
 
         this.returnActions.items.each(function (button) {

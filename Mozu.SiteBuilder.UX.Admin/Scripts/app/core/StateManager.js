@@ -133,7 +133,8 @@ Ext.define('Taco.core.StateManager', {
             'customers',
             'orderattributes',
             'synonyms',
-            'betacategories'
+            'categories',
+            'returns'
         ];
         var NOT_VIEWS =[ 'customerset'];
 

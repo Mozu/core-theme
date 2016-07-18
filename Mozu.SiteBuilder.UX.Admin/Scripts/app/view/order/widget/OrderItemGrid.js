@@ -534,7 +534,8 @@ Ext.define('Taco.view.order.widget.OrderItemGrid', {
                         var key = record.get('id');
                         var config = { metadata: { order: order, orderItem: orderItem } };
 
-                        globalModalEmitter.emit('open', {
+                        // This is coming from mozu-adminui
+                        window.globalModalEmitter.emit('open', {
                             modalType: 'OrderItemDetailModal',
                             key: key,
                             config: config

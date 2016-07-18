@@ -48,6 +48,14 @@ module.exports = (function () {
             errors.passFrom(credit, this);
             return credit.associateToShopper();
         },
+        getReturnLabel: function (data) {
+            return this.api.action('rma', 'getReturnLabel', { 'returnId': data.returnId, 'packageId': data.packageId, 'returnAsBase64': true }).then(function (label) {
+                //var imgBase64 = b64EncodeUnicode(data);
+                return label;
+            }, function (reason) {
+                errors.throwOnObject(self, 'GET_RETURN_LABEL_FAILED', reason.message);
+            });
+        },
         // as of 12/30/2013 partial updates on customer will
         // blank out these values unless they are included
         // TODO: remove as soon as TFS#21775 is fixed

@@ -28,7 +28,12 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.Models.Order
         public int? SiteId { get; set; }
 
         public string ParentOrderId { get; set; }
+
+        public int? ParentOrderNumber { get; set; }
+
         public string ParentReturnId { get; set; }
+
+        public int? ParentReturnNumber { get; set; }
 
         /// <summary>
         /// An order number to link this order to an external system
@@ -50,8 +55,10 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.Models.Order
         public string ReturnStatus { get; set; }
 
         public DateTime CreateDate { get; set; }
+        public string CreateBy { get; set; }
 
         public DateTime UpdateDate { get; set; }
+        public string UpdateBy { get; set; }
 
         public DateTime? SubmittedDate { get; set; }
 

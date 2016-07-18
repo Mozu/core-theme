@@ -328,6 +328,11 @@ Ext.define('Taco.store.Navigation', {
                         'address': 'orders',
                         'behaviorIds': [73]
                     }, {
+                        'id': 'returns',
+                        'label': 'Returns',
+                        'address': 'returns',
+                        'behaviorIds': [73]
+                    }, {
                         'id': 'locations-inventory',
                         'label': 'Inventory',
                         'address': 'locationInventory'

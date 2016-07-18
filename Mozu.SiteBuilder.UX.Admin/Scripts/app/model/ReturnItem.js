@@ -43,8 +43,14 @@ Ext.define('Taco.model.ReturnItem', {
             "useNull": true
         },
         {
-            "name": "rmaNote",
+            "name": "returnType",
             "type": "string",
+            "useNull": true,
+            defaultValue: null
+        },
+        {
+            "name": "returnNotRequired",
+            "type": "boolean",
             "useNull": true,
             defaultValue: null
         },
@@ -79,6 +85,18 @@ Ext.define('Taco.model.ReturnItem', {
             defaultValue: 0
         },
         {
+            "name": "refundAmount",
+            "type": "number",
+            "useNull": true,
+            defaultValue: 0
+        },
+        {
+            "name": "quantityReplaced",
+            "type": "number",
+            "useNull": true,
+            defaultValue: 0
+        },
+        {
             "name": "productLossAmount",
             "type": "number",
             "useNull": false,
@@ -91,6 +109,12 @@ Ext.define('Taco.model.ReturnItem', {
             defaultValue: 0
         },
         {
+            "name": "productTotal",
+            "type": "number",
+            "useNull": false,
+            defaultValue: 0
+        },
+        {
             "name": "shippingLossAmount",
             "type": "number",
             "useNull": false,
@@ -98,6 +122,12 @@ Ext.define('Taco.model.ReturnItem', {
         },
         {
             "name": "shippingLossTaxAmount",
+            "type": "number",
+            "useNull": false,
+            defaultValue: 0
+        },
+        {
+            "name": "shippingAndHandlingTotal",
             "type": "number",
             "useNull": false,
             defaultValue: 0
