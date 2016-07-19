@@ -55,10 +55,11 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
         public async Task<HttpResponseMessage> Index()
         {
             var userClaims = _apiContext.UserClaims;
-            var orderId = userClaims.Bag["orderId"];
+            string orderId = null;
+            
 
             // If there isn't an orderId, cancel!
-            if (orderId == null || !(orderId.Length > 0))
+            if (!userClaims.Bag.TryGetValue("orderId", out orderId) || string.IsNullOrWhiteSpace(orderId))
             {
                 return Request.CreateErrorResponse(HttpStatusCode.NotFound, "Page not found.");
             }
