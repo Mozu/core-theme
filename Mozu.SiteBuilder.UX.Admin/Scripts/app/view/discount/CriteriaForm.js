@@ -953,6 +953,18 @@ Ext.define('Taco.view.discount.CriteriaForm', {
 
     updateQualifyingProductsRadioButton: function(products, categories) {
         var me = this;
+        if (typeof products === 'string') {
+            products = products.split(',').map(function(product) {
+                return product.trim();
+            });
+        }
+        products = Ext.Array.clean(products);
+        if (typeof categories === 'string') {
+            categories = categories.split(',').map(function(category) {
+                return category.trim();
+            });
+        }
+        categories = Ext.Array.clean(categories);
         var isDisabled = !( (products.length === 1 || categories.length === 1) && !(products.length && categories.length) );
         if (this.qualifyingProductsInput) {
             this.qualifyingProductsInput.setDisabled(isDisabled);

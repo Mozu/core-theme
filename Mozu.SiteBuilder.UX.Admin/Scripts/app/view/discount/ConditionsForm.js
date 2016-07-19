@@ -275,7 +275,7 @@ Ext.define('Taco.view.discount.ConditionsForm', {
             disableKeyFilter: true,
             typeAhead: false,
             displayField: 'productName',
-            hideLable: true,
+            hideLable: false,
             listeners: {
                 change: function (cmp, newValue, oldValue) {
                     if (Ext.isEmpty(newValue) !== Ext.isEmpty(oldValue)) {
