@@ -17,6 +17,8 @@ Ext.define('Taco.view.settings.paymentTypes.subform.PurchaseOrder', {
     margin: "0 0 20 0",
     ui: "subform",
     width: "100%",
+    
+    regexPattern: /[^a-zA-Z0-9-_]+/g,
 
     initComponent: function() {
         var me = this;
@@ -158,13 +160,8 @@ Ext.define('Taco.view.settings.paymentTypes.subform.PurchaseOrder', {
                         view.getStore().remove(record);
                     }
                 },
-                validateedit: function(editor, e) {
-                    var existing = e.grid.store.findRecord('id', e.value, 0, false, false);
-                    if (e.field == 'id' && existing) {
-                        Taco.app.fireEvent('setmessage', ('The same value ' + existing.getId() + ' already exists'), 'error');
-                        return false;
-                    }
-                    return true;
+                validateedit: function (editor, e) {
+                    return me.validateEdit(editor, e, 'Payment Term');
                 }
             }
         };
@@ -234,7 +231,7 @@ Ext.define('Taco.view.settings.paymentTypes.subform.PurchaseOrder', {
 
                                     var positionSelector = Ext.ComponentQuery.query('#attr-string-value-placement-selector');
                                     var position = (positionSelector.length > 0) ? positionSelector[0].getValue() : 'bottom';
-                                    var id = value.toLowerCase().replace(/[^a-zA-Z0-9-_//.]/g, "-");
+                                    var id = value.toLowerCase().replace(me.regexPattern, "-");
 
                                     Taco.app.fireEvent('added-payment-term-value', {
                                         description: value,
@@ -305,7 +302,7 @@ Ext.define('Taco.view.settings.paymentTypes.subform.PurchaseOrder', {
                                 if (!Ext.isEmpty(Ext.String.trim(value))) {
                                     field.reset();
 
-                                    var customCode = value.toLowerCase().replace(/[^a-zA-Z0-9-_//.]/g, "-");
+                                    var customCode = value.toLowerCase().replace(me.regexPattern, "-");
                                     var positionSelector = Ext.ComponentQuery.query('#attr-string-value-placement-selector');
                                     var position = (positionSelector.length > 0) ? positionSelector[0].getValue() : 'bottom';
 
@@ -408,12 +405,7 @@ Ext.define('Taco.view.settings.paymentTypes.subform.PurchaseOrder', {
                     }
                 },
                 validateedit: function (editor, e) {
-                    var existing = e.grid.store.findRecord('id', e.value, 0, false, false);
-                    if (e.field == 'id' && existing) {
-                        Taco.app.fireEvent('setmessage', ('The same value ' + existing.getId() + ' already exists'), 'error');
-                        return false;
-                    }
-                    return true;
+                    return me.validateEdit(editor, e, 'Custom Text Field');
                 }
             }, updateParentValues: function() {
                 var rawValues = Ext.Array.map(this.getValues(), function(val) {
@@ -473,6 +465,19 @@ Ext.define('Taco.view.settings.paymentTypes.subform.PurchaseOrder', {
             this.purchaseOrderContent.hide();
             this.purchaseOrderSplitPayment.hide();
         }
+    },
+
+    validateEdit: function (editor, e, locationString) {
+        var existing = e.grid.store.findRecord('code', e.value, 0, false, false);
+        if (e.value.indexOf('.') > -1) {
+            Taco.app.fireEvent('setmessage', ('\'' + locationString + '\' code cannot contain a period.'), 'error');
+            return false;
+        }
+        if (e.field === 'code' && existing) {
+            Taco.app.fireEvent('setmessage', ('The same code: ' + existing.get('code') + ' for \'' + locationString + '\' already exists'), 'error');
+            return false;
+        }
+        return true;
     },
 
     persistFormValues: function () {
