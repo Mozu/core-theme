@@ -35,24 +35,10 @@ Ext.define('Taco.view.product.SiteForm', {
     persistChangesToModel: true,
 
     initComponent: function () {
-        var subFormCfg,
-            items = [];
 
         this.defaults = this.defaults || {};
-        this.defaults.isSingleSite = this.isSingleSite;
-
         this.catalogId = this.record.get('catalogId');
 
-
-        /*
-        // deprecated; remnant of navForm(the original)
-
-        this.navStore = Ext.create('Ext.data.Store', {
-            fields: ['title']
-        });
-        */
-
-        
         //initialize the bundling mixin
         this.mixins.bundleable.constructor.apply(this, arguments);
 
@@ -60,21 +46,13 @@ Ext.define('Taco.view.product.SiteForm', {
 
         this.buildForm();
 
-        
-        
-
-        
-
-
         this.on({
             overrideChange: this.handleOverrideChange,
             scrollspy: this.updateScrollPosition,
             render:this.handleOverrideChange,
-                
             scope: this
         });
     },
-    
 
     buildForm: function () {
     
@@ -85,7 +63,6 @@ Ext.define('Taco.view.product.SiteForm', {
                 product: this.product,
                 productForm: this.productForm,
                 productInCatalogInfo: this.productInCatalogInfo,
-                isSingleSite: this.isSingleSite,
                 isGlobal: false,
                 persistChangesToModel: true
             };
