@@ -31,6 +31,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
         private readonly Lazy<ISearchTuningRuleFilterBuilder> _searchTuningRuleFilterBuilder;
         private readonly Lazy<ISynonymFilterBuilder> _synonymFilterBuilder;
         private readonly Lazy<ISearchTuningRuleSortBuilder> _searchtuningRuleSortBuilder;
+        private readonly Lazy<ISynonymSortBuilder> _synonymSortBuilder;
         private readonly Lazy<IProductWebApiClient> _productWebApiClient;
         private readonly Lazy<IProductTypeWebApiClient> _productTypeWebApiClient;
         private readonly Lazy<ICategoryWebApiClient> _categoryWebApiClient;
@@ -48,7 +49,8 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
             Lazy<IProductWebApiClient> productWebApiClient,
             Lazy<IProductTypeWebApiClient> productTypeWebApiClient,
             Lazy<ICategoryWebApiClient> categoryWebApiClient,
-            Lazy<ISynonymFilterBuilder> synonymFilterBuilder)
+            Lazy<ISynonymFilterBuilder> synonymFilterBuilder,
+            Lazy<ISynonymSortBuilder> synonymSortBuilder)
         {
             _searchWebApiClient = searchWebApiClient;
             _searchTuningRuleFilterBuilder = searchTuningRuleFilterBuilder;
@@ -58,6 +60,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
             _categoryWebApiClient = categoryWebApiClient;
             _apiCtx = apiCtx;
             _synonymFilterBuilder = synonymFilterBuilder;
+            _synonymSortBuilder = synonymSortBuilder;
         }
 
         /// <summary>
@@ -410,7 +413,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
             {
                 filter = _synonymFilterBuilder.Value.ToFilterString(extFilter);
             }
-            string sortBy = _searchtuningRuleSortBuilder.Value.ToSortString(pagingParams.sort);
+            string sortBy = _synonymSortBuilder.Value.ToSortString(pagingParams.sort);
 
             try
             {
