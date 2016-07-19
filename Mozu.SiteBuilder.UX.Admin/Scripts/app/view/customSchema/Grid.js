@@ -54,6 +54,8 @@ Ext.define('Taco.view.customSchema.Grid', {
 
         };
 
+        this.stateId = this.getStateFulId(getDefaultView(me.listMetaData));
+
         if (me.standaloneGrid) {
             this.applyViewConfig();
         }
@@ -99,15 +101,31 @@ Ext.define('Taco.view.customSchema.Grid', {
         this.initListView(this.record, true);
     },
 
-    getStateFulId: function(dynamicFields) {
-        var start = this.listMetaData.entityType + this.listMetaData.name + this.listMetaData.listFQN;
+    getStateFulId: function(rec) {
 
-        if (!dynamicFields) return start;
+        var fields = rec 
+            ? rec.fields
+            : [];
 
-        if (!dynamicFields.length || dynamicFields.length === 0) return start;
+        if (!this.listMetaData) {
+            return 'customSchema-grid';
+        }
+
+        var start = 
+                this.listMetaData.get ?
+                    this.listMetaData.get('entityType') 
+                        + this.listMetaData.get('name')  
+                        + this.listMetaData.get('listFQN')
+                    : this.listMetaData.entityType
+                        + this.listMetaData.name
+                        + this.listMetaData.listFQN;
+
+        if (!fields) return start;
+
+        if (!fields.length || fields.length === 0) return start;
 
         else {
-            var key = dynamicFields.fields.map(function(rec) { return rec.name; }).join(',');
+            var key = fields.map(function(rec) { return rec.name; }).join(',');
             return start + key;
         }
     },
