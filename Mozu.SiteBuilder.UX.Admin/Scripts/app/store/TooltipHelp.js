@@ -56,6 +56,9 @@ Ext.define('Taco.store.TooltipHelp', {
             key: 'discount.criteria.applyToProductsWithSalePrice',
             value: 'If unchecked, items on sale will not be discounted.'
         }, {
+            key: 'discount.criteria.applyToPurchasesOfCondition',
+            value: 'When checked, the discount applies to items bought as part of the Required Purchase in the Conditions section. When unchecked, the discount applies to additional items besides those that satisfy the condition.'
+        }, {
             key: 'discount.criteria.applyDiscountToHighestPricedProduct',
             value: 'Checking this option applies the discount to the highest-priced qualifying items first (benefitting the shopper).'
         }, {
