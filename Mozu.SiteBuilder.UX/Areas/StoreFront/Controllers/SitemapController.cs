@@ -53,7 +53,7 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
             var date = DateTime.UtcNow.AddDays(1).Date.ToString("o");
             var nakedDomain = GetNakedSitePrimaryDomain();
            
-            var scheme = PageContext.IsSecure ? "https://" : "http";
+            var scheme = PageContext.IsSecure ? "https://" : "http://";
             var prefixedDomain = scheme + nakedDomain;
             this.HttpContext.Response.ContentType = "text/xml";
             var writer = XmlTextWriter.Create(this.HttpContext.Response.OutputStream);
