@@ -31,6 +31,7 @@ Ext.define('Taco.shared.view.modal.Address', {
     validateAddress: true,
     enableValidation: false,
     optionalValidationEnabled: false,
+    cascadeValidationUpdate: false,
 
     formCfg: null,
 
@@ -210,7 +211,7 @@ Ext.define('Taco.shared.view.modal.Address', {
                 Ext.Object.merge(mergedFormWithValidationResults, me.form.getValues(), this.validatedAddr);
                 me.record.set(mergedFormWithValidationResults);
 
-                me.form.loadRecord(me.record);
+                me.form.loadRecord(me.record, me.cascadeValidationUpdate);
             }
         };
         Ext.Ajax.request({

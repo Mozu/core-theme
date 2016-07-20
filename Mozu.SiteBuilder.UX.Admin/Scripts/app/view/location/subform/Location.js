@@ -177,7 +177,8 @@ Ext.define('Taco.view.location.subform.Location', {
             //allowOnlyWhitespace: false
             allowBlank:false,
             showEditButton: false,
-            optionalValidationEnabled: true
+            optionalValidationEnabled: true,
+            cascadeValidationUpdate: true
         });
 
         this.allowNoStockFulfillment = Ext.widget("checkbox", {
@@ -221,7 +222,7 @@ Ext.define('Taco.view.location.subform.Location', {
                 hidden: (!me.record.get("isDeleted")),
                 width: 200,
                 fieldLabel: "Location Status",
-                renderer: function (value, field) {
+                renderer: function (value) {
                     if (value === "true") {
                         return "Location has been deleted";
                     } else {
