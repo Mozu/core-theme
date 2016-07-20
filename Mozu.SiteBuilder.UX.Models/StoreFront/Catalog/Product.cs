@@ -771,11 +771,23 @@ namespace Mozu.SiteBuilder.UX.Models.StoreFront.Catalog
             {
                 return null;
             }
+       
             if ( token is int || token is double || token is long)
             {
-                return FindById((int)token);
+                return FindById(Convert.ToInt32(token));
             }
-            return FindByCode(token as string) ?? FindBySlug(token as string).FirstOrDefault();
+            object ret = null;
+            if ( token is string )  
+            {
+                int intVal;
+                if (int.TryParse((string)token, out intVal))
+                {
+                    ret = FindById(intVal);
+                }
+                return ret ?? FindByCode(token as string) ?? FindBySlug(token as string).FirstOrDefault();
+                
+            }
+            return null;
         }
     }
 
