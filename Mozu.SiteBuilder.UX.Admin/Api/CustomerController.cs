@@ -28,7 +28,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
     [WebApi("app/customer", SuppressDescriptorGeneration = true)]
     public class CustomerController : BaseController
     {
-        private readonly ICustomerAccountWebApiClient _customerWebApiClient;
+         ICustomerAccountWebApiClient _customerWebApiClient;
         private readonly ICustomerSegmentWebApiClient _customerSegmentWebApiClient;
         //  private readonly ICustomerGroupWebApiClient _customerGroupWebApiClient;
         private readonly ICreditWebApiClient _creditWebApiClient;
@@ -155,7 +155,11 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
         {
             var tasks = customerSets.Select(x => _customerSetWebApiClient.AddCustomerSet(x)).ToList();
             await Task.WhenAll(tasks);
+            await Task.WhenAll(customerSets.Where(x => x.Sites != null).SelectMany(x => x.Sites).Select(x => _customerSetWebApiClient.AssignToSite(x, x.CustomerSetCode)).ToList());
+
+
             var result = tasks.Select(x => x.Result.ReadAsSync()).ToList();
+
             return this.Request.CreateResponse(HttpStatusCode.OK, List2(result));
         }
 
@@ -186,35 +190,40 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
             await Task.WhenAll(tasks);
             var retList = tasks.Select(x => x.Result.ReadAsSync()).ToList();
             //update assignments  ... remove when assignemnt moved to gen settings
-            var readTasks = customerSets.Select(x => _customerSetWebApiClient.GetCustomerSet(x.Code)).ToList();
-            await Task.WhenAll(readTasks);
-            var currentCustomerSets = readTasks.Select(x => x.Result.ReadAsSync()).ToList();
+            var currentCustomerSets = (await _customerSetWebApiClient.GetCustomerSets(pageSize: 600)).ReadAsSync().Items;
+            var defaultCs = currentCustomerSets.FirstOrDefault(x => x.IsDefault);
             List<Task> assignTasks = new System.Collections.Generic.List<Task>();
             foreach ( var cs in customerSets)
             {
+                
                 var existingCS = currentCustomerSets.FirstOrDefault(x => string.Equals(x.Code, cs.Code, StringComparison.OrdinalIgnoreCase));
+                //new site assignments
                 assignTasks.AddRange(cs.Sites?
                     .Where(x => existingCS?.Sites.Any(s => s.SiteId == x.SiteId) == false)
                     .Select(y => _customerSetWebApiClient.AssignToSite(y, cs.Code)));
+
+                //unassignements
+                if ( defaultCs != null && !string.Equals( defaultCs.Code , cs.Code, StringComparison.OrdinalIgnoreCase))
+                {
+                    assignTasks.AddRange(existingCS.Sites?
+                        .Where(x => cs?.Sites.Any(s => s.SiteId == x.SiteId) == false)
+                        .Select(y => _customerSetWebApiClient.AssignToSite(y, defaultCs.Code)));
+                }
+
+
             }
             if ( assignTasks.Count > 0 )
             {
                 await Task.WhenAll(assignTasks);
-
-                //readTasks = customerSets.Select(x => _customerSetWebApiClient.GetCustomerSet(x.Code)).ToList();
-                //await Task.WhenAll(readTasks);
+                currentCustomerSets = (await _customerSetWebApiClient.GetCustomerSets(pageSize: 600)).ReadAsSync().Items;
             }
-            //refresh 
-
-            var ret = (await _customerSetWebApiClient.GetCustomerSets(pageSize: 600)).ReadAsSync().Items;
-
-            return this.Request.CreateResponse(HttpStatusCode.OK, List2(ret));
+            return this.Request.CreateResponse(HttpStatusCode.OK, List2(currentCustomerSets));
         }
 
 
-        /************
+        /**************
          * cust set end
-         * **********/
+         * ************/
 
 
 
@@ -229,7 +238,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
 
             if (filterByCustomerSet!= true)
             {
-                _customerSetWebApiClient = _customerSetWebApiClient.CloneWithApiContext(x => x.SiteId = null);
+               _customerWebApiClient = _customerWebApiClient.CloneWithApiContext(x => x.SiteId = null);
             }
 
             if (pagingParameters.id != null)
