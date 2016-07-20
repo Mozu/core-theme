@@ -117,14 +117,14 @@ Ext.define('Taco.view.discount.CriteriaForm', {
             name: 'usePurchaseRequirementAsTarget',
             itemId: 'apply-to-purchases-of-condition',
             boxLabel: 'Apply to items satisfying Required Purchase condition',
-            width: 300,
+            width: 600,
             hidden: !me.record.get('isBxGx'),
             tooltip: Ext.create('Taco.core.ux.content.Tooltip', {
                 elementId: 'apply-to-purchases-of-condition',
                 hoverTarget: 'boxLabelEl',
                 messageKey: 'discount.criteria.applyToPurchasesOfCondition',
-                offsetLeft: -225,
-                offsetTop: 12,
+                offsetLeft: -410,
+                offsetTop: 34,
                 arrowPosition: 'left'
             })
         });
