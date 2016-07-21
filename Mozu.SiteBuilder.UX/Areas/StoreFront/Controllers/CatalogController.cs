@@ -53,15 +53,14 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
         private readonly IStorefrontCache _storeFrontCache;
         private readonly UrlHelper _urlhelper;
         static readonly JsonSerializer _productSerializer = JsonSerializer.Create(new JsonSerializerSettings { Converters = new List<JsonConverter> { new ExpandoObjectConverter() }, ContractResolver = new CamelCaseResolver() });
-        Mozu.Core.Logging.ILogger _logger;
-        public CatalogController(ICategoryTreeProvider categoryTreeProvider, IProductWebApiClient productClient, IProductSearchWebApiClient searchClient,  ICustomRouteHandler customRouteHandler , IStorefrontCache storeFrontCache , UrlHelper urlhelper
-            , Mozu.Core.Logging.ILogger logger)
+
+        public CatalogController(ICategoryTreeProvider categoryTreeProvider, IProductWebApiClient productClient, IProductSearchWebApiClient searchClient,  ICustomRouteHandler customRouteHandler , IStorefrontCache storeFrontCache , UrlHelper urlhelper)
         {
             _categoryTreeProvider = categoryTreeProvider;
             _searchClient = searchClient;
   
             _productClient = productClient;
-            _logger = logger;
+         
             _customRouteHandler = customRouteHandler;
             _storeFrontCache = storeFrontCache;
             _urlhelper = urlhelper;
@@ -269,28 +268,30 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
             var totCount = _storeFrontCache.Get<int?>(key);
             if ( !totCount .HasValue)
             {
-                try
-                {
+                try {
                     totCount = (await _searchClient.Search(
                         query: "*:*",
                         pageSize: 0,
-                        filter: "categoryId req " + category.Id).ConfigureAwait(false)).ReadAsSync()?.TotalCount ?? 0;
+                        filter: "categoryId req " + category.Id).ConfigureAwait(false)).ReadAsSync().TotalCount;
 
-                    _storeFrontCache.Set(key, totCount.GetValueOrDefault(0));
-                }
-                catch (Exception ex)
+                    _storeFrontCache.Set(key, totCount);
+                        }
+                catch( Exception ex)
                 {
-                    _logger.Warn(ex);
+                    //todo log
                     _storeFrontCache.Set(key, 0);
                 }
                    
             }
-
-            if (currentIdx+defaultPageSize < totCount.GetValueOrDefault(0))
+            try
             {
-                var nextIndx = currentIdx + defaultPageSize;
-                this.PageContext.CrawlerInfo.NextUrl = this.PageContext.Search.ToUrl(new SearchContextOverrides() { UrlBase = urlBase, StartIndex = nextIndx });
+                if (currentIdx + defaultPageSize < totCount.Value)
+                {
+                    var nextIndx = currentIdx + defaultPageSize;
+                    this.PageContext.CrawlerInfo.NextUrl = this.PageContext.Search.ToUrl(new SearchContextOverrides() { UrlBase = urlBase, StartIndex = nextIndx });
+                }
             }
+            catch { }
 
 
             return category;

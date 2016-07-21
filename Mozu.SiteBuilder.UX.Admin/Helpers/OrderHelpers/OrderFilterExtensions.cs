@@ -78,14 +78,6 @@ namespace Mozu.SiteBuilder.UX.Admin.Helpers.OrderHelpers
                     }
                     return "siteid eq " + filter.value;
                 }
-                case "customerset":
-                    {
-                        if (filter.value == null || string.IsNullOrEmpty(filter.value.ToString()))
-                        {
-                            return "";
-                        }
-                        return "customerset eq " + filter.value;
-                    }
                 case "paymentstatus":
                 {
                     if (filter.value.ToString().ToLower() == "unpaid,pending")
