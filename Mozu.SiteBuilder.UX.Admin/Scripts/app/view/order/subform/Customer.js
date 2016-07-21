@@ -42,7 +42,6 @@ Ext.define('Taco.view.order.subform.Customer', {
             xtype: 'taco-customerfield',            
             flex: 1,
             emptyText: 'Customer Search',
-            filterByCustomerSet:true,
             listeners: {
                 select : function (combo,records, eOpts){                    
                     var selectedRecord = records[0];

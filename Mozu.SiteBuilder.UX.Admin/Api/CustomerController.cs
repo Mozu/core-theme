@@ -133,15 +133,9 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
         }
 
         [HttpGetRoute(UriTemplate = "list")]
-        public async Task<Response<List<ApiCustomer>>> List([FromUri]PagingParamaters pagingParameters, [FromUri]FilterCollection extFilter, bool? showAnonymous = null, bool? isPOFlagRequired = null, bool? filterByCustomerSet = false)
+        public async Task<Response<List<ApiCustomer>>> List([FromUri]PagingParamaters pagingParameters, [FromUri]FilterCollection extFilter, bool? showAnonymous = null, bool? isPOFlagRequired = null)
         {
             int customerId;
-
-            if (filterByCustomerSet!= true)
-            {
-                _customerSetWebApiClient = _customerSetWebApiClient.CloneWithApiContext(x => x.SiteId = null);
-            }
-
             if (pagingParameters.id != null)
             {
                 customerId = Convert.ToInt32(pagingParameters.id);
