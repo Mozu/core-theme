@@ -72,7 +72,7 @@ var WithTag = {
         var asEncountered = false;
         parser.on('*', function(token) {
             if (!asEncountered) return true;
-        })
+        });
         parser.on(types.VAR, function(token) {
             if (token.match === WithTag.as) {
                 if (asEncountered) throw new Error("Error on line " + line + ": " + WithTag.asError);
@@ -164,7 +164,9 @@ HyprLive.engine.setExtension('makeUrlTag', function(type, object) {
     for (var i = 0; i < params.length; i++) {
         if (type === 'paging' && params[i-1] === 'page') {
             secondArg = params[i];
-        } else if (type !== 'paging' || params[i] !== 'page') {
+        } else if (type === 'product' && params[i-1] === 'variant') {
+            secondArg = params[i];
+        } else if ((type !== 'paging' && type !== 'product') || (params[i] !== 'page' && params[i] !== 'variant')) {
             query += (i % 2 ? '=' : '&') + encodeURI(params[i]);
         }
     }
@@ -184,9 +186,12 @@ var util = {
         var url = typeof object === 'object' ? object.imageUrl : object;
         return this.urlScrub(url + extendedQuery + this.getCdnCacheBust());
     },
-    productUrl: function(object, extendedQuery) {
+    productUrl: function(object, extendedQuery, variant) {
         var code = typeof object === 'object' ? object.productCode : object;
-        return this.urlScrub('/p/' + code + extendedQuery);
+        if (!variant) {
+            return this.urlScrub('/p/' + code + extendedQuery);
+        }
+        return this.urlScrub('/p/' + code + '/v/' + variant + extendedQuery);
     },
     categoryUrl: function(object, extendedQuery) {
         var code = typeof object === 'object' ? object.categoryCode : object;
