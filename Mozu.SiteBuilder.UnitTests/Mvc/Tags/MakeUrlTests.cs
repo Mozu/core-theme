@@ -188,6 +188,30 @@ namespace Mozu.SiteBuilder.UnitTests.Mvc.Tags
                     Context = new Dictionary<string, object>() { { "doc", new Mozu.Content.Contracts.Document() {Name="steve", ListFQN="food@fart" } } },
                     ExpectedFunc = TestDescriptor.ContainsLiteral("/steve")
                 },
+                    new TestDescriptor
+                {
+                    Name = "product",
+                    Template = @"{% make_url ""product"" productCode %}",
+                    ContainerModifier = containerMods,
+                    Context = new Dictionary<string, object>() { { "productCode", "abcd" }},
+                    ExpectedFunc = TestDescriptor.ContainsLiteral("p/abcd")
+                },
+                    new TestDescriptor
+                {
+                    Name = "productStringCode",
+                    Template = @"{% make_url ""product"" ""abcd"" %}",
+                    ContainerModifier = containerMods,
+                    Context = new Dictionary<string, object>(),
+                    ExpectedFunc = TestDescriptor.ContainsLiteral("p/abcd")
+                },
+                    new TestDescriptor
+                {
+                    Name = "productVariant",
+                    Template = @"{% make_url ""product"" productCode with variant=""purple-small"" as_paramater %}",
+                    ContainerModifier = containerMods,
+                    Context = new Dictionary<string, object>() { { "productCode", "abcd" }},
+                    ExpectedFunc = TestDescriptor.ContainsLiteral("p/abcd/v/purple-small")
+                }
             };
         }
          

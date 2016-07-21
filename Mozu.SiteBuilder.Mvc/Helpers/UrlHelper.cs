@@ -136,7 +136,7 @@ namespace Mozu.SiteBuilder.Mvc.Helpers
                     }
                 case UrlType.Product:
                     {
-                        url = MakeProductUrl(obj, hostname);
+                        url = MakeProductUrl(obj, config, hostname);
                         break;
                     }
                 case UrlType.Stylesheet:
@@ -360,15 +360,14 @@ namespace Mozu.SiteBuilder.Mvc.Helpers
 
        
 
-        string MakeProductUrl(object obj, string hostName=null)
+        string MakeProductUrl(object obj, Dictionary<string, object> config, string hostName=null)
         {
 
             Product product = obj as Product;
-            string url;
             if (product == null)
             {
                 string productCode = null;
-                url = "#";
+                string url = "#";
                 if (obj is string)
                 {
                     productCode = (string)obj;
@@ -378,13 +377,14 @@ namespace Mozu.SiteBuilder.Mvc.Helpers
                 {
                     url = _resolver.ResolveMemberOrDefault<string>(obj, "url", "#");
                 }
+                if (config != null && config.ContainsKey("variant"))
+                {
+                    url = $"{url}/v/{config["variant"]}";
+                }
                 return url;
             }
 
-
-
             return _customRouteHandler.GetCanonicalUrl(FancyRoute.ProductDetails, () => Mapper.Map<IDictionary<string, object>>(product), false, hostName:hostName).Result ?? "/p/" + product.ProductCode;
-
         }
 
         string MakeCategoryUrl(object obj, Dictionary<string, object> config, bool includeContxt, bool forFaceting, string hostname=null)
