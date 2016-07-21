@@ -66,19 +66,13 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
             _urlhelper = urlhelper;
         }
 
-        /// <summary>
-        /// Retrieves information about a single product given its product code.  
-        /// </summary>
-        /// <param name="productCode">Required. Merchant-created code associated with the product, for example, a SKU. Max length: 30.</param>
-        /// <param name="variantProductCode">Optional variationProductCode. Merchant-created code associated with a specific product variation. Max length: #.</param>
-        /// <returns>Returns information about a single product given its product code including its ... to be continued.</returns>
         [SbActionExtensionFilter(actionId: ActionFilterConstants.ProductDetailsBeforeAction, executionType: ActionExtensionExecutionTypes.BeforeController)]
         [SbActionExtensionFilter(actionId: ActionFilterConstants.ProductDetailsAfterAction, executionType: ActionExtensionExecutionTypes.AfterController)]
         [HttpHead]
         [HttpGet]
-        public async Task<HttpResponseMessage> ProductDetail(string productCode, string variantProductCode = null)
+        public async Task<HttpResponseMessage> ProductDetail(string productCode)
         {
-            var productResponse = await _productClient.GetProduct(productCode, variantProductCode, "Categories,Properties,Options", PageContext.IsEditMode, supressOutOfStock404: true).ConfigureAwait(false);
+            var productResponse = await _productClient.GetProduct(productCode, null, "Categories,Properties,Options", PageContext.IsEditMode, supressOutOfStock404: true).ConfigureAwait(false);
 
             if (!productResponse.ResponseMessage.IsSuccessStatusCode)
             {

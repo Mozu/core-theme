@@ -86,15 +86,6 @@
         });
 
         it('has a tag {% make_url "product" %} that produces a valid Product url', function() {
-            expect(Hypr.engine.render('{% make_url "product" 1234 with variantProductCode=small-green %}'))
-                .to.equal('/p/1234/v/small-green');
-            expect(Hypr.engine.render('{% make_url "product" "something-code-12" with variantProductCode=small-green %}'))
-                .to.equal('/p/something-code-12/v/small-green');
-            expect(Hypr.engine.render('{% make_url "product" model with variantProductCode=small-green %}', { locals: { model: { productCode: 'something-code-12' } } }))
-                .to.equal('/p/something-code-12/v/small-green');
-        });
-
-        it('has a tag {% make_url "product" %} that produces a valid Product Variant url', function () {
             expect(Hypr.engine.render('{% make_url "product" 1234 %}'))
                 .to.equal('/p/1234');
             expect(Hypr.engine.render('{% make_url "product" "something-code-12" %}'))

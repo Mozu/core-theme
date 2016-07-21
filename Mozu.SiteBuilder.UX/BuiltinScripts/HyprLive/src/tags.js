@@ -184,13 +184,9 @@ var util = {
         var url = typeof object === 'object' ? object.imageUrl : object;
         return this.urlScrub(url + extendedQuery + this.getCdnCacheBust());
     },
-    productUrl: function(object, extendedQuery, variantProductCode) {
+    productUrl: function(object, extendedQuery) {
         var code = typeof object === 'object' ? object.productCode : object;
-        if (!variantProductCode) {
-            return this.urlScrub('/p/' + code + extendedQuery);
-        } else {
-            return this.urlScrub('/p/' + code + '/v/' + variantProductCode + extendedQuery);
-        }
+        return this.urlScrub('/p/' + code + extendedQuery);
     },
     categoryUrl: function(object, extendedQuery) {
         var code = typeof object === 'object' ? object.categoryCode : object;
