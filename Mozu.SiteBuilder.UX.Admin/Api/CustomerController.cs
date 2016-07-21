@@ -195,12 +195,10 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
             //TODO:this flag info should ideally come from getAccounts api call  
             if (isPOFlagRequired.GetValueOrDefault(false))
             {
-                var poTasks = customers.Select(x => _customerWebApiClient.GetCustomerPurchaseOrderAccount(x.Id.Value,responseFields:"id,isEnabled")).ToArray();
-                await Task.WhenAll(poTasks);
-                var poAccounts = poTasks.Where(x => !x.Result.HasException).Select( x=> x.Result.ReadAsSync()).ToArray();
                 foreach (var customer in customers)
                 {
-                    customer.IsPoEnabled = poAccounts.FirstOrDefault(x => x?.Id == customer.Id)?.IsEnabled == true;
+                    var result = (await _customerWebApiClient.GetCustomerPurchaseOrderAccount(customer.Id.Value)).ReadAsAsync().Result;
+                    customer.IsPoEnabled = result?.IsEnabled ?? false;
                 }
             }
 

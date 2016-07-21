@@ -106,8 +106,6 @@ namespace Mozu.SiteBuilder.UX.Admin.Helpers.CustomerHelpers
                     return string.Format("segments.id eq {0}", filter.value);
                 case "notsegment":
                     return string.Format("segments.id ne {0}", filter.value);
-                case "customerset":
-                    return string.Format("customerset eq {0}", filter.value);
                 default:
                     {
                         throw new NotImplementedException("unable to filter on property " + filter.property);
