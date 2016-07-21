@@ -1,11 +1,16 @@
 /*! 
- * Mozu Hypr Live - v1.0.0 - 2015-11-17
+ * Mozu Hypr Live - v1.0.0 - 2016-07-21
  *
- * Copyright (c) 2015 Volusion, Inc.
+ * Copyright (c) 2016 Volusion, Inc.
  *
  */
 
- (function(root) {	/* IE8 polyfills */	var hasOwnProperty = Object.prototype.hasOwnProperty,
+ (function(root) {
+
+	/* IE8 polyfills */
+
+
+	var hasOwnProperty = Object.prototype.hasOwnProperty,
     hasDontEnumBug = !({toString: null}).propertyIsEnumerable('toString'),
     dontEnums = [
         'toString',
@@ -15,7 +20,8 @@
         'isPrototypeOf',
         'propertyIsEnumerable'
     ],
-    dontEnumsLength = dontEnums.length;	(function() {
+    dontEnumsLength = dontEnums.length;
+	(function() {
     var _slice = Array.prototype.slice;
 
     try {
@@ -349,7 +355,9 @@
 	}
 
 
-})();	// the definewrapper.tpl uses a super-slim override of "define" that pushes AMD deps into an array.
+})();
+
+	// the definewrapper.tpl uses a super-slim override of "define" that pushes AMD deps into an array.
     // this allows us to cleanly vendor AMD-compatible scripts without polluting scope or registering 
     // private scripts in the root require namespace.
     // only downside is, you have to refer to the build script (Gruntfile) to see what order you brought them in.
@@ -365,7 +373,7 @@
 	(function (exportFn) {
 		exportFn(['hyprlivecontext'], function (HyprLiveContext) {
             
-/*! Swig v<%= pkg.version %> | https://paularmstrong.github.com/swig | @license https://github.com/paularmstrong/swig/blob/master/LICENSE */
+/*! Swig v1.3.6-hypr.1 | https://paularmstrong.github.com/swig | @license https://github.com/paularmstrong/swig/blob/master/LICENSE */
 /*! DateZ (c) 2011 Tomo Universalis | @license https://github.com/TomoUniversalis/DateZ/blob/master/LISENCE */
 ;(function e(t,n,r){function s(o,u){if(!n[o]){if(!t[o]){var a=typeof require=="function"&&require;if(!u&&a)return a(o,!0);if(i)return i(o,!0);throw new Error("Cannot find module '"+o+"'")}var f=n[o]={exports:{}};t[o][0].call(f.exports,function(e){var n=t[o][1][e];return s(n?n:e)},f,f.exports,e,t,n,r)}return n[o].exports}var i=typeof require=="function"&&require;for(var o=0;o<r.length;o++)s(r[o]);return s})({1:[function(require,module,exports){
 var swig = require('../lib/swig');
@@ -2266,8 +2274,8 @@ exports.parse = function (source, opts, tags, filters) {
     varStripAfter = new RegExp('-' + escapedVarClose + '$'),
     cmtOpen = opts.cmtControls[0],
     cmtClose = opts.cmtControls[1],
-	inlineCmtOpen = opts.inlineCmtControls[0],
-	inlineCmtClose = opts.inlineCmtControls[1],
+    inlineCmtOpen = opts.inlineCmtControls[0],
+    inlineCmtClose = opts.inlineCmtControls[1],
     anyChar = '[\\s\\S]*?',
     // Split the template source based on variable, tag, and comment blocks
     // /(\{%[\s\S]*?%\}|\{\{[\s\S]*?\}\}|\{#[\s\S]*?#\})/
@@ -2605,6 +2613,7 @@ var defaultOptions = {
     varControls: ['{{', '}}'],
     tagControls: ['{%', '%}'],
     cmtControls: ['{#', '#}'],
+    inlineCmtControls: ['{#', '#}'],
     locals: {},
     /**
      * Cache control for templates. Defaults to saving all templates into memory.
@@ -5498,7 +5507,8 @@ process.nextTick = (function () {
     if (canPost) {
         var queue = [];
         window.addEventListener('message', function (ev) {
-            if (ev.source === window && ev.data === 'process-tick') {
+            var source = ev.source;
+            if ((source === window || source === null) && ev.data === 'process-tick') {
                 ev.stopPropagation();
                 if (queue.length > 0) {
                     var fn = queue.shift();
@@ -5803,7 +5813,9 @@ HyprLive.engine.setExtension('makeUrlTag', function(type, object) {
     for (var i = 0; i < params.length; i++) {
         if (type === 'paging' && params[i-1] === 'page') {
             secondArg = params[i];
-        } else if (type !== 'paging' || params[i] !== 'page') {
+        } else if (type === 'product' && params[i-1] === 'variant') {
+            secondArg = params[i];
+        } else if ((type !== 'paging' && type !== 'product') || (params[i] !== 'page' && params[i] !== 'variant')) {
             query += (i % 2 ? '=' : '&') + encodeURI(params[i]);
         }
     }
@@ -5823,9 +5835,12 @@ var util = {
         var url = typeof object === 'object' ? object.imageUrl : object;
         return this.urlScrub(url + extendedQuery + this.getCdnCacheBust());
     },
-    productUrl: function(object, extendedQuery) {
+    productUrl: function(object, extendedQuery, variant) {
         var code = typeof object === 'object' ? object.productCode : object;
-        return this.urlScrub('/p/' + code + extendedQuery);
+        if (!variant) {
+            return this.urlScrub('/p/' + code + extendedQuery);
+        }
+        return this.urlScrub('/p/' + code + '/v/' + variant + extendedQuery);
     },
     categoryUrl: function(object, extendedQuery) {
         var code = typeof object === 'object' ? object.categoryCode : object;
@@ -6272,7 +6287,7 @@ HyprLive.engine.setTag('make_url', MakeUrlTag.parse, MakeUrlTag.compile, false, 
             humanized: memo.humanized + space + strPart,
             elemsCount: elemsCount
         };
-    };
+    }
 
     function timeBetween(date, laterDate) {
         if (!date || !laterDate) return "0 minutes";
