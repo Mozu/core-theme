@@ -882,6 +882,16 @@
 
                 return purchaseOrderEnabled;
             },
+            resetPOInfo: function() {
+                var me = this,
+                    currentPurchaseOrder = me.get('purchaseOrder');
+
+                currentPurchaseOrder.get('paymentTermOptions').reset();
+                currentPurchaseOrder.get('customFields').reset();
+                currentPurchaseOrder.get('paymentTerm').clear();
+
+                this.setPurchaseOrderInfo();
+            },
             setPurchaseOrderInfo: function() {
                 var me = this,
                     order = me.getOrder(),
@@ -917,9 +927,7 @@
                 var amount = purchaseOrderInfo.totalAvailableBalance > order.get('amountRemainingForPayment') ?
                         order.get('amountRemainingForPayment') : purchaseOrderInfo.totalAvailableBalance;
 
-                if(!currentPurchaseOrderAmount || currentPurchaseOrderAmount !== amount) {
-                    currentPurchaseOrder.set('amount', amount);
-                }
+                currentPurchaseOrder.set('amount', amount);
 
                 currentPurchaseOrder.set('totalAvailableBalance', purchaseOrderInfo.totalAvailableBalance);
                 currentPurchaseOrder.set('availableBalance', purchaseOrderInfo.availableBalance);
@@ -928,22 +936,20 @@
                 if(purchaseOrderInfo.totalAvailableBalance < order.get('amountRemainingForPayment')) {
                     currentPurchaseOrder.set('splitPayment', true);
                 }
-
-                if(currentPurchaseOrder.get('paymentTermOptions').length === 0) {
-                    var paymentTerms = [];
-                    purchaseOrderInfo.paymentTerms.forEach(function(term) {
-                        if(term.siteId === siteId) {
-                            var newTerm = {};
-                            newTerm.code = term.code;
-                            newTerm.description = term.description;
-                            paymentTerms.push(term);
-                        }
-                    });
-                    currentPurchaseOrder.set('paymentTermOptions', paymentTerms, {silent: true});
-                }
+                
+                var paymentTerms = [];
+                purchaseOrderInfo.paymentTerms.forEach(function(term) {
+                    if(term.siteId === siteId) {
+                        var newTerm = {};
+                        newTerm.code = term.code;
+                        newTerm.description = term.description;
+                        paymentTerms.push(term);
+                    }
+                });
+                currentPurchaseOrder.set('paymentTermOptions', paymentTerms, {silent: true});
 
                 var paymentTermOptions = currentPurchaseOrder.get('paymentTermOptions');
-                if(!currentPurchaseOrder.get('paymentTerm').get('code') && paymentTermOptions.length === 1) {
+                if(paymentTermOptions.length === 1) {
                     var paymentTerm = {};
                     paymentTerm.code = paymentTermOptions.models[0].get('code');
                     paymentTerm.description = paymentTermOptions.models[0].get('description');

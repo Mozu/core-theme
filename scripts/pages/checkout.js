@@ -193,7 +193,7 @@ require(["modules/jquery-mozu", "underscore", "hyprlive", "modules/backbone-mozu
             this.model.clear();
             this.model.resetAddressDefaults();
             if(HyprLiveContext.locals.siteContext.checkoutSettings.purchaseOrder.isEnabled) {
-                this.model.setPurchaseOrderInfo();
+                this.model.resetPOInfo();
             }
         },
         updatePurchaseOrderPaymentTerm: function(e) {
