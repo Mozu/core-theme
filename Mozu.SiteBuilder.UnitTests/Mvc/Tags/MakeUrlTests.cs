@@ -211,6 +211,17 @@ namespace Mozu.SiteBuilder.UnitTests.Mvc.Tags
                     ContainerModifier = containerMods,
                     Context = new Dictionary<string, object>() { { "productCode", "abcd" }},
                     ExpectedFunc = TestDescriptor.ContainsLiteral("p/abcd/v/purple-small")
+                },
+                    new TestDescriptor
+                {
+                    Name = "productVariantObject",
+                    Template = @"{% make_url ""product"" product with variant=""purple-small"" as_paramater %}",
+                    ContainerModifier = containerMods,
+                    Context = new Dictionary<string, object>() { { "product", new Mozu.SiteBuilder.UX.Models.StoreFront.Catalog.Product
+                    {
+                        ProductCode = "abcd"
+                    } }},
+                    ExpectedFunc = TestDescriptor.ContainsLiteral("p/abcd/v/purple-small")
                 }
             };
         }

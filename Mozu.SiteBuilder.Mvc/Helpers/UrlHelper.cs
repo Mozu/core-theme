@@ -362,12 +362,11 @@ namespace Mozu.SiteBuilder.Mvc.Helpers
 
         string MakeProductUrl(object obj, Dictionary<string, object> config, string hostName=null)
         {
-
             Product product = obj as Product;
+            string url = "#";
             if (product == null)
             {
                 string productCode = null;
-                string url = "#";
                 if (obj is string)
                 {
                     productCode = (string)obj;
@@ -377,14 +376,27 @@ namespace Mozu.SiteBuilder.Mvc.Helpers
                 {
                     url = _resolver.ResolveMemberOrDefault<string>(obj, "url", "#");
                 }
+            }
+            else
+            {
                 if (config != null && config.ContainsKey("variant"))
                 {
-                    url = $"{url}/v/{config["variant"]}";
+                    product.VariationProductCode = config["variant"] as string;
                 }
-                return url;
+                url =
+                    _customRouteHandler.GetCanonicalUrl(FancyRoute.ProductDetails,
+                        () => Mapper.Map<IDictionary<string, object>>(product), false, hostName: hostName).Result;
+                if (!string.IsNullOrEmpty(url))
+                {
+                    return url; 
+                }
+                url = "/p/" + product.ProductCode;
             }
-
-            return _customRouteHandler.GetCanonicalUrl(FancyRoute.ProductDetails, () => Mapper.Map<IDictionary<string, object>>(product), false, hostName:hostName).Result ?? "/p/" + product.ProductCode;
+            if (config != null && config.ContainsKey("variant"))
+            {
+                url = $"{url}/v/{config["variant"]}";
+            }
+            return url;
         }
 
         string MakeCategoryUrl(object obj, Dictionary<string, object> config, bool includeContxt, bool forFaceting, string hostname=null)
