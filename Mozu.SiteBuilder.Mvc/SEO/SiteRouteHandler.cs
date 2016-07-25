@@ -278,7 +278,7 @@ namespace Mozu.SiteBuilder.Mvc.SEO
             return incomingPort;
         }
 
-        public async Task<string> GetCanonicalUrl(FancyRoute internalRoute, Func<IDictionary<string, object>> viewDataAdditionFunc, bool useContext)
+        public async Task<string> GetCanonicalUrl(FancyRoute internalRoute, Func<IDictionary<string, object>> viewDataAdditionFunc, bool useContext, string hostName = null)
         {
             var routeCollection = await GetRouteCollectionAsync().ConfigureAwait(false);
             var routes = GetCanonicalRouteList(internalRoute, routeCollection, _routeconfig);
@@ -301,7 +301,7 @@ namespace Mozu.SiteBuilder.Mvc.SEO
                 var vpath = route.GetVirtualPath(newReq, routingValues);
                 if (vpath != null)
                 {
-                    return CreateOutboundUri(route, vpath);
+                    return CreateOutboundUri(route, vpath, hostName , hostName != null);
                 }
             }
             return null;
@@ -320,8 +320,8 @@ namespace Mozu.SiteBuilder.Mvc.SEO
             newReq.Properties[HttpPropertyKeys.DependencyScope] = parent.Properties[HttpPropertyKeys.DependencyScope];
             return newReq;
         }
-
-        static string CreateOutboundUri(CustomRoute route, IHttpVirtualPathData vpath)
+        
+        static string CreateOutboundUri(CustomRoute route, IHttpVirtualPathData vpath, string host, bool fullyQualifyUris)
         {
            
             var path = "/" + new Uri("http://localhost/" + vpath.VirtualPath, UriKind.Absolute).GetComponents(UriComponents.Path, UriFormat.Unescaped);
@@ -329,12 +329,13 @@ namespace Mozu.SiteBuilder.Mvc.SEO
            // var scheme = route.UrlScheme.HasValue ? route.UrlScheme.Value.ToStringQuickly() : incomingUri.Scheme;
             var builder = new UriBuilder("http://localhost");
             builder.Path = path;
-           // builder.Query = query;
-            //dont use urlshcme .. causes invalid caching
-            //if (route.UrlScheme.HasValue)
-            //{
-            //    return builder.Uri.ToString();
-            //}
+            if ( fullyQualifyUris)
+            {
+                builder.Host = host;
+                builder.Scheme = route.UrlScheme.GetValueOrDefault(CustomRoute.Scheme.Http).ToString();
+
+                return builder.Uri.GetComponents(UriComponents.HttpRequestUrl, UriFormat.Unescaped);
+            }
             return builder.Uri.GetComponents(UriComponents.PathAndQuery, UriFormat.Unescaped);
         }
 

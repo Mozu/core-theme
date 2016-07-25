@@ -180,6 +180,9 @@
     <Compile Include="Api\Models\Account\CustomerPurchaseOrderAccount.cs" />
     <Compile Include="Api\Models\Order\PurchaseOrderPayment.cs" />
     <Compile Include="Api\Models\PriceLists\PriceListEntryExtra.cs" />
+    <Compile Include="Api\Models\Reports\Report.cs" />
+    <Compile Include="Api\Models\Reports\ReportParams.cs" />
+    <Compile Include="Api\Models\Search\SynonymDefinition.cs" />
     <Compile Include="Api\ReportGenerator.cs" />
     <Compile Include="Api\CouponCodeController.cs" />
     <Compile Include="Api\LayoutWidgetDefinitionController.cs" />
@@ -461,6 +464,7 @@
     <Compile Include="Helpers\PriceListHelpers\PriceListExtraEntryHelper.cs" />
     <Compile Include="Helpers\PriceListHelpers\PriceListFilterExtensions.cs" />
     <Compile Include="Helpers\PriceListHelpers\PriceListSortExtensions.cs" />
+    <Compile Include="Helpers\ProductHelpers\BundleItemCatalogHelper.cs" />
     <Compile Include="Helpers\ProductHelpers\ProductFilterExtensions.cs" />
     <Compile Include="Helpers\ProductHelpers\ProductSortExtensions.cs" />
     <Compile Include="Helpers\ProductRuntimeHelpers\ProductRuntimeFilterExpressionBuilder.cs" />
@@ -473,6 +477,8 @@
     <Compile Include="Helpers\SearchTuningHelpers\SearchTuningRuleFilterBuilder.cs" />
     <Compile Include="Helpers\SearchTuningHelpers\SearchTuningRuleSortBuilder.cs" />
     <Compile Include="Helpers\SecurityHelpers\SecureCapabilityConfigUrlHelper.cs" />
+    <Compile Include="Helpers\SynonymHelpers\SynonymSortBuilder.cs" />
+    <Compile Include="Helpers\SynonymHelpers\SynonymFilterBuilder.cs" />
     <Compile Include="Helpers\TaskHelper.cs" />
     <Compile Include="MessageHandlers\AuthRedirectMessageHandler.cs" />
     <Compile Include="MockServices\AbstractInMemoryResourceApiClient.cs" />
@@ -598,6 +604,7 @@
     <Content Include="Scripts\app\model\PriceListEntryExtra.js" />
     <Content Include="Scripts\app\model\PriceListEntryPrice.js" />
     <Content Include="Scripts\app\model\PurchaseOrderCustomField.js" />
+    <Content Include="Scripts\app\model\ReportList.js" />
     <Content Include="Scripts\app\model\RuntimePriceList.js" />
     <Content Include="Scripts\app\model\StorefrontProduct.js" />
     <Content Include="Scripts\app\model\FilterField.js" />
@@ -714,6 +721,7 @@
     <Content Include="Scripts\app\store\ProductRankings.js" />
     <Content Include="Scripts\app\store\CouponSets.js" />
     <Content Include="Scripts\app\store\PublishSetsGrid.js" />
+    <Content Include="Scripts\app\store\Reports.js" />
     <Content Include="Scripts\app\store\RuntimePriceLists.js" />
     <Content Include="Scripts\app\store\StorefrontProducts.js" />
     <Content Include="Scripts\app\store\DiscountGrid.js" />
@@ -898,6 +906,8 @@
     <Content Include="Scripts\app\view\publishing\modal\CreatePublishSet.js" />
     <Content Include="Scripts\app\view\publishing\modal\PublishSetPicker.js" />
     <Content Include="Scripts\app\view\publishing\Split.js" />
+    <Content Include="Scripts\app\view\report\ReportList.js" />
+    <Content Include="Scripts\app\view\report\Split.js" />
     <Content Include="Scripts\app\view\role\editModal.js" />
     <Content Include="Scripts\app\view\productRanking\modal\ProductRankingEditor.js" />
     <Content Include="Scripts\app\view\settings\paymentGateways\Index.js" />

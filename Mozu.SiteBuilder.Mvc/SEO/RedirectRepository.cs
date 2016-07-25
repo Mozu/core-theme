@@ -54,7 +54,7 @@ namespace Mozu.SiteBuilder.Mvc.SEO
         /// <param name="viewDataAdditionFunc"></param>
         /// <param name="useExistingQuery"></param>
         /// <returns></returns>
-        Task<string> GetCanonicalUrl( FancyRoute internalRoute, Func<IDictionary<string, object>> viewDataAdditionFunc, bool useExistingValues );
+        Task<string> GetCanonicalUrl( FancyRoute internalRoute, Func<IDictionary<string, object>> viewDataAdditionFunc, bool useExistingValues , string hostName = null);
     }
    
     public interface IRedirectRepository

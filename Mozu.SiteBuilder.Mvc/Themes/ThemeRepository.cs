@@ -275,7 +275,7 @@ namespace Mozu.SiteBuilder.Mvc.Themes
             {
                 if ( selection != null && !string.IsNullOrEmpty(selection.Id ))
                 {
-                    return GetTheme(selection);
+                    return GetTheme(selection) ??  GetDefaultTheme();
                 }
                 return GetDefaultTheme();
             }

@@ -65,7 +65,7 @@ namespace Mozu.SiteBuilder.Mvc.Catalog
             return current == possibleBad ? SemaphoreFactory() : current;
         }
         private async Task<CategoryTree> GetAllCategoriesImpl() {
-            var cacheKey = this.GetType().FullName + _priceListCode + _dataViewMode;
+            var cacheKey = this.GetType().FullName + _priceListCode + _dataViewMode + _siteId;
 
             var catTree = _cache.Get<CategoryTree>(cacheKey, CacheScope.Catalog, StorefrontCacheTypes.Default);
             if (catTree != null)

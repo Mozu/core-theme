@@ -585,7 +585,10 @@ Ext.define('Taco.model.Product', {
 
     },
     formatCurrency: function (value) {
-        return this.getMasterCatalog().formatCurrency(value);
+        if (!isNaN(value)) {
+            return this.getMasterCatalog().formatCurrency(value);
+        }
+        return '';
     },
     getCurrencyCode: function () {
         return this.getMasterCatalog().currencyCode;

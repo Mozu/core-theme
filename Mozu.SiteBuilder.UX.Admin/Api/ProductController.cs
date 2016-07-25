@@ -32,16 +32,18 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
         private readonly IProductTypeWebApiClient _productTypeWebApiClient;
         private readonly IPublishSetWebApiClient _publishSetClient;
         private readonly ILogger _logger;
+        private readonly IBundleItemCatalogHelper _bundleItemCatalogHelper;
 
         /// <summary>
         /// Public constructor.
         /// </summary>
-        public ProductController(IProductWebApiClient productClient, IProductTypeWebApiClient productTypeWebApiClient, IPublishSetWebApiClient publishSetClient, ILogger logger )
+        public ProductController(IProductWebApiClient productClient, IProductTypeWebApiClient productTypeWebApiClient, IPublishSetWebApiClient publishSetClient, ILogger logger, IBundleItemCatalogHelper bundleItemCatalogHelper)
         {
             _productClient = productClient;
             _productTypeWebApiClient = productTypeWebApiClient;
             _publishSetClient = publishSetClient;
             _logger = logger;
+            _bundleItemCatalogHelper = bundleItemCatalogHelper;
         }
 
         [HttpGetRoute(UriTemplate = "list")]
@@ -107,6 +109,10 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
 
 
             var createdProducts = await _productMapper.PerformAction(products, p => _productClient.AddProduct(p));
+            foreach (var createdProd in createdProducts.Where(editedProd => editedProd.ProductUsage.Equals("Bundle")))
+            {
+                await GetBundleItemCatalogInfo(createdProd);
+            }
             return List2(createdProducts.ToList());
         }
 
@@ -156,7 +162,12 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
                 }
                 return _productClient.UpdateProduct(p, p.ProductCode);
             });
-            return List2(editedProducts.ToList());
+            var result = editedProducts.ToList();
+            foreach (var editedProd in result.Where(x => x.ProductUsage.Equals("Bundle")))
+            {
+                await GetBundleItemCatalogInfo(editedProd);
+            }
+            return List2(result);
         }
 
         [HttpPostRoute(UriTemplate = "delete")]
@@ -256,11 +267,23 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
             return List2(prodCodeRenames);
         }
 
+        [HttpGetRoute(UriTemplate = "bundleitems")]
+        public async Task<Response<List<Product>>> ListBundleItems([FromUri]string productCodes)
+        {
+            var bundleItemCollection = await GetBundleItems(productCodes);
+            var bundleItemProducts = bundleItemCollection.Items.Map<List<Product>>();
+            return List2(bundleItemProducts, bundleItemCollection.TotalCount);
+        }
+
         private async Task<Response<List<Product>>> GetSingleProductAsync(PagingParamaters pagingParams)
         {
             var result = await _productClient.GetProduct(pagingParams.id, null);
             DC.Product prod = result.ReadAsAsync().Result;
             var productModel = Mapper.Map<Product>(prod);
+            if (productModel.ProductUsage.Equals("Bundle") && productModel.BundledProducts != null && productModel.BundledProducts.Any())
+            {
+                await GetBundleItemCatalogInfo(productModel);
+            }
 
             if (prod.PublishingInfo == null || string.IsNullOrEmpty(prod.PublishingInfo.PublishSetCode)) {
                 return List2(productModel);
@@ -276,6 +299,24 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
                 _logger.Error(string.Format("Error trying to find Publish-Set [{0}]", prod.PublishingInfo.PublishSetCode), ex.Message);
             }
             return List2(productModel);
+        }
+
+        private async Task<ProductCollection> GetBundleItems(string productCodes)
+        {
+            var filter = $"productCode in [{productCodes}]";
+            var responseFields = "items(productCode,productInCatalogs(catalogId,content(localeCode,productName),price(isoCurrencyCode,price,salePrice)))";
+            return (await _productClient.GetProducts(startIndex: 0, pageSize: 600,
+                filter: filter, responseFields: responseFields)).ReadAsSync();
+        }
+
+        private async Task GetBundleItemCatalogInfo(Product productModel)
+        {
+            var bundleItemProductCodes = productModel.BundledProducts.Select(x => x.ProductCode).Join(",");
+            var bundleItemData = await GetBundleItems(bundleItemProductCodes);
+
+            productModel.ProductInCatalogs =
+                _bundleItemCatalogHelper.MergeBundleItemsAndCatalogInfo(productModel.BundledProducts,
+                    productModel.ProductInCatalogs, bundleItemData.Items);
         }
     }
 }

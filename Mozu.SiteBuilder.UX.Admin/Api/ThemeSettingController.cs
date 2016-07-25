@@ -59,7 +59,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
         {
             var values = await _themeSettingsRepository.GetInstanceValues(themeId);
             var docId = String.Join("", "theme_settings_", themeId); 
-            var documents = (await _documentListWebApiClient.GetDocuments(documentListName: "siteSettings@mozu", pageSize: 200)).ReadAsSync();
+            var document = (await _documentListWebApiClient.GetTreeDocument(documentListName: "siteSettings@mozu", documentName: docId)).ReadAsSync();
             var docList = (await _documentListWebApiClient.GetDocumentList(documentListName: "siteSettings@mozu")).ReadAsSync();
             var theme = _themeRepository.GetThemeOrDefault(new ThemeSelection() { Id = themeId });
 
@@ -67,13 +67,9 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
             string cmsDocId = null;
             bool? isPublishingEnabled = docList.EnablePublishing;
 
-            if (documents != null)
+            if (document != null)
             {
-                var doc = documents.Items.Find(x => x.Name == docId);
-                if (doc != null)
-                {
-                    cmsDocId = doc.Id;
-                }
+                cmsDocId = document.Id;
             }
 
             foreach (var setting in configSettings.Items)

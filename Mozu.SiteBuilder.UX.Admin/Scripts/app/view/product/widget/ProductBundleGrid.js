@@ -7,6 +7,7 @@ Ext.define('Taco.view.product.widget.ProductBundleGrid', {
     requires: [
         'Ext.form.field.Number',
         'Ext.grid.plugin.DragDrop',
+        'Taco.core.ux.DragHandleColumn',
         'Ext.data.Store',
         'Ext.grid.plugin.CellEditing',
         'Taco.store.Products',
@@ -19,63 +20,146 @@ Ext.define('Taco.view.product.widget.ProductBundleGrid', {
     enableSearch: false,
     enablePaging: false,
     enableRowEditing: false,
+    enableRowReorder: true,
     enableAutoSelect:false,
-    launchEditorOnClick: true,
+    launchEditorOnClick: false,
     modelName: 'Taco.model.Product',
-
     hideSearchToolbar: true,
-    //selType: 'cellmodel',
+    isReadOnly: false,
+    isGlobal: false,
+    bundleProductSource: null,
     width: "100%",
+    viewConfig: {
+        deferEmptyText: false,
+        emptyText: "No items in this bundle",
+        stripeRows: false,
+        plugins: {
+            ptype: 'gridviewdragdrop',
+            ddGroup: 'dd',
+            dragGroup: 'dd',
+            dropGroup: 'dd'
+        }
+    },
+    plugins: [
+        {
+            ptype: 'cellediting',
+            clicksToEdit: 1
+        }, {
+            ptype: 'classhandleddragdrop'
+        }
+    ],
 
     initComponent: function () {
-        var me = this;        
-        
-        Ext.apply(me, {
-            selModel: Ext.create('Ext.selection.CellModel', {
-                enableFieldTabbing: true
-                //    enableKeyNav: false // to disable cell traversal when clicks on keys(es: TAB) 
-            }),
-            viewConfig: {
-                deferEmptyText: false,
-                emptyText: "No items in this bundle",
-                stripeRows: false,
-                plugins: [
-                    {
-                        ptype: 'gridviewdragdrop'
-                    }
-                ]
-            },
-            listeners: {                
-                'edit': {
-                    fn: function(editor, column, e) {
-                        column.record.commit();                        
-                        column.record.save();
-                    }
-                }
-            },
-            plugins: [
-                Ext.create('Ext.grid.plugin.CellEditing', {
-                    clicksToEdit: 1
-                })
-            ],
-            columns: this.getColumnConfig()
-        });
 
-        this.store = this.product.getBundledProducts();
-
+        this.viewConfig = this.viewConfig || {};
+        this.columns = this.getColumnConfig();
+        this.store = this.bundleProductSource.getBundledProducts();
         this.callParent(arguments);
 
-        this.mon(this.view, 'drop', function (node, data, overModel, dropPosition, eOpts) {            
-            // need top set a model member to dirty the record so that the store will persist the change; the value you set isn't persisted;
-            data.records[0].set('index', 1);
-        }, this)
+        if (this.isGlobal) {
+            this.mon(this.view, 'drop', function (node, data) {
+                // need top set a model member to dirty the record so that the store will persist the change; the value you set isn't persisted;
+                data.records[0].set('index', 1);
+            }, this);
 
+            this.mon(this.view, 'edit', function (editor, column) {
+                column.record.commit();
+                column.record.save();
+            }, this);
+        } else {
+            // hook up events only for catalog tabs to subscribe to global tab events
+            this.mon(Taco.app, 'bundle-items-added', this.onBundleItemsAdded, this);
+            this.mon(Taco.app, 'bundle-item-quantity-changed', this.onBundleItemQuantityChanged, this);
+            this.mon(Taco.app, 'bundle-item-removed', this.onBundleItemRemoved, this);
+        }
+    },
+
+    onBundleItemsAdded: function (bundleItems) {
+        var me = this,
+            catalogId,
+            catWarnings = [];
+        if (this.isGlobal) return;
+
+        catalogId = this.productInCatalogInfo.get('catalogId');
+        //have to check cat id?
+        Ext.Array.each(bundleItems, function (bundleItem) {
+            var match = Ext.Array.findBy(bundleItem.get('productInCatalogs'), function(prodInCatalog){
+                return prodInCatalog.catalogId === catalogId;
+            });
+            if (!match) {
+              catWarnings.push(bundleItem.get('productName'));
+              return;
+            }
+            var mergedBundleItem = Ext.Object.merge(bundleItem.data, {price: match.price, salePrice: match.salePrice, productName: match.productName });
+            me.store.add(mergedBundleItem);
+        });
+        Taco.app.fireEvent('bundle-item-catalog-sync', bundleItems);
+        this.getView().refresh();
+        this.warnInactiveBundleItemsInCatalog(catWarnings);
+    },
+
+    warnInactiveBundleItemsInCatalog: function (catWarnings) {
+        var catName, warningMsg;
+        if (catWarnings.length > 0) {
+            catName = this.productInCatalogInfo.get('catalog').name;
+            warningMsg = 'Warning: ';
+            if (catWarnings.length === 1) {
+                warningMsg += ('"' + catWarnings[0] + '" is');
+            } else {
+                warningMsg += ('These bundle items, "' + catWarnings.join('", "') + '" are');
+            }
+            warningMsg += (' not active in "' + catName + '"');
+            Taco.app.fireEvent('setmessage', warningMsg, 'error');
+        }
+    },
+
+    onBundleItemQuantityChanged: function (masterCatBundleItem) {
+        if (this.isGlobal) return;
+        var bundleItem = this.store.findRecord('productCode', masterCatBundleItem.get('productCode'));
+        if (!bundleItem) return;
+        bundleItem.set('quantity', masterCatBundleItem.get('quantity'));
+        Taco.app.fireEvent('bundle-item-catalog-sync', bundleItem);
+        this.getView().refresh();
+    },
+
+    onBundleItemRemoved: function (masterCatBundleItem) {
+        if (this.isGlobal) return;
+        var bundleItem = this.store.findRecord('productCode', masterCatBundleItem.get('productCode'));
+        if (!bundleItem) return;
+        this.store.remove(bundleItem);
+        Taco.app.fireEvent('bundle-item-catalog-sync', bundleItem);
+        this.getView().refresh();
     },
     
     getColumnConfig: function () {
-        var me = this;
-        
-        return [
+        var me = this,
+          columns = [],
+          qtyEditor = null;
+        if (!this.isReadOnly) {
+            qtyEditor = {
+                // defaults to textfield if no xtype is supplied
+                xtype: "numberfield",
+                showBorder:true,
+                hideTrigger: true,
+                mouseWheelEnabled: false,
+                emptyText: "quantity",
+                msgTarget: "qtip",
+                // optional enhancement to rowEditor. Makes the field only editable during a create;
+                //editableOnCreateOnly: true,
+                selectOnFocus: true,
+                allowBlank: false
+            };
+        }
+        if (!this.isReadOnly) {
+            columns.push({
+                xtype: 'draghandlecolumn',
+                stateId: 'dragHandle',
+                width: 35,
+                hideable: false
+            });
+        }
+
+        columns = Ext.Array.push(columns, [
             {
                 dataIndex: "quantity",
                 text: "Quantity",
@@ -83,19 +167,7 @@ Ext.define('Taco.view.product.widget.ProductBundleGrid', {
                 sortable: false,
                 resizable: true,
                 menuDisabled: true,
-                editor: {
-                    // defaults to textfield if no xtype is supplied
-                    xtype: "numberfield",
-                    showBorder:true,
-                    hideTrigger: true,
-                    mouseWheelEnabled: false,
-                    emptyText: "quantity",
-                    msgTarget: "qtip",
-                    // optional enhancement to rowEditor. Makes the field only editable during a create;
-                    //editableOnCreateOnly: true,
-                    selectOnFocus: true,
-                    allowBlank: false
-                },
+                editor: qtyEditor,
                 width: 100
             },
             {
@@ -105,7 +177,7 @@ Ext.define('Taco.view.product.widget.ProductBundleGrid', {
                 resizable: true,
                 menuDisabled: true,
                 text: 'Code',
-                width: 100
+                width: 150
             }, {
                 dataIndex: 'productName',
                 sortable: false,
@@ -123,8 +195,8 @@ Ext.define('Taco.view.product.widget.ProductBundleGrid', {
                 sortable: false,
                 resizable: true,
                 menuDisabled: true,
-                width: 100,
-                text: 'Price'
+                width: 150,
+                text: (!me.isGlobal ? 'Catalog ' : '') + 'Price'
             }, {
                 dataIndex: 'salePrice',
                 stateId: "salePrice",
@@ -134,23 +206,28 @@ Ext.define('Taco.view.product.widget.ProductBundleGrid', {
                 sortable: false,
                 resizable: true,
                 menuDisabled: true,
-                width: 100,
-                text: 'Sale Price'
-            }, {
+                width: 150,
+                text: (!me.isGlobal ? 'Catalog ' : '') + 'Sale Price'
+            }
+        ]);
+
+        if (!this.isReadOnly) {
+            columns.push({
                 xtype: 'taco.menucolumn',
                 draggable: false,
                 menuDisabled: true,
                 text: '',
-                //width: 40,
                 iconCls: Taco.baseCSSPrefix + 'grid-row-menu-trigger-remove',
                 menuItems: [],
-                handler: function(grid, rowIndex, colIndex, header, e, record, item) {
-                    // tell the method that we we want to move this item back to the unshippedItems list;
+                handler: function(grid, rowIndex, colIndex, header, e, record) {
+                // tell the method that we we want to move this item back to the unshippedItems list;
                     me.removeItem(record);
                 },
                 scope: me
-            }
-        ];
+            });
+        }
+
+        return columns;
     },
 
     /**
@@ -192,6 +269,7 @@ Ext.define('Taco.view.product.widget.ProductBundleGrid', {
                         });
 
                         bundleStore.add(itemsToAdd);
+                      // fire itemsToAdd ??
                     },
                     scope: me
                 }
@@ -220,5 +298,8 @@ Ext.define('Taco.view.product.widget.ProductBundleGrid', {
                 }
             }
         });
+    },
+    refresh: function() {
+        this.getView().refresh();
     }
 });

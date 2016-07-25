@@ -133,6 +133,11 @@ Ext.define('Taco.view.theme.Index', {
         	]
         };
 
+        this.listeners = {
+            cellclick: me.onCellClick,
+            scope: me
+        };
+
     	this.callParent(arguments);
 
 
@@ -237,6 +242,38 @@ Ext.define('Taco.view.theme.Index', {
         		}
         	}
         ];
-    }
+    },
+
+    onCellClick: function (view, td, cellIndex, record, tr, rowIndex, e, eOpts) {
+        if (this.getSelectionText()) {  // inherited from the launchEditor mixin;
+            return;                     // if the user has highlighted text, do not launch editor
+        }
+
+        var target= Ext.fly(e.getTarget()),
+            metaData = { id: record.getId() },
+            header = view.getHeaderAtIndex(cellIndex);
+
+        if ((header.dataIndex || header.allowNavigation === true) && header.allowNavigation !== false && this.allowNavigation !== false) {
+            e.preventDefault();
+
+            this.addRecordToBrowserHistory(record);
+
+            this.launchEditor(record, metaData);
+        }
+    },
+
+    addRecordToBrowserHistory: function(record) {
+
+        var URIStem = '/themes';
+
+        Taco.core.StateManager.addState(URIStem);
+    },
+
+    launchEditor: function (record) {
+        Ext.defer(function () {
+            Taco.core.StateManager.attemptNavigate('themesettings/edit/' + record.getId(), { complexMetaData: { record: record } });
+            }, 1, this);
+        return;
+    },
 
 });

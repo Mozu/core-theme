@@ -25,8 +25,8 @@ Ext.define('Taco.view.themesettings.Form', {
 
 
     initComponent: function () {
-        this.title = "Theme Settings"; //tbd get theme name
-        
+        this.title = "<a href=\"../../themes\">Theme Settings</a>"; //tbd get theme name
+
         Ext.apply(this, this.themeInfo.formConfig);
 
         Ext.Array.each(this.items, function (item) {

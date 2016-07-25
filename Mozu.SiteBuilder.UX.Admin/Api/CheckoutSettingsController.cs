@@ -75,7 +75,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
                 ctx.CurrencyCode = site.CurrencyCode;
                 ctx.MasterCatalogId = tenant.MasterCatalogs.FirstOrDefault(mc => mc.Catalogs.Any(cat => cat.Id == site.CatalogId))?.Id;
                 ctx.CatalogId = site.CatalogId;               
-            }).GetPaymentSettings().ContinueWith( res=>
+            }).CloneWithoutUserClaims().GetPaymentSettings().ContinueWith( res=>
             {
                 var po = res.Result.ReadAsSync()?.PurchaseOrder;
                 return new SitePaymentTerm()

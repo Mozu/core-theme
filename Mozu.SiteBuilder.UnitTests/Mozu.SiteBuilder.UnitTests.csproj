@@ -161,6 +161,7 @@
     <Compile Include="Admin\Helpers\FacetHelpers\InheritedFacetHelperTest.cs" />
     <Compile Include="Admin\Helpers\LocationHelpers\LocationHelperTest.cs" />
     <Compile Include="Admin\Helpers\PriceListHelpers\PriceListExtraEntryHelperTest.cs" />
+    <Compile Include="Admin\Helpers\ProductHelpers\BundleItemCatalogHelperTest.cs" />
     <Compile Include="Admin\Helpers\ProductHelpers\ProductFilterExtensionsTest.cs" />
     <Compile Include="Admin\Modules\ModuleTests.cs" />
     <Compile Include="Diagrams\Admin\Scripts\app\core\ux\cdCoreUIComponents.cs" />

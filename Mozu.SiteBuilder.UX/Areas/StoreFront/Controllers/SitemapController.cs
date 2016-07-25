@@ -51,21 +51,23 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
             var resp = this.Request.CreateResponse(HttpStatusCode.OK);
             int pages = (int)Math.Ceiling((decimal)prods.TotalCount/(decimal)PageSize);
             var date = DateTime.UtcNow.AddDays(1).Date.ToString("o");
-            var domain = GetSitePrimaryDomain();
-         
-               this.HttpContext.Response.ContentType = "text/xml";
+            var nakedDomain = GetNakedSitePrimaryDomain();
+           
+            var scheme = PageContext.IsSecure ? "https://" : "http://";
+            var prefixedDomain = scheme + nakedDomain;
+            this.HttpContext.Response.ContentType = "text/xml";
             var writer = XmlTextWriter.Create(this.HttpContext.Response.OutputStream);
             writer.WriteStartElement("sitemapindex", NS);
 
             writer.WriteStartElement("sitemap", NS);
-            writer.WriteElementString("loc", NS, domain + "/sitemap.xml/categories");
+            writer.WriteElementString("loc", NS, prefixedDomain + "/sitemap.xml/categories");
             writer.WriteEndElement();
 
 
             for (int i = 0; i < pages; i++)
             {
                 writer.WriteStartElement("sitemap", NS);
-                writer.WriteElementString("loc", NS, domain + "/sitemap.xml/products/" + i);
+                writer.WriteElementString("loc", NS, prefixedDomain + "/sitemap.xml/products/" + i);
                 writer.WriteEndElement();
             }
             writer.WriteEndElement();
@@ -73,49 +75,51 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
             return resp;
         }
 
-           [System.Web.Http.HttpGet]
-           public async Task<HttpResponseMessage> Categories()
-           {
-               // var primaryNavTask = _gandalf.GetTreeNavigation();
-               //var domainTask = GetSitePrimaryDomain();
-               var nodes = await _gandalf.GetFlatList();
+        [System.Web.Http.HttpGet]
+        public async Task<HttpResponseMessage> Categories()
+        {
+            // var primaryNavTask = _gandalf.GetTreeNavigation();
+            //var domainTask = GetSitePrimaryDomain();
+            var nodes = await _gandalf.GetFlatList();
 
 
-               var domain =  GetSitePrimaryDomain();
-               var resp = this.Request.CreateResponse(HttpStatusCode.OK);
+            var domain = GetPrefixedSitePrimaryDomain();
+            var resp = this.Request.CreateResponse(HttpStatusCode.OK);
 
-               var date = DateTime.UtcNow.AddDays(1).Date.ToString("o");
-               // resp.Content.
-               this.HttpContext.Response.ContentType = "text/xml";
-               var writer = XmlTextWriter.Create(this.HttpContext.Response.OutputStream);
-               writer.WriteStartElement("urlset", NS);
+            var date = DateTime.UtcNow.AddDays(1).Date.ToString("o");
+            // resp.Content.
+            this.HttpContext.Response.ContentType = "text/xml";
+            var writer = XmlTextWriter.Create(this.HttpContext.Response.OutputStream);
+            writer.WriteStartElement("urlset", NS);
 
 
-               writer.WriteStartElement("url", NS);
-               writer.WriteElementString("loc", NS,  domain );
-               //  writer.WriteElementString("lastmod", NS, );
-               writer.WriteElementString("changefreq", NS, "daily");
-               writer.WriteElementString("priority", NS, "1");
-               writer.WriteEndElement();
+            writer.WriteStartElement("url", NS);
+            writer.WriteElementString("loc", NS, domain);
+            //  writer.WriteElementString("lastmod", NS, );
+            writer.WriteElementString("changefreq", NS, "daily");
+            writer.WriteElementString("priority", NS, "1");
+            writer.WriteEndElement();
 
-               foreach ( var node in nodes.Where(x=> !x.IsHidden && !string.IsNullOrEmpty(x.Url) ))
-               {
-                   writer.WriteStartElement("url", NS);
-                   writer.WriteElementString("loc", NS, node.Url.StartsWith("/") ?  domain + node.Url : node.Url );
-                 //  writer.WriteElementString("lastmod", NS, );
-                   writer.WriteElementString("changefreq", NS, "daily");
-                   writer.WriteElementString("priority", NS, ".7");
-                   writer.WriteEndElement();
-               }
-               writer.WriteEndElement();
-               writer.Flush();
-               return resp;
-           }
+            foreach (var node in nodes.Where(x => !x.IsHidden && !string.IsNullOrEmpty(x.Url)))
+            {
+                var url = (node as SuperNavigationNode)?.FqUrl ?? node.Url;
+                writer.WriteStartElement("url", NS);
+                writer.WriteElementString("loc", NS, url.StartsWith("/") ? domain + url : url);
+                //  writer.WriteElementString("lastmod", NS, );
+                writer.WriteElementString("changefreq", NS, "daily");
+                writer.WriteElementString("priority", NS, ".7");
+                writer.WriteEndElement();
+            }
+            writer.WriteEndElement();
+            writer.Flush();
+            return resp;
+        }
 
          [System.Web.Http.HttpGet]
            public async Task<HttpResponseMessage> Products(int page)
            {
-               var domain =  GetSitePrimaryDomain();
+               var prefixDomain =  GetPrefixedSitePrimaryDomain();
+            var nakedDomain = GetNakedSitePrimaryDomain();
                
                var resp = this.Request.CreateResponse(HttpStatusCode.OK);
                var date = DateTime.UtcNow.AddDays(1).Date.ToString("o");
@@ -136,7 +140,7 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
 
                 var vm = Mapper.Map<ProductCollection>(prods);
                 vm.Init(false, PageContext.Search);
-                 WriteProducts(vm, writer, domain, _urlHelper);
+                 WriteProducts(vm, writer, prefixDomain, nakedDomain, _urlHelper);
                  startIndex = startIndex + prods.PageSize;
                  if (startIndex >= (page+1) * PageSize || startIndex >= prods.TotalCount || prods.PageCount == 0 )
                  {
@@ -150,16 +154,17 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
 
            }
 
-        private static void WriteProducts(ProductCollection vm, XmlWriter writer, string domain, UrlHelper urlHelper)
+        private static void WriteProducts(ProductCollection vm, XmlWriter writer, string prefixedDomain,string nakedDomain, UrlHelper urlHelper)
         {
+
             foreach (var prod in vm.Items)
             {
                 writer.WriteStartElement("url", NS);
                 
                
-                var url = urlHelper.MakeUrl(UrlHelper.UrlType.Product, prod, null);
+                var url = urlHelper.MakeUrl(UrlHelper.UrlType.Product, prod, null, hostname : nakedDomain);
            
-                writer.WriteElementString("loc", NS, url.StartsWith("/") ? domain + url : url);
+                writer.WriteElementString("loc", NS, url.StartsWith("/") ? prefixedDomain + url : url);
                 //  writer.WriteElementString("lastmod", NS, );
                 writer.WriteElementString("changefreq", NS, "daily");
                 writer.WriteElementString("priority", NS, ".7");
@@ -168,7 +173,7 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
         }
 
 
-        private string GetSitePrimaryDomain()
+        private string GetPrefixedSitePrimaryDomain()
         {
 
             var primary = SiteContext.Domains.Primary;
@@ -182,6 +187,11 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
                 return null;
             }
         }
+        private string GetNakedSitePrimaryDomain()
+        {
+            return SiteContext.Domains.Primary?.DomainName;
+        }
+
 
     }
 }
