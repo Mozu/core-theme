@@ -115,7 +115,7 @@ namespace Mozu.SiteBuilder.Mvc.OAF
 
             await this.RunFunctions(arcCtx, new List<CustomFunctionBase> { fn }, handler).ConfigureAwait(false);
 
-            return actionContext.Response;
+            return actionContext.Response ?? request.CreateErrorResponse((HttpStatusCode)400, new HttpError("unhanded arcjs request"));
         }
 
         public Task<CustomFunctionBase> GetFunction(string id)
