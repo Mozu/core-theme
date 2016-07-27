@@ -361,13 +361,16 @@ namespace Mozu.SiteBuilder.UX.Models.Settings
         public string CustomCdnHostName { get; set; }
         [DataMember]
         public List<EmailTypeSettingVM> EmailTypes { get; set; }
+        [DataMember]
+        public bool? EnforceSitewideSSL { get; set; }
 
         //public ViewModeToggles ViewModeToggles { get; set; }
 
     }
 
     public class ViewModeToggles {
-
+        [DataMember]
+        public bool? EnforceSitewideSSL { get; set; }
         [DataMember]
         public bool IsRequiredLoginForLiveEnabled { get; set; }
 
