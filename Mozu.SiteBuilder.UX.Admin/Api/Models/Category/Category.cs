@@ -26,6 +26,11 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.Models.Category
 
         //public string CategoryPath { get; set; }
 
+        /// <summary>
+        /// Represents whether the product is active in this site.
+        /// </summary>
+        public bool IsActive { get; set; }
+
         public bool? IsHidden { get; set; }
 
         public int? ParentId { get; set; }

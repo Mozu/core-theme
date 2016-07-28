@@ -8,12 +8,13 @@ namespace Mozu.SiteBuilder.UX.Admin.Helpers.CategoryHelpers
 {
     internal static class CategoryFilterExtensions
     {
-        private const string PARENT_ID = "parentid";
+        private const string PARENT_ID = "parentcategoryid";
         private const string ID = "id";
         private const string CATEGORY_CODE = "categorycode";
         private const string IS_DISPLAYED = "isdisplayed";
         private const string CATALOG_ID = "catalogid";
         private const string CATEGORY_TYPE = "categorytype";
+        private const string IS_ACTIVE = "isactive";
         private const string CREATE_DATE = "createdate";
         private const string UPDATE_DATE = "updatedate";
         private const string CREATE_BY = "createby";
@@ -59,6 +60,9 @@ namespace Mozu.SiteBuilder.UX.Admin.Helpers.CategoryHelpers
 
                 case "categorytype":
                     return String.Format("{2} {1} {0}", filter.value, filter.comparison, CATEGORY_TYPE);
+
+                case "isactive":
+                    return string.Format("{2} {1} {0}", filter.value, filter.comparison, IS_ACTIVE);
 
                 case "createdate":
                     return String.Format("{2} {1} {0}", filter.value, filter.comparison, CREATE_DATE);

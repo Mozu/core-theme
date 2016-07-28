@@ -42,6 +42,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.ModelMapping
                 .ForMember(dest => dest.Code, opt => opt.Ignore())
                 .ForMember(dest => dest.Parent, opt => opt.Ignore())
                 .ForMember(dest => dest.CascadeDelete, op => op.Ignore())
+                .ForMember(dest => dest.IsActive, op => op.Ignore())
                 ;
 
             Mapper.CreateMap<DC.Category, CategoryTreeNode>()

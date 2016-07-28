@@ -38,81 +38,81 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
         {
             if (id.HasValue && id != 666)
             {
-                var cat = (await _categoriesClient.GetCategory(id)).ReadAsSync();
-                var retList = new List<Category> {Mapper.Map<Category>(cat)};
-                return List2(retList);
+                return await GetSingleCategory(id);
             }
-            //getting rid of server filtering for now.  all filtering done on the client.
-           if (pagingParams.id == null || 1==1)
-            {
-                int start = 0;
-                var ctxLevel = TargetContextLevelType.MasterCatalog;
-                
-                int siteId = -1;
-                ICategoryWebApiClient catClient = _categoriesClient;
-                if (nodeQuery.HasValue && filterCollection.TryGetValue("SiteId", out siteId))
-                {
-                    ctxLevel = TargetContextLevelType.Site;
-                    catClient = _categoriesClient.CloneWithApiContext(x => x.SiteId = siteId);
 
+            int start = 0;
+            List<Category> categories = new List<Category>();
+            const string responseFields = "items(id,categoryCode,isDisplayed,sequence,childCount,parentCategoryId,catalogId,categoryType,content(name))";
+            while (true)
+            {
+                var cats = (await _categoriesClient.GetCategories(startIndex: start,
+                    pageSize: 200, //current API maximum is 200 - May 2016
+                    sortBy: "sequence asc",
+                    filter: filterCollection.ToFilterString(),
+                    responseFields: responseFields
+                    )).ReadAsSync();
+                categories.AddRange(Mapper.Map<List<Category>>(cats.Items));
+                start = cats.PageSize + cats.StartIndex;
+                if (cats.TotalCount <= start )
+                {
+                    break;
                 }
-                List<Category> categories = new List<Category>();
-                var client = _categoriesClient.CloneWithApiContext(x =>
+            }
+            foreach (var category1 in categories)
+            {
+                if (category1.ParentId.GetValueOrDefault(-1) > -1)
                 {
-                    x.CatalogId = null;
-                    x.SiteId = null;
-                });
-                const string responseFields = "items(id,categoryCode,isDisplayed,sequence,childCount,parentCategoryId,catalogId,categoryType,content(name))";
-                //                const string responseFields = "";
-                while (true)
+                    category1.Parent = categories.FirstOrDefault(x => x.Id == category1.ParentId.Value);
+                }
+            }
+            var ancestory = new List<Category>();
+            foreach (var category1 in categories.Where(x => x.Parent != null))
+            {
+                ancestory.Clear();
+                var parent = category1.Parent;
+
+                do
                 {
-                    var cats = (await client.GetCategories(startIndex: start,
-                        pageSize: 200, //current API maximum is 200 - May 2016
-                        sortBy: "sequence asc",
-                        filter: filterCollection.ToFilterString(),
-                        responseFields: responseFields
-                        )).ReadAsSync();
-                    categories.AddRange(Mapper.Map<List<Category>>(cats.Items));
-                    start = cats.PageSize + cats.StartIndex;
-                    if (cats.TotalCount <= start )
+                    if (ancestory.Contains(parent))
                     {
                         break;
                     }
-                }
-                foreach (var category1 in categories)
-                {
-                    if (category1.ParentId.GetValueOrDefault(-1) > -1)
-                    {
-                        category1.Parent = categories.FirstOrDefault(x => x.Id == category1.ParentId.Value);
-                    }
-                }
-                var ancestory = new List<Category>();
-                foreach (var category1 in categories.Where(x => x.Parent != null))
-                {
-                    ancestory.Clear();
-                    var parent = category1.Parent;
+                    ancestory.Add(parent);
+                    parent = parent.Parent;
 
-                    do
-                    {
-                        if (ancestory.Contains(parent))
-                        {
-                            break;
-                        }
-                        ancestory.Add(parent);
-                        parent = parent.Parent;
+                } while (parent != null);
+                ancestory.Reverse();
+                category1.Path = string.Join("/", ancestory.Select(x => x.Id).ToArray());
 
-                    } while (parent != null);
-                    ancestory.Reverse();
-                    category1.Path = string.Join("/", ancestory.Select(x => x.Id).ToArray());
-
-                }
-
-                return List2(categories);
             }
 
-            var category = (await _categoriesClient.GetCategory(pagingParams.NumericId)).ReadAsSync();
-             
-            return List2(Mapper.Map<Category>(category));
+            return List2(categories);
+        }
+
+        [HttpGetRoute(UriTemplate = "list/read")]
+        public async Task<Response<List<Category>>> GetCategoryList([FromUri]PagingParamaters pagingParams, [FromUri] FilterCollection filterCollection)
+        {
+            if (!string.IsNullOrEmpty(pagingParams.id))
+            {
+                return await GetSingleCategory(pagingParams.NumericId);
+            }
+            //getting rid of server filtering for now.  all filtering done on the client.
+            const string responseFields = "items(id,categoryCode,isDisplayed,sequence,childCount,parentCategoryId,catalogId,categoryType,content(name))";
+            var cats = (await _categoriesClient.GetCategories(startIndex: pagingParams.startIndex,
+                pageSize: pagingParams.pageSize,
+                sortBy: "sequence asc",
+                filter: filterCollection.ToFilterString(),
+                responseFields: responseFields
+                )).ReadAsSync();
+            return List2(Mapper.Map<Category>(cats));
+        }
+
+        private async Task<Response<List<Category>>> GetSingleCategory(int? id)
+        {
+            var cat = (await _categoriesClient.GetCategory(id)).ReadAsSync();
+            var retList = new List<Category> { Mapper.Map<Category>(cat) };
+            return List2(retList);
         }
 
         [HttpGetRoute(UriTemplate = "autocomplete/?query={query}&value={categoryIdsString}")]
