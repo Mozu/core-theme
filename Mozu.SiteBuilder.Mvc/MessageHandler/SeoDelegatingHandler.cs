@@ -88,7 +88,7 @@ namespace Mozu.SiteBuilder.Mvc.MessageHandler
             {
                 return await continuation().ConfigureAwait(false);
             }
-            if ( customRoute.UrlScheme.HasValue )
+            if ( customRoute?.UrlScheme.HasValue == true )
             {
                 if (customRoute.UrlScheme.Value.ToStringQuickly().EqualsIgnoreCase(currentUrl.Scheme))
                 {
@@ -104,7 +104,7 @@ namespace Mozu.SiteBuilder.Mvc.MessageHandler
                 return await continuation().ConfigureAwait(false);
             }
 
-            var scheme = customRoute.UrlScheme.HasValue ? customRoute.UrlScheme.Value.ToStringQuickly() : "https";
+            var scheme = customRoute?.UrlScheme.HasValue == true ? customRoute.UrlScheme.Value.ToStringQuickly() : "https";
 
             var builder = new UriBuilder(scheme, currentUrl.Host);
             builder.Path = currentUrl.AbsolutePath;
