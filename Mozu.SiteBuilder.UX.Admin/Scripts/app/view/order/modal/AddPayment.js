@@ -271,7 +271,7 @@ Ext.define('Taco.view.order.modal.AddPayment', {
     // private
     pullCustomerPaymentData: function (customer) {
         // if the customer attached to the record isn't anonymous, check to see if they have cards saved.
-        if (customer.get('isAnonymous') || customer.raw.paymentCards.length <= 0) {
+        if (!customer || customer.get('isAnonymous') || customer.raw.paymentCards.length <= 0) {
             return;
         }
 

@@ -78,18 +78,35 @@ namespace Mozu.SiteBuilder.Mvc.MessageHandler
         private async Task<HttpResponseMessage> HandleReroutedRequest(HttpRequestMessage rerouted, CancellationToken cancellationToken, Func<Task<HttpResponseMessage>> continuation, bool sslValidationEnabled)
         {
             var pageContext = rerouted.Resolve<PageContext>();
+            var siteContext = rerouted.Resolve<ISiteContext>();
             if (pageContext.IsEditMode) return await continuation().ConfigureAwait(false);
-
-            var customRoute = rerouted.GetRouteData().Route as CustomRoute;
-            if (customRoute == null) return await continuation().ConfigureAwait(false);
             
+            var customRoute = rerouted.GetRouteData().Route as CustomRoute;
             var currentUrl = new Uri(pageContext.Url);
-      
-            if( !sslValidationEnabled || 
-                !customRoute.UrlScheme.HasValue ||
-                customRoute.UrlScheme.Value.ToStringQuickly().EqualsIgnoreCase(currentUrl.Scheme)) return await continuation().ConfigureAwait(false);
 
-            var builder = new UriBuilder(customRoute.UrlScheme.Value.ToStringQuickly(), currentUrl.Host);
+            if (!sslValidationEnabled)
+            {
+                return await continuation().ConfigureAwait(false);
+            }
+            if ( customRoute.UrlScheme.HasValue )
+            {
+                if (customRoute.UrlScheme.Value.ToStringQuickly().EqualsIgnoreCase(currentUrl.Scheme))
+                {
+                    return await continuation().ConfigureAwait(false);
+                }
+            }
+            else if (!siteContext.GeneralSettings.EnforceSitewideSSL.GetValueOrDefault(false))
+            {
+                return await continuation().ConfigureAwait(false);
+            }
+            else if (currentUrl.Scheme.EqualsIgnoreCase("https"))
+            {
+                return await continuation().ConfigureAwait(false);
+            }
+
+            var scheme = customRoute.UrlScheme.HasValue ? customRoute.UrlScheme.Value.ToStringQuickly() : "https";
+
+            var builder = new UriBuilder(scheme, currentUrl.Host);
             builder.Path = currentUrl.AbsolutePath;
             builder.Query = currentUrl.Query?.TrimStart(new char[] { '?' }); 
             return RedirectTo(builder.Uri.ToString(), isTemporary: false, request: rerouted);
