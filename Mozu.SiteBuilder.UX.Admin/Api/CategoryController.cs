@@ -90,7 +90,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
             return List2(categories);
         }
 
-        [HttpGetRoute(UriTemplate = "list/read")]
+        [HttpGetRoute(UriTemplate = "list")]
         public async Task<Response<List<Category>>> GetCategoryList([FromUri]PagingParamaters pagingParams, [FromUri] FilterCollection filterCollection)
         {
             if (!string.IsNullOrEmpty(pagingParams.id))
@@ -105,7 +105,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
                 filter: filterCollection.ToFilterString(),
                 responseFields: responseFields
                 )).ReadAsSync();
-            return List2(Mapper.Map<Category>(cats));
+            return List2(Mapper.Map<List<Category>>(cats.Items));
         }
 
         private async Task<Response<List<Category>>> GetSingleCategory(int? id)

@@ -520,6 +520,8 @@
     <Content Include="Scripts\app\controller\Localization.js" />
     <Content Include="Scripts\app\controller\BusinessIntelligence.js" />
     <Content Include="Scripts\app\controller\Shipping.js" />
+    <Content Include="Scripts\app\controller\CategoriesRx.js" />
+    <Content Include="Scripts\app\controller\Synonyms.js" />
     <Content Include="Scripts\app\controller\Tests.js" />
     <Content Include="Scripts\app\controller\Capability.js" />
     <Content Include="Scripts\app\controller\Channels.js" />
