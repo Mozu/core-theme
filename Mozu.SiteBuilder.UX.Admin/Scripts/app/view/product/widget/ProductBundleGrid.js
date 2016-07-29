@@ -74,43 +74,43 @@ Ext.define('Taco.view.product.widget.ProductBundleGrid', {
         }
     },
 
+    /// Handled normal adds and drag/drop, which results in a remove and an add
+    /// It will verify if the sequence order matches.
     onBundleItemsAdded: function (bundleItems) {
         var me = this,
-            catalogId,
-            catWarnings = [];
+            isSameSequence,
+            catBundleItems,
+            catBundleItemCodes,
+            mergedBundleItems,
+            mcBundledItems = me.product.get('bundledProducts'),
+            resequencedCatItems = [];
         if (this.isGlobal) return;
 
-        catalogId = this.productInCatalogInfo.get('catalogId');
-        //have to check cat id?
-        Ext.Array.each(bundleItems, function (bundleItem) {
-            var match = Ext.Array.findBy(bundleItem.get('productInCatalogs'), function(prodInCatalog){
-                return prodInCatalog.catalogId === catalogId;
-            });
-            if (!match) {
-              catWarnings.push(bundleItem.get('productName'));
-              return;
-            }
-            var mergedBundleItem = Ext.Object.merge(bundleItem.data, {price: match.price, salePrice: match.salePrice, productName: match.productName });
-            me.store.add(mergedBundleItem);
+        mergedBundleItems = this.mergeBundleItemWithProductCatalogInfoOverrides(bundleItems);
+        catBundleItems = me.store.getRange().concat(mergedBundleItems.result);
+        catBundleItemCodes = Ext.Array.map(catBundleItems, function(item){
+            return item.productCode || item.get('productCode');
         });
+        isSameSequence = this.doesSequenceMatchMasterCatalog(mcBundledItems, catBundleItemCodes);
+        if (isSameSequence) {
+            Ext.Array.each(mergedBundleItems.result, function(mergedBundleItem) {
+                me.store.add(mergedBundleItem);
+            });
+        } else {
+            Ext.Array.forEach(mcBundledItems, function (mcBundleItem) {
+                var catItem = Ext.Array.findBy(catBundleItems, function(item) {
+                    return (item.productCode || item.get('productCode')) === mcBundleItem.productCode;
+                });
+                if (catItem) {
+                    resequencedCatItems.push(catItem);
+                }
+            });
+            this.store.removeAll(true);
+            this.store.add(resequencedCatItems);
+        }
         Taco.app.fireEvent('bundle-item-catalog-sync', bundleItems);
         this.getView().refresh();
-        this.warnInactiveBundleItemsInCatalog(catWarnings);
-    },
-
-    warnInactiveBundleItemsInCatalog: function (catWarnings) {
-        var catName, warningMsg;
-        if (catWarnings.length > 0) {
-            catName = this.productInCatalogInfo.get('catalog').name;
-            warningMsg = 'Warning: ';
-            if (catWarnings.length === 1) {
-                warningMsg += ('"' + catWarnings[0] + '" is');
-            } else {
-                warningMsg += ('These bundle items, "' + catWarnings.join('", "') + '" are');
-            }
-            warningMsg += (' not active in "' + catName + '"');
-            Taco.app.fireEvent('setmessage', warningMsg, 'error');
-        }
+        this.warnInactiveBundleItemsInCatalog(mergedBundleItems.warnings);
     },
 
     onBundleItemQuantityChanged: function (masterCatBundleItem) {
@@ -130,7 +130,78 @@ Ext.define('Taco.view.product.widget.ProductBundleGrid', {
         Taco.app.fireEvent('bundle-item-catalog-sync', bundleItem);
         this.getView().refresh();
     },
-    
+
+    mergeBundleItemWithProductCatalogInfoOverrides: function (bundleItems) {
+        var newMergedBundleItems = [],
+          catWarnings = [],
+          catalogId = this.productInCatalogInfo.get('catalogId');
+
+        Ext.Array.each(bundleItems, function (bundleItem) {
+            var match = Ext.Array.findBy(bundleItem.get('productInCatalogs'), function (prodInCatalog) {
+                return prodInCatalog.catalogId === catalogId;
+            });
+            if (!match) {
+                catWarnings.push(bundleItem.get('productName'));
+                return;
+            }
+            var mergedBundleItem = Ext.Object.merge(bundleItem.data, {
+                price: match.price,
+                salePrice: match.salePrice,
+                productName: match.productName
+            });
+            newMergedBundleItems.push(mergedBundleItem);
+        });
+        return {
+            result: newMergedBundleItems,
+            warnings: catWarnings
+        };
+    },
+
+    // pseudo code to compare sequence order:
+    // for loop mcArray
+    //  if item1 !== item2
+    //    if (contains(item1))
+    //      isSameSequence = false
+    //      break;
+    //    else
+    //      insert into catArray
+    // return isSameSequence
+    doesSequenceMatchMasterCatalog: function (mcBundledItems, catBundleItemCodes) {
+        var i,
+            isSameSequence = true;
+        for (i = 0; i < mcBundledItems.length; i++) {
+            if (i >= catBundleItemCodes.length) {
+                //if happens then should be in order up to then. Therefore others would not exist in catalog
+                break;
+            }
+            if (mcBundledItems[i].productCode !== catBundleItemCodes[i]) {
+                if (Ext.Array.contains(catBundleItemCodes, mcBundledItems[i].productCode)) {
+                    isSameSequence = false;
+                    break;
+                } else {
+                    // add placeholder to match up indexes.
+                    Ext.Array.insert(catBundleItemCodes, i, mcBundledItems[i].productCode);
+                }
+            }
+        }
+        return isSameSequence;
+    },
+
+    warnInactiveBundleItemsInCatalog: function (catWarnings) {
+        var catName, warningMsg;
+        if (catWarnings.length > 0) {
+            catName = this.productInCatalogInfo.get('catalog').name;
+            warningMsg = 'Warning: ';
+            if (catWarnings.length === 1) {
+                warningMsg += ('"' + catWarnings[0] + '" is');
+            } else {
+                warningMsg += ('These bundle items, "' + catWarnings.join('", "') + '" are');
+            }
+            warningMsg += (' not active in "' + catName + '"');
+            Taco.app.fireEvent('setmessage', warningMsg, 'error');
+        }
+    },
+
     getColumnConfig: function () {
         var me = this,
           columns = [],

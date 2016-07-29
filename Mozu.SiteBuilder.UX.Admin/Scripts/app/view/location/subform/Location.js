@@ -176,40 +176,9 @@ Ext.define('Taco.view.location.subform.Location', {
             name: "address",
             //allowOnlyWhitespace: false
             allowBlank:false,
-            showEditButton: false
-
-            // extra components to be inserted after the edit button
-            
-            //(Simeon) commented this out pending acquisition of services to do this address to geo location conversion;
-                //http://tfs.ads.volusion.com:8080/tfs/VNext/Mozu/_workitems/edit/19745
-                /*
-                ,buttonItems: [
-                    {
-                        xtype: "splitter"
-                    }, {
-                        xtype: 'button',
-                        ui: "action",
-                        scale: "medium",
-                        text: "Get Latitude/Longitude",
-                        handler: function () {
-                            me.record.getGeo({
-                                jsonData: {
-                                    address: me.addressView.addressField.getValue()
-                                },
-                                success: function (response) {
-                                    // update the lat long fields
-                                    var json = Ext.decode(response.responseText, true);
-                                    if (json && json.success) {
-                                        me.getForm().findField("lat").setValue(json.geo.lat);
-                                        me.getForm().findField("lng").setValue(json.geo.lng);
-                                    }
-                                },
-                                scope: this
-                            });
-                        },
-                        scope: this
-                    }
-                ]*/            
+            showEditButton: false,
+            optionalValidationEnabled: true,
+            cascadeValidationUpdate: true
         });
 
         this.allowNoStockFulfillment = Ext.widget("checkbox", {
@@ -253,7 +222,7 @@ Ext.define('Taco.view.location.subform.Location', {
                 hidden: (!me.record.get("isDeleted")),
                 width: 200,
                 fieldLabel: "Location Status",
-                renderer: function (value, field) {
+                renderer: function (value) {
                     if (value === "true") {
                         return "Location has been deleted";
                     } else {

@@ -396,7 +396,7 @@ Ext.define('Taco.view.product.subform.General', {
             margin: "0 15 0 0",
             width: '50%',
             hidden: !isDigitalCredit,
-            disabled: (!isDigitalCredit || !(this.isGlobal || this.isSingleSite)),
+            disabled: (!isDigitalCredit || !this.isGlobal),
             allowBlank: (!isDigitalCredit || (productUsage === "Configurable")),
             required: (isDigitalCredit && (productUsage != "Configurable")),
             currencyCode: me.currencyCode,
@@ -863,14 +863,14 @@ Ext.define('Taco.view.product.subform.General', {
                     items: [
                         {
                             xtype: 'fieldcontainer',
-                            hidden: (!(this.isGlobal || this.isSingleSite)),
+                            hidden: !this.isGlobal,
                             layout: 'hbox',
                             width: '100%',
                             items: [
                                 this.discountsRestrictedField,
                                 {
                                     xtype: 'fieldcontainer',
-                                    hidden: (!(this.isGlobal || this.isSingleSite)),
+                                    hidden: !this.isGlobal,
                                     layout: 'column',
                                     width: '50%',
                                     margin: '0 0 0 15',
@@ -901,7 +901,7 @@ Ext.define('Taco.view.product.subform.General', {
                         },
                         {
                             xtype: 'fieldcontainer',
-                            hidden: (!(this.isGlobal || this.isSingleSite)),
+                            hidden: !this.isGlobal,
                             layout: 'hbox',
                             width: '100%',
                             margin: '20 0 0 0',
@@ -951,6 +951,9 @@ Ext.define('Taco.view.product.subform.General', {
             if (productForm) {
                 me.mon(productForm, 'productusagechange', me.updatePriceUI, me);
                 me.mon(productForm, 'bundleItemChange', me.updatePriceUI, me);
+                if (!me.isGlobal) {
+                    me.mon(Taco.app, 'bundle-item-catalog-added', me.updatePriceUI, me);
+                }
             }
 
         }, this, {single:true, delay:1});

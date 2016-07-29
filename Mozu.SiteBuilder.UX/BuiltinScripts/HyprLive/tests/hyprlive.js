@@ -1,4 +1,9 @@
- (function(root) {	/* IE8 polyfills */	var hasOwnProperty = Object.prototype.hasOwnProperty,
+ (function(root) {
+
+	/* IE8 polyfills */
+
+
+	var hasOwnProperty = Object.prototype.hasOwnProperty,
     hasDontEnumBug = !({toString: null}).propertyIsEnumerable('toString'),
     dontEnums = [
         'toString',
@@ -8,7 +13,8 @@
         'isPrototypeOf',
         'propertyIsEnumerable'
     ],
-    dontEnumsLength = dontEnums.length;	(function() {
+    dontEnumsLength = dontEnums.length;
+	(function() {
     var _slice = Array.prototype.slice;
 
     try {
@@ -342,7 +348,9 @@
 	}
 
 
-})();	// the definewrapper.tpl uses a super-slim override of "define" that pushes AMD deps into an array.
+})();
+
+	// the definewrapper.tpl uses a super-slim override of "define" that pushes AMD deps into an array.
     // this allows us to cleanly vendor AMD-compatible scripts without polluting scope or registering 
     // private scripts in the root require namespace.
     // only downside is, you have to refer to the build script (Gruntfile) to see what order you brought them in.
@@ -5798,7 +5806,9 @@ HyprLive.engine.setExtension('makeUrlTag', function(type, object) {
     for (var i = 0; i < params.length; i++) {
         if (type === 'paging' && params[i-1] === 'page') {
             secondArg = params[i];
-        } else if (type !== 'paging' || params[i] !== 'page') {
+        } else if (type === 'product' && params[i-1] === 'variant') {
+            secondArg = params[i];
+        } else if ((type !== 'paging' && type !== 'product') || (params[i] !== 'page' && params[i] !== 'variant')) {
             query += (i % 2 ? '=' : '&') + encodeURI(params[i]);
         }
     }
@@ -5818,9 +5828,12 @@ var util = {
         var url = typeof object === 'object' ? object.imageUrl : object;
         return this.urlScrub(url + extendedQuery + this.getCdnCacheBust());
     },
-    productUrl: function(object, extendedQuery) {
+    productUrl: function(object, extendedQuery, variant) {
         var code = typeof object === 'object' ? object.productCode : object;
-        return this.urlScrub('/p/' + code + extendedQuery);
+        if (!variant) {
+            return this.urlScrub('/p/' + code + extendedQuery);
+        }
+        return this.urlScrub('/p/' + code + '/v/' + variant + extendedQuery);
     },
     categoryUrl: function(object, extendedQuery) {
         var code = typeof object === 'object' ? object.categoryCode : object;
@@ -6267,7 +6280,7 @@ HyprLive.engine.setTag('make_url', MakeUrlTag.parse, MakeUrlTag.compile, false, 
             humanized: memo.humanized + space + strPart,
             elemsCount: elemsCount
         };
-    };
+    }
 
     function timeBetween(date, laterDate) {
         if (!date || !laterDate) return "0 minutes";

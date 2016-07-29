@@ -62,17 +62,6 @@ Ext.define('Taco.view.product.mixins.Bundleable', {
             seo: true
         };
 
-        // siteForm and singleSite
-        if (!this.isGlobal && this.isSingleSite) {
-            Ext.apply(siteConfig, {
-                inventory: true,
-                options: true,
-                properties: true,
-                extras: true,
-                shipping: true
-            });
-        }
-
         // globalForm
         globalConfig = {
             general: true,
@@ -83,8 +72,8 @@ Ext.define('Taco.view.product.mixins.Bundleable', {
             extras: this.hasExtras()
         };
 
-        // globalForm and NOT singleSite
-        if (this.isGlobal && !this.isSingleSite) {
+        // globalForm
+        if (this.isGlobal) {
             Ext.apply(globalConfig, {
                 inventory: true,
                 options: true,
@@ -204,7 +193,7 @@ Ext.define('Taco.view.product.mixins.Bundleable', {
         // hide and show the various subForms based on selection;
         this.updateSubFormVisibility(value);
         
-        // fire event so the varios subForms can update based on the change;
+        // fire event so the various subForms can update based on the change;
         me.up("productform").fireEvent('productusagechange', me, value);
     },
     

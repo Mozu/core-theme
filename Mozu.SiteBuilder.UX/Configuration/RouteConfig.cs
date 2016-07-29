@@ -343,6 +343,15 @@ namespace Mozu.SiteBuilder.UX.Configuration
             System.Web.Http.HttpRouteCollection routes = new System.Web.Http.HttpRouteCollection();
 
             routes.MapCustomHttpRoute(
+                "StoreFront_variationProductDetails_SEO",
+                "{productSlug}/p/{productCode}/v/{variationProductCode}",
+                 null,
+              null,
+              null,
+              FancyRoute.ProductDetails,
+              true);
+
+            routes.MapCustomHttpRoute(
                 "StoreFront_productDetails_SEO",
                 "{productSlug}/p/{productCode}",
                  null,
@@ -350,9 +359,7 @@ namespace Mozu.SiteBuilder.UX.Configuration
               null,
               FancyRoute.ProductDetails,
               true);
-
-
-    
+            
             routes.MapCustomHttpRoute(
                 "search",
                 "search",
@@ -378,8 +385,18 @@ namespace Mozu.SiteBuilder.UX.Configuration
                 new { controller = "Cart", action = "Checkout" });
 
             routes.MapHttpRoute(
+               "StoreFront_variationProductDetails",
+               "product/{productCode}/variation/{variationProductCode}",
+               new { controller = "Catalog", action = "ProductDetail" });
+
+            routes.MapHttpRoute(
                "StoreFront_productDetails",
                "product/{productCode}",
+               new { controller = "Catalog", action = "ProductDetail" });
+
+            routes.MapHttpRoute(
+               "StoreFront_variationProductDetailsShort",
+               "p/{productCode}/v/{variationProductCode}",
                new { controller = "Catalog", action = "ProductDetail" });
 
             routes.MapHttpRoute(

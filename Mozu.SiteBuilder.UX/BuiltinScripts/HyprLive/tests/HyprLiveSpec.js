@@ -85,14 +85,28 @@
                 .to.equal('//cdn.mozu.com/img.jpg?max=150&size=1&_mzCb=1234');
         });
 
-        it('has a tag {% make_url "product" %} that produces a valid Product url', function() {
+        it('has a tag {% make_url "product" %} that produces a valid Product url', function () {
             expect(Hypr.engine.render('{% make_url "product" 1234 %}'))
                 .to.equal('/p/1234');
             expect(Hypr.engine.render('{% make_url "product" "something-code-12" %}'))
                 .to.equal('/p/something-code-12');
+            expect(Hypr.engine.render('{% make_url "product" "something-code-12" "emailCampaign=blackFriday" %}'))
+                .to.equal('/p/something-code-12?emailCampaign=blackFriday');
             expect(Hypr.engine.render('{% make_url "product" model %}', { locals: { model: { productCode: 'something-code-12' } } }))
                 .to.equal('/p/something-code-12');
         });
+
+        it('has a tag {% make_url "product" %} that produces a valid Variant Product url', function() {
+            expect(Hypr.engine.render('{% make_url "product" 1234 with variant="small-green" as_parameter %}'))
+              .to.equal('/p/1234/v/small-green');
+            expect(Hypr.engine.render('{% make_url "product" "something-code-12" with variant="small-green" as_parameter %}'))
+              .to.equal('/p/something-code-12/v/small-green');
+            expect(Hypr.engine.render('{% make_url "product" "something-code-12" "emailCampaign=blackFriday" with variant="small-green" as_parameter %}'))
+              .to.equal('/p/something-code-12/v/small-green?emailCampaign=blackFriday');
+            expect(Hypr.engine.render('{% make_url "product" model with variant="small-green" as_parameter %}', { locals: { model: { productCode: 'something-code-12' } } }))
+              .to.equal('/p/something-code-12/v/small-green');
+        });
+
 
         it('has a tag {% make_url "category" %} that produces a valid Category url', function() {
             expect(Hypr.engine.render('{% make_url "category" 1234 %}'))
@@ -192,7 +206,7 @@
         });
         it("has a divide filter that divides the value by the argument", function() {
             var plain = '{{ num|divide(3) }}';
-            var operatedOn = '{% if num|divide(4) > 2 %}bigger than 8{% else %}8 or less{% endif %}'
+            var operatedOn = '{% if num|divide(4) > 2 %}bigger than 8{% else %}8 or less{% endif %}';
             expect(Hypr.engine.render(plain, { locals: { num: 9 } })).to.equal('3');
             expect(Hypr.engine.render(plain, { locals: { num: 5 } })).to.equal('1.6666666667');
             expect(Hypr.engine.render(operatedOn, { locals: { num: 12 } })).to.equal('bigger than 8');
@@ -200,7 +214,7 @@
         });
         it("has an add filter that adds the value to the argument", function() {
             var plain = '{{ num|add(3) }}';
-            var operatedOn = '{% if num|add(3) > 8 %}bigger than 5{% else %}5 or less{% endif %}'
+            var operatedOn = '{% if num|add(3) > 8 %}bigger than 5{% else %}5 or less{% endif %}';
             expect(Hypr.engine.render(plain, { locals: { num: 7 } })).to.equal('10');
             expect(Hypr.engine.render(plain, { locals: { num: 7.7681231 } })).to.equal('10.7681231');
             expect(Hypr.engine.render(operatedOn, { locals: { num: 7 } })).to.equal('bigger than 5');
@@ -209,7 +223,7 @@
 
         it("has a subtract filter that subtracts the value from the argument", function() {
             var plain = '{{ num|subtract(3) }}';
-            var operatedOn = '{% if num|subtract(3) > 5 %}bigger than 5{% else %}5 or less{% endif %}'
+            var operatedOn = '{% if num|subtract(3) > 5 %}bigger than 5{% else %}5 or less{% endif %}';
             expect(Hypr.engine.render(plain, { locals: { num: 7 } })).to.equal('4');
             expect(Hypr.engine.render(plain, { locals: { num: 7.7681231 } })).to.equal('4.7681231');
             expect(Hypr.engine.render('{{ num|subtract(term) }}', { locals: { term: 7.7681231, num: 10 } })).to.equal('2.2318769');
@@ -219,7 +233,7 @@
 
         it("has a multiply filter that multiplies the value by the argument", function() {
             var plain = '{{ num|multiply(3) }}';
-            var operatedOn = '{% if num|multiply(3) > 15 %}bigger than 5{% else %}5 or less{% endif %}'
+            var operatedOn = '{% if num|multiply(3) > 15 %}bigger than 5{% else %}5 or less{% endif %}';
             expect(Hypr.engine.render(plain, { locals: { num: 7 } })).to.equal('21');
             expect(Hypr.engine.render(operatedOn, { locals: { num: 9 } })).to.equal('bigger than 5');
             expect(Hypr.engine.render(operatedOn, { locals: { num: 3 } })).to.equal('5 or less');
@@ -287,7 +301,7 @@
                 });
 
 
-            })
+            });
 
             describe("is_after, which returns boolean whether a date is after another date", function() {
 
@@ -445,8 +459,8 @@
             expect(Hypr.engine.render(tpt3, { locals: { p: MozuProduct } })).to.equal('false');
             var tpt4 = '{% if p|get_product_attribute_value("tenant~additional-handling") %}Has Handling{% endif %}';
             expect(Hypr.engine.render(tpt4, { locals: { p: MozuProduct } })).to.equal('');
-            var tpt4 = '{% if p|get_product_attribute_value("tenant~true-thing") %}Has True Thing{% endif %}';
-            expect(Hypr.engine.render(tpt4, { locals: { p: MozuProduct } })).to.equal('Has True Thing');
+            var tpt5 = '{% if p|get_product_attribute_value("tenant~true-thing") %}Has True Thing{% endif %}';
+            expect(Hypr.engine.render(tpt5, { locals: { p: MozuProduct } })).to.equal('Has True Thing');
         });
 
         describe('has a dictsort filter that', function() {
@@ -510,7 +524,7 @@
                     expect(Hypr.engine.render(tpt, { locals: { value: "three little words" } })).to.equal('"three" "little" "words" ');
                 });
                 function splitWith(value, char) {
-                    var tpt = '{% for word in value|split(char) %}"{{word}}"{% endfor %}'
+                    var tpt = '{% for word in value|split(char) %}"{{word}}"{% endfor %}';
                     return Hypr.engine.render(tpt, { locals: { value: value, char: char } });
                 }
                 it('splits on other characters', function() {
@@ -576,4 +590,4 @@
 
 
     });
-})
+});

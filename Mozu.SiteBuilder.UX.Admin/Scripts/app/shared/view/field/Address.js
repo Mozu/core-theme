@@ -43,6 +43,8 @@ Ext.define('Taco.shared.view.field.Address', {
     editOnFieldClick: true,
 
     addressValidationRequired: false,
+    optionalValidationEnabled: false,
+    cascadeValidationUpdate: false,
 
     defaultValue : {
         "address1": "",
@@ -60,8 +62,7 @@ Ext.define('Taco.shared.view.field.Address', {
     //allowBlank: true,
     
     initComponent: function () {
-        var me = this,
-            addressDisplayTpl = me.getAddressDisplayTemplate();
+        var me = this;
         
         if (!me.items) {
             me.items = [];
@@ -85,8 +86,6 @@ Ext.define('Taco.shared.view.field.Address', {
                 }
             },
             validator: function (value) {
-                var errors = [];
-                
                 if (me.allowBlank) {
                     return true;
                 } else {
@@ -183,6 +182,8 @@ Ext.define('Taco.shared.view.field.Address', {
             showEmail: false,
             showPhoneNumbers: false,
             validateAddress: false,
+            optionalValidationEnabled: me.optionalValidationEnabled,
+            cascadeValidationUpdate: me.cascadeValidationUpdate,
             listeners: {
                 close:function (){
                     me.addressField.focus();

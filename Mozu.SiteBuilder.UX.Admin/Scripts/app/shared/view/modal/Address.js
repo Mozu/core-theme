@@ -29,6 +29,9 @@ Ext.define('Taco.shared.view.modal.Address', {
     singlePhoneRequired: false,
     emailRequired: true,
     validateAddress: true,
+    enableValidation: false,
+    optionalValidationEnabled: false,
+    cascadeValidationUpdate: false,
 
     formCfg: null,
 
@@ -92,7 +95,9 @@ Ext.define('Taco.shared.view.modal.Address', {
         
         this.callParent(arguments);
 
-        this.down('#otherAction').setDisabled(this.validateAddress === false);
+        if (!this.optionalValidationEnabled) {
+            this.down('#otherAction').setDisabled(this.validateAddress === false);
+        }
     },
 
 
@@ -121,7 +126,7 @@ Ext.define('Taco.shared.view.modal.Address', {
         }
 
         // skip address validation for now
-        if (!me.validateAddress) {
+        if (!me.validateAddress && !this.optionalValidationEnabled) {
             callback();
             return;
         }
@@ -206,7 +211,7 @@ Ext.define('Taco.shared.view.modal.Address', {
                 Ext.Object.merge(mergedFormWithValidationResults, me.form.getValues(), this.validatedAddr);
                 me.record.set(mergedFormWithValidationResults);
 
-                me.form.loadRecord(me.record);
+                me.form.loadRecord(me.record, me.cascadeValidationUpdate);
             }
         };
         Ext.Ajax.request({

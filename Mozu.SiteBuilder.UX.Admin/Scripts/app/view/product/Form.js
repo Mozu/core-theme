@@ -26,17 +26,12 @@ Ext.define('Taco.view.product.Form', {
         this.stores = [this.inSitesStore, this.record.getOptions(), this.record.getVariations(false)];
 
         this.siteForms = [];
-        
-        this.createSiteInfoCheck();
-
-        this.isSingleSite = this.singleSiteCheck();
 
         this.masterCatalog = Taco.app.context.getMasterCatalog();
 
         this.globalForm = Ext.create('Taco.view.product.GlobalForm', {
             record: this.record,
-            productForm: this,
-            isSingleSite: this.isSingleSite
+            productForm: this
         });
 
         this.buildSiteTabs();
@@ -54,15 +49,7 @@ Ext.define('Taco.view.product.Form', {
                 items: this.tabItems
             })
         ];
-
-        
-
         this.callParent(arguments);
-
-        if(this.isSingleSite) {
-            this.goGoSingleSite(true);
-        }
-
     },
     
     //todo fix for omni
@@ -135,67 +122,15 @@ Ext.define('Taco.view.product.Form', {
         }
 
         return Ext.create('Taco.view.product.SiteForm', {
-            isSingleSite: this.singleSiteCheck(),
             record: productInCatalogInfo,
             catlogId: productInCatalogInfo.get('catalogId'),
             productForm: this,
             product: this.record,
             productInCatalogInfo: productInCatalogInfo,
             tasksKeyPrefix: 'site-' + catalogId,
-            formCfg: {
-                isSingleSite: this.isSingleSite
-            },
             tabPickerId: '' + catalogId,
             title: title
         });
-    },
-
-    /**
-     * Hides the global tab when in single site mode
-     * @private
-     */
-    goGoSingleSite: function (leaveTabs) {
-        var me = this;
-        
-        if (!leaveTabs) {
-            me.rebuildTabs();
-        }
-
-        this.globalForm.isSingleSite = true;
-        
-        this.globalForm.buildForm();
-
-        if (!me.globalForm.validityOverride) {
-            me.globalForm.validityOverride = true;
-
-            me.getForm().hasInvalidField = function () {
-                return !!this.getFields().findBy(function(field) {
-                    var preventMark = field.preventMark,
-                        isValid, globalForm;
-
-                    globalForm = field.findParentBy(function (ct) {
-                        return ct.getId() === me.globalForm.getId();
-                    });
-
-                    field.preventMark = true;
-                    isValid = field.isValid() || (globalForm && ( !globalForm.rendered || globalForm.isHidden()));
-                    field.preventMark = preventMark;
-
-                    return !isValid;
-                });
-            };
-        }
-
-        
-
-        // me.tabPanel.hideTabAt(0);
-
-        // me.tabPanel.setActiveItemAt(1);
-
-        //refresh the visibility of the siteForm
-        //me.tabPanel.items.getAt(1).updateSubFormVisibility();
-
-
     },
 
     /**
@@ -204,10 +139,7 @@ Ext.define('Taco.view.product.Form', {
      */
     goGoMultiSite: function () {
         var me = this;
-        
 
-        
-        this.globalForm.isSingleSite = false;
         this.globalForm.buildForm();
         this.tabPanel.showTabAt(0);
 
@@ -232,60 +164,12 @@ Ext.define('Taco.view.product.Form', {
     },
 
     goGoCatalogSwitch: function (isRemovingActiveTab) {
-        var wasSingleSite = this.isSingleSite;
-
-        this.isSingleSite = this.singleSiteCheck();
-
         var isOnlyGlobal = this.inSitesStore.count() === 0;
-
         if (isOnlyGlobal || isRemovingActiveTab) {
             this.goGoMultiSite();
             return;
         }
-
-        //  State unchanged, gfto
-        if (wasSingleSite === this.isSingleSite) {
-            return;
-        }
-
-        //  Must rebuild tabs now since stateOrProvince switched
-        if (this.isSingleSite) {
-            this.goGoSingleSite();
-        } else {
-            this.goGoMultiSite();
-        }
-
-    },
-    
-    /**
-     * Handles the use case of create in site context mode
-     */
-    createSiteInfoCheck:function() {
-        var ctx;
-        if (!this.record.phantom) {
-            return;
-        }
-        ctx = Taco.app.context.getCurrent();
-       
-        if ( ctx.getCatalogId() != null) {
-            this.getNewCatalog(ctx.getCatalogId());
-        }else if (ctx.contextType == 'm' && ctx.catalogs.length == 1) {
-            this.getNewCatalog(ctx.catalogs[0].getCatalogId());
-        }
-    },
-
-    /**
-     * Checks to see if the form is in multisite or singlesite mode
-     * If single site & doesn't match currency & locale of master, then returns false (see 48523)
-     * @return {Boolean} True if the product is only on one site, false if it's shared
-     */
-    singleSiteCheck: function () {
-        var mc = Taco.app.context.getMasterCatalog();
-
-        //changing to only run this mode if the user has only one catalogs off of the current master catalog
-        return mc.catalogs.length < 2
-            || (this.inSitesStore.count() === 1
-                && mc.isSiteSameCountryAsMasterCatalog(this.inSitesStore.data.items[0].get('sites')[0]));
+        this.goGoMultiSite();
     },
 
     /**
@@ -345,7 +229,7 @@ Ext.define('Taco.view.product.Form', {
         var siteInfo = Ext.create('Taco.model.ProductInCatalogInfo', {
             catalogId: catalogId,
             productCode:this.record.getId()
-        }), siteForm, wasSingleSite;
+        });
         
         //  Crazy Thom code, to get magical things to happen....but not really
         siteInfo.phantom = true;
@@ -354,17 +238,6 @@ Ext.define('Taco.view.product.Form', {
         siteInfo.phantom = true;
 
         return siteInfo;
-        // if (this.rendered) {
-        //     siteForm = this.buildSiteForm(siteInfo);
-
-        //     this.siteForms.push(siteForm);
-        //     this.tabPanel.add(siteForm);
-
-        //     if (suspendSwitch) {
-        //         return;
-        //     }
-        //     this.goGoCatalogSwitch();
-        // }
     },
 
     /**
