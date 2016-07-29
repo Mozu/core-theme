@@ -253,13 +253,15 @@ Ext.define('Taco.view.theme.Index', {
             metaData = { id: record.getId() },
             header = view.getHeaderAtIndex(cellIndex);
 
-        if ((header.dataIndex || header.allowNavigation === true) && header.allowNavigation !== false && this.allowNavigation !== false) {
-            e.preventDefault();
+            if (tr.dataset.recordid.substr(0, 8) != '_parent_') {
+                if ((header.dataIndex || header.allowNavigation === true) && header.allowNavigation !== false && this.allowNavigation !== false) {
+                    e.preventDefault();
 
-            this.addRecordToBrowserHistory(record);
+                    this.addRecordToBrowserHistory(record);
 
-            this.launchEditor(record, metaData);
-        }
+                    this.launchEditor(record, metaData);
+                }
+            }
     },
 
     addRecordToBrowserHistory: function(record) {
