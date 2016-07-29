@@ -257,7 +257,8 @@ Ext.define('Taco.view.filter.Form', {
             fieldRecord: this.getFieldRecord(),
             operatorRecord: this.getOperatorRecord(),
             value: this.record.get("right"),
-            fieldLabel: "Value"
+            fieldLabel: "Value",
+            parentForm: this
         });
 
         this.add([

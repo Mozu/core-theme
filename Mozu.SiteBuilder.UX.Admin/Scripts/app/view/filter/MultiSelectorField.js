@@ -22,7 +22,7 @@ Ext.define('Taco.view.filter.MultiSelectorField', {
         maxSize: null,
         // force the field to replace the store values with a single record;
         fields:[
-            "id"
+            'id'
         ],
         model: null,
         store: null,
@@ -52,15 +52,14 @@ Ext.define('Taco.view.filter.MultiSelectorField', {
 
     initComponent: function () {
         var me = this,
-            storeData = [];
-        
+            storeData = [],
+            storeType = me.getStoreConfigByValue(me.getLeftFieldValue()),
+            isGenericStore = storeType === 'Ext.data.Store';
         
             this.layout = {
                 type:"vbox",
                 align:"stretch"
             };
-        
-
 
         if (this.store) {
 
@@ -74,7 +73,9 @@ Ext.define('Taco.view.filter.MultiSelectorField', {
                 // need to transform the data into a format the store can consume and make the dataTypes consistant so that the id's will be the same type.
                 storeData = Ext.Array.map(this.value, function (obj) {
                     //return { id: obj.toString() };
-                    return { id: me.coerceDataType(obj) };
+                    return {
+                        id: me.coerceDataType(obj)
+                    };
                 });
             }
 
@@ -82,13 +83,69 @@ Ext.define('Taco.view.filter.MultiSelectorField', {
                 data: storeData
             };
 
+            var storeType = me.getStoreConfigByValue(me.getLeftFieldValue());
+
             if (this.getModel()) {
                 storeConfig.model = this.getModel();
-            } else {
+            } else if (isGenericStore) {
                 storeConfig.fields = this.getFields();
             }
 
-            this.store = Ext.create('Ext.data.Store', storeConfig);
+            this.store = Ext.create(storeType, storeConfig);
+        }
+
+        if (!isGenericStore) { // only apply this loading logic when a resource is using a custom store
+                
+            switch (storeType) {
+                case 'Taco.store.Attributes':
+                    me.store.on('add', function(store, eOpts) {
+                        if (!me.store.data) { return; }
+                        var attribute = me.parentForm.attributePickerField.getValue();
+                        me.store.model.load(attribute, {
+                            scope: me.store,
+                            success: function(record, operation) {
+
+                                var values = record.get('values');
+
+                                var records = me.store.data.items;
+                                Ext.Array.each(records, function(record, index, allItems) {
+
+                                    var property = Ext.Array.findBy(values, function(value) {
+                                        return value.id === record.get('id');
+                                    });
+
+                                    var model = me.store.getAt(index);
+                                    model.set(record.data);
+
+                                });
+                            }
+                        });
+                    });
+                    break;
+                default:
+                    me.store.on('add', function(store, eOpts) {
+                        if (!me.store.data) { return; }
+                        var records = me.store.data.items;
+                        Ext.Array.each(records, function(record, index, allItems) {
+                            me.store.model.load(record.get('id'), {
+                                scope: me.store,
+                                success: function(record, operation) {
+                                    var model = me.store.getAt(index);
+                                    model.set(record.data);
+                                },
+                                failure: function(record, operation) {
+                                    // ¯\_(ツ)_/¯ 
+                                    // do nothing, let the code persist
+                                }
+                            });
+                        }, me.store);
+                    });
+            }
+                
+
+            if (me.store.getCount()) {
+                me.store.fireEvent('add');
+            }
         }
 
         var fieldCfg = Ext.apply(this.getFieldCfg(), {
@@ -148,9 +205,9 @@ Ext.define('Taco.view.filter.MultiSelectorField', {
 
 
         var gridConfig = {
-            hideHeaders:this.getHideHeaders(),
+            hideHeaders:false, //this.getHideHeaders(),
             store: this.store,
-            getColumnConfig: me.getColumnConfig,
+            getColumnConfig: me.getColumnConfig.bind(me),
             removeItemText : this.removeItemText,
             removeAction: this.getRemoveAction(),
             gridActions: this.getGridActions(),
@@ -269,22 +326,124 @@ Ext.define('Taco.view.filter.MultiSelectorField', {
 
     },
 
-    getColumnConfig: function () {
-        return [
-                {
-                    //   xtype: 'gridcolumn',
-                    dataIndex: 'id',
-                    text: 'Id',
-                renderer: function (value) {
-                        return value;
-                        //todo: add display format
-                        //return Taco.app.context.getCurrent().formatCurrency(value);
-                    },
-                    hideable: false,
-                    flex: 1,
-                    minWidth: 150
+    getStoreConfigByValue: function(val) {
+        var configs = {};
+
+        configs['default'] = 'Ext.data.Store';
+        configs['productcode'] = 'Taco.store.Products';
+        configs['producttypeid'] = 'Taco.store.ProductTypes';
+        configs['categories.categorycode'] = 'Taco.store.Categories';
+        configs['properties.'] = 'Taco.store.Attributes';
+
+        return val && configs[val] ? configs[val] : configs['default'];
+    },
+
+    getColumnConfigByValue: function(val) {
+        var me = this,
+            configs = {};
+
+        configs['default'] = [
+            {
+                dataIndex: 'id',
+                text: 'Id',
+                hideable: false,
+                flex: 1,
+                minWidth: 150
+            }
+        ];
+
+        configs['productcode'] = [
+            {
+                dataIndex: 'id',
+                text: 'Product Code',
+                hideable: false,
+                flex: 1,
+                minWidth: 150
+            },
+            {
+                dataIndex: 'productName',
+                text: 'Product Name',
+                flex: 1
+            },
+            {
+                dataIndex: 'price',
+                text: 'Price',
+                flex: 1,
+                renderer: function(val) {
+                    return Taco.app.context.getCurrent().formatCurrency(val);
                 }
-            ];
+            },
+            {
+                dataIndex: 'salePrice',
+                text: 'Sale Price',
+                flex: 1,
+                renderer: function(val) {
+                    return Taco.app.context.getCurrent().formatCurrency(val);
+                }
+            }
+        ];
+
+        configs['producttypeid'] = [
+            {
+                dataIndex: 'id',
+                text: 'ID',
+                hideable: false,
+                flex: 1,
+                minWidth: 150
+            },
+            {
+                dataIndex: 'value',
+                text: 'Name',
+                flex: 1
+            }
+        ];
+
+        configs['categories.categorycode'] = [
+            {
+                dataIndex: 'categoryCode',
+                text: 'Category Code',
+                hideable: false,
+                flex: 1,
+                minWidth: 150
+            },
+            {
+                dataIndex: 'name',
+                text: 'Category Name',
+                flex: 1
+            },
+            {
+                dataIndex: 'categoryType',
+                text: 'Type',
+                flex: 1
+            }
+        ];
+
+        configs['properties.'] = [
+            {
+                dataIndex: 'value',
+                text: 'Label',
+                hideable: false,
+                flex: 1,
+                minWidth: 150
+            },
+            {
+                dataIndex: 'id',
+                text: 'Value',
+                flex: 1
+            }
+        ];
+
+        return val && configs[val] ? configs[val] : configs['default'];
+    },
+
+    getColumnConfig: function () {
+        var me = this;
+        return me.getColumnConfigByValue(me.getLeftFieldValue());
+    },
+
+    getLeftFieldValue: function() {
+        var me = this;
+        return me.parentForm ? me.parentForm.leftField.getValue() : undefined;
     },
 
     addValue: function(value,record) {
@@ -296,15 +455,12 @@ Ext.define('Taco.view.filter.MultiSelectorField', {
             return;
         }
 
-        
-
-
         var recordToSelect = me.store.getById(id);
         if (!recordToSelect) {
             if (this.getSingleSelect()) {
                 //clear out any old records;
                 me.store.removeAll();
-            } 
+            }
 
             if (record) {
                 var json = record.data;
