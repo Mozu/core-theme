@@ -46,24 +46,15 @@ namespace Mozu.SiteBuilder.UX.Admin.Helpers.SynonymHelpers
             {
                 case "all":
                     {
+                        return String.Format("key cont \"{0}\" or synonyms cont \"{0}\"", filterItem.escapedValue);
+                    }
+                case "key":
+                    {
                         return String.Format("key cont \"{0}\"", filterItem.escapedValue);
                     }
-                case "siteid":
+                case "synonyms":
                     {
-                        return String.Format("siteid eq \"{0}\"", filterItem.value);
-                    }
-                case "name":
-                    {
-                        return String.Format("name cont \"{0}\"", filterItem.escapedValue);
-                    }
-                case "activestartdatefrom":
-                    {
-                        return String.Format("startdate ge \"{0}\"", ((DateTime)filterItem.value).ToUniversalTime().ToString("o"));
-                    }
-
-                case "activestartdateto":
-                    {
-                        return String.Format("startdate le \"{0}\"", ((DateTime)filterItem.value).ToUniversalTime().ToString("o"));
+                        return String.Format("synonyms cont \"{0}\"", filterItem.escapedValue);
                     }
                 case "createdatefrom":
                     {
