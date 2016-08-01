@@ -435,6 +435,7 @@
     <Compile Include="Helpers\CategoryHelpers\CategoryFilterExtensions.cs" />
     <Compile Include="Helpers\CategoryHelpers\CategoryHelper.cs" />
     <Compile Include="Helpers\CategoryHelpers\ICategoryHelper.cs" />
+    <Compile Include="Helpers\CategoryHelpers\CategorySortExtensions.cs" />
     <Compile Include="Helpers\ChannelHelpers\ChannelFilterExtensions.cs" />
     <Compile Include="Helpers\CollectionTaskUnMapper.cs" />
     <Compile Include="Helpers\ContentHelpers\ContentFilterExtensions.cs" />

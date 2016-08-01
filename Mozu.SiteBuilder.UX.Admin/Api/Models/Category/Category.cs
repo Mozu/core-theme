@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using Mozu.ProductAdmin.Contracts;
 using Newtonsoft.Json;
 
@@ -67,6 +68,16 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.Models.Category
         public Category Parent { get; set; }
 
         public List<CategoryImage> CategoryImages { get; set; }
+
+        public string CreateBy { get; set; }
+
+        public DateTime? CreateDate { get; set; }
+
+        [JsonProperty(PropertyName = "lastModifiedBy")]
+        public string UpdateBy { get; set; }
+
+        [JsonProperty(PropertyName = "lastModifiedDate")]
+        public DateTime? UpdateDate { get; set; }
     }
 
     

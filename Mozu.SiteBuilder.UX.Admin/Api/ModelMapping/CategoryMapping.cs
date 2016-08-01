@@ -2,6 +2,7 @@
 using Mozu.SiteBuilder.UX.Admin.Api.Models.Category;
 using DC = Mozu.ProductAdmin.Contracts;
 using System.Linq;
+using Mozu.Core.Api.Contracts;
 
 namespace Mozu.SiteBuilder.UX.Admin.Api.ModelMapping
 {
@@ -36,7 +37,12 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.ModelMapping
                 .ForMember(dest => dest.Slug, opt => opt.ResolveUsing(c => ((c.Content != null) ? c.Content.Slug : null)))
                 .ForMember(dest => dest.CategoryImages, opt => opt.ResolveUsing(c => (c.Content != null ? c.Content.CategoryImages : null)))
                 .ForMember(dest => dest.IsLeaf, op => op.ResolveUsing(dc => dc.ChildCount.GetValueOrDefault() == 0))
-            
+                .ForMember(x => x.CreateBy, op => op.ResolveUsing(dc => dc.AuditInfo?.CreateBy))
+                .ForMember(x => x.CreateDate, op => op.ResolveUsing(dc => dc.AuditInfo?.CreateDate))
+                .ForMember(x => x.UpdateBy, op => op.ResolveUsing(dc => dc.AuditInfo?.UpdateBy))
+                .ForMember(x => x.UpdateDate, op => op.ResolveUsing(dc => dc.AuditInfo?.UpdateDate))
+
+
                 //ignores
                 .ForMember(dest => dest.Path, opt => opt.Ignore())
                 .ForMember(dest => dest.Code, opt => opt.Ignore())
@@ -68,10 +74,16 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.ModelMapping
                 .ForMember(dest => dest.Content, opt => opt.ResolveUsing((Category c) => c))
                 .ForMember(dest => dest.IsDisplayed, opt => opt.ResolveUsing(c => !c.IsHidden))
                 .ForMember(dest => dest.CategoryType, opt => opt.ResolveUsing(c => c.CategoryType))
+                .ForMember(dc => dc.AuditInfo, op => op.ResolveUsing(x => new AuditInfo
+                {
+                    CreateBy = x.CreateBy,
+                    CreateDate = x.CreateDate,
+                    UpdateBy = x.UpdateBy,
+                    UpdateDate = x.UpdateDate
+                }))
 
                 //ignores
                 .ForMember(dest => dest.ChildCount, opt => opt.Ignore())
-                .ForMember(dest => dest.AuditInfo, opt => opt.Ignore())
                 ;
 
             Mapper.CreateMap<Category, DC.CategoryLocalizedContent>()

@@ -97,11 +97,16 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
             {
                 return await GetSingleCategory(pagingParams.NumericId);
             }
+            var sort = pagingParams.sort.ToSortString();
+            if (string.IsNullOrEmpty(sort))
+            {
+                sort = "sequence asc";
+            }
             //getting rid of server filtering for now.  all filtering done on the client.
-            const string responseFields = "items(id,categoryCode,isDisplayed,sequence,childCount,parentCategoryId,catalogId,categoryType,content(name))";
+            const string responseFields = "items(id,categoryCode,isDisplayed,sequence,childCount,parentCategoryId,catalogId,categoryType,content(name),auditInfo)";
             var cats = (await _categoriesClient.GetCategories(startIndex: pagingParams.startIndex,
                 pageSize: pagingParams.pageSize,
-                sortBy: "sequence asc",
+                sortBy: sort,
                 filter: filterCollection.ToFilterString(),
                 responseFields: responseFields
                 )).ReadAsSync();
